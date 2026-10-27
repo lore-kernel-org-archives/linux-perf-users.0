@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.197
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.199
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793142954;
-	b=44Bd3TgHphVfD7c52IzDQcXO9OTm5TdZ67uJwxTZL28GcSWjA9HbeNk2+ESb9YsDmdA3
-	 5X4HyUWG2m95WUjSVZn8AOMyfWjAWipvk6PwnO2atxP6ZmE7qopu4WqvEIIALTu/T5x7G
-	 Osqr472A1BS5ByiZv4cbkhd+HrZDG6Op8uWVa83P0uyCbrBxIW23LkmdAcUNS9t+H8Y4/
-	 izvdKwOtc/e4ThnMuvcyBMU5OaO2wxpd55F2ZJ4jHbgPKScKZQsaNYNV6awSDkO/1BMUo
-	 H9hb7JR7Glt0RMzhkbRHw7ZOfcSQlqaBCydwutC7XdmlbiBC+6mDwI1kLQFDeSPgSjQ==
+	t=1793142960;
+	b=TPun/TDEertDdGq1IViJij2lMcgPqJPia8shr+4690pIsKdoe5K32wFWBRpTh+WKxtjk
+	 rRPhX2dZgo3FoXIcyZ5v+2bIoE88J863q5kmB4j1Pu5DgYNx9BQ97oe28yYESkUUyiqt9
+	 tkZs+hCm+ftJ0i+FGjSo8qwMxYKHFhZc1cwRGoLrvanZgdtwzunKHH0gJ5kudP3TEiFYd
+	 qW83+XPcrvi7YelGQ1RQhyfyTmAZgN/86BnSBCaLHIvxAHaCFkbbdvZsMsOr2qLU4RxcB
+	 jbTA07C4X0YW3aC5JeEjkes4pmCWvu3QgO6ZUGVNilxaHGq2uH6f9bPe2h4biSEInhQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793142954;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793142960;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=3yLJES2nL61Anp97TrCq7ocFvAftT6kqwW8hv2ptu8U=;
-	b=CYlJM6adm6ItseZfQGVhOG9pNUcopwylOJgzvYVohZhHGe8tP3bYgyJGqJmfSzJ8pHDI
-	 5Z2kYUq0zoqJ2+5JWYQGhRw7hS+pI9KBNk9rYa2iS50WRlcISbF9NA1Lexuu+R3frykt6
-	 AE/hMbjyVGWt4iW8US4LLbLFttl02fgAxPQmVowmxWTgejzJ3f5WjKUzL6PPFOrm9sIoU
-	 NJva59Luz7GHaF2jWD1vexAg6KqiDvZIEfOd+l0TEB5mnpmfU2OFdxjox+dVPqa3WzDHF
-	 YpCqCJ+HzFZaFTICgJptEYLfhGx5JxIIi1RgrsgynKXiSDDyTtyuPlUB40h3vOwnBtg==
+	bh=PSRUuYVScs5YDAdK/rEKoIJPWiUmEgBEIyRrE4KDdTg=;
+	b=3MimNTYeyYIQ2AQgFVByOK7HUkBWc8Vwh/6Q1eAPG03OKEnbtG2lXzNXa/H3DCplnPiP
+	 iluqF02CXhzAw9179J7YaCTzpRMTjLdDJ8CuOhjv3dZH/QDyBNKjjsdM0B8HqcSdilJNV
+	 XB29h6WrPMXhXm3dEWgOd+Bo1ibqX0HXgYwPC+5EuJK9J6kY3WsDgvQh+1EWUWI0OSq87
+	 eNvuvm3DaXYv/0vCICfVJg/eQ33Nw3DXN1QYF96P7f0Bq52178LH2VHsF8ofx+tWfMoAn
+	 6NFpehjJLGJHJpe/+WS0EgmBZ4n8Vnx48uGXp4qo2FIhlwewNZpOrJG3qQ7jihA3wiw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ef1ptcbG;
-	arc=none smtp.remote-ip=74.125.82.197
-Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=G+zw5RHx;
+	arc=none smtp.remote-ip=74.125.82.199
+Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45228606A31E
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 23:15:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 45228606A31E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF563606A323
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 23:15:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BF563606A323
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ef1ptcbG
-Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-3662e7a9299so1429625eec.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 16:15:54 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=G+zw5RHx
+Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-33c35f5ca6cso619447eec.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 16:15:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793142953; x=1793747753; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1793142959; x=1793747759; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=3yLJES2nL61Anp97TrCq7ocFvAftT6kqwW8hv2ptu8U=;
-        b=ef1ptcbGT0dSTAdG38hGGwhRx7VkFWdasPaIi/yo94AOBbqgJdHCXSAwKbSMBKXjz8
-         qmm2hI5IbYQOxeF9DfADDZ0UnaM1JMEMAt/QTU8vxPRbRO/kN6Gaj1ALEsL5T9J2nTkd
-         aRa+nYFBNRFwoKpKrEDlyePRWZDogxC4aHh5XzDck1b2WPaeCBHPLD1XRR80Z+qiy85W
-         J6sYIF5AyW+TIUCcuD0zSvSHQuejcPfSU3ObEz/UhN2NMfCJ2pLEkEykNRh7DKIj4HVt
-         47fnVCvtyxbkCod1zroZgw2EsD0JJjpHZT3wY/oyqc6qdqTDMbW02be1tpYH5jCJQOOl
-         J7cQ==
+        bh=PSRUuYVScs5YDAdK/rEKoIJPWiUmEgBEIyRrE4KDdTg=;
+        b=G+zw5RHxOHYfSJzAcBvtcAUgySKLTQduT2upslEslEB7TTMyvHcpWf8HJPktoM3YVb
+         8vP6LnP5JvDum/9bEb+YFh1lGRgDTB2sF+tHRSYsapBUAhYHgXvV11Di4rd6PF0qUqnL
+         GGCZCs5z+1ngsadFJzQYQoqekNTcI6oCBP4Bp9pbRMrnPT8Bz3WiNmGHLpXvKnCg4bpO
+         B7nCY2KagweXZRTYfNGJ03K9WLHtahWlTEo0Rg5m9YiK+XYo8ez/u2qMX9JsYCpuWDpY
+         kpnHa+e+MlknAFXK4LVFAM5pCJQr+mObD7FVGUcAgQ/zgobu5kebn1LkfagPGXGB8zNN
+         V/VA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793142953; x=1793747753;
+        d=1e100.net; s=20260707; t=1793142959; x=1793747759;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=3yLJES2nL61Anp97TrCq7ocFvAftT6kqwW8hv2ptu8U=;
-        b=tbvsOrEIWiLsfXtNtI9MQ3QpoXuzlDCuK82LQiIxhRmR6up/p6FXmDLr1Vm1a9f0TO
-         9lg7p8buL0fXK/XO3vupVXVzbYdVFNvobKgBlAB6QYJUidFLZchGnwpKoVzdYXXTrrFI
-         bI/61tbBT5extUwYOA+lUZjuMwBLm0oTiQ6p4IbbYT28apaQ8Nl2CcLxG5GCT8Wf0Vt9
-         kJyyXhU/vu3qMvpqBpiBJ9HlVIGnFxZLZmRUPdPBL5BLDiKqyTSYHSWtY5WZCoizMwM9
-         0V8NOVHg0qaFvNXvIsV18h4wnjm43ApWlUlfa81QN1ZHfm9GqZYMLFULv2pCjRAgwaAn
-         WSLA==
-X-Forwarded-Encrypted: i=1; AKwUvBx5rgQuwK7DaKXtq3V+DpvOwRTwUoWQ6g43JEp4d1EQvpOp+AWiHiZY8qcI2FtZDMIIsjaAo0X007/kEcBQ5TIU@vger.kernel.org
-X-Gm-Message-State: AFq9FYIzYZBskm6n8OmUItjJ9/mnUFJwSmvSjkehXVLN8M2Ip7gp76JY
-	W9hRxQgebAOU4RifnJrEs7Cix264OkELkfskWNoV85w7GwcgSONTX+j2YwHq/aU1Tw1w0Ol7Mja
-	9EEoEVqeThQ==
-X-Received: from dycmb2-n2.prod.google.com ([2002:a05:693c:20c2:20b0:369:f60c:3f6b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:8946:10b0:369:f7d2:d7a0
- with SMTP id 5a478bee46e88-36a20407ad2mr1223463eec.25.1793142953145; Tue, 27
- Oct 2026 16:15:53 -0700 (PDT)
-Date: Tue, 27 Oct 2026 16:15:08 -0700
+        bh=PSRUuYVScs5YDAdK/rEKoIJPWiUmEgBEIyRrE4KDdTg=;
+        b=vruM6kERwls/NaLNNodcU72xg6n+dfgeMIz1VGfj1LrPy0W+1SJcP0mpimsQOtzJXr
+         byc53HoVVmACJOOBc+lCa7KtSpWW2AMLAKLSjHatj/mtAgcg7EfojGU3xtsOP+nDxX3K
+         ENDqQws8X9ZNg5zzlndWicgK7vMmUvHsra0i0SsDd9t6x36B3McwT1mKvGPrUeplX/tF
+         gYIabYBHDzDZRzXxsYLwZQvQ62Dsia+smwbcpbbiEaq3RwAdaltIXzujOnXcre4hLD8D
+         BETVlTcIHagZU2zfE36WKX+rvKUwFJ3io+icFBaMqZIhOJVg+x88ybGMo6exIMvhN2QE
+         8JlA==
+X-Forwarded-Encrypted: i=1; AKwUvBzcjYEN6czRiiNZsV1JJuXRMVh6Ps0VwoZRC1uwEoL1CPiRZODSmLuEAjy8xvedHOGn8twx7OFqxskFBJQf9cKX@vger.kernel.org
+X-Gm-Message-State: AFq9FYKcDcSgmlgNyB3zuAu74BwCh/wrzyIV+b45X1xuP3ZiMWMUAQbl
+	bbzfev4fxJxmMjX+asV/87Tezly2/QAiGFikl45M7YS1FAzwr1CsCsMYXt5RT92oXn7ruGoZpWp
+	C4xVSbk5C6g==
+X-Received: from dyclv11-n2.prod.google.com ([2002:a05:7301:618b:20b0:353:41aa:1e9d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:d508:b0:369:7c:bfce
+ with SMTP id 5a478bee46e88-36a2014adcfmr1777430eec.14.1793142958527; Tue, 27
+ Oct 2026 16:15:58 -0700 (PDT)
+Date: Tue, 27 Oct 2026 16:15:10 -0700
 In-Reply-To: <20261027231513.816148-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,8 +81,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20260928075237.3055101-1-irogers@google.com> <20261027231513.816148-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.313.g2479322e68-goog
-Message-ID: <20261027231513.816148-15-irogers@google.com>
-Subject: [PATCH v2 14/18] perf machine: Protect machines->guests rbtree with a rw_semaphore
+Message-ID: <20261027231513.816148-17-irogers@google.com>
+Subject: [PATCH v2 16/18] perf session: Add dso__session() and session-scoped
+ allocation wrappers
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, haghdoost@uber.com, james.clark@linaro.org, 
@@ -90,230 +91,219 @@ Cc: adrian.hunter@intel.com, haghdoost@uber.com, james.clark@linaro.org,
 	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Unlike struct dsos, struct maps, and struct threads, struct machines had
-no lock protecting its machines->guests rbtree. Synchronizing access to
-machines->guests is needed both for concurrent guest machine lookups and
-so machines__shrink() can safely iterate guest machines using
-down_read_trylock(&machines->lock).
+Add explicit session-scoped memory allocation wrappers:
+- perf_session__malloc(session, size)
+- perf_session__zalloc(session, size)
+- perf_session__calloc(session, nmemb, size)
+- perf_session__realloc(session, ptr, size)
+- perf_session__strdup(session, s)
 
-Add a rw_semaphore lock to struct machines to synchronize access to the
-machines->guests rbtree across machines__add(), machines__find(),
-machines__set_comm_exec(), machines__process_guests(),
-machines__set_id_hdr_size(), machines__fprintf_dsos(),
-machines__fprintf_dsos_buildid(), machines__destroy_kernel_maps(), and
-machines__for_each_thread(), and check for an existing guest machine PID
-under write lock in machines__add().
+When an allocation fails and returns NULL, if a non-NULL struct
+perf_session is provided, the wrapper invokes perf_session__shrink() to
+evict unreferenced symbols, DSOs, and cached debuginfo across the
+session's machines and then retries the allocation once. This avoids
+the thrashing overhead of periodic heuristic shrinking while allowing
+perf to recover from memory exhaustion.
+
+Also plumb a back-pointer from struct dsos to its owning struct machine
+so machine__session(machine) and dso__session(dso) can resolve the
+active perf_session.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/machine.c | 42 +++++++++++++++++++++++++++++++++------
- tools/perf/util/machine.h |  1 +
- 2 files changed, 37 insertions(+), 6 deletions(-)
+ tools/perf/util/dso.c     |  7 ++++
+ tools/perf/util/dso.h     |  2 ++
+ tools/perf/util/dsos.c    |  1 +
+ tools/perf/util/dsos.h    |  1 +
+ tools/perf/util/machine.c |  1 +
+ tools/perf/util/machine.h |  5 +++
+ tools/perf/util/session.c | 70 +++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/session.h |  6 ++++
+ 8 files changed, 93 insertions(+)
 
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index be257c77ab0a..c19de9ab4b24 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -1911,6 +1911,13 @@ void dso__delete(struct dso *dso)
+ 	RC_CHK_FREE(dso);
+ }
+ 
++struct perf_session *dso__session(const struct dso *dso)
++{
++	struct dsos *dsos = dso ? RC_CHK_ACCESS(dso)->dsos : NULL;
++
++	return dsos ? machine__session(dsos->machine) : NULL;
++}
++
+ bool dso__can_shrink_symbols(const struct dso *dso)
+ {
+ 	const char *name;
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index 64a118ea2524..5fa059ba6cf1 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -19,6 +19,7 @@
+ struct machine;
+ struct map;
+ struct perf_env;
++struct perf_session;
+ 
+ #define DSO__NAME_KALLSYMS	"[kernel.kallsyms]"
+ #define DSO__NAME_KCORE		"[kernel.kcore]"
+@@ -802,6 +803,7 @@ static inline refcount_t *dso__refcnt(struct dso *dso)
+ 
+ bool dso__can_shrink_symbols(const struct dso *dso);
+ size_t dso__shrink(struct dso *dso);
++struct perf_session *dso__session(const struct dso *dso);
+ 
+ char *dso__filename_with_chroot(const struct dso *dso, const char *filename);
+ 
+diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
+index 30ecc9a19244..8f3e3f3c6ce3 100644
+--- a/tools/perf/util/dsos.c
++++ b/tools/perf/util/dsos.c
+@@ -18,6 +18,7 @@ void dsos__init(struct dsos *dsos)
+ {
+ 	init_rwsem(&dsos->lock);
+ 
++	dsos->machine = NULL;
+ 	dsos->cnt = 0;
+ 	dsos->allocated = 0;
+ 	dsos->dsos = NULL;
+diff --git a/tools/perf/util/dsos.h b/tools/perf/util/dsos.h
+index 151efdba2aa4..d636e4c5cbaf 100644
+--- a/tools/perf/util/dsos.h
++++ b/tools/perf/util/dsos.h
+@@ -19,6 +19,7 @@ struct machine;
+  */
+ struct dsos {
+ 	struct rw_semaphore lock;
++	struct machine *machine;
+ 	struct dso **dsos;
+ 	unsigned int cnt;
+ 	unsigned int allocated;
 diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index cb9e34220036..fb83da8ef09b 100644
+index 8d0c545ee544..3e0d68fd5efe 100644
 --- a/tools/perf/util/machine.c
 +++ b/tools/perf/util/machine.c
-@@ -237,6 +237,7 @@ int machines__init(struct machines *machines, struct perf_session *session)
- {
- 	int err = machine__init(&machines->host, "", HOST_KERNEL_ID);
+@@ -81,6 +81,7 @@ int machine__init(struct machine *machine, const char *root_dir, pid_t pid)
+ 	memset(machine, 0, sizeof(*machine));
+ 	RB_CLEAR_NODE(&machine->rb_node);
+ 	dsos__init(&machine->dsos);
++	machine->dsos.machine = machine;
+ 	threads__init(&machine->threads);
  
-+	init_rwsem(&machines->lock);
- 	machines->session = session;
- 	machines->host.machines = machines;
- 	machines->guests = RB_ROOT_CACHED;
-@@ -247,12 +248,13 @@ void machines__exit(struct machines *machines)
- {
- 	machine__exit(&machines->host);
- 	/* XXX exit guest */
-+	exit_rwsem(&machines->lock);
- }
- 
- struct machine *machines__add(struct machines *machines, pid_t pid,
- 			      const char *root_dir)
- {
--	struct rb_node **p = &machines->guests.rb_root.rb_node;
-+	struct rb_node **p;
- 	struct rb_node *parent = NULL;
- 	struct machine *pos, *machine = malloc(sizeof(*machine));
- 	bool leftmost = true;
-@@ -265,9 +267,17 @@ struct machine *machines__add(struct machines *machines, pid_t pid,
- 		return NULL;
- 	}
- 
-+	down_write(&machines->lock);
-+	p = &machines->guests.rb_root.rb_node;
- 	while (*p != NULL) {
- 		parent = *p;
- 		pos = rb_entry(parent, struct machine, rb_node);
-+		if (pid == pos->pid) {
-+			up_write(&machines->lock);
-+			machine__exit(machine);
-+			free(machine);
-+			return pos;
-+		}
- 		if (pid < pos->pid)
- 			p = &(*p)->rb_left;
- 		else {
-@@ -278,8 +288,8 @@ struct machine *machines__add(struct machines *machines, pid_t pid,
- 
- 	rb_link_node(&machine->rb_node, parent, p);
- 	rb_insert_color_cached(&machine->rb_node, &machines->guests, leftmost);
--
- 	machine->machines = machines;
-+	up_write(&machines->lock);
- 
- 	return machine;
- }
-@@ -290,16 +300,18 @@ void machines__set_comm_exec(struct machines *machines, bool comm_exec)
- 
- 	machines->host.comm_exec = comm_exec;
- 
-+	down_read(&machines->lock);
- 	for (nd = rb_first_cached(&machines->guests); nd; nd = rb_next(nd)) {
- 		struct machine *machine = rb_entry(nd, struct machine, rb_node);
- 
- 		machine->comm_exec = comm_exec;
- 	}
-+	up_read(&machines->lock);
- }
- 
- struct machine *machines__find(struct machines *machines, pid_t pid)
- {
--	struct rb_node **p = &machines->guests.rb_root.rb_node;
-+	struct rb_node **p;
- 	struct rb_node *parent = NULL;
- 	struct machine *machine;
- 	struct machine *default_machine = NULL;
-@@ -307,6 +319,8 @@ struct machine *machines__find(struct machines *machines, pid_t pid)
- 	if (pid == HOST_KERNEL_ID)
- 		return &machines->host;
- 
-+	down_read(&machines->lock);
-+	p = &machines->guests.rb_root.rb_node;
- 	while (*p != NULL) {
- 		parent = *p;
- 		machine = rb_entry(parent, struct machine, rb_node);
-@@ -314,11 +328,14 @@ struct machine *machines__find(struct machines *machines, pid_t pid)
- 			p = &(*p)->rb_left;
- 		else if (pid > machine->pid)
- 			p = &(*p)->rb_right;
--		else
-+		else {
-+			up_read(&machines->lock);
- 			return machine;
-+		}
- 		if (!machine->pid)
- 			default_machine = machine;
- 	}
-+	up_read(&machines->lock);
- 
- 	return default_machine;
- }
-@@ -464,10 +481,12 @@ void machines__process_guests(struct machines *machines,
- {
- 	struct rb_node *nd;
- 
-+	down_read(&machines->lock);
- 	for (nd = rb_first_cached(&machines->guests); nd; nd = rb_next(nd)) {
- 		struct machine *pos = rb_entry(nd, struct machine, rb_node);
- 		process(pos, data);
- 	}
-+	up_read(&machines->lock);
- }
- 
- void machines__set_id_hdr_size(struct machines *machines, u16 id_hdr_size)
-@@ -477,11 +496,13 @@ void machines__set_id_hdr_size(struct machines *machines, u16 id_hdr_size)
- 
- 	machines->host.id_hdr_size = id_hdr_size;
- 
-+	down_read(&machines->lock);
- 	for (node = rb_first_cached(&machines->guests); node;
- 	     node = rb_next(node)) {
- 		machine = rb_entry(node, struct machine, rb_node);
- 		machine->id_hdr_size = id_hdr_size;
- 	}
-+	up_read(&machines->lock);
- 
- 	return;
- }
-@@ -935,10 +956,12 @@ size_t machines__fprintf_dsos(struct machines *machines, FILE *fp)
- 	struct rb_node *nd;
- 	size_t ret = dsos__fprintf(&machines->host.dsos, fp);
- 
-+	down_read(&machines->lock);
- 	for (nd = rb_first_cached(&machines->guests); nd; nd = rb_next(nd)) {
- 		struct machine *pos = rb_entry(nd, struct machine, rb_node);
- 		ret += dsos__fprintf(&pos->dsos, fp);
- 	}
-+	up_read(&machines->lock);
- 
- 	return ret;
- }
-@@ -955,10 +978,12 @@ size_t machines__fprintf_dsos_buildid(struct machines *machines, FILE *fp,
- 	struct rb_node *nd;
- 	size_t ret = machine__fprintf_dsos_buildid(&machines->host, fp, skip, parm);
- 
-+	down_read(&machines->lock);
- 	for (nd = rb_first_cached(&machines->guests); nd; nd = rb_next(nd)) {
- 		struct machine *pos = rb_entry(nd, struct machine, rb_node);
- 		ret += machine__fprintf_dsos_buildid(pos, fp, skip, parm);
- 	}
-+	up_read(&machines->lock);
- 	return ret;
- }
- 
-@@ -1303,10 +1328,12 @@ int machines__create_guest_kernel_maps(struct machines *machines)
- 
- void machines__destroy_kernel_maps(struct machines *machines)
- {
--	struct rb_node *next = rb_first_cached(&machines->guests);
-+	struct rb_node *next;
- 
- 	machine__destroy_kernel_maps(&machines->host);
- 
-+	down_write(&machines->lock);
-+	next = rb_first_cached(&machines->guests);
- 	while (next) {
- 		struct machine *pos = rb_entry(next, struct machine, rb_node);
- 
-@@ -1314,6 +1341,7 @@ void machines__destroy_kernel_maps(struct machines *machines)
- 		rb_erase_cached(&pos->rb_node, &machines->guests);
- 		machine__delete(pos);
- 	}
-+	up_write(&machines->lock);
- }
- 
- int machines__create_kernel_maps(struct machines *machines, pid_t pid)
-@@ -3134,13 +3162,15 @@ int machines__for_each_thread(struct machines *machines,
- 	if (rc != 0)
- 		return rc;
- 
-+	down_read(&machines->lock);
- 	for (nd = rb_first_cached(&machines->guests); nd; nd = rb_next(nd)) {
- 		struct machine *machine = rb_entry(nd, struct machine, rb_node);
- 
- 		rc = machine__for_each_thread(machine, fn, priv);
- 		if (rc != 0)
--			return rc;
-+			break;
- 	}
-+	up_read(&machines->lock);
- 	return rc;
- }
- 
+ 	machine->kmaps = maps__new(machine);
 diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index 973a59f7c26a..147ce343e370 100644
+index 1d1f46a01a38..ab67cef67c80 100644
 --- a/tools/perf/util/machine.h
 +++ b/tools/perf/util/machine.h
-@@ -151,6 +151,7 @@ typedef void (*machine__process_t)(struct machine *machine, void *data);
- struct machines {
- 	/** @session: back link to owning session if there is one. */
- 	struct perf_session *session;
-+	struct rw_semaphore lock;
- 	struct machine host;
- 	struct rb_root_cached guests;
- };
+@@ -164,6 +164,11 @@ static inline struct perf_session *machines__session(struct machines *machines)
+ 	return machines->session;
+ }
+ 
++static inline struct perf_session *machine__session(const struct machine *machine)
++{
++	return machine && machine->machines ? machine->machines->session : NULL;
++}
++
+ void machines__process_guests(struct machines *machines,
+ 			      machine__process_t process, void *data);
+ 
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 3f35c7affc29..3d4bc9c0063a 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -4274,3 +4274,73 @@ size_t perf_session__shrink(struct perf_session *session)
+ 
+ 	return machines__shrink(&session->machines);
+ }
++
++static __thread bool perf_session__in_shrink;
++
++static bool perf_session__try_shrink(struct perf_session *session)
++{
++	size_t freed;
++
++	if (!session || perf_session__in_shrink)
++		return false;
++
++	perf_session__in_shrink = true;
++	freed = perf_session__shrink(session);
++	perf_session__in_shrink = false;
++
++	return freed > 0;
++}
++
++void *perf_session__malloc(struct perf_session *session, size_t size)
++{
++	void *ptr = malloc(size);
++
++	if (unlikely(!ptr && size != 0) && perf_session__try_shrink(session))
++		ptr = malloc(size);
++
++	return ptr;
++}
++
++void *perf_session__zalloc(struct perf_session *session, size_t size)
++{
++	void *ptr = zalloc(size);
++
++	if (unlikely(!ptr && size != 0) && perf_session__try_shrink(session))
++		ptr = zalloc(size);
++
++	return ptr;
++}
++
++void *perf_session__calloc(struct perf_session *session, size_t nmemb, size_t size)
++{
++	void *ptr = calloc(nmemb, size);
++
++	if (unlikely(!ptr && nmemb != 0 && size != 0) && perf_session__try_shrink(session))
++		ptr = calloc(nmemb, size);
++
++	return ptr;
++}
++
++void *perf_session__realloc(struct perf_session *session, void *ptr, size_t size)
++{
++	void *new_ptr = realloc(ptr, size);
++
++	if (unlikely(!new_ptr && size != 0) && perf_session__try_shrink(session))
++		new_ptr = realloc(ptr, size);
++
++	return new_ptr;
++}
++
++char *perf_session__strdup(struct perf_session *session, const char *s)
++{
++	char *dup;
++
++	if (!s)
++		return NULL;
++
++	dup = strdup(s);
++	if (unlikely(!dup) && perf_session__try_shrink(session))
++		dup = strdup(s);
++
++	return dup;
++}
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index fdec65fcfee6..90ae16a631b0 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -219,4 +219,10 @@ uint16_t perf_session__e_machine(struct perf_session *session, uint32_t *e_flags
+ 
+ size_t perf_session__shrink(struct perf_session *session);
+ 
++void *perf_session__malloc(struct perf_session *session, size_t size);
++void *perf_session__zalloc(struct perf_session *session, size_t size);
++void *perf_session__calloc(struct perf_session *session, size_t nmemb, size_t size);
++void *perf_session__realloc(struct perf_session *session, void *ptr, size_t size);
++char *perf_session__strdup(struct perf_session *session, const char *s);
++
+ #endif /* __PERF_SESSION_H */
 -- 
 2.56.0.313.g2479322e68-goog
 
