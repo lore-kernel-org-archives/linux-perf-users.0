@@ -1,121 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.196.76
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793131023;
-	b=37+s1OArlLf3bIKiDk18R5C28GoqEFP0Qw3Aa2GRpp5JLboP/rr1XP0DVvdUguT5llhP
-	 6gllVGs5jWKXoNinxtpWlDBBUwWQzxemXWbL9aKPARq4PRga6aeIcPqpPX78f0aEGqcjt
-	 e0I9T15B0vGf0rGSFzK4r87MWaT4W1mjLUlsPh4nBGwWuBDZyypJnrC25ualxqvfXE+wA
-	 ABWWd7/sCjYooZNfVZ20a2AJrONhFlV5iglLzdL6DklKt1Au7LgDYjskHq1Kep6L1Gkj3
-	 ix9B6opnGzm9hubkKUNP357hYZhvdS4O+vTajuOWNQ+y5kfhhYEmE9b+2DgMBndnhHw==
+	t=1793132781;
+	b=CN+KYaHjxGuK9k0rJ400/BT6DRY7v5OLHgGzrlrCVMnF4JvZE4NWDxU2rXsaHusHooww
+	 KG57h1hCIk2WSuH9OGsaQvXhTP/2iKC09BUKmalGeDUS6iKZY9gVkpkOgfh6odKKCRYkM
+	 MYhz0Uu+aQUqXbi+krc0NMP1S2gBx4kcywXnQrYYoyvKUdwWq2zGaozN9cFpCuVxoAkRn
+	 QvbR7vdM9aRKnz09t9uaimWy8kiSiRUyWPkaHdpPge8/EqXSjIxvqwZGD2Rd1KlkJK/jr
+	 Ehk4QqVrpYW8rGQ1XgidL8fYiQBNrWl4I1deZScz9Fz+DhxZS4a9yQJqeu57cK9QiXw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793131023;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 X-Received:MIME-Version:References:In-Reply-To:From:Date:
-	 X-Gm-Features:Message-ID:Subject:To:Cc:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=D+j8vussuX24sRS6D0PknwPrpWxpe1hpJSMo0M9lmug=;
-	b=pLFajTtMSlfuAMdyHR2UyFi6pCbA7bsQR6SUe8gJG2MY2RqVevdbHAoLk+3/pPiVislY
-	 qEVHqt6qHZLFzmJCCx+tbGikxA4/Sfd7ffVJfkNe9IcAElSyrwc0Jxo7vQx0Jk8ibac/H
-	 /PRUWOFS+wYN1BnfOLN/nYDngP9ZTi+NihkO244U4MsqjxSbPvcVB3PCFOVw3sQjofaDI
-	 kxj5bSLW+Mlm0NEEOmNZlHu3G7+cNyhEW3QNJYSxqkzratZs5osQ8MTuAgggLO7KZh3cp
-	 HxxjRdESdU8sXBY+JV4ESXz6X/rIzHS7oKEsWRVCNm3YJp+PfrU+ATTWkl8Ss4Ed/EA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793132781;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 References:Content-Type:Content-Disposition:In-Reply-To:
+	 X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=p/kGq+QwfEMYNE6SzfHZXGafcdo2h5wlqVOSBdnFbVw=;
+	b=VpNX5GPmoV65/+UYS15B1DqAiYlV2fCrM4s7lwhLIItYeq1rzB6th5QTlCLxqMjlLnms
+	 ZsgkjIJzXW9O15eP+yCvHtl5VZPEB71O+HCxG7EnZo51nIQQrQ+TpuZE/bF5eOtvtz9gC
+	 Fp2VSm8v91Ej9tRgfIQibL1VHoLA2XZHjnvO1RRRmRJfCfkiFMbi4mbSK4HzcBA+AkAH2
+	 +sRULxK6fp+1hSXsx+9T33QR1HFj6ZAuKe5laJOAILHWc3l3nvjCCZf+ORH5iEgICZxYu
+	 58M9r6oHunKjHPKhffRnNQlTwsZQJoehtM0LvEloYuArykRGif1FtyYxRoVPviSNj6w==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=b5ZgUb4X;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=google header.b=SVXE1DR+;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=170.10.129.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	dmarc=none header.from=atomlin.com;
+	spf=pass smtp.mailfrom=atomlin.com;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.196.76
+Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020076.outbound.protection.outlook.com [52.101.196.76])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816D4606A31D
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 19:57:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 816D4606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=b5ZgUb4X;
-	dkim=pass (2048-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=google header.b=SVXE1DR+
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1793131021;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D+j8vussuX24sRS6D0PknwPrpWxpe1hpJSMo0M9lmug=;
-	b=b5ZgUb4XrlB+gO7I7jDwVdOkJgD0gEPUKcd2B12cjCe4ILcor8RcWBW9WJOdp2ZXN8BSCY
-	jl5AsbrwlXXdzgcFtvNJjWL148K6YiIJVh/4vKFeLJrUk0rtX6QgMVoOElgDfyAqPcf7h4
-	hPCpL+llEcLRDHnxTNqfuvh/4xvzJW0=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-649-DH-g7uEdNDCCVn7_yP3U4A-1; Tue, 27 Oct 2026 15:56:58 -0400
-X-MC-Unique: DH-g7uEdNDCCVn7_yP3U4A-1
-X-Mimecast-MFC-AGG-ID: DH-g7uEdNDCCVn7_yP3U4A_1793131018
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-48e0af48c18so144299f8f.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 12:56:58 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1793131017; cv=none;
-        d=google.com; s=arc-20260327;
-        b=skfaNp3o4jv8wzZ10ixvLUHZQMuZF4jUn8gCUuj9WhA7Ayn6cuEeOZaLIASghUUiis
-         GX0QtSrUZ3l6PC29YLaKRdr/otPWXj40+1jrj8mRpRnjJGDYpspkxKr9T4qJS6HD6SOj
-         aKVXostaUPrgBUcAFIjssPlpraR3EbwV5UsbJSwhEIRrH885/7LYBse7SftlJv02Pc52
-         P3epALx174p4dMkVywvqV2W7qpa3h0pu9QrQY08i2LSfrho1P9kyKnQtcOzSJ2CGadHb
-         UPzpHyyNOw5mRD+i7uNtqeTdD1ePR8v1+YZZdpbkmp+VZf3eLHMFOY+eTi5sn3GAJUrQ
-         s0sA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=D+j8vussuX24sRS6D0PknwPrpWxpe1hpJSMo0M9lmug=;
-        fh=UnkfR9JJWynSpRZv1Gq9Pfw6LQ4U9ANMpRn0WBWeGXQ=;
-        b=EUWPRWx23uEXNCkzsEGmTcejid4Vd7w/ZMfz9l+Y3WwxqIv4a1fepDun/+cYN82/uR
-         MY7aoXvHcJRv3vLgJAk3Gl9AZ5/NUXI9mEfKYZmMUsfbQqYXOk8uw5O+yT4ixikxBpJZ
-         d45uNvNMwZKB8SbZLz6Lx9zxS0NfQRDc5j7S/HTuzokJMtvIyhjD5d4jTMs3G+d1VLEo
-         EcnExf/9fPzW8sjiDwCHZeQ97WqF2qorH6B694msMlNa1UBLBLNKGVTyk+zBAasg6rQT
-         XYn4jnnllZJNoBAeYbTQbHVwKObb9Zlw5xHvuAXt+4kDp3eRcxRwAzMcPcZluYPBde3r
-         mhfg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1793131017; x=1793735817; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=D+j8vussuX24sRS6D0PknwPrpWxpe1hpJSMo0M9lmug=;
-        b=SVXE1DR+m9o03wVvqdx5FFCzys5kUHb28iyLFscl0NOwn9Ab+MMfkocBkTS4pEHT8z
-         pjdCj0vHNGExw4clRXPEN112mM3dUr76eQuoMgU5KmhRnAcLvBzMn5jsd29IpKxLi7jj
-         SE7toaowuciM4JOVoOLqn+xqsa/bFQhTCwplkpJDayAUcL7g465Lp0GZeLyC6wAEe3mz
-         0fbYaR8dvDCzYVAycw3JgXNw7xEAP6JCJCpDD+ptPUtgljoBGC+LL2WZTyIFRMHWwume
-         5xAz8CMLt5BI22zlN+5GwRkGtqR/kxu99Orc+h7VxEiAFmosn6F6SH4nLogEMvduVQgC
-         5W7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793131017; x=1793735817;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=D+j8vussuX24sRS6D0PknwPrpWxpe1hpJSMo0M9lmug=;
-        b=mgx2g/MTSfdyO8dHrfhGYNg+sZnmM2cWKs5fPYj0OV3w29nZTUdptwNrjyKYzgn95u
-         juCiAA7K6fJfcIhbc6aP/uScJ2CQ+GjXm4D7W7cL3NrqZbCaG+3QN90ucuUYruXixr7L
-         +pUty5uxJp4vhsbGM0D0Vt+qfa5oxL5k1ExvOKRXpPFso0wNIjgDPKWaSomcuUdE9fsn
-         Au+YNu2MVeppVMVSI1ySIWwdvVzQAPjlvkOzZKfcHWGDBT5Mf5yZSOKeSX68sDf7FDDJ
-         UP+VoOdph0Xcvhy5w/5RWJPKawN8kJv8NH7+TPPnsllK3nuLQN0jED0h+s8J4BHqT3KR
-         kHdA==
-X-Forwarded-Encrypted: i=1; AKwUvByMj/CZhnCaS5I5r1HVYFvEecLI1RVIRCdgQ73Y22HeZdC3SeEZn/xXiAlXxKY28mpVtoC8PFb3h9QEuy1lIIL/@vger.kernel.org
-X-Gm-Message-State: AFq9FYJbzDVaXMSszvOKyMkTb/ahEloOgi/QtOy8LAeDGAnXDxmcEQhE
-	Oxn/d9YI17t0ahUkHIWXH6j0MRWmDypc/u6+2Ttf7Ba6uyqpMoH2XfuVDp+zdtPo5KUcWON1La7
-	aj6F5OOVBUg3iC1H9HrJa396bfMhdny0W4AR/Ai1ETlpF7aU423GJlc/xwjL1WD7HZmMadCLYHh
-	7dCiihJsMT5chUKrmGJF3dsvJVccgGtNBfDasA0Ia17Npeug==
-X-Gm-Gg: AYBFou0Clw6gPB2B5UNj6We79wgwtNkzJJdK5DffbzdH4zmM45+Z2N1g6iEjFVWlcFU
-	uX3SMT/VyLeCemV90TewqNdc24X5x9O/0o/FkxeHEDC4w5Wm/FMdgrLz2WH2fGRg6hIV/helFOG
-	stBCp8LxWCkVvDTchwhSjb7ffkkZyA5yDkTC1ISt7VbdU1WmuMy+PkFoPoK2mOu/atc9S3wVrVO
-	iYoSv5wAAwwcdU7Zw==
-X-Received: by 2002:a5d:6f04:0:b0:48d:f7ef:cd1d with SMTP id ffacd0b85a97d-48e5d2e7526mr1186675f8f.9.1793131017571;
-        Tue, 27 Oct 2026 12:56:57 -0700 (PDT)
-X-Received: by 2002:a5d:6f04:0:b0:48d:f7ef:cd1d with SMTP id
- ffacd0b85a97d-48e5d2e7526mr1186634f8f.9.1793131017140; Tue, 27 Oct 2026
- 12:56:57 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ECF1606A900;
+	Tue, 27 Oct 2026 20:26:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7ECF1606A900
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RWmAndaYLB0uHBCrwaKNo6KAErEKIceubBFN7Xw5L6JCUfF65e5Pxx+Cbm4RnquWZGCZUKCcgbA9wKQPopiT7wCsDkpxXsCxU+qsKob4jk2+HSANxk/FfvWszqEZKwwDuCHXhyQZZIIIloTgyKaAfPz161YQXMpFTnV193D0IXMwrv12CvGv0VK+6PXjxWg/BuDD8CXSPdnxABDeKnAjnm6iVqIK+2JHYPvbV0LLgnUuoX2ribhgK5/6zYFDFG/B4Gg0oESlbhIrozLqCuNtLU6H5/qVgqHWtUKvWxNS5WQt2HXOqKRTsrQZ/PEh6Zda2QXUPIxOhu5vvIPFokljCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
+ bh=p/kGq+QwfEMYNE6SzfHZXGafcdo2h5wlqVOSBdnFbVw=;
+ b=J6o4USQi+QoEQzIdzwyfaIEtq8rFz3wj1QmCBL0hhBfXbC5ItDzuf2aKdwvRkfD4ACdXhfvzhVjlrPbdITA9tQhc3XbRZtfiGF1MVYe3gWIlDK8OA1PREuqUu80E8+vqn/kAOpPiy9/E5sStLBuqTz8prAi4kRBfy1Z+hUMRnvYhw0Pz2vMiQUHgoQHr6gJCGSKEGXMaGWELhFnlHey556aysSSxcZstgIZ4RRioBofomqqsK7dJO76ZIbm96op9d2lYJ9X7uIQz6TB92WFOnQHO9wuxTMt4khyBbqqlE/M5cTJFop4gT1WM8iNO6Nz+4Au4qDUqLsLcw5ULm1BD4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
+ by CW1P123MB392182.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:282::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.546.22; Tue, 27 Oct
+ 2026 20:26:16 +0000
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230%5]) with mapi id 15.21.0546.021; Tue, 27 Oct 2026
+ 20:26:16 +0000
+Date: Tue, 27 Oct 2026 16:26:11 -0400
+From: Aaron Tomlin <atomlin@atomlin.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Zhan Xusheng <zhanxusheng1024@gmail.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 5/7] perf inject: Use perf_tool__init() for
+ --vm-time-correlation
+Message-ID: <xrwroz6mycibzep7cqos6v5kvsbrztni4lbqobe2gbsz7kuwpa@o4bf76aka2ax>
+References: <20261025220349.1244499-1-irogers@google.com>
+ <20261025220349.1244499-5-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20261025220349.1244499-5-irogers@google.com>
+X-ClientProxiedBy: MN2PR06CA0002.namprd06.prod.outlook.com
+ (2603:10b6:208:23d::7) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:183::5)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -125,233 +91,112 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260930063919.608911-1-himanshu.chauhan@oss.qualcomm.com>
-In-Reply-To: <20260930063919.608911-1-himanshu.chauhan@oss.qualcomm.com>
-From: Jesse Taube <jtaubepe@redhat.com>
-Date: Tue, 27 Oct 2026 15:56:43 -0400
-X-Gm-Features: AclHuK-lqklbDhOzhOwUlRaNa3EOHyRR5yyvs5msGAGwIR1j6q2MQbBTAlwUQTU
-Message-ID: <CADRr4bcoMn2oq99psho5v3rqvtF0ZamTNGmozb2wMDUns0x4sQ@mail.gmail.com>
-Subject: Re: [PATCH v7 0/8] riscv: Introduce support for hardware break/watchpoints
-To: Himanshu Chauhan <himanshu.chauhan@oss.qualcomm.com>
-Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	alex@ghiti.fr, aou@eecs.berkeley.edu, palmer@dabbelt.com, pjw@kernel.org, 
-	qingfang.deng@linux.dev, shuah@kernel.org, thecharlesjenkins@gmail.com, 
-	cp0613@linux.alibaba.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|CW1P123MB392182:EE_
+X-MS-Office365-Filtering-Correlation-Id: a10c01ff-e3eb-4bff-cc71-08df34688d1b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|366016|376014|7416014|1800799024|56012099006|261021121427099003|4143699003|261021123027099003|261022105027099003|261009223027099003|10067099003|18002099003|6133799003|22082099003|3023799007|261026140227099003;
+X-Microsoft-Antispam-Message-Info:
+	DohuczveYwvbwagtjDgD6VFcdvHNhrH7SqbJ3rmVQ6dwLfC8tloYtqiyhUOzx5HQ+gTCVS7+o/6mnOXL7Qq3o4COFA+bgMqeEZ3C6EfpYz6VFhioGVFS/h+V/1CAWb20blIxJwUu/+NCVh1KmXuh7/fUPUYPf8F+0mrnL5TjWcI/gbiCPToQUzQoTm0TcnZpH40e15GjwdzjXEcrLYhT61S5UUW3+k0DGFhjdh5w1R45p5VMx5eDliNU2tKfFVmMTOY0Y9v3e/518wx1XYuiCxtnwZiRH4c+4lAXecXk6HFWUvgj8taR37Ovo0T+r3zT96vtUOHQ+2ZmHqa6VF+GLdRs0EczH3UVPhssZQIDO0iq7OwcqbjpKuVYtXQP5WNtjXiVQkd/dhm4RM5WsUM3ox8DRHZUZLw5hhvswCwamjPA/0Oqpku7ozjUCsD8kfzHpUuTvVl3SA9hOb3DVV0PPFpHXbc76fhW83aacCFJdYUyeO8r1AUrsT2NyEy3bAHmzWndu3+Do+JbMZ2SMbhkNYmGbnWgQBWbslYkqIhlM+TDDQ0+lnZhcfFwefVILp6VKNPvxT2Qq37uMR79jiHB1WA2kb0n/qWrmMis2r92/HaPHYl587D71lUH6rbMKDP7ww4EUg0WqU4dT+5axN5ryhZFfyjEUDXvwX6Jt9GH1Qw=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(376014)(7416014)(1800799024)(56012099006)(261021121427099003)(4143699003)(261021123027099003)(261022105027099003)(261009223027099003)(10067099003)(18002099003)(6133799003)(22082099003)(3023799007)(261026140227099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?b21OK0hiNC9LTytYcWJnZ1JLeSt6K2wreERLUExyRHRwT1hOZEhOb2I4ZGJ6?=
+ =?utf-8?B?OERXTVIydXA3em83ZUVDU0NzKytZRUZtY0pxQU5ERERkb1llaWVXR293MnUy?=
+ =?utf-8?B?aWRuUWQ3MTJGRE5DNGZKQThlMlRSNElScnpIaW9VVW8xY295Rm5NK3dhdUFa?=
+ =?utf-8?B?V3VManpVc2FrcFpVUlBoRjBjWnRZTzJnWTc3TjhQZVJzU3YzMjVxK3lra1Vm?=
+ =?utf-8?B?S09YZ0FpdHg1WHArZTJmMFZYcXF5NEtEdFMxZWE3dW1mMTNlZHBTeEhHdmxE?=
+ =?utf-8?B?a1RvUW9ZWVErMkJqSXdBQjhIQjFRMGUwWUVGQmdvUUovak54eDZGWCsvVWdw?=
+ =?utf-8?B?TnpjWmluY1VrbHR5MGYvYzBtelNzWEFRQ1JhL3RRZmE3QnlITDNQeTdWNDFG?=
+ =?utf-8?B?WUcxTGQ2WXVvZEZvZFpGelVUbVlBSGt5Ly82QTE1R0pXNnQvVVI0REpsb21J?=
+ =?utf-8?B?MFk4VmJmem9WVDNUYktqaS9jUmlHTXh0bjV5NnlaamJIdDdhY3Q2SG9aNm9V?=
+ =?utf-8?B?RnZzcmdENjVXM1lURndxMGNZclp2QkhkS29tYXhic05lckFaSXpyRnVzcEZ1?=
+ =?utf-8?B?UHoxMVRnTnFvYWZnQ3QwcjAxYlhtL0ZEZjZCVGtCY2Z0OXoraHIzZVBpdDRI?=
+ =?utf-8?B?VWtBY1hZNWJZQmJIejhUWURraVI0dmJua3ZiUVJKQmFBZlFoRW9QcUJGOXpi?=
+ =?utf-8?B?K0h1Z2pNUGZJVGg3My90YlRFYy85RFI1Ymk5c3pQNUdlZjZZTFFXdEU3NDZ3?=
+ =?utf-8?B?VUNXUDAzcDVsYWFzNTBwSHl6M2RXR0ZnbDFPLyt1SkNwOC9qeXB4bWVlc09P?=
+ =?utf-8?B?RE1NTjl4NGVvdDMwNFZtTks5dFl2aWM3UkdZZFk3Qk1NWE85RndqY2IwdjU4?=
+ =?utf-8?B?ZWYzVVpTRk0wMitLallhN3BBYzF4YXZjb0gwWStoaDB2eVZ0UUlkTlN5THV5?=
+ =?utf-8?B?NlRubW5nckFxQjBuK0Z4N3pIdE9WVE81OEMxWmZZdU9ZZHZ0MDJneXJLSEl1?=
+ =?utf-8?B?bnZvVXdWUklRMlFyQURLa2NWL28rakhjOEdOS3NPMkc2azZ6NFJoMTlaSHRj?=
+ =?utf-8?B?dUt0Uk5GcWNZN2gzYm9qaG1yeDlTN0hpb0JGVUw1a0UyaTRMTVQ0bG1WTloz?=
+ =?utf-8?B?a3MwRTF5Uk5nZ3dneXdzNHlmT01JbEVaRFFLK1Y5MmtpaHp5Nkx0VWJSb1Ny?=
+ =?utf-8?B?YWdsYWIzb2dwcjVERVBRWWpVQm41R3d2R0R4LzR6bzUwc3Y3Zy9qdkdlTlpN?=
+ =?utf-8?B?NTliU3NMemhnWmcxZ1lvbmRobzBabVZ6dTlWeE9jK1hpUUMyMWxVUDRHeG5K?=
+ =?utf-8?B?RXFnSjlHR3l6VEJhTnZaVDVoa0FhamRrSlB0elUrZ0VOY1VIc1dXMEluWkdR?=
+ =?utf-8?B?cjJUSW9BNldRSHNXd0JYajAyNXlXYlB5T3YwaW0rMDBTeXFZNFY3MW1tckN1?=
+ =?utf-8?B?R1RBM3FZVGlCZncvM0o2Q0NkNDg0VzBVam14Ujg3SDhMM0c4dTBGVFgvblBK?=
+ =?utf-8?B?WE9Zd3JJckQ4bVhVT1dZVFhZajdrUHV0MU4vWUx4eCtpOFZhVEVQSGpVMFk3?=
+ =?utf-8?B?bm5ZVzcyNWpqNnE1QUpqV2JGbnNxRkxUbUFMTjhSbjVwSStkOGZKcXpuTW5r?=
+ =?utf-8?B?cnJJRGwzZWhYck96QVFqWDdmWk1lSGppRVNZSlVVWE1vazE1QjVNR21DNHEz?=
+ =?utf-8?B?azJHaXFFNFR4VWRwWGJGVUZJWWVsSkRHUU5BSi81WWlDcE1tS3BwbEFIZnRi?=
+ =?utf-8?B?bGZGWkxYL3p0VHMwRVFaZ3JYNmpOQUpBZXNoVTlJRUhGTVhrZm84SURSaFRN?=
+ =?utf-8?B?T1MvNGtUQVYzajdQenlMUzgxRlliQVhIR2RvY1A0N3FVZTV1UktCQjBhNWo4?=
+ =?utf-8?B?RXdWOHVnYTVFMU12c0Y5ekRyc2dVdlBienhIemxpa3B4ejBGQXZIME9PSUV4?=
+ =?utf-8?B?SURFVkhITUZ3QWFlVVhiang0RUJGTG0ybDNhaTE2ay8zbEtuNzQzMVlEclhH?=
+ =?utf-8?B?ZE9KdWQ5MjIyZmFBNFlDZW5pYUVGRlNsZzNZelBVYnFtZDJXY21mRWJiUHpk?=
+ =?utf-8?B?L0pjQytLa21OU01wU3JYQndNUG5iUkh4L3I2QTd0YlBqWkZleXl0U1p0ejll?=
+ =?utf-8?B?MHEyTHRLaE1JVFVjNUQvbDhXMkhlTy9wM29peWxoYlhvdTFQd3lTZTYyRi8r?=
+ =?utf-8?B?WHZXbERtUCthd251NU8wc0lSb1hFckkxOGp2dFVwOHBZS0M3OFJwdXczWWJa?=
+ =?utf-8?B?TlovazlMNXlGMU9BMDZZNDRodnEyQjdkV0dYbHh4TDJnOXprUXVXcGljblJN?=
+ =?utf-8?B?S1d5dmNabUMveEZ5R2xwQ0xGREcwMW4xK0ttak9ZdjAvODA2VERDZz09?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a10c01ff-e3eb-4bff-cc71-08df34688d1b
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2026 20:26:15.9510
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: t62oCQYK+YAqDpUgkYnXiFz0/1Aae2DXkLCmZVuawyRle0jpC58hSZE+Cp72GpyoWd58b1Z8oGKB9mmEqvnMdg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CW1P123MB392182
 
-On Wed, Sep 30, 2026 at 2:39=E2=80=AFAM Himanshu Chauhan
-<himanshu.chauhan@oss.qualcomm.com> wrote:
->
-> This patchset adds support for hardware breakpoints and watchpoints in th=
-e
-> RISC-V architecture. The framework is built on top of the perf/ptrace sub=
-system
-> and the SBI debug trigger extension (Sdtrig).
->
-> Single stepping is ready with software support and mc6. Once, icount is f=
-ixed, the software
-> supported single stepping will be put under a Kconfig option. Until then =
-its default.
->
-> Virtualization of debug triggers are pending. Patch set is ready but need=
-s testing.
->
-> Changes from v6:
->   - Rebased to v7.3-rc5
->   - Added HIT0/1 bit check/clear in breakpoint handler with EPC/Bp addres=
-s check
->   - Removed dbtr_shmem null check as pointed by Qinfang Deng
->   - Fixed MEM_HI/MEM_LO macros to work both on rv64/32
->   - Changed unsigned long to __u64 from hwdebug state struct and dropped =
-packing
->   - Gated HAVE_MIXED_BREAKPOINT_REGS with PERF_EVENTS
->   - Software base single stepping with mcontrol6 trigger type.
->   - icount is still under development.
->   - Moved and and reworked instruction decoding code to a common file.
->   - perf test suite now supported.
->         - Breakpoint overflow signal handler
->         - Breakpoint overflow sampling
->         - Breakpoint accounting (needs sudo)
->         - Watchpoint
->           - Read Only Watchpoint
->           - Write Only Watchpoint
->           - Read / Write Watchpoint
->           - Modify Watchpoint
->   - __test_function in "Breakpoint overflow signal handler" is name noinl=
-ine
->   - Fixed warnings from checkpatch.pl --strict
->
-> Changes from v5:
->   - Rebased to v7.2-rc6
->   - Simplified Macros in hw_breakpoint.h
->   - Took care of the review comments
->   - Added ptrace support for hardware break/watchpoints (new patch)
->     - PTRACE_GETREGSET/SETREGSET via NT_RISCV_HW_BREAK / NT_RISCV_HW_WATC=
-H
->     - PTRACE_GETHBPREGS / SETHBPREGS for direct single-trigger access
->     - HAVE_MIXED_BREAKPOINTS_REGS selected (break/watch share trigger poo=
-l)
->     - flush_ptrace_hw_breakpoint / ptrace_hw_copy_thread wired up
->   - Extended selftest to cover ptrace-based hw break/watchpoint paths (ne=
-w patch)
->
-> Changes from v4:
->   - Rebased to v7.2-rc4
->   - Fixed rv32 build error
->   - Added pr_fmt to print KBUILD_MODNAME
->   - Changed type of shmem_pa to phys_addr_t
->   - Use per_cpu_ptr_to_phys instead of __pa for per-cpu allocated memory
->   - Print successful registration/unregistration message when no error
->   - Added RISC-V DEBUGGING section in MAINTAINERS and added myself as mai=
-ntainer
->   - Fixed warnings from checkpatch.pl --strict run
->
-> Changes from v3:
->   - Rebased to v7.1-rc3
->   - For watchpoints, check tdata1.hit via SBI_EXT_DBTR_TRIG_READ and keep
->     STVAL-based matching as fallback
->   - Improved watchpoint matching when STVAL reports the lowest accessed a=
-ddress
->     for wider memory accesses
->   - Program execute breakpoints with SIZE=3D0 (match any size) to avoid m=
-isses
->     with 16-bit/compressed instruction addresses
->   - Updated selftest to avoid deadlock by replacing unbounded sem_wait() =
-with
->     sem_timedwait() timeout handling
->   - Updated selftest breakpoint function so it cannot be inlined or optim=
-ized away
->
-> Changes from v2:
->   - Rebased to v7.0-rc1
->   - Fixed warnings from checkpatch.pl --strict run
->
-> Changes from v1:
->   - The patch adding the SBI extension and function IDs is already merged=
-; this
->     series builds on top of that
->   - Added breakpoint selftest in tools/testing/selftests/breakpoints/
->
-> Specifications:
-> ~~~~~~~~~~~~~~
-> The SBI debug trigger extension is specified in Chapter 19 of the SBI
-> specification:
->   https://github.com/riscv-non-isa/riscv-sbi-doc/releases/download/v3.0/r=
-iscv-sbi.pdf
->
-> The Sdtrig ISA is part of the RISC-V debug specification:
->   https://github.com/riscv/riscv-debug-spec
->
-> How to use:
-> ~~~~~~~~~~~
-> OpenSBI:
->   https://github.com/riscv-software-src/opensbi.git
->
-> QEMU:
->   https://github.com/qemu/qemu.git
->
-> Linux Kernel:
->   Apply these patches on top of v7.3-rc5
->
-> How to test:
-> ~~~~~~~~~~~
-> From the Linux kernel directory, first install the UAPI headers (required=
- on a
-> fresh tree so the compiler can locate <asm/ptrace.h> and the new
-> NT_RISCV_HW_BREAK/WATCH definitions via KHDR_INCLUDES):
->
->   make headers
->
-> Then build the selftest:
->
->   make -C tools/testing/selftests/breakpoints/
->
-> This produces breakpoint_test_riscv under the same directory. Load it on =
-the
-> target and run. Sample output:
->
->   # /apps/breakpoint_test_riscv
->   # [perf_event]: Breakpoint test passed!
->   # [perf_event]: Watchpoint test passed!
->   # [ptrace]: Breakpoint test passed!
->   # ptrace(PTRACE_GETREGSET): Number of watchpoints: 2
->   # ptrace(PTRACE_GETREGSet): addr: 0x82888 control: 0x8080
->   # [ptrace]: Watchpoint test passed!
->   # [hbpregs] breakpoint readback: addr=3D0x10472 type=3D4 len=3D4 ctrl=
-=3D0
->   # [hbpregs]: Breakpoint test passed!
->   # [hbpregs] watchpoint readback: addr=3D0x82888 type=3D2 len=3D8 ctrl=
-=3D0
->   # [hbpregs]: Watchpoint test passed!
->
-> Perf Test Suite:
-> ~~~~~~~~~~~~~~~
-> ~ # /apps/perf test -v 16 17 18 19
->  16: Breakpoint overflow signal handler           : Ok
->  17: Breakpoint overflow sampling                 : Ok
->  18: Breakpoint accounting                        : Ok
->  19: Watchpoint                                   :
->  19.1: Read Only Watchpoint                       : Ok
->  19.2: Write Only Watchpoint                      : Ok
->  19.3: Read / Write Watchpoint                    : Ok
->  19.4: Modify Watchpoint                          : Ok
->
-> =3D=3D=3D Test Summary =3D=3D=3D
-> Passed main tests : 3
-> Passed subtests   : 4
-> Skipped tests     : 0
-> Failed tests      : 0
+On Sun, Oct 25, 2026 at 03:03:47PM -0700, Ian Rogers wrote:
+> When cmd_inject() was converted to use perf_tool__init() in commit
+> a37c0436f379 ("perf inject: Use perf_tool__init()"), the
+> --vm-time-correlation branch in __cmd_inject() still called
+> memset(&inject->tool, 0, sizeof(inject->tool)) to clear the default
+> repipe callbacks. Zeroing out the struct overwrites all default stub
+> handlers set by perf_tool__init() with NULL, causing a NULL function
+> pointer dereference if any other event type is encountered.
+> 
+> Use perf_tool__init(&inject->tool, /*ordered_events=*/true) instead of
+> memset() so that un-overridden callbacks retain their default stub
+> handlers.
+> 
+> Fixes: a37c0436f379 ("perf inject: Use perf_tool__init()")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-inject.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index ce7562fc788c..c30f5aaabf4c 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -2464,12 +2464,11 @@ static int __cmd_inject(struct perf_inject *inject)
+>  		}
+>  	} else if (inject->itrace_synth_opts.vm_time_correlation) {
+>  		session->itrace_synth_opts = &inject->itrace_synth_opts;
+> -		memset(&inject->tool, 0, sizeof(inject->tool));
+> +		perf_tool__init(&inject->tool, /*ordered_events=*/true);
+>  		inject->tool.id_index	    = perf_event__process_id_index;
+>  		inject->tool.auxtrace_info  = perf_event__process_auxtrace_info;
+>  		inject->tool.auxtrace	    = perf_event__process_auxtrace;
+>  		inject->tool.auxtrace_error = perf_event__process_auxtrace_error;
+> -		inject->tool.ordered_events = true;
+>  		inject->tool.ordering_requires_timestamps = true;
+>  	} else if (inject->itrace_synth_opts.set) {
+>  		session->itrace_synth_opts = &inject->itrace_synth_opts;
+> -- 
+> 2.56.0.307.g5fe7bd680c-goog
+> 
 
-Thanks for these fixes! Sorry for the late reply.
-If I dont review the next set within week send me an email to remind me.
-It might also be a good idea to add icount like I did here
-https://github.com/Mr-Bossman/linux/commit/eb0dbb8f87fe7e5df49d6f562ccff409=
-7c41f362
+Reviewed-by: Aaron Tomlin <atomlin@atomlin.com>
 
-Thanks,
-Jesse Taube
-
-> Himanshu Chauhan (8):
->   riscv: Introduce support for hardware break/watchpoints
->   riscv: Add breakpoint and watchpoint test for riscv
->   riscv: ptrace support for hardware break/watchpoints
->   selftests/breakpoints: extend riscv test for ptrace hw
->     break/watchpoints
->   RISC-V: Add fetch and decode helpers to a common file
->   riscv: Add software supported single stepping with mc/mc6 triggers
->   perf tests: add noinline to __test_function
->   MAINTAINERS: Add entry for RISC-V Debugging
->
->  MAINTAINERS                                   |  11 +
->  arch/riscv/Kconfig                            |   3 +
->  arch/riscv/include/asm/hw_breakpoint.h        | 331 +++++++
->  arch/riscv/include/asm/insn.h                 |  15 +
->  arch/riscv/include/asm/kdebug.h               |   3 +-
->  arch/riscv/include/asm/processor.h            |  18 +
->  arch/riscv/include/uapi/asm/ptrace.h          |  50 +
->  arch/riscv/kernel/Makefile                    |   1 +
->  arch/riscv/kernel/hw_breakpoint.c             | 879 ++++++++++++++++++
->  arch/riscv/kernel/process.c                   |   5 +
->  arch/riscv/kernel/ptrace.c                    | 507 ++++++++++
->  arch/riscv/kernel/traps.c                     |   6 +
->  arch/riscv/kernel/traps_misaligned.c          |  52 +-
->  arch/riscv/lib/Makefile                       |   1 +
->  arch/riscv/lib/insn.c                         | 263 ++++++
->  include/uapi/linux/elf.h                      |   4 +
->  tools/include/uapi/linux/elf.h                |   2 +
->  tools/perf/tests/bp_signal.c                  |   2 +-
->  tools/testing/selftests/breakpoints/Makefile  |   5 +
->  .../breakpoints/breakpoint_test_riscv.c       | 769 +++++++++++++++
->  20 files changed, 2874 insertions(+), 53 deletions(-)
->  create mode 100644 arch/riscv/include/asm/hw_breakpoint.h
->  create mode 100644 arch/riscv/kernel/hw_breakpoint.c
->  create mode 100644 arch/riscv/lib/insn.c
->  create mode 100644 tools/testing/selftests/breakpoints/breakpoint_test_r=
-iscv.c
->
-> --
-> 2.43.0
->
-
+-- 
+Aaron Tomlin
