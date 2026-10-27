@@ -1,74 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.72
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793135925;
-	b=kwlM6S+sZBflrfzjc56DTPDsvaYB5gEfRU5zxJujdhvnRkegVyYc6cWOpUfECrC5+AhI
-	 tjfZaBjPlbUs9VbBuULZWVk8uRwsJnE9GQT+wpqsERy2CRVhik6P0qGC/uBqFALXqBsx9
-	 uAnYjwSQ3zdQMUly+z9DsHAPsiuSbXS0+bLUr7ipHB+p7Alc1S6094PRC/8N/unE+IbK5
-	 3Y5SINVYrl5TOR4SoNfjTidetO1y31EdD+Ug+Nv12VhcOI366ND70ekzLqgcsl1icpufq
-	 UOdhWZ6tmWNxM36vlPDvtzPH5I+t0VWbin5GL7cYn9NsrFqWbcASqg+OlLiwfbT3oZA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793135925;
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.174
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793137060;
+	b=cVF1ImTfxU1GRYl39mti6IIUX3g8Oixw1cXOha9QZkG4MI9Gxm3Pgtd2Z8y8lL1z9nz+
+	 uSwBK4MPYCWa6MTjvm2tZ8XmTQr5OnX/JpfXAIwGtHOQzXrD5oVVz3Apk/y6P3URyoNPr
+	 Wr+Fy/6aSgbyL1nb1E5SsnmVnDPdcRUMxrdsdSUgurtsMoqRMHZMF+4yAYuo6mlZT5AE2
+	 a7RSdH5kcLY8yS16xNBfPLWzqrA791w/qAQNrNI3jjWZepNEHQBG2oOKGM1EZGoKNk7ya
+	 /IARVf9EAEGhsax94HSGE8MA9tbrdf9gQXxMSk8/sCJtaO3l7+b0Pqcf/XhP2T24WSg==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793137060;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
-	 Mime-Version:References:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=qUMx95Z2/FLv64tnydT/x/C4fd+wJMNdslwBEILinGo=;
-	b=cmuYHFY/883XcTldivVKs3LL8T4bQfIU2HVJE90rpQ+SINMNd8HwOaovwAI+xvSEBrk2
-	 p9d6HHD3+yeuy6gsjJcZGDqgZy+tR6OaltjrxhkEpPQcaQ5Rd6aPchLUnzXF3jrUQhwwE
-	 ZU8QsEHd/PkIuNzVFVh9oyGbgyu43bVsOzIhwYhVzyTFLnkTTqdDm6zmHOlCnKD2ZHQQi
-	 NkryoSWx+W1ZlZCClzup4XxDAq14PUbogISYVsRJq3YJdQp5jvmn1sENYOycVESRpgxbv
-	 HGQECMLuwX+/AdF7hB3WvLRzsTgR4NT4ktOcOIUOJJEj9Qj68qhWs4laGTO7lruap7g==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=kiQeK4YjfB9mchdkYNVdndc2lj3CRJ2WEHIAVlUrnYk=;
+	b=KFx/tmHfxRaONwPk6DqEc6ClFcdCcEV8M9CoDK1x6ulgeMk+eFAE7od+K4yL5tASZIgD
+	 OFmpTAfBLZ/puInZx0nFOTVux6R+U1VAA4PFtXMGMnTRFNt0Q55+4A6TO2B6koXPbXBbw
+	 wgQDlcCUy10fKFBYTExrfAeyXyv9FjdfSdOxCSXAdSZKKVVU149Mfv8uviTcIao2maZJM
+	 X7O1l0zQV3pWX3XThiV5UuULEAbzIr/COfyrI6T5dVqPaWhi1HbEyY9l4es1DQh4MtcdK
+	 eVazslpi+mt6AbObr0G+OAanNJP/8p2Vs08Rjj+5Fms52bYb4kBQKL/1kUVc0+jgEbg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=O9t1oNxh;
-	arc=none smtp.remote-ip=209.85.216.72
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=JDpJak+h;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.174
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78916606A31F
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 21:18:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 78916606A31F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF66C606A31A
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 21:37:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BF66C606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=O9t1oNxh
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-3adf71ee6a5so387616a91.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 14:18:44 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=JDpJak+h
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-535f598d126so33731cf.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 14:37:39 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1793137059; cv=none;
+        d=google.com; s=arc-20260327;
+        b=UybeoffkIJXQ7/I4PzExq4OCj3POZtQJ37rORWcTSEg2Np6qcL9wCk4T8ASEugJfkp
+         8tpH/CpY27z1PSElKNVWn6MMKCeevGFO9eyJX3VxxjAHBv7J3knqRLItyDYkm/rGf7JZ
+         xxFutsiQEciNutdEFMVxodvIJsbaRj5owviHYrZ2nxeNjPT5yHswV4WFqVYbUos8iTXi
+         MhztcbyOT7OEL33rBn86ddpjuL84/Wgh01VeK0upU52EjcwNOBg/KyDc1Ue0rn9DZ3Z7
+         15TAbt8itvRSkWhzpEP4J1WHt0fVBlCLhsrZzKv2nvQbsuLU25oOFLKaQU/NW5DtmBUK
+         1HdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=kiQeK4YjfB9mchdkYNVdndc2lj3CRJ2WEHIAVlUrnYk=;
+        fh=gV8YRCizNor9qf9YqkfD6ouRyeo8kArNg6FIzxgURfA=;
+        b=AhWBoVbzWfujLJZ6sZz8iyFxXdXlkfrC1XpsEG2Sz7eDlkpQq0uqExFuTZe0uJldYb
+         cRYQ+xA0gn2VG83BNs/tJXvYVyyZIb2c3Hk9IYlKdYch+Lkq/QX/AWnPOl2yX6meNXJ7
+         OwkJpjdp+jmAMf/lLA1MMSGvwLH8WqF79JHvOWCKNbdF36wotXR5emeB7XjJV/NMFiem
+         vilyXXV6GCvLLUOP/dw4VTExYl7dbQSxSZy/OXD4OUKzXTEor7zLpPRpFG8O0ppGQnC5
+         3/w8W3NzOQoSAaOITmPTlDkfPYMGx4qRAUizKjkzcQdFqzFksx8zKlwDqKVsWd59HAOF
+         /6cA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793135924; x=1793740724; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=qUMx95Z2/FLv64tnydT/x/C4fd+wJMNdslwBEILinGo=;
-        b=O9t1oNxhj7Xw67fxZOhJmZ8vNAdxWgxOGEEZGK9oId6/aVHLsnFtQlbNQ6bzhC9B0E
-         f9O/mJB1tznoMWpJP5vr6IAfWd7OYL3+vqog/K86lyrB9hPII1dxM6rPxBJ9Kby9+ucJ
-         q3hnsiNT2ru8vSf8egpVYYGw35wKVG80Vu3ezvTOK/2hErKcg9OsAoYftXOMXvmgvOsE
-         USSlpzb9cbn2+MUY6DGfb3+M18AMUDB5o3XD1HYrd07vSA1sr+KPFgLsCAHlt3yIU0CJ
-         46wb1/8vXqcmincC/gKw4zIHqOkFMeY2f47UtXQrgsFIIglqeYn4Rz2uN2mV+APvhSlW
-         0LBg==
+        d=google.com; s=20260707; t=1793137059; x=1793741859; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=kiQeK4YjfB9mchdkYNVdndc2lj3CRJ2WEHIAVlUrnYk=;
+        b=JDpJak+h3CJc9jWlYYIY7KSCuaoOLUxMWzUAjOfWUeOlT1eC6LT+0QCYEmnMeAkJpM
+         G35ymoC2udf83stlhT3e4153oAGewdADvuwXbPFmNCA/2c3xCJfpV+2Aa1hgT7aFXyxG
+         2gKLkj17NB7rMyswPgVDEYtjcTrY0Rw1illHWe8LMPXkF5Gnlo0EOqL3V838hoBoCGQU
+         sq/2F+RLJGPKthz9KxA+eajsJp2RC6HQyES1gJ0C5rwv4WOofM27yLzM01irLrYjPoei
+         iNwhTw+m+/sxGWmX5R0sRkwOVidG5vEPDReqgN5b65xGSJ+bqSxTy3iUAZkralYqpjcL
+         Z09g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793135924; x=1793740724;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=qUMx95Z2/FLv64tnydT/x/C4fd+wJMNdslwBEILinGo=;
-        b=D4QBhew8eGJ8t027R7XlklFmii7IfltF+PSy4//lZtYAq5EdODuirM+jnN72pB7xtN
-         a+feKh3U7dj1my1JYPFLUgUyjfF+ExWB4YD5LVaPo05DNSMN1nneE39st7FXrn1ywjpw
-         kUHz1UGJXpHCh+QlvNDKUdYNh14qigoUg5KF71Exr0ovff6ZFptB9D668gLVG2Bui1pT
-         xcXsArOQKhA8QW/5caaLPzk08KyVw8rCbglrSo8CIsIaSK4AL6YAnBOyOBjr/MYTNjWl
-         wLkp2Njyc1Z89u37aOIJ9djXd+zL3jP/ok81lpk8fyymkfvGQLSxojXUKu05urUSRMJg
-         Iphw==
-X-Forwarded-Encrypted: i=1; AKwUvBz4Rfe+k9EXiTbeQpGHC55+6aCk0Y7fjxcDtv3dUtmvBBHyRa0l76xwC8FITt4i8f6yqhmCLbByMzBTSoqx8q8B@vger.kernel.org
-X-Gm-Message-State: AFq9FYKFpp//18KrQ57fQAxC2iX4nQxNZE+/dtfjIo/QkpkHyA+d1uo5
-	F+HsSTFCcsMGBr0rperp2YfbhuBr2Qb5aiDs7EPk6KLGWxkQtAz4hjq+ayGLBMc2QIpjlD4xlSD
-	9AUoS9Q==
-X-Received: from pjvv8.prod.google.com ([2002:a17:90b:5888:b0:3ad:850b:6f1c])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:288a:b0:3ac:9706:7739
- with SMTP id 98e67ed59e1d1-3ae5819e5afmr211698a91.17.1793135923585; Tue, 27
- Oct 2026 14:18:43 -0700 (PDT)
-Date: Tue, 27 Oct 2026 14:18:42 -0700
-In-Reply-To: <ac22215d-3e58-4aab-851e-47c30836e058@app.fastmail.com>
+        d=1e100.net; s=20260707; t=1793137059; x=1793741859;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=kiQeK4YjfB9mchdkYNVdndc2lj3CRJ2WEHIAVlUrnYk=;
+        b=PYUbnnq+H+ZR2QyPF3JEMHv7lkLF5cVIO4d6U7E/f2Prkmjch9lLKsdowrniFkVax0
+         O9yHtlng/sLkd17CYxxL7fDSSytKbblNFba3fobarilNLHSRs2ULMoh0lzFpa1jlfoZT
+         GVmc7YQRSR0QtiZQ982u+EHJYDHKNQZfTYwGhVqLEg667NBYT18ZoZ4f33YMnRG3R5yq
+         ++2lVKvFEAwW8eT79UqgK+j9eNDfLIGf2ZFIlF7ot3Y06vbIBL+j7FWxlRnvbefekUsA
+         V7xFlCK2pct/J5A4FlkrF8pMc6e4AK3yVtFbEERG4ae59zjzWPYJYfSrQMcN8TPhj4oi
+         zsBQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxbBlW9QhQMqxT3Oe/XLiPFXZpacAodXDCh0mSJYl/08ZMIZXVozliF/F2dDyZgcxLK+xcVNuD1N/dbq5ZCetQP@vger.kernel.org
+X-Gm-Message-State: AFq9FYK50+GFYrXiWDdNYH4yyqPsepUm99VIwpaiXk9cVoW2bm6jzAaL
+	BzDFKJFojQxnn/LMadXzmfIjnDC7o99LQ9n+heotxhJK5ZNGDiMEthAfOXjT8TSXkeluOKM512v
+	w+Am0w1/jMA/nlJS/4X+H/gO9YGDEQ6eUtJ/U4LJQ
+X-Gm-Gg: AYBFou3Ttk3ePDQ+l4QeeJaiVmSQllRn4lGO+REft4W37MTKjZpo6E4KzYgUoEFGY9P
+	bM6Se/vLZXe/VjHjNLtc2cmvsyvdN6JvOiD4J4y9L11BHqZiayYgc5ZbCxg9sGKvhTx7Ro70lQf
+	0lY/HOH+SAIhd1FENa2LJIUjvRgm7M8XV1pk3ElpKgQbYo3a6NHhZQtyq/XwqZTxy9mkTYKiBi5
+	u2PQcDHD4vN3PdHpAoVeryUPGgh5P5WixbWsjI8vlB75HPIXWwYwms9bKAn+siPND3BtUZ1c7nz
+	uVK7H7sYkTEzCUOF0NzipTvSAwqRjdm41GYdU7AmQ1ZEBWrNxSseZZM/c8V4yMqtc20EeuyuTSz
+	H/sm7aYVkGMfe8OL1L9nvY7bWgwLWsmdzV018u3JAf/72DJaKwi9aAMPTc6BmeSs/gA==
+X-Received: by 2002:a05:622a:4d94:b0:536:6ae9:f55f with SMTP id
+ d75a77b69052e-53fe254cd4cmr2738151cf.7.1793137058168; Tue, 27 Oct 2026
+ 14:37:38 -0700 (PDT)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -77,102 +103,73 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
-References: <20261026215226.3713941-1-jthoughton@google.com>
- <14f5f919-55bd-47c6-a1c8-6f1445cce733@app.fastmail.com> <CADrL8HXQdzcroeGN-ACjyy-jSAdBNHiT1_BCVVe0P+Y8ZueiyA@mail.gmail.com>
- <ac22215d-3e58-4aab-851e-47c30836e058@app.fastmail.com>
-Message-ID: <auEVMrMDqVuKtDqh@google.com>
-Subject: Re: [RFC PATCH 00/10] uaccess: Refuse and warn on user accesses when
- current->mm is NULL
-From: Sean Christopherson <seanjc@google.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: James Houghton <jthoughton@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Thomas Gleixner <tglx@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>, 
-	"David Hildenbrand (Red Hat)" <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, "Vlastimil Babka (SUSE)" <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Jim Mattson <jmattson@google.com>, Jens Axboe <axboe@kernel.dk>, 
-	Pavel Begunkov <asml.silence@gmail.com>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <mkp@kernel.org>, David Sterba <dsterba@suse.com>, Chris Mason <mason@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, linux-mm@kvack.org, 
-	linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org, io-uring@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, linux-btrfs@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+References: <20261021224527.167637-1-takano32@gmail.com> <auEK6E-jX12Bi8u_@phoenix2>
+In-Reply-To: <auEK6E-jX12Bi8u_@phoenix2>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 27 Oct 2026 14:37:26 -0700
+X-Gm-Features: AclHuK8R_WnqIcyQf8f2Qu5VxrU9TQxGN3EayZGJ9XRhsISfCA_QCGKlSsUCj44
+Message-ID: <CAP-5=fX+2eRGCHcU43sqU=gi9iKvxqyS6ipwRSnvFcap3D+QzQ@mail.gmail.com>
+Subject: Re: [PATCH] perf vendor events arm64 AmpereOneX: Drop stale
+ BPU_FLUSH_MEM_FAULT entry
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>, TAKANO Mitsuhiro <takano32@gmail.com>, 
+	linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, 
+	John Garry <john.garry@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 27, 2026, Arnd Bergmann wrote:
-> On Tue, Oct 27, 2026, at 18:29, James Houghton wrote:
-> >> I would think that user_access_begin() is a more natural place
-> >> for the added checks, as this should be called exactly once for
-> >> any function that accesses user space and also stays out of the
-> >> way of the copy_from_kernel_nofault() etc.
+On Tue, Oct 27, 2026 at 1:34=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Wed, Oct 21, 2026 at 10:45:27PM +0000, TAKANO Mitsuhiro wrote:
+> > AmpereOne carried BPU_FLUSH_MEM_FAULT for EventCode 0x121 until it was
+> > renamed to GPC_FLUSH_MEM_FAULT in 10a149e4b4a9; that rename and the
+> > AmpereOneX table were patches 3 and 4 of the same series, so the new fi=
+le
+> > kept the old name.
 > >
-> > user_access_begin() isn't used in a lot of places that I want to
-> > catch, including the KVM case. Roughly:
+> > The result is a table that names the 0x121 counter twice:
+> > ampereonex/core-imp-def.json has GPC_FLUSH_MEM_FAULT, and
+> > ampereonex/memory.json adds BPU_FLUSH_MEM_FAULT with the same code and
+> > the same description.  On AmpereOneX perf therefore lists two events fo=
+r
+> > one counter, one of them under a name the documentation does not use.
+> > No metric and no other file refers to either name, so removing the stal=
+e
+> > entry cannot change a metric.
 > >
-> >   kvm_write_guest_cached() --> __copy_to_user() --> raw_copy_to_user()
-> >
-> > There's no user_access_begin() in there. :/
-> 
-> Good point, yes. After the changes described in
-> https://lwn.net/Articles/1102061/, I had assumed that all
-> __copy_{from,to}_user() are going from common code, but it looks
-> like the series so far only touches __{get,put}_user().
-> 
-> There are of course few enough of these left that I think
-> we can consider doing the same thing here and turn them all
-> into the checking version:
-> 
-> $ git grep -wl __copy_'\(from\|to\)'_user  drivers mm virt
-> drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-> drivers/gpu/drm/i915/i915_gem.c
-> drivers/gpu/drm/i915/i915_query.c
-> drivers/usb/gadget/udc/atmel_usba_udc.c
-> drivers/vhost/scsi.c
-> drivers/vhost/vhost.c
-> mm/kasan/kasan_test_c.c
-> virt/kvm/kvm_main.c
-> 
-> > I do think user_access_begin() should have the new check though, so
-> > I've added it in the v2.
-> 
-> I had the details confused here. Seing that user_access_begin()
-> and the other accessors always call access_ok() at some
-> point, maybe that would be enough?:
+> > It also leaves memory.json holding only the ArchStdEvent aliases the
+> > other files of that kind carry: AmpereOne's memory.json has no raw
+> > EventCode at all, and neither has any other file of the AmpereOneX set
+> > except the ones where raw codes belong.
+>
+> > Nothing catches this at build time.  jevents.py asserts on duplicate
+> > event names, but x86 repeats an EventCode for many events because the
+> > code carries umask and unit bits (3756 times across its tables) and
+> > powerpc repeats five codes, so a duplicate-code check is not possible.
+> > arm64 is the only architecture where no table but this one repeats a
+> > code.
+>
+> Maybe a followup improvement to jevents.py?
 
-It would help, but it wouldn't cover everything, e.g. KVM "caches" the access_ok()
-checks well in advance of actually performing a user access.  I don't know that I
-would fixate on KVM too much though, as KVM's memslots infrastructure that begets
-that behavior is quite unique, i.e. it's unlikely other subsystems will have these
-types of bugs *and* elide access_ok() checks at the time of access.  And KVM has
-natural chokepoints for these accesses, so it's easy enough to harden KVM itself.
+It is expected that events may share an event code but they may be
+differentiated by unit masks, filters, etc. We might have identical
+encodings even with these extra differentiators, due to old and new
+event names.
 
-The counter-argument is that _if_ there are other subsystems that are caching
-access_ok() checks, then those are probably the subsystems that are most likely
-to mess this up and thus would benefit the most from common hardening.
+> > Not tested on hardware: there is no AmpereOneX machine here, so perf wa=
+s
+> > not run against the real PMU.  The change only edits a JSON table; the
+> > perf build was verified and the generated table for this PMU goes from
+> > two names for 0x121 to one (rebuilt, counted in pmu-events.c).
+>
+> Ilkka, can I have your Reviewed-by or Acked-by?
 
-> --- a/include/asm-generic/access_ok.h
-> +++ b/include/asm-generic/access_ok.h
-> @@ -33,6 +33,9 @@ static inline int __access_ok(const void __user *ptr, unsigned long size)
->         unsigned long limit = TASK_SIZE_MAX;
->         unsigned long addr = (unsigned long)ptr;
->  
-> +       if (WARN_ONCE(!current->mm))
-> +               return false;
-> +
->         if (IS_ENABLED(CONFIG_ALTERNATE_USER_ADDRESS_SPACE) ||
->             !IS_ENABLED(CONFIG_MMU))
->                 return true;
-> 
-> (plus the few extra copies of access_ok()/__access_ok())
-> 
-> As a quick fix I would probably start with just the 'if (!mm) return false'
-> bit here to get something merged while we still discuss the other
-> details.
+An alternative to deleting the event is to add:
+"Deprecated": "1",
+as that makes the event not show up in perf list. Using Deprecated
+means that anyone using the event name won't be broken by this change.
+
+Thanks,
+Ian
