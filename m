@@ -1,72 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.72
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793120678;
-	b=KUDTiTqV6fp5o01+fwVlMepZD1wPo5j/UiNTQYBg2WD2mcIxD96LG0CIX5jomT3PJ+Hm
-	 bm+Bqxkco9ejAXLzulP52m5nEawSGfQtgqdFPnG8tvOKxXXjQ74SR2Auk66yKXIURb5Bg
-	 Xr7J1G7PZ/9Mnel2SU9HHZX8ADrsMKLvt6N6ykh/4ES01+yWDr8w5Csp1bt5os0OliJAg
-	 alhDStg1wu4JKMsCfSE5t9zZ78G4c7cypgFpS0niXGx6SqLA+kylexqtLhzZrJhWDGgsH
-	 DQBhSHk6oIn12gUY3Y3CXR6X5agsKwWTB5rcN63xE3MDWRB29rfeeeiRT0AaRocOvpQ==
+	t=1793120681;
+	b=JDaEeVwXZHvmPRQSsQ3yKwOzC9jjLrXoLVoIqkdc6atTYh8DN0dy0+a9xt71lK6Jhgci
+	 e8m1ADK88+ng7yh18jDw1ldj4AoxoX+evRB/69lR6IYr9URFFhE3tPuZa3oShBichHdZL
+	 Oc6d8nME96taaXrwpLaHh9a/0S1V/Wl2xLLTW4IKEH/5mgGxlvPsW9kAUZy7n/ErMf8Av
+	 Za293YQclXDTXYHPA/AQDGdx/z+JYgjOYvAgn3Dq8bLRkg4qbXQot4QsZCfnShnKWtuBt
+	 HTSSyOtTrQ6iwTQr5/hZBLY+9A73gtcSSWf39eyDoL5Nh/IysA38rI+kMC2s00K0PpA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793120678;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793120681;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
-	 X-Mailer:Message-ID:Subject:From:To:Content-Type;
-	bh=vF3lYjwaP6Vu1eELbN7F7td7N/RNwt4u/bezxSwf+3c=;
-	b=LlKyaRLoZ0oEo3I9/hrji6LOFjeeDz8sTKL4SyC9XYROT05HYzoQvyjU1kOM5XfaIZeV
-	 0wbWkbsjJs+dJqEz9kkVqEFdwGY5rS0mkZ0g0g9Zic40gnRHjIxPUPcLOzV1nttQSftr1
-	 1nta520dDniurInLS7w6r14/YEJhXOxdXVRmMQlP4EC9GkZoEbLaqDuQLr8ooJ70YGiu6
-	 axycieBjgFwHLh0WrTZ2omntlbAiqqV8P0UW8FPrRLFLPr/J5CErUVSo30Vaxa5LFvQZC
-	 tl7q7wc5U40wiLcq0XQKcItEia+CT/oxdmZqZqW0fZPZSeClYUS2hV0FF+qwGKiAemw==
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
+	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:
+	 Content-Type;
+	bh=KuPv9dNAeKsP3lHQ5az7k6lXOC/G0/2eCGVI05AUWhM=;
+	b=XEkQDmmGM9J4IaHvjPdyKCke3mk4iZpnqjmRmeSFFI+UxdPhZ1WDKKwVe34XIiYbbzx7
+	 KJJCGzCymqzJ+P0oYMH9E76eKmVGDRffGmZHf40vm4Mi9pRAaMaFWK7sE/YK3A4TDbX/I
+	 k169OzgcY3vAtLxHf/mHHYEHllCbVkWfAoFTX3FJb5ZtZAsBAmxPXfP5uUtuyCsheylyQ
+	 f9xsOA2SIN/tP0bc8gcDd1ZEakXcgBJKB4cf88pyQ2rDo6QdtwqKzmN47QPGmaBDXtaqV
+	 Ga7p6k0kVxJL5JdI8T+XRVWYbdfPWHawylyp/IXBj4cyJ2z6dIbOMNbkckMP07q9bHg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=pG81yAw8;
-	arc=none smtp.remote-ip=74.125.82.198
-Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=AuSlGwyL;
+	arc=none smtp.remote-ip=74.125.82.72
+Received: from mail-dl1-f72.google.com (mail-dl1-f72.google.com [74.125.82.72])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4769606A321
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 17:04:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D4769606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56A2606A31E
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 17:04:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A56A2606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=pG81yAw8
-Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-3552883bd19so160451eec.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 10:04:37 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=AuSlGwyL
+Received: by mail-dl1-f72.google.com with SMTP id a92af1059eb24-1663fb7e005so26466c88.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 10:04:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793120677; x=1793725477; darn=vger.kernel.org;
-        h=content-type:to:from:subject:message-id:mime-version:date:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=vF3lYjwaP6Vu1eELbN7F7td7N/RNwt4u/bezxSwf+3c=;
-        b=pG81yAw8jX7gIgwuDJVfaxwUm4IiHuxT99V6Q3vbAIY6bO6PBPeCnn+bPdpgYmwkL1
-         kWYCT3xbmanK3r79KRwmt8BUo5HJ5P0FbpO4cOM+76kZMNNPdTvRaJUQbMht9P99RvvE
-         6bbZGGsNPlYdSI4F46tqzYekEKE19h0n6pncgaZMG8qmwqFjjaejjcKa0TMGgYJ6Oy7+
-         ZnjAiyYxg6lyFEC4LTWreHA18inubal7ZD/+H4o+GlzsebRNkb7fkhTELUmS6mDZyPI3
-         cDwAt6eYeGBY0WUkLlq3HyrskLQZxI7TOrE8jjHevRNq5NsnJPw4H4/RchsOJlxQbN7T
-         c8sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793120677; x=1793725477;
-        h=content-type:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20260707; t=1793120680; x=1793725480; darn=vger.kernel.org;
+        h=content-type:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=vF3lYjwaP6Vu1eELbN7F7td7N/RNwt4u/bezxSwf+3c=;
-        b=kuVfVCzxetXTkbJm2Ryj8PWU8+fN+PyTGBjKxSFy6bpkfAzrV3bCUIi2SFFYtLcqkC
-         G7yGTPEWk+R2g3bXAFtJFaY/YEl8EOjucQDWHdLMTOK15Q4LoPO/kE9rBeg7EUU4Vvvb
-         2Jo4KjpItJ5nY0MNrKWZehqNVsKQFCfyNkTj2VNC2WjVe87AWVUK/lKYzxzwpNAt67jd
-         1L/DSJGxQ5aFlW7wmjp7sJ8cvUjldRna7V0HO38yABuVzYGDlWeHs5ze9gL3c3GnlvDH
-         3eAbG2a/upz8T9uxGRdtK83+x9GAZT5Q+xElO+B7Z2tXbWdhwhMaoYGHc0PY8i61O8gg
-         KG3A==
-X-Forwarded-Encrypted: i=1; AKwUvBzRaNNgygC2Qrq4jG5feexTIxXmeZiW5O7tAw+H5Nwzk1DjtHlaKHY6vRsSJt3J/SD9vh3AZIel/nZyArdXhva3@vger.kernel.org
-X-Gm-Message-State: AFq9FYKs898PgFp3wK1zhC2oIHDwUVshzaW0h1gMnqfScKbjUBJneYWj
-	gqDd68FGf1uzW7jMtMphQl0Drh0x2o+WGX3mCFqfIzMBaP8u762UnLgI1cgBJ67PNWlB7PAYOK/
-	f426R94dCYg==
-X-Received: from dycpq24.prod.google.com ([2002:a05:7301:fd18:b0:36a:eec:f68c])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ea5c:b0:19b:98bc:326f
- with SMTP id a92af1059eb24-19b98bc32c5mr13845200c88.18.1793120676283; Tue, 27
- Oct 2026 10:04:36 -0700 (PDT)
-Date: Tue, 27 Oct 2026 10:04:12 -0700
+        bh=KuPv9dNAeKsP3lHQ5az7k6lXOC/G0/2eCGVI05AUWhM=;
+        b=AuSlGwyLvMj50I5lH0VPZECM8TmzzAGBpCmgjTh4rDhbxpMDv1bOwguASPJWiLGL1U
+         Y0/rSeY1sHWQpREbVUVHGpKpDZIQDEia9akUS0u7ABwagcB+fKSjO+oZrRqk11Vp5wud
+         rTZxx9kVJS2laXDQWQkJk/vdiHDKAdAXeUyX9as0QcPBB04nibVHkBolUHP3WvIgKxzU
+         a3qD/xJuYvAhFfZJaSvuFD5VJrHw/TCQa1L9n3nP3e5jJ20iKvimCZWjQk+xoTEi58QJ
+         rTGF8RvkYsvoDVcCh3IxuCtBILia/ynU23tejEsZ90QgTr/zQersfIHdK2z+NWgsq7QC
+         Z8Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793120680; x=1793725480;
+        h=content-type:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=KuPv9dNAeKsP3lHQ5az7k6lXOC/G0/2eCGVI05AUWhM=;
+        b=IAfs55jDyQE8+kBAONMlvqMGeCc1yH8G0M5YHdAUnr+GUZoEdvkkM7dRT8hRHCtEjI
+         VI87ZXxlYNkdTcFsiNmo7EMXDDysbZvH6w9axAcW1/3FQcRYtOouhSavS5DfwQijEjEi
+         Too70nW8V3kwfssak1CVPvhXjXoRuRNosR3Gry6XKdfC7yfDEopRT0NuIxwtUhncSjme
+         8LH2kxwFpVXks93r7jBD42ivIQNNpY1iFW/s0HwQt42W4ycex4tiqewgA+TfhJ/GuzHK
+         XMYDtXEYbnvXrLS4i3EprTA4zpv89bzPHaxlh5Xi6OyIiCRC7XpybUydsONYzrdWsjuI
+         VluQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzSiST9oIygcCev6lDMnpjva9dLPaaYsMTynRTMdPmSBsSma3W9L2u+K7SADeTdjrs32OZVbt1RjBJHhBQev3A7@vger.kernel.org
+X-Gm-Message-State: AFq9FYLQRTGMxY3HyR7n7zNYF97AHwWcmB6DKt8ztV1WmB4CUhnD4Sdu
+	XNmGgW1sQUWyX/T7naH4RUh/B5NwYIBYvlyYPV2gQBgWnJIYqnGUUtSrJ7x7AXkeFpHeBYy+t5R
+	RM30iqs3yWQ==
+X-Received: from dlev28.prod.google.com ([2002:a05:701b:465c:b0:181:c416:735b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:110e:b0:149:1feb:6da4
+ with SMTP id a92af1059eb24-199361b5994mr13527117c88.32.1793120679092; Tue, 27
+ Oct 2026 10:04:39 -0700 (PDT)
+Date: Tue, 27 Oct 2026 10:04:13 -0700
+In-Reply-To: <20261027170415.2815859-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -76,10 +79,10 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 Mime-Version: 1.0
+References: <20261027170415.2815859-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.313.g2479322e68-goog
-Message-ID: <20261027170415.2815859-1-irogers@google.com>
-Subject: [PATCH v1 1/4] perf off-cpu: Use the CPU map index for the bpf-output
- file descriptor
+Message-ID: <20261027170415.2815859-2-irogers@google.com>
+Subject: [PATCH v1 2/4] perf off-cpu: Write the sample ID for PERF_SAMPLE_ID
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -89,32 +92,31 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-When populating the offcpu_output BPF perf event array, the file
-descriptor of the bpf-output event was looked up using the CPU number
-rather than the index within the evsel's CPU map. These differ when
-CPUs are offline or a subset of CPUs is used, leading to the wrong, or
-an out-of-bounds, file descriptor being used. Index the file
-descriptor array using the CPU map index.
+OFFCPU_SAMPLE_TYPES allows PERF_SAMPLE_ID, and the sample ID is
+computed, but off_cpu_write() only wrote it for PERF_SAMPLE_IDENTIFIER.
+When PERF_SAMPLE_ID was set the synthesized samples were one u64 short,
+so the remaining fields were misparsed. Write the ID after the time as
+the sample format requires.
 
-Fixes: 282c195906c7 ("perf record --off-cpu: Preparation of off-cpu BPF program")
+Fixes: edc41a1099c2 ("perf record: Enable off-cpu analysis with BPF")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/bpf_off_cpu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/bpf_off_cpu.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
-index c4639f6a5776..ff8935688b43 100644
+index ff8935688b43..16948761cc45 100644
 --- a/tools/perf/util/bpf_off_cpu.c
 +++ b/tools/perf/util/bpf_off_cpu.c
-@@ -95,7 +95,7 @@ static void off_cpu_start(void *arg)
- 		int cpu_nr = pcpu.cpu;
- 
- 		err = bpf_map__update_elem(skel->maps.offcpu_output, &cpu_nr, sizeof(int),
--					   xyarray__entry(evsel->core.fd, cpu_nr, 0),
-+					   xyarray__entry(evsel->core.fd, i, 0),
- 					   sizeof(int), BPF_ANY);
- 		if (err) {
- 			pr_err("Failed to update perf event map for direct off-cpu dumping\n");
+@@ -373,6 +373,8 @@ int off_cpu_write(struct perf_session *session)
+ 			data.array[n++] = 0;
+ 		if (sample_type & PERF_SAMPLE_TIME)
+ 			data.array[n++] = tstamp;
++		if (sample_type & PERF_SAMPLE_ID)
++			data.array[n++] = sid;
+ 		if (sample_type & PERF_SAMPLE_CPU)
+ 			data.array[n++] = 0;
+ 		if (sample_type & PERF_SAMPLE_PERIOD)
 -- 
 2.56.0.313.g2479322e68-goog
 
