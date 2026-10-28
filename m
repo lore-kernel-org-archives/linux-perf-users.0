@@ -1,111 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.143
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793229270;
-	b=JDuTmlZ3P8fWF7ZvOtdkWlzLPep9Pbbht+4sc/iGgBpCflC1u3/WfXHFjDzLGzkWXald
-	 dVBFPNQa7S7D2ch0Zx8wGuYYQ4o0D/ZMW49qn1pZ/NGt5WlMnOE9vDyRh+FsSZUUwaV5r
-	 k/nhPvNB098X/uSkLF84hxNjAHydpzjpZcBY8dPqvWxvY0AMH990ON2kE1log78Tj0qSa
-	 rYnIOQbOzRF4nMcspvWt7EPkNoZV6u3q7xZh+Pylg26lOudceexJcynxxdsnAVUduC2lf
-	 i0gaZuPRptVS5yL5jePLam2MyKYJu8IzNR1uekecKsQ/x8d5W+AqY07jV3u1ATSnaDQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793229270;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
-	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
-	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
-	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
-	 References:Subject:Content-Type:Content-Transfer-Encoding;
-	bh=3NNvExRhs41CllrriDglY+oL4uS1pgKk/7KJlisNUfM=;
-	b=g6dNj5d3gNLWQfByhXQ17/VbxxAQKvjFHAxEPSMBcMZrz4nujMA1ZEacm4xY6Q7UEtzA
-	 LVon13OXBeSRpSSZd0ybcdgJ8MRNnr3rdkD/D0HBhulbpjkmKLqLxNeH6iHn9vBnbntWJ
-	 BW3cKRsMcwsSaXiqf5d/QIXNA7rEJVnwY1ZRDFDr6b9k+g8nHe4x2jrylDt3qGwR72M5w
-	 G/AAggRD7JJnUw0+LaEjQchzUkQgQgKjpBDRdhwuMQPMR4cvpR4iJxUkxZDCxpdl2C8TL
-	 6GNm50FN1ce4uwY4K9QcDjL4NUHuj63A1W3sphqdxhnMsOwvQwWBgdpvyUdRJG/fXgg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=arndb.de;
-	spf=pass smtp.mailfrom=arndb.de;
-	dkim=pass header.d=arndb.de header.i=@arndb.de header.a=rsa-sha256 header.s=fm2 header.b="HJ/9oA4h";
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=F4QP1K0C;
-	arc=none smtp.remote-ip=103.168.172.143
-Received: from flow-a8-smtp.messagingengine.com (flow-a8-smtp.messagingengine.com [103.168.172.143])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793230970;
+	b=kB0cdm2PPWNzRfPtFkIEg6W+4lpJsl56YF2gkbZQet2Abx+/mU60UGalfkSvu2zus++J
+	 Ur+CawAls/N+elMoygVq1Frx0X3tncZAo7UdGVUyN7/UFbQsoeD/nSrMNdtgsl8IIhG2p
+	 09d7Uqe3Ht7NU8UhGsvGFBBDTos94AT9S5WeaF9wvGD9ibDkMZe2gvrd7tCWz1qtLbp7H
+	 y5OaXB/uPaOP60RnWp5ys9vdPiKX4t9CJ/hDVeGs4qmfp089zBbqQl1pPZr8HbAgW9cHd
+	 J9dBteJnmA7cEtlOO9VSr0flFRsAFnGIKP0ONK2G+B31kgNcXyOXW8ItepJFCFW6lpw==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793230970;
+	h=Received:DKIM-Signature:Received:From:Subject:Date:Message-Id:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:
+	 X-Change-ID:To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:
+	 X-Endpoint-Received:X-Original-From:Reply-To;
+	bh=ECZz0r+RTXv9bOuCAGgaq/PzW5nzGtLjy2x20XBo0ng=;
+	b=i35cg6FtIO6lIvNtTFnSxHDsDSS6pRB71Y2wPLrQ+9OqLMI6gDkHRMrSc+l5erU0OoCF
+	 M4UgEbgnOPyMOsPUJcncpb7SRfTdlt4Itfm69+y1o+A3m1sheu2MD5hZTMxIELxM8xZvE
+	 iUv8lAEo07NfLrmGJK13rYH9gJwlGtZhFC7QCs2C0x1WYG3n4UTI1vpWnS47xi9859cTP
+	 3t9oDCZaVhUmAvPKBk974Hlp3aeKFFM0aWkfGgwg1Jm/QInSikFo3Ay4so8UAJDZlV+EL
+	 ULilvUagZA6F2UUHmM0CeOB7YgCBZXobDF1kpR05w4FRBlDB3fbh3zgB8VJBC6YOIqw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cvERsC52;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9569606A33B
-	for <linux-perf-users@vger.kernel.org>; Wed, 28 Oct 2026 23:14:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E9569606A33B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5653F606A31C;
+	Wed, 28 Oct 2026 23:42:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=arndb.de header.i=@arndb.de header.a=rsa-sha256 header.s=fm2 header.b=HJ/9oA4h;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=F4QP1K0C
-Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
-	by mailflow.phl.internal (Postfix) with ESMTP id 1477D13802EA
-	for <linux-perf-users@vger.kernel.org>; Wed, 28 Oct 2026 19:14:29 -0400 (EDT)
-Received: from ams-imap-03 ([10.64.2.23])
-  by ams-compute-02.internal (MEProxy); Wed, 28 Oct 2026 19:14:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1793229250;
-	 x=1793236450; bh=3NNvExRhs41CllrriDglY+oL4uS1pgKk/7KJlisNUfM=; b=
-	HJ/9oA4hbL+gy2W2kMtoUPBRMb9eb02SBFs9WSPPnJVSTb2YkROErs+OQKZmTQsa
-	/HAx4OZA4I59jgFxYJGn9YUl2KYjlgqWA7GFaoY0wylZIVB4q1nbAUDpdfa4o09t
-	WWsqQ5J1DWjqWCqo8kyeajw9PZ0cA8oUWKxPt9aRyHcwwDWhjT5OXeZ7mzVSm6HX
-	r8xlrtYfvkTPlDqPvGK4K2sLrtKGVkdLYmvyYHm27NOyz+6WOId+oJ9OacAGyQMg
-	xaUbbMWZwFjs9YfqBlQ6P2T1ZylMdfFcchf1+nt57spZu/nWs3smfEeZfMCE+LAv
-	EscA093JciZyQqQR/verjA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1793229250; x=
-	1793236450; bh=3NNvExRhs41CllrriDglY+oL4uS1pgKk/7KJlisNUfM=; b=F
-	4QP1K0CA3b/8rkN/0r9Jiljf/MNNz1l2g0iDRWxKMMXIk/c7/kFyNtXScKPTH8xZ
-	pWV5M22SkLFbtNBXoXgEqBmV66mY3WCzF6Prp9k01J3kHgIjwKosS/v8fRcBKDeI
-	IZnXLmSEnOQ6f/mgh+HcFPZccEDPEnEMJvUTH5oJHp5fU600Mt9BlUy9rSuvE/15
-	r6wcZTudJ2H68Cbj0qUQ59Y4a0bBqlXe6YjFrnDkPcIPqzgKQB4C0a1eDq8lMKJd
-	8zzbSsKUyGTI11IW8FG5nZm4UeKwpveeux55SiqnEKlzQKCec6dkF9MOMvuvE3ZH
-	xQ7+m56qYDDn/w9gI1vIg==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
-	repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
-	action=sign d=arndb.de a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1793229250; d=arndb.de;
-	mf=PGFybmRAYXJuZGIuZGU+;
-	rt=PGxpbnV4LXBlcmYtdXNlcnNAdmdlci5rZXJuZWwub3JnPg==;
-	s=fm2:rsa-sha256:bIqVVjA4pSecI9tMNYHdDOqcd+5rmAfi3pgpNbOyxcqyDXR
-	I8Sqq4tbEnCDpm67Hbw96/lhs2/ADD7X/SG8+XqXdaoLKSSgx+g17R1Azf6DEzmH
-	MtZs6I4KTLIWJ5FzEMvTAYarqStoo8756BSePDtbSOQzUYeAdmdwdDpIs/SSczNV
-	G3sIbnixJCqH7/07kPzTSCgyTvUr2NyaR4ukO9qhU7iqkCzXEeHTn9rwKmBH+CUp
-	0YzVqbIOx2+8Hl9g7rmpWtiT0ldNPcVbW0kTpBM5FDIuOuQQFYbkZ7Vk7Jd5fbl7
-	b148Dlx0p5TDzb8bu+inrcMpgp+/cY9TPnHyDMg==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-08;
-	repo=github.com/dkim2wg/interop; date=2026-10-28; sw=lmtpprox;
-	action=mi-m=1; hc=12;
-	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
-	from,in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:1ox/+T3m0kOEAlmq1sGFbMgtCHtFlHB6pbQZya3sc78=:3uzdn1y57rhQviNcmBHgc6VsykPb90eUb7QRIui7pyA=;
-X-ME-Sender: <xms:uIHiagz5NZKzNbUpd03HG5vXYGfXVtC_KWUDGUCYSoiONAiEqrFnUQ>
-    <xme:uIHiavGlWpmT8co8loBrIMpSoDTcUgvQQ9m62webm9VRn1pGNdgefR57QudOBjngy
-    jNYgqv6h-RF3HivHRPEmVDPjxX2_vFOg75DVB2XQ-_x1lQ1SdeoI9Fd>
-X-ME-Proxy-Cause: dmFkZTEIv3O/hjA+DS1Gn0fVIHXS/AlrjN17sOycg4LFHdjHUhYgnSW9A9AfSzFMp/tRm8
-    XfzEySVBTxN8zIPtS+CBPtsSP6JNszBAZNX5W9UfT6bJN/vk/EOs8PaPWJeniA9XSfocWz
-    ftw6UyZ82qNvgXYFyKx0TpuXs6v45cKeeqQd8Mpq+fygU/HDIH1Cl55hzEiOly+Hq4Lmva
-    Mymau3PyFPZn57CVBaS63qJjDtn72IWwCaMsSnq0xiuo9pwYW5Q8wmSZpK0gpir1EDpvKi
-    gMehYxBD1ROulWm68oebxW1gk4S9kv3puG4HMihu+ei8PgnmJ2t0Lgup3TXw41U8PLDWsK
-    lS3YQ4A9PipsOmhEztB5/SlxefvJ1nc2wZmxLHv6g2J9A2gE1rUvs5VgiZvup5xsiNLNWa
-    oCb02kALZx9kVU0Pbtlg1t5Wm2h1SbQ5sBYXcRcIPXKEnpkzBWuUWGS/IZuLCyeSskFdN4
-    4zzXKs6wdkeXLrcX2HN20wB6cnvglYFjzZpBZU/958a1bdaRLtaX1oa7NrbEeIe+Oi76LR
-    sBgOLQlP7wp8klAd+GM8pibMeyBYQiX0sOJVu/JcWhO8d3+qVoN1NucM4DAHeS/nLHASOa
-    Od1p7CERwQ/XC73A0PBBx5FIjswIECwC2i7xersOpHk9io1VqHTZq13jr8Pw
-X-ME-Proxy: <xmx:voHiarhT6uMUhmm_U_iPa7YbilWgfR-kEMAw9AaIdneW7rGVZLPpEw>
-    <xmx:voHiahPLWYEUdHWB3dFXUZ3sZzMV7pgFvvp3hwS9J2O20euYSZk0JQ>
-    <xmx:voHiavW7HwyLicLjcznxZnjDILSFDs8HfztwqWvl1HyOzTj2E8i-WQ>
-    <xmx:voHiauAnpXc7yD4RMne4mY95VUK1oeWFxoQIS-UMCuMdj932dAInNA>
-    <xmx:woHiavrbcCXzohZqImWksNq-zvdo8ZPbhv-nacyxu0TrfbZLEl9kZl0d>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.ams.internal (Postfix, from userid 501)
-	id A817332A0093; Wed, 28 Oct 2026 19:14:00 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cvERsC52
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1793230970;
+	b=f7IMFjhzRzaeSHzLugXVpUxBCgENzLG36kKC4JL5fST7tAXTQRaMJd76pp0L04xZUfIn
+	 wxzOR9XYwCj4B1WqV4lbf/lKeUybvWkxcW9cYQUuN+R3ShvUMlY68HwHwCYkgMC+Ut/1h
+	 12tCJ0dzlMW8WISbmb0rWBb48IUNAKkOoy8nZ/2xZKGajcBkZD/2r6xXP1WRtrfM6+RqJ
+	 xXqlRmVtRfSAlogzyDvgyk4MOUwbmIGe8GrFa9Goi90kETtNBfFLPXqpXh3mTcG3s3vfJ
+	 J2IxYfzNTHr0qqsM/eWAAaKBdKMYkI5eJzbVxtSfyAdqXtL9Y1XixGcdz9aTZ3KIkzQ==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1793230970;
+	h=DKIM-Signature:Received:From:Subject:Date:Message-Id:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:
+	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To;
+	bh=ECZz0r+RTXv9bOuCAGgaq/PzW5nzGtLjy2x20XBo0ng=;
+	b=wif5oobg0L1FUuBV8d3RzmCePVDE1guhU5AepV6g9jJx3wTHHp8j9Ci7+fV19e4W0uxT
+	 CNCvwkaEfwU+tWJRcfhsq/UHG516sQf5vqZFi+Mn8khr4PkKMdwpouSf/Nj7ImllovUUt
+	 tcS/P1lN+V5sEqL4m6H45CIKx72vJVagLyn5d2ReFRxOgnIsq5R5pFpRQz1UodUG3V9TF
+	 v/U/8WyAVhN/sV9fV4hDy8xQKCLMSpi1MWhW8PE6egCGdjLnKWG+eY25mntC8isV4R/gO
+	 oKw+j0kZklD079KjN43VS2XpAfHuxdjEuSvvpkSMuqzrGMghUXL+HRfxt/cMkhHzHmA==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.kernel.org (Postfix) with ESMTPS id 23E971F031E0;
+	Wed, 28 Oct 2026 23:42:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793230970;
+	bh=ECZz0r+RTXv9bOuCAGgaq/PzW5nzGtLjy2x20XBo0ng=;
+	h=From:Subject:Date:To:Cc:Reply-To;
+	b=cvERsC52myc/weFGChKPYPqIZ/RMbxuZHUXkEPSoRyySQIAXRnj8/cbPstA7D98Sw
+	 yX8Qve7HX/WAXg/6rICFY8U/QJfC51Vc3WeqoojT90kqYNSDtbvE3uooQCuRhCIfGp
+	 WNNwbVDnpAx/LZNclEubIMYbCLdXZ0oTryt7MkLjAuflpos4ThgRA0JbMs9kpD3J2l
+	 azqhSDk090k4y+iDmcS/ycWRkJ6MQLC0itEq+8l6/Vcxjz2c2G6D9ZM0yA+09pU9VP
+	 pV0Qh1xRdO56EJvwDWdJ7vswiu8oxi3gfXJojQK5858umJrge7lBSgReCwj5ddxAXG
+	 0S04aU6DL7KTg==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id 6E8C845623;
+	Wed, 28 Oct 2026 23:42:48 +0000 (UTC)
+From: Alireza Haghdoost via B4 Relay <devnull+haghdoost.uber.com@kernel.org>
+Subject: [PATCH v6 0/5] perf script: Lazy symbol loading
+Date: Wed, 28 Oct 2026 16:42:31 -0700
+Message-Id: <20261028-perf-symbol-memory-send-v6-0-7e90415f0101@uber.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -115,190 +83,158 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-ThreadId: AUJ1OXWu3nCJ
-Date: Thu, 29 Oct 2026 00:13:29 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "James Houghton" <jthoughton@google.com>
-Cc: "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
- "Arnaldo Carvalho de Melo" <acme@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Pavel Begunkov" <asml.silence@gmail.com>,
- "Alexei Starovoitov" <ast@kernel.org>, "Jens Axboe" <axboe@kernel.dk>,
- bpf@vger.kernel.org, "Daniel Borkmann" <daniel@iogearbox.net>,
- "David Hildenbrand (Red Hat)" <david@kernel.org>,
- "David Sterba" <dsterba@suse.com>, io-uring@vger.kernel.org,
- "Jim Mattson" <jmattson@google.com>,
- "John Fastabend" <john.fastabend@gmail.com>,
- "Josh Poimboeuf" <jpoimboe@kernel.org>, "Kees Cook" <kees@kernel.org>,
- kvm@vger.kernel.org, "Liam R. Howlett" <liam@infradead.org>,
- linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-perf-users@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, "Lorenzo Stoakes" <ljs@kernel.org>,
- "Chris Mason" <mason@kernel.org>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
- "Masami Hiramatsu" <mhiramat@kernel.org>, "Michal Hocko" <mhocko@suse.com>,
- "Ingo Molnar" <mingo@redhat.com>, "Martin K. Petersen" <mkp@kernel.org>,
- "Namhyung Kim" <namhyung@kernel.org>, "Paolo Bonzini" <pbonzini@redhat.com>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Steven Rostedt" <rostedt@goodmis.org>, "Mike Rapoport" <rppt@kernel.org>,
- "Sean Christopherson" <seanjc@google.com>,
- "Suren Baghdasaryan" <surenb@google.com>,
- "Thomas Gleixner" <tglx@kernel.org>,
- "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>
-Message-Id: <32fad21b-5bad-4640-97df-ef0f638cd9e9@app.fastmail.com>
-In-Reply-To: <20261027231728.1466446-1-jthoughton@google.com>
-References: <ac22215d-3e58-4aab-851e-47c30836e058@app.fastmail.com>
- <20261027231728.1466446-1-jthoughton@google.com>
-Subject: Re: [RFC PATCH 00/10] uaccess: Refuse and warn on user accesses when
- current->mm is NULL
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/4XQy2rDMBAF0F8JWldlNHq4yqr/UbrQY9yo1HaQE
+ tMQ/O+VUijGkHR5YebcYa6sUE5U2H53ZZnmVNI01mCediwc3PhBPMWaGQIasELzI+Wel8vgpy8
+ +0DDlCy80Rk5d6IMTLshoWd0+ZurT901+e//N5ew/KZwa1yYOqZzq+q16Fm3u/5ZZcOAiSmmAU
+ PTQvZ495ecwDayVzLhm7H0GK6Os9i89gItd2DByxeCDa2RlJClCqYI00m8Y9ccIALzPqMqA0xa
+ 9Ry0tbRi9Zh5co9tvjI6BPHpQdsUsy/IDQQ3JFusBAAA=
+X-Change-ID: 20260915-perf-symbol-memory-send-e7cfca1ac3d9
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, Alexei Starovoitov <ast@kernel.org>, 
+ Andrii Nakryiko <andriin@fb.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Alireza Haghdoost <haghdoost@uber.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5717; i=haghdoost@uber.com;
+ h=from:subject:message-id;
+ bh=I7N5Bf76g9ySc8B9hPxsvNQM5HTuObGIpMG8qtSCIQs=;
+ b=owEBiQJ2/ZANAwAIAVNlBDxl2ALYAcsmYgBq4oh218Zng+HW1pW3buKMJJD5qD4KnJyTfSmEA
+ sdOu458+9GJAk8EAAEIADkWIQS5+sFL3gX/8PrA0S1TZQQ8ZdgC2AUCauKIdhsUgAAAAAAEAA5t
+ YW51MiwyLjUrMS4xMiwwLDMACgkQU2UEPGXYAthy7g/+MCxAMZWJXt65QlGMj4OWSnS+bd1niWD
+ Z8fm35UghymiP+MefBW+cArgFGd3AZ8YXXtFfo51HHK3ERv9CIdT2LC4MQpKhTWNjnvkVF80Z0l
+ qQ9yAGsa3yxCDk0fOfKayw5BC86NDzwWB14sAOeMp8k0V8RAEAm1URHINmsLZeYXBJY3DIeYmoA
+ F7x1vLtfuSiW/w8SgkanA3AKpvv8d0Z8ilrquW3yzaTPWV63MJdOOoCH/6nF0s/w/T02SHkWrtC
+ cGBs0DaM54C4dWgurwhwobmmIi/RA1wPxBox2CSmFTG3MAqVlwZCV+d5XmQWNu5k9Fce8XSw2XB
+ 1IVcxlGIEVrmjTeNevvDqPOQ58bxhyWTpvCDPVAtFGNpyAHq6YAVAiZoWtJfGS3WePfi4YuUDKa
+ GS9BZtSHF2mLNGz3SLR8jcUm4n04eIWvvLxtzA6jQEa1xOid/C6l6kogXI76qim64mK6UVhbGEd
+ b04r5599WuHqu4Qld05fTVHpPYPZ6Pl4LABm6HMwBg09bj5koPjT7JrPRvo1XmSOu4bjITpUCyP
+ EySq5vqGkJe4fajvZ4CqNvZIByi8d3YrZ+EQDTjvjPqibvDoDVRZ3kq1FCyOYypW3j0rWZAzE2A
+ PKdQalE1pHeqSoQ5vX67kk2Iu7q0kSdpEDG7wOKwqnsURTY31eMM=
+X-Developer-Key: i=haghdoost@uber.com; a=openpgp;
+ fpr=B9FAC14BDE05FFF0FAC0D12D5365043C65D802D8
+X-Endpoint-Received: by B4 Relay for haghdoost@uber.com/default with
+ auth_id=764
+X-Original-From: Alireza Haghdoost <haghdoost@uber.com>
+Reply-To: haghdoost@uber.com
 
-On Wed, Oct 28, 2026, at 00:17, James Houghton wrote:
->>
->>  - does there need to be any compile-time configuration to skip
->>    the extra checks and/or the warnings?
->
-> Since patch 10 moves the warning out of line, it costs nothing on the
-> fast path, so making the WARN configurable wouldn't save anything. The
-> question is really whether the mm check itself should be configurable,
-> and that check is also what makes the access safe.
+perf script loads the entire ELF symbol table of every DSO that appears
+in a sample, and keeps each symbol, with its demangled name, until
+process exit. Most of those symbols are never sampled. On a large
+profile this turns symbol loading into the main memory cost of perf
+script, and in a memory-constrained cgroup into an OOM kill.
 
-Right, makes sense.
+This series adds an opt-in lazy loader for userspace ELF DSOs, after a
+regression fix and two preparatory patches:
 
-> The text size increase seems manageable[1], but it would be great to
-> hear other people's thoughts. For the runtime cost, I'll do some
-> performance testing. My guess is that a load of current->mm and a
-> well-predicted branch per user access will be negligible, but I'll get
-> numbers.
+  [1/5] Fix a broken "#ifdef ELF_C_READ_MMAP" guard so perf actually
+        mmaps ELF files instead of malloc'ing section data. This is a
+        standalone regression fix for 22dd1ac91a77, which Ian's series
+        [1] also depends on.
 
-Sounds good. I agree this should not have much of a performance
-impact, and for the size it is probably as good as it gets without
-a major rework of the lazy mm switch.
+  [2/5] Split the size, type and binding checks out of
+        choose_best_symbol(), so that the loader can tell which aliases
+        need their names. No functional change.
 
->>  - are there any cheaper ways to make it safe than to add a
->>    condition on each user access?
->>    E.g. the original lazy mm switch was intended to avoid
->>    expensive TLB flushes when switching to a kernel thread and
->>    back to the original task on 32-bit x86. On modern CPUs,
->>    the MMU can deal with multiple ASIDs cheaply, so turning
->>    off user access in a kernel thread may be cheaper than
->>    adding code to uaccess depending on the architecture.
->
-> That's a fair point. If user memory were inaccessible in kernel threads
-> and after exit_mm(), every such access would fault, and the fault
-> handler could WARN about it (x86's do_user_addr_fault() already has a
-> !mm branch), so it could still be loud without a check on every access.
->
-> I'll look into disabling lazy mm switching on x86 and doing some
-> performance testing with that (like comparing the per-uaccess check
-> with the added cost of non-lazy mm switching).
->
-> Other than the performance difference, I see these issues with making
-> uaccess safe entirely with the mm switch mechanics:
->
->  - It only helps on architectures (and configs) that implement it,
->    while the common check works everywhere today.
+  [3/5] Make the symbol name a pointer instead of a flexible array, so
+        that a name can be set after the symbol is in the rb-tree.
 
-Yes, this would probably be opt-in by architecture, unless we decide
-to give up on lazy mm switch altogether and pay the performance
-penalty for that on CPUs without ASID support. Either way it is not
-be something we can do right away but that we can still consider
-in the future.
+  [4/5] Add --lazy-load-symbols to load symbol names lazily.
 
->  - The fault handler would need to tell legitimate faults apart from
->    bugs, e.g. copy_from_user_nofault() from BPF or perf in a kernel
->    thread is fine and must stay quiet.
+  [5/5] Unit and shell tests.
 
-Would it be possible to move those checks into the individual
-callers that want to avoid the WARN_ON(), with a comment on
-each one explaining why they do that? It feels more consistent
-to always warn here, and I would expect that for most of the
-_nofault() users we do want the warning, and I'm still unsure
-what is special about these.
+On a perf script run over a 45,073-sample callchain profile of a large
+C++ service (about 1M symbols), the output is identical in all four
+cases (medians of five runs):
 
-> The series handles that today by
->    checking current->mm in the nofault helpers (patch 6).
->
-> The two approaches are mostly complementary: if non-lazy switching
-> turns out to be cheap enough, an architecture that does this will have
-> better defense against uaccess bugs. But I'd still like the common
-> check so that these bugs are reported on every architecture.
+                                      time    max RSS
+  perf-tools-next                     3.3 s   334 MiB
+  v6                                  3.2 s   341 MiB
+  v6 --lazy-load-symbols              1.5 s   154 MiB
+  v5 --lazy-load-symbols              1.4 s   136 MiB
 
-Agreed. My main remaining concern is about the number of functions
-that need the additional check, if we want to avoid missing
-any of them. If we can have the check in access_ok(), that would
-cover the majority of the functions you are changing right now,
-and it looks like we can deal with the corner cases individually.
+Eager loading remains the default, and costs 8 more bytes per symbol for
+the name pointer. Lazy loading covers userspace ELF .symtab and .dynsym.
+The kernel, modules, PPC64 .opd and .gnu_debugdata still load names
+eagerly.
 
-Since in principle every user access should go through both
-access_ok/mask_user_address and current->mm check at some point,
-so combining the two as much as possible should help long-term
-maintainability.
+Ian's series [1], which removes the priv area and replaces the rb-tree
+with an array, would shrink each symbol further. This series does not
+depend on it, and I'll rebase on it if it lands first.
 
->> There are of course few enough of these left that I think
->> we can consider doing the same thing here and turn them all
->> into the checking version:
->>
->> $ git grep -wl __copy_'\(from\|to\)'_user  drivers mm virt
->> drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
->> drivers/gpu/drm/i915/i915_gem.c
->> drivers/gpu/drm/i915/i915_query.c
->> drivers/usb/gadget/udc/atmel_usba_udc.c
->> drivers/vhost/scsi.c
->> drivers/vhost/vhost.c
->> mm/kasan/kasan_test_c.c
->> virt/kvm/kvm_main.c
->
-> Agreed, I think we should clean those up, but that can be done
-> separately. This series already adds the check to the common
-> __copy_{from,to}_user() and __copy_{from,to}_user_inatomic() wrappers
-> in include/linux/uaccess.h (patches 7 and 8), so the KVM path is
-> covered without converting the callers first.
+[1] https://lore.kernel.org/all/20261027231513.816148-1-irogers@google.com/
 
-Right, if dropping __copy_{from,to}_user() as global interfaces does
-not help add the check in a consistent way, that can wait as well.
-It looks like we are very slowly converting away from them already,
-as we have about half the call sites left compared to v5.0.
+Changes in v6:
 
-There are probably few enough of these that we could address them
-by either adding current->mm checks or converting them to use
-the full versions instead where that is an obvious change like
-that usb gadget driver.
+- Keep the symbols in struct symbol and load only their names lazily,
+  instead of v5's separate per-DSO index (Namhyung).
+- Drop v5 2/5 ("perf dso: Allow reading DSO data from an explicit
+  file"). Names are read with pread() from the symbol-table file that
+  dso__get_filename() returns. The file remains open only while perf
+  reads the names. This path does not use the data cache (Namhyung).
+- Replace v5 3/5 ("perf symbols: Factor out duplicate symbol
+  selection") with 2/5, which only splits out the name-independent
+  checks. struct symbol_candidate is gone, and choose_best_symbol()
+  still takes struct symbol (Ian's v4 question).
+- New 3/5: point to the symbol name instead of embedding it.
+- 4/5: rewritten for the new design.
+- 5/5: replace the index tests (truncated names, lazy address and name
+  lookup, nested range lookup, address lookups racing name lookups,
+  lookups racing DSO data reads) with tests of long and unreadable lazy
+  names and of names loaded concurrently. The duplicate selection test
+  now checks which pairs need names. The eager/lazy parity unit test,
+  the parity shell test and the perf script shell test stay. The parity
+  shell test drops its nested symbol case, since both modes now share
+  the same address lookup. The perf script shell test compares the
+  whole output, and reports a skip only if none of its cases can run.
+- Rebase onto current perf-tools-next.
 
->> As a quick fix I would probably start with just the 'if (!mm) return false'
->> bit here to get something merged while we still discuss the other
->> details.
->
-> Making the same point as Sean[2] but with a little more detail, I had
-> thought about making the change in access_ok(), but:
->
->  - On x86-64 and powerpc, the masked user access paths don't call
->    access_ok() at all. That includes copy_from_user(),
->    strncpy_from_user(), strnlen_user() and every scoped_user_*_access()
->    block, which is where many of the converted __get_user() users ended
->    up.
+Previous versions:
 
-Ok. Apparently there is some of this on arm64 as well, using
-__uaccess_mask_ptr() instead of mask_user_address().
+v5: https://lore.kernel.org/all/20261005-perf-symbol-memory-send-v5-0-165dceb2b049@uber.com/
+v4: https://lore.kernel.org/all/20261002-perf-symbol-memory-send-v4-0-0a592bb2539e@uber.com/
+v3: https://lore.kernel.org/all/20260925-perf-symbol-memory-send-v3-0-3e4e234c363b@uber.com/
+v2: https://lore.kernel.org/all/20260919-perf-symbol-memory-send-v2-0-495b8f00ad7c@uber.com/
+v1: https://lore.kernel.org/all/20260915-perf-symbol-memory-send-v1-0-1d3360e21f07@uber.com/
 
->  - __copy_{from,to}_user() and __copy_from_user_inatomic() skip it too,
->    and the KVM bug followed exactly that pattern: the range was checked
->    once up front, and the access came much later from a different
->    context.
+---
+Alireza Haghdoost (5):
+      perf symbols: Fix broken ELF_C_READ_MMAP fallback guard
+      perf symbols: Split out name-independent duplicate symbol selection
+      perf symbols: Point to the symbol name instead of embedding it
+      perf script: Add --lazy-load-symbols to load symbol names lazily
+      perf test: Test lazy symbol name loading
 
-Arguably this is itself a TOCTOU issue and replacing
-all __copy_{from,to}_user() with copy_{from,to}_user() would be a better
-solution long-term, if we can do that.
+ tools/perf/Documentation/perf-script.txt           |   7 +
+ tools/perf/builtin-script.c                        |   2 +
+ tools/perf/tests/Build                             |   1 +
+ tools/perf/tests/builtin-test.c                    |   1 +
+ tools/perf/tests/shell/lazy_load_symbols_parity.sh | 284 +++++++++++
+ tools/perf/tests/shell/script_lazy_load_symbols.sh | 177 +++++++
+ tools/perf/tests/symbol-lazy.c                     | 544 +++++++++++++++++++++
+ tools/perf/tests/tests.h                           |   1 +
+ tools/perf/ui/browsers/map.c                       |   2 +-
+ tools/perf/ui/stdio/hist.c                         |   1 +
+ tools/perf/util/dso.c                              |   2 +-
+ tools/perf/util/dso.h                              |   3 +-
+ tools/perf/util/symbol-elf.c                       | 251 +++++++++-
+ tools/perf/util/symbol-minimal.c                   |   6 +
+ tools/perf/util/symbol.c                           | 140 +++++-
+ tools/perf/util/symbol.h                           |  40 +-
+ tools/perf/util/symbol_conf.h                      |   1 +
+ 17 files changed, 1429 insertions(+), 34 deletions(-)
+---
+base-commit: e74880764bf94b738102b4b6b6e8304d0c8375d3
+change-id: 20260915-perf-symbol-memory-send-e7cfca1ac3d9
 
->  - access_ok() is also used as a plain range check where having no mm
->    is fine. For example, copy_{from,to}_user_nofault() call
->    __access_ok()/access_ok(), and BPF and perf legitimately call those
->    from kernel threads, so a WARN there would fire on valid tracing.
+Best regards,
+--  
+Alireza Haghdoost <haghdoost@uber.com>
 
-These at least could be easily worked around by just skipping the
-calls to copy_{from,to}_user_nofault() as mentioned above.
 
-      Arnd
