@@ -1,56 +1,108 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.49
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793212130;
-	b=aEXATfZTe4NMWsGBun2mg/BuroMhjuOy15NZr7q3xtAqigUpwRMf6agCmBGOv8xgurnr
-	 QZiZg+9zW+2hWqX/rMX0y1Ec1VmegF7eJzCYB3KGWegmCZF+RyTg9ITgwxRAYzfpUvdGG
-	 vEl+7GFIl8Dsuym+q/aPtYqAgPG2UbtexP15YZC5CzL9iqf0PpMIKBxjoyiTEdlrrby1J
-	 LFq52wLiJA4Rl6kTzpeQcF/4r/npzZKEW5Nr7ymUYRralBFkt2+XisuZTanQG+1laMEh8
-	 nUsehz7SI5Nzo2U/7wlClRP5nzyEUjPFqXrdwwFManKC2u8lPuzMkrOvRbf10dS7Dcg==
+	t=1793212301;
+	b=Bawcqq3KE1FRGaRx6htrleYDmwashnzvI4jqPAvWXGZImw0w1ueNp9q9VoRyo5aJM0O5
+	 68r5YaLetfHy3QSBpmnnUU5OfrYs0wTB/FjCa6ROxjysjXUmEe/QTTv+LfkI2OhHa7ZBz
+	 A5907emOIjOyIYWZzYkvAkidf67hRRwlLl6ZRMHsyDW9G7uEP3TMQqIWuuhH65rxeWy1M
+	 RbHcOAba9SU28FCSvjHDxE71Z8tz3CXSijFb9qs99EgwH4gDLxedZugQ4Jek2mcaaeq2w
+	 S/J7sVx4geepRg3pyECR3BgtKl7X7YtnFe5QpJ5kIU2UizmEGH0n5FDOCSPkCPejK6g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793212130;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=BfIc08y3naB+NIO2v1ca/wpqLeSCy44yCOdFRZHR2uo=;
-	b=PLwSIt3c/hGS055bw8mRFk7TLTCoGEqvyYPJTn/fXWvwo1R53N7KqiMvLusmXXheiB7y
-	 EB50RvWDddHrmYO68wKdhJzQT4qj1vzEblwiNWo5T2Lzfr17YXhiGYimDs6wgUbcX1AK7
-	 0RoACEjumD9KI4OXbKXQujB6pyCmuHXjYFCz8xg6nlWRSd6DOlzNXgEBDEUtgGykhv3Rr
-	 6VAVyUjk7qH08BRHkfOPCy3SDSC0eD5P3lAj8y+NnUQNFMyLF0jXaxzfMOLMM8jrwi5LP
-	 KfaR8snfjBeI7QuklfJfB2pHOukQYD+4qsWALnohyPOTl4AL68ndE2K8Foe3rPZCaQA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793212301;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=X+QvVRHeWMxizCTRKzuAHQ+22/m0nu959maLN9qWALg=;
+	b=HwhV5qfTuEqRTqvQhoDNHnCT6vW6EtIoeVACElG9eeeU/sS6PX4Ed4AAElPZ3Vx3Zrbj
+	 S3kf5L0yWMwuX5M6oYrz8Mxn4Aig20Db5NZtx660/cJzoAH5ECNHoTCL7Yhdx3zC11VrI
+	 BH9eUIYCVAAlboCUq52OCRQgG4qBZj4Y3PfSb9SrF4MOmsY6PjkniGgalSqvfwdwTpbkD
+	 NuGsSCfw8DbDWlLkB2XOR+nABXjzsK7+tI8FsWxSf4tYgHupfDKrrKQHek89CDcTrbG5R
+	 WpjUDiJd/azztFyZ8PrKrsMtn8MMZT3/Gv9fvjX5vTXyigR2zRDzTWKQVUKcRsdqg1g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lyJwaiqq;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="Q3I/SShW";
+	arc=none smtp.remote-ip=209.85.128.49
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2430606A31E
-	for <linux-perf-users@vger.kernel.org>; Wed, 28 Oct 2026 18:28:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1FFD606A31A
+	for <linux-perf-users@vger.kernel.org>; Wed, 28 Oct 2026 18:31:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C1FFD606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lyJwaiqq
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 491551F01828;
-	Wed, 28 Oct 2026 18:28:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793212129;
-	bh=BfIc08y3naB+NIO2v1ca/wpqLeSCy44yCOdFRZHR2uo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=lyJwaiqqjLdbpZhhC2Zl5lLQ8UuyaWmmJ5YkO9AH98EWPq5saU2cZB0BGcZOwj3Kk
-	 Xa3jNYECjjc8C/LBAdPhoadzqh64EdIgsayahBwQKSBG1vMf0M+M8MrIHPJHIXDLnj
-	 UbD7KSMv4eyBcIgEcfONTVAC1/LD/uJbGPiIFCJ/NvTuQbAs/qLt3PO+vWxLksXorg
-	 cVTjj56AZZDho8CrVkk10eb0GtDswv54+XfEQnHr0Tt4ilezBvi6gzkq33ykNtP+hz
-	 a9Nfk5tVwkRfuMFU01iC99/eGPLoVFLC30uk05qiSp2fCumzCI66+aFTSAJP7C4lhy
-	 MngaBG/5atPjA==
-Message-ID: <sashiko-outbox-188288@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/5] alpha/perf: implement ProfileMe sampling
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Matt Turner" <mattst88@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261028-alpha-profileme-v1-3-d44b52bf2500@gmail.com>
-References: <20261028-alpha-profileme-v1-0-d44b52bf2500@gmail.com>
- <20261028-alpha-profileme-v1-3-d44b52bf2500@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 28 Oct 2026 18:28:48 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Q3I/SShW
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4a5177d78c7so12873625e9.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 Oct 2026 11:31:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793212299; x=1793817099; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=X+QvVRHeWMxizCTRKzuAHQ+22/m0nu959maLN9qWALg=;
+        b=Q3I/SShWWIQLoN2RtHEvS3tWyt5qY8W/OL12MoF4oRRZohECYlsMONQyUzyl3lwFs3
+         dS8/l5SIzHnQV95IUGRfYVivCw80NKIlwiVbB5EfxMB2OSFPl/mQQTgSbC83u9K1E5gB
+         beQYiwuVcn+D1KL+RCmy+NZzb5kgy7hbubOhgQdyADaiKZa3TLTwWRrr05JHXZ6Hrq7L
+         UtyDKdZ7795d7EDIeGC5/E0R5wXO4N0GIBIUC0LTKVMN2Mr+aHlzWFAIZ552k6mDtHby
+         dsLy5FvT5eOaQOEtxMEDuMGr+KSRP+VoW1ehD95Cio/5wcmRqahTaDDG02V3tIwYsa2E
+         8fWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793212299; x=1793817099;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=X+QvVRHeWMxizCTRKzuAHQ+22/m0nu959maLN9qWALg=;
+        b=GhjrGfiztTTRWrhD5PYdH4ztXrHhFW0usF+Ws63FiEO+Tu9vELur9Vrx4LY5dz9JTX
+         M1lOum5Vqjhw71UOXBY3lXszfTCjt1hwMRw6cZfiQyVAPPf4ICLPiWnIi3aR3rnMOB1y
+         kLwxjK8o/t5lwkzW7gVa1xofmQ/d3eCW0YxnoQR9dwi4oZZSv+hsQokl3jKebeTFPb14
+         QX9qtJNJTRiG98yCjdCGBYgPdey4jSFAIjUE2x9j/0fCMLK70Kbb06rrRRrqERykNryx
+         HKlttsuKUJnDjxRsdvse+ynHYYoP70cj8IQfVqPxOiKke8Fe8MglncZ3rS/Bo1On7UeI
+         3ypg==
+X-Forwarded-Encrypted: i=1; AKwUvBxehnDynYhH1Sr4pBLeHAGJ60C7VbFiUKtSgqPSD/imKVY0+rpy8aZOPrkKBwD5BPyb+ACF/0lYQuQEezwu/FN/@vger.kernel.org
+X-Gm-Message-State: AFq9FYIcA3NU0iGYFjDfOu1J00DfvMfSDOztGGWjoabl8z/nB2gQE4BV
+	PUjFoxVeC2ZocsoJ54S+BjVfuUKt2/nwGDoFAEGJAeZm8QpBIwiRvZ+LdnTQU30Qdgg=
+X-Gm-Gg: AYBFou07D3dAJOPlSLXx2/ZEXoLXLv36FURlqANdHhOtndZcdZoOLuhlsFlkxjQFxod
+	GJL/JtGv3Zq714F72JpT3Hwz+wOfbHYu/alvbQDrDT0WiBbPZ35qk8HgFxrGCiZasf8jpxZyTdl
+	ixZiW8iKJFjB4p/K65I32ARLKDa6CmMp+sAuDWlBLQJS+eg62y3dZ3dJupgPF2fwUuMcrdxh0KV
+	FXeXVMirJqEKtVBa+aycVz50kIrJ+OhzrQN9psONScem7Wgqw3yteY15Ju2zo+k7kAre1yNAqT9
+	XztmFWOyug+E7RTtna5g6/OoLZTHui4QBgY1hZYrjz9ePpRBwm3MkTHUmv8YH8fLzRfO78dsS9G
+	J6Fah55gVTdIUoK3nOuHpFX7znpqiTCjftSSuYKJG9JnJLpyn2ZAFOCG6mUTODzzm6rKurv38O1
+	4M7ZngdPJ13MV8QHCggOEuvaP2i9ZY1YVKaffsx8toh29EJ3pnNKaJdpEB07LdsO7ho1FYGyz78
+	uo9cI7GnMpqG30smIOPUN2N1t9H2YdiDNv5x5t5Bpz6gi72kQq4U388hCKzA/jGbiLo3r9+S6yC
+	IEcZLaqQQdDsrGmijRwlWI2lPH30huZCo/HbpztihkvqNOZ0
+X-Received: by 2002:a05:600c:4452:b0:4a2:fe3:121b with SMTP id 5b1f17b1804b1-4aa4eb767d1mr29197025e9.28.1793212299033;
+        Wed, 28 Oct 2026 11:31:39 -0700 (PDT)
+Received: from localhost ([5.83.201.131])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e3eb8f25fsm29193591f8f.2.2026.10.28.11.31.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Oct 2026 11:31:38 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: John Garry <john.garry@linux.dev>,
+	Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@arm.com>,
+	Leo Yan <leo.yan@linux.dev>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	coresight@lists.linaro.org,
+	linux-perf-users@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] perf cs-etm: Fix spelling mistake "should't" -> "shouldn't"
+Date: Wed, 28 Oct 2026 18:31:37 +0000
+Message-ID: <20261028183137.537812-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.55.0
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,162 +111,30 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] alpha/perf: wrong register and stack state in alpha_perf_event_pro=
-fileme()
---
+There is a spelling mistake in a pr_err error message. Fix it.
 
-commit 4ba1c82f19c556ae6c582ff386ff198b05c6a1eb
-Author: Matt Turner <mattst88@gmail.com>
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ tools/perf/util/cs-etm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-alpha/perf: implement ProfileMe sampling
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index bdcf94813129..65bce2450549 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -434,7 +434,7 @@ static int cs_etm__map_unformatted_trace_ids(struct cs_etm_auxtrace *etm)
+ 			continue;
+ 
+ 		if (!intlist__empty(etmq->traceid_list)) {
+-			pr_err("CS_ETM: Unformatted queue should't have trace ID\n");
++			pr_err("CS_ETM: Unformatted queue shouldn't have trace ID\n");
+ 			return -EINVAL;
+ 		}
+ 
+-- 
+2.55.0
 
-This commit implements ProfileMe performance counter sampling on Alpha
-EV67 and later processors, selecting it via the profileme config attribute
-or precise_ip and attributing samples to the PC latched in PMPC.
-
-> diff --git a/arch/alpha/kernel/perf_event.c b/arch/alpha/kernel/perf_even=
-t.c
-> index 70840c05d39bf..24c96feda9424 100644
-> --- a/arch/alpha/kernel/perf_event.c
-> +++ b/arch/alpha/kernel/perf_event.c
-
-[ ... ]
-
-> @@ -832,6 +904,61 @@ void perf_event_print_debug(void)
->  }
-> =20
-> =20
-> +/*
-> + * Handle the close of a ProfileMe window on PCTR0.
-> + *
-> + * PCTR0 stops counting when the window closes and does not start again
-> + * until PCTR_CTL is written, so the status must be read first and the
-> + * counters then rearmed unconditionally.
-> + */
-> +static void alpha_perf_event_profileme(struct perf_event *event,
-> +				       struct hw_perf_event *hwc,
-> +				       struct pt_regs *regs)
-> +{
-> +	struct perf_sample_data data;
-> +	struct pt_regs pm_regs;
-> +	unsigned long i_stat, pmpc, ovr;
-> +
-> +	i_stat =3D wrperfmon(PERFMON_CMD_I_STAT, 0);
-> +	pmpc =3D wrperfmon(PERFMON_CMD_PMPC, 0);
-> +
-> +	alpha_perf_event_update(event, hwc, 0, alpha_pmu->pmc_max_period[0]+1);
-> +
-> +	/*
-> +	 * When PCTR0 counts instructions, up to 7 of them are counted after
-> +	 * the overflow but before the window opens. I_STAT reports how many.
-> +	 */
-> +	if (!(hwc->config_base & EV67_PCTR_PCTR0_CYCLES)) {
-> +		ovr =3D (i_stat >> EV67_I_STAT_OVR_SHIFT) & EV67_I_STAT_OVR_MASK;
-> +		local64_sub(ovr, &event->count);
-> +		local64_add(ovr, &hwc->period_left);
-> +	}
-> +
-> +	/*
-> +	 * Attribute the sample to the profiled instruction rather than to
-> +	 * wherever the interrupt landed, including the user/kernel mode that
-> +	 * perf derives from regs. A PALmode PMPC is a physical address that
-> +	 * perf cannot resolve. That happens for ITB miss, Istream access
-> +	 * violation and interrupt redirects, and for instructions inside
-> +	 * PALcode. Keep the interrupted PC, which for redirects is the
-> +	 * instruction that trapped.
-> +	 */
-> +	pm_regs =3D *regs;
-> +	if (!(pmpc & EV67_PMPC_PAL)) {
-> +		pm_regs.pc =3D pmpc & EV67_PMPC_PC_MASK;
-> +		/* PS bit 3 is the mode bit that user_mode() tests. */
-> +		if (pm_regs.pc < TASK_SIZE)
-> +			pm_regs.ps |=3D 8UL;
-> +		else
-> +			pm_regs.ps &=3D ~8UL;
-> +	}
-> +
-> +	perf_sample_data_init(&data, 0, hwc->last_period);
-> +
-> +	if (alpha_perf_event_set_period(event, hwc, 0))
-> +		perf_event_overflow(event, &data, &pm_regs);
-> +}
-
-[Severity: High]
-When a user-mode instruction is profiled (pm_regs.pc < TASK_SIZE), but the
-PMI is delivered after the CPU has entered kernel mode (!user_mode(regs)),
-regs is the kernel interrupt trap frame containing live kernel GPRs, while
-the user task's registers live in task_pt_regs(current).
-
-By copying *regs into pm_regs and setting pm_regs.ps |=3D 8UL before calling
-perf_event_overflow(), user_mode(&pm_regs) evaluates to true in
-kernel/events/core.c:perf_sample_regs_user():
-
-	if (user_mode(regs)) {
-		regs_user->abi =3D perf_reg_abi(current);
-		regs_user->regs =3D regs;
-	} else if (is_user_task(current)) {
-		perf_get_regs_user(regs_user, regs);
-	}
-
-and in kernel/events/core.c:perf_sample_regs_intr():
-
-	if (exclude_kernel && !user_mode(regs)) {
-		regs_intr->abi =3D PERF_SAMPLE_REGS_ABI_NONE;
-		regs_intr->regs =3D NULL;
-	} else {
-		regs_intr->regs =3D regs;
-		regs_intr->abi =3D perf_reg_abi(current);
-	}
-
-Doesn't this cause PERF_SAMPLE_REGS_USER and PERF_SAMPLE_REGS_INTR (even
-when attr.exclude_kernel is set) to record live kernel registers from the
-kernel interrupt trap frame into the user-visible perf ring buffer instead
-of fetching task_pt_regs(current), while also corrupting user DWARF
-callgraph unwinding?
-
-Additionally, if current is a kernel thread when this happens,
-perf_sample_regs_user() sets regs_user->regs =3D &pm_regs while
-perf_sample_ustack_size() returns 0 (since current->mm is NULL), which
-causes perf_prepare_sample() and perf_output_sample_ustack() to disagree
-on the PERF_SAMPLE_STACK_USER record size.
-
-Similarly, when !user_mode(&pm_regs) is true (pm_regs.pc >=3D TASK_SIZE),
-passing the stack-local &pm_regs to perf_event_overflow() affects
-arch/alpha/kernel/perf_regs.c:perf_reg_value():
-
-	if (idx =3D=3D PERF_REG_ALPHA_SP) {
-		if (user_mode(regs))
-			return user_stack_pointer(regs);
-		if (!object_is_on_stack(regs))
-			return 0;
-		/* Same kernel sp approximation as stacktrace.c. */
-		return (unsigned long)(regs + 1);
-	}
-
-and arch/alpha/kernel/stacktrace.c:arch_stack_walk():
-
-	if (regs && task =3D=3D current) {
-		ksp =3D (unsigned long)(regs + 1);
-	}
-
-Because pm_regs is a local variable on the stack, object_is_on_stack(&pm_re=
-gs)
-is true, so &pm_regs + 1 points inside alpha_perf_event_profileme()'s own
-stack frame rather than the end of the interrupted trap frame (regs + 1).
-And if the PMI landed in user mode after a profiled kernel instruction,
-clearing bit 3 of pm_regs.ps causes perf_callchain_kernel() and
-PERF_SAMPLE_REGS_INTR to treat the user register frame as a kernel frame
-and unwind the kernel stack starting from &pm_regs + 1.
-
-Could the PC and PS adjustments be made in-place on regs (and restored
-after perf_event_overflow()) only when the PMPC mode matches the
-interrupted mode in regs, or how should mode-mismatched samples handle regi=
-ster
-and stack sampling?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261028-alpha-prof=
-ileme-v1-0-d44b52bf2500@gmail.com?part=3D3
