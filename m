@@ -1,90 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.224.46
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793210988;
-	b=fl2iubQWp4i6BZAD37YJo7jnwmLVBF3miF5227Pt5gPawO2VEPkfxc6WFEdRIKwXGP/i
-	 PirDg/ZF2hbf4r20oSow86ICEKDjK5Z99NC6SmpHJYRt+fpM+/3AtlhTslr4EyWPuo4Do
-	 0WhSu98sqO/+S25dZzqm6GtCtVyM6CR01X7tV11uHDDfuqP4GZzza0YeqzAZAFZqMLppK
-	 CAcAC1n1OanBTa1KHF58b+XqhUj4CHKT1bi/h6isLjwI03v5BksFKSnqwPJI2z3jnNPGd
-	 9AnMv41WZSRxju1ZRlJ+4Eahqg9zpYZESBn8+grgj056H1NAHVBBUsuTUiOco0Zaesw==
+	t=1793211028;
+	b=EiOx38VRXC6lUWkpDQVsBHsJ9OrTOX0e70eB9Iqo5+vfs5jaWKJWwdIlAX7pP2hcfC8c
+	 LdKrr+vp4PBjtwpjBU8DNaRcoiUsXmMc9ijCDkgZoZU673o9cyw0CMPoHPFP9VdiRtUx0
+	 Xc5K9CB1JGzE21jMvUPBbGdEo2uhS+fhIm23ITdhmzW6OrOK82HdUGqF2HHGHU5sooS6B
+	 j+JofYwIP1yuG/8NibrLy6TUhOwzRcJnmZXNNZp1de/6tySMHHLhH+VVKINskm77iYAS5
+	 5qZcol3cy7ShF4mnQ3beKUIUPU8r9TsjBQgYH6PeBThbKWtUTs6XnoNyNP/tFnFZhuw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793210988;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793211028;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key;
-	bh=rMVi8SFFXKSrqwlRKxY/pjy3d5De/eMP8nsJ1YLQvSk=;
-	b=qJWaikRRiZePKC2vUHm+Wpa2ITezwo8JIk/QuEg1lflGsyaeUEk2t4d7OeLuBaaeQSWq
-	 WDP5mfLVKY5JopVjD4AGFaJwwMGrXrALTqgKa4+3MFLltUWcs8oqeui1jPTcPaZkdplJH
-	 7c8U0KUg80J7+dpwceIeWIST4ari2u54HCwDP3oqlxhKnulXWLf9hF60k+mzTX4ZW00EC
-	 llJZxN2VQ4RBmNq0vVJzbtl2fTMPLuYa9E39nsNjuzYDLBgJTVw9cE6RSR4F4Q/N6qcDS
-	 oum7XEbL7/98mGS9LhSANJKg/W0xAwLD/fJYJ0kmConkJkxaMj5FCCGqD20EP8+WaCg==
+	bh=DOwDccFEkaXVAmL5llnlgGIc02WBrf8+B8JacnpC5XI=;
+	b=sHeSkn2SBWoqQPGfwJ+oCrJzCdhLyNv+wLXSmjJRQlE+1q2zmrWTinZOrpt9oMa/rRwi
+	 DMl3HCVmfswGejqN1LoWfM7+jgK8Nu2a3zx86BjiYSL9BPXDGK8gCKJ+Kc9Sv9hkbYmoD
+	 ngt8xmkCGZfJlSdp8sP/ZjgI/a5Q/G2rtCUEHU/Gdomldh/lAjGMcHqPoItwn1DgYRj79
+	 TLQla2kVt+ZAXZkaBx1Xfwctq7XvIPjGB4xjKoE4lLFLzlfUfeo+JNYqLc9JpqO+1dt4r
+	 uj2U0NwcMQttJLRqe6OVtlaFNF/uIuoNGGwEOIPcYe3rrY3BfAG7bWTLji9jjOIbexA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Jt6MdRhj;
-	arc=none smtp.remote-ip=209.85.128.171
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=AGmae8n+;
+	arc=none smtp.remote-ip=74.125.224.46
+Received: from mail-yx1-f46.google.com (mail-yx1-f46.google.com [74.125.224.46])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773A9606A33C
-	for <linux-perf-users@vger.kernel.org>; Wed, 28 Oct 2026 18:09:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 773A9606A33C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB20606A335
+	for <linux-perf-users@vger.kernel.org>; Wed, 28 Oct 2026 18:10:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1CB20606A335
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Jt6MdRhj
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-8b0a921ee46so12262897b3.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 Oct 2026 11:09:43 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=AGmae8n+
+Received: by mail-yx1-f46.google.com with SMTP id 956f58d0204a3-6767d92cde6so1455771d50.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 Oct 2026 11:10:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793210982; x=1793815782; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1793211027; x=1793815827; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=rMVi8SFFXKSrqwlRKxY/pjy3d5De/eMP8nsJ1YLQvSk=;
-        b=Jt6MdRhjjDNiJqqa/Pc6TAGqThhSZzxewKrkW+b1dDL7CvX7lyeFXtXjLfsO6PTlBv
-         Rch8BPG+BoazMiqpT3TNNYmVzKS0g6+QVD8AoawuTQYh3Cov/2Fdkfy+H4NB4w2EGp4y
-         9jqyccHm8s2MSUQsv3WzHCVACOCb4d2MEOCR2zoQRzsFR++F/i8Dh3wPN290uwxtJ21Q
-         OZIo5IwBC6G0AvHNQgzQ+PP5oLz6nza3wVZujefGSkYXrr2M+EwTEyAbBruCq4kehB9K
-         5SeUcH1XDw6J3gRv3oYHiv+dMkJI50cSsjk07dZuv9pRGO98QlmAhZ8lrcLxCGYZ+A1b
-         d41g==
+        bh=DOwDccFEkaXVAmL5llnlgGIc02WBrf8+B8JacnpC5XI=;
+        b=AGmae8n+uQHVa0E6gvbilT0/ays/0qJ5OZGhf7S82IcXWnpr9Q/CUMcroKHBBbPcJe
+         SAAbrYF/ht5IIiC2OE7204pvQTv0xxGWc2TBfayLK+NQrVLnYGWNJJBcBN+YtVJBlPcM
+         xDqEox4rjNeMpj1xOU/YnxjLxP4ykVT6zOzRlGDzmUdU00erRw0yBNs6ePQ29PbCTkzX
+         d0pevwsvfKVDn4LdFiqHXXH8EZk1MbNWmp+b/JJfT7EYIDQcgmLBbvXPltbqJhazy/BD
+         4BsI+mQJecKLCZPAN1T95krSpx3OO7Oeau/lhEBFShd+ytQm1JqNqSYC0Lv2TexVQMAk
+         BYeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793210982; x=1793815782;
+        d=1e100.net; s=20260707; t=1793211027; x=1793815827;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=rMVi8SFFXKSrqwlRKxY/pjy3d5De/eMP8nsJ1YLQvSk=;
-        b=bgQCny6bzzdyBlBO4/ZM3EYErU/lBlucLxVAmpch/Sf0qdBYnbm1v0IiivP3zwxMTo
-         cqnzVf35AgEhg6JtYBeUk2ibKfALCVHOOsyPTVwZh3DqxhTXWc1vbe9sJYamcSzzIORm
-         5vUtANlQD5uR9vVF2boSRaTBF8IPV52k37hWkW9E+wcyWmZ0jYasnISyCGbv8lyfHYDL
-         IpEyyZnNzL7drMjwtnBy7Su9XnVPbq308LClrw5m1WQ+7AZczI0dAN+FYYeKh7+Dis84
-         AfIZe7nGd6LNJ2eddJs8RcSlg/Ce0my5X6OvbnblqL2SSMi6eX7YdK3WZWD6EWhqd2UM
-         gQvQ==
-X-Forwarded-Encrypted: i=1; AKwUvByN57MgI/Po9dcK9gkGlh94ViH7rZoO/gBlWOgaLDbqjRvPfLvkux+G84hCSEnwFQXKhpKgi6bNbgnZnS7t8d8Q@vger.kernel.org
-X-Gm-Message-State: AFq9FYIl6k8hb6lSOAQWQA/hxVimF36dMYamIJXWj2iIbLoztUnY2mqt
-	Hpqz72BgNoP0bipNuCP9Y+UZ1a6ukIZpbyZiU/YJYxZwwtP0ib6lO2F/
-X-Gm-Gg: AYBFou1yeYZmfHwsZIvdnRQRBRPUKLNBX/pGRnpqJ5AkBORs/USbfCAXhSaMtn8ZLqv
-	PMZWosa5tyJ0MjFn3verf/oN6SEYomBLxqEzlxfarSbQwhEml6QAVhM6+/oKvwGmTDPYWLQvYEY
-	zs8t6ZiZ2IFroiJ+MQFdLNi5qZwXCkmQlbCZTWnjxWKP3qxLarkLpOnL7nD/26SjZeJSUk7ZZjs
-	AMsyyKs6zxzoWMeb+fcmEGhvKLjViKKJn8+5ijvqonMSQqEiRZs2fcSjPe3eT5H3YhTWlren6+Y
-	aBUTSNiR+53SQL3cOirRCuEVGayzNsEYoVUeG+1EBRtnbxW33xJ2SXrAJjrU5dLVnn59Is3dr8o
-	J5TMhsZtu5QsKeHu5kp23AH+PKdRyhaRd5KCw1wG02d8f14jPqx5VGwINfJHpissL0kxMmz+3XD
-	B4o4STZgmHgSemOGzm8h6QeIEyPxqVIuQ1Tn+idc5/OoK1GQx/4qFxPGofn4yiX3P2TI5O+vGX2
-	z9E2QsiHO3xxGVZl0lP1iqXVqzFqdMg+SiJXrBgCNOGu0gGJXakp8wl8G+kEBAT3QSCLbbGFJN4
-	mjWJ8Qrt9VGHo7ad0Rzbaxm+hfgCWX/4AFpvKg26FDZpqsIhpUr5S/uYvK3SFU3iZP/P/t6kMXd
-	bY99SugRPOtnFz+m/B3puz8+CB59du69M
-X-Received: by 2002:a05:690c:112:b0:8b0:a8f8:a12c with SMTP id 00721157ae682-8b1b5ec1c0fmr16444777b3.100.1793210982414;
-        Wed, 28 Oct 2026 11:09:42 -0700 (PDT)
+        bh=DOwDccFEkaXVAmL5llnlgGIc02WBrf8+B8JacnpC5XI=;
+        b=Zvl8AmifUKs8Kc547SnHMlDrCq9ZddeZg9bZPtge3NunX9LH527UKp5DcjW2QLOZhv
+         GoxS4sqG3mTZn382XHhPH5d7TKB3G4tiHxf5SeIjnvPpKa2UGDrbxM7ZnhgBGqL8jId2
+         1BSBaUZP2/WQzC+4MnOdmq4CTiZWHFBBMjMrQIg9jjsWws8dJdQOfOu+NQi5BTFSs4zw
+         e4RL+xqZt5FeyGXipqhDehxX0Wopq3uhLF7zhXpIJQ3BvNH/kFFywr5L5DhfL1t0CPji
+         FqwgjYlp7LQWDLlnkv0+d+dBSdg010ovLEl1yLUdhfqCuQZVH3LnPhSYaReDZdbEENKC
+         lYPw==
+X-Forwarded-Encrypted: i=1; AKwUvBySmA/+KgGf6rGDt9Pd9kSXgB2X0ELnbJ8DS2n0mnCMd2ov8UEor/Xzhg97WLJ8Vsa70u3dFkBeXLVR95Kr5+r6@vger.kernel.org
+X-Gm-Message-State: AFq9FYK/THGldWv3P8lmz3nUotXXXxTjlWFXmV8oHNqwSkKuss0RDE1P
+	AWd+O9aRh1s1733/WOPMWpdTgmpF1rwqKyMKJPveFP77YNU1OKcP9zWE
+X-Gm-Gg: AYBFou0/VmWiQL+gKzs361WjEXK+O3kJXAFIIQ/MVzWLeOPNl+oj+lfp1dHnGCVqrrv
+	nhs/8zabqxBz8OlgJlcgHc/dkFojaHyHzdNNtvZUDF2SgWV4/eGbUKOXue2X3ZB10GvFN8CSQ/Q
+	du7izumdbjFmbueGWL0K8heMetwUw1MYEj84XZPjkiLInMVikB4G4m/e2VR1X5tiR80U/ObZLIg
+	HqCR1Wp4HGTyJAxrLK3Z8hJDFC1gw896gMR4P/XJy1/JsSaMNR8NpLz8aRJO3wUJ85eTiEADtXZ
+	aKiYts70ZJiwOTNtsFoi3R3nV7FdMfhfvc0jIGnLi1G3xgdMOXgCRZtM/WnQTCoa9/7/ZSoWEiJ
+	xaszkr6UeaJDGYkwVy7puoEvVs4WQ5c1nfxnm8scuQ6d8x9U+mdSju4CjoMC1Ik7mQdnxI7sRKL
+	649APPPNSLbKxzb1QGF/QwPEAQQxxhe5ry9rJdtCXWghksb/bBAa+PECfATJzbrz0whF0sXRljv
+	8aYRjtQQZT36A9iCeIKiprKwWmtt2diickIUYlG3Rqm6Ww4OsNFLZTAisOurW95nTrcJUTihP6N
+	cZrrvLRbX/gnXr2xbPaI8E85cDzobMN6FG3cmllPy3XzmwAOtIo+2HLewcDtyT3MRt1/CTJ8Snh
+	LztFsjCm9Y5/1fP45Lwc7oTyLUSYxZZo=
+X-Received: by 2002:a05:690e:12c6:b0:679:c916:46f8 with SMTP id 956f58d0204a3-67a7bce5869mr2806600d50.64.1793211026988;
+        Wed, 28 Oct 2026 11:10:26 -0700 (PDT)
 Received: from localhost ([2600:1702:7a90:6f9f:66f3:d5d6:2d12:d460])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-67a79f38dfesm2194096d50.1.2026.10.28.11.09.40
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-67a7a15ac59sm2129608d50.17.2026.10.28.11.10.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Oct 2026 11:09:40 -0700 (PDT)
+        Wed, 28 Oct 2026 11:10:25 -0700 (PDT)
 From: Matt Turner <mattst88@gmail.com>
-Date: Wed, 28 Oct 2026 14:09:34 -0400
-Subject: [PATCH 5/5] alpha/perf: optionally randomize the ProfileMe
- sampling interval
+Date: Wed, 28 Oct 2026 14:10:24 -0400
+Subject: [PATCH 1/2] perf alpha: Decode ProfileMe raw samples
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -96,12 +95,11 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261028-alpha-profileme-v1-5-d44b52bf2500@gmail.com>
-References: <20261028-alpha-profileme-v1-0-d44b52bf2500@gmail.com>
-In-Reply-To: <20261028-alpha-profileme-v1-0-d44b52bf2500@gmail.com>
-To: Richard Henderson <richard.henderson@linaro.org>, 
- Magnus Lindholm <linmag7@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+Message-Id: <20261028-perf-alpha-profileme-v1-1-f46c1938d001@gmail.com>
+References: <20261028-perf-alpha-profileme-v1-0-f46c1938d001@gmail.com>
+In-Reply-To: <20261028-perf-alpha-profileme-v1-0-f46c1938d001@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
  Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
  Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
@@ -110,130 +108,262 @@ To: Richard Henderson <richard.henderson@linaro.org>,
 Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-perf-users@vger.kernel.org, Matt Turner <mattst88@gmail.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4163; i=mattst88@gmail.com;
- h=from:subject:message-id; bh=jVEkKBuejbJrCzLTdVIES+d7ed19TpFwYvlWuMBFngE=;
- b=owGbwMvMwCW25rVmCc8sv+mMp9WSGLIeWUXd/+9ptnj6EvHPbNEJ2Wdf5nMEvDk5KXKZdsLut
- KdXhOsFOj6yMIhxMcwUU2SJW6/IMqttx1Kf09K/YOawMoEMkRZpYAACFga+3MS8UiMdIz1TbUM9
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8723; i=mattst88@gmail.com;
+ h=from:subject:message-id; bh=9sumTVGZwYIYJT9oLgWMsKhqt8ONjnDp1Ojn/pToUZM=;
+ b=owGbwMvMwCW25rVmCc8sv+mMp9WSGLIeWfXbF3tPPp7R6OBztvfNzWLNT2c607P+/v3zqjj2o
+ thmyTPrOj6yMIhxMcwUU2SJW6/IMqttx1Kf09K/YOawMoEMkRZpYAACFga+3MS8UiMdIz1TbUM9
  QyBDxygeIqfHoJFZXFyaWqSbVlDkkJdfkliSmZ9XrJdfkJpXkF6gl5aZVpKRkV9UnAo0Qi8vtcT
- U1dHNyNDAxNLRwszJwtHUxNnZydDJzdHR2dXJyNLcxMDZ0tHE1dKcgYtTAOYaHjZGhv/dnIYNe0
- ROil57H17ZF3tMMedmzcOlon1mp7fvLudtWsXw3zmFM+7uc9eA/4v1DGV/qooUnr36cDFX67rbx
- TxObM083AA=
+ U1dHNyNDAxNLRwszJwtHUxNnZydDJzdHR2dXJyNLcxMDZ0tHE1dKcgYtTAOaa9YIM/yyD5Y+2xW
+ jL3PCfd02k3i9ZSf23xq0V71evSX635Vbv8YWMDI3Xlx+bcm3P7H27Z1eXGG6bfs1hitkj2bMW2
+ 97ur3zlNZsPAA==
 X-Developer-Key: i=mattst88@gmail.com; a=openpgp;
  fpr=3BB639E56F861FA2E86505690FDD682D974CA72A
 
-A fixed sampling interval can phase-lock with a loop whose length divides
-it, so that the same few instructions are profiled over and over while
-the rest of the loop is never seen. DCPI avoided this by randomizing the
-interval.
+The Alpha cpu PMU attaches struct alpha_profileme_sample to each
+ProfileMe sample as PERF_SAMPLE_RAW data: the profiled instruction's
+PMPC along with the I_STAT and PCTR_CTL status that says what happened
+to it.
 
-Add a randomize config bit that varies each interval by up to 1/16 of
-the period in either direction. Only ProfileMe events accept it, since
-Aggregate mode samples already land a variable distance from the
-instruction that overflowed. Counts are unaffected, because prev_count
-already records the value actually written to the counter.
+Decode it in perf report -D and perf script -D the way AMD IBS raw data
+is decoded, naming the trap from TRAP_TYPE when TRP is set and from the
+PALcode entry offset in PMPC for redirect traps, which TRAP_TYPE does
+not report.
 
-The jitter comes from a per-CPU prandom state rather than
-get_random_u32_below(), which takes the batched entropy local lock and
-triggers an invalid wait context report from lockdep in the PMI.
+Copy the uapi header that defines the struct into tools/arch and add it
+to check-headers.sh.
 
 Signed-off-by: Matt Turner <mattst88@gmail.com>
 ---
- arch/alpha/kernel/perf_event.c | 33 ++++++++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+ tools/arch/alpha/include/uapi/asm/perf_event.h |  27 +++++
+ tools/perf/check-headers.sh                    |   1 +
+ tools/perf/util/Build                          |   1 +
+ tools/perf/util/alpha-sample-raw.c             | 133 +++++++++++++++++++++++++
+ tools/perf/util/sample-raw.c                   |   2 +
+ tools/perf/util/sample-raw.h                   |   2 +
+ 6 files changed, 166 insertions(+)
 
-diff --git a/arch/alpha/kernel/perf_event.c b/arch/alpha/kernel/perf_event.c
-index 06c9afeb7c05..da8262c74d04 100644
---- a/arch/alpha/kernel/perf_event.c
-+++ b/arch/alpha/kernel/perf_event.c
-@@ -16,6 +16,7 @@
- #include <linux/kdebug.h>
- #include <linux/mutex.h>
- #include <linux/init.h>
-+#include <linux/prandom.h>
- 
- #include <asm/hwrpb.h>
- #include <linux/atomic.h>
-@@ -33,9 +34,11 @@
- /* Layout of attr.config for PERF_TYPE_RAW events; see format/ in sysfs. */
- #define ALPHA_PERF_CONFIG_EVENT		0xffULL
- #define ALPHA_PERF_CONFIG_PROFILEME	BIT_ULL(8)
-+#define ALPHA_PERF_CONFIG_RANDOMIZE	BIT_ULL(9)
- 
- /* hw_perf_event.flags */
- #define ALPHA_PERF_FLAG_PROFILEME	0x1
-+#define ALPHA_PERF_FLAG_RANDOMIZE	0x2
- 
- /* For tracking PMCs and the hw events they monitor on each CPU. */
- struct cpu_hw_events {
-@@ -59,6 +62,9 @@ struct cpu_hw_events {
- };
- DEFINE_PER_CPU(struct cpu_hw_events, cpu_hw_events);
- 
-+/* For randomizing sample intervals from the PMI, where locks are not allowed. */
-+static DEFINE_PER_CPU(struct rnd_state, alpha_perf_rnd);
+diff --git a/tools/arch/alpha/include/uapi/asm/perf_event.h b/tools/arch/alpha/include/uapi/asm/perf_event.h
+new file mode 100644
+index 000000000000..0cb7d6f3cb15
+--- /dev/null
++++ b/tools/arch/alpha/include/uapi/asm/perf_event.h
+@@ -0,0 +1,27 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#ifndef _UAPI_ASM_ALPHA_PERF_EVENT_H
++#define _UAPI_ASM_ALPHA_PERF_EVENT_H
 +
- 
- 
- /*
-@@ -246,10 +252,12 @@ static int ev67_raw_event_valid(u64 config)
- 
- PMU_FORMAT_ATTR(event, "config:0-7");
- PMU_FORMAT_ATTR(profileme, "config:8");
-+PMU_FORMAT_ATTR(randomize, "config:9");
- 
- static struct attribute *ev67_format_attrs[] = {
- 	&format_attr_event.attr,
- 	&format_attr_profileme.attr,
-+	&format_attr_randomize.attr,
- 	NULL,
- };
- 
-@@ -360,6 +368,20 @@ static int alpha_perf_event_set_period(struct perf_event *event,
- 		ret = 1;
- 	}
- 
-+	/*
-+	 * Vary each new interval by up to 1/16 of the period either way, so
-+	 * the samples cannot phase-lock with a loop whose length divides the
-+	 * period. The count stays exact because prev_count records the value
-+	 * actually written.
-+	 */
-+	if (ret && (hwc->flags & ALPHA_PERF_FLAG_RANDOMIZE) && period >= 8) {
-+		long jitter = period / 8;
-+		u32 r = prandom_u32_state(this_cpu_ptr(&alpha_perf_rnd));
++#include <linux/types.h>
 +
-+		left += (long)((u64)r * jitter >> 32) - jitter / 2;
-+		local64_set(&hwc->period_left, left);
++/*
++ * PERF_SAMPLE_RAW payload of a ProfileMe sample from the cpu PMU.
++ *
++ * pmpc, i_stat and pctr_ctl are the values of the PMPC, I_STAT and
++ * PCTR_CTL registers when the ProfileMe window closed. i_stat holds only
++ * bits 40:30 and pctr_ctl only bits 47:0. See the EV67/EV68 Hardware
++ * Reference Manuals for the field layout.
++ *
++ * Fields may be added to the end in later versions.
++ */
++#define ALPHA_PROFILEME_SAMPLE_VERSION	1
++
++struct alpha_profileme_sample {
++	__u32 version;
++	__u32 reserved;
++	__u64 pmpc;
++	__u64 i_stat;
++	__u64 pctr_ctl;
++};
++
++#endif /* _UAPI_ASM_ALPHA_PERF_EVENT_H */
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index 531c0e0e84df..de66bb148754 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -36,6 +36,7 @@ declare -a FILES=(
+   "arch/x86/include/asm/msr-index.h"
+   "arch/x86/lib/x86-opcode-map.txt"
+   "arch/x86/tools/gen-insn-attr-x86.awk"
++  "arch/alpha/include/uapi/asm/perf_event.h"
+   "arch/arm/include/uapi/asm/perf_regs.h"
+   "arch/arm64/include/uapi/asm/perf_regs.h"
+   "arch/loongarch/include/uapi/asm/perf_regs.h"
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 2c1f880c4c47..2ab63bbe4a05 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -77,6 +77,7 @@ perf-util-y += sample.o
+ perf-util-y += sample-raw.o
+ perf-util-y += s390-sample-raw.o
+ perf-util-y += amd-sample-raw.o
++perf-util-y += alpha-sample-raw.o
+ perf-util-y += ordered-events.o
+ perf-util-y += namespaces.o
+ perf-util-y += comm.o
+diff --git a/tools/perf/util/alpha-sample-raw.c b/tools/perf/util/alpha-sample-raw.c
+new file mode 100644
+index 000000000000..22cf95be93e3
+--- /dev/null
++++ b/tools/perf/util/alpha-sample-raw.c
+@@ -0,0 +1,133 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Alpha specific. Provide textual annotation for ProfileMe raw sample data.
++ */
++
++#include <stdio.h>
++#include <linux/perf_event.h>
++
++#include "../../arch/alpha/include/uapi/asm/perf_event.h"
++
++#include "evlist.h"
++#include "evsel.h"
++#include "sample-raw.h"
++#include "util/sample.h"
++
++/* I_STAT */
++#define I_STAT_OVR(x)		(((x) >> 30) & 0x7)
++#define I_STAT_ICM(x)		(((x) >> 33) & 0x1)
++#define I_STAT_TRAP_TYPE(x)	(((x) >> 34) & 0xf)
++#define I_STAT_LSO(x)		(((x) >> 38) & 0x1)
++#define I_STAT_TRP(x)		(((x) >> 39) & 0x1)
++#define I_STAT_MIS(x)		(((x) >> 40) & 0x1)
++
++/* PCTR_CTL */
++#define PCTR_CTL_TAK(x)		((x) & 0x1)
++#define PCTR_CTL_VAL(x)		(((x) >> 1) & 0x1)
++#define PCTR_CTL_SL1(x)		(((x) >> 2) & 0x3)
++#define PCTR_CTL_SL0(x)		(((x) >> 4) & 0x1)
++#define PCTR_CTL_PCTR1(x)	(((x) >> 6) & 0xfffff)
++#define PCTR_CTL_KILLED(x)	(((x) >> 26) & 0x1)
++#define PCTR_CTL_STALLED(x)	(((x) >> 27) & 0x1)
++#define PCTR_CTL_PCTR0(x)	(((x) >> 28) & 0xfffff)
++
++/* PMPC */
++#define PMPC_PAL(x)		((x) & 0x1)
++#define PMPC_PAL_OFFSET(x)	((x) & 0x7fff)
++
++static const char * const trap_type_names[16] = {
++	[0]  = "replay",
++	[2]  = "DTB double miss (3 level)",
++	[3]  = "DTB double miss (4 level)",
++	[4]  = "FP disabled",
++	[5]  = "unaligned",
++	[6]  = "DTB single miss",
++	[7]  = "Dstream fault",
++	[8]  = "OPCDEC",
++	[10] = "machine check",
++	[12] = "arithmetic",
++	[14] = "MT_FPCR",
++	[15] = "reset",
++};
++
++/* What PCTR1 counts during the window, by SL1. */
++static const char * const pctr1_names[4] = {
++	"cycles",
++	"retire delay",
++	"bcache misses",
++	"mbox replays",
++};
++
++static const char *trap_name(__u64 i_stat, __u64 pmpc)
++{
++	const char *name;
++
++	/* Redirect traps leave TRAP_TYPE alone and are named by PMPC. */
++	if (PMPC_PAL(pmpc)) {
++		switch (PMPC_PAL_OFFSET(pmpc)) {
++		case 0x481:
++			return "Istream access violation";
++		case 0x581:
++			return "ITB miss";
++		case 0x681:
++			return "interrupt";
++		default:
++			break;
++		}
 +	}
++	if (!I_STAT_TRP(i_stat) || I_STAT_MIS(i_stat))
++		return "none";
++	name = trap_type_names[I_STAT_TRAP_TYPE(i_stat)];
++	return name ? name : "other (see PMPC)";
++}
 +
- 	/*
- 	 * Hardware restrictions require that the counters must not be
- 	 * written with values that are too close to the maximum period.
-@@ -715,7 +737,8 @@ static int __hw_perf_event_init(struct perf_event *event)
- 		return -EOPNOTSUPP;
- 	} else if (attr->type == PERF_TYPE_RAW) {
- 		if (attr->config & ~(ALPHA_PERF_CONFIG_EVENT |
--				     ALPHA_PERF_CONFIG_PROFILEME))
-+				     ALPHA_PERF_CONFIG_PROFILEME |
-+				     ALPHA_PERF_CONFIG_RANDOMIZE))
- 			return -EINVAL;
- 		ev = attr->config & ALPHA_PERF_CONFIG_EVENT;
- 		if (!alpha_pmu->raw_event_valid(ev))
-@@ -740,6 +763,14 @@ static int __hw_perf_event_init(struct perf_event *event)
- 		return -EINVAL;
- 	hwc->flags = profileme ? ALPHA_PERF_FLAG_PROFILEME : 0;
++static bool is_profileme_sample(struct evlist *evlist, union perf_event *event,
++				struct perf_sample *sample)
++{
++	const struct alpha_profileme_sample *pm = sample->raw_data;
++	struct evsel *evsel;
++
++	if (sample->raw_size < sizeof(*pm))
++		return false;
++
++	evsel = evlist__event2evsel(evlist, event);
++	if (!evsel)
++		return false;
++	if (evsel->core.attr.type != PERF_TYPE_HARDWARE &&
++	    evsel->core.attr.type != PERF_TYPE_RAW)
++		return false;
++
++	return pm->version >= ALPHA_PROFILEME_SAMPLE_VERSION;
++}
++
++void evlist__alpha_sample_raw(struct evlist *evlist, union perf_event *event,
++			      struct perf_sample *sample)
++{
++	const struct alpha_profileme_sample *pm;
++	unsigned long long i_stat, ctl, pmpc;
++
++	if (event->header.type != PERF_RECORD_SAMPLE ||
++	    !is_profileme_sample(evlist, event, sample))
++		return;
++
++	pm = sample->raw_data;
++	i_stat = pm->i_stat;
++	ctl = pm->pctr_ctl;
++	pmpc = pm->pmpc;
++
++	printf("ProfileMe PMPC:\t%016llx %s trap %s%s\n",
++	       pmpc, PMPC_PAL(pmpc) ? "PAL" : (pmpc >> 63 ? "kernel" : "user"),
++	       trap_name(i_stat, pmpc),
++	       I_STAT_TRP(i_stat) && I_STAT_MIS(i_stat) ? " mispredicted" : "");
++	printf("ProfileMe I_STAT:\t%016llx TRP %d MIS %d LSO %d TrapType %d ICM %d OVR %d\n",
++	       i_stat, (int)I_STAT_TRP(i_stat), (int)I_STAT_MIS(i_stat),
++	       (int)I_STAT_LSO(i_stat), (int)I_STAT_TRAP_TYPE(i_stat),
++	       (int)I_STAT_ICM(i_stat), (int)I_STAT_OVR(i_stat));
++	printf("ProfileMe PCTR_CTL:\t%016llx VAL %d TAK %d Stalled %d Killed %d",
++	       ctl, (int)PCTR_CTL_VAL(ctl), (int)PCTR_CTL_TAK(ctl),
++	       (int)PCTR_CTL_STALLED(ctl), (int)PCTR_CTL_KILLED(ctl));
++	printf(" SL0 %d SL1 %d PCTR0 %d PCTR1 %d (%s)\n",
++	       (int)PCTR_CTL_SL0(ctl), (int)PCTR_CTL_SL1(ctl),
++	       (int)PCTR_CTL_PCTR0(ctl), (int)PCTR_CTL_PCTR1(ctl),
++	       pctr1_names[PCTR_CTL_SL1(ctl)]);
++}
+diff --git a/tools/perf/util/sample-raw.c b/tools/perf/util/sample-raw.c
+index f5ae9f468983..f765429a481d 100644
+--- a/tools/perf/util/sample-raw.c
++++ b/tools/perf/util/sample-raw.c
+@@ -19,6 +19,8 @@ void evlist__init_trace_event_sample_raw(struct evlist *evlist, struct perf_env
  
-+	if (attr->type == PERF_TYPE_RAW &&
-+	    (attr->config & ALPHA_PERF_CONFIG_RANDOMIZE)) {
-+		if (!profileme)
-+			return -EINVAL;
-+		prandom_init_once(&alpha_perf_rnd);
-+		hwc->flags |= ALPHA_PERF_FLAG_RANDOMIZE;
-+	}
-+
- 	/*
- 	 * We place the event type in event_base here and leave calculation
- 	 * of the codes to programme the PMU for alpha_pmu_enable() because
+ 	if (e_machine == EM_S390) {
+ 		evlist__set_trace_event_sample_raw(evlist, evlist__s390_sample_raw);
++	} else if (e_machine == EM_ALPHA) {
++		evlist__set_trace_event_sample_raw(evlist, evlist__alpha_sample_raw);
+ 	} else if (e_machine == EM_X86_64 || e_machine == EM_386) {
+ 		const char *cpuid = perf_env__cpuid(env);
+ 
+diff --git a/tools/perf/util/sample-raw.h b/tools/perf/util/sample-raw.h
+index c8d38c841c8c..8df0bd3d02aa 100644
+--- a/tools/perf/util/sample-raw.h
++++ b/tools/perf/util/sample-raw.h
+@@ -14,6 +14,8 @@ void evlist__s390_sample_raw(struct evlist *evlist, union perf_event *event,
+ bool evlist__has_amd_ibs(struct evlist *evlist);
+ void evlist__amd_sample_raw(struct evlist *evlist, union perf_event *event,
+ 			    struct perf_sample *sample);
++void evlist__alpha_sample_raw(struct evlist *evlist, union perf_event *event,
++			      struct perf_sample *sample);
+ void evlist__init_trace_event_sample_raw(struct evlist *evlist, struct perf_env *env);
+ 
+ #endif /* __SAMPLE_RAW_H */
 
 -- 
 2.55.0
