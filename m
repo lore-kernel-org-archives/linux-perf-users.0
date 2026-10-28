@@ -1,56 +1,61 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=101.204.27.37
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793157485;
-	b=NWFBVrYKvXWXKFvh+vM968CLKtce/k3HBjQC1oM0Rt/sjJxVdnS8bWp61uC2IOFYdWMJ
-	 l761EM69dLIdwkZYttXow8wxtBkF+oLjThQhJ0H0wds7mh7JOPP6ol6UbMH5EBzZt62Jh
-	 aaa8zpb9n6Y6gTGFDMB6l1Lm7Lbq6JmpiOOCRlmrFQBxVQhdfdtB99W4QQ1GCxYFm/eo0
-	 QhhhOrwEjM6AsHKKjtDAQuozmeVOmKKYWegD3DOsv/UlqBtwebwCJVFRpsUDrviGD8ccP
-	 wFuqQso7L7aAuwETcYEpdainU9yfWMeOBv+W/MYVgOtxcr4bwdbGF2Sj2nlfaFc34BA==
+	t=1793173974;
+	b=uKkgBwiH8iH56grdyZoJY/DTJ5s1pc9R4TjeESeKEJ3Vq08TrdvbPNAkyLmkV507VHc5
+	 hYhEtowkYGGJ4cxyGDXhnLvsvoKJvhH4xK/J8c+Gd++bFdPfsezOrAoVc4OF5CZGvSs3s
+	 fgkZgoJoxMDVwKXGcR+NWgGSs6atQ1rIJbI3ymmMSugQdpEu7AAeF0Bjz+D2yzdnW/cGV
+	 9XBsj6OpbKEJkZxuIygVdEoq1f/j7rVSAflHwkmXZzfuoAidf93rBt1mj/5FgjHYvydNQ
+	 7kmyDgWKjslCA6ZRCLgRN0U40wE6biDsrjuOYMxB7Ax/irogYoKoQoDP5iV1JmAUQEA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793157485;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=xMPVgvHutwpNLNKnLhWU76QNUs2jHJt45FQpsb87O5Q=;
-	b=cnyvKMOwc67Ji7TuW3E6eLaMuWG0kwmwyCMJ4+8oJzJhyZQFp7OMTrUK5D97BXCMDlB3
-	 Bx/ivTUSxoL4jgB26d0tvIZ+d+FdGX3HNU9Mhjx27l/NFE0oI8DfN/a8jxsjWLh8QCGPZ
-	 KF8VIXRYVB3fblvbvO0HHnYIGXDv0uGMMP06XJLvvHKhptaiHeFuoC9eU1DOg8OOL8J67
-	 2FZ6VcAHRkLq6Fyuf3EfF3buGCAH83M5ztzHyts0frs2IYN24yoZvuscTJrnOj/wVNeJf
-	 Xlvxw94oInOw6zcE8+h+TYzZON9rSCk2s/azUL+Z9epRJ2JW3Al1I3QmOv8BnJTm1LA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793173974;
+	h=DMARC-Filter:Received:Received:Received:Received:Date:From:To:CC:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:X-Originating-IP:X-ClientProxiedBy;
+	bh=Hf1CMufnAT672qe7Eu73z3TtfaYwqEFksJs75MflBj0=;
+	b=t9XoCztMfH/LDgcW0JSlIE7qGTScBTPvq4DDUyz6g/fWY1+2digX+rhwAb49cRkWcW7f
+	 7lUgGaH8yCPJyqXEfAFgGQgI6MlvXBhSHviJGHQmTYsfeQw+XH+c82uNIrzn0s75BTUcS
+	 1iXQK1stLoCKHfE6YKtJrhnpZgQkl1er/jsM6mBcCaYzU5LlQz1waGUfJWQoS44THWj4T
+	 TIZ2DUJOqwXHSQUcRyWI57EHwSTLZ7xTtj4cbELdHNn+/4olNISvewCOpb3hj921o+rWm
+	 8my4Pc0ul3GSowtOCMudYzU4+iaEJh2pZy3WLCsnY6AjEelDwSF8utP5BKleEpuzbnA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m8OlGj5C;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9AC606A31A
-	for <linux-perf-users@vger.kernel.org>; Wed, 28 Oct 2026 03:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m8OlGj5C
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67DF81F01828;
-	Wed, 28 Oct 2026 03:18:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793157484;
-	bh=xMPVgvHutwpNLNKnLhWU76QNUs2jHJt45FQpsb87O5Q=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=m8OlGj5CjfL2Kqgzhrdh9MJe8lA4n3HyttaYQg65D2h+lZN9frY8EJBljh0evVXEv
-	 iHg1UahsvV2Gop6ipVhzlQzAyvNrE5jJuQ4wGoYiRN60KX9pBdgV3dzIur/mA5oJpr
-	 8THFz5QOfRynX12iIE+I4ffNtfswwdoQf+UiFYnDV0s2IdyP3DF5WI8EGpI10ZVQ63
-	 n0p5Dkwv6+nT7Vv74wiP6XCxIacV6DFQDdUIorvKN36hFUrhT8UWPMLCaZ+lZf6Hfb
-	 ZyBdRq8XSV+KAmJFI9t2nRw+lSwTZCTF1sFLaSJ9F5HIDUvNt7v6gy9ASrj3ehutU5
-	 zeH+mxtTWCTDQ==
-Message-ID: <sashiko-outbox-187410@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] drivers/perf: riscv: Fix racy hw.idx use in user access
- paths
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Li Jinyue" <jinyue.li@linux.alibaba.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261028031119.1485928-1-jinyue.li@linux.alibaba.com>
-References: <20261028031119.1485928-1-jinyue.li@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 28 Oct 2026 03:18:04 +0000
+	dmarc=pass header.from=hygon.cn;
+	spf=pass smtp.mailfrom=hygon.cn;
+	arc=none smtp.remote-ip=101.204.27.37
+Received: from spam01.hygon.cn (unknown [101.204.27.37])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3739B606A31A;
+	Wed, 28 Oct 2026 07:52:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3739B606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
+Received: from maildlp1.hygon.cn (unknown [127.0.0.1])
+	by spam01.hygon.cn (Postfix) with ESMTP id 4jF02P6wZhz4tvGJ;
+	Wed, 28 Oct 2026 15:52:29 +0800 (CST)
+Received: from maildlp1.hygon.cn (unknown [172.23.18.60])
+	by spam01.hygon.cn (Postfix) with ESMTP id 4jF02M35Fsz4wJL8;
+	Wed, 28 Oct 2026 15:52:27 +0800 (CST)
+Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
+	by maildlp1.hygon.cn (Postfix) with ESMTPS id B724816DF;
+	Wed, 28 Oct 2026 15:52:21 +0800 (CST)
+Received: from hsj-2U-Workstation (172.19.24.226) by cncheex04.Hygon.cn
+ (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 28 Oct
+ 2026 15:52:25 +0800
+Date: Wed, 28 Oct 2026 15:52:23 +0800
+From: Huang Shijie <huangsj@hygon.cn>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>
+CC: <zhongyuan@hygon.cn>, <fangbaoshun@hygon.cn>, <yingzhiwei@hygon.cn>,
+	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
+	<james.clark@linaro.org>, <tglx@kernel.org>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<liuqi@hygon.cn>, <lijing@hygon.cn>, <wangfengyu@hygon.cn>,
+	<wujiangyong@hygon.cn>, <shijie8@gmail.com>, <1537577747@qq.com>
+Subject: Re: [PATCH] perf/amd/ibs: add phy_addr_only software filter for
+ ibs_op
+Message-ID: <auGpt6wenUj5mFP8@hsj-2U-Workstation>
+References: <20260902085251.4046240-1-huangsj@hygon.cn>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,33 +64,40 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20260902085251.4046240-1-huangsj@hygon.cn>
+X-ClientProxiedBy: cncheex06.Hygon.cn (172.23.18.116) To cncheex04.Hygon.cn
+ (172.23.18.114)
 
-> riscv_pmu_event_idx() and arch_perf_update_userpage() are called from
-> perf_mmap() through perf_event_update_userpage(), and
-> pmu_sbi_set_scounteren()/pmu_sbi_reset_scounteren() run on every CPU in
-> mm_cpumask() through IPIs sent by pmu_sbi_event_mapped() and
-> pmu_sbi_event_unmapped(). None of them hold the event context lock, so
-> the event can be scheduled in or out on another CPU at the same time,
-> and riscv_pmu_add()/riscv_pmu_del() change hw.idx underneath them.
->=20
-> Taking the context lock is not an option: perf_event_update_userpage()
-> is also called from riscv_pmu_add() and riscv_pmu_del(), which already
-> hold it.
->=20
-> Commit 3fec323339a4 ("drivers: perf: Fix panic in riscv SBI mmap
-> support") added hw.idx !=3D -1 checks to the scounteren helpers and to
-> riscv_perf_user_access(), but hw.idx is loaded again afterwards to
-> [ ... ]
-> stores in riscv_pmu_add() and riscv_pmu_del().
->=20
-> Fixes: cc4c07c89aad ("drivers: perf: Implement perf event mmap support in=
- the SBI backend")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Li Jinyue <jinyue.li@linux.alibaba.com>
+Hi Ravi,
 
-Sashiko has reviewed this patch and found no issues.
+Thanks for taking a look.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261028031119.1485=
-928-1-jinyue.li@linux.alibaba.com?part=3D1
+> Why not simply use the BPF filter?
+>   $ perf record -e ibs_op// --phys-data --filter 'phys_addr != 0' ...
+
+I did try the BPF filter.
+
+Measurements below are system-wide ibs_op sampling for 5s on a
+384-CPU Hygon box under a 400-thread sysbench oltp_read_only load
+at three sampling periods:
+
+    -c     filter        valid samples    
+  ------  ------------  ---------- 
+  100000  phy_addr_only  19,345,907 
+  100000  BPF filter     17,939,819 
+
+   30000  phy_addr_only  54,670,617 
+   30000  BPF filter     47,926,784 
+
+   10000  phy_addr_only  61,606,488 
+   10000  BPF filter     40,826,086 
+
+
+The phy_addr_only produces more *valid* samples than the BPF filter.
+
+Thanks,
+Huang Shijie
 
