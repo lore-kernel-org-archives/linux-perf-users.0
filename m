@@ -1,75 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=115.124.30.118
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793143050;
-	b=AxL67d52cVLMpM4caHXi5VjDegvCWiYiaY8t1dcoZgo+//t47u0ZyM1j/VCbtvRMfk4B
-	 d21kNAMWOi4mCN6PRc9bFX9RvGZlYLgRY/ratlqSRZt/gU0LlSfEpmoVEinPZrxhZvCJr
-	 kNMjm6VfYE+KfRs8FY3yW7kGC3H15KCwJf3vM6cVMTxJ3HMUe8kTY0X6eZa6AAui3xfJA
-	 OOVJ4xGTJ6/5r6OPeZ8P9D4uDsSQSz+NPZdHLQPzd4DyB8+PFVE1V40APJEFUWxmzDODN
-	 nrw65iMJFiktJfeZs0sLlvq0PzkWz5VIaspDgtK0QsQcV76H3G9z+3R948ZL3CRl8xg==
+	t=1793157085;
+	b=0Eu/2LR3+pUgKmZeWnEGtZ00cTUhXojk4/QBrRuBWdZ5wop0TI3aOwRtcy6GdDeH33oO
+	 NdZgSiHP0kZa0nhYmTmxS+hwherXomsYO0DxCt02nfSjRXZ2HxhZf/Yue/ExWox+L0M/5
+	 qXzrHPQvBa+0B23eN7qwPRhVXTOfMfbeWvU2qouWl0bvW6duhIsZHgRjO0J0CuNF1ejDS
+	 EpWVGRcCeSIWmqKSXWV/vYVkPT3VIFfHvCwtvqOx+dwqQZI8Z9675Gn4Kt2RqtKw1kN/o
+	 sAnhhn/K7Lmlws4CgzH/IAfJmUJcOczmV99SyDtNq4WwIl8vYFcZro9dLYTMQIJHxuw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793143050;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
-	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
-	 Content-Type;
-	bh=ZDGRVgYI+YuLX6sEG6mHKRJT8belKw9rO3epzepDmXc=;
-	b=SzaCuzgnSdHKWf1v93ThlzEdXvGveCLKSpAJ4gTRvQl7R+SYtV5TZOa0NzjI+Lvke3Tq
-	 tr/w9dKOwQXiMAtjitlF51naRR26f5VYst9HjpmjAA4u5g4c76bZybnfcWEShEWZg62rz
-	 BBOiXCL1HDz4Lb8yHIuurhxnMer+e3EUvhCfoIzowXsZ/UNbmohCzyryeVDGxS3whlqkA
-	 KwTdX1Eg+1xv1AN1lkDRApPDy0PB8mgKwj+E2VmKnKydiI/DlszHC3Hc19QnrajTeSbP2
-	 48cXZ7RlSNOaWcgoEPANMbjGYSLyTrInz+twFmpXF/TbX7MzcSf+wvaaGN4pgBQui+A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793157085;
+	h=DMARC-Filter:DKIM-Signature:X-Alimail-AntiSpam:Received:From:To:Cc:
+	 Subject:Date:Message-Id:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=NOidjj5Ml69IXBVDgaaqFA/kPNhQ/xUITVxdD/pzEd8=;
+	b=woGA7rU5Zf/DdZ53DWRRfvlZH7k6XlqAHN0u7rrsWvgv7dK3Gp4R+xDX9J0L0zbPj5zc
+	 /e/D1ZVqgx5OGJBK2chaSbJIWPakEXe0ud9F77gNyUhu0g3Qkc4dRLpbwHwVPq9+h5Bya
+	 VOnCSZ+HOI3ZJ6PmWBs4RpCH6XbSNLrnRitRzWpRbQp/1TphDY/o5SyMaOOyZbArQBd6c
+	 0zRTeeP6DGVH6KR1dGJAePlrvx4gXRIRyypvZea/DL6iqQYh+7LCtPGIkACxpZ0nwyZ/N
+	 Gg2G835b/zrXUdnKC2uM6saaw8l9pY1lK9EGfb1IvUZjv4YShvot6Id+Z4nuoVKhQsA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="PE/zx+6A";
-	arc=none smtp.remote-ip=209.85.210.199
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=linux.alibaba.com;
+	spf=pass smtp.mailfrom=linux.alibaba.com;
+	dkim=pass header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=O72jPzr2;
+	arc=none smtp.remote-ip=115.124.30.118
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD629606A31D
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 23:17:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AD629606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0F7606A31A;
+	Wed, 28 Oct 2026 03:11:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2C0F7606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=PE/zx+6A
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-8a0688a43d3so320372b3a.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Oct 2026 16:17:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793143049; x=1793747849; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ZDGRVgYI+YuLX6sEG6mHKRJT8belKw9rO3epzepDmXc=;
-        b=PE/zx+6Af4cB6kwCb3KWCo2kLDvj8fl2ys7izWUyFpH5zLYmX810u3AzXitpejplQE
-         /jQClQeXVkg24Hq2EtapZZmYZqBqVAzhuerBOXqcEml3pCLmsPFzhUKaKVVRYh78e5jo
-         h8KkCLUPmxBFXlpb/JITMIblABhQ7NlF7KMjGGjdd9IyszPk9+1oO7oOT2MoBvY5XheR
-         C7sZ+dVfMbfS+HyT7uTrugl1sk73k+pwHG2Pfa3KfOiBB28qEE/Udtp4Y7cVn9gp7foT
-         HEcU/cZ1gEdP98XXJk+xlaxcfEGrza6u+gZED9q0MMpJmn/0VM46cFjFyrKNEI0geaag
-         VHHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793143049; x=1793747849;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=ZDGRVgYI+YuLX6sEG6mHKRJT8belKw9rO3epzepDmXc=;
-        b=MxocQ6WjAQZgQP2DalGu8PV6Z5jp7dqY9Y4hQowTSknD3qStTMIwalsHqxbdoqzOyc
-         QIlLJxuoq6zfEw5da8t6Rjdu5+YHcC+5kdglF0jGEcfyxSGJmVWib+cn/FVDbY0IZ64M
-         xjKMDzQ/YtSTjL+xXiFwomJJXJub3c8hZfiNWBfRsQg4GXk+N+6oIamO2W48XSSLFGhP
-         0B1a6HRz1HDkiQ68hIQWubX4NQNzHj5Ds0C3RLWxDOXrlr/xQ5Sq5+ONK0vSfADIssjs
-         JYYcUpEQopy3au4D5lindioeAKvu8GKlpkSf92UrEX3i3rB7PK/QoZHR66tSVxM+S1+E
-         K2Sg==
-X-Forwarded-Encrypted: i=1; AKwUvBwJn2+ezhk15B+01Z8/tAr6oAHw469Qz+HZ+pwRqZ8lZNXGJTY3YTUpsZ3Ta935/605RiFVwmh2z75RyQg90rEC@vger.kernel.org
-X-Gm-Message-State: AFq9FYKXboQJPNxzGEJeieOTFYjcRYPRrqYLdCyR6d8TYEI4XY/zAgOV
-	W0DvQnOGOyETmQe0ZxpC0gqVYkIdf95hzMLdgMXNwjSwYCxZhxq4xbSQTC4XDWVAz22F4rAHwVx
-	iF4NvHQAcWs/xjPiYq0cKiQ==
-X-Received: from pgcgn27-n2.prod.google.com ([2002:a05:6a02:6a1b:20b0:cda:df40:b50f])
- (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:b7a6:b0:3e2:4c65:5905 with SMTP id adf61e73a8af0-3e902404531mr513567637.60.1793143048797;
- Tue, 27 Oct 2026 16:17:28 -0700 (PDT)
-Date: Tue, 27 Oct 2026 23:17:28 +0000
-In-Reply-To: <ac22215d-3e58-4aab-851e-47c30836e058@app.fastmail.com>
+	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=O72jPzr2
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1793157082; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=NOidjj5Ml69IXBVDgaaqFA/kPNhQ/xUITVxdD/pzEd8=;
+	b=O72jPzr2bD793SFpqsi7HsCUAp/9pOyTAa+eACVnYdCSsyWOHJzHoZ2dPt1cb1HLIEOMgqvxq6ZdeftLpm4HkXKOCRCLTstRi442JU1EyNU3SUcJV7LSpOnqCpVBzYHmy249F4xFiHwuEcBO1PLYadoU3IQgPz8RZS51YODnZ1I=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R471e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=jinyue.li@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0XDfYO0M_1793157079;
+Received: from aa8c952a0f58..(mailfrom:jinyue.li@linux.alibaba.com fp:SMTPD_---0XDfYO0M_1793157079 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 28 Oct 2026 11:11:20 +0800
+From: Li Jinyue <jinyue.li@linux.alibaba.com>
+To: Atish Patra <atish.patra@linux.dev>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>
+Cc: Anup Patel <anup@brainfault.org>,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Xixin Liu <liuxixin@kylinos.cn>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH] drivers/perf: riscv: Fix racy hw.idx use in user access paths
+Date: Wed, 28 Oct 2026 03:11:19 +0000
+Message-Id: <20261028031119.1485928-1-jinyue.li@linux.alibaba.com>
+X-Mailer: git-send-email 2.25.1
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -78,193 +70,223 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
-References: <ac22215d-3e58-4aab-851e-47c30836e058@app.fastmail.com>
-X-Mailer: git-send-email 2.56.0.307.g5fe7bd680c-goog
-Message-ID: <20261027231728.1466446-1-jthoughton@google.com>
-Subject: Re: [RFC PATCH 00/10] uaccess: Refuse and warn on user accesses when
- current->mm is NULL
-From: James Houghton <jthoughton@google.com>
-To: arnd@arndb.de
-Cc: James.Bottomley@hansenpartnership.com, acme@kernel.org, 
-	akpm@linux-foundation.org, asml.silence@gmail.com, ast@kernel.org, 
-	axboe@kernel.dk, bpf@vger.kernel.org, daniel@iogearbox.net, david@kernel.org, 
-	dsterba@suse.com, io-uring@vger.kernel.org, jmattson@google.com, 
-	john.fastabend@gmail.com, jpoimboe@kernel.org, jthoughton@google.com, 
-	kees@kernel.org, kvm@vger.kernel.org, liam@infradead.org, 
-	linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-perf-users@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, ljs@kernel.org, mason@kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, mhocko@suse.com, 
-	mingo@redhat.com, mkp@kernel.org, namhyung@kernel.org, pbonzini@redhat.com, 
-	peterz@infradead.org, rostedt@goodmis.org, rppt@kernel.org, seanjc@google.com, 
-	surenb@google.com, tglx@kernel.org, vbabka@kernel.org, 
-	viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 27, 2026 at 11:32 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Tue, Oct 27, 2026, at 18:29, James Houghton wrote:
-> > On Mon, Oct 26, 2026 at 5:13 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >>
-> >> E.g. on arm64 with CONFIG_ARM64_SW_TTBR0_PAN, the page table base for
-> >> the current process is only set in user_access_begin() and would
-> >> not point to any task here. Without ttbr0_pan, it should be
-> >> covered by cpu_set_reserved_ttbr0() turning off all user space access
-> >> for kernel threads.
-> >>
-> >> Should this perhaps be addressed in architecture specific code
-> >> instead of in a common place?
-> >
-> > You're right that whether corruption can actually occur depends on the
-> > architecture and config. I'll write a note about this in the v2 cover
-> > letter.
-> >
-> > That being said, I still think the right thing to do is to have the
-> > new check(s) in common code. Instances of improper uaccesses are still
-> > bugs, even if no corruption occurs.
->
-> I agree we have to do something to prevent the problem for most
-> configurations and find any newly introduced bugs.  The questions
-> that need to be properly decided are
->
->  - does there need to be any compile-time configuration to skip
->    the extra checks and/or the warnings?
+riscv_pmu_event_idx() and arch_perf_update_userpage() are called from
+perf_mmap() through perf_event_update_userpage(), and
+pmu_sbi_set_scounteren()/pmu_sbi_reset_scounteren() run on every CPU in
+mm_cpumask() through IPIs sent by pmu_sbi_event_mapped() and
+pmu_sbi_event_unmapped(). None of them hold the event context lock, so
+the event can be scheduled in or out on another CPU at the same time,
+and riscv_pmu_add()/riscv_pmu_del() change hw.idx underneath them.
 
-Since patch 10 moves the warning out of line, it costs nothing on the
-fast path, so making the WARN configurable wouldn't save anything. The
-question is really whether the mm check itself should be configurable,
-and that check is also what makes the access safe.
+Taking the context lock is not an option: perf_event_update_userpage()
+is also called from riscv_pmu_add() and riscv_pmu_del(), which already
+hold it.
 
-The text size increase seems manageable[1], but it would be great to
-hear other people's thoughts. For the runtime cost, I'll do some
-performance testing. My guess is that a load of current->mm and a
-well-predicted branch per user access will be negligible, but I'll get
-numbers.
+Commit 3fec323339a4 ("drivers: perf: Fix panic in riscv SBI mmap
+support") added hw.idx != -1 checks to the scounteren helpers and to
+riscv_perf_user_access(), but hw.idx is loaded again afterwards to
+index pmu_ctr_list, so the check does not cover the access.
+riscv_pmu_event_idx() has no check and relies on perf_event_index(),
+which only looks at the software state (event->state and hw.state) and
+not at hw.idx. event_sched_in() marks the event ACTIVE before calling
+pmu::add(), and hw.state is still zero on the first schedule-in, so
+perf_event_index() can call into the driver with hw.idx == -1.
+event_sched_out() likewise calls pmu::del() before the state changes.
 
->  - are there any cheaper ways to make it safe than to add a
->    condition on each user access?
->    E.g. the original lazy mm switch was intended to avoid
->    expensive TLB flushes when switching to a kernel thread and
->    back to the original task on 32-bit x86. On modern CPUs,
->    the MMU can deal with multiple ASIDs cheaply, so turning
->    off user access in a kernel thread may be cheaper than
->    adding code to uaccess depending on the architecture.
+syzkaller hits this on QEMU with KASAN. In every report the faulting
+address is pmu_ctr_list[-1]:
 
-That's a fair point. If user memory were inaccessible in kernel threads
-and after exit_mm(), every such access would fault, and the fault
-handler could WARN about it (x86's do_user_addr_fault() already has a
-!mm branch), so it could still be loud without a check on every access.
+  BUG: KASAN: slab-out-of-bounds in pmu_sbi_csr_index+0x80/0x82
+  Read of size 8 at addr ff60000009933bf8 by task syz.0.5217/27313
+  Call Trace:
+   pmu_sbi_csr_index+0x80/0x82
+   riscv_pmu_event_idx+0x9c/0xd8
+   perf_event_update_userpage+0x544/0x6ca
+   riscv_pmu_event_mapped+0x6e/0x98
+   perf_mmap+0xbcc/0x22ae
+   __mmap_region+0x1128/0x2398
+   mmap_region+0x3cc/0x466
+   do_mmap+0xe7c/0x162c
+   vm_mmap_pgoff+0x1e8/0x362
+   ksys_mmap_pgoff+0x338/0x402
+   __riscv_sys_mmap+0x11c/0x18c
 
-I'll look into disabling lazy mm switching on x86 and doing some
-performance testing with that (like comparing the per-uaccess check
-with the added cost of non-lazy mm switching).
+The same read is also reported in pmu_sbi_ctr_get_width() from
+arch_perf_update_userpage(), in pmu_sbi_set_scounteren() from the IPI
+handler and in pmu_sbi_reset_scounteren() from perf_mmap_close().
 
-Other than the performance difference, I see these issues with making
-uaccess safe entirely with the mm switch mechanics:
+Load hw.idx once with READ_ONCE() in these paths, check that value and
+use it for the lookup. Change the csr_index() callback to take the
+counter index so that the value checked is the value used; neither
+backend needs anything else from the event. Use WRITE_ONCE() for the
+stores in riscv_pmu_add() and riscv_pmu_del().
 
- - It only helps on architectures (and configs) that implement it,
-   while the common check works everywhere today.
+Fixes: cc4c07c89aad ("drivers: perf: Implement perf event mmap support in the SBI backend")
+Cc: stable@vger.kernel.org
+Signed-off-by: Li Jinyue <jinyue.li@linux.alibaba.com>
+---
+ drivers/perf/riscv_pmu.c        | 22 ++++++++++++++--------
+ drivers/perf/riscv_pmu_legacy.c |  4 ++--
+ drivers/perf/riscv_pmu_sbi.c    | 14 ++++++++------
+ include/linux/perf/riscv_pmu.h  |  2 +-
+ 4 files changed, 25 insertions(+), 17 deletions(-)
 
- - The fault handler would need to tell legitimate faults apart from
-   bugs, e.g. copy_from_user_nofault() from BPF or perf in a kernel
-   thread is fine and must stay quiet. The series handles that today by
-   checking current->mm in the nofault helpers (patch 6).
+diff --git a/drivers/perf/riscv_pmu.c b/drivers/perf/riscv_pmu.c
+index 8e3cd0f35336..0ec4114595b0 100644
+--- a/drivers/perf/riscv_pmu.c
++++ b/drivers/perf/riscv_pmu.c
+@@ -18,18 +18,23 @@
+ 
+ #include <asm/sbi.h>
+ 
+-static bool riscv_perf_user_access(struct perf_event *event)
++static bool riscv_perf_user_access(struct perf_event *event, int idx)
+ {
+ 	return ((event->attr.type == PERF_TYPE_HARDWARE) ||
+ 		(event->attr.type == PERF_TYPE_HW_CACHE) ||
+ 		(event->attr.type == PERF_TYPE_RAW)) &&
+ 		!!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT) &&
+-		(event->hw.idx != -1);
++		(idx != -1);
+ }
+ 
+ void arch_perf_update_userpage(struct perf_event *event,
+ 			       struct perf_event_mmap_page *userpg, u64 now)
+ {
++	/*
++	 * hw.idx is updated by pmu::add()/del() on another CPU, so take a
++	 * snapshot and use it for both the check and the lookup.
++	 */
++	int idx = READ_ONCE(event->hw.idx);
+ 	struct clock_read_data *rd;
+ 	unsigned int seq;
+ 	u64 ns;
+@@ -37,7 +42,7 @@ void arch_perf_update_userpage(struct perf_event *event,
+ 	userpg->cap_user_time = 0;
+ 	userpg->cap_user_time_zero = 0;
+ 	userpg->cap_user_time_short = 0;
+-	userpg->cap_user_rdpmc = riscv_perf_user_access(event);
++	userpg->cap_user_rdpmc = riscv_perf_user_access(event, idx);
+ 
+ 	/*
+ 	 * The counters are 64-bit but the priv spec doesn't mandate all the
+@@ -45,7 +50,7 @@ void arch_perf_update_userpage(struct perf_event *event,
+ 	 * the cpu vendor.
+ 	 */
+ 	if (userpg->cap_user_rdpmc)
+-		userpg->pmc_width = to_riscv_pmu(event->pmu)->ctr_get_width(event->hw.idx) + 1;
++		userpg->pmc_width = to_riscv_pmu(event->pmu)->ctr_get_width(idx) + 1;
+ 
+ 	do {
+ 		rd = sched_clock_read_begin(&seq);
+@@ -265,7 +270,7 @@ static int riscv_pmu_add(struct perf_event *event, int flags)
+ 	if (idx < 0)
+ 		return idx;
+ 
+-	hwc->idx = idx;
++	WRITE_ONCE(hwc->idx, idx);
+ 	cpuc->events[idx] = event;
+ 	cpuc->n_events++;
+ 	hwc->state = PERF_HES_UPTODATE | PERF_HES_STOPPED;
+@@ -293,7 +298,7 @@ static void riscv_pmu_del(struct perf_event *event, int flags)
+ 	if (rvpmu->ctr_clear_idx)
+ 		rvpmu->ctr_clear_idx(event);
+ 	perf_event_update_userpage(event);
+-	hwc->idx = -1;
++	WRITE_ONCE(hwc->idx, -1);
+ }
+ 
+ static void riscv_pmu_read(struct perf_event *event)
+@@ -353,12 +358,13 @@ static int riscv_pmu_event_init(struct perf_event *event)
+ static int riscv_pmu_event_idx(struct perf_event *event)
+ {
+ 	struct riscv_pmu *rvpmu = to_riscv_pmu(event->pmu);
++	int idx = READ_ONCE(event->hw.idx);
+ 
+-	if (!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT))
++	if (!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT) || idx == -1)
+ 		return 0;
+ 
+ 	if (rvpmu->csr_index)
+-		return rvpmu->csr_index(event) + 1;
++		return rvpmu->csr_index(idx) + 1;
+ 
+ 	return 0;
+ }
+diff --git a/drivers/perf/riscv_pmu_legacy.c b/drivers/perf/riscv_pmu_legacy.c
+index 1b8e4789cb3c..e540bb798fb6 100644
+--- a/drivers/perf/riscv_pmu_legacy.c
++++ b/drivers/perf/riscv_pmu_legacy.c
+@@ -76,9 +76,9 @@ static void pmu_legacy_ctr_start(struct perf_event *event, u64 ival)
+ 	local64_set(&hwc->prev_count, initial_val);
+ }
+ 
+-static uint8_t pmu_legacy_csr_index(struct perf_event *event)
++static uint8_t pmu_legacy_csr_index(int idx)
+ {
+-	return event->hw.idx;
++	return idx;
+ }
+ 
+ static void pmu_legacy_event_mapped(struct perf_event *event, struct mm_struct *mm)
+diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+index 2991dd92def2..2360ee5d8843 100644
+--- a/drivers/perf/riscv_pmu_sbi.c
++++ b/drivers/perf/riscv_pmu_sbi.c
+@@ -530,9 +530,9 @@ int riscv_pmu_get_hpm_info(u32 *hw_ctr_width, u32 *num_hw_ctr)
+ }
+ EXPORT_SYMBOL_GPL(riscv_pmu_get_hpm_info);
+ 
+-static uint8_t pmu_sbi_csr_index(struct perf_event *event)
++static uint8_t pmu_sbi_csr_index(int idx)
+ {
+-	return pmu_ctr_list[event->hw.idx].csr - CSR_CYCLE;
++	return pmu_ctr_list[idx].csr - CSR_CYCLE;
+ }
+ 
+ static unsigned long pmu_sbi_get_filter_flags(struct perf_event *event)
+@@ -809,19 +809,21 @@ static u64 pmu_sbi_ctr_read(struct perf_event *event)
+ static void pmu_sbi_set_scounteren(void *arg)
+ {
+ 	struct perf_event *event = (struct perf_event *)arg;
++	int idx = READ_ONCE(event->hw.idx);
+ 
+-	if (event->hw.idx != -1)
++	if (idx != -1)
+ 		csr_write(CSR_SCOUNTEREN,
+-			  csr_read(CSR_SCOUNTEREN) | BIT(pmu_sbi_csr_index(event)));
++			  csr_read(CSR_SCOUNTEREN) | BIT(pmu_sbi_csr_index(idx)));
+ }
+ 
+ static void pmu_sbi_reset_scounteren(void *arg)
+ {
+ 	struct perf_event *event = (struct perf_event *)arg;
++	int idx = READ_ONCE(event->hw.idx);
+ 
+-	if (event->hw.idx != -1)
++	if (idx != -1)
+ 		csr_write(CSR_SCOUNTEREN,
+-			  csr_read(CSR_SCOUNTEREN) & ~BIT(pmu_sbi_csr_index(event)));
++			  csr_read(CSR_SCOUNTEREN) & ~BIT(pmu_sbi_csr_index(idx)));
+ }
+ 
+ static void pmu_sbi_ctr_start(struct perf_event *event, u64 ival)
+diff --git a/include/linux/perf/riscv_pmu.h b/include/linux/perf/riscv_pmu.h
+index ecaa40370830..4690a5646ae9 100644
+--- a/include/linux/perf/riscv_pmu.h
++++ b/include/linux/perf/riscv_pmu.h
+@@ -66,7 +66,7 @@ struct riscv_pmu {
+ 	void		(*event_init)(struct perf_event *event);
+ 	void		(*event_mapped)(struct perf_event *event, struct mm_struct *mm);
+ 	void		(*event_unmapped)(struct perf_event *event, struct mm_struct *mm);
+-	uint8_t		(*csr_index)(struct perf_event *event);
++	uint8_t		(*csr_index)(int idx);
+ 
+ 	struct cpu_hw_events	__percpu *hw_events;
+ 	struct hlist_node	node;
+-- 
+2.25.1
 
-The two approaches are mostly complementary: if non-lazy switching
-turns out to be cheap enough, an architecture that does this will have
-better defense against uaccess bugs. But I'd still like the common
-check so that these bugs are reported on every architecture.
-
-> >> I would think that user_access_begin() is a more natural place
-> >> for the added checks, as this should be called exactly once for
-> >> any function that accesses user space and also stays out of the
-> >> way of the copy_from_kernel_nofault() etc.
-> >
-> > user_access_begin() isn't used in a lot of places that I want to
-> > catch, including the KVM case. Roughly:
-> >
-> >   kvm_write_guest_cached() --> __copy_to_user() --> raw_copy_to_user()
-> >
-> > There's no user_access_begin() in there. :/
->
-> Good point, yes. After the changes described in
-> https://lwn.net/Articles/1102061/, I had assumed that all
-> __copy_{from,to}_user() are going from common code, but it looks
-> like the series so far only touches __{get,put}_user().
->
-> There are of course few enough of these left that I think
-> we can consider doing the same thing here and turn them all
-> into the checking version:
->
-> $ git grep -wl __copy_'\(from\|to\)'_user  drivers mm virt
-> drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-> drivers/gpu/drm/i915/i915_gem.c
-> drivers/gpu/drm/i915/i915_query.c
-> drivers/usb/gadget/udc/atmel_usba_udc.c
-> drivers/vhost/scsi.c
-> drivers/vhost/vhost.c
-> mm/kasan/kasan_test_c.c
-> virt/kvm/kvm_main.c
-
-Agreed, I think we should clean those up, but that can be done
-separately. This series already adds the check to the common
-__copy_{from,to}_user() and __copy_{from,to}_user_inatomic() wrappers
-in include/linux/uaccess.h (patches 7 and 8), so the KVM path is
-covered without converting the callers first.
-
-> > I do think user_access_begin() should have the new check though, so
-> > I've added it in the v2.
->
-> I had the details confused here. Seing that user_access_begin()
-> and the other accessors always call access_ok() at some
-> point, maybe that would be enough?:
->
-> --- a/include/asm-generic/access_ok.h
-> +++ b/include/asm-generic/access_ok.h
-> @@ -33,6 +33,9 @@ static inline int __access_ok(const void __user *ptr, unsigned long size)
->         unsigned long limit = TASK_SIZE_MAX;
->         unsigned long addr = (unsigned long)ptr;
->
-> +       if (WARN_ONCE(!current->mm))
-> +               return false;
-> +
->         if (IS_ENABLED(CONFIG_ALTERNATE_USER_ADDRESS_SPACE) ||
->             !IS_ENABLED(CONFIG_MMU))
->                 return true;
->
-> (plus the few extra copies of access_ok()/__access_ok())
->
-> As a quick fix I would probably start with just the 'if (!mm) return false'
-> bit here to get something merged while we still discuss the other
-> details.
-
-Making the same point as Sean[2] but with a little more detail, I had
-thought about making the change in access_ok(), but:
-
- - On x86-64 and powerpc, the masked user access paths don't call
-   access_ok() at all. That includes copy_from_user(),
-   strncpy_from_user(), strnlen_user() and every scoped_user_*_access()
-   block, which is where many of the converted __get_user() users ended
-   up.
-
- - __copy_{from,to}_user() and __copy_from_user_inatomic() skip it too,
-   and the KVM bug followed exactly that pattern: the range was checked
-   once up front, and the access came much later from a different
-   context.
-
- - access_ok() is also used as a plain range check where having no mm
-   is fine. For example, copy_{from,to}_user_nofault() call
-   __access_ok()/access_ok(), and BPF and perf legitimately call those
-   from kernel threads, so a WARN there would fire on valid tracing.
-
-Even the quiet 'if (!mm) return false' version would have missed the
-KVM case, because of the first two points. I don't think there's really
-a "small" fix here, unfortunately. :/
-
-Thanks again for all the feedback, Arnd. I really hope we can get this
-series into a mergeable state. :)
-
-[1] https://lore.kernel.org/linux-mm/CADrL8HUZ3t8RdMEeBPfqsy1_1rN0Ty9B2c4iP6OzNS12te6vOg@mail.gmail.com/
-[2] https://lore.kernel.org/kvm/auEVMrMDqVuKtDqh@google.com/
