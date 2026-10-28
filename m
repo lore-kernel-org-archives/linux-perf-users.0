@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793211683;
-	b=La/wJA9SQnKZqs+7fKOtO12CJBiysfxRspkv7CIS7F4hHIzVmTT71e4mhkYwwq4M6MCs
-	 MT9gT34csIOY5DoZz8lh5UFutbMQXW9mGciOW+YczexGySSPh+WNWfLWzaGriU++laFdI
-	 r9gtQQQV6QGmUOIWtFuvICZ3PoBS7LDqGAACPwShln+YxmKtEoTLIOzjTURnEsUbikk9C
-	 xa2oDzQd0/hoKOkCtfQjOaDkWOTNo2sJeP928qkURaR6KQ+gihCJOIgQ5fftU6umrY/Em
-	 Sba3phmxz43ZJyXlRtH2pXlFwpYaSa3ubeEU9E5A/5iTtMF2uChO/tHTJTNaeOgwGlQ==
+	t=1793211724;
+	b=H42r4PXbJcLBcOBMXR0+4w94hlvH3+bSiW7g1Sa5zPCm9h/zJCWE/fw6TvrabhqF3hZP
+	 wNu+w4ZDbpBa/8B+PAQxWdvO49HPMnW100EUd+Vgn62SWe85xUcCTqK9ZBQIN/wzx5Fhp
+	 /zRTWbZydMe8COocc9yfHPvK0ikgB0IXGO9dpU6EriNt4bJ+8u/8cLxomvrI0kB6f68zv
+	 hCEcx3hD8kwskwhafiDHauf+X7LSs/7q4euTzEZI6dN2IvrlGmOKnm62K+NFSM44NqDnu
+	 gF/K9f9BkTZiOq+RnzLO8iFb9Pt3ZMNxHxgcOMYp5EWsG+ASBnaPbpiUlvQUMiUwdQw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793211683;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793211724;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=tJQmsU0KEa5Bfrnn7vrGKNTvFXZ1wwArOS1pYLYM5CY=;
-	b=gfS3ANDaP+8OOjKVf7RuIjlvfq2OdotXgeMeZ/0dsD5wBWLkZq0wvLXmnSLw6ItB0kVw
-	 zzKDrIkkwGZ8WHxAl18NKxBcs0yR0kACLPgTKftkEqo1sWJdwW+1BFbuy6mPGG08xhQIF
-	 UsRZGrlMJu+Y/7lRy+MGlVe3tTipfZAhFOIlELXC40ULkYwcUFZtv3QhH020kvQK0s8qg
-	 824oJ3FtmpNZAlzwCVnk+ZM+FOeuQhiVU+pxjZ9XPpcyulxk+itc2xK77Wbdbs1yXRNjb
-	 0eJw0lVzJjy0pQzZ5qZJUd2Nyp5Nyt9hlRwi7wkU6nIE03fBQ+FRZd4djptNHJSntfw==
+	bh=fzZ5/pxwnA/44iySuYyO0anoTiZGXF5ODEy0IhAZNXM=;
+	b=Zzzf8d77brUrkYc1xssPjUbb4qz9h5fDzmEv1dGKmRSWTQ/pOhYU949BbhSadBioHuDb
+	 p2DmWKzoKjLeV2EI2YgT9rq4DdXAKpYt4zY7clwiCTtKscThhfYBvaCDes1UDNyzF83+9
+	 cBVRggBbqArC+zH0zR3NRp4rauCyzDd+eymqW007GdxWvUhAR0Zz+z0P13mjfG35sec0d
+	 2oWNbAJE8dokWLIYmXxK5g9RztWC/nMpyvMwIBNdsuSwYmYiKgR5C5PU5j01RAfKcBIP9
+	 YpVCs/ZtpijpgAKQIWtzDKaN4JkljmuF2fGa7a3RQAEF7l8vWOyMJa+da+fP8xr1sGg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M5EVDS39;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jt0Our6F;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B978606A31C
-	for <linux-perf-users@vger.kernel.org>; Wed, 28 Oct 2026 18:21:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3397C60A5BE3
+	for <linux-perf-users@vger.kernel.org>; Wed, 28 Oct 2026 18:22:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M5EVDS39
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB2641F01825;
-	Wed, 28 Oct 2026 18:21:22 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jt0Our6F
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 936301F01828;
+	Wed, 28 Oct 2026 18:22:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793211682;
-	bh=tJQmsU0KEa5Bfrnn7vrGKNTvFXZ1wwArOS1pYLYM5CY=;
+	s=k20260515; t=1793211723;
+	bh=fzZ5/pxwnA/44iySuYyO0anoTiZGXF5ODEy0IhAZNXM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=M5EVDS39ws3jiawJhi2yYjy0al156hwc8Djs9B/pUdnHKtUBSwoGM3Z+X1q/BA6YT
-	 sfQzr0psbCz35QJqrQ6vrGhtG9o6iHdpBxp6DcvbDSsQ2Ad4B3+66M3Ad3BSrIVZLd
-	 oNOSvxzdiWjlXS5/ku19oRapPsO2IgIgMvZq6KvyS515Lc6pQTfiDmIlnV4u6aEn97
-	 Fpa37YHDbRX6hN+ndX2f1T+ObudlPR97nvUgJqWClivb1UO3eHaDrL3/zHDoJT65Ha
-	 2rfVGS6BlTL280UndT3c6cSRXffZX4kaDT4dLn+6hx5ErfSV+UNrWtfXULubHgSF2b
-	 LRUDfm8wIJBtw==
-Message-ID: <sashiko-outbox-188275@kernel.org>
+	b=jt0Our6FXpcawditvkhvzZpRcA5sfvj0hkzxNLzPdDvJX9ALdrW11dnfuikO9zFFi
+	 4AxK8D24E1EmUw5boQAqcmEH6P6X94CkialeQe18EwWwaLSI2MA0S6loat4WE4XG/e
+	 kUMdLnooG2UPQE5qnRvJQWnHHY8+byaWZNFupyu/7r3Raj60YmiaGlstzqlCmYpnl3
+	 fjYwL7DZPyeqW/iW/0qxCtmDm+OMCSxbPLTGKiADTprwfWMSCdYBwCG7m8bLcSwHRv
+	 UsXlB5c9vmt1kiduA5vSKhyp/2hV5oZS0IGUPP+08qrTiO6WOjRKANKroRlA3r/2oG
+	 vjWKIoc+40GWw==
+Message-ID: <sashiko-outbox-188276@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 5/5] alpha/perf: optionally randomize the ProfileMe
- sampling interval
+Subject: Re: [PATCH 1/2] perf alpha: Decode ProfileMe raw samples
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Matt Turner" <mattst88@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261028-alpha-profileme-v1-5-d44b52bf2500@gmail.com>
-References: <20261028-alpha-profileme-v1-0-d44b52bf2500@gmail.com>
- <20261028-alpha-profileme-v1-5-d44b52bf2500@gmail.com>
+In-Reply-To: <20261028-perf-alpha-profileme-v1-1-f46c1938d001@gmail.com>
+References: <20261028-perf-alpha-profileme-v1-0-f46c1938d001@gmail.com>
+ <20261028-perf-alpha-profileme-v1-1-f46c1938d001@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 28 Oct 2026 18:21:22 +0000
+Date: Wed, 28 Oct 2026 18:22:03 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,76 +60,154 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] alpha/perf: 64-bit overflow in alpha_perf_event_set_period() jit=
-ter math
+- [Medium] perf alpha: unaligned 64-bit loads in evlist__alpha_sample_raw()
+- [Medium] perf alpha: missing endianness conversion in evlist__alpha_sampl=
+e_raw()
 --
 
-commit f5fe32a707f112845a6641dd8d8b1fcd7a1ddb70
+commit 4908934f82190e0ae8b17e86168bc2a37ca70554
 Author: Matt Turner <mattst88@gmail.com>
 
-alpha/perf: optionally randomize the ProfileMe sampling interval
+perf alpha: Decode ProfileMe raw samples
 
-This commit adds a randomize configuration bit for Alpha ProfileMe raw
-perf events to vary each sampling interval by up to 1/16 of the period in
-either direction using a per-CPU prandom state.
+This commit adds decoding support for Alpha ProfileMe PERF_SAMPLE_RAW
+payloads in perf report -D and perf script -D, along with a copy of the
+uapi asm/perf_event.h header defining struct alpha_profileme_sample.
 
-> diff --git a/arch/alpha/kernel/perf_event.c b/arch/alpha/kernel/perf_even=
-t.c
-> index 06c9afeb7c05e..da8262c74d043 100644
-> --- a/arch/alpha/kernel/perf_event.c
-> +++ b/arch/alpha/kernel/perf_event.c
+> diff --git a/tools/arch/alpha/include/uapi/asm/perf_event.h b/tools/arch/=
+alpha/include/uapi/asm/perf_event.h
+> new file mode 100644
+> index 0000000000000..0cb7d6f3cb154
+> --- /dev/null
+> +++ b/tools/arch/alpha/include/uapi/asm/perf_event.h
+> @@ -0,0 +1,27 @@
 
 [ ... ]
 
-> @@ -360,6 +368,20 @@ static int alpha_perf_event_set_period(struct perf_e=
-vent *event,
->  		ret =3D 1;
->  	}
-> =20
-> +	/*
-> +	 * Vary each new interval by up to 1/16 of the period either way, so
-> +	 * the samples cannot phase-lock with a loop whose length divides the
-> +	 * period. The count stays exact because prev_count records the value
-> +	 * actually written.
-> +	 */
-> +	if (ret && (hwc->flags & ALPHA_PERF_FLAG_RANDOMIZE) && period >=3D 8) {
-> +		long jitter =3D period / 8;
-> +		u32 r =3D prandom_u32_state(this_cpu_ptr(&alpha_perf_rnd));
+> +#define ALPHA_PROFILEME_SAMPLE_VERSION	1
 > +
-> +		left +=3D (long)((u64)r * jitter >> 32) - jitter / 2;
-> +		local64_set(&hwc->period_left, left);
-> +	}
+> +struct alpha_profileme_sample {
+> +	__u32 version;
+> +	__u32 reserved;
+> +	__u64 pmpc;
+> +	__u64 i_stat;
+> +	__u64 pctr_ctl;
+> +};
+> +
+> +#endif /* _UAPI_ASM_ALPHA_PERF_EVENT_H */
+
+[ ... ]
+
+> diff --git a/tools/perf/util/alpha-sample-raw.c b/tools/perf/util/alpha-s=
+ample-raw.c
+> new file mode 100644
+> index 0000000000000..22cf95be93e31
+> --- /dev/null
+> +++ b/tools/perf/util/alpha-sample-raw.c
+> @@ -0,0 +1,133 @@
+
+[ ... ]
+
+> +static bool is_profileme_sample(struct evlist *evlist, union perf_event =
+*event,
+> +				struct perf_sample *sample)
+> +{
+> +	const struct alpha_profileme_sample *pm =3D sample->raw_data;
+> +	struct evsel *evsel;
+> +
+> +	if (sample->raw_size < sizeof(*pm))
+> +		return false;
+> +
+> +	evsel =3D evlist__event2evsel(evlist, event);
+> +	if (!evsel)
+> +		return false;
+> +	if (evsel->core.attr.type !=3D PERF_TYPE_HARDWARE &&
+> +	    evsel->core.attr.type !=3D PERF_TYPE_RAW)
+> +		return false;
+> +
+> +	return pm->version >=3D ALPHA_PROFILEME_SAMPLE_VERSION;
+> +}
 
 [Severity: Medium]
-Can the multiplication (u64)r * jitter overflow 64 bits in
-alpha_perf_event_set_period() in arch/alpha/kernel/perf_event.c when a user
-specifies a large 64-bit sample_period?
+When inspecting an Alpha perf.data file on a big-endian host (such as s390x
+or big-endian PowerPC), will reading pm->version in is_profileme_sample()
+and pm->i_stat, pm->pctr_ctl, and pm->pmpc in evlist__alpha_sample_raw()
+interpret the little-endian fields in host byte order?
 
-In __perf_event_open() in kernel/events/core.c, userspace can supply any
-63-bit attr.sample_period:
+In tools/perf/util/evsel.c, __evsel__parse_sample() undoes the 64-bit byte
+swap on the PERF_SAMPLE_RAW payload when swapped is true:
 
-	if (attr.freq) {
-		if (attr.sample_freq > sysctl_perf_event_sample_rate)
-			return -EINVAL;
-	} else {
-		if (attr.sample_period & (1ULL << 63))
-			return -EINVAL;
+	if (swapped) {
+		/* mem_bswap_64() accesses complete 64-bit words. */
+		sz =3D roundup((u64)data->raw_size, sizeof(u64));
+		OVERFLOW_CHECK(raw, sz, max_size);
+		mem_bswap_64((void *)raw, data->raw_size);
 	}
+	data->raw_data =3D (void *)array;
 
-When hwc->sample_period is at least 1UL << 35, jitter (period / 8) is at
-least 1UL << 32, so (u64)r * jitter overflows 64-bit arithmetic and wraps.
-Because the 64-bit product is then shifted right by 32, the positive term
-is bounded to U32_MAX while jitter / 2 remains a full 64-bit value, causing
-every interval to be systematically shortened by roughly period / 16 rather
-than varying symmetrically within [-period / 16, +period / 16). In addition,
-if sample_period is near LONG_MAX, adding a positive 1/16 offset to left can
-overflow signed long into a negative period_left.
+Because sample->raw_data remains in the recorded architecture's little-endi=
+an
+byte order, on a big-endian host a version of 1 (0x00000001) is read as
+0x01000000 (passing the >=3D ALPHA_PROFILEME_SAMPLE_VERSION check), and the
+register values and bitfields in evlist__alpha_sample_raw() are decoded with
+reversed bytes.
 
-Would using mul_u64_u32_shr(jitter, r, 32) avoid the multiplication overflo=
-w?
+Should these fields be converted with le32_to_cpu() and le64_to_cpu(),
+similar to how tools/perf/util/s390-sample-raw.c uses be16_to_cpu(),
+be32_to_cpu(), and be64_to_cpu()?
+
+> +
+> +void evlist__alpha_sample_raw(struct evlist *evlist, union perf_event *e=
+vent,
+> +			      struct perf_sample *sample)
+> +{
+> +	const struct alpha_profileme_sample *pm;
+> +	unsigned long long i_stat, ctl, pmpc;
+> +
+> +	if (event->header.type !=3D PERF_RECORD_SAMPLE ||
+> +	    !is_profileme_sample(evlist, event, sample))
+> +		return;
+> +
+> +	pm =3D sample->raw_data;
+> +	i_stat =3D pm->i_stat;
+> +	ctl =3D pm->pctr_ctl;
+> +	pmpc =3D pm->pmpc;
+
+[Severity: Medium]
+Does casting sample->raw_data to struct alpha_profileme_sample * in
+is_profileme_sample() and evlist__alpha_sample_raw() perform misaligned
+64-bit loads on pm->i_stat, pm->pctr_ctl, and pm->pmpc?
+
+In PERF_RECORD_SAMPLE events, all fields preceding PERF_SAMPLE_RAW are
+multiples of sizeof(u64), and __evsel__parse_sample() in
+tools/perf/util/evsel.c advances past the 32-bit raw_size header:
+
+	data->raw_size =3D *array;
+	array =3D (void *)array + sizeof(u32);
+	...
+	data->raw_data =3D (void *)array;
+
+This leaves sample->raw_data at a 4-byte offset from an 8-byte boundary (as
+noted in struct perf_sample in tools/perf/util/sample.h). Because struct
+alpha_profileme_sample starts with two __u32 fields (version and reserved,
+8 bytes total), its __u64 fields (pmpc, i_stat, and pctr_ctl) sit at struct
+offsets 8, 16, and 24, landing on 4-byte-aligned addresses rather than
+8-byte-aligned addresses in the sample buffer.
+
+Dereferencing those 64-bit fields directly triggers hardware unaligned acce=
+ss
+traps on every sample when running natively on Alpha, and causes a SIGBUS on
+strict-alignment 64-bit hosts when cross-analyzing a perf.data file (in
+addition to requiring 4 bytes of trailing padding per sample in the ring
+buffer since sizeof(u32) + sizeof(struct alpha_profileme_sample) is 36
+bytes).
+
+Could evlist__alpha_sample_raw() copy sample->raw_data via memcpy() or use
+unaligned accessors, or should struct alpha_profileme_sample account for the
+4-byte PERF_SAMPLE_RAW size prefix?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261028-alpha-prof=
-ileme-v1-0-d44b52bf2500@gmail.com?part=3D5
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261028-perf-alpha=
+-profileme-v1-0-f46c1938d001@gmail.com?part=3D1
