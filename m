@@ -1,70 +1,110 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.92.199
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793265110;
-	b=HyI9oMmY1hsYHhqjpuuO0iodfAGikLxdq9AmSEAD8rRT4kpNuQOaAOvfxJxc2yvK1dlI
-	 VFSYR0ggDMucp8Wp0RG53XCMwq/2ho+ZSrAx2CBnJTJo4p3+b4AQCKolRZx/Mpck75ZRr
-	 +6zpqfHUVaovxboaG85RONafdXKI/SdL92ry8YIPnqVu1TunAt/Mo6Y6zrxqZvevvNMji
-	 lw3ffFzWR2DbLWQuXuID13OM8OHW0AOnJhM6/ULuTTj5YvAtBJq+5AOd+HqQHXG/KhNnH
-	 D+18r5pNmoNogGUcIU4hy2tldcCWnQfgIWNiSk88tZpfVhC03SVpV3bcYV3UQTPVW6w==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793265110;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=nVGF9duES+9fB49cpyOWp9tosy1i7wv8q/sahpSrBB8=;
-	b=1pCeWRBOfzRsP6bEksw3tuvWY/LFmDmdT9UZecd9g8soUi01mWvzKvG5jKPHUexDQu3z
-	 HpZQ3EFE9y9OpAOpxaLE5SAhikSR7dxx1zZgDWZY4BoNVQmtzGNvWdwiRSfICoGXRUqvr
-	 MndfxzujGmW3rS7yyxpcXeHRalc23g8MTGzZHyin2Cux3joKdZ60XDNLQ3hB1j2iphXrN
-	 ZFZQaXFEZQYVNtKeuKImR6uJQ4p8A8uHdcglyN1IQy20n11LDE7DjajNZsL4VY2V7BN+e
-	 xtCfOPR1+WJaD8iRRqBzoyUFXWUg++XcNWakO0itB9AROpxviKbn9Fh64U041eJ3xJw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=JFodSFw1;
-	arc=none smtp.remote-ip=90.155.92.199
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=85.215.255.81
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
+	t=1793265509;
+	b=N0T5e5ovG7QSF7NFBAzuC1+vfwMwUen6r9n1sHibS8hNRtib67bT3+bGoxmSe/+o5T7p
+	 GR7or8L38lAkDMfsIV26hkIMzluB1DvEyYXePsoDwgQOOKTzOG0iG0LIHco0Inwg0Rxnq
+	 sNEh01m4wCD8EVmnBSDILkr6ped0VN1dNC4PPTVXi/snLs/QOcGYDTAewUp7RdAV1ucCi
+	 lgiYLbzzghZuyVehTVg51An1lzMn2FY2AbfDAysKF8lIvQJPTWKdPnD149ZhSt+oVyjRC
+	 r1IBUh6StfnM75eXtqIPZQNiD87Kc8PR5jSAY7Sk1MFHmYfaW7VuqDrZnG+yh4BxAog==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793265509;
+	h=DMARC-Filter:X-RZG-CLASS-ID:DKIM-Signature:DKIM-Signature:X-RZG-AUTH:
+	 Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:Content-Type;
+	bh=6uY21tdKKM6PLzs79GpUqrjknra5fIvf0Pr+3zgyGpo=;
+	b=Z2wxrH+KbBw2erFs9aZZMXtnWzmsgO3TncAoq86ddyi5kyjmiqKbyt+MzxxvFa67/c9T
+	 xZkuEUmt1ewQAYD2xQb6kyS3AsxBkhFXaoA1AN2/EdBJlE6JDWpyIYx2n8BWXtSWAmhDu
+	 sBEC4dKLvxSSqilozQB2g5NPTjzM915UApPfr9t9gF29ZZ67a2uCkvABT++H6tY3WPUmo
+	 +mFO7w3ZdVaD/qgX0qV5uXFeAl+gXYkidrsEDG5PhBTO2okFEUjA3zYSU8xflh2QJU09D
+	 j3Nk6s6yY/PgYe7FOiU4csOYaniXEVzJ7J9NV5qMT+Sg30cZKE7brFXSN0cX9yX2JOQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=outer-limits.org;
+	spf=pass smtp.mailfrom=outer-limits.org;
+	dkim=pass header.d=outer-limits.org header.i=@outer-limits.org header.a=rsa-sha256 header.s=strato-dkim-0002 header.b=U+SiWCHG;
+	dkim=pass header.d=outer-limits.org header.i=@outer-limits.org header.a=ed25519-sha256 header.s=strato-dkim-0003 header.b="D/EG5u/t";
+	arc=fail smtp.remote-ip=85.215.255.81
+Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.81])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4730A606A31C;
-	Thu, 29 Oct 2026 09:11:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4730A606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C4F0606A327;
+	Thu, 29 Oct 2026 09:18:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6C4F0606A327
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=outer-limits.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outer-limits.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=JFodSFw1
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=nVGF9duES+9fB49cpyOWp9tosy1i7wv8q/sahpSrBB8=; b=JFodSFw1zO5piOH0gPmQOJri9N
-	M1O5oLsp5FB9kZezITLco0/xVVPqjjyx/4cG4048S+TaqGu6daKORv3xlduL81TFbV+mxvM8ziwbl
-	FGcWHWBPIsssGzq6BLlEfxHqnhqbUO4b2tkZ/4IZwjp3QuDNSCQykq6WZTzuSYDIRD+BeCEnycs7k
-	n3IM2K9bRxXO0M5CjYaAiCFFsfX6gwapQlt84OEcutSZAoyZBNh0wRnnYvaCicUjZo34mUx6q/dWT
-	l2Cm00h2Al45gll7Gktdaa0xUnGEY+5BgGWOAEm6zji3SEISHxCm9XuLtqkOQY79BfgXYsd24EGQ/
-	ZLSI1XiQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMMAg-0000000GoJ4-2tyA;
-	Thu, 29 Oct 2026 09:11:42 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 25CBC300329; Thu, 29 Oct 2026 10:11:41 +0100 (CET)
-Date: Thu, 29 Oct 2026 10:11:41 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Matt Turner <mattst88@gmail.com>
-Cc: Richard Henderson <richard.henderson@linaro.org>,
-	Magnus Lindholm <linmag7@gmail.com>, Ingo Molnar <mingo@redhat.com>,
+	dkim=pass (2048-bit key, unprotected) header.d=outer-limits.org header.i=@outer-limits.org header.a=rsa-sha256 header.s=strato-dkim-0002 header.b=U+SiWCHG;
+	dkim=pass header.d=outer-limits.org header.i=@outer-limits.org header.a=ed25519-sha256 header.s=strato-dkim-0003 header.b=D/EG5u/t
+ARC-Seal: i=1; a=rsa-sha256; t=1793265498; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=Wi70JQeCk9ZGa7NZQSelHUv4kR0PtOpL1adtMQnCkvDYtCA47ao6dQ+UDC4G9MgXBD
+    sKRqjYiUV1VYwR9ukjoTd6AHR6365ltG4GM84ysnvPrzUcQOhRrvcOm0gmOUCzPuwni2
+    0SLtPILKMRELUXRIlwS8bbu2irlRoiAMgwKBkNEQPNekVjyQCur4OTxW5Whil5wdFvtz
+    T/b1At33fXsxtR9JplnadCkl454lj7VtRModUO5CDH1XV+5XWgvdRw18zKirBQ5M7g24
+    rB3+WWsKuA1uUc5sBx2rzUGINu9B/cr4egs3H8ZVxZYUlZoivWTSMdNXkKoIhzi22dDm
+    KVYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1793265498;
+    s=strato-dkim-0002; d=strato.com;
+    h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=6uY21tdKKM6PLzs79GpUqrjknra5fIvf0Pr+3zgyGpo=;
+    b=ZG3VIsh1YACODawcNm+F0hSDx+ZRu8c9eMH7n5sHanw+htMeXZZJ8x+KN+3ROFnuR+
+    XQp7dYLDQwyJc7TFkydnZmv4yUxknrR1UMYk9dgTLb3qpDwDYltuAXDSKcIXYkeq4CZf
+    DYfmFcVcUdQR65VmS7+pY1e92ImNZFJPzRnWUQ1TKIt081jB+s/L6oHjnMc4iW6cikU3
+    9Yxu7yMnHogW3K8jofQGUpkeTWsgh01hENczzqya8m0fBOOYIaeENtuV05ogn4OEp2hO
+    hNyJo22Jwklrwo2LTa4v+iwpWfHZvGi2ljpeSv2uPJg4LzahKlzHebT0YboE6jVErWRI
+    KcJA==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1793265498;
+    s=strato-dkim-0002; d=outer-limits.org;
+    h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=6uY21tdKKM6PLzs79GpUqrjknra5fIvf0Pr+3zgyGpo=;
+    b=U+SiWCHGRdz3SJUYbi7Nw5TB4hB+GBTMvsR/aIlJf9XpftWwkgem0dxUdZwH0SNs6Y
+    VjbZ0RdjEHojrAqBrHAE0U1eMB4nFfw7tPVrVC5z/hc7udmVZR/ZUAWEm5XphxbKwZYc
+    O2m6JMXoUe1HQjuGKURE2Kcb9IuMVw8ZgKcrec/U2wmb8aMyr1Rwr0VaXetqedIZbhzc
+    kWzWxzpUyzugqKVPiO8nibwR7A9yYxr/ZN+2tE01sqWaF7/Q2OPkzKm1nRoT0MAkvhUJ
+    YqRrbOgXuWFNNbPp6eW7crbzzGr4ECi057QxwfB1ZPtjJTa/VuFxscwTJIdXdiLt2Whj
+    wAsg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1793265498;
+    s=strato-dkim-0003; d=outer-limits.org;
+    h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
+    From:Subject:Sender;
+    bh=6uY21tdKKM6PLzs79GpUqrjknra5fIvf0Pr+3zgyGpo=;
+    b=D/EG5u/tfPrp05S/0DtQ6lb9loG1GGhRVltA9OozYXQm1N/jHCORrteUCB9M84sdbN
+    rNahgwmw6MLd9IsH3PAw==
+X-RZG-AUTH: ":JnkIfEGmW/AMJS6HttH4FbRVwc4dHlPLCp4e/IoHo8zEMMHAgwTfqBFXdk1Z5IDmIqDY7xpnOs6mGD64frXxHtrE3e66udIGwZnWwLgga9o="
+Received: from julian.home
+    by smtp.strato.de (RZmta 55.6.3 AUTH)
+    with ESMTPSA id J82cde29T9IIvXN
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Thu, 29 Oct 2026 10:18:18 +0100 (CET)
+From: Julian Vetter <julian@outer-limits.org>
+To: Andrew Morton <akpm@linux-foundation.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 0/5] alpha/perf: add ProfileMe sampling
-Message-ID: <20261029091141.GG1779021@noisy.programming.kicks-ass.net>
-References: <20261028-alpha-profileme-v1-0-d44b52bf2500@gmail.com>
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Julian Vetter <julian@outer-limits.org>
+Subject: [PATCH v2 1/2] include/linux/unaligned.h: remove deprecated __get_unaligned_cpuX() helpers
+Date: Thu, 29 Oct 2026 10:17:35 +0100
+Message-ID: <20261029091736.28742-2-julian@outer-limits.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20261029091736.28742-1-julian@outer-limits.org>
+References: <20261029091736.28742-1-julian@outer-limits.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -74,20 +114,86 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261028-alpha-profileme-v1-0-d44b52bf2500@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, Oct 28, 2026 at 02:09:29PM -0400, Matt Turner wrote:
-> The 21264 from EV67 on, and the 21364, have a second performance counter
-> mode, ProfileMe, alongside the Aggregate mode that the driver uses today.
-> An Aggregate mode sample reports the PC where the overflow interrupt was
-> taken. On an EV7 that is anywhere from 15 instructions before to 12
-> after the one that overflowed the counter, which makes perf annotate
-> output close to useless. In ProfileMe mode the CPU picks one fetched
-> instruction, follows it down the pipeline, and reports its PC along with
-> what happened to it: whether it retired, whether it trapped and why,
-> whether it was a mispredicted branch, stalled before map, or was killed
-> on a wrong path, and what PCTR1 counted while it was in flight.
+The __get_unaligned_cpu16/32/64() and __put_unaligned_cpu16/32/64()
+helpers are deprecated and all users have been converted to the more
+generic get_unaligned() and put_unaligned(). So, remove
+linux/unaligned/packed_struct.h, and drop its inclusion from
+linux/unaligned.h.
 
-Isn't this the thing that ended up as AMD's IBS?
+Signed-off-by: Julian Vetter <julian@outer-limits.org>
+---
+ include/linux/unaligned.h               |  1 -
+ include/linux/unaligned/packed_struct.h | 46 -------------------------
+ 2 files changed, 47 deletions(-)
+ delete mode 100644 include/linux/unaligned/packed_struct.h
+
+diff --git a/include/linux/unaligned.h b/include/linux/unaligned.h
+index 4a9651017e3c..18c4b0c00e2a 100644
+--- a/include/linux/unaligned.h
++++ b/include/linux/unaligned.h
+@@ -6,7 +6,6 @@
+  * This is the most generic implementation of unaligned accesses
+  * and should work almost anywhere.
+  */
+-#include <linux/unaligned/packed_struct.h>
+ #include <asm/byteorder.h>
+ #include <vdso/unaligned.h>
+ 
+diff --git a/include/linux/unaligned/packed_struct.h b/include/linux/unaligned/packed_struct.h
+deleted file mode 100644
+index f4c8eaf4d012..000000000000
+--- a/include/linux/unaligned/packed_struct.h
++++ /dev/null
+@@ -1,46 +0,0 @@
+-#ifndef _LINUX_UNALIGNED_PACKED_STRUCT_H
+-#define _LINUX_UNALIGNED_PACKED_STRUCT_H
+-
+-#include <linux/types.h>
+-
+-struct __una_u16 { u16 x; } __packed;
+-struct __una_u32 { u32 x; } __packed;
+-struct __una_u64 { u64 x; } __packed;
+-
+-static inline u16 __get_unaligned_cpu16(const void *p)
+-{
+-	const struct __una_u16 *ptr = (const struct __una_u16 *)p;
+-	return ptr->x;
+-}
+-
+-static inline u32 __get_unaligned_cpu32(const void *p)
+-{
+-	const struct __una_u32 *ptr = (const struct __una_u32 *)p;
+-	return ptr->x;
+-}
+-
+-static inline u64 __get_unaligned_cpu64(const void *p)
+-{
+-	const struct __una_u64 *ptr = (const struct __una_u64 *)p;
+-	return ptr->x;
+-}
+-
+-static inline void __put_unaligned_cpu16(u16 val, void *p)
+-{
+-	struct __una_u16 *ptr = (struct __una_u16 *)p;
+-	ptr->x = val;
+-}
+-
+-static inline void __put_unaligned_cpu32(u32 val, void *p)
+-{
+-	struct __una_u32 *ptr = (struct __una_u32 *)p;
+-	ptr->x = val;
+-}
+-
+-static inline void __put_unaligned_cpu64(u64 val, void *p)
+-{
+-	struct __una_u64 *ptr = (struct __una_u64 *)p;
+-	ptr->x = val;
+-}
+-
+-#endif /* _LINUX_UNALIGNED_PACKED_STRUCT_H */
+-- 
+2.53.0
+
