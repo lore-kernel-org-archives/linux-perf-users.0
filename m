@@ -1,68 +1,80 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793268549;
-	b=BVhL6rIzUBDWdaSqtpy90X2INEAoYN4zITCiNKm8yMGUAlfD4W5uRes09vTbXyZE5R+s
-	 bUXnfUkIVndPqJWWTdgyWu4JACA/dUlkjaDe++vFCKqw2f2fTco+QorCw2OnF97g3Ofsb
-	 p9tG1/bsukovGhd0MGKpqtzLUKVde4nFbaUNSZggEGY29XHZ4/Q64UE+KwrZwrgxzxSSK
-	 +YHS61O8WhktYd5hTUHmlnKqI8ylIQmGIvmtHNh0TFvjYoBP6jsSBa11/Ck8pC1fgruaj
-	 rjaWxgFe3y87nF3MZj9W7Gt85vfumQwsIb5AyOkbUbYjioJve1b2iayqcm1ssq4Se8A==
+	t=1793269173;
+	b=XaIw/Q1a3y2BLkCDhOKNOe+0H+MhVaqzaC1aKcvrX6ufQasVAkWACgLJoDqDfLnPU0fK
+	 L1Ht36+AEqodmAmYhI5laOY9Vp2QShbL1Gwo4JItDMynKuBWB74cGuU8/0CyRXD8X60Ou
+	 qjx+KVugQDJ9mTreE1v5p1SzntxU/RGo0j7dZTZ7j4ePcDAN7//+9xu9qqQQbLUrVcc1H
+	 2HCgiS16y0N0l6fdFV7O1rff7SGVjeniePK08YDJ2gJy2X6mUkFNN6C0pmA+H3QmADfh2
+	 gqHXgIxRvJ0rDSJBKIqPqYdW8k7rbfwX8iZtsCzfIUNzAv+yEiUlOWZU6bBbApx3Z1Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793268549;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=EBtBh4mi9vfTbizUgXJjG0zB1ZY51XtTcnlDNfbxwEI=;
-	b=mkrS0qGnQtDe6sUbOBXYPT1Tayjq+7i8Ku5s5A0uF6JoIhzAm2ae3/FBZoMVL9ZBFout
-	 71IGjYGryKb665SBK5voOoVISDQIDwvOEjztiZW56JXQaPMnq3mH4jKPFoVkfK40GndbB
-	 fPElxAgwCcCcIRkNopT3M6jCqH4O2P31VTiu04cp199vggfRiFtzqZO73tucG7JAtVyZO
-	 qm2L6Mnd97pJVGpVRmOR+b145uaa0XBZZg45tEUgOzOARxk7nZ+DWehGMqB8HoAbjRbvF
-	 qRYtBbDGans+DyNJoz9wGdOQXcIArsOv4BVQs1AcB7byESdVjRNDmRJG3IiTb4pVeWg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793269173;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To;
+	bh=vtaqbfBX5vfrkQb9nMFdRAxYBFnpk3c4orXF29WeP8I=;
+	b=2YRuCpfDcSzUB0u6y2+9jVLD6v3KDbDdEG/rDMCIAsaWxftn0+432Zu4H9IQunMdkiCj
+	 Y+ALlCia9QqTZLtmb4XfifB1vdU5zZTF4xiL4ln+7CCbpa9ARTgiJu3/xd051X9n2du1/
+	 yf0QEy2KyqQm0TEJkvYomofXEeb5qAztsrmKuI/LDRDHZrkixo2BqZVKpVGQZ2IhENwbQ
+	 RPf06fHrwRn0aPSRDjvvWoxYwD+FGVAc4Inb5Ms5yp+22HpSPmQZw5bcsVtqgY+W8gQ/R
+	 zRaBPrDZfzzEkk8TEiSYT1g9bGLhOab6X6CPUnalbagWxsy5I8ZC0HyYSMMaPxrl5qQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ULYsBLem;
-	arc=none smtp.remote-ip=192.198.163.15
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=infradead.org;
+	spf=pass smtp.mailfrom=infradead.org;
+	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=nCws2b9a;
+	arc=none smtp.remote-ip=90.155.50.34
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4EF1606A31D;
-	Thu, 29 Oct 2026 10:09:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C4EF1606A31D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98509606B782;
+	Thu, 29 Oct 2026 10:19:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 98509606B782
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ULYsBLem
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793268549; x=1824804549;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=b4PAL6AHf0COge9APUPqFWFOQ7xTd5l7qZ8iH4onfc8=;
-  b=ULYsBLemL/z+49FpSWPFw4wrWjerDcpy8RZ4WqZlYZRgwC0dcKyhf4yH
-   HnZLj1wFiLpJcb2Hqkuq0odZPmwFl5XvfJcAy2FR5S15EEhm6hrTodfpm
-   RaGwW3XHCy/+qfEWRNL2dhL6Z8+QaVa1AE+YjPo8H7JolcLf3WCji10gk
-   386ojjqNUVxAQ/K1D0x9UGxriUBmmvW95DoJfAsc2uFdQNVgTO8uMN0wS
-   Jw3o8rETR9q3dF+1Di7nkM37O9Hid/rQRK/DqKR41nch/q4JS9obiBudj
-   3nQ2A7EEQHoEwfFBOfuTsJe1n01pACCJZJs+JQrhwxNhEZY5O9W4fxA60
-   A==;
-X-CSE-ConnectionGUID: C/Y+QrxOSGmx7pU9tS2K4A==
-X-CSE-MsgGUID: xPbCGLnlQoKsFNiQLX1QNQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11949"; a="2011259"
-X-IronPort-AV: E=Sophos;i="6.27,184,1787036400"; 
-   d="scan'208";a="2011259"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2026 03:09:09 -0700
-X-CSE-ConnectionGUID: nqn9YPXVTj2KUUBYURLt5A==
-X-CSE-MsgGUID: 7FXHWvNtSg2LbKodpgZiEg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,184,1787036400"; 
-   d="scan'208";a="4982772"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2026 03:09:03 -0700
-Message-ID: <efb39a39-5302-49ee-b7d3-a9ef574ab7d9@linux.intel.com>
-Date: Thu, 29 Oct 2026 18:09:00 +0800
+	dkim=pass (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=nCws2b9a
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=vtaqbfBX5vfrkQb9nMFdRAxYBFnpk3c4orXF29WeP8I=; b=nCws2b9aBxAO9qlUADishe8Fow
+	tLBV9d9y3aNbLuedV1Ok5lmUKi8gJSQDjhawzx3IDOMGadYmEJFkfc8uJ3oBAFNnHCmOXkijyTF7H
+	j0+AWSF2XRL2Fb7X/TzSI8UbytP11pmoJdMp+CWqLdgvPqKTRGz2Z0yJ75dZpw/+XEOew/wO0v0sH
+	Dx5zbPocpnGbs4aLaUT/Hg83sMLeYog12NT06PKbeBtAN1b+HR+EfuNFASb+k328BRZmNrinYbmuB
+	ChOGTBFq47+YU9gPz4SV+wQkhBWnFncr2HM1f43uEYbC8fBFi9L9ZH5AieqP6GAjE+8dVIrE2cFhV
+	OpeMjewg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xMNEG-0000000EJz0-1vue;
+	Thu, 29 Oct 2026 10:19:28 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 90DEE300312; Thu, 29 Oct 2026 11:19:27 +0100 (CET)
+Date: Thu, 29 Oct 2026 11:19:27 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Ananth Narayan <ananth.narayan@amd.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	bpf@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>
+Subject: Re: [Patch v5 01/18] perf/x86: Disable LBR if x86_pmu.lbr_nr exceeds
+ MAX_LBR_ENTRIES
+Message-ID: <20261029101927.GB1813469@noisy.programming.kicks-ass.net>
+References: <20261029043914.1395147-1-dapeng1.mi@linux.intel.com>
+ <20261029043914.1395147-2-dapeng1.mi@linux.intel.com>
+ <20261029093845.GI1779021@noisy.programming.kicks-ass.net>
+ <041e5185-ff2d-4423-af5d-aed6628973c5@linux.intel.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -72,95 +84,93 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v5 02/18] perf/x86/intel: Validate LBR XSAVE state before
- updating LBR stack
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- Sandipan Das <sandipan.das@amd.com>, Andrii Nakryiko <andrii@kernel.org>,
- Song Liu <song@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>,
- Ananth Narayan <ananth.narayan@amd.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>
-References: <20261029043914.1395147-1-dapeng1.mi@linux.intel.com>
- <20261029043914.1395147-3-dapeng1.mi@linux.intel.com>
- <20261029094044.GJ1779021@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20261029094044.GJ1779021@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <041e5185-ff2d-4423-af5d-aed6628973c5@linux.intel.com>
 
+On Thu, Oct 29, 2026 at 05:56:15PM +0800, Mi, Dapeng wrote:
+> 
+> On 10/29/2026 5:38 PM, Peter Zijlstra wrote:
+> > On Thu, Oct 29, 2026 at 12:38:57PM +0800, Dapeng Mi wrote:
+> >> Add a sanity check for x86_pmu.lbr_nr. If the hardware reports more LBR
+> >> entries than MAX_LBR_ENTRIES, disable LBR to avoid out-of-bounds access
+> >> in the cached LBR stack handling path.
+> > Cute, can this actually happen?
+> 
+> Currently it won't happen on real hardware since the maximum LBR stack
+> depth what hardware supports is 32. But it's better have this sanity check
+> assume the LBR stack depth could be extended to 64 or larger.
+> 
+> 
+> >
+> >> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> >> ---
+> >>  arch/x86/events/amd/lbr.c    | 8 +++++++-
+> >>  arch/x86/events/intel/core.c | 7 +++++++
+> >>  2 files changed, 14 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/arch/x86/events/amd/lbr.c b/arch/x86/events/amd/lbr.c
+> >> index a55646fcb846..96c5b5e56053 100644
+> >> --- a/arch/x86/events/amd/lbr.c
+> >> +++ b/arch/x86/events/amd/lbr.c
+> >> @@ -433,7 +433,13 @@ __init int amd_pmu_lbr_init(void)
+> >>  	ebx.full = cpuid_ebx(EXT_PERFMON_DEBUG_FEATURES);
+> >>  	x86_pmu.lbr_nr = ebx.split.lbr_v2_stack_sz;
+> >>  
+> >> -	pr_cont("%d-deep LBR, ", x86_pmu.lbr_nr);
+> >> +	if (x86_pmu.lbr_nr > MAX_LBR_ENTRIES) {
+> >> +		pr_warn("LBR entries %d exceeds max %d, disable LBR.\n",
+> >> +			x86_pmu.lbr_nr, MAX_LBR_ENTRIES);
+> >> +		x86_pmu.lbr_nr = 0;
+> >> +	} else {
+> >> +		pr_cont("%d-deep LBR, ", x86_pmu.lbr_nr);
+> >> +	}
+> >>  
+> >>  	return 0;
+> >>  }
+> >> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> >> index 0a34d674df59..10c694db85ea 100644
+> >> --- a/arch/x86/events/intel/core.c
+> >> +++ b/arch/x86/events/intel/core.c
+> >> @@ -9023,6 +9023,13 @@ __init int intel_pmu_init(void)
+> >>  	 */
+> >>  	if (x86_pmu.lbr_tos && !check_msr(x86_pmu.lbr_tos, 0x3UL))
+> >>  		x86_pmu.lbr_nr = 0;
+> >> +
+> >> +	if (x86_pmu.lbr_nr > MAX_LBR_ENTRIES) {
+> >> +		pr_warn("LBR entries %d exceeds max %d, disable LBR.\n",
+> >> +			x86_pmu.lbr_nr, MAX_LBR_ENTRIES);
+> >> +		x86_pmu.lbr_nr = 0;
+> >> +	}
+> >> +
+> >>  	for (i = 0; i < x86_pmu.lbr_nr; i++) {
+> >>  		if (!(check_msr(x86_pmu.lbr_from + i, 0xffffUL) &&
+> >>  		      check_msr(x86_pmu.lbr_to + i, 0xffffUL)))
+> > Would it make sense to have but one copy of this check in
+> > init_hw_perf_events(), after calling into the micro-arch code?
+> 
+> Yes, that's what the previous version does, but Sashiko complains it's too
+> late.
+> 
+> "
+> 
+> Does zeroing x86_pmu.lbr_nr here in init_hw_perf_events() happen too late,
+> after intel_pmu_init() and amd_pmu_init() have already configured hardware
+> and driver state using the unvalidated x86_pmu.lbr_nr value?
+> 
+> "
+> 
+> https://lore.kernel.org/all/sashiko-outbox-179814@kernel.org/
+> 
+> It makes sense in some ways, so move the sanity check into the vendor init
+> in this version. 
 
-On 10/29/2026 5:40 PM, Peter Zijlstra wrote:
-> On Thu, Oct 29, 2026 at 12:38:58PM +0800, Dapeng Mi wrote:
->> intel_pmu_arch_lbr_read_xsave() doesn't check if the LBR data is present
->> in the xsave area. If LBR data is in the INIT state, the LBR data may not
->> be really written into the xsave area.
->>
->> Add an explicit LBR XSAVE state presence check before updating the cached
->> LBR stack. Also clear the cached LBR stack when intel_pmu_lbr_reset() is
->> called, in addition to resetting the hardware LBR register file, to prevent
->> stale LBR data from being reused after a context switch or similar
->> transition.
->>
->> Fixes: c085fb877467 ("perf/x86/intel/lbr: Support XSAVES for arch LBR read")
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  arch/x86/events/intel/lbr.c | 10 +++++++++-
->>  1 file changed, 9 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
->> index 0b446d8912e4..a2e4ba7e1a4f 100644
->> --- a/arch/x86/events/intel/lbr.c
->> +++ b/arch/x86/events/intel/lbr.c
->> @@ -193,6 +193,8 @@ void intel_pmu_lbr_reset(void)
->>  {
->>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->>  
->> +	cpuc->lbr_stack.nr = 0;
->> +
->>  	if (!x86_pmu.lbr_nr)
->>  		return;
->>  
-> This also clears the stack if there is no LBR; was that on purpose? The
-> Changelog is silent on this point.
+Urgh. But there are no events yet that early, none of that can actually
+happen.
 
-Yes, it's on purpose. The intent is to clear the cached software LBR stack
-as well when resetting the hardware LBR stack. This is to avoid leak the
-LBR stack information in some unexpected cases. In theory, it can be placed
-after the !x86_pmu.lbr_nr, I hope the software LBR stack can always be
-cleared regardless of there is LBR user or not.
+If we're really worried about this, change the micro-arch init to spawn
+in disabled state and we call x86_pmu_enable_all() at the end.
 
-My fault, I missed to describe this change in the change log. I would add
-it in next version.
-
-Thanks.
-
-
->
->> @@ -1010,9 +1012,15 @@ static void intel_pmu_arch_lbr_read_xsave(struct cpu_hw_events *cpuc)
->>  		intel_pmu_store_lbr(cpuc, NULL);
->>  		return;
->>  	}
->> +	xsave->header.xfeatures = 0;
->>  	xsaves(&xsave->xsave, XFEATURE_MASK_LBR);
->>  
->> -	intel_pmu_store_lbr(cpuc, xsave->lbr.entries);
->> +	if (xsave->header.xfeatures & XFEATURE_MASK_LBR) {
->> +		intel_pmu_store_lbr(cpuc, xsave->lbr.entries);
->> +	} else {
->> +		/* Clear the LBR stack to avoid leaking stale entries. */
->> +		cpuc->lbr_stack.nr = 0;
->> +	}
->>  }
->>  
->>  void intel_pmu_lbr_read(void)
->> -- 
->> 2.34.1
->>
+Also, this is before x86_pmu_static_call_update(), nothing really
+'works' yet anyway.
