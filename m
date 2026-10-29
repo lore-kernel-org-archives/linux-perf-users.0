@@ -1,100 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.174
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793304778;
-	b=fXrSMawl9rg4XyoWuKObc/uXIFISeb4n1A3WnMgC2xP/58+Bi0TvhNSzlDx7N0UOhFSz
-	 Oe8wpWeUDSbmRrUh0V3fzWcfgL66OhvmuRTWN60BGGruYSdU8+6uHNhs5rTKaGeaet7Lf
-	 D/MJPEunIQbPrwb1qtJBNPlQra1gnX6KL3T2Iciv8NmXp4l9N6Fzc8PPyDx//RQ8Qoqi9
-	 AHZvQJZKmwL9PD1gzVPSqHLjhLIT018IimEFVQytWF9+EqYAE5jfzIvJwD8Adf8fCII/l
-	 TFxteudbdlU38I1GZb+iTn4BdyFvpLrD/NTy2nG8jscwIHKbYcXU5DDtRL2zvOWBOIg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793304778;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=8bWnlcqpeSxNOXcW7N0zFPyW3Tqj3tlZ/k1Vs+K85mM=;
-	b=Wo+pH7RYZ1bXwn9nEft0Fncn1uYsXwHx/gF/FNEaF5fJJ7yp+PUz3C8a7lvZqlWoPKw3
-	 jvvXjPjbkWhqCWcA42Ze7fKqkmHwYIl2JwBl7nuX9f/c8Tk2jlY4xSdkC0m3p2rEg4UC/
-	 BuvjSK8I8Iuv41YU2p3kkkYlD5edD+oaHQlnn1kye32yzOdMGrdXHMDr8BXyN5UdHsfv0
-	 5iHn3CV4MxyWRi6Sek2xw3hNtSGY6GMmpCAV9DJIP39M5Oei+VNv8seKurKFN3apFZfXF
-	 QsNkPZsOEaCnlqIkJbf5rllg80EOFQakESE752dOvzIOgHGvR4g/BwDHcdHWycajwcQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ecciuTBC;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.174
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793315352;
+	b=D9vIXT8XbJc3Iw8OsvgiLvvevUbwMrQsQ4y3jnaOpScJYaKhcs73dPJ7LYFlh19eC/Ku
+	 PAhn+oL7U8mCzn4rg6yuj8sInmxEXVbEzuAhiVK+Z2bye/I5FTaaXJo7AWsgz77IabxJT
+	 fOJbFAJZysVDN5HQ39X7FdiZnjE4eUxqqX4NBsvWq34EMroKFJr94MzoPG+S2Q0AUNqz3
+	 0u48cVdKcl1W29j0UyO2yIhcaqt1QwPFZgweXltgL7mlgeqrczBNWojCurLnXtuClEzBp
+	 9kTU+EPBSTNe99GVd65zoPmkd4+fhlqlSekP29567Ck+CaK7yDhLTzcBwv4rFB7jowQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793315352;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=60uiQLKWD96KNyNA8n1SFH/9ebNVNGe69HhykEBopfM=;
+	b=SL2jlr/12e+eD/nEQJVsFrOFSl674ScxC4wD70xQXIwgVDMj/1XrTDLMQvAkakgmEpDY
+	 JFhnGAORHFDGGeMWQgLEVNqYl7rBrV/1OTZRfX4FtbPhQxFBsol1+vRifnUCjlQRe9TIR
+	 bvNqow9vRyVU7m8PAMW0wxpk2PqrItZmCZW8OxA98IhiSILbsZ7HStM2IwHPYvUxMoAVC
+	 fRhMNowVzgwRV+9Q5UD81l4gEIuxA5xpUIW1OW8DLoqyUwahD9O2AouVhIR5J9OvD4lWF
+	 sb9SRTNlWvrsATnr1CWI5uzWbuBagxRnRzExIWYxR/255e/XOSueCRuznEcEQAV4n6w==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Vlu78CTP;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3CE606A31A
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 Oct 2026 20:12:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AF3CE606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69DF606A31A;
+	Thu, 29 Oct 2026 23:09:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ecciuTBC
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-5383c97c8cfso14651cf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 29 Oct 2026 13:12:57 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1793304777; cv=none;
-        d=google.com; s=arc-20260327;
-        b=MgU9lzxdjM/VWm7ntpm+tWBDUz0yuxAQJ1GBUdjyq8N/XmG/fRY+eHvRJDEzYyDtVC
-         Z+aTO5QzFeMgkAvNu79y5VPRiFTXyalW759rNE7Ylqv25jm3xv2EtnNGF0ySBhVaTsN1
-         OotwsIgd0VlQfIt2OFBqCwrYSAoJG1yfUpxt7LvRyg9vGoX0cnakdLlFIEZeXaeKa/WT
-         VSK+UlQSUXhytVJIy61fZwM7Z5AoxLUmjc52vRXPSLm5b69kNzXdo7IGcLxtZphYql1S
-         qGqXoErFbbOtATj6Sa4ndjOdOsjXI4AFY9DOZo8cJsgGaEmCE4hs1Z5v4tmmtAvQqX6G
-         UlJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=8bWnlcqpeSxNOXcW7N0zFPyW3Tqj3tlZ/k1Vs+K85mM=;
-        fh=bOYYTiDVmVXY35rxa/dQDK0/kKzDkS1Fmy9ebI4U+tY=;
-        b=jp4vRQ1IL8H1VAf/JKdDwEmQPs48xwn08z+qGUA14jepBlUYGbupv3h3UhzLkPx2bE
-         avhB89M6AbQ3ijYzz4Hk1pEJRv+9y2yDUrJRZlfJrvGBfe/HgGJBb+UgAzsttUvc+Hp/
-         UJBGN5+C56zLOLu3MQad68njy4BFTY8VaDcC1GLJF5g2zuTmIWqQ8kDTaKNznjBXJKgu
-         Pcyyxjx7DCUqR7Z4YtLnlgS1fJV6SpHALPhz+h+1KdO7S9NfnsmEqHvJMuMwfCekXpzn
-         Uqd211t1AFbLUnV2HWskoQ35FxKTGWj4I2pGri1rvOnBIckQ6/m2bTa7PH/PL9voW2aY
-         l4oQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793304777; x=1793909577; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=8bWnlcqpeSxNOXcW7N0zFPyW3Tqj3tlZ/k1Vs+K85mM=;
-        b=ecciuTBCqVosdyC5vZpxUYD2sVTPc+IBA634hIVo2LP+m5WGZltDkR8OXGqSltutPL
-         Q1xnmtM9qmFE7abAcqoMcltyKO7zlJiF8gU0T4VrEDBdaBPXePHwzw83gzUufxWCikRY
-         TYLck7Swry0p26rMh6t0Fb4yyVcCWxCMUqnli/tcNu/6E0chnqAnSVDJuUhK7ihYpnaA
-         nG1HzLpOMXT6oiRpKvIv45Dm9NU59XvHr0sx3jHZIi3+6cy2euRk4Ewn3Bnddaz8IRXr
-         /U4awhDvQI1p7iCJSMoti1VsJXO4sBq27nLxn7nJB8S8tS7VdjJiUl1ZuLTEm763lc3V
-         lb3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793304777; x=1793909577;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=8bWnlcqpeSxNOXcW7N0zFPyW3Tqj3tlZ/k1Vs+K85mM=;
-        b=0HlOFnihEPwC/cYV/wwWBeNIqg584qLKsNBjPKy+GXtpzj6/1VLT5IFxEcGEF4s7w+
-         J4b0JVub6/leqZgCCjsPr45BbwgcbR12+O1M/LJG3U3A2X12s3A9QXd+USZxVwTcaDzO
-         d3mf5f92NMhqQBnexTgB9wseAcjqn5c3yp3YbpFm1nFIpTMR/B77pqoqDGqXH8NpJpES
-         xvXmKAcx4MsDoeaGhQc7s+U6K9/CU8FC/bzbaYkUfkff046m/bGz5utzIsAMOEmSzGa2
-         Up+vC5FFJGoz5IWTgWXSLRQEu2JX1KAwYN8XrITagvxiStZ9tFW/0+0g8XJwD2dAeSP7
-         JzSA==
-X-Forwarded-Encrypted: i=1; AKwUvByFLNgiikXjL8/mC/2x+Jkqpm57z5B3+LqPFXqgWJTdE6lzLUQU7ZJJ34x6WbH0gd+W3yIO9I6reOF2pjNRkDna@vger.kernel.org
-X-Gm-Message-State: AFq9FYJB3R0DChGBAxEtt7mkUBE4Xlbk7l1eesHEtM/fmeF4F6QsISt/
-	YjfnLGPoolMv5+zxFntKwBsIklo8k/95GIIZ/5MZvr6FY2SX4RcB7mGub2UFRzqt6IDQZtvm+xa
-	qd6hLHA3SOYYnXXrHtYYzPN1x3aw25mOGRMJnbvVK
-X-Gm-Gg: AYBFou1MeSMuLMmhrZ6qj06CnkxptwOasgSrhDdbFPI7/demBBR0M2r6zdE6vQcdnp3
-	ATu1w2GqyHKDqgMf+YVobeY58hdSoHgDkdObLAUyEMWKpujXVdFgl6t1roi0BrJZpKs80T+VCs4
-	2F7dO4HjFtq/QJkjlqFWjE4ujUw3eEpfdR3AR3LNfsK4L6wHcBlaq2o8hzyhuqZGURkY5uXfC3W
-	Hl0InkAfXqkp0TBUpbnExHP3AIbyB6dPBN6GG4vrzpO7BBYhQY80h+nHPUyZ0Yrnx71WNhFVNO0
-	NHC2Jxmj0kjatGbiziZca6/zM+VJKmLRvQTOSHtgIVhq74O8FAXLJkHaLMJPij/g5TYj0zWhykn
-	vYYFJAyUZAN35nF3+awRaOaVqfJvGTVzhiBSB21xX63WsU0NxhSHYbsW66865jwOIi7I=
-X-Received: by 2002:a05:622a:418b:b0:530:e335:4ef with SMTP id
- d75a77b69052e-54129c3a014mr30493781cf.2.1793304775935; Thu, 29 Oct 2026
- 13:12:55 -0700 (PDT)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Vlu78CTP
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ED671F01816;
+	Thu, 29 Oct 2026 23:09:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793315351;
+	bh=60uiQLKWD96KNyNA8n1SFH/9ebNVNGe69HhykEBopfM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Vlu78CTPyf+ZyY+6ssCTxabXF8StOgXlJTsB8rxtQsxtjj+HkyKmR5Uwb579/tLj6
+	 +zSzMd5S7bFy4FRVCskYPFFb9odTDQ9Nw7618th22JQa7FSyX75FWZenMNGNsHkgwO
+	 M7p+XN2mnP5UeWEPfLyQC6qpJ7+dDhqHH93bcaObz/qaE9RU3DOrrU/JRAD9nVN1Vh
+	 7naVbLRzCja4Zla2Y24qeex84MAMc7RPm0c6rGOuxC9yBTn0+S0dNGqfsmNxBTk2he
+	 an6ZJHJX3iZRnGI4AVVnzUD+YrmzjSrpYS+y0un3VgY/y+ryce03Z4N+Pjj9txHyV9
+	 MW4JC83uKif9w==
+Date: Thu, 29 Oct 2026 23:09:03 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
+Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Himanshu Chauhan <himanshu.chauhan@oss.qualcomm.com>,
+	Anup Patel <anup.patel@oss.qualcomm.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	Yunhui Cui <cuiyunhui@bytedance.com>,
+	Atish Patra <atish.patra@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, Will Deacon <will@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Randy Dunlap <rdunlap@infradead.org>, Shuah Khan <shuah@kernel.org>,
+	yuanzhu@bytedance.com, yang.yicong@picoheart.com,
+	yang.susheng@zte.com.cn, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v12 09/11] MAINTAINERS: add RISC-V SSE maintainers and
+ file coverage
+Message-ID: <20261029-tidy-scorpion-c8601a1761ba@spud>
+References: <20261029074853.35467-1-zhangzhanpeng.jasper@bytedance.com>
+ <20261029114953.27453-1-zhangzhanpeng.jasper@bytedance.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -104,75 +78,104 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261029-perf-tools-next-v1-0-a75a2b64a15e@akamai.com>
-In-Reply-To: <20261029-perf-tools-next-v1-0-a75a2b64a15e@akamai.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 29 Oct 2026 13:12:44 -0700
-X-Gm-Features: AclHuK_VHX_q_V8G3T6Pzc6cduP2r3fHbp2JuReLyIFbTTF9f_ewsz7fsH6vG9s
-Message-ID: <CAP-5=fU=rb5f0X0ArWj3JRZDwrwM2Q341RPG-UJmYX2tUSpUbw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] perf jevents: Add IOMMU PTW & device entry metrics
-To: jlefkowi@akamai.com, Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Ben Chaney <bchaney@akamai.com>, Matt Pelland <mpelland@akamai.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Xqo+bfadgatXB3Qq"
+Content-Disposition: inline
+In-Reply-To: <20261029114953.27453-1-zhangzhanpeng.jasper@bytedance.com>
+
+--Xqo+bfadgatXB3Qq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 29, 2026 at 12:06=E2=80=AFPM Jacob Lefkowitz via B4 Relay
-<devnull+jlefkowi.akamai.com@kernel.org> wrote:
->
-> Adds AMD specific metrics for the IOMMU with respect to page table
-> walks and device table entires. The metrics cover ratios, rates, and
-> percentages with respect to any event which might be triggered during
-> a page table walk or device table entry lookup.
->
-> The metrics target Zen 2+ processors and use the standard amd_iommu
-> PMU events. They have been tested with a benchmark C program that
-> purposefully thrashed the TLB as well as with 'sleep 10'; both of
-> which work as expected.
+On Thu, Oct 29, 2026 at 07:49:51PM +0800, Zhanpeng Zhang wrote:
+> Add the RISC-V SSE maintainers and cover the architecture entry,
+> firmware driver, PMU documentation and selftests in a separate patch,
+> as requested by Himanshu Chauhan. Also add coverage for RISC-V firmware
+> drivers and the architecture selftests.
+>=20
+> Link: https://lore.kernel.org/r/as79MHtNYd-VbUug@hu-himchau-blr.qualcomm.=
+com/
+>=20
+> Signed-off-by: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
 
-Cool, perhaps consider contributing them as test workloads:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/workloads
-
-> The changes are split into two patches:
-> 1. perf jevents: add iommu page table walk metrics
-> 2. perf jevents: add amd specific device table entry metrics
->
-> The specific metris added are:
-> - lpm_iommu_dte_miss_rate
-> - lpm_iommu_dte_lookups
-> - lpm_iommu_ptw_reads_per_tlb_miss
-> - lpm_iommu_ptw_nested_read_ratio
-> - lpm_iommu_ptw_guest_read_ratio
-> - lpm_iommu_trans_per_sec
-
-This is great! +Ravi Bangoria who may know of errata around the PMU,
-etc. There were some Sashiko nits, but I expect to add reviewed-by
-once those are addressed.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
 Thanks,
-Ian
+Conor.
 
-> Signed-off-by: Jacob Lefkowitz <jlefkowi@akamai.com>
 > ---
-> Jacob Lefkowitz (2):
->       perf jevents: add iommu page table walk metrics
->       perf jevents: add amd specific device table entry metrics
->
->  tools/perf/pmu-events/amd_metrics.py | 81 ++++++++++++++++++++++++++++++=
-+++++-
->  1 file changed, 80 insertions(+), 1 deletion(-)
-> ---
-> base-commit: 1c90f0a3c8a1c4e38f9edd97af9e20848805a7fb
-> change-id: 20261028-perf-tools-next-8fd1d433316a
->
-> Best regards,
-> --
-> Jacob Lefkowitz <jlefkowi@akamai.com>
->
->
+>  MAINTAINERS | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 65e8a4b5c90..f275e9d4847 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -23506,6 +23506,7 @@ C:	irc://irc.libera.chat/riscv
+>  P:	Documentation/arch/riscv/patch-acceptance.rst
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git
+>  F:	arch/riscv/
+> +F:	tools/testing/selftests/riscv/
+>  N:	riscv
+>  K:	riscv
+> =20
+> @@ -23518,6 +23519,13 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel=
+/git/iommu/linux.git
+>  F:	Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
+>  F:	drivers/iommu/riscv/
+> =20
+> +RISC-V FIRMWARE DRIVERS
+> +M:	Conor Dooley <conor@kernel.org>
+> +L:	linux-riscv@lists.infradead.org
+> +S:	Maintained
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git
+> +F:	drivers/firmware/riscv/
+> +
+>  RISC-V MICROCHIP SUPPORT
+>  M:	Conor Dooley <conor.dooley@microchip.com>
+>  M:	Daire McNamara <daire.mcnamara@microchip.com>
+> @@ -23573,6 +23581,7 @@ M:	Atish Patra <atish.patra@linux.dev>
+>  R:	Anup Patel <anup@brainfault.org>
+>  L:	linux-riscv@lists.infradead.org
+>  S:	Supported
+> +F:	Documentation/arch/riscv/pmu-sse.rst
+>  F:	drivers/perf/riscv_pmu.c
+>  F:	drivers/perf/riscv_pmu_legacy.c
+>  F:	drivers/perf/riscv_pmu_sbi.c
+> @@ -23612,6 +23621,19 @@ F:	arch/riscv/boot/dts/spacemit/
+>  N:	spacemit
+>  K:	spacemit
+> =20
+> +RISC-V SUPERVISOR SOFTWARE EVENTS
+> +M:	Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
+> +M:	Himanshu Chauhan <himanshu.chauhan@oss.qualcomm.com>
+> +R:	Yunhui Cui <cuiyunhui@bytedance.com>
+> +L:	linux-riscv@lists.infradead.org
+> +S:	Maintained
+> +F:	arch/riscv/include/asm/sse.h
+> +F:	arch/riscv/kernel/sbi_sse.c
+> +F:	arch/riscv/kernel/sbi_sse_entry.S
+> +F:	drivers/firmware/riscv/riscv_sbi_sse.c
+> +F:	include/linux/riscv_sbi_sse.h
+> +F:	tools/testing/selftests/riscv/sse/
+> +
+>  RISC-V TENSTORRENT SoC SUPPORT
+>  M:	Drew Fustini <dfustini@oss.tenstorrent.com>
+>  M:	Joel Stanley <jms@oss.tenstorrent.com>
+> --=20
+> 2.50.1 (Apple Git-155)
+>=20
+
+--Xqo+bfadgatXB3Qq
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCauPSDwAKCRB4tDGHoIJi
+0kttAP9dzoNQAI2SKPQomjar/n9Qd4olyeHc1OusqrZHxxNv7QEApaGoAI0AgXlN
+NFcCol7iifOclsEwiEBBMmF4CzFvhAc=
+=aCSu
+-----END PGP SIGNATURE-----
+
+--Xqo+bfadgatXB3Qq--
