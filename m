@@ -1,102 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.178
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.49
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793295143;
-	b=Z2+ldGAQqPrpNTKKmtjdLI/Lf2s638ijK54XjjSblTFydtjDdoNZwS+GzrCgtaA7lyrg
-	 I3gzJUv/tf6FlZ+GXXwA4Y4s2sUVszrbpY1J+Vv9UHmwftvBV325Nr5Wj4dhUATxGdNJR
-	 x/VUbXesvpvVhJ0T7V03vIbYVhNC/b+WCEyWbkLaEn5SVPm3gmiv/M98RV/PoiFOnwhcW
-	 Yvs7hyfC4ls2rX7KM9nTpJqBDdinHS0ZsS+VXAGOBTZclz0160k164g7SgPBDBGNOHdVt
-	 CgAoozPVocC/KQrPVpRtn9SAeUmndWoaqhBqAn42T0aJJDOtRiRwjcsYrMSfLXoFTVw==
+	t=1793295525;
+	b=JHIBaUEY9Nwf3g6WYIa4O9yFpnuYDqwffGP8RUjUD3g7SHEgB27q9vjHNKuodV5NU1uY
+	 G2M4t5uTzerlvxmu9Ofcmtr5F1be8/kYaefuhdwvoWq4Z3CMALLsTIy3f+EdXw3RMThxR
+	 Nwr451CH/HvVogQ4JyWr38hetogsuDD5GepOv1lcHQ2UNdU6v7TNGScAvEvwH8UKnYzJh
+	 pp75sxB1awl3RyZ7qGX984GVUwEgakbLTPSKNJbKNurOj52dr7XO9MdsGTZzUYC32vlKo
+	 XofXjFbqGHa06zdyvZmaYXzUp/LtYkJgHrsLeDcuZwZ0i0a+FdpUVsr+99a1aRnumKw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793295143;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793295525;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
 	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
 	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=R4Rs+OXHP0WWXEc1HyOxC7jIqK/84yuL7ps1Yjc1ZrA=;
-	b=tEmyUhuyRxJawZNFZU5TELEc/BGY+5g6Cb5DCe6Ff7Cfv8qDBon9d3z98s6918p6DmOA
-	 FykrbmeJ0kdCx7J8bghEtzDYcfVdvOYDkl+TRj9vIzUpeM0hiHJYImLJ/XHseBm/i4lWX
-	 BSsBpWy9gEFTjJOVV6zhvP83JNLP3lWRyI4h0mK8ZNxlSYIxdJEv6VzRv06qi2aVvVr3e
-	 XM9HG6yc9h9ZTt7a9niPFEg8Gaelm15mhnYPCxEW0bwKgoCEuzhmJ/jWYah4dYHYK1NEQ
-	 JxT4FabjYGjhbNFkJpHuCLWpvc5NytLrE3UjUhhXAW6p4R5oeC8JsXixQACdNwBPKnw==
+	bh=Jnb2ggFy/68cuPuLhBQIr9m8EgIXZTngDYovAtQO7jc=;
+	b=GCsB3bU589UNJrz4QHzEjnP6qPwQpmetF9C8CKdnpcVFe757WxeguWFcGrUStnJM6TEM
+	 sEG6wDoZKF8eXOnIO4DjifBdDu6rISG15t5kBrGUK34P/osocF2CGI4rAhoY4E4d9YZC8
+	 4XD4VSOvGMHYXklbtZ/lLRvgL13ZJvFGOR92nSzZT5FCYGs7Cl84n7ciMwok3/zBadK4v
+	 PYnoykfZoDHg+2TuRGqKlFxRke+jHl6A7JEGeTdZnwwDmq/hXuskDoq+Rs7UvTrsu90DA
+	 fp11beJmqHFl6UZnpcUnKKLoGGReQNqjK3tYcO0fPM5fZsJNrixAhxoLHFc056hIH2A==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Sn8ZaqyK;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.178
-Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="WdOK/Nmn";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.49
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8916606A31C
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 Oct 2026 17:32:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C8916606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A7B606A31A
+	for <linux-perf-users@vger.kernel.org>; Thu, 29 Oct 2026 17:38:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C4A7B606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Sn8ZaqyK
-Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-36a1c464349so357331eec.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 29 Oct 2026 10:32:22 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1793295142; cv=none;
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=WdOK/Nmn
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6b1f31c63ebso1690153a12.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 Oct 2026 10:38:44 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1793295523; cv=none;
         d=google.com; s=arc-20260327;
-        b=PR3dauKMWFCiXZgT/tsxMx628+Nylzuu+bGtj+WpXtpxHr3xNux2+N7z6dfYVyyyez
-         dcHN4CJm7wpEswkmmsM0CVuUgt7GWBqguFCx2IMivTPWn9xhF3biqMOdt552HVqexcmP
-         9WuzqKq4xtLALzHT1NC5Q0ofT/DTbuAn8AM5VweoeaPmqaLclvQEQDsl0kEdmFFvczqx
-         bNw5YWanlKgTHcuZM6LC90SNapcXaeiG94fZm8LTKtGpTBoryeKtjFpNzIh0H0r9e8Qa
-         5foNhZSgI+6j0CRD8uVGe63jCmgOU8IoI82O8JS/L3E1pXNtTBbGLkTbtdczpBxaIp3V
-         /QYQ==
+        b=akjYSSEUScifzcsnYfd2EYB2fkNQrpdYN5BVg6n65omcKpwV294xqiEgn5lNJFuJqs
+         65Lh3Z6PU3kkJxR6UG2x+3P8+qglm+xs4UKJxcGxbQZml4ajBSVinE4E7B3PwVcGk8cW
+         LXdN3rWLMOHfneJ/mp8Dxb3iovDz7PFQwrczbOezZD+VzrJou5rvzwMv+ig05b3KtYxx
+         NAx5XFnTSlOgLatcia5RP3h0txbWdan5MCP8eu8L7sACAejALF3/ZNKth7T2cP1egx8s
+         V96GHqTODn0disF7KO9PViv2uiAQQod7hxKZEoQYj9MXDGFNPlTQR/3smC84Ou86Jb+c
+         o/Gw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=R4Rs+OXHP0WWXEc1HyOxC7jIqK/84yuL7ps1Yjc1ZrA=;
-        fh=PNQ3hu04j00JSTLVMiW2a8mQaAsRGJvmhmvtdajt1Ko=;
-        b=pjGKUTFd45sWqBVs6ZiW8pqRHeOvAiDt2DIqBmYV8xfQnPmU4/TGUjrUquvBD9GbyA
-         By1P5UieoX2Mq7TPkN4qXJaCT0Q/M9BWpawNNXedloeBdcDNMq+j+45EV4GEUQnG9nHE
-         NTlN8Gai2LzN4vRC4Bia3/XhwHlwrjBJM/rNuTTDdiudxXYCQvmuLOWireimHXV6aRvN
-         pmzmm5dczSDse13y+KcBAngPwGOsZWQWXg3dAeZjokb6Xt6gnOpXvzdY6UZI4ALrfXHB
-         SiIID1+rOjMGFZmsEVtQ88E+lDKjI3Yvl+CawRZD49r2WKogV3WGQbH/lxopXdMCO5A0
-         lR3g==;
+        bh=Jnb2ggFy/68cuPuLhBQIr9m8EgIXZTngDYovAtQO7jc=;
+        fh=W+2vrK3LnykK0w6kCqr8A3CGFZBO2IlJ3vpMa2L0D7s=;
+        b=nj4cjowJFPz6W/RdblruDnT14SRkAPQ2rxlzIzX5I/CjP+KNup8T+4KLvkRt8CScIK
+         AZOz+EaroXWEW4zP8bNyScZxsYfeBS9F0koC/HA1vxj1Itx+KOHNzzH+3NFdhRPn/fIH
+         qF8s2doYKeVUcn/ud1Cd1np5Wa5NIKnGqis40mPNq/T2ggcCJtwoB9PpZ9zUFI8vEOzR
+         8em5URBEYGU73cdsAm0HgqaCyPOJtn6ygVXN+E+fiSzsIO88eKGS7E8gsLblSC9H2oV4
+         f3MP0tTeONzA0y42cjphygrjA3RvXlQGIG7XCp+FmBdGuEw1oG4AA1X0cwpxU9dhrkxy
+         JI3Q==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793295142; x=1793899942; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1793295523; x=1793900323; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=R4Rs+OXHP0WWXEc1HyOxC7jIqK/84yuL7ps1Yjc1ZrA=;
-        b=Sn8ZaqyKa9l3To+a5GYvvAD0uAR4LJpfMXeTB71mq8b5e1Cu/L8u9HO8Zj4J0B5nci
-         ikPSN1UBdudd69fky6nx+fn2zpQNEKKb8ndM85agvMeZX1huHviwXrVWGf3dK98oNA2n
-         kPm3sFQi0kDHKs5E2U8HTKnHQfybkyFStMtmeFjCEYXW2mEF15JtSDG+5XlGpHWRHj6s
-         p7K5MntJv9WyU0bgxVoYY7vLJvNAw48cDUARB5+Bim5Zy0yKYy1Tv3NY6ydDdUGsXC0O
-         83MJ9sAETqsv7YSQ9eLhf5V4kUe2K4/oqFg8hHLQtP7JGEDhl74TjhF3bkIgdYuBHeUM
-         yhdw==
+        bh=Jnb2ggFy/68cuPuLhBQIr9m8EgIXZTngDYovAtQO7jc=;
+        b=WdOK/NmnJj+0TX8YV8z1q/DKcXpxJQbfndklH5sBCCZuKZZkbRxchJkx3BGXfHQwEb
+         DfNN7ahPHVpaGDCk+IdV+0yyCfm+HfbrkHuzDB0Fw3+jfFh0qKBRiEWWf75WrAAtkqeP
+         f5KFxYFeqd1WGB/MQ46ddbDg6FGFHpWB91irCwQfFiim+dOMQTG4BKBI+xYsKwBDKOW1
+         3NNofkg4yKoEiCQ33IC+d8JpnAi5vs1v7Foca1Liog7Lc7f2B/vRKWsJoh3Ttz5U7Qe4
+         EHkh768OqJwGj3M0KwrRp/7JalebOMV6sdVb8MkYmw/2YYj3dCAh0EbaOW0rsCcXenS4
+         TOFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793295142; x=1793899942;
+        d=1e100.net; s=20260707; t=1793295523; x=1793900323;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=R4Rs+OXHP0WWXEc1HyOxC7jIqK/84yuL7ps1Yjc1ZrA=;
-        b=w5THpnacOlMijkPu1nOEuUp9lRkqPoktwhrPMuCAVXCCTdf46tOpRWNwPr36x+SvrS
-         7sB7YGwnxrnziKZdSdPFbtpn4Owkjqcwp5b2tkTWOkB9P2OWtTpQa9hte2ohzw0ea+zi
-         VgxL2PxSCUzVJVqIp5WlkcwZhC6TohAIChtYTrC0eT6C2BcLRZWK73eLOZKyyR6TwjDN
-         SA4mXlTwgw8+CTvlUMayS0tGnlwMRWE5L1tiPAsGwQVVf1Sc4A5VPbq7C659sN6QAZPX
-         +w8EDb5kL/MS2aVtwQWv98rSHjd6s9iOvB04aIBjPkMa8K4197XkqaJzpfYUyGmnTCaH
-         HPdQ==
-X-Forwarded-Encrypted: i=1; AKwUvBwOBFGJ0A0hD+8D2JZu9L5uiD24vNPNW5rvsE0Z7wVcRJfPjoqki3EcTsUoLBE/lAz6LNDO/fHrc3aiYIc72yys@vger.kernel.org
-X-Gm-Message-State: AFq9FYL7qiNNykpuZ0o+8kgcXX/e0Ij8ta/HQCOiu+PaNGhRCAcg1Y5o
-	bGs9VvAgETCkROPPT71KwT3Sx/iXWfkRlj+ln0kVzm6+NnXECSgXZSj7CdzKB8n9umjZr8tPchk
-	1TBZ6ZAWRnzwERJ51bkHacbbL09dRqM4=
-X-Gm-Gg: AYBFou1HnMZkOu0ab78I0zbEnnU+IWKPVVPkcPLKR3oOKECtWcJXC+swAGCxCY16hq8
-	LwfHAHC2LxNbX70tXM2VJx7+I6ipsI9Lbh+UwfzbW3G/nGrneh7s+BqHaBtslJM1MD8pIxzWFE0
-	Wr7IjI5tgT9slW4f7rgVo/0QuwC6DWpRvLuqNvh3mV+y93fs61grLQqk9m2HTiGVV6LECYV4NKf
-	FqLiP5tj3D6yeIWqxI8Mk9jNsxvcsO2mpNb+QShyXodI5B+Ak+6Q2vQP9H65UzMa2yxaxXE4xN0
-	2Czzs9y4RkCPEw3JEml9YWei4jyQ8JIT536X9NJejJvfkHbWQwwjGoIFV2t+7VfrW8jBGhXZL6k
-	vBo7qgR66E6xwk/q4iIzzfLUkxvJRkOUy8xJnDKhBmVdHEkEEQeqUYtCButZiIEGdApHJm9Qeip
-	RtafGB93eW6Vp5cm0D63XyrT01IQ0RRbu3qYJNBhZS/N9HVNkLwdONw88OhoLwiUmftEsXPAICV
-	BSP1Yvskw6EVJW4U7COcw2echa+BmH+6OtvKlCHxO0vIKeiSGvbw9h3Cw==
-X-Received: by 2002:a05:7300:ae18:b0:36a:13fd:b5c with SMTP id
- 5a478bee46e88-36a4235ceddmr139643eec.2.1793295141770; Thu, 29 Oct 2026
- 10:32:21 -0700 (PDT)
+        bh=Jnb2ggFy/68cuPuLhBQIr9m8EgIXZTngDYovAtQO7jc=;
+        b=jXxZlhMBBQZBud8AKVMvE2dGlK5VnDD0y8f7mhTEQWNPJNur2Ve9n4PXXAwDl3jhxp
+         /yQJ4QaiyF2y2gYgnYnFtX2v9B75+fJFQPDyPhKgg7mpun86bOOh2x47ukVOW4FeCcaf
+         GeogJ0lgdpa1FAzPI/vYIhbGVU1hdB9lrLZv+183jNsBf2sWCTHYzGaXFMpJZ89Q64YV
+         04p7aQt2hzCC+SShzEnu+GB8wBWk2p7rKBu3R3//5pswMLz675jpp5N0MkEgHls7sIEM
+         2me8dTmyUvx7cGIJX3UQHTQYqyQL+FMSRFUfSdJH2Fm/ccXULBsGTqEkFxof0QyBFL/i
+         0SJQ==
+X-Forwarded-Encrypted: i=1; AKwUvByzvFt84hGhNH890+4R83P2XpCYl3HSTLtGLfQzzZuBpNbL4sNFI5Fc5JNJeZoPScPTj6lCA4hN9RhwTLIZ6Liw@vger.kernel.org
+X-Gm-Message-State: AFq9FYK9jVBn5nfhsAdLHhdd/biO1HxyKA+z6Zro2WdrDctXoesEvpar
+	MFr5vTPbGBN1Jl7Dcx+UauLlVMwL/ChwUGMex86LcQEMSK+gz6Q3tzsH9KCZFvyBmyy3AY/QSMM
+	uYo5ssBV+1+wtaE19qCy8VAJX3Ut5fg8=
+X-Gm-Gg: AYBFou3kykUEpknFjT/5I3OpwqDqujPTozC3GdVe3puQBB7J42ITBuauHDBsrh79HSg
+	+ET96IFGnKwBhqOr3Y4mD7PqRcOVke2sUFA26AfS4X5x49QFghlITPe+XZI22d3yRHGz0zvydA3
+	3DP48eE82ktCdRujN7PjofRNnquASQBMgHyRcChe2PrweM4ml0p3N2c1JRT+lI2R1dn2gO6PO9n
+	N7VU0Lxm0aWCm08KQzlxAJHKhmjasXihA9+9v3VehUBovakTP4cdl95ZcHH7huC/SO7/ZmeTZdG
+	lSu+QtTBGhO1ZvHUJP1sFE8xIrxdFP+YKexcXP3bmMVokZw+p5QY/pDWdKCcbcAeJy6+0Qm+D7T
+	GcGSEyI0MeSGW4XAX7WGXt3y2eJLnfu3FvL4qWNDk0hB+zoEJgjSL86S1O90KM2wntcur
+X-Received: by 2002:a17:907:3e19:b0:c48:a838:c17e with SMTP id
+ a640c23a62f3a-c49d1307e11mr311139066b.14.1793295522951; Thu, 29 Oct 2026
+ 10:38:42 -0700 (PDT)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -106,71 +104,97 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261029162958.3224280-1-irogers@google.com>
-In-Reply-To: <20261029162958.3224280-1-irogers@google.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 29 Oct 2026 18:32:09 +0100
-X-Gm-Features: AclHuK-0mxI3LKAZpnOHH-Drrv94DNRirn4x7gfXbdMbpDKW_doTTtE6JJd6tT0
-Message-ID: <CANiq72nrhqK0NP5q8_G=936++gZR3=zrES+cK96T95-ThVTpbg@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 0/3] tools: Add Rust library build infrastructure
- and prefer zlib-rs
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Quentin Monnet <qmo@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-perf-users@vger.kernel.org, 
-	bpf@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+References: <20261028-alpha-profileme-v1-0-d44b52bf2500@gmail.com> <20261028-alpha-profileme-v1-1-d44b52bf2500@gmail.com>
+In-Reply-To: <20261028-alpha-profileme-v1-1-d44b52bf2500@gmail.com>
+From: Magnus Lindholm <linmag7@gmail.com>
+Date: Thu, 29 Oct 2026 18:38:31 +0100
+X-Gm-Features: AclHuK-SY1_Xa-c9wgWP3q7LRAU1TLOJcpcznXRsfIIxmsCY3IoLxSzQH8m4NoQ
+Message-ID: <CA+=Fv5TsDjMcd8+ZPPAXWzw-ox5yhvYJqiCBUfj-6Jm0Lxf9aA@mail.gmail.com>
+Subject: Re: [PATCH 1/5] alpha/perf: pass PERFMON_CMD_LOGGING_ALL to the
+ logging options call
+To: Matt Turner <mattst88@gmail.com>
+Cc: Richard Henderson <richard.henderson@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, linux-alpha@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 29, 2026 at 5:30=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+Hi Matt,
+
+On Wed, Oct 28, 2026 at 7:09=E2=80=AFPM Matt Turner <mattst88@gmail.com> wr=
+ote:
 >
-> 1. **tools build: Add Rust library build infrastructure and zlib-rs featu=
-re test**:
->    - Adds `tools/build/Makefile.rust` with helpers to locate Cargo crate
->      sources in distro (`/usr/share/cargo/registry`) or local Cargo
->      registries (`CARGO_HOME` / `~/.cargo`), map `.rlib` prerequisites to
+> alpha_pmu_enable() passes EV67_PCTR_MODE_AGGREGATE to
+> PERFMON_CMD_LOGGING_OPTIONS. That constant is the counting mode bit for
+> PCTR_CTL, which belongs in the PERFMON_CMD_DESIRED_EVENTS argument. The
+> logging options call takes a flag in bit 0 where 0 means "count all
+> processes". It works only because EV67_PCTR_MODE_AGGREGATE happens to be
+> 0.
+>
+> Add a name for that argument and pass it instead. No functional change.
+>
+> Signed-off-by: Matt Turner <mattst88@gmail.com>
+> ---
+>  arch/alpha/include/asm/wrperfmon.h | 2 ++
+>  arch/alpha/kernel/perf_event.c     | 2 +-
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/alpha/include/asm/wrperfmon.h b/arch/alpha/include/asm/=
+wrperfmon.h
+> index c97b82a1f7db..1fa9bc813263 100644
+> --- a/arch/alpha/include/asm/wrperfmon.h
+> +++ b/arch/alpha/include/asm/wrperfmon.h
+> @@ -23,6 +23,8 @@
+>  #define PERFMON_CMD_I_STAT 8
+>  #define PERFMON_CMD_PMPC 9
+>
+> +/* PERFMON_CMD_LOGGING_OPTIONS arguments */
+> +#define PERFMON_CMD_LOGGING_ALL 0
 
-When we were discussing whether to vendor crates for the normal build
-or whether to fetch them locally from the registry a couple years ago,
-we discussed approaches like this one, i.e. picking a version from the
-registry by folder name etc.
+The Alpha Architecture Reference Manual, Table E-18 (page E-24),
+describes bit 0 as:
 
-But that doesn't work too well. For instance, the graph of
-dependencies may change, there may be several versions available (and
-the highest may not be the proper one to pick), there may be different
-major versions available (i.e. not backwards compatible), they may
-change the build scripts, etc. Even picking the highest major wouldn't
-always be correct, from what I recall.
+  "set =3D log all processes"
+  "clear =3D log only selected processes"
 
-I also asked a few distributions how they felt about it, and they
-indeed said that it wasn't a great idea without querying properly the
-registry.
+That appears opposite to the changelog's description of zero as
+"count all processes". Is the manual incorrect for the PALcode
+implementation we use?
 
-So one should really ask Cargo for the right information about the
-local registry (i.e. offline). It has been a while, so Cargo (or maybe
-`pkg-config` or whatever) may have better support for querying it
-nowadays too -- I would suggest checking that first (e.g. `cargo
-metadata`).
+This preserves the existing value, so there is no functional change,
+but a short explanation would help reconcile the name and changelog
+with the manual.
 
-I think depending on Cargo for this, especially nowadays and for
-`tools/`, should be fine (we were considering even back then and for
-the normal build).
 
-By the way, checking Cargo's cache sounds very strange to me: that
-means the version that gets picked is even more "uncontrolled".
+>
+>  /* EV5/EV56/PCA56 Counters */
+>  #define EV5_PCTR_0 (1UL<<0)
+> diff --git a/arch/alpha/kernel/perf_event.c b/arch/alpha/kernel/perf_even=
+t.c
+> index a3eaab094ece..2d9383425357 100644
+> --- a/arch/alpha/kernel/perf_event.c
+> +++ b/arch/alpha/kernel/perf_event.c
+> @@ -728,7 +728,7 @@ static void alpha_pmu_enable(struct pmu *pmu)
+>                 maybe_change_configuration(cpuc);
+>
+>                 /* Start counting the desired events. */
+> -               wrperfmon(PERFMON_CMD_LOGGING_OPTIONS, EV67_PCTR_MODE_AGG=
+REGATE);
+> +               wrperfmon(PERFMON_CMD_LOGGING_OPTIONS, PERFMON_CMD_LOGGIN=
+G_ALL);
+>                 wrperfmon(PERFMON_CMD_DESIRED_EVENTS, cpuc->config);
+>                 wrperfmon(PERFMON_CMD_ENABLE, cpuc->idx_mask);
+>         }
+>
+> --
+> 2.55.0
+>
 
-I hope that helps!
 
-[ In the end, for normal kernel crates, we decided to vendor for other
-reasons, e.g. we wanted to pin the versions, to customize sometimes,
-and most importantly to avoid any possible user misconfiguration that
-could lead to a subtly incorrect kernel. But for `tools/` it makes way
-more sense, of course. ]
+WIll test this all later on my ES40
 
-Cheers,
-Miguel
+Magnus
