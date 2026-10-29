@@ -1,55 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793266733;
-	b=ZIoTKBH2Zlwjz5SzG7QQrYkLI3qM7LhQ6Yh/tVIBuyqxN0ucmsimZ0v8S3iikBMU8jqF
-	 kKPaQuF6/7Z8VJqq40UqyrbAiAlm6Y9LW14Y99IkT0ygJVcn9p/tuZH+kF5kZ/UIMi2aX
-	 yk2Wlc6+oCfD9tq6hHLTUIbxKRvLKD0hxwfOra0MBYlDoo26koQ9bpwViFIV4Uhm69OWa
-	 jgITa2jmUN5hldjYmpjMlHXkoYlfyNeFYM0bQ1Pm2xKPXFm2t2iSsgP/dzpAkOTGaH2ry
-	 0XUgQ7QkEjtkCNQ0GOn9Z9PO5Fgbldkc1++MuraDMDT4UREz+NjQ3Oyi6rBC83b4fYQ==
+	t=1793266851;
+	b=psmBqS/l+BwzgwaEEL0fzuIR38NYGmGb0sikd3GFGrq4iLqRpHrCcAxOd6w5LxUPBewo
+	 g9SXLwSldSjrdH4tlTCX7Qmtm9VAtsLHeMbqWqqZzKyEN1zYYpg/X5P0S7qF3O6l3x+WZ
+	 Cbtf5tr0ERTTJJkE2XpsKtymXeRtykmbKcL1kzdZsD1tB925VDYJB5OiSAe/5Lt7pgp+A
+	 sZmLxYlUFSj6nlveiIBz3TawpbC5+RN59o1wvW5R9V2NMlDi/tPdOJoNcCQ7wL2Fec+nA
+	 dAxqnpkJopqmk9yBOIadnz3n3llSuGmZyV+x2Vrn7j0XHKEu56wCUm0LOPtHeHihS5Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793266733;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793266851;
 	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
 	 Subject:Message-ID:References:MIME-Version:Content-Type:
 	 Content-Disposition:In-Reply-To;
-	bh=O6fMYNtC9RTyLNGcKh+OsCLCtLPr6yKMhTz4SqrIi94=;
-	b=WFKCwhBprZun95yisLgdew3PPpoWGOICv0Qp8StyIVXHsJcj7MqnhI+zjwf8I4l4qoD1
-	 QCEALVj10zrXSmgdHEnQh3TX4xV3ZbR59CVrhmZJIrW4fiaOQGAuL49QjnF33JTQQBbjF
-	 7PW926G4l5iSuJZFTinQHIJjf7ryvau+t1KDiaL/Vnx/7fZzlndjsklWIK2sJ+I/067U0
-	 2+q/4CZGnDZCCfpCTj2lHVyW1F28452QvfqaEEzIaGd+st/SfRXGGsCMZuJqSlKRgh9yc
-	 U4WlUoSBzj7SEdgWIg7rS3l7enj7UD9uJNQu+KWm70w01sQMdWpPkfWISGESMSBx44Q==
+	bh=WehD4D0lGL1tjwM58dul7G6t9gPl0FSp8uFA/ummXEA=;
+	b=RZIldATyf2tbdBsqewXQ+gm/l5aUU8kjalvuf259nqiJXjyJ5qhVTd/hgPpKncWgfLUF
+	 /WLBurNn2YHN7tX0uFLqCmOIbNZAIIm/oniYS2R1jAETGXuZHoKYig8hF9+8aiwSYaf37
+	 a8ciaj696ET2rFFjLumEPIOl2EXo2B71pw0+BYjgUgrh/nVA9xtuu+c6Hg1px3Qrq1BQc
+	 1k17PFLesl38e3TcLIrgCClKKrhJDdS9EfJIQHI88V0d4zPmM9x2g9eWunHqvsAhYTzrY
+	 6D3S3huI4Rk6ERzHZJyY6HjnDNPstO2krACW88VA8oWM1WFHYVKC0lW+8T0LoGg/Qkg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=infradead.org;
 	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=qeF5aB+b;
-	arc=none smtp.remote-ip=90.155.92.199
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b="aInJ9L/z";
+	arc=none smtp.remote-ip=90.155.50.34
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3071E606A31A;
-	Thu, 29 Oct 2026 09:38:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3071E606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EFED606A31A;
+	Thu, 29 Oct 2026 09:40:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5EFED606A31A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=qeF5aB+b
+	dkim=pass (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=aInJ9L/z
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=O6fMYNtC9RTyLNGcKh+OsCLCtLPr6yKMhTz4SqrIi94=; b=qeF5aB+bkd0o57rvCaHQwkWE9N
-	RMVf0GZCBfef0UVq6/YpoeokqY38SjV/wsdbhSYakF2ELsOOpIeULAsYA82T4Bl7xxlzUf+Woo+lB
-	JHZmvo1y/NB+3OUqsd9fWOPQZ3qEiIxuIKJkpdOYf3zeLdnUqc0uUitgHr4AaiVb3swrPQB2dYPbi
-	v8Zlq0atfT6YPUv8psUG8GBZ89gLXh9XUfIYZpo+HsbOMz62goC/tge6sz9yRGs9RuLMcEOsywsDU
-	pFnh5xXyqlUbgLoLm08YgVhaU/dhc5SnXPHUXTsLcpmicLhqnh1S7tG94Ou9iTBw2cQZtE2Oy1dg2
-	CuPnQCug==;
+	bh=WehD4D0lGL1tjwM58dul7G6t9gPl0FSp8uFA/ummXEA=; b=aInJ9L/zPb64UJ/IoafbEV5KW7
+	lot0wOO6r9+2jrB696VTye43kCdEo9WgInWtx7aQao1sNwon74fggE7QyRtCzWQ53v35BZ7hLkDhD
+	A9mmTzdRa4wm5xUW9Yq1rDWO7taqIzr0mUAxK40rCafDvZ6++CvalJbTNBf7JuOzEQ4oqLTLYKkpM
+	+dPJDXV6+dm1fSJtB6Nl9ZgZhAUUTam+HG7mmnAiEnzoo+h4gekcMXIWQJeykUOdY4du0oQLWIcB0
+	EiaSA9qfkZFYNcFc42Qm2GWOHG6dTD6o5f4nG5vc4yLGkiIGvWHyivFOnqnZ8BYyRwQhbHI55cL8e
+	DUYT6cLw==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMMas-0000000Gpb8-38Ju;
-	Thu, 29 Oct 2026 09:38:47 +0000
+	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xMMcn-0000000E9Bu-0fK0;
+	Thu, 29 Oct 2026 09:40:45 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id AA74A300312; Thu, 29 Oct 2026 10:38:45 +0100 (CET)
-Date: Thu, 29 Oct 2026 10:38:45 +0100
+	id A238B300312; Thu, 29 Oct 2026 10:40:44 +0100 (CET)
+Date: Thu, 29 Oct 2026 10:40:44 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Cc: Ingo Molnar <mingo@redhat.com>,
@@ -68,11 +68,11 @@ Cc: Ingo Molnar <mingo@redhat.com>,
 	Zide Chen <zide.chen@intel.com>,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>
-Subject: Re: [Patch v5 01/18] perf/x86: Disable LBR if x86_pmu.lbr_nr exceeds
- MAX_LBR_ENTRIES
-Message-ID: <20261029093845.GI1779021@noisy.programming.kicks-ass.net>
+Subject: Re: [Patch v5 02/18] perf/x86/intel: Validate LBR XSAVE state before
+ updating LBR stack
+Message-ID: <20261029094044.GJ1779021@noisy.programming.kicks-ass.net>
 References: <20261029043914.1395147-1-dapeng1.mi@linux.intel.com>
- <20261029043914.1395147-2-dapeng1.mi@linux.intel.com>
+ <20261029043914.1395147-3-dapeng1.mi@linux.intel.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -84,58 +84,59 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261029043914.1395147-2-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20261029043914.1395147-3-dapeng1.mi@linux.intel.com>
 
-On Thu, Oct 29, 2026 at 12:38:57PM +0800, Dapeng Mi wrote:
-> Add a sanity check for x86_pmu.lbr_nr. If the hardware reports more LBR
-> entries than MAX_LBR_ENTRIES, disable LBR to avoid out-of-bounds access
-> in the cached LBR stack handling path.
-
-Cute, can this actually happen?
-
+On Thu, Oct 29, 2026 at 12:38:58PM +0800, Dapeng Mi wrote:
+> intel_pmu_arch_lbr_read_xsave() doesn't check if the LBR data is present
+> in the xsave area. If LBR data is in the INIT state, the LBR data may not
+> be really written into the xsave area.
+> 
+> Add an explicit LBR XSAVE state presence check before updating the cached
+> LBR stack. Also clear the cached LBR stack when intel_pmu_lbr_reset() is
+> called, in addition to resetting the hardware LBR register file, to prevent
+> stale LBR data from being reused after a context switch or similar
+> transition.
+> 
+> Fixes: c085fb877467 ("perf/x86/intel/lbr: Support XSAVES for arch LBR read")
 > Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 > ---
->  arch/x86/events/amd/lbr.c    | 8 +++++++-
->  arch/x86/events/intel/core.c | 7 +++++++
->  2 files changed, 14 insertions(+), 1 deletion(-)
+>  arch/x86/events/intel/lbr.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/x86/events/amd/lbr.c b/arch/x86/events/amd/lbr.c
-> index a55646fcb846..96c5b5e56053 100644
-> --- a/arch/x86/events/amd/lbr.c
-> +++ b/arch/x86/events/amd/lbr.c
-> @@ -433,7 +433,13 @@ __init int amd_pmu_lbr_init(void)
->  	ebx.full = cpuid_ebx(EXT_PERFMON_DEBUG_FEATURES);
->  	x86_pmu.lbr_nr = ebx.split.lbr_v2_stack_sz;
+> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+> index 0b446d8912e4..a2e4ba7e1a4f 100644
+> --- a/arch/x86/events/intel/lbr.c
+> +++ b/arch/x86/events/intel/lbr.c
+> @@ -193,6 +193,8 @@ void intel_pmu_lbr_reset(void)
+>  {
+>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
 >  
-> -	pr_cont("%d-deep LBR, ", x86_pmu.lbr_nr);
-> +	if (x86_pmu.lbr_nr > MAX_LBR_ENTRIES) {
-> +		pr_warn("LBR entries %d exceeds max %d, disable LBR.\n",
-> +			x86_pmu.lbr_nr, MAX_LBR_ENTRIES);
-> +		x86_pmu.lbr_nr = 0;
-> +	} else {
-> +		pr_cont("%d-deep LBR, ", x86_pmu.lbr_nr);
-> +	}
+> +	cpuc->lbr_stack.nr = 0;
+> +
+>  	if (!x86_pmu.lbr_nr)
+>  		return;
 >  
->  	return 0;
->  }
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index 0a34d674df59..10c694db85ea 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -9023,6 +9023,13 @@ __init int intel_pmu_init(void)
->  	 */
->  	if (x86_pmu.lbr_tos && !check_msr(x86_pmu.lbr_tos, 0x3UL))
->  		x86_pmu.lbr_nr = 0;
-> +
-> +	if (x86_pmu.lbr_nr > MAX_LBR_ENTRIES) {
-> +		pr_warn("LBR entries %d exceeds max %d, disable LBR.\n",
-> +			x86_pmu.lbr_nr, MAX_LBR_ENTRIES);
-> +		x86_pmu.lbr_nr = 0;
-> +	}
-> +
->  	for (i = 0; i < x86_pmu.lbr_nr; i++) {
->  		if (!(check_msr(x86_pmu.lbr_from + i, 0xffffUL) &&
->  		      check_msr(x86_pmu.lbr_to + i, 0xffffUL)))
 
-Would it make sense to have but one copy of this check in
-init_hw_perf_events(), after calling into the micro-arch code?
+This also clears the stack if there is no LBR; was that on purpose? The
+Changelog is silent on this point.
+
+> @@ -1010,9 +1012,15 @@ static void intel_pmu_arch_lbr_read_xsave(struct cpu_hw_events *cpuc)
+>  		intel_pmu_store_lbr(cpuc, NULL);
+>  		return;
+>  	}
+> +	xsave->header.xfeatures = 0;
+>  	xsaves(&xsave->xsave, XFEATURE_MASK_LBR);
+>  
+> -	intel_pmu_store_lbr(cpuc, xsave->lbr.entries);
+> +	if (xsave->header.xfeatures & XFEATURE_MASK_LBR) {
+> +		intel_pmu_store_lbr(cpuc, xsave->lbr.entries);
+> +	} else {
+> +		/* Clear the LBR stack to avoid leaking stale entries. */
+> +		cpuc->lbr_stack.nr = 0;
+> +	}
+>  }
+>  
+>  void intel_pmu_lbr_read(void)
+> -- 
+> 2.34.1
+> 
