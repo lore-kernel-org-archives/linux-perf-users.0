@@ -1,57 +1,65 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793296997;
-	b=zVZLv92x0TWbzBEIRk7oSj74FQSJWg1U2qdWG5uCsuUxHlEeVWgSN0TXJE99S/I+mtzQ
-	 2CsTf93jC1iVY2o/u0bf06tVPTOfS+CHoCqGe6eSsrv9cyERt20Ojzkz9FvUIZdDZQ6c9
-	 YnnWB+TiqXj74tma/gLXDwd0GaphZ6zIHuACtXg1oZ/lHTxqmybwcF/4GBRcGXux7PF+W
-	 bJdZ42QEni8mj5ekVjPBD0kvIoHfxCAweXyLCBI77voTSyudlwsPrURGGan6SCsek5t+0
-	 fKp8qrXS3c83yyKOlLfagbw0lD8ZqPjgbP9YK2iAUB0CFd1eJXsidYqZLadVD3WBM8w==
+	t=1793297020;
+	b=oIEfr2swiHElRWm3M/G0oiyjaagwJ2ENiRzmwKjW/wRNU0yHvQ5P+ZtltPppiHlyO56T
+	 pQ0PeMKJsM249eQA0G0ULoe8YVIeWW7ioqs78scnQxFA4enXBjE88Vi3xX8f4qXdEoySp
+	 tLrHkdZ1rFCYcAz5HbeREU30O++HBfmBqBx9VXr0C4Io+Z2mvo8qMWOE8gnM1OQF52Tku
+	 YQuLkz1IqN0U0qEagr3D6eQ53qtpfmPw0bL5WSp7qlON03/4FBHAJ+guskmH6Pgi96Wnr
+	 lkJXcXjUh5wDzo3rAxdtkCBB2f//eJPZ9OgaLkNysVqbdY3KxVNW7MYjnsc+YaDVIkw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793296997;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=+BSfrJ0Fvk6pE1EEg+dZVSHnO3k4S6/t9PQDyacXF7o=;
-	b=CMmlAxhPPyt57fVO3OCORTEqavxNzxBLZj6jNHem81UWpjr/FSYNgTFIxpbvnWrDn3ah
-	 qtFW7Oyp5haHnbd5DU89Y6+EzdgJHqLt21NDWNPwWl3q45E0LTViioxnAcCr/NTA7v69z
-	 +zmvE7FONGZkz0h7FGaiHMe3WjxIpR8fL0X2a4eflE9Ei6m38Cr4caM+0VA/sxk8qQd2a
-	 /mzlhg4Jf7xCEgSfl2qbCPNZpIYEztn+1ds7MZqOoPe1VbxUGZey0baM2+Cp0PHHGdnDy
-	 TkDSDfn+D2Bi4myZjfM0BI8GdTe7Z8gBDLY3VxRyP01BOajQT8O4765JRrLekpzxEQQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793297020;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=63CZrMtGcQlClpiL21azWW0LHyKIVqNYpAKHa21JDoo=;
+	b=dgKRAzTD9J9VrR7g2v1A3h2iGSCJtQJWs5eRvRpaQX++rrjUlFGj7Yle+HQ3Au70di6X
+	 6uKbJq2qzUItbrWfwYcXLOWLV+CpWOpN+MrzGzFiiIootvips/obJlPEoTzd1sazNEYpt
+	 hgjqeutcqQzslKXbcgN8PVoW2g3Cf/kFZRXm5uRVDq4Z2spUDsG0tuFGKHfpEI3KDTJos
+	 LDS4AKkLh84soUM/3HvblXol5+L7zwLM2T2W9+2d3xKq6dadd8chQ0IIxZL2lLYEBAV9s
+	 bRXFYxoaM4Ep6Z64iaTUPb6cH6XEXDjxXFdX6wYjNCjRpw3qq9XWVm+UQjolx60xayg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KYJwYCEl;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8271606A334;
-	Thu, 29 Oct 2026 18:03:16 +0000 (UTC)
+	dmarc=pass header.from=arm.com;
+	spf=pass smtp.mailfrom=arm.com;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=MNVGjWhQ;
+	arc=none smtp.remote-ip=217.140.110.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47888606A31C;
+	Thu, 29 Oct 2026 18:03:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 47888606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KYJwYCEl
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E3441F01824;
-	Thu, 29 Oct 2026 18:03:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793296996;
-	bh=+BSfrJ0Fvk6pE1EEg+dZVSHnO3k4S6/t9PQDyacXF7o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=KYJwYCElxdxWS679xOjC48/NIm/L2CqIDBLv8s8E+xU+vA+JqOfQHYixNUrQ0LzSY
-	 ItBepWZ6kKBBsr4E4tqXhGlEN/SnGuJgbAu0MTHIZ5BpcmzAlyzCL5huyegq4rEgh4
-	 ynKngZe7bRWzBHriiddEXebJEzThkroDmdl/3RzHf92eoIXv/D/ziF6MZxsJ+nyZbs
-	 6viFG1bK85EegdzHqSzwVNmESgMVIh77mXg9zSpnGNYnZlGph1vSpyWFhzQ3es0EOp
-	 LojqonfL/BvpvedyLH+EnNpRxqj+05ddEKLbEvZpMxUDI5sGb+uKqr2pnv0j6zjVec
-	 Qqu9+5Uyd4P5A==
-Date: Thu, 29 Oct 2026 18:03:09 +0000
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Alexandru Elisei <alexandru.elisei@arm.com>
-Cc: maz@kernel.org, oupton@kernel.org, fuad.tabba@linux.dev, 
-	joey.gouly@arm.com, seiden@linux.ibm.com, suzuki.poulose@arm.com, 
-	yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	will@kernel.org, mark.rutland@arm.com, linux-perf-users@vger.kernel.org, 
-	catalin.marinas@arm.com, james.clark@linaro.org, Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [RFC PATCH v7 14/28] KVM: arm64: Add SPE VCPU device attribute
- to initialize SPE
-Message-ID: <auOG5W5hxDVYL-hh@gremlin>
-References: <20260903160623.315525-1-alexandru.elisei@arm.com>
- <20260903160623.315525-15-alexandru.elisei@arm.com>
+	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=MNVGjWhQ
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4DA501682;
+	Thu, 29 Oct 2026 11:03:35 -0700 (PDT)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E77923F673;
+	Thu, 29 Oct 2026 11:03:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1793297018; bh=i8iHH4lB14MXZsmaBvM9GhJ2IkOhplEK+iLl3dHE+BU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MNVGjWhQQrvfjLwXQVHwIY9Gt/WjKBxsN3KkL/NCujlzi/NjOXdY7wGey76gB5QtY
+	 +NNscg5odXnpfAwSyK29F0DnVe55rUgbiHK/scEPp7rw0Xj/yH5CHyxaHEr8DMuucr
+	 kY6w7DE9juSejGZ87yReyMeGsp+EGaj2wJC+YdvQ=
+Date: Thu, 29 Oct 2026 18:03:35 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Mike Leach <mike.leach@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>
+Subject: Re: [PATCH v2 11/14] perf tests: Check CoreSight IRQ entry and exit
+Message-ID: <20261029180335.GD9176@e132581.arm.com>
+References: <20260923-perf_cs_etm_fix_non_taken-v2-0-6ab8c07a5455@arm.com>
+ <20260923-perf_cs_etm_fix_non_taken-v2-11-6ab8c07a5455@arm.com>
+ <d371220f-9ad2-41ca-a2a5-930c46801c31@linaro.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,146 +71,89 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260903160623.315525-15-alexandru.elisei@arm.com>
+In-Reply-To: <d371220f-9ad2-41ca-a2a5-930c46801c31@linaro.org>
 
-On Thu, Sep 03, 2026 at 05:06:09PM +0100, Alexandru Elisei wrote:
-> diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
-> index 8ffa3e89d38c..c695aae484d3 100644
-> --- a/arch/arm64/include/uapi/asm/kvm.h
-> +++ b/arch/arm64/include/uapi/asm/kvm.h
-> @@ -449,6 +449,7 @@ enum {
->  #define KVM_ARM_VCPU_SPE_CTRL		3
->  #define   KVM_ARM_VCPU_SPE_IRQ		0
->  #define   KVM_ARM_VCPU_SPE_ID		1
-> +#define   KVM_ARM_VCPU_SPE_INIT		2
->
->  /* KVM_IRQ_LINE irq field index values */
->  #define KVM_ARM_IRQ_VCPU2_SHIFT		28
-> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> index 132df44c3088..c9a026c61ce7 100644
-> --- a/arch/arm64/kvm/arm.c
-> +++ b/arch/arm64/kvm/arm.c
-> @@ -1026,6 +1026,12 @@ int kvm_arch_vcpu_run_pid_change(struct kvm_vcpu *vcpu)
->  			return ret;
->  	}
->
-> +	if (vcpu_has_spe(vcpu)) {
-> +		ret = kvm_spe_vcpu_first_run_init(vcpu);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
+On Tue, Sep 29, 2026 at 01:22:55PM +0100, James Clark wrote:
+> 
+> On 23/09/2026 16:21, Leo Yan wrote:
+> > Add an AArch64 branch_not_taken_loop workload and a CoreSight shell test
+> > checking IRQ entry and exit PCs. Use cpu-clock generates timer
+> > interrupts.
+> > 
+> > Retry at different timer frequencies and skip if no complete pair is
+> > captured.
+> 
+> Maybe we need to look into storing existing recordings somewhere or
+> committing small ones into the repo again. This test took 3 minutes to run
+> on my N1SDP, which is 3x longer than the entire Coresight suite, and then it
+> skipped anyway:
+> 
+> 173: CoreSight IRQ entry and exit:
+> ---- start ----
+> test child forked, pid 6804
+> Recording timer IRQs at 1000 Hz
+> No complete exception entry/exit pair
+> No complete IRQ pair in this recording
+> Recording timer IRQs at 4000 Hz
+> No complete exception entry/exit pair
+> No complete IRQ pair in this recording
+> Recording timer IRQs at 10000 Hz
+> No complete exception entry/exit pair
+> No complete IRQ pair in this recording
+> [Skip] No complete IRQ pair after three recordings
+> ---- end(-2) ----
+> 173: CoreSight IRQ entry and exit
+> 
+> 
+> Really this test is only looking for how a single exception on a single
+> branch is decoded, it shouldn't be affected by how it was recorded. Even a
+> few bytes of trace would be enough to test it. Or maybe we could add some
+> kind of unit test framework that mocks out OpenCSD and allows us to script
+> how different packets affect the decoder?
 
-So, staring at patch 18 made me think about ordering again, which seems to be
-_super_ sensitive in KVM :)
+As discussed I will reduce the loop in branch_not_taken_loop.c and
+don't skip the test if no IRQ pair found.
 
-The next patch in the series (15) makes PMSVer depend on the SPE instance having
-been assigned via KVM_ARM_VCPU_SPE_ID.
+> > +++ b/tools/perf/tests/shell/coresight/irq_entry_exit.sh
+> > @@ -0,0 +1,37 @@
+> > +#!/bin/bash
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +# CoreSight IRQ entry and exit (exclusive)
+> > +
+> > +# shellcheck source=../lib/coresight_exception.sh
+> 
+> No need for these anymore, see https://lore.kernel.org/linux-perf-users/20260921-james-perf-shellcheck-source-v1-1-adcfc107c997@linaro.org/
 
-But you can still KVM_RUN before KVM_ARM_VCPU_SPE_INIT, which means this will
-return -EINVAL:
+Will do.
 
-int kvm_spe_vcpu_first_run_init(struct kvm_vcpu *vcpu)
-{
-	...
-	if (!kvm_vcpu_spe_initialized(vcpu))
-		return -EINVAL;
-	...
-}
+> > +record_trace_with_cpu_clock()
+> > +{
+> > +	local clock_opts=()
+> > +
+> > +	record_freq=$1
+> > +	shift
+> > +
+> > +	# A zero frequency omits the cpu-clock event.
+> > +	if [ "$record_freq" -gt 0 ]; then
+> > +		# Generate timer IRQs without delivering a signal to the workload.
+> > +		clock_opts=(-e cpu-clock:u -F "$record_freq")
+> > +	fi
+> > +
+> > +	# FIFO control bounds the trace to the workload.
+> > +	# --kcore supplies the running kernel's instructions for decoding.
+> > +	taskset -c "$cpu" perf record -B --no-bpf-event --per-thread --kcore \
+> > +		-e cs_etm/timestamp=0/uk "${clock_opts[@]}" \
+> > +		-m,4M -D -1 --control fifo:"$tmpdir/ctl","$tmpdir/ack" \
+> > +		-o "$tmpdir/data" -- \
+> > +		perf test --record-ctl fifo:"$tmpdir/ctl","$tmpdir/ack" -w "$@" \
+> > +		> "$tmpdir/record.log" 2>&1
+> 
+> There's a shellcheck warning here:
+> 
+>   (warning): Word is of the form "A"B"C" (B indicated). Did you mean "ABC"
+> or "A\"B\"C"?
+> 
+> You can avoid it by passing the whole path as "$cf" and "$af" like the other
+> coresight tests.
 
-And this is quite far down the function:
-
-int kvm_arch_vcpu_run_pid_change(struct kvm_vcpu *vcpu)
-{
-	struct kvm *kvm = vcpu->kvm;
-	int ret;
-
-	if (!kvm_vcpu_initialized(vcpu))
-		return -ENOEXEC;
-
-	if (!kvm_arm_vcpu_is_finalized(vcpu))
-		return -EPERM;
-
-	if (likely(vcpu_has_run_once(vcpu)))
-		return 0;
-
-	...
-
-	ret = kvm_vcpu_finalize_sys_regs(vcpu);
-	if (ret)
-		return ret;
-
-	...
-
-	/*
-	 * This needs to happen after any restriction has been applied
-	 * to the feature set.
-	 */
-	kvm_calculate_traps(vcpu);
-
-	...
-
-	if (vcpu_has_spe(vcpu)) {
-		ret = kvm_spe_vcpu_first_run_init(vcpu);
-		if (ret)
-			return ret;
-	}
-
-	...
-}
-
-patch 18 made me think of this as kvm_calculate_traps() does the FGU
-initialisation (which derives from SPE state), and once done sets
-KVM_ARCH_FLAG_FGU_INITIALIZED, meaning this state is incorrectly setup.
-
-This is a real problem as HAS_RAN_ONCE isn't set on that failed path,
-userland can finish the SPE setup, set KVM_ARCH_FLAG_FGU_INITIALIZED, and
-that state is never recomputed.
-
-Also kvm_vcpu_finalize_sys_regs() calls kvm_spe_finalize_idregs() (via
-kvm_vm_finalize_sys_regs()) which writes PMSVer in the first place.
-
-So it seems you should put this check _before_ these, e.g.:
-
-int kvm_arch_vcpu_run_pid_change(struct kvm_vcpu *vcpu)
-{
-	struct kvm *kvm = vcpu->kvm;
-	int ret;
-
-	if (!kvm_vcpu_initialized(vcpu))
-		return -ENOEXEC;
-
-	if (!kvm_arm_vcpu_is_finalized(vcpu))
-		return -EPERM;
-
-	if (likely(vcpu_has_run_once(vcpu)))
-		return 0;
-
-	...
-
->>>>
-	if (vcpu_has_spe(vcpu)) {
-		ret = kvm_spe_vcpu_first_run_init(vcpu);
-		if (ret)
-			return ret;
-	}
->>>
-
-	ret = kvm_vcpu_finalize_sys_regs(vcpu);
-	if (ret)
-		return ret;
-
-	...
-
-	/*
-	 * This needs to happen after any restriction has been applied
-	 * to the feature set.
-	 */
-	kvm_calculate_traps(vcpu);
-
-	...
-
-}
-
---
-Cheers, Lorenzo
+Will do. Thanks for suggestions!
