@@ -1,74 +1,92 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.174
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793315352;
-	b=D9vIXT8XbJc3Iw8OsvgiLvvevUbwMrQsQ4y3jnaOpScJYaKhcs73dPJ7LYFlh19eC/Ku
-	 PAhn+oL7U8mCzn4rg6yuj8sInmxEXVbEzuAhiVK+Z2bye/I5FTaaXJo7AWsgz77IabxJT
-	 fOJbFAJZysVDN5HQ39X7FdiZnjE4eUxqqX4NBsvWq34EMroKFJr94MzoPG+S2Q0AUNqz3
-	 0u48cVdKcl1W29j0UyO2yIhcaqt1QwPFZgweXltgL7mlgeqrczBNWojCurLnXtuClEzBp
-	 9kTU+EPBSTNe99GVd65zoPmkd4+fhlqlSekP29567Ck+CaK7yDhLTzcBwv4rFB7jowQ==
+	t=1793316537;
+	b=mu7HoL2lDkbEvmyi7aA79JNVuZnpugvoyRc1iW0lLS1uzqeltGiKs3I4bTqKzMLAtBpv
+	 XDfTvkfxmTpcbtZXXxi+HUA/xJg447MAhjkdquiYam5yGinkJCQ4kCjfXKnGw660gpQq0
+	 gJKZdmfWNjdNWS28vySmUR5SVOg0VfAIRxyEIw7LKoY/Lzz7SAq3A+3y00Vso0jxgeAlO
+	 OVqMpmF2nAaxkgTGdi7oLFSsy1IkZtydLR12IfBFpsw9ZTYRhoU04DPB9y97wO9CD+jjG
+	 BKVGoKTNHDfsVAqyCM2sPiSlewL/379av9VfURDSooryLPqIMzCB0EtLgWihIXvmZag==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793315352;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=60uiQLKWD96KNyNA8n1SFH/9ebNVNGe69HhykEBopfM=;
-	b=SL2jlr/12e+eD/nEQJVsFrOFSl674ScxC4wD70xQXIwgVDMj/1XrTDLMQvAkakgmEpDY
-	 JFhnGAORHFDGGeMWQgLEVNqYl7rBrV/1OTZRfX4FtbPhQxFBsol1+vRifnUCjlQRe9TIR
-	 bvNqow9vRyVU7m8PAMW0wxpk2PqrItZmCZW8OxA98IhiSILbsZ7HStM2IwHPYvUxMoAVC
-	 fRhMNowVzgwRV+9Q5UD81l4gEIuxA5xpUIW1OW8DLoqyUwahD9O2AouVhIR5J9OvD4lWF
-	 sb9SRTNlWvrsATnr1CWI5uzWbuBagxRnRzExIWYxR/255e/XOSueCRuznEcEQAV4n6w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793316537;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:User-Agent:MIME-Version:Content-Type;
+	bh=5h2QYAUToJaBGd0SGBHbFjbHZlMRwFbs4A1MHWtxF2o=;
+	b=sdT+o5x9m4J2B5W95CtrAcEJgoSccpSpNpFdnqt7aUc3wQcpAQ1dnsVt+X0HPoBCK9rV
+	 Mu61TVmWyqz7QGVswUd1sNUeiMkf24LR7e4HZ4aDMRDKaIBCJxphn/xx/jwbw7PZamlhP
+	 d9nf5Mx58YtfYtk16lLVyIXrDfY/X2ECesixFJtFhcYd+xTHhGN0pe4QG+aeYDL13+ttq
+	 rc9UbyC2cLt1TixpRa+6MI8rDhgViGmQZjaUFTDq/iTpidT5umoa2tRfl/8P5Y0WeanzD
+	 lDM1eXj+UaKgUWYHNt26jQMduxafWKTvN/Ow+hcVFjNqG21ApvlowfzO63jhpx8DbMw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Vlu78CTP;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=YOgm8mcb;
+	arc=none smtp.remote-ip=74.125.82.174
+Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69DF606A31A;
-	Thu, 29 Oct 2026 23:09:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960F3606A33F
+	for <linux-perf-users@vger.kernel.org>; Thu, 29 Oct 2026 23:28:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 960F3606A33F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Vlu78CTP
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ED671F01816;
-	Thu, 29 Oct 2026 23:09:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793315351;
-	bh=60uiQLKWD96KNyNA8n1SFH/9ebNVNGe69HhykEBopfM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Vlu78CTPyf+ZyY+6ssCTxabXF8StOgXlJTsB8rxtQsxtjj+HkyKmR5Uwb579/tLj6
-	 +zSzMd5S7bFy4FRVCskYPFFb9odTDQ9Nw7618th22JQa7FSyX75FWZenMNGNsHkgwO
-	 M7p+XN2mnP5UeWEPfLyQC6qpJ7+dDhqHH93bcaObz/qaE9RU3DOrrU/JRAD9nVN1Vh
-	 7naVbLRzCja4Zla2Y24qeex84MAMc7RPm0c6rGOuxC9yBTn0+S0dNGqfsmNxBTk2he
-	 an6ZJHJX3iZRnGI4AVVnzUD+YrmzjSrpYS+y0un3VgY/y+ryce03Z4N+Pjj9txHyV9
-	 MW4JC83uKif9w==
-Date: Thu, 29 Oct 2026 23:09:03 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
-Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Himanshu Chauhan <himanshu.chauhan@oss.qualcomm.com>,
-	Anup Patel <anup.patel@oss.qualcomm.com>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
-	Yunhui Cui <cuiyunhui@bytedance.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, Will Deacon <will@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Randy Dunlap <rdunlap@infradead.org>, Shuah Khan <shuah@kernel.org>,
-	yuanzhu@bytedance.com, yang.yicong@picoheart.com,
-	yang.susheng@zte.com.cn, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v12 09/11] MAINTAINERS: add RISC-V SSE maintainers and
- file coverage
-Message-ID: <20261029-tidy-scorpion-c8601a1761ba@spud>
-References: <20261029074853.35467-1-zhangzhanpeng.jasper@bytedance.com>
- <20261029114953.27453-1-zhangzhanpeng.jasper@bytedance.com>
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=YOgm8mcb
+Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-3535bf8b3e0so285968eec.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 Oct 2026 16:28:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1793316536; x=1793921336; darn=vger.kernel.org;
+        h=content-type:mime-version:user-agent:message-id:date:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=5h2QYAUToJaBGd0SGBHbFjbHZlMRwFbs4A1MHWtxF2o=;
+        b=YOgm8mcbczfA7htknXvada6PreAPrkYysyTyxZIjC0VGtZBE8sM2qbalP55zVF52zF
+         Je7HazYD9Hm80fZzmMbfwmSxVHCginJPN6PzK7/X3WWrl7aC37ytFd6b0iy/wRRXNi94
+         tYw3fN9Mh51WgGDhAy5EWVUTfBx7oOi9Qhe/oQicWugzmsaAFKccgq1AxeOwuk9U3O7a
+         xmlHbSAowdwzgS/0s1t8uQgi/w+3Akx0vPOf3IIRwp7lfXgY5sYmarSaa43wpJVasINm
+         t23ZH/X+/xsvCrOv4+ctvnCT5vt+FWvsBwhyOCmT/qfgq+uShGXAJhYdjrpTG4r90V9Y
+         sR0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793316536; x=1793921336;
+        h=content-type:mime-version:user-agent:message-id:date:subject:cc:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=5h2QYAUToJaBGd0SGBHbFjbHZlMRwFbs4A1MHWtxF2o=;
+        b=jBA9jH13VuTevBZocpbN3d+WZD1Yr1n+lyhT8AJq4gXGcmLvqG416u4qCNIfWFE7V8
+         Ep+NGLM6AenWthTKUd5WBrBTJ+SVnUyWzt24ixqNRoMCbAJFUuGY/2dBcwLmi7ki40t+
+         wWTTrBmuNRQR1z+/PbPh+x0Qq64Pf0/0MCCiPtqOXC39g6RFDir9TpKHJo8vhgctiwVX
+         l7JiqXsMxy0adXKbTqvOgPRA1SuHmj6AzouKZGSaSI4rW2wgIyv7GeCi1cQ0AF3q3IOw
+         d9cQ6ZaKttWZFqrbMFZ0li03exhPCDOKZn0hWKYKD7zrbPOt6ZcYbhezy38pC1K6Hy7V
+         ZtkQ==
+X-Gm-Message-State: AFq9FYKjzyUH4K9ChBaHRAdGzioLGocU48Cn9McJBN73jCg+x1xW/De3
+	NqjRE/yWQQoCfkVHgWyTlEWf6/Pu3Mtzu3VIkHRApUx8Lt6RhaXOD2XiD4z9eLWgRQ==
+X-Gm-Gg: AYBFou0Xn55xSGE4EV+qWZZjiG/U62S0+aVpIfLDa4LS0PQ5+aTfctgU8aSy9oUNqYG
+	ayamfQUMtSQgfWZSIiizdqBPmK2uYm17LjYRjzJRFq5lhgk1n0XfyjqFE6osLBc7hsjPMC1xv9X
+	aOMBzm/oIECjb5wkVFdzQ3G4EJkw2tSLgBBDfSEm7k9BYPaMHzi0S4lFnxN7Kk9s+Dvj2yeSX/e
+	3Rbl3xAec3PLMEN5hfS1Ucj41EVmhPw+SiMLaYwd18nT3QWl8t5E5U+92ni7/MLVU45PyOi2sEQ
+	L+6jjKDXZQ9AVcT/kx1DtQyZpU4pnNplIuhGpm2Vrw/MVQAPHv+V4gZyv3k87mThB0Zyh/p4BpJ
+	oeix0qvNteiG0jv+ZMUjlnNNtKQHBetqIBYWYKE2amIH+DDEeSVBWKNmQgwWEi9vuBFhwM+UYie
+	47yCtHbPIe7Vuib99Bw6lKj/SO34/r8/qmVujxKwfDIapud1hexNBZpWKY/8gaqTt5g4HGfN9xI
+	uwKDFC+Qoh5tOQNyLHrLNpDdDXCf6IT3A3fxwoUa42i2LwIIEWOfnit4YJXdcYNR9aczA7gDrQ5
+	ZwLtBXljRKpD7Uu4AeLmLFPwDah2ENAcQZ3n8A==
+X-Received: by 2002:a05:7022:f20b:b0:136:c443:80e5 with SMTP id a92af1059eb24-1ac56d94b0amr847420c88.6.1793316534852;
+        Thu, 29 Oct 2026 16:28:54 -0700 (PDT)
+Received: from bsegall27.localhost ([98.45.141.147])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1ac192c2e9dsm2146185c88.9.2026.10.29.16.28.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Oct 2026 16:28:54 -0700 (PDT)
+From: Benjamin Segall <bsegall@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] perf: skew perf_mux_hrtimer_handler firing across cpus
+Date: Thu, 29 Oct 2026 16:28:52 -0700
+Message-ID: <xm265wykhyrv.fsf@google.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -78,104 +96,77 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Xqo+bfadgatXB3Qq"
-Content-Disposition: inline
-In-Reply-To: <20261029114953.27453-1-zhangzhanpeng.jasper@bytedance.com>
+Content-Type: text/plain
 
---Xqo+bfadgatXB3Qq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+When in nohz_full, perf_mux_hrtimer will wind up checking if it needs to
+update jiffies as of commit 53e87e3cdc15 ("timers/nohz: Last resort update
+jiffies on nohz_full IRQ entry"). When perf is run systemwide or against
+a wide process and needs the mux timer, this will fire against many cpus
+at the same interval. Then, much like the timer tick did, this will
+result in unnecessary lock contention on jiffies_lock. This is
+particularly unfortunate since nohz_full is intended to reduce the time
+spent in irqs on those cpus.
 
-On Thu, Oct 29, 2026 at 07:49:51PM +0800, Zhanpeng Zhang wrote:
-> Add the RISC-V SSE maintainers and cover the architecture entry,
-> firmware driver, PMU documentation and selftests in a separate patch,
-> as requested by Himanshu Chauhan. Also add coverage for RISC-V firmware
-> drivers and the architecture selftests.
->=20
-> Link: https://lore.kernel.org/r/as79MHtNYd-VbUug@hu-himchau-blr.qualcomm.=
-com/
->=20
-> Signed-off-by: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
+Adopt the same solution as sched_skew_tick and just have a different
+offset for the timer on each cpu, and make sure to redo the skew if the
+interval is changed.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Ben Segall <bsegall@google.com>
+---
+ include/linux/perf_event.h |  1 +
+ kernel/events/core.c       | 12 ++++++++++++
+ 2 files changed, 13 insertions(+)
 
-Thanks,
-Conor.
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index eb3f7bab498ca..e1cb052af3d2e 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1123,10 +1123,11 @@ struct perf_cpu_pmu_context {
+ 	int				pmu_disable_count;
+ 
+ 	raw_spinlock_t			hrtimer_lock;
+ 	struct hrtimer			hrtimer;
+ 	ktime_t				hrtimer_interval;
++	ktime_t				hrtimer_old_interval;
+ 	unsigned int			hrtimer_active;
+ };
+ 
+ /**
+  * struct perf_event_cpu_context - per cpu event context structure
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 457d75ea71420..7885071bf0856 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1277,17 +1277,29 @@ static void perf_cgroup_switch(struct task_struct *task)
+  */
+ static enum hrtimer_restart perf_mux_hrtimer_handler(struct hrtimer *hr)
+ {
+ 	struct perf_cpu_pmu_context *cpc;
+ 	bool rotations;
++	u64 offset;
+ 
+ 	lockdep_assert_irqs_disabled();
+ 
+ 	cpc = container_of(hr, struct perf_cpu_pmu_context, hrtimer);
+ 	rotations = perf_rotate_context(cpc);
+ 
+ 	raw_spin_lock(&cpc->hrtimer_lock);
++	if (cpc->hrtimer_old_interval != cpc->hrtimer_interval) {
++		/*
++		 * Skew the timer to avoid contention on jiffies_lock in
++		 * nohz_full, whenever we change interval
++		 */
++		offset = cpc->hrtimer_interval;
++		do_div(offset, num_possible_cpus());
++		offset *= smp_processor_id(); /* we are PINNED_HARD */
++		hrtimer_set_expires(hr, offset);
++		cpc->hrtimer_old_interval = cpc->hrtimer_interval;
++	}
+ 	if (rotations)
+ 		hrtimer_forward_now(hr, cpc->hrtimer_interval);
+ 	else
+ 		cpc->hrtimer_active = 0;
+ 	raw_spin_unlock(&cpc->hrtimer_lock);
+-- 
+2.56.0.317.g454f8302e1-goog
 
-> ---
->  MAINTAINERS | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 65e8a4b5c90..f275e9d4847 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -23506,6 +23506,7 @@ C:	irc://irc.libera.chat/riscv
->  P:	Documentation/arch/riscv/patch-acceptance.rst
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git
->  F:	arch/riscv/
-> +F:	tools/testing/selftests/riscv/
->  N:	riscv
->  K:	riscv
-> =20
-> @@ -23518,6 +23519,13 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel=
-/git/iommu/linux.git
->  F:	Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
->  F:	drivers/iommu/riscv/
-> =20
-> +RISC-V FIRMWARE DRIVERS
-> +M:	Conor Dooley <conor@kernel.org>
-> +L:	linux-riscv@lists.infradead.org
-> +S:	Maintained
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git
-> +F:	drivers/firmware/riscv/
-> +
->  RISC-V MICROCHIP SUPPORT
->  M:	Conor Dooley <conor.dooley@microchip.com>
->  M:	Daire McNamara <daire.mcnamara@microchip.com>
-> @@ -23573,6 +23581,7 @@ M:	Atish Patra <atish.patra@linux.dev>
->  R:	Anup Patel <anup@brainfault.org>
->  L:	linux-riscv@lists.infradead.org
->  S:	Supported
-> +F:	Documentation/arch/riscv/pmu-sse.rst
->  F:	drivers/perf/riscv_pmu.c
->  F:	drivers/perf/riscv_pmu_legacy.c
->  F:	drivers/perf/riscv_pmu_sbi.c
-> @@ -23612,6 +23621,19 @@ F:	arch/riscv/boot/dts/spacemit/
->  N:	spacemit
->  K:	spacemit
-> =20
-> +RISC-V SUPERVISOR SOFTWARE EVENTS
-> +M:	Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
-> +M:	Himanshu Chauhan <himanshu.chauhan@oss.qualcomm.com>
-> +R:	Yunhui Cui <cuiyunhui@bytedance.com>
-> +L:	linux-riscv@lists.infradead.org
-> +S:	Maintained
-> +F:	arch/riscv/include/asm/sse.h
-> +F:	arch/riscv/kernel/sbi_sse.c
-> +F:	arch/riscv/kernel/sbi_sse_entry.S
-> +F:	drivers/firmware/riscv/riscv_sbi_sse.c
-> +F:	include/linux/riscv_sbi_sse.h
-> +F:	tools/testing/selftests/riscv/sse/
-> +
->  RISC-V TENSTORRENT SoC SUPPORT
->  M:	Drew Fustini <dfustini@oss.tenstorrent.com>
->  M:	Joel Stanley <jms@oss.tenstorrent.com>
-> --=20
-> 2.50.1 (Apple Git-155)
->=20
-
---Xqo+bfadgatXB3Qq
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCauPSDwAKCRB4tDGHoIJi
-0kttAP9dzoNQAI2SKPQomjar/n9Qd4olyeHc1OusqrZHxxNv7QEApaGoAI0AgXlN
-NFcCol7iifOclsEwiEBBMmF4CzFvhAc=
-=aCSu
------END PGP SIGNATURE-----
-
---Xqo+bfadgatXB3Qq--
