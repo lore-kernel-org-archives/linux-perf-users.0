@@ -1,57 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.92.199
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793269173;
-	b=XaIw/Q1a3y2BLkCDhOKNOe+0H+MhVaqzaC1aKcvrX6ufQasVAkWACgLJoDqDfLnPU0fK
-	 L1Ht36+AEqodmAmYhI5laOY9Vp2QShbL1Gwo4JItDMynKuBWB74cGuU8/0CyRXD8X60Ou
-	 qjx+KVugQDJ9mTreE1v5p1SzntxU/RGo0j7dZTZ7j4ePcDAN7//+9xu9qqQQbLUrVcc1H
-	 2HCgiS16y0N0l6fdFV7O1rff7SGVjeniePK08YDJ2gJy2X6mUkFNN6C0pmA+H3QmADfh2
-	 gqHXgIxRvJ0rDSJBKIqPqYdW8k7rbfwX8iZtsCzfIUNzAv+yEiUlOWZU6bBbApx3Z1Q==
+	t=1793269778;
+	b=JTPH0UlmS5yUFJ9E9RCtkjxfGd/OgERKlsV7nbKEYzM+AU4Go6JEiyDZve+12UGL1cWk
+	 BMjo4ke6nWyWVz9JsXtwRheIa/7BRpId0y/jMyfxNaE8tBiU+3Rqs+at0FRrkX03293XR
+	 JkeEphEAr7ieJyJ2Cczatp/qHBT80ExENpJOd8/GpeYOse44HYUKkWWdW6PsafgzwW+db
+	 3rxON53rNlE7s/XZWTiZCJ9pu4fnXcEaBJOysvFiNz/XzkM1+nalmD7aobkNEmx8o6TVR
+	 v7HT82MF5JsWasQZkef1zCZ69KppGJS77CDK6kHWHkAfO17cZO/TFQWY78nPUDyFHRg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793269173;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793269778;
 	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
 	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To;
-	bh=vtaqbfBX5vfrkQb9nMFdRAxYBFnpk3c4orXF29WeP8I=;
-	b=2YRuCpfDcSzUB0u6y2+9jVLD6v3KDbDdEG/rDMCIAsaWxftn0+432Zu4H9IQunMdkiCj
-	 Y+ALlCia9QqTZLtmb4XfifB1vdU5zZTF4xiL4ln+7CCbpa9ARTgiJu3/xd051X9n2du1/
-	 yf0QEy2KyqQm0TEJkvYomofXEeb5qAztsrmKuI/LDRDHZrkixo2BqZVKpVGQZ2IhENwbQ
-	 RPf06fHrwRn0aPSRDjvvWoxYwD+FGVAc4Inb5Ms5yp+22HpSPmQZw5bcsVtqgY+W8gQ/R
-	 zRaBPrDZfzzEkk8TEiSYT1g9bGLhOab6X6CPUnalbagWxsy5I8ZC0HyYSMMaPxrl5qQ==
+	 Content-Disposition:In-Reply-To;
+	bh=R/lMsusE19estJ9V38aj7rBdTRNza2SkNgqdcGvspKE=;
+	b=szqZbV2glKv61gDiAMsRub2Qd8AswsFy61aPLXsECBvP6BmAvANvdWZCnyPINnnIF8YZ
+	 V9zvDDPoFYByqR6bIz6Yllmgr3m1g7aQZPcXYjojGAqQT8zY8IHwpihY8ZbeHDLfD2LWg
+	 quTtC2XHKaaAf2qDWMEmtBFs27tdfho93mMgmRZ1efV9tV26386bXWdJqfuVMGvT6gIM/
+	 s4r7qpiLw/gpnF1QO+y9KtIJiu9b+h9m/DBXvsTCzNv/JY38xNhmPJi91eoMDPftw5L9c
+	 9Cz2LCYXiAf94qPMhoWVE4+catOHrokzagohla6W6rfdURVZ9C7Ueznk52zQN+IrR3w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=infradead.org;
 	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=nCws2b9a;
-	arc=none smtp.remote-ip=90.155.50.34
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=CEuiE4wh;
+	arc=none smtp.remote-ip=90.155.92.199
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98509606B782;
-	Thu, 29 Oct 2026 10:19:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 98509606B782
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7A7606A327;
+	Thu, 29 Oct 2026 10:29:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EB7A7606A327
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=nCws2b9a
+	dkim=pass (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=CEuiE4wh
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=vtaqbfBX5vfrkQb9nMFdRAxYBFnpk3c4orXF29WeP8I=; b=nCws2b9aBxAO9qlUADishe8Fow
-	tLBV9d9y3aNbLuedV1Ok5lmUKi8gJSQDjhawzx3IDOMGadYmEJFkfc8uJ3oBAFNnHCmOXkijyTF7H
-	j0+AWSF2XRL2Fb7X/TzSI8UbytP11pmoJdMp+CWqLdgvPqKTRGz2Z0yJ75dZpw/+XEOew/wO0v0sH
-	Dx5zbPocpnGbs4aLaUT/Hg83sMLeYog12NT06PKbeBtAN1b+HR+EfuNFASb+k328BRZmNrinYbmuB
-	ChOGTBFq47+YU9gPz4SV+wQkhBWnFncr2HM1f43uEYbC8fBFi9L9ZH5AieqP6GAjE+8dVIrE2cFhV
-	OpeMjewg==;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=R/lMsusE19estJ9V38aj7rBdTRNza2SkNgqdcGvspKE=; b=CEuiE4whPwRJOvlJT1/4ISkmaH
+	yFu7mttcfqMvdF39rwvFEeePWC1/MV/Hc5CAz37LE3dpCCJaw1km5sC7VvA17QDpN6gqlY7r9DS3a
+	h80CwUyehGohUljql3sUWCu0pVBe2E4cXnO4Vk20R9WTpOpQttX7EiAOIy4wTfjj50nS37nTGqq0l
+	ZZeWkC9h+3vigME7XBUZ+Dj6xkA+00c+ycavd3XEAk3+SIG6G3EeRVonj/tjxtt+ViI7NWf1hkbAs
+	D5ypbwrxxBPyVQVKyQNhM7GaUl9zI/u2k8hiYAA5hcBUM09GcowjtQZlrapvHz+30qs4n/gBrHQjs
+	dEUyweEQ==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xMNEG-0000000EJz0-1vue;
-	Thu, 29 Oct 2026 10:19:28 +0000
+	by desiato.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xMNNz-0000000GsBu-3dyu;
+	Thu, 29 Oct 2026 10:29:32 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 90DEE300312; Thu, 29 Oct 2026 11:19:27 +0100 (CET)
-Date: Thu, 29 Oct 2026 11:19:27 +0100
+	id 80967300329; Thu, 29 Oct 2026 11:29:30 +0100 (CET)
+Date: Thu, 29 Oct 2026 11:29:30 +0100
 From: Peter Zijlstra <peterz@infradead.org>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Cc: Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
@@ -67,14 +67,12 @@ Cc: Ingo Molnar <mingo@redhat.com>,
 	bpf@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
 	Zide Chen <zide.chen@intel.com>,
 	Falcon Thomas <thomas.falcon@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>
-Subject: Re: [Patch v5 01/18] perf/x86: Disable LBR if x86_pmu.lbr_nr exceeds
- MAX_LBR_ENTRIES
-Message-ID: <20261029101927.GB1813469@noisy.programming.kicks-ass.net>
+	Xudong Hao <xudong.hao@intel.com>, Sashiko <sashiko-bot@kernel.org>
+Subject: Re: [Patch v5 09/18] perf/x86/intel: Keep LBR frozen throughout PMI
+ handling
+Message-ID: <20261029102930.GK1779021@noisy.programming.kicks-ass.net>
 References: <20261029043914.1395147-1-dapeng1.mi@linux.intel.com>
- <20261029043914.1395147-2-dapeng1.mi@linux.intel.com>
- <20261029093845.GI1779021@noisy.programming.kicks-ass.net>
- <041e5185-ff2d-4423-af5d-aed6628973c5@linux.intel.com>
+ <20261029043914.1395147-10-dapeng1.mi@linux.intel.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -84,93 +82,83 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <041e5185-ff2d-4423-af5d-aed6628973c5@linux.intel.com>
+In-Reply-To: <20261029043914.1395147-10-dapeng1.mi@linux.intel.com>
 
-On Thu, Oct 29, 2026 at 05:56:15PM +0800, Mi, Dapeng wrote:
+On Thu, Oct 29, 2026 at 12:39:05PM +0800, Dapeng Mi wrote:
+> For the platforms which has 4+ PMU version, streamline LBR freeze is
+> supported. The PERF_GLOBAL_STATUS.LBR_FRZ bit is set to freeze LBR once
+> a PMU counter overflow. However, the current PMI handler clears the LBR
+> freeze bit too early, allowing branch operations that occur during PMI
+> handling to be recorded into the LBR stack.
 > 
-> On 10/29/2026 5:38 PM, Peter Zijlstra wrote:
-> > On Thu, Oct 29, 2026 at 12:38:57PM +0800, Dapeng Mi wrote:
-> >> Add a sanity check for x86_pmu.lbr_nr. If the hardware reports more LBR
-> >> entries than MAX_LBR_ENTRIES, disable LBR to avoid out-of-bounds access
-> >> in the cached LBR stack handling path.
-> > Cute, can this actually happen?
+> This can pollute or overwrite the intended branch snapshot, especially
+> when bpf_get_branch_snapshot() is invoked from bpf_overflow_handler().
+> In that case, branches recorded while processing the PMI are mixed into
+> the original LBR data.
 > 
-> Currently it won't happen on real hardware since the maximum LBR stack
-> depth what hardware supports is 32. But it's better have this sanity check
-> assume the LBR stack depth could be extended to 64 or larger.
+> Defer unfreezing until after PMI handling completes so the LBR remains
+> frozen for the entire PMI path and no branch activity from the handler
+> is recorded.
 > 
+> Reported-by: Sashiko <sashiko-bot@kernel.org>
+> Closes: https://lore.kernel.org/all/sashiko-outbox-179823@kernel.org/
+> Fixes: 425507fa5f32 ("perf/x86/intel/lbr: Optimize v4 LBR unfreezing")
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> ---
+>  arch/x86/events/intel/core.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
 > 
-> >
-> >> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> >> ---
-> >>  arch/x86/events/amd/lbr.c    | 8 +++++++-
-> >>  arch/x86/events/intel/core.c | 7 +++++++
-> >>  2 files changed, 14 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/arch/x86/events/amd/lbr.c b/arch/x86/events/amd/lbr.c
-> >> index a55646fcb846..96c5b5e56053 100644
-> >> --- a/arch/x86/events/amd/lbr.c
-> >> +++ b/arch/x86/events/amd/lbr.c
-> >> @@ -433,7 +433,13 @@ __init int amd_pmu_lbr_init(void)
-> >>  	ebx.full = cpuid_ebx(EXT_PERFMON_DEBUG_FEATURES);
-> >>  	x86_pmu.lbr_nr = ebx.split.lbr_v2_stack_sz;
-> >>  
-> >> -	pr_cont("%d-deep LBR, ", x86_pmu.lbr_nr);
-> >> +	if (x86_pmu.lbr_nr > MAX_LBR_ENTRIES) {
-> >> +		pr_warn("LBR entries %d exceeds max %d, disable LBR.\n",
-> >> +			x86_pmu.lbr_nr, MAX_LBR_ENTRIES);
-> >> +		x86_pmu.lbr_nr = 0;
-> >> +	} else {
-> >> +		pr_cont("%d-deep LBR, ", x86_pmu.lbr_nr);
-> >> +	}
-> >>  
-> >>  	return 0;
-> >>  }
-> >> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> >> index 0a34d674df59..10c694db85ea 100644
-> >> --- a/arch/x86/events/intel/core.c
-> >> +++ b/arch/x86/events/intel/core.c
-> >> @@ -9023,6 +9023,13 @@ __init int intel_pmu_init(void)
-> >>  	 */
-> >>  	if (x86_pmu.lbr_tos && !check_msr(x86_pmu.lbr_tos, 0x3UL))
-> >>  		x86_pmu.lbr_nr = 0;
-> >> +
-> >> +	if (x86_pmu.lbr_nr > MAX_LBR_ENTRIES) {
-> >> +		pr_warn("LBR entries %d exceeds max %d, disable LBR.\n",
-> >> +			x86_pmu.lbr_nr, MAX_LBR_ENTRIES);
-> >> +		x86_pmu.lbr_nr = 0;
-> >> +	}
-> >> +
-> >>  	for (i = 0; i < x86_pmu.lbr_nr; i++) {
-> >>  		if (!(check_msr(x86_pmu.lbr_from + i, 0xffffUL) &&
-> >>  		      check_msr(x86_pmu.lbr_to + i, 0xffffUL)))
-> > Would it make sense to have but one copy of this check in
-> > init_hw_perf_events(), after calling into the micro-arch code?
-> 
-> Yes, that's what the previous version does, but Sashiko complains it's too
-> late.
-> 
-> "
-> 
-> Does zeroing x86_pmu.lbr_nr here in init_hw_perf_events() happen too late,
-> after intel_pmu_init() and amd_pmu_init() have already configured hardware
-> and driver state using the unvalidated x86_pmu.lbr_nr value?
-> 
-> "
-> 
-> https://lore.kernel.org/all/sashiko-outbox-179814@kernel.org/
-> 
-> It makes sense in some ways, so move the sanity check into the vendor init
-> in this version. 
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 15dcf8b78de9..a67297148bb6 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -4062,7 +4062,13 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
+>  	loops = 0;
+>  again:
+>  	intel_pmu_lbr_read();
+> -	intel_pmu_ack_status(status);
+> +
+> +	/*
+> +	 * Do not clear the LBR frozen status here; keep LBR frozen
+> +	 * throughout PMI handling.
+> +	 */
+> +	intel_pmu_ack_status(status & ~GLOBAL_STATUS_LBRS_FROZEN);
+> +
+>  	if (++loops > 100) {
+>  		static bool warned;
+>  
+> @@ -4081,10 +4087,13 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
+>  	 * Repeat if there is more work to be done:
+>  	 */
+>  	status = intel_pmu_get_status();
+> -	if (status)
+> +	if (status & ~GLOBAL_STATUS_LBRS_FROZEN)
+>  		goto again;
+>  
+>  done:
+> +	if (status & GLOBAL_STATUS_LBRS_FROZEN)
+> +		intel_pmu_ack_status(status & GLOBAL_STATUS_LBRS_FROZEN);
+> +
+>  	if (mid_ack)
+>  		apic_write(APIC_LVTPC, APIC_DM_NMI);
+>  	/* Only restore PMU state when it's active. See x86_pmu_disable(). */
 
-Urgh. But there are no events yet that early, none of that can actually
-happen.
+Given the whole PMU is disabled per __intel_pmu_disable_all(), all that
+can really happen is for more bits to be set, right? I mean, any counter
+cleared on the first ack_status, will never be re-set, it already fired
+and its disabled. All that can happen is that the disable is 'delayed'
+and a counter can maybe fire a little bit after the disable; getting
+missed on the first go.
 
-If we're really worried about this, change the micro-arch init to spawn
-in disabled state and we call x86_pmu_enable_all() at the end.
+Can we really get more than 1 extra loop there?
 
-Also, this is before x86_pmu_static_call_update(), nothing really
-'works' yet anyway.
+I'm sure this code has changed lots since we added that loop thing
+there.
+
+Anyway, if we can never get more than 1 extra loop, we can probably move
+the ack to the end, without having to do a second.
+
+I suppose this isn't something you have to do now, but keep it on the
+todo list or something?
