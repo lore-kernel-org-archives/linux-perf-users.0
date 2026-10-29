@@ -1,48 +1,48 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793293026;
-	b=nPLWuvz8x/pmReb1N4D2hnILOFpfjzdqzUlSk3KvgTqYG3NSybJK9XxdmZ8kDFgYmBoV
-	 KN20U1LDcu/S2xRfqV4HGGtHHSPyIbU50bmZtDJW+JThoN6NJ+8nVRiA1AvIlHI+x8Jri
-	 Fh3lRJjrP8YdiVUSbihiBC+WhPFtV95oxsDTNAm+EBT5I/DwIBoVzmipFGaVGBTf9bJiT
-	 4JRqy0MuTnrFonL/dzeIqatVZyYd177bX3QxmUhG8YHryqfGbpg1NmIfXKEOn2QJKHNJ3
-	 TXYXTVx9YW76t18/rUvsagLB0ge19LAQRxT8iMITz3BPn8KpYKfnMsfu5RTNVOPyaXg==
+	t=1793293585;
+	b=1eiVwwTUuilCtDi0tP4pmwCWIycmhDMO+UJO7uyAGMYsEBdsvAkFTP3j5l4ui1oFnZIA
+	 nT5zsENMeBJsBM4DOdSsYZNxmbwatsO1PSFgnUT/jWSaxJPnDXTsyPa2+omc128m9hpW7
+	 ajNEpM9KWNwxDdBoA9kq2Nbil0vqe2wRRCtkTW9qgGagl6hVDlP7z7KjL/ESwwEsLW2sv
+	 js9MKgt6qTTKFCmxhnhRrsd6kDFKKJP+6NkBYkVwKMcU5MLi6FnUvw0W95M8tBhqWzayW
+	 1PWZYvxTHIKBhMHqBn9EmZwkeetYTST6YvlxDNd8GT01kDhJzUpg+x0C6JnkTMRl+2A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793293026;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793293585;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=3YMGJT4pTkEsEKwWB46LfYjpDcUnYVe1X3rwCQXzAqI=;
-	b=W2ck81K9zDtwP9Ey2aspC6Kf9NC3bnPWbmIBi91s1rw/3OqIojYRjHrTnwGJ/SfaL5rL
-	 5ZghncngbSs+G+T5RfqPs+x1pNayqlB+SGLIChLcu3rXFQBL4sYzXsKoe/ez4sDYafjXc
-	 PKkZsIHwffCPx3+5sa8SinhqJsIGSLvG/d+1CGFvU95wfN2f0sElug99yT1t+dWgGi+BK
-	 P4uhLcgVqPWm+o2KTjgsILoPDzar7ryG5qK341X77JAw3DNLG+nUhnMCCt6N2VydE2uC7
-	 Q5B/88IpRl8/HU3rLbDpATIyVJ2QMdTfD12TlYAVkt6Z56ig1XY5b5dxNDslcwYmwAA==
+	bh=uhinfOj6G0C6Rx9NfglgMVhwpPTi8kNJ5VV2avR4jbY=;
+	b=0srMFZIaAZP/YDYqR1P9EjcCERmXOyErsAfRZaYWTbG7IdWB1hF3BXgn7pH3lusbDefa
+	 TOF+nqsCWTmtENiXIy34bZNfsGeYnRqUmg0manL1yQ4fR/oeJgERKTggzzi4/sFRNXtNT
+	 I1blhX9mWAPQNsVrFG/1WhSRP9zMDiNJTKmy8ZLB62kLWZ2FsKtXQMjDDoSigaGKIilXD
+	 kIazDFVIQ1EUHKBSKI2cavTpthT+ide7fC5VrPg00jYXYhnsozSK8Rrravx1swCMF9nqG
+	 IwysbO9luGgxpx2J4iuIkuFYY9o5TQPHwfmBK3eHM6GbpYgPYhjKMvg4tyKhik+EdBQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eYrfMnSi;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iNP6ULfQ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4EB8606A31C;
-	Thu, 29 Oct 2026 16:57:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D7F606A31C;
+	Thu, 29 Oct 2026 17:06:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eYrfMnSi
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0B0E1F01816;
-	Thu, 29 Oct 2026 16:57:04 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iNP6ULfQ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3DC71F01816;
+	Thu, 29 Oct 2026 17:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793293025;
-	bh=3YMGJT4pTkEsEKwWB46LfYjpDcUnYVe1X3rwCQXzAqI=;
+	s=k20260515; t=1793293584;
+	bh=uhinfOj6G0C6Rx9NfglgMVhwpPTi8kNJ5VV2avR4jbY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=eYrfMnSifep1QDuQP2NxmzU4emaUV6HXxr4z5831C1pto+08/y8MD989X1Jm4YeFA
-	 zsm2CROrsEwHQgabZyLkz885MNOaC2vipkhyLgp9w8qpqdDzvPHUiXZTV7CG78dQI4
-	 HufkHDMFGmSt0K18QO8A+SH7mBs2leBDfjG6pxr+LtudFTW7agTH4RdQLT9Hjs+beZ
-	 4Cdt94/w+P7WWksRzcErdvxZbf+iNAkCQUiWr+QiCidPfpcO/vN5Jqrct2uxssGisL
-	 PhlUqcqJvjKEBHRBJqm1W0jehFytwxSk/3w3fJ+ODKFMuU4Hufu/QxaGmCwp3MPA8C
-	 yNdL2dLRy00tw==
-Message-ID: <sashiko-outbox-189694@kernel.org>
+	b=iNP6ULfQMAMTf2a8z3iLOeDYZtoddpbgLuEX1NWLLZm4BGmB5RPccw24M2xwJazN7
+	 8KH3UjRaZ6Nx6SN07UVhMQNBeqvd+zGS8izhvcNMAzzEH3dxTxgRw4B/q0azFypsWB
+	 cGHNt6zMgbCEy6cu91V6a/rcuY22Z9rTwTDeYQDniTPI8AiJjxUZ5T1virZbs/m1mL
+	 zrsoq5qIhLUIvQHIjhXPjGOBemuwP08JXMvRQBIHPkFc1aHydowqsrf5T5Kl/eDULT
+	 UdlvJXqMfJCPSi/TlY+sPLLFMbmzaBHAcvpPbEQ9AXHzCpKZTZTECSvTbLSjfe24Ho
+	 UMlIKZeclMUJw==
+Message-ID: <sashiko-outbox-189716@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v1 1/3] tools build: Add Rust library build
- infrastructure and zlib-rs feature test
+Subject: Re: [RFC PATCH v1 3/3] bpftool: Prefer zlib-rs over zlib when
+ available
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>, "Peter Zijlstra" <peterz@infradead.org>, "Ingo
  Molnar" <mingo@redhat.com>, "Arnaldo Carvalho de Melo" <acme@kernel.org>, "Namhyung
@@ -51,12 +51,12 @@ To: "Ian Rogers" <irogers@google.com>, "Peter Zijlstra" <peterz@infradead.org>, 
  Schier" <nsc@kernel.org>, "Nick Desaulniers" <ndesaulniers@google.com>, "Bill
  Wendling" <morbo@google.com>, "Justin Stitt" <justinstitt@google.com>
 Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, linux-kbuild@vger.kernel.org, gary@garyguo.net
-In-Reply-To: <20261029162958.3224280-2-irogers@google.com>
+In-Reply-To: <20261029162958.3224280-4-irogers@google.com>
 References: <20261029162958.3224280-1-irogers@google.com>
- <20261029162958.3224280-2-irogers@google.com>
+ <20261029162958.3224280-4-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 29 Oct 2026 16:57:04 +0000
+Date: Thu, 29 Oct 2026 17:06:23 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -66,194 +66,120 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] tools build: sub-make PKG_CONFIG override blocks --static append
-- [Medium] tools build: lib%.rlib pattern rule fails for subdirectory targe=
-ts
-- [Medium] tools build: missing rustc --target in Makefile.rust and early f=
-eature check
+- [Medium] bpftool: link failure with pre-built libbpf.a when zlib-rs is us=
+ed
 --
 
-commit 15e2b90d3792008ff59190071c3b1973f7ab8c0b
+commit 7a2cb794e37f624ded57767492091a08919fa52c
 Author: Ian Rogers <irogers@google.com>
 
-tools build: Add Rust library build infrastructure and zlib-rs feature test
+bpftool: Prefer zlib-rs over zlib when available
 
-This patch adds shared Rust library build and feature detection infrastruct=
-ure
-under tools/build/ and tools/scripts/, along with a feature test for zlib-r=
-s.
-It supports locating Cargo crate sources or pkg-config packages, compiling
-.rlib and .a targets with rustc, and resolving C compiler and linker flags.
+This commit updates the bpftool Makefile to detect and prefer zlib-rs over
+C zlib, configuring ZLIB_CFLAGS and ZLIB_LIBS via feature_rust_lib and
+falling back to -lz when zlib-rs is unavailable or when cross-compiling
+bootstrap bpftool.
 
-> diff --git a/tools/build/Makefile.build b/tools/build/Makefile.build
-> index ad69efdd4e85c..50c3eb57d34b8 100644
-> --- a/tools/build/Makefile.build
-> +++ b/tools/build/Makefile.build
+> diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
+> index b0f7168e79432..a193cf89a0346 100644
+> --- a/tools/bpf/bpftool/Makefile
+> +++ b/tools/bpf/bpftool/Makefile
 [ ... ]
-> @@ -117,6 +120,10 @@ $(OUTPUT)%.s: %.c FORCE
+> @@ -38,7 +41,9 @@ $(LIBBPF_OUTPUT) $(BOOTSTRAP_OUTPUT) $(LIBBPF_BOOTSTRAP=
+_OUTPUT) $(LIBBPF_HDRS_DI
 > =20
->  # it's recommended to build a static rust library, when a foreight (to r=
-ust)
->  # linker is used.
-> +$(OUTPUT)lib%.rlib: %.rs FORCE
-> +	$(call rule_mkdir)
-> +	$(call if_changed_dep,rustc_rlib_rs)
-
-[Severity: Medium]
-Will this pattern rule match .rlib targets located in subdirectories?
-
-Later in tools/build/Makefile.build, targets in obj-y are prefixed with both
-$(OUTPUT) and $(dir)/:
-
-    objprefix    :=3D $(subst ./,,$(OUTPUT)$(dir)/)
-    obj-y        :=3D $(addprefix $(objprefix),$(obj-y))
-
-Other pattern rules in tools/build/Makefile.build place % immediately after
-$(OUTPUT), such as $(OUTPUT)%.o: %.c FORCE and $(OUTPUT)%.a: %.rs FORCE, wh=
-ich
-allows the stem % to match <subdir>/<name>.
-
-Because $(OUTPUT)lib%.rlib places the literal prefix lib immediately after
-$(OUTPUT), a target in a subdirectory expands to
-$(OUTPUT)<subdir>/lib<name>.rlib. When $(OUTPUT) is non-empty, the pattern
-contains a slash, so GNU Make matches against the full path and fails to ma=
-tch
-$(OUTPUT)lib%.rlib whenever <subdir> is present. When $(OUTPUT) is empty,
-directory-stripped matching sets the stem % to <name> without <subdir>/, so
-the prerequisite %.rs looks for <name>.rs in the current directory rather t=
-han
-in <subdir>/.
-
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index 4d37d11f674c5..c372600ae9e44 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -5,10 +5,11 @@ ifneq ($(OUTPUT),)
->    OUTPUT_FEATURES =3D $(OUTPUT)feature/
->    $(shell mkdir -p $(OUTPUT_FEATURES))
+>  $(LIBBPF): $(wildcard $(BPF_DIR)/*.[ch] $(BPF_DIR)/Makefile) | $(LIBBPF_=
+OUTPUT)
+>  	$(Q)$(MAKE) -C $(BPF_DIR) OUTPUT=3D$(LIBBPF_OUTPUT) \
+> -		DESTDIR=3D$(LIBBPF_DESTDIR:/=3D) prefix=3D $(LIBBPF) install_headers
+> +		DESTDIR=3D$(LIBBPF_DESTDIR:/=3D) prefix=3D \
+> +		$(if $(ZLIB_CFLAGS),EXTRA_CFLAGS=3D"$(or $(EXTRA_CFLAGS),-g -O2) $(ZLI=
+B_CFLAGS)") \
+> +		$(LIBBPF) install_headers
+[ ... ]
+> @@ -153,8 +178,27 @@ include $(FEATURES_DUMP)
 >  endif
-> +RUST_OUTPUT ?=3D $(abspath $(or $(OUTPUT),$(CURDIR)))/
+>  endif
 > =20
->  feature_check =3D $(eval $(feature_check_code))
->  define feature_check_code
-> -  feature-$(1) :=3D $(shell $(MAKE) OUTPUT=3D$(OUTPUT_FEATURES) CC=3D"$(=
-CC)" CXX=3D"$(CXX)" CFLAGS=3D"$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))"=
- CXXFLAGS=3D"$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS=3D"$=
-(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURE=
-S)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
-> +  feature-$(1) :=3D $(shell $(MAKE) OUTPUT=3D$(OUTPUT_FEATURES) RUST_OUT=
-PUT=3D"$(RUST_OUTPUT)" CC=3D"$(CC)" CXX=3D"$(CXX)" RUSTC=3D"$(RUSTC)" $(if =
-$(PKG_CONFIG),PKG_CONFIG=3D"$(PKG_CONFIG)") CFLAGS=3D"$(CLANG_CROSS_FLAGS) =
-$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS=3D"$(CLANG_CROSS_FLA=
-GS) $(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" RUST_FLAGS=3D"$(RUST_=
-FLAGS)" LDFLAGS=3D"$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_d=
-ir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo =
-0)
->  endef
-[ ... ]
-> diff --git a/tools/build/Makefile.rust b/tools/build/Makefile.rust
-> new file mode 100644
-> index 0000000000000..cd9e0915b9298
-> --- /dev/null
-> +++ b/tools/build/Makefile.rust
-> @@ -0,0 +1,149 @@
-[ ... ]
-> +ifeq ($(findstring -static,${LDFLAGS}),-static)
-> +  ifeq ($(findstring --static,$(PKG_CONFIG)),)
-> +    PKG_CONFIG +=3D --static
+> -LIBS =3D $(LIBBPF) -lelf $(CRYPTO_LIBS) -lz
+> -LIBS_BOOTSTRAP =3D $(LIBBPF_BOOTSTRAP) -lelf $(CRYPTO_LIBS) -lz
+> +# Prefer zlib-rs over C zlib when detected. When cross-compiling, the ho=
+st
+> +# bootstrap bpftool still links against the host's -lz.
+> +ifeq ($(feature-zlib-rs),1)
+> +  $(call feature_rust_lib,zlib-rs)
+> +  ZLIB_CFLAGS :=3D $(FEATURE_CFLAGS-zlib-rs)
+> +  ZLIB_LIBS :=3D $(FEATURE_LIBS-zlib-rs)
+> +  CFLAGS +=3D $(ZLIB_CFLAGS)
+> +  ifeq ($(CROSS_COMPILE),)
+> +    HOST_CFLAGS +=3D $(ZLIB_CFLAGS)
+> +    LIBBPF_BOOTSTRAP_CFLAGS +=3D $(ZLIB_CFLAGS)
+> +    ZLIB_BOOTSTRAP_LIBS :=3D $(ZLIB_LIBS)
+> +  else
+> +    ZLIB_BOOTSTRAP_LIBS :=3D -lz
 > +  endif
+> +else
+> +  ZLIB_LIBS :=3D -lz
+> +  ZLIB_BOOTSTRAP_LIBS :=3D -lz
 > +endif
+> +
+> +LIBS =3D $(LIBBPF) -lelf $(CRYPTO_LIBS) $(ZLIB_LIBS)
+> +LIBS_BOOTSTRAP =3D $(LIBBPF_BOOTSTRAP) -lelf $(CRYPTO_LIBS) $(ZLIB_BOOTS=
+TRAP_LIBS)
 
 [Severity: Medium]
-When LDFLAGS contains -static, does PKG_CONFIG +=3D --static take effect if=
- the
-caller passes PKG_CONFIG on the sub-make command line?
+Can this cause a link failure with an undefined reference to gzopen64 when
+bpftool is built using a pre-built libbpf.a on a host where zlib-rs is
+detected?
 
-Both feature_check_code in tools/build/Makefile.feature and
-feature_rust_lib_code in tools/scripts/Makefile.include pass
-$(if $(PKG_CONFIG),PKG_CONFIG=3D"$(PKG_CONFIG)") as a command-line argument=
- to
-$(MAKE). When invoked from Makefiles that initialize PKG_CONFIG (such as
-tools/perf/Makefile.perf or tools/tracing/rtla/Makefile.rtla), PKG_CONFIG h=
-as
-command-line origin in the sub-make.
+In tools/lib/bpf/Makefile, libbpf is compiled with:
 
-In GNU Make, ordinary non-override +=3D appends to a command-line variable =
-are
-ignored, so PKG_CONFIG +=3D --static in both tools/build/Makefile.rust and
-tools/build/feature/Makefile:
+    override CFLAGS +=3D -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=3D64
 
-    ifeq ($(findstring -static,${LDFLAGS}),-static)
-      PKG_CONFIG +=3D --static
-    endif
+When tools/lib/bpf/libbpf.c is compiled without ZLIB_CFLAGS, bpf_object__re=
+ad_kconfig_file()
+includes the system zlib.h with those macros defined, which remaps gzopen()
+to gzopen64() and leaves an undefined reference to gzopen64 in libbpf.a.
+In contrast, libz-rs-sys only exports gzopen and not gzopen64, which is why
+the $(LIBBPF) and $(LIBBPF_BOOTSTRAP) rules here pass $(ZLIB_CFLAGS) so that
+libbpf uses the bundled zlib.h from libz-rs-sys.
 
-is skipped during static builds, omitting transitive static libraries from
-pkg-config queries. Should these use override PKG_CONFIG +=3D --static?
+However, several Makefiles build libbpf.a directly via tools/lib/bpf/Makefi=
+le
+without ZLIB_CFLAGS and then pass that pre-built archive directory to
+bpftool via LIBBPF_OUTPUT or LIBBPF_BOOTSTRAP_OUTPUT, such as
+tools/testing/selftests/bpf/Makefile:
 
-[ ... ]
-> +cmd_rustc_rlib =3D \
-> +	$(rustc_target_envs) $(RUSTC) $(RUST_FLAGS) $(rustc_common_flags) $(rus=
-tc_target_flags) \
-> +	$(call rlibs-to-externs,$^) --crate-type rlib --crate-name $(patsubst l=
-ib%.rlib,%,$(notdir $@)) \
-> +	-o $@ $(filter %.rs,$^) > $(@:.rlib=3D.make.output) 2>&1
-> +
-> +cmd_rustc_staticlib =3D \
-> +	$(rustc_target_envs) $(RUSTC) $(RUST_FLAGS) $(rustc_common_flags) $(rus=
-tc_target_flags) \
-> +	$(call rlibs-to-externs,$^) --crate-type staticlib --crate-name $(patsu=
-bst lib%.a,%,$(notdir $@)) \
-> +	-o $@ $(filter %.rs,$^) > $(@:.a=3D.make.output) 2>&1
-[ ... ]
-> diff --git a/tools/scripts/Makefile.arch b/tools/scripts/Makefile.arch
-> index ed5f008d400ed..d5f25f3be555f 100644
-> --- a/tools/scripts/Makefile.arch
-> +++ b/tools/scripts/Makefile.arch
-> @@ -50,3 +50,17 @@ ifeq ($(LP64), 1)
->  else
->    IS_64_BIT :=3D 0
->  endif
-> +
-> +# Map kernel ARCH to rustc --target triples when cross-compiling tools/.
-> +ifneq ($(CROSS_COMPILE),)
-> +  RUST_TARGET_FLAGS_arm		:=3D arm-unknown-linux-gnueabi
-> +  RUST_TARGET_FLAGS_arm64	:=3D aarch64-unknown-linux-gnu
-> +  RUST_TARGET_FLAGS_loongarch	:=3D loongarch64-unknown-linux-gnu
-> +  RUST_TARGET_FLAGS_m68k	:=3D m68k-unknown-linux-gnu
-> +  RUST_TARGET_FLAGS_mips	:=3D mipsel-unknown-linux-gnu
-> +  RUST_TARGET_FLAGS_powerpc	:=3D powerpc64le-unknown-linux-gnu
-> +  RUST_TARGET_FLAGS_riscv	:=3D riscv64gc-unknown-linux-gnu
-> +  RUST_TARGET_FLAGS_s390	:=3D s390x-unknown-linux-gnu
-> +  RUST_TARGET_FLAGS_x86		:=3D x86_64-unknown-linux-gnu
-> +  RUST_TARGET_FLAGS_x86_64	:=3D x86_64-unknown-linux-gnu
-> +endif
+    $(DEFAULT_BPFTOOL): $(wildcard $(BPFTOOLDIR)/*.[ch] $(BPFTOOLDIR)/Makef=
+ile)    \
+                        $(HOST_BPFOBJ) | $(HOST_BUILD_DIR)/bpftool
+            $(Q)$(MAKE) $(submake_extras)  -C $(BPFTOOLDIR)                =
+        \
+                        ARCH=3D CROSS_COMPILE=3D CC=3D"$(HOSTCC)" LD=3D"$(H=
+OSTLD)"         \
+                        EXTRA_CFLAGS=3D'-g $(OPT_FLAGS) $(SAN_CFLAGS) $(EXT=
+RA_CFLAGS)' \
+                        EXTRA_LDFLAGS=3D'$(SAN_LDFLAGS) $(EXTRA_LDFLAGS)'  =
+          \
+                        OUTPUT=3D$(HOST_BUILD_DIR)/bpftool/                =
+          \
+                        LIBBPF_OUTPUT=3D$(HOST_BUILD_DIR)/libbpf/
 
-[Severity: Medium]
-How does RUST_TARGET_FLAGS_$(ARCH) get passed to rustc when tools/build/fea=
-ture
-or tools/build/Makefile.rust builds libz_rs.a during cross-compilation?
+Similar patterns exist in tools/sched_ext/Makefile,
+tools/testing/selftests/sched_ext/Makefile,
+tools/testing/selftests/hid/Makefile, and drivers/hid/bpf/progs/Makefile.
 
-tools/scripts/Makefile.arch defines RUST_TARGET_FLAGS_<arch> when CROSS_COM=
-PILE
-is set, but neither Makefile.arch, Makefile.include, Makefile.feature, nor
-Makefile.rust adds --target=3D$(RUST_TARGET_FLAGS_$(ARCH)) to RUST_FLAGS or
-rustc_common_flags.
-
-When feature_check runs for zlib-rs without --target in RUST_FLAGS (for
-example, in tools/build/Makefile.feature when FEATURE_TESTS=3Dall is evalua=
-ted
-before a caller sets RUST_FLAGS, or in standalone feature checks),
-cmd_rustc_rlib and cmd_rustc_staticlib in tools/build/Makefile.rust compile
-liblibc.rlib, libzlib_rs.rlib, and libz_rs.a for the host architecture. Lin=
-king
-test-zlib-rs.bin with the cross-compiler $(CC) then fails, and because the
-rules in tools/build/Makefile.rust do not rebuild when RUST_FLAGS changes, =
+Because $(LIBBPF) or $(LIBBPF_BOOTSTRAP) already exists and is up to date w=
+hen
+bpftool's Makefile runs, the $(LIBBPF) recipe with $(ZLIB_CFLAGS) is skippe=
+d,
+while LIBS and LIBS_BOOTSTRAP replace -lz with $(ZLIB_LIBS) (libz_rs.a).
+Wouldn't linking bpftool then fail with an unresolved gzopen64 symbol from =
 the
-host-architecture archives remain cached in $(LIBZ_RS_OUTPUT) for subsequent
-invocations in the same build directory.
+pre-built libbpf.a?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261029162958.3224=
-280-1-irogers@google.com?part=3D1
+280-1-irogers@google.com?part=3D3
