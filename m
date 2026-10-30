@@ -1,57 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=109.224.244.22
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793343576;
-	b=PlwI+czPrfJ7/zmXfpo59OSrP7eeVk73IWOudpf7KAdkH1PFXmZ0Hgxb2OZpovbmfJFc
-	 1OHdnumf3oqvfWkyzNTnJV7vbpaaFjBk7lG7lsMHiOAL90H6sBMge+8l8TogpmqiJuvIR
-	 oljEcsBqhDRJWW+HsEPyU1SBP4F9bYFObVeoBUWtE93d5lU3o27AaNLrZa2dVbNXwe8fM
-	 goT51nuixcbYHBtXzgnTYPlbV9VOQap46vOsnAhSytI8G3BnXNgLnwOhy4jczVQMig6BR
-	 O57QlCOKn5FpPt32amopR+IYSkw6sYFhoF0+bEumkl4EyWJOlRlJSbuKhMNmE3e1Szg==
+	t=1793343600;
+	b=nwBq1KaIxYsV+IDbMlYuvi5Tb7rotxffAVkBFyyv9qm9lraE9shfHwr+LQ8//g+Nvb7y
+	 9rq3+lGrsuL0n0t1Ojo4BO/qPIZWwBbQ9cqkXrAZZNAepCpYXY7e0ae0msDA5/8LvVZ+2
+	 U7BHB2pk6L5586yhPC8H0TJ+g7JvTj+sdvsl/6YC6n7vyuWUETyZi3tkOO/VvIEoW+nHx
+	 uZGDk6wL48zHUMWbYY4jOFH3KFijXMW/njyhUY+dBiL7glwHxjbGwcQ8ryuVgQSDDLwIO
+	 J2xoOD/8/jYBL4+laIRVmClvohGL15u3iIt62K6fYEIiK5KP4jLpGhqQoDpQzuMZ7OA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793343576;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 Feedback-ID:X-Pm-Message-ID:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=Cs9D0HY32Cso7YnxVSoyyLLlor/aF98StXHYbAJIbtM=;
-	b=yOXSvAwW5PtmNiJqArF4yYthw2/6BYj31v0T4SPSiqvm68dC2x4hrZc9IjFHFcT7e/ch
-	 ar0s5Rj+wpHNsC68Ri1qsyHGzcChl3GndodPXEEgakk5wxT+sYY7IWylAt8fF1XlN35p7
-	 f1lF6cMd7k0RDP/Lqaf3wRUyAHmxDKxFA5CKeB4CcrobNgqPOYiMU9FfffuDbmVPnmki3
-	 hZpsBXmbx7yrSe2OydWLxcamEUAp1+UX8kzij05Z/ZqTiolw1KJyyhMoAUpr+0Ye3xyCG
-	 wUsvVDhR0mWfi/1lLndN5e6QNi8Nnhot4dxLuUmbAtvVQAocLsBBj22Cka7rdziihZA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793343600;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=BTK/DNRK4YxedMydCekcYhCHthtEeouRog92RNpoM4c=;
+	b=oc1Pj5TzKQxKgP+AHwb8zUi0OyCZ/Bfztksn9978H9ZPJOf3suKe5KwYpJRNryUNcLSa
+	 77q6ZIhJ1HJnj8v1h9Qyzn0QErHBfGLon6BrMoHJxenGDZRBQvSrp8P6UbEJ6h3pV/bZD
+	 QxLXtTwtXAQnECPI1OSw++Ppfhuw+hejbd+EDrAP0gt913Rd8YT7mUp1bv6uKdhjTA4bV
+	 2Z3W7ttJB+tp9ghgjS4sKig+CNVUEdAO9+s1ef1B8oiOiwrAG2eM/SIY7Kj1rl5KLdkxQ
+	 bTjl+aHAxqO6q1Uy+0J44g+M2dR4H/AUN1gO+T29b6MxihlHvquOH/EUUENnfaEY7CQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=1g4.org;
-	spf=pass smtp.mailfrom=1g4.org;
-	dkim=pass header.d=1g4.org header.i=@1g4.org header.a=rsa-sha256 header.s=protonmail header.b="rQ/lO6+M";
-	arc=none smtp.remote-ip=109.224.244.22
-Received: from mail-24422.protonmail.ch (mail-24422.protonmail.ch [109.224.244.22])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bPEgHgdJ;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85CFB606A31C;
-	Fri, 30 Oct 2026 06:59:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 85CFB606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=1g4.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1g4.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70C4606A31D
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 06:59:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=1g4.org header.i=@1g4.org header.a=rsa-sha256 header.s=protonmail header.b=rQ/lO6+M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=1g4.org;
-	s=protonmail; t=1793343573; x=1793602773;
-	bh=Cs9D0HY32Cso7YnxVSoyyLLlor/aF98StXHYbAJIbtM=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=rQ/lO6+MM6O0c9Lri28+sr03loz1eKU8Moh/sR8lKA2yMySoq1XuhynlwKOUVJPIq
-	 9+rEIgCWiQGQY+j57N8lvhdif2jGUOZDMQM9NWaOnjdady6levdVLKFmSzzbMl3/Jj
-	 3Uxm+nXIUoQadHtmXNQT982D6CPLQozBUqtdhZt7aClt1OMaFng2AnextvBcWewKPl
-	 p/dHZf8rq55/+h93GJwO3NNH1tPay13VmjjuKwB/iGwMbMxvaMW5J/Yl8YeYndu4ml
-	 7lPB0ECAGEyDgERnN8/zkjQHMJ78i9dqNxschgO/JJxSQPY6DfxaRCiL8XDr/gkH4m
-	 ImYNbJwlh5qVw==
-Date: Fri, 30 Oct 2026 06:59:28 +0000
-To: acme@kernel.org, namhyung@kernel.org
-From: Paul <p@1g4.org>
-Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org, alexey.budankov@linux.intel.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Moses <p@1g4.org>
-Subject: [PATCH] perf record: Skip affinity for per-thread mmap buffers
-Message-ID: <20261030065857.2157899-1-p@1g4.org>
-Feedback-ID: 8253658:user:proton
-X-Pm-Message-ID: 30567b2a5a2c3d284c4b55dfa40f2fb37edd2741
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bPEgHgdJ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B21E1F000C1;
+	Fri, 30 Oct 2026 06:59:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793343599;
+	bh=BTK/DNRK4YxedMydCekcYhCHthtEeouRog92RNpoM4c=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=bPEgHgdJfJn+Q90hyRiNNETMknpk9NziHKnI7rCWFIifRZSvRDX+diH+MJdjVTnn+
+	 hDt8/XU94fC8fQm7WdkXVGPU1ZXnG0ER2g9HSruRbiZFK6rL46woVJnskgytxCKj3p
+	 X5etyJUsbJSipGz6/Z72eHVvjjSV+MX1gbihiX9pw+8OTRImd/+fH0w0wiGbDcg/n5
+	 ouKW9v9Bene0jqAs/K01EjAadFAU9TVqA4tTl/TlJg1UCx3KqessgtchWhnJzFLyh4
+	 lulnw+8/XC3xPd7o9DcOgAKIc66cSyMsd3OYzJBdLwVmTUy3W6vjLzpMQVSx5gSBe9
+	 HecoVRm/9GRKw==
+Message-ID: <sashiko-outbox-190624@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf record: reject CPU indices equal to the mask size
+Reply-To: sashiko-reviews@lists.linux.dev
+To: Paul <p@1g4.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261030064825.2156317-1-p@1g4.org>
+References: <20261030064825.2156317-1-p@1g4.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 30 Oct 2026 06:59:58 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,102 +58,32 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-From: Paul Moses <p@1g4.org>
+> From: Paul Moses <p@1g4.org>
+>=20
+> record__mmap_cpu_mask_init() rejects CPU indices greater than nbits but
+> accepts nbits itself. Valid indices end at nbits - 1. When nbits is a
+> multiple of BITS_PER_LONG, __set_bit() accesses the word immediately past
+> the bitmap allocation.
+>=20
+> User specified recording thread masks reach this write before they are
+> intersected with the selected CPU mask. For example, an affinity mask
+> containing CPU 64 overruns a bitmap allocated for 64 possible CPUs.
+>=20
+> =3D=3D40343=3D=3DERROR: AddressSanitizer: heap-buffer-overflow on address=
+ 0x7bbab4000018 at pc 0x6195de57af45 bp 0x7ffe25545d20 sp 0x7ffe25545d18
+> READ of size 8 at 0x7bbab4000018 thread T0
+>    =20
+> Reject indices greater than or equal to nbits before setting a bit.
+>=20
+> Fixes: cbd7bfc7fd99 ("tools/perf: Fix out of bound access to cpu mask arr=
+ay")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Paul Moses <p@1g4.org>
 
-Per-thread mmap buffers use CPU -1 to mean any CPU. Combining --per-thread
-with --affinity=3Dcpu passes this value to __set_bit() when constructing th=
-e
-reader affinity mask, causing an out-of-bounds bitmap access and SIGSEGV.
+Sashiko has reviewed this patch and found no issues.
 
-Program received signal SIGSEGV, Segmentation fault.
-0x0000555555f3488e in mmap.mmap ()
-#0  0x0000555555f3488e in mmap.mmap ()
-#1  0x0000555555e2f7bf in mmap_per_evsel (evlist=3Devlist@entry=3D0x7fffedc=
-c1150, ops=3Dops@entry=3D0x7fffffffaf50, idx=3Didx@entry=3D0, mp=3Dmp@entry=
-=3D0x7fffffffaf70, cpu_idx=3Dcpu_idx@entry=3D0, thread=3Dthread@entry=3D0, =
-_output=3D0x7fffffffaf08, _output_overwrite=3D0x7fffffffaf04, nr_mmaps=3D0x=
-7fffffffaf0c) at evlist.c:598
-#2  0x0000555555e2ef96 in mmap_per_thread (evlist=3D0x7fffedcc1150, ops=3D0=
-x7fffffffaf50, mp=3D0x7fffffffaf70) at evlist.c:650
-#3  perf_evlist__mmap_ops (evlist=3D0x7fffedcc1150, ops=3D0x7fffffffaf50, m=
-p=3D0x7fffffffaf70) at evlist.c:748
-#4  0x0000555555f2150d in evlist.mmap_ex ()
-#5  0x0000555555db0b0a in record.open ()
-#6  0x0000555555dadea7 in __cmd_record ()
-#7  0x0000555555daca89 in cmd_record ()
-#8  0x0000555555e27d53 in run_builtin ()
-#9  0x0000555555e277cf in main ()
-rip            0x555555f3488e      0x555555f3488e <mmap.mmap+382>
-rax            0x7fffef9e9bd0      140737213537232
-rbx            0x7fffedd249a0      140737183369632
-rcx            0x3ffffffffffffff   288230376151711743
-rdx            0x8000000000000000  -9223372036854775808
-rsi            0x0                 0
-rdi            0x7fffef9e9bd0      140737213537232
-   0x555555f34876 <mmap__mmap+358>:=09movswq 0x10(%rbx),%rcx
-   0x555555f3487b <mmap__mmap+363>:=09mov    0xb8(%rbx),%rax
-   0x555555f34882 <mmap__mmap+370>:=09mov    $0x1,%edx
-   0x555555f34887 <mmap__mmap+375>:=09shl    %cl,%rdx
-   0x555555f3488a <mmap__mmap+378>:=09shr    $0x6,%rcx
-=3D> 0x555555f3488e <mmap__mmap+382>:=09or     %rdx,(%rax,%rcx,8)
-   0x555555f34892 <mmap__mmap+386>:=09lea    0x17711b(%rip),%r14        # 0=
-x5555560ab9b4 <verbose>
-   0x555555f34899 <mmap__mmap+393>:=09cmpl   $0x2,(%r14)
-   0x555555f3489d <mmap__mmap+397>:=09jne    0x555555f348f7 <mmap__mmap+487=
->
-   0x555555f3489f <mmap__mmap+399>:=09mov    0xb8(%rbx),%rdi
-   0x555555f348a6 <mmap__mmap+406>:=09mov    0xc0(%rbx),%esi
-   0x555555f348ac <mmap__mmap+412>:=09lea    -0x430(%rbp),%r12
-
-Only construct and apply reader affinity masks for buffers with a
-nonnegative CPU. Skip the reader-side bitmap operations as well, since
-per-thread buffers no longer allocate an affinity mask.
-
-Fixes: 8384a2600c7d ("perf record: Adapt affinity to machines with #CPUs > =
-1K")
-Signed-off-by: Paul Moses <p@1g4.org>
----
- tools/perf/builtin-record.c | 2 +-
- tools/perf/util/mmap.c      | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index a57987851cf0..d7c8f490cb62 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1565,7 +1565,7 @@ static struct perf_event_header finished_init_event =
-=3D {
-=20
- static void record__adjust_affinity(struct record *rec, struct mmap *map)
- {
--=09if (rec->opts.affinity !=3D PERF_AFFINITY_SYS &&
-+=09if (map->core.cpu.cpu >=3D 0 && rec->opts.affinity !=3D PERF_AFFINITY_S=
-YS &&
- =09    !bitmap_equal(thread->mask->affinity.bits, map->affinity_mask.bits,
- =09=09=09  thread->mask->affinity.nbits)) {
- =09=09bitmap_zero(thread->mask->affinity.bits, thread->mask->affinity.nbit=
-s);
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index 358e70c4f3ed..be3dffdaede8 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -292,8 +292,8 @@ int mmap__mmap(struct mmap *map, struct mmap_params *mp=
-, int fd, struct perf_cpu
- =09=09return -1;
- =09}
-=20
--=09if (mp->affinity !=3D PERF_AFFINITY_SYS &&
--=09=09perf_mmap__setup_affinity_mask(map, mp)) {
-+=09if (cpu.cpu >=3D 0 && mp->affinity !=3D PERF_AFFINITY_SYS &&
-+=09    perf_mmap__setup_affinity_mask(map, mp)) {
- =09=09pr_debug2("failed to alloc mmap affinity mask, error %d\n",
- =09=09=09  errno);
- =09=09return -1;
 --=20
-2.56.GIT
-
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261030064825.2156=
+317-1-p@1g4.org?part=3D1
 
