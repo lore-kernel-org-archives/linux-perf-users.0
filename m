@@ -1,100 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.52
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793329875;
-	b=f0MEhevNfAKhJjVDxGNXy+tNW3kIpdZOt6eGLWysziGC2qipdA4Ba15kmTNu61Tl93TS
-	 tQ9GCq1+mGkLosyxK8sBn/l54Xpj6DYvz6sDhcOFgVppZXeRmAy8winC9YAgylihKCVKI
-	 2Mw2HWNYfEFBWlrhU/PwVJ3ClYszAtePN7oFqpmyaPF/xXo+fpjvBwKMcJJ8QEbOsMRSo
-	 JXn1lHbc6cX4yBCxh/vF3VLXT6ZKGaIvclNgmT3c8CONJ4lkxLWJ39EQ+1eYDGntuSiOo
-	 Hv3Hqdf9IkPsd+Ww0lUY8SjK8aOEW/JkVbHBARgFG0eyuB+kiJ+jd5El9VxKaxA9fjQ==
+	t=1793332702;
+	b=m+YDsc/pMjS+5B8uqaLNH0hzHaPx/7s/k3YlqA4nI4F9dAsXEnkKeRIWp1KyFYTZ59nb
+	 cmIojzObPtKUFwdJEX8qpy+3E6aewfKrvFFUdNTYFvhKd0hWylKndCjKPJAigWzwqW9Ih
+	 1gPvE0u6GsLd8DEhIBNsjZHd4AsdH4h8mRrd97g2OvYTzQZu6HbDWHjIiJqMQ/gQd0kan
+	 H9muBMMJW5SmMB8dtaiE+7sZoA79FtUC9TniT9X0TJSJ75Aj9MCwSvaKRsD4Otop3hrbV
+	 /byblNC+0uddA/Jyea0k8as8UKgge7b/8fvk3whcb0WEdaeLRsVscSomXDliSKyyFiw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793329875;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793332702;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
 	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
 	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=hoVHC65GR8n9FjINMXnaahKi7WXhnhvguTlzPVQW3pA=;
-	b=TFY/AfRxPZxb6HLnEKm2aDCs8haab1o8B0j+LOnu/x0rJVJHOJIkzxzfn4UtEF2/pVIE
-	 Aug390hJq8HGcp+daLYn6PDNCTYzcKLuCX6PrCa6NxVJg1DgvvF9jrvMxImch7oF8yNxi
-	 9Wrsm+lCvyYwuT4jvBaYbJw4xcxp2BUggtP7k3EY52/FcUkGXTe1EkFqzsLHzJFtcThB2
-	 hTisHMVmuFC0tykTsCr41EMVhVdIDqksBEEXyE/VnIoenxCQFx/sHmqWiClh3golTCb7C
-	 xDsotvZQQ7fgSz2/XE84VMAJ5N+TVJIH8nrx/GCua14FBFUiFUZFLSC8iyT6KTqVc4g==
+	bh=IZmNuI/wND30J0nkI7O6RvOq46XxnSgW4W30rCGXnNg=;
+	b=ElJMHa7+1CiDytyAVHzjXt5miIUIDFQN7JkyJ0BCAtx+SYJCfyNBTKbjuVjgHUDq4AqC
+	 KtqTqf0SYHl+n9BDyMIG3c1Dt2ujAh9AwaXHMsYvhOn2DImjXrAFBKZzXTmdN0Bjjw+Sb
+	 SHKsxpoS0du5+oeAhO7w4AYmAphTY/gNuOlTdKLKAAGlDgmnWYROtifkd6/RLPD1c/1H9
+	 +dWF6JzvHFfyMOUVHSg+tcCj3sDuE2d62uWQZqxDtwdy0nYV+tvoCKdAP3px+XxqIDPXs
+	 oXQ07tKszu3opRF4bx871F25PdeGC3CQ309/r2C+x/QX0JUxE4o+wBvqXl3B+Svs0Jg==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=kh2HrdRU;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.177
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=sUpdStRz;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.52
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF68606A322
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 03:11:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BCF68606A322
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF63606A31C
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 03:58:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EDF63606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=kh2HrdRU
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-5383c97c8cfso105451cf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 29 Oct 2026 20:11:14 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1793329873; cv=none;
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=sUpdStRz
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5be3cff0f6cso255830e87.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 Oct 2026 20:58:21 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1793332700; cv=none;
         d=google.com; s=arc-20260327;
-        b=fRuZz231JFsu0ytPNWUbocLhTj+TqP8ctergX5hf8Dom3y5vOHioGWxMRlbP/mQozC
-         1JALrIvGIhoYejR5LwrSBIsONaquKlaCd8CwqihrEOr0cmvkpMMVW/InIMNMbCPXnvMW
-         P8U7Xz6Oa5VjbqpXvyuGiDOhfIDljh6LHqzqegqy20NFNdlwtugg6C0aoL/iPNlhEo/S
-         0NHHvq06fzkXN1EzZTI8lx1tyN2woJnnANUiUnINwH9o+prOgwBjqLI4KIzr9Xyif9uo
-         iHzxClELDN7rFvq9+Sc3uXIx1ZB1e8+2wWsdnDe/BCQbGJRqz3EaO7newT1eIbWSCxqE
-         QFfw==
+        b=Su6JCrFeMVA2sW11Y+g0MntrELqfa5dPRSnuzgQXwSn1npVXsJwIgqS21aPpzwc2LF
+         eueFETOsjcjj27wXLOIrGdfKeGG7lAw13aZ2RfRDYhBysOmTjOeMcNki05lSJrMjhUnl
+         43NPt7HLeVGTUpNGHCHJ1+t9Hzm1y/N6WTdiMt/fu9KdFN4jy2SuCAjSemYAWWf+Dmbx
+         NrLZ9RUaNaF4OHTT1sBrAtRYdUAk7MhVGcdfiHWbe5+oUOpJpt44A8+5EnUlCe+4VTR5
+         QzqiB0A7NBG+GLdJJtryQRJNBG9nVQcOeV5NeXjjaWNXvrzC5DISP+w/xkZ88Wp2J5aM
+         0TRw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=hoVHC65GR8n9FjINMXnaahKi7WXhnhvguTlzPVQW3pA=;
-        fh=K8/HSWsnxUDcTPyaickxKNask2r7Orpf8q6Fsi3+Qiw=;
-        b=Ken2tbhkP99uD/VMQErD9kRkZTn0z612IEExMzSzQ/6DBujfu8E3kvUvRvXDaJf361
-         wimUxC82WC0643bieDiwysc5K/GggwbhPXC8kdCCfdggJPIoihlBT2eXRR3sZMOtYpKM
-         3qhr03EoOhuW3ZYIt0Cp+ZWLFtKLjYZPpl7dbCqj4mJCfP/XY6qNjxNg+D2k1STPQOzc
-         3/o3kGo460zmlAgdAJQ74rrX1b19AQf+GmOrVEVmk7SlRm0/PY6UGR+sD2t/r08nT8D/
-         RoMnwOrp5SyfndBEX6BnO9iedxyJy0VWEdNgKGQ4gZGKKYoR0te0+azCUuTq/kIYNkJ1
-         gi8g==;
+        bh=IZmNuI/wND30J0nkI7O6RvOq46XxnSgW4W30rCGXnNg=;
+        fh=q4qERIRkFDVW2FycmDNUIgfKmZU2Q9WgC9lqkSFrSbg=;
+        b=UqH/6TzPPT23ZBWnh14DQ349pzGolnXlTgCpU3ZWwSF4+oVx0xSDVlp4dTee7M+mJo
+         KlEndNE1nRkJxxW+/tm7e1cymlI1H06VUVL38rnS9nQsiNBw7TtZKY06ugf2dGdt1kkk
+         QVzB9T+DVrfaCb3D+JnOv9qlDJWFF/BlMH35/8jCQrVTwwS7Gl+yBdAeBB42+Alw08eP
+         8O8BcToLfiGYkhdFw2BJlihC0gH2QBnQm80oRRsKKzLBsDXbP/SlIRvGSXRydv2bzr1e
+         z+D1mKJWs1m9hYlhp1iRclP4fG1F9+yp3SzUHinU+AjANDhslIvMm+LjfH0OrX1BEiGf
+         FJpQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793329873; x=1793934673; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1793332700; x=1793937500; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=hoVHC65GR8n9FjINMXnaahKi7WXhnhvguTlzPVQW3pA=;
-        b=kh2HrdRUmrMNIG/6fwizpyRV2s3ZGcRq8l+qhBw8D3lvG8emEl6JjqraKmxtxX2X2O
-         ZVgvajWvOtpUnbYl7ZWbzrX3gx+Nz56XLrBfUp/MmTdYPJ3VGsBg83OgypsE+VVnTee0
-         B1zec4y+h6QhIc4Iu4oy6WYjms9OJRLgyK3xNdLlO7bckZRnUc/bDAtF8JBpXU0XMUOn
-         1I8oAMJqjNaCzflStpKVCF0Bp9tH4SII9WfY81WZQT/FvfENzypAo+IMJO27Nyr6kjlf
-         vYvY0iyeiRpFjkQcCmE8mKfeZW5WkPkXWbwrjjVJ2hhNOQ+832Moo79dOhNjQ7s/j5df
-         umBw==
+        bh=IZmNuI/wND30J0nkI7O6RvOq46XxnSgW4W30rCGXnNg=;
+        b=sUpdStRzH778SDNGZYJe1CEBwNtIRtYO39O6dHFQd9TZwGmLMl9XMQQDhD5mRr3mnd
+         LRCTb4d9WdJYvOH8b13wGWKoRGtT6WG3kUtGUuO2eEhio5XuhgyyAIcHSEZKDtZ/8ZiP
+         SJwdec05E3w2G00BIGQv1yRWbguaYFEvCQQNyuTtdWIaH+Kjd1Z65NBeI1R+kzAK+ZAD
+         cl/kfVFXdq1IopfR9d2GVNwH8Qa9mfI+YRqFYn/xHeHxEAG2yeFhZNkWRVRYO07GLRWW
+         fDfxplSL5x2646zj2cU3XNygzYw2ZCJpXHfySsoF0q1bHbChZPOJIUUm2DIggEZvP+cR
+         VNvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793329873; x=1793934673;
+        d=1e100.net; s=20260707; t=1793332700; x=1793937500;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=hoVHC65GR8n9FjINMXnaahKi7WXhnhvguTlzPVQW3pA=;
-        b=m1+fgN5XSJGlJ4fxDZIh3t5AaUzZS7B6SCLkjr2UxmyiC6Mv5p2pbGVSBkVOcHvOJM
-         C099yVrjvShMLKHpND9O7EY0w4ky1QAdozlySGG0DsFw2OEtFAPbv2qRRrv2SA6egcZC
-         ZSc9kzLFNlGrsWsKck5Qg3BScWU/Xyje7TB+tFZVXKytYny0BGhXCiUoPaAYRa9QL/gI
-         s7fzPtDLnuxlByd8iIFW6ueByZCW5L24SYCmQCc57952KUDS5kToWwmqg6g4QiJwxK0W
-         Ek9Gt9TvvJwaW8f51Syn/Wr9bDOKVbdZJ/u9bXaazJC0/W68b60ClXdJXiUHL2XFvwVa
-         oJcA==
-X-Forwarded-Encrypted: i=1; AKwUvBzgXi9TmuQibC89CszRdyqYBMvo/Qc0op2MeqqjGAth9PJ5TBKWoTYc2cPuNkx+7ncNOt0RLY+hbVnzRsG0+hgi@vger.kernel.org
-X-Gm-Message-State: AFq9FYKr3/7P0riSTlp0Mst5GNCo8OlVAANhBsuA8++xhzziUi4ms0qm
-	aWytIcp9816kFXwLKVjFNxtV1WBqjd4kR+uR0cRytKYQaws0d6qe419EuQD8fAcbsCpWLjtmk9U
-	CuZhrYDvftRDED6EDsly1WvsAwOD89Et/pcBUvyfE
-X-Gm-Gg: AYBFou12DQ9DsLZr/UwOFQYhidqdDKKznGGzF3joX0d2nCcl6KmQsAY/013IO2qA9HC
-	OO2ON2FNUhx/dL/dSeyBhNB/u6WLZp/z0hjMWWT9/iDw4VMT7QAtJmfPfWYtpYZSKLY/VDjVlQo
-	8HBDH9ipQ2Sr8zXmWoyEA9twZqVLO2vWfqmEBnOkSnopJfhE6aq1D0S7hPpFA1eN69GEXc0ydqb
-	k4XmOpmMRIQF4guIJQzIT2OTDolGYXwriVgVhhkJ0fTiCGYtU9wRqyUaOn9Jo53SQsXBQ7bG33F
-	tpji+R9Hsqthke+5KS9Fr1CkQqAFBWYzqAPTn3wGiJ0QauhPuuV5BZGT8W31ykF4zIFv8qz1Yc/
-	86H4Ku/aaivNXrbIik9nLdgiRwsLSyE65hY1g9g==
-X-Received: by 2002:a05:622a:1b0e:b0:536:6d88:600a with SMTP id
- d75a77b69052e-5414de1cf2dmr34323151cf.9.1793329872551; Thu, 29 Oct 2026
- 20:11:12 -0700 (PDT)
+        bh=IZmNuI/wND30J0nkI7O6RvOq46XxnSgW4W30rCGXnNg=;
+        b=X9bKym+OpORub78+28uwCgM//eTMw6ivzt4tQxT+FohB1Lzr5H3zWLtDcdX45QYR+j
+         DZMV7vNod2A2uNgs5rZ/a/wbuN4WcUn/m0YMqPyLvAzBbUkk4wBmzQ6IHrO3hcaaA3ea
+         0hXdRLxCRGLrhjVY5xnHWaGCqwOmKpkKZCm2qGm7xOg2RN54NlGJRWUQ5AFIL7n8nU8F
+         8UmMbzl+JTUbeVGa5MKPQ2ETLr4o8Rmg4sWIH4rraLSGppJ3/f2KbJzkscHMR4h4KL8u
+         RDlLw7ZoIivGarltV+HCQyBEDRZIpesbcyOZVOdzpQMci5b+uiXKNTwW9JOgLIAccp04
+         TMRA==
+X-Forwarded-Encrypted: i=1; AKwUvBxC+87oG7yNfDSAkGENcS5tln3ZCQZNfT4fD2Vv3AhER8okU6pd1oozfD5dzAHlbALjLotB688jqbiFWx5BFe1h@vger.kernel.org
+X-Gm-Message-State: AFq9FYID1alNaT0aamItZ7SqE2s2nz0qNUcyqP22zPZSJGn+Jd4X5q9C
+	6Wc79CUTZPLy7cGUNNZFZ0619GTFwz8R3umxvHLITn+zgYt9aPD27qTmTQZ5ZSsnqBS/iRf2j4Q
+	8Bdg75Z5wDnEFKyR6GOymexqGev9V5WPiJZd57ttEIA==
+X-Gm-Gg: AYBFou01B2chj2pXWFJlEJwzZGthYyw1ta/LjMAfNNgkdeUlCx8gMvMUWypcQJJoP98
+	Sbc7ncBZ6H9KEelxN8iSNHQpEQ7zIZxvFfI19CiwrQ7yiAg5jkqXVDRXi+i7QUhQD5RvtZW3MPv
+	Lvl5IM1Ui+A3nU7uc/u5XNY5coo0GcjRnElv9pAl6bOxIdVMFvYfgqu0hSAWEKknCzjSaL/Cd0b
+	aJf7/xBeta56CC/Ri/B4qfYrNoFoMVVX8Owt34FpzCOwFDQtOUvQefjMyZoRyap7YXr0AEoiHno
+	l2tkpeeMpH6mw+U+Ek6cbJCMdbQbnrgmNVk5iDswv7cRAnMOH37xZIDnlKCK2NwpzUHiyFKqCH1
+	/EhWK+Ex0Xzfx1VJgf1xvZsjWduTo7aif0EYlyfE7PTnyg1Gr/blTeh2Jvjagfa7/u1JJmS/3Gu
+	sYmLqoA2lKM1Y5OO1eYn0iVMApAOmFQx5buSaeV6LQurYwJ2o2UG8a
+X-Received: by 2002:a05:6512:1289:b0:5b6:95e:87ee with SMTP id
+ 2adb3069b0e04-5bfd9562acfmr282919e87.13.1793332699938; Thu, 29 Oct 2026
+ 20:58:19 -0700 (PDT)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -104,94 +105,54 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261029162958.3224280-1-irogers@google.com> <20261029162958.3224280-4-irogers@google.com>
- <d1267d81-0ed8-4b3f-a535-88ddba51af88@kernel.org>
-In-Reply-To: <d1267d81-0ed8-4b3f-a535-88ddba51af88@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 29 Oct 2026 20:11:01 -0700
-X-Gm-Features: AclHuK9rCNoYtTV6H1GziiI59-c1QFU3f9f-3J74Fr_QKbxS-WGNb4D7UrtMMqU
-Message-ID: <CAP-5=fWaLj-ToYvAowp-_dk5tL-_Ju+i=U90GRK_obFNqn5axg@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 3/3] bpftool: Prefer zlib-rs over zlib when available
-To: Quentin Monnet <qmo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-perf-users@vger.kernel.org, 
-	bpf@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+References: <20261028-alpha-profileme-v1-0-d44b52bf2500@gmail.com>
+ <20261028-alpha-profileme-v1-1-d44b52bf2500@gmail.com> <CA+=Fv5TsDjMcd8+ZPPAXWzw-ox5yhvYJqiCBUfj-6Jm0Lxf9aA@mail.gmail.com>
+In-Reply-To: <CA+=Fv5TsDjMcd8+ZPPAXWzw-ox5yhvYJqiCBUfj-6Jm0Lxf9aA@mail.gmail.com>
+From: Matt Turner <mattst88@gmail.com>
+Date: Thu, 29 Oct 2026 23:58:07 -0400
+X-Gm-Features: AclHuK8V7EpB7wC06FUDBXo_x3T-573CFsU0sqVCv9AcRDNtqPDSxvn5PcuIGgc
+Message-ID: <CAEdQ38G9id1CnZGzkgw8vHLKZM+bvJEDx7ze+6zpULGTwG=9JQ@mail.gmail.com>
+Subject: Re: [PATCH 1/5] alpha/perf: pass PERFMON_CMD_LOGGING_ALL to the
+ logging options call
+To: Magnus Lindholm <linmag7@gmail.com>
+Cc: Richard Henderson <richard.henderson@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, linux-alpha@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 29, 2026 at 5:15=E2=80=AFPM Quentin Monnet <qmo@kernel.org> wro=
-te:
+On Thu, Oct 29, 2026 at 1:38=E2=80=AFPM Magnus Lindholm <linmag7@gmail.com>=
+ wrote:
+> The Alpha Architecture Reference Manual, Table E-18 (page E-24),
+> describes bit 0 as:
 >
-> 2026-10-29 09:29 UTC-0700 ~ Ian Rogers <irogers@google.com>
-> > Add zlib-rs and zlib to FEATURE_TESTS and FEATURE_DISPLAY in
-> > tools/bpf/bpftool/Makefile and use feature_rust_lib to configure
-> > ZLIB_CFLAGS and ZLIB_LIBS when zlib-rs is detected, falling back to -lz=
-.
+>   "set =3D log all processes"
+>   "clear =3D log only selected processes"
 >
->
-> Hi Ian, bpftool doesn't make an intensive use of zlib (mostly, it's a
-> requirement from other dependencies; we may also use it to unzip the
-> kernel config on the host if necessary for probing BPF features on the
-> system, but only on some distributions). So I'm struggling to understand
-> the motivation for your proposal, what do we gain by switching to
-> zlib-rs when available? I understand this implementation is in Rust, but
-> I'm not sure the added complexity and feature probing in the build
-> system is worth it.
+> That appears opposite to the changelog's description of zero as
+> "count all processes". Is the manual incorrect for the PALcode
+> implementation we use?
 
-Hi Quentin,
+Yes, the manual has it backwards. I disassembled the wrperfmon handler
+in the UNIX PALcode from the ES47 firmware (V7.3) and from the latest
+ES40 firmware, and the code is the same in both. Function 3 clears
+I_CTL[SPCE] and sets it again unless bit 0 of a1 is set:
 
-At my workplace, we are transitioning from zlib to zlib-rs for both
-security and performance reasons. I'd like to keep upstream tools
-aligned but they don't have to be, it just seems nice. I agree zlib is
-of a lower priority to users than, say, zstd. For attackers, like with
-brotli, it is probably an area of interest. Knowing the implementation
-is memory safe is at least something in favor of zlib-rs. I sent this
-series out as an RFC because I obviously have no way to mandate what
-upstream should or shouldn't be doing. There are things that can make
-life a little nicer and easier, and this patch series, for me, is one
-of them.
+    hw_mfpr  t3, I_CTL
+    mov      1, t4            # SPCE is I_CTL bit 0
+    andnot   t3, t4, t3
+    cmovlbs  a1, zero, t4
+    or       t3, t4, t3
+    hw_mtpr  t3, I_CTL
 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/bpf/bpftool/.gitignore |  1 +
-> >  tools/bpf/bpftool/Makefile   | 56 ++++++++++++++++++++++++++++++++----
-> >  2 files changed, 51 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/tools/bpf/bpftool/.gitignore b/tools/bpf/bpftool/.gitignor=
-e
-> > index a736f64dc5dc..ea2222373634 100644
-> > --- a/tools/bpf/bpftool/.gitignore
-> > +++ b/tools/bpf/bpftool/.gitignore
-> > @@ -6,5 +6,6 @@ bpftool*.8
-> >  FEATURE-DUMP.bpftool
-> >  feature
-> >  libbpf
-> > +libz_rs
-> >  /*.skel.h
-> >  /vmlinux.h
-> > diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
-> > index b0f7168e7943..a193cf89a034 100644
-> > --- a/tools/bpf/bpftool/Makefile
-> > +++ b/tools/bpf/bpftool/Makefile
-> > @@ -1,5 +1,6 @@
-> >  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >  include ../../scripts/Makefile.include
-> > +include ../../scripts/Makefile.arch
->
->
-> Looking at the GitHub mirror repository for bpftool, I'd avoid including
-> this additional Makefile if I could.
+The 21264 HRM calls SPCE "System Performance Counting Enable", so 0
+counts all processes. The per-process enable is PCTX[PPCE], which
+PALcode loads from the PME bit in the PCB. Linux never sets that bit,
+so if 0 meant "selected processes only" we would never have counted
+anything.
 
-Ack. I also acknowledge that the CI failed because the patches were
-against perf-tools-next.
-
-Thanks,
-Ian
-
-> Thanks,
-> Quentin
+I'll add a paragraph about this to the commit message in v2.
