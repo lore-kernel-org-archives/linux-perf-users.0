@@ -1,96 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.49
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.45
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793367187;
-	b=u/mkzV/NE+CHLpFZkaeTaR0HkrqTKTfuYP16mKj6V+1NyxYjE0nvpoOxm0dkydnK6zk/
-	 HLxwbXInlq5S+z8cS2Z7PoJjuYyak31xJFM98KblnQq3a57KpnVD4GeeVAnEC1o2ZNLri
-	 UjogWn70GT1ukeTIlWvgzqAlYk9PJb8QstO28RWzxD2xUe18NzbZ4npsfkZBTLhRJGkjN
-	 jaNb896zceM7rI3owNLGN6oHEoQqIfQ8fAyC5vuA4zSau0jCYvgMukAqrQ0FdAQCfxk6Z
-	 tTr9hnRcVDgaS2zm6M0eKQW5DQVxz+giYqjX1x/+dbxildBW8CTiovc5c82OQtU/StA==
+	t=1793367616;
+	b=rO2zMPwK1JDok67+UkYrJto0OJsETE2juXiCSFcvrhDSAPdxl24pQEstisxqClddgx0P
+	 XbQ216j3220pwVn2FH5/SW9QbJQ8XuCP+wN/AOhsTF0o2kAH+y62jkY62QS9UBfUXHk9w
+	 2RiqtaXD2utbXu5BpZboHDM0SXY8DvlPTuz5jSSU2Q89XgHtgiBNDIx0bZUHHK4fMrs01
+	 +C0cPayTTGXDdDiwZGvKdU8rvoBWuvK0k/WWZ4mkLlXgK8GbIQhxT5hSI4ygRgxsdWDTG
+	 Nk5zmv0o7NKiWNV9LT8RuICmMMmqvJVHtIh3i/SKoiri1zfUSEcLd23dg8YtHBQF56Q==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793367187;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793367616;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
 	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
 	 Message-ID:Subject:To:Cc:Content-Type;
-	bh=Ap8AI3OLMnsIvB+7PuWaSwO39DciT3p1bcrU5DUdTaA=;
-	b=OW1s4afOT8u0t0czd0ySWkyAFcVnVCJovlhKMzOkkweip38vbGt/oTDssDrH8gohN11o
-	 tZ4L3CqAD1CmjfU3Zp4uyxLsIZOy823MECB2QyvhwPUtxZvplVyQoUZXpWnbIpmS7rx7K
-	 Jfj6DSzHPTenJpn64mJYScnVs4SidCNikIo5EnYPjt8DAMMMJoj8g7mgLnC1CvRx/S9hR
-	 s/xRjgsSDcGynzjPIHh2VI+3F0bT1PaC36QoyfccxaV+etX962vMiGsaxQ3hT6R1SQiwR
-	 lYU9DFNO7yKtTg9d5aJt7Li7Z8jTVEBEldVSHBC1ywlXBsoFLWbtxd1aDielkVX2zrA==
+	bh=6P2Cg7Q5nhb2mHUAtpDsvhVTITuBoNrw60dH9NrDDVE=;
+	b=E9s4fk+tEQU7LeylPKBMkXVMosMNe2Y+1WM025w6BB9dfCACufussD9ZXjESdu3VVo1y
+	 mg4ZofEys8KTqae4eoTWfpL+V3q/wMD40BWkccsKIPnMaT59GEQjYXKeyEg8oFztL4Y9E
+	 +p52D+dRlcPo+cfrkGtkCp5f6BjUYxnmKCn4SJY+ywYQU2DvgdMlChhQTHTmPxBfWIedx
+	 8W79eoFI1lLzUmVT6VsGy2DhpYzMzv/aHjVl3BeLjtQdR8CNCV3j0xm/yK7JoBh9bG3Va
+	 fJ5gV2oHO+uHn6T14SuC8muiv/OfJHd107gK3wWq/jGU0ZSU4tuOH1fjBDKEokXLzvw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=uber.com;
 	spf=fail smtp.mailfrom=uber.com;
-	dkim=pass header.d=uber.com header.i=@uber.com header.a=rsa-sha256 header.s=google header.b=h6tDS7Vd;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.49
-Received: from mail-yx1-f49.google.com (mail-yx1-f49.google.com [74.125.224.49])
+	dkim=pass header.d=uber.com header.i=@uber.com header.a=rsa-sha256 header.s=google header.b=IT0sPHNq;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.45
+Received: from mail-yx1-f45.google.com (mail-yx1-f45.google.com [74.125.224.45])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E93606A31C
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 13:33:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C9E93606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D0A606A31C
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 13:40:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 10D0A606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=uber.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=uber.com header.i=@uber.com header.a=rsa-sha256 header.s=google header.b=h6tDS7Vd
-Received: by mail-yx1-f49.google.com with SMTP id 956f58d0204a3-6798af41644so459746d50.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 06:33:06 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1793367186; cv=none;
+	dkim=pass (1024-bit key, unprotected) header.d=uber.com header.i=@uber.com header.a=rsa-sha256 header.s=google header.b=IT0sPHNq
+Received: by mail-yx1-f45.google.com with SMTP id 956f58d0204a3-67a79750749so423283d50.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 06:40:15 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1793367615; cv=none;
         d=google.com; s=arc-20260327;
-        b=rq0WxI19QFYPz9IANAFMLqUGDrJDMLREIvYPkQpX3lMBwD6ri3T+lwSkrVph0lOS8S
-         vM96NtvDGjoOnW1ZSLQKL0p40kwKn1/Kr5EoX2zq4c+uB7eqCnXItjAWbBQenO9ivXBI
-         pl4jRow0k6P9rsRj1Ftojk2Ns7jw4xrQC7qIFThO6iHIDX0p0fHaJyZ13K6WuRE/CjVk
-         d7/4spLHEo57/HrgDjsLqlqC1vVaz8bCchzMWI+rEc551+vz3iyigq0ru6BmLF94Ldwm
-         VDPBujN9f0XBkQNTpxb6dHP29XlAxP7tUDeD/sCDimgIQXiZZlgFRNlzsxbTa94n7i0p
-         TzEA==
+        b=aWU0w3cK7Qk9gMV0Js6ihrkB1HbrtQof+/GHH9zXLAFMLw5PBlxgEGEBbKZ3lDCy7Q
+         KylVcxfJm40aV+6B5owUPHTju8b0TxWa/+vv+KfebWP7+catsY4tHxAYhRIYM+r4GsVC
+         u8s3i0Hln2BadEhiM7rcGbuh/jfx8gpe+o3o8FFebNcmhAJo6UtouI3rUgLN0Fy5miW0
+         mj6tBPAfQpeKkDQ8e0I7swq1mptxaso6kYCqyOMnZKrHMyFbE4BApCEUVMkUwOU6oT0z
+         NOxvQ57lY0YR+lnF0TwrQdFTTThJdqA7PSaHNCvxSIqRUqI9ixvXgkI5hA+8HzkXJHdU
+         Zl/g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:dkim-signature;
-        bh=Ap8AI3OLMnsIvB+7PuWaSwO39DciT3p1bcrU5DUdTaA=;
-        fh=xKDG6bWygAEH/lPorqQ+Y2Tdsmiow9vRq2j4t5MuLU0=;
-        b=UOAPbiFXYrD/SUtaER5uM8tp5GJsIMopXgi1azlYRUlXUHi4uZfcDtTApjnpxBjHu5
-         4cWsHvlJh77TkDxRf8o6krrzQRkkgdeLlczf8G493miqosVEdjxTVZyPM3NYS1cD4bHN
-         wUZlau9Xs+Gn+Jcuk+Ryy3AyGUsxCpjMTIX+EaCkoTCR91cPq0DjLHTrppaUzN8iAKjP
-         7rrWRH8g7CoZZtqNmDLtKvtrQt8nofQ9dZ6G7WHjyQ1fSGJqFxYvtopZLKK4eNEi3Aug
-         /h/hxQ4szMgBgIGD9XhF1xGYMiepdsXxIdoalWIMadTGcUCjLlhHUXEsWZksm5g119q3
-         th9g==;
+        bh=6P2Cg7Q5nhb2mHUAtpDsvhVTITuBoNrw60dH9NrDDVE=;
+        fh=rUts17fe/0fcKI46rQe/Ewo6QLOuT7hmhat9WGMRnM0=;
+        b=aM1hJ7hSWaiaTNlRZllE71vJnDzx39WO+GyBOaMSLkEF9Vm2H0ThjJwGreGKlwv8AI
+         Q3kMmnBVLb2p+zdmlixrwMIWutScE81/Tb8bKEsOo1DIgllGjvmI94awR37QHE/BJNPV
+         n5niL/Mp4HNAnPLHPqqSjcXWoGQMjtu4sim76EcKY8f0e6bZ58Vy85dXCukaQ310BUrb
+         yey7ufxcM1sMJTconf28JowHHzaEAAl7gX02GFp3nhmkGvXPlHQClhptQ9t9aCPRXxjX
+         fYDqPv8IJs6fyBjqrh3LZfzjcVDAUX2u648woQ6/Zq5VZQC8x8OXmIA28o8M5XKTCkYK
+         APiQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=uber.com; s=google; t=1793367186; x=1793971986; darn=vger.kernel.org;
+        d=uber.com; s=google; t=1793367615; x=1793972415; darn=vger.kernel.org;
         h=content-type:cc:to:subject:message-id:date:from:in-reply-to
          :references:mime-version:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Ap8AI3OLMnsIvB+7PuWaSwO39DciT3p1bcrU5DUdTaA=;
-        b=h6tDS7VdCT76/QSDtQrX2psEF3ssu/eN98XkJvjqRHqMa8UHzK5jPQBgbQk10A34Ez
-         XzCjINdCtMn1PaKRCo/c6G3XuNzWyBzh9QETypw15kSNp8ULjNR5luxrfdT8ef3YHmgM
-         8I6DbaZm07fAbhphqDU1yE7ml+BcOWvnTwHsI=
+        bh=6P2Cg7Q5nhb2mHUAtpDsvhVTITuBoNrw60dH9NrDDVE=;
+        b=IT0sPHNq7fRL0aNWhR4ZxMbhlVMvdlJJO6ojtXrLIAFX4EhX0+g18RN47Bi7NKi5hD
+         pLMxSIfEBygAWLacWenGfLX5i9hBXA7koHRnjJxb4igfLGqODhepu8UYvSRQYZA6vqaj
+         kIED4xIt7dPXdU9iGzfaGRHaQjriH1lKEW1dE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793367186; x=1793971986;
+        d=1e100.net; s=20260707; t=1793367615; x=1793972415;
         h=content-type:cc:to:subject:message-id:date:from:in-reply-to
          :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=Ap8AI3OLMnsIvB+7PuWaSwO39DciT3p1bcrU5DUdTaA=;
-        b=fJS5IgfM3H5b7ylPbuYTp9IUM70K/m4EdG1XPPkHVYYTiWIAGa5gxMselCaIBeiyz6
-         7TxyUS/+jtZNZFQw4I+WUE32Rt2XtrQFPffxdSnIYOdu3UXMI04cvlTH5miOlG/mO/Qi
-         t6S6Uvs67tOx/Wz4UHV0fq0OYN+inQNJ2B11tiGlRzUiUhkOx1fPKFsBvEtiHBlldkZM
-         swoIkSvqallqTUsoDEjsEImpBoMJCp+1OJabOhaEsXzsplq2jGm8ZApDbUiy0TBPZSfe
-         LV/NbHNAZuogSH8GnRuGh4CmxK8is27vWLqCTstAhS7Yq5cj4amByuHvUgoqz8tLTWha
-         9j9g==
-X-Forwarded-Encrypted: i=1; AKwUvBwbo4rUDzpeQIVe0sURz8mQVVM9ec9w20YrXAgFNP1D2nEYVYHNWgvQbbSVcnvxoeXWmHg3bvcRFUzlecm2DiId@vger.kernel.org
-X-Gm-Message-State: AFq9FYIWl9tCKotvZXqdo72DM8juE++yMkySTXUPCJ/zUx5HwHF9b6u7
-	4dUxQvpGqvau+iwXP9IYC3BQ8BsOnMkFL0cEnZo2GopAoJBElI7MN01KEFMJDO2tWqgvJWZESzq
-	klIdCTiCM0g7YOyj0aMZD286rBTGuOOs0J2soVRsqfg==
-X-Gm-Gg: AYBFou0alPszriIix2F7ImLB9hvWJXnOT40b3k+ub3jmU0UiAmP8bLEECp5uwTaPPvB
-	nc7RcrA7M1f2yd53yJsAcBikVrTtfQ+nMYDILcD2NZc5+jPsIwou/xC6Vq8a4OCiIM1r9sIfANL
-	RpYw8NZhjdJhZnxNMbhBBuDwd+CNzmr8KxgWQiZSpoFa7/tymO6vJX/XRR38MTFfh3vz/WPdMq4
-	YFpA3cAHilCG8JUbcBnV9yxednl5usiCtE6cGVgoHRDSe2Y2OkeTwa6H5Y60fF1g1WWjM1b0JnP
-	X6V7V1PdXkNlrR3K1XGw6EBGp1nchtKuXajpenvsycRO984B1DCF2CzeA7ZltZ2vse/k5p87+q3
-	8L33iu1ManNdoVpm1351Vmohi9iqrhLDCtXEN7E0bgNNnziuwV7K175/9naBaHYTJwPxldG0=
-X-Received: by 2002:a53:b449:0:b0:679:b87d:6f7b with SMTP id
- 956f58d0204a3-67ba4ff3ceemr1245948d50.42.1793367185430; Fri, 30 Oct 2026
- 06:33:05 -0700 (PDT)
+        bh=6P2Cg7Q5nhb2mHUAtpDsvhVTITuBoNrw60dH9NrDDVE=;
+        b=JOjkQ/lJ6UPPlvBMf1D2TbKlfE4eIOvD4F8phcukdTGoGmQYk3Xq8PmK+DAmdB8CII
+         9SnFOx5/87CrGO/83xLhSakCi/Xpljep8Fihfyb7kKSrnhbsj6R7AEAZCrvl7iDylezM
+         Jjs475pbRwr+8yYFbO7WQgpHIXxyqe/w1sEw7x1E5JIyJpxfSnjZDqDaubHT3MU2TE8u
+         4vWxz5hk0xESG7D0zKhwDehODPdtox55eAk45X6jtk8Tf+UhYmb/6OBt/+p6VIqlDgyT
+         sg5sfBZJ+INCU2kyDtAv82iMgaofmHmSHVzPuJUxo+VmjIpGhVLm9AX+oEz3+j3CyHzd
+         c4bw==
+X-Forwarded-Encrypted: i=1; AKwUvBzfhr/wlXbM1gTgReoA7DJHsMp3jga/GTMTHInBQKwxXY4RU4tvY4dAGaqtuo51XHjAOmYS/VtwPJe0gOIkB0jz@vger.kernel.org
+X-Gm-Message-State: AFq9FYIq2IK4iLvgG5qsLwLU6SSzbNpbM8FunIW9OZSGOSrSziwPVqaR
+	IfeUq9ln7Z8xzEjYWFZofj2AT76ubPgEqcV5NcT5GM9o2ceepRdkEOnOZ+BXZx7dJZpkA+/h7Ek
+	PyBdEgHUTB1Be6VFpIPAV8VIj3+G2AMo6mQFPmgJiVw==
+X-Gm-Gg: AYBFou3cz6Zjuuk9aCZjg5sFBeuservPrTk2Lp52xiVsOvb6EpFXu13euLxswTalWxX
+	MH3Fk5iQN95/8xpSt5PQrT1sl09/eH7MjG7xMcgnVN3bTTKEvJiirxiDbv4/MUQQpGvT+6qX8tr
+	uBNZazj17vFYgjogxJHmRP5QerP1dz9WmQGmZuSItCOSDfRx/eXoVV+6LS7LQeBCYwqljmsgWmQ
+	fp3H1ZQQ+AKfk+hEzAH17u4oA+lG/04LjdE/uZoeP1ssl+Og5BCIpGuE952G9FkXPaIC4SmnzgI
+	vYtOfo0KSsdcmlDB5TX2U1YWuX2wXYbnd7cLin7fJX5tzgEEQ6vU1+5tHvq94nBXM1rgnKGTUF+
+	Sz1581rYcBDpZHMtVoqGNCo+S+Xqq/EMi6CPjFCs4xFTY5nSV/l7+GNaOU3ffj7y1Vy+tGP4=
+X-Received: by 2002:a05:690e:138e:b0:679:b1f8:72da with SMTP id
+ 956f58d0204a3-67ba4fa145fmr1497948d50.18.1793367614684; Fri, 30 Oct 2026
+ 06:40:14 -0700 (PDT)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -101,14 +101,13 @@ List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 References: <20260928075237.3055101-1-irogers@google.com> <20261027231513.816148-1-irogers@google.com>
- <20261027231513.816148-12-irogers@google.com>
-In-Reply-To: <20261027231513.816148-12-irogers@google.com>
+ <20261027231513.816148-13-irogers@google.com>
+In-Reply-To: <20261027231513.816148-13-irogers@google.com>
 From: Alireza Haghdoost <haghdoost@uber.com>
-Date: Fri, 30 Oct 2026 06:32:49 -0700
-X-Gm-Features: AclHuK_wMQft7avMWp54-lWi0ChX2zhzv9PYbZe6NUCsPJGn_IUKnWG9vDQbSXY
-Message-ID: <CA+w=M=TRN8SeNPQFpK5uJNMFidebSPtRRe7C0TrECUZKsRSTZw@mail.gmail.com>
-Subject: Re: [PATCH v2 11/18] perf symbol-elf: Cache ELF program/section
- headers and defer symbol name lookup
+Date: Fri, 30 Oct 2026 06:39:58 -0700
+X-Gm-Features: AclHuK8TIkJu85y66B8E48uqjOcf7KiuNWY3s7VN3LSwj2nbT1cFJPXYBWv-78U
+Message-ID: <CA+w=M=SKSJdrehMFouJG7ir5MinOgeWqhunS2jyNWmjtSSW+8g@mail.gmail.com>
+Subject: Re: [PATCH v2 12/18] perf rwsem: Add down_read_trylock() and down_write_trylock()
 To: Ian Rogers <irogers@google.com>
 Cc: acme@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com, 
 	james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
@@ -116,36 +115,44 @@ Cc: acme@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,
 Content-Type: text/plain; charset="UTF-8"
 
 On Tue, Oct 27, 2026 at 4:15 PM Ian Rogers <irogers@google.com> wrote:
-> + /*
-> + * For misannotated, zeroed, ASM function sizes.
-> + */
-> + if (nr > 0) {
-> + struct kmap *kmap = dso__kernel(dso) ? map__kmap(map) : NULL;
-> + struct maps *kmaps = kmap ? map__kmaps(map) : NULL;
-> +
-> + symbols__fixup_end(dso__symbols(dso), false);
-> + symbols__fixup_duplicate(dso__symbols(dso));
+> symbols->lock, dsos->lock, or machines->lock). Non-blocking trylock
+> primitives are needed so shrinking paths can safely skip any locked
+> container without deadlocking.
+[...]
+> + return perf_singlethreaded ? true : pthread_rwlock_trywrlock(&sem->lock) == 0;
 
-Could the change to run these fixups once per load be split into its
-own patch, with an explanation and a test? It changes symbol
-resolution, not only the amount of work.
+Could the single-threaded trylock path detect when the current thread
+already holds the lock, rather than unconditionally succeeding? One
+option would be to track lock ownership or nesting depth. Otherwise,
+the shrink path needs to avoid any container that is currently being
+changed. In the full series, the unconditional success can make
+shrinking free an array that its caller is about to pass back to
+realloc().
 
-Before this change, a zero-size .symtab symbol ended at the next
-.symtab symbol, so it could cover a function that only exists in
-.dynsym. Running the fixups after both tables have loaded instead ends
-it at the next symbol from either table.
+perf_singlethreaded remains true in perf report, perf script, and most
+commands. perf top, multi-threaded synthesis in perf record, and perf
+bench synthesize explicitly switch it. In report and script these
+trylocks therefore always succeed, even on a lock the current thread
+already holds. The shrink paths can't skip a locked container there.
 
-I reproduced this with a small library where zfun has no .size. The
-next function in address order is efun, which I removed from .symtab
-with objcopy --strip-symbol=efun but left exported in .dynsym. The
-same sample is then attributed differently:
+The case I hit: __symbols__insert_sorted(), reached through
+dso__insert_symbol() outside dso__load() (for example from
+db_ids_from_al()), holds symbols->lock for writing and calls
 
-before: 99.97% libz.so [.] zfun
-after: 99.97% libz.so [.] efun
+perf_session__realloc(session, symbols->symbols, ...)
 
-The new answer looks right to me. Minidebuginfo, where exports may
-exist only in .dynsym, should hit the same pattern and would be useful
-test coverage for the separate patch.
+This path combines 12/18 with the shrink and allocator plumbing in
+15-17/18.
+
+If that realloc fails, perf_session__shrink() reaches symbols__shrink()
+on the same container. The write trylock succeeds and, with every
+symbol at refcount 1, it frees symbols->symbols (or reallocs it
+smaller). perf_session__realloc() then retries realloc() with the old
+pointer. With an LD_PRELOAD shim that fails one realloc, ASan reports
+realloc() on freed memory from perf_session__realloc() <-
+__symbols__insert_sorted() <- dso__insert_symbol(). After
+perf_set_multithreaded() the trylock fails and the insert returns
+-ENOMEM, as intended.
 
 Thanks,
 Alireza
