@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793373440;
-	b=qxNAMFRkS2lbaFMWVR+WWunQJdv85yuXlKqD1Yk0OLFqherZ71dJEfOwykQ7jrvkBko9
-	 AXTXw3XC3VseQl2z96ZsP6BtBt+zTOJlcgo/cm2zBbt57cPhKSD0ZRWFaj8IFcBXBIHFW
-	 gGNSfkrKp/t1bwOmI/lMMMxNxPnBaTryYIWDvNQwlfn9zmp06aJ/z5nup/U42NJH/XKXL
-	 tTi4eFQCRjH/1nUG3OY9akkPa+SuXrF4P91O21obLxi/Y8FPFeekHYOUyqf3S0NAKjVxs
-	 iPFXyofDlNSJ598rlOJpuxVQOtaLys8aMgAkdepo2RrxZpTManJjoK/latZ4GsQ3/Ag==
+	t=1793373611;
+	b=Zo6Rck6XkW/t7Fq/zP1s3QEsZrxPGFoEZDt2bu0ex/r1cStDp953WR0LW1cXcOrQyu2d
+	 3dZJNO/HcG0q78UBwzi8MwO1j5g8rOMjv7QMS6HB6l9lNJ6cPNs4l39ayH6u+AfN9UyCP
+	 b09hGe7HBGmQzUbk18qyRBtTFL4cSYbsVHSU4lPfclmExLbkkXNfl18NlSiYEsSBT58vc
+	 HsKcDKfNuecNGHpUwPMH1ACcsIKsjy1RE/xoCnTxla9BKottdhVgkBXYe7fOIMUJtHmkC
+	 PDXUGuI5ztbcxWgf8wrg3xsc5EMJPAtRJ3+paJmtj1TSrjw3+r0mGiX9YU2SR3/39JQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793373440;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793373611;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=Z3NRBBhJWC2AWTLQUW4o9YkhE4LhDx7m/dgwhggUNZs=;
-	b=20QKVhWwZ6EZ1WVQJrQLadFmODoXHGQ5Fr/FoWJ1eP1g2ZSkWA1EvQcos4JUoacgE1X0
-	 /ybpsrKPu86K4vK28zI6sci9iGW+45dnPO2jaid73J9rklocXCikNBnbty2B7CNMlxxe9
-	 3YdvmoKpKbdiTKvD9IwMspOCU5tT2K8mxkDeVXU6yZwCOaYTQAMwbQzvQPiX0I0EwK4rP
-	 GSso/zQJ7jLieuAFvmLKet3/lPdpPJfgNXZDRFAbbG54SxSKp0XRcHJ56YRWzKWyQxbcr
-	 /btxVoXUdmcoA9EHFAEM146/oocLZ7IsU83E81YmIE9DLYU36NhQsAznChZPwoT1dkA==
+	bh=Mgi+HoJTGTigFRqKprfnwrVt+kAZ27VSoEp0QpD+aIw=;
+	b=HD2tpQvYOqIeo7Q9+xyYfFE7j/W5QAz2AOL0bGAtES//LK25o8rbSWrEdWRnZYb65vO+
+	 LGYf/sPMHwwRUGggtJ/KPv4H1lnoqHaWxq/kxcI7qiU3N7TS0NOx7IF1jI9FHkOFqcSDW
+	 H5oOgJ1BxQnvX9K7Q5tEqeKI64kLRkS227WLUp7LAhqKqJUU5FJQES47PbGCuSxPgS4RU
+	 JPKzhaxLZujbuUGSw+optrMItQ9O/1VIKY1CM3dLKeAVI5MlwzLRKm6eQZSFsFDAUtq1m
+	 PbfW6aOIIJqd05CPUYyLLcfrECVFUAfF9vLBbvvUBRjBGtJsXs57LNWzg6iM8+OIxww==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bSRm3jdc;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FLB8wLHc;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D381606A321
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 15:17:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBC7606A31E
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 15:20:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bSRm3jdc
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D0321F000C1;
-	Fri, 30 Oct 2026 15:17:20 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FLB8wLHc
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05A641F000C1;
+	Fri, 30 Oct 2026 15:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793373440;
-	bh=Z3NRBBhJWC2AWTLQUW4o9YkhE4LhDx7m/dgwhggUNZs=;
+	s=k20260515; t=1793373611;
+	bh=Mgi+HoJTGTigFRqKprfnwrVt+kAZ27VSoEp0QpD+aIw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bSRm3jdcbPxP5z2YpHLZlHJtIsear18U8Pa+d/oxmnWxHJPKLFiFxiJG+3Vew/mAp
-	 j2hNoPR/jryps8Yq7/YtVZQra3HxZtkZsA5GsAeTyRg4FAZJOdXjXrBwYPfMXc5p0Q
-	 X6bKzowDhWS++CvwzNPxEeYtM1Gg+mPAzWncXM6T/mUOvyKIGqKkTE4dIANu5WOzOX
-	 wjHfPm3ZBbKFicZ+enM10hzC4HhED+b2MpcWFZ71q9c1/39Ta+T49iuP043RlE9cPS
-	 j1YLkwI2Zeo9K9qJ9rWjpCTpbZzSVYjk6iJBjPBQ+dN+lQEdosJxDPtGk5R6QEsBWq
-	 waBjs0ysTGi0Q==
-Message-ID: <sashiko-outbox-191150@kernel.org>
+	b=FLB8wLHctNEvRGCQmas71n6z4HavsFABetqcIJ3hSvfFVHgG1X6U+vH2sruhokawW
+	 Y0/hFQrUGhMBPg3+u+UhlFm+37f3XKkzItRcFKg5QVl2kAz26kQVsHSRX7HcfxYJSc
+	 rM8FNxvFVjKPjUiyPmPxQ1DGw1eyxg5cde3bTo2OeqN4S4RFouyivTHVRkLcnX2XZu
+	 j4L9z+KSOfqyIrVonIALc/Y90bZ95mhY8MNtphmNjFJJYljiZJLxtPLCfqE1G8lk4Y
+	 HIMnGoATH1P0UajUi0Vtrb2CsEqS+d9aJn/30VMv3PTDf8PmfBcV2EYzSU0jp2XFfw
+	 USmiIr9Xgfc1g==
+Message-ID: <sashiko-outbox-191154@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 04/14] perf cs-etm: Centralize packet ISA
- initialization
+Subject: Re: [PATCH v3 01/14] perf sample: Allow decoders to supply branch
+ return addresses
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Leo Yan" <leo.yan@arm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261030-perf_cs_etm_fix_non_taken-v3-4-7629b52ab047@arm.com>
+In-Reply-To: <20261030-perf_cs_etm_fix_non_taken-v3-1-7629b52ab047@arm.com>
 References: <20261030-perf_cs_etm_fix_non_taken-v3-0-7629b52ab047@arm.com>
- <20261030-perf_cs_etm_fix_non_taken-v3-4-7629b52ab047@arm.com>
+ <20261030-perf_cs_etm_fix_non_taken-v3-1-7629b52ab047@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 15:17:19 +0000
+Date: Fri, 30 Oct 2026 15:20:10 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,16 +61,18 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Exception packets need their own ISA so the frontend can generate samples
-> directly from them. Currently, ISA initialization is limited to instructi=
-on
-> range packets.
+> The thread stack derives return addresses from IP + insn_len. For an
+> interrupt or fault, the return address can instead be the sample IP even
+> when instruction bytes at that address are available.
 >=20
-> Move ISA initialization into cs_etm_decoder__buffer_packet() and use a
-> common helper to obtain it from the OpenCSD element. Populate the ISA for
-> instruction ranges, context updates and exceptions, leaving it unknown
-> for other element types.
+> Add ret_addr to perf_sample and prefer it in thread_stack__trace_end()
+> and thread_stack__process() when supplied. Initialize it to zero so other
+> samples retain the IP + insn_len calculation.
 >=20
+> Add a regression test for explicit exception return addresses and the
+> ordinary call fallback when the return address is zero.
+>=20
+> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 > Reviewed-by: James Clark <james.clark@linaro.org>
 > Signed-off-by: Leo Yan <leo.yan@arm.com>
 
@@ -78,5 +80,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261030-perf_cs_et=
-m_fix_non_taken-v3-0-7629b52ab047@arm.com?part=3D4
+m_fix_non_taken-v3-0-7629b52ab047@arm.com?part=3D1
 
