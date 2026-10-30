@@ -1,55 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793343985;
-	b=c3143zuhXRK85sbEvdTMYb9zkQaGOQowh7T0aGKV1JZ/QvJuEZGZqlLNHzrMX48zY6lA
-	 7sQXWMv/NjOqGxO1siB0cNo9oQGf43j6DDYeHywYPCNkwgfO1v34a5xh8av8tNvSouS2d
-	 2i14ATzIOdyIRgB7gQDUmQWECVuMenPzobyd/yhhPAYlfhxHKWIHvwD8vYTdiqdGM+W0g
-	 cJDhYKhEzauvMcCaLmnMdtuMdJd/zQRFqcicc6So3f8gqeQB0n2snSFO9HhsLu4uM2WCZ
-	 PgasgqbGOOSfb9U079M9XvMn4kL39ET2gwWkP8RF4uvcjfbTi6BRsJDNyAs5onhN5vA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793343985;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=ria1H+vqk2wlhkuQtB7+ZKYRZmuRE1ojfEcCXZjoxoo=;
-	b=08l0sNoRGgn7hXP1nR2SBPjRyk/ne9edJKGyT1Aw6MSXuD8jgTbnjGf6SEhRjqc3JYmE
-	 YdaBC+ZN38QRaUW6Q/US4NMjvziZlRtqzNy24ElNNErTgIDCDDZFmK41c1S8xykRzJCzr
-	 /C7J+PlavT7eZdIoh5oSi+9v4wp5iBIL1AwxVszRxwSHMegtnzGPZtmKxXZoXRDebsLsc
-	 4h6JFkWqUCdU55NTr0hLueLI1QFarniK6G8kUI4iV7141dEPID6IUKMLiVMb8A8ob36Mh
-	 3uxQ4ENeR76kyluwWYXWSoV9OqiuQ1z82Z/iuft2R4lgwZpUw1NjUSQ3xS59G7wpqSQ==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Dau8I/x+";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.51
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793345635;
+	b=O0t7su2I88B3OOmCnRJVfWXyd1G9qZwZggCvJR2pk9vDiqv7mw8TyirhB28cYtLwJyYI
+	 0K9Q0OT+92rdEdPUCkqEeBmt6rrl4mrHeTRIEl/ad6hIhAb+N73lN4qREM4IOBxKUt8om
+	 Q30P8ae37msCRDxZ9cfxT7rMUfKHOkL3/Yxsw/5MJnROVp2AWgeC+wSbg5sAB2xb0mX3M
+	 bh4wZDnkFQJuwLseIbUtIA/pbWZjw1frF1/Z4w0lHl/G/BWBnDDN9bFHCFYhadIV8D7aB
+	 waEDsEtvKN+il1F5hbK9VnWHdh+uLldYZldIVGd8B0xWAI1xEJexXUFQZwDPOnLc4rA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793345635;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=BzMDdqDEf2PfGSyV10n+owoiqld++wyRkAWFeDnOkAA=;
+	b=POkADA042jtcZKOR2I3TkdqG4AkxMbse94U7I9pk8AYsIaLnMOQHfP1BhqDqAnM4CIdE
+	 cXDSGJXVJ750PCLWR8t+NcD2bE60/rpviFkytdFtNUP8srxwn/LIt9NNHyOd1d8ahEFA+
+	 U5VcFR/19927dKsvdNbQya6W8iN7KtfBg/bn6VNfy3Y2J3LauRoNkMylWrx0yzHSCzUtE
+	 /Fd8BdDegEusJ6ewtgZ+96K3CS+FqKBYDjhcd3mD1AOc4C7CCHkLfevSQffKiZdU33oNo
+	 vjHf7p6SRdFXjy8lYTUdtf6DcDgma289IbAudfbAFV1kcU63/RledaezVfJSF9b/0Kw==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=ionos.com;
+	spf=pass smtp.mailfrom=ionos.com;
+	dkim=pass header.d=ionos.com header.i=@ionos.com header.a=rsa-sha256 header.s=google header.b=IZraQTfG;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.51
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD79606A331
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 07:06:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D09D606A327
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 07:33:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8D09D606A327
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Dau8I/x+
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDE3F1F000C1;
-	Fri, 30 Oct 2026 07:06:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793343985;
-	bh=ria1H+vqk2wlhkuQtB7+ZKYRZmuRE1ojfEcCXZjoxoo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Dau8I/x+Hl3xTKaO/pll/Dd3J9J6TmE61qpuz/xI49euO5LsZM7dW12v6MtYn7Bmg
-	 BXmA7iZye5u5qY253OdkBiyvp74o06M663/j/yNSN4/HOaYd9TSAFLtKVk7uzTFQVU
-	 c4oGtCPFMcOb0PDoebdaL0ZIMSqWPpzRoPhNfeP7PPwogVIOCZ2K/c233eUSy7np+v
-	 d7gUUipMY8uSgYiF8z5ZOqYtEsRBT72MZkf7ypWaMCPxdK1ZpHU8evsWfiVcbPAUBx
-	 hZjShp/NPTrmUwuZxf6mZ5y1Rw1VwbONfQjuROed0BnJdCP5OexedzNycZb16Uhffi
-	 xbWLRk0nFtcPQ==
-Message-ID: <sashiko-outbox-190627@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf record: Skip affinity for per-thread mmap buffers
-Reply-To: sashiko-reviews@lists.linux.dev
-To: Paul <p@1g4.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261030065857.2157899-1-p@1g4.org>
-References: <20261030065857.2157899-1-p@1g4.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 07:06:24 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=ionos.com header.i=@ionos.com header.a=rsa-sha256 header.s=google header.b=IZraQTfG
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-c445c95d553so44515866b.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 00:33:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1793345633; cv=none;
+        d=google.com; s=arc-20260327;
+        b=duTVusi8Dq72PlWgQaRtWvURuv9uVghAA9Vf9jDuBWhF+4cg1cPlfzkuZiE4j4MZd1
+         8T7N9ju8WLhYd+pPD0Pha2D1I1DZEoSYOnWm44waW7Opns9upirMp28+F/LBnWQ9Zmr+
+         yV8TBjBIgRyFcVHhFxajC3nMPIu1Kyq1hXJoYAg7U5oEJlOHgqqbMZZ0rbivncBFmP8t
+         wixk2RHvYKjXXZOWrxusb7D/XVCQpy0Smj0JivxJMVw09CEo20RluT/goarcoyo0v+u8
+         vCb7jefPlZB7xdvIuy9kuNqpw2/ooMgJHZty9xMkQ2ycKXhDaVg7nzSLJskbM8XmLp6E
+         43cw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=BzMDdqDEf2PfGSyV10n+owoiqld++wyRkAWFeDnOkAA=;
+        fh=1xMfRi0bd2GtajGmWNuA+1XVDRO+eLz8NryC5+fg0iw=;
+        b=YM5YQHpWEGsWvjW6vokTH934XiZB76yucN1vpqrOaFGGG4FUg/jbchzWTesVLxZwEW
+         77d1+A47K7Cg5bFlfzHqcvbzoEEFgCDIPSf1iEBuasYB5SNQUwHILJdGvxg9J8M79bx7
+         YBU6y6UwgIXtFpcBzTc1ReooOWSnYpUJCvB4IzMhesBIqvN29fNBHo5UWOAcHPxwQhVG
+         NtFWp6uNaKGzDg+KYyFoSB1uoTekyorvDxWdNbx7HcLCA4rQ/EKP8NTmLiVvj68nwojv
+         he/j4lOdFEQgbPNbnwXcp4DC9KG3VX1nBXn9LfUB6DilISgk3hZ3ExI02m9TeeJ7xqRH
+         xW0g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1793345633; x=1793950433; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=BzMDdqDEf2PfGSyV10n+owoiqld++wyRkAWFeDnOkAA=;
+        b=IZraQTfG+tDFd0+TYJNCsWuzg1Me+7gmHeIIcFBwZqtfpjJHI/NKwd/jkwpA6K7HfO
+         7QFFf3AMazDYe88UeylCuRjtgIHgUe+Hv0gEoQd+qaqxwiWslcihgWMi8SX9bQiJgtfK
+         oN0+0bJg+nSSS8xlNghZeod8htskZjRwDTHpH8IlI/AQC1pC1BNKDSqZ4Jwd0Vd/9GGk
+         N4scwS9mMwNnr1evT+b8D2OLFw13iVj3ZUJXAh23zhr3JE5FM7ZHLHplgNVID8M8YmXe
+         35HVKCWh5NMZQBa8jD0dsRwikYtERhhoywlq2SeEMhRZt7widTWqY3+fjrmYzeRdq4tY
+         rw2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793345633; x=1793950433;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=BzMDdqDEf2PfGSyV10n+owoiqld++wyRkAWFeDnOkAA=;
+        b=rD8g5ALqMfGYfEfK7bTfVWsbWLDQpe6Jhn94ATwMRuiuANy2va4nE19/wT+ty48KvS
+         cabb7/9MufMp8V8m5cdJkVJkbZwaeh3blE2lLHHeuk2N2Uk3iwmIIfPYcGSu8jmMNt6Y
+         2tUf50rbg1iDmyHY3Win3UhI9UGGadKm3oygg5TSlL+/HfFkMBvcymT3C3u1m2NosmyF
+         29sJmz6ss61ziwj1kiaxM36I++bJLNHc6Gal8rT24Bmnit/sWApWflyVy3d7eXUT3MaG
+         jSQbthoFO6rnHNJ0ccGxRFRTdrH6xEdogsjB1A+P7TEhQsKMygEFq1Fq0GT5BX1arvB6
+         HASw==
+X-Forwarded-Encrypted: i=1; AKwUvBx60d5v/f0cQoHyA77i8cYuJdhZ0/AEjDbMIw20HvmtFoQnmALSNJHhR+lMpGvrLc0L68knsk1Acx9rVvITCicA@vger.kernel.org
+X-Gm-Message-State: AFq9FYIrPxSj/YcpSUw8VFbIKjMeKc7nJI8tepFfi2UOvNiFSY2HvfBJ
+	p+TRKesAmXjFAh+OGldkrfAnIZObRbfCLLSAgJ/CA89XNt3NsugLmQlowqCILI570X5BnseKC72
+	Nj5igUfSN0ANU11mJSzHNEDVqun5Bpz6tXaQzerxgJQ==
+X-Gm-Gg: AYBFou3MsZUKDE65zB+1xxE3xwyYDjUYL3Z7C1dVjoeAIV3qJjOc5KVKJiOREWtwULR
+	wWqnYhlvN1GOphkkhWdRjbYw06ZiNfB1sXdJ9wKGiqgOp9O9Y74HhRdjuVLHm3gznqOrFHDxBUZ
+	RxEUm7sqrL4CjPS7V+d8579EnaL6yOs3y8rSa1dn/gvfQQK7WqWsmFRLTFOxBeb+Smp8B1+i3+j
+	rWL6L4KUgjp9x9eVYWEB5TSbYpeUMWoYRw37hK/tLyvlFwUPJKW+Nlmg8Vzr7R+1wpr+LpDmg7f
+	F0uXKNV1+06qNSgv9Ny81UspFBb3KiMh67CtxNqtleiomJk+iti3Vd2iLfgn6LYSb1RIxcRqoh2
+	o3LCEum8nxRxrQmB8vGiT7iMMe8O8j1UlXpFa+4grnFAIYpyMiCSYsYorirShFHIo9g==
+X-Received: by 2002:a17:907:9c06:b0:c42:24ea:3220 with SMTP id
+ a640c23a62f3a-c4ca7ab31cdmr117578766b.31.1793345632990; Fri, 30 Oct 2026
+ 00:33:52 -0700 (PDT)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -58,40 +103,49 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+References: <20261013130052.3012773-1-max.kellermann@ionos.com> <CAP-5=fVPtjkxcjEkR9r6QZGsoKe=_rZssjZp1FcJ7rCgntpPng@mail.gmail.com>
+In-Reply-To: <CAP-5=fVPtjkxcjEkR9r6QZGsoKe=_rZssjZp1FcJ7rCgntpPng@mail.gmail.com>
+From: Max Kellermann <max.kellermann@ionos.com>
+Date: Fri, 30 Oct 2026 08:33:40 +0100
+X-Gm-Features: AclHuK995b-JOK6lyN0BDphySp3adp3n0FavtFVMGG8FAoFOKg5oQqb1-bZD7YI
+Message-ID: <CAKPOu+_C4H4w00762045owSGq2ExSec0da-NU3ZVW_aXC2fvOg@mail.gmail.com>
+Subject: Re: [PATCH] perf: skip unnecessary userspace map synthesis
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> From: Paul Moses <p@1g4.org>
->=20
-> Per-thread mmap buffers use CPU -1 to mean any CPU. Combining --per-thread
-> with --affinity=3Dcpu passes this value to __set_bit() when constructing =
-the
-> reader affinity mask, causing an out-of-bounds bitmap access and SIGSEGV.
->=20
-> Program received signal SIGSEGV, Segmentation fault.
-> 0x0000555555f3488e in mmap.mmap ()
-> #0  0x0000555555f3488e in mmap.mmap ()
-> #1  0x0000555555e2f7bf in mmap_per_evsel (evlist=3Devlist@entry=3D0x7fffe=
-dcc1150, ops=3Dops@entry=3D0x7fffffffaf50, idx=3Didx@entry=3D0, mp=3Dmp@ent=
-ry=3D0x7fffffffaf70, cpu_idx=3Dcpu_idx@entry=3D0, thread=3Dthread@entry=3D0=
-, _output=3D0x7fffffffaf08, _output_overwrite=3D0x7fffffffaf04, nr_mmaps=3D=
-0x7fffffffaf0c) at evlist.c:598
-> #2  0x0000555555e2ef96 in mmap_per_thread (evlist=3D0x7fffedcc1150, ops=
-=3D0x7fffffffaf50, mp=3D0x7fffffffaf70) at evlist.c:650
-> #3  perf_evlist__mmap_ops (evlist=3D0x7fffedcc1150, ops=3D0x7fffffffaf50,=
- mp=3D0x7fffffffaf70) at evlist.c:748
-> #4  0x0000555555f2150d in evlist.mmap_ex ()
-> #5  0x0000555555db0b0a in record.open ()
-> #6  0x0000555555dadea7 in __cmd_record ()
-> [ ... ]
-> nonnegative CPU. Skip the reader-side bitmap operations as well, since
-> per-thread buffers no longer allocate an affinity mask.
->=20
-> Fixes: 8384a2600c7d ("perf record: Adapt affinity to machines with #CPUs =
-> 1K")
-> Signed-off-by: Paul Moses <p@1g4.org>
+On Tue, Oct 13, 2026 at 3:29=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+> Thanks for the contribution! I can see if there's a user event then
+> evlist__needs_user_mmaps will return true, otherwise we'll return
+> false if there's a kernel event but true if the list is empty or just
+> contains dummy events. Why do the empty list and dummy case need the
+> user mmap events?
 
-Sashiko has reviewed this patch and found no issues.
+I checked it again (and got confused a bit more than I should). Is the
+empty list really possible? If no event is specified, "cycles" is the
+implicit default in both tools.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261030065857.2157=
-899-1-p@1g4.org?part=3D1
+With "perf -e dummy", the kernel emits user mmap records even with
+"exclude_user", so this would be a possibly user-visible change.  Do
+you want me to remove the "dummy" check, or do you want me to add a
+comment explaining this?  Or is it possible to check whether a dummy
+event is guaranteed to never require user mmaps?
 
+--
+Max Kellermann
+Principal Architect
+Hosting Technology
+
+cm4all | Im Mediapark 6a | 50670 K=C3=B6ln | Germany
+General information about the company can be found here:
+https://www.cm4all.com/impressum
+A member of the IONOS Group
