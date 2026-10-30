@@ -1,52 +1,52 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793373210;
-	b=VbFlTRu/pvIrWJoRvjFkgk3WB7gLFtSnksDMg2aQF4BjSTt4LrWPkpTjbGboi0uyAeGZ
-	 wtTdsVSVYRCq/BM8/iMvxC2Kjtduk3pVPoIg+JZWFxJNmIv/FfZIZRRlEGgNAoD+9/3+3
-	 tIMZPoMUb8ngJiQkOtk8+FZHXVCJexSK8J6W4DXM/9MwDjqUopdKdibZjCMEHlLafSis6
-	 LedYq1MygwlpNgQe1u5H2hNVD+MFtPNnYuRDTv7OSohky90ve6XaOdIauwC9OUW5rF2OS
-	 uu3ccaRyEmeydZDBuL5y5gW3UqUYvQ2Nupv9UbqJ1D4tdSdZ7NDtKtxqLgT5ayeGbwg==
+	t=1793373217;
+	b=3uu8f2V805EmGf8tfNj+mdS7MUkzDu4oIZpymcO1Qlp1vif/nL4V79cwo4aKmwzpEtZn
+	 RYIr98GmdCwtoBr0kPoPBm2F+tpp6PD5NPvEWDqND+08yrdErzRCG2g3rGQaK3jV7qNLm
+	 208mOZBX9m0vPSFJcl5yV94sw+wlbfJBmHf/Ke4S7Rc9L5GZ5zefCddkEmkAJck4CI1lw
+	 rm012l3ruLgZse2kYiLIBbicFWo+ZcykRrL8iIAEplet+f0OLOI2Ix5tk6L/evNvXk+Pm
+	 37X4YdfbPtHreph+2a1gIvb08RT1TENWUvCUwTlDyuG4HxTnFr+qjCKLKAls415H5hw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793373210;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793373217;
 	h=DMARC-Filter:Received:Received:DKIM-Signature:From:Date:Subject:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
 	 References:In-Reply-To:To:Cc:X-Mailer:X-Developer-Signature:
 	 X-Developer-Key;
-	bh=HdoJI368+i11GTohISpbz8VghvyqGRYi37yZFl4fhSU=;
-	b=HqUcfAXNQboHhlzz793xjbyrvcFhvJNXcXueowRm5tdtQRp50Rwww3yJI6jjnLElPUPz
-	 7hREnza0Yie3MP9LBnFJKMG71bos0iVZE66HYbz02+aUp7klO+MNEVTreVwhTu4x3JEuL
-	 t3Fz/GJIAH6o61K6YJibpPpRGB7uWh8iyvrEuZzV8o/ESCUZmfteJtxI8qltulR16LFSY
-	 /Y34Wlwyh7soSfyKfYn3uR6N9xKTtQS56ybLwvZ9gQwfRkFiFy7oWMrizxx1XNuxJEl3S
-	 qH1cuhezSub4Ygq3Vfrlx2KaIdy8IRxOFnpo3ISBKEyScfKm8bFJeA0IxhNzIRGJ2tw==
+	bh=XYUbYfpJ1kU/FT3edRMSak58G4f8Z5E0Xegt0CaNa1c=;
+	b=TtNvbIUH/vG9k45KZCZi3WMopybIUhIGzi0k4Eax6k6PuehotyS8xgyLMTeWpoq8kGvL
+	 Q70/pg/zwHvpByexoC1huzN5B34yYBOM814sRjWNSI+QmNtYoGrjy3457SSz7m2pEqnJb
+	 NDjoTZBtvRNPjmjgjInZzDnPNqBbZnNtbyDTgRXXelEfFHfTliTZQsEgBzRNs3apE0lNe
+	 Fu6fQ7ZU8CChS3FiowYC2dkJDdfZ/iaHazRES5wsq6m48cxO757hnuRsw563Ju6lAOYQh
+	 nl8yQSSVfWb6HAybnYa0oRVPAyDf8EuH6EycsWSOAhCAmBsSe9z6ta1aByOK0eeyFgw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=arm.com;
 	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b="Qs4/9F3b";
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=hOcuT6ww;
 	arc=none smtp.remote-ip=217.140.110.172
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEBF4606A335;
-	Fri, 30 Oct 2026 15:13:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BEBF4606A335
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 656FD606A32F;
+	Fri, 30 Oct 2026 15:13:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 656FD606A32F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=Qs4/9F3b
+	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=hOcuT6ww
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA2891682;
-	Fri, 30 Oct 2026 08:13:25 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C0EC1BD0;
+	Fri, 30 Oct 2026 08:13:33 -0700 (PDT)
 Received: from e132581.arm.com (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C88F63F59E;
-	Fri, 30 Oct 2026 08:13:26 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 819AF3F59E;
+	Fri, 30 Oct 2026 08:13:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1793373209; bh=RTr9WjFzrRPpi75Lbl9yzt4xCky73PggBYYT3kPl0So=;
+	t=1793373216; bh=BSoooiGLGKzGu8BpdgDPmCLJ3dfVUU5CGa5yHLVw51Y=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Qs4/9F3bV3ucdyMATv0KEx+gIxVbXJYsw5kfb4dg0TeprsGcDsS5KXefn+opS7X4V
-	 vPsawshIG+pAIfC+qTdgWwvi0RKk6PObf3jUOYJet3D4jx8xpQ20c8p1hMYoU8+MAn
-	 x5Kb0bXsnrnFtqgPQwX7+GoFuOy9IsKeOlGabF9I=
+	b=hOcuT6wwDJ4VQV+eO7oMgYQTKFz2jG2NOTOZuVUSlLS+VzZq7//vuF1iGuj9MdM9z
+	 LrvsjfUJObrwuxGmou5qZkWh8Y9DiPPqMZ8xNRr5lgdsCZBsp1jCD0vpBTFM1id8By
+	 TVBATE/OOC0e8ctDayp+iqt5R+RJ/YfpXDrXLZbc=
 From: Leo Yan <leo.yan@arm.com>
-Date: Fri, 30 Oct 2026 15:13:09 +0000
-Subject: [PATCH v3 02/14] perf intel-pt: Preserve return addresses for
- asynchronous branches
+Date: Fri, 30 Oct 2026 15:13:12 +0000
+Subject: [PATCH v3 05/14] perf cs-etm: Use the recorded instruction size
+ for A32 and A64
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -58,7 +58,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261030-perf_cs_etm_fix_non_taken-v3-2-7629b52ab047@arm.com>
+Message-Id: <20261030-perf_cs_etm_fix_non_taken-v3-5-7629b52ab047@arm.com>
 References: <20261030-perf_cs_etm_fix_non_taken-v3-0-7629b52ab047@arm.com>
 In-Reply-To: <20261030-perf_cs_etm_fix_non_taken-v3-0-7629b52ab047@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -71,48 +71,66 @@ Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, coresight@lists.linaro.org,
  linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1793373201; l=1435;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1793373201; l=2181;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=RTr9WjFzrRPpi75Lbl9yzt4xCky73PggBYYT3kPl0So=;
- b=XUT/mOQBYxtVkq+U7mwQRfttiE7T/mUsjjaVtbkjo566QPr1S+sFczz8A7ynwzdk/qBATN+1m
- yI1UTGywamACmAugoUPcBqeuYl5mZ5fKj0S9y1Kxm5AlF1EyD2CLP3c
+ bh=BSoooiGLGKzGu8BpdgDPmCLJ3dfVUU5CGa5yHLVw51Y=;
+ b=91UvI1sbll2WAz9sQwKGKruLAz1iWbb04XvRngWxA/9KrxB1SQ4iuvNxvIFuWeQlBHM3kZdur
+ 9DJsGBp9DXwCpfD604SukHETZp12eEbWDsTnn9FFE2F+9u7/s69aEWY
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Intel PT uses a zero instruction length for asynchronous branches so
-the thread stack resumes at the source IP. A dlfilter can fetch the
-instruction before call/return processing and replace that zero with
-its opcode length, advancing the saved return address.
+Use packet->last_instr_size in cs_etm__instr_size() instead of a
+hard-coded value of four. Ordinary A32/A64 instruction ranges are
+unchanged, since their instructions are always four bytes.
 
-Set sample.ret_addr to sample.ip for asynchronous branch samples so
-instruction fetching cannot change the return address. This also
-covers asynchronous trace-end samples and VM exits.
+Prepare for synthesizing exception entries separately from the preceding
+instruction range. An exception packet may have last_instr_size = 0,
+meaning that no instruction completed at the exception source PC and the
+exception return address must not advance past that PC. The thread stack
+computes the return address as the source PC plus the instruction size,
+so returning four would incorrectly advance the return address by four
+bytes.
 
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+Keep per-address decoding for T32. A range can mix 16-bit and 32-bit
+instructions, so last_instr_size describes only the final instruction
+and cannot determine the size at an arbitrary address in the range.
+
 Reviewed-by: James Clark <james.clark@linaro.org>
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/util/intel-pt.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/perf/util/cs-etm.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 8c21c9f52d572d2dd4e15b3b5c341b253ccea1b5..e8b9c8a67b0a0635e0110eda4b6ccb2511132fc7 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -1803,6 +1803,13 @@ static int intel_pt_synth_branch_sample(struct intel_pt_queue *ptq)
- 	perf_sample__init(&sample, /*all=*/true);
- 	intel_pt_prep_b_sample(pt, ptq, event, &sample);
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index bdcf9481312943b2bbcade8f9688311853c138f2..9126f6327e98b67852b6a55980d67abb24de17fe 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -1391,8 +1391,7 @@ static inline int cs_etm__instr_size(struct cs_etm_queue *etmq,
+ 	if (packet->isa == CS_ETM_ISA_T32)
+ 		return cs_etm__t32_instr_size(etmq, tidq, packet, addr);
+ 
+-	/* Otherwise, 4-byte instruction size for A32/A64 */
+-	return 4;
++	return packet->last_instr_size;
+ }
+ 
+ static inline u64 cs_etm__first_executed_instr(struct cs_etm_packet *packet)
+@@ -1572,6 +1571,15 @@ static void cs_etm__copy_insn(struct cs_etm_queue *etmq,
+ 
+ 	sample->insn_len = cs_etm__instr_size(etmq, tidq, packet, sample->ip);
  
 +	/*
-+	 * For asynchronous branches, use the sample IP as the return address
-+	 * instead of advancing it during instruction decoding.
++	 * The instruction length should always fit within sample->insn,
++	 * but check it to prevent an out-of-bounds write.
 +	 */
-+	if (sample.flags & PERF_IP_FLAG_ASYNC)
-+		sample.ret_addr = sample.ip;
++	if (sample->insn_len > sizeof(sample->insn)) {
++		sample->insn_len = 0;
++		return;
++	}
 +
- 	sample.id = ptq->pt->branches_id;
- 	sample.stream_id = ptq->pt->branches_id;
- 
+ 	cs_etm__frontend_mem_access(etmq, tidq, packet, sample->ip,
+ 				    sample->insn_len, (void *)sample->insn);
+ }
 
 -- 
 2.34.1
