@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793373896;
-	b=xI3x23FYIRZbRYMucNc/lFGW6lF7MjA21hzfkxVMZ/nrI0HE+4EdaxZa6e5V5a/8UJLn
-	 wxwfwLtidgFvH2iIEJBlPTgUfgyYhlArdtdpVWGAvRFpEypWrxIw6O2NYQ++zFJGJUt78
-	 LipJQHK8GQV7DMORu7Lr5a56lMcnIgFtQRThEpyt3e269108lYtaafnGRk8gVQpGjub64
-	 9skARLev5MZOR+xk6AKA5wR3qBPuBoeRzGB99sM7NgV0vmMd4xFd1MMewZ7wdGaBoOgu+
-	 ipad6/0oNjQDzPETik+IgQ7S0+yOF/CcSgoMrsZz2iQ2p282XAFXs8cAA8HrY1kHfow==
+	t=1793373901;
+	b=kmeqyRUVZU9mlNYOYZxcC9acucaoOtls883JKDNVWFm8b9BbuVb5atC/vMhUWen4Wmsg
+	 +q1GVW2h/DYWNujrh+nJccTbeZc8QDxRrDFuGO50bnSK6i28q8YStjkQvCOiDWwD+g/ID
+	 /tpIQXukj6nEd71GTjDsiOI+gTnnVr0O2VoACKw7BOxYfLlu6GcN5qkuRTJLvnz8nfqeT
+	 6W6OtrJyEbbJVkQik2jVVKasTiIj1BH9sXOk/pNvjjX4bQKiktbxot+JKnjNn/PXYUzCl
+	 TigDnKbDMSbcC886ys+hgp17ntWAZuqInprF0YUXXbdVQ+H5ohz4b9S7Uz1OveD/cRA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793373896;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793373901;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=mrroWNn8F+zR8VFNwwAy0uWTVNXtUEJ+MXPcimsejzQ=;
-	b=0ylT4dzbm6iZRd3cCwd3HXYVB6eExRynne8gC6QfeJ5hdsUmDhnb/r+mtLWvJKasqbjU
-	 VKr3BhA8YV58dBxcrjA+8c6akSCnc0ho605bl+Lzlze8dQy627+ovSnEkpiRR2/uckA9c
-	 aaZ7+rtmyHTFZ8B3X/sRzomtOmuxB69I7X0xHLYJDID3kqLTXfk3WtG6FLaJPCZHHJ1mg
-	 Qmnoh/bjofDmnMewvAzN+9ZZqpmZGWbrwLJpIt+vgrdpIuGjYtlXVsZsm52b49yvKjKUS
-	 ZqNvk+EpLeLsjpP7OXtniPzwNLe7bG0JO6sNaPbBno4SkL7GZKaqmTd0YZNGUEu9yUQ==
+	bh=Y/B0+SkVKPpiJ2ROVX+wOsXnjuXfJIkbm1MljtNGjxE=;
+	b=oMPxrepxyO5T88Ac2rvtI1BCs+R/AVGVcBQVBGVWem3JWdz0r9kRNPDOKaqTfrJLBNVv
+	 1uh5+RVU6iCGAae/N7f8VK80skgkNKOcLNzXaSHZIwgJc7nLOPLv+v+Fe2dk5igJWADvK
+	 mCmyLksodje8CbPWSGO+f1viJDsljA9omIDFSKJDkm6WT7v9A7YTn921CTu/Iv5COtN4G
+	 PObMwCULwI9U6gLe8siUwdXVoczcBs2oGzLPSQgAzumYg2Ji+ZqXPfMAfKqNW6Kb/rx+Z
+	 m+Do54vViOXH+m0U3wv7SuFP3DLoQfUxseDGWXAvncJGu+Mbn1l7QvDGofzDmq44ndw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Q4zgnlKf;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cubsKKwc;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8EBD606A31E
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 15:24:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E5B606A31A
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 15:25:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Q4zgnlKf
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BE421F00A1A;
-	Fri, 30 Oct 2026 15:24:55 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cubsKKwc
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 245431F000C1;
+	Fri, 30 Oct 2026 15:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793373895;
-	bh=mrroWNn8F+zR8VFNwwAy0uWTVNXtUEJ+MXPcimsejzQ=;
+	s=k20260515; t=1793373901;
+	bh=Y/B0+SkVKPpiJ2ROVX+wOsXnjuXfJIkbm1MljtNGjxE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Q4zgnlKfTjj4OhKcm8Qme+RoCMfxeWPM440svUWcz7WC2XcShgrY6/EA7FH/JE+Sa
-	 vfT3ZkN4Ql9grqsDDC8S7tlXqP3eNyh35yjtBSO2bGl+XcRJ/m1jocRmgPxKIY6uEI
-	 tgV6aQa6V+3MN/NybVnVVJLLDwBa5/1Zto+xW3GlTwrS3DvI3LPRh+8QqwIygrH3Rg
-	 tqIr/ZUbOQFrCq0DJPnoaEE5QrN3HnKhXU788sh3PEECUEej1E/M6LruFBI4pY27aq
-	 AJZyT7naBQDkA4f5hYRndEheBc67McGAUdh/O0JNiutXtfbqHQ4g6F8O5oRhD40Ez0
-	 8x2cyxLGb0n4w==
-Message-ID: <sashiko-outbox-191169@kernel.org>
+	b=cubsKKwcC/h3Tbw0Ibr4xoz8/v8rFA8HLf4btUP7qd4iLOL5JqEJf62GLhd0/W4dx
+	 TZZ8hniXs2B4stSoD+NEVxjB9eNKq7hl+7GOT/3OuXLKfdRdpmXqF9uZT7EZt9mbvE
+	 CLZvBDs1GGmXHn4g3FLFM+EOsDP54ja/nfbkoOSTa9pt2gNd+cf5pXFYDTTqHx/cq9
+	 cpnZILYkmxFmRU8pm3x5l/Xxzm2JYnlX2fZurBBaWxLES3tYVJ4eyFGU7ahMhiW+Ke
+	 lTH4pgUIb+l37FR2+xrYeXKA8TD4Q6Tw1BHN+jjNg4W+CI+IMotlh6JH67mkQ8XsX+
+	 4W44Rvi1plaQw==
+Message-ID: <sashiko-outbox-191170@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 14/14] perf tests: Check CoreSight emulated
- instruction entry and exit
+Subject: Re: [PATCH v3 02/14] perf intel-pt: Preserve return addresses for
+ asynchronous branches
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Leo Yan" <leo.yan@arm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261030-perf_cs_etm_fix_non_taken-v3-14-7629b52ab047@arm.com>
+In-Reply-To: <20261030-perf_cs_etm_fix_non_taken-v3-2-7629b52ab047@arm.com>
 References: <20261030-perf_cs_etm_fix_non_taken-v3-0-7629b52ab047@arm.com>
- <20261030-perf_cs_etm_fix_non_taken-v3-14-7629b52ab047@arm.com>
+ <20261030-perf_cs_etm_fix_non_taken-v3-2-7629b52ab047@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 15:24:55 +0000
+Date: Fri, 30 Oct 2026 15:25:00 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,26 +61,16 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Use traploop's EL0 read of ID_AA64ISAR0_EL1 to check an emulated
-> instruction. The kernel emulates MRS and advances the return PC by four
-> bytes.
+> Intel PT uses a zero instruction length for asynchronous branches so
+> the thread stack resumes at the source IP. A dlfilter can fetch the
+> instruction before call/return processing and replace that zero with
+> its opcode length, advancing the saved return address.
 >=20
-> Select MRS entries by instruction encoding and reuse the common FIFO
-> recorder and pair checker. An instruction page fault at MRS also matches
-> the opcode filter and returns to the same PC. Retry recordings when the
-> pair check fails or finds no complete pair, and fail after three
-> unsuccessful attempts. Recording and decoding errors fail immediately.
+> Set sample.ret_addr to sample.ip for asynchronous branch samples so
+> instruction fetching cannot change the return address. This also
+> covers asynchronous trace-end samples and VM exits.
 >=20
-> For example, an expected int/iret pair is:
->=20
->   int            5cc808 =3D> ffff800080010c00 insn: 00 06 38 d5
->   ...
->   iret ffff800080012284 =3D>           5cc80c insn: e0 03 9f d6
->=20
-> The entry instruction is MRS X0, ID_AA64ISAR0_EL1. After emulating the
-> read at 0x5cc808, the kernel returns via ERET to the next instruction at
-> 0x5cc80c.
->=20
+> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 > Reviewed-by: James Clark <james.clark@linaro.org>
 > Signed-off-by: Leo Yan <leo.yan@arm.com>
 
@@ -88,5 +78,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261030-perf_cs_et=
-m_fix_non_taken-v3-0-7629b52ab047@arm.com?part=3D14
+m_fix_non_taken-v3-0-7629b52ab047@arm.com?part=3D2
 
