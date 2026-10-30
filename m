@@ -1,101 +1,98 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.179
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793332702;
-	b=m+YDsc/pMjS+5B8uqaLNH0hzHaPx/7s/k3YlqA4nI4F9dAsXEnkKeRIWp1KyFYTZ59nb
-	 cmIojzObPtKUFwdJEX8qpy+3E6aewfKrvFFUdNTYFvhKd0hWylKndCjKPJAigWzwqW9Ih
-	 1gPvE0u6GsLd8DEhIBNsjZHd4AsdH4h8mRrd97g2OvYTzQZu6HbDWHjIiJqMQ/gQd0kan
-	 H9muBMMJW5SmMB8dtaiE+7sZoA79FtUC9TniT9X0TJSJ75Aj9MCwSvaKRsD4Otop3hrbV
-	 /byblNC+0uddA/Jyea0k8as8UKgge7b/8fvk3whcb0WEdaeLRsVscSomXDliSKyyFiw==
+	t=1793332771;
+	b=RpLke3BMVpBo8Yt7M/DuPubIE6pQsxVOMHu4A7Y4LafeMIncUD8np1OVc4ggl5kE5avA
+	 JALNRmYXqYNj+CetH3+xhDqV2Wp5XqgdzbB2hU0WsBVpcFaXobWWr2VIR28pePMHUtRGR
+	 dFm+j8KTlo8OG2Nh6GhkdnLq6/0gWYkBEoq1C79ggxvmxQFi7r97JIUz3u1x7YJphZxFY
+	 QdMlxm6qlJ4fxnXfsgpIeSN2e20+N8BmkQ2LQLuTqiHjMdgZ6CKdGp1CcwFexSEwOlOVQ
+	 Pg2fvUVsPfjbyA9vYA1XyqD3PQEjhhvvhkPEZ2a5mYTmpybiiJZsSW7u7zMcDRb52Aw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793332702;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793332771;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
 	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
 	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=IZmNuI/wND30J0nkI7O6RvOq46XxnSgW4W30rCGXnNg=;
-	b=ElJMHa7+1CiDytyAVHzjXt5miIUIDFQN7JkyJ0BCAtx+SYJCfyNBTKbjuVjgHUDq4AqC
-	 KtqTqf0SYHl+n9BDyMIG3c1Dt2ujAh9AwaXHMsYvhOn2DImjXrAFBKZzXTmdN0Bjjw+Sb
-	 SHKsxpoS0du5+oeAhO7w4AYmAphTY/gNuOlTdKLKAAGlDgmnWYROtifkd6/RLPD1c/1H9
-	 +dWF6JzvHFfyMOUVHSg+tcCj3sDuE2d62uWQZqxDtwdy0nYV+tvoCKdAP3px+XxqIDPXs
-	 oXQ07tKszu3opRF4bx871F25PdeGC3CQ309/r2C+x/QX0JUxE4o+wBvqXl3B+Svs0Jg==
+	bh=FOT2v3eFb29HN7FW8NdCrAqVBUnxkiOGyHwF4K+pcrc=;
+	b=bzZXuD2hyIq3GY3Mo7pooUM1ISybel3RY2CIm7l/7AswlUwPoeYBxIBeM0yImPux58tY
+	 A9dFVnXdPgL1FMejHFBLwAx3j+jqj31C62fNVf8yY+ajizW+0OVg9CB0pwKJ0nY0gykAy
+	 UkLHEtwmsyOVugf/ym6ZDjNc2k1N29awb7ibMSAoKdPgfZay3EIXt1f20R2xnp/tSFtCF
+	 KfHv5wA4WBvjiSqpA1i4AuE2D3ZNjRo+8kgbEGHEG/MuZGVkOhwr+qZczYhX2TtNYUbKr
+	 lqrytGWKrC5DBjHUCurs0BkDLMM+wMcm2zQYV1XnBXDAMewBm5LHUr3vV5SO3ISsUHg==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=sUpdStRz;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.52
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.179
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF63606A31C
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 03:58:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EDF63606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E31A606A31C
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 03:59:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9E31A606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=sUpdStRz
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5be3cff0f6cso255830e87.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 29 Oct 2026 20:58:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1793332700; cv=none;
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-3ab53a99771so2866581fa.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 Oct 2026 20:59:25 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1793332764; cv=none;
         d=google.com; s=arc-20260327;
-        b=Su6JCrFeMVA2sW11Y+g0MntrELqfa5dPRSnuzgQXwSn1npVXsJwIgqS21aPpzwc2LF
-         eueFETOsjcjj27wXLOIrGdfKeGG7lAw13aZ2RfRDYhBysOmTjOeMcNki05lSJrMjhUnl
-         43NPt7HLeVGTUpNGHCHJ1+t9Hzm1y/N6WTdiMt/fu9KdFN4jy2SuCAjSemYAWWf+Dmbx
-         NrLZ9RUaNaF4OHTT1sBrAtRYdUAk7MhVGcdfiHWbe5+oUOpJpt44A8+5EnUlCe+4VTR5
-         QzqiB0A7NBG+GLdJJtryQRJNBG9nVQcOeV5NeXjjaWNXvrzC5DISP+w/xkZ88Wp2J5aM
-         0TRw==
+        b=TsJOicMs5wVAmbjei/px8DYHE86F7rfLdRrikD+hUeIzL/LTFKTrj0XD1eMxrnQBt/
+         ttfAAQDg7rOiRONEYb+utsjNgf6HUK53lj8ug3WCsgwXTAdvCC33LauvkfgRJUt81507
+         W/xeOaIls0JFzh1nL9Da5uCvLfY3SXJDDbLJWArcPrm03DCCrIIEP0N7AW7LSLHwJ1cS
+         /AI15hwF/XZndduQYKdPQTkuB+8irgH7kNEBcHwtAPfQx+pORWJemozz72dj51A/w14v
+         Oj9GxDelmnInbRT2apPfdKPEEEyK+tInQkBEF1ohAYxbqEa+I2Lk6rdvd5/q983QA+Pl
+         3zoA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=IZmNuI/wND30J0nkI7O6RvOq46XxnSgW4W30rCGXnNg=;
-        fh=q4qERIRkFDVW2FycmDNUIgfKmZU2Q9WgC9lqkSFrSbg=;
-        b=UqH/6TzPPT23ZBWnh14DQ349pzGolnXlTgCpU3ZWwSF4+oVx0xSDVlp4dTee7M+mJo
-         KlEndNE1nRkJxxW+/tm7e1cymlI1H06VUVL38rnS9nQsiNBw7TtZKY06ugf2dGdt1kkk
-         QVzB9T+DVrfaCb3D+JnOv9qlDJWFF/BlMH35/8jCQrVTwwS7Gl+yBdAeBB42+Alw08eP
-         8O8BcToLfiGYkhdFw2BJlihC0gH2QBnQm80oRRsKKzLBsDXbP/SlIRvGSXRydv2bzr1e
-         z+D1mKJWs1m9hYlhp1iRclP4fG1F9+yp3SzUHinU+AjANDhslIvMm+LjfH0OrX1BEiGf
-         FJpQ==;
+        bh=FOT2v3eFb29HN7FW8NdCrAqVBUnxkiOGyHwF4K+pcrc=;
+        fh=68h/G+anO2MIeCWSLfcfh0rk2x4+Boga08whTzExWZ8=;
+        b=GcFZVWnwmlReGXncev9XKXYCPpDdjwUjDV9SIr7Jxfs2RSxJV9+94eibYFg+WFkTRs
+         sRqh9JJlJR1DBBJaNbiufXlIvKM8H998UB+iFD0J7wqqYHgJutlwjjxBD69dxPZ1C7ZN
+         stLia1ldwYxDCcYEsCPZY3OpLI+Lvc2BVTmBcU/V9ClGFhtVdZtv4zcY7GRcqQPJ82aC
+         ObCPJC5Vxl4hRekEfUn/Uy4cm6jlDNGMMy7IutrNMM4WfIe98/GCwwaFtn0OWbJP+nEz
+         TGJYc7UlxVJIRzofwEoD5CkFkJoZBha2t3X8zLIs/pTNA/Lxoh3LQXK19szb6WFUMuiW
+         APAg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793332700; x=1793937500; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1793332764; x=1793937564; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=IZmNuI/wND30J0nkI7O6RvOq46XxnSgW4W30rCGXnNg=;
-        b=sUpdStRzH778SDNGZYJe1CEBwNtIRtYO39O6dHFQd9TZwGmLMl9XMQQDhD5mRr3mnd
-         LRCTb4d9WdJYvOH8b13wGWKoRGtT6WG3kUtGUuO2eEhio5XuhgyyAIcHSEZKDtZ/8ZiP
-         SJwdec05E3w2G00BIGQv1yRWbguaYFEvCQQNyuTtdWIaH+Kjd1Z65NBeI1R+kzAK+ZAD
-         cl/kfVFXdq1IopfR9d2GVNwH8Qa9mfI+YRqFYn/xHeHxEAG2yeFhZNkWRVRYO07GLRWW
-         fDfxplSL5x2646zj2cU3XNygzYw2ZCJpXHfySsoF0q1bHbChZPOJIUUm2DIggEZvP+cR
-         VNvA==
+        bh=FOT2v3eFb29HN7FW8NdCrAqVBUnxkiOGyHwF4K+pcrc=;
+        b=kOm4/A9uYwuoxIElIPkqOL6pDbf17izln7xJORCwomxPzYzFRAjWGx6dz/pFDFMKvs
+         XvgdHHpsG0mYL7sSAfudM1W+DTArUE1vd9/NVrpfOrDCIcKqecx8mAsX3+6ZUbD5DD54
+         rOFOTaCkgCxwj2UgQQUjJNrqYho2ZY+KF0u/coLUSvBD/UAcsoceiJWqJWzf2sFL/lm2
+         ZpBCebJYk9z+LhJbF+A8uOr5ltcjX3SFjAZI3vBDkHeOzbRWYIHO+5WH3EMyWHfa1lDL
+         stl+QLqZGL8MlL6UPoQoMq/ZiuTkHu3dkvq+RLU3vckc+l35nZZ9dWOJsZfQAv2+Mw6v
+         Q0/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793332700; x=1793937500;
+        d=1e100.net; s=20260707; t=1793332764; x=1793937564;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=IZmNuI/wND30J0nkI7O6RvOq46XxnSgW4W30rCGXnNg=;
-        b=X9bKym+OpORub78+28uwCgM//eTMw6ivzt4tQxT+FohB1Lzr5H3zWLtDcdX45QYR+j
-         DZMV7vNod2A2uNgs5rZ/a/wbuN4WcUn/m0YMqPyLvAzBbUkk4wBmzQ6IHrO3hcaaA3ea
-         0hXdRLxCRGLrhjVY5xnHWaGCqwOmKpkKZCm2qGm7xOg2RN54NlGJRWUQ5AFIL7n8nU8F
-         8UmMbzl+JTUbeVGa5MKPQ2ETLr4o8Rmg4sWIH4rraLSGppJ3/f2KbJzkscHMR4h4KL8u
-         RDlLw7ZoIivGarltV+HCQyBEDRZIpesbcyOZVOdzpQMci5b+uiXKNTwW9JOgLIAccp04
-         TMRA==
-X-Forwarded-Encrypted: i=1; AKwUvBxC+87oG7yNfDSAkGENcS5tln3ZCQZNfT4fD2Vv3AhER8okU6pd1oozfD5dzAHlbALjLotB688jqbiFWx5BFe1h@vger.kernel.org
-X-Gm-Message-State: AFq9FYID1alNaT0aamItZ7SqE2s2nz0qNUcyqP22zPZSJGn+Jd4X5q9C
-	6Wc79CUTZPLy7cGUNNZFZ0619GTFwz8R3umxvHLITn+zgYt9aPD27qTmTQZ5ZSsnqBS/iRf2j4Q
-	8Bdg75Z5wDnEFKyR6GOymexqGev9V5WPiJZd57ttEIA==
-X-Gm-Gg: AYBFou01B2chj2pXWFJlEJwzZGthYyw1ta/LjMAfNNgkdeUlCx8gMvMUWypcQJJoP98
-	Sbc7ncBZ6H9KEelxN8iSNHQpEQ7zIZxvFfI19CiwrQ7yiAg5jkqXVDRXi+i7QUhQD5RvtZW3MPv
-	Lvl5IM1Ui+A3nU7uc/u5XNY5coo0GcjRnElv9pAl6bOxIdVMFvYfgqu0hSAWEKknCzjSaL/Cd0b
-	aJf7/xBeta56CC/Ri/B4qfYrNoFoMVVX8Owt34FpzCOwFDQtOUvQefjMyZoRyap7YXr0AEoiHno
-	l2tkpeeMpH6mw+U+Ek6cbJCMdbQbnrgmNVk5iDswv7cRAnMOH37xZIDnlKCK2NwpzUHiyFKqCH1
-	/EhWK+Ex0Xzfx1VJgf1xvZsjWduTo7aif0EYlyfE7PTnyg1Gr/blTeh2Jvjagfa7/u1JJmS/3Gu
-	sYmLqoA2lKM1Y5OO1eYn0iVMApAOmFQx5buSaeV6LQurYwJ2o2UG8a
-X-Received: by 2002:a05:6512:1289:b0:5b6:95e:87ee with SMTP id
- 2adb3069b0e04-5bfd9562acfmr282919e87.13.1793332699938; Thu, 29 Oct 2026
- 20:58:19 -0700 (PDT)
+        bh=FOT2v3eFb29HN7FW8NdCrAqVBUnxkiOGyHwF4K+pcrc=;
+        b=ESoluLgAt2WI7Fciva003BhHLALb/O0C3VPdNjwk96tLjLix1v+brwi7MGGfKfyrzm
+         iADqr4Xsn2MIluK9DeHvJe3Akin3ymodTN9ni2UaG7P4Z36d5xi8qIT9kgzT1WH1NxHx
+         ktjaxXo/en0VykKdFmrdV18H2tG8quD4JpL6CcP0jwRJSVX4Ei0ae6j0TQyon04GX6cE
+         bu7/nrNO8b/nWM8yC4PV4jH813dbbp5YV+DSum0EI6Vgqx4sCOiWIt52r5vFVCDqFCww
+         M7fSv+dqRJ1fBB1RYiq6QCHIqOgbiAL6Hz1iHsjNbjoEgA1mXCkOLs3q3bFfSRGiJNCA
+         8hEg==
+X-Forwarded-Encrypted: i=1; AKwUvBxs0sSRa7t8l5wgadBlEf2fW3GMMLLlG4VmdM4sTOlZROd0AHHP247AGBjXpFAYKv76ogLik1NOdLj7KMlf4rH+@vger.kernel.org
+X-Gm-Message-State: AFq9FYIq5vQVhApFdwwAOytjsGIYwdoWJV4XVkZ1x/+mzN1mk0X5OfPp
+	H15UuJucX1+Xfc88sLAu05GP8kENoAQ3IFTxvC9vy823SUNlJDb8KyRVV9umQkpEV31vb1TMoRR
+	+HcX+DhQhYPTUbzZmMe8LQJWgU8mDUKUmzijfRxjEDw==
+X-Gm-Gg: AYBFou1iT/HA0qmL7oKSacf7HwoQOPA92MDKVSZXPau3YjTKdg/OrizW+dYc7XiAe0p
+	q6mGK43dQq9/yHiM44aHfRf+gbu06a73JYfat3Sb7lnN2PaVy+poxlDzaF0U9Sz3UQ0Ch0+iD68
+	CG7yS0esakxMezoPdyiBHmsswsOtLo5FqYf3LjAXASl0QM4SADNVofzo7K7LiefbR1U5s+pVqSG
+	53pyyRxNcJP3X+ckR8U4QXYt4KWPibokqMYKEHbZpTEgXa8qzqt3nnmLPseWaMTaqqXAm5bIJiw
+	7h/3JXc9KJt7OBNW/xrzFuC//+1vy/yDSklLDbFgo3HoALhgUfmsLX76r7/1m/KaZNVuL/Nt4ut
+	dmlSW1HgXxTCEqYwOluoRplwLPbW15emE9QeiXjIGK68wwE+G9Z845MOEs5VIXzv8WztkXHX3jo
+	OE6DZkViccPCxSSLsucSKagjSx8D29wNWzMSTEp+UfiDZ3vi+sK5Zi
+X-Received: by 2002:a05:651c:1508:b0:3ac:416c:721b with SMTP id
+ 38308e7fff4ca-3acb7a98329mr1607061fa.10.1793332763639; Thu, 29 Oct 2026
+ 20:59:23 -0700 (PDT)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -106,14 +103,13 @@ List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 References: <20261028-alpha-profileme-v1-0-d44b52bf2500@gmail.com>
- <20261028-alpha-profileme-v1-1-d44b52bf2500@gmail.com> <CA+=Fv5TsDjMcd8+ZPPAXWzw-ox5yhvYJqiCBUfj-6Jm0Lxf9aA@mail.gmail.com>
-In-Reply-To: <CA+=Fv5TsDjMcd8+ZPPAXWzw-ox5yhvYJqiCBUfj-6Jm0Lxf9aA@mail.gmail.com>
+ <20261028-alpha-profileme-v1-3-d44b52bf2500@gmail.com> <CA+=Fv5QZhtB646nAvoMzbc5O+EdFOnZhXyRrv_1Q-LGWKfbrEQ@mail.gmail.com>
+In-Reply-To: <CA+=Fv5QZhtB646nAvoMzbc5O+EdFOnZhXyRrv_1Q-LGWKfbrEQ@mail.gmail.com>
 From: Matt Turner <mattst88@gmail.com>
-Date: Thu, 29 Oct 2026 23:58:07 -0400
-X-Gm-Features: AclHuK8V7EpB7wC06FUDBXo_x3T-573CFsU0sqVCv9AcRDNtqPDSxvn5PcuIGgc
-Message-ID: <CAEdQ38G9id1CnZGzkgw8vHLKZM+bvJEDx7ze+6zpULGTwG=9JQ@mail.gmail.com>
-Subject: Re: [PATCH 1/5] alpha/perf: pass PERFMON_CMD_LOGGING_ALL to the
- logging options call
+Date: Thu, 29 Oct 2026 23:59:11 -0400
+X-Gm-Features: AclHuK90bCzCpBH3kCewscdgnWin1k9-jXiMf8ZZ82e4TOlEtXb6Mcvjq0xGsE0
+Message-ID: <CAEdQ38H0sdgPHOi=iDrHWjzsF4GNJgVUt4GxbZ3O5YwpPc3zJw@mail.gmail.com>
+Subject: Re: [PATCH 3/5] alpha/perf: implement ProfileMe sampling
 To: Magnus Lindholm <linmag7@gmail.com>
 Cc: Richard Henderson <richard.henderson@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -125,34 +121,38 @@ Cc: Richard Henderson <richard.henderson@linaro.org>, Peter Zijlstra <peterz@inf
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 29, 2026 at 1:38=E2=80=AFPM Magnus Lindholm <linmag7@gmail.com>=
- wrote:
-> The Alpha Architecture Reference Manual, Table E-18 (page E-24),
-> describes bit 0 as:
+On Thu, Oct 29, 2026 at 11:18=E2=80=AFAM Magnus Lindholm <linmag7@gmail.com=
+> wrote:
+> > +       pm_regs =3D *regs;
 >
->   "set =3D log all processes"
->   "clear =3D log only selected processes"
->
-> That appears opposite to the changelog's description of zero as
-> "count all processes". Is the manual incorrect for the PALcode
-> implementation we use?
+> On Alpha, perf_reg_value(SP) derives kernel SP from regs + 1.
+> I think passing this copy therefore reports an address past the local cop=
+y,
+> rather than past the original interrupt frame.
 
-Yes, the manual has it backwards. I disassembled the wrperfmon handler
-in the UNIX PALcode from the ES47 firmware (V7.3) and from the latest
-ES40 firmware, and the code is the same in both. Function 3 clears
-I_CTL[SPCE] and sets it again unless bit 0 of a1 is set:
+[...]
 
-    hw_mfpr  t3, I_CTL
-    mov      1, t4            # SPCE is I_CTL bit 0
-    andnot   t3, t4, t3
-    cmovlbs  a1, zero, t4
-    or       t3, t4, t3
-    hw_mtpr  t3, I_CTL
+> If PMPC is in userspace but the interrupt arrived in kernel mode,
+> this also makes perf_sample_regs_user() select the copied kernel
+> registers as user registers, bypassing perf_get_regs_user().
 
-The 21264 HRM calls SPCE "System Performance Counting Enable", so 0
-counts all processes. The per-process enable is PCTX[PPCE], which
-PALcode loads from the PME bit in the PCB. Linux never sets that bit,
-so if 0 meant "selected processes only" we would never have counted
-anything.
+[...]
 
-I'll add a paragraph about this to the commit message in v2.
+> Could we preserve the original frame for register/stack capture
+> and supply the profiled IP and mode separately?
+
+Right on both counts. sashiko caught the same thing, and v2 drops the
+copy. perf core takes the sample IP and mode from regs
+(perf_instruction_pointer() and perf_misc_flags()), so there is no way
+to pass them separately. Instead v2 sets the PC and mode bit in a real
+frame for the overflow call and restores them afterwards:
+
+- interrupt taken in the instruction's mode: regs
+- user instruction, interrupt taken in the kernel: task_pt_regs(current)
+- kernel instruction, interrupt taken after the return to user mode: a
+  per-CPU pt_regs holding only the PC, since the kernel state is gone.
+  It is not on the stack, so perf_reg_value() reports no SP for it, and
+  the user frame is left alone for perf_get_regs_user().
+
+So SP comes from the right frame, and a user sample gets the real user
+frame.
