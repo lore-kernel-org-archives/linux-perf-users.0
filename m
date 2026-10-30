@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793373429;
-	b=4Bty8oMDFKkfdC5GoA21QHVja+WSjZUnoUVHPxutWo+MoR+k/NrEgR2yF+rkS9nFPqhJ
-	 ujqgAO+4BnV7lYa33xJTHUUQOKXDkSkT4SrZNhNId9ua8hvYJucN/9K92uaKyENmURN/U
-	 j2ukg6LeucfQMHx1RSV3y2CZNB90yV/JcnJwCbqmR6PBoQW8FBJhzDfD1aDgGoSeaK2p8
-	 vUB/P6rZSdcVaexDsjdpvxyg/CmSaMe+ISfI7g1WsQuirmSDy13V0PkRn94l9f1f51Dk4
-	 Oc6yLthUle+MjzuZEoW9Ns78cCoe59enyjQdGv+g+bSviplUPHGxskj5FJvY1DMwZGA==
+	t=1793373440;
+	b=qxNAMFRkS2lbaFMWVR+WWunQJdv85yuXlKqD1Yk0OLFqherZ71dJEfOwykQ7jrvkBko9
+	 AXTXw3XC3VseQl2z96ZsP6BtBt+zTOJlcgo/cm2zBbt57cPhKSD0ZRWFaj8IFcBXBIHFW
+	 gGNSfkrKp/t1bwOmI/lMMMxNxPnBaTryYIWDvNQwlfn9zmp06aJ/z5nup/U42NJH/XKXL
+	 tTi4eFQCRjH/1nUG3OY9akkPa+SuXrF4P91O21obLxi/Y8FPFeekHYOUyqf3S0NAKjVxs
+	 iPFXyofDlNSJ598rlOJpuxVQOtaLys8aMgAkdepo2RrxZpTManJjoK/latZ4GsQ3/Ag==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793373429;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793373440;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=2Y91tSxrY0GmFpIaigdYThXteRZgmSnbPsihE/5Q9vc=;
-	b=SbMc0yy6DqL4jsfSR/bH58Ay0dcKXyohj0Nocg/0FuNY7p0yWFPUb9MGlKZjLBgFlA4E
-	 eVKIyJmB1eAfA47nOj7iNDXf09M5Hgxzo9JAYEuyr2ieqlTm2waWOKnzKXF08LrAB+Q4N
-	 jTcAxQPHu6lPgPOTM3iM0lWeC7OGcYDJKVlq92C8uOFWqs3D13MY/lxJspGmwDJL6ZE6j
-	 nMhtrT3KTr1vadzqs0QyHwIiq2XMj7oVDZN5hvrVq2Hhu74JeGBI8jmidcQpunI81EjXl
-	 B2/wxePnZwk5SL5Op11fIL0Kc2eqLbDAiEBsIbgTs/Svn51K5ESeMZPZ7qJrR7e1x/A==
+	bh=Z3NRBBhJWC2AWTLQUW4o9YkhE4LhDx7m/dgwhggUNZs=;
+	b=20QKVhWwZ6EZ1WVQJrQLadFmODoXHGQ5Fr/FoWJ1eP1g2ZSkWA1EvQcos4JUoacgE1X0
+	 /ybpsrKPu86K4vK28zI6sci9iGW+45dnPO2jaid73J9rklocXCikNBnbty2B7CNMlxxe9
+	 3YdvmoKpKbdiTKvD9IwMspOCU5tT2K8mxkDeVXU6yZwCOaYTQAMwbQzvQPiX0I0EwK4rP
+	 GSso/zQJ7jLieuAFvmLKet3/lPdpPJfgNXZDRFAbbG54SxSKp0XRcHJ56YRWzKWyQxbcr
+	 /btxVoXUdmcoA9EHFAEM146/oocLZ7IsU83E81YmIE9DLYU36NhQsAznChZPwoT1dkA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kDPEwhTp;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bSRm3jdc;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08464606A322
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 15:17:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D381606A321
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 15:17:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kDPEwhTp
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F2491F0093A;
-	Fri, 30 Oct 2026 15:17:08 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bSRm3jdc
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D0321F000C1;
+	Fri, 30 Oct 2026 15:17:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793373428;
-	bh=2Y91tSxrY0GmFpIaigdYThXteRZgmSnbPsihE/5Q9vc=;
+	s=k20260515; t=1793373440;
+	bh=Z3NRBBhJWC2AWTLQUW4o9YkhE4LhDx7m/dgwhggUNZs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kDPEwhTpZpT3JTar+wsUkdzDAIAjHMV4a9MPB4TEzQ2AEQLV7gQvFtZAN7zc3WAzg
-	 L36uCTnUHQqXYxzy9/ch7gxgxKi+UkxCkHokn0O8NQq9rwzRkDp/8iZodn3VTuIijO
-	 oMCt28/EgbMccONyXnXKFQN+AC4IAiJGown9lM3Md4G4UjDjccRr+A1x+ZYRqY+f9g
-	 bJgOzZcVdnYzig16RX/RQPTcye2GkHJWskU4jy6CiOtAhFSlFMSMf8ruCnG828jS6P
-	 /qqdJi+AeHZEELJlohiDWaQbnA4/0rOpoxAtbNfamiBaImH1tfcsWb0bmdbOaRHb8p
-	 9Vvm4H+wq6iLQ==
-Message-ID: <sashiko-outbox-191147@kernel.org>
+	b=bSRm3jdcbPxP5z2YpHLZlHJtIsear18U8Pa+d/oxmnWxHJPKLFiFxiJG+3Vew/mAp
+	 j2hNoPR/jryps8Yq7/YtVZQra3HxZtkZsA5GsAeTyRg4FAZJOdXjXrBwYPfMXc5p0Q
+	 X6bKzowDhWS++CvwzNPxEeYtM1Gg+mPAzWncXM6T/mUOvyKIGqKkTE4dIANu5WOzOX
+	 wjHfPm3ZBbKFicZ+enM10hzC4HhED+b2MpcWFZ71q9c1/39Ta+T49iuP043RlE9cPS
+	 j1YLkwI2Zeo9K9qJ9rWjpCTpbZzSVYjk6iJBjPBQ+dN+lQEdosJxDPtGk5R6QEsBWq
+	 waBjs0ysTGi0Q==
+Message-ID: <sashiko-outbox-191150@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 07/14] perf cs-etm: Factor out final instruction
- sample synthesis
+Subject: Re: [PATCH v3 04/14] perf cs-etm: Centralize packet ISA
+ initialization
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Leo Yan" <leo.yan@arm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261030-perf_cs_etm_fix_non_taken-v3-7-7629b52ab047@arm.com>
+In-Reply-To: <20261030-perf_cs_etm_fix_non_taken-v3-4-7629b52ab047@arm.com>
 References: <20261030-perf_cs_etm_fix_non_taken-v3-0-7629b52ab047@arm.com>
- <20261030-perf_cs_etm_fix_non_taken-v3-7-7629b52ab047@arm.com>
+ <20261030-perf_cs_etm_fix_non_taken-v3-4-7629b52ab047@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 15:17:08 +0000
+Date: Fri, 30 Oct 2026 15:17:19 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,11 +61,15 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> cs_etm__flush() and cs_etm__end_block() duplicate the instruction sample
-> used to report the remaining branch history at the end of a trace.
+> Exception packets need their own ISA so the frontend can generate samples
+> directly from them. Currently, ISA initialization is limited to instructi=
+on
+> range packets.
 >=20
-> Move this code into cs_etm__synth_last_instruction_sample(), preserving
-> the sample generation and instruction period reset.
+> Move ISA initialization into cs_etm_decoder__buffer_packet() and use a
+> common helper to obtain it from the OpenCSD element. Populate the ISA for
+> instruction ranges, context updates and exceptions, leaving it unknown
+> for other element types.
 >=20
 > Reviewed-by: James Clark <james.clark@linaro.org>
 > Signed-off-by: Leo Yan <leo.yan@arm.com>
@@ -74,5 +78,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261030-perf_cs_et=
-m_fix_non_taken-v3-0-7629b52ab047@arm.com?part=3D7
+m_fix_non_taken-v3-0-7629b52ab047@arm.com?part=3D4
 
