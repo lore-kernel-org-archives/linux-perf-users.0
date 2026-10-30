@@ -1,96 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.49
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.48
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793368451;
-	b=PPrkFF5sVbvMnGqKmJwg7rKpx4Pfo8qf70HXPO1tc/5YpxUTCOjuXm7v+YtAnCYQalCu
-	 ohFPWIjGczh7YPD1i1ji036lim+5sFppORNWWUeaUTKZXBu6yTcV+FjH+mpZuGb89wujD
-	 655nESbAt8X4Xubv0ybZfddIhYLo2E5NGjMKA950LTDJqbKl/u1OpQDle+po9VJ5r1r28
-	 3dd3bgBmVeQ8rzRc5IbOZtOfjXV2rBBmMJOU4x1Wf0OYxiPwyEaVqQsJP3w5U6pB1i/zJ
-	 5Q+V9nA+yIAL7us4RKfNs7TcDBbbrJCFk1zYuoyECMQKdHhej9srd9oflcLMwEymPBA==
+	t=1793368535;
+	b=tZ/ZNa19G4OG+qZoKwD/7hHOp4JrcHcp6PqvtLCtmdUGD3DuKCo44AkeRbCyHorW8/sS
+	 3HYoYQobeyErb9uoJu/LOjDLmzhS3VnJTX7Uz6gxhCPfOu8ST6nRgAcHBIV0tCCw7QGHd
+	 Fg9jruWd5LhDNixu/ppiwhFi+uToPx70CD6D9wIN58gGEuk0+q7Kkql1YHfQHQHMfQfkt
+	 FwrhI3tRlMAVf9+Z0oYskaOwYG4hOpVCpdm3GO4NcwMSIraMjhNOtEP7X0K2vInK3eBKM
+	 AjrdOI89wJEp8Lc5PPm66MFa/ftuFmnoVDo9cCxyny36j69qUqmZVRihPJi6q/oYbaw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793368451;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793368535;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
 	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
 	 Message-ID:Subject:To:Cc:Content-Type;
-	bh=BAuLNHPNJqqoWJmSv1jiLnRdkmUVQGOL2ovNhcmC/YY=;
-	b=frF15W1UzcrjNB0YieKyGCZ/4nhHZtq57uh+7yUkT0sfaJ4NsOt/ZsrN00NS4V1/VFVh
-	 81ieKypg+3GiwQVTfy+Jepkba0pMlSwJbnGUEHMTeNoW+xiXhiUqURppyl7C0aD3iG14w
-	 ED/xXtvq/DTN0pZQTtGw8pXrxhxRvVVbdMDe4Jm8K0q3n25KfEMC0tt0smKQmkuZCBVsP
-	 YddLL/7cncoOm4Ro5B60ul2IJ3tns2962j+KNvGv8EzypkEp9bC7s3wc5zy61rw0677+7
-	 ZtQkH3bgHkfuSMKr3pmmZZjmFGJlkziHsPLbFNMYeEpmHHv2YDlvjYUwNS3h3zivkOw==
+	bh=dtvSC+Ou86by9mEh2D4NPgVOHJN4VrQWEhxe1Vpo7Eo=;
+	b=Vp5XYR9HLAoBtLBgBmJvwipMY4pIPqRH0BRAtzzKhsTNkG+29Mo4ifhZorXim+W6WVbH
+	 qZC64ka8TiMF1y4JExLbCkA3VVq9t442AqDjB+ZEvfsoRXuwEWukE0AKsFr+yVzni+02N
+	 r9R0zjqO9jkuEe6DaMgOjNxk6UgrNZ4is7+gTANxrKukkBg8duuss9ChEHWM6eJLP+tBE
+	 06aXLWPVBLdctF8ThXL3+KBaCiPwJ8+Lbbqp76sqG31y5f7Szez4CtBZCcFmNu/xH8AWS
+	 6d6rlOmy5DQXawNxkFRWxEMkOJXfYzzOWOUyF9D9BpEZg17WnGdEvtFmHAYkzMjkC1g==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=uber.com;
 	spf=fail smtp.mailfrom=uber.com;
-	dkim=pass header.d=uber.com header.i=@uber.com header.a=rsa-sha256 header.s=google header.b="oo/gDQ1H";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.49
-Received: from mail-yx1-f49.google.com (mail-yx1-f49.google.com [74.125.224.49])
+	dkim=pass header.d=uber.com header.i=@uber.com header.a=rsa-sha256 header.s=google header.b=HTq6J8Yn;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.48
+Received: from mail-yx1-f48.google.com (mail-yx1-f48.google.com [74.125.224.48])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D62606A31C
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 13:54:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 23D62606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBAC4606A31D
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 13:55:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CBAC4606A31D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=uber.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=uber.com header.i=@uber.com header.a=rsa-sha256 header.s=google header.b=oo/gDQ1H
-Received: by mail-yx1-f49.google.com with SMTP id 956f58d0204a3-677bc4704cbso641954d50.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 06:54:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1793368445; cv=none;
+	dkim=pass (1024-bit key, unprotected) header.d=uber.com header.i=@uber.com header.a=rsa-sha256 header.s=google header.b=HTq6J8Yn
+Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-6798af41644so477483d50.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 06:55:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1793368534; cv=none;
         d=google.com; s=arc-20260327;
-        b=XfqibRL/tvd6S8iomzILDRdrL8oPE6vhKYO4sJaXpMG/YifHWATxhauzPUmgGdNF3G
-         VZpNdILplUYNaK9hp/G/NxpUdveLXbmX44Ode6ltMN5b+E//2ln7yPJ5xCfIgUBh4YZD
-         bZKOjIfHvRD/JrsmUKM3azMbnk42HmOd3i7tMZmM1AxrqIlXkH/B6moBcSIWoDvDeSEA
-         3zDO1FpauFEwPaIpKLCxbPqtODqcTpheZmeP371GO00ya/LW4pafl1iPzadQCHk9PxC2
-         /oHhSRP9sRv9EBsqoUeW9wodHnmgS5Rwrp5iZEdLPIl9VszHAnvREztmBHrqDW/CHmez
-         ylCw==
+        b=i4igC5kZK+mnopg4h92YF9ZXgbe/lSi5PHrbxNYE5+XPkRfEqG7l0Ekze7nFVbvEuF
+         M2+ZvKvjNjjNlAKXPjlWAW+aK1D64IujUGnWBXzDjpeLhO+aSeLZsgj3c4vx3/6IoELP
+         OqQh36wJqNmHIWKgu59Q6MHTwZqxKI2y8SQdKavRyVu1prJCbAyG0tYton70v9UNzzl4
+         WO8jTdNnis4Dskkb4+0ELTcJVWreaPq9UYY2TrkYcNDhQPTJ1Q/PZq+heg1ROW85D46u
+         vB1OueYQ/50Nmu6qGh7rnEwdJeBRfol3VJ+h1gclkohL7BNpYOU6M8YQFrJKWJa0q/H2
+         ycbA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:dkim-signature;
-        bh=BAuLNHPNJqqoWJmSv1jiLnRdkmUVQGOL2ovNhcmC/YY=;
-        fh=fUs+y8qPYjDxStqke0ZxVX3Zp6zwLJH31VyRRPmyYnI=;
-        b=rqzvB9LXmivJbePBoqXpPZNkuXbpLXxUn1XRzH/ms60xjo4o5Ljc0/OwIMVR4cn4Gi
-         0iolAY15lQ0PBRPzZmO0lJ2SGqaizWHU/nLexoAWdA0UqwsDj4eNM1+xTvVb/uFOw6BE
-         z09scj1xPTit/pMyyo7G3Y66yZnyTAfRqnTxwr8VpvwO5C4Qo8Lkqy1m9Z6m2UjzDi+j
-         JT3/NWmA3xhFkJj0HF7cV/Og94eNWPITUUC/JVWGzdFMokJ1aMcFgS6x/o1FG1Vmc4zy
-         Dz5v555+x9iBWg4UUBt3dfE3LV6+cxwa08Vd6G0LyA4soYyXwWOlICWMYdPopvg2Q7Xp
-         1z9g==;
+        bh=dtvSC+Ou86by9mEh2D4NPgVOHJN4VrQWEhxe1Vpo7Eo=;
+        fh=FKbDloh1FpqJgf04cnqpWwEgVeuGxzoYZccNiarWZJw=;
+        b=NjjfhV03/ngt8aIGs/IOnQ5HUtLZYse/R/W3KQjINxVNwpO0IWPTBRZlAPeBa7vBEI
+         Ylf6oJtsgS7pT46QxahKcjOSR2jpJvFAns6urTI8Z4ZEfcFrsm4XmxJsLTj2pKQhBRoW
+         6YGb2deEy2Cq8hPQnjd2QB4gC6evGxs+Cqp1m5nZx3LrWyVQ5lQ7yBBzhLLRDITobdzD
+         bFrRHGoQBDd6TD/S/K6PthkIgXUyl5Rph0HJOFr43m8nA7g6k7336PygSTExsKy/Jdrs
+         dGCPufu4iLvCIDtj9Nx8l70aeV4uxTdVnYSjrpjQW89mfH4U0vu3MnPY99KF9JKPWpf0
+         9aBA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=uber.com; s=google; t=1793368445; x=1793973245; darn=vger.kernel.org;
+        d=uber.com; s=google; t=1793368534; x=1793973334; darn=vger.kernel.org;
         h=content-type:cc:to:subject:message-id:date:from:in-reply-to
          :references:mime-version:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=BAuLNHPNJqqoWJmSv1jiLnRdkmUVQGOL2ovNhcmC/YY=;
-        b=oo/gDQ1HmcwaZyjfpA2G9VFwx996PJQ2JK8EgT+15BB9Yu1b3YwRk98RYORY3hrVq2
-         7tTk7woQsPGj3s3kHexvcBU5TjbBuB+Ut6T9Q/8eU4l+rGY6B0Qy1lOnkr8s4dsu2b/A
-         aHkWmBZFNMqUm2kmaLZiIM7uS9A4o/zRNzfz4=
+        bh=dtvSC+Ou86by9mEh2D4NPgVOHJN4VrQWEhxe1Vpo7Eo=;
+        b=HTq6J8YnXw3xvmdibnTPCJR2Q7OYBdd0aaU08pAC+fJSm6T050J1q6VthBz+ieLF8T
+         wG9FAaY4x8O5ECRsM+e8ykmRqZQ+3TabAyD43C6Hc46e7O4P/s7dM4rxQfMmVFlmRSwS
+         9AuYDmWe6hLCsB83P4QLBv3o8M65TGcru8Iu0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793368445; x=1793973245;
+        d=1e100.net; s=20260707; t=1793368534; x=1793973334;
         h=content-type:cc:to:subject:message-id:date:from:in-reply-to
          :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=BAuLNHPNJqqoWJmSv1jiLnRdkmUVQGOL2ovNhcmC/YY=;
-        b=FqfK2UbsA1hvC7Gc590mJbJfUa2y/hkTTJA7z/mEpiEZrpWaEA9olX258ncJo53K6/
-         1wFdTXdaWsd67cKYckvsnwMpsFEXeABJ3o7gHrPtM/3eF0wfEfc2BTyMZO6rxFuM/x56
-         K3SsUKJzAVqGfJMuWfB0sfx+qVsm57O0tvZfhklc+m0XvHMZAY+VTTniOgZbqOKWts1L
-         kogI+5qJo28loFGVSgrJbzRBe5d/EO6m91mE6sR00diDu9rY6PXL9ia2Gb97mnaWZFCH
-         OyYtZjKe9wl2XTVIqjSxbvvZPURwDNBLJjmS/ZgeATLT+tfboBkfASLMWCgieskk0kOP
-         bk4Q==
-X-Forwarded-Encrypted: i=1; AKwUvBw0PEwoPTUCBmnF8eReLCRt90I9a3yzei3Usfc/m3D7YVgtIcFyaKB68jl7ZV9Z4A3uJlaqscIXnZ0chbC9gfbB@vger.kernel.org
-X-Gm-Message-State: AFq9FYKw1v0nmK9fWzJ0NM80dwXgzTDGoGc90NRKs5TqZMKm1AKjyIPO
-	xwXfk1tAqEnTZKEEtUiNfW+qWMAUuva6Hg/XDHud94TvldsHhFGMFg06LxA64rop8in2qYO0hte
-	0MnhtsTEtcLYg/G74qxZeuD5VK+d2+eO3iN/E2mBxoA==
-X-Gm-Gg: AYBFou1rVp/0sXMRVXLppb5TYDS1KpuN/VGosjGTY+1ma0YQNKeQTvcdj7VZAiinA8a
-	m4kaGOeI8HJHcU/umq7BMUwa/5gvBUd5QMGuRTDBd/ax3t9kw6YU7wRDDAtLrZA4GP8pfc2rdsk
-	LSVG41rp9dnkqy9J0jQb8OafRAEBx5Knx3fzaKYsdSmeAi1GPjQg8UuHw3t9c10X+iL8AuuUv+V
-	xwKecgj64ckaOt4tE+2tNc03EKv5gIbeJlljOlSLmSrAuOwVlf4A9NquvleWKI7iQKY5vlijcXD
-	+zl3ezyQq5PjHwSiDCUFTXJwMmvDiT0WEMA8JqV6w+57i+AvZWj+L+Oa4uB8TFiS5NEbOzWSFeb
-	+WcZoNsxt5sBMLD2OlYMcikAieVQcvd96+8pIB/rCeIxSuayka75mAA3YEvHAzftm54K9+A==
-X-Received: by 2002:a05:690e:803:10b0:679:94b3:a257 with SMTP id
- 956f58d0204a3-67ba5072b56mr832427d50.115.1793368444841; Fri, 30 Oct 2026
- 06:54:04 -0700 (PDT)
+        bh=dtvSC+Ou86by9mEh2D4NPgVOHJN4VrQWEhxe1Vpo7Eo=;
+        b=w59A+xCopzFIFQCVmnhaueEabdSgBxej0aiKYE0ga789/kuF6wHeFE1qyd82MXEN0M
+         yosfYgRFZ7Wlq/DC907UyRAdXaa8ytM+Y1mCvb+Xs4IMPedW7QcFICuU1BpA+qnQtpNa
+         j9bHosT6gleIq1oEPHdBZoJnkU+C9d+mvm9XuHVDPSsmROTfB1HoEz7G8nLwupyqyAGv
+         1h8a92c9yROFuL086wBbQqduTI/Aygj3a3bV0CCaUkfPguDBF6ymMZZarMG1ILjmncVg
+         Cp+kSK6O8OQt7otfwMKKjBlrEjgfZSbDKPxkOiYVDcDdDNCIN4N0rpB2qTHPkD7iBWYk
+         Ip1A==
+X-Forwarded-Encrypted: i=1; AKwUvBwi7CpqZ+0qf8Ai+voD901Bswq1G93lRgiNh3E4U/zneqA2oxXMV5mpn1cxmm4O3o8aRhAOnNC1aV51MLsjmX7d@vger.kernel.org
+X-Gm-Message-State: AFq9FYLwgQgDoXLA9U3GNaZXWCdAXAkVOi4UAauyBPXkHMUemk/hIlXR
+	f94dEzoehKMEkXXUTQ7LMU/sTPNCsPBiSQ+os1ZGFSd8TXJPrF7w2RDNpaPV/dLiU8C8UrM9YV0
+	EJmfe4nG6I4gNpu9iHkFuzWVp8xYQLcOsVOm7sSJEag==
+X-Gm-Gg: AYBFou1ZHwVqAIsUM8t8nP1E6arGLIvr+m/e7xdNKBRCXldsdwSerYhb5qkfnDj3HhY
+	mQaBjWHuxxBFGxpK5ASnuds4HnFUp/3C9EAoQT/iZFAdXbc3p8RB8mRBpeYGJXrZQx2JT7bNRjj
+	QrZDkku1oStYnaWtvXmLx88+JvQ061RYSunP3GcmZRZqN7On+pgUikWVMqocnD3Kr4aVtC76KWH
+	0mmSWKeC/Ezyb5lQB1AWDzwPKAoUOasL+gSDO922EjDMwEn9Z5DnWeeR0Xx7q7pPNXeUIoKbhgM
+	zW7gzncpRXIUZjSoLrxF057zvGjnJ3VRl+Z3AaWZ88tQ++yolKL8BUOqJUDXw9aXZlvdfHMPOVz
+	fJYvLVmMazHBd163aQnK3I9saqXejcpaVBQgU+rCBuU8PJvHyCut49RHYu7L/b56Xm9peRg==
+X-Received: by 2002:a05:690e:814:10b0:679:5ce3:b32 with SMTP id
+ 956f58d0204a3-67ba4c90a09mr1194821d50.5.1793368533419; Fri, 30 Oct 2026
+ 06:55:33 -0700 (PDT)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -101,14 +101,14 @@ List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 References: <20260928075237.3055101-1-irogers@google.com> <20261027231513.816148-1-irogers@google.com>
- <20261027231513.816148-16-irogers@google.com>
-In-Reply-To: <20261027231513.816148-16-irogers@google.com>
+ <20261027231513.816148-19-irogers@google.com>
+In-Reply-To: <20261027231513.816148-19-irogers@google.com>
 From: Alireza Haghdoost <haghdoost@uber.com>
-Date: Fri, 30 Oct 2026 06:53:49 -0700
-X-Gm-Features: AclHuK9qEUQ8arGpnCaqKbufakBcpdC2RW03pQw1oOPGVk-0ZrZp_NmRX624f18
-Message-ID: <CA+w=M=TDksQKaU4R+og8eTS=17NWSsACaoBnpv3rM6tWiZ37Fg@mail.gmail.com>
-Subject: Re: [PATCH v2 15/18] perf symbol: Add memory shrinking for symbols,
- DSOs, and machines
+Date: Fri, 30 Oct 2026 06:55:16 -0700
+X-Gm-Features: AclHuK9DrHFFdDSfKhPwaxq5H2pjidaEA0BUvDK6bP_W-cA5-k9M1Y8SIrY3tlY
+Message-ID: <CA+w=M=Sja18zN1foZ4oP7AVyxMGjtNNaBaMOhVnT48wZofKR7Q@mail.gmail.com>
+Subject: Re: [PATCH v2 18/18] perf test symbols: Add tests for symbol
+ shrinking and session alloc wrappers
 To: Ian Rogers <irogers@google.com>
 Cc: acme@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com, 
 	james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
@@ -116,59 +116,23 @@ Cc: acme@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,
 Content-Type: text/plain; charset="UTF-8"
 
 On Tue, Oct 27, 2026 at 4:15 PM Ian Rogers <irogers@google.com> wrote:
-> + if (was_shrunk) {
-> + if (ret > 0) {
-> + symbols__merge_retained(dso__symbols(dso), retained, retained_cnt);
-> + } else {
-> + dso__set_adjust_symbols(dso, saved_adjust_symbols);
-> + symbols__restore_retained(dso__symbols(dso), retained,
-> + retained_cnt, retained_allocated);
-> + if (retained_cnt > 0)
-> + ret = retained_cnt;
-> + }
-> + dso__set_symbols_shrunk(dso, false);
-> + dso__set_loaded(dso);
+> + if (!dso__can_shrink_symbols(dso) || dso__kernel(dso))
+> + return TEST_OK;
 
-Could the failed-reload path leave the DSO in a state where a later
-lookup can retry, rather than clearing symbols_shrunk and marking it
-loaded?
+This passes without testing anything when the DSO can't be shrunk, for
+example a perf binary without .symtab. TEST_SKIP would make that
+visible.
 
-If the file is gone or no longer matches when the reload runs, this
-restores only the retained symbols and still marks the DSO loaded and
-not shrunk. The evicted symbols never come back and nothing retries.
-For a DSO without a build-id whose file was replaced, the reload would
-also merge the new file's symbols with the old retained ones.
+No test makes an allocation fail, so the shrink-and-retry path in the
+session wrappers, where 12/18 combines with the 15-17/18 plumbing,
+never runs. Other gaps:
 
-Could the reload also build a local struct symbols and swap it in
-under the write lock, instead of exposing the table while it is being
-rebuilt?
-
-dso__load() currently detaches the retained symbols for the whole
-reload and merges them back at the end. map__find_symbol() waits for
-the dso lock, but a direct dso__find_symbol() from another thread can
-miss the retained symbols or get the fresh copy meanwhile. In a test
-with one lookup thread and one shrink plus map__load() thread, 115,691
-lookups missed a retained symbol, and most of the 13.2M lookups
-returned the fresh copy instead of the retained object. That breaks
-the pointer identity annotations rely on. Swapping a completed table
-under the write lock would close that window.
-
-Smaller things:
-
-- symbols__merge_retained() is O(R^2) in retained symbols because of
-the already_retained scan. Both arrays are sorted, so a linear merge
-works.
-
-- symbols__fixup_duplicate() no longer returns early for
-allow_aliases, and dso__load() now runs a second dedupe after PLT
-synthesis on every load, not only after a shrink.
-
-- choose_best_symbol() now prefers refcount > 1, so which alias wins
-depends on references other threads hold at that moment.
-
-- If shrink removes a newly populated cache entry, dso_cache_io()
-returns -EAGAIN. cached_io() does not retry, so this transient race
-becomes a hard DSO read failure.
+- a reload after the file is gone (15/18)
+- a lookup from another thread during a reload
+- kallsyms alias groups (09/18)
+- the merge sort with many ties
+- after a reload, only one symbol's identity is checked, not the count
+or the order
 
 Thanks,
 Alireza
