@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793334281;
-	b=N3NMHUqtr1WPFMH8OAD9X4Uo/vK+2OEy94iWuSyjUbDHPWi7+eD/zH8bgZlszYteo4f9
-	 D8+tc5dZw5dxx/bTL1tYjFnd8smJnaa5vkGLZ4acDdTjasngvOOmMN63oZF8HaILXfr00
-	 TPXGbN18cra1cutHaJ2Gu8UzSWBlx9EsEzCuOOMAw2558862ybFCzja4BXs1ur9du1/UI
-	 8JDbw3n4hewOsVkzHpBSfdigi30L/6QR7RDrL4pC3bbnV81mUDgXTP4ujPbV7+DirZfJZ
-	 Nzgh6Jyb/bVso09PED+Z67fxySCdQBbrA7G/XqGAM3PD8oGg4j21l8BighD3ztjMwpw==
+	t=1793334588;
+	b=fyakXdpVYxadSQDcMZHf+IIwk0AnxrRJerSBjatK6KfB2WqyysSUnQieSWScbw6maUj2
+	 SdjtNtbVr8UEUklPv03q/wcO56WLAkEUIwi9wB20R0P27wvlAeta5WfJK/9YHysp43Vw9
+	 mEwYCDyAJ1cYj41+KERsAoEDuUHWUGvl9lm2U+WDGjfPmCKkOlG6JkHPOWNe/ysupx2tR
+	 5gNFvoGb7YZly/5M3j73PyNDyIruS7HJQEOugv/bDdLWk2eHIyP3ojwODILssrbgQaQF4
+	 0Xwrh9IWyyN4X+aYTK8LLBt777a/bqeY5PND/WT+Vr9kNCrMfUH5RWslD+CMfhI6qeQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793334281;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793334588;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=TTpezBER6ukTQUdG14Jlo/9IWL1HS2UhzkdgTvCe/aU=;
-	b=qAgNkpMi09d9Dor49JdMsE0l0rSa2HPyMp2knmwOKm4x19kwxUVi486S9c2vGSmsxUgU
-	 eeQAXh7StQ8cpe4juCm6APl2HpwN60+Y2GvZV7mmDMWjE0KzkANb4XIV3AX/seuwxNcIm
-	 0kDn2oi7tn0DFsKCNi5VD80JMacRAls5zoUahrlreCNE6zZwOJ3M0XYCDiK2jq1IY691C
-	 U03JdtubPRF3w2DQ/cWkK85EpIzpCKe9eutO43fg2H9CPiz7Sp7iHkYDonnc8rBEilnI/
-	 zAkrOCYES0/7XViDATzRC1uNJE+7dr8V6dIj1AyQ+Tjrz/aR831CfwVsuWUOPAUNueA==
+	bh=IYims4Zwriz42DEKJms/5Pdy5P4ZEji09+6q+40yVc8=;
+	b=APCxxQabtzcxlQ55p9KyYmGKBNlv5lB8P2u+5/gQMGVEG2J+IfQ1Dj4112u+wS+uP35m
+	 UBJXoi1BeLynPatBW3h8ot4wJfIRIBsTEzRwikzJBYOqOeEHwk7NnOOFrIXM9joDUn1E+
+	 Q9vU0xMJcAYJONIcBvfFVw3CPWdP68SRmaGKBtKPbS19Q3JzFbDhT4RXFRy/jv5ODr2Dq
+	 qzz1DpBAnO/Uwm2bPKv1fU4s4g2mg3U4RNoVREkL0XnkjjjBMTPs3h/QcLW0dPslxMaz6
+	 JrRXlQ/W9SabKN8HHLK1gmwx2+mtFptSC0G27sHOaw+rkg2/WIewAUM2qCZnBFibzsg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=km7M2eH3;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ggDaYxzj;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48286606A31C
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 04:24:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F601606A322
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 04:29:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=km7M2eH3
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 982831F000C1;
-	Fri, 30 Oct 2026 04:24:40 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ggDaYxzj
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB3EA1F00A02;
+	Fri, 30 Oct 2026 04:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793334280;
-	bh=TTpezBER6ukTQUdG14Jlo/9IWL1HS2UhzkdgTvCe/aU=;
+	s=k20260515; t=1793334587;
+	bh=IYims4Zwriz42DEKJms/5Pdy5P4ZEji09+6q+40yVc8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=km7M2eH3ltKMyUqvQB7U9z6yQhMa9RQz/pR7dJKtcR3iYzRGufqa69A9pdcRLgo9w
-	 kYLg0l5fVj1/dcuw4ulObi81iDCuHsseJg47M0OsjhgXkvtjVBUdVxvWB+o6vcJ47R
-	 HyMZRq9ZyQjos90H3f2brSfBFaMELD8Yd2cD/EYddCQgUwvzMFfNg1YnAQgPL89x3n
-	 LNkWb5vn/n0zLD6QPI1dNIIWHhXrQ3V8KMJUczPQ9WMuY/Fj8iBFegCwWssVmVYTxs
-	 xD+g6RsNlgRqCvJjxLUlFh88kq1SY8K/4InBHVjrnurrw2BQu2CFUp5BLVCyohsDh7
-	 M5iqJNO0hzwiA==
-Message-ID: <sashiko-outbox-190292@kernel.org>
+	b=ggDaYxzj5DAdBZSicW2cJuno+NBHfD1INiDHxXUEX0Q/04GAAjeKFXfwY4RQUKS3R
+	 2UOq1sUKvfwI5tOc1SwafnFogf5Kpj2ZiFlOQwqRh2URWr5m54McfG8jfpQuyJGJka
+	 Qry8Ze154wQXNtcRRHwJBgawUYINl/R41c6MXCocKJySmwvuVuy5AjxpNWcUa/0UvI
+	 hzlHAhq8lL/PwPl+GwFmp5M8/pwy923EyiOUrzkA/U3ktvPlb+b7h1G8jqY7QEK8g3
+	 zzAoO68+ToMolPZhHmRQwXjL5HmcnB38HXy3YOM1I47N1yJAN3wwOoYQk7CCS48Icu
+	 qJDRzebkF7gww==
+Message-ID: <sashiko-outbox-190300@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/2] perf alpha: Decode ProfileMe raw samples
+Subject: Re: [PATCH v2 3/5] alpha/perf: implement ProfileMe sampling
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Matt Turner" <mattst88@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261030-perf-alpha-profileme-v2-1-9ce2f0b0e622@gmail.com>
-References: <20261030-perf-alpha-profileme-v2-0-9ce2f0b0e622@gmail.com>
- <20261030-perf-alpha-profileme-v2-1-9ce2f0b0e622@gmail.com>
+In-Reply-To: <20261030-alpha-profileme-v2-3-c702f1c65272@gmail.com>
+References: <20261030-alpha-profileme-v2-0-c702f1c65272@gmail.com>
+ <20261030-alpha-profileme-v2-3-c702f1c65272@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 30 Oct 2026 04:24:40 +0000
+Date: Fri, 30 Oct 2026 04:29:47 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,96 +60,208 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Low] perf alpha: missing -Wpacked suppression breaks build on 32-bit tar=
-gets
+- [High] alpha/perf: missing ProfileMe overflow reset in alpha_pmu_del()
+- [Medium] alpha/perf: stale PERF_HES_UPTODATE in alpha_pmu_stop() drops co=
+unts
 --
 
-commit 119dd432f8c77b285bd2a318dab7adc61639a02f
+commit 52cd21b0cc0eea12519bbbab88ca2330695b853a
 Author: Matt Turner <mattst88@gmail.com>
 
-perf alpha: Decode ProfileMe raw samples
+alpha/perf: implement ProfileMe sampling
 
-This commit decodes Alpha ProfileMe PERF_SAMPLE_RAW payloads in perf report
--D and perf script -D, and copies the UAPI header defining struct
-alpha_profileme_sample into tools/arch.
+This commit implements ProfileMe sampling mode on Alpha EV67 and later
+processors, selectable via the profileme config bit or precise_ip. It
+attributes samples to the instruction address latched in PMPC and handles
+EV67 PALcode restrictions around stopped counters near overflow.
 
-> diff --git a/tools/arch/alpha/include/uapi/asm/perf_event.h b/tools/arch/=
-alpha/include/uapi/asm/perf_event.h
-> new file mode 100644
-> index 0000000000000..aa0eff5a917cb
-> --- /dev/null
-> +++ b/tools/arch/alpha/include/uapi/asm/perf_event.h
-> @@ -0,0 +1,31 @@
-
-[ ... ]
-
-> +#define ALPHA_PROFILEME_SAMPLE_VERSION	1
-> +
-> +struct alpha_profileme_sample {
-> +	__u32 version;
-> +	__u64 pmpc __attribute__((packed));
-> +	__u64 i_stat __attribute__((packed));
-> +	__u64 pctr_ctl __attribute__((packed));
-> +};
-> +
-> +#endif /* _UAPI_ASM_ALPHA_PERF_EVENT_H */
+> diff --git a/arch/alpha/kernel/perf_event.c b/arch/alpha/kernel/perf_even=
+t.c
+> index 70840c05d39bf..c7f0ccf8ec804 100644
+> --- a/arch/alpha/kernel/perf_event.c
+> +++ b/arch/alpha/kernel/perf_event.c
 
 [ ... ]
 
-> diff --git a/tools/perf/util/alpha-sample-raw.c b/tools/perf/util/alpha-s=
-ample-raw.c
-> new file mode 100644
-> index 0000000000000..b4e336d8fc8f6
-> --- /dev/null
-> +++ b/tools/perf/util/alpha-sample-raw.c
-> @@ -0,0 +1,145 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Alpha specific. Provide textual annotation for ProfileMe raw sample d=
-ata.
-> + */
+> @@ -457,7 +519,8 @@ static void maybe_change_configuration(struct cpu_hw_=
+events *cpuc)
+>  		}
+> =20
+>  		if (!(hwc->state & PERF_HES_STOPPED))
+> -			cpuc->idx_mask |=3D (1<<cpuc->current_idx[j]);
+> +			cpuc->idx_mask |=3D alpha_event_idx_mask(hwc,
+> +							cpuc->current_idx[j]);
+>  	}
+>  	cpuc->config =3D cpuc->event[0]->hw.config_base;
+>  }
+> @@ -548,7 +611,7 @@ static void alpha_pmu_del(struct perf_event *event, i=
+nt flags)
+>  			alpha_perf_event_update(event, hwc, idx, 0);
+>  			perf_event_update_userpage(event);
+> =20
+> -			cpuc->idx_mask &=3D ~(1UL<<idx);
+> +			cpuc->idx_mask &=3D ~alpha_event_idx_mask(hwc, idx);
+>  			cpuc->n_events--;
+>  			break;
+>  		}
+
+[Severity: High]
+Can scheduling out a ProfileMe event via alpha_pmu_del() leave PCTR0 stopped
+near overflow without clearing its overflow state?
+
+In kernel/events/core.c, event_sched_out() removes an active event by calli=
+ng
+perf_pmu_disable() -> alpha_pmu_disable() followed directly by
+event->pmu->del() -> alpha_pmu_del(), without calling alpha_pmu_stop():
+
+  event_sched_out()
+    perf_pmu_disable(event->pmu)
+    event->pmu->del(event, 0) -> alpha_pmu_del()
+
+Because alpha_pmu_del() does not call alpha_pmu_stop() or
+alpha_write_pmc_profileme(), it looks like PCTR0 is not moved away from
+overflow in several cases:
+
+1. If a ProfileMe event is scheduled out via alpha_pmu_del() while a
+   ProfileMe window is open (so PCTR0 has overflowed and stopped, before the
+   window closes to generate a PMI) and no subsequent event rewrites PCTR0
+   twice (for example, when cpuc->n_events becomes 0 on context switch or
+   task exit, or when an Aggregate event on PCTR1 is scheduled in), PCTR0 is
+   left disabled near overflow, which can block interrupts under EV67 PALco=
+de
+   restrictions 32 and 38.
+
+2. During multiplexing in perf_rotate_context() or a context switch (which
+   runs ctx_sched_out() and ctx_sched_in() with hardirqs disabled), if a
+   ProfileMe window closes while IRQs are disabled, alpha_pmu_del() removes
+   the ProfileMe event and ctx_sched_in() -> alpha_pmu_enable() ->
+   maybe_change_configuration() schedules in an Aggregate event and overwri=
+tes
+   cpuc->config:
+
+   arch/alpha/kernel/perf_event.c:maybe_change_configuration() {
+       ...
+       cpuc->config =3D cpuc->event[0]->hw.config_base;
+   }
+
+   If the new Aggregate event is on PCTR1, cpuc->config no longer has
+   EV67_PCTR_MODE_PROFILEME set when IRQs are re-enabled and the pending
+   PCTR0 interrupt reaches alpha_perf_event_irq_handler():
+
+   arch/alpha/kernel/perf_event.c:alpha_perf_event_irq_handler() {
+       ...
+       if (unlikely(j =3D=3D cpuc->n_events)) {
+           if (cpuc->config & EV67_PCTR_MODE_PROFILEME)
+               alpha_write_pmc_profileme(-alpha_pmu->pmc_max_period[0]);
+           wrperfmon(PERFMON_CMD_ENABLE, cpuc->idx_mask);
+           return;
+       }
+   }
+
+   And if the new Aggregate event is on PCTR0, alpha_write_pmc() only writes
+   PCTR0 once and the pending PMI matches current_idx[0] =3D=3D 0, attribut=
+ing
+   an overflow to the new Aggregate event.
+
+3. Similarly, if alpha_pmu_stop() is called with flags =3D=3D 0 (such as fr=
+om
+   perf_event_throttle()) after alpha_pmu_start() has cleared hwc->state to
+   0, PERF_HES_UPTODATE is not set in hwc->state, so alpha_pmu_stop() also
+   skips alpha_write_pmc_profileme().
+
+Should alpha_pmu_del() (or a shared helper in alpha_pmu_stop() called from
+alpha_pmu_del()) unconditionally clear PCTR0's overflow state when stopping
+or removing a ProfileMe event?
+
+> @@ -573,7 +636,7 @@ static void alpha_pmu_stop(struct perf_event *event, =
+int flags)
+>  	struct cpu_hw_events *cpuc =3D this_cpu_ptr(&cpu_hw_events);
+> =20
+>  	if (!(hwc->state & PERF_HES_STOPPED)) {
+> -		cpuc->idx_mask &=3D ~(1UL<<hwc->idx);
+> +		cpuc->idx_mask &=3D ~alpha_event_idx_mask(hwc, hwc->idx);
+>  		hwc->state |=3D PERF_HES_STOPPED;
+>  	}
+> =20
+> @@ -583,7 +646,23 @@ static void alpha_pmu_stop(struct perf_event *event,=
+ int flags)
+>  	}
+> =20
+>  	if (cpuc->enabled)
+> -		wrperfmon(PERFMON_CMD_DISABLE, (1UL<<hwc->idx));
+> +		wrperfmon(PERFMON_CMD_DISABLE, alpha_event_idx_mask(hwc, hwc->idx));
 > +
-> +#include <stdio.h>
-> +#include <string.h>
-> +#include <linux/kernel.h>
-> +#include <linux/perf_event.h>
+> +	/*
+> +	 * A ProfileMe event can be stopped with a window open and PCTR0 just
+> +	 * past overflow. Do not leave it there while it is disabled, see
+> +	 * alpha_write_pmc_profileme(). The count was read above, so rebase
+> +	 * prev_count on the value written.
+> +	 */
+> +	if ((hwc->flags & ALPHA_PERF_FLAG_PROFILEME) &&
+> +	    (hwc->state & PERF_HES_UPTODATE)) {
+> +		long left =3D local64_read(&hwc->period_left);
 > +
-> +#include "../../arch/alpha/include/uapi/asm/perf_event.h"
+> +		left =3D clamp(left, alpha_pmu->pmc_left[0],
+> +			     (long)alpha_pmu->pmc_max_period[0]);
+> +		local64_set(&hwc->prev_count, (unsigned long)(-left));
+> +		alpha_write_pmc_profileme((unsigned long)(-left));
+> +	}
+>  }
 
-[Severity: Low]
-Will including this header without suppressing -Wpacked break the build on
-32-bit architectures where the natural alignment of __u64 is 32 bits or less
-(such as m68k, sh, arc, and microblaze)?
+[Severity: Medium]
+Does alpha_pmu_stop() overwrite PCTR0 and hwc->prev_count with a stale
+period_left when an event was started via alpha_pmu_add()?
 
-tools/perf/util/Build unconditionally compiles alpha-sample-raw.o on all
-architectures with EXTRA_WARNINGS +=3D -Wpacked (in
-tools/scripts/Makefile.include) and CORE_CFLAGS +=3D -Werror (in
-tools/perf/Makefile.config).
+When an event is scheduled in via event_sched_in() ->
+alpha_pmu_add(event, PERF_EF_START), alpha_pmu_add() sets:
 
-In struct alpha_profileme_sample, the pmpc, i_stat, and pctr_ctl fields sit=
- at
-4-byte-aligned offsets after __u32 version and carry __attribute__((packed)=
-),
-which lowers their alignment to 1 byte. On targets where __u64 has 4-byte or
-smaller alignment, those fields are already naturally aligned at offset 4, =
-so
-GCC emits a -Wpacked warning ("packed attribute causes inefficient alignmen=
-t"),
-failing the build under -Werror.
+arch/alpha/kernel/perf_event.c:alpha_pmu_add() {
+    ...
+    hwc->state =3D PERF_HES_UPTODATE;
+    if (!(flags & PERF_EF_START))
+        hwc->state |=3D PERF_HES_STOPPED;
+    ...
+}
 
-Should the header inclusion in tools/perf/util/alpha-sample-raw.c be wrappe=
-d in
-diagnostic pragmas, similar to struct pai_data in
-tools/perf/util/s390-sample-raw.c:
+When alpha_pmu_enable() subsequently calls maybe_change_configuration() to
+program the counter, PERF_HES_UPTODATE is never cleared from hwc->state:
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wpacked"
-#pragma GCC diagnostic ignored "-Wattributes"
-#include "../../arch/alpha/include/uapi/asm/perf_event.h"
-#pragma GCC diagnostic pop
+arch/alpha/kernel/perf_event.c:maybe_change_configuration() {
+    ...
+    if (cpuc->current_idx[j] =3D=3D PMC_NO_INDEX) {
+        alpha_perf_event_set_period(pe, hwc, idx);
+        cpuc->current_idx[j] =3D idx;
+    }
+
+    if (!(hwc->state & PERF_HES_STOPPED))
+        cpuc->idx_mask |=3D alpha_event_idx_mask(hwc,
+                        cpuc->current_idx[j]);
+}
+
+If alpha_pmu_stop(event, PERF_EF_UPDATE) is then called (for example, from
+perf_adjust_freq_unthr_events() on the scheduler tick):
+
+arch/alpha/kernel/perf_event.c:alpha_pmu_stop() {
+    ...
+    if ((flags & PERF_EF_UPDATE) && !(hwc->state & PERF_HES_UPTODATE)) {
+        alpha_perf_event_update(event, hwc, hwc->idx, 0);
+        hwc->state |=3D PERF_HES_UPTODATE;
+    }
+}
+
+Because PERF_HES_UPTODATE is already set in hwc->state,
+alpha_perf_event_update() is skipped, but the ProfileMe block right below it
+sees hwc->state & PERF_HES_UPTODATE as true and rewrites hwc->prev_count and
+PCTR0 with the un-updated hwc->period_left, discarding the counts accumulat=
+ed
+in PCTR0 since the event was added or last updated.
+
+Should maybe_change_configuration() clear PERF_HES_UPTODATE when starting an
+event (or should alpha_pmu_add() use alpha_pmu_start() like other PMU
+drivers)?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261030-perf-alpha=
--profileme-v2-0-9ce2f0b0e622@gmail.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261030-alpha-prof=
+ileme-v2-0-c702f1c65272@gmail.com?part=3D3
