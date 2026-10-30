@@ -1,68 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793325250;
-	b=f7kv1r29uxOfuYWQ0LYQCMMP4mf7ae2NbLpETBHrRT88fobaQyhJM3gIJcdp/aSCboiR
-	 dH4qILcsbdJKOqCI2f6TV91UZwyDTUuYfRNVEX/yQ4JTzr5ra26t0eLNr3MFSVdLVuO0t
-	 MoaB74ong+8MYkHTdKJBiyUdb8pscv9fF7kAYZebuFXhxWV3BRtSon681JIQ5SVva3+2k
-	 EDKmKKU6q40pFpwxR3UsvHiOMDPhiHeGlZ9XhN5mmpnWE4Z4pyXV/ZfwyX5n+1l3rVG/Z
-	 KbnQXu2k/Xk9OWDs3JTmkEV3bUhM8Ch1GW50fg2Xdkni/q1XiWhXJ/Ta2g9yI9Gw3dg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793325250;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=wjYBg1Q3ywUgJOXezyyx9SMfSiikbjh5B+4doKRv9VM=;
-	b=PmCI0NsJC4mLV6CFA+EPmqG2+VR8ACQdwjz0CH7Uth22a+HFMpyJ9uZ/1Hz+k58vUKp6
-	 eR5HcK7BhUuse8EIpxLW4/2elPjYFs683iaamdoBuElztdL0jYSzB2CH+epoEvaNVQD75
-	 YZPyVPzQUiB+NqEgMh7lX30gBxmHqBPcNsmpr9vvIDGw4WAe2e2xFP5iJO7KHScOl8U3X
-	 0Weum1NYV75I/8EBCc3XuGQDV19RspJjzJn1+IhL9oZLJlNfvmvsRFMCHc7N/CEWiHJjB
-	 feWTVUPYHsxYjKWGcVd/kuvuua+4DwVraCRp2KwZUi1dxas0ftv6jwwTzXWbrzNghDw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=TCKeH0vy;
-	arc=none smtp.remote-ip=192.198.163.18
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.177
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793329875;
+	b=f0MEhevNfAKhJjVDxGNXy+tNW3kIpdZOt6eGLWysziGC2qipdA4Ba15kmTNu61Tl93TS
+	 tQ9GCq1+mGkLosyxK8sBn/l54Xpj6DYvz6sDhcOFgVppZXeRmAy8winC9YAgylihKCVKI
+	 2Mw2HWNYfEFBWlrhU/PwVJ3ClYszAtePN7oFqpmyaPF/xXo+fpjvBwKMcJJ8QEbOsMRSo
+	 JXn1lHbc6cX4yBCxh/vF3VLXT6ZKGaIvclNgmT3c8CONJ4lkxLWJ39EQ+1eYDGntuSiOo
+	 Hv3Hqdf9IkPsd+Ww0lUY8SjK8aOEW/JkVbHBARgFG0eyuB+kiJ+jd5El9VxKaxA9fjQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793329875;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=hoVHC65GR8n9FjINMXnaahKi7WXhnhvguTlzPVQW3pA=;
+	b=TFY/AfRxPZxb6HLnEKm2aDCs8haab1o8B0j+LOnu/x0rJVJHOJIkzxzfn4UtEF2/pVIE
+	 Aug390hJq8HGcp+daLYn6PDNCTYzcKLuCX6PrCa6NxVJg1DgvvF9jrvMxImch7oF8yNxi
+	 9Wrsm+lCvyYwuT4jvBaYbJw4xcxp2BUggtP7k3EY52/FcUkGXTe1EkFqzsLHzJFtcThB2
+	 hTisHMVmuFC0tykTsCr41EMVhVdIDqksBEEXyE/VnIoenxCQFx/sHmqWiClh3golTCb7C
+	 xDsotvZQQ7fgSz2/XE84VMAJ5N+TVJIH8nrx/GCua14FBFUiFUZFLSC8iyT6KTqVc4g==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=kh2HrdRU;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.177
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCC6606A31A;
-	Fri, 30 Oct 2026 01:54:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DBCC6606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF68606A322
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 Oct 2026 03:11:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BCF68606A322
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=TCKeH0vy
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793325250; x=1824861250;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=REeXOz4sxQCQ6S4TlzCm7TyFzr3t4SgdXimPEAI77bo=;
-  b=TCKeH0vy/zKy25PvDbwZAkaDkwnEUxRRegqsuvwNhOy8sOr/wtP+PQ8Y
-   DRfFgpla16UHW9EAVYtsrqk2xk560X/P1G/osgk30KN/uOyPoUtuutg6N
-   BWhp8UzEYgv7y1I2IfqIb86a8CqoJElJUlSYq1YUYwCT85C0e78zQD+hE
-   JY7uNfF1SKjYso/JtH+xwJA0YxzKEIRhi4qtvvq74O8M7yF6h1wJ4EAMe
-   IZJJcq9Q3n5HSWiW/egWTQYQPamjgogqeT6sFFw3J3H7v3x8oGig6Bj9w
-   ullr4swX/JnHeRKYmJVxdv9D8uCSdEo2geEJwAl0LBMuxvzzyUSTLW7KF
-   w==;
-X-CSE-ConnectionGUID: 9+MgzHF7SC6VlwBlP63PBw==
-X-CSE-MsgGUID: nxp8oCDhReK8NgUCbUtA3g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11950"; a="2113422"
-X-IronPort-AV: E=Sophos;i="6.27,185,1787036400"; 
-   d="scan'208";a="2113422"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2026 18:54:09 -0700
-X-CSE-ConnectionGUID: aLxr/I6SQ+ePb8eOrTnCrA==
-X-CSE-MsgGUID: l+X3zpCqTdyIzQScZZqcrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,185,1787036400"; 
-   d="scan'208";a="5427760"
-Received: from unknown (HELO [10.238.2.61]) ([10.238.2.61])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2026 18:54:04 -0700
-Message-ID: <16441880-1831-4741-ac90-02e5f662435d@linux.intel.com>
-Date: Fri, 30 Oct 2026 09:54:02 +0800
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=kh2HrdRU
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-5383c97c8cfso105451cf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 Oct 2026 20:11:14 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1793329873; cv=none;
+        d=google.com; s=arc-20260327;
+        b=fRuZz231JFsu0ytPNWUbocLhTj+TqP8ctergX5hf8Dom3y5vOHioGWxMRlbP/mQozC
+         1JALrIvGIhoYejR5LwrSBIsONaquKlaCd8CwqihrEOr0cmvkpMMVW/InIMNMbCPXnvMW
+         P8U7Xz6Oa5VjbqpXvyuGiDOhfIDljh6LHqzqegqy20NFNdlwtugg6C0aoL/iPNlhEo/S
+         0NHHvq06fzkXN1EzZTI8lx1tyN2woJnnANUiUnINwH9o+prOgwBjqLI4KIzr9Xyif9uo
+         iHzxClELDN7rFvq9+Sc3uXIx1ZB1e8+2wWsdnDe/BCQbGJRqz3EaO7newT1eIbWSCxqE
+         QFfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=hoVHC65GR8n9FjINMXnaahKi7WXhnhvguTlzPVQW3pA=;
+        fh=K8/HSWsnxUDcTPyaickxKNask2r7Orpf8q6Fsi3+Qiw=;
+        b=Ken2tbhkP99uD/VMQErD9kRkZTn0z612IEExMzSzQ/6DBujfu8E3kvUvRvXDaJf361
+         wimUxC82WC0643bieDiwysc5K/GggwbhPXC8kdCCfdggJPIoihlBT2eXRR3sZMOtYpKM
+         3qhr03EoOhuW3ZYIt0Cp+ZWLFtKLjYZPpl7dbCqj4mJCfP/XY6qNjxNg+D2k1STPQOzc
+         3/o3kGo460zmlAgdAJQ74rrX1b19AQf+GmOrVEVmk7SlRm0/PY6UGR+sD2t/r08nT8D/
+         RoMnwOrp5SyfndBEX6BnO9iedxyJy0VWEdNgKGQ4gZGKKYoR0te0+azCUuTq/kIYNkJ1
+         gi8g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1793329873; x=1793934673; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=hoVHC65GR8n9FjINMXnaahKi7WXhnhvguTlzPVQW3pA=;
+        b=kh2HrdRUmrMNIG/6fwizpyRV2s3ZGcRq8l+qhBw8D3lvG8emEl6JjqraKmxtxX2X2O
+         ZVgvajWvOtpUnbYl7ZWbzrX3gx+Nz56XLrBfUp/MmTdYPJ3VGsBg83OgypsE+VVnTee0
+         B1zec4y+h6QhIc4Iu4oy6WYjms9OJRLgyK3xNdLlO7bckZRnUc/bDAtF8JBpXU0XMUOn
+         1I8oAMJqjNaCzflStpKVCF0Bp9tH4SII9WfY81WZQT/FvfENzypAo+IMJO27Nyr6kjlf
+         vYvY0iyeiRpFjkQcCmE8mKfeZW5WkPkXWbwrjjVJ2hhNOQ+832Moo79dOhNjQ7s/j5df
+         umBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793329873; x=1793934673;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=hoVHC65GR8n9FjINMXnaahKi7WXhnhvguTlzPVQW3pA=;
+        b=m1+fgN5XSJGlJ4fxDZIh3t5AaUzZS7B6SCLkjr2UxmyiC6Mv5p2pbGVSBkVOcHvOJM
+         C099yVrjvShMLKHpND9O7EY0w4ky1QAdozlySGG0DsFw2OEtFAPbv2qRRrv2SA6egcZC
+         ZSc9kzLFNlGrsWsKck5Qg3BScWU/Xyje7TB+tFZVXKytYny0BGhXCiUoPaAYRa9QL/gI
+         s7fzPtDLnuxlByd8iIFW6ueByZCW5L24SYCmQCc57952KUDS5kToWwmqg6g4QiJwxK0W
+         Ek9Gt9TvvJwaW8f51Syn/Wr9bDOKVbdZJ/u9bXaazJC0/W68b60ClXdJXiUHL2XFvwVa
+         oJcA==
+X-Forwarded-Encrypted: i=1; AKwUvBzgXi9TmuQibC89CszRdyqYBMvo/Qc0op2MeqqjGAth9PJ5TBKWoTYc2cPuNkx+7ncNOt0RLY+hbVnzRsG0+hgi@vger.kernel.org
+X-Gm-Message-State: AFq9FYKr3/7P0riSTlp0Mst5GNCo8OlVAANhBsuA8++xhzziUi4ms0qm
+	aWytIcp9816kFXwLKVjFNxtV1WBqjd4kR+uR0cRytKYQaws0d6qe419EuQD8fAcbsCpWLjtmk9U
+	CuZhrYDvftRDED6EDsly1WvsAwOD89Et/pcBUvyfE
+X-Gm-Gg: AYBFou12DQ9DsLZr/UwOFQYhidqdDKKznGGzF3joX0d2nCcl6KmQsAY/013IO2qA9HC
+	OO2ON2FNUhx/dL/dSeyBhNB/u6WLZp/z0hjMWWT9/iDw4VMT7QAtJmfPfWYtpYZSKLY/VDjVlQo
+	8HBDH9ipQ2Sr8zXmWoyEA9twZqVLO2vWfqmEBnOkSnopJfhE6aq1D0S7hPpFA1eN69GEXc0ydqb
+	k4XmOpmMRIQF4guIJQzIT2OTDolGYXwriVgVhhkJ0fTiCGYtU9wRqyUaOn9Jo53SQsXBQ7bG33F
+	tpji+R9Hsqthke+5KS9Fr1CkQqAFBWYzqAPTn3wGiJ0QauhPuuV5BZGT8W31ykF4zIFv8qz1Yc/
+	86H4Ku/aaivNXrbIik9nLdgiRwsLSyE65hY1g9g==
+X-Received: by 2002:a05:622a:1b0e:b0:536:6d88:600a with SMTP id
+ d75a77b69052e-5414de1cf2dmr34323151cf.9.1793329872551; Thu, 29 Oct 2026
+ 20:11:12 -0700 (PDT)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -72,143 +104,94 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v5 13/18] perf/x86/intel: Refresh LBR stack for non-PEBS
- LBR events if needed
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- Sandipan Das <sandipan.das@amd.com>, Andrii Nakryiko <andrii@kernel.org>,
- Song Liu <song@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>,
- Ananth Narayan <ananth.narayan@amd.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>
-References: <20261029043914.1395147-1-dapeng1.mi@linux.intel.com>
- <20261029043914.1395147-14-dapeng1.mi@linux.intel.com>
- <20261029110046.GO1779021@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20261029110046.GO1779021@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20261029162958.3224280-1-irogers@google.com> <20261029162958.3224280-4-irogers@google.com>
+ <d1267d81-0ed8-4b3f-a535-88ddba51af88@kernel.org>
+In-Reply-To: <d1267d81-0ed8-4b3f-a535-88ddba51af88@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 29 Oct 2026 20:11:01 -0700
+X-Gm-Features: AclHuK9rCNoYtTV6H1GziiI59-c1QFU3f9f-3J74Fr_QKbxS-WGNb4D7UrtMMqU
+Message-ID: <CAP-5=fWaLj-ToYvAowp-_dk5tL-_Ju+i=U90GRK_obFNqn5axg@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 3/3] bpftool: Prefer zlib-rs over zlib when available
+To: Quentin Monnet <qmo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linux-perf-users@vger.kernel.org, 
+	bpf@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Oct 29, 2026 at 5:15=E2=80=AFPM Quentin Monnet <qmo@kernel.org> wro=
+te:
+>
+> 2026-10-29 09:29 UTC-0700 ~ Ian Rogers <irogers@google.com>
+> > Add zlib-rs and zlib to FEATURE_TESTS and FEATURE_DISPLAY in
+> > tools/bpf/bpftool/Makefile and use feature_rust_lib to configure
+> > ZLIB_CFLAGS and ZLIB_LIBS when zlib-rs is detected, falling back to -lz=
+.
+>
+>
+> Hi Ian, bpftool doesn't make an intensive use of zlib (mostly, it's a
+> requirement from other dependencies; we may also use it to unzip the
+> kernel config on the host if necessary for probing BPF features on the
+> system, but only on some distributions). So I'm struggling to understand
+> the motivation for your proposal, what do we gain by switching to
+> zlib-rs when available? I understand this implementation is in Rust, but
+> I'm not sure the added complexity and feature probing in the build
+> system is worth it.
 
-On 10/29/2026 7:00 PM, Peter Zijlstra wrote:
-> On Thu, Oct 29, 2026 at 12:39:09PM +0800, Dapeng Mi wrote:
->> PEBS and non-PEBS events currently share the same LBR stack,
->> cpuc->lbr_stack. In the PMI handler, the non-PEBS path refreshes the
->> LBR state before the PEBS buffer is drained.
->>
->> When PEBS and non-PEBS LBR events overflow in the same PMI, draining the
->> PEBS buffer can overwrite the shared LBR stack with the PEBS snapshot.
->> This leaves stale LBR data from the PEBS record in place, and userspace
->> may observe the wrong branch stack instead of the live LBR state at PMI
->> entry.
->>
->> Add a lbr_need_update flag to indicate when the LBR state must be
->> refreshed. If PEBS events and non-PEBS LBR events overflow in the same
->> PMI, set this flag so the non-PEBS LBR event refreshes the live LBR
->> state. Since the LBR state is frozen for the duration of PMI handling, it
->> only needs to be read once even when multiple non-PEBS LBR events
->> overflow in the same PMI.
->>
->> Fixes: c22497f5838c ("perf/x86/intel: Support adaptive PEBS v4")
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  arch/x86/events/intel/core.c | 23 ++++++++++++++++++++---
->>  1 file changed, 20 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->> index 110fff65bd50..37f304a1b48c 100644
->> --- a/arch/x86/events/intel/core.c
->> +++ b/arch/x86/events/intel/core.c
->> @@ -3863,8 +3863,9 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
->>  {
->>  	struct perf_sample_data data;
->>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->> -	int bit;
->> +	bool lbr_need_update = false;
->>  	int handled = 0;
->> +	int bit;
->>  
->>  	inc_perf_irq_stat();
->>  
->> @@ -3929,6 +3930,8 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
->>  		if (cpuc->events[INTEL_PMC_IDX_FIXED_SLOTS] &&
->>  		    is_pebs_counter_event_group(cpuc->events[INTEL_PMC_IDX_FIXED_SLOTS]))
->>  			status &= ~GLOBAL_STATUS_PERF_METRICS_OVF_BIT;
->> +
->> +		lbr_need_update = true;
->>  	}
->>  
->>  	/*
->> @@ -3944,6 +3947,8 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
->>  		if (cpuc->events[INTEL_PMC_IDX_FIXED_SLOTS] &&
->>  		    is_pebs_counter_event_group(cpuc->events[INTEL_PMC_IDX_FIXED_SLOTS]))
->>  			status &= ~GLOBAL_STATUS_PERF_METRICS_OVF_BIT;
->> +
->> +		lbr_need_update = true;
->>  	}
->>  
->>  	/*
->> @@ -4002,8 +4007,14 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
->>  		 *
->>  		 * The PEBS buffer has to be drained before handling the A-PMI
->>  		 */
->> -		if (is_pebs_counter_event_group(event))
->> +		if (is_pebs_counter_event_group(event)) {
->>  			static_call(x86_pmu_drain_pebs)(regs, &data);
->> +			/*
->> +			 * Draining the PEBS buffer can overwrite the shared
->> +			 * LBR stack, so mark lbr_need_update as true.
->> +			 */
->> +			lbr_need_update = true;
->> +		}
->>  
->>  		last_period = event->hw.last_period;
->>  
->> @@ -4012,8 +4023,14 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
->>  
->>  		perf_sample_data_init(&data, 0, last_period);
->>  
->> -		if (has_branch_stack(event))
->> +		if (has_branch_stack(event)) {
->> +			if (lbr_need_update) {
->> +				intel_pmu_lbr_read(&cpuc->lbr_stack,
->> +					cpuc->lbr_entries, cpuc->lbr_counters);
->> +				lbr_need_update = false;
->> +			}
->>  			intel_pmu_lbr_save_brstack(&data, cpuc, event);
->> +		}
->>  
->>  		x86_pmu_clear_perf_regs(regs);
->>  		x86_pmu_update_perf_regs(event, &data, regs, false);
-> Or... you move intel_pmu_lbr_read() from handle_irq() into pmi_common()
-> after we done the PEBS things?
+Hi Quentin,
 
-Yes, I ever tried to do that, but I found it would break the PEBS LBR
-sampling on the platforms prior to ICE LAKE. The PEBS doesn't support
-snapshot LBR stack on these old platforms, so PMI handler has to snapshot
-the LBR stack before draining the PEBS buffer.
+At my workplace, we are transitioning from zlib to zlib-rs for both
+security and performance reasons. I'd like to keep upstream tools
+aligned but they don't have to be, it just seems nice. I agree zlib is
+of a lower priority to users than, say, zstd. For attackers, like with
+brotli, it is probably an area of interest. Knowing the implementation
+is memory safe is at least something in favor of zlib-rs. I sent this
+series out as an RFC because I obviously have no way to mandate what
+upstream should or shouldn't be doing. There are things that can make
+life a little nicer and easier, and this patch series, for me, is one
+of them.
 
-See below code in setup_pebs_fixed_sample_data().
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/bpf/bpftool/.gitignore |  1 +
+> >  tools/bpf/bpftool/Makefile   | 56 ++++++++++++++++++++++++++++++++----
+> >  2 files changed, 51 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/tools/bpf/bpftool/.gitignore b/tools/bpf/bpftool/.gitignor=
+e
+> > index a736f64dc5dc..ea2222373634 100644
+> > --- a/tools/bpf/bpftool/.gitignore
+> > +++ b/tools/bpf/bpftool/.gitignore
+> > @@ -6,5 +6,6 @@ bpftool*.8
+> >  FEATURE-DUMP.bpftool
+> >  feature
+> >  libbpf
+> > +libz_rs
+> >  /*.skel.h
+> >  /vmlinux.h
+> > diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
+> > index b0f7168e7943..a193cf89a034 100644
+> > --- a/tools/bpf/bpftool/Makefile
+> > +++ b/tools/bpf/bpftool/Makefile
+> > @@ -1,5 +1,6 @@
+> >  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >  include ../../scripts/Makefile.include
+> > +include ../../scripts/Makefile.arch
+>
+>
+> Looking at the GitHub mirror repository for bpftool, I'd avoid including
+> this additional Makefile if I could.
 
-    /*
-     * v3 supplies an accurate time stamp, so we use that
-     * for the time stamp.
-     *
-     * We can only do this for the default trace clock.
-     */
-    if (x86_pmu.intel_cap.pebs_format >= 3)
-        setup_pebs_time(event, data, pebs->tsc);
+Ack. I also acknowledge that the CI failed because the patches were
+against perf-tools-next.
 
-    perf_sample_save_brstack(data, event, &cpuc->lbr_stack, NULL);
+Thanks,
+Ian
 
-
-Thanks.
-
-
+> Thanks,
+> Quentin
