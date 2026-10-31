@@ -1,101 +1,103 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.52
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793465817;
-	b=W3FY42Y/zC0SdUb3yxaEGA7ZrtWzKV7JExF8f+U5pPxYEW3nvTQwDEtXdg065Lk8mNuM
-	 8mgqhAEryjpEL1UpkwRwb+4h0/bVrpj94hJwZ6WXpsRXUvJ6Zs0Np4S+MuW0UUxSv3CTk
-	 F0tMqFQnI0XN3YyzlWaFbPt5CMubA2LumSRIENCzv3Alva2bbfYAUITDxgeQLL/R2j8wR
-	 qX1Jkebgt8sKK35NdHyKl6o/TxV7GYjq2eh9pmBjNYvUPetNr3V10kd6TWl6h7/eS5bqU
-	 Rw/iMgzlvwrQh4Tw5r1FrNlBKvXCsnkj5d6BKMwyjZnDeY/B3IiaXoJZ5F8N99zxJ4w==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793465817;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.52
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793467352;
+	b=sn/Q1Apr4/UhiJGNXkiJZgleOnMocFaVzBQm7ST3YXsFI9BWBRlyjTKG8z6sdNgWYTgY
+	 N7KvUPQkkA3nOFml90qWvk5QtA7+gSqQzuqpcOCJy1dcuV0X5vqUrtywR18KGOd10oA2K
+	 ZxKrjkGvoH8Ezslw4UKP+h4qGXUp3oLnt+x6ZdI1fqFADYqlPzKUTDj7Nhaqk+gOeeqjM
+	 /jQIW6m5N6zCb0APKBf5UbdvweBFigrpSgvYJtrLDSbHCU4tFgAKvVHcYaakSWmMktl2L
+	 oClVAmYJQbARlfqSBMmuSMlQlqsp7lJVZM5Syz1cRATotFoi8kBIJfSSKxwKZhh04gQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793467352;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=5HsQn+K8WRVcTEBks1X7UbNy0Qj9FUVgHxdKvavTijw=;
-	b=LkUflwvIGgBbKz6ByiS0OYTudsRc/+gh1xrEOG+iOtEiXYMnK8YJFU0AoTSqL+DXgrVp
-	 D+mTZmCX2S/RGwA6kDVSRdQILXPga27IsZOUEquOkJhtDn/doleqND5FEYyLuqzXblORV
-	 WnAkZascq4vWkoPxmPCgant1SWynJso3KT/JkIr/waFHJbj0PU3zDnzSqvraNTzvZ/Lta
-	 M2LMO44aSCfZ2uMXoURtMyaT3EgYQMkE88trrXuHz2kq134sECIRnlZ2d4UyqVVA2UdB0
-	 KKSJTCNR7PnT+dCzyRDJ+SxlBTDJbPbyMTFyhL+duSCH6UmtW9epdwOLIrhv6EsW8GA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:X-Mailer:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=jC8OcSeHRdd3RsVKGpoelDfISX3MVzmR9xKrD5ogJJM=;
+	b=1i/wfa9oe4iIKRN8RQtXaNXR3+GnBNPVdFiBb8oHDY2KzqI1ydum6HRUnkn7lTsUcvEM
+	 NtHeAq27Bugm0mTbynq95AqsMFVqg72WX35we5Q1ZqAmW4ipBRJdYZxzc6cPVTMGOowwe
+	 ewfwmzhakp2aq6XiwwyMjIvX8mw2lSJbfG5nOdnp3b5mzeIsUO7Ydjk9wUg0Voztux5P0
+	 NaA0xAbm0cM2JANwe16lDqJBO98WjhWM9cVwJG9jKjQk9KUvSGNHKhcwae8FA6DC82Dav
+	 xkjQz5igz4udKLCwPo3/cHIJgzEszdo7U0zfmhiA3h4Pp3cj1kNlU8rB1+nIll99aMg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=pRhNZdpa;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.52
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=VNOMowRp;
+	arc=none smtp.remote-ip=209.85.128.52
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27D8606A31C
-	for <linux-perf-users@vger.kernel.org>; Sat, 31 Oct 2026 16:56:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D27D8606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6031E606A31C
+	for <linux-perf-users@vger.kernel.org>; Sat, 31 Oct 2026 17:22:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6031E606A31C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=pRhNZdpa
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6b1aa2848d2so2431121a12.3
-        for <linux-perf-users@vger.kernel.org>; Sat, 31 Oct 2026 09:56:56 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1793465815; cv=none;
-        d=google.com; s=arc-20260327;
-        b=UJZA3EnhYPrQqTqhVg5OHBG1nphYJ4lgj42rjrdBW+8F9LdOKdsWj+s7FWIWYoe1rU
-         o1NbtxnYKAt2eMB/7fEI5Bzcy2h2RQksxbLeW9M0bWuAoxWNb+VL72b0ficezxwnYMWw
-         3gCWRV2nZhtVBBX0ztKBpllBWTa9dbIr1FEGe9DzvwY3dkbpzRsoJEg44cF5ak9riwud
-         0agOz71za0LvXK8BWay6ME2sgZhtal4r67Pa2IC/MqbkL4NtoXTAW6FpK4qIdwfbNa4b
-         pOsoFHtwmUOpvIsdOl19Sa0zg4hQrrpm+k7Wq4IsLqjD/6LZfvRi6EiXBydk8+JfzqZ6
-         czRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=5HsQn+K8WRVcTEBks1X7UbNy0Qj9FUVgHxdKvavTijw=;
-        fh=HEtYJOw3PgbEDaR0XNHPNPWwFQDwLjSoUgNp/vxumkw=;
-        b=VD+qdrQWgnT/50XGsZPhvs6e8KaNL9nn3U52hkGhqJ6/jnbB/M++MiwINQDaQa2LBQ
-         kaSbyIdwyLVLbAzWPVF0fgd/ZtfuimUIfzjvaNdX/or88PgT4QSyC/njk9Ff/Iz1YY8l
-         /EUTcnT5ObjKhCCBSKnARLG2p955uc7daXpWpk5f53PG4oVVvTUYCwvLy2DGY3lKmXXn
-         m+r3wWdYZs8lm/azBdUH1H4SZZv1BpTr/noPAaZdSpZDHtQ8hPfAe7Bh0AdUlOSiSPxu
-         g+uxObLiMl4w60YVYoXL2HubFPBsx8jBVZ/WMxr8PrDdQCwboOjj38IkcaeIW0eN/ng2
-         wFOQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=VNOMowRp
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4a20bde60a0so13310205e9.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 31 Oct 2026 10:22:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793465815; x=1794070615; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+        d=gmail.com; s=20260707; t=1793467351; x=1794072151; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=5HsQn+K8WRVcTEBks1X7UbNy0Qj9FUVgHxdKvavTijw=;
-        b=pRhNZdpaQpuD/DUfFEwMnU+S4r8hXkZIlNiw05lpKyGMFbu03Yn0xOjPZK2W+NXcsX
-         vpv6J0xZwT+fseXy+hry9PYW9akel5JR6dDK94C3l6CvvoV5rjRDDQur7yGUJ84IB7TB
-         Vq5U2qLARabEaHBXA6orhMC+zcjBKYM+MDX5CL+eErqkjG2n3QghA6G89U2DAz4AwY5j
-         t9qydXkaS/lca7N8CM8yhdveM4aGUHBLfBHfiBWsDBj5aIoNM+/N+xtgkC6GulXMpbPl
-         PR1xG6fg+OLJV4r4HVfASJb73BjxpLXSBS8Mp08pCNYk2MwPqY5OwboE7XoS1K/BRSV0
-         tHxA==
+        bh=jC8OcSeHRdd3RsVKGpoelDfISX3MVzmR9xKrD5ogJJM=;
+        b=VNOMowRpdd7dZ4omQg/uRfJZqCER0Y9T5v4SO3h5ffrxJCIVO9Ec60GLh8eXGczcir
+         7WrSYNchSOHE2w6UMqQrL3feGtET38O4aluFLsz8vQoJHS6PC5R5R6jrgLT/6QILXfmm
+         KRGiBrZWIOMOiTWP18jlPO1f4lA7hYSVPYylKQFmQ0NqkqBemk3uDA2AJ/sM60k4Wjpn
+         XrGCx0OlrWsgXZv+hr7zsfQZhpd4UsCvPCXkg9GgIZ4b52ktl4BDQMKYX2d2LFs2aO+F
+         rNpH6FYNjaJylqQJQz89SaWgjmp1BssY5jV3SsRa4ErDJlZfUvfFHu30FmSxFjRz1sX2
+         yNAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793465815; x=1794070615;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
+        d=1e100.net; s=20260707; t=1793467351; x=1794072151;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=5HsQn+K8WRVcTEBks1X7UbNy0Qj9FUVgHxdKvavTijw=;
-        b=Mp6IZuIvZMkVBiAxgOKS0BrXTgzvYzGfjYHzaRxeeKnt0SiEF2S4a4bOqIaBsY605U
-         OFskCkm06z+n9807nQ5gfZDwyCrouJYiMkkqiJV4ztevoSO/sJj/LQ3BSFe51Fh1/7PA
-         dkyajJsVJm0gCwrRPQ+KSD7noVs34Ogau2KMpS6QzSiBOAmvFlLMI4ULFboChXvd4v+5
-         e4GaHP3sw4Uy3lm5E9HaJPG4EDX+inUsH/NDWYew+f8TgerseQgcqCDQXdr2bhL0H1Xo
-         yvy4u1FtiwAUwEjpS3Tp8MeQbE7LY29NVBmiCChqtCMsEF1Umr3ugP3Z4K5MZj0xlyez
-         uepA==
-X-Forwarded-Encrypted: i=1; AKwUvBzgYqQB8Y9m9tqfXm5DLlwDAGT/tRNidROHziA5nmUShuvrNd448VFnEJ+Lu9Wbq2mqFoc5kdh8pdVs8QQAbECx@vger.kernel.org
-X-Gm-Message-State: AFq9FYI8fCDJ6JFraFa6ONZCBtHN6nRqnH3f6UrKpBL4j0DLzcSPDpOK
-	0maJKFwDFDM6Lgg3ZKZeuYAfuFiZBUvJPIwr/JcUBYlvE/UvbHy265FQ0dApSJgyj82QI6lMfsW
-	KM2CEi0404wkTiKxL4a1k6h0AArMUVkQ=
-X-Gm-Gg: AYBFou2L0NXRnRJ12zEaRq55y6itSTu8srLLbDW4F3wetiFokyQmFagUSVQ5pQfI9uA
-	rRxHME7381gdzG6asv9uRnhqBjn3EVzlCuJD6+I5ZtD2l9KbDz0jdNILREXh8xB8YbB48Wxtp4F
-	zzNqAXzuh3Bkn3tw/umAZI7vJ0poXqx2BnGYc3RcYy8s2Jt65aM70loVkql17RGV+hpQNNLDlS1
-	DUcxZjUQ9LOjF5GmtgnEEwHADUnf39kM2Feu+d2GVknofV8ILkVfCiX+UDAnfRae4uZnu10OvNN
-	szy8jJ0QFoZ+/V7MiExfKCNR8Yx1CVP2PMhMSlrGZd05fV6EOHoVRfXsCC/IfJRjmRwRUKKgMCv
-	uuU+NdkzINHp2SYW70B5NUW+PruEXpF1L3Nju90RtUSGzwzJhhPuV8E1qBa37gEISkAseV+4NSF
-	n7yGLS3GA44zahtXiTQC0sKgE=
-X-Received: by 2002:a05:6402:5007:b0:6b4:d1ed:95b3 with SMTP id
- 4fb4d7f45d1cf-6b4d5727afcmr4034555a12.41.1793465815192; Sat, 31 Oct 2026
- 09:56:55 -0700 (PDT)
+        bh=jC8OcSeHRdd3RsVKGpoelDfISX3MVzmR9xKrD5ogJJM=;
+        b=Iph8QRAZEFsOSHMJBbDY5pWHNjIL7Dx/8DD4tdOc4HuFPGFUNFHcE1+CMTCt0id3lV
+         xz4FpMFAE/SxKEm+duIjxy2wntxP+nxjVlbraTN8ClZTgrr8qD537+a56qP1isvop0sr
+         dObZPwmVODQLG6OtdjyI9BgHbPZPci5R2rG1xhBOGqLrXMJ0+nxqZ3P1NU9AOlSgVLfe
+         UPsr2GV/Y3SmseHwWiopsO+c4X0aQ5F3TLYnnOM6tmaKkH5YslOJB3l5CD0kmDiSRbhA
+         5jD/Xoo9yRymiKTgnEok4mNmhzB8zLah1JNbXjT4URMcYnMyH4j8W3z7jRrTdTMUF9HV
+         LBgA==
+X-Forwarded-Encrypted: i=1; AKwUvBx7T1RpIw5vjy5e+ql6XdvgtddS6dYawrHJxY64iwJ3RbMCNk/FAsh2+uuYYLKVmIltcYAMyxN0t/YprqjymCSC@vger.kernel.org
+X-Gm-Message-State: AFq9FYL2/6sShRAxw0rjBdGbWld+HOaXzE/uHNfHb8rDuDAxkGo1HuAL
+	644lM0PNOOmoQoCze4jRUUSpgrnUYE/bDgTModE8jOlS+z5CLwJS69xt
+X-Gm-Gg: AYBFou32sP5XvX7Aegc+Aj8R83NtM/gxy0Qfx963vESmtJAl7Yic4Z+zG2NVQaGFNJR
+	c0rRC0D7ODCyjoxZ1Tksge5jcQwOr+TDBzLNbQQGE+lWxMEoMH2N6vbnIQ7jE6GcR4CwXw9IocJ
+	TFKFf/Lrl+9WRV42mBC6IquXe6z+REXBAqtwWvnoCnfEM+YzIbGoDTz/ljHthlz5clkoD205Fd7
+	xnB2nGOnfqruT4u0o0CulUTG/eDi6rKgo2PO0SgaeKOlze0+V454pKvJ3sdxCF18DYcwbOeZugG
+	gGSdLKze8yEGEeG8pZj1J2oVuMX0tVObmiTSsyX/loyDuwJjXkoj36bq9UEQ/ZOHwrRM+xmmGb6
+	zZOG6B8fZ64g41w8x4AZPqFeafTYsQwDhZ15qeekmX6s3VJMerLHenxV2h8udKEA18PpWsBU5Tc
+	MnXReiMzb2Iq0Ujcx3fUHcQfRG2GCxUXjrlL3olyCuqUtagojUgwP/zlbUfOmYl0BZu5VEdGB+w
+	HZyppxhspa1i25uyswWnIkVLXErCJhby+q2u2rCgBVtj1C9KJcOevzqbK2O2JC4tdmAwelMtsU2
+	yM379eEhrVtrf4c3U+H9vUEokl4p9xSzfnQWCg9F42fFFSSMt10aQR5bhwwBAbnV9YaLhcOVa4P
+	lOL3WQ9rYUtk=
+X-Received: by 2002:a05:600c:6087:b0:49f:f099:6fb1 with SMTP id 5b1f17b1804b1-4ac17753befmr127595645e9.15.1793467350501;
+        Sat, 31 Oct 2026 10:22:30 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4abf60f1114sm153311235e9.7.2026.10.31.10.22.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 31 Oct 2026 10:22:30 -0700 (PDT)
+Date: Sat, 31 Oct 2026 17:22:29 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Alireza Haghdoost <haghdoost@uber.com>, acme@kernel.org,
+ namhyung@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org,
+ jolsa@kernel.org, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
+Subject: Re: [PATCH v2 00/18] perf symbol: Reference counting, sorted
+ arrays, and memory shrinking
+Message-ID: <20261031172229.0d178d73@pumpkin>
+In-Reply-To: <CAP-5=fUJy=fZg3t0z7L=uKVVRjg8OQtCL3KxFR8Mrv-yVCtuzA@mail.gmail.com>
+References: <20260928075237.3055101-1-irogers@google.com>
+	<20261027231513.816148-1-irogers@google.com>
+	<CAP-5=fUpji7seZpsxh0BN05oAA6nMUyM-bNdHBg4YfkeNAT00A@mail.gmail.com>
+	<CA+w=M=TEYScc9rDyzthN75Ym41ATXoNLNu8_yj0dsjymb+m7jA@mail.gmail.com>
+	<CAP-5=fX211V8=NCWyr9btd7=hbBB=oiMDETxCDdVr49idP13Fw@mail.gmail.com>
+	<CAP-5=fUJy=fZg3t0z7L=uKVVRjg8OQtCL3KxFR8Mrv-yVCtuzA@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -105,180 +107,81 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261030-alpha-profileme-v2-0-c702f1c65272@gmail.com> <20261030-alpha-profileme-v2-5-c702f1c65272@gmail.com>
-In-Reply-To: <20261030-alpha-profileme-v2-5-c702f1c65272@gmail.com>
-From: Magnus Lindholm <linmag7@gmail.com>
-Date: Sat, 31 Oct 2026 17:56:42 +0100
-X-Gm-Features: AclHuK8up6u9Y3pPa0-yJ_2iRNWdsswN4WKtEkOWWp8jiOXqmU8vIfOM971mbzM
-Message-ID: <CA+=Fv5QJqj0azuYhFE0PNZp7EqBgDzxvuTiW498kptnGBz1pHQ@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] alpha/perf: optionally randomize the ProfileMe
- sampling interval
-To: Matt Turner <mattst88@gmail.com>
-Cc: Richard Henderson <richard.henderson@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-alpha@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi Matt,
+On Fri, 30 Oct 2026 10:57:27 -0700
+Ian Rogers <irogers@google.com> wrote:
 
-On Fri, Oct 30, 2026 at 5:04=E2=80=AFAM Matt Turner <mattst88@gmail.com> wr=
-ote:
->
-> A fixed sampling interval can phase-lock with a loop whose length divides
-> it, so that the same few instructions are profiled over and over while
-> the rest of the loop is never seen. DCPI avoided this by randomizing the
-> interval.
->
-> Add a randomize config bit that varies each interval by up to 1/16 of
-> the period in either direction. Only ProfileMe events accept it, since
-> Aggregate mode samples already land a variable distance from the
-> instruction that overflowed. Counts are unaffected, because prev_count
-> already records the value actually written to the counter. The jitter
-> is computed with mul_u64_u32_shr() and the sum saturates, so that a
-> period beyond 32 bits cannot overflow.
->
-> The jitter comes from a per-CPU prandom state rather than
-> get_random_u32_below(), which takes the batched entropy local lock and
-> triggers an invalid wait context report from lockdep in the PMI.
->
-> Signed-off-by: Matt Turner <mattst88@gmail.com>
-> ---
->  arch/alpha/kernel/perf_event.c | 37 ++++++++++++++++++++++++++++++++++++=
--
->  1 file changed, 36 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/alpha/kernel/perf_event.c b/arch/alpha/kernel/perf_even=
-t.c
-> index c9d4b13817bc..c553cbd6c7a3 100644
-> --- a/arch/alpha/kernel/perf_event.c
-> +++ b/arch/alpha/kernel/perf_event.c
-> @@ -16,6 +16,9 @@
->  #include <linux/kdebug.h>
->  #include <linux/mutex.h>
->  #include <linux/init.h>
-> +#include <linux/math64.h>
-> +#include <linux/overflow.h>
-> +#include <linux/prandom.h>
->
->  #include <asm/hwrpb.h>
->  #include <linux/atomic.h>
-> @@ -33,9 +36,11 @@
->  /* Layout of attr.config for PERF_TYPE_RAW events; see format/ in sysfs.=
- */
->  #define ALPHA_PERF_CONFIG_EVENT                0xffULL
->  #define ALPHA_PERF_CONFIG_PROFILEME    BIT_ULL(8)
-> +#define ALPHA_PERF_CONFIG_RANDOMIZE    BIT_ULL(9)
->
->  /* hw_perf_event.flags */
->  #define ALPHA_PERF_FLAG_PROFILEME      0x1
-> +#define ALPHA_PERF_FLAG_RANDOMIZE      0x2
->
->  /* For tracking PMCs and the hw events they monitor on each CPU. */
->  struct cpu_hw_events {
-> @@ -59,6 +64,9 @@ struct cpu_hw_events {
->  };
->  DEFINE_PER_CPU(struct cpu_hw_events, cpu_hw_events);
->
-> +/* For randomizing sample intervals from the PMI, where locks are not al=
-lowed. */
-> +static DEFINE_PER_CPU(struct rnd_state, alpha_perf_rnd);
-> +
->
->
->  /*
-> @@ -246,10 +254,12 @@ static int ev67_raw_event_valid(u64 config)
->
->  PMU_FORMAT_ATTR(event, "config:0-7");
->  PMU_FORMAT_ATTR(profileme, "config:8");
-> +PMU_FORMAT_ATTR(randoThe v2 arithmetic handles the large-period overflow=
- case. I tested
-randomized instruction sampling with a period of 10000 on all three
-CPUs of my ES40. Repeated runs completed without hangs or kernel
-warnings.
+> To: Alireza Haghdoost <haghdoost@uber.com>
+> Cc: acme@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,   jame=
+s.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org,   linux=
+-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
+> Subject: Re: [PATCH v2 00/18] perf symbol: Reference counting, sorted arr=
+ays,  and memory shrinking
+> Date: Fri, 30 Oct 2026 10:57:27 -0700
+>=20
+> On Fri, Oct 30, 2026 at 9:10=E2=80=AFAM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > On Fri, Oct 30, 2026 at 7:02=E2=80=AFAM Alireza Haghdoost <haghdoost@ub=
+er.com> wrote: =20
+> > >
+> > > Hi Ian,
+> > >
+> > > I applied v2 on perf-tools-next e74880764bf9 with the ELF_C_READ_MMAP
+> > > fix and your three fixes, and compared it with the same tree without
+> > > the 18 patches. I posted comments are on the individual patches; this=
+ is the
+> > > summary.
+> > >
+> > > On a profile of a large C++ service, about 1M symbols, perf script an=
+d perf r
+> > > eport output is byte-identical and roughly 22-32% faster:
+> > >
+> > > Execution time and peak RSS before and after:
+> > > perf script                                3.3s 334 MiB vs 2.25s 332 =
+MiB
+> > > perf report --sort dso,sym       3.0s 389 MiB vs 2.25s 386 MiB
+> > > perf report --children -g caller 4.6s 706 MiB vs 3.60s 703 MiB
+> > >
+> > > Peak RSS barely moves. sizeof(struct symbol) goes from 48 to 32 bytes,
+> > > but the address array adds a pointer per symbol back, so the net is
+> > > about 8 bytes per symbol before malloc rounding. That is under 1%
+> > > here. =20
+> >
+> > Thanks for your work and running the numbers! I think we should aim to
+> > land your lazy loading patches ahead of these patches. The merge
+> > conflicts don't look like they'll be too terrible, wdyt?
+> >
+> > Since the merge window for Linux v7.4 is currently open, I don't see
+> > anything landing before November 1st. So I can do a v3 incorporating
+> > your suggestions and rebase it on top of your patches when they land.
+> > I'll work on pulling out the fixes (you highlighted some you thought
+> > were particularly worthwhile) to mail for v7.4 for now. =20
+>=20
+> Chatting with Namhyung he mentions having the arrays in the DSOs be a
+> `struct symbol[]` rather than a `struct symbol *[]`, because the
+> number of symbols could be known for a DSO when we load the symbols.
+> Currently this isn't possible because of things like the
+> annotated_symbol that this series turns into a side table. I'm not
+> sure it is possible in general to use an array of symbols, as JIT code
+> may need the symbols array to be realloc-ed and the realloc would
+> potentially invalidate any `symbol *` that had been given out. Maybe
+> we can treat that as a special case. In this scenario, the symbol's
+> lifetime would tie to the DSO's lifetime, allowing us to use the DSO
+> reference count instead of needing one per symbol. It would still be
+> nice to add functions like session__malloc so that we can reduce the
+> memory footprint of a session when memory allocations fail. I still
+> think this is work to land on top of your series.
 
-Reviewed-by: Magnus Lindholm <linmag7@gmail.com>
-Tested-by: Magnus Lindholm <linmag7@gmail.com>mize, "config:9");
->
->  static struct attribute *ev67_format_attrs[] =3D {
->         &format_attr_event.attr,
->         &format_attr_profileme.attr,
-> +       &format_attr_randomize.attr,
->         NULL,
->  };
->
-> @@ -367,6 +377,22 @@ static int alpha_perf_event_set_period(struct perf_e=
-vent *event,
->                 ret =3D 1;
->         }
->
-> +       /*
-> +        * Vary each new interval by up to 1/16 of the period either way,=
- so
-> +        * the samples cannot phase-lock with a loop whose length divides=
- the
-> +        * period. The count stays exact because prev_count records the v=
-alue
-> +        * actually written.
-> +        */
-> +       if (ret && (hwc->flags & ALPHA_PERF_FLAG_RANDOMIZE) && period >=
-=3D 8) {
-> +               long jitter =3D period / 8;
-> +               u32 r =3D prandom_u32_state(this_cpu_ptr(&alpha_perf_rnd)=
-);
-> +               long offset =3D mul_u64_u32_shr(jitter, r, 32) - jitter /=
- 2;
-> +
-> +               if (check_add_overflow(left, offset, &left))
-> +                       left =3D LONG_MAX;
-> +               local64_set(&hwc->period_left, left);
-> +       }
-> +
->         /*
->          * Hardware restrictions require that the counters must not be
->          * written with values that are too close to the maximum period.
-> @@ -738,7 +764,8 @@ static int __hw_perf_event_init(struct perf_event *ev=
-ent)
->                 return -EOPNOTSUPP;
->         } else if (attr->type =3D=3D PERF_TYPE_RAW) {
->                 if (attr->config & ~(ALPHA_PERF_CONFIG_EVENT |
-> -                                    ALPHA_PERF_CONFIG_PROFILEME))
-> +                                    ALPHA_PERF_CONFIG_PROFILEME |
-> +                                    ALPHA_PERF_CONFIG_RANDOMIZE))
->                         return -EINVAL;
->                 ev =3D attr->config & ALPHA_PERF_CONFIG_EVENT;
->                 if (!alpha_pmu->raw_event_valid(ev))
-> @@ -763,6 +790,14 @@ static int __hw_perf_event_init(struct perf_event *e=
-vent)
->                 return -EINVAL;
->         hwc->flags =3D profileme ? ALPHA_PERF_FLAG_PROFILEME : 0;
->
-> +       if (attr->type =3D=3D PERF_TYPE_RAW &&
-> +           (attr->config & ALPHA_PERF_CONFIG_RANDOMIZE)) {
-> +               if (!profileme)
-> +                       return -EINVAL;
-> +               prandom_init_once(&alpha_perf_rnd);
-> +               hwc->flags |=3D ALPHA_PERF_FLAG_RANDOMIZE;
-> +       }
-> +
->         /*
->          * We place the event type in event_base here and leave calculati=
-on
->          * of the codes to programme the PMU for alpha_pmu_enable() becau=
-se
->
-> --
-> 2.55.0
->
+Could you have two tables, one 'struct symbol []' containing the fixed
+symbols and a second smaller 'struct symbol *[]' containing any extra
+symbols?
+Lookup would require checking both tables - but won't cost much more.
 
-The v2 arithmetic handles the large-period overflow case. I tested
-randomized instruction sampling with a period of 10000 on all three
-CPUs of my ES40. Repeated runs completed without hangs or kernel
-warnings.
+David
 
-Reviewed-by: Magnus Lindholm <linmag7@gmail.com>
-Tested-by: Magnus Lindholm <linmag7@gmail.com>
+>=20
+> Thanks,
+> Ian
