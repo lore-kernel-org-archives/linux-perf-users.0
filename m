@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793430697;
-	b=2IsXd/Hq8aL6jsRsamD0EWIBCjHUF2rtAxgRkYvGiaNohgUGGb44K3teW5qm8eooiN9/
-	 HHstcCJeLjMq9zqc6ed5iNj6NUvcxoItaO5QDn446zoh57lyhE1qyo/WAsk1ce5tAhMyL
-	 L9jhIlQoxTM4HmnQRodV8gzL8hWJZeZGXoU/tjAHFSZHrkKdAgGSkI0z7s4NZXI+S2QD3
-	 Kr2BDZvueC/e9PLCSh1+bcy5cwXRbP42I0segJHa7LjvTnHi9eRZfwG5n7jCYQaDaUnGS
-	 8qPTZweEl89ug2eDhmy2n4Z7XV4IDhXsFqyUrKtSy1aR3UqXwIzpqt0uU1Q7PSZ8hAw==
+	t=1793430755;
+	b=efixXLP7+yzCJsIprZ7BFFwr4GBwDTqbD1r4SiItTsZ3Mb7+rqTM6G+vKHwjHXuU96/Z
+	 R+hNlm/XLaxFj6co7jkbQgJZ6/oxOqfwJZAkPhq1sp9UmnHu6VXzHTayyLm4gz7IyYIWk
+	 z8bStvS4Trr+n3/yyNpi+MeGhvbb9GAGhA/C7Qgyl3A9RkZr2PTJ83lKXk3B2vND7yhg+
+	 aOdVq6DRWf64vzSPJQYY3FXn9twqQ7ClaniU04pLhgvi0R79Ym/qQQqlk1SSlPvkFCbmS
+	 nY2MpioYJGKzqT8R6vvF9z6sCHB82H9bAKM3Ipse6eDWMawIMc5dwZk5/PlrcSgLuJA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793430697;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793430755;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=MNSb9ssm6PkfnnU35o6Gc/PwNjgcFxJc+CzizpyKcEQ=;
-	b=YVQ+1yseQj+nxOuyqJROsojYqKb++RziZka3kPy0/zTy1V3I0TjxCy8umyYmAS4rqa8X
-	 1JZT4XDmd1z53dcp0FncGFe6FV4DEgYm/8ewvdvmk3WSaz/1bURKcNWhaeDJTxVgAYHnp
-	 uGgbxHKGR1tSiOJGyyfiHE29k1hbv4rd4fXbGkkKrNWfMwlvh7C1zV4xh8T9AV618GKgW
-	 CIb9ZYW1/+7/fKfyxh32l9oM9oN7M7dY+v8k+LHiX/HrABrsAokVvsFWJhRYNtfcAHASN
-	 G4WompaEp60TD4JF/WrdhruBqgiALVyajSeEcQZDW7BEt1yZ6UX8q+fMD+Mr76STZKg==
+	bh=mdeGvQS0yFU+asyxeTn883CRMkX9rxUkNbr2QkmveTo=;
+	b=po7f1RE2M+lLlD0wvM/sLDc2PO7KIuactHpU/aZiWsOpgJjrhAm9uIpS9fRi3sX01fIA
+	 YPThCVyb9L1xPvIU1/040z4s2OoSyopDJRb5mGbVNu07e9BY8iOC8TMlXQehc9Fu8plsp
+	 /4AcdE50HAeoCye3eEh0+WR5igAoNehSQonXus3X9KjWJ1Wa8a/cm4zA70kiUm0T428P4
+	 uG2EK/O/fvUipJlm5OVOvWGMAr0FqGvGV2H5wq3kmEHb6OBMA0S0bAFCMQnYgbKhsuZw4
+	 Us+kiDl7cfGx8vL7aw+xZvIbG37sZkAxghOW2VvIcXwJ0H2Azc4iSZBExQlAAd6O7gg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OnUOa03a;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mKIFkL5N;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21933606A31A;
-	Sat, 31 Oct 2026 07:11:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4956606A31A;
+	Sat, 31 Oct 2026 07:12:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OnUOa03a
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BD171F000C1;
-	Sat, 31 Oct 2026 07:11:36 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mKIFkL5N
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FCB61F000C1;
+	Sat, 31 Oct 2026 07:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793430696;
-	bh=MNSb9ssm6PkfnnU35o6Gc/PwNjgcFxJc+CzizpyKcEQ=;
+	s=k20260515; t=1793430754;
+	bh=mdeGvQS0yFU+asyxeTn883CRMkX9rxUkNbr2QkmveTo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=OnUOa03ac+I4pGZtYSk0Ww/0heqPOhUpcQHB7Eh9S6biQEFC84XnJ9sDfHtUEY6eu
-	 9KHcv/KbuZN94dtpbsx9jLs4fzSfJw4t2k6FAyB2GSA8douPVv8ssMbVXo6TXYWPeT
-	 /alrKBASakWLw/3IRvsheP9P2hqCEU3l5nyncA7JoPMcQIZigx7M9QycfSX2HulFUn
-	 VEbja9jROF3enhxJcwmSVzChQkDvscD4a1Hp8uEI2mXHMGKVI/AS1+ayEvclBPrmVh
-	 FsboFPm832Jr4ElHeu2rK0M9HtFJw+4jC+HTz7aJ/M4FAbsRPA9dHzdmK9r1SUmQSI
-	 xR8dY5bkZ9/Zw==
-Date: Sat, 31 Oct 2026 00:11:34 -0700
+	b=mKIFkL5NML8LqkjgaT5a+l+A1H902JGVUTF+2RRd58IFbGPLf9aSJpy4v0E9Z3Qg9
+	 39dxV5AQEoO8VoL6BIeILzFa+/pqpCFt2NViV+faJ2oX1gFF0+PWBZiJ41S2+fPXsg
+	 JqSqY05yDQWh0ygZ2GVC0jirPRTEg1xfCXPMplyrUjBth1cf2krPFZu7KAu+fROMwj
+	 kTise0DKH8MdLqXbLusAcfy/XazSdZL3Ef7tFtIhA91UJ4g8XBWPNRKSyTmsjZRhrg
+	 EeXXgx6HE1beZawthHB4KH4Ck1y8DLKLV2v8aj69uSzBLFnt2/A7mILE+8jVMiVwXA
+	 p8MNUXcwU3O1w==
+Date: Sat, 31 Oct 2026 00:12:32 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Aaron Tomlin <atomlin@atomlin.com>
 Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
@@ -47,11 +47,11 @@ Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
 	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
 	chjohnst@mail.com, neelx@suse.com, sean@ashe.io,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH perf-tools-next v12 06/10] perf ftrace: Support display
- of inlined functions in function graph tracer
-Message-ID: <auWUpl0toDFpwSYS@z2>
+Subject: Re: [PATCH perf-tools-next v12 01/10] perf ftrace: Handle signals,
+ non-blocking reads and pager exits in __cmd_ftrace()
+Message-ID: <auWU4JndXjxKzBbm@z2>
 References: <20261026025735.546101-1-atomlin@atomlin.com>
- <20261026025735.546101-7-atomlin@atomlin.com>
+ <20261026025735.546101-2-atomlin@atomlin.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,168 +63,109 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20261026025735.546101-7-atomlin@atomlin.com>
+In-Reply-To: <20261026025735.546101-2-atomlin@atomlin.com>
 
-On Sun, Oct 25, 2026 at 10:57:31PM -0400, Aaron Tomlin wrote:
-> The Linux kernel's function graph tracer operates at the machine
-> instruction level via compiler instrumentation
-> (-fpatchable-function-entry), recording entry and return events for
-> physical function calls. Consequently, functions inlined by the compiler
-> are invisible in the resulting call graph, as no discrete call or return
-> instructions are emitted for them. While technically expected, this
-> omission frequently obscures the logical execution flow when analysing
-> kernel subsystems heavily reliant upon inlining.
+On Sun, Oct 25, 2026 at 10:57:26PM -0400, Aaron Tomlin wrote:
+> In __cmd_ftrace(), trace_fd is configured for non-blocking I/O via
+> fcntl(trace_fd, F_SETFL, O_NONBLOCK) and polled using poll(). However,
+> the polling loop previously treated any negative return code from poll()
+> or read() as an unrecoverable failure.
 > 
-> Address this by introducing the --inline option to perf ftrace for the
-> function_graph tracer.
+> If poll() or read() is interrupted by a non-fatal signal (i.e. SIGWINCH
+> upon terminal resizing), errno is set to EINTR. Furthermore, read() on
+> trace_pipe can return EAGAIN/EWOULDBLOCK even after poll() indicates
+> POLLIN (for instance, under concurrent readers, spurious wakeups, or
+> block-mode trace iterator options). In all such cases, breaking from the
+> loop causes perf ftrace to terminate tracing prematurely.
 > 
-> When the kernel is configured with CONFIG_FUNCTION_GRAPH_RETADDR=y, the
-> funcgraph-retaddr trace option records the caller's return address on
-> each function entry, manifested in the trace stream as a comment
-> (e.g. /* <-irq_work_queue_on+0x81/0xa0 */). By interrogating DWARF debug
-> information from the kernel image (vmlinux) utilising libdw, perf ftrace
-> resolves this return address to its inlined callchain and synthesises the
-> intermediate inlined frames directly into the streamed call graph.
+> Additionally, output errors on stdout (i.e. when a pager or consumer
+> process exits, closing the downstream pipe) were ignored by fflush(),
+> leaving __cmd_ftrace() polling indefinitely until the workload
+> completes.
 > 
-> Key aspects of this implementation:
+> Resolve these concerns by retrying poll() upon receiving EINTR, retrying
+> read() on EAGAIN, EWOULDBLOCK, and EINTR, and breaking on EOF (n == 0).
+> Furthermore, detect stdout errors and broken pipes via fflush() and
+> ferror() to exit immediately when the downstream output sink closes, and
+> handle EINTR and ferror(stdout) cleanly in the subsequent buffer
+> draining loop.
 > 
->     1.  DWARF inline resolution
-> 
->         Implement ftrace_resolve_inlines() using libdw to locate inlined
->         subroutines at the instruction address corresponding to the
->         caller's return address.
-> 
->         Implement perf_ftrace__setup_inlines() and
->         perf_ftrace__cleanup_inlines() to initialise machine symbol
->         tracking, load vmlinux symbols, and verify kernel
->         CONFIG_FUNCTION_GRAPH_RETADDR support.
-> 
->     2.  Inline frame synthesis
-> 
->         In ftrace_process_fgraph_line(), when --inline is active:
->             - Interrogate return addresses using ftrace_parse_retaddr()
->               and resolve inlines via ftrace_resolve_inlines().
-> 
->             - Identify common inlined ancestors on the tracked stack and
->               unwind inactive frames.
-> 
->             - Open new inlined frames with /* (inline) */ and indent by
->               inlined_depth * 2.
-> 
->             - On function exit, close matching inlined frames with
->               } /* func (inline) */.
-> 
->     3.  Command-line options and documentation
-> 
->         Add --inline and -k/--vmlinux options in
->         tools/perf/builtin-ftrace.c and document their usage in
->         tools/perf/Documentation/perf-ftrace.txt.
-> 
+> Fixes: d01f4e8db22c ("perf ftrace: Introduce new 'ftrace' tool")
+> Cc: stable@vger.kernel.org
 > Tested-by: Ian Rogers <irogers@google.com>
 > Reviewed-by: Ian Rogers <irogers@google.com>
 > Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
-> ---
-[SNIP]
-> @@ -664,11 +834,16 @@ static void extract_exit_func_name(const char *str, char *buf, size_t size)
->   * @cpu: Pointer to store the CPU number
->   *
->   * Locate the context columns that precede the function call column of a
-> - * function_graph trace record.
-> + * function_graph trace record. Depending on the funcgraph-* options set
-> + * up by perf, a record looks like:
-> + *
-> + *   [ abstime |]  CPU)  [ comm-pid |]  [ duration |]  func
-> + *
-> + * The abstime and comm-pid columns are only present with --graph-opts
-> + * verbose.
->   *
->   * Return: A pointer to the last character of the context columns (the final
-> - * '|' delimiter, or the CPU ')' when no delimiter follows it). Returns NULL
-> - * if @line is not a trace record.
-> + * '|' delimiter). Returns NULL if @line is not a trace record.
->   */
 
-It'd be nice if you could move the comments to the original commit that
-introduced the function.
-
-
->  static const char *find_func_column(const struct perf_ftrace *ftrace,
->  				    const char *line, int *cpu)
-[SNIP]
-> diff --git a/tools/perf/util/ftrace.h b/tools/perf/util/ftrace.h
-> index 45f5090d0115..7b9e0919ae8d 100644
-> --- a/tools/perf/util/ftrace.h
-> +++ b/tools/perf/util/ftrace.h
-> @@ -42,6 +42,8 @@ struct perf_ftrace {
->  	int			graph_verbose;
->  	int			graph_thresh;
->  	int			graph_tail;
-> +	bool			use_inline;
-> +	struct machine		*machine;
->  };
->  
->  struct filter_entry {
-> @@ -96,44 +98,18 @@ perf_ftrace__latency_cleanup_bpf(struct perf_ftrace *ftrace __maybe_unused)
->  
->  #endif  /* HAVE_BPF_SKEL */
->  
-> -#define FTRACE_MAX_CPUS 4096
-> -#define FTRACE_MAX_STACK 256
-> -#define FTRACE_PID_HASH_BITS 10
-> -#define FTRACE_PID_HASH_SIZE (1 << FTRACE_PID_HASH_BITS)
-> +struct machine;
->  
-> -#define FTRACE_IDLE_PID(cpu)       ((pid_t)(-1 - (cpu)))
-> -#define FTRACE_UNKNOWN_PID(cpu)    ((pid_t)(-1 - FTRACE_MAX_CPUS - (cpu)))
-> -
-> -struct ftrace_stack_frame {
-> -	char *name;
-> -	bool inlined;
-> -	int indent;
-> -	int raw_indent;
-> -	u64 seq;
-> -};
-> -
-> -struct ftrace_indent_watermark {
-> -	u64 seq;
-> -	int raw_indent;
-> -};
-> -
-> -struct ftrace_task_state {
-> -	struct hlist_node	node;
-> -	pid_t			pid;
-> -	struct ftrace_stack_frame *stack;
-> -	int			max_stack;
-> -	int			depth;
-> -	int			inlined_depth;
-> -	int			overflow_depth;
-> -	u64			seq;
-> -	struct ftrace_indent_watermark *watermarks;
-> -	int			max_watermarks;
-> -	int			nr_watermarks;
-> -};
-
-Hmm.. probably better to define the structs in the .c file in the first
-place?
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
-
-> +#define FTRACE_MAX_INLINES 32
+> ---
+>  tools/perf/builtin-ftrace.c | 27 ++++++++++++++++++++++-----
+>  1 file changed, 22 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index 6017493ff179..7cdc9ae2fbbb 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -14,6 +14,7 @@
+>  #include <poll.h>
+>  #include <semaphore.h>
+>  #include <signal.h>
+> +#include <stdio.h>
+>  #include <stdlib.h>
+>  #include <unistd.h>
+>  #include <linux/capability.h>
+> @@ -806,17 +807,27 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
+>  	}
 >  
->  bool ftrace_parse_retaddr(const char *str, char *sym_name, size_t sym_len, u64 *offset);
->  void ftrace_filter_retaddr(char *str);
-> -void ftrace_cpu_states__clear(void);
-> +int ftrace_resolve_inlines(struct machine *machine,
-> +			   const char *sym_name, u64 offset,
-> +			   const char **inlined_names, int max_inlines);
->  int ftrace_process_fgraph_line(struct perf_ftrace *ftrace, const char *line, FILE *out);
-> +void ftrace_cpu_states__clear(void);
-> +int perf_ftrace__setup_inlines(struct perf_ftrace *ftrace);
-> +void perf_ftrace__cleanup_inlines(struct perf_ftrace *ftrace);
+>  	while (!done) {
+> -		if (poll(&pollfd, 1, -1) < 0)
+> +		if (poll(&pollfd, 1, -1) < 0) {
+> +			if (errno == EINTR)
+> +				continue;
+>  			break;
+> +		}
 >  
->  #endif  /* __PERF_FTRACE_H__ */
+>  		if (pollfd.revents & POLLIN) {
+>  			int n = read(trace_fd, buf, sizeof(buf));
+> -			if (n < 0)
+> +
+> +			if (n < 0) {
+> +				if (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR)
+> +					continue;
+> +				break;
+> +			}
+> +			if (n == 0)
+>  				break;
+>  			if (fwrite(buf, n, 1, stdout) != 1)
+>  				break;
+>  			/* flush output since stdout is in full buffering mode due to pager */
+> -			fflush(stdout);
+> +			if (fflush(stdout) < 0 || ferror(stdout))
+> +				break;
+>  		}
+>  	}
+>  
+> @@ -831,9 +842,15 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
+>  	}
+>  
+>  	/* read remaining buffer contents */
+> -	while (true) {
+> +	while (!ferror(stdout)) {
+>  		int n = read(trace_fd, buf, sizeof(buf));
+> -		if (n <= 0)
+> +
+> +		if (n < 0) {
+> +			if (errno == EINTR)
+> +				continue;
+> +			break;
+> +		}
+> +		if (n == 0)
+>  			break;
+>  		if (fwrite(buf, n, 1, stdout) != 1)
+>  			break;
 > -- 
 > 2.55.0
 > 
