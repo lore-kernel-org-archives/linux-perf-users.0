@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793428786;
-	b=4g/4iFNXwXSS/SmNnz0ig/xa7pTNVOflba72Z0phv8xCNB68PN1X3+OvgCw7AbaROayS
-	 8+h0XflpsoF0Mfu5kSa4QFa8C1+jLV+8SB7LF5L4dCz8pGOj40u9zg2fzEA2mcmXk+7oT
-	 XZWMbIMvX9y0XnOG9aA+QMn3SUJBxzDS0xBiH6Bk9tk3zm6bifVVIhR3OqoMNhxzslBQn
-	 7ed8Stp0ADKJlN/JmKI8zC+oK1VlsfbAnRrR22MXSBKQVFohld3nOeZp8XzG3Hfc8ipHj
-	 /xUXXqMvL9Ts3oXNJ6Sj5Z53T0C9VS4Dv9I0QgHDw7odLvOMzEnOJTtx9VX082sDmlg==
+	t=1793428897;
+	b=lm63hsCu6ykU6gB5vEixw3xsbAfwoiCXn5p4Fy4ZiGwdNNf3tFhX03btRtlEvHIFvOgx
+	 ci6zXKY+E9KWbJW63Nlur/fdRysaicnPax5WaUGKx9DpPch1vMtIq301uD2pFn9TZVROn
+	 i1+fXRsh7gXRuZJBjj9KFWJxcYvp/DgnlVV/crSGJyqNJxMoeL7Jr1dXbRC5z2Xrx2we6
+	 YvdhwspMnp494iHP28MYk4dw021xaZRUu0JDiajY9w6b7oQ3C3HKSwl64tcLi/IAkQusu
+	 hU/wovDAw/USMfxJdfxUN1vNF+llX8OmdfRBKy+8AIvhMe/SMGNNGG1HZwmvfPhI9lA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793428786;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793428897;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=FE2Ng23b13p2UwZNwM67njLd/pDQ8OMR788QIAkXUA8=;
-	b=IquiM+oI6tDjkTUt1AHcq646B7nW1ji4jQES2yod8rkd9bMJt4STF+jlwwhWMuRPngoz
-	 wNqT3uVyVXGcOt+9W+mto/lxgJX9tu4KbNtqetCk5Q1loEeo5NiZHI2L7op+Kz+fV8Tet
-	 6bMXd/+uLx/sEng2ro2sl4OHgDsZQFbO757hqudOPvGiMgit+w3bgiTYL93Bg7DRzup7/
-	 q/vmzjxjJl4hK57ISv4WGFo/ZNx5ZdEMd+BqpIVMQy/BcCdCNcz9F9cyf6aELgKTJ4/c0
-	 szHkH6rVxRReB7E2p2CgWHuQDCn/aIJ1MslDn6tCfblvzyq/U3wN1Ef3vbNYBR2xzaw==
+	bh=U5Yq1i5fmwaCKYW/XU6cjUJNtZZHmBj0r6IRp6s+DTs=;
+	b=M/d4Ql8I0bgm0By3Hd27i9O1KXMB1+FSlFvL9Wjcoi0yKML49r1DbtQznx1y+Lgbtupo
+	 VkhKvxFKl1c5Cl1kbn4M4vFf+FJyyum+AQPo4ryqnM1qexXLKJTQYUITcnJ1K/ylp+Avk
+	 j0GFIuXn+PtMRfIa2RInanwSu0tap6wiograxLuYaV7lCtPlrs25y94vbBh/Zzn8inJhR
+	 G53Ik+cPZbVQd75z8nPjlfsPfcpl8fSE4g+CSb9xUvlPf0mAaSoTO2qnPXdFxVuXeSj+6
+	 MXcJmwMHf9HYk8oOHdjlFzrNZ0f5ZOy2o5okBj90g1N7izfl0MoD764Zz8qCIKp9B8Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WTBu17hT;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UxNuRe6o;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1140606A31C
-	for <linux-perf-users@vger.kernel.org>; Sat, 31 Oct 2026 06:39:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E37606A31A
+	for <linux-perf-users@vger.kernel.org>; Sat, 31 Oct 2026 06:41:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WTBu17hT
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E7741F000C1;
-	Sat, 31 Oct 2026 06:39:45 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UxNuRe6o
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB2741F000C1;
+	Sat, 31 Oct 2026 06:41:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793428785;
-	bh=FE2Ng23b13p2UwZNwM67njLd/pDQ8OMR788QIAkXUA8=;
+	s=k20260515; t=1793428896;
+	bh=U5Yq1i5fmwaCKYW/XU6cjUJNtZZHmBj0r6IRp6s+DTs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=WTBu17hT/vt4zaurpWxb2YCHsU1abzokG3dolyywfa3drX2SyESDVxH2oZ4NypQKU
-	 qlbVK7QdxkGKsvk34MECO0Fh019NwpgY9pHPUaDDjRE6jC8juK/KW5SNisB/UVfTrj
-	 zBPmkv4WYRCnX+tEq92XV0+FI5utJHiEHZK+Bp7kAp9v3azYXyT/Fh+zqbgPNttWt9
-	 6oZT2sKm0WWt0Z2MDk8c8HUx4EYdKTy4y6bcUZxe97+J0OzfL/sU7cnxFKBvEMISfb
-	 mFf9XU4v47ylgmiNlWPQEPzJh1ab2KGbN1b2tbZJ7SdTmYujCUQIG2xyIPrkAnPGW2
-	 L9VP7EBgnlALQ==
-Message-ID: <sashiko-outbox-191784@kernel.org>
+	b=UxNuRe6ockBuwEJm75eXTNmUB727qHVqVz4fn2bdifSHjMg1OIu6NptpUc7NCprEe
+	 8wHyEdLL0rsdhReJuxAjEZFfe3LpuaaRpUkMJ+/xBRJYBEGgw/GEBKLpccJtVQBmaP
+	 w4nTCTrOYCM7gPg51N9++gPxi7fEPoYR27mWnp3cSaP3LZpNdFpc2Hjuq8UwcTINqy
+	 F4137xkzDPeCsnISR3dfMLXw78Z4SOjo6dCCxzEV/eYppAZSmhER4DnzAbYAfoo3x/
+	 JT988cfWYuUxDh6lbbDJQD+pBpf0sSwXD4evTw5vhjIShFP9KGJaKee4fZxPiXIn8C
+	 1ckstnd0owD5g==
+Message-ID: <sashiko-outbox-191785@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/3] perf callchain: Fix loss of symbol in
- merge_chain_branch()
+Subject: Re: [PATCH 2/3] perf symbol-elf: Fix zero-size symbol end
+ calculation across .symtab and .dynsym
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261031063549.1281324-2-irogers@google.com>
+In-Reply-To: <20261031063549.1281324-3-irogers@google.com>
 References: <20261031063549.1281324-1-irogers@google.com>
- <20261031063549.1281324-2-irogers@google.com>
+ <20261031063549.1281324-3-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 31 Oct 2026 06:39:44 +0000
+Date: Sat, 31 Oct 2026 06:41:36 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,21 +61,30 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Commit bffb5b0c0976 ("perf map/maps/thread: Changes to reference
-> counting") replaced passing &list->ms to callchain_cursor_append() in
-> merge_chain_branch() with a temporary struct map_symbol initialized with
-> .thread and .map, but omitted .sym =3D list->ms.sym.
+> When loading symbols from an ELF binary in dso__load_sym(),
+> dso__load_sym_internal() can be invoked multiple times: first for
+> .symtab (or .gnu_debugdata's .symtab) and then for .dynsym.
 >=20
-> As a result, callchains merged during histogram collapse lose their
-> resolved struct symbol pointer, causing 'perf report --children' to
-> print raw hexadecimal addresses instead of function names and inlined
-> frames on merged callchain branches.
+> Previously, dso__load_sym_internal() ran symbols__fixup_end() and
+> symbols__fixup_duplicate() at the end of each individual symbol table
+> load. Consequently, a zero-size symbol in .symtab had its end address
+> extended to the start of the next .symtab symbol before .dynsym was
+> loaded. If an exported function existed only in .dynsym (for example,
+> when stripped from .symtab or when using .gnu_debugdata minidebuginfo)
+> at an address between the two .symtab symbols, the zero-size .symtab
+> symbol overlapped the .dynsym function and samples inside the .dynsym
+> function were misattributed to the preceding zero-size symbol.
 >=20
-> Initialize .sym =3D list->ms.sym in the temporary struct map_symbol in
-> merge_chain_branch().
+> Move symbols__fixup_end(), symbols__fixup_duplicate(), and
+> maps__fixup_end() from dso__load_sym_internal() to dso__load_sym() so
+> they run once after all symbol tables have been loaded into the DSO, and
+> add a unit test in 'perf test symbols' verifying that a zero-size
+> .symtab symbol ends at a following .dynsym-only function rather than
+> overlapping it.
 >=20
-> Fixes: bffb5b0c0976 ("perf map/maps/thread: Changes to reference counting=
-")
+> Fixes: 87704345cc60 ("perf symbol-elf: Decode dynsym even if symtab exist=
+s")
+> Fixes: b10f74308e13 ("perf symbol: Support .gnu_debugdata for symbols")
 > Suggested-by: Alireza Haghdoost <haghdoost@uber.com>
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
@@ -83,5 +92,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261031063549.1281=
-324-1-irogers@google.com?part=3D1
+324-1-irogers@google.com?part=3D2
 
