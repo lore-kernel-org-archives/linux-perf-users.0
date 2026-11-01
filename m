@@ -1,65 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793498312;
-	b=FCaVAfR9U9IANGHWZynGZOjjmGeGj+ny1aYm2Sf9epfKzFNGXrUMSnjnbjSRSDadYxzi
-	 94yK+coWrKBw9UzjasZr86LIPf5aslJ/FoKxTyyfBk2c/89QxIhN0H+K4ZpISq19aVfq5
-	 cskl89GU+Gq7+ZyqjSLN29TtMQg+g9DHJODFT9mwd4uiIBKfX66Br3u0Hz5sjWq5w5LTL
-	 jJKL3YC9BePU7N329U6a6Dyn31QYCWegbosz9PvzBmAr1/G057qMi0lLcGW04nHKEU9hI
-	 LKL9pCmnuigFZiZp1K++xNdpcedoP0eedo73HD/JPMpnmFbafyn2pTWKrjQYWcLu5Tw==
+	t=1793501331;
+	b=BnaL2/WwDM3JKEy2egS/6clKuyNvnbvK0lslnzwTEn0YjO6NQ8zOprWmNJ534X/siQDF
+	 ngyhrpX/jQgCwEen2IuLv7cxmQEDnqYbSUVBAA1s62gaDfFIpWmrWwUriMFKBRgkO11/5
+	 4tfMRwhdaLLOFByfd9xei3zNBx3d/+tqmOouju7+JC0tJE/F3Fn9y55vDzpkZ8vzzArZ+
+	 YEdPQMIcvMgB+vfhVqY7WHbt6GxyAW+C20b0oPHyfGTdMPIZCbUNRA8WXT1NqAyDKmjF9
+	 XPB6CfsXqkC/IpfnjBO1I95tPW0L3PiU+badYmRIxzDlbhzDqTgUfA2rHEKF2H2KYaQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793498312;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793501331;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To;
-	bh=9vSZLsyhSYt+F+Q2kf88Wa5aKGMcjvWJAR2b3rMf3yY=;
-	b=cURcQW07wINZaQqh3QBJ1xVOr4OsnDa5Xt5Sejd6A8h5QBCUqPopS57Bz1KAbdz6dN0J
-	 Sg4qNn2EUE2stcEmmR5pegLnpZD0qABbrDR25K0BkgNO0u+QAFClAb5/3sgmanN29nDSj
-	 tkcF93k0abo/9jchrYkOQNN1u2KZZsnVhvHumJfDgOObH5HSa68yJZT4wvs0VR99o75BG
-	 C2nbzbOFiFh+WMm8vCfvTCr/W4l6ZeqpFAJ9n8FIUQshHrbjOVr6dnlX8j3fJM/DOYaat
-	 Zp1fVACbDEkwjGIBvCuU/Ccz/2jKlGLDbhPKeRKTmi/N1cenacvhMrbZW1hMOQg0ldg==
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=8vEjfLsV41/7ERxLHnPJ+uT0ZnGzebgW0tEKv1h3+B8=;
+	b=uL/oaHrYWBzG45R/Am6Ol4qBfs+YOocu4BG3MJCGqoA5miqfNO2xg8VvI3mg9eU3jxDq
+	 RQmtcquj3l6K3RfO5i0mStMXOInUak9IfS/h7YSMX8PUEGhyB3aYqjfSutGXXjYW5woWw
+	 mdoPNAUCsGnlnryemd6eu+aOnGJXX4c+pDyQLDxR3O48ziHpyMDQfieIz04TRn1wAH7bb
+	 /Xye9fIDqpgh6Ddn4LiNHL3d7vI+NLMYhqEhgEWVHfnrSK/JCzLRzJp6DuYKmljPQJJiU
+	 9mOAcAaz8V4WJMOIDcDuUNokxFprK6Gkgp8m9IimzsuxUu2zlYvt61bh3J61WOqdxfw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IMM65WKV;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Td1XBBwd;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DE1606A324;
-	Sun,  1 Nov 2026 01:58:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1BF606A324;
+	Sun,  1 Nov 2026 02:48:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IMM65WKV
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60F651F000C1;
-	Sun,  1 Nov 2026 01:58:31 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Td1XBBwd
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96E501F000C1;
+	Sun,  1 Nov 2026 02:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793498311;
-	bh=9vSZLsyhSYt+F+Q2kf88Wa5aKGMcjvWJAR2b3rMf3yY=;
+	s=k20260515; t=1793501331;
+	bh=8vEjfLsV41/7ERxLHnPJ+uT0ZnGzebgW0tEKv1h3+B8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=IMM65WKVDHDB1r8POHrabcAQGRQJK2lcNAvogctKzHGK+3dXwj3uZl+lVlmClWv8d
-	 ZdfEtP6RB2g/poXw8dZC38lVgY7DuXMu3SRoLBoiOqLNLEv4YxFyYs4+ho0kljIkPb
-	 5+JXNeFcZMpUQCVSrrg5I/wCwB9gzpC+cPzrCwm90QIoivNb6LtHQqXm41LPxU1Sbl
-	 gax3KXgDDrTSM0y1tFl2ziX3C5LggtVId2qM6IMgnVXSO8FtKz/uOZorD/vtvL1L/+
-	 GHK35OmQIvlDHLCBZTVyoJEgqR8Oro5fQGC1Oxvq9xcayK1micJOyBTeEgGNLnZFQW
-	 A6cE1sCAggw6w==
-Date: Sat, 31 Oct 2026 18:58:29 -0700
+	b=Td1XBBwdGJcl7MYEzgQ404HqguO1Tp8MOXQ4pwznE9u1hdAWbXJMCdrMXV0ZQqXyL
+	 19lt7pZKHY614kBXJ6w2iLPLgdN3QEx2Eirtf70eCR7Ykbyjd2Oxm5KHuRT7mxsWLv
+	 Iyqej6zfYSXCnKmPUS+H2q/u1Y4B3jKIyAaeQpto9Hi5iFATUJYCapUzPwZmHthw79
+	 csB93cxE54qi+vguXFtn3M8B8ZXgM8nroJ3OvaroJNNkWLw0bApCTQ6WUAgWHrW02S
+	 SP0IJv7cvWBIoxoHozvdES58JAjOIDZqosiSZ1Rp9SXPKs5RzysEFuKrfbl3iN6r31
+	 2Wabsjfv9aZsQ==
+Date: Sat, 31 Oct 2026 19:48:49 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: haghdoost@uber.com, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andriin@fb.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 4/5] perf script: Add --lazy-load-symbols to load
- symbol names lazily
-Message-ID: <auacxQZKtlFa9Pc3@z2>
-References: <20261028-perf-symbol-memory-send-v6-0-7e90415f0101@uber.com>
- <20261028-perf-symbol-memory-send-v6-4-7e90415f0101@uber.com>
- <CAP-5=fU9Du9cCge2aTm10ejtwBKX1THQpm=h7EMR=WVQLww6DA@mail.gmail.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, haghdoost@uber.com,
+	james.clark@linaro.org, jolsa@kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	mingo@redhat.com, peterz@infradead.org
+Subject: Re: [PATCH v2 01/18] perf bench internals: Add symbols and maps
+ benchmarks
+Message-ID: <auaokSIk3deCgp-D@z2>
+References: <20260928075237.3055101-1-irogers@google.com>
+ <20261027231513.816148-1-irogers@google.com>
+ <20261027231513.816148-2-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -71,271 +63,302 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU9Du9cCge2aTm10ejtwBKX1THQpm=h7EMR=WVQLww6DA@mail.gmail.com>
+In-Reply-To: <20261027231513.816148-2-irogers@google.com>
 
-On Fri, Oct 30, 2026 at 08:55:55AM -0700, Ian Rogers wrote:
-> On Wed, Oct 28, 2026 at 4:42 PM Alireza Haghdoost via B4 Relay
-> <devnull+haghdoost.uber.com@kernel.org> wrote:
-> >
-> > From: Alireza Haghdoost <haghdoost@uber.com>
-> >
-> > This patch adds the --lazy-load-symbols option to perf script. With this
-> > option, perf reads the name of a userspace ELF symbol only when a lookup
-> > returns the symbol. Eager loading remains the default.
-> >
-> > perf script loads the ELF symbol table of every DSO that appears in a
-> > sample and keeps each symbol, with its demangled name, until exit. Most
-> > of those symbols are never sampled, and their names take most of the
-> > memory. On a large profile this makes symbol loading the main memory
-> > cost of perf script, and in a memory-constrained cgroup an OOM kill.
-> >
-> > With the option, the loader still creates every symbol, so end fixup,
-> > duplicate selection, PLT synthesis and IFUNC marking work as before. But
-> > it keeps the file offset of each name instead of copying and demangling
-> > the name.
-> >
-> > The name pointer and the offset share a union in struct symbol, and
-> > SYMBOL_FLAG_LAZY_NAME says which one it holds. The dso__find_symbol*()
-> > functions, dso__first_symbol() and dso__last_symbol() load the name of
-> > the symbol they return, and code that walks the symbols of a DSO gets
-> > them with dso__named_symbols(), which loads every name. So does
-> > dso__sort_by_name() before it builds the name-sorted array. A symbol
-> > whose name cannot be read is named "[unknown]" instead of being deleted,
-> > since address lookups search the symbol tree without the DSO lock. Address
-> > lookups return NULL for it, so perf script prints it as an address
-> > without a symbol.
-> >
-> > During loading, perf reads only the names that it needs:
-> >
-> > - the names of aliases that duplicate selection can tell apart only by
-> >   name,
-> > - the names of IFUNC symbols, which PLT synthesis uses to name the
-> >   IRELATIVE slots.
-> >
-> > The loader also skips a .dynsym entry that copies a lazy .symtab symbol.
-> > Duplicate selection would drop the entry, but only after it reads both
-> > names, and most exported symbols are such copies.
-> >
-> > Other names are read with pread() from the file that dso__get_filename()
-> > returns for dso__symtab_type(). The file is open only while perf reads
-> > the names, so no descriptor stays open per DSO.
-> >
-> > The kernel, modules, PPC64 .opd and .gnu_debugdata, whose symbol table
-> > is a temporary file, still load names eagerly.
-> >
-> > On a perf script run over a 45,073-sample callchain profile of a large
-> > C++ service, where eager loading creates about 1M symbols, lazy loading
-> > reduces max RSS from 341 MiB to 154 MiB and time from 3.2 to 1.5
-> > seconds, with identical output.
-> >
-> > Signed-off-by: Alireza Haghdoost <haghdoost@uber.com>
-> > ---
-> >  tools/perf/Documentation/perf-script.txt |   7 +
-> >  tools/perf/builtin-script.c              |   2 +
-> >  tools/perf/ui/browsers/map.c             |   2 +-
-> >  tools/perf/util/dso.c                    |   2 +-
-> >  tools/perf/util/dso.h                    |   3 +-
-> >  tools/perf/util/symbol-elf.c             | 251 +++++++++++++++++++++++++++++--
-> >  tools/perf/util/symbol-minimal.c         |   6 +
-> >  tools/perf/util/symbol.c                 | 113 +++++++++++++-
-> >  tools/perf/util/symbol.h                 |  29 +++-
-> >  tools/perf/util/symbol_conf.h            |   1 +
-> >  10 files changed, 393 insertions(+), 23 deletions(-)
-> >
-> > diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-> > index f0228e784ced..57b3533e6c2a 100644
-> > --- a/tools/perf/Documentation/perf-script.txt
-> > +++ b/tools/perf/Documentation/perf-script.txt
-> > @@ -343,6 +343,13 @@ include::itrace.txt[]
-> >
-> >          Default: 127
-> >
-> > +--lazy-load-symbols::
-> > +       Read and demangle userspace ELF symbol names only when perf needs
-> > +       them. By default, perf reads every symbol name from each binary
-> > +       referenced by a sample. This option reduces memory use and usually
-> > +       improves performance when samples reference only a small fraction
-> > +       of a large binary's symbols.
-> > +
+On Tue, Oct 27, 2026 at 04:14:55PM -0700, Ian Rogers wrote:
+> Add two new 'perf bench internals' subcommands to measure symbol and map
+> operations directly:
 > 
-> Won't it also improve performance if you say link against a library
-> but then only use a portion of that library's contents? I'm thinking
-> this option should really be the default, requiring people to opt out.
-> I may even be tempted to hide this flag so that we have the option
-> later of just always using lazy loading. Since the flag isn't a huge
-> cost in the code, and non-lazy loading is needed in other contexts,
-> perhaps we can make the lazy loading the default behavior and have the
-> flag here be say, "--eager-loading" ?
+> - 'perf bench internals symbols':
+>   1. Loads symbols from an ELF binary (defaulting to the running perf
+>      executable, or specified via -b/--binary) and sorts them by name,
+>      reporting both average runtime and heap memory consumption.
+>   2. Inserts synthetic symbols in two ascending runs (simulating .symtab
+>      and .dynsym), fixes up symbol ends and duplicates, and queries each
+>      symbol by address.
+>   3. Incrementally appends symbols at interior addresses and immediately
+>      queries each appended symbol by address.
+> 
+> - 'perf bench internals maps':
+>   1. Inserts non-overlapping maps in ascending address order (simulating
+>      /proc/<pid>/maps synthesis) and queries each map by address.
+>   2. Incrementally appends maps at interior addresses (simulating runtime
+>      PERF_RECORD_MMAP2 / JIT events) and immediately queries each map by
+>      address and by name.
 
-Agreed on making it default.  I'm not sure what's the case that needs
-eager loading.  We can change the code to load all symbols just before
-it (oh, it seems the patch already handles the cases) then no option
-would be needed. :)
+Can you please add an example output?
 
 > 
-> >  --ns::
-> >         Use 9 decimal places when displaying time (i.e. show the nanoseconds)
-> >
-> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> > index b6691ebb1b4e..88aaf9cfd132 100644
-> > --- a/tools/perf/builtin-script.c
-> > +++ b/tools/perf/builtin-script.c
-> > @@ -4287,6 +4287,8 @@ int cmd_script(int argc, const char **argv)
-> >                      "Set the maximum stack depth when parsing the callchain, "
-> >                      "anything beyond the specified depth will be ignored. "
-> >                      "Default: kernel.perf_event_max_stack or " __stringify(PERF_MAX_STACK_DEPTH)),
-> > +       OPT_BOOLEAN(0, "lazy-load-symbols", &symbol_conf.lazy_load_symbols,
-> > +                   "Read symbol names only when they are needed"),
-> >         OPT_BOOLEAN(0, "reltime", &reltime, "Show time stamps relative to start"),
-> >         OPT_BOOLEAN(0, "deltatime", &deltatime, "Show time stamps relative to previous event"),
-> >         OPT_BOOLEAN('I', "show-info", &show_full_info,
-> > diff --git a/tools/perf/ui/browsers/map.c b/tools/perf/ui/browsers/map.c
-> > index 075a575cdc5d..ef8f75699a07 100644
-> > --- a/tools/perf/ui/browsers/map.c
-> > +++ b/tools/perf/ui/browsers/map.c
-> > @@ -108,7 +108,7 @@ int map__browse(struct map *map)
-> >  {
-> >         struct map_browser mb = {
-> >                 .b = {
-> > -                       .entries = dso__symbols(map__dso(map)),
-> > +                       .entries = dso__named_symbols(map__dso(map)),
-> >                         .refresh = ui_browser__rb_tree_refresh,
-> >                         .seek    = ui_browser__rb_tree_seek,
-> >                         .write   = map_browser__write,
-> > diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> > index ce98613868e7..f41abf442476 100644
-> > --- a/tools/perf/util/dso.c
-> > +++ b/tools/perf/util/dso.c
-> > @@ -2013,7 +2013,7 @@ size_t dso__fprintf(struct dso *dso, FILE *fp)
-> >         ret += fprintf(fp, "%sloaded, ", dso__loaded(dso) ? "" : "NOT ");
-> >         ret += dso__fprintf_buildid(dso, fp);
-> >         ret += fprintf(fp, ")\n");
-> > -       for (nd = rb_first_cached(dso__symbols(dso)); nd; nd = rb_next(nd)) {
-> > +       for (nd = rb_first_cached(dso__named_symbols(dso)); nd; nd = rb_next(nd)) {
-> >                 struct symbol *pos = rb_entry(nd, struct symbol, rb_node);
-> >                 ret += symbol__fprintf(pos, fp);
-> >         }
-> > diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-> > index 3329f417810c..4a60c883cc37 100644
-> > --- a/tools/perf/util/dso.h
-> > +++ b/tools/perf/util/dso.h
-> > @@ -369,7 +369,7 @@ int dso_id__cmp(const struct dso_id *a, const struct dso_id *b);
-> >   * @n: the 'struct rb_node *' to use as a temporary storage
-> >   */
-> >  #define dso__for_each_symbol(dso, pos, n)      \
-> > -       symbols__for_each_entry(dso__symbols(dso), pos, n)
-> > +       symbols__for_each_entry(dso__named_symbols(dso), pos, n)
-> >
-> >  static inline void *dso__a2l(const struct dso *dso)
-> >  {
-> > @@ -831,6 +831,7 @@ char *dso__filename_with_chroot(const struct dso *dso, const char *filename);
-> >  bool dso__sorted_by_name(const struct dso *dso);
-> >  void dso__set_sorted_by_name(struct dso *dso);
-> >  void dso__sort_by_name(struct dso *dso);
-> > +struct rb_root_cached *dso__named_symbols(struct dso *dso);
-> >
-> >  int dso__swap_init(struct dso *dso, unsigned char eidata);
-> >
-> > diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> > index 1e2716c6af45..bce6c6aef20c 100644
-> > --- a/tools/perf/util/symbol-elf.c
-> > +++ b/tools/perf/util/symbol-elf.c
-> > @@ -17,6 +17,7 @@
-> >  #include "machine.h"
-> >  #include "vdso.h"
-> >  #include "debug.h"
-> > +#include "namespaces.h"
-> >  #include "util/copyfile.h"
-> >  #include <linux/ctype.h>
-> >  #include <linux/kernel.h>
-> > @@ -348,7 +349,7 @@ static bool get_ifunc_name(Elf *elf, struct dso *dso, GElf_Ehdr *ehdr,
-> >
-> >         addr -= phdr.p_vaddr - phdr.p_offset;
-> >
-> > -       sym = dso__find_symbol_nocache(dso, addr);
-> > +       sym = symbols__find(dso__symbols(dso), addr);
-> >
-> >         /* Expecting the address to be an IFUNC or IFUNC alias */
-> >         if (!sym || sym->start != addr ||
-> > @@ -629,7 +630,7 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
-> >          * by symbols__fixup_end() to overlap .plt. Truncate it before adding
-> >          * a symbol for .plt header.
-> >          */
-> > -       f = dso__find_symbol_nocache(dso, shdr_plt.sh_offset);
-> > +       f = symbols__find(dso__symbols(dso), shdr_plt.sh_offset);
-> >         if (f && f->start < shdr_plt.sh_offset && f->end > shdr_plt.sh_offset)
-> >                 f->end = shdr_plt.sh_offset;
-> >
-> > @@ -1516,6 +1517,190 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
-> >         return 0;
-> >  }
-> >
-> > +static DEFINE_MUTEX(lazy_names_lock);
-> 
-> I'm curious if this is global just to avoid the expense of a mutex per
-> symbol or it needs to be global? We have
-> tools/perf/util/sharded_mutex.h as a way of doing a cheaper per object
-> mutex, but perhaps the dso__lock works?
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+[SNIP]
+> diff --git a/tools/perf/bench/symbols.c b/tools/perf/bench/symbols.c
+> new file mode 100644
+> index 000000000000..5ab71d440e67
+> --- /dev/null
+> +++ b/tools/perf/bench/symbols.c
+> @@ -0,0 +1,236 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Benchmark symbol loading, sorting, and address/name lookup.
+> + */
+> +#include <elf.h>
+> +#include <errno.h>
+> +#include <inttypes.h>
+> +#include <limits.h>
+> +#include <malloc.h>
+> +#include <stdbool.h>
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <sys/time.h>
+> +#include <linux/compiler.h>
+> +#include <linux/kernel.h>
+> +#include <linux/time64.h>
+> +#include <subcmd/parse-options.h>
+> +#include "bench.h"
+> +#include "../util/debug.h"
+> +#include "../util/dso.h"
+> +#include "../util/map.h"
+> +#include "../util/stat.h"
+> +#include "../util/symbol.h"
+> +#include "../util/util.h"
+> +
+> +static unsigned int iterations = 20;
+> +static unsigned int nr_symbols = 10000;
+> +static unsigned int nr_appends = 200;
+> +static const char *binary_path;
+> +static bool no_demangle;
+> +
+> +static const struct option options[] = {
+> +	OPT_UINTEGER('i', "iterations", &iterations,
+> +		     "Number of iterations used to compute average (default: 20)"),
+> +	OPT_STRING('b', "binary", &binary_path, "path",
+> +		   "Binary path for ELF symbol load benchmark (default: perf binary)"),
+> +	OPT_UINTEGER('n', "nr-symbols", &nr_symbols,
+> +		     "Number of synthetic symbols for bulk benchmark (default: 10000)"),
+> +	OPT_UINTEGER('a', "nr-appends", &nr_appends,
+> +		     "Number of incremental symbol appends per iteration (default: 200)"),
+> +	OPT_BOOLEAN(0, "no-demangle", &no_demangle,
+> +		    "Disable symbol demangling during ELF load"),
+> +	OPT_END()
+> +};
+> +
+> +static const char *const bench_usage[] = {
+> +	"perf bench internals symbols <options>",
+> +	NULL
+> +};
+> +
+> +static int do_dso_load_bench(const char *path)
+> +{
+> +	struct stats time_stats;
+> +#if defined(__GLIBC__) && __GLIBC_PREREQ(2, 33)
+> +	struct stats mem_stats;
+> +#endif
+> +	double time_average, time_stddev;
+> +	unsigned int i;
+> +
+> +	init_stats(&time_stats);
+> +#if defined(__GLIBC__) && __GLIBC_PREREQ(2, 33)
+> +	init_stats(&mem_stats);
+> +#endif
+> +
+> +	for (i = 0; i < iterations; i++) {
+> +		struct timeval start, end, diff;
+> +		struct map *map;
+> +		struct dso *dso;
+> +		u64 runtime_us;
+> +#if defined(__GLIBC__) && __GLIBC_PREREQ(2, 33)
+> +		size_t mem_before = mallinfo2().uordblks;
+> +		size_t mem_after;
+> +#endif
 
-Probably.  dso__load() already takes the dso lock.
+Can we just use maxrss from getrusage()?  It doesn't need to be average,
+probably we just want to know the maximum memory usage.
 
-> 
-> > +
-> > +static char *read_name_at(int fd, u64 off)
-> > +{
-> > +       char small[256], *buf = NULL, *tmp;
-> > +       size_t size = sizeof(small);
-> > +       ssize_t n = pread(fd, small, size, off);
-> > +
-> > +       if (n > 0 && memchr(small, '\0', n))
-> > +               return strdup(small);
-> > +
-> > +       while (n == (ssize_t)size) {
-> > +               size *= 2;
-> > +               tmp = realloc(buf, size);
-> > +               if (!tmp)
-> > +                       break;
-> > +               buf = tmp;
-> > +               n = pread(fd, buf, size, off);
-> > +               if (n > 0 && memchr(buf, '\0', n))
-> > +                       return buf;
-> > +       }
-> > +       free(buf);
-> > +       return NULL;
-> > +}
-> > +
-> > +static int load_symbol_names(struct dso *dso, int fd, struct symbol **syms, size_t nr)
-> > +{
-> > +       int err = 0;
-> > +
-> > +       for (size_t i = 0; i < nr; i++) {
-> > +               char *name, *demangled;
-> > +
-> > +               if (!symbol__has_lazy_name(syms[i]))
-> > +                       continue;
+> +
+> +		gettimeofday(&start, NULL);
+> +		map = dso__new_map(path);
+> +		if (!map) {
+> +			pr_err("Failed to create map for %s\n", path);
+> +			return -ENOMEM;
+> +		}
+> +		if (map__load(map) < 0) {
+> +			pr_err("Failed to load symbols from %s\n", path);
+> +			map__put(map);
+> +			return -EINVAL;
+> +		}
+> +		dso = map__dso(map);
+> +		dso__sort_by_name(dso);
 
-Nit: I'm hesitate to argue about naming, but it seems a bit confusing.
-Why does it skip to load when it doesn't have a (lazy) name?  Probably
-symbol__needs_lazy_name() would be a little better...?
+Probably better to have a separate test not to use symbol names.  As we
+expect to have lazy symbol loading soon.
 
 Thanks,
 Namhyung
 
 
-> > +               name = read_name_at(fd, syms[i]->name_off);
-> > +               if (!name) {
-> > +                       pr_debug("%s: cannot read the symbol name at %#" PRIx64 "\n",
-> > +                                dso__long_name(dso), syms[i]->name_off);
-> > +                       err = -1;
-> > +                       continue;
-> > +               }
-> > +               demangled = dso__demangle_sym(dso, /*kmodule=*/0, name);
-> > +               if (demangled) {
-> > +                       free(name);
-> > +                       name = demangled;
-> > +               }
-> > +               symbol__set_lazy_name(syms[i], name);
-> > +       }
-> > +       return err;
-> > +}
+> +		gettimeofday(&end, NULL);
+> +
+> +#if defined(__GLIBC__) && __GLIBC_PREREQ(2, 33)
+> +		mem_after = mallinfo2().uordblks;
+> +		if (mem_after > mem_before)
+> +			update_stats(&mem_stats, (mem_after - mem_before) / 1024);
+> +#endif
+> +		map__put(map);
+> +
+> +		timersub(&end, &start, &diff);
+> +		runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
+> +		update_stats(&time_stats, runtime_us);
+> +	}
+> +
+> +	time_average = avg_stats(&time_stats) / USEC_PER_MSEC;
+> +	time_stddev = stddev_stats(&time_stats) / USEC_PER_MSEC;
+> +	printf("  Average DSO load + sort: %.3f msec (+- %.3f msec)\n",
+> +	       time_average, time_stddev);
+> +
+> +#if defined(__GLIBC__) && __GLIBC_PREREQ(2, 33)
+> +	printf("  Average DSO memory usage: %.0f KB (+- %.0f KB)\n",
+> +	       avg_stats(&mem_stats), stddev_stats(&mem_stats));
+> +#endif
+> +	return 0;
+> +}
+> +
+> +static int do_synthetic_symbols_bench(void)
+> +{
+> +	struct stats bulk_stats, append_stats;
+> +	unsigned int i, j, half = nr_symbols / 2;
+> +
+> +	if (half == 0)
+> +		return 0;
+> +
+> +	init_stats(&bulk_stats);
+> +	init_stats(&append_stats);
+> +
+> +	for (i = 0; i < iterations; i++) {
+> +		struct timeval start, end, diff;
+> +		struct dso *dso = dso__new("[bench_symbols]");
+> +		u64 runtime_us;
+> +		char name[32];
+> +
+> +		if (!dso)
+> +			return -ENOMEM;
+> +
+> +		/*
+> +		 * Phase 1: Insert symbols in two ascending runs (simulating
+> +		 * .symtab + .dynsym), fixup ends and duplicates, and look up
+> +		 * all symbols by address.
+> +		 */
+> +		gettimeofday(&start, NULL);
+> +		for (j = 0; j < nr_symbols; j++) {
+> +			u64 addr = (j < half) ?
+> +				(0x100000ULL + (u64)j * 0x40ULL) :
+> +				(0x100020ULL + (u64)(j - half) * 0x40ULL);
+> +			struct symbol *sym;
+> +
+> +			scnprintf(name, sizeof(name), "bench_sym_%06u", j);
+> +			sym = symbol__new(addr, 0x18, STB_GLOBAL, STT_FUNC, name);
+> +			if (!sym) {
+> +				dso__put(dso);
+> +				return -ENOMEM;
+> +			}
+> +			symbols__insert(dso__symbols(dso), sym);
+> +		}
+> +		symbols__fixup_end(dso__symbols(dso), false);
+> +		symbols__fixup_duplicate(dso__symbols(dso));
+> +
+> +		for (j = 0; j < nr_symbols; j++) {
+> +			u64 addr = (j < half) ?
+> +				(0x100000ULL + (u64)j * 0x40ULL + 4) :
+> +				(0x100020ULL + (u64)(j - half) * 0x40ULL + 4);
+> +
+> +			(void)dso__find_symbol_nocache(dso, addr);
+> +		}
+> +		gettimeofday(&end, NULL);
+> +		timersub(&end, &start, &diff);
+> +		runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
+> +		update_stats(&bulk_stats, runtime_us);
+> +
+> +		/*
+> +		 * Phase 2: Incrementally append one symbol at a time at an
+> +		 * interior address and immediately query by address.
+> +		 */
+> +		gettimeofday(&start, NULL);
+> +		for (j = 0; j < nr_appends; j++) {
+> +			u64 addr = 0x100010ULL + ((u64)(j * 197 % half)) * 0x40ULL;
+> +			struct symbol *sym;
+> +
+> +			scnprintf(name, sizeof(name), "jit_sym_%06u", j);
+> +			sym = symbol__new(addr, 0x08, STB_GLOBAL, STT_FUNC, name);
+> +			if (!sym) {
+> +				dso__put(dso);
+> +				return -ENOMEM;
+> +			}
+> +			dso__insert_symbol(dso, sym);
+> +			(void)dso__find_symbol_nocache(dso, addr + 2);
+> +		}
+> +		gettimeofday(&end, NULL);
+> +		timersub(&end, &start, &diff);
+> +		runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
+> +		update_stats(&append_stats, runtime_us);
+> +
+> +		dso__put(dso);
+> +	}
+> +
+> +	printf("  Average bulk insert + lookup: %.3f usec (+- %.3f usec)\n",
+> +	       avg_stats(&bulk_stats), stddev_stats(&bulk_stats));
+> +	printf("  Average append + lookup: %.3f usec (+- %.3f usec)\n",
+> +	       avg_stats(&append_stats), stddev_stats(&append_stats));
+> +	return 0;
+> +}
+> +
+> +int bench_symbols(int argc, const char **argv)
+> +{
+> +	char exe_buf[PATH_MAX];
+> +	const char *path;
+> +	bool orig_demangle;
+> +	int err;
+> +
+> +	argc = parse_options(argc, argv, options, bench_usage, 0);
+> +	if (argc) {
+> +		usage_with_options(bench_usage, options);
+> +		exit(EXIT_FAILURE);
+> +	}
+> +
+> +	if (symbol__init(NULL) < 0)
+> +		return -1;
+> +
+> +	orig_demangle = symbol_conf.demangle;
+> +	if (no_demangle)
+> +		symbol_conf.demangle = false;
+> +
+> +	if (binary_path) {
+> +		path = binary_path;
+> +	} else {
+> +		perf_exe(exe_buf, sizeof(exe_buf));
+> +		path = exe_buf;
+> +	}
+> +
+> +	err = do_dso_load_bench(path);
+> +	if (!err)
+> +		err = do_synthetic_symbols_bench();
+> +
+> +	symbol_conf.demangle = orig_demangle;
+> +	return err;
+> +}
+> diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
+> index 62bebdedd3b8..57a4199a058c 100644
+> --- a/tools/perf/builtin-bench.c
+> +++ b/tools/perf/builtin-bench.c
+> @@ -97,6 +97,8 @@ static const struct bench internals_benchmarks[] = {
+>  	{ "inject-build-id", "Benchmark build-id injection",	bench_inject_build_id	},
+>  	{ "evlist-open-close", "Benchmark evlist open and close",	bench_evlist_open_close	},
+>  	{ "pmu-scan", "Benchmark sysfs PMU info scanning",	bench_pmu_scan		},
+> +	{ "symbols", "Benchmark symbol loading, sorting and lookup",	bench_symbols	},
+> +	{ "maps", "Benchmark maps insertion, sorting and lookup",	bench_maps	},
+>  	{ NULL,		NULL,					NULL			}
+>  };
+>  
+> -- 
+> 2.56.0.313.g2479322e68-goog
+> 
