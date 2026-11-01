@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793562526;
-	b=JoLW/kDZ84L7IQLOkKn/8QL8bDuDtVMiidb966nby7z23uFvsR1AJCcrVU5kL6/FE2K5
-	 vR3s49zQj+CY8389WkhRGMSlPiDWP83iFWyVw4HLRmSwlLMy1OGhl6Zx7IHM4eKRRQ6vG
-	 Dci4hIMVyPTnwCncGanDkY65CP1oO5N53d+kYNYEX/6zFw6leXBrH3PKHgTzawbRkH70o
-	 wDKheMf7ycsrLj8b8JnThSPwp77feD+m6vBGQoe5rFjEFwxYtEy+0SInUSDNquJyUfRBj
-	 ZA/8F6OKaIGdHx6UxQf/0MJFfVC7J0LCQjcNQw7WlAsgJx7VBvgcHuV/Yyiz2sAJGUA==
+	t=1793563947;
+	b=W+ADIbyyQtw92ztwq43VyeSRjVDe2wzG2D8tpk0JE1OIOvX3brlgC4uh/USpRYLKDfaA
+	 w+eg0NMnLK9Ga/g+T+xfDaJ4zdPHBlSe7I8hL/Hc6tuzn8urFebj9dl/64JfseW1Mgj4Y
+	 vcedcDTzkvxg6OxzGnO9oxdoFWYwdM7OiJXgZeGQM53QrcEfannxObjyS4agxQzVEUSvd
+	 sXQ1KvKluafyyvg60VAkwCkgSKIx8wrjzYIplnksSsUywtDqmR/aF7+XDrEfPUWvMW9Gg
+	 mKeLd0K3JtvJ+A5ZE98mC/ca0Q/SlF0b+aAbQzO1yrbz+A1X2gsDYg4wgq3XvuSuyLw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793562526;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793563947;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=VpFJrzpoGMpD77cU0SvuWnwEHPuvXj13ejbpYsy2cK0=;
-	b=XZQfgYxaa2fzTKxiKOYyHj9AZ9kclnL/ztbfvg2u03/jAdepJW1rt/4P/X8r0Vtg6bZh
-	 KoXD5piQPEq3yJlWKScqka7f9XWa/FZzzEUetDjT8R1PDXirRtBhvqbe/RefVQsYPQJsV
-	 tZXM6hJyy5kZ3UoHor/iB30XfQtTqSDHrORQeqHK1Q00/zn+OWkMybqguqQvfLHXM8yPK
-	 37LrpY94Yf8ky6LQF8X5Z6sIB9P0DzuxRy2mFADD4NdJETdtSKDMoMhL2WleLHBDkyuIP
-	 TctV5fG05y9j+8XjiZ9JC9JjLS369kUJKF47IUzzOXrvQkxthbFV1JwfreFCTvNTOcA==
+	bh=VocMc75OJsqg09kADb82kK+56yqomlCH4rWFFiLJ5kc=;
+	b=F+Amcv0LoKOKxr4qAnUvGt03zvWfS5TJtEGZ1zC0iru0m3p03JtsgiGrX6Qk97BRXndc
+	 AyBI+81sQyj3Q+hQzvOOfI6X2vq9qHTXYolv69xT5ejjeaZl9R8XVyprUYKlIC1C7LXYu
+	 Ep+3Y2X8tJIdtkuqPZmo3c+bBDLa9E6GCieYZjIXMvmM/b2scl2t2zb+XudOkR58t9soU
+	 njvVtCtnA0PqwcmT7+6W6lWehn0wFgR/8rthAqjuofTanrAuRA0jsKKv0Wlu+8tJWgmNI
+	 Bv9HO6j1Dt6BC/BKq42Z4pb7MVNc3vo853l8+G4YLR1/LaXZp+DHIXw33HQb4zBL4ZA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cJPrtGF+;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZLnCKbRr;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3FBA606A327
-	for <linux-perf-users@vger.kernel.org>; Sun,  1 Nov 2026 19:48:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412FA606A324
+	for <linux-perf-users@vger.kernel.org>; Sun,  1 Nov 2026 20:12:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cJPrtGF+
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 349801F000C1;
-	Sun,  1 Nov 2026 19:48:45 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZLnCKbRr
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E82001F000C1;
+	Sun,  1 Nov 2026 20:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793562525;
-	bh=VpFJrzpoGMpD77cU0SvuWnwEHPuvXj13ejbpYsy2cK0=;
+	s=k20260515; t=1793563947;
+	bh=VocMc75OJsqg09kADb82kK+56yqomlCH4rWFFiLJ5kc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=cJPrtGF+jjzIL2SIkKC+n20ndo+tS419zGIHQUpAe+0i0FadpbiQAWIYtqU8hmCi1
-	 68lVlv011eDuziOgLKb32pwzF92rTFk4nbhe8X5Lk3gvvvTaN3FrUnS3zV/L5shnjI
-	 a4kGzn0hkwlI7ciSuJMW3dz7QBevVy/Qnr8vRvmx4+AEJmvMI4jmLAT9d3eWNzVNS5
-	 GHde0qx0lWsf5vGIfoTQ8UZ0ghb6XLnFNnZCMO6c1sCpEZEJN9QHy4eeM/8/muM22J
-	 AiB8KoegFjOzuiFC9SxjOxBQJ7TEW22pDjZVHz1JLePPcI85bs6V1eScmYSJKUlLPm
-	 zb36fLWmDU4ag==
-Message-ID: <sashiko-outbox-192633@kernel.org>
+	b=ZLnCKbRrI+DEVqgTjr/Tp/uSh0NFOtCDYhJhJcLLnSpEFsBv7aU9DPSNf4fVmVqHB
+	 e62nUNjms71XD+F1jqx8kzsPaa/McoZK/JXX5oKSK1UfcHn4TmBue6LvCjPUHWwAIz
+	 /iaU9NQQOLN+jWcEo01uzlTHLLoyp3VG58Fn2nPbhtPFtZ1i+LwR30F/GbckqDOjbF
+	 UKW6rOeC/NbYSH5pD+cLRxuJTfwhpDR9XuW2Xce+lhzxHyJhqDCWAqjKh5J07Pnw8b
+	 h3W0ZabvuaetYVAfNcXBZ7zJF2sPiBwjM2X762R03F3hJiiB0flKi4VEhgsZZrXlp2
+	 k3x6iTVfUkmCQ==
+Message-ID: <sashiko-outbox-192656@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 4/7] alpha/perf: do not report user registers from
- the entry code
+Subject: Re: [PATCH v3 5/7] alpha/perf: implement ProfileMe sampling
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Matt Turner" <mattst88@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261101-alpha-profileme-v3-4-92d511b5a044@gmail.com>
+In-Reply-To: <20261101-alpha-profileme-v3-5-92d511b5a044@gmail.com>
 References: <20261101-alpha-profileme-v3-0-92d511b5a044@gmail.com>
- <20261101-alpha-profileme-v3-4-92d511b5a044@gmail.com>
+ <20261101-alpha-profileme-v3-5-92d511b5a044@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 01 Nov 2026 19:48:44 +0000
+Date: Sun, 01 Nov 2026 20:12:26 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,66 +62,117 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] alpha/perf: __entry_save_end precedes r16-r18 save in entSys
+- [Medium] alpha/perf: perf_get_regs_user() checks PMPC instead of interrup=
+ted PC
 --
 
-commit ce97475b8e0171fa2ccbfec6b4cebc978a8757a6
+commit b49acea08699ec26b74c2c7c29ccc098435ea611
 Author: Matt Turner <mattst88@gmail.com>
 
-alpha/perf: do not report user registers from the entry code
+alpha/perf: implement ProfileMe sampling
 
-This commit prevents perf_get_regs_user() from returning an incomplete user
-pt_regs frame when a perf sample interrupts kernel exception or syscall
-entry before the user registers have finished being saved.
+This commit implements ProfileMe sampling mode on Alpha EV67 and later
+processors, selectable via the profileme config attribute or precise_ip. It
+attributes samples to the instruction address latched in PMPC, adjusts for
+I_STAT instruction overcount, and works around PALcode counter overflow
+restrictions when stopping or rearming counters.
 
-> diff --git a/arch/alpha/kernel/entry.S b/arch/alpha/kernel/entry.S
-> index 790389a15c3ce..2de7cdd3a8725 100644
-> --- a/arch/alpha/kernel/entry.S
-> +++ b/arch/alpha/kernel/entry.S
-
+> diff --git a/arch/alpha/kernel/perf_event.c b/arch/alpha/kernel/perf_even=
+t.c
+> index ecec78c355cd3..f55ddab7478e0 100644
+> --- a/arch/alpha/kernel/perf_event.c
+> +++ b/arch/alpha/kernel/perf_event.c
 [ ... ]
-
-> @@ -473,6 +479,8 @@ CFI_END_OSF_FRAME entDbg
->  	.cfi_rel_offset	$gp, 16
->  entSys:
->  	SAVE_ALL
-> +	.globl	__entry_save_end
-> +__entry_save_end:
->  	ldq	$1, 0($sp)	/* syscall nr from saved r0 */
->  	stq	$1, 8($sp)	/* regs->r1 =3D shadow syscall nr */
+> @@ -835,6 +939,131 @@ void perf_event_print_debug(void)
+[ ... ]
+> +static void alpha_perf_event_profileme(struct perf_event *event,
+> +				       struct hw_perf_event *hwc,
+> +				       struct pt_regs *regs)
+> +{
+[ ... ]
+> +	pm_regs =3D regs;
+> +	pc =3D pmpc & EV67_PMPC_PC_MASK;
+> +	if (pmpc & EV67_PMPC_PAL) {
+> +		pc =3D regs->pc;
+> +	} else if (pc < TASK_SIZE && !user_mode(regs)) {
+> +		if (is_user_task(current)) {
+> +			pc_only =3D true;
+> +			pm_regs =3D this_cpu_ptr(&alpha_profileme_regs);
+> +			memset(pm_regs, 0, sizeof(*pm_regs));
+> +			/* PS bit 3 is the mode bit that user_mode() tests. */
+> +			pm_regs->ps =3D 8;
+> +		} else {
+> +			pc =3D regs->pc;
+> +		}
+> +	} else if (pc >=3D TASK_SIZE && user_mode(regs)) {
+> +		pm_regs =3D this_cpu_ptr(&alpha_profileme_regs);
+> +		memset(pm_regs, 0, sizeof(*pm_regs));
+> +	}
+> +
+> +	perf_sample_data_init(&data, 0, hwc->last_period);
+> +	if (pc_only)
+> +		alpha_profileme_drop_regs(event, &data, PERF_SAMPLE_REGS_USER |
+> +							PERF_SAMPLE_REGS_INTR);
+> +	/*
+> +	 * perf_get_regs_user() has the same check, but it will find the PMPC
+> +	 * in regs->pc rather than where the interrupt was taken.
+> +	 */
+> +	else if (!user_mode(regs) && in_entry_save_code(regs->pc))
+> +		alpha_profileme_drop_regs(event, &data, PERF_SAMPLE_REGS_USER);
+> +
+> +	if (!alpha_perf_event_set_period(event, hwc, 0))
+> +		return;
+> +
+> +	saved_pc =3D pm_regs->pc;
+> +	saved_ps =3D pm_regs->ps;
+> +	pm_regs->pc =3D pc;
+> +	/* PS bit 3 is the mode bit that user_mode() tests. */
+> +	if (pc >=3D TASK_SIZE)
+> +		pm_regs->ps &=3D ~8UL;
+> +
+> +	perf_event_overflow(event, &data, pm_regs);
 
 [Severity: Medium]
-Should __entry_save_end be placed after $16, $17, and $18 are stored into
-SP_OFF+24..40($sp) in entSys?
+When a ProfileMe sample has a kernel PMPC inside the entry save range
+(in_entry_save_code(pc) is true), but the performance counter interrupt its=
+elf
+is taken after leaving that range=E2=80=94either later in kernel mode after=
+ SAVE_ALL
+has populated task_pt_regs(current), or after returning to user mode where
+user_mode(regs) is true=E2=80=94alpha_perf_event_profileme() does not call
+alpha_profileme_drop_regs() because in_entry_save_code(regs->pc) is false.
 
-Unlike non-syscall PALcode entries, PAL_callsys does not save user $16..$18
-into the PALcode stack frame, and SAVE_ALL only stores them into
-trap_a0..trap_a2 at 160..176($sp). In entSys, pt_regs->r16..r18 are
-populated a few instructions after SAVE_ALL while interrupts are still
-enabled:
+It then sets pm_regs->pc =3D pc and clears the user mode bit in pm_regs->ps=
+ (or
+uses the zeroed per-CPU alpha_profileme_regs when user_mode(regs) is true)
+before calling perf_event_overflow().
 
-arch/alpha/kernel/entry.S:
-entSys:
-	SAVE_ALL
-	.globl	__entry_save_end
-__entry_save_end:
-	ldq	$1, 0($sp)	/* syscall nr from saved r0 */
-	stq	$1, 8($sp)	/* regs->r1 =3D shadow syscall nr */
+During sample preparation, perf_event_overflow() -> __perf_event_overflow()=
+ ->
+perf_prepare_sample() -> perf_sample_regs_user() sees !user_mode(pm_regs) a=
+nd
+calls perf_get_regs_user():
 
-	lda	$8, 0x3fff
-	bic	$sp, $8, $8
+arch/alpha/kernel/perf_regs.c:perf_get_regs_user() {
+	if (in_entry_save_code(regs->pc)) {
+		regs_user->regs =3D NULL;
+		regs_user->abi =3D PERF_SAMPLE_REGS_ABI_NONE;
+		return;
+	}
 
-	stq	$16, SP_OFF+24($sp)
-	stq	$17, SP_OFF+32($sp)
-	stq	$18, SP_OFF+40($sp)
+	regs_user->regs =3D task_pt_regs(current);
+	regs_user->abi =3D perf_reg_abi(current);
+}
 
-Since pt_regs_offset[] in arch/alpha/kernel/perf_regs.c maps
-PERF_REG_ALPHA_R16..R18 to offsetof(struct pt_regs, r16..r18) rather than
-trap_a0..trap_a2, if a perf interrupt lands between __entry_save_end and
-stq $18, SP_OFF+40($sp), in_entry_save_code(regs->pc) will return false and
-perf_get_regs_user() will expose task_pt_regs(current) before r16, r17, and
-r18 have been saved.
+Because perf_get_regs_user() checks in_entry_save_code(pm_regs->pc), which =
+is
+now the PMPC rather than the interrupted PC regs->pc, won't it falsely disc=
+ard
+valid PERF_SAMPLE_REGS_USER and PERF_SAMPLE_STACK_USER data whenever the
+profiled instruction is in __entry_save_start..__entry_save_end even though
+the interrupt was delivered after the user frame was completely saved (or
+after returning to user mode)?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261101-alpha-prof=
-ileme-v3-0-92d511b5a044@gmail.com?part=3D4
+ileme-v3-0-92d511b5a044@gmail.com?part=3D5
