@@ -1,20 +1,20 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.209.130
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.96.79
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793646558;
-	b=zBw1w4dg9aMohN69L4auyZSbzMF9J9nSUGddRm+loDnpzKzBD5sjljJHg5gi2oofeKUJ
-	 p80XGamh7nFuqU5wPDjAbEgw/aD+MwqmfHu+fZvexr6YfLaZ4xfmrSbJnUjf0aqLkkBrz
-	 1/3VzjGRQFz93H3vDkFi2mBEYPQNME7uJWmK8Iy7uQwRkYU3j0WGp2MM+AiXmQMwvKM1X
-	 9y5LaL7uQa71DbJFwnNPzh/bSO9p8+TZ1H1FpSeYSovHoMdtKC4rM2HIgcAnOa4V4nO06
-	 m2fgsGjqm9ozPegoGwK/X+Zyr5oR++d2Oe5NiozAuToaAulab2mpKayOhmP9J/zNdmQ==
+	t=1793647256;
+	b=yyUhMce0ndXprByoJPWfj+FPmDYyLwrngnG1T3R3LDS9YNxk5/bEVMrNRbQsk/MmzjK7
+	 fqFBNRXdxCsSDeLbWeqMt6nu2bQZq4PvzB25mYtAFYghonzcWFY0htnzjhvTgG2F1iheW
+	 ccdK/a4okgFdgz4Qh42oYJ9BEFi3XDNmttamQOtsJP9kSclQaZobaub0J5TEZqiF4bcSP
+	 X6Dqpy1/3EFiljqyECEr/APuGbn4WiMiokXgGI2honnyryr/yW88wJ5dSaW9cmqYSW7aW
+	 l8UjuDLSUZIze1m3FoA8Lq1nNk8sSmRYoVoIAGfK30jBYVCSCoWb+rHnOm6nO/E/1MA==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793646558;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:cc:
-	 Subject:In-Reply-To:Message-ID:References:Content-Type:
-	 X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793647256;
+	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 References:Content-Type:Content-Disposition:Content-Transfer-Encoding:
+	 In-Reply-To:X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
 	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-AtpMessageProperties:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
 	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
 	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
 	 X-MS-Exchange-CrossTenant-Network-Message-Id:
@@ -24,71 +24,65 @@ ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
 	 X-MS-Exchange-CrossTenant-UserPrincipalName:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=4yVDYyuY2UwaKBaMt1bRpLvG5otTBVNZuNh/tmf8OHY=;
-	b=hVWGeVczrcTDSUvZdXaftaXFLJcOprO2ZvxKYSKRrsWS6g9T8j7Cf61ZCT7tkl0SdIVa
-	 YmsUM7T30g50N/83n8tlpGog9mmQ9AYBiefKnlzdoE+XswahPwHlKCYjD/Mh+rxC0uiFE
-	 dYY7pvHCuqGVrJrZjKG2p8q96qmSE4QFTi7zBBWZ8SdR29n5c5tk6aDqMgBctvwSUcxEf
-	 5Si3lFeVcI0+0zBYU5JvFdiPl4WRslot2d5Iq657JQWa5wQtWlq2MN0ZWelH87Bq81BDO
-	 QijQqcy4IU3GPYRCId0wyPQLrCz2cB50tEpVV+r9qggxOKdvbSlQdznVR8aYO4o/U0A==
+	bh=hq3Os9kVWaSQzwpzXZzdLcGnI71pAFvaHsKFUitNMfs=;
+	b=kS2ML+MOi3HdkjtAIbiCAuXQDjZNk4aMxP0l93qfPlvMNJlR5vaO9QT9EEOIeQ2/y1An
+	 ESVCRelBrFsNLkpb3CLeNcjwoEC8nANH+j0zeal7UHwGSvcys/efJHJP1C2qliTEw6m+2
+	 ivVtdUD3ZrHAguOMYaVXEA3z7WKpzZVYIaRodkITEkj2ui9559x/4ak0upEfq1fvzOYer
+	 2pi/tB6az/4V8KtUNJjTm4TR+TcE8gznPC+4fstJWL5vBXmRsKpWTrkcu/iuh0etb4htv
+	 RfCMdiBXNpXeINqsLID5ZirS0yJEUwhmonjOl+h9DkjTvTVvW66oY9c26peYGFJON8g==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=os.amperecomputing.com;
-	spf=pass smtp.mailfrom=os.amperecomputing.com;
-	dkim=pass header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.a=rsa-sha256 header.s=selector2 header.b=uVT+OZkR;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.209.130
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11022130.outbound.protection.outlook.com [40.107.209.130])
+	dmarc=none header.from=atomlin.com;
+	spf=pass smtp.mailfrom=atomlin.com;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.96.79
+Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazon11022079.outbound.protection.outlook.com [52.101.96.79])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11DA606A324
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Nov 2026 19:09:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B11DA606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.a=rsa-sha256 header.s=selector2 header.b=uVT+OZkR
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC677606A32C;
+	Mon,  2 Nov 2026 19:20:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BC677606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=i7624RUb7HjM/ICuKRcyL7Oq4C6fO+4FiyILxQfM6xj1hlQOUoWUzz1PuwWQzDr87/8VWmRfDM3bPWwk39m6jp6t1dFUsi6vppEt0OgvnHAUck96wgyZAvw689yEFlbThNlrxHe0bQx7sjBu6+2wECaryqShxKWeJrMU8oJGhluboXLKnKH8s5SBOFXMUQCflByNK/FwuTJJ4AbQ4ryt3FMTEwWPaNm46jU/TprIaB3I1ibai0CN0hw2eo60CEWh8Tb+yzizZYocWPKAoeDR3HEjsT0ZXTmQy41IRqfD0G9x5sAPzD5zpBxJjVlROcPtsWnZubXpbEkvCwgM9GYW3Q==
+ b=x9CLVN1sCo4s1WEXxtdNYTxfDXXwcVodXeI8GXcaj0NlC8LhuM/Mb1bCXPoToZ6XCLKuQNEYfT6iBTwbuVGNQNpUMgRKwzZo8rRWuLojz0yqStZz/8KHzbn/KR/xOymq7dC2jFABCcYewzhfUZK85QXTuzzxtbwCpcUGbcXTuiiIQlRs/B7wz0X92Dc/E6t0x0R7/EpHiH3SvggiBQuj43/3bfPjJ1lV6npCi/+w9E/v/O65kSzThW/LrVj51qTVPARKIQxDvjKnztaLq3KocynwR2ePYZht5+6PB5ifGqLbjYI8MzfLESc8VvlRb9/+Ueebb129SmKNjPytRWZZEA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4yVDYyuY2UwaKBaMt1bRpLvG5otTBVNZuNh/tmf8OHY=;
- b=GA0tTLsO46hHDQ3UwpR97QYetbw/opW9q6hnSimx+13SRtB/0Rq3aiYTkNZzLNLiarZlX+397qPisnw+mnOhGQwPloraC7EyIRwh8rf7K1+WwNHm+rCBh2uHbE7AqUeY5Br1hpRMCJ2IlOEB14FDSUbjhF5/1VJeLTArMz5pdqfI5NUNv3dCByYPj9gB6Edv6OhjRh7bPcdF4BnaK2NeBOkZTvpCq57fQ862aFStmgJMCaa1z1zXjjG4jo/diHyCMmNqpx8GiP9oEJ6JbUmW8cO3h0zjT7GEJBKIfYNNClMyMz/u+5oCQEuOQZu2Kd5T6vmgC1B9st+9gdm5z6HLLA==
+ s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
+ bh=hq3Os9kVWaSQzwpzXZzdLcGnI71pAFvaHsKFUitNMfs=;
+ b=gy8br4cM+6ejtV+XM12ob0ls3CIcVgxdzQYu2abc2ukG4erfZAv/iklSV5073ikPgQ5Hkd2ikzQC9/H/2yEB+yJMoxqQX8KwmQibrOpU6CJHvNTr7Kq8eWU899Zcc5UR5ADEVuk508CJrbUj8EcgfSMK6ppqn9sLTaZMhfbHyrzaVsJwJE3EauGC17EPywTvp+jTGspz8RSltgZxWXbilA2B8VIAx0OJiMGlIfUjwijCjphfKjtaueYStsfU2rv9KZzW2I70k+hbI5fc7uQP17EFhD+MOiD8soaCyCHtOo23xrG3KTRSd8PXV/HbvvoTKUAXbpk93pDwM0zYtCP9oA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4yVDYyuY2UwaKBaMt1bRpLvG5otTBVNZuNh/tmf8OHY=;
- b=uVT+OZkRLtgOoWH8iUb+5a68yWx4oeKHkOI7S/7B/pKx79FLCDLiIriuGT5qBp/skknqxBCS6hpRnr79Ng1W8pEH0lZ69za4n/ULPEANkArAthOvZtHg2zcoW2zgWfM6CnewQrVutg6N+WmxWcZ7cu5AwdqUSrUAiJiEtE7cvYE=
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
 Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from CH3PR01MB488663.prod.exchangelabs.com (2603:10b6:610:34b::13)
- by CY2PR01MB808244.prod.exchangelabs.com (2603:10b6:930:112::9) with
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:163::8)
+ by LOAP123MB8880.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:498::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.8; Mon, 2 Nov 2026
- 19:09:14 +0000
-Received: from CH3PR01MB488663.prod.exchangelabs.com
- ([fe80::117d:9e02:c9e7:5973]) by CH3PR01MB488663.prod.exchangelabs.com
- ([fe80::117d:9e02:c9e7:5973%6]) with mapi id 15.21.0592.007; Mon, 2 Nov 2026
- 19:09:14 +0000
-Date: Mon, 2 Nov 2026 11:09:11 -0800 (PST)
-From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-To: TAKANO Mitsuhiro <takano32@gmail.com>
-cc: Ian Rogers <irogers@google.com>, 
-    Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Ilkka Koskinen <ilkka@os.amperecomputing.com>, 
-    linux-perf-users@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH] perf vendor events arm64 AmpereOneX: Drop stale
- BPU_FLUSH_MEM_FAULT entry
-In-Reply-To: <179333866449.669133.15101451727175644059@gmail.com>
-Message-ID: <42801873-8908-07a6-aed1-c7076c689e8e@os.amperecomputing.com>
-References: <20261021224527.167637-1-takano32@gmail.com> <auEK6E-jX12Bi8u_@phoenix2> <CAP-5=fX+2eRGCHcU43sqU=gi9iKvxqyS6ipwRSnvFcap3D+QzQ@mail.gmail.com> <179333866449.669133.15101451727175644059@gmail.com>
-Content-Type: text/plain; charset=US-ASCII; format=flowed
-X-ClientProxiedBy: MW4PR03CA0314.namprd03.prod.outlook.com
- (2603:10b6:303:dd::19) To CH3PR01MB488663.prod.exchangelabs.com
- (2603:10b6:610:34b::13)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.12; Mon, 2 Nov
+ 2026 19:20:51 +0000
+Received: from LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::f71f:a9f:c4de:687a]) by LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::f71f:a9f:c4de:687a%5]) with mapi id 15.21.0569.011; Mon, 2 Nov 2026
+ 19:20:51 +0000
+Date: Mon, 2 Nov 2026 14:20:47 -0500
+From: Aaron Tomlin <atomlin@atomlin.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, chjohnst@mail.com, neelx@suse.com, 
+	sean@ashe.io, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH perf-tools-next v12 06/10] perf ftrace: Support display
+ of inlined functions in function graph tracer
+Message-ID: <zri4x5jfbpykc7jxdicixkrjdw4f7tui72t7is3mos6cnzbhj5@2wct4vkl7sno>
+References: <20261026025735.546101-1-atomlin@atomlin.com>
+ <20261026025735.546101-7-atomlin@atomlin.com>
+ <auZ6tj_5-m1MNGDM@z2>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <auZ6tj_5-m1MNGDM@z2>
+X-ClientProxiedBy: YT4PR01CA0403.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:108::17) To LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:163::8)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -99,89 +93,236 @@ List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR01MB488663:EE_|CY2PR01MB808244:EE_
-X-MS-Office365-Filtering-Correlation-Id: e3239731-5df8-441e-db04-08df3914c8d6
-X-MS-Exchange-AtpMessageProperties: SA
+X-MS-TrafficTypeDiagnostic: LO2P123MB4190:EE_|LOAP123MB8880:EE_
+X-MS-Office365-Filtering-Correlation-Id: 25dd157b-fecc-425e-c076-08df39166814
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|1800799024|23010399003|10067099003|55112099003|18002099003|22082099003|261102123227099003|56012099006|11063799006|5023799004|4143699003|261022113327099003|261022105027099003|261022075727099003|261026140227099003|261026121527099003|261028144727099003|261021121427099003;
+	BCL:0;ARA:13230040|366016|1800799024|23010399003|376014|7416014|4143699003|56012099006|261009223027099003|261028144727099003|261022115727099003|261022075727099003|261026140227099003|261021121427099003|261026121527099003|261022105027099003|10067099003|22082099003|18002099003|261102123227099003|6133799003|3023799007;
 X-Microsoft-Antispam-Message-Info:
-	gZBX9nXBf8hon0h2DN8W+b+d/bjqMlaTX0y4JixJKk1DjVuvh7Qj7qPWeXWONboA9xXx12zlcqrw0nYBa6lhguTOqhHzms0YM9lj5fiRYvvZd47qFChbcFoBi4PAAs0JH0RfNZONjqYrklE5QX+jEab1Nb19R7URdgMCWcbma5kTY3B0GkoTzVFJBrH4An+0yi0S9iy4sQYheiP/Hch7FXGi86kcUxOtDlgBI5CjQGEXWvRpkx9wepdedlBE4Wrpxi10c2cp3vJ29bfKS6PFqmYybN+DaTFvHza83EueLvV/60r8ussIAIu+E69Ru+ntw0S29yWZZcD4sj+eoBwYs32+yBUcz+v6zt5SIm3GofeW/B+daVVAz3crg5zDr+wf7Jo3TTXWiy2Fh5eXXDxRW+JBQFf2NW6uqx2PS4E+J7jMpxPzQiOD3W+Q1RRIbdzRQqDtH6S6RnzG4LgaqcP3nNb2+cNmPP3s3tTfpowBofnnK3ZOQkbodkZEhRPamGcVI+jGzCgp9WEVKukGx6bzCPiybDa34r7KTkF+vL6NNfSfUNZX6Z71n22PBxRc1NxIuNx/x/O2XDB1EBkm/qwoNzYDFD6omwFJdC87Pj9djPwyT7e9Gl4AWKZJvg1sKKv7nAF142fOsM/cnBQnmw4crPvuU94v7xfwX/zCcco55UI=
+	fXPO7C5L8MT+LqsfwskeTkhrVA3EFJQxbx2FJihpoqiKv5sTm+e4aFV570lKBamjQreQa2TdHIdpQiZCsh1CQFC/jQCrHWFCF4IOZCOpRoAPUypjBG6A/+oMh1KFJDgV1hAX9wLcDUefLbF0c/2hoRJH27ECyP+LgZ4VVNd3oLlhytvsjeWOYnGmn9+sXv9n1WmOOdJooy6c/ifg+ltYpCXZxrz5nmViTf1Q17m6w+ctMQmyF7DDG4V/FtTowV8unwG6NvFxRCRlcjzOxtULnda8afYQvzRs2cQ0lHlK/CKB6KnOXWRrL2Wf4tmF3KdNAEAkmChz20k5SwyBzPjJeWzrNzobOjCdNMBok/JBBPimQFaOEUkRsTN77bX1EOfKQBpK1v0/QEh3sRX0u6niVTGGl87qxlV3ux7QKDKNWIl3RTUc2+RQTJKpZDxx+nBZDlkFzztE+/dtCcc90A9Kb1Wz1q1X6zdKduPkFG0nhGFt1kctxfmGsme1kDbDF82qykhTdYF4XyzAMcfvBaXo+xOU711VROFqrLBR6I6Jssw/ImxAffigUpaYBQKDg57Qqhi3hpogsnV2N3zLOFrdNHYKhwUe34OBZXVMfmkUGp+TjFyQABKNWWASxO8lse97REBAikHIwSTygR55FXnOiRwqWX84nc8pf0D4brGMHW0=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR01MB488663.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(23010399003)(10067099003)(55112099003)(18002099003)(22082099003)(261102123227099003)(56012099006)(11063799006)(5023799004)(4143699003)(261022113327099003)(261022105027099003)(261022075727099003)(261026140227099003)(261026121527099003)(261028144727099003)(261021121427099003);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(376014)(7416014)(4143699003)(56012099006)(261009223027099003)(261028144727099003)(261022115727099003)(261022075727099003)(261026140227099003)(261021121427099003)(261026121527099003)(261022105027099003)(10067099003)(22082099003)(18002099003)(261102123227099003)(6133799003)(3023799007);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?aQpxWVDFoVrKX01cuXXOjiNc4sPCUxxO7tdJY1TvFQR99EOJRTCBKlQuTCWw?=
- =?us-ascii?Q?X2S3wxEnV9THTNLFVwv3xWOgnvzlzuRGbN8q934F99n1RSfUU9k4NNG9+T8L?=
- =?us-ascii?Q?7dyJgf6HcAC8jp3MMBmFALUneC3udWRxYveGK3hP0pcnR+LeOTMNLT9LpmKp?=
- =?us-ascii?Q?bpo6RtRrwoo67ayWqBnNBcP8dZ21VfS/teFa1yHY2wI2qqKazaIPctFnY0Im?=
- =?us-ascii?Q?PDJNhY7jKqNTdbC7COul3bmwJWr3ECJcipb6tl3/oow1Sqs4XRMJOUIckkt8?=
- =?us-ascii?Q?5PTi35zhtpgQfgXVikGLrbXXKbrUB3fU0uLa0wSOrlVlFH4B6/DAaZlkTj1c?=
- =?us-ascii?Q?TBYP0Q7tRZhfADO7VAy7ir+ebUly5XfVZpTz693fRwP1mCJsja3ozgQcJAB1?=
- =?us-ascii?Q?hxZjH1aPnIPcwg2K8mpH+m4TSAWSq5vRuS1RZV/Ti1j0wNMHOawxjKXkW/DN?=
- =?us-ascii?Q?GIlwiCe2YyypF4fvmEEjnYpiAPzyVqEkrWuIgG4OxajSaeluQoS0ld5F/dw0?=
- =?us-ascii?Q?ilyqD1qmir+z3zfgcQ3c+nHfMu5U/64EuTqll0aGev0TzBpbNDKHAOjpyRRl?=
- =?us-ascii?Q?wHdb7yelFyBGU+1Qd5ukg+nOO/DZSXIYQac5X2Yggo5wdIfzj2ndaV0FFpr9?=
- =?us-ascii?Q?89cMhPzk1GifMqmzoQTqairF9EK1gz9OAQhKgcAphDisZ23VjT8pg6Y0TScg?=
- =?us-ascii?Q?EdcM0UKEqGhN3tfzgQu3dChM0QfeiFl9hMXFp2LysYYgyoWT4SNzisk96mcM?=
- =?us-ascii?Q?kv6bZ6FBT/H+UJnUXO7iwfpjIL7TUQb+oHs+3Nvrcg4m/HLeggkoNhcIp52r?=
- =?us-ascii?Q?xvOFgP/PtHBprb2j0yfF/an9kZmRshgSEzUT3TBxmvxeKN97sSrSvRZpfnj/?=
- =?us-ascii?Q?WbDHZY6tcF8F3Gk0sTulxFkCWOHVmpKXTdgaj2AUZlSOCtVkh0m1ajA9SfA3?=
- =?us-ascii?Q?2ehjh49xhcJ+fP8H36N/fQRC0kmJI94EfRIBXeTOIICfME0fQg9b/nFWpr6y?=
- =?us-ascii?Q?qitV+SEsvzGHNO1N4bc2WhGvHXdtHJ6YjgyQsStUaEts6VTrLhBCi1pDKSo7?=
- =?us-ascii?Q?NuwNgcL7SY9rhpT6ZlUV9hyFMM9htVrIq/bezB7MwmQbpVuI6KAal8cXWZ0f?=
- =?us-ascii?Q?1Q0hRvcCmp1wlpBhak6ZJbZ0LgicYe7JV1KBkM0LFUKhnatR7nBHgLa7QpwZ?=
- =?us-ascii?Q?YBzzC8Sdcz04u9sVnSxFZs59MSI9xeWM+32AuYEd/CEAjxpwHDjUg+pt5Ley?=
- =?us-ascii?Q?s1xLWEPumS/dase2BCi2g/qNuiI0uSPZTm2Q4BuSTnSS8lrdLDnw0Ac/yz9u?=
- =?us-ascii?Q?FLA0VNoUlV+Bo8wZoEsVAEGYGY8nZkFxXXT9PIBfi/W9BEvumxtYdgClN5YT?=
- =?us-ascii?Q?QU24hU7UyZjKmoj4A6Ycs9R7SUOiaJg+VifqM58zBbdH1eXbWV6TFdgLfQRO?=
- =?us-ascii?Q?+Wj7D1QjIsZUlRjNr+6u8jVf9+R5sDQf5wvjERun6rPQEcajwwx77dpjrVHD?=
- =?us-ascii?Q?+du4n0hofFni2sqN0Z9ULDrUMUVBh9u+hgRy60XyfJZB1XMEEfUDll2v9DHh?=
- =?us-ascii?Q?aXVojZzW6zV5gsFSqm/WkRTgwZVjXICX96LIya55ArcZJVmEZnmP363UiBcX?=
- =?us-ascii?Q?R+tjbeG4jyWTz1hkNij7qO+umUZiv3750E7gli3DK81yNZqB5fKxmnKM0P5Y?=
- =?us-ascii?Q?ImaqpEGnc8pkOZsPM92z1pxlYfTq6ziE42SVVIcgCv7wgAFYF+lZ9z8yX0QR?=
- =?us-ascii?Q?u4N+4LiiojvVT3HMj/a+4GLtRSHiRBc=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e3239731-5df8-441e-db04-08df3914c8d6
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR01MB488663.prod.exchangelabs.com
+	=?utf-8?B?aXVDYmIzeWpQV1JOTTFlRHRkWHRnalAvcWdYNENRb3ZtWCt0dlVYcnRHOHN5?=
+ =?utf-8?B?YWxvS3FOMFRGaHQxbWFjTEpWd3ZTZWNrTFdhL2RHaXpEcWpPMGw4NWxWNjFX?=
+ =?utf-8?B?ZW9wMStyY1ErNlJKNXoxQ3hvaXVTMjF3WVJ6c1BmdlpUUjg1a1FKaEhYbEZu?=
+ =?utf-8?B?SFJRa1VObEdkMEg0S3Jqck1NT3NWSGc3UnRzY1poWFhSWkNMWkNnTnlhcjBt?=
+ =?utf-8?B?c2k0cUJ6Y242SExkNlVpOHFOYTVBb1ZGSkgzbjZVKzFZaFpLbHp0VHJ5cEc3?=
+ =?utf-8?B?QTJZeDdPMWV5RllqQ1Vjb1dRL084QTVTWi9KeDk1VlgybDJqRnVoZWdrd3NU?=
+ =?utf-8?B?QUtLRHRSM0NqRExRWHZBVmd6RnZ6VlJ3QnZsUnFWU1FtaEJzUksvTVJLWEZj?=
+ =?utf-8?B?a2VaNzd2aEo2UkRXL3VNd1ZKSEd3MjZERnBVV2RPT1grZjNXcXpiR0NPcW9E?=
+ =?utf-8?B?STc0SkZWSWhJWGZGWk9PU2tkbDJkeWhGS1RTMjNCeFZxOEh4K3J1ZUlGemxm?=
+ =?utf-8?B?RkxaVDNQbWg0SWR5M0kvM04vdlI2Qkh3US8yWUQyR3RuekM4RTZXczBYVTNC?=
+ =?utf-8?B?aUhZT2xMMEg4aTh3NWNUYlFrQ253a2dmRWxpbG9RNmliclBtMzVyOGYyRnQ5?=
+ =?utf-8?B?ZXFwYW9CUHFZekdLbDNSaHBvSHdvQ01lc2JHQktlVDRFUXRFMSt5NU1KM1VE?=
+ =?utf-8?B?VWFSL0NXcTBNcXdUV2paYVZHb2duUGVheHdyVjZQbGsyZVhqT0t6Zm1QTEZ1?=
+ =?utf-8?B?bCtGUzBqN0VRQTY0WU9JNVp5N0xyZG1wL2xxWXc1ODMrclpMQUpVU0pqOVZH?=
+ =?utf-8?B?Y0hUQ1JZZVhSVWREUGtCZGNPcytnQkJNaG5OdG5jZFdYaW5EQ2srdDEyZ1JX?=
+ =?utf-8?B?Uy9GV1N0UzU0THpVQjE2akpwZHV0MVQ4WmNJbzV5RnFZVGtoY2FUdUlhcGIz?=
+ =?utf-8?B?V2ZQZFRRTHJEdk9LV1RkL0tBekJ3MnBkelpPWWlyOUJ1dDVkQk0zUmNpTGZM?=
+ =?utf-8?B?bDBVclpjajJyQkZvazRXZ1ZQYmJIQml3U0tQTTlaSTlEbVZuWFd0VVYrOGt4?=
+ =?utf-8?B?ZWdqV1pVSk5mdFB1R293STQxMWRMR01vTGJLYnVDVXo5bDhlV25UczlLNUZM?=
+ =?utf-8?B?ZnM1dG1TbTUzc0U3czBKZUJ4OFFwWGFpTEQ4WkRVV0Z4YkkvMzBxQ0x6cjNP?=
+ =?utf-8?B?ZERUdlhQU2JWNVNIaHRVVDZCcldRcUZDTVNLWTcySGhXQmtHTUNCSWR4Wit4?=
+ =?utf-8?B?SkRJR3JiWWY0KzB1THFwV0NOSXYvK25DYys5TkRvQjBmZEJqbnN5N0YzQjFE?=
+ =?utf-8?B?Q3FrSmpqQU9TNUxUdjBmNWFFU3VtdklGYmtYUWlZdW9nUHI4aW5WODhWQWtO?=
+ =?utf-8?B?eGhiRURGdVJGSGd6ZFJqS1pOODF4WWhCa204WXQxRHVlTm5rMnR1MTFiSWhG?=
+ =?utf-8?B?RGY3aW9RS1FTeERwWlZ4eGxIWE1ldExKYW5zbDFVdDFOSHg2cG5ZczdJNUls?=
+ =?utf-8?B?aWh3Z0J5N0F6NDMxSEpmSmY0anVQbnRGNVh2RjI3MjZPaG5TSEUrcXIxTE41?=
+ =?utf-8?B?d2V1WmJLNXNGZ0d6TmFXVWhoTEl5VXJCa1V5YzNVZlVOMENrTmxVY0pxT0Mr?=
+ =?utf-8?B?NjVOVThUTloxeVc1cnhTZUdjaHNBbjEyRzFURGh5dnkwcmRmblZYVG92eDZO?=
+ =?utf-8?B?bE1sZ2dmUUkwMXh5eUdnQWRaaTZrZnFpMDdyb01aMks2MEVDaW5YZXVaNzU1?=
+ =?utf-8?B?SWRXelNFUUhuT1VMZ0lZWWp6bTd2V2ZBdUtIcDA3c2trRzN0NW1LQ3NXM2xo?=
+ =?utf-8?B?cURpb2dpSGFTamVZSzhxWGU0UmlRNENFaktmT3JDR0J1Z3Y5eHZTejUzTUdy?=
+ =?utf-8?B?VjQyNGdjdlpwY2EvNGRzdlA4NENtbjR4MG9PQmdIUG1HVmhObE4yK3EydUpu?=
+ =?utf-8?B?OWhNclZoaVE0Q1QwZHZ0ei8zbmc2cENtd0Y4ei81S1IvTGJkemFFNmcxRXNS?=
+ =?utf-8?B?eGxkRTB4dDZ4QWNJVFdDVHo3ZWJRYlZTWXh0d0IrRFZpVnNPYW9QR3BLY3FK?=
+ =?utf-8?B?dHVQR0RJQ1FOU2ZPTHFhMGpGMTU1N21DSmZ4dXF4US8rTkpzTmx1SGJWajdE?=
+ =?utf-8?B?R3E3cUx5MTNVcjMwR3hiV2JqQ2dHL2k4R1Q3T2dUaEo0Q3liVzJ6ek9SWURj?=
+ =?utf-8?B?Y09XaTREcm1JSWUvNmVpQ3Baem1YS2wrTkZ5YWdpMENhQmRhNWtrQTUzS1FE?=
+ =?utf-8?B?YTFwSFhxcDFxcEVEaG02OVZnOU8yMnRzMGxkZ3lpR0h0TU9MeXRkOXJmVHBB?=
+ =?utf-8?B?RzNRUnJrcWJYQjE1K01UVVBUSVppOUF4eHA1WkFVcUxScXNEUXFTZz09?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 25dd157b-fecc-425e-c076-08df39166814
+X-MS-Exchange-CrossTenant-AuthSource: LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2026 19:09:14.2207
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2026 19:20:51.0647
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fh9+ykU7Xvi6xrQTsC07oNB/GII+/IMLywwDgrZTk9Ew8l/WIMAaT/YdUiXtQCLJVHKi5Q9uniuoLqgn00/hgrOz8WdUZ/8hfDQtJpj47KjRWXM7ZWIxXXwIeeWzcGs8
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY2PR01MB808244
+X-MS-Exchange-CrossTenant-UserPrincipalName: kgvT/xjswJDZcww08h7G3IHe9iImHCjlaKFqLuToHDSXZXY6vNaiGCTTrc6v3HBJlBxFSNvKwE/E9GBcseCITQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOAP123MB8880
+
+> > +/**
+> > + * ftrace_resolve_inlines - Resolve inlined functions for a return address
+> > + * @machine: Perf machine context
+> > + * @sym_name: Name of the caller function
+> > + * @offset: Instruction offset within the caller function
+> > + * @inlined_names: Array to store the resolved inline function names
+> > + * @max_inlines: Maximum number of inline frames to resolve
+> > + *
+> > + * Use DWARF debug information from the kernel image to resolve a caller's
+> > + * return address to its inlined callchain.
+> > + *
+> > + * Return: The number of inline functions successfully resolved.
+> > + */
+> > +int ftrace_resolve_inlines(struct machine *machine,
+> > +			   const char *sym_name, u64 offset,
+> > +			   const char **inlined_names, int max_inlines)
+> 
+> Why not remove 'const' from the inlined_names?
+> 
+> > +{
+> > +	struct map *map = NULL;
+> > +	struct symbol *sym;
+> > +	struct dso *dso;
+> > +	struct inline_node *node;
+> > +	struct inline_list *ilist;
+> > +	u64 ip, addr;
+> > +	int count = 0;
+> > +	int j;
+> > +
+> > +	if (!machine || !offset)
+> > +		return 0;
+> > +
+> > +	sym = machine__find_kernel_symbol_by_name(machine, sym_name, &map);
+> > +	if (!sym || !map)
+> > +		return 0;
+> > +
+> > +	dso = map__dso(map);
+> > +	if (!dso) {
+> > +		map__put(map);
+> > +		return 0;
+> > +	}
+> > +
+> > +	ip = sym->start + offset - 1;
+> > +	addr = map__rip_2objdump(map, ip);
+> > +
+> > +	node = inlines__tree_find(dso__inlined_nodes(dso), addr);
+> > +	if (!node) {
+> > +		node = dso__parse_addr_inlines(dso, addr, sym);
+> > +		if (node)
+> > +			inlines__tree_insert(dso__inlined_nodes(dso), node);
+> > +	}
+> > +
+> > +	if (!node) {
+> > +		map__put(map);
+> > +		return 0;
+> > +	}
+> > +
+> > +	list_for_each_entry_reverse(ilist, &node->val, list) {
+> > +		if (ilist->symbol && symbol__inlined(ilist->symbol)) {
+> > +			if (count < max_inlines) {
+> 
+> You can reduce the indentation by inverting the condition.
+> 
+> 
+> > +				char *name = strdup(ilist->symbol->name);
+> 
+> Why not just save the pointer?  You may not use some of them, also it
+> copies the string again when it's added to the stack.  It'd make the
+> error handling a bit easier.
+
+Since the inline_node is cached in the DSO's inlined_nodes tree for the
+lifetime of ftrace->machine, we can store ilist->symbol->name directly in
+inlined_names without strdup() and without freeing each entry in the
+caller. I will also invert the condition in the loop to flatten the
+indentation.
+
+> > +		cs->stack[cs->depth].inlined = true;
+> > +		cs->stack[cs->depth].indent = entry_indent;
+> > +		cs->stack[cs->depth].raw_indent = -1;
+> 
+> I'm curious if it's possible to get rid of the indent and raw_indent.
+> I think you can get the indent from the depth easily.  The raw indent
+> would be from any non-inlined parent if needed.  Also having inlined
+> depth in the cs/ts seems unnecessary.  What do you think?
+
+We still need to record the trace line's indentation rather than deriving
+it purely from ts->depth * 2 because tracing can start mid-callchain (or
+after ring-buffer drops), where ts->depth == 0 has a non-zero kernel
+indentation (e.g. 6 or 8 spaces), and bare "}" exits must be matched
+against that kernel indentation.
+
+However, we do not need both indent and raw_indent on struct
+ftrace_stack_frame, nor do we need inlined_depth in struct
+ftrace_task_state:
+
+    1.  In struct ftrace_stack_frame, indent was only used for inlined
+        frames and raw_indent was only used for non-inlined frames, so they
+        can be consolidated into a single indent field.
+
+    2.  In struct ftrace_task_state, inlined_depth can be dropped
+        altogether and computed from the active inlined frames on ts->stack
+        when needed.
+
+I will simplify both structures accordingly.
+
+> > +#define FTRACE_MAX_INLINES 32
+> 
+> Isn't 32 too big?  I guess 8 would be enough..
+
+No, 8 is not enough in practice. I will prefer to keep 32.
+For instance, after a -O2 kernel build:
+
+❯ addr2line -f -i -e vmlinux 0xffffffff816916e9
+      __do_trace_rss_stat
+      include/trace/events/kmem.h:427 (discriminator 20)
+      trace_rss_stat
+      include/trace/events/kmem.h:427 (discriminator 20)
+      mm_trace_rss_stat
+      mm/memory.c:169 (discriminator 20)
+      add_mm_counter
+      include/linux/mm.h:3469 (discriminator 20)
+      add_mm_rss_vec
+      mm/memory.c:492 (discriminator 20)
+      zap_pte_range
+      mm/memory.c:2087 (discriminator 20)
+      zap_pmd_range
+      mm/memory.c:2151 (discriminator 20)
+      zap_pud_range
+      mm/memory.c:2179 (discriminator 20)
+      zap_p4d_range
+      mm/memory.c:2200 (discriminator 20)
+      __zap_vma_range
+      mm/memory.c:2240 (discriminator 20)
+
+Another example:
+
+❯ addr2line -f -i -e vmlinux 0xffffffff821c34af
+      constant_test_bit
+      arch/x86/include/asm/bitops.h:202
+      arch_test_bit
+      arch/x86/include/asm/bitops.h:232
+      _test_bit
+      include/asm-generic/bitops/instrumented-non-atomic.h:142
+      test_ti_thread_flag
+      include/linux/thread_info.h:133
+      test_tsk_thread_flag
+      include/linux/sched.h:2102
+      task_sigpending
+      include/linux/sched/signal.h:384
+      fatal_signal_pending
+      include/linux/sched/signal.h:406
+      ptrace_report_syscall
+      include/linux/ptrace.h:427
+      ptrace_report_syscall_exit
+      include/linux/ptrace.h:477
+      arch_ptrace_report_syscall_exit
+      include/linux/entry-common.h:233
+      syscall_exit_work
+      include/linux/entry-common.h:266
+      syscall_exit_to_user_mode_work
+      include/linux/entry-common.h:297
+      syscall_exit_to_user_mode
+      include/linux/entry-common.h:334
+      do_syscall_64
+      arch/x86/entry/syscall_64.c:89
 
 
-Hi Mitsuhiro,
-
-On Fri, 30 Oct 2026, TAKANO Mitsuhiro wrote:
-> Hi Ian,
->
-> Agreed, and v2 is in this thread: the entry stays and is marked
-> deprecated, with the description worded the way the x86 tables word it,
-> so perf list shows the counter once and a script that names
-> BPU_FLUSH_MEM_FAULT keeps working.
->
-> Ilkka, your Acked-by is on v2 as well, since you said either option was
-> fine -- say so and I will drop it rather than have it look like you
-> acked a diff you did not read.
-
-You can add Acked-by to v2 as well if you just add the Deprecated line. I 
-tested both the versions quickly and they work as expected.
-
-Cheers, Ilkka
-
->
-> On Arnaldo's jevents.py question: a general duplicate-EventCode check is
-> not possible for the reasons you gave.  Across the 1463 raw EventCode
-> entries under arch/arm64 this is the only duplicated code, so a check
-> limited to those tables would flag this and nothing else in the tree
-> today.  I can send that separately if it is thought worth having.
->
-> Thanks,
-> Mitsuhiro
->
->
+Kind regards,
+-- 
+Aaron Tomlin
