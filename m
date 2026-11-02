@@ -1,53 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=220.181.50.185
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793611120;
-	b=MFHgCOIybdMfoDREYz+SYRvsdKHfQzaU4hhzzGc2TsKoRmPXUwMjVm11cOc9WYH3IF1t
-	 EyTHbwJxQPbfD3j2bqr54grsoAYuLs9HmP+IMVT1xisnTq/NcIpPtN1MSlD2bjA0g8RHd
-	 Q0NBlwXb15NFfs+igREx+qJ6+Dw1h3nFCLH0RERHH1ud6PIsYVUGl6J0IPrY+qWTCvS49
-	 U1EOxyC5qPWJuA+3rjSaHaqRVOUx1IGdnLIG+zDJlUsc4pPRkuJkJQ7aLqyzI3Kr5JGJy
-	 bw/nSaSpSu59MZvKaHeHhRj2RHLTawJCKQLEpg/MMpXVYwXlt8VsjvxwH6jhA22DE+w==
+	t=1793611367;
+	b=erjCUy/MNnIcNnf1vNHIMR+mt7UW/u7zWF+yiExQk44e0rip5Bf+G86TCYS4S2zojFOn
+	 AOR3OlwWprzeQnSa53Lro8GyuKZUPO13BsntR3dq0SuQePZsS8qsF2ZCHtv7t8TV0Q0DO
+	 BV6v6qoIznbldLAMNDEARUcFVmkzMHsMIKXbgflsQC9qXY0TO5AuJH/fX8p8dMPy9m3qT
+	 00fDT1vlRpGinKIqt7jkLph0u0/vXSIzldqHMtOKiv9y15ucL1794REOSM0Bs5u5CUyLC
+	 DcarrIoAvwLtGJ9ebYgICCG1tvW8yqCP1M9cHXk47uoNmvbYU+xmt4a4FyuKFEZ9R/w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793611120;
-	h=DMARC-Filter:X-MD-Sfrom:X-MD-SrcIP:From:To:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Type:X-Originating-IP:X-ClientProxiedBy:
-	 DKIM-Signature;
-	bh=XcbRLYGB82m3MgaPiEO3IYAwJ6GpxW8GbWCS3Wtb9Xo=;
-	b=OY9eC122TzpTL3Z12qTyBvsUKdYJzux9xqO21AXC14kcnvHKQd23cT9iwWchSWLO4qK0
-	 QFSPTnb3K34hfsAKZ/WycD+UmXuzALRGNORWYaq+muFPW7NK4wVqPlGHZW/rWgvjEqW2B
-	 vyWUIpoq1n/HyMNX9FWTu+zigj0YgPQjCAVfh+5Nj++rkfpj+vE9ZlxwZOzQSYHciWnHY
-	 TB6zKGTP49xxU7TcKprg3vWK5XI4lbudxAoUFJ+fIYN1cX3r97+g/G8VQEKpAUJJtr2l6
-	 /ffsJ/ggEQRfDEgAgZxvkQsTob/G/El5Gc5d0Re4CLYXryhdBNi9WjralkeI4zd4ggw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793611367;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=Q8k5RESz1RKUzihpxKMyY5HaMcoalCwq3xOopnnLoPw=;
+	b=TiY4lwjurPWlXYvrvxXZBSYdRvHJMdtr1Bx7n2+8xz+uVE2wS4vldyeQDqkpAbnUJH4K
+	 TSnU1V5JBZBXJHLcEgOJ09tSWrNoYNhl72udZ09eGkKa/scYbXsfJ/y666TY2dbfCqdpj
+	 qs1nT7ESKeZkiD1VEUEkHvgFpT8M3VzR3msHbpGJGh59ECtduaHn5CgVQ0sN1oQ5FmCqQ
+	 ChXdNAaDVdahM/IwevGyZTgbHvnpVpmRvRKDDNCRITU/vDrc2BTQnjFuTTg6KBAF4Mbk2
+	 o5bFCMveqvJKwF66K2+fbI9uinguBLpdIonxFet7vJ3B0hRC37GL+2M/jZKdFnQoDwg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=baidu.com;
-	spf=pass smtp.mailfrom=baidu.com;
-	dkim=pass header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=PTzjI6Yc;
-	arc=none smtp.remote-ip=220.181.50.185
-Received: from outbound.baidu.com (mx22.baidu.com [220.181.50.185])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 03FEC606A326;
-	Mon,  2 Nov 2026 09:18:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 03FEC606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VfxPYP01;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1E1606A324
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Nov 2026 09:22:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=PTzjI6Yc
-X-MD-Sfrom: lirongqing@baidu.com
-X-MD-SrcIP: 172.31.50.47
-From: lirongqing <lirongqing@baidu.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
-	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, Paul Walmsley <pjw@kernel.org>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
- Ghiti <alex@ghiti.fr>, Li RongQing <lirongqing@baidu.com>, Atish Patra
-	<atishp@rivosinc.com>, Anup Patel <anup@brainfault.org>, Shenlin Liang
-	<liangshenlin@eswincomputing.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-Subject: [PATCH] perf kvm: Fix RISC-V VM-exit duration accounting
-Date: Mon, 2 Nov 2026 17:18:09 +0800
-Message-ID: <20261102091809.2215-1-lirongqing@baidu.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VfxPYP01
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 814891F000C1;
+	Mon,  2 Nov 2026 09:22:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793611366;
+	bh=Q8k5RESz1RKUzihpxKMyY5HaMcoalCwq3xOopnnLoPw=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=VfxPYP01qAt2HayCPEtFi+edzFvGHvfxcv05Uq/+WehvOHbEGtZ/AzK3Wa/9GFeuC
+	 e69LAQA4HQXCIHL3UEFmia0U+oGQZ81OZVRAnvGFTB5hT0H7mR3wpCfL+tWpO8Xspd
+	 T5NljPr8YmvPOzI6SKmhQxw090Tynbx+cFo42AgONPv4N71ZWcTu2LUf2mGf9cnyrA
+	 orpbBuMVdGMKfyIfVtiiPOBptoZFJ16bz/64xDzGEC1x2e3A1yaKxHmepPsxfoIdRN
+	 dMHDHhlmyd4iTwhkHAwPmWgVzebEoOlQyqRa4WCMBs3NBmbVtMAaV2mIzANr9+ZiCG
+	 +Fm/zkYbxQOJg==
+Message-ID: <sashiko-outbox-193167@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf kvm: Fix RISC-V VM-exit duration accounting
+Reply-To: sashiko-reviews@lists.linux.dev
+To: lirongqing <lirongqing@baidu.com>, linux-perf-users@vger.kernel.org
+In-Reply-To: <20261102091809.2215-1-lirongqing@baidu.com>
+References: <20261102091809.2215-1-lirongqing@baidu.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 02 Nov 2026 09:22:46 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -56,67 +57,21 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: bjkjy-exc6.internal.baidu.com (172.31.50.50) To
- bjkjy-exc3.internal.baidu.com (172.31.50.47)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=baidu.com;
-	s=selector1; t=1793611108;
-	bh=XcbRLYGB82m3MgaPiEO3IYAwJ6GpxW8GbWCS3Wtb9Xo=;
-	h=From:To:Subject:Date:Message-ID:Content-Type;
-	b=PTzjI6YcIneIl1tRREGTk2ZIzFO5J92jC9mJFjLOfjkucfnleKxuOmUXFg25MG/8s
-	 k70lmraZJt9yU8NyVoX+EFDlhL5uw3I4kwsb/GX9NKqV7J9yYad2P2WqMZuJNinkRY
-	 qiDzTAwSrbFCiYstQRANrj8hZ6Jf0JP6SGGhlLxRafXli0vxEXhaspicTTMY+J9Udk
-	 7e7kKE8Wu5MwcSc+0Exkhhi8FDVIjv57UansihXsOHHsiUkexpfP1VwMYQyr9Ik8Og
-	 Tv1oeGpL7hAmLfbbUmBhueY+jN3yMQ0Ae2vUvOjNzlGvmaT2UWjY4AaZcjFpYgSyd0
-	 8XViBWC25ljhw==
 
-From: Li RongQing <lirongqing@baidu.com>
+> From: Li RongQing <lirongqing@baidu.com>
+>=20
+> Use kvm_exit as the start event and the following kvm_entry as the
+> end event for RISC-V VM-exit statistics. Keep decoding scause from
+> the exit sample.
+>=20
+> Before this change, RISC-V measured guest runtime as VM-exit time.
+>=20
+> Fixes: da7b1b525e97 ("perf kvm/riscv: Port perf kvm stat to RISC-V")
+> Signed-off-by: Li RongQing <lirongqing@baidu.com>
 
-Use kvm_exit as the start event and the following kvm_entry as the
-end event for RISC-V VM-exit statistics. Keep decoding scause from
-the exit sample.
+Sashiko has reviewed this patch and found no issues.
 
-Before this change, RISC-V measured guest runtime as VM-exit time.
-
-Fixes: da7b1b525e97 ("perf kvm/riscv: Port perf kvm stat to RISC-V")
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
----
- tools/perf/util/kvm-stat-arch/kvm-stat-riscv.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-riscv.c b/tools/perf/util/kvm-stat-arch/kvm-stat-riscv.c
-index 967bba2..09c9c7d 100644
---- a/tools/perf/util/kvm-stat-arch/kvm-stat-riscv.c
-+++ b/tools/perf/util/kvm-stat-arch/kvm-stat-riscv.c
-@@ -31,13 +31,7 @@ static void event_get_key(struct perf_sample *sample,
- }
- 
- static bool event_begin(struct perf_sample *sample,
--			struct event_key *key __maybe_unused)
--{
--	return evsel__name_is(sample->evsel, kvm_entry_trace(EM_RISCV));
--}
--
--static bool event_end(struct perf_sample *sample,
--		      struct event_key *key)
-+			struct event_key *key)
- {
- 	if (evsel__name_is(sample->evsel, kvm_exit_trace(EM_RISCV))) {
- 		event_get_key(sample, key);
-@@ -46,6 +40,12 @@ static bool event_end(struct perf_sample *sample,
- 	return false;
- }
- 
-+static bool event_end(struct perf_sample *sample,
-+		      struct event_key *key __maybe_unused)
-+{
-+	return evsel__name_is(sample->evsel, kvm_entry_trace(EM_RISCV));
-+}
-+
- static const struct kvm_events_ops exit_events = {
- 	.is_begin_event = event_begin,
- 	.is_end_event	= event_end,
--- 
-2.9.4
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102091809.2215=
+-1-lirongqing@baidu.com?part=3D1
 
