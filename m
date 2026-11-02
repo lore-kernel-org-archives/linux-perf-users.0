@@ -1,13 +1,13 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.195.102
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.195.91
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793655678;
-	b=ckcwOjQ+LYb9xaB/+vY97G523OtJC2Q78PL/iKSN4XEAUpujcVctXDdkssj+W4heRiTs
-	 08Bn74BE38akE2nq8qy+tVDfCKxTQIM7v890YrZTIZqeR55puXQJPEZQVVmtdGJ7JrYMq
-	 56B/kRsXnTxd3Bh6NQRLezONy3lwc+sdodZDCxOuZpej9E7h/s2vS/olo2olvhSWx9jCA
-	 WPwL36t8L2G7jOUtGxqJsI1fnjCF7zJhsPqAEDaqTCpfOBS+oLtd2XGZ2QLs8UXvtkvIb
-	 wRhQxTfA6h9SRSzbmdug4IwD6MRRn1BmMi1PwfkPVVXMyzUtVgDbG4AGvVOROpMJ3Dg==
+	t=1793655681;
+	b=mOZMRjhi246BZ708RrzzlYbVjoTo30AKslXPontE+AYP0XjR+1e0CJMq3knIWF2OXDEJ
+	 OSfuIwD8LqRKH5D8S+JxHhZ5XtwytqIjfr/cemIpaqnpPs9+H3yTlj0OETnz1VgptvDPA
+	 M9/qMuM1WEHN0Q7JriKVeRLNAxWLoyg6JqyF1v0P8U48pGT82pOxDG7X+6SxeWfJ2rw0B
+	 X5/azwYNJTEdBe/Wwc8wg15hmVUOiW6Sc+crVtFt+2uyJXISErRCCm8Ib30Odolp3yv03
+	 e7l/MyThTTxBA6iAnbZLdMNcBM/+4FUPNX4RqvQnUS5K3IHGl9JldnZxPRnyrM/ePRA==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793655678;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793655681;
 	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:Content-Transfer-Encoding:
 	 Content-Type:X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
@@ -24,31 +24,31 @@ ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
 	 X-MS-Exchange-CrossTenant-UserPrincipalName:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=rD0yRWY14jT4oE4urHl/JA6WolPLJ3OZyjGTE/vk26Q=;
-	b=kouSt0DEGQuXGF3VdZUYDjUtMbG8hvMN+6Xlqym2j5HZhijuetD5Hk9GVNmTsszC3hsN
-	 FFT30EsmxEWMEyF5hoT7jglII6lAiy20Ss0zC9tQmwMdKDBStQDz7YySn5/iOmsUhwrkR
-	 mb0XexxZ6e//Zrajd4Fqau2VbG7DI6Yseq53aIBSk6zYC6LHth7D63Ea36KQK2ItSF64q
-	 69/E1CpzIcKZAtO98iy51HneehsEghL/wz4qEY+C9B5LJ/qM4yyMCedI30ozwLtf+5zkw
-	 BeAyNDThX1OjPgd9EKZsQ3Nq82SfGdIXF8NT1xqMWZpyoJxojaCTp/rQTFt3yCExXSg==
+	bh=zm9Hc/i3HG3kFlSs0IeQ1ejNgHQSUkEXR8EyT8ahvxk=;
+	b=gOI+XsyONwJsMl9mcFuDU35+gsVBUWwoSdQICZfdMEA3IdARSogUoNpJ7ek8mfM9tedR
+	 uKEhcerv9w4FC8Fe0BDGvzru+w4Z3dPbs/vLSxBfWKf4WfAb//rDebEfLTeF0iNFrFQeR
+	 iCbAZoMgd8BJy7Nq9n0PWbLqZX2z/UoJYWbHSEbFbTwHHn/4OA+B0qvyxPsaRfhyBFTRK
+	 06QCirkZrWheht2G5kS/4JafNNFLtlzhijI0nM5LhRAX4ZAxqCqi/1xaJI9tbkEKpg5jI
+	 eG0lwAT/22KkGASUzPbhy2krtbqdx4QXQDj2n9w8sSkqWW4ao7GPxYU7xk0C3xbhNjQ==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=none header.from=atomlin.com;
 	spf=pass smtp.mailfrom=atomlin.com;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.195.102
-Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazon11020102.outbound.protection.outlook.com [52.101.195.102])
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.195.91
+Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazon11020091.outbound.protection.outlook.com [52.101.195.91])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F515606D80F;
-	Mon,  2 Nov 2026 21:41:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6F515606D80F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6DD606D810;
+	Mon,  2 Nov 2026 21:41:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1D6DD606D810
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dAfDEPYy7A7cRytsIb65UZoAFCMTk79sqPojWq78EpXOMAxAmYev0VuD3PSqyK+VrHN4o6ATH9fgZfXsYcFDWGG8xNciP5e8VYOvqW/jZiYwcwosPuUp7bQEy/4QQT/KJ7a84BMjGqxbT6OsIvidR+7oyZLpoOZcFtcAzOlQQKSjkvANtoqii7w5TUN9IhiH49tSz3mhQ6TiiEr9HVOLGQkq7cPl/c5PiFzyW6cjsbDpyQTQKvpOg1xLC0QbZbDnv0v58q5LKUbQ1z1ChRFu6gaxfhBzXwR3mpQChnEYno1BHF3b7vxP+vTq+00ZPNzGV5WX8YsasPGFoIBw4NEIjw==
+ b=EaFZ+/Pyd2bEKIpW88g/S49JDU4ahbaXQOlxIHLb7YnzYBi8svvUagy4VJT0V3Ekx9qvRLpSxSGbMXfNIQYxJ8QSQ+2Un4UAOvIzS/pAUhbEJ5C6FKem79gu+eOxOSPqmMxKhMXA0opOjG0qraXkoDN8CaoHoCCh0r4fkDnor+wuIxVt9SY2ss/mBF97GPyzpZetEHwVabSvJn8wcH8uLTP3Y/+DEuezhagzpwTUJCU+2o5kbnZJh8C5L1CJ/1Yo+EBBqzkgAzasy8kOL5zJPN7/ZooUjKsvh7nzP53VyTS9PahEUAKK45pN1QK3Gx/BXIHLFNgSqTY+q0WpdQJ2Ug==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=rD0yRWY14jT4oE4urHl/JA6WolPLJ3OZyjGTE/vk26Q=;
- b=bnBYqiVvdowvIzjfH9A+RLzCvr/4nnvBP7mCyr19BVUGce5GLkJ+V38jrv+sorA2noEfBbetOLFchim6f4a7RwdFkxGPyOwgM78eApj4tWLuTokEQ209KsDdP5SGBoVR3RXNmiI2+MaJ4ngSh5YLIlVqZGAhHa9cCwRpteIfEb6FytaA0ybrpJ3oXWj8dQu1jgbvRlIEGEjPSLbkXTRac3vX5Wtk4yqG3PdDG6OUnOUKsl97tszNJ88cd+DeWtKmOmqC6lN3M+ln98y34kRsDRrvNVhTxazg7EuTDKX99A1PssH58FRAsx2mxagKnjizlSuqzyaSGMNS0Y7uIHl+CA==
+ bh=zm9Hc/i3HG3kFlSs0IeQ1ejNgHQSUkEXR8EyT8ahvxk=;
+ b=hBF3GzjkBMMXUwyoUh/StgmEK9pAQtBQXPhc/vySqD2mXI9ZMvDt1H4vV6ITiT+YYgJ6b8AaVPyHPcOxAJe4n6qkwefyseUK89vnQdVzKV4Kw/xpkRKTCGLSyr7xrfFIviOQkCIMBWwmO2a2AgU6oOBAVfGc1OhyZz5vQ3hbwutsVhbHJEnAbPyb7Eq/2s993+ldCWlN90GCcD4dWjXGm9MKOdGATbsrKu46aanhHDOBVPx4cn8vIxE1dab0fYrbvQpbh4eT4Pg7Yy8FHMw3LNHMnBAGEXm6og5nsLZSvJhviWl67/wOe246Kryn69wRVfw1oFguf2b0u0gm97Pe2Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
  dkim=pass header.d=atomlin.com; arc=none
@@ -58,11 +58,11 @@ Received: from LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:163::8)
  by CWXP123MB3814.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:4c::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.12; Mon, 2 Nov
- 2026 21:41:14 +0000
+ 2026 21:41:19 +0000
 Received: from LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
  ([fe80::f71f:a9f:c4de:687a]) by LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
  ([fe80::f71f:a9f:c4de:687a%5]) with mapi id 15.21.0569.011; Mon, 2 Nov 2026
- 21:41:14 +0000
+ 21:41:18 +0000
 From: Aaron Tomlin <atomlin@atomlin.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -79,16 +79,16 @@ Cc: mark.rutland@arm.com,
 	sean@ashe.io,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH perf-tools-next v13 03/10] perf ftrace: Support filtering return address comments
-Date: Mon,  2 Nov 2026 16:40:47 -0500
-Message-ID: <20261102214054.911298-4-atomlin@atomlin.com>
+Subject: [PATCH perf-tools-next v13 04/10] perf ftrace: Add basic task call stack management
+Date: Mon,  2 Nov 2026 16:40:48 -0500
+Message-ID: <20261102214054.911298-5-atomlin@atomlin.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261102214054.911298-1-atomlin@atomlin.com>
 References: <20261102214054.911298-1-atomlin@atomlin.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SCYPR80CA0001.lamprd80.prod.outlook.com
- (2603:10d6:300:30::12) To LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
+X-ClientProxiedBy: BL1P223CA0022.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:208:2c4::27) To LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:600:163::8)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -101,390 +101,658 @@ Precedence: list
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: LO2P123MB4190:EE_|CWXP123MB3814:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5acc28d0-05b9-4a0a-9479-08df392a04be
+X-MS-Office365-Filtering-Correlation-Id: b8f96103-e691-4b1f-f545-08df392a077b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|23010399003|3023799007|6133799003|10067099003|18002099003|22082099003|261102123227099003|56012099006|261021135927099003|261022115727099003|261022113327099003|261026121527099003|261022105027099003|261026135527099003|261026140227099003|261022075727099003|261026130827099003|261009223027099003|261021133027099003|261028144727099003|261021130227099003|261021121427099003|261021123027099003;
+	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|23010399003|3023799007|6133799003|10067099003|18002099003|22082099003|261102123227099003|56012099006|5023799004|261022113327099003|261026121527099003|261022105027099003|261026140227099003|261022075727099003|261009223027099003|261028144727099003|261021121427099003|261021123027099003;
 X-Microsoft-Antispam-Message-Info:
-	detOvzbETMM3Y8bDj+lVyr09B891E7+rSKOT+RI1Vy78b7iF/Pp0/P+fMfuf84mDBf3ZSNW/ClltNpT7U/mKzj+eAg92IM3axyemieXlvsNKYorlgKSkq5rLe9vz95DiMYSE5fzzM38vLTKyrYi4c8UL2s5jetrrio0574z9eBfPLyR9GT1wjBOgnUoZGfUotTBTk8G8EQkWBfMpzBWPJnWljEsYtFBSMLPMfqCcQgAhSouZkIhPQq2U875JjnTxW+dn/VQtuiW4HQeu3pxg6nXnwY6+zDBmu1Ltt60tPYwfK63Yz926/OSfA8YqhhxHFi9Xaf2iUZHpk0yezRSv9zGTPAKHRB7D5odcqGhAk/B2AVctXZZaiRlgFFWDzcJDYW6bGXguEQBWFjeS8WaJl+Jvathvf/jS+Nq0kq/mi1LkLOiFxrkeMLmnnjoA+NQ5+GmyyNVqrw+kN/ZDv5en9AfBfooURvorlrRdUQHkc6F+VvggORfRKDGeQWv730MBNbNDu1fsj+pJl/q1Sw1XsbfqHCYQnR1jX3oYaQP5VgWSN2xntJQHiil50BEgBh2aqBmogsg2MGAL+3VFsgpLtsokNY/OzCKptHVXhFPrRkimuJTDqsglBbz+sXdU+k1W5WPiLE5VwL0OPavNr9NOdgGUoL9mQ5gveqZBGiEWBvM=
+	ujcUbxoKWiMVxAuaODr6p3aWI3eJjrvkk6BJb1HerxB55KBQISJAzBIB2M/pxAoTf5b2Kke9bkpsnqgzmT8ty5T2Smx3Lg2MG+p2YKuHQGrwlTHErBh2icSC7XrkO5LkA5SaclUm5RC8LC+6I6J8KDIJaBYwS2MDNLSNH3zarkAItoZn6ciD0MhKc8S7wL26JJK7vozDdl0O/Fgw519+X5KDh3IolQVRCFGWCogaN5trspF9+vA1IxhBz2WFa4ZZ5A1SSUv5iolVNBixSorAduVarjD/XAyvkKJEsLgEYRE2Zf5347iGOzctE3xgdJj6bhtaVDwpfxja9s2bxRxQcfnF++snGWeJRTmcEoTaxOVyprvkvzTDqGtO3O9c23BxcYq92EeVqnBePm0TjpdXSUqVmA0skYW3sP8mp0VBSwD94esih3ZFVffrw6I2A94dZuECnJ+om/aTTEmTo/DV/cLkJ7XS8tRq63NCtKuGTHRszOgFE/e3ex8jzqy50nJiUqK5yyYdxjsid82+waf0O9vQZqx4w8Ed3AY9UgNxL7tS15o+8k61q+y9osq36WEcgOm3ptvXvzjyiXCHHydcHcrZ18LdPTDMKGtV4U5iqHLhCqk27HmxuBgC/gmKnMeopvOZKP0nIfub8xGyXSdK9ilw6BoZh9ZnplwAN7Bzf4A=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(23010399003)(3023799007)(6133799003)(10067099003)(18002099003)(22082099003)(261102123227099003)(56012099006)(261021135927099003)(261022115727099003)(261022113327099003)(261026121527099003)(261022105027099003)(261026135527099003)(261026140227099003)(261022075727099003)(261026130827099003)(261009223027099003)(261021133027099003)(261028144727099003)(261021130227099003)(261021121427099003)(261021123027099003);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(23010399003)(3023799007)(6133799003)(10067099003)(18002099003)(22082099003)(261102123227099003)(56012099006)(5023799004)(261022113327099003)(261026121527099003)(261022105027099003)(261026140227099003)(261022075727099003)(261009223027099003)(261028144727099003)(261021121427099003)(261021123027099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?dgFD0dVVcdqsSbSQ1ENoFm/h6UZNsEQi92dOPsMBpERHEgFHQKoLf4Ne6xAV?=
- =?us-ascii?Q?O/UmqbctlsjsxWYKvpL0OgZM/PK6K2E4dTcUcqegYxMdnpbpuwFDwxIgckZI?=
- =?us-ascii?Q?mnprcj/E9wclpH8NIFRidv9YurR6wU0xhCicn/qEvZ4eX2BsEDGj4tbkFW83?=
- =?us-ascii?Q?7JxnF8iy2dEjeHB8LNTBGBJJgq61zyBZyvuBkX0C3/DG8Bjbx4DeJNBB2UVy?=
- =?us-ascii?Q?g6w6QTfN/hB/O55vmFApAVVqIWOH0Pc4SpdRTcxSvbS3Nu5q8dIv3f+gdrMr?=
- =?us-ascii?Q?rIJD0DSdUsb4R1YHUlFnU9I8nWCCXkEu/0iA3AUrXkpWQc19DEStbE9C0Dr4?=
- =?us-ascii?Q?w8jaKQO3SOijTEkL0CB5BzB/7xxr8IGZYFTWT0/Q270dJ5kY4OUi7HS9N4js?=
- =?us-ascii?Q?hXZB6wG9eF2Q7ANjqZ9iqsQokiSExsKIbSGNFtZrZ3w1hKzw6OTFDz6Lcvbt?=
- =?us-ascii?Q?MiMd5jsmcHhbOjOaVlGxE0t8bxXUq0LHv3mpcUy0BO5q1A18GUxd9nrYoya9?=
- =?us-ascii?Q?M6i9UUr97S6bWLg0eZKoB7/z3hhjt5zeJnCLl570jPNVEwkXazMMFi8e4RaD?=
- =?us-ascii?Q?xS2nv/aYmfBL7k3Bxo78zatMR3CVp5q8z83y2c2pxg+CkpRDbNo8M70IRdO2?=
- =?us-ascii?Q?Qz7PraS7rtJQ2Z99gVGPzbEEKpMeKDq5bR5coMyMv8htuF6IwLd2s5bO8sg4?=
- =?us-ascii?Q?U8Vm3g8LJAzbNAzsHnLFa66Yog40Q8T8FysFinB64v51aNLSj3d69fxlUmdp?=
- =?us-ascii?Q?WxKLzTZ9wn1A79lW9r/k5EnIMoIpb1WxKUzWYMTAddbD8jjG5qolBrCMlDC1?=
- =?us-ascii?Q?cwlSfhK0cj4FU/CeZ0s8J+eBayZGF7EGLxH3s1ibC9lk5vfSqNNFi7ja52Xa?=
- =?us-ascii?Q?KyRV0f8Cmjh0MNgM04TFnsbbr/D8Mh+pIE/HpKemmFan9zY/N6hpWpa40l4P?=
- =?us-ascii?Q?SmelpZYFCv7hvYRUiHw/3yqAJRk+ecKvBoy7jPkR9hZ3nsPkjt1xZJhCnnm+?=
- =?us-ascii?Q?qcMaKNdbaDZDa9faUs9tUv2AbUnxu0M4v4Zefugl4JG613g5LS7RR5aE5n35?=
- =?us-ascii?Q?xjBPtLI0H7+jgePBKHdqizRX3PGuCnXUphqnF+DTQ6QdFwqDaNFl52ce0Tma?=
- =?us-ascii?Q?H4tw08Kze2n/LWmiEdiVR1p9VChm8HfTpIrob3ezU9FJeLuvNjliuyOW59TH?=
- =?us-ascii?Q?qFkgmum+B8/EfXgs2KKP+PgTxNdT6yya1xDpzQoxO1z/TyGP76019+0yAiC4?=
- =?us-ascii?Q?suCVpIFXGp5iymJ4ZYlp+7QDO7ytir4CdbCtxGsq22FQkVGmuqgRrAMma9iK?=
- =?us-ascii?Q?8PbSwlndEWPOKzlB0Rte+yV/urlDYJbjLT1Zb8OvdUYlX0JAUDmhQKlUvZQY?=
- =?us-ascii?Q?eYLSj+b4LUnhUI9Er4V6ST7cFKV8L3MWHEzTAVt3O7e5bOo+/ZLNqVQ8sWCP?=
- =?us-ascii?Q?4jDgACmJ/pRxep+tqnQX13toIYdBOOXFN6pjJes4x3Ki4F5Z0QzWki/OyCBf?=
- =?us-ascii?Q?VN0ueH2J9IrHyFO+vwaGM0qfZyga+qLsxcyn9lr3QRQ+0Vbjpe0wjHFO05tP?=
- =?us-ascii?Q?5IvOyG6R01AlRk+i4/yH2Sj7E/+u/BOS4vbnADGdIJGDpOUJIqAPLK2wkaK+?=
- =?us-ascii?Q?Pa+nLgqf5fQyEy/A5p9bUQtSWKDyNKlgijvGt5haeQbVv3SsXDNvoRzUalty?=
- =?us-ascii?Q?Fgcr6BH36C8Fx64ntxKZVOa+tXqSbxN1xtfENV4Sy1XBJVXNNBjtJ147xaxv?=
- =?us-ascii?Q?rNxi/mCGwA=3D=3D?=
+	=?us-ascii?Q?CPhTxEedvndwKdIm6HVSzMnnhB0OcP56A8xsxoSIx9A5SlE4mmHIw5OAJ8TM?=
+ =?us-ascii?Q?eeQ/Xxjb4p+e3sgfEPEeADkpS5EaVh4kKkbnvhzEZoa4acWD+TiwbvlXFEq5?=
+ =?us-ascii?Q?Y9UiPV31/MGb4I+NJsPKRoIvEVaFirkdgrlnkpJ1RwPFvOheAV09vsbmWATy?=
+ =?us-ascii?Q?O3Ov/w9nXpTGcgpNOsGS9Wv6/OmDn6tsg3viwLXINKmnt3h8inNX+6B+Wbz/?=
+ =?us-ascii?Q?X9SBjXFBQE79H557DEQofvLxZiqquYR8qi0C8iIASxihLmsvM0aHbSrCPlY3?=
+ =?us-ascii?Q?AhXJbgLQfS+NFWXQMxGC7Uf7rtIipOk9653RzDgGOKwEMygPKdncPd0XcJOW?=
+ =?us-ascii?Q?iqFf+jWi6+CsgCIYMfrid+f4aWX7HPm3DwmuNqdG9vtK6dpMqlMy0eEuCdG/?=
+ =?us-ascii?Q?C7XG9TdiJHeSgCmB8fq2dGSfkUQyWjIir4Bmttf/3zsEUyablKQSUt/RyemX?=
+ =?us-ascii?Q?FlpiaJGhWBMwxvLgONBOW8mILND9dQSqIx4P/u+0dfPf3ImMoV3I94SFH3KV?=
+ =?us-ascii?Q?Wv6fG0/2mPaBEwOzQ78UynTxzII3IelodI+d0+c4dF20UCAKyWfIu//wKUwf?=
+ =?us-ascii?Q?RPHbNx+N1jySsdPPvZoOjpx7fs/9LxlFejU4D3sYq+E89GwvcDaD4pm4/y0x?=
+ =?us-ascii?Q?S65hp7zphMQL/xwvreOYm5BH0Zaj5Ba4KhGdslZmTzMrHi9SFv/y+rFyhUa2?=
+ =?us-ascii?Q?1kCzNW+on29Yz1JFEkq/IW9Mxb+xulfiL9V4jOws5nxAxlamqA8B1v/jZawJ?=
+ =?us-ascii?Q?wxyWv/Yiqh7hfGIo/I1jA9u7c4tqoONT3Y02eswvVQx4BNfdhDAU3Jt7qB7A?=
+ =?us-ascii?Q?ZsM3h/+UV2AVlK03ksvoI8RaOzguNECfLIUdX0alYXnfzlYUx9jxj79nlBjQ?=
+ =?us-ascii?Q?RQn6i47Frho2W+WRC1cZnLAx8011WSGv/wxsLgQ2NoE83eMOq3kDOHjXRf3V?=
+ =?us-ascii?Q?6qmRR7iIGDJ+vqM3eK1e6ZRcLRdIPfMjr1uF3PgDto/1tmJOAvzRHvjZWXVW?=
+ =?us-ascii?Q?zeIh6udzE7Q/Qi4TQFzQyWMAUV7NJEM/Hn2EjyhQA+TnRoP6mb/PRia8zC42?=
+ =?us-ascii?Q?BSR2G984Ac4yYYP2oZLmLOoOTHcR8jxZ7szAsYiJz2bXpcHK0tRxjjIlfoL5?=
+ =?us-ascii?Q?W7QhJrJLHgJ/YALvl2tTif1ZsNo64n7e7JofLmqexExEa5S1FhD/Eb/4wQPI?=
+ =?us-ascii?Q?zAcxGwwvTSoGeyqo2XXLGst9bNa2PURTbH+Al/QtU7FyOIcLAJrWmNtRBucB?=
+ =?us-ascii?Q?j0rTKkI/f1gilAwgIIZBA5QjDErKk3L/rfGVx7Lg7XJ4wHDL2C0U1rsPFI8B?=
+ =?us-ascii?Q?XAvrz/9vIPsMECEboB5lS15RlDQIcengMoNrlfYFG+WwZOtfVsoiY+qT6CE+?=
+ =?us-ascii?Q?+rvKZOsAnegPvMIuPjM6GIgLqit7hY1eAcpKf458jF7j0e+aCqtuJfLnXqR2?=
+ =?us-ascii?Q?N+npc3uDzSQjUVbas7fqXdCffWVk6JVnYvlIZFSnmsE18ETUqgJVs0fFUhzN?=
+ =?us-ascii?Q?9exu5ELsSBq+q7kERqLRVDR9D8wnyHzmpthVPjujj/Ub/gEDSgoP8nza5rB5?=
+ =?us-ascii?Q?g7ibCXGbZQiOckxW9tJQ8HkY4OKgg9iGiBmPolj/+o5IRrzBXr+2CiVjjT2y?=
+ =?us-ascii?Q?gyGoIyZHCoOCN16IOejkYe0KKYy+DfwGiDdID6/mnPAga0Ea/sP0dvjpXWdm?=
+ =?us-ascii?Q?tbO4QQTfL9qz2mqLrzxrWYmoC7j4Z25uGrOoGklKK84PVO8zNDkPt8KGsFLp?=
+ =?us-ascii?Q?52WsbCB9PA=3D=3D?=
 X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5acc28d0-05b9-4a0a-9479-08df392a04be
+X-MS-Exchange-CrossTenant-Network-Message-Id: b8f96103-e691-4b1f-f545-08df392a077b
 X-MS-Exchange-CrossTenant-AuthSource: LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2026 21:41:14.5936
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2026 21:41:18.8694
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eBAFSgMAUSU5OKK9JW1qmTc76o2tjG1aXNhD8HDpDRolmHr47t1/BTFN2aY3AWP4ZB4nKr59ixMMu4n0SHIKFw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: OG+SDvpJB2RHRtGBlxvifdQ3OesWXC5uQjeTsitwWKqURBpRV4aRSvl3R7pUcCRG8lC7Rj9ucae+lYhjctXjiQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: CWXP123MB3814
 
-When tracing with the Linux kernel's function graph tracer, enabling
-funcgraph-retaddr records the return address of each function entry as
-a comment in the trace stream (e.g. /* <-load_elf_phdrs+0x6c/0xb0 */).
-Whilst valuable for tracing execution origins, these trailing comments
-can add considerable visual clutter to the call graph, particularly
-when examining deeply nested call trees or when synthesising higher-level
-abstractions.
+The function_graph tracer records kernel function entries and exits with
+nested indentation. To perform call graph analysis and subsequent inlined
+function reconstruction, userspace must track the active call stack on a
+per-task and per-CPU basis.
 
-Introduce support for filtering out return address comments from
-function graph trace output whenever return address display is not
-explicitly requested via --graph-opts retaddr.
+Introduce basic call stack management for the function graph tracer:
 
-Key aspects of this implementation:
+    1.  Data structures
 
-    1.  Return address parsing and filtering
+        Define struct ftrace_stack_frame to track function names and
+        indentation.
 
-        Implement ftrace_filter_retaddr() in tools/perf/util/ftrace.c
-        to locate return address comments and strip them in-place with
-        memmove(3).
+        Define struct ftrace_task_state with a dynamically resisable call
+        stack array, tracked in a hash table keyed by PID alongside per-CPU
+        active task bindings (ftrace_cpu_tasks).
 
-        Additionally, introduce ftrace_parse_retaddr() to parse caller
-        symbol names and offsets across diverse output styles (standard
-        format, return values, and bracketed addresses), establishing
-        the parsing foundation for subsequent inlined callchain
-        resolution.
+    2.  Trace stream processing
 
-    2.  Automatic comment filtering
+        Implement find_func_column() to isolate context columns (CPU,
+        timestamps, duration) from function graph trace lines across
+        standard and verbose layouts.
 
-        In __cmd_ftrace(), filter return address comments from whole
-        trace lines whenever !ftrace->graph_retaddr, ensuring clean
-        output unless the user explicitly requests return address
-        comments via --graph-opts retaddr.
+        Implement ftrace_process_fgraph_line() to parse function entries
+        ("{") and exits ("}"), pushing and popping frames on the tracked
+        stack and matching bare closing braces against preceding frames.
 
-    3.  Automated verification
+    3.  Integration in __cmd_ftrace()
 
-        Add a dedicated unit test suite ("Ftrace return address
-        processing") in tools/perf/tests/ftrace.c to validate comment
-        parsing and string filtering across all supported formats.
+        Stream complete trace lines through ftrace_process_fgraph_line()
+        in __cmd_ftrace() and clean up allocated CPU states on exit via
+        ftrace_cpu_states__clear().
 
 Tested-by: Ian Rogers <irogers@google.com>
 Reviewed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
 ---
- tools/perf/builtin-ftrace.c     |  6 +++
- tools/perf/tests/Build          |  1 +
- tools/perf/tests/builtin-test.c |  1 +
- tools/perf/tests/ftrace.c       | 81 ++++++++++++++++++++++++++++
- tools/perf/tests/tests.h        |  1 +
- tools/perf/util/Build           |  1 +
- tools/perf/util/ftrace.c        | 93 +++++++++++++++++++++++++++++++++
- tools/perf/util/ftrace.h        |  3 ++
- 8 files changed, 187 insertions(+)
- create mode 100644 tools/perf/tests/ftrace.c
- create mode 100644 tools/perf/util/ftrace.c
+ tools/perf/builtin-ftrace.c |  40 +++-
+ tools/perf/util/ftrace.c    | 430 ++++++++++++++++++++++++++++++++++++
+ tools/perf/util/ftrace.h    |   5 +
+ 3 files changed, 463 insertions(+), 12 deletions(-)
 
 diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 65983259b07e..e00621703dd7 100644
+index e00621703dd7..e3909cff287b 100644
 --- a/tools/perf/builtin-ftrace.c
 +++ b/tools/perf/builtin-ftrace.c
-@@ -837,6 +837,8 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
+@@ -744,6 +744,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
+ 	int trace_fd;
+ 	char *buf = NULL;
+ 	struct strbuf linebuf = STRBUF_INIT;
++	int ret = 0;
+ 	struct pollfd pollfd = {
+ 		.events = POLLIN,
+ 	};
+@@ -837,14 +838,20 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
  				break;
  			for (int i = 0; i < n; i++) {
  				if (buf[i] == '\n') {
-+					if (!ftrace->graph_retaddr)
-+						ftrace_filter_retaddr(linebuf.buf);
- 					if (fprintf(stdout, "%s\n", linebuf.buf) < 0)
+-					if (!ftrace->graph_retaddr)
+-						ftrace_filter_retaddr(linebuf.buf);
+-					if (fprintf(stdout, "%s\n", linebuf.buf) < 0)
++					if (ftrace_process_fgraph_line(ftrace,
++								       linebuf.buf,
++								       stdout) < 0) {
++						ret = -1;
++						goto out_close_fd;
++					}
++					if (ferror(stdout))
  						break;
  					strbuf_setlen(&linebuf, 0);
-@@ -874,6 +876,8 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
+ 				} else {
+-					if (strbuf_addch(&linebuf, buf[i]) < 0)
++					if (strbuf_addch(&linebuf, buf[i]) < 0) {
++						ret = -1;
+ 						goto out_close_fd;
++					}
+ 				}
+ 			}
+ 			/* flush output since stdout is in full buffering mode due to pager */
+@@ -876,22 +883,30 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
  			break;
  		for (int i = 0; i < n; i++) {
  			if (buf[i] == '\n') {
-+				if (!ftrace->graph_retaddr)
-+					ftrace_filter_retaddr(linebuf.buf);
- 				if (fprintf(stdout, "%s\n", linebuf.buf) < 0)
+-				if (!ftrace->graph_retaddr)
+-					ftrace_filter_retaddr(linebuf.buf);
+-				if (fprintf(stdout, "%s\n", linebuf.buf) < 0)
++				if (ftrace_process_fgraph_line(ftrace,
++							       linebuf.buf,
++							       stdout) < 0) {
++					ret = -1;
++					goto out_close_fd;
++				}
++				if (ferror(stdout))
  					break;
  				strbuf_setlen(&linebuf, 0);
-@@ -885,6 +889,8 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
+ 			} else {
+-				if (strbuf_addch(&linebuf, buf[i]) < 0)
++				if (strbuf_addch(&linebuf, buf[i]) < 0) {
++					ret = -1;
+ 					goto out_close_fd;
++				}
+ 			}
+ 		}
  	}
  
  	if (!ferror(stdout) && linebuf.len > 0) {
-+		if (!ftrace->graph_retaddr)
-+			ftrace_filter_retaddr(linebuf.buf);
- 		fprintf(stdout, "%s\n", linebuf.buf);
+-		if (!ftrace->graph_retaddr)
+-			ftrace_filter_retaddr(linebuf.buf);
+-		fprintf(stdout, "%s\n", linebuf.buf);
++		if (ftrace_process_fgraph_line(ftrace, linebuf.buf,
++					       stdout) < 0) {
++			ret = -1;
++			goto out_close_fd;
++		}
  		strbuf_setlen(&linebuf, 0);
  	}
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index 58858f3d2bf9..54923c162f2f 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -73,6 +73,7 @@ perf-test-y += hwmon_pmu.o
- perf-test-y += tool_pmu.o
- perf-test-y += subcmd-help.o
- perf-test-y += kallsyms-split.o
-+perf-test-y += ftrace.o
  
- ifeq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc riscv))
- perf-test-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 0b8897fd42ca..5f16cf5770a1 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -157,6 +157,7 @@ static struct test_suite *generic_tests[] = {
- 	&suite__perf_hooks,
- 	&suite__unit_number__scnprint,
- 	&suite__mem2node,
-+	&suite__ftrace,
- 	&suite__time_utils,
- 	&suite__jit_write_elf,
- 	&suite__pfm,
-diff --git a/tools/perf/tests/ftrace.c b/tools/perf/tests/ftrace.c
-new file mode 100644
-index 000000000000..42604811a2fb
---- /dev/null
-+++ b/tools/perf/tests/ftrace.c
-@@ -0,0 +1,81 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/compiler.h>
-+#include <linux/kernel.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include "tests.h"
-+#include "debug.h"
-+#include "util/ftrace.h"
-+
-+static int test_parse_retaddr(void)
-+{
-+	char sym[128];
-+	u64 offset = 0;
-+
-+	/* Standard format */
-+	TEST_ASSERT_VAL("parse standard retaddr",
-+			ftrace_parse_retaddr("kernel_read() { /* <-load_elf_phdrs+0x6c/0xb0 */",
-+					     sym, sizeof(sym), &offset));
-+	TEST_ASSERT_EQUAL("sym name", strcmp(sym, "load_elf_phdrs"), 0);
-+	TEST_ASSERT_VAL("offset", offset == 0x6c);
-+
-+	/* With return value */
-+	TEST_ASSERT_VAL("parse retaddr with ret",
-+			ftrace_parse_retaddr(
-+				"__cond_resched(); /* <-load_elf_phdrs+0x6c/0xb0 ret=0x0 */",
-+				sym, sizeof(sym), &offset));
-+	TEST_ASSERT_EQUAL("sym name", strcmp(sym, "load_elf_phdrs"), 0);
-+	TEST_ASSERT_VAL("offset", offset == 0x6c);
-+
-+	/* Bracketed address */
-+	TEST_ASSERT_VAL("parse bracketed retaddr",
-+			ftrace_parse_retaddr("foo() { /* <-[0xffffffff818534c8] bar+0x20/0x40 */",
-+					     sym, sizeof(sym), &offset));
-+	TEST_ASSERT_EQUAL("sym name", strcmp(sym, "bar"), 0);
-+	TEST_ASSERT_VAL("offset", offset == 0x20);
-+
-+	/* No return address */
-+	TEST_ASSERT_VAL("no retaddr",
-+			!ftrace_parse_retaddr("do_filp_open();", sym, sizeof(sym), &offset));
-+
-+	return TEST_OK;
-+}
-+
-+static int test_filter_retaddr(void)
-+{
-+	char line1[] = "kernel_read() { /* <-load_elf_phdrs+0x6c/0xb0 */";
-+	char line2[] = "__cond_resched(); /* <-load_elf_phdrs+0x6c/0xb0 ret=0x0 */";
-+	char line3[] = "do_filp_open();";
-+
-+	ftrace_filter_retaddr(line1);
-+	TEST_ASSERT_EQUAL("filter standard retaddr", strcmp(line1, "kernel_read() {"), 0);
-+
-+	ftrace_filter_retaddr(line2);
-+	TEST_ASSERT_EQUAL("filter retaddr with ret",
-+			  strcmp(line2, "__cond_resched(); /* ret=0x0 */"), 0);
-+
-+	ftrace_filter_retaddr(line3);
-+	TEST_ASSERT_EQUAL("filter line without retaddr unchanged",
-+			  strcmp(line3, "do_filp_open();"), 0);
-+
-+	return TEST_OK;
-+}
-+
-+static int test__ftrace(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-+{
-+	int ret;
-+
-+	ret = test_parse_retaddr();
-+	if (ret != TEST_OK)
-+		return ret;
-+
-+	ret = test_filter_retaddr();
-+	if (ret != TEST_OK)
-+		return ret;
-+
-+	return TEST_OK;
-+}
-+
-+DEFINE_SUITE("Ftrace return address processing", ftrace);
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 20ae3609892b..384599ca18e6 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -181,6 +181,7 @@ DECLARE_SUITE(perf_hooks);
- DECLARE_SUITE(unit_number__scnprint);
- DECLARE_SUITE(mem2node);
- DECLARE_SUITE(maps);
-+DECLARE_SUITE(ftrace);
- DECLARE_SUITE(time_utils);
- DECLARE_SUITE(jit_write_elf);
- DECLARE_SUITE(api_io);
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 2c1f880c4c47..5b082d09006d 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -169,6 +169,7 @@ perf-util-y += list_sort.o
- perf-util-y += mutex.o
- perf-util-y += sharded_mutex.o
- perf-util-y += intel-tpebs.o
-+perf-util-y += ftrace.o
+@@ -901,9 +916,10 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
+ 	free(buf);
+ 	strbuf_release(&linebuf);
+ out_reset:
++	ftrace_cpu_states__clear();
+ 	exit_tracing_instance();
+ out:
+-	return (done && !workload_exec_errno) ? 0 : -1;
++	return (ret == 0 && done && !workload_exec_errno) ? 0 : -1;
+ }
  
- perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_counter.o
- perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_counter_cgroup.o
+ static void make_histogram(struct perf_ftrace *ftrace, int buckets[],
 diff --git a/tools/perf/util/ftrace.c b/tools/perf/util/ftrace.c
-new file mode 100644
-index 000000000000..452231c01568
---- /dev/null
+index 452231c01568..21d40c6eb288 100644
+--- a/tools/perf/util/ftrace.c
 +++ b/tools/perf/util/ftrace.c
-@@ -0,0 +1,93 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/compiler.h>
-+#include <linux/kernel.h>
-+#include <linux/string.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <ctype.h>
-+#include "util/ftrace.h"
+@@ -2,11 +2,183 @@
+ #include <linux/compiler.h>
+ #include <linux/kernel.h>
+ #include <linux/string.h>
++#include <linux/zalloc.h>
++#include <linux/hash.h>
++#include <linux/list.h>
++#include <stdbool.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <ctype.h>
++#include <errno.h>
++#include <sys/types.h>
++#include "debug.h"
+ #include "util/ftrace.h"
++#include "util/string2.h"
++
++#define FTRACE_MAX_CPUS 4096
++#define FTRACE_MAX_STACK 256
++#define FTRACE_PID_HASH_BITS 10
++#define FTRACE_PID_HASH_SIZE (1 << FTRACE_PID_HASH_BITS)
++
++#define FTRACE_IDLE_PID(cpu)       ((pid_t)(-1 - (cpu)))
++#define FTRACE_UNKNOWN_PID(cpu)    ((pid_t)(-1 - FTRACE_MAX_CPUS - (cpu)))
++
++/*
++ * Represents a single call frame on a task's function_graph stack.
++ *
++ * @name:   Function name extracted from the trace entry.
++ * @indent: Indentation (in spaces) used to correlate entry and exit frames.
++ */
++struct ftrace_stack_frame {
++	char *name;
++	int indent;
++};
++
++/*
++ * Per-task call stack state for function_graph trace reconstruction.
++ *
++ * @node:           Hash list node indexed by PID.
++ * @pid:            Task PID (or synthetic per-CPU ID when PID is unavailable).
++ * @stack:          Dynamically resized array of active stack frames.
++ * @max_stack:      Current allocated capacity (in frames) of @stack.
++ * @depth:          Current number of active frames stored in @stack.
++ * @overflow_depth: Nesting count of frames entered beyond @stack capacity,
++ *                  preventing their exits from popping valid parent frames.
++ */
++struct ftrace_task_state {
++	struct hlist_node node;
++	pid_t pid;
++	struct ftrace_stack_frame *stack;
++	int max_stack;
++	int depth;
++	int overflow_depth;
++};
++
++static struct hlist_head ftrace_task_hash[FTRACE_PID_HASH_SIZE];
++static struct ftrace_task_state *ftrace_cpu_tasks[FTRACE_MAX_CPUS];
 +
 +/**
-+ * ftrace_parse_retaddr - Parse return address comment from trace line
-+ * @str: The trace line containing the comment
-+ * @sym_name: Buffer to store the parsed symbol name
-+ * @sym_len: Length of the @sym_name buffer
-+ * @offset: Pointer to store the parsed offset
++ * ftrace_cpu_states__clear - Free allocated CPU and task stack states
 + *
-+ * Extract the function name and offset from a funcgraph-retaddr comment
-+ * (e.g. "<-load_elf_phdrs+0x6c/0xb0").
-+ *
-+ * Return: true if successfully parsed, false otherwise.
++ * Free all memory associated with the per-task stack tracking states,
++ * including the strings allocated for stack frames.
 + */
-+bool ftrace_parse_retaddr(const char *str, char *sym_name, size_t sym_len, u64 *offset)
++void ftrace_cpu_states__clear(void)
 +{
-+	const char *p = strstr(str, "<-");
-+	const char *plus;
-+	const char *bracket;
-+	size_t name_len;
++	struct ftrace_task_state *ts;
++	struct hlist_node *tmp;
++	int i, j;
 +
-+	if (!p)
-+		return false;
-+
-+	p += 2;
-+	while (*p == ' ')
-+		p++;
-+
-+	if (*p == '[') {
-+		bracket = strchr(p, ']');
-+		if (bracket)
-+			p = bracket + 1;
-+		while (*p == ' ')
-+			p++;
++	for (i = 0; i < FTRACE_PID_HASH_SIZE; i++) {
++		hlist_for_each_entry_safe(ts, tmp, &ftrace_task_hash[i], node) {
++			for (j = 0; j < ts->depth; j++)
++				free(ts->stack[j].name);
++			free(ts->stack);
++			hlist_del_init(&ts->node);
++			free(ts);
++		}
 +	}
 +
-+	plus = strchr(p, '+');
-+	if (!plus)
-+		return false;
-+
-+	name_len = plus - p;
-+	if (name_len == 0 || name_len >= sym_len)
-+		return false;
-+
-+	memcpy(sym_name, p, name_len);
-+	sym_name[name_len] = '\0';
-+
-+	*offset = strtoull(plus + 1, NULL, 16);
-+	return true;
++	memset(ftrace_cpu_tasks, 0, sizeof(ftrace_cpu_tasks));
 +}
 +
 +/**
-+ * ftrace_filter_retaddr - Remove return address comment from trace line
-+ * @str: The trace line to modify
++ * find_task_state - Look up call stack state for a task by PID
++ * @pid: Process ID of the task
 + *
-+ * Find and strip the funcgraph-retaddr comment from the trace line
-+ * in-place, removing trailing spaces where applicable.
++ * Return: A pointer to the task's stack state, or NULL if not found.
 + */
-+void ftrace_filter_retaddr(char *str)
++static struct ftrace_task_state *find_task_state(pid_t pid)
 +{
-+	char *start = strstr(str, "/* <-");
-+	char *end;
-+	char *ret_ptr;
++	struct ftrace_task_state *ts;
++	struct hlist_head *head;
++	u32 key = hash_32((u32)pid, FTRACE_PID_HASH_BITS);
 +
-+	if (!start)
-+		return;
-+
-+	end = strstr(start, "*/");
-+	if (!end)
-+		return;
-+
-+	ret_ptr = strstr(start, " ret=");
-+	if (ret_ptr && ret_ptr < end) {
-+		memmove(start + 3, ret_ptr + 1, strlen(ret_ptr + 1) + 1);
-+		return;
++	head = &ftrace_task_hash[key];
++	hlist_for_each_entry(ts, head, node) {
++		if (ts->pid == pid)
++			return ts;
 +	}
 +
-+	end += 2; /* skip end-of-comment delimiter */
++	return NULL;
++}
 +
-+	/* Also backtrack any spaces before comment */
-+	while (start > str && *(start - 1) == ' ')
-+		start--;
++/**
++ * ftrace_task_state__grow_stack - Double the capacity of a task's call stack
++ * @ts: Task state whose stack should be resized
++ *
++ * Reallocate @ts->stack with twice the current capacity, zero-initialising
++ * the newly allocated frames.
++ *
++ * Return: 0 on success, or -ENOMEM if memory allocation fails.
++ */
++static int ftrace_task_state__grow_stack(struct ftrace_task_state *ts)
++{
++	int new_max = ts->max_stack ? ts->max_stack * 2 : FTRACE_MAX_STACK;
++	struct ftrace_stack_frame *new_stack;
 +
-+	memmove(start, end, strlen(end) + 1);
++	new_stack = realloc(ts->stack, new_max * sizeof(*new_stack));
++	if (!new_stack) {
++		pr_err("Not enough memory to resize ftrace stack\n");
++		return -ENOMEM;
++	}
++
++	memset(new_stack + ts->max_stack, 0, (new_max - ts->max_stack) * sizeof(*new_stack));
++	ts->stack = new_stack;
++	ts->max_stack = new_max;
++	return 0;
++}
++
++/**
++ * get_task_state - Get or allocate stack state for a given task PID
++ * @pid: Process ID of the task
++ *
++ * Return: A pointer to the task's stack state, or NULL on allocation failure.
++ */
++static struct ftrace_task_state *get_task_state(pid_t pid)
++{
++	struct ftrace_task_state *ts = find_task_state(pid);
++	struct hlist_head *head;
++	u32 key;
++
++	if (ts)
++		return ts;
++
++	ts = zalloc(sizeof(*ts));
++	if (!ts)
++		return NULL;
++
++	if (ftrace_task_state__grow_stack(ts) < 0) {
++		free(ts);
++		return NULL;
++	}
++
++	ts->pid = pid;
++	key = hash_32((u32)pid, FTRACE_PID_HASH_BITS);
++	head = &ftrace_task_hash[key];
++	hlist_add_head(&ts->node, head);
++	return ts;
++}
++
++/**
++ * get_cpu_state - Get or allocate active task stack state for a given CPU
++ * @ftrace: Perf ftrace context
++ * @cpu: The CPU number
++ *
++ * Return: A pointer to the CPU's active task stack state, or NULL on error or
++ * out-of-bounds CPU index.
++ */
++static struct ftrace_task_state *get_cpu_state(struct perf_ftrace *ftrace __maybe_unused, int cpu)
++{
++	if (cpu < 0 || cpu >= FTRACE_MAX_CPUS)
++		return NULL;
++
++	if (!ftrace_cpu_tasks[cpu])
++		ftrace_cpu_tasks[cpu] = get_task_state(FTRACE_UNKNOWN_PID(cpu));
++
++	return ftrace_cpu_tasks[cpu];
++}
+ 
+ /**
+  * ftrace_parse_retaddr - Parse return address comment from trace line
+@@ -91,3 +263,261 @@ void ftrace_filter_retaddr(char *str)
+ 
+ 	memmove(start, end, strlen(end) + 1);
+ }
++
++/**
++ * extract_entry_func_name - Extract the function name from an entry record
++ * @str: The trace line's function column string
++ * @buf: Buffer to store the extracted name
++ * @size: Size of the @buf
++ *
++ * Parse the function name out of an entry trace record by stripping away
++ * parentheses or braces.
++ */
++static void extract_entry_func_name(const char *str, char *buf, size_t size)
++{
++	size_t i = 0;
++
++	while (*str && *str != '(' && *str != '{' && !isspace(*str) && i < size - 1)
++		buf[i++] = *str++;
++	buf[i] = '\0';
++}
++
++/**
++ * extract_exit_func_name - Extract the function name from an exit record
++ * @str: The trace line's function column string
++ * @buf: Buffer to store the extracted name
++ * @size: Size of the @buf
++ *
++ * Parse the original function name out of the trailing comment in an
++ * exit trace record.
++ */
++static void extract_exit_func_name(const char *str, char *buf, size_t size)
++{
++	const char *p = strchr(str, '}');
++	size_t i = 0;
++
++	buf[0] = '\0';
++	if (!p)
++		return;
++
++	p = strstr(p, "/*");
++	if (!p)
++		return;
++
++	p = skip_spaces(p + 2);
++	while (*p && !isspace(*p) && *p != '*' && *p != '/' && i < size - 1)
++		buf[i++] = *p++;
++	buf[i] = '\0';
++}
++
++/**
++ * find_func_column - Locate the function call column in a trace record
++ * @ftrace: Perf ftrace context
++ * @line: The trace record to parse
++ * @cpu: Pointer to store the CPU number
++ *
++ * Locate the context columns that precede the function call column of a
++ * function_graph trace record. Depending on the funcgraph-* options set
++ * up by perf, a record looks like:
++ *
++ *   [ abstime |]  CPU)  [ comm-pid |]  [ duration |]  func
++ *
++ * The abstime and comm-pid columns are only present with --graph-opts
++ * verbose.
++ *
++ * Return: A pointer to the last character of the context columns (the final
++ * '|' delimiter). Returns NULL if @line is not a trace record.
++ */
++static const char *find_func_column(const struct perf_ftrace *ftrace,
++				    const char *line, int *cpu)
++{
++	const char *p = line;
++	char *endptr;
++	long val;
++
++	if (ftrace->graph_verbose) {
++		p = strchr(p, '|');
++		if (!p)
++			return NULL;
++		p++;
++	}
++
++	p = skip_spaces(p);
++	val = strtol(p, &endptr, 10);
++	if (endptr == p || *endptr != ')')
++		return NULL;
++	p = endptr;
++
++	if (ftrace->graph_verbose) {
++		p = strchr(p, '|');
++		if (!p)
++			return NULL;
++
++		p = strchr(p + 1, '|');
++		if (!p)
++			return NULL;
++	}
++
++	p = strchr(p + 1, '|');
++	if (!p)
++		return NULL;
++
++	*cpu = (int)val;
++	return p;
++}
++
++/**
++ * print_line - Output a trace line verbatim, filtering return addresses if needed
++ * @ftrace: Perf ftrace context
++ * @line: The trace line to output
++ * @out: File stream to output to
++ *
++ * Output @line to @out. Unless ftrace->graph_retaddr is set, return address
++ * comments are filtered out first.
++ *
++ * Return: 0 on success, or a negative error code (e.g. -ENOMEM) on failure.
++ */
++static int print_line(struct perf_ftrace *ftrace, const char *line, FILE *out)
++{
++	char *filtered;
++
++	if (ftrace->graph_retaddr) {
++		fprintf(out, "%s\n", line);
++		return 0;
++	}
++
++	filtered = strdup(line);
++	if (!filtered) {
++		pr_err("Not enough memory\n");
++		return -ENOMEM;
++	}
++
++	ftrace_filter_retaddr(filtered);
++	fprintf(out, "%s\n", filtered);
++	free(filtered);
++	return 0;
++}
++
++/**
++ * ftrace_process_fgraph_line - Process and output a function graph trace line
++ * @ftrace: Perf ftrace context
++ * @line: The trace line to process
++ * @out: File stream to output to
++ *
++ * Parse function entries and exits, maintain the task's call stack, and
++ * output the trace line.
++ *
++ * Return: 0 on success, or a negative error code on failure.
++ */
++int ftrace_process_fgraph_line(struct perf_ftrace *ftrace, const char *line, FILE *out)
++{
++	const char *pipe_char;
++	const char *after_pipe;
++	const char *func_start;
++	struct ftrace_task_state *ts;
++	int cpu = -1;
++	int leading_spaces;
++	int top_indent;
++	int match_idx;
++	int i;
++	bool is_exit;
++	bool has_open_brace;
++	bool has_semicolon;
++
++	pipe_char = find_func_column(ftrace, line, &cpu);
++	if (!pipe_char)
++		return print_line(ftrace, line, out);
++
++	ts = get_cpu_state(ftrace, cpu);
++	if (!ts)
++		return print_line(ftrace, line, out);
++
++	after_pipe = pipe_char + 1;
++	func_start = skip_spaces(after_pipe);
++	leading_spaces = func_start - after_pipe;
++
++	if (*func_start == '\0')
++		return print_line(ftrace, line, out);
++
++	is_exit = (*func_start == '}');
++
++	if (is_exit) {
++		char exit_name[128];
++
++		extract_exit_func_name(func_start, exit_name, sizeof(exit_name));
++
++		top_indent = -1;
++		if (ts->depth > 0)
++			top_indent = ts->stack[ts->depth - 1].indent;
++
++		if (ts->overflow_depth > 0 &&
++		    (top_indent < 0 || leading_spaces > top_indent)) {
++			ts->overflow_depth--;
++			return print_line(ftrace, line, out);
++		}
++
++		match_idx = -1;
++		if (exit_name[0] != '\0') {
++			for (i = ts->depth - 1; i >= 0; i--) {
++				if (ts->stack[i].name &&
++				    ts->stack[i].indent == leading_spaces &&
++				    strcmp(ts->stack[i].name, exit_name) == 0) {
++					match_idx = i;
++					break;
++				}
++			}
++		}
++
++		if (match_idx < 0 && exit_name[0] == '\0') {
++			for (i = ts->depth - 1; i >= 0; i--) {
++				if (ts->stack[i].indent == leading_spaces) {
++					match_idx = i;
++					break;
++				}
++			}
++		}
++
++		if (match_idx >= 0) {
++			ts->overflow_depth = 0;
++			while (ts->depth > match_idx) {
++				free(ts->stack[ts->depth - 1].name);
++				ts->depth--;
++			}
++		} else if (ts->overflow_depth > 0) {
++			ts->overflow_depth--;
++		}
++
++		return print_line(ftrace, line, out);
++	}
++
++	has_open_brace = (strchr(func_start, '{') != NULL);
++	has_semicolon = (strchr(func_start, ';') != NULL);
++
++	top_indent = -1;
++	if (ts->depth > 0)
++		top_indent = ts->stack[ts->depth - 1].indent;
++
++	if (ts->overflow_depth > 0 && top_indent >= 0 &&
++	    leading_spaces <= top_indent)
++		ts->overflow_depth = 0;
++
++	if (has_open_brace && !has_semicolon) {
++		char entry_name[128];
++
++		extract_entry_func_name(func_start, entry_name, sizeof(entry_name));
++		if (ts->depth >= ts->max_stack &&
++		    ftrace_task_state__grow_stack(ts) < 0) {
++			ts->overflow_depth++;
++		} else {
++			ts->stack[ts->depth].name = strdup(entry_name);
++			if (!ts->stack[ts->depth].name) {
++				pr_err("Not enough memory\n");
++				return -ENOMEM;
++			}
++			ts->stack[ts->depth].indent = leading_spaces;
++			ts->depth++;
++		}
++	}
++
++	return print_line(ftrace, line, out);
 +}
 diff --git a/tools/perf/util/ftrace.h b/tools/perf/util/ftrace.h
-index 950f2efafad2..a3a679f74e9d 100644
+index a3a679f74e9d..a65ae369e9fb 100644
 --- a/tools/perf/util/ftrace.h
 +++ b/tools/perf/util/ftrace.h
-@@ -93,4 +93,7 @@ perf_ftrace__latency_cleanup_bpf(struct perf_ftrace *ftrace __maybe_unused)
+@@ -1,6 +1,9 @@
+ #ifndef __PERF_FTRACE_H__
+ #define __PERF_FTRACE_H__
  
- #endif  /* HAVE_BPF_SKEL */
++#include <stdbool.h>
++#include <stdio.h>
++#include <sys/types.h>
+ #include <linux/list.h>
  
-+bool ftrace_parse_retaddr(const char *str, char *sym_name, size_t sym_len, u64 *offset);
-+void ftrace_filter_retaddr(char *str);
-+
+ #include "target.h"
+@@ -95,5 +98,7 @@ perf_ftrace__latency_cleanup_bpf(struct perf_ftrace *ftrace __maybe_unused)
+ 
+ bool ftrace_parse_retaddr(const char *str, char *sym_name, size_t sym_len, u64 *offset);
+ void ftrace_filter_retaddr(char *str);
++int ftrace_process_fgraph_line(struct perf_ftrace *ftrace, const char *line, FILE *out);
++void ftrace_cpu_states__clear(void);
+ 
  #endif  /* __PERF_FTRACE_H__ */
 -- 
 2.55.0
