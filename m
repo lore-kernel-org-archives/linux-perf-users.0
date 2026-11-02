@@ -1,88 +1,199 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.96.79
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793647256;
-	b=yyUhMce0ndXprByoJPWfj+FPmDYyLwrngnG1T3R3LDS9YNxk5/bEVMrNRbQsk/MmzjK7
-	 fqFBNRXdxCsSDeLbWeqMt6nu2bQZq4PvzB25mYtAFYghonzcWFY0htnzjhvTgG2F1iheW
-	 ccdK/a4okgFdgz4Qh42oYJ9BEFi3XDNmttamQOtsJP9kSclQaZobaub0J5TEZqiF4bcSP
-	 X6Dqpy1/3EFiljqyECEr/APuGbn4WiMiokXgGI2honnyryr/yW88wJ5dSaW9cmqYSW7aW
-	 l8UjuDLSUZIze1m3FoA8Lq1nNk8sSmRYoVoIAGfK30jBYVCSCoWb+rHnOm6nO/E/1MA==
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=67.231.149.131
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
+	t=1793653922;
+	b=wy0n2ZvSTigf2mEWVePkhgFe4uMxSqrEAwX3XSxd2e7z0DR/FlBAWMpZKkhtimg9mKed
+	 rZOL/816D3DCJrVKCjcJGzl5+xeiq2av+r0vhCPNjdzr/ugXMWoTcuyDy2M/SR8Zc3Ld+
+	 ZA1/jzvXjyOnZ+aOp4pm6UCTNFDOZRdprjLvh4XaqPhjMBrjbvNULfjLtCFx6J/P4/ehV
+	 cqufLDpabpRqNOWAafPiMvxPMz8saTm01QwpQuLMly2wsnqfaY4J7CeKxJVBKfX7G86oV
+	 tsZG69tnoXBuuzH0cdI5D6rHH3TDx91OGz9GAk6PK0DQ0c4qKp0G3jhFl0klx715OlA==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793647256;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 References:Content-Type:Content-Disposition:Content-Transfer-Encoding:
-	 In-Reply-To:X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=hq3Os9kVWaSQzwpzXZzdLcGnI71pAFvaHsKFUitNMfs=;
-	b=kS2ML+MOi3HdkjtAIbiCAuXQDjZNk4aMxP0l93qfPlvMNJlR5vaO9QT9EEOIeQ2/y1An
-	 ESVCRelBrFsNLkpb3CLeNcjwoEC8nANH+j0zeal7UHwGSvcys/efJHJP1C2qliTEw6m+2
-	 ivVtdUD3ZrHAguOMYaVXEA3z7WKpzZVYIaRodkITEkj2ui9559x/4ak0upEfq1fvzOYer
-	 2pi/tB6az/4V8KtUNJjTm4TR+TcE8gznPC+4fstJWL5vBXmRsKpWTrkcu/iuh0etb4htv
-	 RfCMdiBXNpXeINqsLID5ZirS0yJEUwhmonjOl+h9DkjTvTVvW66oY9c26peYGFJON8g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793653922;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received:Received:Received:Received:Received:From:To:CC:Subject:
+	 Thread-Topic:Thread-Index:Date:Message-ID:References:In-Reply-To:
+	 Accept-Language:Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
+	 msip_labels:x-ms-publictraffictype:x-ms-traffictypediagnostic:
+	 x-ms-office365-filtering-correlation-id:x-ld-processed:
+	 x-ms-exchange-senderadcheck:x-ms-exchange-antispam-relay:
+	 x-microsoft-antispam:x-microsoft-antispam-message-info:
+	 x-forefront-antispam-report:
+	 x-ms-exchange-antispam-messagedata-chunkcount:
+	 x-ms-exchange-antispam-messagedata-0:x-exchange-routingpolicychecked:
+	 x-ms-exchange-crosstenant-authas:x-ms-exchange-crosstenant-authsource:
+	 x-ms-exchange-crosstenant-network-message-id:
+	 x-ms-exchange-crosstenant-originalarrivaltime:
+	 x-ms-exchange-crosstenant-fromentityheader:
+	 x-ms-exchange-crosstenant-id:x-ms-exchange-crosstenant-mailboxtype:
+	 x-ms-exchange-crosstenant-userprincipalname:
+	 x-ms-exchange-transport-crosstenantheadersstamped:Content-Type:
+	 Content-Transfer-Encoding:MIME-Version:X-OriginatorOrg:
+	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details:
+	 X-Proofpoint-Spam-Info:X-Proofpoint-Spam-Details-Enc:
+	 X-Proofpoint-ORIG-GUID:X-Authority-Analysis:X-Proofpoint-GUID:
+	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details;
+	bh=9gRkDAR4P745xdOdqlNq6LnLO97jRROQjqKP4sjMyi8=;
+	b=qEYiagPV4dxwhKJiD+jIqm5EUzWiVvTeOX5umoOAJt1wz7GfTFJ3X7A2DXvspM4Hbwps
+	 buOr2ZtIrYqPCApiaaHKZ/AcXSe/V1UOpxWAEspOlUscWXFsITDcvbtAG2Z6VbzNNgtYy
+	 Bt+z6dRGZ1EXbv634XMMP7FLPUPDhCs+ahz101W7vG0J59Y+LoiPC6mUZpW1t4nXw+87h
+	 dBCx0UYN637LQi1w6K/dmTY5zXTYUHNVKDigEtWRMyaeZMbdp+tuEuKia45p7E3R0/H3m
+	 7m40YAARHn61EC5GQ7cSQSC2IO3IYzWLkwzQwpJ+s1wClQtbv8qmp3gZLl0+lguWj+w==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=none header.from=atomlin.com;
-	spf=pass smtp.mailfrom=atomlin.com;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.96.79
-Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazon11022079.outbound.protection.outlook.com [52.101.96.79])
+	dmarc=pass header.from=akamai.com;
+	spf=pass smtp.mailfrom=akamai.com;
+	dkim=pass header.d=akamai.com header.i=@akamai.com header.a=rsa-sha256 header.s=apr2026.eng header.b=Z2GOV3mW;
+	arc=fail smtp.remote-ip=67.231.149.131
+Received: from mx0a-00190b01.pphosted.com (mx0a-00190b01.pphosted.com [67.231.149.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC677606A32C;
-	Mon,  2 Nov 2026 19:20:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BC677606A32C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=x9CLVN1sCo4s1WEXxtdNYTxfDXXwcVodXeI8GXcaj0NlC8LhuM/Mb1bCXPoToZ6XCLKuQNEYfT6iBTwbuVGNQNpUMgRKwzZo8rRWuLojz0yqStZz/8KHzbn/KR/xOymq7dC2jFABCcYewzhfUZK85QXTuzzxtbwCpcUGbcXTuiiIQlRs/B7wz0X92Dc/E6t0x0R7/EpHiH3SvggiBQuj43/3bfPjJ1lV6npCi/+w9E/v/O65kSzThW/LrVj51qTVPARKIQxDvjKnztaLq3KocynwR2ePYZht5+6PB5ifGqLbjYI8MzfLESc8VvlRb9/+Ueebb129SmKNjPytRWZZEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=hq3Os9kVWaSQzwpzXZzdLcGnI71pAFvaHsKFUitNMfs=;
- b=gy8br4cM+6ejtV+XM12ob0ls3CIcVgxdzQYu2abc2ukG4erfZAv/iklSV5073ikPgQ5Hkd2ikzQC9/H/2yEB+yJMoxqQX8KwmQibrOpU6CJHvNTr7Kq8eWU899Zcc5UR5ADEVuk508CJrbUj8EcgfSMK6ppqn9sLTaZMhfbHyrzaVsJwJE3EauGC17EPywTvp+jTGspz8RSltgZxWXbilA2B8VIAx0OJiMGlIfUjwijCjphfKjtaueYStsfU2rv9KZzW2I70k+hbI5fc7uQP17EFhD+MOiD8soaCyCHtOo23xrG3KTRSd8PXV/HbvvoTKUAXbpk93pDwM0zYtCP9oA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:163::8)
- by LOAP123MB8880.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:498::18) with
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56394606D837;
+	Mon,  2 Nov 2026 21:12:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 56394606D837
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=akamai.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=akamai.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=akamai.com header.i=@akamai.com header.a=rsa-sha256 header.s=apr2026.eng header.b=Z2GOV3mW
+Received: from pps.filterd (m0122333.ppops.net [127.0.0.1])
+	by mx0a-00190b01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6A2IWvZV1423830;
+	Mon, 2 Nov 2026 21:11:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=apr2026.eng;
+	 bh=9gRkDAR4P745xdOdqlNq6LnLO97jRROQjqKP4sjMyi8=; b=Z2GOV3mWMPlI
+	33BFUSl/b/Z/u+sl7VCsjZL4/m3DKw/tVTtqw3DXoD+V2mZytw5y7qWHaiDD1mbp
+	G6dxjSpnWLFQZbmtFfBbBYcSYpYZl9TMMLMKwgRWTmGqDPkI8abz/BGvDqzM0wnM
+	o0p+5z/+Sa5S7/4wDVLtc6zwnzPCXyhzX5pYEohyk+bJdnNJPNkQ08T60TwDmhZZ
+	UJYoU2/IHFZykqcnCLE9dP+CNEe3cKhjz+65xovb52v8KWpfeaAkUD/Myss1hCID
+	T7VrH38csuWCji9JPii+x3dweTT1W6SIMdEzuAT8vUHsmbFQXFV9zewDTtts8bK/
+	KvrEZzilNw==
+Received: from prod-mail-ppoint7 (a72-247-45-33.deploy.static.akamaitechnologies.com [72.247.45.33] (may be forged))
+	by mx0a-00190b01.pphosted.com (PPS) with ESMTPS id 4hpyw59d1h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 02 Nov 2026 21:11:22 +0000 (GMT)
+Received: from pps.filterd (prod-mail-ppoint7.akamai.com [127.0.0.1])
+	by prod-mail-ppoint7.akamai.com (8.18.1.7/8.18.1.7) with ESMTP id 6A2L39ii017549;
+	Mon, 2 Nov 2026 16:11:21 -0500
+Received: from email.msg.corp.akamai.com ([172.27.50.221])
+	by prod-mail-ppoint7.akamai.com (PPS) with ESMTPS id 4hnbnty2g7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 02 Nov 2026 16:11:21 -0500 (EST)
+Received: from ustx2ex-exedge4.msg.corp.akamai.com (172.27.50.215) by
+ ustx2ex-dag5mb4.msg.corp.akamai.com (172.27.50.221) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.43; Mon, 2 Nov 2026 13:11:20 -0800
+Received: from ustx2ex-exedge3.msg.corp.akamai.com (172.27.50.214) by
+ ustx2ex-exedge4.msg.corp.akamai.com (172.27.50.215) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.43; Mon, 2 Nov 2026 13:11:20 -0800
+Received: from CO1PR07CU001.outbound.protection.outlook.com (72.247.45.132) by
+ ustx2ex-exedge3.msg.corp.akamai.com (172.27.50.214) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.43 via Frontend Transport; Mon, 2 Nov 2026 15:11:20 -0600
+Received: from MN2PR17MB3311.namprd17.prod.outlook.com (2603:10b6:208:136::19)
+ by IA3PR17MB546087.namprd17.prod.outlook.com (2603:10b6:208:60e::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.12; Mon, 2 Nov
- 2026 19:20:51 +0000
-Received: from LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
- ([fe80::f71f:a9f:c4de:687a]) by LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
- ([fe80::f71f:a9f:c4de:687a%5]) with mapi id 15.21.0569.011; Mon, 2 Nov 2026
- 19:20:51 +0000
-Date: Mon, 2 Nov 2026 14:20:47 -0500
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	irogers@google.com, adrian.hunter@intel.com, chjohnst@mail.com, neelx@suse.com, 
-	sean@ashe.io, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH perf-tools-next v12 06/10] perf ftrace: Support display
- of inlined functions in function graph tracer
-Message-ID: <zri4x5jfbpykc7jxdicixkrjdw4f7tui72t7is3mos6cnzbhj5@2wct4vkl7sno>
-References: <20261026025735.546101-1-atomlin@atomlin.com>
- <20261026025735.546101-7-atomlin@atomlin.com>
- <auZ6tj_5-m1MNGDM@z2>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <auZ6tj_5-m1MNGDM@z2>
-X-ClientProxiedBy: YT4PR01CA0403.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:108::17) To LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:163::8)
+ 2026 21:11:19 +0000
+Received: from MN2PR17MB3311.namprd17.prod.outlook.com
+ ([fe80::3af9:49e5:e04:1b1e]) by MN2PR17MB3311.namprd17.prod.outlook.com
+ ([fe80::3af9:49e5:e04:1b1e%6]) with mapi id 15.21.0569.011; Mon, 2 Nov 2026
+ 21:11:19 +0000
+From: "Lefkowitz, Jacob" <jlefkowi@akamai.com>
+To: Ian Rogers <irogers@google.com>, Ravi Bangoria <ravi.bangoria@amd.com>
+CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim
+	<namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark
+	<james.clark@linaro.org>,
+        "linux-perf-users@vger.kernel.org"
+	<linux-perf-users@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "Chaney, Ben" <bchaney@akamai.com>,
+        "Pelland,
+ Matt" <mpelland@akamai.com>
+Subject: Re: [PATCH 0/2] perf jevents: Add IOMMU PTW & device entry metrics
+Thread-Topic: [PATCH 0/2] perf jevents: Add IOMMU PTW & device entry metrics
+Thread-Index: AQHdZ9iUvzKHn7cTZkC+w6l9JTKu1LcU9AUAgAZWzt8=
+Date: Mon, 2 Nov 2026 21:11:18 +0000
+Message-ID: <MN2PR17MB3311B8E5114EAF3B0F25FA76A46A2@MN2PR17MB3311.namprd17.prod.outlook.com>
+References: <20261029-perf-tools-next-v1-0-a75a2b64a15e@akamai.com>
+ <CAP-5=fU=rb5f0X0ArWj3JRZDwrwM2Q341RPG-UJmYX2tUSpUbw@mail.gmail.com>
+In-Reply-To: <CAP-5=fU=rb5f0X0ArWj3JRZDwrwM2Q341RPG-UJmYX2tUSpUbw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=akamai.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN2PR17MB3311:EE_|IA3PR17MB546087:EE_
+x-ms-office365-filtering-correlation-id: 0e0b8faa-26de-41e9-f81f-08df3925d6d1
+x-ld-processed: 514876bd-5965-4b40-b0c8-e336cf72c743,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|23010399003|376014|7416014|261102123227099003|38070700021|261021121427099003|4143699003|56012099006|261009223027099003|261028144727099003|261022105027099003|261026140227099003|261026121527099003|10067099003|22082099003|18002099003|6133799003;
+x-microsoft-antispam-message-info: 2mSqj61oPfdkXmaU2NTgaosWD68N1jkS+dRj7aAdE+kMVsu9a2lNMLyRbuu9+TQRAHEvYwzwjNDzddLdFfiJ/L7Ssb24HbLJQy9fzgNZvHQNLqFBw/8ni/gtr5Joew8Y82am7mY3TQCf/AydWQjw+6bcF4eaWLAUqxHpWWBTtpxHd1m6Ndz8BShHSDkW+i1lVKiYGxZJhdEVBQiehG0427ZIYCpEnCl7dXpnNECmfgBS/H66tuBMhgacQT0jgKsNJQAFG4OR1Dt0cm7NoFrBjVN2itxfrcoUa2hlb/W7VeN6McrIGKcDTnd3kj9161ZIQ/ZWkBaVG4en8qHNrPfPSct/EnyGOfLeeI6rXL6sAAkuuhM9mJYZUrglzo9DIdiAWKDhpq0rnN5LjArCZVlOvg2BH5mpx/WhUd5YVZLkIk3lmvXY+0+mkWhYZeN2KinDTbUYpYX7iKhIotH7xrBTXVx16VevX2q7Ib3PBaYeBm12bfgoDiXzCYlmEXf1sliiV9zJXJhULoyq1FsG2YbEkgfvnv5im1jQaYRZpcYtWCJCYijgFpHcL5LssyWsm/NMkYoFg3DfxVfdoE3ZhDjOuwxXo0bxIScsTJomdrDKaHrQZT651jLPhx/ws2mELPmBQ4h4b9tyu/SBsG+lYzgn6eseyLajcgtuVe750Yxklr0=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR17MB3311.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(376014)(7416014)(261102123227099003)(38070700021)(261021121427099003)(4143699003)(56012099006)(261009223027099003)(261028144727099003)(261022105027099003)(261026140227099003)(261026121527099003)(10067099003)(22082099003)(18002099003)(6133799003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?1nsxxcI90b1pSnl2cnePH9HaSwm3H63SibdSQT3Eicvw+5d901WRxylIfO?=
+ =?iso-8859-1?Q?8kts8CXb/wh7RuRuaoUZ+qDZzgeLgwk4jn92SdOIF2wes0ZnjnvFD3B3NM?=
+ =?iso-8859-1?Q?D68w3/Qy3dcZC9iegs3RI1wb9XZjdysewwnAciy4XZb27Vgx6aYqPVh4J2?=
+ =?iso-8859-1?Q?kJqM3C+N4vtFDg1AwnCARzggVCa4X4MO54heA/wl05uQ0a+6GquDJCYir4?=
+ =?iso-8859-1?Q?jUcwr1Cb49k005kFrmya1E2vP74Rj67AYtgT9G5HOmM7ZTES4JRw/HLKoL?=
+ =?iso-8859-1?Q?Nz6SxxIwC8ULwReVxZnNLZOtl5GEEFu3gUaTo3OQS8mxzWRJax3mzyvFcC?=
+ =?iso-8859-1?Q?xxnq+fXRkP2Yw1y4Zl9NIydVYQe4uIhmqCNJzGOmjphatLlZHg2Q+Wxbqo?=
+ =?iso-8859-1?Q?76Fd7NhYwuNEh6K9LuFJyely41/jGajC1Z08fEZPJmf1sh/9xgPznXqQce?=
+ =?iso-8859-1?Q?AheU6t5oAqjDORwb3WSau9jg9i7BUs68Vzt4frAEIvXl6aQDHaOEO3OVvx?=
+ =?iso-8859-1?Q?4cea7lHTNlA0vEUZO1LOHMUi2pOUIQS6cwissLVyzECjK8l9vtBZKi+eva?=
+ =?iso-8859-1?Q?dP2NP35FOvjMCUvXpqPAsoRMp+nhs9pfxMXnDYFmPoQ/2ud5+hyA4c/qDS?=
+ =?iso-8859-1?Q?7YChQYER0DfyDHIhf/0AITEC+q/edEQtPXx/ApfADkq8WUc5rrUHnw3GYs?=
+ =?iso-8859-1?Q?2hSda1/9p4YKeocNJER3k14osX8blWyjWl6XfZSsEskF4Cf5XEyJB+ZQ0M?=
+ =?iso-8859-1?Q?es2L6fkFNoJR1jjtp163nTNZfem4Hpt9cjRT3lyGJaTgym8B1MxVot8O1l?=
+ =?iso-8859-1?Q?pNlrNum5ufuOV3jTXKqSiYrfgZg2BTs3gekdR8kzX4dmO7nJWWFDC2Y+22?=
+ =?iso-8859-1?Q?gTNwwzzUJQP1sqvyqG5ppbOIXI5qQkoOfrHxdnKPJSC8GynRnOresrxm0p?=
+ =?iso-8859-1?Q?Jpd8l3Apo/9TtdE54EQfO9rqLmYsYM/ufkCOd9brmEONTtvPCA934PnNdK?=
+ =?iso-8859-1?Q?Ry9nfYkXGqicY6u2bGbPxbR/5jHaIksJAfhOJ5UsnpN78YTtLcxJvKQm2Z?=
+ =?iso-8859-1?Q?oRC2vidT6nwyXPmTott6JPJXoJi4TQu2sKQdme+pbiVGwUjxOyaW+ziajc?=
+ =?iso-8859-1?Q?p96SzMC0A+qxcT43md0lLQa2lpGPkGip2ucDSkTOERErccW/IwuBDBqiiB?=
+ =?iso-8859-1?Q?KkmHGeZRQ4Wna04THO+NDWG1zz8mOhFPimjENyiLWtsZXuwMwWui1MHOxm?=
+ =?iso-8859-1?Q?mq80NEF3SUaGbudcj4knhV1eilIQP6dUsaYTw+owyjgL/bpj2vAjQmz9bQ?=
+ =?iso-8859-1?Q?vu4qJlzOoLzO7rWqYovCLrk0Obzz68uA+MucPcZNLG71Hz8JzUyUnBsNwd?=
+ =?iso-8859-1?Q?ZjrrmQiqSgQVjKGkzZOu4463JLEEIme+vf2TxLfIcjVQDjuT0DnnRB9DBp?=
+ =?iso-8859-1?Q?+P9ugAGsu5lCypG3X4k4bUAjfTK9b+M3z4xA6aBm1m6sbUAIYLwISj7gHm?=
+ =?iso-8859-1?Q?lKupI9v+RBLOPcQbwBBIQlJX7ufueyG85ihYdR5rLI2TRHd7WE5gIYNNgh?=
+ =?iso-8859-1?Q?F+UY8PvH6mlkGWPTM2M0LKYQjovnsu/I5MRi7Eierig61ViXGN+eVM1CtP?=
+ =?iso-8859-1?Q?NyThQPBdUwdLwl0h2B7aAGBm+L0EJrx2lltyrBlNx5Q6ij07WxFUAWQOrW?=
+ =?iso-8859-1?Q?4TsdrHreHOr0tiU5wVcFgR1fLuRqqFlW3En4h0KzhOfggfQC5i3StfcC6u?=
+ =?iso-8859-1?Q?tLMrsM9wtllt3KEoH/IOSeup/3Wgnp1cSq768Fi/XzMs3l?=
+arc-seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=firl4/yboVm3bhKq1ISO9Yoyb2szo0/S9L3WoUgasjSTgTUjV0ajVnLlETRKOp2C0X+ic0S+mz0lIX0zXMdi7XEabOk9ve16AY+lRfiLPRVDstIx1EkkAxkI163zPfCXdpspL2Eq9cFGEAofGjx4ZtzFL8T1TLakluZatOUmrcHgMxiS5tJXD1cWkH7+egKrqaZ2ZnKFM0FXRW4VlPnAG7ZxsI5INPWZDAM4M/hf5sl08RXK3bCgk1JjWh8oY9+CMkZnvf8VvV5kID3rlKB+Vt0awvwwtqO328wewmreYGNebIecMMEm+WlZWYS5NLLfmiiVmbeBKtMvaomIS+wbWw==
+arc-message-signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=K6E7SvqtPUMs3YDGafmSZoj9nrU7ilECkt33ehhv+yk=;
+ b=AE+eoU7tpFuQO33GdQ8ARoQU6snC9ldzRudwKIBzIOx6qgUa9qaJzIMam/uLgBQTW5TJ3fLnkYtcH+LYjEN/ySW3bKymHzYbQfGeckBmzPBGFYOhV0n0sRx+M7ewLRIcEloiIj/DmAvGF92OYV0w39m0VDcKBNPien+dPHerje/cj9Bm7gGsBGLokiW+gREGEz+Q0laVMQQ0t3XiEpWjG/HSRNAJK0OJCJegHFqet+4F2i3AcENLNjUA5Wf2z0Pt187Lhd/aBoQRAtcllJdAk5Mylikqs5RuX3sgA4tfwLXrKrq/tPwTLNvN5S8eE6HsXVlqaBOiRGaYSGjgL0fgGw==
+arc-authentication-results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=akamai.com; dmarc=pass action=none header.from=akamai.com;
+ dkim=pass header.d=akamai.com; arc=none
+x-exchange-routingpolicychecked: bgST4xJZLsGYAdI77YNXuXa2lrSzdkIlxGk1P+2Pt8k3eJauqkg67tQZyVIaZx+s0UQUKBr050SsMLTyzmWeWDnZx3uXFCpKA4YBv+S1JngUex+9j5UWZb3Wae6pNG71iHhLM/6u1EoNht72lvxSZQJzZkBByp0Imhz9bpWwVZo3t8tJjnxrwcQ6W5/zq+7T/F7Bn41xImMezYzewMSuekeQVKIptM4aWX6uymWBR8vK6pxHzCSog0l2L545++bC5DofMzPRIzXWHR/cbDiciQfIF02SjYbsXzuyJvcmhENvuB6iiPKK4Z/DdvGEOya83MYMbsaisf/FNTjKGXynsg==
+x-ms-exchange-crosstenant-authas: Internal
+x-ms-exchange-crosstenant-authsource: MN2PR17MB3311.namprd17.prod.outlook.com
+x-ms-exchange-crosstenant-network-message-id: 0e0b8faa-26de-41e9-f81f-08df3925d6d1
+x-ms-exchange-crosstenant-originalarrivaltime: 02 Nov 2026 21:11:19.0059 (UTC)
+x-ms-exchange-crosstenant-fromentityheader: Hosted
+x-ms-exchange-crosstenant-id: 514876bd-5965-4b40-b0c8-e336cf72c743
+x-ms-exchange-crosstenant-mailboxtype: HOSTED
+x-ms-exchange-crosstenant-userprincipalname: O+xL8iTqpP+pCJ9MukPpSE1DAlGhXhzT+Yoz1bwyzdRbcuo1zadFo800bKSLwUulvkCiwZd7+EHoCOyc0oZn+Q==
+x-ms-exchange-transport-crosstenantheadersstamped: IA3PR17MB546087
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -92,237 +203,63 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LO2P123MB4190:EE_|LOAP123MB8880:EE_
-X-MS-Office365-Filtering-Correlation-Id: 25dd157b-fecc-425e-c076-08df39166814
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|23010399003|376014|7416014|4143699003|56012099006|261009223027099003|261028144727099003|261022115727099003|261022075727099003|261026140227099003|261021121427099003|261026121527099003|261022105027099003|10067099003|22082099003|18002099003|261102123227099003|6133799003|3023799007;
-X-Microsoft-Antispam-Message-Info:
-	fXPO7C5L8MT+LqsfwskeTkhrVA3EFJQxbx2FJihpoqiKv5sTm+e4aFV570lKBamjQreQa2TdHIdpQiZCsh1CQFC/jQCrHWFCF4IOZCOpRoAPUypjBG6A/+oMh1KFJDgV1hAX9wLcDUefLbF0c/2hoRJH27ECyP+LgZ4VVNd3oLlhytvsjeWOYnGmn9+sXv9n1WmOOdJooy6c/ifg+ltYpCXZxrz5nmViTf1Q17m6w+ctMQmyF7DDG4V/FtTowV8unwG6NvFxRCRlcjzOxtULnda8afYQvzRs2cQ0lHlK/CKB6KnOXWRrL2Wf4tmF3KdNAEAkmChz20k5SwyBzPjJeWzrNzobOjCdNMBok/JBBPimQFaOEUkRsTN77bX1EOfKQBpK1v0/QEh3sRX0u6niVTGGl87qxlV3ux7QKDKNWIl3RTUc2+RQTJKpZDxx+nBZDlkFzztE+/dtCcc90A9Kb1Wz1q1X6zdKduPkFG0nhGFt1kctxfmGsme1kDbDF82qykhTdYF4XyzAMcfvBaXo+xOU711VROFqrLBR6I6Jssw/ImxAffigUpaYBQKDg57Qqhi3hpogsnV2N3zLOFrdNHYKhwUe34OBZXVMfmkUGp+TjFyQABKNWWASxO8lse97REBAikHIwSTygR55FXnOiRwqWX84nc8pf0D4brGMHW0=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(376014)(7416014)(4143699003)(56012099006)(261009223027099003)(261028144727099003)(261022115727099003)(261022075727099003)(261026140227099003)(261021121427099003)(261026121527099003)(261022105027099003)(10067099003)(22082099003)(18002099003)(261102123227099003)(6133799003)(3023799007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aXVDYmIzeWpQV1JOTTFlRHRkWHRnalAvcWdYNENRb3ZtWCt0dlVYcnRHOHN5?=
- =?utf-8?B?YWxvS3FOMFRGaHQxbWFjTEpWd3ZTZWNrTFdhL2RHaXpEcWpPMGw4NWxWNjFX?=
- =?utf-8?B?ZW9wMStyY1ErNlJKNXoxQ3hvaXVTMjF3WVJ6c1BmdlpUUjg1a1FKaEhYbEZu?=
- =?utf-8?B?SFJRa1VObEdkMEg0S3Jqck1NT3NWSGc3UnRzY1poWFhSWkNMWkNnTnlhcjBt?=
- =?utf-8?B?c2k0cUJ6Y242SExkNlVpOHFOYTVBb1ZGSkgzbjZVKzFZaFpLbHp0VHJ5cEc3?=
- =?utf-8?B?QTJZeDdPMWV5RllqQ1Vjb1dRL084QTVTWi9KeDk1VlgybDJqRnVoZWdrd3NU?=
- =?utf-8?B?QUtLRHRSM0NqRExRWHZBVmd6RnZ6VlJ3QnZsUnFWU1FtaEJzUksvTVJLWEZj?=
- =?utf-8?B?a2VaNzd2aEo2UkRXL3VNd1ZKSEd3MjZERnBVV2RPT1grZjNXcXpiR0NPcW9E?=
- =?utf-8?B?STc0SkZWSWhJWGZGWk9PU2tkbDJkeWhGS1RTMjNCeFZxOEh4K3J1ZUlGemxm?=
- =?utf-8?B?RkxaVDNQbWg0SWR5M0kvM04vdlI2Qkh3US8yWUQyR3RuekM4RTZXczBYVTNC?=
- =?utf-8?B?aUhZT2xMMEg4aTh3NWNUYlFrQ253a2dmRWxpbG9RNmliclBtMzVyOGYyRnQ5?=
- =?utf-8?B?ZXFwYW9CUHFZekdLbDNSaHBvSHdvQ01lc2JHQktlVDRFUXRFMSt5NU1KM1VE?=
- =?utf-8?B?VWFSL0NXcTBNcXdUV2paYVZHb2duUGVheHdyVjZQbGsyZVhqT0t6Zm1QTEZ1?=
- =?utf-8?B?bCtGUzBqN0VRQTY0WU9JNVp5N0xyZG1wL2xxWXc1ODMrclpMQUpVU0pqOVZH?=
- =?utf-8?B?Y0hUQ1JZZVhSVWREUGtCZGNPcytnQkJNaG5OdG5jZFdYaW5EQ2srdDEyZ1JX?=
- =?utf-8?B?Uy9GV1N0UzU0THpVQjE2akpwZHV0MVQ4WmNJbzV5RnFZVGtoY2FUdUlhcGIz?=
- =?utf-8?B?V2ZQZFRRTHJEdk9LV1RkL0tBekJ3MnBkelpPWWlyOUJ1dDVkQk0zUmNpTGZM?=
- =?utf-8?B?bDBVclpjajJyQkZvazRXZ1ZQYmJIQml3U0tQTTlaSTlEbVZuWFd0VVYrOGt4?=
- =?utf-8?B?ZWdqV1pVSk5mdFB1R293STQxMWRMR01vTGJLYnVDVXo5bDhlV25UczlLNUZM?=
- =?utf-8?B?ZnM1dG1TbTUzc0U3czBKZUJ4OFFwWGFpTEQ4WkRVV0Z4YkkvMzBxQ0x6cjNP?=
- =?utf-8?B?ZERUdlhQU2JWNVNIaHRVVDZCcldRcUZDTVNLWTcySGhXQmtHTUNCSWR4Wit4?=
- =?utf-8?B?SkRJR3JiWWY0KzB1THFwV0NOSXYvK25DYys5TkRvQjBmZEJqbnN5N0YzQjFE?=
- =?utf-8?B?Q3FrSmpqQU9TNUxUdjBmNWFFU3VtdklGYmtYUWlZdW9nUHI4aW5WODhWQWtO?=
- =?utf-8?B?eGhiRURGdVJGSGd6ZFJqS1pOODF4WWhCa204WXQxRHVlTm5rMnR1MTFiSWhG?=
- =?utf-8?B?RGY3aW9RS1FTeERwWlZ4eGxIWE1ldExKYW5zbDFVdDFOSHg2cG5ZczdJNUls?=
- =?utf-8?B?aWh3Z0J5N0F6NDMxSEpmSmY0anVQbnRGNVh2RjI3MjZPaG5TSEUrcXIxTE41?=
- =?utf-8?B?d2V1WmJLNXNGZ0d6TmFXVWhoTEl5VXJCa1V5YzNVZlVOMENrTmxVY0pxT0Mr?=
- =?utf-8?B?NjVOVThUTloxeVc1cnhTZUdjaHNBbjEyRzFURGh5dnkwcmRmblZYVG92eDZO?=
- =?utf-8?B?bE1sZ2dmUUkwMXh5eUdnQWRaaTZrZnFpMDdyb01aMks2MEVDaW5YZXVaNzU1?=
- =?utf-8?B?SWRXelNFUUhuT1VMZ0lZWWp6bTd2V2ZBdUtIcDA3c2trRzN0NW1LQ3NXM2xo?=
- =?utf-8?B?cURpb2dpSGFTamVZSzhxWGU0UmlRNENFaktmT3JDR0J1Z3Y5eHZTejUzTUdy?=
- =?utf-8?B?VjQyNGdjdlpwY2EvNGRzdlA4NENtbjR4MG9PQmdIUG1HVmhObE4yK3EydUpu?=
- =?utf-8?B?OWhNclZoaVE0Q1QwZHZ0ei8zbmc2cENtd0Y4ei81S1IvTGJkemFFNmcxRXNS?=
- =?utf-8?B?eGxkRTB4dDZ4QWNJVFdDVHo3ZWJRYlZTWXh0d0IrRFZpVnNPYW9QR3BLY3FK?=
- =?utf-8?B?dHVQR0RJQ1FOU2ZPTHFhMGpGMTU1N21DSmZ4dXF4US8rTkpzTmx1SGJWajdE?=
- =?utf-8?B?R3E3cUx5MTNVcjMwR3hiV2JqQ2dHL2k4R1Q3T2dUaEo0Q3liVzJ6ek9SWURj?=
- =?utf-8?B?Y09XaTREcm1JSWUvNmVpQ3Baem1YS2wrTkZ5YWdpMENhQmRhNWtrQTUzS1FE?=
- =?utf-8?B?YTFwSFhxcDFxcEVEaG02OVZnOU8yMnRzMGxkZ3lpR0h0TU9MeXRkOXJmVHBB?=
- =?utf-8?B?RzNRUnJrcWJYQjE1K01UVVBUSVppOUF4eHA1WkFVcUxScXNEUXFTZz09?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 25dd157b-fecc-425e-c076-08df39166814
-X-MS-Exchange-CrossTenant-AuthSource: LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2026 19:20:51.0647
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kgvT/xjswJDZcww08h7G3IHe9iImHCjlaKFqLuToHDSXZXY6vNaiGCTTrc6v3HBJlBxFSNvKwE/E9GBcseCITQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOAP123MB8880
+X-OriginatorOrg: akamai.com
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-11-02_06,2026-11-02_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0
+ lowpriorityscore=0 spamscore=0 malwarescore=0 adultscore=0 phishscore=0
+ bulkscore=0 suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2610300000
+ definitions=main-2611020083
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTAyMDA4NCBTYWx0ZWRfX+qb+ymp0AiJ1
+ +3yCTnlkq+hEHoVYhUU9uhtx6dMFtSFbNdIB/eyeXVcAJ9Tog1CXp/cGa7GNDG1y7gPJxSxqI8e
+ Jgaqk58LqEqzcAvMQJSLyYZgtPQTsZc=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTAyMDA4NCBTYWx0ZWRfX49+HvEf+Wk0R
+ Oi7mqCXi9xfHGxG/MEYaPyI+0gs79bWHf44xvBNPXl2k9dTPYd3kp3/RB0DWrVqNeG8VOUykwyG
+ zXzNA/+9pWOOZ5pkmeb7UIp6vJ1EeifQTUW30pBnuE1NqfMgW2kXptlanbdeLGhObbXqU74czPz
+ s4IJ0PiWvWHwXLOov8xN2Kfy5qGxkGqhniaMB+Vc6PiO4e142ZsOhfCpn1UlifkI8lAhBCD7Gud
+ 7vyXGPca27T4lbw6BOiYWRsYHVAi+HkE5sySslj3ZrLd0tN2UfTxpSwNzy/B1Oi4b0UXz/t2GEJ
+ ZSxwctC4gycAf4Ec7GQgdqljJ8gV83xCG0WfdIQ6dc9cVzLStlzsKCPAwjbnl9VneUvoEdHS5r8
+ dRrrIAO3d7Vj3TGHFtBGtmpO8HbEOH3edvoZjRW4A04utUWLiwyxK1cVZgXUbMMau5AvfMuG795
+ uRdgs246CVgB6fwO0UA==
+X-Proofpoint-ORIG-GUID: -o9H0NdFSDkqcf97kXkjkWzoea0K2n-X
+X-Authority-Analysis: v=2.4 cv=ZJ1CCn7b c=1 sm=1 tr=0 ts=6ae8fc7a cx=c_pps
+ a=3lD5tZmBJQAvN++OlPJl4w==:117 a=3lD5tZmBJQAvN++OlPJl4w==:17
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=8nJEP1OIZ-IA:10
+ a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=Ifg-1AOnLHOf1gn6spyb:22
+ a=5uIk5skAYop0meUMGpPt:22 a=VwQbUJbxAAAA:8 a=n-XPC6oxVOClqLEJTiIA:9
+ a=wPNLvfGTeEIA:10
+X-Proofpoint-GUID: -o9H0NdFSDkqcf97kXkjkWzoea0K2n-X
+X-Proofpoint-Virus-Version: vendor=nai engine=6900 definitions=11954
+ signatures=596817
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0
+ impostorscore=0 malwarescore=0 clxscore=1011 bulkscore=0 suspectscore=0
+ spamscore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2610300000 definitions=main-2611020084
 
-> > +/**
-> > + * ftrace_resolve_inlines - Resolve inlined functions for a return address
-> > + * @machine: Perf machine context
-> > + * @sym_name: Name of the caller function
-> > + * @offset: Instruction offset within the caller function
-> > + * @inlined_names: Array to store the resolved inline function names
-> > + * @max_inlines: Maximum number of inline frames to resolve
-> > + *
-> > + * Use DWARF debug information from the kernel image to resolve a caller's
-> > + * return address to its inlined callchain.
-> > + *
-> > + * Return: The number of inline functions successfully resolved.
-> > + */
-> > +int ftrace_resolve_inlines(struct machine *machine,
-> > +			   const char *sym_name, u64 offset,
-> > +			   const char **inlined_names, int max_inlines)
-> 
-> Why not remove 'const' from the inlined_names?
-> 
-> > +{
-> > +	struct map *map = NULL;
-> > +	struct symbol *sym;
-> > +	struct dso *dso;
-> > +	struct inline_node *node;
-> > +	struct inline_list *ilist;
-> > +	u64 ip, addr;
-> > +	int count = 0;
-> > +	int j;
-> > +
-> > +	if (!machine || !offset)
-> > +		return 0;
-> > +
-> > +	sym = machine__find_kernel_symbol_by_name(machine, sym_name, &map);
-> > +	if (!sym || !map)
-> > +		return 0;
-> > +
-> > +	dso = map__dso(map);
-> > +	if (!dso) {
-> > +		map__put(map);
-> > +		return 0;
-> > +	}
-> > +
-> > +	ip = sym->start + offset - 1;
-> > +	addr = map__rip_2objdump(map, ip);
-> > +
-> > +	node = inlines__tree_find(dso__inlined_nodes(dso), addr);
-> > +	if (!node) {
-> > +		node = dso__parse_addr_inlines(dso, addr, sym);
-> > +		if (node)
-> > +			inlines__tree_insert(dso__inlined_nodes(dso), node);
-> > +	}
-> > +
-> > +	if (!node) {
-> > +		map__put(map);
-> > +		return 0;
-> > +	}
-> > +
-> > +	list_for_each_entry_reverse(ilist, &node->val, list) {
-> > +		if (ilist->symbol && symbol__inlined(ilist->symbol)) {
-> > +			if (count < max_inlines) {
-> 
-> You can reduce the indentation by inverting the condition.
-> 
-> 
-> > +				char *name = strdup(ilist->symbol->name);
-> 
-> Why not just save the pointer?  You may not use some of them, also it
-> copies the string again when it's added to the stack.  It'd make the
-> error handling a bit easier.
+On 10/29/26 16:12, Ian Rogers wrote:
+>On Thu, Oct 29, 2026 at 12:06 PM Jacob Lefkowitz via B4 Relay
+< >devnull+jlefkowi.akamai.com@kernel.org> wrote:
+>> They have been tested with a benchmark C program that
+>> purposefully thrashed the TLB as well as with 'sleep 10'; both of
+>> which work as expected.
+>
+>Cool, perhaps consider contributing them as test workloads:
+>https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools next.g=
+it/tree/tools/perf/tests/workloads
 
-Since the inline_node is cached in the DSO's inlined_nodes tree for the
-lifetime of ftrace->machine, we can store ilist->symbol->name directly in
-inlined_names without strdup() and without freeing each entry in the
-caller. I will also invert the condition in the loop to flatten the
-indentation.
+Thanks for the suggestion! After reviewing the workload I wrote, I
+realized it thrashes the CPU TLB rather than the IOMMU TLB, since it
+doesn't perform any device-side DMA, so it doesn't actually exercise
+these metrics in the way I thought it did.
 
-> > +		cs->stack[cs->depth].inlined = true;
-> > +		cs->stack[cs->depth].indent = entry_indent;
-> > +		cs->stack[cs->depth].raw_indent = -1;
-> 
-> I'm curious if it's possible to get rid of the indent and raw_indent.
-> I think you can get the indent from the depth easily.  The raw indent
-> would be from any non-inlined parent if needed.  Also having inlined
-> depth in the cs/ts seems unnecessary.  What do you think?
+For now, I will leave this series as is. Down the line I may write a worklo=
+ad that
+thrashes the IOMMU TLB (likely implementing fio-like functionality in C) so=
+ perf
+has a proper IOMMU workload; if I do, I'll send it as a separate patch.
 
-We still need to record the trace line's indentation rather than deriving
-it purely from ts->depth * 2 because tracing can start mid-callchain (or
-after ring-buffer drops), where ts->depth == 0 has a non-zero kernel
-indentation (e.g. 6 or 8 spaces), and bare "}" exits must be matched
-against that kernel indentation.
-
-However, we do not need both indent and raw_indent on struct
-ftrace_stack_frame, nor do we need inlined_depth in struct
-ftrace_task_state:
-
-    1.  In struct ftrace_stack_frame, indent was only used for inlined
-        frames and raw_indent was only used for non-inlined frames, so they
-        can be consolidated into a single indent field.
-
-    2.  In struct ftrace_task_state, inlined_depth can be dropped
-        altogether and computed from the active inlined frames on ts->stack
-        when needed.
-
-I will simplify both structures accordingly.
-
-> > +#define FTRACE_MAX_INLINES 32
-> 
-> Isn't 32 too big?  I guess 8 would be enough..
-
-No, 8 is not enough in practice. I will prefer to keep 32.
-For instance, after a -O2 kernel build:
-
-❯ addr2line -f -i -e vmlinux 0xffffffff816916e9
-      __do_trace_rss_stat
-      include/trace/events/kmem.h:427 (discriminator 20)
-      trace_rss_stat
-      include/trace/events/kmem.h:427 (discriminator 20)
-      mm_trace_rss_stat
-      mm/memory.c:169 (discriminator 20)
-      add_mm_counter
-      include/linux/mm.h:3469 (discriminator 20)
-      add_mm_rss_vec
-      mm/memory.c:492 (discriminator 20)
-      zap_pte_range
-      mm/memory.c:2087 (discriminator 20)
-      zap_pmd_range
-      mm/memory.c:2151 (discriminator 20)
-      zap_pud_range
-      mm/memory.c:2179 (discriminator 20)
-      zap_p4d_range
-      mm/memory.c:2200 (discriminator 20)
-      __zap_vma_range
-      mm/memory.c:2240 (discriminator 20)
-
-Another example:
-
-❯ addr2line -f -i -e vmlinux 0xffffffff821c34af
-      constant_test_bit
-      arch/x86/include/asm/bitops.h:202
-      arch_test_bit
-      arch/x86/include/asm/bitops.h:232
-      _test_bit
-      include/asm-generic/bitops/instrumented-non-atomic.h:142
-      test_ti_thread_flag
-      include/linux/thread_info.h:133
-      test_tsk_thread_flag
-      include/linux/sched.h:2102
-      task_sigpending
-      include/linux/sched/signal.h:384
-      fatal_signal_pending
-      include/linux/sched/signal.h:406
-      ptrace_report_syscall
-      include/linux/ptrace.h:427
-      ptrace_report_syscall_exit
-      include/linux/ptrace.h:477
-      arch_ptrace_report_syscall_exit
-      include/linux/entry-common.h:233
-      syscall_exit_work
-      include/linux/entry-common.h:266
-      syscall_exit_to_user_mode_work
-      include/linux/entry-common.h:297
-      syscall_exit_to_user_mode
-      include/linux/entry-common.h:334
-      do_syscall_64
-      arch/x86/entry/syscall_64.c:89
-
-
-Kind regards,
--- 
-Aaron Tomlin
+Thanks,
+Jacob
