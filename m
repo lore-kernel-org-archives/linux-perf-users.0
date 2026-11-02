@@ -1,13 +1,13 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.195.96
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.195.129
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793655693;
-	b=xs+i4wMnZqfuMX7Bx4776U3YhpZuG8aR/Oms1xPLcyB1hOVwiVW0rf1yWgzuE3wUVrJU
-	 XHw7CNHAmcJIQtR3y9vE1cvulu6m2HrHa1FC8ymTPHrTztgwRfgvSFXWUGBz7XEYmdNzp
-	 j2q/9QOw9xmf+UWYS7rFcJEBWW3d3VRP4SNt6ss5qspKlgqLkQflQXnVVh08qBA6WxvjB
-	 WxMdbWZ2ecLAel3CVgnirGZEBz0PAwxhxXWLPbDPI9tlLubXXoIB0K5VFgnkSOUxHAeM8
-	 DkGBzA2XFA7uDlZDw93ngbreCpEoXnxtxVSrJ5KiVPbU6i0U1H2cT86UPvKSouWRaag==
+	t=1793655701;
+	b=bbEscHN/jR1/3bGqyuCYgIN8qvAB2XKjWvfF9zqdLotzjTl8ekz+TIAtoui9H8PC4ZLK
+	 8TqECJGDK85nDf5JMz+bfBq6sNT3cfYt1O6MqwZ9UNprhh1SRxJjNrjYMAAxRjR2JsfSn
+	 ZWTZ/vkgxSVmRiBsOZYt4FkX9tKmw8/hI2bKdlCkTRtZj8K/YiOASepz2KOaYEhjoLXS9
+	 OEmJ2ntJLF6MoFxlLicqefJvnwJLlvzz2dYLsFc35zxTEA3tAO8RthTnMUwC88YFxyLhU
+	 TwnjKg4K0OdHl5DWbFFsprkTiMxQsiHmvmqlDfySj+9odgGEGc9lHy6j89GGcxs35aQ==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793655693;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793655701;
 	h=DMARC-Filter:Received:Received:From:To:Cc:Subject:Date:Message-ID:
 	 X-Mailer:In-Reply-To:References:Content-Transfer-Encoding:
 	 Content-Type:X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
@@ -24,45 +24,45 @@ ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
 	 X-MS-Exchange-CrossTenant-UserPrincipalName:
 	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=UAVFi7ro4xQ+Ly5fHcgFvb6qTYUE+HPBris3NHn6RZI=;
-	b=P2pXFDTdH8l6WB+eueW8cFrGlJtvhdTjX0sbyyN1F6YIpgsAYVE48hBXHE48YWSddEPZ
-	 RTjm7NuVzaiIp/Pk5SNgidM1oW5JvHZ2PdQS6uCmwNs87DYhQ7T62smvNdLO8uJ3s1l0o
-	 GK6yzXm/mtq0jEODTf12eJo5RtrvJQuFgZ0u3HCmP1HMbhr+45qA3SWG72L0IeGedsZHZ
-	 l+fqLlUzNu0lwAxwALMdADqG1FhfQKCZiZtM0HyIXc72d4Vey2Kisapgjtfw+mqaoGTJr
-	 /IZCHltEvAmEMboNhvj/fa4o2sluml9NB18gw0mgvcnpVUUHNvEHFPb7xW0KvOkqTfw==
+	bh=dEepGyW6c/ClehA/I6Tr3sO+aD+xn2Ck43kRqpoGkvM=;
+	b=HNv/bTgs92ewmtIURnw6QPcwnSxTuH3gKx/h+VE6Db307vOF0f0MBawD/q3SwLXyDk0Q
+	 ekEu0S+vLFkeP0No2GEtQx3V1mmfQsd0mrfPwHHW/cIqNE/Dsv8ehMzDhy7u1Gn+nXf73
+	 98UBUKl9yfM+nnvI2nQt+8oplsQC2z/I1kS09974wOIRcdXLSrl7xmyDHFdg03ZwPVPtP
+	 /SyRdj+9Avh/ynBZ1g6VJAU7zGAHRDJk4Lu1Ro7+D6VCqzHudkzEIFPKdN8uyqgr3y3lL
+	 HS1YUjuqe91VDqhODYGfax4gCvMcpWjDnzBe1TfAqtlwx4XbysHeCrtfJj+tkve8lMg==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=none header.from=atomlin.com;
 	spf=pass smtp.mailfrom=atomlin.com;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.195.96
-Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazon11020096.outbound.protection.outlook.com [52.101.195.96])
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.195.129
+Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazon11020129.outbound.protection.outlook.com [52.101.195.129])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 548A5606A332;
-	Mon,  2 Nov 2026 21:41:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 548A5606A332
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92007606D81D;
+	Mon,  2 Nov 2026 21:41:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 92007606D81D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gcNMcPYy6ZtaVwbB4vob8FnDfSliQfAetU9b3bj6jI9gMIacPkmtNEwmPrXbOiJi2URUc8EJ11LJDKO3FbWxSbRcfsD1H+xm5yj5uLzrQep39CF3bbbeFM1aMSREqL26MyKZ2xR/M0dG6k/TLpj/xsr3uTpo4X35rPi3FeU7o31F9T5vPUqArPXqDDtibhKN/ZbiNNGEEfhQfrtn5vlf8vp2byTHhAe2K02oK4ZjU7ilUvutvf+Al7tSv0QTGlgjcEORmTTGSmRw/FUVsqI7vnPYVp0DYh6WKuU+xUBb0/M6lWJgD05mQFgxjlJIw9XblOQCBHD/eu1ZeMRMd093pw==
+ b=OzezGvbcH8sqFZoXAQ+Qt4eXzZPk76s2gmpm0Pnwc1Xo3lTSy/Y7VHQTVrjdLNyBLXuU2sYletKnfK3/7hpF8Q7L4ws+njXJs2QDapCfylr1UjJjgR3svw3YQPDSjuLoCNd5grhR9grSkHO+uzT+TqYWsLcUXOiCZaB3QNOMVsilraJmNHMZZqfSvjy9WcfdOf34xDZQbZdDkTq6s5d8dp0pnpWsUWzComSVRijtYjLsNwfrtze0f5KDcX5pQXA5E7zVQLepP1RlNYhHCjDPqHHcAHuefaX3mYCC2Yxcfz+TCulMIxnS6jSOdUhjtlBH/mZa+CXQp91Fe7l/BPxc4Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=UAVFi7ro4xQ+Ly5fHcgFvb6qTYUE+HPBris3NHn6RZI=;
- b=m6DrCIH9dJnBv2nnC4vepLr4UHnfeeYhA0axdCuQTy857a8p0rKgtgAKJqtrGguWcaCSclmiLZwvXqB7y7TLjh7sxHQb0WAAiCqkD2R3W0e8OWaL1ahFvYjWTtosjQK6OctQSRuHwruAzYx069/vnbLm/ECsLuRQBGkEdMiDm93AQFMN5y+m1/xNlw/N3V3PWO6yBLjC5Y9tVsADjO0qESLAK+8mpF6GJGV/GIjTOFEOomiVFY7wGe97F5wcdKqYzpPU2fxQv6Rh14be77Heq29K/RkUaISkOA6sN9ft549gLBKJq1vdvqGwiIqlG4atjfFxNs2GGD7+zXbCBWze0g==
+ bh=dEepGyW6c/ClehA/I6Tr3sO+aD+xn2Ck43kRqpoGkvM=;
+ b=XHp1jly7TfsPrIY/zEYa0vh5c6yZwbco5n8pI2bBzjXsJ4UK+Og3juuEhTybVVoFSDkb0GV1ohGFcpjEJkMULKv0F2gYo8pB8De6uYee0T8bwzHMqdm10bjDVeqX/NmcN5iDUWmzLpSav1FR+QqO6M8mMZjLL5FlqgwZcvjEabM5lzWTkABUUK2XokzGTv50VrTsf1MmESV4ISUlP5cjCxtakazJpv4xZLd9Dikl2nNR7DXrbpgWdpWv72DvnCzUZmVTdQtWYS0z+fibw4ekgmiaPh5nKFsA9qHhW0LdIlNMu8VtEBFnS/NRo2d1iemO7lEZSGcygLrG/ZAJNsUPXQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
  dkim=pass header.d=atomlin.com; arc=none
 Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=atomlin.com;
 Received: from LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:163::8)
- by CWLP123MB6106.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:1c6::10) with
+ by LOAP123MB8322.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:43a::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.12; Mon, 2 Nov
- 2026 21:41:30 +0000
+ 2026 21:41:37 +0000
 Received: from LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
  ([fe80::f71f:a9f:c4de:687a]) by LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
  ([fe80::f71f:a9f:c4de:687a%5]) with mapi id 15.21.0569.011; Mon, 2 Nov 2026
- 21:41:29 +0000
+ 21:41:37 +0000
 From: Aaron Tomlin <atomlin@atomlin.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -79,16 +79,16 @@ Cc: mark.rutland@arm.com,
 	sean@ashe.io,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH perf-tools-next v13 07/10] perf symbol: Introduce vmlinux_path__find() helper
-Date: Mon,  2 Nov 2026 16:40:51 -0500
-Message-ID: <20261102214054.911298-8-atomlin@atomlin.com>
+Subject: [PATCH perf-tools-next v13 09/10] perf ftrace: Support omitting execution duration in function graph tracer
+Date: Mon,  2 Nov 2026 16:40:53 -0500
+Message-ID: <20261102214054.911298-10-atomlin@atomlin.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20261102214054.911298-1-atomlin@atomlin.com>
 References: <20261102214054.911298-1-atomlin@atomlin.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: YQZPR01CA0154.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:8c::13) To LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
+X-ClientProxiedBy: YQBPR0101CA0269.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:68::19) To LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:600:163::8)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -100,163 +100,411 @@ List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LO2P123MB4190:EE_|CWLP123MB6106:EE_
-X-MS-Office365-Filtering-Correlation-Id: d9c96900-05eb-423a-43ff-08df392a0e06
+X-MS-TrafficTypeDiagnostic: LO2P123MB4190:EE_|LOAP123MB8322:EE_
+X-MS-Office365-Filtering-Correlation-Id: 37c808a5-3e51-4559-d831-08df392a126d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|7416014|376014|366016|1800799024|261022115727099003|261022105027099003|261021121427099003|261026140227099003|261021123027099003|261028144727099003|261022075727099003|10067099003|261009223027099003|261102123227099003|6133799003|22082099003|18002099003|56012099006;
+	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|23010399003|6133799003|10067099003|261102123227099003|22082099003|18002099003|3023799007|56012099006|261021135927099003|261026130827099003|261021133027099003|261021130227099003|261026135527099003|261021121427099003|261026140227099003|261022075727099003|261022115727099003|261026121527099003|261022113327099003|261022105027099003|261028144727099003|261009223027099003|261021123027099003;
 X-Microsoft-Antispam-Message-Info:
-	QxIGwKevNNNE8WCoJjJCDQ+WtK7QoboylZipBHDdU4nEi/uBdfTge2B970BQMYRddVc62yrBDXcHu7speogeGzCV6ILzebQSB79UsS3nP3YCVQE+fy7wDCWUhGc47Jmtvqqpj30wDpWvn+Mpoi0WKGrijoUK1+wWfUIhppKm7f5TxEsipIqPKefyh/kmQpN3twYAUa1OemTOI4/A2mduz4wgtHf7CDKSFGjukGwKG6eqrW1cmtA9W6j/GnKrYNJBRDp/DMTPhfPdLs5UgWnIt0Jv9UXDa8n/6kcbDNaKVCu5aKEMyRdtIX/k9R34olAc/lfs/ZPBTDg35xbuPMJ8JHAPPGVpg8OUD/WbmfVfKJAU/SIvbi45hy+WZL4NhLMli10idMg54oGok7eilJPu0GwBwDlMTjVQZetqwrDslIdmd/nCRHoJpTFosbQHGcFuHEz3pMemIibF0eMs3HCNBQL3BfZLhK+o3ei2mtoqbrrPHuFDqdQyu8W0CD8EvDLooXXQB3A3vzLG/rOmWk3AA6x09BitBoCgHOVyuRppeHkAa6ZQ7Zgd/rCKiojxVCvV8fqlqU41rTolSOUNVctpwhEoV7iysNKUwL/wrJpGXkdBXLhjgQ/ia1uw/B32/RD9oAa2dX7qj7QzxPSNLsUEAPUYby1XScnOcEQSD8dPhQc=
+	4ea29NRrD7iu1I7l2WeiiY8resnDKIzKaSQRSMSbfbWnWHPmU3j4uic72Ze2gmVYLP6w0h1lyi704ifvtyTSqIPLbh04+s4a5FV8mLP3H9C/PiRR5Uj63/oz+TpqtYbB0p76nJzDhfgfE8hR06JolC1qf0zXDlJsXuU+nRnKYtmRYTsSkR9OEg9iJdSC0YhPLyL+TVunACj4QLORxaAKULFFf5Ova2g/PLi6yjuaw65OdRXQObYj/g0jaCXl1fnywqBjWGQI7/poNRefGEuFVY6+3y8/WvFINAVCeTjcbp1J3gnaTZi7aV7Yy3WGIdmqkJCUqHXwl0sO6zBRl91YccXbWLZ49VOmNokHZEi/KDKb4M/2HQ2kKRdHejADp5QrjjJWrq8+38gsjyOgq15xrmJncflezK3l6fKp+AJyrm/u2x3p9BQJsMLASG71lWlhveNFMS7wTzb3imx0eEN9TmEn1lWX+0LFcXaFYNJqt9ZhE7enu8b6tbkLG1wlIDhMz5DD3lr4BZPFB3DNDkD+06v+gfT/jJhjVwGE2X0XrDdugzBZ83QRCGPwwNvQGFiOIqtG+idLaMeUE3Th2aITISOCkiHV5IASVEkLGSWhAZ9lEBSiJPA8hHtkwH9HfUVwqkEvNchdjPIOcdM5Nz57DFUny1Kvx00oRPawLVxKlKQ=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(376014)(366016)(1800799024)(261022115727099003)(261022105027099003)(261021121427099003)(261026140227099003)(261021123027099003)(261028144727099003)(261022075727099003)(10067099003)(261009223027099003)(261102123227099003)(6133799003)(22082099003)(18002099003)(56012099006);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(23010399003)(6133799003)(10067099003)(261102123227099003)(22082099003)(18002099003)(3023799007)(56012099006)(261021135927099003)(261026130827099003)(261021133027099003)(261021130227099003)(261026135527099003)(261021121427099003)(261026140227099003)(261022075727099003)(261022115727099003)(261026121527099003)(261022113327099003)(261022105027099003)(261028144727099003)(261009223027099003)(261021123027099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?yXXTlgGDv61IGYUZFGUxhDlgmlsAZGHxJ9o+TZLc6FMbFAgKC+Jk5v27DwGz?=
- =?us-ascii?Q?BiivyO1C7SEBez9pzQE/OuZpfjYAXLZLStUB2TduvVFksvlqsxpNLkna7iGZ?=
- =?us-ascii?Q?B5orRy5h8hZrOCcivVDLeaDF5J16xvxutTFzVL/0EOjHE8dC+8i4rZgVkgNC?=
- =?us-ascii?Q?NebsfQJUytjTdXNc8iNd8NCufzt/3sb5rrAzzGgahfuW3bb5f8u5RTuLUp5B?=
- =?us-ascii?Q?O1uemNUrPpH+AcmM3l6FsgejB08y2ziJEXnW/gAuDlyhU3di3fhtvXC/ZRC6?=
- =?us-ascii?Q?FJYTSzdAb9QUc2Mct5pgv2qAYahg6T1bMaza2qpD8QwMpNEazVWhvP/0N9cA?=
- =?us-ascii?Q?PK3UOB/4Qvm5ejnjIgS+JFt5pio6Nb+8WLNjlU66+EJFMyJ4BU1nCrzXAfjK?=
- =?us-ascii?Q?CjE9iUPaGidG95zQ/6PaVK5rTzI2lqFdN+vVddLRqug/RaK9GoSz3hb0L8mT?=
- =?us-ascii?Q?7VMTnebaye6sZGWdWwblS6ytjrWQxQiEdkxCyuQvYo8MMNtcg4pulkPN6n+i?=
- =?us-ascii?Q?bSGXOy1NtemoqWKTXCtLn3q+Q1r4t+HPGwqxorVTixHuPJ0EQJ6HzFsQ0wu8?=
- =?us-ascii?Q?FZ75UZZecOlOxiG5OqLSKm48LLUbHYX0zcZdg8G6y/c6so9xagyWi5tGnyq+?=
- =?us-ascii?Q?jC+yzm/Et4IGrD4DFvn2/AXf7ZWIqUcnw6Sv1wIqWSotGpyYaGDNCnTlQuzO?=
- =?us-ascii?Q?PvTCbqm7UoHJGOflWcuOs9pztzbXp7X73as/4ejYJAc42Mc97BJITi3qC+vq?=
- =?us-ascii?Q?utu+TqIM+j+hqY2JcfxiJCejo0nDvZVSD2u0YE6fjnYRddvacBJftw77NAz2?=
- =?us-ascii?Q?iwl33QGDcjdASblRQnxIxOWnRtulb2LS46QX3sG8FQHB1edMyMtJZKQAFifL?=
- =?us-ascii?Q?se9m/aAFhS9/TdfbYZqEStHGviGYNBRY8oanXBN8Gjkg4kPtaO4KSc7oTPyE?=
- =?us-ascii?Q?VwA5iGmS2XV81DxGduDhzyLFdS5mX+/y7+dxrvzw1usFb6szE8zkOTMvbGHk?=
- =?us-ascii?Q?MV1UwDQmI4g8fK/3vLcJ6wR+2qcg4Z/HPIMDrj8R9FOPTx9Fks5/d43zxI3L?=
- =?us-ascii?Q?s7mLKNc4mXcDciR9XPBidqFfuL1JTILMfXDFGaCybNw0BHdMXZbE6l5VgAnD?=
- =?us-ascii?Q?Igg3REs/bWjuqYYYvSJqokKPpjraQPRHKAhnML2JZfx4gjBlrWd8tvgApYn3?=
- =?us-ascii?Q?sXWFsZBaJHXS4pQnJwEM2/D2zEGyWWrLVHX26jYMiuNS/gLGwD80kCOf5JXl?=
- =?us-ascii?Q?D5A84YlLuMcCIPlP8PXU7a9U9bJTvLiyhJTLe70Q8ttolxuEKiX88K+seksZ?=
- =?us-ascii?Q?gCEgbICIleyfrhSeQ9KdKBjZdntC3UFNCT48PlDCReb5IS0/eOBfeY3b1qIv?=
- =?us-ascii?Q?ogulZd39IwhY5jnperPoF3BLn/6lwDM8FyZe1SaYtGzTxXhOSjmYeWM5sH5c?=
- =?us-ascii?Q?Q1QPV7k4YhrKHnzDWZfUyjbNoFkddVPk+t0wdF71iU1lxxrgT30v9RBUwzT4?=
- =?us-ascii?Q?gkh/Tly8qgzpc7nBnKakHFp8ybPF4keOsWIw9W02kwgPeqjvScqBkXlkRzTX?=
- =?us-ascii?Q?HWDCoUNYOXrRizkO+DtAAhRLPl/8ZBr1CeHVt1g4YwHy5t1ET65v3UAzQFL9?=
- =?us-ascii?Q?aWC6chMm3A4qs9fW7wwA0OKsrdpQXGO15kwaaJUscvnZlvfZlEHtZylATeio?=
- =?us-ascii?Q?L0ilVexI4crzMDD0n1v2/AkgeeNC4pCZYdolz/BcXI/tRTlWnpDQFeT/c0qx?=
- =?us-ascii?Q?rjzdJXxYMw=3D=3D?=
+	=?us-ascii?Q?e7voDvspOX1EguFPL+QrGZCw3Z8BMkPitUj2aLcPF0niO/Hp5cAm2VcPPVav?=
+ =?us-ascii?Q?ccO/ATy7po8TjV5rZMOILaugFmPrva/jkXKGwJEorHbhPc5p0GwOI3qNcQDj?=
+ =?us-ascii?Q?KNwbXkK5tibuugLgFU9HxphJBLYjFZAcEVjYCBFWYb31go8ksD9nb0tE9Ejf?=
+ =?us-ascii?Q?ArsDpwHvsBvAcApA2mx+m7rYUkpJo9v8deHDTFmRZKZ3GXYNoo7+FoagIo2m?=
+ =?us-ascii?Q?RtNvFtpdOpjQQUSYRZ84LjZ7uE02fG40eh18ft7Htiqt3wc71702dKGWOCuN?=
+ =?us-ascii?Q?ESgVmxnoRuPkBFrjP3rQxGJL6kSt/Mu+q73OhQlGSJO9Gvy0EjckwxWckPFC?=
+ =?us-ascii?Q?O7SQDEV7k0BeABQ1Y0fYtDU3RIAF+EW3riwb+xTq1Tt/FdCwcqpJtMroTalG?=
+ =?us-ascii?Q?nIRfSh3aPd3x4mrFHi+X9mnwz63ezLCVKa6D5f6uEgG/0E9rGkuGOjoAqcl/?=
+ =?us-ascii?Q?AhuHDu0z+syeeV42iyU3TIV3LXp1AtttPj558UU72TF7vwu8acK8jlZHPGGx?=
+ =?us-ascii?Q?bPKZlmslW1daMNm9uckIwEJ1snC7IOQn2m4441x5uUk3emipwVXimc257Yy5?=
+ =?us-ascii?Q?IM7r6wHNp76VwkHfn+j3S0ie8CLt7WoAmECtoNBnDoha/oBJUI2l83zpptr1?=
+ =?us-ascii?Q?4n6ZMmQ2CUGcWH6Qm5lSgVuUxvPVNuPvWuPXzT+SKgzRMJo35VG145oCxMWE?=
+ =?us-ascii?Q?PEPNjYeJqyKcTrb2Lct5L1bZyIcfcZ6b30XaSq41OFoJQEGFEeclrpH3q5O5?=
+ =?us-ascii?Q?I+7LIx/T7upiP9LI11tODWES5bu6wJJrhkRIch5hva8AtRiz3ogn7Kr9L/BI?=
+ =?us-ascii?Q?qeDKjf7pU/lYu2QMXzVTIcSSx0sbvBoazKZquy0RSBvBDNVGTwIwPYcpO2MY?=
+ =?us-ascii?Q?0qCGNqk2NDR68GwqcIpwbCVaIrqcQPDjfiJTixT3dA1T2Y4hJxacPN76MJKn?=
+ =?us-ascii?Q?yFzKCdt1kg4Ayl0SJrRqq46bgLlZOlu+L84xLRn1Tt21rau7gWIxvylUMGl0?=
+ =?us-ascii?Q?iB2FWzOrCjbx/dGp7azTxyje8J+6rOSp0X79sxsqVG0Gb/JysApbKxNw+Ys2?=
+ =?us-ascii?Q?ktuqLhAXccRpu+sYg1NA5DnCLCbacx+zP4F4VXtCdtF/8NpymOggkCcqI21y?=
+ =?us-ascii?Q?HKG27rIzVY+pUf0MEdwLUtye/U5oyI4zhfdz7lFR6ojqZpVoDpFLTsGwEaVB?=
+ =?us-ascii?Q?VUOQ7dsn8uO3s57k7bfSM8hQnCRpUD8FOHloFl9jHchTA4vU/MDIv3dmBvaq?=
+ =?us-ascii?Q?LPPOyDnTTe1wtNw11zbcszAqkLe5nXFedQbRNHq4/p/6ZhCJ7582M03U45a/?=
+ =?us-ascii?Q?pkjh9esx9BZKnISwTWB5SJHbZEo46oe2EzKd2zHOCxdinJXgmw1v19HEW16M?=
+ =?us-ascii?Q?EMhev5/y9FD/ZrsYkP+ThaJQncxRL7tyJmUCWN4N5R6y9fV2o7Aqyo+zj/MN?=
+ =?us-ascii?Q?W7WZYGZYAwicQzl+dB8ihmXvQr3xQOT8kjLJsUJSs61RD3ndK3sdw+0U/kSU?=
+ =?us-ascii?Q?VqURR1Q5jBxnGOqXup3smA5nlW6vbveLnKuZtkmrS+mjmNPQj7npTXZFyunf?=
+ =?us-ascii?Q?a7MS0la3yb8W1t3GsmJhZB3yJZHU+eW9XsC3sRjPmOqAB5yfgCp1zCWHhdEt?=
+ =?us-ascii?Q?YQ9PzsYRHhmgJaYVNr/IgeIYx3eSQgNuagbrQeIX6etD4dRdiqlSpwvt1CqE?=
+ =?us-ascii?Q?+d1jM6JoiKS/pdEUdyOPhVx0dsxsvbPjoQGrK2Dci+cK22+d94KsAv07vggz?=
+ =?us-ascii?Q?Fk8AFO/rUQ=3D=3D?=
 X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9c96900-05eb-423a-43ff-08df392a0e06
+X-MS-Exchange-CrossTenant-Network-Message-Id: 37c808a5-3e51-4559-d831-08df392a126d
 X-MS-Exchange-CrossTenant-AuthSource: LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2026 21:41:29.7995
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2026 21:41:37.1739
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MEmxdma97IIo+UOUWBj953GjDHKYn8D+Amt98jIArOa1emJTCpDLTKfnbmbMkaWEP7QTVscsKXADWIfaak3HaQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CWLP123MB6106
+X-MS-Exchange-CrossTenant-UserPrincipalName: rgRIc9gPKim9akY72I35ParqaCh88ZSvkxC+gYMfft8lBH7OADNWhB0nja/KIcO+aiSpg8eWhtYQmIOgv8ZC4A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOAP123MB8322
 
-The vmlinux_path array maintains standard paths used by perf to locate
-the kernel image (e.g. "vmlinux", "/boot/vmlinux",
-"/lib/modules/%s/build/vmlinux", "/usr/lib/debug/..."). While
-vmlinux_path__init() populates these candidates and dso__load_vmlinux_path()
-loads symbols into a DSO/map, callers (such as test suites or probing tools)
-often need to verify the existence of an accessible vmlinux on disk before
-attempting machine setup or test execution.
+The Linux kernel's function graph tracer displays the execution duration
+of completed functions by default via the funcgraph-duration trace
+option. Whilst informative, in scenarios where the user is solely
+interested in the call graph topology, call flow sequence, or inlined
+hierarchy, the duration column can add visual clutter and widen each
+trace line.
 
-Introduce vmlinux_path__find() to search through the configured vmlinux_path
-entries (or symbol_conf.vmlinux_name if explicitly set) and return the
-path to the first readable vmlinux file, or NULL if none is accessible.
+Introduce support for omitting function duration by exposing the
+noduration sub-option under --graph-opts. Consistent with the existing
+nosleep-time and noirqs sub-options, it accepts an optional value, so
+noduration=0 explicitly retains the duration column; when specified
+more than once, the last occurrence takes effect. When enabled, perf
+ftrace configures the kernel's tracing instance option
+funcgraph-duration to 0, and restores it to 1 upon resetting tracing
+options.
+
+Because the profile subcommand fundamentally requires function execution
+duration to compute timing statistics and call counts, combining
+noduration with perf ftrace profile is rejected with an explicit error.
 
 Tested-by: Ian Rogers <irogers@google.com>
 Reviewed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
 ---
- tools/perf/util/symbol.c | 38 +++++++++++++++++++++++++++++++++++++-
- tools/perf/util/symbol.h |  2 ++
- 2 files changed, 39 insertions(+), 1 deletion(-)
+ tools/perf/Documentation/perf-ftrace.txt |   1 +
+ tools/perf/builtin-ftrace.c              |  34 +++++++-
+ tools/perf/tests/ftrace.c                | 104 ++++++++++++++++++++++-
+ tools/perf/util/ftrace.c                 |  25 ++++--
+ tools/perf/util/ftrace.h                 |   1 +
+ 5 files changed, 154 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index b61a574ce9a3..fd4a4441718e 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -2337,6 +2337,9 @@ static int vmlinux_path__init(struct perf_env *env)
- 	const char *kernel_version;
- 	unsigned int i;
- 
-+	if (vmlinux_path)
-+		return 0;
-+
- 	vmlinux_path = malloc(sizeof(char *) * (ARRAY_SIZE(vmlinux_paths) +
- 			      ARRAY_SIZE(vmlinux_paths_upd)));
- 	if (vmlinux_path == NULL)
-@@ -2372,6 +2375,38 @@ static int vmlinux_path__init(struct perf_env *env)
- 	return -1;
+diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+index 0af6b0c1f134..ed2e45b8507f 100644
+--- a/tools/perf/Documentation/perf-ftrace.txt
++++ b/tools/perf/Documentation/perf-ftrace.txt
+@@ -129,6 +129,7 @@ OPTIONS for 'perf ftrace trace'
+ 	  - retaddr      - Show function return address.
+ 	  - nosleep-time - Measure on-CPU time only for function_graph tracer.
+ 	  - noirqs       - Ignore functions that happen inside interrupt.
++	  - noduration   - Do not print function duration.
+ 	  - verbose      - Show process names, PIDs, timestamps, etc.
+ 	  - thresh=<n>   - Setup trace duration threshold in microseconds.
+ 	  - depth=<n>    - Set max depth for function graph tracer to follow.
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index 1f652d1e2754..db9616ad68af 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -300,6 +300,7 @@ static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
+ 	write_tracing_option_file("func_stack_trace", "0");
+ 	write_tracing_option_file("sleep-time", "1");
+ 	write_tracing_option_file("funcgraph-irqs", "1");
++	write_tracing_option_file("funcgraph-duration", "1");
+ 	write_tracing_option_file("funcgraph-proc", "0");
+ 	write_tracing_option_file("funcgraph-abstime", "0");
+ 	write_tracing_option_file("funcgraph-tail", "0");
+@@ -599,6 +600,26 @@ static int set_tracing_funcgraph_irqs(struct perf_ftrace *ftrace)
+ 	return 0;
  }
  
 +/**
-+ * vmlinux_path__find - Locate the first accessible vmlinux file
++ * set_tracing_funcgraph_duration - Set funcgraph-duration tracing option
++ * @ftrace: Perf ftrace context
 + *
-+ * Check symbol_conf.vmlinux_name first if set, then search through the
-+ * initialized paths in vmlinux_path.
++ * Configure the kernel's funcgraph-duration tracing option based on the
++ * ftrace->graph_noduration flag.
 + *
-+ * Return: A pointer to the path of the first readable vmlinux file, or NULL if
-+ * none is accessible.
++ * Return: 0 on success, or a negative error code on failure.
 + */
-+const char *vmlinux_path__find(void)
++static int set_tracing_funcgraph_duration(struct perf_ftrace *ftrace)
 +{
-+	int i;
++	if (!ftrace->graph_noduration)
++		return 0;
 +
-+	if (symbol_conf.vmlinux_name && access(symbol_conf.vmlinux_name, R_OK) == 0)
-+		return symbol_conf.vmlinux_name;
++	if (write_tracing_option_file("funcgraph-duration", "0") < 0)
++		return -1;
 +
-+	if (symbol__init(NULL) < 0)
-+		return NULL;
-+
-+	if (!vmlinux_path) {
-+		if (vmlinux_path__init(NULL) < 0)
-+			return NULL;
-+	}
-+
-+	for (i = 0; i < vmlinux_path__nr_entries; ++i) {
-+		if (access(vmlinux_path[i], R_OK) == 0)
-+			return vmlinux_path[i];
-+	}
-+
-+	return NULL;
++	return 0;
 +}
 +
- int setup_list(struct strlist **list, const char *list_str,
- 		      const char *list_name)
+ static int set_tracing_funcgraph_verbose(struct perf_ftrace *ftrace)
  {
-@@ -2598,6 +2633,8 @@ int symbol__init(struct perf_env *env)
+ 	if (!ftrace->graph_verbose)
+@@ -708,6 +729,11 @@ static int set_tracing_options(struct perf_ftrace *ftrace)
+ 		return -1;
+ 	}
  
- void symbol__exit(void)
- {
-+	vmlinux_path__exit();
++	if (set_tracing_funcgraph_duration(ftrace) < 0) {
++		pr_err("failed to set tracing option funcgraph-duration\n");
++		return -1;
++	}
 +
- 	if (!symbol_conf.initialized)
- 		return;
- 
-@@ -2608,7 +2645,6 @@ void symbol__exit(void)
- 	intlist__delete(symbol_conf.tid_list);
- 	intlist__delete(symbol_conf.pid_list);
- 	intlist__delete(symbol_conf.addr_list);
--	vmlinux_path__exit();
- 	symbol_conf.sym_list = symbol_conf.dso_list = symbol_conf.comm_list = NULL;
- 	symbol_conf.bt_stop_list = NULL;
- 	symbol_conf.initialized = false;
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 3b850cdd9ba6..d7b10199c3eb 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -182,6 +182,8 @@ static inline int __symbol__join_symfs(char *bf, size_t size, const char *path)
- extern int vmlinux_path__nr_entries;
- extern char **vmlinux_path;
- 
-+const char *vmlinux_path__find(void);
+ 	if (set_tracing_funcgraph_verbose(ftrace) < 0) {
+ 		pr_err("failed to set tracing option funcgraph-proc/funcgraph-abstime\n");
+ 		return -1;
+@@ -1785,6 +1811,7 @@ static int parse_graph_tracer_opts(const struct option *opt,
+ 		{ .name = "retaddr",		.value_ptr = &ftrace->graph_retaddr },
+ 		{ .name = "nosleep-time",	.value_ptr = &ftrace->graph_nosleep_time },
+ 		{ .name = "noirqs",		.value_ptr = &ftrace->graph_noirqs },
++		{ .name = "noduration",		.value_ptr = &ftrace->graph_noduration },
+ 		{ .name = "verbose",		.value_ptr = &ftrace->graph_verbose },
+ 		{ .name = "thresh",		.value_ptr = &ftrace->graph_thresh },
+ 		{ .name = "depth",		.value_ptr = &ftrace->graph_depth },
+@@ -1874,7 +1901,7 @@ int cmd_ftrace(int argc, const char **argv)
+ 	OPT_CALLBACK('g', "nograph-funcs", &ftrace.nograph_funcs, "func",
+ 		     "Set nograph filter on given functions", parse_filter_func),
+ 	OPT_CALLBACK(0, "graph-opts", &ftrace, "options",
+-		     "Graph tracer options, available options: args,retval,retval-hex,retaddr,nosleep-time,noirqs,verbose,thresh=<n>,depth=<n>",
++		     "Graph tracer options, available options: args,retval,retval-hex,retaddr,nosleep-time,noirqs,noduration,verbose,thresh=<n>,depth=<n>,tail",
+ 		     parse_graph_tracer_opts),
+ 	OPT_CALLBACK('m', "buffer-size", &ftrace.percpu_buffer_size, "size",
+ 		     "Size of per cpu buffer, needs to use a B, K, M or G suffix.", parse_buffer_size),
+@@ -2073,6 +2100,11 @@ int cmd_ftrace(int argc, const char **argv)
+ 		cmd_func = __cmd_latency;
+ 		break;
+ 	case PERF_FTRACE_PROFILE:
++		if (ftrace.graph_noduration) {
++			pr_err("Error: 'noduration' option cannot be used with profile\n");
++			ret = -EINVAL;
++			goto out_delete_filters;
++		}
+ 		cmd_func = __cmd_profile;
+ 		break;
+ 	case PERF_FTRACE_NONE:
+diff --git a/tools/perf/tests/ftrace.c b/tools/perf/tests/ftrace.c
+index 900f5390141f..ec3c26a01ef9 100644
+--- a/tools/perf/tests/ftrace.c
++++ b/tools/perf/tests/ftrace.c
+@@ -160,6 +160,18 @@ static int test_inline_processing(void)
+ 		" 1234.567890 |   0)   bash-1234    |  ....   |               |    activate_task() { /* (inline) */";
+ 	static const char line_verbose_inline_exit[] =
+ 		" 1234.567890 |   0)   bash-1234    |  ....   |               |    } /* activate_task (inline) */";
++	static const char line_verbose_nodur_entry[] =
++		" 1234.567890 |   0)   bash-1234    |  ....   |  wake_up_new_task() {";
++	static const char line_verbose_nodur_enqueue[] =
++		" 1234.567890 |   0)   bash-1234    |  ....   |    enqueue_task() { /* <-wake_up_new_task+0x1d1/0x3e0 */";
++	static const char line_verbose_nodur_exit_enqueue[] =
++		" 1234.567890 |   0)   bash-1234    |  ....   |    } /* enqueue_task */";
++	static const char line_verbose_nodur_exit_task[] =
++		" 1234.567890 |   0)   bash-1234    |  ....   |  } /* wake_up_new_task */";
++	static const char line_verbose_nodur_inline_entry[] =
++		" 1234.567890 |   0)   bash-1234    |  ....   |    activate_task() { /* (inline) */";
++	static const char line_verbose_nodur_inline_exit[] =
++		" 1234.567890 |   0)   bash-1234    |  ....   |    } /* activate_task (inline) */";
+ 	struct perf_ftrace ftrace;
+ 	char *out_buf = NULL;
+ 	size_t out_len = 0;
+@@ -490,6 +502,33 @@ static int test_inline_processing(void)
+ 		free(out_buf);
+ 		out_buf = NULL;
+ 		ftrace.graph_verbose = false;
 +
- static inline void *symbol__priv(struct symbol *sym)
++		/* Test verbose noduration prefix formatting for synthesised inlines */
++		ftrace.graph_verbose = true;
++		ftrace.graph_noduration = true;
++		out = open_memstream(&out_buf, &out_len);
++		if (!out) {
++			ret = TEST_FAIL;
++			goto out_cleanup;
++		}
++
++		ftrace_process_fgraph_line(&ftrace, line_verbose_nodur_entry, out);
++		ftrace_process_fgraph_line(&ftrace, line_verbose_nodur_enqueue, out);
++		ftrace_process_fgraph_line(&ftrace, line_verbose_nodur_exit_enqueue, out);
++		ftrace_process_fgraph_line(&ftrace, line_verbose_nodur_exit_task, out);
++
++		fclose(out);
++		ftrace_cpu_states__clear();
++
++		TEST_CHECK("verbose noduration inline entry preserves comm-pid",
++			   strstr(out_buf, line_verbose_nodur_inline_entry) != NULL);
++		TEST_CHECK("verbose noduration inline exit preserves comm-pid",
++			   strstr(out_buf, line_verbose_nodur_inline_exit) != NULL);
++
++		free(out_buf);
++		out_buf = NULL;
++		ftrace.graph_verbose = false;
++		ftrace.graph_noduration = false;
+ 	}
+ 
+ out_cleanup:
+@@ -831,20 +870,56 @@ static int test_column_layouts(void)
  {
- 	return ((void *)sym) - symbol_conf.priv_size;
+ 	static const struct {
+ 		const char *desc;
+-				bool verbose;
++		bool noduration;
++		bool verbose;
+ 		const char *in;
+ 		const char *expected;
+ 	} cases[] = {
+ 		{
+-			"default layout", false,
++			"default layout", false, false,
+ 			" 7)               |  wake_up_new_task() { /* <-kernel_clone+0x160/0x510 */",
+ 			" 7)               |  wake_up_new_task() {\n",
+ 		},
+ 		{
+-			"verbose layout", true,
++			"noduration layout", true, false,
++			" 7)   housekeeping_any_cpu(); /* <-ring_buffer_unlock_commit+0x1a0/0x1f0 */",
++			" 7)   housekeeping_any_cpu();\n",
++		},
++		{
++			"verbose layout", false, true,
+ 			" 1234.567890 |   7)   bash-1234    |  ....   |               |  wake_up_new_task() { /* <-kernel_clone+0x160/0x510 */",
+ 			" 1234.567890 |   7)   bash-1234    |  ....   |               |  wake_up_new_task() {\n",
+ 		},
++		{
++			"verbose noduration layout", true, true,
++			" 1234.567890 |   7)   bash-1234    |  ....   |  wake_up_new_task() { /* <-kernel_clone+0x160/0x510 */",
++			" 1234.567890 |   7)   bash-1234    |  ....   |  wake_up_new_task() {\n",
++		},
++		{
++			"noduration context switch marker", true, false,
++			"   7)  bash-1234    =>  sh-5678",
++			"   7)  bash-1234    =>  sh-5678\n",
++		},
++		{
++			"noduration irq entry marker", true, false,
++			" 7) ==========>",
++			" 7) ==========>\n",
++		},
++		{
++			"noduration irq exit marker", true, false,
++			" 7) <==========",
++			" 7) <==========\n",
++		},
++		{
++			"verbose noduration irq entry marker", true, true,
++			" 1234.567890 |   7)   bash-1234    |  ....   | ==========>",
++			" 1234.567890 |   7)   bash-1234    |  ....   | ==========>\n",
++		},
++		{
++			"verbose noduration irq exit marker", true, true,
++			" 1234.567890 |   7)   bash-1234    |  ....   | <==========",
++			" 1234.567890 |   7)   bash-1234    |  ....   | <==========\n",
++		},
+ 	};
+ 	struct perf_ftrace ftrace;
+ 	char *out_buf = NULL;
+@@ -855,6 +930,7 @@ static int test_column_layouts(void)
+ 	for (i = 0; i < ARRAY_SIZE(cases); i++) {
+ 		memset(&ftrace, 0, sizeof(ftrace));
+ 		ftrace.use_inline = true;
++		ftrace.graph_noduration = cases[i].noduration;
+ 		ftrace.graph_verbose = cases[i].verbose;
+ 
+ 		out = open_memstream(&out_buf, &out_len);
+@@ -875,6 +951,28 @@ static int test_column_layouts(void)
+ 		out_buf = NULL;
+ 	}
+ 
++	/* Test noduration IRQ markers do not pop active frames from tracked stack */
++	memset(&ftrace, 0, sizeof(ftrace));
++	ftrace.use_inline = true;
++	ftrace.graph_noduration = true;
++	ftrace_cpu_states__clear();
++
++	out = open_memstream(&out_buf, &out_len);
++	if (!out)
++		return TEST_FAIL;
++
++	ftrace_process_fgraph_line(&ftrace, " 0)  root_func() {", out);
++	ftrace_process_fgraph_line(&ftrace, " 0) ==========>", out);
++	ftrace_process_fgraph_line(&ftrace, " 0) <==========", out);
++	ftrace_process_fgraph_line(&ftrace, " 0)  } /* root_func */", out);
++
++	fclose(out);
++	ftrace_cpu_states__clear();
++
++	TEST_ASSERT_VAL("noduration irq markers preserved stack",
++			strstr(out_buf, " 0)  } /* root_func */\n") != NULL);
++	free(out_buf);
++
+ 	return TEST_OK;
+ }
+ 
+diff --git a/tools/perf/util/ftrace.c b/tools/perf/util/ftrace.c
+index 1f31cf31058c..c2cf4a20553e 100644
+--- a/tools/perf/util/ftrace.c
++++ b/tools/perf/util/ftrace.c
+@@ -734,6 +734,9 @@ static void make_blank_prefix(const struct perf_ftrace *ftrace, const char *line
+ 	memcpy(buf, line, len);
+ 	buf[len] = '\0';
+ 
++	if (ftrace->graph_noduration)
++		return;
++
+ 	if (*pipe_char == '|') {
+ 		if (ftrace->graph_verbose) {
+ 			/* In verbose mode, duration starts after the comm-pid '|' */
+@@ -772,10 +775,12 @@ static void make_blank_prefix(const struct perf_ftrace *ftrace, const char *line
+  *   [ abstime |]  CPU)  [ comm-pid |]  [ duration |]  func
+  *
+  * The abstime and comm-pid columns are only present with --graph-opts
+- * verbose.
++ * verbose, whereas the duration column, and thus its '|' delimiter, is
++ * omitted with --graph-opts noduration.
+  *
+  * Return: A pointer to the last character of the context columns (the final
+- * '|' delimiter). Returns NULL if @line is not a trace record.
++ * '|' delimiter, or the CPU ')' when no delimiter follows it). Returns NULL
++ * if @line is not a trace record (e.g. a header or a context switch marker).
+  */
+ static const char *find_func_column(const struct perf_ftrace *ftrace,
+ 				    const char *line, int *cpu)
+@@ -829,9 +834,14 @@ static const char *find_func_column(const struct perf_ftrace *ftrace,
+ 			return NULL;
+ 	}
+ 
+-	p = strchr(p + 1, '|');
+-	if (!p)
++	if (!ftrace->graph_noduration) {
++		p = strchr(p + 1, '|');
++		if (!p)
++			return NULL;
++	} else if (strstr(p, " => ") || strstr(p, "=====>") || strstr(p, "<=====")) {
++		/* Context switch or interrupt marker */
+ 		return NULL;
++	}
+ 
+ 	*cpu = (int)val;
+ 	return p;
+@@ -927,11 +937,12 @@ int ftrace_process_fgraph_line(struct perf_ftrace *ftrace, const char *line, FIL
+ 	func_start = skip_spaces(after_pipe);
+ 	leading_spaces = func_start - after_pipe;
+ 
+-	if (*func_start == '\0')
+-		return print_line(ftrace, line, out);
+-
+ 	is_exit = (*func_start == '}');
+ 
++	if (*func_start == '\0' ||
++	    (!isalpha(*func_start) && *func_start != '_' && !is_exit))
++		return print_line(ftrace, line, out);
++
+ 	if (is_exit) {
+ 		char exit_name[128];
+ 
+diff --git a/tools/perf/util/ftrace.h b/tools/perf/util/ftrace.h
+index 7b9e0919ae8d..0afaa9695691 100644
+--- a/tools/perf/util/ftrace.h
++++ b/tools/perf/util/ftrace.h
+@@ -39,6 +39,7 @@ struct perf_ftrace {
+ 	int			graph_retaddr;
+ 	int			graph_nosleep_time;
+ 	int			graph_noirqs;
++	int			graph_noduration;
+ 	int			graph_verbose;
+ 	int			graph_thresh;
+ 	int			graph_tail;
 -- 
 2.55.0
 
