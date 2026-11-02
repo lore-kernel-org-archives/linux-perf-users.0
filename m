@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.92.199
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793613494;
-	b=j45Segmysx40BzSs9SL4SjXdSrWVBFyEQjpqot0u+TMgiaZ99GKqGwdZfOmXLNh4VaTN
-	 oDAzzKwmlUZqymv7TVl7ctc5S/QuskQ/5g3Z3PYrm74J/jzGNfCoNXX6YTK95Sl9eJt1J
-	 EQEhKm7V424TZodFii7N4HH2+6GWCE9hv4DU0ycYFQ4xIedzYmFunImoTTmHRYzCxamAW
-	 WJJ7G4Cpl1iygNAIIHiDZ+VeVjn61W78uazA4gRTrR/T1FHwFuuuRDJMFA9AMJU31YCgq
-	 90Q1UXlLOy3Sdkfon1nL9Z/grOJh4cnsUq8eBkU/bfXNOOo6RqZHsPtebSmY7+sBfIQ==
+	t=1793613908;
+	b=G7kHvt6uzsrkhGVA9fAW/aXVTT26Ubsk7RKtVNF23h8q4IXOeU60+YcaurHnOgQq0TRU
+	 j6VFBvOxC/VRl7QA6kEbvrp9t/qSwxt1ZyRaXCdTeruRJ7c65iuOHkaZbsnEsQBbImcpT
+	 HWvnkXfZsAhU5pw8yIa4JxnRQwLiwbhPZl8uU65yhStGcfBY1enOccImW38gOJheOwjON
+	 WghreA4bon+f7usZAUphTChjngVoXQfYKrkwfAOix31CVawQsIhV40WqVqBxUTyrTTjPi
+	 FaX4lCBM586f+2AiHmCE0XMtLDGwnoDSN9GlmVvnPRnvpdrOSnVaZQj3y7OBTbCrHvw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793613494;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793613908;
 	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
 	 Subject:Message-ID:References:MIME-Version:Content-Type:
 	 Content-Disposition:In-Reply-To;
-	bh=UKyyZUOWJVkvc/oMwUTT4h7l57WEWjnuZvJf4U3Jj9g=;
-	b=ty5FTiWbVMq2ePvaftV7+m3ZeELX9hiwR9wv9+IMzY4yt1rmGYk8g2NGDryRKoLYY3NE
-	 /80Ukojr9yLkyJ1AYBhSJZP1dLmePfDEkAxDIn3wb3qurJOJO377RPvaGPKkxsgcVM47v
-	 SgGIlf8fXgF0OyjY48PoxEl37klchGAcqa8yTMkw9YBdNfH+ifMPol/sx+lNV7blpBVcT
-	 DjERwBvLss1JlIVF9iFHCU1Tg1HP53PhfGiBsk/KTSdFNMQuexIrvimDfZ/2B7CoFOzkd
-	 52Ov6+hv7MPUwvydr7nCTW0m5bK4f/BKOaNFdO8Ac9n6ycOMedM8OYUrINroJuXyAkQ==
+	bh=RKZ7s2ip4Cd4cJJpbOr8bHm3t7js9mX3q0DKftip8Gc=;
+	b=Tsq4kWiRC59DuQMFFfHdwN1sVmjUSJhJsgoLSr6zA9ijczRB4Czkwo0Hd9TbvknCK3dL
+	 R9eQL1ESJ7sjUqnaZAh3PyGV/oLFUSFLKQaAPzupGLG3/6ZV3ju92a2Zbd/y5ZDsZOG1b
+	 UvqkrBiZ8EPV8mulShyBEakcPSXIgYjFeasuEWUihZ/kdBGiz8NL4jW+J229t6QVAf5go
+	 tzz9BsRO8DRbCpoXmiUuZt0vEuifwZHlSMbaveVdSDI0+KIdYY/L9bnKBbU5SQfIHGK4M
+	 rWhmGy5aHm7Prap4rWdO6RF0RMicRn4s0LJQcbaHEmoMiZVg2ya9veMeIS6hvc+FX9g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=infradead.org;
 	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=peNr0I8O;
+	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=A26p5ROr;
 	arc=none smtp.remote-ip=90.155.92.199
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56EA5606A324;
-	Mon,  2 Nov 2026 09:58:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 56EA5606A324
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69162606A324;
+	Mon,  2 Nov 2026 10:05:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 69162606A324
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=peNr0I8O
+	dkim=pass (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=A26p5ROr
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=UKyyZUOWJVkvc/oMwUTT4h7l57WEWjnuZvJf4U3Jj9g=; b=peNr0I8O1r4HRfm9ZOZYdjyxS4
-	kprbs4zQBBtMnV5UOs/rSx/Wf28Gy9e1a13tZYH7TQDGU0+AGNUuwR7eKWcANgd6oFP8D/LzX0wki
-	R8PtZiErjBfLYtZIPg+5hhKViG+0ZZkCZlhNHSzN5SEvvDjABn+f2gDtYJVq92eJ3wQ067hWCW74B
-	U0BuGZcbzDQs1Gndbbm7rteMSWL2kf+x0tl6uv5nMUjQXv8fRDIwZnKj5qeBzZWYmG+EolOYpkT3c
-	am9ifVWrfO+7kwnwGUYiMhZ0nrs/e7rXFX8UTuQ5HfqNzIApdBKH56YZMrDQjDnuSz+avyk9mIs5d
-	v3sUJUIQ==;
+	bh=RKZ7s2ip4Cd4cJJpbOr8bHm3t7js9mX3q0DKftip8Gc=; b=A26p5ROrXJIXoqZd9ovicq2gE8
+	4IhvTmKlHAtSE4b6fsenDnadTTffD7OyQnANMwqco3T8XOYWlN8vcRXmaEL9ojBdy5Y29/V3ZrRyS
+	7vX93FJJpkT+nxgnRNCeZ/XkLoxFCzdyD1/dyKy5kQTvrzwSR6UZyPpeXsGmmwWZhMoeH/4OAWHVV
+	dkB+H3kIdvWackyW/8CjQfTkawUXpOnMAfd+Myyw/aUVtUfcFqy6v3REIdSDS8awnrOdmxHL5ASl2
+	Yjbss90p7sZk33mEOTWHEwHPpvVJ0CnPYUhTKFbbFeBfrR1TaRgG3ZEBkdSlXF25uA+4fREG+w1BX
+	PPiIgM/A==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
 	by desiato.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNonZ-00000002L6h-3hQt;
-	Mon, 02 Nov 2026 09:57:55 +0000
+	id 1xNouK-00000002Lhl-1sTa;
+	Mon, 02 Nov 2026 10:04:56 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 00239300312; Mon, 02 Nov 2026 10:57:50 +0100 (CET)
-Date: Mon, 2 Nov 2026 10:57:50 +0100
+	id 2A3B6300322; Mon, 02 Nov 2026 11:04:51 +0100 (CET)
+Date: Mon, 2 Nov 2026 11:04:51 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Ingo Molnar <mingo@redhat.com>,
@@ -75,11 +75,10 @@ Cc: Ingo Molnar <mingo@redhat.com>,
 	Andi Kleen <ak@linux.intel.com>, linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
 	driver-core@lists.linux.dev
-Subject: Re: [PATCH 2/6] perf/x86/intel/pt: Stop tracing if VMXON has not yet
- happened
-Message-ID: <20261102095750.GS1779021@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH 3/6] perf/x86/intel/pt: Stop tracing at syscore shutdown
+Message-ID: <20261102100451.GT1779021@noisy.programming.kicks-ass.net>
 References: <20261102074039.26983-1-adrian.hunter@intel.com>
- <20261102074039.26983-3-adrian.hunter@intel.com>
+ <20261102074039.26983-4-adrian.hunter@intel.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -91,47 +90,20 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261102074039.26983-3-adrian.hunter@intel.com>
+In-Reply-To: <20261102074039.26983-4-adrian.hunter@intel.com>
 
-On Mon, Nov 02, 2026 at 09:40:35AM +0200, Adrian Hunter wrote:
-
->  arch/x86/events/intel/pt.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-> index 49349afee611..36bf039668d7 100644
-> --- a/arch/x86/events/intel/pt.c
-> +++ b/arch/x86/events/intel/pt.c
-> @@ -567,6 +567,15 @@ static void pt_config(struct perf_event *event)
->  	pt_config_enable(event);
->  }
->  
-> +static bool pt_trace_enabled(void)
+On Mon, Nov 02, 2026 at 09:40:36AM +0200, Adrian Hunter wrote:
+> +static void pt_shutdown_cpu(void *info)
 > +{
 > +	u64 ctl;
 > +
-> +	rdmsrq(MSR_IA32_RTIT_CTL, ctl);
-> +
-> +	return ctl & RTIT_CTL_TRACEEN;
-> +}
-> +
->  static void pt_config_stop(struct perf_event *event)
->  {
->  	struct pt *pt = this_cpu_ptr(&pt_ctx);
-> @@ -577,7 +586,12 @@ static void pt_config_stop(struct perf_event *event)
->  		return;
->  
->  	ctl &= ~RTIT_CTL_TRACEEN;
-> -	if (!READ_ONCE(pt->vmx_on))
 > +	/*
-> +	 * vmx_on is set before VMXON, so tracing may not have stopped yet.
-> +	 * RTIT_CTL can be written until VMXON, and after VMXON TraceEn is
-> +	 * clear, so still write RTIT_CTL if TraceEn is set.
+> +	 * After VMXON on CPUs without PT support in VMX operation,
+> +	 * TraceEn is already clear and RTIT_CTL must not be written.
 > +	 */
-> +	if (!READ_ONCE(pt->vmx_on) || pt_trace_enabled())
->  		wrmsrq(MSR_IA32_RTIT_CTL, ctl);
->  
->  	WRITE_ONCE(event->hw.aux_config, ctl);
+> +	rdmsrq(MSR_IA32_RTIT_CTL, ctl);
+> +	if (ctl & RTIT_CTL_TRACEEN)
+> +		wrmsrq(MSR_IA32_RTIT_CTL, ctl & ~RTIT_CTL_TRACEEN);
+> +}
 
-It seems rather unfortunate to issue a RDMSR for state we fully control.
-Surely we can track this?
+Why not unconditionally do: wrmsrq(MSR_IA32_RTIT_CTL, 0), at this point?
