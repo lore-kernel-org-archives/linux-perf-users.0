@@ -1,108 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.126.77
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793608920;
-	b=l5MnsWIW4HY7mCfPK4d3oRcttU6tr/VQYhaT6KE9sWUCR3nO7ah796GveYdAOJiSGS2s
-	 VbpEwlkUEOORItErPGGrsEC0Oqm5sUu/RP6IUips0JQW/ZxeCzUg+5gVAUQ3Mzu3Lfd5o
-	 lukqb9Kc0qEHzmG2KFy7OKZCoGWUy31AQ0Fj1Uh90TUJRzmAkKNWHJhb5GVlxS/xOnEjt
-	 YeeXu89WVUf6Bnb+osMsTZ3RL5ZFyyFnt5etX6bU+ua4CTcIVOuWs4gtBgdqn05JNklU3
-	 a28SQFKqB8aFPFwNWbj5k6OQ2Z5J3GoyzTYrYbjpvYPpYfTg8l27xAWMQwec6f+RErA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793608920;
-	h=DMARC-Filter:Received:Received:X-MS-Exchange-Authentication-Results:
-	 Received-SPF:Received:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-EOPAttributedMessage:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:Content-Type:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=K/VuNAFvyH2RzF9VWtc5C4dx7BhXxQLtuGzqwhLuChE=;
-	b=JxLCzRfeeQQisK+gFyYyOf4FtQxcimK/xrHz1TgPhDCwtT6ntdy52QKHhpPyB1k1hH+A
-	 Ect9tq15u2UvOvAr3hs/rcOHwvuyxwBLRhuLozd//Hr7Q0bdKcspTX7hPhwvGulPUVY/W
-	 9Ndfm7iQPXE31ze6fhpVZre4CK0yQ1ts4lW/2oW7iPCXfSqHU/H375QFJPRHDMpn4vPzB
-	 5kEhgKFo1Wk3IWkXnAXDXWRwhEbKZ7l+i9r1RHp5as3OQ4EuGhwDj/mOutyaO1A553cPi
-	 Wt94ReT9xjG+vmLa7OTbeowNG6OIMFnxo6EdKBWmGKRnIPQ6ICAX5VB+Vvc1tPCtzXg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=none header.from=cixtech.com;
-	spf=pass smtp.mailfrom=cixtech.com;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.126.77
-Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022077.outbound.protection.outlook.com [52.101.126.77])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793609549;
+	b=Y7hsjodJrYC3zvOpu+4T90eZL3YPum8t83UnckDTWXhdpJmmXm1zgI4Fjazjuf2e7vxA
+	 s7JqPsRV+g7158czgYYvGoqI6BIWd5c6yLnAUvReDGnyaDatrlAKHPlve2u6P0cWE5Opg
+	 qoJJL7lXuDGIiHGWfK3yYAiUnybQQCDsoWTjAFL0nFJ0kCPDBbOigHZyzVxTLSB96CYbz
+	 y+oGb+o9sTEZ58iXCVJhJjkbiOZebeV93XAWzz2AGd0NF9CaoJTisN3M+rDsZT2I3zSw/
+	 wj019DHHDzFQnL6caq7Tv3MflHSmsRtgw/p7pPEMUWV59hnasUSd8jC/S9NBeBfCpZQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793609549;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=oXlwWNv0AB7RVPq06a/SOny/QMKnPuzfLB/vY96tk3Q=;
+	b=mdvAqwLFWHUk3dv//dug/+SNa4NlTkfP4L3cmrzTzBRBfT/G6LLjW8oUWPaZizhQI2QB
+	 zjdKlh6/2MiZK5SpKyjeGZ5xdQEgRcXnnAHWC9ui5lvEowuToQHoXDFdWc2mtXsXo0AKC
+	 eXU5uHNfcIvQ6Oj3++GJMTGwyLEAXi7qqCYT4gcRjgyYONTFx2Qh7GN2pVTT2vzdsain4
+	 paDqitA9GqTEAfWA9xmLgush5a13lqm10IxYHd5mJwFI+7md7KenPpU+ms7yE/9W8IbO5
+	 vBfg3FrdM9r1VHWgvavp+d1c7eEpK57htpPEdKnwjklN/dZDjEoTdZ1/uAFrM9//fqg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="B/cCvI93";
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5D4606A326;
-	Mon,  2 Nov 2026 08:41:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9C5D4606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wt5djTDr+hkPJUoMFZfsQPzViYERXrw/3qqXI4YRHiTuSanrahnvf72rz47JEoNCKQjmV8EhbNyooYW0qsA7b3PSw2lIKUPOStL/voXkDJwMz1n4t+Gwq1kLtxpJNnngLCBkbHJLB36jNasgy0J1AeshHrpcwlS/L+SEP+kcdAigLKbdgQ/roZ6yb0y5VejDNXx0Wpt2SBzWFc/D7Lgtv2uRsJAzeYCsjewzpF+lw9+ekX8ZgC7hnoRhLnlDW5eXUa/l8RX20TZbQJJMfp8kPAuAYAJOKJHBShIcLgtMlsPoJFUwHvFC6ehm52rkUHDyxvhyzyb+kmZIVfah7NejAg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=K/VuNAFvyH2RzF9VWtc5C4dx7BhXxQLtuGzqwhLuChE=;
- b=g7xsuFDfwsls+MKc2KRzgt7A1Gmk77GmXFGVY8pDyTsVRYpZ981A659bKTNkeUKW7tqGDGdbu5OtnzXirDsTYSlQ1p91pl5Cc/H8A80ufq1hXZZS5RckvqaOsFwihHAoEVkgcbHe8IVdmLqEYQl8PFoj5FDcjpkG2IybrreLUtr+whReiVJStUnh8T1fMpwOsPUKxRLyYECJ8QEJYll98dTxjp9uVFx3gARrVzcoxf1swHAUU1hVioLbISW1f97nMCLT7kGa47vXYVXKST3OyMv0i5hjQOaaguV3pE7wgECHff7wlldysOOx9hTGlxljHohBQ9yGPk2QJ2snDOUX0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from SI2PR02CA0031.apcprd02.prod.outlook.com (2603:1096:4:195::16)
- by PUZPR06MB6005.apcprd06.prod.outlook.com (2603:1096:301:11b::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.8; Mon, 2 Nov 2026
- 08:41:55 +0000
-Received: from SG1PEPF000082E1.apcprd02.prod.outlook.com
- (2603:1096:4:195:cafe::27) by SI2PR02CA0031.outlook.office365.com
- (2603:1096:4:195::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.569.12 via Frontend Transport; Mon, 2
- Nov 2026 08:41:55 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 222.71.101.198) smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- SG1PEPF000082E1.mail.protection.outlook.com (10.167.240.10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.592.5 via Frontend Transport; Mon, 2 Nov 2026 08:41:54 +0000
-Received: from JohnnyFan (unknown [172.21.64.24])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id A2D5E40920E1;
-	Mon,  2 Nov 2026 16:41:53 +0800 (CST)
-From: "Johnny.Fan" <johnny.fan@cixtech.com>
-To: will@kernel.org,
-	mark.rutland@arm.com
-Cc: suzuki.poulose@arm.com,
-	leo.yan@arm.com,
-	jeremy.linton@arm.com,
-	maz@kernel.org,
-	mike.leach@arm.com,
-	james.clark@linaro.org,
-	alexander.shishkin@linux.intel.com,
-	coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	cix-kernel-upstream@cixtech.com,
-	jie.fu@cixtech.com,
-	bob.zhang@cixtech.com,
-	"Johnny.Fan" <Johnny.Fan@cixtech.com>,
-	Fugang Duan <fugang.duan@cixtech.com>
-Subject: [PATCH v3 1/2] perf: arm_pmu: Accept a per-device CPU mask from platform data
-Date: Mon,  2 Nov 2026 16:41:51 +0800
-Message-ID: <20261102084153.3975282-2-johnny.fan@cixtech.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20261102084153.3975282-1-johnny.fan@cixtech.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7D1606A324
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Nov 2026 08:52:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=B/cCvI93
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3176E1F000C1;
+	Mon,  2 Nov 2026 08:52:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793609549;
+	bh=oXlwWNv0AB7RVPq06a/SOny/QMKnPuzfLB/vY96tk3Q=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=B/cCvI93oE7QNZBeigyEmnwbHFZd1f7BrYCEh2WmdF/UdUIOqiL7EiwtQ4zgGmEtK
+	 BNBl8MZLssJprmiT8NeocvbbZA9NOKja0Dj8uMLsoBszxdhwVeGoZitC6WPqoGCXEn
+	 wvOchIVoCBB+7qZgyxOZvN5jmdeCnD7ZVlZVz3fW53OkyEHa+RkMK0ETm2e8KlhBuh
+	 HzofW85lhinmV3VIWneuM1Etxqll5zR8Kpt51R+P/bL+DbSS8qjRx8513EVLTUYcoj
+	 LGgWBb/1vA+grB1s+AWk2ghxUpmvmprneYnCDoTasHY4BOG6ttIYOPkBtzd3hV6PUf
+	 lIy+3TKYYtgBA==
+Message-ID: <sashiko-outbox-193138@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 2/2] perf: arm_pmu_acpi: Support heterogeneous ACPI
+ systems
+Reply-To: sashiko-reviews@lists.linux.dev
+To: Johnny.Fan <johnny.fan@cixtech.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261102084153.3975282-3-johnny.fan@cixtech.com>
 References: <20261102084153.3975282-1-johnny.fan@cixtech.com>
+ <20261102084153.3975282-3-johnny.fan@cixtech.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 02 Nov 2026 08:52:28 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -111,169 +60,127 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG1PEPF000082E1:EE_|PUZPR06MB6005:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: ed9b2e39-3567-4e39-dfbd-08df38bd2641
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|7416014|376014|1800799024|82310400026|36860700016|56012099006|261009223027099003|261021123027099003|261021121427099003|261022075727099003|261026121527099003|10067099003|22082099003|18002099003|3023799007;
-X-Microsoft-Antispam-Message-Info:
-	9+o1zi7ovHGVcjb45h/Q5LYn6VRNS7jJvnP3ejEb04evW7+/dtu3oJku8gG7kAvPA62q3N4wkvR9nqNo39tB5xhQNvkpBPtGObZ6+a9e8iYKEKUKKHXfRhWbBHN5KI7ZyexAZAucVqlReKm/mKlmGdjPYmDEhaoWvAUDy494SsJ3nV3KEVTFLP1f2oQr+5cahargg1lTD/KZNOAil3zVj+ltQK06zUt/eMRaFCQjH33g5PBBKZ/s2TW7/IK1T0bs2n2VRk9PnBClz0dXt9UJq+w6xyqRxkiQJB/vciI/TjQWbos1Sw8d+0d+rZeoG7EzblJQH9QAfRvo97UFII/liFhY/w8b7QRnPAICbkjHaJSwG+KP5eX7CTgD4OWHvbsdZZm4bv5Gr9PWrPU7ubN0c4E0JDcbAG4vXG1bw1qf6LcjvhnbsIHziruHJXwt+vEU9RkMAkPPryqiJKlqnaeSjk4n1L0FZe687jO69jmM2rJY5hPp5rhzhmI/E+wGzEbchpGHLJN46GvpDefWJ/Ti0grdoxYUya7/rA8utLqfJbH77Lf4VlFGKascrrZS+vqYJLAPqLsz4e4pJHZILV4S+HDdQRxuJZzN04G+TB5sh5k2IyGm3OyDvy72W6d3c5vSQnuoBBETE00XYBQO23o2A2b+HaqZEt1rhpzFIpgAm/k6HvtXvb1rZH1cKT9LdIOI4aKjQWH/wwUV7D6dnJzdSA==
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(376014)(1800799024)(82310400026)(36860700016)(56012099006)(261009223027099003)(261021123027099003)(261021121427099003)(261022075727099003)(261026121527099003)(10067099003)(22082099003)(18002099003)(3023799007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	U/PEmN3Po6l/7JG/vEQUUYaEgYdZUGFBARH3URFMtYwH4RIB5R+GvtZipQWiRh4pi6EYhmvvb/DPTKmCqAOg/D6ltRDxY8U+i0XCuFEc7m13NtMabH0JMf4/NPkBA29dfmNVvpKVMpvgQvIi2lvShhsD1qMiQr/1NUqkbiV9dYNxjUcRtjZ/7S3G5hkWi9bxb19ZgwWhqgnj8utcue/CAtia8NiBjDwMJ8Ahp3JKSkVPRRfwvkkcJI7Jh4cAPzKt6s70eoh9eZ5aJHDGzMRVrRjrUxuEKed2jVyg3xe42AVp0lTuJmmH3x20ldq93ReLWqBujSCLsF8EtQrogOc8wKHVrRBLMJSWQf3cg7YdzfuT6J/U8hUMC9dXZTs7RTqshDRnNbR71038yTTqjT4usLOWmqgV9xv26kFk1WVJi9zz2a8seVeEahkPnOL6ha1c
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2026 08:41:54.6297
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed9b2e39-3567-4e39-dfbd-08df38bd2641
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SG1PEPF000082E1.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR06MB6005
 
-From: "Johnny.Fan" <Johnny.Fan@cixtech.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] perf: arm_pmu_acpi: unbalanced acpi_unregister_gsi() on group er=
+ror
+--
 
-Synthetic platform devices created from ACPI data have no fwnode, so
-platform_get_irq_affinity() cannot tell which CPUs implement the
-feature and falls back to cpu_possible_mask.
+commit 160cc5903c9a42ca04c98cc8b994a9fea642d22f
+Author: Johnny.Fan <Johnny.Fan@cixtech.com>
 
-Add an optional CPU mask to the platform data and make both the SPE and
-the TRBE drivers prefer it over the firmware-described IRQ affinity.
-Device tree devices have no platform data and keep using the affinity.
+perf: arm_pmu_acpi: Support heterogeneous ACPI systems
 
-TRBE must also pass a stable copy of the mask to
-request_percpu_irq_affinity(), because supported_cpus is pruned as CPUs
-are probed, while the IRQ action keeps a pointer to the mask.
+This commit updates arm_pmu_acpi to support heterogeneous ACPI systems by
+grouping CPUs by their PPTT hetero ID and MADT GICC overflow interrupt GSI,
+and registering one SPE or TRBE platform device per group with its CPU mask
+passed as platform data.
 
-This is a preparatory change: no ACPI device carries platform data yet,
-so behaviour is unchanged.
+> diff --git a/drivers/perf/arm_pmu_acpi.c b/drivers/perf/arm_pmu_acpi.c
+> index ca6bf8f86cfe9..bffeeb0638004 100644
+> --- a/drivers/perf/arm_pmu_acpi.c
+> +++ b/drivers/perf/arm_pmu_acpi.c
+[ ... ]
+> @@ -68,91 +70,196 @@ static void arm_pmu_acpi_unregister_irq(int cpu)
+>  		acpi_unregister_gsi(gsi);
+>  }
+> =20
+> +struct arm_pmu_acpi_group {
+> +	int hetid;
+> +	u16 gsi;
+> +	bool registered;
+> +	struct cpumask cpus;
+> +};
+[ ... ]
+> +static bool arm_acpi_gsi_in_use(struct arm_pmu_acpi_group **groups,
+> +				int nr_groups, int idx)
+> +{
+> +	int i;
+> +
+> +	for (i =3D 0; i < nr_groups; i++) {
+> +		if (i =3D=3D idx)
+> +			continue;
+> +		if (groups[i]->registered && groups[i]->gsi =3D=3D groups[idx]->gsi)
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +static int arm_acpi_register_group(struct arm_pmu_acpi_group *group,
+> +				   const char *name)
+> +{
+> +	struct arm_pmu_acpi_dev_data data =3D { };
+> +	struct platform_device *pdev;
+> +	struct resource res;
+> +	int irq, ret;
+> +
+> +	irq =3D acpi_register_gsi(NULL, group->gsi, ACPI_LEVEL_SENSITIVE,
+> +				ACPI_ACTIVE_HIGH);
+> +	if (irq < 0)
+> +		return irq;
+[ ... ]
+> +	for (i =3D 0; i < nr_groups; i++) {
+> +		ret =3D arm_acpi_register_group(groups[i], name);
+> +		if (ret) {
+> +			pr_warn("ACPI: %s: %*pbl: add device failed (%d)\n",
+> +				name, cpumask_pr_args(&groups[i]->cpus), ret);
+> +			last_err =3D ret;
+> +			continue;
+> +		}
+> +
+> +		groups[i]->registered =3D true;
+> +		nr_devices++;
+> +	}
+> +
+> +	/*
+> +	 * acpi_register_gsi() does not reference count the GSI mapping, so
+> +	 * release a shared GSI only once no successfully registered device
+> +	 * uses it any more.
+> +	 */
+> +	for (i =3D 0; i < nr_groups; i++) {
+> +		if (groups[i]->registered)
+> +			continue;
+> +		if (arm_acpi_gsi_in_use(groups, nr_groups, i))
+> +			continue;
+> +		acpi_unregister_gsi(groups[i]->gsi);
+> +	}
 
-Signed-off-by: Johnny.Fan <Johnny.Fan@cixtech.com>
-Reviewed-by: Fugang Duan <fugang.duan@cixtech.com>
----
- drivers/hwtracing/coresight/coresight-trbe.c | 22 +++++++++++++++++---
- drivers/perf/arm_spe_pmu.c                   | 10 ++++++++-
- include/linux/perf/arm_pmu.h                 | 10 +++++++++
- 3 files changed, 38 insertions(+), 4 deletions(-)
+[Severity: Medium]
+Can this cleanup loop in arm_acpi_register_pmu_devices() make unbalanced
+or duplicate calls to acpi_unregister_gsi()?
 
-diff --git a/drivers/hwtracing/coresight/coresight-trbe.c b/drivers/hwtracing/coresight/coresight-trbe.c
-index c7cbca45f2de..0c4bc8fbcaf3 100644
---- a/drivers/hwtracing/coresight/coresight-trbe.c
-+++ b/drivers/hwtracing/coresight/coresight-trbe.c
-@@ -158,6 +158,7 @@ struct trbe_drvdata {
- 	struct hlist_node hotplug_node;
- 	int irq;
- 	cpumask_t supported_cpus;
-+	cpumask_t irq_affinity;
- 	enum cpuhp_state trbe_online;
- 	struct platform_device *pdev;
- };
-@@ -1533,6 +1534,8 @@ static void arm_trbe_remove_cpuhp(struct trbe_drvdata *drvdata)
- static int arm_trbe_probe_irq(struct platform_device *pdev,
- 			      struct trbe_drvdata *drvdata)
- {
-+	const struct arm_pmu_acpi_dev_data *acpi_data =
-+		dev_get_platdata(&pdev->dev);
- 	const struct cpumask *affinity;
- 	int ret;
- 
-@@ -1547,14 +1550,27 @@ static int arm_trbe_probe_irq(struct platform_device *pdev,
- 		return -EINVAL;
- 	}
- 
--	cpumask_copy(&drvdata->supported_cpus, affinity);
-+	/*
-+	 * The ACPI path has no fwnode describing which CPUs implement TRBE,
-+	 * so it passes the mask explicitly. DT devices still use the
-+	 * firmware-described IRQ affinity.
-+	 */
-+	cpumask_copy(&drvdata->supported_cpus,
-+		     acpi_data ? &acpi_data->cpus : affinity);
-+
-+	/*
-+	 * supported_cpus gets pruned as CPUs are probed, so keep a stable
-+	 * copy for the IRQ action.
-+	 */
-+	cpumask_copy(&drvdata->irq_affinity, &drvdata->supported_cpus);
- 
- 	drvdata->handle = alloc_percpu(struct perf_output_handle *);
- 	if (!drvdata->handle)
- 		return -ENOMEM;
- 
--	ret = request_percpu_irq_affinity(drvdata->irq, arm_trbe_irq_handler, DRVNAME,
--					  affinity, drvdata->handle);
-+	ret = request_percpu_irq_affinity(drvdata->irq, arm_trbe_irq_handler,
-+					  DRVNAME, &drvdata->irq_affinity,
-+					  drvdata->handle);
- 	if (ret) {
- 		free_percpu(drvdata->handle);
- 		return ret;
-diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index b70f3fedf028..712b7f187301 100644
---- a/drivers/perf/arm_spe_pmu.c
-+++ b/drivers/perf/arm_spe_pmu.c
-@@ -1330,6 +1330,8 @@ static void arm_spe_pmu_dev_teardown(struct arm_spe_pmu *spe_pmu)
- static int arm_spe_pmu_irq_probe(struct arm_spe_pmu *spe_pmu)
- {
- 	struct platform_device *pdev = spe_pmu->pdev;
-+	const struct arm_pmu_acpi_dev_data *acpi_data =
-+		dev_get_platdata(&pdev->dev);
- 	const struct cpumask *affinity;
- 	int irq;
- 
-@@ -1342,7 +1344,13 @@ static int arm_spe_pmu_irq_probe(struct arm_spe_pmu *spe_pmu)
- 		return -EINVAL;
- 	}
- 
--	cpumask_copy(&spe_pmu->supported_cpus, affinity);
-+	/*
-+	 * The ACPI path has no fwnode describing which CPUs implement SPE,
-+	 * so it passes the mask explicitly. DT devices still use the
-+	 * firmware-described IRQ affinity.
-+	 */
-+	cpumask_copy(&spe_pmu->supported_cpus,
-+		     acpi_data ? &acpi_data->cpus : affinity);
- 
- 	spe_pmu->irq = irq;
- 	return 0;
-diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-index 02d2c7f45b52..7f1c03c55025 100644
---- a/include/linux/perf/arm_pmu.h
-+++ b/include/linux/perf/arm_pmu.h
-@@ -8,6 +8,7 @@
- #ifndef __ARM_PMU_H__
- #define __ARM_PMU_H__
- 
-+#include <linux/cpumask.h>
- #include <linux/interrupt.h>
- #include <linux/perf_event.h>
- #include <linux/platform_device.h>
-@@ -199,6 +200,15 @@ void armpmu_free_irq(struct arm_pmu * __percpu *armpmu, int irq, int cpu);
- #define ARMV8_SPE_PDEV_NAME "arm,spe-v1"
- #define ARMV8_TRBE_PDEV_NAME "arm,trbe"
- 
-+/*
-+ * Per-device CPU mask passed by the ACPI MADT walk. The synthetic
-+ * platform devices have no fwnode, so the IRQ affinity cannot describe
-+ * which CPUs actually implement the feature.
-+ */
-+struct arm_pmu_acpi_dev_data {
-+	struct cpumask cpus;
-+};
-+
- /* Why does everything I do descend into this? */
- #define __GEN_PMU_FORMAT_ATTR(cfg, lo, hi)				\
- 	(lo) == (hi) ? #cfg ":" #lo "\n" : #cfg ":" #lo "-" #hi
--- 
-2.55.0
+In arm_acpi_register_group(), if acpi_register_gsi() fails and returns a
+negative error code, the function returns early and leaves
+groups[i]->registered as false. The cleanup loop in
+arm_acpi_register_pmu_devices() then calls acpi_unregister_gsi() for that
+group even though acpi_register_gsi() never succeeded.
 
+Looking at drivers/acpi/irq.c:acpi_unregister_gsi():
+
+	if (WARN_ON(acpi_irq_model =3D=3D ACPI_IRQ_MODEL_GIC && gsi < 16))
+		return;
+
+	d =3D irq_find_matching_fwnode(acpi_get_gsi_domain_id(gsi),
+				     DOMAIN_BUS_ANY);
+	irq =3D irq_find_mapping(d, gsi);
+	irq_dispose_mapping(irq);
+
+If a malformed MADT GICC entry specifies an SGI (0 < gsi < 16) that
+acpi_register_gsi() rejected, calling acpi_unregister_gsi() will hit the
+WARN_ON(). Or if acpi_register_gsi() failed in irq_create_fwspec_mapping()
+due to a trigger type mismatch with an existing mapping, calling
+acpi_unregister_gsi() will dispose of that pre-existing IRQ mapping.
+
+In addition, arm_acpi_gsi_in_use() only checks whether another group with
+the same GSI has registered =3D=3D true. If two or more groups share the sa=
+me
+GSI and all of them fail platform device registration after
+acpi_register_gsi() succeeds, arm_acpi_gsi_in_use() returns false for each
+of them, causing the loop to call acpi_unregister_gsi() multiple times for
+the same GSI.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102084153.3975=
+282-1-johnny.fan@cixtech.com?part=3D2
