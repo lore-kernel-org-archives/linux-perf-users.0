@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793622397;
-	b=cxRPyJlqmrhwY5MTMBufeLXPUoCwJGQ+tRvt9b9nrACpEpFJwSC3t6tVVp/qD4rT2Psq
-	 pW7K0XGLjAuJRYABWu3Mz50dpLk1kduU1NQDJVxIoIbyDsuXRwmwHHrjx92IqiAnz9sXz
-	 XlrYDSKom4PQC8CJOKpFsqGLHeoqF+i4cUn45U2v26vSiJiikW1zWs7O/RU5ZIqo6v1wj
-	 PXDzHULi/ot4PSRNOYfmdJ4DpPJrJxhNPzSb02lp+TM0tGvVQSctxFKD+ERA0XLAsZw+b
-	 v8IKJc8J4bkrMsyPBNeS5gLyZkgTnCr6hnnPno5Zowkrehp8fJDU7qR/cmT9vMzOuyg==
+	t=1793622448;
+	b=D6WhaEit2n+HegIzg31+R2OP8vWfB6O4UnMYMjXza3FC6RQLB1uRbM7WN3sFNP2cUjIM
+	 68rn5YRxZ39ydqF5iHlnWO7v8LnvIrfOadnHIKJn89Tr1N1fHncoGiNl/+nJr0AXZxhl8
+	 LpuGC/NfTHP6/doT88i0Kd2EAQiYAWzBz/pKUR41Pt93yn4Ozz4Fb4Tsw+aEg7ggiZ6Mx
+	 41N0sqYYaf4HrclqQsfxhXP5SZ6dXBQGZJPXm/YE3TZkmGkRU790fvfXeU7vhDgaWUZC8
+	 fy5TBGJk4CuMprEGEMnWtae0Bh0s8OBrSCM1LjkT3qEgvMTt8+xbnF5B6jcgIvbqAkg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793622397;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793622448;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=G4Ee82eP+LfKaPe3VllAQgw7tuXGMgPPe14RTT2fQFE=;
-	b=rgntCux2Qhc+UdV7YzXil9fC3jy3DwAupfCqxLbtaJpwT4Q9c86U1HLpwg3juJOZZnm4
-	 S+MtehcmfFagH7PdsTmvIfEmz6OehGPZ87eaYUeIFf4gEt6BTY7UdlrkH9up6mztypIX+
-	 UGyKhsT1r4tOXwSvinrUA3jKoMo7KtVcX7/DJixNyHbxZ3DFOKHSh6niTBpwp2qEGcjtR
-	 8K1JyRsHTbAKcp65RU6jM5pYNLNXoJQsFi9sQD/pFB9Iqh2FEzA/TDf7pBREv1U8DvbEv
-	 FN3IChk4M8qI2vC9GGMSS5ikKGpxenVSeKhbidjmJ+HMbssbObFRbaGVkLG2jNSlzLQ==
+	bh=vMvg1LKxuTs4gRCYmDmsFqXQJ/wncWzBOK9gwq2Yv40=;
+	b=Hqa3rlo4GSq2if05thUU/S8UcJ/FKDUEExHfQgvqnRhTwAMpm6VOFnJVJ9CDKNkVZbWi
+	 PdFrrEdvfsMUK9u2w8lLcmrMaoTc5AQQNFGHtY6J0MI2/yHa9v/C1ugrIOkhV+GZV2XmA
+	 aC7zro0FB/epw2gaTWXp8JMWAgh4w+dWQY0T6ak+3BWiI0OOoTk+bx28lgD01VBxLdn3g
+	 hbxb/o8QSyX+h7C8by7gqCNPJgxI14NNAlIlr41WgaGm6iKTUH86lmE2BFIZJg2SSIi14
+	 wjT1emcPsXcnbnqsO3vyG6UUiriS/1UPx/OuBDN80YLZvnBFOW1CUUWNFFhZXAm3uyg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=V7DJrWBv;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XgwEBm3a;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559D6606A326
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Nov 2026 12:26:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07659606A33F
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Nov 2026 12:27:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=V7DJrWBv
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0F331F00A16;
-	Mon,  2 Nov 2026 12:26:36 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XgwEBm3a
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79CED1F00A1C;
+	Mon,  2 Nov 2026 12:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793622396;
-	bh=G4Ee82eP+LfKaPe3VllAQgw7tuXGMgPPe14RTT2fQFE=;
+	s=k20260515; t=1793622447;
+	bh=vMvg1LKxuTs4gRCYmDmsFqXQJ/wncWzBOK9gwq2Yv40=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=V7DJrWBvH1Amk7Ft7RMY8xIb+qdtAyKxjtb4BOzsBvgfnoCAkFTnKybgMryyd07NU
-	 eU0bMh8U3yy5tgJEzm04oC15foVUzjrfoOV/iGImU8QUzAQfFXuo2D13BhjhdMWfZ3
-	 Z+70W9MAfZ2wgM51C5CVQErk/QMgdUsDyTcLchYYOY0CtA6GUe1L1xlog7BwhLwPQ5
-	 f3+tug5V9VYIsbWPeP83djno+CiUtqpvieBa2j+dQFVwNTm+gWDmpNBhGkX8wU34gi
-	 TEDj/9kPDMntdcZDhRTW2vBzHH0OdRR/xOBa6COTgHm1CX8VDcQRK3EXeZr+tSF9uv
-	 2iLHoFIFYjUag==
-Message-ID: <sashiko-outbox-193401@kernel.org>
+	b=XgwEBm3ay8bU+68sWvABxjTGXbh9KanJC1hs60hRyTtwjzxdVnX51VuPzD6LQGFy1
+	 fz95zjjS0uDwLyxA+mxPvCpOfbBh5EBed+k87JSmse2lmuvObi0nZIuhshtQsSLM1L
+	 a3deK/TI2X3eXMjLFImMBhGvnk9EPOXBx5GltqnaNlooadJxdl7a714ePqTjx67E38
+	 U+Uifne14Euir3Dt9XWK7QljLWA05BVqeHHFTFaKiM0aABoDP7o8mLFa/DtazHi942
+	 Nlt9oR5BP6mTQZUGN0cWlI5ZSAH61DFqe5kCmBwHAh8daSvt1D9KigqzFYMMJyV2Me
+	 2WPEHhKfcVVyA==
+Message-ID: <sashiko-outbox-193403@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 14/18] perf cs-etm: Don't print missing buffers in
- snapshot mode
+Subject: Re: [PATCH v3 16/18] perf test: Allow infinite named_thread loops
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "James Clark" <james.clark@linaro.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261102-james-cs-unformatted-per-thread-fix-v3-14-dbcb0c281b9b@linaro.org>
+In-Reply-To: <20261102-james-cs-unformatted-per-thread-fix-v3-16-dbcb0c281b9b@linaro.org>
 References: <20261102-james-cs-unformatted-per-thread-fix-v3-0-dbcb0c281b9b@linaro.org>
- <20261102-james-cs-unformatted-per-thread-fix-v3-14-dbcb0c281b9b@linaro.org>
+ <20261102-james-cs-unformatted-per-thread-fix-v3-16-dbcb0c281b9b@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 02 Nov 2026 12:26:36 +0000
+Date: Mon, 02 Nov 2026 12:27:27 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,16 +60,17 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> The driver produces lots of AUX records for trace data that was never
-> captured in snapshot mode. Downgrade this to a pr_debug3 message as it's
-> only an error in normal mode.
+> The following test will want this to run forever, so add support by
+> treating 0 loops as infinite.
 >=20
-> Reviewed-by: Leo Yan <leo.yan@arm.com>
+> Convert i and named_threads_work to be unsigned to avoid undefined
+> signed overflow behavior in infinite loop mode.
+>=20
 > Signed-off-by: James Clark <james.clark@linaro.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102-james-cs-u=
-nformatted-per-thread-fix-v3-0-dbcb0c281b9b@linaro.org?part=3D14
+nformatted-per-thread-fix-v3-0-dbcb0c281b9b@linaro.org?part=3D16
 
