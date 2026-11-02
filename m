@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793607689;
-	b=vXJyVSAd1UmAs4j8rqP/u/3DTyiHxzv8s5yrU4LhJy70RecaBb+ohAvPuoHSsdIcsdVD
-	 vjEknpXW7maTWGdq6AV1EbZee0B3R75Onac2c4W+vt5zpMb8UUt1cXRMnC6Tlq0JBiRBF
-	 +R6+JVsgsOllM9pOiJ9aaOtsI80rMT4Cp3GUXcEHhSbJh7MoM3L10LvcWyhz0h9Nx9pah
-	 aG5+UZ4OgSEHUCgS6is9J2LYQctJLRgejAy/wQGBVRb2uAqexZnNcksjRkdOKRlMBU9G/
-	 YBiS7LyYPw6kgRFNyymQfFvCLQ/CJNlCI0j8jwJf3s4J55UOjaSUVuzNsWuwzwpGyQw==
+	t=1793608303;
+	b=iAFZX66l5UkXI9eMp4zYxu/8hMGty0l43gYp/CLeXnxyokRKq6GPOleeU9/Z5xFGECzl
+	 2zsgSVaI0ysh1iAAfrbOz+yQxigLn41joO9Mb+uBwm/8P3PsuhNcDggCv2xHkS34r5Pw7
+	 0GoKbRx3EJVSMO9So57WSAD/w2hLrdmbxgVEZBzjKhrBoXybwGUbcf1qSJ4VKj7gbU5m9
+	 f2+LmxlCq2Xn60K5ZSKB5mWh2QwuQKlHJgLpqQY1owVHC0bT2Q/79gloIXZ+PJmNSFDrM
+	 jQfFs207nxRzVhaY1SQJ9ENDWgKlo6FQka9GAuMUhf0Y9gSi0ML2tpdp+i7/tnJ/HUg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793607689;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793608303;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=AvJtfbiV6SfMnq20pOgeXr9a5dTB4ppz5wJgI3CXFy0=;
-	b=wcAf+VCZlAZtHTi22D+osr7nG0AvVO/hPBTaaIRBpWHvlHTti93wqzKn0l6hrlb6Qzk4
-	 K1DPte4Gydg/+n/bg4BGPbKZnu98E3dsnY/X8yg+kEvIbo8VJV6nop4ZDqUx9uGqk1Fws
-	 0VTONGx1PRo/3Onnc9ChUOjxRM07hYrfyHY0yDruhUZUOmN3Gk/apNF7JoewMrksrbCRv
-	 1FT9R3VW74Q5XGDo0yL/p+TkxE/5QMZo4wCrXmseWWbTS0Aq0PLx85XX+7Ffo0EvpUoyr
-	 coqnXQWM5zQphg4FANsGRjU1R1DDsYz6aJEEXh8dypP1nPyRuPU3V/UlKWfrKjhEBAQ==
+	bh=NaA1VUivfnrnRerXlc8rdVNlkmFDH2ZRNiahABFqU1o=;
+	b=ecbL8U5b2JoIdPGB1xgv/FwdeB93tX/KhAmu1avDMJDWOJ+OzYz9v5qoBBBPUdRGe70D
+	 eYssB7dqdosb5QzIuw+VDdkkJiRVb20aUTp7qwjqK21+PyJjQZLnG4Bpx8KBFP72lPZKC
+	 8V1JkNyvZJZPOy9c4mu/gVDxbQKOKMV57dKDq21x+yf4cbK/Pon5W/411icq0oECg+wPo
+	 OCT9ZPiO6eX6vDtpJL7+T3/AH08E0io27k5ml7FP+6IhSdPq1qmbg4CMxm0T6F/756C3j
+	 hYMcbgRHOePBT3x1TgXLFv262cJMvTJuwecZTHdSEB5obW8tv4OzCnp0LjvJzbIz+fg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=b8W3Fa6n;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RgkLki6r;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F381860A2611
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Nov 2026 08:21:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205EF60A2619
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Nov 2026 08:31:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=b8W3Fa6n
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55EB71F00A17;
-	Mon,  2 Nov 2026 08:21:28 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RgkLki6r
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83C631F00A1E;
+	Mon,  2 Nov 2026 08:31:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793607688;
-	bh=AvJtfbiV6SfMnq20pOgeXr9a5dTB4ppz5wJgI3CXFy0=;
+	s=k20260515; t=1793608302;
+	bh=NaA1VUivfnrnRerXlc8rdVNlkmFDH2ZRNiahABFqU1o=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=b8W3Fa6n0lMSA8SK5GoC4/PatsM8z5cX3DXZ/qvtkzbuoFCk+LxgU5iAP/UfZZzIV
-	 4TirUVjOKsq5SNFpA2sZWxtHLhDtc0tnFtUBJWZ8B6KdllKCmmeBa3Cg4IU6W9X/gn
-	 AkAwj2qHlBHSKj7lTfTywbt0epW+brm8BWo2AhTRrhyckySfYPl7MRsNMepVUNRp2M
-	 JWlcU46HnYJgOdCp90gFNTONqz2h0v9UOyA7uljuG9DY4fnw5E8g/UQYR0QA2O94G6
-	 mnuFy9OD+7X1F62Dr4d8DLxrah1hoIJQzwBqKgIkEuhwGgSGZ8tay92FKNDgBIWXAl
-	 ZLXiXuFDTTlvA==
-Message-ID: <sashiko-outbox-193098@kernel.org>
+	b=RgkLki6rMc9lX1JXc2eB19XcUmPGj5iXd2qzFDYb9WiTsiHEqAwsUm55o4OuvZnUs
+	 uuMHfcSL/9JRNZAZIYlR/4URENO9XNLmiRTgUaCF8fHt/yrHIw/onJACjyKGvjHwOZ
+	 2vUSUkC9ylt9es6zZ/e1XgeZeICHoZsafjOlF4lc8X+RmYJW+MO7EUqmHGUMiBdrO5
+	 QOV8YE3OCKcZCUCFhwCcAsuZGmqecZ3VK+p5c9MY6hDGc8/sTRVaCp70vH/AF6OMYi
+	 3VLpb3bjq6D2FfSrGxZ2u+YQ7GlYG+CeCAXKqNjAxUYppObfbliVAYYM9W1wfrRVZn
+	 PsHg7ERQyaPtA==
+Message-ID: <sashiko-outbox-193114@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 4/6] perf/x86/intel/pt: Clear TraceEn in hardware in
- cpu_emergency_stop_pt()
+Subject: Re: [PATCH 5/6] perf/x86/intel/pt: Reset stale MSR state on CPU
+ start and resume
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Adrian Hunter" <adrian.hunter@intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261102074039.26983-5-adrian.hunter@intel.com>
+In-Reply-To: <20261102074039.26983-6-adrian.hunter@intel.com>
 References: <20261102074039.26983-1-adrian.hunter@intel.com>
- <20261102074039.26983-5-adrian.hunter@intel.com>
+ <20261102074039.26983-6-adrian.hunter@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 02 Nov 2026 08:21:27 +0000
+Date: Mon, 02 Nov 2026 08:31:42 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,31 +61,33 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> cpu_emergency_stop_pt() stops tracing through pt_event_stop(), which
-> assumes the software state accurately reflects whether tracing is
-> enabled.  That assumption can fail when a crash NMI interrupts
-> pt_config_start().
+> The Intel PT driver caches the last values written to
+> IA32_RTIT_OUTPUT_BASE, IA32_RTIT_OUTPUT_MASK_PTRS and IA32_RTIT_ADDRn_A/B,
+> and skips redundant WRMSRs.  Those cached values are not invalidated when
+> the hardware state changes outside the driver's control.
 >=20
-> pt_config_start() sets TraceEn in IA32_RTIT_CTL before updating
-> event->hw.aux_config.  If a crash NMI arrives in that window,
-> pt_config_stop() sees TraceEn clear in aux_config and skips the MSR
-> write needed to disable tracing.  Tracing remains active in hardware.
+> After S3, hibernation, CPU replacement, or similar events, the hardware
+> MSRs may be reset while the cached copies retain their old values.
+> Conversely, after warm reboot, kexec or kdump, the MSRs may retain values
+> from a previous kernel while the cached copies start at zero.  In either
+> case, the cached state no longer matches the hardware state and the
+> driver can wrongly skip WRMSRs that must be issued.
 >=20
-> Alternatively, an earlier NMI in the same window can stop the event
-> without restarting it, for example a group throttle calling
-> pt_event_stop(event, 0), or a PT PMI for which perf_aux_output_begin()
-> fails.  pt_config_stop() again skips the write, so the event is stopped
-> only in software: TraceEn remains set in IA32_RTIT_CTL, and
+> In particular, after resume the driver can restart tracing with
+> OUTPUT_BASE left at its reset value of 0.  Depending on the output mode,
+> this may cause Intel PT to write trace data to unintended physical
 > [ ... ]
-> Fixes: 8e105a1fc2a0 ("perf/x86/intel/pt: Factor out pt_config_start()")
-> Fixes: 25e8920b301c ("perf/x86/intel/pt: Add sampling support")
-> Fixes: 08c7454ceb94 ("perf/x86/intel/pt: Add support for pause / resume")
-> Fixes: 2e17bf3a469a ("perf/x86/intel/pt: Fix stop/start with no update")
+>=20
+> Fixes: 295c52ee1485 ("perf/x86/intel/pt: Prevent redundant WRMSRs")
+> Fixes: eadf48cab4b6 ("perf/x86/intel/pt: Add support for address range fi=
+ltering in PT")
+> Fixes: 9a6694cfa239 ("perf/x86/intel/pt: Do not force sync packets on eve=
+ry schedule-in")
 > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102074039.2698=
-3-1-adrian.hunter@intel.com?part=3D4
+3-1-adrian.hunter@intel.com?part=3D5
 
