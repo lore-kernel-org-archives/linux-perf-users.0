@@ -1,57 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.92.199
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793623259;
-	b=jjkQl8dajS8NE4J+iO5+SMqz3KC20jsRSLi5IUyBMKWzhLBhtZhmjA7471CkqTemBdSl
-	 p33MZa2hNeNg826mmgTo0BMpbXKDL0I+KOtiFaRM/4lQtlC2oe4LqNWjW9N7czNq43Pbf
-	 iQ51sRJfnfmlWl3BoSXyouBogrndsdM9SFvC6H3uceZDSuFj9E3p4ZdmVkUwOuHGoXQvU
-	 99sXdvjfYbqqFRnmXLB/tAiM6z8A5kAq+rRnqER/j4gPsa6quCYrUTwRiZYduRGmRLVPi
-	 dghg2N99ITqAE1JD7edM+hajJngQ53/oWzUGqA6mKVEmATv/eRlMg6ZHMr8Yz3O1n7g==
+	t=1793624175;
+	b=HeNE5MCwEz9pvIrN9QGvlar1jM82ogDZSQvZXwyviseJPYh8Oaj1l1m6nqXC0U+zWoJA
+	 Cd1q9NtDByUj/1x/doLMWogjfz6RXSm11inxfosG+85dTKPxFH1O9E4LLw6Wf8kOyIX+U
+	 HbAf+Qw68zXwzO6p5YR01yVskEBqW11XJHgsKM4JdTutL9avunWRR1YWTkt2rRdfDwjIQ
+	 S1XnYx0m5VS0xTg1dVzrb++95KUbmBEE9OF8Tc/UgGUOCJ1A1knmx+VF7MpPJHNFxVdM6
+	 EkBxECtQbzHU9ylYvLR64UMtdYkiHici6lDt3XMlKPP5W0UwaNRsj3sltGsMNXiOVCg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793623259;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=yqWJ3K/q9a6DjSYaKg4T0oP6lH+uQTqzjcwFUtRNPuE=;
-	b=wWfA2JofQp1bJRgvg3fL0kUraO7OFBoD2T5ZPxrkra4Ljq8o5/ug6ltAqnvsQo4s8ZuS
-	 nquMtJiFp3YX4L513v5E0kuEX4FAOZUH4p0k/pRerCyqXPr5jtPy465uKoSW+jKU3pF1k
-	 X7dolL0npocpVgjNIvABdYX6unffIsbAvS+u3m7OyiFdZRTPqDJkEp29N1M5AXHgz/mcp
-	 vAvaVQNhtTlBK5v1soOfJLKIuX92OLtmuAfl9q1+7PKV0VQPrqzqiwlx9SzrNLUjZOpPQ
-	 zPLkKvlRjLif5BPi9uEEuLdgI9uy1nt1FGNabR1islb2NRpPbNYp6vsDt56ktwX+Akw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793624175;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=7feqypzkFTwtbPgjElm3kiRnEaQuqXiolkniaWY6h6I=;
+	b=sKvXDHDuea9/TFF3TbIb6whAKTYaNunbXnnLmj1eoJqYU4srJnhpvukrgaKl5o+duJVS
+	 f7ql1rhQbgDjLlZWpJewPFxYPbcIBj9llz/SWS5X7X01DANFkC34HAUrDdXjqMTGRHhaf
+	 JAm7t9ArPQTYht6KIQEKprtl3dn4l/gZkVKfVfdWvTVdvSUZKDdcyYcWIqPtG81bT/C/j
+	 S63oNxGUXrEP10vW4zEiIUJWxg05u7L01M2h6mLuTfcHz8ekd4BTzSHCI4sb0DSyXLROX
+	 K12Wd7gI1w8MHLHpE/mJ4HT1U8CymrvmiG26r2kN/Jdwo2WGF5TOMIaFQI+tvNNEmtg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=A2yYVd+F;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=infradead.org;
+	spf=pass smtp.mailfrom=infradead.org;
+	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=LA0PZhnd;
+	arc=none smtp.remote-ip=90.155.92.199
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9FA7606A332
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Nov 2026 12:40:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A76606A324;
+	Mon,  2 Nov 2026 12:56:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 63A76606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=A2yYVd+F
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A3021F00A1B;
-	Mon,  2 Nov 2026 12:40:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793623258;
-	bh=yqWJ3K/q9a6DjSYaKg4T0oP6lH+uQTqzjcwFUtRNPuE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=A2yYVd+FAOcJxm4XY/yhn+gJN3iZaPSkLPSXVtsQe+1RQGWiQBGUjERIlv1mBfi9j
-	 +yQkTjKRhouu0lcXBfXf+cdVFsQ/ciWOncoYRWeLhgyf2cXMTQccIAZGrFv379C9Nj
-	 QxoCGCBIodwabuD7VAboMlwPaM6TEfZEmbPTBzLLrsTCkXNs13D1O+FLF1FbGL07Zm
-	 0Tlux9h//GLwe8LvQNI9LXJaU6/cmFpjLo0F2RTO8bes6+TbJvF7MjIhZ4ggdVTfCK
-	 mWOI/uvtlxIqAEzY1WjoS6ga6d6f1Fq/u7d890BEOcjFMNDskwnp71zQujCosuqjQU
-	 JeAxcKN2TpKuQ==
-Message-ID: <sashiko-outbox-193438@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 18/18] perf test: cs-etm: Test multiple per-thread
- threads
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "James Clark" <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261102-james-cs-unformatted-per-thread-fix-v3-18-dbcb0c281b9b@linaro.org>
-References: <20261102-james-cs-unformatted-per-thread-fix-v3-0-dbcb0c281b9b@linaro.org>
- <20261102-james-cs-unformatted-per-thread-fix-v3-18-dbcb0c281b9b@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 02 Nov 2026 12:40:55 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=LA0PZhnd
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=7feqypzkFTwtbPgjElm3kiRnEaQuqXiolkniaWY6h6I=; b=LA0PZhnd9MuswtIu5dz1vi85Ch
+	L4dU4YPzzP5WZmNsKcKb6XHsbtDgxxvyx7PbKknKrQ/6P5L0MPkjEEz/0+4jpvOAGzCn0jqlsA53y
+	yaItw88PQIt4P+ZYBvy4ociph6v26quANqeqRybaZ4z5/IalgA3VS9pQOBCbG1J8YIQeWMjE68fOh
+	73fIaujDBmP9yiHlUtuDDVlPONzwTtepTwpTFN02e0ggL2uzkVG6FjIt0HzVBzV+/tqDoK61UdH4q
+	DdDRiGnKndmafr0YeYVL3ciK2xlbw0sCUpAkkpC5aVKjfhJqEOgl3lrKnZK/tdLKnMuypteiEhd3c
+	6nRsfOpA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xNrZg-00000002Wga-3uwY;
+	Mon, 02 Nov 2026 12:55:51 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 2C2BC300322; Mon, 02 Nov 2026 13:55:43 +0100 (CET)
+Date: Mon, 2 Nov 2026 13:55:43 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sandipan Das <sandipan.das@amd.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Ananth Narayan <ananth.narayan@amd.com>
+Subject: Re: [PATCH] perf/x86/amd/uncore: Avoid context migration from
+ non-owners
+Message-ID: <20261102125543.GH1813469@noisy.programming.kicks-ass.net>
+References: <273135a6d33a40f442fb18e140a90689fae7cd32.1793614726.git.sandipan.das@amd.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,143 +78,75 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <273135a6d33a40f442fb18e140a90689fae7cd32.1793614726.git.sandipan.das@amd.com>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] perf test: cs-etm: unguarded kill in cleanup_files() aborts unde=
-r set -e
-- [Medium] perf test: cs-etm: unsynchronized perf record startup and wait l=
-oop
---
+On Mon, Nov 02, 2026 at 03:52:07PM +0530, Sandipan Das wrote:
+> Each uncore context is owned by a single CPU that hosts all events for
+> the corresponding uncore domain and is advertised through the sysfs
+> cpumask attribute. When a CPU goes offline, the context is migrated to
+> an online sibling if the departing CPU is the owner.
+> 
+> Before commit d6389d3ccc13 ("perf/x86/amd/uncore: Refactor uncore
+> management"), uncore_down_prepare() checked whether the CPU going
+> offline owned the context. The check was lost when the function was
+> replaced by amd_uncore_ctx_move(). Hence, when a CPU that is not the
+> owner goes offline, ownership is always handed over to the first online
+> sibling in the uncore domain irrespective of whether another sibling
+> already owns it. This goes unnoticed as long as the owner is the
+> lowest-numbered online CPU in the domain, since the first online
+> sibling is then the owner itself. Once ownership has moved, that no
+> longer holds.
+> 
+> For example, consider an L3 domain spanning CPUs 8-15,136-143 and owned
+> by CPU 8.
+> 
+>   $ cat /sys/bus/event_source/devices/amd_l3/cpumask
+>   0,8,16,24,32,40,48,56,64,72,80,88,96,104,112,120
+> 
+>   $ echo 0 | sudo tee /sys/devices/system/cpu/cpu8/online
+>   $ cat /sys/bus/event_source/devices/amd_l3/cpumask
+>   0,9,16,24,32,40,48,56,64,72,80,88,96,104,112,120
+> 
+>   $ echo 1 | sudo tee /sys/devices/system/cpu/cpu8/online
+>   $ cat /sys/bus/event_source/devices/amd_l3/cpumask
+>   0,9,16,24,32,40,48,56,64,72,80,88,96,104,112,120
+> 
+>   $ echo 0 | sudo tee /sys/devices/system/cpu/cpu10/online
+>   $ cat /sys/bus/event_source/devices/amd_l3/cpumask
+>   0,8-9,16,24,32,40,48,56,64,72,80,88,96,104,112,120
+> 
+> Offlining CPU 8 correctly moves ownership to CPU 9 and onlining it
+> again leaves CPU 9 as the owner. However, offlining CPU 10 then makes
+> CPU 8 the owner while existing events remain on CPU 9. Both CPUs are
+> now advertised for the same domain, so tools that open an event on
+> every CPU in the cpumask count the domain twice, and the context gets
+> modified from two CPUs without any synchronization.
+> 
+> Restore the ownership check that was lost during the refactor.
+> 
+> Fixes: d6389d3ccc13 ("perf/x86/amd/uncore: Refactor uncore management")
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> ---
+>  arch/x86/events/amd/uncore.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+> index 7aa5a5b652a2..c307323f6390 100644
+> --- a/arch/x86/events/amd/uncore.c
+> +++ b/arch/x86/events/amd/uncore.c
+> @@ -595,7 +595,7 @@ static void amd_uncore_ctx_move(struct amd_uncore *uncore, unsigned int cpu)
+>  	for (i = 0; i < uncore->num_pmus; i++) {
+>  		pmu = &uncore->pmus[i];
+>  		curr = *per_cpu_ptr(pmu->ctx, cpu);
+> -		if (!curr)
+> +		if (!curr || curr->cpu != cpu)
+>  			continue;
+>  
+>  		/* Migrate to a shared sibling if possible */
 
-commit 6aa8bbe9530a4ed93f2099e972a4b1384053a19f
-Author: James Clark <james.clark@linaro.org>
-
-perf test: cs-etm: Test multiple per-thread threads
-
-This commit adds a shell test for CoreSight ETM with TRBE sinks that records
-a workload with multiple child threads in per-thread mode and checks that
-samples from all child threads are present in the decoded trace.
-
-> diff --git a/tools/perf/tests/shell/coresight/per-thread-multi.sh b/tools=
-/perf/tests/shell/coresight/per-thread-multi.sh
-> new file mode 100755
-> index 0000000000000..c6bf1ff2e53d1
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/coresight/per-thread-multi.sh
-> @@ -0,0 +1,76 @@
-> +#!/bin/bash -e
-> +# CoreSight per-thread multiple threads (exclusive)
-> +
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +# If CoreSight is not available, skip the test
-> +perf list pmu | grep -q cs_etm || exit 2
-> +
-> +if ! tmpdir=3D$(mktemp -d /tmp/perf-cs-per-thread-multi-test.XXXXXX); th=
-en
-> +	echo "mktemp failed"
-> +	exit 1
-> +fi
-> +
-> +cleanup_files()
-> +{
-> +	if [[ $parent ]]; then
-> +		kill -9 $parent
-> +		wait $parent || true
-> +	fi
-> +	if [[ $perf ]]; then
-> +		kill -9 $perf
-> +		wait $perf || true
-> +	fi
-> +	rm -rf "$tmpdir"
-> +	trap - EXIT TERM INT
-> +}
-
-[Severity: Medium]
-Can cleanup_files() abort before removing tmpdir or killing the remaining
-process when the script runs under #!/bin/bash -e?
-
-Later in per-thread-multi.sh:
-
-    kill $parent
-    wait $parent || true
-    unset parent
-    wait $perf
-    unset perf
-
-If the background perf record process exits with a non-zero status,
-wait $perf reaps the process and triggers set -e exit before unset perf
-runs. When the EXIT trap enters cleanup_files(), $perf is still set to the
-already-reaped PID, so kill -9 $perf fails with ESRCH and aborts
-cleanup_files() under set -e before rm -rf "$tmpdir" runs.
-
-Similarly, if $parent exits early before unset parent runs, kill $parent
-fails under set -e and cleanup_files() aborts on kill -9 $parent before
-killing $perf or removing "$tmpdir".
-
-Should kill -9 $parent and kill -9 $perf in cleanup_files() be guarded with
-|| true (or 2>/dev/null || true), similar to wait?
-
-> +
-> +trap cleanup_files EXIT
-> +trap 'cleanup_files; exit 1' TERM INT
-> +
-> +# Multiple --per-thread events are only supported with 1:1 sinks/sources
-> +if ! ls /sys/bus/coresight/devices/trbe* > /dev/null 2>&1; then
-> +	echo "No TRBE sinks, skipping"
-> +	exit 2
-> +fi
-> +
-> +# Launch 2 threads to run indefinitely
-> +nthreads=3D2
-> +perf test -w named_threads $nthreads 0 &
-> +parent=3D$!
-> +
-> +# While parent still exists, wait for the 2 children to spawn
-> +while kill -0 "$parent" 2>/dev/null; do
-> +  threads=3D(/proc/"$parent"/task/*)
-> +
-> +  if (( ${#threads[@]} >=3D $(($nthreads + 1)))); then
-> +    break
-> +  fi
-> +
-> +  sleep 0.1
-> +done
-> +
-> +echo "Recording..."
-> +perf record -o "$tmpdir/data" -e cs_etm//u --per-thread -Se -m,64K --pid=
- $parent > /dev/null 2>&1 &
-> +perf=3D$!
-> +
-> +sleep 1
-> +
-> +kill $parent
-
-[Severity: Medium]
-Could starting perf record in the background and immediately running sleep 1
-before killing $parent race with perf record initialization on slower or
-loaded systems?
-
-In tools/perf/builtin-record.c:__cmd_record(), events are opened disabled in
-record__open(), followed by record__synthesize() (including BPF and auxtrace
-synthesis), and only enabled afterward via evlist__enable(). If startup and
-synthesis take most or all of the 1-second sleep window, kill $parent can
-terminate the workload before evlist__enable() or before both threads are
-sampled, causing perf script to miss thread1 or thread2.
-
-Also, the /proc/"$parent"/task/* polling loop above has no timeout and brea=
-ks
-as soon as the task directories exist, which can happen before the child
-threads call pthread_setname_np() in tools/perf/tests/workloads/named_threa=
-ds.c.
-
-Would it be more reliable to source tools/perf/tests/shell/lib/waiting.sh to
-use wait_for_threads() and wait_for_perf_to_start(), or pass sleep 1 direct=
-ly
-as the perf record command workload so the 1-second window begins only after
-events are enabled?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102-james-cs-u=
-nformatted-per-thread-fix-v3-0-dbcb0c281b9b@linaro.org?part=3D18
+Now, I see the Intel stuff cancels the hrtimer here; but AFAICT the AMD
+bits tie the hrtimer to the ctx, and when the ctx goes empty -- due to
+__perf_pmu_remove() it will get stopped there, right?
