@@ -1,45 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793585579;
-	b=hUP9LS8pmhCZYVU0o+dMFocCG/ulCdA7XqScM81JOiDC7LoGfXb6D5BAbz+il0KWzbHw
-	 5at9BxSrfRYZGit0VQu3wfD8uVYRcOCie/63gid4OpAWIuETTGhpXtPxEZJgUi9KmJaLT
-	 3rIDR+62CiT4QR/xpV2WU7KfzxT1Ziw+J8TwEPlFbKFfFcky9hQBNVbaFoI/tmjD4wg2r
-	 7Ekc9K6CL+CHrFKsRZDYuXJqhUJ7e3JFuHnY9lokzmuKhP/9vov4rR0jnhtXwZl5uJYhX
-	 GZMMBWG6cAY2nGxNcJ0pCL6T+rIaV9VvbRKKnXbsdg/PtfmMtpXK9f5asBPw7zW/4WQ==
+	t=1793585586;
+	b=gMeDPUcTayIiAhacZ5mw1GxF266EluNRSJkni75tWYQUYkn9XH559jV33e+SprYSxPpz
+	 0tST93zxjZMcwc/fx2Q/btyvxcj6csc9GCgt2lxRtWQyKWtwdudkoT6nvDDTjOgf3eVw4
+	 owmKX2bIZemr1MiJEkffqsTdchoRwrgZVrgU5Soo5WSvzazciVbXZNMG+OdDaCxWc54nt
+	 ot7bCvvt7LycPCuNCDoqLmuv4wtsQ5B0Or8gczugqSmn1FXVft5bIZawdOaDG+CZW7fT+
+	 204DaibDrqC6Sn2oqKDtCms7S3zvGXGBM7Xu81VJwS8iGiVWMbIzbjShXYbs64lT8gA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793585579;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793585586;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=obEsgLblQBIWl8a18cZtDAHySJ503T0PQpQZjZ7IJWo=;
-	b=3e0fFVTZWYzdwmFbi+fbb5S9FNJ54Af6b8Jt/fcoYpzuQKe5aZjof1G92kqKyyMqD+CN
-	 ck32wgfMRJowevNZf6Kg8e4ZDxWEW2+JnpCAFV8kvurpE8ARA4DFgvLvc78734SMmVcu1
-	 TVBxf5M/hJ9q/Xus9yt8svi7apG6tI3+IRrhyWxCdkzdcU+l7ZhUwtuvzYZoRxd5HKfP9
-	 Kr2FYVFsLy3rDrvV8myJ7eqh7MScBcxsQ6s7jSXHSx1YRJprM3ki7SJNpThgvs4asmrgB
-	 JpHETe5NE7E+Xf00Yf9Xk6q/ZJGcRvCZtgM4JJ4WgiE8alAWZ852BP4UJ4Z88j7KXVw==
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=cU0Ay6zVnXJvrg0bXiWTHLMuHcC/T70qrKx/9BeMpik=;
+	b=uR166CAvQGRi93da2eb4aadeOv1zIWZ0wv2LCACUPSUUpXRtuMtdOydBa5JYiVdLVbvL
+	 9XX2ZEdIRGf7e+U5O6FjaoYhmXk4fp4751JYOPRiagF+na7dSTHZhDNVXekKo/zFJH5Xw
+	 zIa4TLmgWRxnOMjexJWUr6iHCQ/dBzjWJYswt0c7kbMHyKWk0GLWLgK8dtFrMFWLjPb/e
+	 YEGT/WjjPR70RmA9H5a3iVXUIUxzW5/pMQN72yj8a1Qkf1c+u6H9jHXG2bPK5mzuac1qU
+	 X4tiP7Twma61KJ7T744x5gor2iVSttuZzycl71U81mAGcimeoIHb5dbaqgQMn0VAYYw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aBNcj9k1;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XufmkUxv;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6435606A32F;
-	Mon,  2 Nov 2026 02:12:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C8660A3832;
+	Mon,  2 Nov 2026 02:13:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aBNcj9k1
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFA181F00A02;
-	Mon,  2 Nov 2026 02:12:56 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XufmkUxv
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D79781F00A1A;
+	Mon,  2 Nov 2026 02:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793585578;
-	bh=obEsgLblQBIWl8a18cZtDAHySJ503T0PQpQZjZ7IJWo=;
+	s=k20260515; t=1793585585;
+	bh=cU0Ay6zVnXJvrg0bXiWTHLMuHcC/T70qrKx/9BeMpik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=aBNcj9k1mD/PT4xrixvgEEhQ5VnFDs/YxcBkEwK/YDogizDwyC99eZeL4uqR49uBv
-	 dmWc5gQlLjhuxI1xmkeQimNkgigtV/Z9jX15/oC8CorZQUTzh0N2hP8o2FjRddhOFM
-	 jgNBUKSUctT3yXx1D4keAPQnlKTCSjPwDWOG5zm6kj/FMWr87rfTb2h627Ue74Xive
-	 /iNekqTEzaD8ww9wFJPG4Y9p2oNeSdwWeiTUYXyHMKwme4A7g0HWWw+xy4lNuc/IAl
-	 Pr8bY//poZWnLnGtXJ9/Sdu5uCQTg9KFBQziAgg9J6z4l6l4i0ziSiOYcemhuGDSe6
-	 s3ZkCYmgWef0w==
+	b=XufmkUxvHH+0MuNGZb1UEOHeg23Orzws9wTYjZTnlsTqb+VaxaQDOw7H0uxGcxDVB
+	 FyZsHHPT/rHpPjo0REBCKoPCyumePNul5LVds3XLOwOEA0Vw/Riaox315tAUlkwWHf
+	 MrpBzFFSNZnlIm/4VZXvUs6EhdDhTkJ9+21qQrxabjE+Al0g1wCgBQZgmkAVumVoRa
+	 yxn7HuFyc6bL1EHVYIDUMs5MdgNSTKn/910yNM8wLxCx34+rIi5zkqpRy2jNkLmcGp
+	 IpGv8NE8gpPrE08YXUpuwOEKqz2xN4o1J1g0ttTYR2hTd9L2BuavLtghZqx5pWawmi
+	 zlIxJ7XQoUTBw==
 From: Sasha Levin <sashal@kernel.org>
 To: Nathan Chancellor <nathan@kernel.org>,
 	Nicolas Schier <nsc@kernel.org>,
@@ -62,9 +61,9 @@ Cc: Sasha Levin <sashal@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Thorsten Leemhuis <linux@leemhuis.info>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/7] kbuild: factor the userspace ABI flags out into KBUILD_USERABI
-Date: Sun,  1 Nov 2026 21:12:47 -0500
-Message-ID: <20261102021253.2545235-2-sashal@kernel.org>
+Subject: [PATCH v3 4/7] tools: build perf in tools_build
+Date: Sun,  1 Nov 2026 21:12:50 -0500
+Message-ID: <20261102021253.2545235-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20261102021253.2545235-1-sashal@kernel.org>
 References: <20261102021253.2545235-1-sashal@kernel.org>
@@ -77,59 +76,72 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-KBUILD_USERCFLAGS and KBUILD_USERLDFLAGS pick up the flags that select
-the target ABI for userspace programs: --target= under clang, -m32/-m64,
-or CONFIG_ARCH_USERFLAGS. Collect those in KBUILD_USERABI and export it,
-so programs built outside of kbuild's userprogs can be compiled for the
-same ABI without also inheriting kbuild's warning and language flags.
+Add CONFIG_TOOLS_BUILD_PERF. perf is built as it is built standalone,
+with optional features enabled when their libraries are installed, and
+with perf's WERROR setting following CONFIG_WERROR. The feature table is
+left out of the kernel build log.
 
-No functional change: KBUILD_USERCFLAGS and KBUILD_USERLDFLAGS keep the
-same value.
+CONFIG_TOOLS_BUILD_PERF_MINIMAL builds it with MINIMAL=1 instead, which
+turns every optional feature off, so the result does not depend on the
+build machine. allmodconfig and allyesconfig turn it on.
 
 Signed-off-by: Sasha Levin <sashal@kernel.org>
-Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
- Makefile | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ tools/Kconfig         | 16 ++++++++++++++++
+ tools/Makefile.kbuild | 10 ++++++++++
+ 2 files changed, 26 insertions(+)
 
-diff --git a/Makefile b/Makefile
-index f895752d4b05f..58bc69b4996e1 100644
---- a/Makefile
-+++ b/Makefile
-@@ -656,7 +656,7 @@ export CPP AR NM STRIP OBJCOPY OBJDUMP READELF PAHOLE RESOLVE_BTFIDS LEX YACC AW
- export PERL PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
- export KGZIP KPGZIP KBZIP2 KLZOP LZMA LZ4 XZ ZSTD TAR
- export KBUILD_HOSTCXXFLAGS KBUILD_HOSTLDFLAGS KBUILD_HOSTLDLIBS KBUILD_PROCMACROLDFLAGS LDFLAGS_MODULE
--export KBUILD_USERCFLAGS KBUILD_USERLDFLAGS
-+export KBUILD_USERCFLAGS KBUILD_USERLDFLAGS KBUILD_USERABI
+diff --git a/tools/Kconfig b/tools/Kconfig
+index 2d05c8e593e21..4f13e3b104377 100644
+--- a/tools/Kconfig
++++ b/tools/Kconfig
+@@ -60,6 +60,22 @@ config TOOLS_BUILD_IIO
+ 	help
+ 	  Build tools/iio (lsiio, iio_event_monitor, iio_generic_buffer).
  
- export KBUILD_CPPFLAGS NOSTDINC_FLAGS LINUXINCLUDE OBJCOPYFLAGS KBUILD_LDFLAGS
- export KBUILD_CFLAGS CFLAGS_KERNEL CFLAGS_MODULE
-@@ -1262,15 +1262,17 @@ endif
- USERFLAGS_FROM_KERNEL := --target=%
- 
- ifdef CONFIG_ARCH_USERFLAGS
--KBUILD_USERCFLAGS += $(CONFIG_ARCH_USERFLAGS)
--KBUILD_USERLDFLAGS += $(CONFIG_ARCH_USERFLAGS)
-+KBUILD_USERABI := $(CONFIG_ARCH_USERFLAGS)
- else
-+KBUILD_USERABI :=
- # If not overridden also inherit the bit size
- USERFLAGS_FROM_KERNEL += -m32 -m64
- endif
- 
--KBUILD_USERCFLAGS  += $(filter $(USERFLAGS_FROM_KERNEL), $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS))
--KBUILD_USERLDFLAGS += $(filter $(USERFLAGS_FROM_KERNEL), $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS))
-+KBUILD_USERABI += $(filter $(USERFLAGS_FROM_KERNEL), $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS))
++config TOOLS_BUILD_PERF
++	bool "perf"
++	help
++	  Build tools/perf. As in a standalone perf build, optional
++	  features are enabled when the libraries they need are installed.
 +
-+KBUILD_USERCFLAGS  += $(KBUILD_USERABI)
-+KBUILD_USERLDFLAGS += $(KBUILD_USERABI)
++config TOOLS_BUILD_PERF_MINIMAL
++	bool "Build perf with all optional features disabled"
++	depends on TOOLS_BUILD_PERF
++	help
++	  Build perf with MINIMAL=1, which turns off every optional
++	  feature, so that the result does not depend on which libraries
++	  the build machine has installed. allmodconfig and allyesconfig
++	  turn this on, which keeps their builds the same on every
++	  machine.
++
+ config TOOLS_BUILD_SPI
+ 	bool "SPI tools"
+ 	help
+diff --git a/tools/Makefile.kbuild b/tools/Makefile.kbuild
+index 8cfa7f80039cd..4b3ea73bc8ab9 100644
+--- a/tools/Makefile.kbuild
++++ b/tools/Makefile.kbuild
+@@ -79,6 +79,16 @@ PHONY += $(tool-targets)
+ $(tool-targets): tool-%: FORCE
+ 	$(call build,$(outdir)/$*,-C $(toolsdir)/$* O=$(outdir)/$* CC='$(call escsq,$(tools-cc))',,TOOLS_BUILD_$(shell echo $* | tr a-z A-Z))
  
- # userspace programs are linked via the compiler, use the correct linker
- ifdef CONFIG_CC_IS_CLANG
++# perf, without the feature table in the kernel build log
++perf-flags := CC='$(call escsq,$(tools-cc))' FEATURE_DISPLAY= WERROR=$(if $(CONFIG_WERROR),1,0)
++perf-flags-$(CONFIG_TOOLS_BUILD_PERF_MINIMAL) += MINIMAL=1
++
++__tools_build: $(if $(CONFIG_TOOLS_BUILD_PERF),perf)
++
++PHONY += perf
++perf: FORCE
++	$(call build,$(outdir)/perf,-C $(toolsdir)/perf -f Makefile.perf O=$(outdir)/perf $(perf-flags) $(perf-flags-y),,TOOLS_BUILD_PERF)
++
+ PHONY += FORCE
+ FORCE:
+ 
 -- 
 2.53.0
 
