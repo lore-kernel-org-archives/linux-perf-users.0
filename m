@@ -1,55 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793623070;
-	b=5JOdgbX3n610OYmxNh0Z1mFk3rgNk124/7u59UNUqPHI9RgwxOSLasXQcMvb9Tav4Jiz
-	 O9CDSDvKYIxBs1ZvszRvJp0SyGGNxIfG4/YTALGlq2fQT5Pgw+Jf+pS6P05xT3qngD8i0
-	 SBlo0NaYSLcyvuivANE4E0sbyZRTyBv8LICf7P5Gs3vMAMfodbO5suX9vPhCel7y/GjoX
-	 B9aLc5Krwg8MmBfwc+Y8Ylg3PW3fm20lvSc4WW78Gop5lEvmiFA1tiP1YpJSmal1MN4Io
-	 Y2SN1Mv0/FmvfA6fXyV4qVaOLc3OQSNpUcs1rVnnDPVB0uFtlbawnNyxGfNnmtTza6w==
+	t=1793623259;
+	b=jjkQl8dajS8NE4J+iO5+SMqz3KC20jsRSLi5IUyBMKWzhLBhtZhmjA7471CkqTemBdSl
+	 p33MZa2hNeNg826mmgTo0BMpbXKDL0I+KOtiFaRM/4lQtlC2oe4LqNWjW9N7czNq43Pbf
+	 iQ51sRJfnfmlWl3BoSXyouBogrndsdM9SFvC6H3uceZDSuFj9E3p4ZdmVkUwOuHGoXQvU
+	 99sXdvjfYbqqFRnmXLB/tAiM6z8A5kAq+rRnqER/j4gPsa6quCYrUTwRiZYduRGmRLVPi
+	 dghg2N99ITqAE1JD7edM+hajJngQ53/oWzUGqA6mKVEmATv/eRlMg6ZHMr8Yz3O1n7g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793623070;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793623259;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=DloFcbWR7ZqmOmt0ZS4CFgPrTdF+fyC2raZs3SGjSjU=;
-	b=FhqxA7+lHGf/ejeNuzKNCq1IXjlaiw1YE7pmbEqiape5LIo2ivn3vQrSSU2u2539SQJh
-	 BLS5YZAQgnkMgv+JRqZddMWhIGJA7ZSTIe0KSf6aC5Aalj94gX4aPwseGSNjQPDkrWq6s
-	 xhIF+TTDmuwW6UVrbtjAIjLU3SNZiTw1AyQJq5Jf5DQwtVG+K/p2Vv4VA03BwrpweqwQv
-	 MhzlJde74fvk5Tt/PhVNb/ppG4wDD77tBMq9SQoMXuBVKYSexpr26G2oVh0lsvj4iHOiu
-	 KzWDV75Pf4+zb1EtNY3v+CX5oyooqTwqSRDZPB1ZdBDCq6JG5wfLyCYwdeYhBsCoOrA==
+	bh=yqWJ3K/q9a6DjSYaKg4T0oP6lH+uQTqzjcwFUtRNPuE=;
+	b=wWfA2JofQp1bJRgvg3fL0kUraO7OFBoD2T5ZPxrkra4Ljq8o5/ug6ltAqnvsQo4s8ZuS
+	 nquMtJiFp3YX4L513v5E0kuEX4FAOZUH4p0k/pRerCyqXPr5jtPy465uKoSW+jKU3pF1k
+	 X7dolL0npocpVgjNIvABdYX6unffIsbAvS+u3m7OyiFdZRTPqDJkEp29N1M5AXHgz/mcp
+	 vAvaVQNhtTlBK5v1soOfJLKIuX92OLtmuAfl9q1+7PKV0VQPrqzqiwlx9SzrNLUjZOpPQ
+	 zPLkKvlRjLif5BPi9uEEuLdgI9uy1nt1FGNabR1islb2NRpPbNYp6vsDt56ktwX+Akw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SB8TfAIR;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=A2yYVd+F;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C358606A327
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Nov 2026 12:37:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9FA7606A332
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Nov 2026 12:40:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SB8TfAIR
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB7F31F00A16;
-	Mon,  2 Nov 2026 12:37:49 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=A2yYVd+F
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A3021F00A1B;
+	Mon,  2 Nov 2026 12:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793623069;
-	bh=DloFcbWR7ZqmOmt0ZS4CFgPrTdF+fyC2raZs3SGjSjU=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=SB8TfAIRsSOi2n88m1LnXWJt/ryM36WRYN8lQtexCKjgzXumwrApe14R6SIEFfLeW
-	 OMtwqv352395SuVmXYeQeGQNraz/4NI1SRPaSHv5fKyyZCb5IOqa2+J6x8ikrg5spE
-	 skFDZXdo4suJE9UI5onpc/RMH4lG5tEp/Eprr8Tc7LYw+azbLFkJkGptNAYjupw7f1
-	 YDXqHNgmDBEXmRS1yXGy4kIJC1D1hIEkf7JTK5NxCRNAoEwVkdKbLi5xll5pdrC4YF
-	 PK8S7Ri5R5TMpxIteQ1GgD3jfCOM3v0NphIIljUkUS77kjfHIK3gPyk3PJ0rwN+yXG
-	 lNqLGNcVnRzPQ==
-Message-ID: <sashiko-outbox-193430@kernel.org>
+	s=k20260515; t=1793623258;
+	bh=yqWJ3K/q9a6DjSYaKg4T0oP6lH+uQTqzjcwFUtRNPuE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=A2yYVd+FAOcJxm4XY/yhn+gJN3iZaPSkLPSXVtsQe+1RQGWiQBGUjERIlv1mBfi9j
+	 +yQkTjKRhouu0lcXBfXf+cdVFsQ/ciWOncoYRWeLhgyf2cXMTQccIAZGrFv379C9Nj
+	 QxoCGCBIodwabuD7VAboMlwPaM6TEfZEmbPTBzLLrsTCkXNs13D1O+FLF1FbGL07Zm
+	 0Tlux9h//GLwe8LvQNI9LXJaU6/cmFpjLo0F2RTO8bes6+TbJvF7MjIhZ4ggdVTfCK
+	 mWOI/uvtlxIqAEzY1WjoS6ga6d6f1Fq/u7d890BEOcjFMNDskwnp71zQujCosuqjQU
+	 JeAxcKN2TpKuQ==
+Message-ID: <sashiko-outbox-193438@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] perf/amd/ibs: add phy_addr_only software filter for
- ibs_op
+Subject: Re: [PATCH v3 18/18] perf test: cs-etm: Test multiple per-thread
+ threads
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Huang Shijie" <huangsj@hygon.cn>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20261102121324.371157-1-huangsj@hygon.cn>
-References: <20261102121324.371157-1-huangsj@hygon.cn>
+To: "James Clark" <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261102-james-cs-unformatted-per-thread-fix-v3-18-dbcb0c281b9b@linaro.org>
+References: <20261102-james-cs-unformatted-per-thread-fix-v3-0-dbcb0c281b9b@linaro.org>
+ <20261102-james-cs-unformatted-per-thread-fix-v3-18-dbcb0c281b9b@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 02 Nov 2026 12:37:49 +0000
+Date: Mon, 02 Nov 2026 12:40:55 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,161 +63,140 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] perf/amd/ibs: min_period clamp bypassed on discard in perf_ibs_h=
-andle_irq()
-- [Medium] perf/amd/ibs: missing ld_op/st_op check in perf_ibs_handle_irq()=
- filter
+- [Medium] perf test: cs-etm: unguarded kill in cleanup_files() aborts unde=
+r set -e
+- [Medium] perf test: cs-etm: unsynchronized perf record startup and wait l=
+oop
 --
 
-commit 2b588b2eb9d2eeb02990e56aab4b6d6ff659932b
-Author: Huang Shijie <huangsj@hygon.cn>
+commit 6aa8bbe9530a4ed93f2099e972a4b1384053a19f
+Author: James Clark <james.clark@linaro.org>
 
-perf/amd/ibs: add phy_addr_only software filter for ibs_op
+perf test: cs-etm: Test multiple per-thread threads
 
-This commit adds a phy_addr_only software filter attribute for the AMD IBS =
-op
-PMU to discard samples without a valid non-zero physical address in the
-interrupt handler when used with PERF_SAMPLE_PHYS_ADDR.
+This commit adds a shell test for CoreSight ETM with TRBE sinks that records
+a workload with multiple child threads in per-thread mode and checks that
+samples from all child threads are present in the decoded trace.
 
-> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-> index 3531f9c23b8c9..12075d7d4703b 100644
-> --- a/arch/x86/events/amd/ibs.c
-> +++ b/arch/x86/events/amd/ibs.c
-
-[ ... ]
-
-> @@ -1479,6 +1494,23 @@ static int perf_ibs_handle_irq(struct perf_ibs *pe=
-rf_ibs, struct pt_regs *iregs)
->  		}
->  	}
-> =20
-> +	if (perf_ibs_phy_addr_only_event(perf_ibs, event)) {
-> +		union ibs_op_data3 op_data3;
-> +		u64 phys_addr;
+> diff --git a/tools/perf/tests/shell/coresight/per-thread-multi.sh b/tools=
+/perf/tests/shell/coresight/per-thread-multi.sh
+> new file mode 100755
+> index 0000000000000..c6bf1ff2e53d1
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/coresight/per-thread-multi.sh
+> @@ -0,0 +1,76 @@
+> +#!/bin/bash -e
+> +# CoreSight per-thread multiple threads (exclusive)
 > +
-> +		op_data3.val =3D ibs_data.regs[ibs_op_msr_idx(MSR_AMD64_IBSOPDATA3)];
-> +		if (!op_data3.dc_phy_addr_valid) {
-> +			throttle =3D perf_event_account_interrupt(event);
-> +			goto out;
-> +		}
-> +		/* Also skip the case: zero address in MSR_AMD64_IBSDCPHYSAD */
-> +		phys_addr =3D ibs_data.regs[ibs_op_msr_idx(MSR_AMD64_IBSDCPHYSAD)];
-> +		if (!phys_addr) {
-> +			throttle =3D perf_event_account_interrupt(event);
-> +			goto out;
-> +		}
-> +	}
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +# If CoreSight is not available, skip the test
+> +perf list pmu | grep -q cs_etm || exit 2
+> +
+> +if ! tmpdir=3D$(mktemp -d /tmp/perf-cs-per-thread-multi-test.XXXXXX); th=
+en
+> +	echo "mktemp failed"
+> +	exit 1
+> +fi
+> +
+> +cleanup_files()
+> +{
+> +	if [[ $parent ]]; then
+> +		kill -9 $parent
+> +		wait $parent || true
+> +	fi
+> +	if [[ $perf ]]; then
+> +		kill -9 $perf
+> +		wait $perf || true
+> +	fi
+> +	rm -rf "$tmpdir"
+> +	trap - EXIT TERM INT
+> +}
 
 [Severity: Medium]
-When an ibs_op event is opened in frequency mode (event->attr.freq =3D=3D 1=
-, the
-default for perf record when -c is not specified) with phy_addr_only and
-PERF_SAMPLE_PHYS_ADDR, can jumping to out after perf_event_account_interrup=
-t()
-in perf_ibs_handle_irq() bypass the minimum period clamp and program a
-hardware period below perf_ibs->min_period?
+Can cleanup_files() abort before removing tmpdir or killing the remaining
+process when the script runs under #!/bin/bash -e?
 
-Inside perf_event_account_interrupt() -> __perf_event_account_interrupt() ->
-perf_adjust_period(), hwc->sample_period is recalculated and only clamped t=
-o a
-lower bound of 1. Because goto out jumps past the minimum period check at t=
-he
-end of perf_ibs_handle_irq():
+Later in per-thread-multi.sh:
 
-arch/x86/events/amd/ibs.c:perf_ibs_handle_irq() {
-	...
-	if (event->attr.freq && hwc->sample_period < perf_ibs->min_period)
-		hwc->sample_period =3D perf_ibs->min_period;
+    kill $parent
+    wait $parent || true
+    unset parent
+    wait $perf
+    unset perf
 
-out:
-	if (!throttle) {
-		perf_ibs_enable_event(perf_ibs, hwc, period >> 4);
-	...
-}
+If the background perf record process exits with a non-zero status,
+wait $perf reaps the process and triggers set -e exit before unset perf
+runs. When the EXIT trap enters cleanup_files(), $perf is still set to the
+already-reaped PID, so kill -9 $perf fails with ESRCH and aborts
+cleanup_files() under set -e before rm -rf "$tmpdir" runs.
 
-hwc->sample_period can drop below perf_ibs->min_period (0x90 for ibs_op). On
-the subsequent IBS NMI, perf_ibs_set_period() -> perf_event_set_period()
-computes the next hardware period from hwc->sample_period:
+Similarly, if $parent exits early before unset parent runs, kill $parent
+fails under set -e and cleanup_files() aborts on kill -9 $parent before
+killing $perf or removing "$tmpdir".
 
-arch/x86/events/amd/ibs.c:perf_event_set_period() {
-	...
-	if (unlikely(left < (s64)min)) {
-		left +=3D period;
-		local64_set(&hwc->period_left, left);
-		hwc->last_period =3D period;
-		overflow =3D 1;
-	}
-	...
-}
+Should kill -9 $parent and kill -9 $perf in cleanup_files() be guarded with
+|| true (or 2>/dev/null || true), similar to wait?
 
-When left <=3D 0 and period < min, left +=3D period results in a hardware p=
-eriod
-smaller than perf_ibs->min_period (or 0 after shifting by 4) being written =
-to
-MSR_AMD64_IBSOPCTL, which commit fa5d0a824e3bbd ("perf/x86/amd/ibs: Fix
- ->min_period violation") notes has undefined hardware behavior.
-
-Should the min_period clamp in perf_ibs_handle_irq() be moved after the out:
-label (or applied before enabling the event) so that discarded samples in
-frequency mode also respect perf_ibs->min_period?
+> +
+> +trap cleanup_files EXIT
+> +trap 'cleanup_files; exit 1' TERM INT
+> +
+> +# Multiple --per-thread events are only supported with 1:1 sinks/sources
+> +if ! ls /sys/bus/coresight/devices/trbe* > /dev/null 2>&1; then
+> +	echo "No TRBE sinks, skipping"
+> +	exit 2
+> +fi
+> +
+> +# Launch 2 threads to run indefinitely
+> +nthreads=3D2
+> +perf test -w named_threads $nthreads 0 &
+> +parent=3D$!
+> +
+> +# While parent still exists, wait for the 2 children to spawn
+> +while kill -0 "$parent" 2>/dev/null; do
+> +  threads=3D(/proc/"$parent"/task/*)
+> +
+> +  if (( ${#threads[@]} >=3D $(($nthreads + 1)))); then
+> +    break
+> +  fi
+> +
+> +  sleep 0.1
+> +done
+> +
+> +echo "Recording..."
+> +perf record -o "$tmpdir/data" -e cs_etm//u --per-thread -Se -m,64K --pid=
+ $parent > /dev/null 2>&1 &
+> +perf=3D$!
+> +
+> +sleep 1
+> +
+> +kill $parent
 
 [Severity: Medium]
-Could samples with phys_addr =3D=3D 0 still slip through this filter in
-perf_ibs_handle_irq() if neither op_data3.ld_op nor op_data3.st_op is set?
+Could starting perf record in the background and immediately running sleep 1
+before killing $parent race with perf record initialization on slower or
+loaded systems?
 
-In arch/x86/events/amd/ibs.c, perf_ibs_parse_ld_st_data() checks the memory
-operation type before reading MSR_AMD64_IBSDCPHYSAD:
+In tools/perf/builtin-record.c:__cmd_record(), events are opened disabled in
+record__open(), followed by record__synthesize() (including BPF and auxtrace
+synthesis), and only enabled afterward via evlist__enable(). If startup and
+synthesis take most or all of the 1-second sleep window, kill $parent can
+terminate the workload before evlist__enable() or before both threads are
+sampled, causing perf script to miss thread1 or thread2.
 
-arch/x86/events/amd/ibs.c:perf_ibs_parse_ld_st_data() {
-	...
-	perf_ibs_get_mem_op(&op_data3, data);
-	if (data->data_src.mem_op !=3D PERF_MEM_OP_LOAD &&
-	    data->data_src.mem_op !=3D PERF_MEM_OP_STORE)
-		return;
-	...
-	if (sample_type & PERF_SAMPLE_PHYS_ADDR && op_data3.dc_phy_addr_valid) {
-		data->phys_addr =3D ibs_data->regs[ibs_op_msr_idx(MSR_AMD64_IBSDCPHYSAD)];
-		data->sample_flags |=3D PERF_SAMPLE_PHYS_ADDR;
-	}
-}
+Also, the /proc/"$parent"/task/* polling loop above has no timeout and brea=
+ks
+as soon as the task directories exist, which can happen before the child
+threads call pthread_setname_np() in tools/perf/tests/workloads/named_threa=
+ds.c.
 
-If an op sample has op_data3.dc_phy_addr_valid =3D=3D 1 and a non-zero
-MSR_AMD64_IBSDCPHYSAD while both op_data3.ld_op and op_data3.st_op are 0 (f=
-or
-instance, commit f04a8a7649f9b2 ("perf amd ibs: Suppress bogus TlbRefillLat
-and DCPhysAd on Zen4+") notes that Zen4+ hardware can set dc_phy_addr_valid
-with a bogus non-zero IbsDCPhysAd when dc_lin_addr_valid is 0), the filter =
-in
-perf_ibs_handle_irq() will let the sample pass, but perf_ibs_parse_ld_st_da=
-ta()
-will return early without setting PERF_SAMPLE_PHYS_ADDR in data->sample_fla=
-gs.
-
-When perf_event_overflow() then calls perf_prepare_sample() in
-kernel/events/core.c:
-
-kernel/events/core.c:perf_prepare_sample() {
-	...
-	if (filtered_sample_type & PERF_SAMPLE_ADDR) {
-		data->addr =3D 0;
-		data->sample_flags |=3D PERF_SAMPLE_ADDR;
-	}
-	...
-	if (filtered_sample_type & PERF_SAMPLE_PHYS_ADDR) {
-		data->phys_addr =3D perf_virt_to_phys(data->addr);
-		data->sample_flags |=3D PERF_SAMPLE_PHYS_ADDR;
-	}
-}
-
-perf_prepare_sample() will fall back to perf_virt_to_phys(0) and emit a sam=
-ple
-with data->phys_addr =3D 0.
-
-Should the perf_ibs_phy_addr_only_event() check in perf_ibs_handle_irq() al=
-so
-require (op_data3.ld_op || op_data3.st_op), matching perf_ibs_ldlat_event()
-and perf_ibs_parse_ld_st_data()?
+Would it be more reliable to source tools/perf/tests/shell/lib/waiting.sh to
+use wait_for_threads() and wait_for_perf_to_start(), or pass sleep 1 direct=
+ly
+as the perf record command workload so the 1-second window begins only after
+events are enabled?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102121324.3711=
-57-1-huangsj@hygon.cn?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102-james-cs-u=
+nformatted-per-thread-fix-v3-0-dbcb0c281b9b@linaro.org?part=3D18
