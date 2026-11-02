@@ -1,47 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.94.104
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.11
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793580790;
-	b=YLvx4dLuAZ98fBJxJMoRPJYYidWWXN0f4j8AJJviIvLc9X6TfFvOZ6wpQQCn1SEc4ccb
-	 WbAi7ZIPiKmpU06mMwzAj4z3o/tgkKRHPZByqdIKAxX7qdF7HhGihhvU/RZUoQ2T/hKSS
-	 /P1SNL0TeWsIpBK0uNR7YmpFYy53yuEEYi6YLdhNURZOXpBvvFDW2liWele70HukwsE02
-	 k8qO1wKPLj5qF/e92oB7oF4SnIDXE/OP8rTxs7oswavmtsxvcUd0pI+eceP0GTYfUNdcY
-	 FjSGzZqgf05xcM/iEp2mysor6PjcDqPjrzvKyoFpa6+9M6aixkhiEb3ZANwE7MG89hA==
+	t=1793581609;
+	b=XqyDOunGT2u12rWahaUygJiXzCoRos1PSXmpHjzTj2pNqzRXK4QX72ystSgIUA2o1IZm
+	 bKrqwj+THD8lpFCYAZ6zINh66oUWEHAid8HGXkck+KH4dBBlhvwq8XH4ceU4kLDnhEL52
+	 rs1c6sE1cE0+vqBxoBN9ytP8TxTVMSQruY1F10aSL50NKgsUjTLH1hSJCe2peVJXWL03n
+	 5+aFNN/fXKj0N+oOXlTWax+gGMJbEcwywO96MdSWexBdE/Dz5/34yJY+EavGGpM8ZRls7
+	 Jp15STQ4ocMb53bPUjw4671pKA4SFPg16RmXbFRh/yz5TVp8zovFhJD5SI1kd0/BxSw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793580790;
-	h=DMARC-Filter:Received:Received:Received:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-Coremail-Antispam:X-CM-SenderInfo;
-	bh=efENr5abTBnv9LorGAvHvCoxrm853APMJedhZonGDAI=;
-	b=yWaFg0iwNhE7xwyVr7l0a8nAJ0l8elkmkWDZ4sJ7PGFDD8IpxHJ2kXz0k0dgf0lnbRBL
-	 jJKzEtjS0WTg4y0D59dFP3IjJ9jMOkxw9mgZtH0XHNWnpsmSjHq5d84fVhQa8lKq5lMl+
-	 nYk9L0CsCTHpxVKG36zMBmZPNVgUZ/0sIwqNZyQUnCnWNuH9vexeErdDPtRoE9WNeAKeC
-	 s3bUm2TGrZ/n08brgkr9qpLdzXytHPhUS7ukwvjsOvtN3Y489BrhHt3fQngFuJKYX9UxX
-	 eu49JajCYNnfcJpZaSCGwx37QfnHjR9VAfdRtP/9ihKv0UnXPvi7CUmy9Z5lN8ra5wg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793581609;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
+	 Date:Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=AUjSmHXfLT2gi8Fgm+ThC2mvbmf8MyE+898uzs3bVLU=;
+	b=TbOAiryrYcV+OM0Wp4r1XVxZUfpmEYb31wEgjevtcnDRXLlRQjpJ7fpNwruAUvF0KOzJ
+	 UQtGtybEu4KHTpCoMbzJtZu2yqxqmtC4IUl7EmvHjHVVCWmsFyX4Jf8Aj7tCKMCRUoCwY
+	 qSkTGR8dcmPpyAYCvSXZ1v12eIa3rEJrI97T7ItgyAF1gKQV7ETwqJuOkOQuMcPFeqPOU
+	 t2T8bkwDTfnqLBQigSkDmUj6Yn3UVyf5Q7Wgv2ZcOR3Dp567onUtGu+1U1pdbWrrb5jk9
+	 ZIQ+Fa0n8HxE/IPOtf8w0tFYvGHDuvO1qrV7/PJOjDcRho7+zq9KeOciHulPlrfWYJA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=huaweicloud.com;
-	spf=pass smtp.mailfrom=huaweicloud.com;
-	arc=none smtp.remote-ip=124.71.94.104
-Received: from dggmsgout13.his.huawei.com (dggmsgout13.his.huawei.com [124.71.94.104])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dHxf7xki;
+	arc=none smtp.remote-ip=198.175.65.11
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6611F606A324
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Nov 2026 00:53:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6611F606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggmsgout13.his.huawei.com (SkyGuard) with ESMTP id 4jHtTc3fY9z1rq6x
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Nov 2026 08:52:36 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 2618040561
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Nov 2026 08:52:59 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP2 (Coremail) with UTF8SMTPA id Syh0CgBXJuzp3udqS4HYCg--.53925S2;
-	Mon, 02 Nov 2026 08:52:59 +0800 (CST)
-Message-ID: <f145e32a-d181-4af7-afa7-4d26e6f8caa3@huaweicloud.com>
-Date: Mon, 2 Nov 2026 08:52:57 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B50E606A324;
+	Mon,  2 Nov 2026 01:06:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3B50E606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dHxf7xki
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793581609; x=1825117609;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=h3sGhMWylHDbWx7qk02bfTT/q2nZbBG2djgSRusnxIU=;
+  b=dHxf7xki4YnvmwrC7+52ywOvtYyUsTMt8h9CNiR0bsF3jb9pimX42UPI
+   bW+OdC2/zCPR0eqHsiXaQrdHLdV2n8R2cAWHM7uH2UKirA9KxEYyMmKNh
+   EedNmq22SWBRZgGL0JinLdsqJqWlrlxnGNXfyWjMfNnezmAqjZvirtuCJ
+   0uZuRzYP7QaE6im8uIa2RyYNq1TYsxVmuhhVak52GCnRxoJVTja6bmwRw
+   JRvLsMYYIAkSvccWEnNtDVR5Sgd0gRkpH6AiIqpk0RnLg5u15DPpvlbxJ
+   XWvyd6AwdHXi0k0Nsad72G92bZZ1i9xOD7LFeOk62Owr1NosPFIIoHwET
+   w==;
+X-CSE-ConnectionGUID: LD4ZkOczRMab19+NU983CQ==
+X-CSE-MsgGUID: cYWQBxUuR5+j+iNttjL0HA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11953"; a="2146009"
+X-IronPort-AV: E=Sophos;i="6.27,190,1787036400"; 
+   d="scan'208";a="2146009"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2026 17:06:48 -0800
+X-CSE-ConnectionGUID: HqnpdBkSSFSrHUIgBwiWPA==
+X-CSE-MsgGUID: CF2iGjdbRGuudQLQT6T9mQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,190,1787036400"; 
+   d="scan'208";a="6106332"
+Received: from spr.sh.intel.com ([10.112.229.196])
+  by fmviesa003.fm.intel.com with ESMTP; 01 Nov 2026 17:06:43 -0800
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Hanxiang Xu <xuhx@hust.edu.cn>
+Subject: [PATCH 1/2] perf/core: Avoid NULL dereference in mux interval store
+Date: Mon,  2 Nov 2026 08:59:04 +0800
+Message-Id: <20261102005905.2017784-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -51,91 +91,66 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/core: Prevent duplicate sigtrap task work enqueue
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <20261031114520.642476-1-wutengda@huaweicloud.com>
- <sashiko-outbox-191929@kernel.org>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <sashiko-outbox-191929@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgBXJuzp3udqS4HYCg--.53925S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7KFWrAFy3Cw13Zw4kWFy8Xwb_yoW5Jrykp3
-	9xtrn0ka1UXr1qq345tr97Ar18Ww10qan8A3yqka4SqF1YvryDta47Wa1YqFs8ArnrAa4f
-	Aw4j9rZru347JFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUglb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x
-	0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02
-	F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4I
-	kC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Y
-	z7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
-	AF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4l
-	IxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
-	CI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVF
-	xhVjvjDU0xZFpf9x07UE-erUUUUU=
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+Content-Transfer-Encoding: 8bit
 
+perf_pmu_register() currently exposes the PMU device and its attributes
+before the per-CPU perf_cpu_pmu_context (cpc) has been allocated and
+initialized. That allows a race where user space writes
+perf_event_mux_interval_ms before cpc is ready, and
+perf_event_mux_interval_ms_store() dereferences it unconditionally.
 
+Fix this by allocating and initializing the per-CPU PMU context before
+making the PMU attribute visible, and add a NULL check in
+perf_event_mux_interval_ms_store() to avoid dereferencing a missing cpc.
 
-On 2026/10/31 19:58, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Low] perf/core: redundant store to event->pending_work in __perf_event_overflow()
-> --
-> 
-> commit badcfdb790f5048e93691fc4bd20053f8cc9e2d2
-> Author: Tengda Wu <wutengda@huaweicloud.com>
-> 
-> perf/core: Prevent duplicate sigtrap task work enqueue
-> 
-> This commit uses cmpxchg() to atomically claim event->pending_work before
-> calling task_work_add() in __perf_event_overflow() so that a nested NMI
-> cannot enqueue the same sigtrap pending_task twice.
-> 
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 457d75ea71420..f1e4e153c49a4 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -10925,16 +10925,18 @@ static int __perf_event_overflow(struct perf_event *event,
->>  
->>  		notify_mode = in_nmi() ? TWA_NMI_CURRENT : TWA_RESUME;
->>  
->> -		if (!event->pending_work &&
->> -		    !task_work_add(current, &event->pending_task, notify_mode)) {
->> -			event->pending_work = pending_id;
->> -			local_inc(&event->ctx->nr_no_switch_fast);
->> -			WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
->> -
->> -			event->pending_addr = 0;
->> -			if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
->> -				event->pending_addr = data->addr;
->> -
->> +		if (cmpxchg(&event->pending_work, 0, pending_id) == 0) {
->> +			if (!task_work_add(current, &event->pending_task, notify_mode)) {
->> +				event->pending_work = pending_id;
-> 
-> [Severity: Low]
-> Is this store to event->pending_work in __perf_event_overflow() in
-> kernel/events/core.c still needed when task_work_add() succeeds?
-> 
-> The outer cmpxchg(&event->pending_work, 0, pending_id) == 0 check already
-> sets event->pending_work to pending_id before calling task_work_add(), and
-> nothing can clear or modify event->pending_work while inside this branch
-> (interrupts are disabled, perf_pending_task() cannot run until return to
-> user space or task exit, and any nested NMI sees a non-zero value in
-> cmpxchg()).
-> 
-> Leaving this assignment also performs an unmarked plain write to
-> event->pending_work, whereas the rest of this change accesses it via
-> cmpxchg() and READ_ONCE(). Can this redundant assignment be dropped?
-> 
+Reported-by: Hanxiang Xu <xuhx@hust.edu.cn>
+Closes: https://lore.kernel.org/all/de936c3.1476b.1a162c34cec.Coremail.xuhx@hust.edu.cn/
+Fixes: 62b856397927 ("perf: Add sysfs entry to adjust multiplexing interval per PMU")
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+---
+ kernel/events/core.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-Yes, it can be dropped, the assignment is redundant. I'll send v2 to fix it.
-
-Thanks,
-Tengda
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 7cdd02dba4f1..e088c31534bc 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -12831,6 +12831,9 @@ perf_event_mux_interval_ms_store(struct device *dev,
+ 	if (timer == pmu->hrtimer_interval_ms)
+ 		return count;
+ 
++	if (!pmu->cpu_pmu_context)
++		return -ENODEV;
++
+ 	mutex_lock(&mux_interval_mutex);
+ 	pmu->hrtimer_interval_ms = timer;
+ 
+@@ -13062,12 +13065,6 @@ int perf_pmu_register(struct pmu *_pmu, const char *name, int type)
+ 	pmu->type = pmu_type.id;
+ 	atomic_set(&pmu->exclusive_cnt, 0);
+ 
+-	if (pmu_bus_running && !pmu->dev) {
+-		int ret = pmu_dev_alloc(pmu);
+-		if (ret)
+-			return ret;
+-	}
+-
+ 	pmu->cpu_pmu_context = alloc_percpu(struct perf_cpu_pmu_context *);
+ 	if (!pmu->cpu_pmu_context)
+ 		return -ENOMEM;
+@@ -13086,6 +13083,12 @@ int perf_pmu_register(struct pmu *_pmu, const char *name, int type)
+ 		__perf_mux_hrtimer_init(cpc, cpu);
+ 	}
+ 
++	if (pmu_bus_running && !pmu->dev) {
++		int ret = pmu_dev_alloc(pmu);
++		if (ret)
++			return ret;
++	}
++
+ 	if (!pmu->start_txn) {
+ 		if (pmu->pmu_enable) {
+ 			/*
+-- 
+2.34.1
 
