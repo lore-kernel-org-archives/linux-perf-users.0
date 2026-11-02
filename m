@@ -1,88 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.52
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793621755;
-	b=WzDNor+yEkirHifjJbcR567CeSPIAGRkQHiq2vBVH9X4zMlD1cS35dLpO2P+JSwgn2A/
-	 uPKOnTHrMNJ6BNNbd0UtVhdPGo+nBtNGy5PGTsMiQ58zPI9KcJ7cw31WiAeic8RloMeqR
-	 O+POcWlwk5fRHcmmYmMZos6r8RVdmyNTHmyfqS+fmepLQc+CVH+2/2QfReTRUn0sfUURh
-	 yY14njhOxTFPqJVmBCVyYJ7skSLMIzRWR0Kph3KPXR83UmrFMhidVVwKZYnIvV7Fhn4+f
-	 8ciliajSCHzTjyDGR9Bhl7+AB2YqqTCJSr7ezDEmwJX/aNKu8KWcm8cK0881AGwpViA==
+	t=1793621757;
+	b=xt1ultznI9psaUV8EpkbHzd0MfTWKrpM+7zy4UwYvidgYyyE6jRS/QnosyOtNt7wgrN7
+	 28txhNE0W7sX7QcoJ+Gy/nbytuctWh9q2yRekk+G5M+YAqE3Xs0bSS0xBu3p0wZ4riGuh
+	 WvdvRF5k4dNcW9vq15kN2a5TBGEHkkk3WQaQoKgC1+okWqD4dTri7evkz54ZFmgKdZdxQ
+	 YrsuZH904NZVq5Q8W2mzGuEUR/Zlbse+cOANuguxJXKJdzQiBR+xDR3UnEWQxXHjqWcT1
+	 PuJ7H2u96enIE5jMHQagNpOKbYr8JAGKv3Mgii3fjRQmSE3YaAcDkF4+GrB4XBhYT7w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793621755;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793621757;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer;
-	bh=BWyhBgnl5ljVt2Vm8I0njJJDAjJXWTVLrBozwNDgUng=;
-	b=P2BDN29tr03FijYfm0Wl/a8YVrqU3RAJbjLmn3e7rwyyjzpo+Ee23dFZN7ir4ZHOWawl
-	 vMInC/TMJ4fNfZTLbkcwRgNC8qbkSNH9NKReUyGk0TTrm2OexxEPAYK6M4jJbVKu4fwRh
-	 58RwW/QJa/WeNR+ZDVcPk4b/8Bhav0wzZXfdtVRdpQkOJCprFOz6PbagCVYIFm+8rjK2w
-	 HOfrEzEdv3aLl/Lu8bY3+y3FS3oaHE/V3hGyYBLvzoYbyLq0f0/KrW9FzR+XhaFl5ajb1
-	 bll6s5URQqqmotfwpZfgVptTP257sEHshmy/HxHLiMRZNILZ8FjGFstzz1erthNGArw==
+	bh=Tfbh1sEe/bDWqkSnXbEmJhwFJWqdcIiSyVXsN0XzB/g=;
+	b=AxxCzSmxlKsgKlTVNB0NLLPNpNn8J7EPh1LeQQbBxHYDe+bsal6xV+5/XEeAdTKa3xpQ
+	 b2H5/DaFR5g9EdpGEQUlGrpcZIgt8+KTV/R/9TtJVcj0n5ffFnIZQ51Xz6IQP5hjyxMRJ
+	 A/DOj1BKalgQn7DQTxvncKtxhzP3BFby6eg9fh0zg7WwL1nbhIEkWGo4ZlH62ga1g0iFZ
+	 40VLMTNCw/mrZExdssfo+getNtOG9fjC3qH05mRUmQDVVSdAS9oVXL4QqRxOC7krHweyc
+	 38qBnvcxOc7Xb27fvHZvIXRICRrx2H0Qft8rMeyU/g4BP+Zs0xtP6DkrXIR3twZ+R2Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linaro.org;
 	spf=pass smtp.mailfrom=linaro.org;
-	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=jYZuwm4i;
-	arc=none smtp.remote-ip=209.85.128.50
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=sYcKzM9d;
+	arc=none smtp.remote-ip=209.85.128.52
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9CF60A5BCD
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Nov 2026 12:15:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4A9CF60A5BCD
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9681E60A5BE0
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Nov 2026 12:15:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9681E60A5BE0
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=jYZuwm4i
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4a20bdaf39cso33705155e9.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 02 Nov 2026 04:15:55 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=sYcKzM9d
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4ac95761c85so18255825e9.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Nov 2026 04:15:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1793621754; x=1794226554; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1793621755; x=1794226555; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=BWyhBgnl5ljVt2Vm8I0njJJDAjJXWTVLrBozwNDgUng=;
-        b=jYZuwm4iKSkQfz8VriuCw5G+4HqM5DpQwNMCAhfmyMQBm+b9/ypIreMw1vR1AwMyjY
-         njYOGwK91dVT1jVmUM2chqMZy8mC6qnwipKHRsCRFg9kc4qNsAo52O5d8Ld2/ArA41tj
-         8MZiiaa4OSsIHDefjEt3MGzdBtSdafTuU6Uhxvrt12CM1sHS3f2BjinZXuYn0ZZuez4f
-         2r9lIvkFc8HQ+a8JdaWJsIU2NVZOyf8hdpj+ctz1J5ObmH/LF6hWUndZeR7XvS7gKbYP
-         K/2XA7u5r71NjplD8x8jjZZW6GOVIo4WzSqUT0U7nPeGmumvMeFnZDxmK2t817ImzKKV
-         UFWw==
+        bh=Tfbh1sEe/bDWqkSnXbEmJhwFJWqdcIiSyVXsN0XzB/g=;
+        b=sYcKzM9d8EFXn7TM4eMl1zoSRfzsSlaSLAx3Z8IDMXtzXqFiEsUKVtZwQsAbuG1VQw
+         J3MgoBeHHlU/4tbivrBpkvPi7EniiVRta8VwZ0SPYSEsAduZrB4OJ51LHA9CrUw5Fjx3
+         Q5C46GTXDKDu67KAJ70dfar78IKwJm/O40k0QXnz20v7B6U7s1YUmdhX/g6ZUHB9qEd2
+         nIfS9Bo579b72d5LSpoz3HTpLWJ46vSGAcahvoAsYegN/P8EA/9EhzKLMs/cuF82aCcO
+         T5Ams4qCqzYqO4nWIckNmTKO5sQNWhkO68qw3DlrUV2/sH6OmZpQtDIu6jsubzMsSSWX
+         Ps9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793621754; x=1794226554;
+        d=1e100.net; s=20260707; t=1793621755; x=1794226555;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=BWyhBgnl5ljVt2Vm8I0njJJDAjJXWTVLrBozwNDgUng=;
-        b=wJvwlpz615z7gBAy7m+a3M/meXQLNHDW2IGLSoAPO0z4+fXUCLoQF3Z/8N5Wazx9ja
-         hn5oi51BA7ULM2IynIEbUpa1A+L0Zncw+urvvKHYwp8uCMFOY7IboZmZoBiPRl06y3/s
-         pjwLkjw+l98vT/dRIc5IwJp5198KPKzIPM88cFvsiLPO+LiVkoHgf57TFGSQf+VN2rT3
-         cmkXjc5iZBabUiD+hCRw29b2E/OMfCQ3IHFVvFEWLGnENwt25eMqRYZXu5riIixJ7WTY
-         Q847Ao58fRzWkGnn8M0LWUWB+7yOJzC9XW7CB8LxcvrrB+DR2WtZXgIwDzExK6MA9BWZ
-         QFLA==
-X-Forwarded-Encrypted: i=1; AKwUvBxyAhKJmIIkEIrlsw/VmCCrvQUST0xIGNtdoDZdtfvMs9dru7feZbxTVUVAcC9bMt4AaVwJhh03mLedO9SiJNYn@vger.kernel.org
-X-Gm-Message-State: AFq9FYKGWDFNoV+kUrLXKmLDGcRdmlxtH9fvUm8f5i0oLXHBc4JnA9lj
-	ka7xnwA/M8op5TSfwjL3pIsiVmFDlzgLJ3Dr/7GMJvfijOjxb8hKGW7Ed0F+nDzhSOw=
-X-Gm-Gg: AYBFou3QPT4m1HuyUDGXXMHeXhwiH87mKvSF0ngRGYF4fgKaJy/I0FYCXvjXCx6J0C+
-	gdPFYHz5oS/BDuidT8AdfXpkjHTdMWqvMy7dal10lztdRyYYeZjKSb6lbGBJYXJ4yHaUH2WrBDP
-	EkVn4sDABF9LKSFrEPODbWldprAGlKqYPPh44ODn2svv6/WsEinPsPjsdVRObkh8entDwXw2QJ3
-	S49PuKiRpf0L4rouA4h7zWixvOqGAU3W4x4Gbjl6+R90VJXw9mU5+dz+rXnTzVqws4a2GusOpJ/
-	UDgM0xj32oS0RsQjawBKF4PgooTQKylXd4k6gUt4tVG88I7ETHJ0+ZMGWGrKeaDjWyww3iCZgrO
-	9iChbFR1cTTL4DE2VXriSihbE3Wrg3dYtua8MnoQr8o760VU6WWzMZUSMGjxeAu5GO2jxzoHS9m
-	5g2WCd+P4kowv+VKjMUvr6xh5hLzNdSdwGb/cg1tvNKDeKoEC8XADzDbCTKrsPmJa11gielBRxm
-	k2HM39D/SuNjuoFCLLUEiLjaQh7t7FWedtu6px2ognLM42y9fjpXVQrFlX98ijrZU/5ANpMjlNs
-	JJWAlTQlu6zV48UpCx7tGT+UxbxzRFML
-X-Received: by 2002:a05:600c:a103:b0:4ae:63e9:36a9 with SMTP id 5b1f17b1804b1-4ae63e93a86mr93551315e9.14.1793621753669;
-        Mon, 02 Nov 2026 04:15:53 -0800 (PST)
+        bh=Tfbh1sEe/bDWqkSnXbEmJhwFJWqdcIiSyVXsN0XzB/g=;
+        b=XA8V6/FAVWnJebFeNkySWv2D3H+dD6uosrlTox5RibHBbQM9k5fTMM4/44KWfa61Ar
+         EJ/m/mT6gg11dc1jsOEEujol+S58kv5d8stbVKfBhAQlVuDNn37BFu8MzMdF3EH4nx1D
+         WXaYpbNUr/R2RAV+HSVHI2wKuzo3sPK66D70NwM2Bxiw7N91LN9h/V9yNYjiDoZZXYvh
+         Dhl1HkqAya2sItuXap+zaQ8Jip4y0XzvQHfAH0IuTcHa1GJFQq+Zu8pIn37p2P5x1flp
+         eZx8jba9ywU5FbBHPKO04I8KMx8ofxY7VzsHq5CgV0zfE/QV7pzgVydmtzq6tySe318D
+         I8pQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwGJ51Lru3QDU5aA9HH+B4AfkcBpWktF1flWWNRDJTq3E3CqJ+k9ewZxDZagbBzskH28WA2aNVlVPxgyUkzfe/8@vger.kernel.org
+X-Gm-Message-State: AFq9FYKWUYpAD4pTCk7/Hc+KJUpwhpzup+0L0JNYm7z8bv2QW9YYsWXW
+	f3LskVEKKPnthz40hYG1LH28PxjZAn68s3+OtnDbk68S/Scp4lE3ZEzA8VCsQhGwVjg=
+X-Gm-Gg: AYBFou01jjJiJ90SoNrnMr/LSDSMjOTuoerDspVhwQ4A8QpcBRFcE6YQeSWHlPyQtw2
+	ko08KEpJaGUNxhLVUEby7JwP3qpFZhQFKnd7q0KzsIQDhPdGTN1qchFuVmTlb5a47hhKqj1vOzX
+	l2H53BEFMr48eLBAPAHU/ZYa/XRNzcFD6TzZLko2GcJN4WvxFiMoUsEcKR3f5At3SnX74qlpd0w
+	y5s7ebzSKjadEWoDOZhLbbPAS+uBGsna7mWYKXWomg5fKKDhiquwZrS4mLJ4kAJLo5ZfIb+wUae
+	aKQcMyp9fBBAGPnTMLfG2Y5HG13FRY0pQ1JJili6p193D3eBuDye2vVlRGmPHfZWtlUTZ2n13W8
+	aOoAVMioONmtC/WkC2x7Fi0vCmBtqpq3gKLBOzo9A3Cey3W+WdkIgtnQdzmunLaVhhJMA1EqPmT
+	zbtyHqxl0kBcVsTvaNEZ5sq7E/zpyV8MSqbt5OY93TUlQ5bSwH7gqz9lcGlaIj8WVpgfRleMOwG
+	kqTzYHEAAV4QqXVW9i3YT9LocYNHDeaKIvnNyLrzqtucL+dybOoUyX9xaoYtpRnXHNhM1Y+9+LT
+	B8lWfwa0kpNPU5PPAR968CQvejFVdbmC
+X-Received: by 2002:a05:600c:8b61:b0:4a2:1398:dd05 with SMTP id 5b1f17b1804b1-4ac17752ee4mr210928905e9.16.1793621755020;
+        Mon, 02 Nov 2026 04:15:55 -0800 (PST)
 Received: from pop-os.local ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4abf5b27e46sm434974855e9.3.2026.11.02.04.15.52
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4abf5b27e46sm434974855e9.3.2026.11.02.04.15.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Nov 2026 04:15:53 -0800 (PST)
+        Mon, 02 Nov 2026 04:15:54 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
-Date: Mon, 02 Nov 2026 12:15:22 +0000
-Subject: [PATCH v3 08/18] perf cs-etm: Use instruction length in
- disassembly script
+Date: Mon, 02 Nov 2026 12:15:23 +0000
+Subject: [PATCH v3 09/18] perf cs-etm: Increase default timestamp
+ generation period
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -94,7 +94,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261102-james-cs-unformatted-per-thread-fix-v3-8-dbcb0c281b9b@linaro.org>
+Message-Id: <20261102-james-cs-unformatted-per-thread-fix-v3-9-dbcb0c281b9b@linaro.org>
 References: <20261102-james-cs-unformatted-per-thread-fix-v3-0-dbcb0c281b9b@linaro.org>
 In-Reply-To: <20261102-james-cs-unformatted-per-thread-fix-v3-0-dbcb0c281b9b@linaro.org>
 To: Leo Yan <leo.yan@linux.dev>, Adrian Hunter <adrian.hunter@intel.com>
@@ -114,42 +114,54 @@ Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
  James Clark <james.clark@linaro.org>, John Garry <john.garry@linux.dev>
 X-Mailer: b4 0.15.2
 
-The disassembly script adds four bytes to each branch sample's IP to
-include the final instruction in the range. For an exception sample
-whose IP identifies a faulting or interrupted instruction, this
-incorrectly includes an instruction that did not execute.
+The original purpose of timestamps in per-CPU mode was to roughly emit
+samples in the order they occurred across multiple CPUs, rather than
+emit all the trace from CPU 1 followed by all from CPU 2 etc.
+Previously there was no way to change the interval from the minimum of 1
+cycle, but custom intervals are now supported by the driver.
 
-Use the decoder-supplied insn_len to calculate the exclusive end
-address. This preserves zero-length exception entries, includes executed
-syscall instructions and also uses the decoded size for Thumb
-instructions.
+Drastically reduce the number of timestamps emitted by increasing the
+interval, which is more than enough to interleave sample generation.
+This reduces the size of the trace generated.
 
+Reviewed-by: Leo Yan <leo.yan@arm.com>
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/python/arm-cs-trace-disasm.py | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ tools/perf/arch/arm/util/cs-etm.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/python/arm-cs-trace-disasm.py b/tools/perf/python/arm-cs-trace-disasm.py
-index 5a7daf927bea..7cf0af5d2780 100755
---- a/tools/perf/python/arm-cs-trace-disasm.py
-+++ b/tools/perf/python/arm-cs-trace-disasm.py
-@@ -315,11 +315,12 @@ class TraceDisasm:
-         #     [ sample_prev::addr .. sample_next::ip ]
-         #
-         # sample_prev::addr is stored into cpu_data and read back as
--        # 'start_addr' when the new packet arrives, and sample_next::ip + 4 is
--        # used for 'stop_addr' so objdump includes the branch instruction at
--        # sample_next::ip.
-+        # 'start_addr' when the new packet arrives. Add sample_next::insn_len
-+        # to sample_next::ip so objdump includes the last executed instruction.
-+        # The decoder supplies a zero length for an unexecuted instruction at
-+        # an exception entry, excluding it from the range.
-         start_addr = self.cpu_data[str(cpu) + 'addr']
--        stop_addr  = ip + 4
-+        stop_addr = ip + sample.insn_len
+diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+index 47b4e386cc53..5e7d09b7170c 100644
+--- a/tools/perf/arch/arm/util/cs-etm.c
++++ b/tools/perf/arch/arm/util/cs-etm.c
+@@ -70,6 +70,9 @@ static const char * const metadata_ete_ro[] = {
  
-         # Record for previous sample packet
-         self.cpu_data[str(cpu) + 'addr'] = addr
+ enum cs_etm_version { CS_NOT_PRESENT, CS_ETMV3, CS_ETMV4, CS_ETE };
+ 
++/* Default timestamp period of 256 cycles (2 ^ (9 - 1) = 256). */
++#define DEFAULT_TS	9
++
+ static bool cs_etm_is_ete(struct perf_pmu *cs_etm_pmu, struct perf_cpu cpu);
+ static int cs_etm_get_ro(struct perf_pmu *pmu, struct perf_cpu cpu, const char *path, __u64 *val);
+ static bool cs_etm_pmu_path_exists(struct perf_pmu *pmu, struct perf_cpu cpu, const char *path);
+@@ -458,7 +461,7 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+ 		 * Timestamps are required to interleave samples from different
+ 		 * CPUs.
+ 		 */
+-		evsel__set_config_if_unset(cs_etm_evsel, "timestamp", 1);
++		evsel__set_config_if_unset(cs_etm_evsel, "timestamp", DEFAULT_TS);
+ 		/* Context IDs are required to associate trace to a process */
+ 		evsel__set_config_if_unset(cs_etm_evsel, "contextid", 1);
+ 	} else {
+@@ -481,7 +484,7 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+ 	 * timestamp tracing.
+ 	 */
+ 	if (opts->sample_time_set)
+-		evsel__set_config_if_unset(cs_etm_evsel, "timestamp", 1);
++		evsel__set_config_if_unset(cs_etm_evsel, "timestamp", DEFAULT_TS);
+ 
+ 	/* Add dummy event to keep tracking */
+ 	err = parse_event(evlist, "dummy:u");
 
 -- 
 2.43.0
