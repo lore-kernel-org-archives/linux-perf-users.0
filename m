@@ -1,79 +1,78 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
 	t=1793654069;
-	b=fzKf1au2fE7ZiEk5vXW+hsYKPgFwlszFqKg5J9zBttKiF/wDaATsp2TFXmu4kfO68Sfb
-	 ByG8PmhpJY86RrvlE8PHJa6dzLjKm6mAKrxxHGaHw+1O0RsTNXkJmw/EH0q9GL/Vdn0Zl
-	 lIC8ATTt981iAiYzpsObtADg9R3s/cRMOo7ZWgmE6IsU93saSmFP3fGFwByDGNKJ7r3Zu
-	 At4c8PgF/S1Df+UvuPV2xsHUWs2yfZ9zl7WJoO6FdlkxYkP6H9YMgDevHbeBmIqdDFSq0
-	 0HCT2PKZImszFvhB7ynFEr4MeUEHBV3a9FbkDSc1Q6g4TNhrtqA9K34FJrZBi1TegFQ==
+	b=lowyfG8LcOPejDCHMHsmfGKk9UVM4mwTZFg5503Uf0Z1jeaIS4z0rbYGbYOnPdEMJtnw
+	 cW2i1cx8XA6NUsi8KyVN2F1+UQuRLEsiq6WO1RDTXEZKm/lRSyoVrGr+TgU64i+l2t3Mv
+	 BInYdj1sEw+M0kXe7bQ25X0d3uQAnak9UNjiZ102n+ZzuJ8Fh6g4anCmK84GWV/lxdWiy
+	 t8/hbhPCNHP919/K77sQvtT6kuxtgRXHXob1QvZ+Gsy1XiJsw2j/kY+vy0Opg5+Qsv7XM
+	 hFbukQVNMDx4nCVJhICxrQbY1f4UxKZT9W6FiLhmSHQAwMeNNJ2s4RvNN1uri8Pbkog==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1793654069;
-	h=Received:DKIM-Signature:Received:From:Subject:Date:Message-Id:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-B4-Tracking:
-	 X-Change-ID:To:Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:
-	 X-Endpoint-Received:X-Original-From:Reply-To;
-	bh=1XA5MeCaMsUqWbdpicYXd8VCvuZhBeV7/2rs2YRa3XA=;
-	b=I5rfMvCWMBKH7ynUraQ93eOPqmhxmBJKf9UZ5474BdkSFfw/o49Ab1kU6QWGIJq9DO+x
-	 r32vyuBhvxe+DpTuAgkcFmKMIX9pyLagrTwlZJwZbWd5f+ns1OLf5XtSGBKjchgRU1xa2
-	 JwyhgcN570uYerrm4lFW8d1iMjAVY7M3h6XVRwBEpS0yWOUxL01n/VcplrISCwToK1aAr
-	 1wsAZwX5tw7h7GY3f9ULQ9Rr5esCxq/+ER1mGE6Lyox4aTItmBoHeZwpBNchM10CH/ZRS
-	 VkfvxekxElSiMqbky51FqST8EFvyV5dK7Al2jmHUjxf2m+0cvtOKiVbvTgV+5jonAAQ==
+	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=Odnk7WgHn5U8Xk5ai/aYpT0eWB4gdIOVafLZ8UKejdM=;
+	b=hZ1oVhTynH4fc2+NNM4XjS/hqFJu8rb2m2ZOa54iUbcJKU9yyXf9kEqWonY7SyZN1YO0
+	 AhZdurZMtMv04dX9KXyc4ycEBqEUjB2bY3HbiFvIPnCt/r6ym0teiOuifFdIw+3nEkhrs
+	 5voKh4KgmMvGUc8gCX3vHP4ZGoKcYoDbUzpKf1CLAhRoQ8Gahfz4h5fRUHSxizH+vOeyM
+	 5lRPo9lwV7P0QMCk3MkvdEADrUdNL4Mmv7XC6g5piQiHYKjO82q4sRnuwzZpC1n5TZCVl
+	 VN/SdBBtRTe/6yUw3XyS9bQWUsOzI6y44yNIMlnCXmqCmkAKfxYh99Y/WGEB+HtCaRw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=L7nYXuly;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gnWXY2M8;
 	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2CF606A329;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E46606A32C;
 	Mon,  2 Nov 2026 21:14:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=L7nYXuly
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gnWXY2M8
 Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
 ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
 	t=1793654069;
-	b=bx02enzseSDwVj+BVTcZM1y4aTImF/kVJf4mRPYXImg4MYbUiETXuVVmiAaL5TcxNgDG
-	 PT0SovoliBekw8yMYcaesL1iydXfqaySxL+QscJNUnQofwzdZFbTlBpbQ5l0m9OjX1D1f
-	 kXpkt5T+rVVRbvTbMQVKrM/uRKW7ESbi/3Da0xlkw6Bq9BpJpaNfORbOTHaQtp7VPXX0T
-	 GSJzNJop94RAs6uaVru0rXksSVvtmOkR5GgAMtoVnD0TGtR2NqLPJDdur2gtPfcXtK1W5
-	 cPmaVTFIFlwTBODL29Oahxl5p95X5MNtTdN4udqhC8YMgwKQwUHaCM94UjXH+8vcF/g==
+	b=W5A7KZA5+S0Rk9ogT1go96ciR9cPUE0jGzsnBJKbUwT5McFx7O83lNqplNhWNFehRj1v
+	 VarcTCyc8pkGEniKt7btW+HZyDGXtwRN52oeoBSoiF4NBf6DGDtWrldBOCfH0U9+vyo2R
+	 90wgIInIW2AZi+z3hUhDDrFS8McxG4+TFZahi8V/HdsSNInaAcNICn+V9AFBKCehh1Iie
+	 EXgvCwpu+OqKvteKYfUaLyOU+/B3V4p2ornc4WKMVnbJfouh8B6wBNqu9doMAzMlBsSuc
+	 hIRCIchHrOUnuIeOARisyVc0e7co6/OfAsIgkwvH+ceD9dk8T0RKHDFpbfnPrpZsDYg==
 ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
 	c=relaxed/relaxed; t=1793654069;
-	h=DKIM-Signature:Received:From:Subject:Date:Message-Id:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:
-	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To;
-	bh=1XA5MeCaMsUqWbdpicYXd8VCvuZhBeV7/2rs2YRa3XA=;
-	b=IU5OpS34kNPgiExf488Sj/YJ6SMUMhqzENQbAivHWU1mhQYboAjHF8N509LjCHU8S2uM
-	 whlHRyr3ou06qfakdpc0KlvnnVIXdoLFNATajuVbNO1Hb+7HOxqjsR3dj1P0pi93cgszG
-	 LFtFPwLlKOJysV4onYW+dubUD2oPI+2JenTaAaOnDfJ9UqDBL9v1FjQYqHgj1jxGEd8Eg
-	 w/iK52MVQLvMMQFF35Z8ntnUzUbo3K0yObG5CeAMGpX7Y4GnbTWOlYdOs3UkG3KW+5gId
-	 umLI30P8OU1cmoR1wNWJ38TaCwb6/hX3tf6PzYfhPOnGWfGrZPhchhQauH2XcPfwiGQ==
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=Odnk7WgHn5U8Xk5ai/aYpT0eWB4gdIOVafLZ8UKejdM=;
+	b=qTMmn8WBUoTVJXkWm6AceEiCf0EAcckWZXzBpZnXCBh2LihOEEmy1OQle5c5UZeEqcAt
+	 OhGhdwqDU5h8dJSXLsZbaq0HjwYv0/YsrHpTJgheyKZpvXGWq8giqozzlZj2VTYz6lImi
+	 DrlE7it8exLR+QBFhy2Ig/FwKOxiB/HLHoW0B/U59MOD1xaFtpSscS4Q5Mxpn6i4lPq0g
+	 o/nKnowTyMEqCFbVkgono3gH6o+nzrHzKPcCKaKO+iw1LySuLz/CzZb9+xCnXGCZ8unov
+	 HwroES4gijcVSrMW8djy5vosBksjGfMJQbHwRQTxU251x3f1nFMZfGJS7yC4C6AkEmA==
 ARC-Authentication-Results: i=1; smtp.kernel.org; 
 	arc=none smtp.remote-ip=100.80.115.77
 Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 7E22B1F00A16;
+	by smtp.kernel.org (Postfix) with ESMTPS id 8CD221F00A17;
 	Mon,  2 Nov 2026 21:14:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1793654069;
-	bh=1XA5MeCaMsUqWbdpicYXd8VCvuZhBeV7/2rs2YRa3XA=;
-	h=From:Subject:Date:To:Cc:Reply-To;
-	b=L7nYXuly3o+uV7OEls+jNm/H/ETvrnw93JvkeyQnD6xIWr1LKz9yHZV64vdkQ1AGZ
-	 DyZ/vCzs57kSYJ0vvXGVkHtfE19zqG+clZNf1E+iKwB9r+A1TMGUjU8uMMidTfs/mM
-	 aIkqHI+vLHseREE8fPmqoPHK8kW5tkdFmqPs3fuKQlS1dBtcIVedF8X1Skda7ZowwS
-	 hFLpzMOxSlWxVzY0exKcUVcwAZ87MkyWQp6YYNU7g4RHTXWDNG3+SlJKLtljPkxB7f
-	 yDgrbK2kOkXV1RhVXtlcYK0X45mArE3bIcEpYjqy11aUQ7sO3mT3RL+enN+9pK9dAu
-	 NErC+eB+1YMDg==
+	bh=Odnk7WgHn5U8Xk5ai/aYpT0eWB4gdIOVafLZ8UKejdM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
+	b=gnWXY2M8+hOF/YsgY3ARQZsDLSInhFdUK6ovBynIIRxSyC+hHnQ+QFhzyldfL3Ab8
+	 68TqYeNzaYqTqs1kF4+Z4EYPn7i6XFhk4WVkZCQrayiyJTtXspX3Ftk7wylknN6pzy
+	 3m2uoO+o/hKAyaXPPCJJukvG62ApEme8xGjfArbJjrbiQoMjo8RGjb0FG1zyVoOwf8
+	 sMRQTv8TxqlvuTaL/bbl/T8aJ+HQYFQzCr5z7umBR6tNVpiaimcVDoHQ1qIMf8ZeR1
+	 Y2N9MvDV42xGzRWTzH/d1hsWW+gCPXavdzTHtCXS5inO4LDFySUZ4OJzCZxFbD+8kW
+	 +a7HGF2QIPnmg==
 Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id F23294667F;
-	Mon,  2 Nov 2026 21:14:27 +0000 (UTC)
+	by lkml.kernel.org (Postfix) with ESMTP id 0E2F446645;
+	Mon,  2 Nov 2026 21:14:28 +0000 (UTC)
 From: Jacob Lefkowitz via B4 Relay <devnull+jlefkowi.akamai.com@kernel.org>
-Subject: [PATCH v2 0/2] perf jevents: Add IOMMU PTW & device entry metrics
-Date: Mon, 02 Nov 2026 21:14:15 +0000
-Message-Id: <20261102-perf-tools-next-v2-0-4d237f886710@akamai.com>
+Date: Mon, 02 Nov 2026 21:14:16 +0000
+Subject: [PATCH v2 1/2] perf jevents: add iommu page table walk metrics
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -84,12 +83,9 @@ List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/2WNyw6CMBBFf4XM2jG0PERX/odhMcIgE6UlbdNgC
- P9uJXHl8pzknruCZyfs4ZKt4DiKF2sS6EMG3UjmwSh9YtC5rlWuG5zZDRisfXk0vARshl71ZVE
- UqiZIq9nxIMtevLWJR/HBuvd+ENXX/lrnv1ZUmCOdKtL3uiRV8ZWeNJEcOztBu23bB+KDHySvA
- AAA
-X-Change-ID: 20261028-perf-tools-next-8fd1d433316a
+Message-Id: <20261102-perf-tools-next-v2-1-4d237f886710@akamai.com>
+References: <20261102-perf-tools-next-v2-0-4d237f886710@akamai.com>
+In-Reply-To: <20261102-perf-tools-next-v2-0-4d237f886710@akamai.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
  Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -101,76 +97,126 @@ Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  Ben Chaney <bchaney@akamai.com>, Matt Pelland <mpelland@akamai.com>, 
  Jacob Lefkowitz <jlefkowi@akamai.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1932;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3362;
  i=jlefkowi@akamai.com; h=from:subject:message-id;
- bh=d66B5JAoBXgjBVfpcoxVXE9rM8vAjKvyKdmOxdyzjJs=;
- b=owEBbQKS/ZANAwAKAdLKfgzjwTS1AcsmYgBq6P0rROw5wdqaVhUI1FzlhV0u8sWTxMPI3V5w4
- 73IVmoN9leJAjMEAAEKAB0WIQQKFmVpIhg7hFI7scTSyn4M48E0tQUCauj9KwAKCRDSyn4M48E0
- tTv8D/46cbO7uCat3xnsVx99k3cPiDz4YBgdQxmUZORhslhy04HrNpTqLj8Rv1UWowXhmW2bIBh
- KQvqwJYspXh/7idcZtxE6udAYhVAWFVUmNjY+6o8yFztleoME63wtUHVsYix+6PDVXDvnyVS1xz
- uM6+PiMiyXg2HF04A8yavRLbPNu4ZeF6oiL0FZ5qc2NKEBlTT11qqW2UI4S9Yxxn/vYIGmkRzxu
- ApErMtCnesZdk8gatxg0DJ0g5VL5CMlVndVDWRfIy19B+GJfrtuIFZDPSSe9ELogvWZtay/JCAe
- C+Au+N5IDz7Pk0C7AiaIACz23POrYYoTXukRSEvDmWP6zRB/0FlOjDZlA3ZCSlJPCnm2RLeCn/h
- xL6hooCg4XweLs7qdfg8WwIYgxiMD+v15tCWtDaiJxOzVONBU8zt3zYZw9UhQwQmmFTnMDAQQv5
- NXloMm9AQhTnQhOfHJIAelDy4LlMyMHidksVmY1Z7xADHzOuke26+m5lrNge8RDQPDmFILl5a1k
- Pzu/YuXzvki7mdGzA3kx4i8uV+deZiRIhHUc+MrzP4Xp5SbO4kQzLPaI/IOhh75xHlZz7pnI9Ls
- nuSSQBsxYWU/MBHgV3VFFf8VM/dj4z1f4Dr5HxGhuJzD9LwZTGfRHFOqfXlCmmwraQ6DHjlSWrJ
- +lx8orRLVDZTaMw==
+ bh=o+fTHAReSL+rEvSd6OyDxXB8zlYMgzMiuuHLzYKbvtA=;
+ b=owEBbQKS/ZANAwAKAdLKfgzjwTS1AcsmYgBq6P0yeccUtD2GLhej/d2Lavjp2eNUncZ012Hbe
+ GNY/SMVB1eJAjMEAAEKAB0WIQQKFmVpIhg7hFI7scTSyn4M48E0tQUCauj9MgAKCRDSyn4M48E0
+ tRJED/0Sba2qk0SsG8L3HcbaWylkq/NbfhGCI8nOYlremFZXTbIuAg3+CLg8cM0hChvAqfhkNll
+ K87NzMDOwGdEgkRPngmFdHlBClMRXU8bGGMeMOFiqYX/uCnOkgZBJdCxwBrM4kDMweXZeU1pNMc
+ rapnrsIvkNOamrOUAHFV62r9G+RI0oTu58JGSwSlDC14YsNBULXG2LDwuwT+Yz9hCicFjdLQFxg
+ ACeFHxf6vRGZ3CdKFVTnU+91EP1sWfVZ72vccn+a8yaR/iTGjlVLU9vFPIMuvfC+v4k0T3qdjqr
+ t0JPvpaDIEDPNzWN4mkWngP9eDdaBtKl6nBUeANXkziGwqscrU4ubuzP4bKJ8BzL9FABJYcDIx0
+ IC8BdXAp+ZcTmJMCnSHUHAB4RiUAFs2rDaPudGfhySZZer6ucR96kLhyipGHIVKBI94bRhbthIF
+ Wsg4lRbbSdwR+XBNLPe80Exz3p8fvWnkEWqPCps0+JNKE4RMkd8v8zj7eWEgyDyfWnt/QfmoCmj
+ aUBLVQvrdxKCyOMwFons6T8jsemhJH2p/k8nerKf3ZXNgTlFCT23ROoqtby0lNosw9vq36znJvo
+ 7MT+4ZPqON5YozilW+iUwgcEIxtHUw0mfly8Bp+GhBe77QtZGYtMh6M2k1yMD68PfrzM6eF1Q80
+ 9NfTGqngAr2hiVw==
 X-Developer-Key: i=jlefkowi@akamai.com; a=openpgp;
  fpr=0A16656922183B84523BB1C4D2CA7E0CE3C134B5
 X-Endpoint-Received: by B4 Relay for jlefkowi@akamai.com/default with
  auth_id=1357
 X-Original-From: Jacob Lefkowitz <jlefkowi@akamai.com>
 Reply-To: jlefkowi@akamai.com
+Content-Transfer-Encoding: 7bit
 
-Adds AMD specific metrics for the IOMMU with respect to page table
-walks and device table entires. The metrics cover ratios, rates, and
-percentages with respect to any event which might be triggered during
-a page table walk or device table entry lookup.
+From: Jacob Lefkowitz <jlefkowi@akamai.com>
 
-The metrics target Zen 2+ processors and use the standard amd_iommu
-PMU events. All metrics are tested with 'sleep 10' and behave as
-expected. An example output of sleep 10 is provided within each
-individual change. 
+Adds page table walk metrics specfically to perf jevents for AMD
+platforms to enhance observability into IOMMU overhead. The metrics
+are supported on Zen 2 and neweer processors. They are implemented
+using the amd_iommu PMU events.
 
-The changes are split into two patches:
-1. perf jevents: add iommu page table walk metrics
-2. perf jevents: add amd specific device table entry metrics
-
-The specific metris added are:
-- lpm_iommu_dte_miss_rate
-- lpm_iommu_dte_lookups
+The list of metrics added here are:
 - lpm_iommu_ptw_reads_per_tlb_miss
 - lpm_iommu_ptw_nested_read_ratio
 - lpm_iommu_ptw_guest_read_ratio
 - lpm_iommu_trans_per_sec
 
+The changes here have been tested with 'sleep 10' as the workload:
+
+perf stat -M iommuptw --per-socket --metric-only -j -a -- sleep 10
+{"socket" : "S0", "counters" : 8,
+"reads/tlb_miss lpm_iommu_ptw_reads_per_tlb_miss" : "0.5",
+"%  lpm_iommu_ptw_nested_read_ratio" : "none",
+"%  lpm_iommu_ptw_guest_read_ratio" : "0.0",
+"trans/s  lpm_iommu_trans_per_sec" : "971.5"}
+{"socket" : "S1", "counters" : 0,
+"reads/tlb_miss  lpm_iommu_ptw_reads_per_tlb_miss" : "none",
+"%  lpm_iommu_ptw_nested_read_ratio" : "none",
+"%  lpm_iommu_ptw_guest_read_ratio" : "none,
+"trans/s  lpm_iommu_trans_per_sec" : "none"}
+
 Signed-off-by: Jacob Lefkowitz <jlefkowi@akamai.com>
 ---
-Changes in v2:
-- Drop min() wrappers d_ratio() for the IOMMU ratio metrics: min(NaN, 1)
-  evaluated to 1, reporting a false 100% on sockets with no amd_counts
-- Did not test with previously mentioned custom workload and did not add
-  to the workloads collection. The workload stressed the CPU TLB,
-  but the IOMMU only translates device DMA, so the load never reaches
-  the IOMMU.
-- Remove unused min import
-- Remove global declaration of '_zen_model' within each function
-- Link to v1: https://lore.kernel.org/r/20261029-perf-tools-next-v1-0-a75a2b64a15e@akamai.com
+ tools/perf/pmu-events/amd_metrics.py | 45 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
----
-Jacob Lefkowitz (2):
-      perf jevents: add iommu page table walk metrics
-      perf jevents: add amd specific device table entry metrics
+diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-events/amd_metrics.py
+index 42569b9153f4..452b88033492 100755
+--- a/tools/perf/pmu-events/amd_metrics.py
++++ b/tools/perf/pmu-events/amd_metrics.py
+@@ -318,6 +318,50 @@ def AmdIotlb() -> Optional[MetricGroup]:
+     )
+ 
+ 
++def AmdIommuptw() -> Optional[MetricGroup]:
++    if _zen_model < 2:
++        return None
++
++    walks = Event("amd_iommu/mem_iommu_tlb_pte_mis/") + Event(
++        "amd_iommu/mem_iommu_tlb_pde_mis/"
++    )
++    pt_rd = Event("amd_iommu/page_tbl_read_tot/")
++    pt_rd_nst = Event("amd_iommu/page_tbl_read_nst/")
++    pt_rd_gst = Event("amd_iommu/page_tbl_read_gst/")
++    trans = Event("amd_iommu/mem_trans_total/")
++
++    return MetricGroup(
++        "iommuptw",
++        [
++            Metric(
++                "lpm_iommu_ptw_reads_per_tlb_miss",
++                "Average IOMMU page table reads per IOTLB miss",
++                d_ratio(pt_rd, walks),
++                "reads/tlb_miss"
++            ),
++            Metric(
++                "lpm_iommu_ptw_nested_read_ratio",
++                "Share of IOMMU page table reads from nested (host) tables",
++                d_ratio(pt_rd_nst, pt_rd),
++                "100%"
++            ),
++            Metric(
++                "lpm_iommu_ptw_guest_read_ratio",
++                "Share of IOMMU page table reads from guest tables",
++                d_ratio(pt_rd_gst, pt_rd),
++                "100%"
++            ),
++            Metric(
++                "lpm_iommu_trans_per_sec",
++                "IOMMU translation requests per second",
++                d_ratio(trans, interval_sec),
++                "trans/s"
++            )
++        ],
++        description="IOMMU page table walk metrics"
++    )
++
++
+ def AmdItlb():
+     l2h = Event("bp_l1_tlb_miss_l2_tlb_hit", "bp_l1_tlb_miss_l2_hit")
+     l2m = Event("bp_l1_tlb_miss_l2_tlb_miss.all", "l2_itlb_misses",)
+@@ -526,6 +570,7 @@ def main() -> None:
+         AmdCtxSw(),
+         AmdDtlb(),
+         AmdIotlb(),
++        AmdIommuptw(),
+         AmdItlb(),
+         AmdLdSt(),
+         AmdUpc(),
 
- tools/perf/pmu-events/amd_metrics.py | 75 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
----
-base-commit: 1c90f0a3c8a1c4e38f9edd97af9e20848805a7fb
-change-id: 20261028-perf-tools-next-8fd1d433316a
-
-Best regards,
 -- 
-Jacob Lefkowitz <jlefkowi@akamai.com>
+2.53.0
 
 
