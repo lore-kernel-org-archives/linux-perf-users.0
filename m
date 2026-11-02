@@ -1,88 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.53
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793621761;
-	b=l1g5hBPU0AgWlqEmOJYYqXisbTcqbcvgRqPVEVtc8/7xgFHOJDiHM9kpBzebpfTl7zWa
-	 q68qw3jTplAmGpBVqg/JiZ6varT1bkc+WK36ymT2j5Hv0lS9kqVn/+rchdqLYMo/3wWWB
-	 0nyuMSCMA6q3Uzx0NAV9YRK3U96VVPdO/kMdRMG7fSXMYFZfs4+1ugGvxi3JlX1aimMP4
-	 hV3TMmcsfnxw/NSq/f1A3ubbQbBAXNkUYWvK7Ke9c5B/EI9Z5+SjsJKIEBJZsx4FPWamH
-	 uDTw1btvqJsvuhxBjd6/HQX09xDjLd52zXXN6wBl2UW1UR+EtZE3TcAkPHu8tX8op+A==
+	t=1793621763;
+	b=yHO1MZHOJUnC8gtekIyhbJeOthopUKvCp4f3IOEEEhVXrtsCRWkGzrnRP0l2Kzao0b0A
+	 ggI8LHypCEPo35Cj7YXizxRvqqYUiPzDhW/3QJcTU91MYt9NvqTS7skY85rEhkR2yHTMb
+	 0aX0tq5/d/SQJpEazhoU3ZM0Dqf8s2HCOZvEtpeswkLjmNxJhJA0kTKacKTuCAR/ux3x/
+	 ycmeJ6DqVo2j8gRfUdcAoyHmC/YQmEGUXAGAuI3dlO6mSBSt1Y2V5JUIg7u63zuF6U71W
+	 Y6F4TuglvuT0vOUUD44Tm3q/wiUh/xp9q94sPnMDnnpkeevSdbsD8RvoxrLLEc/qXqw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793621761;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793621763;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer;
-	bh=S4s5XiFFed+m0dwtvV2BD0K5lP+U3CdMGGYPhjLKYQ8=;
-	b=mp7ufei5LlK4APAuv9K4J2Z85DPaeNh3iqXeYGtLHBSUmXpl3ADjIzg6LPFyC75tZ0tU
-	 ueNa88Zv8qxM3htQcA3l4OVYa1/5EXL/T8G8WELmE9XUhF09KnltLinJnNBYedhcYB0Rg
-	 XNZhxrIWbJLT3BWCFlhlsi0CG2PtOUHJPgLHVpsyoh/Q9WBmb0L2OHpRVpEefoyNiQyE6
-	 bBECBqsdZf5nkA5bqgPo1K/3GfHHoj7dc5KD3hZScvExqR4rGTLHfBu8lZqi5IBmfYIUW
-	 iI+jEDOtdcN2H4J8k4FkLIFtM29n/KLDebA7Hr4+m64E/S4wc5sX6eqe5qmd4oMt8og==
+	bh=+9NpFkRdVW/EG2TCUGvGJ4MlQ2xcOGmdMzm207Q8vjU=;
+	b=XcbTDSLt2mN/8eBKa6NFOLNhCFYpwkiD0RprPEGyvN3phgSoGTT3JbmwIsSmjvvnaIN1
+	 Zk2rqtMUQYSUEeORWm2x+deWhjn6J2wfWzxr8SX+BihVci84JITUGL6E/xSLdBdvsS7Ez
+	 yD8le5MQ9J3fbaozkrN7u6ArA7FuHlGx0CJYs+Kof+MQIN9Vd4Zdxbtr6CtafmJfrHmND
+	 ehim8h5sgj/W6ZF8iLm/l1yvyX20BPPJHW6ch/+AnfGUPt6ulhLNrRxVJqKONLmAyQ8kU
+	 clMKbb8TTDC8xKfTyGDF+sKzl80djZ8TPIjUJP1AJduv3e1+rtV5wao2Y/8rBgrrgUg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linaro.org;
 	spf=pass smtp.mailfrom=linaro.org;
-	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=v+k6p67j;
-	arc=none smtp.remote-ip=209.85.128.42
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=IPl+jZoo;
+	arc=none smtp.remote-ip=209.85.128.53
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D5460A260D
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Nov 2026 12:16:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 96D5460A260D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21681606B1B9
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Nov 2026 12:16:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 21681606B1B9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=v+k6p67j
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4a5177d78c7so29917065e9.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 02 Nov 2026 04:16:00 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=IPl+jZoo
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4a35ac4475dso20191575e9.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Nov 2026 04:16:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1793621759; x=1794226559; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1793621761; x=1794226561; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=S4s5XiFFed+m0dwtvV2BD0K5lP+U3CdMGGYPhjLKYQ8=;
-        b=v+k6p67jlSCCtAFLTJHEr/fOP9jUFtDJoZqJvF4UwB4P7qpSBHVS3eUZvY9DppleiP
-         ncB/xEDSRl37A0F6ns4DDzlZP6inyg5KWPo8e6ykcJk30dPKR5DnnEUgn0WrLZc/xAnd
-         N0QvD6LwpBeF+HSJiazvoTsSciBmIy/nKEFxLq+4ijHyKjQoW3xxnAyo8OtnpRiwzQa1
-         oRTg0fI69BbAXuYXlQdTgcLOBvUbjpBfw7v2UmLtEse94ConR3apsuQwBAcl+6TeEJYZ
-         jH0MHdU4hFz/923Fuha1P6EBUsNwFW8Y6YklDiL3BPlWBon+mOjM5oOm6WDpzRPsucsD
-         mESQ==
+        bh=+9NpFkRdVW/EG2TCUGvGJ4MlQ2xcOGmdMzm207Q8vjU=;
+        b=IPl+jZooc/Ocqa/xTyy0eTf4YzOERgAZD3gXOxXDZT74tas2k1vjLvWMwevPVRcqBL
+         maKGsTaW6Sv5kdK4mbpfYVPn66mrwKrpPWsVgJXcnXPiaUJ5s2A5Nq5JeQtYBrGw2aIS
+         vkIiiLOXFvzhPDz94DN/xahwm0DiDHQnsYxlp3FGehTNRUkBd0ixM8SXHBl5hqOvWBY2
+         PD593Ari+fFZSjZZy5augqgkV9jBYii47phS4MVNOesAnAn42QdtkY5VcQK2DkqXRDr6
+         RAZSX2JrDQhRmye/f0pAV2czhLBeBLCCHYSbDWpkXsYywwRfg3VHR7WvTJFiR3oHRZVg
+         RNIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793621759; x=1794226559;
+        d=1e100.net; s=20260707; t=1793621761; x=1794226561;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=S4s5XiFFed+m0dwtvV2BD0K5lP+U3CdMGGYPhjLKYQ8=;
-        b=EaP9IiFwjLigrhbmy6v2A0XGODhief0APy1sZuoH2uYtO4w53ketc6wu3zWbAG5ghO
-         pR1Czv2Hp4ExrtF5o3no08Fd4q5kzhPB6EO1uqzAJZrf1ahQY01Qe5vqx7amy+IA0LaY
-         LVpYmU5dVG4T/oAhJHsWAn1XRPrwxfI/Qc/+1SHWsGMitkcyXDfbamMkVSGR5FKNH7bv
-         luXBNgeAxULNWMU+LqxgKl4J5QIwp8eqMkj800WDbH93Fx8hMacWzDdocxR/oCwprX/2
-         0zgYL9aCgnAIzCMmKtrrRQMNZ8/FP434b30IEWrbW1Lle9Y+jMvHIW+Ae0SAxjdxAdqh
-         u+ig==
-X-Forwarded-Encrypted: i=1; AKwUvBzazDiHibnODl/CzqlcAATgnmCzIawOxR4HLSQOQZ3xJZRtOhCQuUBwCNZ9AMp0OJkgwEoc+K6lYEIur4RmYzRU@vger.kernel.org
-X-Gm-Message-State: AFq9FYLh3L2g5uxfoQo66bKf/Fek2awmo0fddBTnafvzmj/8h8nhJzBa
-	mRDIN1VxC/QnY8WNDt0Dw74Bk1GF/F64hPqt/VJrQgqOr9NUiCraRh63KxJ+FcPzUbQ=
-X-Gm-Gg: AYBFou00mIcsYJP4lqlPEOep0op3uegWHp7OxGzIzNfeVKNkZdwX2zdc3Z2Ls0DkSAw
-	4ecsOQuG7gbDbx4ogkBRT9X99q5bbXMXPqKPIutp20f44AJAZIW3O+dv+6GWzn82bukh+QDmsQh
-	9B6uhw+hPJnwbenrw2OOu2f8zd8urCxyEsWZI06lPf8TFJFeli0EXzTHIhEWvWEXWvEL6v5DaOH
-	Z1tJdp7oXTb14wqhEMWFW6Dp9nVl/uDoggyc9viWiChUng457dbzKowBy89z48s1eobiaKKjAxn
-	7Shqq6Tt86IudYzh5oFnNW/j2mvYBEYUOoZI1IBprrj85CEdrFo+B/dCM/UvbY0RQw/CsoUKGqh
-	limpWofEtIOgOKBjBvDCvY6msA2xvn9kkacgCmfC/MSZNSZ4RXKnq0Rk20ORGiKyxKUUP5FqB5k
-	qoHeZkYA1lagD2smXZUbPK+gljAGfRvgVwlBT92Aw75IBHjL106yiXMpnLxTtRBE038xZSz6WwE
-	MNrmE0OhXsXGQdnILBbkhuOIA0/O1cS9RlNVagFH6jYXk9/BCcSe917arRRsN26d7UeQwZOjPyL
-	VtA75Gwkh1XZwP7Xpr0NSbefYZ53MpCZ
-X-Received: by 2002:a05:600c:83c5:b0:4a1:f377:5c75 with SMTP id 5b1f17b1804b1-4ac19329ea4mr197102405e9.33.1793621759044;
-        Mon, 02 Nov 2026 04:15:59 -0800 (PST)
+        bh=+9NpFkRdVW/EG2TCUGvGJ4MlQ2xcOGmdMzm207Q8vjU=;
+        b=tN6X0Q621ZF3z3+GsMacdEA6aoCtK8ptetNCLSyz5iYDrBqvqwftQq2Izw1OIpzBVe
+         GuKyRCGM53pAUhuKvnEs9aukix4p5m85te0gV3BeQEoppjt7yvXw2d8LiMGCgbdpBUOY
+         H5rHyrbxYnETHCXQ9EPegVlXeFvWfCx7mUiJPBCUt9/HngwUFmgDL7/qvbZgbeL+Mee5
+         eE198w1j/C4kGUEpc8NRRuAEnrXU+A++lUw/kuJy4RZkPv0472eVjVXrlIMZig+l1gW7
+         jq/fKH0POaOgdIFL1UbT1JXknYGIIPSU76Tn9QXgvb4tQlHTP7zd9bKOs2jYghoLfnRH
+         rt6w==
+X-Forwarded-Encrypted: i=1; AKwUvBzDtumW25D4vGTS9+/Nx0TSGIDRX/e+zQvBD42IXY9lyAyRSu6gdPgtMiHVaIICCeBmUvj6msSmI4m4TsAvXIoo@vger.kernel.org
+X-Gm-Message-State: AFq9FYLTfR7d/PZXrpbvansln48HCTQo73d/AgmJ6PS6F9HWqL1+zBrS
+	dIdZU4VcWV6fn7uykv7bJ7dkIqtfSdAa7mdET2lOX4elmVVwqL1Yw5H05UeVfGdDl68=
+X-Gm-Gg: AYBFou3UwTb+rke4vY6bN4SbHiFg5zJThHWnXVwkaFlUYiq7vcNXLwslVZtKqalPrei
+	440w9YBy6hSzcge0HHn0Sra2284kOcWc5YoGnufMciN9wHItkIbQzJMHSxl21yB5RfoyDnMcEz0
+	f8p4CqNLxDfB+QGDOoqk5qcIlfEVXhVJ9S0MsTujwfx2vmoWTJL8Dr1QZS/q40I9CqklBzFRxqX
+	TAQf0DoyDmaxBcIuqNJcF2GC0xXxD2U+ijBNF6yVGWJBupRE9f+Yg4/sPo0tFyCCD7lTFxcgSpi
+	DC/Hxi6XIqNCYdJ+7d589R+46NOqms+kzkOjnenOI0CaVXb3YUpjf3c9jOSu7IZqoob+MAESj+t
+	F0vIMR3HClyk5GUNL8tHdJLtgweXjdQE94v6cDsB+6WcffZYv9aNpggBcTEkyX1xPdZMTlH9rkK
+	+qtyLfvXda2ielSDfHyZhSVRRNAxHJ0UZD1cKDuzVn+93G7fAnv/DJ1JVDu4DHzvGG7mXE4VU/t
+	YAVUd1qHNG/IyvzaHQrNTwo6svO8lVwIexAAs9dfG7KgLRrqg0umOumpJInatk+MrLdYsN++bpi
+	2cV+DKmI0eYH/HKY7dIbrtge3vIXZ2iyvgo3H5x91WeGkgUbpawH7Q==
+X-Received: by 2002:a05:600c:6285:b0:4a1:fa27:df7c with SMTP id 5b1f17b1804b1-4ac182dc8f6mr222521195e9.34.1793621761658;
+        Mon, 02 Nov 2026 04:16:01 -0800 (PST)
 Received: from pop-os.local ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4abf5b27e46sm434974855e9.3.2026.11.02.04.15.57
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4abf5b27e46sm434974855e9.3.2026.11.02.04.16.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Nov 2026 04:15:58 -0800 (PST)
+        Mon, 02 Nov 2026 04:16:01 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
-Date: Mon, 02 Nov 2026 12:15:26 +0000
-Subject: [PATCH v3 12/18] perf auxtrace: intel-pt: Use common snapshot
- pointer fixup
+Date: Mon, 02 Nov 2026 12:15:28 +0000
+Subject: [PATCH v3 14/18] perf cs-etm: Don't print missing buffers in
+ snapshot mode
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -94,7 +94,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261102-james-cs-unformatted-per-thread-fix-v3-12-dbcb0c281b9b@linaro.org>
+Message-Id: <20261102-james-cs-unformatted-per-thread-fix-v3-14-dbcb0c281b9b@linaro.org>
 References: <20261102-james-cs-unformatted-per-thread-fix-v3-0-dbcb0c281b9b@linaro.org>
 In-Reply-To: <20261102-james-cs-unformatted-per-thread-fix-v3-0-dbcb0c281b9b@linaro.org>
 To: Leo Yan <leo.yan@linux.dev>, Adrian Hunter <adrian.hunter@intel.com>
@@ -114,49 +114,43 @@ Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
  James Clark <james.clark@linaro.org>, John Garry <john.garry@linux.dev>
 X-Mailer: b4 0.15.2
 
-Intel PT has its own wrap search but the same pointer fixup logic as the
-generic auxtrace_record__default_find_snapshot(). Replace the duplicate
-code with auxtrace_record__snapshot_fixup().
+The driver produces lots of AUX records for trace data that was never
+captured in snapshot mode. Downgrade this to a pr_debug3 message as it's
+only an error in normal mode.
 
-No functional changes intended.
-
+Reviewed-by: Leo Yan <leo.yan@arm.com>
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/arch/x86/util/intel-pt.c | 21 +--------------------
- 1 file changed, 1 insertion(+), 20 deletions(-)
+ tools/perf/util/cs-etm.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-index a533114c0048..ce854209213d 100644
---- a/tools/perf/arch/x86/util/intel-pt.c
-+++ b/tools/perf/arch/x86/util/intel-pt.c
-@@ -1150,26 +1150,7 @@ static int intel_pt_find_snapshot(struct auxtrace_record *itr, int idx,
- 		}
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index e899d82b7c93..c880a1ca7533 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -3361,6 +3361,9 @@ static int cs_etm__queue_aux_records_cb(struct perf_session *session, union perf
+ 	struct perf_sample sample;
+ 	int ret;
+ 	struct auxtrace_index_entry *ent;
++	struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
++						   struct cs_etm_auxtrace,
++						   auxtrace);
+ 	struct auxtrace_index *auxtrace_index;
+ 	struct evsel *evsel;
+ 	size_t i;
+@@ -3414,8 +3417,10 @@ static int cs_etm__queue_aux_records_cb(struct perf_session *session, union perf
+ 	 * don't exit with an error because it will still be possible to decode other aux records.
+ 	 */
+ 	if (!found) {
+-		pr_err("CS ETM: Couldn't find auxtrace buffer for aux_offset: %#"PRI_lx64
+-		       " tid: %d cpu: %d\n", event->aux.aux_offset, sample.tid, sample.cpu);
++		int level = etm->snapshot_mode ? 3 : 0;
++
++		pr_debugN(level, "CS ETM: Couldn't find auxtrace buffer for aux_offset: %#"PRI_lx64
++			  " tid: %d cpu: %d\n", event->aux.aux_offset, sample.tid, sample.cpu);
  	}
- 
--	/*
--	 * In full trace mode 'head' continually increases.  However in snapshot
--	 * mode 'head' is an offset within the buffer.  Here 'old' and 'head'
--	 * are adjusted to match the full trace case which expects that 'old' is
--	 * always less than 'head'.
--	 */
--	if (wrapped) {
--		*old = *head;
--		*head += mm->len;
--	} else {
--		if (mm->mask)
--			*old &= mm->mask;
--		else
--			*old %= mm->len;
--		if (*old > *head)
--			*head += mm->len;
--	}
--
--	pr_debug3("%s: wrap-around %sdetected, adjusted old head %zu adjusted new head %zu\n",
--		  __func__, wrapped ? "" : "not ", (size_t)*old, (size_t)*head);
-+	auxtrace_record__snapshot_fixup(mm, wrapped, head, old);
- 
- 	return 0;
- 
+ 	ret = 0;
+ out:
 
 -- 
 2.43.0
