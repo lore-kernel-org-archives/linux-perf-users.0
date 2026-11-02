@@ -1,87 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=101.204.27.37
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793617689;
-	b=ztnDZocout/BvHhJsIYtxKZbb6qcBk+imu6bQejBJjVU8czruO7bI92qkyQWonX5vsUI
-	 hxQYUdzMP89vyVn30ej3U81VrLZB0mu/uJuEHi5cta1aLFQrbyMA3MCDicT/hLHJuAf8C
-	 8FPh5PeHDbEQfJIDWuQCqIcL4/hAAzsdGha049udGNshSzopzSuHIfQ3vtdo+6qlrgwm8
-	 Ruh+PEMbwcQdfJZBuxV7Zq+bvhSsdHLE8DvGm6GFY+cpi5aBLqnVOZt3Dcr6uxzJc+875
-	 1QmAw0sMaLkCF9OGqcB29Ce42IdOPNklAEUj9aBHvfj6M1xEXqTGznjuDcIlsD8pn2Q==
+	t=1793621654;
+	b=hOab6/MGXa2f8zESFsKCtHv93TkFirSRZG3t1CwGmM9VQLOjxZujig2rP9c4WXQgVxIm
+	 fDwvJfdGjVK6KpPE0olXLrG7zgGFMU2vBD2R6jw3L91Ky25GvDbx4cqdW5XKQl4BWsn27
+	 993iYIULrOEtctUk/b0TMkjVRw/6BnqCengp110yNx6Yq1UY5B5ujb9QgIBFV3WZ6Etpi
+	 CUMyrKlBff76we5Aw7RmvstA6acMaOAq/0dXwKHtLrANjZpJOvSCzvz2Aed7p7mVh0wb3
+	 pFyEbIdkN4zyLv/F/mqLV9Nfr8uTu9zSemDwoQkF4HXppkvxBPlCGwoajQ8jznnV86A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793617689;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=7DXPCrJavnRLEwyl5yXDcP5FfFWrG3htAzB0Azwe5sQ=;
-	b=VcgIG+ou6/xyCop2IjGIk2TFlVz97l0PiH7HwvUv8Zi/FWzlR6kPoMtE2++7dh/sQ6TK
-	 cuKxpq9cVkiHwFrOyqQDzAW+T8Ubp9HNAVBa6HyrZ2p6+r7SzXokWg76zC2k7+vGQ01gY
-	 H2a3bRW8yTFIV0HIqWde/lhLGQClQ9S82tm+/4yITDhCT5iMghwiiby5LIFw4rnQ+rMbp
-	 HlMm82o6q+0L8LjwL03YdMyd6zenqx64jswjNA7DqNZpJW+orsnpv1tjsMGZGzUaIYvFZ
-	 a4i5JbI8FqhNHlQksviISnkl2XYzhT4j+B+9xktTs9m/0ziSwvUUQ80rMzj62hY1z3g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793621654;
+	h=DMARC-Filter:Received:Received:Received:Received:From:To:CC:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 Content-Type:X-Originating-IP:X-ClientProxiedBy;
+	bh=ZHnD2BhfQS4goxoEINStSTyGKKje9Pvfaj0elViDg4Q=;
+	b=28aFNAvE4PvjgrKyDiNlQFOi9InZIVNu1mhsYzQ48vkqFmjwaHdjdXvT0taCdiY99j6d
+	 ga8VHAheZ0KHzrLSyN7AYwEJc5RpO5WM6jRsWelBxv7n1z79TilXc6xIWly21zl+k7iu+
+	 UuxdDMt0mnDILdgv3pid6OCRr/HDVYljTJXfQ4SK9Zk1GiBo67RoLrpozIYCOxDFK+rsn
+	 4SF14USTkYJwj58RvsUkBk8hXY6pJxFcVgkQAymo7MxYum0lGdV9g5MqAXTyY4xyFJA4y
+	 tjNANHQIXOXFDhPnzFRBtw2a5OLLp+Tb+d5HlUVae6f4TtOYSefvvTCv2p0M99NOmAw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=XHFP6Bui;
-	arc=none smtp.remote-ip=90.155.92.199
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3DE606A327;
-	Mon,  2 Nov 2026 11:08:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4A3DE606A327
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=XHFP6Bui
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=7DXPCrJavnRLEwyl5yXDcP5FfFWrG3htAzB0Azwe5sQ=; b=XHFP6BuihMppwPmbS6bxBqCC1B
-	WhNdRfMddfOhAMdCf3gNHaS1OWTnxL+wlJVkdui2I9DhnNcH/GMk1529nbKXYjI4vTGJpycJ1AZ1d
-	5gjN/YKTCEH6lmQWBNMcwkZ9qWb4PqHB6Fw8oGFJYQTMKHANO4ey6OH8aYCmPKgV2oPmx8B3e3VnD
-	ZnIYTb9GJGlmyw1x/wEbtPZTm7diMeFRhulXyHT14XBmtnJaTp+4H+aOp3uXYsa+fRRkG9fhSO5gL
-	eqj7+ajvhK7HyH6XJsp4KzmPmSBsc6KlhE/sMODXPLooVrFFr0VL4d/haag7LKvLcj9McMP8WUty2
-	SLUjFYMQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xNptK-00000002PaO-0yIo;
-	Mon, 02 Nov 2026 11:07:56 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id DD014300322; Mon, 02 Nov 2026 12:07:52 +0100 (CET)
-Date: Mon, 2 Nov 2026 12:07:52 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Pavel Machek <pavel@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jiayuan Chen <jiayuan.chen@linux.dev>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	"Vineeth Pillai (Google)" <vineeth@bitbyteword.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Andi Kleen <ak@linux.intel.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	driver-core@lists.linux.dev
-Subject: Re: [PATCH 2/6] perf/x86/intel/pt: Stop tracing if VMXON has not yet
- happened
-Message-ID: <20261102110752.GX1779021@noisy.programming.kicks-ass.net>
-References: <20261102074039.26983-1-adrian.hunter@intel.com>
- <20261102074039.26983-3-adrian.hunter@intel.com>
- <20261102095750.GS1779021@noisy.programming.kicks-ass.net>
- <ca44daab-662e-41bf-b050-3ff4a94c7948@intel.com>
+	dmarc=pass header.from=hygon.cn;
+	spf=pass smtp.mailfrom=hygon.cn;
+	arc=none smtp.remote-ip=101.204.27.37
+Received: from spam01.hygon.cn (unknown [101.204.27.37])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98DA9606A327;
+	Mon,  2 Nov 2026 12:13:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 98DA9606A327
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
+Received: from maildlp1.hygon.cn (unknown [127.0.0.1])
+	by spam01.hygon.cn (Postfix) with ESMTP id 4jJ9bd4xYVz16TS1;
+	Mon,  2 Nov 2026 20:13:49 +0800 (CST)
+Received: from maildlp1.hygon.cn (unknown [172.23.18.60])
+	by spam01.hygon.cn (Postfix) with ESMTP id 4jJ9bZ5ssyz2fTg;
+	Mon,  2 Nov 2026 20:13:46 +0800 (CST)
+Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
+	by maildlp1.hygon.cn (Postfix) with ESMTPS id CC38AB357;
+	Mon,  2 Nov 2026 20:13:42 +0800 (CST)
+Received: from hsj-2U-Workstation.hygon.cn (172.19.24.226) by
+ cncheex04.Hygon.cn (172.23.18.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.36; Mon, 2 Nov 2026 20:13:44 +0800
+From: Huang Shijie <huangsj@hygon.cn>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <ravi.bangoria@amd.com>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <james.clark@linaro.org>,
+	<tglx@kernel.org>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <zhongyuan@hygon.cn>, <fangbaoshun@hygon.cn>, <yingzhiwei@hygon.cn>,
+	<shijie8@gmail.com>, Huang Shijie <huangsj@hygon.cn>
+Subject: [PATCH v2] perf/amd/ibs: add phy_addr_only software filter for ibs_op
+Date: Mon, 2 Nov 2026 20:13:24 +0800
+Message-ID: <20261102121324.371157-1-huangsj@hygon.cn>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -91,22 +63,151 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ca44daab-662e-41bf-b050-3ff4a94c7948@intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: cncheex05.Hygon.cn (172.23.18.115) To cncheex04.Hygon.cn
+ (172.23.18.114)
 
-On Mon, Nov 02, 2026 at 01:04:59PM +0200, Adrian Hunter wrote:
+We use the following command to track a process's memory footprint:
+  #perf record -e ibs_fetch// -e ibs_op// -p xxx --phys-data -- sleep 10
 
-> > It seems rather unfortunate to issue a RDMSR for state we fully control.
-> > Surely we can track this?
-> 
-> The RDMSR only happens on BDW and only when VMX is on and someone still
-> tries to use Intel PT (even though no trace can be produced on BDW
-> while VMX is on).
-> 
-> There is a window between setting vmx_on and clearing TRACEEN.  Dealing
-> with that would be complicated, compared with reading the MSR.
+In the mysql tests, I caught over 1,804,973 records for ibs_op event.
+I found that over 53% records(970,554) are like this:
+        ibs_op//:  ffffffffb6017739               0
 
-So I thought we'd manually clear the thing before VMXON, but you're
-saying VMXON itself will clobber that register? I stand by my previous
-statement ;-)
+The physical address is 0 for these records. These records are not needed
+by us, and they wasted the CPU cycles.
+
+This patch adds an ibs_op/phy_addr_only term that discards samples
+without a valid physical address (dc_phy_addr_valid == 0) in the interrupt
+handler. And it avoids the phys_addr=0 noise when used with --phys-data.
+The term is only meaningful together with PERF_SAMPLE_PHYS_ADDR.
+
+Test result:
+   On 384-CPU Hygon machine running MySQL 8 + sysbench oltp_read_only with
+400 threads. Use perf-record in a 3s window after 15s of warmup.
+
+Compared with BPF filter:
+  "perf record --phys-data --filter 'phys_addr != 0'"
+
+    "-c = 50000":
+                   samples
+    filter        captured
+    ----------------------
+    phy_addr_only 25158085
+    bpf           24628937
+
+    "-c = 40000":
+                   samples
+    filter        captured
+    ----------------------
+    phy_addr_only 28215473
+    bpf             FAILED
+
+At -c 40000 the BPF rounds stop working.
+The phy_addr_only rounds keep capturing at that density,
+and every one of them still reports zero phys_addr==0 samples.
+
+Signed-off-by: Huang Shijie <huangsj@hygon.cn>
+---
+v1 -->v2:
+   1.) filter the zero-address
+   2.) returen invalid if PERF_SAMPLE_PHYS_ADDR is not set.
+
+  v1:  
+   https://lore.kernel.org/all/20260902085251.4046240-1-huangsj@hygon.cn/#t
+---
+ arch/x86/events/amd/ibs.c | 34 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 33 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index e5376ad5b2ec..f9949853e991 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -32,6 +32,7 @@ static u32 ibs_caps;
+ 
+ /* attr.config2 */
+ #define IBS_SW_FILTER_MASK	1
++#define IBS_PHY_ADDR_ONLY_MASK	2
+ 
+ /* attr.config1 */
+ #define IBS_OP_CONFIG1_LDLAT_MASK		(0xFFFULL <<  0)
+@@ -303,6 +304,13 @@ static bool perf_ibs_strmst_event(struct perf_ibs *perf_ibs,
+ 	       (event->attr.config1 & IBS_OP_CONFIG1_STRMST_MASK);
+ }
+ 
++static bool perf_ibs_phy_addr_only_event(struct perf_ibs *perf_ibs,
++					 struct perf_event *event)
++{
++	return perf_ibs == &perf_ibs_op &&
++	       (event->attr.config2 & IBS_PHY_ADDR_ONLY_MASK);
++}
++
+ static int perf_ibs_init(struct perf_event *event)
+ {
+ 	struct hw_perf_event *hwc = &event->hw;
+@@ -439,6 +447,10 @@ static int perf_ibs_init(struct perf_event *event)
+ 		hwc->extra_reg.config |= strmst << IBS_OP_2_STRM_ST_FILTER_SHIFT;
+ 	}
+ 
++	if (perf_ibs_phy_addr_only_event(perf_ibs, event) &&
++	    !(event->attr.sample_type & PERF_SAMPLE_PHYS_ADDR))
++		return -EINVAL;
++
+ 	/*
+ 	 * If we modify hwc->sample_period, we also need to update
+ 	 * hwc->last_period and hwc->period_left.
+@@ -721,6 +733,7 @@ static struct attribute_group empty_caps_group = {
+ PMU_FORMAT_ATTR(rand_en,	"config:57");
+ PMU_FORMAT_ATTR(cnt_ctl,	"config:19");
+ PMU_FORMAT_ATTR(swfilt,		"config2:0");
++PMU_FORMAT_ATTR(phy_addr_only,	"config2:1");
+ PMU_EVENT_ATTR_STRING(l3missonly, fetch_l3missonly, "config:59");
+ PMU_EVENT_ATTR_STRING(l3missonly, op_l3missonly, "config:16");
+ PMU_EVENT_ATTR_STRING(ldlat, ibs_op_ldlat_format, "config1:0-11");
+@@ -890,6 +903,7 @@ cnt_ctl_is_visible(struct kobject *kobj, struct attribute *attr, int i)
+ 
+ static struct attribute *op_attrs[] = {
+ 	&format_attr_swfilt.attr,
++	&format_attr_phy_addr_only.attr,
+ 	NULL,
+ };
+ 
+@@ -1357,7 +1371,8 @@ static int perf_ibs_get_offset_max(struct perf_ibs *perf_ibs,
+ 	if (event->attr.sample_type & PERF_SAMPLE_RAW ||
+ 	    perf_ibs_is_mem_sample_type(perf_ibs, event) ||
+ 	    perf_ibs_ldlat_event(perf_ibs, event) ||
+-	    perf_ibs_fetch_lat_event(perf_ibs, event))
++	    perf_ibs_fetch_lat_event(perf_ibs, event) ||
++	    perf_ibs_phy_addr_only_event(perf_ibs, event))
+ 		return perf_ibs->offset_max;
+ 	else if (check_rip)
+ 		return 3;
+@@ -1499,6 +1514,23 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+ 		}
+ 	}
+ 
++	if (perf_ibs_phy_addr_only_event(perf_ibs, event)) {
++		union ibs_op_data3 op_data3;
++		u64 phys_addr;
++
++		op_data3.val = ibs_data.regs[ibs_op_msr_idx(MSR_AMD64_IBSOPDATA3)];
++		if (!op_data3.dc_phy_addr_valid) {
++			throttle = perf_event_account_interrupt(event);
++			goto out;
++		}
++		/* Also skip the case: zero address in MSR_AMD64_IBSDCPHYSAD */
++		phys_addr = ibs_data.regs[ibs_op_msr_idx(MSR_AMD64_IBSDCPHYSAD)];
++		if (!phys_addr) {
++			throttle = perf_event_account_interrupt(event);
++			goto out;
++		}
++	}
++
+ 	if (perf_ibs_fetch_lat_event(perf_ibs, event)) {
+ 		union ibs_fetch_ctl fetch_ctl;
+ 
+-- 
+2.53.0
+
+
