@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793585577;
-	b=ia3W4vn6n7/a+uciQGrshpX/5ktmRuZW9hJLlw30sC8pRrIYEKBp+hpdpWsf/1aSeKmQ
-	 ExbVtcaf/6me5z6c2PqDW4cOa3U90YkmfxdRU5SbAl8kLjqd/8YqK/fPOqpPZHVRexsIA
-	 wtsObsT/uF8mwcmwFoq1wMdP9Oo3eixLPlnQibmLtT1GUA9OlHGFWAVY+mrd4bsGNwy8d
-	 XJjHj48gNw8thnBrF81UvyaX/AAStkR2i/AQSgfrfzs6H0CKfX4ZYK/TyIhEvAgC2/rqf
-	 tT88q0t9B035P9tb0BhoVvoa3Ds9vdOj3br8MNKUTIjSIIqgdFq/CTilz/Ti+R4x2qQ==
+	t=1793585584;
+	b=Z/KuDVaZGqYY8EI2imSc05tLAL0GljW3DkDEuoi/wS1saZR4q4CUOn/q5hDAApaLlXKi
+	 6Qkws+ib2zFVXNjBJ59eckDAotQRHrauK6a2fT7vm7pLf/nLiQyeCfmPoHqZXKGklJ7m+
+	 9GgEQVU11XT3q3r3St6poLZLPG4UDVQanPS+2R3pIamUkHU1+ffXJNpTejPiGfai8S+79
+	 eeXh2heMS62rr/wF8wRBLmdjGvMuzK9SkQf3ArclCfFsSxMtrukT19QzQZM2CiN0cFYQr
+	 AK/dza0lYhNgNj7ZAH3frEaEaobV5mcE+bdNflxWNRvIr5nhaPHY1Ne1vBjPR1bwY7w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793585577;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793585584;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding;
-	bh=5rWuDj0zB2njXQ18rBMTysYwavZLXheicVJr1k4BwsM=;
-	b=dGkWjEOqUK1HF0+jgvXGB47CfLUY76wBn+RAOPnTi6AZB4iDw+b9OAaKsaQehhiBrECB
-	 mqXphWUmzYcINWR85pxADsMA6rUnKij/Ar6tuwzPWdQSGZz8DB303rvDjPVeCeo7BeVS7
-	 VItYXRXxSUeIBh0JLK4LF8YFsNivPbe7LEymTJ+cjx1ydmNTtTnOKP4iNIZZ3R60X9VkS
-	 tZU8tfpT2u03hLzlm5BKnnpqxdqluK2FHa+oJx2vZe3wX7kU/5o2SS4APr1M2tVClNtIv
-	 jqr2upV3Tp+IjSPpIRgWcr3+VS5Ch9kK4A5mviwwIwHP0FWyjRMvthUwHGMoxCsis0Q==
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=TkvIJtT2uYGtfsA/9mgNPYvW+4raY7xxarpE4GskwG4=;
+	b=A7hwYP3S0Q+nzfVXlQdmZN2ojNyj9FFxS6lyKnVDLVGZos0ZST6w+rl/FJQMy199w9JX
+	 XeWOFLUhVAO1uhrYzaKMzOW4gJIoCsI7JvqDFp/q8JkFp4hWCdaHkVOK2vYbW0z0i1/Qw
+	 EwMtt95FKCeVzXxhR37jkA8BdoKYd3G9yD/+kwWovfICWJfezjKs5VinZ9xVPRImPB/kg
+	 PV84zz8xlBq9y3FTG1fDaaiNWAU3U4nUJHS+tnco01ot94lEX+MddEVeaZBG32e9eKItR
+	 pe1O0ggrB//UP/nhl7uYOiTqfMM36NWb2qaFZdWvitW8K3/x1vxZRM4d566+zIbF/WQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Mq4EuV4w;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lpH+uFkT;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07366606A338;
-	Mon,  2 Nov 2026 02:12:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B7F60A260D;
+	Mon,  2 Nov 2026 02:13:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Mq4EuV4w
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 942841F0093A;
-	Mon,  2 Nov 2026 02:12:54 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lpH+uFkT
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 695711F00A21;
+	Mon,  2 Nov 2026 02:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793585576;
-	bh=5rWuDj0zB2njXQ18rBMTysYwavZLXheicVJr1k4BwsM=;
-	h=From:To:Cc:Subject:Date;
-	b=Mq4EuV4wR7oIYE6C84+SRWRO5kDzkAv3lqXz+gUj7Yiw4nbtq8PoYj0Wv27rZ6b3H
-	 ICZQ/JlcNdx0dr8hPdDb5AVXREvkWwfpACBZrAZ0pmuwgSK3NTIKTTiXC0DBGFFE/U
-	 FRbClzoLuiE3rtPQPllscVDk7BzdRy/Imod73vVO1YRqvuB3a8fUZ1/d6Cl903eJ2T
-	 4sXqUNmeRKIikdz/d+GMhWxmx98qU+sscJdb0ZRKbMFgVc5pi0YQPLQyaVQNjFWgd6
-	 T6r9BdbgrtH+C5dfVbLTk9ontL8JqgQBxo89IC86zJnDj4NoKPAiBnEWs2PIk9h/dT
-	 nPUxvuSiiNGMA==
+	s=k20260515; t=1793585583;
+	bh=TkvIJtT2uYGtfsA/9mgNPYvW+4raY7xxarpE4GskwG4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=lpH+uFkTQZFHTxIMxofFzG+AROrhUVNLOExV6ySbiMHI24I7Y060fxAfg+HZ2inkC
+	 Ba3BGA6FbhitxRQvhDptUgrWBZuVHH6EkOGt4oLu5Zr3uVBs1VTz0aROT/4O59nkD2
+	 a9vRwkLtdFahndvcZ0SGpEFqTitzz8RDSwmgaCyxOq2QcCTX2R/uCMLU9GJU7PgIXR
+	 ttMgq7pxEgMDwVKcbS5POWsck/TF8esO1TkXlx7Orcpp3q3Sltz2z8OH+g3aGdGZq5
+	 eCVVITT1pI4LRKHYenL0Ft4sQtODz7p6UPyWiMf5IAhqT7JlfeaJY830rW1M4on/Av
+	 Q0KnQgoxmfYAA==
 From: Sasha Levin <sashal@kernel.org>
 To: Nathan Chancellor <nathan@kernel.org>,
 	Nicolas Schier <nsc@kernel.org>,
@@ -60,11 +60,14 @@ Cc: Sasha Levin <sashal@kernel.org>,
 	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Thorsten Leemhuis <linux@leemhuis.info>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/7] kbuild: build the userspace tools in tools/ with the kernel
-Date: Sun,  1 Nov 2026 21:12:46 -0500
-Message-ID: <20261102021253.2545235-1-sashal@kernel.org>
+	linux-kernel@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH v3 3/7] perf build: Add MINIMAL=1 to build without optional features
+Date: Sun,  1 Nov 2026 21:12:49 -0500
+Message-ID: <20261102021253.2545235-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20261102021253.2545235-1-sashal@kernel.org>
+References: <20261102021253.2545235-1-sashal@kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -74,123 +77,154 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The userspace programs under tools/ are disconnected from the rest of the
-kernel's build system. Each has its own makefiles and build framework, and
-"make" never builds them: apart from the few host tools the build itself needs,
-such as objtool and resolve_btfids, nothing under tools/ is compiled as part of
-a kernel build.
+Turning off every optional feature takes a long list of NO_* variables,
+and the list has to follow features as they are added and renamed. The
+one in tests/make for make_minimal has fallen behind: it leaves
+libtraceevent, jevents, slang, AIO, LZMA, zlib, libLLVM and Rust to be
+detected, so a make_minimal build still needs libtraceevent and python.
 
-That makes them easy to break. Most people, and most of the build bots, check a
-change with "make allmodconfig && make", which doesn't cover tools/ at all. A
-change that breaks a tool passes every build check and is only noticed when
-someone happens to build that tool by hand, often much later.
+Add MINIMAL=1, which turns off every optional feature, the BPF
+skeletons, and the shellcheck, mypy and pylint runs. perf then builds,
+natively or cross, with no library beyond the C library and without
+python, pkg-config, clang or rustc, and the result does not depend on
+what is installed on the build machine.
 
-We keep seeing this in tools/testing/: selftests that stop building after a
-change elsewhere in the tree, or after a backport to a stable tree, and stay
-broken until someone tries to build them. Others brought up the same concern at
-LPC.
+A MINIMAL=1 build also leaves out the notices that post unwind and
+python support are disabled, which it asked for, and the one about the
+pkg-config search path for cross builds, as pkg-config is not needed
+then.
 
-This series lets the kernel build also build the tools it is configured for:
+It is handled in Makefile.perf rather than Makefile.config, as
+Makefile.config is included after the pkg-config, shellcheck, mypy and
+pylint setup.
 
-- tools/Kconfig adds a "Build userspace tools from tools/" menu
-  (CONFIG_TOOLS_BUILD) with one entry per tool and per selftests
-  directory, so .config records what gets built, and a tool that breaks
-  can be turned off on its own.
+Use it for make_minimal in tests/make.
 
-- "make tools_build" builds the selected tools for the target, each with
-  its own build system as it is built standalone, into tools-build/ in
-  the object tree.
+Suggested-by: Ian Rogers <irogers@google.com>
+Link: https://lore.kernel.org/r/CAP-5=fWFY-tpJz2vcBZvurwdZY5gwd8cuTemE9q1rtZ0Vi0dng@mail.gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/Makefile.config |  8 ++++++--
+ tools/perf/Makefile.perf   | 42 ++++++++++++++++++++++++++++++++++++--
+ tools/perf/tests/make      |  8 +-------
+ 3 files changed, 47 insertions(+), 11 deletions(-)
 
-- With CONFIG_TOOLS_BUILD=y, "make all" builds them too. allmodconfig
-  and allyesconfig enable every entry that applies to the target when
-  the compiler can link glibc programs for it (currently x86_64 and
-  arm64), so the usual build test catches tools breakage. Other
-  toolchains are unaffected, as are "make vmlinux", "make modules" and
-  external module builds.
-
-This is useful beyond build testing: the tools are built for the same
-target, from the same tree, as the kernel they go with.
-
-The selftests need "selftests: lib.mk: define LINK.c, COMPILE.S and LINK.S
-when make has none" [1], which is not in mainline yet. Without it, most of
-them fail to build in tools_build.
-
-I used LLM coding assistants to write and review these patches. I reviewed
-and tested every change.
-
-Changes in v3:
-- Rebase onto v7.4-rc1 and drop the RFC prefix.
-- 3/7: The perf-tools-next changes are in mainline now, so MINIMAL=1 sets
-  NO_PYTHON_MODULE instead of NO_LIBPYTHON and also sets NO_MYPY and
-  NO_PYLINT. This is the version that was posted on its own [2]. Add the
-  Acked-by tags from Namhyung and Arnaldo.
-- 4/7: Add Namhyung's Acked-by.
-- 5/7: Add Shuah's Reviewed-by. Add entries for the selftests new in v7.4
-  that build with only a C library: filesystems/configfs,
-  filesystems/file_stressor, filesystems/freeze and nfsd.
-
-Changes in v2:
-- 1/7: Add Thomas's Reviewed-by.
-- 2/7: Put each "depends on" condition on its own line. Allow UML: the
-  tools are built for the architecture UML runs on (HEADER_ARCH), as
-  their build systems do not know ARCH=um. Drop the
-  PYTHONDONTWRITEBYTECODE export, as 5479e1a13b75 ("perf tools: Put
-  Python bytecode in output directory") in perf-tools-next keeps perf's
-  bytecode in its output directory.
-- 3/7: New. Add MINIMAL=1 to perf, which turns off every optional
-  feature, as Ian suggested.
-- 4/7: Build perf with MINIMAL=1 instead of a list of NO_* variables.
-- 5/7: As with "make kselftest-all", a selftest that fails to build no
-  longer fails the build unless FORCE_TARGETS is set, and
-  kselftest_deps.sh lists the libraries it needs that the compiler
-  cannot link with. Also rebuild the selftests when headers under
-  tools/arch change, the vDSO test when kernel headers change, and the
-  x86 tests when the x86 headers they include change.
-
-v2: https://lore.kernel.org/r/20261016143143.3613501-1-sashal@kernel.org
-v1: https://lore.kernel.org/r/20261011233647.2454648-1-sashal@kernel.org
-
-[1] https://lore.kernel.org/r/20261011223358.2327625-6-sashal@kernel.org
-[2] https://lore.kernel.org/r/20261018135321.3986899-1-sashal@kernel.org
-
-Sasha Levin (7):
-  kbuild: factor the userspace ABI flags out into KBUILD_USERABI
-  kbuild: add "make tools_build" to build userspace tools from tools/
-  perf build: Add MINIMAL=1 to build without optional features
-  tools: build perf in tools_build
-  tools: build kernel selftests in tools_build
-  kbuild: build the tools selected in tools/Kconfig as part of "make
-    all"
-  Documentation: describe building tools with the kernel
-
- .gitignore                                 |   5 +
- Documentation/dev-tools/kselftest.rst      |   4 +
- Documentation/kbuild/kbuild.rst            |   4 +-
- Documentation/process/submit-checklist.rst |   5 +
- Makefile                                   |  24 +-
- lib/Kconfig.debug                          |   2 +
- tools/Kconfig                              | 342 +++++++++++++++++++++
- tools/Makefile.kbuild                      | 209 +++++++++++++
- tools/perf/Makefile.config                 |   8 +-
- tools/perf/Makefile.perf                   |  42 ++-
- tools/perf/tests/make                      |   8 +-
- 11 files changed, 635 insertions(+), 18 deletions(-)
- create mode 100644 tools/Kconfig
- create mode 100644 tools/Makefile.kbuild
-
-
-base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
-prerequisite-patch-id: 68eb8785244b88ec7e696e716420e2d9b1367dbc
-prerequisite-patch-id: 37c57cf4c2a9700788cd1755912753f363cbb3f9
-prerequisite-patch-id: 5243b7b03f2c12a6e66c353b0c083f7f21fd7ba2
-prerequisite-patch-id: 7153a847ba7b05e49a670caba5d5b8fa2508eff1
-prerequisite-patch-id: 67a995618952454c30eb77960a5bf6f897d22547
-prerequisite-patch-id: bc69d99570e4326ce7736b244838e1e97cc13358
-prerequisite-patch-id: 7a28872d234cdfa7bd5ec851e9dde01a65e91130
-prerequisite-patch-id: a71f47de3fd339d680c9f18e80f5bcde7eae0abf
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index b4764f69f47f4..4af7934887539 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -753,7 +753,9 @@ dwarf-post-unwind-text := BUG
+ # setup DWARF post unwinder
+ ifdef NO_LIBUNWIND
+   ifdef NO_LIBDW
+-    $(warning Disabling post unwind, no support found.)
++    ifneq ($(MINIMAL),1)
++      $(warning Disabling post unwind, no support found.)
++    endif
+     dwarf-post-unwind := 0
+   else
+     dwarf-post-unwind-text := libdw
+@@ -828,7 +830,9 @@ endif
+ 
+ PYTHON_EXTENSION_SUFFIX := '.so'
+ ifdef NO_PYTHON_MODULE
+-  $(call disable-python,Python support disabled by user)
++  ifneq ($(MINIMAL),1)
++    $(call disable-python,Python support disabled by user)
++  endif
+ else
+ 
+   ifndef PYTHON
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index b74b534e1153f..c178c3976d154 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -129,6 +129,9 @@ include ../scripts/utilities.mak
+ # Define NO_MYPY if you do not want to run mypy during build
+ #
+ # Define NO_PYLINT if you do not want to run pylint during build
++#
++# Define MINIMAL=1 to build without any optional feature, needing only a C
++# compiler and library, flex and bison
+ 
+ # As per kernel Makefile, avoid funny character set dependencies
+ unexport LC_ALL
+@@ -174,6 +177,39 @@ endef
+ 
+ LD += $(EXTRA_LDFLAGS)
+ 
++# MINIMAL=1 is handled here rather than in Makefile.config, which is included
++# after the pkg-config, shellcheck, mypy and pylint setup below
++ifeq ($(MINIMAL),1)
++  NO_LIBELF := 1
++  NO_LIBDW := 1
++  NO_LIBTRACEEVENT := 1
++  NO_JEVENTS := 1
++  NO_PYTHON_MODULE := 1
++  NO_LIBBPF := 1
++  BUILD_BPF_SKEL := 0
++  NO_SLANG := 1
++  NO_DEMANGLE := 1
++  NO_BACKTRACE := 1
++  NO_AIO := 1
++  NO_ZLIB := 1
++  NO_LZMA := 1
++  NO_LIBZSTD := 1
++  NO_LIBNUMA := 1
++  NO_LIBLLVM := 1
++  NO_CAPSTONE := 1
++  NO_LIBPFM4 := 1
++  NO_LIBDEBUGINFOD := 1
++  NO_BABELTRACE2 := 1
++  NO_SDT := 1
++  NO_JVMTI := 1
++  NO_RUST := 1
++  NO_PERF_READ_VDSO32 := 1
++  NO_PERF_READ_VDSOX32 := 1
++  NO_SHELLCHECK := 1
++  NO_MYPY := 1
++  NO_PYLINT := 1
++endif
++
+ # Some distros provide the command $(CROSS_COMPILE)pkg-config for
+ # searching packges installed with Multiarch. Use it for cross
+ # compilation if it is existed.
+@@ -195,8 +231,10 @@ else
+       PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/local/share/pkgconfig/
+       PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/share/pkgconfig/
+       export PKG_CONFIG_LIBDIR
+-      $(warning Missing PKG_CONFIG_LIBDIR, PKG_CONFIG_PATH and PKG_CONFIG_SYSROOT_DIR for cross compilation,)
+-      $(warning set PKG_CONFIG_LIBDIR for using Multiarch libs.)
++      ifneq ($(MINIMAL),1)
++        $(warning Missing PKG_CONFIG_LIBDIR, PKG_CONFIG_PATH and PKG_CONFIG_SYSROOT_DIR for cross compilation,)
++        $(warning set PKG_CONFIG_LIBDIR for using Multiarch libs.)
++      endif
+     endif
+   endif
+ endif
+diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+index 7524de5228029..bef5599b95d6f 100644
+--- a/tools/perf/tests/make
++++ b/tools/perf/tests/make
+@@ -119,13 +119,7 @@ make_install_prefix       := install prefix=/tmp/krava
+ make_install_prefix_slash := install prefix=/tmp/krava/
+ make_static         := LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 NO_JVMTI=1 NO_LIBTRACEEVENT=1 NO_LIBELF=1
+ 
+-# all the NO_* variable combined
+-make_minimal        := NO_PYTHON_MODULE=1
+-make_minimal        += NO_DEMANGLE=1 NO_LIBELF=1 NO_BACKTRACE=1
+-make_minimal        += NO_LIBNUMA=1 NO_LIBBIONIC=1 NO_LIBDW=1
+-make_minimal        += NO_LIBBPF=1
+-make_minimal        += NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1
+-make_minimal        += NO_CAPSTONE=1
++make_minimal        := MINIMAL=1
+ 
+ # binutils 2_42 and newer have bfd_thread_init()
+ new_libbfd := $(shell echo '#include <bfd.h>' | $(CC) -E -x c - | grep bfd_thread_init)
 -- 
 2.53.0
 
