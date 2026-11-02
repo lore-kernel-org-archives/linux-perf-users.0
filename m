@@ -1,44 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793585584;
-	b=Z/KuDVaZGqYY8EI2imSc05tLAL0GljW3DkDEuoi/wS1saZR4q4CUOn/q5hDAApaLlXKi
-	 6Qkws+ib2zFVXNjBJ59eckDAotQRHrauK6a2fT7vm7pLf/nLiQyeCfmPoHqZXKGklJ7m+
-	 9GgEQVU11XT3q3r3St6poLZLPG4UDVQanPS+2R3pIamUkHU1+ffXJNpTejPiGfai8S+79
-	 eeXh2heMS62rr/wF8wRBLmdjGvMuzK9SkQf3ArclCfFsSxMtrukT19QzQZM2CiN0cFYQr
-	 AK/dza0lYhNgNj7ZAH3frEaEaobV5mcE+bdNflxWNRvIr5nhaPHY1Ne1vBjPR1bwY7w==
+	t=1793585579;
+	b=hUP9LS8pmhCZYVU0o+dMFocCG/ulCdA7XqScM81JOiDC7LoGfXb6D5BAbz+il0KWzbHw
+	 5at9BxSrfRYZGit0VQu3wfD8uVYRcOCie/63gid4OpAWIuETTGhpXtPxEZJgUi9KmJaLT
+	 3rIDR+62CiT4QR/xpV2WU7KfzxT1Ziw+J8TwEPlFbKFfFcky9hQBNVbaFoI/tmjD4wg2r
+	 7Ekc9K6CL+CHrFKsRZDYuXJqhUJ7e3JFuHnY9lokzmuKhP/9vov4rR0jnhtXwZl5uJYhX
+	 GZMMBWG6cAY2nGxNcJ0pCL6T+rIaV9VvbRKKnXbsdg/PtfmMtpXK9f5asBPw7zW/4WQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793585584;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793585579;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=TkvIJtT2uYGtfsA/9mgNPYvW+4raY7xxarpE4GskwG4=;
-	b=A7hwYP3S0Q+nzfVXlQdmZN2ojNyj9FFxS6lyKnVDLVGZos0ZST6w+rl/FJQMy199w9JX
-	 XeWOFLUhVAO1uhrYzaKMzOW4gJIoCsI7JvqDFp/q8JkFp4hWCdaHkVOK2vYbW0z0i1/Qw
-	 EwMtt95FKCeVzXxhR37jkA8BdoKYd3G9yD/+kwWovfICWJfezjKs5VinZ9xVPRImPB/kg
-	 PV84zz8xlBq9y3FTG1fDaaiNWAU3U4nUJHS+tnco01ot94lEX+MddEVeaZBG32e9eKItR
-	 pe1O0ggrB//UP/nhl7uYOiTqfMM36NWb2qaFZdWvitW8K3/x1vxZRM4d566+zIbF/WQ==
+	 In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=obEsgLblQBIWl8a18cZtDAHySJ503T0PQpQZjZ7IJWo=;
+	b=3e0fFVTZWYzdwmFbi+fbb5S9FNJ54Af6b8Jt/fcoYpzuQKe5aZjof1G92kqKyyMqD+CN
+	 ck32wgfMRJowevNZf6Kg8e4ZDxWEW2+JnpCAFV8kvurpE8ARA4DFgvLvc78734SMmVcu1
+	 TVBxf5M/hJ9q/Xus9yt8svi7apG6tI3+IRrhyWxCdkzdcU+l7ZhUwtuvzYZoRxd5HKfP9
+	 Kr2FYVFsLy3rDrvV8myJ7eqh7MScBcxsQ6s7jSXHSx1YRJprM3ki7SJNpThgvs4asmrgB
+	 JpHETe5NE7E+Xf00Yf9Xk6q/ZJGcRvCZtgM4JJ4WgiE8alAWZ852BP4UJ4Z88j7KXVw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lpH+uFkT;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aBNcj9k1;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B7F60A260D;
-	Mon,  2 Nov 2026 02:13:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6435606A32F;
+	Mon,  2 Nov 2026 02:12:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lpH+uFkT
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 695711F00A21;
-	Mon,  2 Nov 2026 02:13:01 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aBNcj9k1
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFA181F00A02;
+	Mon,  2 Nov 2026 02:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793585583;
-	bh=TkvIJtT2uYGtfsA/9mgNPYvW+4raY7xxarpE4GskwG4=;
+	s=k20260515; t=1793585578;
+	bh=obEsgLblQBIWl8a18cZtDAHySJ503T0PQpQZjZ7IJWo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=lpH+uFkTQZFHTxIMxofFzG+AROrhUVNLOExV6ySbiMHI24I7Y060fxAfg+HZ2inkC
-	 Ba3BGA6FbhitxRQvhDptUgrWBZuVHH6EkOGt4oLu5Zr3uVBs1VTz0aROT/4O59nkD2
-	 a9vRwkLtdFahndvcZ0SGpEFqTitzz8RDSwmgaCyxOq2QcCTX2R/uCMLU9GJU7PgIXR
-	 ttMgq7pxEgMDwVKcbS5POWsck/TF8esO1TkXlx7Orcpp3q3Sltz2z8OH+g3aGdGZq5
-	 eCVVITT1pI4LRKHYenL0Ft4sQtODz7p6UPyWiMf5IAhqT7JlfeaJY830rW1M4on/Av
-	 Q0KnQgoxmfYAA==
+	b=aBNcj9k1mD/PT4xrixvgEEhQ5VnFDs/YxcBkEwK/YDogizDwyC99eZeL4uqR49uBv
+	 dmWc5gQlLjhuxI1xmkeQimNkgigtV/Z9jX15/oC8CorZQUTzh0N2hP8o2FjRddhOFM
+	 jgNBUKSUctT3yXx1D4keAPQnlKTCSjPwDWOG5zm6kj/FMWr87rfTb2h627Ue74Xive
+	 /iNekqTEzaD8ww9wFJPG4Y9p2oNeSdwWeiTUYXyHMKwme4A7g0HWWw+xy4lNuc/IAl
+	 Pr8bY//poZWnLnGtXJ9/Sdu5uCQTg9KFBQziAgg9J6z4l6l4i0ziSiOYcemhuGDSe6
+	 s3ZkCYmgWef0w==
 From: Sasha Levin <sashal@kernel.org>
 To: Nathan Chancellor <nathan@kernel.org>,
 	Nicolas Schier <nsc@kernel.org>,
@@ -60,11 +61,10 @@ Cc: Sasha Levin <sashal@kernel.org>,
 	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Thorsten Leemhuis <linux@leemhuis.info>,
-	linux-kernel@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v3 3/7] perf build: Add MINIMAL=1 to build without optional features
-Date: Sun,  1 Nov 2026 21:12:49 -0500
-Message-ID: <20261102021253.2545235-4-sashal@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/7] kbuild: factor the userspace ABI flags out into KBUILD_USERABI
+Date: Sun,  1 Nov 2026 21:12:47 -0500
+Message-ID: <20261102021253.2545235-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20261102021253.2545235-1-sashal@kernel.org>
 References: <20261102021253.2545235-1-sashal@kernel.org>
@@ -77,154 +77,59 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Turning off every optional feature takes a long list of NO_* variables,
-and the list has to follow features as they are added and renamed. The
-one in tests/make for make_minimal has fallen behind: it leaves
-libtraceevent, jevents, slang, AIO, LZMA, zlib, libLLVM and Rust to be
-detected, so a make_minimal build still needs libtraceevent and python.
+KBUILD_USERCFLAGS and KBUILD_USERLDFLAGS pick up the flags that select
+the target ABI for userspace programs: --target= under clang, -m32/-m64,
+or CONFIG_ARCH_USERFLAGS. Collect those in KBUILD_USERABI and export it,
+so programs built outside of kbuild's userprogs can be compiled for the
+same ABI without also inheriting kbuild's warning and language flags.
 
-Add MINIMAL=1, which turns off every optional feature, the BPF
-skeletons, and the shellcheck, mypy and pylint runs. perf then builds,
-natively or cross, with no library beyond the C library and without
-python, pkg-config, clang or rustc, and the result does not depend on
-what is installed on the build machine.
+No functional change: KBUILD_USERCFLAGS and KBUILD_USERLDFLAGS keep the
+same value.
 
-A MINIMAL=1 build also leaves out the notices that post unwind and
-python support are disabled, which it asked for, and the one about the
-pkg-config search path for cross builds, as pkg-config is not needed
-then.
-
-It is handled in Makefile.perf rather than Makefile.config, as
-Makefile.config is included after the pkg-config, shellcheck, mypy and
-pylint setup.
-
-Use it for make_minimal in tests/make.
-
-Suggested-by: Ian Rogers <irogers@google.com>
-Link: https://lore.kernel.org/r/CAP-5=fWFY-tpJz2vcBZvurwdZY5gwd8cuTemE9q1rtZ0Vi0dng@mail.gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- tools/perf/Makefile.config |  8 ++++++--
- tools/perf/Makefile.perf   | 42 ++++++++++++++++++++++++++++++++++++--
- tools/perf/tests/make      |  8 +-------
- 3 files changed, 47 insertions(+), 11 deletions(-)
+ Makefile | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index b4764f69f47f4..4af7934887539 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -753,7 +753,9 @@ dwarf-post-unwind-text := BUG
- # setup DWARF post unwinder
- ifdef NO_LIBUNWIND
-   ifdef NO_LIBDW
--    $(warning Disabling post unwind, no support found.)
-+    ifneq ($(MINIMAL),1)
-+      $(warning Disabling post unwind, no support found.)
-+    endif
-     dwarf-post-unwind := 0
-   else
-     dwarf-post-unwind-text := libdw
-@@ -828,7 +830,9 @@ endif
+diff --git a/Makefile b/Makefile
+index f895752d4b05f..58bc69b4996e1 100644
+--- a/Makefile
++++ b/Makefile
+@@ -656,7 +656,7 @@ export CPP AR NM STRIP OBJCOPY OBJDUMP READELF PAHOLE RESOLVE_BTFIDS LEX YACC AW
+ export PERL PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
+ export KGZIP KPGZIP KBZIP2 KLZOP LZMA LZ4 XZ ZSTD TAR
+ export KBUILD_HOSTCXXFLAGS KBUILD_HOSTLDFLAGS KBUILD_HOSTLDLIBS KBUILD_PROCMACROLDFLAGS LDFLAGS_MODULE
+-export KBUILD_USERCFLAGS KBUILD_USERLDFLAGS
++export KBUILD_USERCFLAGS KBUILD_USERLDFLAGS KBUILD_USERABI
  
- PYTHON_EXTENSION_SUFFIX := '.so'
- ifdef NO_PYTHON_MODULE
--  $(call disable-python,Python support disabled by user)
-+  ifneq ($(MINIMAL),1)
-+    $(call disable-python,Python support disabled by user)
-+  endif
+ export KBUILD_CPPFLAGS NOSTDINC_FLAGS LINUXINCLUDE OBJCOPYFLAGS KBUILD_LDFLAGS
+ export KBUILD_CFLAGS CFLAGS_KERNEL CFLAGS_MODULE
+@@ -1262,15 +1262,17 @@ endif
+ USERFLAGS_FROM_KERNEL := --target=%
+ 
+ ifdef CONFIG_ARCH_USERFLAGS
+-KBUILD_USERCFLAGS += $(CONFIG_ARCH_USERFLAGS)
+-KBUILD_USERLDFLAGS += $(CONFIG_ARCH_USERFLAGS)
++KBUILD_USERABI := $(CONFIG_ARCH_USERFLAGS)
  else
- 
-   ifndef PYTHON
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index b74b534e1153f..c178c3976d154 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -129,6 +129,9 @@ include ../scripts/utilities.mak
- # Define NO_MYPY if you do not want to run mypy during build
- #
- # Define NO_PYLINT if you do not want to run pylint during build
-+#
-+# Define MINIMAL=1 to build without any optional feature, needing only a C
-+# compiler and library, flex and bison
- 
- # As per kernel Makefile, avoid funny character set dependencies
- unexport LC_ALL
-@@ -174,6 +177,39 @@ endef
- 
- LD += $(EXTRA_LDFLAGS)
- 
-+# MINIMAL=1 is handled here rather than in Makefile.config, which is included
-+# after the pkg-config, shellcheck, mypy and pylint setup below
-+ifeq ($(MINIMAL),1)
-+  NO_LIBELF := 1
-+  NO_LIBDW := 1
-+  NO_LIBTRACEEVENT := 1
-+  NO_JEVENTS := 1
-+  NO_PYTHON_MODULE := 1
-+  NO_LIBBPF := 1
-+  BUILD_BPF_SKEL := 0
-+  NO_SLANG := 1
-+  NO_DEMANGLE := 1
-+  NO_BACKTRACE := 1
-+  NO_AIO := 1
-+  NO_ZLIB := 1
-+  NO_LZMA := 1
-+  NO_LIBZSTD := 1
-+  NO_LIBNUMA := 1
-+  NO_LIBLLVM := 1
-+  NO_CAPSTONE := 1
-+  NO_LIBPFM4 := 1
-+  NO_LIBDEBUGINFOD := 1
-+  NO_BABELTRACE2 := 1
-+  NO_SDT := 1
-+  NO_JVMTI := 1
-+  NO_RUST := 1
-+  NO_PERF_READ_VDSO32 := 1
-+  NO_PERF_READ_VDSOX32 := 1
-+  NO_SHELLCHECK := 1
-+  NO_MYPY := 1
-+  NO_PYLINT := 1
-+endif
-+
- # Some distros provide the command $(CROSS_COMPILE)pkg-config for
- # searching packges installed with Multiarch. Use it for cross
- # compilation if it is existed.
-@@ -195,8 +231,10 @@ else
-       PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/local/share/pkgconfig/
-       PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/share/pkgconfig/
-       export PKG_CONFIG_LIBDIR
--      $(warning Missing PKG_CONFIG_LIBDIR, PKG_CONFIG_PATH and PKG_CONFIG_SYSROOT_DIR for cross compilation,)
--      $(warning set PKG_CONFIG_LIBDIR for using Multiarch libs.)
-+      ifneq ($(MINIMAL),1)
-+        $(warning Missing PKG_CONFIG_LIBDIR, PKG_CONFIG_PATH and PKG_CONFIG_SYSROOT_DIR for cross compilation,)
-+        $(warning set PKG_CONFIG_LIBDIR for using Multiarch libs.)
-+      endif
-     endif
-   endif
++KBUILD_USERABI :=
+ # If not overridden also inherit the bit size
+ USERFLAGS_FROM_KERNEL += -m32 -m64
  endif
-diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-index 7524de5228029..bef5599b95d6f 100644
---- a/tools/perf/tests/make
-+++ b/tools/perf/tests/make
-@@ -119,13 +119,7 @@ make_install_prefix       := install prefix=/tmp/krava
- make_install_prefix_slash := install prefix=/tmp/krava/
- make_static         := LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 NO_JVMTI=1 NO_LIBTRACEEVENT=1 NO_LIBELF=1
  
--# all the NO_* variable combined
--make_minimal        := NO_PYTHON_MODULE=1
--make_minimal        += NO_DEMANGLE=1 NO_LIBELF=1 NO_BACKTRACE=1
--make_minimal        += NO_LIBNUMA=1 NO_LIBBIONIC=1 NO_LIBDW=1
--make_minimal        += NO_LIBBPF=1
--make_minimal        += NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1
--make_minimal        += NO_CAPSTONE=1
-+make_minimal        := MINIMAL=1
+-KBUILD_USERCFLAGS  += $(filter $(USERFLAGS_FROM_KERNEL), $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS))
+-KBUILD_USERLDFLAGS += $(filter $(USERFLAGS_FROM_KERNEL), $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS))
++KBUILD_USERABI += $(filter $(USERFLAGS_FROM_KERNEL), $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS))
++
++KBUILD_USERCFLAGS  += $(KBUILD_USERABI)
++KBUILD_USERLDFLAGS += $(KBUILD_USERABI)
  
- # binutils 2_42 and newer have bfd_thread_init()
- new_libbfd := $(shell echo '#include <bfd.h>' | $(CC) -E -x c - | grep bfd_thread_init)
+ # userspace programs are linked via the compiler, use the correct linker
+ ifdef CONFIG_CC_IS_CLANG
 -- 
 2.53.0
 
