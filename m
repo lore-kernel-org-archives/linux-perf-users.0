@@ -1,57 +1,93 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793657493;
-	b=31b3GrL/CSerD9p7Har3+NcN/kd5rQB21Ps04lHWrd/gS6VTpYMF0UcI2DKNFm+G9P8o
-	 XEjFilBf4k4LCa8bnHN/cnbyREeNrzuShslHmdjhwu/dItBMxb/SPxdlIBp+Q/Q1QPg3K
-	 nmosmpUJInyyaSXMvnm5OBOoMSpxMOaKhgn7MvI6k6/A5w2D1DWzUCOZI1l8YzD+BTsmp
-	 I9m49BK9pL2JXlqW1jUYZhwfu/youXqYVbUs3/2MF5z8JWybzrE8pj8cT7HxDcQyTBspe
-	 8tOoKUiQRi9UlnRw+plede7p50XAYlBA/d0RDVciNmGBG2i/E36KrZerFYkMeaQLP7Q==
+	t=1793660657;
+	b=n+gIRVwAHLY/WMHxp4SzV5E9gRPXSMA+RRkLsXMfICGhomzvhhligyI173Wf7NMW8RLG
+	 tsKHMlsbkWhBPGYffApo8OJcuw2UVNf48PEHv0fCNFXZeO3MTjnijPX7e01PoGpIpzfv+
+	 INaOioxnZAEMnQWTQPX1iB5k2/sbh+ku2OOO/5Ck7pVzzs1jG2UNBdS+/q39DqRzFwBAt
+	 co8nz7LfnZ6btbo6yT4Z+Dpx9WzP6xeZvZQVfAr48KujXqalObcMKvl8eBo1opoIwuV1G
+	 TDp4hhSbKbPynywxf28lX7UnOF9b42uuP+leCIau7KbFIjZzHzBUwsH79meXsiWqqGg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793657493;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=HO5OeKTZlz02ruJkvWUdGjDU3O1WxZRSdVfoYpcyGzQ=;
-	b=hJXG1toOlKh1lcFa/p/z/k5UZC0mdLynu7c72o/SibE+d37CB16nx9oKwmszz9/Iul4b
-	 N/ryxuULVdVTryru1mDLrQMgT/ds9Yl0YR04AISLj8LvknSBfVeS0xJuwAp3pdM61B+VO
-	 vf8Ty2VItYrQsJaVkO/wBdJfl6sfWFXxhlM8ENMHQd5u+QZ8KjVBbQAoihhJb6wz/+ANq
-	 GOjMmgpImjgWj605Y+FjjtWfSYu3rgQvpsb+9fpCkEd0b4vRR3XWgF3gJzuo5CRT8Fnas
-	 do+4HMoD5mkbXK4mOzMqKdi9ak7SO4TQDvbmB1vrwmhiOQy50HZCpmz3avWxqtkO71Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793660657;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 In-Reply-To:References:Date:Message-ID:User-Agent:MIME-Version:
+	 Content-Type;
+	bh=Stvtmahd5i/3uuqc3lii8Wy4EZnXVDq1RllK7RSbpKw=;
+	b=ThUgstgDIQnDzO6Yq6zumgCTDq5/W1qWYw+lNZvI/RNA+7/k7fw0CPW9bIrzrV/ybwkZ
+	 o7hF96t2k2WlIvxUnkXTOsVUJcC50S01JPWwp4KZOeucL58lm7p5zWN2F4vKgF3NsCCpO
+	 O2um7wHdY4gdSnK6Ax36aWNAkG7kRLTNM1jveBF+FZ8Sa8uUHNW6XIQia8JiwcnjfzMmJ
+	 h7AbM29An+d+d2UBUnGmhyHqctMp4sI3eWQSpieL7yiOlWgjVSH15AK89N4ZRiNmz2DMi
+	 T5kYE8lumlVGgvBsUUosHE+4T3/++hOqwZbKQMgb8QJcE2AuIe5COtNgPogZsd6OXZw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DLV++1jc;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=mR4xOioC;
+	arc=none smtp.remote-ip=74.125.82.172
+Received: from mail-dy1-f172.google.com (mail-dy1-f172.google.com [74.125.82.172])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36209606A324
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Nov 2026 22:11:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB4D606A324
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Nov 2026 23:04:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3DB4D606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DLV++1jc
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A45A71F00A16;
-	Mon,  2 Nov 2026 22:11:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793657492;
-	bh=HO5OeKTZlz02ruJkvWUdGjDU3O1WxZRSdVfoYpcyGzQ=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DLV++1jcMZaFNS0FZtV6bv3UZTrhW0sO+mhVRPaAvB+WihDcygOysLhyFJagUEOao
-	 Ro5SlySDDIvTBg6tVlyifLkHMkT9ZWIhVSXz+5QSNLmYy7vK8hGHjfTO98CCwOw2We
-	 2wZCOX9Fg2spB9KgZMxILB1g4gT2FNAYLhoniwPyMPLj17i/D0E5fnxtERAndB1vxr
-	 CzEGTpJBIbSj5zuHlx+ojQik53h/cr+y3Z/GH7ub28JVwl3/St4l8YZ9HEBjxQ4zdO
-	 fzjPQmjs+ZYYM094nIMoAwVuoSPF9gNWEbIg3OjzgAtwHGJjpWObFoI/RT/DpSgfKO
-	 zlfamTHwvHX9A==
-Message-ID: <sashiko-outbox-194261@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH perf-tools-next v13 10/10] perf ftrace: Filter
- extraneous functions in function graph tracer
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Aaron Tomlin" <atomlin@atomlin.com>
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=mR4xOioC
+Received: by mail-dy1-f172.google.com with SMTP id 5a478bee46e88-36661f953e4so5543697eec.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Nov 2026 15:04:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1793660656; x=1794265456; darn=vger.kernel.org;
+        h=content-type:mime-version:user-agent:message-id:date:references
+         :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=Stvtmahd5i/3uuqc3lii8Wy4EZnXVDq1RllK7RSbpKw=;
+        b=mR4xOioC8Z7ZVGwKjyUeiOVGYYKT7pVDPhtMMOP9fPIyHVtajO0smZJ8RY7+8Ml7Qv
+         V4vcj9aMr58UAw06hb1O8CiS1QeSN9PLryW4FrIGU7EMoCNyLgRNfasJOHDxIwGlZ730
+         dMoH606UL7Gt5snZH9DGyuGVTN5JBoA0jtm7savmJxWXpq2FJDbFae6psXb2S4bhpE9+
+         HvuqGHAT7P3AxyEPIeOBG2xFrxIgZsC/t+SbPqLk3y8rcXCAijOhCo61aSnYZiT6A4Vw
+         wbFz0YWtW6KwvGiplQAJUinzY/zbTl5lB5HMvjo21KC43m9VqUiH2KchXl/+Y7nIUtIz
+         okyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793660656; x=1794265456;
+        h=content-type:mime-version:user-agent:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=Stvtmahd5i/3uuqc3lii8Wy4EZnXVDq1RllK7RSbpKw=;
+        b=cx+7cViMK/FifxST1i2N+KKN7+6cBdkNzrDPw/ID/M2vSfTDGvL5LNn191IDhM72Z2
+         I9RWyyhet5xsXIszx1IHuXPWRstTVhVXdpQJtAFSD3FYG60rm6kup1XeYjOk+iadR9SX
+         eFobgFfoPnOA5gdMzQhwC0C3NRCcjfRFOmbhvaSMh9wBPXD8iM7TBWS/gfPgTQhOxVGl
+         tG9eORyxS7GDY0br1Bvk/qqcApcmCqIflSeWAPKwXXxiTyORrqTvTUteJsUtgQkxOJHg
+         xSXVDghL7wPnfpM/YTFWHsGC2izzH8x8lYuUlag1dKI377qvd/FOosw2OR7GE5UsqIaY
+         mLsA==
+X-Gm-Message-State: APuU4Z+eDQhYCMQ1dLVyVu4jhnY3WS3Jl6U63L/OWSpH0UcVvcVve4u7
+	5tmEiM+qTBb2/A9CwtxKGrYMzzsDg8tq4lyXhr/mRbQuUf8DejrqbHwfdcClYqW/sTZaL8LCynq
+	Ii3XJf0lC
+X-Gm-Gg: AYBFou0pIkrTW4jIwrLcR1X5NjB/8Y50OR/iJeY29PuUpnfaWZnHHBkCSOkJQ4PChV4
+	l/T5sc8yMX5dHa+sf6RAUZ2LgEtJJhR5pTBmo6yfEj5zIN9K8U6QQgU6XFRFXe1ezod/YM5l/Sv
+	AJGm/4SN1F30fGZ7fqqfnc4p1Q6m2fdLYwh7xDAKR7uIWzzV0ivLRwpG2J0KRqFBdZs8ENGmA9q
+	OiUmrNk6oFxLEEr7PiDEB+n5vAC4rA7105qQIpcuyIRbpEQANkXJcRTmdxBwaxzQ+qjUGN7IFJK
+	kgUo7mZb0v0UF3Uj1QXM7/yDl3C51QX4TWTMGZVB1irKv4hXJeB2NgWRF8peCsXkI6t1KtIGsLS
+	lyJyKcAFSI3rOl/0NCKBqIh8twcGDvmJ/Dc4A6NhhA1fGErUrSrh1prL4DmA+pwZoi2zh7P1xii
+	iC5crYdjbyg3GLpudR0K0y83a2kMpFGwgwn185097gm/UpaeIb+e+trauogKLe4gstzoYs9FJ5a
+	mcQfO4JoHvOfkbfd3iCfe4MkZGKAiAQDD8grb3JaTUz6GzY4wkWikb+pKF/JlJaUpsrVT2FvAZS
+	LogNtyooTadW8Mcj1BLO8oQ1Vud9Apdwu6Xm3A==
+X-Received: by 2002:a05:7301:7e14:b0:367:363f:6fe4 with SMTP id 5a478bee46e88-36a423f6947mr15717078eec.32.1793660655437;
+        Mon, 02 Nov 2026 15:04:15 -0800 (PST)
+Received: from bsegall27.localhost ([98.45.141.147])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36a42a77c0dsm48932559eec.26.2026.11.02.15.04.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Nov 2026 15:04:14 -0800 (PST)
+From: Benjamin Segall <bsegall@google.com>
+To: sashiko-reviews@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261102214054.911298-11-atomlin@atomlin.com>
-References: <20261102214054.911298-1-atomlin@atomlin.com>
- <20261102214054.911298-11-atomlin@atomlin.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 02 Nov 2026 22:11:32 +0000
+Subject: Re: [PATCH] perf: skew perf_mux_hrtimer_handler firing across cpus
+In-Reply-To: <sashiko-outbox-190118@kernel.org> (sashiko-bot@kernel.org's
+	message of "Thu, 29 Oct 2026 23:42:33 +0000")
+References: <xm265wykhyrv.fsf@google.com> <sashiko-outbox-190118@kernel.org>
+Date: Mon, 02 Nov 2026 15:04:13 -0800
+Message-ID: <xm26wlquhm36.fsf@google.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,286 +96,88 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Medium] perf ftrace: unmatched IRQ return marker leaked in ftrace_proces=
-s_fgraph_line()
-- [Medium] perf ftrace: premature orphan_depth reset on nested exit in ftra=
-ce_process_fgraph_line()
-- [Medium] perf ftrace: ancestor frames discarded on unwind in ftrace_check=
-_target_caller()
---
+sashiko-bot@kernel.org writes:
 
-commit b4d5fc80488b4a74cd5c5107f8098d74571146bb
-Author: Aaron Tomlin <atomlin@atomlin.com>
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Medium] perf: data race on cpc->hrtimer_interval in perf_mux_hrtimer_handler()
+> --
+>
+> commit 21db2df032d9ff638545ff8ead07c480ea100710
+> Author: Benjamin Segall <bsegall@google.com>
+>
+> perf: skew perf_mux_hrtimer_handler firing across cpus
+>
+> This commit adds a per-CPU skew offset to perf_mux_hrtimer_handler() when
+> the mux hrtimer interval changes so that timers across CPUs do not fire at
+> the same time and contend on jiffies_lock in nohz_full configurations.
+>
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index a6c8e38a31104..80d142986eba7 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -1279,6 +1279,7 @@ static enum hrtimer_restart perf_mux_hrtimer_handler(struct hrtimer *hr)
+>>  {
+>>  	struct perf_cpu_pmu_context *cpc;
+>>  	bool rotations;
+>> +	u64 offset;
+>>  
+>>  	lockdep_assert_irqs_disabled();
+>>  
+>> @@ -1286,6 +1287,17 @@ static enum hrtimer_restart perf_mux_hrtimer_handler(struct hrtimer *hr)
+>>  	rotations = perf_rotate_context(cpc);
+>>  
+>>  	raw_spin_lock(&cpc->hrtimer_lock);
+>> +	if (cpc->hrtimer_old_interval != cpc->hrtimer_interval) {
+>> +		/*
+>> +		 * Skew the timer to avoid contention on jiffies_lock in
+>> +		 * nohz_full, whenever we change interval
+>> +		 */
+>> +		offset = cpc->hrtimer_interval;
+>> +		do_div(offset, num_possible_cpus());
+>> +		offset *= smp_processor_id(); /* we are PINNED_HARD */
+>> +		hrtimer_set_expires(hr, offset);
+>> +		cpc->hrtimer_old_interval = cpc->hrtimer_interval;
+>> +	}
+>>  	if (rotations)
+>>  		hrtimer_forward_now(hr, cpc->hrtimer_interval);
+>
+> [Severity: Medium]
+> Can a concurrent update to cpc->hrtimer_interval from
+> perf_event_mux_interval_ms_store() race with perf_mux_hrtimer_handler() and
+> leave the timer with a mismatched skew offset?
+>
+> In kernel/events/core.c, perf_event_mux_interval_ms_store() updates
+> cpc->hrtimer_interval across all online CPUs from the sysfs writer CPU
+> without holding cpc->hrtimer_lock or using WRITE_ONCE():
+>
+> 	for_each_online_cpu(cpu) {
+> 		struct perf_cpu_pmu_context *cpc;
+> 		cpc = *per_cpu_ptr(pmu->cpu_pmu_context, cpu);
+> 		cpc->hrtimer_interval = ns_to_ktime(NSEC_PER_MSEC * timer);
+>
+> 		cpu_function_call(cpu, perf_mux_hrtimer_restart_ipi, cpc);
+> 	}
+>
+> Meanwhile, perf_mux_hrtimer_handler() reads cpc->hrtimer_interval multiple
+> times without READ_ONCE() or caching it in a local variable. Between reading
+> cpc->hrtimer_interval into offset and storing cpc->hrtimer_interval into
+> cpc->hrtimer_old_interval, calls such as do_div() and smp_processor_id()
+> (which calls debug_smp_processor_id() out-of-line when preemption debugging
+> is enabled) allow the compiler to reload cpc->hrtimer_interval from memory.
+>
+> If perf_event_mux_interval_ms_store() modifies cpc->hrtimer_interval in that
+> window, offset can be computed from the previous interval while
+> cpc->hrtimer_old_interval records the newly written interval, preventing
+> subsequent timer callbacks from recomputing the skew for the new interval
+> (and potentially tearing the 64-bit ktime_t load on 32-bit architectures).
+>
+> Should cpc->hrtimer_interval be accessed with WRITE_ONCE() and read once
+> into a local variable via READ_ONCE() (or updated under cpc->hrtimer_lock)?
 
-perf ftrace: Filter extraneous functions in function graph tracer
-
-This commit adds per-task target callgraph state tracking and return-address
-caller validation in userspace for perf ftrace to suppress unrelated top-le=
-vel
-functions and detached orphan calls when filtering with -G / --graph-funcs.
-
-> diff --git a/tools/perf/util/ftrace.c b/tools/perf/util/ftrace.c
-> index c2cf4a20553e2..a919307920321 100644
-> --- a/tools/perf/util/ftrace.c
-> +++ b/tools/perf/util/ftrace.c
-
-[ ... ]
-
-> @@ -879,6 +1087,208 @@ static int print_line(struct perf_ftrace *ftrace, =
-const char *line, FILE *out)
-
-[ ... ]
-
-> +static int ftrace_check_target_caller(struct perf_ftrace *ftrace,
-> +				      struct ftrace_task_state *ts,
-> +				      const char *func_start,
-> +				      const char *entry_name,
-> +				      bool is_graph_target,
-> +				      int leading_spaces,
-> +				      bool has_open_brace,
-> +				      bool has_semicolon,
-> +				      bool has_retaddr,
-> +				      int caller_idx,
-> +				      const char *blank_prefix,
-> +				      FILE *out,
-> +				      bool *is_target_root)
-> +{
-> +	if (!ftrace_has_graph_funcs(ftrace) || !ts->in_target ||
-> +	    ts->depth <=3D ts->target_root_depth)
-> +		return 0;
-> +
-> +	if (has_retaddr && caller_idx >=3D 0 && caller_idx < ts->target_root_de=
-pth) {
-> +		ftrace_unwind_to_depth(ts, caller_idx + 1, blank_prefix, out);
-> +		if (is_graph_target) {
-> +			ftrace_reset_to_target_root(ts, entry_name, ts->depth,
-> +						    leading_spaces);
-> +			*is_target_root =3D true;
-> +			return 0;
-> +		}
-> +		reset_target_root_state(ts);
-> +		if (has_open_brace && !has_semicolon &&
-> +		    push_nontarget_frame(ts, func_start, leading_spaces) < 0)
-> +			return -ENOMEM;
-> +		return 1;
-> +	}
-> +
-> +	if (leading_spaces <=3D ts->target_root_indent) {
-> +		ftrace_unwind_to_depth(ts, 0, blank_prefix, out);
-> +		if (is_graph_target) {
-> +			ftrace_reset_to_target_root(ts, entry_name, 0,
-> +						    leading_spaces);
-> +			*is_target_root =3D true;
-> +			return 0;
-> +		}
-> +		reset_target_root_state(ts);\n> +		if (has_open_brace && !has_semicolo=
-n &&
-> +		    push_nontarget_frame(ts, func_start, leading_spaces) < 0)
-> +			return -ENOMEM;
-> +		return 1;
-> +	}
-
-[Severity: Medium]
-When recovering from a dropped target root exit in
-ftrace_check_target_caller() because leading_spaces <=3D ts->target_root_in=
-dent
-(with caller_idx < 0, such as when funcgraph-retaddr is unavailable or the
-call goes through an untraced wrapper), does calling
-ftrace_unwind_to_depth(ts, 0, blank_prefix, out) discard active non-target
-ancestor frames below ts->target_root_depth whose indentation is strictly l=
-ess
-than leading_spaces?
-
-If an outer ancestor was pushed onto ts->stack before the target root enter=
-ed,
-unwinding all the way to 0 pops that ancestor frame as well. If that ancest=
-or
-subsequently calls another function or re-enters a target function, caller_=
-idx
-lookup will fail and suppress inline frame synthesis (--inline) when resolv=
-ing
-inlines in ftrace_process_fgraph_line():
-
-	if (caller_idx < 0)
-		num_inlines =3D 0;
-
-Should this unwind to ts->target_root_depth first and then pop only non-tar=
-get
-ancestor frames with indent >=3D leading_spaces, matching the exit recovery=
- path
-in ftrace_process_fgraph_line()?
-
-> +
-> +	if (has_retaddr) {
-> +		if (caller_idx < 0) {
-> +			if (ts->pending_irq_ent[0] !=3D '\0') {
-> +				ts->pending_irq_ent[0] =3D '\0';
-> +				ts->suppress_irq_ret =3D true;
-> +			}
-> +			if (has_open_brace && !has_semicolon) {
-> +				ts->orphan_depth =3D 1;
-> +				ts->orphan_base_indent =3D leading_spaces;
-> +				ts->orphan_seq =3D ts->seq;
-> +			}
-> +			return 1;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * ftrace_process_fgraph_line - Process and output a function graph trac=
-e line
->   * @ftrace: Perf ftrace context
-> @@ -910,16 +1320,54 @@ int ftrace_process_fgraph_line(struct perf_ftrace =
-*ftrace, const char *line, FIL
-
-[ ... ]
-
->  	if ((!has_filter || ftrace->graph_thresh) && !ftrace->use_inline)
->  		return print_line(ftrace, line, out);
-> =20
-> +	if (strstr(line, "=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D>") !=3D NULL ||
-> +	    strstr(line, "<=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D") !=3D NULL) {
-> +		bool is_irq_ent =3D (strstr(line, "=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D>") !=
-=3D NULL);
-> +
-> +		if (has_filter && parse_graph_cpu(ftrace, line, &cpu)) {
-> +			ts =3D get_cpu_state(ftrace, cpu);
-> +			if (ts && ts->in_target && ts->orphan_depth =3D=3D 0) {
-> +				if (is_irq_ent) {
-> +					if (ts->pending_irq_ent[0] !=3D '\0')
-> +						print_line(ftrace, ts->pending_irq_ent, out);
-> +					strlcpy(ts->pending_irq_ent, line,
-> +						sizeof(ts->pending_irq_ent));
-> +					ts->suppress_irq_ret =3D false;
-> +				} else {
-> +					if (ts->pending_irq_ent[0] !=3D '\0') {
-> +						print_line(ftrace, ts->pending_irq_ent, out);
-> +						ts->pending_irq_ent[0] =3D '\0';
-> +					}
-> +					if (ts->suppress_irq_ret)
-> +						ts->suppress_irq_ret =3D false;
-> +					else
-> +						print_line(ftrace, line, out);
-> +				}
-> +			} else if (ts && !ts->in_target) {
-> +				ts->pending_irq_ent[0] =3D '\0';
-> +				ts->suppress_irq_ret =3D false;
-> +			}
-> +		} else if (!has_filter) {
-> +			print_line(ftrace, line, out);
-> +		}
-> +		return 0;
-> +	}
-
-[ ... ]
-
-> @@ -950,30 +1398,31 @@ int ftrace_process_fgraph_line(struct perf_ftrace =
-*ftrace, const char *line, FIL
-> =20
->  		extract_exit_func_name(func_start, exit_name, sizeof(exit_name));
-> =20
-> -		top_indent =3D -1;
-> -		for (i =3D ts->depth - 1; i >=3D 0; i--) {
-> -			if (!ts->stack[i].inlined) {
-> -				top_indent =3D ts->stack[i].indent;
-> -				break;
-> +		if (ts->orphan_depth > 0) {
-> +			if (has_filter && ts->in_target &&
-> +			    (leading_spaces <=3D ts->target_root_indent ||
-> +			     (ts->orphan_base_indent > 0 &&
-> +			      leading_spaces < ts->orphan_base_indent))) {
-> +				ts->orphan_depth =3D 0;
-> +				ts->orphan_base_indent =3D 0;
-> +				ts->orphan_seq =3D 0;
-> +			} else {
-> +				if (ts->orphan_base_indent > 0 &&
-> +				    leading_spaces =3D=3D ts->orphan_base_indent)
-> +					ts->orphan_depth =3D 0;
-> +				else
-> +					ts->orphan_depth--;
-> +				if (ts->orphan_depth =3D=3D 0) {
-> +					ts->orphan_base_indent =3D 0;
-> +					ts->orphan_seq =3D 0;
-> +				}
-> +				return 0;
->  			}
->  		}
-
-[Severity: Medium]
-Can a dropped child entry inside an orphan subtree cause ts->orphan_depth to
-reach 0 prematurely in ftrace_process_fgraph_line()?
-
-When an orphan root frame enters at indentation I, ftrace_check_target_call=
-er()
-sets ts->orphan_depth =3D 1 and ts->orphan_base_indent =3D I. If a nested c=
-hild
-inside that orphan subtree at indentation > I has its entry event dropped by
-the ring buffer, ts->orphan_depth remains 1.
-
-When that nested child exits with leading_spaces > ts->orphan_base_indent, =
-the
-else branch decrements ts->orphan_depth from 1 to 0 and clears
-ts->orphan_base_indent =3D 0, even though leading_spaces > ts->orphan_base_=
-indent
-indicates execution is still deeper than the outermost orphan frame. Could
-subsequent calls or exits within the still-active outer orphan frame then l=
-eak
-into the output or pop active target frames?
-
-[ ... ]
-
-> @@ -1083,9 +1551,166 @@ int ftrace_process_fgraph_line(struct perf_ftrace=
- *ftrace, const char *line, FIL
-
-[ ... ]
-
-> +		if (ts->orphan_depth > 0) {
-> +			if (has_open_brace && !has_semicolon) {
-> +				ts->orphan_depth++;
-> +				ts->orphan_seq =3D ts->seq;
-> +			}
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	ts->suppress_irq_ret =3D false;
-
-[Severity: Medium]
-If an interrupt section contains more than one top-level orphan call between
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D> and <=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D (for ex=
-ample, when an untraced interrupt entry
-sequentially invokes irq_enter_rcu(), the interrupt handler, and
-irq_exit_rcu()), will this unconditional reset of ts->suppress_irq_ret =3D =
-false
-in ftrace_process_fgraph_line() leak a dangling <=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D marker?
-
-On the first orphan call after =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D>, ftrace_chec=
-k_target_caller() sees
-ts->pending_irq_ent[0] !=3D '\0', clears ts->pending_irq_ent[0] =3D '\0', a=
-nd sets
-ts->suppress_irq_ret =3D true.
-
-Once that first orphan call finishes (either immediately if it is a leaf ca=
-ll,
-or when its closing brace returns ts->orphan_depth to 0), the entry of the
-second top-level orphan call reaches:
-
-	ts->suppress_irq_ret =3D false;
-
-before calling ftrace_check_target_caller(). Because ts->pending_irq_ent[0]=
- is
-already '\0', ftrace_check_target_caller() suppresses the second orphan call
-without setting ts->suppress_irq_ret back to true, causing the subsequent
-<=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D line to be printed without a matching openi=
-ng marker.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102214054.9112=
-98-1-atomlin@atomlin.com?part=3D10
+This is correct but a pre-existing race between updates and all the
+readers. I don't know how much we care since as I understand it, it's
+root config changes hitting a race with the readers, but it's easy
+enough so I'll send a separate patch for it.
