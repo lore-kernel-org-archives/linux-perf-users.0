@@ -1,100 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.172
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793749370;
-	b=z2T9nvfbaCZIsAHSLLQZbbWe/evkDAACyQ8S090XdQmyrk64zg0fD9yAFXNnuz7kFxCZ
-	 vO0/SnchR1Rsw3yIIK/5HlY1CIQC41sfVLUR9m9GQJjjnJCMP8Xh0qCsL/cyV1T224ULO
-	 OoeJbreDHHmssDIq3+2TOK2JeTgQ9yp1hTvjR/vFMu0zKTqsyhT7RABxrpUcXVBdXiMYH
-	 QHeI3ska+oHUJ2uJAIvEAHuRqKUcKThNxNHbYienaWvbgqM1knu/A/FpvRF6my9hs8UvL
-	 Qw/b92WqB73jK7YoyRn2/fOYRvFnNKHhshEjoreYsBKKvmWVsITj5q3GDzoSUxgayXg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793749370;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.197
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793749509;
+	b=iod+UwnLJJtPNSB90Bf4D92p9Kh6KyR/V/9bLdMn0S2l+ubzLw0lS/kxygHfs2FDbE4e
+	 qDRFEMdvwUDj+T3UoB2Orwx7oG62pbU2vJAYiTGZO3rh+nvY8TCTCisHCw8fj3K2vCMAW
+	 6Upbox9IOgPGrVHpp1w173HbZ3rGgkPAYUah/tUeFUEkzdJc5xGzCrji8EkPPRiGHy/PW
+	 lrV74qy8sqjN7JMzOrEdxl4bsPGuvkbcefn69Cp2e/fd1lKDusanVai2WH5+FEMM1ax8N
+	 ETX1pk3RTTueUpwjHwQMGiDK9K8QTBuCiMcpks8+5cwGzu62hQggJpA509G/6J2fwqw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793749509;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=tVhG/sZRJzj5+F0QRzdXIaWdFtIw+6NJHQcWFAxaXbw=;
-	b=lGBXkcKyUJqCfdMvlWQNJZ+RenAoil0bBPrWvYAL0OF7tkBcL8fmsUdX40GkjppOUTlO
-	 wp/AaSTkmz2e2YobIC3U241CyS8hWyduJAO+b8kkbRbrZtcFPDWi79Ui6odEueo46DPRD
-	 UZUwpFE0Im0X9en9dw1HtyS2iDRzmTl8watEtG29M5CNPeuqhCTI/TidIVcJaX2MKQCzj
-	 r8Ep8N/+2z9pR9OKv693ak2yNIFFVBqQNjIxUw13+48tOvsXr0F0myW59WQ5OOH01NyOT
-	 vZLa9Bm4N8IZ1yTeaar8SMy2JQzm62adoa56eqEgmusQjlEi8jRsLE+jRA5NG9IQLZw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	 X-Gm-Message-State:X-Received:Date:Mime-Version:X-Mailer:Message-ID:
+	 Subject:From:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=IpQWIBpD/+OCXH8zrnCK3RQ3klhJs2Ghlka3UIeP5sM=;
+	b=EYH9eaNuWFTxu5uwJF9h8VNWu6dpJy1+7/Qjhbfw0qVjgslZm48s6LW6BSNF5982diC6
+	 epQ9lnqljB4mOwzH4KoM5dseIDzGLWu+jh9eqhO//D/ft8YArnmQXjqVvG2iWlZsFKFQc
+	 wuEao+z7EDwiMrEuqqNzinWXGTzIonAa/ekqnbztl+KB4lVDc1C3DOX0dAJnQhCTKaBIb
+	 iQFgmaHBXFeEPmFh9bk8Ug3sr+ZvXAoDP32Bov0802lYNZx6Id1yC2iPMe3JWl69iK0fP
+	 MdLX/XNWOHEdH9oGa0dC9Fj+mVMkuyO26IA0SCXPaDtVhhn17KzWdbLPCu5Rn0EIOSw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=jLKajVPJ;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.172
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=mIY3LlaZ;
+	arc=none smtp.remote-ip=74.125.82.197
+Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90756606A334
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 23:42:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 90756606A334
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12634606A31B
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 23:45:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 12634606A31B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=jLKajVPJ
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-54492d8a988so114411cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2026 15:42:49 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1793749368; cv=none;
-        d=google.com; s=arc-20260327;
-        b=AnXTe3Ifwm8Q92/otZoqTbDE283IXH9XcOyVVXMjKd/cXU/lCnoWwef17TZ8ucaUmI
-         Z06Hz9h+Ricm2pb0Cv0LfOoHXhP0tqt1MnYpf7Ax/Lfto68+u+zrlFmytbnUqmFfx/mp
-         bCVPiUWMXloLn0S8Rthn+uBwOHweQuCHEHNiEFzGKxhVrjoZaFBGMxGWtFEw3NAMWSEs
-         5TQZ4MHg6DC44tlsSXRvq6F3fGB1HlttXKVaOaffpXRGFEOTHH5rhDreXRqanXL+5N1Z
-         g7NYzXaLxDTsOBwqolTJinErlhtauhMa5xQfxKLoU+hB4CMsKpDu2Yq7zHXk5YoVQZPL
-         XFjw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=tVhG/sZRJzj5+F0QRzdXIaWdFtIw+6NJHQcWFAxaXbw=;
-        fh=LD7+CYfYYZGKmOmtCjVgsxxV4SR0Xl8rHeO9rfiiMJI=;
-        b=rRkD3Bs/GMxwssTQBItLjsrJJWX7UgVQCaT9Xd3hm9r6iutGIYyJl19C0b/mtRyjWq
-         dGMPqrXv3LYXKTtXg8SPB5NZb/AdIoTS6bit8Nf+BWg3ItZodAMTgoTtQMlBn+Su6NFx
-         ADQeOeihM9QsjQxNYxT9jzBWxqjA1VRX2Y7cF3JUMQaGogA85z7DA2Oktc634Eyx/dsX
-         qpfzpKD/Idf28X1L0PWQat14dAXspa7aO7NuyzAI6UBH4QwIn2PXkX6+MfbKn5Z2eUwL
-         RQ6M9M184vglnq4THWVs4Mt1QfvfCBWkcwjy8tOKPvwVyEQ3WqpDEn0iDWE2xMi/1nii
-         MoEQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=mIY3LlaZ
+Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-351788121cfso428653eec.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2026 15:45:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793749368; x=1794354168; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=tVhG/sZRJzj5+F0QRzdXIaWdFtIw+6NJHQcWFAxaXbw=;
-        b=jLKajVPJxTlUibMrLSmOOnJQnogwWmXDLofPHyK/Em63e/94/He9WR+08cwrIuGOTr
-         AGQRSrYtz6sRSQ7P1pYedxCIrxP5exQUyWoNh9j2o9DIXQo4/gYUrV0G3izQh3imnMB7
-         Zqm9sc0oR2QI7vd9o9Qy8ZUO00lN0NnncFbKrMMQn5+NXTWoIcvi+VLIdbuPLPTBbQWO
-         rLaCvhHIFU/ilYCbbtAX8kw9BovRCAXZlaQlSaWLV89Wbti5Nruf82yPZd+OCk3lXqvh
-         aglnrQUKO2lWgpKLQzmbJwrniHlnpoZhiy/f9SmzJMsaiFH2Qd34R7zWvWz0YczEx4au
-         A9QA==
+        d=google.com; s=20260707; t=1793749507; x=1794354307; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:from:subject
+         :message-id:mime-version:date:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=IpQWIBpD/+OCXH8zrnCK3RQ3klhJs2Ghlka3UIeP5sM=;
+        b=mIY3LlaZ7GqTyO5eT1DDmOxuuMWfABnWld5YxWJCnuKcs1S9PfjZHh5KfqyMmr47Hr
+         uQw5wQWLF4OYjvhWO1KzPKAJ8CYgLz2IauNZJSyBMnH9cdqeH09w1BYgRwS1PsrT4ysA
+         DFaND5C0vqroWOkrcLZlVzAHmE+NtXuVwqXNwriSHvEzwqAMSLb1FoWksM30GQFPMZiM
+         Cv5ZqkTA5OeZ3D0U0BDk36SvwtptBFR7bUpTAhA60UC5UrkniHT0aKBN+B3v3KdTqSaJ
+         esz1FtVL22SrUrhw8i2qHp1WUDJnUiagkuIOTLexEbjvTk4xipw1yweL9C4mKpoPC33w
+         Daaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793749368; x=1794354168;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=tVhG/sZRJzj5+F0QRzdXIaWdFtIw+6NJHQcWFAxaXbw=;
-        b=gi/HAAvxABr8W/JNBhHfghFBHA0tVTQgkA8GCyoVW/HSq+/SJXF/nF01EOX2mflfml
-         iW5synzNYchpno+gTAsO5Zf2f1C/TfZAa1plsNUm+X3FhDKKe4ffEd/A12mL//JOgTHa
-         OkRIC4yfp6vLwwyIjAP17P7Fhkv2Mop2MiiEH69G1zWv7sZFS8WcwswOOJwq1p+aoWsQ
-         C2EsKNxX9xyZXROCqb55raqEQPa5dc8BzQAlt7NUBZtcFosGficpgLnngpnARktJHA77
-         dD4NZpCwy1A4xpsqJZ+qFfBdVfz7NOvRYFtaEMgA8/6wFWjrJcT7LxYaGaZNppFoJeqz
-         DfgA==
-X-Forwarded-Encrypted: i=1; AKwUvBxc+hFFjvHJ2K9a3eK2frmC9IA17f9B33gRZoCTevaIFh590nNLQmK4YoVWI4cy7MgaiVbSH/w35oIHnu6Nzi7h@vger.kernel.org
-X-Gm-Message-State: APuU4Z8q1ZoHuSIrMrK/GH3TLpZayOCXLWFSiKochBb0TxCBxDy9sKOP
-	EodjBBmrDNX6T6q5EBks07TG0/VlNaRwa+A/798iwqIpwxIC6gzZYlvSYhoNhN1UCY83krSnqvU
-	dLu6UJ+nfvnAnHbYc3fNJ2T0mSfNdV7CTojc9mcsm
-X-Gm-Gg: AYBFou0R5ZMEw7F2yAn8xDtdyBZAnxv55lzpFNX7BqMt3GCBjDgqE3zUTuT+m1alqxd
-	/HFJuxszntJ1ZaUiDGf4UgIQJOBcuYEciL+jrJdazAiqDW+JlgD0Due04qUZsdgvPP5XB8uB+dU
-	AoRxweQ5Jj1JRm6lkf7dkc/Sb3FeGrsEZEoDmKeP++QBbgamRMbDzHf2FaiuRiL3kuZbMvDV2ya
-	TeMzmuoyXmFs/mlct2XGi0EBx8adfXO2cSWEtCQohAVXn/s7vM5PnArI4EdWZw904q+UOwsbVnG
-	XgMb1IogM/DmsWfmzt7iF8jx6ZOeGDyDmdX68siDxZpSpDXDr6C4vL3swQAYgQscC4w5hcimZwI
-	8A5mXk6s3nqAudUvckIj7+pUGqo85jO79dnP/yK33YVdLy9JP9qMCRWpD+hQz6V7PvA==
-X-Received: by 2002:a05:622a:5147:b0:52f:9ed4:8d76 with SMTP id
- d75a77b69052e-54b4e3bcd20mr3992271cf.14.1793749367603; Tue, 03 Nov 2026
- 15:42:47 -0800 (PST)
+        d=1e100.net; s=20260707; t=1793749507; x=1794354307;
+        h=content-transfer-encoding:content-type:cc:to:from:subject
+         :message-id:mime-version:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=IpQWIBpD/+OCXH8zrnCK3RQ3klhJs2Ghlka3UIeP5sM=;
+        b=KGGa9fG4jQonEH5Wsfkfs8RLh0dL8rSr2/uj2nnX+/upLM3PtY/ygqrIBng9iVhS2d
+         7gg8431f3sfOHeoL5xcFo7DnB4XYBDWIZs8PcshSF8oJDH+0NsM9lJ2t/Bl3nnc3L64+
+         y7hMkDxF562Os7g6OafXG6CKQJYRNUkPjaYHnQm3gEGmQwLqk1jWmZ9wDowkrNJq2WN6
+         nrMJBMdy9swM5rApb256VZQsSrvPXgteGxXFD+Usam9/EjGD5QJIGNI4YY7tRLbauN/V
+         6X6ET7PiNs0fpA/xZQA1Z1a09RnarVYy/IBf5th3/EEwR3gGpNSguXysgDjTmvJjVFXS
+         UnTw==
+X-Gm-Message-State: APuU4Z+5y8fwt0z85b56zANe5hiOqVwASonaJ0taXX21turvlLxMWHUx
+	0FqkQiTBzW324M0NG6KzpYpx4Wh3yWcxiCuGjnJ8f48oN518nVLU5nCWctPAD5OJSh/r2aTKxem
+	93QZWRdponnbS2nvv+hZE5GpTcMGyqpEwsfaLseiuiiGWClC0tu0156WeE5Dcd4j6aBgrm0EylQ
+	E7g9lPj6dhcIC5BXvoKdPy07PcUJkXJBzYcw/VhLD/Jfd6sfeWo3pDV9k=
+X-Received: from dldyq16-n1.prod.google.com ([2002:a05:701b:4550:10b0:1ad:eb35:4dc3])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2713:b0:144:de98:eec1
+ with SMTP id a92af1059eb24-1ac59dd175fmr22069188c88.11.1793749506730; Tue, 03
+ Nov 2026 15:45:06 -0800 (PST)
+Date: Tue,  3 Nov 2026 15:44:16 -0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -103,241 +76,523 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-References: <20261103-alpha-profileme-v5-0-bbe3937fbf3a@gmail.com>
-In-Reply-To: <20261103-alpha-profileme-v5-0-bbe3937fbf3a@gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.385.gac671c819a-goog
+Message-ID: <20261103234502.1008382-1-irogers@google.com>
+Subject: [PATCH v1 00/41] perf: Per-env PMUs, recorded event metrics, and perf sysinfo
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 3 Nov 2026 15:42:35 -0800
-X-Gm-Features: AclHuK9AeMJQ6PQbnb88LSGf5YQwNSco0QNq-rGESckdvYzO-GY3i0-tmFuIHKI
-Message-ID: <CAP-5=fVtMnaoF1JbVFJuiRqPx-2izJafs=+ov6eF_PYFE9Xrxg@mail.gmail.com>
-Subject: Re: [PATCH v5 00/11] alpha/perf: add ProfileMe sampling
-To: Matt Turner <mattst88@gmail.com>
-Cc: Richard Henderson <richard.henderson@linaro.org>, Magnus Lindholm <linmag7@gmail.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+To: linux-perf-users@vger.kernel.org, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+	Kan Liang <kan.liang@linux.intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, John Garry <john.garry@linux.dev>, 
+	Will Deacon <will@kernel.org>, Leo Yan <leo.yan@arm.com>, 
+	Athira Rajeev <atrajeev@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 3, 2026 at 12:37=E2=80=AFPM Matt Turner <mattst88@gmail.com> wr=
-ote:
->
-> The 21264 from EV67 on, and the 21364, have a second performance counter
-> mode, ProfileMe, alongside the Aggregate mode that the driver uses today.
-> An Aggregate mode sample reports the PC where the overflow interrupt was
-> taken. On an EV7 that is anywhere from 15 instructions before to 12
-> after the one that overflowed the counter, which makes perf annotate
-> output close to useless. In ProfileMe mode the CPU picks one fetched
-> instruction, follows it down the pipeline, and reports its PC along with
-> what happened to it: whether it retired, whether it trapped and why,
-> whether it was a mispredicted branch, stalled before map, or was killed
-> on a wrong path, and what PCTR1 counted while it was in flight.
->
-> Patch 1 fixes a constant passed to the wrong PALcode call, with no
-> functional change. Patch 2 adds the sysfs format and event attributes
-> the perf tool needs to name raw events. Patch 3 fixes counts lost when
-> an event is stopped before its first start, and patch 4 stops reporting
-> user registers that the entry code has not saved yet. Patch 5 adds
-> ProfileMe sampling, selected with precise_ip or a new profileme config
-> bit, so cycles:p and perf record's default event use it. Patch 6
-> attaches the status registers to each sample as PERF_SAMPLE_RAW data,
-> and patch 7 adds an option to randomize the sampling interval so that it
-> cannot lock onto a loop. Patches 8 and 9 report what PCTR1 counted as
-> the sample weight and the data source of DTB misses. Patch 10 adds
-> filters that keep only retired, mispredicted or trapping instructions,
-> and patch 11 makes precise events sample only retired ones.
->
-> A separate series for perf-tools-next adds a decoder for the raw data
-> to perf report -D and perf script -D, and a script that sums the status
-> by symbol or by instruction, in the style of DCPI.
->
-> The two modes cannot run at the same time, because PCTR_CTL[SL0] sets
-> the mode for both counters. A ProfileMe event is scheduled alone, and
-> perf multiplexes it with any other hardware events. perf stat does not
-> ask for precise events, so it keeps using Aggregate mode.
->
-> To try it:
->
->   perf record -e cycles:p -- ./workload
->   perf annotate
->
-> I tested this on an AlphaServer ES47 (EV7). Samples from a
-> 16-instruction loop land on all 16 instructions rather than on 4 PCs.
-> DTB misses and unaligned traps are attributed to the faulting load. A
-> branch on random data shows up as mispredicted in 21% of its samples,
-> and in 0% with sorted data. A 12 minute perf record -a while building
-> git took 4.45 million samples with no warnings. Sampling every 10000
-> instructions, which used to wedge the CPU, ran 66 times without a hang.
-> With precise_ip, killed instructions went from 67% of the samples of a
-> mispredicting loop to none. On two CPUs, this version survived 62 runs
-> that mix sampling, filters, context switches and multiplexing, with no
-> warnings.
->
-> Signed-off-by: Matt Turner <mattst88@gmail.com>
+This series refactors PMU state management into struct perf_env, enables
+computing and displaying metrics from recorded perf.data files in
+'perf stat report' and 'perf script', adds live PMU capability probing,
+and introduces the 'perf sysinfo' subcommand.
 
-Hi Matt,
+It follows on from the v2 RFC series ("perf sysinfo: Add subcommand to
+probe and summarize PMU capabilities"):
+https://lore.kernel.org/linux-perf-users/20261017185442.2137623-1-irogers@g=
+oogle.com/
+Because the series has grown substantially beyond 'perf sysinfo' with
+the per-perf_env PMU refactoring and 'perf stat record'/'perf stat report'
+metric support, it is being sent as a non-RFC v1 series.
 
-Thanks for v5, and for turning the suggestions around so quickly with
-measurements to back each one up. Patch 8 looks good to me; a few
-comments on the rest (appologies, I'm using Gemini to help me be
-cleverer than I am):
+Overview of the series
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-Patch 5: I think Sashiko's report is right. With idx forced to 0 in
-ProfileMe mode, a PCTR1 overflow still pending when an Aggregate event
-is multiplexed out gets taken as a window close: it adds a bogus 2^20
-to the count and emits a sample from a stale PMPC, possibly another
-task's. That's the mirror image of the false sample the commit message
-documents for the other direction.
+1. Per-perf_env PMU state (struct perf_pmus) and perf.data reconstruction
+   (Patches 1-13):
+   Previously, core_pmus, other_pmus, and sysfs scanning state were
+   global variables in tools/perf/util/pmus.c, preventing perf from
+   maintaining both the live host's PMUs and a recorded perf.data
+   session's PMUs simultaneously.
 
-In both cases the interrupt arrives for a counter that hasn't wrapped
-since it was last written, whereas after a real overflow or window
-close the counter sits just past zero. Could the handler drop an
-interrupt when the counter hasn't wrapped relative to prev_count? It
-would need some headroom: a counting event's period is 2^20 - 1, so
-its counter starts at 1, and a real overflow, which leaves it just
-past zero, would look unwrapped too. Capping left at half the counter
-range, as armpmu_event_set_period() does, keeps the two cases apart.
-That would fix both directions, and the caveat could come out of the
-commit message.
+   - Patch 1 makes lazy perf_env initialization thread-safe using
+     env->env_sem.
+   - Patch 2 introduces the host_env() singleton to represent the live
+     host environment explicitly, replacing the global perf_env variable
+     and session->header.env fallbacks.
+   - Patch 3 adds a from_env parameter to perf_pmu__init() to
+     distinguish PMUs reconstructed from perf_env headers from live host
+     PMUs so they never query host sysfs or get cast via container_of()
+     to struct hwmon_pmu or struct drm_pmu.
+   - Patches 4-6 introduce struct perf_pmus embedded in struct perf_env
+     (accessed via perf_env__pmus()) and pass struct perf_pmus to the
+     PMU find and scan helpers.
+   - Patches 7-9 record the ELF machine (e_machine) of each pmu-events
+     table's CPUIDs in struct pmu_events_map, so host lookups only
+     consider the host architecture's tables, find the core events and
+     metrics tables by e_machine rather than an architecture name, and
+     pass the e_machine of the CPUIDs to strcmp_cpuid_str().
+   - Patch 10 moves the architecture-specific strcmp_cpuid_str()
+     implementations from arch/{x86,arm64}/util/header.c into common
+     tools/perf/util/header.c, selecting the comparison by e_machine, so
+     CPUID matching works across architectures when analyzing cross-arch
+     perf.data files.
+   - Patches 11-12 move the arm64 CPUID matching test to
+     tools/perf/tests so it runs on all architectures, and add CPUID
+     matching tests for exact (test/common), x86, PowerPC, RISC-V and
+     s390 CPUIDs.
+   - Patch 13 adds perf_pmus__read_from_env() and perf_pmu__add_cap() to
+     reconstruct a perf_env's core_pmus and other_pmus lists,
+     capabilities, CPU maps, and JSON event/metric tables from perf.data
+     headers.
 
-Patch 9: Now that patch 11 drops DTB miss samples from cycles:p, it
-may be worth giving retired loads and stores a data source too. As
-PALcode fills the TB, an access that retired without a DTB miss trap
-must have hit, so mem_dtlb =3D PERF_MEM_TLB_L1 | PERF_MEM_TLB_HIT. The
-memory sort keys would then show DTB hits and misses side by side for
-cpu/cycles,profileme/. LDA/LDAH and the ldq_u UNOP would need leaving
-out, as they don't access memory.
+2. Recorded event metrics in 'perf stat report' and 'perf script'
+   (Patches 14-25):
+   With per-perf_env PMUs reconstructed from perf.data headers, perf can
+   resolve the recorded machine's PMUs and JSON metric tables offline
+   and match metrics against recorded evsels.
 
-Loads into $31/$f31 need care either way. As the comment in
-do_page_fault() says, as of EV6 they're prefetches, which never fault
-(or are suppressed by the PALcode). If a prefetch that misses the DTB
-is dropped without a trap, they'd need leaving out of the hits too. If
-it does trap, patch 9 reports it as a LOAD, where PERF_MEM_OP_PFETCH
-would be more accurate. Running your one-word-per-page test with loads
-into $31 would show which.
+   - Patch 14 passes struct perf_pmus to metricgroup__for_each_metric()
+     and pmu_metrics_table__find().
+   - Patch 15 moves the matching of metrics to recorded events
+     (metricgroup__add_matching_metrics()) from builtin-script.c into
+     util/metricgroup.c.
+   - Patch 16 moves the encoding and decoding of metric-id term values
+     into parse-events.c so the metric-id is decoded when the evsel is
+     created, rather than metricgroup rewriting each evsel's metric-id
+     after parsing.
+   - Patch 17 generalizes evsel::metric_id to a set of unique
+     evsel::metric_ids. When events are parsed from metric groups, the
+     metric-id is part of the parsed event name and stored on the evsel.
+     When matching metrics to recorded events in a perf.data file,
+     different metrics may refer to the same recorded evsel using
+     different metric-ids (or the recorded event may have been recorded
+     without a metric-id); storing a set of metric_ids on the evsel
+     allows prepare_metric() to populate the expression context with all
+     identifiers associated with the evsel. The set's representation is
+     private to evsel.c and accessed through evsel__add_metric_id(),
+     evsel__copy_metric_ids(), evsel__has_metric_id(),
+     evsel__shares_metric_id() and the evsel__for_each_metric_id()
+     callback iterator. evsel__metric_id(), which would arbitrarily return =
+the
+     first identifier of the set, is removed.
+   - Patch 18 adds perf_pmu__for_each_name_from_config() to find the event
+     names of a PMU for an encoding, including legacy hardware and cache
+     event names from the legacy event tables, and uses it for
+     perf_pmu__name_from_config().
+   - Patch 19 improves metricgroup__add_matching_metrics() to parse each
+     candidate metric's events against the target struct perf_pmus and
+     match them to recorded evlist entries by normalized hardware
+     counter keys (pmu_type, config, config1, config2, config3, and
+     privilege exclusion bits), supporting PERF_TYPE_RAW extended PMU
+     type encodings, uncore PMU instance fan-out, and perf_event_paranoid
+     privilege exclusion fallbacks.
+   - Patch 20 adds metricgroup__add_recorded_metrics() and
+     metricgroup__add_matching_metric_groups() to reconstruct the
+     metrics requested on a recorded 'perf stat record' command line
+     from perf_env (including -M, --transaction, --smi-cost, --topdown,
+     -d, or the Default metricgroups when no events or metrics were
+     specified), or optionally add all matching JSON metrics when
+     --all-metrics is enabled.
+   - Patch 21 fixes 'perf script -F +metric' sample-based metric
+     calculation to use per-sample period deltas rather than raw
+     monotonically increasing counter values.
+   - Patch 22 stops 'perf script -F metric' dropping samples whose CPU
+     isn't in the evsel's CPU map, which for perf record data is the
+     host's online CPUs.
+   - Patch 23 enables displaying metrics for recorded events in
+     'perf stat report' (and adds --all-metrics and stat.all-metrics).
+   - Patch 24 enables displaying metrics for 'perf stat record'
+     PERF_RECORD_STAT data in 'perf script' (and adds --all-metrics).
+   - Patch 25 adds a shell test verifying metric reporting across
+     'perf stat record', 'perf stat report', and 'perf script'.
 
-Patch 11: Kept samples still carry the full period, so with -F the
-sample rate, and perf report's approximate event count, fall by the
-killed fraction: to about a third on your mispredict loop. That seems
-the right trade-off, and it's what IBS's swfilt does with the samples
-it discards, but it may deserve a sentence in the commit message.
+3. Live PMU capability probing via perf_pmu__probe() (Patches 26-38):
+   - Patch 26 exports perf_pmus__scan_skip_duplicates() and adds
+     perf_pmu__num_duplicates() to count numbered uncore PMU instances.
+   - Patch 27 exports perf_pmu__mem_events_init_pmu() and
+     perf_pmu__mem_events_name() for per-PMU memory profiling events.
+   - Patches 28-38 add struct perf_pmu::probed and perf_pmu__probe(),
+     split into individual capability probes:
+     - Patch 28: Basic event opening, counting, interrupt sampling, and
+       branch stack sampling (PERF_SAMPLE_BRANCH_STACK).
+     - Patch 29: Supported perf_event_sample_format flags (sample_type).
+     - Patch 30: Supported precise_ip levels (:p, :pp, :ppp).
+     - Patch 31: Privilege and execution-mode exclusion modifiers
+       (exclude_user, exclude_kernel, exclude_hv, exclude_idle,
+       exclude_host, exclude_guest).
+     - Patch 32: Execution and AUX area features (leader_sampling,
+       sw_grouping, auto-counter reload, aux_output, aux_pause,
+       aux_sample, inherit, sample_freq, write_backward, callchain,
+       data_src, weight, pinned, exclusive, format_lost, cgroup).
+     - Patch 33: Event group size limits (max events counted
+       simultaneously without multiplexing, for both all core counters
+       and general-purpose counters only). The number of events accepted
+       by perf_event_open() isn't reported as PMUs may accept groups that
+       can never be scheduled.
+     - Patch 34: User and interrupt sample register bitmasks
+       (general-purpose and SIMD vector/predicate registers).
+     - Patch 35: Interrupt registers that can only be sampled with
+       precise sampling, such as x86 XMM registers captured by PEBS.
+     - Patch 36: Memory profiling events (ldlat-loads, ldlat-stores,
+       load-store) and supported memory sample formats.
+     - Patch 37: User-space perf_event_mmap_page capabilities
+       (cap_user_rdpmc, cap_user_time*, pmc_width, and live rdpmc
+       verification).
+     - Patch 38: Empirically measured branch instruction skid across
+       precise_ip levels 0..3 using a noinline nop-runway loop.
 
-For the next spin of the tools series, alpha-profileme.py wants the
-same PM_KILLED_BM check before it trusts TRP and MIS. Its example also
-records instructions:p, which after patch 11 has no killed samples, so
-the killed% and invalid% columns would always read 0;
-cpu/instructions,profileme/ keeps them.
+4. 'perf sysinfo' subcommand, documentation, and test (Patches 39-41):
+   Determining what performance monitoring hardware, driver capabilities,
+   and event/metric support are available on a system currently requires
+   piecing together sysfs files under /sys/bus/event_source/devices/,
+   perf list output, and trial-and-error perf_event_open() calls. Across
+   architectures and SoCs, support varies widely: an advanced system
+   provides core PMUs with zero-skid precise event sampling
+   (PEBS/IBS/SPE), hardware branch stack recording (LBR/BRBE),
+   user-space counter reading (rdpmc), memory profiling (DATA_SRC),
+   hardware AUX trace PMUs, memory and PCIe/IO interconnect bandwidth
+   PMUs, and multi-level pipeline metric drill-down hierarchies, whereas
+   a minimal system may only offer software timer sampling.
 
-Two possible follow-ups, neither of which needs to hold up this
-series. perf mem has no Alpha events yet; cpu/cycles,trapped/p would
-be a natural default, or cpu/cycles,profileme/ if retired accesses get
-a data source. And as the driver already works out the profiled
-instruction's mode for the trap frame swap, ProfileMe events could
-honor exclude_user and exclude_kernel by dropping samples, as IBS's
-swfilt does, with PALmode counting as kernel. PERF_PMU_CAP_NO_EXCLUDE
-is PMU wide, so event_init would then reject the exclude bits itself
-for Aggregate events. That would let unprivileged users run perf
-record at the default perf_event_paranoid of 2, where the tool sets
-exclude_kernel for them.
+   - Patch 39 adds the 'perf sysinfo' subcommand. By default,
+     'perf sysinfo' outputs a colorized system capability summary,
+     pipeline metric drill-down hierarchy (via <metric>_group chains),
+     overall system rating (Advanced, Standard, Basic, Minimal), and any
+     missing baseline features. Passing '-p'/'--pmus' (or a PMU glob
+     filter, '-v'/'--verbose', '-a'/'--all', or '-j'/'--json') displays
+     detailed per-PMU static and probed attributes.
+   - Patch 40 adds the 'perf-sysinfo' man page documentation.
+   - Patch 41 adds the 'perf sysinfo' shell test.
 
-Thanks,
-Ian
+Changes since v2 RFC
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+- Dropped RFC status and restarted numbering at v1 as the series expanded
+  to include per-perf_env PMU management and recorded metric reporting.
+- Added thread-safe lazy perf_env initialization and the host_env()
+  singleton (Patches 1-2).
+- Encapsulated global PMU lists and scan state into struct perf_pmus
+  embedded in struct perf_env and updated PMU find/scan callers
+  (Patches 4-6).
+- Unified strcmp_cpuid_str() across all architectures in
+  tools/perf/util/header.c, selecting the comparison by the ELF machine
+  of the CPUIDs, which is recorded for each pmu-events table, and made
+  the CPUID matching test architecture independent (Patches 7-12).
+- Added recorded-event metric matching and shadow counter evaluation in
+  util/metricgroup.c, enabled metric reporting in 'perf stat report' and
+  'perf script' (with --all-metrics and stat.all-metrics), fixed
+  'perf script -F +metric' sample-based metrics, and added a shell test
+  (Patches 14-25).
+- Split the two perf_pmu__probe() commits into 10 per-capability commits
+  (Patches 28-38) and moved the 'perf sysinfo' commits to the end of the
+  series (Patches 39-41).
 
+Example outputs
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
+Example default 'perf sysinfo' output on an Intel AlderLake hybrid system:
 
+  $ perf sysinfo
+  Summary:
+    Core PMUs (2, hybrid): cpu_atom, cpu_core
+    Core features:
+      Interrupt-based sampling: supported
+      Precise event sampling: supported (max_precise: 3 [3 - SAMPLE_IP must=
+ have 0 skid, or uses randomization])
+      Branch stack sampling (LBR/BRBE): supported (depth: 32 branches)
+      User-space counter reading (rdpmc): supported
+      Leader sampling: supported
+      Memory profiling events (DATA_SRC): supported
+      Hardware AUX trace PMUs: intel_bts, intel_pt
+    Bus & uncore monitoring:
+      Memory bandwidth PMUs: uncore_imc, uncore_imc_free_running
+      PCIe / IO interconnect bandwidth PMUs: uncore_arb
+    Events & metrics:
+      Available events: 3161 total (120 sysfs, 3041 json) across 28 PMUs
+      Available metrics: 438 metrics in 192 groups (advanced)
+      Metric drill-down levels (6): L1 (TopdownL1: 7 metrics), L2 (TopdownL=
+2: 14 metrics), L3 (TopdownL3: 44 metrics), L4 (TopdownL4: 45 metrics), L5 =
+(TopdownL5: 15 metrics), L6 (TopdownL6: 9 metrics)
+    System rating: Advanced (core PMU with precise sampling, branch stack (=
+LBR), user rdpmc, bus PMUs, and metric drill-down)
 
-> ---
-> Changes in v5:
-> - Patch 5: refuse precise_ip 3, as a sample with a PALmode PMPC keeps
->   the interrupted PC. Thanks to Magnus Lindholm.
-> - New patches 8 to 11, from Ian Rogers' suggestions: the sample weight,
->   the data source of DTB misses, config1 filters, and retired-only
->   precise samples. The last changes what a default perf record shows.
-> - Link to v4: https://patch.msgid.link/20261102-alpha-profileme-v4-0-61e0=
-0f5e1da8@gmail.com
->
-> Changes in v4:
-> - Patch 4: move __entry_save_end past the r16-r18 stores in entSys,
->   as PAL_callsys does not save them and interrupts are still enabled
->   there.
-> - Patch 5: report the user registers when the profiled instruction is
->   in the entry code but the interrupt was taken after it, since
->   perf_get_regs_user() sees the PMPC rather than the interrupted PC.
-> - Link to v3: https://patch.msgid.link/20261101-alpha-profileme-v3-0-92d5=
-11b5a044@gmail.com
->
-> Changes in v3:
-> - New patch 3: clear PERF_HES_UPTODATE when an event starts counting,
->   so that a stop before the first start does not lose the count.
-> - New patch 4: report no user registers for a sample taken in the entry
->   code, where the frame at task_pt_regs() is not complete. An interrupt
->   nested on one taken there is still not caught.
-> - Patch 5: a user instruction whose interrupt is taken in the kernel now
->   reports its PC with no registers or user stack, as the frame at
->   task_pt_regs() may not be built yet. Thanks to Magnus Lindholm for
->   finding this and for the fix.
-> - Patch 5: also move the counter away from overflow when a ProfileMe
->   event is removed, or stopped without PERF_EF_UPDATE, as
->   alpha_pmu_del() does not go through alpha_pmu_stop().
-> - Patch 5: ignore an interrupt that was pending when the event was
->   stopped. Document that rewriting a counter does not cancel one.
-> - Link to v2: https://patch.msgid.link/20261030-alpha-profileme-v2-0-c702=
-f1c65272@gmail.com
->
-> Changes in v2:
-> - Patch 1: explain why bit 0 clear means all processes, although the
->   Architecture Reference Manual says otherwise.
-> - Patch 3: fix a CPU wedge during high-rate ProfileMe sampling. The
->   ProfileMe counters are now written twice, and a stopped counter is
->   moved away from overflow, as EV67 HRM PALcode restrictions 32 and 38
->   require.
-> - Patch 3: set the profiled PC in place in the trap frame of the
->   instruction's mode instead of in a pt_regs copy on the stack, so
->   sampled registers and stack values are those of the right frame.
->   A kernel instruction whose interrupt is taken in user mode gets a
->   per-CPU frame holding only its PC, so the user frame is not changed.
-> - Patch 4: drop the reserved field and pack the 64-bit fields of
->   struct alpha_profileme_sample, so they are 8-byte aligned in the
->   sample record and the record needs no padding. This changes the raw
->   data layout.
-> - Patch 5: compute the jitter with mul_u64_u32_shr() and saturate the
->   sum, so that large periods cannot overflow.
-> - Link to v1: https://patch.msgid.link/20261028-alpha-profileme-v1-0-d44b=
-52bf2500@gmail.com
->
-> ---
-> Matt Turner (11):
->       alpha/perf: pass PERFMON_CMD_LOGGING_ALL to the logging options cal=
-l
->       alpha/perf: add sysfs format and event attributes
->       alpha/perf: clear PERF_HES_UPTODATE when an event starts counting
->       alpha/perf: do not report user registers from the entry code
->       alpha/perf: implement ProfileMe sampling
->       alpha/perf: attach ProfileMe status as PERF_SAMPLE_RAW data
->       alpha/perf: optionally randomize the ProfileMe sampling interval
->       alpha/perf: report the ProfileMe window count as the sample weight
->       alpha/perf: report the data source of ProfileMe DTB misses
->       alpha/perf: add ProfileMe sample filters
->       alpha/perf: sample only retired instructions for precise events
->
->  arch/alpha/include/asm/perf_event.h      |   2 +
->  arch/alpha/include/asm/ptrace.h          |  12 +
->  arch/alpha/include/asm/wrperfmon.h       |  36 +++
->  arch/alpha/include/uapi/asm/perf_event.h |  31 ++
->  arch/alpha/kernel/entry.S                |   9 +
->  arch/alpha/kernel/perf_event.c           | 535 +++++++++++++++++++++++++=
-+++++-
->  arch/alpha/kernel/perf_regs.c            |  13 +
->  7 files changed, 625 insertions(+), 13 deletions(-)
-> ---
-> base-commit: 330517c63aa9b48227b6ab45f01003effac77ae4
-> change-id: 20261024-alpha-profileme-6e98a977cb54
->
-> Best regards,
-> --
-> Matt Turner <mattst88@gmail.com>
->
+Example filtered per-PMU output:
+
+  $ perf sysinfo cpu_core
+  cpu_core (type: 4 [PERF_TYPE_RAW], core):
+    CPUs: 0-15 (16 CPUs)
+    Capabilities: branches=3D32, max_precise=3D3, pmu_name=3Dalderlake_hybr=
+id
+    Formats: event (config:0-7), pc (config:19), edge (config:18), offcore_=
+rsp (config1:0-63), ldlat (config1:0-15), inv (config:23), umask (config:8-=
+15), frontend (config1:0-23), cmask (config:24-31)
+    Events: 1563 total (20 sysfs, 1543 json)
+    Memory events: ldlat-loads ({cpu_core/mem-loads-aux/,cpu_core/mem-loads=
+,ldlat=3D30/}:P), ldlat-stores (cpu_core/mem-stores/P)
+    Probed capabilities (event: cpu_core/cycles/):
+      Modes: counting, sampling, branch_stack
+      Precise sampling: :p (1 - SAMPLE_IP must have constant skid), :pp (2 =
+- SAMPLE_IP requested to have 0 skid), :ppp (3 - SAMPLE_IP must have 0 skid=
+, or uses randomization) (max_precise: 3)
+      Measured branch skid (instructions from branch):
+        level 0 (no :p): min 105, max 174, avg 156.8 (0/32 exact_ip)
+        level 1 (:p)   : min 1, max 1, avg 1.0 (0/31 exact_ip)
+        level 2 (:pp)  : min 0, max 0, avg 0.0 (31/31 exact_ip)
+        level 3 (:ppp) : min 0, max 0, avg 0.0 (32/32 exact_ip)
+      Sample types: ip, tid, time, addr, read, callchain, id, cpu, period, =
+stream_id, raw, branch_stack, regs_user, stack_user, weight, data_src, iden=
+tifier, transaction, regs_intr, aux, cgroup, data_page_size, code_page_size=
+, weight_struct
+      User registers: AX, BX, CX, DX, SI, DI, BP, SP, IP, FLAGS, CS, SS, R8=
+, R9, R10, R11, R12, R13, R14, R15
+      Intr registers: AX, BX, CX, DX, SI, DI, BP, SP, IP, FLAGS, CS, SS, R8=
+, R9, R10, R11, R12, R13, R14, R15
+      Intr registers (precise sampling only): XMM0, XMM1, XMM2, XMM3, XMM4,=
+ XMM5, XMM6, XMM7, XMM8, XMM9, XMM10, XMM11, XMM12, XMM13, XMM14, XMM15
+      Memory events (probed): ldlat-loads, ldlat-stores (sample types: addr=
+, weight, data_src, transaction, data_page_size, weight_struct)
+      Exclusion modifiers: exclude_user, exclude_kernel, exclude_hv, exclud=
+e_idle, exclude_host, exclude_guest
+      Features: leader_sampling, sw_grouping, inherit, sample_freq, write_b=
+ackward, callchain, data_src, weight, pinned, exclusive, format_lost, user_=
+rdpmc, user_time, user_time_zero
+      User space counter reading (rdpmc): available, enabled, working (widt=
+h: 48 bits)
+      Max event group size: 8
+      Max GP event group size: 7
+
+Example output on a Raspberry Pi 5 (ARM Cortex-A76):
+
+  $ sudo perf sysinfo armv8_cortex_a76
+  armv8_cortex_a76 (type: 9 [dynamic], core):
+    CPUs: 0-3 (4 CPUs)
+    Capabilities: slots=3D0x00000000, threshold_max=3D0x00000000, bus_slots=
+=3D0x00000000, bus_width=3D0x00000000
+    Formats: threshold_count (config1:2), event (config:0-15), long (config=
+1:0), rdpmc (config1:1), threshold (config1:5-16), threshold_compare (confi=
+g1:3-4)
+    Events: 1336 total (40 sysfs, 1296 json)
+    Probed capabilities (event: armv8_cortex_a76/cycles/):
+      Modes: counting, sampling
+      Precise sampling: not supported (0 - SAMPLE_IP can have arbitrary ski=
+d)
+      Measured branch skid (instructions from branch):
+        level 0 (no :p): min 340, max 352, avg 346.2 (0/31 exact_ip)
+      Sample types: ip, tid, time, addr, read, callchain, id, cpu, period, =
+stream_id, raw, regs_user, stack_user, weight, data_src, identifier, transa=
+ction, regs_intr, phys_addr, aux, cgroup, data_page_size, code_page_size, w=
+eight_struct
+      User registers: x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12=
+, x13, x14, x15, x16, x17, x18, x19, x20, x21, x22, x23, x24, x25, x26, x27=
+, x28, x29, lr, sp, pc
+      Intr registers: x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12=
+, x13, x14, x15, x16, x17, x18, x19, x20, x21, x22, x23, x24, x25, x26, x27=
+, x28, x29, lr, sp, pc
+      Exclusion modifiers: exclude_user, exclude_kernel, exclude_hv, exclud=
+e_host, exclude_guest
+      Features: leader_sampling, sw_grouping, inherit, sample_freq, write_b=
+ackward, callchain, data_src, weight, pinned, exclusive, format_lost, user_=
+time, user_time_zero, user_time_short
+      User space counter reading (rdpmc): available, disabled (sysfs: 0) (w=
+idth: 32 bits)
+      Max event group size: 7
+      Max GP event group size: 6
+
+  $ sudo perf sysinfo
+  Summary:
+    Core PMUs (1): armv8_cortex_a76
+    Core features:
+      Interrupt-based sampling: supported
+      Precise event sampling: missing (0 - SAMPLE_IP can have arbitrary ski=
+d)
+      Branch stack sampling (LBR/BRBE): missing
+      User-space counter reading (rdpmc): missing/disabled
+      Leader sampling: supported
+      Memory profiling events (DATA_SRC): missing
+      Hardware AUX trace PMUs: missing
+    Bus & uncore monitoring:
+      Memory bandwidth PMUs: missing
+      PCIe / IO interconnect bandwidth PMUs: missing
+    Events & metrics:
+      Available events: 3695 total (2371 sysfs, 1324 json) across 11 PMUs
+      Available metrics: 21 metrics in 5 groups (minimal)
+      Metric drill-down levels: none (flat metrics only)
+    System rating: Basic (core PMU with basic counting/sampling only; missi=
+ng advanced features)
+    Missing baseline features: PCIe/IO interconnect bandwidth PMUs, hardwar=
+e AUX trace PMU, hardware branch stack sampling (LBR/BRBE), memory bus band=
+width PMUs, memory load/store profiling events, multi-level pipeline drill-=
+down metrics (<metric>_group), precise event sampling (PEBS/IBS/SPE), user-=
+space counter reading (rdpmc)
+
+This patch series was generated with the assistance of antigravity and
+Gemini 4.0.
+
+Ian Rogers (41):
+  perf env: Make lazy perf_env initialization thread-safe
+  perf env: Add host_env() singleton
+  perf pmu: Add from_env parameter to perf_pmu__init()
+  perf pmus: Introduce struct perf_pmus and perf_env__pmus()
+  perf pmus: Pass struct perf_pmus to find helpers
+  perf pmus: Pass struct perf_pmus to scan helpers
+  perf pmu-events: Add e_machine to struct pmu_events_map
+  perf pmu-events: Pass e_machine to find_core_*_table()
+  perf header: Pass e_machine to strcmp_cpuid_str()
+  perf header: Support CPUID matching across all architectures
+  perf test: Make the CPUID matching test architecture independent
+  perf test: Add CPUID matching tests for other architectures
+  perf pmus: Add perf_pmus__read_from_env()
+  perf metricgroup: Pass struct perf_pmus to
+    metricgroup__for_each_metric()
+  perf metricgroup: Move matching of metrics to recorded events from
+    perf script
+  perf parse-events: Decode metric-id terms when adding events
+  perf evsel: Generalize metric_id to a set of metric_ids
+  perf pmu: Add perf_pmu__for_each_name_from_config()
+  perf metricgroup: Improve matching of metrics to recorded events
+  perf metricgroup: Add metricgroup__add_recorded_metrics()
+  perf script: Fix metrics computed from samples
+  perf script: Don't drop metric samples for CPUs missing from the evsel
+  perf stat report: Display metrics for recorded events
+  perf script: Display metrics for perf stat record data
+  perf test: Add stat record metrics test
+  perf pmus: Expose duplicate uncore PMU scanning helpers
+  perf mem-events: Expose PMU init and name formatting helpers
+  perf pmu: Add perf_pmu__probe() for basic open, counting, and sampling
+  perf pmu: Probe supported sample_type flags
+  perf pmu: Probe precise_ip levels
+  perf pmu: Probe privilege exclusion modifiers
+  perf pmu: Probe execution and AUX area features
+  perf pmu: Probe event group size limits
+  perf pmu: Probe user and interrupt sample register masks
+  perf pmu: Probe interrupt registers that require precise sampling
+  perf pmu: Probe memory profiling events and sample formats
+  perf pmu: Probe user-space mmap capabilities
+  perf pmu: Probe branch instruction skid
+  perf sysinfo: Add sysinfo subcommand
+  perf docs: Add perf-sysinfo man page
+  perf test: Add perf sysinfo shell test
+
+ tools/perf/Build                              |    1 +
+ tools/perf/Documentation/perf-config.txt      |    7 +
+ tools/perf/Documentation/perf-script.txt      |    6 +
+ tools/perf/Documentation/perf-stat.txt        |    5 +
+ tools/perf/Documentation/perf-sysinfo.txt     |  113 +
+ tools/perf/Documentation/perf.txt             |    2 +-
+ tools/perf/arch/arm/util/auxtrace.c           |    9 +-
+ tools/perf/arch/arm/util/cs-etm.c             |    3 +-
+ tools/perf/arch/arm64/include/arch-tests.h    |    1 -
+ tools/perf/arch/arm64/tests/Build             |    1 -
+ tools/perf/arch/arm64/tests/arch-tests.c      |    4 -
+ tools/perf/arch/arm64/tests/cpuid-match.c     |   37 -
+ tools/perf/arch/arm64/util/header.c           |   48 -
+ tools/perf/arch/arm64/util/pmu.c              |    3 +-
+ tools/perf/arch/x86/tests/amd-ibs-period.c    |    5 +-
+ .../arch/x86/tests/amd-ibs-via-core-pmu.c     |    3 +-
+ tools/perf/arch/x86/tests/hybrid.c            |    6 +-
+ tools/perf/arch/x86/tests/topdown.c           |    6 +-
+ tools/perf/arch/x86/util/auxtrace.c           |    9 +-
+ tools/perf/arch/x86/util/evsel.c              |    6 +-
+ tools/perf/arch/x86/util/header.c             |   64 -
+ tools/perf/arch/x86/util/intel-bts.c          |    4 +-
+ tools/perf/arch/x86/util/intel-pt.c           |    4 +-
+ tools/perf/arch/x86/util/pmu.c                |   10 +-
+ tools/perf/arch/x86/util/topdown.c            |    3 +-
+ tools/perf/bench/pmu-scan.c                   |   16 +-
+ tools/perf/bench/synthesize.c                 |   13 +-
+ tools/perf/builtin-buildid-list.c             |    5 +-
+ tools/perf/builtin-help.c                     |    3 +-
+ tools/perf/builtin-inject.c                   |    3 +-
+ tools/perf/builtin-kallsyms.c                 |   12 +-
+ tools/perf/builtin-list.c                     |   19 +-
+ tools/perf/builtin-lock.c                     |    6 +-
+ tools/perf/builtin-record.c                   |    2 +-
+ tools/perf/builtin-script.c                   |  309 +--
+ tools/perf/builtin-stat.c                     |   63 +-
+ tools/perf/builtin-sysinfo.c                  | 2022 ++++++++++++++
+ tools/perf/builtin-top.c                      |   17 +-
+ tools/perf/builtin-trace.c                    |   18 +-
+ tools/perf/builtin.h                          |    1 +
+ tools/perf/perf.c                             |    4 +
+ tools/perf/pmu-events/empty-pmu-events.c      |   34 +-
+ tools/perf/pmu-events/jevents.py              |   45 +-
+ tools/perf/pmu-events/pmu-events.h            |    9 +-
+ tools/perf/tests/Build                        |    1 +
+ tools/perf/tests/builtin-test.c               |    1 +
+ tools/perf/tests/code-reading.c               |    5 +-
+ tools/perf/tests/cpuid-match.c                |  126 +
+ tools/perf/tests/dlfilter-test.c              |    5 +-
+ tools/perf/tests/dwarf-unwind.c               |    5 +-
+ tools/perf/tests/event_groups.c               |    4 +-
+ tools/perf/tests/expand-cgroup.c              |    3 +-
+ tools/perf/tests/hwmon_pmu.c                  |    4 +-
+ tools/perf/tests/mmap-basic.c                 |    6 +-
+ tools/perf/tests/mmap-thread-lookup.c         |    5 +-
+ tools/perf/tests/parse-events.c               |   38 +-
+ tools/perf/tests/parse-metric.c               |    3 +-
+ tools/perf/tests/pmu-events.c                 |   15 +-
+ tools/perf/tests/pmu.c                        |    3 +-
+ tools/perf/tests/shell/stat.sh                |  116 +
+ tools/perf/tests/shell/sysinfo.sh             |   83 +
+ tools/perf/tests/symbols.c                    |    7 +-
+ tools/perf/tests/tests.h                      |    1 +
+ tools/perf/tests/uncore-event-sorting.c       |    6 +-
+ tools/perf/trace/beauty/perf_event_open.c     |    4 +-
+ tools/perf/util/aslr.c                        |    7 +-
+ tools/perf/util/config.c                      |    3 +
+ tools/perf/util/cputopo.c                     |    5 +-
+ tools/perf/util/debug.c                       |    6 +-
+ tools/perf/util/drm_pmu.c                     |   14 +-
+ tools/perf/util/env.c                         |  260 +-
+ tools/perf/util/env.h                         |   25 +
+ tools/perf/util/evlist.c                      |   16 +-
+ tools/perf/util/evlist.h                      |    2 +
+ tools/perf/util/evsel.c                       |  192 +-
+ tools/perf/util/evsel.h                       |   10 +-
+ tools/perf/util/evsel_fprintf.c               |    6 +-
+ tools/perf/util/evsel_fprintf.h               |    4 +-
+ tools/perf/util/expr.c                        |    3 +-
+ tools/perf/util/header.c                      |  203 +-
+ tools/perf/util/header.h                      |    6 +-
+ tools/perf/util/hwmon_pmu.c                   |   14 +-
+ .../util/kvm-stat-arch/kvm-stat-powerpc.c     |    3 +-
+ tools/perf/util/machine.c                     |   16 +-
+ tools/perf/util/machine.h                     |   28 +-
+ tools/perf/util/mem-events.c                  |   17 +-
+ tools/perf/util/mem-events.h                  |   20 +
+ tools/perf/util/metricgroup.c                 | 1128 +++++++-
+ tools/perf/util/metricgroup.h                 |   94 +-
+ tools/perf/util/parse-events.c                |  179 +-
+ tools/perf/util/parse-events.h                |    4 +
+ .../perf/util/perf-regs-arch/perf_regs_x86.c  |   11 +-
+ tools/perf/util/perf_api_probe.c              |    3 +-
+ tools/perf/util/perf_event_attr_fprintf.c     |    7 +-
+ tools/perf/util/pfm.c                         |    6 +-
+ tools/perf/util/pmu.c                         | 2312 ++++++++++++++++-
+ tools/perf/util/pmu.h                         |  223 +-
+ tools/perf/util/pmus.c                        |  564 +++-
+ tools/perf/util/pmus.h                        |  283 +-
+ tools/perf/util/print-events.c                |   10 +-
+ tools/perf/util/probe-event.c                 |    5 +-
+ tools/perf/util/python.c                      |   38 +-
+ tools/perf/util/rwsem.h                       |    6 +
+ tools/perf/util/s390-sample-raw.c             |   16 +-
+ tools/perf/util/session.c                     |   32 +-
+ tools/perf/util/session.h                     |   22 +-
+ tools/perf/util/stat-display.c                |    4 +-
+ tools/perf/util/stat-shadow.c                 |   40 +-
+ tools/perf/util/stat.h                        |    1 +
+ tools/perf/util/tool_pmu.c                    |    5 +-
+ 110 files changed, 8192 insertions(+), 1063 deletions(-)
+ create mode 100644 tools/perf/Documentation/perf-sysinfo.txt
+ delete mode 100644 tools/perf/arch/arm64/tests/cpuid-match.c
+ create mode 100644 tools/perf/builtin-sysinfo.c
+ create mode 100644 tools/perf/tests/cpuid-match.c
+ create mode 100755 tools/perf/tests/shell/sysinfo.sh
+
+--=20
+2.56.0.385.gac671c819a-goog
+
