@@ -1,101 +1,152 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.54
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793718777;
-	b=AA8aCnKkS23NFwA38bTWKlBvX5H6XA6T/kbtnktZIhcKF1p3BV4YW2DAH1KtgQJ2UAgX
-	 5ddnbnNf0KCSwqEi9xKKB2lNFPDtLaHfXqedLbw1/DbdnE3Hpemko9H7stTX2SOtltqAT
-	 BMYcDZeV29lkjjBZUOpL1xLZ5VUWwTDS3BKjC5oiwnkr6ga1ihIX55u+0j9SqzgStsO+C
-	 jr124N+Y83+tal61Gwpe0izK2/a5Q0+5wYZtRSLOSH3SiZ8Ae8xKW7o954a/Gg8DNA3GV
-	 DbJQiL/n/pLxjNkOQvbX5GD9bE0Cs7ANeHXZoY3vUDkDtnxIqDTg1fax2tVG8iIpjpQ==
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=192.198.163.18
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
+	t=1793720812;
+	b=f1fTSIFiGVbGempjh+OIWLqnYBBRIOaecOtQpdtLW5wFkROSSUvxysHPn8ucJPZ2Zr8l
+	 8waAA9k64Bg2L+rFhv0RS7I64hP6PQYz4RHM74hbj0+TAYqN1bt8b5VateR0nZE7cLL5O
+	 +TqUlwa712bklPV4bwnh6uoaA58XGmcpDEIV6LjwdMC5f0WawNBOYdZO6z6WhqdJgBg23
+	 AIk5pI1lR0M9tqSiR7eljR4gKKGE5Iy7P/yH8YB9y8zS3V2/SBWN71aPbbYRt5KGpbcfp
+	 sHBZFtxCROU22+BHhKWOMqfi/t5xCu/e0dYFA5/hq0wLjgWxR0GZO0xjYg8cFvQDxBQ==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793718777;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=QsewQ4bSQyXCreyiSJB98dbyhPJ57LIsDJYpo0Npvlg=;
-	b=Eb+MZY/J8mYlmsXJCSjmk+R9v5Tps3ihp7qDD84F6sk2TpTVf0UEVzyAtVwlgUunggYT
-	 y+d/H/Bs0B3YDYGT/0q+3jO2pg+RG1M5DphszZ8S3QUKQEhCBfLRv2AAysF0pfQBxMyX7
-	 Lw26vKNlNL4VrHpup1kwyCuomUcfYAT/Mt4t+R3kXx46Ji5KGPs6upkv4D/HoFMLXjddp
-	 Nt1j1v1r6uRoTrE+zn/bYb8YJb6wEVCgY7RbmDaH948s+XgrYEaiJO3nyK+GUc8uGKASp
-	 I13lKueZd9NdtMdlgaNp/3TubRJ+p5H1kgglMvNCSyiZ9WM1eF9/aviVsSEryac9uvw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793720812;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Received:
+	 Received:Received:Received:Message-ID:Date:User-Agent:From:Subject:To:
+	 CC:References:Content-Language:Organization:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-ClientProxiedBy:MIME-Version:
+	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:X-LD-Processed:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-Exchange-RoutingPolicyChecked:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+	bh=qVRTqzfaeVpKWt8kmwuMLd+abFPhafywgS2GXAiH+08=;
+	b=tWD+FPtCzT43QhQk/PbN24PEbZqv01OPojGrGbAfMCIkVBrmSaL0BaWY0I+VcZruk2Kl
+	 tQajWpbK45uoZUGg8rKPXatkhCIrRr7E/B3qaThMFetCU1sv9y++MAezytqKomv1jMQn8
+	 rtUIP2fI/EsC07F5dE37JIpVsBuqj8LavM8APBABtguHKihhahCS4d8iefN6haGYlz08U
+	 JOkW7hcNejJEOn5KUT9Ks+buHl2TDnlMDe5S1NXThLQArzzItS1v2U5bH4IjAfFxrChF4
+	 PZrSDfWQjU0aXIb/1F1dj1nVRBe6f1C2dYnFw84Ti4JlUFf0cHnAhTb8Hili7BKy15g==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="aL3a/B1A";
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.54
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=b6PpWy9T;
+	arc=fail smtp.remote-ip=192.198.163.18
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11802606B270
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 15:12:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 11802606B270
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E1B606A324;
+	Tue,  3 Nov 2026 15:46:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 17E1B606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=aL3a/B1A
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6b1dae0febeso6316026a12.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2026 07:12:56 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1793718775; cv=none;
-        d=google.com; s=arc-20260327;
-        b=W5pV2l/XpUKi5w95ld/xl0CIqkhslZw9O70/a+oExnjQQ5+tklnBluBpZWvyxxojwS
-         jsuZVMQcSlFnNYhX/vyXFS6gWzjJ1aYxbJvi2hkDIJf+qLoN/Np4fcTa05Jh7XsGZ7Kx
-         dbxgcNr2uIDBB3dqXATfKhqfjb7zJWFcCxmDMwPQwGPy5I0LflNAA7a0VxrEbxpjNc0P
-         Jt5xJKVkXbLlgdKs9LCMG7fiO0FG+ymYMuSvE0Yj1L/aHmbwjsgIuHRu01FjxaB2RMZz
-         4W3K6DYlsx/doVCJwlvlZaRY3nkNBEloQwX+8DU8rsIxMMk6LEHCfNohHyM/Sl+IATVs
-         w09w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=QsewQ4bSQyXCreyiSJB98dbyhPJ57LIsDJYpo0Npvlg=;
-        fh=TIlVCHtFd0ZWD9Ko3TVHoNjjY42DejCL95TS08oEJIQ=;
-        b=OGpZJ8Qo22BZ/kme1OhQayGG/Dee+m8km7QSDGBK502H2F99vptVDoIfKWpG2q2NIS
-         FxOz+OmwFt7PyPuXCzzjPj+hKOX8ej7oRAjivRqQTqzd1PP44xwDkYEWlpnzDiKrOLKS
-         +7IefN3nMLjyXmR5ufYqEjMCkWqYUwl5DwJ1F+oedyrG+hLA86XxCSMoLaUtzvfe4+Mb
-         zAakDnMFFDOTC1RZvbUrfonL5Ey2d2e1sLwoqOfkm5twRpEPZb6y5rxnkAATSNySif9f
-         YE3Qv/2VWsV2vTbvb94fEjNMeEjzXGaPeh0YRz0RmFLwGyHnQ480iRj7aNtnM95gSWIH
-         Ix7A==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793718775; x=1794323575; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=QsewQ4bSQyXCreyiSJB98dbyhPJ57LIsDJYpo0Npvlg=;
-        b=aL3a/B1AV+UGrazg+7plNsxS7dL+F6hTVquzpd3MtjPg2vHO1Xtu3j9xxaUuEhbN4O
-         Jd1BuY51fqCCfDwgcY5VQg1eh+pVEoieAQXHDFU88zWWKem4tBysSnW978H+TaLviIbL
-         gRKWK8TgU6u4ysOmsAus3gO9hkapv6kLExWrMHTG3ZJWiKzCxiZb+/X2Wm/bY7TGHhsd
-         kjDmQ7aAxBXh1toLH8155O4HY8ebIirW7k709O585hWJoSj90/UPPaEVr2LznT7IEArg
-         yTEHekw7QdfgjNuf1OpfqS71bf9+rN6JCzyzUz3hnJhQpJK8O7OVdGNkpoiO9Lg4pR+S
-         zflw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793718775; x=1794323575;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=QsewQ4bSQyXCreyiSJB98dbyhPJ57LIsDJYpo0Npvlg=;
-        b=YXQ3AJGk7qya9X62QpNeb1Mr+vd6k8h//evklwzyRluf6m1unPBo8jD2Zpm5gD3DYd
-         HnDGdBBYnnXmnAd/83zILyozLNSTyp/qQKmAaVpywGp+3GDfDbgu3W7W39tqW+xuTc9Y
-         wwLWbGBeWgSDxzjMPH3BtvkKB2JIV/6UKOgNXzK/L6qT6ZH032WSaNtzF1m3BMsxGMNY
-         9x8CUdKmD6Q79xSe13LZSB3CKChNqRW8TBm09BfZFEgmhl81CxTmviwRvvq6iD2j4tP2
-         NZvJFSk+IfYQyqyZolR6XyisjXzU+/5fQml7N/IjIwCUiQSazdHP5UeXHnFPHpi4+4MO
-         5ogw==
-X-Forwarded-Encrypted: i=1; AKwUvBwRfWapVxOszSIjGDb39xVsFXMttrX97INRcxF//svcJeBxnutmbml/c71t8bgLGnv+dlAf5nYGzifa14lJ/am0@vger.kernel.org
-X-Gm-Message-State: APuU4Z8O2uHeYjjTiBCRofXDJJjIcnr/9LG3rlHyH5rCMQFsDFPeACsx
-	+DEnQJrMhaJ9GckIMGe6DHxVrSigj27shBg8GLGLTBmqsKF01bJgzYt/JYR/J8Ef5Vq+mjgM1OR
-	R89jtsSgimVRQeI+f0XKDdSYzp4mZ8WM=
-X-Gm-Gg: AYBFou0bIcmtHAaTtRmHh3fGTshtBhZZ6CF+pj+ZAW51soc0ZMf19BPC5/swxUuFn3+
-	tRoEc3p5jpaMT+bt0QhQVKZ0GEusOautGnGd+9EWTB4NZNJJ/TidnIKxgLK0U6lROXrgy9RVN9C
-	kSJ3fSKdveiRgnFj4B1e0mvJH27O5NvP47NtKIwzT6qVtnbySLXAYlxKSijITZ7fSgTKP/htFZN
-	bYa/glyFidl4/PxM7ojC/XAAM74m+taYORbmh/0bNc/6ocvp2MmFJc3XiVxPK23tMUBDzOQ/R7Z
-	qL7t2JF3/ly2tCEW1aimrwrHwscAKI01gzrpRLqa+3JTKyU9rs5p6vDzQtfgM/qYbyxiUGrhYXV
-	e1GoGBHf7OhtN+bdvDQTGgMrQXwEmEIPMoLgU5U5xhbbAnpS2HcFPOjHZ5X11e2RV3j12MCRLyV
-	INAnYgoUT284s9/vcG
-X-Received: by 2002:aa7:d746:0:b0:6b1:bbbf:c8da with SMTP id
- 4fb4d7f45d1cf-6b4d467f117mr6727840a12.17.1793718775223; Tue, 03 Nov 2026
- 07:12:55 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=b6PpWy9T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793720811; x=1825256811;
+  h=message-id:date:from:subject:to:cc:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=AOhhZRhkxukTShsoJWDaD4OELhUUv9rAMu+Ssi/ZtPw=;
+  b=b6PpWy9TSm0GGD8c6DrrqH1p1xQIqh0Y90wzujqnEX+eRXMopTTNh8XV
+   2gvBvOidAh2mvqi5Qs7WwVdV6QVfj8YAowY76tWsPAZYAatrvIXy2w9GZ
+   4HdaOtmBQyobIpRqx7kGCntXq+9xRGlgCwnz/dtFHs+DqKvadS2Aqf99B
+   ZTJpaaJVGTXTGVWIhwfkuh3Y2JI0gkktPbyCER8VqOXcQot8ANHJJBCCE
+   yCE1tF4llUwJiGGf4xKnff+noJBaDfcqQq6Tk0vQ/xWwEmMLpkIF9Yi/d
+   CNrrwdNObcQJbGqDa/cYD+HmFtV6Lu8TWiZkh1B2s4+tnAGVfIpLjZE+X
+   g==;
+X-CSE-ConnectionGUID: GSVtVZq1TDSYB4VIQvo21w==
+X-CSE-MsgGUID: GqMlqT9lQz+MPfUpH8yqEA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11955"; a="2477727"
+X-IronPort-AV: E=Sophos;i="6.27,193,1787036400"; 
+   d="scan'208";a="2477727"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2026 07:46:50 -0800
+X-CSE-ConnectionGUID: lbPbrbHHR2SMaPhmD1QEiw==
+X-CSE-MsgGUID: FaEfT+8OQja0Qog+Bohbvw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,193,1787036400"; 
+   d="scan'208";a="6780341"
+Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2026 07:46:50 -0800
+Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.56; Tue, 3 Nov 2026 07:46:48 -0800
+Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
+ FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.56 via Frontend Transport; Tue, 3 Nov 2026 07:46:48 -0800
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (52.101.43.23) by
+ edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.56; Tue, 3 Nov 2026 07:46:48 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HzsemlkfhMwY61mK17aOXzu/Fx+ij+5lPTdjDXMBqc/BtviG8JiHSXrp7Dw++T//IxNEeuTxO0h9GKShLLreQLOKUWiRgxULNGZUCD+H26Hq+B0vGNDu8DDme4YSHYtbtOdtrObS3ceqSmjWJ+uzSv+BlSFdDkIxpOcXLCjXXTNYxlqUR8V/ga4/h9kQSEd0l1ZLLirA+FxET82WPqGWabsrYEOLPFWC7jp8j22oqly2T2xpDk5fzyD9v91NKEOKXifFpg8noohnTQxUj5/2oRO/LAXcVd41EmqCtSn7NZN4baaNrp/vDZqthb56D7f42sWlrzSSwUOp7sDq2+HaNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qVRTqzfaeVpKWt8kmwuMLd+abFPhafywgS2GXAiH+08=;
+ b=F1a24HTVZBzTIAIQXblrCDpCWdgqNBG9c03n3YOewnPgfPi58eJyqTqt6BNhUZRLtppobBTo2L8bAUf57mwnVf1jXSXLp0n8PSILwUrPlojMQjTRRt7+rDa/IIATe8QoL4PJTM5gekk3yjC9PoffKpJIdm2HmQjruv7rF7E4BzNpSWF8L013+iS2Ts6Xod1UXAhHvXnHRa3BYg/V+7lTx7HIuqgo9p+FX8P65Xis1LnVtbSXy9ZRATNMTT9nKkBnno3PluMzT5seNEBGucX7JPDS1m8cOhg1fnhuChRfyjRJ74pyqTbtxif/Modc6Gqj1rANfVELlVO5p1Dkg+nOiw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from IA1PR11MB7198.namprd11.prod.outlook.com (2603:10b6:208:419::15)
+ by SJ0PR11MB5213.namprd11.prod.outlook.com (2603:10b6:a03:2da::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.569.12; Tue, 3 Nov
+ 2026 15:46:40 +0000
+Received: from IA1PR11MB7198.namprd11.prod.outlook.com
+ ([fe80::2c4e:e92a:4fa:a456]) by IA1PR11MB7198.namprd11.prod.outlook.com
+ ([fe80::2c4e:e92a:4fa:a456%3]) with mapi id 15.21.0569.011; Tue, 3 Nov 2026
+ 15:46:40 +0000
+Message-ID: <2d6105b4-bd75-41b5-a7b2-da91bda31350@intel.com>
+Date: Tue, 3 Nov 2026 17:46:32 +0200
+User-Agent: Mozilla Thunderbird
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH 1/6] irq_work: Re-raise pending irq_work after system
+ resume
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>,
+	"Thomas Gleixner" <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
+	<hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek
+	<pavel@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Danilo
+ Krummrich" <dakr@kernel.org>, Johan Hovold <johan@kernel.org>, "Mathieu
+ Desnoyers" <mathieu.desnoyers@efficios.com>, Jiayuan Chen
+	<jiayuan.chen@linux.dev>, "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	"Vineeth Pillai (Google)" <vineeth@bitbyteword.org>, Frederic Weisbecker
+	<frederic@kernel.org>, Andi Kleen <ak@linux.intel.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, <driver-core@lists.linux.dev>
+References: <20261102074039.26983-1-adrian.hunter@intel.com>
+ <20261102074039.26983-2-adrian.hunter@intel.com>
+ <20261102090604.GR1779021@noisy.programming.kicks-ass.net>
+ <74511f6b-f5ff-498f-bf97-ebdc86c43d24@intel.com>
+ <20261102163937.KwllF-Pg@linutronix.de>
+Content-Language: en-US
+Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
+ 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
+ 4, Domiciled in Helsinki
+In-Reply-To: <20261102163937.KwllF-Pg@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DB9PR05CA0001.eurprd05.prod.outlook.com
+ (2603:10a6:10:1da::6) To IA1PR11MB7198.namprd11.prod.outlook.com
+ (2603:10b6:208:419::15)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -105,262 +156,157 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261102-perf-alpha-profileme-v3-0-4bf6e1dda733@gmail.com> <20261102-perf-alpha-profileme-v3-2-4bf6e1dda733@gmail.com>
-In-Reply-To: <20261102-perf-alpha-profileme-v3-2-4bf6e1dda733@gmail.com>
-From: Magnus Lindholm <linmag7@gmail.com>
-Date: Tue, 3 Nov 2026 16:12:44 +0100
-X-Gm-Features: AclHuK-5MktQVkWH25f7cHD8D0vNLr-mwxWg2ZtpgvT0msziqP_pJU8QaFNmgoE
-Message-ID: <CA+=Fv5QxqE08ZE+FWUhp44=bNypEpqx_JYZH3ELzu+nMD1HpbA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] perf python: Add alpha-profileme.py
-To: Matt Turner <mattst88@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-alpha@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR11MB7198:EE_|SJ0PR11MB5213:EE_
+X-MS-Office365-Filtering-Correlation-Id: 714c4603-e174-4fef-1f07-08df39c1a6f1
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|23010399003|6133799003|22082099003|18002099003|56012099006|261102123227099003|261009223027099003|261022075727099003|261021121427099003|261021123027099003|261022105027099003|11063799006|10067099003|4143699003|261028144727099003|261026140227099003|261026121527099003;
+X-Microsoft-Antispam-Message-Info: h4nf7Fny4p0ijY+7U8B5cbiCt/cehuu3TitdAe/Ey4PJBr+jJi4P/NqSt9rIieX5kW61xiCW2/66WliYlKqpeW+n5p/i+EesEpTPvm6hj9eYrvh4JVDSM1GnD5436CVotmUoNdioarDcyjQ3w12fQVqj7uujxDZY5yybUxp3ZwgLRZwbvwCVYa4wUChnBrdhC8iEhayd0xGEuRqCnq/Dt5UmgH3b6TTD3/H88oIlLWwEufKL39dVdOpU9KXLgUnQ6GEO25D3uZziYNecc4ByBPzgTUnAD363tbErVL/jNa0THM1SUPcz19cW3BpX91VpPDJlzyaIq5B2Oqvau9/Hyn958mUBD0s+gWH3fFn0T63pfph42zLn1blrUaWF+QYPy87Z2OLnsnGq8z/COMyCUJKBXY6Ln9couzhn9IhmtpZJ+PQ2d7DrdenPnUallWBpF+7IfjZgxiaPoAAVS0J4+9ujyhE3MXmbmiDNpOCMvKmbMMSYcAA/v/Srg5FvRzaDJIlmM7iUZk+C1K+EL7Qerz7Bdgul7Tjunuv3nDjm8aTbXyNunEo6M69c6t83bk4SeV+BAErIAnp5mWXTNUImMv5P1M0kESK9+ue0+xhB3GGMR01mEKVjxYjeBPMbn6Tps/cQYL3pV5/2iCOdSgiOjep7vQwyTt8UmBefSIXXgmM=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB7198.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(23010399003)(6133799003)(22082099003)(18002099003)(56012099006)(261102123227099003)(261009223027099003)(261022075727099003)(261021121427099003)(261021123027099003)(261022105027099003)(11063799006)(10067099003)(4143699003)(261028144727099003)(261026140227099003)(261026121527099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RFpYWnl2WUhLSVlMaXMxeVdaeXV0c3RZeFp1d0N4RFI3QnNJbTFzL2N3cmJp?=
+ =?utf-8?B?Tlh1Q1dLRXlUd0I2U3dOUU5VQmEzbjZzcXVtQS9FQU42TjBmWk52OHVhOU4v?=
+ =?utf-8?B?dlppUUVieWdVQ3BMT09uL3Z4cmVPLzQ4L215UFZ5Zmw0N3pIemx1bjNpR0Zs?=
+ =?utf-8?B?NndQV1ZMTU5JYjM4amFUSHk3ZFlNKzJGNWp4bVVFRThhc29NdVFidGhoWllQ?=
+ =?utf-8?B?VGgvN2pMTTBxWXBYdjBXYjhnUWZTektWSVYvdWRyY01ua2x5Z3R0VjAvcFJm?=
+ =?utf-8?B?N0tVZnpRTThCQjloQldzTnVyRFVFL1Fxb1Y4UDEyZnF3NlNIczYzN0cvdlJ1?=
+ =?utf-8?B?c0ZWSjJuNmIxMGkxREFBUUUwSmdsV29iUkZVdkhWQzlZSmZaVG5ZcmFYUEFz?=
+ =?utf-8?B?R0RiUE1RMDR1V3VLUTJmLzhScFFMM2ZWa3ZYbmI2RXhNYTZKLzJ1Y09mTHdX?=
+ =?utf-8?B?c09YejlnNWRsYUhtbFNubFZoSW9qa1JhY1N2RHdHb2tSSzdlSHRzSTl0T3FB?=
+ =?utf-8?B?MStmRjdLT0pFaXBjVHFxSHB6TW5sQU1XT3ZSMEJjY1hzWFU2ZGdPNjZpZzB1?=
+ =?utf-8?B?ckJWZDFNaG4yVFpIem5JSWQvRGtNaHZCZ2hRamQzdVRrSy9naGJFUis5UWs3?=
+ =?utf-8?B?NWcxb3pYV0lHL0NCS3JORTRSOVZHTGZEeVVNV2ZuNWN0TWhpTGFrTmdkV2Rv?=
+ =?utf-8?B?ZmJ6c0hhcnIvZFV2QTdIMWIyTWZ1V0VGNjkwaDV2RyttbzlJVlpBc3Y1dVUx?=
+ =?utf-8?B?QkRvRktBNlZBOGQxSGRsd2JjaytnOXUvcThIeGEyOTc4OWJKemNUbUpJNjVv?=
+ =?utf-8?B?alpFT3RQVFJZd1dkSFZ5UlRmdDkwSElBZ3BxSE0ybkVCSjVnR01xRVF6RTRw?=
+ =?utf-8?B?bmhGSDNkd0Exb2Y0YjY1RENqcTZFL3c2OG1pMzB1alltZC95YUs4dDNPRE8w?=
+ =?utf-8?B?UHJsSUlqWEdzY0VXZ0wrYWx0aEt0VGVGM25ocFJnSENGdzh4S2UxdGVETlVj?=
+ =?utf-8?B?RjIvU2tEWGxwWGlMUE1Oc0M0QktqeTA2MUtYcXdxei92L1pXOS9kUDhPbWJL?=
+ =?utf-8?B?UUYzY2JhUm5vR1NnaW5PaThDb0p4Mm9pWWtsaS8rMWcvRHlDanpwdkJ0L3Q2?=
+ =?utf-8?B?cHBrbHBKTGUxd2dLTWhKcm10bXJ4R2M5VGJOaGZnOW5NYm1XV1dPRTlnaFFt?=
+ =?utf-8?B?cDdWZWFuNFR4dGdPRTlJOER2eXE1S29OelVjRjM1b2JoZWpVWjFuT0M3a3Uy?=
+ =?utf-8?B?aTZRbzV1VXJBYlYvbGdLMU9ob3ZZbW5Kc080bHNHN2ViWFdqR2NDNnc0cUM5?=
+ =?utf-8?B?NE9UYkRvalRuVzVvQTA2SGZIZHpjVEVBODhocW51TFc1QzBGTWs2d2NkMC9H?=
+ =?utf-8?B?QkJ4Tnp1ZTJIY0luLzlPNFBtb0R5cXUxSXJmL2FkQjhZWTNMWHFIVWlXb0NK?=
+ =?utf-8?B?WGFsMjJUMkpSMXROV0RlZ0ZCK04vQVpTODA2ZHFtMUVxRFpaZ2p2Q1U5SWZ5?=
+ =?utf-8?B?dVkwSXRyNUdpcTcySnpjbmJ4UnQ4RWNFcU9wQ1J3THZzc0YxVkZWUTZQUDVa?=
+ =?utf-8?B?M3k5RTE1L0dHTVNlS2FsRHN5dzcwazFoQ2Jod2g3d2d0Rk9SRkpvbjFza2RB?=
+ =?utf-8?B?SG56NitXbmovTWc5SGhyMjhURjd6dXJ3U1RETTZLS0s1ZVNsMWJwb1o2b0R1?=
+ =?utf-8?B?OEswMlZ3bVRVSUtjY1FDVlZybVprVCsrWVRqd2pMWkRkT3dsZldBWk81U2pz?=
+ =?utf-8?B?NjlwVytoUDQrMlhObXdoQlR4N2o5QVlEc1IyQjRmVUhRUzgwUURBQ0hKdWRN?=
+ =?utf-8?B?YlBsNVdsQzMwU2pKUkcxYVZPWDhkQURJR0E4U2lYL00wTkVIRnNCWVNTWGNB?=
+ =?utf-8?B?K0Q2a2NLZ2ZSZGczUlFDNUdheHJBcyt4V2s5SlYzdEpPWXA4Y3BMd1d3aFZW?=
+ =?utf-8?B?emJYVmFXWklNeFhoZUU5YndiRjdJRzQ2WDVMazFsandYMXVlMTNMc2NtOEZs?=
+ =?utf-8?B?STlVbGIwMXVUWWZHK3hKTFhBTkRwYVJ6WVlvdC9MTHRCb05KUUQzMzZYYjFq?=
+ =?utf-8?B?VFgrdnNBeVlhYldON2pGWC9CS0ROTXMxTmk3ampoSE02MXczNVc5Y2VNVCtr?=
+ =?utf-8?B?dU1aaVF5RFQybDFGRDNDM2xKOS9YbmU3YVZtdjM3RkR1TUpVV2JlUjc2WmRJ?=
+ =?utf-8?B?NDlNRW42T2J1SExlTkxJKzZvdXVIUGFNODBIZVUzczhnRWcvNEx4ckJScHJY?=
+ =?utf-8?B?Y1YzcEpZUTdpblRrVHhFdy9WNndPTlNxMVRaVGRNdVBNRzhORnYzU0Znd3dF?=
+ =?utf-8?B?OU55RmFhVUlSM0dhQ3VSSFF5c0t2Znhnc3JQaHFucW12ODI1WlYwMnpHd0wr?=
+ =?utf-8?Q?UeeUEn6rTUjejrZc=3D?=
+X-Exchange-RoutingPolicyChecked: 0yI3Bw7y2fRZ3Y0XhpUnRpIU5GvUlEDww1x6uXRkCd2bpGvT1ACIcE/XJ+PwKXYLIR+KvboReKL9Jk0mBA/sPmaSPNFat095v9gtpwKSo+Hnm65aLDrTabeWi2jccYEu5gyfQSF/8nfU2jplYuf7wuA012Sdp1gu8RK/VN3HPW92wnAAQnvpJWdw/iiMs5h6+uyq4Ucq191yjIYeThwMFrZRJxVIuXtAHWIRyieC5DUndAkHfzKXNhZvktIyInlhO8Qs3vK4kEpt7nxpwSuV+Yo0vjoPNIRCrvJBicRr/uCvVS0eDNNyVAo8kmsZMI4yjZz61U2m3d0xFu6DEMwiqw==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 714c4603-e174-4fef-1f07-08df39c1a6f1
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB7198.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2026 15:46:40.4310
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vn+hlKZk2WzHfBsLgk0R9unwMkQODuomvZAepCPxzQZQuFxx71B/cYEROzFlb1Gdx9voCEo3TeA445SLJKAK8w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5213
+X-OriginatorOrg: intel.com
 
-Hi Matt,
+On 02/11/2026 18:39, Sebastian Andrzej Siewior wrote:
+> On 2026-11-02 12:54:22 [+0200], Adrian Hunter wrote:
+>>
+>> Yes CPUs remain online for suspend2idle, but currently the choice between
+>> suspend2idle and "deep" (S3) suspend is a user space choice,
+>> refer /sys/power/mem_sleep.  Many modern systems do not support S3
+>> anymore, but it has not gone away.
+>>
+>>>
+>>> Anyway, I'm torn; I would much rather make this trigger a WARN and have
+>>
+>> AI now also identifies ftrace, BPF, GHES NMI, and #MC as possible causes,
+>> not just perf.  I haven't tried to confirm any of those.
+>>
+>> And, belatedly, AI is now saying an irq_work raised before lapic_resume()
+>> might result in #GP if the APIC is left in xAPIC mode at resume.  Also
+>> not confirmed.
+> 
+> Could we flush this before similarly to what happens during CPU-hotplug.
+> The question is if this event can stay enqueued during suspend (and
+> handled on resume) or should be taken care before entering suspend.
 
-On Tue, Nov 3, 2026 at 3:19=E2=80=AFAM Matt Turner <mattst88@gmail.com> wro=
-te:
->
-> perf report shows where Alpha ProfileMe samples land but cannot
-> aggregate the raw status attached to them.
->
-> Add a standalone script, using the perf Python module, that summarizes
-> it by symbol or, with --pc, by instruction, in the style of DCPI: the
-> fraction of samples killed on a wrong path, not retired, mispredicted,
-> taken or stalled, the mean PCTR1 window count, and trap counts by type.
-> Mispredict and trap types are only counted when I_STAT[TRP] is set,
-> since they are stale otherwise. Redirect traps are counted by their
-> PALcode entry offset in PMPC.
->
-> Raw data is only read from cpu PMU events, as a tracepoint's payload can
-> pass for ProfileMe status. Rows are kept apart by PCTR_CTL[SL1], as a
-> mean over two things PCTR1 can count means nothing.
->
-> On an EV7, sampling a loop whose branch tests random data reports that
-> branch mispredicted in 21% of its samples, and 0% with sorted data.
->
-> Signed-off-by: Matt Turner <mattst88@gmail.com>
-> ---
->  tools/perf/python/alpha-profileme.py | 172 +++++++++++++++++++++++++++++=
-++++++
->  1 file changed, 172 insertions(+)
->
-> diff --git a/tools/perf/python/alpha-profileme.py b/tools/perf/python/alp=
-ha-profileme.py
-> new file mode 100755
-> index 000000000000..366b288c6e1b
-> --- /dev/null
-> +++ b/tools/perf/python/alpha-profileme.py
-> @@ -0,0 +1,172 @@
-> +#!/usr/bin/env python3
-> +# SPDX-License-Identifier: GPL-2.0
-> +"""Summarize Alpha ProfileMe samples.
-> +
-> +Aggregates the ProfileMe status that the Alpha cpu PMU attaches to each
-> +sample as PERF_SAMPLE_RAW data, by symbol or, with --pc, by instruction.
-> +
-> +Record with raw data, e.g.:
-> +  perf record -R -e instructions:p -- ./workload
-> +  alpha-profileme.py [-i perf.data] [--pc] [--top N]
-> +
-> +Columns:
-> +  samples   ProfileMe samples attributed to the row
-> +  killed%   profiled instruction killed before it was mapped (PM_KILLED_=
-BM)
-> +  invalid%  instruction did not trap and did not retire valid (VAL clear=
-)
-> +  mispr%    conditional branch mispredicted (TRP and MIS)
-> +  taken%    TAK set; only meaningful for rows that are conditional branc=
-hes
-> +  stall%    instruction stalled between fetch and map (PM_STALLED)
-> +  pctr1     mean PCTR1 count during the window; what it counts depends o=
-n
-> +            the event: inum retire delay for cycles:p, window cycles for
-> +            instructions:p, Bcache misses for bcache-misses:p and Mbox
-> +            replay traps for cpu/mbox-replay/p
-> +  traps     trap counts by type, only for samples with TRP set
-> +
-> +Samples from events that set PCTR1 to count different things are printed
-> +in separate tables, as their means cannot be compared.
-> +"""
-> +from __future__ import annotations
-> +
-> +import argparse
-> +from collections import defaultdict
-> +import struct
-> +import sys
-> +from typing import Optional
-> +import perf
-> +
-> +TRAP_TYPES =3D {
-> +    0: "replay", 2: "dtb2-3l", 3: "dtb2-4l", 4: "fen", 5: "unalign",
-> +    6: "dtb1", 7: "dfault", 8: "opcdec", 10: "mchk", 12: "arith",
-> +    14: "mt_fpcr", 15: "reset",
-> +}
-> +REDIRECTS =3D {0x481: "iacv", 0x581: "itbmiss", 0x681: "intr"}
-> +PCTR1_NAMES =3D ("cycles", "retire delay", "bcache misses", "mbox replay=
-s")
-> +SAMPLE =3D struct.Struct("<IQQQ")
-> +
-> +
-> +class Row:
-> +    """ProfileMe status totals for one symbol or instruction."""
-> +    def __init__(self) -> None:
-> +        self.samples =3D 0
-> +        self.killed =3D 0
-> +        self.invalid =3D 0
-> +        self.mispredict =3D 0
-> +        self.taken =3D 0
-> +        self.stalled =3D 0
-> +        self.pctr1 =3D 0
-> +        self.traps: dict[str, int] =3D defaultdict(int)
-> +
-> +
-> +def pct(n: int, d: int) -> float:
-> +    """Return n as a percentage of d."""
-> +    return 100.0 * n / d if d else 0.0
-> +
-> +
-> +class ProfileMe:
-> +    """Aggregates ProfileMe raw sample data."""
-> +    def __init__(self, by_pc: bool, top: int) -> None:
-> +        self.by_pc =3D by_pc
-> +        self.top =3D top
-> +        # Keyed by PCTR_CTL[SL1], which sets what PCTR1 counts.
-> +        self.tables: dict[int, dict[str, Row]] =3D defaultdict(lambda: d=
-efaultdict(Row))
-> +        self.skipped =3D 0
-> +        self.session: Optional[perf.session] =3D None
-> +
-> +    def process_event(self, sample: perf.sample_event) -> None:
-> +        """Add one sample's ProfileMe status to its row."""
-> +        raw =3D sample.raw_buf
-> +        # Raw data from another PMU or a tracepoint is not ProfileMe sta=
-tus.
-> +        if (sample.evsel.type not in (perf.TYPE_HARDWARE, perf.TYPE_RAW)=
- or
-> +                not raw or len(raw) < SAMPLE.size):
-> +            self.skipped +=3D 1
-> +            return
-> +        version, pmpc, i_stat, ctl =3D SAMPLE.unpack_from(raw)
-> +        if version < 1:
-> +            self.skipped +=3D 1
-> +            return
-> +
-> +        symbol =3D sample.symbol or "[unknown]"
-> +        if self.by_pc:
-> +            if pmpc & 1:
-> +                key =3D f"PAL+{pmpc & 0x7fff:#x}"
-> +            else:
-> +                key =3D f"{pmpc & ~3:#018x} {symbol}"
-> +        else:
-> +            key =3D f"{sample.dso or '[unknown]'} {symbol}"
-> +
-> +        r =3D self.tables[(ctl >> 2) & 3][key]
-> +        r.samples +=3D 1
-> +        trp =3D (i_stat >> 39) & 1
-> +        if (ctl >> 26) & 1:
-> +            r.killed +=3D 1
-> +        if not trp and not (ctl >> 1) & 1:
-> +            r.invalid +=3D 1
-> +        if ctl & 1:
-> +            r.taken +=3D 1
-> +        if (ctl >> 27) & 1:
-> +            r.stalled +=3D 1
-> +        r.pctr1 +=3D (ctl >> 6) & 0xfffff
-> +
-> +        redirect =3D REDIRECTS.get(pmpc & 0x7fff) if pmpc & 1 else None
-> +        if redirect:
-> +            r.traps[redirect] +=3D 1
-> +        elif trp:
-> +            if (i_stat >> 40) & 1:
-> +                r.mispredict +=3D 1
-> +            else:
-> +                tt =3D (i_stat >> 34) & 0xf
-> +                r.traps[TRAP_TYPES.get(tt, "other")] +=3D 1
-> +
-> +    def print_totals(self) -> None:
-> +        """Print the busiest rows of each table."""
-> +        total =3D sum(r.samples for rows in self.tables.values() for r i=
-n rows.values())
-> +        print(f"{total} ProfileMe samples, {self.skipped} without Profil=
-eMe data")
-> +        for sl1, rows in sorted(self.tables.items()):
-> +            print(f"\npctr1 counts {PCTR1_NAMES[sl1]}:")
-> +            self.print_table(rows)
-> +
-> +    def print_table(self, rows: dict[str, Row]) -> None:
-> +        """Print the busiest rows of one table."""
-> +        print(f"{'samples':>8} {'killed%':>7} {'invalid%':>8} {'mispr%':=
->6} "
-> +              f"{'taken%':>7} {'stall%':>6} {'pctr1':>7}  {'location':<4=
-0} traps")
-> +        ordered =3D sorted(rows.items(), key=3Dlambda kv: kv[1].samples,=
- reverse=3DTrue)
-> +        for key, r in ordered[:self.top]:
-> +            traps =3D " ".join(f"{k}=3D{v}" for k, v in
-> +                             sorted(r.traps.items(), key=3Dlambda kv: -k=
-v[1]))
-> +            print(f"{r.samples:8d} {pct(r.killed, r.samples):7.1f} "
-> +                  f"{pct(r.invalid, r.samples):8.1f} "
-> +                  f"{pct(r.mispredict, r.samples):6.1f} "
-> +                  f"{pct(r.taken, r.samples):7.1f} "
-> +                  f"{pct(r.stalled, r.samples):6.1f} "
-> +                  f"{r.pctr1 / r.samples:7.1f}  {key:<40} {traps}")
-> +
-> +    def run(self, input_file: str) -> None:
-> +        """Run the session."""
-> +        self.session =3D perf.session(perf.data(input_file), sample=3Dse=
-lf.process_event)
-> +        try:
-> +            self.session.process_events()
-> +        finally:
-> +            # Break the reference cycle between perf.session and self.pr=
-ocess_event
-> +            # because perf.session lacks cyclic GC support (tp_traverse)=
-.
-> +            self.session =3D None
-> +        self.print_totals()
-> +
-> +
-> +def main() -> None:
-> +    """Main function."""
-> +    parser =3D argparse.ArgumentParser(description=3D"Summarize Alpha Pr=
-ofileMe samples")
-> +    parser.add_argument("-i", "--input", default=3D"perf.data", help=3D"=
-Input file")
-> +    parser.add_argument("--pc", action=3D"store_true", help=3D"aggregate=
- by instruction")
-> +    parser.add_argument("--top", type=3Dint, default=3D30, help=3D"rows =
-to print")
-> +    args =3D parser.parse_args()
-> +
-> +    analyzer =3D ProfileMe(args.pc, args.top)
-> +    try:
-> +        analyzer.run(args.input)
-> +    except IOError as e:
-> +        print(e, file=3Dsys.stderr)
-> +        sys.exit(1)
-> +
-> +
-> +if __name__ =3D=3D "__main__":
-> +    main()
->
-> --
-> 2.55.0
->
+WRT "might result in #GP if the APIC is left in xAPIC mode at resume",
+the systems I have checked restore the APIC in x2APIC mode, so the
+issue is theoretical at this point, although I can get "unchecked MSR
+access error: WRMSR to 0x83f" if I deliberately add code to change
+x2APIC to xAPIC early in S3 wake (in x86_acpi_suspend_lowlevel()),
+and then do:
 
-I tested alpha-profileme.py with fresh ES40 recordings. It kept
-window cycles and retire delay in separate tables, and it skipped
-the unrelated tracepoint payload in my test. I also decoded the
-ES40 recordings successfully on x86-64.
+  perf record -e power:suspend_resume --filter 'action == "machine_suspend" && start == 0' --no-buffering -C 0 -o /tmp/x.data &
+  rtcwake -m mem -s 10
 
-Reviewed-by: Magnus Lindholm <linmag7@gmail.com>
-Tested-by: Magnus Lindholm <linmag7@gmail.com>
+The error can be avoided with:
+
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index 08c9aa176c33..41f93586f22c 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -63,6 +63,7 @@ extern int apic_verbosity;
+ extern int local_apic_timer_c2_ok;
+ 
+ extern bool apic_is_disabled;
++extern bool lapic_suspended;
+ extern unsigned int lapic_timer_period;
+ 
+ extern enum apic_intr_mode_id apic_intr_mode;
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 40fa7bc7fb97..187cbfad0d76 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -2385,6 +2385,8 @@ void __init up_late_init(void)
+ }
+ #endif
+ 
++bool lapic_suspended;
++
+ /*
+  * Power management
+  */
+@@ -2454,6 +2456,8 @@ static int lapic_suspend(void *data)
+ 	 */
+ 	mask_ioapic_entries();
+ 
++	WRITE_ONCE(lapic_suspended, true);
++
+ 	disable_local_APIC();
+ 
+ 	irq_remapping_disable();
+@@ -2534,6 +2538,8 @@ static void lapic_resume(void *data)
+ 
+ 	irq_remapping_reenable(x2apic_mode);
+ 
++	WRITE_ONCE(lapic_suspended, false);
++
+ 	local_irq_restore(flags);
+ }
+ 
+diff --git a/arch/x86/kernel/irq_work.c b/arch/x86/kernel/irq_work.c
+index 308c62411ff4..32386b7cf84e 100644
+--- a/arch/x86/kernel/irq_work.c
++++ b/arch/x86/kernel/irq_work.c
+@@ -25,7 +25,7 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_irq_work)
+ 
+ void arch_irq_work_raise(void)
+ {
+-	if (!arch_irq_work_has_interrupt())
++	if (!arch_irq_work_has_interrupt() || READ_ONCE(lapic_suspended))
+ 		return;
+ 
+ 	__apic_send_IPI_self(IRQ_WORK_VECTOR);
+
