@@ -1,73 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.197
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793749530;
-	b=opmSIOQxMbZvz7iuDjnnH/6O5CJkArHhxtxBbHIvcTbTo7UPG3K2WBB3KWU2Z5pb9Yk1
-	 i8GMy6vaj7V8DM2FqCLmsGMySO9v8Cdygg3yvF7fG7yZNItRnIlYT4IGl/4LLghOfWxeu
-	 Jl5Ksrn6+XnAthcBJ2x1eD+QRNY9iTaGPGtkaI3zOD1ni5Fll3/2+BizjL5TW5cex2mEy
-	 g0r/psO4hcn3nlrxPXYzxT3fd2iP00mIQZOiQAVCj12JTG9cLZ3PI2FSsABAqwYrBzAzz
-	 QN8yQP7M25hXPTNbo49hvNSqWWAtG1PKDD6iuxGDY+IW2ltUs+TZwAz4ve4IvOpOMAg==
+	t=1793749533;
+	b=zRkiQbz+1GY/nh3dEzHRRzeC/d8d3YekNAE3lyjwvOjihISCIGnieqGtFbR45XGBoD0Z
+	 ZNVOFtnUPBVhzdpunMIGKCkC2UUfJrYD4olgxZeoHGoEY/icE1eeeRe0I4a7do173lOYx
+	 MQUI70mwSc9H07+MgSQlnGtKYuvqMfz7eHiFQO0sbp1FOxvYF4NGU0ZEojnTsG/Qn2NqP
+	 c+tYnfGWaOPHnvaYg5j+B0qXGBi1JIqFf1XDqfLEcbvXWkcR+lT3N5QPC9xB68zkXhl17
+	 qCBauGtTqhyr41rvBbgHiIlLArTbeFMTKEiXwlJ4zCDZgqf4KgR7FTng/EhIs0Ir6uQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793749530;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793749533;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Received:Date:In-Reply-To:Mime-Version:
 	 References:X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=AKexw+Mj1QakEDgc+N/XalBajnVlsS7U5es63W8TH0A=;
-	b=HLSTovclNWD70Fd1TtXBQIvQkOrrXekGlDv4+1nrACtPlNzO0PTlJIKHevMlKm0DsFEb
-	 XJXW3Ngpn6BbOhq/F0YVQVeptzwSIGoBkYkzQOHsFjTSE6t/1Cvyh2f//PK62ZnFqXqN2
-	 f8KYoU0Y5RxCHDkGJv5/W3GH2XTxkM5EYlz2l50ZgV3uUSh9uDsIzp1oq5eL6qSw7Ozt8
-	 9hWmjeOg/Xs9M8e1ANWzzsEtqJY0jJJSANNG1zgA4DL8Hos/zXV3Ca1P8bSkZF3v9hUpA
-	 C0aFX/KFktW//SBm1hvlgj2MpSKaMqKS8y1kbnysmbuexWm5qcLUmT+MtiJqZDtShrA==
+	bh=jgxath3DaewnC859JwTcZnpPJdToW6STPcBiaa1iIoQ=;
+	b=Ibb2aEaOJe86tyJl5qIIxqcJCZJ6ucws28L6Gqh976DcFSvQwRLCI5kHW+nJAyOcLxYi
+	 FHE4SJ3YaFNO3O2VbF9SY+FJT3GtVTZlJx4NzFDAt/8DrFCN2kBGRINQrCGXOkMwlTJif
+	 Vt5ErLkkPTDQeJDYb4kBYZFk4T0L3A56zmISCJFZ9RJXxoE3xvCykYgQ7DDN7hwBVOZQ2
+	 4Qxe8YtH433ZMjOJciF+UBcDi+ZNwFhjSVcLkBh+EdFrdizPWNfkTo64SypXNiI6htObT
+	 SLMOHzAhFbRPou28DX6NV9FMkf81FTIVILIvgtDKH8f7e3YZwvIVDqSr8+h13lTQIqQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="Y/3PSHpI";
-	arc=none smtp.remote-ip=74.125.82.197
-Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=N1giGkl+;
+	arc=none smtp.remote-ip=74.125.82.198
+Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22CBE606A328
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 23:45:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 22CBE606A328
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD470606D83E
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 23:45:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BD470606D83E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Y/3PSHpI
-Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-351788121cfso430605eec.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2026 15:45:29 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=N1giGkl+
+Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-36a190c53a3so96699eec.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2026 15:45:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793749529; x=1794354329; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1793749532; x=1794354332; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=AKexw+Mj1QakEDgc+N/XalBajnVlsS7U5es63W8TH0A=;
-        b=Y/3PSHpIkdIlczEhiIytyplFetemnMYv++96KzwQrUvw15H0SsQniwDsGHFLfPfbzi
-         Rxaa6DwswudOOfZE7T1bINUtMsMLXMUiv7AHsPFbUiIYd7D1B2H9lWpM4Vzu0MVkC3YG
-         tgjGitOERP1wGQAKuqETDMLq4DbFay+1ugS4PdQQ0aDBjbrpYTEnlbBdNWQ1HLQGr3Pk
-         e3baMFbBnVwscQqqm2m7tp915Utc8DQD6aNa2YncwGzUkeya7iTYFLARUC0IIBLx6SxP
-         QNBkhNtkWFpQozZ0F4UQgc+5pa2pE+2KIsoqnPRBzmbYn+Y/ND39Tq4j7BF1JubJTuZo
-         N9Kw==
+        bh=jgxath3DaewnC859JwTcZnpPJdToW6STPcBiaa1iIoQ=;
+        b=N1giGkl+IVNogjAdFrIYIQH2o+zsKpzh5UGqYTY4ORTlvUE+n+ijpqTPrEY9CAUCn0
+         7LXl1ZcVY7jzJvetRnd8YWN6MXvPW9n/TG9oeBYbrI0WK0FlYt0yhBgsR8dNCIpsuRYn
+         E6R6xo5Qf+gN1hoBsqdj5WiBiY1Vq5gy37A/ARv5EBqghbGDrJBMAgzipwsoahl/0VHl
+         UAbKiI1awnssGKV++L/UV3FZAzIRkugJjmhJ+Q/KL5rWZst3kGrJoYaKFDqIoEd2Dxps
+         r+p6SghxAFoNwcwzTntcyb2TYJjeMEu1DTSyDfUnSdSTBo3XNXF5TJizR1TNVaGAerXi
+         gwHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793749529; x=1794354329;
+        d=1e100.net; s=20260707; t=1793749532; x=1794354332;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=AKexw+Mj1QakEDgc+N/XalBajnVlsS7U5es63W8TH0A=;
-        b=iIh60gQM2SqOmhx/H6N253jJ/tDV9vvmhDK/r1nPuhv5WAPx4cQTjwBNxKyRVVU/mr
-         mpd5Px0nOGjyGv0XJl2ikJzF4XyggKyPg21DLPClRxI7jwniakXAhteW2n13I8LelglZ
-         6o8wIA9iX9tbO8C2Ythu5rH0SEX/rPtvIg53fI01d7qnxVa0ROzYzImGuRH0HuMqeK06
-         D0O84ZQPDHtLX9COmvbEDRbhgyM2l970BpNdYdLOBMQ+uQjYnGpSIhDuhkf5bfZBFmO4
-         YxZZSXVHHEmf0dlTTY1eTETDw3e7USF08vDtXGcDXYFHluTmmLrhZbW8Ds4yUfWSoejR
-         m5IA==
-X-Gm-Message-State: APuU4Z/7zf8m6bF92lpYb8MJ4fQLv7g+1LaSuejCvLoSDJRMe9qPKce9
-	rQvEfFamKmECpVEbeTMM16dwLS8KTXdj5/JxcNL0PXGMuruP9jZWvR+G0NNz3BHZHMROyBcB+NF
-	t4oNBH/aWImfkVte3Kybp+Hk8h1OoDj88TnaZbpT5AciKTiGxxHnFJm7vTPHrv7oBDGc5KomJWm
-	a2kk4jCLTCCVVhXsDV3PAWvzYrIPGfAOdEW3Cq7IJzBJzleK32sbV0QyU=
-X-Received: from dyay14.prod.google.com ([2002:a05:693c:62ce:b0:368:6c42:2a6])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:824b:b0:36a:1c75:8ca3
- with SMTP id 5a478bee46e88-36a4221b3b9mr20254819eec.1.1793749528636; Tue, 03
- Nov 2026 15:45:28 -0800 (PST)
-Date: Tue,  3 Nov 2026 15:44:24 -0800
+        bh=jgxath3DaewnC859JwTcZnpPJdToW6STPcBiaa1iIoQ=;
+        b=Nwv7aQ0jc29K+vFwLD9ycOHpaLN2azA9PAYhnxPNhW9Xv14faNihtdRGyIGWiKdvfr
+         XDwMK8dDtc0xPTxyjONLhUL8G2/B3tbvYxMMO9Y677Qn3QqXcMrSpfGk7PPpAAS9FdD3
+         rF8kIvdE0vi3rMyjmsn7HO3FkLsDllHx45FVclreIxo0cM7teoaCEAWzcIV2Jg3vslgf
+         XvaYd7JtierpJE+/hA5DINR1USXHp57rH6+WJGpp7Y1UQPh2nAJlXHyCfF2UXkRb2HeM
+         MSP5cmZU0CFjhTS77LFoaedsJxPbBlfzoam4X7YfsaYm2E/blm4AIEpGcUeESVWcrqTA
+         Mi3g==
+X-Gm-Message-State: APuU4Z8FNfdwgotNAydJ1miLcpOnvEyub2/SMG9Vxfrg5cCXG+aIo9zH
+	Hx3cY+z0dFtsbLXmu1ZYhH6stPxDB7BfxR90bKJPj/ZpqgnRDOY+GA815pgPVMt1xyCOK0dHdYE
+	zLdPcS/9bHcRFvJ/JRtMJ3k/o47nEwjzlh42kdWrfxW8LtmpzIpDEZyaAxF9zOD10a4LPptB90e
+	R0K8GVoaiTbJFG05NMhRzHMEePQ7RZ/ArBB4vIgJe4rzNxPz5rW747seA=
+X-Received: from dybvh12.prod.google.com ([2002:a05:7301:52cc:b0:369:f2ef:9f3d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:2ab4:b0:36c:a26f:83c4
+ with SMTP id 5a478bee46e88-36ca26f863cmr989923eec.13.1793749531311; Tue, 03
+ Nov 2026 15:45:31 -0800 (PST)
+Date: Tue,  3 Nov 2026 15:44:25 -0800
 In-Reply-To: <20261103234502.1008382-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -80,8 +80,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261103234502.1008382-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.385.gac671c819a-goog
-Message-ID: <20261103234502.1008382-9-irogers@google.com>
-Subject: [PATCH v1 08/41] perf pmu-events: Pass e_machine to find_core_*_table()
+Message-ID: <20261103234502.1008382-10-irogers@google.com>
+Subject: [PATCH v1 09/41] perf header: Pass e_machine to strcmp_cpuid_str()
 From: Ian Rogers <irogers@google.com>
 To: linux-perf-users@vger.kernel.org, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
@@ -96,221 +96,256 @@ Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
 	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-find_core_events_table() and find_core_metrics_table() found tables by
-an architecture name, such as from perf_env__arch(), that has to match
-the pmu-events architecture directory name, for example "riscv" rather
-than the "riscv64" from uname.
+The format of a CPUID depends on its architecture, but
+strcmp_cpuid_str() is only given the two CPUID strings and its
+architecture specific implementations assume the CPUIDs are for the
+architecture perf was built for.
 
-Instead find tables by the ELF machine of the CPUID's architecture,
-using the e_machine recorded in struct pmu_events_map. The test and
-common tables are found with EM_NONE.
+Pass the ELF machine of the CPUIDs' architecture to strcmp_cpuid_str()
+so that CPUIDs can be compared according to their architecture rather
+than the host's. The pmu-events tables pass their e_machine, comparisons
+with the host's CPUID pass EM_HOST and the arm64 CPUID matching test
+passes EM_AARCH64. The architecture specific implementations don't yet
+use the argument.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/empty-pmu-events.c | 10 ++++++----
- tools/perf/pmu-events/jevents.py         | 10 ++++++----
- tools/perf/pmu-events/pmu-events.h       |  9 +++++++--
- tools/perf/tests/expand-cgroup.c         |  3 ++-
- tools/perf/tests/parse-metric.c          |  3 ++-
- tools/perf/tests/pmu-events.c            |  7 ++++---
- tools/perf/util/tool_pmu.c               |  3 ++-
- 7 files changed, 29 insertions(+), 16 deletions(-)
+ tools/perf/arch/arm64/tests/cpuid-match.c | 17 +++++++++--------
+ tools/perf/arch/arm64/util/header.c       |  2 +-
+ tools/perf/arch/x86/util/header.c         |  2 +-
+ tools/perf/arch/x86/util/pmu.c            | 10 ++++++----
+ tools/perf/pmu-events/empty-pmu-events.c  |  6 +++---
+ tools/perf/pmu-events/jevents.py          |  6 +++---
+ tools/perf/util/expr.c                    |  3 ++-
+ tools/perf/util/header.c                  |  3 ++-
+ tools/perf/util/header.h                  |  6 +++++-
+ 9 files changed, 32 insertions(+), 23 deletions(-)
 
-diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
-index 7428ffd4d70c..eba5446520c4 100644
---- a/tools/perf/pmu-events/empty-pmu-events.c
-+++ b/tools/perf/pmu-events/empty-pmu-events.c
-@@ -5927,23 +5927,25 @@ const struct pmu_metrics_table *pmu_metrics_table__default(void)
- 	return NULL;
- }
- 
--const struct pmu_events_table *find_core_events_table(const char *arch, const char *cpuid)
-+const struct pmu_events_table *find_core_events_table(uint16_t e_machine, const char *cpuid)
- {
- 	for (const struct pmu_events_map *tables = &pmu_events_map[0];
- 	     tables->arch;
- 	     tables++) {
--		if (!strcmp(tables->arch, arch) && !strcmp_cpuid_str(tables->cpuid, cpuid))
-+		if (pmu_events_map__e_machine_matches(tables, e_machine) &&
-+		    !strcmp_cpuid_str(tables->cpuid, cpuid))
- 			return &tables->event_table;
- 	}
- 	return NULL;
- }
- 
--const struct pmu_metrics_table *find_core_metrics_table(const char *arch, const char *cpuid)
-+const struct pmu_metrics_table *find_core_metrics_table(uint16_t e_machine, const char *cpuid)
- {
- 	for (const struct pmu_events_map *tables = &pmu_events_map[0];
- 	     tables->arch;
- 	     tables++) {
--		if (!strcmp(tables->arch, arch) && !strcmp_cpuid_str(tables->cpuid, cpuid))
-+		if (pmu_events_map__e_machine_matches(tables, e_machine) &&
-+		    !strcmp_cpuid_str(tables->cpuid, cpuid))
- 			return &tables->metric_table;
- 	}
- 	return NULL;
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index db1b4749aec3..fc3de5fbda27 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -1345,23 +1345,25 @@ const struct pmu_metrics_table *pmu_metrics_table__default(void)
- \treturn NULL;
- }
- 
--const struct pmu_events_table *find_core_events_table(const char *arch, const char *cpuid)
-+const struct pmu_events_table *find_core_events_table(uint16_t e_machine, const char *cpuid)
- {
- \tfor (const struct pmu_events_map *tables = &pmu_events_map[0];
- \t     tables->arch;
- \t     tables++) {
--\t\tif (!strcmp(tables->arch, arch) && !strcmp_cpuid_str(tables->cpuid, cpuid))
-+\t\tif (pmu_events_map__e_machine_matches(tables, e_machine) &&
-+\t\t    !strcmp_cpuid_str(tables->cpuid, cpuid))
- \t\t\treturn &tables->event_table;
- \t}
- \treturn NULL;
- }
- 
--const struct pmu_metrics_table *find_core_metrics_table(const char *arch, const char *cpuid)
-+const struct pmu_metrics_table *find_core_metrics_table(uint16_t e_machine, const char *cpuid)
- {
- \tfor (const struct pmu_events_map *tables = &pmu_events_map[0];
- \t     tables->arch;
- \t     tables++) {
--\t\tif (!strcmp(tables->arch, arch) && !strcmp_cpuid_str(tables->cpuid, cpuid))
-+\t\tif (pmu_events_map__e_machine_matches(tables, e_machine) &&
-+\t\t    !strcmp_cpuid_str(tables->cpuid, cpuid))
- \t\t\treturn &tables->metric_table;
- \t}
- \treturn NULL;
-diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
-index cb55c9fbca43..c3f645c97ccd 100644
---- a/tools/perf/pmu-events/pmu-events.h
-+++ b/tools/perf/pmu-events/pmu-events.h
-@@ -4,6 +4,7 @@
- 
- #include <stdbool.h>
- #include <stddef.h>
-+#include <stdint.h>
- 
- struct perf_pmu;
- 
-@@ -134,8 +135,12 @@ const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
- const struct pmu_events_table *perf_pmu__default_core_events_table(void);
- const struct pmu_metrics_table *pmu_metrics_table__find(void);
- const struct pmu_metrics_table *pmu_metrics_table__default(void);
--const struct pmu_events_table *find_core_events_table(const char *arch, const char *cpuid);
--const struct pmu_metrics_table *find_core_metrics_table(const char *arch, const char *cpuid);
-+/*
-+ * Find the core events or metrics table for a CPUID of the architecture with
-+ * ELF machine @e_machine. The test and common tables use EM_NONE.
-+ */
-+const struct pmu_events_table *find_core_events_table(uint16_t e_machine, const char *cpuid);
-+const struct pmu_metrics_table *find_core_metrics_table(uint16_t e_machine, const char *cpuid);
- int pmu_for_each_core_event(pmu_event_iter_fn fn, void *data);
- int pmu_for_each_core_metric(pmu_metric_iter_fn fn, void *data);
- 
-diff --git a/tools/perf/tests/expand-cgroup.c b/tools/perf/tests/expand-cgroup.c
-index 04d62611766a..f5e092e8bb48 100644
---- a/tools/perf/tests/expand-cgroup.c
-+++ b/tools/perf/tests/expand-cgroup.c
-@@ -10,6 +10,7 @@
- #include "pfm.h"
- #include "target.h"
- #include <subcmd/parse-options.h>
-+#include <elf.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
-@@ -178,7 +179,7 @@ static int expand_metric_events(void)
- 	evlist = evlist__new();
- 	TEST_ASSERT_VAL("failed to get evlist", evlist);
- 
--	pme_test = find_core_metrics_table("testarch", "testcpu");
-+	pme_test = find_core_metrics_table(EM_NONE, "testcpu");
- 	ret = metricgroup__parse_groups_test(evlist, pme_test, metric_str,
- 					     /*cputype_filter=*/false);
- 	if (ret < 0) {
-diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
-index 872d9a7aa72f..6f91e64a4123 100644
---- a/tools/perf/tests/parse-metric.c
-+++ b/tools/perf/tests/parse-metric.c
+diff --git a/tools/perf/arch/arm64/tests/cpuid-match.c b/tools/perf/arch/arm64/tests/cpuid-match.c
+index e8e3947cca18..b073ac33ea9b 100644
+--- a/tools/perf/arch/arm64/tests/cpuid-match.c
++++ b/tools/perf/arch/arm64/tests/cpuid-match.c
 @@ -1,5 +1,6 @@
  // SPDX-License-Identifier: GPL-2.0
  #include <linux/compiler.h>
 +#include <elf.h>
- #include <errno.h>
- #include <string.h>
- #include <perf/cpumap.h>
-@@ -91,7 +92,7 @@ static int __compute_metric(const char *name, struct value *vals,
- 	perf_evlist__set_maps(evlist__core(evlist), cpus, NULL);
  
- 	/* Parse the metric into metric_events list. */
--	pme_test = find_core_metrics_table("testarch", "testcpu");
-+	pme_test = find_core_metrics_table(EM_NONE, "testcpu");
- 	err = metricgroup__parse_groups_test(evlist, pme_test, name,
- 					     /*cputype_filter=*/false);
- 	if (err)
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index cb0c2b05c1e8..8e82f7af2aa6 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -4,6 +4,7 @@
- #include "pmu.h"
- #include "pmus.h"
- #include "tests.h"
-+#include <elf.h>
- #include <errno.h>
- #include <stdio.h>
- #include <linux/kernel.h>
-@@ -449,7 +450,7 @@ static int test__pmu_event_table(struct test_suite *test __maybe_unused,
+ #include "arch-tests.h"
+ #include "tests/tests.h"
+@@ -9,28 +10,28 @@ int test__cpuid_match(struct test_suite *test __maybe_unused,
+ 			     int subtest __maybe_unused)
  {
- 	const struct pmu_events_table *sys_event_table =
- 		find_sys_events_table("pmu_events__test_soc_sys");
--	const struct pmu_events_table *table = find_core_events_table("testarch", "testcpu");
-+	const struct pmu_events_table *table = find_core_events_table(EM_NONE, "testcpu");
- 	int map_events = 0, expected_events, err;
- 
- 	/* ignore 3x sentinels */
-@@ -504,7 +505,7 @@ static int __test_core_pmu_event_aliases(const char *pmu_name, int *count)
- 	struct perf_pmu_test_event const **test_event_table;
- 	struct perf_pmu *pmu;
- 	int res = 0;
--	const struct pmu_events_table *table = find_core_events_table("testarch", "testcpu");
-+	const struct pmu_events_table *table = find_core_events_table(EM_NONE, "testcpu");
- 
- 	if (!table)
+ 	/* midr with no leading zeros matches */
+-	if (strcmp_cpuid_str("0x410fd0c0", "0x00000000410fd0c0"))
++	if (strcmp_cpuid_str(EM_AARCH64, "0x410fd0c0", "0x00000000410fd0c0"))
  		return -1;
-@@ -559,7 +560,7 @@ static int __test_uncore_pmu_event_aliases(struct perf_pmu_test_pmu *test_pmu)
- 	const struct pmu_events_table *events_table;
- 	int res = 0;
- 
--	events_table = find_core_events_table("testarch", "testcpu");
-+	events_table = find_core_events_table(EM_NONE, "testcpu");
- 	if (!events_table)
+ 	/* Upper case matches */
+-	if (strcmp_cpuid_str("0x410fd0c0", "0x00000000410FD0C0"))
++	if (strcmp_cpuid_str(EM_AARCH64, "0x410fd0c0", "0x00000000410FD0C0"))
+ 		return -1;
+ 	/* r0p0 = r0p0 matches */
+-	if (strcmp_cpuid_str("0x00000000410fd480", "0x00000000410fd480"))
++	if (strcmp_cpuid_str(EM_AARCH64, "0x00000000410fd480", "0x00000000410fd480"))
+ 		return -1;
+ 	/* r0p1 > r0p0 matches */
+-	if (strcmp_cpuid_str("0x00000000410fd480", "0x00000000410fd481"))
++	if (strcmp_cpuid_str(EM_AARCH64, "0x00000000410fd480", "0x00000000410fd481"))
+ 		return -1;
+ 	/* r1p0 > r0p0 matches*/
+-	if (strcmp_cpuid_str("0x00000000410fd480", "0x00000000411fd480"))
++	if (strcmp_cpuid_str(EM_AARCH64, "0x00000000410fd480", "0x00000000411fd480"))
+ 		return -1;
+ 	/* r0p0 < r0p1 doesn't match */
+-	if (!strcmp_cpuid_str("0x00000000410fd481", "0x00000000410fd480"))
++	if (!strcmp_cpuid_str(EM_AARCH64, "0x00000000410fd481", "0x00000000410fd480"))
+ 		return -1;
+ 	/* r0p0 < r1p0 doesn't match */
+-	if (!strcmp_cpuid_str("0x00000000411fd480", "0x00000000410fd480"))
++	if (!strcmp_cpuid_str(EM_AARCH64, "0x00000000411fd480", "0x00000000410fd480"))
+ 		return -1;
+ 	/* Different CPU doesn't match */
+-	if (!strcmp_cpuid_str("0x00000000410fd4c0", "0x00000000430f0af0"))
++	if (!strcmp_cpuid_str(EM_AARCH64, "0x00000000410fd4c0", "0x00000000430f0af0"))
  		return -1;
  
-diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
-index 6054d5d5aece..d09361999b82 100644
---- a/tools/perf/util/tool_pmu.c
-+++ b/tools/perf/util/tool_pmu.c
-@@ -14,6 +14,7 @@
- #include <api/io.h>
- #include <internal/threadmap.h>
- #include <perf/threadmap.h>
-+#include <elf.h>
- #include <fcntl.h>
- #include <strings.h>
- 
-@@ -718,6 +719,6 @@ struct perf_pmu *tool_pmu__new(void)
- 		perf_pmu__delete(tool);
- 		return NULL;
- 	}
--	tool->events_table = find_core_events_table("common", "common");
-+	tool->events_table = find_core_events_table(EM_NONE, "common");
- 	return tool;
+ 	return 0;
+diff --git a/tools/perf/arch/arm64/util/header.c b/tools/perf/arch/arm64/util/header.c
+index 95e71c4f6c78..ee28add836b5 100644
+--- a/tools/perf/arch/arm64/util/header.c
++++ b/tools/perf/arch/arm64/util/header.c
+@@ -87,7 +87,7 @@ char *get_cpuid_str(struct perf_cpu cpu)
+  *
+  * Return 1 if the CPU type is different or the version of idstr is lower.
+  */
+-int strcmp_cpuid_str(const char *mapcpuid, const char *idstr)
++int strcmp_cpuid_str(uint16_t e_machine __maybe_unused, const char *mapcpuid, const char *idstr)
+ {
+ 	u64 map_id = strtoull(mapcpuid, NULL, 16);
+ 	char map_id_variant = FIELD_GET(MIDR_VARIANT_MASK, map_id);
+diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86/util/header.c
+index 412977f8aa83..b65856f3b846 100644
+--- a/tools/perf/arch/x86/util/header.c
++++ b/tools/perf/arch/x86/util/header.c
+@@ -91,7 +91,7 @@ static bool is_full_cpuid(const char *id)
+ 	return false;
  }
+ 
+-int strcmp_cpuid_str(const char *mapcpuid, const char *id)
++int strcmp_cpuid_str(uint16_t e_machine __maybe_unused, const char *mapcpuid, const char *id)
+ {
+ 	regex_t re;
+ 	regmatch_t pmatch[1];
+diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
+index fd4491fda117..37269154e5e7 100644
+--- a/tools/perf/arch/x86/util/pmu.c
++++ b/tools/perf/arch/x86/util/pmu.c
+@@ -22,6 +22,7 @@
+ #include "util/debug.h"
+ #include "util/env.h"
+ #include "util/header.h"
++#include "dwarf-regs.h"
+ 
+ #define GENUINE_INTEL_SPR "GenuineIntel-6-8F"
+ #define GENUINE_INTEL_EMR "GenuineIntel-6-CF"
+@@ -41,7 +42,8 @@ static void init_snc_support(void)
+ 	char *cpuid = get_cpuid_str((struct perf_cpu){0});
+ 
+ 	for (size_t i = 0; i < ARRAY_SIZE(supported_cpuids); i++) {
+-		cached_snc_supported = cpuid && strcmp_cpuid_str(supported_cpuids[i], cpuid) == 0;
++		cached_snc_supported = cpuid &&
++			strcmp_cpuid_str(EM_HOST, supported_cpuids[i], cpuid) == 0;
+ 		if (cached_snc_supported)
+ 			break;
+ 	}
+@@ -173,11 +175,11 @@ static void init_snc_map(void)
+ 	case 2:
+ 		cpuid = get_cpuid_str((struct perf_cpu){ 0 });
+ 		if (cpuid) {
+-			if (strcmp_cpuid_str(GENUINE_INTEL_SPR, cpuid) == 0 ||
+-			    strcmp_cpuid_str(GENUINE_INTEL_EMR, cpuid) == 0) {
++			if (strcmp_cpuid_str(EM_HOST, GENUINE_INTEL_SPR, cpuid) == 0 ||
++			    strcmp_cpuid_str(EM_HOST, GENUINE_INTEL_EMR, cpuid) == 0) {
+ 				cached_imc_snc_map = spr_emr_snc2_map;
+ 				cached_imc_snc_map_len = ARRAY_SIZE(spr_emr_snc2_map);
+-			} else if (strcmp_cpuid_str(GENUINE_INTEL_GNR, cpuid) == 0) {
++			} else if (strcmp_cpuid_str(EM_HOST, GENUINE_INTEL_GNR, cpuid) == 0) {
+ 				cached_imc_snc_map = gnr_snc2_map;
+ 				cached_imc_snc_map_len = ARRAY_SIZE(gnr_snc2_map);
+ 			}
+diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
+index eba5446520c4..872c6ca6e817 100644
+--- a/tools/perf/pmu-events/empty-pmu-events.c
++++ b/tools/perf/pmu-events/empty-pmu-events.c
+@@ -5831,7 +5831,7 @@ static const struct pmu_events_map *map_for_cpu(struct perf_cpu cpu)
+ 			}
+ 
+ 			if (pmu_events_map__e_machine_matches(map, EM_HOST) &&
+-			    !strcmp_cpuid_str(map->cpuid, cpuid))
++			    !strcmp_cpuid_str(map->e_machine, map->cpuid, cpuid))
+ 				break;
+ 		}
+ 		free(last_map_search.cpuid);
+@@ -5933,7 +5933,7 @@ const struct pmu_events_table *find_core_events_table(uint16_t e_machine, const
+ 	     tables->arch;
+ 	     tables++) {
+ 		if (pmu_events_map__e_machine_matches(tables, e_machine) &&
+-		    !strcmp_cpuid_str(tables->cpuid, cpuid))
++		    !strcmp_cpuid_str(tables->e_machine, tables->cpuid, cpuid))
+ 			return &tables->event_table;
+ 	}
+ 	return NULL;
+@@ -5945,7 +5945,7 @@ const struct pmu_metrics_table *find_core_metrics_table(uint16_t e_machine, cons
+ 	     tables->arch;
+ 	     tables++) {
+ 		if (pmu_events_map__e_machine_matches(tables, e_machine) &&
+-		    !strcmp_cpuid_str(tables->cpuid, cpuid))
++		    !strcmp_cpuid_str(tables->e_machine, tables->cpuid, cpuid))
+ 			return &tables->metric_table;
+ 	}
+ 	return NULL;
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index fc3de5fbda27..802ae2ad4405 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -1249,7 +1249,7 @@ static const struct pmu_events_map *map_for_cpu(struct perf_cpu cpu)
+ \t\t\t}
+ 
+ \t\t\tif (pmu_events_map__e_machine_matches(map, EM_HOST) &&
+-\t\t\t    !strcmp_cpuid_str(map->cpuid, cpuid))
++\t\t\t    !strcmp_cpuid_str(map->e_machine, map->cpuid, cpuid))
+ \t\t\t\tbreak;
+ \t\t}
+ \t\tfree(last_map_search.cpuid);
+@@ -1351,7 +1351,7 @@ const struct pmu_events_table *find_core_events_table(uint16_t e_machine, const
+ \t     tables->arch;
+ \t     tables++) {
+ \t\tif (pmu_events_map__e_machine_matches(tables, e_machine) &&
+-\t\t    !strcmp_cpuid_str(tables->cpuid, cpuid))
++\t\t    !strcmp_cpuid_str(tables->e_machine, tables->cpuid, cpuid))
+ \t\t\treturn &tables->event_table;
+ \t}
+ \treturn NULL;
+@@ -1363,7 +1363,7 @@ const struct pmu_metrics_table *find_core_metrics_table(uint16_t e_machine, cons
+ \t     tables->arch;
+ \t     tables++) {
+ \t\tif (pmu_events_map__e_machine_matches(tables, e_machine) &&
+-\t\t    !strcmp_cpuid_str(tables->cpuid, cpuid))
++\t\t    !strcmp_cpuid_str(tables->e_machine, tables->cpuid, cpuid))
+ \t\t\treturn &tables->metric_table;
+ \t}
+ \treturn NULL;
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index f1164c4666b1..09ced31ef59e 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -14,6 +14,7 @@
+ #include <util/expr-flex.h>
+ #include "util/hashmap.h"
+ #include "util/header.h"
++#include "dwarf-regs.h"
+ #include "util/pmu.h"
+ #include <perf/cpumap.h>
+ #include <linux/err.h>
+@@ -485,7 +486,7 @@ double expr__strcmp_cpuid_str(const struct expr_parse_ctx *ctx __maybe_unused,
+ 	if (!cpuid)
+ 		return NAN;
+ 
+-	ret = !strcmp_cpuid_str(test_id, cpuid);
++	ret = !strcmp_cpuid_str(EM_HOST, test_id, cpuid);
+ 
+ 	free(cpuid);
+ 	return ret;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 2c686095fe67..38525b17f26d 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -964,7 +964,8 @@ char *get_cpuid_allow_env_override(struct perf_cpu cpu)
+  * cpuid string generated on this platform.
+  * Otherwise return non-zero.
+  */
+-int __weak strcmp_cpuid_str(const char *mapcpuid, const char *cpuid)
++int __weak strcmp_cpuid_str(uint16_t e_machine __maybe_unused, const char *mapcpuid,
++			    const char *cpuid)
+ {
+ 	regex_t re;
+ 	regmatch_t pmatch[1];
+diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+index 765037762758..d30fb30a0c92 100644
+--- a/tools/perf/util/header.h
++++ b/tools/perf/util/header.h
+@@ -219,7 +219,11 @@ char *get_cpuid_str(struct perf_cpu cpu);
+ 
+ char *get_cpuid_allow_env_override(struct perf_cpu cpu);
+ 
+-int strcmp_cpuid_str(const char *s1, const char *s2);
++/*
++ * Compare a CPUID from a pmu-events mapfile.csv, @mapcpuid, with @cpuid for
++ * the architecture with ELF machine @e_machine. Returns 0 on a match.
++ */
++int strcmp_cpuid_str(uint16_t e_machine, const char *mapcpuid, const char *cpuid);
+ 
+ struct cpu_domain_map **build_cpu_domain_map(u32 *schedstat_version, u32 *max_sched_domains,
+ 					     u32 nr);
 -- 
 2.56.0.385.gac671c819a-goog
 
