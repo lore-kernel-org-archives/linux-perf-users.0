@@ -1,73 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.197
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793749586;
-	b=JgySDP1UzTIxx6+TCX0Rz4ma4IXPmZ2X/IddOGyPb1YmqlEwxHyLOlOlIo5B92euLbnr
-	 1QO+ikUU5vIHu8iUU1mQM8E8OpGl89b1pHWIfAZ3n+qzhEC9tnlIHq1Bp5SFP9n4ZUWs1
-	 NDR7mSmMOnM2YvY44Iu3rL0KrbnH2NcQUYz8v4CCrGuFFcDvnfBVmzWqTeLQhud4Xxdua
-	 OGdMqgqWrAZmwmiTLrPCQ6a53Lvonxg9OrUY9tAWpX2rCP2B3IFiO4l0QmvnGDgwEvP3x
-	 yUwXDpMnVo9S/O5N984VKeiZPmwQjr0BHXS9/kxEKmPH2fKNGv00ijm1llTJ7vJsWdQ==
+	t=1793749589;
+	b=ZPhzepeoeJ4JioGvWDuHQIh/xMLMlDQrghl/PkUz2HiuuR6RuU9UEaL+2bz6P5u64njh
+	 gOmx1EdkHHkfGhMCTG6devTqUa+SjwllXM073urx2tBpHlS0PuGqjEPwGNhsT1Y241kPP
+	 0Negi7UfeV29AK/khfHMkbZ6HhZpCb9ODi19mGyKuISGT4/Y+ximCNicptwyLIcdsH0yV
+	 BDcEy3tlf6zvFhOlaWfoc7Xwq9nwBejCn+0D4fU1Zld+5oCKL4Ky0QbemtrRtrlrSsvJx
+	 86tjsA6Ouv5E5Aey9fgBc3sjL+r/fW1+XAgMTFm43sKvXu2ElrrJg0MPp7rlZ4rqFhA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793749586;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793749589;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Received:Date:In-Reply-To:Mime-Version:
 	 References:X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=QWrUOGCpXzdW7m/vGfdI2/6APYtveX3HL+c/34q2WdQ=;
-	b=r9aTo9Acszzip9e780pO18k9mm9MM/2Sm5/OPQlENDSqQgoU/ZIOBHTd6S9I6Ek+w+9K
-	 UoxHmr/Rj9rMsEctnGC0q07b0QLtBcpQr1u2klVduyXWVdSRvbLPZFhkKz9vjVoIpFeHt
-	 4ueovksFANEYAjKqdPwhcUxs6qpSe3nDL6O7XlztVJq/sG8vWNpRNpG5E/7wIbFqnWacC
-	 +i1hB5K9lfvyWLLDYWU1Xds6Z7A4d88CNQ6JEUcSOvPvjb4f9frY6eV1jk6W8qZK8QBEr
-	 TTLAFlFH5zKGMRi2bu+TJne4GOcKg6+KPE1FVHCsv6dlUbpoSUnuwmvzUMOUH77nhnA==
+	bh=NSMj0EQk2XJVbJIpKiSnx7gbNLhkEblXTTXusablWHw=;
+	b=DtXlb6U6b0GJ7cZPIZqs8IeUQWV3l4cbi0DKOJ8ZNtW9dINldsMbiOHD7hhuMoNUIbJV
+	 fxvteZw2R0aCSNUjsOoS1TSoIeXHj59jvRtCjqNKU+7msyzZ/DG4qf9Rktf6S4Jk2e5l5
+	 aUODWibDUcG1rIPJb9gLnlK7QrL5ZP2ngo0u8jiRip+SlXSJF/F5zGYcYohbvp+TpS2Ok
+	 9BThnT73aNPt+EJ0+ofsIcPwIaJWNHdnrjLJ0rr5XJLEEPD47sgXglcyeTnkPd1WU/01w
+	 5MNjP8TvdayC7W5Yu0MdeDVzIf8L181JqnQNmXf/S/91QH0f3O9h5v6oSsYg5iBx3ew==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=NfkjKTze;
-	arc=none smtp.remote-ip=74.125.82.198
-Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=V6rBWxbj;
+	arc=none smtp.remote-ip=209.85.214.197
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287006083629
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 23:46:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 287006083629
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64118606D839
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 23:46:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 64118606D839
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=NfkjKTze
-Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-35c5aef2a74so341194eec.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2026 15:46:26 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=V6rBWxbj
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2e601800e58so1164665ad.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2026 15:46:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793749585; x=1794354385; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1793749588; x=1794354388; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=QWrUOGCpXzdW7m/vGfdI2/6APYtveX3HL+c/34q2WdQ=;
-        b=NfkjKTzek8lzSet5DGBywnwWYRt5MxP4wEt7V+7kY8cUayxmk0BVa09YVneuSVsxZx
-         0oA0L5OIRxDfAwQcqWijZPHlJtYoyNrpEWtCevLwVROmVtKMmcj1ZvA9Iy414qrNhVW+
-         8qV/UEOPb0mXKGCwPgslwISNhy+Lf/xQLwI2eQetk5RXrD9ibnTFJD8/G55va6PxooBo
-         88eZZmLvxBsoFSwxhYtIAaa+QhfG7/fyADlY4lADhp9Rw+nQ7rMNoNeMl8lHCl4YgbuO
-         34jIvV0MW07wxyLMp6mgf6uTO0pHSrEC8077OYBvXg6XKWQN9mKLv93ccB+i1TqT2XAT
-         v9AQ==
+        bh=NSMj0EQk2XJVbJIpKiSnx7gbNLhkEblXTTXusablWHw=;
+        b=V6rBWxbjhJ4TNG7EBjluXAVa4nxYxSWrDFJnL1WR3iAAIaRo0HADQ8jpG1NDImW3rY
+         TvHGByYY0aipzmdhRP56lOfK60QZLm5jB87j4KmcpoVTEGG2JVBQrZ12p4QoTsND1BWt
+         hTdgB6fEI2qNna/fo/dKIfjVLyAo9WijCTm/ioiKKkmmiCPxrDvqzTcE4j6EVTA2D1UF
+         lmdgtRw72iodBm1FcMDbhu5/qfqDracD4haGeUCpMwu+0oXBfUJlUkUhiOtp7TFEZeTG
+         YDlOevWrFY2iSjboO2Jr5YrPENYulrPx6pMg/PGyPYhc3fZzdLaZBO+KwgPZRL2ftKJl
+         ALlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793749585; x=1794354385;
+        d=1e100.net; s=20260707; t=1793749588; x=1794354388;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=QWrUOGCpXzdW7m/vGfdI2/6APYtveX3HL+c/34q2WdQ=;
-        b=Oa1djkad4HEThDLsiCCqDQR0hwtn7GigLV90P9vxKW89Cjan5ryvBoikdim9zVjn21
-         sNVSmFpXXWSB2rRPoriLp2bDW64qagiex6QlLMroWV73IWc9nUiI7+Jt/cCh0RWG+UVT
-         +T8pUcwQT1AcjiG2VgYOjiL3msizI1aFMs7rRIXRn2TK6cd4utCHlPIbQFCBKerhXWcu
-         OYX8SAFDkGoEaBpuq1Yp7QXM4Svi9hSJ2Yu/epj1oPOz9TN8xZqDMCzICB8cEwCzzX4L
-         CaoOXLj8O4ZlWa898RcYCcm7Dm0yRWT2iWyjB2Uo7ZGFilSRT9u3qhY85u+ig/lgxdQa
-         c+Rg==
-X-Gm-Message-State: APuU4Z/Ah7eZYvXXbAS3T0acCIYzyDkzHctXBg5TzQNeRBC6y+jpQru3
-	LJuFolFBjZrZ+mzPe8ovBbSCvHvcZtiBr7eNbynY9H3M9BTUfnWz4uZA3jQGGtjuxCAF+BoJ/Ra
-	O9ZMVvEVVR23S2BHKhNvoMD1hgBVCtROyDMmrx0vkwzjlgfDGasNcd7xNhqidKjKPBwa91UrGCy
-	XD0OoHVFnHa+WLva3mYpzV7t0oyhOdJf7Knk/bCiV3uem67gNAKBVgaFo=
-X-Received: from dybgs18.prod.google.com ([2002:a05:7301:2092:b0:35f:390d:248a])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:e9d6:10b0:36a:1e0c:e28d
- with SMTP id 5a478bee46e88-36a42206318mr24426125eec.4.1793749584946; Tue, 03
- Nov 2026 15:46:24 -0800 (PST)
-Date: Tue,  3 Nov 2026 15:44:45 -0800
+        bh=NSMj0EQk2XJVbJIpKiSnx7gbNLhkEblXTTXusablWHw=;
+        b=zhFicYtq+vMFZcE0tk0jrzWnJhyjm4Sj2v0WDK3UdqdJ20tIzIxCYbsi8FfphsVWvg
+         unqqHM3r1Mq01YwCd0UlJ0rkRBTSFlyrvnroQbD5KIv/iuspUTeRa3b8pmLGIMxyVlt0
+         e2vet6mvcbDv6/ybD2dPRHvbsHHk9foGaIM1HRH5S39+BBT+V9cf9RLhkmpSn7k9lEK5
+         boNzbqq0ZeICuMuVlAowRo9T50L8uTXNJwVRy9GHhjxhTG8cB7VDvJ7GahivwqVVpYQW
+         e/eGfph1ZBq4Z5qgUs/UF9Uk6SYg1G4cEf92O5tjrO36YGmIHSxBaRyx/YetIoMPBGlv
+         lNgQ==
+X-Gm-Message-State: APuU4Z8+9ycmRWITo8TJEO/gDT09g8m4mUQI00vSzsazOJOauQ/p4B+t
+	9Qiv03JkgH4LvASWUveNV1LOiPWXQGyxvpXnKC1cn92NBAj8Vn0jBemvQ8N1q6qmZ9bZxnnBmPV
+	6hITBpaySF0QIgWSThC7CSzJtGDqpLW73vXZaAvozLN4EeXNEL4+zaGziqb/rVnFBosHbDm7Msz
+	oSu7cligU7mCd2ZmmUyFp6KRSwGutcCubgZuT8EEddFrk6Hm2LKhL5ASI=
+X-Received: from plic13.prod.google.com ([2002:a17:903:370d:b0:2eb:153c:2391])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d54a:b0:2df:90d4:1193
+ with SMTP id d9443c01a7336-2eb364fa721mr143696105ad.45.1793749587332; Tue, 03
+ Nov 2026 15:46:27 -0800 (PST)
+Date: Tue,  3 Nov 2026 15:44:46 -0800
 In-Reply-To: <20261103234502.1008382-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -80,8 +80,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261103234502.1008382-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.385.gac671c819a-goog
-Message-ID: <20261103234502.1008382-30-irogers@google.com>
-Subject: [PATCH v1 29/41] perf pmu: Probe supported sample_type flags
+Message-ID: <20261103234502.1008382-31-irogers@google.com>
+Subject: [PATCH v1 30/41] perf pmu: Probe precise_ip levels
 From: Ian Rogers <irogers@google.com>
 To: linux-perf-users@vger.kernel.org, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
@@ -96,164 +96,100 @@ Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
 	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Extend perf_pmu__probe() with probe_sample_types() to test which enum
-perf_event_sample_format flags are supported by the PMU.
+Extend perf_pmu__probe() to probe supported precise_ip levels (1..3) and
+populate probed.precise_mask and probed.max_precise.
 
-First test a common bulk sample_type mask with a single
-perf_event_open() call to avoid per-bit syscall overhead when all
-standard sample flags are supported, and then probe any remaining
-PERF_SAMPLE_* bits individually (configuring required companion fields
-such as branch_sample_type, sample_regs_user, sample_regs_intr, and
-sample_stack_user). Populate probed.sample_types as well as convenience
-booleans for branch stack, callchain, data_src, and weight sampling.
+Some PMUs that do not implement hardware precise sampling (such as
+software, breakpoint, or AUX trace PMUs) silently ignore attr.precise_ip
+even on non-sampling events (sample_period == 0), whereas PMUs that
+genuinely validate precise_ip either reject precise_ip > 0 on counting
+events or are sampling-only PMUs. Check for this before probing levels
+1..3 so non-precise PMUs are not misreported as supporting precise_ip,
+while still detecting higher precision levels when core events are
+forwarded to hardware sampling units (such as AMD IBS).
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/pmu.c | 95 +++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/pmu.h | 13 ++++++
- 2 files changed, 108 insertions(+)
+ tools/perf/util/pmu.c | 50 +++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/pmu.h |  4 ++++
+ 2 files changed, 54 insertions(+)
 
 diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 9033bada9f47..164ed926184e 100644
+index 164ed926184e..1c55265be246 100644
 --- a/tools/perf/util/pmu.c
 +++ b/tools/perf/util/pmu.c
-@@ -3118,6 +3118,97 @@ static bool try_open_attr_variants(struct perf_event_attr *attr,
- 	return false;
- }
+@@ -3453,6 +3453,56 @@ static void __perf_pmu__probe(struct perf_pmu *pmu, int pmu_cpu)
+ 	if (pmu->probed.can_sample)
+ 		probe_sample_types(pmu, &base_attr, pid, cpu, flags);
  
-+/*
-+ * Probe which enum perf_event_sample_format flags are supported by @pmu,
-+ * testing a common bulk mask first before probing individual flags.
-+ */
-+static void probe_sample_types(struct perf_pmu *pmu,
-+			       const struct perf_event_attr *base_attr,
-+			       pid_t pid, int cpu, unsigned long flags)
-+{
-+	u64 reg_bit = BIT_ULL(perf_arch_reg_ip(EM_HOST)) ?: 1ULL;
-+	u64 bulk_mask = PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_TIME |
-+			PERF_SAMPLE_ADDR | PERF_SAMPLE_READ | PERF_SAMPLE_CALLCHAIN |
-+			PERF_SAMPLE_ID | PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD |
-+			PERF_SAMPLE_STREAM_ID | PERF_SAMPLE_RAW | PERF_SAMPLE_REGS_USER |
-+			PERF_SAMPLE_STACK_USER | PERF_SAMPLE_WEIGHT | PERF_SAMPLE_DATA_SRC |
-+			PERF_SAMPLE_IDENTIFIER | PERF_SAMPLE_TRANSACTION |
-+			PERF_SAMPLE_REGS_INTR | PERF_SAMPLE_CGROUP |
-+			PERF_SAMPLE_DATA_PAGE_SIZE | PERF_SAMPLE_CODE_PAGE_SIZE;
-+	struct perf_event_attr b_attr = *base_attr;
-+	int b_fd;
++	/*
++	 * 3. Precise sampling support (:p, :pp, :ppp).
++	 * PMUs that do not validate attr.precise_ip (such as software,
++	 * breakpoint, or intel_pt) silently accept precise_ip > 0 even when
++	 * sample_period == 0. A PMU that genuinely implements precise_ip
++	 * either rejects precise_ip > 0 on non-sampling events or is a
++	 * sampling-only PMU (such as AMD ibs_op).
++	 * Note: On AMD, core events like cycles:P are forwarded to IBS and
++	 * support higher precision than advertised in sysfs caps/max_precise.
++	 */
++	if (pmu->probed.can_sample && !pmu->auxtrace) {
++		bool ignores_precise_ip = false;
 +
-+	b_attr.disabled = 1;
-+	b_attr.sample_period = base_attr->sample_period ?: 10000;
-+	b_attr.sample_type = bulk_mask;
-+	b_attr.sample_regs_user = reg_bit;
-+	b_attr.sample_regs_intr = reg_bit;
-+	b_attr.sample_stack_user = 64;
-+	b_attr.exclude_callchain_kernel = b_attr.exclude_kernel;
-+	b_attr.inherit = 0;
-+	b_fd = sys_perf_event_open(&b_attr, pid, cpu, -1, flags);
-+	if (b_fd >= 0) {
-+		close(b_fd);
-+		pmu->probed.sample_types |= bulk_mask;
-+	}
++		if (pmu->probed.can_count) {
++			struct perf_event_attr c_attr = base_attr;
++			int fd;
 +
-+	for (unsigned int shift = 0; (1ULL << shift) < PERF_SAMPLE_MAX; shift++) {
-+		u64 bit = 1ULL << shift;
-+		struct perf_event_attr attr = *base_attr;
-+		int fd;
-+
-+		if (pmu->probed.sample_types & bit)
-+			continue;
-+
-+		attr.disabled = 1;
-+		attr.sample_period = base_attr->sample_period ?: 10000;
-+		attr.sample_type = bit;
-+
-+		switch (bit) {
-+		case PERF_SAMPLE_BRANCH_STACK:
-+			attr.branch_sample_type = PERF_SAMPLE_BRANCH_ANY |
-+				(attr.exclude_kernel ? PERF_SAMPLE_BRANCH_USER : 0);
-+			break;
-+		case PERF_SAMPLE_CALLCHAIN:
-+			attr.exclude_callchain_kernel = attr.exclude_kernel;
-+			break;
-+		case PERF_SAMPLE_REGS_USER:
-+			attr.sample_regs_user = reg_bit;
-+			break;
-+		case PERF_SAMPLE_REGS_INTR:
-+			attr.sample_regs_intr = reg_bit;
-+			break;
-+		case PERF_SAMPLE_STACK_USER:
-+			attr.sample_stack_user = 64;
-+			break;
-+		case PERF_SAMPLE_READ:
-+			attr.inherit = 0;
-+			break;
-+		default:
-+			break;
++			c_attr.sample_period = 0;
++			c_attr.freq = 0;
++			c_attr.sample_type = 0;
++			c_attr.precise_ip = 1;
++			fd = sys_perf_event_open(&c_attr, pid, cpu, -1, flags);
++			if (fd >= 0) {
++				close(fd);
++				ignores_precise_ip = true;
++			}
 +		}
 +
-+		fd = sys_perf_event_open(&attr, pid, cpu, -1, flags);
-+		if (fd < 0 && bit == PERF_SAMPLE_BRANCH_STACK) {
-+			attr.branch_sample_type = PERF_SAMPLE_BRANCH_ANY;
-+			fd = sys_perf_event_open(&attr, pid, cpu, -1, flags);
-+		}
-+		if (fd < 0 && bit != PERF_SAMPLE_IP) {
-+			attr.sample_type = PERF_SAMPLE_IP | bit;
-+			fd = sys_perf_event_open(&attr, pid, cpu, -1, flags);
-+		}
-+		if (fd >= 0) {
-+			close(fd);
-+			pmu->probed.sample_types |= bit;
++		if (!ignores_precise_ip) {
++			for (int level = 1; level <= 3; level++) {
++				struct perf_event_attr p_attr = base_attr;
++				int fd;
++
++				p_attr.sample_period = 10000;
++				p_attr.sample_type = PERF_SAMPLE_IP;
++				p_attr.precise_ip = level;
++				fd = sys_perf_event_open(&p_attr, pid, cpu, -1, flags);
++				if (fd < 0 && p_attr.exclude_kernel && p_attr.config2 == 0) {
++					p_attr.config2 = 1;
++					fd = sys_perf_event_open(&p_attr, pid, cpu, -1, flags);
++				}
++				if (fd >= 0) {
++					close(fd);
++					pmu->probed.precise_mask |= (1u << level);
++					pmu->probed.max_precise = level;
++				}
++			}
 +		}
 +	}
-+
-+	pmu->probed.can_branch_stack = !!(pmu->probed.sample_types & PERF_SAMPLE_BRANCH_STACK);
-+	pmu->probed.can_callchain = !!(pmu->probed.sample_types & PERF_SAMPLE_CALLCHAIN);
-+	pmu->probed.can_data_src = !!(pmu->probed.sample_types & PERF_SAMPLE_DATA_SRC);
-+	pmu->probed.can_weight = !!(pmu->probed.sample_types & PERF_SAMPLE_WEIGHT);
-+}
-+
- static void __perf_pmu__probe(struct perf_pmu *pmu, int pmu_cpu)
- {
- 	struct probe_candidates cands = { .nr = 0 };
-@@ -3358,6 +3449,10 @@ static void __perf_pmu__probe(struct perf_pmu *pmu, int pmu_cpu)
- 		pmu->probed.can_sample = true;
- 	}
- 
-+	/* 2. All enum perf_event_sample_format types */
-+	if (pmu->probed.can_sample)
-+		probe_sample_types(pmu, &base_attr, pid, cpu, flags);
 +
  	if (keepalive_fd >= 0)
  		close(keepalive_fd);
  	pmu->probed.checked = true;
 diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index ddcd28b3cae5..658485faa05d 100644
+index 658485faa05d..fea65e314547 100644
 --- a/tools/perf/util/pmu.h
 +++ b/tools/perf/util/pmu.h
-@@ -226,10 +226,23 @@ struct perf_pmu {
- 		bool can_count;
- 		/** @probed.can_sample: Supports interrupt-based sampling (sample_period > 0). */
- 		bool can_sample;
-+		/** @probed.can_branch_stack: Supports PERF_SAMPLE_BRANCH_STACK. */
-+		bool can_branch_stack;
-+		/** @probed.can_callchain: Supports PERF_SAMPLE_CALLCHAIN. */
-+		bool can_callchain;
-+		/** @probed.can_data_src: Supports PERF_SAMPLE_DATA_SRC. */
-+		bool can_data_src;
-+		/** @probed.can_weight: Supports PERF_SAMPLE_WEIGHT. */
-+		bool can_weight;
- 		/** @probed.probe_event: Name of the event used to probe the PMU. */
+@@ -238,6 +238,10 @@ struct perf_pmu {
  		char *probe_event;
  		/** @probed.open_err: errno if open_supported is false. */
  		int open_err;
-+		/**
-+		 * @probed.sample_types: Bitmask of supported
-+		 * enum perf_event_sample_format flags.
-+		 */
-+		u64 sample_types;
- 	} probed;
- };
- 
++		/** @probed.max_precise: Maximum precise_ip level (0..3) supported. */
++		int max_precise;
++		/** @probed.precise_mask: Bitmask of supported precise_ip levels (1..3). */
++		unsigned int precise_mask;
+ 		/**
+ 		 * @probed.sample_types: Bitmask of supported
+ 		 * enum perf_event_sample_format flags.
 -- 
 2.56.0.385.gac671c819a-goog
 
