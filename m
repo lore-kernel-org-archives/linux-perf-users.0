@@ -1,133 +1,104 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=198.175.65.11
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
-	t=1793721439;
-	b=PMbQlKt2ciVUKHiWdtW2Wj8H3kTSmCA3snkWSUv5dDPKgfSOELyBZ3ZAQyEWYT3DdXWk
-	 CUcO/dxetIMnkOASTvFLNGwNsBWpk/D9Nwy7GgbfoWffa0o2ahQ2RhUsWg4hCRLWhdGJf
-	 pSP8c2LDJh0LstQUHi6HcUYslOqtDLm0GotS64F5HErwzdtIhAxKa0HKscttfTf4ldGqO
-	 yqit02FF+AddjikRWJyvZVXlTfnbgYoHDtkMy20DzJ9cd7wApwLjo3QG3QqYIAeQcVTLC
-	 hJERFbAmzOn1Rt63zIEO7v+jAOtQHhFrMsN9fvVQCIV90FQcTtHx0feFaTzz/BOZ22A==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793721439;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Received:
-	 Received:Received:Received:Message-ID:Date:User-Agent:Subject:To:CC:
-	 References:Content-Language:From:Organization:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-ClientProxiedBy:MIME-Version:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-Exchange-RoutingPolicyChecked:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-	bh=i0A9KSWoOZsf8OWZd4sqaUZ/PRztEH5iU2/62BfXFyA=;
-	b=ZfJSSrjMCtAw62gycl8ZCKU7JfwXrf9HdAFzyPHEem15VpEDpl/X+ERUWGH5H2AoLmpT
-	 DRFT+3UIlA4wxs55Prsr5aCbHwMKUrWib/xO1/xMIJJM2SkMC1p0GoVMHoqZtRyCelCYL
-	 H9B6NuktfuUESxeHX0hXKtN3q4XsPWbz8noKGcA16bD8FDXkfwMX1fp+HsoKItJOq6DVF
-	 kVo5LhFsvO9abEG2aWs5eVg9mNA/cGaD2/lQ2Ay6agp5HhVt8lpc8OsxVww0DpDUPCyYC
-	 roPIXSxYAdz7mOXWIMhibS6Thz33DLk3p59zbJ0hZLG/F6rHjoI3DumGVapGwJHXnvA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=intel.com;
-	spf=pass smtp.mailfrom=intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=kI0UQMfK;
-	arc=fail smtp.remote-ip=198.175.65.11
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.177
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793721460;
+	b=CeGY6Ip7xWrCe3X2owXeJXxCnsNmkRem5ufcPcyz1bEU8/QDMa/PRCAVtn6PSLZ6kZwJ
+	 323T4zakt51uBjMvzorUgd6OrM28kAoyM+ARvhIZQo+U63b+T/CXZ9O/iunIbK8LVc8IZ
+	 4rnosYpnpUeQwNV2gUin7XKRR/dzPwzourHyNfmZgqSc2XULvPNq4OhF0SyA74rGEFKLg
+	 pUktwNxCLdYCDNAL1xgMEdgcmle1UYANzjp6+JpX3c/kDmxXYsiSRkcsHVRYmIQlTZZM3
+	 ffphW93mpLF0QXVsRtZIv32E3nIJn1t+2WPTcnFQr9CljyIQ0+5uDLHPLgfcmch6e/A==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793721460;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=usxHPrZdfM3KAuRcX8FKBBlof7JsXvlRhoP8QnibfPk=;
+	b=uV0fF7hA+C5mDvZnodqP3bW9ACpTzb/O+Z3MdfaXvuCmsGHbhVouP0sVGO8nu8pUNIj3
+	 J6WfubIOZMXiQGA/daIirrzZBurr4AEj/XbclpFtvpK7sE0XDJICO8P+DcRcMLDdC6u2I
+	 ldVVt8Pv6sPV0LCnst6TDhjV1JNU2aHP+DuyRbPJXU6Fh1ykTUGTQxjULnDZJy8e8SbvD
+	 tLXw1GkJ1N1Ppyz6yW+2A1U2e2Iju3i21VMRaiTHwlg0lQJ0bEdOGQhWNxsTDVyUReCvo
+	 m7whRDCgtxs3z3qUjV9DmMQTM1XwRBZ2nYi6zC5fTUzLlmFmxtGr0KSlyKuJjYhMeOg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=ncsu.edu;
+	spf=pass smtp.mailfrom=ncsu.edu;
+	dkim=pass header.d=ncsu.edu header.i=@ncsu.edu header.a=rsa-sha256 header.s=google header.b=bjNJasTP;
+	arc=none smtp.remote-ip=209.85.222.177
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A48D606D802
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 15:57:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6A48D606D802
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E36560A2638
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 15:57:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6E36560A2638
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ncsu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=kI0UQMfK
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793721438; x=1825257438;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=8avGu3lZzC8t9ZdGwKfgpMGBzO3oawNxzIiXhJf2z5g=;
-  b=kI0UQMfKulxit1LnS228TdcvFRNbJ1BHR5lqbbXn8hYTXEbDN2MoPAaf
-   OqVBcRmpsV4eS/BcXUXtsYgHeMm++hNJnQRZHSclepzVDbcHoSJ90dob5
-   +ueVgT/QZbWrPh8VEiiXL5hZvsZYkY1W8A4hywwU+lMucYv3fSCI7ogqj
-   iz618V6qTKrTQv5TeJEfkyFywG4wpx/z2N3+Ht/kfCyhEs5B/S97wgaUH
-   G2YgNMj7ID8gGBpFMB/jvBCy3wFz9ySsOuUFnCqUPBd/bCucJtHua2szF
-   LsZrPfpqeRx0CeTHxpNTD8nBoFVDfGC1dXdp6XaK6i1ryBE4s8Rdqyjg6
-   g==;
-X-CSE-ConnectionGUID: HNTzlgRgROC8p0iE9pALGQ==
-X-CSE-MsgGUID: Yue4nm1VQEyTgxqvKDID7A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11955"; a="2331212"
-X-IronPort-AV: E=Sophos;i="6.27,193,1787036400"; 
-   d="scan'208";a="2331212"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2026 07:57:17 -0800
-X-CSE-ConnectionGUID: HJPnvOCmQGmqoXfalbrZYg==
-X-CSE-MsgGUID: 42ymj0aISfSyy37Fqx9jBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,193,1787036400"; 
-   d="scan'208";a="6295642"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2026 07:57:17 -0800
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56; Tue, 3 Nov 2026 07:57:16 -0800
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56 via Frontend Transport; Tue, 3 Nov 2026 07:57:16 -0800
-Received: from MW6PR02CU001.outbound.protection.outlook.com (52.101.48.16) by
- edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.56; Tue, 3 Nov 2026 07:57:16 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PHD2giKT+hpf2Mqlh5W/npPnISl7tDj7BSF35TixsV+ORf1Qj9uVcmwEz1Jc4mg+dg66MyOBMu/S0XEEQZ4TwmpSgt3TLdv7j7Kdwz1wd9NpLWP9oe8o3iHWGcDaoL7hoeP/+4MgyiMuTAyx7WDqZ945URIv+WH3ByPYtGYNncQBjHMvs576kxjslyNX7LTip1Ibpgmj0znyXlFseswLas0VxTePVyS6Oa7yeaL1gAK3q13QL79u5BJX9qYtN/kx7dgSaK4AolpRt862zKhdTe62x8OtCR8HRx8N24tMHWfh9XB95pYaXTrVFj/XR1kA7Cl+INI5sCa1XPmc1Z4pQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=i0A9KSWoOZsf8OWZd4sqaUZ/PRztEH5iU2/62BfXFyA=;
- b=oAHZdWnCDh1Ln4T/O6iLvIm01atKbWIqgkfy6P167bkFV8zoCz22Rp1ijxoz8jh2P33AM8NViUjss20/g7+0A6n3ITxcJveTq0vTqSuGAI3taJeEBr+Evt6j4u4ddUXYFY7djRwjaSin40LOrVFNpZ45ebTcxuE4Bgv8+ylccffnPV94nN2tJm3ICAaFo5MCxGsRj0DffEkMEbELzn/4Hoy5iDLO4/oHnhPOCpN64PVdC2lUlO/mQQAks5wjnOs0tJaItwk+cQg7BKwJMxFovtQzO2qxM5EaD7VZFJZn9soEBD7ugLTt7dU8jfaOO1Q2BMf0gIayYm0c81yOElOBbA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from IA1PR11MB7198.namprd11.prod.outlook.com (2603:10b6:208:419::15)
- by DS6PR11MB610166.namprd11.prod.outlook.com (2603:10b6:8:469::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.8; Tue, 3 Nov 2026
- 15:57:15 +0000
-Received: from IA1PR11MB7198.namprd11.prod.outlook.com
- ([fe80::2c4e:e92a:4fa:a456]) by IA1PR11MB7198.namprd11.prod.outlook.com
- ([fe80::2c4e:e92a:4fa:a456%3]) with mapi id 15.21.0569.011; Tue, 3 Nov 2026
- 15:57:15 +0000
-Message-ID: <1cb49f46-9453-4ea2-adb1-e78575837d09@intel.com>
-Date: Tue, 3 Nov 2026 17:57:11 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] perf/x86/intel/pt: Stop tracing across system suspend
-To: <sashiko-reviews@lists.linux.dev>
-CC: <linux-perf-users@vger.kernel.org>
-References: <20261102074039.26983-1-adrian.hunter@intel.com>
- <20261102074039.26983-7-adrian.hunter@intel.com>
- <sashiko-outbox-193146@kernel.org>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
- 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
- 4, Domiciled in Helsinki
-In-Reply-To: <sashiko-outbox-193146@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: DU7P191CA0025.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:10:54e::9) To IA1PR11MB7198.namprd11.prod.outlook.com
- (2603:10b6:208:419::15)
+	dkim=pass (2048-bit key, unprotected) header.d=ncsu.edu header.i=@ncsu.edu header.a=rsa-sha256 header.s=google header.b=bjNJasTP
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-93f2b8cf037so369339685a.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2026 07:57:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ncsu.edu; s=google; t=1793721458; x=1794326258; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=usxHPrZdfM3KAuRcX8FKBBlof7JsXvlRhoP8QnibfPk=;
+        b=bjNJasTP507BjciDdMAOwPw9RBH6Ndc+fsd6Hr9SJKo1bbU2O2is/NDO69cPKKBcNq
+         atwdHwoVz5IPWYP41G23ZNqxvwy0kXN7uzD06LkFZIHQP5OqHT8aHRT1IvjZd9CzLE6W
+         TbvAP0x+QB26J0ZSXzrNaUc5pfEBNpLZZk4YTUu6nIewyylF68HiaFmSN/RFhNe8ZgOV
+         D4ShuXMroL8gjSdWWxP1HUpUS2cSZI8aYwe6wFLaStW4dz0DdyReQefUw3Fi1aVCWZiQ
+         jHTNmoFEJoxUq9b6doM0Rl2Kexh/+tZWmKtrsOOAUKp8ASrQtJS7MkrzQM3cu1tQckWq
+         PT3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793721458; x=1794326258;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=usxHPrZdfM3KAuRcX8FKBBlof7JsXvlRhoP8QnibfPk=;
+        b=baSNgSuHSAzhOQJy9qw2NpQKp8Y/rdmuRLbZg5UHLbBYIWno0S6jZ6R04K8GqAuShf
+         z84I9mB7oMBrxpzyGmtXKMUWlPo5kQSJLgaBaV9kx7j0XiOiuE5jaXF+c0blgOkeWMhO
+         Dodj5T2xakGEHtJoymd2U+Y2LTRc+8ZbdAcATBwUmquTG9pmD/+nLVAXSGo6CvhkAUDt
+         k+6rADxnRpmnq5CmtaFAriRmUInrwJSw7+TcSSMO/LUoLssRDZqN1kUAybKxB90xJLaT
+         I3+4P/X1TdoHXx8XMp2S2BLi6YcSH1Hdk8KoXrz4pT8t+AmzjgIB0bloPgeUFcJUS0R8
+         OBXQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwegEWxHkmz7fibUO1QsWtRMe62x6RauWeG/oUDNWMbok2d+7cIzW3Q2Bb5wAVq3ACMDoIelDOvNzFEWORRtkqY@vger.kernel.org
+X-Gm-Message-State: APuU4Z+U/YC6iWwB3qc9QLGBk0rRYRpneNRK7OqJdtNPOilStg7E/g5L
+	PpTjvlBR67hCaAnfFeJPxaDoLbe+84XCMJ9A6HpgZUM2LqXDVZ6YsApPRQ5TODpTsw==
+X-Gm-Gg: AYBFou3oo5vJpjyPXAHCIns56Oskf6+yLbr5RcssrCKcrbV5QGGp/Vko3jiwq89HNmq
+	Hkuo0ZpGIvZZuLcxJon0QR0nE2IuqLTO4Dr+Q22H4DqIr01+nnzdG3rhdCQLYT8HXzRztEuA3K8
+	b2uuGI/1sUTt1zVyvgIbKBhtf/1BRYxHvNgGMTrOFiGI8I1g8qWct00JMc2mIV+xAAJhKlJpNs4
+	AKES6K8nxunV8U+QF8W6VwWZ3sBT6Nl1gPONoyA+poiMCqytzUVMiDYTUflAhjRRbpXE/OFSNTQ
+	J+BuX1oeg8o1ccEwYOu0yrBJ+KiphMoVC4LzHHRx5WuxXRwSldFzQSAmtgds2R4jFGlW1UV2iV/
+	GESH/33z1Vh2sZW1ukNnilSee629Rmw6ymZ59cApWRfLfqUvBrhnmZcJL4GQnq/kJ+qObuE06rd
+	OX0GddCl1/Mf89x76W8dj7QIl6OcWWrWcUj23skbdkVdWcwH5/jvtWCaqUeyzlWfLSFWJwOaEtM
+	VGlBE7EbVFZvYrnkxLJxk9/3R2i41Q60mbRsIqSoyCwFPV2yR005eUDDrh9cjcKZOSPmFTX92pF
+	YEbINoHg1CKF/pxCi57jUn8t5x3Up0VgQPInhCs7a2WIujHkQehtm3xVAXjzlRh1sicY8sk8EXr
+	AE5QYbJIUfhngk7o7YdJFoA==
+X-Received: by 2002:a05:620a:2b43:b0:943:faab:aabe with SMTP id af79cd13be357-94421799619mr2317530085a.62.1793721458176;
+        Tue, 03 Nov 2026 07:57:38 -0800 (PST)
+Received: from flag-System-Product-Name.tail132f98.ts.net ([136.61.118.42])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-94425a7195esm1113191985a.27.2026.11.03.07.57.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Nov 2026 07:57:37 -0800 (PST)
+From: Yanbo Zhao <yzhao62@ncsu.edu>
+To: Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Zecheng Li <zli94@ncsu.edu>,
+	Xu Liu <xliuprof@google.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yanbo Zhao <yzhao62@ncsu.edu>
+Subject: [PATCH v4 0/3] perf annotate: Data type profiling support for C++ classes and virtual calls
+Date: Tue,  3 Nov 2026 10:56:47 -0500
+Message-ID: <20261103155650.269973-1-yzhao62@ncsu.edu>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -137,91 +108,155 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR11MB7198:EE_|DS6PR11MB610166:EE_
-X-MS-Office365-Filtering-Correlation-Id: eafeedd2-b698-4d6a-e6f2-08df39c3212f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|376014|1800799024|366016|4143699003|11063799006|56012099006|261022075727099003|261102123227099003|261021121427099003|261022105027099003|261028144727099003|261026140227099003|10067099003|18002099003|22082099003|3023799007;
-X-Microsoft-Antispam-Message-Info: w2Xo4pgoEGss8lkDJi9Z2Ea+MTSWKWfvzfzlNBguFyqgVuwt++RtCvKvHo19t02XODTRVnXXRCTSu69F7aXUkJ4P6ONQr9ZPAAEPKzRyEjjV8S3uFY5TLk0cBVByN4HHK6I6SjdE7iSimdnm3Jpzl/B2Zmk+sqsAGhV+fcD4O+NHIlyEZubZ6JGlSedirq5iZup00YjzogrVdsuEt6vg/OD6ZX7HO0DSolHtCC4VR6CVZNFpwC70LOc64LlGMvHZoQNZN1GfmGUMS+kWMQMR9A51pySlnMk5oag3ObA2naS27mwYrRUrLAX+++gR1VaZmYdA7u9tRk+MS+9BKuwAJdp7wrSEWWQbAaXDQjIQMBJt/CQB0k+9l4W9b6hr+cPcLgEfd2AbVYKzKma7FrvkZhBjBmGs2gJJpwUhnwvlklzzkqWIXuweCuVhWbmKyrAH23zF3Qq3Ab6Rf7reg2MtSVl2ucDusspwAo4r+nU7Tr9e583xnlML0nK1+/gkytMREWXuSiCyimm6jbObrohPlqukr9gGy3DDTGjhzocI7ZQjzb47bin6NPb/+3nVRa6ia8VSisKmV/y/qvbfWIClHPKn4wn3rHRUja31JqCCsvMr4+Yp5b8vIcjeZ3ZO7SQSzIZLqh/Cbj4jGX89zCSKSScEntUqm7yHtZrZtqgA10Q=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB7198.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(1800799024)(366016)(4143699003)(11063799006)(56012099006)(261022075727099003)(261102123227099003)(261021121427099003)(261022105027099003)(261028144727099003)(261026140227099003)(10067099003)(18002099003)(22082099003)(3023799007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VlRtV2FhNGh4dlVVeXExZFRIM0xBSDRxYjJDUFlYOFR6WklRZmc5Q3Q2dURP?=
- =?utf-8?B?dCtCRysybTNTOGNSVTdiblE3NHVoTWxVaTVVeGxKTUR6K1pqSEFIdzF2QVNE?=
- =?utf-8?B?ODF0UW9OY0MyMm9aYmluUVZqZlJVRmZlOVVnV1pyMjAvZjltR2hsVDhkOFVJ?=
- =?utf-8?B?MEwxZWRaaU1PVSt1eWR0NHZqSW1jQ1JhZ1FOSkMyKzZmbk8vVlpYK2creWtt?=
- =?utf-8?B?eVlyQzZKaVNheVdGNDR0R0dpaGF0b2h0OXR5b09wY1VBTFNZbzRrazdGSUNa?=
- =?utf-8?B?SUNIMEVyRWNia3lrQ2gxanFZcmFnSzkraU1FSEhBRDZJNHJKaEZrZUFkeVg2?=
- =?utf-8?B?djQyMFlyOWNJb1NUZnRHWG40Y200WHo0ZW5XQUdqYVdFLzdiS21Oa05RQmRG?=
- =?utf-8?B?SmFLK2hzWXNaeVZuRDJzM1VWWW5DWHhyWjhHbU1NYTV5eEdvdTV5ZUVHc2Zr?=
- =?utf-8?B?SWVSM1ViTnRvVDRWQkJzMC9JV1N6dExLMWJlSk5CZzRTMDFBaVVRYlRZUHRJ?=
- =?utf-8?B?TnZuTmpqUUFHWjhLbXcyVWJVazc2aHF3N1psUHU5aHVTTkMyNDBXN1ZHSlpC?=
- =?utf-8?B?OTNkeng2b3B1SmhCYzl0b2h3aU50MWlnL1dseXM2K3N5M3ltN1pmbnZ2MndF?=
- =?utf-8?B?Kzd1RExSRk1qM1d3N3l5SU9EZmFxWjA2V3RyM2xNTHhwcTJsYnd3UWREV1gy?=
- =?utf-8?B?cHB2aDhPR0lmamlLNzVlaUhFM2RPajN4VXlhc2NiUEtTb2JleWZUNXd2aE1m?=
- =?utf-8?B?cVc4VXR0SnhOSHpLVnpWRmJlNnhPTzNoNm1Pam12aVd5NXRYNisvdzdZOTdY?=
- =?utf-8?B?MWxFWUoyblVwMUJMaDRZK3drQVBVb0ZTUWV6cFVyazkyaDBxMGZkeDh3U3pQ?=
- =?utf-8?B?S0I2V3FaWHpaeFpoUndNekIrdlEzdE1zTkpUSXNsQm1mWVVKaEZJS0ZIV0Jq?=
- =?utf-8?B?akZkZkVFd05PZTdscnJnTkNtdGxuRDJoUzdWTnpwZi9YbkJwM21CMUNNVFpZ?=
- =?utf-8?B?Y3NkZnBQSy9paVJwNGJvMm0wS2NhSElKNlEzdlJsWHg3aEt0ZnZhVVV6eG4x?=
- =?utf-8?B?S1JPM0Y1Nm5yVTFlM1B6cFVjalJtZEl5L1NNMWdvSzBvWEcvL2N0VUFweGhJ?=
- =?utf-8?B?eElmRG9GQkdlSTAvM0twVTBFMTVjZC8zUGR1eFVIcHk2YjZna2tudjNKMnZJ?=
- =?utf-8?B?bElXZW5uekdwQVJSVm9XWG1iYkpzSGFSay9GYm80UlZNTG9lcmpobUo0K2pr?=
- =?utf-8?B?ZmhiUFdjYkNOQWh3YldwYVVobzU1dUtWRk9wQW95eWM4NGJ4YlBtaEtlQjFP?=
- =?utf-8?B?TlBNdTRieStRRkhzN0lyZCtaTExvanJEbWNCZng5eUtscXBqdERxbHk2NnRH?=
- =?utf-8?B?eDNDSCtUS29iYVBZcGtmZmJ6c3RSRFFIdzZ6TTdLbEcyNmNYRXh0TEVWcjVv?=
- =?utf-8?B?THBvdmtkUG1QTlBOZ3F2dXg1NlZDdUNzNVI4dnU2dTAxNVdmL1VLQkIyb0Ra?=
- =?utf-8?B?d1pFbmdJYnJuL1VOd3UzTGpjOWJNWlVENUpVQ3dpZ3NXS01nTEx1c3ZzUzVm?=
- =?utf-8?B?dEtGNkp0dDhZMEtKMnN0VGxOL2FUZVN2VnFUU2FtYXhOL0t3ZDVzUXQyd09O?=
- =?utf-8?B?Y2dYamZ6VnQ0MXFTVXBQdVhZc0NvalhFTzJsc0NKQUpEL25aYnlsQmlISEE2?=
- =?utf-8?B?am9ZVGl6WjFYT2tnQk5LdXRaMUU4elZUc0JIS1YvTS9DMFBIdlpzWFpjVGh1?=
- =?utf-8?B?RUZCR1djUEtUOXN0QzFPNHE3ZUNnVEN5QWV5S2twOEVtRjhtYkZWRVFpRDBu?=
- =?utf-8?B?NEJmcFZ4M3B3d2tqdFhuSS9QV1lLcVZ4SGpoZTU1TTY5V1E4djlpVEVzd1k4?=
- =?utf-8?B?Q2FQUjZRZDh4eFFGbU1hNWtLakpNN1AxMnlUTWdrM253S1JPMThlVllCYnZV?=
- =?utf-8?B?Y2xnSEFQNFh0c3BWbHdWNWlnQVQrbjR0MHlJaWxXVzQrbXBWLyt4WXM0OThQ?=
- =?utf-8?B?YVk0SE4rWk83eWJuOC9DcTk0SGYrNVZHNjNFM2pkZHU4eVRLV0ZuMGpxVFo4?=
- =?utf-8?B?c1l6YXpDTW9NaXo0YnQ4VEhDR3hOcjhZMmdSNTI1a2hFOFd2TUNTdFdPd3Mr?=
- =?utf-8?B?S2p5ZFN0akhqYWpqbWc3djZhZ2VTMnd6VEtDcmRPblVNQjhTb2N3Uk5hdG43?=
- =?utf-8?B?Y1MzdkorVDU3RC9mbnJRSGlkckVpOFVyeEtqdUgydnk4RG8rM2Z3aEFWLy9T?=
- =?utf-8?B?WmQ0Z2lNaUV3Q3FQcEhENHJOZXE0OVVXTVFWQUR2UCs1bjZKc1pjaFJNUkpU?=
- =?utf-8?B?NHBKcCtDOFpwSlMrVkVXTUlKYzZjbW9hemF2c0NmQmZqWVB4T0I5Zz09?=
-X-Exchange-RoutingPolicyChecked: lPpTiqInzsufBIdtspv0F80i178HCou1ltsAyRzirV328AvygSTucADPJBOF/lNZpujBAP55JNyRm/M1RsWJztlDY5oA3mzDDjG07ADkmRWXlqsv+WfJ9FDtK8bhGZ2Lp+TYOniinUkKGZKtModUZNU4d4MUPEPwe2/LzBkpcszpfM/Sx2lDNCEa+4AGGNp6btS1j5OPKC94sNpl9tYhe/XDoV5349LK0kTkaA4AsEouBZ3xHeWJsRgU65E5SAfc8IN6v/WM1nvKvz5y370eUOj+1vSX8PenjHgqXoqLaruAJE8T2EiIoc4kvJgojNIcc9zKc9OZZ7Ie3fkjRzJuNA==
-X-MS-Exchange-CrossTenant-Network-Message-Id: eafeedd2-b698-4d6a-e6f2-08df39c3212f
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB7198.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2026 15:57:15.0773
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8gYZzkWNnQP+frUibQOd5a4q+G167Rd1PS+HpdW5JUGYPW/oargd7cLpxAcE/zTC3v4gvi7xV/EVw1MZbsgFlQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS6PR11MB610166
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-On 02/11/2026 10:59, sashiko-bot@kernel.org wrote:
-> Can pt_syscore_resume() prematurely restart an Intel PT event that has been
-> throttled by perf_event_throttle(), leading to a duplicate pt_event_start()
-> call when the event is unthrottled on the next timer tick?
+Hello,
 
- Yes, the duplicate start can happen
+Data type profiling currently only understands C struct/union types.
+For C++ workloads, member accesses through base class subobjects
+cannot be resolved, and virtual function calls (indirect calls through
+the vtable) lose the return type of the callee: the register holding
+the returned value becomes unknown, which matters when it's used
+directly to access memory like 'p->next()->val' where no DWARF
+variable describes the temporary.
 
-> Also, if pt_syscore_resume() skips calling pt_event_start() when the event is
-> throttled, wouldn't clearing pt_suspended_event in pt_syscore_resume() before
-> perf_event_unthrottle() later calls pt_event_start() cause a throttled
-> snapshot event to read reset PT MSRs in pt_read_offset() and take the
-> pt_config_enable() path without reprogramming the output MSRs?
+This series extends data type profiling to C++:
 
-Right, so keep the restart and make the redundant start a no-op
-instead.  An event with both PERF_HES_UPTODATE and PERF_HES_STOPPED
-clear is already running.
+Patch 1 introduces die_is_compound_type() covering DW_TAG_class_type
+as well and accepts DW_TAG_inheritance in the offset-based member
+lookup so that it descends into base class subobjects.  It handles
+empty base classes, members placed in the tail padding of a base and
+virtual base classes.
 
- 	if (!(hwc->state & PERF_HES_UPTODATE)) {
-+		/* Already running, e.g. restarted by pt_syscore_resume() */
-+		if (!(hwc->state & PERF_HES_STOPPED))
-+			return;
-	hwc->state &= ~PERF_HES_STOPPED;
+Patch 2 adds the DWARF helpers for virtual calls: the vtable slot index
+of a virtual function, the virtual function at a slot of a class
+(following the primary base class chain), and the class of the vtable
+pointer at an offset of a type.
 
-One side effect remains. A throttled PT event restarted on resume
-traces until the next tick while its sibling is still throttled.
-That lasts at most one tick and is harmless.
+Patch 3 tracks the vtable pointer and the virtual function pointer
+loaded from it in the x86 instruction tracking, and resolves the
+return type of 'call *N(%reg)' and 'call *%reg' through them.
+
+Tested on x86-64 with GCC 15 (-O2 -g) using small programs covering
+single/multiple inheritance, empty base optimization, tail padding
+reuse, virtual inheritance, direct calls through the vtable and the
+speculatively devirtualized form.  In all cases the access to the
+returned pointer after a virtual call is annotated with the right type
+and member, e.g.:
+
+  movq    (%rbp), %rax           # data-type: struct Node +0 (_vptr.Node)
+  movq    (%rax), %rax
+  cmpq    %r14, %rax
+  je      0x1240
+  movq    %rbp, %rdi
+  callq   *%rax
+  addq    8(%rax), %r12          # data-type: struct Node +0x8 (val)
+
+The existing results for C code are unchanged and the added cost on
+the common path (a pointer dereference) is a tag check on the resolved
+member type.
+
+Changes in v4:
+- Rebased onto the current perf-tools-next (v7.4-rc1 based) to resolve
+  the conflicts with the arm64 instruction tracking series.  Patch 3
+  now uses the common invalidate_reg_state() helper and keeps the
+  TSR_KIND_CONST / TSR_KIND_GLOBAL_ADDR handling in set_stack_state().
+  No functional change.
+- Add Reviewed-by from Namhyung.
+
+Changes in v3:
+- Rebased onto the current perf-tools-next.
+
+Patch 1:
+- No change.
+
+Patch 2:
+- Check the value of DW_AT_virtuality instead of its presence (Sashiko,
+  Namhyung).
+- Bound the base class walks in die_find_virtual_func() and
+  die_get_vptr_class() with MAX_TYPE_CHASE (Sashiko, Namhyung).
+
+Patch 3:
+- Check !src->multi_regs when loading a function pointer from the
+  vtable and when marking a register as the vtable pointer (Sashiko,
+  Namhyung).
+- Set ops->target.multi_regs in call__parse() so that an indirect call
+  with an index register is not resolved by the displacement alone.
+
+The recursion depth limit in __die_find_member_offset_cb() reported
+for the patch 1 will be sent as a separate patch on top of this series
+as discussed.
+
+Changes in v2:
+
+Patch 1:
+- Explain DW_TAG_inheritance with an example DWARF in the commit
+  message (Namhyung).
+- Skip virtual base classes whose location is a runtime expression
+  instead of falling back to offset 0 (Sashiko).
+- Match a base class in the offset lookup only if it actually has a
+  member at the offset, to handle empty base optimization and tail
+  padding reuse where a member of the derived class shares the offset
+  with the base (Sashiko).
+- Keep looking at the next sibling in fill_member_name() when an
+  anonymous child (base class) has nothing at the offset.
+
+Patch 2:
+- Drop the non-existent DW_AT_vtable_elem_index and the DW_LANG_*
+  fallback macros (Namhyung).
+- Drop cu_get_language(), cu_is_cplusplus(), die_get_base_class(),
+  die_get_parent() and die_find_member_by_offset() which are not
+  needed anymore (Namhyung).
+- Document that die_get_vtable_index() returns the vtable slot index
+  and that GCC and Clang both emit the index as DW_OP_constu
+  (Namhyung, Sashiko).
+- Fix die_find_virtual_func() to return the function DIE instead of
+  the DW_TAG_inheritance DIE when found in a base class (Sashiko).
+- Follow only the primary base class chain in die_find_virtual_func()
+  since non-primary bases have their own secondary vtables, and skip
+  an empty base at offset 0 which is not the primary base.
+- Add die_get_vptr_class() to find the class of the vtable pointer
+  through base class subobjects, and die_is_vtbl_ptr_type() to
+  identify the vtable pointer by its type ('__vtbl_ptr_type').
+
+Patch 3:
+- Remove the receiver ('this' pointer) register update after the call
+  which was dead code and not needed, and the arg0_reg field (Sashiko,
+  Namhyung).  The 'this' pointer lives in a callee-saved register or
+  on the stack across the call and DWARF location lists cover it.
+- Handle 'call *%reg' by tracking the function pointer loaded from the
+  vtable as TSR_KIND_VFUNC_PTR with its return type (Sashiko).  This
+  form is common due to speculative devirtualization by GCC.
+- Strip the leading '*' of an indirect call operand in call__parse()
+  instead of extract_reg_offset() so that both forms are parsed.
+- Ignore void virtual functions instead of aborting (Namhyung).
+- Keep the existing pointer dereference branch and its fall-through
+  intact; the vtable pointer is detected from the resolved member
+  type there instead of a separate lookup before it.
+- Treat the new register kinds as pointers when saved to the stack.
+
+v3: https://lore.kernel.org/r/20261005201010.36493-1-yzhao62@ncsu.edu
+v2: https://lore.kernel.org/r/20260930210038.196928-1-yzhao62@ncsu.edu
+v1: https://lore.kernel.org/r/20260821050207.4517-1-yzhao62@ncsu.edu
+
+Thanks,
+Yanbo
+
+Yanbo Zhao (3):
+  perf dwarf-aux: Add die_is_compound_type() to handle C++ class types
+  perf dwarf-aux: Add C++ vtable helpers
+  perf annotate: Resolve C++ virtual function calls in x86 insn tracking
+
+ tools/perf/util/annotate-arch/annotate-x86.c |  77 ++++-
+ tools/perf/util/annotate-data.c              |  61 ++--
+ tools/perf/util/annotate-data.h              |   4 +
+ tools/perf/util/disasm.c                     |   7 +
+ tools/perf/util/dwarf-aux.c                  | 282 ++++++++++++++++++-
+ tools/perf/util/dwarf-aux.h                  |  21 ++
+ 6 files changed, 426 insertions(+), 26 deletions(-)
+
+
+base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+-- 
+2.53.0
 
