@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793675216;
-	b=B8Fl/m45HI4MfBb8N0V/5GJ6mdZTzuGpsCqICvl6eJg/DUNTrFXZ/5XJIszTS+X2VKGg
-	 12PY2PZXw82wNoaUyt/LVMltAOKRSh0B4W1lJ35LSQNpq6xryxiHgrV0JZnBaKGcNtUuX
-	 U8RVcUvSX8e+NlDFVyhxkj56eg7yXNN0WSZ4Q0a5xnpTIGZWhPY3PcciWJw/aGNXqE7hn
-	 bfuruey+31WL3EMY8gpozPztnNUxldKmDKyXpwvyCXmsto/RXB6zqJhDnCv0AeTtPQw36
-	 foFPUW5GJx3WF3qjjNcy6T6kAp10g12Lkcgaahr4EW9ptkZDU5wMAvq7zBawpqBEFIw==
+	t=1793675418;
+	b=jfCrVrVP2CAskDJ2YuZU8z4wggvkEJYnOzIrUDcp0C4gpH+0xlmQ5z+Msu0fNQxX/X/U
+	 c+WZilsABzhUfXa48MLNny1NsUdZkVwkWi4mCcnB2c80Ww9E9XN2pmU3IEko+yHxTWQ09
+	 zEpURePQEz35FqBCYXiI0ZiWMp0McKtF8HTpD9vJY3PCd0q7Cif3W1SBDFujizkJc3GRn
+	 SXQ6/bxB90FsQCXnpu/7TZR6rAgxGAfSb1mCkxVqQl9ILujV+E3ZAcrCNxT3rzQLibFCa
+	 rxGO+3AJBORKWH/DppMzsMoNkUeNe3QyTKGp8Zm5d1ujxrILz2O2tzMp483KO7kcBqQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793675216;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793675418;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=jZLWLqRhRtkegqRKyiqKQUk0Xyka4ILUgv3luuJ192Q=;
-	b=t2x/S7jwmwugDPokMADE+EU3brgOz+cGZxg5MkV+rKobukV584xjThyvv6/2CpJeg5JG
-	 W8wmazb52CnX4vfJUx0h3MqJ197+EgT7ohniWZUXIXiNSQ0NbnrIJcebQLf5q6tyq1gtO
-	 FBKRVUuX2EE/bnu6DX7OvhxG2SnyqeD3eZVXP5RunRn79eWK5OlD3RLRf+wzSGTX/oSUK
-	 CR5aLQ+FzQL5usUPAzcdPQ8/0a9D5PMJBj5h4P9B1cW3cAspzOGs6TS8Xgy6US3qAufEu
-	 IQVhm161W7XXX6RaV5Jvxp8/aCchcbsYD2UGe7JNj6iyZn5xRFQFO0DY4yt4u5q0aGw==
+	bh=4FoRRtrxp0vctppTKPVp2pGmiClu1gihgdC2MkLIjrI=;
+	b=lP+q4GVqxnYZ3mHN1669iczinzVjzJDTJW0nlqA8h+WVvK4vy9Rjawkg8p+RFUh00kGV
+	 65M75ri3l1iQGhajO/erFXXynq4Nu6mNjo8hKiPy0epNAENu0N9Pqfj8jFndvFaby/rN/
+	 99T4RvviQd3YbzsQ+UreR2zcIPEszr4tCsoFtM+g4oxSG7wRERRGgSVoSMN5o+zLsTU6v
+	 RWzSAptU86RIAE0BqVjWyOCemPDnNNWVUzBcKuN3xQTubfqJu1p7gG6zkQXwct63O0IdK
+	 5X5dXMIXq0HaE60PZ9iGUgzF3wl4NwiY2VB5saPyed4RzfR9Rv9dEzc0qBn3oRl9UfA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Qwo69olG;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dD6IMQoV;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33697606A326
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 03:06:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42893606A326
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 03:10:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Qwo69olG
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E97D81F00919;
-	Tue,  3 Nov 2026 03:06:55 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dD6IMQoV
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4C1A1F000C1;
+	Tue,  3 Nov 2026 03:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793675216;
-	bh=jZLWLqRhRtkegqRKyiqKQUk0Xyka4ILUgv3luuJ192Q=;
+	s=k20260515; t=1793675417;
+	bh=4FoRRtrxp0vctppTKPVp2pGmiClu1gihgdC2MkLIjrI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Qwo69olGlK48xWKixLimczxoNJBHyWxhUUd7vT1LnbD1Vt2cPTmBbPbr8oqwjcdaC
-	 b8Nh5KbGhRSBkf7ecqQ9TYIkuH6Q4HkiaIt3C7yr/VE1VSq3JotJvlUj4TPOLDo9lC
-	 Mxr0M3X+wOX51fRqoZmzBRg1OUhu2iZXWqXVqAGfkRfsEWbAx4vQY4jvWaJ5xcogLC
-	 nVXlRdq011R16r9swVs4v6yK47Lp0iMsT5kWAuRu9zsI6glate6OnSatBGWMy/O0R3
-	 Xs5hKXq+9dK5U59oCFQXKBB+z3t8wGy49dWrDkP2vcByaC4ob14LbdzHdVGJM8Pmsa
-	 KELckRXuxBQSQ==
-Message-ID: <sashiko-outbox-194491@kernel.org>
+	b=dD6IMQoVWNZE38j97dgTifI45tONSnguZVJEI7K2U3kcjOCmwUGDUWtOvAEFY9PtE
+	 v2fMvpfQaeybP80GBvMmzNlX4L7bHpJRoDaOQcLWsjIlzKMHZfjJVF4INZDjwJMHC7
+	 LqbhiXOBBjfm7QVntARaNHsMK5tNObAGh+97RnuD/Op1XyXREKYk5fdLhc/EnhjtKv
+	 I62E/5VqCZFhCEvF6tAC+rw3K4foZeG0Enf8s1aA+uA0XxfryS/IE7AJJNruwWV/Uj
+	 hrnuSkaPIw/cYzZsYW479WAdN7uJTB6tU+pVFia9OGPTfNYkLbx2Zxc7SgM648P2Ww
+	 3uwNn+YggZVhg==
+Message-ID: <sashiko-outbox-194493@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 3/7] alpha/perf: clear PERF_HES_UPTODATE when an
- event starts counting
+Subject: Re: [PATCH v4 6/7] alpha/perf: attach ProfileMe status as
+ PERF_SAMPLE_RAW data
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Matt Turner" <mattst88@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261102-alpha-profileme-v4-3-61e00f5e1da8@gmail.com>
+In-Reply-To: <20261102-alpha-profileme-v4-6-61e00f5e1da8@gmail.com>
 References: <20261102-alpha-profileme-v4-0-61e00f5e1da8@gmail.com>
- <20261102-alpha-profileme-v4-3-61e00f5e1da8@gmail.com>
+ <20261102-alpha-profileme-v4-6-61e00f5e1da8@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 03:06:55 +0000
+Date: Tue, 03 Nov 2026 03:10:17 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,28 +61,24 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> alpha_pmu_add() sets PERF_HES_UPTODATE and maybe_change_configuration()
-> then programs and enables the counter, but nothing clears the flag until
-> the first alpha_pmu_start(). In that window alpha_pmu_stop() with
-> PERF_EF_UPDATE skips the count update, because the flag claims the count
-> is current. Since the next reload rewrites the counter, everything
-> counted since the event was added is lost.
+> A ProfileMe sample's PC alone does not say what happened to the profiled
+> instruction. I_STAT and PCTR_CTL do: whether it trapped and why, was
+> mispredicted, stalled, or was killed on a wrong path, and what PCTR1
+> counted during the window.
 >=20
-> perf_adjust_freq_unthr_events() does this on the first tick
-> after an event in frequency mode is scheduled in, which is the default
-> for perf record, and it then sees no count to adjust the period with.
+> With PERF_SAMPLE_RAW, attach PMPC, I_STAT and PCTR_CTL to each ProfileMe
+> sample in a versioned struct alpha_profileme_sample. PMPC is included
+> because a PALmode PMPC is not the sample's IP. Killed instructions can be
+> told apart by PM_KILLED_BM and VAL. The 64-bit fields are packed after
+> the 32-bit version, since the payload follows the 32-bit raw size in the
+> sample record: they are then 8-byte aligned in the record, which needs
+> no padding.
 >=20
-> Clear the flag where the event starts counting. alpha_pmu_add() cannot
-> do it, since the event is not programmed until the PMU is enabled, and
-> stopping it before then must not read the counter.
->=20
-> Fixes: a4eaf7f14675 ("perf: Rework the PMU methods")
-> Assisted-by: Claude:claude-opus-5-5
 > Signed-off-by: Matt Turner <mattst88@gmail.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102-alpha-prof=
-ileme-v4-0-61e00f5e1da8@gmail.com?part=3D3
+ileme-v4-0-61e00f5e1da8@gmail.com?part=3D6
 
