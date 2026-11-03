@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793702221;
-	b=PC0qdlW/RiCsy8c8GeDE3FR3TfhtXnozf90wxHuqkhalpf3nl2/VgSACTj8hj85Kb7QE
-	 wuV7vweX5w5oXVphg+9A/MQVXux5/bwLWxePanBgVElSI8+NtXHHnSWtiAPauVBUnHqyq
-	 J7Jyu7vbcYedo5/g8MIsSyw6Lg7H1f0ssydwMhjHAI7CRbm9T6QKa1tO5AVwbeYSlDijw
-	 EVKTS429Ans3/9am1c6KEOuTl33q3IZoodifB2jpAq9O2WhyncepMxX1Z03JQTgXa5JLF
-	 KjaT7Ds2yGwN+gJNAHhxlwcBIIwZirzRNLPdbaIkUIzzTzIL3qSqS6GRDjOEzmIgbkw==
+	t=1793702610;
+	b=lmIMzHOHJclQqoG+pM85THC1jP/d4i2BU6gmTwnbooUg55w8eUj72DcN+2wIxVUW/cps
+	 QDKInXybnjx6wrgJ7AJLhpRSgOkR/vUIaYqy8nkqSSPSbcF6gEfrETvlT528jy6Nor6hl
+	 tQxuqXpmjBnXAeXGuOZvMeWWAZ8h+y1RnQiscDVCe18PY6+H2XW0tDbDWN6AguKp94Xwg
+	 maCS82QYla1xBrEcJ9rB2K7gcDl2LSm+/4qK3P8INzL7GM5GF83mFGpmyScvcTpOcOMPu
+	 ADOyEr1TG4OCKgKlifpbmWRWuBzO3YDMrJJSzADuad2arYYsrRUzMWdwDBSWBFZFKsA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793702221;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793702610;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=eTzZOjveUMfptxlYxZYeO/xxbwzFmEZcXxRkLULcLDE=;
-	b=inYX7+VYgF3UPGSHTw79dbUk7ETBARvYBQUKsPLEEx2REHdZDSRQkvMmOnK7y3GPWHRp
-	 Geo43kvGlWSVj8/O3M3uaOZxnY7JRhd2zqfiA5CgVjXiTdl9Awlw3OTVRvGkDekaYIrb9
-	 fSo8CBfz/OvOiPJa6nBIc5ilOIJhWAkZ4ODnCUUwWNO1PCwr5mPHtrIRTPhdBbacrYzip
-	 7mwCS3j9xbP9wS8cBTedGunPDBy80q03tqS1rv6C9UrZHilKggJ4le95Ik0KyXqdJieUC
-	 XyYb9a042K1YXhmMUram5SRa2/gkmIr/xt+9fhZyCBW2xluP+TIX99TPRzzMXJyf8YQ==
+	bh=in/2KUhYWCUNu5Apx1jARBLYcDYOWMaXTei8yAX4ta0=;
+	b=lTgwUMsDtVYbo03MPB1bBQ8d6WlsSVEY7IjSRs6Dcrlr/ApUetHyWkbFA/riNRfZwGKM
+	 8+hoDB84ODEreiD74m5XaCDA29YxRdnfpsy5kKfeTO9xBZZ+bl9mTdKPMFebFpCInpukM
+	 y1Nib+epqdUCWSIrMgfLLgm9iQyDBWgvhvJpBW8IoQJvK6QrVwfkYM0sBBpNhN3pwj/2Q
+	 RTnUSMTWtqmGZhM/WlWeNIIwbNr/N99Bgldu5ElP0GAfLe4lo7ygXvsW7qEtTWm8za+FH
+	 6/CjyjXjKglduw/VF2b+QmfDoC7ljvtcQEvRMvpH4pwcPGGXRe1oFYkBdy366o0kW1Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oU1ajRVa;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eybOUiWO;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C1C6082BEA
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 10:37:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED488606BA5A
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 10:43:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oU1ajRVa
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D72E1F000C1;
-	Tue,  3 Nov 2026 10:37:01 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eybOUiWO
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 586FB1F000C1;
+	Tue,  3 Nov 2026 10:43:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793702221;
-	bh=eTzZOjveUMfptxlYxZYeO/xxbwzFmEZcXxRkLULcLDE=;
+	s=k20260515; t=1793702609;
+	bh=in/2KUhYWCUNu5Apx1jARBLYcDYOWMaXTei8yAX4ta0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=oU1ajRVazFNXoiUu3zqcvXQDsyshoyXoIp/+qveMata+DKnWwcX8dyZ2c1eF3QtYW
-	 SSoRTJ3sEnBkAK6H7C4S/5fU5Uvf/5Wz0VZOHHQuR+uopjNM2HjN1RvpVWRZc/6oIC
-	 d3RuQ+MPKw0Kbic3AUY2y/IAmMxi5Kmbj8DQ49YwAELUiW9pPBRRkCho/AjiVZp2nk
-	 xVXLCSX/VVu7D4yzNv3CK5tkTC/PeQYSsP+9XlhP23iyjU/W3QlNocpSHELHEZtuMV
-	 /ah9UdMoeJln+R5uaoL+nfRq2vGUbGpaTjZQC233dJcmtIhb7pJd6a+xmMaOB5HuLK
-	 aBpVeLX44KnZg==
-Message-ID: <sashiko-outbox-195059@kernel.org>
+	b=eybOUiWOjpXLyFFMP5S/6yaOVjNNDg7FwcnshlVaOV/iEQtcHca07BWu/OYGfb44P
+	 X3Ejk5iINasDsafNEgb0HxVIa9bIM2M2ea3rUP5qw92ZhwQdKZinWyVqC6RYK/RGk4
+	 kMUohXhI0sZfMrCaE1c8+I3L5bNqe6N51f0de5JeTlcHOgKlE1fKQAbeHayCqslfrp
+	 MbPQoiOsaz9uDt4fs/7OKicFbYKiBx76AMgV1kppo7FD7waWeGNTBD83juMSokdRe3
+	 OC5BhHTaqkAcxtrfB2dGTeE3GkWteSP+AjrNmtuQVRh9gUWoduXgp6x1IKXtQ/rRRO
+	 9xJbXPiHZCsRQ==
+Message-ID: <sashiko-outbox-195062@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 06/13] drivers/perf: apple_m1: Add Apple M3 Series
+Subject: Re: [PATCH 07/13] drivers/perf: apple_m1: Add Apple M4 Series
  Support
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Myria Sarvay" <myrialsarvay@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261103-m3-plus-pmu-events-v1-6-a8eb6c1139fe@gmail.com>
+In-Reply-To: <20261103-m3-plus-pmu-events-v1-7-a8eb6c1139fe@gmail.com>
 References: <20261103-m3-plus-pmu-events-v1-0-a8eb6c1139fe@gmail.com>
- <20261103-m3-plus-pmu-events-v1-6-a8eb6c1139fe@gmail.com>
+ <20261103-m3-plus-pmu-events-v1-7-a8eb6c1139fe@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 10:37:00 +0000
+Date: Tue, 03 Nov 2026 10:43:28 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,9 +63,14 @@ Precedence: list
 
 > From: Myria Sarvay <myrialsarvay@gmail.com>
 >=20
-> Add support for the CPU PMU in the M3 Series chips. These events are
-> encoded with 16 bits, and similar events have different codes when
-> compared to the M1.
+> Add support for the CPU PMU found in the various M4 SoCs. This PMU is
+> almost exactly the same as the M3 PMU, just with different event
+> encodings.
+>=20
+> One notable difference, is the addition of the various ARM_* events,
+> which appear to implement the PMUv3 specific events that the arm PMU
+> specification provides. Hook them up with the various perf events so
+> that more can easily be counted on M4+ devices.
 >=20
 > Signed-off-by: Myria Sarvay <myrialsarvay@gmail.com>
 
@@ -73,5 +78,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103-m3-plus-pm=
-u-events-v1-0-a8eb6c1139fe@gmail.com?part=3D6
+u-events-v1-0-a8eb6c1139fe@gmail.com?part=3D7
 
