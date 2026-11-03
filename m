@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793701380;
-	b=f4lBbI/ANc2h88CnJ1Dfc8pBKp8M/QCcpJZLwkNr6b/bnzxG1ftEJ+1tUlcIpocrZ/HC
-	 j8jvVeOowDmJK5EFcR4mImbgGxVeMVlOizzNS3XSFHCXEx0ILF1LCfjiDBXdypaxYX1JJ
-	 fslD2Q4mjm/SIK1EloRy2lszRZ7h6xPkKnDgw7kQlkpvHgD7A/vw2JgoIC4rQVXzFqyTz
-	 q895Bt0iUBYmt+p+tPxoC5cnY/idoxSGt6Zy2ED2DVG8ti4Eq5SHvFuWquxtbLwzAX6K+
-	 NZwJlrJTbAmLkz4oSjnSAulfmJ8vb1kYCR12YpcGrMAHR/Pv8lpFmAQ8DUXHaFxymCQ==
+	t=1793701543;
+	b=wQxZjuMbFw4/pfwqMSPusAU1ViY6ckiw9LFQxQiuwFqFYaJ06vcVFfM6kFcHC9gf6Pqn
+	 FJJrRd1Wc2pT4QafGzvD/Zkml4q8zMPRbcDM3vcq8uj5sKdi9vdX5Hq+XhCXBIwROY4A8
+	 AFrdYFiZuWpF1qBr3jK9gxy/9HjqiitaLpYrzqjzahsaeU+QYA5MpFh084VXO3hY5d5GU
+	 peRJjIYxsdE5ZZ8fE/wk4ZPDqmPM9i7lkqVekTfFE0qEwmSMj3j+Vs8o3rNRsRTlxfsR6
+	 IcpGv868+5M/7rtJrUktFtUllUcUYCQ5FpnPBEAwB7d8qByi1I0fsdr21ow1prEsUKg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793701380;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793701543;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=mzGQSKGQnbOV66NNIX9oGMolpD9TZ8UkoeQ3WkLIYn8=;
-	b=OI1Ybjhzyt2yyViSbS147xh004sGCSgu59w4wpYZUzBpyu3HlOuDPjfDZH3aymmjS/Sk
-	 DtJ6S+MT9Y2FTt20uYQved8jAMeBEFslnyBxAyQ9myo98gDBEedNaNfqK27jN9pU6eLVh
-	 Lb268VHM60OokdF+uaA609C2bNsyKuV9EIW7ab+0z5rZe2ki7yv3sIrwdOJB1VHvKX13L
-	 r3EK6fcHl+MkXDOjP65qGqiiGPAnov77jLNcYdFu/FG9L6GJBCwWIXUapn2adcOYXNeVz
-	 jAqQ72XuHj5ka3emxO/vJWGZS1Q0wh09yXJfUEBTJUnarczrtbzyCFr64e2IpD3D6tw==
+	bh=xkJ+SVshEZZRilOCb8+itNxU/62wh/KXfa0M4Lru4p0=;
+	b=LQ5pFh7AY6GO7BJngp0DGN+1sjv5bhxHT81jVqZ/qbbAjh5FgOkhCH9S6UjklWON3PX0
+	 U4Zod8Gw3vuxR+aPXSWx2vSRQIq/hemvjjWIEsabRda3vQ5blQ93oRfFzYeZ7H3pj2Hgk
+	 GEm50jM9sDShsiNfRgUgifLWl8jbr1E7Pc0nZlyj36hkTtIyu5je9+2B7WH+DDg1j78YD
+	 3eklINZdXMknloreCBcZ3Ei7cW9V4bs+tCpsrjJ7ct/SOPCABqxQ0bTsOqA/Kj+fEDS96
+	 Sgp+m+COFcH4VKUbzpe9bvbyOhuy5LKhMqIH5FOW2//4c80oqpdSrbhpltXkiPk/Ayw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=odhlFyDP;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZwmotHUV;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF0D606A839
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 10:22:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65109606B12D
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 10:25:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=odhlFyDP
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C9901F000C1;
-	Tue,  3 Nov 2026 10:22:59 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZwmotHUV
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD2471F00A23;
+	Tue,  3 Nov 2026 10:25:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793701379;
-	bh=mzGQSKGQnbOV66NNIX9oGMolpD9TZ8UkoeQ3WkLIYn8=;
+	s=k20260515; t=1793701543;
+	bh=xkJ+SVshEZZRilOCb8+itNxU/62wh/KXfa0M4Lru4p0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=odhlFyDPD+Kzwyxjj4WWOv5GaqdenFms2717+e8plJ+lpXCXXfIivu9v6dhcVpUi4
-	 aUcOC7ZQTHZXscmN/8Iwwq92c92/i36cJu+FdgsIHFGIGPdt2uPba9RUcT6rognyYv
-	 BCWsbVG1TTMppcC3+SpxDZjYwpQ0XP4DOfIq2UCoE9mbuf+FapUo97XQzGrBlKNgVM
-	 T3Ygi7/uNopLRJcN5RTf9hv/N587BDbHhbsQ8Ym13mfWGuSbEl0SBlqc5w4cyyYInC
-	 dHWmZykdMi+QF7JZy4XWFqXNcowxC6F6xCq9ObTaWkagJ9BXermybwMMXW0m7fLtSw
-	 znGP7ejPqp6Kg==
-Message-ID: <sashiko-outbox-195036@kernel.org>
+	b=ZwmotHUVL3tc+M+MbeCRX631ypcKKDMZ6q9GO0mwhK8nT/0Q3A2cd/NKvDPBxu6SX
+	 H1h5D0m5FvFai2PkB2QAJ/WnLeI3Li1LWTNGyMxnSXJqEZSNpQeZMYjMZtSR0IIuQw
+	 eN3zLl0PuQJIGGJMrKoBC22DxGQG4r1zJxObf/6c0FaRi09WiXMoXtjMIe+Jf5cU7X
+	 4OTBQ8U7kUS2SL+MKPJ2o7GlgfmjgaDI/EE3MotrAzbrigEqV90cIgljSx6KNM4haM
+	 kn8MSgLpznVhdh7pSTAaO6dOFKXjI0lZK17iMI5PoxyJMuTtjsqL0eWrzlB88lvY67
+	 nPrUUZqRKNnPA==
+Message-ID: <sashiko-outbox-195041@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 03/13] drivers/perf: apple_m1: Support
- per-implementation event tables
+Subject: Re: [PATCH 04/13] drivers/perf: apple_m1: Support
+ per-implementation event size
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Myria Sarvay" <myrialsarvay@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261103-m3-plus-pmu-events-v1-3-a8eb6c1139fe@gmail.com>
+In-Reply-To: <20261103-m3-plus-pmu-events-v1-4-a8eb6c1139fe@gmail.com>
 References: <20261103-m3-plus-pmu-events-v1-0-a8eb6c1139fe@gmail.com>
- <20261103-m3-plus-pmu-events-v1-3-a8eb6c1139fe@gmail.com>
+ <20261103-m3-plus-pmu-events-v1-4-a8eb6c1139fe@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 10:22:57 +0000
+Date: Tue, 03 Nov 2026 10:25:42 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,18 +61,18 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> From: Nick Chan <towinchenmi@gmail.com>
+> From: Myria Sarvay <myrialsarvay@gmail.com>
 >=20
-> Use per-implementation event tables to allow supporting implementations
-> with a different list of events and event affinities.
+> On M3 and later silicon, events are 16-bits instead of the 8-bits of
+> earlier implementations.
 >=20
-> Signed-off-by: Nick Chan <towinchenmi@gmail.com>
-> Co-developed-by: Myria Sarvay <myrialsarvay@gmail.com>
+> Co-developed-by: Yuvan Shen <yuvanshen09@gmail.com>
+> Signed-off-by: Yuvan Shen <yuvanshen09@gmail.com>
 > Signed-off-by: Myria Sarvay <myrialsarvay@gmail.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103-m3-plus-pm=
-u-events-v1-0-a8eb6c1139fe@gmail.com?part=3D3
+u-events-v1-0-a8eb6c1139fe@gmail.com?part=3D4
 
