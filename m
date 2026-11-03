@@ -1,73 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.71
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793749541;
-	b=Z7gxd3JdQg9h++VpyREL8FODN0Wzgf6RR5y+EuhS0IC5ktuBlNllE03R4ehFLUJKt1DO
-	 3RIpf1gEZDIuvLJW7v6nhcL5OEey44w0KoWWBcdp3gPhAbgjfUnzRi8WfUWC4FzP3W/xD
-	 eCg1yZQ5cSAAgoicyvoX7vKx56j0vfvMd8OC19UMSNzyu4PRbdCPnUsp5BYKSSiIzfSEC
-	 dFfYLi0eHgwEev6APACzPoPsvZFiJcYypBzkKAmQZ1qLNe1zo2Bh2dHXpw1DYxdVKK8DL
-	 /zn/RWrazMjrAv9Wu9EBvszTQqYEOOGD8fjiAwT2BiEWD5a9qeVr3GtVfh5SiL12MgQ==
+	t=1793749538;
+	b=US05LzksNU5GpNjxPRwU1ibVp0lSlxtuXAtedi7gUk8Wibkdou9QzGK8sl4fEhfvmmHU
+	 LfMnNGKgJFc55Vmci7650RvQ2N6ZnkCbkN0tC4YSjysKAXGi1zDo97gv3PPpkp27O7hpv
+	 /rCog/kqdh6TkDdyAQ+NYNy50PqT+EDLPIxtmhjJ7hJJ1S/Ag77YFCQXzbv8ELkdMnY/9
+	 JAa6ZO5HQYs56cjTvx+lmQK1MlLuKv4lXcz4iDdk1oisqcj/qTj0C9zqWmqqGPx3O4k3z
+	 GSdDywJwK8tuwJDJvuP5o1/OLTUfe7VIAgFOI2t9JRe7L0E/7W3TEQ/Rd+9nImAeLVg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793749541;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793749538;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Received:Date:In-Reply-To:Mime-Version:
 	 References:X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=IF7V8sxDy6cgnQTFSKHmtTWDonO4IW8GRaCyN5gvOjA=;
-	b=k8Z8OPo6NjwBKawqt2+bSJhg0FAbvjrijduxE/6qnnKKnfUuyzgHGkH2SHXYZM2QGrG8
-	 9wI0D4oaQHtgyk14pIq9Pm4wTk4KfLv+vW0huPOJfwH0sFSc79cuciN2OYCyrroTpg/uT
-	 z3uA0TyBtGu89h3uZzIBHSNIyP1HfzEpUQW1DxGDvtKP3AOgso3tTKR6lRkso8S4m23wd
-	 UuB6CyTi1dUAdzcOsBjSALtbNj+jr7JIzDcdTz7vyTuwC5qruW60SuzwaEaWWSmSCRDKB
-	 J7BFTVzfxswNMZjXrzwoZ0nkJovjyWmAQDOerunDTZdLSFlgqqDnpJcRHQIl3sAf1TA==
+	bh=f04SE8jtYJAS4lmqfAB8bp6af/1ppJs2us9i398YNlc=;
+	b=MUnRq2esZIpVaVRIHVMLWGQxJ6/QB4hS62TAqdqA/+Se94r3t78XeZOTuSiDAjAwB28u
+	 T3AAUPVCTtIU93+kt2+ZucQybIgRxeFvzwxax6I1xjI2+wC+slVsgNjmvBoT/+2joVWo6
+	 v6l8CwZmRl3YrCXauiwGJg67RvLMf1koyg8Sge9wRhcvaZVbLcbweCvK09KrGbo4IJXiq
+	 EJjcbNWVeK09ld+oWelR5s48yVZg58ro81686xYe+rsr+8NHH0xq0/QRRK+PnVVxQksyB
+	 l/phmBh1BPH4YEsZkn5HiIKpAthIuKdQsRWnhZmMkXa+DN+x1nY8tMaZA7IIQeu0E8g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=DA4BwjsV;
-	arc=none smtp.remote-ip=74.125.82.198
-Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=BncyKMkV;
+	arc=none smtp.remote-ip=74.125.82.71
+Received: from mail-dl1-f71.google.com (mail-dl1-f71.google.com [74.125.82.71])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C83E0606D82F
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 23:45:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C83E0606D82F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2437D606D80B
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 23:45:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2437D606D80B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=DA4BwjsV
-Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-36ca254ca2cso149054eec.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2026 15:45:40 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=BncyKMkV
+Received: by mail-dl1-f71.google.com with SMTP id a92af1059eb24-14373747468so374908c88.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2026 15:45:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793749540; x=1794354340; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1793749537; x=1794354337; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=IF7V8sxDy6cgnQTFSKHmtTWDonO4IW8GRaCyN5gvOjA=;
-        b=DA4BwjsVrDOhR9y+2LT/STSL4JHHxCJtZLyK6r2KAuDp8q3hMntw2iv+2ZOv/+/Utr
-         J6JlrWywIj5d4icHQFDxVazKd3GYpXJ5mfoucyz5R0ZIP0Cd7FA+Xiq80m5InG5JvGxW
-         niSrDS9wjb77g4w8SgEiWwzGn7si+QADxrNuX5g8xiDRGv12CtsE26wma9J2RArsdmDA
-         1CcdMT3Q+SPLgyGfcsHEaGpNB3OgEAbW/3KOJ6juI4/xaf4rHixUY896JvL2luMYg+Gc
-         FoYROGRKmOySVuPTwW3iSo9mPcMMubY9/vxV1xkZDekfoPtk7EeTDpCh+gSETNZQHg+P
-         VVWA==
+        bh=f04SE8jtYJAS4lmqfAB8bp6af/1ppJs2us9i398YNlc=;
+        b=BncyKMkVdt4jXMWiwPEG1jr85wLTQ6CSysk9cSRw9kXm57myovGWQpf8KpbnRtUIlj
+         KnlNR0iyRprRolXRNXEZ/WdvYeXCBMW8x5JmJ1Nl42QWTUOovYdC3R0phwfuvC4Ah3wt
+         MH+TxF5fnEW8Gci05fC1ZmpqJlHmIdU2aSn3o8THt+ub6Z3EBAggXUT980fYmQ9VbLNm
+         07G9IKBilGedSAAngvHI5HareF/PO37T+s6fQb9eqOvNejEKDZ9ZywDV7BtLJsGUC00l
+         zK4dL/g3amMhNg2vL8IGsJiAcPmlp6NxgcQY5yn6V9Fp+ql8r8E7ZpXHzujOASwPcoX9
+         k9yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793749540; x=1794354340;
+        d=1e100.net; s=20260707; t=1793749537; x=1794354337;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=IF7V8sxDy6cgnQTFSKHmtTWDonO4IW8GRaCyN5gvOjA=;
-        b=L3rFXZNrh41X/0koKKUSddJmOwR6gWT4qC0NHrR7FE1XFUdHzmC7+tHpfuaq62N6bZ
-         c8c5PNp6UyRfhKI11uyX4/bEZ5sMhn19ZGe3hmwwk23Rec/o3oJ79Ezce51beoTU1V3d
-         ONo7ZlooUx02QF9tU7Df1wBQEJaP7P3KcfOlpipHCisRZVUK0fs/2uA2Euv13RzAwROk
-         ESwm4vsgkfEa2DLtGSuXIrANh79OE7RbneJTV2jVmZ51h0WDNxFUu+YlOnFnoR3519wb
-         KDyC+dhCz6SceDBnfwzb0yPP3UTxygpwMjuqT3gpzinYQ0JUpsfVMeXIZhdLep/DOlwP
-         fbnA==
-X-Gm-Message-State: APuU4Z9s2MMJZjWmb4gwTyavyehlvPYmQGsc3L5bi0viKs9so5dRBcAx
-	8ddetMNF4MbxyAJ8NA8NV9YwrjhKIaKtf4uBlbD8O321EW4DmKVLReMExuy60SpW6sTiARDETyu
-	Nv0IEFY54QO8I+3OOa4kEajGVKKOBGoaqVxBMEt+mHGLtECgXk4VwdzUk9xK6xB8FADxCS6HENs
-	r6hNmbOjYC6yR9ZpN6wzAXo9EfgRewBJR9LqRMCyxgWm9BGT/0XENRPU0=
-X-Received: from dybgn33.prod.google.com ([2002:a05:7301:2521:b0:34c:9660:9612])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:41c8:10b0:367:185e:867a
- with SMTP id 5a478bee46e88-36a4242366fmr21892131eec.38.1793749539575; Tue, 03
- Nov 2026 15:45:39 -0800 (PST)
-Date: Tue,  3 Nov 2026 15:44:28 -0800
+        bh=f04SE8jtYJAS4lmqfAB8bp6af/1ppJs2us9i398YNlc=;
+        b=SJYs0S8rEnmAF4MuN+3MtTW4RGTl3hUs0Unv9VqRt2KtNrL/vtUUsV9y4i8vcJrgan
+         3tyNjiuR1yODqhPr5L/Bv5KtdxoDNlI0CIzGBkalgcxBeMQMd3d/ADfjBAxh4UZ3OmLx
+         VosLvE9ZBJqsM5We0sOIKs2pWnoavt9MTtqxri7DHLs4Mj9HkkIx/T8yJomL7qyWMY+t
+         667kBzSq6cqFRe7AnroGrgebpgRYo6CX6B3N+nfg4ntwDBruwPg7HFU0YUQRyeQVOIYr
+         Rg5AHVLT588AuFdeG886llyz6KsKI3YvzHl8rbIq2kX9edQe5gMrlly4Ud6Rbag18l6N
+         EFlw==
+X-Gm-Message-State: APuU4Z+D3KL/Tr067n0rTHNeP7USxFcqlFXtXcYzO++CZv7JHaG9BbNM
+	GVePDc39gRzKmpxXMlIcrJF3cT804URybfD2fUW2gzryrD87f843IEhiWBi8nER8L9hRn+YrSQn
+	JBXwOZRMBh24cfm8OMN4cplrLhQ9OpsCbjVSJZG59A3Woxq8OSGC1dfdn/d9lFUCV7VdFC1kw+z
+	C6CFAyI7t5M3tqr7HeAtuYK+AcENuyFqeJLsj6dNGZlBWzgHWRqabvq5s=
+X-Received: from dlaj3.prod.google.com ([2002:a05:701b:2803:b0:1ab:7a71:e7])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:7f0b:b0:13b:3132:6e99
+ with SMTP id a92af1059eb24-1ac5af2da84mr19796869c88.20.1793749536644; Tue, 03
+ Nov 2026 15:45:36 -0800 (PST)
+Date: Tue,  3 Nov 2026 15:44:27 -0800
 In-Reply-To: <20261103234502.1008382-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -80,8 +80,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261103234502.1008382-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.385.gac671c819a-goog
-Message-ID: <20261103234502.1008382-13-irogers@google.com>
-Subject: [PATCH v1 12/41] perf test: Add CPUID matching tests for other architectures
+Message-ID: <20261103234502.1008382-12-irogers@google.com>
+Subject: [PATCH v1 11/41] perf test: Make the CPUID matching test architecture independent
 From: Ian Rogers <irogers@google.com>
 To: linux-perf-users@vger.kernel.org, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
@@ -96,110 +96,138 @@ Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
 	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Test strcmp_cpuid_str() for the ELF machines other than arm64: exact
-matching of the test and common tables, x86 stepping specific and
-stepping optional matching, PowerPC PVR matching, conversion of x86
-and PowerPC HEADER_CPUID strings, and regular expression matching for
-RISC-V and s390 CPUIDs, where RISC-V's hyphens don't imply an x86
-stepping.
+The arm64 CPUID matching test called strcmp_cpuid_str(), whose arm64
+MIDR comparison was only built for arm64. Now that strcmp_cpuid_str()
+is given the ELF machine of the CPUIDs and all of its comparisons are
+in util/header.c, the test can run on every architecture.
+
+Move the test from arch/arm64/tests to tests, as a "CPUID matching"
+suite with an "arm64 MIDR" test case.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/cpuid-match.c | 79 ++++++++++++++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
+ tools/perf/arch/arm64/include/arch-tests.h      |  1 -
+ tools/perf/arch/arm64/tests/Build               |  1 -
+ tools/perf/arch/arm64/tests/arch-tests.c        |  4 ----
+ tools/perf/tests/Build                          |  1 +
+ tools/perf/tests/builtin-test.c                 |  1 +
+ tools/perf/{arch/arm64 => }/tests/cpuid-match.c | 17 +++++++++++++----
+ tools/perf/tests/tests.h                        |  1 +
+ 7 files changed, 16 insertions(+), 10 deletions(-)
+ rename tools/perf/{arch/arm64 => }/tests/cpuid-match.c (75%)
 
-diff --git a/tools/perf/tests/cpuid-match.c b/tools/perf/tests/cpuid-match.c
-index e3d4a349f393..826380241a0f 100644
---- a/tools/perf/tests/cpuid-match.c
-+++ b/tools/perf/tests/cpuid-match.c
-@@ -36,8 +36,87 @@ static int test__cpuid_match_arm64(struct test_suite *test __maybe_unused,
- 	return 0;
- }
+diff --git a/tools/perf/arch/arm64/include/arch-tests.h b/tools/perf/arch/arm64/include/arch-tests.h
+index 474d7cf5afbd..2b3834a5ddbb 100644
+--- a/tools/perf/arch/arm64/include/arch-tests.h
++++ b/tools/perf/arch/arm64/include/arch-tests.h
+@@ -4,7 +4,6 @@
  
-+static int test__cpuid_match_exact(struct test_suite *test __maybe_unused,
-+				   int subtest __maybe_unused)
-+{
-+	/* The test and common tables are compared exactly. */
-+	TEST_ASSERT_VAL("same", !strcmp_cpuid_str(EM_NONE, "testcpu", "testcpu"));
-+	TEST_ASSERT_VAL("different", strcmp_cpuid_str(EM_NONE, "common", "testcpu"));
-+	TEST_ASSERT_VAL("no regex", strcmp_cpuid_str(EM_NONE, "test.*", "testcpu"));
-+	return 0;
-+}
-+
-+static int test__cpuid_match_x86(struct test_suite *test __maybe_unused,
-+				 int subtest __maybe_unused)
-+{
-+	const char *zen3 = "AuthenticAMD-25-([245][[:xdigit:]]|[[:xdigit:]])";
-+
-+	/* Stepping specific entries. */
-+	TEST_ASSERT_VAL("stepping match",
-+			!strcmp_cpuid_str(EM_X86_64, "GenuineIntel-6-55-[01234]",
-+					  "GenuineIntel-6-55-4"));
-+	TEST_ASSERT_VAL("stepping mismatch",
-+			strcmp_cpuid_str(EM_X86_64, "GenuineIntel-6-55-[56789ABCDEF]",
-+					 "GenuineIntel-6-55-4"));
-+	/* The stepping is ignored when the entry isn't stepping specific. */
-+	TEST_ASSERT_VAL("ignore stepping",
-+			!strcmp_cpuid_str(EM_X86_64, "GenuineIntel-6-(97|9A|B7|BA|BF)",
-+					  "GenuineIntel-6-B7-1"));
-+	TEST_ASSERT_VAL("model mismatch",
-+			strcmp_cpuid_str(EM_X86_64, "GenuineIntel-6-(97|9A|B7|BA|BF)",
-+					 "GenuineIntel-6-55-4"));
-+	/* HEADER_CPUID is "vendor,family,model,step" in decimal, model 85 is 0x55. */
-+	TEST_ASSERT_VAL("header stepping match",
-+			!strcmp_cpuid_str(EM_X86_64, "GenuineIntel-6-55-[01234]",
-+					  "GenuineIntel,6,85,4"));
-+	TEST_ASSERT_VAL("header ignore stepping",
-+			!strcmp_cpuid_str(EM_X86_64, zen3, "AuthenticAMD,25,33,2"));
-+	/* 32-bit x86 uses the same comparison. */
-+	TEST_ASSERT_VAL("i386", !strcmp_cpuid_str(EM_386, "GenuineIntel-6-55-[01234]",
-+						  "GenuineIntel-6-55-4"));
-+	return 0;
-+}
-+
-+static int test__cpuid_match_powerpc(struct test_suite *test __maybe_unused,
-+				     int subtest __maybe_unused)
-+{
-+	TEST_ASSERT_VAL("pvr match",
-+			!strcmp_cpuid_str(EM_PPC64, "0x004e[[:xdigit:]]{4}", "0x004e0200"));
-+	TEST_ASSERT_VAL("pvr mismatch",
-+			strcmp_cpuid_str(EM_PPC64, "0x0080[[:xdigit:]]{4}", "0x004e0200"));
-+	/* HEADER_CPUID is "pvr_ver,pvr_rev" in decimal. */
-+	TEST_ASSERT_VAL("header pvr match",
-+			!strcmp_cpuid_str(EM_PPC64, "0x004e[[:xdigit:]]{4}", "78,512"));
-+	TEST_ASSERT_VAL("header pvr mismatch",
-+			strcmp_cpuid_str(EM_PPC64, "0x0080[[:xdigit:]]{4}", "78,512"));
-+	return 0;
-+}
-+
-+static int test__cpuid_match_regex(struct test_suite *test __maybe_unused,
-+				   int subtest __maybe_unused)
-+{
-+	/* Three hyphens in a RISC-V CPUID don't imply an x86 stepping. */
-+	TEST_ASSERT_VAL("riscv match",
-+			!strcmp_cpuid_str(EM_RISCV, "0x489-0x8000000000000007-0x[[:xdigit:]]+",
-+					  "0x489-0x8000000000000007-0x0000000000000001"));
-+	TEST_ASSERT_VAL("riscv mismatch",
-+			strcmp_cpuid_str(EM_RISCV, "0x489-0x8000000000000008-0x[[:xdigit:]]+",
-+					 "0x489-0x8000000000000007-0x0000000000000001"));
-+	TEST_ASSERT_VAL("s390 match",
-+			!strcmp_cpuid_str(EM_S390, "^IBM.209[78].*[13]\\.[1-5].[[:xdigit:]]+$",
-+					  "IBM,2097,705,T01,1.3,002f"));
-+	/* The whole CPUID must match. */
-+	TEST_ASSERT_VAL("partial match",
-+			strcmp_cpuid_str(EM_S390, "IBM,2097", "IBM,2097,705,T01,1.3,002f"));
-+	return 0;
-+}
-+
- static struct test_case tests__cpuid_match[] = {
- 	TEST_CASE("arm64 MIDR", cpuid_match_arm64),
-+	TEST_CASE("Exact test and common tables", cpuid_match_exact),
-+	TEST_CASE("x86", cpuid_match_x86),
-+	TEST_CASE("PowerPC", cpuid_match_powerpc),
-+	TEST_CASE("Regular expression", cpuid_match_regex),
- 	{ .name = NULL, }
+ struct test_suite;
+ 
+-int test__cpuid_match(struct test_suite *test, int subtest);
+ extern struct test_suite *arch_tests[];
+ 
+ #endif
+diff --git a/tools/perf/arch/arm64/tests/Build b/tools/perf/arch/arm64/tests/Build
+index d44c9de92d42..bd15c6bbc1b2 100644
+--- a/tools/perf/arch/arm64/tests/Build
++++ b/tools/perf/arch/arm64/tests/Build
+@@ -2,4 +2,3 @@ perf-test-y += regs_load.o
+ perf-test-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
+ 
+ perf-test-y += arch-tests.o
+-perf-test-y += cpuid-match.o
+diff --git a/tools/perf/arch/arm64/tests/arch-tests.c b/tools/perf/arch/arm64/tests/arch-tests.c
+index 74932e72c727..ad16b4f8f63e 100644
+--- a/tools/perf/arch/arm64/tests/arch-tests.c
++++ b/tools/perf/arch/arm64/tests/arch-tests.c
+@@ -3,13 +3,9 @@
+ #include "tests/tests.h"
+ #include "arch-tests.h"
+ 
+-
+-DEFINE_SUITE("arm64 CPUID matching", cpuid_match);
+-
+ struct test_suite *arch_tests[] = {
+ #ifdef HAVE_DWARF_UNWIND_SUPPORT
+ 	&suite__dwarf_unwind,
+ #endif
+-	&suite__cpuid_match,
+ 	NULL,
+ };
+diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+index 58858f3d2bf9..4a45b6740050 100644
+--- a/tools/perf/tests/Build
++++ b/tools/perf/tests/Build
+@@ -44,6 +44,7 @@ perf-test-y += stat.o
+ perf-test-y += event_update.o
+ perf-test-y += event-times.o
+ perf-test-y += expr.o
++perf-test-y += cpuid-match.o
+ perf-test-y += backward-ring-buffer.o
+ perf-test-y += sdt.o
+ perf-test-y += is_printable_array.o
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 0b8897fd42ca..67d162ec9ef2 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -177,6 +177,7 @@ static struct test_suite *generic_tests[] = {
+ 	&suite__util,
+ 	&suite__subcmd_help,
+ 	&suite__kallsyms_split,
++	&suite__cpuid_match,
+ 	NULL,
  };
  
+diff --git a/tools/perf/arch/arm64/tests/cpuid-match.c b/tools/perf/tests/cpuid-match.c
+similarity index 75%
+rename from tools/perf/arch/arm64/tests/cpuid-match.c
+rename to tools/perf/tests/cpuid-match.c
+index b073ac33ea9b..e3d4a349f393 100644
+--- a/tools/perf/arch/arm64/tests/cpuid-match.c
++++ b/tools/perf/tests/cpuid-match.c
+@@ -2,12 +2,11 @@
+ #include <linux/compiler.h>
+ #include <elf.h>
+ 
+-#include "arch-tests.h"
+-#include "tests/tests.h"
++#include "tests.h"
+ #include "util/header.h"
+ 
+-int test__cpuid_match(struct test_suite *test __maybe_unused,
+-			     int subtest __maybe_unused)
++static int test__cpuid_match_arm64(struct test_suite *test __maybe_unused,
++				   int subtest __maybe_unused)
+ {
+ 	/* midr with no leading zeros matches */
+ 	if (strcmp_cpuid_str(EM_AARCH64, "0x410fd0c0", "0x00000000410fd0c0"))
+@@ -36,3 +35,13 @@ int test__cpuid_match(struct test_suite *test __maybe_unused,
+ 
+ 	return 0;
+ }
++
++static struct test_case tests__cpuid_match[] = {
++	TEST_CASE("arm64 MIDR", cpuid_match_arm64),
++	{ .name = NULL, }
++};
++
++struct test_suite suite__cpuid_match = {
++	.desc = "CPUID matching",
++	.test_cases = tests__cpuid_match,
++};
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index 20ae3609892b..0d54d1d5acd2 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -201,6 +201,7 @@ DECLARE_SUITE(util);
+ DECLARE_SUITE(uncore_event_sorting);
+ DECLARE_SUITE(subcmd_help);
+ DECLARE_SUITE(kallsyms_split);
++DECLARE_SUITE(cpuid_match);
+ 
+ /*
+  * PowerPC and S390 do not support creation of instruction breakpoints using the
 -- 
 2.56.0.385.gac671c819a-goog
 
