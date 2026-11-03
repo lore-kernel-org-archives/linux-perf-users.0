@@ -1,89 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.70.43.100
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793707632;
-	b=q+8gHo89atQ6AmLzpYI5ZWpavqhNiPwZUn1KM7vFkTqUTUdkjV+Jo8XgSu1mtr6rWU5j
-	 kaErjyiciLMidAYtVaICqV2CPVI7qUnt8rxeDuhc8Goyv07+w80KunZAbSPCbBCsobMPm
-	 gflasxWv+ILQ1+520YhRMpBDruafKzBRtnpz+SSf8hp+6f2TfQ5/mb4RgG3QNDurG2dHh
-	 w4Q/BlUKKNdOUQnRwe9jGMzXQC6+icrjF0o2BuR1uLZP6puQ8eJ44mMpqEF4wLGR4MAQS
-	 vvD/BIng3uRlzN/aqX5dUGL1Uun77MAuuTdH0wtbjRu8oWdUFueE8NFw0J2ZOyAVOCA==
+	t=1793711275;
+	b=3DyoV4r0NrbF5cT1NTjbklWrH9hyDux2gCUw0ji6AKju8Zx0NB6klxVsgD6qlDKI722E
+	 XJEF306nYZNfbmRAfUXNwaZIMKDpNuwli7oFsTdscBsn+RtEAgilX3Rw3Po4hl/ZRDvDJ
+	 8WKWJEV4Yk55xAY82S0irjQ8iQPc7NLiKVhMq0eUFhvk1ei+Ig22HTOrl+sv/nWm0O6n/
+	 mR7Dz77mEjykmr6Q3G1xAvxC1dfWF2MuOCpwwOSHGos/ngaqGDkUxzTOv0q3PNoOk4d+X
+	 UXRri5rf3eJxeIqm4kVhziYs2gJUybhaRKV5BSpp1QRbPlhuC8Gf9m3/lZwtZHDWj1w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793707632;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793711275;
+	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
+	 Feedback-ID:X-Pm-Message-ID:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=ySKYasBAII9CIYefFSpb/rg/yMp8IEyXS3kf72/gGBA=;
-	b=tl3+HgTLSk/32w688QeiinrIy38cDEPcpRcUT4Ep9S6JmEVPRCp+LW7OWjDp+Vzrx04q
-	 eTlY5GuvLnWfdFq3ZWR/TzOD4U3xMPXDWu8RsJ5+dJ+ta+FTZBXIGSQ1nCDykM5SvcEfP
-	 PQzNC7vWeUgA12IeA5MLbOXeTVdzxuzsOVvmtoxxTXSBkJxVNfk8JOsz7PRFNUoU8Ylxh
-	 lFZIraQyPoCEYRTxtOiXYGBWKiZxjkDd/Z3ofqou95zAz9Rh19kD3tYE270VC2P6ALai4
-	 nV9QkQBdoGVruB/Os8nUOVeOICIbuftRGRPfKj/tO6q0YiCDgNo2Y+ICpIwSoyeG6LA==
+	bh=zW6mfRDfJlJujbvw1IGU4dhItJDWWt4lFHg3ixIXfNc=;
+	b=uigcP5wNEP9+cow+n749aYp+pbwcjTZRYzrEdrYSz/4WYA4aRW48orFqEDeIeyJ7viiU
+	 BrHt028gPfvn/t6w2jD2cwZZz1d05hIaxiAz5gAHHI1+w5bJdjGu9s6MVif7FCCi/UKZH
+	 ofRgxS16WfolJS6JEwlX2n/fMcV3vuMtaFK8YdwEPiQOHAhuLQkpXJZ6iQ5xSmJGiV8D9
+	 xYpXypMhz52LG2Xt4sfAjeYH47JiLHz/NTaswLOunoD+54bZIrXBJn+GxVJfciJedVIJi
+	 +jr41qRLDlPERl/u1/BKKogbrT8dZrDTTJ8IFlXywTt64flW9cxvu4R4xqsWFV4jAeQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linaro.org;
-	spf=pass smtp.mailfrom=linaro.org;
-	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=m3WUwboX;
-	arc=none smtp.remote-ip=209.85.221.50
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=proton.me;
+	spf=pass smtp.mailfrom=proton.me;
+	dkim=pass header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=iqCzK0sc;
+	arc=none smtp.remote-ip=185.70.43.100
+Received: from mail-43100.protonmail.ch (mail-43100.protonmail.ch [185.70.43.100])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A508606A330
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 12:07:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3A508606A330
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA8A606A32C;
+	Tue,  3 Nov 2026 13:07:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BFA8A606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=m3WUwboX
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-48c4d870d54so2461907f8f.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2026 04:07:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1793707631; x=1794312431; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ySKYasBAII9CIYefFSpb/rg/yMp8IEyXS3kf72/gGBA=;
-        b=m3WUwboXryGP5oVHnpI0HTzT9uj7fYvhet6mk4sWWx0x4PrenYceEUJlv3euNPKAEo
-         BbArikY82AVFcsR3v3ktJXu59DemC8n06or/d9t8esVwbC+0zqTm+veRMq9ktkjRDpWK
-         FFldoBEWsCAFy3szNe2uF5pilY/Qdbzg/BIQA9g3Yxs9pWFLrBebl8W3+IY9hDUTNj7j
-         A+aixhJV8XJQnDBA7LLphsWRsi2u5wYREm1FJDZ9B+3M3ep8ZkgORTwBQh+2smHpbCKd
-         hIE1bmbd9UxOBmBJtP6w+vYznTkRkhYQS4gTSNHh+ca/oAGe7BqS99MI3g8T6Gb/c8Ow
-         AkkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793707631; x=1794312431;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=ySKYasBAII9CIYefFSpb/rg/yMp8IEyXS3kf72/gGBA=;
-        b=rN+ZSpqPUJ2TvYME3bVG+RNeVg+3X4MaOQYKPL3aUQ48cqJRRZ72QloboE0aXGmKiP
-         CF5+8sVeU2Ppy64qxWuTFBsaq+lzvpimQNw1ZXJ7dm2Q3UaZwTc2R/Vnt1FnO5h1o7t3
-         959ATvlpSNp9MyYbZ12ueCiRKbUhvEYtFiCg2a08vC6jDq3IQuG//AynVptYsnTdndhD
-         sewcu5DMmMKFUTyfE7Wdhc8B642O86e4UK/t0bM65rkVrYWEPX/BUDI3/PVQSUMiZI6c
-         x7IwlxS+PMjd83GQiwPhXQ3i9v9Him1jdLBa5erHeYmAegEg8fq6rcQDPbi5ht5YHn+3
-         bvQw==
-X-Forwarded-Encrypted: i=1; AKwUvBxM5Fe2DYx9lGJMTa0kEuqY3kctXJlqfX1l9ZhkYULBB9l/px/cl8SD046UPcJHAixeyJt4C/VuYyj6EanAWBL6@vger.kernel.org
-X-Gm-Message-State: APuU4Z8GiQmWk2SnDVwp0kAF1xfkA8StBAU1fsXNYHLL3uQoHU2qGeyg
-	Lk6Lmv8lafWFEdIlNoEXWI2eqqqrs47qAx/5yey+uRlNugxpKc0xACu7XjjjYAKjQ7zFMo3CROr
-	xStyxIC8=
-X-Gm-Gg: AYBFou2dxkVju1XquF7LgumBgfqJU0s41ss/yIpdsjlngfdewA5hpizOjirMvDFLmbx
-	wI8Rb2818cUTamw5ZakQgTdZHgW1lOD9S25kXIM/jfu8H0nlGT5fzc2M3z/KF7WFnF7CzHlVwc8
-	4KMeRBpH9mIR/uJKnhDsiQdbYPfzIz79+zatC9mR5VXWuMlz10Sx3Cak1HQH7EJvYpPjLUAcP/J
-	Fp+J7DSPLki+EDclupNqBRnIlQPxQGHR/Uwdn7GraLZmq7iiNs8vzHrRO5SzwjTz6LRb4IX2rB9
-	LmbFd+wMvDiCs34JRTqurLfeE7AvA9+gzzmT1LKGx7cu3f/KoPhGqX2HoDdO5lOY2cnwPJLNeLB
-	/LhA3pvX/pJgIl6ETFRcZe745gP9/J/2LgIz/kNZdccRCVqIqgr6iUPL1shOMj0XmlrWIseX3YZ
-	VDFIEQu9bUmgIRh5ukgigIlMljjrdECw3Ur/aCTe3hjy/C2uhlwo9NiBMaKRvs07Fl9mCQf4HpJ
-	Hgw6MMc0C7zQ58WFoehIXTlphCpmsmAvJ1rH8HrFBP3FgJGBufJ0mZvfchyUXqxGMiBj2rkJK4e
-	SetUMm0J6oMsm94mEjWDz7jOfV4A29Qu
-X-Received: by 2002:a05:6000:4311:b0:48e:20ed:d5e7 with SMTP id ffacd0b85a97d-48e6e2ff167mr26869683f8f.34.1793707630565;
-        Tue, 03 Nov 2026 04:07:10 -0800 (PST)
-Received: from [192.168.1.3] ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48e71b8c0b6sm23904045f8f.41.2026.11.03.04.07.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Nov 2026 04:07:10 -0800 (PST)
-Message-ID: <a188c604-46c0-48fb-9cbd-9eacad88b5c9@linaro.org>
-Date: Tue, 3 Nov 2026 12:07:09 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=proton.me header.i=@proton.me header.a=rsa-sha256 header.s=protonmail2 header.b=iqCzK0sc
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail2; t=1793711271; x=1793970471;
+	bh=zW6mfRDfJlJujbvw1IGU4dhItJDWWt4lFHg3ixIXfNc=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=iqCzK0sc7cecORzDmY3YWfT5hLlIEjoJA6u80pAONmYNHB6PUjlxR4C2E/mV4SFs1
+	 uGCKeFcrBFBXgC1TzTk+VbkD+jBjepV9clKS8SsfZXsZdAxqgR8WDVzvpzA6lb+FRd
+	 lPy/fD63GhNciaLjtIqflt+L5mOgzG6eGdBBb3NY+hFrmfbg9XeDPjURob9scBI1e6
+	 hiDfXXLcSYDu9Tij7TaJZztU4h+0ck5rfWRIJ7J71xcam9fjxpkqnwj1t5zwNtlMzX
+	 pid9Kj1LeyhzARMLaM2YazATJN4fa2WPd2evwiU2QDZQTXUlZEKvsx9ElsujCTllj8
+	 40H3fIPmMkD6g==
+Date: Tue, 03 Nov 2026 13:07:42 +0000
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
+From: Paolo Bertinetti <paolobertinetti200f4@proton.me>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Kan Liang <kan.liang@linux.intel.com>, Leo Yan <leo.yan@arm.com>, Francesco Nigro <nigro.fra@gmail.com>, Sumanth Korikkar <sumanthk@linux.ibm.com>, linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: [PATCH 0/2] perf: Fix PERF_EVENT_IOC_REFRESH for tracepoints and breakpoints
+Message-ID: <20261103130732.764081-1-paolobertinetti200f4@proton.me>
+Feedback-ID: 117280896:user:proton
+X-Pm-Message-ID: 2045d11603ba2f0177be2f8a7bfbb574cb29152f
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -93,98 +61,64 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf vendor events arm64 AmpereOneX: Deprecate
- BPU_FLUSH_MEM_FAULT
-To: TAKANO Mitsuhiro <takano32@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- John Garry <john.garry@linux.dev>, Will Deacon <will@kernel.org>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Ilkka Koskinen <ilkka@os.amperecomputing.com>,
- linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
-References: <42801873-8908-07a6-aed1-c7076c689e8e@os.amperecomputing.com>
- <20261103112609.3772250-1-takano32@gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20261103112609.3772250-1-takano32@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Since commit 18dbcbfabfff ("perf: Fix the POLL_HUP delivery breakage"),
+an event that reaches its PERF_EVENT_IOC_REFRESH limit is stopped with
+pmu->stop() and disabled. Re-arming it adds it back with PERF_EF_START,
+but perf_trace_add() and hw_breakpoint_add() never clear
+PERF_HES_STOPPED. Tracepoint, kprobe, uprobe and breakpoint events
+re-armed this way deliver only their first overflow. Francesco reported
+it with the "Event re-armed with PERF_EVENT_IOC_REFRESH" perf test,
+found through an async-profiler bug.
+
+These patches make both PMUs set the state from PERF_EF_START on every
+add, as perf_swevent_add() does. The pmu->stop() call stays, so the
+POLL_HUP fix of 18dbcbfabfff is kept.
+
+Leo's series [1] removes that pmu->stop() call instead, which also
+avoids this, and is still pending. Either way, add() with PERF_EF_START
+should start the event.
+
+Tested in QEMU/KVM, x86_64, 4 vCPUs, v7.4-rc1 with PROVE_LOCKING:
+
+- perf test "Event re-armed with PERF_EVENT_IOC_REFRESH": the tracepoint
+  case goes from FAILED (count 1, 1 overflow) to Ok (count 1000, 1000
+  POLL_HUP signals).
+
+- A small test that re-arms each event from its signal handler and
+  triggers it 200 times, overflows delivered:
+
+                 v7.4-rc1   + patch 1   + patch 2
+    tracepoint       1         200         200
+    kprobe           1         200         200
+    uprobe           1         200         200
+    breakpoint       1           1         200
+
+- The full perf test suite and tools/testing/selftests/perf_events give
+  the same results before and after, apart from the REFRESH test. Many
+  perf tests fail in my VM on both kernels, for setup reasons.
+
+- No lockdep or other warnings in dmesg.
+
+I can add kprobe, uprobe and breakpoint cases to the perf test if that
+helps.
+
+[1] https://lore.kernel.org/r/20260514-arm_cs_clean_perf_handle-v2-0-cbb29c=
+3b3661@arm.com/
+
+Paolo Bertinetti (2):
+  tracing/perf: Clear stop state in perf_trace_add()
+  perf/hw_breakpoint: Clear stop state in hw_breakpoint_add()
+
+ kernel/events/hw_breakpoint.c   | 3 +--
+ kernel/trace/trace_event_perf.c | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
 
+base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
+--=20
+2.53.0
 
-On 03/11/2026 11:26, TAKANO Mitsuhiro wrote:
-> AmpereOne named event 0x121 BPU_FLUSH_MEM_FAULT until
-> commit 10a149e4b4a9 ("perf vendor events arm64 AmpereOne: Rename
-> BPU_FLUSH_MEM_FAULT to GPC_FLUSH_MEM_FAULT") renamed it.  The next patch
-> in that series, 16438b652b46, added the AmpereOneX tables with the old
-> name in memory.json, so 0x121 carries two names: GPC_FLUSH_MEM_FAULT in
-> core-imp-def.json and BPU_FLUSH_MEM_FAULT in memory.json, and the
-> default perf list output shows both.  The old name has been in every
-> release since v6.8, so deleting it would break scripts that use it.
-> 
-> Mark the entry deprecated instead of deleting it, as Ian Rogers asked:
-> perf list then shows 0x121 once while those scripts keep working.  The
-> x86 tables use the same wording, and
-> commit eda39f98bbc5 ("perf vendor events amd: Reintroduce deprecated
-> Zen 5 core events") brought back deprecated AMD events for the same
-> reason.  The flag is only read when listing; the entry still registers
-> event=0x121, so perf stat -e bpu_flush_mem_fault resolves as before, and
-> regenerating the tables changes nothing but that flag.
-> perf list --deprecated still prints the name in the text output; the
-> JSON path does not consult the flag, so perf list -j cannot show it.
-> No metric expression and no other file refers to either name.
-> 
-> The duplicate came in because jevents checks repeated names, not event
-> codes, and one encoding carrying several names is legitimate, so nothing
-> is added for that here.  No AmpereOneX machine was available, so the
-> listing was not run on hardware; Ilkka Koskinen, who added both tables,
-> tried v1 and v2 and reports that they behave as expected, and his
-> Acked-by is for this variant.  The JSON edit and this changelog were
-> written with an LLM assistant, Hermes Agent, working from the code and
-> the thread; the checks above were run here.
-> 
-> Fixes: 16438b652b46 ("perf vendor events arm64 AmpereOneX: Add core PMU events and metrics")
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Link: https://lore.kernel.org/20261021224527.167637-1-takano32@gmail.com
-> Link: https://lore.kernel.org/CAP-5=fX+2eRGCHcU43sqU=gi9iKvxqyS6ipwRSnvFcap3D+QzQ@mail.gmail.com
-> Link: https://lore.kernel.org/42801873-8908-07a6-aed1-c7076c689e8e@os.amperecomputing.com
-> Acked-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-> Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
-> ---
-> v2: keep the entry and mark it deprecated instead of deleting it,
->      as Ian Rogers suggested, and word both descriptions the way
->      the x86 tables do.  Ilkka Koskinen Acked-by v1 and asked for it
->      to be carried over to v2; the description wording was added on
->      top of that, as said in this thread.
-> v1: https://lore.kernel.org/20261021224527.167637-1-takano32@gmail.com
-> 
->   .../perf/pmu-events/arch/arm64/ampere/ampereonex/memory.json | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/memory.json b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/memory.json
-> index 6c06bc928415..114f95e41e0d 100644
-> --- a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/memory.json
-> +++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/memory.json
-> @@ -35,9 +35,10 @@
->           "ArchStdEvent": "MEM_ACCESS_CHECKED_WR"
->       },
->       {
-> -        "PublicDescription": "Flushes due to memory hazards",
-> +        "PublicDescription": "This event is deprecated. Refer to new event GPC_FLUSH_MEM_FAULT Flushes due to memory hazards",
-
-Extremely minor nit, but there should be a full stop before 'Flushes'. 
-But if marking it deprecated makes it not show in Perf list, then it 
-doesn't make a difference.
-
-Reviewed-by: James Clark <james.clark@linaro.org>
-
->           "EventCode": "0x121",
->           "EventName": "BPU_FLUSH_MEM_FAULT",
-> -        "BriefDescription": "Flushes due to memory hazards"
-> +        "BriefDescription": "This event is deprecated. Refer to new event GPC_FLUSH_MEM_FAULT",
-> +        "Deprecated": "1"
->       }
->   ]
-> 
-> base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
 
