@@ -1,55 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.127.230.114
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793702846;
-	b=H9k5n7ro616oTBks2WowayPw1TmfG8GzkeR2X7FdIRCG2jyGwE5V7q3Au0IbRURB+M3O
-	 F+nn1iySgS0ogi0nf6R4j8+fxPNuFOv7hujpUhssyHRc5xa6DOC5oWI8zqPOx1EXvI8Pm
-	 1afEQwe97k0POcrx9AGN6d1pJD3jbO4aoifQMHWnk69nItoWotbulySKaLEI2+pdsQAZ1
-	 x9Y7rfzeaRW1YjqmWCWn3LKjfI7BZIwrTZhUpRAbxb6XA0VDe0U4lvCdZu3PeX07zaeZh
-	 zsHYxqs9LXkGc9vqXUdIXw1ckpyICac1IHZ9TeVfeXc2NUhMQK1IYDufRELdXflSUPA==
+	t=1793702854;
+	b=wDF5gAIPiNwp8zFI7y7eBRgatgXl2aV/n0RX2z615OMkd9xhS8tAoq/W534AmmxOg4tK
+	 r2LL34Vf/aII+CZrDjKuUX5QswvHPVm6uF4xw95CVIC5QcG968vDU8VRDy5ZPtJAKpO5f
+	 uftFfsZcSSCsvHB7Tf1YEP0C3v89BcAMELtG98RlJWOoTNejta8EN4FG2EooKSl1am7U3
+	 sJ7ujsjlaG5dMvqAQ3QY5ym1e/WnKPpaxgi9zsBoC4cyIMAt34KqRFPzai1MNAT3qvFTA
+	 jPuvAP4iXHnNxS21es0H/DLiHSqCkF+ZZR2OBT5qGkv1EEdpPbzJlN3p5aRDFQx+CmQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793702846;
-	h=DMARC-Filter:DKIM-Signature:Content-Type:To:Cc:Subject:
-	 X-Lms-Return-Path:From:Message-Id:Mime-Version:Date:X-Original-From:
-	 In-Reply-To:References:User-Agent:Content-Transfer-Encoding;
-	bh=4nQFqetGIINz3bS3DjkIqIu/AbSp7Br0OBHcXNCcZzg=;
-	b=aY9MVHwQ5GQfbo5hx9dtOXwzAmwe664coAhijOVyyGYifdY6gt1l7pKhWJkhLdlNE86y
-	 5EhGhILeUr4GMizLjStCfWdt1NRIv9jaYgoItyno2Yi9Nvxd3UKzCHawb169SXLBzi4Hu
-	 tgZASdZ+6gQfZQ0Ucb5Z6O6Z0rt55KGk7rmb9a33/jtAdnwsM/gqeWYaEBOKKH+m2p3jX
-	 hyO5cWVqslFiENksmL2CJ5B9us+JuQFNjQ7N0u3+VpCgyd5xqLzywAJynrVoQbDK6Pw0/
-	 FTHlE2xZCPlIEWRRNCaoMKQaZipUcyRCQ6vpwqej3DabzNDJskeWBNIc6MFnWUSGJjQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793702854;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=4VC0HLb8QlP7ub+0ZPtP1lO5JVqmLp7CerydBenrsdM=;
+	b=5hvP53YQUTL7nmimJeYLJrIZwqWTlRnv2HbFzMHTcu/lHITxh+vhR3kl/9PYvOwERgmX
+	 jCCrP7y0R+o6lqv/TXr60oX8ADqZPdd+gC6BWMudQ6hciZ8q7a1aceraGKoNInKt61rPZ
+	 ejVq3s66+BuMPi3mVnvmgqTnHuvV9PNkpPNVi6ohMl6iK10LOOBnDpVFLiYhYW0LludfH
+	 T2Lw4L8eU4fDaoyCuBLuaWwJ7c3sofk/ZxmymtLPDYlUm+pzpnLLwbOMfcMiw9RLrWla0
+	 T8+xmczgzOthFwHA80NMoe2ftsdMjAL3xCgEA5PIUngDceOLIMAtkc9s4Y283qC0adQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=bytedance.com;
-	spf=pass smtp.mailfrom=bytedance.com;
-	dkim=pass header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=2212171451 header.b=ThXAPP9p;
-	arc=none smtp.remote-ip=209.127.230.114
-Received: from va-1-114.ptr.blmpb.com (va-1-114.ptr.blmpb.com [209.127.230.114])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WbNz5NF5;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4924B606C5BE
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 10:47:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4924B606C5BE
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0EEF606F7F5;
+	Tue,  3 Nov 2026 10:47:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=2212171451 header.b=ThXAPP9p
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1793702840; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=4nQFqetGIINz3bS3DjkIqIu/AbSp7Br0OBHcXNCcZzg=;
- b=ThXAPP9pIWIwUQGkgwvt48WcNWzT+o68PfSdlQwYd0bTMTlXkvScGPBVDDQhK56LfNGCYf
- TVXy9oXDIIGS/5VLBCEUcB9nhZiYYeEeetGiowAekQ/oxgM/XbAGFPHPdrrs4y+UH64xnZ
- DfH5OsGnG91wudPLyulYN6HdmQ6XlPilzAqkeySjxDA10n5GFSrCuGlO849IMmruKwyjRY
- CkMy3K1Y4ibPyEx3wx3N23byO4Z/69BfS1rz3/6ja3mDl+vx5eYDCXHAwFzjv15l7iu+St
- jB/gutUBM9kUQCSpqtFwNm3HC/eLLRtCjEmkBeJ4qfIIe8TAav78buE8J7MwmA==
-Content-Type: text/plain; charset=UTF-8
-To: <sashiko-reviews@lists.linux.dev>
-Cc: <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH] perf/riscv: Guard PMU counter indices and user access
-X-Lms-Return-Path: <lba+26ae9bbb6+9087df+vger.kernel.org+zhaogongyi@bytedance.com>
-From: "Zhao Gongyi" <zhaogongyi@bytedance.com>
-Message-Id: <c09a3399-15a2-4931-a858-b4e52c22367b@bytedance.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WbNz5NF5
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A7061F0093A;
+	Tue,  3 Nov 2026 10:47:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793702854;
+	bh=4VC0HLb8QlP7ub+0ZPtP1lO5JVqmLp7CerydBenrsdM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=WbNz5NF5Gm9QiUKPSycHuzqEIpWlXaZsadYqgxCPdhtgNy/VxdX5vIJIEpRKOw93u
+	 v7E1ItyxLgdevhxOJXjQvktTODYj9fFQhcbPBmGlQSYd0Vh2gb1wUQdSfEMRK7F2Eu
+	 fUYOoU9fn2k+PhgTx+e3TNKZr0lFWA7TV/ISYwlZhaljIivgqRRVJR1qbxiZ7i0SYo
+	 5+yOmHRjx66NwMuxyUU93s2lP9Q7KP27A7Pca7cju9tCL8wWkeTxs3C1CW3HYsQKUj
+	 OC+DlvGxhmSz/AK1EUvDFA8nR9EIW6HvH+7c2vgyPiKJBOdNK76MqP2MExfLYCff5J
+	 7gyENBT5oVgnA==
+Message-ID: <sashiko-outbox-195068@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 08/13] drivers/perf: apple_m1: Add Apple A18 Support
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Myria Sarvay" <myrialsarvay@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org
+In-Reply-To: <20261103-m3-plus-pmu-events-v1-8-a8eb6c1139fe@gmail.com>
+References: <20261103-m3-plus-pmu-events-v1-0-a8eb6c1139fe@gmail.com>
+ <20261103-m3-plus-pmu-events-v1-8-a8eb6c1139fe@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 03 Nov 2026 10:47:33 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -58,41 +59,64 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
-Date: Tue, 3 Nov 2026 18:47:06 +0800
-X-Original-From: Zhao Gongyi <zhaogongyi@bytedance.com>
-In-Reply-To: <sashiko-outbox-194990@kernel.org>
-References: <20261103093709.81605-1-zhaogongyi@bytedance.com> <sashiko-outbox-194990@kernel.org>
-User-Agent: Mozilla Thunderbird
-Content-Transfer-Encoding: 7bit
 
-Hi,
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] drivers/perf: apple_m1: redundant a18_pmu_* aliases and unused macro
+--
 
-Thanks for the review.
+commit 96c1a110d959d59196297459a3c8bd2316dfaece
+Author: Myria Sarvay <myrialsarvay@gmail.com>
 
-On 11/3/26 5:57 PM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] perf/riscv: zero counter count in pmu_sbi_get_ctrinfo() derefs ZERO_SIZE_PTR
-> --
-> 
-> commit 8efed03034c08f98dfc2b34e375ed58087ac3e08
-> Author: Zhao Gongyi <zhaogongyi@bytedance.com>
-> 
-> perf/riscv: Guard PMU counter indices and user access
-> 
-> This commit adds bounds validation on PMU counter indices before accessing
-> counter state or CSR mappings, preventing out-of-bounds accesses when a
-> disabled event is mmaped before hw.idx is assigned or when SBI returns
-> invalid counter values.
-> 
+drivers/perf: apple_m1: Add Apple A18 Support
 
-The zero-counter issue predates this patch, since the existing code
-also accepts a zero return value and allocates a zero-sized
-pmu_ctr_list. However, the reported failure path is valid and is
-directly related to the SBI result validation added here.
+This commit adds CPU PMU support for the Apple A18 (Tahiti) cores by
+reusing the M4 PMU event mappings and callbacks.
 
-I will reject zero counter counts in both pmu_sbi_find_num_ctrs() and
-pmu_sbi_get_ctrinfo() in v2.
+> diff --git a/drivers/perf/apple_m1_cpu_pmu.c b/drivers/perf/apple_m1_cpu_=
+pmu.c
+> index bdbd138cf1db8..775f3d5aba7ea 100644
+> --- a/drivers/perf/apple_m1_cpu_pmu.c
+> +++ b/drivers/perf/apple_m1_cpu_pmu.c
+> @@ -1149,12 +1149,23 @@ static int gen ## _pmu_ ## family ## _init(struct=
+ arm_pmu *cpu_pmu)				\
+>  #define m4_pmu_set_event_filter		m3_pmu_set_event_filter
+>  #define m4_pmu_format_attr_group	m3_pmu_format_attr_group
+> =20
+> +#define a18_pmu_enable_event		m4_pmu_enable_event
+> +#define a18_pmu_map_event		m4_pmu_map_event
+> +#define a18_pmu_get_event_idx		m4_pmu_get_event_idx
+> +#define a18_pmu_set_event_filter	m4_pmu_set_event_filter
+> +#define a18_pmu_map_pmuv3_event		m4_pmu_map_pmuv3_event
+> +#define a18_pmu_init_pmceid		m4_pmu_init_pmceid
+> +#define a18_pmu_events_attr_group	m4_pmu_events_attr_group
+> +#define a18_pmu_format_attr_group	m4_pmu_format_attr_group
+> +
+>  APPLE_PMU_INIT(m1, icestorm)
+>  APPLE_PMU_INIT(m1, firestorm)
+>  APPLE_PMU_INIT(m2, avalanche)
+>  APPLE_PMU_INIT(m2, blizzard)
+>  APPLE_PMU_INIT(m3, sawtooth)
+>  APPLE_PMU_INIT(m3, everest)
+> +APPLE_PMU_INIT(a18, tahiti_e)
+> +APPLE_PMU_INIT(a18, tahiti_p)
 
-Thanks,
-Gongyi
+[Severity: Low]
+This isn't a bug, but since APPLE_PMU_INIT(gen, family) only uses the gen
+argument to select the gen_pmu_* callbacks and attribute groups (while
+cpu_pmu->name is constructed solely from family), are the a18_pmu_* alias
+macros needed here?
+
+Unlike m2 and m4, which define generation-specific callbacks or attribute
+groups and only alias the remaining symbols from an earlier generation, a18
+aliases every symbol to m4_pmu_*. In addition, a18_pmu_init_pmceid is never
+used by APPLE_PMU_INIT() and expands to m4_pmu_init_pmceid, which does not
+exist.
+
+Could this use APPLE_PMU_INIT(m4, tahiti_e) and APPLE_PMU_INIT(m4, tahiti_p)
+directly (with m4_pmu_tahiti_e_init and m4_pmu_tahiti_p_init in
+m1_pmu_of_device_ids) and drop the a18_pmu_* macro definitions?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103-m3-plus-pm=
+u-events-v1-0-a8eb6c1139fe@gmail.com?part=3D8
