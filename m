@@ -1,73 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.71
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.199
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793749543;
-	b=d/OU64U1HeQpNelJBDb8e5CLklb1FAj1Utdo2Ude4Xt3UlMV5qjsWkwNCsLYtOZkP2gi
-	 wjtBV2WyJC3Xl+A/60gqoGXMEabL6D7nfzfWyqXSnJVSAuu6CI8u9ZSctodSr294mgTic
-	 cfC6gzak5p3iFR84xzpwZdUh3fOYD8qaw5xAPkOFzSyCW0OZ7IFfvIhHHB1OIb+j8GQXD
-	 rW/s1yet3lkpkpN2bL/Vkff447Nl3AmMSc2LXTGFHqzfjAlzvQGxUFD+lI/PTW68C4j0Z
-	 jf6nAFj+P2TyqpHjdRvpoTSocLbRxewyg9gxF79gzsW+Rttw/YlcptvjiJNfmD4l3rw==
+	t=1793749549;
+	b=aNlSBLVb/hLVDabbwLecOCNOh7d786ZyjjFMnE5sn2jLZnyFUseno/ZQ3FLKUeBlV1qj
+	 XNMfPCBXW+YvVTagc+zp9hpkKVqyV7ATOXIlc0OYZ4rMDQKPdfLjR0I9Gy5lYpmEEtKzA
+	 BK6BgxdH3uzordu54o+RrqUGlqUIPxbeTLA2isFaq2FVKcEkShpZNyCvJnnk1LsRGbFtf
+	 St5joPfOUP25T9NG6Y1JsDUr0MU/bjvVTBcB0RfBLZ/P/Wmu5EegsTVl/f2lgb30pW7cN
+	 Ak+1yuWwzS1YtM41libsvh90ve3hiOIYeYxhjGKmJhxnDC+KuPcSDWxmvXY0j5m7liA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793749543;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793749549;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Received:Date:In-Reply-To:Mime-Version:
 	 References:X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=nIMJ9hdciBH4J+KtRQhktMuL7c1HadCWq4L+Y0lVVOc=;
-	b=K3E3srAQ7lWXhRNxGMFX1lmXJECQ+bNGL/2VUaVoXXe/VBqDPVOO332kOutg/q8uO/sa
-	 GgqICgXI8kDLNN7JUcHyZaz4Z5LxSuhtrZM9fQaOp+uTdTErDScaBq31xbEtOpUcLTpLo
-	 x1PD7Fmtsa8HF7n/HHZ6e7LvJ7MuYcJ4PWeqIwrWCIgd/E7VnU87Jf3gd6fskQo5C7iE7
-	 UWrKQWcK6ULr0jZ6djkwXJ9YwHnmg9eXJ+ttGUcW1U+l+L47knUIr0xxsXF5iYAGBoxaL
-	 L+D4MQjOTDpdVMTxnqdWoANqNJlkdgOCayl+QClApDlKJ/IMd/wGTMAIfD9sisfmyvg==
+	bh=/c9dAAdPppqLCH60TYdEbM0bjim2NQq3FwqogCqlwxw=;
+	b=vqf8UjREFzgVyquJ0dVyZADGWUV5x+AT36OxNt+cIQRlRqypy70yifJG+8wsabE0QUdF
+	 oD7kplRAdmT7PpH8BGO79bSwVlBJ4pPDzvxI7v5WT45Ri5Psm0C57m+dQMQbToflTCZdH
+	 P6k95gfLyR9QLAVICsGVw/aQuxL49BXEI0MDXHK+d4UhynbVX6yGt2Gq09Uqmf7ynwCHt
+	 jpxtvmNevpY9UR8ezKKgrk9RbC5s2iztcE3EsCcA9odWu7aQM11W+lTA8VkNLz8w6SRG6
+	 MrCCaJNgyolmPELc/Kd+qPM92ajMqh3HNO9dm2hYGZoZ6ADsxtmz9225Pw+aKXCjPUA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=bLylMLmi;
-	arc=none smtp.remote-ip=74.125.82.71
-Received: from mail-dl1-f71.google.com (mail-dl1-f71.google.com [74.125.82.71])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=AdA1S5I+;
+	arc=none smtp.remote-ip=74.125.82.199
+Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F5E606D83C
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 23:45:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 50F5E606D83C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A858A606EEA7
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 23:45:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A858A606EEA7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=bLylMLmi
-Received: by mail-dl1-f71.google.com with SMTP id a92af1059eb24-16bc6f3fdb1so195495c88.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2026 15:45:43 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=AdA1S5I+
+Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-36a223755e4so315780eec.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2026 15:45:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793749542; x=1794354342; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1793749548; x=1794354348; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=nIMJ9hdciBH4J+KtRQhktMuL7c1HadCWq4L+Y0lVVOc=;
-        b=bLylMLmil34bfKtQKIHqLPz9ULAOD3gf0b6AyatjkaRnSsNo5K5UE66yy0v4PyPZYP
-         hD4ZpN5r+aQSb803QxsQFY42JMgk5NU+FiFRS6B20crsLMv7VTz9dwmgpjXLDPHXonve
-         a2MX6OthSKZ9ULK9khAoWtXm2RQxdBxzGxeLS7KzMy5yxk6ykAkmCjDujDbZ8nFrt5sz
-         Kq5kGr3vJHYulqAYASQRkOCRTFVOEN6utA7EXhMGoeyZ0huUdMFEv9l6wxkK8CTBoBKi
-         3yIzVYfGYtAaAoCHUNsxdva5sYSSMEWsm4HvWccGSFRQs0cLShQYT7I2D+8VTk7AMBOW
-         RIpg==
+        bh=/c9dAAdPppqLCH60TYdEbM0bjim2NQq3FwqogCqlwxw=;
+        b=AdA1S5I+agN485n4wGTdxTRZtrKj/kQn2kThMHJGdE3SKhE7RQwKXgc/wimcM9TC3s
+         xt8Ib2C9cGMe5Bgm0vFCQyJiisanLNCronXTFt4sBo/CObDAmdW2PiGd1792byfhSP7/
+         xjptxcs7hwS7RulMcssaG6rVUtt6ryzXIe8ZGYy9GtLzeXI/FTuLGQQUuVv8vl7ox33f
+         iyaNV0MBHtg7QvcYLBvmSQBKPZPcv55Rvc6IrhSKoVloTZi413Eh0w12r0+B9f7wnIsM
+         O6zMJWrSKTWUyintHvJgoZPTH5tdCrEG1O/KD+F/+Ax4aVmH596TRPzYD4O4dgRPC1yu
+         Syuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793749542; x=1794354342;
+        d=1e100.net; s=20260707; t=1793749548; x=1794354348;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=nIMJ9hdciBH4J+KtRQhktMuL7c1HadCWq4L+Y0lVVOc=;
-        b=Wsf479OMhwor8hdKdKhXB7PDFCFtoWZ9XITLcHrvGXgyBIGcHGhXUTynBHk3CI/zHV
-         UeKDcpOzXvWN0fsyllCqBvqyzKSqGC4UFlWS2hAY0R7EMSnAF4s0yxzNnaaYq1Etq7bZ
-         dqPmrxV1ZkWFTRUukkmJvknsk17fhJ7c+Ix8iojBcZY3NOoc0IR74YYGpiB+mnJUH+Vo
-         4PIFJ6Ef7vBuPkwGxHTVhk1rtOmA9XycCBctZcRByibhq735KmwY0Ea1F+syOK30lnrS
-         Iq3OWxgjaEUidGradtm3LtzWKMOKS/6MZjNCJqLHFh7u5feLkT5MKI5guoHv92XxugEi
-         ecqA==
-X-Gm-Message-State: APuU4Z/qpCrAvua2FtMCNlPf8Kk/o0obE2Fth+fOBalhaPFySYs/8f3U
-	lHS6Fc1vRoj3QFrm7IVmyMZyT/y3ALsQL2vjGnXMJ7tVrKmM/RD8XEtAJ0k7QUsCjr+8at8Gylm
-	+2gLaMC3uGK7KA34OyxXA6QWGNxgk+bQuSNjh/bhHZeltAv8xZrqbEwj856sy/NGFNeCrnbj0UO
-	ZtG3al7c+lUaecAz/hWL/OuFvlgJq9A9hUVYhEJTwU+5y2pJ4PAyUw07Y=
-X-Received: from dlbqc8.prod.google.com ([2002:a05:7023:a88:b0:1ab:a092:67c3])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:3f0b:b0:1b1:f02b:232c
- with SMTP id a92af1059eb24-1b1f03a6a35mr11981767c88.29.1793749541973; Tue, 03
- Nov 2026 15:45:41 -0800 (PST)
-Date: Tue,  3 Nov 2026 15:44:29 -0800
+        bh=/c9dAAdPppqLCH60TYdEbM0bjim2NQq3FwqogCqlwxw=;
+        b=PaOBJEHfzq6WBzegh55/QA7deSsgXbqRkbv8hnjuUvtV/i/XrTmj8dlDhVMwnh1K96
+         3lc1WGb3x6gWhnjQr1vrQcWNIK6ZgsC5oLnkdfhGG5vWs9Qop7Syhw3WrTNbGkNeSRVP
+         nvzREkiwX+uYbEyB4Ektg8wnt3oGDnvEwy85v5VswhVpO4XIEveRtlkTZM4YfEsGYfuX
+         AgljVN6QfA0IxQo9WhQk6A/6i0CDhexKSIPN/aZZGLNT2yOqGgTk8dow59gwfjyPXcgG
+         ebp6LfvR+9cm4OUaFX37fxBXvS+wQ8veULuZ+JL0ZRpWuRjgdYMKQe6c+5Mi+wQ84iB5
+         Rp5A==
+X-Gm-Message-State: APuU4Z9oV3ZGfpArHr4qwvKyRPY9h4cyJJzSGuwaZ3fW0prE4yMCf31K
+	jXtiexSviZEmQUwy0P9A49duYqkAqG5ez4p1u8UZ87S2ZwCK4UvFF8+4JnrzxAo44gBdObZkmBA
+	41xqM0Tv/vHnQ+/di2CT3UT4gIRw/8Ed8RT6xvEMEy9hDNVCB5islgjXXRt5GIfVP5u0XImQRD6
+	NPy+7+NSGt4O/KFIczA6vM24J+SA+Xvk1uVqllipliDeKknYrzqLFfLVc=
+X-Received: from dlbvg13.prod.google.com ([2002:a05:7022:7f0d:b0:150:117b:cbf8])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:b047:20b0:1a3:bfb6:44ad
+ with SMTP id a92af1059eb24-1ac5da797d4mr23809134c88.32.1793749547250; Tue, 03
+ Nov 2026 15:45:47 -0800 (PST)
+Date: Tue,  3 Nov 2026 15:44:31 -0800
 In-Reply-To: <20261103234502.1008382-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -80,8 +80,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261103234502.1008382-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.385.gac671c819a-goog
-Message-ID: <20261103234502.1008382-14-irogers@google.com>
-Subject: [PATCH v1 13/41] perf pmus: Add perf_pmus__read_from_env()
+Message-ID: <20261103234502.1008382-16-irogers@google.com>
+Subject: [PATCH v1 15/41] perf metricgroup: Move matching of metrics to
+ recorded events from perf script
 From: Ian Rogers <irogers@google.com>
 To: linux-perf-users@vger.kernel.org, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
@@ -96,441 +97,391 @@ Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
 	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add perf_pmus__read_from_env() and perf_pmu__add_cap() to reconstruct
-core_pmus and other_pmus lists and their capabilities in a
-struct perf_pmus from HEADER_PMU_MAPPINGS, HEADER_HYBRID_TOPOLOGY,
-HEADER_PMU_CAPS, and HEADER_CPU_PMU_CAPS in a perf.data header
-environment, and lazily populate env->pmus in perf_env__pmus(). An
-environment without any PMU header metadata, such as one used while
-recording, falls back to the live host's PMUs rather than re-reading
-sysfs into its own copy.
+perf script finds metrics whose events are all present in the
+perf.data file's evlist so that they can be displayed alongside
+samples. Move this code into metricgroup.c as
+metricgroup__add_matching_metrics() so that it can be shared with
+other commands, such as perf stat report. No functional change.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/env.c    |  18 ++++
- tools/perf/util/env.h    |   5 +
- tools/perf/util/header.c |  22 ++++
- tools/perf/util/pmu.c    |  31 ++++++
- tools/perf/util/pmu.h    |   9 ++
- tools/perf/util/pmus.c   | 219 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/pmus.h   |  15 ++-
- 7 files changed, 318 insertions(+), 1 deletion(-)
+ tools/perf/builtin-script.c   | 156 +--------------------------------
+ tools/perf/util/metricgroup.c | 157 ++++++++++++++++++++++++++++++++++
+ tools/perf/util/metricgroup.h |  12 +++
+ 3 files changed, 172 insertions(+), 153 deletions(-)
 
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index fec6a5a8ecb6..04f4db90cc60 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -341,6 +341,24 @@ struct perf_env *host_env(void)
- 
- struct perf_pmus *perf_env__pmus(struct perf_env *env)
- {
-+	struct perf_env *host = host_env();
-+
-+	if (env == host ||
-+	    !(env->nr_pmu_mappings || env->nr_hybrid_nodes ||
-+	      env->nr_cpu_pmu_caps || env->nr_pmus_with_caps)) {
-+		/* No PMU metadata of its own, use the live host's PMUs. */
-+		return &host->pmus;
-+	}
-+
-+	mutex_lock(&env->lock);
-+	if (!env->pmus.core_pmus.next || !env->pmus.other_pmus.next)
-+		perf_pmus__init(&env->pmus);
-+	mutex_unlock(&env->lock);
-+
-+	mutex_lock(&env->pmus.lock);
-+	if (env->pmus.read_pmu_types == 0)
-+		perf_pmus__read_from_env(&env->pmus, env);
-+	mutex_unlock(&env->pmus.lock);
- 	return &env->pmus;
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 8bef76eaf67d..da3f1793774e 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2354,151 +2354,6 @@ static void script_new_line(struct perf_stat_config *config __maybe_unused,
+ 	fputs("\tmetric: ", mctx->fp);
  }
  
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index e38e953060c9..ef583161583f 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -238,6 +238,11 @@ struct perf_env *host_env(void);
-  * perf_env__pmus() - Return the struct perf_pmus associated with @env.
-  * @env: Environment whose PMU collection to retrieve.
-  *
-+ * For non-host environments with PMU header metadata (HEADER_PMU_MAPPINGS,
-+ * HEADER_HYBRID_TOPOLOGY, HEADER_CPU_PMU_CAPS or HEADER_PMU_CAPS), lazily
-+ * populates @env->pmus from the perf.data header on first access. If @env has
-+ * no PMU metadata of its own, falls back to the live host's PMU collection.
-+ *
-  * Return: Pointer to the struct perf_pmus for @env.
-  */
- struct perf_pmus *perf_env__pmus(struct perf_env *env);
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index a442f2a904a9..27fc21fa3a6a 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -5765,6 +5765,28 @@ int perf_event__process_feature(const struct perf_tool *tool __maybe_unused,
- 		goto out;
+-struct script_find_metrics_args {
+-	struct evlist *evlist;
+-	bool system_wide;
+-};
+-
+-static struct evsel *map_metric_evsel_to_script_evsel(struct evlist *script_evlist,
+-						      struct evsel *metric_evsel)
+-{
+-	struct evsel *script_evsel;
+-
+-	evlist__for_each_entry(script_evlist, script_evsel) {
+-		/* Skip if perf_event_attr differ. */
+-		if (metric_evsel->core.attr.type != script_evsel->core.attr.type)
+-			continue;
+-		if (metric_evsel->core.attr.config != script_evsel->core.attr.config)
+-			continue;
+-		/* Skip if the script event has a metric_id that doesn't match. */
+-		if (script_evsel->metric_id &&
+-		    strcmp(evsel__metric_id(metric_evsel), evsel__metric_id(script_evsel))) {
+-			pr_debug("Skipping matching evsel due to differing metric ids '%s' vs '%s'\n",
+-				 evsel__metric_id(metric_evsel), evsel__metric_id(script_evsel));
+-			continue;
+-		}
+-		return script_evsel;
+-	}
+-	return NULL;
+-}
+-
+-static int script_find_metrics(const struct pmu_metric *pm,
+-			       const struct pmu_metrics_table *table __maybe_unused,
+-			       void *data)
+-{
+-	struct script_find_metrics_args *args = data;
+-	struct evlist *script_evlist = args->evlist;
+-	struct evlist *metric_evlist = evlist__new();
+-	struct evsel *metric_evsel;
+-	int ret = metricgroup__parse_groups(metric_evlist,
+-					/*pmu=*/"all",
+-					/*cputype_filter=*/false,
+-					pm->metric_name,
+-					/*metric_no_group=*/false,
+-					/*metric_no_merge=*/false,
+-					/*metric_no_threshold=*/true,
+-					/*user_requested_cpu_list=*/NULL,
+-					args->system_wide,
+-					/*hardware_aware_grouping=*/false);
+-
+-	if (ret) {
+-		/* Metric parsing failed but continue the search. */
+-		goto out;
+-	}
+-
+-	/*
+-	 * Check the script_evlist has an entry for each metric_evlist entry. If
+-	 * the script evsel was already set up avoid changing data that may
+-	 * break it.
+-	 */
+-	evlist__for_each_entry(metric_evlist, metric_evsel) {
+-		struct evsel *script_evsel =
+-			map_metric_evsel_to_script_evsel(script_evlist, metric_evsel);
+-		struct evsel *new_metric_leader;
+-
+-		if (!script_evsel) {
+-			pr_debug("Skipping metric '%s' as evsel '%s' / '%s' is missing\n",
+-				pm->metric_name, evsel__name(metric_evsel),
+-				evsel__metric_id(metric_evsel));
+-			goto out;
+-		}
+-
+-		if (script_evsel->metric_leader == NULL)
+-			continue;
+-
+-		if (metric_evsel->metric_leader == metric_evsel) {
+-			new_metric_leader = script_evsel;
+-		} else {
+-			new_metric_leader =
+-				map_metric_evsel_to_script_evsel(script_evlist,
+-								 metric_evsel->metric_leader);
+-		}
+-		/* Mismatching evsel leaders. */
+-		if (script_evsel->metric_leader != new_metric_leader) {
+-			pr_debug("Skipping metric '%s' due to mismatching evsel metric leaders '%s' vs '%s'\n",
+-				pm->metric_name, evsel__metric_id(metric_evsel),
+-				evsel__metric_id(script_evsel));
+-			goto out;
+-		}
+-	}
+-	/*
+-	 * Metric events match those in the script evlist, copy metric evsel
+-	 * data into the script evlist.
+-	 */
+-	evlist__for_each_entry(metric_evlist, metric_evsel) {
+-		struct evsel *script_evsel =
+-			map_metric_evsel_to_script_evsel(script_evlist, metric_evsel);
+-		struct metric_event *metric_me =
+-			metricgroup__lookup(evlist__metric_events(metric_evlist),
+-					    metric_evsel,
+-					    /*create=*/false);
+-
+-		if (script_evsel->metric_id == NULL) {
+-			script_evsel->metric_id = metric_evsel->metric_id;
+-			metric_evsel->metric_id = NULL;
+-		}
+-
+-		if (script_evsel->metric_leader == NULL) {
+-			if (metric_evsel->metric_leader == metric_evsel) {
+-				script_evsel->metric_leader = script_evsel;
+-			} else {
+-				script_evsel->metric_leader =
+-					map_metric_evsel_to_script_evsel(script_evlist,
+-								       metric_evsel->metric_leader);
+-			}
+-		}
+-
+-		if (metric_me) {
+-			struct metric_expr *expr;
+-			struct metric_event *script_me =
+-				metricgroup__lookup(evlist__metric_events(script_evlist),
+-						    script_evsel,
+-						    /*create=*/true);
+-
+-			if (!script_me) {
+-				/*
+-				 * As the metric_expr is created, the only
+-				 * failure is a lack of memory.
+-				 */
+-				goto out;
+-			}
+-			list_splice_init(&metric_me->head, &script_me->head);
+-			list_for_each_entry(expr, &script_me->head, nd) {
+-				for (int i = 0; expr->metric_events[i]; i++) {
+-					expr->metric_events[i] =
+-						map_metric_evsel_to_script_evsel(script_evlist,
+-									expr->metric_events[i]);
+-				}
+-			}
+-		}
+-	}
+-	pr_debug("Found metric '%s' whose evsels match those of in the perf data\n",
+-		 pm->metric_name);
+-out:
+-	evlist__put(metric_evlist);
+-	return 0;
+-}
+-
+ static struct aggr_cpu_id script_aggr_cpu_id_get(struct perf_stat_config *config __maybe_unused,
+ 						    struct perf_cpu cpu)
+ {
+@@ -2528,12 +2383,6 @@ static void perf_sample__fprint_metric(struct thread *thread,
+ 
+ 	if (!init_metrics) {
+ 		/* One time initialization of stat_config and metric data. */
+-		struct perf_env *env = evlist__env(evsel->evlist) ?: host_env();
+-		struct script_find_metrics_args args = {
+-			.evlist = evsel->evlist,
+-			.system_wide = perf_thread_map__pid(evsel->core.threads, /*idx=*/0) == -1,
+-
+-		};
+ 		if (!stat_config.output)
+ 			stat_config.output = stdout;
+ 
+@@ -2547,8 +2396,9 @@ static void perf_sample__fprint_metric(struct thread *thread,
+ 						  /*needs_sort=*/false);
+ 		}
+ 
+-		metricgroup__for_each_metric(perf_env__pmus(env), pmu_metrics_table__find(),
+-					     script_find_metrics, &args);
++		metricgroup__add_matching_metrics(evsel->evlist,
++						  perf_thread_map__pid(evsel->core.threads,
++								       /*idx=*/0) == -1);
+ 		init_metrics = true;
  	}
  
-+	switch (feat) {
-+	case HEADER_ARCH:
-+	case HEADER_CPUID:
-+	case HEADER_NRCPUS:
-+	case HEADER_PMU_MAPPINGS:
-+	case HEADER_CPU_PMU_CAPS:
-+	case HEADER_HYBRID_TOPOLOGY:
-+	case HEADER_PMU_CAPS:
-+		mutex_lock(&header->env.pmus.lock);
-+		if (session->evlist) {
-+			struct evsel *evsel;
-+
-+			evlist__for_each_entry(session->evlist, evsel)
-+				evsel->pmu = NULL;
-+		}
-+		perf_pmus__exit(&header->env.pmus);
-+		mutex_unlock(&header->env.pmus.lock);
-+		break;
-+	default:
-+		break;
-+	}
-+
- 	if (session->tool->show_feat_hdr) {
- 		if (!feat_ops[feat].full_only ||
- 		    session->tool->show_feat_hdr >= SHOW_FEAT_HEADER_FULL_INFO) {
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 06c4912d2f65..ee52fd18c927 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -2570,6 +2570,37 @@ static int perf_pmu__new_caps(struct list_head *list, char *name, char *value)
- 	return -ENOMEM;
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 876c549069e5..51dbdeac5e60 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -453,6 +453,163 @@ int metricgroup__for_each_metric(struct perf_pmus *pmus, const struct pmu_metric
+ 	return pmu_for_each_sys_metric(metricgroup__sys_event_iter, &sys_data);
  }
  
-+int perf_pmu__add_cap(struct perf_pmu *pmu, const char *name, const char *value)
++struct find_matching_metrics_args {
++	struct evlist *evlist;
++	bool system_wide;
++};
++
++static struct evsel *map_metric_evsel_to_evlist(struct evlist *data_evlist,
++						struct evsel *metric_evsel)
 +{
-+	struct perf_pmu_caps *caps;
++	struct evsel *data_evsel;
 +
-+	if (!pmu || !name || !value)
-+		return -EINVAL;
-+	if (perf_pmu__get_cap(pmu, name))
-+		return 0;
-+
-+	caps = zalloc(sizeof(*caps));
-+	if (!caps)
-+		return -ENOMEM;
-+
-+	caps->name = strdup(name);
-+	if (!caps->name) {
-+		free(caps);
-+		return -ENOMEM;
++	evlist__for_each_entry(data_evlist, data_evsel) {
++		/* Skip if perf_event_attr differ. */
++		if (metric_evsel->core.attr.type != data_evsel->core.attr.type)
++			continue;
++		if (metric_evsel->core.attr.config != data_evsel->core.attr.config)
++			continue;
++		/* Skip if the data event has a metric_id that doesn't match. */
++		if (data_evsel->metric_id &&
++		    strcmp(evsel__metric_id(metric_evsel), evsel__metric_id(data_evsel))) {
++			pr_debug("Skipping matching evsel due to differing metric ids '%s' vs '%s'\n",
++				 evsel__metric_id(metric_evsel), evsel__metric_id(data_evsel));
++			continue;
++		}
++		return data_evsel;
 +	}
-+	caps->value = strdup(value);
-+	if (!caps->value) {
-+		zfree(&caps->name);
-+		free(caps);
-+		return -ENOMEM;
-+	}
-+	list_add_tail(&caps->list, &pmu->caps);
-+	pmu->nr_caps++;
-+	if (!strcmp(name, "max_precise"))
-+		pmu->max_precise = atoi(value);
-+	return 0;
++	return NULL;
 +}
 +
- static void perf_pmu__del_caps(struct perf_pmu *pmu)
- {
- 	struct perf_pmu_caps *caps, *tmp;
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 7605c3859337..06f922ce1f68 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -334,6 +334,15 @@ bool pmu_uncore_identifier_match(const char *compat, const char *id);
- int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
- 
- struct perf_pmu_caps *perf_pmu__get_cap(struct perf_pmu *pmu, const char *name);
-+/**
-+ * perf_pmu__add_cap() - Add a name/value capability entry to @pmu->caps.
-+ * @pmu: The PMU to add the capability to.
-+ * @name: Capability name.
-+ * @value: Capability value string.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int perf_pmu__add_cap(struct perf_pmu *pmu, const char *name, const char *value);
- 
- int perf_pmu__caps_parse(struct perf_pmu *pmu);
- 
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index c3a695ebf2ba..908959abbd3d 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -7,7 +7,9 @@
- #include <subcmd/pager.h>
- #include <sys/types.h>
- #include <ctype.h>
-+#include <errno.h>
- #include <pthread.h>
-+#include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
- #include <unistd.h>
-@@ -980,3 +982,220 @@ struct perf_pmu *perf_pmus__fake_pmu(void)
- 
- 	return &fake;
- }
-+
-+/*
-+ * Determine whether a PMU name reconstructed from perf.data headers is a
-+ * core PMU, checking common core PMU prefixes, hybrid topology nodes, and
-+ * the host architecture's is_pmu_core() when architectures match.
-+ */
-+static bool env_is_pmu_core(const char *name, struct perf_env *env)
++static int find_matching_metrics_cb(const struct pmu_metric *pm,
++				    const struct pmu_metrics_table *table __maybe_unused,
++				    void *data)
 +{
-+	if (!strcmp(name, "cpu") || !strcmp(name, "cpum_cf") ||
-+	    !strcmp(name, "default_core") || !strcmp(name, "arc_pct") ||
-+	    strstarts(name, "cpu_") || strstarts(name, "armv") ||
-+	    (strstarts(name, "apple_") && strstr(name, "_pmu")))
-+		return true;
++	struct find_matching_metrics_args *args = data;
++	struct evlist *data_evlist = args->evlist;
++	struct evlist *metric_evlist = evlist__new();
++	struct evsel *metric_evsel;
++	int ret = metricgroup__parse_groups(metric_evlist,
++					/*pmu=*/"all",
++					/*cputype_filter=*/false,
++					pm->metric_name,
++					/*metric_no_group=*/false,
++					/*metric_no_merge=*/false,
++					/*metric_no_threshold=*/true,
++					/*user_requested_cpu_list=*/NULL,
++					args->system_wide,
++					/*hardware_aware_grouping=*/false);
 +
-+	if (env && env->hybrid_nodes) {
-+		for (int i = 0; i < env->nr_hybrid_nodes; i++) {
-+			const char *pmu_name = env->hybrid_nodes[i].pmu_name;
-+
-+			if (pmu_name && !strcmp(name, pmu_name))
-+				return true;
-+		}
-+		return false;
-+	}
-+
-+	if (!env || !strcmp(perf_env__arch(env), perf_env__arch(host_env())))
-+		return is_pmu_core(name);
-+
-+	return false;
-+}
-+
-+/*
-+ * Look up @name in @pmus or allocate and initialize a new perf_env-backed
-+ * struct perf_pmu, upgrading PERF_PMU_TYPE_FAKE if a real type is later
-+ * discovered.
-+ */
-+static struct perf_pmu *env_pmu_find_or_add(struct perf_pmus *pmus,
-+					    const char *name, __u32 type,
-+					    struct perf_env *env,
-+					    const struct pmu_events_table *core_table)
-+{
-+	struct perf_pmu *pmu = pmu_find(pmus, name);
-+
-+	if (pmu) {
-+		if (pmu->type == PERF_PMU_TYPE_FAKE && type != PERF_PMU_TYPE_FAKE) {
-+			pmu->type = type;
-+			pmu->is_uncore = !pmu->is_core && !pmu->auxtrace &&
-+					 !perf_pmu__is_software(pmu) &&
-+					 perf_pmu__kind(pmu) == PERF_PMU_KIND_PE;
-+			if (!pmu->is_core && !pmu->is_uncore &&
-+			    pmu->events_table == core_table)
-+				pmu->events_table = NULL;
-+		}
-+		return pmu;
-+	}
-+
-+	pmu = zalloc(sizeof(*pmu));
-+	if (!pmu)
-+		return NULL;
-+
-+	if (perf_pmu__init(pmu, type, name, /*from_env=*/true) != 0) {
-+		perf_pmu__delete(pmu);
-+		return NULL;
-+	}
-+
-+	pmu->pmus = pmus;
-+	pmu->sysfs_aliases_loaded = true;
-+	pmu->caps_initialized = true;
-+	pmu->max_precise = -1;
-+	pmu->is_core = env_is_pmu_core(name, env);
-+	pmu->auxtrace = !strcmp(name, "intel_pt") ||
-+			!strcmp(name, "intel_bts") ||
-+			!strcmp(name, "cs_etm") ||
-+			strstarts(name, "arm_spe") ||
-+			strstarts(name, "hisi_ptt");
-+	pmu->is_uncore = !pmu->is_core && !pmu->auxtrace &&
-+			 !perf_pmu__is_software(pmu) &&
-+			 (perf_pmu__kind(pmu) == PERF_PMU_KIND_PE ||
-+			  pmu->type == PERF_PMU_TYPE_FAKE);
-+
-+	if (!strcmp(name, "software") || !strcmp(name, "tool"))
-+		pmu->events_table = perf_pmu__default_core_events_table();
-+	else if (core_table && (pmu->is_core || pmu->is_uncore))
-+		pmu->events_table = core_table;
-+
-+	list_add_tail(&pmu->list, pmu->is_core ? &pmus->core_pmus : &pmus->other_pmus);
-+	return pmu;
-+}
-+
-+/* Parse "key=value" capability strings from perf_env into @pmu->caps. */
-+static void env_pmu_add_caps_strings(struct perf_pmu *pmu, int nr_caps, char **caps)
-+{
-+	if (!pmu || nr_caps <= 0 || !caps)
-+		return;
-+
-+	for (int i = 0; i < nr_caps; i++) {
-+		const char *eq;
-+
-+		if (!caps[i])
-+			continue;
-+		eq = strchr(caps[i], '=');
-+
-+		if (eq) {
-+			char *key = strndup(caps[i], eq - caps[i]);
-+
-+			if (key) {
-+				perf_pmu__add_cap(pmu, key, eq + 1);
-+				free(key);
-+			}
-+		} else {
-+			perf_pmu__add_cap(pmu, caps[i], "");
-+		}
-+	}
-+}
-+
-+int perf_pmus__read_from_env(struct perf_pmus *pmus, struct perf_env *env)
-+{
-+	const struct pmu_events_table *core_table = NULL;
-+	struct perf_pmu *pmu;
-+
-+	if (!pmus || !env)
-+		return -EINVAL;
-+
-+	perf_pmus__exit(pmus);
-+	pmus->read_pmu_types = PERF_TOOL_PMU_TYPE_ALL_MASK;
-+
-+	if (env->cpuid)
-+		core_table = find_core_events_table(perf_env__e_machine(env, /*e_flags=*/NULL),
-+						    env->cpuid);
-+
-+	/* 1. Populate from HEADER_PMU_MAPPINGS */
-+	if (env->nr_pmu_mappings > 0 && env->pmu_mappings) {
-+		char *str = env->pmu_mappings;
-+
-+		for (int i = 0; i < env->nr_pmu_mappings; i++) {
-+			char *colon = NULL;
-+			unsigned long type = strtoul(str, &colon, 0);
-+
-+			if (!colon || *colon != ':')
-+				break;
-+			str = colon + 1;
-+			env_pmu_find_or_add(pmus, str, (__u32)type, env, core_table);
-+			str += strlen(str) + 1;
-+		}
-+	}
-+
-+	/* 2. Populate/enrich from HEADER_HYBRID_TOPOLOGY */
-+	for (int i = 0; i < env->nr_hybrid_nodes; i++) {
-+		struct hybrid_node *hn = &env->hybrid_nodes[i];
-+
-+		if (!hn->pmu_name)
-+			continue;
-+		pmu = env_pmu_find_or_add(pmus, hn->pmu_name, PERF_PMU_TYPE_FAKE,
-+					  env, core_table);
-+		if (!pmu)
-+			continue;
-+		if (!pmu->is_core) {
-+			pmu->is_core = true;
-+			if (!pmu->events_table && core_table)
-+				pmu->events_table = core_table;
-+			list_move_tail(&pmu->list, &pmus->core_pmus);
-+		}
-+		if (hn->cpus && !pmu->cpus)
-+			pmu->cpus = perf_cpu_map__new(hn->cpus);
-+	}
-+
-+	/* 3. Populate/enrich from HEADER_PMU_CAPS */
-+	for (int i = 0; i < env->nr_pmus_with_caps; i++) {
-+		struct pmu_caps *pc = &env->pmu_caps[i];
-+
-+		if (!pc->pmu_name)
-+			continue;
-+		pmu = env_pmu_find_or_add(pmus, pc->pmu_name, PERF_PMU_TYPE_FAKE,
-+					  env, core_table);
-+		if (pmu)
-+			env_pmu_add_caps_strings(pmu, pc->nr_caps, pc->caps);
++	if (ret) {
++		/* Metric parsing failed but continue the search. */
++		goto out;
 +	}
 +
 +	/*
-+	 * 4. Populate/enrich from HEADER_CPU_PMU_CAPS.
-+	 * HEADER_CPU_PMU_CAPS holds the capabilities of the first core PMU,
-+	 * named "cpu" on x86 but e.g. "armv8_pmuv3_0" or "cpum_cf" elsewhere.
-+	 * On hybrid systems it duplicates the first core PMU's entry in
-+	 * HEADER_PMU_CAPS. Attach the capabilities to "cpu" if present,
-+	 * otherwise to the first core PMU when it has no capabilities yet,
-+	 * creating a "cpu" PMU only if no core PMUs exist.
++	 * Check the data_evlist has an entry for each metric_evlist entry. If
++	 * the data evsel was already set up avoid changing data that may
++	 * break it.
 +	 */
-+	if (env->nr_cpu_pmu_caps > 0 && env->cpu_pmu_caps) {
-+		pmu = pmu_find(pmus, "cpu");
-+		if (!pmu && !list_empty(&pmus->core_pmus)) {
-+			/* Match the writer's perf_pmus__find_core_pmu() order. */
-+			list_sort(NULL, &pmus->core_pmus, pmus_cmp);
-+			pmu = list_first_entry(&pmus->core_pmus, struct perf_pmu, list);
-+			if (pmu->nr_caps > 0)
-+				pmu = NULL;
-+		} else if (!pmu) {
-+			pmu = env_pmu_find_or_add(pmus, "cpu", PERF_TYPE_RAW,
-+						  env, core_table);
++	evlist__for_each_entry(metric_evlist, metric_evsel) {
++		struct evsel *data_evsel =
++			map_metric_evsel_to_evlist(data_evlist, metric_evsel);
++		struct evsel *new_metric_leader;
++
++		if (!data_evsel) {
++			pr_debug("Skipping metric '%s' as evsel '%s' / '%s' is missing\n",
++				pm->metric_name, evsel__name(metric_evsel),
++				evsel__metric_id(metric_evsel));
++			goto out;
 +		}
-+		if (pmu)
-+			env_pmu_add_caps_strings(pmu, env->nr_cpu_pmu_caps, env->cpu_pmu_caps);
-+	}
 +
-+	/* 5. Set default core CPUs on non-hybrid systems */
-+	if (env->nr_cpus_avail > 0 && env->nr_hybrid_nodes == 0) {
-+		char buf[64];
++		if (data_evsel->metric_leader == NULL)
++			continue;
 +
-+		snprintf(buf, sizeof(buf), "0-%d", env->nr_cpus_avail - 1);
-+		list_for_each_entry(pmu, &pmus->core_pmus, list) {
-+			if (!pmu->cpus)
-+				pmu->cpus = perf_cpu_map__new(buf);
++		if (metric_evsel->metric_leader == metric_evsel) {
++			new_metric_leader = data_evsel;
++		} else {
++			new_metric_leader =
++				map_metric_evsel_to_evlist(data_evlist,
++								 metric_evsel->metric_leader);
++		}
++		/* Mismatching evsel leaders. */
++		if (data_evsel->metric_leader != new_metric_leader) {
++			pr_debug("Skipping metric '%s' due to mismatching evsel metric leaders '%s' vs '%s'\n",
++				pm->metric_name, evsel__metric_id(metric_evsel),
++				evsel__metric_id(data_evsel));
++			goto out;
 +		}
 +	}
++	/*
++	 * Metric events match those in the data evlist, copy metric evsel
++	 * data into the data evlist.
++	 */
++	evlist__for_each_entry(metric_evlist, metric_evsel) {
++		struct evsel *data_evsel =
++			map_metric_evsel_to_evlist(data_evlist, metric_evsel);
++		struct metric_event *metric_me =
++			metricgroup__lookup(evlist__metric_events(metric_evlist),
++					    metric_evsel,
++					    /*create=*/false);
 +
-+	list_sort(NULL, &pmus->core_pmus, pmus_cmp);
-+	list_sort(NULL, &pmus->other_pmus, pmus_cmp);
++		if (data_evsel->metric_id == NULL) {
++			data_evsel->metric_id = metric_evsel->metric_id;
++			metric_evsel->metric_id = NULL;
++		}
++
++		if (data_evsel->metric_leader == NULL) {
++			if (metric_evsel->metric_leader == metric_evsel) {
++				data_evsel->metric_leader = data_evsel;
++			} else {
++				data_evsel->metric_leader =
++					map_metric_evsel_to_evlist(data_evlist,
++								       metric_evsel->metric_leader);
++			}
++		}
++
++		if (metric_me) {
++			struct metric_expr *expr;
++			struct metric_event *data_me =
++				metricgroup__lookup(evlist__metric_events(data_evlist),
++						    data_evsel,
++						    /*create=*/true);
++
++			if (!data_me) {
++				/*
++				 * As the metric_expr is created, the only
++				 * failure is a lack of memory.
++				 */
++				goto out;
++			}
++			list_splice_init(&metric_me->head, &data_me->head);
++			list_for_each_entry(expr, &data_me->head, nd) {
++				for (int i = 0; expr->metric_events[i]; i++) {
++					expr->metric_events[i] =
++						map_metric_evsel_to_evlist(data_evlist,
++									expr->metric_events[i]);
++				}
++			}
++		}
++	}
++	pr_debug("Found metric '%s' whose evsels match those of in the perf data\n",
++		 pm->metric_name);
++out:
++	evlist__put(metric_evlist);
 +	return 0;
 +}
-diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-index 6e7c9f857aaf..2b784cf648f3 100644
---- a/tools/perf/util/pmus.h
-+++ b/tools/perf/util/pmus.h
-@@ -8,6 +8,7 @@
- #include "mutex.h"
- 
- struct perf_event_attr;
-+struct perf_env;
- struct perf_pmu;
- struct print_callbacks;
- 
-@@ -49,7 +50,10 @@ struct perf_pmus {
- 	 * encoding in perf_event_attr::config is supported.
- 	 */
- 	enum perf_pmus_extended_type extended_type;
--	/** @lock: Protects lazy initialization of @extended_type. */
-+	/**
-+	 * @lock: Protects lazy initialization of @extended_type and
-+	 * perf_pmus__read_from_env().
-+	 */
- 	struct mutex lock;
- };
- 
-@@ -75,6 +79,15 @@ void perf_pmus__init(struct perf_pmus *pmus);
-  */
- void perf_pmus__exit(struct perf_pmus *pmus);
- 
-+/**
-+ * perf_pmus__read_from_env() - Populate @pmus from perf.data header metadata.
-+ * @pmus: The PMU collection to populate.
-+ * @env: The perf_env containing header PMU mappings, hybrid topology, and caps.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int perf_pmus__read_from_env(struct perf_pmus *pmus, struct perf_env *env);
 +
- /**
-  * perf_pmus__find() - Find a PMU by name in @pmus.
-  * @pmus: The PMU collection to search.
++int metricgroup__add_matching_metrics(struct evlist *evlist, bool system_wide)
++{
++	struct perf_env *env = evlist__env(evlist) ?: host_env();
++	struct find_matching_metrics_args args = {
++		.evlist = evlist,
++		.system_wide = system_wide,
++	};
++
++	return metricgroup__for_each_metric(perf_env__pmus(env), pmu_metrics_table__find(),
++					    find_matching_metrics_cb, &args);
++}
++
+ static const char *code_characters = ",-=@";
+ 
+ static int encode_metric_id(struct strbuf *sb, const char *x)
+diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
+index 2cc28b3eb983..2069211913dc 100644
+--- a/tools/perf/util/metricgroup.h
++++ b/tools/perf/util/metricgroup.h
+@@ -97,6 +97,18 @@ int metricgroup__parse_groups_test(struct evlist *evlist,
+  */
+ int metricgroup__for_each_metric(struct perf_pmus *pmus, const struct pmu_metrics_table *table,
+ 				 pmu_metric_iter_fn fn, void *data);
++/**
++ * metricgroup__add_matching_metrics() - Add metrics whose events are in @evlist.
++ * @evlist: The evlist, typically read from a perf.data file, to add metrics to.
++ * @system_wide: Are the events in @evlist system wide?
++ *
++ * For every metric whose events all have a corresponding evsel in @evlist,
++ * add the metric to the metric events of @evlist so that it is computed and
++ * displayed along with the counts of the evsels.
++ *
++ * Return: 0 on success or a negative error code.
++ */
++int metricgroup__add_matching_metrics(struct evlist *evlist, bool system_wide);
+ bool metricgroup__has_metric_or_groups(struct perf_pmus *pmus, const char *pmu,
+ 				       const char *metric_or_groups);
+ unsigned int metricgroups__topdown_max_level(void);
 -- 
 2.56.0.385.gac671c819a-goog
 
