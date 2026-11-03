@@ -1,55 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793699841;
-	b=l25VhXj3YnF8yhxlsfXDV87K7h9UBjPGJVpKeLC3VWKSv1g2SZuzRaI5LFAA3sOE2baT
-	 M5N/b0r148KYTgF4vBIgC/9W+1BDRoLVObCCM483WVEUzQpudwGDB/5JmDn18hga/x+zR
-	 scX5ytB8KsmQ14er7pBzNuFY0aukRRKvkXKTuCzX9gtuRJG43RsRAY0fwXbCsoul4c9zI
-	 LnsIdg7JtYGK6lAWNBEFKvIocdO64nHrZgaS+DTz1DvKHvG2MfgdiQum8yjzTsToIxTdm
-	 0kPz+JEKyAA7BA70W0Hjc34YeiUHPAWvPY0b5MCI5oe8vXqF3jaoUW0BJmLMCu0zmMw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793699841;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=YYaYT2MvsdKI812lDcAtf4FP/Iik2f0nueU1YRbeT0I=;
-	b=Bdfulj5yqybjQBPO6YPdEHxP0F0tVLGzBCgEqQJh2Ajwed65ci8iBQ0gzLQGAQPujJK1
-	 cuY0U1KsR6HAY2c6qVSGHGNAbVP7OJFVuGVycMjqnNrmmQ0pQfitDj/R/WojW1+2NRBGY
-	 eZZOYvd3HOBTpT4Wh0mW0+3RNoc6+y3DuWW4UhGjiRRknlTH+KsD6kNmHU1xdK3Q+jlQB
-	 Vjca4IVBJoaTeZ7RAki0Qsf8/pw9jhkKV/8rxr3r9z9lA2T2LaX+LFuY3Q+Mq4dY4T5sg
-	 2G6F0yY8F0a2NxL+EvMxP+Hf8us4KQF3QjU3zA8nh1P5GnW0iTFa5FasNcl3J6ciecw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RGyny3fy;
-	arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793700890;
+	b=f42cLq/MkX6LhlEMFT2gDoUiPH22Sve5F7OW0cdF9T5kf6zu2dnm8UWOhMrbwajYbf0e
+	 Q3UnP4ltVyotTdmIcecauLHdPXTkHiMB/6V1JUlJDqHnNgrjZxNm9sD1MS1e55f1AOMgW
+	 ZA6tkOaeJsgQFddhc6ym7dhXErQtP+R016l/RQbgsJsl8LwjC+266dyxYjzpla33cLNVZ
+	 F6VkbPCtVbhwnqfi2ZHQ9TKNeMsgXi1laKH4GqujhbEVWeuFGr0T5PgefWYOGKRSLlTNZ
+	 V2e/V5T3hB6p/5FToQ27JXq4MtD2ira2TwfRJxIINJQgFQvfJtNJeJMnL3w8ybLRC6g==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793700890;
+	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=cNoGgX+UJiBvCGY47GMUcYG+per3jFnV5URk2F0Da2E=;
+	b=mpQPDzP+1lULTUpS6rK/UKQA18+ZcCFcAKgE6VblozpgE7CxHgbB9PWx4V5bC2yYTlWh
+	 bhDxXPee016sZKUENWHdrpWJNYlKKzXJ7MWHld4ULp34N/dMQg9VnrqV2iWaDyxtrCma1
+	 50ByzvFevCQ8f4tTbsPH82NDSzJOiuTZ1e1hCTQGH8SGOqpZHbm+UMMJJZCsspTcb4mkg
+	 0Z5ivkwfsmrrge3Oy2UBOBvu/688J+AZLGFuX5eiciAYU1UA8YWQGr24ykFY/zrwY9tX3
+	 A1ji+9JlWYm9iBocn8CfSLTuHw0IvGakpdcqujYVVULKIErphQSiUsvdGaPAeCMhL0g==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hftTaAF8;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409C3606C51E
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 09:57:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6632606A800;
+	Tue,  3 Nov 2026 10:14:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RGyny3fy
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B76421F00A23;
-	Tue,  3 Nov 2026 09:57:20 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hftTaAF8
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1793700889;
+	b=0Miq07ZMRLYB01pxwpG1F98bS95cp4MqchTiFq9BQxVjenlLxQiWwbEI7T4CAvCAEdpZ
+	 pFba+YfWRS7kA+qWXnIcKVahRvkHjiUwg7lrnw8PL3GlYEEEtAUj9CrXn2i036It212v9
+	 SsizlqWD5+oPdmQyz7Mf8g8Fh7ZhXu+/d9ynU5f09vN2yPTxt+sL9S/x+JwMt4azJNKFX
+	 SRU3Sa7hWoyIlDiCOYN6pPVH5XGfOVe8K0NXGKqJqEED6h7siIDyoH6oeaTeyvAEGDVRK
+	 ulDVxBrAlaInwfCB1hyxG24qkLtftQ5nTcWKh3chjFXkw71t0fNANGSycN8wLrkJzgA==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1793700889;
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=cNoGgX+UJiBvCGY47GMUcYG+per3jFnV5URk2F0Da2E=;
+	b=y8ByIaeaZSg0VEnP8xoVogVMAu8b+lH9AjpniAtsz6fzc8blim8wMhrKuFVK00/bRlVN
+	 gEFavoPu2HQSspGyXyagqjjeVGoYW1ipGRvuoM6OeBXfLaF8gZIQyhgBTJ/raJ1LjMn8E
+	 xmysFH3AL0jkGY1rHD8zGSXnVrQBX4dRE9PME2+IikHBoWGzp9t2qZ8FhFk5puTijDHnM
+	 3eaJcdOERpPn5BNbfNEbou/NGG9kWPh33ID/PBphYJErXaBiBn+8b+IDgl3yLNE8/cO/V
+	 qPb9jJKnntMObqncD3Az7T/oiXWftdqfcc+hcPOAnEDqLD7trl7P2802J9C9h66kIsg==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.kernel.org (Postfix) with ESMTPS id 261F61F000C1;
+	Tue,  3 Nov 2026 10:14:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793699840;
-	bh=YYaYT2MvsdKI812lDcAtf4FP/Iik2f0nueU1YRbeT0I=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=RGyny3fyVPjqThf8oLvKo34rsdvtCLgr2yJN19p4aH+NhtjWSZZzgcxJJy9Rsa8IE
-	 zHbrJIN3/DX2L2VyfpRfcW6S+Dt78+rVyy2C6kMaLQfCNIL+qcutXKe19X8qLRUHBU
-	 8c8ovgKbMKD+OA9N4FtNczb6KiUDDB0QwewdLL915u4D6CnOlkuKS5PTJJfv0/6/I9
-	 UtjzzTMBJifI/yGsBaQmJ8Xz2VWY8S+10HcPc/9KAPn6VygUL0JgcPDmtZRIDy1F9C
-	 PTq2qd4+/th27M/LQ4yxxCTmKoI1TdTCeZQt9WT7phaJO2ckdlXfB61QH/ygzuidq3
-	 +bBdqKz6w5BBw==
-Message-ID: <sashiko-outbox-194990@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf/riscv: Guard PMU counter indices and user access
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Zhao Gongyi" <zhaogongyi@bytedance.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261103093709.81605-1-zhaogongyi@bytedance.com>
-References: <20261103093709.81605-1-zhaogongyi@bytedance.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 09:57:20 +0000
+	s=k20260515; t=1793700889;
+	bh=cNoGgX+UJiBvCGY47GMUcYG+per3jFnV5URk2F0Da2E=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
+	b=hftTaAF89UUS606phWBtcNNu+5QtaWJJyjuRbF3s1pvIOn6ysUq+Tby79f60TepnZ
+	 WThhlnzKSOsGl18AXtFK87sWqYVh1eRfVCyRbRwfmrtWB1+ap4kxVpwXnbc0/kUmZK
+	 2cKrV/9wE7WeJCG/Y3/Rcx+Jr86Q9xUP3hJIlFvzPJtZv3yR57+HZIFQZg8Av5S/i+
+	 oKvWwrWWSNY8KmBQTzb/gFBo1sTsh7v63tS5lNvrfTaIC+JcfssmNsIeREsKIkG9SD
+	 pc+Ue4RlXRe9H+h9tfIwMGFWrT5AYHXSPxmG1nflvezmnsfI+tpqH+um5nbQuMhimA
+	 xGp1yZZzF37sA==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id 8397B4687E;
+	Tue,  3 Nov 2026 10:14:47 +0000 (UTC)
+From: Myria Sarvay via B4 Relay <devnull+myrialsarvay.gmail.com@kernel.org>
+Date: Tue, 03 Nov 2026 21:14:36 +1100
+Subject: [PATCH 01/13] dt-bindings: arm: pmu: Add Apple M3/M4/A18 Pro SoC
+ CPU PMU compatibles
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -58,97 +82,71 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <20261103-m3-plus-pmu-events-v1-1-a8eb6c1139fe@gmail.com>
+References: <20261103-m3-plus-pmu-events-v1-0-a8eb6c1139fe@gmail.com>
+In-Reply-To: <20261103-m3-plus-pmu-events-v1-0-a8eb6c1139fe@gmail.com>
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Sven Peter <sven@kernel.org>, 
+ Janne Grunau <j@jannau.net>, Neal Gompa <neal@gompa.dev>, 
+ Marc Zyngier <maz@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ asahi@lists.linux.dev, Yuvan Shen <yuvanshen09@gmail.com>, 
+ Myria Sarvay <myrialsarvay@gmail.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1255;
+ i=myrialsarvay@gmail.com; h=from:subject:message-id;
+ bh=j1e1lB3ujOCOFCosr6O6hKLnB66STlyve85ZT8PSD4A=;
+ b=owJ4nJvAy8zAJRbk4iixYu2/l4yn1ZIYsl5uEf7beptPf2reQX42teRrIqnXGV+rKHW+2WD95
+ M8CI8E3YRM7SlkYxLgYZMUUWfRN07QnszVcKl3mugVmDisTyBAGLk4BmIjRDIa/Mn3Hsma/busv
+ rHm2fonITqUT0WwHjx979ufPqf0K+3f26jH8D82afVrOTfDehyv7Dyp/tRZJ+fpWvkdJs+rven2
+ VpefmMQAAsJ5OFQ==
+X-Developer-Key: i=myrialsarvay@gmail.com; a=openpgp;
+ fpr=2F35662B930680D275A645B452444118A8ADFEE9
+X-Endpoint-Received: by B4 Relay for myrialsarvay@gmail.com/default with
+ auth_id=1027
+X-Original-From: Myria Sarvay <myrialsarvay@gmail.com>
+Reply-To: myrialsarvay@gmail.com
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] perf/riscv: zero counter count in pmu_sbi_get_ctrinfo() derefs ZER=
-O_SIZE_PTR
---
+From: Myria Sarvay <myrialsarvay@gmail.com>
 
-commit 8efed03034c08f98dfc2b34e375ed58087ac3e08
-Author: Zhao Gongyi <zhaogongyi@bytedance.com>
+Document the compatibles for all current M3, M4 and A18 Pro SoC PMU
+variants. Note that the M4+ are split out by chip codenames, instead of
+name for the types of cores, as they no longer have individual names for
+the performance and efficiency cores.
 
-perf/riscv: Guard PMU counter indices and user access
+Signed-off-by: Myria Sarvay <myrialsarvay@gmail.com>
+---
+ Documentation/devicetree/bindings/arm/pmu.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-This commit adds bounds validation on PMU counter indices before accessing
-counter state or CSR mappings, preventing out-of-bounds accesses when a
-disabled event is mmaped before hw.idx is assigned or when SBI returns
-invalid counter values.
+diff --git a/Documentation/devicetree/bindings/arm/pmu.yaml b/Documentation/devicetree/bindings/arm/pmu.yaml
+index f47baaefcdac..c27f06e82de1 100644
+--- a/Documentation/devicetree/bindings/arm/pmu.yaml
++++ b/Documentation/devicetree/bindings/arm/pmu.yaml
+@@ -22,8 +22,16 @@ properties:
+           - apm,potenza-pmu
+           - apple,avalanche-pmu
+           - apple,blizzard-pmu
++          - apple,brava-e-pmu
++          - apple,brava-p-pmu
++          - apple,donan-e-pmu
++          - apple,donan-p-pmu
++          - apple,everest-pmu
+           - apple,firestorm-pmu
+           - apple,icestorm-pmu
++          - apple,sawtooth-pmu
++          - apple,tahiti-e-pmu
++          - apple,tahiti-p-pmu
+           - arm,armv8-pmuv3 # Only for s/w models
+           - arm,arm1136-pmu
+           - arm,arm1176-pmu
 
-> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-> index 21a2078eab98a..ac0d43746b799 100644
-> --- a/drivers/perf/riscv_pmu_sbi.c
-> +++ b/drivers/perf/riscv_pmu_sbi.c
-[ ... ]
-> @@ -890,10 +917,18 @@ static int pmu_sbi_find_num_ctrs(void)
->  	struct sbiret ret;
-> =20
->  	ret =3D sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_NUM_COUNTERS);
-> -	if (!ret.error)
-> -		return ret.value;
-> -	else
-> +	if (ret.error)
->  		return sbi_err_map_linux_errno(ret.error);
-> +
-> +	if (ret.value < 0)
-> +		return -EINVAL;
-> +	if (ret.value > RISCV_MAX_COUNTERS) {
-> +		pr_info("SBI returned too many counters, limiting to %d\n",
-> +			RISCV_MAX_COUNTERS);
-> +		return RISCV_MAX_COUNTERS;
-> +	}
-> +
-> +	return ret.value;
->  }
-> =20
->  static int pmu_sbi_get_ctrinfo(int nctr, unsigned long *mask)
-> @@ -902,6 +937,9 @@ static int pmu_sbi_get_ctrinfo(int nctr, unsigned lon=
-g *mask)
->  	int i, num_hw_ctr =3D 0, num_fw_ctr =3D 0;
->  	union sbi_pmu_ctr_info cinfo;
-> =20
-> +	if (nctr < 0 || nctr > RISCV_MAX_COUNTERS)
-> +		return -EINVAL;
-> +
->  	pmu_ctr_list =3D kzalloc_objs(*pmu_ctr_list, nctr);
->  	if (!pmu_ctr_list)
->  		return -ENOMEM;
+-- 
+2.56.0
 
-[Severity: High]
-Should pmu_sbi_find_num_ctrs() and pmu_sbi_get_ctrinfo() reject zero
-counters as well (ret.value <=3D 0 and nctr <=3D 0)?
 
-If SBI_EXT_PMU_NUM_COUNTERS returns 0, pmu_sbi_find_num_ctrs() returns 0,
-which passes the num_counters < 0 check in pmu_sbi_device_probe():
-
-drivers/perf/riscv_pmu_sbi.c:pmu_sbi_device_probe() {
-	num_counters =3D pmu_sbi_find_num_ctrs();
-	if (num_counters < 0) {
-		pr_err("SBI PMU extension doesn't provide any counters\n");
-		goto out_free;
-	}
-
-	/* cache all the information about counters now */
-	if (pmu_sbi_get_ctrinfo(num_counters, cmask))
-		goto out_free;
-}
-
-In pmu_sbi_get_ctrinfo(), kzalloc_objs(*pmu_ctr_list, 0) returns
-ZERO_SIZE_PTR, which is non-NULL, so the PMU is registered with
-pmu_ctr_list set to ZERO_SIZE_PTR and an empty cmask.
-
-When userspace later opens a non-sampling event (such as a PERF_TYPE_RAW
-event), riscv_pmu_event_init() sets hwc->idx =3D -1 and calls
-riscv_pmu_ctr_get_width_mask(), which falls back to counter index 0 and
-dereferences ZERO_SIZE_PTR in pmu_sbi_ctr_get_width():
-
-riscv_pmu_event_init()
-  riscv_pmu_ctr_get_width_mask()
-    if (!riscv_pmu_ctr_idx_valid(hwc->idx))
-      cwidth =3D rvpmu->ctr_get_width(0);
-        pmu_sbi_ctr_get_width(0)
-          return pmu_ctr_list[idx].width;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103093709.8160=
-5-1-zhaogongyi@bytedance.com?part=3D1
