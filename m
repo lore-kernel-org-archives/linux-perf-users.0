@@ -1,100 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.179
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793676592;
-	b=jNXP/bC1B7mnvkTrRsC7Dn/25gt33+GmDF81YXzWvD1j3M/mcmzktPPCiseOvh64hDe/
-	 0YdYPd7EQgSVl0SUS0CIoBLaYFMIgwx+c7D/MW2FiSxOZtnsYrp/dSUetVRWQGw8GblDk
-	 HKx3GwGqfOgwhe2PK2iAK2IssTHPzg5XCzgmmILT03AYkVGu3UANbh9OsiGhaBLEaLvzZ
-	 erzOv3Z/I3akP6oX12bNZbfoHwQx0sQLWpEsZQcj4jIBfNsumfz1yzE3uFONwWcGWJKhE
-	 vhs6rR4o8polMWS7HtNJ5GhA/4WLQKCeBtli8CT7ZfIL5ftBpJHp8QMsK5BmSOdNM9g==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793676592;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.197
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793679262;
+	b=h134ZtNQz+moOrIY2xD2F8U0w3kJl3vgRMy5JhfVjTmzfaTRMls3m4iYjRVSttsKJlJ3
+	 ex78oq7bwnWHUrCDWpYs8RoSsiuxk50hRHSsMMoYO4oQQgJQfI0amvSqXVF6KdrWUY4Od
+	 OyO+jiwlpQB53ExDGNDhyyJwjvPP8eGwbdP3VXh0r0YuPDgT8t0TX/9jzzt4+yW8uXnWo
+	 jd6LODbsSiGEnckFP2ejvzLtaAOpNVYM/q+EHRhhoUlyD/qKn2OWphhOkgqmKdvxD5aJR
+	 JD/oVBSLm+KS2REj1L/LaM390jntLk8E06G/Jdt0npgjs3WA4HtLd0OxkHcgL5ueiyg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793679262;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=3/jVVaijRUiYgguhdxxzqQy/vf/qXuWMp4fiYE9hRio=;
-	b=mpvhTRnE1AsG1Mdm8OfikZLTsl/y1OC/+p3prKIrsUY5EPAMoFe3bHufnpOeupS0947s
-	 vB4OhOmFLHCCmUs4hedckagTBH2iRipCmxPFBGqhE7VOw9sHBAMwhAZrnZUP5NVKv9h+h
-	 jvTsnUW+M3YiQuoZp8HQLzPLJaq9nUHozEdF8/B6eYit22kWeyCUtRq6TEgm7O/VxlPXh
-	 SoGDjmMmjwprvzYTreIk0SmwkFAMzb6Pwl0s5CN7YhkhmqYZQotFBVd/QGf0Cd1GBSSk9
-	 DCkSGWjy2gP65NY3ifqX19jUSBN24w9zXjP4akDuwntvwsJsoKpBfxvzaNeZ9x4vyyg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
+	 X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
+	bh=Fp1Lx/Kg3pMRBBCsAns7CtggXW6vZRcTbQp37OcvvAQ=;
+	b=5n+mjvsgxM6jDy/xf6ZoxWyzV4hK/ciG+cEcHeuI5Ny02UlnbuJhIREmvwlShqWOo8xY
+	 Ac+BRuJASNXV3m1BRSzWg3kFpsjlpotHfZez4Ay6X5SFsyv4MzOudb98+EdJGS98CLS5U
+	 SAUc1fn27omK6cKepRrvHsDwXGsxTenQxwEcO+/HHYzH+bIychmszgoWBrhEPloTGBwdP
+	 YKr/1jn+/QjNDgAru1gtpCWs2YSpE7OPqHf+sDsrIh6+j9epiO3mup3Ps75dbDRFQdQdj
+	 D3tINP5InxG/Ox9xvjF53KL2DvWIJBPVCTgXyz6mFdRTww3NWZZJ26Uv0oSTF2RRotw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=oRQlatYQ;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.179
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="VUc48P/b";
+	arc=none smtp.remote-ip=74.125.82.197
+Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58949606A32E
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 03:29:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 58949606A32E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6DB606A326
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 04:14:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3D6DB606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=oRQlatYQ
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-5383c97c8cfso76021cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 02 Nov 2026 19:29:51 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1793676590; cv=none;
-        d=google.com; s=arc-20260327;
-        b=G1Tw2sX7k82hnSRsUjk058qau5Z4LoZJwnCWuSplfgY6zPnB5L5h1We8ZeXS3EC0Ai
-         ouQ8cfj2kCS2ECHIMWrCUKtef239dTZR/k38HY16RZ7m418j6WprwswBHpq1fevQPc06
-         WgDwtHv80Zz06Q0/agXONbyZ1N84dI7ODQKXbg++WUfIEace1YLANlYxw8ELZbJ9acen
-         5Fv8Z/uFeJ++LrTCWEuwLrV5N2Lk3+5+f8ACQb1O4aiwqbTMvgRKuoVZxl9UUGTK2+Dk
-         SuAqCzDq4rNLYTC2sniiofGWqumCMH6prynoKt17W5tFS4ycLOztYGhWW/WpG94s8XXq
-         V/oA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=3/jVVaijRUiYgguhdxxzqQy/vf/qXuWMp4fiYE9hRio=;
-        fh=NGs23CCQCF6VlXJukoZ2ZAJGJVpQO9FPW9biQobXGQY=;
-        b=BTLcW6MnvuzQR1kzOGaZtEwUnWWvM6cELhoF9iIBmKxK+jSOmgiYJz9Oa+LzmC4duR
-         nKSgF1n8UQZBL50Kvdmil/vgG7PLkVoOPEFpz43NLSoUG1APfhi7qCtfCwLUBMLZnlD6
-         PrfIe3PbSMmgI9nUClrBq6R8M11cGV7CHk8CRQIGt6eWdeiCj2tnTUhuZSkLA4f37Hqp
-         INTck8JmN9EIWAaHeHl/5I9EARvA4zf688xsvVrryLazNCPMjv8tjQ349Ie0Zsw3pq5z
-         Z4Y0YGaf7jwxp4azhGN9/KhrHJIlz0oeCYaxa2qh8nUX47XPBekub4OmvW8QjenZI9jz
-         2YNA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=VUc48P/b
+Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-36637676140so5135374eec.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Nov 2026 20:14:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793676590; x=1794281390; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=3/jVVaijRUiYgguhdxxzqQy/vf/qXuWMp4fiYE9hRio=;
-        b=oRQlatYQ4V/cKWLoECQKAVt3ves50NtB5jDiQpMB4Qgk+/BmgvlFm5RIte/Wj8MsAB
-         JdFOZzgvx1MAAXhcC2IIKEmvPmtm+4AWRGTwjVZZb3m8LWkMrAjrF2vBsYTgEpFi671v
-         d65vvGo9tIMSp3g4NlP1jBLNMV9rFJF9kOS7vwM5afHRzXlxp2mOOpqu2LCFRmdYavgP
-         StpHiZck9i85eNeBTfamyuB+cBmWO0BAALf8rOhjB6BW9NLyxiAGeLTuLl0OZw56sexE
-         ctZqW12uvD8Y7tzvtbEIb/ATSHxVWfSAoMv7QAi0D5ygwK/qBNs0rSrLnzGnzdNs/ikJ
-         S99A==
+        d=google.com; s=20260707; t=1793679260; x=1794284060; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Fp1Lx/Kg3pMRBBCsAns7CtggXW6vZRcTbQp37OcvvAQ=;
+        b=VUc48P/b6X2ZpZvux4yNMu9AJit/kHYdez0cEtwtBB5oj8OjGO3hI4B3ofgXSj44GT
+         fNwzJzSR8bFjf99ULHbYLZnr+ZUBnBYB1ObIn+lTSHrFGgQR48A6uzMr0Zz5Cwy+eloZ
+         GXrXXEJaNDUtSF2lXHesOcOVZaCSSndnL5wo+d0caHNwYJnOUdiixQiKAThYopp4ugZ/
+         qc7veLORHD7yytyaFvdqyKD0/jRiGObJbUZjxd/xmYf4gdja2OjnXupjTRL7s6PsR+fY
+         iHFaf4KumuBoDtf4MN1Rj4eF7kaV6XVR3BTm1jfgrPL8zQp1LPk4Eq+WNSCFk0MB3c+R
+         KOkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793676590; x=1794281390;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
+        d=1e100.net; s=20260707; t=1793679260; x=1794284060;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=3/jVVaijRUiYgguhdxxzqQy/vf/qXuWMp4fiYE9hRio=;
-        b=csMGjHcnEUM5oGQeMAvaJ1d2K3pzzA+BDvaDxmXfG5hOi4TS2FH9sc9ZrM5mSMfIIA
-         YixUK5T8LZMu8rsc/MiLRFq149azPq02tlP5V837KS4Zg6B4DVpL1H+b7BEVkID1Jo5r
-         Wlj1yppHhzf7WhUf9QGHTd3+dDOt9wNY69LuHm7hJ/rY5yyt1UUWLYtAnqs+APPsXUaD
-         163LnI7l+VWUlXZcK7C6BzaMNlIEY97vuwLlzlByyETG2ivTE8NpFxNlI01MP1v6LJB6
-         F0bzqZUNIMuxQNFUg4XGPcG8ZUWfavEGluKmwV+nEB/WHC7je5QQE7jvT4hvXmxPfpFv
-         eJQg==
-X-Forwarded-Encrypted: i=1; AKwUvBxntDw6aSgkGTtTnAhzf7sPbzia51MlNszQI28Z3K94+Phc1LU/ttL5Q7KxEq1TYkP2Y0gjU2w0A/AsIobU3Rfl@vger.kernel.org
-X-Gm-Message-State: AFq9FYJhYz/2ZNQG7lHg78i7uM5GL3TVmvK5Catc9sEcPL3H875HUpSc
-	1EV1QbfVZOHoqnieC7l2+NcZFJhlrd1VVAkX8Qh4rGegckXDFSDwAECJncq51t21VrgFnnZdmlR
-	5tT3MDGRJzXWEKBIg45h3gk8jOXzogdoQ9zzX1TPe
-X-Gm-Gg: AYBFou0G398JGg83hCwDeFawp5PDw/LS8ZUfr3pYblEBwlfEugCsjpjK+qu+Owf+beT
-	FYteO0xjdl2wXBD6LqBUymDaByTggpvlOz9oJnDO21NHjPcrJ4d4DhcR9p+I080XGfwBtG19IVw
-	OlrZcWOPXuYHotBx0/Fd2MAcRISMw/Xq09s5aoUM5tKhvC7jVn5irwZTW0LNvc/lV3DdfmAzZFR
-	tCdWvo9PMkjfVGfVX9DvNzWG2GPl428oKxzjZ9mjota59RG5MTUocetMLb9Kt/h0wBE/3i8VbKL
-	fMMBFHaWBdVgMYkxumV8jPgIc/NFumFDNsYVlPmdsDDr2XEX1C+764Zhp7GUxbZ4Lj3mQPSOSpM
-	U/iE3jBBmi1i2yplRJhhMAtX7qnel6Y7xzSVBEg==
-X-Received: by 2002:a05:622a:2447:b0:530:e335:4ef with SMTP id
- d75a77b69052e-549ba0e24f1mr10891801cf.2.1793676589342; Mon, 02 Nov 2026
- 19:29:49 -0800 (PST)
+        bh=Fp1Lx/Kg3pMRBBCsAns7CtggXW6vZRcTbQp37OcvvAQ=;
+        b=xhtXBte8jpA73q/qyZtNHalYE/tF6UB2RGvDUH80R8gJOWTyeN2BZ1fgw3ITlukMvx
+         hSCHXnWMNj36zHw9tz+7/m9x2RPzsiQx+YAH63GKBOPysAFS9xKSQ1nX7N2rlA85ZYOn
+         Ye7dP4IyN46YMb0RQN7ZDZ2oYxgcGXr/1Xvse46di+1gJw8nYCMoo2PRrOAy0P9LvYua
+         wheGLLMrBMh+VILvEu+98s1xhFYLS2+3aAkSnSN5a6gikejZV+TGcGF+HMxSJhszF4J2
+         Rba68CPO5BJiEv3sDtCi9q/0ghQUaBdwEOdumwnisXgRlehxdofL4hs1Vn18jFDZTcDY
+         2nBg==
+X-Forwarded-Encrypted: i=1; AKwUvBxBeF0UfDGBc1xdqooEBKq6ERUQHqhGeK/jzl+89huA8kaYsm2U88wMsyiW7GXc1u1sxfuIJbI7Gyo/GEVlXKSv@vger.kernel.org
+X-Gm-Message-State: APuU4Z8VOvsPo2SMiMLugGMt3ZYFhmPgYXSTYr6+K6u301kKFiGIu2gj
+	xb/R0E6DwpUecH6FG6l2YQNr6AtglvRANK69X0du+5JTP2ZYwZtiAaX3DCH/WBL0+NtwnGH0ijA
+	NGnYbwcaD4Q==
+X-Received: from dyz12.prod.google.com ([2002:a05:693c:408c:b0:351:2266:121])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:1602:b0:369:f9da:a70f
+ with SMTP id 5a478bee46e88-36a423af719mr15654717eec.17.1793679259838; Mon, 02
+ Nov 2026 20:14:19 -0800 (PST)
+Date: Mon,  2 Nov 2026 20:14:13 -0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -103,220 +75,285 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-References: <20261102-alpha-profileme-v4-0-61e00f5e1da8@gmail.com>
-In-Reply-To: <20261102-alpha-profileme-v4-0-61e00f5e1da8@gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.0.385.gac671c819a-goog
+Message-ID: <20261103041416.2940213-1-irogers@google.com>
+Subject: [PATCH v16 0/3] perf: Add Raspberry Pi AXI PMU driver
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 2 Nov 2026 19:29:36 -0800
-X-Gm-Features: AclHuK904JHTfUNnVjrkcp3Pq4YdxAo-LcsUdxHpRJ4GokkVa24QE-DbUgehNDw
-Message-ID: <CAP-5=fWC7AM9aAsHaZvQVXznYzVp5FRQtH=vu2xxQys7QWvCQg@mail.gmail.com>
-Subject: Re: [PATCH v4 0/7] alpha/perf: add ProfileMe sampling
-To: Matt Turner <mattst88@gmail.com>
-Cc: Richard Henderson <richard.henderson@linaro.org>, Magnus Lindholm <linmag7@gmail.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Dom Cobley <popcornmix@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, 
+	"=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=" <u.kleine-koenig@baylibre.com>, Stefan Wahren <wahrenst@gmx.net>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	bcm-kernel-feedback-list@broadcom.com, linux-perf-users@vger.kernel.org, 
+	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 2, 2026 at 7:01=E2=80=AFPM Matt Turner <mattst88@gmail.com> wro=
-te:
->
-> The 21264 from EV67 on, and the 21364, have a second performance counter
-> mode, ProfileMe, alongside the Aggregate mode that the driver uses today.
-> An Aggregate mode sample reports the PC where the overflow interrupt was
-> taken. On an EV7 that is anywhere from 15 instructions before to 12
-> after the one that overflowed the counter, which makes perf annotate
-> output close to useless. In ProfileMe mode the CPU picks one fetched
-> instruction, follows it down the pipeline, and reports its PC along with
-> what happened to it: whether it retired, whether it trapped and why,
-> whether it was a mispredicted branch, stalled before map, or was killed
-> on a wrong path, and what PCTR1 counted while it was in flight.
->
-> Patch 1 fixes a constant passed to the wrong PALcode call, with no
-> functional change. Patch 2 adds the sysfs format and event attributes
-> the perf tool needs to name raw events. Patch 3 fixes counts lost when
-> an event is stopped before its first start, and patch 4 stops reporting
-> user registers that the entry code has not saved yet. Patch 5 adds
-> ProfileMe sampling, selected with precise_ip or a new profileme config
-> bit, so cycles:p and perf record's default event use it. Patch 6
-> attaches the status registers to each sample as PERF_SAMPLE_RAW data,
-> and patch 7 adds an option to randomize the sampling interval so that it
-> cannot lock onto a loop.
->
-> A separate series for perf-tools-next adds a decoder for the raw data
-> to perf report -D and perf script -D, and a script that sums the status
-> by symbol or by instruction, in the style of DCPI.
->
-> The two modes cannot run at the same time, because PCTR_CTL[SL0] sets
-> the mode for both counters. A ProfileMe event is scheduled alone, and
-> perf multiplexes it with any other hardware events. perf stat does not
-> ask for precise events, so it keeps using Aggregate mode.
->
-> To try it:
->
->   perf record -e cycles:p -- ./workload
->   perf annotate
->
-> I tested this on an AlphaServer ES47 (EV7). Samples from a
-> 16-instruction loop land on all 16 instructions rather than on 4 PCs.
-> DTB misses and unaligned traps are attributed to the faulting load. A
-> branch on random data shows up as mispredicted in 21% of its samples,
-> and in 0% with sorted data. A 12 minute perf record -a while building
-> git took 4.45 million samples with no warnings. Sampling every 10000
-> instructions, which used to wedge the CPU, ran 66 times without a hang.
-> On two CPUs, this version survived 26 runs that mix sampling, context
-> switches and multiplexing, with no warnings.
->
-> Signed-off-by: Matt Turner <mattst88@gmail.com>
+Motivation & Background
+=======================
+Currently, Linux lacks a standard perf-API compatible driver for the
+Broadcom AXI bus-watcher performance monitor blocks on Raspberry Pi
+platforms (BCM2835, BCM2711, and BCM2712). Prior out-of-tree vendor
+solutions relied on custom debugfs nodes and ad-hoc kthreads, preventing
+integration with standard Linux perf tooling (`perf stat`, `perf list`,
+etc.).
 
-Hi Matt,
+Note that this hardware block (`brcm,bcm2835-axiperf`) is distinct from
+the Northstar BCM5301X AXI Trace Module (`brcm,bcm5301x-axi-pmu`,
+https://lore.kernel.org/r/20261027175124.3518239-1-florian.fainelli@broadcom.com).
 
-Thanks for v4, this is great to see. Attributing precise samples to
-PMPC is the big win here: it puts the most important part of the
-ProfileMe data, the IP, in a generic field, so perf report, annotate,
-etc. just work. I have a suggestion about the rest of the data, which
-is currently only reachable through PERF_SAMPLE_RAW. Raising it now
-since it's easier to shape before the uapi lands.
+Key Architectural Features
+==========================
+1. Standard Linux Perf Integration:
+   - Exposes uncore AXI interconnect events via
+     `/sys/bus/event_source/devices/rpi_axi_pmu/` and documents them in
+     `Documentation/admin-guide/perf/rpi-axi-pmu.rst`.
+   - Supports up to 3 concurrently monitored `(bus, filter)` pairs per
+     monitor (`NUM_BUS_WATCHERS_PER_MONITOR = 3`), with reference counting
+     so all counter metrics on the same `(monitor, bus, filter)` share a
+     single hardware watcher without multiplexing.
+   - Enforces group validation (`rpi_axi_pmu__validate_group()`) to reject
+     event groups requiring more than 3 watchers per monitor at
+     `perf_event_open()` time, while supporting time-multiplexing across
+     more than 3 ungrouped buses.
+   - Masks counter deltas to each hardware register's bit width (32-bit for
+     `*trans`, 28-bit for `*wait`/`*max`, and 8-bit for `rpend`) and tracks
+     per-interval watermarks for level registers (`*max` and `rpend`) so
+     `perf stat` and `perf stat -I` report accurate peak levels.
 
-The I_STAT status and the PCTR1 window count are only really usable
-via alpha-profileme.py. IBS was in the same position for years, until
-the perf mem/c2c work started filling in the generic sample fields
-alongside the raw record (perf_ibs_parse_ld_st_data() [1]). The same
-seems worthwhile here: keep the raw record as is for full fidelity,
-and set the generic fields where the data maps cleanly.
+2. Hybrid MMIO & Firmware Mailbox Architecture:
+   - System Monitor (`monitor=0`): Performs fast atomic-safe MMIO reads.
+   - VideoCore VPU Monitor (`monitor=1`): Polled asynchronously in process
+     context (`vpu_work`) via a single 44-word bulk Raspberry Pi firmware
+     mailbox `RPI_FIRMWARE_GET_PERIPH_REG` call across all three VPU bus
+     watchers. At probe time, `rpi_axi_pmu_vpu_accessible()` verifies that
+     the firmware can reach the VPU monitor hardware and hides the `vpu_*`
+     sysfs events if unavailable.
 
-The PCTR1 window count looks like a natural fit for
-PERF_SAMPLE_WEIGHT_STRUCT. It's 20 bits, so it fits var1_dw without
-saturating, and var1_dw is what the weight and local_weight sort keys
-read. What the weight means is already PMU specific (IBS puts the DC
-miss latency there, and tag-to-retire cycles in var2_w), so for
-cycles:p it would be the inum retire delay. var3_w, where x86 puts
-retire latency, may be closer in meaning, but it's only 16 bits and
-its sort keys are enabled per arch in the tool. Something like:
+3. Per-SoC & Stepping Support:
+   - Patch 1 adds the Device Tree binding (`brcm,bcm2835-axiperf`,
+     `brcm,bcm2711-axiperf`, `brcm,bcm2712-axiperf`) and `MAINTAINERS`
+     entry.
+   - Patch 2 adds the driver and admin-guide documentation for BCM2835 and
+     BCM2711.
+   - Patch 3 adds BCM2712 (Raspberry Pi 5) C0 and D0 support, including
+     runtime D0 stepping detection via the bus-watcher AXI ID mask field,
+     C0 (13-port) and D0 (10-port) System bus tables, 6-bit sparse AXI
+     master ID filter tables (`BCM2712_FLT_MAX = 64`), and `ratrans`.
 
-if (sample_type & PERF_SAMPLE_WEIGHT_TYPE) {
-  /* not initialized by perf_sample_data_init() */
-  data.weight.full =3D 0;
-  data.weight.var1_dw =3D pctr1;
-  data.sample_flags |=3D PERF_SAMPLE_WEIGHT_TYPE;
-}
+Hardware Validation
+===================
+The bus tables, master ID filters, and register layouts have been validated
+against Broadcom register documentation and direct hardware measurements on:
+- BCM2835 (Raspberry Pi 1 B+)
+- BCM2837 (Raspberry Pi 3 B+)
+- BCM2711 B0 (Raspberry Pi 4 B and Raspberry Pi 400)
+- BCM2712 C0 (Raspberry Pi 5 rev 1.0)
+- BCM2712 D0 (Raspberry Pi 5 rev 1.2 and Raspberry Pi 500)
 
-As Alpha is little-endian, that's also the right value for plain
-PERF_SAMPLE_WEIGHT, which is what perf record -W asks for unless the
-arch opts in to the struct, so it'd work without a tools change. I'd
-keep the I_STAT bits out of var2_w/var3_w though, as the tool sums
-and averages weights. One wrinkle is the PALmode samples, where the
-IP stays as the interrupted PC, so the window count would be charged
-to an instruction it doesn't belong to; it may be best to leave the
-weight unset for those.
+Example on Raspberry Pi 5 (BCM2712) counting all 11 metrics on the `arm`
+bus simultaneously on a single bus watcher:
 
-Similarly, if any I_STAT trap types identify a memory event, a DTB
-miss on a load or store say, setting PERF_SAMPLE_DATA_SRC (mem_op,
-mem_dtlb) for those samples would make them visible to the memory
-sort keys. If nothing maps cleanly, I wouldn't force it.
+  $ sudo perf stat -a \
+      -e rpi_axi_pmu/arm_atwait/ -e rpi_axi_pmu/arm_atrans/ \
+      -e rpi_axi_pmu/arm_amax/   -e rpi_axi_pmu/arm_wwait/ \
+      -e rpi_axi_pmu/arm_wtrans/ -e rpi_axi_pmu/arm_wmax/ \
+      -e rpi_axi_pmu/arm_rwait/  -e rpi_axi_pmu/arm_rtrans/ \
+      -e rpi_axi_pmu/arm_rmax/   -e rpi_axi_pmu/arm_rpend/ \
+      -e rpi_axi_pmu/arm_ratrans/ \
+      -- dd if=/dev/zero of=/dev/null bs=1M count=2048
 
-The remaining status bits (retired/killed, mispredict, trap) don't
-have a generic home, but they'd make useful filters: format bits,
-in config1 say, for retired-only, mispredict-only and trapped-only,
-with the driver dropping samples that don't match. Arm SPE's
-event_filter does much the same in hardware, with retired and
-mispredicted among its bits. Retired-only would also stop killed,
-wrong-path instructions showing up as hot spots in a plain perf
-report. Since PEBS and IBS op only sample retired instructions, it
-may even make sense for precise_ip to imply retired-only, leaving the
-profileme bit for the unfiltered view. That one changes what a
-default perf record gives on Alpha, so it's worth deciding before
-merge rather than after.
+   Performance counter stats for 'system wide':
 
-All of this is additive to the raw format and alpha-profileme.py, so
-it could equally be a follow-up if you'd rather not grow the series.
+           222,085      rpi_axi_pmu/arm_atwait/
+        21,789,405      rpi_axi_pmu/arm_atrans/
+             2,196      rpi_axi_pmu/arm_amax/
+        39,623,624      rpi_axi_pmu/arm_wwait/
+        43,482,567      rpi_axi_pmu/arm_wtrans/
+             2,197      rpi_axi_pmu/arm_wmax/
+               554      rpi_axi_pmu/arm_rwait/
+            96,264      rpi_axi_pmu/arm_rtrans/
+                 1      rpi_axi_pmu/arm_rmax/
+                 5      rpi_axi_pmu/arm_rpend/
+            48,148      rpi_axi_pmu/arm_ratrans/
 
-Thanks,
-Ian
+       0.208600205 seconds time elapsed
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/arch/x86/events/amd/ibs.c#n1274
+And filtering `per_atrans` by `VPU_UC0` (`filter=1`) and `ARM` (`filter=11`):
 
-> ---
-> Changes in v4:
-> - Patch 4: move __entry_save_end past the r16-r18 stores in entSys,
->   as PAL_callsys does not save them and interrupts are still enabled
->   there.
-> - Patch 5: report the user registers when the profiled instruction is
->   in the entry code but the interrupt was taken after it, since
->   perf_get_regs_user() sees the PMPC rather than the interrupted PC.
-> - Link to v3: https://patch.msgid.link/20261101-alpha-profileme-v3-0-92d5=
-11b5a044@gmail.com
->
-> Changes in v3:
-> - New patch 3: clear PERF_HES_UPTODATE when an event starts counting,
->   so that a stop before the first start does not lose the count.
-> - New patch 4: report no user registers for a sample taken in the entry
->   code, where the frame at task_pt_regs() is not complete. An interrupt
->   nested on one taken there is still not caught.
-> - Patch 5: a user instruction whose interrupt is taken in the kernel now
->   reports its PC with no registers or user stack, as the frame at
->   task_pt_regs() may not be built yet. Thanks to Magnus Lindholm for
->   finding this and for the fix.
-> - Patch 5: also move the counter away from overflow when a ProfileMe
->   event is removed, or stopped without PERF_EF_UPDATE, as
->   alpha_pmu_del() does not go through alpha_pmu_stop().
-> - Patch 5: ignore an interrupt that was pending when the event was
->   stopped. Document that rewriting a counter does not cancel one.
-> - Link to v2: https://patch.msgid.link/20261030-alpha-profileme-v2-0-c702=
-f1c65272@gmail.com
->
-> Changes in v2:
-> - Patch 1: explain why bit 0 clear means all processes, although the
->   Architecture Reference Manual says otherwise.
-> - Patch 3: fix a CPU wedge during high-rate ProfileMe sampling. The
->   ProfileMe counters are now written twice, and a stopped counter is
->   moved away from overflow, as EV67 HRM PALcode restrictions 32 and 38
->   require.
-> - Patch 3: set the profiled PC in place in the trap frame of the
->   instruction's mode instead of in a pt_regs copy on the stack, so
->   sampled registers and stack values are those of the right frame.
->   A kernel instruction whose interrupt is taken in user mode gets a
->   per-CPU frame holding only its PC, so the user frame is not changed.
-> - Patch 4: drop the reserved field and pack the 64-bit fields of
->   struct alpha_profileme_sample, so they are 8-byte aligned in the
->   sample record and the record needs no padding. This changes the raw
->   data layout.
-> - Patch 5: compute the jitter with mul_u64_u32_shr() and saturate the
->   sum, so that large periods cannot overflow.
-> - Link to v1: https://patch.msgid.link/20261028-alpha-profileme-v1-0-d44b=
-52bf2500@gmail.com
->
-> ---
-> Matt Turner (7):
->       alpha/perf: pass PERFMON_CMD_LOGGING_ALL to the logging options cal=
-l
->       alpha/perf: add sysfs format and event attributes
->       alpha/perf: clear PERF_HES_UPTODATE when an event starts counting
->       alpha/perf: do not report user registers from the entry code
->       alpha/perf: implement ProfileMe sampling
->       alpha/perf: attach ProfileMe status as PERF_SAMPLE_RAW data
->       alpha/perf: optionally randomize the ProfileMe sampling interval
->
->  arch/alpha/include/asm/perf_event.h      |   2 +
->  arch/alpha/include/asm/ptrace.h          |  12 +
->  arch/alpha/include/asm/wrperfmon.h       |  14 ++
->  arch/alpha/include/uapi/asm/perf_event.h |  31 +++
->  arch/alpha/kernel/entry.S                |   9 +
->  arch/alpha/kernel/perf_event.c           | 382 +++++++++++++++++++++++++=
-++++--
->  arch/alpha/kernel/perf_regs.c            |  13 ++
->  7 files changed, 450 insertions(+), 13 deletions(-)
-> ---
-> base-commit: 330517c63aa9b48227b6ab45f01003effac77ae4
-> change-id: 20261024-alpha-profileme-6e98a977cb54
->
-> Best regards,
-> --
-> Matt Turner <mattst88@gmail.com>
->
+  $ sudo perf stat -a \
+      -e rpi_axi_pmu/per_atrans/ \
+      -e rpi_axi_pmu/per_atrans,filter=1/ \
+      -e rpi_axi_pmu/per_atrans,filter=11/ \
+      -- sleep 1
+
+   Performance counter stats for 'system wide':
+
+            29,393      rpi_axi_pmu/per_atrans/
+            19,934      rpi_axi_pmu/per_atrans,filter=1/
+             9,452      rpi_axi_pmu/per_atrans,filter=11/
+
+       1.001089440 seconds time elapsed
+
+Tooling & AI Assistance
+=======================
+Per Documentation/process/coding-assistants.rst and
+Documentation/process/generated-content.rst:
+- Tools used: Google Antigravity (gemini-3.1-pro), Anthropic Claude, and
+  Sashiko automated kernel patch review, alongside standard kernel tooling
+  (scripts/checkpatch.pl, scripts/kernel-doc, dt-doc-validate).
+- Summary of prompts and assistance:
+  - Assisted in converting the downstream Raspberry Pi debugfs AXI monitor
+    (drivers/perf/raspberrypi_axi_monitor.c) into a Linux perf PMU driver
+    (drivers/perf/rpi_axi_pmu.c), generating the repetitive
+    PMU_EVENT_ATTR_STRING sysfs event tables across SoC generations, the
+    Device Tree binding schema (brcm,bcm2835-axiperf.yaml), and the
+    admin-guide documentation (Documentation/admin-guide/perf/rpi-axi-pmu.rst).
+  - Assisted with iterative review and fixes across revisions, including
+    synchronization between atomic MMIO reads (pmu->lock) and deferred
+    process-context VPU mailbox polling (vpu_mutex / vpu_work), bulk VPU
+    mailbox reads, BCM2712 C0/D0 stepping detection and filter masks, and
+    per-interval watermark tracking for level registers (*max and rpend).
+- Portions affected:
+  Documentation/devicetree/bindings/perf/brcm,bcm2835-axiperf.yaml,
+  Documentation/admin-guide/perf/rpi-axi-pmu.rst, and
+  drivers/perf/rpi_axi_pmu.c.
+- Testing and verification:
+  All generated code and tables were reviewed by the authors and tested on
+  physical BCM2835, BCM2837, BCM2711 B0, BCM2712 C0, and BCM2712 D0
+  hardware using perf list and perf stat (single-watcher multi-metric
+  counting, perf stat -I interval watermark tracking, AXI master ID
+  filtering, VPU firmware accessibility probing, and 10-bus multiplexing).
+
+Changelog
+=========
+v16:
+- Addressed Sashiko review feedback on v15 (Patch 2):
+  - Returned early from `rpi_axi_pmu__validate_group()` when
+    `leader == event` to avoid dereferencing `leader->ctx` (which is NULL
+    during `event_init` for standalone events and group leaders) inside
+    `for_each_sibling_event()` when `CONFIG_PROVE_LOCKING=y`.
+  - Enforced `RPI_AXI_MAX_EVENTS` (66) during group validation in
+    `rpi_axi_pmu__validate_event()`.
+  - Dropped `depends on !RPI_AXIPERF` from `drivers/perf/Kconfig` as
+    `RPI_AXIPERF` is only defined in the downstream Raspberry Pi kernel
+    tree.
+
+v15:
+- Device Tree Bindings & MAINTAINERS (Patch 1):
+  - Dropped `kernel-list@raspberrypi.com` from `maintainers:`, sorted
+    `compatible:` alphabetically, and required both `reg` items (`System
+    monitor registers` and `VPU monitor registers`) across all SoCs per
+    Krzysztof Kozlowski.
+  - Added `MAINTAINERS` entry and noted distinction from
+    `brcm,bcm5301x-axi-pmu`.
+- Driver & Hardware Validation Fixes (Patches 2 & 3, co-developed with Dom
+  Cobley on https://github.com/raspberrypi/linux/pull/7671):
+  - Added `Documentation/admin-guide/perf/rpi-axi-pmu.rst`.
+  - Masked `*wait`/`*max` deltas to 28 bits (`GENMASK(27, 0)`) and `rpend`
+    to 8 bits (`GENMASK(7, 0)`), and implemented per-read-interval
+    watermark tracking (`counter_is_level()`) for `*max` and `rpend` with
+    `prev_count` reset under `pmu->lock` in `rpi_axi_pmu_read()`.
+  - Removed non-existent `ratrans` on BCM2835 and BCM2711, and corrected
+    the BCM2835 VPU bus table (`0..13` matching BCM2711 plus `14 = sdram`).
+  - Re-enabled the BCM2712 VPU monitor (`0x7ee00000`) via the firmware
+    mailbox, added probe-time `rpi_axi_pmu_vpu_accessible()` verification,
+    and hid `vpu_*` sysfs events via `.is_visible` when firmware support is
+    unavailable.
+  - Replaced per-event VPU mailbox reads with a single 44-word bulk read
+    (`rpi_axi_pmu_vpu_read_watchers()`) with `__le32` endianness
+    conversions (`cpu_to_le32()` / `le32_to_cpu()`) and `config_gen[]`
+    tracking, and defaulted `hrtimer_interval_ms` to 1000 ms when the VPU
+    mailbox is used.
+  - Used `rpi_firmware_find_node()` to locate the firmware node.
+  - Corrected BCM2712 sparse AXI master ID filter numbering
+    (`BCM2712_FLT_MAX = 64`), added BCM2712 D0 runtime stepping detection
+    (`pmu->axi_id_mask`), D0 System/VPU filter mask encoding, the 10-port
+    D0 System bus table, and renamed `bstm_top`/`arb3`/`src` to
+    `rp1`/`sdio_wifi`/`sd_dma`.
+
+v14: https://lore.kernel.org/r/20261002175738.3242646-1-irogers@google.com
+- Removed `firmware` phandle property from `brcm,bcm2835-axiperf.yaml` per
+  Krzysztof Kozlowski.
+- Removed `LINUX_VERSION_CODE` checks per Uwe Kleine-Koenig and Florian
+  Fainelli.
+- Separated BCM2835, BCM2711, and BCM2712 bus and filter tables, exposed
+  all counter metrics per bus without synthetic `Bytes` scaling, and added
+  bus-watcher reference counting and group validation.
+
+v13: https://lore.kernel.org/r/20260815172712.50119-1-irogers@google.com
+- Added `allOf`/`if` block in `brcm,bcm2835-axiperf.yaml` and cleaned up
+  sysfs attribute definitions and comments.
+
+v12: https://lore.kernel.org/r/20260815082048.4043217-1-irogers@google.com
+- Added Device Tree binding patch (`brcm,bcm2835-axiperf.yaml`), split
+  per-chip `attr_groups`, and returned `-EPROBE_DEFER` when firmware is not
+  yet ready.
+
+v11: https://lore.kernel.org/r/20260815082048.4043217-1-irogers@google.com
+- Added `READ_ONCE()`/`WRITE_ONCE()` on `enabled[idx]` and restored
+  `flush_work()` in `rpi_axi_pmu__exit()` so queued VPU watcher disables
+  complete on module unload.
+
+v10: https://lore.kernel.org/r/20260815082048.4043217-1-irogers@google.com
+- Removed unused `num_started` state variable from `struct rpi_axi_hw_events`.
+
+v9: https://lore.kernel.org/r/20260813064228.2799872-1-irogers@google.com
+- Adjusted PMU and CPU hotplug registration order in `probe()` and
+  simplified BCM2712 sysfs event visibility.
+
+v8: https://lore.kernel.org/r/20260813064228.2799872-1-irogers@google.com
+- Switched `pmu->lock` to `raw_spinlock_t` for `PREEMPT_RT` compatibility
+  and reduced `RPI_AXI_PMU_TIMER_INTERVAL` from 2000 ms to 100 ms.
+
+v7: https://lore.kernel.org/r/20260813052419.2770841-1-irogers@google.com
+- Isolated all BCM2712 definitions into Patch 2 and initialized
+  `vpu_disable_pending` on watcher allocation.
+
+v6: https://lore.kernel.org/r/20260813043533.2744442-1-irogers@google.com
+- Fixed `Kconfig` `RASPBERRYPI_FIRMWARE` dependency, added
+  `vpu_disable_pending` for VPU watcher teardown, and let the hrtimer
+  self-terminate when `active_events == 0`.
+
+v5: https://lore.kernel.org/r/20260812230800.2646749-1-irogers@google.com
+- Added `monitor_running` tracking, deferred VPU watcher disablement to
+  `vpu_work`, and protected `event->hw.state` updates under `pmu->lock`.
+
+v4: https://lore.kernel.org/r/20260812052417.2361040-1-irogers@google.com
+- Avoided global monitor reset when other watchers are active and fixed
+  error handling on mailbox read failures.
+
+v3: https://lore.kernel.org/r/20260812002728.2283079-1-irogers@google.com
+- Switched hrtimer to `HRTIMER_MODE_REL_SOFT`, set `.suppress_bind_attrs =
+  true`, and cleaned up probe error unwinding.
+
+v2: https://lore.kernel.org/r/20260811235112.2267241-1-irogers@google.com
+- Added `of_device_get_match_data()` chip selection, CPU affinity check in
+  `event_init()`, and counter wrap delta masking.
+
+v1: https://lore.kernel.org/r/20260811083828.2057695-1-irogers@google.com
+- Initial submission.
+
+Ian Rogers (3):
+  dt-bindings: perf: Add Broadcom Raspberry Pi AXI PMU definition
+  perf: Add Raspberry Pi BCM2835 AXI PMU driver
+  perf: Add Raspberry Pi 5 (BCM2712) AXI PMU support
+
+ Documentation/admin-guide/perf/index.rst      |    1 +
+ .../admin-guide/perf/rpi-axi-pmu.rst          |  164 +
+ .../bindings/perf/brcm,bcm2835-axiperf.yaml   |   50 +
+ MAINTAINERS                                   |    9 +
+ drivers/perf/Kconfig                          |   13 +
+ drivers/perf/Makefile                         |    1 +
+ drivers/perf/rpi_axi_pmu.c                    | 4152 +++++++++++++++++
+ 7 files changed, 4390 insertions(+)
+ create mode 100644 Documentation/admin-guide/perf/rpi-axi-pmu.rst
+ create mode 100644 Documentation/devicetree/bindings/perf/brcm,bcm2835-axiperf.yaml
+ create mode 100644 drivers/perf/rpi_axi_pmu.c
+
+-- 
+2.56.0.385.gac671c819a-goog
+
