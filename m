@@ -1,73 +1,73 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.71
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793749538;
-	b=US05LzksNU5GpNjxPRwU1ibVp0lSlxtuXAtedi7gUk8Wibkdou9QzGK8sl4fEhfvmmHU
-	 LfMnNGKgJFc55Vmci7650RvQ2N6ZnkCbkN0tC4YSjysKAXGi1zDo97gv3PPpkp27O7hpv
-	 /rCog/kqdh6TkDdyAQ+NYNy50PqT+EDLPIxtmhjJ7hJJ1S/Ag77YFCQXzbv8ELkdMnY/9
-	 JAa6ZO5HQYs56cjTvx+lmQK1MlLuKv4lXcz4iDdk1oisqcj/qTj0C9zqWmqqGPx3O4k3z
-	 GSdDywJwK8tuwJDJvuP5o1/OLTUfe7VIAgFOI2t9JRe7L0E/7W3TEQ/Rd+9nImAeLVg==
+	t=1793749543;
+	b=d/OU64U1HeQpNelJBDb8e5CLklb1FAj1Utdo2Ude4Xt3UlMV5qjsWkwNCsLYtOZkP2gi
+	 wjtBV2WyJC3Xl+A/60gqoGXMEabL6D7nfzfWyqXSnJVSAuu6CI8u9ZSctodSr294mgTic
+	 cfC6gzak5p3iFR84xzpwZdUh3fOYD8qaw5xAPkOFzSyCW0OZ7IFfvIhHHB1OIb+j8GQXD
+	 rW/s1yet3lkpkpN2bL/Vkff447Nl3AmMSc2LXTGFHqzfjAlzvQGxUFD+lI/PTW68C4j0Z
+	 jf6nAFj+P2TyqpHjdRvpoTSocLbRxewyg9gxF79gzsW+Rttw/YlcptvjiJNfmD4l3rw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793749538;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793749543;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Received:Date:In-Reply-To:Mime-Version:
 	 References:X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=f04SE8jtYJAS4lmqfAB8bp6af/1ppJs2us9i398YNlc=;
-	b=MUnRq2esZIpVaVRIHVMLWGQxJ6/QB4hS62TAqdqA/+Se94r3t78XeZOTuSiDAjAwB28u
-	 T3AAUPVCTtIU93+kt2+ZucQybIgRxeFvzwxax6I1xjI2+wC+slVsgNjmvBoT/+2joVWo6
-	 v6l8CwZmRl3YrCXauiwGJg67RvLMf1koyg8Sge9wRhcvaZVbLcbweCvK09KrGbo4IJXiq
-	 EJjcbNWVeK09ld+oWelR5s48yVZg58ro81686xYe+rsr+8NHH0xq0/QRRK+PnVVxQksyB
-	 l/phmBh1BPH4YEsZkn5HiIKpAthIuKdQsRWnhZmMkXa+DN+x1nY8tMaZA7IIQeu0E8g==
+	bh=nIMJ9hdciBH4J+KtRQhktMuL7c1HadCWq4L+Y0lVVOc=;
+	b=K3E3srAQ7lWXhRNxGMFX1lmXJECQ+bNGL/2VUaVoXXe/VBqDPVOO332kOutg/q8uO/sa
+	 GgqICgXI8kDLNN7JUcHyZaz4Z5LxSuhtrZM9fQaOp+uTdTErDScaBq31xbEtOpUcLTpLo
+	 x1PD7Fmtsa8HF7n/HHZ6e7LvJ7MuYcJ4PWeqIwrWCIgd/E7VnU87Jf3gd6fskQo5C7iE7
+	 UWrKQWcK6ULr0jZ6djkwXJ9YwHnmg9eXJ+ttGUcW1U+l+L47knUIr0xxsXF5iYAGBoxaL
+	 L+D4MQjOTDpdVMTxnqdWoANqNJlkdgOCayl+QClApDlKJ/IMd/wGTMAIfD9sisfmyvg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=BncyKMkV;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=bLylMLmi;
 	arc=none smtp.remote-ip=74.125.82.71
 Received: from mail-dl1-f71.google.com (mail-dl1-f71.google.com [74.125.82.71])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2437D606D80B
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 23:45:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2437D606D80B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F5E606D83C
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 23:45:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 50F5E606D83C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=BncyKMkV
-Received: by mail-dl1-f71.google.com with SMTP id a92af1059eb24-14373747468so374908c88.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2026 15:45:38 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=bLylMLmi
+Received: by mail-dl1-f71.google.com with SMTP id a92af1059eb24-16bc6f3fdb1so195495c88.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2026 15:45:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793749537; x=1794354337; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1793749542; x=1794354342; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=f04SE8jtYJAS4lmqfAB8bp6af/1ppJs2us9i398YNlc=;
-        b=BncyKMkVdt4jXMWiwPEG1jr85wLTQ6CSysk9cSRw9kXm57myovGWQpf8KpbnRtUIlj
-         KnlNR0iyRprRolXRNXEZ/WdvYeXCBMW8x5JmJ1Nl42QWTUOovYdC3R0phwfuvC4Ah3wt
-         MH+TxF5fnEW8Gci05fC1ZmpqJlHmIdU2aSn3o8THt+ub6Z3EBAggXUT980fYmQ9VbLNm
-         07G9IKBilGedSAAngvHI5HareF/PO37T+s6fQb9eqOvNejEKDZ9ZywDV7BtLJsGUC00l
-         zK4dL/g3amMhNg2vL8IGsJiAcPmlp6NxgcQY5yn6V9Fp+ql8r8E7ZpXHzujOASwPcoX9
-         k9yQ==
+        bh=nIMJ9hdciBH4J+KtRQhktMuL7c1HadCWq4L+Y0lVVOc=;
+        b=bLylMLmil34bfKtQKIHqLPz9ULAOD3gf0b6AyatjkaRnSsNo5K5UE66yy0v4PyPZYP
+         hD4ZpN5r+aQSb803QxsQFY42JMgk5NU+FiFRS6B20crsLMv7VTz9dwmgpjXLDPHXonve
+         a2MX6OthSKZ9ULK9khAoWtXm2RQxdBxzGxeLS7KzMy5yxk6ykAkmCjDujDbZ8nFrt5sz
+         Kq5kGr3vJHYulqAYASQRkOCRTFVOEN6utA7EXhMGoeyZ0huUdMFEv9l6wxkK8CTBoBKi
+         3yIzVYfGYtAaAoCHUNsxdva5sYSSMEWsm4HvWccGSFRQs0cLShQYT7I2D+8VTk7AMBOW
+         RIpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793749537; x=1794354337;
+        d=1e100.net; s=20260707; t=1793749542; x=1794354342;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=f04SE8jtYJAS4lmqfAB8bp6af/1ppJs2us9i398YNlc=;
-        b=SJYs0S8rEnmAF4MuN+3MtTW4RGTl3hUs0Unv9VqRt2KtNrL/vtUUsV9y4i8vcJrgan
-         3tyNjiuR1yODqhPr5L/Bv5KtdxoDNlI0CIzGBkalgcxBeMQMd3d/ADfjBAxh4UZ3OmLx
-         VosLvE9ZBJqsM5We0sOIKs2pWnoavt9MTtqxri7DHLs4Mj9HkkIx/T8yJomL7qyWMY+t
-         667kBzSq6cqFRe7AnroGrgebpgRYo6CX6B3N+nfg4ntwDBruwPg7HFU0YUQRyeQVOIYr
-         Rg5AHVLT588AuFdeG886llyz6KsKI3YvzHl8rbIq2kX9edQe5gMrlly4Ud6Rbag18l6N
-         EFlw==
-X-Gm-Message-State: APuU4Z+D3KL/Tr067n0rTHNeP7USxFcqlFXtXcYzO++CZv7JHaG9BbNM
-	GVePDc39gRzKmpxXMlIcrJF3cT804URybfD2fUW2gzryrD87f843IEhiWBi8nER8L9hRn+YrSQn
-	JBXwOZRMBh24cfm8OMN4cplrLhQ9OpsCbjVSJZG59A3Woxq8OSGC1dfdn/d9lFUCV7VdFC1kw+z
-	C6CFAyI7t5M3tqr7HeAtuYK+AcENuyFqeJLsj6dNGZlBWzgHWRqabvq5s=
-X-Received: from dlaj3.prod.google.com ([2002:a05:701b:2803:b0:1ab:7a71:e7])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:7f0b:b0:13b:3132:6e99
- with SMTP id a92af1059eb24-1ac5af2da84mr19796869c88.20.1793749536644; Tue, 03
- Nov 2026 15:45:36 -0800 (PST)
-Date: Tue,  3 Nov 2026 15:44:27 -0800
+        bh=nIMJ9hdciBH4J+KtRQhktMuL7c1HadCWq4L+Y0lVVOc=;
+        b=Wsf479OMhwor8hdKdKhXB7PDFCFtoWZ9XITLcHrvGXgyBIGcHGhXUTynBHk3CI/zHV
+         UeKDcpOzXvWN0fsyllCqBvqyzKSqGC4UFlWS2hAY0R7EMSnAF4s0yxzNnaaYq1Etq7bZ
+         dqPmrxV1ZkWFTRUukkmJvknsk17fhJ7c+Ix8iojBcZY3NOoc0IR74YYGpiB+mnJUH+Vo
+         4PIFJ6Ef7vBuPkwGxHTVhk1rtOmA9XycCBctZcRByibhq735KmwY0Ea1F+syOK30lnrS
+         Iq3OWxgjaEUidGradtm3LtzWKMOKS/6MZjNCJqLHFh7u5feLkT5MKI5guoHv92XxugEi
+         ecqA==
+X-Gm-Message-State: APuU4Z/qpCrAvua2FtMCNlPf8Kk/o0obE2Fth+fOBalhaPFySYs/8f3U
+	lHS6Fc1vRoj3QFrm7IVmyMZyT/y3ALsQL2vjGnXMJ7tVrKmM/RD8XEtAJ0k7QUsCjr+8at8Gylm
+	+2gLaMC3uGK7KA34OyxXA6QWGNxgk+bQuSNjh/bhHZeltAv8xZrqbEwj856sy/NGFNeCrnbj0UO
+	ZtG3al7c+lUaecAz/hWL/OuFvlgJq9A9hUVYhEJTwU+5y2pJ4PAyUw07Y=
+X-Received: from dlbqc8.prod.google.com ([2002:a05:7023:a88:b0:1ab:a092:67c3])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:3f0b:b0:1b1:f02b:232c
+ with SMTP id a92af1059eb24-1b1f03a6a35mr11981767c88.29.1793749541973; Tue, 03
+ Nov 2026 15:45:41 -0800 (PST)
+Date: Tue,  3 Nov 2026 15:44:29 -0800
 In-Reply-To: <20261103234502.1008382-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -80,8 +80,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261103234502.1008382-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.385.gac671c819a-goog
-Message-ID: <20261103234502.1008382-12-irogers@google.com>
-Subject: [PATCH v1 11/41] perf test: Make the CPUID matching test architecture independent
+Message-ID: <20261103234502.1008382-14-irogers@google.com>
+Subject: [PATCH v1 13/41] perf pmus: Add perf_pmus__read_from_env()
 From: Ian Rogers <irogers@google.com>
 To: linux-perf-users@vger.kernel.org, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
@@ -96,138 +96,441 @@ Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
 	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The arm64 CPUID matching test called strcmp_cpuid_str(), whose arm64
-MIDR comparison was only built for arm64. Now that strcmp_cpuid_str()
-is given the ELF machine of the CPUIDs and all of its comparisons are
-in util/header.c, the test can run on every architecture.
-
-Move the test from arch/arm64/tests to tests, as a "CPUID matching"
-suite with an "arm64 MIDR" test case.
+Add perf_pmus__read_from_env() and perf_pmu__add_cap() to reconstruct
+core_pmus and other_pmus lists and their capabilities in a
+struct perf_pmus from HEADER_PMU_MAPPINGS, HEADER_HYBRID_TOPOLOGY,
+HEADER_PMU_CAPS, and HEADER_CPU_PMU_CAPS in a perf.data header
+environment, and lazily populate env->pmus in perf_env__pmus(). An
+environment without any PMU header metadata, such as one used while
+recording, falls back to the live host's PMUs rather than re-reading
+sysfs into its own copy.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/arm64/include/arch-tests.h      |  1 -
- tools/perf/arch/arm64/tests/Build               |  1 -
- tools/perf/arch/arm64/tests/arch-tests.c        |  4 ----
- tools/perf/tests/Build                          |  1 +
- tools/perf/tests/builtin-test.c                 |  1 +
- tools/perf/{arch/arm64 => }/tests/cpuid-match.c | 17 +++++++++++++----
- tools/perf/tests/tests.h                        |  1 +
- 7 files changed, 16 insertions(+), 10 deletions(-)
- rename tools/perf/{arch/arm64 => }/tests/cpuid-match.c (75%)
+ tools/perf/util/env.c    |  18 ++++
+ tools/perf/util/env.h    |   5 +
+ tools/perf/util/header.c |  22 ++++
+ tools/perf/util/pmu.c    |  31 ++++++
+ tools/perf/util/pmu.h    |   9 ++
+ tools/perf/util/pmus.c   | 219 +++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/pmus.h   |  15 ++-
+ 7 files changed, 318 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/arm64/include/arch-tests.h b/tools/perf/arch/arm64/include/arch-tests.h
-index 474d7cf5afbd..2b3834a5ddbb 100644
---- a/tools/perf/arch/arm64/include/arch-tests.h
-+++ b/tools/perf/arch/arm64/include/arch-tests.h
-@@ -4,7 +4,6 @@
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index fec6a5a8ecb6..04f4db90cc60 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -341,6 +341,24 @@ struct perf_env *host_env(void)
  
- struct test_suite;
- 
--int test__cpuid_match(struct test_suite *test, int subtest);
- extern struct test_suite *arch_tests[];
- 
- #endif
-diff --git a/tools/perf/arch/arm64/tests/Build b/tools/perf/arch/arm64/tests/Build
-index d44c9de92d42..bd15c6bbc1b2 100644
---- a/tools/perf/arch/arm64/tests/Build
-+++ b/tools/perf/arch/arm64/tests/Build
-@@ -2,4 +2,3 @@ perf-test-y += regs_load.o
- perf-test-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
- 
- perf-test-y += arch-tests.o
--perf-test-y += cpuid-match.o
-diff --git a/tools/perf/arch/arm64/tests/arch-tests.c b/tools/perf/arch/arm64/tests/arch-tests.c
-index 74932e72c727..ad16b4f8f63e 100644
---- a/tools/perf/arch/arm64/tests/arch-tests.c
-+++ b/tools/perf/arch/arm64/tests/arch-tests.c
-@@ -3,13 +3,9 @@
- #include "tests/tests.h"
- #include "arch-tests.h"
- 
--
--DEFINE_SUITE("arm64 CPUID matching", cpuid_match);
--
- struct test_suite *arch_tests[] = {
- #ifdef HAVE_DWARF_UNWIND_SUPPORT
- 	&suite__dwarf_unwind,
- #endif
--	&suite__cpuid_match,
- 	NULL,
- };
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index 58858f3d2bf9..4a45b6740050 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -44,6 +44,7 @@ perf-test-y += stat.o
- perf-test-y += event_update.o
- perf-test-y += event-times.o
- perf-test-y += expr.o
-+perf-test-y += cpuid-match.o
- perf-test-y += backward-ring-buffer.o
- perf-test-y += sdt.o
- perf-test-y += is_printable_array.o
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 0b8897fd42ca..67d162ec9ef2 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -177,6 +177,7 @@ static struct test_suite *generic_tests[] = {
- 	&suite__util,
- 	&suite__subcmd_help,
- 	&suite__kallsyms_split,
-+	&suite__cpuid_match,
- 	NULL,
- };
- 
-diff --git a/tools/perf/arch/arm64/tests/cpuid-match.c b/tools/perf/tests/cpuid-match.c
-similarity index 75%
-rename from tools/perf/arch/arm64/tests/cpuid-match.c
-rename to tools/perf/tests/cpuid-match.c
-index b073ac33ea9b..e3d4a349f393 100644
---- a/tools/perf/arch/arm64/tests/cpuid-match.c
-+++ b/tools/perf/tests/cpuid-match.c
-@@ -2,12 +2,11 @@
- #include <linux/compiler.h>
- #include <elf.h>
- 
--#include "arch-tests.h"
--#include "tests/tests.h"
-+#include "tests.h"
- #include "util/header.h"
- 
--int test__cpuid_match(struct test_suite *test __maybe_unused,
--			     int subtest __maybe_unused)
-+static int test__cpuid_match_arm64(struct test_suite *test __maybe_unused,
-+				   int subtest __maybe_unused)
+ struct perf_pmus *perf_env__pmus(struct perf_env *env)
  {
- 	/* midr with no leading zeros matches */
- 	if (strcmp_cpuid_str(EM_AARCH64, "0x410fd0c0", "0x00000000410fd0c0"))
-@@ -36,3 +35,13 @@ int test__cpuid_match(struct test_suite *test __maybe_unused,
++	struct perf_env *host = host_env();
++
++	if (env == host ||
++	    !(env->nr_pmu_mappings || env->nr_hybrid_nodes ||
++	      env->nr_cpu_pmu_caps || env->nr_pmus_with_caps)) {
++		/* No PMU metadata of its own, use the live host's PMUs. */
++		return &host->pmus;
++	}
++
++	mutex_lock(&env->lock);
++	if (!env->pmus.core_pmus.next || !env->pmus.other_pmus.next)
++		perf_pmus__init(&env->pmus);
++	mutex_unlock(&env->lock);
++
++	mutex_lock(&env->pmus.lock);
++	if (env->pmus.read_pmu_types == 0)
++		perf_pmus__read_from_env(&env->pmus, env);
++	mutex_unlock(&env->pmus.lock);
+ 	return &env->pmus;
+ }
  
- 	return 0;
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index e38e953060c9..ef583161583f 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -238,6 +238,11 @@ struct perf_env *host_env(void);
+  * perf_env__pmus() - Return the struct perf_pmus associated with @env.
+  * @env: Environment whose PMU collection to retrieve.
+  *
++ * For non-host environments with PMU header metadata (HEADER_PMU_MAPPINGS,
++ * HEADER_HYBRID_TOPOLOGY, HEADER_CPU_PMU_CAPS or HEADER_PMU_CAPS), lazily
++ * populates @env->pmus from the perf.data header on first access. If @env has
++ * no PMU metadata of its own, falls back to the live host's PMU collection.
++ *
+  * Return: Pointer to the struct perf_pmus for @env.
+  */
+ struct perf_pmus *perf_env__pmus(struct perf_env *env);
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index a442f2a904a9..27fc21fa3a6a 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -5765,6 +5765,28 @@ int perf_event__process_feature(const struct perf_tool *tool __maybe_unused,
+ 		goto out;
+ 	}
+ 
++	switch (feat) {
++	case HEADER_ARCH:
++	case HEADER_CPUID:
++	case HEADER_NRCPUS:
++	case HEADER_PMU_MAPPINGS:
++	case HEADER_CPU_PMU_CAPS:
++	case HEADER_HYBRID_TOPOLOGY:
++	case HEADER_PMU_CAPS:
++		mutex_lock(&header->env.pmus.lock);
++		if (session->evlist) {
++			struct evsel *evsel;
++
++			evlist__for_each_entry(session->evlist, evsel)
++				evsel->pmu = NULL;
++		}
++		perf_pmus__exit(&header->env.pmus);
++		mutex_unlock(&header->env.pmus.lock);
++		break;
++	default:
++		break;
++	}
++
+ 	if (session->tool->show_feat_hdr) {
+ 		if (!feat_ops[feat].full_only ||
+ 		    session->tool->show_feat_hdr >= SHOW_FEAT_HEADER_FULL_INFO) {
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 06c4912d2f65..ee52fd18c927 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -2570,6 +2570,37 @@ static int perf_pmu__new_caps(struct list_head *list, char *name, char *value)
+ 	return -ENOMEM;
+ }
+ 
++int perf_pmu__add_cap(struct perf_pmu *pmu, const char *name, const char *value)
++{
++	struct perf_pmu_caps *caps;
++
++	if (!pmu || !name || !value)
++		return -EINVAL;
++	if (perf_pmu__get_cap(pmu, name))
++		return 0;
++
++	caps = zalloc(sizeof(*caps));
++	if (!caps)
++		return -ENOMEM;
++
++	caps->name = strdup(name);
++	if (!caps->name) {
++		free(caps);
++		return -ENOMEM;
++	}
++	caps->value = strdup(value);
++	if (!caps->value) {
++		zfree(&caps->name);
++		free(caps);
++		return -ENOMEM;
++	}
++	list_add_tail(&caps->list, &pmu->caps);
++	pmu->nr_caps++;
++	if (!strcmp(name, "max_precise"))
++		pmu->max_precise = atoi(value);
++	return 0;
++}
++
+ static void perf_pmu__del_caps(struct perf_pmu *pmu)
+ {
+ 	struct perf_pmu_caps *caps, *tmp;
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 7605c3859337..06f922ce1f68 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -334,6 +334,15 @@ bool pmu_uncore_identifier_match(const char *compat, const char *id);
+ int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
+ 
+ struct perf_pmu_caps *perf_pmu__get_cap(struct perf_pmu *pmu, const char *name);
++/**
++ * perf_pmu__add_cap() - Add a name/value capability entry to @pmu->caps.
++ * @pmu: The PMU to add the capability to.
++ * @name: Capability name.
++ * @value: Capability value string.
++ *
++ * Return: 0 on success, negative error code on failure.
++ */
++int perf_pmu__add_cap(struct perf_pmu *pmu, const char *name, const char *value);
+ 
+ int perf_pmu__caps_parse(struct perf_pmu *pmu);
+ 
+diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+index c3a695ebf2ba..908959abbd3d 100644
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -7,7 +7,9 @@
+ #include <subcmd/pager.h>
+ #include <sys/types.h>
+ #include <ctype.h>
++#include <errno.h>
+ #include <pthread.h>
++#include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <unistd.h>
+@@ -980,3 +982,220 @@ struct perf_pmu *perf_pmus__fake_pmu(void)
+ 
+ 	return &fake;
  }
 +
-+static struct test_case tests__cpuid_match[] = {
-+	TEST_CASE("arm64 MIDR", cpuid_match_arm64),
-+	{ .name = NULL, }
-+};
++/*
++ * Determine whether a PMU name reconstructed from perf.data headers is a
++ * core PMU, checking common core PMU prefixes, hybrid topology nodes, and
++ * the host architecture's is_pmu_core() when architectures match.
++ */
++static bool env_is_pmu_core(const char *name, struct perf_env *env)
++{
++	if (!strcmp(name, "cpu") || !strcmp(name, "cpum_cf") ||
++	    !strcmp(name, "default_core") || !strcmp(name, "arc_pct") ||
++	    strstarts(name, "cpu_") || strstarts(name, "armv") ||
++	    (strstarts(name, "apple_") && strstr(name, "_pmu")))
++		return true;
 +
-+struct test_suite suite__cpuid_match = {
-+	.desc = "CPUID matching",
-+	.test_cases = tests__cpuid_match,
-+};
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 20ae3609892b..0d54d1d5acd2 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -201,6 +201,7 @@ DECLARE_SUITE(util);
- DECLARE_SUITE(uncore_event_sorting);
- DECLARE_SUITE(subcmd_help);
- DECLARE_SUITE(kallsyms_split);
-+DECLARE_SUITE(cpuid_match);
++	if (env && env->hybrid_nodes) {
++		for (int i = 0; i < env->nr_hybrid_nodes; i++) {
++			const char *pmu_name = env->hybrid_nodes[i].pmu_name;
++
++			if (pmu_name && !strcmp(name, pmu_name))
++				return true;
++		}
++		return false;
++	}
++
++	if (!env || !strcmp(perf_env__arch(env), perf_env__arch(host_env())))
++		return is_pmu_core(name);
++
++	return false;
++}
++
++/*
++ * Look up @name in @pmus or allocate and initialize a new perf_env-backed
++ * struct perf_pmu, upgrading PERF_PMU_TYPE_FAKE if a real type is later
++ * discovered.
++ */
++static struct perf_pmu *env_pmu_find_or_add(struct perf_pmus *pmus,
++					    const char *name, __u32 type,
++					    struct perf_env *env,
++					    const struct pmu_events_table *core_table)
++{
++	struct perf_pmu *pmu = pmu_find(pmus, name);
++
++	if (pmu) {
++		if (pmu->type == PERF_PMU_TYPE_FAKE && type != PERF_PMU_TYPE_FAKE) {
++			pmu->type = type;
++			pmu->is_uncore = !pmu->is_core && !pmu->auxtrace &&
++					 !perf_pmu__is_software(pmu) &&
++					 perf_pmu__kind(pmu) == PERF_PMU_KIND_PE;
++			if (!pmu->is_core && !pmu->is_uncore &&
++			    pmu->events_table == core_table)
++				pmu->events_table = NULL;
++		}
++		return pmu;
++	}
++
++	pmu = zalloc(sizeof(*pmu));
++	if (!pmu)
++		return NULL;
++
++	if (perf_pmu__init(pmu, type, name, /*from_env=*/true) != 0) {
++		perf_pmu__delete(pmu);
++		return NULL;
++	}
++
++	pmu->pmus = pmus;
++	pmu->sysfs_aliases_loaded = true;
++	pmu->caps_initialized = true;
++	pmu->max_precise = -1;
++	pmu->is_core = env_is_pmu_core(name, env);
++	pmu->auxtrace = !strcmp(name, "intel_pt") ||
++			!strcmp(name, "intel_bts") ||
++			!strcmp(name, "cs_etm") ||
++			strstarts(name, "arm_spe") ||
++			strstarts(name, "hisi_ptt");
++	pmu->is_uncore = !pmu->is_core && !pmu->auxtrace &&
++			 !perf_pmu__is_software(pmu) &&
++			 (perf_pmu__kind(pmu) == PERF_PMU_KIND_PE ||
++			  pmu->type == PERF_PMU_TYPE_FAKE);
++
++	if (!strcmp(name, "software") || !strcmp(name, "tool"))
++		pmu->events_table = perf_pmu__default_core_events_table();
++	else if (core_table && (pmu->is_core || pmu->is_uncore))
++		pmu->events_table = core_table;
++
++	list_add_tail(&pmu->list, pmu->is_core ? &pmus->core_pmus : &pmus->other_pmus);
++	return pmu;
++}
++
++/* Parse "key=value" capability strings from perf_env into @pmu->caps. */
++static void env_pmu_add_caps_strings(struct perf_pmu *pmu, int nr_caps, char **caps)
++{
++	if (!pmu || nr_caps <= 0 || !caps)
++		return;
++
++	for (int i = 0; i < nr_caps; i++) {
++		const char *eq;
++
++		if (!caps[i])
++			continue;
++		eq = strchr(caps[i], '=');
++
++		if (eq) {
++			char *key = strndup(caps[i], eq - caps[i]);
++
++			if (key) {
++				perf_pmu__add_cap(pmu, key, eq + 1);
++				free(key);
++			}
++		} else {
++			perf_pmu__add_cap(pmu, caps[i], "");
++		}
++	}
++}
++
++int perf_pmus__read_from_env(struct perf_pmus *pmus, struct perf_env *env)
++{
++	const struct pmu_events_table *core_table = NULL;
++	struct perf_pmu *pmu;
++
++	if (!pmus || !env)
++		return -EINVAL;
++
++	perf_pmus__exit(pmus);
++	pmus->read_pmu_types = PERF_TOOL_PMU_TYPE_ALL_MASK;
++
++	if (env->cpuid)
++		core_table = find_core_events_table(perf_env__e_machine(env, /*e_flags=*/NULL),
++						    env->cpuid);
++
++	/* 1. Populate from HEADER_PMU_MAPPINGS */
++	if (env->nr_pmu_mappings > 0 && env->pmu_mappings) {
++		char *str = env->pmu_mappings;
++
++		for (int i = 0; i < env->nr_pmu_mappings; i++) {
++			char *colon = NULL;
++			unsigned long type = strtoul(str, &colon, 0);
++
++			if (!colon || *colon != ':')
++				break;
++			str = colon + 1;
++			env_pmu_find_or_add(pmus, str, (__u32)type, env, core_table);
++			str += strlen(str) + 1;
++		}
++	}
++
++	/* 2. Populate/enrich from HEADER_HYBRID_TOPOLOGY */
++	for (int i = 0; i < env->nr_hybrid_nodes; i++) {
++		struct hybrid_node *hn = &env->hybrid_nodes[i];
++
++		if (!hn->pmu_name)
++			continue;
++		pmu = env_pmu_find_or_add(pmus, hn->pmu_name, PERF_PMU_TYPE_FAKE,
++					  env, core_table);
++		if (!pmu)
++			continue;
++		if (!pmu->is_core) {
++			pmu->is_core = true;
++			if (!pmu->events_table && core_table)
++				pmu->events_table = core_table;
++			list_move_tail(&pmu->list, &pmus->core_pmus);
++		}
++		if (hn->cpus && !pmu->cpus)
++			pmu->cpus = perf_cpu_map__new(hn->cpus);
++	}
++
++	/* 3. Populate/enrich from HEADER_PMU_CAPS */
++	for (int i = 0; i < env->nr_pmus_with_caps; i++) {
++		struct pmu_caps *pc = &env->pmu_caps[i];
++
++		if (!pc->pmu_name)
++			continue;
++		pmu = env_pmu_find_or_add(pmus, pc->pmu_name, PERF_PMU_TYPE_FAKE,
++					  env, core_table);
++		if (pmu)
++			env_pmu_add_caps_strings(pmu, pc->nr_caps, pc->caps);
++	}
++
++	/*
++	 * 4. Populate/enrich from HEADER_CPU_PMU_CAPS.
++	 * HEADER_CPU_PMU_CAPS holds the capabilities of the first core PMU,
++	 * named "cpu" on x86 but e.g. "armv8_pmuv3_0" or "cpum_cf" elsewhere.
++	 * On hybrid systems it duplicates the first core PMU's entry in
++	 * HEADER_PMU_CAPS. Attach the capabilities to "cpu" if present,
++	 * otherwise to the first core PMU when it has no capabilities yet,
++	 * creating a "cpu" PMU only if no core PMUs exist.
++	 */
++	if (env->nr_cpu_pmu_caps > 0 && env->cpu_pmu_caps) {
++		pmu = pmu_find(pmus, "cpu");
++		if (!pmu && !list_empty(&pmus->core_pmus)) {
++			/* Match the writer's perf_pmus__find_core_pmu() order. */
++			list_sort(NULL, &pmus->core_pmus, pmus_cmp);
++			pmu = list_first_entry(&pmus->core_pmus, struct perf_pmu, list);
++			if (pmu->nr_caps > 0)
++				pmu = NULL;
++		} else if (!pmu) {
++			pmu = env_pmu_find_or_add(pmus, "cpu", PERF_TYPE_RAW,
++						  env, core_table);
++		}
++		if (pmu)
++			env_pmu_add_caps_strings(pmu, env->nr_cpu_pmu_caps, env->cpu_pmu_caps);
++	}
++
++	/* 5. Set default core CPUs on non-hybrid systems */
++	if (env->nr_cpus_avail > 0 && env->nr_hybrid_nodes == 0) {
++		char buf[64];
++
++		snprintf(buf, sizeof(buf), "0-%d", env->nr_cpus_avail - 1);
++		list_for_each_entry(pmu, &pmus->core_pmus, list) {
++			if (!pmu->cpus)
++				pmu->cpus = perf_cpu_map__new(buf);
++		}
++	}
++
++	list_sort(NULL, &pmus->core_pmus, pmus_cmp);
++	list_sort(NULL, &pmus->other_pmus, pmus_cmp);
++	return 0;
++}
+diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
+index 6e7c9f857aaf..2b784cf648f3 100644
+--- a/tools/perf/util/pmus.h
++++ b/tools/perf/util/pmus.h
+@@ -8,6 +8,7 @@
+ #include "mutex.h"
  
- /*
-  * PowerPC and S390 do not support creation of instruction breakpoints using the
+ struct perf_event_attr;
++struct perf_env;
+ struct perf_pmu;
+ struct print_callbacks;
+ 
+@@ -49,7 +50,10 @@ struct perf_pmus {
+ 	 * encoding in perf_event_attr::config is supported.
+ 	 */
+ 	enum perf_pmus_extended_type extended_type;
+-	/** @lock: Protects lazy initialization of @extended_type. */
++	/**
++	 * @lock: Protects lazy initialization of @extended_type and
++	 * perf_pmus__read_from_env().
++	 */
+ 	struct mutex lock;
+ };
+ 
+@@ -75,6 +79,15 @@ void perf_pmus__init(struct perf_pmus *pmus);
+  */
+ void perf_pmus__exit(struct perf_pmus *pmus);
+ 
++/**
++ * perf_pmus__read_from_env() - Populate @pmus from perf.data header metadata.
++ * @pmus: The PMU collection to populate.
++ * @env: The perf_env containing header PMU mappings, hybrid topology, and caps.
++ *
++ * Return: 0 on success, negative error code on failure.
++ */
++int perf_pmus__read_from_env(struct perf_pmus *pmus, struct perf_env *env);
++
+ /**
+  * perf_pmus__find() - Find a PMU by name in @pmus.
+  * @pmus: The PMU collection to search.
 -- 
 2.56.0.385.gac671c819a-goog
 
