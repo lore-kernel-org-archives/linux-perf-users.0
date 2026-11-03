@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793702854;
-	b=wDF5gAIPiNwp8zFI7y7eBRgatgXl2aV/n0RX2z615OMkd9xhS8tAoq/W534AmmxOg4tK
-	 r2LL34Vf/aII+CZrDjKuUX5QswvHPVm6uF4xw95CVIC5QcG968vDU8VRDy5ZPtJAKpO5f
-	 uftFfsZcSSCsvHB7Tf1YEP0C3v89BcAMELtG98RlJWOoTNejta8EN4FG2EooKSl1am7U3
-	 sJ7ujsjlaG5dMvqAQ3QY5ym1e/WnKPpaxgi9zsBoC4cyIMAt34KqRFPzai1MNAT3qvFTA
-	 jPuvAP4iXHnNxS21es0H/DLiHSqCkF+ZZR2OBT5qGkv1EEdpPbzJlN3p5aRDFQx+CmQ==
+	t=1793703297;
+	b=G55fCNyYBWE4NSpxBWCIj5Sn0cJXUyuHj6+THF4o0YmDi8R3Y6Ejx3cQ8brBu1CXoqpI
+	 3zniRZCoLw0yuXHF1PzjU/Y/sriBL50HJhOE3IaPCqlf4ZIJegZTNYdkHueAa8v1yOWRV
+	 Q/wmCPWs9yvOMXkwk7HG2xgjumKd+ImqUo8c+4Bc7PNY4+XqnwGI4ZMTa5crLnwnaacwT
+	 dMFbqBat7lEM6epykl6XhPY6fpzUP5YH3HdjzzrrqtMy3qMuVk8JJ70jY9xI/rexvHCox
+	 FifTclxbRWDdq/J2/BLhllgPEo2cp/pFAaAfqei6NDguO7uYhCBmdSGSkTf2kRC2MXw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793702854;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793703297;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=4VC0HLb8QlP7ub+0ZPtP1lO5JVqmLp7CerydBenrsdM=;
-	b=5hvP53YQUTL7nmimJeYLJrIZwqWTlRnv2HbFzMHTcu/lHITxh+vhR3kl/9PYvOwERgmX
-	 jCCrP7y0R+o6lqv/TXr60oX8ADqZPdd+gC6BWMudQ6hciZ8q7a1aceraGKoNInKt61rPZ
-	 ejVq3s66+BuMPi3mVnvmgqTnHuvV9PNkpPNVi6ohMl6iK10LOOBnDpVFLiYhYW0LludfH
-	 T2Lw4L8eU4fDaoyCuBLuaWwJ7c3sofk/ZxmymtLPDYlUm+pzpnLLwbOMfcMiw9RLrWla0
-	 T8+xmczgzOthFwHA80NMoe2ftsdMjAL3xCgEA5PIUngDceOLIMAtkc9s4Y283qC0adQ==
+	bh=6hMyoFma0f21MEbZrR8QhDlPHUhRUe7/HSlXqi0WQ5g=;
+	b=2TaNX8Gg3UqIt55wl98B00D+OzJf4kIpojFUox3CqieW+EAscDXHb1EO8I3ED9lvTA6U
+	 n49LU0tFkw7HmiLJ5LI2Ak2ZnpaWiATY4qC4Ma5jbStH0rI2XKXHEbr0rjrAcf0mHFynW
+	 XnTkqQ/R7DWOl3K2WhNKvVgbEwUT/qjiR5FcpOxYh1RbqkLOQiJituQcBOVmZJMpPWzoC
+	 FnleH9/ykGZT/6JptyVww+RB1ZVNkFaLYi7Jq9h1Boq5S8OmvJyAd6Hq63MuW/3o1qjd2
+	 A7Jnss7UY1emPT3R2rg1IN937pwIf1IxdWQ3oe0L+ikEvJHbp2RABK7DiD+ni85DwGQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WbNz5NF5;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h+VAUXFJ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0EEF606F7F5;
-	Tue,  3 Nov 2026 10:47:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F22606D82C;
+	Tue,  3 Nov 2026 10:54:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WbNz5NF5
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A7061F0093A;
-	Tue,  3 Nov 2026 10:47:34 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h+VAUXFJ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD41E1F0093A;
+	Tue,  3 Nov 2026 10:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793702854;
-	bh=4VC0HLb8QlP7ub+0ZPtP1lO5JVqmLp7CerydBenrsdM=;
+	s=k20260515; t=1793703297;
+	bh=6hMyoFma0f21MEbZrR8QhDlPHUhRUe7/HSlXqi0WQ5g=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=WbNz5NF5Gm9QiUKPSycHuzqEIpWlXaZsadYqgxCPdhtgNy/VxdX5vIJIEpRKOw93u
-	 v7E1ItyxLgdevhxOJXjQvktTODYj9fFQhcbPBmGlQSYd0Vh2gb1wUQdSfEMRK7F2Eu
-	 fUYOoU9fn2k+PhgTx+e3TNKZr0lFWA7TV/ISYwlZhaljIivgqRRVJR1qbxiZ7i0SYo
-	 5+yOmHRjx66NwMuxyUU93s2lP9Q7KP27A7Pca7cju9tCL8wWkeTxs3C1CW3HYsQKUj
-	 OC+DlvGxhmSz/AK1EUvDFA8nR9EIW6HvH+7c2vgyPiKJBOdNK76MqP2MExfLYCff5J
-	 7gyENBT5oVgnA==
-Message-ID: <sashiko-outbox-195068@kernel.org>
+	b=h+VAUXFJfhRCW7AeUr3kHXsHJ5fdll/aFxUhFeqFZIMCT3K0FfI1U4Ud29rKXwOtk
+	 atH9W1i0kjFruhVXQydScgUJ6rnlJCuPUS1YcaVzvu6AXpV2KPPU2IzKFXqprd6PY0
+	 u+bpKaGw9RKq901aG8wJ4CkIAYx9OK+9umGHOCHXz6v5FoPMMtEPks0DzXYQXXw7j6
+	 ETML5DBAe+vMENODtYv3g5Hk1EeiMi895HZ2LZysJ2x68mi0wr8muOnmnt/2oxTTN7
+	 xpbPSKKXRGGr12Em4qGy1/4JiChoqAdSJW3FJTauH7fgYNet7AW24/g98j0nmEnUEj
+	 SygQt33EIkmiw==
+Message-ID: <sashiko-outbox-195083@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 08/13] drivers/perf: apple_m1: Add Apple A18 Support
+Subject: Re: [PATCH 09/13] arm64: dts: apple: t603x: Add PMU Device Nodes
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Myria Sarvay" <myrialsarvay@gmail.com>
 Cc: linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org
-In-Reply-To: <20261103-m3-plus-pmu-events-v1-8-a8eb6c1139fe@gmail.com>
+In-Reply-To: <20261103-m3-plus-pmu-events-v1-9-a8eb6c1139fe@gmail.com>
 References: <20261103-m3-plus-pmu-events-v1-0-a8eb6c1139fe@gmail.com>
- <20261103-m3-plus-pmu-events-v1-8-a8eb6c1139fe@gmail.com>
+ <20261103-m3-plus-pmu-events-v1-9-a8eb6c1139fe@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 10:47:33 +0000
+Date: Tue, 03 Nov 2026 10:54:56 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -62,61 +62,135 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Low] drivers/perf: apple_m1: redundant a18_pmu_* aliases and unused macro
+- [High] arm64: dts: apple: missing AIC PMU affinities in t6030 and t6031-b=
+ase
 --
 
-commit 96c1a110d959d59196297459a3c8bd2316dfaece
+commit b22393aa51d5b877175fc97e743f45d90d0a09a1
 Author: Myria Sarvay <myrialsarvay@gmail.com>
 
-drivers/perf: apple_m1: Add Apple A18 Support
+arm64: dts: apple: t603x: Add PMU Device Nodes
 
-This commit adds CPU PMU support for the Apple A18 (Tahiti) cores by
-reusing the M4 PMU event mappings and callbacks.
+This commit adds the pmu-e (apple,sawtooth-pmu) and pmu-p (apple,everest-pm=
+u)
+device tree nodes to t6030.dtsi and t6031-base.dtsi.
 
-> diff --git a/drivers/perf/apple_m1_cpu_pmu.c b/drivers/perf/apple_m1_cpu_=
-pmu.c
-> index bdbd138cf1db8..775f3d5aba7ea 100644
-> --- a/drivers/perf/apple_m1_cpu_pmu.c
-> +++ b/drivers/perf/apple_m1_cpu_pmu.c
-> @@ -1149,12 +1149,23 @@ static int gen ## _pmu_ ## family ## _init(struct=
- arm_pmu *cpu_pmu)				\
->  #define m4_pmu_set_event_filter		m3_pmu_set_event_filter
->  #define m4_pmu_format_attr_group	m3_pmu_format_attr_group
+> diff --git a/arch/arm64/boot/dts/apple/t6030.dtsi b/arch/arm64/boot/dts/a=
+pple/t6030.dtsi
+> index 85a16d03e22f3..c3779e1584c2a 100644
+> --- a/arch/arm64/boot/dts/apple/t6030.dtsi
+> +++ b/arch/arm64/boot/dts/apple/t6030.dtsi
+> @@ -239,6 +239,18 @@ l2_cache_1: l2-cache-1 {
+>  		};
+>  	};
 > =20
-> +#define a18_pmu_enable_event		m4_pmu_enable_event
-> +#define a18_pmu_map_event		m4_pmu_map_event
-> +#define a18_pmu_get_event_idx		m4_pmu_get_event_idx
-> +#define a18_pmu_set_event_filter	m4_pmu_set_event_filter
-> +#define a18_pmu_map_pmuv3_event		m4_pmu_map_pmuv3_event
-> +#define a18_pmu_init_pmceid		m4_pmu_init_pmceid
-> +#define a18_pmu_events_attr_group	m4_pmu_events_attr_group
-> +#define a18_pmu_format_attr_group	m4_pmu_format_attr_group
+> +	pmu-e {
+> +		compatible =3D "apple,sawtooth-pmu";
+> +		interrupt-parent =3D <&aic>;
+> +		interrupts =3D <AIC_FIQ AIC_CPU_PMU_E IRQ_TYPE_LEVEL_HIGH>;
+> +	};
 > +
->  APPLE_PMU_INIT(m1, icestorm)
->  APPLE_PMU_INIT(m1, firestorm)
->  APPLE_PMU_INIT(m2, avalanche)
->  APPLE_PMU_INIT(m2, blizzard)
->  APPLE_PMU_INIT(m3, sawtooth)
->  APPLE_PMU_INIT(m3, everest)
-> +APPLE_PMU_INIT(a18, tahiti_e)
-> +APPLE_PMU_INIT(a18, tahiti_p)
+> +	pmu-p {
+> +		compatible =3D "apple,everest-pmu";
+> +		interrupt-parent =3D <&aic>;
+> +		interrupts =3D <AIC_FIQ AIC_CPU_PMU_P IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+> +
+>  	reserved-memory {
+>  		ranges;
+>  		#address-cells =3D <2>;
+> diff --git a/arch/arm64/boot/dts/apple/t6031-base.dtsi b/arch/arm64/boot/=
+dts/apple/t6031-base.dtsi
+> index f62ce0690182b..3b97c12409340 100644
+> --- a/arch/arm64/boot/dts/apple/t6031-base.dtsi
+> +++ b/arch/arm64/boot/dts/apple/t6031-base.dtsi
+> @@ -308,6 +308,18 @@ l2_cache_2: l2-cache-2 {
+>  		};
+>  	};
+> =20
+> +	pmu-e {
+> +		compatible =3D "apple,sawtooth-pmu";
+> +		interrupt-parent =3D <&aic>;
+> +		interrupts =3D <AIC_FIQ 0 AIC_CPU_PMU_E IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+> +
+> +	pmu-p {
+> +		compatible =3D "apple,everest-pmu";
+> +		interrupt-parent =3D <&aic>;
+> +		interrupts =3D <AIC_FIQ 0 AIC_CPU_PMU_P IRQ_TYPE_LEVEL_HIGH>;
+> +	};
 
-[Severity: Low]
-This isn't a bug, but since APPLE_PMU_INIT(gen, family) only uses the gen
-argument to select the gen_pmu_* callbacks and attribute groups (while
-cpu_pmu->name is constructed solely from family), are the a18_pmu_* alias
-macros needed here?
+[Severity: High]
+Do the aic nodes for t6030 and the t6031-based SoCs (t6031, t6032, and t603=
+4)
+ also need affinities child nodes mapping AIC_CPU_PMU_E and AIC_CPU_PMU_P to
+their respective E-core and P-core CPU phandles?
 
-Unlike m2 and m4, which define generation-specific callbacks or attribute
-groups and only alias the remaining symbols from an earlier generation, a18
-aliases every symbol to m4_pmu_*. In addition, a18_pmu_init_pmceid is never
-used by APPLE_PMU_INIT() and expands to m4_pmu_init_pmceid, which does not
-exist.
+In drivers/irqchip/irq-apple-aic.c, aic_irq_domain_translate() merges
+AIC_CPU_PMU_E and AIC_CPU_PMU_P onto a single Linux percpu_devid IRQ
+(AIC_CPU_PMU_P), and relies on the affinities subnode under aic (parsed by
+aic_of_ic_init() -> build_fiq_affinity() into aic_irqc->fiq_aff[]) to report
+the CPU mask for each PMU in aic_irq_get_fwspec_info():
 
-Could this use APPLE_PMU_INIT(m4, tahiti_e) and APPLE_PMU_INIT(m4, tahiti_p)
-directly (with m4_pmu_tahiti_e_init and m4_pmu_tahiti_p_init in
-m1_pmu_of_device_ids) and drop the a18_pmu_* macro definitions?
+drivers/irqchip/irq-apple-aic.c:aic_irq_get_fwspec_info() {
+	...
+	if (aic_irqc->fiq_aff[intid])
+		mask =3D &aic_irqc->fiq_aff[intid]->aff;
+	else
+		mask =3D cpu_possible_mask;
+	...
+}
+
+Because neither arch/arm64/boot/dts/apple/t6030.dtsi nor
+arch/arm64/boot/dts/apple/t6031-die0.dtsi (or t6031.dtsi / t6032.dtsi)
+defines an affinities subnode under aic, aic_irqc->fiq_aff[AIC_CPU_PMU_E] a=
+nd
+aic_irqc->fiq_aff[AIC_CPU_PMU_P] remain NULL, causing both PMUs to receive
+cpu_possible_mask via:
+
+m1_pmu_device_probe()
+  -> arm_pmu_device_probe()
+    -> pmu_parse_irqs()
+      -> platform_get_irq_affinity()
+        -> of_irq_get_affinity()
+          -> aic_irq_get_fwspec_info()
+
+When pmu-e probes first, pmu_parse_percpu_irq() sets pmu-e's supported_cpus
+to cpu_possible_mask, and armpmu_request_irq() registers pmu-e's per-CPU IRQ
+across all CPUs and sets per_cpu(cpu_irq, cpu) =3D irq on every CPU.
+
+When pmu-p probes second with the same merged virq and affinity equal to
+cpu_possible_mask, armpmu_count_irq_users(affinity, irq) returns non-zero in
+armpmu_request_irq():
+
+drivers/perf/arm_pmu.c:armpmu_request_irq() {
+	...
+	} else if (armpmu_count_irq_users(affinity, irq) =3D=3D 0) {
+		err =3D request_percpu_nmi(irq, handler, "arm-pmu", affinity, pcpu_armpmu=
+);
+
+		/* If cannot get an NMI, get a normal interrupt */
+		if (err) {
+			err =3D request_percpu_irq_affinity(irq, handler, "arm-pmu",
+							  affinity, pcpu_armpmu);
+			irq_ops =3D &percpu_pmuirq_ops;
+		} else {
+			has_nmi =3D true;
+			irq_ops =3D &percpu_pmunmi_ops;
+		}
+	} else {
+		/* Per cpudevid irq was already requested by another CPU */
+		irq_ops =3D armpmu_find_irq_ops(affinity, irq);
+	...
+}
+
+As a result, pmu-p skips calling request_percpu_irq_affinity() and never
+registers its per-CPU irqaction on the shared PMU FIQ line. P-core PMU
+counter overflow FIQs will be routed to pmu-e (leaving the P-core overflow
+status and PMCR0_IACT uncleared when PMCR0_IMODE_FIQ is re-enabled), and
+teardown in armpmu_free_irqs() will trigger a warning in __free_percpu_irq()
+because pmu-p's dev_id was never registered.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103-m3-plus-pm=
-u-events-v1-0-a8eb6c1139fe@gmail.com?part=3D8
+u-events-v1-0-a8eb6c1139fe@gmail.com?part=3D9
