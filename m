@@ -1,56 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793722951;
-	b=wPRbg1nmaraSG3qD+Oq7T7QzC0U9TRHyux8E+t23xGAZnMKQhM9a77yP5WM4VLzfYr/x
-	 m5DgsN0Ea+S4NgoLWQ37m0cqCnIYqZBy33l1p413uaB+jrjNAtc5HDi/6EaJT7V5Wk502
-	 bBkqdcTGYSrVGM1QOBTO2chdmhKMegIuTltDNIjB4nquoJdbYwGig2gS1TKkZHYkLCuNh
-	 C5jpPwmm8cnlHsFEfFw0AzuYUhfhN4FNUqWIl8VXlLklHH52td+T9t0IcDAoMT3X6ahKi
-	 JSONDbJDoSNcsBI9levjlJK/VvFe3nc+Pu5urbO3B1vMtfGFflM4Q9tQPp4y31H+cSQ==
+	t=1793724047;
+	b=RE53puNR5d8OdEOGCIBZywlM+qDUP8mFfTmyeMAwpgBNR+m4vknpgneObPpoi7BQs02m
+	 E0LEftYDFdRhRuaNWVMJ2ztTdHOarLJVQrKmUCivIDSMC/e4YTlE1K12WjF4DZ11aQyZd
+	 kUNibabXSc49rn1p7Jr5419q5oGg2s0lPOJ6CFxuu37rgUK5s+nLcBjHYDpi1Z3CMT/J3
+	 uXy3cf9cQUlJfY7u+kSaZRExv+xGmDzPaabe7LgoclYiNTibCGbDhK57V9MB5owxSOs9/
+	 pq1QbMi9qnAqPUfw2sHjVilEcNbCGhlPe835kUpc7ywfTO+sWaxJhnWJk0ewehgSfiQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793722951;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793724047;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=P3FtUDxJQwIK77wjxLQdmDWGOk3fmBL64O8rIMXaEvo=;
-	b=VUo5PQA1I56kaMdme9HWZUfa6eb9izkTqEq1eyFFnHD0wP3t5rNrMRNg0VDh4hUQ1+Tf
-	 233yZ63erPACbr4GoX9inmo1S7Tl/d2AEc5ktdWzzct5eSdpSchTs6qGJqAlp9rmkKnJd
-	 B1l1jtIp5k3YowRh6thrF69KCoy62QtfYc7EtjwJwwSfXR3O+GhGIs2DZ4S94wfN6Q68R
-	 V7kdTQ2PKKgcBqe52WLu7vObdGmsYKIK8rpvTyifXlsCYReqaYa7QNN/rhCs69vXsqEI7
-	 FAVoJpA2eeTq+XaB/q7nF2Ojqgi1KwuWzd2SvaUR+g4y9b98IkQeUB5Ct0G/YRg8/zQ==
+	bh=Ahar+PZSezd13EEuRp3JvII5/SAvoTWZ1sBRnuol6Gw=;
+	b=rYxn30OVLlGtLX67gMoOh+Dho+uHCIFMgUJN1+un59kOmHMurt6aC0+RQCirrHlqm/RO
+	 9nP6BynBK/m0px+FK0WWpNfEUq1W9KXGDRN46gd/9gy45aPdDhSNWj99W1gFxFhzG9u43
+	 JS6uG0O9cDlZ9eZD0ATzOaUf3njlTAlERl2P9oTpv5AhB7C/u2x15kA/F3AutCFTkQZYf
+	 5sw4kA5DhY4vxroXnqfc8PO0WqNmGj5mu5+ls2fvXcZAjXCJKVTXcinH8AApt4MvdCCcE
+	 XdTD8Ax24Zw7gMxd1q63RDwOV3aGm72owTqLAreqffGWGyU8Vz6znevA6z38JPaNkHA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oYHRMOgr;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fxYJ1q83;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711C7606A326
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 16:22:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7112606A326
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 16:40:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oYHRMOgr
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1A7B1F000C1;
-	Tue,  3 Nov 2026 16:22:30 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fxYJ1q83
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 439611F0093A;
+	Tue,  3 Nov 2026 16:40:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793722951;
-	bh=P3FtUDxJQwIK77wjxLQdmDWGOk3fmBL64O8rIMXaEvo=;
+	s=k20260515; t=1793724046;
+	bh=Ahar+PZSezd13EEuRp3JvII5/SAvoTWZ1sBRnuol6Gw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=oYHRMOgrNoXZCNntZvMccuNIeWe9hsBl4BYDqzDQYBTqJU7kMLMkxpuiuB2ssihac
-	 9zEBOvLpThA/hWpNQs+86gwk8wUSlFMQDqJUnk1rLuzjaJEzom7q6OFpyMHlzosWK0
-	 CdlTDkYYRGXmT/l1f3erIFFx3ZNkjnZWzl2ss4c3JDOxA2nJSUn1MzvPkhPa2iUzLN
-	 E/tyxWOU9QelAzxvIN9aXpkOciOmr3lhQ3ajFp4wjhIRf9qYmV8CQrepu7o0yBA40S
-	 8bnNYH1s/ytMwWHVi6ggqAvL/G8QsmlOTpitXPC2QExXRCZz5CzoGXdsP2ubd5drpx
-	 leNAa97MfzsuA==
-Message-ID: <sashiko-outbox-195716@kernel.org>
+	b=fxYJ1q83GEBxJbnBCAxpazw6s2NrLAepWA8UZPwgJNTnch8XE0yjpMeUDBCiUcT2h
+	 gDLM1P95V3XT+1d7EXoWu3QGMVIcXvrFls92b67X6Ich8ha9bTmJ7IzbdLvy6UhZkw
+	 ixKpXUplN4qgw9WZByaGGB0XKlUN+Nt7UN/36pcYlyvfYYr/z+7XiN7C0QC6aKRBiq
+	 CGItO6xLFayRsEI4yoqsT2QW5ctawd9jlQ0pQySMg+szXYiBkxIcPNyRZBVEYCWM+M
+	 Gh6F9Q4ifuWfK6y3hS5vWpCkExtAiXmBKbC7HaBLIujAEANvCw1Rwr/8iGmNqchMcl
+	 0SpDuVC7DU2/Q==
+Message-ID: <sashiko-outbox-195734@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 2/3] perf dwarf-aux: Add C++ vtable helpers
+Subject: Re: [PATCH v4 3/3] perf annotate: Resolve C++ virtual function
+ calls in x86 insn tracking
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Yanbo Zhao" <yzhao62@ncsu.edu>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261103155650.269973-3-yzhao62@ncsu.edu>
+In-Reply-To: <20261103155650.269973-4-yzhao62@ncsu.edu>
 References: <20261103155650.269973-1-yzhao62@ncsu.edu>
- <20261103155650.269973-3-yzhao62@ncsu.edu>
+ <20261103155650.269973-4-yzhao62@ncsu.edu>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 16:22:30 +0000
+Date: Tue, 03 Nov 2026 16:40:45 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -66,94 +67,121 @@ s) to consider:
 cb()
 --
 
-commit 3556b432528cd90397fc56862bef26cf9afde995
+commit e681ce13b22214a8ffd9b0e9b51a57f0b2937bb7
 Author: Yanbo Zhao <yzhao62@ncsu.edu>
 
-perf dwarf-aux: Add C++ vtable helpers
+perf annotate: Resolve C++ virtual function calls in x86 insn tracking
 
-This commit adds DWARF helper functions (die_get_vtable_index(),
-die_find_virtual_func(), die_is_vtbl_ptr_type(), die_get_vptr_class(), and
-die_deref_vptr_class()) to support static resolution of C++ virtual function
-calls during data type profiling.
+This commit resolves C++ virtual function calls during x86 instruction
+state tracking by tracking vtable pointer loads and virtual function
+pointer calls using DWARF vtable helpers.
 
-> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> index eb4b8f3475df1..10079f47a6c38 100644
-> --- a/tools/perf/util/dwarf-aux.c
-> +++ b/tools/perf/util/dwarf-aux.c
-> @@ -2293,6 +2293,239 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_di=
-e, int offset,
-
-[ ... ]
-
-> +static int __die_find_primary_base_cb(Dwarf_Die *die_mem, void *arg __ma=
-ybe_unused)
+> diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/ut=
+il/annotate-arch/annotate-x86.c
+> index 3a6ea7e978e0a..e38a4e7a54d55 100644
+> --- a/tools/perf/util/annotate-arch/annotate-x86.c
+> +++ b/tools/perf/util/annotate-arch/annotate-x86.c
+> @@ -207,6 +207,29 @@ static int x86__cpuid_parse(struct arch *arch, const=
+ char *cpuid)
+>  }
+> =20
+>  #ifdef HAVE_LIBDW_SUPPORT
+> +/*
+> + * Get the return type of the C++ virtual function at the @offset in the
+> + * vtable of @class_die.  Returns false if it's not found or the function
+> + * returns void.
+> + */
+> +static bool vtable_get_rettype(Dwarf_Die *class_die, int offset,
+> +			       Dwarf_Die *type_die)
 > +{
-> +	Dwarf_Attribute attr;
-> +	Dwarf_Die base_die, vptr_die;
-> +	Dwarf_Word loc, virtuality;
+> +	Dwarf_Die func_die;
+> +	int index;
 > +
-> +	if (dwarf_tag(die_mem) !=3D DW_TAG_inheritance)
-> +		return DIE_FIND_CB_SIBLING;
+> +	if (offset < 0)
+> +		return false;
 > +
-> +	/* The attribute can be present with DW_VIRTUALITY_none */
-> +	if (dwarf_attr_integrate(die_mem, DW_AT_virtuality, &attr) &&
-> +	    dwarf_formudata(&attr, &virtuality) =3D=3D 0 &&
-> +	    virtuality !=3D DW_VIRTUALITY_none)
-> +		return DIE_FIND_CB_SIBLING;
+> +	/* TODO: arch-dependent pointer size */
+> +	index =3D offset / sizeof(void *);
 > +
-> +	if (die_get_data_member_location(die_mem, &loc) < 0 || loc !=3D 0)
-> +		return DIE_FIND_CB_SIBLING;
+> +	if (die_find_virtual_func(class_die, index, &func_die) =3D=3D NULL)
+> +		return false;
 > +
-> +	if (die_get_real_type(die_mem, &base_die) =3D=3D NULL)
-> +		return DIE_FIND_CB_SIBLING;
-> +
-> +	/* It should have the vtable pointer at offset 0 */
-> +	if (die_get_vptr_class(&base_die, 0, &vptr_die) =3D=3D NULL)
-> +		return DIE_FIND_CB_SIBLING;
-> +
-> +	return DIE_FIND_CB_END;
+> +	return die_get_real_type(&func_die, type_die) !=3D NULL;
 > +}
 
 [ ... ]
 
-> +Dwarf_Die *die_get_vptr_class(Dwarf_Die *type_die, int offset,
-> +			      Dwarf_Die *die_mem)
-> +{
-> +	Dwarf_Die class_die =3D *type_die;
-> +	Dwarf_Die vptr_class =3D *type_die;
-> +	Dwarf_Die member_die, mb_type;
-> +	Dwarf_Word loc;
-> +	int chase =3D 0;
-> +
-> +	while (die_is_compound_type(&class_die)) {
-> +		if (++chase > MAX_TYPE_CHASE) {
-> +			pr_debug("DWARF: base class chase limit reached at DIE 0x%lx\n",
-> +				 (unsigned long)dwarf_dieoffset(type_die));
-> +			return NULL;
-> +		}
-> +
-> +		if (die_find_child(&class_die, __die_find_member_offset_cb,
-> +				   (void *)(long)offset, &member_die) =3D=3D NULL)
-> +			return NULL;
+> @@ -615,13 +662,39 @@ static void update_insn_state_x86(struct type_state=
+ *state,
+
+[ ... ]
+
+>  		/* And then dereference the pointer if it has one */
+>  		else if (has_reg_type(state, sreg) && state->regs[sreg].ok &&
+>  			 state->regs[sreg].kind =3D=3D TSR_KIND_TYPE &&
+>  			 die_deref_ptr_type(&state->regs[sreg].type,
+>  					    src->offset + state->regs[sreg].offset, &type_die)) {
+> +			/*
+> +			 * The vtable pointer of a C++ object needs the class
+> +			 * to resolve virtual calls through it.
+> +			 */
+> +			if (!src->multi_regs && die_is_vtbl_ptr_type(&type_die) &&
+> +			    die_deref_vptr_class(&state->regs[sreg].type,
+> +						 src->offset + state->regs[sreg].offset,
+> +						 &type_die))
 
 [Severity: Medium]
-As reported by Namhyung Kim on v2 [1], broken DWARF debug info with cyclic
-inheritance requires recursion depth limits when chasing base classes.
+Can malformed DWARF debug info with cyclic DW_TAG_inheritance entries trigg=
+er
+unbounded recursion and overflow the stack when resolving C++ virtual calls
+here?
 
-While die_get_vptr_class() and die_find_virtual_func() add a MAX_TYPE_CHASE
-check on their outer loops, die_get_vptr_class() (which is also invoked by
-die_find_virtual_func() -> __die_find_primary_base_cb() ->
-die_get_vptr_class()) calls die_find_child() with
-__die_find_member_offset_cb() on its first iteration (chase =3D=3D 1).
+In tools/perf/util/annotate-arch/annotate-x86.c, update_insn_state_x86() and
+vtable_get_rettype() wire in the first calls to die_deref_vptr_class() and
+die_find_virtual_func(), both of which reach die_get_vptr_class() in
+tools/perf/util/dwarf-aux.c:
 
-Inside __die_find_member_offset_cb(), when encountering a DW_TAG_inheritance
-child with offset >=3D loc, it recurses into base_die without a depth limit:
+  update_insn_state_x86()
+    -> die_deref_vptr_class()
+      -> die_get_vptr_class()
 
-tools/perf/util/dwarf-aux.c:__die_find_member_offset_cb() {
-	...
+  vtable_get_rettype()
+    -> die_find_virtual_func()
+      -> __die_find_primary_base_cb()
+        -> die_get_vptr_class()
+
+Even if die_deref_ptr_type() succeeds first because a class's _vptr
+DW_TAG_member precedes an offset-0 DW_TAG_inheritance entry,
+vtable_get_rettype() -> die_find_virtual_func() subsequently walks all
+offset-0 DW_TAG_inheritance children via __die_find_primary_base_cb() and
+calls die_get_vptr_class(&base_die, 0, &vptr_die).
+
+Although die_find_virtual_func() and die_get_vptr_class() check
+++chase > MAX_TYPE_CHASE in their outer loops to guard against cyclic
+inheritance, the first iteration of die_get_vptr_class() invokes
+__die_find_member_offset_cb():
+
+  tools/perf/util/dwarf-aux.c:die_get_vptr_class() {
+      ...
+		if (++chase > MAX_TYPE_CHASE) {
+			pr_debug("DWARF: base class chase limit reached at DIE 0x%lx\n",
+				 (unsigned long)dwarf_dieoffset(type_die));
+			return NULL;
+		}
+
+		if (die_find_child(&class_die, __die_find_member_offset_cb,
+				   (void *)(long)offset, &member_die) =3D=3D NULL)
+			return NULL;
+      ...
+  }
+
+Inside __die_find_member_offset_cb(), any DW_TAG_inheritance child with
+offset >=3D loc recursively invokes die_find_child() with
+__die_find_member_offset_cb() again without a recursion depth bound:
+
+  tools/perf/util/dwarf-aux.c:__die_find_member_offset_cb() {
+      ...
 	if (tag =3D=3D DW_TAG_inheritance) {
-		Dwarf_Die base_die, member_die;
-		...
 		if (offset < loc)
 			return DIE_FIND_CB_SIBLING;
 
@@ -163,20 +191,13 @@ tools/perf/util/dwarf-aux.c:__die_find_member_offset_cb() {
 		if (die_find_child(&base_die, __die_find_member_offset_cb,
 				   (void *)(long)(offset - loc), &member_die))
 			return DIE_FIND_CB_END;
+      ...
+  }
 
-		return DIE_FIND_CB_SIBLING;
-	}
-	...
-}
-
-If a binary has malformed DWARF with cyclic DW_TAG_inheritance (for example,
-at offset 0), won't __die_find_member_offset_cb() recurse until stack
-exhaustion on the first iteration before returning to the outer MAX_TYPE_CH=
-ASE
-loop in die_get_vptr_class() or die_find_virtual_func()?
-
-[1] https://lore.kernel.org/r/asA1u7LBRp2gqbWI@google.com
+Does this recursion in __die_find_member_offset_cb() bypass the
+MAX_TYPE_CHASE check in die_get_vptr_class() on cyclic DW_TAG_inheritance
+graphs?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103155650.2699=
-73-1-yzhao62@ncsu.edu?part=3D2
+73-1-yzhao62@ncsu.edu?part=3D3
