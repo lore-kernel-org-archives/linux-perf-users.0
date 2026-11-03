@@ -1,57 +1,65 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793672001;
-	b=yILzgRRdbDROCl+q6AP6irkfqkwh4iUk7FDiYXFxiroujIjBuLlNUjGSvH7Vsaf8HCBS
-	 mZqz9wBJmNflkIwU4bLYs77lPoRJvIsNo/vbcumiu1Xw40UhcEsuvhcxDZjrsXPsGn2rd
-	 magA2QrrzmNoXkwyQNc1dZSaQgwBbLj8NesyiQnvQ4sNeJx/OOa2A76IqDnNIiofGtWhL
-	 NheFTdGO0p26q8xwpe+u8+8xlr2ePd8lsGDdOMHbXuzt4bCPSPjgizXgydv2Zf9Rsb4fB
-	 GS5UlvmE1Skagxd5i3WJfu+QbkV3yEg23X+4yBCPm6DGpOHxaUh5R84xRKFg56UBTfg==
+	t=1793672003;
+	b=yP6dPo2ypNI4+L0w8mcaXQSH2pXsx4tcfhvh14AkGJGEnOvDnRJGXDN3GKwpOTxU1n6L
+	 Eh6gM8lIh8GcTyd3SC4D7t7GrkR+D16TsJxeHOEm+/jF2p2zgCu/dEU4dqubkoH/GtXgv
+	 HgExUkky9lysvAV0vQ6nNiCv2bZp2WatjXUJQCBXkM+GH2+h7bX2uHEu+qW7/68BmLis0
+	 kauzB8qpkRD56VYFw6rdsGupqFiwdoe+wXi1aHSJBLEEgJEwNR8tYz6D6vW1FuJ3hiBIc
+	 yCh9EtbD79oixxxBVhnfSWyU6s7kR5y/3Z08a2DJ5r1FY7yzk3IqOH2VVvM4piEr9ZA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793672001;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793672003;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=ZtSdhFTuTjw24aSCWIGnCCfG0xvtx+UD26snZ+mZ+TE=;
-	b=YdU9oGUiVtwm8AseQ2ZKZ4L1mKc2CCWfxHnh3huRjT/ZSZa/wMxNbsy/wnMJaBoYP4/S
-	 bmZPdQPvYIwxxhD7CYFKYitfYJDBvoCXMP0/IldHootP+KCcDh+zCJ2pjWyOgxXOub7Tx
-	 GDXKZw/Vs9ECaObyxJVmrc625EnW2/DuR72NHciOOZTqvYfAzigHc4wlJUmk5tgshAvjF
-	 hCC7TLAdLy2HCaLV8bpw/txQTuAAtfdSR78fOgKn+itWI1zfxLnpXDaVWsvP5NbGkq5qK
-	 VorTCRuqka37Q2a8BXYJuzaV3FUHEDz3no4/sVJvBraO6sS/fN7qhBi1o6/lcsNfggQ==
+	bh=mWh086qMCDkQpMNwRFil3pzUNTpRkKGPpLFfZ+JQ6K8=;
+	b=wV5Q1F6Nn7finp6FpJo7MVkmtJWOChwkf43IYyDWs3oJh3EEnHazGSSVhC6h2ie3YWEZ
+	 G4ee6ReKCY1dNslB8QN/btgt8mCKR845ELdaNH/B3eq2W5IaZwacal4P4xnks0RjDVEWD
+	 5/cO7rH80Fu39da+udgVaexg7zb/zx0WTc66NZR6VA6guJ6+wl1e4WrmXc5IdI8AHRBZ8
+	 PS1rIRLvWZxbI2wuNrTIn49gH0nW9icUUBiUivaZkgHsfvwFZn4obAXMnqYeyWbc5nvwK
+	 egvBSVyfcDQEHufZ440a6z0O71VU1fAcbiqbsMtuGhxmCRTGKXB5rlOQgeYCrAJXaiA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mIzBfQFk;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Z5eACxTU;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F62606A324
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 02:13:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2F0606A324;
+	Tue,  3 Nov 2026 02:13:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mIzBfQFk
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 108FA1F000C1;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Z5eACxTU
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A87011F00919;
 	Tue,  3 Nov 2026 02:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793672001;
-	bh=ZtSdhFTuTjw24aSCWIGnCCfG0xvtx+UD26snZ+mZ+TE=;
+	s=k20260515; t=1793672002;
+	bh=mWh086qMCDkQpMNwRFil3pzUNTpRkKGPpLFfZ+JQ6K8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mIzBfQFkhdqXrExMZr8QORTKhSU4nrVhMcSKiKiyo3kalWqK0PPHEjFabOYATIOqD
-	 TEA+FzMHaNWFOu+WwUDTlHRL4M0gjFb/La3TthbPH/YR4sE6q8EmePr02HcNrew1EL
-	 Zhesgnce4jFyLLqlactmdEjmHoczTfmUMRR6tblvGgB/xnjCjkApxri84bAKByjeZA
-	 d3ozyyA27tAW7yvGC6ENGj3g+uwbhjMXwtx/7/07Pb45gcaN9G5EBjPMgcW08ofy3i
-	 qE8IpaIuk/IOaVW8gcbGA8+YE94w83UAeOMGSUvqXuRP9+aNqywQDsQOUVrdXe/2+k
-	 FhwmDOE/3dNeA==
-Message-ID: <sashiko-outbox-194449@kernel.org>
+	b=Z5eACxTUltOwoyXlUrrM4Npqwi8JcT39uHUY4GdL3+XXS6m+9P5Wi832wpkoXMPEy
+	 pqWbXrBay5cOWaaBrH87/JrdxCkmzLLbbPOPPiQvGZ+6jFzbkMuZvX81s5uzQkKWQo
+	 XxjJAZTldn7rw8CWmkBuKxVGy1V50/+FHi7ghh9FHu2MR6d4IRss0pmWseWNMlEV4a
+	 Mz0lVIwe793AFmt0ioukTYMePV8rVx5cOgWxLI+w06itYCqNAlvGpW/dehtbfavGdW
+	 eYUYEvSOwONJaNeKqRfSyJJLRiOdvK43lRrvVg/YZbRJIB8X/eb3bOrnyNKYaJZAWi
+	 j5jMXbSOtYp1A==
+Message-ID: <sashiko-outbox-194450@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 1/7] kbuild: factor the userspace ABI flags out into
- KBUILD_USERABI
+Subject: Re: [PATCH v3 2/7] kbuild: add "make tools_build" to build
+ userspace tools from tools/
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Sasha Levin" <sashal@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261102021253.2545235-2-sashal@kernel.org>
+To: "Sasha Levin" <sashal@kernel.org>, "Nathan Chancellor" <nathan@kernel.org>, "Nicolas
+ Schier" <nsc@kernel.org>, linux-kbuild@vger.kernel.org
+Cc: "Shuah Khan" <shuah@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>, "Ingo
+ Molnar" <mingo@redhat.com>, "Arnaldo Carvalho de Melo" <acme@kernel.org>, "Namhyung
+ Kim" <namhyung@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>, "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>, "Jiri Olsa" <jolsa@kernel.org>, "Ian
+ Rogers" <irogers@google.com>, "Adrian Hunter" <adrian.hunter@intel.com>, "James
+ Clark" <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
+ =?utf-8?b?VGhvbWFzIFdlacOfc2NodWg=?= <linux@weissschuh.net>, "Andrew Morton" <akpm@linux-foundation.org>, "Thorsten
+ Leemhuis" <linux@leemhuis.info>
+In-Reply-To: <20261102021253.2545235-3-sashal@kernel.org>
 References: <20261102021253.2545235-1-sashal@kernel.org>
- <20261102021253.2545235-2-sashal@kernel.org>
+ <20261102021253.2545235-3-sashal@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 02:13:20 +0000
+Date: Tue, 03 Nov 2026 02:13:21 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,20 +69,87 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> KBUILD_USERCFLAGS and KBUILD_USERLDFLAGS pick up the flags that select
-> the target ABI for userspace programs: --target=3D under clang, -m32/-m64,
-> or CONFIG_ARCH_USERFLAGS. Collect those in KBUILD_USERABI and export it,
-> so programs built outside of kbuild's userprogs can be compiled for the
-> same ABI without also inheriting kbuild's warning and language flags.
->=20
-> No functional change: KBUILD_USERCFLAGS and KBUILD_USERLDFLAGS keep the
-> same value.
->=20
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Low] kbuild: USERLDFLAGS in LDFLAGS is ignored when building tools/dma
+- [Low] kbuild: missing $(m64-flag) in CONFIG_TOOLS_BUILD_GLIBC preprocesso=
+r probe
+--
 
-Sashiko has reviewed this patch and found no issues.
+commit 73fb4c9163d06e31dd88981052867f3114563466
+Author: Sasha Levin <sashal@kernel.org>
+
+kbuild: add "make tools_build" to build userspace tools from tools/
+
+This commit introduces a CONFIG_TOOLS_BUILD menu in tools/Kconfig and a
+tools_build make target backed by tools/Makefile.kbuild to build selected
+userspace tools for the target architecture into tools-build/.
+
+> diff --git a/tools/Kconfig b/tools/Kconfig
+> new file mode 100644
+> index 0000000000000..2d05c8e593e21
+> --- /dev/null
+> +++ b/tools/Kconfig
+> @@ -0,0 +1,73 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +
+> +config TOOLS_BUILD_ABI
+> +	def_bool X86_64 || ARM64
+> +
+> +config TOOLS_BUILD_GLIBC
+> +	def_bool $(success,echo '#include <features.h>' | $(CC) $(CLANG_FLAGS) =
+$(USERCFLAGS) -E -dM -x c - | grep -q __GLIBC__)
+
+[Severity: Low]
+Should this preprocessor probe also pass $(m64-flag)?
+
+In scripts/Kconfig.toolchain, CC_CAN_LINK passes $(m64-flag) to
+cc_can_link_user when 64BIT is enabled, and tools/Makefile.kbuild passes
+$(KBUILD_USERABI) (which includes -m64 on x86_64) in tools-cc.
+
+When configuring an x86_64 kernel with a biarch GCC toolchain that defaults
+to 32-bit mode and only has 64-bit glibc development headers
+(gnu/stubs-64.h) installed without 32-bit headers (gnu/stubs-32.h), running
+$(CC) $(CLANG_FLAGS) $(USERCFLAGS) -E -dM -x c - without $(m64-flag)
+preprocesses <features.h> in 32-bit mode. That fails with a fatal error on
+the missing <gnu/stubs-32.h> before -dM outputs macro definitions, causing
+TOOLS_BUILD_GLIBC to evaluate to n even though the compiler can build 64-bit
+glibc programs for the target.
+
+[ ... ]
+
+> diff --git a/tools/Makefile.kbuild b/tools/Makefile.kbuild
+> new file mode 100644
+> index 0000000000000..8cfa7f80039cd
+> --- /dev/null
+> +++ b/tools/Makefile.kbuild
+> @@ -0,0 +1,85 @@
+[ ... ]
+> +# The compiler CONFIG_CC_CAN_LINK was tested with. The tools take linker
+> +# flags from LDFLAGS.
+> +tools-cc :=3D $(CC) $(USERCFLAGS) $(KBUILD_USERABI)
+> +ifneq ($(USERLDFLAGS),)
+> +override LDFLAGS :=3D $(USERLDFLAGS)
+> +export LDFLAGS
+> +endif
+
+[Severity: Low]
+Will USERLDFLAGS reach tools/dma when building with CONFIG_TOOLS_BUILD_DMA=
+=3Dy?
+
+Here USERLDFLAGS is only passed through the exported LDFLAGS variable and is
+not included in tools-cc. However, tools/dma/Makefile compiles and links
+dma_map_benchmark in a single rule without referencing $(LDFLAGS):
+
+tools/dma/Makefile:
+$(OUTPUT)$(DMA_MAP_BENCHMARK): prepare FORCE
+	$(CC) $(CFLAGS) $(DMA_MAP_BENCHMARK).c -o $@
+
+When a user specifies linker flags in USERLDFLAGS (such as --sysroot, -L,
+-fuse-ld, or -static) that scripts/cc-can-link.sh validated for
+CONFIG_CC_CAN_LINK, building tools/dma via make tools_build will drop those
+flags and can fail to link or produce an improperly linked binary.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102021253.2545=
-235-1-sashal@kernel.org?part=3D1
-
+235-1-sashal@kernel.org?part=3D2
