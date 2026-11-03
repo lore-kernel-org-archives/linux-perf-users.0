@@ -1,67 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793670778;
-	b=Do0mKDiGzG4jDgmQbwJ4KCi59IBjb9Y97OTxGs8O1YvPlmEDdcEs1kfnBnLdOAUrQ3tT
-	 LWhE50eQEOUP4ujLsQhrwhIXwYelBWfsdWhnCV+rySZQWp3dt8LvS2CThn8i21xpvUHn2
-	 lM26swSBPrYn8hgJUsEb+dGsKR/jm4n2qT3BzjpTc962bBU9+9Qm4YdQ3TE5QjqTmN6MQ
-	 Y7jN57Wew5JnzunF2/JHlLjHMRc8omPIWkfA3/62/5lNMQiX0M4Bw1OZ2AEFwhupiK9bU
-	 IE9TV1PmeOgdC+HeWUkZ4WRpGQ7i7ijfhKDNUhQkkzbb1ghMZUZogsMqpvNUgFpPG7g==
+	t=1793672001;
+	b=yILzgRRdbDROCl+q6AP6irkfqkwh4iUk7FDiYXFxiroujIjBuLlNUjGSvH7Vsaf8HCBS
+	 mZqz9wBJmNflkIwU4bLYs77lPoRJvIsNo/vbcumiu1Xw40UhcEsuvhcxDZjrsXPsGn2rd
+	 magA2QrrzmNoXkwyQNc1dZSaQgwBbLj8NesyiQnvQ4sNeJx/OOa2A76IqDnNIiofGtWhL
+	 NheFTdGO0p26q8xwpe+u8+8xlr2ePd8lsGDdOMHbXuzt4bCPSPjgizXgydv2Zf9Rsb4fB
+	 GS5UlvmE1Skagxd5i3WJfu+QbkV3yEg23X+4yBCPm6DGpOHxaUh5R84xRKFg56UBTfg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793670778;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=Jk9ja6pFw9H/pCHElM4lvoPR4YQqjz4WLvOdv5tiqaQ=;
-	b=kswHAJLBMJuqT3V9jxzzD25nPFwkVzE0Uyb1PS7AP6awc9Tn2UoMF0mGfHi9SBbA2EFs
-	 FwR1LiVAboJM+MezCR17RQ+MK81tk6PD+n7ZbaMPtlOdcnu6k+ij5cSuwTzTlw5YyFOqb
-	 Ysffgt7C96K6aLv2m24C7MJPjYRJdL63XXrfURMhTGyThZKodvDjaN2kIsoQ3RztdBu/Z
-	 eWlHZIdPJEVqTNjb0pXjctgJg2Os2ZVBAlTClKEBbOenZr9P91C1jhqN6zuD9GAnUKBDc
-	 50m/IUKbhEoHz7F5+03Vg6ASZGgNSqwmnPmiTsnp2Cm1IWD04IPixHuXPwgvM6GEyrQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793672001;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=ZtSdhFTuTjw24aSCWIGnCCfG0xvtx+UD26snZ+mZ+TE=;
+	b=YdU9oGUiVtwm8AseQ2ZKZ4L1mKc2CCWfxHnh3huRjT/ZSZa/wMxNbsy/wnMJaBoYP4/S
+	 bmZPdQPvYIwxxhD7CYFKYitfYJDBvoCXMP0/IldHootP+KCcDh+zCJ2pjWyOgxXOub7Tx
+	 GDXKZw/Vs9ECaObyxJVmrc625EnW2/DuR72NHciOOZTqvYfAzigHc4wlJUmk5tgshAvjF
+	 hCC7TLAdLy2HCaLV8bpw/txQTuAAtfdSR78fOgKn+itWI1zfxLnpXDaVWsvP5NbGkq5qK
+	 VorTCRuqka37Q2a8BXYJuzaV3FUHEDz3no4/sVJvBraO6sS/fN7qhBi1o6/lcsNfggQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ieZ8mjgl;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mIzBfQFk;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BAA606A338;
-	Tue,  3 Nov 2026 01:52:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F62606A324
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 02:13:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ieZ8mjgl
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 716F11F00A1B;
-	Tue,  3 Nov 2026 01:52:56 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mIzBfQFk
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 108FA1F000C1;
+	Tue,  3 Nov 2026 02:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793670778;
-	bh=Jk9ja6pFw9H/pCHElM4lvoPR4YQqjz4WLvOdv5tiqaQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ieZ8mjgl1kJ+qhIlackYcDn4YQPJ5AK/nrP4yNlVqj9wwEds1WlViDZYJW3sKEVSH
-	 R+gKDwezVYLPogxqnSxLJhXKZD6f+x5NKoBMFDY0tRd1w5/eO11S3q7zQCSLp3A8/z
-	 qVGvYHfGyGRuC6VV+QTB+BzcaCTn36WUGFVnWWIgV6TnL7bIU4DJn8KDYnRSL06Vsu
-	 qgFW/thxcj/Uw4okCYsp1iNEITB3SLsZLvkdMbC/No+Piem8JQQ0dvCH1/JdJIwnkd
-	 8Hp4KDuT0un97+Lj4VomPbr+CUSx8oCSZMEder7nI9OewFN9IvLH6d6Opyh8MEFDMP
-	 /sKvQ897kmZ9g==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Chuck Wolber <chuck@wolber.net>,
-	Ian Rogers <irogers@google.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Marco Elver <elver@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>
-Subject: [PATCH v2 07/20] perf: Always inline the empty perf_lopwr_cb() stub
-Date: Mon,  2 Nov 2026 20:52:25 -0500
-Message-ID: <20261103015238.3780910-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261103015238.3780910-1-sashal@kernel.org>
-References: <20261103015238.3780910-1-sashal@kernel.org>
+	s=k20260515; t=1793672001;
+	bh=ZtSdhFTuTjw24aSCWIGnCCfG0xvtx+UD26snZ+mZ+TE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=mIzBfQFkhdqXrExMZr8QORTKhSU4nrVhMcSKiKiyo3kalWqK0PPHEjFabOYATIOqD
+	 TEA+FzMHaNWFOu+WwUDTlHRL4M0gjFb/La3TthbPH/YR4sE6q8EmePr02HcNrew1EL
+	 Zhesgnce4jFyLLqlactmdEjmHoczTfmUMRR6tblvGgB/xnjCjkApxri84bAKByjeZA
+	 d3ozyyA27tAW7yvGC6ENGj3g+uwbhjMXwtx/7/07Pb45gcaN9G5EBjPMgcW08ofy3i
+	 qE8IpaIuk/IOaVW8gcbGA8+YE94w83UAeOMGSUvqXuRP9+aNqywQDsQOUVrdXe/2+k
+	 FhwmDOE/3dNeA==
+Message-ID: <sashiko-outbox-194449@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 1/7] kbuild: factor the userspace ABI flags out into
+ KBUILD_USERABI
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Sasha Levin" <sashal@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261102021253.2545235-2-sashal@kernel.org>
+References: <20261102021253.2545235-1-sashal@kernel.org>
+ <20261102021253.2545235-2-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 03 Nov 2026 02:13:20 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -70,36 +60,21 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-perf_lopwr_cb() is called from the noinstr acpi_idle_do_entry(). The
-x86 implementation is __always_inline, but the empty fallback is a
-plain static inline function, which the compiler won't inline into
-noinstr code when building with code coverage instrumentation:
+> KBUILD_USERCFLAGS and KBUILD_USERLDFLAGS pick up the flags that select
+> the target ABI for userspace programs: --target=3D under clang, -m32/-m64,
+> or CONFIG_ARCH_USERFLAGS. Collect those in KBUILD_USERABI and export it,
+> so programs built outside of kbuild's userprogs can be compiled for the
+> same ABI without also inheriting kbuild's warning and language flags.
+>=20
+> No functional change: KBUILD_USERCFLAGS and KBUILD_USERLDFLAGS keep the
+> same value.
+>=20
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-  vmlinux.o: warning: objtool: acpi_idle_do_entry+0x4: call to perf_lopwr_cb() leaves .noinstr.text section
+Sashiko has reviewed this patch and found no issues.
 
-Make the stub __always_inline as well.
-
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/linux/perf_event.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index eb3f7bab498ca..dcda92526b78c 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -2137,7 +2137,7 @@ typedef int (perf_snapshot_branch_stack_t)(struct perf_branch_entry *entries,
- DECLARE_STATIC_CALL(perf_snapshot_branch_stack, perf_snapshot_branch_stack_t);
- 
- #ifndef PERF_NEEDS_LOPWR_CB
--static inline void perf_lopwr_cb(bool mode)
-+static __always_inline void perf_lopwr_cb(bool mode)
- {
- }
- #endif
--- 
-2.53.0
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102021253.2545=
+235-1-sashal@kernel.org?part=3D1
 
