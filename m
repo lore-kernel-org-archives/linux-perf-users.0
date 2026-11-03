@@ -1,73 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.71
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793749576;
-	b=ep0dxWNDG2wwqV2q1J8MW50JveVwVHRzjShv8Qg6ElHp52grgOLuwDrciPNuW6eDWEEz
-	 Iti4p0ab6xgcmP87eXYuNm98qxuf5Je1PqdSPaRsGs06WE4r02RBj4nG7K8+egCkeZl/k
-	 NbakbjIUNas2xb7TD61T5ZxqenfXDUI7PFqbVlFUZ+mIlDaq6BBtjlOprBErA9nwL/EpH
-	 XvioJhBca0SOFewJZNH3Fmcwo7gYPoLAMaAFc/+vnS19Gn16SDaPG/JhvXrfLLk0jGZ+h
-	 q39kpHJP3h3xKIhfsRqXtoOHqVGhFdW6uFCxi7wveQtlVKW1fXrBmFegW7kMQBlL/cA==
+	t=1793749579;
+	b=LLZfRJ1v0mChowqp4sSBm0Lkh1BnJwNe02+BaiRxY6ZAOtJQ3hrsKRTIMrYeeaRcl2mS
+	 8CkM6ockulwmUICHFKKWbF/wsdz/9sghRtOac+g90NE/2yR9wZskgy3mUReTuKIT+7BVG
+	 lEgKvSLd1crj4FYO7mFJIBu5KK98w11qf6hCsx88MZZ8kUOrlWq6RMhBlzzooZI1KUF+8
+	 YQKD6CLVUGQClSflL+Yu5XK0s9rdQlYHCbRbNZ8V3hEke0QYOrBUf0aAy1aivM3VDGPhz
+	 iEvzdPKQMqGMNLvDYGS5jggL0LQ7LrYI2QxDXGzG3Lz/5hO5fSploTuvjNVIkoe8PlA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793749576;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793749579;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Received:Date:In-Reply-To:Mime-Version:
 	 References:X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=x0S3vEvOp+7SdbxIvR6tN/MJ2TGIuQLHYwcU4rWNdGE=;
-	b=Uxnmwn/8ZYre7YCvXXFWXS0QQI8/o9AjJlbf2M0YMPPkpKJME49Gcty7JS+sdEYdHekl
-	 F3Ne50tLNOc34vEjjlJspLkNCr7rkpuC4/ubftCE/Iwuf1MKkAriz4UJc7K+Nxe1GG3mg
-	 QejAhJ1VSP0XMz4t0wzdQToS/U7jS0ZhzcKemF6/ohTPT+DRX/fQaK2S8NhwKcvQHrDHE
-	 qkIJ/qEYcbBj7CJX/CEe19ES3MgUwPKwUXg8AkGtLx0wIY/PrKcGqTwaSLivZMmAVR/93
-	 B/lby4hbgPqA/VkE6xCiHanXw64XoXLSJ0E41jN1ItGXyF0iSVgyNChV38aeXrmGq5w==
+	bh=90Ulmni/ZtUVR/D26nwZSwYtw/VrVoB150k+Z34XCvc=;
+	b=vnIwRFiQLssKtULCg0IXiLvaunPTnt54E3NtyworyFiR5zRBG1qBhwqox5IuHzYpffos
+	 EdoD0p0y1bir9hqzJny5u+kcs6XnMcgm07PagcuDWITNNcLRbGis6BGVXmrhDZVC4oOGA
+	 uWRluu7koMacNNSLBw+5H6NvpzsLaBdTwij5XGDQ5G4uEKuzaztvD4Q1D+rhN7r3L9bsU
+	 l0MKFnbtIPmGfL10gjyuwpi4NDZYIzgQrQRapSHr9Hew5jOMg+jP5rVVLBepf4kltr3sV
+	 kgd9j2tTTlPJ57Pj/FcOhuoAlIIZlDDl6DKhnNEenO+wH9WBzMmfSG9PbubDHbZ43ZA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="S/m3q+yu";
-	arc=none smtp.remote-ip=74.125.82.199
-Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=fQDYyqUT;
+	arc=none smtp.remote-ip=74.125.82.71
+Received: from mail-dl1-f71.google.com (mail-dl1-f71.google.com [74.125.82.71])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F479606D802
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 23:46:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1F479606D802
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1686083603
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 23:46:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AD1686083603
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=S/m3q+yu
-Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-351788121cfso433605eec.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2026 15:46:15 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=fQDYyqUT
+Received: by mail-dl1-f71.google.com with SMTP id a92af1059eb24-1383723dfddso300885c88.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2026 15:46:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793749575; x=1794354375; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1793749578; x=1794354378; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=x0S3vEvOp+7SdbxIvR6tN/MJ2TGIuQLHYwcU4rWNdGE=;
-        b=S/m3q+yudoMqo4A5ijv0bbf6wDGpV0cYt6puVOGmYHsyNf7H/AOqOwKOFqGUN0MezH
-         RfAEZJ5MDHCHwDHt5WNUaGhMcZFmvhvOXbTZjD8+4YRJyJvmi70f/Nv3uizQRFvXk1eN
-         YTgxwCPVpCWKNM+cIsTVS8InWnX0tFNFBroqKp9nYu3C+wUV/qBQjpPC5QW4KVt/Ayi/
-         8rbm+7xMjE7jE+7Mf5q2TNHE8rXRrGnUuyTgYm/yc1o/txu9SxA6TsWgrckWCwQb+52Z
-         m20YJZZpHpoB2JRyNN/EfQ7spjRsL7lTtLKklSkzHIwQIE1siCikXi15NkM9ni560riy
-         v+MA==
+        bh=90Ulmni/ZtUVR/D26nwZSwYtw/VrVoB150k+Z34XCvc=;
+        b=fQDYyqUT6kvU0totc9BlyS+qdjENNBGjR1VpQl6hFeaq2sDXGtVbsqBoF0s5KoFeku
+         rhLeopPlpBaYweKsDTZtxuAFA4fUb0dkWEpwnwdZkihSkbzFPxSv3qLB8l4mkDco7fDB
+         o31MvBNrJLDtdpm7pKdnFFaDLxMZH7hwjHIhKnabnyeVEqARkdXndfgZVrmvVpksRpOS
+         Ft1w1koCxxWkBLbsv5CIE0vjqq1vkpfskx33WpOQCmhSNeiEvmZDAwCnG4A7pS8jsBRU
+         SjZDJvACiZVDq8fgBRP3+CFcn2ryktHXg1klbqlqG2AqOFyCLuCrNrwmWk3chRNcFykn
+         ew+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793749575; x=1794354375;
+        d=1e100.net; s=20260707; t=1793749578; x=1794354378;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=x0S3vEvOp+7SdbxIvR6tN/MJ2TGIuQLHYwcU4rWNdGE=;
-        b=inw/Bm/M0WcNl+SzPhYhOFcYJOIqZ1r4djmueC8YCspBzEWeVa+6l+CKhqbgoWBQhe
-         OwjAiY2oBn8o/LJcSeVp/Y1wgF4d1uGQL2aKLifQlSAiGIvOrVaadtaEoRi3GUK8vK89
-         4aV9UbkcHdauItlhlxxbzeACVlXH+5YoCpHVPCP+gmoZVhyWmLMn/zZFcA3cy55b1NZW
-         pxqZ40TXeUAgKhUKBjRjC9+kb5+pA+CB6R+BOd+bolvzMGxDQenP7jDMczShmmikKDwo
-         m8/w1SeB4InjRhka4P/6kaz2k0XStzz2KUOa8qe720s145pdQwXEY+e97Wjvu3wR4feK
-         oBbw==
-X-Gm-Message-State: APuU4Z/4pfW1JFzOqCgWDYcd20VeJZeZzmt/AI9pNi6eG/u9JVyUNBoj
-	IpycVbinBs7M81gEyn3pAuTmZVo8cFIQcjEr0j7jq8/wuzzabQSVtNEMLVKoaQGsMk6Od8vR4px
-	i6Mg93m1jfnvLhM38FAKU91H7rsar8ttLiB0LCnprOd5x4U0RbR723xNejtvrhuqpPvQIxAOqKP
-	jR3l6Nbn/2tmbxP1tf4pGXzMRqpH+jSC/TVa1VP0sAh4XlgAxthos40cU=
-X-Received: from dlai26.prod.google.com ([2002:a05:701b:271a:b0:199:7dc2:7958])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:5f0b:b0:1ab:de8b:5f0f
- with SMTP id a92af1059eb24-1ac5cb18717mr20136030c88.40.1793749574559; Tue, 03
- Nov 2026 15:46:14 -0800 (PST)
-Date: Tue,  3 Nov 2026 15:44:41 -0800
+        bh=90Ulmni/ZtUVR/D26nwZSwYtw/VrVoB150k+Z34XCvc=;
+        b=ioqkEpRvMfQGppSm7Fsqjhklh/GAf8TZ6MUpyAmQe+D59HIxzX4RbZ6tFOr7J3cizD
+         bbypf0Q0xVrsG2lXxpnpLlIj1bIZmz0bGj1G+MEIQHS0Fuo+q7lQFu5gl84kU0dDf1OW
+         VWk7wrPSxcGq6uh5yu23N6d0zR7zj1xtDS4jWLyBd2WSaGZaUGFi6S3ba1w2UE9dXV1R
+         TPHVKfHlx500WTmabJx1NkyqM1O+V4D1pAGVDYmMu+AlYjkbNB4PYZ8cj6bzG0RnHIEE
+         m1M2qCgHBTWjqY1KlNj5SIhi28kWpDcEDBOeNQBJNi2o2o25pxREUmCvT/WzYTm3DXCD
+         c47Q==
+X-Gm-Message-State: APuU4Z/U9QeG7BR9mQtN4myxes1mtzMN3zdadsSPhC8hh9LpAXpEELWl
+	CZmrmuP0XRCU3B2GmeaY/MIiU2wQh7UteRp2Qk7vpWsV0bLNLGaX+yvMIpJhd3HEY1nzPBjgg1W
+	Gdu32ASyM0U+F6bJBtQE+gP1mUvGlM1nSaRpavU0+sqGzc+EnpNLjbnsKKhwBcvj4HocFZLE1mC
+	H1s88r+r5JFWDMthDZlQS6MzuLdLOi4dgqwIQhJaNzKhQgCa697NVjdig=
+X-Received: from dlbvv4.prod.google.com ([2002:a05:7022:5f04:b0:19d:594d:1e8b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:29b:b0:151:94a6:6f5f
+ with SMTP id a92af1059eb24-1ac5c3699aamr20517954c88.10.1793749577431; Tue, 03
+ Nov 2026 15:46:17 -0800 (PST)
+Date: Tue,  3 Nov 2026 15:44:42 -0800
 In-Reply-To: <20261103234502.1008382-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -80,8 +80,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261103234502.1008382-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.385.gac671c819a-goog
-Message-ID: <20261103234502.1008382-26-irogers@google.com>
-Subject: [PATCH v1 25/41] perf test: Add stat record metrics test
+Message-ID: <20261103234502.1008382-27-irogers@google.com>
+Subject: [PATCH v1 26/41] perf pmus: Expose duplicate uncore PMU scanning helpers
 From: Ian Rogers <irogers@google.com>
 To: linux-perf-users@vger.kernel.org, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
@@ -96,150 +96,98 @@ Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
 	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Test that metrics measured by perf stat record are displayed by perf
-stat report and perf script, and that events recorded with -e only
-display matching JSON metrics in perf stat report and perf script when
---all-metrics, stat.all-metrics=true, or -M is used.
+Export perf_pmus__scan_skip_duplicates() and add
+perf_pmu__num_duplicates() to count numbered PMU instances sharing a
+common prefix (such as uncore_imc_0..uncore_imc_7) so subcommands like
+'perf sysinfo' can collapse duplicate uncore PMUs by default and report
+their instance count.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/stat.sh | 116 +++++++++++++++++++++++++++++++++
- 1 file changed, 116 insertions(+)
+ tools/perf/util/pmus.c | 25 ++++++++++++++++++++++++-
+ tools/perf/util/pmus.h | 19 +++++++++++++++++++
+ 2 files changed, 43 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
-index ac9e031831da..bc7d29ec7b0f 100755
---- a/tools/perf/tests/shell/stat.sh
-+++ b/tools/perf/tests/shell/stat.sh
-@@ -92,6 +92,121 @@ test_stat_record_script() {
-   echo "stat record and script test [Success]"
+diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+index 908959abbd3d..aa088c9c9aec 100644
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -484,7 +484,7 @@ struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmus *pmus,
+ 	return NULL;
  }
  
-+test_stat_record_metrics() {
-+  echo "stat record metrics test"
-+  if ! perf stat -M insn_per_cycle true 2>&1 | grep -E -q "[0-9]+.*[[:space:]]+insn_per_cycle"
-+  then
-+    echo "stat record metrics test [Skipped insn_per_cycle metric unsupported]"
-+    return
-+  fi
-+  stat_data=$(mktemp /tmp/perf-stat-test-data.XXXXX)
-+  if ! perf stat record -o "${stat_data}" -M insn_per_cycle true > /dev/null 2>&1
-+  then
-+    echo "stat record metrics test [Failed record]"
-+    rm -f "${stat_data}"
-+    err=1
-+    return
-+  fi
-+  if ! perf stat report -i "${stat_data}" 2>&1 | grep -q "insn_per_cycle"
-+  then
-+    echo "stat record metrics test [Failed missing metric in perf stat report]"
-+    rm -f "${stat_data}"
-+    err=1
-+    return
-+  fi
-+  if ! perf script -i "${stat_data}" 2>&1 | grep -E -q "metric:.*insn_per_cycle"
-+  then
-+    echo "stat record metrics test [Failed missing metric in perf script]"
-+    rm -f "${stat_data}"
-+    err=1
-+    return
-+  fi
-+  if ! perf stat record -o "${stat_data}" -e instructions,cycles true > /dev/null 2>&1
-+  then
-+    echo "stat record metrics test [Failed record with events]"
-+    rm -f "${stat_data}"
-+    err=1
-+    return
-+  fi
-+  if perf stat report -i "${stat_data}" 2>&1 | grep -q "insn_per_cycle"
-+  then
-+    echo "stat record metrics test [Failed unexpected metric in perf stat report]"
-+    rm -f "${stat_data}"
-+    err=1
-+    return
-+  fi
-+  if ! perf stat report --all-metrics -i "${stat_data}" 2>&1 | grep -q "insn_per_cycle"
-+  then
-+    echo "stat record metrics test [Failed missing metric in perf stat report --all-metrics]"
-+    rm -f "${stat_data}"
-+    err=1
-+    return
-+  fi
-+  if perf script -i "${stat_data}" 2>&1 | grep -E -q "metric:.*insn_per_cycle"
-+  then
-+    echo "stat record metrics test [Failed unexpected metric in perf script]"
-+    rm -f "${stat_data}"
-+    err=1
-+    return
-+  fi
-+  if ! perf script --all-metrics -i "${stat_data}" 2>&1 | grep -E -q "metric:.*insn_per_cycle"
-+  then
-+    echo "stat record metrics test [Failed missing metric in perf script --all-metrics]"
-+    rm -f "${stat_data}"
-+    err=1
-+    return
-+  fi
-+  stat_config=$(mktemp /tmp/perf-stat-test-config.XXXXX)
-+  printf "[stat]\nall-metrics = true\n" > "${stat_config}"
-+  if ! PERF_CONFIG="${stat_config}" perf stat report -i "${stat_data}" 2>&1 | \
-+    grep -q "insn_per_cycle"
-+  then
-+    echo "stat record metrics test [Failed stat report stat.all-metrics=true]"
-+    rm -f "${stat_data}" "${stat_config}"
-+    err=1
-+    return
-+  fi
-+  if ! PERF_CONFIG="${stat_config}" perf script -i "${stat_data}" 2>&1 | \
-+    grep -E -q "metric:.*insn_per_cycle"
-+  then
-+    echo "stat record metrics test [Failed perf script stat.all-metrics=true]"
-+    rm -f "${stat_data}" "${stat_config}"
-+    err=1
-+    return
-+  fi
-+  rm -f "${stat_config}"
-+  if ! perf stat report -M insn_per_cycle -i "${stat_data}" 2>&1 | grep -q "insn_per_cycle"
-+  then
-+    echo "stat record metrics test [Failed missing metric in perf stat report -M insn_per_cycle]"
-+    rm -f "${stat_data}"
-+    err=1
-+    return
-+  fi
-+  if ! perf stat record -o "${stat_data}" true > /dev/null 2>&1
-+  then
-+    echo "stat record metrics test [Failed default record]"
-+    rm -f "${stat_data}"
-+    err=1
-+    return
-+  fi
-+  if ! perf stat report -i "${stat_data}" 2>&1 | grep -q "insn_per_cycle"
-+  then
-+    echo "stat record metrics test [Failed missing default metric in perf stat report]"
-+    rm -f "${stat_data}"
-+    err=1
-+    return
-+  fi
-+  if ! perf script -i "${stat_data}" 2>&1 | grep -E -q "metric:.*insn_per_cycle"
-+  then
-+    echo "stat record metrics test [Failed missing default metric in perf script]"
-+    rm -f "${stat_data}"
-+    err=1
-+    return
-+  fi
-+  rm -f "${stat_data}"
-+  echo "stat record metrics test [Success]"
+-static struct perf_pmu *
++struct perf_pmu *
+ perf_pmus__scan_skip_duplicates(struct perf_pmus *pmus, struct perf_pmu *pmu)
+ {
+ 	bool use_core_pmus = !pmu || pmu->is_core;
+@@ -522,6 +522,29 @@ perf_pmus__scan_skip_duplicates(struct perf_pmus *pmus, struct perf_pmu *pmu)
+ 	return NULL;
+ }
+ 
++size_t perf_pmu__num_duplicates(const struct perf_pmu *pmu)
++{
++	const struct list_head *head;
++	const struct perf_pmu *pos = pmu;
++	size_t base_len;
++	size_t count = 1;
++
++	if (!pmu || !pmu->pmus)
++		return 1;
++
++	head = pmu->is_core ? &pmu->pmus->core_pmus : &pmu->pmus->other_pmus;
++	base_len = pmu_name_len_no_suffix(pmu->name ?: "");
++	list_for_each_entry_continue(pos, head, list) {
++		size_t pos_len = pmu_name_len_no_suffix(pos->name ?: "");
++
++		if (pos_len != base_len ||
++		    strncmp(pmu->name ?: "", pos->name ?: "", base_len))
++			break;
++		count++;
++	}
++	return count;
 +}
 +
- test_stat_repeat_weak_groups() {
-   echo "stat repeat weak groups test"
-   if ! perf stat -e '{cycles,cycles,cycles,cycles,cycles,cycles,cycles,cycles,cycles,cycles}' \
-@@ -601,6 +716,7 @@ test_null_stat
- test_offline_cpu_stat
- test_stat_record_report
- test_stat_record_script
-+test_stat_record_metrics
- test_stat_repeat_weak_groups
- test_topdown_groups
- test_topdown_weak_groups
+ struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmus *pmus,
+ 					       struct perf_pmu *pmu, const char *compat)
+ {
+diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
+index 2b784cf648f3..9790be2d60a5 100644
+--- a/tools/perf/util/pmus.h
++++ b/tools/perf/util/pmus.h
+@@ -134,6 +134,24 @@ struct perf_pmu *perf_pmus__scan(struct perf_pmus *pmus, struct perf_pmu *pmu);
+  */
+ struct perf_pmu *perf_pmus__scan_core(struct perf_pmus *pmus, struct perf_pmu *pmu);
+ 
++/**
++ * perf_pmus__scan_skip_duplicates() - Iterate over PMUs in @pmus, skipping
++ *                                     numbered duplicate instances.
++ * @pmus: The PMU collection to scan.
++ * @pmu: Previous PMU returned, or NULL to start from the first PMU.
++ *
++ * Return: Next distinct prefix struct perf_pmu, or NULL when done.
++ */
++struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmus *pmus, struct perf_pmu *pmu);
++
++/**
++ * perf_pmu__num_duplicates() - Count consecutive PMUs sharing @pmu's prefix.
++ * @pmu: Representative PMU returned by perf_pmus__scan_skip_duplicates().
++ *
++ * Return: Number of PMU instances (including @pmu) sharing its base name.
++ */
++size_t perf_pmu__num_duplicates(const struct perf_pmu *pmu);
++
+ /**
+  * perf_pmus__scan_for_event() - Iterate over PMUs in @pmus that have @event.
+  * @pmus: The PMU collection to scan.
+@@ -260,6 +278,7 @@ struct perf_pmu *perf_pmus__add_test_hwmon_pmu(struct perf_pmus *pmus,
+  * Return: Pointer to the fake struct perf_pmu.
+  */
+ struct perf_pmu *perf_pmus__fake_pmu(void);
++
+ /**
+  * perf_pmus__find_core_pmu() - Return the first core PMU in @pmus.
+  * @pmus: The PMU collection to search.
 -- 
 2.56.0.385.gac671c819a-goog
 
