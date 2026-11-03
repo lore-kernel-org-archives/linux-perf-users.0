@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793675480;
-	b=opn/mXcD3X3D3CiBWDvpJfy2LZ29JwoQdOk1YnpXzyHM0e9+SDKeMv/n3+qIMRwGXH2Y
-	 /DiaGdvaxqIVxJA0RtJnBHxHXKXejdz6XC1EstyuixaQ8kpYCBoPiQO3LntLPOhl6DWU3
-	 VWD+KY5QlaLDdzTsFtMIrAb/Y3GS3pM2IhyiN+BQ+dNW+oShcByv3YPGyFHizbYF8DTJC
-	 WS2Ju/lF1rfzTJ0ba+xkznlMhc3hlHgPG6XxJ55sHEMW2zT5bmHBwOre6gvBjWS47qjbE
-	 DqOUDuAWNN9p2M8GkzVMbvL+MPHSe+hnbqy9NaewoHfNcxcmlCAYNXcQjvFx5wdT8Ng==
+	t=1793676363;
+	b=MmT5+tJpWiZFQSyX5gq0hoYpmINOtsK5bxZkB1I+wsTZsBe6Aeuyqrnn8k7KbcrtZN64
+	 ejT5OX7QF7nnAZMrvECIIt8JbMhJmrzQEEOLaXftsKyYIcFh3wyW0xjKJdpFfJd7pKpnu
+	 Mk3fOCQLGnmt+bGDVbiwPvCNFOKgjfPWFE5zJVt4+dyhS7ReNARnH18rGTHyIFMD/vLQm
+	 JZtB+b3VcrZ4/QF+nlttBcjspr9WPIliNGAzAlCeXntVGWypZg7rrwQraZyXELfbi7CDj
+	 kBj5VBu/nS2UiMW9iPylDcFAcWJGQ0gjLAjYVexsUFR2u8dJ5wB61B5nU0+zLhEXAZg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793675480;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793676363;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=w2QS3z+K3SmrbHmnEcY34OBDVvwG1vgT1wyZgPGH6eg=;
-	b=CGlDFuZEAdF5mNv39eSZtXrGlqRby1dneMPzruwvyBMMQz6ffio0NzxbAx1NpY1BZEaV
-	 4rw5PXUo0WV1+Yy05wsqOoklGKR+Wv9lDAXia0V7ZWT27z37es0NgGwMcchz820j1Edf2
-	 HdEj7i22LL7nu3QKl0KdRaxqzx+qBj+HuJD19ZAhNdho/8ipS96H4xWt+XR1J3QGCRpnD
-	 u+tg5BM0YK8NemBbXSIikoNkiURIH2sMB6ab0uK57TR7F8pMYe08xNDMrr4JijB3x1uml
-	 iXNrruBYndCNJhb+s3vOE8ALb0U8FY6wty7Ma7MbCKPmP707V6bH8pyMxTQieEyINvQ==
+	bh=4uSPJ2+TlTP5w8f8wQNSzFeQ6nkvhIU5NxcZXvOyMkU=;
+	b=5oKE2g6OTKyUnkxCnwkcNnE/QfMa+RA018G0uqmLbLfKglvE5Gj61YuBZXPNgMpdz4Gc
+	 Dq7002rBrqpJChCtqh2w6CtKZ/ZTIjVMaC0yh9O+aAKnIKGUiztpipEPg64vz6l0RIHHw
+	 WmBBoRsYsXXMeRawMia7mxtFTWlk2gSunFvayiLB4aWVhcTlXlhXWB9pcR7/YiI7ryJbe
+	 mS3FiXRjf7J7s6gS7w26lu0oMB//Qepg9LhPwxNZc+V+32rkUHq+gPo/cj8HO7ucaPPv6
+	 2uegyGy/IJoZmrEBSWADSCE5HqYGK4tP684PaD5MbCo8MOpeug/ObkNN4Ogjgywo9pA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cYtJt1QQ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TudFlD92;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C4F606A324
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 03:11:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF78606A324
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 03:26:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cYtJt1QQ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 738DE1F000C1;
-	Tue,  3 Nov 2026 03:11:19 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TudFlD92
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48A261F000C1;
+	Tue,  3 Nov 2026 03:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793675479;
-	bh=w2QS3z+K3SmrbHmnEcY34OBDVvwG1vgT1wyZgPGH6eg=;
+	s=k20260515; t=1793676362;
+	bh=4uSPJ2+TlTP5w8f8wQNSzFeQ6nkvhIU5NxcZXvOyMkU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=cYtJt1QQL/74uiV5hAWIWJv2pf3uEfyp/43Lj6sAlw9X1DA5R+MyDGAFcfCDm1EQQ
-	 iFp2K8c1Wz5CnJns7KXt7RLpFtBWv4LEYZUSxtlsw9u+znIgy2vDr2Th3TShxAm4sL
-	 XPyXSEExjC0FbpYG8P3jQym4Gdyt73ekDLHCIepxxSr98AOMaeviMf+PGCP4LKaWVD
-	 Q46XCqP5oIW+uvX9V3jdd53Xz0ZZ9rOuWrX0vcxZv9CI12XEvRhYwpLmZ8lH9ncokG
-	 6k43h+t0jiAhPOjWHI154y/Bfy6oK2XTZXQiykAu50fP/DiALRDdwVhMmhKT6e1NQx
-	 vIYz9x/CsyOww==
-Message-ID: <sashiko-outbox-194495@kernel.org>
+	b=TudFlD92Uy9R6+0JA9ers743fY0Ggui0Tk4/FPAp9CHC/ErSyokv4hztaWs3OgMsE
+	 QFENEsnnpeGOH2MBaRtpCidFiTUpz22Q7Jz6J0GuGk9tobKFytc+1nuzBK4PEZ5FBn
+	 Cp72OcNf4hdquhHBChzSFERRDO5VoHNbTyYRgrhqXCqph6ZhlquYjq6QIWUZNBoLT2
+	 G7bq/g3qmxAsxQ0AjDMQgfVj0j8QJcsl9PQ/A1ifrj8/4Xm9beCcC0GRPdRE8oHvaY
+	 YRrkozRtIUVgjedxd2qGUcfAEt+2Xb31QbvC9GxBM6JgupYdyMpJtn4rLrXiZmaaOZ
+	 KrkqUnAxtAZug==
+Message-ID: <sashiko-outbox-194514@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 7/7] alpha/perf: optionally randomize the ProfileMe
- sampling interval
+Subject: Re: [PATCH v4 5/7] alpha/perf: implement ProfileMe sampling
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Matt Turner" <mattst88@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261102-alpha-profileme-v4-7-61e00f5e1da8@gmail.com>
+In-Reply-To: <20261102-alpha-profileme-v4-5-61e00f5e1da8@gmail.com>
 References: <20261102-alpha-profileme-v4-0-61e00f5e1da8@gmail.com>
- <20261102-alpha-profileme-v4-7-61e00f5e1da8@gmail.com>
+ <20261102-alpha-profileme-v4-5-61e00f5e1da8@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 03:11:19 +0000
+Date: Tue, 03 Nov 2026 03:26:01 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,28 +60,31 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> A fixed sampling interval can phase-lock with a loop whose length divides
-> it, so that the same few instructions are profiled over and over while
-> the rest of the loop is never seen. DCPI avoided this by randomizing the
-> interval.
+> The 21264 (EV67 and later) and 21364 have two performance counting modes,
+> and the driver only uses Aggregate mode. Its samples report the PC at
+> which the counter interrupt was taken, which lands a variable number of
+> instructions after the one that overflowed the counter. On an EV7 a
+> 16-instruction user loop shows up at only 4 PCs, anywhere from 15
+> instructions before to 12 after the real one.
 >=20
-> Add a randomize config bit that varies each interval by up to 1/16 of
-> the period in either direction. Only ProfileMe events accept it, since
-> Aggregate mode samples already land a variable distance from the
-> instruction that overflowed. Counts are unaffected, because prev_count
-> already records the value written to the counter. The jitter
-> is computed with mul_u64_u32_shr() and the sum saturates, so that a
-> period beyond 32 bits cannot overflow.
+> In ProfileMe mode, the instruction that overflows PCTR0 opens a window
+> during which PCTR1 counts, and when it closes PALcode delivers the
+> interrupt with that instruction's PC latched in PMPC.
 >=20
-> The jitter comes from a per-CPU prandom state rather than
-> get_random_u32_below(), which takes the batched entropy local lock and
-> triggers an invalid wait context report from lockdep in the PMI.
+> Select ProfileMe with the new profileme config bit or with precise_ip,
+> since PMPC has no skid. PCTR_CTL[SL0] selects the mode for both
+> counters, so a ProfileMe event is scheduled alone and perf core
+> multiplexes it with other hardware events. The event type chooses the
+> [ ... ]
+> wrong path are sampled at their own PC, as ProfileMe defines them.
 >=20
+> Suggested-by: Magnus Lindholm <linmag7@gmail.com>
+> Assisted-by: Claude:claude-opus-5-5
 > Signed-off-by: Matt Turner <mattst88@gmail.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261102-alpha-prof=
-ileme-v4-0-61e00f5e1da8@gmail.com?part=3D7
+ileme-v4-0-61e00f5e1da8@gmail.com?part=3D5
 
