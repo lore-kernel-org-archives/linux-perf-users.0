@@ -1,57 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.127.230.114
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793702610;
-	b=lmIMzHOHJclQqoG+pM85THC1jP/d4i2BU6gmTwnbooUg55w8eUj72DcN+2wIxVUW/cps
-	 QDKInXybnjx6wrgJ7AJLhpRSgOkR/vUIaYqy8nkqSSPSbcF6gEfrETvlT528jy6Nor6hl
-	 tQxuqXpmjBnXAeXGuOZvMeWWAZ8h+y1RnQiscDVCe18PY6+H2XW0tDbDWN6AguKp94Xwg
-	 maCS82QYla1xBrEcJ9rB2K7gcDl2LSm+/4qK3P8INzL7GM5GF83mFGpmyScvcTpOcOMPu
-	 ADOyEr1TG4OCKgKlifpbmWRWuBzO3YDMrJJSzADuad2arYYsrRUzMWdwDBSWBFZFKsA==
+	t=1793702846;
+	b=H9k5n7ro616oTBks2WowayPw1TmfG8GzkeR2X7FdIRCG2jyGwE5V7q3Au0IbRURB+M3O
+	 F+nn1iySgS0ogi0nf6R4j8+fxPNuFOv7hujpUhssyHRc5xa6DOC5oWI8zqPOx1EXvI8Pm
+	 1afEQwe97k0POcrx9AGN6d1pJD3jbO4aoifQMHWnk69nItoWotbulySKaLEI2+pdsQAZ1
+	 x9Y7rfzeaRW1YjqmWCWn3LKjfI7BZIwrTZhUpRAbxb6XA0VDe0U4lvCdZu3PeX07zaeZh
+	 zsHYxqs9LXkGc9vqXUdIXw1ckpyICac1IHZ9TeVfeXc2NUhMQK1IYDufRELdXflSUPA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793702610;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=in/2KUhYWCUNu5Apx1jARBLYcDYOWMaXTei8yAX4ta0=;
-	b=lTgwUMsDtVYbo03MPB1bBQ8d6WlsSVEY7IjSRs6Dcrlr/ApUetHyWkbFA/riNRfZwGKM
-	 8+hoDB84ODEreiD74m5XaCDA29YxRdnfpsy5kKfeTO9xBZZ+bl9mTdKPMFebFpCInpukM
-	 y1Nib+epqdUCWSIrMgfLLgm9iQyDBWgvhvJpBW8IoQJvK6QrVwfkYM0sBBpNhN3pwj/2Q
-	 RTnUSMTWtqmGZhM/WlWeNIIwbNr/N99Bgldu5ElP0GAfLe4lo7ygXvsW7qEtTWm8za+FH
-	 6/CjyjXjKglduw/VF2b+QmfDoC7ljvtcQEvRMvpH4pwcPGGXRe1oFYkBdy366o0kW1Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793702846;
+	h=DMARC-Filter:DKIM-Signature:Content-Type:To:Cc:Subject:
+	 X-Lms-Return-Path:From:Message-Id:Mime-Version:Date:X-Original-From:
+	 In-Reply-To:References:User-Agent:Content-Transfer-Encoding;
+	bh=4nQFqetGIINz3bS3DjkIqIu/AbSp7Br0OBHcXNCcZzg=;
+	b=aY9MVHwQ5GQfbo5hx9dtOXwzAmwe664coAhijOVyyGYifdY6gt1l7pKhWJkhLdlNE86y
+	 5EhGhILeUr4GMizLjStCfWdt1NRIv9jaYgoItyno2Yi9Nvxd3UKzCHawb169SXLBzi4Hu
+	 tgZASdZ+6gQfZQ0Ucb5Z6O6Z0rt55KGk7rmb9a33/jtAdnwsM/gqeWYaEBOKKH+m2p3jX
+	 hyO5cWVqslFiENksmL2CJ5B9us+JuQFNjQ7N0u3+VpCgyd5xqLzywAJynrVoQbDK6Pw0/
+	 FTHlE2xZCPlIEWRRNCaoMKQaZipUcyRCQ6vpwqej3DabzNDJskeWBNIc6MFnWUSGJjQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eybOUiWO;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=bytedance.com;
+	spf=pass smtp.mailfrom=bytedance.com;
+	dkim=pass header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=2212171451 header.b=ThXAPP9p;
+	arc=none smtp.remote-ip=209.127.230.114
+Received: from va-1-114.ptr.blmpb.com (va-1-114.ptr.blmpb.com [209.127.230.114])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED488606BA5A
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 10:43:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4924B606C5BE
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 10:47:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4924B606C5BE
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eybOUiWO
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 586FB1F000C1;
-	Tue,  3 Nov 2026 10:43:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793702609;
-	bh=in/2KUhYWCUNu5Apx1jARBLYcDYOWMaXTei8yAX4ta0=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=eybOUiWOjpXLyFFMP5S/6yaOVjNNDg7FwcnshlVaOV/iEQtcHca07BWu/OYGfb44P
-	 X3Ejk5iINasDsafNEgb0HxVIa9bIM2M2ea3rUP5qw92ZhwQdKZinWyVqC6RYK/RGk4
-	 kMUohXhI0sZfMrCaE1c8+I3L5bNqe6N51f0de5JeTlcHOgKlE1fKQAbeHayCqslfrp
-	 MbPQoiOsaz9uDt4fs/7OKicFbYKiBx76AMgV1kppo7FD7waWeGNTBD83juMSokdRe3
-	 OC5BhHTaqkAcxtrfB2dGTeE3GkWteSP+AjrNmtuQVRh9gUWoduXgp6x1IKXtQ/rRRO
-	 9xJbXPiHZCsRQ==
-Message-ID: <sashiko-outbox-195062@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 07/13] drivers/perf: apple_m1: Add Apple M4 Series
- Support
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Myria Sarvay" <myrialsarvay@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261103-m3-plus-pmu-events-v1-7-a8eb6c1139fe@gmail.com>
-References: <20261103-m3-plus-pmu-events-v1-0-a8eb6c1139fe@gmail.com>
- <20261103-m3-plus-pmu-events-v1-7-a8eb6c1139fe@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 10:43:28 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=2212171451 header.b=ThXAPP9p
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1793702840; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=4nQFqetGIINz3bS3DjkIqIu/AbSp7Br0OBHcXNCcZzg=;
+ b=ThXAPP9pIWIwUQGkgwvt48WcNWzT+o68PfSdlQwYd0bTMTlXkvScGPBVDDQhK56LfNGCYf
+ TVXy9oXDIIGS/5VLBCEUcB9nhZiYYeEeetGiowAekQ/oxgM/XbAGFPHPdrrs4y+UH64xnZ
+ DfH5OsGnG91wudPLyulYN6HdmQ6XlPilzAqkeySjxDA10n5GFSrCuGlO849IMmruKwyjRY
+ CkMy3K1Y4ibPyEx3wx3N23byO4Z/69BfS1rz3/6ja3mDl+vx5eYDCXHAwFzjv15l7iu+St
+ jB/gutUBM9kUQCSpqtFwNm3HC/eLLRtCjEmkBeJ4qfIIe8TAav78buE8J7MwmA==
+Content-Type: text/plain; charset=UTF-8
+To: <sashiko-reviews@lists.linux.dev>
+Cc: <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH] perf/riscv: Guard PMU counter indices and user access
+X-Lms-Return-Path: <lba+26ae9bbb6+9087df+vger.kernel.org+zhaogongyi@bytedance.com>
+From: "Zhao Gongyi" <zhaogongyi@bytedance.com>
+Message-Id: <c09a3399-15a2-4931-a858-b4e52c22367b@bytedance.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,23 +58,41 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+Mime-Version: 1.0
+Date: Tue, 3 Nov 2026 18:47:06 +0800
+X-Original-From: Zhao Gongyi <zhaogongyi@bytedance.com>
+In-Reply-To: <sashiko-outbox-194990@kernel.org>
+References: <20261103093709.81605-1-zhaogongyi@bytedance.com> <sashiko-outbox-194990@kernel.org>
+User-Agent: Mozilla Thunderbird
+Content-Transfer-Encoding: 7bit
 
-> From: Myria Sarvay <myrialsarvay@gmail.com>
->=20
-> Add support for the CPU PMU found in the various M4 SoCs. This PMU is
-> almost exactly the same as the M3 PMU, just with different event
-> encodings.
->=20
-> One notable difference, is the addition of the various ARM_* events,
-> which appear to implement the PMUv3 specific events that the arm PMU
-> specification provides. Hook them up with the various perf events so
-> that more can easily be counted on M4+ devices.
->=20
-> Signed-off-by: Myria Sarvay <myrialsarvay@gmail.com>
+Hi,
 
-Sashiko has reviewed this patch and found no issues.
+Thanks for the review.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103-m3-plus-pm=
-u-events-v1-0-a8eb6c1139fe@gmail.com?part=3D7
+On 11/3/26 5:57 PM, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [High] perf/riscv: zero counter count in pmu_sbi_get_ctrinfo() derefs ZERO_SIZE_PTR
+> --
+> 
+> commit 8efed03034c08f98dfc2b34e375ed58087ac3e08
+> Author: Zhao Gongyi <zhaogongyi@bytedance.com>
+> 
+> perf/riscv: Guard PMU counter indices and user access
+> 
+> This commit adds bounds validation on PMU counter indices before accessing
+> counter state or CSR mappings, preventing out-of-bounds accesses when a
+> disabled event is mmaped before hw.idx is assigned or when SBI returns
+> invalid counter values.
+> 
 
+The zero-counter issue predates this patch, since the existing code
+also accepts a zero return value and allocates a zero-sized
+pmu_ctr_list. However, the reported failure path is valid and is
+directly related to the SBI result validation added here.
+
+I will reject zero counter counts in both pmu_sbi_find_num_ctrs() and
+pmu_sbi_get_ctrinfo() in v2.
+
+Thanks,
+Gongyi
