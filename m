@@ -1,89 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.196.107
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.175
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793808619;
-	b=KPJLg/xeGJ0rOnK6wiW2nWE7Iskp1TnVYWk/X2HLG3RMcpo5AHMuts9KS0/8JbjdN0Qz
-	 ZW1wlTYgvnX+KIH2whKd/vILuEA8pQZcQXTY7akVQ3yVZxErN0/XAFQLPYljbzN7vm7Hz
-	 51POuplYXCxqFkXhEBIe44HMgE0uwr6lA1QYXFHozPzHHbFtikYCEG8Pvb2H8etkwNAUQ
-	 pCjholt9mk41fetK9qLVTw2Dz8eYnq+yEwzyKxrJWcHS6gZ+X9+WAbm2Yi4+gtTJNX65b
-	 VLFlOOpte7rczuPz7vxGjsFjv0gq28Gx1rGQbR48SKrI+XmFHVuMlbh5sYJqx4GHMSg==
+	t=1793809233;
+	b=XzUwceEERIqk6OntzKQqAUaMv3381/vxBefEDOKeCdOVB/vTvsg17T4ryUoC1vnJfSRQ
+	 A4OueB5KSnlE1xL0YEIfTqZRSQ51ueoV3fPT2zu1ZIO8Xg6KL4+6f8ln4xpFTfFn01OF8
+	 pDnLB3QtY4z1FHzldQT71rRDKsBPuraMOGd9is5Q+Xxiy5dkQzUGdDpBi0ObOaz9KpUkp
+	 FB901fd9uRgGdG1QSMq4aTt4Qh2PjrfgQDqcmc2aUmEiRUd2NUuReoyyRrkB2ePXDvm2B
+	 Qr1Knz/SzhiWKpv0gtKhuiTXYa/s1eu8PUqQmaTwc0q+9PiLgXf3WbTSwkbh4OhSf6Q==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793808619;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 References:Content-Type:Content-Disposition:In-Reply-To:
-	 X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=odg2xYqxHix/PONQ4BRrf8qKH/zXOoI5v9t80hp9gFc=;
-	b=rcCrht9L2QCHdM0E5G/RbWTekYf6KDG+Pp5AQV6hTZh7QCidG5KrInJlyZZtHVvJnZYR
-	 HHombsYZPmsFyUyW8e1G3FAsqzCmqOFOi4GUIvmmU1X4A2C5QcS6woeQJur8jaVJtelIf
-	 qv+JRk6LsPremQpiYbKt22dA7gWM6juEXgkPJHCm2f8zk9R5gJVPrIILbeyPvB1aKQq3p
-	 wJl334y4pfbX9y8WXFr/qRBm8qcru8jccqesUeK1CRLX4ItAYqSUle+Vd+z/UVs9n4E3A
-	 x+3iPCz1Cwev40xyeSckMF1zOioqYqAZ78IqopXNU7lm/NX488TlbyVdH3BHfoRGNMg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793809233;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=7WX/ZTMITs0q76Ht6EmOOVK989Ar1uU+fZznXiAFQ00=;
+	b=zfI/l5E41LnWcrIpU2uap/sNQNOOMJazz5mDS76OxAdPEJHas5kJhjWyLy5lLWliq0vi
+	 0b8QSSeoziMcZTb6fD9t6YdaJhizudhIt+YeJpRJA6KDRsjLiod/kgJGbMMiwEc3CuPMd
+	 vAtHpH3TgIAN0cP6QXMP6Mu5dnQk+845yJI4XfSTgtyoujicVySLQ5Ho2PjK7HwT7g+Xu
+	 wn3Tsi50TqujQpKCMb9Xex0LYnNOVnchRU5gdMqvMgzU//XST0oGjPehKncN6ZQMnEPRR
+	 E0RG2POzctlW/bfujwzR78SrXwwfnpu4xqp8eb03lhtS0YEzwVT9peG479Vc+dX/m0g==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=none header.from=atomlin.com;
-	spf=pass smtp.mailfrom=atomlin.com;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.196.107
-Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020107.outbound.protection.outlook.com [52.101.196.107])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="e7CwDu/v";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.175
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50847606A326;
-	Wed,  4 Nov 2026 16:10:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 50847606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UF7dlJGi6flFy69a7tpoO2afvo4WEozaVTk+xY5Z2soWU446iCXP2VDqwHZdd5+fMKCMiaw2uxkSyLM6iGIfkenT9HR78FcKMa60pRCu6qdYmW8cobxrHXohiGqkknC2tK7fEGMepXYW0XJcB9clwimNIa+7uC/6LFxS7NMGYN4rh4Bs9ln1Ky5s+DV4tPs9tAUOR86Vvhl6bdbIo5mt3HI+o1x3wm3T7Ov4t9YqcdxTfNEeZllHhOdxDBjXzuH53Pm0q/MItHHc6skNXQemQz720iDwRIRCkMJSCMufUuxy6rKsgyWKyDmuI74se6ClrKGc/WViX6HtufEklYNJFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=odg2xYqxHix/PONQ4BRrf8qKH/zXOoI5v9t80hp9gFc=;
- b=rgN5Edi9+lF60IJuLYRWRzm7axafw3bcOrMYV8y1XyATLwhJWpfHCsn80+J8uLxVH9mJIHTWYJGV3FzsTk+B7Woe1xcxReniz72FB3YyVckoT9pXa0rJXEZv2suTqChDCqEINUE/+qkpIsHk7bBWpP2A8OxoHJqhlUS80F71xXiJhHsmaAVM70LjclOU9hldP33PexwD54mrM21N5tl1O6K76bS//gFqx+rMUXyN27qAW8Io4d6Sjl8ZNZGsEcaio1CR6UIY/Fp3NzxWSc07rWi8vxukEICkapkNe/Sbyy6RhRUhhjv8WG9tJ8rGJBS/vs/YCvjEsm2dwSEJAgKyDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:163::8)
- by LO0P123MB4186.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:15a::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.592.9; Wed, 4 Nov 2026
- 16:10:15 +0000
-Received: from LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
- ([fe80::f71f:a9f:c4de:687a]) by LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
- ([fe80::f71f:a9f:c4de:687a%5]) with mapi id 15.21.0592.009; Wed, 4 Nov 2026
- 16:10:15 +0000
-Date: Wed, 4 Nov 2026 11:10:11 -0500
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	irogers@google.com, adrian.hunter@intel.com, chjohnst@mail.com, neelx@suse.com, 
-	sean@ashe.io, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH perf-tools-next v12 04/10] perf ftrace: Add basic task
- call stack management
-Message-ID: <v25akf3qmsncyec2awcyl4btk4jybkog33fp6w2l7q33t4246a@uwmknpmfbvgo>
-References: <20261026025735.546101-1-atomlin@atomlin.com>
- <20261026025735.546101-5-atomlin@atomlin.com>
- <auWTUJd4VJUI32S3@z2>
- <5s4fy255agvlgqdg4b4f5ekvhgmpjndydvsaadeq56cubrtgot@mrflkcricted>
- <aurgSbFGfN0VC2L6@z2>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aurgSbFGfN0VC2L6@z2>
-X-ClientProxiedBy: CH0PR03CA0368.namprd03.prod.outlook.com
- (2603:10b6:610:119::17) To LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:163::8)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E116606A329
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 16:20:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2E116606A329
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=e7CwDu/v
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-533202fe429so338731cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Nov 2026 08:20:33 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1793809232; cv=none;
+        d=google.com; s=arc-20260327;
+        b=EezCL52vvP9XSexTmsJh0D17qBBrDNkp0X2BL5KZjtvY56/WwJEu2QET51YiZ/rMyj
+         idOABfWO51Pp7LPn60PKN+zhoiA+if8B2nL7KomeAzNHkAvYgeFq/GdltJrh8haVvwqM
+         noauOKl+JtOo88hdC2A2WAfdlJS3ZuT9RTXT4+tZ/Ej2j5ajM5oOxNUswANepAzCM6kA
+         o/cMTw6wOBaeJv4hEp1RmFKAOIOkNTO/VSny5dSHHV8MfdrOABUYdVtuq12faPNI+cOy
+         MHqIkfDd8dI8YK8Y935QjYp1R6EGTO6OsfkNfD/M2cky8f+Hn2CkUqyt/Rzk9d7YwqMs
+         Uyhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=7WX/ZTMITs0q76Ht6EmOOVK989Ar1uU+fZznXiAFQ00=;
+        fh=s0iWiBwDEAk8ATk9kcxiughvR5ShQdMxCudCWTAvYVQ=;
+        b=hI68J/kQfiWBGEzCdrvmGa/IO3VU32NMYh3ompoaAMJ5VysycnkSI+6jlWImB41gFq
+         ZbLPOZQHQ5rpDkFd/rtEFqTuGORApyEGCnIDybsJ8zMe6okPaNig1b9DVS1nDJbhOu61
+         tGT2vnhhcswG1kGLEmaOZ8WZ/UNuXQkBLboQLrgtEx3wt8BS9DVxIGMJ2zr1jNxBYJJB
+         aCQClR3t0ybIhvCkwadS9feKZmZ0m3TEWGIPXjZ5poqdbq+t4wqfFvGFyFrT4E7eDmFK
+         KzCEZ1b+T9cwOJ42Mlq8uOEvFq0rRgWc7vbWl25ns38pgoG4CyFfFz3IvDgLij9YySeM
+         hCIg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1793809232; x=1794414032; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=7WX/ZTMITs0q76Ht6EmOOVK989Ar1uU+fZznXiAFQ00=;
+        b=e7CwDu/vxnexZuo4KfJhPCtRyWpfG4HA0qSLqj+dx6M9IOdxQTm/gBei/ZyfXmq/tY
+         P3MSh9PYrzkGTLNUGfeAhvMJ48cwsMtPhpMNJbHeeVj1mW9CQXZ5nMm75rYZGkOVbG3k
+         rFNTr2VlmNYDn/QUmG26sYZcxpZv36ky85ZtR1vsgYmamTbuT99dkuYTfms7KontHtol
+         tezQM6c6DOiouuc7Ebec+4sCb42oFqyMr5n5XDWfnRzA8OB+lUGytMxXw1jIxctA7xux
+         OKtvTcZV765Kwpj2pfdySCuyVlXj0n9CPKwUySlhGEsxzWP2LfN4uZcLgzZ/XyNTaa/H
+         wgOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793809232; x=1794414032;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=7WX/ZTMITs0q76Ht6EmOOVK989Ar1uU+fZznXiAFQ00=;
+        b=UQCbyfLqSw+JM1f4yqb7BwSMB1tzL2/OH3pccVGEs+G5AtUeu5NyJ7JMF0y4TY6c8u
+         LlkO0mxCdWmOA2Rs87EOurJ+P/MAcQu9Md5BBaTiL7XsM71XeNC30SoNQApc6gXdEz1o
+         J2fjntbeD0hC2Z2xR8l4OdKBjsnjap+BNqF95blmCvYLh8CeDZKfbhZkh1awNDdVQjz0
+         sqwaIG7ANi4nD4EZL1wtpDisp63Y+csxuFd3Felwg2L4AUxZtQb8Gp/kPRYT6hXAk1SU
+         J9JwyIHX7+2XCj5ejeKwdyaY/Q1TQuvncxkWzyXJVNk56SFXYfjVftgn80ItwFnmtzWN
+         5Okw==
+X-Forwarded-Encrypted: i=1; AKwUvBxlDNxQu13H7/uov9enyxmHZEIaXGx4RrSgn5aioY3mHyrpKS7SMn1IC+ukiWVxKaGlE0p5A5jOrBXcz+bE+b+L@vger.kernel.org
+X-Gm-Message-State: APuU4Z/LojbBheaNhXYpSlUGNfF6lrxnspsTNz55Htf0dNhlfwvPZRgb
+	RZh2nKwH91P8fbE/1u2i/pKpZi2CX9LF0xRFscSKJQR1OLvrWxiUeDZGABBWkYvIkChh4wsMPrp
+	4+C+gjVrlbWfazbFwOGooH1OPDl3wX5L03wewqvBy
+X-Gm-Gg: AYBFou3+03y/LQqiR/+Fy187wPrcOs7J02ORbD4NJSNWZZlFsZ3VnMOBpKp1e0tQTDC
+	co1633CuRCVbtChB6NP+TfC1OP1ErJQLqMv5cDdQOGGw/ANi0f+ooajXI8u1Y7fKO821NZJDxdm
+	aDJYrMRYoJmhOwz91TJlofUZeBYBn9tNo7IgFJk10vRxAoFXdw7uuvOgGgUuRY7hfuhohoxQ/Np
+	+ELEvu2zCcASITvx2RUPp09gNx7Dn7RswG6dAgFXhLMj7OinheRIL3GtBYjZ6XPL8n76tDyR/HZ
+	Oq3+K5RiPknU0xmdza6/LHOo7ei3XVbTi1GWaGZg5+/CRQuF0qM613Qf0hrm6riEgOd6YiW9JiR
+	y0tVgtzMJRNeOGBMx3kMmM6fGrApaNfNbbbSnT/bY0TdeUitpa6TBn6XRHvWFXIB34aAviD4ibS
+	Pe4AHISkDZoiE=
+X-Received: by 2002:a05:622a:5a17:b0:533:9731:f0f1 with SMTP id
+ d75a77b69052e-54b828def6bmr16257461cf.10.1793809230476; Wed, 04 Nov 2026
+ 08:20:30 -0800 (PST)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -93,294 +105,409 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LO2P123MB4190:EE_|LO0P123MB4186:EE_
-X-MS-Office365-Filtering-Correlation-Id: 699f464d-fbd1-48f9-5f92-08df3a8e1ce7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|23010399003|366016|1800799024|7416014|4143699003|56012099006|261009223027099003|261021121427099003|261028144727099003|261026121527099003|261022105027099003|261022075727099003|261102123227099003|261026140227099003|10067099003|18002099003|22082099003|6133799003|3023799007|27256017;
-X-Microsoft-Antispam-Message-Info:
-	Fm5vjVpgnsHKV8CS64B7iZGjgtBw5qdJDXAU9vg8Ajq3BICq2PYCYLPvLkyf+o6+iUakSOJQEfRREePKlwkgqubJxPQLoluK5rPntjdFk8PZrI8hfgFssGr6koy5NWpWOy6Be/+qeVNUUceH+mYGHFlpyFlAnPE+Y6Hd+k4IzRIxhV5Wc2MMMBWQvSU6LZ1e9ggp36bhcVDLloCigSjXSYwuDUpOozAs90A4sA16qxt+8v2Von3FGP/vt1bbmezoqWXy7KILkL3I5p8YYXFBb/+BDCkf4U/YRwV/CMpVRAGQxfLWN6lOGkoHvThA1gyjxqlteLjGdWOAXI5SojrkP6T2B5LU/Qf7+1mQq6pvJ2rYxLG1FN/fYrIyhg1Mu5tv+W1acm9Icy46aMx68TViHotIMVc4CbQeSKIH3x6HZE4bDBl859ehC4w6gjNnSl8pDp+QJ7W9cLIUSV9LLA1samnG82f3wjYDzA1glfwpBlpOe+s2MxVVzBfSMT9x1SFfFE3CWjGU9YM00bbHUjYnvLJSwchsr5M+I65jsjB1riqPtECeqHSisj+tCNIPCiz76Rg2iFXwsof9cj+8WWBLiaQAXu5J6PUKefwCKLXkM76UrGbL64CYo3qz0ZQZG0HQNFXAJCrQr8kWp6D6c4xVG2tFnIWteX4GyKsF04bOjKnf4fDKj71ynSuhKq9vX5CCZZpm/UeSsHxlDgEB9ieB0Q==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(366016)(1800799024)(7416014)(4143699003)(56012099006)(261009223027099003)(261021121427099003)(261028144727099003)(261026121527099003)(261022105027099003)(261022075727099003)(261102123227099003)(261026140227099003)(10067099003)(18002099003)(22082099003)(6133799003)(3023799007)(27256017);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bkZZRVZHU1BEbW5uQnFsekFGTWpqU0tsSzdZQlowNDhSTUh1a1hWMDFpSllN?=
- =?utf-8?B?Nm1ScVV0c3BQWGlFa0VhV3pFRUxQSnV4ZTF6WWRTRmZqU0lQenpZNTgxc0x6?=
- =?utf-8?B?VTYyQTV2K09IMmNWbUhzUHd4K3doSmdvYWVzSTZmUVJSbGNwNytTS29Xc1c2?=
- =?utf-8?B?d0Q5cHZFUDdpajl6UFEzWHBQRFdQWjFWT2JOTW9WWjM1dVNVZk1DVExwRmJi?=
- =?utf-8?B?RWNkSEg4VUMxSDVXMk5TMWtQdTBsd2pOZHpSamd0WjZRRFFQQzRVOEFQV3pq?=
- =?utf-8?B?MGRkWGtxZEc2RE56a1RYbk5RdzdJQ1VRM2lNblJ3SGh4ZVQzZDdZelN2Nm50?=
- =?utf-8?B?Ulhrb2RsT0YrZ3hqU3AwMUUyTkI5SERrZU4rOXNaZzZrL2pGWHBqMmVIdUlm?=
- =?utf-8?B?eTk1Uy9NQ3pnTStFemdicDBlcGI0TFplTkQycDFIbjhuQ0NrWXNSYkNON05V?=
- =?utf-8?B?bzBYcU9UMXgwYVVUS1pWcmtpNlprVVZiSDI0OEdKKzRuVlRQZWdVNnZubk9u?=
- =?utf-8?B?QnN6Y1k0U0VzWUJ6L2lvWHRWWHk3RFpEbXF1V29pdlFodCsyNE5LQmJ4N05Q?=
- =?utf-8?B?TWdseU53a0FZQys5V3lQSVFRNWxlVWFpTmFZaW9nUlFzb2pISm05NEtQNG9l?=
- =?utf-8?B?T2Ntb3hBRDZoVTBqMXNHYzVxdW4wWGp5TkhwTjF1NXIzUjBUWE9UelF5Qm83?=
- =?utf-8?B?Y05TTy8xS2d4czgxZjE5SzJqa1hTaUJSZzBPdkxWbHhtOEVlL0ZRa0YxMGV6?=
- =?utf-8?B?OHY3N0dWdmN3WURJcm9VTFlVNkt2OEVnbVZLTW1nS1VzRTVOVkczR2xmUGJ3?=
- =?utf-8?B?QXBVd3Fjck5FN0lmMlhmLzQwK3JGYUdyOHR5aDJTNE04QllEbXJzQjBNcysr?=
- =?utf-8?B?SHBKalprbFEyWXRaWC9uQlZmUzdpb2hFbEM3bHJoL3pqb0hETEhDOGE5NS80?=
- =?utf-8?B?bmFnNU9DaU1qNGZOVHhkc05pTFp1Wko5ZDkrU3BBazZ1ZTVZK0RSRFh3bFVl?=
- =?utf-8?B?WWpPcFJiSWNVampVMzY2MnIrQU1aWFZkcnZJVEl2WGJkTFNoOWVzWEVXZndI?=
- =?utf-8?B?TWJBS2FNc0Q1NzJ4L1E0YmgrblYxdkpBZEFub25Fc1Z3L0NYTUlUSjBnUWlV?=
- =?utf-8?B?SGJaSTVsMy9qcHErU1JkeFNweTdzTityanVpNjlaZm9wL2dGM1lMbDZ0OHVz?=
- =?utf-8?B?NVZiSjk1cS9UdHBJblFlL0E2eFNoTHF5VW1qVlNjZ0I5aXhwMDd3Q3NRZndh?=
- =?utf-8?B?eUpteHZuOWJXckgwKytxVU40WG9ZR0lFalAwYUNWRDlub3JDTUlZMVBVQkM4?=
- =?utf-8?B?ait4TzFjbThhekxWeWlRVUpMYjBVTWt1MTFTUDZzYmZEbVY0NnNMN2ZWc2V0?=
- =?utf-8?B?L09QTGRNZG5EN0tXSmdFUVpNdENZR3F2V2JxRkNJZUJjYzJFMC82ZlpvZkl3?=
- =?utf-8?B?TEdBSEpUZFcwaXEvRUpGVWFOSnZxNWpWZno2RXNYL3MxTUQ2ZnZOeXk3aGl6?=
- =?utf-8?B?YUZYdG5TdWkxejNEcGgzUzBUM0pKZzF0Q3ZpQVg0NWFjZUxLNGNSdUg0MXdH?=
- =?utf-8?B?a3pKbllnMm92M1BwOUpvR2FJWWludjB4WmtSZVJ0VzdXdm0rYTBhMXdzSThS?=
- =?utf-8?B?d3lGTUxwSVZmVkZKeERCcFhuOWpNNUlJUGtsYnNENzk3aXFpS0N5N1cwdHB3?=
- =?utf-8?B?dkVRRHJwK1lOZ3NnVkxJNjd1b2ZxM2lOSE5Rd1JWd0FLSDIwM2VXdTI2Uk04?=
- =?utf-8?B?NDQzaGloVngxaDU3VVZxWlBXazRzYjVHVjE2a2ZnbHZ2ZkdUbDAyZGpIOHlM?=
- =?utf-8?B?NC9lL3hmSWRlVjZxamkwLzNSNlFMN2VVZnlsdlVjSE5ESVY1MERCU3huTC9u?=
- =?utf-8?B?SGd5NHNEQm1PSTlxMmo4bVpRSXJvYnk0eTdNaUxTeStlTm9yMmVlSDdiYW5D?=
- =?utf-8?B?S1NFRmExajUzd2Jna0wrUnlGYjZDVUNGeGRIRG5jRWpSUWkrVmVIbHJCVVZz?=
- =?utf-8?B?MGl5RWhPRmhlK0lMdW96UkIzQ21WbDg3Y3pPOTAzR0JpelJhU2JKbXh1eElB?=
- =?utf-8?B?aXIrVStadnFSc2hMNHU1MStXWFVLdldxNDlPdHpsNzByQzlSbXV5emk5Z25t?=
- =?utf-8?B?eDRRYmVUQUxheGRncGVDOE5adjYxR2IrUEZockxpejlUdElkclZWTy8zY1ZY?=
- =?utf-8?B?L2JFcHNKbi9NekVqOWlLZ3NVSDRYL1hQZTZBMzU2ZWh3Mm1YRWZzUmJ3YWVV?=
- =?utf-8?B?R3pWSXBDeUl5aHBGRklIMDROTUhQVzkyakZDbFQ2dTB0NHpnMkhWWUVEVVBX?=
- =?utf-8?B?djJYTk8wRVR0OThwVG5IR3hYQm1UdDUyLy9uVkY2N01LbUgyN1JGZz09?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 699f464d-fbd1-48f9-5f92-08df3a8e1ce7
-X-MS-Exchange-CrossTenant-AuthSource: LO2P123MB4190.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Nov 2026 16:10:15.7066
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: V7PHAv4YLC001Wl0y04FK4Gv3QILmUYUht3+xkinpicm/txyKRg8M9RbR6BNR8BX+yhfsbKCnbdC05wGbLRdpg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P123MB4186
+References: <20261104160716.2910873-1-bwicaksono@nvidia.com> <20261104160716.2910873-6-bwicaksono@nvidia.com>
+In-Reply-To: <20261104160716.2910873-6-bwicaksono@nvidia.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 4 Nov 2026 08:20:17 -0800
+X-Gm-Features: AclHuK8kmY9Y5i9GpPnoLDbH8n_OPilb4d8Fhx3j9bcjOJ8O94IiJtK0q4nuoTg
+Message-ID: <CAP-5=fUP4ivJpDySjk5Np5VM=Q3xaSL4ONkZZLumQn=OH_hucA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/7] perf jevents: Add support for NVIDIA Tegra410 C2C
+ PMU aliasing
+To: Besar Wicaksono <bwicaksono@nvidia.com>
+Cc: acme@kernel.org, namhyung@kernel.org, ctshao@google.com, 
+	linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	vsethi@nvidia.com, rwiley@nvidia.com, skelley@nvidia.com, mochs@nvidia.com, 
+	rajjoshi@nvidia.com, treding@nvidia.com, jonathanh@nvidia.com, 
+	john.garry@linux.dev, will@kernel.org, james.clark@linaro.org, 
+	mike.leach@arm.com, leo.yan@linux.dev, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 03, 2026 at 11:35:37PM -0800, Namhyung Kim wrote:
-> Hello,
-> 
-> On Sat, Oct 31, 2026 at 06:27:42PM -0400, Aaron Tomlin wrote:
-> > On Sat, Oct 31, 2026 at 12:05:52AM -0700, Namhyung Kim wrote:
-> > > On Sun, Oct 25, 2026 at 10:57:29PM -0400, Aaron Tomlin wrote:
-> > > > The function_graph tracer records kernel function entries and exits with
-> > > > nested indentation. To perform call graph analysis and subsequent inlined
-> > > > function reconstruction, userspace must track the active call stack on a
-> > > > per-task and per-CPU basis.
-> > > > 
-> > > > Introduce basic call stack management for the function graph tracer:
-> > > > 
-> > > >     1.  Data structures
-> > > > 
-> > > >         Define struct ftrace_stack_frame to track function names,
-> > > >         indentation, and inlined status.
-> > > > 
-> > > >         Define struct ftrace_task_state with a dynamically resisable call
-> > > >         stack array, tracked in a hash table keyed by PID alongside per-CPU
-> > > >         active task bindings (ftrace_cpu_tasks).
-> > > > 
-> > > >     2.  Trace stream processing
-> > > > 
-> > > >         Implement find_func_column() to isolate context columns (CPU,
-> > > >         timestamps, duration) from function graph trace lines across
-> > > >         standard and verbose layouts.
-> > > > 
-> > > >         Implement ftrace_process_fgraph_line() to parse function entries
-> > > >         ("{") and exits ("}"), pushing and popping frames on the tracked
-> > > >         stack and matching bare closing braces against preceding frames.
-> > > > 
-> > > >     3.  Integration in __cmd_ftrace()
-> > > > 
-> > > >         Stream complete trace lines through ftrace_process_fgraph_line()
-> > > >         in __cmd_ftrace() and clean up allocated CPU states on exit via
-> > > >         ftrace_cpu_states__clear().
-> > > > 
-> > > > Tested-by: Ian Rogers <irogers@google.com>
-> > > > Reviewed-by: Ian Rogers <irogers@google.com>
-> > > > Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
-> > > > ---
-> > > [SNIP]
-> > > > +/**
-> > > > + * ftrace_process_fgraph_line - Process and output a function graph trace line
-> > > > + * @ftrace: Perf ftrace context
-> > > > + * @line: The trace line to process
-> > > > + * @out: File stream to output to
-> > > > + *
-> > > > + * Parse function entries and exits, maintain the task's call stack, and
-> > > > + * output the trace line.
-> > > > + *
-> > > > + * Return: 0 on success, or a negative error code on failure.
-> > > > + */
-> > > > +int ftrace_process_fgraph_line(struct perf_ftrace *ftrace, const char *line, FILE *out)
-> > > > +{
-> > > > +	const char *pipe_char;
-> > > > +	const char *after_pipe;
-> > > > +	const char *func_start;
-> > > > +	struct ftrace_task_state *cs;
-> > > > +	int cpu = -1;
-> > > > +	int leading_spaces;
-> > > > +	int top_raw_indent;
-> > > > +	int match_idx;
-> > > > +	int i;
-> > > > +	bool is_exit;
-> > > > +	bool has_open_brace;
-> > > > +	bool has_semicolon;
-> > > > +
-> > > > +	pipe_char = find_func_column(ftrace, line, &cpu);
-> > > > +	if (!pipe_char)
-> > > > +		return print_line(ftrace, line, out);
-> > > > +
-> > > > +	cs = get_cpu_state(ftrace, cpu);
-> > > > +	if (!cs)
-> > > > +		return print_line(ftrace, line, out);
-> > > > +
-> > > > +	after_pipe = pipe_char + 1;
-> > > > +	func_start = skip_spaces(after_pipe);
-> > > > +	leading_spaces = func_start - after_pipe;
-> > > > +
-> > > > +	if (*func_start == '\0')
-> > > > +		return print_line(ftrace, line, out);
-> > > > +
-> > > > +	is_exit = (*func_start == '}');
-> > > > +
-> > > > +	if (is_exit) {
-> > > > +		char exit_name[128];
-> > > > +
-> > > > +		extract_exit_func_name(func_start, exit_name, sizeof(exit_name));
-> > > > +
-> > > > +		top_raw_indent = -1;
-> > > > +		for (i = cs->depth - 1; i >= 0; i--) {
-> > > > +			top_raw_indent = cs->stack[i].raw_indent;
-> > > > +			break;
-> > > > +		}
-> > > 
-> > > This loop doesn't look natural.  Why not just use an if statement?
-> > 
-> > Hi Namhyung,
-> > 
-> > Thank you. I completely agree.
-> > 
-> > A loop that unconditionally breaks on the first iteration is
-> > unnecessary here. I will replace it with a simple conditional check in
-> > the next revision:
-> > 
-> >     top_raw_indent = -1;
-> >     if (cs->depth > 0)
-> >         top_raw_indent = cs->stack[cs->depth - 1].raw_indent;
-> > 
-> > All subsequent similar instances will be addressed accordingly as well.
-> > 
-> > > > +struct ftrace_stack_frame {
-> > > > +	char *name;
-> > > > +	bool inlined;
-> > > > +	int indent;
-> > > > +	int raw_indent;
-> > > 
-> > > Can you please add comments that explain why it has two indents?
-> > > Also inlined field may be added later.
-> > 
-> > Certainly. The two indent fields serve distinct purposes once inlined
-> > frames are injected into the output.
-> > 
-> >     - raw_indent: Records the original leading whitespace count after "|"
-> >       as emitted by the kernel's function_graph tracer. Because the kernel
-> >       only traces real stack frames, raw_indent is used to match entry and
-> >       exit frames against the raw trace stream.
-> > 
-> >     - indent: Records the adjusted visual indentation (in spaces) used when
-> >       rendering the frame to output, accounting for any extra indentation
-> >       added by preceding synthetic inlined frames so that the closing "}"
-> >       aligns with its opening "{".
-> > 
-> > Agreed, these fields are not used yet. I will move inlined and
-> > inlined_depth into the subsequent patch that introduces inlined function
-> > display, and add explanatory comments to both structures.
-> > 
-> > > > +};
-> > > > +
-> > > > +struct ftrace_task_state {
-> > > > +	struct hlist_node	node;
-> > > > +	pid_t			pid;
-> > > > +	struct ftrace_stack_frame *stack;
-> > > > +	int			max_stack;
-> > > > +	int			depth;
-> > > > +	int			inlined_depth;
-> > > > +	int			overflow_depth;
-> > > 
-> > > Ditto.  What are these depths?
-> > 
-> >     - max_stack: Current allocated capacity (in frames) of the dynamically
-> >       resized 'stack' array.
-> > 
-> >     - depth: Current number of active frames stored on stack.
-> > 
-> >     - inlined_depth: Number of active synthetic inlined frames currently on
-> >       stack, used to compute the extra visual indentation offset for
-> >       child frames. This will also be moved to the later patch.
-> > 
-> >     - overflow_depth: Number of nested call frames entered while stack is
-> >       saturated (at the maximum depth cap or on allocation failure), used
-> >       so their matching exit braces can be consumed without prematurely
-> >       popping valid parent frames.
-> > 
-> > I will document all of these fields with comments in the next revision.
-> > 
-> > Please see an example. When synthetic inlined frames are injected, the
-> > visual display column (indent) shifts right relative to the kernel stream
-> > (raw_indent):
-> > 
-> >     1.  What kernel function_graph emits:
-> > 
-> >            |  foo() {                 <-- raw_indent = 2
-> >            |    bar() {               <-- raw_indent = 4
-> >            |    } /* bar */           <-- raw_indent = 4
-> >            |  } /* foo */             <-- raw_indent = 2
-> > 
-> >     2.  Rendered output and stack state:
-> > 
-> >         When perf injects inlined function inline_helper() onto cs->stack,
-> >         inlined_depth becomes 1. Every subsequent child frame shifts right
-> >         by (inlined_depth * 2) spaces so bar() nests visually inside
-> >         inline_helper(), while still retaining raw_indent = 4 to match the
-> >         kernel's closing "}" event:
-> > 
-> >            Rendered Output            cs->stack[idx] and ftrace_task_state
-> >            ---------------            ---------------------------
-> >            |  foo() {                 [0] foo:
-> >            :                              raw_indent=2, indent=2, inlined=false
-> >            :                              (depth=1, inlined_depth=0)
-> >            :
-> >            |    inline_helper() {     [1] inline_helper:
-> >            :                              raw_indent=4, indent=4, inlined=true
-> >            :                              (depth=2, inlined_depth=1)
-> >            :
-> >            |      bar() {             [2] bar:
-> >            :                              raw_indent=4, indent=6, inlined=false
-> >            :                              (depth=3, inlined_depth=1)
-> >            :                              ^
-> >            :                              '-- indent = raw_indent (4) +
-> >            :                                           inlined_depth * 2 (2) = 6
-> >            :
-> >            |      } /* bar */         <-- kernel function_graph emits "}"
-> >            :                              at raw_indent=4. Matched against [2]
-> >            :                              via raw_indent=4, but printed at
-> >            :                              [2].indent (6 spaces)
-> >            :
-> >            |    } /* inline_helper */ <-- Popped automatically; printed at
-> >            :                              [1].indent (4 spaces)
-> >            :
-> >            |  } /* foo */             <-- kernel function_graph emits "}"
-> >                                           at raw_indent=2. Matched against [0]
-> >                                           via raw_indent=2, printed at
-> >                                           [0].indent (2 spaces)
-> > 
-> 
-> Thanks for the example,  the comment also look good.
+On Wed, Nov 4, 2026 at 8:08=E2=80=AFAM Besar Wicaksono <bwicaksono@nvidia.c=
+om> wrote:
+>
+> Add alias support for NVIDIA Tegra410 C2C PMU events.
 
-Hi Namhyung,
+What does alias mean in this case? That there are json and sysfs
+events? I don't see support being added, only additional events.
 
-Thank you and you are very welcome.
+Thanks,
+Ian
 
-Kind regards,
--- 
-Aaron Tomlin
+> Signed-off-by: Besar Wicaksono <bwicaksono@nvidia.com>
+> ---
+>  .../arm64/nvidia/t410/uncore-nvclink.json     |  67 ++++++++++
+>  .../arm64/nvidia/t410/uncore-nvdlink.json     |  43 +++++++
+>  .../arm64/nvidia/t410/uncore-nvlink_c2c.json  | 115 ++++++++++++++++++
+>  3 files changed, 225 insertions(+)
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/uncore-n=
+vclink.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/uncore-n=
+vdlink.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/nvidia/t410/uncore-n=
+vlink_c2c.json
+>
+> diff --git a/tools/perf/pmu-events/arch/arm64/nvidia/t410/uncore-nvclink.=
+json b/tools/perf/pmu-events/arch/arm64/nvidia/t410/uncore-nvclink.json
+> new file mode 100644
+> index 000000000000..1e7f8115ff9c
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/arm64/nvidia/t410/uncore-nvclink.json
+> @@ -0,0 +1,67 @@
+> +[
+> +    {
+> +        "EventCode": "0x0",
+> +        "EventName": "NVCLINK_CYCLES",
+> +        "BriefDescription": "Counts NV-CLink interface clock cycles.",
+> +        "PublicDescription": "Counts NV-CLink interface clock cycles. Al=
+l NV-CLink instances share this clock, so the count is read from the first =
+instance.",
+> +        "Unit": "nvidia_nvclink_pmu_"
+> +    },
+> +    {
+> +        "EventCode": "0x1",
+> +        "EventName": "NVCLINK_IN_RD_CUM_OUTS",
+> +        "BriefDescription": "Accumulates the outstanding incoming read r=
+equests counted by NVCLINK_IN_RD_REQ each NV-CLink interface cycle.",
+> +        "PublicDescription": "Accumulates the outstanding incoming read =
+requests counted by NVCLINK_IN_RD_REQ each NV-CLink interface cycle. Pair t=
+he two for the average read latency.",
+> +        "Unit": "nvidia_nvclink_pmu_"
+> +    },
+> +    {
+> +        "EventCode": "0x2",
+> +        "EventName": "NVCLINK_IN_RD_REQ",
+> +        "BriefDescription": "Counts incoming read requests from the remo=
+te Tegra SoC at the NV-CLink interface.",
+> +        "PublicDescription": "Counts incoming read requests from the rem=
+ote Tegra SoC at the NV-CLink interface, where local memory or a local devi=
+ce responds with data. Request size can be from 1 to 256 bytes. The count i=
+s summed over all NV-CLink instances.",
+> +        "Unit": "nvidia_nvclink_pmu_"
+> +    },
+> +    {
+> +        "EventCode": "0x5",
+> +        "EventName": "NVCLINK_OUT_RD_CUM_OUTS",
+> +        "BriefDescription": "Accumulates the outstanding outgoing read r=
+equests counted by NVCLINK_OUT_RD_REQ each NV-CLink interface cycle.",
+> +        "PublicDescription": "Accumulates the outstanding outgoing read =
+requests counted by NVCLINK_OUT_RD_REQ each NV-CLink interface cycle. Pair =
+the two for the average read latency.",
+> +        "Unit": "nvidia_nvclink_pmu_"
+> +    },
+> +    {
+> +        "EventCode": "0x6",
+> +        "EventName": "NVCLINK_OUT_RD_REQ",
+> +        "BriefDescription": "Counts outgoing read requests from the loca=
+l Tegra SoC to the remote Tegra SoC at the NV-CLink interface.",
+> +        "PublicDescription": "Counts outgoing read requests from the loc=
+al Tegra SoC to the remote Tegra SoC at the NV-CLink interface, where memor=
+y on the remote Tegra SoC responds with data. Request size can be from 1 to=
+ 256 bytes. The count is summed over all NV-CLink instances.",
+> +        "Unit": "nvidia_nvclink_pmu_"
+> +    },
+> +    {
+> +        "MetricName": "nvclink_freq",
+> +        "MetricGroup": "NVCLINK_Frequency;NVCLINK_Latency;NVCLINK_Read_L=
+atency",
+> +        "MetricConstraint": "NO_GROUP_EVENTS",
+> +        "MetricExpr": "(NVCLINK_CYCLES / aggr_nr(NVCLINK_CYCLES)) / 1e9 =
+/ duration_time",
+> +        "ScaleUnit": "1GHz",
+> +        "BriefDescription": "NV-CLink interface clock frequency.",
+> +        "PublicDescription": "Average NV-CLink interface clock frequency=
+ over the measurement interval.",
+> +        "Unit": "nvidia_nvclink_pmu_"
+> +    },
+> +    {
+> +        "MetricName": "nvclink_in_avg_rd_latency",
+> +        "MetricGroup": "NVCLINK_Latency;NVCLINK_Read_Latency;NVCLINK_Inc=
+oming",
+> +        "MetricConstraint": "NO_GROUP_EVENTS",
+> +        "MetricExpr": "(NVCLINK_IN_RD_CUM_OUTS / NVCLINK_IN_RD_REQ) / nv=
+clink_freq",
+> +        "ScaleUnit": "1ns/request",
+> +        "BriefDescription": "Average latency of incoming read requests f=
+rom the remote Tegra SoC at the NV-CLink interface.",
+> +        "PublicDescription": "Average latency of the incoming read reque=
+sts counted by NVCLINK_IN_RD_REQ, measured at the NV-CLink interface.",
+> +        "Unit": "nvidia_nvclink_pmu_"
+> +    },
+> +    {
+> +        "MetricName": "nvclink_out_avg_rd_latency",
+> +        "MetricGroup": "NVCLINK_Latency;NVCLINK_Read_Latency;NVCLINK_Out=
+going",
+> +        "MetricConstraint": "NO_GROUP_EVENTS",
+> +        "MetricExpr": "(NVCLINK_OUT_RD_CUM_OUTS / NVCLINK_OUT_RD_REQ) / =
+nvclink_freq",
+> +        "ScaleUnit": "1ns/request",
+> +        "BriefDescription": "Average latency of outgoing read requests s=
+ent by the local Tegra SoC to the remote Tegra SoC at the NV-CLink interfac=
+e.",
+> +        "PublicDescription": "Average latency of the outgoing read reque=
+sts counted by NVCLINK_OUT_RD_REQ, measured at the NV-CLink interface.",
+> +        "Unit": "nvidia_nvclink_pmu_"
+> +    }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/arm64/nvidia/t410/uncore-nvdlink.=
+json b/tools/perf/pmu-events/arch/arm64/nvidia/t410/uncore-nvdlink.json
+> new file mode 100644
+> index 000000000000..7777add3741d
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/arm64/nvidia/t410/uncore-nvdlink.json
+> @@ -0,0 +1,43 @@
+> +[
+> +    {
+> +        "EventCode": "0x0",
+> +        "EventName": "NVDLINK_CYCLES",
+> +        "BriefDescription": "Counts NV-DLink interface clock cycles.",
+> +        "PublicDescription": "Counts NV-DLink interface clock cycles. Al=
+l NV-DLink instances share this clock, so the count is read from the first =
+instance.",
+> +        "Unit": "nvidia_nvdlink_pmu_"
+> +    },
+> +    {
+> +        "EventCode": "0x1",
+> +        "EventName": "NVDLINK_IN_RD_CUM_OUTS",
+> +        "BriefDescription": "Accumulates the outstanding read requests c=
+ounted by NVDLINK_IN_RD_REQ each NV-DLink interface cycle.",
+> +        "PublicDescription": "Accumulates the outstanding read requests =
+counted by NVDLINK_IN_RD_REQ each NV-DLink interface cycle. Pair the two fo=
+r the average read latency.",
+> +        "Unit": "nvidia_nvdlink_pmu_"
+> +    },
+> +    {
+> +        "EventCode": "0x2",
+> +        "EventName": "NVDLINK_IN_RD_REQ",
+> +        "BriefDescription": "Counts read requests to local CXL memory at=
+ the NV-DLink interface.",
+> +        "PublicDescription": "Counts read requests to local CXL memory a=
+t the NV-DLink interface, from all requesters, local and remote. Request si=
+ze can be from 1 to 256 bytes. The count is summed over all NV-DLink instan=
+ces.",
+> +        "Unit": "nvidia_nvdlink_pmu_"
+> +    },
+> +    {
+> +        "MetricName": "nvdlink_freq",
+> +        "MetricGroup": "NVDLINK_Frequency;NVDLINK_Latency;NVDLINK_Read_L=
+atency",
+> +        "MetricConstraint": "NO_GROUP_EVENTS",
+> +        "MetricExpr": "(NVDLINK_CYCLES / aggr_nr(NVDLINK_CYCLES)) / 1e9 =
+/ duration_time",
+> +        "ScaleUnit": "1GHz",
+> +        "BriefDescription": "NV-DLink interface clock frequency.",
+> +        "PublicDescription": "Average NV-DLink interface clock frequency=
+ over the measurement interval.",
+> +        "Unit": "nvidia_nvdlink_pmu_"
+> +    },
+> +    {
+> +        "MetricName": "nvdlink_in_avg_rd_latency",
+> +        "MetricGroup": "NVDLINK_Latency;NVDLINK_Read_Latency",
+> +        "MetricConstraint": "NO_GROUP_EVENTS",
+> +        "MetricExpr": "(NVDLINK_IN_RD_CUM_OUTS / NVDLINK_IN_RD_REQ) / nv=
+dlink_freq",
+> +        "ScaleUnit": "1ns/request",
+> +        "BriefDescription": "Average latency of read requests to local C=
+XL memory at the NV-DLink interface.",
+> +        "PublicDescription": "Average latency of the read requests count=
+ed by NVDLINK_IN_RD_REQ, measured at the NV-DLink interface.",
+> +        "Unit": "nvidia_nvdlink_pmu_"
+> +    }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/arm64/nvidia/t410/uncore-nvlink_c=
+2c.json b/tools/perf/pmu-events/arch/arm64/nvidia/t410/uncore-nvlink_c2c.js=
+on
+> new file mode 100644
+> index 000000000000..48a64caaba61
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/arm64/nvidia/t410/uncore-nvlink_c2c.json
+> @@ -0,0 +1,115 @@
+> +[
+> +    {
+> +        "EventCode": "0x0",
+> +        "EventName": "NVLINK_C2C_CYCLES",
+> +        "BriefDescription": "Counts NVLink-C2C interface clock cycles.",
+> +        "PublicDescription": "Counts NVLink-C2C interface clock cycles. =
+All NVLink-C2C instances share this clock, so the count is read from the fi=
+rst instance.",
+> +        "Unit": "nvidia_nvlink_c2c_pmu_"
+> +    },
+> +    {
+> +        "EventCode": "0x1",
+> +        "EventName": "NVLINK_C2C_IN_RD_CUM_OUTS",
+> +        "BriefDescription": "Accumulates the outstanding incoming read r=
+equests counted by NVLINK_C2C_IN_RD_REQ each NVLink-C2C interface cycle.",
+> +        "PublicDescription": "Accumulates the outstanding incoming read =
+requests counted by NVLINK_C2C_IN_RD_REQ each NVLink-C2C interface cycle. P=
+air the two for the average read latency. The gpu_mask filter works as desc=
+ribed for NVLINK_C2C_IN_RD_REQ.",
+> +        "Unit": "nvidia_nvlink_c2c_pmu_"
+> +    },
+> +    {
+> +        "EventCode": "0x2",
+> +        "EventName": "NVLINK_C2C_IN_RD_REQ",
+> +        "BriefDescription": "Counts incoming read requests from connecte=
+d GPUs or a remote Tegra SoC at the NVLink-C2C interface.",
+> +        "PublicDescription": "Counts incoming read requests sent by conn=
+ected GPUs or a remote Tegra SoC to the local Tegra SoC at the NVLink-C2C i=
+nterface, where the local Tegra SoC responds with data. Request size can be=
+ from 1 to 256 bytes. The count is summed over all NVLink-C2C instances. Fi=
+lters: the gpu_mask filter selects GPUs by index, one bit per GPU. This fil=
+ter is available only when GPUs are connected. An unset gpu_mask counts all=
+ GPUs.",
+> +        "Unit": "nvidia_nvlink_c2c_pmu_"
+> +    },
+> +    {
+> +        "EventCode": "0x3",
+> +        "EventName": "NVLINK_C2C_IN_WR_CUM_OUTS",
+> +        "BriefDescription": "Accumulates the outstanding incoming write =
+requests counted by NVLINK_C2C_IN_WR_REQ each NVLink-C2C interface cycle.",
+> +        "PublicDescription": "Accumulates the outstanding incoming write=
+ requests counted by NVLINK_C2C_IN_WR_REQ each NVLink-C2C interface cycle. =
+Available only when GPUs are connected. Pair the two for the average write =
+latency. The gpu_mask filter works as described for NVLINK_C2C_IN_WR_REQ.",
+> +        "Unit": "nvidia_nvlink_c2c_pmu_"
+> +    },
+> +    {
+> +        "EventCode": "0x4",
+> +        "EventName": "NVLINK_C2C_IN_WR_REQ",
+> +        "BriefDescription": "Counts incoming write requests from connect=
+ed GPUs to the local Tegra SoC at the NVLink-C2C interface.",
+> +        "PublicDescription": "Counts incoming write requests sent by con=
+nected GPUs to the local Tegra SoC at the NVLink-C2C interface, where the G=
+PU sends the data. Request size can be from 1 to 256 bytes. Available only =
+when GPUs are connected. The count is summed over all NVLink-C2C instances.=
+ Filters: the gpu_mask filter selects GPUs by index, one bit per GPU. An un=
+set gpu_mask counts all GPUs.",
+> +        "Unit": "nvidia_nvlink_c2c_pmu_"
+> +    },
+> +    {
+> +        "EventCode": "0x5",
+> +        "EventName": "NVLINK_C2C_OUT_RD_CUM_OUTS",
+> +        "BriefDescription": "Accumulates the outstanding outgoing read r=
+equests counted by NVLINK_C2C_OUT_RD_REQ each NVLink-C2C interface cycle.",
+> +        "PublicDescription": "Accumulates the outstanding outgoing read =
+requests counted by NVLINK_C2C_OUT_RD_REQ each NVLink-C2C interface cycle. =
+Pair the two for the average read latency. The gpu_mask filter works as des=
+cribed for NVLINK_C2C_OUT_RD_REQ.",
+> +        "Unit": "nvidia_nvlink_c2c_pmu_"
+> +    },
+> +    {
+> +        "EventCode": "0x6",
+> +        "EventName": "NVLINK_C2C_OUT_RD_REQ",
+> +        "BriefDescription": "Counts outgoing read requests to connected =
+GPUs or a remote Tegra SoC at the NVLink-C2C interface.",
+> +        "PublicDescription": "Counts outgoing read requests from all req=
+uesters to connected GPUs or a remote Tegra SoC at the NVLink-C2C interface=
+, where the GPU or remote Tegra SoC responds with data. Request size can be=
+ from 1 to 256 bytes. The count is summed over all NVLink-C2C instances. Fi=
+lters: the gpu_mask filter selects GPUs by index, one bit per GPU. This fil=
+ter is available only when GPUs are connected. An unset gpu_mask counts all=
+ GPUs.",
+> +        "Unit": "nvidia_nvlink_c2c_pmu_"
+> +    },
+> +    {
+> +        "EventCode": "0x7",
+> +        "EventName": "NVLINK_C2C_OUT_WR_CUM_OUTS",
+> +        "BriefDescription": "Accumulates the outstanding outgoing write =
+requests counted by NVLINK_C2C_OUT_WR_REQ each NVLink-C2C interface cycle."=
+,
+> +        "PublicDescription": "Accumulates the outstanding outgoing write=
+ requests counted by NVLINK_C2C_OUT_WR_REQ each NVLink-C2C interface cycle.=
+ Available only when GPUs are connected. Pair the two for the average write=
+ latency. The gpu_mask filter works as described for NVLINK_C2C_OUT_WR_REQ.=
+",
+> +        "Unit": "nvidia_nvlink_c2c_pmu_"
+> +    },
+> +    {
+> +        "EventCode": "0x8",
+> +        "EventName": "NVLINK_C2C_OUT_WR_REQ",
+> +        "BriefDescription": "Counts outgoing write requests to connected=
+ GPUs at the NVLink-C2C interface.",
+> +        "PublicDescription": "Counts outgoing write requests from all re=
+questers to connected GPUs at the NVLink-C2C interface, where the requester=
+ sends the data. Request size can be from 1 to 256 bytes. Available only wh=
+en GPUs are connected. The count is summed over all NVLink-C2C instances. F=
+ilters: the gpu_mask filter selects GPUs by index, one bit per GPU. An unse=
+t gpu_mask counts all GPUs.",
+> +        "Unit": "nvidia_nvlink_c2c_pmu_"
+> +    },
+> +    {
+> +        "MetricName": "nvlink_c2c_freq",
+> +        "MetricGroup": "NVLINK_C2C_Frequency;NVLINK_C2C_Latency;NVLINK_C=
+2C_Read_Latency;NVLINK_C2C_Write_Latency",
+> +        "MetricConstraint": "NO_GROUP_EVENTS",
+> +        "MetricExpr": "(NVLINK_C2C_CYCLES / aggr_nr(NVLINK_C2C_CYCLES)) =
+/ 1e9 / duration_time",
+> +        "ScaleUnit": "1GHz",
+> +        "BriefDescription": "NVLink-C2C interface clock frequency.",
+> +        "PublicDescription": "Average NVLink-C2C interface clock frequen=
+cy over the measurement interval.",
+> +        "Unit": "nvidia_nvlink_c2c_pmu_"
+> +    },
+> +    {
+> +        "MetricName": "nvlink_c2c_in_avg_rd_latency",
+> +        "MetricGroup": "NVLINK_C2C_Latency;NVLINK_C2C_Read_Latency;NVLIN=
+K_C2C_Incoming",
+> +        "MetricConstraint": "NO_GROUP_EVENTS",
+> +        "MetricExpr": "(NVLINK_C2C_IN_RD_CUM_OUTS / NVLINK_C2C_IN_RD_REQ=
+) / nvlink_c2c_freq",
+> +        "ScaleUnit": "1ns/request",
+> +        "BriefDescription": "Average latency of incoming read requests a=
+t the NVLink-C2C interface.",
+> +        "PublicDescription": "Average latency of the incoming read reque=
+sts counted by NVLINK_C2C_IN_RD_REQ, measured at the NVLink-C2C interface."=
+,
+> +        "Unit": "nvidia_nvlink_c2c_pmu_"
+> +    },
+> +    {
+> +        "MetricName": "nvlink_c2c_in_avg_wr_latency",
+> +        "MetricGroup": "NVLINK_C2C_Latency;NVLINK_C2C_Write_Latency;NVLI=
+NK_C2C_Incoming",
+> +        "MetricConstraint": "NO_GROUP_EVENTS",
+> +        "MetricExpr": "(NVLINK_C2C_IN_WR_CUM_OUTS / NVLINK_C2C_IN_WR_REQ=
+) / nvlink_c2c_freq",
+> +        "ScaleUnit": "1ns/request",
+> +        "BriefDescription": "Average latency of incoming write requests =
+from connected GPUs at the NVLink-C2C interface.",
+> +        "PublicDescription": "Average latency of the incoming write requ=
+ests counted by NVLINK_C2C_IN_WR_REQ, measured at the NVLink-C2C interface.=
+ Available only when GPUs are connected.",
+> +        "Unit": "nvidia_nvlink_c2c_pmu_"
+> +    },
+> +    {
+> +        "MetricName": "nvlink_c2c_out_avg_rd_latency",
+> +        "MetricGroup": "NVLINK_C2C_Latency;NVLINK_C2C_Read_Latency;NVLIN=
+K_C2C_Outgoing",
+> +        "MetricConstraint": "NO_GROUP_EVENTS",
+> +        "MetricExpr": "(NVLINK_C2C_OUT_RD_CUM_OUTS / NVLINK_C2C_OUT_RD_R=
+EQ) / nvlink_c2c_freq",
+> +        "ScaleUnit": "1ns/request",
+> +        "BriefDescription": "Average latency of outgoing read requests a=
+t the NVLink-C2C interface.",
+> +        "PublicDescription": "Average latency of the outgoing read reque=
+sts counted by NVLINK_C2C_OUT_RD_REQ, measured at the NVLink-C2C interface.=
+",
+> +        "Unit": "nvidia_nvlink_c2c_pmu_"
+> +    },
+> +    {
+> +        "MetricName": "nvlink_c2c_out_avg_wr_latency",
+> +        "MetricGroup": "NVLINK_C2C_Latency;NVLINK_C2C_Write_Latency;NVLI=
+NK_C2C_Outgoing",
+> +        "MetricConstraint": "NO_GROUP_EVENTS",
+> +        "MetricExpr": "(NVLINK_C2C_OUT_WR_CUM_OUTS / NVLINK_C2C_OUT_WR_R=
+EQ) / nvlink_c2c_freq",
+> +        "ScaleUnit": "1ns/request",
+> +        "BriefDescription": "Average latency of outgoing write requests =
+to connected GPUs at the NVLink-C2C interface.",
+> +        "PublicDescription": "Average latency of the outgoing write requ=
+ests counted by NVLINK_C2C_OUT_WR_REQ, measured at the NVLink-C2C interface=
+. Available only when GPUs are connected.",
+> +        "Unit": "nvidia_nvlink_c2c_pmu_"
+> +    }
+> +]
+> --
+> 2.43.0
+>
