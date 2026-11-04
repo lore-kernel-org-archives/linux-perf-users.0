@@ -1,55 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793778630;
-	b=404/1nw/Mvi23fUGNJ+8s6PHgJKaXH3lnu4EvIalPe8YfDMJdfXfvhptntEdFMvG4oMe
-	 fy5SeUCYiuvQdJZed1mTNMvMV7bbHvNYulk6TQAGpyi7ap4tlNreeszSoVsWFyNcACXvv
-	 1fHbLgbkSz9XF1ZD7e/8OBBZUqusX+W3vlO0beTRCAJhQizLo+1wlJp+cNXMnCxCfywR6
-	 WQ26ohwDnJlbPgqENj4KEbJQXxwAUVOpx5jd2jpe8GYh/Uli8x8XGuPUhGtnIQmb/1PUh
-	 7pO+i9ca7bfASJYKL9pOi3bYWB25ImuAagvh8tz1RqTEtWXFM9fkfNjhZUxtN6ymUfw==
+	t=1793778655;
+	b=qchORHAUyTZikWgmFuUatcWE5QYbPoIHUCiMx35/GwPJZRAkPzdQLCYyPDarkv115vtM
+	 AsR/5QqQtUnqZfuleug6r2IzzLU9Tl4tZ8czAmV0wTQWKJfIwkpDANxEdF1qt7BwC9yuv
+	 244KWDOh0eMCpgvyJElLLIYdjk4CIpnTD4nittel2+6M1Y0yvoGjRjcXnB5FqiyFjV5nJ
+	 JSAxY1rZq+k3sfHhW2tUhcyy7FMlEKLEnQjcwPBomFWb4dbFQyQsabuYzyf3A/QC8mBF8
+	 ILTA/bMEMYvpUoAXC4RR8nohq3KpbY55lxgRnKg7h/gHu1nlP5sjkyIKjNX5lUV1vVA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793778630;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=QWEXLw6X4dj8uDfDR2SBW+NakWNbhWvlR3hco7tvwB4=;
-	b=Iz5LtQ7tcGEbdNQ79pClMU3/tChB2ERWUcQqdNCWC8fjOyhRcg1f+LSbID9XbESdDw7f
-	 S5Cj8UZo/wUOSmQt6iloZ4hdF6YllyrL5imcWBKh/lfMFeU7B0v4z31dM+cL0SN6l5QPt
-	 OmVS/Ogw5DbfLQRwlCCHn5Np2solgcuwTQUKUa0HNSPKizKYHmLCWqm9onUS9LeWzx5oJ
-	 YyVgBCsU9qlqvv0jOY6WAMbGQZHbLtMOaPD3WLClP6a1jirMPdBmKGDDfnImkb1ODazTJ
-	 NFwvM8iP3FHYfvUVsZBZwaKP6pFO/JyE4fpG72NosmsEixt+XtBFqljPiz1gaHTEX4A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793778655;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=N5UuCC/Ms2hLZxT1jvIYIL2yeL6N/vJPxW5qz9SFjXQ=;
+	b=JvUXAv4BLQvdUdftd/q6MSGvF65OMB2t7bbYVavGlbjStzKX66l6l6fc1RIC5I/w33Xh
+	 Vr7/KHTvziCGtLwWWEMrnQjgf3UFUS0MqHGW3hzfmFE7LqSHNDG2C2ZJWCBESasfTT79a
+	 YKut/pyh77/Se+/eP8D6CRQ2BlQQyyqTh4HC0GaafZDnGj4lrWZQpGUob90fuKxVGDR+u
+	 4faKQweKrwJSJWRWr0EFpq0XgktDGWdLFLIFrT7EBGy22lVWsWM3h1tukImbWUZnfrmF+
+	 oGoJOgTyDX2euVD2hST2H6rcF+LwtBJ41r9q9Rz30t+WEChvXz+ZqMcxXFGm5dSelqw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WYnbJrqs;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ceZAPvn1;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C2F606A32D
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 07:50:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC98D606A31B;
+	Wed,  4 Nov 2026 07:50:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WYnbJrqs
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61F5C1F0093A;
-	Wed,  4 Nov 2026 07:50:29 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ceZAPvn1
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABD9F1F000C1;
+	Wed,  4 Nov 2026 07:50:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793778629;
-	bh=QWEXLw6X4dj8uDfDR2SBW+NakWNbhWvlR3hco7tvwB4=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=WYnbJrqs9FbfJjuu1YOkJrAWXQoMgje1P2MOQpduHwKd/K1nvCHTCqpYNEkvs/Sjw
-	 6JEOFHpgSKJkUb9fWalbWyfENiWf5Uwe146QsIo6isXwBPhn+67HNS7VxGGdlXLnSr
-	 S2q9U9aPOOzli1kZhLXLz5Ig0apYez9lOyDokIBgHvf3gPX5W/bPyxICLraXN9O947
-	 EG3KK9MvxllUJH7atb5dlaiG3ruaMCYRzMqpdGV3D0EeYyqMKkH9nm0SqjwnOWDSV0
-	 wJ+JNh9WnBJ8Olj4vlR4AIsQk1+VOHbhztW5t/3FcwODCsBpg+WmMHcgCRtI8FV9Wm
-	 MkUZxsZ1lPyuQ==
-Message-ID: <sashiko-outbox-196830@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 39/41] perf sysinfo: Add sysinfo subcommand
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20261103234502.1008382-40-irogers@google.com>
-References: <20261103234502.1008382-1-irogers@google.com>
- <20261103234502.1008382-40-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 07:50:28 +0000
+	s=k20260515; t=1793778654;
+	bh=N5UuCC/Ms2hLZxT1jvIYIL2yeL6N/vJPxW5qz9SFjXQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ceZAPvn1eGF2M2UHVzcXgEmfg1foS3VLm/MiMc79yUZNuIzfo7SiwHsIVSVEKLOWo
+	 W1F8UpxHNIfN7rmmrjbTA+UeGnuOH6IBrSDhS/aS5ZlZxla319nDL8pmmn4NFR6S1Z
+	 GW8yFQBNuF+t6ynqhq8HdTCYjejDIk/u2mDxbzENumKB7XFXWQxMASDVoOGs1lU2FZ
+	 PiLOS3mXbs2FKTGYR+Z7YUr55B9ftc0sLpgWxP0+ye6s5f+aBy8KSZeUdJSGPcDl+q
+	 pp9J6BYonK/nC2PiM3OTK0sXki8qCQKKnW9sKwolQaYUOIGjH38GsoU5tOrzX51Bgy
+	 mxHgw5CiCE4jg==
+Date: Tue, 3 Nov 2026 23:50:53 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: Yanbo Zhao <yzhao62@ncsu.edu>, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] perf dwarf-aux: Add C++ vtable helpers
+Message-ID: <aurj3WMsv2mwM971@z2>
+References: <20261103155650.269973-1-yzhao62@ncsu.edu>
+ <20261103155650.269973-3-yzhao62@ncsu.edu>
+ <sashiko-outbox-195716@kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -58,166 +57,130 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <sashiko-outbox-195716@kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] perf sysinfo: precise-only regs duplicated in print_pmu_json()
-- [Medium] perf sysinfo: cmd_sysinfo() collapses heterogeneous core PMUs
---
+On Tue, Nov 03, 2026 at 04:22:30PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Medium] perf dwarf-aux: unbounded recursion in __die_find_member_offset_cb()
+> --
+> 
+> commit 3556b432528cd90397fc56862bef26cf9afde995
+> Author: Yanbo Zhao <yzhao62@ncsu.edu>
+> 
+> perf dwarf-aux: Add C++ vtable helpers
+> 
+> This commit adds DWARF helper functions (die_get_vtable_index(),
+> die_find_virtual_func(), die_is_vtbl_ptr_type(), die_get_vptr_class(), and
+> die_deref_vptr_class()) to support static resolution of C++ virtual function
+> calls during data type profiling.
+> 
+> > diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> > index eb4b8f3475df1..10079f47a6c38 100644
+> > --- a/tools/perf/util/dwarf-aux.c
+> > +++ b/tools/perf/util/dwarf-aux.c
+> > @@ -2293,6 +2293,239 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset,
+> 
+> [ ... ]
+> 
+> > +static int __die_find_primary_base_cb(Dwarf_Die *die_mem, void *arg __maybe_unused)
+> > +{
+> > +	Dwarf_Attribute attr;
+> > +	Dwarf_Die base_die, vptr_die;
+> > +	Dwarf_Word loc, virtuality;
+> > +
+> > +	if (dwarf_tag(die_mem) != DW_TAG_inheritance)
+> > +		return DIE_FIND_CB_SIBLING;
+> > +
+> > +	/* The attribute can be present with DW_VIRTUALITY_none */
+> > +	if (dwarf_attr_integrate(die_mem, DW_AT_virtuality, &attr) &&
+> > +	    dwarf_formudata(&attr, &virtuality) == 0 &&
+> > +	    virtuality != DW_VIRTUALITY_none)
+> > +		return DIE_FIND_CB_SIBLING;
+> > +
+> > +	if (die_get_data_member_location(die_mem, &loc) < 0 || loc != 0)
+> > +		return DIE_FIND_CB_SIBLING;
+> > +
+> > +	if (die_get_real_type(die_mem, &base_die) == NULL)
+> > +		return DIE_FIND_CB_SIBLING;
+> > +
+> > +	/* It should have the vtable pointer at offset 0 */
+> > +	if (die_get_vptr_class(&base_die, 0, &vptr_die) == NULL)
+> > +		return DIE_FIND_CB_SIBLING;
+> > +
+> > +	return DIE_FIND_CB_END;
+> > +}
+> 
+> [ ... ]
+> 
+> > +Dwarf_Die *die_get_vptr_class(Dwarf_Die *type_die, int offset,
+> > +			      Dwarf_Die *die_mem)
+> > +{
+> > +	Dwarf_Die class_die = *type_die;
+> > +	Dwarf_Die vptr_class = *type_die;
+> > +	Dwarf_Die member_die, mb_type;
+> > +	Dwarf_Word loc;
+> > +	int chase = 0;
+> > +
+> > +	while (die_is_compound_type(&class_die)) {
+> > +		if (++chase > MAX_TYPE_CHASE) {
+> > +			pr_debug("DWARF: base class chase limit reached at DIE 0x%lx\n",
+> > +				 (unsigned long)dwarf_dieoffset(type_die));
+> > +			return NULL;
+> > +		}
+> > +
+> > +		if (die_find_child(&class_die, __die_find_member_offset_cb,
+> > +				   (void *)(long)offset, &member_die) == NULL)
+> > +			return NULL;
+> 
+> [Severity: Medium]
+> As reported by Namhyung Kim on v2 [1], broken DWARF debug info with cyclic
+> inheritance requires recursion depth limits when chasing base classes.
 
-commit 137020466c84fe37ed29fa37c240863bb116831f
-Author: Ian Rogers <irogers@google.com>
+Can you please address this?
 
-perf sysinfo: Add sysinfo subcommand
+Thanks,
+Namhyung
 
-This commit adds the perf sysinfo subcommand to display and probe PMU and
-system performance monitoring capabilities on a running system or from a
-perf.data file, supporting both text and JSON output modes.
-
-> diff --git a/tools/perf/builtin-sysinfo.c b/tools/perf/builtin-sysinfo.c
-> new file mode 100644
-> index 0000000000000..afc4648098dd8
-> --- /dev/null
-> +++ b/tools/perf/builtin-sysinfo.c
-> @@ -0,0 +1,2022 @@
-
-[ ... ]
-
-> +static bool evsel_matches_pmu(const struct evsel *evsel,
-> +			      const struct perf_pmu *pmu, bool show_all)
-> +{
-> +	struct perf_pmu *ev_pmu =3D evsel__find_pmu(evsel);
-> +	const char *ev_pmu_name;
-> +
-> +	if (ev_pmu =3D=3D pmu)
-> +		return true;
-> +
-> +	if (ev_pmu) {
-> +		if (!show_all && !pmu->is_core && pmu->name && ev_pmu->name) {
-> +			size_t base_len =3D pmu_name_len_no_suffix(pmu->name);
-> +
-> +			if (pmu_name_len_no_suffix(ev_pmu->name) =3D=3D base_len &&
-> +			    !strncmp(pmu->name, ev_pmu->name, base_len))
-> +				return true;
-> +		}
-> +		return false;
-> +	}
-
-[ ... ]
-
-> +static void print_pmu_json(FILE *fp, const struct perf_pmu *pmu,
-> +			   const struct perf_session *session, bool show_all)
-> +{
-
-[ ... ]
-
-> +			print_probed_regs(fp, &buf, "UserRegisters",
-> +					  p->user_regs_mask, p->user_regs_abi,
-> +					  p->user_simd_mask, p->user_pred_mask,
-> +					  /*intr=3D*/false, /*json=3D*/true);
-> +			print_probed_regs(fp, &buf, "IntrRegisters",
-> +					  p->intr_regs_mask, p->intr_regs_abi,
-> +					  p->intr_simd_mask, p->intr_pred_mask,
-> +					  /*intr=3D*/true, /*json=3D*/true);
-> +			print_probed_regs(fp, &buf, "IntrRegistersPreciseOnly",
-> +					  p->intr_regs_precise_mask, p->intr_regs_abi,
-> +					  p->intr_simd_precise_mask, p->intr_pred_precise_mask,
-> +					  /*intr=3D*/true, /*json=3D*/true);
-
-[Severity: Medium]
-In probe_pmu_regs_one() in tools/perf/util/pmu.c, when an interrupt register
-or SIMD/predicate register class can only be sampled with precise_ip > 0, i=
-ts
-bit is set in both intr_regs_mask (or intr_simd_mask / intr_pred_mask) and
-intr_regs_precise_mask (or intr_simd_precise_mask / intr_pred_precise_mask).
-
-In print_pmu_text(), the Intr registers output masks out the precise-only
-subsets before printing Intr registers (precise sampling only):
-
-	print_probed_regs(fp, NULL, "Intr registers",
-			  p->intr_regs_mask & ~p->intr_regs_precise_mask,
-			  p->intr_regs_abi,
-			  p->intr_simd_mask & ~p->intr_simd_precise_mask,
-			  p->intr_pred_mask & ~p->intr_pred_precise_mask,
-			  /*intr=3D*/true, /*json=3D*/false);
-	print_probed_regs(fp, NULL, "Intr registers (precise sampling only)",
-			  p->intr_regs_precise_mask, p->intr_regs_abi,
-			  p->intr_simd_precise_mask, p->intr_pred_precise_mask,
-			  /*intr=3D*/true, /*json=3D*/false);
-
-Should print_pmu_json() also mask out intr_regs_precise_mask,
-intr_simd_precise_mask, and intr_pred_precise_mask when emitting
-IntrRegisters, so that precise-only registers (such as x86 PEBS-only XMM
-registers) are not duplicated in both IntrRegisters and
-IntrRegistersPreciseOnly?
-
-[ ... ]
-
-> +static void add_pmu_display_name(struct strlist *list, const struct perf=
-_pmu *pmu)
-> +{
-> +	size_t num_inst =3D perf_pmu__num_duplicates(pmu);
-> +	char buf[128];
-> +
-> +	if (!pmu->name)
-> +		return;
-> +	if (num_inst > 1) {
-> +		size_t base_len =3D pmu_name_len_no_suffix(pmu->name);
-> +
-> +		snprintf(buf, sizeof(buf), "%.*s", (int)base_len, pmu->name);
-> +		strlist__add(list, buf);
-> +	} else {
-> +		strlist__add(list, pmu->name);
-> +	}
-> +}
-> +
-> +static void print_system_summary(FILE *fp, const struct perf_session *se=
-ssion,
-> +				 bool probed, bool leading_newline)
-> +{
-
-[ ... ]
-
-> +	while ((pmu =3D perf_pmus__scan_skip_duplicates(pmus, pmu)) !=3D NULL) {
-> +		size_t pmu_events, sysfs_ev, json_ev;
-> +
-> +		pmu_event_counts(pmu, &pmu_events, &sysfs_ev, &json_ev);
-
-[ ... ]
-
-> +int cmd_sysinfo(int argc, const char **argv)
-> +{
-
-[ ... ]
-
-> +	while ((pmu =3D show_all ? perf_pmus__scan(pmus, pmu) :
-> +				 perf_pmus__scan_skip_duplicates(pmus, pmu)) !=3D NULL) {
-> +		if (!pmu_matches_filters(pmu, show_all, argc, argv))
-> +			continue;
-
-[Severity: Medium]
-On heterogeneous or big.LITTLE systems where distinct core PMUs share a base
-prefix before a decimal or 3+ hex-digit suffix (such as armv8_cortex_a53 and
-armv8_cortex_a57/a72, or armv8_pmuv3_0 and armv8_pmuv3_1),
-pmu_name_len_no_suffix() strips those suffixes and treats the core PMUs as
-duplicates.
-
-When running without -v or -a, won't perf_pmus__scan_skip_duplicates() in
-cmd_sysinfo() and print_system_summary() skip all but the first core PMU,
-while perf_pmu__num_duplicates() in print_pmu_text(), print_pmu_json(), and
-add_pmu_display_name() strips the CPU suffix from the displayed core PMU na=
-me
-(reporting armv8_cortex or armv8_pmuv3) and counts the system as having only
-a single core PMU in the summary?
-
-In addition, because evsel_matches_pmu() guards its prefix match with
-!pmu->is_core, recorded events belonging to the skipped core PMUs will not
-match the first core PMU either and will be omitted from Recorded events.
-
-Should core PMUs be excluded from duplicate skipping and suffix stripping
-(similar to how pmu_deduped_name_len() in tools/perf/util/pmu.c handles
-pmu->is_core)?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103234502.1008=
-382-1-irogers@google.com?part=3D39
+> 
+> While die_get_vptr_class() and die_find_virtual_func() add a MAX_TYPE_CHASE
+> check on their outer loops, die_get_vptr_class() (which is also invoked by
+> die_find_virtual_func() -> __die_find_primary_base_cb() ->
+> die_get_vptr_class()) calls die_find_child() with
+> __die_find_member_offset_cb() on its first iteration (chase == 1).
+> 
+> Inside __die_find_member_offset_cb(), when encountering a DW_TAG_inheritance
+> child with offset >= loc, it recurses into base_die without a depth limit:
+> 
+> tools/perf/util/dwarf-aux.c:__die_find_member_offset_cb() {
+> 	...
+> 	if (tag == DW_TAG_inheritance) {
+> 		Dwarf_Die base_die, member_die;
+> 		...
+> 		if (offset < loc)
+> 			return DIE_FIND_CB_SIBLING;
+> 
+> 		if (die_get_real_type(die_mem, &base_die) == NULL)
+> 			return DIE_FIND_CB_SIBLING;
+> 
+> 		if (die_find_child(&base_die, __die_find_member_offset_cb,
+> 				   (void *)(long)(offset - loc), &member_die))
+> 			return DIE_FIND_CB_END;
+> 
+> 		return DIE_FIND_CB_SIBLING;
+> 	}
+> 	...
+> }
+> 
+> If a binary has malformed DWARF with cyclic DW_TAG_inheritance (for example,
+> at offset 0), won't __die_find_member_offset_cb() recurse until stack
+> exhaustion on the first iteration before returning to the outer MAX_TYPE_CHASE
+> loop in die_get_vptr_class() or die_find_virtual_func()?
+> 
+> [1] https://lore.kernel.org/r/asA1u7LBRp2gqbWI@google.com
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20261103155650.269973-1-yzhao62@ncsu.edu?part=2
