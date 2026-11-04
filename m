@@ -1,55 +1,93 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793777278;
-	b=l5z5m7zmLnC5EBHZ+fBG6HG+v5h8XC4Csmv1mJx6ykBEyIIhLceJoiPgjFg1BQJMj3aE
-	 BEpxCzqczXNyZuvXoBccYl/hFNNEfIswZZS6R6dbDJWWKuwy5HfRJwfZCcqbogh37pJLa
-	 FLKiQuSTDvGe860EwjX+g4RgEy4t0mT0+bbbEVrcBMyAIDRGh2qyBBlD1GP9be30UWHfm
-	 DwSbaNmYQXDw4+zxP2Ry6cnBbdIs/Cba9Kj+BOcxg/cci2mdXwpmSyV3+pv1O6D80sf/7
-	 kJS99hE5SSHPR4RU6oqQyZwAXQ8M71k7r59raf/UZUZxcAXY3zA39tCN5UNwTc2WmvQ==
+	t=1793777544;
+	b=qVOITaQnjH+yu9iELyvsGDOgHfGmlWdkc2CrGo0XN/81nDir9Sit+0C6F5ujf/esiV6f
+	 /7701Keh12NBp9P0vKIg3OYjfBqKUzgCPqtCn4LjlMhKACQwf/YS7mKQO789igQARjBtr
+	 0ah7VPgirErwW1P5Sihf39wIzgHEWoCL0dD2I8WYi2VGpztZH77wLGpWX+vDcG0sAQfuR
+	 wNk0n1CdXu3nNE1phM0wtMyZ+bt26nzsn9XByDgYP2bYJJfob2PXn4MrR+cngFeLT9ntD
+	 HtDmA+AvCTx8HxMqo+MTWX8KVr9dppVYPQhD7R8bPYnNzOKgw7BDdxGCeVgMLL32eZQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793777278;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=pptyCmJmQPEMzSvMlHZwf3zUy4ustAl6GnS7BsuFQE0=;
-	b=GhSTMqNOHFC2PUU/vlGzKWAwoeFB1Eab71/amo51rN9qSaiFPE2vOSYlqzhpiKTcewB/
-	 3bK3egVxpCd+Zexb2hD7EyngxsMir+WmJtyj61tzQbiQ16ppeE0qwJpdQElF8fsn4KvDc
-	 wzaRaCtuiHSW+xEolbKEQ+Ypt0EJ+OeA3Nl/TLBZNxbZ4hts2QLBySBO7G3DE7bRRjSrB
-	 LMUcrt8TVTtMA5sHTUZhIqOp2Q/1KQfWXdpIeiaml7Nx7PcEoTlSmGl8PYuuSRgxsmcqu
-	 N80KHzMDl/+9rzKFchcBOm4xoOE+3syyPcb+7u2H2ZGzhTQgN95NyiHHbBuO92Z+3mg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793777544;
+	h=DMARC-Filter:Date:DKIM-Signature:DKIM-Signature:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To;
+	bh=FTuoz+Tu1ZqVAmMASax5Vg8xqu9+VRz2AqfqKkE/of8=;
+	b=Q6reKC51RMVxFu3o6feLMVvqgg3Hcib7B4QR/7nnGvYXzD8mH46bb84PMg85zQ9zCRg2
+	 +XGYdPuz9NSGGTrJdI2p9TBQpGE0FtikA4UFYldDFAKf79GDWR2TSG6laQE+MQC9xJUhp
+	 ggOdpndWMdnHpYxD844Dy05nQKqw7HzzShRp3F+vxScpETAoQe5wrx6oD9RUs4jf0VfEk
+	 b67PqoLtyNX6smdHHpxoyZGgDO2w/diRcg6ZclkbT+rhjiFom96BRJnd8jqJw96gY1bds
+	 uIY3FhUz5lKrtMLJG5WV0ODS09467voPiwTAedkuxNkQ1k8jspkoXCV5n6YBMGHi50g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KXhUlhGY;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=linutronix.de;
+	spf=pass smtp.mailfrom=linutronix.de;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=XH3LXEsZ;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=VAkr93B+;
+	arc=none smtp.remote-ip=193.142.43.55
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8FB0606A31B
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 07:27:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8DE606A326;
+	Wed,  4 Nov 2026 07:32:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1D8DE606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KXhUlhGY
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 767B21F000C1;
-	Wed,  4 Nov 2026 07:27:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793777277;
-	bh=pptyCmJmQPEMzSvMlHZwf3zUy4ustAl6GnS7BsuFQE0=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=KXhUlhGYtaC0QwfOjykJ2a/gdS24mqnPkxepqvHoC3u2Kre30sYgkBBlO87Z5bYG3
-	 pJYIh0q/WoLr1SHzVqUK9W93FS5bC1Lm045kkUe6IGVR+7ZdLA7oYf16NLVQl7G/Ze
-	 3Aq/xOOjiZbIjaDJfVlXu2d+uow0AqZ+lBuypRR1hO29qPvU4YwfK7HjD+jBtyBVbc
-	 KajsdKPB300YRIIyr5oU0xeZZgAN+k45oPRCudWQfyhRPBz0OI42wUFqp6kcfw3zlh
-	 g6wuZFhX34uE3sTfXSE4466rJVyzg3Me/mMR8HYMPimkz3AJx7rTNuqKH5tuUp1P3z
-	 7Cnp9pNPonyrA==
-Message-ID: <sashiko-outbox-196793@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 37/41] perf pmu: Probe user-space mmap capabilities
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20261103234502.1008382-38-irogers@google.com>
-References: <20261103234502.1008382-1-irogers@google.com>
- <20261103234502.1008382-38-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 07:27:57 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=XH3LXEsZ;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=VAkr93B+
+Date: Wed, 4 Nov 2026 08:32:20 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1793777542;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FTuoz+Tu1ZqVAmMASax5Vg8xqu9+VRz2AqfqKkE/of8=;
+	b=XH3LXEsZmyZjYlk3Ntq6SZFFLSphhKRezZCOR9FpoOpYqKxDRBAqPylJyxHoxidC/fat4d
+	JM+AnI3UvD310wrBCL8hOKotKn8QjJsgAJrA4Tqs1GSmi6qcqfKMYx2fW7f+bsbor/oLfA
+	Tb9WKo6i6aHUQSXOyqej6WkFiMYEfC/AvqB9K41Gea0XSHyTJQsqQiXY8ApoGuE2VvfPue
+	pJenrF+P4Isat0Y1/FRNpwSpknoN8oGKMjk2C+cMqRqf6d/VzoVu4Rm9Iqh5xoa2f9ZXmh
+	OcHlmOzs/Iktr46mlx+LmhWb+HeW2uG6GsNiofui7oMkZcmrorIJnLGblkR9/Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1793777542;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FTuoz+Tu1ZqVAmMASax5Vg8xqu9+VRz2AqfqKkE/of8=;
+	b=VAkr93B+pVAxcXeHVdFUneBrvYF2MbIFQ9wvH5xIKwwRBbzMqLFo2lozUkzIu8R+I8XHqK
+	IfvDtLfCkuzJg5Bw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jiayuan Chen <jiayuan.chen@linux.dev>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	"Vineeth Pillai (Google)" <vineeth@bitbyteword.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Andi Kleen <ak@linux.intel.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	driver-core@lists.linux.dev
+Subject: Re: [PATCH 1/6] irq_work: Re-raise pending irq_work after system
+ resume
+Message-ID: <20261104073220.Hgq4chT1@linutronix.de>
+References: <20261102074039.26983-1-adrian.hunter@intel.com>
+ <20261102074039.26983-2-adrian.hunter@intel.com>
+ <20261102090604.GR1779021@noisy.programming.kicks-ass.net>
+ <74511f6b-f5ff-498f-bf97-ebdc86c43d24@intel.com>
+ <20261102163937.KwllF-Pg@linutronix.de>
+ <2d6105b4-bd75-41b5-a7b2-da91bda31350@intel.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -58,137 +96,48 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2d6105b4-bd75-41b5-a7b2-da91bda31350@intel.com>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] perf pmu: probe_mmap_caps() skips perf_user_access sysctl on RIS=
-C-V
-- [Medium] perf pmu: non-advancing counter check in probe_mmap_caps()
---
+On 2026-11-03 17:46:32 [+0200], Adrian Hunter wrote:
+> On 02/11/2026 18:39, Sebastian Andrzej Siewior wrote:
+> > On 2026-11-02 12:54:22 [+0200], Adrian Hunter wrote:
+> >>
+> >> Yes CPUs remain online for suspend2idle, but currently the choice between
+> >> suspend2idle and "deep" (S3) suspend is a user space choice,
+> >> refer /sys/power/mem_sleep.  Many modern systems do not support S3
+> >> anymore, but it has not gone away.
+> >>
+> >>>
+> >>> Anyway, I'm torn; I would much rather make this trigger a WARN and have
+> >>
+> >> AI now also identifies ftrace, BPF, GHES NMI, and #MC as possible causes,
+> >> not just perf.  I haven't tried to confirm any of those.
+> >>
+> >> And, belatedly, AI is now saying an irq_work raised before lapic_resume()
+> >> might result in #GP if the APIC is left in xAPIC mode at resume.  Also
+> >> not confirmed.
+> > 
+> > Could we flush this before similarly to what happens during CPU-hotplug.
+> > The question is if this event can stay enqueued during suspend (and
+> > handled on resume) or should be taken care before entering suspend.
+> 
+> WRT "might result in #GP if the APIC is left in xAPIC mode at resume",
+> the systems I have checked restore the APIC in x2APIC mode, so the
+> issue is theoretical at this point, although I can get "unchecked MSR
+> access error: WRMSR to 0x83f" if I deliberately add code to change
+> x2APIC to xAPIC early in S3 wake (in x86_acpi_suspend_lowlevel()),
+> and then do:
+> 
+>   perf record -e power:suspend_resume --filter 'action == "machine_suspend" && start == 0' --no-buffering -C 0 -o /tmp/x.data &
+>   rtcwake -m mem -s 10
+> 
+> The error can be avoided with:
 
-commit 4c52f2a70c884425ea972ad4877898e6764c69b2
-Author: Ian Rogers <irogers@google.com>
+I meant flush it via irq_work_run_cpu() like in smpcfd_dead_cpu() (the
+CPU-hotplug path) and not go via APIC. You should do it late once the
+interrupts are disabled so no new irq-work can be enqueued.
 
-perf pmu: Probe user-space mmap capabilities
-
-This commit extends perf_pmu__probe() with probe_mmap_caps() to inspect the
-perf_event_mmap_page of an opened PMU event, recording user-space counter
-reading support (rdpmc/mrs/csrr), counter bit-width, and user time conversi=
-on
-capabilities.
-
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index bc3c821153b6a..e26563342ad19 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -3820,6 +3820,106 @@ static bool probe_format_pack(const struct perf_p=
-mu *pmu, struct perf_event_attr
->  	return true;
->  }
-> =20
-> +/*
-> + * Probe user-space perf_event_mmap_page capabilities, including user-sp=
-ace
-> + * counter reading (rdpmc/mrs/csrr), counter bit-width, and user time fi=
-elds.
-> + */
-> +static void probe_mmap_caps(struct perf_pmu *pmu,
-> +			    const struct perf_event_attr *base_attr,
-> +			    pid_t pid, int cpu, unsigned long flags)
-> +{
-
-[ ... ]
-
-> +	/*
-> +	 * On architectures such as arm64, user-space counter reading must be
-> +	 * explicitly requested via format/rdpmc (e.g. config1:1).
-> +	 */
-> +	if (perf_pmu__has_format(pmu, "rdpmc")) {
-> +		struct perf_event_attr r_attr =3D attr;
-> +		int uval;
-> +
-> +		has_rdpmc_cap =3D true;
-> +		if (pmu->probed.rdpmc_sysfs < 0 &&
-> +		    sysctl__read_int("kernel/perf_user_access", &uval) =3D=3D 0)
-> +			pmu->probed.rdpmc_sysfs =3D uval;
-> +
-> +		if (probe_format_pack(pmu, &r_attr, "rdpmc", 1))
-> +			fd =3D sys_perf_event_open(&r_attr, 0, -1, -1, flags);
-> +	}
-
-[Severity: Medium]
-In probe_mmap_caps(), reading kernel/perf_user_access and setting
-has_rdpmc_cap are gated on perf_pmu__has_format(pmu, "rdpmc").
-
-While arm64 PMUs expose format/rdpmc, the RISC-V SBI PMU driver in
-drivers/perf/riscv_pmu_sbi.c registers the kernel/perf_user_access sysctl in
-sbi_pmu_sysctl_table without exposing a per-PMU sysfs rdpmc file or a
-format/rdpmc attribute in riscv_arch_formats_attr:
-
-drivers/perf/riscv_pmu_sbi.c:
-    static struct attribute *riscv_arch_formats_attr[] =3D {
-        &format_attr_event.attr,
-        &format_attr_firmware.attr,
-        NULL,
-    };
-
-When perf_pmu__probe() -> __perf_pmu__probe() -> probe_mmap_caps() runs on a
-RISC-V core PMU, won't this skip reading kernel/perf_user_access, leaving
-pmu->probed.rdpmc_sysfs at -1 and leaving pmu->probed.rdpmc_available false
-whenever kernel/perf_user_access is 0?
-
-> +
-> +	if (fd < 0 && !pmu->is_uncore)
-> +		fd =3D sys_perf_event_open(&attr, 0, -1, -1, flags);
-> +	if (fd < 0)
-> +		fd =3D sys_perf_event_open(&attr, pid, cpu, -1, flags);
-> +
-> +	if (fd >=3D 0) {
-> +		pc =3D mmap(NULL, page_sz, PROT_READ, MAP_SHARED, fd, 0);
-> +		if (pc !=3D MAP_FAILED) {
-> +			if (has_rdpmc_cap || pc->cap_user_rdpmc) {
-> +				pmu->probed.rdpmc_available =3D true;
-> +				pmu->probed.pmc_width =3D pc->pmc_width;
-> +			}
-> +			if (pc->cap_user_rdpmc && pc->index !=3D 0) {
-> +				struct perf_mmap map =3D { .base =3D pc };
-> +				struct perf_counts_values start =3D { .val =3D 0 };
-> +				struct perf_counts_values end =3D { .val =3D 0 };
-> +
-> +				pmu->probed.can_user_rdpmc =3D true;
-> +				if (perf_mmap__read_self(&map, &start) =3D=3D 0) {
-> +					for (int spin =3D 0; spin < 10000; spin++)
-> +						barrier();
-> +					if (perf_mmap__read_self(&map, &end) =3D=3D 0 &&
-> +					    end.val >=3D start.val && end.val > 0)
-> +						pmu->probed.rdpmc_works =3D true;
-> +				}
-> +			}
-
-[Severity: Medium]
-Should the check in probe_mmap_caps() be end.val > start.val instead of
-end.val >=3D start.val && end.val > 0?
-
-When an active hardware event is opened and its perf_event_mmap_page is
-mapped, the kernel's period initialization (such as x86_perf_event_set_peri=
-od,
-armpmu_event_set_period, and riscv_pmu_event_set_period) sets
-event->hw.prev_count to (u64)-left, and perf_event_update_userpage() sets
-userpg->offset to +left > 0.
-
-In user space, perf_mmap__read_self() computes:
-
-    cnt =3D pc->offset + evcnt;
-
-Because pc->offset is already positive, if read_perf_counter() returns 0 (f=
-or
-instance via the fallback stub in tools/lib/perf/mmap.c) or if the hardware
-counter does not advance across the 10,000-iteration spin loop, start.val a=
-nd
-end.val will both equal the same positive constant, causing end.val >=3D
-start.val && end.val > 0 to evaluate to true and set pmu->probed.rdpmc_works
-even when the counter did not advance.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103234502.1008=
-382-1-irogers@google.com?part=3D37
+Sebastian
