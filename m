@@ -1,56 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793818558;
-	b=MUDJ3RITd6s3rjT3HDcmE7GSPDPSg1cEnGYATP7DtjVBEEiyGFGaIG5O4nfKjRMRUAcS
-	 YNPPuPCmiq55cnaFm1mPZYV+4pVmH6+reaeq5mmTwLMk9Zgbi8ukE8TBeCjoUztMZxFHI
-	 32OAt/7++PGeFupAvjPhl+rjgjwTO5n3nxFS2blffh72IpeYrE+8Njsir35yKTlC40BC9
-	 41aMH8YmZ0Gi3AqltHpLwNouMaeOpjaOiNQc37GSiK8xPdZlZBYAHmAJOd7+nspGSKQfX
-	 mOH3EX1+sYxr1LzEaqmlS7oCb6lKI7CUjGhFNkPNYnLOC4K0zG0UY0oCCBBj02TjVjw==
+	t=1793818569;
+	b=ONGPSyOHY3Q5IX4HOSxfQzq5MpnmYBhWDmc8u73PI+rSXQFMRwvQciSeYUBAiCdX5OAO
+	 rYpGuCy4Ow05ISIXjfwk6oouWGV0jXPy4uMZNH57BFIVH39uoX6+/1H8CpGwP1tdVMxRt
+	 Jcq5LSayH0YSwr/nJt+V9/1c9cPqOMyJQejqwaH4o5PTUAe1Tg8obh0YkgTcOktgXQV5b
+	 pfd7su9UJ7OuWXo0MUAE0OnN9nC53WAtAt02k/v6OqjgVe5GDjIzCJuE4obgRK4R7XQ9F
+	 YFDOaRPR9OYLRp0Z+eP4Ue/+vXWxCNVLqfxGSMQgi1K039eMiZEEyHTNMbHZneIq1+g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793818558;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793818569;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=aa2RvVvL3G0/KZ59rL3HbRKQSOx4Emn2F92gfO8sMsk=;
-	b=145P5+I+PjNVoEO/GyUbA/KS4Qf8S6TWETFBK6zUx5QUpyekAdNuoBXWm4WJGjXySuvz
-	 0YsD0S+Eur+8gW8OT3IaSejYBrylyOTVFkEypY78+JqjrssqDG2g4elRLxb/leWHNpfsU
-	 +GikiG0jc1OjBJVE7avY04/pLGA+UXvsiwvFMYEpj4ZoEFlxFEFIuEDo12zWSx5Vvd4yY
-	 PeSFXzA5phOTqNYtZNtttxPlKAEKWfQeL+3BjkB4oZQN87RPm+icKpnUI8/0gXsdkB/eR
-	 lH7RJQ7PwD01WSMvHnLbHrQnGdN+mXSo1yvd7Xqer1j6nRxh/LJWxWbTQxfwMyOH5EQ==
+	bh=6h02pjY31iOC20QJUPEB//iRLTBNXxefSzIfbwJ8/Qg=;
+	b=gZ0eQY12yV5rGKZhHaH/nwSr/b0Qb2YXWFex8nM/zHh/Rz+cG1rreXr2wJLVlXw6j56i
+	 U9tzuOm/y+Zt1CEnlDPlWoGP1qu6Ajhy1DulziZwtLNVhqONXIa1nOw/Em1geBYk+MaQX
+	 q0ApRwNOam5GQ66UkS0G72xsgsUjEguTeHIyfNmHDP/6WWU3qfTae73grC4uMOQDv4LOx
+	 lYtE6LOdvdIl9oQBFyw9Ll+gLmrvdRaiipDsaFMIcOnYfJIs0afrnzLLHSqOOKFEpSdOF
+	 UiFMSuozme+kTItoKux/7znj0FnQOARs57GhhP6Vsu5ErUBSYJgSxTVwQOf5ggVQ0Kw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ATk42RM4;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=U3S+AdGg;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30796606A32C
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 18:55:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E5A606A336
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 18:56:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ATk42RM4
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2D0C1F000C1;
-	Wed,  4 Nov 2026 18:55:57 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=U3S+AdGg
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9132C1F000C1;
+	Wed,  4 Nov 2026 18:56:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793818558;
-	bh=aa2RvVvL3G0/KZ59rL3HbRKQSOx4Emn2F92gfO8sMsk=;
+	s=k20260515; t=1793818568;
+	bh=6h02pjY31iOC20QJUPEB//iRLTBNXxefSzIfbwJ8/Qg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ATk42RM4SxwEUZkjO7XXl/Er1d4YOLbOPyv2AiwosP2gNQSHnHXCZz+8OvLF7ldVl
-	 WnQ0ouN0ua/BF0b33cAkorN6Bsav9v6dLfnHiCm8rn+GC5Use5+HSYME2uozH8GL2n
-	 zrHyM+t6U08Rs6PLjt3KyMo0DhvAWhzYWnkPhMWLgm2w7/+4aZQsWMTN23DNzuE7nT
-	 oW1iujRIfnZmlRuchtVovM5pIHi59pcI7vCs8TkEEDLp30hTR8mZjhNBK3fZHT5kFx
-	 AOJIoJILJPqL/tEbJunGIoNXiHW9zm2FnG92weL9EqrvVj0dLnGRCo/NCXxVf2Zsrv
-	 CQgWm0tkqlvPw==
-Message-ID: <sashiko-outbox-197890@kernel.org>
+	b=U3S+AdGg18d5oQSrwXU3cQduXhG36m4NvAAl7QTFUAkQMCSEpsjm2pd9Xowk1RV1j
+	 Gu/q614giPKxJWHxHi/jCHYflJHVARip2I7/cKJ2bCWqO/GilL+XBVJQ8MkPgHyr58
+	 QoUV7jOKUUj8+YKLAvLfqZCa7zL2uCOzoJ0bWk+zANS184evLZFLJ+EMv9H3wkYan0
+	 /5Yqlz5SJ4YrX512rY3bGacBJJemY0UtityHV52q/L6IPX9fd1o9juaByhejPpOBgB
+	 +oHS2Ha04cw23mC8/MJHkl+umpSpFMK5bmdk/77UCUYLzsDRLkiowsSxnxrm2A7RIO
+	 jPgUlk7pYXssw==
+Message-ID: <sashiko-outbox-197891@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 11/13] alpha/perf: add ProfileMe sample filters
+Subject: Re: [PATCH v6 09/13] alpha/perf: report the ProfileMe window count
+ as the sample weight
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Matt Turner" <mattst88@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261104-alpha-profileme-v6-11-63362e9290a3@gmail.com>
+In-Reply-To: <20261104-alpha-profileme-v6-9-63362e9290a3@gmail.com>
 References: <20261104-alpha-profileme-v6-0-63362e9290a3@gmail.com>
- <20261104-alpha-profileme-v6-11-63362e9290a3@gmail.com>
+ <20261104-alpha-profileme-v6-9-63362e9290a3@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 18:55:57 +0000
+Date: Wed, 04 Nov 2026 18:56:08 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,20 +61,15 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> ProfileMe samples any fetched instruction, including those killed on a
-> wrong path, and what happened to it is only in the PERF_SAMPLE_RAW data.
+> What PCTR1 counted during the ProfileMe window, the inum retire delay for
+> cycles:p or the window length for instructions:p, is only available in
+> the PERF_SAMPLE_RAW data.
 >=20
-> Add three config1 bits that keep only the samples of instructions that:
->=20
->   retired     retired. VAL says so for an instruction that did not trap,
->               and the trap type for one that did.
->   mispredict  were mispredicted conditional branches.
->   trapped     trapped, mispredicts included, or caused an ITB miss,
->               Istream access violation or interrupt redirect.
->=20
-> A sample must match every bit that is set, as with Arm SPE's
-> event_filter. The driver drops the samples that do not, and they still
-> count as interrupts for throttling and frequency mode.
+> Report it in var1_dw of the sample weight, which the weight and
+> local_weight sort keys read. It is 20 bits, so it fits. As Alpha is
+> little-endian, this is also the right value for plain PERF_SAMPLE_WEIGHT,
+> which is what perf record -W asks for. Samples that fall back to the
+> interrupted PC get no weight, as it belongs to a different instruction.
 >=20
 > Suggested-by: Ian Rogers <irogers@google.com>
 > Assisted-by: Claude:claude-opus-5-5
@@ -83,5 +79,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-alpha-prof=
-ileme-v6-0-63362e9290a3@gmail.com?part=3D11
+ileme-v6-0-63362e9290a3@gmail.com?part=3D9
 
