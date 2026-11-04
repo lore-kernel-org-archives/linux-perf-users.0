@@ -1,48 +1,53 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793797162;
-	b=JHqNvOBrk2kQFKN9nTIRxX/Mf2+yk6KZhhvr9lUSOTB+nP622G3fCWrvNCNqxAzjZoxm
-	 /2pxrLArYpfv0LlEsdGFeeybdInXNfRtuU6vdzCxRqva68OJKXdoI1NCZVFZXVLwarmCO
-	 l6qDP0Fnz3jwAZmgsZ+rukyPm8dXMOokZgejWHmO3SZJCOcSahcWrsjf2rKmsFeH8NwFN
-	 6eyyl6Up1md5QyZG5iWdDSZsSX14tLpAv/EC21RzAZN7mOgvS7TKNPpjN7Rsmx83nTZ9L
-	 Nun7lAuRQvByfgwEujfE1XMowtef4aMYTFMVY+tprHrJfEdFsV3wgqMdsSY90ISJU8A==
+	t=1793802256;
+	b=ALs6TT6D3BSFEkLOCXD4lbZMQK1kaztbHrVt2E6nNQsM5FJbu5/fzBV7VIrBy2+yOSU1
+	 g9/IvPneA5l+yzlvIPZS8EV8snAoxTaHho+FxVN0taifBDBdYeppYAvziCxNWmjzP3Kub
+	 T/VQ0jE89Fx8qK7JfjuwItqITP7F5JOTJ6Xue9cT0VIAeYwWCcA7bxHCufX1sgiHe2FfS
+	 B+ODNmmh9Cow+K2ZXbZvKwOB6kvtpOCgU2ad/KPlFu7cfX/f6YHOXFjeuKRmeqIZfd3Ce
+	 TblhO/EShuvH+BtwnnZA0XPsdjebQCtAbOGH34Wp8PgSB4UeFy1r8OMvpxHuXjIgUfg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793797162;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=nd7kADZgodTb54n9b+XTnvtmzKhovXgowvZQIlEeTH8=;
-	b=yT3OWWntxvzrALg88LYOwqa1tft2q2IF3dsN3WMB8SYj2IC5xxEoWC99RrmPaQNXrc+s
-	 SGWEtez4xSWYSPEA7D3QaM2OuPWjeLSNPdLZdo/ZiUEyQyup6EA+eR25hqP7Fpehb2VjK
-	 oPXQUMvrbHzuYj/2IxojTsybIG7oe9TMRbdR/rfkoCE3kFml1UjUWZ0nX9vY9qWpXtVb8
-	 aKgSo1SXqJNkI42xkUlWnPg/1b3/XafzKFc3btk1RSBw0Od3dSWUUhzx29ttkBN3eh+l1
-	 ai8k+jf+G5kCS3kvLXf2kDF/+noK4ClvYBeuOv6KTHolnYNxtv3qIVdrlmk9LtXL3qA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793802256;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=LT4QhNCuGhtvYaGuZ1YT+0MRJJqhUJ12cQ6XYhOTJgY=;
+	b=mHABGTdJ0gsBtS5u3Sm4qPvSOP0Kv9ZkDc/L1pY4yF8Qow0tFhTmfIpa++qMIIMQTtT0
+	 pde3abpV5pzbZocuBmHhyS6rDFXGUQ6GaErE8KYjx3VJL8zHF0AqykoRfUc711cggO/+h
+	 iFYF627/kbZw4NeTjmtAz34iKBFFCMc6/BIagBfgHFvcy3yk+hPkW6ZshG8AW9wosQ5GK
+	 DqY57Wx1NjdJMrsNW3RQjWWp5KUTycojQ0eU/g8tJbNBTUBO43DtTwHSENqwZqxmkEQcK
+	 NegCnyVqodzEtCBt/0ts+nm8VhzoDXvNI6O1RTmL+vrxE9eNGInjQQLFnmm1n8NTq7g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NBJSllBh;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E20A606A326;
-	Wed,  4 Nov 2026 12:59:21 +0000 (UTC)
+	dmarc=pass header.from=arm.com;
+	spf=pass smtp.mailfrom=arm.com;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=ejUyoupl;
+	arc=none smtp.remote-ip=217.140.110.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 141D4606A31B;
+	Wed,  4 Nov 2026 14:24:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 141D4606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NBJSllBh
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F2241F00A16;
-	Wed,  4 Nov 2026 12:59:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793797161;
-	bh=nd7kADZgodTb54n9b+XTnvtmzKhovXgowvZQIlEeTH8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=NBJSllBhnDR7WWrkv1y3e/hqRoezfi09pMp/ctyZ+RQuqk9zw3FWeikYEC7sIKRPj
-	 f793oKbAwOKKWDSyqPGZOguSsOSv0cOl0pjSjo9UKdKk55KCxA1GSSUy7QPY3NIlH9
-	 oDu9ivav0GEygSI3fuDJDSR4CxNCHNzUm0JfPo5zBtl8hluw+lfQ4+p+g+fQ5TLIcp
-	 V3+UeEkhelygerKDmAGbAVKVqRC8bDRqmm/7tHoKAgDwK3kEziWur2yhn9joRrbRIQ
-	 dfNwO5LCohVnXyj97RbOchle+B2aBsuRwW9G5YL3vieNci2eOWNrknePE46WfII2hI
-	 LWJeZikhx+fLA==
-Date: Wed, 4 Nov 2026 12:59:13 +0000
-From: Will Deacon <will@kernel.org>
-To: Yabin Cui <yabinc@google.com>
-Cc: Dev Jain <dev.jain@arm.com>, Leo Yan <leo.yan@arm.com>,
+	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=ejUyoupl
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36AF81D34;
+	Wed,  4 Nov 2026 06:24:12 -0800 (PST)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DAD8A3F673;
+	Wed,  4 Nov 2026 06:24:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1793802255; bh=p/DbzJh9fxRbnRCpJa3VaWBb0VSwvoJXFXtDwP7M4UM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ejUyouplR6xIahybJGnDj5M0O72FEHZUsM4v7yfuiYbScyq64hyzW8kFrpxd5j3vu
+	 pdyVMZvfh3SZPkOBo7jMB7qqAXuV9Zf7Z0zhGTI2WMSDrSCL9ZIUSxfLYOCY7oMGPC
+	 4QacAJ6NY8RdcO9bbXighOJU3kREXelzU/b11eI4=
+Date: Wed, 4 Nov 2026 14:24:12 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Leo Yan <leo.yan@linux.dev>, Adrian Hunter <adrian.hunter@intel.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@arm.com>, Will Deacon <will@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -50,26 +55,19 @@ Cc: Dev Jain <dev.jain@arm.com>, Leo Yan <leo.yan@arm.com>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Tamas Petz <tamas.petz@arm.com>,
-	Tamas Zsoldos <tamas.zsoldos@arm.com>,
-	Michiel van Tol <michiel.vantol@arm.com>,
-	coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "perf/aux: Allocate non-contiguous AUX pages by
- default"
-Message-ID: <aussIYUR1BGfUzqn@willie-the-truck>
-References: <20261025-perf_revert_prefer_large_alloc-v1-1-5fb431bbd624@arm.com>
- <57c34e26-3048-474d-8e74-f65799e32ff4@arm.com>
- <CALJ9ZPNWcDtajO+Luhxe1K3af64mPRFQSjvfvNornyFFkam-+g@mail.gmail.com>
- <CALJ9ZPO9XxF-kz5K67Jg8RtpiEmK7XFU3e+xDak6LyV_We7yBQ@mail.gmail.com>
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>,
+	linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-doc@vger.kernel.org, John Garry <john.garry@linux.dev>
+Subject: Re: [PATCH v3 04/18] perf cs-etm: Use per-CPU queues for per-thread
+ mode
+Message-ID: <20261104142412.GI9176@e132581.arm.com>
+References: <20261102-james-cs-unformatted-per-thread-fix-v3-0-dbcb0c281b9b@linaro.org>
+ <20261102-james-cs-unformatted-per-thread-fix-v3-4-dbcb0c281b9b@linaro.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -81,40 +79,54 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALJ9ZPO9XxF-kz5K67Jg8RtpiEmK7XFU3e+xDak6LyV_We7yBQ@mail.gmail.com>
+In-Reply-To: <20261102-james-cs-unformatted-per-thread-fix-v3-4-dbcb0c281b9b@linaro.org>
 
-On Tue, Nov 03, 2026 at 12:46:24PM -0800, Yabin Cui wrote:
-> On Sun, Oct 25, 2026 at 04:24:06PM +0000, Leo Yan wrote:
-> > The original commit claimed that contiguous AUX pages unnecessarily
-> > exacerbate fragmentation for SPE, TRBE and ETR. This is not generally
-> > valid: larger allocations can keep pages with the same lifetime together,
-> > while order-0 allocations can scatter them across large blocks and prevent
-> > free pages from coalescing [1]. The follow-up discussion [2] has not
-> > established how forcing order-0 allocations addresses the reported problem.
-> ...
-> > Restore the previous policy of trying higher-order allocations first.
-> > The allocator already uses __GFP_NORETRY and falls back to smaller
-> > orders, including order 0, when larger allocations fail.
-> 
-> Sorry for the late reply, and sorry that the commit message in
-> 18049c8cff9c ("perf/aux: Allocate non-contiguous AUX pages by default")
-> was imprecise about "exacerbating memory fragmentation". You and Dev are
-> right that grouping same-lifetime pages into higher-order allocations
-> does not itself worsen fragmentation, and the TLB reduction numbers for
-> TRBE and SPE with large vmap() mappings make total sense given TRBE's
-> tiny TLB.
-> 
-> However, a straight revert will reintroduce a severe production issue we
-> hit on Android devices, so I'd like to share what actually happened and
-> suggest a way to get large mappings for SPE/TRBE without bringing back
-> the regression.
+On Mon, Nov 02, 2026 at 12:15:18PM +0000, James Clark wrote:
 
 [...]
 
-Thanks, Yabin. This just hardens my stance [1] that the allocation decision
-should be driven by userspace and not second-guessed by the kernel. So the
-revert is _not_ the right approach, in my view.
+> @@ -2215,6 +2209,29 @@ static int cs_etm__get_data_block(struct cs_etm_queue *etmq)
+>  	 */
+>  	cs_etm__flush_all_stack(etmq);
+>  
+> +	/*
+> +	 * Per-thread mode still uses a queue for each CPU, but that CPU can run
+> +	 * different threads. When the TID from the AUX record on a CPU changes,
+> +	 * re-initialize the thread using the AUX record/buffer fragment TID so
+> +	 * we can start decoding even if the context ID packet was cropped or
+> +	 * they're disabled.
+> +	 */
+> +	if (etm->per_thread_decoding) {
+> +		struct cs_etm_traceid_queue *tidq = cs_etm__etmq_get_traceid_queue(etmq,
+> +							CS_ETM_PER_THREAD_TRACEID);
+> +
+> +		if (thread__tid(tidq->decode_thread) != etmq->buffer->tid) {
+> +			thread__zput(tidq->frontend_thread);
+> +			thread__zput(tidq->decode_thread);
+> +			tidq->frontend_thread = machine__findnew_thread(
+> +				&etm->session->machines.host, -1,
+> +				etmq->buffer->tid);
+> +			tidq->decode_thread = machine__findnew_thread(
+> +				&etm->session->machines.host, -1,
+> +				etmq->buffer->tid);
+> +		}
+> +	}
 
-Will
+Why not use PERF_RECORD_AUX events as an opportunity to update threads,
+similar to how we handle PERF_RECORD_SWITCH_CPU_WIDE?
 
-[1] https://lore.kernel.org/all/ar4Iuanz_vA4twGP@willie-the-truck/
+> +
+>  	return 1;
+>  }
+>  
+> @@ -3288,7 +3305,9 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
+>  
+>  	if (aux_offset >= auxtrace_event->offset &&
+>  	    aux_offset + aux_size <= auxtrace_event->offset + auxtrace_event->size) {
+> -		struct cs_etm_queue *etmq = cs_etm__get_queue(etm, auxtrace_event->cpu);
+> +		/* Old per-thread files have no CPU (before v6.4) */
+> +		int queue_idx = sample->cpu == (u32)-1 ? 0 : sample->cpu;
+> +		struct cs_etm_queue *etmq = cs_etm__get_queue(etm, queue_idx);
+
+For per-thread mode, auxtrace_event->cpu is -1. So this is why we
+resort sample->cpu to retrieve CPU ID. This makes sense to me.
