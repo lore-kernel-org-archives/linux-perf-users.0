@@ -1,62 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793827169;
-	b=2cvH1hLR2bLon7hsrkEUcfplggcZqseXprNVXlVL13TxlaCjxPtZ/kApXhypiJZOqdhY
-	 BqPSmsTmXS1noaVHqtxCnpJidm4sbmWSmvN7y6s4J4hyqjl+ffobjwR1HJ0rjBLlu4XL1
-	 gQootEKHsDRdRpNMaignUAamEr5klksCrPbPX6nXWkfRTrjZ7APXG3uvAvxaE8dsB/fUr
-	 H0kBawgnDMwI8HQvGkVWbdb4mloYlkRefk0anXA7xIGWX9J51YuoBYhEipIwo9P+QYeRD
-	 WElM2CXRmeQzEvPJBT3G6EsJW5rY7N/dYsiKYrBmTrbFHYyyqGTaqTScLTTwkVCbjbg==
+	t=1793827170;
+	b=JCwtw03tSSTVjpG0IFbN1couZOf8PpPHXmEEVE1AIjL4vlKIlUrv1eKMnuGSg3be2wzm
+	 KEvgqvi0we+XqZRHpPsbDyAg5t80Kki+t3Q3shWc6IKHpq3xkEy+Q8vC3MQUDpjrSG9U8
+	 bHs6FOVavql0fk57MCekaAUqiKFnwem32hxHzuVjdYqy6KeEklZFrgAd40u1IT3tl5azn
+	 SdPOgzjxk/cl+P9elmQ8HlUD9+fhl1eB0URs8gyNEW7cadn+Zu7OFr25HkA0m1Q7TEkg1
+	 G5NvotTIiqCs7tZT23Hn3N6nmy/SLK281kut+ROCAoGh9FPqe4T1ULtkUOMwOtV5dOQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793827169;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=dqv7130npN2VJ9BaDnO2Xcckf3AY4niswDVqVMQ5hTg=;
-	b=XQTXNcPVxL1wft1EOOE5a7MhqJfFOBUZ+tCQLKd5wTlLaDnxETL1jnOQ6T4DusiOoioY
-	 VizbZ4UE8chwMvWJwCKefIaL8hPhjE64/TkvbsMDUItBRF5IYL2JpkkM2lbUVRozUYmTc
-	 HTkw/rkQWbyB6jL6/q2AAe27gVzOKinXObgw2ckNfZ28rBtj3vqgwG8DDziAUU62lwSul
-	 MybZMF6v2J8nSBGsQOIhuKexmMw6LmUB2dduO4v2UYlYBWnY2lpJ7/6ajwxQ8jsux6yKQ
-	 LinWpgezuUHwhJYDKZXAciC+HvATwMS45A+Rf44AGK2aGfIo2YhlUX7ES4+H0myr0NQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793827170;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=laf8LOVg1+gNvmmBFR8ujDEZ8toScyzlnnQII6ALsW4=;
+	b=rdM/CpGGqIkKHJvJiCqwryLbEkV0tBIdEczH5D184/p8iynl5/Z9GTf9vtK8jsTbMNkj
+	 5s90DnQ5vyEvxOgz9Tj9XSVvcWXU8Pg1k9d6LF1fEG4KIEA30h84FTcSo0rr6S3yKfwHz
+	 ViKbZyViQE+TlS+6h/4NAcP7Mm/Hsilr3rin41X8AjbEE+wnCNZRa61uQAn0Kr2A9rHur
+	 Z3+MtbjpwBcg4nWiCyQACX+N4v9+KMohsD6fhahOnJVlZFrmHNEOBzwV5990uMPXHltHP
+	 NzHZH8j/43XDMR4ZNAB+JERwzGGOyMmcd8Nv0Mdoi2ioyGdI+EYj9JAsXD/55QJt5Pw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AT13itWw;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TYbcKJ51;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8941606D83F;
-	Wed,  4 Nov 2026 21:19:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880DF6074FAF
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 21:19:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AT13itWw
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D90C41F00A1D;
-	Wed,  4 Nov 2026 21:19:27 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TYbcKJ51
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 405B01F0093A;
+	Wed,  4 Nov 2026 21:19:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793827168;
-	bh=dqv7130npN2VJ9BaDnO2Xcckf3AY4niswDVqVMQ5hTg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=AT13itWwcs9AtlV90JbeNmR8DAmEk6ryFDsl7arWGWfMl4hCRD5PT6AA1kiySzxZz
-	 e0KLn1YKZZCRrEbGUT/CFCy7mDVHSedjtM6VhnKfAiOuk+xM9v1FLLoxqToky5B3d0
-	 iN8XhtHAP3doj7qDa94bbSiNDPcX1vqiPC+/yyeNDi9Eccue82VXDeGN2jSc4WYMCC
-	 PTCWFfHSdhJCePylkQ6XebJYQRXhqIRLq318B+Bw1Ii1ec8R2KTPqOUEFqsffWOh0I
-	 Wl3Mw3InAqNyj1rTCTOdtJthrtBzhC8xngA2BaeuT9TzLXVD4JNSGqIxTRV4WA9r+a
-	 SZPjiqvcHShTQ==
-Date: Wed, 4 Nov 2026 18:19:25 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: lirongqing <lirongqing@baidu.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Leo Yan <leo.yan@linux.dev>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf kvm: Fix arm64 VM-exit duration accounting
-Message-ID: <auuhXYYpDW3UZn90@phoenix2>
-References: <20261031120123.2312-1-lirongqing@baidu.com>
- <20261104111751.GG9176@e132581.arm.com>
+	s=k20260515; t=1793827170;
+	bh=laf8LOVg1+gNvmmBFR8ujDEZ8toScyzlnnQII6ALsW4=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=TYbcKJ51LK0C6aTq+2Ul9ykGg4heEpON3MIReQumrQQ2ZtyzZQsTd3B+vya++e8IR
+	 T3kMkSj+TY39xBaLpaBpTUxiapxnNHCN0UrIAWgxJeKb7+xzPOq6khvHFrhV5Ez+iW
+	 4ER9UdVrVM4Ztx6i/S2ZSlNF7nKkGl08R6JPffw69Ngwfhg9kMOfSN+4dlEjI131wd
+	 8/2BYh1tzlyAp4IENJi7Fyts1TeK7lJiDpQmXwD+eVkZ54IRBv1D4+IZrG2RBulEPu
+	 NiKxgXYuYnFWyff9gk55pEDm90nIzRI5MEtRPve+/BcZxdt2W72enCKmekZQFPUDBz
+	 sC5j8jLqDI5Mg==
+Message-ID: <sashiko-outbox-198094@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v9 11/19] perf dso: Use DEFINE_MUTEX for
+ dso__data_open_lock
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261104205909.2078411-12-irogers@google.com>
+References: <20261104205909.2078411-1-irogers@google.com>
+ <20261104205909.2078411-12-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 04 Nov 2026 21:19:29 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -65,31 +60,15 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261104111751.GG9176@e132581.arm.com>
 
-On Wed, Nov 04, 2026 at 11:17:51AM +0000, Leo Yan wrote:
-> On Sat, Oct 31, 2026 at 08:01:23PM +0800, lirongqing wrote:
-> > From: Li RongQing <lirongqing@baidu.com>
-> > 
-> > Use kvm_exit as the start event and the following kvm_entry as the
-> > end event for arm64 VM-exit statistics. Keep decoding ret and esr_ec
-> > from the exit sample.
-> > 
-> > Before this change, arm64 measured guest runtime as VM-exit time.
-> > 
-> > Fixes: 1218838d68f5 ("perf kvm: Add kvm-stat for arm64")
-> > Signed-off-by: Li RongQing <lirongqing@baidu.com>
-> 
-> Thanks for the fix!
-> 
-> Reviewed-by: Leo Yan <leo.yan@arm.com>
-> 
-> Since arm64 requires the exit reason, we cannot directly use the common
-> exit_event_begin()/exit_event_end() callbacks as other archs do.
+> Replace _dso__data_open_lock and its pthread_once() initialization
+> wrapper dso__data_open_lock() with DEFINE_MUTEX(dso__data_open_lock).
+>=20
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Thanks, applied for v7.4.
+Sashiko has reviewed this patch and found no issues.
 
-- Arnaldo
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104205909.2078=
+411-1-irogers@google.com?part=3D11
+
