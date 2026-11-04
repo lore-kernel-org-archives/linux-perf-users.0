@@ -1,99 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.172
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793766353;
-	b=XdZPvyhjiMdzNpRs5geIYdW3eJ5OQtDZugzeD7mPe4oaB+oqYDFWukHGKizpkQLe3AWw
-	 PJEYmj7cn1cDEtEYaSwJF5N8ptQAu7+dwbPK3ccul0HThliuQ7BhI375LRk0HoMaPt810
-	 P31WCNaLaK0fupJiCExg6fcqWNKs6tuLyLqYxxzfcilcZkOLEXmopS/3pgGWv1z3Z/Lmn
-	 IkVvGzsHdaC5QLdaN1L7YyJ9XHkLAmxY5cakZek+gnj5y4XUL4K/99z54THU40EZpOFn0
-	 sSQPWI7jMrBtzd5cglcZ97XBkjsoXyy8zISuoJPvjXhdSmYpf3IxrAo/IY4rhPyIAqQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793766353;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.72
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793766622;
+	b=eeCk9bplDPmqVw/Q96dJqSq/4P4aTHGgkzkpJrd6duJ/+PTINgK8YLni/zS1bqdpNtUI
+	 g4sp7X7fxGm2BVn9uyFU4u4pFCbPZPnkoI0gyptnFHwei/wJo767EfXcPCPCZwxPmUc7e
+	 X+U7hsheZ4MOtJCspZX4t2FeVAYfrcmRP6trXDlMuC3EsRD8a6sjxST5EHjNla0pfs9aT
+	 CIIMUYOtF0qHlCBtOLdIaZKr6D7Qvd9WNP+iCiqSYUFLTDfq4gfMWkJDycZB+zwjJwjul
+	 Esxju6UuswzE+HbAK/d40MC7V48UX4itCmBpr+JUmgeMYkwWOv8UesgTfEPbxil973A==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793766622;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Content-Type:Content-Transfer-Encoding;
-	bh=WI3bB1tWOsWyGOl/zi8tRudvpoSVF4MVl+STRxzjras=;
-	b=2bqQt9WRYbWTs5HbVuDZ+VEeyGchbPeHTrQOT6FGSZ8eiaglEpyre4YnratI+vhoOM9O
-	 f1QLEl1/7u1Z7ARxk+RhmSVyfj3HFf1fPTE6rs49iowSWrlQy6EICZEI2GBegKOGv72+n
-	 z/+9Z2gDsfmU3lRkyH8j1jDrUI0SACDwB7ICTwYKwltjI06WBX8BtrFlfSKwublmW3vPf
-	 Cbe89NdW5e8FtCC/QikYhSeeU9S++/IVoxgAGoe4AyiT+JPfFzsWKjRW6R0tVxW9AF1rf
-	 TYrNTQXH75P185PkF/dUPEI86uTwzANG5BH1L9Rz/p1h5Zr+jvyUHYqDtWM/48nN91Q==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
+	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
+	 Content-Type;
+	bh=M5ouklrHE4cf5TDEAMF9SCkJTPVvWGYITZBVBfks0c0=;
+	b=dEQhgpURd7+NsCr6F7VIfhKa1dZISEXv6BQEMu0Wyy2zmAgXNrYXxqmMaehicYjgbZSV
+	 hlVlGFHR5BX5ATfYarpden0Ve7rfc5YaKZnkeaiX9W2iNQq69KSEFyDmP710CxN3bWeA/
+	 EKA4cdYn329da3Rxpu+48DYm0TmEbm7elhtg9SVZqMFID0E2UXeilU/QuKEOGqL2eHw+V
+	 +NcEdvaQHunYF3sKQQF5obcSXK08+fyKFjWE85IKSLRW8yRqsWjmGuvQkOuwYLt6ifBO2
+	 d9Cxi+VD4zk9MIb5twgQvr2s4rjbDDIJnDSahCI2erdGrv+AEl0jXIVd1kOlHgDsrQw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=NyYT572y;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.172
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=czilwe2O;
+	arc=none smtp.remote-ip=74.125.82.72
+Received: from mail-dl1-f72.google.com (mail-dl1-f72.google.com [74.125.82.72])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBDB606A326
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 04:25:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CEBDB606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE36606A326
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 04:30:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DFE36606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=NyYT572y
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-54492d8a988so157981cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2026 20:25:52 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1793766352; cv=none;
-        d=google.com; s=arc-20260327;
-        b=aS2a68M68xU5LrlxwxapNWthMWAB9u0lpmExdsHYR7NXy/DYL6x6UBN7hHjgaI8k8o
-         mNuedb8IO4EdIOXqhgNlKotM9bme4cunYUn7lAAOUIezuccp5S+kP7la6tjrFG3a/WWd
-         BAOq6DkckXSMEORsCGSpTtPIkJBo0O12VgirjaFuZ5VahrR7GD4/+Jqn+UPKQdh2EeLt
-         a24BQQWjXE9VDmYT6NSRlrqO25gV9y/LzykB2jTZmwfv6NF+dFsegWdSKhVB/Q8GafJO
-         DJ0LwFOlHsYAtSJLS2BgyKpsxCTTHj55I21dnyavEhnNCXgrlM3EXtdHHYCraAFEzieP
-         Ehxg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=WI3bB1tWOsWyGOl/zi8tRudvpoSVF4MVl+STRxzjras=;
-        fh=DrvvoY1TMtiLwxhzFzOHHKtuaSafbVTTTcFvu54kRbM=;
-        b=XbDl0Swkta90fc5/TjnXTv5eR3sddhxQzAbxcuXh2qaaBeY5nDfWgwUB3XhizVu461
-         PzcjMds2T7SbAvPBXdVx+oCzHMHfTfBldRaMQG1HmEqlaw1LaprahTArNZAhfBCaHyYf
-         BIFf194Qh6JPWS77PZG36KlLfAFpdQSDLrLxJQv57xhgXBxs4ICaK0uKlDU/IivxhddL
-         eeq09ijCzGYxwbZ84QpieP1WoEZOQSKEvLeaz+MNdVM+hUcFZvS6qv4vxyzc4idxGbji
-         m32KAYXfFwVHjmqq5GAlhfXkbYqphMpnt+e1xLUx9kQWhTWMLjv4OsAmoA6ZPC4Erlc7
-         nNyw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=czilwe2O
+Received: by mail-dl1-f72.google.com with SMTP id a92af1059eb24-1af203073e0so605462c88.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2026 20:30:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1793766352; x=1794371152; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:to:subject:message-id:date
-         :from:in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=WI3bB1tWOsWyGOl/zi8tRudvpoSVF4MVl+STRxzjras=;
-        b=NyYT572yiCVIxymQGlv8tJ8fyVMUD3PVocJ6lfrX4j8vOyaLRwp6ezM7AtutnQ5A48
-         hxgPz+g03r9zNaKsaHFm9hk7uhQ10cylnqorPbqKqVF8S+Gh8mV+k7e3UsbQ/qUu2nA9
-         JBntU9ZWNevKZc2kadM2uc2ncX1/skAobHBkl3+wpcogG90TI8IdSEzQd2/Pvxq55GgS
-         KshO1YHSY5sDidi4IuafZGGq9r2QUggt238+3Db5fAIE1Q/XFi4sDMnUZamTlJ1BWmxG
-         NtHoUlj7nMyrOmyCpmgdYly4pFykaWjGbaIIXPfsC+0M1LFLEoEo9ksc5/ThKG6YXPNb
-         Bt1g==
+        d=google.com; s=20260707; t=1793766621; x=1794371421; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=M5ouklrHE4cf5TDEAMF9SCkJTPVvWGYITZBVBfks0c0=;
+        b=czilwe2Odw0EpbtqJ70KyBch5voX2iTsy+BMWaReFKuQgizgGG2bviH9enO9I6b9/f
+         GFFUc654HhEkI8r5+LZ32DmnV3OrFgZxzKeQB1weYfmjEY8Z+ZkozCC/ZkvCGt9zrILY
+         R8W+R8hwz8YA0xw/7OZObDs72UQi/Q3Ieh8fU30l9+LNJACXudz7pHXSybvBubMt/uGd
+         1qbge9uLm72l0xRzhvu0pNVhPzxyYbpx7oh1zE4rp+eYXupVJUuOFagrR4Ny+fWe1vRV
+         x9ZZ2tEsaGHhCVmIus/G+mUxIL/vpx56/usCbwK8XenwjAmgInYWStRHgBh89T2T5Qs4
+         PoAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793766352; x=1794371152;
-        h=content-transfer-encoding:content-type:to:subject:message-id:date
-         :from:in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=WI3bB1tWOsWyGOl/zi8tRudvpoSVF4MVl+STRxzjras=;
-        b=vMSh1M79vdnsxfhoYxyjciibPuiqOwZZRKwcVmJI8z7RysE1eDrp2hpi2BljVJ5H3R
-         Qq6BnHDa7lDIFvMBF5fBwpVgIUu2gmQSUPD4AQbaB8dF3I5kMwowgpsrk/axpzgYNkSi
-         /LkCL8AqglQcnbLsGZuzlnBjabLSFZowXFl1rMxoBweVJ2f7e5kGP1M2Sr6+sO88m6pQ
-         RKRAf0ew/7X+QY7VgtVDQdOXejQudRcK+4jjNxhoKxZAsG9x9ePPGBMk75sMJJbGpFel
-         Dr+B8jCiyhjPSNcVcgKv1H4efKrREgLKYDssgOub93dNT+/j6G8emketEPeHrs+6Dq08
-         8ovA==
-X-Forwarded-Encrypted: i=1; AKwUvBwdDEgX7NK2ScG2W4Tr43yVql5AYaR/MjbkL4se78BVQdvmi+lLsiNUn4L688G5/Lf+4HFFcr/WFQtLUCfrj7Wj@vger.kernel.org
-X-Gm-Message-State: APuU4Z8NoLFg7qJw+k0zp6c9zs0i2cQ/DSejclD3psDsg9EHH46WkMJE
-	CIYpeXud+WJgYupwd8R/AZcPKLaYzaCiy/M82R41MbCfSYgjv5v8L6dftNnkW090plMHSiboNf/
-	05L0W+n83BmBal1kr8ZyuQRlxTzycP/RYvGSPnsKw
-X-Gm-Gg: AYBFou1cv7g5t/5Mv5kZxI2ACHXlRn6ijkHu16Lz0hgB2vmv3feGoX3Oo73llltPo2y
-	jwWaj4FK5y78S8/pbBuQFx3NhZnmOuJEA1BVHaK3hywREK1LYiz+CCQ85vKTOOZu3ulMUDs8D2I
-	GnyTg4B5C+ELV90P6So+FaHWBPGcRTsiYeaKaOgbPlfAqa1b9e47pBsT5bM0AIItwD2pFTsvzDX
-	FAT5yvfN9ZG2YJAavXOsDTR04k9FqtyhViKBz++WUJMWTjpEoTOZAs+T4F/W3Fp4pDNNd/uiS8o
-	BPR69hPzNvJXdyMnXgFp2LCK0IW0SkykdvA9RE7zzh4gGru+RdET5J6n0hdGujRf1VFcFx4VODT
-	5bXBstYM/sGDclMT8UKFNeGtCX5a2AlDv+7G7Fw==
-X-Received: by 2002:a05:622b:d1:10b0:54b:648d:9ab5 with SMTP id
- d75a77b69052e-54b648d9cb2mr5349011cf.11.1793766351090; Tue, 03 Nov 2026
- 20:25:51 -0800 (PST)
+        d=1e100.net; s=20260707; t=1793766621; x=1794371421;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=M5ouklrHE4cf5TDEAMF9SCkJTPVvWGYITZBVBfks0c0=;
+        b=LyliC9XcfT3XF1NdMGFKw4HDikKCc4OFTmqzh+GRQ6DWLFuRR0sDIHf4a1LQ4K+BKh
+         kfBs+U/JV+hGvGJu8E0XfLdFy6uBGXE7XLCrjHcFyyaunFMrX/iqJ5I7e2nooZovmlZJ
+         z146xU3JGKIhHTSnmSeMHVVipfb+G3fTscR685ka98JMKk+lU3ZGtFllAoMNqkNeKivx
+         JSlSSfa4//1IpSmhzrrEAcKlMTqqFNhC0lyEc+bavGgcccW5JDYMNA1lMTuiMhhOn9VK
+         sojSh35x5ae962zJRWgDwWjb2eY0cBwVdsJk5TaBWeOC+WR6s2dz/agEbSc02/Pij1W4
+         l0Aw==
+X-Forwarded-Encrypted: i=1; AKwUvBzynzUzEUqhp1jMJchTnNBkNqJEgB1xsG0ewY/YpYCvo8rsgAlEqZOai1k6qtMD46DGMJWzQLiiLMiImrS6sHil@vger.kernel.org
+X-Gm-Message-State: APuU4Z/pvQTUDsE2242COP8uHA821Ma6L9sfweuiyDXT4z0P9fXb0Ohu
+	uUxjJ9jbUGwth+K3otoc6/cclZKPzAuoGaS1aEDRF8qyES1jIR90zDSE7eMKKLztwKsaW97bSGk
+	q3ZpsWssQ3g==
+X-Received: from dlbsi11.prod.google.com ([2002:a05:7022:b88b:b0:1b1:f02b:2321])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ea57:b0:196:c1ca:3489
+ with SMTP id a92af1059eb24-1ac50799c22mr20080907c88.0.1793766620259; Tue, 03
+ Nov 2026 20:30:20 -0800 (PST)
+Date: Tue,  3 Nov 2026 20:30:03 -0800
+In-Reply-To: <20261104043006.1199857-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -102,110 +78,121 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-References: <20261025215508.1237480-1-irogers@google.com> <20261025215508.1237480-2-irogers@google.com>
-In-Reply-To: <20261025215508.1237480-2-irogers@google.com>
+Mime-Version: 1.0
+References: <20261104043006.1199857-1-irogers@google.com>
+X-Mailer: git-send-email 2.56.0.385.gac671c819a-goog
+Message-ID: <20261104043006.1199857-2-irogers@google.com>
+Subject: [PATCH v3 1/4] tools build: Add explicitly sequenced -lzstd to libbfd
+ feature fallback
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 3 Nov 2026 20:25:39 -0800
-X-Gm-Features: AclHuK-QZgMOvOFTv8qxkeUkqYgKRZ2Q1nM_6KHU_FH0WEU6VrqodwNE_FTWN88
-Message-ID: <CAP-5=fW6gwOZpoVWSdDyi-kHHADHdy3g7oKREgCGn3SCO2Pb1A@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] perf/core: Clamp deferred callchain entry count to
- fit u16 header.size
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+	Quentin Monnet <qmo@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, James Clark <james.clark@linaro.org>, 
+	Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Oct 25, 2026 at 2:55=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> In perf_callchain_deferred_output(), if trace->nr is large enough that
-> sizeof(deferred_event->event) + trace->nr * sizeof(u64) + id_header_size
-> exceeds U16_MAX, header.size wraps while the output loop still writes
-> all trace->nr entries into the ring buffer. Clamp nr per event (accountin=
-g
-> for event->id_header_size when sample_id_all is enabled) so the record
-> never overflows u16 header.size.
->
-> Fixes: c69993ecdd4d ("perf: Support deferred user unwind")
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Distributions like Fedora ship a statically compiled binutils libbfd
+that depends on zstd (along with libiberty and zlib) to decompress
+sections (e.g. undefined reference to 'ZSTD_decompress').
 
-Ping. +Steve and Masami
+Commit 89d001d48ec7 ("tools build: Add zstd to the binutils library
+feature tests") added '|| $(BUILD_BFD) -lzstd' directly to
+test-libbfd.bin, test-libbfd-threadsafe.bin, and
+test-disassembler-four-args.bin. However, static libbfd requires
+'-liberty -lz -lzstd' together, and setting feature-libbfd=1 when extra
+libraries are needed causes callers (perf, bpftool) to link only '-lbfd
+-lopcodes' without '-lzstd'.
 
-Thanks,
-Ian
+Restore test-libbfd.bin to test only $(BUILD_BFD), add the
+test-libbfd-liberty-z-zstd.bin feature test and
+FEATURE_GROUP_MEMBERS-libbfd entry, and append the '-liberty -lz -lzstd'
+fallback to test-libbfd-threadsafe.bin, test-disassembler-four-args.bin,
+and test-disassembler-init-styled.bin.
 
-> ---
->  kernel/events/core.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
->
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index b43883a42566..37824ca7fe97 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -10385,8 +10385,6 @@ struct perf_callchain_deferred_event {
->         struct {
->                 struct perf_event_header        header;
->                 u64                             cookie;
-> -               u64                             nr;
-> -               u64                             ips[];
->         } event;
->  };
->
-> @@ -10395,12 +10393,19 @@ static void perf_callchain_deferred_output(stru=
-ct perf_event *event, void *data)
->         struct perf_callchain_deferred_event *deferred_event =3D data;
->         struct perf_output_handle handle;
->         struct perf_sample_data sample;
-> +       u64 nr =3D deferred_event->trace->nr;
-> +       u16 size, id_size, max_payload;
->         int ret;
-> -       u16 size =3D sizeof(deferred_event->event) + (deferred_event->tra=
-ce->nr * sizeof(u64));
->
->         if (!event->attr.defer_output)
->                 return;
->
-> +       id_size =3D event->attr.sample_id_all ? event->id_header_size : 0=
-;
-> +       max_payload =3D round_down(U16_MAX - sizeof(deferred_event->event=
-) -
-> +                                sizeof(u64) - id_size, sizeof(u64));
-> +       nr =3D min_t(u64, nr, max_payload / sizeof(u64));
-> +       size =3D sizeof(deferred_event->event) + sizeof(u64) + nr * sizeo=
-f(u64);
-> +
->         /* XXX do we really need sample_id_all for this ??? */
->         perf_event_header__init(&deferred_event->event.header, &sample,
->                                 PERF_RECORD_CALLCHAIN_DEFERRED,
-> @@ -10414,8 +10419,10 @@ static void perf_callchain_deferred_output(struc=
-t perf_event *event, void *data)
->                 return;
->
->         perf_output_put(&handle, deferred_event->event);
-> -       for (int i =3D 0; i < deferred_event->trace->nr; i++) {
-> +       perf_output_put(&handle, nr);
-> +       for (u64 i =3D 0; i < nr; i++) {
->                 u64 entry =3D deferred_event->trace->entries[i];
-> +
->                 perf_output_put(&handle, entry);
->         }
->         perf_event__output_id_sample(event, &handle, &sample);
-> @@ -10430,7 +10437,6 @@ static void perf_unwind_deferred_callback(struct =
-unwind_work *work,
->                 .trace =3D trace,
->                 .event =3D {
->                         .cookie =3D cookie,
-> -                       .nr =3D trace->nr,
->                 },
->         };
->
-> --
-> 2.56.0.307.g5fe7bd680c-goog
->
+Fixes: 89d001d48ec7 ("tools build: Add zstd to the binutils library feature tests")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/build/Makefile.feature |  3 ++-
+ tools/build/feature/Makefile | 19 +++++++++++++------
+ 2 files changed, 15 insertions(+), 7 deletions(-)
+
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 4d37d11f674c..c010049d9720 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -121,6 +121,7 @@ FEATURE_TESTS_EXTRA :=                  \
+          libcheck                       \
+          libbfd-liberty                 \
+          libbfd-liberty-z               \
++         libbfd-liberty-z-zstd          \
+          libopencsd                     \
+          llvm                           \
+          libbpf                         \
+@@ -160,7 +161,7 @@ FEATURE_DISPLAY ?=              \
+ # Declare group members of a feature to display the logical OR of the detection
+ # result instead of each member result.
+ #
+-FEATURE_GROUP_MEMBERS-libbfd = libbfd-liberty libbfd-liberty-z
++FEATURE_GROUP_MEMBERS-libbfd = libbfd-liberty libbfd-liberty-z libbfd-liberty-z-zstd
+ 
+ #
+ # Declare list of feature dependency packages that provide pkg-config files.
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 10340a537224..359da8b98bc5 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -20,6 +20,7 @@ FILES=                                          \
+          test-reallocarray.bin			\
+          test-libbfd-liberty.bin                \
+          test-libbfd-liberty-z.bin              \
++         test-libbfd-liberty-z-zstd.bin         \
+          test-cplus-demangle.bin                \
+          test-cxa-demangle.bin                  \
+          test-libcap.bin			\
+@@ -249,18 +250,21 @@ $(OUTPUT)test-python-module.bin:
+ 	$(BUILD) $(FLAGS_PYTHON_EMBED)
+ 
+ $(OUTPUT)test-libbfd.bin:
+-	$(BUILD_BFD) || $(BUILD_BFD) -lzstd
++	$(BUILD_BFD)
+ 
+ $(OUTPUT)test-libbfd-threadsafe.bin:
+-	$(BUILD_BFD) || $(BUILD_BFD) -lzstd || $(BUILD_BFD) -liberty || $(BUILD_BFD) -liberty -lz
++	$(BUILD_BFD) || $(BUILD_BFD) -liberty || $(BUILD_BFD) -liberty -lz || \
++	$(BUILD_BFD) -liberty -lz -lzstd
+ 
+ $(OUTPUT)test-disassembler-four-args.bin:
+-	$(BUILD_BFD) -lopcodes || $(BUILD_BFD) -lopcodes -lzstd || $(BUILD_BFD) -lopcodes -liberty || \
+-	$(BUILD_BFD) -lopcodes -liberty -lz
++	$(BUILD_BFD) -lopcodes || $(BUILD_BFD) -lopcodes -liberty || \
++	$(BUILD_BFD) -lopcodes -liberty -lz || \
++	$(BUILD_BFD) -lopcodes -liberty -lz -lzstd
+ 
+ $(OUTPUT)test-disassembler-init-styled.bin:
+-	$(BUILD_BFD) -lopcodes ||  $(BUILD_BFD) -lopcodes -liberty || \
+-	$(BUILD_BFD) -lopcodes -liberty -lz
++	$(BUILD_BFD) -lopcodes || $(BUILD_BFD) -lopcodes -liberty || \
++	$(BUILD_BFD) -lopcodes -liberty -lz || \
++	$(BUILD_BFD) -lopcodes -liberty -lz -lzstd
+ 
+ $(OUTPUT)test-reallocarray.bin:
+ 	$(BUILD)
+@@ -271,6 +275,9 @@ $(OUTPUT)test-libbfd-liberty.bin:
+ $(OUTPUT)test-libbfd-liberty-z.bin:
+ 	$(CC) $(CFLAGS) -Wall -Werror -o $@ test-libbfd.c -DPACKAGE='"perf"' $(LDFLAGS) -lbfd -ldl -liberty -lz
+ 
++$(OUTPUT)test-libbfd-liberty-z-zstd.bin:
++	$(CC) $(CFLAGS) -Wall -Werror -o $@ test-libbfd.c -DPACKAGE='"perf"' $(LDFLAGS) -lbfd -ldl -liberty -lz -lzstd
++
+ $(OUTPUT)test-cplus-demangle.bin:
+ 	$(BUILD) -liberty
+ 
+-- 
+2.56.0.385.gac671c819a-goog
+
