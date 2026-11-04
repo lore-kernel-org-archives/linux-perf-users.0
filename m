@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793754101;
-	b=1wrAiAhYzBCLgZPSPeFCtOh4W9mXbs+gRur8TPGOx3s9q02o7iJiJl5x9jcGxZXlYasI
-	 dD6YqCzqClmu7U+p0y9d0Xbx8UxnAoH6H9RKtHYzl56ruHHy4CpeQBV4hvqVflrqRr++U
-	 vfy9RF43O5dvXAwblGu5+RhLECHUKUOYXSODDZUzS+jW6+Ns7lK0cjj2ZYz1Hw8K6gdsT
-	 q1Hn5gkO4Htlz78mBKBGqhJjLUMDm8lveVBLjYUau6AjHR8K7C7So1Ut38xTj2W7x8fBN
-	 LxVy6U0i+Aua3YLPIRFYQYNEWWtfonItP2VKgBn2zYgVmwmMnSJt4s7xVThvZ7FDKVA==
+	t=1793754394;
+	b=Wqf+p8Uzn8ur23G8/RF6joOhpgNmkkbO9UbjAJRjaKglFBSvzeJq9SzG1L2U28+xhLG5
+	 F7FuTCl+EGVgNTzYRGUsN9k+LnyDerj1SWxt+0Jwlbn01jxstiofbVezuL0rj/IO2Hlu7
+	 6nnyyBX8NXwTTJ80ZE+/MklEEIMWi0WeiLqa+GevESp7ngJPLs5vu6PTNWsukJEmvbn2k
+	 PWOIkJSwn5upLfrAhImPz/ioGEu01EYysXetJaSrpyeF6G9StHFSvYZl6xavfp1yJPihV
+	 xY1rxzQL01X4L1T+kPlfO4MADMW4zpF21ocAIeHZSAZ2kdtlOQbDaxkgZSxnbvdDiTg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793754101;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793754394;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=dg7tKDwhywzJUK9kE7bg46KY8PwGeMznRUs8bymcAlA=;
-	b=HV81aiBQck5+RTbRZx/83jsc9u8ABVUF/A/AQ1vMxe5uZlqasgXG8MC0VYNWH79Pu6ed
-	 lGIxmsQaBEKmCosL+23Gq/TGcFKB/DF50v4NChIDwgp9SHFUnZ57Pn4L2qGazEmMbejOp
-	 viz0E/wHUtuwZnrdBLlQ29BtJICUWZaETLTjplghO7PlShC9KHnNap/hA1a6mOK81sgzf
-	 76ghhJ0NRr1fpCIcONAbvarWbnhcIQ9vQpHzkrNmSsYz6vFQQsIUzB9P+eUkJn2tJVUCZ
-	 ePq2d1W5a+4UaRkMccrQqaYUg6OkEdfE3tQf3FQWeWLmMNB7rlYtrNw80JrtIBqEWPw==
+	bh=EraADTqaX4cREKVoBxNPClGGc+iujzSAIHuiuleTva0=;
+	b=LJOONlTGfL+X65k/jkJORgAuBY28/eZlxJ/bTiE4IB7BqyEwYbeXPR+aw8qJqVzjwa6u
+	 uhP3eDx/4rUTbMcZlsI2FDosT6vyjbc1X7PDo6GaIIJtAC0Sb9cNBuHnlodn+vjF4BXFu
+	 ukz+opb9Opb9vtoMjRupuW5L3K3SgwZweXr7AP8WGh5SAmyJ1pijJ1SeDCZyOwlZet69G
+	 LcHSIcpclWUpE6Jy25Zc2HcMht3SZaCm4BLvAV9AhsGviaGUDM5D1JzErNTgAxr64mtd+
+	 RxDdGqyobpgkD0PlNre3Ab51p+NMlqaWQTlWRei6D2vc8GNqD58btkMmOHNmTS7FH9w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dwOhgrwX;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dDtsb9jL;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9FB7606A31B
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 01:01:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9AB606A31B
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 01:06:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dwOhgrwX
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B5171F000C1;
-	Wed,  4 Nov 2026 01:01:40 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dDtsb9jL
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B118A1F000C1;
+	Wed,  4 Nov 2026 01:06:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793754100;
-	bh=dg7tKDwhywzJUK9kE7bg46KY8PwGeMznRUs8bymcAlA=;
+	s=k20260515; t=1793754393;
+	bh=EraADTqaX4cREKVoBxNPClGGc+iujzSAIHuiuleTva0=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=dwOhgrwX6Yj+h2PNQ4cEXeB7/g1/sRQ0z3IPSlZorwi1i/1TNMYwz3d/TtXWa0wOB
-	 z3jFKPgzSjsoMPaioEx1G6pZstBcQgIn1mdhQW0tfUwVT4hYDwpECpfm4X9jhwD4OO
-	 271RbBSAsHnuhSdgZbv1z9glk1T3ud7irRisDY1Iyrmdw2iYScvKX634k7XviiTcAS
-	 9djqxGnwzHJhXxMnzX3RbZ2tTuWLhRgv+X8Y0CoCFhdlyXAfZDvOxIh6v4nCu36kLW
-	 nAvlx72YAk2mzndOZP/4Zk4IhCPjGVZFs7Ch4LwIDhCe4Atu7bC5xHa8Vn4B9WCtFj
-	 MJq4J229nYj+g==
-Message-ID: <sashiko-outbox-196331@kernel.org>
+	b=dDtsb9jLghw7DT0IYE2ErGQO7EydzL4PIlLlxauxe6RXdet6DxCCcn+kWncsTXCCP
+	 P/cLjQo9QakYSC9LAxe7yS+YxNwBJvDGQn+0mPNVX6K5xAInXZ0P4EGo3oRDCz92Hp
+	 va6NYIMluK6D8N0DGORG9muZsZUWTbFdARQ1CSh/F9mV+hJ6E/jZKGuDohqJvpVj+d
+	 1jLRSABu/kq0nrW8aOCo3PIY6CMNtiOIBpOQ9kMh7yYZup/+tPd949Xr52MgWbY3JE
+	 5UAZGmQtoJmn3adkx5rK31trAzcY5vB41YYDdoKp4RhdgmXfcEAC2eQGHWB2I5ahOL
+	 H2SwtnEXWMZag==
+Message-ID: <sashiko-outbox-196344@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 06/41] perf pmus: Pass struct perf_pmus to scan
- helpers
+Subject: Re: [PATCH v1 07/41] perf pmu-events: Add e_machine to struct
+ pmu_events_map
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20261103234502.1008382-7-irogers@google.com>
+In-Reply-To: <20261103234502.1008382-8-irogers@google.com>
 References: <20261103234502.1008382-1-irogers@google.com>
- <20261103234502.1008382-7-irogers@google.com>
+ <20261103234502.1008382-8-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 01:01:39 +0000
+Date: Wed, 04 Nov 2026 01:06:33 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,9 +60,17 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Update perf_pmus__scan() and perf_pmus__scan_core() to take a
-> struct perf_pmus * argument and update callers to pass the appropriate
-> environment's PMUs.
+> The CPUID strings in the pmu-events mapfile.csv files have an
+> architecture specific format, such as "GenuineIntel-6-55-[56789ABCDEF]"
+> on x86 or a MIDR value like "0x00000000410fd0c0" on arm64. When perf is
+> built with JEVENTS_ARCH=3Dall the tables of every architecture are
+> present and map_for_cpu() compared the host's CPUID against all of
+> them, even though only the host architecture's tables can match.
+>=20
+> Record the ELF machine of each architecture's CPUIDs in struct
+> pmu_events_map, EM_NONE for the test and common tables, and have
+> map_for_cpu() only consider tables for the host's ELF machine. The 32
+> and 64-bit variants of x86 and PowerPC share tables.
 >=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
@@ -70,5 +78,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103234502.1008=
-382-1-irogers@google.com?part=3D6
+382-1-irogers@google.com?part=3D7
 
