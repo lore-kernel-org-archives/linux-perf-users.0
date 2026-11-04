@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793761743;
-	b=nx8Md/A8nGTORcVClk32egeamIpwBSuZ8Ejl4WZzkRSD32+6Z/kk8qLATGcd4ZAmNT1k
-	 xARtXpuIHtnlZeFmGBnEl0/pZ9wOgWJx9/LFCSbUhhMoxgzUea8ywRlejby97yYjttOB/
-	 oBcxQyTEOs6Q1XuE8MMKIr5dcGBaGOHaTdkBeHK3+BfCbIQixKvweWVvvNruqgI3LIp1W
-	 0EYjPg7xjWvQ217luWDFTYjOogJflYzuZ4mGqs01LdXZMFKNw4ZtiMU/mB9id2R1Hy7xE
-	 QFMLSET3cyQCYQwuW+D+OBB/8eT6nu3iJXNfTO8KPycpCGWBAZxS8HapjUx7dgxZDnw==
+	t=1793762237;
+	b=0DhxK1UjWAGf0XKEWNPuRYN83hDcioFeO9aryXqojd/qc5acdSqZ62glN93IvH/AqhRv
+	 JxzAem1jBGN3irMjt/WnjyP31biQGHH4iZrks/VHCjUlCmWur1I1eLoBdm0RC8Xh/RNnY
+	 cNmq3DdaBNqU5/Sgf7CqrSwTGdzWSEuUJBRBy0xD84We5ONg2b8ksqEyXq3++tFfI3liO
+	 1Z533q7OCQ9dIYmZXSu5tyMJ+dl/JuMhB7rume8vRlf9GVVzRxhHs0mB4hPPAsHp4LEH9
+	 0pUFYcIPoLsVIrRO7uC5zYO2/cjwh+/B31pih1ITvewUHUcX2xOlkr8UULfgDYmyDWg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793761743;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793762237;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=b+QDO98Qz3kf7L5qQirMMfSsiJHpp3HEN/j18ZWD3j4=;
-	b=AmCDF4aP7fIC0O/6IcOto7bb1dLcD5aUMumFocLDRFCJYjSHPY5cDREZWKD45BX5Z2tm
-	 R2kMOPiNHjGkAKW4O8YrI0LnuuFWdnP9Mi/vaHivOzAoz+vr1cVdBBFhrMz7dyXwkkj/T
-	 cwoVRfiW4TpzO1FbG/hUX9wdOv4Z4kizsaJtbSOtx8QFda/R28shiiTaF/CRYpky0lUCM
-	 xytJs2zEUoLVQTcvmWml7XQeT9ypv2AEEDPdJJsetZUVeKjn6EE6ejJNgDvL52nX24lyB
-	 914snB7MP6jpGGFooZJWPQN45fMLY8Q+SK3tsu9r/UNJaPQsPA7V6p3D+76EjRzN1aw==
+	bh=8P8/zys7o5ASa7h1+b8xPzod0mj3KkxZZ3ZtD5/d4Fc=;
+	b=fqkV9uSM7fYKA2mHYlYMYmJuyxCN4AwFLm2+TVx7ubFUBOazv+2yOzZ8EDcOBODlUTY/
+	 iB3c2CN+7zcNVsKswh5MOwqtk7ORY1KwwjguUIzw6MU5GNVEP56hS2xUiOMaIzWRDv1VC
+	 jZw0FS/GqT5YSQP0d6LOOenqQNxQWcYblqjKswhqhYekWkqcfDg5UHC3MmWujk6z1bL/5
+	 n0yNwIBkguvv2LXudIoQzlW4G7rWjFv6Eg2tiZucANliAzURH8rL1l923VGHjbXR0cFDG
+	 UjQdB47bkkgl2/m7d/ouWgctgdASZnyRLoRB2dKr9LH2kp7frhJlhUPgTMpN2OWfzLA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=i7Ov4Ygo;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oqwTaRtK;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA4E606A326;
-	Wed,  4 Nov 2026 03:09:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2150606A31B
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 03:17:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=i7Ov4Ygo
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D15F31F000C1;
-	Wed,  4 Nov 2026 03:09:01 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oqwTaRtK
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14F951F000C1;
+	Wed,  4 Nov 2026 03:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793761742;
-	bh=b+QDO98Qz3kf7L5qQirMMfSsiJHpp3HEN/j18ZWD3j4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=i7Ov4YgolQ1MCHS69WQl2wJvQVghK9ujmjUTxehbrvjN6y8OEJ+pKeY2Rw8IaRB3n
-	 Cw7lKc+3DqfL71pdC/7uvkuykAAODXQ1NQ8oBtrJtpXiQyUPLjcyA4XBhFX0tJJmzg
-	 pSi+y0FGsSVXn/p9eeSZUFP5VviFd75S9DzifDYQD9Q5mzClK7kN31J79a+9fwDzxf
-	 uRLzCQqjBEGYbBAciM81vFwbxLkIZey8D9rWM60K8lXb2F0S4WF7MM9PAqiT3wuCUB
-	 iVYQTS18uR3IOX6VfjOIMEaKWUiaJUtekcn8FHb9fAtSJTN+i084/Z7YUybzCTCsm+
-	 DmDGw7ycaq48Q==
-Message-ID: <sashiko-outbox-196587@kernel.org>
+	s=k20260515; t=1793762237;
+	bh=8P8/zys7o5ASa7h1+b8xPzod0mj3KkxZZ3ZtD5/d4Fc=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=oqwTaRtKM/GMolwqJJJ5/ST3NT4eh7f1dwHFxdy0RG1DN1/B9Ia4KYP6Z/7x7lOGy
+	 78p2jlqWmZqzZW7ioHaBsVpD6ZcQXgI049owSKcoHg0YW2eJJF5x7BdrmdmCq+Vhqi
+	 o4fDB1mPk7cA0T+4UDIQuPP3Yz9uoZU0zy/c767Vb3+z4Igxj0lgxRjIv02IuBjCkq
+	 enY93MMronLAyuEybTLv1ofvGKOj8ooV5JfGsjG5fCrMZd0Sc7ixRatomqB8cWxVa+
+	 8vbBgyxa6HO3QBf6YUshppqPobBDF2U/MXn2nY8EAx4IWYMgkEEAUVSeKVGukbdRvk
+	 0CCNfikLa3Kbw==
+Message-ID: <sashiko-outbox-196593@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v17 1/3] dt-bindings: perf: Add Broadcom Raspberry Pi
- AXI PMU definition
+Subject: Re: [PATCH v1 17/41] perf evsel: Generalize metric_id to a set of
+ metric_ids
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org
-In-Reply-To: <20261104030300.1140180-2-irogers@google.com>
-References: <20261104030300.1140180-1-irogers@google.com>
- <20261104030300.1140180-2-irogers@google.com>
+To: "Ian Rogers" <irogers@google.com>, linux-perf-users@vger.kernel.org
+In-Reply-To: <20261103234502.1008382-18-irogers@google.com>
+References: <20261103234502.1008382-1-irogers@google.com>
+ <20261103234502.1008382-18-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 03:09:01 +0000
+Date: Wed, 04 Nov 2026 03:17:16 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,64 +60,35 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] dt-bindings: perf: invalid plain scalar colon in brcm,bcm2835-axipe=
-rf.yaml
---
+> When computing a metric the value of each of its events is added to the
+> expression context using the event's metric_id. When metrics are matched
+> to events read from a perf.data file, different metrics may refer to the
+> same recorded event by different names, for example "instructions" and
+> "cpu_core@INST_RETIRED.ANY@", but an evsel previously stored only a
+> single metric_id.
+>=20
+> Replace evsel::metric_id with a NULL-terminated evsel::metric_ids set of
+> unique identifier strings. Keep the representation private to evsel.c
+> behind helpers: evsel__add_metric_id(), evsel__copy_metric_ids(),
+> evsel__has_metric_id(), evsel__shares_metric_id() and
+> evsel__for_each_metric_id(), a callback based iterator. Use the iterator
+> in prepare_metric() to populate the expression parse context with all
+> metric_ids of each metric event. The metric_ids are freed by
+> evsel__exit(), so make the __add_event() error path use evsel__put()
+> rather than freeing the evsel's strings itself.
+>=20
+> Remove evsel__metric_id() as returning a single identifier from the set
+> is error prone. Its uses either iterate over the set, test membership,
+> or, when finding duplicate events for a metric leader, test whether two
+> evsels share an identifier. Tool events without an explicit metric-id
+> keep their tool event name as an implicit identifier, other events
+> without a metric-id no longer have the identifier "unknown".
+>=20
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-commit 585240cf0e14c8ec2eefa09a1ecc59a1d82cc72f
-Author: Ian Rogers <irogers@google.com>
-
-dt-bindings: perf: Add Broadcom Raspberry Pi AXI PMU definition
-
-This commit adds the Device Tree binding schema for the Broadcom Raspberry =
-Pi
-AXI PMU block on BCM2835, BCM2711, and BCM2712 SoCs.
-
-> diff --git a/Documentation/devicetree/bindings/perf/brcm,bcm2835-axiperf.=
-yaml b/Documentation/devicetree/bindings/perf/brcm,bcm2835-axiperf.yaml
-> new file mode 100644
-> index 0000000000000..2f1f4f286ab57
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/perf/brcm,bcm2835-axiperf.yaml
-> @@ -0,0 +1,44 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/perf/brcm,bcm2835-axiperf.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Broadcom BCM2835/2711/2712 AXI Performance Monitor
-> +
-> +maintainers:
-> +  - Ian Rogers <irogers@google.com>
-> +
-> +description:
-> +  The Broadcom BCM2835 series (including BCM2711 and BCM2712) features h=
-ardware
-> +  performance monitors on the AXI bus for evaluating memory bandwidth and
-> +  system traffic. Two monitor register blocks are present: the primary m=
-onitor
-> +  evaluates the System fabric, while the secondary monitor evaluates the
-> +  VideoCore VPU fabric. This block is distinct from the BCM5301X AXI Tra=
-ce
-> +  Module.
-
-[Severity: Low]
-In Documentation/devicetree/bindings/perf/brcm,bcm2835-axiperf.yaml, the
-top-level description property is written as an unquoted multi-line plain
-scalar and contains a colon followed by a space in "present: the primary
-monitor".
-
-In YAML 1.2, a colon followed by whitespace inside a plain scalar is parsed
-as a mapping value indicator, which causes make dt_binding_check and yamlli=
-nt
-to fail with a syntax error ("mapping values are not allowed here").
-
-Should description use a block scalar indicator (such as description: |) or
-avoid the colon followed by a space?
+Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104030300.1140=
-180-1-irogers@google.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103234502.1008=
+382-1-irogers@google.com?part=3D17
+
