@@ -1,89 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.182
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793818441;
-	b=VlyK0n4IQr+1pZ+Qd89HoEyQeBEaEXx8xTkCo2b/6pyDtEkLseCceWmN8/gSDWVJr2lP
-	 Fq3lMPtruf3N2ZlvYT6LHYFi2LQTF9mYlMKJOjKAXkREDlQe4yBsfqlU+fagGIgfNqeVe
-	 tNnUqvJcszFVcog0PCwdjJf0hd9ToBVQ2tv16VpXLdQovMhlPlKWzXjnSDcPwX82olKov
-	 M1FYbBrRARPAMhLGin/Qva8tp3IVkkNVQuaU1ZHyBmaR69Py5N7lVPUbWKUAthSLexcrs
-	 J9xsswkzpNI5hNGLw6t+jEOno1hvaaPG9QAoLBT0guN5d91FhrWhlk3FhR1YB6JH7ew==
+	t=1793818447;
+	b=wpb3XA8W2cO2/oRChTstKijdts0G+QM7y0rPSnX4VU+EDUitJfv7PTZf9RHtHSjChDg4
+	 RT8zVqrsUOvyyX2GZEv6MYFYAex83RyR93Z9SQTsLPSmfRKc8Z/V83UAWYgKELBX6CP9b
+	 0ANZ4Dknow9NIoQWIjwBhfJrVQ6ezhszcy55COquNUeuUYbPN37t1QNif4vXNIa8eyQHT
+	 mMxqoyQCA/4TRdq2Gk7YlJJO8YSSu8QRY6KpVLPBOicXU5gAwPQO8oUSBsrS4/OEKpP4S
+	 vdswqo/r9HDkT1ibLnO7dJ+NhsocvZ1TxhCYF43iHNhFUe9HO+yd4wf0iYmjMMMv23g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793818441;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793818447;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key;
-	bh=bG17toEvZh++6oWvbtdtKUsBVX6r9sD7TdpJIvwp2W8=;
-	b=rxwLuGDytf90XTz1ynZ84+B17EOiDQ5jj2cQlu9cAvgw4C8Ipvqt3bddXCQNL2CzEqpX
-	 X2eGTypCYbbxioljJ2cI9uBdDhSt1bFEdDjbxD2wsN/62sNHbXjhldl5KoWe5zH4K4y6R
-	 MXIXPjsRqmUbLPvPFJ66OMNTXShOQ9Xmg4+87Dwrgew5qv9LWfH5misPC6UnCXCEKppiY
-	 WOGv4Cq2ress4ABYjpIWsBawiDAlYAuiwmzgegFNl0jYS4v0v3QdsgqY607oQTUqSx1hs
-	 Y7Z5ZeAhKxtf2U9KWq7b7m3SBD9Q3+s4ULPNnBKEp8jLiOXcRTr3VD8E5sRB5b42f0A==
+	bh=/AOC0zKLt5ZW95N1gJu6YbD87wTpnyQ+KQVNXuHJSQ4=;
+	b=VlT2uT/ILzvqTsyjExlU6QumdNzuqUAcBajSjoVdVm5eaA7UOgA/8czR/saNq+5lYNqc
+	 y1Pyl1M9/43rgq0gthGJP5mtBUd2cuASjPBYWQMXjTZtV8ig76ve8tHsuwYRUl+HrMWuS
+	 mN/cLQQtL8MALIxuHVyPetEe5RSePrQxyF8jy9D7MPFFEN8tizXwU1oCE/EiR+0lkDauZ
+	 w85uTsrUZLsMu+Ft2WYjti6lhS1trBzVPZTjpvpyuVcUc43R+4wr5gp2RMu8aTU8RSTdl
+	 NCw8pr1rM85ORdNyvZL4JGqmaIX/NcrfeLSwwdZNjMiHo11BF8taLhLoJK231x0k1sQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=SI6EEa2n;
-	arc=none smtp.remote-ip=209.85.128.170
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=DwpKm2+B;
+	arc=none smtp.remote-ip=209.85.128.182
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7731E606EEA7
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 18:54:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7731E606EEA7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042E6606EEAC
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 18:54:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 042E6606EEAC
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=SI6EEa2n
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-8b10d24345dso10249307b3.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 04 Nov 2026 10:54:01 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=DwpKm2+B
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-8ab43af5e97so13018137b3.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Nov 2026 10:54:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793818440; x=1794423240; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1793818446; x=1794423246; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=bG17toEvZh++6oWvbtdtKUsBVX6r9sD7TdpJIvwp2W8=;
-        b=SI6EEa2noK56LZOEvuTiGj/vbhYI+Cae8xlwRgjKig4fhTbIr9UoIwjh6oqZWvB39g
-         zRr2B6xRcISCXu8NZvap5bJNIkZUIeIEJyYOceD3/ZgK6fpNOKZOT+QkdbVhWRG2/sF1
-         XVSigwBaA/5Espmk3Zrx05eRd0OuNI+clihfvHAHnN5UJSPruNFJC1vqP46ORtsG0VI3
-         bN7zsQB4un/IquEUPzaKX8cHzu1bDp/9K9LAelPji7FRyo+XMClNqVvQA75OKMnPMj7S
-         SpqTNmuOAmc1W60ULK4MCvEiJMVGS8y19SsUVxiWjNXjj8zfBKxt7+9iXfWvtWM943sX
-         eA0g==
+        bh=/AOC0zKLt5ZW95N1gJu6YbD87wTpnyQ+KQVNXuHJSQ4=;
+        b=DwpKm2+BTX81L1F49YpXO4FykMzzkbsBmX52y6Aoyhk1q1tr7S7S8fOT0IoEbGGV8y
+         xjWS0eGhGoPKHYd6nn8AqggGqxIbQ4hM46X9uSk104jN0y0CkptoyXf56Rq4r5xTnDQ9
+         OUOdYuJvx3BwwYQivtE33roxbxLbK0RwsucdLcx0rXKXx3JseARLExbH7rE05MLA7sbH
+         ftesP0i+YumTj6okaZjZDNCmOihIuIuEhuRPQom9VLpBTWKP2pKvF51T3nDq0uS4ilGb
+         4bMafRGtwZkZbNVe+zE//85LG8lEXl41x+u9QAgj2rV3gNlg+mBrq67BN0srVDD+W/ei
+         X8KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793818440; x=1794423240;
+        d=1e100.net; s=20260707; t=1793818446; x=1794423246;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=bG17toEvZh++6oWvbtdtKUsBVX6r9sD7TdpJIvwp2W8=;
-        b=NKTTR7Ra5+OQTG17iYOYf9J50LyKm36D6Z0sbzU+LQH0cvWz6gUrUDOxYrZap9YLcO
-         RCGqQXLudkhR/QD/jHJjg0kGD0OLeI8aZfNf2RWcSM+v+SYPELn+JOD2em912CEQHjg/
-         KlFn/+eOEXpBZfKvXQQfR8/AznSzElPDnsTHbgEk/SNM/VvXqSLNQ/vULXCth/Ffmgbe
-         vAw9nSA4kp4JwtBKF5ZcBlFilYLCofWlQOqRy0IMlCug+hkM9F5uA50ktDX7G3uSrZks
-         pIgoMZisCE1Bx4RqHxHbgKZZAFrWYFZFuMG2h158GTCaOXxzaYgD9B1V5f1sxhwoUVhH
-         cb/w==
-X-Forwarded-Encrypted: i=1; AKwUvByv1ICh/CuQQnA00QKCoXAONOYx4V8pN7Rd4tV8GmTFJQkvcjZ0lS9XR0Na6QhPozU2fxLXHj+iYordAPmOrOMj@vger.kernel.org
-X-Gm-Message-State: APuU4Z8045OIxP5vJTZ5GR6dxtBjSn/kkN2BdaZIUsQ7aEezd7zSVvhG
-	IGXrTQ5TF7Y18exfsK346qKT0M5w19lC6TjL1YuWlNmqP+m9h39g3UQI
-X-Gm-Gg: AYBFou0PneoCvvsrGmPEEuuSiFh/9Mbb+/4Qr/mPmHFvZ49MfYg0V5MTI/tB40i6MiP
-	6n0NpqbO2KlM14H0Gi/INe52PhmdxeQO0u04jly+I++95waHI0FsmrQa2aLjBg9HqDbKGCvOOOZ
-	s7lBoIYJIO2eJTxMrL7qvKcevmWQhRDuuzdy5k/wQf6/yWpdDX8EIoWts/Z8Vj6KkXNrxOOr7hy
-	q4T9fyfsx0c8LW/2zfXNJTm2Y8H8pyJv3lKnxWe6dbokehUR9LpBfpzpFhlTNJ+v4LmS0roRstk
-	2/TBLIIQQOIRQrJK6Rcm5ExTqVvlDA7sNBf6NkcPgMHkHm2KoZJx5sj/eEDG8thiHpdFNeoEx3v
-	cFzSj2iTefVid9+KV4RH593ALe4hBgvk0+H801CE5xjxc+rOTouvG3goi5mYAMeOO6OnJgOFSLM
-	1qSPrkNIruCM6dO4RDrCOqE8YBoJElt9ktsNDxCEFilkld4tvJ6q/cLN4HlAbWjhSTACW7i+pUB
-	7zm96jd1zE6s69V8A96jDODWGP4JUGQsC4Bv5IeF3gcCLsyHHSRgl3wtzzp+Muwn4ozfz0uX7da
-	i7oLCRKayRNEzciVmLZM/PsVvy7nK7077yHMAMbpJjI+1hAua75vJpnxcEqWZE4rOUw4uaUx0ZD
-	Em/YTKkz6eg==
-X-Received: by 2002:a05:690c:30a:b0:8b1:6e61:513 with SMTP id 00721157ae682-8b2b64382d1mr172025907b3.0.1793818440462;
-        Wed, 04 Nov 2026 10:54:00 -0800 (PST)
+        bh=/AOC0zKLt5ZW95N1gJu6YbD87wTpnyQ+KQVNXuHJSQ4=;
+        b=It/jkqcY8lz15HmEPSLX21Mjb7HmhyayGN302qLkNLNEgd/EV4W2WLur21wuOJFLP3
+         e6IKovi9+zlRXSr4ofBYgP5sheefntmKe8rpWYEJZoxRqtdrwjHXKbpGhHvNEdHgnzpA
+         QmVTDrq5Ew8y0LOUVr89xFjmKXhiXvyXJQF5Z9UFpeyZX1ChKZ8icsr7CSipT4YRykBk
+         2qmGZ881FO4/U9SkoNrcMZ3+zFnApiHMU4NlqJMKbqMNqK4p42DAYRSCirfCtLizEU7Z
+         RBuEZdQtJWIXC2wY92kHLl7meYHhJr5/brM71+m1Ppjo0sSdbqtKvFbVv2OIsRztcZNb
+         MWmg==
+X-Forwarded-Encrypted: i=1; AKwUvBwsb3g4kbcignraEjvFH58cs+3IijAiwzwkAGT06mjRfMJyDtXFtZOM8pW69Hy/15Ph3+QQlcQFcYxm3h7tJGOa@vger.kernel.org
+X-Gm-Message-State: APuU4Z/FG5GRKeHpGjU87MlEE4JOgtu5MTxq4UQg8jZJ0zYf1boFXCSd
+	zeZtfI5qGCkKVaIEG8e2RCc7vV0tUd/EVJzdnhvuFR8bHGQkRoBLQy6w
+X-Gm-Gg: AYBFou0YmCNzQp/Q0YsTtbVtKdXmwm9LbllheyGWHOMpQnqbth/77O98PJPUhFPkOt2
+	wF4lFFfPhRcRpoZrVi59kospyI9pjYa2RUqXRBJ+qjkjMFJQeBBde6Z1P2ryWnqX01jsQHt8qhP
+	KvQAuHuQQ9Ek554aCLBns93SFowmW5zGhBurz34mLuVyJVaJiPLA8ylKQcF84QkemXKivMKZ13E
+	TK3rttfILaQ8kHfcqWmTsJ5bC959LKIh6ueLPfJVZCIPd3dD3Olh3iJShRXkye72ZpAH3W11Fl/
+	FpkCq5nPks9ks7fNkBl0OLyRqC3StaAdHhh8ZW550g8JafjiZcKEqqDxCVxOdOBLqgfnEa0ECTQ
+	laJPnAVlu12v/fFmqfljpN7Z02iGuS6yJx86mtf6HzDHluWGHxWeGRvkXXcxkOd0SLUpQJfcq8C
+	+Sf7f76yfVMn8KYO/i16cGsY2PtKEQP8H0j1h2pSN+U8eMpmZyfL7dvW2xf1jumnf6r1Qwh+6lB
+	j6DbQ9t/TU/KXp9sz5jloNLY2w8FTRKgdH4eIE5uu3pu8FBwtJppv3av0eHx3O3a90MZbtD3z6n
+	8zi7DOgLKran9ClIcQ2M9CZbkWtYsaxTirHXOtsjw41SRLBMPWru1I2tkQQnOdMNb7AO0/isMEX
+	JskyZLN38CKN7n4/sWWdG3Oso8DYjc/0=
+X-Received: by 2002:a05:690c:1d:b0:8a9:9f40:24b4 with SMTP id 00721157ae682-8b328d12ef3mr3485117b3.15.1793818445964;
+        Wed, 04 Nov 2026 10:54:05 -0800 (PST)
 Received: from localhost ([2600:1702:7a90:6f9f:66f3:d5d6:2d12:d460])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-8b3099291d7sm24787807b3.16.2026.11.04.10.53.58
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-8b309aa8405sm24581687b3.37.2026.11.04.10.54.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Nov 2026 10:53:59 -0800 (PST)
+        Wed, 04 Nov 2026 10:54:01 -0800 (PST)
 From: Matt Turner <mattst88@gmail.com>
-Date: Wed, 04 Nov 2026 13:53:56 -0500
-Subject: [PATCH v4 1/3] perf alpha: Decode ProfileMe raw samples
+Date: Wed, 04 Nov 2026 13:53:57 -0500
+Subject: [PATCH v4 2/3] perf python: Add alpha-profileme.py
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -95,7 +95,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261104-perf-alpha-profileme-v4-1-1771ea02950e@gmail.com>
+Message-Id: <20261104-perf-alpha-profileme-v4-2-1771ea02950e@gmail.com>
 References: <20261104-perf-alpha-profileme-v4-0-1771ea02950e@gmail.com>
 In-Reply-To: <20261104-perf-alpha-profileme-v4-0-1771ea02950e@gmail.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -109,294 +109,225 @@ Cc: Magnus Lindholm <linmag7@gmail.com>, linux-alpha@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
  Matt Turner <mattst88@gmail.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10228; i=mattst88@gmail.com;
- h=from:subject:message-id; bh=vN2dNodGOzqDv+WTFB0OWLrULDzd2p5lHoMP/25UmAw=;
- b=owGbwMvMwCW25rVmCc8sv+mMp9WSGLJe17uwX58wQVfU54+Npuoam/MJvf1Bi1bpvmV7r+nSc
- vxR+uRdHR9YGMS4GGaKKbLErVdkmdW2Y6nPaelfMHNYmUCGSIs0MAABCwNfbmJeqZGOkZ6ptqGe
- IZChYxQPkdNj0MgsLi5NLdJNKyhyyMsvSSzJzM8r1ssvSM0rSC/QS8tMK8nIyC8qTgUaoZeXWmL
- q6uhmZGhgYuloYeZk4Whq4uzsZOjk5ujo7OpkZGluYuBs6WjiamnOwMUpAHNNlQjDj53s13uZNv
- 5f/nFKaVGtbeivgyGHTXYbXrLle68bN1n3LSPD3+Q31XKPV8dEn23c4fq9OM370o+ksOxnX9klM
- utsPjEwAAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8517; i=mattst88@gmail.com;
+ h=from:subject:message-id; bh=EM7SaWCUzm0g+DOjXsNVlrswtdlis/4RXvVxASC7NyE=;
+ b=owGbwMvMwCW25rVmCc8sv+mMp9WSGLJe17skspRLRGzr+NxUXPNB9nCHAZfTE9t5hvfsLD4ui
+ cl5zHOu4yMLgxgXw0wxRZa49Yoss9p2LPU5Lf0LZg4rE8gQaZEGBiBgYeDLTcwrNdIx0jPVNtQz
+ BDJ0jOIhcnoMGpnFxaWpRbppBUUOefkliSWZ+XnFevkFqXkF6QV6aZlpJRkZ+UXFqUAj9PJSS0x
+ dHd2MDA1MLB0tzJwsHE1NnJ2dDJ3cHB2dXZ2MLM1NDJwtHU1cLc0ZuDgFYK6Zb8zwm9X0Moutok
+ t2Ocf2tV/+9ZZIPLt1b8FWWz1RLrO6fr2L2xgZ/gk828jOvUbxnM/m9k1Jk+U4L/x/uJWpsZ/1w
+ JfCnzs28AIA
 X-Developer-Key: i=mattst88@gmail.com; a=openpgp;
  fpr=3BB639E56F861FA2E86505690FDD682D974CA72A
 
-The Alpha cpu PMU attaches struct alpha_profileme_sample to each
-ProfileMe sample as PERF_SAMPLE_RAW data: the profiled instruction's
-PMPC along with the I_STAT and PCTR_CTL status that says what happened
-to it.
+perf report shows where Alpha ProfileMe samples land but cannot
+aggregate the raw status attached to them.
 
-Decode it in perf report -D and perf script -D the way AMD IBS raw data
-is decoded, naming the trap from TRAP_TYPE when TRP is set and from the
-PALcode entry offset in PMPC for redirect traps, which TRAP_TYPE does
-not report. TRP is ignored for an instruction killed before it was
-mapped, as an EV7 leaves it stale there. The payload is copied out of
-the sample and converted from little endian, so that it decodes on
-strict-alignment and big-endian hosts too.
+Add a standalone script, using the perf Python module, that summarizes
+it by symbol or, with --pc, by instruction, in the style of DCPI: the
+fraction of samples killed on a wrong path, not retired, mispredicted,
+taken or stalled, the mean PCTR1 window count, and trap counts by type.
+Mispredict and trap types are only counted when I_STAT[TRP] is set
+and the instruction was not killed before it was mapped, since they are
+stale otherwise. Redirect traps are counted by their
+PALcode entry offset in PMPC.
 
-Copy the uapi header that defines the struct into tools/arch and add it
-to check-headers.sh.
+Raw data is only read from cpu PMU events, as a tracepoint's payload can
+pass for ProfileMe status. Rows are kept apart by PCTR_CTL[SL1], as a
+mean over two things PCTR1 can count means nothing.
+
+On an EV7, sampling a loop whose branch tests random data reports that
+branch mispredicted in 21% of its samples, and 0% with sorted data.
 
 Signed-off-by: Matt Turner <mattst88@gmail.com>
-Reviewed-by: Magnus Lindholm <linmag7@gmail.com>
-Tested-by: Magnus Lindholm <linmag7@gmail.com>
 ---
- tools/arch/alpha/include/uapi/asm/perf_event.h |  31 +++++
- tools/perf/check-headers.sh                    |   1 +
- tools/perf/util/Build                          |   1 +
- tools/perf/util/alpha-sample-raw.c             | 156 +++++++++++++++++++++++++
- tools/perf/util/sample-raw.c                   |   2 +
- tools/perf/util/sample-raw.h                   |   2 +
- 6 files changed, 193 insertions(+)
+ tools/perf/python/alpha-profileme.py | 178 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 178 insertions(+)
 
-diff --git a/tools/arch/alpha/include/uapi/asm/perf_event.h b/tools/arch/alpha/include/uapi/asm/perf_event.h
-new file mode 100644
-index 000000000000..aa0eff5a917c
+diff --git a/tools/perf/python/alpha-profileme.py b/tools/perf/python/alpha-profileme.py
+new file mode 100755
+index 000000000000..da374d206187
 --- /dev/null
-+++ b/tools/arch/alpha/include/uapi/asm/perf_event.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+#ifndef _UAPI_ASM_ALPHA_PERF_EVENT_H
-+#define _UAPI_ASM_ALPHA_PERF_EVENT_H
++++ b/tools/perf/python/alpha-profileme.py
+@@ -0,0 +1,178 @@
++#!/usr/bin/env python3
++# SPDX-License-Identifier: GPL-2.0
++"""Summarize Alpha ProfileMe samples.
 +
-+#include <linux/types.h>
++Aggregates the ProfileMe status that the Alpha cpu PMU attaches to each
++sample as PERF_SAMPLE_RAW data, by symbol or, with --pc, by instruction.
 +
-+/*
-+ * PERF_SAMPLE_RAW payload of a ProfileMe sample from the cpu PMU.
-+ *
-+ * pmpc, i_stat and pctr_ctl are the values of the PMPC, I_STAT and
-+ * PCTR_CTL registers when the ProfileMe window closed. i_stat holds only
-+ * bits 40:30 and pctr_ctl only bits 47:0. See the EV67/EV68 Hardware
-+ * Reference Manuals for the field layout.
-+ *
-+ * In the sample record the payload follows the 32-bit PERF_SAMPLE_RAW
-+ * size, so it starts 4 bytes past an 8-byte boundary. The 64-bit fields
-+ * are packed after the 32-bit version so that they are 8-byte aligned in
-+ * the record and no padding follows the payload.
-+ *
-+ * Fields may be added to the end in later versions.
-+ */
-+#define ALPHA_PROFILEME_SAMPLE_VERSION	1
++Record with raw data, e.g.:
++  perf record -R -e cpu/instructions,profileme/ -- ./workload
++A precise event such as instructions:p samples only retired instructions,
++so its killed% and invalid% columns read 0.
++  alpha-profileme.py [-i perf.data] [--pc] [--top N]
 +
-+struct alpha_profileme_sample {
-+	__u32 version;
-+	__u64 pmpc __attribute__((packed));
-+	__u64 i_stat __attribute__((packed));
-+	__u64 pctr_ctl __attribute__((packed));
-+};
++Columns:
++  samples   ProfileMe samples attributed to the row
++  killed%   profiled instruction killed before it was mapped (PM_KILLED_BM)
++  invalid%  instruction did not trap and did not retire valid (VAL clear)
++  mispr%    conditional branch mispredicted (TRP and MIS)
++  taken%    TAK set; only meaningful for rows that are conditional branches
++  stall%    instruction stalled between fetch and map (PM_STALLED)
++  pctr1     mean PCTR1 count during the window; what it counts depends on
++            the event: inum retire delay for cycles:p, window cycles for
++            instructions:p, Bcache misses for bcache-misses:p and Mbox
++            replay traps for cpu/mbox-replay/p
++  traps     trap counts by type, only for samples with TRP set
 +
-+#endif /* _UAPI_ASM_ALPHA_PERF_EVENT_H */
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index 531c0e0e84df..de66bb148754 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -36,6 +36,7 @@ declare -a FILES=(
-   "arch/x86/include/asm/msr-index.h"
-   "arch/x86/lib/x86-opcode-map.txt"
-   "arch/x86/tools/gen-insn-attr-x86.awk"
-+  "arch/alpha/include/uapi/asm/perf_event.h"
-   "arch/arm/include/uapi/asm/perf_regs.h"
-   "arch/arm64/include/uapi/asm/perf_regs.h"
-   "arch/loongarch/include/uapi/asm/perf_regs.h"
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 2c1f880c4c47..2ab63bbe4a05 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -77,6 +77,7 @@ perf-util-y += sample.o
- perf-util-y += sample-raw.o
- perf-util-y += s390-sample-raw.o
- perf-util-y += amd-sample-raw.o
-+perf-util-y += alpha-sample-raw.o
- perf-util-y += ordered-events.o
- perf-util-y += namespaces.o
- perf-util-y += comm.o
-diff --git a/tools/perf/util/alpha-sample-raw.c b/tools/perf/util/alpha-sample-raw.c
-new file mode 100644
-index 000000000000..6ff0566799ca
---- /dev/null
-+++ b/tools/perf/util/alpha-sample-raw.c
-@@ -0,0 +1,156 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Alpha specific. Provide textual annotation for ProfileMe raw sample data.
-+ */
++TRP, and MIS and the trap type with it, are stale for a killed instruction,
++so mispr%, invalid% and traps ignore them there.
 +
-+#include <stdio.h>
-+#include <string.h>
-+#include <linux/kernel.h>
-+#include <linux/perf_event.h>
++Samples from events that set PCTR1 to count different things are printed
++in separate tables, as their means cannot be compared.
++"""
++from __future__ import annotations
 +
-+/* -Wpacked objects to the packed fields where __u64 is 4-byte aligned. */
-+#pragma GCC diagnostic push
-+#pragma GCC diagnostic ignored "-Wpacked"
-+#pragma GCC diagnostic ignored "-Wattributes"
-+#include "../../arch/alpha/include/uapi/asm/perf_event.h"
-+#pragma GCC diagnostic pop
++import argparse
++from collections import defaultdict
++import struct
++import sys
++from typing import Optional
++import perf
 +
-+#include "evlist.h"
-+#include "evsel.h"
-+#include "sample-raw.h"
-+#include "util/sample.h"
-+
-+/* I_STAT */
-+#define I_STAT_OVR(x)		(((x) >> 30) & 0x7)
-+#define I_STAT_ICM(x)		(((x) >> 33) & 0x1)
-+#define I_STAT_TRAP_TYPE(x)	(((x) >> 34) & 0xf)
-+#define I_STAT_LSO(x)		(((x) >> 38) & 0x1)
-+#define I_STAT_TRP(x)		(((x) >> 39) & 0x1)
-+#define I_STAT_MIS(x)		(((x) >> 40) & 0x1)
-+
-+/* PCTR_CTL */
-+#define PCTR_CTL_TAK(x)		((x) & 0x1)
-+#define PCTR_CTL_VAL(x)		(((x) >> 1) & 0x1)
-+#define PCTR_CTL_SL1(x)		(((x) >> 2) & 0x3)
-+#define PCTR_CTL_SL0(x)		(((x) >> 4) & 0x1)
-+#define PCTR_CTL_PCTR1(x)	(((x) >> 6) & 0xfffff)
-+#define PCTR_CTL_KILLED(x)	(((x) >> 26) & 0x1)
-+#define PCTR_CTL_STALLED(x)	(((x) >> 27) & 0x1)
-+#define PCTR_CTL_PCTR0(x)	(((x) >> 28) & 0xfffff)
-+
-+/* PMPC */
-+#define PMPC_PAL(x)		((x) & 0x1)
-+#define PMPC_PAL_OFFSET(x)	((x) & 0x7fff)
-+
-+static const char * const trap_type_names[16] = {
-+	[0]  = "replay",
-+	[2]  = "DTB double miss (3 level)",
-+	[3]  = "DTB double miss (4 level)",
-+	[4]  = "FP disabled",
-+	[5]  = "unaligned",
-+	[6]  = "DTB single miss",
-+	[7]  = "Dstream fault",
-+	[8]  = "OPCDEC",
-+	[10] = "machine check",
-+	[12] = "arithmetic",
-+	[14] = "MT_FPCR",
-+	[15] = "reset",
-+};
-+
-+/* What PCTR1 counts during the window, by SL1. */
-+static const char * const pctr1_names[4] = {
-+	"cycles",
-+	"retire delay",
-+	"bcache misses",
-+	"mbox replays",
-+};
-+
-+/* TRP, and MIS and the trap type with it, are stale for a killed insn. */
-+static bool trapped(__u64 i_stat, __u64 ctl)
-+{
-+	return I_STAT_TRP(i_stat) && !PCTR_CTL_KILLED(ctl);
++TRAP_TYPES = {
++    0: "replay", 2: "dtb2-3l", 3: "dtb2-4l", 4: "fen", 5: "unalign",
++    6: "dtb1", 7: "dfault", 8: "opcdec", 10: "mchk", 12: "arith",
++    14: "mt_fpcr", 15: "reset",
 +}
++REDIRECTS = {0x481: "iacv", 0x581: "itbmiss", 0x681: "intr"}
++PCTR1_NAMES = ("cycles", "retire delay", "bcache misses", "mbox replays")
++SAMPLE = struct.Struct("<IQQQ")
 +
-+static const char *trap_name(__u64 i_stat, __u64 ctl, __u64 pmpc)
-+{
-+	const char *name;
 +
-+	/* Redirect traps leave TRAP_TYPE alone and are named by PMPC. */
-+	if (PMPC_PAL(pmpc)) {
-+		switch (PMPC_PAL_OFFSET(pmpc)) {
-+		case 0x481:
-+			return "Istream access violation";
-+		case 0x581:
-+			return "ITB miss";
-+		case 0x681:
-+			return "interrupt";
-+		default:
-+			break;
-+		}
-+	}
-+	if (!trapped(i_stat, ctl) || I_STAT_MIS(i_stat))
-+		return "none";
-+	name = trap_type_names[I_STAT_TRAP_TYPE(i_stat)];
-+	return name ? name : "other (see PMPC)";
-+}
++class Row:
++    """ProfileMe status totals for one symbol or instruction."""
++    def __init__(self) -> None:
++        self.samples = 0
++        self.killed = 0
++        self.invalid = 0
++        self.mispredict = 0
++        self.taken = 0
++        self.stalled = 0
++        self.pctr1 = 0
++        self.traps: dict[str, int] = defaultdict(int)
 +
-+/*
-+ * Copy the payload out of the sample, since nothing guarantees its
-+ * alignment in the buffer, and convert it from the little-endian byte
-+ * order it was recorded in.
-+ */
-+static bool is_profileme_sample(struct evlist *evlist, union perf_event *event,
-+				struct perf_sample *sample,
-+				struct alpha_profileme_sample *pm)
-+{
-+	struct evsel *evsel;
 +
-+	if (sample->raw_size < sizeof(*pm))
-+		return false;
++def pct(n: int, d: int) -> float:
++    """Return n as a percentage of d."""
++    return 100.0 * n / d if d else 0.0
 +
-+	evsel = evlist__event2evsel(evlist, event);
-+	if (!evsel)
-+		return false;
-+	if (evsel->core.attr.type != PERF_TYPE_HARDWARE &&
-+	    evsel->core.attr.type != PERF_TYPE_RAW)
-+		return false;
 +
-+	memcpy(pm, sample->raw_data, sizeof(*pm));
-+	pm->version = le32_to_cpu(pm->version);
-+	pm->pmpc = le64_to_cpu(pm->pmpc);
-+	pm->i_stat = le64_to_cpu(pm->i_stat);
-+	pm->pctr_ctl = le64_to_cpu(pm->pctr_ctl);
++class ProfileMe:
++    """Aggregates ProfileMe raw sample data."""
++    def __init__(self, by_pc: bool, top: int) -> None:
++        self.by_pc = by_pc
++        self.top = top
++        # Keyed by PCTR_CTL[SL1], which sets what PCTR1 counts.
++        self.tables: dict[int, dict[str, Row]] = defaultdict(lambda: defaultdict(Row))
++        self.skipped = 0
++        self.session: Optional[perf.session] = None
 +
-+	return pm->version >= ALPHA_PROFILEME_SAMPLE_VERSION;
-+}
++    def process_event(self, sample: perf.sample_event) -> None:
++        """Add one sample's ProfileMe status to its row."""
++        raw = sample.raw_buf
++        # Raw data from another PMU or a tracepoint is not ProfileMe status.
++        if (sample.evsel.type not in (perf.TYPE_HARDWARE, perf.TYPE_RAW) or
++                not raw or len(raw) < SAMPLE.size):
++            self.skipped += 1
++            return
++        version, pmpc, i_stat, ctl = SAMPLE.unpack_from(raw)
++        if version < 1:
++            self.skipped += 1
++            return
 +
-+void evlist__alpha_sample_raw(struct evlist *evlist, union perf_event *event,
-+			      struct perf_sample *sample)
-+{
-+	struct alpha_profileme_sample pm;
-+	unsigned long long i_stat, ctl, pmpc;
++        symbol = sample.symbol or "[unknown]"
++        if self.by_pc:
++            if pmpc & 1:
++                key = f"PAL+{pmpc & 0x7fff:#x}"
++            else:
++                key = f"{pmpc & ~3:#018x} {symbol}"
++        else:
++            key = f"{sample.dso or '[unknown]'} {symbol}"
 +
-+	if (event->header.type != PERF_RECORD_SAMPLE ||
-+	    !is_profileme_sample(evlist, event, sample, &pm))
-+		return;
++        r = self.tables[(ctl >> 2) & 3][key]
++        r.samples += 1
++        killed = (ctl >> 26) & 1
++        trp = (i_stat >> 39) & 1 and not killed
++        if killed:
++            r.killed += 1
++        if not trp and not (ctl >> 1) & 1:
++            r.invalid += 1
++        if ctl & 1:
++            r.taken += 1
++        if (ctl >> 27) & 1:
++            r.stalled += 1
++        r.pctr1 += (ctl >> 6) & 0xfffff
 +
-+	i_stat = pm.i_stat;
-+	ctl = pm.pctr_ctl;
-+	pmpc = pm.pmpc;
++        redirect = REDIRECTS.get(pmpc & 0x7fff) if pmpc & 1 else None
++        if redirect:
++            r.traps[redirect] += 1
++        elif trp:
++            if (i_stat >> 40) & 1:
++                r.mispredict += 1
++            else:
++                tt = (i_stat >> 34) & 0xf
++                r.traps[TRAP_TYPES.get(tt, "other")] += 1
 +
-+	printf("ProfileMe PMPC:\t%016llx %s trap %s%s\n",
-+	       pmpc, PMPC_PAL(pmpc) ? "PAL" : (pmpc >> 63 ? "kernel" : "user"),
-+	       trap_name(i_stat, ctl, pmpc),
-+	       trapped(i_stat, ctl) && I_STAT_MIS(i_stat) ? " mispredicted" : "");
-+	printf("ProfileMe I_STAT:\t%016llx TRP %d MIS %d LSO %d TrapType %d ICM %d OVR %d\n",
-+	       i_stat, (int)I_STAT_TRP(i_stat), (int)I_STAT_MIS(i_stat),
-+	       (int)I_STAT_LSO(i_stat), (int)I_STAT_TRAP_TYPE(i_stat),
-+	       (int)I_STAT_ICM(i_stat), (int)I_STAT_OVR(i_stat));
-+	printf("ProfileMe PCTR_CTL:\t%016llx VAL %d TAK %d Stalled %d Killed %d",
-+	       ctl, (int)PCTR_CTL_VAL(ctl), (int)PCTR_CTL_TAK(ctl),
-+	       (int)PCTR_CTL_STALLED(ctl), (int)PCTR_CTL_KILLED(ctl));
-+	printf(" SL0 %d SL1 %d PCTR0 %d PCTR1 %d (%s)\n",
-+	       (int)PCTR_CTL_SL0(ctl), (int)PCTR_CTL_SL1(ctl),
-+	       (int)PCTR_CTL_PCTR0(ctl), (int)PCTR_CTL_PCTR1(ctl),
-+	       pctr1_names[PCTR_CTL_SL1(ctl)]);
-+}
-diff --git a/tools/perf/util/sample-raw.c b/tools/perf/util/sample-raw.c
-index f5ae9f468983..f765429a481d 100644
---- a/tools/perf/util/sample-raw.c
-+++ b/tools/perf/util/sample-raw.c
-@@ -19,6 +19,8 @@ void evlist__init_trace_event_sample_raw(struct evlist *evlist, struct perf_env
- 
- 	if (e_machine == EM_S390) {
- 		evlist__set_trace_event_sample_raw(evlist, evlist__s390_sample_raw);
-+	} else if (e_machine == EM_ALPHA) {
-+		evlist__set_trace_event_sample_raw(evlist, evlist__alpha_sample_raw);
- 	} else if (e_machine == EM_X86_64 || e_machine == EM_386) {
- 		const char *cpuid = perf_env__cpuid(env);
- 
-diff --git a/tools/perf/util/sample-raw.h b/tools/perf/util/sample-raw.h
-index c8d38c841c8c..8df0bd3d02aa 100644
---- a/tools/perf/util/sample-raw.h
-+++ b/tools/perf/util/sample-raw.h
-@@ -14,6 +14,8 @@ void evlist__s390_sample_raw(struct evlist *evlist, union perf_event *event,
- bool evlist__has_amd_ibs(struct evlist *evlist);
- void evlist__amd_sample_raw(struct evlist *evlist, union perf_event *event,
- 			    struct perf_sample *sample);
-+void evlist__alpha_sample_raw(struct evlist *evlist, union perf_event *event,
-+			      struct perf_sample *sample);
- void evlist__init_trace_event_sample_raw(struct evlist *evlist, struct perf_env *env);
- 
- #endif /* __SAMPLE_RAW_H */
++    def print_totals(self) -> None:
++        """Print the busiest rows of each table."""
++        total = sum(r.samples for rows in self.tables.values() for r in rows.values())
++        print(f"{total} ProfileMe samples, {self.skipped} without ProfileMe data")
++        for sl1, rows in sorted(self.tables.items()):
++            print(f"\npctr1 counts {PCTR1_NAMES[sl1]}:")
++            self.print_table(rows)
++
++    def print_table(self, rows: dict[str, Row]) -> None:
++        """Print the busiest rows of one table."""
++        print(f"{'samples':>8} {'killed%':>7} {'invalid%':>8} {'mispr%':>6} "
++              f"{'taken%':>7} {'stall%':>6} {'pctr1':>7}  {'location':<40} traps")
++        ordered = sorted(rows.items(), key=lambda kv: kv[1].samples, reverse=True)
++        for key, r in ordered[:self.top]:
++            traps = " ".join(f"{k}={v}" for k, v in
++                             sorted(r.traps.items(), key=lambda kv: -kv[1]))
++            print(f"{r.samples:8d} {pct(r.killed, r.samples):7.1f} "
++                  f"{pct(r.invalid, r.samples):8.1f} "
++                  f"{pct(r.mispredict, r.samples):6.1f} "
++                  f"{pct(r.taken, r.samples):7.1f} "
++                  f"{pct(r.stalled, r.samples):6.1f} "
++                  f"{r.pctr1 / r.samples:7.1f}  {key:<40} {traps}")
++
++    def run(self, input_file: str) -> None:
++        """Run the session."""
++        self.session = perf.session(perf.data(input_file), sample=self.process_event)
++        try:
++            self.session.process_events()
++        finally:
++            # Break the reference cycle between perf.session and self.process_event
++            # because perf.session lacks cyclic GC support (tp_traverse).
++            self.session = None
++        self.print_totals()
++
++
++def main() -> None:
++    """Main function."""
++    parser = argparse.ArgumentParser(description="Summarize Alpha ProfileMe samples")
++    parser.add_argument("-i", "--input", default="perf.data", help="Input file")
++    parser.add_argument("--pc", action="store_true", help="aggregate by instruction")
++    parser.add_argument("--top", type=int, default=30, help="rows to print")
++    args = parser.parse_args()
++
++    analyzer = ProfileMe(args.pc, args.top)
++    try:
++        analyzer.run(args.input)
++    except IOError as e:
++        print(e, file=sys.stderr)
++        sys.exit(1)
++
++
++if __name__ == "__main__":
++    main()
 
 -- 
 2.55.0
