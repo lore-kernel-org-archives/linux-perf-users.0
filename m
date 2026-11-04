@@ -1,102 +1,89 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.53
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793818430;
-	b=dezG42GkEWfmLZxcW3p73VESEekXLYtsIAiaG3XR3kzqMv096ALiZ2DVnXfai11zroba
-	 ZWVmLxd1wpGnhjsSxYCvySIGoDRo2k3s9ukPMX3S/GzzOsk/Mgu4/E+LRhp1PaTjoVy/e
-	 wGuX8WESqQ9hM0Ok9pqb4sT6/9+jR0hbA7UyuaG86OF0dv6yDkzg5pnSU/C9Ej2hCrSDF
-	 xUHfGr076RAJJlBtTkw0FbO4FA1DV3dMLYv6oh97W7lU8yDJkR28DCfp1FgHnFNn8qRfn
-	 3IMy7i5dPf82zANZ1hckYak+vGyPY5VFh8SUYIr9abovNyNxS1xeLdaj6RV6KDpU6uw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793818430;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.170
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793818439;
+	b=KsnloMdFVbwQEqVjYpJ9clIYB7RV/5jr9IDKuOBc2mYP5bK5Yj7vIXEgBHiasoyh9Bn9
+	 LiQONmHIAjJRoKqtycwd+qCuXI1VuuSQbIFQgGSkrI7wgdRf5r4lIMxZ/MeUiUJFbdfsE
+	 /U6zcGnPS+WrdnmmDMIqI0DjkoS2bE1gc6CS4XEP/riwaOSYwkWKWHV6c9T6jKnzsKZ1B
+	 JpvAMdD7Sx6MSFNOl3I1IsxzJ68EdhdrpSJv0i6o4F6ofizUw5V/0loNvMV6lMRhrNpL/
+	 Um35t5EN/e8IGKOTPccjCrPvAu/AjVMXfjsUhINiCUPzFELrGn+1d7kvdixw1DyOchQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793818439;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=VSLZirYLfXxCX6vmTSLPB0q93v507OlVixWklmCxkMQ=;
-	b=aBaOByIZ6rLBTTL8uNNg5EKpuNtAjyfLnWOMXFmXov+dPC7jmoh0h4zkBGRk8mH+aPP+
-	 6gZZ70Wtv2IVz9pJY0dTbrNV5/98tSuMmdppcRWyTkTwwo3PZCRh100xRs826eKyQl9Bf
-	 rgQ3QQYYHGNkALZtVjT7lro5T5akc/udT6KJ6Ppvv1FTrk1oXR/h081S3jEq6S0uHCNpf
-	 km4JXsE3O2wEqqAwIByeu2wjuSSvSf/juEDHiTP3Poc96Qdy7oAP2NC4jx6a8wKDwOwUx
-	 amLZCVfOU9ghjzvOjO5loWQwt6pLWhmcGad8Jok35AQs1D+TM/q/97e35Uix7LsKS1A==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key;
+	bh=MW25hjDMN9fnl42Jgp9cMMEDFOlPXuWurbBc7DgYrdY=;
+	b=do6QGwPqjkbJWYOBO0H3VgM7Pd1j0XqDBbL0wT0wlCvFnyM03yR5rfFF7oUybtsKB5wm
+	 EaX+hrU2ARiv7LjxAamC9iE5ZVZJltyInVGQfk0N+LgTWbbWF/L4RKXzG98lX33J1EpLV
+	 3B/8yQ3AAacW/mK5Jzb9/lgVw2STe10bK463BMNif3OBfSvS/ngjyP8hYq+dt4/0nspPr
+	 XVeNsJxOb8PbHDlzde0EPLer1ZaBx7R4ra7kT+mstHJ+hXYKUWDKRJ+aLWo7fGimEDNOa
+	 qtxxhkYD3P7kRWEMTMAveXCp3b4+qg/AttIj5ywC+l7uLzR1NvEy7IDyOOFomkpT58g==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=PMbT5d5A;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.167.53
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ygO6a+B5;
+	arc=none smtp.remote-ip=209.85.128.170
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10480606D824
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 18:53:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 10480606D824
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F86606EE93
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 18:53:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 08F86606EE93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=PMbT5d5A
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5bcb6faf862so879978e87.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 04 Nov 2026 10:53:49 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1793818428; cv=none;
-        d=google.com; s=arc-20260327;
-        b=A6rs/9tjUIz+cDGavUvxWs7O1Fmpk860f9KsQY5pTOx87lgDBjpH8sknTS1GAIKGnO
-         6j/2VqFWymSXA5jqS8AgcL/+T9C6I3JaBprUeNMaS6WMEnf7QEaAKLiQBkXhO+eBbfkv
-         jYgiMj4TwPrcuhdGmYVX8fzhGjX6rJegvde5UaC+VDsEg7VirK4arO698iP9TahyaLYN
-         WwlK4RiKOAmjXlSagEkI9ZQONf0CDIiMj60RqKBALgdRmfCSF6tEhRLfwIMi5I88NIXU
-         kKeeGov0wplT7PVO4yRjlQ9fUeEmxEypaXZV6Yxkx57BYpfMu+SGA9iTNUFNQ6ngXvIz
-         0USA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=VSLZirYLfXxCX6vmTSLPB0q93v507OlVixWklmCxkMQ=;
-        fh=5mPIqRj4BHc8GsmfDVoYJTka7rVLWgNTa7b7vCLNaQk=;
-        b=YGyhSoYdNPuVhYaoh9E1SDIVafQfd7hUSH53U5z/eZLqHZjteE45YIOtnDH2SgUFXd
-         a/A37NlA8yNRZCYTmc5b3Pt+N6pwKgU11mnjBC366bombEh1mzGCOkaAnEJSJWZRDoAA
-         +W505LQjzw2oPxYyjfTYP9Jch1M4tpjqY6Nr9QTS7BYFZtrdTbcqNCt8EIEE+d+xKCeT
-         E7kx71eGlkfnERJczP/IjmA4PdfVpOtIMeG7nY2xgasMMonAwYLYDaIioXYBUrZL1DTV
-         j9yKZsVmBkiIFeAoZ9nRjDPpZaOKpvNUnVJobNBdEEAmrE6T/UIv4f9pPOOPVc4KchvR
-         EQUg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ygO6a+B5
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-8b0f59a5fdaso12496677b3.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Nov 2026 10:53:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1793818428; x=1794423228; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=VSLZirYLfXxCX6vmTSLPB0q93v507OlVixWklmCxkMQ=;
-        b=PMbT5d5AfA3PKJ81m+UKPVsHKXN0tvmPHqP3xOpY/M+JwQrno2/TrDH+YOK4f8QGUu
-         6GKbUP+P9YY0vfpxdMSD0aEQTFcQsNQcE/KpLy7ut2Q9u1OYhv+c2xKLDSupF7wPccWj
-         AzqWg6XpW85jy6tzDERjz4YOnRQP0jzH1JxOm9A+CtfKQZXRe8i+tg5mCcAOEeytu6c7
-         MdAMtJi+ZZJcog3NDVz8tNIgWM4LPsqd4y18rE/s3/iE/XkuulpjAgE33g1kQoXMRwQD
-         TqpdyOPLDh474Hh0Vb6gkzsYoHRPu/dG1/u68hm1nEHM2Bl3hYSOVbl/XlH5q41T2quV
-         r8oQ==
+        d=gmail.com; s=20260707; t=1793818438; x=1794423238; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=MW25hjDMN9fnl42Jgp9cMMEDFOlPXuWurbBc7DgYrdY=;
+        b=ygO6a+B5rv6ddJNrX1cdMEwGNrWTj7H6ceQS2/xXOBM9XJoCUp5m+OcgzbUzn4leVF
+         WyLIygXkFMxs2pgG1y+a0EaSTqSfsbjw+YIetz7PdcsTGWLwHuInr9DpZPsTlEBjIH3B
+         R2lVkkcSptzriK3Iw14QyfW2wLTp9AckPLZhEDOyBDJtkJfEExWsaFcgydbOwFwlSvYb
+         yhBEgRGu1TZOCaCocH1YcriJd+C4GZYOp9gE4naazA4LU95eXiSE+lWEONn0JIpGEdb5
+         aRTV4yWpzjOASQJpSC27jvxfOaEddPoIMH3arUzPtY/nOK1SlA7OuBfhlYls+23Btfdt
+         sKrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793818428; x=1794423228;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=VSLZirYLfXxCX6vmTSLPB0q93v507OlVixWklmCxkMQ=;
-        b=idb1kuefQpmnxf+NBw70gcLEytCrs3uWHSAPXoya0P4CIOh2jRwbaFQjuuIg5PCYy5
-         vpnQ/BIYAZqhhzNSORvdodyCkO7NWSxF8bMqp3lPJpvRywMifksWnEj9YrHdlz+Wl+SU
-         R37rP1EFTMjE6mYOmZ4pMGlErTtB4DEoDPbXdviPo0FLVbXh/8ZNmvyS8gFrNPaRWa9b
-         mtEUFRS11MOvVkdRJ1M6oQ+QPGq2qqMcazI5mYXccbtwkYpUFK2czUzeKTGC2FbDJXjs
-         QZpqNukzpjJ9ESJPg/mzsOU4JNACvSjpzVmEXMLmMcPRz2MPl4X+HGqmpGenX9uEkmwx
-         iltg==
-X-Forwarded-Encrypted: i=1; AKwUvBx4Lhd4DP1rUu5Hl3VggDN6WnKH+hWpdIr+mnwkbwKId9OCY3uVocNU7QQ194BIQ2oVRLKkuoBwMjLK4K+Mmy9I@vger.kernel.org
-X-Gm-Message-State: APuU4Z98g+PiK6Rs/K9K9sWM9YfeuQnjpBYI2GS6ckL1P1FQCobklirA
-	K5ZwcBDU+q4nd6PQo1shuvZyWW+lzOxLWM3CCbbSh9mVaYDd4rQoMZmi3phWehICk5JK+bUPc2Q
-	irA5blzBAEkKux62yGSDlooFGAwvUwrc=
-X-Gm-Gg: AYBFou2evMlLWQoE7r+SV51HOM+dpieyHMYhWRgEBwRmH4olzM2TB5P+jvLQwaCBfrV
-	cqqMKqhsVK2dGx9KWSf9TK3qwKQQjKMAa/K/AZUYARTHbBoANAoidmDzPIfZBj125mqetoOxGZH
-	pp8Gsv+BStmm7C9ogFLxDGl0ebaamRy9ms7U1UA7iZ8d4OAfWD6KKHdpYvMsss1GgalNzooE3LI
-	40HPxlMkCfpMhFsvw7IWV5sl9JuaGRK7mfd3mvpNL4DJRoMUHXJHyCxwTFfmdBpluAwmcmDwSq0
-	cgs9O5frV3FVrZLJNFdPpkfey+lgiXv8SLqh8cTERAVEeVAWqm9jpfaNsDBcHQMN/Hrrqo1llsv
-	p2tIeCsKVKS/+ldiVstX5KL/MADtU9T0ZytitFNMp1mck273lHng6x1kmSDvJzgQAYT8ypiAsB4
-	gAKxxoRwwXdlHGKbVmqAA0+z0q/5KK8neQz5ltslsSGLXBP/OSmMzRypLXS6N33Kr3E9bJjCF+7
-	A==
-X-Received: by 2002:a05:6512:3a92:b0:5be:3c86:f24a with SMTP id
- 2adb3069b0e04-5bfd957e37dmr6686063e87.53.1793818427812; Wed, 04 Nov 2026
- 10:53:47 -0800 (PST)
+        d=1e100.net; s=20260707; t=1793818438; x=1794423238;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=MW25hjDMN9fnl42Jgp9cMMEDFOlPXuWurbBc7DgYrdY=;
+        b=lUJPIJ5wIH+lYgRLWtiaCfAtgalc3zX64ee9ytBSxsZ+TrXIrmrPw69avw9pPsl+Qn
+         0iCZGQuEHIEgTmASR9+iR9cmk894jbrpVYUkUIGYzG3wcodVF/d+j3bzKB5P27nuGPwW
+         iInhteWVeO3XHcVy2vJIEoE1/tj8TVOecG6+Pua+crNyDR/Lgry14/OH8gGM0jiy11Fj
+         qc+6g6apZQZTg5yWgOayOG9lBhoSzLZae/LQOk3i+BvnwRJ/TUwCc47bl42ju++E/71N
+         Byyt60dcTknEyzqqqi1ErurKzvgOBda8UFYSk6t/yjOD8ag8AAJexY6bYHFXv3P53vqn
+         JB/Q==
+X-Forwarded-Encrypted: i=1; AKwUvBx6E+FzIjNdYiHnis85yAUxssu8mqMQ0FBuX0pRYZeLjmnvUtaT6PtPk7zqX61LBk1p8nRJNGXN67rMiQaNqWlS@vger.kernel.org
+X-Gm-Message-State: APuU4Z/eV5+GYawR7tVyjR1S11bmdyt4GTLmKM6eAAgSUCLUEfB5CgPL
+	3S6O8OZ1jwvo/1dGkuhcaJ6fSMgWAGKQDg7ws9gAnX6CqyhWFDExh+hr
+X-Gm-Gg: AYBFou27/0+rywSDYz57LEeYnBC/8EdcYfRTYCg6h2yOkbBcKRgjJ6KCzmBHeRQwhS7
+	Oxpj8GSwokPa94wqhsvSEjTR7aRVdQPsK7uW8frJd0/mw67IFoaiWRHwZgDoxRWSGYozSsCANO4
+	/rnhes6eqohMbYIeqseT1NeYwH8nJdO2ru0ARQWvz9RbnVlNEjCZ/VVhvyPiTxdt53XsB0SHJ1A
+	x/ZmfRsq+Hn7WyDHZUQ2AZN8hoZGKsKrc99LKp7mnQN//M6AzB8JqE41RJ3ZDdrDuYIEm/fG03Z
+	Er1YynjwzyUIrb/turZv767sY4+X3dnf6RFHq/dpu3qovOTso6MufHp4DXgojnWiVfM8leACtw8
+	spAqlkkLzGOEhxF6k63nEffDYb+3TGt0Ne15KGodWr6fyv6wC6WGA7U4Gq8UVuSgqpR1SKntNJG
+	+9j94SUrDNqilwkhoLIXpzm447hdHJuC1PWWyulo1hta+y1gbjZrDeBnVLg/KiDEjleb5ACe2RY
+	CB4bjWsvmTxAzqPwMzf52Mkl0xXps8ladzWWBI3fLkvi3qLLEnyGDzoo3yHeVgmsC1ZZc7+lBKS
+	maefVCZl0GV8qBJkzK0Krxhu0cc0qUZYdvmKMDkM57N+DbFNUozcoxVvjSGBrlLy12vvY7AySq8
+	yOFYUuhT5sw==
+X-Received: by 2002:a05:690c:f05:b0:8b0:9e27:fcd0 with SMTP id 00721157ae682-8b2b66c4171mr120311327b3.21.1793818437748;
+        Wed, 04 Nov 2026 10:53:57 -0800 (PST)
+Received: from localhost ([2600:1702:7a90:6f9f:66f3:d5d6:2d12:d460])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-8b309b9f50csm24364847b3.38.2026.11.04.10.53.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Nov 2026 10:53:57 -0800 (PST)
+From: Matt Turner <mattst88@gmail.com>
+Subject: [PATCH v4 0/3] perf alpha: Decode ProfileMe samples
+Date: Wed, 04 Nov 2026 13:53:55 -0500
+Message-Id: <20261104-perf-alpha-profileme-v4-0-1771ea02950e@gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -106,116 +93,119 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261103-alpha-profileme-v5-0-bbe3937fbf3a@gmail.com> <CAP-5=fVtMnaoF1JbVFJuiRqPx-2izJafs=+ov6eF_PYFE9Xrxg@mail.gmail.com>
-In-Reply-To: <CAP-5=fVtMnaoF1JbVFJuiRqPx-2izJafs=+ov6eF_PYFE9Xrxg@mail.gmail.com>
-From: Matt Turner <mattst88@gmail.com>
-Date: Wed, 4 Nov 2026 13:53:34 -0500
-X-Gm-Features: AclHuK9pOKGbog0PgwGPnVhdNm68bt_g_FLIV6Q4IvNlgqwLLjl2Ikr-ET1-ZgE
-Message-ID: <CAEdQ38GxScDOhw-4ev_cOyWcEiE2jtfyp2FEJEEomvcgExjL4w@mail.gmail.com>
-Subject: Re: [PATCH v5 00/11] alpha/perf: add ProfileMe sampling
-To: Ian Rogers <irogers@google.com>
-Cc: Richard Henderson <richard.henderson@linaro.org>, Magnus Lindholm <linmag7@gmail.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/4XOTQ6CMBAF4KuQrq2ZTgmCK+9hXJQyhRr+0iLRE
+ O5uwYXEhLh8mZnvzcQ8OUuenaOJORqtt10bQnyImK5UWxK3RcgMARMBmPKenOGq7ivFe9cZW1N
+ DPIUwy7KcJEoWTntHxj5X9nr7ZP/I76SHxVo2KuuHzr3W3lEse38qRsGBmzjRIpNpASAuZaNsf
+ dRdw5aKETeIhB0EA5JpQgM5UIL4i8gvEl7ZQWRA4twkJIpCnaTcIvM8vwFL/6wuVAEAAA==
+X-Change-ID: 20261028-perf-alpha-profileme-8010299be323
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>
+Cc: Magnus Lindholm <linmag7@gmail.com>, linux-alpha@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ Matt Turner <mattst88@gmail.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4163; i=mattst88@gmail.com;
+ h=from:subject:message-id; bh=mwri5c3a60UO9UOwmoXQFRAV5LNNQJzOrWjLaoTcg4E=;
+ b=owGbwMvMwCW25rVmCc8sv+mMp9WSGLJe17s4z+N4sOaUzbn2ZQ/cRSQ8XdIsV4bMNdms1ZiWd
+ TSuOZml4yMLgxgXw0wxRZa49Yoss9p2LPU5Lf0LZg4rE8gQaZEGBiBgYeDLTcwrNdIx0jPVNtQz
+ BDJ0jOIhcnoMGpnFxaWpRbppBUUOefkliSWZ+XnFevkFqXkF6QV6aZlpJRkZ+UXFqUAj9PJSS0x
+ dHd2MDA1MLB0tzJwsHE1NnJ2dDJ3cHB2dXZ2MLM1NDJwtHU1cLc0ZuDgFYK7pEmFk2F0nFFCxut
+ H/RXVl+NMnmw3eHBdWTn3BqLHL99U5z6a75owMGywOb8kukUj4aH+xTIXVlN3jxIS957Y6rTURY
+ rdj8rnPAAA=
+X-Developer-Key: i=mattst88@gmail.com; a=openpgp;
+ fpr=3BB639E56F861FA2E86505690FDD682D974CA72A
 
-On Tue, Nov 3, 2026 at 6:42=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
-> Patch 5: I think Sashiko's report is right. With idx forced to 0 in
-> ProfileMe mode, a PCTR1 overflow still pending when an Aggregate event
-> is multiplexed out gets taken as a window close: it adds a bogus 2^20
-> to the count and emits a sample from a stale PMPC, possibly another
-> task's. That's the mirror image of the false sample the commit message
-> documents for the other direction.
->
-> In both cases the interrupt arrives for a counter that hasn't wrapped
-> since it was last written, whereas after a real overflow or window
-> close the counter sits just past zero. Could the handler drop an
-> interrupt when the counter hasn't wrapped relative to prev_count? It
-> would need some headroom: a counting event's period is 2^20 - 1, so
-> its counter starts at 1, and a real overflow, which leaves it just
-> past zero, would look unwrapped too. Capping left at half the counter
-> range, as armpmu_event_set_period() does, keeps the two cases apart.
-> That would fix both directions, and the caveat could come out of the
-> commit message.
+The Alpha kernel series "alpha/perf: add ProfileMe sampling" adds
+ProfileMe sampling to the Alpha cpu PMU. Each ProfileMe sample carries
+the profiled instruction's PMPC and its I_STAT and PCTR_CTL status as
+PERF_SAMPLE_RAW data, which says whether the instruction retired,
+whether it trapped and why, whether it was a mispredicted branch,
+stalled before map, or was killed on a wrong path, and what PCTR1
+counted while it was in flight:
 
-Agreed, and done in v6 as you describe. It's a separate patch ahead of
-the ProfileMe one, since Aggregate mode has the same problem when an
-event is reloaded or perf moves another event onto the counter. The
-cost is that counting events now interrupt every 2^19 events instead
-of every 2^20. The caveat is gone from the ProfileMe commit message.
+  https://lore.kernel.org/r/20261104-alpha-profileme-v6-0-63362e9290a3@gmail.com
 
-> Patch 9: Now that patch 11 drops DTB miss samples from cycles:p, it
-> may be worth giving retired loads and stores a data source too.
+This series is the perf tool side. Patch 1 decodes the raw data in perf
+report -D and perf script -D, as is done for AMD IBS. It copies the new
+uapi header from the kernel series into tools/arch, so it should wait
+until that header is merged. Patch 2 adds a script that sums the status
+by symbol or by instruction, in the style of DCPI. Patch 3 gives perf
+mem a ProfileMe event, as the kernel series reports the DTB hits and
+misses of loads and stores in the data source.
 
-Done. Retired loads and stores without a DTB miss trap get
-PERF_MEM_TLB_L1 | PERF_MEM_TLB_HIT. LDA and LDAH aren't memory
-instructions, so they get nothing, and neither does the ldq_u UNOP.
+To try it, with the kernel series applied:
 
-> Loads into $31/$f31 need care either way. [...] Running your
-> one-word-per-page test with loads into $31 would show which.
+  perf record -R -e cpu/instructions,profileme/ -- ./workload
+  tools/perf/python/alpha-profileme.py --pc
 
-I ran it. On the EV7 a load into $31 that misses the DTB does take the
-miss trap, so it shows up with TRP set like an ordinary load. Those are
-now reported as PERF_MEM_OP_PFETCH, both misses and hits.
+I tested this on an AlphaServer ES47 (EV7). Sampling a loop whose
+branch tests random data reports that branch mispredicted in 21% of its
+samples, and 0% with sorted data. As a normal user, perf mem record on
+a loop that loads one word from each page reports the load's DTB hits
+and misses.
 
-One thing the test showed that I didn't expect: an ordinary load's
-samples split about 1:1 between DTB misses and hits. The miss trap
-aborts the load, PALcode fills the DTB, and the refetched load hits and
-gets sampled again. The commit message says so.
+Signed-off-by: Matt Turner <mattst88@gmail.com>
+---
+Changes in v4:
+- Patches 1 and 2: ignore TRP, and MIS and the trap type with it, for
+  an instruction killed before it was mapped, as the kernel series
+  does. Thanks to Ian Rogers.
+- Patch 2: record cpu/instructions,profileme/ in the example, as a
+  precise event now samples only retired instructions, which leaves
+  the killed% and invalid% columns at 0. Thanks to Ian Rogers.
+- New patch 3: add a perf mem event for Alpha, cpu/cycles,profileme/.
+  Suggested by Ian Rogers.
+- Link to v3: https://patch.msgid.link/20261102-perf-alpha-profileme-v3-0-4bf6e1dda733@gmail.com
 
-> Patch 11: Kept samples still carry the full period, so with -F the
-> sample rate, and perf report's approximate event count, fall by the
-> killed fraction: to about a third on your mispredict loop. That seems
-> the right trade-off, and it's what IBS's swfilt does with the samples
-> it discards, but it may deserve a sentence in the commit message.
+Changes in v3:
+- Patch 1: silence -Wpacked around the uapi header, which breaks the
+  build where __u64 is 4-byte aligned, such as sh4.
+- Patch 2: only read raw data from cpu PMU events, as a tracepoint's
+  payload can pass for ProfileMe status. Thanks to Magnus Lindholm.
+- Patch 2: print a table for each thing PCTR1 can count, so that mixing
+  events no longer averages unrelated values. Thanks to Magnus Lindholm.
+- Link to v2: https://patch.msgid.link/20261030-perf-alpha-profileme-v2-0-9ce2f0b0e622@gmail.com
 
-Added.
+Changes in v2:
+- Patch 1: copy the raw data out of the sample and convert it from
+  little endian, so that it decodes on strict-alignment and big-endian
+  hosts.
+- Patches 1 and 2: follow the new 28-byte struct alpha_profileme_sample
+  from kernel v2.
+- Link to v1: https://patch.msgid.link/20261028-perf-alpha-profileme-v1-0-f46c1938d001@gmail.com
 
-> For the next spin of the tools series, alpha-profileme.py wants the
-> same PM_KILLED_BM check before it trusts TRP and MIS. Its example also
-> records instructions:p, which after patch 11 has no killed samples, so
-> the killed% and invalid% columns would always read 0;
-> cpu/instructions,profileme/ keeps them.
+---
+Matt Turner (3):
+      perf alpha: Decode ProfileMe raw samples
+      perf python: Add alpha-profileme.py
+      perf alpha: Add perf mem support
 
-Both fixed in tools v4, in the script and in the perf report -D
-decoder.
+ tools/arch/alpha/include/uapi/asm/perf_event.h |  31 +++++
+ tools/perf/Documentation/perf-mem.txt          |   3 +
+ tools/perf/arch/alpha/Build                    |   2 +-
+ tools/perf/arch/alpha/util/Build               |   2 +
+ tools/perf/arch/alpha/util/mem-events.c        |  17 +++
+ tools/perf/arch/alpha/util/mem-events.h        |   7 +
+ tools/perf/arch/alpha/util/pmu.c               |  11 ++
+ tools/perf/check-headers.sh                    |   1 +
+ tools/perf/python/alpha-profileme.py           | 178 +++++++++++++++++++++++++
+ tools/perf/util/Build                          |   1 +
+ tools/perf/util/alpha-sample-raw.c             | 156 ++++++++++++++++++++++
+ tools/perf/util/sample-raw.c                   |   2 +
+ tools/perf/util/sample-raw.h                   |   2 +
+ 13 files changed, 412 insertions(+), 1 deletion(-)
+---
+base-commit: 4626d370ae89b8af4d46a45372b269f926ec662d
+change-id: 20261028-perf-alpha-profileme-8010299be323
 
-> Two possible follow-ups, neither of which needs to hold up this
-> series. perf mem has no Alpha events yet; cpu/cycles,trapped/p would
-> be a natural default, or cpu/cycles,profileme/ if retired accesses get
-> a data source.
+Best regards,
+--  
+Matt Turner <mattst88@gmail.com>
 
-Since retired accesses now get one, tools v4 adds a mem-ldst event of
-cpu/cycles,profileme/, set up only when the PMU has the profileme
-format bit. cycles:p would lose the DTB misses, since it samples only
-retired instructions. perf mem record and report work as a normal user
-on the EV7, with the load showing both L1 hits and misses in the TLB
-column.
-
-> And as the driver already works out the profiled
-> instruction's mode for the trap frame swap, ProfileMe events could
-> honor exclude_user and exclude_kernel by dropping samples, as IBS's
-> swfilt does, with PALmode counting as kernel.
-
-Done as a new last patch in v6. PERF_PMU_CAP_NO_EXCLUDE is gone, and
-event_init rejects the exclude bits for Aggregate events, plus
-exclude_idle, exclude_guest and exclude_host for all events.
-exclude_hv is ignored, as IBS does. A sample that falls back to the
-interrupted PC (a PALmode PMPC, or a user PMPC in a kernel thread) is
-dropped if either its PC or the profiled instruction is in an excluded
-mode, so a user-only event never sees a kernel address. As with IBS,
-the event count and the PCTR1 window count still include kernel time.
-
-With perf_event_paranoid at 2, perf record as a normal user now works,
-and on a workload with plenty of syscalls none of the samples were in
-the kernel. As root, cycles:pu and cycles:pk split the samples cleanly,
-and perf stat -e cycles:u still gets EINVAL.
-
-I've sent v6 with these changes.
