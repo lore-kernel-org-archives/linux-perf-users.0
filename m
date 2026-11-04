@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793827191;
-	b=q2Xz9Bgs9XGzySFZdaM6ryoWEVtVefeQKuQTbWNkrEUqH2/E69snPJIKhFYpxlvlZ7lh
-	 2w1l7HbRbU/2TsQIGwupHnsvv07tzWyFgf9wJWriFFCC/1lohv70MBl69BtqgZnPqVUUv
-	 7sJ5r9X3mF9cwrigxJhJLgfbFj81MlWQaDLPi02eTT7nxnFUjJk3bibI6OsUAEkxhnN6P
-	 Kh/U24YFrf1MgWYkVs/1ft7khD3OhDeg8uDR/R3/xjEskmRSr8ATmrawsdGCKbt/1pOiL
-	 t6gQ8SEjPUbWH7kQ0iGUGEqoGm2r2HVA6GRTDpdgeE0Ok7cA/g3CUJUyVtoxTxI8dmQ==
+	t=1793827192;
+	b=S6qCXMqLq/99GZgXmrZhRP/CW0BjNqnzxyHXMWPCUHX5s6BSX5PRZyFxivcjyaJklwmD
+	 TI6AIH27bAk+89+F0fhSrZP5aslC+eMFgM4yUujB6I3LR+Ge7hOSpuS2KApa4OlI2em2T
+	 EvEU4W8fIMDjBWBC0qgchBXocTB+ObCYJkWMY7NvTsOlSwLHlcucshoRyHNuFhlPIcotD
+	 EnxitV4cZ7Fp8Hh3Y2jpHJp3fLdWlwMmoHBIhsamd3G8mCEgFne6GK+bscXPKYpJosg5A
+	 HtiRG9glG486s5mHO33tNWuFPnv2agdQMx0jWmA8LjFDaQ6oqBsTa4wUT08fMM31ARA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793827191;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793827192;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=CJ4jopF8YWJlYP770Cs5eVWgDtLEa7B1ZmFeN/USPw0=;
-	b=aJXU53EvdXlUP0lSKzPyYPSEpBS1u+lllDcyhWz3IXVZzcrI8qWC102A6kFvHdMLRzyx
-	 +zSqXrlUCOmfbyBb1L8WdU4suLSDFLHBajHSpR9MsmuwOD6a+dXeTi0c1L2efzAEKo7u6
-	 ok8PJbN1ouxY1usq++Z/gMVzHVU2Y7a5oVS36DNpb1qWrG1P9uIisp2ejKOCTP/OUb3yz
-	 sZonVPxEIklZO9U+93B837m/5tKzCKlK1NbzgWD//3j6OPgkHUAAnDpBUCyl61kobHDqk
-	 2edsTjKCq+9NGGm5iFgxc67gbdovdPhNa5AxXihX1nqAkcsFm80KP1qq+6qFn3c8PSA==
+	bh=3HwDoMpu8BCO2+9f+D95orHKlwE6UHSm5PulwZZPj+w=;
+	b=IsxvHLxCFASvfvcWznMhaayCuWI9R4pxUtBn/NfVxsraES8AzzPWbkEzg9KoCbGM716x
+	 bH0OVxQQjPYofSqcQg9YG02M+OQvxEaMTuLSgKcUr6wx6PaZsPCZ9uHCxAC1G+A3pILIp
+	 oG0ILdFHRpBucaCZ+AD7T7QBdOgUtIt9a1AbW3M8+dqaf1FYPhKurnKVL4UeZOWspd8gm
+	 OGCszo2p7aWVJNTC6BjezJALemyFKIERudKpAibUiFGbmBiNGSTisM0uwpn8363itWGg1
+	 Ky8Eu9Zt6MAlGwOA/f74MY7mPzCxanhoMcvepfux/reHvKOy2yDh1RzWMlHQjDDNelQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PK+b3Owu;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WCUlu4uE;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40491606B2C1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1DD66083601
 	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 21:19:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PK+b3Owu
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9CF31F00A17;
-	Wed,  4 Nov 2026 21:19:50 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WCUlu4uE
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9202C1F00919;
+	Wed,  4 Nov 2026 21:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1793827191;
-	bh=CJ4jopF8YWJlYP770Cs5eVWgDtLEa7B1ZmFeN/USPw0=;
+	bh=3HwDoMpu8BCO2+9f+D95orHKlwE6UHSm5PulwZZPj+w=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=PK+b3OwuALB+JTBVZi3Af9SY7YmH5P1Zuw1RcBhAxd9bY+fAwSh7kqSK9v4cftUHe
-	 tSK7/GywHb9Lhc/VIUBRsCFwYi7Jp1WA72OYxQMD0+w+Q4X3VQivDTDv54SReyK3Pn
-	 4bxrbAP03QIclF9Il1i/YB20lWpiWooyN2n1+ibIrQXfx2ayVo6IpFbrIp0J1wTEht
-	 e63U5h+XjZDX5+f0LCBsKpW+UyYOxXljy3qrvefZ+s2Lc1xevnkdpcGv+62Z/RBmdd
-	 +uVPyw0Fte3F+vBgxzf/+m9ajoxBqaif0oTm4cl6o1hs/Qe7LaNnK3TduJhEZfA/Cr
-	 md4nR9vKh7Iug==
-Message-ID: <sashiko-outbox-198095@kernel.org>
+	b=WCUlu4uECub5d33PkeHbhPY/QDqv4F1KPZ0wO8e0d4K7mZWTzhvh1RRnrbnGahvrl
+	 O9kxtgvhXxj4znHR0qalUL4kEUHZaD2/DYGJK9sJOMpVfksc+XDPz2KX9wpkKPrEPg
+	 oH49EOVn5wg76Kd1zhqqEV4JPaO5CdmGZ8ptGuG/SWT+dSmmNJLZ+DF7SUN0b7fvNO
+	 zRAEm67Qppz0fKRsST1/R3Zt8TnMNGQZ/LAPPvpfsN1gWP52eLDxilob4ZBgoi6Fg1
+	 wLNG9uJWYbpecyBZM0V1ULvup/1JYZb6LGFLfynXbB/BsIbm1+aU6dAuBlWPHppsYi
+	 B4yWHuMEfiH3Q==
+Message-ID: <sashiko-outbox-198096@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 09/19] perf dsos: Ensure DSOs in auxtrace, machine,
- and symbol are in dsos
+Subject: Re: [PATCH v9 10/19] perf dso: Pass dso_data to close_data_fd() and
+ dso__list_del()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261104205909.2078411-10-irogers@google.com>
+In-Reply-To: <20261104205909.2078411-11-irogers@google.com>
 References: <20261104205909.2078411-1-irogers@google.com>
- <20261104205909.2078411-10-irogers@google.com>
+ <20261104205909.2078411-11-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 21:19:50 +0000
+Date: Wed, 04 Nov 2026 21:19:51 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,10 +61,16 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Place the DSOs created in addr_filter__resolve_syms(),
-> machine__process_ksymbol_register(), and maps__split_kallsyms() into a
-> dsos collection so that all DSOs that may have data fds opened or be
-> referenced by maps belong to a dsos collection.
+> close_data_fd() and dso__list_del() only operate on struct dso_data
+> fields, while close_first_dso() retrieves a struct dso_data * from
+> dso__data_open. Pass struct dso_data * directly to close_data_fd() and
+> dso__list_del() so close_first_dso() does not need to recover a
+> struct dso * from struct dso_data *.
+>=20
+> This removes the REFCNT_CHECKING dso pointer from struct dso_data and
+> avoids dropping _dso__data_open_lock in dso__list_del() to call
+> dso__put(), preventing lock-order inversions and races during EMFILE
+> eviction.
 >=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
@@ -72,5 +78,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104205909.2078=
-411-1-irogers@google.com?part=3D9
+411-1-irogers@google.com?part=3D10
 
