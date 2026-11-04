@@ -1,93 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793777544;
-	b=qVOITaQnjH+yu9iELyvsGDOgHfGmlWdkc2CrGo0XN/81nDir9Sit+0C6F5ujf/esiV6f
-	 /7701Keh12NBp9P0vKIg3OYjfBqKUzgCPqtCn4LjlMhKACQwf/YS7mKQO789igQARjBtr
-	 0ah7VPgirErwW1P5Sihf39wIzgHEWoCL0dD2I8WYi2VGpztZH77wLGpWX+vDcG0sAQfuR
-	 wNk0n1CdXu3nNE1phM0wtMyZ+bt26nzsn9XByDgYP2bYJJfob2PXn4MrR+cngFeLT9ntD
-	 HtDmA+AvCTx8HxMqo+MTWX8KVr9dppVYPQhD7R8bPYnNzOKgw7BDdxGCeVgMLL32eZQ==
+	t=1793777567;
+	b=iv1IfujW+Gw/f+aK0+2p9Q/NRzChWTY9SMtgUZSJaQbi590jg26oBpoJIgyw+LV5Ihuh
+	 oZzGjsIpV7foMw5k+bMAm38fmnOD1qV0UZk9bNspIqDmqq4pJvrad/Uot6VYFau7JGmRr
+	 euTApu5OqYPQTzpkd/inIiMa9BzXEUJuMgIEjlMOUX+zyo9ZDl4M5K0ofMg4hx9AHcLK4
+	 pfAEgaFNVjnDwPtiEzIJFq7HJ9Eb/xWxP67L7BBdXmjR7djKpiGaG1YW+DPVS8EeO6Mdn
+	 o/ZdilzaAh3q6RUFVcwobByOn41ak4tUR0SHrc9TknOruwKI94k9WFpaUKr2FwdMIOg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793777544;
-	h=DMARC-Filter:Date:DKIM-Signature:DKIM-Signature:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To;
-	bh=FTuoz+Tu1ZqVAmMASax5Vg8xqu9+VRz2AqfqKkE/of8=;
-	b=Q6reKC51RMVxFu3o6feLMVvqgg3Hcib7B4QR/7nnGvYXzD8mH46bb84PMg85zQ9zCRg2
-	 +XGYdPuz9NSGGTrJdI2p9TBQpGE0FtikA4UFYldDFAKf79GDWR2TSG6laQE+MQC9xJUhp
-	 ggOdpndWMdnHpYxD844Dy05nQKqw7HzzShRp3F+vxScpETAoQe5wrx6oD9RUs4jf0VfEk
-	 b67PqoLtyNX6smdHHpxoyZGgDO2w/diRcg6ZclkbT+rhjiFom96BRJnd8jqJw96gY1bds
-	 uIY3FhUz5lKrtMLJG5WV0ODS09467voPiwTAedkuxNkQ1k8jspkoXCV5n6YBMGHi50g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793777567;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=1ycD0BV4gVs7u8bqtOM4Z/HOT0u/KQ4oXXM9rPsMJaM=;
+	b=m0dCm8pFglzMV0JFK1N/pWJIadUkDlMFVIXrvdDT/3DQM12C8xxD5I05U2g2LkbMyFdP
+	 N89PClxmHs/a4XiL63HnfoJ2izAlYt9cusrv6nClmEsNTDSh70oaOUQjaDBqa9kJgKV9n
+	 mFy5dRejFb+/CL+RhDl3et8PGGgD7TiFxSsWidikLZK5M9XHKcVHaWt97ulLX/uK990WX
+	 Wrbxe/bpssHZSs5H0jMon0EjvFL2eRlmmOJai9FfyOGmdGYkKd3j5/wmgQ51Oaddqi5Ye
+	 5tDANPZ8hUxIJfQhfbfiz2cTwULHWqfpCgu23Q7BHfa8zEk7ifEFs7MfymTHo7BMkZw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linutronix.de;
-	spf=pass smtp.mailfrom=linutronix.de;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=XH3LXEsZ;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=VAkr93B+;
-	arc=none smtp.remote-ip=193.142.43.55
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DqESkm2P;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8DE606A326;
-	Wed,  4 Nov 2026 07:32:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1D8DE606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBBE4606A329
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 07:32:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=XH3LXEsZ;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=VAkr93B+
-Date: Wed, 4 Nov 2026 08:32:20 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1793777542;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FTuoz+Tu1ZqVAmMASax5Vg8xqu9+VRz2AqfqKkE/of8=;
-	b=XH3LXEsZmyZjYlk3Ntq6SZFFLSphhKRezZCOR9FpoOpYqKxDRBAqPylJyxHoxidC/fat4d
-	JM+AnI3UvD310wrBCL8hOKotKn8QjJsgAJrA4Tqs1GSmi6qcqfKMYx2fW7f+bsbor/oLfA
-	Tb9WKo6i6aHUQSXOyqej6WkFiMYEfC/AvqB9K41Gea0XSHyTJQsqQiXY8ApoGuE2VvfPue
-	pJenrF+P4Isat0Y1/FRNpwSpknoN8oGKMjk2C+cMqRqf6d/VzoVu4Rm9Iqh5xoa2f9ZXmh
-	OcHlmOzs/Iktr46mlx+LmhWb+HeW2uG6GsNiofui7oMkZcmrorIJnLGblkR9/Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1793777542;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FTuoz+Tu1ZqVAmMASax5Vg8xqu9+VRz2AqfqKkE/of8=;
-	b=VAkr93B+pVAxcXeHVdFUneBrvYF2MbIFQ9wvH5xIKwwRBbzMqLFo2lozUkzIu8R+I8XHqK
-	IfvDtLfCkuzJg5Bw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Pavel Machek <pavel@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jiayuan Chen <jiayuan.chen@linux.dev>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	"Vineeth Pillai (Google)" <vineeth@bitbyteword.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Andi Kleen <ak@linux.intel.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	driver-core@lists.linux.dev
-Subject: Re: [PATCH 1/6] irq_work: Re-raise pending irq_work after system
- resume
-Message-ID: <20261104073220.Hgq4chT1@linutronix.de>
-References: <20261102074039.26983-1-adrian.hunter@intel.com>
- <20261102074039.26983-2-adrian.hunter@intel.com>
- <20261102090604.GR1779021@noisy.programming.kicks-ass.net>
- <74511f6b-f5ff-498f-bf97-ebdc86c43d24@intel.com>
- <20261102163937.KwllF-Pg@linutronix.de>
- <2d6105b4-bd75-41b5-a7b2-da91bda31350@intel.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DqESkm2P
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62F771F00919;
+	Wed,  4 Nov 2026 07:32:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793777566;
+	bh=1ycD0BV4gVs7u8bqtOM4Z/HOT0u/KQ4oXXM9rPsMJaM=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=DqESkm2PgxhVDbLXS1psVA/sGjMq5KjxcwE2X9KkGEzc+MFqhfvE5S1n8RaEg0hgw
+	 jQ8i9kuDqZXa9GR6u6xPE7BXi25irwqIx4NHPbFHIl++4axeShFdpVgJahhYpg/TvE
+	 27/WEh7hql0f08ZH7LpJ0i/EEYX9DWNYAvrUpir9uC+Cmz1DSxHFmdtrhxgbBmsbWU
+	 Aj7sfs59XdPkRD2ghNHrQD/OyI80PDvTJ59ZuE2KpKeUHgpfKYboWJ4HXnqlxCf9/A
+	 ApakxrojETjcQVeiuKGbq+dDPHUXDc2sPCbb82S57Qq7nFeQTvgUbCdGGsNKKQ+Qqu
+	 7QFHIm1XS2P0w==
+Message-ID: <sashiko-outbox-196800@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1 38/41] perf pmu: Probe branch instruction skid
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>, linux-perf-users@vger.kernel.org
+In-Reply-To: <20261103234502.1008382-39-irogers@google.com>
+References: <20261103234502.1008382-1-irogers@google.com>
+ <20261103234502.1008382-39-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 04 Nov 2026 07:32:46 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -96,48 +58,22 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2d6105b4-bd75-41b5-a7b2-da91bda31350@intel.com>
 
-On 2026-11-03 17:46:32 [+0200], Adrian Hunter wrote:
-> On 02/11/2026 18:39, Sebastian Andrzej Siewior wrote:
-> > On 2026-11-02 12:54:22 [+0200], Adrian Hunter wrote:
-> >>
-> >> Yes CPUs remain online for suspend2idle, but currently the choice between
-> >> suspend2idle and "deep" (S3) suspend is a user space choice,
-> >> refer /sys/power/mem_sleep.  Many modern systems do not support S3
-> >> anymore, but it has not gone away.
-> >>
-> >>>
-> >>> Anyway, I'm torn; I would much rather make this trigger a WARN and have
-> >>
-> >> AI now also identifies ftrace, BPF, GHES NMI, and #MC as possible causes,
-> >> not just perf.  I haven't tried to confirm any of those.
-> >>
-> >> And, belatedly, AI is now saying an irq_work raised before lapic_resume()
-> >> might result in #GP if the APIC is left in xAPIC mode at resume.  Also
-> >> not confirmed.
-> > 
-> > Could we flush this before similarly to what happens during CPU-hotplug.
-> > The question is if this event can stay enqueued during suspend (and
-> > handled on resume) or should be taken care before entering suspend.
-> 
-> WRT "might result in #GP if the APIC is left in xAPIC mode at resume",
-> the systems I have checked restore the APIC in x2APIC mode, so the
-> issue is theoretical at this point, although I can get "unchecked MSR
-> access error: WRMSR to 0x83f" if I deliberately add code to change
-> x2APIC to xAPIC early in S3 wake (in x86_acpi_suspend_lowlevel()),
-> and then do:
-> 
->   perf record -e power:suspend_resume --filter 'action == "machine_suspend" && start == 0' --no-buffering -C 0 -o /tmp/x.data &
->   rtcwake -m mem -s 10
-> 
-> The error can be avoided with:
+> Extend perf_pmu__probe() with run_skid_branch_loop() and
+> probe_pmu_skid() to empirically measure branch instruction skid across
+> supported precise_ip levels (0..3) on core PMUs.
+>=20
+> For each supported precise_ip level, open a branch sampling event on the
+> current thread, execute a NOP-runway loop ending in a backward
+> conditional branch on x86_64, arm64, and riscv, and compute the minimum,
+> maximum, average, and exact-IP (zero-skid) sample counts from the
+> recorded ring buffer samples.
+>=20
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-I meant flush it via irq_work_run_cpu() like in smpcfd_dead_cpu() (the
-CPU-hotplug path) and not go via APIC. You should do it late once the
-interrupts are disabled so no new irq-work can be enqueued.
+Sashiko has reviewed this patch and found no issues.
 
-Sebastian
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103234502.1008=
+382-1-irogers@google.com?part=3D38
+
