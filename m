@@ -1,56 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793763969;
-	b=tniREitIXB5sZY1B5J9gzCd+nfeN6vD6luS5xcxFxLcCn+P6Gl8JQ1wZ1o4hndFSgMp9
-	 yErOHEAb6b73nylc6RWGtnVqAbT7JmFEKagEPg1sifWQP0RYNt5LoZhoKAQtKZTNPTnS2
-	 HQzd+Sowd/D9FPXecMmyF2gmCNGVLRTjoQeNYxWFNdzXTy2c48neFlLHjCx1ERp9XWELn
-	 /Xye7cUo80CEGlgc8S2TZVl3Cp2PIqS3TnVlBiaOlkJYHk7JRIK1Q6CHyeYViUk0mi6dg
-	 ePB0HUACWzw17zRzO1W49GiOYCkj6eY599x542V+tA2Y0fHHz3BAdpHjc6vsrs2PU+A==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793763969;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=Cd0615ZcJzOUwmOSyBuJVIv1mKpmKHtryRIlmOuV6JE=;
-	b=oYM0lvx4fP/dYRGKX/xxDAtpQDdnOh3zo1mcPSOFig1X8Ry3p+Jd9yjjcq0bVbGgxzZY
-	 E8l+68mYEgw/UmjvfJ7CPcclJ/0GxllCA2vKjX2yuqWqKA2TGFSoRYkkhT+TRLUotYFyD
-	 F705njb9kqjVvNnDpTngCt7yUzr6FXSio8Ht9lSvwr5kJg1PCyotayxxC1pY2atcM2jEC
-	 IUnH/Im8GXCrbWyD4SY6p/a/ymW+HsANV+h8Q9POSPlKD01FAGBXTdhBOw5YNXnQQPUvR
-	 4ThFfNfsqmYxMj/IvH64J/Q+2S+qJH1GErMvuGz5jEeLaOAPDjxwVnmhSZUSC5XIgVg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cH0nAMtl;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.172
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1793764147;
+	b=dUwYzhnFKaAzne3hzfOdhMH1Bz1kr1JCuM0GZHI548OcA/KqVcJWIJ1ZyKHqtOcerrNv
+	 F+RWvOVsBTYQKYyiwVEAswCN7kQuzz6AHLW+o/rg6O1dUA2F/7VYdpkouKhdv0kRLNbk7
+	 r1j+pigWYjjBkPTS/FAy/AOUJh/hFShCcv1O1QITo18LXXqu/NOKBTiKbnWRWOT0rQoSf
+	 3Ht3cXxW70cFkn8iXXCNpgF6g4ekrdFls5Mx/BfLRHUReAqxRQjLBbRx4FV7YXgUMyurm
+	 ggIIuZvQRdkGZEJfEZ1EkWdWC7ukQMFduEZIjOJwviWI5dsv0QCZCQ1o8EFTrjJaZFA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793764147;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=cKWjRS9Xq/l8hl3060rXc9wXNrOk8HsfCBzOk8+AuV4=;
+	b=E2NBjN204hgkvCSNXfzEHMhn1TSMjUrWrn+3OIwjfspY+aFSI2YCTKl3i4NtyB5oU5JU
+	 mAUvb0hQfmmtve7ITX8PwKkeKqjcnbzBWMBj+8de6bED03sK6qF2N4kK+6sV3JoXtS6A9
+	 xPQhz+WmIFdkbp9pP2IS5AY0g58+SDaF8fj+OYwT3QFXvExWLFSrnLR3EHL7wY7/CG39O
+	 BmFHgJH8TRgQypUZIO3UNUsDb9pCgPNXDf314jjfJXJer3J/OY8dz8WUz3TfA+cNRm8PM
+	 AdsVI/7QKmYanCAgwDfeavfLLLNbdfebeXCxGL3MVe79YZEOTX+NCI853GUhwcHmNOQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="Zff7lCr/";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.172
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C6E606A326
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 03:46:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32758606A32D
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 03:49:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 32758606A32D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cH0nAMtl
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A7BB1F000C1;
-	Wed,  4 Nov 2026 03:46:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793763968;
-	bh=Cd0615ZcJzOUwmOSyBuJVIv1mKpmKHtryRIlmOuV6JE=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=cH0nAMtlX8/btNSuf+KThKLesRaLz/eghoCXpusVrtnkCTlRsPkQWndC/x/Z8TsfT
-	 nxLoMUZcqbrDzhixZ3t59GAaCrIV58cYa4oAN7xyeub2cQAIAJ9w54LpjQspVOrrzr
-	 /I3QHUHGH4AZrsmfyuhlU5U6IAhaKiTU+2YLefZ4hk6bJFpqCcVtrBwHuqYfNnBk8D
-	 zPxvjpCMiVBZGVv+uBbUQuJd4MO5QXkfwYLLej9SIVxrklYCqvsdp4RY+Kuwox1RVN
-	 zYUw1PhpExv7i2JApGM5HRnbfF8RB60qYksS7RrnZ6lJrqS/dQIgwghNWiJDlgui04
-	 hNjMWizxcu2/g==
-Message-ID: <sashiko-outbox-196634@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 19/41] perf metricgroup: Improve matching of metrics
- to recorded events
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20261103234502.1008382-20-irogers@google.com>
-References: <20261103234502.1008382-1-irogers@google.com>
- <20261103234502.1008382-20-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 03:46:07 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Zff7lCr/
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-533202fe429so155041cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Nov 2026 19:49:06 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1793764145; cv=none;
+        d=google.com; s=arc-20260327;
+        b=IRk1MOkeGFEQJeksbHcZ1tXZ5kd5Qof93C9/TxUGIEnIDOnoDI7j6eeaFyrXOZbTQl
+         D9NUbLWwXZRqkcEyi2iSERz0nJv3bHmT1hwLcaXlYJak/xNgWSI06sRh300uAqYRGm0J
+         taXIIkfC5I7JcsQi2B2ZvxP+XYLb1POdWROwnd/obFlsqN4n+Zr3GZCUmxfz0UF6gEZz
+         2xJqh/CQ5S0Hp2fmfFwIes85nv+ef8cRLIZEYxutTWnekmyynOMOlizc8JHOUwgPOGKJ
+         ZBxMLn2nI1lhLwgFDRp+ExSx1r0lz1kYPSbCCDqWLds9V7NTi2Nq+LjDy7HWKqTJtu7W
+         NyZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=cKWjRS9Xq/l8hl3060rXc9wXNrOk8HsfCBzOk8+AuV4=;
+        fh=73gEuGgmPeVYY2Htw8bE5+nQn3dIk9fD7YmLq9V+V90=;
+        b=r8ghjMQQLBtgmASy/LW0wgcZMKgVDVCHAxsyWc5cXfzf1ny5AA5ORzAY3/Ld+HgOM2
+         eBPqh3lpFOBpImAkfySEcH4l+O9yrg8oKRsN6ddqPhsCkWBoKOC7F8pa/QKqWRgFGeEx
+         o1xTwJEPmKXy2vwbqRlRB9FwOlTY6rgOqDKnw1ZNczDlNX7ZVHcsCmu2cKi2Nf9Mq8cL
+         Vmo8aBptH4Q60RF/HDLtanrLmbRq4jIQUsuovU29iQuEKxjiHOt+/xLMiy/rtPaLrVo/
+         n1lsgdPyHr3qG6rKDwI+pj/saMYVoNoFz1yIAWkx9vI5K1ff2Rpo1TJysMMS2tcIf8KT
+         9f3Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1793764145; x=1794368945; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=cKWjRS9Xq/l8hl3060rXc9wXNrOk8HsfCBzOk8+AuV4=;
+        b=Zff7lCr/RYzDOMb26mR07xi/YgRsLCknrcp7xuB7uYbEei3iXUJHgJAMS5sDc9s/p3
+         e5VGpX9uTqFK3Wdv5gDPAQxvyroQYQfHwlWZlPA58bsPYLpTlyfBcRF4WalCLlkbFevK
+         VSjvYCAMvny47vCLyYeWEr0vylVwhyEkDw0z5B8YPPpXD1zmHK9kWfoVCm+6uPTiWp4W
+         2jN/qeIPx4hx78uKvP0NOTWfQepDmHq1Pln6bOhyt7nqhnVPCkbcsmrYHjX93TUtWnIh
+         RcY3+kfHuG2RPAAWQ7dhhfhgP6QZ4/o2h/vMA3mI4hrEvYdwmBXODg8YOv8Ybn8qgR37
+         8TSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793764145; x=1794368945;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=cKWjRS9Xq/l8hl3060rXc9wXNrOk8HsfCBzOk8+AuV4=;
+        b=njqGyUPSPxfm5LTFdbrH6jZAL9QDrUuqPo5p6k/Did5Wn5MqCYhwrUyECZ8VExfeL3
+         mkdYvvOWMuXohbl/f8qLbJeH+HmJ9wDJLa3TCeYL+ZfDgdg7QWH+qrepNC1G7hipiiN4
+         zNygoJBKmqzXQrEQ7nhaiKTnzqzH+uJc6WMK7uftKvRxlB87DFriYQswJsOocx8QZiKj
+         lweRbGTNRH6y6hXcAhACQMXh/bQvnGxpxTj5V9iOORCoehcu8isJvdw/hpf7Gnw8Du2o
+         rnpgMLb9HcVS5EzfdHzqGuzkb1/SROcmA9i5qSx1E6iStWKZlKgDVYwL6WTak4z2F8e0
+         Zq7Q==
+X-Forwarded-Encrypted: i=1; AKwUvBxAwxHH0JGJsgwGaQhrQXFngJCCekNgMrxq4O9hXl/e2IwEVNp5QHLIEqUoJbEiVpjq2lfC7zAGmZSBWeJltecB@vger.kernel.org
+X-Gm-Message-State: APuU4Z95S10nlMAo1U1K6aNTCDrBnHZLhRgk0k9zkI7Yhy8GVpy4jPvo
+	Es9g16OpWPvLHWhwVzs9KaVmty4vfceWqcU0yDGsr5+E1fFQW4iCrFlMvLwFRwZPKoXB+EP9iPm
+	EDPuW0jvhZEJZOsuQZcC5tIDaG6Qe5Lb1saxE0LKq
+X-Gm-Gg: AYBFou0HEiZr2TLMUTdcSNoybp4LZuPVNm7YCh3QeMcUWorBAv520aJ78AXe1hfX1YW
+	aNT1AfmB2+AHpyx7Upe6pPMls9tcScOgA60ZEtPLXUX2OzdhFIaKlut9C+dqfEgozsujOySjkfM
+	9lPR2+RYWuyajfh5dGSxiIanYYocmlRmfpYbgbc99IwPlEZnagv1uzgnVx91fzhW4RM8izcSLQy
+	CNX3kkFV6eCOqipXASHHFZOtM8vXS13yjniisoan/12Amm4v6iXUaYADF9NlIfE+aktcgEmitjg
+	6st/eRbl8i0PeoQ4kFVW9YNaD1S6DTErvIAqXHAmE7KREXbj8sdhSvb8C3xBQDIHNmHke8Fmnr/
+	weSNAtL6OjmeThN7833Dx04y/t0dfriYVAz1VTg==
+X-Received: by 2002:a05:622a:2298:b0:546:92f2:7830 with SMTP id
+ d75a77b69052e-54b61e27b15mr3087041cf.6.1793764144251; Tue, 03 Nov 2026
+ 19:49:04 -0800 (PST)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,363 +103,174 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+References: <20261030202710.3863806-1-irogers@google.com> <20261030202710.3863806-4-irogers@google.com>
+ <25216bda-7e36-4bad-ba7c-1984dbb9dfda@kernel.org>
+In-Reply-To: <25216bda-7e36-4bad-ba7c-1984dbb9dfda@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 3 Nov 2026 19:48:52 -0800
+X-Gm-Features: AclHuK8jUTP0fZRLAUdhb4V7KjnS7XAslg-dpWxyxMmrVUFMhhemkzjXApXA5fA
+Message-ID: <CAP-5=fXKeqy75_1p9TgrqOgw_Eh8h=U5FB40PQbZhwxczV-CrQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 3/3] bpftool: Prefer zlib-rs over zlib when available
+To: Quentin Monnet <qmo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>, Boqun Feng <boqun@kernel.org>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	llvm@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
-- [Medium] perf metricgroup: duplicate data_evsel in metric_expr__dup_for_d=
-ata()
-- [Medium] perf metricgroup: metric_no_group=3Dtrue inverts group score in =
-matching
-- [Medium] perf metricgroup: all-PMU check and partial mutation break PMU m=
-atching
-- [Medium] perf metricgroup: wildcard PMU match in counter_key__equal() whe=
-n pmu is NULL
---
+On Mon, Nov 2, 2026 at 8:20=E2=80=AFAM Quentin Monnet <qmo@kernel.org> wrot=
+e:
+>
+> Hi Ian, thanks for the v2,
+>
+>
+> 2026-10-30 13:27 UTC-0700 ~ Ian Rogers <irogers@google.com>
+> > Add zlib-rs and zlib to FEATURE_TESTS and FEATURE_DISPLAY in
+> > tools/bpf/bpftool/Makefile and use feature_rust_lib to configure
+> > ZLIB_CFLAGS and ZLIB_LIBS when zlib-rs is detected (unless disabled wit=
+h
+> > NO_ZLIB_RS=3D1), falling back to -lz.
+> >
+> > Decompression of kernel configuration (/proc/config.gz) and compressed
+> > ELF/BTF sections (via libbpf, libelf, and libbfd) processes data that
+>
+>
+> Is there any mechanism in place that prevents libbpf, libelf, and libbfd
+> to link to different versions of zlib (zlib vs zlib-rs, I mean)? I
+> imagine you could have bpftool linking against zlib-rs, but the libs
+> installed on the system linking against zlib? Also I think the static
+> build with the LLVM disassembler [0] passes -lz -lzstd in LIBS and I'm
+> not sure how it would combine with the change, I need to take a closer lo=
+ok.
 
-commit 0dda1611167f07ce9d5277e31daf8894a0250f02
-Author: Ian Rogers <irogers@google.com>
+Thanks for raising both of these!
 
-perf metricgroup: Improve matching of metrics to recorded events
+1. On preventing libbpf, libelf, and libbfd from using different zlib
+   implementations: in libelf.so, libdw.so, and libbfd.so, the zlib symbol
+   references (inflate, inflateInit_, inflateReset, inflateEnd, etc.) are
+   unversioned. If we link libz_rs.a with:
 
-This commit improves how metrics are matched to recorded events in perf.data
-by comparing events using a counter key (PMU name, counter encoding, and
-exclude modifiers), converting legacy hardware events to sysfs encodings,
-duplicating metric expressions per PMU, and scoring candidate events.
+     -Wl,--whole-archive $(LIBZ_RS_OUTPUT)libz_rs.a
+-Wl,--no-whole-archive -Wl,--export-dynamic
 
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index e87da791fd1e4..90d22c67bfaeb 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
+   in Makefile.rust (perf already passes -export-dynamic via python-config,
+   so adding --whole-archive is actually important for perf too so it
+   exports the full zlib ABI rather than only the objects referenced at
+   static link time), then ELF symbol interposition binds all zlib calls
+   from libelf.so and libbfd.so directly to zlib-rs in the executable:
 
-[ ... ]
+     $ LD_BIND_NOW=3D1 LD_DEBUG=3Dbindings ./bpftool version 2>&1 | grep in=
+flate
+     binding file /lib/x86_64-linux-gnu/libelf.so.1 [0] to ./bpftool
+[0]: normal symbol `inflate'
+     binding file /lib/x86_64-linux-gnu/libelf.so.1 [0] to ./bpftool
+[0]: normal symbol `inflateEnd'
+     binding file /lib/x86_64-linux-gnu/libelf.so.1 [0] to ./bpftool
+[0]: normal symbol `inflateInit_'
+     binding file /lib/x86_64-linux-gnu/libelf.so.1 [0] to ./bpftool
+[0]: normal symbol `inflateReset'
 
-> @@ -471,151 +483,581 @@ int metricgroup__for_each_metric(struct perf_pmus=
- *pmus, const struct pmu_metric
-> +static void counter_key__init_attr(struct counter_key *key, const char *=
-pmu_name,
-> +				   const struct perf_event_attr *attr)
-> +{
-> +	key->pmu_name =3D pmu_name;
-> +	key->type =3D attr->type;
-> +	key->config =3D attr->config;
-> +	key->config1 =3D attr->config1;
-> +	key->config2 =3D attr->config2;
-> +	key->exclude =3D (attr->exclude_user ? COUNTER_KEY_EXCLUDE_USER : 0) |
-> +		       (attr->exclude_kernel ? COUNTER_KEY_EXCLUDE_KERNEL : 0) |
-> +		       (attr->exclude_hv ? COUNTER_KEY_EXCLUDE_HV : 0) |
-> +		       (attr->exclude_host ? COUNTER_KEY_EXCLUDE_HOST : 0) |
-> +		       (attr->exclude_guest ? COUNTER_KEY_EXCLUDE_GUEST : 0);
-> +	if (attr->type =3D=3D PERF_TYPE_HARDWARE || attr->type =3D=3D PERF_TYPE=
-_HW_CACHE)
-> +		key->config &=3D PERF_HW_EVENT_MASK;
-> +	else if (attr->type >=3D PERF_TYPE_MAX)
-> +		key->type =3D PERF_TYPE_RAW;
-> +}
+   That ensures libbpf, libelf, and libbfd all use the same zlib-rs
+   implementation at runtime, and means all compressed ELF/BTF/debug
+   section decompression in libelf and libbfd also gets the memory-safety
+   and performance benefits of zlib-rs even when linking against distro
+   shared libraries.
 
-[ ... ]
+2. On the static build with LLVM disassembler: `llvm-config --system-libs`
+   emits `-lz`. Since `LIBS` in bpftool (and `EXTLIBS` in perf) already
+   includes `$(ZLIB_LIBS)`, we should wrap `--system-libs` with
+   `$(filter-out -lz,$(shell $(LLVM_CONFIG) --system-libs ...))` so static
+   LLVM builds don't pull in `-lz` alongside `$(ZLIB_LIBS)`.
 
-> +static bool counter_key__equal(const struct counter_key *a, const struct=
- counter_key *b)
-> +{
-
-[ ... ]
-
-> +	if (a->pmu_name && b->pmu_name)
-> +		return !strcmp(a->pmu_name, b->pmu_name);
-> +
-> +	return true;
-> +}
-
-[Severity: Medium]
-Can an unresolved dynamic PMU or tool PMU event act as a wildcard that
-matches metric events from any PMU with the same config values?
-
-When evsel__find_pmu(data_evsel) returns NULL for a recorded event with
-attr.type >=3D PERF_TYPE_MAX (such as PERF_PMU_TYPE_TOOL or a dynamic PMU t=
-ype
-when HEADER_PMU_MAPPINGS in perf.data is absent or incomplete while
-env->pmus.read_pmu_types =3D=3D PERF_TOOL_PMU_TYPE_ALL_MASK),
-counter_key__init_attr() sets key->pmu_name =3D NULL and overwrites key->ty=
-pe
-with PERF_TYPE_RAW.
-
-When counter_key__equal() then compares this recorded event against a parsed
-metric event from any PMU (which also has key->type =3D=3D PERF_TYPE_RAW an=
-d a
-non-NULL pmu_name), the pmu_name comparison is skipped because one pmu_name
-is NULL, returning true whenever config, config1, and config2 happen to mat=
-ch.
-
-[ ... ]
-
-> +static struct evsel *map_metric_evsel_to_evlist(struct find_matching_met=
-rics_args *args,
->  						struct evsel *metric_evsel)
->  {
-> -	struct evsel *data_evsel;
-> +	struct evsel *data_evsel, *best =3D NULL;
-> +	struct counter_key metric_key;
-> +	bool metric_grouped =3D evsel__leader(metric_evsel)->core.nr_members > =
-1;
-> +	int best_score =3D -1;
-> +
-> +	evsel__counter_key(args, metric_evsel, &metric_key);
-> +	evlist__for_each_entry(args->evlist, data_evsel) {
-> +		bool data_grouped;
-> +		int score;
-> =20
-> -	evlist__for_each_entry(data_evlist, data_evsel) {
-> -		/* Skip if perf_event_attr differ. */
-> -		if (metric_evsel->core.attr.type !=3D data_evsel->core.attr.type)
-> +		if (!data_evsel->supported)
->  			continue;
-> -		if (metric_evsel->core.attr.config !=3D data_evsel->core.attr.config)
-> +
-> +		/* Skip if the evsels don't program the same counter. */
-> +		if (data_evsel->core.idx >=3D args->nr_keys ||
-> +		    !counter_key__equal(&metric_key, &args->keys[data_evsel->core.idx]=
-))
->  			continue;
-> -		return data_evsel;
-> +
-> +		data_grouped =3D evsel__leader(data_evsel)->core.nr_members > 1 ||
-> +			       (data_evsel->core.attr.read_format & PERF_FORMAT_GROUP);
-> +		score =3D (!strcmp(evsel__name(metric_evsel), evsel__name(data_evsel))=
- ? 16 : 0) +
-> +			(metric_key.exclude =3D=3D args->keys[data_evsel->core.idx].exclude ?=
- 8 : 0) +
-> +			evsel__count_score(data_evsel) * 2 +
-> +			(metric_grouped =3D=3D data_grouped ? 1 : 0);
-> +		if (score > best_score) {
-> +			best =3D data_evsel;
-> +			best_score =3D score;
-> +		}
->  	}
-> +	return best;
-> +}
-
-[Severity: Medium]
-Does passing metric_no_group =3D true in find_matching_metrics_cb() invert =
-the
-(metric_grouped =3D=3D data_grouped) scoring heuristic here?
-
-In find_matching_metrics_cb(), metricgroup__parse_groups() is called with
-metric_no_group set to true, which causes metric__new() to set
-m->group_events =3D false. As a result, the parsed metric_evsel entries in
-metric_evlist are not placed in groups, so core.nr_members is 1 and
-metric_grouped evaluates to false.
-
-When map_metric_evsel_to_evlist() then scores candidate events,
-(metric_grouped =3D=3D data_grouped ? 1 : 0) evaluates to (!data_grouped ? =
-1 : 0),
-which penalizes grouped data_evsel entries and favors ungrouped ones even f=
-or
-metrics that normally group their events when recorded.
-
-[ ... ]
-
-> +static struct metric_expr *metric_expr__dup_for_data(struct find_matchin=
-g_metrics_args *args,
-> +						     struct evlist *metric_evlist,
-> +						     const struct metric_expr *expr,
-> +						     const struct perf_pmu *pmu)
-> +{
-
-[ ... ]
-
-> +	while (expr->metric_events[nr])
-> +		nr++;
-> +	copy->metric_events =3D calloc(nr + 1, sizeof(*copy->metric_events));
-> +	if (!copy->metric_events)
-> +		goto err;
-> +
-> +	for (int i =3D 0; i < nr; i++) {
-> +		struct evsel *ev =3D metric_evsel_on_pmu(metric_evlist, expr->metric_e=
-vents[i], pmu);
-> +
-> +		if (!ev)
-> +			goto err;
-> +		copy->metric_events[i] =3D map_metric_evsel_to_evlist(args, ev);
-> +		if (!copy->metric_events[i])
-> +			goto err;
-> +		if (evsel__copy_metric_ids(copy->metric_events[i], expr->metric_events=
-[i]))
-> +			goto err;
-> +		/*
-> +		 * As in setup_metric_events(), a matched event without a metric
-> +		 * leader leads itself so that evsel__source_count() counts it.
-> +		 */
-> +		if (!copy->metric_events[i]->metric_leader)
-> +			copy->metric_events[i]->metric_leader =3D copy->metric_events[i];
-> +	}
-> +	return copy;
-> +err:
-> +	metric_expr__delete(copy);
->  	return NULL;
->  }
-
-[Severity: Medium]
-What happens when two entries in expr->metric_events[] map to the same
-recorded data_evsel in copy->metric_events[]?
-
-For example, in tma_info_system_mux
-(cpu_core@CPU_CLK_UNHALTED.THREAD_P@ / cpu_core@CPU_CLK_UNHALTED.THREAD@),
-or when a metric references both an unqualified event and a :u event while
-the recorded event had exclude_kernel/exclude_hv set by evsel__fallback(),
-multiple expr->metric_events[i] resolve to the same data_evsel.
-
-Because copy->metric_events[] is not deduplicated while all metric_ids are
-copied onto that shared data_evsel via evsel__copy_metric_ids(),
-prepare_metric() in tools/perf/util/stat-shadow.c visits the same data_evsel
-multiple times:
-
-tools/perf/util/stat-shadow.c:prepare_metric() {
-    ...
-		args.val =3D val;
-		args.source_count =3D source_count;
-		args.aggr_nr =3D aggr_nr;
-		ret =3D evsel__for_each_metric_id(metric_events[i], add_metric_id_val_cb,=
- &args);
-    ...
-}
-
-On each repeat visit, expr__add_id_val_source_count_aggr_nr() finds old_data
-for every metric_id on that data_evsel and accumulates val, source_count, a=
+> > benefits from a memory-safe implementation. Preferring zlib-rs over C
+> > zlib provides memory safety and improved decompression performance whil=
+e
+> > keeping bpftool aligned with tools/perf (including sharing libz_rs.a
+> > when building bootstrap bpftool for perf BPF skeletons).
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+>
+> Recalling our discussion from v1:
+>
+> >> Hi Ian, bpftool doesn't make an intensive use of zlib (mostly, it's a
+> >> requirement from other dependencies; we may also use it to unzip the
+> >> kernel config on the host if necessary for probing BPF features on the
+> >> system, but only on some distributions). So I'm struggling to understa=
 nd
-aggr_nr again:
+> >> the motivation for your proposal, what do we gain by switching to
+> >> zlib-rs when available? I understand this implementation is in Rust, b=
+ut
+> >> I'm not sure the added complexity and feature probing in the build
+> >> system is worth it.
+> >
+> > Hi Quentin,
+> >
+> > At my workplace, we are transitioning from zlib to zlib-rs for both
+> > security and performance reasons. I'd like to keep upstream tools
+> > aligned but they don't have to be, it just seems nice. I agree zlib is
+> > of a lower priority to users than, say, zstd. For attackers, like with
+> > brotli, it is probably an area of interest. Knowing the implementation
+> > is memory safe is at least something in favor of zlib-rs. I sent this
+> > series out as an RFC because I obviously have no way to mandate what
+> > upstream should or shouldn't be doing. There are things that can make
+> > life a little nicer and easier, and this patch series, for me, is one
+> > of them.
+> I understand you're transitioning to zlib-rs, but the current patch is
+> not a full transition, in the sense that it doesn't replace zlib with
+> zlib-rs but allows any of the two options; and I don't see support for
+> the standard zlib being removed from bpftool anytime soon, which means
+> that in practice, we've got to maintain compatibility with the two
+> versions going forward. Others may want to chime in, but I'm still not
+> convinced this is worth the burden.
 
-tools/perf/util/expr.c:expr__add_id_val_source_count_aggr_nr() {
-    ...
-	} else if (old_data) {
-		data_ptr->val.val +=3D old_data->val.val;
-		data_ptr->val.source_count +=3D old_data->val.source_count;
-		data_ptr->val.aggr_nr +=3D old_data->val.aggr_nr;
-	}
-    ...
-}
+Because zlib-rs (via libz-rs-sys) implements the exact C zlib ABI and
+headers, there is no C code difference to maintain between the two=E2=80=94=
+only
+the Makefile selection of ZLIB_CFLAGS and ZLIB_LIBS via feature_rust_lib.
+With the symbol interposition above, bpftool (and perf) get memory-safe
+zlib decompression across libbpf, libelf, libbfd, and libLLVM whenever
+zlib-rs is installed at build time, while still building everywhere else
+with C zlib.
 
-Won't this multiply the event counts, source_count, and aggr_nr by the numb=
-er
-of times data_evsel appears in copy->metric_events[], as well as match
-multi-counter comparison metrics against a single recorded counter?
+> You also mention zstd, do you plan to add support for a zstd alternative
+> as well in perf and bpftool in the future?
 
-[ ... ]
+No current plans for zstd. Unlike zlib-rs (where libz-rs-sys provides a
+complete, drop-in C ABI for both compression and decompression and is
+already packaged in Debian/Ubuntu/Fedora), I don't think there is an
+equivalent drop-in Rust replacement for the full libzstd C ABI yet
+(ruzstd is currently focused on decoding, and the zstd crate wraps C
+libzstd).
 
-> @@ -523,99 +965,97 @@ static int find_matching_metrics_cb(const struct pm=
-u_metric *pm,
->  				    const struct pmu_metrics_table *table __maybe_unused,
->  				    void *data)
->  {
->  	struct find_matching_metrics_args *args =3D data;
-> -	struct evlist *data_evlist =3D args->evlist;
->  	struct evlist *metric_evlist =3D evlist__new();
->  	struct evsel *metric_evsel;
-> -	int ret =3D metricgroup__parse_groups(metric_evlist,
-> +	int ret;
-> +
-> +	if (!metric_evlist)
-> +		return -ENOMEM;
-> +
-> +	evlist__set_session(metric_evlist, evlist__session(args->evlist));
-> +	/*
-> +	 * Event grouping doesn't affect the matching and avoids warnings about
-> +	 * grouping constraints.
-> +	 */
-> +	ret =3D metricgroup__parse_groups(metric_evlist,
->  					/*pmu=3D*/"all",
->  					/*cputype_filter=3D*/false,
->  					pm->metric_name,
-> -					/*metric_no_group=3D*/false,
-> +					/*metric_no_group=3D*/true,
->  					/*metric_no_merge=3D*/false,
->  					/*metric_no_threshold=3D*/true,
->  					/*user_requested_cpu_list=3D*/NULL,
->  					args->system_wide,
->  					/*hardware_aware_grouping=3D*/false);
-> -
->  	if (ret) {
->  		/* Metric parsing failed but continue the search. */
-> +		ret =3D 0;
->  		goto out;
->  	}
-> =20
-> -	/*
-> -	 * Check the data_evlist has an entry for each metric_evlist entry. If
-> -	 * the data evsel was already set up avoid changing data that may
-> -	 * break it.
-> -	 */
-> +	/* Check the data_evlist has an entry for each metric_evlist entry. */
->  	evlist__for_each_entry(metric_evlist, metric_evsel) {
-> -		struct evsel *data_evsel =3D
-> -			map_metric_evsel_to_evlist(data_evlist, metric_evsel);
-> -		struct evsel *new_metric_leader;
-> -
-> -		if (!data_evsel) {
-> +		if (!map_metric_evsel_to_evlist(args, metric_evsel)) {
->  			pr_debug("Skipping metric '%s' as evsel '%s' is missing\n",
-> -				pm->metric_name, evsel__name(metric_evsel));
-> -			goto out;
-> -		}
-> -
-> -		if (data_evsel->metric_leader =3D=3D NULL)
-> -			continue;
-> -
-> -		if (metric_evsel->metric_leader =3D=3D metric_evsel) {
-> -			new_metric_leader =3D data_evsel;
-> -		} else {
-> -			new_metric_leader =3D
-> -				map_metric_evsel_to_evlist(data_evlist,
-> -								 metric_evsel->metric_leader);
-> -		}
-> -		/* Mismatching evsel leaders. */
-> -		if (data_evsel->metric_leader !=3D new_metric_leader) {
-> -			pr_debug("Skipping metric '%s' due to mismatching evsel metric leader=
-s '%s' vs '%s'\n",
-> -				pm->metric_name, evsel__name(metric_evsel),
-> -				evsel__name(data_evsel));
-> +				 pm->metric_name, evsel__name(metric_evsel));
->  			goto out;
->  		}
->  	}
-> -	/*
-> -	 * Metric events match those in the data evlist, copy metric evsel
-> -	 * data into the data evlist.
-> -	 */
-> -	evlist__for_each_entry(metric_evlist, metric_evsel) {
-> -		struct evsel *data_evsel =3D
-> -			map_metric_evsel_to_evlist(data_evlist, metric_evsel);
-> -		struct metric_event *metric_me =3D
-> -			metricgroup__lookup(evlist__metric_events(metric_evlist),
-> -					    metric_evsel,
-> -					    /*create=3D*/false);
-> =20
-> -		if (evsel__copy_metric_ids(data_evsel, metric_evsel))
-> -			goto out;
-> +	ret =3D add_matching_metric_evlist(args, metric_evlist,
-> +					 /*default_metricgroup=3D*/false);
+> (By the way, if you allow me a short digression, you had a patch related
+> to the zstd probing for perf and bpftool [0] and I don't see in the
+> tree, do you know if it was ever merged?)
 
-[Severity: Medium]
-On a hybrid or multi-PMU system where events were recorded on only one PMU
-(for example, only cpu_core on Alder Lake), won't this check skip valid
-per-PMU metrics?
+Thanks for the reminder! That series wasn't merged yet=E2=80=94both you (on
+patch 3/4) and Peter Zijlstra (on patch 4/4) gave Acked-by on v2, and I
+think it fell through the cracks waiting to be picked up into
+perf-tools-next. I'll send out a rebased v3 with your and Peter's Acks
+collected.
 
-Because metricgroup__parse_groups() is called with pmu set to "all" rather
-than pm->pmu, default_core metrics (like insn_per_cycle) and metrics sharing
-the same name across PMUs (like tma_retiring) expand into evsels for both
-cpu_core and cpu_atom in metric_evlist. Requiring every metric_evsel in
-metric_evlist to match before calling add_matching_metric_evlist() causes t=
-he
-entire metric to be skipped when cpu_atom events were not recorded, even
-though all cpu_core events for the metric are present.
+Thanks,
+Ian
 
-Also, in metric_expr__dup_for_data(), evsel__copy_metric_ids() and
-copy->metric_events[i]->metric_leader are updated inside the loop before
-verifying that all nr events in the expression resolve on pmu and match in
-args->evlist. If an earlier event in the expression matches and a later eve=
-nt
-fails (taking goto err), won't the earlier matched data_evsel be left with
-partially mutated metric_ids and metric_leader?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103234502.1008=
-382-1-irogers@google.com?part=3D19
+> Best regards,
+> Quentin
+>
+>
+> [0]
+> https://github.com/libbpf/bpftool/blob/main/.github/workflows/static-buil=
+d.yaml
+> [1] https://lore.kernel.org/all/20260909204122.1993010-4-irogers@google.c=
+om/
