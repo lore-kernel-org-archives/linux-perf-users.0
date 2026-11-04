@@ -1,56 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793750026;
-	b=HzBGV+SljxISJYSpIm7c3WzTz2Hs2ABXDDVO7H/N/8GTWp+NYr1JPnYaguBHpH0zq/2s
-	 cWWlsXlNWjH6mX+WUIXhcw6Uy3TEK67NoiZQ9OwE5ck4XAviYI0i4ZranISJYqnfDqZCq
-	 nWJ8UfZy2LOwS9XBrZ8rL7LdiadxxEmC9u6VkxZpZAWesn/0GRNeKRxelyoIRDcZdovOZ
-	 RiUcdIjuRWjDObo1IuY5VV+ioYTe5KvV7eMua0+fClk0r37H0T/K0wzLrgUE8AxCylEi1
-	 goUKBd8OQvWGY5E0icCZ1n8Ns4+pRQWMnuz7cA6U2NlN63HLfAvj1RFNOC5FanzX51w==
+	t=1793751510;
+	b=q/jZcrpntupJungx7Qg0nOovQ/M3OWRCxdew0oakqUs4CgV4p/celavhQE9ceNLiPrXC
+	 XNIfC94MmMR3iZrudEOk7JmnW97auiE9lS0bPNU6Sj0e17EFXwksWjbOwxfZsVLrCsWEN
+	 oglTcZvfvH8JPOz4zr3XFM1m/jGxwqJj14Jrf/z0LGWUd4LsEbmKEkRcQwqRFuxog6V7U
+	 QV88JWnMhMIF+L5UslxInL13vItnCxHNeIqnEgQKWHtoh1QRakivGFCXEZiOcQoQNAPVT
+	 xgXdBvB2SQa+DT/JcmupjIMAXnfn7cIqpm01B4XXtKfEh3yBTB7cuTbEdFNVUHRuoNw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793750026;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793751510;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=vHhMl2J6DAPwMwyKkJVTS7RkudGR5EmledEdLMqudks=;
-	b=mh2tyYc4rh31kX4B/ewDy/roUc9/p087GaloClxsxrqqB0C/PdPRXtr7CNmTxiwh3GhY
-	 bYpPcsngpMpM9zwOScai0TMAmpDwRySoQvW1BWyIy1a1Jd2+X9S78YovTAAr07FA3FJcw
-	 PR5ZumpDPjgIJKtBbkAyE+0n84h0NzzqQAp5W/8rf3PyzY7dkg507gvJeQ3ZML2odpe+y
-	 vPsfjcHCi2U6m2t94mrstC2UxgoHSI48n+AC1RX0j8OBAt88rwtbtCo+ZjLVXeIfPDqD6
-	 AO3KWJOkJwocL+qJitxAEvHve43E4nyHvYJR86h8rqUdmrQ064wOx6OUjsd3S3f/7HA==
+	bh=C1oDoBmtxPlvpZsnA9NcDVGAL/IzU77bhFzpWIs9tsA=;
+	b=owdFQMr/cDCp1erIUGXsj/gpzQ/Mlbb5t4HiGba6SdaZDNBlBNLbkFZ69z89CNRHwy4o
+	 TH2y9tUMZlUTluYT5UurE9JZ5JvdSfMe/oCLMssTdFyrMJUwgNZ5hF8QDboYa2IyEv9ld
+	 HW9f2afcwl/taJ2I9fH0eXvIUOUg9ww8BJd3LTYd3a09nMmwx2tCuWtBkXr9T08MI/bYK
+	 hKcinAg1JKJTbqP+6YKi5YjaAyn0cxJY/JXXmbyFseQ4zQf2aKrBW5/9YMbN5EdrbP8W1
+	 2AGANZy3wGZxEJI5LbUhSUdDHC+SpND0814ZsrqfdRNge42FXYRClQ2DxaArVT3+7zQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dzk1M7JE;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DyXER8o3;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289A7606A32C
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Nov 2026 23:53:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2FC606A326
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 00:18:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dzk1M7JE
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93C8C1F000C1;
-	Tue,  3 Nov 2026 23:53:45 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DyXER8o3
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BF381F000C1;
+	Wed,  4 Nov 2026 00:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793750025;
-	bh=vHhMl2J6DAPwMwyKkJVTS7RkudGR5EmledEdLMqudks=;
+	s=k20260515; t=1793751509;
+	bh=C1oDoBmtxPlvpZsnA9NcDVGAL/IzU77bhFzpWIs9tsA=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=dzk1M7JE5knYstki90S9I16Pja6Vsfw7rcpVxh6BsKpVpeltXriyrFzPymYI7vjst
-	 gvgmnd4BvB9u9f5HAyRph+0oKgfksku/kV2T4jIUswmX4Zzg8D+1X5XAr42W16jSKG
-	 osJoaeIZIYgBdkLWIcryVkMxe2CCh+x8Uizxs3pVgKEkya0a1OOJCO1qBRPD+oXvEs
-	 6eqyISqWqPeOlDOoVpDZWqlhfVBstA/A58XLcMjTTMnP0HXsL08WN8n7IMSJxxiO3R
-	 rkEefN3lFmAlZ3EWggAOWt8yxKn4LmD5b76jPkV6V/D0IrNRgnna+xU0DbDSMhjaZT
-	 tzFrLw9C5+xFA==
-Message-ID: <sashiko-outbox-196249@kernel.org>
+	b=DyXER8o3KGy8dcD5y0/2+ybSaHBsaC13c8EB05ua3qdgG/jMTMRXCjuZY5pfpsdW6
+	 NGxWleydzmY0ggFvKJr7j6n+AzxWzbCFIA/kJ8VOraEH31FL/1O6ML1CJPABX8/8q5
+	 uG2KXmmcnQojcUgMExrvbCyi7whtyFKiUufMWJ0yCNygZGbmYWkDyJeTNftEkz40EL
+	 6JuBT1owaUZ4NejmBZV+ertNlR7fDq8CmrajpoFs/Y/MsgfftHQt0q7IEClPXH9O4F
+	 QGO4qhr95NPFhslTpWbDKBu6TXhDrhEux3vhQWMjnr2aDcr5SL6M42jrlENjdDXNyH
+	 yPoUKEJ3K6SMg==
+Message-ID: <sashiko-outbox-196300@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 01/41] perf env: Make lazy perf_env initialization
- thread-safe
+Subject: Re: [PATCH v1 02/41] perf env: Add host_env() singleton
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20261103234502.1008382-2-irogers@google.com>
+In-Reply-To: <20261103234502.1008382-3-irogers@google.com>
 References: <20261103234502.1008382-1-irogers@google.com>
- <20261103234502.1008382-2-irogers@google.com>
+ <20261103234502.1008382-3-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Nov 2026 23:53:45 +0000
+Date: Wed, 04 Nov 2026 00:18:28 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,17 +59,53 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Guard lazy initialization of kernel_is_64_bit, nr_cpus_avail, e_machine,
-> cpuid, nr_pmu_mappings, pmu_mappings, and numa_map in struct perf_env
-> with env->lock, and use DO_ONCE() to initialize the cached host utsname
-> structure. This prevents data races when multiple threads concurrently
-> query a shared struct perf_env.
->=20
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] perf tests: unupdated machine__new_live() calls in maps.c break =
+build
+--
 
-Sashiko has reviewed this patch and found no issues.
+commit 7d73aaa1c355418d0246becdd2de8785036ea900
+Author: Ian Rogers <irogers@google.com>
+
+perf env: Add host_env() singleton
+
+This commit adds a host_env() singleton representing the live host
+environment and drops the struct perf_env * parameter from
+machine__new_host(), machine__new_kallsyms(), machine__new_live(), and
+__perf_session__new().
+
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 076d167380f20..7fae861dc6463 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+
+[ ... ]
+
+> -struct machine *machine__new_live(struct perf_env *host_env, bool kernel=
+_maps, pid_t pid)
+> +struct machine *machine__new_live(bool kernel_maps, pid_t pid)
+>  {
+> -	struct machine *machine =3D __machine__new_host(host_env, kernel_maps);
+> +	struct machine *machine =3D __machine__new_host(kernel_maps);
+
+[Severity: Medium]
+Does changing the signature of machine__new_live() break the build in
+tools/perf/tests/maps.c?
+
+Both test__maps__merge_in() and test__maps__fixup_overlap_and_insert() in
+tools/perf/tests/maps.c still pass &host_env as the first argument to
+machine__new_live():
+
+	perf_env__init(&host_env);
+	machine =3D machine__new_live(&host_env, /*kernel_maps=3D*/false, getpid()=
+);
+	maps =3D maps__new(machine);
+
+Should those two callers also be updated to drop their local host_env and c=
+all
+machine__new_live(/*kernel_maps=3D*/false, getpid())?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103234502.1008=
-382-1-irogers@google.com?part=3D1
-
+382-1-irogers@google.com?part=3D2
