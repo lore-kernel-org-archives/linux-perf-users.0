@@ -1,56 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793756188;
-	b=rR3MNq/i1UNAyXk2gUMjoCWrZEmfW7CVByQqGn54jKaeIH7r5jmjwWyqFKSMPk8LPGSr
-	 GMiApNQzRroZq0Os+Nz2laz/fRkeBj7VqOCMgqOi147nvWz0LEu3T3vSUbUxbTg8fcJmo
-	 0k2UPpywF8KW68IM5UCSmToCyvueZyo5gQ95xe1x2PIQViQ34FF5IAmkRrEJYK2yUxXOR
-	 xnf7CkjTNchXVK2aOkxDp1SH5jj1x7kS9XXZJSMEMd4z+ktoMc3Ml7ROsgCgYKmBVBOQ8
-	 5Wl8Nmd4eJvILl8BNzhaC2lPaUfmAjfA7TCDXqWMk/R/NRIM1tvh8SUNzlJtXMJwi0A==
+	t=1793757206;
+	b=fKSS8OCWMLndNdXyvvT3r5b2Me/afOPq7NR7jjoj1ulbn33G/4UUAAS5N9tTxHDV77rY
+	 o2Qy9i2XaBRJXHlF9uv4SfNzUSl4dKonQ8RKBsD2+NBPw1G+bnhkpKsZGURXbgPrWfI37
+	 p6ZLBYBCnhyh8H/3W4yWvryU5OnmourJAFe9+wNQr3roee1ncP67yFki58syVHuQhszhc
+	 Lalw1Gn1NEVl8sRidWFgV+uj1615jKorkWUMKrHwBqS/FMM5aW6Cu9Tr0tqWTLuRfSCAr
+	 i6g/ZqgPX1ue1tb0C8PT7bn8HCKcXXMQFqsx4ZPQodWEJQH0XpprCYObRdWR0nN6HvA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793756188;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	a=rsa-sha256; c=relaxed/relaxed; t=1793757206;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=9r1G8o9LX4h7XFjfUytn97xpRQsifOxouYNvXWuel3k=;
-	b=2cs1fGIhpEGa6bJ5zGyCrMYVF0CmylVRMEEFMGNg0q6F7Ky87hvPUzRLXkbyBit93Mdi
-	 oU1wGV7nYsekI6ZCwjGyBi+DBI5rOhzx6yznkt7C1bvu9aQf1D/GBIr2VnhYupD+TyHPf
-	 Z048k0g42Gk3ub5ulNVpkRucfI99a1TuJJLX+7yopZoJnuw5kC36Vl88q5xPZwn48QQ0B
-	 XmtiFrAP/LlSRXofU3eIWmosTUSPego5pCpOhbXhrypmH2PyPArQh7ECtyGU9d7Wv3DrM
-	 x10XoKp6U+Pr1H+pjjDXn8fUw1I8BI7qC62A2dnBO560VD2LoazGvwADzB6psKIRGVw==
+	bh=bAQ7p6NMVhW91sSlLlSPyeie8VM5QXWyYcZEyZGa3Z8=;
+	b=G+gvMKFDZzahKmOto1uqaNghWz22G8GDrXluhtgZ9v06U+lUPSXJRjuieA0EM/w5+oRr
+	 8t2Xw22v83nSiqcKz0VFmGi22bwnSvK31eJnPC6ocGdKAh7rnek+njSX3byefpVR3xjHz
+	 BuG3/6PQqI9XN33HwmuCaV7Yhw3pHZbDCj/wenAdQPDkkfEhNVPf8b6ZGCiAvwH1IOyil
+	 tzWY9JcleOrcTi9Ccjt1xRpEP3H+G3a+ss7c7Sx94KrT2c1NWR8qE6d19xEbRIFZoqbI4
+	 qbfC4RyAdUbKfj3YwvQuFwm0d1mXwD0VX3poDjgQMJHphGHKGc7pd4YA1FlnN0OkjNQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cVV3W2ul;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bdVwteXl;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61CDD606A31B
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 01:36:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D60606A326
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 01:53:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=cVV3W2ul
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B55B71F000C1;
-	Wed,  4 Nov 2026 01:36:27 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bdVwteXl
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F3701F00919;
+	Wed,  4 Nov 2026 01:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793756187;
-	bh=9r1G8o9LX4h7XFjfUytn97xpRQsifOxouYNvXWuel3k=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=cVV3W2ul+sRIVQ+laMqlT/NdnPp+oHtcXnZ1RcfR/eBoAVXGRcyF5Y097kGCX7MeP
-	 Ehf4fJsVrK9fooCLBAPdf2V0t3jUFhpZBZ4jHRTDmjYfSYNxAG1uJHKUGDHoSNPk2o
-	 tAR1e7R3mTut28UOnIJ02u1fQKhz3muaSGuPIeHTnSvUmXB82vG0cVS4c7Qnb57tl7
-	 l/pUnqdmCSKB9fcEaEj49+7b9KZcRP/K2y6S4tujqUgjS2DNPzlX2q2CvAPdvTsmho
-	 Y6zrLCqQEXauGZveqLo3kmj2tdYcn23A1fB4EbcHTF5dTej3azXhg1m/RMiB4ybObl
-	 eQWgVG5G4T2Yw==
-Message-ID: <sashiko-outbox-196364@kernel.org>
+	s=k20260515; t=1793757206;
+	bh=bAQ7p6NMVhW91sSlLlSPyeie8VM5QXWyYcZEyZGa3Z8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=bdVwteXltMv1wlWpgdH7TkFfsmdkDwdBrKveu85fQLDJpa4+APihq/ItRqklfERAA
+	 9AagnfRAO5AxFj/N3p3OZObFlZWZWtOllmBq0T292ABH0I4sNVPGS0TxX5nL2thSvg
+	 QzQLMofQHZ1Ma0lo8Yn3oYXrGmSOT25MjRGp9pJrD/QmLzxMSBZt3IV4c1Ssps2JX0
+	 kRL+uQm+y828oV8tD+yD6WLO9nbAJQcKYqx6FBitCnWDNBrmQ1gv6g4S+PX6EprMiH
+	 dFSyb724MYCw7kRM6SsCAe7N7T53hWP4eL/8vr1IgUYxPExdZ+sN0tcAKNr8iIp7y8
+	 TQyvSBlCMsCsA==
+Message-ID: <sashiko-outbox-196397@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 12/41] perf test: Add CPUID matching tests for other
- architectures
+Subject: Re: [PATCH v2 07/20] perf: Always inline the empty perf_lopwr_cb()
+ stub
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20261103234502.1008382-13-irogers@google.com>
-References: <20261103234502.1008382-1-irogers@google.com>
- <20261103234502.1008382-13-irogers@google.com>
+To: "Sasha Levin" <sashal@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261103015238.3780910-8-sashal@kernel.org>
+References: <20261103015238.3780910-1-sashal@kernel.org>
+ <20261103015238.3780910-8-sashal@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 01:36:27 +0000
+Date: Wed, 04 Nov 2026 01:53:25 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,18 +61,21 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Test strcmp_cpuid_str() for the ELF machines other than arm64: exact
-> matching of the test and common tables, x86 stepping specific and
-> stepping optional matching, PowerPC PVR matching, conversion of x86
-> and PowerPC HEADER_CPUID strings, and regular expression matching for
-> RISC-V and s390 CPUIDs, where RISC-V's hyphens don't imply an x86
-> stepping.
+> perf_lopwr_cb() is called from the noinstr acpi_idle_do_entry(). The
+> x86 implementation is __always_inline, but the empty fallback is a
+> plain static inline function, which the compiler won't inline into
+> noinstr code when building with code coverage instrumentation:
 >=20
-> Signed-off-by: Ian Rogers <irogers@google.com>
+>   vmlinux.o: warning: objtool: acpi_idle_do_entry+0x4: call to perf_lopwr=
+_cb() leaves .noinstr.text section
+>=20
+> Make the stub __always_inline as well.
+>=20
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103234502.1008=
-382-1-irogers@google.com?part=3D12
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261103015238.3780=
+910-1-sashal@kernel.org?part=3D7
 
