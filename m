@@ -1,56 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793819320;
-	b=hjkRBJxC4uLNEmwM37RirdGdMhUrGCe/woPYmg8/1Qnq/0+QBZt2QtkZGRbLYGi6+qHd
-	 MlfF80Ti0eFu+Iz1yAV5atoDpTb3jI/fIuRojRAXzC6ehDeEMCz1YCMkpBpKo8l1IXgow
-	 HFPpQGSfQ+nS8Wm8oh/yuGuuMg6eMA+kK4dVH1aUSuYOHtiwsVA3asy+RqRPrecVuqku3
-	 9++7UBtdj00TnGJjNjwTKiDRx1oDvX5lDErb+KBIZADigx9Xs9MeS5I/sOSzG1EZjGjPr
-	 TSSc+UkhIYm+6GpldE9uR2Yg0xDHqlaHC9Mc8N4hCHR+wVvSmnjqVJc7+x1dp14iUCw==
+	t=1793819377;
+	b=LQxWhQ5rx630SqOzNCRB3R94AOXCVdcRQOHKtLfUIYBR0vLC5QeZ4gwec0xAPNek20PC
+	 5mTJrTotJvibZLuJX1FBRM8Y5KnM5yOVVgRIbnYlP6ViW4mGxp/hG+rwUivIcNaRBuX+a
+	 +11et3MwhCat/utm8MZtP5/nlj/IdSZ2XTf2FMt/eWUE2JXomD8E6Kzegu9fJRrScKWvx
+	 9n0DvTzQHiTIiBqhaSLcJpha9BzR5HkF/eeRBJmglhUAYaU5cq0nuUG1Ok4MdpEmPb1ux
+	 XOJD7BqTIrXRk0NOnzVIfeoa3/R+bS82U6mL7uLg3FUBP25/CBPt2TxOoOjQYh+asbQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793819320;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793819377;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=JwdfWgBzizcagauq4tQzWSBc0Oz1vfSm6TeeyNdvIVI=;
-	b=cyrIWqWW7ADyKj16Fl3rJQU7mpCLCvZTUXc7XliCU6ujtXHNbFxHZc3LYc9q80ABIf3g
-	 iP4Sk3YVIlMGdU1+vvPiEGJkQHnDC56N0hHwSvm1sUn9f3uQm07/DA/vUEitHfmCU6i2y
-	 AM2j2wpBHHeVTbstKMKGpSkLkUQgc/oYFiaejV3OTwEWfKD+IyC4ptu8FAhuWHO9v2H3z
-	 YTsNfiMr+Qq1z0e+Txy/eYxl7dyacrstF5PUp1JO/wxWoK2Xj6aroYyoCQveInzj8pIbn
-	 KZ5QlH1xQ2TM0CQV0amcekCNDc+WuyZ1RxnA3YuUflZT+Ke3ROG3yqW3WbXhlLF6iqA==
+	bh=RGWR+nky4XE9HgtXkKpoViQz4G6a6Zx8FxG3HZVpZ9I=;
+	b=2J8kgXK/6nJBBLvfc1KXSAkkwJVD2XB+bWn4Fjdm6zl7ViJOMFk1At9FGIpZ8yJ+NiPV
+	 kh0iYs/WL7NuLAcRclCqEM/TDRtUjn8DCSGu9BudK0N7HVLuo33Oyopw0OBeQgT/fCYFo
+	 jQ4bPO/uJSpKd6IV6QFtsRKqqAPPGzz4MQ7d6fiARpvCSDHCaajNy19lu47V0sOT6dh0y
+	 sQcnc1G48q0zado9bHjzBYxtqjdobXiTlfhWBCgomG8fnegRRBmDU9jgubcCY0I3CuzxF
+	 4p5FURLd4hEPlE4qCRtrIuXTAA26FxSSgFOQ8ECxh6RVFmJAlFVK7vhuwJRzShIq28Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MDTAyK7V;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YLv7p1pL;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480F7606A326
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 19:08:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE57606A31B
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Nov 2026 19:09:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MDTAyK7V
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6E2F1F000C1;
-	Wed,  4 Nov 2026 19:08:39 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YLv7p1pL
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B720D1F00919;
+	Wed,  4 Nov 2026 19:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793819320;
-	bh=JwdfWgBzizcagauq4tQzWSBc0Oz1vfSm6TeeyNdvIVI=;
+	s=k20260515; t=1793819376;
+	bh=RGWR+nky4XE9HgtXkKpoViQz4G6a6Zx8FxG3HZVpZ9I=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=MDTAyK7Vf6mwvoQs1MxFjixWs7icgfogeYQI1SpJNflJouX76PPlqJI0nMLVSvOJb
-	 i9kYV9zQPyBynfz+U5iMlx/Xrf98fizrfhua8QKWXSl34Q7pZaKkaECECnrUP09OFM
-	 msHQoesMSAayZs9Zh16l6+7iTWgOlp9NoedpaoRXed6UC/MqeGUUSOwrjJ0+pkO3yS
-	 JHdVIK8y6uuq6l/f/JnpJyBI6b/Ca5Jj1LbJI0+meDgtPtQVFDg2SZvfoBvjgC7qWA
-	 MTjSv29GRzsSmX3gR8Zgvcuobnwhd0Py81Z6aBJWyMIxBVCG5Ug3SKFRy4Xbo8dDOu
-	 1kuS/aXKRAuyw==
-Message-ID: <sashiko-outbox-197920@kernel.org>
+	b=YLv7p1pLveH3Kfd66u+sko9a8FmhL0kBD5ThJPVC7HZSxVTa3SUSHxzo7hNlViffv
+	 ykJlME5spa/DuvwYv6pDcQTYoJLlZ5mugyACIq7g1fF9m6ko2ufrd+uXwXriw7dYSu
+	 pRmsmtt9aW2v3FbDqyvNncGPOZp0+TdZTCD3mHB5ocSlPomrqqYLfEGKn3T1/Zashe
+	 xHKAdxYYY21+Ih0MjRmsQv4ghAA9Z3BaoFkZRC6ZaR5MK52tTBy2/rpjep1OULOGn4
+	 czsEIFr3xkVODcSbSGb1AUWxOqDuGpvhW6D+Ra3Dton6UlWR5wj1+rL0C1q9MVVFFS
+	 K1EeZIEfGfX9Q==
+Message-ID: <sashiko-outbox-197923@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 2/3] perf python: Add alpha-profileme.py
+Subject: Re: [PATCH v6 05/13] alpha/perf: ignore overflow interrupts the
+ counter does not account for
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Matt Turner" <mattst88@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261104-perf-alpha-profileme-v4-2-1771ea02950e@gmail.com>
-References: <20261104-perf-alpha-profileme-v4-0-1771ea02950e@gmail.com>
- <20261104-perf-alpha-profileme-v4-2-1771ea02950e@gmail.com>
+In-Reply-To: <20261104-alpha-profileme-v6-5-63362e9290a3@gmail.com>
+References: <20261104-alpha-profileme-v6-0-63362e9290a3@gmail.com>
+ <20261104-alpha-profileme-v6-5-63362e9290a3@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 04 Nov 2026 19:08:39 +0000
+Date: Wed, 04 Nov 2026 19:09:36 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,30 +61,37 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> perf report shows where Alpha ProfileMe samples land but cannot
-> aggregate the raw status attached to them.
+> The interrupt handler adds a full counter period to the count of the
+> event on the counter that interrupted, which goes wrong in two cases.
 >=20
-> Add a standalone script, using the perf Python module, that summarizes
-> it by symbol or, with --pc, by instruction, in the style of DCPI: the
-> fraction of samples killed on a wrong path, not retired, mispredicted,
-> taken or stalled, the mean PCTR1 window count, and trap counts by type.
-> Mispredict and trap types are only counted when I_STAT[TRP] is set
-> and the instruction was not killed before it was mapped, since they are
-> stale otherwise. Redirect traps are counted by their
-> PALcode entry offset in PMPC.
+> Rewriting a counter does not cancel its pending interrupt: wrperfmon has
+> no way to, and PALcode clears the request only when delivering it. An
+> interrupt pending when an event is reloaded, or when perf moves another
+> event onto the counter, is then taken as an overflow of a counter that
+> has not overflowed. It adds a bogus period to the count and can emit a
+> false sample.
 >=20
-> Raw data is only read from cpu PMU events, as a tracepoint's payload can
-> pass for ProfileMe status. Rows are kept apart by PCTR_CTL[SL1], as a
-> mean over two things PCTR1 can count means nothing.
+> And alpha_perf_event_update() already adds the period when a read finds
+> that the counter overflowed before its interrupt was taken. The
+> interrupt then adds it again.
 >=20
-> On an EV7, sampling a loop whose branch tests random data reports that
-> branch mispredicted in 21% of its samples, and 0% with sorted data.
+> An overflow leaves the counter just past zero, below the value it was
+> written with, while a counter that has not overflowed is at or above it.
+> Ignore an interrupt for a counter in the latter state, unless a read
+> has already counted the overflow, in which case add nothing. For this to
+> hold, write the counters at most half their range below overflow, as
+> armpmu_event_set_period() does. Counting events then take an interrupt
+> every 2^19 events rather than every 2^20.
 >=20
+> Fixes: 979f867191f8 ("alpha: implement HW performance events on the EV67 =
+and later CPUs")
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Assisted-by: Claude:claude-opus-5-5
 > Signed-off-by: Matt Turner <mattst88@gmail.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-perf-alpha=
--profileme-v4-0-1771ea02950e@gmail.com?part=3D2
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104-alpha-prof=
+ileme-v6-0-63362e9290a3@gmail.com?part=3D5
 
