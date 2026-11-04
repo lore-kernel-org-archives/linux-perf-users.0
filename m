@@ -1,59 +1,62 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793825635;
-	b=5JCJVE4i0TtlEjWg+l9fLbKxFGZVPYr9apsy9q7KS5YNCNP2KWOdU33YSCSV8qeMM1VH
-	 x1ejaKHHdSE8RWsGISIR3zp6u/5IG9Gdr1NzsJqyfHzjqPB8UerQbThGP8by1esenYQz/
-	 SKfn046+rDb9K1ET4Ia5Y47lL+vqSo9wVSBi7Zdj+vQd/BRPlBNZGT0/QHhBL7zWvTFE0
-	 8lfkbD6EzbBJJgsN2R44UyzZNCIInuL/SvQTotfqgaojmDG2YluQ78jrXgf7b3BrVZBlW
-	 VGbqQb0wBfFuyRe4AUS0hd/L+UbrWbBFO6C7HbLBGizxbiyrO2caSZwR5vOu2qdpQhA==
+	t=1793825692;
+	b=n/CazxrvjknG07sVcAXvNqySa69Vy0RFuQmw/19SfZz7Ant7QzRBBFuKmfeW5UDbiDqy
+	 eIVQEAKkGRCRDIdUCoFpufB9ObuJX0kvlO3ANejuBOZMr84SVO3jNFx+6LE7O3y5iuA7c
+	 Bt0NWMlkPl7BcoyMT3f0jGavYdFCfOlxNXdnDrGE1YIEPpUCwkq74+Pdvmd0B42B4OwWA
+	 Qnvgt8LUwj9X+c/7x+aMuJ6DoNg0uzqKCIFdVlCcNa0Z0GPu7dTN2HfITnZFOLMa3VZZ7
+	 WSeSlWDHmH2GH9VklStuLw7Dz0Xgdkwbz/BieD65np9PPmpedAr/4TYNHgr7GxVFvxg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793825635;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793825692;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=HWLOq4qtfbMphmVaiYHtmULf2RgucUsQCzVuDARfa/4=;
-	b=SwbGeeI7fQwo6/Pu9vukjSytEGTv1mij5AoGMUBEEEdr1wxzAcpmNfVMBXWpLkZWWpB5
-	 uwEPpAutop3b6kTpN1iDCayFWosfJ5eWEWrPDyF5j/miJQQJwYb0SbKbQRZxxJJGP0gy/
-	 TAFzQqMKhoKvsnH6zZ68w7yijg1gTndv+DUGFlZY0T/jVO/eMAXLOzTgsCxsbroOdBbVG
-	 VVHD4hSHJJvztIET4ERkwC6pAhtQ4CYzS1rBs2yEUR602bd/QJs9JZS7vunEvp0UmpfZD
-	 wvWnxuyzHPR2K1jqao18GRFZwpyhI38SFV1rzIrpp62ZNdI4ixcALppPhiNm8l5P8eQ==
+	bh=ba9/h+V5Meq1wkITvXegwitThM7yj544wxqsQCz0yS4=;
+	b=rawiaege3TrvKjonky7c5jHP7W4IpLEZ3/2hCqyx70LxPKW42ExmqPU1+jv1ql5BZHnI
+	 uxrPAxetNXqsONgjg/SVGzC9ERkoGP2Ud6tCFAjXDg3RzbRlggISUQoAKysnQbgUXX8H6
+	 sxuujT2yjb7bQ7Jlcw3hJjjP68qYb59OpRJRQOWlki9dzkRfdxoeJa8pJIMj+2kSiucvr
+	 9R+YOqi33bQJ6vaIx8ABg7bYXMI4ouurh0JbZtDh9LYu3cm6G69O+u3CIWtNJWcKXsFx7
+	 w5mO3UTiFU+dok/mETAztubInn0/yPMvwdmW0VCPhTW2O99N+bj3L2PN0dep+nq7Jkg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jkJrr6gL;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="BrWWwPZ/";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93595606C91E;
-	Wed,  4 Nov 2026 20:53:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8532A6078151;
+	Wed,  4 Nov 2026 20:54:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jkJrr6gL
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFD871F000C1;
-	Wed,  4 Nov 2026 20:53:54 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BrWWwPZ/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB7C31F00919;
+	Wed,  4 Nov 2026 20:54:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793825635;
-	bh=HWLOq4qtfbMphmVaiYHtmULf2RgucUsQCzVuDARfa/4=;
+	s=k20260515; t=1793825692;
+	bh=ba9/h+V5Meq1wkITvXegwitThM7yj544wxqsQCz0yS4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jkJrr6gL7/ZqREnA+f1m1/Tpgkl/VDYEWJ5ja5FlC1e+4Q5J05qzLnvS2QGVq4dN5
-	 ar8JP0SSxkvKyfflOn78v12NenMRw3eVpN2MbaAFRVdUmdSioArX6FLcThWzA4P18+
-	 XH5xl25j4+GLJ093NYU/UYkwg1/WfNnF5ztvfQhql6terxaRsxjo4fF/xeADPOJu7B
-	 OJRwX3cUHPzVkSbkLW2efd7invXPRNP1OZAHgpGrvLxW6YoYe61dGUu/6fF/szYleo
-	 IXE6Wtaf4qk5BIot7Wwz79IrE44MXJFYGRtwNE8jnD7ICAvOD8VobbLCRNldn4bbU6
-	 jBdkeXDpE/6SQ==
-Date: Wed, 4 Nov 2026 12:53:52 -0800
+	b=BrWWwPZ/la4ATP/U6VCWAA+Ay8vb+pI4aLCctpwOU/zMy/bMxt4GrxmKhgwcE7/dU
+	 Uea3jr/2i8A3ju8bcfHOXCp1/A72Ws+XAWHa0s9dIr2ZTZt2s0tB1ripQME8KJXQVq
+	 KEE1tDTSfVC0rQqdL4IK91N9fPKySk7xqyQL/Gn3k4eJ7vivBtoHm8btEDnXbvgbHU
+	 fXfEEyFvP8Keq55p5ZmbehR01qbmtNlCSyD5ogtsHtBfJQY/fLUgUcpQz2kIjoOZWx
+	 ByHXmrQatZSTZy8ucOmP6/8NcPPNRCzRR5bczsJdx7MF++zmRPw221m4foOL4zp2P3
+	 tKLFs2+Yng76w==
+Date: Wed, 4 Nov 2026 12:54:50 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Aaron Tomlin <atomlin@atomlin.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	chjohnst@mail.com, neelx@suse.com, sean@ashe.io,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH perf-tools-next v12 01/10] perf ftrace: Handle signals,
- non-blocking reads and pager exits in __cmd_ftrace()
-Message-ID: <auubYIQRs560OPXk@google.com>
-References: <20261026025735.546101-1-atomlin@atomlin.com>
- <20261026025735.546101-2-atomlin@atomlin.com>
- <auWU4JndXjxKzBbm@z2>
- <gv2ojndchlo5yuwpqas554vgavuixfoenmaqsulvmqc65itz54@fjumgdv777w4>
+To: Alireza Haghdoost <haghdoost@uber.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andriin@fb.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/5] perf symbols: Fix broken ELF_C_READ_MMAP fallback
+ guard
+Message-ID: <auubmvsLenOI2EcV@google.com>
+References: <20261028-perf-symbol-memory-send-v6-0-7e90415f0101@uber.com>
+ <20261028-perf-symbol-memory-send-v6-1-7e90415f0101@uber.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -65,42 +68,23 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <gv2ojndchlo5yuwpqas554vgavuixfoenmaqsulvmqc65itz54@fjumgdv777w4>
+In-Reply-To: <20261028-perf-symbol-memory-send-v6-1-7e90415f0101@uber.com>
 
-On Sat, Oct 31, 2026 at 06:29:30PM -0400, Aaron Tomlin wrote:
-> On Sat, Oct 31, 2026 at 12:12:32AM -0700, Namhyung Kim wrote:
-> > On Sun, Oct 25, 2026 at 10:57:26PM -0400, Aaron Tomlin wrote:
-> > > In __cmd_ftrace(), trace_fd is configured for non-blocking I/O via
-> > > fcntl(trace_fd, F_SETFL, O_NONBLOCK) and polled using poll(). However,
-> > > the polling loop previously treated any negative return code from poll()
-> > > or read() as an unrecoverable failure.
-> > > 
-> > > If poll() or read() is interrupted by a non-fatal signal (i.e. SIGWINCH
-> > > upon terminal resizing), errno is set to EINTR. Furthermore, read() on
-> > > trace_pipe can return EAGAIN/EWOULDBLOCK even after poll() indicates
-> > > POLLIN (for instance, under concurrent readers, spurious wakeups, or
-> > > block-mode trace iterator options). In all such cases, breaking from the
-> > > loop causes perf ftrace to terminate tracing prematurely.
-> > > 
-> > > Additionally, output errors on stdout (i.e. when a pager or consumer
-> > > process exits, closing the downstream pipe) were ignored by fflush(),
-> > > leaving __cmd_ftrace() polling indefinitely until the workload
-> > > completes.
-> > > 
-> > > Resolve these concerns by retrying poll() upon receiving EINTR, retrying
-> > > read() on EAGAIN, EWOULDBLOCK, and EINTR, and breaking on EOF (n == 0).
-> > > Furthermore, detect stdout errors and broken pipes via fflush() and
-> > > ferror() to exit immediately when the downstream output sink closes, and
-> > > handle EINTR and ferror(stdout) cleanly in the subsequent buffer
-> > > draining loop.
-> > > 
-> > > Fixes: d01f4e8db22c ("perf ftrace: Introduce new 'ftrace' tool")
-> > > Cc: stable@vger.kernel.org
-> > > Tested-by: Ian Rogers <irogers@google.com>
-> > > Reviewed-by: Ian Rogers <irogers@google.com>
-> > > Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
-> > 
-> > Acked-by: Namhyung Kim <namhyung@kernel.org>
+On Wed, Oct 28, 2026 at 04:42:32PM -0700, Alireza Haghdoost wrote:
+> Commit 22dd1ac91a77 ("tools: Remove feature-libelf-mmap feature
+> detection") replaced perf's compile-time feature test with an #ifdef on
+> ELF_C_READ_MMAP. ELF_C_READ_MMAP is an Elf_Cmd enumerator rather than a
+> preprocessor macro, so the condition is always false and perf silently
+> uses ELF_C_READ.
+> 
+> Perf already requires a sufficiently recent elfutils version that
+> provides ELF_C_READ_MMAP. Use the enumerator directly instead of
+> restoring a feature probe or retaining an unreachable fallback.
+> 
+> Fixes: 22dd1ac91a77 ("tools: Remove feature-libelf-mmap feature detection")
+> Signed-off-by: Alireza Haghdoost <haghdoost@uber.com>
+> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
 Applied to perf-tools-next, thanks!
 
