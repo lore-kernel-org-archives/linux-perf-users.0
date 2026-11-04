@@ -1,58 +1,59 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793825770;
-	b=ZdxLJPlO1IyWx6RyCmpL/UxjrmzSPEXTK+iMLiw6Fit1sB3LXc8U7m2K9te4pqc/WJN9
-	 sBgbDAG3HsV5SVS+OWqludQdD7KZky//rkGhqp3XsteB6/Zvt2hPn71wTuOlOgTj6DD4Q
-	 OcfeoMWn48Mrr3J2MOeWtmD0rDCrexH6baMflHN2YjZrTHEesrp1ckYqCD6Kk9E12+Txq
-	 P7NqSQXiNX82j7bzUQ7qlnrv+o9YI8oWgSLsQSxNoLgFOb7wjAlMos7io2QUZKvREs/P5
-	 ZUA24PjpLApU8al+PKgfo7No2wWRmbJzfKZocuO2Hjs/yHfWyEMBoMtSPzfMfJoweeQ==
+	t=1793825941;
+	b=TT4ArWpG51dObUbEOXDNS+pl6KdsDvfMQP9IcXSXSvIndqwHQcxz/idvmuNJ7XKpyzFF
+	 Dlm8nwFx704mjrrU69R1+gL3+jOHtr59dUyOrXxRf+HlToJBiduvL0Xi6oo4ylpWqrhIL
+	 SN9SYqStcinbE5qee2X5rGbaPBpebrKCD4t+l94zb7y5FGSb3jCjwVk2H1igEV9s7AzPc
+	 7X6gdtw3Hvv1bAYau3lfYsWsYJe9IvA3miAh/1CEs+Qu+bvN5/5SOciDqVRqgCMg/u3Fz
+	 ACBUhfJhXuFrvxQ1B/YpQn5wgTku/7CPB0FHpD2kXpuwdsBrP8+U7wBKl7jReaVTO6Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793825770;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793825941;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=uxSwOQErIZ3I0/QVGsS3gJtYrLgdNJzU2U+0Lm6R/OU=;
-	b=WKZ8wMSDxPgaV3mAN883qy0lBRuSGWG3L2+kRAFAGi6/+g3jpeXh6dcK0xOVPVCeDiI4
-	 vkjP7zDzU8zkwyPoxt2FXEgB/cyOWcw14/9eXngfI6JNxGTG/dw8pNT+QnTAd3JPZOwbb
-	 9VwswROmSPvJmcGzg44Jf6YacImvcQkmrHIc69GChy2Uz0o4GH3Or0+iE1WW8EOnt1ruY
-	 nYD80Z5P91Q6iSafZ89doQyjOg69T5miynq6A1DbPmkl56Ha8xhiAUXcIJbYv0chHUGoe
-	 jif3N6/XSbhuffu2FZodZS5/31kd4JrrI14In+GG+IjmOTtv0wQYgZiMxVgmguvp5kg==
+	bh=68FQQXsoJksoeoLSDrKS2zwovVFM1JhIN0EjI4tp+08=;
+	b=wsSGaA3HOGuW3E+Pg1faqjz5Am72Bga/wMc5Db7kwJOgAyrkKYT8Z/kkViqGWhrNQD2Y
+	 bh2JrjvKkFJk5NCqLqE9H/xUH9PVRdEM6zsd57VOWuOOFdVv6Cv/bkPQ009U9x+ROPj5c
+	 6TUBIexlMnuGBKuYlKNPDWvbf5rq3QIpneBQ99r1UEvrs8OOxyiaeh+0tnuHST4zbza5R
+	 /R2qkQjPae5qbffyrc0+B4pIeORvh30/Tq/NARPSep1+YRVpzpJTdxF8hGx3Bz4PtCKMq
+	 8Dqbb3j8XqPFgGL+Hsf/HLNWx87265GzGHuosRMpgCG3rd1O02YDO4EiaiEYWeyT9pA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=npxON8ct;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SRPUjx8Z;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040DB607870B;
-	Wed,  4 Nov 2026 20:56:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8AF606C599;
+	Wed,  4 Nov 2026 20:59:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=npxON8ct
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A0221F000C1;
-	Wed,  4 Nov 2026 20:56:09 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SRPUjx8Z
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 643811F000C1;
+	Wed,  4 Nov 2026 20:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793825769;
-	bh=uxSwOQErIZ3I0/QVGsS3gJtYrLgdNJzU2U+0Lm6R/OU=;
+	s=k20260515; t=1793825940;
+	bh=68FQQXsoJksoeoLSDrKS2zwovVFM1JhIN0EjI4tp+08=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=npxON8ctjayv/xaG/yJuR9cNX8EfIeBxdMK0yWC8rNnFViRoSjgpbMCnj5nbYqymm
-	 dO7o/cR4xnl3TeDQ1NKo4QpZL/iWCK7R4EIuW2RM+xtAAdnUVnlsxldwIvrmbimNZk
-	 ZTxmyWXLBzs2+I8uxVsrG+ndtSDvKpJ7eGLIxqaGAUyI3101wtF2a7bXVKAzDWP7ju
-	 MzSPNjgWX1XY9hVIGe9sS/zWcclo3bVyuHOkkTpuSZFL0Tld9YNyKvi0g8qdpODuqQ
-	 UZqyUYyJyvCH9adn+Qcjw9/CxRIYD3V9N1YxUzop6+Ob3JzWxGiiK5kvcMGBqJAH+r
-	 rdi6sLmyYiyAA==
-Date: Wed, 4 Nov 2026 12:56:07 -0800
+	b=SRPUjx8Zy48vSwkkaX/POKZ30Re+UiT7fzDFUOg6XDpSdch/779uWITaYR++cIW1t
+	 Yznj4/ZzvtLH3vrEYIF2RFx4aitSQxeYlD2lUaHQft6lRa0zEUiSROPPWGq6sMQ+i7
+	 bzPT33Z5UOQHtpU9RegDhicrFq0frj/EaOP+pp0nr5iG0PyAgn0C52FmXdv/KYRI9J
+	 bNCpdCwj64zRjhZZh7qORt3ph1rsYndYtAWqE1QjKrRJ45qcLIBkds6gz67/irrjAZ
+	 pCdn+yEPv2rBJJHooDTVLQgbo9paAfeD553vL/zGB1k0IspviixUrWCR5BUBMJBmKg
+	 UMTKkG/wnmLmQ==
+Date: Wed, 4 Nov 2026 12:58:58 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
+To: Stephen Brennan <stephen.s.brennan@oracle.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	James Clark <james.clark@linaro.org>,
-	Alireza Haghdoost <haghdoost@uber.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] perf symbols/callchain/annotate: Bug fixes from
- symbol reference counting review
-Message-ID: <auub590i-CGpgjJ6@google.com>
-References: <20261031063549.1281324-1-irogers@google.com>
+	linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>,
+	Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH] tools: perf: allow opt-in "no-dso." files in /dev/shm
+Message-ID: <auuckurvVVn0YXSg@google.com>
+References: <20261013213842.1870582-1-stephen.s.brennan@oracle.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -64,49 +65,34 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20261031063549.1281324-1-irogers@google.com>
+In-Reply-To: <20261013213842.1870582-1-stephen.s.brennan@oracle.com>
 
-On Fri, Oct 30, 2026 at 11:35:46PM -0700, Ian Rogers wrote:
-> While reviewing the v2 symbol reference counting series [1], Alireza
-> Haghdoost identified three existing bugs in callchain merging, ELF
-> zero-size symbol end calculation across .symtab and .dynsym, and basic
-> block range splitting/cleanup in 'perf annotate'.
+On Tue, Oct 13, 2026 at 02:38:41PM -0700, Stephen Brennan wrote:
+> Applications can place JIT-compiled code in POSIX shared memory so that
+> multiple processes can execute the same code. On Linux, these shared
+> memory objects appear as file mappings under /dev/shm.
 > 
-> Pull these three fixes out ahead of v3 of the main series so they can
-> land for the v7.4 merge window:
+> Perf uses /tmp/perf-$pid.map to resolve symbols for executable SysV
+> shared memory mappings, but it treats /dev/shm mappings as ordinary
+> DSOs. As a result, applications which provide perf-map symbols for JIT
+> code in POSIX shared memory don't get those symbols resolved, while they
+> do with SysV shared memory.
 > 
-> 1. perf callchain: Fix loss of symbol in merge_chain_branch()
->    Restore .sym = list->ms.sym when constructing the temporary
->    struct map_symbol in merge_chain_branch(), fixing missing symbol
->    names and inlined frames in 'perf report --children'.
+> It would be incorrect to classify every /dev/shm mapping as no-DSO
+> memory though, because /dev/shm is just a tmpfs mount, and it can
+> contain ELF files.
 > 
-> 2. perf symbol-elf: Fix zero-size symbol end calculation across .symtab
->    and .dynsym
->    Move symbols__fixup_end(), symbols__fixup_duplicate(), and
->    maps__fixup_end() from dso__load_sym_internal() to dso__load_sym() so
->    zero-size .symtab symbols do not get extended across following
->    .dynsym-only functions before .dynsym is loaded, and add a unit test
->    in 'perf test symbols'.
+> Add a filename prefix "/dev/shm/no-dso." which is recognized by
+> is_no_dso_memory(). Applications can opt-in by naming their shared
+> memory objects "no-dso.<name>". Executable mappings with this prefix
+> will use the perf-map file, while other /dev/shm mappings will keep the
+> existing behavior. This allows applications that already emit perf maps
+> to use POSIX shared memory for JIT code, without needing to implement
+> jitdump support.
 > 
-> 3. perf annotate: Fix block_range symbol loss on split and leaks on exit
->    Preserve .sym = entry->sym when splitting head/tail basic block
->    ranges in block_range__create(), add block_ranges__exit(), and release
->    resolved branch_info addr_map_symbol references in
->    process_branch_stack().
-> 
-> This series was prepared with the assistance of Antigravity and Gemini 4.
-> 
-> Link: https://lore.kernel.org/linux-perf-users/20261027231513.816148-1-irogers@google.com/ [1]
-> Assisted-by: Antigravity:Gemini-4
-> 
-> Ian Rogers (3):
->   perf callchain: Fix loss of symbol in merge_chain_branch()
->   perf symbol-elf: Fix zero-size symbol end calculation across .symtab
->     and .dynsym
->   perf annotate: Fix block_range symbol loss on split and leaks on exit
+> Signed-off-by: Stephen Brennan <stephen.s.brennan@oracle.com>
 
 Applied to perf-tools-next, thanks!
 
 Best regards
 Namhyung
-
