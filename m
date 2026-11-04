@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793827109;
-	b=fNwNuf+c5C5ysaEkIGPtzvjoDnXpoZ7HMVn9lFohvNMF5V43xp06togR7s9C9kVKQmW0
-	 /YBd2+LzvsQ4MGKW78vhSWXsO965oKBXQKjbAje0+e1Hv2X9rAmjzUcl/KmIeyvYL6UZ3
-	 oaI7ZhnbYiDIvoJcEgwbmkR1IzG8TnBev7qPmYaZPxAjsODOw/zr5wNcghgl+sbhq7VCB
-	 s/hYrbREyWqv/EViEJB8L+5xqFwsxyqUi38xnO4R5EP6WV7yjAQsyNK4wjFnF1T4j9cT6
-	 CGP1VL/2PC9ejJL2lj1NvH9YmW+EuCLA2o/bctODWr6epTLZegZzIQu0ASHKyZ5Ycgw==
+	t=1793827169;
+	b=2cvH1hLR2bLon7hsrkEUcfplggcZqseXprNVXlVL13TxlaCjxPtZ/kApXhypiJZOqdhY
+	 BqPSmsTmXS1noaVHqtxCnpJidm4sbmWSmvN7y6s4J4hyqjl+ffobjwR1HJ0rjBLlu4XL1
+	 gQootEKHsDRdRpNMaignUAamEr5klksCrPbPX6nXWkfRTrjZ7APXG3uvAvxaE8dsB/fUr
+	 H0kBawgnDMwI8HQvGkVWbdb4mloYlkRefk0anXA7xIGWX9J51YuoBYhEipIwo9P+QYeRD
+	 WElM2CXRmeQzEvPJBT3G6EsJW5rY7N/dYsiKYrBmTrbFHYyyqGTaqTScLTTwkVCbjbg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793827109;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793827169;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=yaFgj1eDp7Y/u38ZPUdrhSnfnXtmtVwv/VbWSHbZvLU=;
-	b=dTuN18HuBMpq1p4CocLy/Sv1Nn0xn79434wKmagXvvUtFWDaDJIF3YEdQwLCmnfZRvt3
-	 cywtvX25D6Ew0O2vXNdPkg0IVtBKOOvgF6/pU12C+kZmUf3w48ZT4V7KvMec6T6GzxkHP
-	 9Vti+x5OhBkHU7WvmNSVqRJNDdp7Bsa/j9EagR0Y2xxYiyPiOPzgiwmDWrL4Ta+9fhVVk
-	 4S46BzDmydwBhegxeeAD2EqlyjWiTkWyGcOS+gjfjctaHVLL+GShUnpO7nWCYybGXMt6b
-	 hTbAGFYDSdqBSDvdZWYOA3SozUmJ9whNSEUyz49Z3K4XqlIDAL3z9ECL5+fr80x7HJg==
+	bh=dqv7130npN2VJ9BaDnO2Xcckf3AY4niswDVqVMQ5hTg=;
+	b=XQTXNcPVxL1wft1EOOE5a7MhqJfFOBUZ+tCQLKd5wTlLaDnxETL1jnOQ6T4DusiOoioY
+	 VizbZ4UE8chwMvWJwCKefIaL8hPhjE64/TkvbsMDUItBRF5IYL2JpkkM2lbUVRozUYmTc
+	 HTkw/rkQWbyB6jL6/q2AAe27gVzOKinXObgw2ckNfZ28rBtj3vqgwG8DDziAUU62lwSul
+	 MybZMF6v2J8nSBGsQOIhuKexmMw6LmUB2dduO4v2UYlYBWnY2lpJ7/6ajwxQ8jsux6yKQ
+	 LinWpgezuUHwhJYDKZXAciC+HvATwMS45A+Rf44AGK2aGfIo2YhlUX7ES4+H0myr0NQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SBg5sUgn;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AT13itWw;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD88606AE33;
-	Wed,  4 Nov 2026 21:18:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8941606D83F;
+	Wed,  4 Nov 2026 21:19:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SBg5sUgn
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E17CF1F0093A;
-	Wed,  4 Nov 2026 21:18:27 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AT13itWw
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D90C41F00A1D;
+	Wed,  4 Nov 2026 21:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793827108;
-	bh=yaFgj1eDp7Y/u38ZPUdrhSnfnXtmtVwv/VbWSHbZvLU=;
+	s=k20260515; t=1793827168;
+	bh=dqv7130npN2VJ9BaDnO2Xcckf3AY4niswDVqVMQ5hTg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=SBg5sUgnY1XdJBkwcT9hQnBe2Wp623X9Ws+Vxvdo9ppb2koYF5yMqLv8SnfZOH0SQ
-	 jZgrf2PllUaH42Vr3/aDRujDolbIdnQ1gvnf2zOOoaqXx/U94Px6B0JzQZfGyIDNIP
-	 rofNurVJQr2nNe0gAe4sdz4JKsh2+lA+AFe7HZqaZPPQg0faxFy9WKQQ8P7H9tsR0m
-	 PM3E2JlX6Xs/e6pWw4sGZ6kwDixdsz+V25uJ8JSWk0fhk1IJcb84Di7LsYooL+8WlR
-	 gkfaP+fbjoM69KfyTC2eTMWjJG3+1IehVY2+VBAoz2PnmYLvpPEtCcILtXzhZP3cxr
-	 5s90yU3296R5g==
-Date: Wed, 4 Nov 2026 18:18:25 -0300
+	b=AT13itWwcs9AtlV90JbeNmR8DAmEk6ryFDsl7arWGWfMl4hCRD5PT6AA1kiySzxZz
+	 e0KLn1YKZZCRrEbGUT/CFCy7mDVHSedjtM6VhnKfAiOuk+xM9v1FLLoxqToky5B3d0
+	 iN8XhtHAP3doj7qDa94bbSiNDPcX1vqiPC+/yyeNDi9Eccue82VXDeGN2jSc4WYMCC
+	 PTCWFfHSdhJCePylkQ6XebJYQRXhqIRLq318B+Bw1Ii1ec8R2KTPqOUEFqsffWOh0I
+	 Wl3Mw3InAqNyj1rTCTOdtJthrtBzhC8xngA2BaeuT9TzLXVD4JNSGqIxTRV4WA9r+a
+	 SZPjiqvcHShTQ==
+Date: Wed, 4 Nov 2026 18:19:25 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@linaro.org>
+To: Leo Yan <leo.yan@arm.com>
 Cc: lirongqing <lirongqing@baidu.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
@@ -49,12 +49,14 @@ Cc: lirongqing <lirongqing@baidu.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf intel-bts: Free the old snapshot reference array
- after growing it
-Message-ID: <auuhIWt8Xz9jXBot@phoenix2>
-References: <20261104022042.1894-1-lirongqing@baidu.com>
- <c1e052c6-531b-4c1e-b671-b5a214ae24c4@linaro.org>
+	James Clark <james.clark@linaro.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Leo Yan <leo.yan@linux.dev>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf kvm: Fix arm64 VM-exit duration accounting
+Message-ID: <auuhXYYpDW3UZn90@phoenix2>
+References: <20261031120123.2312-1-lirongqing@baidu.com>
+ <20261104111751.GG9176@e132581.arm.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -66,44 +68,27 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c1e052c6-531b-4c1e-b671-b5a214ae24c4@linaro.org>
+In-Reply-To: <20261104111751.GG9176@e132581.arm.com>
 
-On Wed, Nov 04, 2026 at 10:00:15AM +0000, James Clark wrote:
-> 
-> 
-> On 04/11/2026 02:20, lirongqing wrote:
+On Wed, Nov 04, 2026 at 11:17:51AM +0000, Leo Yan wrote:
+> On Sat, Oct 31, 2026 at 08:01:23PM +0800, lirongqing wrote:
 > > From: Li RongQing <lirongqing@baidu.com>
 > > 
-> > The snapshot reference array grows when a mapping index exceeds its
-> > capacity. Its old entries are copied into a new allocation, but the old
-> > array is abandoned when snapshot_refs is replaced.
+> > Use kvm_exit as the start event and the following kvm_entry as the
+> > end event for arm64 VM-exit statistics. Keep decoding ret and esr_ec
+> > from the exit sample.
 > > 
-> > Release the old array after copying it so expanding past sixteen
-> > mappings does not leak it.
+> > Before this change, arm64 measured guest runtime as VM-exit time.
 > > 
-> > Fixes: d0170af7004d ("perf tools: Add Intel BTS support")
+> > Fixes: 1218838d68f5 ("perf kvm: Add kvm-stat for arm64")
 > > Signed-off-by: Li RongQing <lirongqing@baidu.com>
-> > ---
-> >   tools/perf/arch/x86/util/intel-bts.c | 1 +
-> >   1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
-> > index d44d568..9403681 100644
-> > --- a/tools/perf/arch/x86/util/intel-bts.c
-> > +++ b/tools/perf/arch/x86/util/intel-bts.c
-> > @@ -299,6 +299,7 @@ static int intel_bts_alloc_snapshot_refs(struct intel_bts_recording *btsr,
-> >   	memcpy(refs, btsr->snapshot_refs, cnt * sz);
-> > +	free(btsr->snapshot_refs);
-> >   	btsr->snapshot_refs = refs;
-> >   	btsr->snapshot_ref_cnt = new_cnt;
 > 
-> I made the same fix here [1] as well as turning BTS snapshots into the
-> generic one. But that doesn't have a fixes tag, so maybe this patch is still
-> useful.
+> Thanks for the fix!
 > 
-> Reviewed-by: James Clark <james.clark@linaro.org>
+> Reviewed-by: Leo Yan <leo.yan@arm.com>
 > 
-> [1]: https://lore.kernel.org/all/20261102-james-cs-unformatted-per-thread-fix-v3-10-dbcb0c281b9b@linaro.org/
+> Since arm64 requires the exit reason, we cannot directly use the common
+> exit_event_begin()/exit_event_end() callbacks as other archs do.
 
 Thanks, applied for v7.4.
 
