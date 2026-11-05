@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793868068;
-	b=SkcMt3511vC7Mk2/IXBAnmGdHQJJylfRMNuPY44FtwQkfCClYeDSXOAxbWtYyzFhowVQ
-	 fGXZHCE5unxOnhtwGvqva9kb61dx49Dqz4WwZHDjt+aGhYHJbgEU5KO5NntltCdAGmQdd
-	 EDbjcBK3x/MQMd/FfO7/uHQvz6VA2sL4xOf3ZX9DMzyNVTrV6rg7pocoMbnZQ7jV6Yrzk
-	 JrLw6XqmJhMlFDzstQemJXVm3Wp/dnjRAU+Khf32MDZZO0kLLUAbCtruwpb7pYgoiO28J
-	 w3sl64aue7Z6YbXN/3/XHL0haVLs2jYkxGkWC5WXyGe+i4zZWquSmjSwAcfcVB20Blw==
+	t=1793868148;
+	b=iXTdc1tJ7ZtnqcagszpjmxpkJ3wVs77lAKQ+oPD8SCTUvdwWvmo9Ev+7Etj83MXHNjFM
+	 n2oyPi9Kf5cTa5y+jTce468PXtyrAbTrptVJGHfDzIgX1/knwYUvRg58n8vK0uXLFcAH7
+	 4BA7eGsUqmq700T1jwrLlq+pbO8SLTXo3uMngFnsvtkxm9rEkp4g/HXvHOPl1/DVX95s/
+	 brx8gH+dgH2BMObuoYF5iWEME1p7EUCYJ7SoF7tLh3EesfQYJ4xhqxnxwVcvvg35o+c+f
+	 xQD68N7yotVz347LiPmOE/EeBIZ2qnkaRTUrv+NViJovJ5Qpj2q9Xz9q7uWvgYKWyWw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793868068;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793868148;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=Vd1EvYjWXu9wgN1/qXv5649oMwpTZghAKNnzLS9cZ2c=;
-	b=ah0RjKfVOiVcQKoFvZ+D6BcB361ZWEltM37AdbHgUPx5BRnuZqbr3IywJVwyliKP+3bd
-	 3MnWps8ZgIwhMVMO5IWKnGShMw+B/zATzOzEMA8Y4OfFS9L2wZxpoa0jO/r+946lyvV+Z
-	 sclgWMWs/uXoUpDrsrMvL7XFlaqHQjhRVNTVhgWnle/RorZuDsPnWCEFBXOvIW3oAUje/
-	 vGe3LZvJgy7muWvTEihenAKCRsImm4dU3s4o35PRAcvtryrk2QzPuN6no2KHUXPdXw6L3
-	 gHwnR7/tq6gMadGxGK9PL5oVx67RGXjvxPo3a3WuAM2Wp5zyd/rZ/Nm5GTDWXPwEclQ==
+	bh=+/TiAj7VLHncj2qv2ZqEJ7+TV34Qt2l5wv33yoTSdQQ=;
+	b=4gTrRwGh6LAfzroJ8gXru1bXstG8mdmePHAnuIM1N+Z/SpTigK3YlyEXkjNtjEPhVzvD
+	 8sZZD47OR8zicRjKXik1IRmd1Rk194+NswKeNA5bPT5eJ43Gv4Nwxb9aTf5tUAzH61zmx
+	 hCWQc61xBGbOVHruD/ZwdZKSUFfODOk6oefs6suzDxg0JZda0Jz4G2JJdcdE9hQSc8fKY
+	 7jgLeG+2Mqrn9Nf75LrXl9Q9GgbpAI6J2uzj/lhr+B62TyuVHVFHthaAS5PiJtRFg4ZKX
+	 WVxJxvC7H0n1zxTq9K3a1TLxVt+ABgDqwXf8nOrrgqh00d89hc7ChsM0dkbIe9hEzJg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CupoUR7t;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JRH8mB5z;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78DB1606A326
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Nov 2026 08:41:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A640606A339
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Nov 2026 08:42:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CupoUR7t
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F204E1F000C1;
-	Thu,  5 Nov 2026 08:41:07 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JRH8mB5z
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC2851F00A17;
+	Thu,  5 Nov 2026 08:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793868068;
-	bh=Vd1EvYjWXu9wgN1/qXv5649oMwpTZghAKNnzLS9cZ2c=;
+	s=k20260515; t=1793868148;
+	bh=+/TiAj7VLHncj2qv2ZqEJ7+TV34Qt2l5wv33yoTSdQQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CupoUR7t6+Ra6L+nXrUKoUY/ixrGV/gJZUD2JLtm22q5fcLPMUAiSW/XcM/XDsrHM
-	 /y6MvuQLO75EeE3Q3E3/c+QYsxa0Obzo6AiHGg8iEtwM1aXVFHIx3Gwwt4A7ZCgjHD
-	 sW5JS8BTOrFywMqHrz3+rwRAUF7mpDwru4kJagLXW7qo3AO0PPKI5PbJvitm2PL0Uk
-	 wsC/8ckF+Yf9Vk9Hv1rZiiU8B/Wwd6IEvUPA/CyxlXiUGOLNiBsLR8Qqq8VTj9JcKu
-	 48isSr3eTzA3AFlvhMOh5leIp/excwrhgXIGx3+7mcckprmXDwIhIn+yRkY/q6hXEa
-	 zPrHMj50zOsyw==
-Message-ID: <sashiko-outbox-198733@kernel.org>
+	b=JRH8mB5zNOPMqU/9x8kKS3njRMEqQg4KaI7PWCrVNtYOIukCRCjKYA0yEJUhDdA3c
+	 m+qnqvMKc1+oTdf/0ULcUA9+rBB6AvO64VY+FwJSWKHfhzqYD032/UtynEFIen5lcC
+	 Avkky39VkYAx5n4L6GkiKjAiaMacdWeswIV6UwWRaQcQdasNLloEejrQXREpjmnXVs
+	 umqcBPlFbd4vcF3uTNwI1g1HjEkmY0j/IRaTMXo8UfZmzzWbvtfUPYqjPrIG39WDko
+	 eJpvNrGyzfzMoBswfoQ3WVu1iZsdPcJDlBTMQ4tGRKIqyJbS9yf5pzvgpVOaLvTUPG
+	 WzrhgWPKCL6vA==
+Message-ID: <sashiko-outbox-198736@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/3] perf: do not call zfree() on uninitialized
- pointer
+Subject: Re: [PATCH v2 2/3] perf: do not call list_for_each_entry_safe() on
+ uninitalized list
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?SmlyaSBTbGFieSAoU1VTRSk=?= <jirislaby@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <8b245572903b8c4ed0dc569d7a71a8f4974e2455.1793867553.git.jirislaby@kernel.org>
+In-Reply-To: <465e342ac620ec4f784424da897aecb4d0aa58cb.1793867553.git.jirislaby@kernel.org>
 References: <cover.1793867553.git.jirislaby@kernel.org>
- <8b245572903b8c4ed0dc569d7a71a8f4974e2455.1793867553.git.jirislaby@kernel.org>
+ <465e342ac620ec4f784424da897aecb4d0aa58cb.1793867553.git.jirislaby@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 08:41:07 +0000
+Date: Thu, 05 Nov 2026 08:42:25 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,30 +61,29 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> In add_drm_pmu(), the check for type > PERF_PMU_TYPE_DRM_END happens
-> before "drm" is allocated by zalloc(). The error path nevertheless
-> called zfree(&drm), i.e. free() on an uninitialized pointer, which
-> can crash. Remove this bogus zfree() -- nothing has been allocated
-> yet at this point, so there is nothing to free.
+> In test__pmu_config_helpers(), when evlist__new() fails, the code jumped
+> to the err_out label, which calls parse_events_terms__exit(&terms). At
+> that point parse_events_terms__init(&terms) has not run yet, so the
+> terms list head is uninitialized and list_for_each_entry_safe() walks a
+> garbage pointer.
 >=20
 > Fixes this compiler warning:
-> In function =E2=80=98__zfree=E2=80=99,
->     inlined from =E2=80=98add_drm_pmu=E2=80=99 at util/drm_pmu.c:110:3,
->     inlined from =E2=80=98read_drm_pmus_cb=E2=80=99 at util/drm_pmu.c:174=
-:10:
-> ../lib/zalloc.c:13:9: warning: =E2=80=98drm=E2=80=99 may be used uninitia=
-lized [-Wmaybe-uninitialized]
->    13 |         free(*ptr);
->       |         ^
+> In function =E2=80=98parse_events_terms__exit=E2=80=99,
+>     inlined from =E2=80=98test__pmu_config_helpers=E2=80=99 at tests/pmu.=
+c:296:2:
+> util/parse-events.c:2849:2: warning: =E2=80=98terms.terms.next=E2=80=99 m=
+ay be used uninitia
+> tests/pmu.c: In function =E2=80=98test__pmu_config_helpers=E2=80=99:
+> tests/pmu.c:209:28: note: =E2=80=98terms=E2=80=99 declared here
 >=20
 > Assisted-by: LLM
-> Fixes: 28917cb17f9d ("perf drm_pmu: Add a tool like PMU to expose DRM inf=
-ormation")
+> Fixes: 8e2ef85c66dc ("perf tests: Test evsel__set_config_if_unset() and c=
+onfig change tracking")
 > Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/8b245572903b8c4ed0d=
-c569d7a71a8f4974e2455.1793867553.git.jirislaby@kernel.org?part=3D1
+c569d7a71a8f4974e2455.1793867553.git.jirislaby@kernel.org?part=3D2
 
