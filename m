@@ -1,57 +1,77 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=115.124.30.97
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793868148;
-	b=iXTdc1tJ7ZtnqcagszpjmxpkJ3wVs77lAKQ+oPD8SCTUvdwWvmo9Ev+7Etj83MXHNjFM
-	 n2oyPi9Kf5cTa5y+jTce468PXtyrAbTrptVJGHfDzIgX1/knwYUvRg58n8vK0uXLFcAH7
-	 4BA7eGsUqmq700T1jwrLlq+pbO8SLTXo3uMngFnsvtkxm9rEkp4g/HXvHOPl1/DVX95s/
-	 brx8gH+dgH2BMObuoYF5iWEME1p7EUCYJ7SoF7tLh3EesfQYJ4xhqxnxwVcvvg35o+c+f
-	 xQD68N7yotVz347LiPmOE/EeBIZ2qnkaRTUrv+NViJovJ5Qpj2q9Xz9q7uWvgYKWyWw==
+	t=1793869404;
+	b=4E//+BMLBPBUEZPnFHmFB+TtyB9RUNT/K+40JR6vxA/qIiEdva7DVRHj6t29WT5lilco
+	 epQfD2UNex0lH/DmT7fBHg2N6y++GeynW6XXep0ov9zuYDtm+/5pxjEkta1FnxX+6HOga
+	 A8rdIDdWKaLffHT6o7YXl3dPj5XOeIwKm/lgOQNsbvTdJrRlDQfAH1s1Tpnt1R0prhhm4
+	 PleNME9L4wQdLgp3WgOlz28MQiOTvLbk0uLQScLd7Liw8iHKeJl9fxOYQ50h2Jfr+eRPe
+	 uucHIPC//98DIYfWmd9kJdUH1Gf92hAhZf9p+8ej6Qvpc/d9hhVqSXJ8Yua9gQbyM7w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793868148;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=+/TiAj7VLHncj2qv2ZqEJ7+TV34Qt2l5wv33yoTSdQQ=;
-	b=4gTrRwGh6LAfzroJ8gXru1bXstG8mdmePHAnuIM1N+Z/SpTigK3YlyEXkjNtjEPhVzvD
-	 8sZZD47OR8zicRjKXik1IRmd1Rk194+NswKeNA5bPT5eJ43Gv4Nwxb9aTf5tUAzH61zmx
-	 hCWQc61xBGbOVHruD/ZwdZKSUFfODOk6oefs6suzDxg0JZda0Jz4G2JJdcdE9hQSc8fKY
-	 7jgLeG+2Mqrn9Nf75LrXl9Q9GgbpAI6J2uzj/lhr+B62TyuVHVFHthaAS5PiJtRFg4ZKX
-	 WVxJxvC7H0n1zxTq9K3a1TLxVt+ABgDqwXf8nOrrgqh00d89hc7ChsM0dkbIe9hEzJg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793869404;
+	h=DMARC-Filter:DKIM-Signature:X-Alimail-AntiSpam:Received:From:To:Cc:
+	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=1NYk/R+AjvZfblsV7HCmGu0xMESmf/3Rl3LdxJTF5qY=;
+	b=eUZg6iCvHwQDfNgKZJkCRcItsGjgvl+lhp1rJfta556RfVacM1VA7NlWWf3HM4nVM8ox
+	 8F6Em8X3XIzRQkpSkYcGJhtzLl+8mOHXt9o1qCqt4hbFrPR9k3i7dpCn+e//um759UFKD
+	 0ojYmyHKSqQEilUSsRuTvN2GitNFA2QlgSNEIMDBKGLbfTaqe+0nA7cn4HxzekezXjpCD
+	 iSIJpQafQL6g6pGruGnUK8pkZNwfBY5Zg0AHQfrVW6FssTGLzoHX8IfQgkhX+Wd/WSWQO
+	 Fr3ayCOAAR5St/Do9POAA9pbZqDU0LiScWI4YbZWe5qKM869AyBKnIQ1FAG41bHE6bg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JRH8mB5z;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=linux.alibaba.com;
+	spf=pass smtp.mailfrom=linux.alibaba.com;
+	dkim=pass header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=pmNLQSFO;
+	arc=none smtp.remote-ip=115.124.30.97
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A640606A339
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Nov 2026 08:42:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25613606A31B;
+	Thu,  5 Nov 2026 09:03:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 25613606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JRH8mB5z
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC2851F00A17;
-	Thu,  5 Nov 2026 08:42:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793868148;
-	bh=+/TiAj7VLHncj2qv2ZqEJ7+TV34Qt2l5wv33yoTSdQQ=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=JRH8mB5zNOPMqU/9x8kKS3njRMEqQg4KaI7PWCrVNtYOIukCRCjKYA0yEJUhDdA3c
-	 m+qnqvMKc1+oTdf/0ULcUA9+rBB6AvO64VY+FwJSWKHfhzqYD032/UtynEFIen5lcC
-	 Avkky39VkYAx5n4L6GkiKjAiaMacdWeswIV6UwWRaQcQdasNLloEejrQXREpjmnXVs
-	 umqcBPlFbd4vcF3uTNwI1g1HjEkmY0j/IRaTMXo8UfZmzzWbvtfUPYqjPrIG39WDko
-	 eJpvNrGyzfzMoBswfoQ3WVu1iZsdPcJDlBTMQ4tGRKIqyJbS9yf5pzvgpVOaLvTUPG
-	 WzrhgWPKCL6vA==
-Message-ID: <sashiko-outbox-198736@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 2/3] perf: do not call list_for_each_entry_safe() on
- uninitalized list
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?SmlyaSBTbGFieSAoU1VTRSk=?= <jirislaby@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <465e342ac620ec4f784424da897aecb4d0aa58cb.1793867553.git.jirislaby@kernel.org>
-References: <cover.1793867553.git.jirislaby@kernel.org>
- <465e342ac620ec4f784424da897aecb4d0aa58cb.1793867553.git.jirislaby@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 08:42:25 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=pmNLQSFO
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1793869399; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=1NYk/R+AjvZfblsV7HCmGu0xMESmf/3Rl3LdxJTF5qY=;
+	b=pmNLQSFOpq/RuRuhP0vzWZQi+r2DSovBx8mbaVk24pezHXtwBKmp9/8XAPGE4gUt5nNM5gtVYmEo7HW6q/uzke4zADGtHy2IriKE+h6xZfOzrVwLbt12RwIY9O8luJNn4U7bqlbiLt4H19tTsSrH6vK432upsOL+i6+b125lCWM=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=23;SR=0;TI=SMTPD_---0XE8DYxW_1793869381;
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0XE8DYxW_1793869381 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 05 Nov 2026 17:03:17 +0800
+From: Chen Pei <cp0613@linux.alibaba.com>
+To: acme@kernel.org
+Cc: adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com,
+	anup@brainfault.org,
+	david.laight.linux@gmail.com,
+	guoren@kernel.org,
+	irogers@google.com,
+	james.clark@linaro.org,
+	john.g.garry@oracle.com,
+	jolsa@kernel.org,
+	leo.yan@linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	mark.rutland@arm.com,
+	mike.leach@arm.com,
+	mingo@redhat.com,
+	namhyung@kernel.org,
+	palmer@dabbelt.com,
+	peterz@infradead.org,
+	pjw@kernel.org,
+	will@kernel.org
+Subject: Re: [PATCH v3 0/2] perf riscv: Implement rdtsc()
+Date: Thu,  5 Nov 2026 17:02:57 +0800
+Message-ID: <20261105090300.2889-1-cp0613@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20261009032715.2841-1-cp0613@linux.alibaba.com>
+References: <20261009032715.2841-1-cp0613@linux.alibaba.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,30 +80,17 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-> In test__pmu_config_helpers(), when evlist__new() fails, the code jumped
-> to the err_out label, which calls parse_events_terms__exit(&terms). At
-> that point parse_events_terms__init(&terms) has not run yet, so the
-> terms list head is uninitialized and list_for_each_entry_safe() walks a
-> garbage pointer.
->=20
-> Fixes this compiler warning:
-> In function =E2=80=98parse_events_terms__exit=E2=80=99,
->     inlined from =E2=80=98test__pmu_config_helpers=E2=80=99 at tests/pmu.=
-c:296:2:
-> util/parse-events.c:2849:2: warning: =E2=80=98terms.terms.next=E2=80=99 m=
-ay be used uninitia
-> tests/pmu.c: In function =E2=80=98test__pmu_config_helpers=E2=80=99:
-> tests/pmu.c:209:28: note: =E2=80=98terms=E2=80=99 declared here
->=20
-> Assisted-by: LLM
-> Fixes: 8e2ef85c66dc ("perf tests: Test evsel__set_config_if_unset() and c=
-onfig change tracking")
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+On Fri, Oct 09, 2026 at 11:27:13AM +0800, Chen Pei wrote:
+> [PATCH v3 0/2] perf riscv: Implement rdtsc()
 
-Sashiko has reviewed this patch and found no issues.
+Gentle ping on this series.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/8b245572903b8c4ed0d=
-c569d7a71a8f4974e2455.1793867553.git.jirislaby@kernel.org?part=3D2
+Is there anything else you need from me to get it queued for the next
+perf-tools cycle? If you would rather see it resent on a newer base,
+or want a change I have not thought of, say the word and I will do that.
 
+Best regards,
+Chen
