@@ -1,49 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793867641;
-	b=WWBifLkwpEUA+fGyzHVcnjkgpb0ogXfKy4ofQJR4LenNzTKlXhwvLLLF+Q+7YbjHrHAm
-	 rf3AaaVrE+FbktJ+MVNUELudjs4Wtxm8Udzjdt+6QTVLD6IwWQ0eLl9AXlmaOJwlbQQqN
-	 iECogOpngFd/V5XytDuTpCKNXD+zs2bHxPqj7/Tj/h3t+YFvVJQoaWVyLgPu/pUhW62LN
-	 1VZyeSA/t6MOUMdRRDjJsgTTeaLaPkLWPVJvmtoVt9Ho0qSnyZHwz4fgjYR5w5LI4SQJk
-	 IbD5kGAWkTSFbi8rA/RVBnivkGJqwkIqzIKfyFUEg7Pf2mbeZhF7qHTvNSXsbyh/12A==
+	t=1793867644;
+	b=c/4cK0Yx3oaopBJKgmOarmVMHrUOMiXO7CLG6f0f9AyR5D2BUmSXoeu7PNxd3jacqtX9
+	 KevSp0wUuUfOaJ5CIDR0zMqDCfAv8ds03108wRr8GZEr7sIYI9WFS3tXmK1QVI8TA6Bag
+	 QvZwoSu3vHFcipyXQDRyl52EBipiw1JFMohssbyT4wVXJYa+t7yISzrbF8fokBz8Be5kt
+	 Q0Sj9/MRV878IL81AL0BWDPoiWwi1YQZ48PolOUKIGwaB1DdumD7Qn9fNZgfXZ5lmNpHk
+	 6/IwEPWQEAJC3+vFEZuisJQjasnR5VR2gVmhHaRCZt4zeEjnpeHmtRTlQeNHckKmnUw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793867641;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793867644;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=g1z6lhbfTmpCBeImsfdQYA7OJHIdU+dlhb2qrfEYb40=;
-	b=4hH4vfTh5UdaeW+ItaXV+94Yr6Z5uP0V2KLUAx9PtGJ242+c00BfAbSwvWs94Sr05Il1
-	 uzyN8/tWpr1dxfAuHF4FL6Afe2VByP5iQN9aZ1LcGAfvZg7p8feX0cwJArcQRINWlC+zG
-	 VC8oLyxWl8yQRiGs8rUx68vDsjZoqoPwGC+j56mI47bAl6F3xPMxUwWKCXO+iu1JeiWFm
-	 mVIqgN/q/SXcQ/g+Q5lva04aeXBz+avX4GSNDJ10KxA+knHwxCSb/LG8AhPBKSRfw9USV
-	 bEYiwuiYyTzTbpgwH0aGU3+8SMbCQT7+rTMMdcv+3I2S+GpPIWMmfshSmUMe4Umiv6Q==
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=q7Yg2k54AxCuDrMxGRaPerxf+zLG+4XvnfL6ItD6i3A=;
+	b=TE2DHlhddPfOLIlAenVdunjOp7QSYViEj/Z/xXO/kyyUYkPem5znFjq142M2PPTer+mF
+	 18x/Azn62I+9tp1Cem3PuwsjVDaXMlpFQZ1iRUp4kLqswRvYhNg2suEF961QcSE3GxuLA
+	 Jz6JgH6vcoHur9XiQvnOQaOQiLV9sPBhHy9O7jclJRMZP62iintPXfzl+P4jCiS9IDH47
+	 GOHMes68gTUrdbuSNxvybjQfM+wrls8axxSz/1S43lFdC3fyfBg4zNO109njahdMBdVZ0
+	 0dqevF+bEnjWQZdJ7SlbZSvoSj595vj7fn1MCDhip4Hel4D05zLeJr3pJF52dNF1Zhg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WvxWhwMq;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lyLe5nC+;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC3B606A326
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Nov 2026 08:34:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75247606A31B
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Nov 2026 08:34:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WvxWhwMq
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 808E71F000C1;
-	Thu,  5 Nov 2026 08:33:58 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lyLe5nC+
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BA2A1F0093A;
+	Thu,  5 Nov 2026 08:34:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793867641;
-	bh=g1z6lhbfTmpCBeImsfdQYA7OJHIdU+dlhb2qrfEYb40=;
+	s=k20260515; t=1793867644;
+	bh=q7Yg2k54AxCuDrMxGRaPerxf+zLG+4XvnfL6ItD6i3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=WvxWhwMqnHbBeJlSM7dEd2no9YG8eTLaKDDnKGmj4JN30zJNneF/8FpM6wl1TYMgo
-	 Vcem97aJNaOgpiDh5GjAGK9XnQBV3O0nxQnfPzC3QILajpA+CoOjmPTqAKJFZInma4
-	 C6t6QNLLG3gF8k1mvEUcUKjX5o/ETJqemgvp6ZleAU4a3Q7I5AbkUlOFOYy/zrs2TB
-	 x7gdR1RLoJNDTiWLJf5hNa9dJqb+IBKjrioFT2yuLyRk3vNwnBehO518cW2AV0vm2W
-	 UJ27wNH/hfHE8sAI6vngggBcs0NVFrIRUqwv5b1uFbpcvMq4t7p+MZ1ISBDLA95zMS
-	 Yb3ztLKmTMqOQ==
+	b=lyLe5nC+artHA4/uyvGztIw31chprYyx2pBgoz7hiK+oGNNApLcTEQmUBGTwWX3QT
+	 aUeWZrH+2kxEjS3ehxz2yzBjlVyZARgf9aPx+o49MZ+ECn4lntWBKrdHEz9/TMLZyr
+	 IQSZNxCO0U6jmGRJPIOIQGkYy/z2jJaCs9Kf/2BTZgcbkmnZbfU0aI3eGKEYTGZU5e
+	 FxpHELcgBfftxrTgFldoBwNoKFN12BKPHpLVIGlRql31LwKhqVkgDiYzeFI+Q9yJ/B
+	 pdMu1+oKY2MNWObvoAdRO8fLTWGOTlDC4evFQ75FoBOBlW0OONCqeAeM8sEktRbmdM
+	 g8/h6jDHKo78g==
 From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
 To: acme@redhat.com
 Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	James Clark <james.clark@linaro.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -53,10 +51,11 @@ Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 2/3] perf: do not call list_for_each_entry_safe() on uninitalized list
-Date: Thu,  5 Nov 2026 09:33:51 +0100
-Message-ID: <465e342ac620ec4f784424da897aecb4d0aa58cb.1793867553.git.jirislaby@kernel.org>
+Subject: [PATCH v2 3/3] perf: initialize and destroy error list in test__pmu_config_helpers()
+Date: Thu,  5 Nov 2026 09:33:52 +0100
+Message-ID: <b9796c017042a3074956474a83c9b2170caec6db.1793867553.git.jirislaby@kernel.org>
 X-Mailer: git-send-email 2.56.0
 In-Reply-To: <cover.1793867553.git.jirislaby@kernel.org>
 References: <cover.1793867553.git.jirislaby@kernel.org>
@@ -69,28 +68,27 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-In test__pmu_config_helpers(), when evlist__new() fails, the code jumped
-to the err_out label, which calls parse_events_terms__exit(&terms). At
-that point parse_events_terms__init(&terms) has not run yet, so the
-terms list head is uninitialized and list_for_each_entry_safe() walks a
-garbage pointer.
+test__pmu_config_helpers() passes an uninitialized "err" to parse_events()
+without ever calling parse_events_error__init() on it first. Sashiko
+pointed this out in review:
+> When parse_events() fails and records an error via
+> parse_events_error__handle(), list_add(&entry->list, &err->list) and the
+> subsequent list_for_each_entry() walks in parse_events_error__print() and
+> parse_events_error__contains() will dereference the uninitialized err.list
+> pointers on the stack, and any allocated parse_events_error_entry objects
+> will be leaked.
 
-Fixes this compiler warning:
-In function ‘parse_events_terms__exit’,
-    inlined from ‘test__pmu_config_helpers’ at tests/pmu.c:296:2:
-util/parse-events.c:2849:2: warning: ‘terms.terms.next’ may be used uninitia
-tests/pmu.c: In function ‘test__pmu_config_helpers’:
-tests/pmu.c:209:28: note: ‘terms’ declared here
+Fix it by calling parse_events_error__init(&err) before parse_events(), and
+by releasing the list with parse_events_error__exit(&err) on the new
+err_out_errlist path taken once the list has been initialized.
 
 Assisted-by: LLM
 Fixes: 8e2ef85c66dc ("perf tests: Test evsel__set_config_if_unset() and config change tracking")
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Cc: James Clark <james.clark@linaro.org>
 ---
-[v2] drop terms completely (Sashiko)
+[v2] this is new in v2
 
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>
@@ -101,41 +99,41 @@ Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Ian Rogers <irogers@google.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: James Clark <james.clark@linaro.org>
 Cc: linux-perf-users@vger.kernel.org
 ---
- tools/perf/tests/pmu.c | 4 ----
- 1 file changed, 4 deletions(-)
+ tools/perf/tests/pmu.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
-index 13e8d7fa80af..b6ad2806659c 100644
+index b6ad2806659c..f208932590df 100644
 --- a/tools/perf/tests/pmu.c
 +++ b/tools/perf/tests/pmu.c
-@@ -206,9 +206,7 @@ static int test__pmu_config_helpers(struct test_suite *test __maybe_unused,
- {
- 	const char *event = "perf-pmu-test/config=15,config1=4,krava02=170,"
- 			    "krava03=1,krava11=27,krava12=1/";
--	struct parse_events_terms terms;
- 	struct parse_events_error err;
--	LIST_HEAD(config_terms);
- 	struct evlist *evlist;
- 	struct perf_pmu *pmu;
- 	struct evsel *evsel;
-@@ -226,7 +224,6 @@ static int test__pmu_config_helpers(struct test_suite *test __maybe_unused,
+@@ -224,13 +224,14 @@ static int test__pmu_config_helpers(struct test_suite *test __maybe_unused,
  		goto err_out;
  	}
  
--	parse_events_terms__init(&terms);
++	parse_events_error__init(&err);
  	ret = parse_events(evlist, event, &err);
  	if (ret) {
  		pr_debug("failed to parse event '%s', err %d\n", event, ret);
-@@ -293,7 +290,6 @@ static int test__pmu_config_helpers(struct test_suite *test __maybe_unused,
+ 		parse_events_error__print(&err, event);
+ 		if (parse_events_error__contains(&err, "can't access trace events"))
+ 			ret = TEST_SKIP;
+-		goto err_out;
++		goto err_out_errlist;
+ 	}
+ 	evsel = evlist__first(evlist);
+ 
+@@ -289,6 +290,8 @@ static int test__pmu_config_helpers(struct test_suite *test __maybe_unused,
+ 	evsel__get_config_val(evsel, "krava23", &val);
  	TEST_ASSERT_EQUAL("krava23 not overwritten", (int) val, 0);
  	ret = TEST_OK;
++err_out_errlist:
++	parse_events_error__exit(&err);
  err_out:
--	parse_events_terms__exit(&terms);
  	evlist__put(evlist);
  	test_pmu_put(dir, pmu);
- 	return ret;
 -- 
 2.56.0
 
