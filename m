@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793885428;
-	b=Jn6u2tmat9XAOBdHwc/QrMWVPTvWtKMCjPnpLoXoX4182Ty4h32AI7Nk+D3j/dWvmVdl
-	 DvwvqzVlOdfJcMIAVVYdw6EhnvL8FLihE+RLKOtgMPf6lnnInxTCbBfgpYnYBTFOV7gIA
-	 JWODZ8rJtynknJat3dKnalo0VAsQh9qi/n+bh6vk3v71JOjav6qHhZZ0P48xHGRnHirY1
-	 MZO1aYB/y5x3YDMOu8UdocjO4i249QsaqyDncP9TKo3PJ8JFLYI/bHEJ5v+TIsmXEpGT6
-	 v8fM9eLNzCAXKJDVRd/ewl6AgszbKmM60N4OW0CiU/yRDm7wuJU0J/D1VJ4JZXTh7Gw==
+	t=1793885520;
+	b=NI0zvbg43Y7BdVxQqyJ/zdcY3feX9EqRC86Dhvo+Bql6UHkGnfS61yCt6XPxWyrYAIle
+	 OvEdrqwFGRijAKpqDZufoacYThHDMpTP8YClKrvYS0KdHxSuwBwf9cbfIhYroovA1/XJ9
+	 ZTB+alp0WwigupKVCLMqBYPCD6eci9mtOOyK1r+dUwL6SYcUQzy9Xx2N76KcIFhNCl/Oi
+	 nqlr8OSIbFSK55m7XZ2NHN0WyhxpCxju/apmCYDJXU7xP1YQqUumzSsNmnjijFPxA9/KR
+	 CS2AIqe9ltT+d49hf6b7Xzt475X88qLCDN4Z2cMSraZ8rYIbSr5s8toZsLZwLLJGdng==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793885428;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793885520;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=B8pjo/fb166Y5I8jBn3VbJ48EuZkAk9N4GoB6EdtkdM=;
-	b=HQPJXb5T7Odh4QBzJXxjPL1e2wj1ONrSHU2zCu1ZGMwN69naIk3Du2o1Rwxg17FEm+BL
-	 iG7dAYlUPxAqBb8v7e1RKskTIq4zuuSGJdCgo1V3QmktqjOZWhLmmfnB69n5wPYy4GHzY
-	 tZkX/W3L+/WN1kpelGrE8ozWNIwTgPcKb8Q+/YZRV1aFiWyScFRLDV3e/zUOmqctwSbaB
-	 9vkLTKEAvWl745gGBzz8wEzDa/nbRwKY3kfL3J7hjvDG8WlXk8X6oIh/1KT9dIPZIKy0r
-	 ZrA7XY+gHs3GE9ekEVA3Pbhv/JZhLg2TwO9PVyNPjtBy6iAVVA17kOfQtuONm+AIGDg==
+	bh=8wltWlLMoS+bp9CXjVrOMwbugugLIHNZGMU+E/69oHQ=;
+	b=iyYrIRXFBv4khTQ4sWG98Kjl3lVC9AzWQLffLxDAPProYSX8z8sHykG6WRfWPD+79oY2
+	 3i/3CvBhqVeXNHZY8OmRvZpQhx5Dbxr72VPvkSkv37+L1A3FauIvokPjpGGaQUmlGfKdq
+	 Zamt/ndGeflLsXR86t0P2Z3SJjYpObc5qZQqfynXsqt4IJv7CzwqnlEQOAPkQ1dKNhpTa
+	 L3UASdtyQYkEsMJqKocm3hBPtsQz6eb/mDlm9XilOAGcWoW17ETDKE+CKpgS5jBfCueRM
+	 /67QQs2/tbR9PTZUJUm+NNxX0pYMZPFtoc06RV0cjYhyVtqEme5kfCScJDtCY6oPjKA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n1C5ip9Y;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=f6QqMvSa;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0FC606D836
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Nov 2026 13:30:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C60606A31B
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Nov 2026 13:31:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n1C5ip9Y
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E347C1F000C1;
-	Thu,  5 Nov 2026 13:30:27 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=f6QqMvSa
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B1A61F00A1D;
+	Thu,  5 Nov 2026 13:31:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793885428;
-	bh=B8pjo/fb166Y5I8jBn3VbJ48EuZkAk9N4GoB6EdtkdM=;
+	s=k20260515; t=1793885519;
+	bh=8wltWlLMoS+bp9CXjVrOMwbugugLIHNZGMU+E/69oHQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=n1C5ip9YoWQOH7iYWfmai0Ia62coH3dHILsa3c16RyFryYr1TbROA7AMLKXG1t8VT
-	 tyYVrA3CHxBdh8ue9O7SsvwM6sQl9VoxZJuQDZETmlAYYOp4DQmWuD9BJW7Wh4XAIJ
-	 CZqP0KqRKyryKRUxLgfGU2QncykhRnYmbM3rM+WSlY1Wjk6wyRfRGGx/ZJCHEfBU63
-	 2CO8sS0TNZjyhYtCMgce9MFv02aI5BLMcEIcP1itOmuiWHp8lzpyJlLk3hqb8ul/mU
-	 f94oRkyZQLf2SzeANy+JZNdD+j3hBFeTfk7gMTnlQKDklwNfPnV98Am3841PGZJyFt
-	 3jUkLZZkUgM2g==
-Message-ID: <sashiko-outbox-199153@kernel.org>
+	b=f6QqMvSaJoa8cRn2t4vJt4aoyhFgqZScn4U+iAw/FQ/ft8FxKxASdRG++ET9rFDl5
+	 sz4YF/avqCRDqVlKYl6baTEcVZ2B8AxRZf6eRt1YE/qJ3TAWLPJBgO8e9WLiTH+9l3
+	 VmlckxxknSrpKGxrY9bzT1pLnE909LcoWGUxZS54c35xH3o6DLeO8PrJmcLQ9DYmZD
+	 UrQM0Y0on8OWgYr3cr0x73/YRUKS3jqiIkcCpNAFO/gkEBV11GDJ4BO97Is8TQuFaW
+	 IBK/4BeEMNy7S367QEyG2Lkdg7d1jtV4w26SD6UCwE8BYC3vWJ0Y280wYfO+PEUaZa
+	 s7cuaffeptn2w==
+Message-ID: <sashiko-outbox-199156@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 15/19] perf auxtrace: cs-etm: Capture wrapped
- snapshots
+Subject: Re: [PATCH v4 16/19] perf test: Allow infinite named_thread loops
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "James Clark" <james.clark@linaro.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261105-james-cs-unformatted-per-thread-fix-v4-15-7759e0ce2449@linaro.org>
+In-Reply-To: <20261105-james-cs-unformatted-per-thread-fix-v4-16-7759e0ce2449@linaro.org>
 References: <20261105-james-cs-unformatted-per-thread-fix-v4-0-7759e0ce2449@linaro.org>
- <20261105-james-cs-unformatted-per-thread-fix-v4-15-7759e0ce2449@linaro.org>
+ <20261105-james-cs-unformatted-per-thread-fix-v4-16-7759e0ce2449@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 13:30:27 +0000
+Date: Thu, 05 Nov 2026 13:31:58 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,25 +60,12 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> find_snapshot() isn't implemented for Coresight, so when a wrap occurs
-> we only save from offset 0 to current head, modulo buffer size, rather
-> than capturing the whole buffer. Coresight drivers currently use a
-> monotonic head pointer even in snapshot mode, which gives a lot more
-> information for taking snapshots than a wrapped pointer. It means we
-> don't need to search for data at the end of the buffer to guess if a
-> wrap has occurred, and we can go back to saving partial buffers after a
-> wrap by checking if the next size to take is less than the buffer
-> size.
+> The following test will want this to run forever, so add support by
+> treating 0 loops as infinite.
 >=20
-> The drivers will always be able to generate a monotonic head because
-> TRBE has a bytes written counter, so even if we stop generating an AUX
-> record on every overflow, we can check if the counter indicated an
-> overwrite and offset head by a whole buffer size if it wrapped. This
-> forces userspace to read the whole buffer rather than between last and
-> [ ... ]
-> buffer's worth of new data.
+> Convert i and named_threads_work to be unsigned to avoid undefined
+> signed overflow behavior in infinite loop mode.
 >=20
-> Reviewed-by: Leo Yan <leo.yan@arm.com>
 > Tested-by: Leo Yan <leo.yan@arm.com>
 > Signed-off-by: James Clark <james.clark@linaro.org>
 
@@ -87,5 +73,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105-james-cs-u=
-nformatted-per-thread-fix-v4-0-7759e0ce2449@linaro.org?part=3D15
+nformatted-per-thread-fix-v4-0-7759e0ce2449@linaro.org?part=3D16
 
