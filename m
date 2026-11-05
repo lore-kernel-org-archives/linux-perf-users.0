@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1793903180;
-	b=0cjIPygc/XC/9M62C/xBCnTMjbMGOHmsJIddD8lV0nCouVjbhG9RjavYBABTPLOo5Ebg
-	 sDjgBq+v4DCBlBRT8SeMhXncFsDpw20nnFZ4AE/oL/XJMtsr4UEUHAt2WeTk4HaEcO0vs
-	 XHl93EjmQ+FiHtD85IZMRfjhKkYmrui3A0tRx96r77XV5yyA/xqX+GoYTj/rUUT5wedv1
-	 YrcUSYtyixgRuxcsrsnZm3N/xNAFhVeFQsiSSR+cPW+4wzJ8qxvfkxlFB5Xk9KZ+rymVL
-	 TUhH7SWguXfosB7rswRsNgleABPQ1FyH0DJbuMi3ztMpI8aCasdxw/Rc+gApQkOXwoQ==
+	b=5g+40M+vnwiKb0ZDKxfWPDagHro6XVNVkkEoi4wnzcEmN/GXhQXbZaPm5XZ2ZvhmqjBA
+	 Rv+rmDyJQehiKwKUPNtDHSDSjgo2+3PmNa5LdBeE7iRDVpKD1ZwhpgxwCO8wsWmG5+Bxl
+	 7GbcOg6NU5b0P6KPli6v2LM1yUK/NrrXL1P9MFvlUYzaSCyDkNrEAnxr+R6XQh40+XJVC
+	 J0EplrlENRIYtRwgSeow609uwsmefDDtFSbuY/15TKNS05I63UsMh6/xu+hvS+Ce4SwIQ
+	 XNgRkQqUB2zXf9azPw+uYJDKXRkyHjAcTh0Y8kkS72Y6HRLK6JBTfUcQ9f+tq/NRGTw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1793903180;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=nh7D6vgmWcIvrmMhqdn3mE5w3+ect6lMuFk9WaTYKhQ=;
-	b=RfyFgJm+A5yO4h0xTmcLEzjnvvIVIBFU3qyV4qpytasTkinddvUvhXgzZC+r9cpqlpVc
-	 i9oiDyfKDrwPrpy/J02A2ObeE/05e5dTDU7pZ5BWCglRbabo8JoizeidMRQJ3ujTR6Sp5
-	 Q19urfzpv5Xmo/CxQ1IWTGYHqVTCccfEXdIJXtlvnBFrkBKr8n8UBFiSQtLPIIUBq9g0a
-	 4CzgfBUUgKTdzHW0B25P4bQ3fYGWAd2DDUa/p95a9L9P51D+Xcw98i4VdSMfOxp1Qntk0
-	 ffPLHu598BVLBjTnhadxKvMtOUla3ObmPz/Di571QAvkDF97Vu9K7KS4qnC81NILS9w==
+	bh=Na8Ud6xh15e4hwafYXbf2rd3ixNvCAhtA6jcta0HKiQ=;
+	b=T494fk3u+0vqoQsVlE+qVQhcTndcdAn0OQ/18DyOEnK2g4MiLjEo2DX0X87fjECHack5
+	 pban7owclvJffWrBescGTEz5TJvRc+dgbDTNyx9YcDkIE/rMngulaTrELUBtb4SjMc7qE
+	 GabesmOhVPpsC/bb7AYbru7uGmx4EItCUfYN+ESfn0n9AdTuhUG7KfV5KjQZtWKHcHSHb
+	 FAN/v2uqFewXktZQkrpqj/loJjRS9GMqd6GTfS9bKRqWoUUSt5d8hXY/pANUGG5fC/1Q1
+	 Xlf6hagb/Z+LDzk6B6ZTx/+QjhLCAdBLSNZwimUKokKwPTLwcR8lzmrmYxPUeSWcy6w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="TB8f/lRu";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=G+xjx73R;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDB9606A328
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409D7606A31B
 	for <linux-perf-users@vger.kernel.org>; Thu,  5 Nov 2026 18:26:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TB8f/lRu
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F5C11F000C1;
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=G+xjx73R
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A55191F00919;
 	Thu,  5 Nov 2026 18:26:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1793903179;
-	bh=nh7D6vgmWcIvrmMhqdn3mE5w3+ect6lMuFk9WaTYKhQ=;
+	bh=Na8Ud6xh15e4hwafYXbf2rd3ixNvCAhtA6jcta0HKiQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TB8f/lRugFnFE/NxVn1WKibAjgvn5AfvLjgO+3kfklq3lrxcsaMGDgCrgY6xGXcZ4
-	 3+855wcbECjPQeiB0fArSXHeXeUgbmxphg/DaWO0uBxd/FnrgWNr6ECKBm/MYmZnIY
-	 4875kFxsRN+sYDfY5bgZ9brwbHNKbIjx3dtqk6GXG2dUcCLF4zSGev/79WWq4vQe0s
-	 DKRXQ6NqLhg52Xe9ZPsngrFUUo8zAf4vZfA5a1HVDAiZnuIC4T/on/+JSpi+jFiZt0
-	 ANcSNDRANDMYbDFTXxyLlmHGvdGtKDqDM9nEktn2m/m0w95QEevgQpXmGNpB4JzKvY
-	 2x7GzUR+bSmGw==
-Message-ID: <sashiko-outbox-199760@kernel.org>
+	b=G+xjx73RRZXLdp3N0yakoRAs43sfOLej+0ij6ZzyNqgVS1I4qNII9sjK+n2FetzKp
+	 3kkCc6nyovhpEb7QYr08OfTA+OT6brHitBIjpnsTfyRLl4WpVE4zBm/cRNOy2sKjEV
+	 vp/YLPoNnDIhf5huYNx7fmn+BoSCotClRwimeKPgzEKoY2V+UuupZwcoEsaluk0bhn
+	 rUuQ0KUoKY1rZMjUvX37iPO1v2QJQn1FL7sK4qr/UD0+L+BbAnF+VtLwjxSqX0x/Dh
+	 K4R55PH6fNLNrHH2+2wmGRebHOrSqnMe5DBo9q1kT9uR4FmnqN4r9dKCTAuzKaeVZR
+	 4Q8jX5piQ7Q0Q==
+Message-ID: <sashiko-outbox-199761@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v3 2/3] perf build: Prefer zlib-rs over zlib when
- available
+Subject: Re: [PATCH 15/47] perf/amd/ibs: Move
+ CPUHP_AP_PERF_X86_AMD_IBS_STARTING post stop_machine()
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
+To: "Frederic Weisbecker" <frederic@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261105180923.3441359-3-irogers@google.com>
-References: <20261105180923.3441359-1-irogers@google.com>
- <20261105180923.3441359-3-irogers@google.com>
+In-Reply-To: <20261105163045.38862-16-frederic@kernel.org>
+References: <20261105163045.38862-1-frederic@kernel.org>
+ <20261105163045.38862-16-frederic@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 18:26:18 +0000
+Date: Thu, 05 Nov 2026 18:26:19 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,30 +61,27 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Detect and prefer zlib-rs over C zlib in the perf build unless disabled
-> with NO_ZLIB_RS=3D1 (or NO_ZLIB=3D1 / NO_RUST=3D1):
+> Between CPUHP_TEARDOWN_CPU and CPUHP_AP_OFFLINE, stop_machine executes
+> all the teardown callbacks while stopping all CPUs in the system. This
+> doesn't mix-up well with running RT or isolated tasks.
 >=20
-> - Move Rust compiler detection ahead of zlib detection in
->   tools/perf/Makefile.config and use feature_check + feature_rust_lib for
->   zlib-rs, setting both HAVE_ZLIB_SUPPORT and HAVE_ZLIB_RS_SUPPORT when
->   zlib-rs is used and falling back to C zlib (-lz) otherwise.
-> - Replace -lz with $(ZLIB_LIBS) in DWARFLIBS and llvm-config
->   --system-libs so static libdw/libelf and libLLVM configurations use
->   the selected zlib implementation.
-> - Build and clean libz_rs.a in $(OUTPUT)libz_rs/, pass ZLIB_CFLAGS when
->   building static libbpf, and share RUST_OUTPUT with the host bootstrap
->   bpftool build in tools/perf/bpf_skel.mak.
-> - Expose 'zlib-rs' in 'perf check feature' / 'perf version --build-option=
-s'
->   and document it in perf-check.txt.
-> - Add zlib-rs package mappings to tools/perf/scripts/install-build-deps.sh
->   and NO_ZLIB / NO_ZLIB_RS build tests to tools/perf/tests/make.
+> In order to transition smoothly from global stop_machine to finer
+> grained synchronization between teardown callbacks and the other CPUs,
+> a new stop machine post function has been introduced to be executed
+> after the main one with IRQs still disabled while other CPUs can exit
+> stop_machine().
 >=20
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Here the callback only restores the IBS interrupt to the normal priority
+> on the local APIC and running it concurrently against other CPUs
+> shouldn't expose any kind of race.
+>=20
+> Move this teardown callback to post stop_machine() accordingly.
+>=20
+> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105180923.3441=
-359-1-irogers@google.com?part=3D2
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105163045.3886=
+2-1-frederic@kernel.org?part=3D15
 
