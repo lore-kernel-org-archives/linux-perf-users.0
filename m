@@ -1,57 +1,77 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793899382;
-	b=BkuuIMaJZpvZHDDgNinioVh0NbIizw4riYCIbA0CXG+ShABK/Xf5UQFdiSfg9DT9lgtt
-	 wDGRnMmuQ/ZmTbNivb4IZ0czukBPLvIhKCDq6b/fjFZwt8Wzz36kipy4ACvVBfTmbXe7m
-	 VeSqaBYYM+ss2HHuYVIcqvbButIpSSMt4z2l9N8ACQVjT6o3+vkwLvi9TWONidPyZLYQH
-	 KCEvDSWWNFP7JzHh8iRoewimr3R8GEA7ExVEdixtQannfWvQvUNZFhhV/KqqUkFgwqSvH
-	 HQUzc/Tvr/vCSz7mY19iatquEpS2LyN/oNqRq5A/7e+jj+TYlABw5YB86nfRj+rdvVw==
+	t=1793900105;
+	b=2WpmfIIXUPt3QDHh0mh98YMHKFFY9C2PBCn8BR9/mEPq6RcJnY9bRx8C4Pf05MZYPrLm
+	 MOqGwXrive3C0DtC88e6FBZFMnbtx4uvHBfzGLLlq8FjdqrDu+rheOxeNcOMZshoL++bK
+	 wqtpwuH+UcSVUOzZDgfhauF10OwZdavq7QEB666JcR8uj4Cy2eZbnx+1Kx9RG3ynFw9dL
+	 M4hyhh/lAaKrJxLOgUfvQZWUQ06pDW9MoVZPISFdvWIWNGMB0JIsOsrg2oZTU9ccwHIVp
+	 HZKdywzLKEEbZhfV1CcOz3ZDUMSxlVTicyzjuBMAedJ2EUrL7ymUNtVnLtEDJCZ/tag==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793899382;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=+6CpF1xlpLGHP2CK2fwg8qYxmT1n/cuHIZFkncNOG5c=;
-	b=ZQEswaeAGM53A7KgsF1gBOFlDWOem1oh57ZL3cmRR7PZwI+1hif9VrkqQjeaEY1So3uk
-	 2gXxxWDkMvBjf6s2NulI6Qq2UP7WBwTWjiyyJQwH3seqH8/bV3tlf74p9uoP5KxXFuPYI
-	 VCfau2rUErDFYDyz3DgMBu0tjiT2i+F1EXegt3sUAvRcheJyWX/hhrxk5ZNp7732fdZiT
-	 3p5tHrGHkneSsH2LC472Bhot++KA2HHfayoc+pH9dnOfRdo4/YCdG0HxBGFbwvEKWxr8F
-	 W8NV7J5CnA+Nlwqql7UuTVbmko6iH+V8ohzsbkHxjvsSTqvJFfmw99OyJhxmreNxDDA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793900105;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=t9fXrsO0O2af3z3/kWMiEISte9PuUvmoDvuTu4maoQU=;
+	b=YcMUW1K6Fg79T6DzeE3/BjNWJ8eHR6QvIDY5DL0UTkq9/tZ0DwTAE42l2Ukb18WeL7zg
+	 +yAjwcd82k2vPXhBk1VjT7wZ/gO6jBJmPbnov8yOjqNrwIAMAeaax/4RnhrT4gsYj6Tje
+	 DIHEp20yyEoyZIhaFY12/Stbgk5X4IdhmFYaDiqZutBOdXPSLu9xFuhSog8JQaAoUkufH
+	 v3Ngbx3O+3jaMCDJJ3SlG6EJX685hm8KkjNVFk6L9gS6q+sDxKLWziFm6dotbbCnKxvbH
+	 1o4g5gtJBSIakFkKqexEjwjV5pCJpVy23vmk8Ml8+t0PW0kWgEGQKN+DOs51YFOBihw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="E/GltXnH";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31564606EE9D
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Nov 2026 17:23:02 +0000 (UTC)
+	dmarc=pass header.from=arm.com;
+	spf=pass smtp.mailfrom=arm.com;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=CigfXg3H;
+	arc=none smtp.remote-ip=217.140.110.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0160C606A328;
+	Thu,  5 Nov 2026 17:35:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0160C606A328
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=E/GltXnH
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2BD01F00A16;
-	Thu,  5 Nov 2026 17:23:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793899382;
-	bh=+6CpF1xlpLGHP2CK2fwg8qYxmT1n/cuHIZFkncNOG5c=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=E/GltXnHfjfwP3tMi6kn5C140Nph2+yQxfBGV4qxZvUaO1UGmVtT2WTICFC+VuCGf
-	 RDqPj9RzJqjrwJFw2cTgvClfb4oJL7ZxMgFe5Vwgve3z/b9KGHLLp3wI2tJcOvIBVb
-	 FnKS37OPQR048tGCj5kjSaOYvqHIgrtEmgRCZd/h0GK/ULuvVm54ActpBnM0dFbltd
-	 lb+qGheCb04X2vXTwbUZBVTTiNFdvyCL9G/gEgkpvnSS8UCwOtH2Y6G/g6v1ketoDW
-	 apDFIg7b3NZMQoShNe/r2b+fZnY7ZkPN+VxOnae9GrpqO8YBsg6CPSPzkVEH39ozyB
-	 7Tnn4RZEK9alw==
-Message-ID: <sashiko-outbox-199604@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH RFC] perf/x86/amd/lbr: Don't freeze the LBR on PMI for
- user-only filters
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Puranjay Mohan" <puranjay@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261105170340.165507-1-puranjay@kernel.org>
-References: <b7456dbb-16fd-45b4-8742-e9ea3f896317@amd.com>
- <20261105170340.165507-1-puranjay@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 17:23:01 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=CigfXg3H
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C283168F;
+	Thu,  5 Nov 2026 09:35:01 -0800 (PST)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C8CDE3F628;
+	Thu,  5 Nov 2026 09:35:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1793900104; bh=1kdTInzv5avQC44NY6UkCIy3jwAJ0WWvZ6Hq0Mp6/Z8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CigfXg3HjPp56Isr9XGD0NM81d6kV4jL7gMyL+LqukWH9Lez/STa6w1aenTrOl7cD
+	 yWBs/d8EDxRkirRXKTdJ0v2JLV97O03cgMICD4sHuaxQ2S0468DKeUFwYtHktKIIzE
+	 VPEKEJrZD4sTj+eX27hY6gWL/dUEuG7LJ9p2xKQk=
+Date: Thu, 5 Nov 2026 17:35:01 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Yabin Cui <yabinc@google.com>
+Cc: Dev Jain <dev.jain@arm.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@arm.com>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Tamas Petz <tamas.petz@arm.com>,
+	Tamas Zsoldos <tamas.zsoldos@arm.com>,
+	Michiel van Tol <michiel.vantol@arm.com>,
+	coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Revert "perf/aux: Allocate non-contiguous AUX pages by
+ default"
+Message-ID: <20261105173501.GV9176@e132581.arm.com>
+References: <20261025-perf_revert_prefer_large_alloc-v1-1-5fb431bbd624@arm.com>
+ <57c34e26-3048-474d-8e74-f65799e32ff4@arm.com>
+ <CALJ9ZPNWcDtajO+Luhxe1K3af64mPRFQSjvfvNornyFFkam-+g@mail.gmail.com>
+ <CALJ9ZPO9XxF-kz5K67Jg8RtpiEmK7XFU3e+xDak6LyV_We7yBQ@mail.gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,188 +80,104 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALJ9ZPO9XxF-kz5K67Jg8RtpiEmK7XFU3e+xDak6LyV_We7yBQ@mail.gmail.com>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] perf/x86/amd/lbr: freeze format exposed and accepted without fea=
-ture check
-- [Medium] perf/x86/amd/lbr: wrong freeze state in amd_pmu_lbr_enable_all()=
- for multi-event LBR
---
+On Tue, Nov 03, 2026 at 12:46:24PM -0800, Yabin Cui wrote:
 
-commit 4ee339b2b2fdce2f2f85b09e93b75d05b24049b1
-Author: Puranjay Mohan <puranjay@kernel.org>
-
-perf/x86/amd/lbr: Don't freeze the LBR on PMI for user-only filters
-
-This commit skips setting DEBUGCTLMSR_FREEZE_LBRS_ON_PMI on PMI when kernel
-branches are suppressed in LBR_SELECT, while adding a freeze format attribu=
-te
-(config2:0) to allow user space to explicitly request freezing the LBR.
-
-> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-> index 49b6b8fce5664..d63649c756a58 100644
-> --- a/arch/x86/events/amd/core.c
-> +++ b/arch/x86/events/amd/core.c
-> @@ -1404,8 +1404,22 @@ static struct attribute_group group_events_amd_brs=
- =3D {
-> =20
->  #endif	/* CONFIG_PERF_EVENTS_AMD_BRS */
-> =20
-> +PMU_FORMAT_ATTR(freeze, "config2:0");
-> +
-> +static struct attribute *amd_pmu_lbr_format_attrs[] =3D {
-> +	&format_attr_freeze.attr,
-> +	NULL,
-> +};
-> +
-> +static struct attribute_group group_format_amd_lbr =3D {
-> +	.name       =3D "format",
-> +	.attrs      =3D amd_pmu_lbr_format_attrs,
-> +	.is_visible =3D amd_branches_is_visible,
-> +};
-> +
->  static const struct attribute_group *amd_attr_update[] =3D {
->  	&group_caps_amd_branches,
-> +	&group_format_amd_lbr,
->  #ifdef CONFIG_PERF_EVENTS_AMD_BRS
->  	&group_events_amd_brs,
->  #endif
-> diff --git a/arch/x86/events/amd/lbr.c b/arch/x86/events/amd/lbr.c
-> index a55646fcb8465..f45e2c53566af 100644
-> --- a/arch/x86/events/amd/lbr.c
-> +++ b/arch/x86/events/amd/lbr.c
-> @@ -10,6 +10,12 @@
->  /* LBR Branch Select valid bits */
->  #define LBR_SELECT_MASK		0x1ff
-> =20
-> +/* attr.config2: freeze the LBR on PMI */
-> +#define LBR_CFG2_FREEZE		BIT_ULL(0)
-> +
-> +/* Software only, masked out before writing LBR_SELECT */
-> +#define LBR_FREEZE		BIT_ULL(63)
-> +
->  /*
->   * LBR Branch Select filter bits which when set, ensures that the
->   * corresponding type of branches are not recorded
-> @@ -307,6 +313,9 @@ static int amd_pmu_lbr_setup_filter(struct perf_event=
- *event)
->  	/* Filter bits operate in suppress mode */
->  	reg->config =3D mask ^ LBR_SELECT_MASK;
-> =20
-> +	if (event->attr.config2 & LBR_CFG2_FREEZE)
-> +		reg->config |=3D LBR_FREEZE;
-> +
->  	return 0;
->  }
-
-[Severity: Medium]
-Should group_format_amd_lbr and amd_pmu_lbr_setup_filter() check for
-X86_FEATURE_AMD_LBR_PMC_FREEZE?
-
-In arch/x86/events/amd/core.c, group_format_amd_lbr uses
-amd_branches_is_visible():
-
-static umode_t
-amd_branches_is_visible(struct kobject *kobj, struct attribute *attr, int i)
-{
-	return x86_pmu.lbr_nr ? attr->mode : 0;
-}
-
-Because x86_pmu.lbr_nr is non-zero both on Zen 3 BRS systems (where
-amd_brs_detect() sets x86_pmu.lbr_nr =3D 16) and on LBRv2 systems or VMs th=
-at do
-not advertise X86_FEATURE_AMD_LBR_PMC_FREEZE, the sysfs format attribute
-/sys/bus/event_source/devices/cpu/format/freeze is exposed on systems that
-cannot freeze the LBR on PMI.
-
-In addition, when a user opens an event with LBR_CFG2_FREEZE set in
-event->attr.config2 on those systems, amd_pmu_lbr_setup_filter() accepts it
-and sets LBR_FREEZE in reg->config, while amd_pmu_lbr_enable_all() silently
-ignores it because the MSR_IA32_DEBUGCTLMSR update is guarded by
-cpu_feature_enabled(X86_FEATURE_AMD_LBR_PMC_FREEZE).
-
-Should the visibility callback and amd_pmu_lbr_setup_filter() verify
-cpu_feature_enabled(X86_FEATURE_AMD_LBR_PMC_FREEZE) and return -EOPNOTSUPP =
-if
-freeze is requested when unsupported?
-
-> @@ -392,20 +401,26 @@ void amd_pmu_lbr_sched_task(struct perf_event_pmu_c=
-ontext *pmu_ctx,
->  void amd_pmu_lbr_enable_all(void)
->  {
->  	struct cpu_hw_events *cpuc =3D this_cpu_ptr(&cpu_hw_events);
-> -	u64 lbr_select, dbg_ctl, dbg_extn_cfg;
-> +	u64 lbr_cfg =3D 0, lbr_select =3D 0, dbg_ctl, dbg_extn_cfg;
-> =20
->  	if (!cpuc->lbr_users || !x86_pmu.lbr_nr)
->  		return;
-> =20
->  	/* Set hardware branch filter */
->  	if (cpuc->lbr_select) {
-> -		lbr_select =3D cpuc->lbr_sel->config & LBR_SELECT_MASK;
-> +		lbr_cfg =3D cpuc->lbr_sel->config;
-> +		lbr_select =3D lbr_cfg & LBR_SELECT_MASK;
->  		wrmsrq(MSR_AMD64_LBR_SELECT, lbr_select);
->  	}
-> =20
->  	if (cpu_feature_enabled(X86_FEATURE_AMD_LBR_PMC_FREEZE)) {
->  		rdmsrq(MSR_IA32_DEBUGCTLMSR, dbg_ctl);
-> -		wrmsrq(MSR_IA32_DEBUGCTLMSR, dbg_ctl | DEBUGCTLMSR_FREEZE_LBRS_ON_PMI);
-> +		/* Skip the freeze if kernel branches are suppressed, unless asked */
-> +		if ((lbr_select & LBR_KERNEL) && !(lbr_cfg & LBR_FREEZE))
-> +			dbg_ctl &=3D ~DEBUGCTLMSR_FREEZE_LBRS_ON_PMI;
-> +		else
-> +			dbg_ctl |=3D DEBUGCTLMSR_FREEZE_LBRS_ON_PMI;
-> +		wrmsrq(MSR_IA32_DEBUGCTLMSR, dbg_ctl);
->  	}
-
-[Severity: Medium]
-Can this re-enable DEBUGCTLMSR_FREEZE_LBRS_ON_PMI for an active user-only L=
-BR
-event when multiple branch-stack events are scheduled on the same CPU?
-
-In arch/x86/events/amd/lbr.c, amd_pmu_lbr_add() sets cpuc->lbr_select =3D 1=
- and
-increments cpuc->lbr_users, but amd_pmu_lbr_del() unconditionally clears
-cpuc->lbr_select to 0 whenever any branch-stack event is removed:
-
-void amd_pmu_lbr_del(struct perf_event *event)
-{
-	struct cpu_hw_events *cpuc =3D this_cpu_ptr(&cpu_hw_events);
-
-	if (!x86_pmu.lbr_nr)
-		return;
-
-	if (has_branch_stack(event))
-		cpuc->lbr_select =3D 0;
-
-	cpuc->lbr_users--;
 ...
-}
 
-If two user-only branch-stack events are active on a CPU (cpuc->lbr_users =
-=3D=3D 2)
-and one of them is removed via amd_pmu_lbr_del(), cpuc->lbr_users remains 1
- while cpuc->lbr_select becomes 0.
+> In field telemetry and local ftrace on Pixel devices (prior to
+> 18049c8cff9c, so __GFP_NORETRY was already in place), we observed heavy
+> rb_alloc_aux() -> __alloc_pages_direct_compact() stalls alongside
+> kcompactd0 pinned on big cores scanning order-9, and this accounted for
+> >20% of all perceptible app kills (via lmkd) across dogfood devices
+> until we stopped high-order AUX allocations.
 
-When amd_pmu_v2_enable_all() then calls amd_pmu_lbr_enable_all(), the
-if (cpuc->lbr_select) block is skipped, leaving lbr_cfg and lbr_select as 0.
-As a result, (lbr_select & LBR_KERNEL) evaluates to false and
-amd_pmu_lbr_enable_all() sets DEBUGCTLMSR_FREEZE_LBRS_ON_PMI in
-MSR_IA32_DEBUGCTLMSR even though the remaining active event suppresses kern=
-el
-branches and did not request a freeze.
+Thanks for the detailed explanation. My understanding is that repeated
+reclaim/compaction during AUX allocation raises memory PSI and can lead
+to lmkd killing applications. The problem to address is therefore the
+cost of obtaining higher-order pages under memory fragmentation.
 
-Additionally, if a user-only event with freeze=3D0 is added alongside an ev=
-ent
-that requires freezing (either recording kernel branches or with freeze=3D1=
-),
-amd_pmu_lbr_add() overwrites cpuc->lbr_sel->config with the new event's con=
-fig,
-causing amd_pmu_lbr_enable_all() to clear DEBUGCTLMSR_FREEZE_LBRS_ON_PMI for
-both events.
+> Initially we worked around this in userspace (simpleperf) by setting
+> perf_event_attr::aux_watermark = 4096 so get_order(watermark) == 0. That
+> was fine for CoreSight ETR (which uses its own separate scatter-gather
+> buffer and only copies into AUX on flush/stop), but when enabling TRBE
+> (and SPE) it caused hardware maintenance interrupts every 4 KiB instead
+> of every 2 MiB. Also, in overwrite/snapshot mode rb_alloc_aux() ignores
+> aux_watermark and uses ilog2(nr_pages). That is why I sent 18049c8cff9c.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105170340.1655=
-07-1-puranjay@kernel.org?part=3D1
+Agreed. Reducing watermark to 4096 also increases maintenance interrupt
+frequency for SPE/TRBE. We should refine buffer allocation rather than
+using watermark as a workaround.
+
+> ### Possible solutions
+> 
+> For PMUs without PERF_PMU_CAP_AUX_NO_SG (such as SPE, TRBE, and modern
+> Intel PT), higher-order AUX pages are an opportunistic optimization
+> rather than a functional requirement -- very similar to THP allocations
+> on fault (GFP_TRANSHUGE_LIGHT) or opportunistic high-order slabs in SLUB
+> (allocate_slab()).
+> 
+> Instead of reverting to GFP_KERNEL reclaim/compaction for all high-order
+> attempts, could we do the following?
+> 
+> 1. Make opportunistic high-order AUX allocations no-reclaim:
+>    When !(event->pmu->capabilities & PERF_PMU_CAP_AUX_NO_SG) and
+>    order > 0, clear __GFP_RECLAIM (and add __GFP_NOMEMALLOC, matching
+>    SLUB's allocate_slab() and GFP_TRANSHUGE_LIGHT):
+> 
+>      gfp_t gfp = PERF_AUX_GFP;
+> 
+>      if (order && !has_no_sg)
+>              gfp = (PERF_AUX_GFP | __GFP_NOMEMALLOC) & ~__GFP_RECLAIM;
+> 
+>    When order falls back to 0 (or when PERF_PMU_CAP_AUX_NO_SG is set),
+>    keep PERF_AUX_GFP so single-page allocations still reclaim normally
+>    under memory pressure.
+> 
+>    That way, when free order-9 / order-4 blocks exist, SPE and TRBE get
+>    them immediately for PMD / contiguous-PTE vmap() mappings (and pages
+>    stay grouped together); when memory is fragmented on a long-running
+>    device, high-order probes fail fast on the freelist without waking
+>    kcompactd/kswapd or triggering direct compaction and reclaim.
+
+This looks reasonable for me: try to obtain larger blocks cheaply, then
+then retain the PERF_AUX_GFP policy for order-0 allocations. I also
+agree with preserving the allocation policy for PERF_PMU_CAP_AUX_NO_SG
+case.
+
+Could you compare the memory PSI stall deltas before and after applying
+this option? I think measurements from your production devices would be
+convinced evidence for benefits.
+
+> 2. Clamp max_order in rb_alloc_aux() after fallback:
+>    If rb_alloc_aux_page() requested `order` and had to fall back to a
+>    smaller order, update `max_order = page_private(page)` in
+>    rb_alloc_aux() so subsequent iterations for the rest of the buffer do
+>    not keep re-probing higher orders that just failed.
+
+This also can avoid reclaim repeatedly, but the side effect is subsequent
+iterations would no longer try high order, which have no chance to
+benefit from large mapping.
+
+I would prefer to evaluate option 1 first.
+
+> (Optionally, if server/benchmark workloads ever want synchronous
+> compaction to form huge AUX mappings even on fragmented hosts, that could
+> be gated behind an opt-in attr/sysfs knob similar to THP defrag modes,
+> with light/no-reclaim as the default.)
+
+I will follow up with Will separately about the userspace interface.
+
+> Would this approach work for your SPE/TRBE use cases? Happy to help test
+> on our side.
+
+If option 1 works, we can confidently revert 18049c8cff9c, as it would
+restore higher-order allocations for TRBE/SPE without introducing the
+regression you mentioned.
+
+Thanks,
+Leo
