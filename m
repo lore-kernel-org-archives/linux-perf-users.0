@@ -1,44 +1,44 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.94.104
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.93.99
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793871075;
-	b=1Vqkm+LRJQs0VFOHcuIQ+M6Gwdvl2PVgJKEP77V0dMWY7pt1R8+ezubmH8g0GRTJE9H7
-	 Fw//U1eVkhHWOBHvfAO4s4nTcqLK6FIQxaVfkrq3HNaYfSF16FxhQu7m5wLO09An+ODb6
-	 PXpz+B4T9geir8CTigeIKqXf/XeVx7CgDO4xJjKhqzd35W33lRdStLW2sP0jLfal5VuC0
-	 ab5S/XstmLskVCxg0FudUmMKrCvMGbXz/esdECH6UOfF/6M9IuyORVw9wYrfLQ6jmktoM
-	 NxUbeScKpmZixGqclSUFxMCLKftbus/9vlmrJJJibXUDHAUMGovQt8xmLJgMjBtnqhw==
+	t=1793871079;
+	b=Ybumx6cp2jM4VTxXAs7MWBdT/8SMMdO/b1SzcMhxLIyQk+lGbjYIZAcAdYkOR+CBzklm
+	 r5IC39Tn5CUXYIP8N6yq9CpNyl1a0BTZpCKZ1sbChNQcWaRlSIbObwhB+Q/3Ns/UFWlym
+	 a903UgG3f3DNRoNglgwtU0bvRjbQlCOg6gsCWYCAzEXNAsxCQ87dPBhafnnM/tV/y93X6
+	 K9+it60w6ANIjt2o09HwDgVFoAmQwJDRGJIvYQsyQm2KTC5VCFUSP3qXprF9XNg7yy/1v
+	 rDpAcEZkq7DY6RXioF0auvv9a8XeKUfbup1eUXB5MHFCpH4Oo4MtqR01dKbLwa8ZvlQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793871075;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793871079;
 	h=DMARC-Filter:Received:Received:Received:From:To:Cc:Subject:Date:
 	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding:X-CM-TRANSID:X-Coremail-Antispam:
 	 X-CM-SenderInfo;
-	bh=SRZQ0Gzs6aLf7t6xhqXhqon/Ja06I2IN6ER4ujbRXnw=;
-	b=08XG8AqNQtNgJBFkLULV739YI91ch8caVpvHOi3n9DTAWAvfVgKdoptK4BkmYUSrYwMk
-	 mClqDUoUiN4LFnYNaJGyorKYiTQAbbq4LgSVm8S6h833ggSPE0C6QL4E7CU008glOT5Dv
-	 JY5pSewh+aSQ2MnYv8oWDliPgEr9ElU4q70Gw1+d081LTDyEYpFfhbP7r5VUJyOLetr/p
-	 h84aK1Nlbd6MwUSEzZ+xRFF18s8dOrpZOXbVqN1kULU7BUJTbJjnRTE0BjloKoeQRmMrB
-	 pZPRjp4Hp1MVGHAAmxiFPKOggT3JWNzG6+o+VRLmjqy+cAkfDwS2w30sHJXP3pFGFnw==
+	bh=pctn8oD6fQBVAGPm5jnPVM5s1k69X3qxtiwPvcIl6kE=;
+	b=aSeax3eJ3VIlPQ9NotuQBhCMmrcMBkaKA9oEHRY3J47DK+GTcWIXWuuDzbvuVanAVsNg
+	 QNy8aDDIoqU7Ng5zH4au70Gy24ynkuZtgfGga/jC1DD4A9QAabm2n7+/BMVKG7am7pEVL
+	 H67JoJchYlzbtFfq71440e1z+BLgvaJba9eBbNRsf9cpsWpC2KQlFN3xEVe68+cdggiJ4
+	 7EOCMeVQYoFWr07P+aXt911pT6H0yqwJdLcwGoxXTA/Fny+7Fd1jRX6b9Rks+rtCJVTcm
+	 qXLTL960EYc7FXy+gbv/V3TEkqo2WV9y7Vc0760DziDFPkA6qQDFE7pi5s65YsUzS9A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=huaweicloud.com;
 	spf=pass smtp.mailfrom=huaweicloud.com;
-	arc=none smtp.remote-ip=124.71.94.104
-Received: from dggmsgout13.his.huawei.com (dggmsgout13.his.huawei.com [124.71.94.104])
+	arc=none smtp.remote-ip=124.71.93.99
+Received: from dggmsgout11.his.huawei.com (dggmsgout11.his.huawei.com [124.71.93.99])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F206A606A31B;
-	Thu,  5 Nov 2026 09:31:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F206A606A31B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF03C606A330;
+	Thu,  5 Nov 2026 09:31:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BF03C606A330
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggmsgout13.his.huawei.com (SkyGuard) with ESMTP id 4jKxr065GBz1rqYh;
+	by dggmsgout11.his.huawei.com (SkyGuard) with ESMTP id 4jKxr03Sjsz1c1lC;
 	Thu,  5 Nov 2026 17:30:40 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 894F040573;
+	by mail.maildlp.com (Postfix) with ESMTP id A2E7740574;
 	Thu,  5 Nov 2026 17:31:09 +0800 (CST)
 Received: from huawei.com (unknown [10.67.174.45])
-	by APP4 (Coremail) with UTF8SMTPA id gCh0CgBnnu3OTOxqcwqpDA--.46006S3;
+	by APP4 (Coremail) with UTF8SMTPA id gCh0CgBnnu3OTOxqcwqpDA--.46006S4;
 	Thu, 05 Nov 2026 17:31:09 +0800 (CST)
 From: Tengda Wu <wutengda@huaweicloud.com>
 To: Peter Zijlstra <peterz@infradead.org>
@@ -55,9 +55,9 @@ Cc: Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH v3 1/2] perf/core: Prevent duplicate sigtrap task work enqueue
-Date: Thu,  5 Nov 2026 09:30:43 +0000
-Message-Id: <ff842e802e9ecb74510a90964f8ad2c4825834b7.1793870900.git.wutengda@huaweicloud.com>
+Subject: [PATCH v3 2/2] perf/core: Disable context fast-swap for sigtrap events
+Date: Thu,  5 Nov 2026 09:30:44 +0000
+Message-Id: <f19b29b90fe1d0126fa8f5cd0e7c8d7da07e5a34.1793870900.git.wutengda@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1793870900.git.wutengda@huaweicloud.com>
 References: <cover.1793870900.git.wutengda@huaweicloud.com>
@@ -71,13 +71,13 @@ List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBnnu3OTOxqcwqpDA--.46006S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxWr15JFy8AF48XF1fGrW5GFg_yoW5Zr48pr
-	W3trn8ta1UXrnFqry5tws7Ar18Ww40qan8ArWDCa4SvF1YvF9rXay7W3WYvFW5ArnrAa43
-	Zw4j9rW7C34UXFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgBnnu3OTOxqcwqpDA--.46006S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxAw1UCFyUAryxGrW5JrykAFb_yoWrGF15pF
+	WkCrn3KrW8XF12vw15Ka1qg343Ww4rKFsrWwsag3y3Zw4Yq3saqFWUJ3WYqF45Jrn2va45
+	t3yqvrZ3C34UJaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUQI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
 	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
 	A2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1l
 	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI
@@ -88,92 +88,102 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxWr15JFy8AF48XF1fGrW5GFg_yoW5Zr48pr
 	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xII
 	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw2
 	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRiR6wJUUUUU==
+	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUUiF4tUUUUU==
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-The sigtrap handling in __perf_event_overflow() checks
-event->pending_work before calling task_work_add(), but only sets
-pending_work after the task work has been queued.
+perf_sigtrap() contains:
 
-This leaves a window where an NMI can interrupt task_work_add()
-and re-enter __perf_event_overflow() for the same event. Since
-pending_work is still zero, the nested invocation can enqueue
-the same pending_task again.
+	WARN_ON_ONCE(event->ctx->task != current)
 
-The re-entrant call path is:
+The warning assumes that an event's ctx->task always matches the task
+that ends up running the pending task_work. That assumption can be
+broken by the context fast-swap path.
 
-  __perf_event_overflow()
-    task_work_add()
-      kasan_record_aux_stack()
-        <NMI>
-          __perf_event_overflow()
-            task_work_add()
+The failure sequence is:
 
-The nested invocation can enqueue pending_task before the
-outer invocation does. When the outer invocation resumes, it
-inserts the same task_work entry again, potentially creating
-a cycle in the task work list.
+  1. A -> B switch, perf_event_context_sched_out() takes the fast path
+     and does WRITE_ONCE(ctx->task, next) / WRITE_ONCE(next_ctx->task, task).
+     An NMI then hits while the context is swapped, and
+     __perf_event_overflow() queues pending task_work on the *current*
+     task (A), even though the event now belongs to B's swapped-in
+     context view.
 
-This causes perf_pending_task() to be executed repeatedly
-and leads to unbalanced event reference counting.
+  2. B -> A switch. Because A now has pending task_work,
+     nr_no_switch_fast is non-zero, so the slow path is taken and
+     ctx->task is *not* swapped back.
 
-Use cmpxchg() to atomically claim pending_work before calling
-task_work_add(). This ensures that only one invocation can
-enqueue the pending_task, even when interrupted by an NMI.
+  3. A returns to user mode, task_work runs perf_pending_task() ->
+     perf_sigtrap(), and event->ctx->task no longer equals current,
+     tripping the WARN_ON_ONCE().
 
-If task_work_add() fails, clear the pending_work claim so that
-a subsequent overflow can retry.
+The context fast-swap path was already excluded for events that need
+stable task association (inherit + sample read). sigtrap events have
+the same requirement: the SIGTRAP is targeted at ctx->task and must not
+be delivered after ctx->task has been swapped to another task.
 
-Also use READ_ONCE() when checking pending_work in the
-exclude_kernel warning path to avoid an unsynchronized read.
+Fix this by also excluding events with attr->sigtrap from the fast-swap
+path, i.e. bump nr_no_switch_fast for sigtrap events in
+list_add_event()/list_del_event(), and update the comment describing
+the invariant accordingly.
 
 Fixes: c5d93d23a260 ("perf: Enqueue SIGTRAP always via task_work.")
 Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 ---
- kernel/events/core.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ include/linux/perf_event.h | 6 ++----
+ kernel/events/core.c       | 9 +++++++--
+ 2 files changed, 9 insertions(+), 6 deletions(-)
 
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index eb3f7bab498c..5cc0fb144e04 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1068,10 +1068,8 @@ struct perf_event_context {
+ 	 * should be avoided.
+ 	 *
+ 	 * Sum (event->pending_work + events with
+-	 *    (attr->inherit && (attr->sample_type & PERF_SAMPLE_READ)))
+-	 *
+-	 * The SIGTRAP is targeted at ctx->task, as such it won't do changing
+-	 * that until the signal is delivered.
++	 *    (attr->inherit && (attr->sample_type & PERF_SAMPLE_READ)) +
++	 *    events with attr->sigtrap)
+ 	 */
+ 	local_t				nr_no_switch_fast;
+ };
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 457d75ea7142..ee5c59158b89 100644
+index ee5c59158b89..d693a14ca50d 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -10925,16 +10925,17 @@ static int __perf_event_overflow(struct perf_event *event,
+@@ -1999,7 +1999,7 @@ list_add_event(struct perf_event *event, struct perf_event_context *ctx)
+ 		ctx->nr_user++;
+ 	if (event->attr.inherit_stat)
+ 		ctx->nr_stat++;
+-	if (has_inherit_and_sample_read(&event->attr))
++	if (has_inherit_and_sample_read(&event->attr) || event->attr.sigtrap)
+ 		local_inc(&ctx->nr_no_switch_fast);
  
- 		notify_mode = in_nmi() ? TWA_NMI_CURRENT : TWA_RESUME;
+ 	if (event->state > PERF_EVENT_STATE_OFF)
+@@ -2225,7 +2225,7 @@ list_del_event(struct perf_event *event, struct perf_event_context *ctx)
+ 		ctx->nr_user--;
+ 	if (event->attr.inherit_stat)
+ 		ctx->nr_stat--;
+-	if (has_inherit_and_sample_read(&event->attr))
++	if (has_inherit_and_sample_read(&event->attr) || event->attr.sigtrap)
+ 		local_dec(&ctx->nr_no_switch_fast);
  
--		if (!event->pending_work &&
--		    !task_work_add(current, &event->pending_task, notify_mode)) {
--			event->pending_work = pending_id;
--			local_inc(&event->ctx->nr_no_switch_fast);
--			WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
--
--			event->pending_addr = 0;
--			if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
--				event->pending_addr = data->addr;
--
-+		if (cmpxchg(&event->pending_work, 0, pending_id) == 0) {
-+			if (!task_work_add(current, &event->pending_task, notify_mode)) {
-+				local_inc(&event->ctx->nr_no_switch_fast);
-+				WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
-+
-+				event->pending_addr = 0;
-+				if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
-+					event->pending_addr = data->addr;
-+			} else {
-+				cmpxchg(&event->pending_work, pending_id, 0);
-+			}
- 		} else if (event->attr.exclude_kernel && valid_sample) {
- 			/*
- 			 * Should not be able to return to user space without
-@@ -10948,7 +10949,7 @@ static int __perf_event_overflow(struct perf_event *event,
- 			 *     To approximate progress (with false negatives),
- 			 *     check 32-bit hash of the current IP.
- 			 */
--			WARN_ON_ONCE(event->pending_work != pending_id);
-+			WARN_ON_ONCE(READ_ONCE(event->pending_work) != pending_id);
- 		}
- 	}
- 
+ 	list_del_rcu(&event->event_entry);
+@@ -3831,6 +3831,11 @@ perf_event_context_sched_out(struct task_struct *task, struct task_struct *next)
+ 				 * SAMPLE_READ events they should be switched
+ 				 * out using the slow path so that they are
+ 				 * treated as if they were distinct contexts.
++				 *
++				 * A context holding a sigtrap event must also
++				 * take the slow path, even when nothing is
++				 * pending, since the sigtrap delivery relies on
++				 * the ctx->task relation as well.
+ 				 */
+ 				raw_spin_unlock(&next_ctx->lock);
+ 				rcu_read_unlock();
 -- 
 2.34.1
 
