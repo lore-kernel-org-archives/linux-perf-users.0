@@ -1,88 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.45
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793879149;
-	b=HZXTbPclXBGqsGxH+W98Ld+pImCV/eH7oYxiXh9paL/Nd9ZkP9um2rXuIyaaYk2e4M7f
-	 SUB3EI8BSyDhAZvG2ZrJR8pHcFL88GqWCSnXIGQzZ1SZKLq8GE0SuWnyMZ5DojmjsDZbM
-	 q59oZamkkNGDXt4TMRwSShu2X1GcJxoUsEKCm22WH57WYH0a2ZV5xHY+PCaLJNMZjI9EG
-	 K+RHHXcP82JVsPX5H2EgmZWIaN73CFJ7PInkfzCkQozB/UuhTNcUeZFXzegDUQ3ZgCU9M
-	 g2laP4liPai3bmAdoQOanySEzRoMAlZHMEQyH5vivucTuYurDdwNU7xyFQBIZS5f6Mw==
+	t=1793879150;
+	b=G+ENdNOD9JJ6p0X7oc14gc2P6wSJqBXWACzqdOb/PXLgDruADKAzsC8/fubcnqfjBSWS
+	 rABb0YiVS/iibuLoeQt+hY7BElXBGglQb/8u6L8LheC7j3vpogSVkL5ziUajYomjuOTF3
+	 ex7S06ivXtVftQBCoRFuA+rtWyTxeySBjsQpTTADU0WlVGF9CzTAvViBCggu4CfbMkv2p
+	 xL3FDYnfS+Os3LaSFvdhAIxI5JWlnZeN7kDvXUvxkNuRtZYbNYjDi2EJlpiNMNWuAVWSF
+	 foXS1Fe/qHKfS8v0yGlFAQ1fBl9C/t1AVWMKc1dcpWKYiyAfz7Q1llhuW5fp7NxEJ8A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793879149;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793879150;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer;
-	bh=urrgTOdhrZbA2FGtYgxftgMNBud/Y8/6+LuWZZfe/7k=;
-	b=ZVCJTB6jHB9tQraPfOlQI7IyCLXqxf4aF2CviORW7Rmp//4/wP+DVqi2TacPjl1PoGrX
-	 JHrXfYl3fpKkH3hxK0+RYf9Lo0o5qnORY0PEN/d1QxQad///gkL9yiwl2i6sGYWJ5n/6A
-	 CX2z4OyKDGbmo/SU8dTRJK6ReSnoa2mAflbRQ/vxOfOsSlvH++ry2u+bIkM3rh+9Wu0al
-	 fUiARM57/3dUFzyMZqkccWOs/uWsUKeK541nrcUZF6hH6RSHmQtL05GOepuiJ36svqQ1I
-	 ffNzGQilPX86iFJpoX/2z93rvN00rZ40CncDyk5adIhqS5F+Ek4NTlqP1VXgseWyjgQ==
+	bh=K6SaFtQqKwsgNERxw2YHc13oEMre1Ry8xi3YCZpxsYU=;
+	b=DLx17+hCO5il1R/Q1nSjSKp61pY2XzVaTYDRnOBNqxoi+Q9oCP8rJf9cBIWbMaSBfVOd
+	 8v5tr/V5Ds1AZkgvzcz8AtooBapiN8HxsK25fkeghg24LbV+PJD99DVCjCVGp6+PjGIQb
+	 W2qcrd6anOWNORPWT3ETLQLq84OtAOnj/O8x+C4E/408P6MdEp6KDRAksPacrwE+n8bkx
+	 QzfwH9LVKezZFKQxQUU4ObTvrsWj5ljECtZdgdoXqvOJEDsY+R/MLZcgZ1tOqobl/UFCn
+	 YmsRmyb59Q2ImuhluFWRO5+P1zU5UlA+kvMmxnsnpYcYLthLLBEvm35Ji79bFBOX+PQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linaro.org;
 	spf=pass smtp.mailfrom=linaro.org;
-	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=O7G21oQn;
-	arc=none smtp.remote-ip=209.85.128.44
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=ex9MeRvg;
+	arc=none smtp.remote-ip=209.85.128.45
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98CC7606AB18
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Nov 2026 11:45:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 98CC7606AB18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACC5606AB2E
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Nov 2026 11:45:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EACC5606AB2E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=O7G21oQn
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4a5036bbac7so10754835e9.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Nov 2026 03:45:48 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=ex9MeRvg
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4a2072b9832so2949115e9.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Nov 2026 03:45:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1793879147; x=1794483947; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1793879148; x=1794483948; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=urrgTOdhrZbA2FGtYgxftgMNBud/Y8/6+LuWZZfe/7k=;
-        b=O7G21oQnj5EJzLMX33JkomM0jG8TtAWCpdbH9a5JQ9LNoAwKNVCHbeWdzvN4aqIv8o
-         e0i6mtuQjfheHG6pvcl7R7PuKXkw36xAPrRZynGhXNubC1q81XYCUwdjSzzOB4u0NXHL
-         yqQsMbTEKxAhumaEEA8MLob0jiCe6+JyP5/y0kLzQjF3U4WpN9olH+b1d/7FevyDYzWD
-         3Xs/zqsfTbDnbR7CPfq86qHpU1BJCRXYdDtqp2Td/3Oa0h2vT+HnHjtAuQE+OFFYBST7
-         CIKEARQUuRGTQ8TErl2zwuYTXN59lN5TyCB/qRm69TqfrDaJ7jzJ8nv56HfTmVDmqSNc
-         3w7g==
+        bh=K6SaFtQqKwsgNERxw2YHc13oEMre1Ry8xi3YCZpxsYU=;
+        b=ex9MeRvgxf8OthR+ykcSraFjQf2M1WOA86U2Fyr8z/S/bLhwMNSebNL2K8bhaHn9Go
+         BjkkSM0e5+zsm2UFf+xBByJOR9siue/+yqCJH9aelxgYEznoKWP3rg8CflugEMzk5h96
+         8i2GSpmycaB1kcqQXKQMAfD2XYU2eStmfOp7L+Jgr2fhiG0vioIcGaUH9ZP6rePGZB9U
+         OgEaUR2KuIuTq4Fl8Q0AgcdeE5DXUVGmadz8eGW/ndq6JY9iViPlXbDI+Igyd0KugMXO
+         YogmN7vDE4ufq2kBuv1aFznTMoLBD/g4bIPKm20fNOZWS58AMkDLrnPIUIiV+WPshWtA
+         +4lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793879147; x=1794483947;
+        d=1e100.net; s=20260707; t=1793879148; x=1794483948;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=urrgTOdhrZbA2FGtYgxftgMNBud/Y8/6+LuWZZfe/7k=;
-        b=WCbxuL+DLXXH4R+iDFiF0ghYMdgOEmjQyaBgYwgTowlaqEen7jtVjsxHsPjL71iLw6
-         B1wLdgDJsY06K5BPYfwh6hkIxa9LUCQs09/+1t7GybofQuPRTnDgA7QdQNLxU+d8RAPL
-         e07Nn+UGdA9zYPwP5nOwVfbOafuV/vaOFi23cV2fPvBQIDJscRJa1ek6/pb4cyV4TzXD
-         BjylX3MYCxMa+NioigWKw2bzd2hYVuBeYeDUma/MKYPCMSew5I9tB80Lk75is5H+U5jJ
-         M4/feRY0yYij4OWatSXWfMZZOEwjwenS53kMTU+4KabvFip7/LlJK6xmqFm7Ip5FzNe/
-         2RhA==
-X-Forwarded-Encrypted: i=1; AKwUvBymnS2YLu9KIhy7j3/NFF+pEXAWjVMsZ+qUurq9CiaKJ9xD0hOx3UrnWt4Sz/UiRQBeBOu0XlqNGgPxxuN7Jc+F@vger.kernel.org
-X-Gm-Message-State: APuU4Z9aPDVYuUQKGlDHNJEXEVZJX6gs1wIqgTPXfNLz0gYnczT96qK1
-	6g4TLmB7KGt7WYFHATBkIY2a8YDWKBreytjKUvU0zxTBV7XJRmaz+F3pSIybUFTMslA=
-X-Gm-Gg: AYBFou1ig1Oix9fJKF8+4lP81Zrpzc5DhJkS9b6KO6HBJKMPXQqw8vCukKPOGr2uF7R
-	6kiwMde8+68dvJ9oO2cCAMaqxQdQWpxWwlW8CzkzK4WV20nnFMgcu8pCfdm9YxHrqX+YiSFmBD7
-	FhG6QSIlg1Nr2f7gFyqwCmpYKqfIKAagmbXybhNzotKoiYjLeW0ueHm3GNRk7/Ced5uUPtOx2SC
-	PaJxF8NiAcV/1CUKrGlFPyRwga6XFhTcyUSTh5bSrx26oNvcbFqiqQLGbfXU9/+kWyRN4wnqk8P
-	v8CPML5ICuJik9XNvbVHko7iZFPPJhpu3ow4Zx7WhAqB+VH0nLAK6IZzzC9LO1cIZ7G2+H/hj8O
-	OOlAmnWt01cGudxd8Dfd8uHWQUHp7qZHfbIpowfOdBRNnyeoovSecaWPcbXBShMRHre/efgYeLx
-	4GdQABwDPjIZGIgIsAFhgBDskt4rNJMeKw5ssSqvB6KXgYfB6jBzYpjOb+zCBZECTxNZrfnllAb
-	FhzPcGNalM7AxVaJnTR27PWbgja+vqSGCfjIr8QnipP4sOogqEbaqzjlLG7tgjwi9g/DNqlWlA2
-	9GNrtTaYSiyqN5DY6fPvMT1WAAdf2lf0
-X-Received: by 2002:a05:600c:608d:b0:4a2:1197:1de0 with SMTP id 5b1f17b1804b1-4ac18b7dcdbmr405802955e9.19.1793879147059;
-        Thu, 05 Nov 2026 03:45:47 -0800 (PST)
+        bh=K6SaFtQqKwsgNERxw2YHc13oEMre1Ry8xi3YCZpxsYU=;
+        b=lGInsNbTQwOssg9n64x4iaJJieDA5IzyAoUOi4Bdx+rfJMcgirNx0KeeveaIuDickG
+         3Dr21tMKpxvVrg7oASXfzioVi8zLpr0HNFCC/rlMxZnKYHKFAYHTXoW+g4BqaFoE+JUg
+         +bfrOdgbghO2YaRmIHGg4MZ1BUL6x0bfhr/UHEIgKfYsN3VaWGYUsEPpnLtlOzsWc2AS
+         gMN2FKw/yMJZVW0kgk6rMw5G7ukRGUCtOeyvVT61xyrU2Q/K2LXSZQ/xUfd4Twxnsp7a
+         eFNnF1rCrbZhWURwJq+a8/rz65FnRe8SS/XEljU/lx3gaKHZYPkWm9A0BdSofbxheo4D
+         qXIQ==
+X-Forwarded-Encrypted: i=1; AKwUvBweTuUL+i8F0Ok90HzSS796DP+wFVaJ4ehP3Uwd+ADOay0HpJHk4+V+22tf4dCTRAwOqz7QeLRe7opHFXDWABXn@vger.kernel.org
+X-Gm-Message-State: APuU4Z+O2VCMRJ1S53FMPFLmKdtmdaVXg5vMKzH5ifvkMxjaw0wI2tTk
+	UZuPW2LUHOaBHF3lfwUpvNPcnbfKmHjk98lNTNfM3RC//4ExSNdkhsxZvljdnxZqano=
+X-Gm-Gg: AYBFou3QxuA4sWppBaoM8KGjhqR1jGuUCHGhFtCoOyWt6LQToyjXyEvSBqCMagPmRUW
+	ID/KMpAR/EPTfkOoJBw9s0+cbbyojjlnAmzXAGWbKJy+2WHkqzN4DZhEFlR7O/2gvPwpeyafbdp
+	wig4nLfIoQa8E/iNKsyIypnAdA81hH81q9rfww2qvYCFTqkkZOcGCcxJedNO5GKMacM03an6PDY
+	mOcRUBW58exyAXGxG+2Sv99RmQWhRy1TCQt3UBDmpt/+Ocsqz8R9T3dd9M//KwoGWdZCXrRw7am
+	ZEcI1Esm17+QDWkahUA1QHBPK/2CJpRL5p9HdwpygqhDv4SiVuFqOI5WaRsKkVMvxGalxPtBCCX
+	DUq+IIYg6EYiUPMF9Kef0Iw1X8iuxjuMiUXak3RhOwoYDyKo+RM2zWlJB0FcPo/lDw57ndyBfHM
+	qQ9LvF3N00VeQ9Hui1xdXZEOMGtYSUF1S2a1zZg1QZ6pa4ip5dTE050lOfT48o0AsxzpavstUis
+	qmhbUwdODL5rW2ohFRlzZX7KXxdV9Ecu8oBKBw4KMwzC0XOc06diLDXhh2qIC3Cll1aq4gypK3b
+	gt9jyNQVuF2jJGeck229O9GJAsJR/1iT
+X-Received: by 2002:a05:600c:e556:20b0:4a1:c6f5:2450 with SMTP id 5b1f17b1804b1-4b55e07fb14mr25741525e9.17.1793879148405;
+        Thu, 05 Nov 2026 03:45:48 -0800 (PST)
 Received: from pop-os.local ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b571f46538sm56679525e9.5.2026.11.05.03.45.45
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b571f46538sm56679525e9.5.2026.11.05.03.45.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Nov 2026 03:45:46 -0800 (PST)
+        Thu, 05 Nov 2026 03:45:48 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
-Date: Thu, 05 Nov 2026 11:45:06 +0000
-Subject: [PATCH v4 18/19] perf test: cs-etm: Test multiple per-thread
- threads
+Date: Thu, 05 Nov 2026 11:45:07 +0000
+Subject: [PATCH v4 19/19] perf test: cs-etm: Increase snapshot size
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -94,7 +93,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261105-james-cs-unformatted-per-thread-fix-v4-18-7759e0ce2449@linaro.org>
+Message-Id: <20261105-james-cs-unformatted-per-thread-fix-v4-19-7759e0ce2449@linaro.org>
 References: <20261105-james-cs-unformatted-per-thread-fix-v4-0-7759e0ce2449@linaro.org>
 In-Reply-To: <20261105-james-cs-unformatted-per-thread-fix-v4-0-7759e0ce2449@linaro.org>
 To: Leo Yan <leo.yan@linux.dev>, Adrian Hunter <adrian.hunter@intel.com>
@@ -114,104 +113,36 @@ Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
  James Clark <james.clark@linaro.org>, John Garry <john.garry@linux.dev>
 X-Mailer: b4 0.15.2
 
-Launch something that has multiple child threads, attach to it and
-make sure that all child threads are present in the samples
+AUX maps require at least two pages, so for machines with 64K pages,
+128K is the minimum.
 
-This will only work with 1:1 sinks/sources, and looking for TRBE is an
-easy way to guarantee this. In theory this could also work for ETR
-sinks, but we'd have to attempt to record and skip if that fails, which
-would make the test silently skip if the record command started failing
-on TRBE too.
-
-Tested-by: Leo Yan <leo.yan@arm.com>
-Reviewed-by: Leo Yan <leo.yan@arm.com>
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- .../perf/tests/shell/coresight/per-thread-multi.sh | 76 ++++++++++++++++++++++
- 1 file changed, 76 insertions(+)
+ tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/shell/coresight/per-thread-multi.sh b/tools/perf/tests/shell/coresight/per-thread-multi.sh
-new file mode 100755
-index 000000000000..bace76cb6a51
---- /dev/null
-+++ b/tools/perf/tests/shell/coresight/per-thread-multi.sh
-@@ -0,0 +1,76 @@
-+#!/bin/bash -e
-+# CoreSight per-thread multiple threads (exclusive)
-+
-+# SPDX-License-Identifier: GPL-2.0
-+
-+# If CoreSight is not available, skip the test
-+perf list pmu | grep -q cs_etm || exit 2
-+
-+if ! tmpdir=$(mktemp -d /tmp/perf-cs-per-thread-multi-test.XXXXXX); then
-+	echo "mktemp failed"
-+	exit 1
-+fi
-+
-+cleanup_files()
-+{
-+	if [[ $parent ]]; then
-+		kill -9 $parent
-+		wait $parent || true
-+	fi
-+	if [[ $perf ]]; then
-+		kill -9 $perf
-+		wait $perf || true
-+	fi
-+	rm -rf "$tmpdir"
-+	trap - EXIT TERM INT
-+}
-+
-+trap cleanup_files EXIT
-+trap 'cleanup_files; exit 1' TERM INT
-+
-+# Multiple --per-thread events are only supported with 1:1 sinks/sources
-+if ! ls /sys/bus/coresight/devices/trbe* > /dev/null 2>&1; then
-+	echo "No TRBE sinks, skipping"
-+	exit 2
-+fi
-+
-+# Launch 2 threads to run indefinitely
-+nthreads=2
-+perf test -w named_threads $nthreads 0 &
-+parent=$!
-+
-+# While parent still exists, wait for the 2 children to spawn
-+while kill -0 "$parent" 2>/dev/null; do
-+  threads=(/proc/"$parent"/task/*)
-+
-+  if (( ${#threads[@]} >= $(($nthreads + 1)))); then
-+    break
-+  fi
-+
-+  sleep 0.1
-+done
-+
-+echo "Recording..."
-+perf record -o "$tmpdir/data" -e cs_etm//u --per-thread -Se -m,128K --pid $parent > /dev/null 2>&1 &
-+perf=$!
-+
-+sleep 1
-+
-+kill $parent
-+wait $parent || true
-+unset parent
-+wait $perf
-+unset perf
-+
-+echo "Decoding..."
-+perf script -i "$tmpdir/data" > "$tmpdir/script" 2>/dev/null
-+
-+# Check all threads were traced and they have the correct thread name and symbol
-+for i in $(seq 1 $nthreads); do
-+	if ! grep -q "thread${i} .* named_threads_thread${i}" "$tmpdir/script"; then
-+		echo "Error: thread${i} missing" >&2
-+		exit 1
-+	fi
-+done
-+
-+exit 0
+diff --git a/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh b/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
+index 236c4160e480..404317c2b96f 100755
+--- a/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
++++ b/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
+@@ -48,7 +48,7 @@ branch_search='[[:space:]](bl|b(\.(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le|al)
+ ## Test kernel ##
+ if [ "$(id -u)" == 0 ] && [ -e /proc/kcore ]; then
+ 	echo "Testing kernel disassembly"
+-	perf record -o ${perfdata} -e cs_etm//k --kcore -Se -m,64K -- touch $file > /dev/null 2>&1
++	perf record -o ${perfdata} -e cs_etm//k --kcore -Se -m,128K -- touch $file > /dev/null 2>&1
+ 	perf script -i ${perfdata} arm-cs-trace-disasm -- \
+ 		-d --stop-sample=6 -k ${perfdata}/kcore_dir/kcore 2> /dev/null > ${file}
+ 	grep -q -E ${branch_search} ${file}
+@@ -60,7 +60,7 @@ fi
+ 
+ ## Test user ##
+ echo "Testing userspace disassembly"
+-perf record -o ${perfdata} -e cs_etm//u -Se -m,64K -- touch $file > /dev/null 2>&1
++perf record -o ${perfdata} -e cs_etm//u -Se -m,128K -- touch $file > /dev/null 2>&1
+ perf script -i ${perfdata} arm-cs-trace-disasm -- \
+ 	-d --stop-sample=6 2> /dev/null > ${file}
+ grep -q -E ${branch_search} ${file}
 
 -- 
 2.43.0
