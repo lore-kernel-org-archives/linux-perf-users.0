@@ -1,72 +1,63 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.93.99
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793870578;
-	b=hfBAtwXwXltMmTODO3Au9jYlSTpCzfPrq/Y24KOnZdBacS9lmkEeJtEStWjUBXLxBAGH
-	 TgUfukmji5fOVhjyGWGYUxVaQuD7iRNQ6V56N2FzS4a4AaL+8IvaGH5ojBYGMx+WlclN1
-	 jm3T+qTPFNKykYHDBHKZezeapRx6UuM6MqN/y3ZjgwD5oZPIo3v2ScFmOiKaHBZtVAzs5
-	 HegLGBE1buzvAVTH7q8ZSi0W6ZzNdqWLeH6MVutvfMllei7n321RFzagcDkUYiUnoKACr
-	 zgKEEesCTAnwni9EW7SziWS2PIg130k122e4eluJDcLhkYaHqNZBRPkL9CP52pZXzLA==
+	t=1793871080;
+	b=Rzi8cGCuSMOVfAR7UaSLyKGjpqIGTNFfImz7UFZozrglZYMeCw4pAsBUo9v4kOovDAGQ
+	 9okp7dyilwbq3uk8TZau6aZ8zeAUQMim8mRGAvifFYv0pXPKXnErCoqzEj1O6KfMJBUmN
+	 HtO3qQo496+m/ZuIu+Akz8nNsLDtjD7SKgst+QMPKKPQ6YsxSOhxkzT2pMJoGNJgYgf6B
+	 dUB36fP9lQwdPEspAjT82Z/rbke+gkyCC5bl3d+jsVKrzOHpNqOhC0F5M7lNnmvePONtp
+	 5rTGS6ATwNcDQXn0UEIKb0wYV/AWE/w0SrFT3ZNTg8Adx/jJCiO0yn8u0pGZMyh/xQg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793870578;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=3ADmQIxAo8HDM9v3jLMAtpR5tdAcgtAcz2GrlhHdH0M=;
-	b=EgvkeljpdyPqftFrV0EJs+Q9gs8P9KmjRETc74hY+JhJ2dQ3OKteOYucSFj2WsvxWlc+
-	 DfLvTFXl67/jzH8cnLwHY1u5zgBUtFXHoIi9YFMVn/zFlGSFC8QGpoETsjUdWbTBhwRTv
-	 IjB9Vd57fIXeJrQIbCTkABrdCi2pzWWiYuTmw3w9ezEriSzDfoXMWai9NEtZxyMv3CtcA
-	 kpGJp1jF2s3cF/2YNbm1sOGG0E/cSksbs3BBxIVjHiFJ5Q2sUpKt4tqUVBi+m+1wyjpl/
-	 sGjSzN8vGqy+kxgCejXuj9UCoQmqiOSo/U7V4kg2E0Nls0d/C2PAIgPuy7cxk6m9zsA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793871080;
+	h=DMARC-Filter:Received:Received:Received:From:To:Cc:Subject:Date:
+	 Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-CM-TRANSID:X-Coremail-Antispam:X-CM-SenderInfo;
+	bh=vdZD0y5QaPmxoC/GOogdB9j6cmFXfwnHWNZ5At60b8I=;
+	b=uQ8vkKG+eDPCd3rfVbOuDB2i8OgYYXDmWioFAkygIzsDMa8PmNVlcAewIXHnR+ju78bN
+	 uThxgr3iVPg713tbSHiW8p2AzH/tA5GFfQ0gbBrYJ8jsYfwLAKcfCd/FCszdq63ZGS7L8
+	 bjdCedPJ4Sbjj7qI5OGdSwDSJcZvEucrFKJ3yIGoEoPyIwO8TCgkEl3q9gJo3X48qaXFO
+	 DTLfsIdlAu62ba9B76EJyO7iKqgTWAF7BcvkuC6OFTcFIHqwCJd7P5PFuOHF64NqQhOW3
+	 an8Vl+F991xN7O6BKJ8ccQs6dKwnGzFxHKmRLuyIrDXC7qwfXWSIhcZuxFs+0f5a6WA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=arm.com;
-	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=WjVvJR2t;
-	arc=none smtp.remote-ip=217.140.110.172
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7EB8606D813;
-	Thu,  5 Nov 2026 09:22:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C7EB8606D813
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=WjVvJR2t
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C866E19F6;
-	Thu,  5 Nov 2026 01:22:52 -0800 (PST)
-Received: from localhost (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D05D3F628;
-	Thu,  5 Nov 2026 01:22:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1793870575; bh=3ADmQIxAo8HDM9v3jLMAtpR5tdAcgtAcz2GrlhHdH0M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WjVvJR2tAoFJSufvpND4tfqyE+S7lXAB15rdV43IYRwoa05K89GDHf2rs4DM15kCe
-	 eK6nxhLWcUYRKamtKzGFDQHr8ywB/C86Ioujk6V61bYHa93TFkNhVnnrL6U+V9o6h9
-	 00JeJ1XMwFX1sgh7mCiAKJNbQSmjj95+kxrw+MR0=
-Date: Thu, 5 Nov 2026 09:22:53 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Leo Yan <leo.yan@linux.dev>, Adrian Hunter <adrian.hunter@intel.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@arm.com>, Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
+	dmarc=none header.from=huaweicloud.com;
+	spf=pass smtp.mailfrom=huaweicloud.com;
+	arc=none smtp.remote-ip=124.71.93.99
+Received: from dggmsgout11.his.huawei.com (dggmsgout11.his.huawei.com [124.71.93.99])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF90606A32F;
+	Thu,  5 Nov 2026 09:31:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BEF90606A32F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.170])
+	by dggmsgout11.his.huawei.com (SkyGuard) with ESMTP id 4jKxr02BSYz1c1kn;
+	Thu,  5 Nov 2026 17:30:40 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 77D5A4056D;
+	Thu,  5 Nov 2026 17:31:09 +0800 (CST)
+Received: from huawei.com (unknown [10.67.174.45])
+	by APP4 (Coremail) with UTF8SMTPA id gCh0CgBnnu3OTOxqcwqpDA--.46006S2;
+	Thu, 05 Nov 2026 17:31:09 +0800 (CST)
+From: Tengda Wu <wutengda@huaweicloud.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>,
-	linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-doc@vger.kernel.org, John Garry <john.garry@linux.dev>
-Subject: Re: [PATCH v3 15/18] perf auxtrace: cs-etm: Capture wrapped snapshots
-Message-ID: <20261105092253.GO9176@e132581.arm.com>
-References: <20261102-james-cs-unformatted-per-thread-fix-v3-0-dbcb0c281b9b@linaro.org>
- <20261102-james-cs-unformatted-per-thread-fix-v3-15-dbcb0c281b9b@linaro.org>
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tengda Wu <wutengda@huaweicloud.com>
+Subject: [PATCH v3 0/2] perf/core: Fix sigtrap task_work races
+Date: Thu,  5 Nov 2026 09:30:42 +0000
+Message-Id: <cover.1793870900.git.wutengda@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -76,30 +67,61 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261102-james-cs-unformatted-per-thread-fix-v3-15-dbcb0c281b9b@linaro.org>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgBnnu3OTOxqcwqpDA--.46006S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ary5Kw1xZr15tr1rGr4xCrg_yoW8XFWDpF
+	sxurySkw48J34Iv3y3Aw48Z3yrWw4Fqa13Wrs3Kw18AF45ZF98XFW7Gr4Y9FW7Cr97tayS
+	yw4vvFWkuryj9FDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBa14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
+	8cxan2IY04v7MxkF7I0En4kS14v26r1q6r43MxkF7I0Ew4C26cxK6c8Ij28IcwCF04k20x
+	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
+	3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIx
+	AIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAI
+	cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2js
+	IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU2oGQUUUUU=
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-On Mon, Nov 02, 2026 at 12:15:29PM +0000, James Clark wrote:
+Two fixes for sigtrap task_work handling since the switch to always
+enqueue SIGTRAP via task_work.
 
-> Add auxtrace_record__monotonic_find_snapshot() and use it for Coresight.
-> A monotonic head can't be auto-detected in the default find_snapshot()
-> by checking if head > buffer size, because before the first wrap a
-> monotonic head looks the same as a wrapped one. The search would then
-> falsely detect a wrap when head is near the end of the buffer, and the
-> wrapped pointer fixup moves 'old' and 'head' a whole buffer ahead of the
-> driver's head. With a wrapped head that doesn't matter because only the
-> offset within the buffer is used, but with a monotonic head the next
-> snapshot would either save already saved data again or drop up to a
-> buffer's worth of new data.
+The warning splats and PoCs for both patches are too long to inline in
+the commit messages. They are sent as separate replies to this cover
+letter, one per patch.
 
-As mentioned, the default find_snapshot() can falsely report a wrap,
-which now prevents us from using it for the monotonic-head case.
-However, I don't think this block consolidation; I see the decision
-not to consolidate as a design preference.
+Patch 1 fixes a re-entrancy race in __perf_event_overflow(): pending_work
+was set only after task_work_add(), so an NMI could re-enter and enqueue
+the same pending_task twice, creating a cycle in the task work list and
+unbalancing the event refcount. Claim pending_work with cmpxchg() before
+enqueuing, and clear it if the enqueue fails.
 
-If an AUX driver transitions from an arbitrary head to a monotonic head
-in the future, we might still need to consolidate the find_snapshot()
-implementations.
+Patch 2 fixes a WARN_ON_ONCE() in perf_sigtrap() triggered by the context
+fast-swap path swapping ctx->task while a sigtrap event has pending task
+work. SIGTRAP is targeted at ctx->task, so exclude sigtrap events from
+fast-swap alongside inherit+sample-read events.
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
+Changelog
+=========
+v2 -> v3:
+  - v2: https://lore.kernel.org/all/20261102021355.650671-1-wutengda@huaweicloud.com/
+  - Added Patch 2 to fix WARN_ON_ONCE() in perf_sigtrap()
+v1 -> v2:
+  - v1: https://lore.kernel.org/all/20261031114520.642476-1-wutengda@huaweicloud.com/
+  - Drop the redundant event->pending_work assignment. (Sashiko)
+
+Tengda Wu (2):
+  perf/core: Prevent duplicate sigtrap task work enqueue
+  perf/core: Disable context fast-swap for sigtrap events
+
+ include/linux/perf_event.h |  6 ++----
+ kernel/events/core.c       | 30 ++++++++++++++++++------------
+ 2 files changed, 20 insertions(+), 16 deletions(-)
+
+-- 
+2.34.1
+
