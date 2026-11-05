@@ -1,72 +1,71 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=5.75.144.95
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793838698;
-	b=lDLjxPo8pCGAeg6WkZYXzuMjeY63w3X+ge0SgiUFiqp4Gphb4zEoxtu6bYmVPnvo+p8X
-	 EqKG4d+q2fboyzFg+b6cyHabq/40KIZIP0cjKjrcZMw9LWc4BXSQSobE5cUI4gXcBinL6
-	 216mf+/f1HK08coinKBC561zo0mVeqXI0luld96Oq//bJOlWnnoSjhWATSHWq2QfELZir
-	 diw+vELOpK25QazGCuRVrxjP0x7dwY8FbO71wfRGepZKdyqvrq48mbO11VxXo1wF3nLz4
-	 zpZOBa4OYe1NH30xnacBuNZ9V37QfaIRfU77c+h6vHmFTLmRIPcsRGtKtiZk57DOXFA==
+	t=1793838723;
+	b=tlDCmroinQvIsfganrWmy9ND2kJBpLWgy8AUPLDHw1FO3NegRqkCD1PUal6chSSdYSSN
+	 DGNbsJWMKlxmMlGMD6sC1enqaXYSZj8lPZ5ZBYMaEuAgbEy4Lhg7pgZYXWwjxKTdKmlP0
+	 bQWiLGiGRhaLF8mTG3zPWsnU0EOLphLENbMc/AfMfUhrxBPZlYiIphbn9OP+JvBljH6wa
+	 xTsv8jd3nCGz1yd3yCp8VAdgGtdIxFk+wtRiYoY5/OOHInXmlvZM3kV/zGeWNV5sbf3jb
+	 /o4Hyq+0agzW4mu9wdPLjfjCFpvoH7Fczf0y1BotUWX0UoRpTzj/pE+svytQdVn8u0A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793838698;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793838723;
 	h=DMARC-Filter:DKIM-Signature:DKIM-Signature:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=8j65eSSWn/EEqAi9eftH5O3y7QuS/oV1lt57acdBekE=;
-	b=v7eCO8hqw1EIL/Si42iXcrYDxItpBLp/1IOtl38KaqzSeN04b71rsFwImPDWkzF5N5MK
-	 bF6Yf2Q1gBmIDyF+uMADp1ejGzeZdyqkFUPMmwryIizk/7V0Ggv+l9H03NZ2EN25gSuur
-	 PQ/MK0VXjzT4wXwghlFuHbpEv4Iau065Kuix9R89X4ANpbBbEpjC7rHQWqxMkn87ui1NY
-	 ynsiBnO5fAKRNtutkKwY6ee2ZCPTNNCDzMNIkoBD4SP9Y44TWXxGRjrvGxf6zTQ2kL7xD
-	 ZuW+4faazq41q3syk3OsrJR0UaBa6jraVwL7I8z7+sB0T+Jz3gAD8e5S9lbI4oqjueQ==
+	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=9QjdMfvLlLiOeQ6G0kRgO30MxEk/1Cr2/haJN/67+Ks=;
+	b=UGP3a3rcSJQNUgW1E4im/qYYwkcBfCwh+Insok2LM+R6jfdeTA2RlAYWMjyyyCQU5Xon
+	 ZT3Ty0/bsk50TcQ/T6Tdn+REPyK29upEzs94WOO6/HkHg3X1wQ2pbYMU9W1nUPwJxKtz/
+	 AP8XJSimRmu4EMUrh1aLwaiUCc6ckSMXCLrdwyqf/LYA7qNOvISceecBoNdyXXEFS5Gn9
+	 V/XvwWhOUtQPioFCxfDgRLnANWPSv37hkHelThRMrU/S3yYxLq/d1dVETa9IgSg0MSoq1
+	 XM+enp6dnv4pItv/WecKLmw7zNdIQEAPQH1L2VVZ6Mse1CV2R6dG5UvLjl0ZfgLgBuQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=mainlining.org;
 	spf=pass smtp.mailfrom=mainlining.org;
-	dkim=pass header.d=mainlining.org header.i=@mainlining.org header.a=rsa-sha256 header.s=202507r header.b=F6quFPOY;
-	dkim=pass header.d=mainlining.org header.i=@mainlining.org header.a=ed25519-sha256 header.s=202507e header.b=nAPQuaMr;
+	dkim=pass header.d=mainlining.org header.i=@mainlining.org header.a=rsa-sha256 header.s=202507r header.b="Oo/uU/Km";
+	dkim=pass header.d=mainlining.org header.i=@mainlining.org header.a=ed25519-sha256 header.s=202507e header.b=6dcQwJPH;
 	arc=none smtp.remote-ip=5.75.144.95
 Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86864606A31B;
-	Thu,  5 Nov 2026 00:31:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 86864606A31B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1FE606A329;
+	Thu,  5 Nov 2026 00:32:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BE1FE606A329
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=mainlining.org header.i=@mainlining.org header.a=rsa-sha256 header.s=202507r header.b=F6quFPOY;
-	dkim=pass header.d=mainlining.org header.i=@mainlining.org header.a=ed25519-sha256 header.s=202507e header.b=nAPQuaMr
+	dkim=pass (2048-bit key, unprotected) header.d=mainlining.org header.i=@mainlining.org header.a=rsa-sha256 header.s=202507r header.b=Oo/uU/Km;
+	dkim=pass header.d=mainlining.org header.i=@mainlining.org header.a=ed25519-sha256 header.s=202507e header.b=6dcQwJPH
 DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Date:Subject:To:From; t=1793838693; bh=8j65eSSWn/EEqAi9eftH5O3
-	y7QuS/oV1lt57acdBekE=; b=F6quFPOYgfpIEHNwXIAv7EbTgIGkx/EhWJ+CVooTahsQrT4e7Y
-	Zpf1MVkx9VomEWmlOdclH39WrU29FzTEuEJYaa1LKC5c1VfkH1tkVNZj80BeLsTIqpcq3+CqsjS
-	fKu4QfNpU1gnramo9PjL0EWg+heXas43SaBHeC2hpYGlzASDnsWs73/rXKZ8uiWpaU0ohbZ7DAy
-	jv/TchnkA/atMuLdNe9xvqMhniQUyaTQkro2U8IZ6C79/GPPFTgfdYQbXc0f6VbR6KtJRjcgIGz
-	EwKOnWYKNzgf+B8M4ZEQiY3Owzm4ST9JmYw4hrkC6g4iXb9icgMjyW5QnqnXaUGtqcA==;
+	h=Message-ID:Date:Subject:To:From; t=1793838691; bh=9QjdMfvLlLiOeQ6G0kRgO30
+	MxEk/1Cr2/haJN/67+Ks=; b=Oo/uU/KmQ4qfZolgBEcPDrZ8eOgNSf2QIUXTSl8ac94InI8gDy
+	3UYAlpJyCAcguGl+FG82Ik0IsJy5W4ZvQTIs6rv7mGp4SgGdAcPOKAcQ99/J3Ekip8Tc9R+k+vw
+	EDQYa676YBMI2aOJS78AYn3gZ6hPDs+E8ukx5M7KlC0qWgXd+IAFv8xEAq1Cq/azOhtcvpUQOu2
+	jjpLA6Zjfd3VaTAZkG2GqdJhRjhvBnZhnCzklzPnn87kTkcvexzmAIAsAXws63LmYRFyGxmHcXB
+	nZ44KYQOlVh8XsZU/h4u8DTFNCYEeKN3wVSNLrmqijA1v0lB+fSKNNP/rvrwa2GlY9w==;
 DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
-	h=Message-ID:Date:Subject:To:From; t=1793838693; bh=8j65eSSWn/EEqAi9eftH5O3
-	y7QuS/oV1lt57acdBekE=; b=nAPQuaMrtuY5u/oY9kCy2chF7LLq31y7s/BrQtB6v1O/ENxFjT
-	A2N2R59+fNfvDZwiijAlXaybdwm7WlVLiDBA==;
+	h=Message-ID:Date:Subject:To:From; t=1793838691; bh=9QjdMfvLlLiOeQ6G0kRgO30
+	MxEk/1Cr2/haJN/67+Ks=; b=6dcQwJPH+Vel4mzfDL72b7VJgtdSJS1llPs3pu2VXFUGGhQvEd
+	4zjhV6w50MTVgAzAAtq2sOVaUbdx0TTmWODg==;
 From: Bradley Morgan <brads@mainlining.org>
 To: Thomas Gleixner <tglx@kernel.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
+	Namhyung Kim <namhyung@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
 Cc: Bradley Morgan <brads@mainlining.org>,
 	Darren Hart <dvhart@infradead.org>,
 	Davidlohr Bueso <dave@stgolabs.net>,
 	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
 	Shuah Khan <shuah@kernel.org>,
 	Wake Liu <wakel@google.com>,
+	Arnd Bergmann <arnd@arndb.de>,
 	linux-perf-users@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] tools: pass the unused prctl() args explicitly for PR_FUTEX_HASH
-Date: Thu,  5 Nov 2026 00:31:27 +0000
-Message-ID: <20261105003129.3130709-2-brads@mainlining.org>
+Subject: [PATCH 0/3] two small fixes out of kernel/sys.c
+Date: Thu,  5 Nov 2026 00:31:26 +0000
+Message-ID: <20261105003129.3130709-1-brads@mainlining.org>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261105003129.3130709-1-brads@mainlining.org>
-References: <20261105003129.3130709-1-brads@mainlining.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -78,63 +77,37 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-prctl() is declared variadic in sys/prctl.h, so an argument the caller
-leaves out of the call is whatever that register happens to hold.
-Neither file passes all five.  The two SET_SLOTS calls leave arg5 out
-and the two GET_SLOTS calls leave arg3, arg4 and arg5 out, so those are
-whatever the registers hold.  The kernel does not look at them today so
-it works, but it works by luck.  I checked that against a running
-kernel, garbage in arg5 on SET_SLOTS and in all three on GET_SLOTS are
-accepted.
+Two unrelated things that came out of reading kernel/sys.c line by line.
+They are in one series only because they came from the same read, patch 3
+stands on its own and can be taken without the other two.
 
-Pass the zeros.  No functional change.
+Patches 1 and 2 have to go in that order.  PR_FUTEX_HASH is the only case
+in the prctl switch that does not check the args it does not use, arg5
+does not even reach futex_hash_prctl().  Patch 2 adds the checks.  Patch 1
+goes first because prctl() is variadic, so the two callers under tools/
+leave the args they do not pass as whatever those registers hold, and
+patch 2 would fail them at random without it.
 
-Signed-off-by: Bradley Morgan <brads@mainlining.org>
----
- tools/perf/bench/futex.c                                   | 4 ++--
- tools/testing/selftests/futex/functional/futex_priv_hash.c | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+Patch 3 is compat_sysinfo().  It scales the 64 bit memory values down so
+they fit the 32 bit fields, and stops when the unit reaches PAGE_SIZE.
+But do_sysinfo() hands it bytes with mem_unit at 1, so on a box with
+enough ram it stops far too early and drops the high bits.  16 TiB reads
+back as 0 and 17 TiB reads back as 1 TiB.  The loop only runs longer on
+the path that was already wrong, nothing that works today changes.
 
-diff --git a/tools/perf/bench/futex.c b/tools/perf/bench/futex.c
-index 1968c9d00b5bb..f4c1c30efe0bd 100644
---- a/tools/perf/bench/futex.c
-+++ b/tools/perf/bench/futex.c
-@@ -20,7 +20,7 @@ void futex_set_nbuckets_param(struct bench_futex_parameters *params)
- 	if (params->nbuckets < 0)
- 		return;
- 
--	ret = prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, params->nbuckets, 0);
-+	ret = prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, params->nbuckets, 0, 0);
- 	if (ret) {
- 		printf("Requesting %d hash buckets failed: %d/%m\n",
- 		       params->nbuckets, ret);
-@@ -33,7 +33,7 @@ void futex_print_nbuckets(struct bench_futex_parameters *params)
- 	char *futex_hash_mode;
- 	int ret;
- 
--	ret = prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_SLOTS);
-+	ret = prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_SLOTS, 0, 0, 0);
- 	if (params->nbuckets >= 0) {
- 		if (ret != params->nbuckets) {
- 			if (ret < 0) {
-diff --git a/tools/testing/selftests/futex/functional/futex_priv_hash.c b/tools/testing/selftests/futex/functional/futex_priv_hash.c
-index a8742e2045402..96bfb72362221 100644
---- a/tools/testing/selftests/futex/functional/futex_priv_hash.c
-+++ b/tools/testing/selftests/futex/functional/futex_priv_hash.c
-@@ -32,12 +32,12 @@ static int counter;
- 
- static int futex_hash_slots_set(unsigned int slots)
- {
--	return prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, slots, 0);
-+	return prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, slots, 0, 0);
- }
- 
- static int futex_hash_slots_get(void)
- {
--	return prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_SLOTS);
-+	return prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_SLOTS, 0, 0, 0);
- }
- 
- static void futex_hash_slots_set_verify(struct __test_metadata *_metadata, int slots)
+Tested on ppc64.
+
+Bradley Morgan (3):
+  tools: pass the unused prctl() args explicitly for PR_FUTEX_HASH
+  futex: reject the unused PR_FUTEX_HASH arguments
+  compat: make compat_sysinfo() scale far enough to actually fit
+
+ include/linux/futex.h                         |  6 ++--
+ kernel/futex/core.c                           |  7 +++--
+ kernel/sys.c                                  | 28 +++++++++----------
+ tools/perf/bench/futex.c                      |  4 +--
+ .../futex/functional/futex_priv_hash.c        |  4 +--
+ 5 files changed, 26 insertions(+), 23 deletions(-)
+
 -- 
 2.53.0
