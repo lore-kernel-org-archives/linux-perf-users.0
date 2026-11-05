@@ -1,72 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793879779;
-	b=nwFnL0Cj8WCoKyDI2v13wBqAtUnoEfAMfD40xnEqcb+CtDlg8N+OtbmtTvm109Z8Ef2n
-	 u3rLTFwM2ZFTDvXA2Z3ToBtVMrVbC0RYqWfZUWPUiKEODGySBovM/K0e9MME1nUcR9kqu
-	 2VSgUznMIzyPIXfhbKv2cszvA566dnnDKdSmH5E2+i42fhtmO56pskZkO9MkrmJwJGm9E
-	 piZR1R7nlZzVtYp4sE0fn9qXgcv17Jud+q/3Udj9O98OJoN6gZZ1CDMiyN/cptnVQQOhq
-	 0KK6E4/CKpBYdilNOB0l5C3n+VkaFaMG0FO5bPTbKjSTQ6qmmYNjIlNMLAFZL3cBfBw==
+	t=1793880059;
+	b=qfEuH6D9VaWqnMpfJK0qrtXRwxayG3mZw7AK3K69vaZ/Ml3S5hXB8fN/b6KS6W4QGER4
+	 48R1oNrUqYWMBRb2MyFZJ1N6U6PssQVCjE92MPRPd0djMTGzUsyXpgtCshdgQe3PtdzU+
+	 KKVa2ssvmz5BzVRoAGckWFXxQcio5mDUGe6nkd4zTt/gzsG+LqbHQsqLoZhcUFKrjWEEP
+	 V0m74rVxjg2Jic7unltbzRfPTqZLCj5EEuZbMvFya5pV8WMG9X9Pja8C+2EZiAgbXBnhw
+	 nq5z98B6FumpU9bCMyuiTy2MtazF6iLmYuezyJJbwEsCSqhvJvI4XffA8PcwgiQ/7Aw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793879779;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=EolUrwZQiSAM3PJ9+udGnUgOcc9Wxy4cF8sTcB/x8RU=;
-	b=ZTfl6RenexlRewTnkvM5u1GFOWcl52Q3Wz2CbcRPuzbzTqIWDGMwshwxj31LwyooiJpO
-	 I8fWFezUPl6umHztxd7U1O4yqaul4JZYyM3KoimnjbLb/KIUOa71YqLaRC9V/AEhJAC9y
-	 m8/3B8M+UUS5M5A5Deoub4Ps2hUDk4PCKWuNGqoHAjkmeggMWB5Y292FokJl9jM9xpzHG
-	 /vc9aVCwm8eAArD1n72KCmA+/9rKY0ynfpj6oce/+GppJx8ULkWhx5aw5vQycczmcshBO
-	 8pIf1j0Ja5e+BUWfKqQxdyhBRGEcK1o20Hu2vmdG7z6/18oCRwGJsVN1SkVQqN/IVRw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793880059;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=7igIsH72x0F828QY4DPwOKmD+bbx2OMmOR2auTO0JnY=;
+	b=R4IKiPE++s/6WeqXmHtd7tYzA7fLoB9G7/0u7Hg9TZzcguMsMPW5gp/aKZxEMGI1aoPf
+	 7EWAPMVU6MxE719RZSdRvnzrQVhjFtyqOi1YZJsXIO76Nho69Oz86H/5SyPE4BXuyWvjG
+	 4lOWYK84VrFyOu5lJ4fKqqD6b4HpyWJvlA33Oav1QsRIbpfwfrsA2qt3RI4seNnl+EFp/
+	 kqK+sKhu/EBgg2+3xUTGmjZ0GhmA2QCANCoEU04yyykNUtws+RW1i+rzJ8XDyaMLQez4h
+	 205gcpNEvzA8H6dekXs4ih41/trKJlgMFb71ddd4Wrqr996u3MXgZk1XgYCVDa4PeLw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=arm.com;
-	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=kvWm3ELs;
-	arc=none smtp.remote-ip=217.140.110.172
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F23D2606A31B;
-	Thu,  5 Nov 2026 11:56:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F23D2606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=baeDJKMQ;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47328606A31B
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Nov 2026 12:00:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=kvWm3ELs
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2818419F6;
-	Thu,  5 Nov 2026 03:56:14 -0800 (PST)
-Received: from localhost (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9F0E3F628;
-	Thu,  5 Nov 2026 03:56:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1793879777; bh=uUU6WeGNbp8M9D1RIW4g77izG8IRnf63cU3yGo6J/dk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kvWm3ELsUjqKVzgkvpVtDptptSL4Njbe3RH8DGaRRtTXzqka5gd1HBJYbMtiX/K3o
-	 PztZdmeNuezuXoUYnyvcj/TbSJ0RGqeAR6gawSmV0f17+CDWwgfXKb5pgpc+7VObw3
-	 S4c3wtZ9Xx3hjxqN4IYHBija3RB4SMUiBZ/xTr5Y=
-Date: Thu, 5 Nov 2026 11:56:14 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Leo Yan <leo.yan@linux.dev>, Adrian Hunter <adrian.hunter@intel.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@arm.com>, Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>,
-	linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-doc@vger.kernel.org, John Garry <john.garry@linux.dev>
-Subject: Re: [PATCH v4 19/19] perf test: cs-etm: Increase snapshot size
-Message-ID: <20261105115614.GU9176@e132581.arm.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=baeDJKMQ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4F091F00A02;
+	Thu,  5 Nov 2026 12:00:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793880058;
+	bh=7igIsH72x0F828QY4DPwOKmD+bbx2OMmOR2auTO0JnY=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=baeDJKMQKSpyufz40m+nLFWuK0Kz6ixHI8Qqwg3DTfwTwDrXwqChuC78umiBQuvTM
+	 os5MZj/HfopehuAL9GHJDh5eJ+U3RIWan/lJXQa2gM/SrKo8tgBiGDrCxIw4+8fOuS
+	 /Zx3aWzc6ocDsdArjTGwRPTGCzNXD3wrYndzyh8V7u7J7UfbvpPQ07BG2CgTxARgHy
+	 Fm3s69jI/aeNgqlsMHQ4Y3FXf0txiFrljGrdpwctz6naJIVI+NGNtZw3SL0BAsh0sC
+	 K8MsyMlFrjnhHIKFi7/9WtjB/IQi+v1P5U63LlhfqrF54NF+7Nj7W5kjMbznklviL+
+	 I1sCsQtx5fk1A==
+Message-ID: <sashiko-outbox-198980@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4 01/19] perf cs-etm: Fix nVHE per-thread decoding
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "James Clark" <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261105-james-cs-unformatted-per-thread-fix-v4-1-7759e0ce2449@linaro.org>
 References: <20261105-james-cs-unformatted-per-thread-fix-v4-0-7759e0ce2449@linaro.org>
- <20261105-james-cs-unformatted-per-thread-fix-v4-19-7759e0ce2449@linaro.org>
+ <20261105-james-cs-unformatted-per-thread-fix-v4-1-7759e0ce2449@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 05 Nov 2026 12:00:58 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -75,15 +59,25 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261105-james-cs-unformatted-per-thread-fix-v4-19-7759e0ce2449@linaro.org>
 
-On Thu, Nov 05, 2026 at 11:45:07AM +0000, James Clark wrote:
-> AUX maps require at least two pages, so for machines with 64K pages,
-> 128K is the minimum.
-> 
+> pid_fmt is unset in per-thread mode because we don't need PIDs, so we
+> can't use it as a hint to determine which EL the host is running at.
+> That results in falling though to the next part where EL1 is treated as
+> guest, which is wrong for nVHE.
+>=20
+> Fix it by only returning a guest machine when run from perf kvm where a
+> guest image would be provided, which matches existing behavior in other
+> parts of Perf. The exception is when pid_fmt shows that the host is
+> running at EL2 (VHE). Then EL1 is always a guest, so keep using the guest
+> machine rather than decoding guest trace with the host kernel maps.
+>=20
+> Reviewed-by: Leo Yan <leo.yan@arm.com>
+> Tested-by: Leo Yan <leo.yan@arm.com>
 > Signed-off-by: James Clark <james.clark@linaro.org>
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
+Sashiko has reviewed this patch and found no issues.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105-james-cs-u=
+nformatted-per-thread-fix-v4-0-7759e0ce2449@linaro.org?part=3D1
+
