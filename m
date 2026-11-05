@@ -1,57 +1,66 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793903439;
-	b=iO3JA1uO4vhUq2M4PXZiNUroKgUZBhlp3JXAXakDJjVeX4bl/QhV5Q/YmfkYIyjqUioO
-	 BWOJUtNhc8ljFUE8+nsROsGuvDCF5Lk0G8R/ZnqwDLpkQS3vuLVeC1l8+UxKuoWfXte2W
-	 UeUN8wX9NMjtDQaxp76dKyMLF8jwr8oUBzXCaPG105BfsaVow/eWZLvXUfwZCJXGWAypZ
-	 R092/NsxwC1S9GmIL3yrUR+hQ5pyHuLT+mHX7Y54fTntfS+NGEQTB2eZYJO32i0BtsBAo
-	 txMU2cPSXc6rGi0Sj+MV8vd1Mp2ckZHR1HWe2vraAjHoclbTc9P7jQrG5TWP/J8NISA==
+	t=1793903456;
+	b=xPSeb+DdYPo0XekIS3ONJ90ssOC3DgSi8T1307nICRBwJcmpiOt9L9qraYikGdE8CTuS
+	 9QZdcPmWyJAi3sSqQ9dpLAt/p6f0fmvVdPbbcsAFPegeFey4JdwPNBc+wEjnJ0qwZCGO0
+	 LUb5xj63vkkUkYYcHSL/ZaUz/iaU6ElmSkIuoMEl1SvJtwilKZcwDdFcEF3zqdDgdzAtB
+	 /TtOeDe8uFXzHrSG69AbAg+1vJs6lu0HApeBO4agf0eYtXv6XHuhIdKyQhrrCmlkjItR7
+	 DKPpZgp1zJxIllF7kgrc8Si9m9TQevB+5g1+1o0sUDpXGIIpJO6ZMc9SXYXyDfOtqtw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793903439;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793903456;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=x5d6SYBlXjZlRzlSv5xfu+3xXLsafmzIHR4sM7t1anw=;
-	b=VVi41lGkXdLO2pJ1OWPhSkJ2Ps9gO+1bi839qK0fSybfow86Scu5f1a9XqFCm2GPQycZ
-	 ACFKXjdwtJEuTPEtJmFVs1fROkGVDjEDzuNMt1qWfPeQenoIcs1anGJxjGOvjRGkBKlYo
-	 IFO/A0wS+F6XAKI9wgg+5AKZAGKvKLZSSCOh+OA9ydmtukF2XUX3jTAfNGJCrxD4Oucdm
-	 F4h8MPr9aTtag2GngpdBELv2ioEDsxiariQ3A++jRsPwWugIHI7DB6/ldYSEGOBrZXvl1
-	 j6eSnRRV0MWQdczAYS/Rz1ChejVfns20EyGYCDz+fam29MWLW8GY7E0Vol6ipuR6CxQ==
+	bh=vVhpqikISQXl5pJb/RMvkCOgXacVq/CG6zfA+mX4EdI=;
+	b=MKfR6z6DPxlbxLdMRh7+SJS4uNyxQMrD2veYT49P/DPqZvOqsOdY5prq7k0lMYlQKlWb
+	 HVIeMXRTixexpn/pWvaDuXV8WRp+7a89EcxiGazcT28ak3WfvnYlaVQDJ38WeSf67Eg2O
+	 kXKR7XwzIkLFNRLdT/e13bgRtplK61BtJHcDerFhANqj4BvXu7F0ZwsFnDc4j/0l7TRni
+	 ZP92RBganh+pRQuX+Flk7fLBpWW3wQNGLRurYl/X9kM+XWYoQleweCJzlrWUbKzSdHCeY
+	 BG5hnzvh3DqKEGw4kj/DWzl1pB4irA+/tTp8vya2/fuvMI0cpUx3AnlHgGg8GelVgsQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bDYNjIbU;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OHgocqGD;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47493606A328
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Nov 2026 18:30:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF29606A31B;
+	Thu,  5 Nov 2026 18:30:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bDYNjIbU
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE61A1F000C1;
-	Thu,  5 Nov 2026 18:30:38 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OHgocqGD
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DE131F00919;
+	Thu,  5 Nov 2026 18:30:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793903438;
-	bh=x5d6SYBlXjZlRzlSv5xfu+3xXLsafmzIHR4sM7t1anw=;
+	s=k20260515; t=1793903455;
+	bh=vVhpqikISQXl5pJb/RMvkCOgXacVq/CG6zfA+mX4EdI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bDYNjIbURgAzk6ooB71aXEd0rDKcP9fvOuj6B78AGAaTzeRxQETNZ7NBvk92edONO
-	 AwvllGHStIj3jbUO0uli5YgTDU/5n2VgPE2+GeX1lGsT7yBD8J5ZcvjC3RaJ0Cz/rm
-	 ccTa1sthODbGnv6U1KbtijIJb2GAYkvX8YGnMb/rNqPZ1kGCaVyhEcq8JKLctl3CsE
-	 nShOzyq5viLO7EqSL97wl/bodpMG+Pg62kRVPxnyUiOeVt3SABnepp1lrBe0ZWL5XA
-	 VjQAgVAhBOCJqmMN3igSgGhlDGU3wj0BDTzQPz6Y/SJdEffrBk4TJJz790j57NK4Hi
-	 qmv9whv9+S9Bg==
-Message-ID: <sashiko-outbox-199769@kernel.org>
+	b=OHgocqGDGRb8X8llMMX+/obt5mn+TIQkaootouwpOT8AKwsOqREQhF5evvxrJJxkg
+	 cMVjipvlZRKT3M7qHBghFvP7BKkVLQN/PrXfdyH8608AR0HIufxgwv5R/byPRC6HRF
+	 wxGFWoaXyESbrtU3YucIdyjj+NxCnN0JVrn4L65pCl5gD819bMcCgfRayulppq9q2J
+	 HD1Z/+iKPjh8kV0TkTiZViaDEJgm8RgUsmk8TlYSpMtAwjpkrrTnxRanqcaaSs+rtB
+	 osNnKpyaUYzekrI4xrBzf/qj8NaI4B/1MAVR0mLFHGD0nhN/AddKJpKRJmiuhmaaBS
+	 317arvw1Mddag==
+Message-ID: <sashiko-outbox-199770@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 3/3] perf annotate: Resolve C++ virtual function
- calls in x86 insn tracking
+Subject: Re: [RFC PATCH v3 1/3] tools build: Add Rust library build
+ infrastructure and zlib-rs feature test
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Yanbo Zhao" <yzhao62@ncsu.edu>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261105181949.43198-4-yzhao62@ncsu.edu>
-References: <20261105181949.43198-1-yzhao62@ncsu.edu>
- <20261105181949.43198-4-yzhao62@ncsu.edu>
+To: "Ian Rogers" <irogers@google.com>, "Peter Zijlstra" <peterz@infradead.org>, "Ingo
+ Molnar" <mingo@redhat.com>, "Arnaldo Carvalho de Melo" <acme@kernel.org>, "Namhyung
+ Kim" <namhyung@kernel.org>, "Jiri Olsa" <jolsa@kernel.org>, "Adrian Hunter" <adrian.hunter@intel.com>, "Quentin
+ Monnet" <qmo@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Nathan
+ Chancellor" <nathan@kernel.org>, "Nicolas Schier" <nsc@kernel.org>
+Cc: "Boqun Feng" <boqun@kernel.org>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?b?QmrDtnJuIFJveSBCYXJvbg==?= <bjorn3_gh@protonmail.com>, "Benno
+ Lossin" <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice
+ Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
+ Krummrich" <dakr@kernel.org>, "Nick Desaulniers" <ndesaulniers@google.com>, "Bill
+ Wendling" <morbo@google.com>, "Justin Stitt" <justinstitt@google.com>, linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, linux-kbuild@vger.kernel.org
+In-Reply-To: <20261105180923.3441359-2-irogers@google.com>
+References: <20261105180923.3441359-1-irogers@google.com>
+ <20261105180923.3441359-2-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 05 Nov 2026 18:30:38 +0000
+Date: Thu, 05 Nov 2026 18:30:53 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,31 +70,95 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> A C++ virtual function call is an indirect call through the vtable.
-> The instruction tracking of the data type profiling cannot resolve the
-> callee name for it, so the return type is lost and the type of the
-> register holding the returned value is unknown after the call.  It
-> matters when the returned value is used directly to access memory, like
-> in 'p->next()->val', where no DWARF variable describes the temporary.
->=20
-> The vtable pointer and the slot index are known statically from the
-> type of the object pointer, so the callee can be found by DWARF.  Track
-> the two steps of a virtual call in update_insn_state_x86():
->=20
-> 1. Loading the vtable pointer from the object.  When a load from a
->    register with a pointer type hits the '_vptr' member of the class
->    (or one of its base classes), the destination register is marked as
->    TSR_KIND_VTABLE_PTR with the class DIE returned by
-> [ ... ]
->   1260:  addq  $1, %rbx
->   1264:  callq *%rax
->   1266:  addq  8(%rax), %r12     # data-type: struct Node +0x8 (val)
->=20
-> Signed-off-by: Yanbo Zhao <yzhao62@ncsu.edu>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] tools build: feature_check_code passes CLANG_CROSS_FLAGS to g++ =
+in CXXFLAGS
+--
 
-Sashiko has reviewed this patch and found no issues.
+commit b53b88b2adbac2b7788068d159976b5144e79923
+Author: Ian Rogers <irogers@google.com>
+
+tools build: Add Rust library build infrastructure and zlib-rs feature test
+
+This commit adds shared Rust library build and feature detection rules under
+tools/build/Makefile.rust, along with cross-compilation target mappings and=
+ a
+feature test for zlib-rs.
+
+> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+> index 4d37d11f674c5..ecf27626d493e 100644
+> --- a/tools/build/Makefile.feature
+> +++ b/tools/build/Makefile.feature
+> @@ -5,10 +5,11 @@ ifneq ($(OUTPUT),)
+>    OUTPUT_FEATURES =3D $(OUTPUT)feature/
+>    $(shell mkdir -p $(OUTPUT_FEATURES))
+>  endif
+> +RUST_OUTPUT ?=3D $(abspath $(or $(OUTPUT),$(CURDIR)))/
+> =20
+>  feature_check =3D $(eval $(feature_check_code))
+>  define feature_check_code
+> -  feature-$(1) :=3D $(shell $(MAKE) OUTPUT=3D$(OUTPUT_FEATURES) CC=3D"$(=
+CC)" CXX=3D"$(CXX)" CFLAGS=3D"$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))"=
+ CXXFLAGS=3D"$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS=3D"$=
+(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURE=
+S)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
+> +  feature-$(1) :=3D $(shell $(MAKE) OUTPUT=3D$(OUTPUT_FEATURES) RUST_OUT=
+PUT=3D"$(RUST_OUTPUT)" CC=3D"$(CC)" CXX=3D"$(CXX)" CARGO=3D"$(CARGO)" RUSTC=
+=3D"$(RUSTC)" $(if $(PKG_CONFIG),PKG_CONFIG=3D"$(PKG_CONFIG)") CFLAGS=3D"$(=
+CLANG_CROSS_FLAGS) $(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS=
+=3D"$(CLANG_CROSS_FLAGS) $(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" =
+RUST_FLAGS=3D"$(RUST_FLAGS)" LDFLAGS=3D"$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-=
+$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/nu=
+ll && echo 1 || echo 0)
+>  endef
+
+[Severity: Medium]
+Does prepending $(CLANG_CROSS_FLAGS) to CXXFLAGS in feature_check_code break
+C++ feature detection (such as cxa-demangle, llvm, and llvm-perf) when
+cross-compiling with CC=3Dclang and the default CXX=3D$(CROSS_COMPILE)g++?
+
+In tools/scripts/Makefile.include, CLANG_CROSS_FLAGS is populated whenever
+CC_NO_CLANG is 0 and CROSS_COMPILE is set, and is only appended to CFLAGS a=
+nd
+AFLAGS while CXX defaults to $(CROSS_COMPILE)g++ (unless LLVM is set or CXX=
+ is
+explicitly overridden):
+
+tools/scripts/Makefile.include:
+    $(call allow-override,CC,$(CROSS_COMPILE)gcc)
+    ...
+    $(call allow-override,CXX,$(CROSS_COMPILE)g++)
+    ...
+    CLANG_CROSS_FLAGS :=3D --target=3D$(CLANG_TARGET)
+    GCC_TOOLCHAIN_DIR :=3D $(dir $(shell which $(CROSS_COMPILE)gcc 2>/dev/n=
+ull))
+    ifneq ($(GCC_TOOLCHAIN_DIR),)
+    CLANG_CROSS_FLAGS +=3D --prefix=3D$(GCC_TOOLCHAIN_DIR)$(notdir $(CROSS_=
+COMPILE))
+    CLANG_CROSS_FLAGS +=3D --sysroot=3D$(shell $(CROSS_COMPILE)gcc -print-s=
+ysroot)
+    CLANG_CROSS_FLAGS +=3D --gcc-toolchain=3D$(realpath $(GCC_TOOLCHAIN_DIR=
+)/..)
+    endif # GCC_TOOLCHAIN_DIR
+    endif # CLANG_CROSS_FLAGS
+    CFLAGS +=3D $(CLANG_CROSS_FLAGS)
+    AFLAGS +=3D $(CLANG_CROSS_FLAGS)
+
+As noted in tools/perf/Makefile.config (commit c8592f8da838 ("perf build: F=
+ix
+CXX clang flag injection when only CC=3Dclang is set")), CC being clang doe=
+s not
+imply CXX is clang++. When $(CROSS_COMPILE)g++ is invoked for a C++ feature
+check via $(BUILDXX), it rejects Clang-only flags in CLANG_CROSS_FLAGS such=
+ as
+--target=3D... and --gcc-toolchain=3D..., causing the feature check to fail.
+
+Also, this change to CFLAGS and CXXFLAGS in tools/build/Makefile.feature is
+not mentioned in the commit message. Should CLANG_CROSS_FLAGS only be passed
+in CXXFLAGS when CXX is actually clang++, or is this change intended for a
+separate patch?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105181949.4319=
-8-1-yzhao62@ncsu.edu?part=3D3
-
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105180923.3441=
+359-1-irogers@google.com?part=3D1
