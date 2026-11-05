@@ -1,63 +1,59 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793855271;
-	b=ZA7gTluHTdFpEpbZbAPlTReR7j2gKDmQE1NC4XiycuhSaBmgLmjSb9z+DNtwid3D2j5V
-	 N2O/D1pJHhMOfcombBGwos8ccSJw3xjDKqAq1sq4BvXoVLUWSJUO2b1jL3sfcrPXzDcOy
-	 G/sqUcgMHc3SrVkYr8L1TbcThgpD47MuBK+NrUwBhjNQI9mK5Ylsb1yf2I5mdGXtc8n1k
-	 5e8i5odothaF+Mu6zwIqbT79nim1A+/C1Wi9zWMgRPxU2ZlPPJuD+uU79dVD92nP/ByaG
-	 8U2Tt0Dw6g7ZelXHU8gV2KXCRFrSn4BLQlILzWeC4fE3plPsAe2iKpYxt3Xfg1p7LSg==
+	t=1793855561;
+	b=of+q2251YrTsJ5cAz1OLuo4sVdkoBYhN1s9Z49dALmcdCC1Y1uJjayNRr3Jqad/ayYuf
+	 VB9+Llq0baMEUkdPZxDFzWPEfL+BI8RyfrMbCMoT939RlIKweZj6XNYhu7l7bGmu8i3SS
+	 hT6Grag5kHDUgcHaSLvkfhJWCS0TrharGsb78IcudjOB6/hRXqe7wtjbMT5QjSSSZ2CIJ
+	 0uPcKu4CYEOBDQXACqBl7sLgBUWSo9SZUS6FuT8KU5eLlm9HekPKMot8RuiYPzqlusebx
+	 13QVTpczx/zGi9y6O8ZqaOBYwL2VbnsfTBe/3VeL83A79js+VHjMi3y3x6bJXahXpqw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793855271;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793855561;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=Yi6Q0LLSA53/Cz2aURPcplC/4LZHDSvLW4Z3o4uHodg=;
-	b=svs5E2EKuxA0uXHr8Mi14N7HcqMxCjCCjE+5uySazvSD0vE33m4K7j9Jy3mcCnPCV+5G
-	 +ExalP3u/5QvleffpBfir+xIz8KHmZ8hBeBZaMRHFCCskE4osuLlTP14498USh1qfXLDv
-	 pJ6RDcvgDDeqF5ZjjxBFzTUrbzqsXkf0V+mzkHWHNiq3I602MuiFgnHvco4MpoUNmyw6z
-	 l7O7lx09xyAsngRUICqJv65K7gthUAeuJdKCureqBXChfTijZLNAyGDpH8ZPrElLHvcnE
-	 ahbs5WhmZFpyK24aAa89cvrhAMJJm5pxtPnqAmgf2m8FkLfHkt9gdyHWR9Kd5qmtHvQ==
+	bh=zBipnjUh+a03qSX7TJO5K5pogIYLCb0BKkuRilRGRYs=;
+	b=NGCvRzz1Y6sXfV/VZgX/V9wm0fRoUZgJ6gvMEcCBtJSWSv8FDGYT4dEiGnzP3eIFiZMS
+	 lU9k5WXLBJGcZ1p22FYtFkfjNMoOZrfBVd6Cr9oC/cHPYcT2PG0wWoHNN7AIac5xnYBKS
+	 VhFOnsPZgqT79P7hj3CzeVYDFMRV+D5+q3I4AtqcErlUqvYoeao+jopRbyATmbo5ijlET
+	 4HUkXEBoaxjWSbpWHhAFK2tf9Sz41Jfi9KoU1y6x2OkZxBqVd98x/5wmhxNlGpQCB6HNP
+	 Q/ann75zA2fz28DX4g4/uiupNBjNYV8yTO1px65BBWKX1Afkyq8iqG7M7Pmzyad27Wg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ESEPfJCH;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Smne0HCg;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2D3606A31B;
-	Thu,  5 Nov 2026 05:07:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94EB606A326;
+	Thu,  5 Nov 2026 05:12:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ESEPfJCH
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E3BB1F000C1;
-	Thu,  5 Nov 2026 05:07:50 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Smne0HCg
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0EF91F00A16;
+	Thu,  5 Nov 2026 05:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793855271;
-	bh=Yi6Q0LLSA53/Cz2aURPcplC/4LZHDSvLW4Z3o4uHodg=;
+	s=k20260515; t=1793855560;
+	bh=zBipnjUh+a03qSX7TJO5K5pogIYLCb0BKkuRilRGRYs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ESEPfJCH3dzeJR1ZFCDzOt72+66AITx08TSsYm7Fw/45gx1dQkzKRSruSUUjKUheU
-	 krTPHnTTh8fvkgg4Ehshjjr1z4FDPRdOytJbzRVgOWJyZTM+G1LSyEdtygXbr4t4CJ
-	 FUA0BdGQZ99yv2AhAG/IQnqW1Mx7oJyFhuGTVjJ1J/GgLZhNVBV7xm+4gBKWk64Erx
-	 E9QDkGsuNyM/e8I9ceGSb1Bs9yCDeOmKxm0E4ZgEENj9Qt7hP7/gtqFAgltczuhWnN
-	 s/HKttV1pVWCNFALPhdE9ycSY8AWQnfk5GOiwfbBasen4BcwBpzE0dgMlkIxd1n5cr
-	 07EyjS3Zyc3SQ==
-Date: Wed, 4 Nov 2026 21:07:48 -0800
+	b=Smne0HCgAqesY+t/84icmhLBt777b+deNKzsSVpzA60bZV9qobodiiv/0aEVbIYAc
+	 uHXTlcR05C3MYopEFR3rXZt3d428/98iCto7vd3+X1RFdGLpnu1cvqH8H2kFfvYZaz
+	 gX1xtpjqujCh6HCUSfWXVK38sSix0WdZbrJnElVS8dEvHb2qx40xQYa3LlAGEiRbSv
+	 6RfSUChJY5Kk6vIVBxtP9Je7nRP8Ono665gkhOzMnV8fZ9HkNaANej0W9JC6J+jhj/
+	 NMMvUkeqmNf9cbH81Xv2zq5ESwuRhLKL3Jv3DMw95+YwqRn4cX66lSgnz2VXlsLRkw
+	 wETgGAEotUlOA==
+Date: Wed, 4 Nov 2026 21:12:38 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Tengda Wu <wutengda@huaweicloud.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, james.clark@linaro.org,
-	xueshuai@linux.alibaba.com, Peter Zijlstra <peterz@infradead.org>,
-	leo.yan@linux.dev, Li Huafei <lihuafei1@huawei.com>,
-	Ian Rogers <irogers@google.com>,
-	Kim Phillips <kim.phillips@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>, Ingo Molnar <mingo@redhat.com>,
-	Bill Wendling <morbo@google.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+To: Ivan Shapovalov <intelfx@intelfx.name>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Zecheng Li <zli94@ncsu.edu>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH] perf annotate-data: Show event name in the data-type
- title
-Message-ID: <auwPJIaRjtfQJdta@z2>
-References: <20261029071510.460873-1-wutengda@huaweicloud.com>
+	James Clark <james.clark@linaro.org>,
+	Nick Terrell <terrelln@fb.com>, David Sterba <dsterba@suse.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] perf: support zstd-compressed kernel modules
+Message-ID: <auwQRrlxzuTg4dDN@z2>
+References: <20261014-perf-zstd-v1-0-9652727886fa@intelfx.name>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -69,55 +65,41 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20261029071510.460873-1-wutengda@huaweicloud.com>
+In-Reply-To: <20261014-perf-zstd-v1-0-9652727886fa@intelfx.name>
 
-On Thu, Oct 29, 2026 at 07:15:10AM +0000, Tengda Wu wrote:
-> The same data type can be annotated for multiple sampling events, in
-> which case the data-type header is printed once per event.  But the
-> header only shows the type name and the sample count, so several
-> identical-looking headers are emitted and the user cannot tell which
-> event each of them corresponds to. E.g.
-> 
->   $ perf annotate --data-type=page --stdio --itrace=f
->   Annotate type: 'struct page' in [kernel.kallsyms] (59208 samples):
->   ============================================================================
->    Percent     offset       size  field
->     100.00          0       0x40  struct page      {
->       9.95          0        0x8      long unsigned int   flags;
-> 
->   Annotate type: 'struct page' in [kernel.kallsyms] (59480 samples):
->   ============================================================================
->    Percent     offset       size  field
->     100.00          0       0x40  struct page      {
->      10.15          0        0x8      long unsigned int   flags;
-> 
-> Add the event name to the data-type title in both the TUI browser and
-> the stdio output, so each header can be attributed to its event.  For
-> group events, use evsel__group_desc() to print the group description
-> instead of the leader's name, so the whole group is identified.
-> 
-> While at it, size the underline in the stdio output dynamically based
-> on the length of the header line instead of using a fixed-width string,
-> so it keeps matching the header as the text grows.
-> 
-> Result:
-> 
->   $ perf annotate --data-type=page --stdio --itrace=f
->   Annotate type: 'struct page' in [kernel.kallsyms] for l1d-miss (59208 samples):
->   ===============================================================================
->    Percent     offset       size  field
->     100.00          0       0x40  struct page      {
->       9.95          0        0x8      long unsigned int   flags;
-> 
->   Annotate type: 'struct page' in [kernel.kallsyms] for l1d-access (59480 samples):
->   =================================================================================
->    Percent     offset       size  field
->     100.00          0       0x40  struct page      {
->      10.15          0        0x8      long unsigned int   flags;
-> 
-> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+Hello,
 
-Applied to perf-tools-next, thanks!
+On Wed, Oct 14, 2026 at 08:34:06PM +0300, Ivan Shapovalov wrote:
+> This extends in-perf zstd code to add an interface for streaming
+> decompression of an entire file, and uses that interface in dso.c to
+> support handling of zstd-compressed DSOs (e.g., zstd-compressed kernel
+> modules, as shipped by various distros including Arch).
 
-Best regards
+Can you please address comments from Sashiko and the bot?
+
+Thanks,
 Namhyung
+
+> 
+> Signed-off-by: Ivan Shapovalov <intelfx@intelfx.name>
+> ---
+> Ivan Shapovalov (4):
+>       perf: zstd: zstd_decompress_stream -> zstd_decompress_buffer
+>       perf: zstd: factor out zstd_init_{c,d}stream()
+>       perf: zstd: add streaming decompression and format probe functions
+>       perf: support zstd-compressed kernel modules
+> 
+>  tools/perf/Makefile.config |   2 +-
+>  tools/perf/util/compress.h |  22 +++++-
+>  tools/perf/util/dso.c      |   5 +-
+>  tools/perf/util/tool.c     |   2 +-
+>  tools/perf/util/zstd.c     | 188 +++++++++++++++++++++++++++++++++++++--------
+>  5 files changed, 183 insertions(+), 36 deletions(-)
+> ---
+> base-commit: 0fcb05b72344f40806cbe810de8872f1698bf053
+> change-id: 20261014-perf-zstd-279017105eb3
+> 
+> Best regards,
+> --  
+> Ivan Shapovalov <intelfx@intelfx.name>
+> 
