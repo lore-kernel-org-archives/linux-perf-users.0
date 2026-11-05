@@ -1,123 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.20
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793856807;
-	b=pV5HFwGBfJiJP5Xx1zMCKgo2lcgfXVNAvmVrFmAAYgx4VDFcGXluy77QfxjgdiRPBdtV
-	 SpdY+3eT209p9og3x91+kz4DB6dKtrf8uTIq5ONHr15ML2YK0DFi08EMBbBuNeTdmOJGt
-	 NGgsdqiEcxI//MJTXLp7exKL5aZE+3lIKqmc2jr9kBpIM9vHZ1FSpodYMD/929FAbm9sB
-	 8u8RdLaMAqGNBkXNAy2KMXfnYhxEYAGyGEpsFZPdOPgq6dx7dcK+Ap3PhaRMsUJCkxRVC
-	 YSHbTLH47AeWjGTvc9UOPE3jGP9zdTlvmF6xnV595YCCmXv0tarVClMrHVVel8UifaQ==
+	t=1793857322;
+	b=SPJdWzMYDsPTWJPdVgc/tyzmjOZ10Qe6HLtFMWo4bwDGlxX3jpFlpQckPbrBLir5cfXM
+	 qOti/Z+qSvMfBMIonk2NX8yyqMGKvxLSIyyCenFVK93dc9XdmnRHVHdMmDtOOlvm3drPC
+	 XXAB4/3j4afykEIbUJHM1ow4NM7xHBDiRz1+dcJgYFeoOGGtbF03MaN26CTQudjNXcQh3
+	 PsaoMbF3j5wXM5mOCUrJf88PWv/JkW50HB1UKCOA4GTl4qFy9DJQ2nlVdkUKgHJ8HxtVc
+	 RAJts5vKCfvX6o8aiW0kdCazhhSa+9jz5IEfzio8DXsvKA2L8MkMi6QraQuIV5/CoVg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793856807;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
-	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:Date:From:
-	 To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To:
-	 X-Authority-Analysis:X-Proofpoint-Spam-Info:X-Proofpoint-ORIG-GUID:
-	 X-Proofpoint-GUID:X-Proofpoint-Spam-Details-Enc:
-	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details;
-	bh=mnfDP717xLwdYJ0ae4AGWYEs+tKg8ErO9fE7F09ythk=;
-	b=fwF2Hs7t7E4YyG3/OV0xZ0dLqf6uUyiXarbUpYuq1r2Zrg752+APFF9Lh6VXWFfKJ3/S
-	 YqF3jfbgiN+eKtYKWYxcJMz0nzoaM+FQZoG+XXzMogCrLZ9GGcyQWfTAKqVjE0OQF7Zqg
-	 X0ZDEoaujsJ1vUNSFn2jpkvQLFBjLsRO51cdKe2X/ONosPtJYbfDHxRhg6f9rEYomXMnz
-	 NPY2o2DB+zgPNghBjulGhsrxYrPFFL2F2nTAmHUjwHcQe7HNmdyX9Zp6G+IGpTg8h7Ee3
-	 39E20Ok4//ignZvb4CTqi2Yj0+7vmHxuLPYrUQNso3NLMDsRvkq2glmPMAa97Nqq7vg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793857322;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
+	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=9wlTg2Dr/LsFlagA3DtpGqNOCAVA82K6+eoM9BoGZ50=;
+	b=fl62C7tviQuli6KN7PG2+doUTJEMMmbV86debnPm0SGdhdA8aSFwhmW+1tEU/TZ8bf+4
+	 ogWtgu7cE9QqkRCVuwUXq4zq0UzIBQwbv2T8BtwMGccOoVQk7CLTmOJ10oVQ7S8kpAqKV
+	 HdpH9rAQnBsh6c17TJxywjb70dWk3wcd0gyiIVC6iOveDJAdF6oX0hId5gV45Ld5h7VLC
+	 1xzL71TDn7uDM1KZwNyaU4BiLpBJQAhDt3895ybykM+GtB/o2agk4pH0S2Du5tBRfGxgY
+	 1phDpF5R3ZlUV3/Vm5klYttTDvts6MmVJrIHB2klR1QqzCqMAs1sSHsHaK85e0BAMwQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=oss.qualcomm.com;
-	spf=pass smtp.mailfrom=oss.qualcomm.com;
-	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=VEyKhNh4;
-	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=L5abHxnb;
-	arc=none smtp.remote-ip=205.220.180.131
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=FIvAoHki;
+	arc=none smtp.remote-ip=198.175.65.20
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A79606A328
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Nov 2026 05:33:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 42A79606A328
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22150606A326;
+	Thu,  5 Nov 2026 05:42:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 22150606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=VEyKhNh4;
-	dkim=pass (2048-bit key, unprotected) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=L5abHxnb
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6A50oa8A4051648
-	for <linux-perf-users@vger.kernel.org>; Thu, 5 Nov 2026 05:33:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	mnfDP717xLwdYJ0ae4AGWYEs+tKg8ErO9fE7F09ythk=; b=VEyKhNh4XXvkgpDi
-	OMY2Y+5ggSH1HM5rU4kWJvRos5uJxhl/RN4lJr52oZyv8/3b8UEtB4BwqGUafpyk
-	1eutvG83UEqM2gScVG4kmNznp5PVhqbzgt5QKY6Pk80q7NhBTkWy8+R2RN2INifm
-	g1gG87ueC1DtSMDD+5qzQWNyGRbyi7J2Dtcvv+u7g0Ki0ISj6YYV1Q8p3G6jRSPz
-	9pY/6T6RMFQtDnQ+FctTMVy4H9OxY83zAfkvXZwpXX7t+xpZ7WW0tqD6BE2nass5
-	+KuASWtbBJ7zFmT/7m0UWSSijVWPpPGKxO2LTBPBxRaTWEpxBp9LaEsBleP+er26
-	2oZEwA==
-Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4hr8rv2svg-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-perf-users@vger.kernel.org>; Thu, 05 Nov 2026 05:33:26 +0000 (GMT)
-Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-36de26cb4b3so865341eec.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 04 Nov 2026 21:33:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1793856805; x=1794461605; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=mnfDP717xLwdYJ0ae4AGWYEs+tKg8ErO9fE7F09ythk=;
-        b=L5abHxnbDd8SsTyHgMh5VAaOU8GbYOjmmrjIad9gINHFXB+OLBkmKmf3iWKW2ib3t5
-         3WdPsH4mV5+nsjX0v+8pMp2776olDA/IErVHuGOYnyzWY5RFqWgAC6uiYy4R/S7ev9cw
-         /GtvFZxyHLbICIQdfWaSf+2+IyKo3A7mgIS+YwtCcrrKz812j4A9z5yyHCGd085F/naZ
-         2k9h1uXJeAfJfKz/76qVh2MRnUnWsq/xi8lE41mI/O97dITtF3Uoab8AHLvJf89l2Gy2
-         OPSC3CD+zdLnITSpPConqCYMSQzZKhUbO4DI/nbQbd2FWTJ2NcFr/1ZlLTz1e6I/ZRkN
-         JsSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793856805; x=1794461605;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=mnfDP717xLwdYJ0ae4AGWYEs+tKg8ErO9fE7F09ythk=;
-        b=YSogB2xlqCRSv2ELoIeNfUkwq/jRDzBBpBGCtARQFSUnDiZIT1SJKzx43D0IjDFZK/
-         OU0Qc3EWcHdDoaMoYg7J2ZkQBGrmOm/Q6hOCj5lkLMA6dCJJ78LOlwttSzjsFtXysg5r
-         2/w0zd5es+BLQVakG1e6TnDMtQchkKV6b/toxIK5l/Ox28dekKN7JMGkpb56S3YXaj+u
-         Pyvf/c0bqgMaUdzZEqpJsfJ8YxvGu5UcZ4qOLrlzoCmp9F39HE/lYRf3/zE7BHHAGI7p
-         epZHFsAqhuDO/vnomyVhE5+Y+/eBiB0PTmGqwFl3wud7NmLZ0CyjykmvapuIq8fkxRQ0
-         XZaA==
-X-Forwarded-Encrypted: i=1; AKwUvBxfXnxAwie/OMazdHZHQebqPrFZbCnZ9Vf4x37j3snqzrNWDLJZAJFS6Sb+D+27Njl1ptaeKqHRcrI6Hk9MkDZV@vger.kernel.org
-X-Gm-Message-State: APuU4Z+dNOJKFChQSPgaPmnYDdoMd1I4p4Gw1wi6Crodg2XxrgJJlwVC
-	MtASLsvo3Q5Ryk3R4xekxl8guEaca/v1kPUcd+Q5mzjiUQbk6oDxxrEQBHJi8ySL7R8jFZ7jOGC
-	FGxJ3L+cNGTmg0p6h3T/Gh1mH8ZB+W5ycWuUVdmmVlfs++/goo1utNsPAoIs4frOw845gu7zYiS
-	Xv5lFe
-X-Gm-Gg: AYBFou3SWegNfp3YJriaOq4vc/ekw2NEUljfVrlSi7Rov6wA6WVwDk+sX1iEAK+/ikB
-	i+FlXXA4syVh/W5Z54LBw9O8rdje2ldMqHoyugJ+mchXuiKUPDLnaLG0/T4U1tc7c5mRJGwe5VE
-	+mn8srWbkwWxuLGNDKXw12jzWlVlOHcFwbPoG1vpLi7RYQ7IQ9CNxZGObeCGFiGixa/1ws1Xmsk
-	ut/9KG9NmFKIVgf6RAb+9EW2CX7+cEBH/QQ5BWbgmPjUZVbd6Czo/uMJsBhBPC1Dn+IZ1HGj2LS
-	NvPlirq8nWv+O+TOb/JzojIiQ7IRDEMw3x9Tf1NnurfwLlSryP8Hobnu9K21zmC1j8kaeYsdG3R
-	k/nQ0JnhDzbCFUxyea/1kprL8cNZSIkkP6OIUe3EofamXrmJ4cM41moJ8ADgCTpKWFeV9plYd/F
-	2WIT431Wt1ypreFQ4pH0PfXbzbLrwqswgmBECfNxv8DHwL0jPxzSErewJs7Do8dbJZGPMjpBt0
-X-Received: by 2002:a05:7301:db8a:b0:36d:394d:e690 with SMTP id 5a478bee46e88-36d395d342amr3970078eec.40.1793856804918;
-        Wed, 04 Nov 2026 21:33:24 -0800 (PST)
-X-Received: by 2002:a05:7301:db8a:b0:36d:394d:e690 with SMTP id 5a478bee46e88-36d395d342amr3970038eec.40.1793856804160;
-        Wed, 04 Nov 2026 21:33:24 -0800 (PST)
-Received: from hu-himchau-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36ca38f53a6sm12148541eec.15.2026.11.04.21.33.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Nov 2026 21:33:23 -0800 (PST)
-Date: Thu, 5 Nov 2026 11:03:16 +0530
-From: Himanshu Chauhan <himanshu.chauhan@oss.qualcomm.com>
-To: Jesse Taube <jtaubepe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alex@ghiti.fr, aou@eecs.berkeley.edu,
-        palmer@dabbelt.com, pjw@kernel.org, qingfang.deng@linux.dev,
-        shuah@kernel.org, thecharlesjenkins@gmail.com,
-        cp0613@linux.alibaba.com
-Subject: Re: [PATCH v7 7/8] perf tests: add noinline to __test_function
-Message-ID: <auwVHAC4iPfdXD4c@hu-himchau-blr.qualcomm.com>
-References: <20260930063919.608911-1-himanshu.chauhan@oss.qualcomm.com>
- <20260930063919.608911-8-himanshu.chauhan@oss.qualcomm.com>
- <CADRr4bctCf-7xBER1G2vqtQm2Nda+h222UzYShMQXw+rtBwPzA@mail.gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=FIvAoHki
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793857322; x=1825393322;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=DJf4bTNPHkLVygRJnF6XNHKdcTG9QdbUCz5UjaoLfmM=;
+  b=FIvAoHkizvI1n3/v/lbGYAq2MlS1hpmKrHIKQEnwgLqJ4wP+K1P0w8t5
+   ASdvErTWYYhkmxSIEfOZ4Q2V7WVNd9f+sxvDDvgy4wwAKKFUboVjCH3fT
+   l9y8/AQoCRqL8aTqyfuJmjjcLF7uybCz1XlreX4WQoUx5tZtNL2W6WrNT
+   H0/X+9cNM4NaiVUL+ZtauGujuouok+T91DZ2obi35eq/5M8RKAOLMvwIP
+   n17YBftmnMBC8ph7X9NVjdBH6U5kH1l5XnurujgfmS0IMjQz7Sjjqitqt
+   Glkco7py6wHGPoWYG122AgwwCvFzrFXwGMWaE6KtlOMDL61bUHnJ48sNp
+   w==;
+X-CSE-ConnectionGUID: PtdEtMypTxiZATzIukLhfQ==
+X-CSE-MsgGUID: hZ8pYdBQQGCCo3U+541zSA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11956"; a="2667958"
+X-IronPort-AV: E=Sophos;i="6.27,196,1787036400"; 
+   d="scan'208";a="2667958"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2026 21:42:01 -0800
+X-CSE-ConnectionGUID: g4XYH+QNRBaBCIfS0JtifA==
+X-CSE-MsgGUID: N0+cnYwkScmA2LHAHWG8JA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,196,1787036400"; 
+   d="scan'208";a="7041297"
+Received: from unknown (HELO [10.238.2.61]) ([10.238.2.61])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2026 21:41:56 -0800
+Message-ID: <2d1a2dcb-f1db-4126-80b7-217a62cea136@linux.intel.com>
+Date: Thu, 5 Nov 2026 13:41:53 +0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -127,84 +72,179 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [linus:master] [perf vendor events intel] 31efbec216:
+ perf-stat-tests.UNC_IIO_NUM_TGT_MATCHED_REQ_OF_CPU.fail
+To: Ian Rogers <irogers@google.com>, kernel test robot <yi1.lai@intel.com>,
+ "Taylor, Perry" <perry.taylor@intel.com>,
+ Thomas Falcon <thomas.falcon@intel.com>, Edward <edward.baker@intel.com>,
+ "Chen, Zide" <zide.chen@intel.com>, luis.f.recalde@intel.com
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
+ Arnaldo Carvalho de Melo <acme@redhat.com>,
+ linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
+References: <202611050912.2cdf1ff5-lkp@intel.com>
+ <CAP-5=fUk4Q3PxNiqwHtyM6XTt9LGZaTe9p7o9k2gL7f2LBRBHw@mail.gmail.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <CAP-5=fUk4Q3PxNiqwHtyM6XTt9LGZaTe9p7o9k2gL7f2LBRBHw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADRr4bctCf-7xBER1G2vqtQm2Nda+h222UzYShMQXw+rtBwPzA@mail.gmail.com>
-X-Authority-Analysis: v=2.4 cv=Vtm2kO2n c=1 sm=1 tr=0 ts=6aec1526 cx=c_pps
- a=Uww141gWH0fZj/3QKPojxA==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=IkcTkHD0fZMA:10 a=zJRp6_cAMcgA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=3WHJM1ZQz_JShphwDgj5:22
- a=NEAV23lmAAAA:8 a=EUspDBNiAAAA:8 a=20KFwNOVAAAA:8 a=3ntduUHgHJ2MHpqTwYcA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=O8hF6Hzn-FEA:10
- a=PxkB5W3o20Ba91AHUih5:22
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMTA1MDAyMSBTYWx0ZWRfX9rEOT6n2287O
- Pb1D7QVvgGcZEOIQgC/u1NVrkRvm0CB3uGpRUpdVzswyWIYzZs19X/DtWDWTzpjdImCAZbLo+f6
- MdusOzt+bk6cp0mnfQGSn1Mhs7r+/YU=
-X-Proofpoint-ORIG-GUID: gchUYMwUjxtwsZAULzuRaTLXp788fX70
-X-Proofpoint-GUID: gchUYMwUjxtwsZAULzuRaTLXp788fX70
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTA1MDAyMSBTYWx0ZWRfXxV020y+oJxAp
- RlYbg0EL3HfKbr8mrOJldauzZ08sEXgmdePktiW/f5K30kk8ZncHAkDjPsetDX7QpO0RRbn52pu
- i7DJIxS0cVy2dWuemMUhcnQZmvPYN4qg6OErFY6KZyBbAgni1Q9r5oRDyjB42FalLCRam0L6OYu
- hTyzge29LlCgeXH7luROX1WjQhlnuPR8fE3yhofw3kMlZuqDiplr0N3nMVVmyQuZKZKySytcGA7
- zOKShhWO+3kX5NlT9jq2GnIpKWBlBq0DxjOdY93TO/16KNeZKiIWERzNgWxm6AsUJr1N2M9Tyip
- kDXxKWhwam0aN+vGbe4rnC5sFHevGMumpFxifmsUqLRxfBR3PdPVIjQC7BgX+y/VVKtzH0xptjc
- MEOmi2qay7hx0/Aa6Iruj6C0sxfV8zYieV+yenP3EgRRUCg0m8CYVAVyEnvmdZZdVPISJpwEQh1
- KcGV6ywdKc0XwCuj8bg==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
- definitions=2026-11-05_01,2026-11-04_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 impostorscore=0 spamscore=0 suspectscore=0 malwarescore=0
- phishscore=0 lowpriorityscore=0 priorityscore=1501 clxscore=1015 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2610300000 definitions=main-2611050021
 
-On Tue, Oct 27, 2026 at 03:52:20PM -0400, Jesse Taube wrote:
-> On Wed, Sep 30, 2026 at 2:40 AM Himanshu Chauhan
-> <himanshu.chauhan@oss.qualcomm.com> wrote:
-> >
-> > In the breakpoint signal handler test, a breakpoint is set on
-> > __test_function. Compiler may optimize and inline __test_function.
-> > This causes failure in the test.
-> >
-> > Add noinline to __test_function so that it is not inlined.
-> >
-> > Signed-off-by: Himanshu Chauhan <himanshu.chauhan@oss.qualcomm.com>
-> Reviewed-by: Jesse Taube <jtaubepe@redhat.com>
-> 
-> I would resend this to the perf list and not in a patch set as it is a
-> separate fix.
-perf list is already in the To: list
 
-Regards
-Himanshu
+On 11/5/2026 12:22 PM, Ian Rogers wrote:
+> On Wed, Nov 4, 2026 at 5:47 PM kernel test robot <yi1.lai@intel.com> wrote:
+>>
+>>
+>> Hello,
+>>
+>> kernel test robot noticed "perf-stat-tests.UNC_IIO_NUM_TGT_MATCHED_REQ_OF_CPU.fail" on:
+>>
+>> commit: 31efbec2161d2d31b020b086958e41f35f070a38 ("perf vendor events intel: Update sapphirerapids events from 1.39 to 1.40") https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+>>
+>> [test failed on linux-next/master 7649ba73f9e7e1e04d0b46213e39c79ae09dd55c]
+>>
+>> in testcase: perf-stat-tests
+>> with following parameters:
+>>
+>>
+>> config: x86_64-rhel-9.4-bpf
+>> compiler: gcc-14
+>> test machine: 224 threads 2 sockets Intel(R) Xeon(R) Platinum 8480CTDX (Sapphire Rapids) with 256G memory
+>>
+>> (please refer to attached dmesg/kmsg for entire log/backtrace)
+>>
+>>
+>> If you fix the issue in a separate patch/commit (i.e. not just a new version of the same patch/commit), kindly add following tags
+>> | Reported-by: kernel test robot <yi1.lai@intel.com>
+>> | Closes: https://lore.kernel.org/oe-lkp/202611050912.2cdf1ff5-lkp@intel.com
+>>
+>>
+>> EventName: UNC_IIO_NUM_TGT_MATCHED_REQ_OF_CPU
+>> 2026-10-05 17:15:24 perf stat -e UNC_IIO_NUM_TGT_MATCHED_REQ_OF_CPU -a sleep 0.1
+>> event syntax error: 'UNC_IIO_NUM_TGT_MATCHED_REQ_OF_CPU'
+>>                      \___ Bad event name
+>>
+>> Unable to find event on a PMU of 'UNC_IIO_NUM_TGT_MATCHED_REQ_OF_CPU'
+> Ok, this is an ugly issue. When we fixed the issue so that umasks of 0
+> weren't dropped, we added new umasks:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit?id=31efbec2161d2d31b020b086958e41f35f070a38
+> ```
+> ...
+> @@ -1923,6 +1974,7 @@
+>          "PerPkg": "1",
+>          "PortMask": "0x0000",
+>          "PublicDescription": "UNC_IIO_NUM_TGT_MATCHED_REQ_OF_CPU",
+> +        "UMask": "0x7000000",
+> ...
+> ```
+> The umask calculation is odd:
+> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py#L361
+> ```
+>         # Combine the umask with the umask_ext. We don't know the
+>         # width of the umask as we concatenate the strings, removing
+>         # "0x"
+>         if umask_ext:
+>             self.umask = umask_ext + self.umask[2:] if self.umask else
+> umask_ext + "00"
+> ```
+> For Sapphire Rapids the UMaskExt is:
+> https://github.com/intel/perfmon/blob/main/SPR/events/sapphirerapids_uncore_experimental.json#L17422
+> ```
+> ...
+>     {
+>       "Unit": "IIO",
+>       "EventCode": "0x8f",
+>       "UMask": "0x00",
+>       "PortMask": "0x0000",
+>       "FCMask": "0x00",
+>       "UMaskExt": "0x00070000",
+>       "EventName": "UNC_IIO_NUM_TGT_MATCHED_REQ_OF_CPU",
+>       "BriefDescription": "ITC address map 1",
+>       "PublicDescription": "UNC_IIO_NUM_TGT_MATCHED_REQ_OF_CPU",
+>       "Counter": "0,1,2,3",
+>       "ELLC": "0",
+>       "Filter": "na",
+>       "ExtSel": "0",
+>       "Deprecated": "0",
+>       "FILTER_VALUE": "0",
+>       "CounterType": "PGMABLE"
+>     },
+> ...
+> ```
+> So that's hex 7 followed by 4 zeros. In the generated perf json it is
+> hex 7 followed by 6 zeros as we concatenated the UMask's 00 to the
+> front.
+>
+>> event syntax error: '..O_NUM_TGT_MATCHED_REQ_OF_CPU'
+>>                                   \___ value too big for format (umask), maximum is 255
+> This error indicates that the UMask for the IIO PMU only expects
+> values from 0 to 255.
 
-> 
-> There is also another fix to data_breakpoint.c‎ that i have been
-> meaning to send here:
-> https://github.com/Mr-Bossman/linux/commit/db4faa52a66f6b7265cd397a2d44d7d38c3fdfb7
-> 
++ Zide, Luis
+
+According to current uncore driver, SPR IIO supports the extended umask
+field which locates at bits [50:32], so the UMaskExt data of
+UNC_IIO_NUM_TGT_MATCHED_REQ_OF_CPU looks correct. I suppose we should not
+or could be very hard to check the valid range of umaskext in perf tools.
+Currently different uncore PMUs may have different umaskext layout and the
+umaskext of some uncore events could be very large.
+
+Currently the Intel uncore driver would validate the umask/umaskext from
+user space. It would be good enough.
+
+@Luis, @Edward, please double confirm. Thanks.
+
+
+>
+> So something is wrong in how we interpret the UMask and UMaskExt for
+> Sapphire Rapids' IIO. Could someone from Intel take a look? Is the
+> problem in the original perfmon event json, is there a different way
+> to encode the UMaskExt for the IIO on SPR or is the IIO PMU on SPR
+> constraining the umask too much?
+>
 > Thanks,
-> Jesse Taube
-> > ---
-> >  tools/perf/tests/bp_signal.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
-> > index f580ba7486b1..cc4a27224884 100644
-> > --- a/tools/perf/tests/bp_signal.c
-> > +++ b/tools/perf/tests/bp_signal.c
-> > @@ -54,7 +54,7 @@ asm (
-> >         "ret\n"
-> >         ".popsection\n");
-> >  #else
-> > -static void __test_function(volatile long *ptr)
-> > +static noinline void __test_function(volatile long *ptr)
-> >  {
-> >         *ptr = 0x1234;
-> >  }
-> > --
-> > 2.43.0
-> >
-> 
+> Ian
+>
+>
+>> event syntax error: '..O_NUM_TGT_MATCHED_REQ_OF_CPU'
+>>                                   \___ value too big for format (umask), maximum is 255
+>>
+>> event syntax error: '..O_NUM_TGT_MATCHED_REQ_OF_CPU'
+>>                                   \___ value too big for format (umask), maximum is 255
+>>
+>> event syntax error: '..O_NUM_TGT_MATCHED_REQ_OF_CPU'
+>>                                   \___ value too big for format (umask), maximum is 255
+>>
+>> event syntax error: '..O_NUM_TGT_MATCHED_REQ_OF_CPU'
+>>                                   \___ value too big for format (umask), maximum is 255
+>>
+>> event syntax error: '..O_NUM_TGT_MATCHED_REQ_OF_CPU'
+>>                                   \___ value too big for format (umask), maximum is 255
+>>
+>> event syntax error: '..O_NUM_TGT_MATCHED_REQ_OF_CPU'
+>>                                   \___ value too big for format (umask), maximum is 255
+>>
+>> event syntax error: '..O_NUM_TGT_MATCHED_REQ_OF_CPU'
+>>                                   \___ value too big for format (umask), maximum is 255
+>>
+>> event syntax error: '..O_NUM_TGT_MATCHED_REQ_OF_CPU'
+>>                                   \___ value too big for format (umask), maximum is 255
+>>
+>> event syntax error: '..O_NUM_TGT_MATCHED_REQ_OF_CPU'
+>>                                   \___ value too big for format (umask), maximum is 255
+>> Run 'perf list' for a list of valid events
+>>
+>>  Usage: perf stat [<options>] [<command>]
+>>
+>>     -e, --event <event>   event selector. use 'perf list' to list available events
+>>
+>>
+>> The kernel config and materials to reproduce are available at:
+>> https://download.01.org/0day-ci/archive/20261105/202611050912.2cdf1ff5-lkp@intel.com
+>>
+>>
+>> --
+>> 0-DAY CI Kernel Test Service
+>> https://github.com/intel/lkp-tests/wiki
+>>
+>>
