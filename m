@@ -1,88 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793878157;
-	b=evSvCB7r4iFOrEugl737S33e7kOEvZlXtroirxv97h8eEib8CqU2ZFM1D3JsjN/CQKU9
-	 aqAkS+mgprljTxxoAwLiH+L8uX/Jz6CxC0KhzsXVjUfETtwS+SFWRrOV5leFFd+gP4YXW
-	 PXAHIxilmbjCfMNAzeDYEATTtYdsq7wWk9g2vfCcTnhNYx5iKkxqawvv6sQwOdFGqv6es
-	 Q9WztvwBW+7m+i2dixQK0zKVgbVTosTu6CfuzBEkKfy6oBOBWpQOwUlllXnrWqtQdNhQk
-	 9P1P5OfKWlvPBw8YVFd/f+B9NfH/fBgeuatysuNwek+FlZYcaCR3RgbvM5FQJ37bVWg==
+	t=1793878999;
+	b=ZTd48aeUPAv7X+QA90zFWI20jNvH4c3F2u4F4fVs3nn5lRSyCkgQI+lj1c+tY+3Dqdao
+	 mPSeJV9bnksNQMJrKui/p2L+jCsaBboRls1YhEaQDWsrcPi9XSqj5+2AQA7XgPOe7wmtT
+	 bqjyRszYOsu3XzOlviKFkbHs+cEgFpoVCSUztBcxx0yLxOxWCcMJxsJS3DNGsfYJ/qsnd
+	 KVu32wgLtiIX6ZiNAjl/xuikQoNdpkr++cmkF17ZMBWmC1qsq+avhwifvyJ3Hs4SAH9/w
+	 2kajAnzqQ0A14gqPK4XWjtleT4FV7H1pH6KT+QQZ0QJH8qxTfoo2LWpnVJLfaKEGhYw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793878157;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=N/06Fqiqgpcb/TdwVDmA0U4277VRXF0+QsquQEmtQNs=;
-	b=TZGiZep+DwdcM+9KF6m5hIFUF/5/wc4kT/ObY91Vve9lEL9LQvehu9GE+XfKJ3Wx/9G0
-	 lriBAHAmJce717sxJ9G/l9JuuS/MwR3KG42yHEw3vNjIWBTnACbcjlXgyZb+0+WxqteRk
-	 XSx/BwGG0ijACplmfpGRWBCiy91utKuZOze1UOZ/6rp+EOvNkrEdOuYU7ukKXFjZIi7vg
-	 3zaVROQeiCqokYWt7UF7OovFvnev9WjQ94aImm3NCgGygG9nSxgN/pN0s+/rOfBFL6eZk
-	 W7JJYGdFAH7kyOr9cUycIvahk+33lEHG9Hmm7FRCP5O/MhuUW+iELN+Th8HbN/+66VA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793878999;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=3arWtRYMgXECqw7+BWms5meFgKjfCsn5/zO/hbfOvZ8=;
+	b=nkoupdAQJu6mJA4ww1H8nDPjMkNYQQLscDrRxXaqTrY05Jug9oO4dIUlexb/ItE4InTH
+	 xzXQLgOuCn8dYPxPFWzT4djiuuLEYC8om1PrQMSOPdgFTDmLdouQTHdjtKiSeky48buLW
+	 f5dI/Tw25dU+nAseuw1pHdIF/h19WFAXEqL10W42kmqqbm06KlJ6uEr1fFx8X0jJlgqxJ
+	 AmsBkh1kl0CkgFnEAAYs7clTME7hEih3rqU1LzPJX0B9ImUVz81ZZrCEfkVUXIrfdVUUQ
+	 cffA/ugYOjk8/ZkiUM58GI6/RQwl26waxrNDQKw9B4UI2LPfGzY+hLfBeNIzDrtX6mA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linaro.org;
-	spf=pass smtp.mailfrom=linaro.org;
-	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=I9a9JUzK;
-	arc=none smtp.remote-ip=209.85.221.53
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7A5606A31B
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Nov 2026 11:29:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5D7A5606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	dmarc=pass header.from=arm.com;
+	spf=pass smtp.mailfrom=arm.com;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=vAw5UIhC;
+	arc=none smtp.remote-ip=217.140.110.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55F4D60A5BFE;
+	Thu,  5 Nov 2026 11:43:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 55F4D60A5BFE
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=I9a9JUzK
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-48e6eb21a8fso776188f8f.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Nov 2026 03:29:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1793878156; x=1794482956; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=N/06Fqiqgpcb/TdwVDmA0U4277VRXF0+QsquQEmtQNs=;
-        b=I9a9JUzKUX0WcnX2PpmU4+ofAjmpb982XVSor5aq/TW/nqUSgGHRNul8ojN9n5rJtU
-         LiDY3caSbkJ9HlcRoXukLgA8ik5sPUsOY0DBol0NUT0XCDz0nDN84l0smVxncOKVKgQU
-         mKNyqH3tm8mvWushA2x4wqw4aP/umUS5qQlIkoK7IbkA7xoE8PMWOFkJP5OeW0fvy9iO
-         JXoV3DJF7F5pVlxP7qYd5fymQ5MbY3PNM0OmAumSo1ZS0hVb7YadikvkedhyRwiXjoeY
-         oMPdOmTTbzyRxs/o4u7HEJw1T/IotbOkHoguO9j4MrwBddabErl2HbMNw7zRJzUX+XH+
-         MJNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793878156; x=1794482956;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=N/06Fqiqgpcb/TdwVDmA0U4277VRXF0+QsquQEmtQNs=;
-        b=Zlmy72BqYTPSwcEc7iK28N4NwdU6KkY40XjOBcpZQdzyaXDYcJAHPboYVg2+Eus5uQ
-         Lg4Gm4Ohuvn1NWm6HXAUm/L0hKryMprRZzmirxbqQfsTxghR3CTIkHW9iFTsnSZorf3A
-         +nqCI+F+rR4WF0hQyS3bN90MJeWff4DDlJ0mt1643oJqlNbibn8v3iAJ0PMck0AonqHb
-         9bLqYF3ukMReCQAMEDftw2zIdRWn6RtzBe/GEJjH3pHln2DHbyjt1Eiq3DunNzK2SN42
-         SD3+cJmNU63hni2iveDMls2M4l/i/g/h8YR0aKMbqn3XeoK3VwEHiSlwpuGTODELBv8H
-         KwUg==
-X-Forwarded-Encrypted: i=1; AKwUvBwxxag3UbGPaAp3vLjF6FR8bO8y2o80pYtl/rZcqquISPuAg9N77Lcw3BHvtbHAGNOWXy1dRwQr+AR7Lsq6989o@vger.kernel.org
-X-Gm-Message-State: APuU4Z8w11031bTuNZnzyMgJAv7InyshVNEYr3TiTrAgkEhvAlR2ZYlg
-	rUrc54bruGHcSnMRnkum22aWqnyBqGcz28QNpRYtzCreDHuWvhTQ1qlVqVkkBcy4BEM=
-X-Gm-Gg: AYBFou17ItdEZ9Ei8a+bmH8acT/z6q7FYMc423tiyvNZJd8iaTHureCWHNinfZyomJR
-	yJjXfRfCiMRJddZb2tQdD9jnXUEdv3FJYrbPW5W8XB+dOR6enBGYbo8O8cGou6bFqUeeiaz07Nz
-	dQdlrcKAzkrfe6pu4C6WFQXfZ1DpRgvH5q5Q8BAxvUqO1hE7GZW10dQilSl6h3LfsLh+AvZ4uAv
-	am7ikgmlMoXxCgW6PmOGLadz4ckKu5Je9z1mEorSN9edfoaEvwkEg3vDZtG9kxFuHZUHkLVYL1k
-	e/wLfhKUquAooTt/mEmdSMctyBg0IaxwIBz/vNUqA372aXGf8qjEL++f4ViUKUhf7tgyn7ijJBc
-	CYCDBafrERJs9b01kXXXo1Dq6pPPA4EAXi0pkOUYnOIT+Nt6Orbqt9AM9og173KXmG9+NDrFume
-	fHpjGwyKOYSg12LNLcqgpbJfp/HDMl5jBBs9+/zH1YG8B4aVslhVmVAgP//o2j+rnO3NHqPQuLs
-	xZWF+ZN9Qj6Hk83RqNT4xryb8M6Efd9p0MncGiCdsz/QmDMAgz+UwE5yLxXJAaeO9wHHrIBf5/H
-	XR73y8lGvyF3PWvwuR5875dBVenhMOxz
-X-Received: by 2002:a05:6000:2011:b0:48d:f14a:917e with SMTP id ffacd0b85a97d-48e6e2f24f9mr44942848f8f.11.1793878155393;
-        Thu, 05 Nov 2026 03:29:15 -0800 (PST)
-Received: from [192.168.1.3] ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48fea1811c4sm9489546f8f.3.2026.11.05.03.29.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Nov 2026 03:29:15 -0800 (PST)
-Message-ID: <404c2006-61f4-4e6d-8b23-dbea177bab3c@linaro.org>
-Date: Thu, 5 Nov 2026 11:29:14 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=vAw5UIhC
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F65A1684;
+	Thu,  5 Nov 2026 03:43:14 -0800 (PST)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A1A13F628;
+	Thu,  5 Nov 2026 03:43:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1793878997; bh=tNLSO+hdm+nSfzMoKkNnsSWYMdy8kNf8a0WRixCTXUY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vAw5UIhC3psCGMOX+MMnb+D9GR290XkKa9AuHmSzLQJdiC0S0HbR7Iw5xHPxficMw
+	 +TW40584w8silG5YCpCe0YcnPdUIGx5aR6jKkTCPT2UtXjT2DrSxQxUUJgZJVJ0OK+
+	 tSJJs5TLqJStkuTvwEC8gE4FdxkqVgPJAtDF0E/E=
+Date: Thu, 5 Nov 2026 11:43:15 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Amir Ayupov <aaupov@fb.com>
+Cc: James Clark <james.clark@linaro.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Daniel Pereira <danielmaraboo@gmail.com>,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/7] coresight: Pulse an ETM external output for a PMU
+ event
+Message-ID: <20261105114315.GT9176@e132581.arm.com>
+References: <cover.1792907332.git.aaupov@fb.com>
+ <cover.1792989860.git.aaupov@fb.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -92,70 +73,22 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] perf: do not call zfree() on uninitialized pointer
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, "acme@redhat.com" <acme@redhat.com>
-References: <cover.1793867553.git.jirislaby@kernel.org>
- <8b245572903b8c4ed0dc569d7a71a8f4974e2455.1793867553.git.jirislaby@kernel.org>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <8b245572903b8c4ed0dc569d7a71a8f4974e2455.1793867553.git.jirislaby@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1792989860.git.aaupov@fb.com>
 
-
-
-On 05/11/2026 08:33, Jiri Slaby (SUSE) wrote:
-> In add_drm_pmu(), the check for type > PERF_PMU_TYPE_DRM_END happens
-> before "drm" is allocated by zalloc(). The error path nevertheless
-> called zfree(&drm), i.e. free() on an uninitialized pointer, which
-> can crash. Remove this bogus zfree() -- nothing has been allocated
-> yet at this point, so there is nothing to free.
+On Sun, Oct 25, 2026 at 10:48:20PM -0700, Amir Ayupov wrote:
+> Add an ETMv4 configuration, pmu_pulse, that drives trace unit external
+> output 1 on every traced cycle, so a PMU event counting it (TRCEXTOUT1)
+> can end a fixed-length ETM window, for example with aux-action=pause.
+> The feature only loads on an ETE whose PMU counts its external outputs.
 > 
-> Fixes this compiler warning:
-> In function ‘__zfree’,
->      inlined from ‘add_drm_pmu’ at util/drm_pmu.c:110:3,
->      inlined from ‘read_drm_pmus_cb’ at util/drm_pmu.c:174:10:
-> ../lib/zalloc.c:13:9: warning: ‘drm’ may be used uninitialized [-Wmaybe-uninitialized]
->     13 |         free(*ptr);
->        |         ^
-> 
-> Assisted-by: LLM
-> Fixes: 28917cb17f9d ("perf drm_pmu: Add a tool like PMU to expose DRM information")
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> Cc: Ian Rogers <irogers@google.com>
-> ---
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: linux-perf-users@vger.kernel.org
-> ---
->   tools/perf/util/drm_pmu.c | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/drm_pmu.c b/tools/perf/util/drm_pmu.c
-> index b8badae7015c..5e4bdd8e7fa8 100644
-> --- a/tools/perf/util/drm_pmu.c
-> +++ b/tools/perf/util/drm_pmu.c
-> @@ -107,7 +107,6 @@ static struct drm_pmu *add_drm_pmu(struct list_head *pmus, char *line, size_t li
->   		type = PERF_PMU_TYPE_DRM_START;
->   
->   	if (type > PERF_PMU_TYPE_DRM_END) {
-> -		zfree(&drm);
->   		pr_err("Unable to encode DRM PMU type for %s\n", name);
->   		return NULL;
->   	}
+> Patch 1 is Leo's fix for TRCIDR0.NUMEVENT decoding, which patch 6 relies
+> on for the number of external outputs.
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+Maybe it is worth to update patch 03 for Suzuki's comment:
+https://lore.kernel.org/linux-arm-kernel/82adee03-a169-4106-99f2-7624a4926037@arm.com/
+
+This series looks good to me and I have verified it:
+
+Tested-by: Leo Yan <leo.yan@arm.com>
