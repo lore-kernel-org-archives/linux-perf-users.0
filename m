@@ -1,100 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.216.51
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1793920680;
-	b=evUnIkLONfQtNAI7KXy/i6ujZG6LBVoPdCy7IjnyZUa/X2e5Gc1fSZepKq38mU8i+89I
-	 /oHOtiqJYyaqygCl4jahLS3FS47Z2QQgCQCBSltniZ10ojhjz36YHqnlJppQPlJBUB29a
-	 8+3wP4C2yx3r3g0rY6WDN/9cPcx9uO6y39cSQEJsAxBqDLw+eZNPlTWdlTD1bGtBGBJDW
-	 Vga1LWz2VHbWxI/wboYDPcd6GDyVUl3o74Dc8dyN30aJj6eBERpLzd+d4EmXBGedMvHR7
-	 ctSgZLQp2BGqVBV4TIjp7hdLD7kWjX1cDI2Ts0wwjxW84ZNhPr2k34U3D2T+XGhXo9g==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793920680;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=fuCDmSI9zu6AYuOwJkaSaRyngdfgRozjSLztTOAphqk=;
-	b=TDlckPnrGTEl8DkPdv+uSb5GtEfYnzaF2xkWygEMNeu3HCWBMhxVDLIAqBAzrFGTp96O
-	 EuXT4cVOefqTZ1ME64HwBc4H/IUjH3gwbLa6Piq5pUdW3WA9RjDDkmMYxLYQVmm7CYkl1
-	 PfhZJ1PtWYGex/vEyFJSBVNMtQi3oZfITtTC1wR/zB/YuCd1MF45rXNdQSBPd51aiE6q8
-	 TFDMVaSBqHEG7fO6vQTrz1XlSNKT9E2+YOG/ote9eba2brNuTbcT91wfHB4uzlhdgZrIV
-	 xIhpMwCcu9ZMn4WcRucn0KVYr7zXHZk8gGiOaQiXUXDtsbYUPg7c/pfHijO053KSqWQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=paul-moore.com;
-	spf=pass smtp.mailfrom=paul-moore.com;
-	dkim=pass header.d=paul-moore.com header.i=@paul-moore.com header.a=rsa-sha256 header.s=google header.b=F936vzKm;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.216.51
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1793920738;
+	b=QMvXgxQ+DsDVsrVhnunJMMn0k9emRNZOPueIen31nbONdMqLonXkIK5m7A31IFBWloVw
+	 XhC/bLiakXo7vBAh+30kNJ9ycYTt0FiPbR9v5fFcPgCrvNqX9gG+Pg+/3+sKZVxieaxiV
+	 f3J89RFTzemYzNaiJufSOgraEB9nokPIZlXYpPc3tFhuV7sWkb/o7RyBShyK/KuCOmpsd
+	 xGPvneeIuxqJ0DUza1jro2gGDaIrvJOfs6c5ZWy5sKQ8uQzR7tXidmpTRacSOuKX5TMxF
+	 hOGrUKPnTS9H+HZVMjmU7JWLNhJf6qPAWOTOVH1SoFdcvQCXx7GF5EG+yFb3BR3AAWg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793920738;
+	h=Received:DKIM-Signature:From:To:Cc:In-Reply-To:References:Subject:
+	 Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-Mailer;
+	bh=mk9jqojNulChiWcD8JJ5p7BFBGVqSZDlleZYxFAx4OQ=;
+	b=GtaXW893XzYLUO1WewKPMVUs3urrGNC50YMALFYrly5mnbxvDHQ8fFVNlfX0qyzmuicR
+	 yaSFK7XXU1pvUEU4+3FAZYMX1JNCaEi/qzi+T26SfvRXhfVsqYesOnWb7ZvKDe9RJiQS/
+	 ykR2/NdhTY84Up3X3dWf6wL7WMVwwLvfE4cEVwbOzhKSIwNijyaYGM0wH5BF7y2BWFriI
+	 rhqQm8LUQlZVz62xgyvu8lePUytaNrCvKc2HENGaHUxQkMLlj6EYeWZvnUfkqP45OBHxm
+	 LH1BVTrqNWzRDD9PFB9ghJlEumURMIBpgIw/WzAi4PQ/HZKwFJY+OmRyC9W9pA0OTJg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MrWeTVSq;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CE1606A328
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Nov 2026 23:17:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 09CE1606A328
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC46D606A31B;
+	Thu,  5 Nov 2026 23:18:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=paul-moore.com header.i=@paul-moore.com header.a=rsa-sha256 header.s=google header.b=F936vzKm
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-3b0bbdeae06so26856a91.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Nov 2026 15:17:59 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1793920679; cv=none;
-        d=google.com; s=arc-20260327;
-        b=af+KJnrYOrh1f9ninz0FmbnC2FdNXQxBLe5gjJtHLS/qvIitmUJuvQRecSmjUHOpXk
-         i0FMUM2cpc7kXNDguCDASHgSST3/KUZISZ/LDMh++G303bypXITUY7LKXZkRGl+rw/ZI
-         NY9OqH3G0B9n9HfCH78wfaedO9pf52r2xEzLM1AFs7/sZNKlgElRbmsPfogWfkY26or8
-         8uUH1YmzPnRkpEdrmBNxlPi1q9WxfAGitRemiHPLWQzGzbmFoqtN4IWvg0m3VaP18u4z
-         AU1IbTWsyuCum+4LLq5j2x04VJu9Hq7O68pu0nstUBXoar9+KlAb+tf4iTbzdpKK/To+
-         ll6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=fuCDmSI9zu6AYuOwJkaSaRyngdfgRozjSLztTOAphqk=;
-        fh=ppxtX/vSlTM1Afv51nrtnVXTWNKwFnzMJDwTUB8cUSs=;
-        b=dgCGybQ8qUy3z0vvYijie1gvnB8NJGwKpDV6T+y9EnG4ZxcEaOtTQN6hzUIPVuJKCj
-         Mdjxa+vtYt4ZFmkYlOfnwIZv1Im5Zkl9MCZ+4D9QsEanmoQESPCwB3ukYGN4OoPiruiA
-         R5f3JQBvry2tunNLhqbkaHYMyEemYaXNPOp8RJT/bX+j1TtyOfTcCPNIIor4MMHHeYqn
-         tbcQafMrkDRBHIfFJtHKQaRjT7BntMEZSnT2ALRwTNl0eOMUURhezTOGZ1Z/QCQSxmOp
-         LK+okbpiPsHmGGf117KTuYS+NdfcROcsIKUr4GmyImNMuMmO7+fqFMBAIEaP6S86Cdgt
-         PmlQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1793920679; x=1794525479; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=fuCDmSI9zu6AYuOwJkaSaRyngdfgRozjSLztTOAphqk=;
-        b=F936vzKmZco1Rg9qiS2Cf7yXwnXt8dn1LQ3YxCN5SMsKSJRTlu37FG2JQnmiZ4tO3q
-         ZY7C/eCqTECYbf79gAR8gp3oow9+Ykdrk78RZdAOFLnN4sIU8x8jDIiI/j4+tmIgfhgQ
-         Kfc7/iulz45+20nMepsyi2DVKsca2I7vu/IOFa2DSNB+5NoNB+X3xZL+TnSEr5nUJW/0
-         t+eWupnUof2Q+Z07m3XUdhgKdmPOk5SNXh4+R1i03zuB5eyYkN5hGGMTpwfL4P3jF/oi
-         qjoVjwxKWuHtQbutc+EbzPaNTI2YVJHBnHBIs9egvV2qx2jXIUZICkPleteOCZKku3cJ
-         ZAwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793920679; x=1794525479;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=fuCDmSI9zu6AYuOwJkaSaRyngdfgRozjSLztTOAphqk=;
-        b=nF6DaItyyn8+eNjaTZdi1t4NslbgWQGL++r23nZBzSvgeo1VtW6+1b//IehR8oF5Ct
-         PtrqERmhNNYpKlV1ERi8Sx0IwPLVIslToCZZa81b47WmZPt3qEGHe0dWOiTpuZpE/tqw
-         afcjZAJNBcGotPqJbaBDzkIQym9U9yV35WtXC/2SJHIg5cq1zkdwbsURlqznukf64LBE
-         NtShEk0GbajAz8pF/vdm5+gjei2f5iyxwuf2tQIoxvq/K98k0xPmC5kHCvB6U6bXxkYH
-         bJcDMnaHTPTG969Sazgp3jfirWLE5XiBy8H5fLrqHRHEqbVwuop4AO9tgSFBHVQLC8ir
-         +MjQ==
-X-Forwarded-Encrypted: i=1; AKwUvByBiWUjsc4D5Ee5RpqFdqhw8TG3yvYtLzCHjpWwGCVB9IvAaQwrMgUESdNqiJDkQsYUTWN+Qzvazt/ZkbGg/MWJ@vger.kernel.org
-X-Gm-Message-State: APuU4Z/FYvPZAMWD54JxzQ4pmpBzg0ex13x+jG19YsPxl+XWJX6QJeGE
-	bAS31WWDIMlyLswhpqK2TtY8tOK/9z7n8+kW7SXBEuJKggsJGqBOuJm779KIzEXVzpufZQPXuc7
-	IWxAK7HQBylQmr/GthKmvgQzf6tMwMVXLombT68/t
-X-Gm-Gg: AYBFou2JmkUghqZZ3ZiM3bvU7sRmSW+6svLGcHK4q1v7Im74g/20fRUEysIhjQajH4g
-	jWL4nFS2TPkN9zZX5LZn1P/iXHH9/OIz6uOz3UCl1/X76DytJl3UfzbvgtB9pgbb/FRdcIGONxs
-	IslXeW/wS269dPFE99zeHHVWruGgzvXBXWdX33meCABw5l6P4m1mbItkLdF8HLC2LAox7pAEos9
-	8EzTBrstyd7by96BpoqPWAnIzeQ2QovdJh0qAAm9q8QpAhYtoYWRWVh3GPKppern9XfACXK5WGu
-	4N3y5/pUn4tqPBRetTI8fTAGnbTjuSk5vpdvdNNYF1YyknpZOhUn99onQgt2Him6Stqpc/s8nlc
-	PzLSVIGPh9HrHHF3i/tjwKvW7D/EnDSLkYcgJgi/mE2NOTJbKktbxglVj3+VrMJE0pzCK
-X-Received: by 2002:a17:90b:1dcd:b0:3ab:f38:2b43 with SMTP id
- 98e67ed59e1d1-3b0db703e39mr535625a91.34.1793920679319; Thu, 05 Nov 2026
- 15:17:59 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MrWeTVSq
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFE9F1F0089F;
+	Thu,  5 Nov 2026 23:18:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793920737;
+	bh=mk9jqojNulChiWcD8JJ5p7BFBGVqSZDlleZYxFAx4OQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=MrWeTVSqZDNF4KVgUyK3Sq63fTIIaVu3H9M1EMVMOjj4+B4JBGXxWAA9Ls+YMBUCt
+	 IggvD5XEc7FtKQhcVJ/RnHIND1mv9hlFzJB8mZp2Rr/8P4LdaM0Ush+I86HPxsea7N
+	 j+ajGnuGijHG0gw2W5+kW5oyk2VU1BP0/M46zZsmtoU5Ly7+tpyOGy5oaZF3DUAYvO
+	 TWPJKv6BjVSuz2YWj4wN6Zso6o0uOUZp4fLZMBjaO/KtTYTsha+1Xgp4/oLng9OhC0
+	 GMNh5+ViK5sgzo3dj1CKRTRT3gRBMLmNbYaakJxIMnbsIVUa2HXSmOqNGYFYpdz2wk
+	 KhbtxIrh/7sQw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>, 
+ Namhyung Kim <namhyung@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+ LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+ Chun-Tse Shao <ctshao@google.com>
+In-Reply-To: <20261002054832.64980-1-namhyung@kernel.org>
+References: <20261002054832.64980-1-namhyung@kernel.org>
+Subject: Re: [PATCH] perf stat: Fix aggregation of cgroup events
+Message-Id: <179392073692.4004918.5084074052430143304.b4-ty@b4>
+Date: Thu, 05 Nov 2026 15:18:56 -0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -104,81 +62,23 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261105-late-2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org> <20261105-late-2026-vma-flags-v1-13-0d3cd15ab75f@kernel.org>
-In-Reply-To: <20261105-late-2026-vma-flags-v1-13-0d3cd15ab75f@kernel.org>
-From: Paul Moore <paul@paul-moore.com>
-Date: Thu, 5 Nov 2026 18:17:47 -0500
-X-Gm-Features: AclHuK_gkg-Hspii6U5_01_jGLQO23B7F4YXuvzvsb53ImE19wnChR3DgLruv6g
-Message-ID: <CAHC9VhSR=9YNhBxeFBcTR8wgG2yDP1fW590QKjzuc4Kq9ohaiQ@mail.gmail.com>
-Subject: Re: [PATCH 13/13] security: convert VMA flag tests to use vma_flags_t
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Rik van Riel <riel@surriel.com>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>, 
-	Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>, Zi Yan <ziy@nvidia.com>, 
-	Matthew Brost <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
-	Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
-	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, Xu Xin <xu.xin@linux.dev>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
-	Shrikanth Hegde <sshegde@linux.ibm.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Leon Romanovsky <leon@kernel.org>, 
-	SJ Park <sj@kernel.org>, Rakie Kim <rakie.kim@sk.com>, David Rientjes <rientjes@google.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Oleg Nesterov <oleg@redhat.com>, John Johansen <john.johansen@canonical.com>, 
-	Georgia Garcia <georgia.garcia@canonical.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
-	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, =?UTF-8?B?T25kcmVqIE1vc27DocSNZWs=?= <omosnacek@gmail.com>, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	kvm@vger.kernel.org, damon@lists.linux.dev, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15.2
 
-On Thu, Nov 5, 2026 at 4:35=E2=80=AFPM Lorenzo Stoakes (ARM) <ljs@kernel.or=
-g> wrote:
->
-> Replace use of the legacy vm_flags_t flags with vma_flags_t values in the
-> mmap and mprotect LSM hooks of SELinux, AppArmor, IMA and IPE.
->
-> No functional change intended.
->
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> ---
->  security/apparmor/lsm.c           |  2 +-
->  security/integrity/ima/ima_main.c |  2 +-
->  security/ipe/hooks.c              |  2 +-
->  security/selinux/hooks.c          | 14 +++++++-------
->  4 files changed, 10 insertions(+), 10 deletions(-)
+On Thu, 01 Oct 2026 22:48:32 -0700, Namhyung Kim wrote:
+> I got a report that perf stat with BPF and cgroup is broken with
+> aggregation like per-socket or node.  On my machine, running the
+> following command shows the problem.
+> 
+>   $ sudo perf stat -a --bpf-counters --per-socket -e cycles \
+>     --for-each-cgroup /user.slice,/system.slice  sleep 1
+> 
+> [...]
 
-Similar to the other patchset you just posted, is there any reason why
-individual subsystem maintainers can't pick these patches up, or is
-there some reason I'm missing and they need to go through a single
-tree?
+Applied to perf-tools-next, thanks!
 
-If they can go through multiple trees, can you split this patch up?
-AppArmor, Integrity/IMA, IPE, and SELinux are all maintained by
-different groups/people.
+Best regards
+Namhyung
 
---=20
-paul-moore.com
+
