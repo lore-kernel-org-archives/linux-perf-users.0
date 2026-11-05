@@ -1,87 +1,87 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.45
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793879143;
-	b=vqG7VluvDV0FdXbEoxpmLhGTolPvejzQLRuxmktvEmFVgdgi4zCN3kEGlttxYlA0vw30
-	 FW1rVFTLrdrKN7kf9WIPpcKy7hthHNMLcnxq2qzpJlxBVtgNQPxlD04bDL5WFRZCrogPX
-	 S/sVBATscNIRKsmrBM8sSTwHsMyTE5t1J3EbOadsY+o6vrVLQUdgWgRZrjh4xak0L7Ywo
-	 bim1Ds01+TYcyWYKPfhhCs+WLs5UbGS68/dMydXESouE91jPTVz80EMU9oa+EHzILL5DN
-	 +7zQuoiB1NPptn5MXe3N0zQlV3d7lbPRRlI9jcaojM0SfR6GLY0lTdq6hj7Wjz/Lh3A==
+	t=1793879138;
+	b=hGF4mCQi1oh1VfI+bWVIg8V/gK25U0bZiwkwpasNBRxRbZm1DWU3drKKWgN41MCdisK3
+	 G0xGQS9LORiaVDMSkU1InkW9FocJRXgAYMRzJIRcXmtm+Br4kccLUxQ5oFlDFCt7or8TE
+	 BbuK91Es8r5UDbdminYwsSqx1X7amOYnp1Xg5Vdvbk+cnwYSWtZiRkrSBsxCwu2O5zxhF
+	 bl9Gc7gJgSMvHiycSRtxsNrKMjBXpYp0fU3oLtNhwVvafyDDpNYGw6RAFjIhouAzMhHp2
+	 TwCFV6h+rdrgkWaoGoF71O8QzdK5AfOvWfj5cOnbn4GRNzBIL2CW3ewl2+z3sl/NUNw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793879143;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793879138;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer;
-	bh=6POGoe9GP/LfncNNPmyOb3NHHZhyrYu1RabNz3eag4o=;
-	b=d0btcCNQsANuYcr7WliVZqp4XG/iEhdT7XzbHHw98xtppbSo5NF1rvQdQDOVqHBPl+gY
-	 f9mgT8hWuu60fcikaCA7GmUMjrNurwh/XaCFiHiuFvm1LxnrZCboJ1lz7Mx8pYHIl46dn
-	 cistluuM9sWqN3DOfFVLJL8qz+xEJPsGsYFwmIQUOcaznELGetCDcUnDnGanlK92TK2YR
-	 S0MaxFhCvkqUThsXPRX5A4Q0NQp47oKW63ouHLonIRR8qPgIzb9/U0cKmjo3zTtRCKr6S
-	 Vft9slJurl9c1IyEc4gt4w6SNmYQEg+1MdqSrL6WM9uz5MKgNvbGdKECDI81rSSBCBw==
+	bh=7+yXqelcd7K9D83xlzwHs5kTJc4QtzlsHxdJQfLdGMM=;
+	b=sOeJt+XAhVvsjt4rEYj/Fte6QeyzngAXrIX4mLigqg/Tg7ostoUSLLE32miGj2O1R7pL
+	 7/bmAFStUwFlRdrQC8tYM0AOcmX3g/qWrJRjkLGKICZhrQT/gkNTk4cPbpLEYuh65P8c6
+	 8R8IwABEc74KEPiuHROlVbhGdI/MYUdCH+LbUHzep8Q+DonzcYurOn2dN72hyMO5Y+fLJ
+	 hbxnBnorGXMsgWImIMQbkZlRSTfEekw13m/h2RM11nxnT9OsHswHNsZud0N+6PW4AcqBa
+	 8RTlZB4by40cJxx/o/H4XxEwO5f96luLgTCd5EpIoD3rjMoV+IgbzRdoT8DqWZ1ny4w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linaro.org;
 	spf=pass smtp.mailfrom=linaro.org;
-	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=K1gejdb5;
+	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=eiAXUHZk;
 	arc=none smtp.remote-ip=209.85.128.45
 Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3286074707
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Nov 2026 11:45:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CD3286074707
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E6E6073A9F
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Nov 2026 11:45:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E8E6E6073A9F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=K1gejdb5
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4a9a8d6cea8so6046995e9.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Nov 2026 03:45:42 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=eiAXUHZk
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4a5177d78c7so15953965e9.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Nov 2026 03:45:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1793879141; x=1794483941; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1793879136; x=1794483936; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=6POGoe9GP/LfncNNPmyOb3NHHZhyrYu1RabNz3eag4o=;
-        b=K1gejdb51J+Z8oiybieXDjNL9wJxYfNHLd1X4OBM5GNJ3wor+IUnGJXJbBw1ZVJemG
-         oiQOLL70ZCPDKxZks4QCtmNbf5n1gYX7h76x5nc2888dG8C8bxvg9qIPbxL7FGuZZ++b
-         0scyKGIHjQNGL3ckIenvZab7SOT9iPj+TT9DBFlx1T7hD1seza5NI8CPPEKLUFal7mIj
-         PYl0DSB2Z9V4kGKcip1ICMOuHBBgkwWixzjLhug6Xkh/ygxGPiF0v5NBr2sVuMVaEPS1
-         fBnHpA9IkZfoH81zrYFaaMCOQqLH27o9yOs1pyPsjgbDtnY7oidT38FFfmGSPh9F6xv6
-         LvIw==
+        bh=7+yXqelcd7K9D83xlzwHs5kTJc4QtzlsHxdJQfLdGMM=;
+        b=eiAXUHZkRcPPJyedbMUBbfgxQ/69bd1TJfROZiWDCkI/5s2nMHEmO0+/X+Br9wTGGi
+         1FlYPTfwxBUARRST1SxwdDyoFfvi0jXy+TYCkoHiEXSoZsa/HUD2GbzCZaPv5uZXvQn1
+         mN5gNTWnwNf56D9mOI+L/vNhTmtX4zcUpGwul45g9G99HBeGp6LzkAlw+6e4gO7suRug
+         OTm1Sj2jJ9uodOVxQEpLUyBn184jYCSz38wIBxD+S8iDTePuKh8lh7CnUT8uMhAS9wso
+         y9CaSkLRYFgAQ0ZjSoWZD6BLtecXTyc4NcUduj514JWaqqQV/M8NV0r7Xy1O7wN/maqM
+         weDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793879141; x=1794483941;
+        d=1e100.net; s=20260707; t=1793879136; x=1794483936;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=6POGoe9GP/LfncNNPmyOb3NHHZhyrYu1RabNz3eag4o=;
-        b=gQIZgjTvvS1GydxtdsF0qncz5MGK7QZVIe3oWNMausLkMtB/IpmIpZJetAaGcK7mq5
-         SEgbQ15ZRB6r7Yd2xJbV+867g5DJ1B0edaXfjiS4GJ0W6qsmXJpovgnc1LysedQ62Pq1
-         u8L+12MY2ZpqL9DBtxa+cL4W7yzaQIkkzLlplngtoL9pUfLTb9DXXQG2JlUmI1b2JkPm
-         tCH9z3DdsVmemziG34fANeAzwqjEn1Of+LafZsolY+aijfsVV32splGOHdq07IvZ+mzA
-         /EqIF74ojTltOYJykIrz2MpeRaxeIeaoEYJeJh9gx4mGyY5Kn18x9dagfYHD9y7d5Lku
-         c6UA==
-X-Forwarded-Encrypted: i=1; AKwUvBxe7fo0zueV2sBHCU3A3WH36Sa+JmHv/CL+cYw0wjT1bBqTg2zlz5/x3rmNPzgQXJj/loqVSHepuA9mQvzGnaip@vger.kernel.org
-X-Gm-Message-State: APuU4Z8ZPdF3IuF8LLV6b7/LDuNsBHd8lSR2t2ynPs3ZvB5S+X9qUIeM
-	0f6UqS/vjiHPxvGvYlMcTWyFd2exD3mLgnOsGR/E4pSoNetmU3KOK/ivuT5LvOLw52Y=
-X-Gm-Gg: AYBFou35afkCB3P10sUVfv0Oz2+NvJX0Cf6O1TIo9X9nTKt8+My7ge5Nw6H+beVdgwy
-	7fDFUdT/UL+/QJ9S7gpQcOc2XXv0wrICN+xM3nbRG2/rX1H+ElNOZ9fSajiqod6xSp9Ps0AkSpr
-	YXTsNXR5c5KfqlwlA8TpxkL+J/J/BV6HtZ471ccc62WEZcqTqnYOCU68HR+AKKocZQZLVi1Tfle
-	3p6VhVwCZhOfnEgamnI5MI+Ubn20MkysSEMcSHpBTjafJHVo7oSCctwNqioH2/xc/Hm/SSJBZms
-	Yc1wQ9fzMEILsPjm/V1Q6LY5+156AtCA/YOcWryslqu/mvH4Hqr9Hw+GVsNbRCzjut0mqQZBCgq
-	/HJ8xNDFsG9TXW78Hr+f+hk9JVtUx3HJvMFHm2BroxwwmhYGgcX8IugraTfO9AZQUN07uypSGUP
-	C3QoZMh9MflgtQE1WuZ/kX5v1gNmj+FNn97Y+zR8gLyhe+MTPSvrV35oeeEKBatfel6/WpI7WRB
-	Ixb8gHpwcm4AsnjEesBZa5FzxUGJ4Pgj3iawwXlT3aaMcTbVNOHqIdKu49j5+dH3paNcB0nkk7i
-	aeavvHxSBWDH/3oY5dZsZ+Gd8rKH1aORBVI10Ed5Y1WV6jFMcH0x+a8=
-X-Received: by 2002:a05:600c:34d2:b0:4a0:20b4:ba93 with SMTP id 5b1f17b1804b1-4b55e07e6d5mr40258725e9.16.1793879141088;
-        Thu, 05 Nov 2026 03:45:41 -0800 (PST)
+        bh=7+yXqelcd7K9D83xlzwHs5kTJc4QtzlsHxdJQfLdGMM=;
+        b=uZHa3eiu565t37oHuEvjDJ+evMFriGQADA9yfaGCV5O3qCrMGdz/M6s8zfwf7gm5v9
+         4nIywgL0DY1BljOBtf29YafR6qJK6ailTAjokKxsjGCItIqretAxoeO6u2Y6SRjdvm66
+         HF+XYIqJ9feRk3JiB3IhyBMtzophDlpv1mlFVowOQuQFyYDBGMtghjoSk09YaKn4PvYO
+         jVUpuD7awR5o6ZsDQym2IMOt9SVEl8/iua7wajTbQPPvIbevsVukq73ajHm9AXd19BI6
+         bceuI9GJFlj11UlwNHcxJRtefgnrE1z6HHFGgZ+6gespbljQiWZZI6skNvkNa6srMVAL
+         vs+A==
+X-Forwarded-Encrypted: i=1; AKwUvBz82adr4kFnrgilaTZKvpyO5gnckPsJ11o/XHeiTuMa5lKNajWu8g4qCQ1sjh8H2FCclR7zLYwUPxeBdDjcdTO7@vger.kernel.org
+X-Gm-Message-State: APuU4Z+gEDOmRSINLYk8yYmsaWKrzfmM6+1xEZdP90oN4OcgPokaZdWc
+	SF7Z/OO6xtzbihskKExScYqqXUo195359v+xj8TTKbv+bDE33AhbA90H8sfGfZNkUBA=
+X-Gm-Gg: AYBFou075yTcKlSVuHQia8EhYEHuVYzSBBXC5dueyXUXnJ6jigI4421JN9y8xYvXvri
+	/K4gkR9DfHGGtSbef4c9mym/Z3Vy510gkIXmtaYlttIRyj9AN/mdnpRIEVbt88sRA0iSUlu9TZR
+	TksYf8ScTYlFNnw94YD5ixwzotUVsoXcOw70rEcl2Q1O4OJBa3fcMrpJqw4Gt9lMAruBDl0ymXU
+	0JvLzDC3LA8dkoGsvkYeWJE1HORJslqnC7AFpzYwYolTcjogjYzPGkZN/13mzgOebJ7sPDue6cO
+	sRt/Ie1DLyOEQcPTB8SwUBoF9tO0fejsJr7I5nrOOqjQ0ad6AEiDLyP+aCuxWyUyUc4261/pgAX
+	FTODnfVqa2GQuAXekSY+rBSYx8GBGmIk4OkudHdXItlycLfCyBYPhDRE9nIyPSil8+jjEAjo3VJ
+	YKOf0Qnmr2wvxc+MLUkK5t7zXPW8PQxJnrgf/XZUZmzd0PxCIw7PVWHMhWnCJcHAnB2MDMRSSFy
+	5ROJts6ndnuS2u9dXbvSc+4jSi3vjIwQ6KNBZbdvGRQ0eiqBvCySo26N3DgLOiqZ6O4BRxWHaSW
+	/szJufjF/tKkp/rkc5sPEZh7s0ckLcnoMQoxfti9j5cKUnUYWQFVxA==
+X-Received: by 2002:a05:600c:4f0f:b0:4b3:ad9d:e21 with SMTP id 5b1f17b1804b1-4b3ad9d0e48mr136677825e9.12.1793879136438;
+        Thu, 05 Nov 2026 03:45:36 -0800 (PST)
 Received: from pop-os.local ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b571f46538sm56679525e9.5.2026.11.05.03.45.38
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b571f46538sm56679525e9.5.2026.11.05.03.45.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Nov 2026 03:45:39 -0800 (PST)
+        Thu, 05 Nov 2026 03:45:36 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
-Date: Thu, 05 Nov 2026 11:45:03 +0000
-Subject: [PATCH v4 15/19] perf auxtrace: cs-etm: Capture wrapped snapshots
+Date: Thu, 05 Nov 2026 11:45:01 +0000
+Subject: [PATCH v4 13/19] perf cs-etm: Queue partial AUX records
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -93,7 +93,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261105-james-cs-unformatted-per-thread-fix-v4-15-7759e0ce2449@linaro.org>
+Message-Id: <20261105-james-cs-unformatted-per-thread-fix-v4-13-7759e0ce2449@linaro.org>
 References: <20261105-james-cs-unformatted-per-thread-fix-v4-0-7759e0ce2449@linaro.org>
 In-Reply-To: <20261105-james-cs-unformatted-per-thread-fix-v4-0-7759e0ce2449@linaro.org>
 To: Leo Yan <leo.yan@linux.dev>, Adrian Hunter <adrian.hunter@intel.com>
@@ -113,122 +113,134 @@ Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
  James Clark <james.clark@linaro.org>, John Garry <john.garry@linux.dev>
 X-Mailer: b4 0.15.2
 
-find_snapshot() isn't implemented for Coresight, so when a wrap occurs
-we only save from offset 0 to current head, modulo buffer size, rather
-than capturing the whole buffer. Coresight drivers currently use a
-monotonic head pointer even in snapshot mode, which gives a lot more
-information for taking snapshots than a wrapped pointer. It means we
-don't need to search for data at the end of the buffer to guess if a
-wrap has occurred, and we can go back to saving partial buffers after a
-wrap by checking if the next size to take is less than the buffer
-size.
+In snapshot mode AUX records may straddle the boundary of multiple trace
+buffers. Currently we only queue AUX records whose range is contained
+wholly within a single buffer.
 
-The drivers will always be able to generate a monotonic head because
-TRBE has a bytes written counter, so even if we stop generating an AUX
-record on every overflow, we can check if the counter indicated an
-overwrite and offset head by a whole buffer size if it wrapped. This
-forces userspace to read the whole buffer rather than between last and
-current head. ETR and other sinks use software double buffering, so can
-continue as they are.
-
-Add auxtrace_record__monotonic_find_snapshot() and use it for Coresight.
-A monotonic head can't be auto-detected in the default find_snapshot()
-by checking if head > buffer size, because before the first wrap a
-monotonic head looks the same as a wrapped one. The search would then
-falsely detect a wrap when head is near the end of the buffer, and the
-wrapped pointer fixup moves 'old' and 'head' a whole buffer ahead of the
-driver's head. With a wrapped head that doesn't matter because only the
-offset within the buffer is used, but with a monotonic head the next
-snapshot would either save already saved data again or drop up to a
-buffer's worth of new data.
+Fix it by queuing any partial AUX range that overlaps any buffer.
 
 Reviewed-by: Leo Yan <leo.yan@arm.com>
 Tested-by: Leo Yan <leo.yan@arm.com>
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/arch/arm/util/cs-etm.c                  |  1 +
- .../perf/tests/shell/coresight/raw_dump_stress.sh  |  5 -----
- tools/perf/util/auxtrace.c                         | 23 ++++++++++++++++++++++
- tools/perf/util/auxtrace.h                         |  4 ++++
- 4 files changed, 28 insertions(+), 5 deletions(-)
+ tools/perf/util/cs-etm.c | 54 +++++++++++++++++++++++++++---------------------
+ 1 file changed, 30 insertions(+), 24 deletions(-)
 
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index 5e7d09b7170c..84a5d7392a5f 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -922,6 +922,7 @@ struct auxtrace_record *cs_etm_record_init(int *err)
- 	ptr->itr.info_fill		= cs_etm_info_fill;
- 	ptr->itr.snapshot_start		= cs_etm_snapshot_start;
- 	ptr->itr.snapshot_finish	= cs_etm_snapshot_finish;
-+	ptr->itr.find_snapshot		= auxtrace_record__monotonic_find_snapshot;
- 	ptr->itr.reference		= cs_etm_reference;
- 	ptr->itr.free			= cs_etm_recording_free;
- 	ptr->itr.read_finish		= auxtrace_record__read_finish;
-diff --git a/tools/perf/tests/shell/coresight/raw_dump_stress.sh b/tools/perf/tests/shell/coresight/raw_dump_stress.sh
-index bea70d825596..c9459ded4cbe 100755
---- a/tools/perf/tests/shell/coresight/raw_dump_stress.sh
-+++ b/tools/perf/tests/shell/coresight/raw_dump_stress.sh
-@@ -48,11 +48,6 @@ read -r size offset last_idx <<< "$(awk '
- # everything was dumped. Allow 48 bytes difference to cover 3 frames: current
- # frame length, a partial frame and a final empty one, all of which aren't
- # dumped.
--#
--# TODO: for a single snapshot, offset should always be zero. However, we
--# currently output AUX records in snapshot mode when we shouldn't, which
--# increments the offset. Allow for that until it's fixed so we can test raw
--# dumping.
- decode_size=$((1 + last_idx - offset))
- if [ "$decode_size" -gt "$((size - 48))" ] && [ "$decode_size" -le "$((size))" ]; then
- 	echo "PASS: AUXTRACE buffer length matches dumped packet index"
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index c613efd83223..3aabf2f4bd47 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -750,6 +750,29 @@ int auxtrace_record__default_find_snapshot(struct auxtrace_record *itr, int idx,
- 	return 0;
- }
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 966261429da6..320164645f61 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -3238,7 +3238,8 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
+ 	union perf_event *auxtrace_event_union;
+ 	struct perf_record_auxtrace *auxtrace_event;
+ 	union perf_event auxtrace_fragment;
+-	__u64 aux_offset, aux_size;
++	__u64 aux_start, aux_end, auxtrace_start, auxtrace_end;
++	__u64 frag_start, frag_end, frag_size;
+ 	enum cs_etm_format format;
  
-+/*
-+ * auxtrace_record::find_snapshot() implementation for drivers that don't wrap
-+ * 'head' in snapshot mode, so it's already monotonic like in full trace mode.
-+ * No search is needed, only force a full buffer read if more than a buffer's
-+ * worth of data was written since the last read.
-+ */
-+int auxtrace_record__monotonic_find_snapshot(struct auxtrace_record *itr __maybe_unused,
-+					     int idx, struct auxtrace_mmap *mm,
-+					     unsigned char *data __maybe_unused,
-+					     u64 *head, u64 *old)
-+{
-+	pr_debug3("%s: mmap index %d old head 0x%"PRIx64" new head 0x%"PRIx64"\n",
-+		  __func__, idx, *old, *head);
+ 	struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
+@@ -3286,25 +3287,23 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
+ 	}
+ 
+ 	if (aux_event->flags & PERF_AUX_FLAG_OVERWRITE) {
+-		/*
+-		 * Clamp size in snapshot mode. The buffer size is clamped in
+-		 * __auxtrace_mmap__read() for snapshots, so the aux record size doesn't reflect
+-		 * the buffer size.
+-		 */
+-		aux_size = min(aux_event->aux_size, auxtrace_event->size);
+-
+ 		/*
+ 		 * In this mode, the head also points to the end of the buffer so aux_offset
+ 		 * needs to have the size subtracted so it points to the beginning as in normal mode
+ 		 */
+-		aux_offset = aux_event->aux_offset - aux_size;
++		aux_start = aux_event->aux_offset - aux_event->aux_size;
++		aux_end = aux_event->aux_offset;
+ 	} else {
+-		aux_size = aux_event->aux_size;
+-		aux_offset = aux_event->aux_offset;
++		aux_start = aux_event->aux_offset;
++		aux_end = aux_event->aux_offset + aux_event->aux_size;
+ 	}
+ 
+-	if (aux_offset >= auxtrace_event->offset &&
+-	    aux_offset + aux_size <= auxtrace_event->offset + auxtrace_event->size) {
++	auxtrace_start = auxtrace_event->offset;
++	auxtrace_end = auxtrace_start + auxtrace_event->size;
++	frag_start = max(aux_start, auxtrace_start);
++	frag_end = min(aux_end, auxtrace_end);
 +
-+	if (*head - *old > mm->len) {
-+		*old = *head - mm->len;
-+		pr_debug3("%s: wrap-around detected, adjusted old head 0x%"PRIx64"\n",
-+			  __func__, *old);
++	if (frag_start < frag_end) {
+ 		/* Old per-thread files have no CPU (before v6.4) */
+ 		int queue_idx = sample->cpu == (u32)-1 ? 0 : sample->cpu;
+ 		struct cs_etm_queue *etmq = cs_etm__get_queue(etm, queue_idx);
+@@ -3313,18 +3312,19 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
+ 			return -EINVAL;
+ 
+ 		/*
+-		 * If this AUX event was inside this buffer somewhere, create a new auxtrace event
+-		 * based on the sizes of the aux event, and queue that fragment.
++		 * If this AUX event overlaps this buffer, create a new auxtrace event
++		 * for the overlapping range and queue that fragment.
+ 		 */
++		frag_size = frag_end - frag_start;
+ 		auxtrace_fragment.auxtrace = *auxtrace_event;
+-		auxtrace_fragment.auxtrace.size = aux_size;
+-		auxtrace_fragment.auxtrace.offset = aux_offset;
++		auxtrace_fragment.auxtrace.size = frag_size;
++		auxtrace_fragment.auxtrace.offset = frag_start;
+ 		auxtrace_fragment.auxtrace.idx = etmq->queue_nr;
+ 		auxtrace_fragment.auxtrace.cpu = etmq->queue_nr;
+-		file_offset += aux_offset - auxtrace_event->offset + auxtrace_event->header.size;
++		file_offset += frag_start - auxtrace_start + auxtrace_event->header.size;
+ 
+ 		pr_debug3("CS ETM: Queue buffer size: %#"PRI_lx64" offset: %#"PRI_lx64
+-			  " tid: %d cpu: %d\n", aux_size, aux_offset, sample->tid, sample->cpu);
++			  " tid: %d cpu: %d\n", frag_size, frag_start, sample->tid, sample->cpu);
+ 		err = auxtrace_queues__add_event(&etm->queues, session, &auxtrace_fragment,
+ 						 file_offset, NULL);
+ 		if (err)
+@@ -3364,6 +3364,7 @@ static int cs_etm__queue_aux_records_cb(struct perf_session *session, union perf
+ 	struct auxtrace_index *auxtrace_index;
+ 	struct evsel *evsel;
+ 	size_t i;
++	bool found = false;
+ 
+ 	/* Don't care about any other events, we're only queuing buffers for AUX events */
+ 	if (event->header.type != PERF_RECORD_AUX)
+@@ -3397,11 +3398,14 @@ static int cs_etm__queue_aux_records_cb(struct perf_session *session, union perf
+ 			ret = cs_etm__queue_aux_fragment(session, ent->file_offset,
+ 							 ent->sz, &event->aux, &sample);
+ 			/*
+-			 * Stop search on error or successful values. Continue search on
+-			 * 1 ('not found')
++			 * Stop search on error values. Continue search on
++			 * 1 ('not found') or 0 ('queued')
+ 			 */
+-			if (ret != 1)
++			if (ret < 0)
+ 				goto out;
++
++			if (!ret)
++				found = true;
+ 		}
+ 	}
+ 
+@@ -3409,8 +3413,10 @@ static int cs_etm__queue_aux_records_cb(struct perf_session *session, union perf
+ 	 * Couldn't find the buffer corresponding to this aux record, something went wrong. Warn but
+ 	 * don't exit with an error because it will still be possible to decode other aux records.
+ 	 */
+-	pr_err("CS ETM: Couldn't find auxtrace buffer for aux_offset: %#"PRI_lx64
+-	       " tid: %d cpu: %d\n", event->aux.aux_offset, sample.tid, sample.cpu);
++	if (!found) {
++		pr_err("CS ETM: Couldn't find auxtrace buffer for aux_offset: %#"PRI_lx64
++		       " tid: %d cpu: %d\n", event->aux.aux_offset, sample.tid, sample.cpu);
 +	}
-+
-+	return 0;
-+}
-+
- int auxtrace_record__options(struct auxtrace_record *itr,
- 			     struct evlist *evlist,
- 			     struct record_opts *opts)
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index 9d86f8366ad7..980acb2dc687 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -607,6 +607,10 @@ int auxtrace_record__default_find_snapshot(struct auxtrace_record *itr, int idx,
- 					   struct auxtrace_mmap *mm,
- 					   unsigned char *data, u64 *head,
- 					   u64 *old);
-+int auxtrace_record__monotonic_find_snapshot(struct auxtrace_record *itr,
-+					     int idx, struct auxtrace_mmap *mm,
-+					     unsigned char *data, u64 *head,
-+					     u64 *old);
- void auxtrace_record__snapshot_fixup(struct auxtrace_mmap *mm, bool wrapped,
- 				     u64 *head, u64 *old);
- u64 auxtrace_record__reference(struct auxtrace_record *itr);
+ 	ret = 0;
+ out:
+ 	perf_sample__exit(&sample);
 
 -- 
 2.43.0
