@@ -1,55 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793990990;
-	b=tmyS7mrhikYi/57R/ED3sbMhiJ9o4AaAmfkL00mGsWvDA1/37U67X9QlFa/HT3EJUfxw
-	 jeEpAF5FzjI0vz+UHee7Hu2fQ5kiTD1Wy/TiMeZn2JEG4tCdnZ6zBQ//5zrIyTNxReQg+
-	 QJdjq/VsYMQ0xc/UuNrpR63WVdqV+yeSGKiOMHFFfybA9J5I+YfvOpaZq7O4SSmwnyUBk
-	 fIsk32LC28HkGR5tb540Dr7UsM2+0EN/PJvqxDSXiKnNtG6wDS+ZG4n6ucRdwZmG4G1qJ
-	 k0Z0gJ0B4qXkSTvJwwqQaOIYCFYAyExidy90anUxVTv3ZBkcdiyww7bKmVyALxOKcsA==
+	t=1793991243;
+	b=MDUTyBcvwzYcY+DAAwrkd+7uxJiZ/TR+jD/j4mWHJ9IRmaP/ZS0Bgwjp6XMnxf+z741O
+	 5cfsKkU65Q5v1l3eRmxMvsNfD5uPWn0RxUVwVGDaX8qBsYG2KIqKCamacUtm1rf15zN74
+	 JnlP0dqKP0fqmQFaKP5YisppsaXZtTZ5BqRRr0PtlLCiwLRIfwcH+d304SxNqh3KviAiU
+	 WAhIpOmoZM2IFcSSdVPAGjSeezsWYt3Ermwv/1PXawqLWfhPZJT3Iinajo8wDkRJ1+LHW
+	 K6KYXy3mexiDtHXQaai3iHflsdk8H9jj4IsZWtJRxbmZMUt/7pOiGH79AIlH7CinzDA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793990990;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=iOSfLb86QY08ej0RawPxXcRECun5ow2DaAauKLhZvic=;
-	b=f0eGhzjrHgDZMRTF9vX1zWBOAfSxFYgiVrvTtFJUk3c3e4sopgeJz9qtBGqL0lsvqEgb
-	 hGpQ9R7f6icZs5BBErRMUTE3e2RyHlFMd3hiMGT3VTlWzy8Ec5EhfDRHcxvyAGDXhmvuZ
-	 PIeRQJ592esfgJRMv32wa2zyUyUzkDDi+rg7sarICi6oBmrobDanM4Epf0FlDuhT3jaiQ
-	 lNhm+duvWf8iokphBGZLTba42hZsffsEKbhNGRRM6mQXHix4brnpmfCA8EOOeFjAiz3bl
-	 TTfPxhCWac8s/O8XydsgH/KRYrBndic1C5wGtWOK5YgBNqtv8KxXCqS9JwEBeiOEaCg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793991243;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=AuGg27+9IMpciHcEnbUzptbZl49jagNmm+REWY+RQ38=;
+	b=I5n5kMdG+C/3PwLMVWSSAmk2ev/uKAkp9C0e/06QlSS3Yj1L75a9iMp4VKHNrNjU3o9X
+	 ovPrUHDYq4S9IAIHVCbrzydpw2upsaXdOIKi0S90aTTsKiAqUQRa42mfsa4f37ijI8F66
+	 b+noY0wiANe3hIhAJo3HsOLqomMRggo2glLjBlvpHByHGdZAeJ3B7MdrMlPxArHF2J3Du
+	 QDTHYDqvPq7pGyzaDc2PHwEe1p93jli70VLFAF6lkc6OF3Y8Rq2zcXkXpmsGZMKicFBbL
+	 YyL8OV4f0qdr3823wOLY2VH/xJyt4WZdZhpd/qhw0aTsosrbEPFPVggepyw33hCtoEw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=arm.com;
-	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=nfnStZQD;
-	arc=none smtp.remote-ip=217.140.110.172
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24C58606A326
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 18:49:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 24C58606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=b04mEkU5;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0A6606A329
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 18:54:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=nfnStZQD
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5CD0C1650;
-	Fri,  6 Nov 2026 10:49:46 -0800 (PST)
-Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.2.212.23])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 91F3B3F673;
-	Fri,  6 Nov 2026 10:49:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1793990989; bh=KnzE4VmiVmM6UAdxWSUgepdIWMCIhJvuARplG3Gxblo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=nfnStZQDrWiZp7Q9DdPQCjg52ets9l5SI+kta8RUw8uP44rkLlmEJT5d5HW2LfKER
-	 Zh3jwXbIpvMty/DzDvO6nHZ0+CPj/kvieBqnu/JTlhv0jEApQH3LzYqZnUAcxaIZFC
-	 YAugKva6TeScAyGIfU/eZi/QFe3t+UTel7+TizRA=
-From: Robin Murphy <robin.murphy@arm.com>
-To: will@kernel.org
-Cc: mark.rutland@arm.com,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] perf: Process subdirectory Makefiles unconditionally
-Date: Fri,  6 Nov 2026 18:49:37 +0000
-Message-ID: <4b2e518499270b2a6cab3e04a1123458d82d2759.1793990977.git.robin.murphy@arm.com>
-X-Mailer: git-send-email 2.54.0.dirty
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=b04mEkU5
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54D9F1F0089F;
+	Fri,  6 Nov 2026 18:54:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793991242;
+	bh=AuGg27+9IMpciHcEnbUzptbZl49jagNmm+REWY+RQ38=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=b04mEkU5ynRcI9tFaNE630A/xrrGzta/arv5rW1MWsVfa3RGc4XCTd2RoJj782A1e
+	 QwiX3vT6GZcnwTldfYT6T8hXWRWYofEw0YRyz/mfvZOG25tmj/AAP7UJPHdR85vygh
+	 /jKCVEyp8JeSwY2wlQ3nMFrUioHXn3MRlKlU3th25ogdSi0JemDMWoJFbh2w81U2vS
+	 ArqulRxO0/Q2yXgWNp5qDofCWMSsyGFiB6L6O4Yy7wvjshbD4rMDvtiZuUuAGG/oQw
+	 Vo/+mMsiJwdsIFiBOELV67WDwbNRjAH7R5dimSIlPRBO+n+r+NcjY82niZOEccc606
+	 C8pnZYZX1mrMA==
+Message-ID: <sashiko-outbox-202115@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf: Process subdirectory Makefiles unconditionally
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Robin Murphy" <robin.murphy@arm.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <4b2e518499270b2a6cab3e04a1123458d82d2759.1793990977.git.robin.murphy@arm.com>
+References: <4b2e518499270b2a6cab3e04a1123458d82d2759.1793990977.git.robin.murphy@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 06 Nov 2026 18:54:01 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -58,47 +58,18 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Our subdirectories here are purely for file-level organisation rather
-than any particular build structure, and everything in the Makefiles
-is already conditional on the appropriate config options. Plus they're
-not exactly big and complex, so for simplicity let's just drop the
-top-level conditions.
+> Our subdirectories here are purely for file-level organisation rather
+> than any particular build structure, and everything in the Makefiles
+> is already conditional on the appropriate config options. Plus they're
+> not exactly big and complex, so for simplicity let's just drop the
+> top-level conditions.
+>=20
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
- drivers/perf/Makefile | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Sashiko has reviewed this patch and found no issues.
 
-diff --git a/drivers/perf/Makefile b/drivers/perf/Makefile
-index eb8a022dad9a..8c3146c604ce 100644
---- a/drivers/perf/Makefile
-+++ b/drivers/perf/Makefile
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
-+obj-y += amlogic/ arm_cspmu/ hisilicon/
- obj-$(CONFIG_ARM_CCI_PMU) += arm-cci.o
- obj-$(CONFIG_ARM_CCN) += arm-ccn.o
- obj-$(CONFIG_ARM_CMN) += arm-cmn.o
-@@ -14,7 +15,6 @@ obj-$(CONFIG_ARM_SMMU_V3_PMU) += arm_smmuv3_pmu.o
- obj-$(CONFIG_FSL_IMX8_DDR_PMU) += fsl_imx8_ddr_perf.o
- obj-$(CONFIG_FSL_IMX9_DDR_PMU) += fsl_imx9_ddr_perf.o
- obj-$(CONFIG_FUJITSU_UNCORE_PMU) += fujitsu_uncore_pmu.o
--obj-$(CONFIG_HISI_PMU) += hisilicon/
- obj-$(CONFIG_QCOM_L2_PMU)	+= qcom_l2_pmu.o
- obj-$(CONFIG_QCOM_L3_PMU) += qcom_l3_pmu.o
- obj-$(CONFIG_RISCV_PMU) += riscv_pmu.o
-@@ -32,8 +32,6 @@ obj-$(CONFIG_MARVELL_PEM_PMU) += marvell_pem_pmu.o
- obj-$(CONFIG_APPLE_M1_CPU_PMU) += apple_m1_cpu_pmu.o
- obj-$(CONFIG_ALIBABA_UNCORE_DRW_PMU) += alibaba_uncore_drw_pmu.o
- obj-$(CONFIG_DWC_PCIE_PMU) += dwc_pcie_pmu.o
--obj-$(CONFIG_ARM_CORESIGHT_PMU_ARCH_SYSTEM_PMU) += arm_cspmu/
--obj-$(CONFIG_MESON_DDR_PMU) += amlogic/
- obj-$(CONFIG_CXL_PMU) += cxl_pmu.o
- obj-$(CONFIG_NVIDIA_TEGRA410_CMEM_LATENCY_PMU) += nvidia_t410_cmem_latency_pmu.o
- obj-$(CONFIG_NVIDIA_TEGRA410_C2C_PMU) += nvidia_t410_c2c_pmu.o
--- 
-2.54.0.dirty
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/4b2e518499270b2a6ca=
+b3e04a1123458d82d2759.1793990977.git.robin.murphy@arm.com?part=3D1
 
