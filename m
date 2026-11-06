@@ -1,58 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=183.62.165.209
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793969730;
-	b=NLCE9u7U9r/rvpEPFRa85kJpnD6/XdevlRxepXtFXB9QI/aoiBV/M6qSAdrh3UlBnT5x
-	 LfrJWCOzIeVPY+nLsBf0CzImazaq2ZYjGM/PTmAjLvyAHUQ72mO3WXnqizd6i6JzZKHmP
-	 TSPhH5t+Aa9nI4Owgmi/JaS+93ysjE6I1E63fDUpwwsurdEj4fGB4twen0OUyBhP7VNoM
-	 xzlV7T4uSLMoKppseZgDAYfBEHY9MD0xMVAnOApFFsNFvv3D3DXv3vszml1KShr1sGf6j
-	 RbTnD7VDqmgL2AUsiSHPHwmVAOiK4QvWS7maDB110TK3K+F5Xfy3qcTaMUlEyPlzQGw==
+	t=1793973799;
+	b=QQNsl2g/p0QJnTs1h+dvt+Wx+FgXjStSGG5QE/lIqo7Xki6JkFH6BTWG1rcea9mMdmYn
+	 HtoAAgw5WRwjJkNrHiaEIjews3grnAmh4/5i/Dk8SrXo9VkAOLpniJnwLItMtqvnyI8YB
+	 5jyJQhur5Ydfn4bBjhy2kQxSf3liyyCW3zL88JP+1Fxni8a08SGLqC9Mz6F+TAWj/4pIg
+	 Fxo0mw1TRcWdaT/w2EcoQsAiTVXkXkZQqll7weZG/F100iFlIIFqzQb/rjHTEMsAS53jM
+	 kdrpZErMXhJC11e2IBijM6ilwt62HJgz378gD1dZRUx0QE9hXve9IPt33P3psHlHwkw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793969730;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=cVLVUDAQ/S8P7wIqNsNlHQ7D4Qx5qIHxAIVrj+ZvXUo=;
-	b=wP8v91b7t5e7d9oXXn+idYBvAY9BlG8jbUiN66vaVxGgPIztqsJp06KPhNldyGqWAj0H
-	 1DYmgSbzpHfeenQ3p9ysl0FBk+T3WbdWA3Ge9WJbzH22d22J5xM58ONx/wRxjmwJtYX40
-	 4fNP55t0r3alejkhSlUXiuMFWsoaQwfXu6gNDoLRFIsIbvtk0mAQ6zD3Yik5ytpOUv0Qh
-	 QTOsAHIlBJYIBypLInuyDhdqjWaAO2kKwJjVfgKPLo/GQ1hg3YVOEzCZmccrZlp5/fKIt
-	 fdl5v98Q74xhL68Cux3RAmy57kJZ/cC06LY69gz0NKsV+Xpo/kqRAv7yZbFO3hgu4kQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793973799;
+	h=DMARC-Filter:Received:Received:Message-Id:Received:Received:
+	 X-Zmail-TransId:X-Mailer:In-Reply-To:References:Date:Mime-Version:
+	 From:To:Cc:Subject:Content-Type:X-MAIL:X-MSS:X-TLS:X-ENVELOPE-SENDER:
+	 X-SOURCE-IP:X-CLEAN:X-Fangmail-Anti-Spam-Filtered:X-Fangmail-MID-QID;
+	bh=NB0Y4V8K19KZ9Mjs/nRDJQF2F1aefmQ654/1qRnC28w=;
+	b=UphIAx+DtZImjOA3LbFVp/v0DTzZP6LL96wrkX6QoT4dXRa/8aw/g87mt4YAcqRzSJ5g
+	 J6VkjWtGNHFQmiTPPirfnylv2up+F1DKtWG0w2wSxB3nD8V6xkA9v11sKEzj7/o2Uowas
+	 xaATxBKZeLcuLvT1APnRIO01mqTthyDg+7NqIYHffq6F1LEcnfOyIxoFnp90R/CJmdQE7
+	 LsX63tw55nsg7NrJlN4iRnULx1H1eCQYR+W7zYI5jDHQCwjq5ar6POddzqds3An/1Kv3n
+	 j32OCNApAKZtEBBV96KE2ToyaBiUvPM0KQ7W/8N8TKLS4Jq8tyPMJAu/b8zpGPRfGGg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ECT3i2U5;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=zte.com.cn;
+	spf=pass smtp.mailfrom=zte.com.cn;
+	arc=none smtp.remote-ip=183.62.165.209
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F043606A326;
-	Fri,  6 Nov 2026 12:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ECT3i2U5
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BAD61F008A2;
-	Fri,  6 Nov 2026 12:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793969729;
-	bh=cVLVUDAQ/S8P7wIqNsNlHQ7D4Qx5qIHxAIVrj+ZvXUo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ECT3i2U5LWvD96+SCQy4BY79Px0+LDDQkEQLvJIAJSGkKs9QsvVoBFan9ktO5ZAoX
-	 va1/OGEa1g7t2MYQt/3KARMxop2KwWT3C6iksHVrLmmSjiCvaI1zdbVttb7dFnMK7v
-	 XbL211JxP8D+wxkDxkpaeehi6T0a9PmquD3ReY7t8B7KeasBnxexlU8oc5eyxDBwkE
-	 ATD0mGfwA4di50LX05xToAT/GDO6sk6aWM/0i13UdQMOjzoGYb6isYxZjKdT5sm7xQ
-	 kuXKCjfjhfuQKc8qKRT1/4wdspO2NsgdQi4rTVx5OsAmmREuauI4GFPpDJIHwQEM09
-	 HYtPH22IRay9A==
-Date: Fri, 6 Nov 2026 13:55:26 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Myria Sarvay <myrialsarvay@gmail.com>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>, 
-	Neal Gompa <neal@gompa.dev>, Marc Zyngier <maz@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, asahi@lists.linux.dev, Yuvan Shen <yuvanshen09@gmail.com>
-Subject: Re: [PATCH 01/13] dt-bindings: arm: pmu: Add Apple M3/M4/A18 Pro SoC
- CPU PMU compatibles
-Message-ID: <20261106-meteoric-tench-of-proficiency-a000ee@quoll>
-References: <20261103-m3-plus-pmu-events-v1-0-a8eb6c1139fe@gmail.com>
- <20261103-m3-plus-pmu-events-v1-1-a8eb6c1139fe@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E7B606D83A;
+	Fri,  6 Nov 2026 14:03:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 60E7B606D83A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-db.zte.com.cn (unknown [10.5.228.131])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4jLgqs3cckz501Rl;
+	Fri, 06 Nov 2026 22:03:05 +0800 (CST)
+Received: (from root@localhost)
+	by mse-db.zte.com.cn id 6A6E35HY078932;
+	Fri, 6 Nov 2026 22:03:05 +0800 (+08)
+	(envelope-from lv.yating@zte.com.cn)
+Message-Id: <202611061403.6A6E35HY078932@mse-db.zte.com.cn>
+Received: from szxlzmapp04.zte.com.cn ([10.5.231.166])
+	by mse-fl1.zte.com.cn with SMTP id 6A67xGYT042489;
+	Fri, 6 Nov 2026 15:59:16 +0800 (+08)
+	(envelope-from lv.yating@zte.com.cn)
+Received: from mapi (szxlzmapp04[null])
+	by mapi (Zmail) with MAPI id mid16;
+	Fri, 6 Nov 2026 15:59:18 +0800 (CST)
+X-Zmail-TransId: 2b066aed88d64a0-a3646
+X-Mailer: Zmail v1.0
+In-Reply-To: <CAP-5=fUbpxz9HQV+BRd62Yk+mQ5Bq-G3XvcK8ea3W8E3BqM6jg@mail.gmail.com>
+References: 202610271154.69RBsOlq045164@mse-fl2.zte.com.cn,CAP-5=fUbpxz9HQV+BRd62Yk+mQ5Bq-G3XvcK8ea3W8E3BqM6jg@mail.gmail.com
+Date: Fri, 6 Nov 2026 15:59:18 +0800 (CST)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,23 +62,32 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20261103-m3-plus-pmu-events-v1-1-a8eb6c1139fe@gmail.com>
+Mime-Version: 1.0
+From: <lv.yating@zte.com.cn>
+To: <irogers@google.com>
+Cc: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <namhyung@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <adrian.hunter@intel.com>, <james.clark@linaro.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <liu.qingtao2@zte.com.cn>, <he.yilin@zte.com.cn>,
+        <zhang.cheng35@zte.com.cn>, <ye.zhihao1@zte.com.cn>,
+        <shen.lin1@zte.com.cn>, <dai.hualiang@zte.com.cn>,
+        <stable@vger.kernel.org>, <hu.shengming@zte.com.cn>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gcGVyZiBtYWNoaW5lOiBGaXggTlVMTCBkZXJlZiBpbiB0aHJlYWRfX3Jlc29sdmVfY2FsbGNoYWluX3NhbXBsZSgp?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-db.zte.com.cn 6A6E35HY078932
+X-MSS: AUDITRELEASE@mse-db.zte.com.cn
+X-TLS: YES
+X-ENVELOPE-SENDER: lv.yating@zte.com.cn
+X-SOURCE-IP: 10.5.228.131 unknown Fri, 06 Nov 2026 22:03:05 +0800
+X-CLEAN: YES
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6AEDDE19.000/4jLgqs3cckz501Rl
 
-On Tue, Nov 03, 2026 at 09:14:36PM +1100, Myria Sarvay wrote:
-> Document the compatibles for all current M3, M4 and A18 Pro SoC PMU
-> variants. Note that the M4+ are split out by chip codenames, instead of
-> name for the types of cores, as they no longer have individual names for
-> the performance and efficiency cores.
-> 
-> Signed-off-by: Myria Sarvay <myrialsarvay@gmail.com>
-> ---
->  Documentation/devicetree/bindings/arm/pmu.yaml | 8 ++++++++
+Thanks for applying the fix. 
+I've sent a follow-up patch adding the LBR test coverage to record_lbr.sh
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-
-Best regards,
-Krzysztof
-
+Thanks,
+Lv yating
