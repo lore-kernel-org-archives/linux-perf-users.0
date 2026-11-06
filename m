@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793940889;
-	b=bbf1om7JzE4zvz5g81FOFhDp3NIIbltA8nOG7kNxm8vYOeb6iBfSRoeyOR28D1tMODOf
-	 AWFjZ4vLpRf1CyfGyjxPboYtn6I1ikSGo1rnAeCl23ckMResj1zzh86sKSizO+SqH0nnp
-	 MdWd2839B6U3nAZkIvpg+DOc4eRsIxdmQj7fhDRdvip/UHXZwF/3HXomiNVGzZHl7KPSS
-	 XkPZKiy+pKXgftx20hesmybeQ+415hpQlwf69PyUAzkTSvTyaYBqPe225Zm6Z3iZPZdJK
-	 0IiOPZWGyY8sb9B8yPgysqApeIsvw6CuHMRB7JTELySegiLG+N5vSwFrZTOgaUYj8Bw==
+	t=1793941116;
+	b=DTSaiARP7NBbwKfXYl4TYxZGevxhov4jf5g8+2hCsL4FK8AEg34vUExqWehMyCamip8L
+	 JTtiw68ErujgjVS2HxukEbM6sw+r5Aamqlx+pgG2dFqvOzaus5l4Nq0NxSEDeHWHkbKco
+	 M2qav8l5y/ECEfs5IkT3L+hFoRjhQtcHDzy65IcJeyUvebTkfWjawdRziAZNhCUCsyB4Z
+	 UYGqHwu/QD7m2zVNkzTH1YUjYoad6psHs6gFsWoN+eS0rbSHk1POUACSmhVDDozCVz4WA
+	 9Spg99xvQfhUfw1A4fuwg/5ebQgDvtXZMhH1fPts0ZcFZNMwOOu8/auPxRnGf1Ax3FQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793940889;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793941116;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=gHuQASwUVAQLgTl1pSbO+e44/F4aPQxt57SJf2QLhig=;
-	b=vyuL9tJxOgMyjKvMptasFlZ9kvg5Wh+4QzB7hL9v82wWJj/rdzT1MyOFUT2CgJ94WyRh
-	 SJpp9ltBol5s6DM7Dtn3YoKUsar4tcVaBf4O7hmf1ISLnih6qsVwAj6/GQuy8pCS6KzaS
-	 BKOW1FwZbV/QEysBcdOXHv0VhjWn5FUiKSoRi5Z4HSG2IXwLgfqUzGljR24xKZss21MLs
-	 fw/JYUMSrOJD6nwQIFk/SfFlCAR7wEk1PRa65lkqrFiGYofTEfxyfhq3kKvV627XR38Wp
-	 V/TASVvNaWCasRWSbxw66NTNMWHjfTJdUS80zeDkO5wRdsFMKXdCO1gVYc5AByMJnpg==
+	bh=GP4RUtDJs9Bf7BNNXYP6fUS8NpO+lqNbUQA487eN+sY=;
+	b=tt7QgIsv9PUpym3ZSvds8ujzzML5qQA3CBtPeeAu7SFqCkHDpFFHL+QopmEBW6Nby8Lz
+	 mZwKI2gAD4Ih3ZibQyBSvusIDjS6y8PXQzWRqtHwfL0M9Iq+UPhxHqJD1XtpU1ytbBoWN
+	 lrCGJ9+RLWRsNL8gGkvEYIilVA0gyzXUs5c+n72KfZEFBe3URMlvDHMme0DkqQBXduTzI
+	 OYesbYsWqb8kKCsbhkyEZXNe8D6vO1KSIsljkKOptnh4keyWVK/vGwQNVh2yC29uuL4sj
+	 VIHiPoNp9H8rlt5qmU13qIEowvA14kD4Fvtuas1nql3eM2sliK6ystzYoVpOE8uhxww==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oSX619cF;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=H6UlwhAM;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19CC606A31B
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 04:54:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00D0606A328
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 04:58:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oSX619cF
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A0A41F008A1;
-	Fri,  6 Nov 2026 04:54:48 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=H6UlwhAM
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E4EB1F008A1;
+	Fri,  6 Nov 2026 04:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793940888;
-	bh=gHuQASwUVAQLgTl1pSbO+e44/F4aPQxt57SJf2QLhig=;
+	s=k20260515; t=1793941115;
+	bh=GP4RUtDJs9Bf7BNNXYP6fUS8NpO+lqNbUQA487eN+sY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=oSX619cF+DRSAtBpI8PzfpBWSXXzrXdGcI4EzDzubZBkxT6LQpbAgj/x9sX4hqDKZ
-	 A1uh8rRgejHM2qXDSwqAmfDMXKxQMgjbp2m8rbgCvkHIR7ql3KpvajmzSZpbJLx3f0
-	 j/RamIUU/SMagUO1K8TST09M2ZnqCFkk1UnACeouUpVnveXAvHzkhyOrb2iDmMlf0u
-	 PSo4kFPPQgb4or+0v+DYWdxH5rv7us1sXWbQgyTebt0SvwZ223yg0VNpg88pDZclJf
-	 bImMXJ00+AmqhJOQ89oT9lbTw50yQ1Th7dVUWTOF/Xwpj8lwSVmtJv6/Vf1KVMkQcg
-	 81xiYkGjmrCOA==
-Message-ID: <sashiko-outbox-200778@kernel.org>
+	b=H6UlwhAMI0j1FGTW4gfTrZk+dDwi12NEHDjrfrR+al7DJVMS+I1XAs990hnshjdtq
+	 0gfbu2dBAwfia5IXdtJxppB8r2f9WGrzqSkQI6JYD+b16GrJUsc5vC17MQzNbAq5AP
+	 ljwwuf3A8xifdnFFk6HKJUT2I5mgD09HlIuKE8xv7vrzfKypxHZP2NL5fPLSCh+das
+	 fxmDokks/m5oBZ4zCHuLlHzyjihUSOnaeLK2bizhlBSHAdURsWzmMCjAuVkIrTac2l
+	 aDtYGSYqcQUtNaFi3kYyN7Y6WWPIMeiLhZCE8lhc/vi7gygiausIfJ9NqJftpcjazR
+	 quh85LbwrWSWA==
+Message-ID: <sashiko-outbox-200782@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 06/14] alpha/perf: ignore overflow interrupts the
- counter does not account for
+Subject: Re: [Patch v6 09/20] perf/x86/intel: Keep LBR frozen throughout PMI
+ handling
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Matt Turner" <mattst88@gmail.com>
+To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261105-alpha-profileme-v7-6-c474e892abb0@gmail.com>
-References: <20261105-alpha-profileme-v7-0-c474e892abb0@gmail.com>
- <20261105-alpha-profileme-v7-6-c474e892abb0@gmail.com>
+In-Reply-To: <20261106043257.842864-10-dapeng1.mi@linux.intel.com>
+References: <20261106043257.842864-1-dapeng1.mi@linux.intel.com>
+ <20261106043257.842864-10-dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Nov 2026 04:54:47 +0000
+Date: Fri, 06 Nov 2026 04:58:34 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,39 +61,29 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> The interrupt handler adds a full counter period to the count of the
-> event on the counter that interrupted, which goes wrong in two cases.
+> For the platforms which has 4+ PMU version, streamline LBR freeze is
+> supported. The PERF_GLOBAL_STATUS.LBR_FRZ bit is set to freeze LBR once
+> a PMU counter overflow. However, the current PMI handler clears the LBR
+> freeze bit too early, allowing branch operations that occur during PMI
+> handling to be recorded into the LBR stack.
 >=20
-> Rewriting a counter does not cancel its pending interrupt: wrperfmon has
-> no way to, and PALcode clears the request only when delivering it. An
-> interrupt pending when an event is reloaded, or when perf moves another
-> event onto the counter, is then taken as an overflow of a counter that
-> has not overflowed. It adds a bogus period to the count and can emit a
-> false sample.
+> This can pollute or overwrite the intended branch snapshot, especially
+> when bpf_get_branch_snapshot() is invoked from bpf_overflow_handler().
+> In that case, branches recorded while processing the PMI are mixed into
+> the original LBR data.
 >=20
-> And alpha_perf_event_update() already adds the period when a read finds
-> that the counter overflowed before its interrupt was taken. The
-> interrupt then adds it again.
+> Defer unfreezing until after PMI handling completes so the LBR remains
+> frozen for the entire PMI path and no branch activity from the handler
+> is recorded.
 >=20
-> An overflow leaves the counter just past zero, below the value it was
-> written with, while a counter that has not overflowed is at or above it.
-> Ignore an interrupt for a counter in the latter state, unless a read
-> has already counted the overflow, in which case add nothing. For this to
-> hold, write the counters at most half their range below overflow, as
-> armpmu_event_set_period() does. Counting events then take an interrupt
-> every 2^19 events rather than every 2^20.
->=20
-> Fixes: 979f867191f8 ("alpha: implement HW performance events on the EV67 =
-and later CPUs")
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Assisted-by: Claude:claude-opus-5-5
-> Reviewed-by: Magnus Lindholm <linmag7@gmail.com>
-> Tested-by: Magnus Lindholm <linmag7@gmail.com>
-> Signed-off-by: Matt Turner <mattst88@gmail.com>
+> Reported-by: Sashiko <sashiko-bot@kernel.org>
+> Closes: https://lore.kernel.org/all/sashiko-outbox-179823@kernel.org/
+> Fixes: 425507fa5f32 ("perf/x86/intel/lbr: Optimize v4 LBR unfreezing")
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105-alpha-prof=
-ileme-v7-0-c474e892abb0@gmail.com?part=3D6
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261106043257.8428=
+64-1-dapeng1.mi@linux.intel.com?part=3D9
 
