@@ -1,66 +1,66 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.20
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793940076;
-	b=x8BVYQ3O4F4fxEqdxs4KtPCp7kNJK13L8f35LCEu9jHdGrOa9YOkZ463YlkmVaIsAv7Z
-	 zSNd38Z6XH0/P5MZtRjc5yejQrCGvNjfVPYrJ5oPvsosZWwjOSIszC2rvnKySzhugK8xc
-	 YLl8hs1uK2qfekG+kfMTUgnvWzVFaFUcQnn/tTfd57x8bZpsnRQcnbwOhHagWZOuk0fP4
-	 5V/jPsqMvYEIc0nccSCw52tfFbQ4RQ3r1UDSaHM0+AexsZEoAEucp4VIBpIj6ixGI+frf
-	 dw1UN7K7yckiMP+cyvELcs4dBocO5oAhZ+ohoX7F+/JTEVLik3RfUFJdLAYZw+aUJBA==
+	t=1793940071;
+	b=ciAnNoexcRxjnQlVMpSg81IdkHF7pyiddvL4I2wFGwNze3ySt/KptiZfDcGjZ3XfPKOZ
+	 J3KuGMRQEzpHp8CxSGG8BLfwy4BwgTooT6YWNCpQMeMTTTOrixLqoqNhtdL+B2c4C2Hor
+	 O9aWVrJWToi+TZ1btdzRr2BPoSnObo/xzxGKIrsso5VbMj3YQXWs3BsGFcpE05dbh2CBa
+	 FaIfDCaKWbJhfynfLh5jJRHna+lc6djy8n+9S5ZD1Fk5i0/bD0cmi9AaZsXDfZaTJk88Z
+	 +lKzN3AQzW1AY0E5zPMu9TIqpZBJ5k1NKlXb/LGI1LGCv8dCXnHicgClx95Hc1Jr4xQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793940076;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793940071;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
 	 Date:Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=9+yC9rQMX+LaPyTPb7UmOWb3faqRuSDuRnFBorCkXd4=;
-	b=s4M6jBecMvSYpvTSDviQ5t+MF5/eS4/QTzAiu4L5BylD+chbXzPulO3SlnP7h5pJNh/1
-	 EUXV1yulodtROsBLVZjLA5xHLOimk5r4tABLs9EzDC52qXPx+IxQreVNbr+Ad7jtXSejG
-	 VtYnNLjFLNZVVPyZWmTZ9aMwsg1sNektOmOV4sCf5fm6SwxgGfyBxhI+/QRAHA693EvlO
-	 G2hNik2YBnlhrexnf1jtANBmR8rX22lk8Zxw56xPnhL96ukVxhZJk4RmoWDGqrcgYpqqE
-	 GhYWc0AzuexiJuxrSybByXfgVV5vTaPKVj6kNW2NO5iUbMYv4qJyMi9OWz4voDA5SMg==
+	bh=YcM8v/RTKwblj58hKcHHQdEbFFVRRmrldYYxF4ZWcBY=;
+	b=4oQ+1MEkjodU8e9w9mDUybLhOBeJDUHmR2Qec3fCJ9DBwDyW0ZPsUW0SPy3HHRkK8Sn9
+	 iapZmqUUf4ZJRCx2WDwblMun9pwOvyjgXlqsQTdxhmtjfO+s7eQHCd1kt39ZchZR0yzn4
+	 Eq+Bn4pgVJJuBzzy8oXFwFrq0kSHlxbbX08fkS8f1tw6cKYn/Gehlb7dfDwKBtA+zWJ50
+	 blEHtUM7/gFbcoPNzmzTFjgsngdKKj8KhNvJ+1KMyzSRyFTYF7QkDcGfdYiT4vd/wo2gA
+	 5yJzSBdmpp1YoYvDRHRNdVbKy2D7DiEGsPIK+p/BCXKaoQtWTNZMvPBRcHFwivMYoag==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gHGUY04i;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ARMG4wMC;
 	arc=none smtp.remote-ip=198.175.65.20
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D1B606A33A;
-	Fri,  6 Nov 2026 04:41:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B9D1B606A33A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12BB1606D803;
+	Fri,  6 Nov 2026 04:41:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 12BB1606D803
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gHGUY04i
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ARMG4wMC
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793940076; x=1825476076;
+  t=1793940072; x=1825476072;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=AUq0X+Oajj00m0wZ/A9pWX24JHnFo9sl2iHA1XHB9xc=;
-  b=gHGUY04iCUrHAK0fnzQbTqt8KKz0EVOqFroGlt8/Ns1NJ6YM4XlqLwoU
-   Yw/d5RlcsZwsq8a1Jh2d9UQlhPcD+cOUVXuiNuySPHsHi/sDc1vVDlXkW
-   qA1WqlcDSs50C0phDau1LaOPDiCIARsXsDo4XcosBzvtMCyyvLIfiMFtk
-   WGrhHIjNm1h5D6QTccaktTkWu7+nlJ/fsjcZXqWepReiEbX5KwMrppcdf
-   dgAUEVMuOzzEfEKwSCPqZDYgPlGD/VozJ6XyyK5KAG4ZUduQKWNwldnX7
-   gGm6/NdwPYmXJKks2Uy9Bo1VePk+MwJ7TOwgEGbOlBLhPR2iZ/1CNrLWk
-   g==;
-X-CSE-ConnectionGUID: YHaN9x8LSzikFmcf6m1m0g==
-X-CSE-MsgGUID: KPP9tv9TRVGpYxSPpKo2GQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11957"; a="2780813"
+  bh=fi5VDIVrm+cqwudwgaOZD+KaFDJ7hm8tYxzOjhUF2FM=;
+  b=ARMG4wMC8FkwsYNs+HOoL9lD+w69UZrbtZZNIFZx7+otPguh3TXkEYID
+   SWJurOyFTByYHEuksZxGrSt8VeCqiGVzGeWWiSTsMpBCjNFKkFhacaxb1
+   Jb66csMPQO2Qg2SveNw0Z+TdyEtGO+uRruHJfqpfuRhouTdpAFX0mfJeL
+   bA2UlSD99CJL02Y5Gig7yEu8RKNqk5/LlEX96IzdWKKrusdRtTy7ChSku
+   DY0EPs0kLXC5S90yAdTgj1aDbzcrVq/r6u5982e7GDxYFJbqBsRXHnWFb
+   4VHS3uiifvt6/+ItsBDrrtBishQ2iMnsS1MprYYFNu1SEESIL1sDoJ8nZ
+   A==;
+X-CSE-ConnectionGUID: YETTryH9Q966oP73X/nxEg==
+X-CSE-MsgGUID: MTtS0F2jQDmNpdwfUEJZ3g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11957"; a="2780806"
 X-IronPort-AV: E=Sophos;i="6.27,197,1787036400"; 
-   d="scan'208";a="2780813"
+   d="scan'208";a="2780806"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2026 20:41:16 -0800
-X-CSE-ConnectionGUID: brL67LLVQd+KMGNUY7mETA==
-X-CSE-MsgGUID: 6FNLuesPQ6mylfv4kxl8xw==
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2026 20:41:11 -0800
+X-CSE-ConnectionGUID: 1/7j9aOJQ8OGWWvKxC85iA==
+X-CSE-MsgGUID: K5RSBurDTCOVF4126fbVHA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,197,1787036400"; 
-   d="scan'208";a="7222919"
+   d="scan'208";a="7222905"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa001.jf.intel.com with ESMTP; 05 Nov 2026 20:41:11 -0800
+  by orviesa001.jf.intel.com with ESMTP; 05 Nov 2026 20:41:07 -0800
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -83,11 +83,10 @@ Cc: linux-kernel@vger.kernel.org,
 	Zide Chen <zide.chen@intel.com>,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Sashiko <sashiko-bot@kernel.org>
-Subject: [Patch v6 08/20] perf/x86/intel: Avoid re-enabling PMU and LBR for BPF when disabled
-Date: Fri,  6 Nov 2026 12:32:45 +0800
-Message-Id: <20261106043257.842864-9-dapeng1.mi@linux.intel.com>
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [Patch v6 07/20] perf/x86/intel: Add helper to enable PMU without LBR
+Date: Fri,  6 Nov 2026 12:32:44 +0800
+Message-Id: <20261106043257.842864-8-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20261106043257.842864-1-dapeng1.mi@linux.intel.com>
 References: <20261106043257.842864-1-dapeng1.mi@linux.intel.com>
@@ -102,104 +101,67 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-__intel_pmu_snapshot_branch_stack() currently re-enables the PMU and LBR
-unconditionally even when they were already disabled in PMI context.
-This can cause events such as cycles and instructions to be counted
-while the PMI handler is running, which is not intended.
+Currently, __intel_pmu_enable_all() also re-enables LBR in addition to
+the PMU. Split out the PMU-only path into a new helper,
+___intel_pmu_enable_all(), so the PMU can be enabled independently. This
+helper will be used by a subsequent patch.
 
-Only restore the PMU and LBR on the BPF path if they were originally
-enabled.
+Also remove the unused added argument from __intel_pmu_enable_all().
 
-Reported-by: Sashiko <sashiko-bot@kernel.org>
-Closes: https://lore.kernel.org/all/sashiko-outbox-179823@kernel.org/
+No functional change intended.
+
 Fixes: c22ac2a3d4bd ("perf: Enable branch record for software events")
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/intel/core.c | 38 ++++++++++++++++++++++++++++++++----
- 1 file changed, 34 insertions(+), 4 deletions(-)
+ arch/x86/events/intel/core.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 9d8398da1989..739c454827ac 100644
+index e99b311c7b8d..9d8398da1989 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -2821,7 +2821,8 @@ static void intel_pmu_enable_all(int added)
+@@ -2783,13 +2783,11 @@ static __always_inline void intel_pmu_disable_all(void)
+ 	intel_pmu_lbr_disable_all();
+ }
  
- static noinline int
- __intel_pmu_snapshot_branch_stack(struct perf_branch_entry *entries,
--				  unsigned int cnt, unsigned long flags)
-+				  unsigned int cnt, unsigned long flags,
-+				  int pmu_enabled, int lbr_enabled)
+-static void __intel_pmu_enable_all(int added, bool pmi)
++static void ___intel_pmu_enable_all(void)
  {
  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	u64 intel_ctrl = hybrid(cpuc->pmu, intel_ctrl);
  
-@@ -2829,7 +2830,22 @@ __intel_pmu_snapshot_branch_stack(struct perf_branch_entry *entries,
- 	cnt = min_t(unsigned int, cnt, cpuc->lbr_stack.nr);
+-	intel_pmu_lbr_enable_all(pmi);
+-
+ 	if (cpuc->fixed_ctrl_val != cpuc->active_fixed_ctrl_val) {
+ 		wrmsrq(MSR_ARCH_PERFMON_FIXED_CTR_CTRL, cpuc->fixed_ctrl_val);
+ 		cpuc->active_fixed_ctrl_val = cpuc->fixed_ctrl_val;
+@@ -2809,10 +2807,16 @@ static void __intel_pmu_enable_all(int added, bool pmi)
+ 	}
+ }
  
- 	memcpy(entries, cpuc->lbr_entries, sizeof(struct perf_branch_entry) * cnt);
--	intel_pmu_enable_all(0);
++static void __intel_pmu_enable_all(bool pmi)
++{
++	intel_pmu_lbr_enable_all(pmi);
++	___intel_pmu_enable_all();
++}
 +
-+	/*
-+	 * Do not blindly call intel_pmu_enable_all() to re-enable LBR.
-+	 * This path may be entered from the PMI handler through
-+	 * bpf_overflow_handler().
-+	 *
-+	 * If PMU version < 4, LBR is disabled by the LBR freeze mechanism,
-+	 * LBR can't be re-enabled here.
-+	 * If PMU version >= 4, LBR is only frozen instead of disabled,
-+	 * LBR should be re-enabled here.
-+	 */
-+	if (lbr_enabled)
-+		intel_pmu_lbr_enable_all(false);
-+	if (pmu_enabled)
-+		___intel_pmu_enable_all();
-+
- 	local_irq_restore(flags);
- 	return cnt;
- }
-@@ -2837,27 +2853,41 @@ __intel_pmu_snapshot_branch_stack(struct perf_branch_entry *entries,
- static int
- intel_pmu_snapshot_branch_stack(struct perf_branch_entry *entries, unsigned int cnt)
+ static void intel_pmu_enable_all(int added)
  {
-+	struct cpu_hw_events *cpuc;
- 	unsigned long flags;
-+	int pmu_enabled;
-+	int lbr_enabled;
- 
- 	/* must not have branches... */
- 	local_irq_save(flags);
-+	cpuc = this_cpu_ptr(&cpu_hw_events);
-+	pmu_enabled = cpuc->enabled;
-+	lbr_enabled = cpuc->lbr_enabled;
- 	__intel_pmu_disable_all(false); /* we don't care about BTS */
- 	__intel_pmu_lbr_disable();
- 	/*            ... until here */
--	return __intel_pmu_snapshot_branch_stack(entries, cnt, flags);
-+	return __intel_pmu_snapshot_branch_stack(entries, cnt, flags,
-+						 pmu_enabled, lbr_enabled);
+ 	static_call_cond(x86_pmu_pebs_enable_all)();
+-	__intel_pmu_enable_all(added, false);
++	__intel_pmu_enable_all(false);
  }
  
- static int
- intel_pmu_snapshot_arch_branch_stack(struct perf_branch_entry *entries, unsigned int cnt)
- {
-+	struct cpu_hw_events *cpuc;
- 	unsigned long flags;
-+	int pmu_enabled;
-+	int lbr_enabled;
+ static noinline int
+@@ -4056,7 +4060,7 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
+ 	/* Only restore PMU state when it's active. See x86_pmu_disable(). */
+ 	cpuc->enabled = pmu_enabled;
+ 	if (pmu_enabled)
+-		__intel_pmu_enable_all(0, true);
++		__intel_pmu_enable_all(true);
+ 	intel_bts_enable_local();
  
- 	/* must not have branches... */
- 	local_irq_save(flags);
-+	cpuc = this_cpu_ptr(&cpu_hw_events);
-+	pmu_enabled = cpuc->enabled;
-+	lbr_enabled = cpuc->lbr_enabled;
- 	__intel_pmu_disable_all(false); /* we don't care about BTS */
- 	__intel_pmu_arch_lbr_disable();
- 	/*            ... until here */
--	return __intel_pmu_snapshot_branch_stack(entries, cnt, flags);
-+	return __intel_pmu_snapshot_branch_stack(entries, cnt, flags,
-+						 pmu_enabled, lbr_enabled);
- }
- 
- /*
+ 	/*
 -- 
 2.34.1
 
