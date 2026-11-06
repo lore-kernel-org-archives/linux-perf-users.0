@@ -1,61 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793949995;
-	b=cE1FlfNQ/8IUzj1jIluZCCqJKyWevpp+677+zUiYxcMVHOOqEc4KYEznDPnjFawjltGz
-	 1xZWGJ5iBT+Ztt6f5/iFD41myflIncHOdZdACkGcHg0ohSTf9zBxLPb5DUsRV2uhTZg5X
-	 c/yg0vcyVrPCVuoAixBrOr4wBasbIP57JrJQtREP8Q1KWjQA1wmyRW3tdAl0nCKllH/8P
-	 SZ5TNFJvQl4jtipqKkyeDPPd0bGQ4B1pfo7HfulCJq049ABSWkMIVXxzWfVlIgrF18izU
-	 uFKeuXGxQ70YA8uAG+Iv+2eKKRsbRdQbq5OMlQTNQm7RxrUoZBnFOKZ2q6kFA6gUPGA==
+	t=1793950055;
+	b=kPeimdjUurkF98MYYV1UNodILIRUM1KUKdkn4acsr6P9t/vMMtpajjN8rHwn6zhu5ifV
+	 UDleHxE4l8wLLzdlDWp/drQC7TVqWSxlvvUOMI0m/d7h79ax/ET0X9CtASMwqU2CenUIU
+	 BkanexByFW+mwbYtcYIxqsqWBp1DFaxDqExd3ygOdHP9dXBjPeK/Myu2dOz/2aYg6SOkg
+	 VIeJFGaUU1K+HaA5l22WZ+CVf8h35TYYzZf0vHf4B075rmfOYFw1Fmrku1Mm6KihC3WO7
+	 Nu7tzws81j4YVidYQnQVeUXktjLazxei55bPdYLpThyVPZ3JIkt/qeRmh+UqU7eD0oA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793949995;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=BGdQzBcMwo7usWV7WuvqWtlKe4y+jxcjyFFOJGQbfG0=;
-	b=PZ/IaVUX9erXjRJMZViYjHb1+FS8Jt9tXp+q8OtkuRS5V232QJ42U/5oRy4enviSOa0Y
-	 W1Sxkfehb91ToKIxYBlKkKabqQ3a/9OllhoNHH7/6uA3EB7ZffsSxaUc8p5v+iDlNCr72
-	 arvD+ADusr7gzGENYmqlxrHvHON8hr8N85VR+jQ38qUeSXjj/90Vmpn+I1nKI+X0z0HQD
-	 NJmVPlqPLL73Xrl4eglBlnGRJZd+3RZDHQ1qXU0ZTs8m016WlPoYSgm+EeoTMJkr9ioXt
-	 4bD8FChZcapx9uBoADaO3AoRf+jTK+6+gYlAZKd0ieGVBOFjUjIGQ2WzKUA824g53fw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793950055;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=86kZUBf7AHhHApn+V/YHePerjY6XiNL0Xsk4FmCSCUA=;
+	b=gz/Fgrx73Pc5SZTc1Er5notvu1FbGaeOhpxa+Srj7Te0tLRh8hBfMG8c0ZbLsSDS3qic
+	 fJ8SLFwzv6SI28GLHH8vjYyjx87n6yhP7wLeLipsD+a3gsq4HlLAX/JvcRvWzlMIShYc9
+	 mL5wkQWOCtumHirJJiIZmsGFHY3iGS8MiZnD+WQPF8Q7gr4Hjaskewux7TP0WyHRJCG1P
+	 0mLP4vj8K8kWJAFTmOw4whPMBsBJwNMVspDGcO3bggHdSRttcDgzsZmW79ZnCtkXRtv+E
+	 I45NxC5gszAKMa+TBhB5gb2VkeE7w9udNAPdEm6Ct0ZWeMMCaPufW3a39EvEGpVDsEg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WiViVpDy;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dGBlv6h9;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D838E606A326;
-	Fri,  6 Nov 2026 07:26:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7BD606A326
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 07:27:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WiViVpDy
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C4F91F0089F;
-	Fri,  6 Nov 2026 07:26:34 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dGBlv6h9
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06C691F0089F;
+	Fri,  6 Nov 2026 07:27:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793949994;
-	bh=BGdQzBcMwo7usWV7WuvqWtlKe4y+jxcjyFFOJGQbfG0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=WiViVpDyOdAL3WJwcak2d5wU00yl9klqIRBiWGYS4JgiyKJ9fWBdCSMRZ8bBPm65M
-	 qgliTPuUA3nbVDUiexvb8m4fiU16Kjaxf5YKUFFPIDyA7LP4HnXfIPIu5uXluusq8q
-	 7ZDD3cebC7QNVYiWxX8EhHSOu6cgHaWVnTruTtd34Ejm1vT9KXvmhrkGEtdMZnV4nv
-	 NM8/KHsug6BY68XbxGlSiZ07a1eiYyfLKizSQgxwjCD2STc1wqFuUigwf6EcjI3uXY
-	 5GQC3xFLoYzJhyAy6J4zvA/zEIDeC5z0GzTXfN9xSVslbQibM1ZpLvtQd8iuxUaWgK
-	 EIj5YW8ly6SXw==
-Date: Thu, 5 Nov 2026 23:26:32 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Edward Baker <edward.baker@intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Perry Taylor <perry.taylor@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel test robot <yi1.lai@intel.com>
-Subject: Re: [PATCH v1] perf jevents: Don't encode MSRs with no value
-Message-ID: <au2BKOeDHgzqUNh5@google.com>
-References: <20261105044841.102295-1-irogers@google.com>
+	s=k20260515; t=1793950055;
+	bh=86kZUBf7AHhHApn+V/YHePerjY6XiNL0Xsk4FmCSCUA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=dGBlv6h9XnmD65PWL4RHwI1pR6BM7s8oBcOz+jDxQP1ul2c2JPyFrGHJ8Bto2QRNU
+	 fZuak4U3KCVcX9YeasbvFAm+eGSa5Ll3xajdB1pYOyUZLBOoEDRpdYYKRhuFbJamAm
+	 rVXvtir2RpZ69x3BAJS8chRJQhKbtj3+xZK6qRbluKo+RuJaS9V6PzOvF4ymtLGta3
+	 ir8uD7IznkEhVl9SflYTgcTIM8IX/KZtm8AN1hBbEhCE5IIP0Zi7x2nUsgPqEk1qBD
+	 AM8bJLXLD7ktOf3HzEHKWXGlg0cFxp4csctZWgXhrfSxknYGw5qJnnr+UVjfaO6sXF
+	 Md1C15R0ltmFg==
+Message-ID: <sashiko-outbox-200994@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v10 15/20] perf intel-tpebs: Fix race in tpebs_stop()
+ and tpebs_cmd.out fd handling
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261106070344.329897-16-irogers@google.com>
+References: <20261106070344.329897-1-irogers@google.com>
+ <20261106070344.329897-16-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 06 Nov 2026 07:27:34 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -64,43 +60,107 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20261105044841.102295-1-irogers@google.com>
 
-On Wed, Nov 04, 2026 at 08:48:41PM -0800, Ian Rogers wrote:
-> Fixes the events mem_trans_retired.load_latency (EMR) and
-> mem_inst_retired.latency_above_threshold_0 (NHM, WSM) that were having
-> their ldlat= value encoded as python's None.
-> 
-> Fixes: ffc606ada3d7 ("perf jevents: Add python converter script")
-> Reported-by: kernel test robot <yi1.lai@intel.com>
-> Closes: https://lore.kernel.org/oe-lkp/202611050801.67bb4af4-lkp@intel.com
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Medium] perf intel-tpebs: race between evsel__tpebs_open() cleanup
+  and tpebs_stop()
+--
 
-Arnaldo, I think it's good to go to v7.4.
+commit 7a1ce986169f6d07b45e9adbf7d1dd00eff88dbc
+Author: Ian Rogers <irogers@google.com>
 
-Thanks,
-Namhyung
+perf intel-tpebs: Fix race in tpebs_stop() and tpebs_cmd.out fd handling
 
-> ---
->  tools/perf/pmu-events/jevents.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-> index 080e04b51b8c..e083f7495e67 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-> @@ -396,7 +396,7 @@ class JsonEvent:
->          event += f',{value}{canonicalize_value(jd[key])}'
->      if filter:
->        event += f',{filter}'
-> -    if msr:
-> +    if msr and msrval:
->        event += f',{msr}{msrval}'
->      if self.desc and extra_desc:
->        self.desc += extra_desc
-> -- 
-> 2.56.0.455.g6c5a503b38-goog
-> 
+This commit fixes a race on tpebs_reader_thread in tpebs_stop(), transfers
+tpebs_cmd.out ownership to __sample_reader(), cleans up tpebs_cmd and
+tpebs_reader_thread on error paths, and adds explicit header includes.
+
+> diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
+> index 7c0b8b15bd10e..47c939fc2058c 100644
+> --- a/tools/perf/util/intel-tpebs.c
+> +++ b/tools/perf/util/intel-tpebs.c
+[ ... ]
+> @@ -567,12 +588,15 @@ int evsel__tpebs_open(struct evsel *evsel)
+>  			goto out;
+> =20
+>  		if (pthread_create(&tpebs_reader_thread, /*attr=3D*/NULL, __sample_rea=
+der,
+> -				   /*arg=3D*/NULL)) {
+> +				   (void *)(intptr_t)tpebs_cmd.out)) {
+>  			kill(tpebs_cmd.pid, SIGTERM);
+>  			pr_err("Could not create thread to process sample data.\n");
+>  			ret =3D -1;
+>  			goto out;
+>  		}
+> +		/* __sample_reader now owns and closes the output fd. */
+> +		tpebs_cmd.out =3D -1;
+> +		started_thread =3D true;
+>  		ret =3D tpebs_send_record_cmd(EVLIST_CTL_CMD_ENABLE_TAG);
+>  	}
+>  out:
+> @@ -586,9 +610,22 @@ int evsel__tpebs_open(struct evsel *evsel)
+> =20
+>  		if (started_process) {
+>  			if (tpebs_cmd.pid > 0) {
+> -				kill(tpebs_cmd.pid, SIGTERM);
+> +				pid_t actual_pid =3D tpebs_cmd.pid;
+> +
+> +				tpebs_stopping =3D true;
+> +				kill(actual_pid, SIGTERM);
+> +				tpebs_cmd.pid =3D 0;
+> +				if (started_thread) {
+> +					pthread_t reader_thread =3D tpebs_reader_thread;
+> +
+> +					mutex_unlock(tpebs_mtx_get());
+> +					pthread_join(reader_thread, NULL);
+> +					mutex_lock(tpebs_mtx_get());
+> +				}
+> +				tpebs_cmd.pid =3D actual_pid;
+>  				finish_command(&tpebs_cmd);
+>  				tpebs_cmd.pid =3D 0;
+> +				tpebs_stopping =3D false;
+>  			}
+
+[Severity: Medium]
+Can this error path race with tpebs_stop() and call pthread_join() twice on
+the same reader_thread?
+
+tpebs_send_record_cmd() drops tpebs_mtx while writing the command and
+polling ack_fd[0].  During that window a concurrent evsel__tpebs_close()
+can enter tpebs_stop(), which also drops tpebs_mtx inside
+tpebs_send_record_cmd() before clearing tpebs_cmd.pid:
+
+CPU0                                  CPU1
+evsel__tpebs_open()
+  started_process =3D true
+  started_thread =3D true
+  tpebs_send_record_cmd(ENABLE)
+    mutex_unlock(tpebs_mtx)
+                                      evsel__tpebs_close()
+                                        tpebs_stop()
+                                          tpebs_stopping =3D true
+                                          tpebs_send_record_cmd(STOP)
+                                            mutex_unlock(tpebs_mtx)
+    mutex_lock(tpebs_mtx)
+  if (started_process)
+    if (tpebs_cmd.pid > 0)
+      reader_thread =3D tpebs_reader_thread
+      tpebs_cmd.pid =3D 0
+      mutex_unlock(tpebs_mtx)
+      pthread_join(reader_thread)
+                                            mutex_lock(tpebs_mtx)
+                                          reader_thread =3D tpebs_reader_th=
+read
+                                          mutex_unlock(tpebs_mtx)
+                                          pthread_join(reader_thread)
+                                            <-- double pthread_join()
+
+Both threads then also restore tpebs_cmd.pid =3D actual_pid and call
+finish_command(&tpebs_cmd).  Even if tpebs_stop() has already cleared
+tpebs_cmd.pid =3D 0 and is unlocked inside pthread_join(), the
+started_process block still closes control_fd and ack_fd underneath it.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261106070344.3298=
+97-1-irogers@google.com?part=3D15
