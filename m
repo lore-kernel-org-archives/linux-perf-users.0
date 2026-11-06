@@ -1,56 +1,125 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.94
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793950904;
-	b=b2rRjKC1IXqZOru/D1FpuPWRkb19W12g98Yc6bsivf5bR7+9Cd6eSDfoXK6a4B1vPb4+
-	 nIrGhoNreiSoUDoFPwTsKgKdbF1gFDPNBlBcEH6Q3tD/p1KY/tijp+AhKvYVpLVk+xmBK
-	 HQw3JuTai6m8QG3F61x/0IpH0WGi9BwBQHiIIQLFFpAYTqh0W5C6PmHoGTLqN3sZ0LvNP
-	 T4UjTfmI/an7ur3dFtx0pYi0WagNjGKh7OjChxr0/k9PrOXXPVTsNevYWw42GmTZz8hwm
-	 6aahAj02BYfDegvftKkKLaKo+44bp09kJL0x9T8Bo5NdvpAImYVD51aoRoziKXlpuXg==
+	t=1793950979;
+	b=V8a6qyukHlT6QxgjKewguWKf4S4gJ4ipNgGs/MwRhgfLBtZE1rVPKEb9K97RuchRDtwa
+	 J0viRx7WBG2r4JBjwcxib3uXHCwXxpMV9CcXyZq+S8bOMAm5rPBdIOHvNy+neTEtpdf0Y
+	 K81zQg9GSkFbRKefdasZ6er9ytFufITEtWZbkQDUHj1sYABCVxRncD46RfshOPMPSyr9X
+	 MxlRfCL6aLVxJfHkPwz2sFHtdAk20ZWybiC3B7joxZpic8wMAWCdMf2AkB0ECKSq/XUpT
+	 Kc2XDoOm0F6WKAIUKpmZFCrTKuk4loE9TU7ILozQcg+ZNNEmmB5VejWXOxV84KPQsQg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793950904;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=yxANCzH2/FGTT4nw7oI+TQmRg2KUOh5YfrUVx1MekzU=;
-	b=IAJRmaFWMJgwQyU6Qb0A6+zAxOVx6L8gnWA8MYIRPdW6Ed+tA8GhSgyXvSMnEhjnlhpG
-	 SCkf8v+YmQQviVNfbsOmidScVJzFhlpWimMqqiUkOTOvVB8zu0dm5FQi4HiM/+JeBRgba
-	 zkweyQo+aTM+7bnUkSFzlUvPbtq90l9q/2HNThE/sGtsTvjuIfX4LFDdPTPdwfVwi31P1
-	 tHCs2XZD/vD6xEGsOl3IxaVklYrEgwLWCm/zGG5IZoXqyIyJJOyhN7GVJw6vqlhjvDeO4
-	 BlR90nFrNJqJEVSQ9wRjFrMBPzxO6dh1P1fWhjTcK8EXtGzpEX1dtPioelms+h71FjQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793950979;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=J6SE0s1+Cmv2tEQyGLs4E7WejNQSVW6EagB3ds9ygbQ=;
+	b=kUKr3TmgD2kW+V9NeD8N3r13mmU/jQsDq3ReOq7HiF3dSfutM/lBGQR9SHKEKqpg+dgu
+	 u1/evJtP9TiBgfrUIvQE8Qy/sygPb7vLGiQ/a1sVPlryVXN8tkKHz4+GKP8gar11Um726
+	 fkg73Ed6ntKzhucoUHc0+asSSCE1dle+q82d5irxquayoyWUBeYNIig69wUw+puk6VmUl
+	 vhPEDo/0fUyronblM243oU+zky75CawTev11zc6jeRrDBqRqrAbyi7YUZpZPOKsjSL4BE
+	 sZZ+9QTNcC0TTn6bWy+Ei51GgE6MYopL2N358q+6m1JM/yzUSy5aYIJPHLWXNWjTjLA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iQkv6k43;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=fxlM84s3;
+	arc=none smtp.remote-ip=95.215.58.94
+Received: from mta1.migadu.com (out-94.mta1.migadu.com [95.215.58.94])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E1B606A326
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 07:41:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311A9606A338
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 07:42:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 311A9606A338
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iQkv6k43
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F3EA1F008A1;
-	Fri,  6 Nov 2026 07:41:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793950903;
-	bh=yxANCzH2/FGTT4nw7oI+TQmRg2KUOh5YfrUVx1MekzU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=iQkv6k43ZuERtp1VUJPwg7kmdTi7QbnsnP9Vb8ZM8c001AXsEZNnzQ3mwFkBkwjLi
-	 HdBTZB/wmQwvbsEphzq0afG6jTLyM0yJIecEfoZrlAprl9hQ7lyqbKPdBrwwpIaFSV
-	 2RAh2hB8o14y8/Gu3iqIs+tnQYxytJ8R/A5w+iu9+jcTmzmBOOvpunJn822WwoGtx6
-	 51zRNWKGFuSpta1jzBNNOmRoDwTkHhaTCcwHqVHBrYSCxRDSwzsw718aavqoPmXJXn
-	 H3tO3cZcecMgTZFWsbe6Hp7/kIr+OBG76gET3Ff1UImPVUFUWqyKWpRl5n4ue/9RJl
-	 64zeg/nKrEaJg==
-Message-ID: <sashiko-outbox-201001@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/2] perf tests: Skip zero sample IP in object-code
- reading test
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261106073018.903126-1-dapeng1.mi@linux.intel.com>
-References: <20261106073018.903126-1-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Nov 2026 07:41:43 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=fxlM84s3
+X-Envelope-To: linux-perf-users@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=PtWTq6nqlzK8T9nMNNfK0YJy8biQ9MHHy5p7qGOpMUs=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1793950976; v=1; x=1794555776;
+ b=fxlM84s3hCVbROs1wu/ZRrH3w7L69J3djc8r82NKL7XgHLF5bsQqxKfWQvDSAP9wYLmdAde1
+ mu24woVL/EN8rZQZureXL4U5hLrUQUpSNqcu/ZfylUSqhhED8b7JJPf3XOGbxNYP4nyzo0wgtdF
+ e3L8oaGdTF4l+D2Ofihjjuv4=
+X-Envelope-To: linux-perf-users@vger.kernel.org
+Received: by mta11.migadu.com with ESMTPS id 9c50986a3e384fa4;
+	Fri, 06 Nov 2026 07:42:54 +0000
+X-Mizu-Trace-ID: 9c50986a3e384fa4
+X-Migadu-Flow: FLOW_OUT
+Date: Fri, 6 Nov 2026 15:42:19 +0800
+From: "Xu Xin (vivo)" <xu.xin@linux.dev>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+	Peter Xu <peterx@redhat.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Jan Kara <jack@suse.cz>, Rik van Riel <riel@surriel.com>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>,
+	Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>,
+	Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>,
+	Byungchul Park <byungchul@sk.com>,
+	Gregory Price <gourry@gourry.net>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Nico Pache <nico.pache@linux.dev>,
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+	Barry Song <baohua@kernel.org>, Usama Arif <usama.arif@linux.dev>,
+	Kiryl Shutsemau <kas@kernel.org>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Pedro Falcato <pfalcato@suse.de>, Kairui Song <kasong@tencent.com>,
+	Qi Zheng <qi.zheng@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
+	Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Leon Romanovsky <leon@kernel.org>,
+	SJ Park <sj@kernel.org>, Rakie Kim <rakie.kim@sk.com>,
+	David Rientjes <rientjes@google.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	John Johansen <john.johansen@canonical.com>,
+	Georgia Garcia <georgia.garcia@canonical.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej =?utf-8?B?TW9zbsOhxI1law==?= <omosnacek@gmail.com>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	kvm@vger.kernel.org, damon@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, apparmor@lists.ubuntu.com,
+	linux-security-module@vger.kernel.org,
+	linux-integrity@vger.kernel.org, selinux@vger.kernel.org
+Subject: Re: [PATCH 06/13] mm/ksm: convert VMA flag tests to use vma_flags_t
+Message-ID: <au2E2/Q3yQacg5pk@dgvxl46587.localhost.localdomain>
+References: <20261105-late-2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org>
+ <20261105-late-2026-vma-flags-v1-6-0d3cd15ab75f@kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,23 +128,90 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261105-late-2026-vma-flags-v1-6-0d3cd15ab75f@kernel.org>
 
-> The kernel may clear the sample IP to 0 when a user-space address is
-> expected but a kernel address is sampled due to hardware skid. A zero
-> sample IP causes the object-code reading test to fail incorrectly.
->=20
-> Skip zero sample IP values in the object-code reading test to avoid
-> false-positive failures.
->=20
-> Reported-by: kernel test robot <yi1.lai@intel.com>
-> Closes: https://lore.kernel.org/oe-lkp/202609151503.cb02f753-lkp@intel.com
-> Fixes: 166f10836a65 ("perf/core: Fix kernel register info leak via hardwa=
-re skid")
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+On Thu, Nov 05, 2026 at 09:30:57PM +0000, Lorenzo Stoakes (ARM) wrote:
+> Replace use of the legacy vm_flags_t flags with vma_flags_t values where
+> KSM tests VMA flags directly.
+> 
+> The ksm_madvise() interface continues to take legacy flags for the time
+> being.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> ---
+>  mm/ksm.c | 13 +++++++------
+>  1 file changed, 7 insertions(+), 6 deletions(-)
 
-Sashiko has reviewed this patch and found no issues.
+LGTM! Thanks!
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261106073018.9031=
-26-1-dapeng1.mi@linux.intel.com?part=3D1
+Reviewed-by: Xu Xin (vivo) <xu.xin@linux.dev>
 
+> 
+> diff --git a/mm/ksm.c b/mm/ksm.c
+> index d6f736a1aa2f..61b772bba229 100644
+> --- a/mm/ksm.c
+> +++ b/mm/ksm.c
+> @@ -779,7 +779,7 @@ static struct vm_area_struct *find_mergeable_vma(struct mm_struct *mm,
+>  	if (ksm_test_exit(mm))
+>  		return NULL;
+>  	vma = vma_lookup(mm, addr);
+> -	if (!vma || !(vma->vm_flags & VM_MERGEABLE) || !vma_has_anon_rmap(vma))
+> +	if (!vma || !vma_test(vma, VMA_MERGEABLE_BIT) || !vma_has_anon_rmap(vma))
+>  		return NULL;
+>  	return vma;
+>  }
+> @@ -1243,7 +1243,8 @@ static int unmerge_and_remove_all_rmap_items(void)
+>  			goto mm_exiting;
+>  
+>  		for_each_vma(vmi, vma) {
+> -			if (!(vma->vm_flags & VM_MERGEABLE) || !vma_has_anon_rmap(vma))
+> +			if (!vma_test(vma, VMA_MERGEABLE_BIT) ||
+> +			    !vma_has_anon_rmap(vma))
+>  				continue;
+>  			err = break_ksm(vma, vma->vm_start, vma->vm_end, false);
+>  			if (err)
+> @@ -2698,7 +2699,7 @@ static struct ksm_rmap_item *scan_get_next_rmap_item(struct page **page)
+>  		goto no_vmas;
+>  
+>  	for_each_vma(vmi, vma) {
+> -		if (!(vma->vm_flags & VM_MERGEABLE))
+> +		if (!vma_test(vma, VMA_MERGEABLE_BIT))
+>  			continue;
+>  		if (ksm_scan.address < vma->vm_start)
+>  			ksm_scan.address = vma->vm_start;
+> @@ -2890,7 +2891,7 @@ static int __ksm_del_vma(struct vm_area_struct *vma)
+>  {
+>  	int err;
+>  
+> -	if (!(vma->vm_flags & VM_MERGEABLE))
+> +	if (!vma_test(vma, VMA_MERGEABLE_BIT))
+>  		return 0;
+>  
+>  	if (vma_has_anon_rmap(vma)) {
+> @@ -3027,7 +3028,7 @@ int ksm_madvise(struct vm_area_struct *vma, unsigned long start,
+>  
+>  	switch (advice) {
+>  	case MADV_MERGEABLE:
+> -		if (vma->vm_flags & VM_MERGEABLE)
+> +		if (vma_test(vma, VMA_MERGEABLE_BIT))
+>  			return 0;
+>  		if (!vma_ksm_compatible(vma))
+>  			return 0;
+> @@ -3484,7 +3485,7 @@ bool ksm_process_mergeable(struct mm_struct *mm)
+>  	mmap_assert_locked(mm);
+>  	VMA_ITERATOR(vmi, mm, 0);
+>  	for_each_vma(vmi, vma)
+> -		if (vma->vm_flags & VM_MERGEABLE)
+> +		if (vma_test(vma, VMA_MERGEABLE_BIT))
+>  			return true;
+>  
+>  	return false;
+> 
+> -- 
+> 2.56.0
+> 
