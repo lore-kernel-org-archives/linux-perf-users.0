@@ -1,57 +1,51 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=114.242.206.163
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793957780;
-	b=sk9rVOibwS9wzD5I3unLOPdohflXgDfGwDfK0Mj7f5eYwi92bqh1J3DCQdhz0Hm76yEh
-	 /rlO1H+FJkHauUlIaJ2dyOgW5eSQ4sJe448WEszkgkHPh4p54EtyEMLJNBoICnoC9McBB
-	 eMYuBKCHZpSnkZ5cjKO1j80EruXvKbvp7RbtQCk0/KryyIGvN8X8CwXEjVUk7VE2ng3Ty
-	 OgZl9Sm83d+X7iwv7O2DZqp7U4PRqMC5HX6qFd5aCbFR4Ynx7Cb9OLNcsOi9Q/UgAd25a
-	 rAsr1N9w19ZTw5ORTlt7xnKQLzYPCWfpmmfwMXFHLX1FGA9ncev6F+BOMID/FW9CbjA==
+	t=1793958717;
+	b=sq4Ea9qVkCn8rkZVywvk5vlij7QT6e3Wp542lIES3ZKRUDRhsLnJs7gEcT8cbV3JKc22
+	 Fln1kzLfFNl8awAG6V52jdhYddVe6HPJNW1gqkUuaNtYFl72csY+E8tb4idcGDt6MuGFD
+	 bRwAJxeSAK9DwzIcXkZXgvDGOHoe1yRHP8WUViyZ3QEP/Y+BDaHCjlmrfDuUdRHAEk8X5
+	 WHtqE12ITTTvxyl2kwGhm4NjHoYuUzX9fv+mxPXfTyJJjav/cv04LTJ0xSJt3EzQpNEYN
+	 womb1pmScKAmmEoxBIDKKQLlC2pM3jTCGHrcbVsjZYBunn0RZH4wCvIkltyk5DE+VrQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793957780;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=q1hqcbTG3rhdZx/9gfUyzxGMvtU1bwp4KeexPPpLb4I=;
-	b=cElAhGNfizwX76XvYoQOH15V80cpZIGhEPDBkmFsn44rrfT+/Jdhto/pCXaPd4fjNkQ6
-	 Mlt9TswmS3D7BLPRWDdxFzL5hf7fCaKbr1Jln3geUzzT7Pap6YkA8SqDZPoTj2qtTBaOI
-	 7lwBxzlSvF3gitivhgz+srpSXAPGHB7Or4l/+DYikWodsm5nd99ReOSiGZxPhdQtRtpzS
-	 lUJWMeWmY9cOQmg1ju3GegCZzwY7WOel+OoEcLn/uPKbzJ5fnc7epmH5t5zq3Iu4MtI4b
-	 CYtRR+1omBC5tfvc+BaAzeVbPn8Xe/8BUt+a8v5s5/5Hv6fojEgl1fqHS3UvjTcV4ww==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793958717;
+	h=DMARC-Filter:Received:Received:Subject:To:Cc:References:From:
+	 Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:Content-Type:
+	 Content-Language:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-CM-SenderInfo:X-Coremail-Antispam;
+	bh=gbUYFO1GQ14u1DHN0T1ERQGs+tAoXo7YRe7M2+DS1tQ=;
+	b=og+YkQ7Ndaq2bC9GKJFisLlttpOtlE/gu4kRboI4zWntR5G19I5N4+MGHjhfpwOFIP9P
+	 gP0eK7y+paOW07LXOD+UT8NMm/2BmjwPUwsyNLHk3ET8cpHqSvM4wq/9cUyyCr9dnfoXU
+	 j0pKOutI/w0PAm1NdQkcxSR+7erxdgb3ehb5x2l2+VPr1Du2xFw5ETSKgMcqDGS0CLm5q
+	 DiSv+YhORhuol4zl07aIDwPMbKZIMRCjpZ33qLJxxQnq0VOu7hxg2DoL4g85wD058jiRz
+	 9EoNmWwMtYxMaPat9omAUB+mvn05ef1NTetbzYVUWwFQEwpkQ3GJoi8g8AFpt3EOzUA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fqsXKuuf;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33366606A921
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 09:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fqsXKuuf
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA3B81F0089F;
-	Fri,  6 Nov 2026 09:36:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793957779;
-	bh=q1hqcbTG3rhdZx/9gfUyzxGMvtU1bwp4KeexPPpLb4I=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fqsXKuuf7sKxkUB8CAlcaocNOBAy3l6MwqC6EGxPpnedxOxnr+RntMaPwaz/Ga8NH
-	 CTVFj0Isv2xIn1qm3RMrML6cxFGyuk6w7bdM6YQPS9xbx/hyfabLMtZ2L/JTO1HdYQ
-	 NN5He+hiuP9QOG7NZYlCJot9dyYVyVKQa0iSxqZitx3ajB1OOmItCehLXRrNa2pytY
-	 UQqLu+2ZFaHIxdYhOxLSIqjEwo8gqz4io03xF1rpgxmhedyTcWjj+h5ETekt35oWsH
-	 eLmGsW93k0j8dMIy63Zi8DGMdyNK8yxxsHRePmP7IyVUVHOta7Kr67s6ZftKYTCpEY
-	 fxlSQoCH1tJKg==
-Message-ID: <sashiko-outbox-201127@kernel.org>
-From: sashiko-bot@kernel.org
+	dmarc=none header.from=loongson.cn;
+	spf=pass smtp.mailfrom=loongson.cn;
+	arc=none smtp.remote-ip=114.242.206.163
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29BB9606A328
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 09:51:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 29BB9606A328
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [123.138.236.242])
+	by gateway (Coremail) with SMTP id _____8AxntI3o+1q8wcdAA--.18228S3;
+	Fri, 06 Nov 2026 17:51:51 +0800 (CST)
+Received: from [127.0.0.1] (unknown [123.138.236.242])
+	by front1 (Coremail) with SMTP id qMiowJAx2c0no+1qb8IyAA--.38726S2;
+	Fri, 06 Nov 2026 17:51:36 +0800 (CST)
 Subject: Re: [PATCH v1 1/2] perf tests: Assign return value of ioctl in
  wp_modify test
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Tiezhu Yang" <yangtiezhu@loongson.cn>
+To: sashiko-reviews@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261106092808.6914-2-yangtiezhu@loongson.cn>
 References: <20261106092808.6914-1-yangtiezhu@loongson.cn>
  <20261106092808.6914-2-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Nov 2026 09:36:18 +0000
+ <sashiko-outbox-201127@kernel.org>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <79708703-7e59-315b-04f6-9d24a694eece@loongson.cn>
+Date: Fri, 6 Nov 2026 17:51:35 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,36 +54,45 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+In-Reply-To: <sashiko-outbox-201127@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowJAx2c0no+1qb8IyAA--.38726S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+	ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E
+	87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+	AS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s02
+	6c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jr
+	v_JF1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvE
+	c7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
+	v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x
+	07UiiSdUUUUU=
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Low] perf tests: missing Fixes trailer for test__wp_modify() ioctl
-  check
---
+On 11/6/26 5:36 PM, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential
+> issue to consider:
 
-commit 36cc478a3007ff125acd9f095ef1c72b59deb4aa
-Author: Tiezhu Yang <yangtiezhu@loongson.cn>
+...
 
-> perf tests: Assign return value of ioctl in wp_modify test
->
-> In test__wp_modify(), the return value of ioctl PERF_EVENT_IOC_ENABLE
-> was not being captured. As a result, the subsequent error handling was
-> checking a stalled value of `ret` instead of the actual result of the
-> enablement operation.
->
-> Fix this by properly assigning the return value of the ioctl call to
-> `ret` so that the test can correctly catch and report failures when
-> enabling the watchpoint event.
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> [Severity: Low]
+> This fixes a missing return value assignment introduced when the
+> watchpoint test was added.  Should the commit message include a Fixes
+> tag?
+> 
+>    Fixes: 2e85d5979e8d ("perf test: Add watchpoint test")
 
-[Severity: Low]
-This fixes a missing return value assignment introduced when the
-watchpoint test was added.  Should the commit message include a Fixes
-tag?
+This is just a simple test case fix, so I'll let the maintainers
+decide if a Fixes tag is necessary when applying the patch.
 
-  Fixes: 2e85d5979e8d ("perf test: Add watchpoint test")
+Thanks,
+Tiezhu
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261106092808.6914=
--1-yangtiezhu@loongson.cn?part=3D1
