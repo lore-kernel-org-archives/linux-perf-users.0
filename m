@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793943857;
-	b=FPpYW+/1YVXeKd3182Q7UiFhJUvRfytVtxfaN4sF86r+APlzqNXlfL0pcijD+0eJs+oN
-	 gxt5iZXsTcOTZEdBtN40wiYN7QzWvjK7c5ovxbZpfkbTN1irVlgyWCNU1xIuDeTn+mbe7
-	 b8dEf2InbP6xVdg9B3nIV+v/+Ud1+tzL+ofYW+4DJmA4DqUBRZ1tNpJayL5b6cOXdPx01
-	 n94hEJ6wrx6XfcS3gJe3Uy3qKtxmsGKyvcdUc8Mtssq8EqrTQBD8DKjysIwBSKNR16RPr
-	 Qpgy5kyZcMJX0rcX0y6i0LnDERZ6l9QRxxX+5p8APIpAm12bj5QpTNYihKxJnxp5yIA==
+	t=1793943873;
+	b=WEdiqUnheGz01OkE278IVX7RuXOv4woWfzXg4y16BaogLToTpL1yjdt9YobIxNzWsFxb
+	 5EzOzNvnAtLAjd2kP9Cwj7+FPePX6dV6lirXV3m9cHmyt29YjURLzU4oaK6jFrfqQ1YxZ
+	 0epfL8BGMUC+LfqNySz1+SzIP9KhTc0HZjAm+8yD4/0Dcq3s7+MbMcNTIYZRMXmKijJs/
+	 AYTC7NvOEzArRBF0kc0B6PuuuhTAlkXjaSZ+EWgUtdLq0yLQV0/1uS/71U5Oxi0Pyzhwg
+	 B41J0ywW80Y6EnYuOWyH98bO9wRwDgdFTjMQj31pSdiDhqWXLxROm3wiVWX9qQb8qfg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793943857;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793943873;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=MbT5hfIgqocq0MwQi05WOfF5j6FeoIpT7xe1Kt8tkJ0=;
-	b=Tuhis5MC7no85MiXeCbF9TxME2h4WA6cxtSCEKgW7vK5zaR1ifzBi4KzoVKD1GlQ/6yb
-	 EV8NF6wAr8Jqa7TEP9PCdR8yRWtX5vVwe5wwFyFz2+eaVq5i3IsQQsowjiHW5ZC6sbDGV
-	 InlFbZZTSE9v14UntwMjBQmZJtMpur15t3MvYiPyZvg2Wu5DUi0wCdfR8L9yHJFfh9JQb
-	 /8LM0G0oKDAnmJXk8kqmqkyl5+DjMg4I6gWsde+L0g1aU3yIjWgmsL3DGGh72dWmAZadd
-	 a0PIso3RBqg8/vGYeGB+cWyh9CN3je6LGLSHoNNEMk9Xc4DY3HJYrZLJq68L+Jp4d3w==
+	bh=uN+lBU+OgPx259O1NSDBxpBhjw2gGF2ziZzz6cgbLgk=;
+	b=Azi9ctGGB/39prRgHP3DYI3Oc4Wxa7fvZyOl8tqL45THFLK8bp85SKwQI2bilclrYQ2g
+	 dw89MKPdB8OGs/+t2fqsLgnfWG/gecYb2YqBBPRaTjzSsLIj5xGtP26fn8xOuQQ6LqSfG
+	 MKNCII8DObfo6l8AcOVB2dJ0zkBDEdRbOAfnB4W9fbnVzV3PZXYVjAmn8ajQ8deAhwEAb
+	 8mOqX03rUP72OUheMDX8h6PlCtYhLMVfJSImlVUp3UNpieyG6BVeWMALcwslwPmduZ7q6
+	 4bLZ9aLZ7ZN9j/YAPsA/zTwpUdtuNTG0GRcOgSZt3bWqTTzWOPpGT1+NyNS+tR6PesA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="NUGYYoR/";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oCBJMXCk;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51347606A328
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 05:44:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB59606A333
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 05:44:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NUGYYoR/
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C92111F0089F;
-	Fri,  6 Nov 2026 05:44:16 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oCBJMXCk
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67B221F008A2;
+	Fri,  6 Nov 2026 05:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793943856;
-	bh=MbT5hfIgqocq0MwQi05WOfF5j6FeoIpT7xe1Kt8tkJ0=;
+	s=k20260515; t=1793943872;
+	bh=uN+lBU+OgPx259O1NSDBxpBhjw2gGF2ziZzz6cgbLgk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=NUGYYoR/hBHVepDzUOegRQC3ikBLalZOd9YHL2o1YSs84K133XvyTHsBSfJ2U4i4r
-	 lK/dt3R59JTmPqfUgq3QX6UHDKqQUmUKU6qW/1zB1SsmmmBsS+dfnkRjvON6Kj+3xl
-	 E3s9Xe4ycIZc+1jzg3VaT0YazFx1h9z2fMRtiTBKVDKXULALNw0jhay5qvb5AdxDHW
-	 oUCp5JG5nxpQ4Dd+XkbVGIBaS9nbkCtqEE1JfZ06RN/oPYrfaS/Mv1THrulNY32kjW
-	 TSlh1b3ycPm0OEkY3A1oLhVGdn9TKuWGlu4q3vXxUjRmcN1W6KHv3SBz2vg2TbSa9J
-	 srEeQGpQ5ROBg==
-Message-ID: <sashiko-outbox-200850@kernel.org>
+	b=oCBJMXCkks87DUfQVEIFqqme9KWjqzRFVf1mxoLn5HTlGUHZPRucJ9ID5c3R1GlOX
+	 fv/9Mb6hBwxqzoEJh7nmDQnxGqhtKrcT42PmOfdBzR+m050VKmRyMjB3b+oBXqVlCz
+	 GX8CKS8xd58GXDy+2A3Sd7UKAOm3kyLosYoD9ba/EQQfAeyFJFSmXntgnCFoGOMwL4
+	 8w3Wt5dWwdk/2rZ3TsUbSDd2JfGnfohY8mcsLcUjRkKTNq+WdaLwqy1rSMA+KNOY7w
+	 jlYvm6IOdtg+by2U1ePaZn+IS6jzYBiWyjL/xOCSbDWjtebGN6wKC00SV/r3RzNgag
+	 u1wE514kg7GBg==
+Message-ID: <sashiko-outbox-200851@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/4] perf dwarf-aux: Support DW_OP_addrx locations for
- global variables
+Subject: Re: [PATCH v7 14/14] alpha/perf: honor exclude_user and
+ exclude_kernel for ProfileMe events
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "James Clark" <james.clark@linaro.org>
+To: "Matt Turner" <mattst88@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261105-james-perf-test-fixes-v1-2-0b279bee5830@linaro.org>
-References: <20261105-james-perf-test-fixes-v1-0-0b279bee5830@linaro.org>
- <20261105-james-perf-test-fixes-v1-2-0b279bee5830@linaro.org>
+In-Reply-To: <20261105-alpha-profileme-v7-14-c474e892abb0@gmail.com>
+References: <20261105-alpha-profileme-v7-0-c474e892abb0@gmail.com>
+ <20261105-alpha-profileme-v7-14-c474e892abb0@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Nov 2026 05:44:16 +0000
+Date: Fri, 06 Nov 2026 05:44:32 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,37 +61,31 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> die_find_variable_by_addr() and die_collect_global_vars() only accept
-> global variables with a DW_OP_addr location. DWARF 5 producers like
-> clang use DW_OP_addrx instead, which is an index into .debug_addr, so
-> global variables are never found when Perf is built with LLVM=3D1.
+> The PMU sets PERF_PMU_CAP_NO_EXCLUDE, as the counters count in every
+> mode. perf record then fails for unprivileged users: at the default
+> perf_event_paranoid of 2, the tool sets exclude_kernel for them.
 >=20
-> Add a helper that also resolves DW_OP_addrx and DW_OP_GNU_addr_index
-> through dwarf_getlocation_attr() and dwarf_formaddr(), and use it in
-> both places. This fixes the "perf data type profiling tests" test:
+> A ProfileMe sample says which mode the profiled instruction ran in, so
+> the excluded samples can be dropped, as AMD IBS does with swfilt. Do
+> that for ProfileMe events, counting PALmode as kernel, and ignore
+> exclude_hv, as there is no hypervisor. A sample that falls back to the
+> interrupted PC is dropped if either its PC or the profiled instruction
+> is in an excluded mode. Aggregate events cannot tell, so event_init
+> now rejects their exclude bits itself, along with exclude_idle,
+> exclude_guest and exclude_host for all events.
 >=20
->   $ perf test -vvv "perf data type profiling tests"
->   ...
->   Basic C perf annotate test
->   Basic annotate [Failed: missing target data type]
->   ...
->   Pipe C perf annotate test
->   Pipe annotate [Failed: missing target data type]
->   ...
->   Basic FS perf annotate test
->   Basic annotate [Failed: missing target data type]
->   ...
->   Pipe FS perf annotate test
->   Pipe annotate [Failed: missing target data type]
->   ---- end(-1) ----
->    88: perf data type profiling tests : FAILED!
+> The event count, and what PCTR1 counted during a window, still include
+> the excluded modes.
 >=20
-> Fixes: d60469d7c0e5 ("perf dwarf-aux: Add die_find_variable_by_addr()")
-> Signed-off-by: James Clark <james.clark@linaro.org>
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Assisted-by: Claude:claude-opus-5-5
+> Reviewed-by: Magnus Lindholm <linmag7@gmail.com>
+> Tested-by: Magnus Lindholm <linmag7@gmail.com>
+> Signed-off-by: Matt Turner <mattst88@gmail.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105-james-perf=
--test-fixes-v1-0-0b279bee5830@linaro.org?part=3D2
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105-alpha-prof=
+ileme-v7-0-c474e892abb0@gmail.com?part=3D14
 
