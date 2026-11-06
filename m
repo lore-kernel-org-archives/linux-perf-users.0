@@ -1,49 +1,61 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=111.22.67.139
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793934350;
-	b=Pz4h6YfHGLtGfLXUGo0L7H7h93QvapG9YqhkctYxMahrHTy8fRyulqbeEn/y5cSAKNcb
-	 cUpDFNS/as96Cz16lUGLIhFh6EHEqWyMrdH+TT9edfEgsqrCG9gLM0T+copO+Dv4DCP2F
-	 7vVr5dfnwAO4riEtk2KyzVCKG4agVPO3PzQKPPKayToT0Czigne1pfcKl5LCELXZbtWJK
-	 3moeHtZ7Vb7sXpV3Bod+n62u+j4Wv6LwWwUaB5WRCpZMlUmbLwn8D1oNtz/n0eZ/aYkNz
-	 oQivM/OPXSJ6kJD+pBXdKNhrFUQbbytvx0i83pj2M6EM+tnmtoqWDDcEKcJRVLsg4zQ==
+	t=1793934432;
+	b=zZttVCwvKk0JUxPP00UF/B6Q3UIr/4hU+1Z/l6j1Ty49mfcDnLwVyBCsQaDlxCHeUjov
+	 zH/4pubEICyusZZ7M1hkPCswVjBbKb9TFcTkHB2o0sXR5VdxW+WMOQeSlcp0mRSjksZyG
+	 eub6D8bbW2bNq3crPydr5MIyh88En3RThRdS2IszPpLMWJlq1CBUJWyB4wRflcQPP1AAJ
+	 UOFGOvjtJ3/ROySw+Sq6Z1MiNXu/FX+QVZ9hM3SVq11Wa8j4fpwTbVI7lwPZh0iVkGIn/
+	 BCQCt3Dlp8a3VWslTQiltUyJg7xJ04tT0hWujS2sSo2GR8ECPU9FwE6NIoqyqKbgelg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793934350;
-	h=DMARC-Filter:DKIM-Signature:X-Alimail-AntiSpam:Received:Message-ID:
-	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=7Aof237vDO4qMTTpfPlwofHadKxllvqKaM/oePbLGkw=;
-	b=PmHZge9Ra2cu9sIg7DibVtjCeyeL8WFNs8xqpFyshA+ShehhASe3tSBuKJwdchLNiy/T
-	 ok7oivB+Ot542xH7PHvfn75PPkzy+S6Q/uiQ6prnkKnpBk9gSyQQE0bU0Qn6VQ9r7o90v
-	 r1gCBfY+RDUy/52FAGjHdLOkRZ+C44M4ktDEhtukpLCV+jnDUzZ1Og1RaPOv9jS7TwQLr
-	 Hsnx4MzRLUjtEBJbYaXXVCXkEPurWJ9MUgDXNBmConXdCiwKX8OplvkqDZZ7f4oU5o/IG
-	 WGm2gJUZ5KoCYMFrjaRDv/ss4qwtDj+FMv/slmB8N4/Qfww02Uo/Od96g/f3aBGo0rg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793934432;
+	h=DMARC-Filter:DKIM-Signature:X-RM-TagInfo:X-RM-SPAM-FLAG:Received:
+	 X-RM-TRANSID:X-RM-TagInfo:X-RM-SPAM-FLAG:Received:X-RM-TRANSID:From:
+	 To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=SEAX8sDv2DtDNpr8cOIQd6z9xBqi+QGbvhq2CyLVLL0=;
+	b=4sJF2cCZ9hm3D8sxMmOTpLqCZ6B9VPrn7KLpNE7Nt8Dk5x2dPMWKqpCAaq0tE8bMQfCH
+	 YUmgmpvDf93pQhs91ptDqucXd3v0ssI48t9BrVsk9fQToDtnU+O3AGfnXOQQ6vBG06yTN
+	 yBiPTz7Lg9P5kAKyJxJMws9JSxpVZZYZs19nDX/uUat0Yv7I21XSdwCVALZhS/II9Gtu5
+	 wbRk494AyK3pOtCo3GVp25RygaFnMEcOS8Adr3KGVZCDQJ3dWxhRnEKpnfV3ki7H6TgwW
+	 PTDHjvjWC9filwUmMA9nSS6UZEK9/tar3CYvLEvJPLumZy49UYBQIivta0444+EmGzw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.alibaba.com;
-	spf=pass smtp.mailfrom=linux.alibaba.com;
-	dkim=pass header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Gz2golrb;
-	arc=none smtp.remote-ip=115.124.30.119
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1904606A31B;
-	Fri,  6 Nov 2026 03:05:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D1904606A31B
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	dmarc=pass header.from=cmss.chinamobile.com;
+	spf=pass smtp.mailfrom=cmss.chinamobile.com;
+	dkim=pass header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=PGwPAq2x;
+	arc=none smtp.remote-ip=111.22.67.139
+Received: from cmccmta6.chinamobile.com (cmccmta6.chinamobile.com [111.22.67.139])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89C0E606A31B;
+	Fri,  6 Nov 2026 03:07:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 89C0E606A31B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmss.chinamobile.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Gz2golrb
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1793934344; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=7Aof237vDO4qMTTpfPlwofHadKxllvqKaM/oePbLGkw=;
-	b=Gz2golrbdlHdc3ywvlrav132W8JvfXQeCV0Kfzmv/kk61TscCoF+6deUA5HiaF+brHtUnA3mo0WElY7tDoxgy5xevu+g8s5T/9dAnkQquuvRjJ8srr6vXxBqrX0sJycOuTdotjPscTkA4jK1xBr0eiV+cyCU/e8lMNiGyngeTrk=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=88;SR=0;TI=SMTPD_---0XEA9EV0_1793934336;
-Received: from 30.74.144.130(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0XEA9EV0_1793934336 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 06 Nov 2026 11:05:39 +0800
-Message-ID: <4bc884a1-a04d-4ccd-8934-2095beb08251@linux.alibaba.com>
-Date: Fri, 6 Nov 2026 11:05:36 +0800
+	dkim=pass (1024-bit key, unprotected) header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=PGwPAq2x
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=cmss.chinamobile.com; s=default; l=0;
+	h=from:subject:message-id:to:cc:mime-version;
+	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+	b=PGwPAq2x9B9GUbo61qYMlEp+uiTiaaE+q0tmnseXa18b4GP/z1ErYxchD5PN3yS292aWv5bS3aP7S
+	 RruiP/jSFBwIhfBkG1a3Z27EbKR7/9nWsl5KnHJo+r/ztUCHum+e4IRHiO74vzW87KizB+Dcfx+/Fx
+	 v9h+qoNp1nUpCrm4=
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
+	by rmmx-syy-dmz-app05-12005 (RichMail) with SMTP id 2ee56aed4452171-a945d;
+	Fri, 06 Nov 2026 11:07:02 +0800 (CST)
+X-RM-TRANSID:2ee56aed4452171-a945d
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from cmss.chinamobile.com (unknown[10.55.1.72])
+	by rmsmtp-syy-appsvr08-12008 (RichMail) with SMTP id 2ee86aed44545f9-0f6f7;
+	Fri, 06 Nov 2026 11:07:01 +0800 (CST)
+X-RM-TRANSID:2ee86aed44545f9-0f6f7
+From: Yuehong Wu <wuyuehong@cmss.chinamobile.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, David Rientjes <rientjes@google.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] perf/x86/intel/ds: don't WARN when the BTS buffer can't be allocated
+Date: Fri, 06 Nov 2026 11:06:41 +0800
+Message-ID: <20261105-perf-ds-bts-warn-1-yuehongwu@cmss.chinamobile.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -53,83 +65,57 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/13] mm/migrate: convert VMA flag tests to use
- vma_flags_t
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
- John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Rik van Riel <riel@surriel.com>, "Liam R. Howlett" <liam@infradead.org>,
- Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>,
- Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>,
- Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Byungchul Park <byungchul@sk.com>,
- Gregory Price <gourry@gourry.net>, Ying Huang
- <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>,
- Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
- Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
- Shrikanth Hegde <sshegde@linux.ibm.com>, Pedro Falcato <pfalcato@suse.de>,
- Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Leon Romanovsky <leon@kernel.org>,
- SJ Park <sj@kernel.org>, Rakie Kim <rakie.kim@sk.com>,
- David Rientjes <rientjes@google.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Oleg Nesterov <oleg@redhat.com>, John Johansen
- <john.johansen@canonical.com>, Georgia Garcia
- <georgia.garcia@canonical.com>, Paul Moore <paul@paul-moore.com>,
- James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
- Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu <roberto.sassu@huawei.com>,
- Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
- Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>,
- Stephen Smalley <stephen.smalley.work@gmail.com>,
- =?UTF-8?B?T25kcmVqIE1vc27DocSNZWs=?= <omosnacek@gmail.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- kvm@vger.kernel.org, damon@lists.linux.dev,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
- linux-integrity@vger.kernel.org, selinux@vger.kernel.org
-References: <20261105-late-2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org>
- <20261105-late-2026-vma-flags-v1-4-0d3cd15ab75f@kernel.org>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20261105-late-2026-vma-flags-v1-4-0d3cd15ab75f@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+
+alloc_bts_buffer() asks for the buffer with __GFP_NOWARN and then WARNs
+if the allocation failed anyway.  The failure is already handled: the
+caller disables BTS for the event and releases what was set up, and
+perf_event_open() returns -ENOMEM.
+
+The WARN_ONCE() came with commit 4485154138f6 ("perf/x86/intel: Avoid
+spamming kernel log for BTS buffer failure"), which added __GFP_NOWARN to
+stop the log spam of the failing per-CPU allocation but kept one warning
+as a hint.  That hint is fatal under panic_on_warn: on a machine with
+BTS, the 64 KiB buffer allocation can fail on a memory-constrained
+system and a plain perf_event_open() then panics the kernel.  Since the
+allocation explicitly asked not to warn and the error path is fine, drop
+the WARN_ONCE().
+
+Reproduced on 7.3.0-next-20261027 by making the page allocator fail the
+order-4 BTS buffer allocation (fail_page_alloc: min-order=4,
+ignore-gfp-wait=0).  Without this change the first perf_event_open() of
+a hardware event hits the warning and, with panic_on_warn=1, panics.
+With this change the same allocation failure is silent: BTS is disabled
+and a following branches/period=1 event returns -EOPNOTSUPP, while the
+kernel keeps running.  The buffer is allocated per possible CPU,
+independently of any specific BTS event, so the failure path is
+exercised without BTS tracing.
+
+Fixes: 4485154138f6 ("perf/x86/intel: Avoid spamming kernel log for BTS buffer failure")
+Signed-off-by: Yuehong Wu <wuyuehong@cmss.chinamobile.com>
+---
+ arch/x86/events/intel/ds.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index 8444670..27e4115 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -939,10 +939,8 @@ static int alloc_bts_buffer(int cpu)
+ 		return 0;
+ 
+ 	buffer = dsalloc_pages(BTS_BUFFER_SIZE, GFP_KERNEL | __GFP_NOWARN, cpu);
+-	if (unlikely(!buffer)) {
+-		WARN_ONCE(1, "%s: BTS buffer allocation failure\n", __func__);
++	if (unlikely(!buffer))
+ 		return -ENOMEM;
+-	}
+ 	hwev->ds_bts_vaddr = buffer;
+ 	/* Update the fixmap */
+ 	cea = &get_cpu_entry_area(cpu)->cpu_debug_buffers.bts_buffer;
+-- 
+2.43.0
 
 
 
-On 11/6/26 5:30 AM, Lorenzo Stoakes (ARM) wrote:
-> Replace use of the legacy vm_flags_t flags with vma_flags_t values in the
-> migration logic.
-> 
-> We retain the READ_ONCE() of vma->vm_flags in remove_migration_pte(), as
-> there is no vma_flags_t equivalent, and arch_make_huge_pte() continues to
-> take legacy flags for the time being.
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> ---
-
-LGTM.
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
