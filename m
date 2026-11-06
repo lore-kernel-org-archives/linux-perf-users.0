@@ -1,96 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793940080;
-	b=zOLxIzhwOI+JOZmL1QIcxZM0etM6mZw0BR+SOKVX76LukQlmJE3JCzKI7sh16bBCzL6x
-	 JcllyYUKmVezj6BnFiFvGw8ZmF5w4yIzC+X2UAfKh2eXpb3/7ke4Zwx+rboXzlHcMtMcR
-	 z4Hd9hxYlp8i8C9SdDUx/cBfW/hN/g5RnZ2q1MW0kg73WjCORegQ3bU94WZNY+qyQR3Fh
-	 viH/wPESx6vcMSBBCW+8TXkfG+jMyrfoLlKY7H/cIsQIkXGeHIiDYBcy7kBjQFJ1EGFEb
-	 FQr9VSK8lNKUbo3OqiyGMSEYS+hUTCBSY3aIodskVWRIGCKr/nVC2N+VlUt35pLxf1g==
+	t=1793940088;
+	b=F19fd26jaeCDCtnwjwF/hsQKK+UTq6cvN9X382AbsmyWGkalTo+zUdyF7BRwDrYi7MTl
+	 wXU3UzG85vGBApcINLqJvIf+hc5Xv9pJGBO/dZXw997ZEoxfaUhBDKCWWzlfTUBvTYzte
+	 syRW25CBPdF5y4dkElvs4lzYQeNGUkYNcub1MyuTTK8qbG8C7bs0qwthw5SINM8G2mvnH
+	 hFjr1YottipHRR7xOIXhHbArZnkpWOVuWXiTau9W5iZZVcCNlxK8uelrMvk09q8JFm9Ck
+	 6VzVX9Zm9tvBgxWJDnKmbegjUKdlep45tJ3CIAYEnw9cWbehPSozIKZS8tMrbCtpk+g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793940080;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
-	 Date:Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=Pygvn842jga790SjY8o5kVq/R/0MWFQ+kp9cGyq7BRU=;
-	b=Eh/F9e7umRxnd+Muz9AYXKV26VpqwBwqjK2VAVhJSNfdzaGHxdSpLifO7j/+rMza6z7Q
-	 UgRZM8DkbSSKpzZbooi/ThcfJhIwqT93+XDjm1md1gwYAiERjojsy9Dt+VsPAUOPMye4N
-	 L3vVZc6xsh+AK0WhqaamWUNA3EPru8E54eVnaSKyNZ5v1p0pJZsHSmD28oSXPv+K5vkwD
-	 f26D3wD76qqJjuNg89x/j5JNIajNZghUQc+DT0SBy7gah0AxxuBFqY2qvQjklhbAZTRoD
-	 OSmaevCYsgHOUG6pfy0c7bLl7zH8hgSwCBU7ca5TPB0kayMpO1PARoPdaAqCWifTQ1Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793940088;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=+7bdW8RinvolF50gKjVJe2Un+FQomU6jIEsWvLvLSQU=;
+	b=VsLFhq7G9zHTaxLg+p4lhBXRlPSeD1nvzkouw20jPsjVdIE91GDAhZY8LK+/TG2fXJ2l
+	 bHmALslCWs0t90bIQqjJ87142eZI/3dbGKom5PYMTS+V3MzIeqLE6H8rc3NEU/od1J7df
+	 N1ORlxXbvxgoj7OrP0gm+JE9jfPlqPmmZBdDl8iSk1Vd7JJVobHrbDR92KaVhl71lO0Cr
+	 gB4qe0foc+7tF0bHipLaDG32RQ7O3oy9NjPjZSpK3X1cEaANE71o9PJpWcA+qltaW2spw
+	 1LuKKvpY/saWe/ctszJMKRmmJdDShzTcpW20uyXuldK9lFoyG7No1HXJ2z5IykzwG8Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=I8lMQzul;
-	arc=none smtp.remote-ip=198.175.65.20
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MuKLYFmU;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BD9606A33E;
-	Fri,  6 Nov 2026 04:41:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 40BD9606A33E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31CD3606D80C
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 04:41:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=I8lMQzul
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1793940081; x=1825476081;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=zxqY63QgkRk72t6lSQXhuujIjk0eIxq8JszEtzd37dc=;
-  b=I8lMQzuldWYd84zKjW+bnM3zSvfHgXnGVy7QbsqnAkOLevKUmk9pxjzH
-   Lt2JkdgIHPcW+D5GkIoXuSnX+Uq6skm7B23CdUJxD6DgA2pF+AoxAJW03
-   TK2b8nRhLKhWEEEARgZeeTxJLUVn1WdGZh73CFKWiYqnHJD3dcqn6099P
-   Xg3Gd4Xnfl29GpZCrEh3H8lgzwwbnrMCje7NWuz2kIa09YjoKhDDCoZyq
-   nVKkbbhpNxq65G0P8j3IGOGg39MqOrI9tB5ENbD4vnpqjGFXKm5e4NJ1g
-   ltz3LxRNYuYnVeY4r2GFAFfgnNLJPpaqE1raSND3l44XKQ24Zk6dX7geR
-   Q==;
-X-CSE-ConnectionGUID: TB24zjHXQEigv1f8AHiQbw==
-X-CSE-MsgGUID: rTJ5CCxMSPKngNTxi6/kjA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11957"; a="2780823"
-X-IronPort-AV: E=Sophos;i="6.27,197,1787036400"; 
-   d="scan'208";a="2780823"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2026 20:41:21 -0800
-X-CSE-ConnectionGUID: Xip2gFYRRgieuVOnN64ARg==
-X-CSE-MsgGUID: hEKIBCzmTIm+6fsD9sjiKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,197,1787036400"; 
-   d="scan'208";a="7222937"
-Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa001.jf.intel.com with ESMTP; 05 Nov 2026 20:41:16 -0800
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Song Liu <song@kernel.org>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Ananth Narayan <ananth.narayan@amd.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Sashiko <sashiko-bot@kernel.org>
-Subject: [Patch v6 09/20] perf/x86/intel: Keep LBR frozen throughout PMI handling
-Date: Fri,  6 Nov 2026 12:32:46 +0800
-Message-Id: <20261106043257.842864-10-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20261106043257.842864-1-dapeng1.mi@linux.intel.com>
-References: <20261106043257.842864-1-dapeng1.mi@linux.intel.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MuKLYFmU
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E67901F008A5;
+	Fri,  6 Nov 2026 04:41:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793940088;
+	bh=+7bdW8RinvolF50gKjVJe2Un+FQomU6jIEsWvLvLSQU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=MuKLYFmUsMC+Ta7hzdEySvFfVkNVvdoM+ymKfHs8mOFuSbUUs1bBjanG2GhPoeDbm
+	 fedoDFRCUDBfX3kHWehNHzANve8Oj1hLmzBjhiTRir3I/pCj+nnbGJJVsU8zijIAZY
+	 q1z9JZJln50WE1zrGkudUhg7QOIg5lg6xwPuuKK/70vV0Jx+NQQmdyf5ms4TQCvPQ+
+	 0jzF21JzQqRpBCZGByskPz/ZJjDN4O1+QuL7dghv9pbTcGGhhjPxuNhIVLrZ1Tonm/
+	 aPmAIRN56gmi+IzkeVqBDe2xJWnpleHtmSuXa33RfM7JfVhY1tOwqcaWnhMDX6LTQu
+	 u/XjA7YDxoDAA==
+Message-ID: <sashiko-outbox-200752@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v7 01/14] alpha/perf: do not update an event that has no
+ counter in alpha_pmu_del()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Matt Turner" <mattst88@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261105-alpha-profileme-v7-1-c474e892abb0@gmail.com>
+References: <20261105-alpha-profileme-v7-0-c474e892abb0@gmail.com>
+ <20261105-alpha-profileme-v7-1-c474e892abb0@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 06 Nov 2026 04:41:27 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -99,66 +60,34 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-For the platforms which has 4+ PMU version, streamline LBR freeze is
-supported. The PERF_GLOBAL_STATUS.LBR_FRZ bit is set to freeze LBR once
-a PMU counter overflow. However, the current PMI handler clears the LBR
-freeze bit too early, allowing branch operations that occur during PMI
-handling to be recorded into the LBR stack.
+> alpha_pmu_add() puts a new event on the list with current_idx set to
+> PMC_NO_INDEX, and alpha_pmu_enable() assigns the counter later, through
+> maybe_change_configuration(). Alpha has no group transaction callbacks,
+> so the core schedules a group with the PMU disabled for the whole
+> group. When a sibling does not fit, for example because the counters
+> are multiplexed between groups, group_sched_in() rolls back the events
+> it already added by calling alpha_pmu_del() on them, before the PMU is
+> enabled again.
+>=20
+> alpha_pmu_del() then passes idx =3D=3D -1 to alpha_perf_event_update(),
+> which indexes pmc_count_shift[], pmc_count_mask[] and pmc_max_period[]
+> at -1, and it clears bit -1 of idx_mask, an undefined shift. On the
+> EV67 PMU the entries before each array happen to make the computed
+> delta zero, so the event's count survives, but only by luck of the
+> struct layout.
+>=20
+> The event was never on a counter, so there is no count to absorb and no
+> counter to turn off. Only remove it from the list.
+>=20
+> Fixes: 979f867191f8 ("alpha: implement HW performance events on the EV67 =
+and later CPUs")
+> Assisted-by: Claude:claude-opus-5-5
+> Signed-off-by: Matt Turner <mattst88@gmail.com>
 
-This can pollute or overwrite the intended branch snapshot, especially
-when bpf_get_branch_snapshot() is invoked from bpf_overflow_handler().
-In that case, branches recorded while processing the PMI are mixed into
-the original LBR data.
+Sashiko has reviewed this patch and found no issues.
 
-Defer unfreezing until after PMI handling completes so the LBR remains
-frozen for the entire PMI path and no branch activity from the handler
-is recorded.
-
-Reported-by: Sashiko <sashiko-bot@kernel.org>
-Closes: https://lore.kernel.org/all/sashiko-outbox-179823@kernel.org/
-Fixes: 425507fa5f32 ("perf/x86/intel/lbr: Optimize v4 LBR unfreezing")
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- arch/x86/events/intel/core.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 739c454827ac..ab6261ab54b6 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4062,7 +4062,13 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
- 	loops = 0;
- again:
- 	intel_pmu_lbr_read();
--	intel_pmu_ack_status(status);
-+
-+	/*
-+	 * Do not clear the LBR frozen status here; keep LBR frozen
-+	 * throughout PMI handling.
-+	 */
-+	intel_pmu_ack_status(status & ~GLOBAL_STATUS_LBRS_FROZEN);
-+
- 	if (++loops > 100) {
- 		static bool warned;
- 
-@@ -4081,10 +4087,13 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
- 	 * Repeat if there is more work to be done:
- 	 */
- 	status = intel_pmu_get_status();
--	if (status)
-+	if (status & ~GLOBAL_STATUS_LBRS_FROZEN)
- 		goto again;
- 
- done:
-+	if (status & GLOBAL_STATUS_LBRS_FROZEN)
-+		intel_pmu_ack_status(status & GLOBAL_STATUS_LBRS_FROZEN);
-+
- 	if (mid_ack)
- 		apic_write(APIC_LVTPC, APIC_DM_NMI);
- 	/* Only restore PMU state when it's active. See x86_pmu_disable(). */
--- 
-2.34.1
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105-alpha-prof=
+ileme-v7-0-c474e892abb0@gmail.com?part=3D1
 
