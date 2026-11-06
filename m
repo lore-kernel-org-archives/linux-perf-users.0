@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793940401;
-	b=VMKWzDGgPjQNPQfWQpMiHYHvXsh6nScW45s3Vjma+UEqdLhfY+oTrG2Ra0FXmFhffS5j
-	 n6wN6rvZDfE9thrKKqwE+xQaVkxd5CISh+oACWtJqn3ASvwP6Xl893+XAZLbapTvhHq8B
-	 5Pu8dU9rHP9ldQuTbHt4bPkcLazKTLhYTqnTzxMWMzRH1w2I1vuPBfldQFcQyy2ZckEkM
-	 Jr4ba2DX97mCcCIt26EUNyy4zh89GaTvnyJrssEjd7iHCr+CHqygkBRDigRq9//X+m8pe
-	 yd/4fG79uFWdu7LBKcDtlHZNwJOf1aMooSw2Z6XsPLOEcJOvcpMsCjkZnDxFJq89P2w==
+	t=1793940604;
+	b=StuFVYlZcZD0qKVRGgQNL2E+lHmuP2SSdOTSzs5MDCaR9fWEBGlHcxwUz84nnsaAMWH6
+	 UxTFa9RDWsZBq48HLXsTcy0Sg8liKlYCPsB1DL+78A3SGr3ew5VEIUDESrqIY0HKS5KpR
+	 UpjN4E1+mpMchTrinm16OZY4/+QFDIibBgg3DjCzAz682DACRzl9eRDGF37YiM751dt8m
+	 5byIXX9W4GWQIPmrsUJrOgIO+5Us2TrtA5lriZprf7uXGMeuMTyf2kzOtaLPjKKgxpvJ8
+	 J8BT6xCZ+odD0eAmY0IXuL4Zb6HoLnIxKHT80v4nEllGvkumkuBuA/USnQ9nEVaY9SQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793940401;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793940604;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=TeSJUipgE/47PHtJXpheCvT+FY6w2Zv5/CK6qVoMfbY=;
-	b=OdVzU50gTq2AaFhbZcuRowbaKm/QZo/Mdz2tYoYWmGmPgFfLAfWrYJKgGTdDQCKXstyv
-	 QT5/7hUClzWd+Aa515sL74l/KVdnuMTJsR1n/nBZ8DZel6cfcTQsHnq752Z88BQQ4mzSv
-	 X6Lv8oxHCbnenLGVmONA8oQ66nyApj2C7bIxcON3ptR/uKxg92jFqTVGv9EWZ1G0k/ZIQ
-	 tcx6mCrMynO7kWi+j98CADXcn7kxbjI5skY9g/wbAPXWHfc1ggrCRdIZZIuBudSgk1gmi
-	 Rs2TWMLVt6BDHTOCo5K3R3vcnpuvsDwtM0HBCRz9NCelhAei2z4RDqropY4qW2O7HSQ==
+	bh=SSJDQ0sAgtcaj5PpS53GuIXWB/QOgkr7ILG3AnoMHrI=;
+	b=UB+PWneSChgDwWCjEniTO70uACLUnj8bl1sjYPfbOXCVCai5iToZErhuaBy+7ubSAbGa
+	 q4uS4Lh3CObKhTtCknOW7VzVI5ZTfCErKVLM3asrtLUodDR5Mwk7KFv+o1j1Z6kv+boyr
+	 b7Bz9YTv/I7QUgjNoRqn0u4z++3XaDWyHhrsM8RxM4AqLVb7jOtNBVHfqsQL6w3uLmsid
+	 t/i9+5eDdd8oZkRZMbkvOr81v/uQp6Du+gtP9zqr0Qi7FTwILmGfLt7gXDM8pvKB1CXdp
+	 ql7D36bYfdhwiPkK0XbOPEvEAWYq6NhOCoqahEnYTNm2TZnpXNnee2j310o842d7how==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Gi9wUdj9;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jas7aOqB;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE40606A326
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 04:46:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDF0606A326
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 04:50:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Gi9wUdj9
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEA8E1F0089F;
-	Fri,  6 Nov 2026 04:46:39 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jas7aOqB
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F8C91F0089F;
+	Fri,  6 Nov 2026 04:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793940400;
-	bh=TeSJUipgE/47PHtJXpheCvT+FY6w2Zv5/CK6qVoMfbY=;
+	s=k20260515; t=1793940603;
+	bh=SSJDQ0sAgtcaj5PpS53GuIXWB/QOgkr7ILG3AnoMHrI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Gi9wUdj9P16tFsuk8qmVR3TeWYau3KbGGoLjwK4r0VHu0sa/cXk9J2d9vos7fbxnr
-	 IRfUsDdB335OyGBfBzOXeAxBynWv6Hn9TaexyFS+JaWPTI/3U98KtmyjRPE6Tqyb+w
-	 02zkPEOOkFk+uUNfeGz+IH4MR6/LzwPWyF2B+BHb2z66La5jKZzeRMr+l//NsqdsKv
-	 RZlJ5ygkOBqWQmk2cA1BejRehYZoHEMA1rkGLdjpibdQgp5+akL6ERkYyo0+WQP4KX
-	 pManku2kHGI5pjeQa/N7yHyIAtGzMEoNgY7ncT8mmudtzge97Qk77IgJr9q4lqicmp
-	 EisBQDaHD+yGQ==
-Message-ID: <sashiko-outbox-200760@kernel.org>
+	b=jas7aOqBxIXe5dSMeMwvQdxcHw5Ma5AJCBuo7pCukQGQVUbW9nTweX0BtPc++7A0X
+	 AKSK7JfM22SEESSBzw+oFzjgGqbQ79149Q4pAJa84RZEYU7MsfVK0erht66wt+LcKR
+	 BAaNNPo4eJ+q9S/j1VBl1ihVmWy32hs7L4ixRVJPGg1Du+LMqBIaSlmK1ROZu+JoEG
+	 Kg7GRfgUxzUfQBrx3tJWy8hB6TXLUooW+Z9ofmGrLzVSPPudgwtz2lP/zkiGykVxsX
+	 vqyvYR25hbZgbQPoluvXv+s/TCTbZBHP+J5h1Q0vkTeu0P6MsD5D3/6dHw6mNN0uCj
+	 qiRRPPAsjMDrg==
+Message-ID: <sashiko-outbox-200770@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 05/14] alpha/perf: do not report user registers from
- the entry code
+Subject: Re: [Patch v6 03/20] perf/x86/amd/lbr: Limit branch snapshots to
+ valid entries
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Matt Turner" <mattst88@gmail.com>
+To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261105-alpha-profileme-v7-5-c474e892abb0@gmail.com>
-References: <20261105-alpha-profileme-v7-0-c474e892abb0@gmail.com>
- <20261105-alpha-profileme-v7-5-c474e892abb0@gmail.com>
+In-Reply-To: <20261106043257.842864-4-dapeng1.mi@linux.intel.com>
+References: <20261106043257.842864-1-dapeng1.mi@linux.intel.com>
+ <20261106043257.842864-4-dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Nov 2026 04:46:39 +0000
+Date: Fri, 06 Nov 2026 04:50:02 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,32 +61,28 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> perf_get_regs_user() returns task_pt_regs() whenever a sample of a user
-> task lands in the kernel. But exception entry runs with interrupts
-> enabled, so the sample can land before the entry code has saved the user
-> registers. Only the part PALcode pushed is valid then. An interrupt
-> taken on the first instruction of entUna, say, pushes its own frame on
-> top of PALcode's, which overlaps the rest of the user frame, so r7 and r8
-> read as the interrupt's r23 and r24.
+> From: Sandipan Das <sandipan.das@amd.com>
 >=20
-> Report no user registers while the interrupted PC is in the entry code.
-> Such a sample also gets no user stack dump. The range is all of the entry
-> code from entInt to the end of the save in entSys, so it also drops the
-> registers of samples that land after they were saved there.
+> The branch snapshot callback used by bpf_get_branch_snapshot() copies
+> up to x86_pmu.lbr_nr entries from cpuc->lbr_entries[], even when the
+> last LBR read kept fewer branches. The entries past lbr_stack.nr are
+> invalid, but they end up reaching BPF programs.
 >=20
-> An interrupt that nests on one taken in the entry code still reads the
-> incomplete frame, as its own PC has left the entry code.
+> Limit copying to lbr_stack.nr entries and also reset lbr_stack.nr when
+> amd_pmu_lbr_read() skips reading the registers, so that a stale count
+> is never reused.
 >=20
-> Fixes: 9280e99d87dd ("alpha: add HAVE_PERF_REGS and HAVE_PERF_USER_STACK_=
-DUMP support")
-> Assisted-by: Claude:claude-opus-5-5
-> Reviewed-by: Magnus Lindholm <linmag7@gmail.com>
-> Tested-by: Magnus Lindholm <linmag7@gmail.com>
-> Signed-off-by: Matt Turner <mattst88@gmail.com>
+> Fixes: a4d18112e531 ("perf/x86/amd: Support capturing LBR from software e=
+vents")
+> Reported-by: Sashiko <sashiko-bot@kernel.org>
+> Closes: https://lore.kernel.org/all/sashiko-outbox-163130@kernel.org/
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105-alpha-prof=
-ileme-v7-0-c474e892abb0@gmail.com?part=3D5
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261106043257.8428=
+64-1-dapeng1.mi@linux.intel.com?part=3D3
 
