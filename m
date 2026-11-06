@@ -1,59 +1,68 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.19
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793948675;
-	b=4No7DphOIIo8JOi/mtc/rAE+u4eoF4SQX5c9fHRxLrzMhyBW4pqk1B4ILN/qOX2MVD7v
-	 JDSsMEPz9pAiev8T2FQpnDcr+dZw8MwqBx5y+bVyo9T8fCM3ZRouA6URk4lpJX5KHttXh
-	 ylFZDhKgJ1gEYqwOYpbIJ7oq58MLyniNSfxSftNJ3vhmJnf+IBJTUQP+/lcqpCDFiH8fV
-	 0k72xlHOpj588dPHImj9k0KfSUPTDaPXlmqFq98zewlxsBrqdm5Id7oG/O72vtQp3UldG
-	 mzHbnrcMkTBo0GK0gLAxtK/5Msbl5ExDVGdvI9wEZ/gbP30zG//tVLRhuxC/06Se3GA==
+	t=1793948840;
+	b=hNZsrcz7DdLXRqiKShbqQF0IQolCGVBKwFtQZceUHoLU2Sa/nmKIQnq6jASrtadmeMKr
+	 KsYNAEEbyB3RuoHsI1PAI0BDkvzs93qInS1jHLXABjfQfzMsbsjaQL1NKqYC1fSceCOuv
+	 ooKLUGJoWGhf4v1Sg77G+F1vrpgoKTqyceA+mxkRE5dic7sV/4P2m8zR/bgyP/f4rXWuo
+	 Lq9GHc2Wa+qfDMwHT4v+84Z+v5JDRxTwi8e0zJ9fiHPSU0elLw3Uvu4AZJMj7EBHlZhTN
+	 tsb8tfuJOqPXAPKKbmcrfFXtXKchdKU6CP/FoDzFSO3hCK8kdRUoogmqmAN+EdsvijQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793948675;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=xQimsWMweTVt7aA1nxhPWFC6IqDq+APLqir/fJvyBQg=;
-	b=qt3FUmsToQSzEqApSfosbmVecnuXzxka9vgrmUu1nPqwl5cIkjnh/LZ7utxDvzsM3yfp
-	 9bWdOp/5vhwuzeieScK0H+xpvLUEwNYtHgWv5DimPHF9RjlWWwPw+Fdid/XnMgCmwUknh
-	 zBS3VwUdMBGrNdJjB956kU5Uv2/jn7dn/7GSDopE+HN8cqQR6CeUPGu8umy4GeOfRhoU1
-	 WWGl9s9yaD1wIsq+/mr1bLvPbgL5hQ4pniHw95/+2ivUuT8OAM42Bo09uceBe8hQ4FOJi
-	 /K/xFA0OdTD1Ii90GBairtwQxKW3ykKKHiviVsgzNwL0vJPOqSZVPqg5z6sLP++9BJg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793948840;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
+	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=Zc+3YvyVljRF2wCC5ReTQTHDEIZMfGYDGiyjt0kQoBc=;
+	b=NDguMHGc8PqUkhKW9irnTfI/YAPsZREr+QLGIInPDsed6nUhkhnvJONz9MksOo5II04p
+	 8DmpVhpss1cmo9SK3eHyqmH6hiS0ZnvZd4ngS+KVuByi4HsRC4+o7YEa+K2Q3uTFpL5nt
+	 5QHPmEBFgUotu9VfFXYb+HZIKfONJLqprUNIQ0UsXrE9hILMEeEG5ypwCUwNTqV+fIUkR
+	 bgKBy2WkiMRqYUVulZ08ddfhtHUE3mfY3n04fwbif/a6UZGPTF2nVRjyLhc7IwgUWehZP
+	 upLQvHWNyJNSqj/FHFe0uI6/tJzowyEiZPmlhpehWXyf3ig6N63itXEM/o+6Z8aE26w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ULnrK42b;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linux.intel.com;
+	spf=pass smtp.mailfrom=linux.intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="kxYTn/d2";
+	arc=none smtp.remote-ip=192.198.163.19
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915FE606D809;
-	Fri,  6 Nov 2026 07:04:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5DC606A32E;
+	Fri,  6 Nov 2026 07:07:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4E5DC606A32E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ULnrK42b
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAC7B1F008A6;
-	Fri,  6 Nov 2026 07:04:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793948675;
-	bh=xQimsWMweTVt7aA1nxhPWFC6IqDq+APLqir/fJvyBQg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ULnrK42bPE01fMWEWfXVKoIma+mQPNtmIPqGhB3EsCECgsG/PEjd4m8f5RUtLAF73
-	 hOGC8b1sMx1BG5sIv3CYGaeZ/PUjWuk4wu6Hi854Xr3HiI/9fzTx23c2DF0vCouEFu
-	 Bx0C2NWNGiThOEW4m30T98q6Afzyyq67Ue7nF9PgRbLHximjY7I1PWusk0dk8WrPZM
-	 6/Ik0K63vzw4ptjPhhWA7/8o8fyblvYF4CfysqF6wuUoKlgC5FNj2BfBmZMh/Hkek4
-	 u8qMIcxHL20lKMMeWkkZVTMuUltGsMeesVBSQNdu+nla6+VZ00v6N4t/80qnFyIYtN
-	 dCGIxh/9ZJISw==
-Date: Thu, 5 Nov 2026 23:04:32 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Matthew Wood <thepacketgeek@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] perf unwind: Don't load symbols when the caller
- doesn't need them
-Message-ID: <au18AJ94dUsE5PaQ@google.com>
-References: <20261030193237.1440673-1-thepacketgeek@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=kxYTn/d2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1793948839; x=1825484839;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=1Ogc44+PrMm9JaehxvQFyal3jUrT3uzIlfVMGfE+oOI=;
+  b=kxYTn/d2IwXLBhPyz8sSreP37ao/5cuPTLi1pBorQgqtCVbwBmzaNzxo
+   Xm3ZiAd0v05JKEVP8IzycdA5b1Hvw+siM59tTCt/PunHozsWggUXSnIhG
+   dOM5++3z175WI+ZHDcPzC1boLVzfVYoHcrextaQyvSJgCaSMmTAsn4vc2
+   9lIJCKRvuChDDnIe0PEsBPhIIgsHwp0yZ0W+ROnudSulkC409Db82Y2aq
+   Fe04prdgzO29ZEIeMpRpgx43bWmsXELNkmQff8e3vwSgYeVddZNKU0JCs
+   Uv8hclFEAolw2q/QFAxHIdgUETtk+rQbvquo6IwHU5kSeMiuN9Yxd9y9g
+   Q==;
+X-CSE-ConnectionGUID: nLPCMJ4JT5+5WlcwhK7n1w==
+X-CSE-MsgGUID: GavXxd2CQ/yiJkcb4lwDQA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11957"; a="2857079"
+X-IronPort-AV: E=Sophos;i="6.27,197,1787036400"; 
+   d="scan'208";a="2857079"
+Received: from fmviesa012.fm.intel.com ([10.60.135.152])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2026 23:07:19 -0800
+X-CSE-ConnectionGUID: kKG2rLztRbyQcweQi7IEDw==
+X-CSE-MsgGUID: 3rdCzIQTTzu+1HG2KAbl+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,197,1787036400"; 
+   d="scan'208";a="8965633"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2026 23:07:17 -0800
+Message-ID: <4857ec01-42bf-4ba3-bb27-eedbfd94f61b@linux.intel.com>
+Date: Fri, 6 Nov 2026 15:07:15 +0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,123 +72,109 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20261030193237.1440673-1-thepacketgeek@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v6 06/20] perf/x86/amd: Avoid re-enabling PMU and LBR for
+ BPF when disabled
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+References: <20261106043257.842864-1-dapeng1.mi@linux.intel.com>
+ <20261106043257.842864-7-dapeng1.mi@linux.intel.com>
+ <sashiko-outbox-200787@kernel.org>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <sashiko-outbox-200787@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
 
-On Fri, Oct 30, 2026 at 12:32:32PM -0700, Matthew Wood wrote:
-> When perf only needs to know which DSOs a callchain passes through (as
-> build-id marking does at the end of 'perf record' and in 'perf inject
-> -b') it resolves the callchain without symbols. The DWARF unwinders
-> ignore that and look up the symbol of every frame anyway, which loads
-> and demangles the whole symbol table of each DSO they visit.
-> 
-> On arm64 every frame pointer sample also gets a short DWARF
-> unwind to find the leaf function's caller; since v6.17 (commit
-> 29be60c93d2d, "perf build-id: Mark DSO in sample callchains") the end of
-> 'perf record -a --call-graph fp' loads the symbols of every user binary
-> it sampled. On a 128-CPU arm64 host,
-> 
->   perf record -a -e cycles:u --call-graph fp -- sleep 2
-> 
-> never finishes writing perf.data, with over 1GB of heap growth in 5
-> seconds.
-> 
-> Skipping the symbol lookup isn't enough because loading the
-> symbols also finds two things the unwinders depend on: the DSO's
-> build-id, which libdw needs to fall back to the build-id cache, and any
-> separate debuginfo file, through dso__symsrc_filename(), which is how
-> both unwinders find a .debug_frame there.
-> 
->   1: add dso__load_symsrc(), which does the same search for debuginfo
->      and the build-id as symbol loading, but doesn't read any symbols
->   2: pass the symbols flag down to the unwinders and honour it, using
->      dso__load_symsrc() when symbols aren't wanted, which also makes
->      the arm64 leaf frame caller unwind skip symbols
+On 11/6/2026 1:01 PM, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Medium] perf/x86/amd: amd_pmu_v2_snapshot_branch_stack() leaves cpuc->enabled set
+> --
+>
+> commit dbf85e8b6a5abeff651d80166ad0c339896c5b42
+> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>
+> perf/x86/amd: Avoid re-enabling PMU and LBR for BPF when disabled
+>
+> This commit updates amd_pmu_v2_snapshot_branch_stack() to save cpuc->enabled
+> and cpuc->lbr_enabled before disabling the PMU and LBR, and only re-enable
+> them if they were previously enabled.
+>
+>> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+>> index bf631f60757cc..851d8a938f522 100644
+>> --- a/arch/x86/events/amd/core.c
+>> +++ b/arch/x86/events/amd/core.c
+>> @@ -932,22 +932,28 @@ static int amd_pmu_v2_snapshot_branch_stack(struct perf_branch_entry *entries, u
+>>  {
+>>  	struct cpu_hw_events *cpuc;
+>>  	unsigned long flags;
+>> +	int pmu_enabled;
+>> +	int lbr_enabled;
+>>  
+>>  	/*
+>>  	 * The sequence of steps to freeze LBR should be completely inlined
+>>  	 * and contain no branches to minimize contamination of LBR snapshot
+>>  	 */
+>>  	local_irq_save(flags);
+>> +	cpuc = this_cpu_ptr(&cpu_hw_events);
+>> +	pmu_enabled = cpuc->enabled;
+>> +	lbr_enabled = cpuc->lbr_enabled;
+>>  	amd_pmu_core_disable_all();
+>>  	__amd_pmu_lbr_disable();
+>>  
+>> -	cpuc = this_cpu_ptr(&cpu_hw_events);
+>> -
+>>  	amd_pmu_lbr_read();
+>>  	cnt = min(cnt, cpuc->lbr_stack.nr);
+>>  	memcpy(entries, cpuc->lbr_entries, sizeof(struct perf_branch_entry) * cnt);
+>>  
+>> -	amd_pmu_v2_enable_all(0);
+>> +	if (lbr_enabled)
+>> +		amd_pmu_lbr_enable_all();
+>> +	if (pmu_enabled)
+>> +		amd_pmu_core_enable_all();
+> [Severity: Medium]
+> As reported by Sashiko on v5 [1], while __amd_pmu_lbr_disable() clears
+> cpuc->lbr_enabled = 0, amd_pmu_core_disable_all() only clears the hardware
+> global control MSR and leaves cpuc->enabled set to 1.
+>
+> If a BPF program in non-NMI context calls bpf_get_branch_snapshot() ->
+> amd_pmu_v2_snapshot_branch_stack() while cpuc->enabled is 1, local_irq_save()
+> does not mask NMIs. If an NMI arrives while amd_pmu_v2_snapshot_branch_stack()
+> is reading LBR MSRs or copying entries, perf_event_nmi_handler() ->
+> amd_pmu_v2_handle_irq() will see cpuc->enabled == 1 and re-enable the core PMU
+> counters on exit:
 
-Please don't.  I've added dso__dbginfo_type() to handle debug files and
-that's the correct way to get the file.  Probably dso__debuginfo() would
-work for you.
+This issue should never happen in reality since amd_pmu_core_disable_all()
+would disable PMU, so no PMI can be interrupt the BPF LBR snapshot.
 
-I was working on cleaning up this area, but sidetracked by other things.
-I hope to find time for it soon but you can go with the above helpers.
 
-Thanks,
-Namhyung
 
-> 
-> Testing compared v7.3-rc7 with this series, on x86 and natively on a
-> CentOS Stream 10 arm64 host:
-> 
->  - The 'perf test' dwarf unwind and 'perf inject' DWARF callchain
->    conversion tests pass on both, also in a REFCNT_CHECKING build on
->    x86. The libdw multi-threaded unwind and addr2line inline unwinding
->    tests pass on x86; on the arm64 host the former is skipped and the
->    latter fails both with and without this series.
-> 
->  - 'perf inject -b' on an x86 'perf record --call-graph dwarf' profile
->    of a Python workload goes from 0.19s and 69MB max RSS to 0.10s and
->    33MB, with the same build-ids injected.
-> 
->  - A test library built with -fno-asynchronous-unwind-tables, so that
->    its CFI is only in .debug_frame, then split with 'objcopy
->    --only-keep-debug', sits between two other DSOs in the sampled
->    stacks. On both architectures, with the debuginfo found either
->    through .gnu_debuglink or only in perf's build-id cache, 'perf
->    script' output for a --call-graph dwarf profile, and on arm64 for an
->    fp profile, is unchanged with both libdw and libunwind, and 'perf
->    inject -b' unwinds the same frames and marks the same DSOs. v1,
->    which only passed the flag down, lost every frame past the library
->    in all but 5 of 4045 samples in 'perf script'.
-> 
-> libunwind's .debug_frame support couldn't be exercised: EL9's x86
-> libunwind is built without it, and on arm64 perf's libunwind support
-> has been compiled out since v7.2, as libunwind-arm64.c checks
-> HAVE_LIBUNWIND_ARM64_SUPPORT while Makefile.config defines
-> HAVE_LIBUNWIND_AARCH64_SUPPORT. With that macro defined by hand, and a
-> cast for the build error it then hits, arm64 libunwind results are also
-> the same with and without this series. That breakage is independent of
-> this series.
-> 
-> Not tested: the build-id cache fallback for DSOs in another mount
-> namespace when the MMAP2 events don't carry build-ids.
-> 
-> Changes since v2:
->   - Instead of a separate debuginfo lookup, reuse dso__load()'s search
->     and stop before reading symbols (dso__load_symsrc()) so candidate
->     files are checked against the build-id, --symfs, mount namespaces
->     and chroots are honoured, and the search is done once per DSO
->   - Drop moving dso__read_build_id() out of 'perf inject'
->   - Extend the dwarf unwind test to unwind without symbols, check that
->     no symbols get loaded, and compare with unwinding with symbols
->   - Link:
->     https://lore.kernel.org/all/20261017000158.1178269-1-thepacketgeek@gmail.com/
-> 
-> Changes since v1:
->   - Complete re-work on approach based on feedback
->   - Link: https://lore.kernel.org/linux-perf-users/20261014151326.4142140-1-thepacketgeek@gmail.com/
-> 
-> Matthew Wood (2):
->   perf symbol: Add dso__load_symsrc()
->   perf unwind: Don't look up symbols when the caller doesn't want them
-> 
->  tools/perf/tests/dwarf-unwind.c               | 71 ++++++++++++++++---
->  .../util/arm64-frame-pointer-unwind-support.c |  7 +-
->  tools/perf/util/dso.h                         | 11 +++
->  tools/perf/util/machine.c                     |  7 +-
->  tools/perf/util/symbol.c                      | 40 +++++++++--
->  tools/perf/util/symbol.h                      |  1 +
->  tools/perf/util/unwind-libdw.c                | 17 ++++-
->  tools/perf/util/unwind-libdw.h                |  1 +
->  tools/perf/util/unwind-libunwind.c            | 22 ++++--
->  tools/perf/util/unwind.c                      |  7 +-
->  tools/perf/util/unwind.h                      | 11 ++-
->  11 files changed, 164 insertions(+), 31 deletions(-)
-> 
-> 
-> base-commit: 24a19b953e2a3d0ea5a8c4951a0ab8f32720c907
-> -- 
-> 2.53.0-Meta
-> 
+>
+> arch/x86/events/amd/core.c:amd_pmu_v2_handle_irq() {
+> 	pmu_enabled = cpuc->enabled;
+> 	cpuc->enabled = 0;
+>
+> 	/* Stop counting but do not disable LBR */
+> 	amd_pmu_core_disable_all();
+> 	...
+> done:
+> 	cpuc->enabled = pmu_enabled;
+>
+> 	/* Resume counting only if PMU is active */
+> 	if (pmu_enabled)
+> 		amd_pmu_core_enable_all();
+> }
+>
+> Similarly, if an NMI triggers a nested BPF call to
+> amd_pmu_v2_snapshot_branch_stack(), the nested call will also observe
+> cpuc->enabled == 1 and call amd_pmu_core_enable_all() before returning to the
+> outer snapshot.
+>
+> Should amd_pmu_v2_snapshot_branch_stack() clear cpuc->enabled = 0 after saving
+> pmu_enabled and restore cpuc->enabled = pmu_enabled before re-enabling the
+> core PMU, matching amd_pmu_v2_handle_irq()?
+>
+> [1] https://lore.kernel.org/r/20261029043914.1395147-7-dapeng1.mi@linux.intel.com
+>
