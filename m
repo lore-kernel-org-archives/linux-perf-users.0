@@ -1,64 +1,77 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793961648;
-	b=GfZSYyeGJ8uRljk6KtMVK3CvJaca/DsH6gogFWbrtAKvGzFu7hoLd/m+fa9ke1Hobank
-	 HdzyoJErpfuHrNKjVXftmw5ekIk/hZoq8nxttOIZg8iNCiOiifU9cK+D7NAm9yq/x1HYx
-	 /X1dVesclEDh6yXL2kASHX7AxvmQReG3mBvTcwDZ2qCZL7iS5Lv5vV5GMIAOu5tdC0E+s
-	 31ODh/W+cidVDvFuy2N8FefhI7e0y+abYa7mhXb9fjNmPZqGdwgYEbuIjaEcwcpk78wsa
-	 b4tCC/kkZ5KR1dhA0spJ+oo/GSayQnIw8C0FqR6YJMbTlWbcfw9h9HR4cnmYiX1ZT7A==
+	t=1793962010;
+	b=kZnHJrRQKvkDPG8LOe7V0K+CM/REhmGksf0GL9ElVxv2TnmqVCIlY2CZMo3FtuVrThNs
+	 suCr5p4+BJawEc/ErOm/SQ3y1C/N6ba7f9M2iixBNAPoN78pGJ3/VB5YG8bS4xDQJ9vT6
+	 YcIyqGOknXwZ5fUEwiO0JXJ9sN9Ue+DnmwiJrsQRc4BU8DV3imPe0XL2Rjgj0oZ5j/WcD
+	 9mspPpa9hLfbIIcrrWt7Zuy1DaohFPihrE8rrkFC6yiQT8ElWpUuR/jBTQeAp+YzBLsTJ
+	 H7V7GIMBpd09iwAOsVTp+kuHS4WK+WZ9PLZ4yzbKTt71w9czPOefpX82pvpV3vPjuKw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793961648;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=BE8UiToIGa+BlLQ4NfiXGDJ1iS7fTidQ2pO9YczIG6U=;
-	b=32m2etbL2RItpn3l4eHucW3WtYvTxnMPZ5Nn8msDhrs2CFUV+F/DsR6T3SC3SXn6DSdx
-	 2K30XgxN1b23+8c3lEtmKZ8NFFsBejPhnjNAYTAg3XYoos75u6+9tcIVfVySf0DIxcfRZ
-	 y8j3NzWIll7V/lfgqIxg7TUp+xOXMLQn5RkF+O9+JqaU0JYRhnrYxgtdom2bMOiV55gTk
-	 SxNhdwnSUn6KynlVYL7SbCP5M3EJG+1vVMSk1yERpn3xTfAQypUBWrPAhvxBNZp4eMhOe
-	 KRS7Ji+Q3Smc4cKDRBFGQTnvWycxYjFNqhb+kwangeKZKMPwhtxJmyjy/xBvAY77/vQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793962010;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=R4UXJ8D6lFItiQJcibx9Gvr2Xk0BfzjmL2Cx9RaqZ2M=;
+	b=SYFEHufbF9aqOEa4yqDuFKtrfKTLwikOx0WKTz2EMr3NEcCX11zo8WkMwqFhN27XEQAO
+	 31oPPs2vE6wQ4VFbyBwx2lMHFwXpvC8PgCt53g+ye9NHX3iFBzg5NTEl2nRiF15fEAW95
+	 XU8tZsXQORW+PYcL6njFs8Wje3QMtsRglaiAVVAzu+wRCgvs8vVF4FpWqALi8zAMMT+Fw
+	 MJ1xVkJRhJulg+VIepQDUl9GJp4nfQOL/ru8piX8MclcIwroN9s7kSV3zv3Q3GQv/fi34
+	 VnwSdy99xsByE4evnoRTydyeRTsuMlxy/W4n2CNJXsWci0wI8TJaIIcar0U2unfAdIQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=qZSK4yK2;
-	arc=none smtp.remote-ip=90.155.92.199
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hCunnEIZ;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF5D606A326;
-	Fri,  6 Nov 2026 10:40:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BAF5D606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB6A606A326;
+	Fri,  6 Nov 2026 10:46:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=qZSK4yK2
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=BE8UiToIGa+BlLQ4NfiXGDJ1iS7fTidQ2pO9YczIG6U=; b=qZSK4yK2/g7EUz25pvBahAGT28
-	SYyPvMiULZnA5qTNqaazupU2LJCffXAzoeK6TE7HxkOJiujCIs89l1EU4v4CSy3N8rm0MgP8c3HIO
-	y2nxfRAV6Cvc45EBOvolwVWggR2AG7RSO+gNyKnuYwIdPSRA/UuvoCZgnvMT8jI1/vWI004gixwZo
-	URp+JXqoeloyFeazulbwHo33k01C13+AH7D/GbCSbq80PnEj7e7R0iKHIeNiNRnEMTL7+B+uJVXKc
-	/4KkpE0LL5scGnqfc7HVgvXGeYhJB92llaVhg7tbccan0Gs82UObGY7/woT/3ZGyT63hRKzhFVdf/
-	0cZ76WmQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xPHNE-000000047AQ-2SLy;
-	Fri, 06 Nov 2026 10:40:44 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 872BC300882; Fri, 06 Nov 2026 11:40:43 +0100 (CET)
-Date: Fri, 6 Nov 2026 11:40:43 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Phat Dinh <phatdt1116@gmail.com>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	security@kernel.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/core: Do not resurrect cpuctx->cgrp after last
- cgroup event exit
-Message-ID: <20261106104043.GF1779021@noisy.programming.kicks-ass.net>
-References: <20261106101642.494674-1-phatdt1116@gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hCunnEIZ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B0321F0089F;
+	Fri,  6 Nov 2026 10:46:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793962009;
+	bh=R4UXJ8D6lFItiQJcibx9Gvr2Xk0BfzjmL2Cx9RaqZ2M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=hCunnEIZfKlr6qoMUNMOsdGsxQ7IjWUgxiafHv1Z+GtVnHVIkVloNm7JSe0jucf4v
+	 Be00OZ6LyBekuVn6BjvLPY9n2k+e1AmiDi7InnmDdbDQGdSnjuudqzxDjYAlNYhG2v
+	 SnIHZ4gjFJUpZLBedEUDIPptonWTz9uotLA6iRgOA5X7/RHU+Qv1IOi7Qmd5Lw5GMa
+	 S4EJI6CpXc1502QDo0gR7VlleOn0nXISLFq96tAGYmHD/6PzuqiHbzA0uFQN4lnX9K
+	 Fvb6evOecIr4CJf2MUAMnT/LJw8xU/8SNUha42jnLM4sIhXYighfjJoCreU0/7wDnB
+	 tlpx359Zg2mQQ==
+Date: Fri, 6 Nov 2026 10:46:29 +0000
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Lance Yang <lance.yang@linux.dev>
+Cc: akpm@linux-foundation.org, david@kernel.org, jgg@ziepe.ca, 
+	jhubbard@nvidia.com, peterx@redhat.com, willy@infradead.org, jack@suse.cz, 
+	riel@surriel.com, liam@infradead.org, vbabka@kernel.org, harry@kernel.org, 
+	jannh@google.com, ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com, 
+	byungchul@sk.com, gourry@gourry.net, ying.huang@linux.alibaba.com, 
+	apopple@nvidia.com, baolin.wang@linux.alibaba.com, nico.pache@linux.dev, 
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org, usama.arif@linux.dev, 
+	kas@kernel.org, xu.xin@linux.dev, chengming.zhou@linux.dev, maddy@linux.ibm.com, 
+	npiggin@gmail.com, mpe@ellerman.id.au, chleroy@kernel.org, ritesh.list@gmail.com, 
+	sshegde@linux.ibm.com, pfalcato@suse.de, kasong@tencent.com, qi.zheng@linux.dev, 
+	shakeel.butt@linux.dev, axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com, 
+	baoquan.he@linux.dev, rppt@kernel.org, surenb@google.com, mhocko@suse.com, 
+	leon@kernel.org, sj@kernel.org, rakie.kim@sk.com, rientjes@google.com, 
+	viro@zeniv.linux.org.uk, brauner@kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	james.clark@linaro.org, mhiramat@kernel.org, oleg@redhat.com, 
+	john.johansen@canonical.com, georgia.garcia@canonical.com, paul@paul-moore.com, 
+	jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com, roberto.sassu@huawei.com, 
+	dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, wufan@kernel.org, 
+	stephen.smalley.work@gmail.com, omosnacek@gmail.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	kvm@vger.kernel.org, damon@lists.linux.dev, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
+	linux-integrity@vger.kernel.org, selinux@vger.kernel.org
+Subject: Re: [PATCH 09/13] fs/proc/task_mmu: convert VMA flag tests to use
+ vma_flags_t
+Message-ID: <au2tJWwPamlmx1Q4@gremlin>
+References: <20261105-late-2026-vma-flags-v1-9-0d3cd15ab75f@kernel.org>
+ <20261106065925.50906-1-lance.yang@linux.dev>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -70,108 +83,128 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261106101642.494674-1-phatdt1116@gmail.com>
+In-Reply-To: <20261106065925.50906-1-lance.yang@linux.dev>
 
-On Fri, Nov 06, 2026 at 05:16:42PM +0700, Phat Dinh wrote:
-> perf_cgroup_switch() relies on:
-> 
->     /*
->      * cpuctx->cgrp is set when the first cgroup event enabled,
->      * and is cleared when the last cgroup event disabled.
->      */
-> 
-> It computes the next task's cgroup, schedules out the CPU context and
-> then assigns cpuctx->cgrp unconditionally:
-> 
->     ctx_sched_out(&cpuctx->ctx, NULL, EVENT_ALL|EVENT_CGROUP);
->     /*
->      * must not be done before ctxswout due
->      * to update_cgrp_time_from_cpuctx() in
->      * ctx_sched_out()
->      */
->     cpuctx->cgrp = cgrp;
-> 
-> However, ctx_sched_out() can disable events itself. If a cgroup event
-> has a pending disable from perf_event_disable_inatomic() (e.g. its
-> PERF_EVENT_IOC_REFRESH limit ran out) that the irq_work has not
-> handled yet, event_sched_out() consumes it inline:
-> 
->     if (event->pending_disable) {
->         event->pending_disable = 0;
->         perf_cgroup_event_disable(event, ctx);
->         state = PERF_EVENT_STATE_OFF;
->     }
-> 
-> If that was the last cgroup event, perf_cgroup_event_disable() clears
-> cpuctx->cgrp:
-> 
->     if (--ctx->nr_cgroups)
->         return;
-> 
->     cpuctx->cgrp = NULL;
-> 
-> and perf_cgroup_switch() then sets it again. cpuctx->cgrp is left
-> non-NULL with ctx.nr_cgroups == 0, so the NULL check in
-> perf_cgroup_switch() no longer catches it and the next switch trips:
-> 
->     WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
-> 
-> cpuctx->cgrp does not hold a reference on the cgroup. Once that cgroup
-> is removed, the next ctx_sched_in() dereferences the stale pointer:
-> 
->   BUG: KASAN: slab-use-after-free in ctx_sched_in+0xb1f/0xfa0
->   Read of size 8 at addr ffff8881008972d0 by task swapper/3/0
-> 
->   Tainted: [W]=WARN
->   Call Trace:
->    <IRQ>
->    ctx_sched_in+0xb1f/0xfa0
->    perf_event_sched_in+0x1a/0x70
->    ctx_resched+0x32b/0xac0
->    __perf_install_in_context+0x475/0xab0
->    remote_function+0x105/0x200
->    __flush_smp_call_function_queue+0x179/0x8d0
->    __sysvec_call_function_single+0x1b/0x1c0
->    sysvec_call_function_single+0x66/0x80
->    </IRQ>
->    <TASK>
->    asm_sysvec_call_function_single+0x1a/0x20
-> 
-> Only assign cpuctx->cgrp when cgroup events remain after the context
-> has been scheduled out, so that it stays NULL as the invariant
-> requires.
-> 
-> Fixes: e19cd0b6fa59 ("perf/core: Always set cpuctx cgrp when enable cgroup event")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Phat Dinh <phatdt1116@gmail.com>
+On Fri, Nov 06, 2026 at 02:59:25PM +0800, Lance Yang wrote:
+>
+> On Thu, Nov 05, 2026 at 09:31:00PM +0000, Lorenzo Stoakes (ARM) wrote:
+> >Replace use of the legacy vm_flags_t flags with vma_flags_t values where
+> >VMA flags are tested directly in /proc/$pid/[s]maps, pagemap, clear_refs
+> >and PROCMAP_QUERY.
+> >
+> >In replacing vm_flags_clear() (which takes the VMA write lock) with
+> >vma_clear_flags() (which does not) in clear_refs_write(), we explicitly
+> >write lock the VMA. The mmap write lock is already held at this point.
+> >
+> >The show_vma_header_prefix() and show_smap_vma_flags() output functions and
+> >the thp_vma_allowable_orders() call continue to use legacy flags for the
+> >time being.
+> >
+> >No functional change intended.
+> >
+> >Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> >---
+> > fs/proc/task_mmu.c | 43 ++++++++++++++++++++++---------------------
+> > 1 file changed, 22 insertions(+), 21 deletions(-)
+> >
+> >diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> >index 22361607020d..b6e8ef15e40e 100644
+> >--- a/fs/proc/task_mmu.c
+> >+++ b/fs/proc/task_mmu.c
+> >@@ -569,18 +569,18 @@ static struct vm_area_struct *query_matching_vma(struct proc_maps_locking_ctx *l
+> >
+> > 	/* VMA permissions should satisfy query flags */
+> > 	if (flags & PROCMAP_QUERY_VMA_FLAGS) {
+> >-		u32 perm = 0;
+> >+		vma_flags_t perm = EMPTY_VMA_FLAGS;
+> >
+> > 		if (flags & PROCMAP_QUERY_VMA_READABLE)
+> >-			perm |= VM_READ;
+> >+			vma_flags_set(&perm, VMA_READ_BIT);
+> > 		if (flags & PROCMAP_QUERY_VMA_WRITABLE)
+> >-			perm |= VM_WRITE;
+> >+			vma_flags_set(&perm, VMA_WRITE_BIT);
+> > 		if (flags & PROCMAP_QUERY_VMA_EXECUTABLE)
+> >-			perm |= VM_EXEC;
+> >+			vma_flags_set(&perm, VMA_EXEC_BIT);
+> > 		if (flags & PROCMAP_QUERY_VMA_SHARED)
+> >-			perm |= VM_MAYSHARE;
+> >+			vma_flags_set(&perm, VMA_MAYSHARE_BIT);
+> >
+> >-		if ((vma->vm_flags & perm) != perm)
+> >+		if (!vma_test_all_mask(vma, perm))
+> > 			goto skip_vma;
+> > 	}
+> >
+> >@@ -647,13 +647,13 @@ static int do_procmap_query(struct mm_struct *mm, void __user *uarg)
+> > 	karg.vma_end = vma->vm_end;
+> >
+> > 	karg.vma_flags = 0;
+> >-	if (vma->vm_flags & VM_READ)
+> >+	if (vma_test(vma, VMA_READ_BIT))
+> > 		karg.vma_flags |= PROCMAP_QUERY_VMA_READABLE;
+> >-	if (vma->vm_flags & VM_WRITE)
+> >+	if (vma_test(vma, VMA_WRITE_BIT))
+> > 		karg.vma_flags |= PROCMAP_QUERY_VMA_WRITABLE;
+> >-	if (vma->vm_flags & VM_EXEC)
+> >+	if (vma_test(vma, VMA_EXEC_BIT))
+> > 		karg.vma_flags |= PROCMAP_QUERY_VMA_EXECUTABLE;
+> >-	if (vma->vm_flags & VM_MAYSHARE)
+> >+	if (vma_test(vma, VMA_MAYSHARE_BIT))
+> > 		karg.vma_flags |= PROCMAP_QUERY_VMA_SHARED;
+> >
+> > 	karg.vma_page_size = vma_kernel_pagesize(vma);
+> >@@ -970,7 +970,7 @@ static void smaps_pte_entry(pte_t *pte, unsigned long addr,
+> > {
+> > 	struct mem_size_stats *mss = walk->private;
+> > 	struct vm_area_struct *vma = walk->vma;
+> >-	bool locked = !!(vma->vm_flags & VM_LOCKED);
+> >+	bool locked = vma_test(vma, VMA_LOCKED_BIT);
+> > 	struct page *page = NULL;
+> > 	bool present = false, young = false, dirty = false;
+> > 	pte_t ptent = ptep_get(pte);
+> >@@ -1017,7 +1017,7 @@ static void smaps_pmd_entry(pmd_t *pmd, unsigned long addr,
+> > {
+> > 	struct mem_size_stats *mss = walk->private;
+> > 	struct vm_area_struct *vma = walk->vma;
+> >-	bool locked = !!(vma->vm_flags & VM_LOCKED);
+> >+	bool locked = vma_test(vma, VMA_LOCKED_BIT);
+> > 	struct page *page = NULL;
+> > 	bool present = false;
+> > 	struct folio *folio;
+> >@@ -1728,7 +1728,7 @@ static int clear_refs_test_walk(unsigned long start, unsigned long end,
+> > 	struct clear_refs_private *cp = walk->private;
+> > 	struct vm_area_struct *vma = walk->vma;
+> >
+> >-	if (vma->vm_flags & VM_PFNMAP)
+> >+	if (vma_test(vma, VMA_PFNMAP_BIT))
+> > 		return 1;
+> >
+> > 	/*
+> >@@ -1798,9 +1798,10 @@ static ssize_t clear_refs_write(struct file *file, const char __user *buf,
+> >
+> > 		if (type == CLEAR_REFS_SOFT_DIRTY) {
+> > 			for_each_vma(vmi, vma) {
+> >-				if (!(vma->vm_flags & VM_SOFTDIRTY))
+> >+				if (!vma_test(vma, VMA_SOFTDIRTY_BIT))
+> > 					continue;
+> >-				vm_flags_clear(vma, VM_SOFTDIRTY);
+>
+> vm_flags_clear() still warns on VM_SOFTDIRTY when pgtable_supports_soft_dirty()
+> is false. Did you mean to drop that?
 
-Indeed, thanks!
+Yep it's silly. Checking every single operation with VMA_SOFTDIRTY_BIT for
+whether CONFIG_MEM_SOFT_DIRTY is enabled, which is not done for literally any
+other VMA flag, is ludicrous frankly :)
 
-> ---
->  kernel/events/core.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index f36a3bbaa33c..54b87584c752 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -1072,8 +1072,13 @@ static void perf_cgroup_switch(struct task_struct *task)
->  	 * must not be done before ctxswout due
->  	 * to update_cgrp_time_from_cpuctx() in
->  	 * ctx_sched_out()
-> +	 *
-> +	 * ctx_sched_out() can consume a pending disable and drop the last cgroup
-> +	 * event, which clear the cpuctx->cgrp. Cgroup tracking follow active cgroup
-> +	 * event, so do not resurrect it
->  	 */
-> -	cpuctx->cgrp = cgrp;
-> +	if (cpuctx->ctx.nr_cgroups)
-> +		cpuctx->cgrp = cgrp;
->  	/*
->  	 * set cgrp before ctxsw in to allow
->  	 * perf_cgroup_set_timestamp() in ctx_sched_in()
-> 
-> base-commit: d095321349222961813333277881b3c74f10b17b
-> -- 
-> 2.56.0
-> 
+>
+> (Vaguely recall you weren't too keen on that warn, though I could be wrong.)
+>
+> Otherwise, LGTM!
+>
+> Reviewed-by: Lance Yang <lance.yang@linux.dev>
+
+Thanks!
+
+--
+Cheers, Lorenzo
