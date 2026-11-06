@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793941275;
-	b=MvhgdIICbxC+jRGM7eUWzy/0mxlGp9W25P9u2//STYQr3UPWlkayZMUkqXRb4fJhE5fF
-	 FqcFPu/Re3K8A6xhEujBrUcVM+ymIFX/bs46XzE4alAwu/H3Wi1QDioJxbF6VbDv4muTW
-	 Rz/LjvwGj/sBszBDUUjGGnsy3PlZZKfIeM0MpHx0xdpEqcGDAIj9BK+9qRChWpmQXwl32
-	 GcwwkJMdoiFHkHqI84sDQ5VnhGJtdWtOwrY4fBKyTeorPHoO4NUQaxqoSdVQq/9M3YcFH
-	 tRkhBYPQAoYgfyDQLNXvWq3eDc0VCAfVHT8SsllHdtkZEea5jvNCU8uyvl8Dufoic7w==
+	t=1793941552;
+	b=p1ZgXVvnhoiVHOV/Gqf4VBu2WoQq4zngsdiKxbRCtwj5c7LJEwcOTdgFVtVkL13e/+tv
+	 mVUtL8rU/+zDmoq0w0ewAkgtIgAoFKAi4pVkK1yia1oVeMs3Z4/dSAE4PDBOVKDNx0l1c
+	 Md7ivy9n9Qiu4/SUY5MhtsvH+vyfIEN9D28ICKlz1KubTON1FgVxO8HGEtTdefDfQQEUl
+	 BuVFsrKskABukkGLrNR7RQk43uV8AQCriPkzmQtGE7i8jjOVVsAwKo60zFaBl19qppmau
+	 Yf5A71PzddB1mvNh4UseEuC0Z4Dx6KCZzLwRq7bMHBEVUjxioYq5n9p+Lwljja6vdCQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793941275;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793941552;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=j5hTxVha0pIyp65aKu9OxONr/TdNJ0NLjPZrkXTpUuA=;
-	b=mLbirxYZYLRFwQpx3NLkoeWu2cWl3W/Lme5vwpU1t7IvxwV/B3ocsvkjANWlrpQi44kF
-	 HBQJLuCc9L8iB7C73uUgruqXRPrcQuzBYzJtjPa2NmioNRrE8JKx3R9lE45M33JYFlVC+
-	 SOjY5YeJh6VjL+Cj8ytmu1zbH5ADt9hZpmYLZj91lBveqADfwfR6K8nEPXrTZHEI6FmGr
-	 DqASMidcwS0t9haTwP+JQkB3FXn+jK4vpslWtn3PMnR1i6vuHy95WiGLiTwvePSAcK2ih
-	 TUc4I5aYBv0hjlqZIVKaNQg/JpcljQ9VnojmihZajN1VkitjEyuvxYuHpMbh8lM2t0g==
+	bh=HU8VkCZyDdYD4TJeUv6jYIvKNk3dZgl9bcQu/L2U+uQ=;
+	b=1X4jhSs2UR8d4iZTxjijpJ0TJCWl7i9x73cyB+uXn1GSaRM6hXNriHWDAg0HziyLRl2i
+	 qB6S6UTFC6b1xTveK1eBdwLB0I2fEZtF6tJ2mTlKWlVwePlgOWNpSSAjeTqWgCT0CzhxX
+	 ZvjkMJ9QfhM8aYXT6Y3ldC6kLRU/rablKkvTasGYcYZQKlDzTwypfsv7RDK2u+5Q1f9wF
+	 xTYUXm9VG4GLjJf+hJ6GHAEC4nBALv1/Izf3/aa/SqEmTxU3W5ZtaW1dtDaqnVkePwmqA
+	 fCnbgAae8bC4UYgf3EULFMKwcVbEk9RfQUCQpAQ1PcmVT9JwVh7syyXrFN26suWEqeQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="kTu7/0po";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QGKHYyWb;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FDA606A31B;
-	Fri,  6 Nov 2026 05:01:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A34606A31B
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 05:05:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kTu7/0po
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A0B31F0089F;
-	Fri,  6 Nov 2026 05:01:14 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QGKHYyWb
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57EA51F0089F;
+	Fri,  6 Nov 2026 05:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793941274;
-	bh=j5hTxVha0pIyp65aKu9OxONr/TdNJ0NLjPZrkXTpUuA=;
+	s=k20260515; t=1793941552;
+	bh=HU8VkCZyDdYD4TJeUv6jYIvKNk3dZgl9bcQu/L2U+uQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kTu7/0poZr8UFYtIoG3pCArqMJb093/bctyTDbSURWASLPbT5FuajZ9qKWrDWQ+3e
-	 YLrpGVVGoQAVswpAMks3BQ85VND2PY7uTFGLPxn32uSLEgeFbEaIUpBtci5eYAFgtD
-	 RCkbJBWHVxbm3XdaGqY3IweWWqLfq/wMV1sE+z45JJZ/G+JUgUU/+8mil90TMsdAhi
-	 tJVWZ2QC6qdXVcfhUxmIzxI6gw0ydGIYvFiarndkdJFSLuUNQ/bJ9l5Hfr16PpYncI
-	 Da+YkbYyLigv5zrsXQJDhP118eZcnti7C6rQohQBPRghGVHuxkegxshyRrSZytXd8P
-	 WV7mnoO9TqGdg==
-Message-ID: <sashiko-outbox-200787@kernel.org>
+	b=QGKHYyWbVrbzR/W3RAaJY/5phMwmQEKyAWs22vEOPK74xqczg2oANl+qFIW0R4Yf+
+	 PNOd6vi8cfqw1uo3i0XVmdf35QA5wcJaJvnVNHjDyJUUuu6M4eB3jyYTwL9tv8e3u9
+	 zzGnSRdvtQChjbkPA6TQ7ucRaPYoge4xYZwate9fZdZVskp82eHJgvJoEPjWQxOExF
+	 drOw8BcvdJzF+Y/fmCxRlm5HuJymRSbyVKPDTi5qQCQVDzZFfSiZ7f2VcqO3SaNmrV
+	 PazzUa5pDI3CzTQOPUqOzUJIQo/wptQjfjP/ykVLuKxyo15wKNlOBvUR+a8nIW9fvY
+	 ZDxPobxEyIMug==
+Message-ID: <sashiko-outbox-200791@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [Patch v6 06/20] perf/x86/amd: Avoid re-enabling PMU and LBR
- for BPF when disabled
+Subject: Re: [Patch v6 02/20] perf/x86/intel: Validate LBR XSAVE state
+ before updating LBR stack
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-In-Reply-To: <20261106043257.842864-7-dapeng1.mi@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261106043257.842864-3-dapeng1.mi@linux.intel.com>
 References: <20261106043257.842864-1-dapeng1.mi@linux.intel.com>
- <20261106043257.842864-7-dapeng1.mi@linux.intel.com>
+ <20261106043257.842864-3-dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Nov 2026 05:01:13 +0000
+Date: Fri, 06 Nov 2026 05:05:51 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,101 +61,24 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] perf/x86/amd: amd_pmu_v2_snapshot_branch_stack() leaves cpuc->en=
-abled set
---
+> intel_pmu_arch_lbr_read_xsave() doesn't check if the LBR data is present
+> in the xsave area. If LBR data is in the INIT state, the LBR data may not
+> be really written into the xsave area.
+>=20
+> Add an explicit LBR XSAVE state presence check before updating the cached
+> LBR stack. Also clear the cached LBR stack when intel_pmu_lbr_reset() is
+> called, in addition to resetting the hardware LBR register file, to preve=
+nt
+> stale LBR data from being reused after a context switch or similar
+> transition.
+>=20
+> Fixes: c085fb877467 ("perf/x86/intel/lbr: Support XSAVES for arch LBR rea=
+d")
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-commit dbf85e8b6a5abeff651d80166ad0c339896c5b42
-Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
-
-perf/x86/amd: Avoid re-enabling PMU and LBR for BPF when disabled
-
-This commit updates amd_pmu_v2_snapshot_branch_stack() to save cpuc->enabled
-and cpuc->lbr_enabled before disabling the PMU and LBR, and only re-enable
-them if they were previously enabled.
-
-> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-> index bf631f60757cc..851d8a938f522 100644
-> --- a/arch/x86/events/amd/core.c
-> +++ b/arch/x86/events/amd/core.c
-> @@ -932,22 +932,28 @@ static int amd_pmu_v2_snapshot_branch_stack(struct =
-perf_branch_entry *entries, u
->  {
->  	struct cpu_hw_events *cpuc;
->  	unsigned long flags;
-> +	int pmu_enabled;
-> +	int lbr_enabled;
-> =20
->  	/*
->  	 * The sequence of steps to freeze LBR should be completely inlined
->  	 * and contain no branches to minimize contamination of LBR snapshot
->  	 */
->  	local_irq_save(flags);
-> +	cpuc =3D this_cpu_ptr(&cpu_hw_events);
-> +	pmu_enabled =3D cpuc->enabled;
-> +	lbr_enabled =3D cpuc->lbr_enabled;
->  	amd_pmu_core_disable_all();
->  	__amd_pmu_lbr_disable();
-> =20
-> -	cpuc =3D this_cpu_ptr(&cpu_hw_events);
-> -
->  	amd_pmu_lbr_read();
->  	cnt =3D min(cnt, cpuc->lbr_stack.nr);
->  	memcpy(entries, cpuc->lbr_entries, sizeof(struct perf_branch_entry) * c=
-nt);
-> =20
-> -	amd_pmu_v2_enable_all(0);
-> +	if (lbr_enabled)
-> +		amd_pmu_lbr_enable_all();
-> +	if (pmu_enabled)
-> +		amd_pmu_core_enable_all();
-
-[Severity: Medium]
-As reported by Sashiko on v5 [1], while __amd_pmu_lbr_disable() clears
-cpuc->lbr_enabled =3D 0, amd_pmu_core_disable_all() only clears the hardware
-global control MSR and leaves cpuc->enabled set to 1.
-
-If a BPF program in non-NMI context calls bpf_get_branch_snapshot() ->
-amd_pmu_v2_snapshot_branch_stack() while cpuc->enabled is 1, local_irq_save=
-()
-does not mask NMIs. If an NMI arrives while amd_pmu_v2_snapshot_branch_stac=
-k()
-is reading LBR MSRs or copying entries, perf_event_nmi_handler() ->
-amd_pmu_v2_handle_irq() will see cpuc->enabled =3D=3D 1 and re-enable the c=
-ore PMU
-counters on exit:
-
-arch/x86/events/amd/core.c:amd_pmu_v2_handle_irq() {
-	pmu_enabled =3D cpuc->enabled;
-	cpuc->enabled =3D 0;
-
-	/* Stop counting but do not disable LBR */
-	amd_pmu_core_disable_all();
-	...
-done:
-	cpuc->enabled =3D pmu_enabled;
-
-	/* Resume counting only if PMU is active */
-	if (pmu_enabled)
-		amd_pmu_core_enable_all();
-}
-
-Similarly, if an NMI triggers a nested BPF call to
-amd_pmu_v2_snapshot_branch_stack(), the nested call will also observe
-cpuc->enabled =3D=3D 1 and call amd_pmu_core_enable_all() before returning =
-to the
-outer snapshot.
-
-Should amd_pmu_v2_snapshot_branch_stack() clear cpuc->enabled =3D 0 after s=
-aving
-pmu_enabled and restore cpuc->enabled =3D pmu_enabled before re-enabling the
-core PMU, matching amd_pmu_v2_handle_irq()?
-
-[1] https://lore.kernel.org/r/20261029043914.1395147-7-dapeng1.mi@linux.int=
-el.com
+Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261106043257.8428=
-64-1-dapeng1.mi@linux.intel.com?part=3D6
+64-1-dapeng1.mi@linux.intel.com?part=3D2
+
