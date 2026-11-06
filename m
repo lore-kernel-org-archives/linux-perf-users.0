@@ -1,79 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793957755;
-	b=RobzJlwqiNWS4bLvJ0qelv2QW+p23ZO1CNXHkHsvXa+ApNpb0kkFXhCfXZfLwfN7Kesc
-	 XG4aEDqE2vL4SRIQgzPmol4QSIy3miioY1p1asrc7gtOm9tOs4OF25jd7ZyQLFT/mre7s
-	 1Qlgj7N29gNph8P8V5XXIkeA4TcU0ZZ1PGpGAEaDyJNU2qXNcHeeoZ5PuTpzsa8vVMUjO
-	 CXn0t1NI94g8D+P43ySsVLNTgrxZGf64MVH5Y+ds+d0AbOp13HUk3yPKNxbKn0U5hWbuU
-	 /2UKsj7cRZrh8OJQChhc6Xexth6s6yBmr3dq67oJmcnL3ibDHVgysaGcGQHHJx/YO2Q==
+	t=1793957780;
+	b=sk9rVOibwS9wzD5I3unLOPdohflXgDfGwDfK0Mj7f5eYwi92bqh1J3DCQdhz0Hm76yEh
+	 /rlO1H+FJkHauUlIaJ2dyOgW5eSQ4sJe448WEszkgkHPh4p54EtyEMLJNBoICnoC9McBB
+	 eMYuBKCHZpSnkZ5cjKO1j80EruXvKbvp7RbtQCk0/KryyIGvN8X8CwXEjVUk7VE2ng3Ty
+	 OgZl9Sm83d+X7iwv7O2DZqp7U4PRqMC5HX6qFd5aCbFR4Ynx7Cb9OLNcsOi9Q/UgAd25a
+	 rAsr1N9w19ZTw5ORTlt7xnKQLzYPCWfpmmfwMXFHLX1FGA9ncev6F+BOMID/FW9CbjA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793957755;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=AuQzATelnmDjKnoi/WThuzmUYvvV7GWZYk1OPN8btk8=;
-	b=5SNeFth+10RUfQTaXa1+qcXKDsuQTyz6GuJFC7XAVf/xiDev+O8Zqfwt+eV6D8G2vnFE
-	 1Prf+qA0fteaVeSESWz/zBi+MbRjH9CmovzNsTbD0v9oOody5KDH/IH65LvcFzQ4GGTYw
-	 dsGOv2gbPOOl5cvvRy/sjqwuUcY0SH2EgraiWbRVauZyU1ZTY4Fv7mOGQqswly4TRfjW7
-	 8dcn7o1uxic400CnOjFy06O++BVpEL4V/DpqGW140lCtGhxYy27kTQPKow/2OQXouevde
-	 LOBVysJIEnKXizi3/t5gtGcVNUTT8iLQtub+OmAMhKQMg/dr5SVaH1Kpa43YmKa7tcw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793957780;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=q1hqcbTG3rhdZx/9gfUyzxGMvtU1bwp4KeexPPpLb4I=;
+	b=cElAhGNfizwX76XvYoQOH15V80cpZIGhEPDBkmFsn44rrfT+/Jdhto/pCXaPd4fjNkQ6
+	 Mlt9TswmS3D7BLPRWDdxFzL5hf7fCaKbr1Jln3geUzzT7Pap6YkA8SqDZPoTj2qtTBaOI
+	 7lwBxzlSvF3gitivhgz+srpSXAPGHB7Or4l/+DYikWodsm5nd99ReOSiGZxPhdQtRtpzS
+	 lUJWMeWmY9cOQmg1ju3GegCZzwY7WOel+OoEcLn/uPKbzJ5fnc7epmH5t5zq3Iu4MtI4b
+	 CYtRR+1omBC5tfvc+BaAzeVbPn8Xe/8BUt+a8v5s5/5Hv6fojEgl1fqHS3UvjTcV4ww==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=arm.com;
-	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=nI9cIiiG;
-	arc=none smtp.remote-ip=217.140.110.172
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B5BC60A3816;
-	Fri,  6 Nov 2026 09:35:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8B5BC60A3816
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fqsXKuuf;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33366606A921
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 09:36:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=nI9cIiiG
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 703AD1682;
-	Fri,  6 Nov 2026 01:35:50 -0800 (PST)
-Received: from localhost (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1FA1F3F628;
-	Fri,  6 Nov 2026 01:35:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1793957753; bh=jYmh+bA1tMRDuwRkyGpujBnx+YjabsgM13OGBc749BY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nI9cIiiGGR4bazichtzF10dlhkgr3k/QZy+bsp96RB1pHpxWqJbwjBq1rkP4RypEj
-	 J+HPyHbFTVCDcSGKaTk2Nq10vac1coPWVuoNMDYazXpj9k/CnUnxVSXd/06dPqINep
-	 Em/c7DXyXKLI/7HwXhbTaPIccNBE0ykXp4co+Ebw=
-Date: Fri, 6 Nov 2026 09:35:51 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Will Deacon <will@kernel.org>
-Cc: Yabin Cui <yabinc@google.com>, Dev Jain <dev.jain@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Tamas Petz <tamas.petz@arm.com>,
-	Tamas Zsoldos <tamas.zsoldos@arm.com>,
-	Michiel van Tol <michiel.vantol@arm.com>,
-	coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "perf/aux: Allocate non-contiguous AUX pages by
- default"
-Message-ID: <20261106093551.GW9176@e132581.arm.com>
-References: <20261025-perf_revert_prefer_large_alloc-v1-1-5fb431bbd624@arm.com>
- <57c34e26-3048-474d-8e74-f65799e32ff4@arm.com>
- <CALJ9ZPNWcDtajO+Luhxe1K3af64mPRFQSjvfvNornyFFkam-+g@mail.gmail.com>
- <CALJ9ZPO9XxF-kz5K67Jg8RtpiEmK7XFU3e+xDak6LyV_We7yBQ@mail.gmail.com>
- <aussIYUR1BGfUzqn@willie-the-truck>
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fqsXKuuf
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA3B81F0089F;
+	Fri,  6 Nov 2026 09:36:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1793957779;
+	bh=q1hqcbTG3rhdZx/9gfUyzxGMvtU1bwp4KeexPPpLb4I=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=fqsXKuuf7sKxkUB8CAlcaocNOBAy3l6MwqC6EGxPpnedxOxnr+RntMaPwaz/Ga8NH
+	 CTVFj0Isv2xIn1qm3RMrML6cxFGyuk6w7bdM6YQPS9xbx/hyfabLMtZ2L/JTO1HdYQ
+	 NN5He+hiuP9QOG7NZYlCJot9dyYVyVKQa0iSxqZitx3ajB1OOmItCehLXRrNa2pytY
+	 UQqLu+2ZFaHIxdYhOxLSIqjEwo8gqz4io03xF1rpgxmhedyTcWjj+h5ETekt35oWsH
+	 eLmGsW93k0j8dMIy63Zi8DGMdyNK8yxxsHRePmP7IyVUVHOta7Kr67s6ZftKYTCpEY
+	 fxlSQoCH1tJKg==
+Message-ID: <sashiko-outbox-201127@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1 1/2] perf tests: Assign return value of ioctl in
+ wp_modify test
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Tiezhu Yang" <yangtiezhu@loongson.cn>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261106092808.6914-2-yangtiezhu@loongson.cn>
+References: <20261106092808.6914-1-yangtiezhu@loongson.cn>
+ <20261106092808.6914-2-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 06 Nov 2026 09:36:18 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -82,46 +60,36 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aussIYUR1BGfUzqn@willie-the-truck>
 
-On Wed, Nov 04, 2026 at 12:59:13PM +0000, Will Deacon wrote:
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Low] perf tests: missing Fixes trailer for test__wp_modify() ioctl
+  check
+--
 
-[...]
+commit 36cc478a3007ff125acd9f095ef1c72b59deb4aa
+Author: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-> > Sorry for the late reply, and sorry that the commit message in
-> > 18049c8cff9c ("perf/aux: Allocate non-contiguous AUX pages by default")
-> > was imprecise about "exacerbating memory fragmentation". You and Dev are
-> > right that grouping same-lifetime pages into higher-order allocations
-> > does not itself worsen fragmentation, and the TLB reduction numbers for
-> > TRBE and SPE with large vmap() mappings make total sense given TRBE's
-> > tiny TLB.
-> > 
-> > However, a straight revert will reintroduce a severe production issue we
-> > hit on Android devices, so I'd like to share what actually happened and
-> > suggest a way to get large mappings for SPE/TRBE without bringing back
-> > the regression.
-> 
-> [...]
-> 
-> Thanks, Yabin. This just hardens my stance [1] that the allocation decision
-> should be driven by userspace and not second-guessed by the kernel. So the
-> revert is _not_ the right approach, in my view.
+> perf tests: Assign return value of ioctl in wp_modify test
+>
+> In test__wp_modify(), the return value of ioctl PERF_EVENT_IOC_ENABLE
+> was not being captured. As a result, the subsequent error handling was
+> checking a stalled value of `ret` instead of the actual result of the
+> enablement operation.
+>
+> Fix this by properly assigning the return value of the ioctl call to
+> `ret` so that the test can correctly catch and report failures when
+> enabling the watchpoint event.
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-If a userspace interface is needed, what remaining reclaim or allocation
-policy should userspace control? I am not clear how userspace control
-would fix the PSI reclaim stalls described in Yabin's reply.
+[Severity: Low]
+This fixes a missing return value assignment introduced when the
+watchpoint test was added.  Should the commit message include a Fixes
+tag?
 
-Alternatively, we could optimize the reported reclaim cost in the kernel
-by clearing __GFP_RECLAIM for optional higher-order attempts, while
-preserving the existing policy at order 0 and for
-PERF_PMU_CAP_AUX_NO_SG PMUs.
+  Fixes: 2e85d5979e8d ("perf test: Add watchpoint test")
 
-If testing confirms this works, combining this mitigation with a revert
-of 18049c8cff9c would be a reasonable way to restore higher-order
-allocations for SPE/TRBE without adding a userspace interface.
-
-Thanks,
-Leo
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261106092808.6914=
+-1-yangtiezhu@loongson.cn?part=3D1
