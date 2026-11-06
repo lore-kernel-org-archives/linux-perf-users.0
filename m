@@ -1,93 +1,61 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793964120;
-	b=G3348mn3e/6qX4XHstLORqtXde9ynMzS1SPXaFLknwLmopmKKpg7a7/0lhYzMpAKlLr3
-	 HMipZbASpz9PFGbmJhjQ5ylRMH5wbhLrSB6cWtfezCq0hhUP7bmiamNIhJs0S4/SdxC6c
-	 1uITpEktXK6vUBlOIq2Ade1OVzQB58YMtIfLUHzMFoxQSn1B2TG4VY/RksERLRTF2C/wQ
-	 85VRmCHbZQOWxUXZ/ztkjr2aPOvJ7uu6lOOVX7fJlmxHNTSe93secXilEsRjxutwBUVxw
-	 6TNuHXzChejlJM8sNc86/m4VJdjeS6zaRcpGOK0FDVTPmM8B7333J7BfURqpvsrdRxg==
+	t=1793965318;
+	b=nxZaF6Bd88Rxb8e5Vknmj7rOyQ5tGWNpNaYRGFwH3SGqKVXSli7bsUZt7WWg7J3B+4wP
+	 SMehCCPbhIR8LCgR2KYe+U40cC1uKzW9mXOA85kktXtGL8KW49d5Wbl3+cqhqY8HBSLsk
+	 7PzSmsb/uGl1zIrUIiNmhTaDefbFQ7AKkOvdjXGAoZYck6SFHRhZSDa2Msxs9Bgs4OnFt
+	 /MNgngkjKE1Cf9ujl/CaMTg7EK2rTu4w8TUDPr6usH5BZCVWjQZeSS2rm3KS7o5HkPRgI
+	 wxyFMukSy2RzLMwGnfFjxrcQEI8Peps6R9309a2p6qkTXq1GtQ4QiJUHebhTpXqzxTw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793964120;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To;
-	bh=p+Ok2jd0IVx31NW+VHJJuf+Q+PVcuhS6OrBHlNc0X1Y=;
-	b=ytue30Mko8PcVj8n6z3W2CMEEYWN49LNpERPk2jQ5ealzk5wi9PF2m9zyZMtLnzp0+j/
-	 cBJ53ZCK4iUYWhF5WHzqtyKtbauwa6elVNpynSiK3xtXY4NPUIXtds7uTsuP+IpxLIZaJ
-	 BPV6B1K//fa/OPDbnQLknMsmMZxM8RfAPNJ4A/8sXeLyeSaAMPTIkISrC9zhfI8Dn0g/a
-	 pqiUlvRBUcL4x79F+r2JmMqOoubFsrtA2FyVlA3lI435DEHuFC+AekxHj2LK3w5MngjX6
-	 V+UiY7mLhFwQS/O3v+tAKXGepvpXfR3XCcl7pM9rFdQYXccTlaUOFP4BzvyVMJYpbmA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793965318;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=ucL7Kplm9BcQfsNCszVakuHa/fV2YWpTEBClElt75lg=;
+	b=i8A7bj960OafEm4zvkGm2te2t/8AO61RyIpLoQ43VW0o824oiTFcu14WPY0SGDKMxQgc
+	 l8A44feqTrBoNxmtUcXH1Pvwxf3SLrb2PSwMv6rBapOqiUbd29wJ0Xmgoa+POFNhbVdh1
+	 N6YO5eczKMgHirqagc1I2q3/lC+R2+rS9mgD32aeSZMKXhZSzdtm1dczQO88PikCbQZ6q
+	 QF29Vj7ZAHpkOFw+2Yv8phawJmki50IVWsRguAKnqgjHBYcvh+engcsrFV9njdmJbmj46
+	 NoQ179ZcUgMgBXKDWJKg4QRU0CNY7jPxWUss0m62IhkY0bzbwPF4vYkcSciw0Qj8cBA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bK0a9SGW;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B84606A331;
-	Fri,  6 Nov 2026 11:22:00 +0000 (UTC)
+	dmarc=pass header.from=arm.com;
+	spf=pass smtp.mailfrom=arm.com;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b="uJjYZrc/";
+	arc=none smtp.remote-ip=217.140.110.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8407606C7C6
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 11:41:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C8407606C7C6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bK0a9SGW
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18F931F0089F;
-	Fri,  6 Nov 2026 11:21:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793964120;
-	bh=p+Ok2jd0IVx31NW+VHJJuf+Q+PVcuhS6OrBHlNc0X1Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bK0a9SGWX+VyZD0kFIiK4yNIK9A9v+An7WfGjPiMiNKuUGcrfRy/CwNqTxljrBpV0
-	 U7m1a/COhNVgako5ExzfFpup8zroemN8PZasns74e+wzdmXNGp9HfFsumePkfHpqUz
-	 B54avhJDK4RV1zIBmim6BKz7o7ZgZ9/g1a3ek0DWtoergphiLCDdHz5glMnik8SvAi
-	 sjlHg1ttAqkP8985sWOQHptTvB9E/+p4pzQXWHiAvU6YBAJ26cTB4FDz0XEBtsF1a0
-	 bgh+paL3EuS+CEi5iRnn4vYJCUV3oXHmFOJ7h5ygJmRsCVDkmI4xEURGnOh8gud8UK
-	 jwyBg4yTS3zRQ==
-Date: Fri, 6 Nov 2026 11:21:40 +0000
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Barry Song <baohua@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Rik van Riel <riel@surriel.com>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>, 
-	Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, Xu Xin <xu.xin@linux.dev>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
-	Shrikanth Hegde <sshegde@linux.ibm.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Leon Romanovsky <leon@kernel.org>, SJ Park <sj@kernel.org>, 
-	Rakie Kim <rakie.kim@sk.com>, David Rientjes <rientjes@google.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	John Johansen <john.johansen@canonical.com>, Georgia Garcia <georgia.garcia@canonical.com>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
-	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej =?utf-8?B?TW9zbsOhxI1law==?= <omosnacek@gmail.com>, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, damon@lists.linux.dev, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, apparmor@lists.ubuntu.com, 
-	linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org, selinux@vger.kernel.org
-Subject: Re: [PATCH 03/13] mm/rmap: convert remaining VMA flag tests to use
- vma_flags_t
-Message-ID: <au2yhvzWy6HID8jM@gremlin>
-References: <20261105-late-2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org>
- <20261105-late-2026-vma-flags-v1-3-0d3cd15ab75f@kernel.org>
- <CAGsJ_4wCd_j5or0uHwPLq0PUixcXgiFim=_d7uUhUhAuQf0nTQ@mail.gmail.com>
+	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=uJjYZrc/
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B2091650;
+	Fri,  6 Nov 2026 03:41:54 -0800 (PST)
+Received: from raptor (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B0BF3F628;
+	Fri,  6 Nov 2026 03:41:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1793965317; bh=GtzZGsuJwQAob0R6SufhJGIdzZ65QSVgYvPV+jqju24=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uJjYZrc/QFCxqfHVhKctjEGSxaednrBocQV1LT6i1orIBGz0qqcGQPpLrM2WSMpwB
+	 qfqKjfZ2Qy/PyWXIziRTNNVrPqCt2B1bXxPF4p2plo9RC9+Z3rJbX9BAdQzmcvE6aa
+	 DMQON7BVfEHIZkZN8M/l6XEkKxV8CGl6EAQw/KBk=
+Date: Fri, 6 Nov 2026 11:41:52 +0000
+From: Alexandru Elisei <alexandru.elisei@arm.com>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: maz@kernel.org, oupton@kernel.org, fuad.tabba@linux.dev,
+	joey.gouly@arm.com, seiden@linux.ibm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, will@kernel.org, mark.rutland@arm.com,
+	linux-perf-users@vger.kernel.org, catalin.marinas@arm.com,
+	james.clark@linaro.org
+Subject: Re: [RFC PATCH v7 00/28] KVM: arm64: Add Statistical Profiling
+ Extension (SPE) support
+Message-ID: <au29ACRXFEOXaWPV@raptor>
+References: <20260903160623.315525-1-alexandru.elisei@arm.com>
+ <auy-TwnMbIn-r2xl@gremlin>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -97,83 +65,122 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGsJ_4wCd_j5or0uHwPLq0PUixcXgiFim=_d7uUhUhAuQf0nTQ@mail.gmail.com>
+In-Reply-To: <auy-TwnMbIn-r2xl@gremlin>
 
-On Fri, Nov 06, 2026 at 11:57:08AM +0800, Barry Song wrote:
-> On Fri, Nov 6, 2026 at 5:32 AM Lorenzo Stoakes (ARM) <ljs@kernel.org> wrote:
-> >
-> > Replace the remaining uses of the legacy vm_flags_t flags in the rmap logic
-> > with vma_flags_t values.
-> >
-> > No functional change intended.
-> >
-> > Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> > ---
->
-> LGTM,
->
-> Reviewed-by: Barry Song <baohua@kernel.org>
->
-> >  mm/rmap.c | 8 +++++---
-> >  1 file changed, 5 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/mm/rmap.c b/mm/rmap.c
-> > index 1131b76bbbc2..cdc97fec8586 100644
-> > --- a/mm/rmap.c
-> > +++ b/mm/rmap.c
-> > @@ -1196,7 +1196,7 @@ static bool page_mkclean_one(struct folio *folio, struct vm_area_struct *vma,
-> >
-> >  static bool invalid_mkclean_vma(struct vm_area_struct *vma, void *arg)
-> >  {
-> > -       if (vma->vm_flags & VM_SHARED)
-> > +       if (vma_test(vma, VMA_SHARED_BIT))
-> >                 return false;
-> >
-> >         return true;
-> > @@ -1660,7 +1660,8 @@ void folio_add_new_anon_rmap(struct folio *folio, struct vm_area_struct *vma,
-> >          * VM_DROPPABLE mappings don't swap; instead they're just dropped when
-> >          * under memory pressure.
-> >          */
-> > -       if (!folio_test_swapbacked(folio) && !(vma->vm_flags & VM_DROPPABLE))
-> > +       if (!folio_test_swapbacked(folio) &&
-> > +           !vma_test_single_mask(vma, VMA_DROPPABLE))
->
-> Right, VMA_DROPPABLE_BIT is not available on
-> 32-bit architectures, so vma_test() cannot be
-> used here.
+Hi Lorenzo,
 
-Yeah, it's an annoying wrinkle having to differentiate, but is necessary.
+On Thu, Nov 05, 2026 at 05:47:45PM +0000, Lorenzo Stoakes (ARM) wrote:
+> Hi Alex,
+> 
+> I've gone through all of the patches now, thank you for your patience with
+> the review :)
 
-Eventually we will have 32-bit kernels move to the same size vma_flags_t as
-64-bit, e.g. something like:
+Many thanks for the stellar review, will start replying soonish.
 
-- #define NUM_VMA_FLAG_BITS BITS_PER_LONG
-+ #define NUM_VMA_FLAG_BITS 8
+> 
+> So there are various dependencies/architectural decisions that need to be
+> made here to go from RFC -> non-RFC:
+> 
+> 1. The 'Ignore MMU notifiers for guest_memfd-only memslots' patch [0] is a
+>    hard dependency for the series. I chased over there, hopefully we can
+>    get something landed there.
 
-But that's down the road :)
+Like you said, Sean is planning to send my original version of that patch with
+an updated commit message, thanks for the ping!
 
-Which will solve the 'not in 32-bit-kernels' stuff.
+> 
+> 2. non-VHE, pKVM, NV disallowed for SPE - As I mentioned off-list, I spoke
+>    to Marc, and he confirmed that he's more than happy for these to be off
+>    the table for a v1. So I think you can drop the HACK: patches and just
+>    make these conditions of using SPE.
 
-But also this form is also used for stuff that's not defined under certain
-configurations, in which case you get something like:
+Oliver, some time ago, expressed the opposite preference: VHE-only is OK for an
+RFC, but he was concerned about the discrepancy between VHE and nVHE
+configurations. Maybe the direction for KVM changed in the meantime.
 
-#ifdef CONFIG_FOOBAR
-#define VMA_BLAH	mk_vma_flags(VMA_BLAH_BIT)
-#else
-#define VMA_BLAH	EMPTY_VMA_FLAGS
-#endif
+Fine by me to drop the HACK! patches, of course, that's just something to keep
+in mind.
 
-And then vma_test_single_mask() is necessary too.
+> 
+> 3. The entire VM needs to be pre-faulted, but who should do it? - I do
+>    think that relying on userland to do this is a little iffy. So I wonder
 
-An unfortunate outcome of defining per-bit (so no bit value means
-'nothing'), and any kind of invalid bit value solution has worse drawbacks.
+There's plenty of iffiness that userspace already handles when it comes to
+virtual machines.
 
-In the end all this stuff will be useful as it allows us to no longer be
-constrained by either 32-bit vs 64-bit or in only having 64 possible
-flags. :)
+Or, how Oliver put it [1] (regarding migration, but it fits):
 
---
-Cheers, Lorenzo
+'My take is that there's no amount of idiot-proofing we can do in KVM to prevent
+the VMM from messing this up somehow'.
+
+[1] https://lore.kernel.org/kvm/alE3jRLtYeq-WesA@kernel.org/
+
+>    whether it might be possible to, on SPE first run, prefault the ranges
+>    there, and make that a condition of using it? Relatedly, KVM could
+>    reject non-guest_memfd memslots for an SPE VM rather than trusting
+>    userspace there too.
+
+I'm not sure that's the best idea. Mainly two reasons:
+
+1. KVM will be imposing the condition that *all* writable memslots be backed by
+guest_memfd, and *all* memory backing these memslots be pre-faulted and
+effectively pinned.
+
+There are use cases for writable memslots to describe guest memory that won't be
+used by SPE. First thing that comes to mind would be paravirtualized interfaces
+between host userspace and the guest. For example, pvtime - kvmtool creates a
+RAM memslot for pvtime (i.e, non-read-only memslot), and it looks to me that
+qemu does the same (but my knowledge of qemu is severely limited, so I might be
+completely wrong).
+
+Then there's also the possibility that a guest might want to assign a slice of
+RAM for use by SPE, to avoid pre-faulting and pinning the entire VM memory. In
+this case, userspace will want to have *only* the memslot describing that slice
+pre-faulted and pinned, and not the rest of system memory.
+
+2. Perfomance - userspace can pre-fault in parallel, KVM cannot easily do that.
+
+arm64 now has support for KVM_PRE_FAULT_MEMORY, I say let's use that :)
+
+> 
+> 4. Dirty page logging - patch 27/28 relies on series [1] being landed,
+>    which is also an RFC, and allows migration of SPE VMs. So we need to
+>    decide - do we want this migration? Additionally, I think it's
+>    reasonable to, if we want it, send both [1] and patch 27/28 as a follow
+>    up separate from the v1 non-RFC of the series.
+
+For background, I started this conversation in the LOG_DIRTY_PAGES support for
+guest_memfd series [2]. Oliver had some concerns, but he didn't follow up on my
+explanations, so I decided to send migration support as part of SPE so people
+can have a more complete picture of how everything fits together.
+
+I would be very happy to get basic support for SPE merged in KVM, and, if we
+decide it's useful, migration implemented as a follow up, as that involves
+landing dirty page logging support for guest_memfd.
+
+[2] https://lore.kernel.org/kvm/alAFmiAsNf6Xm49_@kernel.org/
+
+> 
+> 5. Errata handling - the default already disallows SPE on the affected
+>    silicon, which seems right. I wonder whether kvm-arm.ignore_spe_errata
+>    should exist at all though, other than in some sort of debug mode.
+
+It is intended as a debug/development option, to be used only when the VMs are
+trusted. As to why it's there, it's there because without it, SPE would be
+disabled on all the machines that I have access to, and I suspect systems not
+affected are few and rare between.
+
+> 
+> So 1 is a known dependency, I think there's no getting around that, and
+> thus that makes merging [0] or something like it a top priority.
+> 
+> It seems to me 2 is pretty clear-cut, and 4 can reasonably (if we want it)
+> be sent as a follow up.
+> 
+> So really 3 and 5 are the decisions to make here!
+
+I really appreciate your enthusiasm, thanks!
+
+Alex
