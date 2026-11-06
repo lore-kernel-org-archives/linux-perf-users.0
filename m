@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793941116;
-	b=DTSaiARP7NBbwKfXYl4TYxZGevxhov4jf5g8+2hCsL4FK8AEg34vUExqWehMyCamip8L
-	 JTtiw68ErujgjVS2HxukEbM6sw+r5Aamqlx+pgG2dFqvOzaus5l4Nq0NxSEDeHWHkbKco
-	 M2qav8l5y/ECEfs5IkT3L+hFoRjhQtcHDzy65IcJeyUvebTkfWjawdRziAZNhCUCsyB4Z
-	 UYGqHwu/QD7m2zVNkzTH1YUjYoad6psHs6gFsWoN+eS0rbSHk1POUACSmhVDDozCVz4WA
-	 9Spg99xvQfhUfw1A4fuwg/5ebQgDvtXZMhH1fPts0ZcFZNMwOOu8/auPxRnGf1Ax3FQ==
+	t=1793941202;
+	b=yxP+rkwiJMdjIINbdTKyflDVkpos/FUcG6+rwVugxM4jidafp82GQzblwGBDMiRDGsBR
+	 SGpdm+dWidVM+OVgAysKXCMNb1DYVA/jUZ+SC9Apjyiq6cr5wKBqBF6g452frkoiIfXY0
+	 edC2ZXbzZpY0CFaee4KUUNA5NcNFbVzxYkBvKshKOvW1YuvMkJWpMkuJJf4C/9lbqNPhG
+	 W13CjNkvDkeaUDgDKA4wBK35ZbyQI3i+17avXKoUIIt6cmltTlp/7jZlMuUKfNpJtZBif
+	 QB4eZX0LgZ3Z+0WteXIdBzo9BNleHpYSOXUbHJtT4PzRC1gKlBuvvJhlPUlx9Qfbb2A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793941116;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793941202;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=GP4RUtDJs9Bf7BNNXYP6fUS8NpO+lqNbUQA487eN+sY=;
-	b=tt7QgIsv9PUpym3ZSvds8ujzzML5qQA3CBtPeeAu7SFqCkHDpFFHL+QopmEBW6Nby8Lz
-	 mZwKI2gAD4Ih3ZibQyBSvusIDjS6y8PXQzWRqtHwfL0M9Iq+UPhxHqJD1XtpU1ytbBoWN
-	 lrCGJ9+RLWRsNL8gGkvEYIilVA0gyzXUs5c+n72KfZEFBe3URMlvDHMme0DkqQBXduTzI
-	 OYesbYsWqb8kKCsbhkyEZXNe8D6vO1KSIsljkKOptnh4keyWVK/vGwQNVh2yC29uuL4sj
-	 VIHiPoNp9H8rlt5qmU13qIEowvA14kD4Fvtuas1nql3eM2sliK6ystzYoVpOE8uhxww==
+	bh=IkhM+AWSV+n6OY3rsrAk7bH+XnMG4r8tkgzqH2ZVmZM=;
+	b=FcoqYeeRxiwbSZ2fQu4KC+gKPYPJ6WkznsvwD01nh1LjALbMGRvyhVL4utMTsWew9z5J
+	 OUJoGYJFiRZlQcJ7Po1E/9MnTmlut3YAjw2fv9mtS+txWz86D3k8holkp69mAOAeLdK4A
+	 Nslc6aH1JuZ7X9sWq2EKtiv4Lob/v/anTuoWbgekYonPTNAUpR9GGA9YO7iMZim5lUq/I
+	 oLfEJcPLizaXQHzEvmkCYy59bMJPklyNDP0riLyP7k80EFk/cj2mk76EuvA6Dszd1lpeA
+	 5QXxrxH0CgBllpk1EtGGBpiw+ORkU517CPrxircVSwt6cF3jVTEjGh0Y8DugCAPjSsw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=H6UlwhAM;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Pxk3aFU8;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00D0606A328
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 04:58:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE317606A31B
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 05:00:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=H6UlwhAM
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E4EB1F008A1;
-	Fri,  6 Nov 2026 04:58:35 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Pxk3aFU8
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 262201F0089F;
+	Fri,  6 Nov 2026 05:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793941115;
-	bh=GP4RUtDJs9Bf7BNNXYP6fUS8NpO+lqNbUQA487eN+sY=;
+	s=k20260515; t=1793941201;
+	bh=IkhM+AWSV+n6OY3rsrAk7bH+XnMG4r8tkgzqH2ZVmZM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=H6UlwhAMI0j1FGTW4gfTrZk+dDwi12NEHDjrfrR+al7DJVMS+I1XAs990hnshjdtq
-	 0gfbu2dBAwfia5IXdtJxppB8r2f9WGrzqSkQI6JYD+b16GrJUsc5vC17MQzNbAq5AP
-	 ljwwuf3A8xifdnFFk6HKJUT2I5mgD09HlIuKE8xv7vrzfKypxHZP2NL5fPLSCh+das
-	 fxmDokks/m5oBZ4zCHuLlHzyjihUSOnaeLK2bizhlBSHAdURsWzmMCjAuVkIrTac2l
-	 aDtYGSYqcQUtNaFi3kYyN7Y6WWPIMeiLhZCE8lhc/vi7gygiausIfJ9NqJftpcjazR
-	 quh85LbwrWSWA==
-Message-ID: <sashiko-outbox-200782@kernel.org>
+	b=Pxk3aFU8ASr0eXuJIbSkv0+Rm94jNoP8mig9y70XPfGD7itkG/eo9A0s+yZfRskP6
+	 /kzs/x01WR3oXm19faASAJlUBXyul6AIgn4MVLbRsyYwuWu6HASx6Lr3k946hjnIa1
+	 hmy3i1h0XPK5c3rCYmJGT+NcjaDfBWUrfLDnkY9WMtgn1mKDSbn3F3g6XuM1aNqdGA
+	 SeHmw6hr/OSH7b2sNGVQ4u0iiSQXwLkgBFYXIETcBQgTXM7/dQsHCm+sQJYH7kr+B7
+	 +h9KGLSU26cVlNLce0gUQk24IhL3ibHBRurAL1cG6SjbnJ2LDQZR2yOYdIcZnwJffO
+	 rLxBPW8Zr1MiQ==
+Message-ID: <sashiko-outbox-200783@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [Patch v6 09/20] perf/x86/intel: Keep LBR frozen throughout PMI
- handling
+Subject: Re: [PATCH v7 08/14] alpha/perf: attach ProfileMe status as
+ PERF_SAMPLE_RAW data
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
+To: "Matt Turner" <mattst88@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261106043257.842864-10-dapeng1.mi@linux.intel.com>
-References: <20261106043257.842864-1-dapeng1.mi@linux.intel.com>
- <20261106043257.842864-10-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20261105-alpha-profileme-v7-8-c474e892abb0@gmail.com>
+References: <20261105-alpha-profileme-v7-0-c474e892abb0@gmail.com>
+ <20261105-alpha-profileme-v7-8-c474e892abb0@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Nov 2026 04:58:34 +0000
+Date: Fri, 06 Nov 2026 05:00:00 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,29 +61,26 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> For the platforms which has 4+ PMU version, streamline LBR freeze is
-> supported. The PERF_GLOBAL_STATUS.LBR_FRZ bit is set to freeze LBR once
-> a PMU counter overflow. However, the current PMI handler clears the LBR
-> freeze bit too early, allowing branch operations that occur during PMI
-> handling to be recorded into the LBR stack.
+> A ProfileMe sample's PC alone does not say what happened to the profiled
+> instruction. I_STAT and PCTR_CTL do: whether it trapped and why, was
+> mispredicted, stalled, or was killed on a wrong path, and what PCTR1
+> counted during the window.
 >=20
-> This can pollute or overwrite the intended branch snapshot, especially
-> when bpf_get_branch_snapshot() is invoked from bpf_overflow_handler().
-> In that case, branches recorded while processing the PMI are mixed into
-> the original LBR data.
+> With PERF_SAMPLE_RAW, attach PMPC, I_STAT and PCTR_CTL to each ProfileMe
+> sample in a versioned struct alpha_profileme_sample. PMPC is included
+> because a PALmode PMPC is not the sample's IP. Killed instructions can be
+> told apart by PM_KILLED_BM and VAL. The 64-bit fields are packed after
+> the 32-bit version, since the payload follows the 32-bit raw size in the
+> sample record: they are then 8-byte aligned in the record, which needs
+> no padding.
 >=20
-> Defer unfreezing until after PMI handling completes so the LBR remains
-> frozen for the entire PMI path and no branch activity from the handler
-> is recorded.
->=20
-> Reported-by: Sashiko <sashiko-bot@kernel.org>
-> Closes: https://lore.kernel.org/all/sashiko-outbox-179823@kernel.org/
-> Fixes: 425507fa5f32 ("perf/x86/intel/lbr: Optimize v4 LBR unfreezing")
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Reviewed-by: Magnus Lindholm <linmag7@gmail.com>
+> Tested-by: Magnus Lindholm <linmag7@gmail.com>
+> Signed-off-by: Matt Turner <mattst88@gmail.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261106043257.8428=
-64-1-dapeng1.mi@linux.intel.com?part=3D9
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105-alpha-prof=
+ileme-v7-0-c474e892abb0@gmail.com?part=3D8
 
