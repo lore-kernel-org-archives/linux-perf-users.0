@@ -1,49 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793989913;
-	b=SWpvmtvw2Jevs9wXN1cq0oYIkfLCG+ozDTa6NeY4nr9nc4pPZaJh1CC5NmSx+AQVutIH
-	 V82L4FewhTBewR2B63zWSvxF47SqPmtOfOJq/GyGPRr6zxmY0HwHZzWjdURnWsikstuhX
-	 RKapc5+JGz/iTgQ8hda9uIE7rZGkhORUDQGg3JMvHjlWjce+cWC+clRZkXeft8I9TZkCo
-	 zFg0/8iOQHKP7Fj4Aok+4ekjlwOOUC9vYYOR+fW+6ASxVtUTBAKq8ggeJT/w3u8d7SYBB
-	 Lasf0TQ7YGQWZM7Nb/0vZbXaEiTynkq95iryuAMWzSC0vJeTOhMPzblDa1458GqMeug==
+	t=1793990990;
+	b=tmyS7mrhikYi/57R/ED3sbMhiJ9o4AaAmfkL00mGsWvDA1/37U67X9QlFa/HT3EJUfxw
+	 jeEpAF5FzjI0vz+UHee7Hu2fQ5kiTD1Wy/TiMeZn2JEG4tCdnZ6zBQ//5zrIyTNxReQg+
+	 QJdjq/VsYMQ0xc/UuNrpR63WVdqV+yeSGKiOMHFFfybA9J5I+YfvOpaZq7O4SSmwnyUBk
+	 fIsk32LC28HkGR5tb540Dr7UsM2+0EN/PJvqxDSXiKnNtG6wDS+ZG4n6ucRdwZmG4G1qJ
+	 k0Z0gJ0B4qXkSTvJwwqQaOIYCFYAyExidy90anUxVTv3ZBkcdiyww7bKmVyALxOKcsA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793989913;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
-	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=Y5WQ/M1+RHkh0LOByno43m5sDI3jNIMmkTA0JIJi3zQ=;
-	b=FgZ1QXOrRR3TmpRaBWn1rz7vlGP+6IXhF9xlj2JOUOx0Qro3rCsrmrOtO/w6ugByDhwF
-	 A0y4Fkkl/JgpCOfkwGDpicR3mtd2hWa3nO2sPO/mG4pwttnAN4NyQ65hZJZrSbxWLTcHu
-	 l/6kEAYOcGFj3ytYgrknyeTwB6FSuKVWJtMGAVPYU6L1wXpILNLfXGjJUBTAoCtdSHb0k
-	 jC1n1WLu+qcieLmb3uMHXItRwN339PORIFyTy1S0qIE8LmN+7c0Www8pdKt+SgH2sAQq4
-	 PvQ7aaoQW+gHtJOTKE8xjbwJLLvAO4FJwuXaMbKBG+yYWBO9Qv6W4iFfjn1XZGKdHKw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793990990;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=iOSfLb86QY08ej0RawPxXcRECun5ow2DaAauKLhZvic=;
+	b=f0eGhzjrHgDZMRTF9vX1zWBOAfSxFYgiVrvTtFJUk3c3e4sopgeJz9qtBGqL0lsvqEgb
+	 hGpQ9R7f6icZs5BBErRMUTE3e2RyHlFMd3hiMGT3VTlWzy8Ec5EhfDRHcxvyAGDXhmvuZ
+	 PIeRQJ592esfgJRMv32wa2zyUyUzkDDi+rg7sarICi6oBmrobDanM4Epf0FlDuhT3jaiQ
+	 lNhm+duvWf8iokphBGZLTba42hZsffsEKbhNGRRM6mQXHix4brnpmfCA8EOOeFjAiz3bl
+	 TTfPxhCWac8s/O8XydsgH/KRYrBndic1C5wGtWOK5YgBNqtv8KxXCqS9JwEBeiOEaCg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=arm.com;
 	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=VzEAUNRD;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=nfnStZQD;
 	arc=none smtp.remote-ip=217.140.110.172
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DDA4606A326
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 18:31:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5DDA4606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24C58606A326
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 18:49:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 24C58606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=VzEAUNRD
+	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=nfnStZQD
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 78C001650;
-	Fri,  6 Nov 2026 10:31:48 -0800 (PST)
-Received: from [10.57.91.130] (unknown [10.57.91.130])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 069A33F673;
-	Fri,  6 Nov 2026 10:31:50 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5CD0C1650;
+	Fri,  6 Nov 2026 10:49:46 -0800 (PST)
+Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.2.212.23])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 91F3B3F673;
+	Fri,  6 Nov 2026 10:49:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1793989911; bh=3Dn9EDzzMxdd+CgUKLKWiOQ+dJK8ULASfykEi2qFJVE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VzEAUNRDKEfyhDli+MoEgjFcbKO48IOqGNw+ErE6LqW+IghrqezO6h5A9xbKfPYqA
-	 4AsFsk9b1Hf2yY6GpsYhQ6tK+j99nQVxInfqWQlfSZ1tAPyYJbYZ2vz9Ra/tekBBNF
-	 HPhHvG6oSQaKmM6DefzOfbDuAg2Z694BGw4Xqdq0=
-Message-ID: <20ab965b-bbe0-4550-be16-24e104e2dac4@arm.com>
-Date: Fri, 6 Nov 2026 18:31:31 +0000
+	t=1793990989; bh=KnzE4VmiVmM6UAdxWSUgepdIWMCIhJvuARplG3Gxblo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nfnStZQDrWiZp7Q9DdPQCjg52ets9l5SI+kta8RUw8uP44rkLlmEJT5d5HW2LfKER
+	 Zh3jwXbIpvMty/DzDvO6nHZ0+CPj/kvieBqnu/JTlhv0jEApQH3LzYqZnUAcxaIZFC
+	 YAugKva6TeScAyGIfU/eZi/QFe3t+UTel7+TizRA=
+From: Robin Murphy <robin.murphy@arm.com>
+To: will@kernel.org
+Cc: mark.rutland@arm.com,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] perf: Process subdirectory Makefiles unconditionally
+Date: Fri,  6 Nov 2026 18:49:37 +0000
+Message-ID: <4b2e518499270b2a6cab3e04a1123458d82d2759.1793990977.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.54.0.dirty
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -53,90 +59,46 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/4] perf/arm_cspmu: Add Arm system PMU
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <cover.1793986672.git.robin.murphy@arm.com>
- <2cf79599d522539440a53adb4221dfc5a4d7b9e6.1793986672.git.robin.murphy@arm.com>
- <sashiko-outbox-202006@kernel.org>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <sashiko-outbox-202006@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2026-11-06 6:17 pm, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential
-> issue to consider:
-> - [Medium] perf/arm_cspmu: arm_cspmu_init_impl_ops() defers probe when
->    ARM_SYSTEM_PMU=n
-> --
-> 
-> commit ae4570e49b496427e88dd55c46f9506b33a8b68e
-> Author: Robin Murphy <robin.murphy@arm.com>
-> 
-> perf/arm_cspmu: Add Arm system PMU
-> 
-> This commit adds the arm_syspmu backend module to support an additional
-> 64-bit event filter register (PMEVFILT3R) on Arm system PMUs with product
-> ID 0x9c3.
-> 
->> diff --git a/drivers/perf/arm_cspmu/arm_cspmu.c b/drivers/perf/arm_cspmu/arm_cspmu.c
->> index 912f03ce3ef5f..9f298ea1a9745 100644
->> --- a/drivers/perf/arm_cspmu/arm_cspmu.c
->> +++ b/drivers/perf/arm_cspmu/arm_cspmu.c
->> @@ -358,6 +358,13 @@ static struct arm_cspmu_impl_match impl_match[] = {
->>   		.module		= NULL,
->>   		.impl_init_ops	= NULL,
->>   	},
->> +	{
->> +		.module_name	= "arm_syspmu",
->> +		.pmiidr_val	= ARM_CSPMU_IMPL_ID_ARM,
->> +		.pmiidr_mask	= PMIIDR_IMPLEMENTER,
->> +		.module		= NULL,
->> +		.impl_init_ops	= NULL,
->> +	},
->>   	{
->>   		.module_name	= "ampere_cspmu",
->>   		.pmiidr_val	= ARM_CSPMU_IMPL_ID_AMPERE,
-> 
-> [Severity: Medium]
-> Does adding an unconditional impl_match[] entry for ARM_CSPMU_IMPL_ID_ARM
-> cause arm_cspmu_init_impl_ops() to defer probing indefinitely when
-> CONFIG_ARM_SYSTEM_PMU is disabled?
-> 
-> Previously, CoreSight PMUs with Arm's implementer ID did not match any
-> entry in impl_match[] and probed using the generic ops.  With this entry
-> present, arm_cspmu_init_impl_ops() requires the arm_syspmu module to
-> register match->impl_init_ops:
-> 
-> drivers/perf/arm_cspmu/arm_cspmu.c:arm_cspmu_init_impl_ops() {
->      ...
-> 		if (match->impl_init_ops) {
->      ...
-> 		} else {
-> 			request_module_nowait(match->module_name);
-> 			ret = dev_err_probe(cspmu->dev, -EPROBE_DEFER,
-> 					    "Waiting for module %s to load\n",
-> 					    match->module_name);
-> 		}
->      ...
-> }
-> 
-> Because CONFIG_ARM_SYSTEM_PMU has no default in Kconfig, existing configs
-> with CONFIG_ARM_CORESIGHT_PMU_ARCH_SYSTEM_PMU enabled will have
-> CONFIG_ARM_SYSTEM_PMU=n, leaving every Arm-implemented CoreSight PMU
-> (including non-0x9c3 devices where arm_syspmu_init_ops() is a no-op)
-> permanently stuck in -EPROBE_DEFER.
+Our subdirectories here are purely for file-level organisation rather
+than any particular build structure, and everything in the Makefiles
+is already conditional on the appropriate config options. Plus they're
+not exactly big and complex, so for simplicity let's just drop the
+top-level conditions.
 
-Sure, let me know what other Arm Ltd. PMU implementations those are, and 
-I'll get back to you with how much I care...
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/perf/Makefile | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Plus there's nothing here that's any different from the existing Ampere 
-and NVIDIA cases. Perhaps we could #ifdef the impl_match entries if 
-anyone really thought it mattered, but that would be a general matter 
-for the arm_cspmu framework itself, not this patch.
+diff --git a/drivers/perf/Makefile b/drivers/perf/Makefile
+index eb8a022dad9a..8c3146c604ce 100644
+--- a/drivers/perf/Makefile
++++ b/drivers/perf/Makefile
+@@ -1,4 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
++obj-y += amlogic/ arm_cspmu/ hisilicon/
+ obj-$(CONFIG_ARM_CCI_PMU) += arm-cci.o
+ obj-$(CONFIG_ARM_CCN) += arm-ccn.o
+ obj-$(CONFIG_ARM_CMN) += arm-cmn.o
+@@ -14,7 +15,6 @@ obj-$(CONFIG_ARM_SMMU_V3_PMU) += arm_smmuv3_pmu.o
+ obj-$(CONFIG_FSL_IMX8_DDR_PMU) += fsl_imx8_ddr_perf.o
+ obj-$(CONFIG_FSL_IMX9_DDR_PMU) += fsl_imx9_ddr_perf.o
+ obj-$(CONFIG_FUJITSU_UNCORE_PMU) += fujitsu_uncore_pmu.o
+-obj-$(CONFIG_HISI_PMU) += hisilicon/
+ obj-$(CONFIG_QCOM_L2_PMU)	+= qcom_l2_pmu.o
+ obj-$(CONFIG_QCOM_L3_PMU) += qcom_l3_pmu.o
+ obj-$(CONFIG_RISCV_PMU) += riscv_pmu.o
+@@ -32,8 +32,6 @@ obj-$(CONFIG_MARVELL_PEM_PMU) += marvell_pem_pmu.o
+ obj-$(CONFIG_APPLE_M1_CPU_PMU) += apple_m1_cpu_pmu.o
+ obj-$(CONFIG_ALIBABA_UNCORE_DRW_PMU) += alibaba_uncore_drw_pmu.o
+ obj-$(CONFIG_DWC_PCIE_PMU) += dwc_pcie_pmu.o
+-obj-$(CONFIG_ARM_CORESIGHT_PMU_ARCH_SYSTEM_PMU) += arm_cspmu/
+-obj-$(CONFIG_MESON_DDR_PMU) += amlogic/
+ obj-$(CONFIG_CXL_PMU) += cxl_pmu.o
+ obj-$(CONFIG_NVIDIA_TEGRA410_CMEM_LATENCY_PMU) += nvidia_t410_cmem_latency_pmu.o
+ obj-$(CONFIG_NVIDIA_TEGRA410_C2C_PMU) += nvidia_t410_c2c_pmu.o
+-- 
+2.54.0.dirty
 
-Thanks,
-Robin.
