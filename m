@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793943050;
-	b=teoxSnx9PV/ePJKI8lXMrEGVHHcKTOYm6yXDZcrjx7tEGQi2HJqalZSjRa29XiTodQj9
-	 99ZeblW9qGXEC8TgXF0UOgNSl/kZFhToOl2HKVD4Sa7UluEUm/ru4Aua0ivIIPzkTFsUV
-	 0uD/m5pOt2Jc5dZ0Qt/cxBOaDmsygxck1Duw3RnvhBR7Juf/S0g3ip7p2WYDf24cTHP/R
-	 mdavCMVYxDq+9UesKph7u48vWy2eoTL339AGcKBvhh65OGUGrlSVhUJ047BAIRVtxJKSm
-	 ViQtbtGi20klsAXLJP/T31BT3V0Hk14W98kEiPMXUL2DJZO/NfjKy0fW+M0iGLSqWfg==
+	t=1793943149;
+	b=aXfqFqWilEqP4LEcMaWytMSiV1GXv8utB+UGoESXld3Y4caXmA8BCtz1+Kauvfi5CynK
+	 HnGlb1m0X1RsnJgdcUoo9DJrQAryW9ANW/y7/G38Ip1gRBEjnfreXCc0kLis0jtbyOSrC
+	 GKALJNk98wVkoEDmNDfeUSP/n6MfMLVBhZc74p9mmdrpyAkPJ17uqwh4SAaZcpqMbM5Ex
+	 MR2WwcgFOQa6ljs/xECln+uQb5MFnDiaUzAfNb2NfFiWWKH72T+h4j456Wy3cVldZJn/y
+	 cWAZbNEAqpEMafX2csstHRk13u1lwUqD3+IFEhd9N3pOaHY+kn98Ua8ZByAcPTKZIUQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793943050;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793943149;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=dkDSxm+nCkXHOK7HlIBarAhIs+e5QxpUgtarDTUjVeY=;
-	b=UzCEhvCrKTGKgcds9SrWWz8LsmHSXNnKEC7DqXFrtth45jWULOEbbOGwEo4ge2byVuiS
-	 lHJgRU7kqVdmF/Muu/serWBZZRtWm11pyaL8zIRH7GdRFRRAOl0kpUYaY8DDtqi2XvUyd
-	 fFbo8+jNpluCKmAyHNx2OXIzL+0teKUIKvYwl/XiUiKQF3TPVFnoiocWamKpIYYFH8yMF
-	 Hog713divdAwcdWaesbyekFWh8bGjcTWumX+m5qHYHizouHIO1hWzNwDFkogtyWBpkOlj
-	 vERyA+neIozkqtQIxsPw7zqbbS0fKXzspWLZHWjTrQZYgOR5vKvXva/Byc2p26aTcNA==
+	bh=I1WDWMS/yU6MEecwgQvcWn4+XYzVTcOgyQeZ4rgeoQY=;
+	b=RbM04Uhhags0RsTFO4O/0NMlqoFago7yT4Kkvwn++cR40fx2jPgnf/7WaZ0Rv0fxbP53
+	 k/ULVLVRXvAHVu2WtOS9LdztepB/G0NEHCAxeIvC8yK8+iHjnbsHWNqKNspOTF0gp4505
+	 tM/q0+74PJjjSpEfol01B04oPPNCo+wKNfg7iPBcugZzfMc4Zy2V5yKIh8i96+mG6Bx9D
+	 AFcJ+vAZ+z6mkrDk5ThY+ZcEmM85qhXWD0ancDIEeCEYCdFZU7fAvcrkrAyCWNZnI81ZP
+	 rpQXSeLu8zThH0cTjRTGXdDCGrbEqS3AmOLqbeXnMgVGgVQ9jmpvuTZv1roiu7avt1w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LgxCKOM1;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bAprKkKR;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0197606A328
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 05:30:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FDC606A326
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 05:32:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LgxCKOM1
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5DCA1F008A1;
-	Fri,  6 Nov 2026 05:30:49 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bAprKkKR
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC2011F0089F;
+	Fri,  6 Nov 2026 05:32:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793943049;
-	bh=dkDSxm+nCkXHOK7HlIBarAhIs+e5QxpUgtarDTUjVeY=;
+	s=k20260515; t=1793943148;
+	bh=I1WDWMS/yU6MEecwgQvcWn4+XYzVTcOgyQeZ4rgeoQY=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=LgxCKOM15VnoPM35BkO45d9fZh4UpYZLn6dL+jStuaumX07IloTFucMHT/WIIyjRZ
-	 hJ/7dS6evzKREG7vZpFMmtCfnZlX82DlF1fv+z7/BPcg4wMWb3YQhbdql3rAOQVo/x
-	 OABsgSwtlPvoQgf76DWzPAXCrAl7g9n5l+awx4zqv1MIB/nlwTEmOoyCtXyvQcVgpJ
-	 52eRljeN2fyVx5dNF73PORujycC40oZMmRlEH4YLP8SbOP9+6kHwboB3v1hk7BVE2j
-	 VPH7dZ2sLnXgqSFoJVDQd3AVQ64nUkv8pogTEprT/VJs7aLHQZ54D9VRRjy+fOfUh3
-	 5pUKFf4+3cNBw==
-Message-ID: <sashiko-outbox-200821@kernel.org>
+	b=bAprKkKRXdoQhfK+o/IWffHCeF+cZdNmYEezb1D8Fk6ZXCiTOLL1bPpmTb5Kf4Q0R
+	 eMbYgztcL84H1HrVIoPZOK/UH4uaq48ZDtBIhj4l/3nNdcdXRfNw810WsynU2OXcc9
+	 JhYAjmYpuDZs0PjLkAUU0aAVgMPHd/zXXqQVe56gYkFcT2Em70s9lrZ9uXkXbBjOtS
+	 Ek6oJTQFsNmeS4UFxXCBnOwGz/jpopy9HHfoX/Ew/G7HSKGPZ1rm7fNyvzmpYn47uX
+	 p57E+Pv7/ZxzEMyOf8+vBZmwSnpDxTrTLK5aq7rFtlCmQVmxTa8m3s6KSXHsRTjXBH
+	 i9YxD4Oa6l1ng==
+Message-ID: <sashiko-outbox-200828@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf intel-pt: Free the old snapshot reference array
+Subject: Re: [PATCH] perf intel-bts: Free the old snapshot reference array
  after growing it
 Reply-To: sashiko-reviews@lists.linux.dev
 To: lirongqing <lirongqing@baidu.com>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20261104021951.1779-1-lirongqing@baidu.com>
-References: <20261104021951.1779-1-lirongqing@baidu.com>
+In-Reply-To: <20261104022042.1894-1-lirongqing@baidu.com>
+References: <20261104022042.1894-1-lirongqing@baidu.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Nov 2026 05:30:49 +0000
+Date: Fri, 06 Nov 2026 05:32:28 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,19 +61,19 @@ Precedence: list
 
 > From: Li RongQing <lirongqing@baidu.com>
 >=20
-> Growing snapshot_refs allocates a new array and copies the old entries,
-> then overwrites the only pointer to the old array. Snapshot recording
-> with more than sixteen AUX mappings leaks that allocation on expansion.
+> The snapshot reference array grows when a mapping index exceeds its
+> capacity. Its old entries are copied into a new allocation, but the old
+> array is abandoned when snapshot_refs is replaced.
 >=20
-> Free the old array after copying its entries. The reference buffers are
-> still owned by the entries copied into the replacement array.
+> Release the old array after copying it so expanding past sixteen
+> mappings does not leak it.
 >=20
-> Fixes: 90e457f7be08 ("perf tools: Add Intel PT support")
+> Fixes: d0170af7004d ("perf tools: Add Intel BTS support")
 > Signed-off-by: Li RongQing <lirongqing@baidu.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104021951.1779=
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261104022042.1894=
 -1-lirongqing@baidu.com?part=3D1
 
