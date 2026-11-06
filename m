@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793949252;
-	b=ZGZpk5neSM7ShXLacQfHX0UZHwauGz+Fg4eqn4LicWrnnmAa5XlSTnKuc5fTCUwWIhkJ
-	 i5pRJuY9xKtkbfJFhgTiwNgH67rNit70QSjLxQc/kC8nFMuEBGxVM3Z55H9EYNe49XVVp
-	 PlpTBKk5BWG0Ff3U/IOMLyQyoVVmmVAiNI73DFvs+uAWn1WiHfbPiideqhojeqvoAQKxx
-	 Hzju88o2l1oQiwLDRwDo10iHH2ASGfoC5cis/Qe7B+3zvfQ1lefam5J+2Z2G3PX57EumN
-	 p0uljgUFTlxKLz5QXF69Z6NsUPxwtrYqmkLKMuDn9gpO2j1tyOphRa3zgzFad+wFViw==
+	t=1793949308;
+	b=oCPnIv6lIovYcRxOEGpKMLIaumo69kuoKvI6Kb2jHGDJqrXTPBsTWXZt9wyHxkjJY6mt
+	 85Ehw88v9qmY1yrxEAd/dByQq/AJoytAttfBCF0PeDmJPHHDenvyJxAG4VtcuCvDGwOfB
+	 xlm9OduTqAXYCjYyNPA8XLkQ3mZR8tttXf/qb5bU0vs5zexEiSCFkLBskg7pQpQyiZCY+
+	 HqlMfMn1qKYQf0pUCVQ+cNLefi59M5CYTt2P7pjoBr+c83NL/IK1BT/SHgFOGLCsnWzzT
+	 9E1HqFNGXBLWLliODfBIdhD9Zb5lUTM0wbUNCvGPEGMu+yfDc+++8Jw3ydEXGCHH0Ng==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793949252;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793949308;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=/2hR+n2ox29eTjaNushIzcndb3OZ5mA6uGtWvlntACE=;
-	b=b0UpQIQjCRavWQJ+heJDrllR7H8YfPwc8MGCnIanusVvbPRDFbWUBWSej/fwiJ+7L+oq
-	 9zjDW5Z0qehYCpfAnFzawOzJ7JF3xdtc48LRN2koVAIzFWQ/5/ziAWX4ddUd0YlAg3RQU
-	 O23GqQeZtqVrEHuygoWFik6P6q6NcLLWjwha8QfAPfZjex8+Amvf9G2eDMNJh78lVtqRw
-	 3fyqybxo63U/jJObITM4EELCZK2p1sEQJ84pIXsBN0lIFunH3a2dAHrJKXBgblZ2zJzrr
-	 zaIgc34winlZMV1djvvWVjEAsl/LvIH2hmc+3XA11rNOR1dpLPhIwCGURHraHNG4GtQ==
+	bh=z0IejGJrkRhOOfVbbW65UQnqOh6d5kEY7KIQkpAhTRs=;
+	b=TJyqRQD/eOBVfwiQ6C0lnuGcII2GKHPMn23qvQJHxRS8jLdiiVtX7HQBVLJDBKBkY56u
+	 CVNfpwa4dbxXWg0/RB7CBsxNHvs9NO2Ge+QQlyEW2xUah1568TOI/JXtlUkhC7udt6gca
+	 H/7sPNUkMfLsmsgwNZqS9JmvmC2TcmwAKVl+3P66IUGpjwfse4Lt/930NOHcWes7c6qbR
+	 iFiviGS1sdUcfP3g8zPWI5Z22oyBhsJvKoqTKYp4ji5rK5GZaP9OzuWCwTpyufkpB4RP1
+	 plV1vd4Ry4YP5Tw3Qgvq/hK+M+3Tja/aqP5MD1YRC7FmKnZxhForIjOnDxS4sPHRNqw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kht5noUI;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HKr6awjT;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD86606A326
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 07:14:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF37E606A33D
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 07:15:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kht5noUI
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6933F1F008A1;
-	Fri,  6 Nov 2026 07:14:11 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HKr6awjT
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 649881F008A1;
+	Fri,  6 Nov 2026 07:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793949251;
-	bh=/2hR+n2ox29eTjaNushIzcndb3OZ5mA6uGtWvlntACE=;
+	s=k20260515; t=1793949307;
+	bh=z0IejGJrkRhOOfVbbW65UQnqOh6d5kEY7KIQkpAhTRs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kht5noUILY+I/mMIzutfKn2xqUBfGeUXK3ccbntQp8HN83QatxKc958G5PTU3JdjQ
-	 Yl3OhW04J/GtiWhXaQWGC9KHhpttAmEWDtKohO0DTJYLsHSPM9TB4ucOF3LBVlQb/j
-	 xPiv8yXbs37OyELAV1LRHYq8XaIM6BlqDiIZCNpxI7FE/PB3oqHlgpX5O/F3Iy+FlD
-	 fj3S3AyQd3wFUwStg/fjDl9HUGWVRxQhZucUhVWlVmsS8FFwq9M+wZq/ykesVk8Ekc
-	 yGvCe8//gkRtKDnFiTSY+w+m2KRKEhIoYIrXF4l6sDlLcauDf5NB321vBY0tgkfLQP
-	 KJZnc4HqxIyQQ==
-Message-ID: <sashiko-outbox-200979@kernel.org>
+	b=HKr6awjTY3t6Ja3RMx0IJtl9vRGV3udcmDKBNt3wvb4gSQRGdJOfihpbkqLhfVNgA
+	 bPkZMOXc+svjxD4c+HZ54GK9r3e5ujXhaHVRw7gAbnwA3WR2MxPTy9TillBibj017K
+	 Mgp6DmunzT/P/Fkv9xEOkPsQuHQ41QQAIi6W1jfh10jysNcT/8IWAe9RyIMQl0y9AW
+	 JCzZp8XXqg/C7pxfV70QQBRfSiZ5Gh/1h8BPuTDaw3JR5N9kydL2q0QXNoNI+I3F5+
+	 zjmz78R8Gol6hkarMIfwVcKPs5URTXap9YXYXXJ4c6znXxv865hHseGiVGF5anKZw9
+	 waV/gS8hM4BbQ==
+Message-ID: <sashiko-outbox-200980@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 04/20] perf mutex: Use kernel style
- compiler-context-analysis.h annotations
+Subject: Re: [PATCH v10 17/20] perf config, intel-tpebs, env: Add
+ __guarded_by and __must_hold annotations
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261106070344.329897-5-irogers@google.com>
+In-Reply-To: <20261106070344.329897-18-irogers@google.com>
 References: <20261106070344.329897-1-irogers@google.com>
- <20261106070344.329897-5-irogers@google.com>
+ <20261106070344.329897-18-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Nov 2026 07:14:11 +0000
+Date: Fri, 06 Nov 2026 07:15:06 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,14 +61,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Enable -DWARN_CONTEXT_ANALYSIS alongside -Wthread-safety for Clang
-> builds in tools/perf/Makefile.config, replace the custom lock safety
-> macros in tools/perf with the kernel's compiler-context-analysis.h
-> annotations (context_lock_struct, __guarded_by, __acquires,
-> __acquires_shared, __releases, __releases_shared, __cond_acquires,
-> __must_hold, __must_hold_shared, __must_not_hold, __returns_ctx_lock,
-> __no_context_analysis, and __context_unsafe), and remove the redundant
-> macro definitions from tools/perf/util/mutex.h.
+> Add __guarded_by() and __must_hold() annotations to static parser and
+> config state in util/config.c, TPEBS state in util/intel-tpebs.c, and
+> bpf_progs and cgroups trees in struct perf_env.
 >=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
@@ -76,5 +71,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261106070344.3298=
-97-1-irogers@google.com?part=3D4
+97-1-irogers@google.com?part=3D17
 
