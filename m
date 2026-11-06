@@ -1,54 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1793941989;
-	b=C+DWiBVufXsN+P948ZPtx9Xv3GxkcyE1g0EMj6rq2qhBE1syCbJD9Jag38s2C3qS/ZHz
-	 gRcXnV3HQ2kLZ+eg5+53wsHaTMgq7S5+hiyH4l6fzLLH0EVimPNGP7TqMgUz1IEoJ7khW
-	 TMHXsxHL+fyjD0TEBtTk0WV/m1nZKSkMOvhO06YqLbq5edoG/e+PqCtXYp3U2BpjeVgr0
-	 dqMCdeKflJ3uuS7XASLx4ium/A0WvvLcZmxEfCesYskQtVs6OPsw+kG6o1IaD8GSzhocX
-	 c91OoF7pXd0TnlTJ/JG80gjJsT/YT0Ytjqvyypkp7WOMCjHWlWzndYmnmCnAHCsONUw==
+	b=p/Rsk3h2+n9CgB9ZBJN3x+FaDByH8USYqUgwUT7C2jvq2wLyjkcHnEwEra/UuwcxDp9a
+	 gFHWN0CYxHPD3hnqiWAXYA1D7pdAhIIrOByRDRDjdalvPan+p8jvwUkO3Ipwc/UKMBc7k
+	 9CfJv6XfsE7tToMNTp1AnkLPx4J1UFemKLq2+oPYXuGFwrH9Rs0czIMPRDo96DIcoJj00
+	 Cu+HWxfCq8qFl1ImtTFIg01fmkZrTQK/9Rg+1IktdKq3ndf/FKPgeSBtXImn2YUFsRTOr
+	 HYO6Lvu/2LUuhMrgZntb7eFBceq3qtacVI9LGMG0PFr60G10z+sf8AP2u7+6Lkl5WTw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1793941989;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=0TPB53YkmS0jjXHwGWd+CbOxoBLKbt/lKIM4hyuPTbA=;
-	b=q6CGdgXTwoQt7i/QTswOhj6J0/jtOaipRGTiBHs/N9Lr9WC8gmmYTAOtk7HNmoeRUZPa
-	 LFys4CN7uAz5tQ5ELGKeul+4BBP7HLc5DMwztQAU8cpUYHbvMSentxVO0eKLue9qQ5JB2
-	 M/ammJxOlvNpqe2K3bnFl9pGBHnMIpIA3NlxGKNIuqgJN9znWN2HMdKXBSGIWxsp2A6eX
-	 OTaKhm28rrVK4846RfgpsJUp9rJFvURqtbfmKHM0AqVpm+LksICWt6sokROmtERTK6tbt
-	 YKywpcLIHZRj8LkP9qCPwF2c7v5FSMfokJX8XTdQY6hMWgJHfl9zcn77cpyyl4mSC8w==
+	bh=80f9Z6larh29cFZKrHb5jNIpBmK0kVVoSTJqe/49Nyk=;
+	b=Bhr8/ACkzocn+JxQORldZbMsczjuS+pwTLIgJktpv3Ec6S1wKE614fkXTqeWwKEzRgGH
+	 aOdgqY2M1Dx7mh87pcrOmrJEbWef35v5ouXZvs2NUyQf/GSt0ARNCZgTv1skFXVPv3a1z
+	 rAs37hMFSxFw/SPbsW32w2TEVNz6oOH1Pl+TyzrG9fdcuZu8YWIJir1GiD2ogXplQD4kd
+	 7dyUjTbcIE19FRVkxFQNr5JWxNTB9t8nntj3yZkm1eHyP6YxHlNHTwVZyo73xsO7GweRK
+	 2BflhlOocrzBNx7ODfTQHfk9YUi3W2YON9CMT1PU6r5S6hbcYljnULyJEUSCOdpiV0A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ftMsUZjs;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lZsq1ilI;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33540606A31B
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 05:13:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811C6606A326
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 05:13:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ftMsUZjs
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E7091F0089F;
-	Fri,  6 Nov 2026 05:13:08 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lZsq1ilI
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42DFE1F008A1;
+	Fri,  6 Nov 2026 05:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793941988;
-	bh=0TPB53YkmS0jjXHwGWd+CbOxoBLKbt/lKIM4hyuPTbA=;
+	s=k20260515; t=1793941989;
+	bh=80f9Z6larh29cFZKrHb5jNIpBmK0kVVoSTJqe/49Nyk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ftMsUZjs90F7X7TdmV+Mo8XsLyKb+OBPECGC/A6mPgjV9oraTvwyyzHbqV7ni2GCA
-	 q8csNHyeKjzxFuPrWoPVbRPUGxGp/LrVo0+f26YAbks3SQ2InYrP5SMLqpywGy7xTi
-	 C1Gm+nbcNdkF8o6wXIzAjg++KCbOQYASk63Ju/CPs1u9YneQ4vKzWw8LXr/uOg91e2
-	 Rnvfnb72jz7bi0U2vgl2POA8TcPRb6Z1P1RfrG39RXHkUgUx06WaUEbJEEX5SySdqf
-	 ZPB2wRRRio/KsTG3BXt8eu6nSEIQf2+mtvWGlv8hucThI+/hl9C8e51aZYAHsbPRwd
-	 I+/SDaHptlt/g==
-Message-ID: <sashiko-outbox-200803@kernel.org>
+	b=lZsq1ilI1X+jA4Ha47DMznEs0zNZ78ElhLoQAu1waxBupVkJAM8plveUIHSCS4WWz
+	 ZQexA7GR2QGbo2x8a8nIkiWalTMSRNZX+k2FRlbp3ceKD2NYiqsE7RqW7j1Lp4kbLP
+	 05OE4AHbunI0O1Ol2T2JFRPX/OK6GfHh4hzxvOwlldqRcK3zFbRp6mTlMO+aAz2FEv
+	 kq35vnoAb4Qujd67aMjoT0F8dqgVgm3qHXVhUmiJxQH6wcG8t6kdvSHQpeLK2utChV
+	 e0HZ96LudWs6FkP1rYPXeNO7j4j5KVyBwVeaOsbymzNVLL6xwXrPoBzzU9PKkqp8Rp
+	 R4VA0/OM9sR7g==
+Message-ID: <sashiko-outbox-200804@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [Patch v6 13/20] perf/x86/intel: Always snapshot live hardware
- LBR state for BPF
+Subject: Re: [PATCH v7 11/14] alpha/perf: report the data source of
+ ProfileMe memory accesses
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
+To: "Matt Turner" <mattst88@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261106043257.842864-14-dapeng1.mi@linux.intel.com>
-References: <20261106043257.842864-1-dapeng1.mi@linux.intel.com>
- <20261106043257.842864-14-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20261105-alpha-profileme-v7-11-c474e892abb0@gmail.com>
+References: <20261105-alpha-profileme-v7-0-c474e892abb0@gmail.com>
+ <20261105-alpha-profileme-v7-11-c474e892abb0@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Date: Fri, 06 Nov 2026 05:13:08 +0000
@@ -61,20 +61,35 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> __intel_pmu_snapshot_branch_stack() is intended to capture the current
-> live hardware LBR state for the BPF path. However, that snapshot is
-> currently skipped when all LBR users are PEBS events.
+> Whether a ProfileMe sample's memory access missed the DTB is only in the
+> PERF_SAMPLE_RAW data, as a DTB miss trap.
 >=20
-> BPF LBR snapshotting now uses its own dedicated LBR stack, so there is
-> no longer a risk of clobbering the shared default LBR stack. As a
-> result, always snapshot the live hardware LBR state for the BPF path.
+> Set PERF_SAMPLE_DATA_SRC for the samples of memory instructions, so that
+> the memory sort keys see them. One that trapped on a DTB miss gets an L1
+> miss in mem_dtlb. PALcode fills the DTB, so one that retired without
+> that trap hit it, and gets an L1 hit. mem_op comes from the opcode, as
+> I_STAT does not say whether the access was a load or a store. A load
+> into $31 or $f31 is a prefetch, except for ldq_u, a UNOP that is left
+> out. Samples that fall back to the interrupted PC get none.
 >=20
-> Fixes: c22ac2a3d4bd ("perf: Enable branch record for software events")
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> On an EV7, a loop that loads one word from each page of 64 MB in random
+> order had as many DTB hit samples on the load as misses: the miss trap
+> aborts the load, and its refetch hits. A prefetch into $31 takes the
+> same trap, and its samples are reported as PFETCH misses and hits.
+>=20
+> I_STAT[TRP] is ignored for an instruction killed before it was mapped. On
+> an EV7, TRP and MIS were seen set for killed instructions that are not
+> even branches.
+>=20
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Assisted-by: Claude:claude-opus-5-5
+> Reviewed-by: Magnus Lindholm <linmag7@gmail.com>
+> Tested-by: Magnus Lindholm <linmag7@gmail.com>
+> Signed-off-by: Matt Turner <mattst88@gmail.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261106043257.8428=
-64-1-dapeng1.mi@linux.intel.com?part=3D13
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105-alpha-prof=
+ileme-v7-0-c474e892abb0@gmail.com?part=3D11
 
