@@ -1,93 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.176
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793960026;
-	b=BkR6aj5ZeCtWMDu6vul64vOLd0tBl/2ZgO8tCEh+bL9lf/llv8ECdpMt9k1qL+Egjnkn
-	 snXrQ27AVHQ5Ee8HpNLmovJ1p+Z+X9AcTvwDGWGhBPKcy2T43tlX+XxlVggAB65lte1QC
-	 +zcuvUfkXAx4aQ4kbCyIcz1AcH1UckWxAyWGg/Z9iISeCbMe09anvcPYwSI6oZyifiLo8
-	 eaQBhX5b//Q1n4ztnEgIl7TKzVlltqB8brUKU5yGTxAAT6gxDtMrcLOz8p0ZpJrI7p85e
-	 zEgnfeCOT7WY/kYgOi8yzP2IWAhtq46TKLx4/HXwNb3iSGF0lPzUgQuu1riRcNIJIJQ==
+	t=1793960146;
+	b=Ai/F0Su/RJO5LiUFS+VLSxacPdW7vYGI7ljhKFIPFs0JF63CE03IMqs81wp+7WgQ/mjr
+	 4/VCXYy30eysK6wgoDR/SGJXYTNkSsOIbahG2bQvyrgwpRXVEuH0UuAW1Oc1sHsxashfr
+	 7cqL+gk4I0VWI7llK0R2OZtq6dq0B1+OGdoxLp3xmcma0D8LB/3K/us+Vl9CPpEI2udSu
+	 KoOE6Lg3oelXcpml/B2RmdJN0ydHtNQMzOekQuzPbI6zPS6naiegO+2pB/hsheyVlWVqG
+	 6pnFGANsFAYmpG2Z1X93SKJAlmrmpERxJujJLMCf6c8X5WGXeFjMeoyvJryEmLO0hnw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793960026;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To;
-	bh=cFVMR87EGNpkNOCnSwEX2b70j/gGYf8Jkc9yEvS8W5Y=;
-	b=2lOMFaOb8G+xAUauT1HWRGCCaoECIzcqs3NKGAQc4lNAgLpV++2wRVE2xD0b520lfDYZ
-	 OQCkNkf2NadnHPvizY7Cn6tHOYZkjcsFWvT3QOCIxJvPZ5x4f6OX1ZmLdoFJRwh0qlt7H
-	 HcPg/CnvYCpqM6Ncf+9qAk8enXpD17LvtQwT0/if+24P5MX+dKSQ+SyQYEVIYjwYdHsuk
-	 1/XkK9fZ3uYV/HYjEdSmqBbjxITJ8+dUxCXEafElhRdu+nyF6Hi4RmTYKPW3H2aejhY9n
-	 eH4ZeMP6iDYDgU6Wi0BVMuitDxGh8MFRVcwH0GFcTY1+h+s7HMqXBeH9G4oBYk0EPSg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793960146;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=yY4sdtE3dBVPlQLRrDOshaKq5NhLj8R0ice8LmyGNbE=;
+	b=yzpdWXyH1W2mqkd7swbsMqBLGWkNIl5udUkbdA1doss43aG/TalKgHLDYU5lqF/qLQ0F
+	 xDDx47Up/hrkCIfczcWb+9hRTDbvyptuZX7d+3WclO0zA8NT0Q8YYqANjvko2Rqy4vfT8
+	 Objjx7WYmjVq8vf0NJx0PIPY6toK89ZZ0E3Sp+xNmzrtbwGFZw9j3ZDcQ/DiXkgBrfc0w
+	 w0TQNbmNKQiGKkHR5VTD9hE6kL+S/4xPD2shyWka3/i019uvresT9n1YLWI8weOdMeJwJ
+	 /yAdm85JxNzDDqWPxaaGFTIgW4S08lzGDLgXhg+XAPBVyaQxf2LFzFqV0FYpfVgeiAA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YwYtVdd3;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Wg3LH9M6;
+	arc=none smtp.remote-ip=74.125.82.176
+Received: from mail-dy1-f176.google.com (mail-dy1-f176.google.com [74.125.82.176])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A68606A335;
-	Fri,  6 Nov 2026 10:13:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C726B606A33E
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 10:15:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C726B606A33E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YwYtVdd3
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEE401F008A6;
-	Fri,  6 Nov 2026 10:13:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793960025;
-	bh=cFVMR87EGNpkNOCnSwEX2b70j/gGYf8Jkc9yEvS8W5Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=YwYtVdd3f+9r0rGtBh8d1tRPhVBL4qmvxhKCMZkV8lomBwDWV76lkDV2ZPvzrsUcy
-	 trEyAB1TCppduadMVhftHMFVxgeYolc/EMPmtth1hXWiwFgz1kQ0EKU4byddd4Ylof
-	 Kw8NW48Kkjzx+SlpAufJOnfBvexabI3n6q9ar/Hme/DA7MCCquYR1YVU8yI3FmAIG8
-	 1O4CYPlx4m2ZTD5HMwTNZOFUugRf4D3Ab0jOV8qahLlzSisYMSFxFIYqDA/1U31men
-	 TNFTuhw5aLNcrLSy3wXMfK9DUwkHBXM2MWRhS62JTGof+13zFAAyi0DL6QeEKCjKfL
-	 pWOWcHUvqbeJQ==
-Date: Fri, 6 Nov 2026 10:13:27 +0000
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Paul Moore <paul@paul-moore.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Rik van Riel <riel@surriel.com>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>, 
-	Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Barry Song <baohua@kernel.org>, Usama Arif <usama.arif@linux.dev>, 
-	Kiryl Shutsemau <kas@kernel.org>, Xu Xin <xu.xin@linux.dev>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
-	Shrikanth Hegde <sshegde@linux.ibm.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Leon Romanovsky <leon@kernel.org>, SJ Park <sj@kernel.org>, 
-	Rakie Kim <rakie.kim@sk.com>, David Rientjes <rientjes@google.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	John Johansen <john.johansen@canonical.com>, Georgia Garcia <georgia.garcia@canonical.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu <roberto.sassu@huawei.com>, 
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Eric Snowberg <eric.snowberg@oracle.com>, 
-	Fan Wu <wufan@kernel.org>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	Ondrej =?utf-8?B?TW9zbsOhxI1law==?= <omosnacek@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
-	damon@lists.linux.dev, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, selinux@vger.kernel.org
-Subject: Re: [PATCH 13/13] security: convert VMA flag tests to use vma_flags_t
-Message-ID: <au2ny_goOYa9TJ4u@gremlin>
-References: <20261105-late-2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org>
- <20261105-late-2026-vma-flags-v1-13-0d3cd15ab75f@kernel.org>
- <CAHC9VhSR=9YNhBxeFBcTR8wgG2yDP1fW590QKjzuc4Kq9ohaiQ@mail.gmail.com>
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Wg3LH9M6
+Received: by mail-dy1-f176.google.com with SMTP id 5a478bee46e88-353804b591eso876505eec.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Nov 2026 02:15:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793960145; x=1794564945; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=yY4sdtE3dBVPlQLRrDOshaKq5NhLj8R0ice8LmyGNbE=;
+        b=Wg3LH9M6tfBjq5I4/bIE1uXcaFA1fgWulMuDqKjZwcTyHdAE33i9Yl89ZkiXo+ioBY
+         7kZBGgCeIEe8feUN7hAh4MZFZXt93GYyYJ8fWqOgpZ6jl07Lon9ANCC7G7ZasRUWBKtO
+         t8g2p4TgW0znUxdTTLh+WFJnurSIJZ24yAoRtiqGG+l6qISDPIwLa0l72m5yuhTGPOKS
+         FUT9uSnozdN9TJMlh1NMUoEv2Empyc1nW7WLvnhwCpgxRPQucCxYEJ4d2xZCGOoZdeDy
+         OoHvbTxegXOxu0SXvk+cxei2jAM2TconBLaWDTXZj4QxSltnpkRIfwqCAWJRDXB0J8wC
+         sHaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793960145; x=1794564945;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=yY4sdtE3dBVPlQLRrDOshaKq5NhLj8R0ice8LmyGNbE=;
+        b=BXM5XmdMNRBaJuQtHrQrUWkSLdP37Tec7HNLflipdkgVLoXD/5RMfDFkXyTVwr2KbZ
+         1VWY/UY1TEmKcqQiMjuEQI6CagC8KLCd2vEMr4RjdRVcqPmUDsJ+qvnlNIawJMBxvbv5
+         jhMOd05/cTw0aEaVqBSoGE8GThPQkhAAtbxmRot9reM1I6y3dUbpzuPSfo8TQjYubA7M
+         EPwj3RnsCgY+/bv1oVuMLikpS0dc4k0De/7xKzd3BZlyYzkvKWwVdtdLy59h2cZz6fMK
+         fU+1N3jKx8cYhqnWivXD63vLJj+f9Rl8p/BVmf8eEPZhfx2vylpoiRT9YdgY7l6m/QwF
+         ZM6A==
+X-Forwarded-Encrypted: i=1; AKwUvBx+4URG2a2rAUGy6Lm+cxm0xaQSrGu7JMGBKuv6Y1NcmUxpt1M6sDqbWCyVWFhB6EkacyL/vIxSIjWolmbJpXeR@vger.kernel.org
+X-Gm-Message-State: APuU4Z+uT6M94+Z328wUrfSVsnw8a08//R4Sqp4MaJBsWIiCbcgWR17F
+	hvfW5U1OcxlRD4MKVEC2HoVm17QaPCa3zrK4yQEgxqbxKvJxibDW+9Df
+X-Gm-Gg: AYBFou2Et++PyE51XRC9pKy4ruIlnMAm05Gh/2zPKHH+55fB5UmLfxmvvCvwoNnmN3X
+	8YbTzqX9PuLka7vubt2EEJNCO6bdMLtJnbshq6hpEgURAhYPZaSdkj+2I38NAz/3fyFeIpyW5J2
+	n8RFrJ6ta6DC/Zo3ZOKV4sqd/qcifUZa30uS3QZFeh5gfnDV0Y1t61Ujcih5A0N6TLQSTB/sWgv
+	d0YU2SzgJ39VyKmw65kHonm8+VOB1diQTIMKnVm8+Z0vwxd/mmTxUTjPQ54eaHVFKpVR234EpkF
+	XRZydp/8jH8fP/KRYgwXsUpGAPBmuh8CigSTSGX5ircDrcxERCLmg5eoO6LB6MbZqM2sUry8kd1
+	Mpw6QAbOsmWVDScTBRL6mXyq3r8VZvh/0zyRkSN6QDzhTO+rSysq6K8lusq6oeHczw3zjS61apt
+	t4keHEVBqOsNXFBTuqvgAHeOReZq9OEfEBE7xsd5RbGk932waIpqjXA9zNz6dB/A+45XJ15A1za
+	kIQfUWI0ulGTxVawDsdgFSNK2Tbo6GUiyp9H6Nrw8Y6AS+9tU0KUT5XxgtZWOixylFm5NVjZoj6
+	ai2NRVJGlWRUPc3ZlksfBMPaH0/Ts0sRWLeEct+xEaFDUI0hMg==
+X-Received: by 2002:a05:7301:4709:b0:369:d8e1:7bb6 with SMTP id 5a478bee46e88-36f75a25e2emr2791294eec.25.1793960144628;
+        Fri, 06 Nov 2026 02:15:44 -0800 (PST)
+Received: from localhost (vps-56c092c9.vps.ovh.ca. [15.235.184.193])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-36fa9fd0000sm4681361eec.21.2026.11.06.02.15.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Nov 2026 02:15:44 -0800 (PST)
+From: Phat Dinh <phatdt1116@gmail.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: security@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf/core: Do not resurrect cpuctx->cgrp after last cgroup event exit
+Date: Fri,  6 Nov 2026 17:16:42 +0700
+Message-ID: <20261106101642.494674-1-phatdt1116@gmail.com>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -97,41 +98,104 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHC9VhSR=9YNhBxeFBcTR8wgG2yDP1fW590QKjzuc4Kq9ohaiQ@mail.gmail.com>
 
-On Thu, Nov 05, 2026 at 06:17:47PM -0500, Paul Moore wrote:
-> On Thu, Nov 5, 2026 at 4:35 PM Lorenzo Stoakes (ARM) <ljs@kernel.org> wrote:
-> >
-> > Replace use of the legacy vm_flags_t flags with vma_flags_t values in the
-> > mmap and mprotect LSM hooks of SELinux, AppArmor, IMA and IPE.
-> >
-> > No functional change intended.
-> >
-> > Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> > ---
-> >  security/apparmor/lsm.c           |  2 +-
-> >  security/integrity/ima/ima_main.c |  2 +-
-> >  security/ipe/hooks.c              |  2 +-
-> >  security/selinux/hooks.c          | 14 +++++++-------
-> >  4 files changed, 10 insertions(+), 10 deletions(-)
->
-> Similar to the other patchset you just posted, is there any reason why
-> individual subsystem maintainers can't pick these patches up, or is
-> there some reason I'm missing and they need to go through a single
-> tree?
->
-> If they can go through multiple trees, can you split this patch up?
-> AppArmor, Integrity/IMA, IPE, and SELinux are all maintained by
-> different groups/people.
+perf_cgroup_switch() relies on:
 
-Sure, they're all independent so you can take the security bits through your
-tree, I guess fairly easy for Andrew/David to figure out which went where?
+    /*
+     * cpuctx->cgrp is set when the first cgroup event enabled,
+     * and is cleared when the last cgroup event disabled.
+     */
 
-Intentionally made these easy ones given how busy the cycle is, just keeping the
-conversion rolling forward :)
+It computes the next task's cgroup, schedules out the CPU context and
+then assigns cpuctx->cgrp unconditionally:
 
---
-Cheers, Lorenzo
+    ctx_sched_out(&cpuctx->ctx, NULL, EVENT_ALL|EVENT_CGROUP);
+    /*
+     * must not be done before ctxswout due
+     * to update_cgrp_time_from_cpuctx() in
+     * ctx_sched_out()
+     */
+    cpuctx->cgrp = cgrp;
+
+However, ctx_sched_out() can disable events itself. If a cgroup event
+has a pending disable from perf_event_disable_inatomic() (e.g. its
+PERF_EVENT_IOC_REFRESH limit ran out) that the irq_work has not
+handled yet, event_sched_out() consumes it inline:
+
+    if (event->pending_disable) {
+        event->pending_disable = 0;
+        perf_cgroup_event_disable(event, ctx);
+        state = PERF_EVENT_STATE_OFF;
+    }
+
+If that was the last cgroup event, perf_cgroup_event_disable() clears
+cpuctx->cgrp:
+
+    if (--ctx->nr_cgroups)
+        return;
+
+    cpuctx->cgrp = NULL;
+
+and perf_cgroup_switch() then sets it again. cpuctx->cgrp is left
+non-NULL with ctx.nr_cgroups == 0, so the NULL check in
+perf_cgroup_switch() no longer catches it and the next switch trips:
+
+    WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
+
+cpuctx->cgrp does not hold a reference on the cgroup. Once that cgroup
+is removed, the next ctx_sched_in() dereferences the stale pointer:
+
+  BUG: KASAN: slab-use-after-free in ctx_sched_in+0xb1f/0xfa0
+  Read of size 8 at addr ffff8881008972d0 by task swapper/3/0
+
+  Tainted: [W]=WARN
+  Call Trace:
+   <IRQ>
+   ctx_sched_in+0xb1f/0xfa0
+   perf_event_sched_in+0x1a/0x70
+   ctx_resched+0x32b/0xac0
+   __perf_install_in_context+0x475/0xab0
+   remote_function+0x105/0x200
+   __flush_smp_call_function_queue+0x179/0x8d0
+   __sysvec_call_function_single+0x1b/0x1c0
+   sysvec_call_function_single+0x66/0x80
+   </IRQ>
+   <TASK>
+   asm_sysvec_call_function_single+0x1a/0x20
+
+Only assign cpuctx->cgrp when cgroup events remain after the context
+has been scheduled out, so that it stays NULL as the invariant
+requires.
+
+Fixes: e19cd0b6fa59 ("perf/core: Always set cpuctx cgrp when enable cgroup event")
+Cc: stable@vger.kernel.org
+Signed-off-by: Phat Dinh <phatdt1116@gmail.com>
+---
+ kernel/events/core.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index f36a3bbaa33c..54b87584c752 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1072,8 +1072,13 @@ static void perf_cgroup_switch(struct task_struct *task)
+ 	 * must not be done before ctxswout due
+ 	 * to update_cgrp_time_from_cpuctx() in
+ 	 * ctx_sched_out()
++	 *
++	 * ctx_sched_out() can consume a pending disable and drop the last cgroup
++	 * event, which clear the cpuctx->cgrp. Cgroup tracking follow active cgroup
++	 * event, so do not resurrect it
+ 	 */
+-	cpuctx->cgrp = cgrp;
++	if (cpuctx->ctx.nr_cgroups)
++		cpuctx->cgrp = cgrp;
+ 	/*
+ 	 * set cgrp before ctxsw in to allow
+ 	 * perf_cgroup_set_timestamp() in ctx_sched_in()
+
+base-commit: d095321349222961813333277881b3c74f10b17b
+-- 
+2.56.0
+
