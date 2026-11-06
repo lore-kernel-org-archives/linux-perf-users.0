@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793949184;
-	b=mEt1AJuAtAjjU59OYBDXv5jnIyfNPid+7JjwA2wKm8v2RPa0eezmV4KTVVMAWQdde4uW
-	 X2tZ98vWuWj2KY5O1bDOJQPtVOCmAgKqTC4GnazBW/J7nyWcDCdDGeq/sOsLM45eK/Zkq
-	 fV7O3tAY9YAj/7D/CDxoCtn210bKC7El6suLyqjyqS7XwkCzKW89xZwOEynHRyEDla9SW
-	 4baeiCC0Pa8JdLhPWQ77noK6Ag5f6SJr+3thk0RnFIzlMNdM1oiPTpu2EQB5Kwy7/AajO
-	 yfO7gXMLz/OG4E2EeUC0qR7+Bnyaul/xePeGp786bV76MGOcLGAgPGBk8hh8vH7yaWQ==
+	t=1793949231;
+	b=nlg6hOX6ycfPaihiyrPMRJhxwrL/iHzoZmmiqyBN1xvNrcXxFGVJ+cVKzuG0ZsB9iLKV
+	 gvCNcYKRviLkJ5UgMhZRLbR2HL42bn0H/OwzpNvZGuzl3MRS125+P5lYycULpKJYp7PtX
+	 eTjbT7w7WQH2vdt+BAuPc1N+wHiXdD1nhzmhKXvRiYLEvAFZFCpdkrDKcDDBH0zUrVhCZ
+	 SppjSjMQ9YhPPgz1Ghye23kNrRRQrxgTUf/bBPPsE/LVDShgioH86QNoeS2PYl7IFB5nO
+	 fdslw6rFNTHQK2G+EYbeBPwYMD0NTZORkbApKeraKslPhOP23IXaFZ10Ssm8Z2ApHqA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793949184;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793949231;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=bbPFvvXbfuwpePSH507awjCd3d3xjVAiRzMxn0V8Vro=;
-	b=I8U9E6O9aio7d8X86DyBR5gwUdDLRbsQDPs77wpQ7br/90Bu6aeZX5azn4o1N8tSaNdg
-	 yqBejH7K/AnR2I9ZSBWt3qM6WvgnqNbGrI8Ckm2NuFdDWtxP8/w7VgwUmDhnimK4vPQ7r
-	 JURBmunosfYx6NvARN2CisAWCiuZkdzkwQsu02BwJBvx/wgeDtq8ZNRXUBKIBp0J8BmfV
-	 hI0CKmBIxGfQqLPEQtXWp8c10uaJOVjHbLJsgVl0YcwBA+UR2iZ5fg0TRIuHBxNUSLpT8
-	 hYhyvOChlI+YKO7JCb07e93nnpLYUxNyqYaG5cjH3rkf0fd1rBB35mTtYCs3NsCfWbQ==
+	bh=ek30tQqXRrFL6+y+kBquu0Xmo3qCepG7CWZ7/n71N0U=;
+	b=LvENNc4lQ5Ub03Go9E92Bo9jg68GEIMpKo+6/fwaGzWmGiCTMfLmLqBw9D8f5ABeNJ4q
+	 gLPUB0kAC4Ec8Kq4mykWA0z4aTBtE9tcjinSlp+tDnTApOI3mna3hHd9rQyfaSSFHytGX
+	 cSdl/WnIpc2X+VAlmlUEt7Mv6HpoBLkW0Cu+NY3TdH5J4Z/Sb2TAdYoXNYdb4ALFddaYC
+	 C4ft5k0ZGt+G/nSKdNzmeBc+XoumWmNtGNdkV04iRtCghNVVpjxyu61J+0dkYmardOqC9
+	 SsTKYUCAbVL8oMzXL3KA3vSjxXxtNwMwu9w1Jx8nnv6WJnKp50YO+cWtN838FELg+Gw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="VKETvD/X";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=c6q8Yxhr;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E4F606A33B
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 07:13:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1025E606A326
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 07:13:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VKETvD/X
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 722F31F0089F;
-	Fri,  6 Nov 2026 07:13:03 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=c6q8Yxhr
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B36271F0089F;
+	Fri,  6 Nov 2026 07:13:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793949183;
-	bh=bbPFvvXbfuwpePSH507awjCd3d3xjVAiRzMxn0V8Vro=;
+	s=k20260515; t=1793949230;
+	bh=ek30tQqXRrFL6+y+kBquu0Xmo3qCepG7CWZ7/n71N0U=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=VKETvD/X/qAxRWKEHsicrHJ7d/kOaKPEth7paElIdtc/cNuLkbBPa/wCNfZWs5qIY
-	 C8uUEk8V8sdiLtpWM0HuMIdXaNKLsZj8OdCjL04M2vRyMXq/XBGAkp9SRONbKw8Aen
-	 mhjJe2gCV3utw0TeJfiQN+k/45Ged4hEijlzZaSr0sGLqiGVFnRBcCz6wW+xfQiem0
-	 29HluD/mVzityiwqJ0kdexX3ywrmE4mV1sHgB/EZM0/46+89VlJifjzmW1Ir/MZ7w+
-	 0FrEbOlqKio1gdEVnF7sAPmWUvW2+PnFETKTvtFn3YQ537gCXSTEI79LRZC+lVhxQQ
-	 xE2gUnlRUXPSw==
-Message-ID: <sashiko-outbox-200976@kernel.org>
+	b=c6q8Yxhrak5Lqt1MXs7fMn/7eCMyifUNZYbjsQ9+WnkaMiSSJF7wpImmMlg3aN3Y7
+	 DbrRLc/cXYRCZTxe6I4RxccLJ4eKwxPVFlBkOeLzSCCwqjD7BoycDLLxQhhQxr5IP4
+	 acOMstr9wX+paooL1XugGyM+WEQGsOvWesH2ZRcKEMJNv6Upnf3JH+z82xb3CrYOxy
+	 EBuW5j9E0LdnuhRS9dG+esO6v+RfDoMh8ycin4lxww8hFf2BGJBu49SuDjkyRJ3EF9
+	 u+Eel3olNHvssGyxU9WnhY2xmxPIsSTqAd4fJ2L5HwoGlhI9SW9/AkvFZpMaQSkKje
+	 PhiWg5Ro9vQyg==
+Message-ID: <sashiko-outbox-200978@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 02/20] tools headers compiler: Synchronize
- compiler_types.h with the kernel sources
+Subject: Re: [PATCH v10 20/20] perf maps: Add context analysis annotations
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261106070344.329897-3-irogers@google.com>
+In-Reply-To: <20261106070344.329897-21-irogers@google.com>
 References: <20261106070344.329897-1-irogers@google.com>
- <20261106070344.329897-3-irogers@google.com>
+ <20261106070344.329897-21-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Nov 2026 07:13:03 +0000
+Date: Fri, 06 Nov 2026 07:13:50 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,14 +60,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Synchronize the non-__KERNEL__ sections of
-> tools/include/linux/compiler_types.h and
-> tools/include/linux/compiler-gcc.h with the kernel sources (including
-> ___PASTE/__PASTE, BTF_TYPE_TAG, object-size helpers, asm_goto_output,
-> ASM_INPUT_*, asm_inline, __typeof_unqual__/__unqual_scalar_typeof,
-> __signed_scalar_typeof, __native_word, compiletime_assert, and the
-> __diag pragma helpers required by compiler-context-analysis.h), and
-> remove the duplicated definitions from tools/include/linux/compiler.h.
+> Add __returns_ctx_lock() to maps__lock(), annotate DECLARE_RC_STRUCT(maps)
+> members protected by lock with __guarded_by(&lock), and annotate
+> internal maps helpers with __must_hold() and __must_hold_shared().
 >=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
@@ -76,5 +70,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261106070344.3298=
-97-1-irogers@google.com?part=3D2
+97-1-irogers@google.com?part=3D20
 
