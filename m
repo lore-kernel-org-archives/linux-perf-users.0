@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793962316;
-	b=KMwCyG7LZ8LPmd4suHLa7Mto/kpSAcxRZ6Lkmc3Udzz/lQe/ly34K0M/Rt6r7N7n4V6L
-	 7HbWbrEdSby5SpjsC+fToup13ia/u1cVqZRY99jYVkv5vmdKFsGhpxC1FnKB+fT2CxNhA
-	 bepoplX8V75gfKGGCHD/P4FrqfRzeEEyfxRFB0HhZ2qMz6BdNscsYDQ40zTCH/VQ9P7ZD
-	 IvrZvYevfZd+bHdi4xNboe8Cc/51+woBvJgRx+ly1fpe/btjog5xL53tHbZESx1C3JaQZ
-	 +CYH4NIz3A5nTK/ioivlOXBbGtZz22z3XJy37em5GjtTIrVQSn20zFQg5ujm1I3HaDw==
+	t=1793962351;
+	b=LtHWYd9sy6mLrWq0amSqh/9ID/MiO1VCkhLZxaTKHWkh9Dch4nPGnYL57EcuG6KZOP33
+	 XZ8Wt/UXe4fb56JxuHr2QekeLC4SRrnzjPslAsmZT8jvp261Fn44NpNFCOw1x8NM5CgSX
+	 jUn8Ut3Rzw1K2beyyCoXykAmfKPXvg5rpPb0SBEkbGnbf6SrU3Th8RjQ+NUNYp9Lj9E+2
+	 XMT0ZC2KZZwU7dsLQH1zt7Dq9f7+wogYhYZDkbqEh2DtOgjoe8mrw0sERj7/pU19K3ydk
+	 1c6bl440HmMth1+OsHuTdR+ZMWsiCqBD4y/SpPqAOddYFWQ8LHw+cTkgBC42vdHqUIQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793962316;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793962351;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=r9foQXmJTV1etxPqaKfMUteZLLHTbt4TSVeqZt/ZyMo=;
-	b=0HycjQNVxk+WcDBoMVu2K24HHZOw28IZZAQZ2koWpHNd6OquvrFHVxZ/4IJWvrFfEY0L
-	 2oQxD5wNbXDc0stCncoQBtRyKWkpbdGDt1et+965fRjlG4roWPSb/SZzCTwMKppHcZ4et
-	 w6mmJcZald5siZoCH5BgfcRvFrkAoYgvXItyKOaxKvOR7VnhCAHM6DN1Jfufk6TsCzIvM
-	 87EizmUkYdnhDiWei2CJpthiPcK5x/qx2DL2kpOmDnZlC4Lw3FaubIvcA8aL74jWNCo4w
-	 0D/B+d+VCxtsw0LXEHxNE4EF0G96pHpSPgupi8nMB27tYdiucH6CxlOdlQjw6wNbZog==
+	bh=rR4nK+c9pvYipYsedIWAmCdwp3kO1wMEJmf1vQsa4Rg=;
+	b=dSzEuj4nR5V+GGr5k5gZdQh/Cw6KuMt29TrKDHKojx22bYJH9AtCGXO6gYv/tdFgXZ+z
+	 VtAYWyEkgXm8Ovu2h3KgqH3kmq/36cKvUmn3EKhfB/qeAZs+GMHnxhWC6x/XlkglZqmn5
+	 V/2ZFM7zY7g0OMq6LjoTvzTu5fy5J+exf6d6qgNXRMC1MAEa+QLOEEmEUHB5z7onxDWCD
+	 iArbZJ9LJw7I9VjHYpW1KNOK1wYZylM2YyGT6WOorkPzlX5PtvYunzvCpi6eladiCZBuw
+	 skFQXBep5DKKNz17GRHYtR4R3qoPoOQJSjlzTWZfHN3P2ZACNX76sDefadygi3/xoaA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gAAZzHqA;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BkTLlBPn;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF23A606A333
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 10:51:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FA0606A326
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 10:52:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gAAZzHqA
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48D481F0089F;
-	Fri,  6 Nov 2026 10:51:55 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BkTLlBPn
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E89571F0089F;
+	Fri,  6 Nov 2026 10:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793962315;
-	bh=r9foQXmJTV1etxPqaKfMUteZLLHTbt4TSVeqZt/ZyMo=;
+	s=k20260515; t=1793962351;
+	bh=rR4nK+c9pvYipYsedIWAmCdwp3kO1wMEJmf1vQsa4Rg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=gAAZzHqAeW5OqYv0FXB/fwrK6w7ujIJRDdsfwCUG841u3dDBCIPUQjs+FMZW07I/4
-	 X6c4714Dp2Zp7MaYL3HCm49ZZOU9oBFf4/3jvDfOJg2I+dbgzmD/R/q1mlAjBOVl4+
-	 b3RNbvUooNk0tJwq6dRESG/Nqjkw1mOtbrNYCaQUsRYoQA0HW2W1zdeNmYWYbapOVJ
-	 DnoSXbaMEaPFbscoZhZwCAMaUR8XE5/6f/P6Tut8amSTDUDIxNSM82k+bh62AQvgMs
-	 d/StFxgGg/vsWM7B7nZpRNgZEhImuPq48PTQBJEw+oQf5BJlQ4hGHfziYz39X7QtG4
-	 3UsHvofMhQe7Q==
-Message-ID: <sashiko-outbox-201234@kernel.org>
+	b=BkTLlBPnCMKr+wS0PXjoGYzH+c28QjWeD50hsjvBxq9dPc8a+6/5H/3MaLLZA8zgl
+	 YQQ9DNnA2WL91+9E0mQ2hS11rFsOMHFGcfcEXo0pSw1VouGXTAhfSejBbrluppehdq
+	 u54AzamGObvnVp3UTpA7Y/7sMsHZRqH9zcq3EpHu5TSeE2erTV4sfqjgNZThkc4TuD
+	 YY0kJ88h6MHNN9ekN/FpGZfhgHbZ29zl4KFRIR3nshgcSpxTiO7LOVnObvbr6VLdSf
+	 5YCxJP1Szu28bELNP4esIPEkiD7/y7rmw/RcpHBgBwZe1cSpZYkbbQdUD11VJEZjdt
+	 qYTgi5g9sjIIw==
+Message-ID: <sashiko-outbox-201235@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 4/4] perf test: Don't starve per-process tests with
- system-wide events
+Subject: Re: [PATCH v2 2/4] perf dwarf-aux: Support DW_OP_addrx locations
+ for global variables
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "James Clark" <james.clark@linaro.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261106-james-perf-test-fixes-v2-4-9a912662f822@linaro.org>
+In-Reply-To: <20261106-james-perf-test-fixes-v2-2-9a912662f822@linaro.org>
 References: <20261106-james-perf-test-fixes-v2-0-9a912662f822@linaro.org>
- <20261106-james-perf-test-fixes-v2-4-9a912662f822@linaro.org>
+ <20261106-james-perf-test-fixes-v2-2-9a912662f822@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Nov 2026 10:51:54 +0000
+Date: Fri, 06 Nov 2026 10:52:30 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,31 +61,37 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Some tests intermittently fail when run in parallel, for example "Check
-> branch stack sampling" fails with no branches recorded at all.
+> die_find_variable_by_addr() and die_collect_global_vars() only accept
+> global variables with a DW_OP_addr location. DWARF 5 producers like
+> clang use DW_OP_addrx instead, which is an index into .debug_addr, so
+> global variables are never found when Perf is built with LLVM=3D1.
 >=20
-> The default event is cycles:P which there may only be 1 or 2 HW counters
-> for on Intel because it's precise. System wide or per-core precise
-> events hog the HW counter leaving other per-process tests with no
-> samples. Rather than make all the tests that use default record commands
-> run serially, just make the system wide ones use a software event which
-> has the greatest possible compatibility. They don't need precise
-> sampling or HW counters anyway. The per-process tests can be left alone
-> as their events/processes never run concurrently on any one core.
+> Add a helper that also resolves DW_OP_addrx and DW_OP_GNU_addr_index
+> through dwarf_getlocation_attr() and dwarf_formaddr(), and use it in
+> both places. This fixes the "perf data type profiling tests" test:
 >=20
-> The LBR filter is another resource shared by all events on a CPU, and
-> the system-wide LBR test uses different filters to the per-process
-> branch stack test, so mark the LBR test as exclusive.
-> [ ... ]
+>   $ perf test -vvv "perf data type profiling tests"
 >   ...
+>   Basic C perf annotate test
+>   Basic annotate [Failed: missing target data type]
+>   ...
+>   Pipe C perf annotate test
+>   Pipe annotate [Failed: missing target data type]
+>   ...
+>   Basic FS perf annotate test
+>   Basic annotate [Failed: missing target data type]
+>   ...
+>   Pipe FS perf annotate test
+>   Pipe annotate [Failed: missing target data type]
 >   ---- end(-1) ----
->   138: Check branch stack sampling : FAILED!
+>    88: perf data type profiling tests : FAILED!
 >=20
+> Fixes: d60469d7c0e5 ("perf dwarf-aux: Add die_find_variable_by_addr()")
 > Signed-off-by: James Clark <james.clark@linaro.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261106-james-perf=
--test-fixes-v2-0-9a912662f822@linaro.org?part=3D4
+-test-fixes-v2-0-9a912662f822@linaro.org?part=3D2
 
