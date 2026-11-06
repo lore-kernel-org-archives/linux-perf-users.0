@@ -1,61 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1793939992;
-	b=3bsv9QfwC4lSA2jptBZwbOwP/wSkRGT2D0z+Wgwrfata8whWBew6x1XyQlPo5u36qPoV
-	 ilTzqpmPIhh3mf5H6kT/pAuR5dj2I1Ege7rxuR4AoQh6H1yLM0efzR6xIr3vfYy/Qi27j
-	 ikSv42HMpT6LfKk3Wjdl9O4zGNNkIx4mSWrOcHK1llJhX1860WG0X/0gPaj5dIjx0gj0R
-	 Q1SOXsOLj/aIy86uECev3zXrrqRznccKIrV6/UEe62UURXFFoCedLRCj8UPbkE6PDlVZ7
-	 I3aVtZL+AAoAUxG8ex9misBdCTfKSw36vQoY9vb/tsmlJPF61cIn1QH/Gx6JL+ypV2g==
+	b=hMA7xutMHSEXxBtH+gBjCykFTz/hxXE/vhIj2AL1BJAzXHmEg4G9yJkW88j1CwlV/pwx
+	 bdT6CdgGXYbWvrbcwBUujFtck9fIjpTIcuezEEbIaBS/rjNzfBspy8bMzk+vgn7cuudZV
+	 LTGb2X3uAH7KYoCUpDKhT7pRqYPmH56GPXYMv8hPjiGkHmv7uDFU4ZlIbbWdQJKHzcq9f
+	 wgBvEHJ30Mk0W1rHU+mdzgORmHjNlCvqDD0Ee21DKLWjHbD6c6enyReyxXI5uAjkt/wA/
+	 2fEvxsKXWi9M3NeZBy2tMK67gXjrpDEacZTGS9hfCGgFR+RIqJh3/EstqyoQpFG/l9Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1793939992;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=U/Wi977Ysi2ECGBIy/Z+NJVhAV3nu6XdPLmQqc6pq8o=;
-	b=HqcHrHHyOleAUvKbPT9iaGzFh1rjlG06DQVhKaa6bS/Uq9t0HaapOEoGu/676FqLzzOz
-	 rszDKF7X13GyJyyBOAUxHnX5bUeZud8yIVOIWZrX/I5N8ztfqVEYPYMkixA014bZqTmfd
-	 4gfdz31CvlCDOCf85lccfCES1nQ4PrNYE4fA905DYb5pPThMACoBHsIVWGEAe+BrQq6Y0
-	 JoS5Z9LF7zzXowkJX5wCqjJIl8nmtCKS5YO8oSjyCdNGOIAg09omcJJlWU1N8CuJVGfkm
-	 n77McZ59zWxY6qnlq7NO+/s/BOy2PVCVJn5jy+RaL5DEWPDsfSSglvejmWV+nU4tRtQ==
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=lCgHhDgP0O+436Dzp6BLNvwLI/sZ8sJatnsLLe4PNGk=;
+	b=bKXbdE0x/uluuX9KzdpQXsDr19/5YXTFUIf+JmBrNaO8FVdcHDVGYj9SqvB/fxARRAwP
+	 C++BYcaUXEIjfmSItUMFQA8nHKI23FnCgKDkveQV0BFQ5+QYeR5Ww3LsEqCmDKTCO7SlH
+	 TDNB3Tsq5eCitD8fKJhcrYmT+Hg42ktjVrVQZHRopRDgBZ5TUZQ+IZhIHJL58mg4BWtOu
+	 SaaO3nDdUgiDnrWeug1jBdq3f756KZm7kzRlkUG7L5XBwwQS6dY9iEJ4qeH8TO1N3DCTu
+	 3oH35erErXoPiTqDXenmPm7o3HMFAXOTSCxtDFqgl2yTXYjS+UWsYMzeOfdsYrpmuQg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nxjuamxu;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BXJFs+O9;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64844606A328;
-	Fri,  6 Nov 2026 04:39:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765ED606A32C
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 04:39:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nxjuamxu
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C7A11F0089F;
-	Fri,  6 Nov 2026 04:39:51 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BXJFs+O9
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 352081F008A6;
+	Fri,  6 Nov 2026 04:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1793939992;
-	bh=U/Wi977Ysi2ECGBIy/Z+NJVhAV3nu6XdPLmQqc6pq8o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=nxjuamxu/BbzGrRfbGhqNBDVjq1VdeXNrwVIyWnGtqby/pUmgz8iy+Qepl3eTKx1X
-	 aLLlGpdoN87lppcd03u/AWjkwIw42vRTXXgqeO6+OrCcfYolkQmsqQ1M/+jtKXeGEH
-	 lW0q5m5vTeZv3K0C1659IQROqq6LWOZ2GshLgMcl1wH857IkA+VAyOpPvUhCHuN5h1
-	 s46Rhsq1bEtsBlpFxDYqUfkWxllcjvhOAo8jD7QHt+yfEwtuhVr+0DVaZMgrNSkBk1
-	 UTcuOIx/916ppRqXwVhvsF/Xlh/Xi5zNME1djz98vDCbbzgCfUpsAda8tnCTYg/5Nh
-	 DxK617GsBp6yw==
-Date: Thu, 5 Nov 2026 20:39:49 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jakub Brnak <jbrnak@redhat.com>, Leo Yan <leo.yan@arm.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] perf test probe_vfs_getname: Fix missing debuginfo
- detection
-Message-ID: <au1aFaHCvXgRWMbJ@google.com>
-References: <20261105-james-perf-test-fixes-v1-0-0b279bee5830@linaro.org>
- <20261105-james-perf-test-fixes-v1-3-0b279bee5830@linaro.org>
+	bh=lCgHhDgP0O+436Dzp6BLNvwLI/sZ8sJatnsLLe4PNGk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=BXJFs+O9W9DxzKgV1omBmItOGf0GOE5OGYN5dmH3B0WRHENcB4kaan6kH0AX8FU3s
+	 YbzhH+zsMQGRHTOh9211M/deSTAB4KjmRLcRM5VI9gOuhA/RaV2JbPX1pCkPUTkwMQ
+	 gumTHrBTPtrmGV+siiNigqO+UN4WLEMlyWAV0ER2P7iIgGMdMW88Rtq+RblVMH1mnG
+	 Q4UTP3zkUcDD/fvtXsS0XNZqo58V2gG+NfLOuM4h7Ov/0mzL6SUy3HLCHpoZ5OJY6n
+	 +l/tne3z4aO/kQFrZLxnbb9lV8NQm9PBfy1uebk5BhFR+qt8bJT0FJxQrXTDohqc/2
+	 v0FlZhUkW/6TA==
+Message-ID: <sashiko-outbox-200750@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v7 04/14] alpha/perf: clear PERF_HES_UPTODATE when an
+ event starts counting
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Matt Turner" <mattst88@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261105-alpha-profileme-v7-4-c474e892abb0@gmail.com>
+References: <20261105-alpha-profileme-v7-0-c474e892abb0@gmail.com>
+ <20261105-alpha-profileme-v7-4-c474e892abb0@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 06 Nov 2026 04:39:51 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -64,76 +60,31 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20261105-james-perf-test-fixes-v1-3-0b279bee5830@linaro.org>
 
-On Thu, Nov 05, 2026 at 03:49:05PM +0000, James Clark wrote:
-> skip_if_no_debuginfo() looks for the errors that 'perf probe' prints when
-> there is no debuginfo in the output of add_probe_vfs_getname(). But since
-> commit 92b664dcefab ("perf test probe_vfs_getname: Skip if no suitable
-> line detected"), add_probe_vfs_getname() returns early without adding a
-> probe if 'perf probe -L' doesn't find the line, which is also what
-> happens when there is no debuginfo. The error from 'perf probe -L' is
-> discarded, so the debuginfo errors are never found.
-> 
-> This causes the debuginfo dependent subtests of the
-> "perftool-testsuite_probe" test to fail instead of being skipped on
-> kernels without debuginfo, because test_adding_kernel.sh calls
-> skip_if_no_debuginfo() unconditionally. The other users only call it
-> when add_probe_vfs_getname() returns 1, so they aren't affected.
-> 
-> Fix it by doing a dry run of a probe that needs debuginfo instead. This
-> works without libdw too, where 'perf probe -L' isn't available, and also
-> avoids adding a real probe just to check for debuginfo. This fixes the
-> "perftool-testsuite_probe" test:
-> 
->   $ sudo perf test -vvv "perftool-testsuite_probe"
->   ...
->   -- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added probe :: perf probe -l (output regexp parsing)
->   ...
->   -- [ FAIL ] -- perf_probe :: test_adding_kernel :: wildcard adding support (command exitcode + output regexp parsing)
->   ...
->   -- [ FAIL ] -- perf_probe :: test_adding_kernel :: non-existing variable (output regexp parsing)
->   ...
->   ## [ FAIL ] ## perf_probe :: test_adding_kernel SUMMARY :: 3 failures found
->   ...
->   189: perftool-testsuite_probe : FAILED!
-> 
-> Fixes: 92b664dcefab ("perf test probe_vfs_getname: Skip if no suitable line detected")
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
->  tools/perf/tests/shell/lib/probe_vfs_getname.sh | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> index 57a59ae7d4ae..1c3af5771bcf 100644
-> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> @@ -64,7 +64,8 @@ add_probe_vfs_getname() {
->  }
->  
->  skip_if_no_debuginfo() {
-> -	add_probe_vfs_getname -v 2>&1 | grep -E -q "^(Failed to find the path for the kernel|Debuginfo-analysis is not supported)|(file has no debug information)" && return 2
-> +	# Dry run a probe that needs debuginfo.
-> +	perf probe -n -v 'getname_flags $params' 2>&1 | grep -E -q "^(Failed to find the path for the kernel|Debuginfo-analysis is not supported)|(file has no debug information)" && return 2
+> alpha_pmu_add() sets PERF_HES_UPTODATE and maybe_change_configuration()
+> then programs and enables the counter, but nothing clears the flag until
+> the first alpha_pmu_start(). In that window alpha_pmu_stop() with
+> PERF_EF_UPDATE skips the count update, because the flag claims the count
+> is current. Since the next reload rewrites the counter, everything
+> counted since the event was added is lost.
+>=20
+> perf_adjust_freq_unthr_events() does this on the first tick after an
+> event in frequency mode is scheduled in, which is the default for perf
+> record, and it then sees no count to adjust the period with.
+>=20
+> Clear the flag where the event starts counting. alpha_pmu_add() cannot
+> do it, since the event is not programmed until the PMU is enabled, and
+> stopping it before then must not read the counter.
+>=20
+> Fixes: a4eaf7f14675 ("perf: Rework the PMU methods")
+> Assisted-by: Claude:claude-opus-5-5
+> Reviewed-by: Magnus Lindholm <linmag7@gmail.com>
+> Tested-by: Magnus Lindholm <linmag7@gmail.com>
+> Signed-off-by: Matt Turner <mattst88@gmail.com>
 
-Nit: can we break the long line like this?
+Sashiko has reviewed this patch and found no issues.
 
-	perf probe -nv 'getname_flags $params' 2>&1 | grep -q \
-		-e "Failed to find the path for the kernel" \
-		-e "Debuginfo-analysis is not supported" \
-		-e "file has no debug information" && return 2
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105-alpha-prof=
+ileme-v7-0-c474e892abb0@gmail.com?part=3D4
 
-Thanks,
-Namhyung
-
-
->  	return 1
->  }
->  
-> 
-> -- 
-> 2.43.0
-> 
