@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793943391;
-	b=MYmzq3zlH/A+wxDEIQCbO4UvvwPSgK7PcVYXgKBtGoxi/MVkq+Zy1xh0gEBaUZG0tN0V
-	 N/dlH+CQFquAqVOoqgIf1rLIq122JCbZeg0O5q//bVMky/D5QBiROEyXaWDPBkG5jSceX
-	 L1ikGCm8vcGNsw7yoBFlZQHisD+f/AoNDI6TLg7SJ6Nc4qaDCG9TClYztmouHwdurLNuH
-	 t2GSO+XmUu/ZPZj/dteMuILfGM+eOMNV+mPjrrbhWuiyD/MMAyg+SWs4zOYQtpvf2zRaU
-	 SMV+6h9lKqvtiBd6ZA46hGoZdHG4D28sWrWN3fydK1GxoFSWinF/jpN0zScwFnmYyoQ==
+	t=1793943857;
+	b=FPpYW+/1YVXeKd3182Q7UiFhJUvRfytVtxfaN4sF86r+APlzqNXlfL0pcijD+0eJs+oN
+	 gxt5iZXsTcOTZEdBtN40wiYN7QzWvjK7c5ovxbZpfkbTN1irVlgyWCNU1xIuDeTn+mbe7
+	 b8dEf2InbP6xVdg9B3nIV+v/+Ud1+tzL+ofYW+4DJmA4DqUBRZ1tNpJayL5b6cOXdPx01
+	 n94hEJ6wrx6XfcS3gJe3Uy3qKtxmsGKyvcdUc8Mtssq8EqrTQBD8DKjysIwBSKNR16RPr
+	 Qpgy5kyZcMJX0rcX0y6i0LnDERZ6l9QRxxX+5p8APIpAm12bj5QpTNYihKxJnxp5yIA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793943391;
+	a=rsa-sha256; c=relaxed/relaxed; t=1793943857;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=wcHxR7ctsrBN1TjtycOY4Tfb9D+dMKUOVKpXr3X87fo=;
-	b=dG0Mu/TrF4M4/oF4GWktif98mVRkoPzrL0dxAD8oXuqTDBk8V/HjU276yyw7s9XvVfTj
-	 8abJ3tKOXzeFmNqzgdNiVflyVLNb1CqDLTLSKQQZywcuombR6DQ18YzH4eYJv/YwYJ32e
-	 2Wjk1Qk4AX1MqZecGCCDJX0CssrNuibGLpfRy9DTmG4G1MwrAIuImAwVs54Pi6reZ2/MD
-	 Uz/w6Lq1+AWkntSU1zwcfF5Aymc0+ZG/gotBxC/opk6cPVIaqGpBPfMLaAIioZvl+7wyn
-	 qj6sVlcrVkBwzrcF1OyXsb2OizYkFMnH59ZbsJ1SYpOKj4ygB+oznORL32G9O8oYigA==
+	bh=MbT5hfIgqocq0MwQi05WOfF5j6FeoIpT7xe1Kt8tkJ0=;
+	b=Tuhis5MC7no85MiXeCbF9TxME2h4WA6cxtSCEKgW7vK5zaR1ifzBi4KzoVKD1GlQ/6yb
+	 EV8NF6wAr8Jqa7TEP9PCdR8yRWtX5vVwe5wwFyFz2+eaVq5i3IsQQsowjiHW5ZC6sbDGV
+	 InlFbZZTSE9v14UntwMjBQmZJtMpur15t3MvYiPyZvg2Wu5DUi0wCdfR8L9yHJFfh9JQb
+	 /8LM0G0oKDAnmJXk8kqmqkyl5+DjMg4I6gWsde+L0g1aU3yIjWgmsL3DGGh72dWmAZadd
+	 a0PIso3RBqg8/vGYeGB+cWyh9CN3je6LGLSHoNNEMk9Xc4DY3HJYrZLJq68L+Jp4d3w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DS++An0l;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="NUGYYoR/";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E7F606A32E
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 05:36:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51347606A328
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 05:44:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DS++An0l
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13B431F008A4;
-	Fri,  6 Nov 2026 05:36:31 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NUGYYoR/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C92111F0089F;
+	Fri,  6 Nov 2026 05:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793943391;
-	bh=wcHxR7ctsrBN1TjtycOY4Tfb9D+dMKUOVKpXr3X87fo=;
+	s=k20260515; t=1793943856;
+	bh=MbT5hfIgqocq0MwQi05WOfF5j6FeoIpT7xe1Kt8tkJ0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DS++An0lQPxkARrASbXhR7eGrArzByhNPcQq63H0eyqBGdL1g3VR4kq/i+uktZfAn
-	 QBCp2ZWvFpzS2QQoMbPT7ZhqqcxVV0CauD5r/OQn909LHeMlupdCfjKhze5q6TCClD
-	 20Ke8Ib565kQGW+qMGup0ryF9xbBUKZ892aIOtF1vpfQWF0Yed+N+yBlraIX+cP3oY
-	 CzfcuebFPVHJVJWsFRvBMx12xDmu4zMlq7DEADylTFaVqAfOkQ3oKXfrT5rWx3xqqj
-	 ejJT15R7P2Cqn3PD3Lg+kWkfMQdP7TaM22wAwRg0W0wcJiyhQdmsWRlXKOGQZv0emj
-	 fTn0qSJNTgtTA==
-Message-ID: <sashiko-outbox-200834@kernel.org>
+	b=NUGYYoR/hBHVepDzUOegRQC3ikBLalZOd9YHL2o1YSs84K133XvyTHsBSfJ2U4i4r
+	 lK/dt3R59JTmPqfUgq3QX6UHDKqQUmUKU6qW/1zB1SsmmmBsS+dfnkRjvON6Kj+3xl
+	 E3s9Xe4ycIZc+1jzg3VaT0YazFx1h9z2fMRtiTBKVDKXULALNw0jhay5qvb5AdxDHW
+	 oUCp5JG5nxpQ4Dd+XkbVGIBaS9nbkCtqEE1JfZ06RN/oPYrfaS/Mv1THrulNY32kjW
+	 TSlh1b3ycPm0OEkY3A1oLhVGdn9TKuWGlu4q3vXxUjRmcN1W6KHv3SBz2vg2TbSa9J
+	 srEeQGpQ5ROBg==
+Message-ID: <sashiko-outbox-200850@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/4] perf libdw: Find the CU by iterating all CUs when
- aranges are missing
+Subject: Re: [PATCH 2/4] perf dwarf-aux: Support DW_OP_addrx locations for
+ global variables
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "James Clark" <james.clark@linaro.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261105-james-perf-test-fixes-v1-1-0b279bee5830@linaro.org>
+In-Reply-To: <20261105-james-perf-test-fixes-v1-2-0b279bee5830@linaro.org>
 References: <20261105-james-perf-test-fixes-v1-0-0b279bee5830@linaro.org>
- <20261105-james-perf-test-fixes-v1-1-0b279bee5830@linaro.org>
+ <20261105-james-perf-test-fixes-v1-2-0b279bee5830@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Nov 2026 05:36:30 +0000
+Date: Fri, 06 Nov 2026 05:44:16 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,31 +61,37 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> libdw__addr2line() finds the CU with dwfl_module_getsrc() and
-> dwfl_module_addrdie(), which use dwarf_getaranges(). In elfutils 0.190
-> this only reads .debug_aranges, which can be partial. For example, when
-> Perf is built with LLVM=3D1, clang doesn't emit .debug_aranges by default
-> so the lookup then fails and no source lines are found for most of the
-> Perf binary.
+> die_find_variable_by_addr() and die_collect_global_vars() only accept
+> global variables with a DW_OP_addr location. DWARF 5 producers like
+> clang use DW_OP_addrx instead, which is an index into .debug_addr, so
+> global variables are never found when Perf is built with LLVM=3D1.
 >=20
-> This used to be hidden by falling back to the next addr2line style, but
-> now missing information stops the fallback since commit (62d7cdc8d587
-> "perf libdw: Optimize fallback logic for missing DWARF").
+> Add a helper that also resolves DW_OP_addrx and DW_OP_GNU_addr_index
+> through dwarf_getlocation_attr() and dwarf_formaddr(), and use it in
+> both places. This fixes the "perf data type profiling tests" test:
 >=20
-> find_cu_die() in annotate-data.c already handles partial aranges by
-> iterating all CUs in .debug_info and checking them with dwarf_haspc().
-> Move it to dwarf-aux.c, then look up the line in that CU with
-> dwarf_getsrc_die() and use the same CU for unwinding inlines. While
-> [ ... ]
+>   $ perf test -vvv "perf data type profiling tests"
+>   ...
+>   Basic C perf annotate test
+>   Basic annotate [Failed: missing target data type]
+>   ...
+>   Pipe C perf annotate test
+>   Pipe annotate [Failed: missing target data type]
+>   ...
+>   Basic FS perf annotate test
+>   Basic annotate [Failed: missing target data type]
+>   ...
+>   Pipe FS perf annotate test
+>   Pipe annotate [Failed: missing target data type]
 >   ---- end(-1) ----
->    79: test addr2line inline unwinding : FAILED!
+>    88: perf data type profiling tests : FAILED!
 >=20
-> Fixes: 88c51002d06f ("perf addr2line: Add a libdw implementation")
+> Fixes: d60469d7c0e5 ("perf dwarf-aux: Add die_find_variable_by_addr()")
 > Signed-off-by: James Clark <james.clark@linaro.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105-james-perf=
--test-fixes-v1-0-0b279bee5830@linaro.org?part=3D1
+-test-fixes-v1-0-0b279bee5830@linaro.org?part=3D2
 
