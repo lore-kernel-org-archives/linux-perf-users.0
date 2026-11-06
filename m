@@ -1,60 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=115.124.30.110
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793933974;
-	b=l0vbuDLtZwOuyqnhptxnIxF6A0VtcHLf0IfMhBG53stIccN1G0v0cpBq++yB5zTVDq5X
-	 PKh6veMy6S/X493W1BbvxnV4Sq8wBNArMdwRzx8q/dvOWb+UxEH371Jf7jTKuwF+AGJRt
-	 aRH68iTpcKbn7AR7b98EPfVZm1CsRQVLm1qlnU+TXYQmn7e4A9NcqvVz+KBg11ObLp2ip
-	 Vc+T5HIFMTvsaZQbptHmDSTEaxbMkRCRPSEhAPagrG8mqNYaNQ0rh/RgFFy721AU8IR4O
-	 cBr4Vo9T/WPeAga8W+1UyC9zT2UVByzToW+ChUbC3NzaLwpFu49gGihN45p579/DryQ==
+	t=1793934289;
+	b=29eSvORJ2MDRxnZ21fI5rBG5Ex2oJdytrgRdMnmLD1piftIS6N40KpNyicJsYML4BXMs
+	 lNIBfpxeu3QTTLVpEHZn3ARrsQN1agvVgidvBw9TbJV5FB4gAArexv5vI0k63Wj27ASAW
+	 BVp0RgIhtJF/pf6k68lp6YKB5en5e73MygRc7yMQYzLefhz+M1efgbeSvjcE/RuL7cn35
+	 AgjWmEYtmAoiZttCOwLJjuV0WINnbtPZywV/WF1x5qwOJS90TNSH1HG3Larr8GxVqJ89Q
+	 kYr3jVz2dFxXIcjUWxm3u+6UG+wkrA/AVwJS6nyPYJAouGDz75f6yUc5ZE9pnOScAjw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793933974;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To;
-	bh=7Oh2e3u6KS6ULuWUXpjmzaKdyn+WALhzDQQ6dIp7NJA=;
-	b=4PlVeHM+/XsarvAUaB5EMqgFTWxYFvzCsC4OI5Ul840593Ct3WojLBdcjuMENn+03Ah+
-	 tWpw4VldzGR+s7mW6IDCZlO6WxcsBo2koHBYywk/ltdbi1z43Dv/W1Kfqm3OwlwkLIBc/
-	 /N+bMDBZKQ7URrYFEkN8Bzu8R9FmUjFDU5alNl99juZxEMOVJoPjok3hSwnQIoe0B0Efo
-	 1s9VHraaI5B318n487GS19HZR6q6pVfbTFtSoNGlDUYN5ZrlgV3pKLGVNlN4qi4m+eM1l
-	 H9MOP5cLGQ4tiz2RcKbYs7wVD4Hq62XM/eTEgvubdT5HL8X2ESaG4wUOIbcI6fXYMJQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793934289;
+	h=DMARC-Filter:DKIM-Signature:X-Alimail-AntiSpam:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=PD61LryWpAKBHtS1n/1Sw/t0gup78Gp41jIY7RFBO5U=;
+	b=TIk0o6pjKBu6HLETO1serM2LLHS5x1Q0C1EiG1OPsW3I8a8JoVtyRoYj1EGo3lMRUkmy
+	 Eh9OGTOKEPuhrsZZP5c+vRa+pr3LLHoCfJQVjo7ORX08uWDiwVk+4szmot8DRjPn2ne0f
+	 2WdbDs4WEBBZGhgYLfQegDmReSSmfWE8qzpNuByrjnKfpS0mYSNYLU9uv314XyIGOhItg
+	 1C8k/XXGmkP3Wocj/TOsdVAlYwQuSBDgG0OQ2b5dfLokRYUhnTEyC0fC3+bf1/bxQoBJ0
+	 vWnP88BCGB8AIIC237ivk/Ue78WAEUnleDG05atkD/lRjovwNWVLZxhhs4gciCU+bDg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZzQTCYcy;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=linux.alibaba.com;
+	spf=pass smtp.mailfrom=linux.alibaba.com;
+	dkim=pass header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=WfgW9CSI;
+	arc=none smtp.remote-ip=115.124.30.110
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF40606A31B;
-	Fri,  6 Nov 2026 02:59:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 452BF606A326;
+	Fri,  6 Nov 2026 03:04:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 452BF606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZzQTCYcy
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC5151F008A1;
-	Fri,  6 Nov 2026 02:59:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793933974;
-	bh=7Oh2e3u6KS6ULuWUXpjmzaKdyn+WALhzDQQ6dIp7NJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ZzQTCYcy/PQbb/t3uEL68eJO0sRkJqL8iSDwwUk3XwGRqM9hNvhsbrcbcoz7sDA0L
-	 Ehivnji6LT2gl5IIsGx4dtV06rMxzLNBzapL4AR4lDzAopL2eHX0aE6X+BjIXdr/WH
-	 BcW8hzb4zh6WpDjuanZTKrdzSb2kB9lV3EO3ppX3PLjKq+egHqqiXtX4bnJBj4bzzS
-	 vemfoAs4ZHSIhUY0NBTjSMmkwTzLfKFHsuxXv1Uk3pid/RQfqGTdJOwwTGK+NhdYFT
-	 ZbrSqEP4CMhB/kFvop5UN0cO9bc397oAQ+amrX7AI2VjV+94Woc+j7eEgT64c+ZcwU
-	 VrdoH+HnVCasA==
-Date: Thu, 5 Nov 2026 18:59:32 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Jakub Brnak <jbrnak@redhat.com>,
-	Michael Petlan <mpetlan@redhat.com>
-Subject: Re: [PATCH] perf test: Fix perf probe testsuite
-Message-ID: <au1ClCsTbbOdc69U@z2>
-References: <20261105071711.31086-1-namhyung@kernel.org>
- <ea9091fc-c129-4840-80f7-ab5edc8d56a7@linaro.org>
- <7fb3e764-e71d-4cd1-b481-963ea518dfd3@linaro.org>
+	dkim=pass (1024-bit key, unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=WfgW9CSI
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1793934277; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=PD61LryWpAKBHtS1n/1Sw/t0gup78Gp41jIY7RFBO5U=;
+	b=WfgW9CSIuO2sKALqvx/vrklmCUt3e6blYbgRiIg8/X5FqegzvtuNvS6rmTiMek3GthDCTO1D/btBqT7wTNv96XHkB3tqCowT8B72Ra+LVHSDRpG1AZw7i1VGnHEJdWdJY3fYKtnjp23/NtUYzCGaw71Qjlfg7EryGQfk5Y4k57o=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=88;SR=0;TI=SMTPD_---0XEA9E6e_1793934269;
+Received: from 30.74.144.130(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0XEA9E6e_1793934269 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 06 Nov 2026 11:04:32 +0800
+Message-ID: <38869f97-7e81-40e0-acc8-fb30ddc22c14@linux.alibaba.com>
+Date: Fri, 6 Nov 2026 11:04:28 +0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -64,212 +53,79 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7fb3e764-e71d-4cd1-b481-963ea518dfd3@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 03/13] mm/rmap: convert remaining VMA flag tests to use
+ vma_flags_t
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+ John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Rik van Riel <riel@surriel.com>, "Liam R. Howlett" <liam@infradead.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>,
+ Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>,
+ Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Byungchul Park <byungchul@sk.com>,
+ Gregory Price <gourry@gourry.net>, Ying Huang
+ <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>,
+ Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
+ Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+ "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+ Shrikanth Hegde <sshegde@linux.ibm.com>, Pedro Falcato <pfalcato@suse.de>,
+ Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>,
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Leon Romanovsky <leon@kernel.org>,
+ SJ Park <sj@kernel.org>, Rakie Kim <rakie.kim@sk.com>,
+ David Rientjes <rientjes@google.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Oleg Nesterov <oleg@redhat.com>, John Johansen
+ <john.johansen@canonical.com>, Georgia Garcia
+ <georgia.garcia@canonical.com>, Paul Moore <paul@paul-moore.com>,
+ James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
+ Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu <roberto.sassu@huawei.com>,
+ Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+ Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>,
+ Stephen Smalley <stephen.smalley.work@gmail.com>,
+ =?UTF-8?B?T25kcmVqIE1vc27DocSNZWs=?= <omosnacek@gmail.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ kvm@vger.kernel.org, damon@lists.linux.dev,
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+ linux-integrity@vger.kernel.org, selinux@vger.kernel.org
+References: <20261105-late-2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org>
+ <20261105-late-2026-vma-flags-v1-3-0d3cd15ab75f@kernel.org>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20261105-late-2026-vma-flags-v1-3-0d3cd15ab75f@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello James,
 
-On Thu, Nov 05, 2026 at 03:56:03PM +0000, James Clark wrote:
+
+On 11/6/26 5:30 AM, Lorenzo Stoakes (ARM) wrote:
+> Replace the remaining uses of the legacy vm_flags_t flags in the rmap logic
+> with vma_flags_t values.
 > 
+> No functional change intended.
 > 
-> On 05/11/2026 15:08, James Clark wrote:
-> > 
-> > 
-> > On 05/11/2026 07:17, Namhyung Kim wrote:
-> > > The perf probe test suite fails on my machine.  It seems it's because
-> > > the kernel debug info is not available.  Actually NO_DEBUGINFO is to
-> > > check the condition and skip affected tests.
-> > > 
-> > > But it didn't work well as the skip_if_no_debuginfo function misses a
-> > > new error string for v7.0+ kernels.  Internally it uses the
-> > > add_probe_vfs_getname() to check if perf probe handles debuginfo and
-> > > check the error string.  But it didn't add the new error string.
-> > > 
-> > >    "Could not find probeable line"
-> > > 
-> > > With that added, it now passes like below:
-> > > 
-> > >    $ sudo perf test -vv 189
-> > >    Not taking turns using the perf mlock budget: nothing can exhaust it
-> > >    189: perftool-testsuite_probe:
-> > >    ---- start ----
-> > >    test child forked, pid 26135
-> > >    Probing warn_thunk_thunk
-> > >    -- [ PASS ] -- perf_probe :: test_adding_blacklisted :: adding
-> > > blacklisted function warn_thunk_thunk
-> > >    -- [ PASS ] -- perf_probe :: test_adding_blacklisted :: listing
-> > > blacklisted probe (should NOT be listed)
-> > >    ## [ PASS ] ## perf_probe :: test_adding_blacklisted SUMMARY
-> > >    -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe
-> > > inode_permission ::
-> > >    -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe
-> > > inode_permission :: -a
-> > >    -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe
-> > > inode_permission :: --add
-> > >    -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing added
-> > > probe :: perf list
-> > >    -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 1 1 Skipped
-> > > due to missing debuginfo :: testcase skipped
-> > >    -- [ PASS ] -- perf_probe :: test_adding_kernel :: using added probe
-> > >    -- [ PASS ] -- perf_probe :: test_adding_kernel :: deleting added
-> > > probe
-> > >    -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing
-> > > removed probe (should NOT be listed)
-> > >    -- [ PASS ] -- perf_probe :: test_adding_kernel :: dry run ::
-> > > adding probe
-> > >    -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding
-> > > probes :: first probe adding
-> > >    -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding
-> > > probes :: second probe adding (without force)
-> > >    -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding
-> > > probes :: second probe adding (with force)
-> > >    -- [ PASS ] -- perf_probe :: test_adding_kernel :: using doubled probe
-> > >    -- [ PASS ] -- perf_probe :: test_adding_kernel :: removing
-> > > multiple probes
-> > >    Regexp not found: "probe:vfs_mknod"
-> > >    Regexp not found: "probe:vfs_create"
-> > >    Regexp not found: "probe:vfs_rmdir"
-> > >    Regexp not found: "probe:vfs_link"
-> > >    Regexp not found: "probe:vfs_write"
-> > >    -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 1 1 Skipped
-> > > due to missing debuginfo :: testcase skipped
-> > >    Regexp not found:
-> > > "somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
-> > >    Regexp not found: "in this function|at this address"
-> > >    -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 1 1 Skipped
-> > > due to missing debuginfo :: testcase skipped
-> > >    -- [ PASS ] -- perf_probe :: test_adding_kernel :: function with
-> > > retval :: add
-> > >    -- [ PASS ] -- perf_probe :: test_adding_kernel :: function with
-> > > retval :: record
-> > >    -- [ PASS ] -- perf_probe :: test_adding_kernel :: function
-> > > argument probing :: script
-> > >    ## [ PASS ] ## perf_probe :: test_adding_kernel SUMMARY
-> > >    -- [ SKIP ] -- perf_probe :: test_basic :: help message ::
-> > > testcase skipped
-> > >    -- [ PASS ] -- perf_probe :: test_basic :: usage message
-> > >    -- [ PASS ] -- perf_probe :: test_basic :: quiet switch
-> > >    ## [ PASS ] ## perf_probe :: test_basic SUMMARY
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: missing
-> > > argument for -a
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: missing
-> > > argument for -d
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: missing
-> > > argument for -L
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: missing
-> > > argument for -V
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: unnecessary
-> > > argument for -F
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: unnecessary
-> > > argument for -l
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually
-> > > exclusive options :: -a xxx -d xxx
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually
-> > > exclusive options :: -a xxx -L foo
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually
-> > > exclusive options :: -a xxx -V foo
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually
-> > > exclusive options :: -a xxx -l
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually
-> > > exclusive options :: -a xxx -F
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually
-> > > exclusive options :: -d xxx -L foo
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually
-> > > exclusive options :: -d xxx -V foo
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually
-> > > exclusive options :: -d xxx -l
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually
-> > > exclusive options :: -d xxx -F
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually
-> > > exclusive options :: -L foo -V bar
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually
-> > > exclusive options :: -L foo -l
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually
-> > > exclusive options :: -L foo -F
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually
-> > > exclusive options :: -V foo -l
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually
-> > > exclusive options :: -V foo -F
-> > >    -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually
-> > > exclusive options :: -l -F
-> > >    ## [ PASS ] ## perf_probe :: test_invalid_options SUMMARY
-> > >    -- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable
-> > > descriptions :: func
-> > >    -- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable
-> > > descriptions :: func:10
-> > >    -- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable
-> > > descriptions :: func:0-10
-> > >    -- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable
-> > > descriptions :: func:2+10
-> > >    -- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable
-> > > descriptions :: func@source.c
-> > >    -- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable
-> > > descriptions :: func@source.c:1
-> > >    -- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable
-> > > descriptions :: source.c:1
-> > >    -- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable
-> > > descriptions :: source.c:1+1
-> > >    -- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable
-> > > descriptions :: source.c:1-10
-> > >    -- [ PASS ] -- perf_probe :: test_line_semantics :: unacceptable
-> > > descriptions :: func:foo
-> > >    -- [ PASS ] -- perf_probe :: test_line_semantics :: unacceptable
-> > > descriptions :: func:1-foo
-> > >    -- [ PASS ] -- perf_probe :: test_line_semantics :: unacceptable
-> > > descriptions :: func:1+foo
-> > >    -- [ PASS ] -- perf_probe :: test_line_semantics :: unacceptable
-> > > descriptions :: func;lazy\*pattern
-> > >    ## [ PASS ] ## perf_probe :: test_line_semantics SUMMARY
-> > >    ---- end(0) ----
-> > >    189: perftool-
-> > > testsuite_probe                                                         
-> > > : Ok
-> > > 
-> > > Fixes: 92b664dcefab ("perf test probe_vfs_getname: Skip if no
-> > > suitable line detected")
-> > > Cc: Jakub Brnak <jbrnak@redhat.com>
-> > > Cc: Michael Petlan <mpetlan@redhat.com>
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > ---
-> > >   tools/perf/tests/shell/lib/probe_vfs_getname.sh | 2 +-
-> > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> > > b/tools/ perf/tests/shell/lib/probe_vfs_getname.sh
-> > > index 57a59ae7d4ae3d71..c091cd208beec056 100644
-> > > --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> > > +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> > > @@ -64,7 +64,7 @@ add_probe_vfs_getname() {
-> > >   }
-> > >   skip_if_no_debuginfo() {
-> > > -    add_probe_vfs_getname -v 2>&1 | grep -E -q "^(Failed to find
-> > > the path for the kernel|Debuginfo-analysis is not supported)|(file
-> > > has no debug information)" && return 2
-> > > +    add_probe_vfs_getname -v 2>&1 | grep -E -q "^(Failed to find
-> > > the path for the kernel|Debuginfo-analysis is not supported)|(file
-> > > has no debug information|Could not find probeable line)" && return 2
-> > >       return 1
-> > >   }
-> > 
-> > I was just about to send a fix for the same thing, but I had something
-> > slightly different. I think adding "Could not find probeable line"
-> > allows for false skips in the future even when debug symbols are
-> > present, like when that function was re-worked other times. And that
-> > seems to be what Sashiko mentions as well.
-> > 
-> > If you just try to do a dry run probe of getname_flags() which has
-> > always existed, then its a pretty stable equivalent for whether debug
-> > info exists or not:
-> > 
-> >    perf probe -n -v 'getname_flags $params' 2>&1 | grep -E -q "^(Failed
-> > to find the path for the kernel|Debuginfo-analysis is not supported)|
-> > (file has no debug information)" && return 2
-> > 
-> 
-> I included it here: https://lore.kernel.org/linux-perf-users/20261105-james-perf-test-fixes-v1-0-0b279bee5830@linaro.org/T/#t
+> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> ---
 
-Thanks, looks good.
-Namhyung
-
+LGTM.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
