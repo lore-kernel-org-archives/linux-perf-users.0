@@ -1,55 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1793991243;
-	b=MDUTyBcvwzYcY+DAAwrkd+7uxJiZ/TR+jD/j4mWHJ9IRmaP/ZS0Bgwjp6XMnxf+z741O
-	 5cfsKkU65Q5v1l3eRmxMvsNfD5uPWn0RxUVwVGDaX8qBsYG2KIqKCamacUtm1rf15zN74
-	 JnlP0dqKP0fqmQFaKP5YisppsaXZtTZ5BqRRr0PtlLCiwLRIfwcH+d304SxNqh3KviAiU
-	 WAhIpOmoZM2IFcSSdVPAGjSeezsWYt3Ermwv/1PXawqLWfhPZJT3Iinajo8wDkRJ1+LHW
-	 K6KYXy3mexiDtHXQaai3iHflsdk8H9jj4IsZWtJRxbmZMUt/7pOiGH79AIlH7CinzDA==
+	t=1793991639;
+	b=qkaKvWCnUZfAq7ZhJsfmdGxPLg7xX8s/cLonWLSARo/Y25LNtbMHob5CfgmBg5HT5iRq
+	 6Ichp50c8A4dlhHmVvK78snCswW48mbt1BZnW3em4fTrJUFfPkrX76Pdctf5vcRPJj6e3
+	 eywb69gr6BVEVVm4sLbgW9ucc9jFZqY+iD3bebhpdF92fzutsnntJtsR6Q2hWXBuxYMjp
+	 UY36llRaqaBGATO9vfMOAQMspyZvOwI/C9oIUdP3kfp7e/qsU4hrzIeI2cxzKfidUaq/X
+	 BxQFMMMAe00N0VEoLpOqgUHVSA93yMSJlAOaEOz9Zc/INDkVrFi1otVunX8OlEt+A3w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1793991243;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=AuGg27+9IMpciHcEnbUzptbZl49jagNmm+REWY+RQ38=;
-	b=I5n5kMdG+C/3PwLMVWSSAmk2ev/uKAkp9C0e/06QlSS3Yj1L75a9iMp4VKHNrNjU3o9X
-	 ovPrUHDYq4S9IAIHVCbrzydpw2upsaXdOIKi0S90aTTsKiAqUQRa42mfsa4f37ijI8F66
-	 b+noY0wiANe3hIhAJo3HsOLqomMRggo2glLjBlvpHByHGdZAeJ3B7MdrMlPxArHF2J3Du
-	 QDTHYDqvPq7pGyzaDc2PHwEe1p93jli70VLFAF6lkc6OF3Y8Rq2zcXkXpmsGZMKicFBbL
-	 YyL8OV4f0qdr3823wOLY2VH/xJyt4WZdZhpd/qhw0aTsosrbEPFPVggepyw33hCtoEw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1793991639;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
+	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=GdNer88pGmusqvGHPd0KumXo7JJ6TTkP7yBHRbdWp1U=;
+	b=kgdUy7vDabxGiiSYV4/wW2+YcsIH7/wk8JRIj9AjpQCZbEMtWqNREgY67ClptB3D2pAC
+	 EnpLpVIcvo8tXrqAQd4h6oiVDgUWPzDTyMVTMLVD/ZwJdrw3h+Hm/12yQtykU1YNeFQYh
+	 k9kIbrVa1j6fHKq66EyxO47hKQu1UPdhKAKtFbBCbhhJzchE1KUjTzE38rAT6jKanPwWI
+	 rYkw4dtfWYUKUYEsxmz0hjvu1EqE+YscJS+vi+YLzF5dwoe5lXAuu60fozd3+mlOQd6ka
+	 l1DGWgVVSLtKkEAh0N5Pe/kyIjMPpLInC/ZrnvEilBPF1/KvWqwCG3kDSC71dxa1Z1A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=b04mEkU5;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0A6606A329
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 18:54:02 +0000 (UTC)
+	dmarc=pass header.from=arm.com;
+	spf=pass smtp.mailfrom=arm.com;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=gAhndznP;
+	arc=none smtp.remote-ip=217.140.110.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFD7E606A329
+	for <linux-perf-users@vger.kernel.org>; Fri,  6 Nov 2026 19:00:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DFD7E606A329
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=b04mEkU5
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54D9F1F0089F;
-	Fri,  6 Nov 2026 18:54:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1793991242;
-	bh=AuGg27+9IMpciHcEnbUzptbZl49jagNmm+REWY+RQ38=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=b04mEkU5ynRcI9tFaNE630A/xrrGzta/arv5rW1MWsVfa3RGc4XCTd2RoJj782A1e
-	 QwiX3vT6GZcnwTldfYT6T8hXWRWYofEw0YRyz/mfvZOG25tmj/AAP7UJPHdR85vygh
-	 /jKCVEyp8JeSwY2wlQ3nMFrUioHXn3MRlKlU3th25ogdSi0JemDMWoJFbh2w81U2vS
-	 ArqulRxO0/Q2yXgWNp5qDofCWMSsyGFiB6L6O4Yy7wvjshbD4rMDvtiZuUuAGG/oQw
-	 Vo/+mMsiJwdsIFiBOELV67WDwbNRjAH7R5dimSIlPRBO+n+r+NcjY82niZOEccc606
-	 C8pnZYZX1mrMA==
-Message-ID: <sashiko-outbox-202115@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf: Process subdirectory Makefiles unconditionally
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Robin Murphy" <robin.murphy@arm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <4b2e518499270b2a6cab3e04a1123458d82d2759.1793990977.git.robin.murphy@arm.com>
-References: <4b2e518499270b2a6cab3e04a1123458d82d2759.1793990977.git.robin.murphy@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Nov 2026 18:54:01 +0000
+	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=gAhndznP
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19EFE1650;
+	Fri,  6 Nov 2026 11:00:35 -0800 (PST)
+Received: from [10.57.91.130] (unknown [10.57.91.130])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A9DA93F8C6;
+	Fri,  6 Nov 2026 11:00:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1793991638; bh=vAhKlaxtIJtUaUUFkf4m71CpxjcFvsJUxlFtiJBAkMM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gAhndznPmhH84Ce1OzEMS6hPVXDz/i8OyQ2Wr0uWeGDi7iajMqNXJEBg0HTBmvgJW
+	 ETby+lSTbVr0KDsmJFDTwqYz+PShSTlTeUCHUMRiIUPVwtCz3xiApaLRC5RnLDiOip
+	 TWSPjbT87taelDQUbsmXZDmDh1+4i8yDfQUVNdnk=
+Message-ID: <4111d978-5277-46e5-82a4-dd92bc7099da@arm.com>
+Date: Fri, 6 Nov 2026 19:00:35 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -58,18 +52,87 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/4] perf: Add Arm Bus Monitor Unit driver
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+References: <cover.1793986672.git.robin.murphy@arm.com>
+ <7bf3b15677548c7e0c88aa03fa18a2b5673ab363.1793986672.git.robin.murphy@arm.com>
+ <sashiko-outbox-202020@kernel.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <sashiko-outbox-202020@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> Our subdirectories here are purely for file-level organisation rather
-> than any particular build structure, and everything in the Makefiles
-> is already conditional on the appropriate config options. Plus they're
-> not exactly big and complex, so for simplicity let's just drop the
-> top-level conditions.
->=20
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+On 2026-11-06 6:23 pm, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential
+> issue to consider:
+> - [Medium] perf: arm-bmu: driver omitted when
+>    ARM_CORESIGHT_PMU_ARCH_SYSTEM_PMU is n or m
+> --
+> 
+> commit 0be62f2184bd603abec9ec13cdc4790db8588fea
+> Author: Robin Murphy <robin.murphy@arm.com>
+> 
+> perf: Add Arm Bus Monitor Unit driver
+> 
+> This commit adds a perf driver for Arm's Bus Monitor Unit in
+> drivers/perf/arm_cspmu/ to support transaction matching and counting across
+> interface monitoring units.
+> 
+>> diff --git a/drivers/perf/arm_cspmu/Kconfig b/drivers/perf/arm_cspmu/Kconfig
+>> index 25bd55f036a4f..48c2a3ac7fab5 100644
+>> --- a/drivers/perf/arm_cspmu/Kconfig
+>> +++ b/drivers/perf/arm_cspmu/Kconfig
+>> @@ -34,3 +34,9 @@ config ARM_SYSTEM_PMU
+>>   	help
+>>   	  Support additional event filtering attributes for the CoreSight-based
+>>   	  PMU blocks found in various parts of Arm Compute Subsystems and SoCs.
+>> +
+>> +config ARM_BMU
+>> +	tristate "ARM Bus Monitor Unit"
+>> +	depends on (ARM64 && ACPI) || COMPILE_TEST
+>> +	help
+>> +	  Support perf event counting on Arm Bus Monitor Unit devices.
+>> diff --git a/drivers/perf/arm_cspmu/Makefile b/drivers/perf/arm_cspmu/Makefile
+>> index 90c3cd7101577..4e0b420a2b55f 100644
+>> --- a/drivers/perf/arm_cspmu/Makefile
+>> +++ b/drivers/perf/arm_cspmu/Makefile
+>> @@ -9,3 +9,5 @@ arm_cspmu_module-y := arm_cspmu.o
+>>   obj-$(CONFIG_NVIDIA_CORESIGHT_PMU_ARCH_SYSTEM_PMU) += nvidia_cspmu.o
+>>   obj-$(CONFIG_AMPERE_CORESIGHT_PMU_ARCH_SYSTEM_PMU) += ampere_cspmu.o
+>>   obj-$(CONFIG_ARM_SYSTEM_PMU) += arm_syspmu.o
+>> +
+>> +obj-$(CONFIG_ARM_BMU) += arm-bmu.o
+> 
+> [Severity: Medium]
+> Will arm-bmu.o be skipped during the build when
+> CONFIG_ARM_CORESIGHT_PMU_ARCH_SYSTEM_PMU is disabled or modular?
+> 
+> Unlike the other drivers in this directory, CONFIG_ARM_BMU does not depend on
+> CONFIG_ARM_CORESIGHT_PMU_ARCH_SYSTEM_PMU, but drivers/perf/Makefile only
+> descends into arm_cspmu/ via:
+> 
+> drivers/perf/Makefile:
+> 	obj-$(CONFIG_ARM_CORESIGHT_PMU_ARCH_SYSTEM_PMU) += arm_cspmu/
+> 
+> When CONFIG_ARM_CORESIGHT_PMU_ARCH_SYSTEM_PMU=n, Kbuild never enters
+> drivers/perf/arm_cspmu/ and arm-bmu.o is not built at all; when
+> CONFIG_ARM_CORESIGHT_PMU_ARCH_SYSTEM_PMU=m and CONFIG_ARM_BMU=y, arm_cspmu/
+> is only visited for modules and the built-in arm-bmu driver is omitted from
+> vmlinux.
+> 
+> drivers/perf/Makefile should also add arm_cspmu/ for CONFIG_ARM_BMU (or use
+> obj-y += arm_cspmu/).
+> 
 
-Sashiko has reviewed this patch and found no issues.
+Unlikely to be an issue in practice for the moment, as the users who 
+want arm-bmu also want arm_syspmu anyway (did you notice I sent them 
+together as a series?). However the existing double-conditional 
+compilation does seem a bit silly in general, so I've sent a quick patch 
+to clean that up separately.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/4b2e518499270b2a6ca=
-b3e04a1123458d82d2759.1793990977.git.robin.murphy@arm.com?part=3D1
-
+Thanks,
+Robin.
