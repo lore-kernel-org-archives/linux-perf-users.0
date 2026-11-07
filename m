@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794048851;
-	b=1BMStc5AiWdqEPFk7vszdTXd94Sxqeuq4zHQb80PFQHS62Y/pr3jYDejnp8fOKs5f9BF
-	 htvTTQezduaY/wND1DNWb7iEMAuLgTVwpwKEqgMogPw8feN56+fOe1auWY0b6Gkn73L+O
-	 FCXdr5/MI20s+XPCslicmkJkKWXj5WF8VQjNuVpUtR+kjdtle0g91hDktIdGH78yfLLIE
-	 31PCwmWVwV9P2Ld5u4KbU/7M+TTY0yCFhV8soUl0gYWRop6cOuYfDa46CxIcW7o18Px1d
-	 tpv8kpDC89OikyntBOzUjy8erELzyo5tu/ESPWxCP4zEAyCHIeWKzlofKui/BxZd9xw==
+	t=1794048886;
+	b=WJFr8m2BVYFLrDj1R+u1Gn1WPPKNU6yY6wTa+3JoL//EZT/o1wTGSiO8o0CDbcm55Eo6
+	 SM+x52f0qy5tDavJ9GCvarHvC684f4XXE9RsuIA3NAjB9oIFnzUzlGYZTngroZ5Lp0va/
+	 wZfv5UjBP8P4ijxqrNJKY5tA8EOIIHxFQLCAluhOYASvWQeQuFDnboqifpJsPUNE9acgP
+	 HXm/ogb+5UXe2MAhaMiLYXLq1bZSG00VkYovMOWT4xYd9juwYQfPNn2rbHOGBThe/slPL
+	 CraZwCt1+Z/IjzBueoLAn4Fi9sHlYfeUl2w7q1jpeSGWR+6sdxuMoqvWw6PC6fYsvYA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794048851;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794048886;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=gfSAUD9uJY+YDfVq+Q6PpejS/TXVIhkpdlDZkhIWdf0=;
-	b=ZchSlZ2z7EVCF/tIQ21qEGxrF6Jbk60Oit0MmKyADzib2WulDKUvoqbVaer5vaLf/oyR
-	 8IFBp5E6ZBsq1uyc/6VXg+M0a1glomZJEItuCw1f8DAYvOEjBZUU4P+WZsMgFbLnhRwtF
-	 ur1a9etz1oks9rqNAs5HLpMAdqgJ5QqlSQB4SABySvMc3ZUnLfnNUMfnR31MpOag5XBVA
-	 rgFeJgT/0OnNt0JqZgyk22qwlkgrioCAECJzQXIsetXoB5MxQ3L5l8aDxIs+jAADHX+hi
-	 ipbim6yQGn1xGH74P8+v/HAWlLXlBKOmwa7KeO2BIBKhaLkQvSr+YSLxYUHV7ZOpc+A==
+	bh=5qnevHOp+Aj+f84iY6R0igUKclW+nX6FAaidiCGV+E0=;
+	b=j4SCt7iud6LZuJ0uctw356+j8ZSiHOhqt9TV2ULVzWaAbCXIi91QS9V64Thr+/3BacQx
+	 P6v6A/dtzhkh+qaPmwhfg4Ydowvr58Nbfss+eS2yspBN6taohdfhZDk55xxGydP6wR8n9
+	 XW7P9W6WthmxQryy+L5dcULoS35x+zCMOfLvsKna4S5yRaAzAiHOz9DeCnEcNHCBCCltn
+	 jfDxLLmEjmUu6nPhx2zV+Mvad8Dwxnn/XeXXP4r1JFqqly9ZVPjm4YCMRBw4tmytgWrOw
+	 D7qYR+cDgR45pTZWYP0k/haARUcFoXRLNhBuPL5EuOF4R2+B+nURjoX0wo1PyEUwcsA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CkCzPtWn;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RAnIRS84;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05A15606A32D;
-	Sat,  7 Nov 2026 10:54:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75F3606A32E
+	for <linux-perf-users@vger.kernel.org>; Sat,  7 Nov 2026 10:54:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CkCzPtWn
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E8351F0089F;
-	Sat,  7 Nov 2026 10:54:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RAnIRS84
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F5AF1F008A1;
+	Sat,  7 Nov 2026 10:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794048850;
-	bh=gfSAUD9uJY+YDfVq+Q6PpejS/TXVIhkpdlDZkhIWdf0=;
+	s=k20260515; t=1794048886;
+	bh=5qnevHOp+Aj+f84iY6R0igUKclW+nX6FAaidiCGV+E0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CkCzPtWnrWt1bxT8ppDQCbbtw5F8AiOZJZ4DTnwPllIujqA3bWhQjzX+iY4zz/DT1
-	 BIRVGyn3kZIk1BmSgHluFUyNQRwTVmnshUDYn4jBLfNRV4Gp8LUplVSgjFHA25egAi
-	 Tt4UcTYEH1aBQBsoXqRKNBldLarWW7FnlhO1XJBoO8EYIAH+VvjQRDsQhEe72ssbAG
-	 MS1vJrrGqxoMs+EaMOBRC+bMygDaTgB2Fut91IgXFtIzvOIjF8lmtOojGVrsRAOFFj
-	 7Dh2YHjrn4/pxLFAHiwVaDtcOsa30akQQtz2kLS7z9Sru3gTbRSrCx3TPDNwKphkgt
-	 eGbzZoc1hr27g==
-Message-ID: <sashiko-outbox-202829@kernel.org>
+	b=RAnIRS84NQNutdzPF5YUAomYSrhlq/kakl9Fdf2Y+hU8FBnI4X+NDoPPbRaxb1oH5
+	 nccpuiP2BmsXuVZpcJ9iorKiwMTiBwyeahBMsmkzyCi7CFPMtYbFZDdMfrZvN5S6Vy
+	 kzcZFZVb+Q7pMqeOWvFPApZUIdtA3/w3Tjp2F97cacu0vUgUpaYPHilqTzLmJatW0e
+	 QxYXden4gt51vke3n6V4wXYK4Q6qkKIV4QCyQkr1XG+ck4uLtDmCKNOHqWytud3gTf
+	 h4N5a6IRNmpOg+Pau9rpgW1lohMEYsGr18E4ZnnFUtWikB9jXMUDyl+sydT0xFINwN
+	 bRsa6bq/yfzGQ==
+Message-ID: <sashiko-outbox-202830@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 02/15] drivers/perf: apple_m1: Remove unused
- variables
+Subject: Re: [PATCH v2 12/15] arm64: dts: apple: t8122: Add PMU Device Nodes
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Myria Sarvay" <myrialsarvay@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org
-In-Reply-To: <20261107-m3-plus-pmu-events-v2-2-acf1e78da039@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261107-m3-plus-pmu-events-v2-12-acf1e78da039@gmail.com>
 References: <20261107-m3-plus-pmu-events-v2-0-acf1e78da039@gmail.com>
- <20261107-m3-plus-pmu-events-v2-2-acf1e78da039@gmail.com>
+ <20261107-m3-plus-pmu-events-v2-12-acf1e78da039@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 07 Nov 2026 10:54:10 +0000
+Date: Sat, 07 Nov 2026 10:54:46 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,35 +60,15 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Low] drivers/perf: apple_m1: wrong Fixes commit for
-  m1_pmu_enable_event()
---
-
-commit 46e6058673421fd04a6bec454dd88350e27b9540
-Author: Myria Sarvay <myrialsarvay@gmail.com>
-
-> drivers/perf: apple_m1: Remove unused variables
->
-> These variables are calculated elsewhere as well, remove the extra dead
-> code.
->
+> From: Myria Sarvay <myrialsarvay@gmail.com>
+>=20
+> Adds the PMU nodes to all t8122 devices.
+>=20
 > Signed-off-by: Myria Sarvay <myrialsarvay@gmail.com>
-> Fixes: a639027a1be1 ("drivers/perf: Add Apple icestorm/firestorm CPU PMU =
-driver")
 
-[Severity: Low]
-In commit a639027a1be1 ("drivers/perf: Add Apple icestorm/firestorm CPU PMU
-driver"), m1_pmu_enable_event() passed evt, user, and kernel to
-m1_pmu_configure_counter().  Commit 75ecffc361bb ("drivers/perf: apple_m1:
-Refactor event select/filter configuration") changed
-m1_pmu_configure_counter() to take event->hw.config_base directly, leaving
-those local variables unused.
-
-Should the Fixes tag reference 75ecffc361bb ("drivers/perf: apple_m1:
-Refactor event select/filter configuration") instead?
+Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261107-m3-plus-pm=
-u-events-v2-0-acf1e78da039@gmail.com?part=3D2
+u-events-v2-0-acf1e78da039@gmail.com?part=3D12
+
