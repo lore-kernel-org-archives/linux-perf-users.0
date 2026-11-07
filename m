@@ -1,74 +1,74 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.197
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794026484;
-	b=ytVlCNs7edRtqvIs9E6MW6TD0uONrQ8a89QGK3vui7MgVsv1wCU+c+L20N+NsJ/CXU8F
-	 jDPVINvrLaA2Njq1RnAacv61wEJmm7ul4Fd6/IBkpmpsI2ct4kR8PdnXuZGsJ85/Y5Wwo
-	 688VP7OecAntOuj05bSSRBxK5JzO084MBPgp3BvD0i/YLz4YFbPBSDRL7vKUOv9uyWkd5
-	 Cp94DtEtZZzXpg3YG4Vp6mly9vqqrZm6Rrf94bWgRyk0BM2BdyKd14t23Jnn4TV69fg/h
-	 747majJD0g2CK+kRid4UQz++HYhkgfaDPgiIPtcJlCcczGdpVy1HtygHWRpqEtQc9LA==
+	t=1794026480;
+	b=3zo+VhuQpgZjEi39NUN5HOV26jvECRkCzbwyGIQ0HeiaBF18FFetjkEQaxGQ5YTmAORy
+	 WoGEfj/RZw1evBl5zZ3ugXSQda7hNF1ixWfSkpC66ycE1O+mTgArNZMzMbDLFOgqr5xSd
+	 SCcQNNR1YqwEHn5fFLFgbgRtFg/+M0L7C0fPBhJMZRTcHv5WUdmknr4l2RlFFBOg3iTr0
+	 JAywl2lGSn6JVjs5D5X3Bfi0EjC2WcIOBe434T2zGZvgj4fGhr4uEAPSaii0tFOqVuEg1
+	 esnp9JQhBKuvbmgiMg+VFJ1iF9h3EEF8Rvduzng5lAg97JdgDnsrm22lqPbe/wyIFfw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794026484;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794026480;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=t2QoGiIe6qh+xXGRXPEuyCoTeHTjKPAeQiniSi4k+CI=;
-	b=rGfNbikFGwHjvtdx5HFqPdzX3ZB52LJKyloxE8nLOAY43YXXsYBR+kuWmKG3jPTevQVi
-	 wtcindtciqjKl4enYOOcc6zfQdFl8dcDhrCeEhGW6/YtWJvUrNkRiMCE/NsxtyYhD5+Rv
-	 wAnPXqTljIvXEPfElQsgGtl56PMqj3XbxaAS0lx8J1YhBPnmZnFHTVTtNatcaxU9lINxu
-	 QDHjofabgtwElb6+mh5nsXZCjQQJHJtYWYYxvSJ3zI9x2c9Gs20fH/pcPyUsLw7qdm4xO
-	 LgRy5mjJ/vKRuw0kGkgeLoCoE23wa+jvb9h2wKxAXVp+gUeiPQsFB7yzWAOsYS5QWyA==
+	bh=dlGmy1iETR07VpwAF3gSNr7L3yDUEizC6SlTALxKZy0=;
+	b=VX0e6Dnd1v7emMUx0UBpqk8RLHqcY0BadkzLH13xjSHp7H9UypT7oNYKZLedQJABze6f
+	 PN1r15sQ75F0DWXTYlj9Eoi3kKfY1vVe0lZ+2iG4+rkmB6a7HXoH13enU9uzshfJkczmg
+	 dbljyFXcxGG4wUszC4vJBFAq9Ep5HthAVaJHk1U6zbq4d7RbREIbzd/feQxbHGo3OCheV
+	 PCoGZ7iGj8UOltqZW3Fwgs+lvmNO061nuYucsVgZ6PbOiiil1nrqPUGxXAiLVxtFKwYVS
+	 B9iIevLIZ84GR19nvtbm4hSDHnM2Sp/4yu9puXpjQSh7tUAuuUUUH0qQWqBB9/9+enQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=BCjZplEl;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=loNpZisR;
 	arc=none smtp.remote-ip=74.125.82.197
 Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D6D606A33B
-	for <linux-perf-users@vger.kernel.org>; Sat,  7 Nov 2026 04:41:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 92D6D606A33B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D09F606D805
+	for <linux-perf-users@vger.kernel.org>; Sat,  7 Nov 2026 04:41:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2D09F606D805
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=BCjZplEl
-Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-36d1353fdcdso2423131eec.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Nov 2026 20:41:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=loNpZisR
+Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-36f26e6abe9so2347332eec.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Nov 2026 20:41:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794026484; x=1794631284; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794026479; x=1794631279; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=t2QoGiIe6qh+xXGRXPEuyCoTeHTjKPAeQiniSi4k+CI=;
-        b=BCjZplElqqSWtaFxAjFUeGqdp9Gav6nTfkCMGBeM4NxtVHBzecqISlPmQJVal7qYUX
-         HV+bIE9gBe70Dg58WFu3Tui4XkzXuQ2gN3YW1EYRRrAuZfLLFeL6/Li2QGp6GF0zaXMN
-         Efz71a2l6CuBntw3IDd+nJbeFLj7a2HseMCtHaVQzwyXu7LYbDRZjSyhHJCx4yqg1wr6
-         xlNsJmI/znkf5iCXvrmd4g8csk4hqZhNDcoPTadYqAX3IoA87+6Loezcv+jGECEaX1Cf
-         A0dsMdTtVjaxobSxnqInlTVtZzOjuxQXgxj/5RzYt9ytiT3uOy4nIxSFyc6eEovT/WQr
-         CG2g==
+        bh=dlGmy1iETR07VpwAF3gSNr7L3yDUEizC6SlTALxKZy0=;
+        b=loNpZisRQBSqUFgZi7hOe2CwX5rAB3c/T9oRlFAGN/P67a/eOHYXlqz0ZL1bY7ta+f
+         xVmktgtja5ZfvVkhBkTbvTncuAzWu9IkpCRSgogkkiWp1L9KwJ+jFDRg45aUoyWMUIXJ
+         HhSFSMhJqR57ORQjm+pW6h5nxohkdZDQ9sebw4+5jtlceiCkXQHYu/771mcNpoZFfc9G
+         Z3SmRhghYKwkXu6wcnIYVG4LQQ0WanvllZSNK/tIs6XXPk0aiXSgobU433MB7yYqbg5c
+         wKzZ5PYxrsp8KFuWGaCgTNXzy7Ui5T/Su/2ulurX+kCRxCjQZlh4stZgt4uxn7q6F/7F
+         zU2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794026484; x=1794631284;
+        d=1e100.net; s=20260707; t=1794026479; x=1794631279;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=t2QoGiIe6qh+xXGRXPEuyCoTeHTjKPAeQiniSi4k+CI=;
-        b=A6aU4RZqreBODppaKxWO4A7y6PBZ/MDvnXQoyhADDUAPm5o6ZFBFpUPhtR5TMxlbZO
-         NLeFU1IRDnG59zsHUp3y2mYdsaDiPhXF6XWkFb7AVH51iIoRdkZBDkFoQP+3kKYKiIfc
-         3DJPj1R0YhC649GjmHjN9dlGLipfm2JioUTdajgg9Fumv+RvKmg2lUIxKEwyb2zP+ikr
-         l0QAbzvW3q4EeiKoRsDq2y1rTuVm6KptLE5oSxZKlpIfbgKRs0D+wODkoirG1IsPhIbz
-         aLRK6zTFB1Lzv99mDkSTPZ7FpbVqv35vN1cbQdJl42WU7vpPG+iBqRWd4XVgDwTksekN
-         HycA==
-X-Forwarded-Encrypted: i=1; AL+hErG8EvKjGGX1B1qHFBN2RLejMHajlHBCIooRjUiJ0XTqFgzS8OI2uCbgOaJzQ1AtQ4w5PsC1ziZope197lCKvjYs@vger.kernel.org
-X-Gm-Message-State: APuU4Z9zL8uz7ajbP437ebO6ssWSJ3cFPg914YuosY4rQaFFMgXs14bA
-	UbKT06ACLTIqhtaoWDqON3rpnNiR/TEjUvWdZ9w9I2/BsT4fh4RSZjUT637qpf4uTzNxsCRIK7O
-	px/gx13VOMA==
-X-Received: from dyctb4.prod.google.com ([2002:a05:693c:39c4:b0:369:45ee:40a0])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:78c3:b0:36a:1904:60a3
- with SMTP id 5a478bee46e88-36f75a2ae65mr5587829eec.15.1794026483275; Fri, 06
- Nov 2026 20:41:23 -0800 (PST)
-Date: Fri,  6 Nov 2026 20:40:49 -0800
+        bh=dlGmy1iETR07VpwAF3gSNr7L3yDUEizC6SlTALxKZy0=;
+        b=DQKGLROGWaWta+gXxSVKwNTPlgHoNmWoLvHuyqv/2Wa9f9CVhAQU29q+jP3Q2vY0Dq
+         sAUQb4s6lxYD1VgTQgBHxkM33C1zQZPGn8uIMeF2o/3G68AFoR/jXjs1oFcPshs42RCU
+         3TIQju5fpjCrU14xfRc/ct89gvE+SZtbEz4lJLGp63okofqO1CtwcJs8DyyA/FyGOsiM
+         UHHC14PiGbzjjqqgzUDRmEkyhZ2qX1uPQofpVAg2p8Hk5Wr3CrWbV4r+AGxyijsphb8O
+         f9b3omU0/ELj37rtds82f/CNzWM3RHSN7FqW8rXUDacmW/O1KG3Kp08dDQ95hRMZM6RV
+         FSCw==
+X-Forwarded-Encrypted: i=1; AL+hErEi2NrCIcl2f8CFHoqQURWtLryGfsloZickOwgElGKxJeLQEhsORWFkFXXEJ+yMWOnvxSXnuWLMthuQ4X1snytb@vger.kernel.org
+X-Gm-Message-State: APuU4Z/uK2XQwI++ZtVXAoIBmvh01UmRvPTkJqVrARqPUT3Z/tz9PS+T
+	9AY1fA5DMq9G7n0WiPpB7lVJctFkCi682kFphwLYA4TWNkKv3Tmm5F+M6E2ZF2oD+oyeepDtr9R
+	Vo0wA73F6Rg==
+X-Received: from dyboy1.prod.google.com ([2002:a05:7300:ed01:b0:368:57fe:3057])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:d813:b0:369:fe81:a575
+ with SMTP id 5a478bee46e88-36f772fa7e5mr6450670eec.35.1794026479099; Fri, 06
+ Nov 2026 20:41:19 -0800 (PST)
+Date: Fri,  6 Nov 2026 20:40:47 -0800
 In-Reply-To: <20261107044102.1506626-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,8 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261107044102.1506626-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.455.g6c5a503b38-goog
-Message-ID: <20261107044102.1506626-9-irogers@google.com>
-Subject: [PATCH v11 08/20] perf dsos: Skip BPF and OOL DSOs in dsos__find_kernel_dso()
+Message-ID: <20261107044102.1506626-7-irogers@google.com>
+Subject: [PATCH v11 06/20] perf comm: Add __guarded_by annotations to struct comm_strs
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, bvanassche@acm.org, elver@google.com, 
@@ -92,61 +92,32 @@ Cc: adrian.hunter@intel.com, bvanassche@acm.org, elver@google.com,
 	ndesaulniers@google.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-In machine__process_ksymbol_register(), set the binary type of non-OOL
-ksymbol DSOs to DSO_BINARY_TYPE__BPF_IMAGE (which
-machine__process_bpf_event_load() upgrades to
-DSO_BINARY_TYPE__BPF_PROG_INFO on PERF_BPF_EVENT_PROG_LOAD), and update
-dsos__find_kernel_dso_cb() to skip DSO_BINARY_TYPE__BPF_PROG_INFO,
-DSO_BINARY_TYPE__BPF_IMAGE, and DSO_BINARY_TYPE__OOL so that
-dsos__find_kernel_dso() does not match ksymbol DSOs in machine->dsos.
+Annotate strs, num_strs, and capacity in struct comm_strs with
+__guarded_by(&lock) and __pt_guarded_by(&lock) so Clang verifies all
+accesses hold comm_strs->lock.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/dsos.c    | 3 +++
- tools/perf/util/machine.c | 9 ++++-----
- 2 files changed, 7 insertions(+), 5 deletions(-)
+ tools/perf/util/comm.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-index 1574c8885d78..fbbf98c4ccae 100644
---- a/tools/perf/util/dsos.c
-+++ b/tools/perf/util/dsos.c
-@@ -475,6 +475,9 @@ static int dsos__find_kernel_dso_cb(struct dso *dso, void *data)
- 	 * is_kernel_module() treats it as a kernel cpumode.
- 	 */
- 	if (!dso__kernel(dso) ||
-+	    dso__binary_type(dso) == DSO_BINARY_TYPE__BPF_PROG_INFO ||
-+	    dso__binary_type(dso) == DSO_BINARY_TYPE__BPF_IMAGE ||
-+	    dso__binary_type(dso) == DSO_BINARY_TYPE__OOL ||
- 	    is_kernel_module(dso__long_name(dso), PERF_RECORD_MISC_CPUMODE_UNKNOWN))
- 		return 0;
+diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
+index 6343a3c9debe..9fc4e91a36e9 100644
+--- a/tools/perf/util/comm.c
++++ b/tools/perf/util/comm.c
+@@ -16,9 +16,9 @@ DECLARE_RC_STRUCT(comm_str) {
  
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 076d167380f2..b958c6935a56 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -769,6 +769,10 @@ static int machine__process_ksymbol_register(struct machine *machine,
- 			dso__set_binary_type(dso, DSO_BINARY_TYPE__OOL);
- 			dso__data(dso)->file_size = event->ksymbol.len;
- 			dso__set_loaded(dso);
-+		} else {
-+			dso__set_binary_type(dso, DSO_BINARY_TYPE__BPF_IMAGE);
-+			if (is_bpf_image(event->ksymbol.name))
-+				dso__set_long_name(dso, "", false);
- 		}
+ static struct comm_strs {
+ 	struct rw_semaphore lock;
+-	struct comm_str **strs;
+-	int num_strs;
+-	int capacity;
++	struct comm_str **strs __pt_guarded_by(&lock) __guarded_by(&lock);
++	int num_strs __guarded_by(&lock);
++	int capacity __guarded_by(&lock);
+ } _comm_strs;
  
- 		map__set_start(map, event->ksymbol.addr);
-@@ -780,11 +784,6 @@ static int machine__process_ksymbol_register(struct machine *machine,
- 		}
- 
- 		dso__set_loaded(dso);
--
--		if (is_bpf_image(event->ksymbol.name)) {
--			dso__set_binary_type(dso, DSO_BINARY_TYPE__BPF_IMAGE);
--			dso__set_long_name(dso, "", false);
--		}
- 	} else {
- 		dso = dso__get(map__dso(map));
- 	}
+ static void comm_strs__remove_if_last(struct comm_str *cs);
 -- 
 2.56.0.455.g6c5a503b38-goog
 
