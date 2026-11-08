@@ -1,56 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=149.28.215.223
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794145559;
-	b=PtQ6kRPGtOzcgGVxv3TEH5K472a6CzNErWybxNBI7SG10tAqSFuiMPUY1DtJGzFKeTIP
-	 /Arb/dW031JSuUjT/qRmU1O/MA5zx9QVr+i8CWphHrYX7rYx2Q7XMAI3y3QSPEHZ7y+5Z
-	 zf+cbtenvTzREdHXe6EXzb2eCjfsdJnvv8GrwKSBTATv8aMWLUTYfU9XS/LmrmwePhk60
-	 QEHsphgxg1pTHmwnfYMFxqJr7hGU6ewlxby6vIumkmFee/q+Q7xaRp8Z7TeacFwBU8OQj
-	 u0dL9iP+lhesXDcD4kC0m9dldGIDeT641CAb3MsNMJGbG8EhDaPRSnqCr6rodKKTmKg==
+	t=1794159185;
+	b=zlX2kbzaD6Rf02sJyTqXJfx+IaHkrSlk6B/+uG0MiMTXHAkVjKXZ6mG3KWR0+y4cDwOY
+	 Z16Fb0/9ffbmoc7CELMT/MxAhH8D1nryOa7tiKi+1uaVZn8vzB7m4HVMwjm4gZp1I7O9V
+	 mysBZEzrWYI3wpLl0vT4G+k/YXvypmjXsJE01EVY4oZz36qGEhwybDoBEmA8GblDQUTHz
+	 P/W83M173eqDqcdw+DgpwtOuLVxo4zrjBoPM/9uLiyXhw+fZSKfpl6MfcRpk4sPU//dE5
+	 xATZiEaMRuH8SRPRHNqb1Cd20YE24AKRkVY3qECrGD6ngN5dmZqTftLRP6nTe11m4VQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794145559;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=3J9MEQNBQoLk3yIq1U3fXeBJMi6GOjqhSdWlc111+hM=;
-	b=3P5tPYNxa/FUUwfzMyqITnBvooonl13GmW/TBtQCzwuUKYjLENODkDvf2L1v1SGlRnrI
-	 7kDfJQOfd+HIpq5vuBjCU0rBQP4YR4KYQVui1wugWLhJT8P0SFROvsT76gQ8ipiTc8zS9
-	 kWMGly9jU8JQbeumNzH8IXIZJXZwLSBflLFuRcnf5egTBy4nQSOFkD0Up0F90al/ZmSMb
-	 iXw79pMAVxJ9fw9oPz3bWj3W6R4hAN0Xn1jOMhZC25/3pZRiWWVoWd6JFCtu0yFgIgV5o
-	 vcsDJZ1PTFYY7wZQ5US4C03LRN0XE96uQYzac5f1Y03Qft7LEZE/YG/p41dH337jYAw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794159185;
+	h=DMARC-Filter:DKIM-Signature:X-Forward-Email-ID:
+	 X-Forward-Email-Sender:X-Forward-Email-Version:
+	 X-Forward-Email-Website:X-Complaints-To:X-Report-Abuse:
+	 X-Report-Abuse-To:Mime-Version:Content-Transfer-Encoding:Content-Type:
+	 Date:Message-Id:Cc:Subject:From:To:X-Mailer:References:In-Reply-To;
+	bh=mmRDTsFTMdkB1knSlLyF6ragoIMpPyE7Nd3fqt3pBKI=;
+	b=xWAx4WsamvEw5e+AfC2tTCirs7//lKweC5YUaO2qO51rI8BJs1x6bpZI9YoWk9n9Bpm3
+	 lWPIsiRn7snI1+MZUvw9bZyX6/OJ5BuEE7BRJqPIUNbCXiCqIv86IIa0LvrFIjgkexSwU
+	 oTL2GlVA1AhOQsxiT/Nl6lE3mMQM7fyLhCTrb5jiCmIqnkRb0UoavzWFypfP8tfudizci
+	 dxQchvVXp6YQmiKltOdaBK3GJakezGcShZ4Mn9g77JqG/CyBOyYcUI/UIlQfiFk721l0Y
+	 i+7WH9LMIuF4d8u8j268nFfVxk+0PRbk1AoIVRsVnnFc6om93hfPWpkca7liGssLOSg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="e5Mq/W8C";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=ubuntu.com;
+	spf=pass smtp.mailfrom=fe-bounces.ubuntu.com;
+	dkim=pass header.d=ubuntu.com header.i=@ubuntu.com header.a=rsa-sha256 header.s=fe-953a8a3ca9 header.b=slSmwU3H;
+	arc=none smtp.remote-ip=149.28.215.223
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379FD606A320;
-	Sun,  8 Nov 2026 13:45:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1585D606A31C
+	for <linux-perf-users@vger.kernel.org>; Sun,  8 Nov 2026 17:33:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1585D606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ubuntu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.ubuntu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=e5Mq/W8C
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A953C1F0089F;
-	Sun,  8 Nov 2026 13:45:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794145558;
-	bh=3J9MEQNBQoLk3yIq1U3fXeBJMi6GOjqhSdWlc111+hM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=e5Mq/W8CtpLK0CVts/M0yLKeWvH7ZkE5rOGorUUSOjUkuBVPiu7eiv2Q9ZKYBM9Z9
-	 7ZxZVSYYDo53hVJjr5bJ/s2/Du102xt99RaCjTabIMl08u7eQXcRUymnxqFrh//IIp
-	 MDPYxTXdDlFMMYp0E1ISGLpdEYSX8Lsocq9VZ3EsrFOf/IA0DNYZk5nSIR+5VearcR
-	 S1jk4JgXwZzLNQKubeZlbrwwLx+0U5q/A/woL24Tqclgh9TZ4oM9/IqTjn90MJ5Gfe
-	 hWf41eoqJ0eiDpVEkVKii+Dn1Th4Y24AVItckPS+2WwP46OnQ7P+Ilhy6/8tl5rZOM
-	 4RM8DnqG6Dsdw==
-Message-ID: <sashiko-outbox-203782@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 4/5] perf: add MIPS Coherence Manager 3 (CM3) PMU driver
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>
-Cc: devicetree@vger.kernel.org, linux-perf-users@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org
-In-Reply-To: <20261108-i6500-cm3-pmu-v1-4-bd119584891a@mobileye.com>
-References: <20261108-i6500-cm3-pmu-v1-0-bd119584891a@mobileye.com>
- <20261108-i6500-cm3-pmu-v1-4-bd119584891a@mobileye.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 08 Nov 2026 13:45:58 +0000
+	dkim=pass (2048-bit key) header.d=ubuntu.com header.i=@ubuntu.com header.a=rsa-sha256 header.s=fe-953a8a3ca9 header.b=slSmwU3H
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ubuntu.com;
+ h=In-Reply-To: References: To: From: Subject: Cc: Message-Id: Date:
+ Content-Type: Content-Transfer-Encoding: Mime-Version; q=dns/txt;
+ s=fe-953a8a3ca9; t=1794159177;
+ bh=mmRDTsFTMdkB1knSlLyF6ragoIMpPyE7Nd3fqt3pBKI=;
+ b=slSmwU3HRLRUzQNPP4oiH4+wP4RhHx0pOhQKAEdLjgL77ReW7807UIJqOdOfrcB0O2l5Uzt1B
+ 9hjB3VViHcxqwslBR1+uDQuH+SJapSMpwFfYAR9vuIq+xktLSvozOxhttStfzM7lf7R3Ieh0HF/
+ XppHcwqGw+qaMcD4/6aDGFkfSQNRvRflgYl0u3jL2+o6giuTSn+NfFMDRHQMzFrAAlPA3migo3b
+ maOH16KrDAG8OE8Yn2irBbKLf7a3tN2cZOJBc3ODwEfsUABfRfyBT9h+hHfs7Hao1DFLtvQ/jLS
+ E3jrZne5Oeng3Nu77Dve71LK2DyuOyn00VQ9K7YbPHWw==
+X-Forward-Email-ID: 6af0b240935e4de7801c9067
+X-Forward-Email-Sender: rfc822; jpeisach@ubuntu.com, smtp.forwardemail.net,
+ 149.28.215.223
+X-Forward-Email-Version: 2.19.13
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,280 +61,82 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8; format=Flowed
+Date: Sun, 08 Nov 2026 12:32:46 -0500
+Message-Id: <DMQ0CENBZQGW.L35BD1BXYE9Z@ubuntu.com>
+Cc: <linux-arm-kernel@lists.infradead.org>,
+ <linux-perf-users@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <asahi@lists.linux.dev>, "Yuvan Shen"
+ <yuvanshen09@gmail.com>, "Nick Chan" <towinchenmi@gmail.com>
+Subject: Re: [PATCH 00/13] drivers/perf: apple_m1: Add M3/M4/A18 Pro Support
+From: "Joshua Peisach" <jpeisach@ubuntu.com>
+To: <myrialsarvay@gmail.com>, "Will Deacon" <will@kernel.org>, "Mark
+ Rutland" <mark.rutland@arm.com>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Sven Peter" <sven@kernel.org>, "Janne Grunau"
+ <j@jannau.net>, "Neal Gompa" <neal@gompa.dev>, "Marc Zyngier"
+ <maz@kernel.org>
+X-Mailer: aerc 0.21.0
+References: <20261103-m3-plus-pmu-events-v1-0-a8eb6c1139fe@gmail.com>
+In-Reply-To: <20261103-m3-plus-pmu-events-v1-0-a8eb6c1139fe@gmail.com>
 
-Thank you for your contribution! Sashiko AI review found 7 potential
-issues to consider:
-- [High] perf/mips_cm3: 2^32 counts lost on counter overflow in
-  cm3_pmu_update()
-- [Medium] perf/mips_cm3: 64-bit qualifier truncated in hwc->config_base
-  on 32-bit
-- [Medium] perf/mips_cm3: cm3_pmu_event_init() validates group before
-  setting config
-- [Medium] perf/mips_cm3: NULL ctx deref in cm3_pmu_validate_group()
-  with lockdep
-- [Medium] perf/mips_cm3: cpuhp_state_remove_instance() migrates
-  unregistered PMU
-- [Medium] perf/mips_cm3: cm3_pmu_hw_init() skips power check when
-  initialized
-- [Medium] perf/mips_cm3: invalid wait context acquiring cm_core_lock in
-  cm3_pmu_lock()
---
+On Tue Nov 3, 2026 at 5:14 AM EST, Myria Sarvay via B4 Relay wrote:
+> This series adds support for the CPU PMU in the new M3, M4 and A18 SoCs
+> presed in apple devices. These PMUs have new encodings for events, along
+> with larger codes for these events. All of these events are as Apple
+> describes them in the various kpep files found under /usr/share/kpep on
+> macOS 27. More events may exist, but we have no idea of their affinity,
+> or what they actually count, so we don't include them here.
+>
+> These patches have been tested on my own M2 (t8133-j413) and M3
+> (t6031-j514c) devices, as well as by Yuvan on their M4 (t8132-j713)
+> device.
+>
+> If possible, the device tree changes should probably go through
+> apple-soc, as this is where the recently picked up M4 Pro/Max dts are.
+>
+> Tested-by: Yuvan Shen <yuvanshen09@gmail.com> # on t8132-j713
+> Signed-off-by: Myria Sarvay <myrialsarvay@gmail.com>
+> ---
+> Myria Sarvay (12):
+>       dt-bindings: arm: pmu: Add Apple M3/M4/A18 Pro SoC CPU PMU compatib=
+les
+>       drivers/perf: apple_m1: Remove unused variables
+>       drivers/perf: apple_m1: Support per-implementation event size
+>       drivers/perf: apple_m1: Use macros for per-implementation init func=
+tions
+>       drivers/perf: apple_m1: Add Apple M3 Series Support
+>       drivers/perf: apple_m1: Add Apple M4 Series Support
+>       drivers/perf: apple_m1: Add Apple A18 Support
+>       arm64: dts: apple: t603x: Add PMU Device Nodes
+>       arm64: dts: apple: t8122: Add PMU Device Nodes
+>       arm64: dts: apple: t604x: Add PMU Device Nodes
+>       arm64: dts: apple: t8132: Add PMU Device Nodes
+>       arm64: dts: apple: t8140: Add PMU Device Nodes
+>
+Maybe the folder should be renamed to 'apple_arm' or something like
+that?
 
-commit 7d10c5a1b5055212bfd02b13d5581ab06e3a9b14
-Author: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+> Nick Chan (1):
+>       drivers/perf: apple_m1: Support per-implementation event tables
+>
+>  Documentation/devicetree/bindings/arm/pmu.yaml |   8 +
+>  arch/arm64/boot/dts/apple/t6030.dtsi           |  12 +
+>  arch/arm64/boot/dts/apple/t6031-base.dtsi      |  12 +
+>  arch/arm64/boot/dts/apple/t6041.dtsi           |  12 +
+>  arch/arm64/boot/dts/apple/t8122.dtsi           |  12 +
+>  arch/arm64/boot/dts/apple/t8132.dtsi           |  12 +
+>  arch/arm64/boot/dts/apple/t8140.dtsi           |  12 +
+>  drivers/perf/apple_m1_cpu_pmu.c                | 664 +++++++++++++++++++=
++++---
+>  8 files changed, 662 insertions(+), 82 deletions(-)
+> ---
+> base-commit: acb925da49876e74b806ccd48a7518d2d3368e5d
+> change-id: 20260929-m3-plus-pmu-events-e4010ab44135
+>
+> Best regards,
+> -- =20
+> Myria Sarvay <myrialsarvay@gmail.com>
 
-perf: add MIPS Coherence Manager 3 (CM3) PMU driver
-
-This commit adds an uncore PMU driver and documentation for the performance
-counters in the MIPS Coherence Manager 3 (CM3).
-
-> diff --git a/drivers/perf/mips_cm3_pmu.c b/drivers/perf/mips_cm3_pmu.c
-> new file mode 100644
-> index 0000000000000..d4be23e79d6f0
-> --- /dev/null
-> +++ b/drivers/perf/mips_cm3_pmu.c
-
-[ ... ]
-
-> +static bool cm3_pmu_lock(struct cm3_pmu *cm3_pmu)
-> +{
-> +	preempt_disable();
-> +	if (cm3_pmu->cluster =3D=3D cpu_cluster(&current_cpu_data))
-> +		return false;
-> +
-> +	mips_cm_lock_other(cm3_pmu->cluster, 0, 0, CM_GCR_Cx_OTHER_BLOCK_DEBUG);
-> +	return true;
-> +}
-
-[Severity: Medium]
-Can calling mips_cm_lock_other() here trigger a lockdep wait-context
-splat under CONFIG_PROVE_RAW_LOCK_NESTING?
-
-mips_cm_lock_other() acquires the per-CPU cm_core_lock, which is a
-non-raw spinlock_t:
-
-arch/mips/kernel/mips-cm.c:mips_cm_lock_other() {
-	...
-	spin_lock_irqsave(this_cpu_ptr(&cm_core_lock),
-			  *this_cpu_ptr(&cm_core_lock_flags));
-	...
-}
-
-CM3_PMU_READ() and CM3_PMU_WRITE() call cm3_pmu_lock() from the PMU
-callbacks (add, start, stop, del, read), which run while holding the
-raw_spinlock_t perf_event_context::lock, as well as from the hardirq
-hrtimer callback cm3_pmu_poll().  Acquiring a spinlock_t inside a
-raw_spinlock_t or hardirq context is an invalid wait-context transition
-when accessing a remote cluster's PMU.
-
-[ ... ]
-
-> +static int cm3_pmu_hw_init(struct cm3_pmu *cm3_pmu)
-> +{
-> +	guard(mutex)(&cm3_pmu->init_lock);
-> +
-> +	if (cm3_pmu->initialized)
-> +		return 0;
-> +
-> +	if (!cm3_pmu_cluster_powered(cm3_pmu))
-> +		return -ENODEV;
-> +
-> +	cm3_pmu->num_pcs =3D FIELD_GET(CM_GCR_DB_PC_CTL_PERF_NUM_CNT,
-> +				     CM3_PMU_READ(cm3_pmu, pc_ctl));
-> +	cm3_pmu->num_pcs =3D min_t(unsigned int, cm3_pmu->num_pcs,
-> +				 CM3_PMU_MAX_PCS);
-> +	cm3_pmu_hw_reset(cm3_pmu);
-> +	cm3_pmu->initialized =3D true;
-> +
-> +	return 0;
-> +}
-
-[Severity: Medium]
-Does returning early when cm3_pmu->initialized is true skip the power
-check if a remote cluster is powered down after probe or an earlier
-event?  As cm3_pmu_unregister() notes by checking both
-cm3_pmu->initialized and cm3_pmu_cluster_powered(), a cluster that was
-once initialized can later power down; opening a new event on it will
-then pass cm3_pmu_hw_init() and fault when cm3_pmu_start() accesses its
-GCRs.
-
-[ ... ]
-
-> +static void cm3_pmu_update(struct perf_event *event)
-> +{
-> +	struct cm3_pmu *cm3_pmu =3D to_cm3_pmu(event->pmu);
-> +	struct hw_perf_event *hwc =3D &event->hw;
-> +	u64 prev, new;
-> +
-> +	do {
-> +		prev =3D local64_read(&hwc->prev_count);
-> +		new =3D cm3_pmu_read_counter(cm3_pmu, hwc->idx);
-> +	} while (local64_cmpxchg(&hwc->prev_count, prev, new) !=3D prev);
-> +
-> +	local64_add((new - prev) & CM3_PMU_COUNTER_MASK, &event->count);
-> +}
-> +
-> +static void cm3_pmu_start(struct perf_event *event, int flags)
-> +{
-> +	struct cm3_pmu *cm3_pmu =3D to_cm3_pmu(event->pmu);
-> +	struct hw_perf_event *hwc =3D &event->hw;
-> +	int idx =3D hwc->idx;
-> +
-> +	if (WARN_ON_ONCE(!(hwc->state & PERF_HES_STOPPED)))
-> +		return;
-> +
-> +	hwc->state =3D 0;
-> +
-> +	if (idx !=3D CM3_PMU_IDX_CYCLES)
-> +		cm3_pmu_program_counter(cm3_pmu, idx, hwc->config,
-> +					hwc->config_base);
-> +
-> +	/*
-> +	 * Setting the reset bit together with the count-on bit resets the
-> +	 * counter and its overflow status before counting is started.
-> +	 */
-> +	local64_set(&hwc->prev_count, 0);
-> +	cm3_pmu_set_ctl(cm3_pmu, 0,
-> +			cm3_pmu_reset_bit(idx) | cm3_pmu_counton_bit(idx));
-> +
-> +	perf_event_update_userpage(event);
-> +}
-
-[Severity: High]
-When operating in overflow-interrupt mode (cm3_pmu->irq > 0, where the
-polling timer is not started), does cm3_pmu_update() lose 2^32 counts on
-counter wraparound?
-
-cm3_pmu_start() resets both hwc->prev_count and the 32-bit hardware
-counter to 0.  When the counter reaches 0xffffffff, raises the overflow
-interrupt, and wraps past 0 to a small value new before
-cm3_pmu_handle_irq() calls cm3_pmu_update(), (new - prev) & 0xffffffff
-evaluates to just new (or on subsequent overflows, whenever new >=3D prev),
-discarding the full 2^32 wraparound.
-
-[ ... ]
-
-> +static void cm3_pmu_count_group_event(struct perf_event *event,
-> +				      struct perf_event *member,
-> +				      unsigned int *cycles, unsigned int *pcs)
-> +{
-> +	if (member->pmu !=3D event->pmu)
-> +		return;
-> +
-> +	if (member->hw.config =3D=3D CM3_PMU_EV_CYCLES)
-> +		(*cycles)++;
-> +	else
-> +		(*pcs)++;
-> +}
-> +
-> +static bool cm3_pmu_validate_group(struct perf_event *event)
-> +{
-> +	struct cm3_pmu *cm3_pmu =3D to_cm3_pmu(event->pmu);
-> +	struct perf_event *leader =3D event->group_leader;
-> +	struct perf_event *sibling;
-> +	unsigned int cycles =3D 0, pcs =3D 0;
-> +
-> +	/* Hardware events of the group must all be ours */
-> +	if (leader->pmu !=3D event->pmu && !is_software_event(leader))
-> +		return false;
-> +
-> +	cm3_pmu_count_group_event(event, event, &cycles, &pcs);
-> +	if (leader !=3D event)
-> +		cm3_pmu_count_group_event(event, leader, &cycles, &pcs);
-> +
-> +	for_each_sibling_event(sibling, leader) {
-> +		if (sibling->pmu !=3D event->pmu && !is_software_event(sibling))
-> +			return false;
-> +
-> +		cm3_pmu_count_group_event(event, sibling, &cycles, &pcs);
-> +	}
-> +
-> +	return cycles <=3D 1 && pcs <=3D cm3_pmu->num_pcs;
-> +}
-
-[Severity: Medium]
-Can for_each_sibling_event(sibling, leader) cause a NULL pointer
-dereference when leader =3D=3D event and CONFIG_PROVE_LOCKING is enabled?
-
-When initializing a standalone event or group leader in
-perf_try_init_event(), leader->ctx is still NULL, and
-for_each_sibling_event() expands lockdep_assert_event_ctx(leader), which
-dereferences leader->ctx->mutex.  Returning true before the loop when
-leader =3D=3D event avoids this.
-
-> +
-> +static int cm3_pmu_event_init(struct perf_event *event)
-> +{
-
-[ ... ]
-
-> +	if (!cm3_pmu_validate_group(event))
-> +		return -EINVAL;
-> +
-> +	hwc->idx =3D -1;
-> +	hwc->config =3D config;
-
-[Severity: Medium]
-Is cm3_pmu_validate_group(event) called before hwc->config is set?
-
-Because event->hw.config is still 0 during cm3_pmu_validate_group(),
-cm3_pmu_count_group_event(event, event, &cycles, &pcs) always counts the
-new event in pcs instead of cycles.  Adding a CM3_PMU_EV_CYCLES event to
-a group that already has two programmable events fails with -EINVAL,
-while a group with two CM3_PMU_EV_CYCLES events passes validation.
-
-> +	hwc->config_base =3D event->attr.config1 ?: cm3_pmu_default_qual(config=
-);
-> +	event->cpu =3D cm3_pmu->on_cpu;
-> +
-> +	return 0;
-> +}
-
-[Severity: Medium]
-Does storing the 64-bit qualifier in hwc->config_base truncate bits 63:32
-on 32-bit kernels?
-
-hwc->config_base is an unsigned long, whereas CM3 qualifiers are 64-bit
-values (and events such as CM3_PMU_EV_CM_REQ, CM3_PMU_EV_IO_REQ, and
-CM3_PMU_EV_MEM_REQ require bits in 63:32 to be set in order to match any
-requests).  Storing the qualifier in hwc->config1 (which is u64 in
-struct hw_perf_event) preserves all 64 bits on CONFIG_32BIT.
-
-[ ... ]
-
-> +static void cm3_pmu_unregister(struct cm3_pmu *cm3_pmu)
-> +{
-> +	perf_pmu_unregister(&cm3_pmu->pmu);
-> +	cpuhp_state_remove_instance(cm3_pmu_cpuhp_state, &cm3_pmu->node);
-> +	hrtimer_cancel(&cm3_pmu->hrtimer);
-> +	if (cm3_pmu->initialized && cm3_pmu_cluster_powered(cm3_pmu)) {
-> +		cm3_pmu->irq =3D 0;
-> +		cm3_pmu_hw_reset(cm3_pmu);
-> +	}
-> +}
-> +
-> +static int cm3_pmu_register(struct device *dev, struct cm3_pmu *cm3_pmu)
-> +{
-
-[ ... ]
-
-> +	ret =3D perf_pmu_register(&cm3_pmu->pmu, name, -1);
-> +	if (ret) {
-> +		cpuhp_state_remove_instance(cm3_pmu_cpuhp_state, &cm3_pmu->node);
-> +		return dev_err_probe(dev, ret, "failed to register %s\n", name);
-> +	}
-
-[Severity: Medium]
-Should cm3_pmu_unregister() and the error path in cm3_pmu_register() use
-cpuhp_state_remove_instance_nocalls() instead of
-cpuhp_state_remove_instance()?
-
-cpuhp_state_remove_instance() invokes cm3_pmu_offline_cpu() for each
-online CPU while all CPUs remain in cpu_online_mask.  When more than one
-CPU is online, cpumask_any_but(cpu_online_mask, cpu) finds a target CPU
-and calls perf_pmu_migrate_context() on a PMU that has already been
-unregistered (or failed perf_pmu_register()).
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261108-i6500-cm3-=
-pmu-v1-0-bd119584891a@mobileye.com?part=3D4
