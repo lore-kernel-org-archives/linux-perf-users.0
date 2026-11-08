@@ -1,55 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.90.104.144
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794123769;
-	b=1Pl4PuyQR9pWOHOnwgel3w199vcxCjGVBbghm5AzJUOWE1rgFB9VwEi1w9Ln2+DgHCWc
-	 5iaVMORNCPTKOD+szaJfqfG2YaG5Uoq3gVXxZSJwyMb/Al+w69qthV6tTVImFrOGt8Qrn
-	 SAvAqWsStTnacjEzWycf0fKiBl/cjXwC5GFd52g5X/dp7NqpdCOhEIiTPvI9cytlBYf2U
-	 n1xlOomW2UOQJpY6TrG2zTgh/YeuaeTEtOmqMjfbdPt5E0Mdw3pgu5pXBmdW8CNeYqh4w
-	 8rxL6i+QPdPyIdhWbr4p2fQRUGWWsC+wBddQGrMvyQ1ofDtNKudkXBDcW+x40aOHeJA==
+	t=1794144042;
+	b=atwAiI2f1XjLrpvJBn/61VzhvkPhHJcL0TRAfS4UpymGumsF/ROxUANAJXtn8eqm1oWA
+	 anXyBZFw/0ssyKAEiZ4mIPpNlS6tX7yVPxqTXjSakIJKX5Vfk7moGmhF5DKb76pDv5h+a
+	 GaRAGENtLTpqljRGFqOs3sV0YdTqheg2cWP1UPWvlTkw7L7xqNYZUE/L3FzJoFV82qhJT
+	 N/Foq+s8bSLGv38UveLZGGhD2ZI8D/D7m0URhWbR2qecsqylg3bttJ7/tidN2QDxiTcQk
+	 b+TAiVIR4CqwEdhht4wghm1hkpMl0wcgcgoks+RYBlgshdWsc313zKKX+wDy2QXDWcA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794123769;
-	h=Received:DKIM-Signature:Received:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:X-Received:MIME-Version:References:In-Reply-To:
-	 From:Date:X-Gmail-Original-Message-ID:X-Gm-Features:Message-ID:
-	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=hq7itTvys1Cr5iB10ff6BShqs7ZRME9USZpaeDEQWac=;
-	b=Avr1di8Sa/1M9TxPT2jPEP3Lzuh74y8n2LPb8hzrSzVgPjFEGDxcxE2jMIVUAtdGUEbD
-	 uVnZyqyPOQSDBx1ScuW8LDcYoJVsYYZC5tnnE8JnrhS8YGd95PGc11dHeAvBVmy3thP+s
-	 uDHm2F6cSECGcMArKag49YgPPfqAUqM4a1pn/wNeYew3ig0YOXaM80EMX5Ex2UIiYOeKG
-	 yPYQJKjYjHjxq+h8NpUM2ZRL8f07WUzu+WDoNYrSYmU2OO1OXuNbKcvSdX75KfTuTIvlO
-	 /UYDByDcdMwcJheMuqkfD7m+YsvziLeBs71bvRwuNYr8Is6unMyf35Hktu4vECc5BxA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794144042;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-Amp-Result:X-Amp-File-Uploaded:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:Received:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
+	 In-Reply-To:To:Cc:X-Mailer;
+	bh=AxuQz5LK3GiuVobsA9FvWNWs2WJqoUY+Mb4H5LniejY=;
+	b=vQI3zEKCM8A59jdEZycvLmf/7W7rYRm+bE4loblgNuL9bw2BCN94a1yyiv2Th3s/gjfk
+	 7N4tFd6YrGDnd7TViplgGQ8er4H5s/NnJRjT/qz6L2mIl370B7ubagulZJiMfysLW36lo
+	 jYJysKrlDzxpWrFoxMLEggzY/HjL6lenpjC4r8hnmqK1WbBFSM7vE/dKR2jdOHBia+uZi
+	 e7+AGiThOia2veJFmTPvj1ciODYuFz5tlnBpichom436hLoLRcWkN9apcz71Evxh71iIL
+	 8e6RRtUJUZTsXeT+G7mVKJ+Hp/H51tL4TNwJ3WqHkKDv0xStI2x/YCMN9d8jK3oiqvA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YYzPMZ5U;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45BBA606A330
-	for <linux-perf-users@vger.kernel.org>; Sun,  8 Nov 2026 07:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YYzPMZ5U
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2D4A1F00935
-	for <linux-perf-users@vger.kernel.org>; Sun,  8 Nov 2026 07:42:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794123768;
-	bh=hq7itTvys1Cr5iB10ff6BShqs7ZRME9USZpaeDEQWac=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=YYzPMZ5UtctcPpcRnUG9P28WIDENCXgambK8yjDHypKWPFGpIe6TmQSTfVWfDmpGF
-	 htL/bA+oP45fy221Tgu6ZPP7QU2vcSC93rDug/R0h+uOCBTkU1oP0mPO+pyxMd5Jhv
-	 CoAb6Li7/zd1myiQ7koRfQVHWASdDYrbjZukStnwggMZVNq956usiAsIIcWfeSGjdW
-	 iSMgTz9CV0K5nqhUcTrsYwq+gTQ/+nc0FgUX+3dzs0cCh5Ji3aeDIDDg7dxyAQsBEH
-	 YDOylo//GrfIXsoUpwEHk900nWB9bv6omEL9JYaoBp+LZY4PiSIKEnYc2zNwFMh3Sx
-	 bBGE8vXHSK+Nw==
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-91e7af9a67fso1355566d6.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 07 Nov 2026 23:42:48 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AL+hErFsxl14o8p0pr8j661pHrEgJFgTabDlc5EIiXc7nHDHG+NsDvaS/aqNhswgHFOi4onLUN+GVC4XspIbCz3OTbWG@vger.kernel.org
-X-Gm-Message-State: APuU4Z/R7UaJcgkcZR97U+sRB4Kf6tC19PF4oKsqNZo2RErfsA+lxNDI
-	+DL14jKT/3Nu35qenUMSHo6P1S4twUrNVlox8/+ijp/V101XeJb0FrTAyes58oSdXEBMyrh8HCB
-	fprrdg3feyEVGp3qf3pu2VkGPzVsgK0k=
-X-Received: by 2002:a05:620a:29c8:b0:93f:6f8:9d72 with SMTP id
- af79cd13be357-947842d0ca0mr101856885a.77.1794123767495; Sat, 07 Nov 2026
- 23:42:47 -0800 (PST)
+	dmarc=pass header.from=mobileye.com;
+	spf=pass smtp.mailfrom=mobileye.com;
+	arc=none smtp.remote-ip=23.90.104.144
+Received: from esa1.hc555-34.eu.iphmx.com (esa1.hc555-34.eu.iphmx.com [23.90.104.144])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C367606A321;
+	Sun,  8 Nov 2026 13:20:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9C367606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
+  t=1794144039; x=1825680039;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=JLH0TVSF7/Dj1JD2tP+0+XyeKgziUbRuQS+T9+oJsjE=;
+  b=YcVsdW0F9+THulazwJj2ojdXMgyWO+nSp7K/vZQZWDJRAFG33EBb5SSW
+   yhJVvi0+AdPweyibhwXuJoLjN+/ce6fhTRhXmim5GFztKSkk/YhGs4ASU
+   mS23IQbciXC7kTkyWXG3BzfPgS8zFX8Z3MgK7k6zecFkelrZ3LrEoh+Ue
+   6w3DaXuRA4FH+b4m+6bDddubgTGBDlTt8TNUCq2rD1B+ahkpq5+Dgqbjy
+   g3qVLy/Z46FyBNZAQGNfZDdVoPm2mKxS+R0siSV3ezXCHUYlDSGiV9EmA
+   Rust5a2njmoLthecLNwRaiaZUlmrg9bHvDlQ9doAEf/lZxGR97n8ySwBm
+   A==;
+X-CSE-ConnectionGUID: 2x4g6s2ITqGDO7ABlUHd6w==
+X-CSE-MsgGUID: JBdGUtXuT0KpKYqfArpw4g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from unknown (HELO ces02_data.me-corp.lan) ([146.255.191.134])
+  by esa1.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2026 15:20:27 +0200
+X-CSE-ConnectionGUID: YPgsWQeNT9K0LOvGBXfyiA==
+X-CSE-MsgGUID: koslSIjWTMyBeFcTUZAnBQ==
+Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.2])
+  by ces02_data.me-corp.lan with SMTP; 08 Nov 2026 15:28:30 +0200
+Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Sun, 08 Nov 2026 15:20:26 +0200
+From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+Date: Sun, 08 Nov 2026 15:20:11 +0200
+Subject: [PATCH 2/5] MIPS: CM: export the symbols needed to access the GCRs
+ from a module
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,98 +66,106 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261105-late-2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org>
- <20261105-late-2026-vma-flags-v1-2-0d3cd15ab75f@kernel.org>
- <sashiko-outbox-200257@kernel.org> <au2_PPpdAMgRJZtX@gremlin> <CAGsJ_4yWQom=cG5vw2B-FR8+7wNU+rwZkvghjAxusym+3OH96A@mail.gmail.com>
-In-Reply-To: <CAGsJ_4yWQom=cG5vw2B-FR8+7wNU+rwZkvghjAxusym+3OH96A@mail.gmail.com>
-From: Barry Song <baohua@kernel.org>
-Date: Sun, 8 Nov 2026 15:42:36 +0800
-X-Gmail-Original-Message-ID: <CAGsJ_4zvRSUSspBe_hNwTYDjK3-TLuq6Mhi5gDyOPZGDXN8gDw@mail.gmail.com>
-X-Gm-Features: AclHuK8HH9jkrTpk3YGZtn3OLDvb25GlEH8O5QS1DwT0MQXSYfuXeM9FnX7dKXs
-Message-ID: <CAGsJ_4zvRSUSspBe_hNwTYDjK3-TLuq6Mhi5gDyOPZGDXN8gDw@mail.gmail.com>
-Subject: Re: [PATCH 02/13] mm/filemap: convert fault and readahead logic to
- use vma_flags_t
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: sashiko-reviews@lists.linux.dev, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, 
-	Peter Xu <peterx@redhat.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Rik van Riel <riel@surriel.com>, "Liam R. Howlett" <liam@infradead.org>, 
-	Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>, 
-	Lance Yang <lance.yang@linux.dev>, Zi Yan <ziy@nvidia.com>, 
-	Matthew Brost <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
-	Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, Xu Xin <xu.xin@linux.dev>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
-	Shrikanth Hegde <sshegde@linux.ibm.com>, Pedro Falcato <pfalcato@suse.de>, 
-	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Leon Romanovsky <leon@kernel.org>, 
-	SJ Park <sj@kernel.org>, Rakie Kim <rakie.kim@sk.com>, David Rientjes <rientjes@google.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Oleg Nesterov <oleg@redhat.com>, John Johansen <john.johansen@canonical.com>, 
-	Georgia Garcia <georgia.garcia@canonical.com>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
-	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, =?UTF-8?B?T25kcmVqIE1vc27DocSNZWs=?= <omosnacek@gmail.com>, 
-	linux-mm@kvack.org, kvm@vger.kernel.org, damon@lists.linux.dev, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261108-i6500-cm3-pmu-v1-2-bd119584891a@mobileye.com>
+References: <20261108-i6500-cm3-pmu-v1-0-bd119584891a@mobileye.com>
+In-Reply-To: <20261108-i6500-cm3-pmu-v1-0-bd119584891a@mobileye.com>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Randy Dunlap <rdunlap@infradead.org>, Will Deacon <will@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ =?utf-8?q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>, 
+ Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
+ Fu Chao-Ying <chao-ying.fu@globalfoundries.com>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+X-Mailer: b4 0.16.0
 
-On Sun, Nov 8, 2026 at 3:20=E2=80=AFPM Barry Song <baohua@kernel.org> wrote=
-:
->
-> On Fri, Nov 6, 2026 at 7:53=E2=80=AFPM Lorenzo Stoakes (ARM) <ljs@kernel.=
-org> wrote:
-> [...]
-> > > --
-> > > Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261105-late=
--2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org?part=3D2
-> >
-> > It seems these are valid, oops!
-> >
-> > Andrew suggested a fix off-list, and I agreed to this as an in-place fi=
-xup to
-> > avoid respin.
-> >
-> > I have also updated the series locally to reflect this change:
->
-> Seems like a reasonable fix. maybe_unlock_mmap_for_io()
-> could have released mmap_lock, leaving the VMA
-> unprotected. but  ra->size *=3D 2 is still going there no matter
-> if the vma has disappeared
->
-> For the original patch combined with the fix,
->
-> Reviewed-by: Barry Song <baohua@kernel.org>
->
+Allow modules to use the GCR and CPC accessors from asm/mips-cm.h and
+asm/mips-cpc.h:
 
-BTW, one question is whether mmap-based readahead is
-still worthwhile if the VMA is actually gone after we
-release mmap_lock (or the VMA lock). Perhaps we don't
-need to continue readahead in that case.
+- mips_gcr_base and mips_cpc_base are the mapped register blocks;
+- the CPS_ACCESSOR macros consult mips_cm_is64 on every 64-bit register
+  access;
+- mips_cm_lock_other() / mips_cm_unlock_other() are the only way to
+  reach the registers of another cluster through the redirect block.
 
-However, we don't have a reliable way to know whether
-the VMA is really gone until the page fault is retried.
-We release the lock to perform readahead, so in this
-racy case, readahead might be happening for a VMA that
-is being removed.
+This is a prerequisite for building the CM3 PMU driver as a module.
 
-I'm not challenging this patch, just leaving a note
-to think about later :-)
+Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+---
+ arch/mips/kernel/mips-cm.c  | 5 +++++
+ arch/mips/kernel/mips-cpc.c | 2 ++
+ 2 files changed, 7 insertions(+)
+
+diff --git a/arch/mips/kernel/mips-cm.c b/arch/mips/kernel/mips-cm.c
+index 7c9c5dc38823..afe0664e4dcf 100644
+--- a/arch/mips/kernel/mips-cm.c
++++ b/arch/mips/kernel/mips-cm.c
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <linux/errno.h>
++#include <linux/export.h>
+ #include <linux/of.h>
+ #include <linux/percpu.h>
+ #include <linux/spinlock.h>
+@@ -14,8 +15,10 @@
+ #include <asm/mipsregs.h>
+ 
+ void __iomem *mips_gcr_base;
++EXPORT_SYMBOL_GPL(mips_gcr_base);
+ void __iomem *mips_cm_l2sync_base;
+ int mips_cm_is64;
++EXPORT_SYMBOL_GPL(mips_cm_is64);
+ bool mips_cm_is_l2_hci_broken;
+ 
+ static char *cm2_tr[8] = {
+@@ -373,6 +376,7 @@ void mips_cm_lock_other(unsigned int cluster, unsigned int core,
+ 	 */
+ 	mb();
+ }
++EXPORT_SYMBOL_GPL(mips_cm_lock_other);
+ 
+ void mips_cm_unlock_other(void)
+ {
+@@ -389,6 +393,7 @@ void mips_cm_unlock_other(void)
+ 
+ 	preempt_enable();
+ }
++EXPORT_SYMBOL_GPL(mips_cm_unlock_other);
+ 
+ void mips_cm_error_report(void)
+ {
+diff --git a/arch/mips/kernel/mips-cpc.c b/arch/mips/kernel/mips-cpc.c
+index 3e386f7e1545..4a8bd56bc2e8 100644
+--- a/arch/mips/kernel/mips-cpc.c
++++ b/arch/mips/kernel/mips-cpc.c
+@@ -6,6 +6,7 @@
+ 
+ #include <linux/bitfield.h>
+ #include <linux/errno.h>
++#include <linux/export.h>
+ #include <linux/percpu.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+@@ -14,6 +15,7 @@
+ #include <asm/mips-cps.h>
+ 
+ void __iomem *mips_cpc_base;
++EXPORT_SYMBOL_GPL(mips_cpc_base);
+ 
+ static DEFINE_PER_CPU_ALIGNED(spinlock_t, cpc_core_lock);
+ 
+
+-- 
+2.43.0
+
