@@ -1,95 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.177
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794163619;
-	b=oUC/jJHjMk7RVMOF+83qtxhThM3J9aFzwY4shJyFUtYlkZJ19SZPLBlXEePRtdggB7SE
-	 wbZLJmDicAQH1Q8EbMwO9WBBHTeMtb30HuzeWrMNUBgig8l8zgGhHgzDuCr+DumvLX6PI
-	 J0Qv/Gr3cUs0e6wlnUXeEw4fZxBB0GXKt+zEeNXZNGQvXreMdDa1EFsZZerm8vkZJDzCg
-	 W7+rzRoe45Xut5Ox3gDF19XRZd5Amqx1Ac9PUvXnAQ3YxuLWajhe1xVYjID1dYctFmZgH
-	 vtybhSy18MrU1YH7qEg2hsC729qQ8OFOFrY6EASnuNnKM3Se5qn24seNdyMq/TDvjzA==
+	t=1794163676;
+	b=XqEYPlDqa9hq88A0v6Y9avD3p7w6FP57LuznUst632n9GzKlUQqpK1CTg6FZ7QECBnbm
+	 3EaizWmPniit7QdXu61puRMcHXxNjLK9vnpKDNVHEKw6fk1QMzseriDSxT9nvv1O6cXCC
+	 GcGCV43Min9dfDDD/aN8kspvV+mqBgERHSDC4OI+NEmqle5UqtlQ5/Dw7e50+Muw93tUD
+	 ikre8oLLULwLrqpK7E/IUOxu/Qcew/Y+H/H86tpNtIEcTXOpDpm/8knfbPf239hDrvfFw
+	 qvPyA9fJWlBN45aVIBAqbiYb/XqxQ34JCU4hn8Lx/zueYdzggy9IaQp17CvaVcXBMtA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794163619;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
-	bh=KLhGHJD0w6qogzd6hlhJL13wlPNhn8Vr3qPOak0i+BQ=;
-	b=J5TKnH1J9YE5V5BpUyt60YqA7lEezAaSmbhhpky+m0+z2SjYl+fFT2TLK7QMUeHU3Lk9
-	 yEKRiVYAey7FjDv4hCznTLclm2SyTcZZn/+hjG+Wm4JABRf1Xr3JA/YqMz8CSHitMrN7j
-	 DOJ5B9XVov8ipppvlT24qrXVfJagVksppkQEYLhgE4mizxWrwuacfW0e5mEcV92r8FgQ2
-	 YB2n8cBKB2kwgIVGGND+AYnINh8OqoPsKqBrefY4ampPz9qhVT0efd2eQq7mn9xTpfD8K
-	 uoKDRroHGShZmmHaGciqcPXC3Ft1epxu/QFwc/aOgfUbSwHKcb+HBs79wQsyY20Fvow==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794163676;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=D7vX/0ljEmlIdz0QMbhaaT2QpyBGnB8+95xI/bRmcXE=;
+	b=o0HtOdg1Y9W5pAJfN5Z05yx3zWFRutwJq+Gwl0Ebn8cWp/mdjAvErwmvAWN8rpWY6Ucc
+	 zjQALUWOFq7p8Pfrr46nbTc2V7y+bRf5CJsgVbhEYp+Qg4xUtfs+l/SZkHdvWwqLqX6BY
+	 5f9lZukB25AQCzWTh/j7cKsTof7DrJq5V+Qv1TUEFrYWW7ZSctdNnqdYCLVqg6jwq9UXI
+	 jvqjrybXw1SPajUkUvS6UbDBoXIkBT6+DLP4VaEzZSdpEhSywPesYR/KUg2TXVsIaEwIF
+	 RWT9AH1C9rtSuGI5xnIRQwX+khqpxxLmCNWrhiXJ4KKcpHMBaA3E3uv66DDqjG2egbA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=zwwakEJ3;
-	arc=none smtp.remote-ip=74.125.82.177
-Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mlJZKNnQ;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC5C606A320
-	for <linux-perf-users@vger.kernel.org>; Sun,  8 Nov 2026 18:46:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0BC5C606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC7E606A31C
+	for <linux-perf-users@vger.kernel.org>; Sun,  8 Nov 2026 18:47:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=zwwakEJ3
-Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-3704d30b84fso256924eec.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 08 Nov 2026 10:46:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794163618; x=1794768418; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=KLhGHJD0w6qogzd6hlhJL13wlPNhn8Vr3qPOak0i+BQ=;
-        b=zwwakEJ3ORwCSEoOOvKxzaCPPcXZpNTTTJ8On71fhGEVimwf1IDpmnBNmpJoGsWSfp
-         HuR6bNMRhUT5ng/KjEXoi7RmHX7ikWEGWB5FHs77R4Z1O5rL1VYSIbgC+9lVEENVvV3b
-         DUGf1ODIqgxhBQe+sIpm/FR0TbrC1AUcO0KR3JEbNrUjo9tNBwwSlbPpG/MXtynHqVYg
-         hJ8H34JmaJE6pdCs05qNL+UAoY+RIcXmEBlfJRC/hsqro4Dwc0iRxuQRKoLAO0sQ49FH
-         Ov8Yhoj7zkXIULPuEN8/0PXthmuQ0HptsYZvD/FobPWC9fXXiJlKkj23l8cWPx+1gsZ0
-         O53A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794163618; x=1794768418;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=KLhGHJD0w6qogzd6hlhJL13wlPNhn8Vr3qPOak0i+BQ=;
-        b=QA25iB8Mp5lTiGqAgQ/wRmJs9harkqCw2I4XGjuwoBhP+pjZsFnwGojroIfAlEdKIQ
-         9wLt732Ndpeo+UAa3MpvYa3KdLC0jDAZhrzpjVukc8LSsi0KQ+lf+7EbPyNmSWnzNmuw
-         8zft2s5Goc56L7bzjkVNtT2Lvawt4pu13y8TTgggwaDGyKmaS0j51axYX8RXGvYNoVQF
-         i/gJR7c0gLOypvCE3Va/rLhu7TIR+E8++kKlNtd8gVWGhiQ7Z5n74EN8zezCvZSeWXv/
-         6ApDBqB1YqZWzLd3VIE7Nszw7ZsW7qnSW4PxxjpOnQxTF+0EA0kVpA8+1UkLK6fXnrsM
-         nJfw==
-X-Gm-Message-State: APuU4Z+OWxWGYTE/B35wOJ2iINl8fNPs/3vcG5t5aoSK8ew+QKxYBEtq
-	tjaVnK8ElNhpYVQv6/GTQfOhpn4DBxfRQ0OieEz4Bw3NCs17qRQtK/IkRPaIFkT/
-X-Gm-Gg: AYBFou1knxCiPoUESdF+R/TW0rXgDbKzS6nwfLAzEmUuAFNlxTgwXaZ1LMX3y02rGST
-	hNH0HEPlTpVxyYiSM/cA8MWWf1Yp4JzGy1rT7jR7CjdIS3PsVgdcZPygK/EQoO9UQXVJx3hHvpU
-	2V1WLEKRDSzKTTLB2tb0f/Bf6o/3J8M01jir54XXrs+u4FtkilRkAn7PWasZ88H+4AazQJZqqI3
-	37YUt53/kpnapfriaG1R3aYfqZ+KlDUibb/i1DJeNQW16bvURx7/06BamkxZFraJD7kiOV4Sh4b
-	uj5hy3nCLaVooz1yG1GashLf2J12aSoLdOM5k+q2/eFt2Sg3axc3E0Rjx7kE01BS1M2fMSvWuFd
-	vtgmVdLfCRQlMNZscKlBWj7j/2TWJTbg9kDesiiOY4QW8qdquTmIXRIk4Onkk1OH75JC59Ssdo5
-	4q4dIUDeER2qr+NtPqM6OTAQDxnegGtXKGDZeP6Olcj6mutZ/GKKlVk0m0XWKY2K1nrkWK2b9bT
-	e3/PY2krQeGQ7k08v5scYtj0B7cxO7rbtJQjP9QSbj+w3Y7pcmB8e2GXoZan7WBwIFRZ9Q0bpB/
-	JO1Z1YC71JciJUUsjyPYHkKEudIEitpepMsogSuYlA==
-X-Received: by 2002:a05:693c:87dc:10b0:36a:15cb:30bf with SMTP id 5a478bee46e88-3725d1a5eabmr4318401eec.13.1794163617977;
-        Sun, 08 Nov 2026 10:46:57 -0800 (PST)
-Received: from a1-free ([161.33.196.121])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-372665db733sm6348252eec.23.2026.11.08.10.46.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Nov 2026 10:46:57 -0800 (PST)
-From: TAKANO Mitsuhiro <takano32@gmail.com>
-To: linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	linux-kernel@vger.kernel.org,
-	TAKANO Mitsuhiro <takano32@gmail.com>,
-	James Clark <james.clark@linaro.org>,
-	Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-	John Garry <john.garry@linux.dev>,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] perf vendor events arm64: Fix typos in event descriptions
-Date: Sun,  8 Nov 2026 18:46:54 +0000
-Message-ID: <20261108184654.3811267-1-takano32@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mlJZKNnQ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B6E71F0089F;
+	Sun,  8 Nov 2026 18:47:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794163675;
+	bh=D7vX/0ljEmlIdz0QMbhaaT2QpyBGnB8+95xI/bRmcXE=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=mlJZKNnQDtQsoedAXr9TEbVJGdyatMbpTkk8wFO4+xIH+4UazNdYMoLl5/jQ8PcSn
+	 fnvVez/6JDz5YknJ89rkWUYprQ4r43Z1b8GGJ9QGuNSfFwzJWkIpUB79jbQURvBUC4
+	 4gx+KaLDg/Kjr97rtbDsli8UnUkAz6viDfg/kMZM0GCs4tcskEaai4Zuv4NwZ9SajM
+	 O8vJOCIc8dnJzVhwd2fIg8ZZGPGMErUP9LIbbku1jLKv8c6+/xTkC9GfVxqsPNEOfc
+	 v2UHCZLZFkKRLA44oPnMe6bukkMMZS9Rz2gPqRZ9CxehUOx5/t9WIv0IDc4iP2wUpe
+	 ECXCP2hJ25Brg==
+Message-ID: <sashiko-outbox-203913@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf vendor events amd: Fix a misspelled JSON key
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "TAKANO Mitsuhiro" <takano32@gmail.com>, linux-perf-users@vger.kernel.org
+In-Reply-To: <20261108184600.3810059-1-takano32@gmail.com>
+References: <20261108184600.3810059-1-takano32@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 08 Nov 2026 18:47:54 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -98,96 +57,27 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Six entries in common-and-microarch.json spell Statistical as "Statisical"
-(the SAMPLE_FEED_* events), and one entry in the Fujitsu a64fx table, the
-L2HWPF_STREAM_PF event, spells prefetcher as "prefecher" in both its
-BriefDescription and its PublicDescription.
+> ls_inef_sw_pref.all is listed without a description on Zen 4, Zen 5 and
+> Zen 6.  Its three JSON entries spell BriefDescription as
+> "BriefDescript6ion", and jevents.py reads the keys it knows by name, so
+> the text is dropped and the generated table ends up with an empty
+> description field.
+>=20
+> Spell the key correctly.  Only the key changes; the text, event names,
+> codes, umasks and expressions are untouched.
+>=20
+> Fixes: 658448281d19 ("perf vendor events amd: Add Zen 4 core events")
+> Fixes: 45c072f2537a ("perf vendor events amd: Add Zen 5 core events")
+> Fixes: 2f42fb0661d9 ("perf vendor events amd: Add Zen 6 core events")
+>=20
+> Written with Hermes Agent, an LLM assistant.
+>=20
+> Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
 
-The SAMPLE_FEED_* events are inherited through ArchStdEvent by the
-neoverse-n3, neoverse-v3 and t410 tables, so the misspelling reaches those
-three generated tables.  The a64fx pair appears once, because the long
-description is dropped when it equals the brief one.
+Sashiko has reviewed this patch and found no issues.
 
-Spell the words correctly.  Event names, codes and expressions are
-unchanged.
-
-Written with Hermes Agent, an LLM assistant.  Running jevents.py for arm64
-before and after this change removes 12 occurrences of "Statisical" and the
-one "prefecher" from the generated string table; perf was not rebuilt.
-
-Fixes: 994256a79867 ("perf vendor events arm64: Add N3 events/metrics")
-Fixes: 5497b23e870c ("perf vendor events arm64: Add Fujitsu A64FX pmu event")
-Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
----
- .../pmu-events/arch/arm64/common-and-microarch.json  | 12 ++++++------
- .../pmu-events/arch/arm64/fujitsu/a64fx/other.json   |  4 ++--
- 2 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/tools/perf/pmu-events/arch/arm64/common-and-microarch.json b/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
-index 144325d87be4..c61d6c0ceb4f 100644
---- a/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
-+++ b/tools/perf/pmu-events/arch/arm64/common-and-microarch.json
-@@ -1340,32 +1340,32 @@
-     {
-         "EventCode": "0x812A",
-         "EventName": "SAMPLE_FEED_BR",
--        "BriefDescription": "Statisical Profiling sample taken, branch"
-+        "BriefDescription": "Statistical Profiling sample taken, branch"
-     },
-     {
-         "EventCode": "0x812B",
-         "EventName": "SAMPLE_FEED_LD",
--        "BriefDescription": "Statisical Profiling sample taken, load"
-+        "BriefDescription": "Statistical Profiling sample taken, load"
-     },
-     {
-         "EventCode": "0x812C",
-         "EventName": "SAMPLE_FEED_ST",
--        "BriefDescription": "Statisical Profiling sample taken, store"
-+        "BriefDescription": "Statistical Profiling sample taken, store"
-     },
-     {
-         "EventCode": "0x812D",
-         "EventName": "SAMPLE_FEED_OP",
--        "BriefDescription": "Statisical Profiling sample taken, matching operation type"
-+        "BriefDescription": "Statistical Profiling sample taken, matching operation type"
-     },
-     {
-         "EventCode": "0x812E",
-         "EventName": "SAMPLE_FEED_EVENT",
--        "BriefDescription": "Statisical Profiling sample taken, matching events"
-+        "BriefDescription": "Statistical Profiling sample taken, matching events"
-     },
-     {
-         "EventCode": "0x812F",
-         "EventName": "SAMPLE_FEED_LAT",
--        "BriefDescription": "Statisical Profiling sample taken, exceeding minimum latency"
-+        "BriefDescription": "Statistical Profiling sample taken, exceeding minimum latency"
-     },
-     {
-         "EventCode": "0x8130",
-diff --git a/tools/perf/pmu-events/arch/arm64/fujitsu/a64fx/other.json b/tools/perf/pmu-events/arch/arm64/fujitsu/a64fx/other.json
-index 10c823ac26cc..6fa2936e427d 100644
---- a/tools/perf/pmu-events/arch/arm64/fujitsu/a64fx/other.json
-+++ b/tools/perf/pmu-events/arch/arm64/fujitsu/a64fx/other.json
-@@ -162,10 +162,10 @@
-     "BriefDescription": "This event counts non-allocation type prefetch injection requests to L1D cache generated by hardware prefetcher."
-   },
-   {
--    "PublicDescription": "This event counts streaming prefetch requests to L2 cache generated by hardware prefecher.",
-+    "PublicDescription": "This event counts streaming prefetch requests to L2 cache generated by hardware prefetcher.",
-     "EventCode": "0x233",
-     "EventName": "L2HWPF_STREAM_PF",
--    "BriefDescription": "This event counts streaming prefetch requests to L2 cache generated by hardware prefecher."
-+    "BriefDescription": "This event counts streaming prefetch requests to L2 cache generated by hardware prefetcher."
-   },
-   {
-     "PublicDescription": "This event counts allocation type prefetch injection requests to L2 cache generated by hardware prefetcher.",
-
-base-commit: d48723711bae9b8cdc56719c448ba42fef28cbee
--- 
-2.53.0
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261108184600.3810=
+059-1-takano32@gmail.com?part=3D1
 
