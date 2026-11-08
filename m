@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794144249;
-	b=KIQWM3irLLi3EB6TCGC5/YUZp7yy8UjvySUx1LojQnd5j0VvdQ+x8AAbfSYQfnNpVNM2
-	 grSx8/icAbzx1cgp2+UiAR8X+sIizcx+QPOdqk6Kqx2VRsTPXs2tow0QIhDvuPZ+BIeCy
-	 gft74gec6ce8CeB21QmU8RlcHdtEypfFA2QK1AZHW2R99RvXefTudecr5zqMQv21G+NIR
-	 SOEJrzdkSFB2z2cfBBBggO+FN+Q1ZZK+vOAZDk9syehc371+d3s5yHDrdRUCEgt5T3NwL
-	 uIqNtm6fG3qxRuX9XxHnoEcn1e3tGQDYGj+gIS6+sMR02q7fiyPmM8WnB+NzZHY7jMQ==
+	t=1794144290;
+	b=IabdVDMJYAnm+8jBa/V9lkRLTjXA8zpJ3BypqHFhB8o0jmvOymVP9FYSt0oTGsAvEMF7
+	 cp9pWFWl6IhpX/y9sxzv3aQRpRb4Vw60ghQMGeogVquWe3dnJgBmimdbjGK1HnluQ+V3j
+	 Ci4RPyewYaWyV7J7dd8v9hc/ilEoFmt33KmhlbTLbY5qBSIXyaRG0LoLvlgXakjHjqOcw
+	 u+OxkJbVJl0OIi15mjuEq/8DYo+cyncpRAlDwEBKvWG9tVy6pRfEPA4sNwUZxsrju51i5
+	 zpKfMkgDcg5d5AcXvIpTjCrOos1upF8PGk1Gu1IsfXSP2BY0aisQlPgUDiOkvj9yXqw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794144249;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794144290;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=3BysjCKnOpBT1KBOqoLe9qdCTtc0iLzf3KltMHW3CWI=;
-	b=BlFnXTQP/SWllKsx25pG34VnkZeSTfFhsCrkbzIF1w912dweuDw6/HRKRDgdC1wkihu+
-	 RVe5LJ9afwN0diM7Ki+japLi6TGnRfuuVrlN52h7XkiKW6Kz3sL5rIUOkI82hG9DzUFpj
-	 qnkZQQnTC/vQmF1vItiE28e2htLuUa8q+1sMxY2j8pUPlnzZkSmIyp1Tl1Oz4C5VsnMOJ
-	 eylv4CMC2uWSrDQIi/anS1wwP8cwcpdqWzmt+eZIfxKr4/WD+Tzefo8+baz1ymktUjJDQ
-	 L6RxuQ+5WTbKzYVI2hrltMjwSPjA9o2rRlHAh7lZ6puoQnFOE8HDqjF6Hqw2Ru0tvDg==
+	bh=Or8HOQ+FUHumsZGwHSU2tgZkhlm7jJ1ipJ6DS34uNzs=;
+	b=eRWNT5keh0fzfZZoW8dNoJl3bm5ro25giJkUJ8sCNu/+SJhMpTSZ+FfeDUVeKCbhYHyI
+	 rrh2ofyTPxfLHQ8CYbbx8ubVfbeei3+MvWqD0OUkU+uWSGlDMo0w1ig3m6E1is0FOH6eS
+	 L+XvKObgumbuTPH0Nhdsai+bkcXw4WW4uN8xM3Xz8W6G2VD7tuGVZI6OrcZEeHkUm/5XD
+	 2VFpkavL5Dykeb4tRhU6F6wILgNfEaDLf8/nZPSYdxV55ISFAQ9aS+e/mECPIv+Bw3YAZ
+	 MaNrTvHxPzzmUGf2EBJHs5mnq/7x09aLnxr7mXVNIKY61rLEuMCw0JyBqvbazYSfO2A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fhV9Qq8V;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a8xbDpCi;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26470606A322
-	for <linux-perf-users@vger.kernel.org>; Sun,  8 Nov 2026 13:24:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DFE606A31C
+	for <linux-perf-users@vger.kernel.org>; Sun,  8 Nov 2026 13:24:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fhV9Qq8V
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE38A1F008A1;
-	Sun,  8 Nov 2026 13:24:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a8xbDpCi
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73BC71F0089F;
+	Sun,  8 Nov 2026 13:24:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794144248;
-	bh=3BysjCKnOpBT1KBOqoLe9qdCTtc0iLzf3KltMHW3CWI=;
+	s=k20260515; t=1794144289;
+	bh=Or8HOQ+FUHumsZGwHSU2tgZkhlm7jJ1ipJ6DS34uNzs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fhV9Qq8V8OjKu6j0ulEuggHw1SSiReU1a1HSRD7r4cnngXRDQSvQnYM/09WZ/ppzA
-	 Gj0qYKEUTTmLxgAlFGCMldQbWnr9xMPv+g8/6NTJPPuTyFoEh8bJvcyU0ujX6abBNb
-	 pEzpphGLr1gbF6fNoDfPhYM7Yvs1I6csQvPdi1iH+L7I+EIuwGOWe8ItabJnJjHrmH
-	 we+lg+beZrHrYX+80jwey/uLvw9RMS15oR3rck1bv7RTOupV5RqB9ezVuX67mmXQwL
-	 K7o2dnqLkqIVZA1HDct0stBAqhugnL+K84ToxnY9ybafOCKpygInFPYnEaMgYCJZIl
-	 1C2kHnmkVB/Jw==
-Message-ID: <sashiko-outbox-203777@kernel.org>
+	b=a8xbDpCiqbxBIZc4/FvoYyeM74505rda4TeteEv4Gv82IZD4Q4wftRWw5Db5vZxjx
+	 oToaoma6i0gpEmYtBj12luBhOe7qwcERTU6WQ+brsIHFbqkJvKaAKKstVqK4ec/bks
+	 9VEuB3BizBhuoBTl8rYrIFd1b52QA8zTYWD0CNDPWnjDiF5W/ndJm9C5gyj5p9+WXi
+	 ahVmhlXIEHjbQKQyf9d/pHlQR/TdhcmqNTlyj+FVwVRovFcfCsvjt39tjek5I6f6ku
+	 zmTJfuWUo2MFdMYEtVH2opC2ot+sZcZpfxXyp29pKYXEf0rKu+qxDPtKKW2rEU+XM7
+	 vn1cy2tiEB4GQ==
+Message-ID: <sashiko-outbox-203778@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/5] MIPS: CM: add CM3 performance counter GCR
- definitions
+Subject: Re: [PATCH 5/5] MIPS: eyeq6_defconfig: enable the CM3 PMU
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261108-i6500-cm3-pmu-v1-1-bd119584891a@mobileye.com>
+In-Reply-To: <20261108-i6500-cm3-pmu-v1-5-bd119584891a@mobileye.com>
 References: <20261108-i6500-cm3-pmu-v1-0-bd119584891a@mobileye.com>
- <20261108-i6500-cm3-pmu-v1-1-bd119584891a@mobileye.com>
+ <20261108-i6500-cm3-pmu-v1-5-bd119584891a@mobileye.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 08 Nov 2026 13:24:08 +0000
+Date: Sun, 08 Nov 2026 13:24:49 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,20 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> The CM3 implements two programmable 32-bit performance counters and a
-> 32-bit cycle counter, controlled through registers in the GCR global
-> debug block (GCR_DB_PC_*, offset 0x6100..0x61a8 from GCR_BASE).
->=20
-> Add GCR_DB_ACCESSOR_{RO,RW} helpers for the debug block and define the
-> control, overflow status, event select, cycle counter, qualifier and
-> counter registers along with their fields, as described in the I6500
-> register reference (MD01189).
->=20
-> Each accessor comes in two flavours, as the CPC ones do: db_<reg> for
-> the local cluster and redir_db_<reg> for the debug block of another
-> cluster through the redirect block. GCR_Cx_OTHER.BLOCK value 2 selects
-> the debug block in the GCR, where the existing _BLOCK_USER name only
-> describes its GIC meaning; add CM_GCR_Cx_OTHER_BLOCK_DEBUG for it.
+> Enable perf events and build the Coherence Manager 3 PMU driver as a
+> module.
 >=20
 > Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 
@@ -82,5 +69,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261108-i6500-cm3-=
-pmu-v1-0-bd119584891a@mobileye.com?part=3D1
+pmu-v1-0-bd119584891a@mobileye.com?part=3D5
 
