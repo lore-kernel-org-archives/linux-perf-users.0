@@ -1,56 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794144290;
-	b=IabdVDMJYAnm+8jBa/V9lkRLTjXA8zpJ3BypqHFhB8o0jmvOymVP9FYSt0oTGsAvEMF7
-	 cp9pWFWl6IhpX/y9sxzv3aQRpRb4Vw60ghQMGeogVquWe3dnJgBmimdbjGK1HnluQ+V3j
-	 Ci4RPyewYaWyV7J7dd8v9hc/ilEoFmt33KmhlbTLbY5qBSIXyaRG0LoLvlgXakjHjqOcw
-	 u+OxkJbVJl0OIi15mjuEq/8DYo+cyncpRAlDwEBKvWG9tVy6pRfEPA4sNwUZxsrju51i5
-	 zpKfMkgDcg5d5AcXvIpTjCrOos1upF8PGk1Gu1IsfXSP2BY0aisQlPgUDiOkvj9yXqw==
+	t=1794144487;
+	b=oZeKk2Ml8XU3a39bOaige7q1VfqjLF/2oiERgzRyjYRYkTB9j0VKEDk9Fz+7KcmZgdba
+	 GovMQoac3IpMNTLMV33UJMqJyo+MQnmvunVi79+7bgfKUv76kiI/QdjxJnxEiC4B6o4Pk
+	 fB/4Kn084kXTG8wqCoGPou0mdaZ5u0ZRHz6hYKneeRxNe+jLm4Res9ZI6JxHJoicjJ3mV
+	 IK4khvWLZZiN+dzFi2jBhApbVjHDzlUIFcp8Jy1i2l25JAzKoGBdCUzRp9Ug2Astc1JZ7
+	 292MyXiNYXDdqADMtyAF/vdtINemMgzrtIMRGbGiz2rZgwV432R1imPtu2sC+v7hBgw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794144290;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794144487;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=Or8HOQ+FUHumsZGwHSU2tgZkhlm7jJ1ipJ6DS34uNzs=;
-	b=eRWNT5keh0fzfZZoW8dNoJl3bm5ro25giJkUJ8sCNu/+SJhMpTSZ+FfeDUVeKCbhYHyI
-	 rrh2ofyTPxfLHQ8CYbbx8ubVfbeei3+MvWqD0OUkU+uWSGlDMo0w1ig3m6E1is0FOH6eS
-	 L+XvKObgumbuTPH0Nhdsai+bkcXw4WW4uN8xM3Xz8W6G2VD7tuGVZI6OrcZEeHkUm/5XD
-	 2VFpkavL5Dykeb4tRhU6F6wILgNfEaDLf8/nZPSYdxV55ISFAQ9aS+e/mECPIv+Bw3YAZ
-	 MaNrTvHxPzzmUGf2EBJHs5mnq/7x09aLnxr7mXVNIKY61rLEuMCw0JyBqvbazYSfO2A==
+	bh=95D60lJwPPRh7oesSbozYjICYxOXZWglGzgEdDruuZQ=;
+	b=1EfCtAKJBvJ6+XGB2NTsl2ipMuPFhYIQUZACIepDphoEci+M85CxEW6VJgrgBLHYUWLw
+	 j3wAMj3NjGLPFJF2wVK4xBcJARrYiKdaTB21zCpxbSdGj+6G9a+CG1w0yzR/1tdyCdZXN
+	 zrgfvPBSz6BTvAzU25SlkoKSpAk04FLIpV5bk3xBUZuKLusO8luBvy4pmi/Ii5lfSuddi
+	 7B29XJ6DgVoH48SN+ab0XQa5VAZnK8+WIPmTo8NSTrqX9s+RL89hnbR7RgupEII7uvt58
+	 ajW5wQCAeASWniiazB36AnilZJjo6sU2R7W31lpa0eJVPfm7XnzPIArogYzcVlV5KEA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a8xbDpCi;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="ihFwRZ/I";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DFE606A31C
-	for <linux-perf-users@vger.kernel.org>; Sun,  8 Nov 2026 13:24:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C6F1606A31C
+	for <linux-perf-users@vger.kernel.org>; Sun,  8 Nov 2026 13:28:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a8xbDpCi
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73BC71F0089F;
-	Sun,  8 Nov 2026 13:24:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ihFwRZ/I
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70B5A1F0089F;
+	Sun,  8 Nov 2026 13:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794144289;
-	bh=Or8HOQ+FUHumsZGwHSU2tgZkhlm7jJ1ipJ6DS34uNzs=;
+	s=k20260515; t=1794144486;
+	bh=95D60lJwPPRh7oesSbozYjICYxOXZWglGzgEdDruuZQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=a8xbDpCiqbxBIZc4/FvoYyeM74505rda4TeteEv4Gv82IZD4Q4wftRWw5Db5vZxjx
-	 oToaoma6i0gpEmYtBj12luBhOe7qwcERTU6WQ+brsIHFbqkJvKaAKKstVqK4ec/bks
-	 9VEuB3BizBhuoBTl8rYrIFd1b52QA8zTYWD0CNDPWnjDiF5W/ndJm9C5gyj5p9+WXi
-	 ahVmhlXIEHjbQKQyf9d/pHlQR/TdhcmqNTlyj+FVwVRovFcfCsvjt39tjek5I6f6ku
-	 zmTJfuWUo2MFdMYEtVH2opC2ot+sZcZpfxXyp29pKYXEf0rKu+qxDPtKKW2rEU+XM7
-	 vn1cy2tiEB4GQ==
-Message-ID: <sashiko-outbox-203778@kernel.org>
+	b=ihFwRZ/IS9y0UP/khMVDc6VCmouQfYaG3qiL5htQn+W71a0ZEYuF4Z77A0cvAKKbk
+	 t3PPQj8weZiRRUCKW6trvrf+ipYKzTufbZGI7VKbhoOCYLhwOA5da28KlBsl8Ppa1k
+	 qSXYnisphDLjKSbeRIxV85VUuIrxncTkKVahKCp8qHRvI5lPf2IA3CDvAXLN7JfJEP
+	 L39SRNF7bba4SS916ddjeLCpk/+7fdrF0AJRAEq6Yz3GNq9Z/eE8bn6Ebsp3SrO556
+	 F/YJ2JYMIvTmKZ6+TdPWmRQDP2o1hplZZ1ZoWmCuSaQj/4tWhaJryM+4vIQ/tvrxgS
+	 k1UNHJHMWiQ6w==
+Message-ID: <sashiko-outbox-203779@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 5/5] MIPS: eyeq6_defconfig: enable the CM3 PMU
+Subject: Re: [PATCH 2/5] MIPS: CM: export the symbols needed to access the
+ GCRs from a module
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261108-i6500-cm3-pmu-v1-5-bd119584891a@mobileye.com>
+In-Reply-To: <20261108-i6500-cm3-pmu-v1-2-bd119584891a@mobileye.com>
 References: <20261108-i6500-cm3-pmu-v1-0-bd119584891a@mobileye.com>
- <20261108-i6500-cm3-pmu-v1-5-bd119584891a@mobileye.com>
+ <20261108-i6500-cm3-pmu-v1-2-bd119584891a@mobileye.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 08 Nov 2026 13:24:49 +0000
+Date: Sun, 08 Nov 2026 13:28:06 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,8 +61,16 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Enable perf events and build the Coherence Manager 3 PMU driver as a
-> module.
+> Allow modules to use the GCR and CPC accessors from asm/mips-cm.h and
+> asm/mips-cpc.h:
+>=20
+> - mips_gcr_base and mips_cpc_base are the mapped register blocks;
+> - the CPS_ACCESSOR macros consult mips_cm_is64 on every 64-bit register
+>   access;
+> - mips_cm_lock_other() / mips_cm_unlock_other() are the only way to
+>   reach the registers of another cluster through the redirect block.
+>=20
+> This is a prerequisite for building the CM3 PMU driver as a module.
 >=20
 > Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 
@@ -69,5 +78,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261108-i6500-cm3-=
-pmu-v1-0-bd119584891a@mobileye.com?part=3D5
+pmu-v1-0-bd119584891a@mobileye.com?part=3D2
 
