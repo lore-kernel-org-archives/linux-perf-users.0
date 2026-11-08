@@ -1,48 +1,48 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794105701;
-	b=YTH53bLhxf13owmMOl/yKipU8kyJMIfVvyS5F5BS8LOtBddoRlAbO60CLiFmqGzq4STU
-	 gwBZrNcO1qPynep2rucrKFi7xQcb4usEw4dEDI2rHYRluhHnGyg7AFDbpeElpRvE860f4
-	 PxWLdrM4vO8/a2ajyNdfBma51optnN/5dUca3lMQiIGbhf+QIvNF7f/miInO/a4Bw91kP
-	 uDkh6UJ2ap/h0Y6Ijlaqbei5cWdOg9xpieBBOOSRg+L/CU7pjmFEVJuY5IBIpPmAINDcx
-	 Yoo3Fn04lpL13f5JUSqaMPcwUjDMMsDWtnoBFRi319bc66xTP44pXLTt8bqi3sVVLAw==
+	t=1794105702;
+	b=MC3C2we1JMoqwNAuHetsaRuDSRP65Y8WWBXjLPvYxNTlnE3KFc50ZrPOgCOK2nCm4ql7
+	 V54v71B16xrs8t+j3XK/xkOavdOnyokLTJ0ubyCa1UeFodDDEHE01/RzJyOO0KpomR5+w
+	 yiCELbRzcpsksgSXaRW8qAQvFTDRYSVGBvtit4byJbH5aeRacDZNPbyimRG+2kEZqWgAh
+	 /AOm9aAg3A3pNWqV7cDsVMbSN3F0y58ZTyyOzeatwgSE/2iCZzImpMJ8UswjVb0ptGlz4
+	 Mk3GVlIwTKhbvuX/iWfDQvlcU9N+Xo785Ivm6Fz90/h8hqy1dVNVoQbOFd7rFperBYw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794105701;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794105702;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=lmpnz1vLHbJ3dPKz5BCelzlMiXmBar94uMPTctw9zZo=;
-	b=kyWHECaLWgq71J+eOcOmM39FgOMYUYwC1XoUpzkgwlQ6GjuZKh0ZsfBXkdJ0MdGlNdy1
-	 eD9/nFsUhZRuu+uze1GOkCPGiLMUofE2GTKkGbCXb6ZBc/D0fZ4R2EVae3Y0N+6zO+fQe
-	 Hpd5VDRP+vBkdDJOSp9/Z1D6GMJXeECotwaghl2v6Pn+07XU3ekJfkqpZMUCxctWAJzmS
-	 l4g1nnzqQXuEnckp8c/fF4rvQ8x9GJBsz7HD/0E/FcpPq2pYOns5i3sENSRF0e6jZRLO9
-	 Oyz/5xf4NLb3lpz4+gxeRoLIuCdWdd9QsnIlGtcOzlReJPwQglD0Kmbb9Vx6emEmwjg==
+	bh=DRHvIw1u2uHJfm4qV+SPn2XIBsYniEYEKzVAR8jCY1A=;
+	b=3r3r/h4/D5il4e5wUR+NWb9Q1qgbx3vrrQhbGSKvs0WXbxlEzm9mIVvKldBz+4Xzl0Di
+	 HQ+3TjTtHggqwb7RL2x9SQT0xP8NSL+dKaIAMlMgFSkQmmI5vVTNSusqUnYEQwZ1v1qYg
+	 kJ3BDOHxNEFgB7TE4tTl4HUbEQlVNlANyC0N+xtQ2ueRv63GDHxfLO9jxV+9HZEEpNCLt
+	 xXopM5+RK+aJAxv5WWqqQF4+X9XR+CvZUmlZjpvWnzLIyCIK/o7V3yQ+Ha0a4wXFadT3i
+	 /UopFebmVE5H3xr7we6vnHzY6s3taYGx2JprbVvyv6xBJE9vegyW0b2nyChPxOgWR6Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=I0FhQcof;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oqUWd+hL;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7856606A31F
-	for <linux-perf-users@vger.kernel.org>; Sun,  8 Nov 2026 02:41:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24429606A31C
+	for <linux-perf-users@vger.kernel.org>; Sun,  8 Nov 2026 02:41:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=I0FhQcof
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 907F21F008A2;
-	Sun,  8 Nov 2026 02:41:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oqUWd+hL
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 081DD1F0089F;
+	Sun,  8 Nov 2026 02:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794105700;
-	bh=lmpnz1vLHbJ3dPKz5BCelzlMiXmBar94uMPTctw9zZo=;
+	s=k20260515; t=1794105702;
+	bh=DRHvIw1u2uHJfm4qV+SPn2XIBsYniEYEKzVAR8jCY1A=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=I0FhQcofGHHdGJ/G6kk+fnZ+ROpBPN67ClIv5oVyRK4e0sz5IzajJ3Vxo+OEgxUpc
-	 /0dzEfH4rACiY53T56j4zNN+l8411bFBO+KDTS5yjjhLVt5kyaTIQ9SA3cPSJmh4wn
-	 iqaZH3BV+ewjlApJQyzajzK0oM7XQw82Uoh3Lw7dVn+z4CReU1bbtb+RhsOAVIcnzZ
-	 0tKLGCFpEjW+6SmIANvGP1i+3USupxmK8lTZ4/ocGuxweLH+2r97ijqdblt81Yxkfg
-	 2few6JyMU+Zb5gizCOloCqkmCuvlDnOh+w3Eo2GHOhMAK/kw79fffL71oeVFRqZdcV
-	 251GbhvgrTlhA==
-Message-ID: <sashiko-outbox-203526@kernel.org>
+	b=oqUWd+hLytVSiXaShntxJ/FH6ebYoenXwjkB9WjF8xdIP9TK08Dh9Xzqjn47s56ch
+	 7KoBDwXd50TVDtjwEXovPtiCkyYlXtEr3BwOS6a93p/AZEB9TDeIHiO9qbe+YsBR+Z
+	 XuJzX0XhdbQpa5rBhsehMz2MdyRTHPO7GAiR67Tdazka+5/RH8dHKZP8CssenSJ1e1
+	 QYvOpnsMdtW8urPtpht5KxYez3hnl3PTg/Mu48LtuWFSSTHjz5auNtQjl2C8Jlcl9R
+	 oV6mFU0aDuLKmxJryJztXlPThGc60u6nK4T7hvnXa5zvciDkO4nsostq7CIZ4ljntp
+	 QV1pOlmiOB7zw==
+Message-ID: <sashiko-outbox-203527@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 5/8] selftests/breakpoints: extend riscv test for
- ptrace hw break/watchpoints
+Subject: Re: [PATCH v8 6/8] riscv: Add shared instruction fetch and decode
+ helpers
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Himanshu Chauhan" <himanshu.chauhan@oss.qualcomm.com>, "Paul Walmsley" <pjw@kernel.org>, "Palmer
  Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>
@@ -53,12 +53,12 @@ Cc: "Alexandre Ghiti" <alex@ghiti.fr>, "Jesse Taube" <jtaubepe@redhat.com>, "Ole
  Shishkin" <alexander.shishkin@linux.intel.com>, "Jiri Olsa" <jolsa@kernel.org>, "Ian
  Rogers" <irogers@google.com>, "Adrian Hunter" <adrian.hunter@intel.com>, "James
  Clark" <james.clark@linaro.org>, "Shuah Khan" <shuah@kernel.org>, linux-mm@kvack.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20261107023917.40606-6-himanshu.chauhan@oss.qualcomm.com>
+In-Reply-To: <20261107023917.40606-7-himanshu.chauhan@oss.qualcomm.com>
 References: <20261107023917.40606-1-himanshu.chauhan@oss.qualcomm.com>
- <20261107023917.40606-6-himanshu.chauhan@oss.qualcomm.com>
+ <20261107023917.40606-7-himanshu.chauhan@oss.qualcomm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 08 Nov 2026 02:41:39 +0000
+Date: Sun, 08 Nov 2026 02:41:40 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -68,254 +68,119 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 7 potential
+Thank you for your contribution! Sashiko AI review found 2 potential
 issues to consider:
-- [Medium] selftests/breakpoints: 8-byte write into unsigned long var on
-  32-bit riscv
-- [Medium] selftests/breakpoints: icount_branch_result modified only via
-  raw asm symbol
-- [Low] selftests/breakpoints: format string mismatch for __u64 in
-  breakpoint_test_riscv
-- [Low] selftests/breakpoints: missing kselftest TAP reporting, skip
-  handling, and changelog mismatch
-- [Low] selftests/breakpoints: commit message out of sync with diff
-  changes
-- [Low] selftests/breakpoints: icount_branch_result invisible to C
-  optimizer
-- [Low] selftests/breakpoints: close(gfd) before wait_event() in
-  trigger_wp() and trigger_bp()
+- [High] riscv: missing s32 sign extension of offsets in
+  get_next_insn_address()
+- [Low] riscv: duplicate include of asm/insn.h in traps_misaligned.c
 --
 
-commit 91bb1409ac047eda69672c8b99664375baad647d
+commit c0540231e3e0c755203ccef775001d61bb9b1fb4
 Author: Himanshu Chauhan <himanshu.chauhan@oss.qualcomm.com>
 
-> selftests/breakpoints: extend riscv test for ptrace hw break/watchpoints
->
-> Cover the new ptrace-based hardware breakpoint/watchpoint support
-> added for riscv: exercise the PTRACE_GETREGSET/SETREGSET regset path
-> as well as the raw PTRACE_GETHBPREGS/SETHBPREGS interface, alongside
-> the existing perf_event-based tests.
->
-> Also drop a leftover #if 0 block duplicating the HWDEBUG_* control
-> field macros already defined in uapi/asm/ptrace.h.
->
-> Signed-off-by: Himanshu Chauhan <himanshu.chauhan@oss.qualcomm.com>
+riscv: Add shared instruction fetch and decode helpers
+
+This commit moves get_insn() into arch/riscv/lib/insn.c and adds helpers to
+fetch instructions and compute the next PC for control-flow instructions
+during software single-stepping.
+
+> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/tra=
+ps_misaligned.c
+> index 6e8ae6c66322c..541e6a5b80394 100644
+> --- a/arch/riscv/kernel/traps_misaligned.c
+> +++ b/arch/riscv/kernel/traps_misaligned.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/irq.h>
+>  #include <linux/stringify.h>
+> =20
+> +#include <asm/insn.h>
+>  #include <asm/processor.h>
+>  #include <asm/ptrace.h>
+>  #include <asm/csr.h>
 
 [Severity: Low]
-Is this commit message out of sync with the changes in the diff?  The parent
-commit "riscv: Add breakpoint and watchpoint test for riscv" has no #if 0
-block with duplicate HWDEBUG_* macros, while the new perf_event taken-branch
-PC test (trigger_icount_branch()) and the close(gfd) fix in trigger_wp() are
-not mentioned.
-
-> diff --git a/tools/testing/selftests/breakpoints/breakpoint_test_riscv.c =
-b/tools/testing/selftests/breakpoints/breakpoint_test_riscv.c
-> index a8a94a788142d..b07f6770c380e 100644
-> --- a/tools/testing/selftests/breakpoints/breakpoint_test_riscv.c
-> +++ b/tools/testing/selftests/breakpoints/breakpoint_test_riscv.c
+This isn't a bug, but arch/riscv/kernel/traps_misaligned.c already includes
+asm/insn.h a few lines below.
 
 [ ... ]
 
-> +		if (ptrace(PTRACE_GETREGSET, pid, NT_RISCV_HW_WATCH, &iov) =3D=3D 0) {
-> +			ksft_print_msg("ptrace(PTRACE_GETREGSET): Number of watchpoints: %u\n=
-",
-> +				       dreg_state.info);
-> +			ksft_print_msg("ptrace(PTRACE_GETREGSET): addr: 0x%lx control: 0x%x\n=
-",
-> +				       dreg_state.dbg_regs[0].addr,
-> +				       dreg_state.dbg_regs[0].control);
-> +			if (!dreg_state.info ||
-> +			    dreg_state.dbg_regs[0].addr !=3D (uintptr_t)addr ||
-> +			    HWDEBUG_TYPE(dreg_state.dbg_regs[0].control) !=3D HW_BREAKPOINT_W=
- ||
-> +			    HWDEBUG_SIZE(dreg_state.dbg_regs[0].control) !=3D size) {
-> +				ksft_print_msg("Bad wp readback: info=3D%u addr=3D0x%lx ctrl=3D0x%x\=
-n",
-> +					       dreg_state.info,
-> +					       dreg_state.dbg_regs[0].addr,
-> +					       dreg_state.dbg_regs[0].control);
-> +				return false;
-> +			}
-
-[Severity: Low]
-Should these ksft_print_msg() calls use %llx and %llu instead of %lx and
-%lu?  In arch/riscv/include/uapi/asm/ptrace.h,
-struct user_hwdebug_state::dbg_regs[0].addr and
-struct __riscv_hwdebug_state::{addr, type, len, ctrl} (printed in
-set_hbpregs_watchpoint() and set_hbpregs_breakpoint()) are __u64, which is
-unsigned long long on both 32-bit and 64-bit RISC-V, causing -Wformat
-warnings and corrupting variadic argument reads on 32-bit RISC-V.
+> diff --git a/arch/riscv/lib/insn.c b/arch/riscv/lib/insn.c
+> new file mode 100644
+> index 0000000000000..fc44e2aa6f5f0
+> --- /dev/null
+> +++ b/arch/riscv/lib/insn.c
 
 [ ... ]
 
-> +static bool run_ptrace_wp_test(void)
+> +static unsigned long get_next_insn_address_compressed(struct pt_regs *re=
+gs, u32 insn,
+> +						      unsigned long pc)
 > +{
-> +	pid_t pid =3D fork();
-> +	bool ret =3D false;
+> +	unsigned int rs1_num;
 > +
-> +	if (pid < 0) {
-> +		ksft_print_msg("fork() failed: %s\n", strerror(errno));
-> +		return false;
+> +	if (riscv_insn_is_c_jalr(insn) || riscv_insn_is_c_jr(insn)) {
+> +		rs1_num =3D RV_X(insn, RVC_C2_RS1_OPOFF, 5);
+> +		return riscv_jalr_target(riscv_get_reg_value(regs, rs1_num), 0);
 > +	}
 > +
-> +	if (pid =3D=3D 0)
-> +		do_wp_child(&var, 8);
+> +	if (riscv_insn_is_c_j(insn) || riscv_insn_is_c_jal(insn))
+> +		return RVC_EXTRACT_JTYPE_IMM(insn) + pc;
 > +
-> +	if (!wait_for_child_stop(pid, SIGSTOP, "ptrace watchpoint"))
-> +		goto out;
+> +	if (riscv_insn_is_c_beqz(insn)) {
+> +		rs1_num =3D RV_X(insn, RVC_C1_RS1_OPOFF, 3) + 8;
+> +		if (!rs1_num || riscv_get_reg_value(regs, rs1_num) =3D=3D 0)
+> +			return RVC_EXTRACT_BTYPE_IMM(insn) + pc;
+> +		return pc + 2;
+> +	}
 > +
-> +	if (!set_watchpoint(pid, 8))
-> +		goto out;
-
-[Severity: Medium]
-Can do_wp_child(&var, 8) write past the end of var on 32-bit RISC-V?
-
-var is declared as unsigned long (4 bytes on RV32), and
-tools/testing/selftests/breakpoints/Makefile builds breakpoint_test_riscv f=
-or
-both riscv and riscv64.  Hardcoding 8 here and in set_hbpregs_watchpoint() /
-run_hbpregs_wp_test() instead of sizeof(var) executes *(uint64_t *)addr =3D=
- 47
-in do_wp_child(), overflowing var in .bss and requesting HW_BREAKPOINT_LEN_8
-on 32-bit kernels where only lengths up to 4 bytes are supported.
-
-[ ... ]
-
-> +static int icount_branch_result;
-> +static unsigned long icount_branch_pc;
-
-[ ... ]
-
-> +static __attribute_noinline__ void run_icount_taken_branch(void)
-> +{
-> +	asm volatile(".option push\n"
-> +		".option norvc\n"
-> +		".globl icount_branch_insn\n"
-> +		".globl icount_branch_fallthrough\n"
-> +		".globl icount_branch_target\n"
-> +		"li t0, 1\n"
-> +		"li t1, 1\n"
-> +		".balign 4\n"
-> +		"icount_branch_insn:\n"
-> +		"beq t0, t1, icount_branch_target\n"
-> +		"icount_branch_fallthrough:\n"
-> +		"la t2, icount_branch_result\n"
-> +		"li t3, 2\n"
-> +		"sw t3, 0(t2)\n"
-> +		"j icount_branch_done\n"
-> +		".balign 4\n"
-> +		"icount_branch_target:\n"
-> +		"la t2, icount_branch_result\n"
-> +		"li t3, 1\n"
-> +		"sw t3, 0(t2)\n"
-> +		"icount_branch_done:\n"
-> +		".option pop\n"
-> +		:
-> +		:
-> +		: "t0", "t1", "t2", "t3", "memory");
+> +	if (riscv_insn_is_c_bnez(insn)) {
+> +		rs1_num =3D RV_X(insn, RVC_C1_RS1_OPOFF, 3) + 8;
+> +		if (rs1_num && riscv_get_reg_value(regs, rs1_num) !=3D 0)
+> +			return RVC_EXTRACT_BTYPE_IMM(insn) + pc;
+> +		return pc + 2;
+> +	}
+> +
+> +	return pc + 2;
 > +}
 
-[Severity: Low]
-Can the compiler optimize away or constant-fold icount_branch_result when
-building with optimizations enabled?  Because icount_branch_result is a
-static variable whose address is never taken in C and that is only written =
-via
-a raw symbol name in the inline assembly rather than an asm output operand,
-interprocedural optimization can fold reads of icount_branch_result to 0 and
-elide the symbol from .bss.
-
 [ ... ]
 
-> +	if (icount_branch_result !=3D 1) {
-> +		ksft_print_msg("Icount branch did not take the branch\n");
-> +		return -1;
+> +static unsigned long get_next_insn_address_standard(struct pt_regs *regs=
+, u32 insn,
+> +						    unsigned long pc)
+> +{
+> +	unsigned int rs1_num;
+> +
+> +	if ((insn & __INSN_OPCODE_MASK) =3D=3D __INSN_BRANCH_OPCODE)
+> +		return riscv_branch_taken(regs, insn) ?
+> +			RV_EXTRACT_BTYPE_IMM(insn) + pc : pc + 4;
+> +
+> +	if (riscv_insn_is_jal(insn))
+> +		return RV_EXTRACT_JTYPE_IMM(insn) + pc;
+> +
+> +	if (riscv_insn_is_jalr(insn)) {
+> +		rs1_num =3D RV_X(insn, RVG_RS1_OPOFF, 5);
+> +		return riscv_jalr_target(riscv_get_reg_value(regs, rs1_num),
+> +					 RV_EXTRACT_ITYPE_IMM(insn));
 > +	}
-> +
-> +	if (icount_branch_pc !=3D (unsigned long)target_addr) {
-> +		ksft_print_msg("Icount branch PC 0x%lx does not match target %p\n",
-> +			       icount_branch_pc, target_addr);
-> +		return -1;
-> +	}
 
-[Severity: Medium]
-Does trigger_icount_branch() fail at this point in the series and prevent
-run_ptrace_tests() and run_hbpregs_tests() from running?
+[Severity: High]
+On 64-bit RISC-V, do RVC_EXTRACT_*_IMM(insn) and RV_EXTRACT_*_IMM(insn)
+zero-extend negative branch and jump offsets to 64 bits instead of
+sign-extending them?
 
-Before the later commit "riscv: Add software supported single stepping with
-mc/mc6 triggers" in this series, hw_breakpoint_handler() delivers the perf
-breakpoint event at insn_addr without single-stepping to target_addr, so
-icount_branch_pc !=3D (unsigned long)target_addr fails and main() returns -1
-before reaching the new ptrace tests (in addition to icount_branch_result
-being folded to 0 under -O1/-O2 unless marked volatile/__used or passed as =
-an
-asm operand).
+Because insn is u32, RV_IMM_SIGN(x_) and RVC_IMM_SIGN(x_) evaluate in 32-bit
+unsigned arithmetic (producing a 32-bit unsigned mask such as 0xfffff000U),
+and bitwise-ORing that with the GENMASK()-based unsigned long bitfields
+zero-extends the result to 64-bit unsigned long. Any backward branch,
+backward jump, or negative-offset JALR in get_next_insn_address_compressed()
+and get_next_insn_address_standard() will miscompute the next PC by +4 GiB,
+arming software single-step breakpoints at the wrong address.
 
-[ ... ]
-
->  	ioctl(gfd, PERF_EVENT_IOC_ENABLE, 0);
->  	test_data =3D 0xdeadbeef;
->  	ioctl(gfd, PERF_EVENT_IOC_DISABLE, 0);
-> =20
-> +	close(gfd);
-> +
->  	return 0;
->  }
-
-[Severity: Low]
-Can closing gfd in trigger_wp() (and trigger_bp()) before main() calls
-wait_event() drop the perf fasync signal?
-
-__perf_event_overflow() queues pending_irq via irq_work_queue() without
-IRQ_WORK_HARD_IRQ, so on !CONFIG_SMP or CONFIG_PREEMPT_RT kernels kill_fasy=
-nc()
-is deferred until after the breakpoint trap returns to userspace:
-
-trigger_wp()
-  test_data =3D 0xdeadbeef
-    <breakpoint trap>
-      ...
-        __perf_event_overflow()
-          irq_work_queue(&event->pending_irq)
-  close(gfd)
-    __fput()
-      perf_fasync(-1, ...)  <-- clears event->fasync before kill_fasync()
-main()
-  wait_event(&wp_mtx, "Watchpoint")  <-- times out after 5s
-
-Closing gfd after wait_event() returns, as trigger_icount_branch() does,
-avoids tearing down fasync while the signal is still pending.
-
-[ ... ]
-
->  	if (wp_triggered)
-> -		printf("Watchpoint test passed!\n");
-> +		ksft_print_msg("[perf_event]: Watchpoint test passed!\n");
-> +
-> +	sem_init(&icount_branch_mtx, 0, 0);
-> +	if (trigger_icount_branch() < 0)
-> +		return -1;
-> +
-> +	if (!run_ptrace_tests())
-> +		return -1;
-> +	if (!run_hbpregs_tests())
-> +		return -1;
-> =20
->  	return 0;
->  }
-
-[Severity: Low]
-Should main() report results through the kselftest harness and skip when
-hardware breakpoints are unsupported?
-
-Although this patch includes kselftest.h and converts several prints to
-ksft_print_msg(), main() never calls ksft_print_header(), ksft_set_plan(),
-ksft_test_result_*(), or ksft_exit_*(), and exits with a bare return -1 (25=
-5).
-In addition, when set_watchpoint() or set_breakpoint() sees errno =3D=3D EI=
-O ("not
-supported") on platforms without hardware debug triggers, the test fails
-instead of reporting a kselftest skip.
+Casting the extracted immediates to s32 before adding pc or passing the
+offset to riscv_jalr_target() (as done in simulate-insn.c) would sign-extend
+them properly.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261107023917.4060=
-6-1-himanshu.chauhan@oss.qualcomm.com?part=3D5
+6-1-himanshu.chauhan@oss.qualcomm.com?part=3D6
