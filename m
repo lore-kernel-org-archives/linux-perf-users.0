@@ -1,54 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794163676;
-	b=XqEYPlDqa9hq88A0v6Y9avD3p7w6FP57LuznUst632n9GzKlUQqpK1CTg6FZ7QECBnbm
-	 3EaizWmPniit7QdXu61puRMcHXxNjLK9vnpKDNVHEKw6fk1QMzseriDSxT9nvv1O6cXCC
-	 GcGCV43Min9dfDDD/aN8kspvV+mqBgERHSDC4OI+NEmqle5UqtlQ5/Dw7e50+Muw93tUD
-	 ikre8oLLULwLrqpK7E/IUOxu/Qcew/Y+H/H86tpNtIEcTXOpDpm/8knfbPf239hDrvfFw
-	 qvPyA9fJWlBN45aVIBAqbiYb/XqxQ34JCU4hn8Lx/zueYdzggy9IaQp17CvaVcXBMtA==
+	t=1794163771;
+	b=CnqVl6q12Yc/YLyMaHuI83t2ZaKsCVhle9EgODF4NOrYDVo7CGsYqO72hSfe56+66R9f
+	 3Ybhp+O4cFKYdmNw+DIwT9UqZt/4ENSRjHMxxk+IhF8d5HTxQVg7RUzZCgjE1XSas5DpP
+	 I3qsUS8QkaGM3qWLvOL2Xtao4gRX3Odj17sOen7op3phV45Tr4q7V7qLWA5FO+iF8JdBQ
+	 MGpOs65fklXVY0lkrNGErFSfzQ+zIPVnVXRp5QfyMmRdxFaqNBJd1XdtryOczQYKlierK
+	 oMeVdDLQZORP7NB5jdPilX+kBGYMIakSyQta+PakC/qrrh3UPSVOYaxEAiG6GHapLsQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794163676;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794163771;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=D7vX/0ljEmlIdz0QMbhaaT2QpyBGnB8+95xI/bRmcXE=;
-	b=o0HtOdg1Y9W5pAJfN5Z05yx3zWFRutwJq+Gwl0Ebn8cWp/mdjAvErwmvAWN8rpWY6Ucc
-	 zjQALUWOFq7p8Pfrr46nbTc2V7y+bRf5CJsgVbhEYp+Qg4xUtfs+l/SZkHdvWwqLqX6BY
-	 5f9lZukB25AQCzWTh/j7cKsTof7DrJq5V+Qv1TUEFrYWW7ZSctdNnqdYCLVqg6jwq9UXI
-	 jvqjrybXw1SPajUkUvS6UbDBoXIkBT6+DLP4VaEzZSdpEhSywPesYR/KUg2TXVsIaEwIF
-	 RWT9AH1C9rtSuGI5xnIRQwX+khqpxxLmCNWrhiXJ4KKcpHMBaA3E3uv66DDqjG2egbA==
+	bh=vKFOAwKKRxX6KT89GEQArTofVGGsL0ndJcg9QO4UQgo=;
+	b=FJZ14DWs/4aKK/P7Lbc92ZdEjjvRDvJS19MOOuzDrsZ0G2VFmqafi3GR566Cc0X+JT8V
+	 bo81S/5FzsHz0tpxIBxsLhRLLr42pQRT7BW6Ky3HO50lyf0OjAvh7yNVtHAkRZoUJRAOI
+	 PF3UxOv9EBZcZfXc0y7Nr5jo48/YXkgCCvFEF6wOQ6h/u/JH7o34zTFjupa2vF3luUukS
+	 FTGQwIrbpgPf7t6nxWpTRNQ2TWkPzKmROhmzayF7jyTaiq1ZjihjKvyVHj0rqXu1l7FJo
+	 Y6vyYTjZy0+klKBVlXkvAnKVtOgmuqqy2GuvCf2bj1zzoqUAz50Em/VQtQpVbrxoG0A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mlJZKNnQ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=c42evJMD;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC7E606A31C
-	for <linux-perf-users@vger.kernel.org>; Sun,  8 Nov 2026 18:47:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F38606A31C
+	for <linux-perf-users@vger.kernel.org>; Sun,  8 Nov 2026 18:49:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mlJZKNnQ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B6E71F0089F;
-	Sun,  8 Nov 2026 18:47:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=c42evJMD
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 094B11F0089F;
+	Sun,  8 Nov 2026 18:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794163675;
-	bh=D7vX/0ljEmlIdz0QMbhaaT2QpyBGnB8+95xI/bRmcXE=;
+	s=k20260515; t=1794163771;
+	bh=vKFOAwKKRxX6KT89GEQArTofVGGsL0ndJcg9QO4UQgo=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=mlJZKNnQDtQsoedAXr9TEbVJGdyatMbpTkk8wFO4+xIH+4UazNdYMoLl5/jQ8PcSn
-	 fnvVez/6JDz5YknJ89rkWUYprQ4r43Z1b8GGJ9QGuNSfFwzJWkIpUB79jbQURvBUC4
-	 4gx+KaLDg/Kjr97rtbDsli8UnUkAz6viDfg/kMZM0GCs4tcskEaai4Zuv4NwZ9SajM
-	 O8vJOCIc8dnJzVhwd2fIg8ZZGPGMErUP9LIbbku1jLKv8c6+/xTkC9GfVxqsPNEOfc
-	 v2UHCZLZFkKRLA44oPnMe6bukkMMZS9Rz2gPqRZ9CxehUOx5/t9WIv0IDc4iP2wUpe
-	 ECXCP2hJ25Brg==
-Message-ID: <sashiko-outbox-203913@kernel.org>
+	b=c42evJMDhC5AoO6FrI8uGDx5o8ASqr1lJvgXv2STAcjOplI8epaHWLSyewMIwGsw4
+	 y0XudM69NkNa6p4PLIC1AhyLUjSRqbNLfUEXTLhsqpjd6dpWU/cRVW9uQmhswgr/TF
+	 AZ1SOMyisqJ9X2ZQAy0QsZcwhdPh1K3z081P7A4D25+zNlage2MhodRyZw1ISNUblT
+	 pe6YCaioQisXwSkhjioqFyOhmiVHyGnPNMiMPVLDF77DfihnHJVgoNKDmqOub3fedR
+	 3mkEkeVTddL+fNlfcIphd9pv+/DzFk59obLQ3M7knL6weP075ozLyGxAI8lerQuKGe
+	 WmlJQYaI3wKgQ==
+Message-ID: <sashiko-outbox-203914@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf vendor events amd: Fix a misspelled JSON key
+Subject: Re: [PATCH] perf vendor events arm64: Fix typos in event
+ descriptions
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "TAKANO Mitsuhiro" <takano32@gmail.com>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20261108184600.3810059-1-takano32@gmail.com>
-References: <20261108184600.3810059-1-takano32@gmail.com>
+In-Reply-To: <20261108184654.3811267-1-takano32@gmail.com>
+References: <20261108184654.3811267-1-takano32@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 08 Nov 2026 18:47:54 +0000
+Date: Sun, 08 Nov 2026 18:49:30 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -58,26 +59,32 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> ls_inef_sw_pref.all is listed without a description on Zen 4, Zen 5 and
-> Zen 6.  Its three JSON entries spell BriefDescription as
-> "BriefDescript6ion", and jevents.py reads the keys it knows by name, so
-> the text is dropped and the generated table ends up with an empty
-> description field.
+> Six entries in common-and-microarch.json spell Statistical as "Statisical"
+> (the SAMPLE_FEED_* events), and one entry in the Fujitsu a64fx table, the
+> L2HWPF_STREAM_PF event, spells prefetcher as "prefecher" in both its
+> BriefDescription and its PublicDescription.
 >=20
-> Spell the key correctly.  Only the key changes; the text, event names,
-> codes, umasks and expressions are untouched.
+> The SAMPLE_FEED_* events are inherited through ArchStdEvent by the
+> neoverse-n3, neoverse-v3 and t410 tables, so the misspelling reaches those
+> three generated tables.  The a64fx pair appears once, because the long
+> description is dropped when it equals the brief one.
 >=20
-> Fixes: 658448281d19 ("perf vendor events amd: Add Zen 4 core events")
-> Fixes: 45c072f2537a ("perf vendor events amd: Add Zen 5 core events")
-> Fixes: 2f42fb0661d9 ("perf vendor events amd: Add Zen 6 core events")
+> Spell the words correctly.  Event names, codes and expressions are
+> unchanged.
 >=20
-> Written with Hermes Agent, an LLM assistant.
+> Written with Hermes Agent, an LLM assistant.  Running jevents.py for arm64
+> before and after this change removes 12 occurrences of "Statisical" and t=
+he
+> one "prefecher" from the generated string table; perf was not rebuilt.
 >=20
+> Fixes: 994256a79867 ("perf vendor events arm64: Add N3 events/metrics")
+> Fixes: 5497b23e870c ("perf vendor events arm64: Add Fujitsu A64FX pmu eve=
+nt")
 > Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261108184600.3810=
-059-1-takano32@gmail.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261108184654.3811=
+267-1-takano32@gmail.com?part=3D1
 
