@@ -1,56 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.127.231.113
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794220304;
-	b=caY7d0RqA2VUrvU8SGhhS3h76aO52hdYa0ENEPNoUblSm6GxdllGV66rr8E4PdO1nhUp
-	 OzI4T99FNLGzG+7rInvYVWEe7F7QL7K3BaoI3IIgEY2IRvPBCOeOXoMJJGxCFn1vs8YlO
-	 4Yz0tYUVO/rnUOkrIgU5IecK//cSTAKXZ0dCuEZSanv7PiFGOqFIfX2+HPr+fj31rXpt/
-	 MKXmzXuuWaPJ78+JlDQS0ZcR1pH3RylEAJRfsWHJFf8jVqSfEUgDajj42vFkxe5jLtMno
-	 PBVD/61k3haiau4ksPHHw7tWHcr4bw6T6gv3ESziWGL22HZj+kkhrDdvOtXt+d3uZyQ==
+	t=1794222273;
+	b=S31atOE0GK6b/ORqm578L7LmAwraZATY8YL1tr1JtldUPASkcu9k6yJdln+rwcn/rNRg
+	 2ryA51TRiATY/rYSJZG0T+vftgbx3g11dkviEvS3elrASmo+6XlP0g3QRggGu2nV6OmMh
+	 YrSrjV/R89Ip5sw8+lSpItATnsV/lTdHeyMMTtVsX9Bb5wiNoz27FTOMgC5YDLseQmkai
+	 AVXnR16F2GYhegnUmdM4hQuYICjukr71uGkihdBHM18OkT0+WDDSocOUiQCuvHE4PxYga
+	 OrifQov7nFtozooy4yDWmS0ACJwMuKXyWkLOqgsCnyBmyFlZjxU+9NyuNLv0lVH/DqQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794220304;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=CrYtaQlewUnQdLteoahoW5+khkg0nWbpHI9Teshcdjw=;
-	b=H5SIpP/KNHIVfUvT/8CfnXQ6x8yltTrUq3U+FHjc1O8+a5NyUQhBBmRZAH5UwWJqC+oR
-	 kHGSkI5ythiqnz+jjSxaw3b/0Gm6162m7Ht+jKrrieahWWDz9b8P6eUiyA4YyRUlr4Xsw
-	 xH9gaxe0NjppzQT710BmGrVszw6tQcQ8I0/PvL0yWJZp1IjhKsdlvIL38W/FDVqws4X/f
-	 HUJKf8pWbOVhEu0VuROxWfQKfTZbL4YjVjJdAqNLB6I1pvF5UGgurFRkrQJ7N+p2X1+ep
-	 iRMJYdKo4+NmVoukPSwtP2O//8q6VmwlSyUlFo4tvb1DyQCqixzds+o7ssUTN7t7w0A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794222273;
+	h=DMARC-Filter:DKIM-Signature:Content-Transfer-Encoding:X-Mailer:Cc:
+	 Date:Message-Id:Mime-Version:Subject:X-Original-From:Content-Type:To:
+	 From:X-Lms-Return-Path;
+	bh=Y5Lzomot2LyKiavuKiwRHLXi9C7DIBS9PkpU70qoGZQ=;
+	b=xcYT3634tzWQbJ2sAuUgEyIkWHc5Kx/0yghvYRrQHMlWIb68oo95GRD3dNnvhh2F5TFl
+	 BO8S+VykE6d6gvyKy2clAppFAnGq9ExeGLSDs+BnGQYtn/HS+HKD5CBhxajhM3MnYEW8o
+	 kZhUCXJUuyvc+ZrDuQQ0P2z9aCvNxTyMdYjLwT6YIZNpthohHPHSD5FAX9o0WbTUKfzKe
+	 gBoNHaafDaKo8qcclL2SL3p35HaxXwB8wzjxo72XcGIrP1s+klzcoiRzuJaR4tCPN0uGd
+	 CYLfELRr6BpxPTsyJlykOlHMyoDEZ53SPiNZBC0jb1x2mAkLj58R8DCye2e/GfNGKOA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dSslyQo4;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=bytedance.com;
+	spf=pass smtp.mailfrom=bytedance.com;
+	dkim=pass header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=2212171451 header.b=haWrxf6C;
+	arc=none smtp.remote-ip=209.127.231.113
+Received: from va-2-113.ptr.blmpb.com (va-2-113.ptr.blmpb.com [209.127.231.113])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC0B606A31C
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Nov 2026 10:31:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568F9606A325
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Nov 2026 11:04:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 568F9606A325
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dSslyQo4
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E0381F0089F;
-	Mon,  9 Nov 2026 10:31:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794220303;
-	bh=CrYtaQlewUnQdLteoahoW5+khkg0nWbpHI9Teshcdjw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=dSslyQo46rD+sUg4x+jRxiLiJfW9v8d5KTPYI05gDs7BDmW0U2lap8uvxMovrof0Q
-	 tq3Z5DCXUkEHUn/Zugl0nBSTpFOIkh2q18kA9RGNWM7DDZCwVzp5kvGNo+ZGnN3l+W
-	 tNAmqVhk6lwagbun5IiJZbcldXj3NYx7AjnpQNHUOTbVOhLi+hVMWD1SEtZ3pbVobi
-	 9dza+/gXcB2R3SQXBkcfwqIC0HY2u8XnG3w2ygWZOCV0PGKRyFso1xjdgGHxIrWeZM
-	 O4nhOXTTa1G1snj/3dFua+pMP9PVfxm+1xIeUigQb/XcYW4UPtGHuj2z/V00R06Y/j
-	 zKOjkf4/7nsAw==
-Message-ID: <sashiko-outbox-204821@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf/aux: Avoid reclaim for optional higher-order
- allocations
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Leo Yan" <leo.yan@arm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261109-perf_aux_alloc_optimize_psi-v1-1-d56ac4bf3ef5@arm.com>
-References: <20261109-perf_aux_alloc_optimize_psi-v1-1-d56ac4bf3ef5@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 09 Nov 2026 10:31:42 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=2212171451 header.b=haWrxf6C
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1794222265; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=Y5Lzomot2LyKiavuKiwRHLXi9C7DIBS9PkpU70qoGZQ=;
+ b=haWrxf6C94JWYif297/Q/Hy3fL1sRedEs37FjuZXdfVnmL9yP9izqWjjgHJqVMr6mLupl7
+ xCjZf0HU1Mh0RmHizYtqaAYXAmf10kOnIbGyDwAp6JhmkY3klHOZDH5A2Ph8kxHOAhxVut
+ LpMcCox1ot8rijGaA7c/qSo+kE802RAAYpXKMfj2YURJ8T7w/753Lf2xVG9ZA59Zarwg5I
+ ZgxDSpvny5Dwn2jGYuZPI+eRrzYlm0ZZMgdwU3dSfISD7pkAB30pZaq7meAV6eGBYk+fey
+ QigLZORhi8bLo0L+Wnvigb6JJ6COtyBl2lo0bXFZr0IaJSaazmAIGbaQtE5ERQ==
+Content-Transfer-Encoding: 7bit
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+Cc: <acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>, 
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>, 
+	<irogers@google.com>, <adrian.hunter@intel.com>, 
+	<james.clark@linaro.org>, <x86@kernel.org>, <kim.phillips@amd.com>, 
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Date: Mon,  9 Nov 2026 19:03:56 +0800
+Message-Id: <20261109110356.27709-1-zhaogongyi@bytedance.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,50 +60,50 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+Mime-Version: 1.0
+Subject: [PATCH] perf/x86: Reject pair-counter groups with no GP budget
+X-Original-From: Zhao Gongyi <zhaogongyi@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
+To: <peterz@infradead.org>, <mingo@redhat.com>
+From: "Zhao Gongyi" <zhaogongyi@bytedance.com>
+X-Lms-Return-Path: <lba+26af1a8b7+981cbe+vger.kernel.org+zhaogongyi@bytedance.com>
 
-Thank you for your contribution! Sashiko AI review found no new issues
-in this patch, but noticed 1 related pre-existing issue it does not
-introduce:
-- [Medium] perf/core: memory leak of rb->aux_pages in rb_alloc_aux() [1]
---
+AMD large-increment events reserve an extra GP counter. A syzkaller
+reproducer opens a perf event group until the adjusted GP budget is
+exhausted. x86_schedule_events() then WARNs on the unschedulable group.
 
-commit 2dcf33d1db6176542401bc5d602eab44c1364ebb
-Author: Leo Yan <leo.yan@arm.com>
+Treat an exhausted budget as a scheduling failure and return -EINVAL
+through the existing cleanup path.
 
-perf/aux: Avoid reclaim for optional higher-order allocations
+Fixes: 5738891229a2 ("perf/x86/amd: Add support for Large Increment per Cycle Events")
+Cc: stable@vger.kernel.org
+Signed-off-by: Zhao Gongyi <zhaogongyi@bytedance.com>
+---
+ arch/x86/events/core.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-This commit clears __GFP_RECLAIM and adds __GFP_NOMEMALLOC for optional
-higher-order AUX buffer allocations on scatter-gather PMUs, and switches
-PERF_AUX_GFP from __GFP_NORETRY to __GFP_RETRY_MAYFAIL.
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 4e344fb1a..20ba7b5b0 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1246,11 +1246,13 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
+ 		 */
+ 		if (x86_pmu.flags & PMU_FL_PAIR) {
+ 			gpmax -= cpuc->n_pair;
+-			WARN_ON(gpmax <= 0);
++			if (gpmax <= 0)
++				unsched = 1;
+ 		}
+ 
+-		unsched = perf_assign_events(cpuc->event_constraint, n, wmin,
+-					     wmax, gpmax, assign);
++		if (!unsched)
++			unsched = perf_assign_events(cpuc->event_constraint, n, wmin,
++						     wmax, gpmax, assign);
+ 	}
+ 
+ 	/*
 
-Link: https://lore.kernel.org/lkml/CALJ9ZPO9XxF-kz5K67Jg8RtpiEmK7XFU3e+xDak=
-6LyV_We7yBQ@mail.gmail.com/
-
-> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-> index 95f4fbdfd2764..37bda4398724a 100644
-> --- a/kernel/events/ring_buffer.c
-> +++ b/kernel/events/ring_buffer.c
-
-[ ... ]
-
-> @@ -733,7 +743,7 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_=
-event *event,
->  		int last, order;
-> =20
->  		order =3D min(max_order, ilog2(nr_pages - rb->aux_nr_pages));
-> -		page =3D rb_alloc_aux_page(node, order);
-> +		page =3D rb_alloc_aux_page(node, order, no_sg);
->  		if (!page)
->  			goto out;
-
-[Severity: Medium]
-This problem wasn't introduced by this patch, but can rb_alloc_aux() leak
-rb->aux_pages [1] when the first rb_alloc_aux_page() call fails?  At
-that point rb->aux_nr_pages is still zero, and __rb_free_aux() only calls
-kfree(rb->aux_pages) when rb->aux_nr_pages is non-zero.
-
-[1] https://sashiko.dev/#/bug/linux-c1a2bb3b-5d2a-4fca-a697-ce07992a5cc1
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261109-perf_aux_a=
-lloc_optimize_psi-v1-1-d56ac4bf3ef5@arm.com?part=3D1
+base-commit: 59f1398140869432c7171b9a2a279ca315467c4e
+-- 
+2.39.5 (Apple Git-154)
