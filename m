@@ -1,101 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.48
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794247135;
-	b=Ll85ar7xgUhEDEl2SkJFLKq7OyqeCSmLspxoemT17YCDtT0xvGbWY9vbd3AsMHv/IlA6
-	 3jdE/iLLpYmo6PcC1uugBWr73K+SGwx2DJWBZoX5/crlcdEUdpOJYlxnnqSCCAth0yAxM
-	 xsTz0qxv6XY/oTk94kHm496CwiTkEz6nNqlTk1APivHaY5QTEKOeP6u2XgQMWk42+e7q4
-	 ZAy9vLdmJdWg3xWcYefPJXKoMdK1SWq4U50ohK4pat18ABaGmm0rTdq7MGtqUVwsv2HeH
-	 3dPrHOjhj6hcC9pRIJsvzjzRQIYrndvCzqbh4lU0NVSuurJOh9e7TRAwAxNEM9/Oltw==
+	t=1794248422;
+	b=JZsLJZApVaj59OyepYazBo+rUdGtuS6yjVYbYkQvP+IQ5O0I7MEx/NEp85f8Nk8HHCaz
+	 Gt3ZpJ2mvT7eTlVWYcvsXBX98JswSuYlSQ07N74Bfps0KTTIMorsCJ50rA3s1pIHPMDe0
+	 VX7ezJq5QlQyMpJJ4D558RKrBvVFmR+wBeXvAUCSYkdVDvvjhwP4sT2lMD28POSgaccuY
+	 Zlem4ftuNDJBjl7xDAitN4K/pR4qn8hBKeu5eH1Jw0zmx+GxKJF2MFWMFlc1Ykvx0xlcN
+	 MkTdybcv7iEzz9/5pVMdsDZaHRxj+a5HwfD4lxQceU4lOcIFQgcuNyfpr5cUO5sfXow==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794247135;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794248422;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
 	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
 	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=9q75CrYbbx1raBGLb0OpIjYM8X7HXrQNmHLt90ZlSz8=;
-	b=rCKhtMi98v2iFABwjTrTYcDwuRDE3ajkiAdEHlora4lW9gg3WizpRx3KrZdkzOTpGFXp
-	 jrsUcdvjqDOXA6btGn9IIrU7fjMKnHoLaouYNyCCAJ5o2SEZ0Fjy7/A9+U6pj0o/69fSu
-	 XRl96OTrYQYfUEmENoe1DeXNOp+eX/8Go98ap/LpYn6GGnZ/teIPDuZA3FMExKv41OOQi
-	 6i6vLypliIiSSPzgeS9zMxyZ0LpOLRiUnPGxgKPeqTmS/VHF3S5+A4ZBXC7PVpg6qPDy0
-	 AKj/5Nfsy9mfqJvYDuZ+TQ+7oKwtbVhVi6+j/A2WrvqMKdkzrTgLu1l0TcJequv/Ifg==
+	bh=ec3rSrMbZ8GmXw0Jux1jLXyWIwWhDxqyeBtx6xUwW1Q=;
+	b=07ZpjAAwHMWvskPiSBU/U8eNcp4T7r+zTaTXarY6w35n2UmJHjMOHahcvNjl6eyLlcxb
+	 NiIHQ+I2QknkLKFWKQtW4Lsl28Cbcmutb7HAVkGkB64FuIxQRbBoyo0lzW1FvHfjCTD2s
+	 CffQIQcf77TOktIQgRB1WBnotcnLwdReS9Dcd9SwMUTYCim9DyfBMI+qEbnl0WRrWfGG0
+	 WcyNara25gqhqol2wN2oOMDTHTCAJvB4b3RQhSky0dpRoWvasfbf9r/H4yVlqM+QiZ3AH
+	 87EP3hRcvFiwgQkBi4krs0KvcjaNACaOULIVPxlPYv2OuEK44JHjqqO+AI+3DUGv/xg==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Oblus5Sb;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.218.53
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=AH0gZGsz;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.82.48
+Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA35606A32A
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Nov 2026 17:58:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3DA35606A32A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CB3606A326
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Nov 2026 18:20:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 59CB3606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Oblus5Sb
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-c4d2b741ed9so188641266b.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Nov 2026 09:58:54 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794247133; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=AH0gZGsz
+Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-150ef97e790so534c88.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Nov 2026 10:20:22 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794248421; cv=none;
         d=google.com; s=arc-20260327;
-        b=Wd+jDTfHzNedxIIMZ6r2XBrEUHbk/7+NcubJOSQ0VDohyNbK5Qr1jNShHtqK75Xi7V
-         V2R/jiZnLvtvvjAox5KvIWoWflsO8S/CA+sOYaq4QcCqW3Tm5wT8mD2uWkVz0XUlU4oP
-         otQhgZfcy/cL30Cc2RCyXKgYYtIlxf+Plro+zpqTkpQWjTu+CuP1MBUd+pt62KL2eXpW
-         sMXE7/z8QU0simS7jq06Z6XAUUSyPFoAKkFSt7KrLnzZQi4N9Br1ZFM6+J9TK2x6QG5A
-         97zikKmCBEHJ6hSGJDu0tRe4QZvUJNFuycV7RMr1nTj6tFdyrtjk+XksnQO8LxnoLtdG
-         hfaA==
+        b=UGaijFsr5dvJODICLThhNNBNyB3IpWik6a//lpgiAVukyuTY8KtS3k+ha/OzLJ7D23
+         MPkskgb0259JR8bP4hQb8vg8jVaXhlTdTMHcBiD2Tq0UeRJVPfV2SazLX2/+lzB5Rd7u
+         B3WSYi+voa0mdjzI8uvVwW+tiFiIIg0P1UsTLtAylPytoVFBZSdXbgaO/dWUnaVQNa4+
+         bztw5GjVZbWpK1tJ2jIoUajh5bE0JdI3OifwwLcRn4lw4+0dqo2imzS3U1T2q9mIhsZy
+         RUgmCCzFnjwBlRWYoV3pV5H2ICDDCxLZA9bqtD8bAwnCZBK5O8+0pkPNSH/2XyoGI/Wc
+         Ih4A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=9q75CrYbbx1raBGLb0OpIjYM8X7HXrQNmHLt90ZlSz8=;
-        fh=D7X1+VwMfGWEx0vOm2gegH1iShqVYt5oxpkDnZGl3kU=;
-        b=IRBJwbxjzUh1waX3ILd/HuQhEhLlHFga/4iZdjmeT7M0BTWsnCJmiy8yf1UV3W+dC2
-         Un9vdvhsYtV936fPx/N+B9jPaqdPUE3KWenxVR2wk+MfXQ3fGkrye443YRfXYyOKWmc0
-         WEVCFF05Xr9NWG17hAn9jn5QcbOkwK7PFBuSLOU6eVXDL8djuZ1G18lsvws+KV1vl97o
-         n/5i3+/R7pyuxRNL2pseL7bRtnyOqA077pQa6Qh12MrjLFUi2PXhrDeAbRQ1S5pYauT0
-         pmsZozmVaTmjwgsFS3IclTv2laRXOu+n5QRD7uU0EVo9yjrMnq0/j7yqx5+8+hg+hK9b
-         Q0tg==;
+        bh=ec3rSrMbZ8GmXw0Jux1jLXyWIwWhDxqyeBtx6xUwW1Q=;
+        fh=MjuHx+qvhJmyhnMnwsJEaFQjwGrwbxUtmRMHjqlrIC0=;
+        b=AqAl9ZlGgWFMj+iSM33XmyWtj8k9ZiCECtFx38sZRuSlFHvOB3y0crdWNRc9bC4v3k
+         uYYJ8em/C0MkX44xw9KbD3DWaheEWvjO1ayNrHVMGR2G/NfC7aYH1R8qIuES+vO/zN6Z
+         G7hT8kwvM5NO26VttJU+NRTSRF7Yr52tNkqLkL0R6Fob7Vug+gYqpaip7f4lWcAspJ6t
+         ITv4eDrPspDCiPn/P4+e8JrSwZLuKt50vviPpkTS0AJsl5h1PuhudY46F82WkylHyRK4
+         oO1fdC38HNSFjz78OxvAiU2HK49LXPVOuG+As+MBwogXrFypXXDakFlT3Mvful4hKe0j
+         EJhQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794247133; x=1794851933; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794248421; x=1794853221; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=9q75CrYbbx1raBGLb0OpIjYM8X7HXrQNmHLt90ZlSz8=;
-        b=Oblus5SbQVYBivewi2nR7J8npdN1R80u7wbVSsZOQmK8ZH8yCyKoPL05M6qt+hDUQ4
-         LJfsTf4kLBmDjBlL855mlvkiC59XkRJrDoPlUxjOGIpkrC0pxxlOs6DBqpALWznUttrO
-         G9Uy2QeRDcyreaK3mon5vtQ4Y9mc6MiAnQqT9teafpaH7P4t1LcdyeqxBjSsTCzFp962
-         Uki4ej9hjAvEip5q3I+FO1VGn0PC5Cr7EH5rWa6j0jbKxhJRYOXhBaKWLDwDaBuZM72u
-         VOfTuGNivY+sXn4D2bfJ7De36GLPIyXhVS7Z+Mppq9GrG7HhO9ZwsMsTVfaLm+n/xvUU
-         bPug==
+        bh=ec3rSrMbZ8GmXw0Jux1jLXyWIwWhDxqyeBtx6xUwW1Q=;
+        b=AH0gZGszlxMedBOIhGpjVJylI93uLea+9zIreqRbqB/UJFem+6skMZWtk4cM34qZe0
+         XH2KMuaCR8u9aFHRXQqjxrrr2x/GTKkL/KiFC+uF8Tqx2uwu0Mrv7U4ihVRFDyDX66Dx
+         jCOxTD7M+spO5/rITC2+EFw+02R8Zrr0TQVkQi1l2pXj4A3R7JwGLJnVaOznTDaAJc8W
+         h3Nf6R7y7QPw/y7cn97eM4VwCUPxb1TJmHQatU1S1ti10oIqsBpsqx2qQjNmkygDuSGY
+         tF4R2Eqs8HVJCdVJTT/zy2n7XOSdBzY1O1kUeRn+gA5kz78+yCJKlO8NJqCtDNVaLyZF
+         oXCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794247133; x=1794851933;
+        d=1e100.net; s=20260707; t=1794248421; x=1794853221;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=9q75CrYbbx1raBGLb0OpIjYM8X7HXrQNmHLt90ZlSz8=;
-        b=zcuJjzmr179vCQNu8oIzeaHZ1lPvMujWG6dTcskHy0DLdTRZoZUwu8+Ae3+tDA2tUT
-         Z9qU9PDLb8kw/oNgt08Prs3ziKWu28BNP+n0Pg0pVYUTcG1vBO59QMxHIHX6WiFkvjBl
-         Epk5hcE/CPd2JaF9E8wwc31ocaGYbuHFKEpJkx3hvSejWZJ+YEfXwiE0emGph+BkH4Aa
-         nT/anM2YRTZXIcSiaNLolFX51fZU6ws8nbsEH0SK4rYMZEx318IA0du3S/tQdSxfm+z7
-         TmLA3wewsGlzxvJc3KFTEaX/V8M7N/8qE5aKs7fh1xH+chetwYpkuVMfmpGyrc1IZOKt
-         kDTw==
-X-Forwarded-Encrypted: i=1; AL+hErFpjvDeT/BEAGODYWlXa5FmhTERASixj7nIfYtkm7rYbbtCk7UT7VQPX+L5cmRHz0V6wudrNKNSWZh6wCpgOHwx@vger.kernel.org
-X-Gm-Message-State: APuU4Z8vAgQ1dk+Ip4am+e9n0YRo4ZMhtpa3Dh10GFKFMAvwl8e2k3a5
-	g0QZJ2UMmfz7MKQR/DzfNIo1UuTSGd5RCag3tQkRDeBHg+3x/R/eeTh3SaU+8LTFYO7L6Gjxt9r
-	QWKPhUcJoUTYITfc2OozHftbxnGHIR9IhSCducmPx
-X-Gm-Gg: AYBFou2D1bZw6BBOQPPER1A9Tm5/S79T6Z0PQfF38kI3aGzsvW9kDZqosmr2BZhND41
-	oXq/AOcsAy/Y+8xUqtS0Bbs2cbdniyBMYCovDl8fMFNe//Be9c1oe8HdrBjtAV/mcxCw/gYJTDi
-	PEFQ7TTMgkvTP6CgljRzw7JEZx2K/7aNQO3hmEB928BEkzK1D+1RjOLBRdysO7NxOzMzkTXmCPX
-	rRlCIw4nZD6Zp3Fhx9dCMdfSziY3jqaQbsa5Ajs6pWfTvZHG9Vp2CeZhzMbTG9qki6r8GzzEL7a
-	PI60k8+k9NlErhL5Sf++1lNv+jB/PELhGBI6CRoRRX/3ERp/YsS+zWHiQCOkViW0LEqjikQGo3B
-	uYt5yELZwc76EUuV/dzXMAZDC+x/9Hzp9jZdfLTwD0sgmU3Ht+nk6aSxGwzpSeWCozp5HQlMn+O
-	E0mc24r/cb/U5q6nw=
-X-Received: by 2002:a17:907:7f9e:b0:c46:645f:cee2 with SMTP id
- a640c23a62f3a-c5049451e5fmr16322566b.4.1794247132202; Mon, 09 Nov 2026
- 09:58:52 -0800 (PST)
+        bh=ec3rSrMbZ8GmXw0Jux1jLXyWIwWhDxqyeBtx6xUwW1Q=;
+        b=NqRe3qJ8NHYxmeh23zuVqkWsZuJpQOMBTZ3R49B16v1bsCSK7nH13XnYZHtUlfzZum
+         rfzcXhl5BG2XXbR9AzWW86mvGT5fBXjpOKIniuszGN9G91RF06DR0DNCv197kRpe4/FG
+         PpdftCKdeVH7Ele41GR7YpK2hArgD70bZMTZdmqnS7R8TsauICEp3InIGPwYIIQpQcaj
+         hTCNgrKnHa/hhjdrMdN8CXFEUOI6fmVOLx/tGGv8W71LLD4VcvqK7L51ku3HBnFcvTDj
+         HvplcqiC+VSW9dPB4hXA0doxD352DeHlwv3LLy75JBqo1Yhy0tC0vwHDPldd+zYu4L5s
+         jDFQ==
+X-Forwarded-Encrypted: i=1; AL+hErEc5Nxdxtb2cLqInpA0ZeuzZWKCztiRET0+LDt3obMfHfHdjBIVhjhLCVWoKSl+4uu5C48L9vZIzV7djyyZe1Bl@vger.kernel.org
+X-Gm-Message-State: APuU4Z8kWH7Zvb4o5i113StSmHjre2xBiwBPFM8ClxcnzyMIrra3W16m
+	d1Qgbo39hTFpFhyB51zoANDhJG0TLHGcX8cc3LGeEqoPMpuZXNiWkci/gcmJJgYKdgRN0WFn3QR
+	/MEs3c8OvtCr8oYtNlUvNxuU65B+ohKEfusw9XMc3
+X-Gm-Gg: AYBFou1fPWFf/YO16WwETCYANsYqgtPCIWWsChu3d663OMI/SAha4nuoUr2VONimu4K
+	eFWOFtqACZuXkWrk4kr68PSmdL9Ynd9BrBD21gN8dOBZS83PUGzTkbnQrCnu/L3VLD1EtH7mO7I
+	bu5BD8z1/wAS7+6TTrUKGAhb9Bt0xi8nc/zj2uCz9bFnf/J3h4pZhgqknTuFLbRxeuBmf4hXDo6
+	nDEf4vxBtQhrd2HjVVpMUCq/VfzmP+z2WbqnkY1FkixH0oI2kH+cNujhiDRjdpoiT4DjyqsNxpy
+	yMxQi5VxkurewG/sRMAt6Wy5myk7mo3HT3qgdhEfGu++2U3oOWpDw7Fmmm/y71xEEp2af5b3tgI
+	yvQslHpT+KjlWwPn6AGsQJS/I6O9hDL3I1v5gapf7VuAHeh81zuXHmYET11Wy+zN8YiY=
+X-Received: by 2002:a05:7022:ea8b:b0:14e:e4bf:7974 with SMTP id
+ a92af1059eb24-1b3b66842a4mr9502c88.4.1794248420013; Mon, 09 Nov 2026 10:20:20
+ -0800 (PST)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -105,76 +104,81 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261018074528.974953-1-lalitmaganti@gmail.com>
-In-Reply-To: <20261018074528.974953-1-lalitmaganti@gmail.com>
-From: Samuel Wu <wusamuel@google.com>
-Date: Mon, 9 Nov 2026 09:58:40 -0800
-X-Gm-Features: AclHuK_v7qaIr6WMYbYXezDLEd8d-dWLqSsdsr8a5s62qgaMbJAwuZ4_uyen8YQ
-Message-ID: <CAG2KctqPvou3A_EGiov9yZJrCWMmoEX-k4-Or-RGj_Cxdtc7Fg@mail.gmail.com>
-Subject: Re: [PATCH] perf python: Accept events larger than union perf_event
-To: Lalit Maganti <lalitmaganti@gmail.com>
-Cc: irogers@google.com, acme@kernel.org, namhyung@kernel.org, 
-	james.clark@linaro.org, adrian.hunter@intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20261109-james-perf-test-fixes-v4-0-355ee6b81917@linaro.org>
+In-Reply-To: <20261109-james-perf-test-fixes-v4-0-355ee6b81917@linaro.org>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 9 Nov 2026 10:20:06 -0800
+X-Gm-Features: AclHuK9DNekpxwBEfz2zjyCpyugGoj1l-_2rYK3b_X2Xz0sEkpkfXtYjLA4ppIM
+Message-ID: <CAP-5=fWpnzp4O-kKqToP0Q7WVp1dcPaUH1MgPNiL__MNJKZ7hQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/4] perf tools: LLVM dwarf and flaky test fixes
+To: James Clark <james.clark@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Jakub Brnak <jbrnak@redhat.com>, Leo Yan <leo.yan@arm.com>, 
+	Arnaldo Carvalho de Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Oct 18, 2026 at 12:45=E2=80=AFAM Lalit Maganti <lalitmaganti@gmail.=
-com> wrote:
+On Mon, Nov 9, 2026 at 5:48=E2=80=AFAM James Clark <james.clark@linaro.org>=
+ wrote:
 >
-> Samples recorded with --call-graph dwarf carry a copy of the user stack
-> and are larger than union perf_event, so session.process_events()
-> fails on the first one:
+> Running the tests on an LLVM build results in some dwarf issues that
+> need fixing. And there is an easy fix for some flakiness caused when
+> tests are run in parallel.
 >
->   $ perf record --call-graph dwarf -- ./workload
->   $ python3 tools/perf/python/stackcollapse.py
->   ...
->   TypeError: Unexpected event size: 4168 < 8424
+> Assisted by Claude Opus 5.5
 >
-> This makes all the standalone scripts unusable on such recordings.
->
-> pyrf_event__new() rejects events larger than union perf_event, which
-> guarded the copy into the union that pyrf_event used to embed. Since
-> commit 2c672ffdad4b ("perf python: Lazily copy events and samples from
-> process_events") the event is borrowed, or copied to a buffer of
-> header.size bytes when a callback keeps it, so nothing depends on the
-> event fitting in the union any more. Remove the check.
->
-> With this, stackcollapse.py and flamegraph.py process a DWARF recording
-> of a two-thread workload, with the same per-symbol sample counts as
-> perf script, also when the callback keeps the events after returning.
->
-> Assisted-by: LLM
-> Signed-off-by: Lalit Maganti <lalitmaganti@gmail.com>
-> ---
->  tools/perf/util/python.c | 5 -----
->  1 file changed, 5 deletions(-)
->
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 60dbe2dad5eb..8b4b2f3d0926 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
-> @@ -1792,11 +1792,6 @@ static PyObject *pyrf_event__new(const union perf_=
-event *event, struct evsel *ev
->                                     event->header.size, event->header.typ=
-e);
->         }
->
-> -       if (event->header.size > sizeof(union perf_event)) {
-> -               return PyErr_Format(PyExc_TypeError, "Unexpected event si=
-ze: %zu < %u",
-> -                                   sizeof(union perf_event), event->head=
-er.size);
-> -       }
-> -
->         pevent =3D PyObject_New(struct pyrf_event, pyrf_event__type[event=
-->header.type]);
->         if (pevent =3D=3D NULL)
->                 return PyErr_NoMemory();
->
-> base-commit: 1c90f0a3c8a1c4e38f9edd97af9e20848805a7fb
-> --
-> 2.56.0
->
+> Signed-off-by: James Clark <james.clark@linaro.org>
 
-Reviewed-by: Samuel Wu <wusamuel@google.com>
+For the series:
+Tested-by: Ian Rogers <irogers@google.com>
+
+Thanks,
+Ian
+
+> ---
+> Changes in v4:
+> - Remove unused add_probe_vfs_getname() argument to fix shellcheck.
+> - Link to v3: https://patch.msgid.link/20261109-james-perf-test-fixes-v3-=
+0-e8d0a65e618a@linaro.org
+>
+> Changes in v3:
+> - Rebase to resolve new conflicts
+> - Link to v2: https://patch.msgid.link/20261106-james-perf-test-fixes-v2-=
+0-9a912662f822@linaro.org
+>
+> Changes in v2:
+> - Break perf probe line (Namhyung)
+> - Use a software event instead of cycles for VM compatibility (Namhyung)
+> - Link to v1: https://patch.msgid.link/20261105-james-perf-test-fixes-v1-=
+0-0b279bee5830@linaro.org
+>
+> ---
+> James Clark (4):
+>       perf libdw: Find the CU by iterating all CUs when aranges are missi=
+ng
+>       perf dwarf-aux: Support DW_OP_addrx locations for global variables
+>       perf test probe_vfs_getname: Fix missing debuginfo detection
+>       perf test: Don't starve per-process tests with system-wide events
+>
+>  tools/perf/tests/shell/lib/probe_vfs_getname.sh |  9 ++--
+>  tools/perf/tests/shell/record.sh                |  6 +--
+>  tools/perf/tests/shell/record_lbr.sh            |  2 +-
+>  tools/perf/tests/shell/record_sideband.sh       |  4 +-
+>  tools/perf/util/annotate-data.c                 | 27 +---------
+>  tools/perf/util/dwarf-aux.c                     | 70 +++++++++++++++++++=
++++---
+>  tools/perf/util/dwarf-aux.h                     |  3 ++
+>  tools/perf/util/libdw.c                         | 19 +++----
+>  8 files changed, 90 insertions(+), 50 deletions(-)
+> ---
+> base-commit: 13a8d580433a3b72b10be34f0e26787fe5659d3c
+> change-id: 20261104-james-perf-test-fixes-f72265531d1a
+>
+> Best regards,
+> --
+> James Clark <james.clark@linaro.org>
+>
