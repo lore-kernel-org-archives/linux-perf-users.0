@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794232595;
-	b=w31rI8N6AdzP/EVlsyBBC5Fsz73P4g26zTsSadJte2eI9op00At/SpyKREj//b7xWcU4
-	 I38k14nkqpcYVbO8TO/nGKuNlm7niojrabwySr3FPRlkhi5E9F6m3xlISfCBlw6urY/wI
-	 3SlQQ+oXlTcdr1wD/ZnBeex43bXKNbTn0hgvw/DU8H7zi3pzifrYxbXy8aUAVtUNnU1ng
-	 c5fW0bJi9ADccM/p57XyptzLp4ryn3oGnzUQN0Co8g+pH+wv142FFP+FYZv8TrprOwDcP
-	 fcsQR8MtSxqJiaL7MNCc6xHOgdeDTAzstxy2Rqw/LpYgw9QXpQJ4XK++KF43cruuEqw==
+	t=1794232625;
+	b=Umozocw+Bsh86JMsN0IDnKJMCatxzOnjcwQTSShqHy5gQUHpZ5lBTsB7TxhJsO7tYWaE
+	 DPzvsSPk7K+diqvhFX/OXEsKNCinuIa+UoYVHcF07lKEbf4osvP41elxMKPfR5LQEkP0D
+	 h8PmDS9OISvix3GNFE3JsFjaRfLfjsyYkCuAmfqDLRK15h6R8WkXNgxeqQYzbT6Zl60Oc
+	 UIu//MH40BjnpV3rrmdJp9LlF8EuPVfRpS3tbBr9CU1c5zOggU8tgmu1N9TTEfKuhFk3j
+	 TGyQY8LkUtkrnOdOLPxUXPyjDLRNtpuIEH8ce+tZ9AwDYNxod8T7I4ZHeRywSai8U0g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794232595;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794232625;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=VbnWRrnXdgWMnp2TuOuO/zxaq+YM5Xn4WmQaYrrGJwE=;
-	b=MRadjpML/SMrzwfdo316oZgfjxQJnu1/ULcUjXa82NdpxorLbwyHQs+vvtNBXwsYcfVM
-	 05xd6n01Rlcaq/WEQHiTKnh05jIxY/RRFKDPASIatI4CDi3cOdOcL/P0OAWldyyVJX1Pl
-	 6k93n69AGIJ7YjDvyrxx1vAlQrq8+6Gv7vh2hV2/Vd/E+R8FrWm03kS/E6fIiTQEfh7+S
-	 u4L7g5l3pYF6oC6cQpGxArR8RUTGpb9uP9VRhs9M7CurB99ip5QkrFTVKhVeF1n/s3hXc
-	 MaGpTzciXJi/nUHiIndgZNEX3GRfzvnTjw4o6+oFgmmp5TjP0fkJgVXbDBO7ZG8iGvQ==
+	bh=S2G+DSPYLFOn55xqv3gA8EmdNOpqxA15xP8usem+OBw=;
+	b=hvgYN68o36kDU6tD0zGRy/t+UwlYu0hAcA2uQaFAu0kdSTYPhm778d8MTPa5kXSLDhOp
+	 QTAOkf6D/vKNsfczvvsFj6G0dSVS2L/bCOVCMd5Y0bd5PVdXBwb/n43yCiqeb2nBAbG1Q
+	 oP+keI3kfpqqXvh7zW5yEXCoSV1oo6hsl2oPyRUIpopnFHepghYPr/IWe5bbK9Jv16XoB
+	 /T97gc/CcwzqRO8n9nv+8v1XaJtpO9Fev3V7IZs3CBb2TUX14Aq/hGG6fkPoDXiI8YFii
+	 ouG8hKpq6agx59wkRDaqSWmtxfSw947p1tu9JwnsSYx6SYguk863OxR5SWSjcecbSzg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HKQ3PV4Z;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M3CRXJ3Y;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8CDB606D802
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Nov 2026 13:56:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0BF606A322
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Nov 2026 13:57:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HKQ3PV4Z
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DD5A1F008A6;
-	Mon,  9 Nov 2026 13:56:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M3CRXJ3Y
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB0A81F008A1;
+	Mon,  9 Nov 2026 13:57:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794232594;
-	bh=VbnWRrnXdgWMnp2TuOuO/zxaq+YM5Xn4WmQaYrrGJwE=;
+	s=k20260515; t=1794232624;
+	bh=S2G+DSPYLFOn55xqv3gA8EmdNOpqxA15xP8usem+OBw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HKQ3PV4Z1sE0HzUGIA/mnFVKjDuWi93wNcMKGpq1V/7HLxqfa8lZYZX4brRGjuavh
-	 2sCa/pTDyGchOmG/3dAKh6zCxcakPt7Wkf01Zn8XuIE4vaxLm/bmpeAtioazjDQKAz
-	 XldtZdN9GP9265hrF/JG3q6BJ8YwikOn6O6fGGU9C2FF/YcF/KtLa4X6lBfLXtrj0U
-	 XbiWW2rskRhPmeKVcIPNbvDBHUUozJy97wnBVfXQnW063ChgebID7dLZM63+tn8N23
-	 cfagXHNKBdX0IlPIh+b5H6irSMlMyAa8kIHurmWDgQtAI0PWvw3bBpKMT7ibfBE3kr
-	 wppQ01nkOy8tg==
-Message-ID: <sashiko-outbox-205042@kernel.org>
+	b=M3CRXJ3YtM35o7tXQgtSfokzsCYhPpgZz1bj7Fsyr2hYdrbV1af91BJqgQOP6BTS4
+	 hdxOk4Su7tMcclTyb2nnKXApnktBuoNWu4vdPfWx8qfOrFnfoIEoeMcArVtGF2a+bU
+	 fYciWlgr+i/7m0PH8K86qC6P6/EUO8CumpgqhaZKCOg9WdT1lGDTnXz58tdHb1f4Nq
+	 NGBtmxlZ3veEURNbp7vmKzSobdcFquyDJrjcq3C1IKm/brCzYysHl7IeZbOyBJ3MyK
+	 t2pRW11qsu4XzaIS2FG1R36mDpw5S3Q/UER5R3KJu8oY41EVhkMgQMxl2aXQZ3CX/3
+	 vYExMmjj8HDRw==
+Message-ID: <sashiko-outbox-205044@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 1/4] perf libdw: Find the CU by iterating all CUs
- when aranges are missing
+Subject: Re: [PATCH v4 4/4] perf test: Don't starve per-process tests with
+ system-wide events
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "James Clark" <james.clark@linaro.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261109-james-perf-test-fixes-v4-1-355ee6b81917@linaro.org>
+In-Reply-To: <20261109-james-perf-test-fixes-v4-4-355ee6b81917@linaro.org>
 References: <20261109-james-perf-test-fixes-v4-0-355ee6b81917@linaro.org>
- <20261109-james-perf-test-fixes-v4-1-355ee6b81917@linaro.org>
+ <20261109-james-perf-test-fixes-v4-4-355ee6b81917@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 09 Nov 2026 13:56:33 +0000
+Date: Mon, 09 Nov 2026 13:57:04 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,31 +61,31 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> libdw__addr2line() finds the CU with dwfl_module_getsrc() and
-> dwfl_module_addrdie(), which use dwarf_getaranges(). In elfutils 0.190
-> this only reads .debug_aranges, which can be partial. For example, when
-> Perf is built with LLVM=3D1, clang doesn't emit .debug_aranges by default
-> so the lookup then fails and no source lines are found for most of the
-> Perf binary.
+> Some tests intermittently fail when run in parallel, for example "Check
+> branch stack sampling" fails with no branches recorded at all.
 >=20
-> This used to be hidden by falling back to the next addr2line style, but
-> now missing information stops the fallback since commit (62d7cdc8d587
-> "perf libdw: Optimize fallback logic for missing DWARF").
+> The default event is cycles:P which there may only be 1 or 2 HW counters
+> for on Intel because it's precise. System wide or per-core precise
+> events hog the HW counter leaving other per-process tests with no
+> samples. Rather than make all the tests that use default record commands
+> run serially, just make the system wide ones use a software event which
+> has the greatest possible compatibility. They don't need precise
+> sampling or HW counters anyway. The per-process tests can be left alone
+> as their events/processes never run concurrently on any one core.
 >=20
-> find_cu_die() in annotate-data.c already handles partial aranges by
-> iterating all CUs in .debug_info and checking them with dwarf_haspc().
-> Move it to dwarf-aux.c, then look up the line in that CU with
-> dwarf_getsrc_die() and use the same CU for unwinding inlines. While
+> The LBR filter is another resource shared by all events on a CPU, and
+> the system-wide LBR test uses different filters to the per-process
+> branch stack test, so mark the LBR test as exclusive.
 > [ ... ]
+>   ...
 >   ---- end(-1) ----
->    79: test addr2line inline unwinding : FAILED!
+>   138: Check branch stack sampling : FAILED!
 >=20
-> Fixes: 88c51002d06f ("perf addr2line: Add a libdw implementation")
 > Signed-off-by: James Clark <james.clark@linaro.org>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261109-james-perf=
--test-fixes-v4-0-355ee6b81917@linaro.org?part=3D1
+-test-fixes-v4-0-355ee6b81917@linaro.org?part=3D4
 
