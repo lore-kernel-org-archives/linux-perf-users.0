@@ -1,62 +1,61 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794199261;
-	b=z0TeAetnt6+Z/ha+dXWCF7icLLl01gjDxhxhu2mnyavqi1uAzv1irmxDeNUUb7/CLqQd
-	 AkxJKGtclFdJlWk1HZ/fCeQdBAqj2zrfXKtlDvZKMqWJ3B4mLAvFY/D6XziAVpdA0/+ch
-	 +3pdw/NCBr0V7caFiFBBrD0qE6cWORu01Ec0xzXe04evmrdB5KKpaVgzU+SZ9ueRphO9e
-	 6sGSENAhwQibx30B/JXk9JBVxWY5HuqQHhqECCBeot/lyzvK+iIE2R6xK+ojh4nh85cm2
-	 kZgIjRFCf6TX+0bMoXSateZBhyS27UeHabrqkckeKlc0lrU5VGzOR2ghnOfFT/zbKyA==
+	t=1794199877;
+	b=LqFIGGSJdaHS9WpVC7t2Frnd3+HI/JEzmpxQHg8F2Yy6TC+AYQsJko2N4jvX5blK/XpR
+	 x9E+kmFLuloN7hSyu8XU6PsmOre/b6yGs8SBEVwWpFEb0rEKeZRNPmef7Few6OUH+HRYl
+	 kwfF8SCGxjhcjMTSXBKW3BgMtb5XZ4olAVh+xUtAQrlom5PFw68bt6z1G7S52xjAwBsZs
+	 UviDqbfuCW0GBI915rlvfC/VJ7oZos60Mv8JGf/BHiHiwpW7xG3gpnUlE9u3CQMTzP9Lv
+	 n4U5zLby8Ldrm+ro5zmXUUXmv6sEoOdyrre9efUtmfz0coHNt6ot0XtJ9RPG43dSn9g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794199261;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794199877;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To;
-	bh=gJ74CSnVzPrkgTLXYkjcVhaLGZAUHvhtJS3ScUpXCvc=;
-	b=xZUClqUpWaUF/1KFotPdYwPtfB5NFHIUs4dk2CgCwdnoa+2Uob4Rzj+lPi6wXSglEC/f
-	 mqUQ+i2gdMLj6uKGWMhwHc0zVmAjkPBbQViJWDXqiJ6qjNMXO9rTVqP86qI/u4iVjETe2
-	 v+dPkdJ1bGziYs7Xxu8NhiG4jVETZkc89q/nFmZODLEnnTFpL3rxKH/ncRkXQWvcC1/Ic
-	 hhuyxa84YFluMQl1iXdm/GVh25bX7TgNrpciG1XFSj/HCMBjgUphfEBGm4qLN9pe6wilZ
-	 UwIAIZVDhzFqtEKs8RjstrhLrE45Ph24EKVKLRK4z31GAqD2myzBxklwsRXWt/l6jmg==
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=UHfIuj9XV86YENs0+tBiGTF9GmpaSycoxACTNNGEH9Q=;
+	b=VuU7J7Z3BcsL5lFUwupOfad6gjlvMTxhXil1WKgL7iSS+agaqEg65Di71/yK9zOYQ84p
+	 XNj7Qk9GGIIM1Y2EeiVoG/z2adF+h2vV28zZPq1039ildgknM9aTQWGrrjgQ1H3ajPTDu
+	 alRhejRlGJHGo3JVeNx1RqV0pGGLpZfXN42vG+K3y+qeUO/un+WBTF0BeqeDDaWiCZStf
+	 b44ULSxUW0eZCpL8fvkkslTsRYJSV6RnEo/4dhSf2WzQX6kxdvZgRU+Yv7Vgmt85g/ZRp
+	 5qJKpFtM+QR6YLoWOf+08YU8GeLYC3HFfZsjRnYHKpYWscHK+PL8CZG5SQAzuDuAiwQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aN5bLCzk;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RVO32l8c;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7642E606A321;
-	Mon,  9 Nov 2026 04:41:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8D4606A31C;
+	Mon,  9 Nov 2026 04:51:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aN5bLCzk
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4FAB1F0089F;
-	Mon,  9 Nov 2026 04:41:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RVO32l8c
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CDC71F0089F;
+	Mon,  9 Nov 2026 04:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794199261;
-	bh=gJ74CSnVzPrkgTLXYkjcVhaLGZAUHvhtJS3ScUpXCvc=;
+	s=k20260515; t=1794199876;
+	bh=UHfIuj9XV86YENs0+tBiGTF9GmpaSycoxACTNNGEH9Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=aN5bLCzkkmHIJ+IHGhJWKRiJJ129JYWlLANhDgCGSZbbBUrlZwblQUxs4DOPAr9z1
-	 v7Dm7LBQ818BSLR5cZWA1b4rsfH8RReWkZLjFtXkGkp3OT0lqLZ6JMLxoYMTJypJbt
-	 EVTrfsvECNkrNjC2yEPEbukP++OGOvrKgiNO0Tz13mc4r06CClXkfVL/tc2rFQLYg0
-	 NxRwMix+6s10xSU2Vsxa3cdXpccH1yZ6lnoQiW65j4NovyooLfphgiZ53fMGxycpL8
-	 hYNQl5JC105e3OjDhMll4/miatP2tGprb2EhP4VDYpdNWnOiZolCX1NIIdflBzWT6V
-	 iVExQCPyn6POg==
-Date: Sun, 8 Nov 2026 20:40:58 -0800
+	b=RVO32l8cPT0ci8PDbTcje7fjECHBpPeSw4Cpp0Qt0Yged78bYuJj3ubHg91vE5DDh
+	 iC5xRaZU9qK8mBDEH9ecODthWuQJeh6cuMzs+4j1WGFwB8fs4cZSp2sAHR8uyX994Z
+	 Dd27Z8O0/+wmD5j4MJNrjaRaBX5FBXIWcdUnnVvRewCF69th0/Njn13kahLAhseVfs
+	 nJIZ4R4rPOOcwkjbahhQeQe2EVF8UaXSA1Bc+Q1N/YOEI/DhKTbX7jlMrc7h5QTIWd
+	 Vd2gVK63RSXv8Pk5xKR9ZCM20TQWF6VggBrqjcQ/3G3G6QGkfr9+u3GzdaXiC8w6K1
+	 LaTGaL6rxrEIA==
+Date: Sun, 8 Nov 2026 20:51:14 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Matthew Wood <thepacketgeek@gmail.com>
+To: James Clark <james.clark@linaro.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] perf unwind: Don't load symbols when the caller
- doesn't need them
-Message-ID: <avFO2pqMGEkhaK_4@z2>
-References: <20261030193237.1440673-1-thepacketgeek@gmail.com>
- <au18AJ94dUsE5PaQ@google.com>
- <CADvopvYeG74khivCbBR=LsFNAuqDzn94Wg+LA4PwscsQue510A@mail.gmail.com>
+	Jakub Brnak <jbrnak@redhat.com>, Leo Yan <leo.yan@arm.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] perf libdw: Find the CU by iterating all CUs when
+ aranges are missing
+Message-ID: <avFRQh8EL_Ab9Qcs@z2>
+References: <20261106-james-perf-test-fixes-v2-0-9a912662f822@linaro.org>
+ <20261106-james-perf-test-fixes-v2-1-9a912662f822@linaro.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -68,77 +67,232 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADvopvYeG74khivCbBR=LsFNAuqDzn94Wg+LA4PwscsQue510A@mail.gmail.com>
+In-Reply-To: <20261106-james-perf-test-fixes-v2-1-9a912662f822@linaro.org>
 
-On Fri, Nov 06, 2026 at 04:26:54PM -0800, Matthew Wood wrote:
-> On Thu, Nov 5, 2026 at 11:04 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hello,
-> >
-> > On Fri, Oct 30, 2026 at 12:32:32PM -0700, Matthew Wood wrote:
-> > > When perf only needs to know which DSOs a callchain passes through (as
-> > > build-id marking does at the end of 'perf record' and in 'perf inject
-> > > -b') it resolves the callchain without symbols. The DWARF unwinders
-> > > ignore that and look up the symbol of every frame anyway, which loads
-> > > and demangles the whole symbol table of each DSO they visit.
-> > >
-> > > On arm64 every frame pointer sample also gets a short DWARF
-> > > unwind to find the leaf function's caller; since v6.17 (commit
-> > > 29be60c93d2d, "perf build-id: Mark DSO in sample callchains") the end of
-> > > 'perf record -a --call-graph fp' loads the symbols of every user binary
-> > > it sampled. On a 128-CPU arm64 host,
-> > >
-> > >   perf record -a -e cycles:u --call-graph fp -- sleep 2
-> > >
-> > > never finishes writing perf.data, with over 1GB of heap growth in 5
-> > > seconds.
-> > >
-> > > Skipping the symbol lookup isn't enough because loading the
-> > > symbols also finds two things the unwinders depend on: the DSO's
-> > > build-id, which libdw needs to fall back to the build-id cache, and any
-> > > separate debuginfo file, through dso__symsrc_filename(), which is how
-> > > both unwinders find a .debug_frame there.
-> > >
-> > >   1: add dso__load_symsrc(), which does the same search for debuginfo
-> > >      and the build-id as symbol loading, but doesn't read any symbols
-> > >   2: pass the symbols flag down to the unwinders and honour it, using
-> > >      dso__load_symsrc() when symbols aren't wanted, which also makes
-> > >      the arm64 leaf frame caller unwind skip symbols
-> >
-> > Please don't.  I've added dso__dbginfo_type() to handle debug files and
-> > that's the correct way to get the file.  Probably dso__debuginfo() would
-> > work for you.
-> >
-> > I was working on cleaning up this area, but sidetracked by other things.
-> > I hope to find time for it soon but you can go with the above helpers.
-> >
-> > Thanks,
-> > Namhyung
-> >
+Hello James,
+
+On Fri, Nov 06, 2026 at 10:48:07AM +0000, James Clark wrote:
+> libdw__addr2line() finds the CU with dwfl_module_getsrc() and
+> dwfl_module_addrdie(), which use dwarf_getaranges(). In elfutils 0.190
+> this only reads .debug_aranges, which can be partial. For example, when
+> Perf is built with LLVM=1, clang doesn't emit .debug_aranges by default
+> so the lookup then fails and no source lines are found for most of the
+> Perf binary.
 > 
-> Hi Namhyung, thanks for the feedback. I'll look into those helpers and see about
-> using them instead.
-
-Great.
-
+> This used to be hidden by falling back to the next addr2line style, but
+> now missing information stops the fallback since commit (62d7cdc8d587
+> "perf libdw: Optimize fallback logic for missing DWARF").
 > 
-> Can you confirm if the premise of the issue I'm reporting and trying
-> to fix seems
-> valid? Would saving this unnecessary work of symbol lookup when they're
-> unused be part of your cleanup?
+> find_cu_die() in annotate-data.c already handles partial aranges by
+> iterating all CUs in .debug_info and checking them with dwarf_haspc().
+> Move it to dwarf-aux.c, then look up the line in that CU with
+> dwarf_getsrc_die() and use the same CU for unwinding inlines. While
+> moving it, don't treat a dwarf_haspc() error as a match.
+> 
+> This fixes the "test addr2line inline unwinding" test when Perf is built
+> with LLVM:
+> 
+>   $ perf test -vvv "test addr2line inline unwinding"
+>   ...
+>   Inline unwinding fp verification test [Failed missing inlined functions]
+>   ...
+>   Inline unwinding dwarf verification test [Failed missing inlined functions]
+>   ...
+>   Inline unwinding lbr verification test [Failed missing inlined functions]
+>   ---- end(-1) ----
+>    79: test addr2line inline unwinding : FAILED!
+> 
+> Fixes: 88c51002d06f ("perf addr2line: Add a libdw implementation")
+> Signed-off-by: James Clark <james.clark@linaro.org>
 
-Basically there are 3 main use cases for DSO.
-
- 1. symbol table - most analysis need symbol names
- 2. binary contents - for perf annotate or instruction analysis
- 3. debug information - srcline, inlined symbols, stack unwinding, ...
-
-Due to split files, those information can be found in different files.
-So we now have 3 types of binary type info to handle the cases
-independently.  New helpers will give you a write path name for your use
-case already.
+Can you please rebase this one again?  It seems to clash with the recent
+C++ data type profiling support.  I'm processing other patches as they
+are independent fixes.
 
 Thanks,
 Namhyung
 
+
+> ---
+>  tools/perf/util/annotate-data.c | 27 +--------------------------
+>  tools/perf/util/dwarf-aux.c     | 37 +++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/dwarf-aux.h     |  3 +++
+>  tools/perf/util/libdw.c         | 19 ++++++++++---------
+>  4 files changed, 51 insertions(+), 35 deletions(-)
+> 
+> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+> index 25e3169ea8ad..8092ef9d2045 100644
+> --- a/tools/perf/util/annotate-data.c
+> +++ b/tools/perf/util/annotate-data.c
+> @@ -523,31 +523,6 @@ static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
+>  	return result;
+>  }
+>  
+> -static bool find_cu_die(struct debuginfo *di, u64 pc, Dwarf_Die *cu_die)
+> -{
+> -	Dwarf_Off off, next_off;
+> -	size_t header_size;
+> -
+> -	if (dwarf_addrdie(di->dbg, pc, cu_die) != NULL)
+> -		return cu_die;
+> -
+> -	/*
+> -	 * There are some kernels don't have full aranges and contain only a few
+> -	 * aranges entries.  Fallback to iterate all CU entries in .debug_info
+> -	 * in case it's missing.
+> -	 */
+> -	off = 0;
+> -	while (dwarf_nextcu(di->dbg, off, &next_off, &header_size,
+> -			    NULL, NULL, NULL) == 0) {
+> -		if (dwarf_offdie(di->dbg, off + header_size, cu_die) &&
+> -		    dwarf_haspc(cu_die, pc))
+> -			return true;
+> -
+> -		off = next_off;
+> -	}
+> -	return false;
+> -}
+> -
+>  enum type_match_result {
+>  	PERF_TMR_UNKNOWN = 0,
+>  	PERF_TMR_OK,
+> @@ -1827,7 +1802,7 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
+>  	pc = map__rip_2objdump(dloc->ms->map, dloc->ip);
+>  
+>  	/* Get a compile_unit for this address */
+> -	if (!find_cu_die(dloc->di, pc, &cu_die)) {
+> +	if (!cu_find_by_addr(dloc->di->dbg, pc, &cu_die)) {
+>  		pr_debug_dtp("cannot find CU for address %"PRIx64"\n", pc);
+>  		ann_data_stat.no_cuinfo++;
+>  		return -1;
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index 54f8b5ec74a2..742fccba5376 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+> @@ -106,6 +106,43 @@ static Dwarf_Line *cu_getsrc_die(Dwarf_Die *cu_die, Dwarf_Addr addr)
+>  	return line;
+>  }
+>  
+> +/**
+> + * cu_find_by_addr - Find the CU DIE that contains an address
+> + * @dbg: a Dwarf handle
+> + * @addr: An address
+> + * @cu_die: a buffer to store the found CU DIE
+> + *
+> + * Find the CU DIE whose ranges contain @addr. dwarf_addrdie() uses
+> + * dwarf_getaranges() which didn't work until elfutils 0.191. Release notes:
+> + *
+> + *   * NEWS *
+> + *   libdw: dwarf_addrdie now supports binaries lacking a .debug_aranges
+> + *   section.
+> + *
+> + * Clang doesn't emit them by default, so fall back to iterating all CUs in
+> + * case it's missing.
+> + *
+> + * Return @cu_die if found, otherwise NULL.
+> + */
+> +Dwarf_Die *cu_find_by_addr(Dwarf *dbg, Dwarf_Addr addr, Dwarf_Die *cu_die)
+> +{
+> +	Dwarf_Off off = 0, next_off;
+> +	size_t header_size;
+> +
+> +	if (dwarf_addrdie(dbg, addr, cu_die) && dwarf_haspc(cu_die, addr) == 1)
+> +		return cu_die;
+> +
+> +	while (dwarf_nextcu(dbg, off, &next_off, &header_size,
+> +			    NULL, NULL, NULL) == 0) {
+> +		if (dwarf_offdie(dbg, off + header_size, cu_die) &&
+> +		    dwarf_haspc(cu_die, addr) == 1)
+> +			return cu_die;
+> +
+> +		off = next_off;
+> +	}
+> +	return NULL;
+> +}
+> +
+>  /**
+>   * cu_find_lineinfo - Get a line number and file name for given address
+>   * @cu_die: a CU DIE
+> diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
+> index 6f9145510adc..cc3fd61374c4 100644
+> --- a/tools/perf/util/dwarf-aux.h
+> +++ b/tools/perf/util/dwarf-aux.h
+> @@ -23,6 +23,9 @@ const char *cu_find_realpath(Dwarf_Die *cu_die, const char *fname);
+>  /* Get DW_AT_comp_dir (should be NULL with older gcc) */
+>  const char *cu_get_comp_dir(Dwarf_Die *cu_die);
+>  
+> +/* Find the CU DIE that contains the given address */
+> +Dwarf_Die *cu_find_by_addr(Dwarf *dbg, Dwarf_Addr addr, Dwarf_Die *cu_die);
+> +
+>  /* Get a line number and file name for given address */
+>  int cu_find_lineinfo(Dwarf_Die *cudie, Dwarf_Addr addr,
+>  		     const char **fname, int *lineno);
+> diff --git a/tools/perf/util/libdw.c b/tools/perf/util/libdw.c
+> index e660623338d5..90767361f485 100644
+> --- a/tools/perf/util/libdw.c
+> +++ b/tools/perf/util/libdw.c
+> @@ -170,7 +170,9 @@ int libdw__addr2line(u64 addr, char **file, unsigned int *line_nr,
+>  {
+>  	Dwfl *dwfl;
+>  	Dwfl_Module *mod;
+> -	Dwfl_Line *dwline;
+> +	Dwarf_Line *dwline;
+> +	Dwarf_Die cu_mem, *cudie;
+> +	Dwarf *dw;
+>  	Dwarf_Addr bias;
+>  	const char *src;
+>  	int lineno = 0;
+> @@ -197,7 +199,8 @@ int libdw__addr2line(u64 addr, char **file, unsigned int *line_nr,
+>  	 * between the regular ELF addr2line addresses and those to use with
+>  	 * libdw.
+>  	 */
+> -	if (!dwfl_module_getdwarf(mod, &bias)) {
+> +	dw = dwfl_module_getdwarf(mod, &bias);
+> +	if (!dw) {
+>  		/*
+>  		 * Free the Dwfl session so the mmap'd ELF binary is unmapped
+>  		 * immediately, and mark the DSO as lacking srcline/DWARF info
+> @@ -211,7 +214,8 @@ int libdw__addr2line(u64 addr, char **file, unsigned int *line_nr,
+>  	}
+>  
+>  	/* Find source line information for the address. */
+> -	dwline = dwfl_module_getsrc(mod, addr + bias);
+> +	cudie = cu_find_by_addr(dw, addr, &cu_mem);
+> +	dwline = cudie ? dwarf_getsrc_die(cudie, addr) : NULL;
+>  	if (!dwline) {
+>  		/* conclusively missing information -> abort fallbacks */
+>  		ret = 0;
+> @@ -219,8 +223,8 @@ int libdw__addr2line(u64 addr, char **file, unsigned int *line_nr,
+>  	}
+>  
+>  	/* Get line information. */
+> -	src = dwfl_lineinfo(dwline, /*addr=*/NULL, &lineno, /*col=*/NULL, /*mtime=*/NULL,
+> -			    /*length=*/NULL);
+> +	src = dwarf_linesrc(dwline, /*mtime=*/NULL, /*length=*/NULL);
+> +	dwarf_lineno(dwline, &lineno);
+>  
+>  	if (file)
+>  		*file = src ? strdup(src) : NULL;
+> @@ -229,8 +233,6 @@ int libdw__addr2line(u64 addr, char **file, unsigned int *line_nr,
+>  
+>  	/* Optionally unwind inline function call chain. */
+>  	if (unwind_inlines && node) {
+> -		Dwarf_Addr unused_bias;
+> -		Dwarf_Die *cudie = dwfl_module_addrdie(mod, addr + bias, &unused_bias);
+>  		struct libdw_a2l_cb_args args = {
+>  			.dso = dso,
+>  			.sym = sym,
+> @@ -248,8 +250,7 @@ int libdw__addr2line(u64 addr, char **file, unsigned int *line_nr,
+>  		}
+>  
+>  		/* Walk from the parent down to the leaf. */
+> -		if (cudie)
+> -			cu_walk_functions_at(cudie, addr, libdw_a2l_cb, &args);
+> +		cu_walk_functions_at(cudie, addr, libdw_a2l_cb, &args);
+>  
+>  		if (!args.leaf_srcline_used)
+>  			free(args.leaf_srcline);
+> 
+> -- 
+> 2.43.0
+> 
