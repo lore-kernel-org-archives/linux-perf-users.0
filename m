@@ -1,60 +1,66 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=180.76.5.236
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794200718;
-	b=uvZ8V9+Zlb5wsGDpN42IZCAc9gTxWWCb4sxFAodZL4T+iVKrar8xvamhJnZCGl93h/FY
-	 qOdKdJUYNSYBPh7NillVQb/7SxRjQnZKFVtsd0m3fltdjkafVKaTFjrCCq0MYZ0sJSSs0
-	 n7uU82wsA9q8fuOsbCxadziuR78k8E1aRtas6MhaNa+NARV5SLpB+RLM7JxPByFN3x6eS
-	 zlNxcxoTxiweEDBio8mgrChmNU9DYBNCVHyXORxGibwMMOqSRD6FGy1nlSp7ITp9IVY6P
-	 QFYLyUqwvUnzZWYw3zsTw9YmzgCEnDHsQmTQ1o1fL5lXmAaT7anOMML8cFEDuJfc5UA==
+	t=1794201536;
+	b=kCv61hVoW6Dlg0jMGPJxBVzpU2DMgaDVFxjnfel49vbMomlOtTv683CabUpdycKK/Al9
+	 7Hx0tRRH2E+7rhEdl4WzC4FzZvptYhilpWcRVNOgijI9g84jGGxgiFdf4I35JcEjYGGTC
+	 brlVAaGfce8bP+VjRh6//NVZjVKoS5QjRcp396qZLXmt5Wg7woqruVIofwK6meGaif0vj
+	 KqNe30rAQox0GwGmJe2yS97ElVuRlzUnnTJHCHYEYZEg+v2IRYD82IcFCgKecuufxzxr4
+	 l1YRL/o/AWWMW10lWxE+/krO3dYnsl++yiXxSpcfLgHg1bpdCNNvQURCknPJgvd2dhw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794200718;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=YhDYB9VCD0yrPWZ2fcw1r0wfo4j7xSr05dSXAefrmpI=;
-	b=Q47Eb5JMlv3/yvUw363mYR2EozTYAfinbfnvQYox63VenQpRNTTkFnQgXdn7RCqC067x
-	 l6ai559wXQDPG9lCkv2oIQfRpYJ1qIxkqytIz6zpBs9yedHyyDsgQOuYulo7WAYil9ACF
-	 wfWe2I6tJt047GUzCowDOlvnu+ByyQ9h6KQBFdIGzSI9bParLs7mLS5P/c8yLxp07Ju5v
-	 pJQslg4s3DWjWxFs7in3e20GFwk4Vs4i9fSl5OxzHkgA64yR/YYx0PzbU/2sHOhwVMLA1
-	 sXKqAqdQyd/ZkYY7T2L3uCW7wfyQ01u4C/HfKM8DNmZx1CKyAuHWZZmGEqEIvUBTKAw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794201536;
+	h=DMARC-Filter:X-MD-Sfrom:X-MD-SrcIP:From:To:CC:Subject:Thread-Topic:
+	 Thread-Index:Date:Message-ID:References:In-Reply-To:Accept-Language:
+	 Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
+	 x-originating-ip:Content-Type:Content-Transfer-Encoding:MIME-Version:
+	 DKIM-Signature;
+	bh=Q8psQZsCNkuCQJ/0SE6gHtV3T9khaxfO8NoGBf1WRiU=;
+	b=C2ubqbwHx3ub4+nGSFtz90Zs0qgRQki1LBvw+DzHbTTtdV3WpxSqA8opsNT6W54zL/lA
+	 Ry7XFi4IP4ogGLOVyZPgweDQVrBEjYugC36WIq9RIjs9i3mq8ld5QRWiZvRkyiCaJ9js/
+	 yzn6bne4uUgAaEhGue6+Ttw+oUzZB1tzJeSVLIDWUF97tpdPHZ8V5YgcZT1874i/0xOGs
+	 kWzExOhy4piYW20Al/Tpet5kI259sJcg/WvRBwUNDYpNuB/JhLe9aysW2OfkZFtBro2Wg
+	 j7DId2AejM50K8GuS89w95g2leC4wbMmhXlp4Yn0UuFhG2eCobBIiTI6JHG/z7RNNDQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RT0uoa9D;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD5D606A31C;
-	Mon,  9 Nov 2026 05:05:17 +0000 (UTC)
+	dmarc=pass header.from=baidu.com;
+	spf=pass smtp.mailfrom=baidu.com;
+	dkim=pass header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=KecyytpZ;
+	arc=none smtp.remote-ip=180.76.5.236
+Received: from outbound.baidu.com (outbound.baidu.com [180.76.5.236])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 1866F606A31C;
+	Mon,  9 Nov 2026 05:18:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1866F606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RT0uoa9D
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B78401F0089F;
-	Mon,  9 Nov 2026 05:05:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794200717;
-	bh=YhDYB9VCD0yrPWZ2fcw1r0wfo4j7xSr05dSXAefrmpI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=RT0uoa9Dmej4PB7jnw7+6GHBmV2aqp8rxLzZhCFTSlPlfvfdPDiHGIEslZ17OZREG
-	 hL1FF+CPSSwwWWTYAE56jq+ewwJN7Ud1U/tOmFeTWXN8xEkGqTwFlM2BNuhiJv4h4S
-	 +48eRoTtr7bgOl4RvDB0Z1Os00GK6z6qo+GflBLwJ99Ab+1gjrAAmlXUdHE0YiAhWn
-	 AsV3E7XJOaAxQ4jU/8k84EtCXndx6hqBYY+GC68HS64vPE6esEScmPpMuDzT2389Nq
-	 EzEAxiIRQIfGsLIjj4lyhT9eWN4Jj7KIr+uXrTeoRFkyBHiXtJ7FIKCgnAsQvFobJi
-	 poDZv/d6ltbYw==
-Date: Sun, 8 Nov 2026 21:05:15 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: lirongqing <lirongqing@baidu.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Alexander Antonov <alexander.antonov@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf iostat: Release the port list if command allocation
- fails
-Message-ID: <avFUi_R0dzVEaT2X@z2>
-References: <20261106021840.2186-1-lirongqing@baidu.com>
+	dkim=pass (2048-bit key, unprotected) header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=KecyytpZ
+X-MD-Sfrom: lirongqing@baidu.com
+X-MD-SrcIP: 172.31.3.12
+From: "Li,Rongqing" <lirongqing@baidu.com>
+To: Namhyung Kim <namhyung@kernel.org>
+CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Ian
+ Rogers" <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "James
+ Clark" <james.clark@linaro.org>, Alexander Antonov
+	<alexander.antonov@linux.intel.com>, "linux-perf-users@vger.kernel.org"
+	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: =?utf-8?B?562U5aSNOiBb5aSW6YOo6YKu5Lu2XSBSZTogW1BBVENIXSBwZXJmIGlvc3Rh?=
+ =?utf-8?B?dDogUmVsZWFzZSB0aGUgcG9ydCBsaXN0IGlmIGNvbW1hbmQgYWxsb2NhdGlv?=
+ =?utf-8?Q?n_fails?=
+Thread-Topic: =?utf-8?B?W+WklumDqOmCruS7tl0gUmU6IFtQQVRDSF0gcGVyZiBpb3N0YXQ6IFJlbGVh?=
+ =?utf-8?Q?se_the_port_list_if_command_allocation_fails?=
+Thread-Index: AQHdbZUoiUZEvH9QHE+2fHHGQnrbh7ckromAgACJr5A=
+Date: Mon, 9 Nov 2026 05:18:44 +0000
+Message-ID: <8ad8deabd84448da837c279c670a5e17@baidu.com>
+References: <20261106021840.2186-1-lirongqing@baidu.com> <avFUi_R0dzVEaT2X@z2>
+In-Reply-To: <avFUi_R0dzVEaT2X@z2>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -64,55 +70,17 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20261106021840.2186-1-lirongqing@baidu.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=baidu.com;
+	s=selector1; t=1794201529;
+	bh=Q8psQZsCNkuCQJ/0SE6gHtV3T9khaxfO8NoGBf1WRiU=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type;
+	b=KecyytpZxf4Axm9bN+eVBzg5DkhzK+zMUoXe+NIBXZDXllCRwe2oEcgrFneMND9W6
+	 GOz8pFDu0/WSO2BANaW8jP+V4OhSi7zMBO/QXuc7e9RYVErnrTgDEHGvqaPTq+up/d
+	 HR+I1C6zK1qRMUkU/EufQEgupd+fhNCwE0jyocNStTK4spbbNBCOhCNeA5r7SoeSCt
+	 knaWwvEhJlXMfCbYxqlp3ksTqRnNjSAQxR4a3nO6ia2ZaSck7Ihw/ghdkNM1PBRJ8B
+	 Vl6sAjk4ACJD2o2E8hC7B6iXPdl9OxP3i8v00XqdvwDjoHXEAKcDEPx+Cf+rKJLmTC
+	 C/w2/D+qyQs7Q==
 
-Hello,
-
-On Fri, Nov 06, 2026 at 10:18:40AM +0800, lirongqing wrote:
-> From: Li RongQing <lirongqing@baidu.com>
-> 
-> The event-group builder takes ownership of the root port list and frees
-> it on its normal and parsing-error paths. If allocation of the event
-> command fails, however, it returns directly without releasing the list,
-> its pointer array or its ports.
-> 
-> Use the existing cleanup path for this allocation failure too, before
-> any port has been transferred to an event.
-> 
-> Found while testing the iostat fixes with allocation fault injection.
-> 
-> Fixes: f9ed693e8bc0 ("perf stat: Enable iostat mode for x86 platforms")
-> Signed-off-by: Li RongQing <lirongqing@baidu.com>
-
-This patch doesn't apply.  Can you please rebase onto the current
-perf-tools-next?
-
-Thanks,
-Namhyung
-
-> ---
->  tools/perf/arch/x86/util/iostat.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/arch/x86/util/iostat.c b/tools/perf/arch/x86/util/iostat.c
-> index 2dc5ac6..f8b4939 100644
-> --- a/tools/perf/arch/x86/util/iostat.c
-> +++ b/tools/perf/arch/x86/util/iostat.c
-> @@ -342,8 +342,10 @@ static int iostat_event_group(struct evlist *evl,
->  	struct perf_cpu cpu;
->  	unsigned int cpu_map_idx;
->  
-> -	if (!iostat_cmd)
-> -		return -ENOMEM;
-> +	if (!iostat_cmd) {
-> +		ret = -ENOMEM;
-> +		goto err;
-> +	}
->  
->  	for (idx = 0; idx < list->nr_entries; idx++) {
->  		sprintf(iostat_cmd, iostat_cmd_template,
-> -- 
-> 2.9.4
-> 
+PiANCj4gVGhpcyBwYXRjaCBkb2Vzbid0IGFwcGx5LiAgQ2FuIHlvdSBwbGVhc2UgcmViYXNlIG9u
+dG8gdGhlIGN1cnJlbnQNCj4gcGVyZi10b29scy1uZXh0Pw0KPiANCk9rLCBJIHdpbGwgcmViYXNl
+DQoNClRoYW5rcw0KDQpbTGksUm9uZ3FpbmddIA0K
