@@ -1,66 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=180.76.5.236
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794201536;
-	b=kCv61hVoW6Dlg0jMGPJxBVzpU2DMgaDVFxjnfel49vbMomlOtTv683CabUpdycKK/Al9
-	 7Hx0tRRH2E+7rhEdl4WzC4FzZvptYhilpWcRVNOgijI9g84jGGxgiFdf4I35JcEjYGGTC
-	 brlVAaGfce8bP+VjRh6//NVZjVKoS5QjRcp396qZLXmt5Wg7woqruVIofwK6meGaif0vj
-	 KqNe30rAQox0GwGmJe2yS97ElVuRlzUnnTJHCHYEYZEg+v2IRYD82IcFCgKecuufxzxr4
-	 l1YRL/o/AWWMW10lWxE+/krO3dYnsl++yiXxSpcfLgHg1bpdCNNvQURCknPJgvd2dhw==
+	t=1794201983;
+	b=X29u7OxGHHqr4lyLYE1CqmbY4E4gDkHz59wX9AuxwHJBJAbYOKcE1RG2owemu3BcQw8p
+	 c08IE+JO7DcBSzJC81ywZcrL0nEBdNZuViyVCbHMoCSeHLNk1d7tmR6a7Iorb02lzqo3o
+	 tf020rd4MZHUSwWCC1HPsxx21ZlUHvJAx+A6Z59HBw6lIsrwsQWF/g45BtUElEByuZc/2
+	 UehPUyJZMl0Kv+5zrE3fVHEEEZO1O450xxf4nh6UNBgTq/B+ln4wnkqzUuiZWbVSuptUU
+	 ERo8V5T5ZvrC6RKVf5V5xq/XtfIGt2ofDAmqwlYysl7MZGjRzfeCbNEqkrhnKl25ekA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794201536;
-	h=DMARC-Filter:X-MD-Sfrom:X-MD-SrcIP:From:To:CC:Subject:Thread-Topic:
-	 Thread-Index:Date:Message-ID:References:In-Reply-To:Accept-Language:
-	 Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
-	 x-originating-ip:Content-Type:Content-Transfer-Encoding:MIME-Version:
-	 DKIM-Signature;
-	bh=Q8psQZsCNkuCQJ/0SE6gHtV3T9khaxfO8NoGBf1WRiU=;
-	b=C2ubqbwHx3ub4+nGSFtz90Zs0qgRQki1LBvw+DzHbTTtdV3WpxSqA8opsNT6W54zL/lA
-	 Ry7XFi4IP4ogGLOVyZPgweDQVrBEjYugC36WIq9RIjs9i3mq8ld5QRWiZvRkyiCaJ9js/
-	 yzn6bne4uUgAaEhGue6+Ttw+oUzZB1tzJeSVLIDWUF97tpdPHZ8V5YgcZT1874i/0xOGs
-	 kWzExOhy4piYW20Al/Tpet5kI259sJcg/WvRBwUNDYpNuB/JhLe9aysW2OfkZFtBro2Wg
-	 j7DId2AejM50K8GuS89w95g2leC4wbMmhXlp4Yn0UuFhG2eCobBIiTI6JHG/z7RNNDQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794201983;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=Uy6ZibXC/S+TPzv6yEZDSpvw02UsW0HIsbZ/ZeOvYfg=;
+	b=0ccaxOpgHtNEEHZy08wG8A+m5FoV5Pjw7KX95arHXkN6AJ9oi0C1W8itGIhJ19I2ZvG6
+	 M3eW0wpA+kNhoHLID9vnbNxP3hhI2WEf+WZGZVcgrvHw2x+sSm3Nm69679/VCoL7p442E
+	 fJ9ftJGswm9okJ8rez6Wlg/fO6lvwMftekM6QRST1VJjiAU9P0ge5a4SzU6y6dHg/eb+Z
+	 EI4SDQoksOyQMHBKZILbICFwyz3bWURxT1RXKbj2SRDnwuXMigsME9z3Qzb+Ijl044LGl
+	 wOroGMcRy/SNvrlkulYlXIaGM1jVIRoYhAuWJCxn9IsXEbFD/jgSbgIgjdPqVtddwZw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=baidu.com;
-	spf=pass smtp.mailfrom=baidu.com;
-	dkim=pass header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=KecyytpZ;
-	arc=none smtp.remote-ip=180.76.5.236
-Received: from outbound.baidu.com (outbound.baidu.com [180.76.5.236])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 1866F606A31C;
-	Mon,  9 Nov 2026 05:18:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1866F606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eNJTK4Il;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6C0606A31C;
+	Mon,  9 Nov 2026 05:26:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=KecyytpZ
-X-MD-Sfrom: lirongqing@baidu.com
-X-MD-SrcIP: 172.31.3.12
-From: "Li,Rongqing" <lirongqing@baidu.com>
-To: Namhyung Kim <namhyung@kernel.org>
-CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Ian
- Rogers" <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "James
- Clark" <james.clark@linaro.org>, Alexander Antonov
-	<alexander.antonov@linux.intel.com>, "linux-perf-users@vger.kernel.org"
-	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: =?utf-8?B?562U5aSNOiBb5aSW6YOo6YKu5Lu2XSBSZTogW1BBVENIXSBwZXJmIGlvc3Rh?=
- =?utf-8?B?dDogUmVsZWFzZSB0aGUgcG9ydCBsaXN0IGlmIGNvbW1hbmQgYWxsb2NhdGlv?=
- =?utf-8?Q?n_fails?=
-Thread-Topic: =?utf-8?B?W+WklumDqOmCruS7tl0gUmU6IFtQQVRDSF0gcGVyZiBpb3N0YXQ6IFJlbGVh?=
- =?utf-8?Q?se_the_port_list_if_command_allocation_fails?=
-Thread-Index: AQHdbZUoiUZEvH9QHE+2fHHGQnrbh7ckromAgACJr5A=
-Date: Mon, 9 Nov 2026 05:18:44 +0000
-Message-ID: <8ad8deabd84448da837c279c670a5e17@baidu.com>
-References: <20261106021840.2186-1-lirongqing@baidu.com> <avFUi_R0dzVEaT2X@z2>
-In-Reply-To: <avFUi_R0dzVEaT2X@z2>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eNJTK4Il
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E75651F0089F;
+	Mon,  9 Nov 2026 05:26:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794201983;
+	bh=Uy6ZibXC/S+TPzv6yEZDSpvw02UsW0HIsbZ/ZeOvYfg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=eNJTK4IlJicAgAYrOlvdIYd0JOY304zSG2g1l+1Sxg/5xyzlW7N2rivl2fOEda5z9
+	 xFfImnAgHPS9UERr8kpB0exXpowczvc0kR+8vBbF3wBp3SNfYI5TfxtQbizZha13vb
+	 +XwY/h4d1VHS2E/QlDhbjyExdAEPGbUE74U3QwrmYPZ6kpB6EwdGGTPPrmEyJU3tpo
+	 2bvG+1HfdpMYwRIa/2USCMPRVhes224KNPkpXgOdhnaYvMF2mR8pl3RD1TeMQdFuyP
+	 Qium/17It8gAX6gRG4XnFi+2a31lXC1/spFJfYT79Is/CEB5cvKTCUjrby4xYQbzDb
+	 S+MBXdQEb8gtw==
+Date: Sun, 8 Nov 2026 21:26:21 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: lirongqing <lirongqing@baidu.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf iostat: Do not compute interval deltas a second time
+Message-ID: <avFZfcWDPD3eXW-w@z2>
+References: <20261105080429.2472-1-lirongqing@baidu.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -70,17 +62,61 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=baidu.com;
-	s=selector1; t=1794201529;
-	bh=Q8psQZsCNkuCQJ/0SE6gHtV3T9khaxfO8NoGBf1WRiU=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type;
-	b=KecyytpZxf4Axm9bN+eVBzg5DkhzK+zMUoXe+NIBXZDXllCRwe2oEcgrFneMND9W6
-	 GOz8pFDu0/WSO2BANaW8jP+V4OhSi7zMBO/QXuc7e9RYVErnrTgDEHGvqaPTq+up/d
-	 HR+I1C6zK1qRMUkU/EufQEgupd+fhNCwE0jyocNStTK4spbbNBCOhCNeA5r7SoeSCt
-	 knaWwvEhJlXMfCbYxqlp3ksTqRnNjSAQxR4a3nO6ia2ZaSck7Ihw/ghdkNM1PBRJ8B
-	 Vl6sAjk4ACJD2o2E8hC7B6iXPdl9OxP3i8v00XqdvwDjoHXEAKcDEPx+Cf+rKJLmTC
-	 C/w2/D+qyQs7Q==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20261105080429.2472-1-lirongqing@baidu.com>
 
-PiANCj4gVGhpcyBwYXRjaCBkb2Vzbid0IGFwcGx5LiAgQ2FuIHlvdSBwbGVhc2UgcmViYXNlIG9u
-dG8gdGhlIGN1cnJlbnQNCj4gcGVyZi10b29scy1uZXh0Pw0KPiANCk9rLCBJIHdpbGwgcmViYXNl
-DQoNClRoYW5rcw0KDQpbTGksUm9uZ3FpbmddIA0K
+On Thu, Nov 05, 2026 at 04:04:29PM +0800, lirongqing wrote:
+> From: Li RongQing <lirongqing@baidu.com>
+> 
+> process_counter_values() now computes deltas directly in evsel->counts
+> for global aggregation too. It saves the current cumulative raw count in
+> prev_raw_counts before iostat prints the interval.
+> 
+> Subtracting prev_raw_counts again can therefore underflow the count.
+> Worse, replacing the saved raw count with the interval delta corrupts
+> the baseline used to calculate the next interval.
+
+Can you share example output before and after this change?
+
+Thanks,
+Namhyung
+
+> 
+> Use the already computed delta and leave prev_raw_counts untouched.
+> 
+> Fixes: f976bc6b6bfc ("perf stat: Aggregate events using evsel->stats->aggr")
+> Signed-off-by: Li RongQing <lirongqing@baidu.com>
+> ---
+>  tools/perf/arch/x86/util/iostat.c | 10 +---------
+>  1 file changed, 1 insertion(+), 9 deletions(-)
+> 
+> diff --git a/tools/perf/arch/x86/util/iostat.c b/tools/perf/arch/x86/util/iostat.c
+> index 0cf0f93..fac6b4a 100644
+> --- a/tools/perf/arch/x86/util/iostat.c
+> +++ b/tools/perf/arch/x86/util/iostat.c
+> @@ -434,20 +434,12 @@ void iostat_print_metric(struct perf_stat_config *config, struct evsel *evsel,
+>  			 struct perf_stat_output_ctx *out)
+>  {
+>  	double iostat_value = 0;
+> -	u64 prev_count_val = 0;
+>  	const char *iostat_metric = iostat_metric_by_idx(evsel->core.idx);
+>  	u8 die = ((struct iio_root_port *)evsel->priv)->die;
+>  	struct perf_counts_values *count = perf_counts(evsel->counts, die, 0);
+>  
+>  	if (count && count->run && count->ena) {
+> -		if (evsel->prev_raw_counts && !out->force_header) {
+> -			struct perf_counts_values *prev_count =
+> -				perf_counts(evsel->prev_raw_counts, die, 0);
+> -
+> -			prev_count_val = prev_count->val;
+> -			prev_count->val = count->val;
+> -		}
+> -		iostat_value = (count->val - prev_count_val) /
+> +		iostat_value = count->val /
+>  			       ((double) count->run / count->ena);
+>  	}
+>  	out->print_metric(config, out->ctx, METRIC_THRESHOLD_UNKNOWN, "%8.0f", iostat_metric,
+> -- 
+> 2.9.4
+> 
