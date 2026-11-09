@@ -1,47 +1,91 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794233433;
-	b=bx1ORRxqhPZ55UJVPaPUzZ/620eKi7h73tInjYE7G/j5pGaoiFZZYG+j08b7Ol8Ooq0b
-	 KebfAX3UuoWLccwFxbhl47k7Hx+5M6QaPfrjtUFaLxG/AHYF8mHSPQ2Nje6avjCHm94+e
-	 bzJDkN/NFCLPn/0KcJv28P4MlRE7+3qxZkn/TO/Hfh0pKHg0lOrWVRNOwKvnmFWL70HOc
-	 sZuJqa/u94XoM987zuggM0k6KHpAacFb3+t208AIRZfF7n0CdjHbkowIEpxaRsR522Okh
-	 UUBg/n4CvfaGxciMTi17pbaSGkUJmqX0n8jbP63nKA9gwiWp9uF7+eEvWaym8n419Uw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794233433;
-	h=Received:DKIM-Signature:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:From:Content-Language:Autocrypt:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=myMKGYz65TX3ZV2HLEDYXummVbvvcxR6eJbeormWLNY=;
-	b=Xr4mMi3tbGKF7vP3dEuJWZ+PuO+52niQiAVBNia+/+4KDyDnHmtBSTKLTx7ANmMBRlq8
-	 3IhnfYqeqc/ebeBXmDB3Y0nhJKtS7xb8TZB0sQ5suGbcB0wExl98xfXNcrKQUd4cFWqE2
-	 8+gkI2XbA4cWr+0aUAH0+B7LtHiaBVMxWquMCInCX6kWQnpy4EKyiK1YWuWgamEHBmoOg
-	 TdwY5QZJQDBAJ++xdMkNWQArRxw/eVc92+vSRZckRleUrHYIMObIEVLdqs0YuZ58Nw0+k
-	 V+qLQWASbBOfpZpy74D3t/hZ/jdssUZkAxzQQu8Ughd6csz+CtDbvNlDO9vtXfWi32Q==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Bglofv8p;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=81.169.146.171
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
+	t=1794234614;
+	b=V4wbUuy5KZFJ/K9/9T9fKchZUgMqhixGFQj06aLQPywDbjwvgBCXLIT9zSK61jHfnXTc
+	 Qo5t3cuvKlzngEUuM35YVTPn6Hi31yoQW8o2Wp4GOra23UTiUqRHT34vPONcwHT8hqV1i
+	 UdlYYn+GG3X9HLTR4ocrC7hnSRy1u/M3JAGQkfxk5oe2a7K37LzsCmLYa4j+FgS1MDdKs
+	 YlSFeI4qXi1Hag8MAzUefbAWL/xRbFHetIyxpdLXamcyfkgsD9PTWEX9uTGYfAzBxN/UT
+	 z4ros71yoVUn1bdIFOJ+WkxmvznTUtqFfECTWIk/RAx487SObcAdjReAlqqpNxXvqRg==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794234614;
+	h=DMARC-Filter:X-RZG-CLASS-ID:DKIM-Signature:DKIM-Signature:X-RZG-AUTH:
+	 Received:Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:
+	 References:Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=8KiPHgaI34vv0/q5DZBdlVQ5Ql56ikXsCwH4QLHKU2g=;
+	b=P0Cx5lvjRpk0U6BDAWawqJfhe7VbdSEbLf+WDfsGGfxVEQdu8nWOhRVS85sjAolOwNx6
+	 F0cWfy2oKCLZJxlpyHnkwOwGqmqZMbh3wEUCIRYyiRVMlg/HUbBrmCGbBp5Za+HPyv3sv
+	 IQOkRNsw8yKUdkVt63DTf3O8WcIGo5neqpo0oo9Mv2r/nFS6Xb1tbpzNNcwY1xOSZZyBJ
+	 WmkGkmzfaXFxkf9p+IkTKisZ4UnzDqFFkSaHOV2OzSLoA2mMdekj/PyZ4JGzcQGmH9XN+
+	 AlmvH97HWR6hMFquGf1pTQFNWuYfXLis82POW+VcaBLusgiW/ramjn50RuGF+VtspQA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=outer-limits.org;
+	spf=pass smtp.mailfrom=outer-limits.org;
+	dkim=pass header.d=outer-limits.org header.i=@outer-limits.org header.a=rsa-sha256 header.s=strato-dkim-0002 header.b=lk0NjN7H;
+	dkim=pass header.d=outer-limits.org header.i=@outer-limits.org header.a=ed25519-sha256 header.s=strato-dkim-0003 header.b=iCZOqIGw;
+	arc=fail smtp.remote-ip=81.169.146.171
+Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [81.169.146.171])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1300606D82B;
-	Mon,  9 Nov 2026 14:10:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A32606A322;
+	Mon,  9 Nov 2026 14:30:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 49A32606A322
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=outer-limits.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outer-limits.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Bglofv8p
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D12FC1F008A6;
-	Mon,  9 Nov 2026 14:10:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794233432;
-	bh=myMKGYz65TX3ZV2HLEDYXummVbvvcxR6eJbeormWLNY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Bglofv8pDUgq9hvZ4rVha6IMx3/tuTzNQNjSHYP9CIWyepDI27syAaVFBas8f6RVD
-	 UVmdyKqTyz0b0NheG+FZ+AE2pIAr4hBiDl86UsGhA2o+J9ROCIUnuGugx2665zjVgQ
-	 TMdl9gtEp1MxF8F7yzZNtAdWogd9Qrd7XfK+Cn9/CyV+VmkQv5SDfWRp1jUA83/KWa
-	 0go/uTrk3kXniLmF1Y9T5JU/bstxbmS1HQc2z9qgBDZR2I/KcxQxVBiBGjfDxu/sgz
-	 lACX7WdmvIxb++wMDKFjor2fBrrIUzrhV7UHlSvhb14W9EZvqdLp4aUCwYHftZoSEC
-	 9xf7LvowSWk1Q==
-Message-ID: <65038fdc-f4a1-461d-b7b9-669885f15c3c@kernel.org>
-Date: Mon, 9 Nov 2026 15:10:12 +0100
+	dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.a=rsa-sha256 header.s=strato-dkim-0002 header.b=lk0NjN7H;
+	dkim=pass header.d=outer-limits.org header.i=@outer-limits.org header.a=ed25519-sha256 header.s=strato-dkim-0003 header.b=iCZOqIGw
+ARC-Seal: i=1; a=rsa-sha256; t=1794234590; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=Z9INr75GkDeSq3HwFpO/yirX6fuxNLHAqiRuj05jGCO9YSrd1CasgUAXGLHI59CW7D
+    ghln5jXkT/V6uMeNVzqvrlj+MJr2MhTdVmskwpxsuUlfNFa0UMoRJem5dR0X2ZWAbc2u
+    r7CwyTsZPbWEj4za8cT4Gv490WY+Lc2IBwsVzq4MQFCluB9QXNM6dO0vQXgts773F6UT
+    sDukfgxj0o6iM8T+BzDlupIZWr2q4UNF6Y4QKrBqgIQbd8ob4rXJjtJCpHxboeVVnnEy
+    vNVwuB9YXqWOIe5NtQmoRZXOmY9+nOsivALNnH3AtaEmuIxKgWZhA+/muCje2ZeE9i9M
+    iAUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1794234590;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=8KiPHgaI34vv0/q5DZBdlVQ5Ql56ikXsCwH4QLHKU2g=;
+    b=O22EbDoxqG9yX7AurB1FwUDJKOuw1LocmMfTgvP28Uj0qGAEPPWto0n8of12Q0MVla
+    1sRXclyzmGGU1gYeDWSUUedwsfJb6xJMsLmvxFnnW+Tk4HFaVuyOwKjBAGgHAj2jbT9m
+    tt5VmxvA7JkxizBFkUKPpHDOQQJLIHBIwMHzRE2FTyfI2FFF5Hz9G4A+BFKGrtYPAwh3
+    D+rnM9x5eay/iFKURxrDn2TVw0UP4WTRrpOzIsIexJROG/xfQ375Ie9rNQ1rZFVXMhzw
+    3Sh0HUsShGDXpex/eI8+WGaOrIZEM5D5/Xtug6TuCs048NAJ0CjZs2htiNUyvZRaRYhI
+    55XQ==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1794234590;
+    s=strato-dkim-0002; d=outer-limits.org;
+    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=8KiPHgaI34vv0/q5DZBdlVQ5Ql56ikXsCwH4QLHKU2g=;
+    b=lk0NjN7HDjSoWExkDonAsB75kBu/iJvoZJ+4z5YvKXGUg1uQ0Vr3f0fCDWenrYD61X
+    ceRq5BsPMi685YXVdMYi0zQgvy8KCf7jyLzgRDkgHu2lJNc44uLhmdUGcLr8SvsHhP9G
+    cjckct2LmgkyTYLJjn8VauDwSo1UvpQ2306a2xpbY+7lXghqtbxvp+CMVH/2dq5tzp1r
+    WJenrW4d2H6rwPGp/fSZY3LiYcaXcaDjBpJn8r5svAcbSzkM8cNLIHNb9cmX5OFYiLJT
+    nrW2kF4CU/13IEHIO4mmvwNFhg9n/8QJobNQN8vmbTIXQ/2yYup4KT6BV7es5zGOVt7T
+    pWMA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1794234590;
+    s=strato-dkim-0003; d=outer-limits.org;
+    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=8KiPHgaI34vv0/q5DZBdlVQ5Ql56ikXsCwH4QLHKU2g=;
+    b=iCZOqIGw9SLc/UbmFWdWVNDa5Xu7IOH+2paJz4mFxFjDnCODFcOuAzaQR4dzHQ0GHn
+    hec2m2ds27X4F7L/fRBA==
+X-RZG-AUTH: ":JnkIfEGmW/AMJS6HttH4FbRVwc4dHlPLCp4e/IoHo8zEMMHAgwTfqBFXdk1Z5IDmIqDY7xpnOs6mGD64frXxHtrE3e66udIGwZnWwLgga9o="
+Received: from [IPV6:2a01:cb15:80c6:e800:a9dd:2b53:f1aa:d3fa]
+    by smtp.strato.de (RZmta 55.6.3 AUTH)
+    with ESMTPSA id J82cde2A9ETn2f5
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Mon, 9 Nov 2026 15:29:49 +0100 (CET)
+Message-ID: <c479d14a-aedf-4815-b191-a5ebf41c1844@outer-limits.org>
+Date: Mon, 9 Nov 2026 15:29:48 +0100
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -52,131 +96,132 @@ List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/13] mm/madvise: convert madvise_vma_behavior() to use
- vma_flags_t
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, Jason Gunthorpe <jgg@ziepe.ca>,
- John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Rik van Riel <riel@surriel.com>, "Liam R. Howlett" <liam@infradead.org>,
- Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>,
- Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>,
- Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Byungchul Park <byungchul@sk.com>,
- Gregory Price <gourry@gourry.net>, Ying Huang
- <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
- Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
- Shrikanth Hegde <sshegde@linux.ibm.com>, Pedro Falcato <pfalcato@suse.de>,
- Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>,
- Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Leon Romanovsky <leon@kernel.org>,
- SJ Park <sj@kernel.org>, Rakie Kim <rakie.kim@sk.com>,
- David Rientjes <rientjes@google.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+Subject: Re: [PATCH 1/6] irq_work: Re-raise pending irq_work after system
+ resume
+To: Adrian Hunter <adrian.hunter@intel.com>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
  Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
  Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Oleg Nesterov <oleg@redhat.com>, John Johansen
- <john.johansen@canonical.com>, Georgia Garcia
- <georgia.garcia@canonical.com>, Paul Moore <paul@paul-moore.com>,
- James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
- Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu <roberto.sassu@huawei.com>,
- Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
- Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>,
- Stephen Smalley <stephen.smalley.work@gmail.com>,
- =?UTF-8?B?T25kcmVqIE1vc27DocSNZWs=?= <omosnacek@gmail.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- kvm@vger.kernel.org, damon@lists.linux.dev,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
- linux-integrity@vger.kernel.org, selinux@vger.kernel.org
-References: <20261105-late-2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org>
- <20261105-late-2026-vma-flags-v1-7-0d3cd15ab75f@kernel.org>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
+ James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jiayuan Chen <jiayuan.chen@linux.dev>,
+ "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+ "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>,
+ Frederic Weisbecker <frederic@kernel.org>, Andi Kleen <ak@linux.intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, driver-core@lists.linux.dev
+References: <20261102074039.26983-1-adrian.hunter@intel.com>
+ <20261102074039.26983-2-adrian.hunter@intel.com>
+ <20261102090604.GR1779021@noisy.programming.kicks-ass.net>
+ <74511f6b-f5ff-498f-bf97-ebdc86c43d24@intel.com>
+ <20261102163937.KwllF-Pg@linutronix.de>
+ <2d6105b4-bd75-41b5-a7b2-da91bda31350@intel.com>
+ <20261104073220.Hgq4chT1@linutronix.de>
+ <56198a93-670e-4187-86a3-99ae54295998@intel.com>
 Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20261105-late-2026-vma-flags-v1-7-0d3cd15ab75f@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+From: Julian Vetter <julian@outer-limits.org>
+In-Reply-To: <56198a93-670e-4187-86a3-99ae54295998@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-> --- a/mm/ksm.c
-> +++ b/mm/ksm.c
-> @@ -779,7 +779,8 @@ static struct vm_area_struct *find_mergeable_vma(struct mm_struct *mm,
->  	if (ksm_test_exit(mm))
->  		return NULL;
->  	vma = vma_lookup(mm, addr);
-> -	if (!vma || !vma_test(vma, VMA_MERGEABLE_BIT) || !vma_has_anon_rmap(vma))
-> +	if (!vma || !vma_test(vma, VMA_MERGEABLE_BIT) ||
-> +	    !vma_has_anon_rmap(vma))
+On 11/4/26 8:48 AM, Adrian Hunter wrote:
+> On 04/11/2026 09:32, Sebastian Andrzej Siewior wrote:
+>> On 2026-11-03 17:46:32 [+0200], Adrian Hunter wrote:
+>>> On 02/11/2026 18:39, Sebastian Andrzej Siewior wrote:
+>>>> On 2026-11-02 12:54:22 [+0200], Adrian Hunter wrote:
+>>>>>
+>>>>> Yes CPUs remain online for suspend2idle, but currently the choice between
+>>>>> suspend2idle and "deep" (S3) suspend is a user space choice,
+>>>>> refer /sys/power/mem_sleep.  Many modern systems do not support S3
+>>>>> anymore, but it has not gone away.
+>>>>>
+>>>>>>
+>>>>>> Anyway, I'm torn; I would much rather make this trigger a WARN and have
+>>>>>
+>>>>> AI now also identifies ftrace, BPF, GHES NMI, and #MC as possible causes,
+>>>>> not just perf.  I haven't tried to confirm any of those.
+>>>>>
+>>>>> And, belatedly, AI is now saying an irq_work raised before lapic_resume()
+>>>>> might result in #GP if the APIC is left in xAPIC mode at resume.  Also
+>>>>> not confirmed.
+>>>>
+>>>> Could we flush this before similarly to what happens during CPU-hotplug.
+>>>> The question is if this event can stay enqueued during suspend (and
+>>>> handled on resume) or should be taken care before entering suspend.
+>>>
+>>> WRT "might result in #GP if the APIC is left in xAPIC mode at resume",
+>>> the systems I have checked restore the APIC in x2APIC mode, so the
+>>> issue is theoretical at this point, although I can get "unchecked MSR
+>>> access error: WRMSR to 0x83f" if I deliberately add code to change
+>>> x2APIC to xAPIC early in S3 wake (in x86_acpi_suspend_lowlevel()),
+>>> and then do:
+>>>
+>>>    perf record -e power:suspend_resume --filter 'action == "machine_suspend" && start == 0' --no-buffering -C 0 -o /tmp/x.data &
+>>>    rtcwake -m mem -s 10
+>>>
+>>> The error can be avoided with:
+>>
+>> I meant flush it via irq_work_run_cpu() like in smpcfd_dead_cpu() (the
+>> CPU-hotplug path) and not go via APIC. You should do it late once the
+>> interrupts are disabled so no new irq-work can be enqueued.
+> Disabling IRQs doesn't stop NMI or syscore enqueues, and the resume-side
+> raise still goes through the APIC
 
-This change should be dropped form this patch IIUC.
+Hello Adrian,
+I ran into the same lost irq_work self-IPI independently, in a different
+context. I triggered that same issue with a live migration of Xen HVM 
+guests. I sent a fix for it, but the posting only reached xen-devel and 
+the maintainers, and not the Linux mailinglist (because my company email 
+has some issues), so here is a short summary for everyone on this thread:
 
-It would have to go into the previous one (that I applied) but it's not actually
-required.
+My Setup: XCP-ng 8.3 (Xen 4.17), Ubuntu 26.04 cloud image (kernel 
+7.0.0-38), 4 vCPUs, "console=tty1 console=ttyS0". After a live migration 
+the guest hangs, e.g. "systemctl restart systemd-resolved" never 
+returns, and fsnotify/SRCU users block.
 
-Unless I am missing something :)
+Mechanism: On Xen, live migration suspends the guest through 
+xen_suspend() (drivers/xen/manage.c), which runs inside stop_machine():
 
--- 
-Cheers,
+syscore_suspend()        -> lapic_suspend() disables the local APIC
+HYPERVISOR_suspend()
+gnttab_resume(), xen_irq_resume(), ...   -> printk()
+syscore_resume()
 
-David
+With the 8250 console being nbcon, the printk() in that window queues
+nbcon_irq_work to the raised_list on CPU0 and then sends the self-IPI. 
+But, the APIC is disabled at that point, so it's dropped. Afterwards, 
+the raised_list stays non-empty, so irq_work_queue() never raises the 
+IPI again and we are in that same situation.
+
+In mainline the nbcon trigger is hidden by 560f4deda327 ("printk/nbcon: 
+Change nbcon_irq_work to IRQ_WORK_LAZY"), but the underlying problem is 
+still there for any non-lazy irq_work queued in that window. To 
+reproduce it on mainline I reverted 560f4deda327 on top of v7.4-rc1:
+
+v7.4-rc1 + revert of 560f4deda327 -> hangs after the first migration
+
+v7.4-rc1 + revert of 560f4deda327 + this patch (1/6 only) -> 6 live 
+migrations between two hosts, no hang, no SRCU or hung-task warnings, 
+systemctl returns immediately
+
+Since xen_suspend() calls syscore_resume() after the window above, this 
+fix with the new irq_work_resend() functions covers the Xen case as 
+well, without any Xen-specific changes.
+
+Regarding the flush-before-suspend: In the Xen case that would not help. 
+The lost irq_work is queued by printk() after syscore_suspend() has 
+already disabled the local APIC, with interrupts off, so there is 
+nothing to flush yet when suspend starts.
+
+Tested-by: Julian Vetter <julian.vetter@vates.tech>
+
+Thank you,
+Julian
