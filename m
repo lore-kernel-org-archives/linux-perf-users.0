@@ -1,55 +1,95 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794226554;
-	b=p5kHit7SVXW8f5KSWEoRSmTMOd60igee0Wwg8kyZY4+1MnUYL1T5z+yywptpajdGMtAa
-	 Q8v9LXiwHYvOWk46Qm0Pp1yS65Z3MYc6CCmSqMJp0A07c8sNTj00yVha0rzCNSLNdtCWr
-	 ok2GTcJ05CTTjF2khqy8JY3f96ovqw8Wo2KbgaTbFV0mrajZX+nTDO4WEFXEYLXQ325t5
-	 EYRqrbY2Oh/V5tbk2bHc+ewQ2itYfCgpz/zCYGoW0EtZ4JERFR1BQNAx6dFoFFFM//WYJ
-	 NY1wIb6sICxNwuCgM/B27BzF0laxg5oI/1fg8WVZTfpve96H+/x5aQILJpB0ZMO6elw==
+	t=1794227183;
+	b=NrIrE9yApcsqVd5SU3ZiyjqhfbZBh5i9xqCllwy+/hpyEwnCiS9SINaoa6Nt+fUm03/o
+	 fSO+N6hU2uCUpIlnNgaOXaadMOlPMsC0NbaZzZNjjDV8PC/xItR0ckRcVlGT9kxIFFixY
+	 VUf+T1NyZCkRZcPK7JdMhmUUFxBOjZVGNELacL30Wk8gmNM6dTX685/qV+C5OD9OmUqUb
+	 Ok1ugviyAv9D9QiIIn34Pw2u2P2+5TZYwomOD28zXQCQ4npqdbrc7HGXcX3E4SE0pfRZs
+	 a99t9hcKkDfF4UhcVQfzZVLN6+IvL511H/gq5aIBZiSzAsJ5tFBnycme0oiHzRvPguA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794226554;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=NTGrZKlax+U/yKbBUNZfcwm2y7GmmdbzohpA3eauULc=;
-	b=4N8Jezr0Mjf9i5BK/gkz2gR6sUA7y7kgNYatyq+hCDBHE47rUZ/D67+l5Sm+lfeYifSV
-	 A1LaGtVRfCHCzdbIhXIpAyyxgCRR6QPWz8V8nxA3w1+fBDzkioQujGbv05NSw5DOEXkEJ
-	 fF77CcPuDWKM9qicfeYNImhE1mHQztvy1rP26yy7Goy+0o2Zg7VMMQ3S8lw4nsy0nYPgw
-	 AMu7ez15V3sO0o0YAFAwSXtB58Ikf3a47FEziF6hKEU23eKN35mU6+M6NiPhCmhn/Ckl0
-	 c1+TLNJ+GpMO17VnjOp5qBw3XmHllW0enVNojrmV1fRxOSiTkMnyncNdr9ptpDDmNUw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794227183;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=6+EKYQdPiDyWXkzzfV/UN8vBxInBjW4N6ZELhlBfhOI=;
+	b=FravJIZPmJWItFVVMLMskbgWqU7crZr5vlViguxVfCH3UAh8W/8KcprpC5sqA27dNA6I
+	 XfQfEuYpWdg10AGdYVERwxyvnJTUiRbAtpxtRdMnRBKrQfCMFQsYR6la6ycqBr5L+cbF/
+	 CCbl8pXhNakEck3IKSCctFEHMMlJCfRDWgGqSd0sTvU0F/UU1Gl9Q44SM7pZ2reCzL6G7
+	 S5F3OJANODDPdlcak96qiA+K+bKGmxy7eqE0fMlif8fmo552dmgDtzyPPyyfH0yYLfS4h
+	 R3KWz87o4PQqkpirYcU3rc+cEthaL0341PymLTfKsM8Ova9CwXG1AeVGR9mIkY44iEQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OL+xvUir;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VhodTs+A;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8902F606A33A
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Nov 2026 12:15:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9811606A321;
+	Mon,  9 Nov 2026 12:26:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OL+xvUir
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05E0A1F008A7;
-	Mon,  9 Nov 2026 12:15:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VhodTs+A
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 937971F0089F;
+	Mon,  9 Nov 2026 12:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794226554;
-	bh=NTGrZKlax+U/yKbBUNZfcwm2y7GmmdbzohpA3eauULc=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=OL+xvUirmmfGK+KpNCwSyXyvWxEKEQj0bKV1icTvOjb5mWfqp5JUXj6O8TfPcnulr
-	 smhtGPtVHSnEExIYDsbEt7O2J66t7Iz75uzzNXPgR3jrtco188mk71QIM+ThX94lJ6
-	 B+BqDx9tlweyapFOaN4NjzWS8VvUGVURl8pRm25xIqidwtbBjskfMD4JnZkSIHVRvG
-	 vZQNjLH0feTL+jh9NoyoW8qvs8iOgV39Ijrjj+1jYYfVMFBUgaYBvhqOTGOv0Jkq2Q
-	 3itRBV+wE0Dk2iwh1qvw2ZyKk9QvoKhiNNAwU9nPjV9ZwAAzgV5K8Opv/tFO2FJ015
-	 kVK4BQiKiNsZg==
-Message-ID: <sashiko-outbox-204922@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf parse-events: default data breakpoints to any size
- on RISC-V
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Rui Qi" <qirui.001@bytedance.com>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20261109120320.75053-2-qirui.001@bytedance.com>
-References: <20261109120320.75053-2-qirui.001@bytedance.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 09 Nov 2026 12:15:53 +0000
+	s=k20260515; t=1794227182;
+	bh=6+EKYQdPiDyWXkzzfV/UN8vBxInBjW4N6ZELhlBfhOI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=VhodTs+AWpB6b78audXhz1hdToGnTfiqsIeh7C9iS51ypshI9FNnayYXFucaMgeLZ
+	 xeEIungcy0zjIPzwmpAqArp8eRXgn6aLR4nNmqHiWaRHWsbsQ7Qxh3+PgSaQmGodli
+	 iH97FzOVZfiuF5Da5WjkLmXe3XJknzf7SbtxrzdHDZZM2QKqqAHZOHOY4doionvKHw
+	 4h930muPKhPQSSHI+AAJgxUYDe3aTAGC8NAItOXceOH2dwmRr1lJ1teB6f1iCQBu+D
+	 7GUCaRQliXvLQza+jV5DiZhXeIr64nvzKuidlvAiLong4iDN+nDILPyMHrAS7gpG/t
+	 Sxhmv2E4eHoMw==
+Date: Mon, 9 Nov 2026 12:26:00 +0000
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Barry Song <baohua@kernel.org>
+Cc: sashiko-reviews@lists.linux.dev, 
+	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Rik van Riel <riel@surriel.com>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>, 
+	Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Byungchul Park <byungchul@sk.com>, 
+	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
+	Alistair Popple <apopple@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, Xu Xin <xu.xin@linux.dev>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
+	Shrikanth Hegde <sshegde@linux.ibm.com>, Pedro Falcato <pfalcato@suse.de>, 
+	Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Axel Rasmussen <axelrasmussen@google.com>, 
+	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Leon Romanovsky <leon@kernel.org>, SJ Park <sj@kernel.org>, 
+	Rakie Kim <rakie.kim@sk.com>, David Rientjes <rientjes@google.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	John Johansen <john.johansen@canonical.com>, Georgia Garcia <georgia.garcia@canonical.com>, 
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>, 
+	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
+	Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej =?utf-8?B?TW9zbsOhxI1law==?= <omosnacek@gmail.com>, 
+	linux-mm@kvack.org, kvm@vger.kernel.org, damon@lists.linux.dev, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, apparmor@lists.ubuntu.com, 
+	linux-security-module@vger.kernel.org, selinux@vger.kernel.org
+Subject: Re: [PATCH 02/13] mm/filemap: convert fault and readahead logic to
+ use vma_flags_t
+Message-ID: <avG7mvt0okaFGUT7@gremlin>
+References: <20261105-late-2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org>
+ <20261105-late-2026-vma-flags-v1-2-0d3cd15ab75f@kernel.org>
+ <sashiko-outbox-200257@kernel.org>
+ <au2_PPpdAMgRJZtX@gremlin>
+ <CAGsJ_4yWQom=cG5vw2B-FR8+7wNU+rwZkvghjAxusym+3OH96A@mail.gmail.com>
+ <CAGsJ_4zvRSUSspBe_hNwTYDjK3-TLuq6Mhi5gDyOPZGDXN8gDw@mail.gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -58,108 +98,57 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGsJ_4zvRSUSspBe_hNwTYDjK3-TLuq6Mhi5gDyOPZGDXN8gDw@mail.gmail.com>
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issues to consider:
-- [Medium] perf parse-events: RISC-V bp_len=3D0 default breaks
-  parse-events unit tests
-- [Low] perf parse-events: default_data_breakpoint_len() uses unmerged
-  bp_len=3D0 ABI
+On Sun, Nov 08, 2026 at 03:42:36PM +0800, Barry Song wrote:
+> On Sun, Nov 8, 2026 at 3:20 PM Barry Song <baohua@kernel.org> wrote:
+> >
+> > On Fri, Nov 6, 2026 at 7:53 PM Lorenzo Stoakes (ARM) <ljs@kernel.org> wrote:
+> > [...]
+> > > > --
+> > > > Sashiko AI review · https://sashiko.dev/#/patchset/20261105-late-2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org?part=2
+> > >
+> > > It seems these are valid, oops!
+> > >
+> > > Andrew suggested a fix off-list, and I agreed to this as an in-place fixup to
+> > > avoid respin.
+> > >
+> > > I have also updated the series locally to reflect this change:
+> >
+> > Seems like a reasonable fix. maybe_unlock_mmap_for_io()
+> > could have released mmap_lock, leaving the VMA
+> > unprotected. but  ra->size *= 2 is still going there no matter
+> > if the vma has disappeared
+> >
+> > For the original patch combined with the fix,
+> >
+> > Reviewed-by: Barry Song <baohua@kernel.org>
+> >
+>
+> BTW, one question is whether mmap-based readahead is
+> still worthwhile if the VMA is actually gone after we
+> release mmap_lock (or the VMA lock). Perhaps we don't
+> need to continue readahead in that case.
+>
+> However, we don't have a reliable way to know whether
+> the VMA is really gone until the page fault is retried.
+> We release the lock to perform readahead, so in this
+> racy case, readahead might be happening for a VMA that
+> is being removed.
+>
+> I'm not challenging this patch, just leaving a note
+> to think about later :-)
+
+I suspect it's one of those 'not worth checking' situations, VMAs can come
+and go at will at any time and theoretically you can do useless work, as
+long as that's mostly not the case I think we're OK.
+
+And in general I think these code paths need significant rework before we
+revisit stuff like this, we always pay a tax for code complexity!
+
 --
-
-commit bc358ce307d173b53ca7362db7fd768d0758ca0f
-Author: Rui Qi <qirui.001@bytedance.com>
-
-perf parse-events: default data breakpoints to any size on RISC-V
-
-This commit adds default_data_breakpoint_len() to default unspecified data
-breakpoint lengths to 0 on RISC-V while keeping HW_BREAKPOINT_LEN_4 on
-other architectures.
-
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
-s.c
-> index f3ba70d4f76b2..b72e4b0da8a15 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -598,6 +598,27 @@ size_t default_breakpoint_len(void)
->  #endif
->  }
-> =20
-> +/*
-> + * Default length for data breakpoints when the user did not specify one.
-> + *
-> + * Most architectures treat the length as a byte range that is compared
-> + * against the address of the access, so 4 bytes is a reasonable default
-> + * that matches most accesses.  RISC-V debug triggers (Sdtrig mcontrol6)
-> + * encode the width of the access in the trigger instead, and a trigger
-> + * only fires when the access has exactly that width.  This holds for
-> + * both RV32 and RV64.  With a fixed default, an access of a different
-> + * width silently never matches, so pass 0 on RISC-V, which the kernel
-> + * translates to "match any size".
-> + */
-> +static size_t default_data_breakpoint_len(void)
-> +{
-> +#if defined(__riscv)
-> +	return 0;
-> +#else
-> +	return HW_BREAKPOINT_LEN_4;
-> +#endif
-> +}
-
-[Severity: Low]
-Does default_data_breakpoint_len() rely on a kernel ABI that is not yet in
-mainline?
-
-Mainline arch/riscv does not select HAVE_HW_BREAKPOINT or implement
-hw_breakpoint_arch_parse(), and include/uapi/linux/hw_breakpoint.h only
-defines HW_BREAKPOINT_LEN_1 through HW_BREAKPOINT_LEN_8 to describe a
-watched byte range (as relied upon by test__wp_modify() in
-tools/perf/tests/wp.c).  All in-tree hw_breakpoint_arch_parse()
-implementations reject attr->bp_len =3D=3D 0 with -EINVAL, so baking bp_len=
- =3D 0
-into tools/perf before the RISC-V kernel hw_breakpoint support and UAPI are
-merged upstream risks breaking default data breakpoints if the upstream
-implementation follows standard byte-range semantics.
-
->  static int
->  parse_breakpoint_type(const char *type, struct perf_event_attr *attr)
->  {
-> @@ -658,7 +679,7 @@ int parse_events_add_breakpoint(struct parse_events_s=
-tate *parse_state,
->  		if (attr.bp_type =3D=3D HW_BREAKPOINT_X)
->  			len =3D default_breakpoint_len();
->  		else
-> -			len =3D HW_BREAKPOINT_LEN_4;
-> +			len =3D default_data_breakpoint_len();
->  	}
-
-[Severity: Medium]
-Does this regression break the "Parse event definition strings" unit test
-on RISC-V?
-
-When commit 70b27c756f95 ("perf parse-events: Add default_breakpoint_len
-helper") introduced default_breakpoint_len() for instruction breakpoints,
-it exported the helper in tools/perf/util/parse-events.h and updated
-test__checkevent_breakpoint_x() in tools/perf/tests/parse-events.c.  Here,
-test__checkevent_breakpoint(), test__checkevent_breakpoint_r(),
-test__checkevent_breakpoint_w(), and test__checkevent_breakpoint_rw() still
-assert that evsel->core.attr.bp_len equals HW_BREAKPOINT_LEN_4:
-
-tools/perf/tests/parse-events.c:test__checkevent_breakpoint() {
-    ...
-	TEST_ASSERT_EVSEL("wrong bp_len", HW_BREAKPOINT_LEN_4 =3D=3D evsel->core.a=
-ttr.bp_len, evsel);
-    ...
-}
-
-On RISC-V, parsing data breakpoints without an explicit length (such as
-mem:0, mem:0:r, mem:0:w, and mem:0:rw) now sets attr.bp_len to 0, causing
-all 16 un-sized data breakpoint test cases to fail.  Exporting
-default_data_breakpoint_len() for those checks (while keeping the explicit
-HW_BREAKPOINT_LEN_4 check for test__checkevent_breakpoint_len_rw_modifier(),
-which tests mem:0/4:rw:u and delegates to test__checkevent_breakpoint_rw())
-would keep the test suite passing.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261109120320.7505=
-3-2-qirui.001@bytedance.com?part=3D1
+Cheers, Lorenzo
