@@ -1,56 +1,50 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=180.76.5.236
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794212316;
-	b=wx5ZZEPfhR9vx6E4f/vkxTDJ75r9RHGbS5xWv2gS6FkOFV1vRwk1C2N2O1G1U8triJKK
-	 L00Or/pJIAEgH8NxHOvSajYqKzxzcs5KBGfVvMCuwcj3TpxPD9xgJEPBIamodpPdW2a14
-	 ROpwN/LPHU4VigGlYlvJsXe2jwFFIvpqoty1rRxn1tO5BNtxNcYwZ6euYLYFPCvey64is
-	 e7Kp85fCqs7wfhFZrez9YuoqxQr9nEDQntpc2glKNuWMa713/9KH/nI+RDQBH6pGpWBh1
-	 r63U/1d8Vs0I+BgfHaho7E/xrN0K/lOjXhXFHkz2DZ0xz8G0jFX6qrfZpbiTXiHPQOw==
+	t=1794214918;
+	b=B9ZxSKAPLah/1u0mWrZduH6+D5tIlnauzk2vz3bt2xZuosuBztyeYedTj/iuCPput2HH
+	 oae4CoX6KR43EH3W/QDN5h7S6ujqoKnHXOyBLS+ryNyTpzpNfXlfFHa/JvsfF5tUH9nx/
+	 b301vgIkgW3E7gvWCuod/x+9c0vVnqdQWHV6l2gceP4iUO5N0Iqvc/wCCvcg4RZRaVAr/
+	 U+v9WbI3wATHtthbAS5dWLwxkLtp24fDhd7KdgjLLerpiYwgF+2mfFQM2C7iUBDNDVMPT
+	 Yhq6aGSU4IMsZKtuLIssdFJ9frixjDwsBCpjig01okiLpXzgtA4F06oGxyIQYTuoyHQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794212316;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=i/9s/2SlIw2j222eGrBmezs92r2B4SDA5YcPD1F/bzA=;
-	b=D7Uq0tv+trwiuhoQXeaLQvg015VpESRtRvj7hZqTk4Kj1gFm4el2T8QjSJRHxUfXd/C5
-	 9LsazXYlOPlR62vi0yeuMMXZMmL4dFwMOC5jBBF1v+0NsVBuntSYaniOxzkDI3QKze9XH
-	 T310er3n+KspAYGSEYg6OhbSeIUHkKr5/nksx7ESf8kbqCHqEFWJ8Vpqb02F7YVQURM97
-	 Z298YZjvooGSqsWK/9K4TsfNspk2f70bOl4YemHkLNmd5C5AwuNrGNUeigrP08mwEQLdy
-	 8WqdaVpx1ip8VkE/ortCDo1urTjJoASf5wS1Hvrzci1FCgBAvxVS9Jkz/anVVWydiuw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794214918;
+	h=DMARC-Filter:X-MD-Sfrom:X-MD-SrcIP:From:To:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Type:X-Originating-IP:X-ClientProxiedBy:
+	 DKIM-Signature;
+	bh=F8g6Wt9NOwF6DUxJqUEaQBioV069X8V8j/0l1jIw+2A=;
+	b=Yex327mDYjsE3WPZBGLzhJBZGovj3cfYtmp6XNEXmvt7ZQrgd44sVMShB6BAQjce1v+I
+	 wtT9jAZuM94Hi6ku9hrH4skw6hQrcUYHqP6eBOzgv5N2qz+trkJAzkonhu9aIrJx2OfEZ
+	 P6Cy5UOPn4We+25hp50qffMDniibl9wTg34njwr5kDllQAgf4eaRrciV89afItkjTw2hk
+	 1X2mb2yeXIqIwxYia/n+YqPhqKK11MFbu1yDVM9fam/lqTLffymj7zqX02BwUY6PCTq4d
+	 CrNJwAGRmCwoBrB37KMFNGz8SmKL0VGGk5pju+y7tUFacHUgPuhZxW9hyrq5kyZOOoQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LlshMkvA;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEDC0606A321
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Nov 2026 08:18:35 +0000 (UTC)
+	dmarc=pass header.from=baidu.com;
+	spf=pass smtp.mailfrom=baidu.com;
+	dkim=pass header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b="X/4PLyEH";
+	arc=none smtp.remote-ip=180.76.5.236
+Received: from outbound.baidu.com (outbound.baidu.com [180.76.5.236])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id B56DA606A321;
+	Mon,  9 Nov 2026 09:01:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B56DA606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LlshMkvA
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 552331F008A2;
-	Mon,  9 Nov 2026 08:18:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794212315;
-	bh=i/9s/2SlIw2j222eGrBmezs92r2B4SDA5YcPD1F/bzA=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=LlshMkvApoADorGA5cr0tq7/unE6Jc83/+wi7T0BYzFA+h+4YW68P8f3nkPXGN0ap
-	 MciyOUNwe8HYCCKb2gCftidCWySq+CaGHemyRdk6doOzk1yOhLdJBIUuod9K4uSHjo
-	 Y4vd8HaNB9elPJfQ3Jm4Xc/RhLYY7Kgp58Xkvn2I/4X4DtXXDcbzNPbnrOunPx3qp4
-	 xbWSoN/63IkkQHN99oE4eiyvKdeW1FaV91Zm0XS6VnrtpX9fvVIAQlww67xPE3ONkA
-	 qK5CCTBGHf83GAmOcD7bW8pS0YEv35Y8XArpMQ3G0sx+YP9Zk2pmCSClPTLBpTOoLi
-	 BEFL5WjuvFXuA==
-Message-ID: <sashiko-outbox-204582@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v19 2/3] perf: Add Raspberry Pi BCM2835 AXI PMU driver
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261109080126.417161-3-irogers@google.com>
-References: <20261109080126.417161-1-irogers@google.com>
- <20261109080126.417161-3-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 09 Nov 2026 08:18:34 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=X/4PLyEH
+X-MD-Sfrom: lirongqing@baidu.com
+X-MD-SrcIP: 172.31.50.47
+From: lirongqing <lirongqing@baidu.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, Li RongQing <lirongqing@baidu.com>,
+	Alexander Antonov <alexander.antonov@linux.intel.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH, next, v2] perf iostat: Release the port list if command allocation fails
+Date: Mon, 9 Nov 2026 17:01:43 +0800
+Message-ID: <20261109090143.1749-1-lirongqing@baidu.com>
+X-Mailer: git-send-email 2.17.1
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,28 +53,58 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain
+X-ClientProxiedBy: bjhj-exc13.internal.baidu.com (172.31.4.11) To
+ bjkjy-exc3.internal.baidu.com (172.31.50.47)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=baidu.com;
+	s=selector1; t=1794214911;
+	bh=F8g6Wt9NOwF6DUxJqUEaQBioV069X8V8j/0l1jIw+2A=;
+	h=From:To:Subject:Date:Message-ID:Content-Type;
+	b=X/4PLyEHFsNFleUoTyVpm1B3hQJbuIPLDulSdWMmK1g4ul2c6FoJYuyN3iiOGeoEt
+	 sYAma4gBtO7U36s/q8vnun3Rm13BF4CgYGpCGJyujf3AVe8e8kLJ4E9iiWgm6q+Ic3
+	 6h6oTxgjGldeQw3sljEABkMB+Y+YnNkiqyEsN5adKXHWXZZhFIb6yTIXtXlB723v4t
+	 Onh7AG6lnV1blOLacn5b5DP/tYOkxBmVspPLWe2RKxjGSa7qee4MAYk1WdoN4hLa9r
+	 FOGLm18LT0EGxgYoq5kpdjju3BqbxkMWniNgzMvXZKXzeV1MoHZkCfSf1bzjKAZ+VX
+	 uIb+asvppyEtQ==
 
-> Add a PMU driver for the Raspberry Pi AXI performance monitors. It
-> provides access to the System and VideoCore performance counters on
-> Broadcom BCM2835 and BCM2711 platforms natively through the perf
-> subsystem.
->=20
-> The driver implements bus-watcher refcounting, group validation, CPU
-> hotplug migration, and sysfs event aliases mapping hardware-specific
-> events to AXI pipelines (such as DMA, V3D, HVS, and ISP). Memory-mapped
-> endpoints for the primary System bus are read synchronously, while the
-> VideoCore VPU monitor is polled asynchronously in process context via a
-> single bulk Raspberry Pi firmware mailbox read across all active bus
-> watchers.
->=20
-> Co-developed-by: Dom Cobley <popcornmix@gmail.com>
-> Signed-off-by: Dom Cobley <popcornmix@gmail.com>
-> Tested-by: Dom Cobley <popcornmix@gmail.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
+From: Li RongQing <lirongqing@baidu.com>
 
-Sashiko has reviewed this patch and found no issues.
+iostat_event_group() takes ownership of the root port list and frees it
+via the err: label on both the normal and parsing-error paths. When
+calloc() for iostat_cmd fails, however, the function returns -ENOMEM
+directly, leaking the list, its pointer array and every port in it.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261109080126.4171=
-61-1-irogers@google.com?part=3D2
+Route this failure through the existing cleanup path instead. At this
+point no port has been transferred to an event yet, so
+iio_root_ports_list_free() releases the whole list, and the trailing
+free(iostat_cmd) is a no-op on the NULL pointer.
+
+Fixes: f9ed693e8bc0 ("perf stat: Enable iostat mode for x86 platforms")
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+---
+Diff with v1: rebase to next
+
+ tools/perf/arch/x86/util/iostat.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/arch/x86/util/iostat.c b/tools/perf/arch/x86/util/iostat.c
+index 7442a2c..d2cc2e7 100644
+--- a/tools/perf/arch/x86/util/iostat.c
++++ b/tools/perf/arch/x86/util/iostat.c
+@@ -310,8 +310,10 @@ static int iostat_event_group(struct evlist *evl,
+ 	int metrics_count = iostat_metrics_count();
+ 	char *iostat_cmd = calloc(len_template, 1);
+ 
+-	if (!iostat_cmd)
+-		return -ENOMEM;
++	if (!iostat_cmd) {
++		ret = -ENOMEM;
++		goto err;
++	}
+ 
+ 	for (idx = 0; idx < list->nr_entries; idx++) {
+ 		sprintf(iostat_cmd, iostat_cmd_template,
+-- 
+2.9.4
 
