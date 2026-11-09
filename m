@@ -1,52 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.50
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794215805;
-	b=hgVF04MW+BUcDUXpkGKl8Kd6lL415OayCoGYNvMoIeHaeZYizCIPk65wgu7M/1b74Fwt
-	 qrDYGzvdonUNcpot9psOWqR1KQpN0aQ1cdl1beH3WKZN7bRm/2c1u1cY31j/WE94soFYD
-	 fgS9BCnGOgwiH4ejJG5JeTF0+QtedLhv7ym9K+2sHua5wziQOTUKQRSK3EtT0Ogeb+8VM
-	 5j2lA8SORHJ1T0rVJJ5qw+GnRemktmKLBYYgJpBtiUm5MHI+6gS8MK+a/Y192a59JXZA1
-	 4A5LEcRXTZDkxLnVjTcaEn1e73DmhdSxypCfwUVYpi8TA1sOysf41TOhirll/M69TFQ==
+	t=1794219451;
+	b=dI4gz3dYfFNb94bSKF6mTk5cihPqBWob8AjDhTm9kMoFebBuivLfF2h4OfrVw68IDh5J
+	 s7/9DdM7ofpZHHlSu3VQQmOSth1nwrokO3CQJ0/kjYrTGV7lrquq5zXAP81457DmamOhG
+	 00FMSpfRQQ2t0eiGS74gQD8en2ueZJpgBAIeFvlDrX/MHA9r0qe2zFVS5jAxXu4C8NpLa
+	 rrfNoNRlMyhBkRZqbEt2dOFlwEDFEkZrPi5Eo+eummFvMFbpn4LC5OyMdbVL8FPN3CO6P
+	 98IrrWOoLEMAz+ZcY+0p+lbzCXtwItdpD458Oyv0/fGphC3UmSF1MWrl6UrroK83RJQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794215805;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=QFg6WaXKZiXuoSOEntxs6b0JTEObImC6+g3mSXZ3TBw=;
-	b=KiWYzFOGfd3LqeD/1GU5TqT2+AOUFSOVahiE+dE/RAsgdU5SX8HLQm9ZOsz+MC3L68m6
-	 4rii6yFbsgDaLsT3MlupBq+iK1WFuwuGbw+Or3fzUZkF6xLnzFb0wqK9WEypoRzqs7IgF
-	 L02MLyo8ieuHr3U6NDkRel12vT2D1hOny1wyoexNTSDBnlFxbHrrukkGgRBZ9LaCtk60B
-	 UhHiaetMbr5DalUKH2pnfZOdmtqUcVvXqrx1gjNPGJxbqzZnn0vGJm1WmsMMTyAtQtwDe
-	 XBajwbkBQqYoUZFIdJx1iniX9nDMUbKNfcUGPXhHRAgF4qg6YG6kbxOZv0pKLgRljHg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794219451;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer;
+	bh=TJaSvhKXpOs4hPW+qhrc6bZ76dM2q6MMdsGYOHYjFdc=;
+	b=2RAfSWh36jopOQ2Rarmo/RZudxbKgt36qs7JWKIvi+Z5q04MGgWQv3z2YwjW6LjKsf9u
+	 idaexUZ/RxFtTID2OixSj8PpX5tm2spW9S3LySMMPhr886OrMep0dNf1sYioej3MtQ4v0
+	 Z5nrehaG6fXpXJCts3P+1mjQNkggtC+X5mtZzVJAY2Xn13KNySkRDMuV8bwGvODgvX2IU
+	 Lh+2rEbeHp9BeydIbnovZIjAdNqu0k+SpCQeRDJY2d/muVKUWZZ4711Ui0426lfCGoF7T
+	 bswpZbgT8d4rLlWtA9sd4byi/CvBVCcVaGkbPsnGfi3wpOaEGYjnqMJSfD+9/ROpaFA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="EAbu/eq7";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linaro.org;
+	spf=pass smtp.mailfrom=linaro.org;
+	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=jYWPiZtM;
+	arc=none smtp.remote-ip=209.85.128.50
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4995860A6F48;
-	Mon,  9 Nov 2026 09:16:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3AF606A321
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Nov 2026 10:17:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DC3AF606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EAbu/eq7
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3B7A1F0089F;
-	Mon,  9 Nov 2026 09:16:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794215804;
-	bh=QFg6WaXKZiXuoSOEntxs6b0JTEObImC6+g3mSXZ3TBw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=EAbu/eq7+tNBCV9OnxL/VxekQkXFWvB5XGGpflCvFikxnOnxkxhKMV7w7oFPmkrOf
-	 4Goh2fhaDpaVgB8nDgLZtji0dHYqqNhD2+JwHxCQsvzhHXorE0ip0Cena91HTi8qWa
-	 Kf+9d9QnCivA918y9khwr9HNDNumo/3CvFOa3T9sO9lZsiwrm9QjrBIjrFcizQatRF
-	 XpU4NvzO2d1QxCDM5U8ZgrYn5pSRjFkXCofQR+IBZ6t8c9tyZq5MfOX1GIzxNgU745
-	 pSc+Xu88dUA9gH3VBghEqJRyX7wyoPoo3s1GqVK6bcBWPYLz8AUdmCBgHY5idDh5JA
-	 mhmd5wev79yrw==
-Date: Mon, 9 Nov 2026 10:16:36 +0100
-From: Alejandro Colomar <alx+linux-man@kernel.org>
-To: Nick Krichevsky <nick@ollien.com>
-Cc: linux-man@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Vince Weaver <vincent.weaver@maine.edu>
-Subject: Re: Behavior of wakeup_events being 0 in perf_event_open(2)
-Message-ID: <avGNA14jLDjGNw6O@debian>
-References: <CAN8n623GU-VbFJF1O7nDWhty-dUeTdo7HwPe31m1xDbU=hQVjA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=jYWPiZtM
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4ac95761c85so4421305e9.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Nov 2026 02:17:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1794219449; x=1794824249; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=TJaSvhKXpOs4hPW+qhrc6bZ76dM2q6MMdsGYOHYjFdc=;
+        b=jYWPiZtMTC1lB+9ahM3rmPP/S3UjVUcqZq+wKSDRfw9xU8z5bUcHf3zg+ZzIOD4+G8
+         x2JstWyS8oD7Xq2AdE+5NJcGeeYXxdvhYAwKNYZ6XnEHaOXlW5FDzV2hqqqmdyzpz5GN
+         3xeu9s/hssF7zfYabYFqJd3O5dZPsAGXaFd5DTHIkbJxAFnoat4N1VjvToYA+7V+iD7O
+         dcl+TQsBl6itTT7g5hQcOhanKOu6+WZZ0z6eTQljil2zx54K8YZvgJk5damRfJzR54H/
+         gvrcmaA+nIIKHTDQ08b6p4xZVWwp+GBLm8o22D974volh8lsKb1ktXUqsq+7EzMImENi
+         QAkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794219449; x=1794824249;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=TJaSvhKXpOs4hPW+qhrc6bZ76dM2q6MMdsGYOHYjFdc=;
+        b=Yw8jU4C555fr5J4anSZfXTFHMWQd4bhkSxMhhGGXZc/MWZG7rTGXeV2Gb0EWA9ij1S
+         j1Ry/F7y1j3Me8ENXt2dssYw7MsqOAWFukhpM1udGETVUwOuyqjcR0oQMZTvIjSnLruJ
+         /vpJkIRirzhwKaHAALn2wHEe0mg1mx5h8LOk8UNWtl3J9PO8k+fruX4FO0MynZKXppt1
+         i+RZkQEOFQsDMb9+67drlC8J/jT6s0XJj2ha7fF7KvsWV6Vobtseg5UOp6HhXvIIAWat
+         MsaowlLjo/ijsnG/uRu2t3TSBTOF+qCYRaHWOHGrxD3vmbX7hV+EnyyJpCRUclStHHqT
+         9WGQ==
+X-Forwarded-Encrypted: i=1; AL+hErGpRjvaFzCXad/e3SHarLIJ4g8dhwAr1Y3C6kg6RUA/BMFjZCLcxoqDnFKjxV6isZHLY5EE29qQUekhcpjWi6b2@vger.kernel.org
+X-Gm-Message-State: APuU4Z/D313GvGxUJKJcHpiQkKRWe5zoeeazIvGTASZrxreEcmKlLdU+
+	c7fpDi/KN81sbBtbzDGkTgaBUWrzETs4sDQPhUQri6DmPdCkqEGHv27nhkA1vGTEgrY=
+X-Gm-Gg: AYBFou04n92MVmigsA7fNsZ/bb9vARMVSPHOh9QY+25YU0c9EXgU7mLAbVUtTTK+uTj
+	5aEELI+N8AgLOAmJedixfTZTnB2fbBE0UU7EZQwNZVLCwlP9CZiIGGKk8fqHP0SDADWQEH61RWb
+	8QevmgfclxAitFWCJ54A8ki6pMhEYi0X96VoMwYmLLEa4oK761Ofu83Vc8EC3hdsB4/gbzDB7XQ
+	3V6YjgDaipJGX49htUtqL/nSa9fefB8z8PqdKWDzlqFX8yIsZg4H2Gs7n2dj8JJWkxVl/7Waf+H
+	mwv3BBxhv0CMok9xS+kBRwrwXkTwBV2UTmuoSFO4gKuBsVpdl/Sfps2RoeqXi171OsFvD97UC6S
+	l9kpkAilyvuYfs8w/ur2NNJIYfOKm7WOUIAa6iKhHeUe/SyTMrziZipyZV7HsKn43AmrWMXeonG
+	AiBf10XcmdlE1Mwuf886O9ZbsW59dLb5ADQzzStCbxqOyU8jhpZZcA5z5BPy5sT70YitNc44ZAp
+	6yE10ZgvfsiuIPHTkC1lQ8dVJS2i3EySsl7J8AN7KHGA1yfdeD4O8RA4zyP8/P8j6DlFsixx0pr
+	WVCpjTis8lsHK0Mju2eRepejVEhCc/Bf
+X-Received: by 2002:a05:600c:c4aa:b0:4a7:8fe8:130c with SMTP id 5b1f17b1804b1-4b963c8c64dmr68512305e9.28.1794219449235;
+        Mon, 09 Nov 2026 02:17:29 -0800 (PST)
+Received: from pop-os.local ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b90ee1de2esm121575795e9.5.2026.11.09.02.17.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Nov 2026 02:17:28 -0800 (PST)
+From: James Clark <james.clark@linaro.org>
+Subject: [PATCH v3 0/4] perf tools: LLVM dwarf and flaky test fixes
+Date: Mon, 09 Nov 2026 10:17:00 +0000
+Message-Id: <20261109-james-perf-test-fixes-v3-0-e8d0a65e618a@linaro.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -56,221 +91,63 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hec37lstcxggxvlu"
-Content-Disposition: inline
-In-Reply-To: <CAN8n623GU-VbFJF1O7nDWhty-dUeTdo7HwPe31m1xDbU=hQVjA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJyd8WoC/3WNQQ6CMBBFr0K6tqYdpIAr72FcFJhCiVLS1kZDu
+ LstxkQXLl9m/nsLcWg1OnLMFmIxaKfNFCHfZaQd5NQj1V1kAgwE5+xAR3lDR2e0inp0nir9iKx
+ KAFEUOe+4JHE7W9wOcXq+vNndmxFbn2TpY9DOG/vcwoGnv0+j+NMInDLKGijrBrGocna66klas
+ ze2JykS4Fsj/mkgampZcxACVAXwo1nX9QXIOfLcFAEAAA==
+X-Change-ID: 20261104-james-perf-test-fixes-f72265531d1a
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, Jakub Brnak <jbrnak@redhat.com>, 
+ Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.15.2
 
+Running the tests on an LLVM build results in some dwarf issues that
+need fixing. And there is an easy fix for some flakiness caused when
+tests are run in parallel.
 
---hec37lstcxggxvlu
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx+linux-man@kernel.org>
-To: Nick Krichevsky <nick@ollien.com>
-Cc: linux-man@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Vince Weaver <vincent.weaver@maine.edu>
-Subject: Re: Behavior of wakeup_events being 0 in perf_event_open(2)
-Message-ID: <avGNA14jLDjGNw6O@debian>
-References: <CAN8n623GU-VbFJF1O7nDWhty-dUeTdo7HwPe31m1xDbU=hQVjA@mail.gmail.com>
-MIME-Version: 1.0
-In-Reply-To: <CAN8n623GU-VbFJF1O7nDWhty-dUeTdo7HwPe31m1xDbU=hQVjA@mail.gmail.com>
+Assisted by Claude Opus 5.5
 
-[CC +=3D linux-perf-users@]
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+Changes in v3:
+- Rebase to resolve new conflicts
+- Link to v2: https://patch.msgid.link/20261106-james-perf-test-fixes-v2-0-9a912662f822@linaro.org
 
-Hi Nick,
+Changes in v2:
+- Break perf probe line (Namhyung)
+- Use a software event instead of cycles for VM compatibility (Namhyung)
+- Link to v1: https://patch.msgid.link/20261105-james-perf-test-fixes-v1-0-0b279bee5830@linaro.org
 
-> Date: 2026-11-08 21:08:44-0500
-> From: Nick Krichevsky <nick@ollien.com>
->
-> Hi,
->=20
-> I was experimenting with perf_event_open(2) and caught this sentence in t=
-he
-> man page.
->=20
->     Prior to Linux 3.0, setting wakeup_events to 0 resulted in no overflow
->     notifications; more recent kernels treat 0 the same as 1.
->=20
-> I wrote a small test program (below) to test this behavior. On
-> kernel 7.1.13-200.fc44.x86_64, my experience seems to contradict the man =
-page;
-> it seems that when wakeup_events is 0, it actually notifies the file desc=
-riptor
-> when the ring buffer is half filled (4096 byte size buffer here, (4096 by=
-tes /
-> 2) / (8 bytes per event) =3D 256 events). Setting this to 1 sends a notif=
-ication
-> after every event.
->=20
-> My (rough) reading of the source code supports this understanding:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/k=
-ernel/events/ring_buffer.c?id=3D7475ea8b58616b33c04afb976cf0fbaad9dd63fb#n3=
-22
->=20
-> Is this a stale entry in the man page, or is my understanding of this fac=
-ility
-> incorrect? If it is indeed stale, perhaps this could read
+---
+James Clark (4):
+      perf libdw: Find the CU by iterating all CUs when aranges are missing
+      perf dwarf-aux: Support DW_OP_addrx locations for global variables
+      perf test probe_vfs_getname: Fix missing debuginfo detection
+      perf test: Don't starve per-process tests with system-wide events
 
-I don't know; it could be stale, or it could be a misunderstanding of
-the author of the text, or it could be that you're misunderstanding it.  :)
+ tools/perf/tests/shell/lib/probe_vfs_getname.sh |  6 ++-
+ tools/perf/tests/shell/record.sh                |  6 +--
+ tools/perf/tests/shell/record_lbr.sh            |  2 +-
+ tools/perf/tests/shell/record_sideband.sh       |  4 +-
+ tools/perf/util/annotate-data.c                 | 27 +---------
+ tools/perf/util/dwarf-aux.c                     | 70 ++++++++++++++++++++++---
+ tools/perf/util/dwarf-aux.h                     |  3 ++
+ tools/perf/util/libdw.c                         | 19 +++----
+ 8 files changed, 89 insertions(+), 48 deletions(-)
+---
+base-commit: 13a8d580433a3b72b10be34f0e26787fe5659d3c
+change-id: 20261104-james-perf-test-fixes-f72265531d1a
 
-The commit that added that text was:
+Best regards,
+--  
+James Clark <james.clark@linaro.org>
 
-	21977c9d2ac8 (2015-01-21; "perf_event_open.2: Clarify description of overf=
-low events")
-
-by Vincent.  I've added him to CC.  Let's see if he or some maintainer
-can help clarify what happened.
-
->   Prior to Linux 3.0, setting wakeup_events to 0 resulted in no overflow
->   notifications; more recent kernels generate notifications based on a de=
-fault
->   watermark of half the ring buffer size.
-
-If this is true, we should clarify the exact version in which the
-behavior changed.
-
-> Test run of program:
->     $ gcc main.c
->     $ ./a.out 0
->     wakeup_events =3D 0
->     wakeup 1: 257 samples of 8 bytes
->     wakeup 2: 256 samples of 8 bytes
->     wakeup 3: 256 samples of 8 bytes
->     wakeup 4: 256 samples of 8 bytes
->     $ ./a.out 1
->     wakeup_events =3D 1
->     wakeup 1: 1 samples of 8 bytes
->     wakeup 2: 1 samples of 8 bytes
->     wakeup 3: 1 samples of 8 bytes
->     wakeup 4: 1 samples of 8 bytes
->=20
-> Program:
->     #define _GNU_SOURCE
->     #include <linux/perf_event.h>
->     #include <poll.h>
->     #include <pthread.h>
->     #include <stdint.h>
->     #include <stdio.h>
->     #include <stdlib.h>
->     #include <sys/ioctl.h>
->     #include <sys/mman.h>
->     #include <sys/syscall.h>
->     #include <unistd.h>
->=20
->     #define PAGE_SIZE 4096
->=20
->     static void *workload(void *unused) {
->       for (;;) {
->       }
->=20
->       return unused;
->     }
->=20
->     int main(int argc, char **argv) {
->       unsigned wakeup_events =3D argc > 1 ? atoi(argv[1]) : 0;
->=20
->       pthread_t workload_thread;
->       pthread_create(&workload_thread, NULL, workload, NULL);
->       // Needs glibc >=3D 2.42
->       pid_t workload_tid =3D pthread_gettid_np(workload_thread);
->=20
->       struct perf_event_attr attrs =3D {.size =3D sizeof(attrs)};
->       attrs.type =3D PERF_TYPE_SOFTWARE;
->       attrs.config =3D PERF_COUNT_SW_CPU_CLOCK;
->       attrs.freq =3D 1;
->       attrs.sample_freq =3D 49;
->       attrs.disabled =3D 1;
->       attrs.exclude_kernel =3D 1;
->       attrs.wakeup_events =3D wakeup_events;
->=20
->       int fd =3D syscall(SYS_perf_event_open, &attrs, workload_tid, -1, -=
-1, 0);
->       if (fd < 0) {
->         perror("perf_event_open");
->         return 1;
->       }
->=20
->       void *buffer =3D
->           mmap(NULL, PAGE_SIZE * 2, PROT_READ | PROT_WRITE, MAP_SHARED, f=
-d, 0);
->       if (buffer =3D=3D MAP_FAILED) {
->         perror("mmap");
->         return 1;
->       }
->=20
->       struct perf_event_mmap_page *meta =3D buffer;
->       char *data =3D (char *)buffer + meta->data_offset;
->=20
->       ioctl(fd, PERF_EVENT_IOC_ENABLE, 0);
->       printf("wakeup_events =3D %u\n", wakeup_events);
->=20
->       for (int i =3D 1; i <=3D 4; i++) {
->         struct pollfd poll_fd =3D {.fd =3D fd, .events =3D POLLIN};
->         poll(&poll_fd, 1, -1);
->=20
->         uint64_t head =3D __atomic_load_n(&meta->data_head, __ATOMIC_ACQU=
-IRE);
->         uint64_t tail =3D meta->data_tail;
->         int sample_count =3D 0;
->         int sample_size =3D 0;
->=20
->         while (tail < head) {
->           struct perf_event_header *header =3D
->               (struct perf_event_header *)(data + tail % meta->data_size);
->=20
->           if (header->type =3D=3D PERF_RECORD_SAMPLE) {
->             sample_count++;
->             sample_size =3D header->size;
->           }
->=20
->           tail +=3D header->size;
->         }
->         __atomic_store_n(&meta->data_tail, tail, __ATOMIC_RELEASE);
->=20
->         printf(
->           "wakeup %d: %d samples of %d bytes\n",
->           i, sample_count, sample_size
->         );
->       }
->=20
->       return 0;
->     }
-
-Thanks a lot for the program!
-
-
-Have a lovely day!
-Alex
-
->=20
->=20
->=20
->=20
-> -Nick Krichevsky
-
---=20
-<https://www.alejandro-colomar.es>
-
---hec37lstcxggxvlu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmrxj20ACgkQ64mZXMKQ
-wql95BAAktgdPUnIXXKsLl6a4p4C6LiRhHOB3706kNqLbF8R0nrpC/ql6W056ll6
-+AeCet7qJSfuPxWBunqEAbsShW1ZG5AP73B6bwLdB4u+RwRHEWebVhVFGgfa6ebW
-6a4tHcCWtXzPh8/MjfN8gHy+qFlXSLWfLeTlDXOhqGcHIG7pwalBoMOJo+1Xs4kb
-clIoAvQe5Rl07u0GsUSbG7GmYZIXWhi6Tm1putrR+A4bSrkmW/yje3X03RWRauSJ
-IUVhs3O5FDkmlsGaHLzyvLzZQmwyG1E3R6Ie6CdUAuWWYyEqEgnFmlBG03NQgzoa
-ePx9u9mhZYX5fPNX6blSpx3gr94jSV4BwSNJcxEU3+qIvtjHMflXgnmL9nYNhbFt
-nrdY6oSA1TaoKZL6f1W3e6s1Y7ll51KKfKL7eGmI4DcLNXgbmbSrCYGWF2fT+A1x
-BsS02GeIO8lO8/X+NScmfMxzcijda9phSET/0xtNDqQPsrdakpE0tkg7dupdjT/u
-hnN37cSpyuDhRLk5EZrPOFo88W500fCG3FVKHWb9lXvL1/zThfZ7JzjVHP9s3DZb
-Z9GMAyNdQa7/ghcdACWJ1INW9AWQIV9FFZDIy+qoP+Z90wZmAs9QN5bnrkAKCXss
-SDStHIuzivNuBt02PM1/mfSAnHlThXecrBerkLHW3dsoCW020Fk=
-=nTnS
------END PGP SIGNATURE-----
-
---hec37lstcxggxvlu--
