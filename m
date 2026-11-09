@@ -1,57 +1,63 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.127.231.113
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.127.230.113
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794222273;
-	b=S31atOE0GK6b/ORqm578L7LmAwraZATY8YL1tr1JtldUPASkcu9k6yJdln+rwcn/rNRg
-	 2ryA51TRiATY/rYSJZG0T+vftgbx3g11dkviEvS3elrASmo+6XlP0g3QRggGu2nV6OmMh
-	 YrSrjV/R89Ip5sw8+lSpItATnsV/lTdHeyMMTtVsX9Bb5wiNoz27FTOMgC5YDLseQmkai
-	 AVXnR16F2GYhegnUmdM4hQuYICjukr71uGkihdBHM18OkT0+WDDSocOUiQCuvHE4PxYga
-	 OrifQov7nFtozooy4yDWmS0ACJwMuKXyWkLOqgsCnyBmyFlZjxU+9NyuNLv0lVH/DqQ==
+	t=1794223189;
+	b=5j9+QIZTDfAbJ7eHQtUoQGpbfBvf0bCA8Fr4QzgX8s16P+kpCClgrNK0KlyRugcys+tE
+	 Wpqa9Z5ZAWxzVXsG9tKy5vITHXQUD5AGkA0kA7NFpecBsUFdiWxajtLODANgUmfIr/Yc3
+	 4dtJZ3yuZGfRojgeDJiQH5oAtmBbb1Uj/B+M1eRj6V0bHrQX1eT39dgzmHisRWpMfzEwp
+	 /cSxD3f7JSH/9HT4kCStW9wpc+h4v3TgxHHCUC+XdhLv8aEa24b5lHC1fwBIyHuTbhpUO
+	 h/2h+7PxnDqOg2OM0MGRztrhhb/UGpNp5lnOJa6BRH8JcEyaShi1qkTrCZ1/qlKpGeg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794222273;
-	h=DMARC-Filter:DKIM-Signature:Content-Transfer-Encoding:X-Mailer:Cc:
-	 Date:Message-Id:Mime-Version:Subject:X-Original-From:Content-Type:To:
-	 From:X-Lms-Return-Path;
-	bh=Y5Lzomot2LyKiavuKiwRHLXi9C7DIBS9PkpU70qoGZQ=;
-	b=xcYT3634tzWQbJ2sAuUgEyIkWHc5Kx/0yghvYRrQHMlWIb68oo95GRD3dNnvhh2F5TFl
-	 BO8S+VykE6d6gvyKy2clAppFAnGq9ExeGLSDs+BnGQYtn/HS+HKD5CBhxajhM3MnYEW8o
-	 kZhUCXJUuyvc+ZrDuQQ0P2z9aCvNxTyMdYjLwT6YIZNpthohHPHSD5FAX9o0WbTUKfzKe
-	 gBoNHaafDaKo8qcclL2SL3p35HaxXwB8wzjxo72XcGIrP1s+klzcoiRzuJaR4tCPN0uGd
-	 CYLfELRr6BpxPTsyJlykOlHMyoDEZ53SPiNZBC0jb1x2mAkLj58R8DCye2e/GfNGKOA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794223189;
+	h=DMARC-Filter:DKIM-Signature:X-Original-From:Subject:Date:
+	 X-Lms-Return-Path:From:X-Mailer:Content-Type:To:Cc:Message-Id:
+	 Mime-Version:Content-Transfer-Encoding;
+	bh=nrTj8/1DomOwvHqcUIcxM/6KsnFRHawVripj6enYjDE=;
+	b=KFdMhMb6LFX/AGdP/pPuvoy74af35YtXYW5nktxUlRaQNGRkL4Ohh1ZbmYrBfqVp8BcK
+	 joHY3P0OedqfL1T07nNbiY0ZN6CuhaL3RrBNw1HODUx/dHOw2VGdeS1BLM5WLPUFBRFet
+	 PhVKY63MrrJAUwVUfv3zRtBbVaTqLCH1X17dLgcBg4Z1MGcW+RRr7h2lICaRhth6Faybt
+	 0GbA7kSEOvZ1XilOoqPfqReRXO7isLnB41aRPZMqD0+SyGnU9RfTiZVmNSKMBEWUFV49Z
+	 8P6PlgcZoAGwBI3ye7G2oQfLTi+10eLDKDxuxCzW5005rhvnF7hXVK4NT/a0RIcXubQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=bytedance.com;
 	spf=pass smtp.mailfrom=bytedance.com;
-	dkim=pass header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=2212171451 header.b=haWrxf6C;
-	arc=none smtp.remote-ip=209.127.231.113
-Received: from va-2-113.ptr.blmpb.com (va-2-113.ptr.blmpb.com [209.127.231.113])
+	dkim=pass header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=2212171451 header.b=H3rX9E0R;
+	arc=none smtp.remote-ip=209.127.230.113
+Received: from va-1-113.ptr.blmpb.com (va-1-113.ptr.blmpb.com [209.127.230.113])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568F9606A325
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Nov 2026 11:04:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 568F9606A325
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA482606A321
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Nov 2026 11:19:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AA482606A321
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=2212171451 header.b=haWrxf6C
+	dkim=pass (2048-bit key, unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=2212171451 header.b=H3rX9E0R
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1794222265; h=from:subject:
+ s=2212171451; d=bytedance.com; t=1794223183; h=from:subject:
  mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
  mime-version:in-reply-to:message-id;
- bh=Y5Lzomot2LyKiavuKiwRHLXi9C7DIBS9PkpU70qoGZQ=;
- b=haWrxf6C94JWYif297/Q/Hy3fL1sRedEs37FjuZXdfVnmL9yP9izqWjjgHJqVMr6mLupl7
- xCjZf0HU1Mh0RmHizYtqaAYXAmf10kOnIbGyDwAp6JhmkY3klHOZDH5A2Ph8kxHOAhxVut
- LpMcCox1ot8rijGaA7c/qSo+kE802RAAYpXKMfj2YURJ8T7w/753Lf2xVG9ZA59Zarwg5I
- ZgxDSpvny5Dwn2jGYuZPI+eRrzYlm0ZZMgdwU3dSfISD7pkAB30pZaq7meAV6eGBYk+fey
- QigLZORhi8bLo0L+Wnvigb6JJ6COtyBl2lo0bXFZr0IaJSaazmAIGbaQtE5ERQ==
-Content-Transfer-Encoding: 7bit
+ bh=nrTj8/1DomOwvHqcUIcxM/6KsnFRHawVripj6enYjDE=;
+ b=H3rX9E0RE21NXqy7N1salj1TMq04PbW2OFcO+j7c00H5N/78drhbBYVTzmGzj8+Tm0BHQj
+ ZxxSoLKdaSGih5euq0dZ5oXk/n9YCd1q+noTxrT5wbMf0baizDizclTvJ/6yXlVhnS9QDY
+ FoZhEkyycCZM5aJ0XLrnjnFmYOo+rUeWzcEiyHL7W1SXXvQl2ZBl2h2VkOBv/uEV79VmtR
+ 3/XCAQ1T7YOyCH1ktLfKgl3HGFTcR0rKpGZOIseOdC4d37+s7rUs/EGpogdy1n9aVTPpRp
+ wZVydDWIXZqbnTw2FCD/Rkw3uGdypEsrChI4i2erDZu1ov4YYhEbYly5HAXz0A==
+X-Original-From: Zhao Gongyi <zhaogongyi@bytedance.com>
+Subject: [PATCH] perf/x86/amd: Avoid double-decrementing n_pair on failed transactions
+Date: Mon,  9 Nov 2026 19:19:09 +0800
+X-Lms-Return-Path: <lba+26af1ac4d+dbe2b5+vger.kernel.org+zhaogongyi@bytedance.com>
+From: "Zhao Gongyi" <zhaogongyi@bytedance.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+Content-Type: text/plain; charset=UTF-8
+To: <peterz@infradead.org>, <mingo@redhat.com>
 Cc: <acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>, 
 	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>, 
 	<irogers@google.com>, <adrian.hunter@intel.com>, 
-	<james.clark@linaro.org>, <x86@kernel.org>, <kim.phillips@amd.com>, 
+	<james.clark@linaro.org>, <tglx@kernel.org>, <bp@alien8.de>, 
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>, 
 	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Date: Mon,  9 Nov 2026 19:03:56 +0800
-Message-Id: <20261109110356.27709-1-zhaogongyi@bytedance.com>
+Message-Id: <20261109111909.31712-1-zhaogongyi@bytedance.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,49 +67,38 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 Mime-Version: 1.0
-Subject: [PATCH] perf/x86: Reject pair-counter groups with no GP budget
-X-Original-From: Zhao Gongyi <zhaogongyi@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-To: <peterz@infradead.org>, <mingo@redhat.com>
-From: "Zhao Gongyi" <zhaogongyi@bytedance.com>
-X-Lms-Return-Path: <lba+26af1a8b7+981cbe+vger.kernel.org+zhaogongyi@bytedance.com>
+Content-Transfer-Encoding: 7bit
 
-AMD large-increment events reserve an extra GP counter. A syzkaller
-reproducer opens a perf event group until the adjusted GP budget is
-exhausted. x86_schedule_events() then WARNs on the unschedulable group.
+On a failed PERF_PMU_TXN_ADD commit, x86_schedule_events() releases
+constraints for newly added pair events. The AMD put callback decrements
+n_pair, and x86_pmu_cancel_txn() then subtracts n_txn_pair for the same
+events. This undercounts active pairs and overstates the GP counter budget
+for later scheduling.
 
-Treat an exhausted budget as a scheduling failure and return -EINVAL
-through the existing cleanup path.
+Leave transaction rollback to x86_pmu_cancel_txn(). Keep the AMD
+decrement for constraint releases outside transactions.
 
-Fixes: 5738891229a2 ("perf/x86/amd: Add support for Large Increment per Cycle Events")
-Cc: stable@vger.kernel.org
+Fixes: 871a93b0aad6 ("perf/x86: Fix n_pair for cancelled txn")
 Signed-off-by: Zhao Gongyi <zhaogongyi@bytedance.com>
 ---
- arch/x86/events/core.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/x86/events/amd/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 4e344fb1a..20ba7b5b0 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1246,11 +1246,13 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
- 		 */
- 		if (x86_pmu.flags & PMU_FL_PAIR) {
- 			gpmax -= cpuc->n_pair;
--			WARN_ON(gpmax <= 0);
-+			if (gpmax <= 0)
-+				unsched = 1;
- 		}
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 49b6b8fce..3363cfd3b 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -1251,7 +1251,8 @@ static void amd_put_event_constraints_f17h(struct cpu_hw_events *cpuc,
+ {
+ 	struct hw_perf_event *hwc = &event->hw;
  
--		unsched = perf_assign_events(cpuc->event_constraint, n, wmin,
--					     wmax, gpmax, assign);
-+		if (!unsched)
-+			unsched = perf_assign_events(cpuc->event_constraint, n, wmin,
-+						     wmax, gpmax, assign);
- 	}
+-	if (is_counter_pair(hwc))
++	if (is_counter_pair(hwc) &&
++	    !(cpuc->txn_flags & PERF_PMU_TXN_ADD))
+ 		--cpuc->n_pair;
+ }
  
- 	/*
 
-base-commit: 59f1398140869432c7171b9a2a279ca315467c4e
+base-commit: f5a78ecccd98a04c47cea1cd63c2a2fdce8a4b48
 -- 
 2.39.5 (Apple Git-154)
