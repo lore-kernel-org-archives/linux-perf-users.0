@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794211582;
-	b=MfY/XLgZHFZewsY8G/oTYvxgLKi9jF22oIWe81Ixx5Cz3oe2kDtcgA1jTbbkFaYTmGwz
-	 9ESh44l1XaxfeocE6gkdPtsuM7aCK59bKsdRNkloVSG/31gVMlrKwX7GZD78Ll1Wk9qT1
-	 +WANX2y4BRj02MbZn7e2KU7RijOCvPvXoaHVW3+8HAGSiNrwGqXshO4vUAegWIGq4iVmE
-	 UKqNlsEK1jrRtrSWRcGJbjH6BU7h6wMMK5WJt9bNkK0ilMyqT30OD7P06zRoR+I3gczi+
-	 M7NP/FEWel95INirGwaJdU2bTLTpIZWuJ+BtnEf4V7FYayRogR4EFYe6hoSSVxqwR5g==
+	t=1794211598;
+	b=PTOP9wuDc7GYlXvlKPO7nmqEqyJfRvlFyUE27vcQzoRKTLgjPP8yag2cqab9EuQvn15W
+	 zadf4AN5/yIeqw2HOgpVb0wNFvjaMGKR/stLCDBtS0lRoyXmH0ggeEsfI4XBD3PL5l2p1
+	 vkWcQ4c0zkY8LOB0dZVFDGH8Z21mkaZsXuWIZ1y90hZpyUSwVjJgzyMQM3/3e+hlJgub9
+	 ZYq0POPQ/CAuWlPxCxULY/+jemDvqblXmde0WqS3vWUDR35FfcFh4WSy+0JSVFY4D09Sd
+	 F/vTtzWR7lxwnvwD3Lr0eTql8wTkB7GFSe5UBgpnCpUmueRNykfaBSLCjtTrnb0KzxQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794211582;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794211598;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=zb/Z71NmBL4/NE5LGBhbc42dyZCrm+r4z6vTmTBW0bQ=;
-	b=SOreLMBuy7sXm7y1lN3XnldEMz036nI1IhIEPZg63FpBbh2t6z3lc4AUp0F+npU7PLuq
-	 dd6yxIWBQt/Fki2Kyqzsfo3h6wBw2kj1IuJAV9DNTwShFF12scvkY8BTlEDGRaUJeEtaf
-	 9LpfEwvRJ6WgHasqmBT+yPdx9kFIYibQ1d3D+KLZzMSLf2CWT6QS5/fxTSrvldCCEE3Rb
-	 K21Z+EaiTwMtE7KN09CaeuXdvPnZkO0yx7uP6rlMhvQbT2wveQ5jZloEra6Sq+X6A9jb6
-	 cSkx9R6Cg9qJlc6vz///Pu51mQH/Aif/GSCGdGk4vj2YJLX++DUm+MzpwEDSdwRs0KA==
+	bh=yerjRv150b+8r3W3RprMwbQees1lvr4LigaCZqI27u0=;
+	b=UxQfl6bnpsndoFVDrRCUK3yxRJjfbTfsb8PzTjX5GCQD1f8oIFh1eoApN1BbOCtZQlh4
+	 ifkh7b8vjTkr+b6dVHE1QTN3l5bxVJg7DdVqx9zn9C9jl3N8kMSnuBNcnNwbyKhgQYva1
+	 qvwrjIj7ZiFvuGQVhye4eLO7VKMxAdNhXrHYZgWIFgXzTfQ8TLPQOg2IEgul4uHc/WVQR
+	 2rZwi6pPXLOA/nI5bt0w9i0HH7/Kb1EwtcCGulmdYwvnl0zXVp7++kp+D34I3nbrrN55K
+	 YnPgu4Z/kxmR7Y+Rf8wp1hXaZMpFZxz9z+LqBNVQdwpm9C3/MUVWwFB6lED/pJqATGQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=berNbiWQ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jyanvLmq;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7F9606A31C
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Nov 2026 08:06:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A27606A31C
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Nov 2026 08:06:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=berNbiWQ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B99501F0089F;
-	Mon,  9 Nov 2026 08:06:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jyanvLmq
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECDC21F0089F;
+	Mon,  9 Nov 2026 08:06:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794211581;
-	bh=zb/Z71NmBL4/NE5LGBhbc42dyZCrm+r4z6vTmTBW0bQ=;
+	s=k20260515; t=1794211598;
+	bh=yerjRv150b+8r3W3RprMwbQees1lvr4LigaCZqI27u0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=berNbiWQmen8pZs/N5sbo2Cd4o8JXR/qLwfGryFbClinAoAIVW2Rg/MCbh0Tt9/VG
-	 vQs/rLlu3WEGwSIOK00X24gjqLuHY1FRu3c1eJ5ERUKH44V3fGOiaUNWpnEFX8NUmm
-	 MhGJs1uq971yhZKjI+MH6v1AOhxxXxrn5ibz9SMb+hH/mQH7XpUzAEql5YP+0KY7Ko
-	 KBhJFFkBApo7uNhd14XCcmTthv+dQZqVRSs5oUyQRy+eBhCQVxnBV2qAYysQWGvnWr
-	 n4Jv5CLuaI+07N7ujQDEzoQO90cmMaPQy4sNcs9LRzrKGip901q7VHAgHQlnrZEsW3
-	 513MeGIwdgwIg==
-Message-ID: <sashiko-outbox-204561@kernel.org>
+	b=jyanvLmq1nJotTgNi5ccb1ATpzxYSMh9Gnw6ykZtfZiYPsI1JnY82mw3CuCV/bdyE
+	 8UXk9loxS7kMHZvt2mjl1tCoGtcuJpJGgpLatpksIgg7hewDiC5MvFfAcg8VDgHLkt
+	 tQhVjhL8Ey0Zh8i0BVa5dYoWIqx7jt3Y0Oy43lFA6TS+UYrTE7mKpowv468y5C3q99
+	 v0m+xT+4YQmn7XunOYLBnWq2ZDhWS5rDV+feKrB8ql/YLcOOdh0Bb2hvwVWQznhnoH
+	 pB1XjdY9b8DCZpLVLppwH5yHCqyQ6n3VOTw3nFBpqFYO7+pm6IRPf/tq/cZgyAC3Hi
+	 1aQU4O3mcYfjw==
+Message-ID: <sashiko-outbox-204562@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v19 3/3] perf: Add Raspberry Pi 5 (BCM2712) AXI PMU
- support
+Subject: Re: [PATCH v19 1/3] dt-bindings: perf: Add Broadcom Raspberry Pi
+ AXI PMU definition
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261109080126.417161-4-irogers@google.com>
+In-Reply-To: <20261109080126.417161-2-irogers@google.com>
 References: <20261109080126.417161-1-irogers@google.com>
- <20261109080126.417161-4-irogers@google.com>
+ <20261109080126.417161-2-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 09 Nov 2026 08:06:21 +0000
+Date: Mon, 09 Nov 2026 08:06:37 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,37 +61,20 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Extend the Raspberry Pi AXI PMU driver to support the Broadcom BCM2712
-> used in the Raspberry Pi 5.
+> Add device tree bindings for the Broadcom Raspberry Pi AXI PMU block
+> found on BCM2835, BCM2711, and BCM2712 SoCs.
 >=20
-> As on earlier chips, the System monitor is accessed directly via MMIO
-> and the VPU monitor via the firmware mailbox. BCM2712 has 6-bit AXI
-> master IDs.
->=20
-> The System bus names in Broadcom's documentation describe the set-top
-> box variant of the chip, so they were checked by measurement on C0 and
-> D0 boards. PCIe2 (RP1) traffic appears on the port documented as
-> BSTM_TOP, SD/eMMC with DMA0 and DMA1 on the one documented as SRC, and
-> SD/eMMC2 (WiFi SDIO) on the one documented as ARB3; these are named
-> pcie_02, sd_dma and emmc2 here, and the display_top and argon_top ports
-> are named display and argon.
->=20
-> From BCM2712 D0, three System monitor ports (XPT, PCIE_01 and HVDP) are
-> removed and the remaining ones renumbered, with the external PCIe moving
-> to the Argon port. The bus watchers also match a full AXI ID under a
-> mask: 10-bit ID and mask fields on the System monitor, and 6-bit fields
-> holding the master ID directly on the VPU monitor. D0 is detected at
-> probe by whether the ID mask field is writable, and selects its own bus
-> table and filter encoding.
+> The hardware exposes two MMIO register blocks: the primary monitor
+> evaluates the System fabric and the secondary monitor evaluates the
+> VideoCore VPU fabric.
 >=20
 > Co-developed-by: Dom Cobley <popcornmix@gmail.com>
 > Signed-off-by: Dom Cobley <popcornmix@gmail.com>
-> Tested-by: Dom Cobley <popcornmix@gmail.com>
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261109080126.4171=
-61-1-irogers@google.com?part=3D3
+61-1-irogers@google.com?part=3D1
 
