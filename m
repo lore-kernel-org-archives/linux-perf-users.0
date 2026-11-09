@@ -1,88 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.48
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794232104;
-	b=CnP0SRGbhZAzXqdMkOxnVX/GR8HcjE7roJB3pDfT+r5p0fL+EToXaMkK2A9KXSjuyvOM
-	 xRtlZT3KstCrT6Mu8PxK4c0FrlWbd6H8xdJ8iu0i/UksAOviMyeVIPO1DYMhYkiAr4tCB
-	 +UIZXXaxBPJYoX3A1rq2leRKVBTO8cOvYbbE06fBmZkNFsV5H9l5g3yCfXVdYPwiWK3n9
-	 3DOiT8GfyXr2vjbVeK01miua0INjAG4N54AXCAioGvQk2hQ3WqBcop0PZMaePd3yve1ms
-	 jXOyjXIeXGwdO3ydI3X7xILM97//TM5cP11dsK6fPkAAikOWeAlas+Jxfg6fdNdBEtA==
+	t=1794232106;
+	b=QXLAhw24SL8/mUfHBJm62c1RQl+6IOrUBn7sN4l8FZuQ/DSR/qT7swtg3srM6Vk8egFw
+	 RtNZq5KZY48d3rC6vPGv57xroAJt15A53gT+r0nDeceX+0rHip5SmPPtWhi8vyU+jxCQS
+	 h1rDwg9CW8dsiDkH70qCCDPJzbfjZHnHoQl04Xc/zfyyZrK2QR24+KQ35Oscn07sPAI4h
+	 5K4InCPm4GSUU9PmNEI09cqIcztLnXAcdqC+lL7tln9NGjGnfhe17ORbguvZNWSAFg16s
+	 CHDyVpzUyKQeXibhAU/5cZPP4h0vWOrUbHj2UIpcuSTCNJasSnkQjs4yCGFYRwV0+hw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794232104;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794232106;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer;
-	bh=oIWLoa5g/fdYrkLvLxADIE71/WrnQMWwPiN+l5QI7j8=;
-	b=iPc949Hg16O8Zz5Hu2x7SImNEegt5/w3K6JnpVLYTvcSwX+vPK6SjDO1T5r0uwHnNary
-	 g8ar/ONTYJnjtVF6HwFBPoGFfNs/Gj7C1EXhyIKn8YCQtaS5MrZjCwaoVlHJcMuPfotg8
-	 pCXk+JGsxJuKgeCN5NQIicCCH5+2XGktQaGu/z4EZMtXe1JTKNaPgvCUHl5jbfLS6G/lK
-	 E5ZZaPvJf/wDaPD/FIOVbqSooghnF3Gjpb0tgXjlahSidM+AB5SWdeC8/Z3HDZFFtLsd+
-	 1PkeRXkbD91jTCWMJYLvzPMGHPWYIfWSXH3IIBf1GhNZjz5ZCzUCA8ToqbMdqKTovbA==
+	bh=bvVa3bulUsYqSwCXV6o2ClwLUYzLh1XdnIqlWVEHka4=;
+	b=KJh5EqsSQR1HCsIVMLogtBjK7WbqAQ6//WsvLVee6Bdoed4cxpEUNtJH4IWaebew/dUT
+	 wWpR66l3KrSXDapQQ+CHV7ZG3/oiFGdIpUdC5hWRDXcJVOP1OfaX3A6viXcczltZuGGzJ
+	 7Ocxc2fz5gt4XXlNmNTYnejWp7LpA/5myueg7t/u6yu7SqUywjIHHOGzpUafoWRxr2rFl
+	 QwN4C/XjS7/mF3J3gwcQ6gTZpQeR4PaLxEgIvASZ9XzbNVEDhg38O1BZjHZ0HnQ7cYGi9
+	 SwiRbxc63Mr61eL5tyhK12KvB9SjwJ5EGG23FZitIlhBzBOab1F/TN0xO+g7Dae+U2g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linaro.org;
 	spf=pass smtp.mailfrom=linaro.org;
-	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=qCoLQ1gZ;
-	arc=none smtp.remote-ip=209.85.128.41
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=bQ1u8Cx6;
+	arc=none smtp.remote-ip=209.85.128.48
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 886BD606A323
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Nov 2026 13:48:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 886BD606A323
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD26B606D803
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Nov 2026 13:48:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CD26B606D803
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=qCoLQ1gZ
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4a214af2076so6365025e9.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Nov 2026 05:48:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=bQ1u8Cx6
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4a20bdaf39cso9726415e9.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Nov 2026 05:48:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1794232103; x=1794836903; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1794232104; x=1794836904; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=oIWLoa5g/fdYrkLvLxADIE71/WrnQMWwPiN+l5QI7j8=;
-        b=qCoLQ1gZUkK86B5wMyNztDk2Ob1tRTwT+aXHGfPWdU0JycAbGnrrshRsU189lYu8u9
-         BdMDVfJfwX1FYqKk8tbNSRneQV7QIhKGMh0AhfEMj3j0NoZYkKYqSJtXJZieFQ0jjM/7
-         X3x+yuSAD9L1x0ZOF+/lmjyiw+sHmld745Mx4wAjRdo3U0X4zgdjEx48hBwVKHMKdzj6
-         fKhxQu5bX/dqKC0bIZbF32ssXsijh+TKrakD0M+TvqZrpgg9ueCOa9eRi4hFnW0YWzS5
-         EuQzETo5AJw8jBHi/+omQd/LNj8fNT1IKnM3kDX59QDR0bttDsg6Niq1gwudXpoYFaLl
-         1JnA==
+        bh=bvVa3bulUsYqSwCXV6o2ClwLUYzLh1XdnIqlWVEHka4=;
+        b=bQ1u8Cx6ADf0WgR5Bas7K5VpPdlLILisbMB0KN7Kj3GFh/HlLT+erO22gSTeleDybd
+         OWTzCEMEUgLnp8Jc1BggaM2xXERnVAVSpuYr2TFt+ys2ajVfBMr4FTQGtZA5OL5mVCh5
+         Tfzz/Kigt9UVQDQaCmQ3cRx6xAg9jk0gl4GZl4FsPqYDdMp1N+Gxidru9SXH92EiUl8S
+         aFI//wTPFs2gZE8H77d/gLDny4SASMaDnIV1LKX5zJfeg9eHYatQ0WZj4mkKn8QqZE6D
+         0RqcvIE1ZmFVwt0FsPoqUU+JYx0xFNZRsJWjStHIJr0fyWxZyP4pbD/ZElYB8NUzYWeE
+         lJCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794232103; x=1794836903;
+        d=1e100.net; s=20260707; t=1794232104; x=1794836904;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=oIWLoa5g/fdYrkLvLxADIE71/WrnQMWwPiN+l5QI7j8=;
-        b=U6+ZcB1T3GftrnbtYsKwW/eATF20u1LD+ev+G7ZZaTkVsQxYh5pfA2HYJ8MWBmCCh0
-         NS/8HrvJEvFYkYiJcbw4pf+AfPiD7RXCJlGkb2BTnll4rKoSYWimL5Ih91EVnQlNhEoJ
-         PO92TgaLZBZp1F6IU2NDf1Pq0oCnESlP/sDCgUwdXtIQA55FvTfjpO8nIm/+OONyFATy
-         hD7scFuk4tLsQRLTVaRn+YaWtagRYIowloH3t4H60kn6pj2ukLVhkt0dX55SrN268PJ0
-         C0vU3qIeOthEDYwxhuEyALtX0v/esYO0fjWnJUKFZqqX5ztnTw+yZ4R1nru3uqhv6lp9
-         fxmg==
-X-Forwarded-Encrypted: i=1; AL+hErGgjKyployboGSMCTJsWCbOqeC7dH2iiXOtrbE9B3NZPOmjpfPpXugJWKIKUDqUP3aknjekRwsmCnJ3H94QvhmF@vger.kernel.org
-X-Gm-Message-State: APuU4Z8NZXx5q3SRp1cylKAx5fNLsYY+Pjs9LTzk4HRxNDhPomV741hJ
-	GFGNVyM6+bAPBQzYffJvRRelGLMb8Sv/Pns+4AzVZ8jlLhOLTDL6D0PqGHVlTevuEyY=
-X-Gm-Gg: AYBFou0o4nVXUktWjlxqzMdtqJ2TNYId804vNtOg/Oem7IXRnKDOGPIlovfbA44WVSx
-	VTCCkVLX69n0IqkSuh3cbk6G/gTCaeo1QV7inzI28irFrMUW4jx0fjrh0MMgsrwjZS8wHfoV3vU
-	nS9UY1ShkLVSdT9mTFhaFKAICz3l5CYqOO56ERHQSAneqVZOpC5NeZUllPlDOkiW2RnfmkINKZz
-	9U5HaidcG9ygzMs33dFKMvwvKKIlUvGLGPgDGDjqOHEXVIncXfwiY8AYcs0EGA/vb5zb2xCIml8
-	4JvbBRg1jcOiqik5sdXxXtlePd0ISHDrC4/e+VhlOvAPsJlbYlddICc9U4QZqijxhSbAl+iW4JF
-	5wSAIArYwqk055DsG6BWd46yjY+3ocytbMgVqGspjmNHpzE9QCWXa4ZxYNPYuActIDNDBtombcE
-	ITNzEkaAsVAFd8ijHoig9Ha+rap1aVGhVEE8FKm/yUwOfSX16mKWZd3luF4bBm48xMOZVswc6+j
-	0ZpdGENkuAjBuXNnodcJOXck43hDHkx53WU8Y4glzruueV98ncf2sYycc0w2R13tVRBdX+n9/nB
-	/rEO6cMB8kniKeO4iFBnNG4ymTS/IaXb
-X-Received: by 2002:a05:600c:4e92:b0:4a8:f2ad:a9e5 with SMTP id 5b1f17b1804b1-4b94d76c213mr83961285e9.3.1794232102984;
-        Mon, 09 Nov 2026 05:48:22 -0800 (PST)
+        bh=bvVa3bulUsYqSwCXV6o2ClwLUYzLh1XdnIqlWVEHka4=;
+        b=GOs2Ku0K4TF6TtVJIw59+2noPg8C5R46RzGCkN+dCQ4qUuydK5LYeNCHHIRWxQ9VeZ
+         k+FxlOPq3SRTvKE+2CecDOQd7oRCE4sFiYmsLW0t8Vlh7v1mLEou7ir0xtOMf+sGSTgL
+         rIrdxniBI8v+dcKAgrboS7TidmcD0CKiNhv+hMer7XbEsvl3WMB1ZS5Z+O/RP66eu5kk
+         XJ22sROeu4UWR3TwkhoFtMsjiXZL/k3JSPH7ftzQCsPbDa790PGMh/yTK9Y6sysfwLW0
+         QeuP4C49R7ZKxYwc+zvSUHvZwpeOi4pK39HaK7ocZgE6aFymht7je1oTLn0cRGArL5gh
+         hE/w==
+X-Forwarded-Encrypted: i=1; AL+hErFjb6w7SMLSw6ZZldEMon8tZ5wYHtpLPIodOo4gvJk/F0Nw/CE2p7s/AocQ+knCpqQsKZrE+GARvX9SE7sMAcXW@vger.kernel.org
+X-Gm-Message-State: APuU4Z//GR4P8AcfGKMyj01lkLP4pFjxKbd8QF8NdwcZOymkPSmBTqu1
+	R0t3/FXThtVe3BgMsp6IWI3Hjr4E+BPfzkpFNL+O0WJFBl9ojThGC/R4tCHR7twd8j8=
+X-Gm-Gg: AYBFou2eIGiZ0plU9FtyK+VMLvhmaDr3htF50eWwU8dYPAOa2E8MaumtgJWwixcSlR9
+	2ry61x3HBu1KkfyV61/uoS6rFbsBy+eNNb4mi210h9uEeZMD7u4EVr9/dEMbMZurja90rXA+kB/
+	h61rS2Rp4zD3Sdr/IvMJs1hflY8TUSWD0zoqlhbXxVJU2XpITIWz0wAtkehXf4QI9SGWWg15xBq
+	DGSfpOijFzGGLBVGe3hIHPZmp0eI3/5G1OyobCBWmatDyRtAWwAqnuVbhFTTDhFBIhnxIyw9rDL
+	YRKCGWGWbJTuo3c5klXuacRnUuhgjTzRvqCrYOHaRn8t43zx3htwSEAucUsCOOtTKA7TzEqeEHI
+	fkhY30XjA4AiZggd9LFw/0ohb8gCYVufHkqg5qKTF+/yeXDl2ZuTZTE48dgMSRywTJP18iKsN/g
+	GDDxIZflyPqciA5AWIbV3V9hS7sEkbzkTTrtRTeTI69PPuMa/sClosZ6/9lR02zP4LPeS0IG3Mf
+	qDwuRq0ZL1Dv334G7nvyNhqW+1CkY4n6ADfyU9LacMwQRt9/ywRI7QnxxCAmdgPStTauaeX0qK/
+	K0rECQ/LukkPFhm0NJ3Xo13QzrmH/HSa
+X-Received: by 2002:a05:600c:6087:b0:4a1:9663:7633 with SMTP id 5b1f17b1804b1-4b963c6cfc2mr74331665e9.11.1794232104174;
+        Mon, 09 Nov 2026 05:48:24 -0800 (PST)
 Received: from pop-os.local ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b7bb101537sm98522045e9.0.2026.11.09.05.48.21
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4b7bb101537sm98522045e9.0.2026.11.09.05.48.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Nov 2026 05:48:22 -0800 (PST)
+        Mon, 09 Nov 2026 05:48:23 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
-Date: Mon, 09 Nov 2026 13:48:08 +0000
-Subject: [PATCH v4 1/4] perf libdw: Find the CU by iterating all CUs when
- aranges are missing
+Date: Mon, 09 Nov 2026 13:48:09 +0000
+Subject: [PATCH v4 2/4] perf dwarf-aux: Support DW_OP_addrx locations for
+ global variables
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -94,7 +94,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261109-james-perf-test-fixes-v4-1-355ee6b81917@linaro.org>
+Message-Id: <20261109-james-perf-test-fixes-v4-2-355ee6b81917@linaro.org>
 References: <20261109-james-perf-test-fixes-v4-0-355ee6b81917@linaro.org>
 In-Reply-To: <20261109-james-perf-test-fixes-v4-0-355ee6b81917@linaro.org>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -109,217 +109,119 @@ Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
  James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.15.2
 
-libdw__addr2line() finds the CU with dwfl_module_getsrc() and
-dwfl_module_addrdie(), which use dwarf_getaranges(). In elfutils 0.190
-this only reads .debug_aranges, which can be partial. For example, when
-Perf is built with LLVM=1, clang doesn't emit .debug_aranges by default
-so the lookup then fails and no source lines are found for most of the
-Perf binary.
+die_find_variable_by_addr() and die_collect_global_vars() only accept
+global variables with a DW_OP_addr location. DWARF 5 producers like
+clang use DW_OP_addrx instead, which is an index into .debug_addr, so
+global variables are never found when Perf is built with LLVM=1.
 
-This used to be hidden by falling back to the next addr2line style, but
-now missing information stops the fallback since commit (62d7cdc8d587
-"perf libdw: Optimize fallback logic for missing DWARF").
+Add a helper that also resolves DW_OP_addrx and DW_OP_GNU_addr_index
+through dwarf_getlocation_attr() and dwarf_formaddr(), and use it in
+both places. This fixes the "perf data type profiling tests" test:
 
-find_cu_die() in annotate-data.c already handles partial aranges by
-iterating all CUs in .debug_info and checking them with dwarf_haspc().
-Move it to dwarf-aux.c, then look up the line in that CU with
-dwarf_getsrc_die() and use the same CU for unwinding inlines. While
-moving it, don't treat a dwarf_haspc() error as a match.
-
-This fixes the "test addr2line inline unwinding" test when Perf is built
-with LLVM:
-
-  $ perf test -vvv "test addr2line inline unwinding"
+  $ perf test -vvv "perf data type profiling tests"
   ...
-  Inline unwinding fp verification test [Failed missing inlined functions]
+  Basic C perf annotate test
+  Basic annotate [Failed: missing target data type]
   ...
-  Inline unwinding dwarf verification test [Failed missing inlined functions]
+  Pipe C perf annotate test
+  Pipe annotate [Failed: missing target data type]
   ...
-  Inline unwinding lbr verification test [Failed missing inlined functions]
+  Basic FS perf annotate test
+  Basic annotate [Failed: missing target data type]
+  ...
+  Pipe FS perf annotate test
+  Pipe annotate [Failed: missing target data type]
   ---- end(-1) ----
-   79: test addr2line inline unwinding : FAILED!
+   88: perf data type profiling tests : FAILED!
 
-Fixes: 88c51002d06f ("perf addr2line: Add a libdw implementation")
+Fixes: d60469d7c0e5 ("perf dwarf-aux: Add die_find_variable_by_addr()")
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/util/annotate-data.c | 27 +--------------------------
- tools/perf/util/dwarf-aux.c     | 37 +++++++++++++++++++++++++++++++++++++
- tools/perf/util/dwarf-aux.h     |  3 +++
- tools/perf/util/libdw.c         | 19 ++++++++++---------
- 4 files changed, 51 insertions(+), 35 deletions(-)
+ tools/perf/util/dwarf-aux.c | 33 +++++++++++++++++++++++++++------
+ 1 file changed, 27 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index dd9c1d7b2da8..2332d465f975 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -553,31 +553,6 @@ static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 4cc231ffcb2a..d972c121171f 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -1666,6 +1666,27 @@ Dwarf_Die *die_find_variable_by_reg(Dwarf_Die *sc_die, Dwarf_Addr pc, int reg,
  	return result;
  }
  
--static bool find_cu_die(struct debuginfo *di, u64 pc, Dwarf_Die *cu_die)
--{
--	Dwarf_Off off, next_off;
--	size_t header_size;
--
--	if (dwarf_addrdie(di->dbg, pc, cu_die) != NULL)
--		return cu_die;
--
--	/*
--	 * There are some kernels don't have full aranges and contain only a few
--	 * aranges entries.  Fallback to iterate all CU entries in .debug_info
--	 * in case it's missing.
--	 */
--	off = 0;
--	while (dwarf_nextcu(di->dbg, off, &next_off, &header_size,
--			    NULL, NULL, NULL) == 0) {
--		if (dwarf_offdie(di->dbg, off + header_size, cu_die) &&
--		    dwarf_haspc(cu_die, pc))
--			return true;
--
--		off = next_off;
--	}
--	return false;
--}
--
- enum type_match_result {
- 	PERF_TMR_UNKNOWN = 0,
- 	PERF_TMR_OK,
-@@ -1850,7 +1825,7 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
- 	pc = map__rip_2objdump(dloc->ms->map, dloc->ip);
- 
- 	/* Get a compile_unit for this address */
--	if (!find_cu_die(dloc->di, pc, &cu_die)) {
-+	if (!cu_find_by_addr(dloc->di->dbg, pc, &cu_die)) {
- 		pr_debug_dtp("cannot find CU for address %"PRIx64"\n", pc);
- 		ann_data_stat.no_cuinfo++;
- 		return -1;
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 48a11c95a676..4cc231ffcb2a 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -114,6 +114,43 @@ static Dwarf_Line *cu_getsrc_die(Dwarf_Die *cu_die, Dwarf_Addr addr)
- 	return line;
- }
- 
-+/**
-+ * cu_find_by_addr - Find the CU DIE that contains an address
-+ * @dbg: a Dwarf handle
-+ * @addr: An address
-+ * @cu_die: a buffer to store the found CU DIE
-+ *
-+ * Find the CU DIE whose ranges contain @addr. dwarf_addrdie() uses
-+ * dwarf_getaranges() which didn't work until elfutils 0.191. Release notes:
-+ *
-+ *   * NEWS *
-+ *   libdw: dwarf_addrdie now supports binaries lacking a .debug_aranges
-+ *   section.
-+ *
-+ * Clang doesn't emit them by default, so fall back to iterating all CUs in
-+ * case it's missing.
-+ *
-+ * Return @cu_die if found, otherwise NULL.
++/*
++ * Get the absolute address of a location op. DWARF 5 producers like clang use
++ * DW_OP_addrx, which is an index into .debug_addr, instead of DW_OP_addr.
 + */
-+Dwarf_Die *cu_find_by_addr(Dwarf *dbg, Dwarf_Addr addr, Dwarf_Die *cu_die)
++static bool die_get_op_addr(Dwarf_Attribute *attr, Dwarf_Op *op, Dwarf_Addr *addr)
 +{
-+	Dwarf_Off off = 0, next_off;
-+	size_t header_size;
++	Dwarf_Attribute addr_attr;
 +
-+	if (dwarf_addrdie(dbg, addr, cu_die) && dwarf_haspc(cu_die, addr) == 1)
-+		return cu_die;
-+
-+	while (dwarf_nextcu(dbg, off, &next_off, &header_size,
-+			    NULL, NULL, NULL) == 0) {
-+		if (dwarf_offdie(dbg, off + header_size, cu_die) &&
-+		    dwarf_haspc(cu_die, addr) == 1)
-+			return cu_die;
-+
-+		off = next_off;
++	switch (op->atom) {
++	case DW_OP_addr:
++		*addr = op->number;
++		return true;
++	case DW_OP_addrx:
++	case DW_OP_GNU_addr_index:
++		return dwarf_getlocation_attr(attr, op, &addr_attr) == 0 &&
++		       dwarf_formaddr(&addr_attr, addr) == 0;
++	default:
++		return false;
 +	}
-+	return NULL;
 +}
 +
- /**
-  * cu_find_lineinfo - Get a line number and file name for given address
-  * @cu_die: a CU DIE
-diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-index 803182cdff8a..26a887c85a4b 100644
---- a/tools/perf/util/dwarf-aux.h
-+++ b/tools/perf/util/dwarf-aux.h
-@@ -44,6 +44,9 @@ Dwarf_Die *die_get_vptr_class(Dwarf_Die *type_die, int offset,
- Dwarf_Die *die_deref_vptr_class(Dwarf_Die *ptr_die, int offset,
- 				Dwarf_Die *die_mem);
- 
-+/* Find the CU DIE that contains the given address */
-+Dwarf_Die *cu_find_by_addr(Dwarf *dbg, Dwarf_Addr addr, Dwarf_Die *cu_die);
-+
- /* Get a line number and file name for given address */
- int cu_find_lineinfo(Dwarf_Die *cudie, Dwarf_Addr addr,
- 		     const char **fname, int *lineno);
-diff --git a/tools/perf/util/libdw.c b/tools/perf/util/libdw.c
-index e660623338d5..90767361f485 100644
---- a/tools/perf/util/libdw.c
-+++ b/tools/perf/util/libdw.c
-@@ -170,7 +170,9 @@ int libdw__addr2line(u64 addr, char **file, unsigned int *line_nr,
+ /* Only checks direct child DIEs in the given scope */
+ static int __die_find_var_addr_cb(Dwarf_Die *die_mem, void *arg)
  {
- 	Dwfl *dwfl;
- 	Dwfl_Module *mod;
--	Dwfl_Line *dwline;
-+	Dwarf_Line *dwline;
-+	Dwarf_Die cu_mem, *cudie;
-+	Dwarf *dw;
- 	Dwarf_Addr bias;
- 	const char *src;
- 	int lineno = 0;
-@@ -197,7 +199,8 @@ int libdw__addr2line(u64 addr, char **file, unsigned int *line_nr,
- 	 * between the regular ELF addr2line addresses and those to use with
- 	 * libdw.
- 	 */
--	if (!dwfl_module_getdwarf(mod, &bias)) {
-+	dw = dwfl_module_getdwarf(mod, &bias);
-+	if (!dw) {
- 		/*
- 		 * Free the Dwfl session so the mmap'd ELF binary is unmapped
- 		 * immediately, and mark the DSO as lacking srcline/DWARF info
-@@ -211,7 +214,8 @@ int libdw__addr2line(u64 addr, char **file, unsigned int *line_nr,
+@@ -1673,7 +1694,7 @@ static int __die_find_var_addr_cb(Dwarf_Die *die_mem, void *arg)
+ 	int tag = dwarf_tag(die_mem);
+ 	ptrdiff_t off = 0;
+ 	Dwarf_Attribute attr;
+-	Dwarf_Addr base, start, end;
++	Dwarf_Addr base, start, end, addr;
+ 	Dwarf_Op *ops;
+ 	size_t nops;
+ 
+@@ -1684,11 +1705,11 @@ static int __die_find_var_addr_cb(Dwarf_Die *die_mem, void *arg)
+ 		return DIE_FIND_CB_SIBLING;
+ 
+ 	while ((off = dwarf_getlocations(&attr, off, &base, &start, &end, &ops, &nops)) > 0) {
+-		if (ops->atom != DW_OP_addr)
++		if (!die_get_op_addr(&attr, ops, &addr))
+ 			continue;
+ 
+ 		if (check_allowed_ops(ops, nops) &&
+-		    match_var_offset(die_mem, data, data->addr, ops->number,
++		    match_var_offset(die_mem, data, data->addr, addr,
+ 				     /*is_pointer=*/false))
+ 			return DIE_FIND_CB_END;
  	}
+@@ -1814,7 +1835,7 @@ static int __die_collect_global_vars_cb(Dwarf_Die *die_mem, void *arg)
+ 	Dwarf_Die type_die;
+ 	int tag = dwarf_tag(die_mem);
+ 	Dwarf_Attribute attr;
+-	Dwarf_Addr base, start, end;
++	Dwarf_Addr base, start, end, addr;
+ 	Dwarf_Op *ops;
+ 	size_t nops;
+ 	struct die_var_type *vt;
+@@ -1829,7 +1850,7 @@ static int __die_collect_global_vars_cb(Dwarf_Die *die_mem, void *arg)
+ 	if (dwarf_getlocations(&attr, 0, &base, &start, &end, &ops, &nops) <= 0)
+ 		return DIE_FIND_CB_SIBLING;
  
- 	/* Find source line information for the address. */
--	dwline = dwfl_module_getsrc(mod, addr + bias);
-+	cudie = cu_find_by_addr(dw, addr, &cu_mem);
-+	dwline = cudie ? dwarf_getsrc_die(cudie, addr) : NULL;
- 	if (!dwline) {
- 		/* conclusively missing information -> abort fallbacks */
- 		ret = 0;
-@@ -219,8 +223,8 @@ int libdw__addr2line(u64 addr, char **file, unsigned int *line_nr,
- 	}
+-	if (ops->atom != DW_OP_addr)
++	if (!die_get_op_addr(&attr, ops, &addr))
+ 		return DIE_FIND_CB_SIBLING;
  
- 	/* Get line information. */
--	src = dwfl_lineinfo(dwline, /*addr=*/NULL, &lineno, /*col=*/NULL, /*mtime=*/NULL,
--			    /*length=*/NULL);
-+	src = dwarf_linesrc(dwline, /*mtime=*/NULL, /*length=*/NULL);
-+	dwarf_lineno(dwline, &lineno);
- 
- 	if (file)
- 		*file = src ? strdup(src) : NULL;
-@@ -229,8 +233,6 @@ int libdw__addr2line(u64 addr, char **file, unsigned int *line_nr,
- 
- 	/* Optionally unwind inline function call chain. */
- 	if (unwind_inlines && node) {
--		Dwarf_Addr unused_bias;
--		Dwarf_Die *cudie = dwfl_module_addrdie(mod, addr + bias, &unused_bias);
- 		struct libdw_a2l_cb_args args = {
- 			.dso = dso,
- 			.sym = sym,
-@@ -248,8 +250,7 @@ int libdw__addr2line(u64 addr, char **file, unsigned int *line_nr,
- 		}
- 
- 		/* Walk from the parent down to the leaf. */
--		if (cudie)
--			cu_walk_functions_at(cudie, addr, libdw_a2l_cb, &args);
-+		cu_walk_functions_at(cudie, addr, libdw_a2l_cb, &args);
- 
- 		if (!args.leaf_srcline_used)
- 			free(args.leaf_srcline);
+ 	if (!check_allowed_ops(ops, nops))
+@@ -1845,7 +1866,7 @@ static int __die_collect_global_vars_cb(Dwarf_Die *die_mem, void *arg)
+ 	vt->die_off = dwarf_dieoffset(&type_die);
+ 	vt->die_tag = dwarf_tag(&type_die);
+ 	vt->from_alt = !die_same_file(die_mem, &type_die);
+-	vt->addr = ops->number;
++	vt->addr = addr;
+ 	vt->end = 0;
+ 	vt->has_range = false;
+ 	vt->reg = -1;
 
 -- 
 2.43.0
