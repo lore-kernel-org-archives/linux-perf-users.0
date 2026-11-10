@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.70
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794348502;
-	b=x5XJmwhLhq1QxA0xSekHcKitcLWNl7dOqAV1ICidM5bKcSHlha2NWfoVPq/GoKjPUtOM
-	 Wj0MHaG8J+0XRnEceIhiUwIk3PmYzdQ8XDW9h6+jEwVuh9/+D+oDKH5POAH0WV2z6Ynx0
-	 bQNNHWXFw/jgvmZPIZZClOSRJZMV58RJdN/e7WxH7ViBGIdCydiXn3cYvKeIIX/2cXjf4
-	 8v55sZiy5fUN/GmW2mX/HPAEiUxHG66Dwiq8kprjySlszilFOlJTvlW/TNbsArFxn+BHf
-	 sl7/sltRhDuH0WE2T+3piYJDwH+LrhNB8KSXkeHPzG4KDbql19V8/Kbuwks8xnQ4G6w==
+	t=1794348507;
+	b=bQrP34OS57ymqwwBwi/nat0ffp7nuSYLS9K+MTL1nqjA13rkI+CruaHOd9rOWvi71Asz
+	 /OZalc87Ab2esXurl6plbo1uAztvw/Zv+zv/FDIH2jlVtXt1tNO5I7EJb9lf0zqzB3H4O
+	 ut2lwNtmO/WL8cAnXe0VBJqKtkJo1rBJb6/Ug6D1oxkRbRoYSp+j5agw8u+jsJDD8uZH2
+	 lyFdhde/8dOkm/6Q+wk16VFLNiUXUBvVLxqE31B9bckrH9cmewIczyG69R/FJ/F6KDb8E
+	 7Afuu3H0Ulp//LjZ2cuTrak3v7dvWhuEeTfF/6IaGenuhB2d3q8rl0kvxShPRBl0Srg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794348502;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794348507;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=N+MUyU3INOipJF3nxA2pGAx9KlSKX9/S9FUz5WZxUec=;
-	b=3bEWZTQdqJ4C+zCD+ClmQbCrOF1IqWszxIK45C5y4xBLXDMNFsOSOL88JrQwRtSqFjLA
-	 byPqcPpOxC/Yc/XM/J5QigIhr6C0C/Ym+X4kjn47mbwQngUZooL/CEFCVwvoDDQzvTQVN
-	 L8p7WTKBG1MS8A1dha2Vx9psxcEBLjF8SvouyR35ejlcJa7/02TyYrMfVUc+aIULa0Ye8
-	 fr+c0Wj2/fdua9nhr40AqjG0FBgOChO6vgLjODYrYS1EojYC1StLRkkmqkV7zUc1UaZBg
-	 f1fC1YaOROWQKjLsid4ZZEw3c0tUYtusya2HMWUXl678TQqGnAZHfELz8gSfJISYHGw==
+	bh=XS8KwxxTSM/GHbNZjo0jXubef4iD9k9Unh4LZDXen94=;
+	b=LrAxqveiXgqkjsDnRz6+dVigsaQyhPzArX7/QFInG+T+lA6hNao1mECeDaJGqkiHC04j
+	 D87yI1yhsyC6xLn21fGyLis4hzeTLEbiN0piGdARBjUEtCxh2p7n9ev0pFQTyoVvBid34
+	 nn/GqnfT5pWb7dqGHeb1Vid/Aa8fZN1W1/XNvxAZwbArDqsdQGwTCvS//mKDuHVk0HH9y
+	 cRd7i264UfTRXwPZcZInExrwEgiQkSLnUkv0vLKoXWNjZZgUvMIDQzil1P/7ks8nhyahQ
+	 ivKKN9Fbv7Wmcd2HeuVAc8Si1hPmPfw6qXLxgNhAZX8CGBriTLus7zcp26mfdgwONfw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Ky8Ogiya;
-	arc=none smtp.remote-ip=74.125.82.199
-Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=oQ5PYVGw;
+	arc=none smtp.remote-ip=74.125.82.70
+Received: from mail-dl1-f70.google.com (mail-dl1-f70.google.com [74.125.82.70])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A2760A383D
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 22:08:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 32A2760A383D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3886460A263F
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 22:08:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3886460A263F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Ky8Ogiya
-Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-375f0fd31f4so1179137eec.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 14:08:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=oQ5PYVGw
+Received: by mail-dl1-f70.google.com with SMTP id a92af1059eb24-1b25d977b91so3436294c88.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 14:08:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794348500; x=1794953300; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794348506; x=1794953306; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=N+MUyU3INOipJF3nxA2pGAx9KlSKX9/S9FUz5WZxUec=;
-        b=Ky8OgiyaoiaPXQ5GDXZD+RBv0DPoRaAtnKw9p8ogt1sX/Z0anfPx9ViMWnBg1c7lLY
-         73F1HT5Z9NHIMKskhPozje0KkEEcRv3Od/AYjwBc68+1dWmici1hSx6NRr0oK1D135MY
-         t7wmaiT82fKQWMC2TL2IWUuSQvePd4yttehN+803HXXgQfsec4dqNyEKSGBOXB6Hgqp7
-         C7y5oNuGLfiqEfbB5YlJ/zcDMhNxL5cKxt1Na3X91L70+fvnMugXZXpfMu1xVh9vNhU+
-         YmQQq0GdsA7Kk6UQSa4dbTjPXvmpSC3tOUjznZNKpqBlTfElb4Wu4rrQzj0CRXMWmnoB
-         oWwg==
+        bh=XS8KwxxTSM/GHbNZjo0jXubef4iD9k9Unh4LZDXen94=;
+        b=oQ5PYVGwUBoUDJpIJj4aHAcFG7K/HRxhucwRwmAEHKqb/4rz3qWpyqhQvcVY4l0AAK
+         4K3jsksP1rGFEVaoc7kRxf7c7npthZxpz3kJgT/m2OKCfu3spO9kzmwIANkeI3FnTadF
+         48YKZ/cUYYR4q3H89QC/DBOXPjcrNcS9se8QprSswbJEmVA90dNnmTy5WvjJ0XFP2BJr
+         6y1hVLP83LgrzgQaqYJQkvLbefSWkfZflICqISP21hz25XbaNQ2ZeDFE69SPRZAXmfyu
+         C6POs2CXiqO7XV/ttIwed6U2MyatVUUQkEgtumQCjOHr/vsl86pMi2i1M21sYpPLxfcV
+         y5EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794348500; x=1794953300;
+        d=1e100.net; s=20260707; t=1794348506; x=1794953306;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=N+MUyU3INOipJF3nxA2pGAx9KlSKX9/S9FUz5WZxUec=;
-        b=DICj6d/ABzrZMNwk1ALYvZysyl2rrX/f2SKMX5EMtXVfNojRCRPu6B/YqtlUAjM7Jp
-         7mefWpp6mLpKEtEfDmd2Q74dRZXtxv3aRU8G6Dr30vaOR3BO7qehwQHzKPvzoiqlzaRz
-         1Nu+FczLZ4fV75NpwFmkDktb2CXagJiShB924R/LfQJf/c3wWX/7OXWpvo5XSZbfYh9F
-         9ElqmGCIjHL5nx77yhllTwVmmtOKTnVP3TqVzt21+GTOllZFMTknAedsP2t2qv8UywNW
-         DjyX8yQaOhbHvNSTdFMRqsnzvmdRVcwngKShCQ6Oc8/99lmyQb2enakdsSdc78CPyUqU
-         NYzw==
-X-Forwarded-Encrypted: i=1; AL+hErH4UdGqlFPPHjqGlmqF2xqXKNIngl8Jtl64RBwTZI4J6urz6UWwyNiDQWFHbyLvxBaFCsEQwHZNmqudwc2Zsb9/@vger.kernel.org
-X-Gm-Message-State: APuU4Z8LcHDwyk+E6JxqE0Q3gYUY0T0qTJCiFNCpDntLq/rNQ63dTOUQ
-	7WsAagNweGwmOeTX2Udx+NMSvh5QM9L7O05epSwjAX3bzfZ/gurBw8nmV0/dA5MewL1TkQPBb1S
-	Bp4Mqf5G4ew==
-X-Received: from dycc6.prod.google.com ([2002:a05:693c:60c6:b0:33e:5767:2163])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:ce01:b0:36a:1452:8dad
- with SMTP id 5a478bee46e88-3768636e3c6mr883020eec.20.1794348499849; Tue, 10
- Nov 2026 14:08:19 -0800 (PST)
-Date: Tue, 10 Nov 2026 14:07:45 -0800
+        bh=XS8KwxxTSM/GHbNZjo0jXubef4iD9k9Unh4LZDXen94=;
+        b=qgUXSOGfOoEKZ/jHR5whPOQxNcVuRhyJ7UVKCj3BeSf7tNRpNO8FtEdw3hLZ4ck35i
+         wHExHMOdP2ySv9SBCKdu3sYFqT8cf8+E3dq/gnimQjdIHohCe1u9jJy4zh+pnB7S0d7U
+         fjMrQusA0BU6hpPV5ni5W+SZ+2OIK9aksz4Kpz7gNBq3MLVYDVOta4r5JOsWKUBY3Edl
+         tICfxobzCOqKLXBXllsIC1E/1mLiHekeXeTmKte5b9iEEulTaaORAh+n46i9l3hxXNb/
+         F3qXhTcPcrGgGIhaqzIQDOsIUS+LroUpBLSurhK+sh3nMkUPSa69CBSi1jUTPcvd3anG
+         0TLQ==
+X-Forwarded-Encrypted: i=1; AL+hErEYpG5jyJr4Czn0K/++315u97qZWE0Jm67n9itJ60Q3pAuQGPuojvnA1HVvaymFum2h0VHsVqnxAptuJHzdLx8c@vger.kernel.org
+X-Gm-Message-State: APuU4Z/zMtX7gmDk3h4ZKmnoQyDXxO25B9bottwNZX3vxZnm9zgUPAk9
+	dELeWM9lyQa0AGG/ng15JrzZHbvftsAfXPKg5ah+mMsZbyAlHBD+ihpA/oM0BTQGf39h/5/GPKu
+	BImYPKRyTxA==
+X-Received: from dlec11-n2.prod.google.com ([2002:a05:701b:428b:20b0:1a7:17d1:fc4a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2302:b0:1b3:b53e:b4cd
+ with SMTP id a92af1059eb24-1b3c030ae16mr295689c88.21.1794348505769; Tue, 10
+ Nov 2026 14:08:25 -0800 (PST)
+Date: Tue, 10 Nov 2026 14:07:47 -0800
 In-Reply-To: <20261110220803.2503416-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,8 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261027231513.816148-1-irogers@google.com> <20261110220803.2503416-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.542.g3ef89b7020-goog
-Message-ID: <20261110220803.2503416-3-irogers@google.com>
-Subject: [PATCH v3 02/20] perf machine: Protect machines->guests rbtree with a rw_semaphore
+Message-ID: <20261110220803.2503416-5-irogers@google.com>
+Subject: [PATCH v3 04/20] perf rwsem: Add down_read_trylock() and down_write_trylock()
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, haghdoost@uber.com, 
 	namhyung@kernel.org
@@ -91,230 +91,100 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Unlike struct dsos, struct maps, and struct threads, struct machines had
-no lock protecting its machines->guests rbtree. Synchronizing access to
-machines->guests is needed both for concurrent guest machine lookups and
-so machines__shrink() can safely iterate guest machines using
-down_read_trylock(&machines->lock).
+On-demand memory shrinking (perf_session__shrink(), dsos__shrink(),
+symbols__shrink()) can be triggered from OOM recovery inside allocation
+wrappers while the current thread already holds a rw_semaphore (such as
+symbols->lock, dsos->lock, or machines->lock). Non-blocking trylock
+primitives are needed so shrinking paths can safely skip any locked
+container without deadlocking.
 
-Add a rw_semaphore lock to struct machines to synchronize access to the
-machines->guests rbtree across machines__add(), machines__find(),
-machines__set_comm_exec(), machines__process_guests(),
-machines__set_id_hdr_size(), machines__fprintf_dsos(),
-machines__fprintf_dsos_buildid(), machines__destroy_kernel_maps(), and
-machines__for_each_thread(), and check for an existing guest machine PID
-under write lock in machines__add().
+Add non-blocking down_read_trylock() and down_write_trylock() wrappers
+around pthread_rwlock_tryrdlock() / pthread_rwlock_trywrlock() and
+pthread_mutex_trylock() along with SHARED_TRYLOCK_FUNCTION and
+EXCLUSIVE_TRYLOCK_FUNCTION thread-safety annotations.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/machine.c | 42 +++++++++++++++++++++++++++++++++------
- tools/perf/util/machine.h |  1 +
- 2 files changed, 37 insertions(+), 6 deletions(-)
+ tools/perf/util/mutex.h |  3 +++
+ tools/perf/util/rwsem.c | 20 ++++++++++++++++++++
+ tools/perf/util/rwsem.h |  2 ++
+ 3 files changed, 25 insertions(+)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 5eb5efa4eb90..f6975d9c4568 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -237,6 +237,7 @@ int machines__init(struct machines *machines, struct perf_session *session)
+diff --git a/tools/perf/util/mutex.h b/tools/perf/util/mutex.h
+index 5de1065ea2b9..de7dd6d8326c 100644
+--- a/tools/perf/util/mutex.h
++++ b/tools/perf/util/mutex.h
+@@ -57,6 +57,8 @@
+ /* Documents functions that try to acquire a lock, and return success or failure. */
+ #define EXCLUSIVE_TRYLOCK_FUNCTION(...) \
+ 	__attribute__((exclusive_trylock_function(__VA_ARGS__)))
++#define SHARED_TRYLOCK_FUNCTION(...) \
++	__attribute__((shared_trylock_function(__VA_ARGS__)))
+ 
+ /* Documents a function that expects a mutex to be held prior to entry. */
+ #define EXCLUSIVE_LOCKS_REQUIRED(...) __attribute__((exclusive_locks_required(__VA_ARGS__)))
+@@ -78,6 +80,7 @@
+ #define SHARED_LOCK_FUNCTION(...)
+ #define UNLOCK_FUNCTION(...)
+ #define EXCLUSIVE_TRYLOCK_FUNCTION(...)
++#define SHARED_TRYLOCK_FUNCTION(...)
+ #define EXCLUSIVE_LOCKS_REQUIRED(...)
+ #define SHARED_LOCKS_REQUIRED(...)
+ #define NO_THREAD_SAFETY_ANALYSIS
+diff --git a/tools/perf/util/rwsem.c b/tools/perf/util/rwsem.c
+index 9d26832398db..37fa08bae5e9 100644
+--- a/tools/perf/util/rwsem.c
++++ b/tools/perf/util/rwsem.c
+@@ -37,6 +37,16 @@ int down_read(struct rw_semaphore *sem)
+ #endif
+ }
+ 
++bool down_read_trylock(struct rw_semaphore *sem)
++	NO_THREAD_SAFETY_ANALYSIS
++{
++#if RWS_ERRORCHECK
++	return mutex_trylock(&sem->mtx);
++#else
++	return perf_singlethreaded ? true : pthread_rwlock_tryrdlock(&sem->lock) == 0;
++#endif
++}
++
+ int up_read(struct rw_semaphore *sem)
+ 	NO_THREAD_SAFETY_ANALYSIS
  {
- 	int err = machine__init(&machines->host, "", HOST_KERNEL_ID);
+@@ -59,6 +69,16 @@ int down_write(struct rw_semaphore *sem)
+ #endif
+ }
  
-+	init_rwsem(&machines->lock);
- 	machines->session = session;
- 	machines->host.machines = machines;
- 	machines->guests = RB_ROOT_CACHED;
-@@ -247,12 +248,13 @@ void machines__exit(struct machines *machines)
++bool down_write_trylock(struct rw_semaphore *sem)
++	NO_THREAD_SAFETY_ANALYSIS
++{
++#if RWS_ERRORCHECK
++	return mutex_trylock(&sem->mtx);
++#else
++	return perf_singlethreaded ? true : pthread_rwlock_trywrlock(&sem->lock) == 0;
++#endif
++}
++
+ int up_write(struct rw_semaphore *sem)
+ 	NO_THREAD_SAFETY_ANALYSIS
  {
- 	machine__exit(&machines->host);
- 	/* XXX exit guest */
-+	exit_rwsem(&machines->lock);
- }
+diff --git a/tools/perf/util/rwsem.h b/tools/perf/util/rwsem.h
+index b102d8143181..782016c3e01f 100644
+--- a/tools/perf/util/rwsem.h
++++ b/tools/perf/util/rwsem.h
+@@ -22,9 +22,11 @@ int init_rwsem(struct rw_semaphore *sem);
+ int exit_rwsem(struct rw_semaphore *sem);
  
- struct machine *machines__add(struct machines *machines, pid_t pid,
- 			      const char *root_dir)
- {
--	struct rb_node **p = &machines->guests.rb_root.rb_node;
-+	struct rb_node **p;
- 	struct rb_node *parent = NULL;
- 	struct machine *pos, *machine = malloc(sizeof(*machine));
- 	bool leftmost = true;
-@@ -265,9 +267,17 @@ struct machine *machines__add(struct machines *machines, pid_t pid,
- 		return NULL;
- 	}
+ int down_read(struct rw_semaphore *sem) SHARED_LOCK_FUNCTION(sem);
++bool down_read_trylock(struct rw_semaphore *sem) SHARED_TRYLOCK_FUNCTION(true, sem);
+ int up_read(struct rw_semaphore *sem) UNLOCK_FUNCTION(sem);
  
-+	down_write(&machines->lock);
-+	p = &machines->guests.rb_root.rb_node;
- 	while (*p != NULL) {
- 		parent = *p;
- 		pos = rb_entry(parent, struct machine, rb_node);
-+		if (pid == pos->pid) {
-+			up_write(&machines->lock);
-+			machine__exit(machine);
-+			free(machine);
-+			return pos;
-+		}
- 		if (pid < pos->pid)
- 			p = &(*p)->rb_left;
- 		else {
-@@ -278,8 +288,8 @@ struct machine *machines__add(struct machines *machines, pid_t pid,
+ int down_write(struct rw_semaphore *sem) EXCLUSIVE_LOCK_FUNCTION(sem);
++bool down_write_trylock(struct rw_semaphore *sem) EXCLUSIVE_TRYLOCK_FUNCTION(true, sem);
+ int up_write(struct rw_semaphore *sem) UNLOCK_FUNCTION(sem);
  
- 	rb_link_node(&machine->rb_node, parent, p);
- 	rb_insert_color_cached(&machine->rb_node, &machines->guests, leftmost);
--
- 	machine->machines = machines;
-+	up_write(&machines->lock);
- 
- 	return machine;
- }
-@@ -290,16 +300,18 @@ void machines__set_comm_exec(struct machines *machines, bool comm_exec)
- 
- 	machines->host.comm_exec = comm_exec;
- 
-+	down_read(&machines->lock);
- 	for (nd = rb_first_cached(&machines->guests); nd; nd = rb_next(nd)) {
- 		struct machine *machine = rb_entry(nd, struct machine, rb_node);
- 
- 		machine->comm_exec = comm_exec;
- 	}
-+	up_read(&machines->lock);
- }
- 
- struct machine *machines__find(struct machines *machines, pid_t pid)
- {
--	struct rb_node **p = &machines->guests.rb_root.rb_node;
-+	struct rb_node **p;
- 	struct rb_node *parent = NULL;
- 	struct machine *machine;
- 	struct machine *default_machine = NULL;
-@@ -307,6 +319,8 @@ struct machine *machines__find(struct machines *machines, pid_t pid)
- 	if (pid == HOST_KERNEL_ID)
- 		return &machines->host;
- 
-+	down_read(&machines->lock);
-+	p = &machines->guests.rb_root.rb_node;
- 	while (*p != NULL) {
- 		parent = *p;
- 		machine = rb_entry(parent, struct machine, rb_node);
-@@ -314,11 +328,14 @@ struct machine *machines__find(struct machines *machines, pid_t pid)
- 			p = &(*p)->rb_left;
- 		else if (pid > machine->pid)
- 			p = &(*p)->rb_right;
--		else
-+		else {
-+			up_read(&machines->lock);
- 			return machine;
-+		}
- 		if (!machine->pid)
- 			default_machine = machine;
- 	}
-+	up_read(&machines->lock);
- 
- 	return default_machine;
- }
-@@ -464,10 +481,12 @@ void machines__process_guests(struct machines *machines,
- {
- 	struct rb_node *nd;
- 
-+	down_read(&machines->lock);
- 	for (nd = rb_first_cached(&machines->guests); nd; nd = rb_next(nd)) {
- 		struct machine *pos = rb_entry(nd, struct machine, rb_node);
- 		process(pos, data);
- 	}
-+	up_read(&machines->lock);
- }
- 
- void machines__set_id_hdr_size(struct machines *machines, u16 id_hdr_size)
-@@ -477,11 +496,13 @@ void machines__set_id_hdr_size(struct machines *machines, u16 id_hdr_size)
- 
- 	machines->host.id_hdr_size = id_hdr_size;
- 
-+	down_read(&machines->lock);
- 	for (node = rb_first_cached(&machines->guests); node;
- 	     node = rb_next(node)) {
- 		machine = rb_entry(node, struct machine, rb_node);
- 		machine->id_hdr_size = id_hdr_size;
- 	}
-+	up_read(&machines->lock);
- 
- 	return;
- }
-@@ -933,10 +954,12 @@ size_t machines__fprintf_dsos(struct machines *machines, FILE *fp)
- 	struct rb_node *nd;
- 	size_t ret = dsos__fprintf(&machines->host.dsos, fp);
- 
-+	down_read(&machines->lock);
- 	for (nd = rb_first_cached(&machines->guests); nd; nd = rb_next(nd)) {
- 		struct machine *pos = rb_entry(nd, struct machine, rb_node);
- 		ret += dsos__fprintf(&pos->dsos, fp);
- 	}
-+	up_read(&machines->lock);
- 
- 	return ret;
- }
-@@ -953,10 +976,12 @@ size_t machines__fprintf_dsos_buildid(struct machines *machines, FILE *fp,
- 	struct rb_node *nd;
- 	size_t ret = machine__fprintf_dsos_buildid(&machines->host, fp, skip, parm);
- 
-+	down_read(&machines->lock);
- 	for (nd = rb_first_cached(&machines->guests); nd; nd = rb_next(nd)) {
- 		struct machine *pos = rb_entry(nd, struct machine, rb_node);
- 		ret += machine__fprintf_dsos_buildid(pos, fp, skip, parm);
- 	}
-+	up_read(&machines->lock);
- 	return ret;
- }
- 
-@@ -1295,10 +1320,12 @@ int machines__create_guest_kernel_maps(struct machines *machines)
- 
- void machines__destroy_kernel_maps(struct machines *machines)
- {
--	struct rb_node *next = rb_first_cached(&machines->guests);
-+	struct rb_node *next;
- 
- 	machine__destroy_kernel_maps(&machines->host);
- 
-+	down_write(&machines->lock);
-+	next = rb_first_cached(&machines->guests);
- 	while (next) {
- 		struct machine *pos = rb_entry(next, struct machine, rb_node);
- 
-@@ -1306,6 +1333,7 @@ void machines__destroy_kernel_maps(struct machines *machines)
- 		rb_erase_cached(&pos->rb_node, &machines->guests);
- 		machine__delete(pos);
- 	}
-+	up_write(&machines->lock);
- }
- 
- int machines__create_kernel_maps(struct machines *machines, pid_t pid)
-@@ -3128,13 +3156,15 @@ int machines__for_each_thread(struct machines *machines,
- 	if (rc != 0)
- 		return rc;
- 
-+	down_read(&machines->lock);
- 	for (nd = rb_first_cached(&machines->guests); nd; nd = rb_next(nd)) {
- 		struct machine *machine = rb_entry(nd, struct machine, rb_node);
- 
- 		rc = machine__for_each_thread(machine, fn, priv);
- 		if (rc != 0)
--			return rc;
-+			break;
- 	}
-+	up_read(&machines->lock);
- 	return rc;
- }
- 
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index 973a59f7c26a..147ce343e370 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -151,6 +151,7 @@ typedef void (*machine__process_t)(struct machine *machine, void *data);
- struct machines {
- 	/** @session: back link to owning session if there is one. */
- 	struct perf_session *session;
-+	struct rw_semaphore lock;
- 	struct machine host;
- 	struct rb_root_cached guests;
- };
+ #endif /* _PERF_RWSEM_H */
 -- 
 2.56.0.542.g3ef89b7020-goog
 
