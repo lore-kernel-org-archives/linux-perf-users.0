@@ -1,55 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794339921;
-	b=AkB4T6PDKIakRHj77L2pHWeQ5zgCGfNiCA6xBsOP/fX5SOLj47A36bgFRoPawGIz5Fu6
-	 +393M2aKfGa6LpE7UBb/jZ7VWVGEw3/mhZRq1e6PhkeP4GCGtgG8vA0idyjZ0HFpiNxX0
-	 LE2hWBpw7zf339YVm2b/ws0sTkQRSkCegERkUhGDWzSUpMKQVsBz/Dx8BgUNiOzf2KvPc
-	 nYKg43HWkMAOjXZqXs1jUQEYFeaSDQWVwdV+pWHLj6B1kOXlHhZCEQ7pn9M3xX2hg40Nj
-	 /+rd6WpDQMXSusUXG69gbIigh7RfkEk08CJ5PrcTmCXUyBxyObv8Zsz7JDeNLpoV8Rw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794339921;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=3GBKYc2zOW3dj8oa1Hc52JQRwp0PgEZDFrKNRJOSpBI=;
-	b=S+BThB0nJrMieZgZrDMXp3fG14aspt0nQb323ejGlUXo6Ppsf4I2Qr7wXlxIwpGpcihS
-	 pqVfsRGbB8oMECZB6Boha+Apxj47NDOsdmmhjjTzwXacd2c9+XVOM6K00jz0N0wIrXgAW
-	 070eZw/AQPsrJBkwJGb4Av1ia3/lGhZ4TwUdKIaE3U8pkdiudhYHSKaK5WuBUwBZtK/Xf
-	 /OeYaM7HKbU946LVhM/JiKAjcXvC9YhPcWDV/hclY/MiLUDiGhTLzRYlynqOkV0ZxeeBK
-	 pmNOZvSzYriNSw3itrJykCd+iGEf/MsJuAExpyyzsn4+N781w6NnXf9zAi8o177nB2Q==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RDH+klph;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.182
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794344063;
+	b=OSv6j6gnlohlHvzXaNEvsOl2TXk6junFUK5UQ15lvfiUcp1Onlq2O+1yvnuX2tUPzeQo
+	 24o75Sa3XTcPp49aZpW1aJRTaLgK2Dz46El9YUkfdj5YCRcntXzj+bORdYp1WnXj/3pB7
+	 7MaKtN+iEos2MH7ltPVceyFBPdPoVVlY3+7bf5sC67EgpyEmxygvXSWF5BXYxVi3y0dLp
+	 8q4dhdGWn4q+Pj60Ab5Za/9eNxsY+kWzb1yajxh2Px7IxeKGDZ9IbL2n/whrgSdZxAp11
+	 g+xkbxF8CjRINVZ/Sy5EcrOVxMJTgtUJSJkdayu4Mpy6Yn+Pxq5iyeDs8gAGHsZ8/oA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794344063;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=yvRZ4NPr9zuipnBz8AO8lnblNbdj7j1u7mqaDBMXrDI=;
+	b=4GVCFyJYd7b3c1qitEsh3nhfQ10hvEEvBK8AQRnmkOA+HnM0rdwDfJlkQ/uSz1Y7ZcaM
+	 EAkAzNqFjC4JTkMdMfhwpdB5vIQ5ph159+d2t/VjF85A8w8TMoVd1CEUeKKIl07FN0N9S
+	 9LuEg2UkGOn7Q4uovgJtxKSQwkixY1kLJ+toT3EGoVTBzP/wtbFhJsQz5iMWJqFrGfsi1
+	 6+4034V4i2oGFv0RzZuYi1XhvTu5ZCAxAqdtIgm64CZoewYVn7tF1Ro81mazr2AuiCsE5
+	 +dbdBA6NSC/7r7PRG55kTJoSNk74bRGFS5AJskWqUHdjtLKOshvlOjqPbpv6B/Q7nww==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=JgZ5Sbyj;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.182
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7346B606A31C
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 19:45:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72EEE606A320
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 20:54:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 72EEE606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RDH+klph
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9BCE1F0089F;
-	Tue, 10 Nov 2026 19:45:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794339921;
-	bh=3GBKYc2zOW3dj8oa1Hc52JQRwp0PgEZDFrKNRJOSpBI=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=RDH+klph/83YU5da57iBwoiHNHdKC85QSXbgYordppOffltMudL+uALM9/9j7yTgg
-	 BdVpMX4gFIl65TSwFj1OHiYffj6NlL/eI1sMWkE+2j+TJKOThKbn+FMhAbE7NquD9V
-	 DQGRZlxkA0ajJRB5d06CW7K62LYq+8lLfCN3f9MVa9bxIyM/TrmYqImSXqXlpCzt04
-	 i9qDKGb2dTSgc3fcQWfcoMzHUXS0D0JVJHxFbc6xYhsUEgoLIh8LX048/2Yf3Uv3wt
-	 cMMHNsrLI2chaqGmjMu5y4KyRCdFVqrbsxR/GIYijSsGTGefBOqVYi2yDCx37v9P6Q
-	 yw3ByixewIdWQ==
-Message-ID: <sashiko-outbox-207678@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf jevents: Check the JSON keys that jevents.py never
- reads
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "TAKANO Mitsuhiro" <takano32@gmail.com>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20261110193239.1741014-1-takano32@gmail.com>
-References: <20261110193239.1741014-1-takano32@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 10 Nov 2026 19:45:20 +0000
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=JgZ5Sbyj
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-54492d8a988so9971cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 12:54:23 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794344062; cv=none;
+        d=google.com; s=arc-20260327;
+        b=VnJYnF9BIRt2fC912/LHbHa4C0caJpknvWRbcrc7RMYzXHyS/RMKuJJQ0mcY2YSKVc
+         cq6vf55x3LHNsruVE/JSuNSoAlCy3HGDOeth4l8UXTWdxaSE7eOQE8NI/K9hFKrV3m4H
+         MNWp014uuB9oHHT9J1AS655dtu/kVRGYoOWcYgYTR2F2ZebBAh+3l2zWsFWJDF4/c00P
+         rX37ERzRECL5K6niPGYgltntolwCfhIPaZbcQ9eIebi/ep47s7iQRKc+/4IshYkEi2pn
+         a+1ibYbiTNrg54PUlxlkLuvSLiAg7RzkYLKWSHCJbDXg4TCyyxt/Js0lrajPYrPZlHNS
+         J29Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=yvRZ4NPr9zuipnBz8AO8lnblNbdj7j1u7mqaDBMXrDI=;
+        fh=A6OB7Co4ufmtR7OZGw4ey1sSg/2MTVtrJcOjEhZ7Aps=;
+        b=leXoYJzuUVaybm56eb+MrLqR6ABsZwmiSL2l0hcqBN+fwqf6j4l1wBu4SzEioKJYdY
+         6S/l9Q7Cpla1CXeLt8VJ1qPIsfAAve+tQ9ocesg5CdTmzmlTDRETu8rfNcNIccM0b+JH
+         nSGb4KXNy2BbFG6KExtsDRkzRZQziJx0HMbKX0rAcCkpN0q2rZr4UjxNzJEcoh7y1yEa
+         EohdAb1IzZ5wcfshV91nkegoKbmH6zOnrV7dNufYOg+ctFlnIOW2dyKzLZDNis4+u9Ls
+         7TftXQi2zTDrrRVlFL18+CJUOt9+hsMbh0Q5YBPkx0Pik+1tWMgz3axRt+f8ZnXp30kZ
+         hbew==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1794344062; x=1794948862; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=yvRZ4NPr9zuipnBz8AO8lnblNbdj7j1u7mqaDBMXrDI=;
+        b=JgZ5Sbyj/bfTX1B8fNhEYDl5JbvzsY1ATjB7buyxeVt+W8gB3qInKF3nG1mSpWS7Hq
+         HOm4SmWKKTKKCnp3ZEBCWtqjTye+taOOsvKWqAl/+6vCDSMwmWTk6TVM/AwaW2zXSmaX
+         zpC+XqEpMqOgmJj7MIOauDRJgHLcDHQAUFouhWC2eeugb2VFqD2qkbIWB/GZSy3Wv0zC
+         VoPe2Jw1B1RSXo1orcbn1RmOrLIivsFCJeGUzmuzrRSdEdYjFAtWJjMgftqBs/UtEcVa
+         n+sEaWQ9fLVVINL5CH2z/MyOc5Nb25mNy7hP0DVd+Aji5+Blze+HOfFUjkYB3BCAtYgj
+         IQLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794344062; x=1794948862;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=yvRZ4NPr9zuipnBz8AO8lnblNbdj7j1u7mqaDBMXrDI=;
+        b=IEqA1RxZIsPiG3gNAAjzeNX3+hyfRbHjjCGmZxsa4enlw96dOMFxWDfMTwZM2hWHqK
+         I+byR6W+iz2cyhuqHt7o2TKBzyMUlH5KtCD57KfHXUZI/ACcXG3YIJ1dnJGxFBBRF1Ii
+         YQ4fhfJlOUW+PhK5qdYzxandl/EO/yAV1EH3CgsTk11n/7ykxEvE0LD0Px/Xz/BZBiap
+         Ryf0ZY0PddevQMYnmtzb1PBKF2gtTPRV0/Us4gllMEHMBOIIQ1HYqnvHGl/q/shFzIf/
+         jj4h5soi/TymtMHZ+OrUJqoebhdKF882ZVdmKaAse0ySI5ngkxTUoXTewEDZBq2wBGCw
+         9lrw==
+X-Forwarded-Encrypted: i=1; AL+hErG8KL0F6W3RQeSqVX8MFRTmG6MQtgXf4/RNcbdi6dvVVbN4Gi9ubPn6RzJVPYMez4Hsy9xJ8TW4tUHuHNtalmlj@vger.kernel.org
+X-Gm-Message-State: APuU4Z8MpJ3dDyJK85BwiLwwjPynHbzD0gOjhrml6KssOzUss06denG3
+	5KlQbmxe7cO50YkSQUkyXgi8wZQhIkrrgipJPx29WqHK2NjIkJ+dl3/v55po9NPqJGOz1spT4pz
+	tWOGLYxvXsU89Axr/ZlruqUtg9vf51etpBTyqe1DL
+X-Gm-Gg: AYBFou1j0YTWM76TIS7Iq9QThUuIiYA08Oge1U90Clyvm/qgNPF3Xw/qWH0N3JXLJe1
+	62ztRdJkNtZT3P4jcBehWh6EzITIbA+iHTyTn4jX/QNMbxlaI3iLqFbOk1fewzb7I6BZs4CYKt3
+	IbL/oXbA+xHFtXHRh98rOIhSxSHqw0n7D+kUVkmLlY8+R6dBv0xRqVSqU55sHsRr/n65pfBPUps
+	943Cseu+AAqcUKOrA7gA1FU5Ru6vdlKyGQRVLpcSlGos3XECLKmDSA2y2JYkJIFF9U+f+Vqylq1
+	xE+CXNsRRS8ONjSD62PY53lTcSrasjAWbw16hUHIaD7dPdMDmqPgYTozqQeqdTuA+RCsV9VgB71
+	0MdnemdsUDT4Ys5l2MbVJto5U/WTFi2qba1Repw3/VeuCwcQMzSLNX6gCBs/uYLXqB+E=
+X-Received: by 2002:a05:622a:4c8c:b0:542:fc60:fe23 with SMTP id
+ d75a77b69052e-5569edef00fmr3545561cf.3.1794344061730; Tue, 10 Nov 2026
+ 12:54:21 -0800 (PST)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -58,102 +103,85 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+References: <20261104043006.1199857-1-irogers@google.com>
+In-Reply-To: <20261104043006.1199857-1-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 10 Nov 2026 12:54:09 -0800
+X-Gm-Features: AclHuK8u7iu3KreUV1BOly4WRgYcjdLxbePAeQ91RkjuMYcADS4FO3F63l0qY-8
+Message-ID: <CAP-5=fVJfHEt1NTJg43tyGoQuJO4AgBaHzBZQHN9fqPef7i5=A@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] tools build: Fixes for libbfd -lzstd dependency
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Quentin Monnet <qmo@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, James Clark <james.clark@linaro.org>, 
+	Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issues to consider:
-- [Low] perf jevents: crash in _read_json_events_impl() when MetricExpr
-  is mistyped
-- [Low] perf jevents: preprocess_arch_std_files() drops parse error in
-  --check mode
---
+On Tue, Nov 3, 2026 at 8:30=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> This series addresses build problems when linking against static
+> libbfd/libopcodes on distributions like Fedora where binutils is built
+> with zstd section decompression support (requiring '-liberty -lz -lzstd'
+> together).
 
-commit b85ceb11b01de607fd5251f8da36bf8900130730
-Author: TAKANO Mitsuhiro <takano32@gmail.com>
+Hi,
 
-perf jevents: Check the JSON keys that jevents.py never reads
+Namhyung/Arnaldo, could you help review the tools/build and tools/perf
+parts of this (patches 1 and 2)? The objtool and bpftool changes have
+Peter's and Quentin's tags.
 
-This commit adds a --check mode to jevents.py (and a jevents-check make
-target) that tracks unread JSON keys in JsonEvent and reports keys that
-closely match field names read by jevents.py.
+Thanks,
+Ian
 
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
-ents.py
-> index 080e04b51b8c5..56859e983a4b0 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-
-[ ... ]
-
-> @@ -493,7 +653,10 @@ def preprocess_arch_std_files(archpath: str) -> None:
->          if event.metric_name:
->            _arch_std_events[event.metric_name.lower()] =3D event
->      except Exception as e:
-> -        raise RuntimeError(f'Failure processing \'{item.name}\' in \'{ar=
-chpath}\'') from e
-> +        failure =3D RuntimeError(f'Failure processing \'{item.name}\' in=
- \'{archpath}\'')
-> +        if failures is None:
-> +          raise failure from e
-> +        failures.append((item.path, failure))
-
-[Severity: Low]
-Does appending failure instead of e here drop the underlying parse error wh=
-en
---check reports failures from preprocess_arch_std_files()?
-
-In main(), each entry in failed is printed with str(error), which does not
-follow __cause__ and only prints "Failure processing '<name>' in '<archpath=
->'"
-alongside the relative path, hiding why the JSON file failed to load.
-
-[ ... ]
-
-> @@ -1490,12 +1660,111 @@ such as "arm/cortex-a34".''',
-
-[ ... ]
-
-> +    with concurrent.futures.ProcessPoolExecutor(max_workers=3D_parallel_=
-worker_count(len(tasks)),
-> +                                                initializer=3D_init_work=
-er,
-> +                                                initargs=3D(_arch_std_ev=
-ents, _args.check)) as executor:
-> +      for path, topic, events in executor.map(_parallel_read_json_events=
-, tasks):
-> +        if isinstance(events, Exception):
-> +          if not _args.check:
-> +            raise RuntimeError(f'Failure processing \'{path}\'') from ev=
-ents
-> +          failed.append((path, events))
-> +        else:
-> +          _json_cache[(path, topic)] =3D events
-
-[Severity: Low]
-What happens in --check mode when a metric object has a valid MetricName
-(without '-') but misspells MetricExpr (for example as MetricExp)?
-
-JsonEvent.__init__() leaves self.metric_expr as None and records the mistyp=
-ed
-key in self.mistyped, but _read_json_events_impl() then passes that None
-expression into metric.RewriteMetricsInTermsOfOthers():
-
-tools/perf/pmu-events/jevents.py:_read_json_events_impl() {
-    ...
-  for event in events:
-    event.topic =3D topic
-    if event.metric_name and '-' not in event.metric_name:
-      metrics.append((event.pmu, event.metric_name, event.metric_expr))
-  updates =3D metric.RewriteMetricsInTermsOfOthers(metrics)
-    ...
-}
-
-RewriteMetricsInTermsOfOthers() raises an AttributeError on None before
-_read_json_events_impl() can return events, so main() records the file in
-failed instead of _json_cache and --check reports an AttributeError (exit
-status 2) instead of reporting the misspelled MetricExpr key.  Checking that
-event.metric_expr is not None before appending to metrics would let --check
-report the misspelling.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261110193239.1741=
-014-1-takano32@gmail.com?part=3D1
+> In v2, commit 89d001d48ec7 ("tools build: Add zstd to the binutils
+> library feature tests") landed in tools/build/feature/Makefile at the
+> same time, creating a merge conflict and only adding '|| $(BUILD_BFD)
+> -lzstd' without '-liberty -lz' or the corresponding
+> libbfd-liberty-z-zstd feature check in perf and bpftool (so even if
+> test-libbfd.bin passed with -lzstd, perf and bpftool would link only
+> '-lbfd -lopcodes' without '-lzstd').
+>
+> v3 rebases onto perf-tools-next (v7.4-rc1), fixes commit 89d001d48ec7 in
+> patch 1/4, collects the Acked-by tags from Quentin Monnet and Peter
+> Zijlstra, updates the LIBOPCODES_LIBS comment in tools/objtool/Makefile,
+> and moves the AI assistance disclosure from commit trailers to the cover
+> letter.
+>
+> v2: https://lore.kernel.org/all/20260909204122.1993010-1-irogers@google.c=
+om/
+> v1: https://lore.kernel.org/linux-perf-users/20260909181030.1870496-1-iro=
+gers@google.com/
+>
+> AI Assistance Disclosure (per Documentation/process/coding-assistants.rst=
+):
+> - Tools used: Antigravity coding assistant and Sashiko automated patch
+>   review.
+> - Summary of prompts and assistance: Rebased the 4-patch series onto
+>   perf-tools-next, resolved the conflict with commit 89d001d48ec7 in
+>   tools/build/feature/Makefile, incorporated review feedback and
+>   Acked-by tags, and verified with scripts/checkpatch.pl.
+>
+> Ian Rogers (4):
+>   tools build: Add explicitly sequenced -lzstd to libbfd feature
+>     fallback
+>   perf build: Add explicitly sequenced -lzstd to libbfd feature fallback
+>   bpftool: Add explicitly sequenced -lzstd to libbfd feature fallback
+>   objtool: Add explicitly sequenced -lzstd to libopcodes fallback
+>
+>  tools/bpf/bpftool/Makefile   |  4 ++++
+>  tools/build/Makefile.feature |  3 ++-
+>  tools/build/feature/Makefile | 19 +++++++++++++------
+>  tools/objtool/Makefile       |  7 ++++---
+>  tools/perf/Makefile.config   |  3 +++
+>  5 files changed, 26 insertions(+), 10 deletions(-)
+>
+> --
+> 2.56.0.385.gac671c819a-goog
+>
