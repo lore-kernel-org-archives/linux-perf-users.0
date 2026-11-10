@@ -1,58 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794274949;
-	b=aqySuThmwKEP+zCjOfoQBRvTGhA6fn0a2VsYudX+m3pvf+vdVE+IJ8gJGsA0/mWXRBAt
-	 djlx7Nyp5OSzi55A0kSGnJOaYz1+Aa1HGScWSB7Bvt/rHHY02j2Jw+ZUErVLTCvERtfdk
-	 5gzEn1VrmWdIdU5asD42J5B0WC5v9CLDwu57gBzZZo+1a9Aez9Q3zQhtpIk0hK55Jcaz5
-	 pA6DpNgOazJIKEgYqUdSiQr+AROOP6fAwYwlsCPLksv7yPHc23YEGDi8QUek8wWQ38ovz
-	 BgL/CYK58uN1Y7ATUTHmr7lM+17FqUi3bogYkC5yn4XShaICais9ESZtxcyWANr4kiQ==
+	t=1794274954;
+	b=cjUR82y87w0cCdT7g3szKMGgA4jVx/etAMEf7Cu8OAYSdzKxNhtNTDtEe9e9m2FPK1LV
+	 ATwN4D6IhLi7yPqY3zqjCbx154Duf/zCp6gxw4JW4gvsfuF7OitA4rXUhCoc7aQli3CxQ
+	 XoKraMed/XCnV9AW9UwRGQYvAGJbuYgOrkjEzOwMnH6oRGWshj397ExPg+qf1pvGqxj5Z
+	 cJ1sm/f4DTkh6dUizYWhQvuy50xuww4u5aAdfojyx71ECtf0qJWZBzpj/Ab3VR3vzPhQe
+	 NUFfD3cs2LAJLU1KlQQc9QsG4GC0Ky1dIO5MDXzb+GAybXZAn0PAD7Ka6E7tIwih7MA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794274949;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794274954;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=5dd6Y6CPnAcileGiAc/81JwlIUTSp0jG2udkeQwnV6M=;
-	b=KMxEKbjV3/IU73C7DhZ0yz5mCG7PVr8EKT6OY9cD831YUvFSqiicaM8PdKxby6Wx8vvH
-	 PwdldmqLAG4UEetsKC0igoWoi7er0zsvCYdk2HlKLQXSKJ1wQNYWhbGC0+YeB8y3l4wXi
-	 yJh6yTP1VOM10Zic4Oc+fpD9yywVjONsjaJWFe8dyCSFgnG8MypMcS1un6RTSVQhDKqiA
-	 +IW7N1ni/Rkj9sVJYy+NOrCcKcx+IpG9TohvmwSLxr9b6kDlVaalXSYUUYnTAmtrELt46
-	 3XNLhSzHw7Sxo2TQAlMiKq+RtU8t2wLFKx7nnIhuhD83Cm4994TKNJi5Ahnw+TRrLSQ==
+	bh=GS5QcbHcgeHbE8fi9wdjI8BAF+Ucegl1CTEttneWlv0=;
+	b=cgGRCoqfOksM2pDgMGv7VJ8woj2uN2VbwrjB0CD4laViwnV+mRATyfQctZkAf4owIaAW
+	 Iq+8lUEHLjG6yy2baVVCs33yg3QWwh/9R1cHeFfF6fFOnqaXd2juSdBa2ehkw4sWNb6BY
+	 DmmWd2Ducj3CmtJqalmPgj38Ii9vq9/D+Cae8ADPqCbPvl8exc9Y7EaSD4jTRKXe+ysti
+	 +mV6cYgFiYGiDbo/JvrOpnerM/jZc2jwJbUKiBbSsbzXU+32liPOKPcR6NvWG0hHFf7lA
+	 Qgh56Wp4axkpauywCZujmY/PNuAsiqoGn3KY3kRVwzrrsg8Q9BYLETDifP2L8d0TExg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F1XGg9aN;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LEk+bKCO;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F24B606A933
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 01:42:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A3E3606A933
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 01:42:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F1XGg9aN
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE2EF1F0089F;
-	Tue, 10 Nov 2026 01:42:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LEk+bKCO
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BAA81F0089F;
+	Tue, 10 Nov 2026 01:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794274948;
-	bh=5dd6Y6CPnAcileGiAc/81JwlIUTSp0jG2udkeQwnV6M=;
+	s=k20260515; t=1794274954;
+	bh=GS5QcbHcgeHbE8fi9wdjI8BAF+Ucegl1CTEttneWlv0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=F1XGg9aNx9lwjhnafCoWq5pnhxNLE5TrUI8Sqb8rScwcHGpmcTl2D4IBiNfJOIXG7
-	 rSRXIMsfhHdNEfQi1JQSidGif9lwj86iNQ3K6UQNDdv2S+GrKeBHLaX8lBllpdGZUa
-	 Nn7JRVTaJuR4XtVt25ogokHcAVbUWpFlR39TI99IMqNMh26XOhhBN8yLvfFXF1Rjsx
-	 Malq7BiXmEQmsyegQn2MPZMAwb85FjgTpBm+sHtrWIkOJZt3W6QKr4VynJC3JrwNTy
-	 952fDbbDYOhnqrXzxRLhMUMW/Hbp5DtS2Fxnbk2UdXO5hW3//0vVPdF9LbGIav9YeZ
-	 WBFQ/zrk6cD4w==
-Message-ID: <sashiko-outbox-205980@kernel.org>
+	b=LEk+bKCOHQ2N428/Ggc2q+LzNZTu5eHHesSNO5F9fAGNcPMKZV3UCTyZMBnaFxrFu
+	 AzNGI9Ooxcig8omB4TLeL/Dp2Uw8YOukbdNYAOmXdKD9SVz57E2SPMN59wIMdHtkjC
+	 /Gzzp3kg1616NInQnsn+XLpO9eBibUBim8GaXN8zqjEMBnpTYUYLtCggv10/3/jVGE
+	 KEOHXuU1xZCJKhh+puAq0jmJWxu9VynkwfEl4U6xl3pktooEf32vlTx2gx+bGS0wex
+	 vusJAK8mwMQUuJdmOeuUWlRjBbsUp8+sboWamDtJ6i7iOyj1Uz3UdJLurq7xU/GlkM
+	 hURg3M9KkJ9xA==
+Message-ID: <sashiko-outbox-205981@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 06/10] riscv: ftrace: always preserve s0 in dynamic
- ftrace register frame
+Subject: Re: [PATCH v7 05/10] riscv: stacktrace: disable KASAN and KCOV
+ instrumentation for stacktrace.o
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Shuai Xue" <xueshuai@linux.alibaba.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261110013750.36800-7-xueshuai@linux.alibaba.com>
+In-Reply-To: <20261110013750.36800-6-xueshuai@linux.alibaba.com>
 References: <20260914092648.51254-1-xueshuai@linux.alibaba.com>
  <20261110013750.36800-1-xueshuai@linux.alibaba.com>
- <20261110013750.36800-7-xueshuai@linux.alibaba.com>
+ <20261110013750.36800-6-xueshuai@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 10 Nov 2026 01:42:28 +0000
+Date: Tue, 10 Nov 2026 01:42:34 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -64,27 +64,20 @@ Precedence: list
 
 > From: Wang Han <wanghan@linux.alibaba.com>
 >=20
-> struct __arch_ftrace_regs declares s0 unconditionally, and both
-> ftrace_regs_get_frame_pointer() and ftrace_partial_regs() read it
-> unconditionally. But the SAVE_ABI_REGS / RESTORE_ABI_REGS macros in
-> mcount-dyn.S only stored s0 under HAVE_FUNCTION_GRAPH_FP_TEST
-> (CONFIG_FUNCTION_GRAPH_TRACER && CONFIG_FRAME_POINTER). With
-> CONFIG_FRAME_POINTER=3Dn the slot held whatever was on the stack before,
-> so any callback going through ftrace_partial_regs() saw a garbage
-> regs->s0. RISC-V kernels default to FRAME_POINTER=3Dy, which is why this
-> has not bitten in practice.
+> KASAN records stack traces for every alloc/free, which means it walks
+> the unwinder very frequently. Instrumenting the stack trace collection
+> code itself adds substantial overhead and makes the traces themselves
+> noisier.
 >=20
-> Save and restore s0 unconditionally in the dynamic ftrace ABI register
-> frame. This fixes the latent garbage-s0 case, brings the dynamic ftrace
-> path in line with the static _mcount path (mcount.S SAVE_ABI_STATE
-> already saves s0 unconditionally), and matches the frame layout already
-> documented in the comment above SAVE_ABI_REGS. It is also a prerequisite
-> for the upcoming reliable unwinder, which reads
-> ftrace_regs_get_frame_pointer(fregs) directly.
+> KCOV instruments every basic-block edge. The unwinder is a hot path,
+> especially with KASAN enabled, so KCOV instrumentation has the same kind
+> of cost and noise problem here.
 >=20
-> The cost is one extra REG_S/REG_L pair per traced call, negligible
-> compared to the overall ftrace cost; the existing FREGS_SIZE_ON_STACK
-> already reserved the slot, so no extra stack space is used.
+> Mark stacktrace.o as not KASAN- or KCOV-instrumented, matching the x86
+> treatment of its stack unwinding code. RISC-V keeps the relevant unwinder
+> code in stacktrace.o, so a single translation-unit annotation covers the
+> equivalent scope. This is a prerequisite preference for the upcoming
+> reliable unwinder, but the change is valid on its own.
 >=20
 > Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
 > Reviewed-by: Martin Kaiser <martin@kaiser.cx>
@@ -96,5 +89,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261110013750.3680=
-0-1-xueshuai@linux.alibaba.com?part=3D6
+0-1-xueshuai@linux.alibaba.com?part=3D5
 
