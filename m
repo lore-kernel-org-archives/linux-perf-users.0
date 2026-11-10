@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.69
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.197
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794348549;
-	b=urFT1mHsoshnmn+x9Z/slgO2VZ/1m6anjDtLsPuFDmtBZhjieUhTTb5W49I7c4uQq7/o
-	 LXG+xxFNfSNm9IU76Is2m9z3FfAhjACu3iDJiGSgU/UUbdtHb4sA42gkBSEWMpE/cWv4Z
-	 Iiz7sEURNx8WHhc9oBfJUs3i4a3cT2Vg3NbOJzwnp9xpaTtj5FLcwhvh6utlrJla7VYQW
-	 19uX5puFXlkK3Vp/Xm+887IfjSDCjc3cJlwp3xMOkz2CIlp/bLZtZFKAXrw6Cvm+CIMhh
-	 Y3Hbgjzm5e1IUUvUQh2rnAaDrNwti4qhfzxH7ARKxcUnNx64bQt7Sa90SQxg/s8z/eg==
+	t=1794348553;
+	b=0kI4pTKP7q9ACl64FP4gOIq9qg4f7f5XC9jelbinOU++kiHrAanmRyDNB5mkT1LD9MJS
+	 MY61BeFNC+hc+EUq/bvKH22/BOghq7kUzA+D9nojEg2A1XipdN2i3LaLpMuaz11TXFGO1
+	 9Gm+6X4y9jPihRrRM52ofEcLxOwDtkPUO3Ft68UJf8nMGGxjsG34T8HstvS78TfQRwTML
+	 /eMWTl9KnTKirFnR1YLYA2ZGv3GrucDO+nRD5DII6kOTshTmj++7ML55BBQBliiHQVou4
+	 jzoC4ITkPnBAMgACMBmjCJ0uqNBwjVi8vSV9DdLGvWffKTmi6k6S3rAZtHPuLtvUVvg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794348549;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794348553;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=DK6c4Mv1slcrfPYKr6p5gvaMnuNouZYdLRcM1zyRnEY=;
-	b=JR5zYwrFCnQiCR/a9ClRKrCxqFgonSxkta2iHSl1TA5M0HMk66zDTm4547Kk8UDfixUU
-	 hrH/lc1kH3cE+UwjXd5cg4BAftMS2jWn6by6ANmHjg8/A7JczJOYC6vcIu53hiCEdbXGf
-	 zi4I6lZLUpO42ApEIqv+ixiQ7VVUjF2yZlH4p6ruBdmATZl3NHWyYU6KeViuGtumCURUj
-	 GOzS/TLuFULqrfUTuvtDlqSRm10W/CmQJgGuNfQwjjwTvnvMIIO1k4BEO7xALPTQg1fVj
-	 ndi6Hct1z/Z9i/SXjiEGHFh7MpSYHQrsZ8Fo4/NhpC/8EvTw+tXV/Q9LeX5VOi6f2lw==
+	bh=MMxzKufKtGUmRX4ibReVNnYMLq+zFG/uj6zyWrIRHuY=;
+	b=289Ep1GUrLc5rwjWo8vsvBADjHYuTZ/2KN3/23GufKwiGBHyfe43Pd7O236uKvsYIv+y
+	 Rgv3jPfdQYwIhulAqls8P95sNiwXjf93Dzyw8y7ttKlVuSHe7dqYxLnYCABoq3OEg91MQ
+	 cGdrhmtBmy4smv7v/JGQLnGpD8uac3xf35owwRoOAOLLTCJeD2rddODlhMldT6bg7F/aM
+	 83fjc4v25mm5xqblQsp72Kb8gvAmwYwmoJLgbwVlP9J6jRJSUFXwm1IzCHDa67r3jIYrj
+	 jiPy4CFS4BBtSMJL0DnRrjWCJC5PQXbCUbVqdIq6Bgi/hmzg2g6dpwIcKMRWtT8RNMQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=TSbp4qcW;
-	arc=none smtp.remote-ip=209.85.216.69
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Q7YgbDfl;
+	arc=none smtp.remote-ip=74.125.82.197
+Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BF9606AE2A
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 22:09:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 32BF9606AE2A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D8360A2601
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 22:09:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 52D8360A2601
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=TSbp4qcW
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-3b08aee6b3eso2134977a91.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 14:09:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Q7YgbDfl
+Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-36efb506f29so3420498eec.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 14:09:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794348548; x=1794953348; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794348552; x=1794953352; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=DK6c4Mv1slcrfPYKr6p5gvaMnuNouZYdLRcM1zyRnEY=;
-        b=TSbp4qcW1eG0z5Qw/F7SqfuRGlcQtcIzIltsRGhT+/2qxfDZ/rQosQa66XQr0mEFdA
-         /CXmWnRVpflGRpiiPRaz3f+Ypbq++MErK1u6QrGJHXuVNHrriSaz+6FnunLgKqvZC8Gq
-         WOCiMWE7s2DXaPxTLFv027tlgAeEwdJT8tP2e3cOmfcW3osH/csTY2QurXTp3MmicTFo
-         SqdKyIMhAzS7amPmIN0EZjKHtbQMUaqVEtJ0vzZBZfoifijALxtdKApUuXbjDoAZEDk5
-         kJVgRh6bkwrXZJNOP4QRc3LWQ3CoHnfhWDX2icAYYhVDkzZ51uN8elszC6pMGh5qWbXy
-         OXjw==
+        bh=MMxzKufKtGUmRX4ibReVNnYMLq+zFG/uj6zyWrIRHuY=;
+        b=Q7YgbDfluWLMAwlH9VOKHmEcOAbXk8lWLUaZKZb2DC2j6uG/OUeGAr//LuW9ZZr1u0
+         CgzeAdyvZzaBC47GHBm7Y+kMEzAfbPIa/U0jYxq9O6s/TU2/INiCpgPrJadgV1IENIUU
+         FEc/ci88NM0IGh9yZp3oIqDW7VtfUZCbVtbyqYv2gQR+IsKY+7faGgSk9Avlah7sfzp9
+         l1aDbt1f9sAbmm5qnYFCD0zLnQx5GLVZeUoUQXjjd9BdGp2xlZSAFbEf1r1QIk/Ml/tE
+         xsbzQKMPR44sQZno6uYfxgmg28ZDxAYl+4uHW3AdlEYZsLop29/RQBz8PAeylRBV9Ic5
+         V7ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794348548; x=1794953348;
+        d=1e100.net; s=20260707; t=1794348552; x=1794953352;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=DK6c4Mv1slcrfPYKr6p5gvaMnuNouZYdLRcM1zyRnEY=;
-        b=sCYP3pnNRpTekSzNpFo/cWFlVmZJljM78TJal32hKsGh6hRJKQXiH5EkN0IAtPXqHW
-         9bbix/t4qyZo6mYe4GOohFX0SkSzg5FVB3wazbtzPo3H0OONTRCp5dI6DugP+JXuxZ/M
-         aDWzA97KfAOXTfJJ66uNvK1p1adZ2M5SQ3CXk8a+ieKcfFM1LtloNiguE5Qe6SSvIrDn
-         Vz9U6UcchMEp1YzqeRUF2Xlk1A6x5aWgfPJiLjvaaAK7RUUUzHXpLeiiuP2chJhHyVjH
-         C3JC5BGa4+FazIM78cz98x0VthohQtaos5HM6dYGw+75Op3UlgIj6j+ESuhSA16ZX/Bx
-         y5gg==
-X-Forwarded-Encrypted: i=1; AL+hErF0H37KVQnZEZamcSkShdW9+CmooU04DNa18m+H0GZmnlz/WrY1pvStbTPXxwD3HBNs9gDRKix9iWOJGOFv9mHV@vger.kernel.org
-X-Gm-Message-State: APuU4Z8f0FlCItuX+CsH8CzjeTVburB5CkViOGx2CWJBgHulELSrZK5Q
-	887teoj4jHJprrg0m0y3/eM/3VrDPxI0dUX3mMLiR7qEKav9lzfTsBRo6Cn+cZpTCZmxXlAzaTM
-	16/X70ZwuFA==
-X-Received: from pjbds9.prod.google.com ([2002:a17:90b:8c9:b0:3ab:fd4b:afa8])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:55c3:b0:39e:4c80:f67b
- with SMTP id 98e67ed59e1d1-3b182eec04dmr331818a91.26.1794348548273; Tue, 10
- Nov 2026 14:09:08 -0800 (PST)
-Date: Tue, 10 Nov 2026 14:08:01 -0800
+        bh=MMxzKufKtGUmRX4ibReVNnYMLq+zFG/uj6zyWrIRHuY=;
+        b=kIHcAfO61lbAt0HqdxuX4Qcuh9MP9+2R5RPCnf82lXN6EawtaQt9QuAVTXKN0A7wMQ
+         /BBAvjVwa4ZL2faAJ4tkxSy/hk0vMfM91X4oqirZhf/TQquVHjvzdKFgxCZCp3NU6QNy
+         sVtLp4TghVZkm9YSOUsWUgtpoeJiAd9zohjP2pv+1Zs7dsK4+VD9A36cnTtJbyh2CENI
+         IDuJMSE6WnVKIkdVxVbCyKtltfURDKLoE+BoE2DGI9Ep7isACWjUAhqKn6TPGr8Y2mF2
+         tig9Z7iaKnufMPz5faPjqNcRc34Id/pnfslSi3jwk/LX49O2GEbsHpchjiTK7SCMOan6
+         q8Rw==
+X-Forwarded-Encrypted: i=1; AL+hErFbGrTPFePwqRtTGIIf91uCnECq1nu6vh5LN4dCF/9EcuD2n2s6E/MJHWZ5K59q5D2PdlX/PAP476+dDRDqfem1@vger.kernel.org
+X-Gm-Message-State: APuU4Z+PI4ugtOBsLQWQ31hc4YshxHS5WM3Vdra/KYEDWE7vM8IPgzLW
+	yE8Tq1XeBO3388JGZ6/jM1Gy4OTr30+neveInyyOTAyP91ZTwvJIMHiaeH+ByTEZC+2prKTKQWD
+	0lp08fe7EYw==
+X-Received: from dycam1.prod.google.com ([2002:a05:7300:fc01:b0:376:583a:e72a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:65d5:b0:36a:1f8:a5a4
+ with SMTP id 5a478bee46e88-37687213f9dmr903664eec.38.1794348551171; Tue, 10
+ Nov 2026 14:09:11 -0800 (PST)
+Date: Tue, 10 Nov 2026 14:08:02 -0800
 In-Reply-To: <20261110220803.2503416-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,9 +81,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261027231513.816148-1-irogers@google.com> <20261110220803.2503416-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.542.g3ef89b7020-goog
-Message-ID: <20261110220803.2503416-19-irogers@google.com>
-Subject: [PATCH v3 18/20] perf session: Add dso__session() and session-scoped
- allocation wrappers
+Message-ID: <20261110220803.2503416-20-irogers@google.com>
+Subject: [PATCH v3 19/20] perf symbol: Use session allocation wrappers in
+ symbol, DSO, thread, and hist paths
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, haghdoost@uber.com, 
 	namhyung@kernel.org
@@ -92,219 +92,437 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add explicit session-scoped memory allocation wrappers:
-- perf_session__malloc(session, size)
-- perf_session__zalloc(session, size)
-- perf_session__calloc(session, nmemb, size)
-- perf_session__realloc(session, ptr, size)
-- perf_session__strdup(session, s)
+Connect the session-scoped allocation wrappers (perf_session__malloc,
+perf_session__zalloc, perf_session__calloc, perf_session__realloc,
+perf_session__strdup) to the primary heap allocation paths during sample
+and symbol processing: symbol__new(), symbols->symbols array growth,
+dso__new_id(), thread__new(), and hist_entry allocation.
 
-When an allocation fails and returns NULL, if a non-NULL struct
-perf_session is provided, the wrapper invokes perf_session__shrink() to
-evict unreferenced symbols, DSOs, and cached debuginfo across the
-session's machines and then retries the allocation once. This avoids
-the thrashing overhead of periodic heuristic shrinking while allowing
-perf to recover from memory exhaustion.
-
-Also plumb a back-pointer from struct dsos to its owning struct machine
-so machine__session(machine) and dso__session(dso) can resolve the
-active perf_session.
+In normal operation when memory is available, behavior is unchanged.
+When an allocation fails with NULL, these paths now invoke
+perf_session__shrink() on the owning perf_session to reclaim
+unreferenced DSOs and auxiliary symbol/DSO buffers and retry the
+allocation once before failing.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/dso.c     |  7 ++++
- tools/perf/util/dso.h     |  2 ++
- tools/perf/util/dsos.c    |  1 +
- tools/perf/util/dsos.h    |  1 +
- tools/perf/util/machine.c |  1 +
- tools/perf/util/machine.h |  5 +++
- tools/perf/util/session.c | 70 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/session.h |  6 ++++
- 8 files changed, 93 insertions(+)
+ tools/perf/util/dso.c        |  4 ++-
+ tools/perf/util/dsos.c       |  7 +++++
+ tools/perf/util/hist.c       | 41 ++++++++++++++++++++++++----
+ tools/perf/util/machine.c    |  8 +++++-
+ tools/perf/util/symbol-elf.c | 14 +++++++---
+ tools/perf/util/symbol.c     | 52 +++++++++++++++++++++++-------------
+ tools/perf/util/symbol.h     |  3 +++
+ 7 files changed, 99 insertions(+), 30 deletions(-)
 
 diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 184d49935bfd..7b71fd5e48a9 100644
+index 7b71fd5e48a9..cfeed7cc3e9f 100644
 --- a/tools/perf/util/dso.c
 +++ b/tools/perf/util/dso.c
-@@ -1907,6 +1907,13 @@ void dso__delete(struct dso *dso)
- 	RC_CHK_FREE(dso);
+@@ -28,6 +28,7 @@
+ #include "map.h"
+ #include "namespaces.h"
+ #include "path.h"
++#include "session.h"
+ #include "srcline.h"
+ #include "string2.h"
+ #include "symbol.h"
+@@ -1215,10 +1216,11 @@ static struct dso_cache *dso_cache__populate(struct dso *dso,
+ 					     u64 offset, ssize_t *ret)
+ {
+ 	u64 cache_offset = offset & DSO__DATA_CACHE_MASK;
++	struct perf_session *session = machine ? machine__session(machine) : dso__session(dso);
+ 	struct dso_cache *cache;
+ 	struct dso_cache *old;
+ 
+-	cache = zalloc(sizeof(*cache) + DSO__DATA_CACHE_SIZE);
++	cache = perf_session__zalloc(session, sizeof(*cache) + DSO__DATA_CACHE_SIZE);
+ 	if (!cache) {
+ 		*ret = -ENOMEM;
+ 		return NULL;
+diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
+index d53a8ab217e6..94f93fbf02e4 100644
+--- a/tools/perf/util/dsos.c
++++ b/tools/perf/util/dsos.c
+@@ -2,6 +2,8 @@
+ #include "debug.h"
+ #include "dsos.h"
+ #include "dso.h"
++#include "machine.h"
++#include "session.h"
+ #include "util.h"
+ #include "vdso.h"
+ #include "namespaces.h"
+@@ -350,6 +352,11 @@ struct dso *dsos__findnew_id(struct dsos *dsos, const char *name, const struct d
+ 	down_write(&dsos->lock);
+ 	dso = __dsos__findnew_id(dsos, name, id);
+ 	up_write(&dsos->lock);
++	if (!dso && dsos->machine && perf_session__shrink(machine__session(dsos->machine)) > 0) {
++		down_write(&dsos->lock);
++		dso = __dsos__findnew_id(dsos, name, id);
++		up_write(&dsos->lock);
++	}
+ 	return dso;
  }
  
-+struct perf_session *dso__session(const struct dso *dso)
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 566ecf4035fb..dbfaef28daeb 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -524,16 +524,45 @@ struct hist_entry *hists__get_entry(struct hists *hists, int idx)
+  * histogram, sorted on item, collects periods
+  */
+ 
++static struct perf_session *hist_entry__session(const struct hist_entry *he)
 +{
-+	struct dsos *dsos = dso ? RC_CHK_ACCESS(dso)->dsos : NULL;
++	struct maps *maps;
 +
-+	return dsos ? machine__session(dsos->machine) : NULL;
++	if (!he)
++		return NULL;
++
++	if (he->ms.map) {
++		struct dso *dso = map__dso(he->ms.map);
++		struct perf_session *session = dso__session(dso);
++
++		if (session)
++			return session;
++	}
++
++	maps = he->thread ? thread__maps(he->thread) : NULL;
++	if (maps) {
++		struct machine *machine = maps__machine(maps);
++		struct perf_session *session = machine__session(machine);
++
++		if (session)
++			return session;
++	}
++
++	return NULL;
 +}
 +
- bool dso__can_shrink_symbols(const struct dso *dso)
+ static int hist_entry__init(struct hist_entry *he,
+ 			    struct hist_entry *template,
+ 			    bool sample_self,
+ 			    size_t callchain_size)
  {
- 	const char *name;
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index 7f217815ec07..9b01a86526c1 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
++	struct perf_session *session = hist_entry__session(template);
++
+ 	*he = *template;
+ 	he->callchain_size = callchain_size;
+ 
+ 	if (symbol_conf.cumulate_callchain) {
+-		he->stat_acc = malloc(sizeof(he->stat));
++		he->stat_acc = perf_session__malloc(session, sizeof(he->stat));
+ 		if (he->stat_acc == NULL)
+ 			return -ENOMEM;
+ 		memcpy(he->stat_acc, &he->stat, sizeof(he->stat));
+@@ -551,7 +580,7 @@ static int hist_entry__init(struct hist_entry *he,
+ 		 * sample__resolve_bstack() and will be freed after
+ 		 * adding new entries.  So we need to save a copy.
+ 		 */
+-		he->branch_info = malloc(sizeof(*he->branch_info));
++		he->branch_info = perf_session__malloc(session, sizeof(*he->branch_info));
+ 		if (he->branch_info == NULL)
+ 			goto err;
+ 
+@@ -580,14 +609,14 @@ static int hist_entry__init(struct hist_entry *he,
+ 	}
+ 
+ 	if (he->srcline && he->srcline != SRCLINE_UNKNOWN) {
+-		he->srcline = strdup(he->srcline);
++		he->srcline = perf_session__strdup(session, he->srcline);
+ 		if (he->srcline == NULL)
+ 			goto err_rawdata;
+ 	}
+ 
+ 	if (symbol_conf.res_sample) {
+-		he->res_samples = calloc(symbol_conf.res_sample,
+-					sizeof(struct res_sample));
++		he->res_samples = perf_session__calloc(session, symbol_conf.res_sample,
++						       sizeof(struct res_sample));
+ 		if (!he->res_samples)
+ 			goto err_srcline;
+ 	}
+@@ -653,6 +682,8 @@ static struct hist_entry *hist_entry__new(struct hist_entry *template,
+ 		callchain_size = sizeof(struct callchain_root);
+ 
+ 	he = ops->new(callchain_size);
++	if (!he && perf_session__shrink(hist_entry__session(template)) > 0)
++		he = ops->new(callchain_size);
+ 	if (he) {
+ 		err = hist_entry__init(he, template, sample_self, callchain_size);
+ 		if (err) {
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index c89f47ba16f2..489395b53c2e 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
 @@ -20,6 +20,7 @@
- struct machine;
- struct map;
+ #include "mem-events.h"
+ #include "mem-info.h"
+ #include "path.h"
++#include "session.h"
+ #include "srcline.h"
+ #include "symbol.h"
+ #include "synthetic-events.h"
+@@ -598,7 +599,12 @@ static struct thread *__machine__findnew_thread(struct machine *machine,
+ 
+ struct thread *machine__findnew_thread(struct machine *machine, pid_t pid, pid_t tid)
+ {
+-	return __machine__findnew_thread(machine, pid, tid, /*create=*/true);
++	struct thread *th = __machine__findnew_thread(machine, pid, tid, /*create=*/true);
++
++	if (!th && perf_session__shrink(machine__session(machine)) > 0)
++		th = __machine__findnew_thread(machine, pid, tid, /*create=*/true);
++
++	return th;
+ }
+ 
+ struct thread *machine__find_thread(struct machine *machine, pid_t pid,
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 2c8088184568..f2a071508d2c 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -15,6 +15,7 @@
+ #include "symbol.h"
+ #include "symsrc.h"
+ #include "machine.h"
++#include "session.h"
+ #include "vdso.h"
+ #include "debug.h"
+ #include "util/copyfile.h"
+@@ -700,7 +701,7 @@ static int dso__synthesize_plt_got_symbols(struct dso *dso, Elf *elf,
+ 		sym = symbol__new(shdr.sh_offset + i, shdr.sh_entsize, STB_GLOBAL, STT_FUNC, buf);
+ 		if (!sym)
+ 			goto out;
+-		if (symbols__insert(dso__symbols(dso), sym))
++		if (symbols__insert_session(dso__symbols(dso), sym, dso__session(dso)))
+ 			goto out;
+ 	}
+ 	err = 0;
+@@ -755,7 +756,7 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
+ 	plt_sym = symbol__new(shdr_plt.sh_offset, plt_header_size, STB_GLOBAL, STT_FUNC, ".plt");
+ 	if (!plt_sym)
+ 		goto out_elf_end;
+-	if (symbols__insert(dso__symbols(dso), plt_sym))
++	if (symbols__insert_session(dso__symbols(dso), plt_sym, dso__session(dso)))
+ 		goto out_elf_end;
+ 
+ 	/* Only x86 has .plt.got */
+@@ -878,7 +879,7 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
+ 			goto out_elf_end;
+ 
+ 		plt_offset += plt_entry_size;
+-		if (symbols__insert(dso__symbols(dso), f))
++		if (symbols__insert_session(dso__symbols(dso), f, dso__session(dso)))
+ 			goto out_elf_end;
+ 		++nr;
+ 	}
+@@ -1937,13 +1938,18 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 		f = symbol__new(sym.st_value, sym.st_size,
+ 				GELF_ST_BIND(sym.st_info),
+ 				GELF_ST_TYPE(sym.st_info), elf_name);
++		if (!f && perf_session__shrink(dso__session(curr_dso)) > 0) {
++			f = symbol__new(sym.st_value, sym.st_size,
++					GELF_ST_BIND(sym.st_info),
++					GELF_ST_TYPE(sym.st_info), elf_name);
++		}
+ 		free(demangled);
+ 		if (!f)
+ 			goto out_elf_end;
+ 
+ 		arch__sym_update(f, &sym);
+ 
+-		if (symbols__insert(dso__symbols(curr_dso), f))
++		if (symbols__insert_session(dso__symbols(curr_dso), f, dso__session(curr_dso)))
+ 			goto out_elf_end;
+ 		nr++;
+ 	}
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 9d7c87bcbbea..21f012252dcd 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -41,6 +41,7 @@
+ #include "namespaces.h"
+ #include "header.h"
+ #include "path.h"
++#include "session.h"
+ #include <linux/ctype.h>
+ #include <linux/log2.h>
+ #include <linux/zalloc.h>
+@@ -845,12 +846,13 @@ static void symbol__set_idle(struct symbol *sym, bool idle)
+ 	} while (!atomic_compare_exchange_weak(&sym->flags, &old_flags, new_flags));
+ }
+ 
+-static int __symbols__insert(struct symbols *symbols, struct symbol *sym)
++static int __symbols__insert(struct symbols *symbols, struct symbol *sym,
++			     struct perf_session *session)
+ {
+ 	if (symbols->cnt == symbols->allocated) {
+ 		unsigned int to_allocate = symbols->allocated ? symbols->allocated * 2 : 32;
+-		struct symbol **temp = realloc(symbols->symbols,
+-					       sizeof(struct symbol *) * to_allocate);
++		struct symbol **temp = perf_session__realloc(session, symbols->symbols,
++							     sizeof(struct symbol *) * to_allocate);
+ 
+ 		if (!temp) {
+ 			symbol__delete(sym);
+@@ -877,17 +879,18 @@ static int __symbols__insert(struct symbols *symbols, struct symbol *sym)
+ 	return 0;
+ }
+ 
+-static int __symbols__insert_sorted(struct symbols *symbols, struct symbol *sym)
++static int __symbols__insert_sorted(struct symbols *symbols, struct symbol *sym,
++				    struct perf_session *session)
+ {
+ 	unsigned int idx;
+ 
+ 	if (!symbols->sorted)
+-		return __symbols__insert(symbols, sym);
++		return __symbols__insert(symbols, sym, session);
+ 
+ 	if (symbols->cnt == symbols->allocated) {
+ 		unsigned int to_allocate = symbols->allocated ? symbols->allocated * 2 : 32;
+-		struct symbol **temp = realloc(symbols->symbols,
+-					       sizeof(struct symbol *) * to_allocate);
++		struct symbol **temp = perf_session__realloc(session, symbols->symbols,
++							     sizeof(struct symbol *) * to_allocate);
+ 
+ 		if (!temp) {
+ 			symbol__delete(sym);
+@@ -940,16 +943,22 @@ static int __symbols__insert_sorted(struct symbols *symbols, struct symbol *sym)
+ 	return 0;
+ }
+ 
+-int symbols__insert(struct symbols *symbols, struct symbol *sym)
++int symbols__insert_session(struct symbols *symbols, struct symbol *sym,
++			    struct perf_session *session)
+ {
+ 	int ret;
+ 
+ 	down_write(&symbols->lock);
+-	ret = __symbols__insert(symbols, sym);
++	ret = __symbols__insert(symbols, sym, session);
+ 	up_write(&symbols->lock);
+ 	return ret;
+ }
+ 
++int symbols__insert(struct symbols *symbols, struct symbol *sym)
++{
++	return symbols__insert_session(symbols, sym, NULL);
++}
++
+ static struct symbol *symbols__find_range(struct symbol **arr, unsigned int cnt, u64 ip)
+ {
+ 	int low = 0, high = (int)cnt - 1;
+@@ -1143,7 +1152,7 @@ int dso__insert_symbol(struct dso *dso, struct symbol *sym)
+ 	int ret;
+ 
+ 	down_write(&symbols->lock);
+-	ret = __symbols__insert_sorted(symbols, sym);
++	ret = __symbols__insert_sorted(symbols, sym, dso__session(dso));
+ 	up_write(&symbols->lock);
+ 	return ret;
+ }
+@@ -1478,7 +1487,7 @@ static int map__process_kallsym_symbol(void *arg, const char *name,
+ 	 * We will pass the symbols to the filter later, in
+ 	 * map__split_kallsyms, when we have split the maps per module
+ 	 */
+-	return symbols__insert(root, sym);
++	return symbols__insert_session(root, sym, dso__session(dso));
+ }
+ 
+ /*
+@@ -1541,7 +1550,8 @@ static int maps__split_kallsyms_for_kcore(struct maps *kmaps, struct dso *dso)
+ 			symbol__set_end(pos, symbol__end(pos) -
+ 					(map__start(curr_map) - map__pgoff(curr_map)));
+ 		}
+-		if (symbols__insert(dso__symbols(curr_map_dso), pos) == 0)
++		if (symbols__insert_session(dso__symbols(curr_map_dso), pos,
++					    dso__session(curr_map_dso)) == 0)
+ 			++count;
+ 		map__put(curr_map);
+ 	}
+@@ -1717,7 +1727,8 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
+ 		if (!RC_CHK_EQUAL(curr_map, initial_map)) {
+ 			struct dso *curr_map_dso = map__dso(curr_map);
+ 
+-			if (symbols__insert(dso__symbols(curr_map_dso), pos) == 0)
++			if (symbols__insert_session(dso__symbols(curr_map_dso), pos,
++						    dso__session(curr_map_dso)) == 0)
+ 				++moved;
+ 		} else {
+ 			old_symbols[write_idx++] = pos;
+@@ -1739,7 +1750,7 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
+ 		old_symbols = NULL;
+ 	} else {
+ 		for (unsigned int j = 0; j < write_idx; j++)
+-			__symbols__insert(root, old_symbols[j]);
++			__symbols__insert(root, old_symbols[j], dso__session(dso));
+ 	}
+ 	zfree(&root->symbols_by_name);
+ 	root->num_by_name = 0;
+@@ -1769,7 +1780,7 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
+ 		old_symbols = NULL;
+ 	} else {
+ 		for (unsigned int j = 0; j < write_idx; j++)
+-			__symbols__insert(root, old_symbols[j]);
++			__symbols__insert(root, old_symbols[j], dso__session(dso));
+ 		root->sorted_cnt = 0;
+ 		root->sorted = false;
+ 	}
+@@ -2339,7 +2350,7 @@ static int dso__load_perf_map(const char *map_path, struct dso *dso)
+ 		if (sym == NULL)
+ 			goto out_delete_line;
+ 
+-		if (symbols__insert(dso__symbols(dso), sym))
++		if (symbols__insert_session(dso__symbols(dso), sym, dso__session(dso)))
+ 			goto out_delete_line;
+ 		nr_syms++;
+ 	}
+@@ -2505,7 +2516,7 @@ int dso__load(struct dso *dso, struct map *map)
+ 	if (machine)
+ 		root_dir = machine->root_dir;
+ 
+-	name = malloc(PATH_MAX);
++	name = perf_session__malloc(dso__session(dso), PATH_MAX);
+ 	if (!name)
+ 		goto out;
+ 
+@@ -2581,8 +2592,11 @@ int dso__load(struct dso *dso, struct map *map)
+ 		if (!syms_ss && symsrc__has_symtab(ss)) {
+ 			syms_ss = ss;
+ 			next_slot = true;
+-			if (!dso__symsrc_filename(dso))
+-				dso__set_symsrc_filename(dso, strdup(name));
++			if (!dso__symsrc_filename(dso)) {
++				dso__set_symsrc_filename(dso,
++							 perf_session__strdup(dso__session(dso),
++									      name));
++			}
+ 		}
+ 
+ 		if (!runtime_ss && symsrc__possibly_runtime(ss)) {
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index e68248be38c5..003b9cc57e5e 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -32,6 +32,7 @@ struct maps;
+ struct option;
+ struct build_id;
  struct perf_env;
 +struct perf_session;
  
- #define DSO__NAME_KALLSYMS	"[kernel.kallsyms]"
- #define DSO__NAME_KCORE		"[kernel.kcore]"
-@@ -791,6 +792,7 @@ static inline refcount_t *dso__refcnt(struct dso *dso)
+ /*
+  * Ignore local labels and mapping symbols, matching kernel is_ignored_kernel_symbol() logic.
+@@ -347,6 +348,8 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss);
+ char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name);
  
- bool dso__can_shrink_symbols(const struct dso *dso);
- size_t dso__shrink(struct dso *dso);
-+struct perf_session *dso__session(const struct dso *dso);
+ int symbols__insert(struct symbols *symbols, struct symbol *sym);
++int symbols__insert_session(struct symbols *symbols, struct symbol *sym,
++			    struct perf_session *session);
+ void symbols__fixup_duplicate(struct symbols *symbols);
+ void symbols__fixup_end(struct symbols *symbols, bool is_kallsyms);
  
- char *dso__filename_with_chroot(const struct dso *dso, const char *filename);
- 
-diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-index f6868ffcc3e1..d53a8ab217e6 100644
---- a/tools/perf/util/dsos.c
-+++ b/tools/perf/util/dsos.c
-@@ -18,6 +18,7 @@ void dsos__init(struct dsos *dsos)
- {
- 	init_rwsem(&dsos->lock);
- 
-+	dsos->machine = NULL;
- 	dsos->cnt = 0;
- 	dsos->allocated = 0;
- 	dsos->dsos = NULL;
-diff --git a/tools/perf/util/dsos.h b/tools/perf/util/dsos.h
-index 151efdba2aa4..d636e4c5cbaf 100644
---- a/tools/perf/util/dsos.h
-+++ b/tools/perf/util/dsos.h
-@@ -19,6 +19,7 @@ struct machine;
-  */
- struct dsos {
- 	struct rw_semaphore lock;
-+	struct machine *machine;
- 	struct dso **dsos;
- 	unsigned int cnt;
- 	unsigned int allocated;
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index dad06eb865e6..c89f47ba16f2 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -81,6 +81,7 @@ int machine__init(struct machine *machine, const char *root_dir, pid_t pid)
- 	memset(machine, 0, sizeof(*machine));
- 	RB_CLEAR_NODE(&machine->rb_node);
- 	dsos__init(&machine->dsos);
-+	machine->dsos.machine = machine;
- 	threads__init(&machine->threads);
- 
- 	machine->kmaps = maps__new(machine);
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index 0f4c0ae5b56d..6192bd3e33bb 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -164,6 +164,11 @@ static inline struct perf_session *machines__session(struct machines *machines)
- 	return machines->session;
- }
- 
-+static inline struct perf_session *machine__session(const struct machine *machine)
-+{
-+	return machine && machine->machines ? machine->machines->session : NULL;
-+}
-+
- void machines__process_guests(struct machines *machines,
- 			      machine__process_t process, void *data);
- 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 3f35c7affc29..3d4bc9c0063a 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -4274,3 +4274,73 @@ size_t perf_session__shrink(struct perf_session *session)
- 
- 	return machines__shrink(&session->machines);
- }
-+
-+static __thread bool perf_session__in_shrink;
-+
-+static bool perf_session__try_shrink(struct perf_session *session)
-+{
-+	size_t freed;
-+
-+	if (!session || perf_session__in_shrink)
-+		return false;
-+
-+	perf_session__in_shrink = true;
-+	freed = perf_session__shrink(session);
-+	perf_session__in_shrink = false;
-+
-+	return freed > 0;
-+}
-+
-+void *perf_session__malloc(struct perf_session *session, size_t size)
-+{
-+	void *ptr = malloc(size);
-+
-+	if (unlikely(!ptr && size != 0) && perf_session__try_shrink(session))
-+		ptr = malloc(size);
-+
-+	return ptr;
-+}
-+
-+void *perf_session__zalloc(struct perf_session *session, size_t size)
-+{
-+	void *ptr = zalloc(size);
-+
-+	if (unlikely(!ptr && size != 0) && perf_session__try_shrink(session))
-+		ptr = zalloc(size);
-+
-+	return ptr;
-+}
-+
-+void *perf_session__calloc(struct perf_session *session, size_t nmemb, size_t size)
-+{
-+	void *ptr = calloc(nmemb, size);
-+
-+	if (unlikely(!ptr && nmemb != 0 && size != 0) && perf_session__try_shrink(session))
-+		ptr = calloc(nmemb, size);
-+
-+	return ptr;
-+}
-+
-+void *perf_session__realloc(struct perf_session *session, void *ptr, size_t size)
-+{
-+	void *new_ptr = realloc(ptr, size);
-+
-+	if (unlikely(!new_ptr && size != 0) && perf_session__try_shrink(session))
-+		new_ptr = realloc(ptr, size);
-+
-+	return new_ptr;
-+}
-+
-+char *perf_session__strdup(struct perf_session *session, const char *s)
-+{
-+	char *dup;
-+
-+	if (!s)
-+		return NULL;
-+
-+	dup = strdup(s);
-+	if (unlikely(!dup) && perf_session__try_shrink(session))
-+		dup = strdup(s);
-+
-+	return dup;
-+}
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index cbea6792a008..c6157eddcc43 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -213,4 +213,10 @@ uint16_t perf_session__e_machine(struct perf_session *session, uint32_t *e_flags
- 
- size_t perf_session__shrink(struct perf_session *session);
- 
-+void *perf_session__malloc(struct perf_session *session, size_t size);
-+void *perf_session__zalloc(struct perf_session *session, size_t size);
-+void *perf_session__calloc(struct perf_session *session, size_t nmemb, size_t size);
-+void *perf_session__realloc(struct perf_session *session, void *ptr, size_t size);
-+char *perf_session__strdup(struct perf_session *session, const char *s);
-+
- #endif /* __PERF_SESSION_H */
 -- 
 2.56.0.542.g3ef89b7020-goog
 
