@@ -1,100 +1,91 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=115.124.30.100
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794268626;
-	b=siEljpsRcq12+H+SlORoYr1ReadLYFszlQRyXBgCacmRXxg7ibIbeXlpNicBoIOEUH5H
-	 UN5k5K6kdZbB7V8fy2XQT8CqsVDCEyvIdSCU2IKdj/DdXvtACrfA9uionD15yDG6/3FpL
-	 Miv70csEpcSaJpj1aWgcQ1zrV+y/ZqtGmglun1ok1+MOhQr2s4RMkGlCsYMt80NvV/trk
-	 cbmZBjw+lSKYbjgOsN8UCTGux77Ta9o07WVIbwt+o6u3Kuyh6S+oE8wMt7AWl0VZgffn+
-	 z+3VBurDvn3+CskIr7NS0j9DO1jB1CmtRlUWGQXOb5fq6ZI3KDZrAKY3x1xWho8P6tA==
+	t=1794274682;
+	b=I+7anf1MuMBYS/VUHuSXxnR5aqWwyJk2dYOWMyGeFmwjdYYbwt5RB3jt7r1wPRHJc/kS
+	 tbph13dcYJZ/R0CMZQbKgVB7YNORcvAylacd6CegDOtmYXt+wJhjoJo2TP5IUaypLvnpd
+	 VAXDjbEmiPfPg3GwqGoZ6BlTqAb09u9dT+oy2bxouZbDJwTSoOIsJesZpGR2HP3XRhxX9
+	 1E2Qjun6BmjEqLSVgxXJgLqQaeY2SsAhdMjbVEZQmPut+9XbqR10cNY0jR8qOVc6+/Hxg
+	 dzC+NWB+JkCe6XOa6yOHt31tbxeZUr3BxJCOpYysLuNDqlwvwIUXEhXSqDUpuHAQJ/g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794268626;
-	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
-	 Received:Received:Received:Received:From:To:Cc:Subject:Date:
-	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-TM-AS-GCONF:X-Proofpoint-Reinject:
-	 X-Proofpoint-Spam-Info:X-Authority-Analysis:X-Proofpoint-ORIG-GUID:
-	 X-Proofpoint-GUID:X-Proofpoint-Spam-Details-Enc:
-	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details;
-	bh=/wzyInIm8OS+TfeVGIGf5m1zs0cKoc4wXGU9YGh2U4g=;
-	b=STJEVDGraSwl12BfS0QWNkOdk4aaq53zoPMM9i9rChf0bIH94qnIwAq6V2bK7PjnVucr
-	 eWoiPxJb1eJFUY5Og041FmSJrTXKCfpj+p/LsOqH0dLVPzUzQxkTdVTXzFsL8EoKWCT4N
-	 FYSCQ1cBFq7jGVjp/AhpvFOSs/TCjOKlty1ow5gs6HbPr01LgfHfSupuCz4M7knwyRQYb
-	 RR+t9P9n5+ff/lkhRRRVoWDtqTQyWTlRVBocB55BgddEoZ9NnMmlrTd8rKj+/oU8jnIxg
-	 m2idNJ8cz2T9ofmOHFZUrPI88IiLguXMcOEPsAXE4wkUBlqKY28yFISmQGTH0fT7zdA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794274682;
+	h=DMARC-Filter:DKIM-Signature:X-Alimail-AntiSpam:Received:From:To:Cc:
+	 Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=gxJalAltFJ+mzwybO3QEc8bbloiNp6J964VtBr6AK/M=;
+	b=cZY0EOqvnGBsgffLysEd2FJYds5NWGOFTwAezbk55xbM62O/cH9veEalzl6aaGsEfn9v
+	 BBQ88dfJpDmNshwqk3cNx0BKPvLpGshnstJZSnmDTmX0fbW21W7TbNXyKHjSJ0D/3vjvL
+	 Z7F9pWjZI7/XUFsYGGyObpvTPoFlUzKuL94fTKJD1Ip3U0au4w/M1M9h90dA0fab41MX1
+	 jL8LjuAtk/A1oj3Asuj+1f6wgc2lwlUyQ00T3K2l7BmqJfCuzRSF/2v9jH5ZrHDtO+ynG
+	 L9WD1NN8/N60lvlMbkqZOqElOeYR8tWcx8pmLWXQjbCvKQOSzvC7wQtLyrQGIC+oaGQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.ibm.com;
-	spf=pass smtp.mailfrom=linux.ibm.com;
-	dkim=pass header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=XQz50uvW;
-	arc=none smtp.remote-ip=148.163.156.1
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	dmarc=pass header.from=linux.alibaba.com;
+	spf=pass smtp.mailfrom=linux.alibaba.com;
+	dkim=pass header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=d4l7ZaYo;
+	arc=none smtp.remote-ip=115.124.30.100
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81AC8606A31C;
-	Mon,  9 Nov 2026 23:57:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 81AC8606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1E1606A321;
+	Tue, 10 Nov 2026 01:37:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4E1E1606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=XQz50uvW
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6A9LEEdQ502489;
-	Mon, 9 Nov 2026 23:56:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=/wzyIn
-	Im8OS+TfeVGIGf5m1zs0cKoc4wXGU9YGh2U4g=; b=XQz50uvWTY+aJShJFJe9f9
-	L0BmYuz2cgRANrU3SyL170Nqq6bWzH6pBRUjlYJ6K56rEyrFD9AkOGp1PAckbRL/
-	BBbmzAGfD3NhRImMiGCLvGDQGpvKiO4wu0lX0ce8rXYxy1SFY7bdlkPqL1O/XJkI
-	y5ApOGkv3/yVDsaQ0dbQ+a2xZXShDPzqAPNTe27F5JwtAN1xE7OrrYVI/9lHscBe
-	Xe0OTSH7zsh4POn7UN7KsbA9ieCcKcOFoVh2z5WsQMi8VYcnF1quiGr2U441byWf
-	SG9/ic265TQL3OtZbTTH22ZE3UVEuTz6SiGkLAUGpV/xuH0WtNG6ZdKaGSjwsfzw
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4hsuq6t9yx-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Mon, 09 Nov 2026 23:56:14 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6A9LK05c812485;
-	Mon, 9 Nov 2026 23:56:13 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4hth0y42bv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Nov 2026 23:56:13 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6A9NuBSo28443278
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 9 Nov 2026 23:56:11 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7312658059;
-	Mon,  9 Nov 2026 23:56:11 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E69B558017;
-	Mon,  9 Nov 2026 23:56:05 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.67.169.223])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  9 Nov 2026 23:56:05 +0000 (GMT)
-From: Mingming Cao <mmc@linux.ibm.com>
-To: netdev@vger.kernel.org
-Cc: Mingming Cao <mmc@linux.ibm.com>, davem@davemloft.net, kuba@kernel.org,
-        horms@kernel.org, edumazet@kernel.org, pabeni@redhat.com,
-        andrew+netdev@lunn.ch, nnac123@linux.ibm.com, maddy@linux.ibm.com,
-        mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, npiggin@gmail.com,
-        chleroy@kernel.org, ritesh.list@gmail.com, sshegde@linux.ibm.com,
-        haren@linux.ibm.com, ricklind@linux.ibm.com, davemarq@linux.ibm.com,
-        bjking1@linux.ibm.com, shaik.abdulla1@ibm.com,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org,
-        shivani@linux.ibm.com, ssrish@linux.ibm.com, nayna@linux.ibm.com,
-        gautam@linux.ibm.com, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v8 01/15] ibmveth: Add MQ RX hypercall wrappers and call definitions
-Date: Mon,  9 Nov 2026 15:55:42 -0800
-Message-Id: <20261109235556.60604-2-mmc@linux.ibm.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20261109235556.60604-1-mmc@linux.ibm.com>
-References: <20261109235556.60604-1-mmc@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=d4l7ZaYo
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1794274678; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=gxJalAltFJ+mzwybO3QEc8bbloiNp6J964VtBr6AK/M=;
+	b=d4l7ZaYo2DtEK8kYTAca12mqQ2CZhYxlTdTbfQ0o8sMq9pNsMJWeuEaEhaIeXDE6HPuyV8dqn2FnqV1wAoyjASolMbc3Aa1U5oPN60Jom+2uNkBR/jwggZ0qm2vETAtauEPdf5lEKmVU0MufI3AuRSfUxGXxVW89LJ/xZ9cs9GY=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0XETOX1E_1794274674;
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0XETOX1E_1794274674 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 10 Nov 2026 09:37:56 +0800
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: palmer@dabbelt.com,
+	pjw@kernel.org,
+	aou@eecs.berkeley.edu
+Cc: alex@ghiti.fr,
+	linux-riscv@lists.infradead.org,
+	oleg@redhat.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	jpoimboe@kernel.org,
+	jikos@kernel.org,
+	mbenes@suse.cz,
+	pmladek@suse.com,
+	joe.lawrence@redhat.com,
+	shuah@kernel.org,
+	mpdesouza@suse.com,
+	martin@kaiser.cx,
+	kmehltretter@gmail.com,
+	oliver.yang@linux.alibaba.com,
+	zhuo.song@linux.alibaba.com,
+	xueshuai@linux.alibaba.com,
+	jkchen@linux.alibaba.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	live-patching@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v7 01/10] riscv: stacktrace: do not report the walker's own frame from arch_stack_walk()
+Date: Tue, 10 Nov 2026 09:37:41 +0800
+Message-Id: <20261110013750.36800-2-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20261110013750.36800-1-xueshuai@linux.alibaba.com>
+References: <20260914092648.51254-1-xueshuai@linux.alibaba.com>
+ <20261110013750.36800-1-xueshuai@linux.alibaba.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -104,335 +95,134 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=true
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMTA5MDA5NCBTYWx0ZWRfX772qyZmHc8pN
- ZYrDQwg2cqjaMFvNrE29ccXM0X8DeZ7d5n3838ceT+C+Z7aNACnbroyQ9PTEZMKVGfD2/nPoKtR
- e9RsfmNU1h7I+zL4vGZ6hnwSNkTGO4M=
-X-Authority-Analysis: v=2.4 cv=HbCB3SE8 c=1 sm=1 tr=0 ts=6af25d9e cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=9GrW9DZCARAA:10 a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8
- a=g_pQcjD69mu4thz0hlQA:9 a=3ZKOabzyN94A:10 a=47kamO7So9gA:10
- a=O8hF6Hzn-FEA:10
-X-Proofpoint-ORIG-GUID: K0IjsE_3bgwP4AD4VPMm0Vu1gP6S_pqV
-X-Proofpoint-GUID: IzdDymo_qrtFc9RbLtDzFK5MgWOGqqKv
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTA5MDA5NCBTYWx0ZWRfX1wbeO/NbTxXD
- HpBgmLTyN1lqcp2zMMLiX+Vrb+dk81KiLmKpaYsyYhT5m/5H42A6m0ijY+1SRkPRgalQToGPkJP
- F19NQYXd7c2TuPtJ4iILQdgBlxW384aZHBdOYFOV9WaBNeZrhkC6eBvlUwaZzGbCgeHxz//rgq4
- QV43j8S0DaCd2BTGHHrPllm7Ad4NYDRSgiG48yAifPiOuraMDvMio2F42BYitZgseqvOImr5ZdM
- JSHZA41OBfZOezUZlwB6qm9Av6dKYHeLhHFdhRp1PEMVW3I9dpNs6/FDJvIYuPJXp5njTGTQPJT
- bQxMjYyittk2uGapnolhLZvhCMAhXdz9Kx5d04fflBr40eD9nmOzKIRd3ZYpLhvNxUxJGCZ6/kk
- +0vvEupv2emyztMy9G0BgTrI2mL/0LtmyNiIq7o+rhHBIU7D+yyRA8O0aG/BczxiHLzLAreI1zS
- bmeYowPeja0Cs+qoG7w==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
- definitions=2026-11-09_07,2026-11-06_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 adultscore=0 spamscore=0 bulkscore=0 phishscore=0
- impostorscore=0 priorityscore=1501 clxscore=1011 lowpriorityscore=0
- suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2611040001
- definitions=main-2611090094
 
-Single-queue ibmveth only needs h_register_logical_lan() plus legacy
-buffer add/free calls. MQ RX uses per-queue handles, so the driver must
-also be able to register/deregister subordinate queues and post
-buffers against a specific queue handle.
+From: Karl Mehltretter <kmehltretter@gmail.com>
 
-Add the PHYP call IDs for:
+stack_trace_save() uses skipnr + 1 because arch_stack_walk() is expected
+to first report the return into stack_trace_save(). With FRAME_POINTER,
+the RISC-V arch_stack_walk() calls walk_stackframe(), which starts from
+its own frame and first reports the return into arch_stack_walk().
+stack_trace_save() therefore starts one frame too early. For example,
+page_owner records begin at __set_page_owner() instead of the allocation
+site.
 
-  H_REG_LOGICAL_LAN_QUEUE (0x49C)
-  H_ADD_LOGICAL_LAN_BUFFERS_QUEUE (0x4A0)
-  H_FREE_LOGICAL_LAN_QUEUE (0x4A8)
+Move the walker into an always-inlined helper and call it directly from
+arch_stack_walk(). Keep walk_stackframe() as a wrapper for its existing
+callers.
 
-as defined in PAPR 11.20.00. The gaps at 0x498 (reserved) and 0x4A4
-(reserved for H_FREE_LOGICAL_LAN_BUFFER_QUEUE) are intentional; this
-series tears queues down with H_FREE_LOGICAL_LAN_QUEUE and does not add
-the buffer-queue free hcall.
+return_address() skips level + 3 entries, while the arm64 implementation
+skips level + 2. After removing the extra frame, use level + 2 so
+ftrace_return_address() and CALLER_ADDR results do not shift by one caller.
 
-Raising MAX_HCALL_OPCODE for these IDs also widens KVM's
-kvm_arch.enabled_hcalls bitmap and the range KVM_CAP_PPC_ENABLE_HCALL
-accepts. Neither is user-visible: KVM implements none of the three, so
-the ioctl still rejects them, and the bitmap rounds to the same five
-unsigned longs, so struct kvm_arch does not change size. The pseries
-hcall_inst array is also sized from MAX_HCALL_OPCODE, so those
-opcodes can be counted. A debugfs row appears only after the
-opcode has been called.
-
-Add ibmveth.h wrapper helpers (h_register_logical_lan_queue(),
-h_add_logical_lan_buffers_queue(), h_free_logical_lan_queue()) with
-argument ordering matching the existing ibmveth hcall wrappers.
-h_free_logical_lan_queue() uses plpar_hcall_norets() like
-h_free_logical_lan(). Its kdoc lists the hcall's H_PARAMETER meaning
-from the PHYP interface: the unit has no logical LAN, or the handle
-names no registered queue (already freed). Also add
-h_register_logical_lan_with_handle() so queue 0 can capture the PHYP
-queue handle in MQ mode. Both new registration wrappers use
-plpar_hcall() rather than plpar_hcall9(), so they do not read unwritten
-stack slots, and store their out-parameters only on H_SUCCESS.
-
-Name the three opcodes in tools/perf/python/powerpc-hcalls.py
-so perf hcall traces show them. The two reserved slots stay unnamed.
-
-This patch is intentionally plumbing only: no runtime behavior change
-yet. Legacy firmware keeps H_REGISTER_LOGICAL_LAN and the existing
-buffer hcalls. The new wrappers are used only when a later commit sets
-multi_queue from H_ILLAN_ATTRIBUTES.
-
-Signed-off-by: Mingming Cao <mmc@linux.ibm.com>
-Reviewed-by: Dave Marquardt <davemarq@linux.ibm.com>
-Tested-by: Shaik Abdulla <shaik.abdulla1@ibm.com>
+Fixes: 6a00ef449370 ("riscv: eliminate unreliable __builtin_frame_address(1)")
+Link: https://lore.kernel.org/r/20261010132712.46931-1-kmehltretter@gmail.com
+Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
+Tested-by: Shuai Xue <xueshuai@linux.alibaba.com>
+Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
+Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
 ---
-Changes in v8:
-- H_FREE_LOGICAL_LAN_QUEUE kdoc: subordinate handles only (queue 0 goes
-  with H_FREE_LOGICAL_LAN); H_PARAMETER means no logical LAN or no such
-  registered queue; the with_handle wrapper's R4 handle exists only on
-  firmware that reports MQ RX support
-- commit message: out-params are stored only on H_SUCCESS; hcall_inst
-  counts the new opcodes
+ arch/riscv/kernel/return_address.c |  2 +-
+ arch/riscv/kernel/stacktrace.c     | 40 ++++++++++++++++++++++++++----
+ 2 files changed, 36 insertions(+), 6 deletions(-)
 
-Changes in v7:
-- Drop the duplicated "Both new registration wrappers use
-  plpar_hcall()…" sentence
-- Register and free-queue Return: also H_FUNCTION. Add-buffers
-  already had it in v6; all three PAPR 11.20.00 opcodes return that
-  status on older firmware
-- h_register_logical_lan_queue Return: also
-  H_BUSY / H_LONG_BUSY_*; the caller retries those,
-  and free-queue already documented them
-- tools/perf powerpc-hcalls.py: name 0x49C / 0x4A0 / 0x4A8.
-  0x498 and 0x4A4 stay unnamed (reserved holes)
-
-Changes in v6:
-- both new registration wrappers use plpar_hcall() instead of
-  plpar_hcall9(). They do not need nine args, and plpar_hcall9() was
-  reading three unwritten stack slots
-- Widen add-buffers-queue and free-queue @queue_handle kdoc: handle may
-  come from h_register_logical_lan_queue() or
-  h_register_logical_lan_with_handle() (queue 0)
-- add-buffers-queue Return: also H_FUNCTION (MQ firmware missing that
-  hcall)
-
-Changes in v5:
-- Cite PAPR 11.20.00 for MQ hcall IDs 0x49C / 0x4A0 / 0x4A8 (v4 named
-  the opcodes only)
-- Call out reserved gaps at 0x498 and 0x4A4 (0x4A4 =
-  H_FREE_LOGICAL_LAN_BUFFER_QUEUE); decision: do not add that hcall -
-  queue teardown uses H_FREE_LOGICAL_LAN_QUEUE
-- Note MAX_HCALL_OPCODE raise also widens KVM enabled_hcalls /
-  KVM_CAP_PPC_ENABLE_HCALL accepted range (cross-subsystem)
-- Rename h_reg_logical_lan_queue() -> h_register_logical_lan_queue() to
-  match h_register_logical_lan() / h_free_logical_lan()
-- Unify queue_handle out-params as unsigned long * on both
-  h_register_logical_lan_queue() and h_register_logical_lan_with_handle()
-  (v4 used u64 * on with_handle)
-- h_free_logical_lan_queue() uses plpar_hcall_norets() like
-  h_free_logical_lan() (v4 used plpar_hcall9 with unused retbuf)
-
-Changes in v4:
-- Document @queue_handle and @irq in h_reg_logical_lan_queue() kdoc.
-- Wrap h_register_logical_lan_with_handle() prototype for readability /
-  checkpatch.
-- Drop unused H_FREE_LOGICAL_LAN_BUFFER_QUEUE wrapper/opcode (no caller;
-  buffer return is local harvest + queue free).
-
- arch/powerpc/include/asm/hvcall.h   |   6 +-
- drivers/net/ethernet/ibm/ibmveth.h  | 146 ++++++++++++++++++++++++++++
- tools/perf/python/powerpc-hcalls.py |   4 +
- 3 files changed, 155 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/include/asm/hvcall.h b/arch/powerpc/include/asm/hvcall.h
-index dff90a7d7f70..cb0ea53491e6 100644
---- a/arch/powerpc/include/asm/hvcall.h
-+++ b/arch/powerpc/include/asm/hvcall.h
-@@ -362,7 +362,11 @@
- #define H_GUEST_DELETE		0x488
- #define H_PKS_WRAP_OBJECT	0x490
- #define H_PKS_UNWRAP_OBJECT	0x494
--#define MAX_HCALL_OPCODE	H_PKS_UNWRAP_OBJECT
-+/* 0x498 reserved; 0x4A4 = H_FREE_LOGICAL_LAN_BUFFER_QUEUE (unused here) */
-+#define H_REG_LOGICAL_LAN_QUEUE 0x49C
-+#define H_ADD_LOGICAL_LAN_BUFFERS_QUEUE 0x4A0
-+#define H_FREE_LOGICAL_LAN_QUEUE 0x4A8
-+#define MAX_HCALL_OPCODE	H_FREE_LOGICAL_LAN_QUEUE
+diff --git a/arch/riscv/kernel/return_address.c b/arch/riscv/kernel/return_address.c
+index c8115ec8fb30..4da1cfd249d3 100644
+--- a/arch/riscv/kernel/return_address.c
++++ b/arch/riscv/kernel/return_address.c
+@@ -33,7 +33,7 @@ noinline void *return_address(unsigned int level)
+ {
+ 	struct return_address_data data;
  
- /* Scope args for H_SCM_UNBIND_ALL */
- #define H_UNBIND_SCOPE_ALL (0x1)
-diff --git a/drivers/net/ethernet/ibm/ibmveth.h b/drivers/net/ethernet/ibm/ibmveth.h
-index be0939caa328..82f22de16394 100644
---- a/drivers/net/ethernet/ibm/ibmveth.h
-+++ b/drivers/net/ethernet/ibm/ibmveth.h
-@@ -68,6 +68,152 @@ static inline long h_add_logical_lan_buffers(unsigned long unit_address,
- 			    desc5, desc6, desc7, desc8);
+-	data.level = level + 3;
++	data.level = level + 2;
+ 	data.addr = NULL;
+ 
+ 	arch_stack_walk(save_return_addr, &data, current, NULL);
+diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
+index c7555447149b..28c5744889ba 100644
+--- a/arch/riscv/kernel/stacktrace.c
++++ b/arch/riscv/kernel/stacktrace.c
+@@ -45,8 +45,16 @@ static inline int fp_is_valid(unsigned long fp, unsigned long sp)
+ 	return !(fp < low || fp > high || fp & 0x07);
  }
  
-+/**
-+ * h_register_logical_lan_queue - Register a subordinate receive queue
-+ * @unit_address: Device unit address
-+ * @buffer_list: DMA address of 4KB page for tracking registered buffers
-+ * @rec_queue: Buffer descriptor of receive queue
-+ * @queue_handle: Output queue handle on success (may be NULL)
-+ * @irq: Output hypervisor IRQ number on success (may be NULL)
-+ *
-+ * Registers a subordinate receive queue with the hypervisor.
-+ *
-+ * Return:
-+ *   H_SUCCESS (0) on success
-+ *   H_PARAMETER if parameters are invalid
-+ *   H_BUSY / H_LONG_BUSY_* if the resource is busy; retry
-+ *   H_FUNCTION if firmware does not support this hcall
-+ *
-+ * On success, hypervisor returns:
-+ *   R3: H_SUCCESS
-+ *   R4: Queue handle
-+ *   R5: IRQ number for this queue
+-void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
+-			     bool (*fn)(void *, unsigned long), void *arg)
++/*
++ * Always inlined so that the frame the walk starts from is the caller's own,
++ * and the first entry reported for the current task is the caller's return
++ * address.  arch_stack_walk() relies on that to report the same frames as
++ * the other architectures, see the comment there.
 + */
-+static inline long
-+h_register_logical_lan_queue(unsigned long unit_address,
-+			     unsigned long buffer_list,
-+			     unsigned long rec_queue,
-+			     unsigned long *queue_handle,
-+			     unsigned long *irq)
++static __always_inline void __walk_stackframe(struct task_struct *task,
++					      struct pt_regs *regs,
++					      bool (*fn)(void *, unsigned long),
++					      void *arg)
+ {
+ 	unsigned long fp, sp, pc;
+ 	int graph_idx = 0;
+@@ -59,6 +67,7 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
+ 	} else if (task == NULL || task == current) {
+ 		fp = (unsigned long)__builtin_frame_address(0);
+ 		sp = current_stack_pointer;
++		/* Placeholder for the frame the walk starts from, never reported. */
+ 		pc = (unsigned long)walk_stackframe;
+ 		level = -1;
+ 	} else {
+@@ -102,10 +111,18 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
+ 	}
+ }
+ 
++void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
++			     bool (*fn)(void *, unsigned long), void *arg)
 +{
-+	unsigned long retbuf[PLPAR_HCALL_BUFSIZE];
-+	long rc;
-+
-+	rc = plpar_hcall(H_REG_LOGICAL_LAN_QUEUE,
-+			 retbuf, unit_address,
-+			 buffer_list, rec_queue);
-+
-+	if (rc == H_SUCCESS) {
-+		if (queue_handle)
-+			*queue_handle = retbuf[0];
-+		if (irq)
-+			*irq = retbuf[1];
-+	}
-+
-+	return rc;
++	__walk_stackframe(task, regs, fn, arg);
 +}
 +
-+/**
-+ * h_add_logical_lan_buffers_queue - Add buffers to an RX queue by handle
-+ * @unit_address: Device unit address
-+ * @queue_handle: Queue handle from h_register_logical_lan_queue() or
-+ *		  h_register_logical_lan_with_handle() (queue 0)
-+ * @buffersznum: Buffer size (upper 32 bits) | count (lower 32 bits)
-+ * @ioba12: Buffer addresses 1 and 2 packed ((addr1 << 32) | addr2)
-+ * @ioba34: Buffer addresses 3 and 4 packed
-+ * @ioba56: Buffer addresses 5 and 6 packed
-+ * @ioba78: Buffer addresses 7 and 8 packed
-+ * @ioba910: Buffer addresses 9 and 10 packed
-+ * @ioba1112: Buffer addresses 11 and 12 packed
-+ *
-+ * Return:
-+ *   H_SUCCESS - All buffers added successfully
-+ *   H_PARAMETER - Invalid parameters
-+ *   H_HARDWARE - Hardware error
-+ *   H_FUNCTION - Firmware does not support this hcall
-+ */
-+static inline long h_add_logical_lan_buffers_queue(unsigned long unit_address,
-+						   unsigned long queue_handle,
-+						   unsigned long buffersznum,
-+						   unsigned long ioba12,
-+						   unsigned long ioba34,
-+						   unsigned long ioba56,
-+						   unsigned long ioba78,
-+						   unsigned long ioba910,
-+						   unsigned long ioba1112)
+ #else /* !CONFIG_FRAME_POINTER */
+ 
+-void notrace walk_stackframe(struct task_struct *task,
+-	struct pt_regs *regs, bool (*fn)(void *, unsigned long), void *arg)
++static __always_inline void __walk_stackframe(struct task_struct *task,
++					      struct pt_regs *regs,
++					      bool (*fn)(void *, unsigned long),
++					      void *arg)
+ {
+ 	unsigned long sp, pc;
+ 	unsigned long *ksp;
+@@ -133,6 +150,12 @@ void notrace walk_stackframe(struct task_struct *task,
+ 	}
+ }
+ 
++void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
++			     bool (*fn)(void *, unsigned long), void *arg)
 +{
-+	unsigned long retbuf[PLPAR_HCALL9_BUFSIZE];
-+
-+	return plpar_hcall9(H_ADD_LOGICAL_LAN_BUFFERS_QUEUE,
-+			    retbuf, unit_address,
-+			    queue_handle, buffersznum,
-+			    ioba12, ioba34, ioba56,
-+			    ioba78, ioba910, ioba1112);
++	__walk_stackframe(task, regs, fn, arg);
 +}
 +
-+/**
-+ * h_free_logical_lan_queue - Deregister a subordinate receive queue
-+ * @unit_address: Device unit address
-+ * @queue_handle: Queue handle from h_register_logical_lan_queue()
-+ *
-+ * Deregisters and frees all structures associated with the subordinate
-+ * queue. Queue 0 is torn down with the whole logical LAN by
-+ * H_FREE_LOGICAL_LAN.
-+ *
-+ * Return:
-+ *   H_SUCCESS - Queue freed successfully
-+ *   H_PARAMETER - The unit address has no logical LAN, or the handle
-+ *		   names no registered queue (already freed)
-+ *   H_HARDWARE - Hardware error
-+ *   H_STATE - VIOA not in valid state
-+ *   H_BUSY / H_LONG_BUSY_* - Resource busy, retry
-+ *   H_FUNCTION - Firmware does not support this hcall
+ #endif /* CONFIG_FRAME_POINTER */
+ 
+ static bool print_trace_address(void *arg, unsigned long pc)
+@@ -176,10 +199,17 @@ unsigned long __get_wchan(struct task_struct *task)
+ 	return pc;
+ }
+ 
++/*
++ * The generic code expects the first entry for the current task to be the
++ * return address of arch_stack_walk() itself, the way x86 and arm64 report
++ * it, and stack_trace_save() sizes its skip count accordingly.  Walking from
++ * inside a called walk_stackframe() adds that function's own frame on top,
++ * so inline the walker here and start from this frame instead.
 + */
-+static inline long h_free_logical_lan_queue(unsigned long unit_address,
-+					    unsigned long queue_handle)
-+{
-+	return plpar_hcall_norets(H_FREE_LOGICAL_LAN_QUEUE,
-+				  unit_address, queue_handle);
-+}
-+
-+/**
-+ * h_register_logical_lan_with_handle - Register primary queue and get handle
-+ * @unit_address: Device unit address
-+ * @buffer_list: DMA address of buffer list
-+ * @rec_queue: Buffer descriptor of receive queue
-+ * @filter_list: DMA address of filter list
-+ * @mac_address: MAC address
-+ * @queue_handle: Output parameter for queue handle (may be NULL)
-+ *
-+ * Registers the primary receive queue (queue 0) with the hypervisor and
-+ * returns the queue handle. This is needed in multi-queue mode to use
-+ * h_add_logical_lan_buffers_queue() for all queues including queue 0.
-+ * R4 carries a handle only on firmware that reports MQ RX support in
-+ * H_ILLAN_ATTRIBUTES; use h_register_logical_lan() otherwise.
-+ *
-+ * Return: H_SUCCESS (0) on success, error code otherwise
-+ */
-+static inline long
-+h_register_logical_lan_with_handle(unsigned long unit_address,
-+				   unsigned long buffer_list,
-+				   unsigned long rec_queue,
-+				   unsigned long filter_list,
-+				   unsigned long mac_address,
-+				   unsigned long *queue_handle)
-+{
-+	unsigned long retbuf[PLPAR_HCALL_BUFSIZE];
-+	long rc;
-+
-+	rc = plpar_hcall(H_REGISTER_LOGICAL_LAN, retbuf,
-+			 unit_address, buffer_list, rec_queue,
-+			 filter_list, mac_address);
-+
-+	if (rc == H_SUCCESS && queue_handle)
-+		*queue_handle = retbuf[0];
-+
-+	return rc;
-+}
-+
- /* FW allows us to send 6 descriptors but we only use one so mark
-  * the other 5 as unused (0)
-  */
-diff --git a/tools/perf/python/powerpc-hcalls.py b/tools/perf/python/powerpc-hcalls.py
-index ab5867c05d3e..f743e5751b60 100755
---- a/tools/perf/python/powerpc-hcalls.py
-+++ b/tools/perf/python/powerpc-hcalls.py
-@@ -197,6 +197,10 @@ HCALL_TABLE = {
- 	# Key wrapping hcalls
- 	1168: 'H_PKS_WRAP_OBJECT',
- 	1172: 'H_PKS_UNWRAP_OBJECT',
-+	# Logical LAN multi-queue RX (PAPR 11.20.00)
-+	1180: 'H_REG_LOGICAL_LAN_QUEUE',
-+	1184: 'H_ADD_LOGICAL_LAN_BUFFERS_QUEUE',
-+	1192: 'H_FREE_LOGICAL_LAN_QUEUE',
- 	# Platform-specific hcalls used by the Ultravisor
- 	61184: 'H_SVM_PAGE_IN',
- 	61188: 'H_SVM_PAGE_OUT',
+ noinline noinstr void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+ 		     struct task_struct *task, struct pt_regs *regs)
+ {
+-	walk_stackframe(task, regs, consume_entry, cookie);
++	__walk_stackframe(task, regs, consume_entry, cookie);
+ }
+ 
+ /*
 -- 
-2.50.1 (Apple Git-155)
+2.39.3
 
