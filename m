@@ -1,57 +1,60 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794279144;
-	b=gOoIW1oiqwgfzSmI557+ERHGwsskK03gzEcOaJxOx85Hl2J53tuI+a1zIQT/Qa4W6AWh
-	 eGOZ10/Q7fxqFZOgo7oVjsP8NoB1fJbivOB3xPTCHcDiXUBUuLUOcKSkIchnzItmPiZ17
-	 08LiuappexY4dhaw4FAnQ7VE1HULv/2jQ34qtEicp1TuQA7tG9NN2Rp5SDCfcIzF4m3cW
-	 qJg0VnjmLUGNNoTASHogoBqbyqdXajyk2PfdUPElZiUQXRizoygcv8F+0vPzEEcCu67Ze
-	 MzM5Ins/RRQW+gK2WjdXgE9vjZTuwtQGIFtnYGUgPv7U+RFAz0X/bnHbaQSgfxBz3Ig==
+	t=1794279193;
+	b=lhV553eGolIHteyONQxIs4WJt6HttRjHmb4uC0y8XEjcuF31ayPEc1vh8xrvSV++nMJr
+	 ErK08KHPqE4vIXeXzGvPJr0P4pYmnWVsYpxONy2JRanWWiC2Zs+zC7ccJEmgsF+vQ6J7k
+	 BLc/5EqUHArabfQyURXPPAEjPTjcC2EJb8nlyBzOAyET5gfDLe9xjt4Yb7YFfDZ4w97Mf
+	 TAv4ZZra9mvWs/uoeFbmRPqhX0gQn828B92OAMyFUHB30wLmBzY9vO9UVh+QvGtXgzykh
+	 yh2wmMvuK0EX6sv5dLfd24vEeIL2c2J18dmN0RN7cMzEdgvJZImrugQCC6DyxwVrTJg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794279144;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794279193;
 	h=Received:DKIM-Signature:From:To:Cc:In-Reply-To:References:Subject:
 	 Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 X-Mailer;
-	bh=1o3TgLBCn/asTnqDXbcDsKfs5lg9f0d7xH7UA0kKlpg=;
-	b=sI2trh+/yYA90/5qGqkd0cGdayT+AMLIXqray26R+m0ICvpTKZvNtnTIjRw1+Te9fcLm
-	 4+GRKHbDG8AbJ6EVD9RGXmtntzvm6T82SADIIHjTXi7WwKL0Fag/6STQe6r/MlLdThiMR
-	 D8zT5PzpugD7ADpaxpXOOTud8i/ZF0fGIZLiXshNtsum3oMHgQvYNkqGZmuF0PPtLfujk
-	 j+JA1Y1mo/W/kqAZwIcLgZKtOD2G06ZFVqwJeXitpXVJtRuNL5zAhhhlPe9Bm2n0dgAlF
-	 1vzAOtnfwLMlnn0jGe7XXCL8VQr9ed0w8D7/f47m/DRBSAGADS8neIZB3FNAMomjDCA==
+	bh=pFkAgbUwMOH3n//6diqGv//+eQhSdg06FjdV9LR67w4=;
+	b=NcG00Gd6StpaAvHJJAVBos03o0YSv+xWchJNQkKdR7lR/ot2hikcH4MI8pGfhqA0mfaq
+	 xcbS3CdcnFu5o6OfQ7HgRHFYP8HGe2c94e7UJRHwpAbBfBuuSP0TiYAck5/bcA02TtiYY
+	 IRXAt3q2BV1AqTv6+yBWq/BKVfQ7SrQfv3C1jAjjcp1E1W9UQSA+NlaPT6j9v3g5NIfb2
+	 iHazB35TPqFNsw+6t9h1x6/+yBuqzqcnQJ/20M5gTS71FdzNqTpsA0bVw5cBKQgDzl1V5
+	 coZ6MSjRka8zF/BqWyYRkcPq495N02RL2WgQsml5MFAYa1tInEWycQdRu5NLsLHhBmg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m6wqf0En;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="ZUVC/uy9";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A9860A260D;
-	Tue, 10 Nov 2026 02:52:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32F960A3808
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 02:53:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m6wqf0En
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB0531F008A4;
-	Tue, 10 Nov 2026 02:52:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZUVC/uy9
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4F5F1F008A4;
+	Tue, 10 Nov 2026 02:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794279144;
-	bh=1o3TgLBCn/asTnqDXbcDsKfs5lg9f0d7xH7UA0kKlpg=;
+	s=k20260515; t=1794279192;
+	bh=pFkAgbUwMOH3n//6diqGv//+eQhSdg06FjdV9LR67w4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=m6wqf0EnE8iE/PnapG73uZN8YnHsQ7lTKo47z+UzV7ukHwlmqyZzjA5T0WCsR+/8w
-	 5ybwBtY/e5o+JZ9ni4nR05cXAjA09aV+ZsVzQ5eXEE5Rw5AmQAXZo8z/yVmz0QtFDK
-	 KO2eETCPBg2KETIwmP0BhaXre6xQfqlHIq+aI7QIGWPOdxIKEAA0HlpjIyVZoq4ewG
-	 7urT5lzJYtLVkXybWwEX4zQFfjWmYLnCOFay9NwVzvrn4M3WZXqnHV/KAJ/ygDJLCg
-	 xYhtjXs2dGQVY1Otxc507+NKaSzk9Wsed6nOvoiT8YsiyNuVHMS9wGka9PSwj6hqpb
-	 ifliFSbOJ4KQA==
+	b=ZUVC/uy93/k3d07pL7n8jsBNwDPJJDDSEjId9AhF3tvA78bygfou3UN4RKZQFGN93
+	 Ak9GZ8nJn/i8KjBn/E2s+TbqvexMxVZEb3qlWTZpxUG6MQ9/kpG8otORW53K01WjVr
+	 fkROdj/7RJk2lT04/ODz0OkQvKGD8Wb4iYHCnclhSfqErYTUBJbrluMiSeAn42uFgN
+	 L0n1hgbbs1SkgT1fxkvkfEclRr2KPTacKb6q50bIOA7H2/LImYiNtqOyCREmgWstsP
+	 fZpBvQsxoBDlqu78hR+6+KoD6JYrhY8gs/GOxKFfM2eX2A77vSZ0vBHeydsssIpowg
+	 VzuNh86QVimfw==
 From: Namhyung Kim <namhyung@kernel.org>
-To: acme@kernel.org, Gu Bin <gubin@cmss.chinamobile.com>
-Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, 
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
- adrian.hunter@intel.com, james.clark@linaro.org, 
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20261105064958.2134-1-gubin@cmss.chinamobile.com>
-References: <20261105064958.2134-1-gubin@cmss.chinamobile.com>
-Subject: Re: [PATCH] perf machine: Fix NULL deref in
- machine__is_lock_function()
-Message-Id: <179427914390.13444.16238989516543583346.b4-ty@kernel.org>
-Date: Mon, 09 Nov 2026 18:52:23 -0800
+To: acme@redhat.com, "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org
+In-Reply-To: <8b245572903b8c4ed0dc569d7a71a8f4974e2455.1793867553.git.jirislaby@kernel.org>
+References: <cover.1793867553.git.jirislaby@kernel.org>
+ <8b245572903b8c4ed0dc569d7a71a8f4974e2455.1793867553.git.jirislaby@kernel.org>
+Subject: Re: [PATCH v2 1/3] perf: do not call zfree() on uninitialized
+ pointer
+Message-Id: <179427919177.13760.15866804714797157945.b4-ty@kernel.org>
+Date: Mon, 09 Nov 2026 18:53:11 -0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -62,27 +65,24 @@ List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.14.3
 
-On Thu, 05 Nov 2026 14:49:57 +0800, Gu Bin wrote:
+On Thu, 05 Nov 2026 09:33:50 +0100, Jiri Slaby (SUSE) wrote:
 
-> machine__is_lock_function() looks up __sched_text_start and, if found,
-> assumes the remaining scheduler/lock text symbols are present too: it
-> dereferences sym->start for __sched_text_end, __lock_text_start and
-> __lock_text_end without a NULL check, under a "should not fail from
-> here" comment.
+> In add_drm_pmu(), the check for type > PERF_PMU_TYPE_DRM_END happens
+> before "drm" is allocated by zalloc(). The error path nevertheless
+> called zfree(&drm), i.e. free() on an uninitialized pointer, which
+> can crash. Remove this bogus zfree() -- nothing has been allocated
+> yet at this point, so there is nothing to free.
 > 
-> That assumption has already been broken in practice: on s390,
-> __sched_text_end shared its address with __cpuidle_text_start and
-> was dropped by symbols__fixup_duplicate(), causing a SIGSEGV in
-> "perf lock contention".
-> commit d8d85ce86dc8 ("perf lock contention: Fix core dump related to
-> not finding the "__sched_text_end" symbol on s/390") worked around
-> that particular case by keeping duplicate symbols via
-> symbol_conf.allow_aliases. The symbols can also be absent when the
-> kernel image has no lock text, or when the symbol table is otherwise
-> incomplete.
+> Fixes this compiler warning:
+> In function ‘__zfree’,
+>     inlined from ‘add_drm_pmu’ at util/drm_pmu.c:110:3,
+>     inlined from ‘read_drm_pmus_cb’ at util/drm_pmu.c:174:10:
+> ../lib/zalloc.c:13:9: warning: ‘drm’ may be used uninitialized [-Wmaybe-uninitialized]
+>    13 |         free(*ptr);
+>       |         ^
 > 
 > [...]
 
