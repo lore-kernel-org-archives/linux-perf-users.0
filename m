@@ -1,100 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=209.85.160.175
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
-	t=1794334496;
-	b=3XDEhByJhc5OayjZV7oGTQS6llLNDVwyLqxWMluUMNjZATxs/oTLs7E3WYY1N/stkMJl
-	 pwsNLXcbfUkirs8jr1ayztQpYl65iUu6lQnowypM4YhiePdbb/hCxiLKGILeTXbHph9yh
-	 3XaoRnJW3hANnJIhSFiV/GuZyPBseAAC/Enmtqu1HMW5w4Mo2jvSlJQ9hmU9wWG2oshh9
-	 OERNMsGB6CsZJhAkrrU/jhoWe6DoU8rZH6JM0vka+FwuGXwi8PeN9/Ur8NHVH/yVaETxm
-	 rv3owIVnGqgGvQrnU+AvfK/OlaIkocTvwYb+RAPAwvAWRowj8JH32zoG1K/Khvf+ADA==
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.221.53
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794337545;
+	b=IgNwAG9ICZR1b3EsKWpnQFirkxWPc4h1qXTjF0uDWX6UfyWLfsNkccQiJNChyCxx3Si+
+	 cTrA27d0kcfxDS5/Gds0rAquD6IEeCCtQ8ayX9SaiHe56Og56MEKa+EIxTdWl/Iy02yb3
+	 eNyHUV9s0BOZT0g9lzt3QAfk59n4OK959YuueDkYIZD72UX6vwJTXnbuH3tSiOb1MfsH/
+	 dJrzyZjd4erFct54uFiu3z+Pk6F+jQv6M/Of6jzj9nUoP3o7hBsQHhsmgZds/mARCrtVG
+	 rN1fsI2p+v5avmpQh4Y6PmiRP2hw9FUpUkrGWBEPvBHkIvp6J28Sc2QGTROTjoTyGbw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794334496;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794337545;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
 	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
 	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=Z/T19qwkUhRsiOdHXZPOOueJ4FV/Vspzv786LxtKzAs=;
-	b=xngeF3b8P4zHI0rlAWK0MxLWW/9Wp66L6f1QB1cO2P/0p0CJiyf3PwRgi1yWpGe7BXV0
-	 /2A4IitWssaFTxv437er+nX2iQhbdQWycaQVHRTT3gaKyKFBhQmA0zbgt4JBtPYx+Sjft
-	 mou+qpJRAI1Mrlt4x73jENrELurVhQHf0igZYHlLJMEn7poKTIX3d83ix3SUKRK4qkQd8
-	 ka2XKaXqgdTJjjkg33tQjvGo/oxOUA5TfFap+JylkwjV7Vdcx25TNQVINxwcQHq4pPW/N
-	 6KhA9LvgOm13bgx5Wh787Vpj7T/6te1aD+Z3eIMZs0yS4DLcIvgKPRpoWMAw2Su5OlA==
+	bh=anLt6qagkph9XR8vpxxzxpgqvxbcb9YqldFXaQ5KeM4=;
+	b=TeBfI2EuBtlwG9x4uVxo5cyra1qZEAE/a6lgJ9HYm2cd7CMjDubvQrFoPepWiWI7y7Ad
+	 zmvyacMBlxZfTquhutpd9fLaLSvG513exmofJLLVYSZdB4z72qTiW7/DXeQ54UxHRve82
+	 AldEoNwSeoPR6a3uIQcf7rzp6pQCKhlCCG6AIjjYwEM93rPirdqmqnNdS9qcL/oMJcOpq
+	 QewvXG60DLyM8n/5fmDc5wg6WCxtP6YzSKPW/RLlpSKZFAegOhBFEeMh+mosLMKyudHRe
+	 OWcd23C1lExB66blPUYD65HABkbz5HXrdBpZjtIRH8xB3FDXaEBNGBIkcGVcLTzLK5g==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Qii2TyZ7;
-	arc=fail smtp.remote-ip=209.85.160.175
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=FoPrCu+l;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.221.53
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA31E606A320
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 18:14:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EA31E606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D56606A325
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 19:05:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 81D56606A325
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Qii2TyZ7
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-54492d8a988so8311cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 10:14:55 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794334495; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=FoPrCu+l
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-48e1d0e5dafso1609776f8f.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 11:05:45 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794337544; cv=none;
         d=google.com; s=arc-20260327;
-        b=qIZ8UR6DWScvF9cMcFn7GVHNxkp1k8M2gUWlep6KFV9yaHK/2wUXDQpyWm+d214GoT
-         QHwzY2FdcLvJCiSYwWXJjFKeAQyuGjngFSBmOdgL108QMSB2v8avQxGQPbJZBPghUkVa
-         y8PrHDwKOuMqM4b4tgurLC/JmIM2sgxydo/R+bbq1vRItrzyBoC4uZEl8w2NplS9iPCb
-         GQBruFXxYGRzMcTxtbH9gXfCfm228JHTIDAQLDf/2rJbSgnp1/BbGymAdU1dZVUCf6EY
-         ss/aHVwofFET8dNSUmlZUroYyCXnD0aUhfOS4oD0HO5cmzkqDtIGUpPV5mgNEv9ounyh
-         Xopw==
+        b=M49yUKZDeF7g7U7+W4pwPqOs6D4VixhTvsWoR+TQosZrJ4JVwfyK2mfIEFUrDY+X05
+         1v6oO1ld3hNV9cLhafvVHgNk+2AEtzmud17nmf3Q8ZUrVa4G3g8F9rV8IXVHOWiDMeol
+         j5DCa0LgTRKhZ/6tNmiW/V72CJ3NCaKH7fGvujJwG/YkdSMkNWVYMxwQrnwIw920gfQK
+         WpqSHFf7qMSJ2OqdoXOXyj3XRlULZEtDr+hdgE+6mALv8QSGNbS1JSwouKmWN1N/rKOM
+         c4P0c4o5u9xaoaC1K4+AX9lt8CmKHp7tUw/P94hmwP1oBmwA3AOy38byuqovs5A53r4K
+         Im5A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=Z/T19qwkUhRsiOdHXZPOOueJ4FV/Vspzv786LxtKzAs=;
-        fh=oi+xONp853Ymq3Cg12ptXRyDqtwg/q79mYS/BXFezt0=;
-        b=g/9ovGSv2ZrxGeQU14fBzS3YEli0k5fSjdpuEztw4jNfO4CNBfUymsiLB0y1PIxXUw
-         OQsczwHifNjv5cvNsPtFAi+w3KW0uEWy7QuQ2i0qtSJ7mCNFObgOf3lIaCziqalS6i1S
-         07of1jrX98BegVC+hrG5UV27tSBxVpJIT0SvOn3rzMFximMciQGgVp1ByM/xxAU/yjqi
-         Kk87QV67JX1xSF9bk0XBtCuQlqqZ3tmKC7muaa+EU1pozym+N1Cl2jg9Ur/FUiugdJKC
-         DjLLUS2EDTFdGYzY6zXQ9D6WDIsjat8NLyXHih4a0suxKjUXI/jMkjX8/1EG2aitPUm7
-         +/cg==;
+        bh=anLt6qagkph9XR8vpxxzxpgqvxbcb9YqldFXaQ5KeM4=;
+        fh=SSO0xAKWEhe3FHbR3ulaMwz82EbatlIhb+cFEyXoUj0=;
+        b=haQfp9aoQXtn6Qi1BFuFP75n7Ntim3l6YvbqwFAfE8lJR8w12UPqVznRU6bzNOZZdy
+         0QVVgvma1qLiFIYDKWBPd25u9MXKIWj9lWUqZIte/dkI3uFJVnOrSvSXVnTEO02cPkWJ
+         OzRVkrDBlcGrCOo6fX8qgF4y3DIQ1fh0kQ58NpCMTIHGsYaliq60b9YZW3wlUZHdimg3
+         HH7ZJsXS8wOQ84miv0yQcTLK0MBeq7kfsxhA1HK3r2e6Wci5BWo2LjD5+L9DyGFMouuN
+         eBehJF8O6dpf4rmLGVJNc2ExM0L7B9sw30At7GT94DEsrlJfyxQkKhfFiZ3h5PeCbjD8
+         WtJw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794334495; x=1794939295; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1794337544; x=1794942344; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=Z/T19qwkUhRsiOdHXZPOOueJ4FV/Vspzv786LxtKzAs=;
-        b=Qii2TyZ7jCHfr9Ifg1uG1l0L4Vo7zZoQ477vdRT7bBObbfapFSMUNJUUS9e6evAISl
-         Q4fni0WpJftiDQlaAZnWe/k1lb1jGD7BKoAINmB+/2no1PwYIZJ/a/hbcG5HDoKUb4kd
-         Du5BIyXy6U6uc+15eisV6pjyrwaDIzi3xN4Mpi91JkuV+1Jn0fLxun22+8QwkG/Jphln
-         DdhtcnrO7a1XqFHh0DWXtLUA94wMF9NCKlMZbvLWnAOiIs2IrH9kEUjfCJqG2XirLsh+
-         oXCKNERJq646eWiUDnp1iGQS0cGBRE7zpMSEwLLR1FlzSW4I6xc2RkzWMmTXdYSxIx9w
-         ILNQ==
+        bh=anLt6qagkph9XR8vpxxzxpgqvxbcb9YqldFXaQ5KeM4=;
+        b=FoPrCu+lgpPuMNG6t2WePToTWn1vV7OxoFB6yJCn3SW7ujyeMQPqPvI5MetASfN5t8
+         aUVbujBjF9Hu1W2txzDolkMjz7o5JuekJ+JYD6KltD2HSGGWuWjec5FKHzJECE5iijKs
+         JI6A04eOhY4OKbTYEL8+glLIl6Wb5A9dzm+fon3n+0CuHNLYzwXIhbmiEqiRC6Mp8/+V
+         JpPCzsy5l9FUNFQ60oaTNlGLNEy3OLbzoGtCl6hkq3QjMJnGOOS7R4j0oJupsYPSOdyD
+         CDayuFkXsON+vcFU66VzWecaTHRts1Z/5Z/A31nYSbEnYpS7yQe1PYhhXHCqwukBt0h+
+         YbPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794334495; x=1794939295;
+        d=1e100.net; s=20260707; t=1794337544; x=1794942344;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Z/T19qwkUhRsiOdHXZPOOueJ4FV/Vspzv786LxtKzAs=;
-        b=zAU4vouRersn1GsZbSMLAFQAkObGbcQgY7DKubysm0OUR9l/boN73oz85vdqtzBASx
-         geWOOKCJrncX78Ecbmi6+vULl0rA2+24gAnteev8dKOqoN2uQxolbJhT310twxqLr67l
-         wjbjMP/pi6ZjgKPfuRHMpi47LrO/j+p2/YOAhb3jkUpXHFlzGnIH+5r78xzd0yHKIiWd
-         hDP7crmZpR0dRF7E72thtlqkQ+2cOW94bvx2cSLXpT9o+2TUqBLH7CmWpVW9t+dePTOZ
-         q0v993AHCw+Fq7JYRKDrsdWVZT/zpNtvmzLsE/jAv1uFuWRKzEoDRqFxDQ0idQVH+Nnl
-         VBUg==
-X-Forwarded-Encrypted: i=1; AL+hErEKwqFiqS4jK61Gfj5JNnivV04YpAsSMxCulriK0mQ6s6dpNTj99SKKWQ6tjf7IkpjWmKGL+dv5t/ijvLBladTk@vger.kernel.org
-X-Gm-Message-State: APuU4Z/mrpG5JkOioS0Hd2lSvsG1huES271lQnr3qZqOYZBYb3Wg0o7R
-	OcJ9L9n2oeE1jLT8dINjPbWdjikPR0seZah87tT2uNHk04fJbVgLmfg8fVHW5+EtuP3Xhmj2kvn
-	IVoi3OWN3Dn98QzWC+fzC/fpoyJMxHUVENbrSDqlb
-X-Gm-Gg: AYBFou2VK5PuL4EJeyrYzVQ3PmMakxsOM6qsh04XDY1tDin7GdOKinPkoORuJBc5UGJ
-	6NlNJd5BRRj8AHWnR0cE040gWzgXvbS63RcJFAzSeOfOemno/jS6cgk6IHSv/kHiVklrEruY+cW
-	HI2lYP28mR0V3TRNkJ4o0PYhV2jryUyHoBJHmC5OZRitxIAZbDU190gwKDy2Ho0npgnh8JTlcRc
-	UOPjwHo8ge3qy27w6B9eJ0mW8mP/hLEWRIKIaectpSY2T8wvG9Guiechjodo0njjCx1ZKDdlKop
-	zV3G+J351sya7Cq39Xb04jsKkt13o4GVz6PE5KHeM/T38t8ZXS1n85PrgzkKOnANd96VekFvCtT
-	xpGB/RsXkqXA0qdheXfc0vhpdVzZo9b9NYa6lv2mJjyllhUGcKLVxHCTs9Ee9vXmBJiA=
-X-Received: by 2002:a05:622a:2b0f:b0:536:353e:8d2a with SMTP id
- d75a77b69052e-5569bc21f5bmr15411cf.1.1794334493987; Tue, 10 Nov 2026 10:14:53
- -0800 (PST)
+        bh=anLt6qagkph9XR8vpxxzxpgqvxbcb9YqldFXaQ5KeM4=;
+        b=AjyOyEyN2Q7NNjJs4fhJF+DvrX+z2z6LqQblnxRFhqqZzXOSOl3I6zdIXvOjoLIIZF
+         YwACeGmAcyDlpY6pgLK+ec5AXQ9gj3XhkxJe/R9+QVFWy6bZ5cReBqELx4uVU1yju0pf
+         dlQ7yq0MJ62ABW3KqnHDlzD70igwEynNQfU4yYxOQAqNe/whJVccF3aUunL6xFIiiUxM
+         DyyfqKQx4FdGzpAVDfvMSW3aWALWoLz3ZpbdtUiU1a7DQR2z0uWF/qfNQF43xj0KU+m9
+         pWLdqreGHIqQ2r19/Q6O0bUq6IYzU/fR5dSxMb8QLFjUzqX+GopBHEWL4/l7glOyRkkP
+         /DPA==
+X-Forwarded-Encrypted: i=1; AL+hErGNaVVwx4JmBhkdW4/BZ4cp4xiatQrI78uMDEMligG7FTRE7KezMBAjZl3Hg6BmvYBCeGGHJjTohZODKNbxW3Rc@vger.kernel.org
+X-Gm-Message-State: APuU4Z805aMJhyzi454GzITn5eF4CNsBt2wQNZ9eKKy0yiFtAS3KdAYy
+	2akwHVWWPJcMAdZYk3RAPGqg38fkuPBy5elAbTYRCx2XI/Cs2UvEwb0Lm4PY1GkoJ3ndh1/cC9h
+	xPWxxRb/csypeL67bIkosK7y6RhJbp7w=
+X-Gm-Gg: AYBFou1KkJ0AHaapgYGTBAGSnQDcYU/RT+hqiFqFgBHRLjDsxz7YiCem7DjO5QCD34k
+	GjCils1CSvJ8z1B2RQY6EJ5yLCClPWV2/AQPzZnDeXEHwoXkg5dNsE5EoLwgCtxFC8P8FQ/fKAH
+	4joGIOWwrwC+/t8ABwFuj6gi3RbJaABp+E5nhfibc3bdZRJ1hKBoRg9+Feo0+ovtNlRAwDUfxi6
+	mhjdljGd32C9T7Xi6Zzp3aoSt+QzeLqkBgMFJDIKLC5Y4quACg3VHfH3TQ2mnU7MkB3EZewx6dK
+	Vfd6hjCpXlIIKclokncc675gYPe5va8n7qgOMBfXI9zoHc7QRfxn8cPyx2cjpcjl4zAzcnXPlBW
+	2yaDTCZLsydFsftnSSZO2IwaYUZ7eXPhK7QU/AQlyseF1hNIxn+fyeMzYXOFAHEB4bOyTl8Lq1o
+	ytfSXy3TVMAgt1+TAzZ9LGmhn5b0L0An61Sw==
+X-Received: by 2002:a05:6000:1610:b0:498:364d:7509 with SMTP id
+ ffacd0b85a97d-49997c6c18bmr523568f8f.24.1794337543600; Tue, 10 Nov 2026
+ 11:05:43 -0800 (PST)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -104,102 +105,180 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261110-tp-glob-errno-v1-1-6c2cb609c590@gmail.com>
-In-Reply-To: <20261110-tp-glob-errno-v1-1-6c2cb609c590@gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 10 Nov 2026 10:14:42 -0800
-X-Gm-Features: AclHuK9xIbr7pga1JS6cGGqHrO7XBZ0oZ6bzuqE2kkPmCpNtl3AFPDmJMPPFj4I
-Message-ID: <CAP-5=fUFXZBtHEfSRzcR1rXFXb9jXqzUpp+gvCJH=9V6cEb7HQ@mail.gmail.com>
-Subject: Re: [PATCH] perf parse-events: Don't report unreadable tracepoint
- globs as unknown
-To: hang.zhengyang1010@gmail.com
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+References: <b7456dbb-16fd-45b4-8742-e9ea3f896317@amd.com> <20261105170340.165507-1-puranjay@kernel.org>
+ <CAEf4BzZeVd4boXX4Hy1sKAM=dUPS7dvdmrOPybGrrZV+bU7eAA@mail.gmail.com>
+In-Reply-To: <CAEf4BzZeVd4boXX4Hy1sKAM=dUPS7dvdmrOPybGrrZV+bU7eAA@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 10 Nov 2026 11:05:32 -0800
+X-Gm-Features: AclHuK8p9eKzrAmIvCtxKy6s76DJ6bc52Qt62Y2l4XXBjiRTKRk1Vg0I6Sg8r78
+Message-ID: <CAEf4BzaGnsOhpz=bOxoSEyy-8W0epd5Go6juimoqDge+Rc-+Dw@mail.gmail.com>
+Subject: Re: [PATCH RFC] perf/x86/amd/lbr: Don't freeze the LBR on PMI for
+ user-only filters
+To: Puranjay Mohan <puranjay@kernel.org>
+Cc: Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H . Peter Anvin" <hpa@zytor.com>, Andrii Nakryiko <andrii@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 9, 2026 at 7:05=E2=80=AFPM Hang Zhengyang via B4 Relay
-<devnull+hang.zhengyang1010.gmail.com@kernel.org> wrote:
+On Thu, Nov 5, 2026 at 5:07=E2=80=AFPM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
 >
-> From: Hang Zhengyang <hang.zhengyang1010@gmail.com>
+> On Thu, Nov 5, 2026 at 9:03=E2=80=AFAM Puranjay Mohan <puranjay@kernel.or=
+g> wrote:
+> >
+> > On CPUs with X86_FEATURE_AMD_LBR_PMC_FREEZE the LBR is always frozen on
+> > PMI, so the branch stack ends before the IP and callchain, which are
+> > taken when the NMI is delivered. IBS rejects branch-stack events, so
+> > there is no precise alternative.
+> >
+> > The freeze only keeps the PMI handler's branches out of the stack, whic=
+h
+> > matters only if branches into the kernel are recorded. Skip it when
+> > LBR_SELECT suppresses them, and add a freeze format bit (config2:0) to
+> > request it anyway.
+> >
+> > Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+> > ---
+> > Thanks both. A user-only default with an explicit request works for me,
+> > with one exception I would like to keep: when branches into the kernel
+> > are recorded the freeze has to stay. On a Zen 5 part with the freeze
+> > cleared and a user+kernel filter, every entry in every sample was a
+> > branch taken by amd_pmu_v2_handle_irq() or amd_pmu_lbr_read(), so users
+> > recording kernel branches would regress with a "never freeze" default.
+> >
+> > This RFC does the following:
+> >  - LBR_SELECT suppresses kernel branches: no freeze, unless the new
+> >    AMD-only freeze format bit (config2:0, advertised through the format
+> >    attributes) is set.
+> >  - Otherwise: freeze as today.
+> >
+> > That needs no tool changes for the user-only case and gives an explicit
+> > way to request the freeze. This version is only compile tested; I will
+> > retest on a Zen 5 part if the approach is acceptable.
+> >
+> >  arch/x86/events/amd/core.c | 14 ++++++++++++++
+> >  arch/x86/events/amd/lbr.c  | 21 ++++++++++++++++++---
+> >  2 files changed, 32 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+> > index 49b6b8fce5664..d63649c756a58 100644
+> > --- a/arch/x86/events/amd/core.c
+> > +++ b/arch/x86/events/amd/core.c
+> > @@ -1404,8 +1404,22 @@ static struct attribute_group group_events_amd_b=
+rs =3D {
+> >
+> >  #endif /* CONFIG_PERF_EVENTS_AMD_BRS */
+> >
+> > +PMU_FORMAT_ATTR(freeze, "config2:0");
+> > +
+> > +static struct attribute *amd_pmu_lbr_format_attrs[] =3D {
+> > +       &format_attr_freeze.attr,
+> > +       NULL,
+> > +};
+> > +
+> > +static struct attribute_group group_format_amd_lbr =3D {
+> > +       .name       =3D "format",
+> > +       .attrs      =3D amd_pmu_lbr_format_attrs,
+> > +       .is_visible =3D amd_branches_is_visible,
+> > +};
+> > +
+> >  static const struct attribute_group *amd_attr_update[] =3D {
+> >         &group_caps_amd_branches,
+> > +       &group_format_amd_lbr,
+> >  #ifdef CONFIG_PERF_EVENTS_AMD_BRS
+> >         &group_events_amd_brs,
+> >  #endif
+> > diff --git a/arch/x86/events/amd/lbr.c b/arch/x86/events/amd/lbr.c
+> > index a55646fcb8465..f45e2c53566af 100644
+> > --- a/arch/x86/events/amd/lbr.c
+> > +++ b/arch/x86/events/amd/lbr.c
+> > @@ -10,6 +10,12 @@
+> >  /* LBR Branch Select valid bits */
+> >  #define LBR_SELECT_MASK                0x1ff
+> >
+> > +/* attr.config2: freeze the LBR on PMI */
+> > +#define LBR_CFG2_FREEZE                BIT_ULL(0)
+> > +
+> > +/* Software only, masked out before writing LBR_SELECT */
+> > +#define LBR_FREEZE             BIT_ULL(63)
+> > +
+> >  /*
+> >   * LBR Branch Select filter bits which when set, ensures that the
+> >   * corresponding type of branches are not recorded
+> > @@ -307,6 +313,9 @@ static int amd_pmu_lbr_setup_filter(struct perf_eve=
+nt *event)
+> >         /* Filter bits operate in suppress mode */
+> >         reg->config =3D mask ^ LBR_SELECT_MASK;
+> >
+> > +       if (event->attr.config2 & LBR_CFG2_FREEZE)
+> > +               reg->config |=3D LBR_FREEZE;
+> > +
+> >         return 0;
+> >  }
+> >
+> > @@ -392,20 +401,26 @@ void amd_pmu_lbr_sched_task(struct perf_event_pmu=
+_context *pmu_ctx,
+> >  void amd_pmu_lbr_enable_all(void)
+> >  {
+> >         struct cpu_hw_events *cpuc =3D this_cpu_ptr(&cpu_hw_events);
+> > -       u64 lbr_select, dbg_ctl, dbg_extn_cfg;
+> > +       u64 lbr_cfg =3D 0, lbr_select =3D 0, dbg_ctl, dbg_extn_cfg;
+> >
+> >         if (!cpuc->lbr_users || !x86_pmu.lbr_nr)
+> >                 return;
+> >
+> >         /* Set hardware branch filter */
+> >         if (cpuc->lbr_select) {
+> > -               lbr_select =3D cpuc->lbr_sel->config & LBR_SELECT_MASK;
+> > +               lbr_cfg =3D cpuc->lbr_sel->config;
+> > +               lbr_select =3D lbr_cfg & LBR_SELECT_MASK;
+> >                 wrmsrq(MSR_AMD64_LBR_SELECT, lbr_select);
+> >         }
+> >
+> >         if (cpu_feature_enabled(X86_FEATURE_AMD_LBR_PMC_FREEZE)) {
+> >                 rdmsrq(MSR_IA32_DEBUGCTLMSR, dbg_ctl);
+> > -               wrmsrq(MSR_IA32_DEBUGCTLMSR, dbg_ctl | DEBUGCTLMSR_FREE=
+ZE_LBRS_ON_PMI);
+> > +               /* Skip the freeze if kernel branches are suppressed, u=
+nless asked */
+> > +               if ((lbr_select & LBR_KERNEL) && !(lbr_cfg & LBR_FREEZE=
+))
 >
-> When the events directory can't be read, a tracepoint glob like
-> 'syscalls:*' is reported as an unknown tracepoint, with a hint about a
-> missing CONFIG_ option.  A plain tracepoint name reports the permission
-> problem instead:
+> heh, so we basically either
 >
->   $ perf stat -e 'syscalls:*' true
->   event syntax error: 'syscalls:*'
->                        \___ unknown tracepoint
+> a) opt-in freeze with *new config*, but do it *only for non-kernel LBR*
 >
->   Error:  File /sys/kernel/tracing//events/syscalls/* not found.
+> or
+>
+> b) opt-out freeze *only for non-kernel LBR* _unconditionally_, but
+> without adding any new config
+>
+> In both cases we have a behavior that makes sense in practice, but a)
+> adds some new config, while b) doesn't add anything. End result is the
+> same, just more configuration and need to change user space code to
+> opt-out the freeze.
+>
+> Is a) worth it, or we should stick to b) and keep it simple, Sandipan?
 
-Thanks Hang! The Sashiko feedback seems like overkill to fix here.
-Could you give a before and after comparison of the console output for
-this change?
+ping
 
-Thanks,
-Ian
-
-> add_tracepoint_multi_sys() reports ENOENT whenever nothing matched and
-> ignores the error returned while reading the directories, which got
-> lost when this code moved to tp_pmu.c.  Report that error when there
-> is one.  As a normal user 'syscalls:*' now gets "can't access trace
-> events" and the remount hint, and perf test 5.1 is skipped again
-> instead of failing.
 >
-> Fixes: d002aab87de8 ("perf tp_pmu: Factor existing tracepoint logic to ne=
-w file")
-> Assisted-by: Claude:claude-opus-5-5
-> Signed-off-by: Hang Zhengyang <hang.zhengyang1010@gmail.com>
-> ---
-> Found running perf test as a normal user.  Tested on perf-tools-next
-> 13a8d580433a.  As a normal user, 'syscalls:*', 'sched:*',
-> 'syscalls:sys_enter_open*' and '*:sys_enter_openat' now report the
-> permission problem, perf test 5 passes with 5.1 skipped, and the rest
-> of perf test is unchanged.  As root, 'nosuchsys:*' still reports an
-> unknown tracepoint, 'syscalls:sys_enter_open*' counts, and perf test
-> 5.1 passes.
->
-> The issue was found and the fix and changelog drafted with Claude; I
-> reproduced the issue and reviewed and tested the change.
-> ---
->  tools/perf/util/parse-events.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
-s.c
-> index f3ba70d4f76b..8a6d5a13863d 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -572,8 +572,10 @@ static int add_tracepoint_multi_sys(struct parse_eve=
-nts_state *parse_state,
->                 ret =3D tp_pmu__for_each_tp_sys(&args, add_tracepoint_mul=
-ti_sys_cb);
->         }
->         if (args.found =3D=3D 0) {
-> -               tracepoint_error(err, ENOENT, sys_glob, evt_glob, loc->fi=
-rst_column);
-> -               return -ENOENT;
-> +               if (!ret)
-> +                       ret =3D -ENOENT;
-> +               tracepoint_error(err, ret, sys_glob, evt_glob, loc->first=
-_column);
-> +               return ret;
->         }
->         return ret;
->  }
->
-> ---
-> base-commit: 13a8d580433a3b72b10be34f0e26787fe5659d3c
-> change-id: 20261110-tp-glob-errno-672ea1eb786b
->
-> Best regards,
-> --
-> Hang Zhengyang <hang.zhengyang1010@gmail.com>
->
->
+> > +                       dbg_ctl &=3D ~DEBUGCTLMSR_FREEZE_LBRS_ON_PMI;
+> > +               else
+> > +                       dbg_ctl |=3D DEBUGCTLMSR_FREEZE_LBRS_ON_PMI;
+> > +               wrmsrq(MSR_IA32_DEBUGCTLMSR, dbg_ctl);
+> >         }
+> >
+> >         rdmsrq(MSR_AMD_DBG_EXTN_CFG, dbg_extn_cfg);
+> >
+> > base-commit: 0f443787a7f6ae907975742680aac2600483eaf1
+> > --
+> > 2.53.0-Meta
+> >
