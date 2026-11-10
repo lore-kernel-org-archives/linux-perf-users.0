@@ -1,57 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794349471;
-	b=yjDvM4Gq7EfUsoKqT8d057yVISWzgZuh6z7khMJlutWWCirVGtZ10etS60e1BD3ebqbG
-	 UtAXFnxARxUWreGnugtMp56O8rKvnRyLQXUi9AwbLiprtOjJA0HhKhqf3AlD2bhKyzQUo
-	 EkubjrrN0iPZ/47wiNmpezA4n9/EJ1Faw1/FTi5A03pzo9kag9rKzK9iRwzksv+myIa9+
-	 qfaPNlqAu3WDzCMV2NzaDNSNOw0k8EgsncbfvUs3mYeLK5z0vgCfhCvm/2mJst3qwpNNb
-	 vP0ekNIBTe1AHq2Etg+3iuVKTk+wJwnb61ou/JJBfRTcpVuFiek5K8AFdZzSNDKlOnw==
+	t=1794349482;
+	b=ljjxzL/1a/1SV2G+60sRAfl1h+93nuPxiKtCriPyWVmYGRTyP06mIHpXa7AphM9Bunrc
+	 rVMPgvYEdAm5z99jQhenvAQEJxoxZQ4ziy8BdXOX4G4X4e1VIfTlTISGvS7aiHqeTdDu3
+	 sZ+zKt5v0xXrTCIzRuX9Weae8ydCwkuk2m4psR+UZO8X6GUFthCcVeVTLgpvyKklPc4Q/
+	 NfWFzBYCaeqA4LNRukTfta6IrVar7qNv4FAtYddxn51atFwR/DSegCplZoDpN08898vl4
+	 eRxoEmD2NM+UeT4evNY+14yth7GC+Mw2Fzey35crim621x/l3PcXKyGJT5dQyyHhehA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794349471;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794349482;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=sV6IqD/OA6PWEl2Ajlr+QSnDaiMiy45kUaeDX8n6luc=;
-	b=sdm71tCWvsSX5NO2qTXhxnkGJhQf4lTrijHIDasuwj0kkKnLcn+lvXjsR6km5kpjWpFy
-	 tlwWcClnPXk9ptcAC6vFFAM4Tt5U3MGTwRUR7yMXUdAKSzYjG7XkYV/wJlFotQWji6nVW
-	 xJUf0MayebhBqd8GvSfWzrMLNUpBMUpx4O4x2EkZ+5Y7ACk85lArkjCzDx9sbYwRH27oB
-	 PZ7LRK/g1Yvnero4QYKophIzC73tDj0rfoUDkhA8NEZ18vlZZJBB+S+5sLBFYB57KDzSg
-	 pBCuRVXbw0audUQePnv1Kx4wkywIblMZ7RG6XjoDhxqs5zqUZydUpyMlykmG6JCb+Gw==
+	bh=fZK4LOWCMmVgMiNhSy5kFXEhDOLIk9gTpFrNp7biNBk=;
+	b=hd4FNOAADzHPnQMklr7tnE7QHhJOkBj1pEeYt3+NVClLT0wQrtfLog0qfU9HZC5BSXZM
+	 26JVs7lem0PkfVUXBraLSAG9GNbJb7A7MMs6oKApj5ucYhKLbQNjaMYQkzmtZw3Nosn/p
+	 eB9fbHOJz5OMDAGXmTKA6MLH4VqD6Gk6ImAwZxRDCSiVNXOLa2N5AIb6JR/PJSttP5qjI
+	 vkmHA2AAFTx75a59K+vwa7nURG/iNWs/SoE9J3H9KKMatVSkFsoQikl2BPG/orlGI5VMD
+	 dyTyF0oizOMCPCiMZOhRxjpst15+bXDMqCi/MM9Fnab4Dt/Kgd/6vfrE+aVVT6yCYlA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dggN+XQk;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YdnzP3J8;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A8D606A334
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 22:24:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4114606A31C
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 22:24:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dggN+XQk
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB80F1F008A3;
-	Tue, 10 Nov 2026 22:24:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YdnzP3J8
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8240E1F008A3;
+	Tue, 10 Nov 2026 22:24:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794349471;
-	bh=sV6IqD/OA6PWEl2Ajlr+QSnDaiMiy45kUaeDX8n6luc=;
+	s=k20260515; t=1794349481;
+	bh=fZK4LOWCMmVgMiNhSy5kFXEhDOLIk9gTpFrNp7biNBk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=dggN+XQkZDt5hThcH8lB3st3dqdGPQWijVGtKkT54xXemT+aZNB3mhxEbo5j2od/d
-	 0AgQV0bNpLCdcWz01dlsOlw09VLaI5gMyxNtWrMklqmCcCOw5E+1U0pgx9dZM+J+pd
-	 bpNjQJvheJFdXKihDV+OgNtMS3eFJ+eG73MUOIAmCyEYOr2aVip5gr1ooQPBKZAO6M
-	 V4p/6JKSFLYOBNmzBzTk67VoLHHjJiDb9CYPA9YGt8rSBuEEEvya3u57UhnnfKisU7
-	 +5w2WVvTz7lAYQONbPn1Y3t4wAzUmRu4iUMH//cnNI+bUZX3qtNsbhIGzUSWEzqCjO
-	 ybpSDAf/14tUg==
-Message-ID: <sashiko-outbox-207823@kernel.org>
+	b=YdnzP3J88Dq7fNH+XsF5QeF55jiURA025ln63qW16UYzztHtv0Ri+rdLQEBMiCUQX
+	 +qkqZ4EEXO3N5Q8zVQXHGay9ww683iVtdtaAHX/sC7G13OZCm+XUQNOwgw0K35Ggeg
+	 i6DmE9GI7jRxHUEH0p0wasuRER+sdAOMHPV4A/FFVhYvkCKC+aURsc3WIEOt3v2N95
+	 tzsjwEhTwiTXJyCYH/Il2/Y60BQyrf2FzzpDMx6bi94S59fxJ0u6Rm+CNuMRwoiHp3
+	 LHOnei/aGAtC8n5aAMomeweo9kJTdqZyxUSF9PcoQ5nHFseFBrhiNjELfO8ggYI7FD
+	 ZbvyugrTvkSfA==
+Message-ID: <sashiko-outbox-207824@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 10/20] perf bench internals: Add maps benchmark
+Subject: Re: [PATCH v3 05/20] perf map_symbol: Add struct dso_symbol and use
+ for parent symbols
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261110220803.2503416-11-irogers@google.com>
+In-Reply-To: <20261110220803.2503416-6-irogers@google.com>
 References: <20261027231513.816148-1-irogers@google.com>
  <20261110220803.2503416-1-irogers@google.com>
- <20261110220803.2503416-11-irogers@google.com>
+ <20261110220803.2503416-6-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 10 Nov 2026 22:24:30 +0000
+Date: Tue, 10 Nov 2026 22:24:41 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,21 +62,21 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Add a 'perf bench internals maps' subcommand to measure map insertion,
-> sorting, and lookup operations directly:
+> A struct symbol's lifetime is owned by the struct dso containing its
+> symbol table rather than by an individual struct map. When retaining a
+> symbol pointer beyond the scope of a temporary addr_location or map
+> reference without holding the map itself, the owning struct dso must be
+> refcounted alongside the symbol pointer.
 >=20
-> 1. Inserts non-overlapping maps in ascending address order (simulating
->    /proc/<pid>/maps synthesis) and queries each map by address.
-> 2. Incrementally appends maps at interior addresses (simulating runtime
->    PERF_RECORD_MMAP2 / JIT events) and immediately queries each map by
->    address and by name.
+> Introduce struct dso_symbol pairing a refcounted struct dso * with a
+> struct symbol *, along with dso_symbol__copy(), dso_symbol__exit(), and
+> dso_symbol__from_al() lifecycle helpers in map_symbol.[ch].
 >=20
-> Example output:
->=20
->   $ perf bench internals maps
->   # Running 'internals/maps' benchmark:
->     Average ascending insert + lookup: 145.870 usec (+- 14.628 usec)
->     Average append + lookup: 17405.810 usec (+- 1773.195 usec)
+> Convert parent symbol tracking across callchain resolution,
+> hist_entry_iter, and hist_entry from bare struct symbol * pointers to
+> struct dso_symbol so that parent symbols pin their owning DSOs until the
+> iterator or histogram entry is destroyed. Also drop the unused
+> perf_session__resolve_callchain() prototype from session.h.
 >=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
@@ -83,5 +84,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261110220803.2503=
-416-1-irogers@google.com?part=3D10
+416-1-irogers@google.com?part=3D5
 
