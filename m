@@ -1,86 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.44
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.49
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794280959;
-	b=RrWR8x+aN9z69vx4ml08gLuQfycKDp6G/p2MGXL7VAgBw+p0UXy9f193d1479eMNl27x
-	 kW7tOs4xkmW3a+ZY4Vq/OCdOymZmNW5ijq6iSmVqEGQZ9mrARiuTAWelKAlz/PSEduNzb
-	 7IxegXXs4l7rSYJrknj4ye/Y5Y21SLkro+soc9BWiFdYW7uMV8squDZSUSpyo/gTMpHm5
-	 KrguXFK3h0OQgXVUFO79aIbVLfLliKrq64Ex+eNSCnPUzCDv9KR6fwxWa+hDkSJjw58C5
-	 PSbYtKss9BcqZYqkCKa3d+/DFogOeI1KZx3Xn40Xu6cP5urPevGY3/g5cbecTRtcR5g==
+	t=1794280967;
+	b=MpGE564IKTnJtQZ7GLU4JXUFLYQ6YSrTcsvrV1UIYycexDcoCuNXdu2ah0xPBWzLEsMM
+	 Qz+TL/s5Yx3ymeH+at6KaeImmB51OEm9Ua+VebHI5DQOxZ1trJV9Wnt8hmJzcK/opIEV3
+	 5olIgCam8zbpx5GQu3NjURk81aBR8tnPlT3j4yrSCpgmru6+OtZffvA8SZccMbvlk+Rmb
+	 Q84UHYhyVKGhatkdbjB2fFGX3KFW3yQZwuzhVQYIGtnaERnhOJJXRizHsGHP3lA52svsv
+	 pCw1pSL2Q+TZsugeIh50z46tdM3dlU//h6IymDUvyPemEvkT80AFnlESG0AB+neUi0A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794280959;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794280967;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=0n3oxuSYM0wY0dNcqd4sVlOYEFaqxsxikNeoWib2fRE=;
-	b=qzKKNGAa22BuRBG70BPmNFaPQ/8oRNz92Srueb76hkxxCwmWVj3o97El97kJN1BGrDQ+
-	 DZjXz+l4ji72GlQBuHM43DFBthjL3bH0bS81F9Ya/4FL5iNg1IxRnBlKj164YAWKdvd3L
-	 TtpxPcH/Fr/lWIOIMZsiz6FSP7zTdSa1QOElQjeiuooOoOZ/0pkJK4q4xoEYWIi/ggoJp
-	 tGegdFOUk1EvBl0aF/QJSSkNzoNcjXTfdIcmXBhdrfpfYk8pzlL1kVXaRjmPgLjGG9n4K
-	 W0DSimBpYyoBHcWgPDqOdxv9mirkYCFMmSUvQTyaUV+t6Z3cdWvFMC4dYVUnPhRr0Gg==
+	bh=stnzaxH8NkDuiOo85TJCNs0yAvKFW6/an24wa5kJvj8=;
+	b=jxcCinLdsojpGc5+Lu1MQLUe1TzNict3N1HY5nehmpy3fG/6oFYr91bcLdAddDDzfI/g
+	 rVD462W9KDNqAkdsezwxslDnYM+jwQK1f3PJgmj08MvKOcjY8ZLIi9wRKKF65o3hLdgeA
+	 Be4ANBFdLsB229VlV1OsXHYp7L8eiwt7YXdY7OFfx/NWsk3bxQJGRYXMbqrjJ7EdP4w3o
+	 AsXKN9RPEEHwssCv/dcy3wMTZ5u6B6bcFv98MA6hNA4rozhYKOHtfa5ankHP+Ncv9oAax
+	 nZX7BDbQT3Vo6jVBJzlymlJWzh7nSHKUyX2huIpn5H7IRVbwptl8ZCzDrFXgThSdZTA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=xAUVWEMJ;
-	arc=none smtp.remote-ip=74.125.82.44
-Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=clGMaWxd;
+	arc=none smtp.remote-ip=74.125.82.49
+Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB930606A33E
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 03:22:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DB930606A33E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D05606A326
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 03:22:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A4D05606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=xAUVWEMJ
-Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-1b3b4bcbfc9so1222714c88.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Nov 2026 19:22:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=clGMaWxd
+Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-1a2761c69fbso2078884c88.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Nov 2026 19:22:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794280958; x=1794885758; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1794280966; x=1794885766; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=0n3oxuSYM0wY0dNcqd4sVlOYEFaqxsxikNeoWib2fRE=;
-        b=xAUVWEMJIPDmeFKsmhIV1Zj5U+r9lthtoqzb4uiUSi+lhY/v9VM4NRGRtUv0iZKNib
-         48gnIUfYYOqQk+RHI+f3V/r8RoOroRbbLIzkSN1kIlMijRinYXiEMIl4fm6fVIqdGdjP
-         24zwrkKvTtOLvn63wV/XoF3rWgS3UZkyQ3JPYP0IvcNnB57+DP4EruFYNfzF6ZaSaToL
-         2vuPPiSUPxaSL4/oEXyRwrVWxve9OWSM0aC6pwIaI5dyiJTj/PZUvtPzUPK5int/2xqe
-         z85UBeAGqDSfdIgmFkJAhdU3OstphZ8Mcy78jvm46gnohop5j00V8PL9Vj6J+W19OQRz
-         Y7yA==
+        bh=stnzaxH8NkDuiOo85TJCNs0yAvKFW6/an24wa5kJvj8=;
+        b=clGMaWxd1xDbbN+gMw/ioN1VLgmuJekJgKgfL3QzKFjCdJrb1uXulezmJxeyhJhrbf
+         lT5v5cI1hFkX1HUKQE/YI9jDCe3FZJriOm8BGTNbYrwiGx8zgZJyw9IYXPJptgmq5Oah
+         f1u51+46gzKXGBUCD8UKQa8DFoxsopJAM7/lBf/19N6yeQ1x25oUV0KZkil4gcZmZaCd
+         lEefzmOiaq2+07BtO9V3Q/kgQbfpLmAtJcYKHo8cunpCabtV99uzPtcrwI8ihDJH8tT0
+         fJ8uO9XzlXrxY67CFk+Vn7jMi6zd5680f9DualvtChmxyvaxbxaNs8k4Bs8n+Y4Le6aB
+         6W1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794280958; x=1794885758;
+        d=1e100.net; s=20260707; t=1794280966; x=1794885766;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=0n3oxuSYM0wY0dNcqd4sVlOYEFaqxsxikNeoWib2fRE=;
-        b=0omFfKhQmn5DLMflbeeZaAuWWhDK2dPWZk+eIx1U8RSwfs3tzUd25QprQgKlIxdCyR
-         0sVYPnCGDxyAxKxeLX3RlptBrD0AP27zon2cbnna1YW6mb8PGgNxPo4ZB8OhM879i+29
-         ZN0nqKvVhY32I6qch0xufrlywi620AGrosWSl/J5r6eo9ItrhaYbkiKeAMhWJt3FmvI9
-         yPX5H64YSJGlbwdAZ+eFzk9khlg6RuQbpxfAVsmzB9zeeIDNhoeET9dSF7zi2pTiSwWS
-         AP6GPdm5jhmXUY0mRT8Wn1tvzzwNs5XomnVHZ2WUOgAD75A4U4jh4Oo7Y1Tzy0bUN3Wv
-         5Cww==
-X-Forwarded-Encrypted: i=1; AL+hErGb+0L5gVY7XVO3jXDlQzmM5TOlMNhhAB6lR0v0GRViy2TOpENie2MVmjIqerftSWm8pXIUvcKsur7vrGil/QlG@vger.kernel.org
-X-Gm-Message-State: APuU4Z8Hts+h05wKzdhKNnsGIwM+b2wJUEBHLofUSZRu1IhTfDrIqFEV
-	uTcS5jjTypfVl/ddxYsG3dFqbIfBjyoCBAv88b0uMHtnkT0yjOp0urII
-X-Gm-Gg: AYBFou2KPBplkn/E8gkcu4L6XKNYuCrGYQJp7aaQLNMl++WzojmXKk1/UHZGzr/evZz
-	9f5sM6INmdjjjo6FrnfCX9pT1fFYpWabP9THrgHNkW41nb76ZXSiBeuyzelz8of67GVdoTwqS5O
-	asjZfLxlDJnIEsr3erWzIP7DluQf4VMgKjNsabRB9u9i9UKb+YaPGaA9Pn3j59IOtOjqcY4xNtx
-	ey62g8A/PSpDpEBhNlQBigUEwfYB7e27++F2hGxwDuMrZa+vwVm6qf0jT6wVF6yB8KH0Mkd9cfV
-	gTjufHdXOumqgkacUcE1RNe4i8U8JNSzLp9C/5lp3LTGl3t1lsOfesEk87RHjCuIIdX6qvdMG0G
-	bW40ExS99LnxWXGOs8J0WuAj3OCSH+RrBMgedOYGIc4eZiOQA37LBmZpHaWQ+e9zw+x9i+F2e2K
-	k4uCMsCgicteSj1kXfiWwNEthIuShAF2TDKsitudMooe8lEL9QcAUv0zYpcepYn4FJS84+RxPuH
-	H2bO+B8tIk2s02JDhkw3OyawFgPBA/ofXFPp6QA+CeUGpWVL3ObJGr/nXQ80g8hkTeHF6FZVgs/
-	RYvzdUATUvl0rpD3TvwPQD7/A8ZP9QgB0K4TMDgB8r96Gu5dlPprUJbCtU34M6TDNyOB1iZt2SV
-	yaMenX9oF
-X-Received: by 2002:a05:701b:2302:b0:1b3:a9c0:6a3e with SMTP id a92af1059eb24-1b3b5fff49bmr1860238c88.29.1794280957671;
-        Mon, 09 Nov 2026 19:22:37 -0800 (PST)
+        bh=stnzaxH8NkDuiOo85TJCNs0yAvKFW6/an24wa5kJvj8=;
+        b=MM62QYJj7pqrwnV24RMWyYH8QitAnjJmqByk6ObryzAEHYYer1kQSDGxy5eRlBsqTQ
+         wwjcztSKKTGfKz89Ixb7USL1IwqnvMzmViCPDUkabepeUYICtX7j9kt/21fTqnJlZU+n
+         9UTAOIJrF6EM5QuFYZoqbdMq5T4coCvU4eHSnif4WS5StDKqMPTvhB/czbO0fzI6vAdu
+         EgC0YP6EGA/becsNMrOAhi1NQL6pv2lo8k4qhSNI32hHWEN2f8hbreKE9MIH9h2/vSf9
+         ou+qr6MHuxxOt29aa6ONXUUPrdg40fnBd3uRzEjGU+2QDakPFdmIggVy+Q3DZuD+BJFB
+         qeGQ==
+X-Forwarded-Encrypted: i=1; AL+hErGWTqDwoL4wtXa3hCUTJWiIKaZTU/JjmGnKd9tRbd7jND40gdIdS028adPH8/JvWseLt9VuCbZsAGTZFdbHD88z@vger.kernel.org
+X-Gm-Message-State: APuU4Z9ZqSHXDk/tRzy0Ueto8NBmIYCjZkZstXDFh9VEhfSWg8nuPcDN
+	q8ynTzjgGmer8dBefShJJnbhWAEe7+2VY7YDAgtZghG6nc1Xs2PkTEXX
+X-Gm-Gg: AYBFou1juixTeiZIHdzAExyLFaHwRrdxfjzOiO/Uhp2PXwWkxAVJKS49b0f0rfkURZu
+	pzQD1JMxyHufKub9R1G9tNAemeASpQQNRvY7hPbpFXuUwoMdtvxS4lBp65OOnX4kjGR9DGy+vGG
+	R3yFQNglNyBDwvdcUWGqGf8rKaGo+QyOt+pAfOi5eocPVzJV3Cwd/83uX/JuzzqWFP5TpRz6FQH
+	xOQb0JYSOsizN4ELae9TMm5h5eONudKu7PXMCzHZWfyYjcbLDomK/kH7zL/ODB8+5i9SLiQzkbY
+	mgOL8i3zoWtt9t+HokVxhoB0PS8YT7iMv1dHyQ/pfWrTKPk1/Yvcuky4uGuiSM4ZF2fCUMQbVSq
+	dchBvgoj1vuf7XrGQyQhBHSRKxaztB6TXmoEQ1lOMI1wGZi65IYVCCPX8G6EFAiZUVuv4rKbRjo
+	da45oVkncl0nMJFz/9Qtc2H/ABrUYJblHym11Bi2tDeBSBeio3EtIav+BIHnf7soxEf4vW2CB2u
+	QWIe2LqvXBOtVQOFcEBEEc+BWaukHWtjkoKE8tvWHPSWWor4fjLF3RtKbAtfevPRseVnVDgJj9H
+	MZHsmO3UgrGd0LvNpOagDDip4LkNK/2wIgMPh2Wu5X8LUWhkSO0Sqh64PirN0DJlqx+96KKNPoM
+	ZgICLRqL3
+X-Received: by 2002:a05:7022:290:b0:195:c6c2:c6b with SMTP id a92af1059eb24-1b3b6183256mr1937438c88.35.1794280965622;
+        Mon, 09 Nov 2026 19:22:45 -0800 (PST)
 Received: from thinkpad.tail59a646.ts.net ([112.199.224.229])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b3b5b4efc2sm2897362c88.15.2026.11.09.19.22.34
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b3b5890e04sm3284470c88.2.2026.11.09.19.22.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Nov 2026 19:22:37 -0800 (PST)
+        Mon, 09 Nov 2026 19:22:45 -0800 (PST)
 From: Hang Zhengyang <hang.zhengyang1010@gmail.com>
-To: Jacob Lefkowitz <jlefkowi@akamai.com>
+To: Chun-Tse Shao <ctshao@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -91,17 +91,14 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Ben Chaney <bchaney@akamai.com>,
-	Matt Pelland <mpelland@akamai.com>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] perf jevents: Add IOMMU PTW & device entry metrics
-Date: Tue, 10 Nov 2026 11:22:30 +0800
-Message-ID: <20261110032232.3080268-1-hang.zhengyang1010@gmail.com>
+Subject: Re: [PATCH v7] perf stat: Include PMU name and split uncore events per PMU in metric-only JSON output
+Date: Tue, 10 Nov 2026 11:22:38 +0800
+Message-ID: <20261110032240.3080302-1-hang.zhengyang1010@gmail.com>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261102-perf-tools-next-v2-0-4d237f886710@akamai.com>
-References: <20261102-perf-tools-next-v2-0-4d237f886710@akamai.com>
+In-Reply-To: <20261030192537.3079368-1-ctshao@google.com>
+References: <20261030192537.3079368-1-ctshao@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -113,25 +110,24 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Mon, 02 Nov 2026 21:14:15 +0000, Jacob Lefkowitz wrote:
-> Adds AMD specific metrics for the IOMMU with respect to page table
-> walks and device table entires.
+On Fri, 30 Oct 2026 12:25:37 -0700, Chun-Tse Shao wrote:
+> When running `perf stat` with `-A` (--no-aggr) and `--metric-only` in
+> JSON output mode (`-j`), [...]
 
-Tested on Zen 3 (Ryzen 7 PRO 5850U) on top of perf-tools-next
-13a8d580433a.  Both groups show up and count, perf test 130 and 131
-pass, and under O_DIRECT reads from NVMe the values match the raw
-amd_iommu_0 counts.
+Tested on AMD Zen 3 on top of perf-tools-next 13a8d580433a.  With
+'-M l3_cache,data_fabric,iotlb -a -A --metric-only -j' the metrics are
+now on separate lines labeled amd_l3, amd_df and amd_iommu_0.  STD, CSV
+and aggregated JSON output are unchanged, and the stat linters pass.
 
 Tested-by: Hang Zhengyang <hang.zhengyang1010@gmail.com>
 
-Two values look odd on this machine:
+Two changes the changelog doesn't mention:
 
- - lpm_iommu_ptw_nested_read_ratio is 100% with no guest running:
-   page_tbl_read_nst equals page_tbl_read_tot.
+ - Without -M, 'perf stat -a -A --metric-only -j' now prints two lines
+   per CPU; the first is labeled "pmu" : "software".
 
- - lpm_iommu_ptw_reads_per_tlb_miss is about 0.2: 142588 page table
-   reads against 440805 pte and 192018 pde misses.
+ - Plain 'perf stat -a -A -j' gets the "pmu" key too.
 
-Ravi, are these expected on Zen 3?
+Are those intended?
 
 (Tested with the help of an AI assistant; I checked the results.)
