@@ -1,63 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794279050;
-	b=nG/jNYypGvDaO4HellLUaeyMcHblAn8CaekJ68QYEyiZgra/K6odxGK/Jq8tbSc6bXze
-	 HGOkQl75j/wNJv/6TCIaf4rYK1Mfq18FTVHnFGu2BDJuz4tqnpMo+JxVKjeK1sOjQWzGS
-	 vI5bLAlFUm555D8Y9dBGktarEiPmlX1D2KTxxTKN9gqJ4JgwJvcCNctvjcUV15WcLpJp8
-	 p7mH5ysxOVFrgdi3eHeA2uLMZOMeZpDUavFUHtpAdVfg8GvCQIQdRIwXMkbnLlZxw1MY1
-	 fJPo5oU87Mw42N1w2Q9dbO8cn/b8GOM/Y9fEOLkyWge6V//pBUOeZAp69S1vvbVPrWw==
+	t=1794279142;
+	b=AZUNOEy4AO/vzsX8Ajam0RKWkVUXOxnkFuwWChdB+CTn/m2dsnFlgZ96Xbcd4Xo+g6tx
+	 iYDIzvO14y5ZYFwsIURZG297FHtF/P8CATUGohe0raDr7Pmvvd4w9j/ysz4Z2SFDFsH1s
+	 pQ6U9PphBcHVxzzh8gj0eFzXW60Zx6IJrZ0GjmQURLmlI0aSGTofcYxsXV+A79Yn8YHBD
+	 Vh/EVGdRO6O8BrLoWuSBvCKzwSrfPUD2z4omRqSKzPIHUlMnbM6OUngrCm7B2fsN/Y15/
+	 +UfKQKQcFPmqj5zMk/JP/EcxCd65krUopwb6twKuDPtO1d+Wby9KXyEX97U2dYDaM9g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794279050;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=V4BuPZ7NW9TLL+8xfWGzyH2DKRK7c1rfjhgBtZNneX8=;
-	b=XjS3vm6S2/nWhlREfiqwIs0k9GXBmx5mQkZT/ReWe2TEsrUb0clsVfC2AXO1iDhkdalO
-	 sWMi/VDjOl1tZp8Ye84LqFAxHOHyJx+HPsZDdSm0Ls2l3wPv+ISdhhLYgs0uVHyVSNwpE
-	 0CNnswV8/H1+Cp7H8hFs/PBl8e8mY5a3sY66d7ilDQKsaXQpgA54zo2VA5HweXJ8XEiNI
-	 T79R8mwQU3oE+88yy9XZjkmQzoyfdQguINNL+2XKNnmjbOoP58EpeSOn71ef92uY0/aZK
-	 KFg7srHVmuQ3x7CwR5CIAWRv6VAQO7D+DUrufeOBvOhSKDXmhncG+AR55iFOYI3B/Xw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794279142;
+	h=Received:DKIM-Signature:From:To:Cc:In-Reply-To:References:Subject:
+	 Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-Mailer;
+	bh=IVNJNBwVCUrvpTZr532XZvXnzIFFiae9ctL11rMnMxk=;
+	b=Ipi+uUX/wKIU6XAskOCq1ecOr+1L8LnCmeVAwLOPIyWDvuZWw3AaAlXVJ3/LJ0oQ9wWc
+	 0cRdFF1q2xilhTwnzCxS9+LuOljyzozBe0eSR2/Sq2Scb/uDT9RerD0ilyX+Q2bEhIm6K
+	 IRS8Bawje3YNPpjf7xpQXCxWS5C6DGDxPSHrurzq51wTJfHQXeoI889MNuXZ80BpFf//6
+	 7mUxFMw50ShHM8mfgkwTNdX0guP21c0iOWzk8kbJU+trO+T+Qz3Sq9sE9zlmypqF4W+ts
+	 rKNCB7t7iRDvrZQjocRQvtxxR2rURrzY4UDwO5Gq8JFqD2ANiwYpgmViZV2EudfS50Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=k0BFBl8z;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ao28qVj9;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C38F606A325;
-	Tue, 10 Nov 2026 02:50:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28114606A321;
+	Tue, 10 Nov 2026 02:52:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=k0BFBl8z
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07BA71F008A2;
-	Tue, 10 Nov 2026 02:50:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ao28qVj9
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D1B21F008A3;
+	Tue, 10 Nov 2026 02:52:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794279050;
-	bh=V4BuPZ7NW9TLL+8xfWGzyH2DKRK7c1rfjhgBtZNneX8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=k0BFBl8zcd33ECWC2HjtKmbdUmGlo7G4Bqu9sRRwvbtFUAIUioMoO4JXLdDT0xjZp
-	 RowSKL9DP6ksG991qVHD0bXCFj9UwIDE2rj03MvWA8S+Km4v3wZw6yNnTnode5ZoeG
-	 f/nkY+f+gWu4nosoqsMqLgsVslyVqXkFwBezraEJBcghUYkxYq75iWrwAzGm6h3HjH
-	 cQOObLLm9ZsLccfHSH+gPebfexjGrVbelz4Eb9Et+FMRhp0/8mByyfHdLlkf5JXTK7
-	 BHdIvTj5cm9SvOLBGLxqoYyVHIYZkigGoR+wnF9GMiWoEULHyuMsCKXhWWR8iL+yUz
-	 X78/Z/CQix8mw==
-Date: Mon, 9 Nov 2026 18:50:48 -0800
+	s=k20260515; t=1794279141;
+	bh=IVNJNBwVCUrvpTZr532XZvXnzIFFiae9ctL11rMnMxk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=ao28qVj94euhgeyeORZydVBfwsNYgy5EQLn5Ny3Iag4v463vUfrEistLWNxFUjcxk
+	 /SCVeJXLmYjIvi0uNacghwtHmgEe/pCfV0GBHdzV6xRHdCjPFQfZmZ9y42txD7V1gJ
+	 SSgWDyDOSujDIsvPg3P0+kNdCfeRtdtt8DBASUhBd6Aui+Qh1FQrroX/6oTw1pnvhd
+	 rOmP74XeLt26VjpMkPauoPHN5T4JRuEQID1zVlYnbXkdNOdfSth7WrASL+lX/8Nzbz
+	 ME2vyJvDf1b5FyRHnen6aEeMsKccGh3FkP4md06cbqq+qfkjP/hkpMpgsKOSxPxQ9v
+	 yBppWZn7DX1Tw==
 From: Namhyung Kim <namhyung@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jakub Brnak <jbrnak@redhat.com>, Leo Yan <leo.yan@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v3 3/4] perf test probe_vfs_getname: Fix missing
- debuginfo detection
-Message-ID: <avKGiPiE4Ag3PS33@z2>
-References: <20261109-james-perf-test-fixes-v3-0-e8d0a65e618a@linaro.org>
- <20261109-james-perf-test-fixes-v3-3-e8d0a65e618a@linaro.org>
- <ecd60873-644e-4b8b-a786-ec84276a99c4@linaro.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20261106092808.6914-1-yangtiezhu@loongson.cn>
+References: <20261106092808.6914-1-yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v1 0/2] perf tests: Fix and improve watchpoint tests
+Message-Id: <179427914132.13444.8498342903914689846.b4-ty@kernel.org>
+Date: Mon, 09 Nov 2026 18:52:21 -0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -67,80 +59,23 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ecd60873-644e-4b8b-a786-ec84276a99c4@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3
 
-On Mon, Nov 09, 2026 at 12:11:09PM +0000, James Clark wrote:
-> 
-> 
-> On 09/11/2026 10:17, James Clark wrote:
-> > skip_if_no_debuginfo() looks for the errors that 'perf probe' prints when
-> > there is no debuginfo in the output of add_probe_vfs_getname(). But since
-> > commit 92b664dcefab ("perf test probe_vfs_getname: Skip if no suitable
-> > line detected"), add_probe_vfs_getname() returns early without adding a
-> > probe if 'perf probe -L' doesn't find the line, which is also what
-> > happens when there is no debuginfo. The error from 'perf probe -L' is
-> > discarded, so the debuginfo errors are never found.
-> > 
-> > This causes the debuginfo dependent subtests of the
-> > "perftool-testsuite_probe" test to fail instead of being skipped on
-> > kernels without debuginfo, because test_adding_kernel.sh calls
-> > skip_if_no_debuginfo() unconditionally. The other users only call it
-> > when add_probe_vfs_getname() returns 1, so they aren't affected.
-> > 
-> > Fix it by doing a dry run of a probe that needs debuginfo instead. This
-> > works without libdw too, where 'perf probe -L' isn't available, and also
-> > avoids adding a real probe just to check for debuginfo. This fixes the
-> > "perftool-testsuite_probe" test:
-> > 
-> >    $ sudo perf test -vvv "perftool-testsuite_probe"
-> >    ...
-> >    -- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added probe :: perf probe -l (output regexp parsing)
-> >    ...
-> >    -- [ FAIL ] -- perf_probe :: test_adding_kernel :: wildcard adding support (command exitcode + output regexp parsing)
-> >    ...
-> >    -- [ FAIL ] -- perf_probe :: test_adding_kernel :: non-existing variable (output regexp parsing)
-> >    ...
-> >    ## [ FAIL ] ## perf_probe :: test_adding_kernel SUMMARY :: 3 failures found
-> >    ...
-> >    189: perftool-testsuite_probe : FAILED!
-> > 
-> > Fixes: 92b664dcefab ("perf test probe_vfs_getname: Skip if no suitable line detected")
-> > Signed-off-by: James Clark <james.clark@linaro.org>
-> > ---
-> >   tools/perf/tests/shell/lib/probe_vfs_getname.sh | 6 +++++-
-> >   1 file changed, 5 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> > index 57a59ae7d4ae..98cfb02cf7c6 100644
-> > --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> > +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-> > @@ -64,7 +64,11 @@ add_probe_vfs_getname() {
-> >   }
-> >   skip_if_no_debuginfo() {
-> > -	add_probe_vfs_getname -v 2>&1 | grep -E -q "^(Failed to find the path for the kernel|Debuginfo-analysis is not supported)|(file has no debug information)" && return 2
-> > +	# Dry run a probe that needs debuginfo.
-> > +	perf probe -n -v 'getname_flags $params' 2>&1 | grep -q \
-> > +		-e "^Failed to find the path for the kernel" \
-> > +		-e "^Debuginfo-analysis is not supported" \
-> > +		-e "file has no debug information" && return 2
-> >   	return 1
-> >   }
-> > 
-> 
-> Hi Namhyung,
-> 
-> This patch causes a shellcheck issue with certain versions. Not sure if you
-> applied it already, but I'll send another version anyway:
-> 
->   In tests/shell/./lib/probe_vfs_getname.sh line 30:
-> add_probe_vfs_getname() {
-> ^-- SC2120 (warning): add_probe_vfs_getname references arguments, but none
-> are ever passed.
+On Fri, 06 Nov 2026 17:28:06 +0800, Tiezhu Yang wrote:
 
-No worries, I'll pick v4.
+> This patch series aims to fix a potential logic bug and improve
+> the debuggability of the watchpoint tests in the perf tool.
+> 
+> Tiezhu Yang (2):
+>   perf tests: Assign return value of ioctl in wp_modify test
+>   perf tests: Use TEST_ASSERT_EQUAL for all watchpoint tests
+> 
+> [...]
 
-Thanks,
+Applied to perf-tools-next, thanks!
+
+Best regards,
 Namhyung
 
