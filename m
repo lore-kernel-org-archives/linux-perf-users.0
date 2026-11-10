@@ -1,58 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794279147;
-	b=PrnBUKH0kBHEbZN24dKiI2v4RiDNHmyiXAHjWBpHsR1KIC+++FMnxkKHm0gfikgLQP4d
-	 qA3OziEdAdNI9Ag+5TWjJfcQsKLTty79/kln3XUP7aaECZZrbm+v65ODtaai7uPFpuS84
-	 CbpYj0GbiSMVDKXPhbAMhLbz5oRpJHn5WcFTkh8zQORGnEcJ8z9cvouHchUjWASXQqBDy
-	 qIHszFyUys/vNuq9vJURa2WXmrw90V+KzHI46dYr9uweheSnc88uGkLHGKR+gQbPfoCZ3
-	 nMACV2Lw8TlTokyoxEhYoeZUXA2Lxe3ONgMD3dmgU1+7rhjGdpu/PI5xH1VyWaYA9gg==
+	t=1794279144;
+	b=gOoIW1oiqwgfzSmI557+ERHGwsskK03gzEcOaJxOx85Hl2J53tuI+a1zIQT/Qa4W6AWh
+	 eGOZ10/Q7fxqFZOgo7oVjsP8NoB1fJbivOB3xPTCHcDiXUBUuLUOcKSkIchnzItmPiZ17
+	 08LiuappexY4dhaw4FAnQ7VE1HULv/2jQ34qtEicp1TuQA7tG9NN2Rp5SDCfcIzF4m3cW
+	 qJg0VnjmLUGNNoTASHogoBqbyqdXajyk2PfdUPElZiUQXRizoygcv8F+0vPzEEcCu67Ze
+	 MzM5Ins/RRQW+gK2WjdXgE9vjZTuwtQGIFtnYGUgPv7U+RFAz0X/bnHbaQSgfxBz3Ig==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794279147;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794279144;
 	h=Received:DKIM-Signature:From:To:Cc:In-Reply-To:References:Subject:
 	 Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 X-Mailer;
-	bh=lQNUV5YgUByNTPltTuqOFpYJlWyhTkTkFmY14rehLIY=;
-	b=EpwwZxRs68giJ7W6BnxqtCQe2jPuaYM9ACnY9aOXbw2sQAt1Z7xmjdrYzuRLMTh7X7qq
-	 yyOaPWqTZAseQ6JcI05u5O13lSojDlKT2g9JVRgl0JUtbN/VHUL0ElSGeQ0TJhZ+hg2dg
-	 EdqTrdxypshaG4eaY0OKh1U55h0TUFRLyucLXqlPu7nQC2LK2jhdtMu/rkG3vrUJJWit/
-	 zL4u+B8V0pH0oAARP6wLpeWh92nS0pQBxG94gtWGbVyvvo4p+Ms0B1EbIPGEo6e5BlWd6
-	 W2QE3g6c4zfwy8gdrxdSff2kbWeNELIt6NJQqXM/FYAG2N5J5VEKK5VBf/4hpxbrH7w==
+	bh=1o3TgLBCn/asTnqDXbcDsKfs5lg9f0d7xH7UA0kKlpg=;
+	b=sI2trh+/yYA90/5qGqkd0cGdayT+AMLIXqray26R+m0ICvpTKZvNtnTIjRw1+Te9fcLm
+	 4+GRKHbDG8AbJ6EVD9RGXmtntzvm6T82SADIIHjTXi7WwKL0Fag/6STQe6r/MlLdThiMR
+	 D8zT5PzpugD7ADpaxpXOOTud8i/ZF0fGIZLiXshNtsum3oMHgQvYNkqGZmuF0PPtLfujk
+	 j+JA1Y1mo/W/kqAZwIcLgZKtOD2G06ZFVqwJeXitpXVJtRuNL5zAhhhlPe9Bm2n0dgAlF
+	 1vzAOtnfwLMlnn0jGe7XXCL8VQr9ed0w8D7/f47m/DRBSAGADS8neIZB3FNAMomjDCA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=V2M2JpNX;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m6wqf0En;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24BC60A2622;
-	Tue, 10 Nov 2026 02:52:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A9860A260D;
+	Tue, 10 Nov 2026 02:52:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=V2M2JpNX
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 258791F008A5;
-	Tue, 10 Nov 2026 02:52:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m6wqf0En
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB0531F008A4;
+	Tue, 10 Nov 2026 02:52:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794279146;
-	bh=lQNUV5YgUByNTPltTuqOFpYJlWyhTkTkFmY14rehLIY=;
+	s=k20260515; t=1794279144;
+	bh=1o3TgLBCn/asTnqDXbcDsKfs5lg9f0d7xH7UA0kKlpg=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=V2M2JpNXr6rbh+djVU0eYs6a3sLhSDAbAd79nJinvsp4fyVZnGCANL6TnB2dY+oIf
-	 MeUNjuPXXN9J/JuVCXIZmMyU/w3U7ZLx8PtaJ5+cgtcxcwLo3DdMpdfCcOtiqTRdtG
-	 wrK4Kww9qIgdsrBYPFr/8chYorpCdcAwAHibzmZfPfHYhr6/6eD3akM4tytKMnO1i+
-	 FqZMUjdr4PI039joXcqF9COBm2B+XyKP+ZdeYgSwT+31eQXc9ywvHxoV7K7bzXx59a
-	 qJiKQfsYeEmOjMat/p2JTnYz3ZoWFwneMamrYaGM49q4mX1QihIiVnN7NxkMt7wsGo
-	 AACyQ5bHobOPQ==
+	b=m6wqf0EnE8iE/PnapG73uZN8YnHsQ7lTKo47z+UzV7ukHwlmqyZzjA5T0WCsR+/8w
+	 5ybwBtY/e5o+JZ9ni4nR05cXAjA09aV+ZsVzQ5eXEE5Rw5AmQAXZo8z/yVmz0QtFDK
+	 KO2eETCPBg2KETIwmP0BhaXre6xQfqlHIq+aI7QIGWPOdxIKEAA0HlpjIyVZoq4ewG
+	 7urT5lzJYtLVkXybWwEX4zQFfjWmYLnCOFay9NwVzvrn4M3WZXqnHV/KAJ/ygDJLCg
+	 xYhtjXs2dGQVY1Otxc507+NKaSzk9Wsed6nOvoiT8YsiyNuVHMS9wGka9PSwj6hqpb
+	 ifliFSbOJ4KQA==
 From: Namhyung Kim <namhyung@kernel.org>
-To: irogers@google.com, acme@kernel.org, peterz@infradead.org, 
- mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
- jolsa@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
- lv.yating@zte.com.cn
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- liu.qingtao2@zte.com.cn, he.yilin@zte.com.cn, zhang.cheng35@zte.com.cn, 
- ye.zhihao1@zte.com.cn, shen.lin1@zte.com.cn, dai.hualiang@zte.com.cn
-In-Reply-To: <202611021227.6A2CRwkO000175@mse-fl1.zte.com.cn>
-References: <202611021227.6A2CRwkO000175@mse-fl1.zte.com.cn>
-Subject: Re: [PATCH] perf test: Add LBR call stack branch filter test
-Message-Id: <179427914610.13444.13056121071412016191.b4-ty@kernel.org>
-Date: Mon, 09 Nov 2026 18:52:26 -0800
+To: acme@kernel.org, Gu Bin <gubin@cmss.chinamobile.com>
+Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, 
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+ adrian.hunter@intel.com, james.clark@linaro.org, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20261105064958.2134-1-gubin@cmss.chinamobile.com>
+References: <20261105064958.2134-1-gubin@cmss.chinamobile.com>
+Subject: Re: [PATCH] perf machine: Fix NULL deref in
+ machine__is_lock_function()
+Message-Id: <179427914390.13444.16238989516543583346.b4-ty@kernel.org>
+Date: Mon, 09 Nov 2026 18:52:23 -0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -66,14 +65,24 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.3
 
-On Mon, 02 Nov 2026 19:02:28 +0800, lv.yating@zte.com.cn wrote:
+On Thu, 05 Nov 2026 14:49:57 +0800, Gu Bin wrote:
 
-> While debugging a NULL deref in resolve_lbr_callchain_sample()
-> triggered by "perf record -j stack" (fixed in commit
-> 4626d370ae89b8af4d46a45372b269f926ec662d "perf machine:
-> Fix NULL deref in thread__resolve_callchain_sample()"), the "-j
-> stack" filter was found to lack coverage in the perf record LBR
-> tests.
+> machine__is_lock_function() looks up __sched_text_start and, if found,
+> assumes the remaining scheduler/lock text symbols are present too: it
+> dereferences sym->start for __sched_text_end, __lock_text_start and
+> __lock_text_end without a NULL check, under a "should not fail from
+> here" comment.
+> 
+> That assumption has already been broken in practice: on s390,
+> __sched_text_end shared its address with __cpuidle_text_start and
+> was dropped by symbols__fixup_duplicate(), causing a SIGSEGV in
+> "perf lock contention".
+> commit d8d85ce86dc8 ("perf lock contention: Fix core dump related to
+> not finding the "__sched_text_end" symbol on s/390") worked around
+> that particular case by keeping duplicate symbols via
+> symbol_conf.allow_aliases. The symbols can also be absent when the
+> kernel image has no lock text, or when the symbol table is otherwise
+> incomplete.
 > 
 > [...]
 
