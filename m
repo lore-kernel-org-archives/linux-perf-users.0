@@ -1,104 +1,104 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.49
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.49
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794280967;
-	b=MpGE564IKTnJtQZ7GLU4JXUFLYQ6YSrTcsvrV1UIYycexDcoCuNXdu2ah0xPBWzLEsMM
-	 Qz+TL/s5Yx3ymeH+at6KaeImmB51OEm9Ua+VebHI5DQOxZ1trJV9Wnt8hmJzcK/opIEV3
-	 5olIgCam8zbpx5GQu3NjURk81aBR8tnPlT3j4yrSCpgmru6+OtZffvA8SZccMbvlk+Rmb
-	 Q84UHYhyVKGhatkdbjB2fFGX3KFW3yQZwuzhVQYIGtnaERnhOJJXRizHsGHP3lA52svsv
-	 pCw1pSL2Q+TZsugeIh50z46tdM3dlU//h6IymDUvyPemEvkT80AFnlESG0AB+neUi0A==
+	t=1794292513;
+	b=e5L81S85meZ1BOIWjrmiR+tA8NraoZDZgVLI9eL2IvG2Mh2aTfWrRDsQpah81w5FdneE
+	 ANdjcJBhGt54KnO5+e8B6H4q0f7b6lPSaD44ZFcXUGH0wyild46qwHUmHgH+Df1XH/ZQo
+	 XO7IuHTet302g3+rIzLH758xAm/XxaedKqBwxNmDFt1TJ+yBmm7ikJRLhjMCg9tSwLpzk
+	 ERhG4XQ164Ik/Z+fOp/v8tjaG1OHhjiq0d4APM8YftTvcRlke2tugV57B2V2oQYGhYKEK
+	 7U6Vb1L8FOzsrjVhBob8AL8Irehb2lAKgGSnjExZMfTDDkeWLW/KZxbNF+Bwq2BVipw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794280967;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794292513;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=stnzaxH8NkDuiOo85TJCNs0yAvKFW6/an24wa5kJvj8=;
-	b=jxcCinLdsojpGc5+Lu1MQLUe1TzNict3N1HY5nehmpy3fG/6oFYr91bcLdAddDDzfI/g
-	 rVD462W9KDNqAkdsezwxslDnYM+jwQK1f3PJgmj08MvKOcjY8ZLIi9wRKKF65o3hLdgeA
-	 Be4ANBFdLsB229VlV1OsXHYp7L8eiwt7YXdY7OFfx/NWsk3bxQJGRYXMbqrjJ7EdP4w3o
-	 AsXKN9RPEEHwssCv/dcy3wMTZ5u6B6bcFv98MA6hNA4rozhYKOHtfa5ankHP+Ncv9oAax
-	 nZX7BDbQT3Vo6jVBJzlymlJWzh7nSHKUyX2huIpn5H7IRVbwptl8ZCzDrFXgThSdZTA==
+	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To;
+	bh=SrAtUp9emSKSwdDhGVp75ycz8yJkKPQkr0AQDP+R5XY=;
+	b=n2U9nfvCtDZ21OrK55ZQbRH8JvU/3BqH+N/1RAlHqAaQbuHVMJRt7QlCBVW8hOPfXawY
+	 snr/9WPhRJTmaCQ4sgEDHKQ3iuj3Bv16R4K2p/6GdqZIx0qLr3BsSkIK/9VxaHIS59xWb
+	 nvNd3cDEyZuWUHqFK7T7cE0P3vNYaaTGXSxvJeOzF+OnO0kEmrB5hY2/uFy3pBH7oEODq
+	 tZHs4kEJWXzOe0H+CZJ1m9WQ1QWpXjFmRvIq63y5Ahzl7xOuUGCrVGROL14XL0KW0QVwB
+	 R9VgiI9bT1h+yUEJPv07RSRXjWTgN4zoKayUyJzqVBu7aQYb4+8xUf9qdORt1cgkqMg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=clGMaWxd;
-	arc=none smtp.remote-ip=74.125.82.49
-Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=KvZh9KkF;
+	arc=none smtp.remote-ip=209.85.221.49
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D05606A326
-	for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 03:22:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A4D05606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998BA60A2600
+	for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 06:35:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 998BA60A2600
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=clGMaWxd
-Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-1a2761c69fbso2078884c88.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Nov 2026 19:22:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=KvZh9KkF
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-49465892f7bso1120908f8f.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Nov 2026 22:35:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794280966; x=1794885766; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=stnzaxH8NkDuiOo85TJCNs0yAvKFW6/an24wa5kJvj8=;
-        b=clGMaWxd1xDbbN+gMw/ioN1VLgmuJekJgKgfL3QzKFjCdJrb1uXulezmJxeyhJhrbf
-         lT5v5cI1hFkX1HUKQE/YI9jDCe3FZJriOm8BGTNbYrwiGx8zgZJyw9IYXPJptgmq5Oah
-         f1u51+46gzKXGBUCD8UKQa8DFoxsopJAM7/lBf/19N6yeQ1x25oUV0KZkil4gcZmZaCd
-         lEefzmOiaq2+07BtO9V3Q/kgQbfpLmAtJcYKHo8cunpCabtV99uzPtcrwI8ihDJH8tT0
-         fJ8uO9XzlXrxY67CFk+Vn7jMi6zd5680f9DualvtChmxyvaxbxaNs8k4Bs8n+Y4Le6aB
-         6W1Q==
+        d=gmail.com; s=20260707; t=1794292511; x=1794897311; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=SrAtUp9emSKSwdDhGVp75ycz8yJkKPQkr0AQDP+R5XY=;
+        b=KvZh9KkFCB0l/6Bmr8nRlFNiNAYwTuU4bAbREFGDiprWKCca1D9gjGF60eGJA+3F1m
+         /bv5d5Tc5eWM5D865wZT1/xR3NEMOOdRqy4g1KkEy4dNN0ai3E7ZEOXBKCO9AA5jrZON
+         81noRzABdcThsTx/uPfWP2XKO8tbYcZNnqcldty/UzrmzSJt6LP+9II6IP/t+90m35A4
+         cHdS20nAQY6nLpp4JCwaxwmfEkKJkszzwHAQ0RkC24pcwIC8g2itd/wYEPWH0RU5LloK
+         +jxZ0egu/5nUvtzeuP+y0T3PHWti68rhJPt30aoXkp9b4h0G+AWEqtc8wek4WNU9qfaJ
+         cryg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794280966; x=1794885766;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=stnzaxH8NkDuiOo85TJCNs0yAvKFW6/an24wa5kJvj8=;
-        b=MM62QYJj7pqrwnV24RMWyYH8QitAnjJmqByk6ObryzAEHYYer1kQSDGxy5eRlBsqTQ
-         wwjcztSKKTGfKz89Ixb7USL1IwqnvMzmViCPDUkabepeUYICtX7j9kt/21fTqnJlZU+n
-         9UTAOIJrF6EM5QuFYZoqbdMq5T4coCvU4eHSnif4WS5StDKqMPTvhB/czbO0fzI6vAdu
-         EgC0YP6EGA/becsNMrOAhi1NQL6pv2lo8k4qhSNI32hHWEN2f8hbreKE9MIH9h2/vSf9
-         ou+qr6MHuxxOt29aa6ONXUUPrdg40fnBd3uRzEjGU+2QDakPFdmIggVy+Q3DZuD+BJFB
-         qeGQ==
-X-Forwarded-Encrypted: i=1; AL+hErGWTqDwoL4wtXa3hCUTJWiIKaZTU/JjmGnKd9tRbd7jND40gdIdS028adPH8/JvWseLt9VuCbZsAGTZFdbHD88z@vger.kernel.org
-X-Gm-Message-State: APuU4Z9ZqSHXDk/tRzy0Ueto8NBmIYCjZkZstXDFh9VEhfSWg8nuPcDN
-	q8ynTzjgGmer8dBefShJJnbhWAEe7+2VY7YDAgtZghG6nc1Xs2PkTEXX
-X-Gm-Gg: AYBFou1juixTeiZIHdzAExyLFaHwRrdxfjzOiO/Uhp2PXwWkxAVJKS49b0f0rfkURZu
-	pzQD1JMxyHufKub9R1G9tNAemeASpQQNRvY7hPbpFXuUwoMdtvxS4lBp65OOnX4kjGR9DGy+vGG
-	R3yFQNglNyBDwvdcUWGqGf8rKaGo+QyOt+pAfOi5eocPVzJV3Cwd/83uX/JuzzqWFP5TpRz6FQH
-	xOQb0JYSOsizN4ELae9TMm5h5eONudKu7PXMCzHZWfyYjcbLDomK/kH7zL/ODB8+5i9SLiQzkbY
-	mgOL8i3zoWtt9t+HokVxhoB0PS8YT7iMv1dHyQ/pfWrTKPk1/Yvcuky4uGuiSM4ZF2fCUMQbVSq
-	dchBvgoj1vuf7XrGQyQhBHSRKxaztB6TXmoEQ1lOMI1wGZi65IYVCCPX8G6EFAiZUVuv4rKbRjo
-	da45oVkncl0nMJFz/9Qtc2H/ABrUYJblHym11Bi2tDeBSBeio3EtIav+BIHnf7soxEf4vW2CB2u
-	QWIe2LqvXBOtVQOFcEBEEc+BWaukHWtjkoKE8tvWHPSWWor4fjLF3RtKbAtfevPRseVnVDgJj9H
-	MZHsmO3UgrGd0LvNpOagDDip4LkNK/2wIgMPh2Wu5X8LUWhkSO0Sqh64PirN0DJlqx+96KKNPoM
-	ZgICLRqL3
-X-Received: by 2002:a05:7022:290:b0:195:c6c2:c6b with SMTP id a92af1059eb24-1b3b6183256mr1937438c88.35.1794280965622;
-        Mon, 09 Nov 2026 19:22:45 -0800 (PST)
-Received: from thinkpad.tail59a646.ts.net ([112.199.224.229])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b3b5890e04sm3284470c88.2.2026.11.09.19.22.42
+        d=1e100.net; s=20260707; t=1794292511; x=1794897311;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=SrAtUp9emSKSwdDhGVp75ycz8yJkKPQkr0AQDP+R5XY=;
+        b=gr0OMN4SI6Tf+FG+ligmkI0iuZ1KcAMi/S/jvH+YMN9UmZcDdgD28HFH3gdbkP8NdL
+         EzC0Iuc7mjSaPhtfD7W0u246qAL1wz+5vcZmy9benjwP1hz66bjJBkmtzTkwja/mzzeM
+         0KCeBMrzbIeiPY4wI5o3yAhz8OOcos5QUhmPi+30bJ+pXjRL7a9FXz0bcnQ9W0xrvhM6
+         miASRioVUxgrK3w85+X3fnzXoKQu5AlfzPtziJmPYn6lkCoa3+/V8bBmBhRgM0RgZq5I
+         2eY6FtV+xc0Yc4UtUEyCg+3KvpS2rJXwcyRT9xRgI89hCXi5hNnQXrHDZwFa5JPAgVTV
+         T7ew==
+X-Forwarded-Encrypted: i=1; AL+hErGJHu5rfslTSWdDNcD70UGha5gM7kRToAJfPBQ0CONjDp7CmGWH+hXyU2xXUYDKZXuFVfWXOMXTRhhWZDDP0dz3@vger.kernel.org
+X-Gm-Message-State: APuU4Z9vawycGfH/DxDBE92YqQTCfRtIcija3xEFuskIHBNuuqe4H+9P
+	w45/h15qtIjSM1izolx/V2/Y/lNXS64KU+jHzqQhjb0D0Y77wbooQtoA
+X-Gm-Gg: AYBFou06BPbpngrKI35eTzneOqS8y6pVmckDvgufcToCXbt+q9J3gR3rZoqJkyi6grP
+	y3qMRMAS8d4MhnKUGIaDxfDJ0JEKuRJR0FaHm0nB9LLgSyWR3AvSbzP2o7s3TQlWOE9FdDZrlhb
+	giZWYDYjNm43+fhULQplhdJHUOEfRDziDlVWXNJMa9wiYWVKZEVMR5JB8Xk6mFSXWkiLxnubJ1+
+	dvf3gD8ovTVVvC99SupIHV4VQfptEs1z7V+NQD9sd0p75iFzSzM2yA9Odp4Yuz0QzCPj2fPUtwA
+	Tkq0/3hiVrQT+nj2LWLl1ThEVmQTkAmRTt0aB0HK2sqTDg33AHPRNB5QLq0yz3TdeSatWGlx8OV
+	ZzshdtIatMuxbeDhReCnWXtTRoXBP7LouS4N8ZR/TEmW8MMYi0L7OnoTFfOT7oJdrPT8nszZX6t
+	6UbFycSRvzne/lqOigaLjWllKdykKUrGh3a+h7gfaLndmcuQnt0MFH8mFwKkIVT+u+IfBn3TGHb
+	rov9nHBaB+ZM+sUDj8fK6w7UK/WDl1J3ywBJRTLTqPmBp83IxINfn5x/1bFRoU6FLsvrCP6U2yK
+	cVdcrQat2dqFVhfIfv82r7ECoDrwpC3Wxsuojf1qHIIYHlxHo0ONQt4hVwCtBta796m16fBpGiB
+	evdvWcRLAYWqvplyqCsLXx3w3ItehPQ4i/qndoWHB99eXkuuwm85JG4fWF+2CEsdLe3+qm9TO5h
+	TcUs41ffBlWYMW3fQzoWY/uRCTtF5kg04=
+X-Received: by 2002:a05:6000:288f:b0:48e:3cec:b852 with SMTP id ffacd0b85a97d-498306d02e3mr2957082f8f.40.1794292510590;
+        Mon, 09 Nov 2026 22:35:10 -0800 (PST)
+Received: from MacBook-Pro-von-Karl (dynamic-2a02-3100-a0e9-dc01-c402-36c1-c306-953c.310.pool.telefonica.de. [2a02:3100:a0e9:dc01:c402:36c1:c306:953c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-498366c500asm3241156f8f.48.2026.11.09.22.35.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Nov 2026 19:22:45 -0800 (PST)
-From: Hang Zhengyang <hang.zhengyang1010@gmail.com>
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7] perf stat: Include PMU name and split uncore events per PMU in metric-only JSON output
-Date: Tue, 10 Nov 2026 11:22:38 +0800
-Message-ID: <20261110032240.3080302-1-hang.zhengyang1010@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261030192537.3079368-1-ctshao@google.com>
-References: <20261030192537.3079368-1-ctshao@google.com>
+        Mon, 09 Nov 2026 22:35:09 -0800 (PST)
+Date: Tue, 10 Nov 2026 07:35:07 +0100
+From: Karl Mehltretter <kmehltretter@gmail.com>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: palmer@dabbelt.com, pjw@kernel.org, aou@eecs.berkeley.edu, 
+	alex@ghiti.fr, linux-riscv@lists.infradead.org, oleg@redhat.com, 
+	rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com, peterz@infradead.org, 
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	james.clark@linaro.org, jpoimboe@kernel.org, jikos@kernel.org, mbenes@suse.cz, 
+	pmladek@suse.com, joe.lawrence@redhat.com, shuah@kernel.org, mpdesouza@suse.com, 
+	martin@kaiser.cx, oliver.yang@linux.alibaba.com, zhuo.song@linux.alibaba.com, 
+	jkchen@linux.alibaba.com, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v7 00/10] riscv: Add reliable stack unwinding for
+ livepatch
+Message-ID: <avK6oydgmtsa_Sjg@gmail.com>
+References: <20260914092648.51254-1-xueshuai@linux.alibaba.com>
+ <20261110013750.36800-1-xueshuai@linux.alibaba.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -108,26 +108,29 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261110013750.36800-1-xueshuai@linux.alibaba.com>
 
-On Fri, 30 Oct 2026 12:25:37 -0700, Chun-Tse Shao wrote:
-> When running `perf stat` with `-A` (--no-aggr) and `--metric-only` in
-> JSON output mode (`-j`), [...]
+On Tue, Nov 10, 2026 at 09:37:40AM +0100, Shuai Xue wrote:
+> Changes since v6:
+> 
+> * Rebase onto the current riscv/for-next (based on 7.4-rc1).
+> 
+> * Fold in Karl Mehltretter's two patches [1] as 1/10 and 2/10. Patch
+>   1/10 stops arch_stack_walk() from reporting the walker's own frame as
+>   the first entry, which corrupts the skip-frame accounting of
+>   stack_trace_save() users (page_owner, perf), and adjusts
+>   return_address() level accounting accordingly. Patch 2/10 adds a KUnit
+>   test for the start frames. Both patches keep their original authorship;
+>   I added my Reviewed-by/Tested-by and sign-off. I asked Karl on
+>   3 November whether he would like to see his patches folded into this
+>   series; he has not replied so far. Since 8/10 reuses the walker
+>   extraction from 1/10 for its !CONFIG_FRAME_POINTER fallback, his
+>   patches are included here to keep the series self-contained.
+> 
 
-Tested on AMD Zen 3 on top of perf-tools-next 13a8d580433a.  With
-'-M l3_cache,data_fabric,iotlb -a -A --metric-only -j' the metrics are
-now on separate lines labeled amd_l3, amd_df and amd_iommu_0.  STD, CSV
-and aggregated JSON output are unchanged, and the stat linters pass.
+Thank you for folding those patches in. I'm fine with that.
 
-Tested-by: Hang Zhengyang <hang.zhengyang1010@gmail.com>
-
-Two changes the changelog doesn't mention:
-
- - Without -M, 'perf stat -a -A --metric-only -j' now prints two lines
-   per CPU; the first is labeled "pmu" : "software".
-
- - Plain 'perf stat -a -A -j' gets the "pmu" key too.
-
-Are those intended?
-
-(Tested with the help of an AI assistant; I checked the results.)
+Regards,
+Karl
