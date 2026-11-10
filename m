@@ -1,56 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794279146;
-	b=gegEc80t6OVT5kKLlI5kpJl0DIKDJbKWq7knFN2RJqMxiqYP+A9aOLsHxhssdGubbHwv
-	 SXsIMmGUyDoqM8QIO9HgxVWsl7HnOpC7/xTy6fN4MG1IpMq55JF5a60uVVhXeyP192A2/
-	 4nqJ7hiE7T6lo17IDjiwKSdIGXyU1mza03LzsmNK6cqRYQn8+QA7k4Q0o56tTP0uY0Cdf
-	 B+Llg57BS5lvmuD0nl/kiEo8HLSWv0manCLKNRsFxpC5PlIjuk0SOcrRnoUo+GpdmzEPQ
-	 8/HPg4pL7fkhasQ/ICUGBiuOmW7UX4FOiaBjG56VCOvM/vhXYJrzALliIN12JWDH+tQ==
+	t=1794279147;
+	b=PrnBUKH0kBHEbZN24dKiI2v4RiDNHmyiXAHjWBpHsR1KIC+++FMnxkKHm0gfikgLQP4d
+	 qA3OziEdAdNI9Ag+5TWjJfcQsKLTty79/kln3XUP7aaECZZrbm+v65ODtaai7uPFpuS84
+	 CbpYj0GbiSMVDKXPhbAMhLbz5oRpJHn5WcFTkh8zQORGnEcJ8z9cvouHchUjWASXQqBDy
+	 qIHszFyUys/vNuq9vJURa2WXmrw90V+KzHI46dYr9uweheSnc88uGkLHGKR+gQbPfoCZ3
+	 nMACV2Lw8TlTokyoxEhYoeZUXA2Lxe3ONgMD3dmgU1+7rhjGdpu/PI5xH1VyWaYA9gg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794279146;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794279147;
 	h=Received:DKIM-Signature:From:To:Cc:In-Reply-To:References:Subject:
 	 Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 X-Mailer;
-	bh=nVLuWoo1y6ND0a9aTD0T7hC5NidaBGXYwbt6YdA3oj4=;
-	b=WLKhPwcIlpb6HVA/QKDUq/LVqM+2vS1NgzKG+R4MEDuoy6NreJhxNU1HEOjFXAejIZEa
-	 t4ZatwdifS7K7GUeNRgWNqTncBFb38Ac6EMcEjaEUl+sHCUKjyopZSjUmIQe7pC7YVD2H
-	 sI2JSP7Q6z4kHywjbJDCJsUckq2IQAgebXzfptOQcEWbyv+Zd5Em4LHf0+Vi7ZMeYGJBD
-	 fcamMQ2JuZq5OkmZD2tN35Wc2ZEF6NgzMA87RZ5rSkfAmtCyEzzSrhabQ3f8AXxttCu37
-	 9VZzYOOtM4Bm644vhUG+EJzbeQQAfSTXumXFP7/joH02CqqjGtd0KxBeBVN3bXefr8A==
+	bh=lQNUV5YgUByNTPltTuqOFpYJlWyhTkTkFmY14rehLIY=;
+	b=EpwwZxRs68giJ7W6BnxqtCQe2jPuaYM9ACnY9aOXbw2sQAt1Z7xmjdrYzuRLMTh7X7qq
+	 yyOaPWqTZAseQ6JcI05u5O13lSojDlKT2g9JVRgl0JUtbN/VHUL0ElSGeQ0TJhZ+hg2dg
+	 EdqTrdxypshaG4eaY0OKh1U55h0TUFRLyucLXqlPu7nQC2LK2jhdtMu/rkG3vrUJJWit/
+	 zL4u+B8V0pH0oAARP6wLpeWh92nS0pQBxG94gtWGbVyvvo4p+Ms0B1EbIPGEo6e5BlWd6
+	 W2QE3g6c4zfwy8gdrxdSff2kbWeNELIt6NJQqXM/FYAG2N5J5VEKK5VBf/4hpxbrH7w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FJsTVEXC;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=V2M2JpNX;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D50D60A261B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24BC60A2622;
 	Tue, 10 Nov 2026 02:52:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FJsTVEXC
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EC8A1F008BD;
-	Tue, 10 Nov 2026 02:52:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=V2M2JpNX
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 258791F008A5;
+	Tue, 10 Nov 2026 02:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1794279146;
-	bh=nVLuWoo1y6ND0a9aTD0T7hC5NidaBGXYwbt6YdA3oj4=;
+	bh=lQNUV5YgUByNTPltTuqOFpYJlWyhTkTkFmY14rehLIY=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=FJsTVEXCtfu4LEG+ppmzxVMLMGJT4p0KqLf8loa8ZxHp7vifJbY05Lsi4mNbtquj1
-	 dkQvMujeewqf0l6LTo4kX4gCebrSHKT5F5CheNlhm9uSqsmxd8fuXLHqTF1NN3ZWeA
-	 aQhpx3HYORmzFR8XcZ+GGJqSUOhHxmPY4/hdb4d6DOkrAo/7R/kKNdE4eRmkbcDeoG
-	 lcbiWSI2Cd3bm5HvmDHQISHMLsa+hATM9/ETAYgrIz1WWz6IDuxwOfC30G40ScWHnd
-	 njwPZBzoKdxDo8VOUuSq/FzrMAoEgfd9ikBhy00DUJ/zXPMs8qhuLFKc+RLWCoDjfl
-	 PYuwxUXLJzhlg==
+	b=V2M2JpNXr6rbh+djVU0eYs6a3sLhSDAbAd79nJinvsp4fyVZnGCANL6TnB2dY+oIf
+	 MeUNjuPXXN9J/JuVCXIZmMyU/w3U7ZLx8PtaJ5+cgtcxcwLo3DdMpdfCcOtiqTRdtG
+	 wrK4Kww9qIgdsrBYPFr/8chYorpCdcAwAHibzmZfPfHYhr6/6eD3akM4tytKMnO1i+
+	 FqZMUjdr4PI039joXcqF9COBm2B+XyKP+ZdeYgSwT+31eQXc9ywvHxoV7K7bzXx59a
+	 qJiKQfsYeEmOjMat/p2JTnYz3ZoWFwneMamrYaGM49q4mX1QihIiVnN7NxkMt7wsGo
+	 AACyQ5bHobOPQ==
 From: Namhyung Kim <namhyung@kernel.org>
-To: acme@kernel.org, Gu Bin <gubin@cmss.chinamobile.com>
-Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, 
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
- adrian.hunter@intel.com, james.clark@linaro.org, 
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20261104090229.1870-1-gubin@cmss.chinamobile.com>
-References: <20261104090229.1870-1-gubin@cmss.chinamobile.com>
-Subject: Re: [PATCH] perf hist: Fix branch_info index for sample weight
-Message-Id: <179427914553.13444.2646955447454960251.b4-ty@kernel.org>
-Date: Mon, 09 Nov 2026 18:52:25 -0800
+To: irogers@google.com, acme@kernel.org, peterz@infradead.org, 
+ mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+ jolsa@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
+ lv.yating@zte.com.cn
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ liu.qingtao2@zte.com.cn, he.yilin@zte.com.cn, zhang.cheng35@zte.com.cn, 
+ ye.zhihao1@zte.com.cn, shen.lin1@zte.com.cn, dai.hualiang@zte.com.cn
+In-Reply-To: <202611021227.6A2CRwkO000175@mse-fl1.zte.com.cn>
+References: <202611021227.6A2CRwkO000175@mse-fl1.zte.com.cn>
+Subject: Re: [PATCH] perf test: Add LBR call stack branch filter test
+Message-Id: <179427914610.13444.13056121071412016191.b4-ty@kernel.org>
+Date: Mon, 09 Nov 2026 18:52:26 -0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -64,14 +66,14 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.3
 
-On Wed, 04 Nov 2026 17:02:28 +0800, Gu Bin wrote:
+On Mon, 02 Nov 2026 19:02:28 +0800, lv.yating@zte.com.cn wrote:
 
-> iter_add_next_branch_entry() is called once per branch and uses &bi[i]
-> for the hist entry, but reads the weight from bi->flags.cycles (i.e.
-> bi[0]) for every branch, so every entry is weighted with the first
-> branch's cycle count. This is incorrect when the branch stack contains
-> more than one entry with different cycle counts, as the weight of each
-> hist entry fails to reflect the cycles of its own branch.
+> While debugging a NULL deref in resolve_lbr_callchain_sample()
+> triggered by "perf record -j stack" (fixed in commit
+> 4626d370ae89b8af4d46a45372b269f926ec662d "perf machine:
+> Fix NULL deref in thread__resolve_callchain_sample()"), the "-j
+> stack" filter was found to lack coverage in the perf record LBR
+> tests.
 > 
 > [...]
 
