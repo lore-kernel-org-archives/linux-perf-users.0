@@ -1,95 +1,81 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.174
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=65.109.113.108
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794440527;
-	b=nAtW3wuu6+Wl3a+5gqxXJbSn0pT9J37gyPgBB1eJ02wK8FNCRrtpSjR619x1YonYTAWP
-	 3ZC77+cJekJFbrxCCRkLHOfCY2YGcwbLtO7lJud4ajin9ekKNuti5zDzAIkOrNI2SyXko
-	 9jyZunvRM2D+7FyJVM4/6snl0UaZw9sf7EqcxVUSJj7coI0aQSIu42rDdoMNdksmc4qU+
-	 3yXbR937dhkDiG1wekLxcOa27TCioaWjzimXctk7J0urSP7Wd0ByGyGSe4De1qXiVoaMt
-	 zAaANPGQcbTi911d0SqptZ0fQI9gnc89BTlQScMMnG2XFfxx31kbjUqduLD6tUsGUXQ==
+	t=1794441038;
+	b=BOM+c6VYUpVILeQNwdZC7KicC70P+BPmgxRCBE2AJxAgOK7Y78ku2k1DDEeuCs68fTe9
+	 2nBw68PZY+gIKqHpIU3Qps7J0HJTibp4BaHDLkvL54ejosObzygWe+YRVFO+E0lBDQjYe
+	 6tTYv5ek/bEq3VeFwaajfof5Lp0rIewhaGNWMGvooGb39lARgXdba1Rr8PxkzSjovJNO1
+	 qw60MeqajJl4dfekcrjG+3eYkyLT3+C7BbCN69KXq6ANfeAHKVp59dA65OX1bhoH0aOGc
+	 /+RcvP3Ku/a6pdIs79uEmRRrAV4mLZ//0gxvdcjr3oIkS0NU+qSZVE/4W1Ym/uKSQeA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794440527;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=MlLwmC7eqhyj5SluG/jr8wz+fFfa83Uj4sPyAVlAWdU=;
-	b=YaMoyyhdnSbn3QZO7VUl8eEGOz+rzuQR8YAbmLRr8ZQkX5S+3bUInZUTmdlmdd9lCMZU
-	 zgXhz0oV5/mQe6PefWpuTRTxXYGPNs7tCnXVC1CITr8oqL3x0h+uk0xPBC9jvlAfAWdIN
-	 AxmMQzAg0coV+CY4Svcb/eSBAXzJZXf12QDMHAMLF4tSkbMLmz4krY2gF6mgMR7mapEvJ
-	 uXRG4yI66bcuae77wl0y2b2GwYwrU4KA4o9TApS7O4I2Htu0+4zcCW5B3MyWjvO1IssJG
-	 SIsucZt9enx7RU4QIL0lMqoOTBlYbsEPshpIKU+2YbXUpaBadzmb/QKh8ROb/BfvSLg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794441038;
+	h=DMARC-Filter:Received:X-Virus-Scanned:Received:DKIM-Signature:
+	 Received:Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To;
+	bh=/jXfGizkxO69J+2SCwzA4KedoDtDnbwnGmCtv0wVlkg=;
+	b=MxqzeKiLN2yvzZKzldLShEtT8SmcXJXKNHW7szBRxQKKXfH5QS0dsAz+qTWbKPltaUHy
+	 x+eH9Qgf4udOmxb6MvHlqcw5AAFeB15TTQg0O10A+LHqEGrZytBNodDpgalMjQNQ67ow3
+	 HI9ZDDsphsmyWLUQR9PcUWhbOMCDl5NHs8FnIr9AlpI+SyYQHaCmZuO4rSSvfBDp09h+e
+	 8VaQAGBEbfOfyRStFe/h96zAA3WoEFG1nsurMk/8yuIpR4IculzBUaX5MC4g16ojmKtm3
+	 RU38VE38FUly2DHOovT7sjc627+xL8LBL2mOHN5uG4sUbGFjWYHXB6W0tOcKL6fooiQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=purestorage.com;
-	spf=pass smtp.mailfrom=purestorage.com;
-	dkim=pass header.d=purestorage.com header.i=@purestorage.com header.a=rsa-sha256 header.s=google2022 header.b=LxWaKLhO;
-	arc=none smtp.remote-ip=74.125.82.174
-Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=alien8.de;
+	spf=pass smtp.mailfrom=alien8.de;
+	dkim=pass header.d=alien8.de header.i=@alien8.de header.a=rsa-sha256 header.s=alien8 header.b="U/9DVXsJ";
+	arc=none smtp.remote-ip=65.109.113.108
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F239606A32D
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 23:42:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4F239606A32D
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=purestorage.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB0A606A882;
+	Wed, 11 Nov 2026 23:50:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4EB0A606A882
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.a=rsa-sha256 header.s=google2022 header.b=LxWaKLhO
-Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-376a4059061so127523eec.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 15:42:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1794440526; x=1795045326; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=MlLwmC7eqhyj5SluG/jr8wz+fFfa83Uj4sPyAVlAWdU=;
-        b=LxWaKLhOfRi65GLeDTlvV8UU5t5kaXs/qlvKWB1L1rpvsA4tUJ5NspotgCTsvD2ovw
-         +RQUHQfJtpFCwosuQYFjnjkYPKBCCFWw1wtsIlqilU283K1LK32olZGlgGpJ/OYbpJbI
-         +mo09+4hbtab85qRNyQvW6D9Gq9va4SuDk3znCoXSHcODVSskkPj8Cun7wpBjCWsZouZ
-         ug3EnZAHhZpT3IfRqki4kClThkAse3An4Rt8JYOf14lXqfJ7d27gdsrQsGdvNKYq98Tf
-         keYGE+xk3fMUI9Zt8/VRi8DvraKOVkUf/1Bsv+BJfVjjNr/oZ4fbGpHoXQBIuGSsVrqd
-         2s/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794440526; x=1795045326;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=MlLwmC7eqhyj5SluG/jr8wz+fFfa83Uj4sPyAVlAWdU=;
-        b=bRJrCfkCFP5cz20SaI2Czl2kdnKeZgRLbSxRY7wdRjRbw+oQ61vu5YWu5U6LK2v4nn
-         9ItWmMSlW3xCp0I9Za2rMeoGfDetfgwaQMcAj63ao87b8sC1Yr/2VSvyMr5hl7/LcEG+
-         wYHt7lmaFofG7nbm3sU9p5BY1KFNxzkDsxaDMFrQyZeVXYIgfb19w5DOLqnEWIwyEJao
-         PFOj+LqQwkyfypnw9WD4p+eivVdfd75z6KKHIGkYYQ5+LG2xyoRYSintf6ofl2zaxguV
-         YJkYvEZ1K8dgcnM7PbASJUxNFPIEGzpfhKt4FtGU3w2CdlSPi9eY4w/JKG7/WFqC0UGQ
-         JFuA==
-X-Forwarded-Encrypted: i=1; AL+hErG4nUVdfgsug+chvXqjh363p0HAvQfQcom15UykSDXUR4N1BIOJ4An6TDsMx33+Dv1Fapu6i2O1eCTL4W6KSpEm@vger.kernel.org
-X-Gm-Message-State: APuU4Z9dh78FeHzO59i7JopIez07q9xCETkFSAnWMHByhF2oxMkByJHj
-	myWFYAH1ynf17H9IQpy9Qhzrv6lc3heYQn6RvhmRZdgsMCqZicjGHGCtMBrf5o9+BHA=
-X-Gm-Gg: AYBFou138T5O4ZSF0gEtwXxBj1X89dEPJ0LzJ7jM8hP1rH15QNaKEr9cotIZtr9wG73
-	lfP67vuMqe7QqLaVk04hOCOpsdIyRROV59GhchlO7CAmSkLGsVPG0VxVe9hCkiubgnp1Xb32LV9
-	Z8IFvgVoMp+kYPbBjjmVWWZ/D/wiw/fJl6BRJK/Ira7GrFqnfmIrABvAJwvpLKH89H/ml9meH0a
-	cEP2CPRyBw222sJgn1gkeSbogvRa8YScXkRXLV9jYnnR7/E0HmDUuSKYdune7pkGEd1J5+q0Tw9
-	UKmJzG1xh3iXs+4eORn3Cs8Mz8PBa/CARCM4k10iEEl3r+fgDHNAAHSAbl6SfjaiKRopKYkLLHI
-	H1kZo17cCrBmnd1/mj32SSKib6+Dk4qaesm9DaaPDrDkmXiGPwuGvWUQluLfrySdbiTUbFHrGdp
-	fw9mUSVzI+73NUct9jsUUO6HIIUvOR5/nSvL6uvyhgFoPDoZh2BS5bhl1Ma1TvCLcyJyc+P/t0j
-	SzCh/jnGDtCS0htXrkKNFDZCb7KbDbfZt2d53hUoTFRKHK82dSVwv6HlC0hzx9g6loGk0hQvXOC
-	VydtLjgWndrIKkIju3jyqfyhx+UD6FMG7n1GIFF4KiC3uIDTZ/WtQPskgP4WwBXXiiSsZDfhyhw
-	uqHc=
-X-Received: by 2002:a05:7022:3a86:b0:143:5c2a:e45f with SMTP id a92af1059eb24-1b3c01600d4mr5838434c88.0.1794440526019;
-        Wed, 11 Nov 2026 15:42:06 -0800 (PST)
-Received: from dev-cachen2.dev.purestorage.com ([208.88.159.128])
-        by smtp.googlemail.com with ESMTPSA id a92af1059eb24-1b3b5b2fc09sm40240128c88.10.2026.11.11.15.42.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Nov 2026 15:42:05 -0800 (PST)
-From: Casey Chen <cachen@purestorage.com>
-To: Namhyung Kim <namhyung@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Matt Fleming <matt@readmodwrite.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Casey Chen <cachen@purestorage.com>
-Subject: [PATCH] perf hist: Don't update the map of a hist entry to a NULL map
-Date: Wed, 11 Nov 2026 16:41:56 -0700
-Message-Id: <20261111234156.2276500-1-cachen@purestorage.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.a=rsa-sha256 header.s=alien8 header.b=U/9DVXsJ
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0FA1F40E021B;
+	Wed, 11 Nov 2026 23:50:36 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id togEw39fOTai; Wed, 11 Nov 2026 23:50:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1794441032; bh=/jXfGizkxO69J+2SCwzA4KedoDtDnbwnGmCtv0wVlkg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U/9DVXsJ//TipiRfSbtrji3R+QJOeDJbnzEfTP4DEKq0AeyyQnzbj4foBwLElGZiU
+	 HIbJNcstQ7jFzGVm7M2o9w8WLFxsowTw3m8Ck+gK8elSWr9BKMh6Ugrp0XnDBaWIno
+	 yttp143cCG6NQ8e2JwHZikXlJ2VQ7SE1qegIvv1IYPzAECuSyKmZbxHfHqFUr6TKIa
+	 7lYWT6ln8ATCrZs7om7PjQ5MLeOHtjvDCTJEgLyrzJiO2WdM7hOsekYJ+vjvDiMOLH
+	 gPPflgfEjEPbG+o442Obr82IFQll0dBujJF46sCUn21K02RrR/49XY7srHJc6iUK5e
+	 MvUzvDtHuUJsRmIr+ERekgShtq6VZdRzcWbKlDA3ijz7R/bx4lbNdolDen+yxDCDVH
+	 1zAU3En8+1mwOsXGCjaFLpXvrHWgz/6xZ8JtqEGPxw2hkUZ76UVW0vSH04eAf35Bcu
+	 6CsFpYNESdbpvehNPGLSvng8GdGCebkBHmeBTBaMDHHsy1h9I1Pm6Eue0RgVgIvsfg
+	 LD8rMNoT1UQjR3YZL7qFxojjRitJhlwlvVKIO9mLOY7ETAy3QTjc2WMPXZrXveuh9L
+	 RJIKZDrFTDDYjxYyyzcihianoUz68TlCKVWBSBb5+CC72XJDqOcEMiczaSMrD4HRL+
+	 BEs5JFGV4B5JB9e8fBWPWwc0=
+Received: from stx.tnic (unknown [209.52.143.85])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 261B940E019C;
+	Wed, 11 Nov 2026 23:50:15 +0000 (UTC)
+Date: Wed, 11 Nov 2026 15:50:09 -0800
+From: Borislav Petkov <bp@alien8.de>
+To: Dhruv Gupta <dhruv.gupta@amd.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, tglx@kernel.org, dave.hansen@linux.intel.com,
+	x86@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org,
+	hpa@zytor.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] perf/x86/rapl: Fix a bug caused by overflow timer
+ being calculated using a 200W Max TDP
+Message-ID: <20261111235009.GBavT_Ma5Syt72-dLK@fat_crate.local>
+References: <20261111151050.329724-1-dhruv.gupta@amd.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -99,75 +85,61 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20261111151050.329724-1-dhruv.gupta@amd.com>
 
-perf c2c report, including --stats, segfaults on c2c data recorded on
-a loaded system:
+On Wed, Nov 11, 2026 at 03:10:50PM +0000, Dhruv Gupta wrote:
+> The RAPL energy status counters are 32 bits wide, so the PMU uses an
+> hrtimer to fold them into the 64-bit event count before they can wrap.
+> rapl_event_update() sign-extends the 32-bit difference between two
+> reads, so the counter must advance by less than half of its range
+> between updates. A larger advance is treated as a negative delta and
+> the event count goes backwards by 2^32 counter units.
+> 
+> The timer interval is the time it takes to use half the counter range
+> at a reference power of 200W. Any package that sustains more than 200W
+> between two expirations therefore loses energy. This applies to every
+> energy unit, since the interval scales with it: with 2^-16 J units the
+> interval is 163.84s and at most 32768 J can be accounted per interval,
+> and with 2^-14 J units it is 655.36s with the same 200W limit. Many
+> current server processors draw more than that under load.
+> 
+> On an AMD EPYC 9654 (max default TDP 360W) running stress-ng on all
+> CPUs, the package draws about 346W, or about 56 kJ per 163.84s
+> interval. Over an 1100s run, "perf stat -a -e power/energy-pkg/"
+> reported 4294882289.81 Joules, i.e. -85006 J, while reading the same
+> event every second with "perf stat -I 1000" gave 373745.7 J. The
+> difference is 458752 J, exactly seven wraps of the 65536 J counter.
+> 
+> This patch raises the reference power to 1000W. With 2^-16 J units the
+> interval becomes 32.768s, and with 2^-14 J units 131.072s. The cost is
+> one MSR read per active event per package per interval.
+> 
+> With this change, the same workload run for 300s reports 104062.71 J
+> with plain "perf stat" and 104062.7 J with "perf stat -I 1000".
+> 
+> Additionally this patch drops the hw-unit check and the 1ms fallback. The
 
-  map__find_symbol
-  hists__findnew_entry
-  __hists__add_entry
-  process_sample_event      (builtin-c2c.c)
-  perf_session__deliver_event
-  ordered_events__deliver_event
-  __ordered_events__flush
-  perf_session__process_user_event
-  perf_session__process_events
-  perf_c2c__report
+Avoid having "This patch" or "This commit" in the commit message. It is
+tautologically useless.
 
-When a new sample matches an existing hist entry whose map differs,
-hists__findnew_entry() replaces the entry's map with the new sample's
-and re-resolves the entry's symbol in it.  The new sample's map is NULL
-when its address is not in any known mapping, and
-map__find_symbol(NULL, ...) then dereferences it in map__load().
+Also, do
 
-perf c2c sets the sym flag for its symbol and iaddr columns but groups
-samples by cacheline, so samples from different code locations, with
-and without a map, end up in the same entry.  perf report without a sym
-sort key never reaches this code, and perf report and perf script
-process the same perf.data without problems.
+$ git grep 'This patch' Documentation/process
 
-Skip the update when the new sample has no map.  There is nothing to
-update to, and the entry keeps its existing map and symbol instead of
-being reset by a sample that did not resolve.
+for more details.
 
-Tested on an x86-64 system (2 sockets, 192 CPUs) with perf c2c data
-recorded under heavy load: perf c2c report --stats and
-perf c2c report --stdio --full-symbols --no-source -NN segfault without
-this change and complete with it.  The data comes from a proprietary
-workload and cannot be shared; no synthetic reproducer was produced.
+Please read:
 
-The bug was found and analyzed, and the fix written, with the help of
-an AI coding assistant.  The patch was also reviewed with Sashiko, which
-reported no issues.  I reviewed and tested the change.
+https://docs.kernel.org/process/maintainer-tip.html
 
-Fixes: ac01c8c42465 ("perf hist: Update hist symbol when updating maps")
-Signed-off-by: Casey Chen <cachen@purestorage.com>
----
- tools/perf/util/hist.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+before submitting tip patches.
 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 364754e9d12a..d5763199205b 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -723,9 +723,12 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
- 			 * become out-of-date due to an exec() or
- 			 * similar, update it.  Otherwise we will
- 			 * mis-adjust symbol addresses when computing
--			 * the history counter to increment.
-+			 * the history counter to increment.  Skip it when the
-+			 * new sample has no map (an unresolved address):
-+			 * there is nothing to update to.
- 			 */
--			if (hists__has(hists, sym) && he->ms.map != entry->ms.map) {
-+			if (hists__has(hists, sym) && entry->ms.map &&
-+			    he->ms.map != entry->ms.map) {
- 				if (he->ms.sym) {
- 					u64 addr = he->ms.sym->start;
- 					he->ms.sym = map__find_symbol(entry->ms.map, addr);
+Thx.
 
-base-commit: edd09316bd3784bcae2b3281a892700e272d5d40
 -- 
-2.34.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
