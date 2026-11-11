@@ -1,57 +1,84 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794406343;
-	b=iUc16f4v5LInKxhCGbvR34Av969icFhGx5DgDKb6dDPeSsNNoIM0SmeAQSbP3iDOpuKb
-	 Bf96qNNeo9BR/G/4lQVwRN8rk0OOSvRA8SKUiDqCBIHmnkLoQaJ8uzaNwiv+t2DIiznJH
-	 PnNbD0z13qNsP2oXeYHPxtcefmBLw0NBkTwo4YyCz8yoMgr/P+i6pW+KmNXx7U/kG25Io
-	 /+inc8YiP+yoYjghHniIBAWqaAARbHmhFbmEXmkSidGID+YyxQYvJ0q+zQu0r72b5DFpH
-	 dpFkCf/tKynHQi9gagchEv3lIIjQYhavpLs8L6RcWh1isgR748RJpjCbNge2F9k6ofQ==
+	t=1794409623;
+	b=BPF0ZzjEXSAHtPNmI5jj6WaSk9Bdr1GODbSXpyaz7lh0rfmOJmb7uN38+Ucyc9nepDO8
+	 3t7NLcC0GLFn5pvWT+26s61VDpHnlY6V+hsRLSmDmFEBZvVqA4qzYFU57j41WvnQcflLq
+	 G4iMKy1qNAs/QJZDPoU61wpzS6jSSJM79ZtQZrtuyEbuKrlkzWxcoK7PtJ8WCFSmpK+aL
+	 75aAtJNmliLSE7JTuoudB3Kwx5PIN4utlzx6RWjr92rFywAtTwmndZiZdiL09bajBBxc2
+	 isTcwrYDLcDN6M/pzn5i1w87nIM9MV5c/aRLpmfbVdm2c0TosFeCVnqrAD4/qtIFU7Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794406343;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=DOIoOniqBzbktgySwrKpvouK5D4KqvnwxWuWRrJNr6Y=;
-	b=NiB7jnRTIzYffHPKP47MOsuqr9bUaZfoGa4PkaRjHJA8Ha2d883DDZNG/hwFyCk5eJ04
-	 pLNGr2eopny2hysE6vqoo8Fe+X8bQabP/ps5lkDvwS2jtuKdDQkm5bgwFhtkj5dH3jk5C
-	 NCct8/c5Cj2ZJ1sZrVugM+Xz0Zo2nz32N3rxIGMksriLHeeYfUHTZJoyXn+fLqABUFV4X
-	 cAnwlNRjV8JehXMwJ23W1d157QO8lq7LWUrnvr+FMO52/s8daAnICQw9Via0vUGeN8bFR
-	 f7bIE2zT31DTZW93rn+lKWVTxqrR/e2UqWyWjA91cuFXkGV94/8/bEs41TyTGjm0XWg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794409623;
+	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
+	 X-Mimecast-MFC-AGG-ID:Received:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:X-Scanned-By;
+	bh=B4vmEo6JeWk7kI+Rbno6KTwqomkHC0TPZQ7Gp154qJo=;
+	b=WNRu9Gq816YtsxCXaoy6Nd7Lu1Px9gS8vzGJICzv37pJ+opzIk5mf0WZp+vyemIdd59J
+	 QpKEZc2z6OoikHFrghlPymCernDbVYw17pgclNbHwvY6iSk3PGqxIKgm57oiKfQNaIUef
+	 /Enu8XWS1cq7dq5V4fNH9yDP0zVnsFwiwplAv/wtR4E2Con+c9FGsfKDNvNPh4CUiks7R
+	 IA+ZjE7F5s5B1e5DquuJNqvH1qlfiiqMnRC1jWs0g1uj8GubBorJLe4ocbEpGWhjca8Mr
+	 vWh+Ck4xwiKHVP8GqUybo25QidpdV0XSnt29FGVbWXIAnkAB/NaOgzj/AsGylqr9LgQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Np74bZXa;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=redhat.com;
+	spf=pass smtp.mailfrom=redhat.com;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=CGQSg76J;
+	arc=none smtp.remote-ip=170.10.133.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F40606A326
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 14:12:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46E8606A8A1
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 15:07:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D46E8606A8A1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Np74bZXa
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 039D91F00A05;
-	Wed, 11 Nov 2026 14:12:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794406343;
-	bh=DOIoOniqBzbktgySwrKpvouK5D4KqvnwxWuWRrJNr6Y=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=Np74bZXawcaNWXj9hsHYhwfO2FdPbBNh7Ih5YyE5645wJxMrzjnBEmSWziEWpAV0n
-	 2dSGs4VryVlf4Tm+vlKyeYM3IrgLV71shViPbauF9fQYU4+t/Pf4/Ltc62nijb5Zrd
-	 /YVVgjFMhBAHi5XPztPiM7mHjkxwfuWglZYWJ1gWECEkVzYWWvYN3w86jrcNHfQsXm
-	 20enUL6Bso8lmq9QuPouIpdnHp98TqVwsCB9rIZU56uWVtklCD+7wpx/712Ao/fPjQ
-	 /JtVDUKISIkX5kS4vqA0rx2NBhRoxzhyffBMTC3fylEiWTmgufNtfhRt1t9bldnPbK
-	 JIHdIY1tOEq4A==
-Message-ID: <sashiko-outbox-209122@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 3/3] perf jevents: Check the JSON keys a table may
- carry
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "TAKANO Mitsuhiro" <takano32@gmail.com>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20261111132622.2349165-4-takano32@gmail.com>
-References: <20261111041045.2031464-1-takano32@gmail.com>
- <20261111132622.2349165-1-takano32@gmail.com>
- <20261111132622.2349165-4-takano32@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 11 Nov 2026 14:12:22 +0000
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=CGQSg76J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1794409621;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B4vmEo6JeWk7kI+Rbno6KTwqomkHC0TPZQ7Gp154qJo=;
+	b=CGQSg76JcWOZ0MoLN+MuZ77KH7+NPHXUesisi8e/4c6lGvHpscTqYlfTUX0p/BERV+qX9H
+	V46GXvkZcWKUpldI90W56GHevJDj0ImcNTE6GTAk3lttDWS+2vmaEWEAF2Gnop50VWCiaN
+	RhQAVRAQ+RYgRsVcNen07ezcA/GjlNg=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-370-AisQuOWnM4mok3IeGCsEUQ-1; Wed,
+ 11 Nov 2026 10:06:58 -0500
+X-MC-Unique: AisQuOWnM4mok3IeGCsEUQ-1
+X-Mimecast-MFC-AGG-ID: AisQuOWnM4mok3IeGCsEUQ_1794409616
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E603319540F2;
+	Wed, 11 Nov 2026 15:06:55 +0000 (UTC)
+Received: from onestero-thinkpadp1gen7.tpbc.csb (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id CED3330000E8;
+	Wed, 11 Nov 2026 15:06:51 +0000 (UTC)
+Received: by onestero-thinkpadp1gen7.tpbc.csb (nbSMTP-1.00) for uid 13628
+	oleg@redhat.com; Wed, 11 Nov 2026 16:06:55 +0100 (CET)
+Date: Wed, 11 Nov 2026 16:06:50 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] uprobes: Use flexible array for xol_area bitmap
+Message-ID: <avSEikCPEn_Q3KpI@redhat.com>
+References: <20261111022605.66010-1-rosenp@gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,49 +87,33 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261111022605.66010-1-rosenp@gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Low] perf tests: jevents_check.sh truncates test description and
-  omits (no_mlock)
---
+On 11/10, Rosen Penev wrote:
+>
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -108,7 +108,6 @@ static LIST_HEAD(delayed_uprobe_list);
+>   */
+>  struct xol_area {
+>  	wait_queue_head_t		wq;		/* if all slots are busy */
+> -	unsigned long			*bitmap;	/* 0 = free slot */
+>  
+>  	struct page			*page;
+>  	/*
+> @@ -117,6 +116,7 @@ struct xol_area {
+>  	 * the vma go away, and we must handle that reasonably gracefully.
+>  	 */
+>  	unsigned long			vaddr;		/* Page(s) of instruction slots */
+> +	unsigned long			bitmap[];	/* 0 = free slot */
 
-commit 92181aaa26288cfbfa72d268994737820fd76f90
-Author: TAKANO Mitsuhiro <takano32@gmail.com>
+I agree with Peter, you can just use
+	
+	unsigned long			bitmap[BITS_TO_LONGS(UINSNS_PER_PAGE)];
 
-perf jevents: Check the JSON keys a table may carry
+Oleg.
 
-This commit adds a --check option to jevents.py to validate JSON keys in
-pmu-events tables, along with a check-jevents make target and a shell test.
-
-> diff --git a/tools/perf/tests/shell/jevents_check.sh b/tools/perf/tests/s=
-hell/jevents_check.sh
-> new file mode 100755
-> index 0000000000000..311ca5f5ab15e
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/jevents_check.sh
-> @@ -0,0 +1,62 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +# perf jevents tests: --check reports a key the generator does not read,=
- and an
-> +# architecture that is not there is an error rather than a clean tree.
-
-[Severity: Low]
-Does wrapping this header comment across two lines truncate the test
-description in perf test?
-
-In tools/perf/tests/tests-scripts.c, shell_test__description() reads only
-the first non-shebang, non-SPDX comment line and stops, so perf test list
-displays "perf jevents tests: --check reports a key the generator does not
-read, and an".
-
-Also, append_script() and shell_test__requisites() default needs_mlock to
-true unless that single-line description ends with "(no_mlock)". Since this
-script only runs jevents.py on temporary JSON files and never maps perf
-event ring buffers, could the first comment line be a single-line
-description ending with "(no_mlock)"?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111132622.2349=
-165-1-takano32@gmail.com?part=3D3
