@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794427215;
-	b=hwYOGDXgfCqzEMMANIQdTrptM5UKF8eldZ1h6c4KYRZMJ1p2gKJIEjZ+af3i/GGEFodz
-	 PlEBtzKSmDoC/tgfBQwdBbc6W2g3pU5Iym/Pn2uN++Qzl1Br+IWOeWHkPs53hi+oGwg3+
-	 z85yTMgUd/k0YQuhiyXn+2kdUgYFRJRNoAnRkAHYLQMLw+O5mLGGRy5LFT++UrJPNhQXf
-	 hALSj2KLbt6VrDwhgGj+sPkjiiFRzeSxPY31hUavVMvlL+GXITO5Kqtj8yW1sbhBvqidq
-	 U9ulaJjQ0ox2pa8tUVc6qgqLrgUd9rDZPN0yFIZ1vwVuxt+tIExRWlB+8vx3899FrwA==
+	t=1794427893;
+	b=OGYQm7MbBPqcWhCV183voqZFfTwNzvEBqi7iPX8U7wKM2ABTp+2UCYLw0IXoHui+K2G1
+	 e4YCwtchBvDWrzoNh3rxN4slQ8m9OfOtzlQkmCqAagNOSyRnzxSKI6B36+Rr/24LVe7vC
+	 EM7MsFA7TLTfKb1STzj0erHycQwxlA2XbhhXqSNiYKFASz+I60P+qaw3dVg6cei02dSyT
+	 yOk2UDeM73dgZInvjJcM1axabIrgHWfQIAw4JRGiJj5nz+U/DgflskqFVanahPGImb7Mr
+	 RpOHC+FnporH+3U226pUTIi+y9/IzWHRT+2wnKITGtrihczoc7x50xWxzGQ8AJPjtHw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794427215;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794427893;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=PWZfMUcfptSjErqMoYGBqLNao0rXbTC2xXvpbfXB5oQ=;
-	b=zNVOVkGFmaGbwbvkbcRex7n2tteUkb5gfs4OhdY/svRwj86ThZQzmUYpyAXNEGjVM1yN
-	 pKoQkghUnXNhTAthqoBJCkW06J/Dy9JAYXNmPBS2IEK6ycR/HB3tj+NZXOfA1nLe/rlsu
-	 pX9D3MP1lMJxxpf/mVDGvRXP2m6M24nK+xnGtjICAa7lTrPyZwcNzF+AOTM9+FcIH4DqQ
-	 BfArcRsgl8/DgTBcj98PyWV8IBYs0Amsu60eFAJNS+cPiPSCprl/wgfGzlBTlo8pdalw/
-	 LEwnAbEbyxPHai4vVQjNNJQZCwbmZAjLz33DtXffTbVe6NNXdmspxPd1F3nc/eVgwgA==
+	bh=5/njl6c8h3BcypnpWlm9oLPqhst+7U5d9QjWg0Jd1Mo=;
+	b=5TpN+vVsO15igAdbQF3qgQMB2tvHVv6triV7Or0zwBtNua31eaOZ4+kK95Lei9gwy9gw
+	 cXZ1/O42Go9pwaDfSaaq2qDuVuKYPDxEtfuzbxNf4a6hLH+fSKzT2VoOlL+zjKfl6gw6c
+	 Jgoh0HPBPu7aOne5uf1TeK1SUdCWptFTH5zC8s9g8D5f71BtIYxbZZkrufSzjjjkmimDS
+	 aE6RVVmYdHs3uIumiuCkAukDUdJsrkoyblxKJ0wWCoZvB+55fbD+JABt79FgRcea9yHK0
+	 DIbyLWgjIViD+1d/oKJEff54QsG1fPTPez1zoKGfYrONtRmfcQ4i0WNfQJ6edJMwxqA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="QngY/9qf";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GpK6UhLT;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0EB606A321
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 20:00:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6CD606A31C
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 20:11:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QngY/9qf
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D75411F00A06;
-	Wed, 11 Nov 2026 20:00:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GpK6UhLT
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5B981F00A05;
+	Wed, 11 Nov 2026 20:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794427215;
-	bh=PWZfMUcfptSjErqMoYGBqLNao0rXbTC2xXvpbfXB5oQ=;
+	s=k20260515; t=1794427893;
+	bh=5/njl6c8h3BcypnpWlm9oLPqhst+7U5d9QjWg0Jd1Mo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=QngY/9qf5ygHJfJp3yPUmOhjMBB3jgmt4vdXgX5dZPtj/kKlCv4gc9FKDlegbqwPR
-	 fnv1PTgsweOfCefnqIqQAMMUm9M7xi+a7sUcC1Yw1s/drqyZvgJ6wTUSgLjk17sOYd
-	 hRWMRH6oOWFn/NIwoAQcOTMppjyiERMJ89G5VMA7GVvZEmI2EcZFzrEDLLVcLdSY5Z
-	 Lbp2r/lo+lPKxRJx8pU4TThZ7u4z3GAGCGE65LSpuznNtEabkUh1Fg+bqIY1r4tKT/
-	 Gc9QcItzvei/A0BRL6d+BK9/55mxTWLLAHO/tLcpsUTnCcddgdp4U7F/oifSy1M9Pu
-	 AKwy+XqsqO16g==
-Message-ID: <sashiko-outbox-209601@kernel.org>
+	b=GpK6UhLT/6hCnoUwvk5H7vleJT8EhJDGqOEv9p8l8TbX8pMQJlxVRnvBTY+BnX9i9
+	 ZvmvR/o+tFH/n9Bpvf13+RPZ2FL3HHSRxITsqE9GokctfllMG39NCysnOiHexViIdq
+	 0ThPWgOi3EoeATkMDaUNsATiW7ubVb/LgzdFglKSat9IjVmF8vijEkgyrd6EGBMAqQ
+	 Pn2dSjyAQRQHkzNe/jU5WMpDgb5llb/EnaI2AE9mVDsI3QVerJiqW+VB8ryhQhEK/h
+	 inAX9plAU0KUZ0FQxaqhlbEhP019Mr9myxOBUQTjFEs1OyRl91RbOj3/VkuqAJuRQH
+	 dCYj5ldbos5uA==
+Message-ID: <sashiko-outbox-209616@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v12 08/20] perf dsos: Skip BPF and OOL DSOs in
- dsos__find_kernel_dso()
+Subject: Re: [PATCH v12 09/20] perf dsos: Ensure DSOs in auxtrace, machine,
+ and symbol are in dsos
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261111174213.3526604-9-irogers@google.com>
+In-Reply-To: <20261111174213.3526604-10-irogers@google.com>
 References: <20261111174213.3526604-1-irogers@google.com>
- <20261111174213.3526604-9-irogers@google.com>
+ <20261111174213.3526604-10-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 11 Nov 2026 20:00:14 +0000
+Date: Wed, 11 Nov 2026 20:11:32 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,13 +61,10 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> In machine__process_ksymbol_register(), set the binary type of non-OOL
-> ksymbol DSOs to DSO_BINARY_TYPE__BPF_IMAGE (which
-> machine__process_bpf_event_load() upgrades to
-> DSO_BINARY_TYPE__BPF_PROG_INFO on PERF_BPF_EVENT_PROG_LOAD), and update
-> dsos__find_kernel_dso_cb() to skip DSO_BINARY_TYPE__BPF_PROG_INFO,
-> DSO_BINARY_TYPE__BPF_IMAGE, and DSO_BINARY_TYPE__OOL so that
-> dsos__find_kernel_dso() does not match ksymbol DSOs in machine->dsos.
+> Place the DSOs created in addr_filter__resolve_syms(),
+> machine__process_ksymbol_register(), and maps__split_kallsyms() into a
+> dsos collection so that all DSOs that may have data fds opened or be
+> referenced by maps belong to a dsos collection.
 >=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
@@ -75,5 +72,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111174213.3526=
-604-1-irogers@google.com?part=3D8
+604-1-irogers@google.com?part=3D9
 
