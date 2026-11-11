@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794429800;
-	b=ED1TaEFi11X49egYxm3pIlonEYkYP45qG24igF64EaH4tNDXg3eydI4z218NCT71EvX5
-	 1aCMEqnQziVpppBVESjMlA/xZeNSNVT/vN0j5NMSdg5WDQ3nPvQ8+xVcWybpZzIouYnme
-	 DRwniEmThrNjSrcF0BgjcbNFDIc4ftTdsoNymjpLMs2GIrzPMJruPYK4GjrxZWlJPGgSM
-	 o/rFHXOJn2MQ3b6XqcdTWHs6T86gUdOVWMP/8A06il5biHbLUnKz6PfjPYZCWsKgnBSa5
-	 Q2xyPrbFrwhmqckgdSxHWSJSm8n1LW7RRxPYfgM1VDUNCtucJI6lAgJPbexYxGScTYA==
+	t=1794430284;
+	b=xfP6tnCzPGKaYlcphzAQ+ICpUmaeWEFTJf898oS439awcnNwWCQMMhFpZNCFe2Ydqc4E
+	 mBzcPT0aX4eQwn+c6hriHbai/SwrJYPbdK1r8ITqNgRRXXG7zlRYCLZQb3hdSt2vSg/l3
+	 egc3eJmxfoKyQQsGGl5oZiwKi5pCtOTPlabDsL9wC7n4QgiBIm2PCC2zP8ohBwOUCDMu0
+	 1wya9TsLva5RmJPLWGV7omsQgOuvjYqdP9yhoxhfjTspDvHxTsAAQ8BPiBU8cpn1iY1Hd
+	 9wX6gGeiXzJmNBZhdZtDP4EiYO5cRuNgXWsv6bSX4gdPAp0En2u4QxlAzcGQJibqG3A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794429800;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794430284;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=bDzJd3eQYDlD/yJY/wVTosMEIAjytSJsGer2qHzzqSY=;
-	b=rSaXfJKtM3+a2RhK85nV1Eew5B9zzQARp0+qe37RwMBrqiMTB8jQw73AxcBUIM5Oe/7j
-	 ucL12y5iGr4O+QahcOpbcHXAMwpj1UoFWMqLeoh6LEr0iu7qcPG9X/guCfxtAPzAFMWO3
-	 9Uwd1lcuPm1htQUoCwCYVIunv8PxONcywvXrsV3rkj6NFWS0Zt1Fph6EXAL05BKBmfRc5
-	 IrISfIftHWMl5XiQPXnEz8jmreaZ0Nc3jLuqc9ob3laQgchj/rMmtgd+VU/zdP4icBI4v
-	 /fHzvfiokewE4X907urwqgECXeFmY1btUm/NW7CgA1V9NSuY433nFzlg7GqSY0B/oXg==
+	bh=c9RztIF5vJvDoEXa1VXw1DX+dA76WCBA8QBCqFLpDfg=;
+	b=hyJWmszpKwbrZ9mM8VEtb85zzrEZpe3b8HMUr5m/YcbRTvS5d+rXLZ/I3WITSURqaSwi
+	 YpTrKgrJT5gOlS6pZhhHvjIdIzC2dy8+wG9uT5Wh4Dx9ImZzB4iT01sQyf8YGwtJ1P8oi
+	 uEA8avU8YJKyQR4z7tsqn/0ekfGW+DXZrxiy6Zp570GBwWqAiU1CkdYQK83dl5hzii/Ny
+	 OKL0flncQJnCEHMg4TCFJsNT+oF1PXiomGB3sdjIDBAVHDsAZ3ydOHmsNpk08FTrQswD4
+	 hHW4k6+BxQq0LmMSCIexOhMSLtNRBB/t1hpeQNKbUVL4MMZ5GYRX1e5YDaNwzu0dgTA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ImO6XjiH;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=L3a3wNHt;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852A8606A31C
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 20:43:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9457B606A326
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 20:51:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ImO6XjiH
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4186F1F00A05;
-	Wed, 11 Nov 2026 20:43:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=L3a3wNHt
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB68F1F00A05;
+	Wed, 11 Nov 2026 20:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794429800;
-	bh=bDzJd3eQYDlD/yJY/wVTosMEIAjytSJsGer2qHzzqSY=;
+	s=k20260515; t=1794430284;
+	bh=c9RztIF5vJvDoEXa1VXw1DX+dA76WCBA8QBCqFLpDfg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ImO6XjiHsp5m2+jljz6omL04qqtAR+Z1R4lUEO6WmlyAqGS/i2tCQy8nHJHvdiRDE
-	 6bfOcCN2jgJ6CwaFN1OT4kwFOdC4EGEe1f3ZUO5qaOlRu927q3fuSbZCejZ/wW1dB0
-	 6w0EKV/wZqAMxAMXqx5oPEnqX6VTaAEncukNUuo8Vus/y4vzDH2dNTkPBX0ckP2tsf
-	 t5zTvuN9TsUmVNPkVSXvaAyzt93vMUu4BwbZXgGM3ym0edCIxKKGjCMDZs/mbr8Vov
-	 X1RF2cyQ6QhfWUUJAZnXsEhKrNpmQcnTiJO+Inu/dvE68sG+4Ua95erf327LMegG4V
-	 O7X5EVGA6vppg==
-Message-ID: <sashiko-outbox-209672@kernel.org>
+	b=L3a3wNHtxwWhV6RMmZ61mmQ3jNYCbeTR3P11SPMQA5KW7h9h5pVNtHGpE81ljw6x4
+	 HmljEcAPsrPMROdaYBWU1tNVYsjahMjliIf4vNkYTw9g5DZWdedS8lm9B5rpI8w0T5
+	 lzVSuz5sJjPB9TWSdOqTj5XP+I8w0Gj9PBGldz7NbChRRCbcygRul63W2w8mr6d1ad
+	 UKibxphz2VKhBQ4JkOjg2B0e4bXmjtBb644+Gi38LS77ka5j0I3xc+8/IVZ9TtroDu
+	 xVKQpiCWmkkcHzQMDJ69MHHPog2GLzkdTyvggl/6xZ9CV9kBqi21Bx+he3n6AB/7te
+	 33gDMDwK6tt7w==
+Message-ID: <sashiko-outbox-209682@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v12 15/20] perf intel-tpebs: Fix race in tpebs_stop()
- and tpebs_cmd.out fd handling
+Subject: Re: [PATCH v12 16/20] perf intel-tpebs: Use DEFINE_MUTEX for
+ tpebs_mtx
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261111174213.3526604-16-irogers@google.com>
+In-Reply-To: <20261111174213.3526604-17-irogers@google.com>
 References: <20261111174213.3526604-1-irogers@google.com>
- <20261111174213.3526604-16-irogers@google.com>
+ <20261111174213.3526604-17-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 11 Nov 2026 20:43:19 +0000
+Date: Wed, 11 Nov 2026 20:51:23 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,38 +61,15 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> In tpebs_stop(), read tpebs_reader_thread into a local variable before
-> releasing tpebs_mtx to call pthread_join().
+> Replace tpebs_mtx_get() and its pthread_once() initialization helper
+> tpebs_init() with DEFINE_MUTEX(tpebs_mtx) and static initializers for
+> control_fd and ack_fd.
 >=20
-> Transfer ownership of tpebs_cmd.out to __sample_reader() by passing it
-> as the thread argument and setting tpebs_cmd.out =3D -1 in
-> evsel__tpebs_open() so tpebs_stop() does not double-close the fd closed
-> by perf_session__delete(). Also reset tpebs_cmd.pid =3D 0 and
-> tpebs_cmd.out =3D -1 and return early if start_command() fails in
-> evsel__tpebs_start_perf_record(), as start_command() closes the pipe
-> internally and may leave cmd->pid =3D -1 on error.
->=20
-> Serialize tpebs_send_record_cmd() with teardown via tpebs_cmd_in_flight
-> and tpebs_cmd_cond, newline-terminate control commands so consecutive
-> writes cannot coalesce in evlist__ctlfd_recv(), check
-> check_if_command_finished(&tpebs_cmd) under tpebs_mtx only when not
-> stopping, ignore late samples in process_sample_event() once
-> tpebs_stopping is set, and guard evsel__tpebs_open() against a
-> concurrent tpebs_stop() with tpebs_gen, tpebs_enabled, and
-> tpebs_stopping across closing the fds and finish_command().
->=20
-> Include <pthread.h>, <signal.h>, <stdint.h>, <stdlib.h>, <string.h>, and
-> <unistd.h> explicitly.
->=20
-> Fixes: 8db5cabcf1b6 ("perf stat: Fork and launch 'perf record' when 'perf=
- stat' needs to get retire latency value for a metric.")
-> Fixes: bded0398ac19 ("perf tpebs: Fix concurrent stop races and PID reuse=
- hazards in tpebs_stop")
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111174213.3526=
-604-1-irogers@google.com?part=3D15
+604-1-irogers@google.com?part=3D16
 
