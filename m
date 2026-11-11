@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794426087;
-	b=nyKLSe1y91J+eIS7oOD09zb+eRHlDj8D1i2frcEYhRBcSodcG+DaY16AFBPLTVZToavS
-	 wCuAGC//nPhVzDM1EJNNQQCFtby3GEfDo55xEiahNb5d1uslUG733gEWfJ2FmMzGyh9AT
-	 teQuaETPtqRDDntahooRPvqaSzlDs7buJm6a9yawSIetZzw2Gbmh962utUm+wjYVDETJp
-	 W1im3hlABsCO7/h5kjXOnhKwB1XFrcaHgNrs0Zcer0jdXVR0WEjVljM8EJvKVBxO8SqZX
-	 G4TG07GZpafsRxoDhUeCp+2Zh/OvxKDNnrcW1yAShq8Oa+6qD9uvoVXzjpq3h4pHrGA==
+	t=1794426285;
+	b=oSWgiacAQk/mj8h8bNwis+HbQ3QfRAMndhto4FBgsfzmn//rU2X7PF/nHXD+1MekjKvg
+	 Rm5leZdNecSsUSBpjZgQ04XjC53tGUvSF9hYSsWAcs6aw8YK3tBggNy6i5wZIS0ZYT8Id
+	 ekIqtRV+oHxjWlJKpxeRGuoN8sHTDELtbsDU6UvkuRkiDwtfgvu/YyfCZQvT41oW/9axU
+	 hyrvxtsH5jUDugEffzkH2wIMcu3xsxGXVRqHqeu9jgVH3Qj7wfTEmztH60A6VVpdukpfX
+	 ay6JJmhHC9HvhIr+pzq6/kfUpSJB/KdAc0p6BJ9plHUhZ8Zd2TkQ33X5D51HiXubmHA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794426087;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794426285;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=+G33XAa8JaWXFBK8ycpLRC7AacBPgROZJtqaPyKQN5g=;
-	b=3nVbnxamWmoYBxK/HJnNGFjXefBGI77tRAk7Sul16vU9qOukSqsWhGuXucgxqG2nR937
-	 oTZrNPAd3SOsMbEW++QzTtDw73j4yZ6GPpC+Co4c/qmEcI0sI7LnllhS2/uW6sQq6yERC
-	 l+dRmRBVM7DYCa2gwyCJ1vaS9I+v8YlipUNqP5sldFTi06TZS9l9vdwq5O635yDd7xKXa
-	 wkzCS9S+At7B7XgeoHE4pbU1a3o9T1X4ygbmtGlaZTbqZSsAuUsu5LKhOXbUSIEd6b1/4
-	 gpFUM+794alRXjH3pBZwsb8ujQejqNnDICIHWk+gllou+qsuvVGjwWjZEZFvK8606/Q==
+	bh=QPmFxekiy810C57SBFGidBzxHDcFrFqkMZWYJ3zE0F8=;
+	b=v/TllHb4M6hzOpZC38VYv1CyLEgnYjfNIQdznBMMdwVWPIQQfLDs5jumVVDHc/ys5QIP
+	 S3Y+pKkL0IaJKO1YDsJ24Rf9WZjCBlrXRg178nPlY2hCKhSeIRKJ845TPwVnse0KBwdix
+	 OdLuZfvxMJArN76FVdFg4eW+b/wxkiDsjift1D97Cz7CVcaJnrg/PbNOGIFq6AVS8f4G8
+	 c7APr0RUiD7hdxBTTqjoAyVxwo+81fbIOy6nyKXG+DAiRyyECdPQbPN9UMdM2y04eJT90
+	 WVdHfU/UAf+kVjZGKtMVZ4oI04/j7b8HMJJtFNpASyqw3F8StYnbLXgrpyPOA3t5T/g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="m/RQ+ebs";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M0WegfNA;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FCF606A32A
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 19:41:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C24606A8AA
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 19:44:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m/RQ+ebs
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA9031F00A07;
-	Wed, 11 Nov 2026 19:41:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M0WegfNA
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 833421F00AD6;
+	Wed, 11 Nov 2026 19:44:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794426087;
-	bh=+G33XAa8JaWXFBK8ycpLRC7AacBPgROZJtqaPyKQN5g=;
+	s=k20260515; t=1794426285;
+	bh=QPmFxekiy810C57SBFGidBzxHDcFrFqkMZWYJ3zE0F8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=m/RQ+ebsEcN03LebCzodsCc6Mg8HpEmnv96pCvjgwVX7N2IE7AfSXCFRKUI+JH/YV
-	 //yW/7rukPa6glkVAI/rIQoBX54vNyIxpYZrxCUTu4p2jeEq6QRAyghRF8fouY6BvH
-	 3f7+sZH+0B1sWlOjE1Qpa2o7Hcy1JOanx50Bm/1qG5YX+C/DgWeQalQ0l9JPG7pJSu
-	 oOx9se7PLakGt7Ph5WGOiQQnX/w8rlX3aGoeBQIfvYmb4XUREEDHz1bwSqH2NHXOYI
-	 YL9biaFqCy2pGLedovlpm+6Qmkgg0if6yP83jilsWPj4ugPrT81IDWNzxZqV99l1nM
-	 7doeX9Ydr/Z9w==
-Message-ID: <sashiko-outbox-209585@kernel.org>
+	b=M0WegfNAu4bVlvz532sgMC9XqPIvbP2q36q/pf/GBtxZBt1iUr2iy+1ylHVOtKT3e
+	 SHPFIHMqr66gIbjNXbGlSPY2TdMNubBQNKSF50qp9WBINVrQZP/CfFWxOSgY3phdYY
+	 WktCUIsxoP/G3hM1X7Nzl+sNpIUj7JLOjJ4Xsmq+rVnzc1tlu6o2v3LnLDYdEzyX8p
+	 tMgVQVDSOnX9IMGCpHoFtZ15Khrn4TAw4nDpgcD1O4W71RlQQr4E/9gLy3Pin8MAVO
+	 pgdBO3w92eFY/TSV5/EZq7EMIyErPInpd/Hf7HgPTF3hAof2+L2tyQ4YB/RNmnMuyr
+	 e0wEmKqNtLBuQ==
+Message-ID: <sashiko-outbox-209590@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v12 06/20] perf comm: Add __guarded_by annotations to
- struct comm_strs
+Subject: Re: [PATCH v12 07/20] perf vdso: Fix unlocked __dsos__add() and
+ race in __machine__addnew_vdso()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261111174213.3526604-7-irogers@google.com>
+In-Reply-To: <20261111174213.3526604-8-irogers@google.com>
 References: <20261111174213.3526604-1-irogers@google.com>
- <20261111174213.3526604-7-irogers@google.com>
+ <20261111174213.3526604-8-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 11 Nov 2026 19:41:26 +0000
+Date: Wed, 11 Nov 2026 19:44:45 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,15 +61,20 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Annotate strs, num_strs, and capacity in struct comm_strs with
-> __guarded_by(&lock) and __pt_guarded_by(&lock) so Clang verifies all
-> accesses hold comm_strs->lock.
+> __machine__addnew_vdso() called __dsos__add(&machine->dsos, dso) without
+> holding machine->dsos.lock, and machine__findnew_vdso() and
+> __machine__findnew_compat() initialized machine->vdso_info and created
+> temporary VDSO files without synchronization. Acquire
+> machine->dsos.lock in write mode across machine->vdso_info
+> initialization, duplicate checking via __dsos__find(), temporary file
+> creation, dso__set_long_name(), and __dsos__add().
 >=20
+> Fixes: f649ed80f3ca ("perf dsos: Tidy reference counting and locking")
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111174213.3526=
-604-1-irogers@google.com?part=3D6
+604-1-irogers@google.com?part=3D7
 
