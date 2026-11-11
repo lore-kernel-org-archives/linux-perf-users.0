@@ -1,104 +1,61 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.127.230.113
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794363980;
-	b=LR+HMjsp3IyBFZ+37jHO/cPmrzOHI8mJKLzUQIjrYHalO3O8B4wcmdHXrtT/KOa1M/Ki
-	 U1F/88pKMl44KMxGfW7Ulp0WPoeqLvbdeqsP0XlpqX7SrvkaKNVgtDk1DMQ/+7W96u0ni
-	 /F+7FYXJzaDILFtvba5pH79USxxVDT9WYJZ+Bj1sZqiiDDfIlKwX2mlJneQmjiBfgB/ff
-	 fAr2cFWnJevEGqXVvdE5p5HcWSeQkwctPNN08YPjxQUEmzKz5IeAYjVZJVBDejH5MFoZw
-	 EA03zN+spkB2GJ4YsJ2DyzXWORhSMxf0ZqSsNDvx/G0/2dIHTRJYUsFGWX9k7rRbXrQ==
+	t=1794364034;
+	b=jnw1bxLFv5N1TOepVxvtiHZsP0EM5y0XBbfxIcsamzjU9wsq4oB3XTc2KNFjVckyWXTI
+	 sJ+xPD1Q7YytOgbJkXznIklrHLuz8KUviOjMkcpcEVXNyRQbcLs0Nuo3sZh+Ip3Qn9WFc
+	 MHsifOHhh7c6UtRHNWAL1i/Hm15U+MssnVfBApFtjHo1uiYDP70HAqRozAN84F0L0Ww71
+	 nvX3ahu05wuIgkcXDyvNmFyXgf1+VHujE888s42hnlMtIdtlwP2yaFXdHsc9XtHDgNCmx
+	 3ix+UgG7gXSgu0gm3mUnApMdgyiiAkS4z/XWB4hYFpEa9n27Dw+egFHtD0zL0h9pd3A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794363980;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=IJhsxR/EvrWZJxL/r/ZQEHhwVLOVGsYzQMsdW4G1Luk=;
-	b=r7K2YUV+/pRynrSDNQZ0UJKu5wDr8B60HuPsoUQXcJJA4mSDwT9kCS5rg5IGVwnj99b0
-	 6Ozd3vx1mDmSk1PtZcNLJZtVf9kgt4xGseMnyJjwUTRmp1FOk889c3V6JNxjvkoNG7f7x
-	 p7qAtK5+svUM9pwFpPkDgziqS1t9xesF7g0trJ1BbyX2bhBgNRwFlVaTX+MlDtExF3dSH
-	 IIjD1ZCGx0t333MNTeo54JNaNDgPdp/Y0cRawADWxa3SLKZNC4f5XW4godq5aCAbmJBjX
-	 vYem8xy9oavz4Fut5XucGeMaH8PcX4iGj4d2bM0IMBuW9jWni8Fcq2a+6Z+hOeU1vUQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794364034;
+	h=DMARC-Filter:DKIM-Signature:Date:Message-Id:X-Original-From:
+	 Content-Type:To:Subject:Cc:X-Mailer:From:Content-Transfer-Encoding:
+	 X-Lms-Return-Path:Mime-Version;
+	bh=YzCVkXl0Ljz1g+ypSGRoD2tcH71bvXunUtydpCIBAWU=;
+	b=3xi2PRzw7dtlV9Q7iCbgdOgdjdIh4KhMM378cz1MOfPv8QLg6LPXMWa+/McwQ8yupl0b
+	 abJGlG8Fhq9yAIoDNW5cmXOMvdfxeElOyRMtMBxnPe5TagxGm4dLYIfF/9Z6qBPXyMmog
+	 YU1PLjHVD/IZFqxtubL4skPZwfxr2zpk4BjT4zi5hVgD4t3BzxxD7ZywuQqmKu29fvSnD
+	 nVFccU1iyhwlse8v4lsg71GlfIV47B2hpRaUiLX5FnKk0W9ya2fBzg/oDSZWyylC59SY1
+	 CTvWjaBpPnWjPA0Kym2EJjtltft0USSG6MVY/vRfGiDw8V1tw3pv/YtVUWkeUaBYUWQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=DU95D8oe;
-	arc=none smtp.remote-ip=209.85.215.179
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	dmarc=pass header.from=bytedance.com;
+	spf=pass smtp.mailfrom=bytedance.com;
+	dkim=pass header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=2212171451 header.b=Aa3Ofoix;
+	arc=none smtp.remote-ip=209.127.230.113
+Received: from va-1-113.ptr.blmpb.com (va-1-113.ptr.blmpb.com [209.127.230.113])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23416606A321
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 02:26:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 23416606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7EEA606A32A
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 02:27:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B7EEA606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=DU95D8oe
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-cdd9e925075so287185a12.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 18:26:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794363979; x=1794968779; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=IJhsxR/EvrWZJxL/r/ZQEHhwVLOVGsYzQMsdW4G1Luk=;
-        b=DU95D8oeVGyJ7lGm1+klKR5Z6Fk/s7oU4yM7eiBkpTWsH1IxOX1GVxxgHbdKZlUrUs
-         OK/irF6YkwDerURylq/X5tipLKhdMTKb9A0rfqQYuB1bsJzkYHMczJBFWuXyDwVnrhCr
-         ls1QiHmNodL1l0XfMt6oscEkou/Yk+29qGiLsoGzeWdXwfD3lXhOSFm3kENJ1m/7page
-         4Qw0dAFY0rAgncIo46JduGecIsZ8HLMxYD2QlFh4fxFQj4upwWUyhMgt0ARkMvyTuBdX
-         NIuwub7SbYcZiS6J8r4wb8getSQbSt4yMSPrBC49uqhFe9n1E+en8lyVpcXBOANajF7c
-         qRqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794363979; x=1794968779;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=IJhsxR/EvrWZJxL/r/ZQEHhwVLOVGsYzQMsdW4G1Luk=;
-        b=Lqz1rgsDSkXdr20QkeuHBJTwoY88LZAfIzTzdtkGGXqh/W4HorQ+SHeBb27FT8YO3k
-         yIUyssH9XMB7heF9JMd25pV3vYbk0VBd5ny7AhMhQbc2CJ2PkgST3k/3NOW3fibU0bvw
-         NB21zOFo286NHwJSuPpDpB61K0j+2JgKk8hi+Moh77OiD/vWXw69kpl9+n8/kizk3DIr
-         XmPBlzwzfW2TLuT6bvkjBFeR14Uk2uliovrqPYVYSyhgh8hX39geX1YGaO4U5T96IZPP
-         sZV1mlSykjkqMS8JlhgJPKYAcsloy+xO9iIWGWEWpVN467YBk1JeQSRbC0GfpvFVlH0V
-         UdOQ==
-X-Forwarded-Encrypted: i=1; AL+hErGhOF3jBXADaV4+b3TU/cBs/2H7EZ0va1kDDmiHJI6skOWXJcJj3w89LpYGNHqVTuncbd/WUfCX5hij7bvfrczo@vger.kernel.org
-X-Gm-Message-State: APuU4Z8xuaOo0umvJjv7mHzaPeg8pmg9UWVjkMk04uvCTCwH7kO7iLV0
-	w2XiKMCsPirdEjY1P/myi3sBHMdiQD9BR7dVBww7qhKoDuZuzfeLqBYR
-X-Gm-Gg: AYBFou1ClGLtdUL15k6s7QnBkEjGGhWUs4LL95jiu9SVDlDEx3ebzr6wwNSAllP/pu7
-	R4MUttgkbr+WpxzUL62IyXzLpE0/fSSmx5evQGPNeYZEv+QGB9XbjoZR0Gdb/sjMJsFO3KZftJg
-	lfFBF8eWXWzghOLqajEjbtBWGZpGT8XplmUvqstf4wh/1cSGee+NZmmRgaz/PNSSV0CynciWVTo
-	sRcMnCUDH61F7GLGlumM2WvhsGKBDIlrgT3Vx3zvJsx7XFpsggHTFrm4wIbQ0rxFeKvGlq+GMju
-	Z6HA79OACwm1t0n4Qdi6DvYTz4/ACbJieiDdPTinrFwPu6N6+NmYzD6VT9bPADCOjT0Nuo13uq6
-	xmOkfaa6ECN7bbIW7+8ddOq/B7TGgE19yf001EaXtW1RkqjR+fClcjMPXY+7+ayLCrQpMXHxKvX
-	PRwt1Upre/97sHquIiY0iPbmamEYjRHBXbNlY0fq+oVzNmDbodKBfG7h6ae08nSfTCBz8ZMHLOi
-	ZmD6diL7N3D7H5WRmF3nTwVK3ggWTJYUuTbfNjRH9SVQtMd4GSbGTIjYmcSCnAgY3krdSAK4Syb
-	lNxAfNj2nEAaRxi0IDuJq6ZEaXRDi33jaqQyDqoGINLcpMZSiQKDDBpKj/PnRmGZfMtGnFaCitf
-	cEVUe0UqjBJJcCutd/MEjRxOh02GFrSqvuSi4lRa5kQ+0QSVapr8wVpNkPn1y2wFe6abaAzkKUe
-	bUDA==
-X-Received: by 2002:a17:90b:35cf:b0:3b0:96ce:104f with SMTP id 98e67ed59e1d1-3b182dea718mr974216a91.5.1794363979444;
-        Tue, 10 Nov 2026 18:26:19 -0800 (PST)
-Received: from ryzen.lan ([2601:644:8000:37f::e34])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b17db56c7esm2040066a91.8.2026.11.10.18.26.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Nov 2026 18:26:18 -0800 (PST)
-From: Rosen Penev <rosenp@gmail.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2] uprobes: Use flexible array for xol_area bitmap
-Date: Tue, 10 Nov 2026 18:26:05 -0800
-Message-ID: <20261111022605.66010-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.56.0
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=2212171451 header.b=Aa3Ofoix
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1794364027; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=YzCVkXl0Ljz1g+ypSGRoD2tcH71bvXunUtydpCIBAWU=;
+ b=Aa3OfoixQvVkWKLQ+M9dS9+mYGyzbtmqK/sZ4YX7wf09ujtug9BKVtievzna+w0DPSUfuC
+ H/ngZcFyIdSpKUSrZ2WhBHv+ZJ0pgLxeerkFmgMbf9oP2rE6/exc9ksYwZWm35Uq0fFcGO
+ vXyBBycIY8AaRlp9lVQbviD6PuaYN1WyaNFLCe2ZcMUt2Tymx2Itp5PMDZU0d31+T2udb+
+ dCixXbq3tHocEyxlyAemhlTxZ+xto7oeHp9i6sNjhnyncinKBAQ5D1JITSI5t/SFomM+BR
+ cZLbN/kwg+Xbpe+iF8kJrZpmc7lBTzEyv2RDDnK3vNgZWErN480e4Letgfg75w==
+Date: Wed, 11 Nov 2026 10:26:49 +0800
+Message-Id: <20261111022648.71649-2-qirui.001@bytedance.com>
+X-Original-From: Rui Qi <qirui.001@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
+To: <linux-perf-users@vger.kernel.org>
+Subject: [PATCH v2] perf parse-events: default data breakpoints to any size on RISC-V
+Cc: <linux-kernel@vger.kernel.org>, <linux-riscv@vger.kernel.org>, 
+	<irogers@google.com>, <peterz@infradead.org>, <mingo@redhat.com>, 
+	<acme@kernel.org>, <namhyung@kernel.org>, <qirui.001@bytedance.com>
+X-Mailer: git-send-email 2.52.0
+From: "Rui Qi" <qirui.001@bytedance.com>
+Content-Transfer-Encoding: 7bit
+X-Lms-Return-Path: <lba+26af3d279+653cd4+vger.kernel.org+qirui.001@bytedance.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -107,84 +64,172 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
 
-The XOL slot bitmap has the same lifetime as struct xol_area, but it
-is currently allocated separately.  That adds another allocation
-failure path and a matching cleanup branch without buying any extra
-flexibility.
+When the length of a data breakpoint is not specified on the command
+line, perf defaults it to HW_BREAKPOINT_LEN_4:
 
-Store the bitmap as a flexible array member and allocate it together
-with the xol_area using kzalloc_flex().  The bitmap remains
-zero-initialized, while the allocation and error handling become
-simpler.
+  $ perf record -e mem:0x30020:w ./prog
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+That assumes the length describes a byte range that is compared
+against the address of the access, which is how the x86 debug
+registers and most other architectures work.
+
+RISC-V debug triggers behave differently.  An Sdtrig mcontrol6
+trigger encodes the width of the memory access it should match, and
+it only fires for accesses of exactly that width.  Watching an 8-byte
+variable with the implicit 4-byte length therefore never triggers:
+the perf event is created and enabled, but no event is ever
+delivered:
+
+  $ perf stat -e mem:0x30020:w ./prog          # 8-byte stores
+  0       mem:0x30020:w
+  $ perf stat -e mem:0x30020/8:w ./prog
+  10      mem:0x30020:w
+
+The failure is silent and easily mistaken for a broken hardware
+breakpoint implementation.  Tracing hw_breakpoint_exceptions_notify()
+while the event is active confirms the trigger never fires.
+
+Zero is a valid length for RISC-V data breakpoints: the kernel
+encodes it as size 0, which means "match any size".  That is what a
+user leaving out the length asks for, so use it as the default on
+RISC-V and keep the existing 4-byte default elsewhere.
+
+Tested on a riscv64 kernel with hardware breakpoint support.  With the
+default length, watching an 8-byte and a 4-byte variable both count
+10 stores, while explicit lengths keep their exact-width behaviour:
+/8 only matches the 8-byte access and /4 only the 4-byte one.
+
+Signed-off-by: Rui Qi <qirui.001@bytedance.com>
+v2:
+ - Update the data-breakpoint assertions in tools/perf/tests/parse-events.c
+   to compare against default_data_breakpoint_len().  The rw checker now
+   takes the expected length, so the explicit /4 cases still assert
+   HW_BREAKPOINT_LEN_4.  Suggested by Ian Rogers.
+
 ---
- v2: add Acked-by. remove Assisted-by
- kernel/events/uprobes.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ tools/perf/tests/parse-events.c | 20 ++++++++++++++------
+ tools/perf/util/parse-events.c  | 23 ++++++++++++++++++++++-
+ tools/perf/util/parse-events.h  |  1 +
+ 3 files changed, 37 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 853fc952331c..876c3cfe8031 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -108,7 +108,6 @@ static LIST_HEAD(delayed_uprobe_list);
-  */
- struct xol_area {
- 	wait_queue_head_t		wq;		/* if all slots are busy */
--	unsigned long			*bitmap;	/* 0 = free slot */
- 
- 	struct page			*page;
- 	/*
-@@ -117,6 +116,7 @@ struct xol_area {
- 	 * the vma go away, and we must handle that reasonably gracefully.
- 	 */
- 	unsigned long			vaddr;		/* Page(s) of instruction slots */
-+	unsigned long			bitmap[];	/* 0 = free slot */
- };
- 
- static void uprobe_warn(struct task_struct *t, const char *msg)
-@@ -1760,18 +1760,13 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
- 	struct xol_area *area;
- 	void *insns;
- 
--	area = kzalloc_obj(*area);
-+	area = kzalloc_flex(*area, bitmap, BITS_TO_LONGS(UINSNS_PER_PAGE));
- 	if (unlikely(!area))
- 		goto out;
- 
--	area->bitmap = kcalloc(BITS_TO_LONGS(UINSNS_PER_PAGE), sizeof(long),
--			       GFP_KERNEL);
--	if (!area->bitmap)
--		goto free_area;
--
- 	area->page = alloc_page(GFP_HIGHUSER | __GFP_ZERO);
- 	if (!area->page)
--		goto free_bitmap;
-+		goto free_area;
- 
- 	area->vaddr = vaddr;
- 	init_waitqueue_head(&area->wq);
-@@ -1784,8 +1779,6 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
- 		return area;
- 
- 	__free_page(area->page);
-- free_bitmap:
--	kfree(area->bitmap);
-  free_area:
- 	kfree(area);
-  out:
-@@ -1826,7 +1819,6 @@ void uprobe_clear_state(struct mm_struct *mm)
- 		return;
- 
- 	put_page(area->page);
--	kfree(area->bitmap);
- 	kfree(area);
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index 5f6f95c8a5b4..d5f0f4ca7ccd 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -257,7 +257,8 @@ static int test__checkevent_breakpoint(struct evlist *evlist)
+ 	TEST_ASSERT_EVSEL("wrong bp_type",
+ 			  (HW_BREAKPOINT_R | HW_BREAKPOINT_W) == evsel->core.attr.bp_type,
+ 			  evsel);
+-	TEST_ASSERT_EVSEL("wrong bp_len", HW_BREAKPOINT_LEN_4 == evsel->core.attr.bp_len, evsel);
++	TEST_ASSERT_EVSEL("wrong bp_len",
++			  default_data_breakpoint_len() == evsel->core.attr.bp_len, evsel);
+ 	return TEST_OK;
  }
  
+@@ -282,7 +283,8 @@ static int test__checkevent_breakpoint_r(struct evlist *evlist)
+ 	TEST_ASSERT_EVSEL("wrong type", PERF_TYPE_BREAKPOINT == evsel->core.attr.type, evsel);
+ 	TEST_ASSERT_EVSEL("wrong config", 0 == evsel->core.attr.config, evsel);
+ 	TEST_ASSERT_EVSEL("wrong bp_type", HW_BREAKPOINT_R == evsel->core.attr.bp_type, evsel);
+-	TEST_ASSERT_EVSEL("wrong bp_len", HW_BREAKPOINT_LEN_4 == evsel->core.attr.bp_len, evsel);
++	TEST_ASSERT_EVSEL("wrong bp_len",
++			  default_data_breakpoint_len() == evsel->core.attr.bp_len, evsel);
+ 	return TEST_OK;
+ }
+ 
+@@ -294,11 +296,12 @@ static int test__checkevent_breakpoint_w(struct evlist *evlist)
+ 	TEST_ASSERT_EVSEL("wrong type", PERF_TYPE_BREAKPOINT == evsel->core.attr.type, evsel);
+ 	TEST_ASSERT_EVSEL("wrong config", 0 == evsel->core.attr.config, evsel);
+ 	TEST_ASSERT_EVSEL("wrong bp_type", HW_BREAKPOINT_W == evsel->core.attr.bp_type, evsel);
+-	TEST_ASSERT_EVSEL("wrong bp_len", HW_BREAKPOINT_LEN_4 == evsel->core.attr.bp_len, evsel);
++	TEST_ASSERT_EVSEL("wrong bp_len",
++			  default_data_breakpoint_len() == evsel->core.attr.bp_len, evsel);
+ 	return TEST_OK;
+ }
+ 
+-static int test__checkevent_breakpoint_rw(struct evlist *evlist)
++static int check_breakpoint_rw(struct evlist *evlist, u64 len)
+ {
+ 	struct evsel *evsel = evlist__first(evlist);
+ 
+@@ -308,10 +311,15 @@ static int test__checkevent_breakpoint_rw(struct evlist *evlist)
+ 	TEST_ASSERT_EVSEL("wrong bp_type",
+ 			  (HW_BREAKPOINT_R|HW_BREAKPOINT_W) == evsel->core.attr.bp_type,
+ 			  evsel);
+-	TEST_ASSERT_EVSEL("wrong bp_len", HW_BREAKPOINT_LEN_4 == evsel->core.attr.bp_len, evsel);
++	TEST_ASSERT_EVSEL("wrong bp_len", len == evsel->core.attr.bp_len, evsel);
+ 	return TEST_OK;
+ }
+ 
++static int test__checkevent_breakpoint_rw(struct evlist *evlist)
++{
++	return check_breakpoint_rw(evlist, default_data_breakpoint_len());
++}
++
+ static int test__checkevent_tracepoint_modifier(struct evlist *evlist)
+ {
+ 	struct evsel *evsel = evlist__first(evlist);
+@@ -1708,7 +1716,7 @@ test__checkevent_breakpoint_len_rw_modifier(struct evlist *evlist)
+ 	TEST_ASSERT_EVSEL("wrong exclude_hv", evsel->core.attr.exclude_hv, evsel);
+ 	TEST_ASSERT_EVSEL("wrong precise_ip", !evsel->core.attr.precise_ip, evsel);
+ 
+-	return test__checkevent_breakpoint_rw(evlist);
++	return check_breakpoint_rw(evlist, HW_BREAKPOINT_LEN_4);
+ }
+ 
+ static int test__checkevent_precise_max_modifier(struct evlist *evlist)
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index f3ba70d4f76b..e752f41f2b36 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -598,6 +598,27 @@ size_t default_breakpoint_len(void)
+ #endif
+ }
+ 
++/*
++ * Default length for data breakpoints when the user did not specify one.
++ *
++ * Most architectures treat the length as a byte range that is compared
++ * against the address of the access, so 4 bytes is a reasonable default
++ * that matches most accesses.  RISC-V debug triggers (Sdtrig mcontrol6)
++ * encode the width of the access in the trigger instead, and a trigger
++ * only fires when the access has exactly that width.  This holds for
++ * both RV32 and RV64.  With a fixed default, an access of a different
++ * width silently never matches, so pass 0 on RISC-V, which the kernel
++ * translates to "match any size".
++ */
++size_t default_data_breakpoint_len(void)
++{
++#if defined(__riscv)
++	return 0;
++#else
++	return HW_BREAKPOINT_LEN_4;
++#endif
++}
++
+ static int
+ parse_breakpoint_type(const char *type, struct perf_event_attr *attr)
+ {
+@@ -658,7 +679,7 @@ int parse_events_add_breakpoint(struct parse_events_state *parse_state,
+ 		if (attr.bp_type == HW_BREAKPOINT_X)
+ 			len = default_breakpoint_len();
+ 		else
+-			len = HW_BREAKPOINT_LEN_4;
++			len = default_data_breakpoint_len();
+ 	}
+ 
+ 	attr.bp_len = len;
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index b14c832b03a1..e8f8cdfd1052 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -291,5 +291,6 @@ static inline bool is_sdt_event(char *str __maybe_unused)
+ #endif /* HAVE_LIBELF_SUPPORT */
+ 
+ size_t default_breakpoint_len(void);
++size_t default_data_breakpoint_len(void);
+ 
+ #endif /* __PERF_PARSE_EVENTS_H */
 -- 
-2.56.0
-
+2.52.0
