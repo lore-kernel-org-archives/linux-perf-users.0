@@ -1,59 +1,62 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794424172;
-	b=4zy7hgmKDzHgwGtzFR2PGlLNdFCyCKuxy9dXai2AkVJRalAW8DvQ/R0Y5rFmZs4kB76x
-	 y5BoCxUUnUR4knzUFcJIedHTx3SXunO89Kk0YZmRLOJ6eiQCZKgMSGzgqBEOTkboxuym+
-	 cwhPagttHUOq84Rqqjk9CqliOYmcF18kuwd8WbWHE7QCTMmukiJngb8BcECKgaXCLgiJS
-	 Iyyd6SQDLS7lTucRw/Bzil8hgqqgA2s7WtY3HV0F4KYhlHw+sOfJjPqPYq/hKozxTCqmQ
-	 ksmV24swNW5oK2hDHX9QDP72iJnsJi18IzTepDmVwxNeSpaDM+ryZmX9UnvaFMiqwqA==
+	t=1794424174;
+	b=NoWZCbz91KCx1ZF1UtbqCsUo82n6ovzwepqn41NLySC7eOqgUacmoPJ44Y9E1gtvIy9o
+	 MuTKpjrX3B6utVsXWJa6pE9CGW0tOlhhXveoeR8rdWNA4PW+WGmLUn/rzS8gqQzGJIckw
+	 ZegUFFMYSlhAqDxoi0OS9a5kdKZT7EEAFAQprmacrIoO4laP6k+CSGzDzckK9rhsKWa15
+	 hfcxaIvhOTUwMmiYAtbk14ihP7P7rG9ca4431qPiYYrBXI1BQD2iOfQDNTvYeVui91vhl
+	 FCrNMh3zXqlmusvvA5Y5TAZZo42Qw2hRjEUWyC0eK7UF9xQC4WkbOEGaVe+VhVVtRGw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794424172;
-	h=Received:DKIM-Signature:From:To:Cc:In-Reply-To:References:Subject:
+	a=rsa-sha256; c=relaxed/relaxed; t=1794424174;
+	h=Received:DKIM-Signature:From:To:In-Reply-To:References:Subject:
 	 Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 X-Mailer;
-	bh=RNbJFmZkmePFtzHwV6zWkYa+pCLlN4u6+GmZ4jR2f7c=;
-	b=JZoQDWs7uv5VJ5S53/quUvq2YnKv0hzWymHeGW+bqzEcX3jD0Gif5iekaHGBuMrQFJny
-	 3ZxryoiVV77gyOZCkGZJr6x8Ko6pt3dm9lm/nj4Vayqv3Qsk97B9r+fDKz4XaVqbU0+cU
-	 WzCNkYwo353Z0A1KyfSwcLcKX8oSK8UQp4O8CD2FKPOFotXXjtDI+FQgsddE6ucItICNV
-	 aqqDQhxZt93pun4ZRh0XweAEV1qjvL7TzmYzpLLdu1o3XPTHIMwp6RipzndDZtmaszE1f
-	 +Y0KRCNPNTHixF+L1+IBhSu4gcjmKyhru6KR6w3G++2HZhP3aTRjV9EeK4OZs5cjX2A==
+	bh=sBLvfooJz/TBQ1KvAdmewHc377ArYIPCH8KTfuPvfKg=;
+	b=dpDuMTpT5oTA7HKau6TAIVBu6HE9ZqrfMORKiehFZSBZ+awVWuQV2OzjFADR9QHBlmS1
+	 Q9iG9XeKs06I62v4Drk1CYYN26o/xmxbh3Ls2NFU+m4wJu/gZCLADzBJXKIivHRN0jj02
+	 R4M1f0WEjHED5rcIz14JyXO+/zI2oiZb0dQGX3b4LoQUNCOrrN3OsrGO4pQv0qoC0Y5ES
+	 8vAJx1set9GwAFcw1tHvpHkAoqmgCSqht/p5rogTez7ftl9bmhDAdXwo/+3wk3K16bGwD
+	 2WZTDAddcUznaZRvm58pEhuesAKCm59GD7kzyhnuPRDCnNNSRftuZo4w5kyBGqED6wg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RXA0k7n0;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HXnJuSbi;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98725606A33E;
-	Wed, 11 Nov 2026 19:09:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245C6606A89F;
+	Wed, 11 Nov 2026 19:09:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RXA0k7n0
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE6451F00A0C;
-	Wed, 11 Nov 2026 19:09:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HXnJuSbi
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B66A01F00A06;
+	Wed, 11 Nov 2026 19:09:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794424172;
-	bh=RNbJFmZkmePFtzHwV6zWkYa+pCLlN4u6+GmZ4jR2f7c=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=RXA0k7n0M5IN7QMkFeVeuLMiGZjXp57D7LIoGJUif6ewwxIEIxcbBJomSSPg11P0f
-	 duVoArBe1Km+orfavhR9mC+UpoGorp7VwvfosAbGc5bIQuOUzAmcq8htDsqyAhsxjB
-	 KUQRrrAHVa2PXJjeeheqN6nDyqlPag5OZCYhV+i/CzmTGxnBQ022eyZRAFs1b48dwg
-	 3t9m1JNK+kO+OV7vzNr+3hRdq0wIgED9eKUIkO/OQzc7uq2fitqsGtW5VVmyMra5XP
-	 r1F77k1VhKVsGdiVNCvO1CfMfKLoY5ARjc3d/xZ3LA+GsVsElorq4lROlCyFQzRre4
-	 YW72rWMCqhfHw==
+	s=k20260515; t=1794424174;
+	bh=sBLvfooJz/TBQ1KvAdmewHc377ArYIPCH8KTfuPvfKg=;
+	h=From:To:In-Reply-To:References:Subject:Date;
+	b=HXnJuSbiXtl8ctaRceuPznXya+x2fkKyOJ0re0xCwixwY3zWquL+tx7IMD75UolVV
+	 1aHQQNTtDGlTQwW3pKQ6b0LonuA8+7g6VyZBqNmTRKvoLvOTFTw/OyJ1lYsbgnnxYo
+	 +ppNqTXJicvxfdPdPLchDocYUaRdekQyZN1CI5TbTGNs9wHrLIBbiOgSp4O8imZ5MP
+	 m32gBDT4srpB/9V1OyHKxf556ab6RjfeNHlMzEwBt6o7a3u9yDQamF138fZ6ghhdtL
+	 jnM44P8bI+VVQbvwGi2WJR42MsgEZ0acajiASm2cOG4H1t0zhlpvHctiBMQCVdReDD
+	 XuuGKzjVidjUg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: linux-perf-users@vger.kernel.org, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
  Arnaldo Carvalho de Melo <acme@kernel.org>, 
- TAKANO Mitsuhiro <takano32@gmail.com>
-Cc: Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
  James Clark <james.clark@linaro.org>, 
- Shunsuke Nakamura <nakamura.shun@fujitsu.com>, 
- John Garry <john.garry@linux.dev>, linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20261108184654.3811267-1-takano32@gmail.com>
-References: <20261108184654.3811267-1-takano32@gmail.com>
-Subject: Re: [PATCH] perf vendor events arm64: Fix typos in event
- descriptions
-Message-Id: <179442417182.676192.13202396193475036791.b4-ty@b4>
-Date: Wed, 11 Nov 2026 11:09:31 -0800
+ Alexander Antonov <alexander.antonov@linux.intel.com>, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ lirongqing <lirongqing@baidu.com>
+In-Reply-To: <20261109090143.1749-1-lirongqing@baidu.com>
+References: <20261109090143.1749-1-lirongqing@baidu.com>
+Subject: Re: [PATCH, next, v2] perf iostat: Release the port list if
+ command allocation fails
+Message-Id: <179442417255.676192.17219284909215847181.b4-ty@b4>
+Date: Wed, 11 Nov 2026 11:09:32 -0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -67,16 +70,16 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Sun, 08 Nov 2026 18:46:54 +0000, TAKANO Mitsuhiro wrote:
-> Six entries in common-and-microarch.json spell Statistical as "Statisical"
-> (the SAMPLE_FEED_* events), and one entry in the Fujitsu a64fx table, the
-> L2HWPF_STREAM_PF event, spells prefetcher as "prefecher" in both its
-> BriefDescription and its PublicDescription.
+On Mon, 09 Nov 2026 17:01:43 +0800, lirongqing wrote:
+> iostat_event_group() takes ownership of the root port list and frees it
+> via the err: label on both the normal and parsing-error paths. When
+> calloc() for iostat_cmd fails, however, the function returns -ENOMEM
+> directly, leaking the list, its pointer array and every port in it.
 > 
-> The SAMPLE_FEED_* events are inherited through ArchStdEvent by the
-> neoverse-n3, neoverse-v3 and t410 tables, so the misspelling reaches those
-> three generated tables.  The a64fx pair appears once, because the long
-> description is dropped when it equals the brief one.
+> Route this failure through the existing cleanup path instead. At this
+> point no port has been transferred to an event yet, so
+> iio_root_ports_list_free() releases the whole list, and the trailing
+> free(iostat_cmd) is a no-op on the NULL pointer.
 > 
 > [...]
 
