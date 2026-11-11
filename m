@@ -1,56 +1,60 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.127.230.111
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794377910;
-	b=5Tz7xduSvZf5Om3CGa3vbtE8zripCv/fI5AGRGDu/aSVveh6MowmEnWOQQy8WRS11MtJ
-	 a+EkTHCTkDght1NUXEgqUzIhkDbsFdrh0u2XcgdmcrrHi7+7aq+q0Mq01cBimyRx+bsc/
-	 c17XGGVjkBclAsnAk315NICCpjedDCaHljZ9ztkxsly6wcLc/e5YjB4E4myNFc5PH8RGU
-	 pUabzVYJW8WF0SLx+2NtPGappfQxBcC4kmIy94wXR6DsGhpEkZw2J54YBqvGf5KPqtQub
-	 IZCuBA5J6e5FRnKDEqNm4x0LJb3vMv3e0mQvhX15FHhnN2LX7didG0nX7aqSvHNWwxQ==
+	t=1794378254;
+	b=PhWH1cj0e+ui0GGjmnnSNs0YFEJ8vV1lcYRhB/wJFrMmBqDU1XkjQ2eoXL9SiPsArCYg
+	 KUL727kqgds83ydSmbxv7/lUiB40iyfXlF+iHtabtzcSGhN0x3rSgEn/UBo73QxgBuQ2L
+	 5MHv+Vnbun9kE/JHOuTXbhTEmKSFGKklNqUAK3+TmMxBFPaGEK1FJ2nMBn/uPlaa+UR8T
+	 1usRZsEwSppzwb9Bq8A81Ox8Jx4sLLuoEFqUgPGJS0ftHP1chGVjmct+nBsQen2AJvAdj
+	 dFy+SEGhCzIoyuB/rusrRpz9zBcB3HHw3mEqt1E327Z3Vx8VlW9nhbLm7MM/vqILYDg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794377910;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=VKu2xHEkhwK9Kq4tiWZRGgYWUPgmWjGSDblVBQuCnEM=;
-	b=BND80fV7NT+4KGuVGYUnHy2DvM1gusiPSGlAjkq07wU7SZZmORTm9Nmd2pTgoEGic2bH
-	 YDIVwCCACw4SDtHrdZIPvYOJlLH7Uk0QcdZ5cHzJWlrGKPrSsnfYRpxrPwXqfsuLYjWMU
-	 kjj8ZxJ+HjrAs9GJBrRmBwkahzlWhKqDWvXjAWGNZdoQnWaeH5y1uD75m3nOO14nEVi90
-	 BkAT7Nevv8xQMKQFCOM92MQhJDJO1SjWthzT+caUhAGJP/2OrH5qqpXsY7NzBMAWz3WCg
-	 3YGicKU5nX/2IBi+B1PF0UgR/HUvJDHRxntMDYzspCjsUYFeDuJKZ5cbWB0zJPNcorw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794378254;
+	h=DMARC-Filter:DKIM-Signature:Date:In-Reply-To:Content-Type:To:Cc:
+	 User-Agent:From:Subject:Message-Id:Content-Transfer-Encoding:
+	 Mime-Version:X-Original-From:References:X-Lms-Return-Path;
+	bh=mKF0n9OrBcr3ch6GDHkzJ5g03plplWf6k4SwddYKcSU=;
+	b=o7dXCXEmk9gVCv5qqYIHbb3lfp1kk6qm3hVjXMwh4qeuDUKae9JddcsJnHPzg93hrSQ7
+	 kPSZqC3d7mTuYCxKJZOIppDl6fA/bE9/r2o8q/3BIfw8wMG/22TvqHAcQHBmO+TRNCUvt
+	 hZdbYCL6h4AffN+wTQMbVHkEaNwqpihoo7jlBskUyvWYJjpoArTVjtMx1ZIoH0BIbJNeX
+	 0MfgOAK9UGvlHnICWsll6fD5NddVGCN6IchQeVH69+Ryioibm7t32tEtiR8Y104RLOIvI
+	 OAoDSzG9c+3Du6qPpyEhUtSoZtJRIhGnMs7LhvD78y3u7ZJI/9xkdJCB8Tl25mwOUZw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ToIrRYi6;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=bytedance.com;
+	spf=pass smtp.mailfrom=bytedance.com;
+	dkim=pass header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=2212171451 header.b=By8+tB5d;
+	arc=none smtp.remote-ip=209.127.230.111
+Received: from va-1-111.ptr.blmpb.com (va-1-111.ptr.blmpb.com [209.127.230.111])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6980A606A33B
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 06:18:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98EB9606A321
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 06:24:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 98EB9606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ToIrRYi6
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF76B1F00A05;
-	Wed, 11 Nov 2026 06:18:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794377910;
-	bh=VKu2xHEkhwK9Kq4tiWZRGgYWUPgmWjGSDblVBQuCnEM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ToIrRYi6xbymw1BLNxYoQZe5Nzb70MGxzuqwzFhgLL11Xxs1uF4RLcN51emN48qu5
-	 8ONL5dE4CMIT9QWxeY8ZmAs8rzI03DfoN3eQ+vrjwB4fjH1gPl2OnwfEKXeaCAWyU4
-	 KPZJrPKicowzBlPgbFXrLAcaOXfEdJ9EZ1GpbtzJORb7B6Do0VAkU+PVrapwj5OxpW
-	 f5wfkHarkKKklWZqYKYiLlHqnptyLV7LkoxBvaqU5JSlXFXr6Kd5KMritIYLTLNjhw
-	 A7lNiE6GLFZkn0z2XvjOCewY8dkRCEVQ+fQknd5T35n1Rt7DKT5Laf2FAd0VNKVNuj
-	 xbRDXBtpBbRvw==
-Message-ID: <sashiko-outbox-208426@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] perf stat: Count kernel events in a group led by a
- tool event
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Hang Zhengyang" <hang.zhengyang1010@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261111-tool-pmu-leader-v2-1-3faa0fb98c51@gmail.com>
-References: <20261111-tool-pmu-leader-v2-1-3faa0fb98c51@gmail.com>
-Content-Type: text/plain; charset=utf-8
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=2212171451 header.b=By8+tB5d
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1794378247; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=mKF0n9OrBcr3ch6GDHkzJ5g03plplWf6k4SwddYKcSU=;
+ b=By8+tB5dfg7dIivPXMOTiXu2b+6B33ETipYe+IsXzdo3rawVnO6nxE0K+o2FseHUkiapru
+ uD28vsjn7JzJa8q2nbHM6GIyQdCsiHoWU2GN3SpP8oZuQOZG9MdVY1BEfTuAMQFyDqZRN/
+ nNGs+stI5IHF1mXQFYCMSdl1FsW769nvRiSAaVYZ8s04fkkRp0I+9PwdcZHtIgtIazJ/XQ
+ JkLEvGGpQ/ozMmIPnEcxExKqCD4x3uLodZqWgDlPoCuoaafbd9g4wfT7ZXuvR4LpiymPF4
+ s+3pP0qXAe2gZaEINho9UwKaSuuIOI5giXJjX/2LFfsaoQPpXkFLsI8OYxOgEA==
+Date: Wed, 11 Nov 2026 14:23:49 +0800
+In-Reply-To: <CAP-5=fUf=MD72=wuSxem+j6S11J2SvOaxOEb+H+ifLV=Y2p03A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+To: "Ian Rogers" <irogers@google.com>
+Cc: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
+	<linux-riscv@vger.kernel.org>, <peterz@infradead.org>, 
+	<mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>
+User-Agent: Mozilla Thunderbird
+From: "Rui Qi" <qirui.001@bytedance.com>
+Subject: Re: [PATCH] perf parse-events: default data breakpoints to any size on RISC-V
+Message-Id: <89c6a757-8824-4559-b2c0-2cd41c3e45f1@bytedance.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 11 Nov 2026 06:18:29 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,39 +63,132 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+Mime-Version: 1.0
+X-Original-From: Rui Qi <qirui.001@bytedance.com>
+References: <20261109120320.75053-2-qirui.001@bytedance.com> <CAP-5=fUf=MD72=wuSxem+j6S11J2SvOaxOEb+H+ifLV=Y2p03A@mail.gmail.com>
+X-Lms-Return-Path: <lba+26af40a05+dbd47b+vger.kernel.org+qirui.001@bytedance.com>
 
-> From: Hang Zhengyang <hang.zhengyang1010@gmail.com>
+On 11/10/26 5:58 AM, Ian Rogers wrote:
+> On Mon, Nov 9, 2026 at 4:06=E2=80=AFAM Rui Qi <qirui.001@bytedance.com> w=
+rote:
+>>
+>> When the length of a data breakpoint is not specified on the command
+>> line, perf defaults it to HW_BREAKPOINT_LEN_4:
+>>
+>>   $ perf record -e mem:0x30020:w ./prog
+>>
+>> That assumes the length describes a byte range that is compared
+>> against the address of the access, which is how the x86 debug
+>> registers and most other architectures work.
+>>
+>> RISC-V debug triggers behave differently.  An Sdtrig mcontrol6
+>> trigger encodes the width of the memory access it should match, and
+>> it only fires for accesses of exactly that width.  Watching an 8-byte
+>> variable with the implicit 4-byte length therefore never triggers:
+>> the perf event is created and enabled, but no event is ever
+>> delivered:
+>>
+>>   $ perf stat -e mem:0x30020:w ./prog          # 8-byte stores
+>>   0       mem:0x30020:w
+>>   $ perf stat -e mem:0x30020/8:w ./prog
+>>   10      mem:0x30020:w
+>>
+>> The failure is silent and easily mistaken for a broken hardware
+>> breakpoint implementation.  Tracing hw_breakpoint_exceptions_notify()
+>> while the event is active confirms the trigger never fires.
+>>
+>> Zero is a valid length for RISC-V data breakpoints: the kernel
+>> encodes it as size 0, which means "match any size".  That is what a
+>> user leaving out the length asks for, so use it as the default on
+>> RISC-V and keep the existing 4-byte default elsewhere.
+>>
+>> Tested on a riscv64 kernel with hardware breakpoint support.  With the
+>> default length, watching an 8-byte and a 4-byte variable both count
+>> 10 stores, while explicit lengths keep their exact-width behaviour:
+>> /8 only matches the 8-byte access and /4 only the 4-byte one.
+>>
+>> Signed-off-by: Rui Qi <qirui.001@bytedance.com>
 >=20
-> A tool event like user_time has no perf event in the kernel, but
-> get_group_fd() still passes its fd, the /proc/stat fd, as the group_fd
-> of the members.  The kernel rejects each member with EBADF and nothing
-> is counted:
+> The change makes sense to me, and I may have been the last person to
+> tweak how this parsing runs. Could you address at least the test
+> failure issue with something like:
 >=20
->   $ perf stat -a -e '{user_time,cycles,instructions}' -- sleep 0.05
->                    0      user_time
->      <not supported>      cycles
->      <not supported>      instructions
+> - TEST_ASSERT_EVSEL("wrong bp_len", HW_BREAKPOINT_LEN_4 =3D=3D
+> evsel->core.attr.bp_len, evsel);
+> + TEST_ASSERT_EVSEL("wrong bp_len", default_data_breakpoint_len() =3D=3D
+> evsel->core.attr.bp_len, evsel);
 >=20
-> Open the members with group_fd =3D -1, as the enable/disable code already
-> assumes.  They are then on their own, so read them without
-> PERF_FORMAT_GROUP and open them disabled like a leader, so that -D,
-> --control and enable_on_exec still apply.  Keep reporting a broken
-> group when the leader failed to open.
+> and then I'll add my tag.
 >=20
->   $ perf stat -a -e '{user_time,cycles,instructions}' -- sleep 0.05
->                    0      user_time
->             38257394      cycles
->             21228043      instructions
->=20
-> The kernel events in such a group are no longer scheduled together.
->=20
-> Fixes: 6828d6929b76 ("perf evsel: Refactor tool events")
-> Assisted-by: Claude:claude-opus-5-5
-> Signed-off-by: Hang Zhengyang <hang.zhengyang1010@gmail.com>
+> Thanks,
+> Ian
 
-Sashiko has reviewed this patch and found no issues.
+Hi Ian,
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111-tool-pmu-l=
-eader-v2-1-3faa0fb98c51@gmail.com?part=3D1
+Thanks =E2=80=94 v2 posted as "[PATCH v2] perf parse-events: default data
+breakpoints to any size on RISC-V".  It exports
+default_data_breakpoint_len()
+and switches the data-breakpoint assertions to it; the rw checker now takes
+the expected length, so the explicit /4 cases still assert
+HW_BREAKPOINT_LEN_4.
 
+I ran 'perf test -v 5' on riscv64 with the patched tree: the bp_len
+assertions pass.  The only failure left is the pre-existing "wrong config2"
+in 5.3, which reproduces without my change as well.
+
+Rui
+
+>=20
+>> ---
+>>  tools/perf/util/parse-events.c | 23 ++++++++++++++++++++++-
+>>  1 file changed, 22 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-even=
+ts.c
+>> index f3ba70d4f76b..b72e4b0da8a1 100644
+>> --- a/tools/perf/util/parse-events.c
+>> +++ b/tools/perf/util/parse-events.c
+>> @@ -598,6 +598,27 @@ size_t default_breakpoint_len(void)
+>>  #endif
+>>  }
+>>
+>> +/*
+>> + * Default length for data breakpoints when the user did not specify on=
+e.
+>> + *
+>> + * Most architectures treat the length as a byte range that is compared
+>> + * against the address of the access, so 4 bytes is a reasonable defaul=
+t
+>> + * that matches most accesses.  RISC-V debug triggers (Sdtrig mcontrol6=
+)
+>> + * encode the width of the access in the trigger instead, and a trigger
+>> + * only fires when the access has exactly that width.  This holds for
+>> + * both RV32 and RV64.  With a fixed default, an access of a different
+>> + * width silently never matches, so pass 0 on RISC-V, which the kernel
+>> + * translates to "match any size".
+>> + */
+>> +static size_t default_data_breakpoint_len(void)
+>> +{
+>> +#if defined(__riscv)
+>> +       return 0;
+>> +#else
+>> +       return HW_BREAKPOINT_LEN_4;
+>> +#endif
+>> +}
+>> +
+>>  static int
+>>  parse_breakpoint_type(const char *type, struct perf_event_attr *attr)
+>>  {
+>> @@ -658,7 +679,7 @@ int parse_events_add_breakpoint(struct parse_events_=
+state *parse_state,
+>>                 if (attr.bp_type =3D=3D HW_BREAKPOINT_X)
+>>                         len =3D default_breakpoint_len();
+>>                 else
+>> -                       len =3D HW_BREAKPOINT_LEN_4;
+>> +                       len =3D default_data_breakpoint_len();
+>>         }
+>>
+>>         attr.bp_len =3D len;
+>> --
+>> 2.52.0
+>>
