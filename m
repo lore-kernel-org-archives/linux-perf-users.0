@@ -1,109 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.156.1
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794380053;
-	b=oz54QOI2IENF8hnh/Ai3LxeSTAldK4yyKsPtnHmRacelb74pvOtGZrbduo30o8uAl2sb
-	 o/AGh+MNDAdP0GLbeXAuBSSQu4g6VV6112KmueXSrDd1io5Mu9eQ8tOb/fheuoGHNjPM3
-	 S+LyRrpS1V3Tf1ftKsz7/QStY+9VoZo+6RaatMF8ylJz8rN6cGi7FaajlxctHcbDf9COV
-	 OnUaWsd1QD4kqM+5DGwCMVWCyzjuS2+mYcEjLABkYj3/WC6kHwmlyf1o5NBX6rkqiDMZR
-	 R/SFKjELPvW3mztMogvY1chbXxhZtbFZqElsYoDzcDE02w8P1DFyKlX7H1l9JRJa2mQ==
+	t=1794384016;
+	b=uvK8z5h6rvXq+vYtQdm+4zgMjyttql3NBHDDM+vOJtiNiwS13FtUbD8PYhsk60vIuFjp
+	 dSNJa6vsAcJH7LATeGCLgaR8ijvMYcqYOJBup9bmkt9g1IHpiFL2oeWc/QBVSpBXIs1sC
+	 kPXMApmoL/WFbBac0GXgQamfr75lC9oMptmytKNpKxlPUHa+qWR/jDnjPrUxQR/RLAYzx
+	 nZ7B39vaEU8hWAgi2jzBFiw/OqN/hwaZLyOpyaJpEQV6HZrUuqfiosjaGwt0JnKs550uo
+	 r36q53SIMPRsvZOIEWpBT0HBQquuOXGqp4JpFaiUNvpnvQ5VExZ0JfFOuJHacnISKnw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794380053;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=YpkwVa0e5p/3HxWr1XgWTgZwvj+qnPlEkzILctELff4=;
-	b=M6YYhD6UI7Kjbe/LjIoM04ACSF3kuzivGcYlxXxUgSV+fXB37l0Kt8Og5Szzr5xsf2Ir
-	 Kp6OMtGz6fccpkGQ2JXJu+e6sdaF9GXalF19H37il7En25p1XjQgAlDdeKhpk2eb+AFlL
-	 YkXCDTYp2I/Lc069fRxFFZVY9CFdEzMuYzfpby7Aa+QX74atFxQ423PMBpcUj9Epmv9bk
-	 XUCTK9Rk9K95OJ2N0PUbA5PY6dNOizO4D4LE35314Xvr9EzP8jdd+MoxD2CHf0V11upT9
-	 zMuiILWyJiRqj07B0ySnofEzEXxEp7kIMjaqvAbKCCuZTsS5v0zHSdUUjrP4Ia8QEEg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794384016;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
+	 Received:Received:Received:Received:From:To:Cc:Subject:Date:
+	 Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-TM-AS-GCONF:X-Proofpoint-Reinject:X-Proofpoint-ORIG-GUID:
+	 X-Authority-Analysis:X-Proofpoint-GUID:X-Proofpoint-Spam-Details-Enc:
+	 X-Proofpoint-Spam-Info:X-Proofpoint-Virus-Version:
+	 X-Proofpoint-Spam-Details;
+	bh=Dses+xQ2+cfA2qsP+zMtzHIPrnkvI/iOIla6JM1cwxw=;
+	b=xaDzNO+tBwApBvgBET7bKvA5nDKC7eJUPF1RVF/Wj1wt7HWU5daMHK3JtZaFdDHWDDOR
+	 kRB8gXkpPhERXTxC9pkwtBo4REWQvg/W7kjQrsyzU+yLXKUr+gu7PxjKJGI6xYueb65v/
+	 pn1iA7VQSzHulfK2sUpyG/oy9GVXDYvVzSvo1BtGXd7k1JsS9c+79uBLjc70uwlks2uci
+	 NlQcubae5nAohx/rn68EjprqoQcAfHMUpOEgAeFh1dICZ4vUUcKhTfM4LpHEWa2lnuNqh
+	 0wqZMcODONDQf5UjizdW9UZdiiRovKbhbOpQdu7jeSL5jplE7WzipgYKGgmLeRqMaNQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="FwJd/tP4";
-	arc=none smtp.remote-ip=74.125.82.178
-Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=linux.ibm.com;
+	spf=pass smtp.mailfrom=linux.ibm.com;
+	dkim=pass header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=VjNXtv0W;
+	arc=none smtp.remote-ip=148.163.156.1
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69AA606A32E
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 06:54:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B69AA606A32E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A5E606A320;
+	Wed, 11 Nov 2026 08:00:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 08A5E606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=FwJd/tP4
-Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-37000e7234bso657122eec.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 22:54:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794380052; x=1794984852; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=YpkwVa0e5p/3HxWr1XgWTgZwvj+qnPlEkzILctELff4=;
-        b=FwJd/tP4RrafDENe0B717GJUY9vAgtkGGu8Bd+k5XNzYY2RVCU9JqWlqclrbOElg/X
-         lI5/anXjEr2CKTJXixAkW3SgQm5vKbq8WaLEcDLEhG5cAB27Y3HW6uDa/BMDlwtac8Gu
-         ScimaUZLfi4upcrx10w2YsPvAux3KgpuVzM00khjnqG33j9ofmhCWD9D6jncaufHgiR5
-         Ff5dlC5ag9ugx+HfEbOTZRTTUK5w9idX9TS0kJGhYIpaDsJ1dNG0vjy0KNi2X49tJtDB
-         mAkqne8U9m+AMgimImEM7sZmF3GRqMBe0Mi19OVQMPg8MnOJY76PxChD+Emq1wadmkLO
-         XKPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794380052; x=1794984852;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=YpkwVa0e5p/3HxWr1XgWTgZwvj+qnPlEkzILctELff4=;
-        b=xwmhxBQfmlIg/u7c44pQ+ccH3h54tw3qNb4rdyJ6RjwcH2eAb5MQKWsJhl2zQCw5Jh
-         vZOsCNj7b0UwDOSoFq2pUEjN/6KfVxmJz/Dtto6iDh5o4G76A/PNpIcqmk5MIS55W2Pz
-         pX4oqPdZjuIBqY2P9z4Bqgqcg7UnhE2vOBV7ljv19hleECD0XdwtLPSsGL2zLs5j1TB9
-         Adr14Xpt+R+w10UjUWHsVw1UJClgoNBuUMSB3QFAV6J9hnxu6UeGnxyYkOrkAdHt4wVv
-         Yt0HQtkS+XQ4pJteQREpmhTeJgPnMZ080qdR3On/NDkTUpDwQATDOFUcQi2BHbSyQIgQ
-         yTUw==
-X-Forwarded-Encrypted: i=1; AL+hErGTfZDnylhnGiBQRd1frcb6Rnpbi1GUpULHtuzKSr11sH5MIssLfmikoFEipTt17TxlPfgDGFskIWarrfnTXUKZ@vger.kernel.org
-X-Gm-Message-State: APuU4Z/cCt0YvjcxJSRqclL10hvKeLTBpouDfCVl1wNHx/wTUNGAm8Ir
-	OzrfHEr/2DIQ8FNrVdGQ2XrWJAmkEImw2TXdfSDqyg9LZCgcPoORwAKoBeIm/Q6W
-X-Gm-Gg: AYBFou2pUtESIPojzLYV2lB8EVypDcTx9KdXMq3+O617CY6GMS9laNmEkxBgYOR1V3n
-	5fyOo+4G+fw28FMpjZup7A37hrwS55F0C1w065C/s3AP2wzBbReMWZYodZN0IM0xGy14EQwJa62
-	A1LAXJ2LRfLIh/W0pIJ5WTugVddN/cpaghxtwflGUSLt74e4/v4VxN0vuzZ+qqbuoBAQxHoBPgL
-	aYVOTDcpFjpKK6oddiY4ANYbgV1cOjG0TwZ/2HUqIn2IVWglSrbAzcUeZpjWnnNq2e+EUneWjLw
-	8/bGU6gT0kjIPJbG7GwcIE+QB62gKkEurDJPuJ+zwqeOqaAVnNR6OJ/fRvN9R3RjhfIuePu9BE6
-	jPkQsOTgWguW8uX7Cq5KXFU4TrFvVzc4g0KE0sMNeDqD/mNQxMoHvEpVKDjIgBG0Vsci5ofN0b/
-	vPquJtv9P1VgqJto/p2BrgZR+LCFJt6rE1pD/oPZxdSVy9gzOAuWxiHJAFvl4+jObFkmH7fe+L+
-	KPK7b5XnX8XH+YSiOHVqcAeyQvqTcDq5U+IT8fl5cTjqiwHGTeP452GKCW9wGcwO/xfJS93K0T6
-	LSQ8NVoJCjTIvrO+7Go/qdxitCQrXD+8S8LYf/WnRHlGrqg3b4I1Y0ydIg3SevvGvo0T8rlLK7A
-	gBtD06WUN
-X-Received: by 2002:a05:7022:170a:b0:1b3:b3de:9232 with SMTP id a92af1059eb24-1b3c02f06bdmr1500507c88.9.1794380051342;
-        Tue, 10 Nov 2026 22:54:11 -0800 (PST)
-Received: from thinkpad.tail59a646.ts.net ([112.199.224.229])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3751dae6377sm11879272eec.3.2026.11.10.22.54.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Nov 2026 22:54:10 -0800 (PST)
-From: Hang Zhengyang <hang.zhengyang1010@gmail.com>
-To: Zhao Gongyi <zhaogongyi@bytedance.com>
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	tglx@kernel.org,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/x86/amd: Avoid double-decrementing n_pair on failed transactions
-Date: Wed, 11 Nov 2026 14:54:03 +0800
-Message-ID: <20261111065404.3428684-1-hang.zhengyang1010@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261109111909.31712-1-zhaogongyi@bytedance.com>
-References: <20261109111909.31712-1-zhaogongyi@bytedance.com>
+	dkim=pass (2048-bit key, unprotected) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=VjNXtv0W
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AB5iFbQ486352;
+	Wed, 11 Nov 2026 07:59:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=Dses+xQ2+cfA2qsP+zMtzHIPrnkvI/iOIla6JM1cw
+	xw=; b=VjNXtv0Wrkypw4CbBPSyvVCWs9hu08Bv91R664SD3BjW+vdTE4uXBcoUs
+	CsdsHHmS70yAlOSOmT2++J6V7ViOQk/aGyOd549h9JG8UAA6t6Qcm0tM5qa5LChX
+	/34fq/KiWaeKesViz30b3Tul826HgvwrVAnJYKAM2tfVIt+ig8jLeLST6GTmpwON
+	A0ZSszoRmvqM2WnxCM/RF+/epA4cLsX0gr16NM05Gf9vZx8n8S3dk8S4GhmMeB08
+	y2bHXZtzR9pwdKnWKPWQ8B1D5mWOLaih9b280QcaVMxfzPhz70A3bQBDQF0HsZEe
+	z4yUmEeYXRC0slpIyz7mhpWOE0mgA==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4hsug697rx-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Wed, 11 Nov 2026 07:59:54 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6AB5K3hr1747921;
+	Wed, 11 Nov 2026 07:59:54 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4hvd51s959-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 11 Nov 2026 07:59:54 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6AB7xqP847710578
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 11 Nov 2026 07:59:52 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3724720040;
+	Wed, 11 Nov 2026 07:59:52 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CE4EB20043;
+	Wed, 11 Nov 2026 07:59:48 +0000 (GMT)
+Received: from li-7bb28a4c-2dab-11b2-a85c-887b5c60d769.ibm.com.com (unknown [9.124.213.92])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 11 Nov 2026 07:59:48 +0000 (GMT)
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, yury.norov@gmail.com,
+        linux-perf-users@vger.kernel.org
+Cc: sshegde@linux.ibm.com, mingo@kernel.org, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org, tglx@kernel.org,
+        sudeep.holla@kernel.org, linux@rasmusvillemoes.dk
+Subject: [PATCH 0/5] cpumask: Use cpumask_intersects* APIs where applicable
+Date: Wed, 11 Nov 2026 13:29:40 +0530
+Message-ID: <20261111075945.3930230-1-sshegde@linux.ibm.com>
+X-Mailer: git-send-email 2.54.0
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -114,28 +93,68 @@ List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-ORIG-GUID: _ILj8DNpx5AzId_t_Oc4DNupIN7b8Ztd
+X-Authority-Analysis: v=2.4 cv=PeVqFShd c=1 sm=1 tr=0 ts=6af4207b cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=iQ6ETzBq9ecOQQE5vZCe:22 a=N73upePAzneGQQU5UeIA:9
+X-Proofpoint-GUID: azgE8Jl0FqBN9p062ATuk96YL8e-3OCJ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTExMDAzMCBTYWx0ZWRfX8NbA9j2GVon0
+ xjHQiJB7OQp2G+6UI4YSH8aUAcOcVGHYx2tTTDlTB7JHdMqbX1Ztp5HDGPx0U/BM6W4KWXr/khz
+ 2bo3Z+n6oQRjN01txgSu2zkUQeFiQ1RbMF5XysiFCyRNffiEf6cHRp8yJQ1MQmWjsQHYKQYjgVf
+ CWM9lrx1+vGmGZaKIiRKmrZUKXCfM15ad9kR9iOhQXtCg3d4VjaHUofZMaZv0odixymSS8UkOAe
+ tHlXcdVNEYn9Vj2cFbkTHKB7cBuatHRRn9u8Xo0RvlKgRxPvmVabq5OT7AlevKMvYpg3N9r6zoN
+ QBI8mMD9pc2vwxnSY0g4u3nTa43smQzEfzZcdJIX7CYkNVjLI8mvQLhWk08elbZInLwioLp7t4+
+ E0KU62IIemAzyz3KULn+VADQIepRS7BzyeFBBIK+gepfnV0wsL24vHFYzG/2KINDnjd6wdHB0xl
+ kgr2MA/3vJgRifT+A4g==
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTExMDAzMCBTYWx0ZWRfXyAI4VYmVMIJU
+ 8X4gUrCzC/SfDEAoQ5FbOGRniEybjq3S0xSw3cD8Es6cO0vm66iZ6XGUge996K4JtTWR6YX68E6
+ 5Vudi/p8EKCgxKS5uHUU2e2cadqHIB4=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-11-11_02,2026-11-06_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 phishscore=0 suspectscore=0 impostorscore=0 priorityscore=1501
+ lowpriorityscore=0 spamscore=0 malwarescore=0 clxscore=1011 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2611040001 definitions=main-2611110030
 
-On Mon,  9 Nov 2026 19:19:09 +0800, Zhao Gongyi wrote:
-> On a failed PERF_PMU_TXN_ADD commit, x86_schedule_events() releases
-> constraints for newly added pair events. The AMD put callback decrements
-> n_pair, and x86_pmu_cancel_txn() then subtracts n_txn_pair for the same
-> events.
+It was observed while working on cpumask_intersects_and, check like
+below could use it instead.
 
-Reproduced in a KVM guest on a Zen 3 host (Ryzen 7 PRO 5850U), kernel
-7.3-rc6, with a trace_printk() in x86_schedule_events() and
-x86_pmu_cancel_txn().  With four pinned cycles events on CPU 0, each
-failed attempt to add a pinned '{fp_ret_sse_avx_ops.all,cycles}' group
-leaves n_pair one lower: -1, -2, -3, so gpmax goes 5, 6, 7 on 6
-counters.  With this patch n_pair is back to 0 after each attempt and
-gpmax stays 5.
+if (cpumask_first_and_and() < nr_cpu_ids)
 
-Tested-by: Hang Zhengyang <hang.zhengyang1010@gmail.com>
+While there, did check the code for any such similar patterns of
+cpumask_any_and, cpumask_first_and and explicit loops where
+cpu found by these APIs are not being used. All those callsites
+instead can simply use cpumask_intersects.
 
-To reproduce:
+Note that few more places can use similar change. But, I have left
+them as is. 
+drivers/net/ethernet/sfc/efx_channels.c+370
+drivers/net/ethernet/sfc/siena/efx_channels.c+371
+drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c+153
 
-  perf stat -C 0 -e '{cycles,cycles,cycles,cycles}:D' -- sleep 4 &
-  # three times:
-  perf stat -C 0 -e '{fp_ret_sse_avx_ops.all,cycles}:D' -- taskset -c 0 <workload>
+Also, these patches can combined into three patches if that is
+easier for review/merge. I have kept it separate since they belong
+to different subsystems.
 
-(Analysis and testing done with an AI assistant; I reproduced the
-n_pair drift.)
+Shrikanth Hegde (5):
+  sched/rt: cpupri_find: Use cpumask_intersects where applicable
+  cpu/hotplug: Use cpumask_intersects where applicable
+  perf: Use cpumask_intersects where applicable
+  cpuidle: Use cpumask_intersects_and where applicable
+  arch_topology: Use cpumask_intersects where applicable
+
+ drivers/base/arch_topology.c | 9 +--------
+ drivers/cpuidle/coupled.c    | 4 ++--
+ kernel/cpu.c                 | 3 +--
+ kernel/events/core.c         | 7 ++-----
+ kernel/sched/cpupri.c        | 2 +-
+ 5 files changed, 7 insertions(+), 18 deletions(-)
+
+-- 
+2.52.0
+
