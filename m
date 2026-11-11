@@ -1,53 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=45.254.49.198
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794399804;
-	b=Dln2p6s6uf1ImE3BCNqsxSUL4tBxGFVcsUBPOq2XFmDUAnmPdEo6T14bOI4dsy/5Kn3e
-	 3NTfibkfWcqixBoYjF4BNJaPbIwNSDb3nSl+ecXiOlDNlLPX9eqCx3ztFqyERr1SZW/cz
-	 QwtmrCVjJp3tzR0AmD59JBGof7+hBp6JVithc/475jWjEeJ4rETpR+8hV37ZaQXcBP2Gk
-	 0JHwu/rLavikU9jt4nhJxYMfnw8R7KeklIYGdutlK5+E+Juuq+PSWBStbSIG9QwxvIT/l
-	 d70qcSbmmbTLVYD0gVjyRqR4MObqv+wpwE692WX0WwtlsvKrLD5IMESre4nmUBis1fg==
+	t=1794400676;
+	b=MzCqjccRg6W4txYG6EbK9uDFTNHSJfatPfrTQcsx958pujt+SwOB+mVA/Qjt6/BNckKj
+	 o6f1B2mXt4sMVuRTIpaLrIn+8TI4pVj/4nGNwI8E28xdaZkOk3QBFCw4hQxUX5QHtxjxo
+	 iEhFATf3jTGHpjquIQtKk5P0/EfsVG5Qz6WEnidg+IKSjNop7Uycw2KLdHOGCxLemptL7
+	 /EGzAMWVLCLPSuvs9OoW92dAsPKC6gKTYct3Zruccixz2+eYK6gcQ6fqrYtj/Um4f9Hcs
+	 FKWiZrXlnkCmUc+gazlSZaG+l7CiPHxl3Kgi3GmF3/le1qn94/KS2ppWjq+9mJUvDtg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794399804;
-	h=DMARC-Filter:Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-HM-Tid:
-	 X-HM-MType:X-HM-Spam-Status:DKIM-Signature;
-	bh=5ft7sNkyBnZQKcl8yjWTxI0pp9pDYp7fOU712sGAOFU=;
-	b=KvZA7dPPVvNeX0/W3/DHEP6CgS6rBgrvKWlIEpK8ciAuUK1+pXG6YMQLcyO+Dd6G3KCu
-	 449iKOHRGkaq79nbr5J/oW8g7QTO7UpfJXGwUoHCD/OV2bBF4ha6IC3VsFnCgSaSrMYH5
-	 Jl7xIHQl9WX8imW59twZlQCfzriYkAn08jXV1W3tCz2nfG3msodn2US0Nq7y3Q3vhv65z
-	 fSH161cirIpIM+HUQzOFijnI3Q9uTsBA8V1Jv+t0mzfxVzrG3TZ+PjN4iJH7KH6uYpIGI
-	 Wg4rp3x5/f1QGE/AWKtvXNvOwHzO0veC3AjOGYZUOJC5UvPGbLxiEDriVRcZAahuL6g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794400676;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=1vDRNs1VSyc0GL0iLYpd/agydn0dkuyzsUB+Hv/8+as=;
+	b=Wmm19tP4UE6cNvd/uJX1i1iQ2keg0Uyx8E5+A50zBs7Bikz91eMWka0lO7QRQF/SLhBf
+	 1FeGDKWmA2IHteTyK2dAocTEFGm55nKvoE99IiMv8fcvhSpGQm28zhVRd0O7NE4dJOGMc
+	 y7RP8Vph6Fd2VqPaGYGICva/C2LdhJlx6j9KhthzM0p1T+QDe7tkqau4x9ruwEhaqbVbl
+	 t8BYRK10aC+W+5f72g1PYeypXjOrNWzZmk7/7OnvnnqH/eXN86GvVXlBnhWqXzRsJ1+aK
+	 xIvno2kbHnNvRi+IBV4xUhVFIU4cnvMJRug70QvH3CwD78E9aNHGXM5SJNTY1p916LQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mail.sdu.edu.cn;
-	spf=pass smtp.mailfrom=mail.sdu.edu.cn;
-	dkim=pass header.d=mail.sdu.edu.cn header.i=@mail.sdu.edu.cn header.a=rsa-sha256 header.s=default header.b=O3btiuwd;
-	arc=none smtp.remote-ip=45.254.49.198
-Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=muiiWkVV;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B6460A2621;
-	Wed, 11 Nov 2026 12:23:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 03B6460A2621
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.sdu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.sdu.edu.cn
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D8E606A332
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 12:37:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mail.sdu.edu.cn header.i=@mail.sdu.edu.cn header.a=rsa-sha256 header.s=default header.b=O3btiuwd
-Received: from lgs.. (unknown [101.76.249.61])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 54502a177;
-	Wed, 11 Nov 2026 20:23:18 +0800 (GMT+08:00)
-From: Guangshuo Li <liguangshuo@mail.sdu.edu.cn>
-To: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] perf: starfive: Fix potential per-CPU memory leak on probe failure
-Date: Wed, 11 Nov 2026 20:23:16 +0800
-Message-ID: <20261111-e5624093d6-perf-starfive@mail.sdu.edu.cn>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=muiiWkVV
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8969A1F00A07;
+	Wed, 11 Nov 2026 12:37:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794400675;
+	bh=1vDRNs1VSyc0GL0iLYpd/agydn0dkuyzsUB+Hv/8+as=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=muiiWkVV0388ZHa1uG4h4OkePa/zcHSAXj0Fk/KnWXfe7yM/I76/hmdtACtdtSgkO
+	 TGURVS81Q4sVi8uvc0EEQjUU8Tts+DysQVmlOkx7Ont6bave51GEQH3+98s24VBR1P
+	 nqp3+gFVi14oT+qqqbDQxafRVT4bx3WWbabDPv9hn/qFyYmcJjFF7KV1s3lb9+evss
+	 rPNiuXU/2cdYPDzTj3nsE4KJ+nJUXipnguyvbaV9PqlmrTzWX6X+QwE2TbcP4GZo2z
+	 Vs1cwod4XYmT4XaWIZxETPGwOj1H73ACHX+CQ/2mcx1hy7Pw+nn85u0jj4LUXzXBvX
+	 8/tryOrOV6WsQ==
+Message-ID: <sashiko-outbox-208988@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf: starfive: Fix potential per-CPU memory leak on
+ probe failure
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Guangshuo Li" <liguangshuo@mail.sdu.edu.cn>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261111-e5624093d6-perf-starfive@mail.sdu.edu.cn>
+References: <20261111-e5624093d6-perf-starfive@mail.sdu.edu.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 11 Nov 2026 12:37:55 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -56,49 +59,22 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0aa1ca90038103a1kunmb074d2a81b3671
-X-HM-MType: 10
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWRgWCB1ZQUpXWS1ZQUlXWQ8JGhUIEh9ZQVkaQk0eVk9NGklKTxkaTh1MSVYeHw
-	5VEwETFhoSFyQUDg9ZV1kYEgtZQVlKS0pVTE1VSU9CVU1KWVdZFhoPEhUdFFlBWU9LSFVKS0lCQ0
-	NMVUpLS1VLWQY+
-DKIM-Signature: a=rsa-sha256;
-	b=O3btiuwd6QfNJ9dRzz2jF7iTYo/iKofY+oPbwVvUqzAwaleCEdUZPcWPV6lKlgN1exIdLvoi5ReLhmk/m9UICfXnqSE9YifETztp9x8aQw0H8NgcIz77vHflnsobErL7R+ytS+WnaVxS3p6e+SaTtaSwcqMi0bjW5j3KxSfnx+s=; s=default; c=relaxed/relaxed; d=mail.sdu.edu.cn; v=1;
-	bh=5ft7sNkyBnZQKcl8yjWTxI0pp9pDYp7fOU712sGAOFU=;
-	h=date:mime-version:subject:message-id:from;
 
-The per-CPU hardware events remain allocated when a later probe step
-fails, although the device-managed PMU structure is released.
+> The per-CPU hardware events remain allocated when a later probe step
+> fails, although the device-managed PMU structure is released.
+>=20
+> Allocate the events with devm_alloc_percpu() so failed probing releases
+> them after the interrupt handlers have been removed.
+>=20
+> This issue was found by our static analysis tool under development.
+>=20
+> Fixes: c2b24812f7bc ("perf: starfive: Add StarLink PMU support")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Guangshuo Li <liguangshuo@mail.sdu.edu.cn>
 
-Allocate the events with devm_alloc_percpu() so failed probing releases
-them after the interrupt handlers have been removed.
+Sashiko has reviewed this patch and found no issues.
 
-This issue was found by our static analysis tool under development.
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111-e5624093d6=
+-perf-starfive@mail.sdu.edu.cn?part=3D1
 
-Fixes: c2b24812f7bc ("perf: starfive: Add StarLink PMU support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Guangshuo Li <liguangshuo@mail.sdu.edu.cn>
----
- drivers/perf/starfive_starlink_pmu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/perf/starfive_starlink_pmu.c b/drivers/perf/starfive_starlink_pmu.c
-index d9843645554b..25d57b904028 100644
---- a/drivers/perf/starfive_starlink_pmu.c
-+++ b/drivers/perf/starfive_starlink_pmu.c
-@@ -519,8 +519,8 @@ static int starlink_pmu_probe(struct platform_device *pdev)
- 	if (IS_ERR(starlink_pmu->pmu_base))
- 		return PTR_ERR(starlink_pmu->pmu_base);
- 
--	starlink_pmu->hw_events = alloc_percpu_gfp(struct starlink_hw_events,
--						   GFP_KERNEL);
-+	starlink_pmu->hw_events = devm_alloc_percpu(&pdev->dev,
-+						    struct starlink_hw_events);
- 	if (!starlink_pmu->hw_events) {
- 		dev_err(&pdev->dev, "Failed to allocate per-cpu PMU data\n");
- 		return -ENOMEM;
-
-base-commit: 6628e7d4c6b25c8d18f1345e3a20d21829aae7e4
