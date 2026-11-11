@@ -1,79 +1,104 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.remote-ip=100.103.45.18
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=fail;
-	t=1794361737;
-	b=l+U4teiqH1ICh74kO7n+TWlOsg4fk/yavYONJCwVa5ox9NlLj6pX7zyiXEs0qjyeMS+o
-	 f7uNUpFs9THeiqioHvkVjTKINYv55Z30XTp/GIaqM81xiRbPF2slPKSv3+CdPi0PIHn/W
-	 0R9yNMVQb6KgSe4YCpXW2Cussznti+s5ww0whg/6dtpBHE/47Zu5x1ZR5HjSCJC1i9/T/
-	 RaoAlsLGT5b1MF6WhT6ZP8y8+xVVZC++aALX6TLlcBIxD8k1ZMBUsNNHTLQNickYYjdDQ
-	 ZD0V5nh8oRBQXQej1M/+ozcdrMM0qXaNe1zHWJmdnl1n1QsNFqJz9Q7Y4nI+yLx4CMQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794361737;
-	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=rdK8pogkcDADwcKV/q341boHK0olYf2gsa/z6bYGdYk=;
-	b=ABQVBxCG9YcM5DTAkCDudH4uOoSzWcCMj/kcybUX5S+LN26uV3txlFH6vk+LJocJKQZ1
-	 EcYiGvh659ehtBdUPJfpUGvuzQ/DdL0uee0q4bg0u1NbYqe2Y7BH/JftISboqFn7gLh82
-	 qkZvRqxqJWsqTQxl93978yVYlnVLUh1xnW3WMP9mLm7uYPPU5sCHN8Gxy3BMI7xtfhH/F
-	 CFCbdGQ5bsg0/4vbJOJCmf0FOuz+bQwNQ6vy/BkFIjVKjjsN/guc1gbiW/e8xPX9k4W9w
-	 t4b2Mrnlr0sq7hS6XOqi748fdUMsGWp2HU+DH72K0MIi8lDmqZ6Hm8xOM9tcf9Uh04Q==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="F45mwB/D";
-	arc=fail smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C4D606A321;
-	Wed, 11 Nov 2026 01:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F45mwB/D
-Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
-ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1794361737;
-	b=iOKdR+OhPf1pfp3H4q5LEu//QU4Exzgai0C2fltBhtaXZ6016savzqIALCS5SsXj2+GF
-	 Z1Ir429myTbfOcdVMO5z5WLvRb7KBAaPeBlsewjYEZjg8DjVVEwztTYe41Jen+txfxoVy
-	 0Woyq6eqL7vUV9lLfRzJw3BYfKCK8EBYelPl8KAu0vJd0hCKFRmaopitOACzzlgy4mSz6
-	 JVUZOy4ny+3ny7uocT/RuGG/ih5hlPXQR+aH7yGtyV+BoizNfmLBD5IpVD+fQ/6ieRBQV
-	 B8dzf6GPAek4weJsCtnQ1rjSq2A4QJaHKOBTY2Ox/Cw6jpn595pla1WLlzmaVsifUww==
-ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1794361737;
-	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
-	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
-	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
-	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=rdK8pogkcDADwcKV/q341boHK0olYf2gsa/z6bYGdYk=;
-	b=HlBW+fCSkaKz0YunfIweDVDQw7CBpW7HIHJV+qiTAx7ChLAEe6+ZrvUoeHqC7gkUeTzm
-	 b6nhP1pgtBKOrWjrhXW7cwWlYRhWCHsDI0ECIsBYd8/mxhG3ZpqHZgpwMjymL0NQwUA/7
-	 Kt6qgYct841NFsq6ufddOF05Iko4SM5J7gPQTZSqxUujcfrlmG0+t7FfNlOS1+iC1fCbV
-	 IN5Ixc03OECo7UmUjGnyxmUA4gTXQ7CIiNsZzokLQDYKif5fzqaOj7FdMunP8230tsLx5
-	 a4S/x/8z8ON9g6Oxe/OoOS6pfwSaAkhRKrlUn1J0MHOcn4DmHsHyrIGWX8Shnjnd6Eg==
-ARC-Authentication-Results: i=1; smtp.kernel.org; 
-	arc=none smtp.remote-ip=100.80.115.77
-Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.179
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794363980;
+	b=LR+HMjsp3IyBFZ+37jHO/cPmrzOHI8mJKLzUQIjrYHalO3O8B4wcmdHXrtT/KOa1M/Ki
+	 U1F/88pKMl44KMxGfW7Ulp0WPoeqLvbdeqsP0XlpqX7SrvkaKNVgtDk1DMQ/+7W96u0ni
+	 /F+7FYXJzaDILFtvba5pH79USxxVDT9WYJZ+Bj1sZqiiDDfIlKwX2mlJneQmjiBfgB/ff
+	 fAr2cFWnJevEGqXVvdE5p5HcWSeQkwctPNN08YPjxQUEmzKz5IeAYjVZJVBDejH5MFoZw
+	 EA03zN+spkB2GJ4YsJ2DyzXWORhSMxf0ZqSsNDvx/G0/2dIHTRJYUsFGWX9k7rRbXrQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794363980;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=IJhsxR/EvrWZJxL/r/ZQEHhwVLOVGsYzQMsdW4G1Luk=;
+	b=r7K2YUV+/pRynrSDNQZ0UJKu5wDr8B60HuPsoUQXcJJA4mSDwT9kCS5rg5IGVwnj99b0
+	 6Ozd3vx1mDmSk1PtZcNLJZtVf9kgt4xGseMnyJjwUTRmp1FOk889c3V6JNxjvkoNG7f7x
+	 p7qAtK5+svUM9pwFpPkDgziqS1t9xesF7g0trJ1BbyX2bhBgNRwFlVaTX+MlDtExF3dSH
+	 IIjD1ZCGx0t333MNTeo54JNaNDgPdp/Y0cRawADWxa3SLKZNC4f5XW4godq5aCAbmJBjX
+	 vYem8xy9oavz4Fut5XucGeMaH8PcX4iGj4d2bM0IMBuW9jWni8Fcq2a+6Z+hOeU1vUQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=DU95D8oe;
+	arc=none smtp.remote-ip=209.85.215.179
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 897D31F0093C;
-	Wed, 11 Nov 2026 01:48:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794361737;
-	bh=rdK8pogkcDADwcKV/q341boHK0olYf2gsa/z6bYGdYk=;
-	h=From:Date:Subject:To:Cc:Reply-To;
-	b=F45mwB/D6222erR43dR/hvQO7xVgLtA4JEP+uZ90jNrUntDIpPXbgc+/Zvp6ourWT
-	 brlzmyPgTEx9V6Rg3ONPl2YvPYJH4Wez9RNkpmOmrQSus+R50vqha5s/QAD0WOs15N
-	 4kYU7lUZahLXEgVO15cFZcq4iM4bLm+EoZECLf1VChr04LaEtfG3j6z/e9Ik+UOJSn
-	 R/tocHENAmLmotosNLFiGdTbKVKDQAX/TQjb3N3nHEF5NxKF3e4ZY7KNlOQrPI+pXD
-	 MkKMP6knBdeZl3qqC2VPuaUoMzcN0nopA27taZE7dTbSjRvrgi4ODH03PDGHjqkNYT
-	 LxptwQ1pFZmVg==
-Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id 1439648D0F;
-	Wed, 11 Nov 2026 01:48:56 +0000 (UTC)
-From: Hang Zhengyang via B4 Relay <devnull+hang.zhengyang1010.gmail.com@kernel.org>
-Date: Wed, 11 Nov 2026 09:48:50 +0800
-Subject: [PATCH v2] perf parse-events: Don't report unreadable tracepoint
- globs as unknown
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23416606A321
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 02:26:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 23416606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=DU95D8oe
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-cdd9e925075so287185a12.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Nov 2026 18:26:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794363979; x=1794968779; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=IJhsxR/EvrWZJxL/r/ZQEHhwVLOVGsYzQMsdW4G1Luk=;
+        b=DU95D8oeVGyJ7lGm1+klKR5Z6Fk/s7oU4yM7eiBkpTWsH1IxOX1GVxxgHbdKZlUrUs
+         OK/irF6YkwDerURylq/X5tipLKhdMTKb9A0rfqQYuB1bsJzkYHMczJBFWuXyDwVnrhCr
+         ls1QiHmNodL1l0XfMt6oscEkou/Yk+29qGiLsoGzeWdXwfD3lXhOSFm3kENJ1m/7page
+         4Qw0dAFY0rAgncIo46JduGecIsZ8HLMxYD2QlFh4fxFQj4upwWUyhMgt0ARkMvyTuBdX
+         NIuwub7SbYcZiS6J8r4wb8getSQbSt4yMSPrBC49uqhFe9n1E+en8lyVpcXBOANajF7c
+         qRqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794363979; x=1794968779;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=IJhsxR/EvrWZJxL/r/ZQEHhwVLOVGsYzQMsdW4G1Luk=;
+        b=Lqz1rgsDSkXdr20QkeuHBJTwoY88LZAfIzTzdtkGGXqh/W4HorQ+SHeBb27FT8YO3k
+         yIUyssH9XMB7heF9JMd25pV3vYbk0VBd5ny7AhMhQbc2CJ2PkgST3k/3NOW3fibU0bvw
+         NB21zOFo286NHwJSuPpDpB61K0j+2JgKk8hi+Moh77OiD/vWXw69kpl9+n8/kizk3DIr
+         XmPBlzwzfW2TLuT6bvkjBFeR14Uk2uliovrqPYVYSyhgh8hX39geX1YGaO4U5T96IZPP
+         sZV1mlSykjkqMS8JlhgJPKYAcsloy+xO9iIWGWEWpVN467YBk1JeQSRbC0GfpvFVlH0V
+         UdOQ==
+X-Forwarded-Encrypted: i=1; AL+hErGhOF3jBXADaV4+b3TU/cBs/2H7EZ0va1kDDmiHJI6skOWXJcJj3w89LpYGNHqVTuncbd/WUfCX5hij7bvfrczo@vger.kernel.org
+X-Gm-Message-State: APuU4Z8xuaOo0umvJjv7mHzaPeg8pmg9UWVjkMk04uvCTCwH7kO7iLV0
+	w2XiKMCsPirdEjY1P/myi3sBHMdiQD9BR7dVBww7qhKoDuZuzfeLqBYR
+X-Gm-Gg: AYBFou1ClGLtdUL15k6s7QnBkEjGGhWUs4LL95jiu9SVDlDEx3ebzr6wwNSAllP/pu7
+	R4MUttgkbr+WpxzUL62IyXzLpE0/fSSmx5evQGPNeYZEv+QGB9XbjoZR0Gdb/sjMJsFO3KZftJg
+	lfFBF8eWXWzghOLqajEjbtBWGZpGT8XplmUvqstf4wh/1cSGee+NZmmRgaz/PNSSV0CynciWVTo
+	sRcMnCUDH61F7GLGlumM2WvhsGKBDIlrgT3Vx3zvJsx7XFpsggHTFrm4wIbQ0rxFeKvGlq+GMju
+	Z6HA79OACwm1t0n4Qdi6DvYTz4/ACbJieiDdPTinrFwPu6N6+NmYzD6VT9bPADCOjT0Nuo13uq6
+	xmOkfaa6ECN7bbIW7+8ddOq/B7TGgE19yf001EaXtW1RkqjR+fClcjMPXY+7+ayLCrQpMXHxKvX
+	PRwt1Upre/97sHquIiY0iPbmamEYjRHBXbNlY0fq+oVzNmDbodKBfG7h6ae08nSfTCBz8ZMHLOi
+	ZmD6diL7N3D7H5WRmF3nTwVK3ggWTJYUuTbfNjRH9SVQtMd4GSbGTIjYmcSCnAgY3krdSAK4Syb
+	lNxAfNj2nEAaRxi0IDuJq6ZEaXRDi33jaqQyDqoGINLcpMZSiQKDDBpKj/PnRmGZfMtGnFaCitf
+	cEVUe0UqjBJJcCutd/MEjRxOh02GFrSqvuSi4lRa5kQ+0QSVapr8wVpNkPn1y2wFe6abaAzkKUe
+	bUDA==
+X-Received: by 2002:a17:90b:35cf:b0:3b0:96ce:104f with SMTP id 98e67ed59e1d1-3b182dea718mr974216a91.5.1794363979444;
+        Tue, 10 Nov 2026 18:26:19 -0800 (PST)
+Received: from ryzen.lan ([2601:644:8000:37f::e34])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b17db56c7esm2040066a91.8.2026.11.10.18.26.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Nov 2026 18:26:18 -0800 (PST)
+From: Rosen Penev <rosenp@gmail.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v2] uprobes: Use flexible array for xol_area bitmap
+Date: Tue, 10 Nov 2026 18:26:05 -0800
+Message-ID: <20261111022605.66010-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -83,94 +108,83 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261111-tp-glob-errno-v2-1-ca45efb07d31@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/3XMQQrCMBCF4auUWTuSCZhaV95Dumji2A60SUlKU
- Erubuze5f/gfTskjsIJbs0OkbMkCb6GPjXgpsGPjPKsDVppQ0QKtxXHOVjkGH1A02oeiG17NRb
- qZ438kvfhPfrak6QtxM/BZ/qt/6RMSGicdtaozl06dR+XQeazCwv0pZQvcthdzqoAAAA=
-X-Change-ID: 20261110-tp-glob-errno-672ea1eb786b
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Hang Zhengyang <hang.zhengyang1010@gmail.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1794361735; l=2091;
- i=hang.zhengyang1010@gmail.com; s=20261008; h=from:subject:message-id;
- bh=oKOhzpzzihzjzROHP90IK3skpmdwiZ3od9qtUe5u8x0=;
- b=X16E1srTe/q4EZ1klblgXdNEd7t6M0s9GxwKTspiFMc3meJyyDw7zwYCiW72kql09RdtaBgze
- FAH1G29AinGAnydJqtp1/bdG2+cEBUnrugBG89z7HnMtlYT7dfFzdwa
-X-Developer-Key: i=hang.zhengyang1010@gmail.com; a=ed25519;
- pk=5drRny3PqRPLhKVB0YIQXN5YyD8miKCpXWhnEPvafAI=
-X-Endpoint-Received: by B4 Relay for hang.zhengyang1010@gmail.com/20261008
- with auth_id=1133
-X-Original-From: Hang Zhengyang <hang.zhengyang1010@gmail.com>
-Reply-To: hang.zhengyang1010@gmail.com
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-From: Hang Zhengyang <hang.zhengyang1010@gmail.com>
+The XOL slot bitmap has the same lifetime as struct xol_area, but it
+is currently allocated separately.  That adds another allocation
+failure path and a matching cleanup branch without buying any extra
+flexibility.
 
-As a normal user, a tracepoint glob gets the wrong error:
+Store the bitmap as a flexible array member and allocate it together
+with the xol_area using kzalloc_flex().  The bitmap remains
+zero-initialized, while the allocation and error handling become
+simpler.
 
-  $ perf stat -e 'syscalls:*' true
-  event syntax error: 'syscalls:*'
-                       \___ unknown tracepoint
-
-  Error:  File /sys/kernel/tracing//events/syscalls/* not found.
-  Hint:   Perhaps this kernel misses some CONFIG_ setting to enable this feature?.
-
-add_tracepoint_multi_sys() returns ENOENT when nothing matched and
-drops the error from reading the directories.  Return that error
-instead, so the glob reports what a plain tracepoint name does:
-
-  $ perf stat -e 'syscalls:*' true
-  event syntax error: 'syscalls:*'
-                       \___ can't access trace events
-
-  Error:  No permissions to read /sys/kernel/tracing//events/syscalls/*
-  Hint:   Try 'sudo mount -o remount,mode=755 /sys/kernel/tracing/'
-
-Fixes: d002aab87de8 ("perf tp_pmu: Factor existing tracepoint logic to new file")
-Assisted-by: Claude:claude-opus-5-5
-Signed-off-by: Hang Zhengyang <hang.zhengyang1010@gmail.com>
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
-Thanks for the review, Ian.
----
-Changes in v2:
-- Show the output after the fix (Ian)
-- Link to v1: https://lore.kernel.org/r/20261110-tp-glob-errno-v1-1-6c2cb609c590@gmail.com
----
- tools/perf/util/parse-events.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ v2: add Acked-by. remove Assisted-by
+ kernel/events/uprobes.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index f3ba70d4f76b..8a6d5a13863d 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -572,8 +572,10 @@ static int add_tracepoint_multi_sys(struct parse_events_state *parse_state,
- 		ret = tp_pmu__for_each_tp_sys(&args, add_tracepoint_multi_sys_cb);
- 	}
- 	if (args.found == 0) {
--		tracepoint_error(err, ENOENT, sys_glob, evt_glob, loc->first_column);
--		return -ENOENT;
-+		if (!ret)
-+			ret = -ENOENT;
-+		tracepoint_error(err, ret, sys_glob, evt_glob, loc->first_column);
-+		return ret;
- 	}
- 	return ret;
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 853fc952331c..876c3cfe8031 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -108,7 +108,6 @@ static LIST_HEAD(delayed_uprobe_list);
+  */
+ struct xol_area {
+ 	wait_queue_head_t		wq;		/* if all slots are busy */
+-	unsigned long			*bitmap;	/* 0 = free slot */
+ 
+ 	struct page			*page;
+ 	/*
+@@ -117,6 +116,7 @@ struct xol_area {
+ 	 * the vma go away, and we must handle that reasonably gracefully.
+ 	 */
+ 	unsigned long			vaddr;		/* Page(s) of instruction slots */
++	unsigned long			bitmap[];	/* 0 = free slot */
+ };
+ 
+ static void uprobe_warn(struct task_struct *t, const char *msg)
+@@ -1760,18 +1760,13 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
+ 	struct xol_area *area;
+ 	void *insns;
+ 
+-	area = kzalloc_obj(*area);
++	area = kzalloc_flex(*area, bitmap, BITS_TO_LONGS(UINSNS_PER_PAGE));
+ 	if (unlikely(!area))
+ 		goto out;
+ 
+-	area->bitmap = kcalloc(BITS_TO_LONGS(UINSNS_PER_PAGE), sizeof(long),
+-			       GFP_KERNEL);
+-	if (!area->bitmap)
+-		goto free_area;
+-
+ 	area->page = alloc_page(GFP_HIGHUSER | __GFP_ZERO);
+ 	if (!area->page)
+-		goto free_bitmap;
++		goto free_area;
+ 
+ 	area->vaddr = vaddr;
+ 	init_waitqueue_head(&area->wq);
+@@ -1784,8 +1779,6 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
+ 		return area;
+ 
+ 	__free_page(area->page);
+- free_bitmap:
+-	kfree(area->bitmap);
+  free_area:
+ 	kfree(area);
+  out:
+@@ -1826,7 +1819,6 @@ void uprobe_clear_state(struct mm_struct *mm)
+ 		return;
+ 
+ 	put_page(area->page);
+-	kfree(area->bitmap);
+ 	kfree(area);
  }
-
----
-base-commit: 13a8d580433a3b72b10be34f0e26787fe5659d3c
-change-id: 20261110-tp-glob-errno-672ea1eb786b
-
-Best regards,
+ 
 -- 
-Hang Zhengyang <hang.zhengyang1010@gmail.com>
-
+2.56.0
 
