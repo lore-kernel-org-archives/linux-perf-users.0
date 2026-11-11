@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794431234;
-	b=5BTYEwvTA6TdITvTngpOzBGOQJ2rJih+B0OKrmHiHseTOVvGeJ3NooSMg3xKbEM58Rtc
-	 o7kw0R5pMOqKGjOTisTUtGf7rIxdypE9kBmCs0rjZW5z2NhBOUkLRF5Lx3ImZf10wcu9Q
-	 TmDrc2M3o+CYbxNUHdRSFqRyTINasJmR+JdSfR9WxFHOyBXqGH+D97IY/JKvKlb9kdwOz
-	 tAgiLzNlV7J684aIquuJZBB9W7YkIqXslMH3DcQbJlDXDuTG8qVz7pIO78k61afEhOUno
-	 Q2sc45WxdqLaDdx1n6eviBIyFq4h7VcDlis6nFkmFGcLbH6Kgw2PdTlPchQmE7AZITA==
+	t=1794431777;
+	b=ycRuEwxuLZ11vAK7mDJ0bvE4RaBJ1sRWtfBTw75JKT1/Ya2+K9uPXbIJ2ouM82D0IKHn
+	 LYKIC/vCEU6fdC/xG2Xy9Dks7zqCDI7U9tqKOZRjbHIDcfgsbF/zQ/1OLyHDnixbC6eAP
+	 YrshcmhATUkuK42PR1PlUIUPRjvcqnBcaH+H5Y62dszQI6SoLakweNjtifOuUkHjFArPa
+	 T85D//71aFZY93/GH6iaEvA5n6EAMeeyFgwXzRCXHbW/M1P1TqLXJMUDgh1H32FQhvdf7
+	 IFewDggvwW/mz8l3JABucFpqxnDi7ClswDt+U9g2iWhHmml4RgC8qNeXmNFHG4wA0TA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794431234;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794431777;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=ujx1uAHdpTGrXVag86rwTVmy2hHOXLaB/H/YzhG+0dk=;
-	b=nJKJj1BOcVVZ3meocxat8bWzWXOc+pCshw7Ig2PUcGCwa5DxbfL5ol1KpET61zG35jkZ
-	 +MeHajl3AX25rPI5/j9W5o4cof1HQLCzM/d20k661LwPVHqY3zxg+2A4J586FNWJPl1sr
-	 UFmKGhKemp3BdYJzSzj6uxAYe6vVjVDHhNfmULvLcXgXEKbe+6loMIYgarjyU+aEeEMe8
-	 TM8m/gRIrVlW/usEVzgx1dKeB2JfWM/j1eNTvo3KzmknFJNSxyNX1dA7eN+EBcmIfIK02
-	 uB/ZDvqzSaO73NvEp8fTf4FQKwcOKvpe3/TQ6f8XHrQuBszSeU2gnNSR4w6JdcNixdA==
+	bh=uei4glz8zNQHTulXNdTr+dLzdbV4AEe0tukjwQlJm/M=;
+	b=pdKCYDuRJTferAUbRiosBUewNV0fLXKGjZCxmQXc1UZn2k/MVNkmbciJIN17e+jpNDRq
+	 mG3JPFULxcixEwRFZe4b9W/sJTTQruInc8LnUjvI0Or98DZ4fhX/w7zve5kByTHR5x9ul
+	 1elVTEqI1I1JNuVaHNf66t/DGnx3NaW1FPQESVGDfF4gcqgcN6EW9gPBH1Hk49rmUoV9u
+	 Yz8SpE6U+A25noKH4BkA5OTjabE4tnJmR5p5O3o/yaCAo6EDg55hh7dubOjnZ2sVxPw79
+	 odK9U74Gl/jgV63wMy5Of6D+uGI5nl7POMAncFdkWqla/snQS2PUViv3p0XvTQvaxcw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iALBjLt1;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SZ1lEB6d;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA02606A321
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 21:07:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B3C606A321
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 21:16:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iALBjLt1
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 666BB1F00A05;
-	Wed, 11 Nov 2026 21:07:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SZ1lEB6d
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 287CA1F00A05;
+	Wed, 11 Nov 2026 21:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794431233;
-	bh=ujx1uAHdpTGrXVag86rwTVmy2hHOXLaB/H/YzhG+0dk=;
+	s=k20260515; t=1794431777;
+	bh=uei4glz8zNQHTulXNdTr+dLzdbV4AEe0tukjwQlJm/M=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=iALBjLt154WZjhSmfNxbvT3D+x4ecUuZgHebu9/XNiGtvmsL5uR7bzbZ6ta/4Curg
-	 /wQ1WclfvBvcL4G7VqoD2N7arx+7GJW3y2D08xruZJ9iT+DYQWlFjJarIPDScs54xW
-	 pBVmgEs+VuQpc5pN+lgxnkfy6Yn7Uw9IsFvZxNW5GMiOi4Zw86y6smF7o2nUOcXLj+
-	 NkA1C7UGcrZkGtT40BEVC87/qo8h2YvvBQWdL1MmWTSshXQe6sG2EuBMXPZdrSQRVN
-	 XLnJcRxI8KIdhrsxrR/DhU1eVgWLYzXnZv9tArOPhhjd75C+QtjtUMvpQM5k8JVXNo
-	 apNMT5uGg2iJA==
-Message-ID: <sashiko-outbox-209687@kernel.org>
+	b=SZ1lEB6du6iL9jqN5YXPo6fJkG+y8xzlh7069mhvxiw6Mv8t4QhqjUl8FrMYmznir
+	 fv07hclqkF87C8h+mGGhhdjt27lFJSzACFV2+0//4EruzzGG4BF5BwIU2mlUXIHavu
+	 xN/arbfRK6uYcL6KCsVnvMwwBn4XIVWe//u9FOkmwhQKRe9U4xlZbYLlq50xeFQ/bM
+	 z4gGMZRZb5CvKQI8tKGyVQv6GsCBkkGzpaHyxOuXZ8mhoFPxqWuaMhLsSGotAKkULb
+	 jmxUOgBEJM2V4+TNjswKLvEM7f7T47eKhKo6BF6wJAKMqUUUGbC4at5tjee+b/Jyx8
+	 AS0ap7xCknljA==
+Message-ID: <sashiko-outbox-209691@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v12 18/20] perf maps: Fix lock inversion in
- maps__load_first()
+Subject: Re: [PATCH v12 19/20] perf maps: Fix map index lookup fallback and
+ removal
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261111174213.3526604-19-irogers@google.com>
+In-Reply-To: <20261111174213.3526604-20-irogers@google.com>
 References: <20261111174213.3526604-1-irogers@google.com>
- <20261111174213.3526604-19-irogers@google.com>
+ <20261111174213.3526604-20-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 11 Nov 2026 21:07:12 +0000
+Date: Wed, 11 Nov 2026 21:16:16 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,16 +61,32 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> In maps__load_first(), take a reference to the first map and drop
-> maps__lock(maps) before calling map__load() to avoid a read-to-write
-> self-deadlock when loading kernel maps inserts extra trampoline maps.
+> maps__by_address_index() and maps__by_name_index() currently only run
+> their linear pointer scan when maps_by_address_sorted or
+> maps_by_name_sorted is false, returning -1 (UINT_MAX) immediately if
+> bsearch() returns NULL. When a map's start/end address or DSO short_name
+> is updated in place without clearing the sorted flags (for example
+> during module map setup), map__start_cmp() or map__strcmp() tie-breakers
+> can become stale and cause bsearch() to miss an entry that is present in
+> the array.
 >=20
-> Fixes: e77b0236cd0c ("perf maps: Add maps__load_first()")
+> Fix the lookup and removal paths so stale sort keys or missing maps are
+> handled safely:
+>   - Fall back to the linear pointer scan in maps__by_address_index() and
+>     maps__by_name_index() when bsearch() returns NULL, and avoid calling
+>     bsearch() on empty or NULL arrays.
+>   - Check map__start(prev) < map__start(new) in __maps__insert() before
+> [ ... ]
+> Add a unit test in tests/maps.c covering maps__remove(),
+> maps__remove_maps(), maps__fixup_end(), and maps__find_next_entry().
+>=20
+> Fixes: 659ad3492b91 ("perf maps: Switch from rbtree to lazily sorted arra=
+y for addresses")
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111174213.3526=
-604-1-irogers@google.com?part=3D18
+604-1-irogers@google.com?part=3D19
 
