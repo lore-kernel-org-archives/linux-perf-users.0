@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794423743;
-	b=D/oJU4b8WtMrjAX6DHMzZAFeJDomgoWRUSG/x1tyr1JYCiUCzaa5g9Au0N4qq/9Wv35F
-	 djHNn6kHWOctIwh7n43APi6tOVUjyd4aHdWB9jVSgedTBO2Ki1OZECz7pqMe6AjbZHV1q
-	 y2Ngg7lj2ZmTmv/3Y+krJZuSiN6lhhY7eNceisqJTHI+h736gtN8S4oJu2halEaCVrfXQ
-	 fX8e6DDZqw941M7AjDCr22n3/IGpXkuFBnHBJy3xzopL6q+PXwSj7nBojADYNGsciYHTM
-	 e9R0a5/jXb609U8M0LXWFVJzGnK4Vyr+vh6mzMGMvLVXD2HyWGqBC0ak169GT29LBHA==
+	t=1794423946;
+	b=duUyt/6kbGHjLXXjo7oa6YcbKUavxjcS2HKu0dI8X49o+HqVZnrp5C+dOSBywkGP02HD
+	 dfkbGIFODeg7gOJWq2GCSfEO4mrvheKi6wSPUr4osf+nmZ3bHDSbcxzgmn5kjRTx8wkrh
+	 blUOtApoUV7ppuJAAq0MMqrFfnmmc/JpBP9csRczNKhMvd732lL61O5j911KTQxaQWj4L
+	 mVHByMOGUEISZyY5bSUx+smackjHBW6MJNqR/HQugVk9eyooPvsHWnnCfy4R1+FLvfisX
+	 UFtcVgYpCJ47PcT6GSeo2Wh0y9rEtD3OcSBPFhnUXYQAVowG4I0tHNGJItQ6StONxFg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794423743;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794423946;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=xtGnstOLF87lHvdcUYHrTy9fynepThITHeYwA0Wgbag=;
-	b=vvYAv+JPdtwpiFipEYd9On6WDDGqpfj38zN4joA/t2VKHcWD4qzE8fNdq+h5NHTBSyif
-	 0OSVhX6P732pBTOlRazgHn7MEm9v96CjH3Rn5Y+SqI4UHVcQ0eQSyFWV+pfY0LJOXrYzy
-	 +kfhWYinr77nwg2swdnaoK0J3LqPNDi6rRYvr5/nImF+m7+uiwR26bPhLctohAklYztNN
-	 RsCSkS+y59ryjyNwklrVl7PO/hc8m6JB5ogeOHzePhw/UE/m2rK9o/X0zPj3mAE6io1EM
-	 fZGpqfuMkdJBD6bUzCH5n4LRyWLeFM19rIng85fR7vtgXRcJdEIS+oxWh6Q6mQ/IwQg==
+	bh=EqO+YMWzym/ukEW5qAG0PlRlMiS2P/d+pu8LjXSVuOw=;
+	b=lr7iEvYUosm6hrK1x8yv6BgTGX2Z34vwxS011zaaIvFgSkNwyRAiQvzRj/jCYggifPl5
+	 bk9sfJY/7M95k/K6QCWsPJbz9NSKlhJTfAns7JQFAnU7/IxmSML0FKnFvMG7Ppy+Mi2SF
+	 I1S1odO7gecSoGiRG3LLtTz9GZ36TZtn0jBb3kHo5RI8awxwnmIeZbhA7pwxkM+k35Kcd
+	 BQcqqupfY3LqEW74A9u37sApsggllJc2ttKSSYBTSLwnNQCHZx+UU6UEZ3gnE8L97BV6v
+	 G/OC6npg7mhKN7WphXORMif+IedMnxt8ygUT0yoc3dwb2YB9ruX2bkQXVTw2yfHklDw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Du6jEICC;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Jdm6a8t1;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51B1606A897
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 19:02:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEDF606A31C
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 19:05:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Du6jEICC
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 134041F00A09;
-	Wed, 11 Nov 2026 19:02:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Jdm6a8t1
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 575771F00A05;
+	Wed, 11 Nov 2026 19:05:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794423743;
-	bh=xtGnstOLF87lHvdcUYHrTy9fynepThITHeYwA0Wgbag=;
+	s=k20260515; t=1794423946;
+	bh=EqO+YMWzym/ukEW5qAG0PlRlMiS2P/d+pu8LjXSVuOw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Du6jEICCPAA+hV4pc0al0M4DZSpaiTAtUuNRWBZByCIpFwEoZhtspaOZDk3g/ndTc
-	 9ZIeuPBhNuBbqfN921qyUznglxSXX16UYZIDyU8ZfMfuJl9ApJReKebJ8hTt1AUNWb
-	 CSHzO/ej2dVy6qfFkfDUyKl8j5gJRTfwgbivPuAtmNp0l38igOEmH3JJ7nqrWOnAr0
-	 JdkC/KV24WS7adUchQRdJeHWBlQE9SL+KO0B+ZXHIgrC6I+/hzlg/iDe2MaSwReXOc
-	 ttlvki7e5cwHqzzquTVU2SickNlw6mdDqCeujTQBQf8f/FcSg3/cL9VIvUcVMiRwis
-	 i+XL9VnUSOgtA==
-Message-ID: <sashiko-outbox-209518@kernel.org>
+	b=Jdm6a8t1FaLi9oUd/Uy0aRQLt4KRfQ4MJfAlSdkbETkdGHnIXdR/qI/soTeWJOmTv
+	 /kgwYd+cteSXqsrH39ttMLFmdLN4acvWCMtG302OurVFL7Q6LqMEuV6Ausi4pHUNl8
+	 KfxTgbRuNmNXf3zKBnaIL2MduqHyZJOVy4CcguKYslRA3diSCTRfmOjx8W8ziJ3VVv
+	 wsx5W8Um5UWLjH8aAA3ilO8Ir1eEcadNqLCYuIx202Q/G/G3/6C4sOG3AnIG4cGFlZ
+	 S400zG8mxSGNES9k2wi2V1UrTs0378HNzVwmM8MgkrMRjlv+7YGxOJ/s3V1EL4n1X+
+	 DkfWcwAamLR0g==
+Message-ID: <sashiko-outbox-209529@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v12 01/20] compiler-context-analysis: Avoid unused
- parameter warning in _context_unsafe_alias()
+Subject: Re: [PATCH v8] perf stat: Include PMU name and split uncore events
+ per PMU in metric-only JSON output
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
+To: "Chun-Tse Shao" <ctshao@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261111174213.3526604-2-irogers@google.com>
-References: <20261111174213.3526604-1-irogers@google.com>
- <20261111174213.3526604-2-irogers@google.com>
+In-Reply-To: <20261111183209.1892421-1-ctshao@google.com>
+References: <20261111183209.1892421-1-ctshao@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 11 Nov 2026 19:02:22 +0000
+Date: Wed, 11 Nov 2026 19:05:45 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,18 +60,33 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> _context_unsafe_alias() does not use its parameter 'p', which triggers
-> -Wunused-parameter when building code that enables -Wextra (such as
-> tools/perf, tools/lib/perf, tools/lib/subcmd, and tools/lib/symbol).
-> Explicitly cast 'p' to void to silence the warning, matching
-> __assume_ctx_lock() and __assume_shared_ctx_lock().
+> When running `perf stat` with `-A` (--no-aggr) and `--metric-only` in
+> JSON output mode (`-j`), `perf stat` evaluates metric expressions
+> across all matching PMUs (including uncore PMUs like `uncore_iio_0`,
+> `uncore_iio_1`, etc.).
 >=20
-> Reviewed-by: Marco Elver <elver@google.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> However, `perf stat` previously formatted JSON output by printing only
+> "cpu" : "<id>" and grouping all metric values on a single line per CPU
+> without identifying which PMU instance evaluated each metric. As a
+> result, when an uncore event spans multiple PMU boxes, `perf stat`
+> printed repeated, ambiguous metric keys without PMU names.
+>=20
+> Fix this by:
+> 1. Including "pmu" : "<pmu_name>" in print_aggr_id_json in metric-only
+>    AGGR_NONE mode (-A) when evsel->pmu is a non-core hardware or hybrid
+>    PMU. Software and tool events don't belong to a hardware PMU instance
+> [ ... ]
+>   {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_1", "MB/s =
+ iio_bandwidth_read" : "0.0"}
+>   {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_11", "MB/s=
+  iio_bandwidth_read" : "0.0"}
+>=20
+> Assisted-by: Gemini:gemini-3.1-pro-preview
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111174213.3526=
-604-1-irogers@google.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111183209.1892=
+421-1-ctshao@google.com?part=3D1
 
