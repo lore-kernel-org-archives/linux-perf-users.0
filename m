@@ -1,60 +1,61 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.127.230.111
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794378254;
-	b=PhWH1cj0e+ui0GGjmnnSNs0YFEJ8vV1lcYRhB/wJFrMmBqDU1XkjQ2eoXL9SiPsArCYg
-	 KUL727kqgds83ydSmbxv7/lUiB40iyfXlF+iHtabtzcSGhN0x3rSgEn/UBo73QxgBuQ2L
-	 5MHv+Vnbun9kE/JHOuTXbhTEmKSFGKklNqUAK3+TmMxBFPaGEK1FJ2nMBn/uPlaa+UR8T
-	 1usRZsEwSppzwb9Bq8A81Ox8Jx4sLLuoEFqUgPGJS0ftHP1chGVjmct+nBsQen2AJvAdj
-	 dFy+SEGhCzIoyuB/rusrRpz9zBcB3HHw3mEqt1E327Z3Vx8VlW9nhbLm7MM/vqILYDg==
+	t=1794378354;
+	b=B66bCWFOvzATsscu1JeG6xLQKfDdwZc1fvOvAAiLUgIaQgyUFJdLABmSjEJrNATjyWnP
+	 IuDWxBaHtoy4DPH7jddUOt7qNcq1L/IM6votWujtzOnRUB7QTc1OpZXTfAvk0Dng82vAk
+	 PL8wCFIM00YHlyvB5k8L4iSfK30yIsCr0n9UyapGaYQnOevpDM0mn4o/x3fNDYI7QhrNG
+	 rftgmWCJV1qVSOyY1n9S95wP7VKcP1ZYvTuO+xeCsBoAVk+4SUylLhGLNFWgBa2JkHGWc
+	 mzs801wwGFibqi78QwxY0Ns116M8kCUUaTixl6VgyNQ8RXQ+6+ce2wvgJ1o7bNRPMMg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794378254;
-	h=DMARC-Filter:DKIM-Signature:Date:In-Reply-To:Content-Type:To:Cc:
-	 User-Agent:From:Subject:Message-Id:Content-Transfer-Encoding:
-	 Mime-Version:X-Original-From:References:X-Lms-Return-Path;
-	bh=mKF0n9OrBcr3ch6GDHkzJ5g03plplWf6k4SwddYKcSU=;
-	b=o7dXCXEmk9gVCv5qqYIHbb3lfp1kk6qm3hVjXMwh4qeuDUKae9JddcsJnHPzg93hrSQ7
-	 kPSZqC3d7mTuYCxKJZOIppDl6fA/bE9/r2o8q/3BIfw8wMG/22TvqHAcQHBmO+TRNCUvt
-	 hZdbYCL6h4AffN+wTQMbVHkEaNwqpihoo7jlBskUyvWYJjpoArTVjtMx1ZIoH0BIbJNeX
-	 0MfgOAK9UGvlHnICWsll6fD5NddVGCN6IchQeVH69+Ryioibm7t32tEtiR8Y104RLOIvI
-	 OAoDSzG9c+3Du6qPpyEhUtSoZtJRIhGnMs7LhvD78y3u7ZJI/9xkdJCB8Tl25mwOUZw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794378354;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=cZQmf3rKYa62Ru0ytEh6HRhQWVPRFmnqQycLLmAQQW0=;
+	b=w+AZLpvQR9lFvv9AqAVGiDXlhFUo07buDhOysoh0ZzDVgFszaAiTRKsBFxOivyiX8N6N
+	 txxdXFb+FfAYfJT63zt8bx2u9D8B2tAdssfDGFHl/vZ7Yuce/jO4+SyP1j9g81W50EWqE
+	 G//ar89cPr0ke2bCA0zLfhatmVDOWTL5iBl6eFxO6FtDHCnM5UVfkY8SYpk/QUr4wB6eg
+	 FBiTefaqVbxv+H0OyRWOFUiSgdv4QEUpb+yDDAmYZMGkezzmmqWH/8TlPTVJv7bmedFFs
+	 JfE0UbQJ5ta2rQptt42nEV8dK6RznPmpjAG086IRG58dVO9uH2wCzK908KwseO5Wbxw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=bytedance.com;
-	spf=pass smtp.mailfrom=bytedance.com;
-	dkim=pass header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=2212171451 header.b=By8+tB5d;
-	arc=none smtp.remote-ip=209.127.230.111
-Received: from va-1-111.ptr.blmpb.com (va-1-111.ptr.blmpb.com [209.127.230.111])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dTSkVDt2;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98EB9606A321
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 06:24:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 98EB9606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1BC606A31C;
+	Wed, 11 Nov 2026 06:25:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=2212171451 header.b=By8+tB5d
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1794378247; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=mKF0n9OrBcr3ch6GDHkzJ5g03plplWf6k4SwddYKcSU=;
- b=By8+tB5dfg7dIivPXMOTiXu2b+6B33ETipYe+IsXzdo3rawVnO6nxE0K+o2FseHUkiapru
- uD28vsjn7JzJa8q2nbHM6GIyQdCsiHoWU2GN3SpP8oZuQOZG9MdVY1BEfTuAMQFyDqZRN/
- nNGs+stI5IHF1mXQFYCMSdl1FsW769nvRiSAaVYZ8s04fkkRp0I+9PwdcZHtIgtIazJ/XQ
- JkLEvGGpQ/ozMmIPnEcxExKqCD4x3uLodZqWgDlPoCuoaafbd9g4wfT7ZXuvR4LpiymPF4
- s+3pP0qXAe2gZaEINho9UwKaSuuIOI5giXJjX/2LFfsaoQPpXkFLsI8OYxOgEA==
-Date: Wed, 11 Nov 2026 14:23:49 +0800
-In-Reply-To: <CAP-5=fUf=MD72=wuSxem+j6S11J2SvOaxOEb+H+ifLV=Y2p03A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-To: "Ian Rogers" <irogers@google.com>
-Cc: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
-	<linux-riscv@vger.kernel.org>, <peterz@infradead.org>, 
-	<mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>
-User-Agent: Mozilla Thunderbird
-From: "Rui Qi" <qirui.001@bytedance.com>
-Subject: Re: [PATCH] perf parse-events: default data breakpoints to any size on RISC-V
-Message-Id: <89c6a757-8824-4559-b2c0-2cd41c3e45f1@bytedance.com>
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dTSkVDt2
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 133071F00A05;
+	Wed, 11 Nov 2026 06:25:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794378353;
+	bh=cZQmf3rKYa62Ru0ytEh6HRhQWVPRFmnqQycLLmAQQW0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=dTSkVDt2MZgKxE5gNAHSsZYqTggsReO4ZtPqt4qVNEl62VwzSW9akXRGFYoLBIedn
+	 P69/MlL1Muc1EUXsVRho86vy/qTb7WrButfiFzlEvm7LyhT6oeX0Kv9imRHp2qxzhB
+	 rx921EHIKeJ1T4TDF88DoOz/UcCEzpstO+NT4wY5Occqm3qm0eomBk/mAjOZay8r6a
+	 bqqlXMYwnWpOQOiLzz2KiVvV2RsMpYA4G/oXv3c47kDm7DTDm9C3OFYEvTfNmFsVf9
+	 zOWu2U8tOff90jrjNXLx2/kog4PCwurFUOAiHXxddjlQABZa1HaGsi47eI8+4rFbN/
+	 +O4uv2B63dg3A==
+Date: Tue, 10 Nov 2026 22:25:51 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Magnus Lindholm <linmag7@gmail.com>, Ian Rogers <irogers@google.com>
+Cc: Matt Turner <mattst88@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v4 0/3] perf alpha: Decode ProfileMe samples
+Message-ID: <avQKb-vBxTvMn1yF@z2>
+References: <20261104-perf-alpha-profileme-v4-0-1771ea02950e@gmail.com>
+ <CA+=Fv5RBKVAdGgq=BGPmLXpczcB3qvQcSw8aat7nB2ePXcG4yg@mail.gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,132 +64,117 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
-X-Original-From: Rui Qi <qirui.001@bytedance.com>
-References: <20261109120320.75053-2-qirui.001@bytedance.com> <CAP-5=fUf=MD72=wuSxem+j6S11J2SvOaxOEb+H+ifLV=Y2p03A@mail.gmail.com>
-X-Lms-Return-Path: <lba+26af40a05+dbd47b+vger.kernel.org+qirui.001@bytedance.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+=Fv5RBKVAdGgq=BGPmLXpczcB3qvQcSw8aat7nB2ePXcG4yg@mail.gmail.com>
 
-On 11/10/26 5:58 AM, Ian Rogers wrote:
-> On Mon, Nov 9, 2026 at 4:06=E2=80=AFAM Rui Qi <qirui.001@bytedance.com> w=
-rote:
->>
->> When the length of a data breakpoint is not specified on the command
->> line, perf defaults it to HW_BREAKPOINT_LEN_4:
->>
->>   $ perf record -e mem:0x30020:w ./prog
->>
->> That assumes the length describes a byte range that is compared
->> against the address of the access, which is how the x86 debug
->> registers and most other architectures work.
->>
->> RISC-V debug triggers behave differently.  An Sdtrig mcontrol6
->> trigger encodes the width of the memory access it should match, and
->> it only fires for accesses of exactly that width.  Watching an 8-byte
->> variable with the implicit 4-byte length therefore never triggers:
->> the perf event is created and enabled, but no event is ever
->> delivered:
->>
->>   $ perf stat -e mem:0x30020:w ./prog          # 8-byte stores
->>   0       mem:0x30020:w
->>   $ perf stat -e mem:0x30020/8:w ./prog
->>   10      mem:0x30020:w
->>
->> The failure is silent and easily mistaken for a broken hardware
->> breakpoint implementation.  Tracing hw_breakpoint_exceptions_notify()
->> while the event is active confirms the trigger never fires.
->>
->> Zero is a valid length for RISC-V data breakpoints: the kernel
->> encodes it as size 0, which means "match any size".  That is what a
->> user leaving out the length asks for, so use it as the default on
->> RISC-V and keep the existing 4-byte default elsewhere.
->>
->> Tested on a riscv64 kernel with hardware breakpoint support.  With the
->> default length, watching an 8-byte and a 4-byte variable both count
->> 10 stores, while explicit lengths keep their exact-width behaviour:
->> /8 only matches the 8-byte access and /4 only the 4-byte one.
->>
->> Signed-off-by: Rui Qi <qirui.001@bytedance.com>
->=20
-> The change makes sense to me, and I may have been the last person to
-> tweak how this parsing runs. Could you address at least the test
-> failure issue with something like:
->=20
-> - TEST_ASSERT_EVSEL("wrong bp_len", HW_BREAKPOINT_LEN_4 =3D=3D
-> evsel->core.attr.bp_len, evsel);
-> + TEST_ASSERT_EVSEL("wrong bp_len", default_data_breakpoint_len() =3D=3D
-> evsel->core.attr.bp_len, evsel);
->=20
-> and then I'll add my tag.
->=20
-> Thanks,
-> Ian
+Hello,
 
-Hi Ian,
+On Tue, Nov 10, 2026 at 08:31:02PM +0100, Magnus Lindholm wrote:
+> Hi all,
+> 
+> On Wed, Nov 4, 2026 at 7:53 PM Matt Turner <mattst88@gmail.com> wrote:
+> >
+> > The Alpha kernel series "alpha/perf: add ProfileMe sampling" adds
+> > ProfileMe sampling to the Alpha cpu PMU. Each ProfileMe sample carries
+> > the profiled instruction's PMPC and its I_STAT and PCTR_CTL status as
+> > PERF_SAMPLE_RAW data, which says whether the instruction retired,
+> > whether it trapped and why, whether it was a mispredicted branch,
+> > stalled before map, or was killed on a wrong path, and what PCTR1
+> > counted while it was in flight:
+> >
+> >   https://lore.kernel.org/r/20261104-alpha-profileme-v6-0-63362e9290a3@gmail.com
+> >
+> > This series is the perf tool side. Patch 1 decodes the raw data in perf
+> > report -D and perf script -D, as is done for AMD IBS. It copies the new
+> > uapi header from the kernel series into tools/arch, so it should wait
+> > until that header is merged. Patch 2 adds a script that sums the status
+> > by symbol or by instruction, in the style of DCPI. Patch 3 gives perf
+> > mem a ProfileMe event, as the kernel series reports the DTB hits and
+> > misses of loads and stores in the data source.
+> >
+> > To try it, with the kernel series applied:
+> >
+> >   perf record -R -e cpu/instructions,profileme/ -- ./workload
+> >   tools/perf/python/alpha-profileme.py --pc
+> >
+> > I tested this on an AlphaServer ES47 (EV7). Sampling a loop whose
+> > branch tests random data reports that branch mispredicted in 21% of its
+> > samples, and 0% with sorted data. As a normal user, perf mem record on
+> > a loop that loads one word from each page reports the load's DTB hits
+> > and misses.
+> >
+> > Signed-off-by: Matt Turner <mattst88@gmail.com>
+> > ---
+> > Changes in v4:
+> > - Patches 1 and 2: ignore TRP, and MIS and the trap type with it, for
+> >   an instruction killed before it was mapped, as the kernel series
+> >   does. Thanks to Ian Rogers.
+> > - Patch 2: record cpu/instructions,profileme/ in the example, as a
+> >   precise event now samples only retired instructions, which leaves
+> >   the killed% and invalid% columns at 0. Thanks to Ian Rogers.
+> > - New patch 3: add a perf mem event for Alpha, cpu/cycles,profileme/.
+> >   Suggested by Ian Rogers.
+> > - Link to v3: https://patch.msgid.link/20261102-perf-alpha-profileme-v3-0-4bf6e1dda733@gmail.com
+> >
+> > Changes in v3:
+> > - Patch 1: silence -Wpacked around the uapi header, which breaks the
+> >   build where __u64 is 4-byte aligned, such as sh4.
+> > - Patch 2: only read raw data from cpu PMU events, as a tracepoint's
+> >   payload can pass for ProfileMe status. Thanks to Magnus Lindholm.
+> > - Patch 2: print a table for each thing PCTR1 can count, so that mixing
+> >   events no longer averages unrelated values. Thanks to Magnus Lindholm.
+> > - Link to v2: https://patch.msgid.link/20261030-perf-alpha-profileme-v2-0-9ce2f0b0e622@gmail.com
+> >
+> > Changes in v2:
+> > - Patch 1: copy the raw data out of the sample and convert it from
+> >   little endian, so that it decodes on strict-alignment and big-endian
+> >   hosts.
+> > - Patches 1 and 2: follow the new 28-byte struct alpha_profileme_sample
+> >   from kernel v2.
+> > - Link to v1: https://patch.msgid.link/20261028-perf-alpha-profileme-v1-0-f46c1938d001@gmail.com
+> >
+> > ---
+> > Matt Turner (3):
+> >       perf alpha: Decode ProfileMe raw samples
+> >       perf python: Add alpha-profileme.py
+> >       perf alpha: Add perf mem support
+> >
+> >  tools/arch/alpha/include/uapi/asm/perf_event.h |  31 +++++
+> >  tools/perf/Documentation/perf-mem.txt          |   3 +
+> >  tools/perf/arch/alpha/Build                    |   2 +-
+> >  tools/perf/arch/alpha/util/Build               |   2 +
+> >  tools/perf/arch/alpha/util/mem-events.c        |  17 +++
+> >  tools/perf/arch/alpha/util/mem-events.h        |   7 +
+> >  tools/perf/arch/alpha/util/pmu.c               |  11 ++
+> >  tools/perf/check-headers.sh                    |   1 +
+> >  tools/perf/python/alpha-profileme.py           | 178 +++++++++++++++++++++++++
+> >  tools/perf/util/Build                          |   1 +
+> >  tools/perf/util/alpha-sample-raw.c             | 156 ++++++++++++++++++++++
+> >  tools/perf/util/sample-raw.c                   |   2 +
+> >  tools/perf/util/sample-raw.h                   |   2 +
+> >  13 files changed, 412 insertions(+), 1 deletion(-)
+> > ---
+> > base-commit: 4626d370ae89b8af4d46a45372b269f926ec662d
+> > change-id: 20261028-perf-alpha-profileme-8010299be323
+> >
+> > Best regards,
+> > --
+> > Matt Turner <mattst88@gmail.com>
+> >
+> 
+> My plan is to take this series through the Alpha tree alongside the
+> kernel ProfileMe support. Does that work for the perf maintainers?
+> An Acked-by would be appreciated.
 
-Thanks =E2=80=94 v2 posted as "[PATCH v2] perf parse-events: default data
-breakpoints to any size on RISC-V".  It exports
-default_data_breakpoint_len()
-and switches the data-breakpoint assertions to it; the rw checker now takes
-the expected length, so the explicit /4 cases still assert
-HW_BREAKPOINT_LEN_4.
+Should be ok as it hardly touches the common code.
 
-I ran 'perf test -v 5' on riscv64 with the patched tree: the bp_len
-assertions pass.  The only failure left is the pre-existing "wrong config2"
-in 5.3, which reproduces without my change as well.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Rui
+Ian, does it look ok to you?
 
->=20
->> ---
->>  tools/perf/util/parse-events.c | 23 ++++++++++++++++++++++-
->>  1 file changed, 22 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-even=
-ts.c
->> index f3ba70d4f76b..b72e4b0da8a1 100644
->> --- a/tools/perf/util/parse-events.c
->> +++ b/tools/perf/util/parse-events.c
->> @@ -598,6 +598,27 @@ size_t default_breakpoint_len(void)
->>  #endif
->>  }
->>
->> +/*
->> + * Default length for data breakpoints when the user did not specify on=
-e.
->> + *
->> + * Most architectures treat the length as a byte range that is compared
->> + * against the address of the access, so 4 bytes is a reasonable defaul=
-t
->> + * that matches most accesses.  RISC-V debug triggers (Sdtrig mcontrol6=
-)
->> + * encode the width of the access in the trigger instead, and a trigger
->> + * only fires when the access has exactly that width.  This holds for
->> + * both RV32 and RV64.  With a fixed default, an access of a different
->> + * width silently never matches, so pass 0 on RISC-V, which the kernel
->> + * translates to "match any size".
->> + */
->> +static size_t default_data_breakpoint_len(void)
->> +{
->> +#if defined(__riscv)
->> +       return 0;
->> +#else
->> +       return HW_BREAKPOINT_LEN_4;
->> +#endif
->> +}
->> +
->>  static int
->>  parse_breakpoint_type(const char *type, struct perf_event_attr *attr)
->>  {
->> @@ -658,7 +679,7 @@ int parse_events_add_breakpoint(struct parse_events_=
-state *parse_state,
->>                 if (attr.bp_type =3D=3D HW_BREAKPOINT_X)
->>                         len =3D default_breakpoint_len();
->>                 else
->> -                       len =3D HW_BREAKPOINT_LEN_4;
->> +                       len =3D default_data_breakpoint_len();
->>         }
->>
->>         attr.bp_len =3D len;
->> --
->> 2.52.0
->>
+Thanks,
+Namhyung
+
