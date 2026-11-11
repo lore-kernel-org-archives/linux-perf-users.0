@@ -1,62 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794417665;
-	b=sqzcNxA+aRH74x4blHloCUgeJ89gz8sBpa2KrqXyysGj7VL3+OToNrZZIEcn4p2Qfv6B
-	 kwwkrPsUXOVllOhdzmTZ+e+HLHaZdHWaZn6kFEc9VrBXAaJVY9xRocYvJU2UhIlhiP/wV
-	 nLJU/438UBHWOcZmYhWt6CZd0Fso+vpSfGaMdacXBuVhlTObadhrpMmR6g15TISzcbohu
-	 P3sI017OUjPp2mbc2lft+i187VeSUyXjF/SSYWi9Sru8j6tFXT1PtLYD7cGrLmwLdaHUT
-	 mEavNT+4MfObwVyhg/QS7oMCasXbjnufRcqH3zQbMGvdTT15sbYS8bMGlQbqdqA/71w==
+	t=1794418466;
+	b=qMJdnt4AFzVDLa69kRNwB5ccog/UN1uty89xSQbHTilpQ8Peptk9trzBHScm/LMA3VvX
+	 YGjd1Oz9tNZu4plZFp8B+blPvWChkh4kSuEL7IEkGQKtGFMOaQylS/xmlpWFzo/T66/H8
+	 lAXbegzycbowBiaJhamquuF6yRzwsBPAxtt5ei/hC7r2jhzOn4qcJy1VIoWJj8xAF2crC
+	 n9SW3b0aeTIfXAwoJIQfSNOYy7MPEEMeH+MelC6Ik6rJTjPzO7/lVkeu8synKJZ47BAsY
+	 5RbnqiiKXWMmP+yffHx9OlNuPQW8f11E+zM3yfOfifIt57WSfilrfPL+EllMrPsGvdQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794417665;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=oHVW7jNgTo/7nIb4CmqK42I4MtbBzqJmNU5KyxcTUvE=;
-	b=3m0i2wd7Bjltyz4Gh2z5xLKFd3ZT0ele/QhmUCZGSBGQhX1A/9ocdzYRSk1w2ZUjYsf1
-	 yfkYFp3PNpH5GMeFJ2+XUtIuUD7pFMXN0YRfczWvhiLyoooIi9pR5kQWFfRoQWKihXnMC
-	 9up7VMcWfmF71siLfe+Br0kixTtkeb7wwklAO/I/Zs+QI4uzb2ad0ifwumN7emz+Xr/+O
-	 wzCGjdeqSybUzZUIeWIz1F3pAJuseJmeFZXPdHdylg/BEaNYfCXda3FzUkSX4QPGBXUJM
-	 3spKg0yPsZEXDeuyW6VZyHPtt8GMtdfd3gV+MYwbbr56zimfWlmOJKswuyCAjgTcQVA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794418466;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:From:To:Cc:References:
+	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=uPqiu+ElU4cIICKoPtEjFRF5YoXaI3QeZNsern0wcRA=;
+	b=qjxS3OwGpyzapVCZEl4PPmuz4P4M53dwoO/yixL/pGUkfvI91yYEpF5/AilT5ptWt9Da
+	 8zRAEKZvUFeFeiijmuJFIcCHOVNZy4uiB5z0GiBTwu8DTF90hmDBdmzXtJOb7ntBEFwEY
+	 5B+C1VG9dUKeUR6VhT1Np70FzFc2Nv8QdLKCl+Bv7xfZjx4hgUhdWCKr4e89RPbiNebkw
+	 SK3Al9mn54Lwlr2rT7SL4cjoOGhjhRWlp+/0171O9mT1XwGwGxU9yXcqJr6VCdKs39X05
+	 xCgZpnJhGHuormcHtsdP9Akyq9xgPB8on4ZBblEHXo+Fk6wnrGC+ACofXpirT/1gkwQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=arm.com;
 	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=Z3NEcnpz;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=VmalHv2M;
 	arc=none smtp.remote-ip=217.140.110.172
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2671E606A324
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 17:21:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2671E606A324
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60976606A321
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 17:34:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 60976606A321
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=Z3NEcnpz
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=VmalHv2M
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BDC441576;
-	Wed, 11 Nov 2026 09:21:00 -0800 (PST)
-Received: from raptor (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 87BAC3F632;
-	Wed, 11 Nov 2026 09:21:00 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E4A31576;
+	Wed, 11 Nov 2026 09:34:22 -0800 (PST)
+Received: from [10.2.212.23] (e121345-lin.cambridge.arm.com [10.2.212.23])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC43B3F632;
+	Wed, 11 Nov 2026 09:34:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1794417663; bh=Rf4ebtvltCctbkDc/Gv4WhpuRQ5MW6jqs73z5jo5cb0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z3NEcnpzN+rb8IhiTNoLslEyKdoUWksMEpnQHcWQAB7rr/bq5YHO2aUh9LZBJb9kZ
-	 NVJ4FctJSnEOQvL9bv8EUE5im5n3NvHjBD2tLY/0pcjk8MmodxdQ9Z4LUMN0lfvE87
-	 XlML061p/+aCR23TsCURNUlK6CPGFo+EFvOdFTcc=
-Date: Wed, 11 Nov 2026 17:20:08 +0000
-From: Alexandru Elisei <alexandru.elisei@arm.com>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: maz@kernel.org, oupton@kernel.org, fuad.tabba@linux.dev,
-	joey.gouly@arm.com, seiden@linux.ibm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, will@kernel.org, mark.rutland@arm.com,
-	linux-perf-users@vger.kernel.org, catalin.marinas@arm.com,
-	james.clark@linaro.org
-Subject: Re: [RFC PATCH v7 05/28] perf: arm_spe_pmu: Add PMBIDR_EL1 and
- PMSIDR_EL1 to struct arm_spe_pmu
-Message-ID: <avSjyLhFsYjI7tG_@raptor>
-References: <20260903160623.315525-1-alexandru.elisei@arm.com>
- <20260903160623.315525-6-alexandru.elisei@arm.com>
- <atDmDRSNDllpJtmL@gremlin>
+	t=1794418465; bh=frQdcUhueWWzIbR9Oz8s0QL9CPkNt6BylYNzxsYqnHM=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=VmalHv2MEFAlvYotxBWyNb5nWPMltG0c0GKC+tKy8FxcJmRcihihtvBMUEwHt3Pj5
+	 QSzlax2bALWVO5jYfq0t8ibvDrGUqeqJo7e8wDqY7EJA2QS0+54NesiijJK8a1AdwV
+	 vQYJzqAFypYR0QyYjxn69GYfWDBRsM7rfcnQ4m7g=
+Message-ID: <dee315cb-9218-4da6-913e-8eb946ed2d68@arm.com>
+Date: Wed, 11 Nov 2026 17:34:23 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -66,139 +53,62 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <atDmDRSNDllpJtmL@gremlin>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf: Process subdirectory Makefiles unconditionally
+From: Robin Murphy <robin.murphy@arm.com>
+To: will@kernel.org
+Cc: mark.rutland@arm.com, linux-perf-users@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <4b2e518499270b2a6cab3e04a1123458d82d2759.1793990977.git.robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <4b2e518499270b2a6cab3e04a1123458d82d2759.1793990977.git.robin.murphy@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 06/11/2026 6:49 pm, Robin Murphy wrote:
+> Our subdirectories here are purely for file-level organisation rather
+> than any particular build structure, and everything in the Makefiles
+> is already conditional on the appropriate config options. Plus they're
+> not exactly big and complex, so for simplicity let's just drop the
+> top-level conditions.
+> 
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> ---
+>   drivers/perf/Makefile | 4 +---
+>   1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/perf/Makefile b/drivers/perf/Makefile
+> index eb8a022dad9a..8c3146c604ce 100644
+> --- a/drivers/perf/Makefile
+> +++ b/drivers/perf/Makefile
+> @@ -1,4 +1,5 @@
+>   # SPDX-License-Identifier: GPL-2.0
+> +obj-y += amlogic/ arm_cspmu/ hisilicon/
+>   obj-$(CONFIG_ARM_CCI_PMU) += arm-cci.o
+>   obj-$(CONFIG_ARM_CCN) += arm-ccn.o
+>   obj-$(CONFIG_ARM_CMN) += arm-cmn.o
+> @@ -14,7 +15,6 @@ obj-$(CONFIG_ARM_SMMU_V3_PMU) += arm_smmuv3_pmu.o
+>   obj-$(CONFIG_FSL_IMX8_DDR_PMU) += fsl_imx8_ddr_perf.o
+>   obj-$(CONFIG_FSL_IMX9_DDR_PMU) += fsl_imx9_ddr_perf.o
+>   obj-$(CONFIG_FUJITSU_UNCORE_PMU) += fujitsu_uncore_pmu.o
+> -obj-$(CONFIG_HISI_PMU) += hisilicon/
 
-On Thu, Oct 15, 2026 at 04:12:27PM +0100, Lorenzo Stoakes (ARM) wrote:
-> I think probably some kind of commit message would be good even for a
-> trivial change :)
+Ha, in fact this might technically fix a bug already, since Sashiko's 
+hilarious internal monologue inadvertently highlights that HNS3_PMU can 
+be selected without HISI_PMU, but currently wouldn't be built if so.
 
-Of course, I'll add something here.
+Robin.
 
-> 
-> On Thu, Sep 03, 2026 at 05:06:00PM +0100, Alexandru Elisei wrote:
-> > Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
-> > ---
-> >  drivers/perf/arm_spe_pmu.c       | 3 +++
-> >  include/linux/perf/arm_spe_pmu.h | 2 ++
-> >  2 files changed, 5 insertions(+)
-> >
-> > diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> > index 79c571a649d5..42ba0924bd02 100644
-> > --- a/drivers/perf/arm_spe_pmu.c
-> > +++ b/drivers/perf/arm_spe_pmu.c
-> > @@ -1095,6 +1095,7 @@ static void __arm_spe_pmu_dev_probe(void *info)
-> >  			"profiling buffer owned by higher exception level\n");
-> >  		return;
-> >  	}
-> > +	spe_pmu->pmbidr_el1 = reg;
-> 
-> This doesn't seem to be used anywhere in the series?
+>   obj-$(CONFIG_QCOM_L2_PMU)	+= qcom_l2_pmu.o
+>   obj-$(CONFIG_QCOM_L3_PMU) += qcom_l3_pmu.o
+>   obj-$(CONFIG_RISCV_PMU) += riscv_pmu.o
+> @@ -32,8 +32,6 @@ obj-$(CONFIG_MARVELL_PEM_PMU) += marvell_pem_pmu.o
+>   obj-$(CONFIG_APPLE_M1_CPU_PMU) += apple_m1_cpu_pmu.o
+>   obj-$(CONFIG_ALIBABA_UNCORE_DRW_PMU) += alibaba_uncore_drw_pmu.o
+>   obj-$(CONFIG_DWC_PCIE_PMU) += dwc_pcie_pmu.o
+> -obj-$(CONFIG_ARM_CORESIGHT_PMU_ARCH_SYSTEM_PMU) += arm_cspmu/
+> -obj-$(CONFIG_MESON_DDR_PMU) += amlogic/
+>   obj-$(CONFIG_CXL_PMU) += cxl_pmu.o
+>   obj-$(CONFIG_NVIDIA_TEGRA410_CMEM_LATENCY_PMU) += nvidia_t410_cmem_latency_pmu.o
+>   obj-$(CONFIG_NVIDIA_TEGRA410_C2C_PMU) += nvidia_t410_c2c_pmu.o
 
-Indeed, that's a leftover from the previous iterations, will remove.
-
-> 
-> >
-> >  	/* Minimum alignment. If it's out-of-range, then fail the probe */
-> >  	fld = FIELD_GET(PMBIDR_EL1_ALIGN, reg);
-> > @@ -1107,6 +1108,8 @@ static void __arm_spe_pmu_dev_probe(void *info)
-> >
-> >  	/* It's now safe to read PMSIDR and figure out what we've got */
-> >  	reg = read_sysreg_s(SYS_PMSIDR_EL1);
-> > +	spe_pmu->pmsidr_el1 = reg;
-> > +
-> >  	if (FIELD_GET(PMSIDR_EL1_FE, reg))
-> >  		spe_pmu->features |= SPE_PMU_FEAT_FILT_EVT;
-> >
-> > diff --git a/include/linux/perf/arm_spe_pmu.h b/include/linux/perf/arm_spe_pmu.h
-> > index af86fd184050..97b14e236fcd 100644
-> > --- a/include/linux/perf/arm_spe_pmu.h
-> > +++ b/include/linux/perf/arm_spe_pmu.h
-> > @@ -21,6 +21,8 @@ struct arm_spe_pmu {
-> >  	cpumask_t				supported_cpus;
-> >  	struct hlist_node			hotplug_node;
-> >
-> > +	u64					pmbidr_el1;
-> 
-> Equally, this doesn't seem to be used anywhere in the series, maybe drop?
-
-Fixed.
-
-> 
-> > +	u64					pmsidr_el1;
-> 
-> This field is used in kvm_spe_has_feat_spe_fds() and
-> kvm_spe_has_feat_spe_fne():
-> 
-> bool kvm_spe_has_feat_spe_fds(struct kvm *kvm)
-> {
-> 	...
-> 	return kvm_has_feat(kvm, ID_AA64DFR0_EL1, PMSVer, V1P4) &&
-> 	       FIELD_GET(PMSIDR_EL1_FDS, spe_pmu->pmsidr_el1);
-> }
-> 
-> bool kvm_spe_has_feat_spe_fne(struct kvm *kvm)
-> {
-> 	...
-> 	return kvm_has_feat(kvm, ID_AA64DFR0_EL1, PMSVer, V1P2) &&
-> 	       FIELD_GET(PMSIDR_EL1_FnE, spe_pmu->pmsidr_el1);
-> }
-> 
-> So checking for FDS and FnE, but these are available as feature flags as
-> __arm_spe_pmu_dev_probe() gets these:
-> 
-> static void __arm_spe_pmu_dev_probe(void *info)
-> {
-> 	...
-> 	if (FIELD_GET(PMSIDR_EL1_FnE, reg))
-> 		spe_pmu->features |= SPE_PMU_FEAT_INV_FILT_EVT;
-> 	...
-> 	if (FIELD_GET(PMSIDR_EL1_FDS, reg))
-> 		spe_pmu->features |= SPE_PMU_FEAT_FDS;
-> 	...
-> }
-> 
-> And then kvm_spe_has_feat_spe_fds() and kvm_spe_has_feat_spe_fne() can be:
-> 
-> bool kvm_spe_has_feat_spe_fds(struct kvm *kvm)
-> {
-> 	...
-> 	return kvm_has_feat(kvm, ID_AA64DFR0_EL1, PMSVer, V1P4) &&
-> 	       (spe_pmu->features & SPE_PMU_FEAT_FDS);
-> }
-> 
-> bool kvm_spe_has_feat_spe_fne(struct kvm *kvm)
-> {
-> 	...
-> 	return kvm_has_feat(kvm, ID_AA64DFR0_EL1, PMSVer, V1P2) &&
-> 	       (spe_pmu->features & SPE_PMU_FEAT_INV_FILT_EVT);
-> }
-> 
-> Right?
-
-In this use case they are functionally the same, yes, but conceptually, they are
-not the same thing. spe_pmu->features advertises the features that the SPE
-*driver* supports, PMSIDR_EL1 advertises the features that the *hardware*
-implements. The two are not always equal.  For example, KVM added handling for
-the PMSNEVFR_EL1 register (added by FEAT_SPE_FnE), a few years before the SPE
-driver supported FEAT_SPE_FnE.
-
-I can see KVM, in the future, having to virtualize hardware features not
-supported by the host driver yet, so unless you have a strong objection, I would
-rather keep the use of the architectural register instead of relying on the
-driver.
-
-> 
-> So it seems you could drop this patch from the series in general? Is there
-> another reason to get these fields?
-> 
-> Also - there seems to be a divergence in the naming there between FnE and
-> INV_FILT_EVT, is that intentional?
-
-I think that's a question for the person who added FEAT_PMU_FEAT_INV_FILT_EVT?
-
-Thanks,
-Alex
