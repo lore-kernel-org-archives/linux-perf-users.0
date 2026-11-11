@@ -1,59 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1794424176;
-	b=Le+N8h4DXpXvd/bycEakw7qGgIyQIXYIVSSs4xHpdWiGEShdFhBHho1EOhoHgTI1ynKB
-	 eb4ea+RUccojBEiOAGKaIT8lkcZkBcul1V4B2DhC1scZ3usivoDYMtcfw9296q65wZvVO
-	 vWrr+Zyl/92VKUY5p5qG5hiyldA1qF+c73A+XdYFwXh8BgB8JD71MlsAAbMZDsXgv5JKu
-	 8YmSDCyKvCU4GwBD2NohvxUgwPcy2mqr30Fx6Y8dPioqNmeNyg+mm8WDmJPYT/QgZ1djt
-	 2IsSVWB4d3YEdo+GPjW5HlzU8YO5G0cST2mwhqUyDrj0N8mp21X3yKDYtKfovBm+/TA==
+	b=hpB0nBGHVrjRM8pl/UtU+/FCWDZhtE7BUBuHgviInFqhxkTctO7oNCRODBqVXuP3YN3b
+	 MDWmZ3Saqkid8eWzLKcwIlQoLLzPuMQuDQvsuvRaLKcYER23076ylAf8Gzl4n6l7X82hI
+	 0BJzkKisKVjhRN6KTRwoyWeVgfCggx8wQqFfaDuXlgqC9u/uQvOHlL/N/bamsZNuPYnbV
+	 61+5J4il42aNm/kTWMDgidxC1+L7UvyBiLzbyaORaoNfu/OMy19lYciyXWQFYU0nphzVz
+	 KXdAs8AMiUfyPo0d67+vBjEjImTXVOh9s/q+IRdmDZZIc7UGfHBe2dgCgHWnVLiGakw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794424176;
 	h=Received:DKIM-Signature:From:To:Cc:In-Reply-To:References:Subject:
 	 Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 X-Mailer;
-	bh=n8g69Ffy8X8/MidEKWQhACh6qmyitgBHvkPD7FRYFPs=;
-	b=WumfFkS/5GKLmZ0fXYluv8O5WiD946b+6l7JwpOinrCdg/RdswI7oIJNaRpG43EhbQ4r
-	 z/QxiS/40eHihJxOPzyQdhXWsosYRq91Ezn+QzsLZ74bdVjdAfl16QSHEuZKErHh628ZO
-	 LyPRelp/mD4wNEr9ARBzielln5+ZQmzjWdElefJEJbgxW7NsbHZMNuFugYJsluLNhaaIF
-	 7MorxRbtmAKajISb6TrGAkm7ZNdZdU8jHAxoAT3ZBQGK32mvYuA1IJIERlXJTGs9ZIQGy
-	 NGNvJTU4LFaje5ZyhjjeCbb0VFDqr6Zoqirfrs5LFzwkhrbwAvZDIIffUUUN5pSNp8g==
+	bh=GjGQbeEWEMac+4rVX6cAmri8jzhw4jbYojbGu9dN4QE=;
+	b=oYvHMg78iP3KWDOGoB31E+FZoENXPVKIqYkmLtTiqbysAJsHuW5GY8gqzH0CCAjkyHdC
+	 W/KdMj4bFp1jI4b3/sr3PLEGAunBNW7E15nTCx41BrWuHDfr1h14IA1nv6qGwf6KsRg7p
+	 sVPmLuuUp98Sz3yJmSddWL3pKZu61ul30rJvzNXAvvgyQPRUGgiW+Sh23eUDPROGwpEjG
+	 YFSCX+V+XudvbfXT21tPNVtavNxoAN3sRuPHxm+k9V0e5mk3AjUWTDv8jnlX3B0RTcQt8
+	 KsQjTx+08J59OeX/T1EMifYfJJ/jiLVw2c23aZ8ETf4WnaeZQn8oQlq5IfhFIgyVqFw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aBRw9e2T;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dbXMqyZJ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3299D60A2604;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930C6606A331;
 	Wed, 11 Nov 2026 19:09:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aBRw9e2T
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C15021F00ACC;
-	Wed, 11 Nov 2026 19:09:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dbXMqyZJ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BFBF1F00A0B;
+	Wed, 11 Nov 2026 19:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1794424176;
-	bh=n8g69Ffy8X8/MidEKWQhACh6qmyitgBHvkPD7FRYFPs=;
+	bh=GjGQbeEWEMac+4rVX6cAmri8jzhw4jbYojbGu9dN4QE=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=aBRw9e2TqfUocSssJ6RZBOTqXpmgachx3SCxgtoXnTNLsA7YxaJKaQmAYnNzUTbyn
-	 7dytq2/s9GEEWbgqIiGd8Zn5BsHb5Wd4n/4scnqXTmmxVPZmnoq+zEiSyfXQjQrOdb
-	 6YrWdg0gVXJyl2mBqnpcW0hHodlrtNGhAjAbhFXRmmGLbo7px+VjZszKLSMMhZaRlO
-	 TGyRtDKB+C5Al+MUagVIClaod10D971df2L0HHZdFcCGHXr/U6mVzkklW1JN0293Dh
-	 2Ecr5pPXG75PSSiiTem+vRDpUOYUlNDjUzNZsaFgqASRyl4/ARCOA3Dx2bvZboV92s
-	 Q0pZESNlIA6lA==
+	b=dbXMqyZJHwRIckzPmNUEliVS14wz8B0LmvLMCOEYCeNUcWjcAaeUow9L/lnWev5K7
+	 rkQUscc9WwYLfIcjNvA0CVpjSzqqYlthi6NCgeKBwyUL4N0S20JJ/eRqXRFC7pSYDB
+	 XfZUIhs5AmQ3VAXjFIAmiTVUEmZLy8txK/XJHts4UsT0ovO4iIzHgJeJahWZiRNB9h
+	 z5JrRKmWqrbOkJrJ1hOM6ZttWa8ASR8748/hFpczXWlWq+crx3Y1cQXedecqRWSXVy
+	 m4Aas9dKpX4CQMf1prDMjwH+dJ104IQ0d8DBiqE+NVZ51pTPBAfj27F4Z4+cdsqQsF
+	 FUOkMXoxfoaew==
 From: Namhyung Kim <namhyung@kernel.org>
 To: linux-perf-users@vger.kernel.org, 
  Arnaldo Carvalho de Melo <acme@kernel.org>, 
  TAKANO Mitsuhiro <takano32@gmail.com>
-Cc: Ian Rogers <irogers@google.com>, John Garry <john.garry@linux.dev>, 
- James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- Ilkka Koskinen <ilkka@os.amperecomputing.com>
-In-Reply-To: <20261107051730.1880691-1-takano32@gmail.com>
-References: <20261107051730.1880691-1-takano32@gmail.com>
-Subject: Re: [PATCH] perf vendor events arm64: AmpereOne/AmpereOneX: Fix
- typos
-Message-Id: <179442417564.676192.15713798103748970108.b4-ty@b4>
-Date: Wed, 11 Nov 2026 11:09:35 -0800
+Cc: Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org, 
+ Sandipan Das <sandipan.das@amd.com>, Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <20261108184600.3810059-1-takano32@gmail.com>
+References: <20261108184600.3810059-1-takano32@gmail.com>
+Subject: Re: [PATCH] perf vendor events amd: Fix a misspelled JSON key
+Message-Id: <179442417609.676192.2090618697803320246.b4-ty@b4>
+Date: Wed, 11 Nov 2026 11:09:36 -0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -67,13 +64,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Sat, 07 Nov 2026 05:17:30 +0000, TAKANO Mitsuhiro wrote:
-> Three distinct words are misspelled in eight description fields in the
-> AmpereOne and AmpereOneX PMU tables: "Preditable" in BPU_BTB_UPDATE
-> (AmpereOneX only), "satisified" in LD_FROM_ST_FWD, and "misprediciton"
-> in the branch_mispredict metric.  jevents.py copies the strings into the
-> generated tables, so perf list prints them and a grep for the correct
-> spelling misses the entries.
+On Sun, 08 Nov 2026 18:46:00 +0000, TAKANO Mitsuhiro wrote:
+> ls_inef_sw_pref.all is listed without a description on Zen 4, Zen 5 and
+> Zen 6.  Its three JSON entries spell BriefDescription as
+> "BriefDescript6ion", and jevents.py reads the keys it knows by name, so
+> the text is dropped and the generated table ends up with an empty
+> description field.
+> 
+> Spell the key correctly.  Only the key changes; the text, event names,
+> codes, umasks and expressions are untouched.
 > 
 > [...]
 
