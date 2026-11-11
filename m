@@ -1,82 +1,82 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.46
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.50
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794403590;
-	b=4N7LotpLFTFX4LmSM4qCacIXvntHWPjZ9HOwNrQethOUvud5j6GNAzzUF4JyMrbh6ovU
-	 +ggHB0kc/Rk4v3AA4tmdJx9+o1OmkmSJvaO5FGyXlGn7oYT4RfQMbnttae3SKBvMFyva/
-	 /mapb5FFer8GA3CmimV2uwxka9xFjFv9SXc1toywT4/dZ+1P9aKNfGV28wZ93yWBoKvys
-	 j76mwdStcSq1C6JCrXhJgATRIXH6bWJuW0/2c9PDq4KBqZ9MLchCLBuxuSDM5UqqtRLK1
-	 hybgpquWoDneqaHhVQkk31lFvBXvxRzmhsHiz/cMP5RenGZMOn1Yl4VpK6XBAUbBAPQ==
+	t=1794403593;
+	b=Sht27BTk+QMta/DKIBWYJBFj2B3Pk28WiZgwdxXNeIsEh/RfP1TUKk8O9JGbWjvL8Yvb
+	 ZwzhYQ7NetMypOyYjzyym3ybJ0OV0PW05SEc7ddNJ5fn+L2ST4hiTh3pfcg4qQolG538f
+	 J3SADvxPt0U8g1JCdntWrBzESRhSX4VmDspFHYTs1kzCWipTj89PF8i9IqRDBqLgV/4Yo
+	 b9k0EAN3kLHHC2uFGVu2dlgskN0qLJbrl/aMT2aFXUuxh8QCYdkShihdH9VG6qEmu0A5x
+	 gw0O0yNfTFBmGRbMlaHn/UDApvHRIldRgKFe6Ubmgtgb0LV7gRi8q7c3wkxxJICPrbw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794403590;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794403593;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=88rAM2oHhFqNhLiz8qe8zFsCZuZ5oGk0TJbNGquyza4=;
-	b=cB9coWvQJeC3aBJ2expmoQOJ8chsC+50hJAhdmihu2PnXAoJr3VzpswDNnN1h22fI0zE
-	 SkR6VF4WJ00Uggpv3p5tmdyfesRR1VNhj+ExfhVhYTewfSx4nHxHgXDhD6qDrIQGLQ2mq
-	 kSp3E1b6/fyXyjlaL2UTeEoN4v+ZxQGxNK0SBoQAEs99Bn5w8mPxYyo4DYdg9qCsZwpx8
-	 J4CBTTkcovrNbBqoU+OJGeU58b7tY9Se4fGpSorVdGLM5+5+sopYd7rnGJjY8dWml6MaA
-	 +miWUZOsFf7UoT5fBTcyNKZBWvcrBEWh153VaamEfChlPfFuJ/GYLoQ2nkVdoLPe1mw==
+	bh=Qlh/NbB/SLsweGl68rOzqRC0K8ERB7oVP/kP9StNUEc=;
+	b=M0BBlGagALUnTK1hZ+B0n28ZtTY8ZgyzXoexGivsGDi3zaJGvTRJ+3CCXQJLaxrBviQR
+	 9fivd2teUgZv6nS0OESopG5aSpnPa9/yDSElGJOOCl8yuP4CBGpx/ZMqHKR3gzggErto+
+	 6/rA13ivj2FRSv89hQEHXYHMGMRc/RMPH4/wbGCCT/2laFz1ieVGvKHvNWb5H3ZC4fsK8
+	 L83zlrgu3yO5ZYimeGew22QosaiGEJxfsWpPClybA+qIdnaAPG/C76Dt2610BXZjbxe+X
+	 qOW03iyXkDME86gj2Kt8GAvE15eANFs5UiSZ7oCadBlM0fAU7m3uInVWPavqIC9FXoQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=mEeLGdIL;
-	arc=none smtp.remote-ip=74.125.82.46
-Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=kKDlNKpE;
+	arc=none smtp.remote-ip=74.125.82.50
+Received: from mail-dl1-f50.google.com (mail-dl1-f50.google.com [74.125.82.50])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6815B606A326
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 13:26:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6815B606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09BC606A335
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 13:26:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C09BC606A335
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=mEeLGdIL
-Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-1a8cc11ac42so3098089c88.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 05:26:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=kKDlNKpE
+Received: by mail-dl1-f50.google.com with SMTP id a92af1059eb24-14394530ec6so4098275c88.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 05:26:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794403589; x=1795008389; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1794403592; x=1795008392; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=88rAM2oHhFqNhLiz8qe8zFsCZuZ5oGk0TJbNGquyza4=;
-        b=mEeLGdILxddied5+J5ytDjMBs8y/z9lOnZA92CI5+T5OGiiKebFbIyyn/YflaHYzhy
-         loWwkNlUG2Dq9A5lFvCmZDsFKmAzTaEW98Ibzg5ZZMXpRarIj7JPYzW6XoFSe+5lJrzg
-         7ULt5y+KeoFQ83fNf1h1IxX9H7W4yNXa1Clg4KI8i/8RMp5Z9/YoacwDqYd0rlMkTk3V
-         4amUgodqLEUZVYv6Ej6/qUWAdXR4aAH/2In4aFQarkv/ThxmovVDsUlgmtpMldkp0NwI
-         ySJLfF6gd9EbGhEFQ0aAzmkqaAfY54hHTCJ1dPQb8E0C26VEiOmSFmIfthQ/3COuHOXw
-         FPVA==
+        bh=Qlh/NbB/SLsweGl68rOzqRC0K8ERB7oVP/kP9StNUEc=;
+        b=kKDlNKpEk5hepD4/OoeWFvCrgRH/Eehfz1ynsUJTGkuVEDk6eoApXsu61ALcO7HEFV
+         F/52KGyH6teDW+H0+4u0WW093UgQcPK37VmkbIZuHsai1fF/rR9w7J6dsZ8n77YbYz9K
+         r4k5SpvWqWB3LaSMQpJ7P1eCKk1uXRk4GSnLIVjFdCALISDEDxM80U2/K+zCwUDkW1ff
+         q4nhU8mVa7h47H3OV2V+qjhhpnikYSb9VqyQ20SwKGMdGZKPjihmivehCpBol075HlZt
+         L/Z23olm7Jw9nmUZBfEea5CJ9Gk+4hCw/jCEVyrh5S4J2gDK0hOIYcw4EDNBNyKuEZ5y
+         sdLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794403589; x=1795008389;
+        d=1e100.net; s=20260707; t=1794403592; x=1795008392;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=88rAM2oHhFqNhLiz8qe8zFsCZuZ5oGk0TJbNGquyza4=;
-        b=EFBXZg64VpWeqx6AuvMBWEoYm/OevLwDOm210D+zxwGPlEzhSu4kn4Xv2elzayXx+w
-         QZvaNzAG5NNwr18aVtltP42PdMGJaI4Qwju/irbgBZ87uktet135q255/MtIvN0hZc6o
-         WFWDnK8RohCDkUw9TWHGMDjJ78Q+veyY6awA6jI/TveaAsX+sHUJEBvFfXAMgiOiT03f
-         YCCKxusww/7BF9t9FvUKh1qBuPJhtNQRS3Ugui1zNv0tJ4WS0OPOq470+LGt285m64HW
-         K3JXdId0hL9vs/KJx9nIP1B20vmk7UNStBAL99SZSqOQDUh14iR31vvAHdz9L6rcLjy3
-         s5rQ==
-X-Gm-Message-State: APuU4Z/xMolFwJTfNckNyF+w+RvgG4v6+Pz+UphsLCIdHnWjmV2ECQxx
-	nPRjpEbGJ+OIk/V3dJllv+SbKHZsHDz5UBan2Z4bJ4Y4xzxbRGj3xiLrsALtLgqs
-X-Gm-Gg: AYBFou2f3FiVJ1Fhv58T7S36gjrvF4cYPOr/zTvU9nPK9s3roWqkvTP2cUpwwXtAB64
-	0gGs49DcbinGEJIu1r2NbM/468NKum4Av6+U9I1qsrS8dU2SOUeJguSSx0Al2mTEOMzia0b9wzZ
-	pAvzIc0OGMy7bScPMVW20u0CHF3QKtXWWbeL/qQVFAClYB/JgLg1xkceA2JJzadmZD7LTRKbe2+
-	PSdjMzU1YehLx1PDjCgKA9Ov9M4OQfD+RG3/K/1CnzDZsbakPJ88oUttkAEp3lSRbUQ07+qNYkI
-	5X8CGt44v4mvTtwVK+G46aZsSpKBT1OyfsH8fRr9+x5CfOGeufV4DdTL9aPWE4biie3sP6kyrZJ
-	rz8gfkeLgiPRvNgq96UtVVOQvs6k7MYl5IryNv/zKCAbnt3rlxsYvWXCdBe/6b35k/zAUGHO88x
-	D0tLcb32oBPbHlGve8tn37ZQqV0DJojbEg28O1VLxP4se/sttyhOzICvM1Uu0jUADOixVbUoOq1
-	IX0bD+XbvKCs7vB9JINq7FanUPVxlVyhIDt9hBZ74KiStZSPNSPYUxIF8bc3OL2q4L1UAttIFZ/
-	Rc/2g5hOGVgV1PLNIzKO
-X-Received: by 2002:a05:7022:2510:b0:1b2:6844:25c9 with SMTP id a92af1059eb24-1b3c024a16amr3072928c88.3.1794403589243;
-        Wed, 11 Nov 2026 05:26:29 -0800 (PST)
+        bh=Qlh/NbB/SLsweGl68rOzqRC0K8ERB7oVP/kP9StNUEc=;
+        b=1PVmUbEDUztTK0t8EDPxM5lNEffuRLso/Oi6nMTGQAsaGXaDa8zUjtw0IQU91PXn2N
+         zUMrb3t3jWtQ5UPulRqUPMw9EacCLb8WPlQOSPo83f5o1hI4dX513dZ03/ogU43CqGRm
+         a3mcce7QulVb5P8KzFE4ztQqkLebUQWUI7lP9EtT1FR2GDMuIQcsbTFPHcQtJkcf46nu
+         +lGaJzgEKa2jNWDZLZt2gvXSrI4svOkpkMa8p/K2EvplJ5FjL4ywCo/zMRMc2C8U81DC
+         IZYHye549JJVEv0T9TEM9VYuz+tRSZ0SXkcKv3gZ+qwiolYy+k9OjM81TiU/3fAaPbpA
+         hD5A==
+X-Gm-Message-State: APuU4Z/3S5viCHBulTUX5w/Oob9xd361c2GJwIfywHqbiu+fOfNzz1uL
+	iAXfJW1ri0/6/o3OHlIELmaxoj56wBDe/kTIJeLvGOoV5JJiGxw6SsGeITCIe5j9
+X-Gm-Gg: AYBFou0/7RMmqmmGMoJ8S8Gg/K1389GJ1wo+3PpjLkvhqaffh/6qqlg3PN83Uk4t/Sp
+	Yv/8a+EfiagL3FEvMVCaOEuiGqSBfTYhseJedrzHkT9i1LdZMweL98PCJnTES46WJo6i6BB5BTY
+	tivoex/o1a9PFtM2hrRRUoOa0tskC4qSBWtbw9bs9DWWEOftX6IU/KQciCR5nLY5mTSfUeGK9oh
+	912uc1PU4d5YGj1Yka5CAl8a+hjahp3sSrd3mN5lYIv9TzxtKb93XJCemiSXAbQYvZ1hWoazDgK
+	jxKLWvNbCoeabZ+sa8GdnLFSihcEaFlMWixIC4UTpCcoH9M5K+VVINfSTihAuzFoW5lop1PQTYi
+	A7Vxm2nj8LG4TcKWPSd+BktSA+HdCOCH68QgAyFyKPRr8/CdK2KkimKxdFxWkHihvNddJEhajSY
+	dhLzQi9DDmkoHHwy6zG9HuubzIFXThgQE5amHmylQa9Xopc61LIVKJO4vMfyVeZUd6DL4JyrsdB
+	dpWJSwXnf2KfpiRE//Hljhho01HGptXwPic/M7oVm9YSvrAy0dE92mecaP3kpSS4K9650XZPKQH
+	+Sas1x9eyC48Rquah2xI
+X-Received: by 2002:a05:7022:f10a:b0:166:f097:6f12 with SMTP id a92af1059eb24-1b3c0337115mr1787921c88.15.1794403591550;
+        Wed, 11 Nov 2026 05:26:31 -0800 (PST)
 Received: from a1-free ([161.33.196.121])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b3b5b2fc09sm33053502c88.10.2026.11.11.05.26.25
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b3b5b2fc09sm33053502c88.10.2026.11.11.05.26.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Nov 2026 05:26:26 -0800 (PST)
+        Wed, 11 Nov 2026 05:26:30 -0800 (PST)
 From: TAKANO Mitsuhiro <takano32@gmail.com>
 To: linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -86,12 +86,13 @@ Cc: Ian Rogers <irogers@google.com>,
 	John Garry <john.garry@linux.dev>,
 	linux-kernel@vger.kernel.org,
 	TAKANO Mitsuhiro <takano32@gmail.com>
-Subject: [PATCH v5 0/3] perf jevents: Check the JSON keys a table may carry
-Date: Wed, 11 Nov 2026 13:26:19 +0000
-Message-ID: <20261111132622.2349165-1-takano32@gmail.com>
+Subject: [PATCH v5 1/3] perf jevents: Name the metric when a MetricExpr is missing
+Date: Wed, 11 Nov 2026 13:26:20 +0000
+Message-ID: <20261111132622.2349165-2-takano32@gmail.com>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261111041045.2031464-1-takano32@gmail.com>
+In-Reply-To: <20261111132622.2349165-1-takano32@gmail.com>
 References: <20261111041045.2031464-1-takano32@gmail.com>
+ <20261111132622.2349165-1-takano32@gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -103,58 +104,169 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-jevents.py takes the fields it wants out of each JSON object by name and
-ignores the rest, so a key spelled differently is dropped without a word
-and the object is built without whatever that field held.  Two of those
-are in the tree: "PublicDescrition" in 16 entries of an Arm table, where
-the lost long description repeated the brief one and so nothing a user
-saw changed, and "BriefDescript6ion" in one entry each of three AMD
-tables, where the event is generated with no text at all.
+jevents.py reads each field it wants out of a JSON object by name, so a
+MetricExpr key that is missing or spelled another way leaves the object
+with a MetricName and no expression. Two different failures followed,
+neither of which named the metric: the rewrite in _read_json_events_impl()
+raised AttributeError on the None, and a metric that got that far reached
+print_pending_metrics(), whose assert fired on it.
 
-Patch 2 makes the model argument optional when the tables are generated by
-hand, and patch 1 names the metric that has a name and no MetricExpr
-instead of failing on the file.  Patch 3 says which keys a table may carry
-and checks the tree against that, instead of reporting the keys a run of
-jevents.py did not read.
+Raise in the reader instead, naming the metric, before either of them can
+happen. The check is not inside the '-' test that decides whether a metric
+takes part in the rewrite: a name with a dash in it can lose its
+expression the same way.
 
-v5 rewrites patch 3 rather than revising it.  The review asked for
-something strict and simple instead of a near-miss heuristic, so the
-similarity cut-off, the tracking of which keys were read and the wrapped
-objects are gone: the schema is a list of 51 names, 47 of which this
-file reads, and a key outside it is reported with the object that
-carries it.  A JSON Schema would say the same thing, but perf's build
-would then require jsonschema, which it does not use today and which is
-not in every builder's python; the list holds the same names either way,
-and a vendor that adds a field adds one line here.
+Two smaller changes on the same path:
 
-Patches 1 and 2 are unchanged.  The check is still something a maintainer
-runs - make check-jevents, with JEVENTS_CHECK_ARCH to look at one
-architecture - rather than a step of the build, so the generated tables are
-byte identical.  An architecture that is not there, or named as a path, is
-an error rather than a silent pass, an object where a list belongs is
-reported, the name of a metricgroup is not treated as a key, and a small
-perf test runs those cases.
+- An architecture standard table that does not parse now carries the
+   reason in its message ("Failure processing '<file>' in '<dir>':
+   <cause>").  The traceback used to end with the file name alone, and
+   only the chained exception said why.
 
-The two misspellings the check reports in the tree today were posted
-separately in November.
+- A table that does not parse is reported on stderr with a "jevents:
+   error:" prefix instead of on stdout, where it was mixed with the
+   generated output.
 
-Link: https://lore.kernel.org/linux-perf-users/20261108183846.3804875-1-takano32@gmail.com/
-Link: https://lore.kernel.org/linux-perf-users/20261108184600.3810059-1-takano32@gmail.com/
+And the output files are opened after every table has been read, and not
+by argparse, so a build that fails while reading leaves a file the caller
+named as it was instead of truncating it to the header.  "Every table"
+includes metricgroups.json, whose first pass runs before this point, and
+the string table built from all of them: nothing that parses a file runs
+after the output is opened.
 
-TAKANO Mitsuhiro (3):
-  perf jevents: Name the metric when a MetricExpr is missing
-  perf jevents: Make the model argument optional
-  perf jevents: Check the JSON keys a table may carry
+Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
+---
+v5: patch 3 says which keys a table may carry and checks the tree
+    against that list, replacing the near-miss report that v4 had.
+    The list is 51 names, 47 of which jevents.py reads; an architecture
+    that is not there or is named as a path is an error (status 2)
+    instead of a silent pass, and an object written without the list
+    brackets is reported.  The name of a metricgroup is not treated as
+    a key.  jsonschema is not used because perf's build would then
+    require it, and the list holds the same names a schema would.
+    The target is check-jevents, next to check-headers, and takes
+    JEVENTS_CHECK_ARCH; a shell test covers a reported key, a clean
+    tree and a missing architecture.
 
- tools/perf/Makefile                     |  13 +-
- tools/perf/Makefile.perf                |   1 +
- tools/perf/pmu-events/jevents.py        | 228 ++++++++++++++++++++----
- tools/perf/tests/shell/jevents_check.sh |  62 +++++++
- 4 files changed, 272 insertions(+), 32 deletions(-)
- create mode 100755 tools/perf/tests/shell/jevents_check.sh
+ tools/perf/pmu-events/jevents.py | 78 +++++++++++++++++++++-----------
+ 1 file changed, 51 insertions(+), 27 deletions(-)
 
-
-base-commit: 7475ea8b58616b33c04afb976cf0fbaad9dd63fb
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 080e04b51b8c..61f778dcc1e5 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -460,11 +460,17 @@ def _read_json_events_impl(path: str, topic: str) -> Sequence[JsonEvent]:
+     with open(path, encoding='utf-8') as f:
+       events = json.load(f, object_hook=JsonEvent)
+   except BaseException:
+-    print(f"Exception processing {path}")
++    print(f'jevents: error: Exception processing {path}', file=sys.stderr)
+     raise
+   metrics: list[Tuple[str, str, metric.Expression]] = []
+   for event in events:
+     event.topic = topic
++    if event.metric_name and event.metric_expr is None:
++      # A MetricName without a MetricExpr leaves nothing to put in the
++      # generated tables, whether or not the name has a dash, so the build
++      # must not go on.  Name the metric instead of letting the table printer
++      # assert on the None.
++      raise RuntimeError(f'Metric {event.metric_name!r} has no MetricExpr')
+     if event.metric_name and '-' not in event.metric_name:
+       metrics.append((event.pmu, event.metric_name, event.metric_expr))
+   updates = metric.RewriteMetricsInTermsOfOthers(metrics)
+@@ -493,7 +499,7 @@ def preprocess_arch_std_files(archpath: str) -> None:
+         if event.metric_name:
+           _arch_std_events[event.metric_name.lower()] = event
+     except Exception as e:
+-        raise RuntimeError(f'Failure processing \'{item.name}\' in \'{archpath}\'') from e
++      raise RuntimeError(f'Failure processing \'{item.name}\' in \'{archpath}\': {e}') from e
+ 
+ 
+ def add_events_table_entries(item: os.DirEntry, topic: str) -> None:
+@@ -1490,33 +1496,13 @@ such as "arm/cortex-a34".''',
+       type=dir_path,
+       help='Root of tree containing architecture directories containing json files'
+   )
+-  ap.add_argument(
+-      'output_file', type=argparse.FileType('w', encoding='utf-8'), nargs='?', default=sys.stdout)
+-  ap.add_argument(
+-      'output_string_file', type=argparse.FileType('w', encoding='utf-8'), nargs='?', default=None)
++  ap.add_argument('output_file', nargs='?', default=None,
++                  help='file to write the tables to, default standard output')
++  ap.add_argument('output_string_file', nargs='?', default=None,
++                  help='file to write big_c_string to when it is to be kept '
++                       'apart from the tables')
+   _args = ap.parse_args()
+ 
+-  _args.output_file.write(f"""/* SPDX-License-Identifier: GPL-2.0 */
+-/* THIS FILE WAS AUTOGENERATED BY `jevents.py arch={_args.arch} model={_args.model}` ! */
+-""")
+-  _args.output_file.write("""
+-#include <pmu-events/pmu-events.h>
+-#include "util/header.h"
+-#include "util/pmu.h"
+-#include <string.h>
+-#include <stddef.h>
+-
+-struct compact_pmu_event {
+-\tint offset;
+-};
+-
+-struct pmu_table_entry {
+-\tconst struct compact_pmu_event *entries;
+-\tuint32_t num_entries;
+-\tstruct compact_pmu_event pmu_name;
+-};
+-
+-""")
+   archs = []
+   for item in os.scandir(_args.starting_dir):
+     if not item.is_dir():
+@@ -1553,6 +1539,44 @@ struct pmu_table_entry {
+ 
+   assert _bcs is not None
+   _bcs.compute()
++
++  # Every table has been read by now, so opening the output here cannot truncate
++  # a file the caller named when a table turns out not to parse.
++  if _args.output_file in (None, '-'):
++    _args.output_file = sys.stdout
++  else:
++    try:
++      _args.output_file = open(_args.output_file, 'w', encoding='utf-8')
++    except OSError as e:
++      ap.error(f'argument output_file: {e}')
++  if _args.output_string_file == '-':
++    _args.output_string_file = sys.stdout
++  elif _args.output_string_file is not None:
++    try:
++      _args.output_string_file = open(_args.output_string_file, 'w', encoding='utf-8')
++    except OSError as e:
++      ap.error(f'argument output_string_file: {e}')
++  _args.output_file.write(f"""/* SPDX-License-Identifier: GPL-2.0 */
++/* THIS FILE WAS AUTOGENERATED BY `jevents.py arch={_args.arch} model={_args.model}` ! */
++""")
++  _args.output_file.write("""
++#include <pmu-events/pmu-events.h>
++#include "util/header.h"
++#include "util/pmu.h"
++#include <string.h>
++#include <stddef.h>
++
++struct compact_pmu_event {
++\tint offset;
++};
++
++struct pmu_table_entry {
++\tconst struct compact_pmu_event *entries;
++\tuint32_t num_entries;
++\tstruct compact_pmu_event pmu_name;
++};
++
++""")
+   _args.output_file.write('/* clang-format off */\n')
+   if not _args.output_string_file:
+     _args.output_file.write('static const char *const big_c_string =\n')
 -- 
 2.53.0
 
