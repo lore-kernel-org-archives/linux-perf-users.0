@@ -1,60 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794424175;
-	b=AkQ6Azl3Ze94aFDyF2lmqzIhT59bvX2oTZSPINkIkX8rZFU261aWo4VWIupy+Ah3ewGm
-	 RWAqy9rd0kABkrVY1iiwsH0cVOiskPRm0aq3ZzX96HrnEpXmSkgIu+EJmSBwAHtWYdOtu
-	 gLxmF886rd83vBc/dcw1m8V/jdrUxn//7eSUOoCWsp7dg01LeNrXRd765CKifyAM74HbX
-	 VMuflIWz68YMr05CxALt2scAE8vICWigAKmg5r/ebLJ8j3VxtIJMIoJRP2H0hIPxpuyXK
-	 95MMd/6oPlXnqI04k1WIlcIhSaL8nH+N7ZLqXb3VFDwiqG9ynUUKMnlk0jgQOik0IGA==
+	t=1794424291;
+	b=BfAhHABSEF3ac+6FGaSb+PFGsqq+w+K2H3oK0vvSNT67ErJJeH60prdqHpbWvNgB+WGI
+	 UFEahtNhxThK0j91phLS/ejwfvOIRg0lsZY3JuV0ReOx3nve2G9uLwMyXEpRRw0gZcIpk
+	 k/GeEhHM8zrG53n6Cr/2y3cDWREVa/XLuDoqKLtE+EFFt+17XXEipf2jCgCE0Yn5Vz3bK
+	 HWO0Ar+VAIRbhmY9SN/rr9PlLJtrhg6KjYI9TrmbPixrT0coDqSzoAoZ6OvZann6UBmpv
+	 2pn74jb70tiV3MT2WljlmMhWMHf0tgBmdZUgNIlfouQZUNCZ7ylsvD9UZg/Murjad3A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794424175;
-	h=Received:DKIM-Signature:From:To:In-Reply-To:References:Subject:
-	 Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 X-Mailer;
-	bh=su/OSGH3o3MLwTj+8nkFYFF/21RU8CHFM9EYwvQE5zY=;
-	b=jdwOGeA63d3RMs0U5VJjAVXF4yfyjtu0tMjPsNY/pNp+szhMJxRUYju+oiieHdO+8c6U
-	 y6+NSAZLAF2rg9UBzieBYrdzk3+1cQ/3tMNL6/r5K0isiuinXh7/1zFNbbA+9Hmjfq0cL
-	 5aFqhZdJK6bHUwAfYr9kphbBga4ZWrbcBCWJbvM57stahJ1LLq+KDO5zbM3xDKaSYCqSA
-	 a+upMysxBiac3JrkjjYfLg1WWJE9sBlMLHWskcO3zkSQGiUejhleUE3tS1+kvqWrsHmKY
-	 B8MWqFFLseqL1UnErCtTymSKuIRN7QSKJ75yoETJJnzMWXb1q2qEIxl2g71ZMP3JwHw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794424291;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=VM6arIkzcKqjwV2N/vZ45pdwKW3OU5oCRKlRQgxCvak=;
+	b=HlwxxWWxV9pXoPYmG5EStQpvKSg0ZNW6F3hRrXHomxaCUILwQZymzp/dGEZIpTuFfQff
+	 EUoeYb9qTh2IceoqhtUXZ7U3SU0id/tYAFfV8vL0c3zbwySk2oPY/L/Apu6TJhLTwY+RH
+	 sNbGRZUCAh35+trhF5XtAYB2b8iZk5AKTexa9hLuwlvQ9rnCyDI7r/CsdFoy+qhf/n8G9
+	 8yT+fnfKvAbZiP4g1832vaKdsTV6rGxPNdjj0OmzF9ZbcqGZa3YI8q5c95Wn2rmxheZV+
+	 OH2SbjXNXLC0HgvBGMT7oKXEbH+ZwKb56x49yRxfllpy2fIJsk4I5AF+uxXrZHZhS/g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jPiXsdRi;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NRI8VegV;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04156606A8B1;
-	Wed, 11 Nov 2026 19:09:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E90606A321
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 19:11:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jPiXsdRi
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 413381F00A10;
-	Wed, 11 Nov 2026 19:09:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NRI8VegV
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B83A1F00A05;
+	Wed, 11 Nov 2026 19:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794424174;
-	bh=su/OSGH3o3MLwTj+8nkFYFF/21RU8CHFM9EYwvQE5zY=;
-	h=From:To:In-Reply-To:References:Subject:Date;
-	b=jPiXsdRiA0pPH2dhL8KZOEIMQLhL9tpT6pbGPjHcApmgk7JyLXSKcdWjoqwJJjYGE
-	 bEzRncO3PUuXF05XtvjyT8sN9yfpqui+x9EmLvubdEmIYhO2BC7VB5MWWUmqI/z6s1
-	 7GXE57oPxRv+2gaHVc8XbFQMpibOUhEKWpDeB0DLCGl17BFRVe3dUQc0QoQzVp7ICZ
-	 RdIROTSgv8xYfVPvJcaya9w33oZPauyb5/csh7sgch4IOzk3JnLMvD4fmV/uWDq4Ap
-	 MKkWiuROrKMMG+mMb0uMSST7zZdZzIPWi4mxpTeniyWl1423mNceD8XGA1eGmSZgxC
-	 WekdiB3HVyPzw==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, lirongqing <lirongqing@baidu.com>
-In-Reply-To: <20261105080429.2472-1-lirongqing@baidu.com>
-References: <20261105080429.2472-1-lirongqing@baidu.com>
-Subject: Re: [PATCH] perf iostat: Do not compute interval deltas a second
- time
-Message-Id: <179442417410.676192.4506999525247903583.b4-ty@b4>
-Date: Wed, 11 Nov 2026 11:09:34 -0800
+	s=k20260515; t=1794424291;
+	bh=VM6arIkzcKqjwV2N/vZ45pdwKW3OU5oCRKlRQgxCvak=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=NRI8VegVbTr3ByWd19YIzje/p4K3efUK5g48ZlSNRlKGRbmQjWzsqJMRqnNLyiOQk
+	 CTFhi4gWoey9khUfh8PppmiQaS9bfT7kTHOoZlHuNQErazLrzLV442anJoNp540oKS
+	 jb56vTHABsoSG/OrxDGVCHT/pDXqXwS+GfslP0t3IYRhnvDk6/PMm7cqCw0n8evmP9
+	 H74iirxBis1C0K6oU4/tlrmzLFlBFJ9EAJR8l/LE3Csl0WmjyilAN2/2ge4S+m7761
+	 WiHdZ1ud29sdHNHWOsasRRu5q+fdAndgbnuS4YXexWSbvR3O9pZzaQMOGQoN/B5zP2
+	 dAv2kdmFdMfLA==
+Message-ID: <sashiko-outbox-209537@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v12 03/20] tools headers: Synchronize
+ linux/compiler-context-analysis.h with the kernel sources
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261111174213.3526604-4-irogers@google.com>
+References: <20261111174213.3526604-1-irogers@google.com>
+ <20261111174213.3526604-4-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 11 Nov 2026 19:11:30 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,25 +60,17 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15.2
 
-On Thu, 05 Nov 2026 16:04:29 +0800, lirongqing wrote:
-> process_counter_values() now computes deltas directly in evsel->counts
-> for global aggregation too. It saves the current cumulative raw count in
-> prev_raw_counts before iostat prints the interval.
-> 
-> Subtracting prev_raw_counts again can therefore underflow the count.
-> Worse, replacing the saved raw count with the interval delta corrupts
-> the baseline used to calculate the next interval.
-> 
-> [...]
+> Replace the no-op stub tools/include/linux/compiler-context-analysis.h
+> with the full kernel implementation from
+> include/linux/compiler-context-analysis.h and add it to
+> tools/perf/check-headers.sh so future changes are tracked.
+>=20
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Applied to perf-tools-next, thanks!
+Sashiko has reviewed this patch and found no issues.
 
-Best regards
-Namhyung
-
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111174213.3526=
+604-1-irogers@google.com?part=3D3
 
