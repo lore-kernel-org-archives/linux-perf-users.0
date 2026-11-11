@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794365876;
-	b=CG5mdrj1ImoumRU+zIwt3ZdtynBb3VcgcA2d/i+tazQnXHFG/KdtIviR2Pluf2kf/8Gq
-	 aX8422l89LCJT1WYXu7nQnjs22BRkfKp8h4ei6sJckGXiciLNzMePsicvnJmZ8nJR5VZT
-	 hgAX8y/25Wm203RmLpaOvRwN+XoeLsCK57QUnFXi8fnbfCj8hhIbZleQGJqYu5jAMQMao
-	 SJ9vnAyRYPN2/Dxv1CDos4AH+S48Iab+sBvZKAYX+gdj5qve4odo7f83hgP1Aeb2oqwcr
-	 ZkCXwCN4Lvfu89Lm8pNRCNzv76gpvu3epdB+3m+1W6Bx3vhRb9/XuEmF7Sxnb7qiBtg==
+	t=1794365934;
+	b=UFAvjfadErDPy15gqXT1cPwRPjBFE79LEcE4DNPm2y5CqCPPwvVjpiluAYDU5jOGGmpP
+	 I488t1U/cNOpNMNk/wZN/Ytx92fzV4lozzL9BH/97IPGkw8OTiR3u+39hCRQiicDj+NaJ
+	 iOhOFRIBDFxgcIhHGPKMP+RjjsXkeM2GSvlcUxKqzyfG2R7DMcsj5PQYhGLceF0BYYRIW
+	 8c3IWYVjQbKz69n5FjPElcwg7Dl7d/qOtfo9Xl1zijMLOrahXan0Qn/6qLfnikXA/bl8U
+	 xqj04n7T80vsL4n0bpAxzonKbZkCDYpZ/yTBIDfZUU4fV/S7MDWfnbGKH6Wn+r6wJ/Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794365876;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794365934;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=XwVViwER2NT4YgLKnp77wYa+9UuwXgsAEHyrLQ24tuQ=;
-	b=0ktZq4QWida8jvjVJsaOaqdbP3QdzDJBiP6oI1StNYenuUwi8d0oXr5YKevImkhGyJjb
-	 DfNVOW4Ws2C0i9I5Qpneejdmr9SJ7Q8PAbJ+up7JIcA9H1XJYDnh1t+aJ7XP5UIgYV0YR
-	 iUcldZeYVH76heMYG5Xb9z/B+zA69Uqnbj89swYmWclU+0S5ObP7EPXyAOpvL8u7VV737
-	 CpOw063TIv5ILh65T0ZRXbTHROI3cQmAI02bVdNyJvERW4HXT9V3c/Ot2p/OU9R2giGDp
-	 uYCRy30+NLVzGt4mBRPQbQXCD7NdIYFdu0YL94Kh7Lt79nZY38Dgotf+WDTnlbb9jxg==
+	bh=S5T9vhjlctgIImRr+N92w0piFczgO8gP2zP1kPw63WQ=;
+	b=Fej4F1mW+WGgwy9wS1+9U0ixkONM+HNHl3y0F9ah/mLSTKCyEAzWrCpl1zN5FrfmMrjE
+	 cfR/8+l+i9cLFAGTI9QupbB4g0uVVtF0NdRcO3Ns8KXh4hTZc23MQ4NxGqrBNgEKSG+dZ
+	 n5hRER/OZweiCqG+okRAHL0XUYI7o3egTmv6bv1Plerjaht/HZpnpbGjYHgBFR/fV9X5u
+	 DQkRQtdY85A6Tu5/5cQESXM2cqnLe1rMIJ0SK79zncj+If6w3PaCUywlHv34wFnz+Y8U/
+	 1aHOyfhk94BCE0UMHmDfAYhb0BKA5W+UwieqdAvavhJfAntU6YcwqgWYqakQotQeh1g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W21GOY5Y;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AonsGsai;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC47560A382D
-	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 02:57:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E8A4606A31C
+	for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 02:58:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W21GOY5Y
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 659E01F00A05;
-	Wed, 11 Nov 2026 02:57:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AonsGsai
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8043A1F0089F;
+	Wed, 11 Nov 2026 02:58:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794365876;
-	bh=XwVViwER2NT4YgLKnp77wYa+9UuwXgsAEHyrLQ24tuQ=;
+	s=k20260515; t=1794365933;
+	bh=S5T9vhjlctgIImRr+N92w0piFczgO8gP2zP1kPw63WQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=W21GOY5YGLmJAG0c3uznawHhjpW2mRIFzXuRRn1nhd0z3PzA1bObgmMoHL1vtyZwG
-	 S7OgIBLqv/cLYKJvZjyzmQGeU44R6fMZqT1H2btQsfTwLl++UlYu1KFZbLadEvqEae
-	 TdyCauCtYyk6pM8edXxARHa7vr1/gd4BJK3q6WlGIrUf54G8XrErLxJdjpsM915L/7
-	 wLBaq2acYXqDyyU+zfXZjzHnXSsklzUve0pv59Q0ZSNBoi+s25TiUOLRQsfRrUmUYG
-	 ipIyTl7h3Xk22YPJV8SeEBPB0O0MpvOyEWoDO0JvCow59+8ydLB89kFjYPzJnwfY4S
-	 RtYQuKv8PJRww==
-Message-ID: <sashiko-outbox-208137@kernel.org>
+	b=AonsGsai9ell+DB9Dy8TUV3UVkyTrC2sdFOqyZnDI8XJ8SaFswA4g2vADxiW77XTk
+	 z5MUXV47LLOGAPiCw4jv/A4jAilMTvvGZXyDTkkYsme/EFqz78dJmJ6652ONpi7x9T
+	 LOhtJCOb2XpkIVr6NmI4mD09HdngEqlN3xjJoBrjAxJQdgzlYv4yR3DYmPT8QT1neU
+	 i7PYlcc49rHFBYAjQF84mwdCVTEZpsef9hC7p8L1KnrPR3ftrgHL6L2DdsHKolFdhU
+	 ek0whdzjw4u7oVOkMwLL2qXO90fIcYce99SXa8X9zVUjUguMy4aVxR6pwg86H6UzoU
+	 tRNXDk+XsUiVg==
+Message-ID: <sashiko-outbox-208141@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] arm64: perf: Drop the example the userspace counter
- section points at
+Subject: Re: [PATCH] perf: arm_v7_pmu: suppress -Winitializer-overrides for
+ perf maps
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "TAKANO Mitsuhiro" <takano32@gmail.com>
+To: "Rosen Penev" <rosenp@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261111023550.1971639-1-takano32@gmail.com>
-References: <20261106234551.1474417-1-takano32@gmail.com>
- <20261111023550.1971639-1-takano32@gmail.com>
+In-Reply-To: <20261111023326.70922-1-rosenp@gmail.com>
+References: <20261111023326.70922-1-rosenp@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 11 Nov 2026 02:57:56 +0000
+Date: Wed, 11 Nov 2026 02:58:53 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,44 +62,48 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [Low] docs: arm64: perf: commit message includes v1 changelog and
-  repetitive text
+- [High] perf: arm_v7_pmu: Clang-only -Winitializer-overrides breaks GCC
+  builds
 --
 
-commit 4f292c888b9c6465b91000fd55cd46c1bc198a65
-Author: TAKANO Mitsuhiro <takano32@gmail.com>
+commit 56df4775a501226704b362f4cef9ce6d443becbf
+Author: Rosen Penev <rosenp@gmail.com>
 
-> arm64: perf: Drop the example the userspace counter section points at
->
-> Documentation/arch/arm64/perf.rst points at
-> tools/perf/arch/arm64/tests/user-events.c, in the text and in the link
-> target, but the file does not exist: no file of that name is in
-> tools/perf/arch/arm64/tests/, and no commit in the history leading to this
-> base has added one.
->
-> The section already describes how to use the libperf helpers and points at
-> tools/lib/perf/tests/test-evsel.c as the example, so the sentence that
-> sends the reader elsewhere is redundant. Remove it and the link target
-> rather than pointing at another test, and move the instruction for running
-> the example into the How-to section, next to the reference it belongs to.
->
-> v1 pointed the reference at tools/perf/tests/mmap-basic.c. The review said
-> that file is a confusing example and that the section above already covers
-> the how-to, which is what this version does.
->
-> Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
+perf: arm_v7_pmu: suppress -Winitializer-overrides for perf maps
 
-[Severity: Low]
-This isn't a bug, but the v1 review history in the third paragraph belongs
-below the --- separator line rather than in the permanent commit log, per
-Documentation/process/submitting-patches.rst.
+This commit wraps the perf_map and cache_map array definitions in
+drivers/perf/arm_v7_pmu.c with __diag_push(), __diag_ignore_all(), and
+__diag_pop() to suppress designated initializer override warnings.
 
-Also, the first paragraph repeats that
-tools/perf/arch/arm64/tests/user-events.c is missing in three different
-ways ("the file does not exist", "no file of that name is in ...", and
-"no commit in the history ... has added one"), which could be trimmed for
-conciseness.
+> diff --git a/drivers/perf/arm_v7_pmu.c b/drivers/perf/arm_v7_pmu.c
+> index a1e438101114a..9ac28c8adf801 100644
+> --- a/drivers/perf/arm_v7_pmu.c
+> +++ b/drivers/perf/arm_v7_pmu.c
+> @@ -146,6 +146,15 @@
+> =20
+>  #define SCORPION_ITLB_MISS				0x12021
+> =20
+> +/*
+> + * The perf_map and cache_map arrays use range initializers to fill all
+> + * entries with HW_OP_UNSUPPORTED / CACHE_OP_UNSUPPORTED, then override
+> + * specific entries with supported event codes. This is valid C99 but
+> + * triggers Clang's -Winitializer-overrides.
+> + */
+> +__diag_push();
+> +__diag_ignore_all("-Winitializer-overrides", "");
+
+[Severity: High]
+Does passing "-Winitializer-overrides" to __diag_ignore_all() break GCC
+builds with CONFIG_WERROR=3Dy?
+
+__diag_ignore_all() expands on both Clang and GCC, producing a
+"#pragma GCC diagnostic ignored" directive on GCC.  Because
+-Winitializer-overrides is a Clang-specific flag name, GCC rejects the
+pragma with a -Wpragmas warning and leaves its own -Woverride-init warning
+unsuppressed in W=3D1 builds.  Using "-Woverride-init" (with a non-empty
+comment argument) works on both compilers since Clang supports it as an
+alias for -Winitializer-overrides.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111023550.1971=
-639-1-takano32@gmail.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261111023326.7092=
+2-1-rosenp@gmail.com?part=3D1
