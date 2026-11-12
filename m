@@ -1,11 +1,11 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=207.54.77.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.90.104.144
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1794486563;
-	b=wWcwAq3sXiZGO1Rbm2OuVIarwerArtbkd28m+hZfkJjt4BvP4u6wtzzFso/EnyMKdQ8k
-	 pvkPZgmmJtJprHZOn7PHlJla/YKFCWVKBFbT7pNn9JCmUz3M54lfdRvUumR9Ruc7AdzZK
-	 sxDFPaD9UJzJJgjIdQGI6mznuHb7awZE8ErwYB/3R/fJQfu6qpSE2pFWwZdDPUceqKQFq
-	 mFJV+wocG5JzvSxmPM/TEr7mscbs3aLynIuEnlfOfwuyFH2wD+Kwxob+BApxC/Joqy0xA
-	 dzZ6OP5dvXb9OC3XVv/hq8+KOU1hqiUJk/376LD9OE+LyrU5JpqNEadn+nwoR3BA5mw==
+	b=5e8qNIjtrd/3vOmaoLby7/5jtTb/rP0wX+7UyNPkMDIAcDNggXPC0wzyxnxZ5pbJqz0b
+	 0YnvpU5AbhtFdu54Xh8M9E1QVCfURRpkIAEw0zRzfV9rmOgMOE7KxlVP3oQlmFBcD9zNS
+	 Zp9+1coKJzc/X6x+fT+LdMuObEaWQyPxUr8CzU+VT4LmVvAyxejBhOkGfTHMRr1hwhT+B
+	 PcBBj5e9ZR48kVQGPXbX7sDpQdBV70PWkXYozjpvxacb5Jn668Yf9Ek7Irf1VtWmGE3ry
+	 BvMYx3pgc4J0GK3ewY3vl7QfOw+mqR0YqPEEev7g4l/5K/09R/42vAWheZbciT5oEDA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794486563;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
@@ -13,20 +13,20 @@ ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	 X-CSE-MsgGUID:Received:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
 	 In-Reply-To:To:Cc:X-Mailer;
-	bh=OKPZQyJsCxKmvcu3evgCAn8bCU003kDuUuvj5pSvgRY=;
-	b=vTuIr6/bgAqXS1t851gZ0kJy8xgjmMqlVPlGREtWzIugmYHiqAMqc5yPJ4solEFNb8R7
-	 2bNMG4MbMMvfypx4V1Al1UZcEsi6uqxMPJHC1OM7zzr+k1pFkiK6gbrIxx4KLLgVu7y6i
-	 xssei8sfKBYCBdKUShdzi8dpmKqf2gPtMuQbo+a5l/iGZIRnQbM9W9wOADWYLjQUbbanv
-	 IMFPY38wrWHNmt0ugbJfHgsWnLsZcIKL5gtXrXDzm4qB1CUK7ekwbbY9yhMUcotWyFPnA
-	 hB8MKdO4hvc9oin4dHH9dqScDuO26QQXFUdyzWltwI4R8Jitob0OqaHeodHvbHX3i+Q==
+	bh=QaXA/7h5BauqhBFtUqFVgi+smZWJ+Dj+75buKP6hI5k=;
+	b=ABgAQtvIbW8vIKlpn8WqZUBmSkiRo1TrtcN7bQ/MFEtNj4sjbPF3igVbyoNBCKoOlq2T
+	 LVClJiQg+jynn5fKOXWYCQd+PVSOJP/hdwD0m25t9lWIaVNyJcdjEaqY5EjQU9zmxMlir
+	 FLQJqOZ0ECfYp/zePGOxA6XkrZQkECM8mYC7F0SybrjKmF4tbrG7mbPNS6J7/4F1gD1Tk
+	 cQOi8jS/otiiOl0WiTxxoIZJooMd8vGxPbm7t9ltmZ6YtAw/iw05XHHHQXEzPrsbJUsRa
+	 tv9nmtE73QmXcpRNnBBkeTnixHRj/TAJEor25dr6lQCAset+YwElAEooh+uPZR8jR8Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=mobileye.com;
 	spf=pass smtp.mailfrom=mobileye.com;
-	arc=none smtp.remote-ip=207.54.77.171
-Received: from esa4.hc555-34.eu.iphmx.com (esa4.hc555-34.eu.iphmx.com [207.54.77.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C43CD606A339;
+	arc=none smtp.remote-ip=23.90.104.144
+Received: from esa1.hc555-34.eu.iphmx.com (esa1.hc555-34.eu.iphmx.com [23.90.104.144])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9FB0606A880;
 	Thu, 12 Nov 2026 12:29:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C43CD606A339
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D9FB0606A880
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
@@ -34,29 +34,28 @@ DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   t=1794486562; x=1826022562;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=4V18Tfg9Ly6MPWUMnLZiqruGXQUpnrBi9GEGXYzKK7I=;
-  b=fV9+A909pS7sXpHZXjKHTqWsCbhCQwRCKdP0pNYAhpKONLEO0Kq9a48x
-   +Hr0OMYqcxgUC5N6u2Tbx3lIa9+C82QxKiTiePqhHfHkSF0p6wHXza/UH
-   1ndCIHlPoXuZmeBwZd702NYkifYViAC6OzF9loy7s1g7bEZmAU1wDrt4x
-   ssbvWzytJYbRctT363yS5S3S7RKDE7v+CfWnF7R2WUPhuI+/+Nw6vD/uW
-   saMeszaFmjwa2juNLz/3VfsTUI9H8v/M7F5urOGwzLoLtHW+a2cyUME5J
-   MSVEXl+gKBIWulx5Vf6UjEKMf10UqzZjdjvTG0eX5ezzVoFpgKUg2nTrD
-   g==;
-X-CSE-ConnectionGUID: 17Jg97HdQH6H9ZG49LVN+g==
-X-CSE-MsgGUID: tT/PWwczTfqxGoP/oNJC8Q==
+  bh=4GzglnkQNuQ8DhvKxqKfR7Zw2ujdVo4Myqgpt01y1tY=;
+  b=dKZxuCV87cPgdUgUKEJhYrwwpzLFDIsem7DSaAfCd7116YvjOjN1238z
+   MxIY0p57qrK0n/z6BrDlt1x/wQHuD61oEwE+1rNXXDD2jjt6908MBrWbW
+   EDV9HgQbgB+kSys7+9P0zHIr9Rx+4BMGnuOF6Ej84d8ztmJJVKo8taHfc
+   2+sLILYHmk0kyGKrSP70Tt9l1ufIG4Klh9yoFSU8VhSEnxauu07J4aMDy
+   fW5CSr/57k+W9E4NA4urqmUqcJVzNQIUvXDDdLLUV8OOx21qEauwIccT2
+   orn1zonCj2ZFfnpwcT/qolHuBMh24kF3QydIfwJYU7PnZEbx3NHIn6Bbl
+   w==;
+X-CSE-ConnectionGUID: Jly7lB5MTe+QEe3/IDSYWg==
+X-CSE-MsgGUID: 6+IBlxmQQBipKgRCnhuKIw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from unknown (HELO ces03_data.me-corp.lan) ([146.255.191.134])
-  by esa4.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2026 14:29:19 +0200
-X-CSE-ConnectionGUID: UULRuqxfRmCDy2+S+/mm0w==
-X-CSE-MsgGUID: PmsNVuSFQXSC1EdXJEs7Tw==
-Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.3])
-  by ces03_data.me-corp.lan with SMTP; 12 Nov 2026 14:37:16 +0200
-Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Thu, 12 Nov 2026 14:29:18 +0200
+Received: from unknown (HELO ces02_data.me-corp.lan) ([146.255.191.134])
+  by esa1.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2026 14:29:18 +0200
+X-CSE-ConnectionGUID: hXjRCfEvR3eNRQkxbYdwlA==
+X-CSE-MsgGUID: EGuZD5xpRaabhMTf+twnoQ==
+Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.2])
+  by ces02_data.me-corp.lan with SMTP; 12 Nov 2026 14:37:25 +0200
+Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Thu, 12 Nov 2026 14:29:16 +0200
 From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-Date: Thu, 12 Nov 2026 14:28:59 +0200
-Subject: [PATCH v2 2/6] MIPS: CM: add CM3 performance counter GCR
- definitions
+Date: Thu, 12 Nov 2026 14:28:58 +0200
+Subject: [PATCH v2 1/6] MIPS: CM: Make cm_core_lock raw spinlocks
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -68,7 +67,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261112-i6500-cm3-pmu-v2-2-cd2569571819@mobileye.com>
+Message-Id: <20261112-i6500-cm3-pmu-v2-1-cd2569571819@mobileye.com>
 References: <20261112-i6500-cm3-pmu-v2-0-cd2569571819@mobileye.com>
 In-Reply-To: <20261112-i6500-cm3-pmu-v2-0-cd2569571819@mobileye.com>
 To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
@@ -88,105 +87,86 @@ Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
  linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-rt-devel@lists.linux.dev, devicetree@vger.kernel.org, 
  linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-perf-users@vger.kernel.org, linux-hardening@vger.kernel.org
+ linux-perf-users@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ Paul Burton <paulburton@kernel.org>
 X-Mailer: b4 0.16.0
 
-The CM3 implements two programmable 32-bit performance counters and a
-32-bit cycle counter, controlled through registers in the GCR global
-debug block (GCR_DB_PC_*, offset 0x6100..0x61a8 from GCR_BASE).
+From: Paul Burton <paul.burton@mips.com>
 
-Add GCR_DB_ACCESSOR_{RO,RW} helpers for the debug block and define the
-control, overflow status, event select, cycle counter, qualifier and
-counter registers along with their fields, as described in the I6500
-register reference (MD01189).
+cm_core_lock is used to protect access to a CPU's core-other/redirect CM
+register block. Since each CPU sees its own copy of this block, we need
+to ensure that critical sections holding a cm_core_lock run on one CPU -
+ie. we need to disable preemption.
 
-Each accessor comes in two flavours, as the CPC ones do: db_<reg> for
-the local cluster and redir_db_<reg> for the debug block of another
-cluster through the redirect block. GCR_Cx_OTHER.BLOCK value 2 selects
-the debug block in the GCR, where the existing _BLOCK_USER name only
-describes its GIC meaning; add CM_GCR_Cx_OTHER_BLOCK_DEBUG for it.
+Use raw_spinlock_t to implement cm_core_lock in order to provide the
+guarantees we need on PREEMPT_RT systems.
 
+Signed-off-by: Paul Burton <paul.burton@mips.com>
 Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 ---
- arch/mips/include/asm/mips-cm.h | 51 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 50 insertions(+), 1 deletion(-)
+ arch/mips/kernel/mips-cm.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/arch/mips/include/asm/mips-cm.h b/arch/mips/include/asm/mips-cm.h
-index 407f253bb4a1..390d06a8f1d1 100644
---- a/arch/mips/include/asm/mips-cm.h
-+++ b/arch/mips/include/asm/mips-cm.h
-@@ -161,6 +161,20 @@ static inline bool mips_cm_has_l2sync(void)
- 	CPS_ACCESSOR_RW(gcr, sz, MIPS_CM_CLCB_OFS + off, cl_##name)	\
- 	CPS_ACCESSOR_RW(gcr, sz, MIPS_CM_COCB_OFS + off, co_##name)
+diff --git a/arch/mips/kernel/mips-cm.c b/arch/mips/kernel/mips-cm.c
+index 7c9c5dc38823..3bfe85e86a9a 100644
+--- a/arch/mips/kernel/mips-cm.c
++++ b/arch/mips/kernel/mips-cm.c
+@@ -179,7 +179,7 @@ static char *cm3_causes[32] = {
+ 	"0x19", "0x1a", "0x1b", "0x1c", "0x1d", "0x1e", "0x1f"
+ };
  
-+/*
-+ * Global debug block registers. The redir_db_* accessors reach the debug
-+ * block of another cluster through the redirect block, which must have been
-+ * pointed at it with mips_cm_lock_other(cluster, 0, 0,
-+ * CM_GCR_Cx_OTHER_BLOCK_DEBUG).
-+ */
-+#define GCR_DB_ACCESSOR_RO(sz, off, name)				\
-+	CPS_ACCESSOR_RO(gcr, sz, MIPS_CM_GDB_OFS + off, db_##name)	\
-+	CPS_ACCESSOR_RO(gcr, sz, MIPS_CM_COCB_OFS + off, redir_db_##name)
-+
-+#define GCR_DB_ACCESSOR_RW(sz, off, name)				\
-+	CPS_ACCESSOR_RW(gcr, sz, MIPS_CM_GDB_OFS + off, db_##name)	\
-+	CPS_ACCESSOR_RW(gcr, sz, MIPS_CM_COCB_OFS + off, redir_db_##name)
-+
- /* GCR_CONFIG - Information about the system */
- GCR_ACCESSOR_RO(64, 0x000, config)
- #define CM_GCR_CONFIG_CLUSTER_COH_CAPABLE	BIT_ULL(43)
-@@ -357,7 +371,8 @@ GCR_CX_ACCESSOR_RW(32, 0x018, other)
- #define CM_GCR_Cx_OTHER_BLOCK			GENMASK(25, 24)	/* CM >= 3.5 */
- #define  CM_GCR_Cx_OTHER_BLOCK_LOCAL		0
- #define  CM_GCR_Cx_OTHER_BLOCK_GLOBAL		1
--#define  CM_GCR_Cx_OTHER_BLOCK_USER		2
-+#define  CM_GCR_Cx_OTHER_BLOCK_USER		2	/* GIC */
-+#define  CM_GCR_Cx_OTHER_BLOCK_DEBUG		2	/* GCR */
- #define  CM_GCR_Cx_OTHER_BLOCK_GLOBAL_HIGH	3
- #define CM_GCR_Cx_OTHER_CLUSTER			GENMASK(21, 16)	/* CM >= 3.5 */
- #define CM3_GCR_Cx_OTHER_CORE			GENMASK(13, 8)	/* CM >= 3 */
-@@ -384,6 +399,40 @@ GCR_CX_ACCESSOR_RW(32, 0x030, reset_ext_base)
- #define CM_GCR_Cx_RESET_EXT_BASE_BEVEXCPA	GENMASK(7, 1)
- #define CM_GCR_Cx_RESET_EXT_BASE_PRESENT	BIT(0)
+-static DEFINE_PER_CPU_ALIGNED(spinlock_t, cm_core_lock);
++static DEFINE_PER_CPU_ALIGNED(raw_spinlock_t, cm_core_lock);
+ static DEFINE_PER_CPU_ALIGNED(unsigned long, cm_core_lock_flags);
  
-+/* GCR_DB_PC_CTL - Control of the CM3 performance counters */
-+GCR_DB_ACCESSOR_RW(32, 0x100, pc_ctl)
-+#define CM_GCR_DB_PC_CTL_PERF_INT_EN		BIT(30)
-+#define CM_GCR_DB_PC_CTL_PERF_OVF_STOP		BIT(29)
-+#define CM_GCR_DB_PC_CTL_P1_RESET		BIT(9)
-+#define CM_GCR_DB_PC_CTL_P1_COUNTON		BIT(8)
-+#define CM_GCR_DB_PC_CTL_P0_RESET		BIT(7)
-+#define CM_GCR_DB_PC_CTL_P0_COUNTON		BIT(6)
-+#define CM_GCR_DB_PC_CTL_CYCL_CNT_RESET		BIT(5)
-+#define CM_GCR_DB_PC_CTL_CYCL_CNT_COUNTON	BIT(4)
-+#define CM_GCR_DB_PC_CTL_PERF_NUM_CNT		GENMASK(3, 0)
-+
-+/* GCR_DB_PC_OV - CM3 performance counter overflow status (write 1 to clear) */
-+GCR_DB_ACCESSOR_RW(32, 0x120, pc_ov)
-+#define CM_GCR_DB_PC_OV_P1_OF			BIT(2)
-+#define CM_GCR_DB_PC_OV_P0_OF			BIT(1)
-+#define CM_GCR_DB_PC_OV_CYCL_CNT_OF		BIT(0)
-+
-+/* GCR_DB_PC_EVENT - CM3 performance counter event selection */
-+GCR_DB_ACCESSOR_RW(32, 0x130, pc_event)
-+#define CM_GCR_DB_PC_EVENT_P1_EVENT		GENMASK(15, 8)
-+#define CM_GCR_DB_PC_EVENT_P0_EVENT		GENMASK(7, 0)
-+
-+/* GCR_DB_PC_CYCL - CM3 performance cycle counter */
-+GCR_DB_ACCESSOR_RW(32, 0x180, pc_cycl)
-+
-+/* GCR_DB_PC_QUALn - CM3 performance counter n event qualifier */
-+GCR_DB_ACCESSOR_RW(64, 0x190, pc_qual0)
-+GCR_DB_ACCESSOR_RW(64, 0x1a0, pc_qual1)
-+
-+/* GCR_DB_PC_CNTn - CM3 performance counter n value */
-+GCR_DB_ACCESSOR_RW(32, 0x198, pc_cnt0)
-+GCR_DB_ACCESSOR_RW(32, 0x1a8, pc_cnt1)
-+
- /**
-  * mips_cm_l2sync - perform an L2-only sync operation
-  *
+ phys_addr_t __weak mips_cm_phys_base(void)
+@@ -309,7 +309,7 @@ int mips_cm_probe(void)
+ 	mips_cm_is64 = IS_ENABLED(CONFIG_64BIT) && (mips_cm_revision() >= CM_REV_CM3);
+ 
+ 	for_each_possible_cpu(cpu)
+-		spin_lock_init(&per_cpu(cm_core_lock, cpu));
++		raw_spin_lock_init(&per_cpu(cm_core_lock, cpu));
+ 
+ 	return 0;
+ }
+@@ -347,8 +347,8 @@ void mips_cm_lock_other(unsigned int cluster, unsigned int core,
+ 		 * mips_cm_lock_other() leading to a deadlock or a nice warning
+ 		 * with lockdep enabled.
+ 		 */
+-		spin_lock_irqsave(this_cpu_ptr(&cm_core_lock),
+-				  *this_cpu_ptr(&cm_core_lock_flags));
++		raw_spin_lock_irqsave(this_cpu_ptr(&cm_core_lock),
++				      *this_cpu_ptr(&cm_core_lock_flags));
+ 	} else {
+ 		WARN_ON(cluster != 0);
+ 		WARN_ON(block != CM_GCR_Cx_OTHER_BLOCK_LOCAL);
+@@ -359,8 +359,8 @@ void mips_cm_lock_other(unsigned int cluster, unsigned int core,
+ 		 * race with us.
+ 		 */
+ 		curr_core = cpu_core(&current_cpu_data);
+-		spin_lock_irqsave(&per_cpu(cm_core_lock, curr_core),
+-				  per_cpu(cm_core_lock_flags, curr_core));
++		raw_spin_lock_irqsave(&per_cpu(cm_core_lock, curr_core),
++				      per_cpu(cm_core_lock_flags, curr_core));
+ 
+ 		val = FIELD_PREP(CM_GCR_Cx_OTHER_CORENUM, core);
+ 	}
+@@ -380,11 +380,11 @@ void mips_cm_unlock_other(void)
+ 
+ 	if (mips_cm_revision() < CM_REV_CM3) {
+ 		curr_core = cpu_core(&current_cpu_data);
+-		spin_unlock_irqrestore(&per_cpu(cm_core_lock, curr_core),
+-				       per_cpu(cm_core_lock_flags, curr_core));
++		raw_spin_unlock_irqrestore(&per_cpu(cm_core_lock, curr_core),
++					   per_cpu(cm_core_lock_flags, curr_core));
+ 	} else {
+-		spin_unlock_irqrestore(this_cpu_ptr(&cm_core_lock),
+-				       *this_cpu_ptr(&cm_core_lock_flags));
++		raw_spin_unlock_irqrestore(this_cpu_ptr(&cm_core_lock),
++					   *this_cpu_ptr(&cm_core_lock_flags));
+ 	}
+ 
+ 	preempt_enable();
 
 -- 
 2.43.0
