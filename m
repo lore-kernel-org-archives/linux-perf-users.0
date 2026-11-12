@@ -1,58 +1,71 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=111.22.67.139
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794467967;
-	b=WfXS3T0Jc7C2OfHGQaNJEnKT1ZgHqWp4PxdBDOgmj62p7t/V+O7TeVJeMfgWzhb86gpw
-	 adJBODcyC2onG5CrLa3t1HOugij+95uVD/TsG828OdoASglVx8bEjG8MlHOSvzaRq/5ub
-	 cJIapPOmnn4cdk0cg5ya95gv8LEz/PShLrxoGlOSQtZ7zl4KXTBo6a8M+dYbVuyzfvznc
-	 eYcIrVhd7ud6PRZf3zQDfjtEJOzG7eM29lIVgXGXyg6LQ/GP4wXGGFiD/2N239FOo6ftK
-	 zgXrbWQ+qefu1x8n/01K3ab57hiGrL4fP+0r+tz3QcC0xKlZJboPNCpse/k950qQInw==
+	t=1794470977;
+	b=naebTqLkt+3wvBeX3s9U1mRVgmq77fGhn09hKyNnWzHZ3Dgcc3bjFIySRPgrVUNJresH
+	 LCALqFEbfLlL6BfjiLTAEHr4jo5/cjSd6knSxheDvwknq8akUnrWksVAXh80R2avApsiW
+	 PISEDMD7V/SdRDAaGIhpXamfwmaAYw6n6si4XfxcZXGQpJo5zIZMwDrBR7uK/SbyxnERK
+	 lngg2ytYyh74R/sY3oBl2p9JIRT0p6wvBC3syNzThM5+sT1L0oiIl1mWkghRXS+KlLdsM
+	 PONdYOjwf3lCxBTWuyBYLOr6kd81vkG0H+fXNNGX0Ko21ig5O5lW35IStm29dbxmPhg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794467967;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=9vEwfFNJsQC0uguVeCiGQZL5IYwoymuj63dcnWgCJ+g=;
-	b=QMY+RowEYhkuty8dvsyH7zlkIBvQpr0E30mDb+js+1HPol7zMdh3DUlJm7Bqi+zSVZc2
-	 lB5jMUNidpci6Rys7BgndHWRMVDuztuFqSiH6UDoXz7GiZJAav0GdvPx4GhTt0YNJRwZR
-	 S35ZRb5JU9sevT3DI81cHCdEGvhNJeJmJboBbKn3hLhKEBYhj3pr6Rj4+WQCe0XenRaGz
-	 8ifU4iSGeVfj8/rt7nCo8CTV7adg3v3sReFIUvkEPOZ1TSCRyf46yeBRObY+e9EWzxwOG
-	 tYVNTOs7OIC/cOpK3KMypcsrSYmln/OB9psz2s2Vr8YGqp3BgwOtow9TvIaaj8eyDXw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794470977;
+	h=DMARC-Filter:DKIM-Signature:X-RM-TagInfo:X-RM-SPAM-FLAG:Received:
+	 X-RM-TRANSID:X-RM-TagInfo:X-RM-SPAM-FLAG:Received:X-RM-TRANSID:From:
+	 To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=DjAl4XgOg1dS5z3yYb4d+Tk1gYH65D5OSWDssukR0vI=;
+	b=xs/W7LGZlVjI4fEpVoHC/LuClSQX3iu29ncp85thlMgJoOqrjRhD/yzFNLAdLq3QQi8T
+	 HewRxuZ9vpv4xO1mUkrUL22au9rBt6KwVld51k+ZubvnWda27cwxvl73x74uA1etQ04XY
+	 tZAc5pD1ncQh7La7iEBtIgNiP4NejRciXWUeUkJlHi7SJMTGO8bwA81CY9nhmFzWUou05
+	 dOC1ZfAwg/MX//SvK6xIUDL2ZpNXb5HIrjLerkQ7txMGz6g/+qxijbVNFCPjHRxqALs6b
+	 eMlo3lUWHXLHPrA87MegmLNzDYBSj3g9RDF92EVfG4z2i2hYHLxGt8BCp901rep8wyw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=enn33zGw;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EF5606A8AE;
-	Thu, 12 Nov 2026 07:19:26 +0000 (UTC)
+	dmarc=pass header.from=cmss.chinamobile.com;
+	spf=pass smtp.mailfrom=cmss.chinamobile.com;
+	dkim=pass header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=fh4UZyPm;
+	arc=none smtp.remote-ip=111.22.67.139
+Received: from cmccmta6.chinamobile.com (cmccmta6.chinamobile.com [111.22.67.139])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 189DB606A88D;
+	Thu, 12 Nov 2026 08:09:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 189DB606A88D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmss.chinamobile.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=enn33zGw
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4186A1F00A05;
-	Thu, 12 Nov 2026 07:19:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794467966;
-	bh=9vEwfFNJsQC0uguVeCiGQZL5IYwoymuj63dcnWgCJ+g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=enn33zGwSWs4juikjM58M5TOzQy8iWqVwJ9T4frJw8aqptfjK/FpSS5U86XVM+PHW
-	 JLMKnoHtxaNfjpDqNvftr3XU+8K4802anqoyYbA2+HNCou12HjOMyNE4SYiQIIkhnp
-	 bNEzZwyIxU/ibauEfU5+xOw3/nzT2dMH/VkS96JO0AoaoBLa5pLIK0/HsNKts8+MLR
-	 SUsPnyXv0ixm2uH9gpW/daTQnf4KJqMgyQLW1OaPF4czIg+rK2SqLiKqVquzAm3jH5
-	 jAF+2eiApCuBdmn4sPZ5zTWqRuTLon8w2nt/nHeBFk6nnKAke/oUBndFKYLYZkxGRB
-	 50KRJNgiUs+eQ==
-Date: Wed, 11 Nov 2026 23:19:23 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, adrian.hunter@intel.com, bvanassche@acm.org,
-	elver@google.com, james.clark@linaro.org, jolsa@kernel.org,
-	justinstitt@google.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev,
-	mingo@redhat.com, morbo@google.com, nathan@kernel.org,
-	ndesaulniers@google.com, peterz@infradead.org
-Subject: Re: [PATCH v12 15/20] perf intel-tpebs: Fix race in tpebs_stop() and
- tpebs_cmd.out fd handling
-Message-ID: <avVoe_hajXqJpfmq@google.com>
-References: <20261111174213.3526604-1-irogers@google.com>
- <20261111174213.3526604-16-irogers@google.com>
+	dkim=pass (1024-bit key) header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=fh4UZyPm
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=cmss.chinamobile.com; s=default; l=0;
+	h=from:subject:message-id:to:cc:mime-version;
+	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+	b=fh4UZyPmoEq0QF9EgZQer4kgYiI/sYLgAkO0qTryrvYcB3lyNuUCkN+N/XnpdSqHPYE9OoVtAuBs6
+	 KdBswuDForKH6WNa9V2RyBtSueD+6sTxCNN1+/SIUOijdg7q/VtJJqYXrvhmjFl3lgHDQxG4l1kX2F
+	 2O6hb8bhgd0XO6wk=
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
+	by rmmx-syy-dmz-app05-12005 (RichMail) with SMTP id 2ee56af5743d197-dd8bd;
+	Thu, 12 Nov 2026 16:09:33 +0800 (CST)
+X-RM-TRANSID:2ee56af5743d197-dd8bd
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from FHB-W5100250 (unknown[36.137.216.21])
+	by rmsmtp-syy-appsvr09-12009 (RichMail) with SMTP id 2ee96af574366b3-f8c0c;
+	Thu, 12 Nov 2026 16:09:33 +0800 (CST)
+X-RM-TRANSID:2ee96af574366b3-f8c0c
+From: Gu Bin <gubin@cmss.chinamobile.com>
+To: acme@kernel.org,
+	namhyung@kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@redhat.com,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf trace: propagate evsel__set_filter() error in trace__expand_filter()
+Date: Thu, 12 Nov 2026 16:09:21 +0800
+Message-ID: <20261112080924.2082-1-gubin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.50.1.windows.1
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -62,36 +75,55 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20261111174213.3526604-16-irogers@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 11, 2026 at 09:42:07AM -0800, Ian Rogers wrote:
-> In tpebs_stop(), read tpebs_reader_thread into a local variable before
-> releasing tpebs_mtx to call pthread_join().
-> 
-> Transfer ownership of tpebs_cmd.out to __sample_reader() by passing it
-> as the thread argument and setting tpebs_cmd.out = -1 in
-> evsel__tpebs_open() so tpebs_stop() does not double-close the fd closed
-> by perf_session__delete(). Also reset tpebs_cmd.pid = 0 and
-> tpebs_cmd.out = -1 and return early if start_command() fails in
-> evsel__tpebs_start_perf_record(), as start_command() closes the pipe
-> internally and may leave cmd->pid = -1 on error.
-> 
-> Serialize tpebs_send_record_cmd() with teardown via tpebs_cmd_in_flight
-> and tpebs_cmd_cond, newline-terminate control commands so consecutive
-> writes cannot coalesce in evlist__ctlfd_recv(), check
-> check_if_command_finished(&tpebs_cmd) under tpebs_mtx only when not
-> stopping, ignore late samples in process_sample_event() once
-> tpebs_stopping is set, and guard evsel__tpebs_open() against a
-> concurrent tpebs_stop() with tpebs_gen, tpebs_enabled, and
-> tpebs_stopping across closing the fds and finish_command().
-> 
-> Include <pthread.h>, <signal.h>, <stdint.h>, <stdlib.h>, <string.h>, and
-> <unistd.h> explicitly.
+At the end of trace__expand_filter(), the return value of
+evsel__set_filter() is ignored. When the strdup() inside fails with
+-ENOMEM, the function returns 0 anyway, leaving evsel->filter holding
+the unexpanded filter, which still contains the symbolic constants the
+loop meant to resolve. The failure then surfaces later and indirectly:
+evlist__apply_filters() passes the unexpanded string to the tracepoint
+filter parser, which rejects the symbolic name, so perf trace fails to
+start with a filter syntax error whose real cause is the missed
+allocation.
 
-I feel it's too verbose and not clear what's problem.  Please explain
-the race and how it fixes the issue concisely.
+Propagate the error so the -ENOMEM is reported at the source and the
+caller fails immediately.
 
-Thanks,
-Namhyung
+Fixes: 90df0249c2ea ("perf trace: Expand strings in filters to integers")
+Signed-off-by: Gu Bin <gubin@cmss.chinamobile.com>
+---
+ tools/perf/builtin-trace.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+Found by the sashiko review of the fix to the asprintf() failure path
+in the same function ([PATCH] perf trace: guard free(new_filter) to
+avoid double-free on OOM), which flagged the unchecked return value of
+evsel__set_filter() as a related pre-existing issue:
+
+  https://sashiko.dev/#/bug/linux-cbf4bb01-a981-47dc-b440-68e5c9c3e81c
+
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 4094141461f91..ce1a7352ea9dd 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -4704,9 +4704,13 @@ static int trace__expand_filter(struct trace *trace, struct evsel *evsel)
+ 	}
+ 
+ 	if (new_filter != evsel->filter) {
++		int err;
++
+ 		pr_debug("New filter for %s: %s\n", evsel->name, new_filter);
+-		evsel__set_filter(evsel, new_filter);
++		err = evsel__set_filter(evsel, new_filter);
+ 		free(new_filter);
++		if (err)
++			return err;
+ 	}
+ 
+ 	return 0;
+-- 
+2.50.1.windows.1
+
+
+
