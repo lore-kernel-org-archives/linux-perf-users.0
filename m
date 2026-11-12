@@ -1,58 +1,106 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.41
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794447525;
-	b=1RrPTeLpZ60cLLyPe4/RtlT6M02HRAUoJUTxKva+y+4iQ8pIurrwxVVbKjS26uYgCwZI
-	 9bJ5elQqIzMcqniAnRkO8SoI9HUbMH+sc0vtj5Q4zWPkzGmZLxvfCnjqm9DRPyCsSJhsb
-	 6lPYigL8HVXQRwWkH8JyGNesluGNFgbtnWts+o67EYi8aiEZniQxJxH2S3RLtHwXafoXE
-	 GbzBQr5dN/F5yLdVZUPqDKDBdXcL2456Mjt5OvQ65anxRBkf+xKS/E6lsKVOiee9/875K
-	 5TsAJUVNuX9+g5EoEB5z6qnArvsNi6HTAGuJGwXy9us7AoD612lkas0hQQ27rXwv+GA==
+	t=1794451236;
+	b=H06vgw2SDdtkcjWWoWL6iqnT9nwaozFA/ol2J9a1g7IIK5qxCePXPm2NUc0L5MDIOlEH
+	 1g2FAQSn5L9jgBxyfKvwvj/6j1KPF2jVtIchCH3WmCCngS12UxHkn1hI4VuCvD1l9m9sm
+	 BKNFoXNybhc8EQ1rUOs9aLtRdmjqb2yEtJrKEHqjEL1YO2IuTAt4TrWSHwSwZVmSwqj35
+	 iWUdAQlHDWdDWgiojliw9AiXUM1R0WwlazRcem2T3JQfFHzTCwp/kPhwhRRet7/xlAY61
+	 3b01OJjxy87umT8nl1Le/OoakfEQ/HaR/NLStj0Kk29sKqGF2NYuW4+ijn7DsMeMqTg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794447525;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=1A0FHHRkeZNu59qGXPq9bvmsKCRiK5XouhN7KZ6v/hQ=;
-	b=LrPgG5f/LyrmC2tqqn9VMRwA+QOIKCTwhIv5WcLtTiBGnwadqw/wjXUvU7BR9+9SB9Ct
-	 VD7+1EjXB7U+J0lh0xmrVHyMIhULba/Zf9vzL7LQi9NJa+Y15DeVbY1dAATUdNT7WamOu
-	 /KQVEp1bTiAhiAc/yS/8MsGDIcSw0d/UxHo9xUsa1N8noaHNhzvyRcfYA9N1N1Y91uHLQ
-	 P7oJ9JUXqPiXjf96qsyUxKr2o/g2lqvdagzbdH5Q2ZjSBEeNxLs3PTLyWEPZmT0Vcawu3
-	 keOzb+OkiP3et/ei/r6NF1TuWjoOpRcfvDM/ThJQZXchOwWzC64GqlfvQ/7nMpFE3hg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794451236;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=XCG/hpoNHIW0Eu98Teji7EwKeVbJHc3B1VUMeilrzfc=;
+	b=Vruefls1RBFrC5L9dgyHaIip9pS4b4mbCqKImmmuUkNNPdfGKiSjEABckZ7MRETwHUAi
+	 3VVUMpe3uLoay0LmavIj39sJitaJe7MChfn+c8spI+LWo3GPAU2+sGI/M5X1CAKPapQTw
+	 QJCwWpcA+2TLuoPb3baCQLOcpTGh2HzWsVikoa3GLps02RPv04eP5fG9Vo2tz/lUHOJyG
+	 TUzBT9ro4MTcWlGc/ZoQSLwmTuMzI7xU9FOUhUC4SnEiIr7xhY00ZFuiBG2HcfNYuJ/e3
+	 IMhErucEXG9E+N7DCfe5UZLlHwGp6F4+4lrYGQ9mXXoshTkTXBN3aW9+hQ7PMhXImXw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="bM1aSUG/";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=VfT1VovT;
+	arc=none smtp.remote-ip=74.125.82.41
+Received: from mail-dl1-f41.google.com (mail-dl1-f41.google.com [74.125.82.41])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DF8606A31C
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 01:38:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF667606A326
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 02:40:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BF667606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bM1aSUG/
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEFEF1F00A05;
-	Thu, 12 Nov 2026 01:38:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794447524;
-	bh=1A0FHHRkeZNu59qGXPq9bvmsKCRiK5XouhN7KZ6v/hQ=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bM1aSUG/i2jG43antmoG13A6/AZuGiBmCZgvIRGh8RanWzgZFov+yPWx7zxL2LZtL
-	 /LjuSUcEKKnM6KuqS/ad53TzO+iP0s8jN1q2/pQqvmCKo4lP8AwuhiPhHhg3KVktyN
-	 z5Us7KrjWm9YYj7yHmJNLHIVy3z1UWLOOX1FohjJPyHTwf0iro9pHawT1FqmKy9wDd
-	 VCsO9BR3hswClkTrls9dzilHDJZU87BbgSHRq+YB9HsVZ++lT4glevNI3sdTzl/AFW
-	 Elg4ubHn6kRMZ8cBVGpiqMu7lk0Yd9a/zKh6TyS7ExuEzJHbeVZudZLE3hSzOSgUKx
-	 ZtydMG3QRgH4Q==
-Message-ID: <sashiko-outbox-210078@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 5/5] perf test make: Add BPF skeleton build tests for
- clang and bpf-gcc
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261112011514.4032822-6-irogers@google.com>
-References: <20261022204627.1813821-1-irogers@google.com>
- <20261112011514.4032822-1-irogers@google.com>
- <20261112011514.4032822-6-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 01:38:44 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=VfT1VovT
+Received: by mail-dl1-f41.google.com with SMTP id a92af1059eb24-15dd124bbe7so5851994c88.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 18:40:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794451235; x=1795056035; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=XCG/hpoNHIW0Eu98Teji7EwKeVbJHc3B1VUMeilrzfc=;
+        b=VfT1VovTUsPLuCQ7MctJPLbnqZlFTk3uSg1IvRBBcNsXsLUIKtblqmiPg8zM2YlHx7
+         Aqywjz2lH85piwUeLNxNurLql7LQHyH98EtzkzVNeZfljO1rl8ab9Zr87XdXc+hWwNpp
+         HnSUuqf2c0mcHIWdgET/i5u8dBEMbj0NNHTA8SKLbFRK+8+EZgUtXIVFHQnjZmeYbKGd
+         YkBXb0+30fYVllP6gBZOd3qlem+T9T99ynpqynMDajM9BLmQAgf3tWaxzrgZ5er44RUD
+         p2hL8JT1gnRdHPkDbo92SxAvtONrTJ4k/qzSQn3ilY9ZssKhtQbqKXeEuubbVAkaJlf0
+         zMfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794451235; x=1795056035;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=XCG/hpoNHIW0Eu98Teji7EwKeVbJHc3B1VUMeilrzfc=;
+        b=jikC3EQrwn4sDgHsi5MqgZDGmr7o68EllED2+6Oulse1VM4EVjuH+KhOfJRhoJK2US
+         6xEUp50/EuUlVuQ1lFydyXd0j5sxGCYoR6EmWYttTWj1OFW7yC0wSPTZndR53Hfxz7M4
+         lnnyUVGYpgE2lwA35oDa7SVJZPLLjaqG9KahPsY+LOUlRbosV/vr4QApCUi9x0w87mkU
+         EOeOEn/ws2lqELYuYOo6jRykzd/M60Bcwtr34Wxq2NHVRPA2iRljHe6yX7ZBFNtK1CGR
+         iM33GnQjJ6InoNiCXiXaSLgd92zzlmzgOgCakf2KPgi0F1bVDJugB50J/+5cUVHMYNd0
+         wo+w==
+X-Forwarded-Encrypted: i=1; AL+hErFbkcuMr5vfwfQZAk78wvq9gtei98pIOhjAVjb6C4E0tUrwtt2jm+HgoUn4UVD7sQY+tbymR6v9P9ty2ZuxyKyW@vger.kernel.org
+X-Gm-Message-State: APuU4Z9twXhJNMMz2KWmmlzn8zC8nxBaO6+lylj0Qi43kBssMDIYf+zc
+	En5l1Y3Rr4LGR+TU9c8uL4A+88MqooSrN0J79wWdpzbmMG7h+SqYfSZs
+X-Gm-Gg: AYBFou2cqOh1VKSTcARX9N9snKn/Rlc2uW/id9n8zpKj8yUQ+10HG3LfpHggJ6FR4uC
+	H9DLmWYla2ILr477ZUVq3IcEr0rD4Cl2I0Xnte5qsnQVsnm4hRCkm9gj6aBLvBjyUTnBQfKvY6X
+	mzAPfdfJraReoGz52RoMgUl+gOiIy2+VEFW0SjignIaBpl3nrbyjNEoCuWK9bgQ4hBIv65oZnO5
+	5Kg8t5VeStD/3vgJcC4pQecIssz7tQBQmZA8dIHTi5V130sZP8BE2fjXCdubpAiewyTf0FuqBBJ
+	4UMw2mTNimA/pGM6u6KpzS5xPT8N/A/je1vM6boYZNBfBg5FHeUPSilQ27nogVt5fuaQgRtYadr
+	Ppy7AqDttgEjCiYUdxgPNXpJefBxKGEMj/ZAHRZRF8PzlVLgMVVNi2gAcomgzSxvVuejWdXM3dI
+	LQXxLSfWycbNWtN9IIbAbHVVVS3fMT37XEW32cAWzsxmJExfpm7d6/WfjPZa69lCJub3QVyM/DV
+	bHajOALxgg1CtLazh1JEr1X89lQiAnEFIUDXyfhdfDoXE+zWYQHGgHFca/Dr0J3U04WX4xzwV9r
+	kopoctiZw32xTx/1w0RepyRR8kZXk64f3PTWHPnvVPYFXtFLs4qprAxqxwVopt4lDxn56bDMyl1
+	xVHBWqiPLicQ1vfjODqRLWGSRbCVTzA==
+X-Received: by 2002:a05:701b:2219:b0:1b2:4378:3545 with SMTP id a92af1059eb24-1b3c0304417mr3841493c88.21.1794451234580;
+        Wed, 11 Nov 2026 18:40:34 -0800 (PST)
+Received: from thinkpad.tail59a646.ts.net ([112.199.224.229])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b3b5b1003fsm19000961c88.6.2026.11.11.18.40.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Nov 2026 18:40:34 -0800 (PST)
+From: Hang Zhengyang <hang.zhengyang1010@gmail.com>
+To: Zhao Gongyi <zhaogongyi@bytedance.com>
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	x86@kernel.org,
+	kim.phillips@amd.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf/x86: Reject pair-counter groups with no GP budget
+Date: Thu, 12 Nov 2026 10:40:24 +0800
+Message-ID: <20261112024027.3678221-1-hang.zhengyang1010@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20261109110356.27709-1-zhaogongyi@bytedance.com>
+References: <20261109110356.27709-1-zhaogongyi@bytedance.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,22 +109,17 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-> Add make_bpf_skel_clang (CLANG=3D$(CLANG) BPF_GCC=3D) and
-> make_bpf_skel_bpf_gcc (BPF_GCC=3D$(BPF_GCC) CLANG=3D) targets to
-> tools/perf/tests/make when the corresponding compiler and BPF skeleton
-> dependencies (libelf, zlib, bpf, and libopenssl via Makefile.feature)
-> are available on the host.
->=20
-> Verify with 'perf check -q feature bpf_skeletons' that BPF skeleton
-> support is enabled for both targets and disabled (exit code 1) for
-> make_no_bpf_skel.
->=20
-> Signed-off-by: Ian Rogers <irogers@google.com>
+On Mon, 09 Nov 2026 19:03:56 +0800, Zhao Gongyi wrote:
+> AMD large-increment events reserve an extra GP counter. A syzkaller
+> reproducer opens a perf event group until the adjusted GP budget is
+> exhausted. x86_schedule_events() then WARNs on the unschedulable group.
 
-Sashiko has reviewed this patch and found no issues.
+Tested on AMD Zen 3 (KVM guest, tip perf/urgent): a group of six
+fp_ret_sse_avx_ops.all events hits the WARN without this patch and not
+with it; smaller groups still schedule. Without your n_pair fix the WARN
+fires only once per CPU.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261112011514.4032=
-822-1-irogers@google.com?part=3D5
-
+Tested-by: Hang Zhengyang <hang.zhengyang1010@gmail.com>
