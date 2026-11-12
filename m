@@ -1,55 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1794510996;
-	b=GTI9Ns7lvesBgj+lamavBFcxpADLNAFfIdOrflLTyDV3Cw5YxtNpb1I7Q2duPhh6B3TS
-	 fOrWc+eb+tEL5tUml9whkfkSu5fEJC32pHzFBy8BCL/p7YQQGNHmFPfoSl8FCqWW3b6PR
-	 5szliVWn/o0hKHpQVXLplU+MPP6C0mJdJFzGGmjyXXT3gWgDoXxBtpy6jj4kBw4hBnV20
-	 BGxkwqX+x5iMMe1N9jKTywYyiIAC35ENn/2e8iP59Cw752g7SzIV5T3p/3/3nT9dlZlkX
-	 J1eQztQV4v6tajcQL4ylF1I/6/+oAVKCszEhpWDgEm2eTrhhEZSxcsxx2YJRXi5tQxg==
+	b=av5WXM53GLYhnx5KFTrKHCaV97zinYtlqPRxXhuWORXBipV/5Ojxjqt6DXpmGfC8TySF
+	 EmHZ4UOT66aamUh876zFjjaC8Lfp0BEaV9hu6inpOcV/4yoAEe689x+IdciAUsolL5i+p
+	 sBf7ktb9YqXyjKFcZtXd4V1GEDubKuKdLCZjkNiNeUU2raq4f4XEPFtyXJn0sdMGti7xl
+	 SqwMxO2zQYqTopRetuxwGLVkuchEavrd1aLDWrnCbJmFCZxr/KFgfaiFVA0hG0Hcmh0Yc
+	 dJTOeeF4+P63V6IJI4MAw24ewEccg8LfWfnQDKXLNKKIlZBSzVtuCN0x4DxF724WVQA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794510996;
 	h=Received:DKIM-Signature:From:To:Cc:In-Reply-To:References:Subject:
 	 Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 X-Mailer;
-	bh=IIEUMbtDnFy3px0dufXVKAi/aJFPBCXhybdjUkL0fWw=;
-	b=djXuaMRPkLP0vOR19IXgMqkMuGHDEnA7vk8YbwyDzmqopVBn/+syTHMuQqMK1SyPKqX6
-	 vwqZvt5B5JWWWWI2JAwEeKtFQ+uvvxj7UGW97nBD97WMk6BWzm85tB5Xr87wJalBxmzp9
-	 w0xTKn2YqfNJ2qq2WcpQjBLaqE3a9m+vDoQwGkUQxdpqbQRf198ekPrxyCU1OSU0tvhAk
-	 dN6QriCKxIp5CppnyM9K+3Aay5xix5TVJ3rjdy31MWIXUWFb0cKaBHhj0p2EuOcz4nyQU
-	 gKOhF1j8a3PdP9/wUdxZ9aoORTUWYqnKgYEZG3NsBNhRpJLmgcTqNS54o/RLRMTJ4EQ==
+	bh=TTpgPS27g9tvWKMg7nS+1O971VeCao8nId0PVN09cmM=;
+	b=3FwVPu5FkLAXA3p0x/Zztpxg3ijMKueXvXEMU1VudBZ+2vvscq2mmefaCpn0XRzBR+C8
+	 Ew8tAlRDKHT7bmvHtjjn3n7aXi3SW64HWZHC0VQefYJc7kU36JGNC0copIYsmCSgemS4H
+	 DdC9D4IwYpmeGLqa4FiuyLf8LVc/vX9LoR/k34uNNG1Zdm56PR+slVV1tEL54qvTU6sFB
+	 yfs6nP3nNv3mXeatKFKxl6KXqfvIEvwLbq15AAIbv51XknkG2Tm78WfuHpNvKWUD4lpcL
+	 smxWW8ajFMyCaNRnHWpEcnIHnHeusqATEB7A4qiZFP9I6SVw2LL4146iNjBipM3CRQA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GnG46Tel;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ajApgNCo;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1614606A321;
-	Thu, 12 Nov 2026 19:16:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322AF606A32D;
+	Thu, 12 Nov 2026 19:16:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GnG46Tel
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F44A1F000C5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ajApgNCo
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A51FC1F000C6;
 	Thu, 12 Nov 2026 19:16:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794510995;
-	bh=IIEUMbtDnFy3px0dufXVKAi/aJFPBCXhybdjUkL0fWw=;
+	s=k20260515; t=1794510996;
+	bh=TTpgPS27g9tvWKMg7nS+1O971VeCao8nId0PVN09cmM=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=GnG46Tel/T/LVnBuKGuLylVa1Rni1Q0Xnsw23CxQYFnQPp4gx7PMBqXxPYmNaXzsN
-	 h1xDUQP0djocODLayjeU1gkHCVKp9jMu3K8hN0Ufbv459ZewrRHFVFP9K9Zd0LB5Z+
-	 8uJFYkb1WOhFv3rqCodurY6el9ZJN5MUL5z8wv/gw3A/8PVsTdxxsMXp+/DgxQ+Cf/
-	 lRj5cMZGHhChuC2ia7kjRvgyh03oq2RZbWBpDzMj4PBrD6XNhnSET1bNQjIBpB8Xbt
-	 bbjg+j/TcuAfyhzOFWWotKXXHBkeHDIgXOQYz/2+uGlvCYyfkP3E0JSmiTM2l0gTcB
-	 Fu8qnFupwlHhA==
+	b=ajApgNCoD34Zjz5EYgerjdNOee/AmhIzIfaRwHUT3dGv5RFwY0UFg6LkcVLB+IYT+
+	 348NWsLgGaYmd9r3nRG7883c7iCo+0bueqRhqmy1vN2ASaW/9jdlXsNo5JBTxaq88A
+	 DZw4qzSSVfDXA4VgyyNxyiAn69ROZ+d4KKNYmR8s9e7wKfaP0oLUqKyaWywb7qyj0u
+	 QBoZ6jjTxNt7sPsrS48+t5bS0UPbFJAYVbgfywFeHkf9/FrqOJIW1k4B+P8Cgk7A0R
+	 4fAcqjevE8qhNKd+nqJ3aFgboxbQ0B4xHa1EVVAhCWg+AENk1eQtS5Zg3/6JqadpwJ
+	 OuK9fZBeKfhCw==
 From: Namhyung Kim <namhyung@kernel.org>
-To: acme@kernel.org, Ian Rogers <irogers@google.com>
-Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com, james.clark@linaro.org, 
- jolsa@kernel.org, leo.yan@arm.com, linux-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
-In-Reply-To: <20261022222245.2064964-1-irogers@google.com>
-References: <20261022222245.2064964-1-irogers@google.com>
-Subject: Re: [PATCH v6 0/3] perf test: Per-test timeouts and JUnit XML
- schema compliance
-Message-Id: <179451099413.165449.9244116407892454819.b4-ty@b4>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+ linux-perf-users@vger.kernel.org
+In-Reply-To: <20261111192328.3917311-1-namhyung@kernel.org>
+References: <20261111192328.3917311-1-namhyung@kernel.org>
+Subject: Re: [PATCH] perf record: Do not fail with an exiting thread
+Message-Id: <179451099476.165449.2568504015872173129.b4-ty@b4>
 Date: Thu, 12 Nov 2026 11:16:34 -0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -64,20 +66,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Thu, 22 Oct 2026 15:22:42 -0700, Ian Rogers wrote:
-> This series adds per-test timeout support to 'perf test', improves JUnit
-> XML output to validate against strict JUnit schemas, and ensures time
-> spent waiting for the shared mlock budget does not count towards a
-> test's timeout or reported duration:
+On Wed, 11 Nov 2026 11:23:28 -0800, Namhyung Kim wrote:
+> When a thread in the target process exits during the synthesize, it
+> can fail due to the missing /proc entry.  So __perf_event__synthesize_
+> thread() ignores the return value of __event__synthesize_thread().
 > 
-> 1. Add a per-test timeout (default 120s, configurable via '-t'/'--timeout',
->    0 to disable, disabled with '-F'/'--dont-fork'). Forked tests run in
->    their own process groups and the existing polling loops in
->    finish_test() and finish_tests_parallel() check elapsed runtimes,
->    sending SIGTERM on timeout and escalating to SIGKILL after 1 second.
->    Timed out tests are reported as 'TIMEOUT!', listed in the summary,
->    and recorded as '<error message="TIMEOUT" type="timeout">' in JUnit
->    XML output.
+> Do the same in the perf_event__synthesize_thread_map() too.
+> 
 > 
 > [...]
 
