@@ -1,58 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794447509;
-	b=xUtZYcnSGPVaMQyJrecup9yAYQpnZRSrdYdMLwNCYoBvz1Q4N+tpI73GkdDRgnurdbgZ
-	 LCDEl90G/3Tg2DAl/GTjCU5WD0P83QG3VjQBdO3Ms+2msDaK1m3xDCQGqWqsEr3WycmSE
-	 a2JQvyBRm5y1v7uQW02d5l3Wt7tzP8LafpSBN24y6eXI3ymusnQGNacpOcfKpiNr878eO
-	 ABAUkE7U6hrFdhGXejZ58mNgz1B9N8B2OUk44nVJEChMw5HuMI2UzCQHBaAYZoYc2xxdn
-	 EFfJUaia/oAMhSjFjf4SMP2GcfoidATSSKkabarheCiZBdmpyoj30beW9BvtWfK5sYg==
+	t=1794447525;
+	b=1RrPTeLpZ60cLLyPe4/RtlT6M02HRAUoJUTxKva+y+4iQ8pIurrwxVVbKjS26uYgCwZI
+	 9bJ5elQqIzMcqniAnRkO8SoI9HUbMH+sc0vtj5Q4zWPkzGmZLxvfCnjqm9DRPyCsSJhsb
+	 6lPYigL8HVXQRwWkH8JyGNesluGNFgbtnWts+o67EYi8aiEZniQxJxH2S3RLtHwXafoXE
+	 GbzBQr5dN/F5yLdVZUPqDKDBdXcL2456Mjt5OvQ65anxRBkf+xKS/E6lsKVOiee9/875K
+	 5TsAJUVNuX9+g5EoEB5z6qnArvsNi6HTAGuJGwXy9us7AoD612lkas0hQQ27rXwv+GA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794447509;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794447525;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=jjIaTrYcEzw6WReKB7K1tzW445G8ptEgd9uakp+7ots=;
-	b=o1xYC3r1c8TYzj9/CYxkzZogn90pxQP5d5MscAOBOnYpBu2wYkK7FpAgje4LzXuGyYjF
-	 mdwcTiILeqcxnSs8ClbacclNX5AMaVmDMXgz1T593cfvpPQP0dF3dA/jbNwoVxmhSt3U1
-	 CqUWfj8mwNWoHM6L0LXOLFDvCGnhciVVDYHqRck+r38Zfeqdqq18SRev+y1ZRx7V7aICd
-	 J6w//+jB2ZZFRUsSmnCf8plll9uNqP2lz638LS3CQn3tmh8F7v9D5IhZSk4i+c2QHn9lf
-	 MfcUvuDYBkJUIYI9RjDOZIKArWVxJHl/4D5Q0L480ACjYXqgXRkEAC6rdkzieKHtk+Q==
+	bh=1A0FHHRkeZNu59qGXPq9bvmsKCRiK5XouhN7KZ6v/hQ=;
+	b=LrPgG5f/LyrmC2tqqn9VMRwA+QOIKCTwhIv5WcLtTiBGnwadqw/wjXUvU7BR9+9SB9Ct
+	 VD7+1EjXB7U+J0lh0xmrVHyMIhULba/Zf9vzL7LQi9NJa+Y15DeVbY1dAATUdNT7WamOu
+	 /KQVEp1bTiAhiAc/yS/8MsGDIcSw0d/UxHo9xUsa1N8noaHNhzvyRcfYA9N1N1Y91uHLQ
+	 P7oJ9JUXqPiXjf96qsyUxKr2o/g2lqvdagzbdH5Q2ZjSBEeNxLs3PTLyWEPZmT0Vcawu3
+	 keOzb+OkiP3et/ei/r6NF1TuWjoOpRcfvDM/ThJQZXchOwWzC64GqlfvQ/7nMpFE3hg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eoSU9U+E;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="bM1aSUG/";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C664606A31C
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 01:38:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DF8606A31C
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 01:38:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eoSU9U+E
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0889B1F00A05;
-	Thu, 12 Nov 2026 01:38:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bM1aSUG/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEFEF1F00A05;
+	Thu, 12 Nov 2026 01:38:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794447509;
-	bh=jjIaTrYcEzw6WReKB7K1tzW445G8ptEgd9uakp+7ots=;
+	s=k20260515; t=1794447524;
+	bh=1A0FHHRkeZNu59qGXPq9bvmsKCRiK5XouhN7KZ6v/hQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=eoSU9U+ElZl7j32msOy9AfeTcRrVqcB+UiKQ7BXETgcJZmwGc4DLGZAJ0W2n6d7Zb
-	 K7WA8yeVDrs2j+IO2WY0+/cwDfn0I4tK1K7knlHIkr7IzE8V6nBXQ/NOe0oGcTiZ5a
-	 W1v9jnFu7VkDSz/OkdNrdoAWxtkyPoEUlgPmN2pbbDMR50N9MumV1nltnLX2HUKVTv
-	 IIUNFIad2F2RZBsCtZzB5OfrE830x00+nbZgJulmsMPlAw/DcKMDrQAZ6YwXU9OuTr
-	 5yGsSyrir+cosAfRPTQkr2K82SIJXEgpxF+DxjC8HPOUXA/o4jnQCgrejNT4QV4xJa
-	 qC3zTCE1L656A==
-Message-ID: <sashiko-outbox-210077@kernel.org>
+	b=bM1aSUG/i2jG43antmoG13A6/AZuGiBmCZgvIRGh8RanWzgZFov+yPWx7zxL2LZtL
+	 /LjuSUcEKKnM6KuqS/ad53TzO+iP0s8jN1q2/pQqvmCKo4lP8AwuhiPhHhg3KVktyN
+	 z5Us7KrjWm9YYj7yHmJNLHIVy3z1UWLOOX1FohjJPyHTwf0iro9pHawT1FqmKy9wDd
+	 VCsO9BR3hswClkTrls9dzilHDJZU87BbgSHRq+YB9HsVZ++lT4glevNI3sdTzl/AFW
+	 Elg4ubHn6kRMZ8cBVGpiqMu7lk0Yd9a/zKh6TyS7ExuEzJHbeVZudZLE3hSzOSgUKx
+	 ZtydMG3QRgH4Q==
+Message-ID: <sashiko-outbox-210078@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 3/5] perf build: Support building BPF skeletons with
- bpf-gcc
+Subject: Re: [PATCH v4 5/5] perf test make: Add BPF skeleton build tests for
+ clang and bpf-gcc
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261112011514.4032822-4-irogers@google.com>
+In-Reply-To: <20261112011514.4032822-6-irogers@google.com>
 References: <20261022204627.1813821-1-irogers@google.com>
  <20261112011514.4032822-1-irogers@google.com>
- <20261112011514.4032822-4-irogers@google.com>
+ <20261112011514.4032822-6-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 01:38:28 +0000
+Date: Thu, 12 Nov 2026 01:38:44 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -62,20 +62,15 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Support building perf BPF skeletons with bpf-gcc (>=3D 14.0.0) in addition
-> to clang (>=3D 12.0.1), similar to tools/testing/selftests/bpf/Makefile.
+> Add make_bpf_skel_clang (CLANG=3D$(CLANG) BPF_GCC=3D) and
+> make_bpf_skel_bpf_gcc (BPF_GCC=3D$(BPF_GCC) CLANG=3D) targets to
+> tools/perf/tests/make when the corresponding compiler and BPF skeleton
+> dependencies (libelf, zlib, bpf, and libopenssl via Makefile.feature)
+> are available on the host.
 >=20
-> When building perf with GCC (CC_NO_CLANG=3D1), prefer bpf-gcc and fall
-> back to clang if bpf-gcc is unavailable or too old. When building with
-> Clang/LLVM (CC_NO_CLANG=3D0), prefer clang and fall back to bpf-gcc.
-> Explicit command-line overrides via BPF_GCC=3D... or CLANG=3D... are
-> respected, and setting BPF_GCC=3D or CLANG=3D to empty disables that
-> compiler.
->=20
-> In bpf_skel.mak, pass the bpf-gcc flags (-mcpu=3Dv3, -fno-ident,
-> -DBPF_NO_PRESERVE_ACCESS_INDEX, -Wno-attributes,
-> -D__TARGET_ARCH_$(SRCARCH), and target endianness) and query system
-> include paths from $(CC).
+> Verify with 'perf check -q feature bpf_skeletons' that BPF skeleton
+> support is enabled for both targets and disabled (exit code 1) for
+> make_no_bpf_skel.
 >=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
@@ -83,5 +78,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261112011514.4032=
-822-1-irogers@google.com?part=3D3
+822-1-irogers@google.com?part=3D5
 
