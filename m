@@ -1,56 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794505565;
-	b=edIQ8f0rWCnmCnb8dlHcEHKWu5le87KDgdcACTpVxwCK6yXSPAk/FA/njtIC8yist39N
-	 GfN6px1YqhmhLXEaNX4IH2ZaNVs2xue36gFwzlXHHLp+atN2OYMAA4fAojaNTsufAowev
-	 ORg0+8mwAjjFWNWY0dcFhPyqT3pqNsPqVuCw5oCBdh6S0MYJvmHFWfscn8aNHUwBp0zg0
-	 yt9PpKkoKWkgV9PhuOLZcuc/saxYHmXH10kC0kn49Unj/HdsGRzPiWvEVtsNB9pa5gmaz
-	 8B90rL1ZVuSmfpjPy0qT+CcJDlCQtt+BIekh3feY6OvKkDla9YhrkURfO+i+4WHggOQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794505565;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=C86U8RloTglgsszDzhJdbgMg/rffmA12FYMFxG8eadk=;
-	b=saBQSWZCrigWv6VYEoV2Lrl79XEk8a5QFyOgDADKKWFBhxz7qfyMdht7N8i20RuFWbcr
-	 7GriZCWDB3pejP/Ezj5TfMj9fSpL+QP0pYEIpzo2Rm7EsjHhxre+rKkY7lmHx0eizrm6n
-	 G4fmUpfQ3aJWXGIvdmrAAg0ZUTkaApc/mfiYnYaQpx/fVvR/00L/3Zs9t6OiswPlGoDX+
-	 oukVWTV9i7kzJOXeHUdMoRDYTVS+iiZEKqC68Sb2FB5JOMvno0q+yruzFtLv+7P+FaihZ
-	 /Hwq4wGyQWIxKbGNQpqTHJj5hhhfil88dV+Cs0Hv88jY0O5GjYcA69pVA7NupvqXq9A==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=l1KeHlPw;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.176
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794507230;
+	b=q5m6doaC8napUxrB6yDJU4I78ePfTV41F2f626HGnENCKCZPli//HwR6rlhhqVS85XQW
+	 ig3C4TFOweKfrDdtQeL+w2cN1XE2wZWrosqfmjmeKDJGkyFVpDwkXTXrtLIDtXBvwIVbZ
+	 pTHQUkus8u/vGd8RbAyW+0Q8d3Acs47hRptTLLxggaBiZcP+vmoE1QtnavPsSaE2qUxQf
+	 U2x0zNnh+wqIcENqLIyp3NZn1OHsxwn46A0n4OX9EYwwAEFITwJEaM4NlejbQOGuFzbQz
+	 suRt/zypXKQG2asbkZhif4NEV1ZXrfvxMeEYOIT1bGljEeiw9tU5plfATOEMcB23rHA==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794507230;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=rZ6GJC7hEGwULDynH0oTCtdmn91ovRHlyRCH+X3ZTes=;
+	b=ea0TVIiLJJHivn+rMdcDC86XeEZjCjoFSdEB0tQ81NUDb7lLDZZpwepmZDihigQH/5Pu
+	 vP6YrvOG4iJsuH0NYLsYxDQkhqGoEpJ+SR65kJ4mr0Xfhbk7vole4CgvPe8nzzuCLVqBz
+	 doKx/BLmvHR69JAU552hD+ZKQEw1MLZwfLBdcIKlqRxZTGRi2jhC6IUGdKM8LYf1q/1VO
+	 RZTNIIOE4bUEdByT5rVrcKT8KyWjUeWwA+N5nX5aFa6YnGXXp+3ckIZxMD1qaich9SNfs
+	 fwAppFmpoDDTeSXq23n7I7kIZDgg4l+dFiKn2O3F/Nds7oWXi7rm7/4+8kcC1RodgHg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="QAOT/jUa";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.176
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819E7606A31C
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 17:46:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B46606A33D
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 18:13:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B3B46606A33D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=l1KeHlPw
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFC421F000C4;
-	Thu, 12 Nov 2026 17:46:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794505564;
-	bh=C86U8RloTglgsszDzhJdbgMg/rffmA12FYMFxG8eadk=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=l1KeHlPwErMwmEUUaS3k3iVYv76SuHLyD/E8gICkR73ZhiCopN10voycNjZ95z1wu
-	 aTsZ3fZZkxMLZZL7Q42ubG9O43P+9xUumvaZhMZyKTD0fuuGvzTHKRkQ6P2YKT8Uqf
-	 pri030PhBa7hf3ZroKBhB91zcRRpt0veuA164TtqAr61VComBpSyUI+X0oCZ3HFEGO
-	 G1MuLhv2x3b18RiVao/RGoRnfup/R8jQBkf2SymebRF1aXMT7YoxpW92FUhHU+KF/Y
-	 hOoqoaYGFKwcCjsw579NqJYr85H07rKaXKhIXS8Xi/iaUsiQrGAlta3oMILYtFjaNu
-	 7VU9YXyxhJkzw==
-Message-ID: <sashiko-outbox-211625@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 1/1] perf jevents: Check the keys of the JSON tables
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "TAKANO Mitsuhiro" <takano32@gmail.com>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20261112173241.197996-2-takano32@gmail.com>
-References: <20261112162823.139419-1-takano32@gmail.com>
- <20261112173241.197996-1-takano32@gmail.com>
- <20261112173241.197996-2-takano32@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 17:46:04 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=QAOT/jUa
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-535f598d126so7371cf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 10:13:49 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794507229; cv=none;
+        d=google.com; s=arc-20260327;
+        b=TVft9uwemdmmoepPFb5Wlc3jaXcF94suEd2mI9Kn5jiv0jCw++aoh6kWGDVPI1ZbDf
+         LC055sScchQxHkAp5lVlfwJDpPolR8vGhnHABx9RPNqQ9pDnnLHarhiA2V8yvMkboOgk
+         Hw826WDQEanDga+fQTfKL1LP5cnGWnwyi5ulGCdr2H4D4MmARzs4mg3GdPbMu/JOW/nJ
+         qbdqQyMTJo0y2BAh2od7xUVGKjmdwjuOA4rwSl3fXIbInmf8zZijfqpV7FowIT+BxCyv
+         yTdMjWf+jNZ71zgRk4LQQDzEkOfyt1VSHcuQ5fPxRP6RDt0SB3e2MDFLt86vCPjPeLdY
+         MDTg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=rZ6GJC7hEGwULDynH0oTCtdmn91ovRHlyRCH+X3ZTes=;
+        fh=swyzE5s4mE8cjlx7xKZYqcbSuYvVVaGd5gUz5M1BxW0=;
+        b=YFMUInGgN0RjdiLc7fKe5FlJ8PzszwDMFkYllI7n+x+SGnmWi9DCSXEIDjJNMJCpy2
+         EFGEfxiFxwYeyiJvgm8gvbPRXC0xLvnHOqDWdw3YnuVfq3oOg/w66YKRW+9f3piyi7uR
+         6WMLCzE9iUSZBqU4uzZ16PeQdYY9xyNrbcQBrMBz9mTf/Ph3+y51p0hmkZPqm2YKTEjr
+         bGYs9HzfWFalrUZar1yx5kTGdEWyOpmznG7NPjIH0JOKtmv18rr6dZkR0GQXtZDAsi3S
+         cC8jeQkyJUX2bZ0T6rylpU5hbJ1ff9P7YrysulRc28IyCYbM8y2zWzs1JQNDSvcF+QkK
+         1o3g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1794507229; x=1795112029; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=rZ6GJC7hEGwULDynH0oTCtdmn91ovRHlyRCH+X3ZTes=;
+        b=QAOT/jUa1ge+FjhwHcidPWqHm+YYo2QRnirCuBNYMGRauQmP4nWTzYMNyQy+u3k+zu
+         tKbYvx+UacipiubMSX2t0aNrINRm7JGqNgE4HnDn5ONmnfqtBlekoPiY6RyY8TJZdqB2
+         iMPSQi99rEXSAFVRN+O5374t02u1cDpUtC9gCdwxOQi1tDaoYnuxIHmFNDKqKWxTLKbS
+         yD/UvRB7ECUE0FZhxd0sv0OzKQeI5b7SSgNPE5jKeoEhoVTsDve8pyILpbnScp/cH0k9
+         e0x9cHDKovRAfsJLx0KDxuQYUQ4dTbRAqXvjFi+foSzaKIMiYm0P/fJ4606JrVpwnrVb
+         ZQxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794507229; x=1795112029;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=rZ6GJC7hEGwULDynH0oTCtdmn91ovRHlyRCH+X3ZTes=;
+        b=rYmpX7pWcX2E9ET2w/DjSCkxhaHr8A7tMwWHpx2pr/r8WR3DfJDYv+EX/QiIB/qR/D
+         77k6zBwf5Kl+W4/lb5EapH8SpH+z4KudqIglqkyzlLyLOUY2EDnsjcIRSrYY8FYX11aN
+         Eq1I0Ix1bgOkHYSxient5HgONqx4MkRLCVDfp0rm2EBfpYx/qaq8TT3mXEuwxkDf0mUE
+         m1bKTnGkVlwPYXcfjGePSv+y0P5M0i+gnDwXzHZ0YvMpRc7El6FRf5JwH94GeZ9cTFGt
+         QMtCqTewspvW8lEVcM3ct11tiJ/ecsLvjmBNCwVC0KrVmLo8Y+CnnvY1JcHOmJ8eANxx
+         3GHA==
+X-Forwarded-Encrypted: i=1; AL+hErHDPUXNx7FLZf3tgur1kvmbMIwO4EaOZbBAA0iuTrLqo+PCRVnc9oyvJDjMpMQppAD2oAjUoY18BUpGsZMXefSR@vger.kernel.org
+X-Gm-Message-State: APuU4Z/zjm585MLJI8w36A5E3w3Bg8CUAc3G6BfgY09xbRYB3DtwOphW
+	TyW8Yyr/YXHSyiC6y2+wBJ4NxAAHzRqC1FSWTUX6JsGe2vBrZgi+glZ6hhbl+WKG3M0qaBcKPh+
+	QU26F+eZ6sbOQLWuzFtyKnFh8VAFSC0SYp9qujn1f
+X-Gm-Gg: AYBFou1633NrfyeZVKUDMfgMGw7ZQSH6mHw+98ExqK8FnVN2as+vUC3i3IcsmEiUK6s
+	JU3iXlqk5qdGqI2KMnnu69yI1XCjR7DY2sViLQSQ0lnextiCDQay0iPZQsoH8JedFg7NLSYnCP/
+	WfLaeWe0KXTlwz+aKkx5DW16JHJWx36fbEamLw2GxJBYINNfz9WN8YbjHhpq0VqTK4p+TZeCDta
+	ytDd9OfiY+oJdcBwyJ4RoT0fae2pd5B+O4/tGvhWa+jcK49pc2YAQn7jvq6qUuChBMqipCfk9B1
+	hyXO4cZouCSgOQJnx1e8ea2MggeceQZKedeBNMr8Saa+P76f6RTO+KnKLokfwUBBAEjAfP8IZnS
+	5/TxIqfNQKQcPNLa2g76PN1vWyAL5AWtvv2U2+3P88a18QzFigtpWC09z+4SCUSdMi8w=
+X-Received: by 2002:ac8:5c84:0:b0:534:d386:c3f1 with SMTP id
+ d75a77b69052e-5598d505571mr21838081cf.9.1794507227881; Thu, 12 Nov 2026
+ 10:13:47 -0800 (PST)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,126 +103,117 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+References: <20261104043006.1199857-2-irogers@google.com> <d94520950f855a1d5ac4b51975988b70185ba7da61836aa84b044b69e8104bbc@mail.kernel.org>
+In-Reply-To: <d94520950f855a1d5ac4b51975988b70185ba7da61836aa84b044b69e8104bbc@mail.kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 12 Nov 2026 10:13:35 -0800
+X-Gm-Features: AclHuK_VHOAaoYtWAecnECui2dC3TEgW3VbUrZGpnHMy0F3WB50lMjG2hgO8I_c
+Message-ID: <CAP-5=fWekVEnxS_eSGsrCPM2XzoY=Z5fkYYK_dD6MGgxX3N2gg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] tools build: Add explicitly sequenced -lzstd to
+ libbfd feature fallback
+To: bot+bpf-ci@kernel.org
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com, 
+	qmo@kernel.org, jpoimboe@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	eddyz87@gmail.com, memxor@gmail.com, martin.lau@linux.dev, song@kernel.org, 
+	yonghong.song@linux.dev, james.clark@linaro.org, leo.yan@arm.com, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ast@kernel.org, martin.lau@kernel.org, 
+	mason@kernel.org, ihor.solodrai@linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issues to consider:
-- [Medium] perf test: jevents_check.sh never checks in-tree PMU JSON
-  tables
-- [Low] perf jevents: --check exits 0 on missing dir and rejects
-  --check=3DDIR
---
+On Tue, Nov 3, 2026 at 9:03=E2=80=AFPM <bot+bpf-ci@kernel.org> wrote:
+>
+> > tools build: Add explicitly sequenced -lzstd to libbfd feature fallback
+>
+> TL;DR: Possible build break at this commit: the libbfd -lzstd fallback is
+> removed but no consumer uses the new feature test yet, so perf may fail t=
+o
+> link and bpftool may lose JIT disassembly.
+>
+> > diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefil=
+e
+> > --- a/tools/build/feature/Makefile
+> > +++ b/tools/build/feature/Makefile
+>
+> [ ... ]
+>
+> > @@ -249,18 +250,21 @@ $(OUTPUT)test-python-module.bin:
+> >       $(BUILD) $(FLAGS_PYTHON_EMBED)
+> >
+> >  $(OUTPUT)test-libbfd.bin:
+> > -     $(BUILD_BFD) || $(BUILD_BFD) -lzstd
+> > +     $(BUILD_BFD)
+> >
+> >  $(OUTPUT)test-libbfd-threadsafe.bin:
+> > -     $(BUILD_BFD) || $(BUILD_BFD) -lzstd || $(BUILD_BFD) -liberty || $=
+(BUILD_BFD) -liberty -lz
+> > +     $(BUILD_BFD) || $(BUILD_BFD) -liberty || $(BUILD_BFD) -liberty -l=
+z || \
+> > +     $(BUILD_BFD) -liberty -lz -lzstd
+>
+> Can this leave perf and bpftool unable to link libbfd at this commit?
 
-commit 36d55c52d8c667ed37678b7b12c79a3614fd5c56
-Author: TAKANO Mitsuhiro <takano32@gmail.com>
+So the concern is that at this commit, not later in the series, a
+feature test for a libbfd built with zstd that previously failed to
+link in this feature test will now succeed, but the parent Makefile
+will not pass the -zstd flag and so break the build. This issue is
+fixed later in the series by adding the -lzstd. Will this impact
+anything? It will turn one broken build into a different kind of
+broken build. I can reengineer the series to maintain bisectability
+but this seems like a low priority issue to address.
 
-perf jevents: Check the keys of the JSON tables
+Thanks,
+Ian
 
-This commit adds a --check option to jevents.py to report unrecognized JSON
-object keys in PMU event tables and adds a shell test exercising that optio=
-n.
-
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
-ents.py
-> index 080e04b51b8c5..5daf92527573e 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-[ ... ]
-> +def _check_tables(root: str) -> int:
-> +  """Report the keys in the tables under root that a table may not carry=
-."""
-> +  bad =3D 0
-> +  for path in sorted(Path(root).rglob('*.json')):
-> +    if path.name.endswith('metricgroups.json'):
-> +      # A dictionary keyed by metric group name, not a list of events.
-> +      continue
-> +    for obj in json.loads(path.read_text(encoding=3D'utf-8')):
-> +      if extra :=3D set(obj) - _TABLE_KEYS:
-> +        print(f'{path}: {sorted(extra)}')
-> +        bad +=3D 1
-> +  return 1 if bad else 0
-> +
->  def main() -> None:
->    global _args
-> =20
-> +  # --check takes the directory to check and needs nothing else, so it i=
-s read
-> +  # before the parser below asks for the three positional arguments.
-> +  if '--check' in sys.argv:
-> +    ap =3D argparse.ArgumentParser()
-> +    ap.add_argument('--check', metavar=3D'DIR', required=3DTrue,
-> +                    help=3D'report the keys of the tables under DIR and =
-exit')
-> +    sys.exit(_check_tables(ap.parse_args().check))
-> +
->    def dir_path(path: str) -> str:
->      """Validate path is a directory for argparse."""
->      if os.path.isdir(path):
-
-[Severity: Low]
-Does _check_tables() exit with status 0 when given a nonexistent or
-non-directory path?  Unlike starting_dir below, --check does not validate i=
-ts
-argument with type=3Ddir_path, and Path(root).rglob('*.json') yields an emp=
-ty
-iterator when root does not exist, so a misspelled directory silently passes
-with zero files checked.
-
-Also, checking "'--check' in sys.argv" misses the single-token "--check=3DD=
-IR"
-form, which falls through to the main parser and fails with missing positio=
-nal
-arguments.
-
-> diff --git a/tools/perf/tests/shell/jevents_check.sh b/tools/perf/tests/s=
-hell/jevents_check.sh
-> new file mode 100755
-> index 0000000000000..62ce70ef5d022
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/jevents_check.sh
-> @@ -0,0 +1,29 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +# jevents_check: an unknown key in a table is reported (no_mlock)
-> +#
-> +# A key that is spelled differently is dropped without a word, so the ke=
-ys of
-> +# the tables are checked against the list jevents.py reads.
-> +
-> +jevents=3D$(dirname "$0")/../../pmu-events/jevents.py
-> +python=3D${PYTHON:-python3}
-> +
-> +# An installed perf has the test but not the generator, and a python that
-> +# cannot run the generator is not a failure of the check.
-> +[ -r "${jevents}" ] || exit 2
-> +command -v "${python}" > /dev/null || exit 2
-> +
-> +tmp=3D$(mktemp -d)
-> +trap 'rm -rf "${tmp}"' EXIT
-> +tables=3D"${tmp}/arch/x86/model"
-> +mkdir -p "${tables}"
-> +
-> +# Known keys pass.
-> +printf '[{"EventName": "a", "EventCode": "0x1"}]\n' > "${tables}/events.=
-json"
-> +"${python}" "${jevents}" --check "${tmp}/arch" > /dev/null || exit 1
-> +
-> +# A key the generator does not read is reported.
-> +printf '[{"EventName": "a", "NotAKey": "x"}]\n' > "${tables}/events.json"
-> +"${python}" "${jevents}" --check "${tmp}/arch" > /dev/null && exit 1
-
-[Severity: Medium]
-Does jevents_check.sh ever run jevents.py --check on the in-tree JSON tables
-under tools/perf/pmu-events/arch?
-
-The commit message and file header state that the table key check runs as a
-perf test, and _TABLE_KEYS and _check_tables() include exceptions for unused
-keys and metricgroups.json in the tree.  However, this script only tests a
-synthetic two-key file in ${tmp}/arch, and nothing in the build or test sui=
-te
-invokes --check on tools/perf/pmu-events/arch, so neither existing nor futu=
-re
-key typos in the repository's PMU tables are caught by perf test.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261112173241.1979=
-96-1-takano32@gmail.com?part=3D1
+> Nothing here reads the new libbfd-liberty-z-zstd result.  Neither
+> tools/perf/Makefile.config nor tools/bpf/bpftool/Makefile calls
+> feature_check for it or has a branch that uses it.
+>
+> On a system where "-lbfd -ldl" fails but "-lbfd -ldl -lzstd" links, the
+> parent commit gave feature-libbfd=3D1 through the removed fallback.  Here
+> feature-libbfd, feature-libbfd-liberty and feature-libbfd-liberty-z are
+> all 0, while feature-libbfd-threadsafe is 1 through the new
+> "-liberty -lz -lzstd" fallback.
+>
+> With BUILD_NONDISTRO=3D1, perf's Makefile.config then passes the threadsa=
+fe
+> check but takes none of the EXTLIBS branches:
+>
+>   ifeq ($(feature-libbfd), 1)
+>     EXTLIBS +=3D -lbfd -lopcodes
+>   else ifeq ($(feature-libbfd-liberty), 1)
+>     EXTLIBS +=3D -lbfd -lopcodes -liberty
+>   else ifeq ($(feature-libbfd-liberty-z), 1)
+>     EXTLIBS +=3D -lbfd -lopcodes -liberty -lz
+>   endif
+>
+>   CFLAGS +=3D -DHAVE_LIBBFD_SUPPORT
+>
+> util/libbfd.o is still built, so the perf link can fail with undefined
+> references to bfd_openr(), bfd_check_format() and disassembler().  bpftoo=
+l
+> goes down the same chain, silently drops -lbfd and -DHAVE_LIBBFD_SUPPORT,
+> and loses JIT disassembly.
+>
+> The consumers are added later in the series:
+>
+>   6eb66acc776f ("perf build: Add explicitly sequenced -lzstd to libbfd
+>   feature fallback")
+>   155513d3a59d ("bpftool: Add explicitly sequenced -lzstd to libbfd
+>   feature fallback")
+>
+> Would it be better to keep the old -lzstd fallback until those consumers
+> land, or to reorder or squash so that each commit remains buildable?
+>
+>
+> ---
+> AI reviewed your patch. Please fix the bug or email reply why it's not a =
+bug.
+> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/READM=
+E.md
+>
+> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/417749=
+22004
