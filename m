@@ -1,101 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.216.49
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794501662;
-	b=KSxhkLIryGUHzqFoKqOQZpgZBxp+RPM7yoV2dRc7ChIbMq5LMawK5KSeR2b8qqcV/d97
-	 fpSIHAtG1IwwaD1lkn79SJvpxNQwg/oQsx3qnEwUwfI0Q27WyuOhS5cAhbt55JRy0bocs
-	 cJEm8wV8b5Oflbfr0NklB4/0Gi+hFlMmPwUYIpMjYmB0mF0WEIWoKSMLnYOPy+H4aJXOe
-	 vXqKYuI3DxwudhEmBvkjILnFd5/hnOVAvDNhr7XFntl+dXCPkXpNl46QPA55x0gsImKB9
-	 5oDTt6xoe1DJdHT7NmLInKrl/Tx0geeLLEpT9M5jWW/1cKXlAu3opshRZgAfhUOSSpw==
+	t=1794503186;
+	b=Wd4yhjS2OPnxyeSRyJir//jr7aXcEMQn6Peh+pEDhkeCiruj5bwKfKHS6R9JnsUuMWcJ
+	 WHmnUx098/XY2bRDkoAYOIrJcO0Gj+OEWmjCaS+zQJj9hEu6Zv4rAu6kbcVBXcVg62meO
+	 bwD2AHfvyj5Tv64oZcBw86FJhvWrbW1mwpqdKmNZnuWSczyrESqRe8uNHvhZthPllu7lR
+	 YQuS8v/Ye0ceRhhwCpkxvT86USKo2ZVmvNHXeW/+yfSDoLuGvFvJr/RJ8eaD35HfdXq10
+	 gdkvMI+J13EPoj7xc6k2KDKzZbcq/3eMV+x2s9mgJ/tR8/Z/JBoMLRHsbnHZ39MwFaw==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794501662;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794503186;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=IBC4BwbngFExwxTmiTkfTdZarJDe7r1VPiz0JfI2IbM=;
-	b=zI2ZeJ7i7AOe40K9oGvO+eNlqfElCZaL2ow0cYWjJG+JnGz12GRcFV06LI9HL2QYS943
-	 S07sorSk1Dsd4SDJEVG+/dPHakwEkiNzDaXeJF0i2mxHHm0h4THNero/UStz/xLG2SMAd
-	 XxgUD8mwwsV0LBOCGtF1gtYVSDKRs0I9lPrnqcxP+f+kWRuby2xnKzEwe2zVsYYT6GU52
-	 uo3O8L21wj4XkazvFb/1o1efGyMNt/COwsODP433LR3cr+MtSiVtCx7fYayhYgAgS5zO9
-	 eG7+cudrZ6H+wwnjf8XqRNUQaqC0zWgEZW2fHQKiZ4zRw5bDgqAWjOvlQ8h2+9uyK2w==
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 MIME-Version:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
+	 Content-Type;
+	bh=n1UFYaTUgMxyzKDugLadjgfN92wam7xCBrE6jHJt4/U=;
+	b=huah9ggWt3CCCyqAHsEELVw+7uig4HV1ImVJexoD/Kb+ep5Ny6hSFu/ZarvB7IzBVtip
+	 pnt0383jgMwrnm23KQk/KkfWk9PONzEx/PwE6ZFVsHaD5c4hX6JIFacSGUxHtHUDwo8yf
+	 HYcmIrzTodsmHAkX8LER/DexMFn1HZiEpKkofiGzPwLdnssX4/6kGj7nKA/muK6dT+sIJ
+	 fguc7xX00WQmv0WrUxEqjJPNkN/GqJ+YBknhhKgZ9L9r7EVg8wpTKa17/IKJJjX/qBYlY
+	 AgLM7c27NVaS5e9VFEqY4kcmHicaOYfux4qea3DstTW09sLmTNtYXTEdSdAJtUPcIuw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=vjZvUhJ1;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.221.51
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=G4t4Zafi;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.216.49
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466D760A2621
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 16:41:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 466D760A2621
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD545606A32A
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 17:06:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AD545606A32A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=vjZvUhJ1
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-48dee593f18so3599783f8f.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 08:41:02 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794501661; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=G4t4Zafi
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3ace1f3897cso1143a91.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 09:06:25 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794503185; cv=none;
         d=google.com; s=arc-20260327;
-        b=H6Ar1Crflm0YzjYlK4TB68HPT6fhlQ+7G4FrRj/0aFngHsYIZcMvO/qrAwAsi0AlYR
-         aE6kiz5H4tsnTCS/Ze3+gw9y4g7uzroh48ooxkHDAQxnFvKEybMAdjE0G5SxA81O8Mkr
-         w7rDUl2ntOsUTmubqrSBs9HGhJtMdY40lSdHAQ32ox+YVC0hy06GnMBUntyR/ZMsI6/h
-         dwx39IeCaD6srfpBwMmIbN1RvWXBOeOQgsCna6eRipVE1GqFaa8LimmG1mmKVhAr/E+t
-         LRyVHvFfZWhVrAHXNjwf+K2bGFpNqn1JzbHJdgsIdE4qPfyhYTDZSL3Gx24Hne3dCFk9
-         8LjQ==
+        b=so9rIlo74GJGvSl8WjlSYhK/RrvWoKwGrBTnMYgmHSV7cB7nSH7ChKOEPDzQmuEVtY
+         +vBUfeQQhTVCCxFYJEU4IdXIZnD5g5s+GL3vKjiZ08zGzLbtUzmQYlXza54u/KsgZBT7
+         H9Vr6opP1UVpd8cDTv8wPCMIUY1d2PwIjynnbVW39vAOf1jD78elMtD97KLBQBSSYMUS
+         by7u8DFotMEsSjqX1wMlCyx4xSOK6zTgdamgA9NiThzHmjQjxjER/92xahhzWo5RlgAR
+         TTuN3BhbevFiXkw27+UDhJmhqtwCb1qhUKcZWN8D4SoqzjpU1UBXdlR4ohcpzDxhP+P8
+         ibXQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=IBC4BwbngFExwxTmiTkfTdZarJDe7r1VPiz0JfI2IbM=;
-        fh=ck/GffTmn8aMsmU/rTizmZ4PUo+iI0hwmAvmoWx50SQ=;
-        b=ZQnpwL3O+pJYRh6vcJzXoQDGk/+WEOJFYt/Cbw03FGqUxBoWGozx8DkMs/QbPmLM2E
-         Fz90JkftDhGwyhRloGPu81T7+X7d3nWINU/j93weuCaQW11GjmAC/piRNFIGsFFiGJjH
-         eTgOnH9hTEY7HBSJ9nNqQsOraic0tLC7XKBEAH5k0muRZC2OY8Xa78SDZEYEsIAyhfvU
-         0Xw9kJgB9++yDXuUASekX/DKcREYeoTjchOByGqhd11z9ZMWUAnZD94wK2dIEm2vw9xx
-         xaIgnU0TnyKTcjxCGmYokfPtPVAvH6N8O2QryC+GeDpAZZRMz8epx9VOgmNwvBiv+o+A
-         82YQ==;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=n1UFYaTUgMxyzKDugLadjgfN92wam7xCBrE6jHJt4/U=;
+        fh=xHFFZbuWdl3jeIob27LeqLqr11I92nbKOWNz36c6g4Q=;
+        b=sqpIgsA8F4RLi19sXSnl//O7XXVoJHRe8VYm9mHMf2IPZi3/lxyaKTX4x/sVxcYAR4
+         mEMv84s+nFG8PGUkl3eW7Qlqf6vpfA9JU3AHvn6NNpNNzaZ3VxvH6ACNVyX9bVQJ127s
+         u4NsGo63fJx4+fEM6A0fWHzndufLTDsk7yPGpT8ZGO1rHw92eQe1QwuVRHSJmIKCMmJF
+         p4LCRCaOEUOLwwxvhSv6zDpWQJxqtr/w/yNONszlgjc5xoSxP1/nxCqkafqV+AUCWanD
+         aRl1M0TGX/jubBdo6Jd+gNyyh24ymu042zGASy0t2h4w4uUlNa/n8T15YImFYHItVhuJ
+         ZloQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794501661; x=1795106461; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=IBC4BwbngFExwxTmiTkfTdZarJDe7r1VPiz0JfI2IbM=;
-        b=vjZvUhJ19QRU+AiKc6KMqW190hVpWOlrqhNDnTZcTTSXb1vtsAZPTM1uV2b5maBx2U
-         RQ6yt8kOTYsT6PGh0oGC42EDyYtvkwLhliyWJuemfr1t6x26L9ZAWHB1CmzNmL3Su/+E
-         lkaTNObDft8B2MWiSaGlQMv8rldaSsccfa7O6zbRpisgLeLI8fm/DfB21zF+Nx3Jb4EC
-         iOWaines2gkUBveFbdyoEWPkgxswH10MCvWwKgXMD0cDeQHgUdvQP9B0WuqvjNxvTdGV
-         pLNJcnMiJ1x3OY1pPvS5ZUOIHIBCHKi0T6nbKAR8TknmO2hmVCjohr6sM12jhueaWZBP
-         l2nw==
+        d=gmail.com; s=20260707; t=1794503185; x=1795107985; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=n1UFYaTUgMxyzKDugLadjgfN92wam7xCBrE6jHJt4/U=;
+        b=G4t4ZafiTziELVVr1FXyuIirw8jqTgQNi92J9ZUtw96wy4nmfD5jWCUsHYuMnbMeTk
+         UyLEjywopFcNQfLI1wjAt4cAFrOIMxOfKLvX9/XKkt1GD1MFOQ/re2cyxNTfe83speWy
+         eSw/27Eizb+HWulX9d0+9JZ7E+mUb5jwSuVfhjyXPi7Fr+TowFuna82zGdZsG0c6485i
+         G9NStxBt5bG0erCWLfmtCxlCSWjayOGuYkIDS3m7ApNVU5l3vu248UZQy14jL88mHUdq
+         408x0hPXWvonAZS3KS0jCl0GrgvQvIRxCf0M4aVaxHmFV88mtS+xzh7qKnm15cbWOMQ4
+         dXJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794501661; x=1795106461;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=IBC4BwbngFExwxTmiTkfTdZarJDe7r1VPiz0JfI2IbM=;
-        b=c9cPMu4AFZZYA6wXgkc8Kt5YMosuM3AXTxB8oSOnakstP8l+oWuOnp54OiEj9faXll
-         GcayYXY8M7uNKGaBrT1mVVgIlySS5BRcSIe3E6za6MAZcInyoM1nUrpfHgOlnE4kSfVu
-         6fZkGX1Ss7wbtzPYRkh8C4VV/g3He2yzEvnoffacyl3EV/eZUuzJ1Xim67nCclkJ5yUs
-         Z9lIOPxi+Nflt8VcN0ebHYugEybH5O1xiesYRlcjnb1vwPDeJZxMbASfZzO2J9QP091k
-         HE0r+SSAH7hnGQqx3vhBDK1/WY0/Bew+NVs0snyC1afUMt25MEEhURTuciW2L2twIgK1
-         5yAA==
-X-Forwarded-Encrypted: i=1; AL+hErE6qfKwaaHk1XohR/ltiWCCHNZzl3cvYgGzZeGLNRhcAQPgtaTz4s8RpwZsmPYbjrNJcMtSvgb5X7zh95XRyqBA@vger.kernel.org
-X-Gm-Message-State: APuU4Z+wLbaXrjJTeD9WjxZsXLWw6uAaZ3d7u4XpzDkpyt5qu+QbRHlZ
-	FyJwqvZl6HmGKxsUg/YIIJosb25C9epwcj8TTWiUAKuoGnTKSeEGchYqWdpEYalaA23acrhTRZc
-	MsP4UcugrWKOcDxfxcbxDaTVgZb5dCvI=
-X-Gm-Gg: AYBFou0gEsoI/yHQ83GQ2vm8enB1MmqnWZTjdBEqlgnshCmOfO8Mv3kS9qnFpMI0LkT
-	8AYZKJxCKGXU63RICPWgyPbEemtz8z/f/qc6VDhvihmK/UeZLWD7x8hCp8STldDXDbT/psgMw1W
-	Zlmq9q3Z6Fyc5OBTr3Jif/ldmz1972zB2/pZybcXneBztF85nILDEP4EVdNJXnXoTxLy0EsysBj
-	lR44BUvgPkVWSgi7+cAwGFmWYCdqwrSdAGmoSeVv1XzdH2PoXcHGnoIqIyXefrAo/RxpRb74Rmv
-	gjTpXzLJqemGTAy9Kgif4fbcssDitAdwBC+8/qZ268+LNH4n0fkZmP+SF0xAgoHYJMs4zWTg58c
-	BVkjGnMVY7BuVdcGgwnHZgoB5lH92zVllyFAD0L1WXqVlHsGQTnB307mSinF4qxTgbJfRL9Aeta
-	Us5L/qNeYwnMnlJOGEBT9sZ788UTrATFAvTg==
-X-Received: by 2002:a05:6000:611:b0:48b:9d2:1a6a with SMTP id
- ffacd0b85a97d-499c5783b39mr11321286f8f.1.1794501660442; Thu, 12 Nov 2026
- 08:41:00 -0800 (PST)
+        d=1e100.net; s=20260707; t=1794503185; x=1795107985;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=n1UFYaTUgMxyzKDugLadjgfN92wam7xCBrE6jHJt4/U=;
+        b=sSAsV2e9JOsSjMUPyhji28YBYpB3fYKdL3WnN0vjf6k5duV6voBpT6ptf8zpPXYgvn
+         L/Q1uSpCekkQqZLYpZwsQpTvHnKuoJgeki/jZfkpRWQUI1xT01sI34IwxUVxqUbg0RU3
+         4DEY45l8j/God3pBAw3JSJrAu/Y5HT2S1V4A+AWNywmvazhZwJfu09adpVTOonw3TTXl
+         ih3sR3/XZQwLhGNcHBA+9SHY5eQaZJ+4D/iXdaqIAkrh5CL6GuMdfYHXOAVx/7h6OIsx
+         O+eqlks+Eb5jQt+JCI4mE6s+TIbNqTkDeDoRhJz1MmV5e6/lktkpO2bE1m/qWMz13+Rl
+         YVxQ==
+X-Forwarded-Encrypted: i=1; AL+hErG8Xpj7W2uhLST69+rmvADC0enUFrjF1jNpP2egW9xVuv5xsJtUAIp1WMu2dBIAiG8KuYbbu19vidJz6r6TOxss@vger.kernel.org
+X-Gm-Message-State: APuU4Z+JRB0SSvLcv4T+J9uiBHIaQxZkXC1HOPqe3d1ozIJud71a3ngn
+	k4Wx/f+sTALEbgAROHnTZu1hglOJRH1AwoQ2jkhuYeCtYKv3uh6EPKPKd9ll7zbOxmBM/gy5Zg+
+	o4MxqR1Scj0bFwFdNA9r+dUmw0REFYWdCFA==
+X-Gm-Gg: AYBFou0Gi2a/9iMAZVeebVjKHpeB4u4lV3rqX5A3nFltOPe49S4vXqSujeiG4CFHWPH
+	gRSuUbZbhcgUu54Xn/TL9ysqhexlzWgViH6oO3GmGK9AhdxjI+AV1k+TCifLybtogyxobGhSR8B
+	FY1hVuD2rKsZk6Vu9RYuyCf3va54b64dlFW00NWf32Bfjg6TnPTzh3LK3batrUlD2fpf5BDI8mW
+	SVN6GXgNwY7vcImcfMtlOgMEJilU4/9EqNEsmy09kyoe3mtPN1t628dqF95AAD54iqQa8ZrFLBb
+	5ckf69przgeGhIqLWXs4CgYt7OyURjL/1eQ5WQdjY8IRBrWB2oKgfPZ3Yvk9CLLfiBVJyahaau5
+	PLYhGhojDQQpEZ0ovlG+oLifcocGfihKfzx/1bOIlqwWiAfTQWFjPUyLC5+N60+nQV6qIx78jL1
+	UzlhFJX5jsufskM8AZoA==
+X-Received: by 2002:a17:90b:5347:b0:3ac:b6eb:e0dd with SMTP id
+ 98e67ed59e1d1-3b182f9bcdbmr6127741a91.50.1794503184714; Thu, 12 Nov 2026
+ 09:06:24 -0800 (PST)
+Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
+ Thu, 12 Nov 2026 09:06:23 -0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -105,67 +104,132 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <b7456dbb-16fd-45b4-8742-e9ea3f896317@amd.com> <20261105170340.165507-1-puranjay@kernel.org>
- <CAEf4BzZeVd4boXX4Hy1sKAM=dUPS7dvdmrOPybGrrZV+bU7eAA@mail.gmail.com>
- <CAEf4BzaGnsOhpz=bOxoSEyy-8W0epd5Go6juimoqDge+Rc-+Dw@mail.gmail.com> <3b28aa06-1496-42b1-b1d2-c654c7a1ff0c@amd.com>
-In-Reply-To: <3b28aa06-1496-42b1-b1d2-c654c7a1ff0c@amd.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 12 Nov 2026 08:40:49 -0800
-X-Gm-Features: AclHuK9lJQZ7h-Tjy7NgKie2ud-WbJ_QiIASQW9r183XyGzAbFbdqxpFP6zjSSU
-Message-ID: <CAEf4Bzarzbv+Dyg4poo5BM1pjsBT_ggycP-Wrafk5fAf-F2TUg@mail.gmail.com>
-Subject: Re: [PATCH RFC] perf/x86/amd/lbr: Don't freeze the LBR on PMI for
- user-only filters
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Puranjay Mohan <puranjay@kernel.org>, Sandipan Das <sandipan.das@amd.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H . Peter Anvin" <hpa@zytor.com>, Andrii Nakryiko <andrii@kernel.org>
+From: Wojciech Szpucha <szpuszi@gmail.com>
+Date: Thu, 12 Nov 2026 09:06:23 -0800
+X-Gm-Features: AclHuK_-710F4Tm24mSZpzGA3sLAhRVHhRU-7oKpgPopwSYPEC_JfCwLpT3pf_Q
+Message-ID: <CAAcuPuJUt=Qf6uuTVv63jiY_iCjsvjso1T=WYSFQB=i6Wzb2Vw@mail.gmail.com>
+Subject: [PATCH] tools api io: Return high-bit bytes as unsigned characters
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 12, 2026 at 3:09=E2=80=AFAM Ravi Bangoria <ravi.bangoria@amd.co=
-m> wrote:
->
-> Puranjay, Andrii,
->
-> >> heh, so we basically either
-> >>
-> >> a) opt-in freeze with *new config*, but do it *only for non-kernel LBR=
-*
-> >>
-> >> or
-> >>
-> >> b) opt-out freeze *only for non-kernel LBR* _unconditionally_, but
-> >> without adding any new config
-> >>
-> >> In both cases we have a behavior that makes sense in practice, but a)
-> >> adds some new config, while b) doesn't add anything. End result is the
-> >> same, just more configuration and need to change user space code to
-> >> opt-out the freeze.
-> >>
-> >> Is a) worth it, or we should stick to b) and keep it simple, Sandipan?
->
-> Have you run a PGO experiment with the patch, and does it show a
-> benefit? Also, have you seen any regression in any benchmarks? If
-> no-freeze regresses some of them, we may need to give the user an
-> option to keep the freeze enabled. No?
+From: Wojciech Szpucha <szpuszi@gmail.com>
 
-One of Meta teams internally reported that disabling freezing
-unconditionally through the kernel command line showed a lot of
-benefit in terms of data consistency, and I don't believe any sort of
-regression was reported.
+On signed-char builds, io__get_char() returns negative values for bytes
+0x80-0xff. This makes filename__read_str() silently truncate non-ASCII
+input in standalone libapi builds.
 
-If anything, that same team is asking to unconditionally disable
-freezing fleet-wide, and this work by Puranjay is an attempt to have
-some middle ground where we don't have to do this all-or-nothing
-disablement through the kernel command line.
+Cast the byte to unsigned char before returning it as int. Add regression
+tests compiled with -fsigned-char, since perf defaults to -funsigned-char
+and already avoids the issue.
 
->
-> Thanks,
-> Ravi
+Fixes: e95770af4c4a ("tools api: Add a lightweight buffered reading api")
+Signed-off-by: Wojciech Szpucha <szpuszi@gmail.com>
+---
+Tested on Ubuntu 24.04 x86_64, GCC 13.3.0: standalone libapi reads 0/4
+bytes before the fix and 4/4 afterwards. The API IO regression fails
+before and passes after. libapi and perf build successfully; checkpatch
+passes. Full perf suite and kernel builds were not run.
+
+https://github.com/szpuszi/linux-perf-io-test/actions/runs/43257707229
+
+ tools/lib/api/io.h        |  2 +-
+ tools/perf/tests/Build    |  1 +
+ tools/perf/tests/api-io.c | 33 ++++++++++++++++++++++++++++++++-
+ 3 files changed, 34 insertions(+), 2 deletions(-)
+
+diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
+index 1731996b..25e2008d 100644
+--- a/tools/lib/api/io.h
++++ b/tools/lib/api/io.h
+@@ -91,7 +91,7 @@ static inline int io__get_char(struct io *io)
+ 		if (ret)
+ 			return ret;
+ 	}
+-	return *io->data++;
++	return (unsigned char)*io->data++;
+ }
+
+ /* Read a hexadecimal value with no 0x prefix into the out argument hex. If the
+diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+index 58858f3d..c3ba1fca 100644
+--- a/tools/perf/tests/Build
++++ b/tools/perf/tests/Build
+@@ -79,6 +79,7 @@ perf-test-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
+ endif
+
+ CFLAGS_dwarf-unwind.o += -fno-optimize-sibling-calls
++CFLAGS_api-io.o += -fsigned-char
+
+ perf-test-y += workloads/
+
+diff --git a/tools/perf/tests/api-io.c b/tools/perf/tests/api-io.c
+index 0ba3d5cc..f283712e 100644
+--- a/tools/perf/tests/api-io.c
++++ b/tools/perf/tests/api-io.c
+@@ -98,7 +98,7 @@ static int do_test_get_char(const char *test_string,
+size_t buf_size)
+ 	for (i = 0; i < strlen(test_string); i++) {
+ 		ch = io__get_char(&io);
+
+-		EXPECT_EQUAL(ch, test_string[i]);
++		EXPECT_EQUAL(ch, (unsigned char)test_string[i]);
+ 		EXPECT_EQUAL(io.eof, false);
+ 	}
+ 	ch = io__get_char(&io);
+@@ -118,6 +118,7 @@ static int test_get_char(void)
+ 		"12345678abcdef90",
+ 		"a\nb\nc\nd\n",
+ 		"\a\b\t\v\f\r",
++		"\x7f\x80\xfe\xff",
+ 	};
+ 	for (i = 0; i <= 10; i++) {
+ 		for (j = 0; j < ARRAY_SIZE(test_strings); j++) {
+@@ -290,6 +291,34 @@ static int test_get_dec(void)
+ 	return ret;
+ }
+
++static int test_get_line_non_ascii(void)
++{
++	static const char test_string[] = "a\xc3\xa9\xff\nnext\n";
++	char path[PATH_MAX];
++	struct io io;
++	char *line = NULL;
++	size_t line_len = 0;
++	int len, ret = 0;
++
++	if (setup_test(path, test_string, 2, &io))
++		return -1;
++
++	len = io__getline(&io, &line, &line_len);
++	EXPECT_EQUAL(len, 5);
++	EXPECT_EQUAL((int)line_len, 5);
++	EXPECT_EQUAL((int)strlen(line), 5);
++	if (line_len == 5)
++		EXPECT_EQUAL(memcmp(line, test_string, 5), 0);
++	len = io__getline(&io, &line, &line_len);
++	EXPECT_EQUAL(len, 5);
++	EXPECT_EQUAL((int)line_len, 5);
++	EXPECT_EQUAL(strcmp(line, "next\n"), 0);
++
++	free(line);
++	cleanup_test(path, &io);
++	return ret;
++}
++
+ static int test_get_line(void)
+ {
+ 	char path[PATH_MAX];
+@@ -337,6 +366,8 @@ static int test__api_io(struct test_suite *test
+__maybe_unused,
+ 		ret = TEST_FAIL;
+ 	if (test_get_line())
+ 		ret = TEST_FAIL;
++	if (test_get_line_non_ascii())
++		ret = TEST_FAIL;
+ 	return ret;
+ }
+
+
+base-commit: 9d66f26fefacebfeed15de31c1123451a17ff119
