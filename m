@@ -1,57 +1,61 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794488534;
-	b=EG2kxYmtcP+TCR0sR84H5jbYMa/WWFnbvJaSdOwaLb6v3/maXr04C7cPdIWGJefcMCgh
-	 etiWG9uJ5RXq6d2wcYsXRE8mLzNmWWoJIoBYdcb5jOYTimHroFtOniiXMMY7obHLwgFhX
-	 L1v2XYRAkC6XCvtpPdU015btVtX+9PuXxe/PJtWtaNDS90vZOV47O8FiTPJOgy56BGQhX
-	 BHcKbMVpTwjpCpkr/tbcBRAPyTWA7IYvR2SVYxBI/sDaQTqJm8Mc1dPu0v1BVu4ZD/7MS
-	 L6eW52hVmHsudRizT6sP7H4yEvBOto83Q6hvPwNYBFiXBGXKrNKxClfKDlz+NUmGECQ==
+	t=1794497664;
+	b=3bX6PPrtWlOiFqj0jZqS8wFAT7gF1lVgDN7HaWgGXtrf9J8kepshyXvrOWRiJYFPaGuH
+	 J8oQDwKBYfyaLVFKPDvBCmCtlWl1pNbYAv/79VP9EmooZp5jet6hWowPaKuyQ+clFzdYu
+	 BeiaOFskj/i10na6MdkALnXmL0QteKqCBVhvBCsbMXhOjdEwpzKked9CNx4r5Ui/PUl9J
+	 rHmr+OqxFo/MyQAZPl/NxhRQmSrPwmJv/MBeoRJPQljcpQs+fk/e0AFPWfH+B1CNNuinb
+	 6xhuaMTzSjXzPcpSAA+3PKD/nQ7YKPGiaoX4axXra7cYV/lpGvohqCQ/YiiL4aIUdZw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794488534;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=KYusxYP1bJCA82Agudj5Yk62dkc+vZ4npVPLPLyCVJY=;
-	b=vNAoe8wt9ge5W75ZrgWDf/1uGH8vmgSUwyjP9jrraqhzXbL0xXauW4AJMhyJdzMpGM6T
-	 CuAQ+J6SRDqIG3/eMYZVLjR3fnG00mPH+m6dG31TbI8diANtUGaZVMsX4RGoq9msLPl2n
-	 x0XWPyjPUdLnoOPKRd1ZAMKEC1oeLFoF/Yrant2CDyz8GPXfzbGiVj9Rx3YtIGdJFoB4b
-	 7Go7Iu3q6orcM2RVO28sfkkOmAS76Ez0P2D9zx43EdA4Xmi5yDQmsR7TLz62+7Z3mrsDU
-	 bLNHhVrvWzNliU15m5bY8RmyWQT2JPPWE+e6jqc5rM+2fL9zvjANZp7cCx3AUrPN0Yw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794497664;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=/J56hK+npGwUcYHlvvjnzB+Ql98rLiCDb+PVkIYFOG0=;
+	b=1nCY7vZYN0GF5ZuFRuS1mKkviRCeX8cuGumvB7n3CuABz+ZJidxrYdIW+W6+q1n6IPAc
+	 rMZoyv2IuRp3DI0VxoIV70op3V9QqFXL0NqfHHsZalqDUk89PS3WOs/bdwe4r/zkClKmR
+	 YDRAbyUuZavAzS1fmw4fsRUXQwF/1a/4Wtzf0EBab/DgaD0/QoKV76hYKrRS8i78p0KlT
+	 xgzCzQG08qa/WGhLIshFjp93d7nrF0vp+YLgPvFFo2REIaBvnQ1AUyQEMRMNGZ1HncAvC
+	 1bIsAG9zXpYJ5oBg1fe505J0AomGWfxJIdJXOeSy/5rGzNztZs9bEkwxPn44CKy2zhw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="SMs4/KN/";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972FF606A321;
-	Thu, 12 Nov 2026 13:02:14 +0000 (UTC)
+	dmarc=pass header.from=arm.com;
+	spf=pass smtp.mailfrom=arm.com;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=CjiLcwNS;
+	arc=none smtp.remote-ip=217.140.110.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 437E8606A337
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 15:34:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 437E8606A337
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SMs4/KN/
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAE401F00A05;
-	Thu, 12 Nov 2026 13:02:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794488534;
-	bh=KYusxYP1bJCA82Agudj5Yk62dkc+vZ4npVPLPLyCVJY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=SMs4/KN/eiCn7BHQ63CG/6s/8VCH/u+KLjduSqHZr1LtaiAeMJYqyN5m8Ui6TQN4h
-	 MnhnFbOJGaxTcpwznRharfRlE7U1tbPixQX90oUpd133QX+39cAYaZMZWrAWqgN15x
-	 /Yi8M2nFEbWVSEtYaI2EZPSe3nvlTW9x1zh1TRpfhAnxb3u9RSnCxw7T/ftmssXKui
-	 B9yRenIPrjVreQm2iy9T7LGIojP0KoN+2g+Ap86VM4v5zVLLFyS/s/3X/e/jfRUBD2
-	 y3uIl6Co9ZYPpn1zKy1NO7xnQrrtJ4jEXJ1iF+0C0IRR6AYm2gtgEj4Vop0jp83vtH
-	 16vRycYrOaLBg==
-Message-ID: <sashiko-outbox-211133@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 5/6] perf: add MIPS Coherence Manager 3 (CM3) PMU
- driver
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>
-Cc: linux-rt-devel@lists.linux.dev, devicetree@vger.kernel.org, linux-perf-users@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20261112-i6500-cm3-pmu-v2-5-cd2569571819@mobileye.com>
-References: <20261112-i6500-cm3-pmu-v2-0-cd2569571819@mobileye.com>
- <20261112-i6500-cm3-pmu-v2-5-cd2569571819@mobileye.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 13:02:13 +0000
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=CjiLcwNS
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C3CB1516;
+	Thu, 12 Nov 2026 07:34:20 -0800 (PST)
+Received: from raptor (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34E7E3F632;
+	Thu, 12 Nov 2026 07:34:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1794497663; bh=v/5ba4HhdEKibvPby5qRUyDyDF/hjUFrNiHj+mQAZkY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CjiLcwNSF67aeSiSWGY8jDgobhA1YG49NCsh+PlIuuOlyspq9gf2vIK2Lfx6O58jl
+	 7DXzsnZvyjV/uOHKovMgmrZFr3bo5JQQhpD5LoTfYwQEUKWEpqozc5DreMdXL06A7T
+	 pANlEd4o5qvv6E5kQUvszpo9fc2drKpxqUvcApvY=
+Date: Thu, 12 Nov 2026 15:34:15 +0000
+From: Alexandru Elisei <alexandru.elisei@arm.com>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: maz@kernel.org, oupton@kernel.org, fuad.tabba@linux.dev,
+	joey.gouly@arm.com, seiden@linux.ibm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, will@kernel.org, mark.rutland@arm.com,
+	linux-perf-users@vger.kernel.org, catalin.marinas@arm.com,
+	james.clark@linaro.org
+Subject: Re: [RFC PATCH v7 06/28] KVM: arm64: Add KVM_CAP_ARM_SPE capability
+Message-ID: <avXcdwY89YPFGIlk@raptor>
+References: <20260903160623.315525-1-alexandru.elisei@arm.com>
+ <20260903160623.315525-7-alexandru.elisei@arm.com>
+ <atDtheEuNRs7v3Gx@gremlin>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,116 +64,443 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <atDtheEuNRs7v3Gx@gremlin>
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issues to consider:
-- [Medium] perf: mips_cm3_pmu: counter overflow double-counting in
-  cm3_pmu_update()
-- [Low] perf: mips_cm3_pmu: broken !MIPS_CPS / !SMP configuration
---
+Hi Lorenzo,
 
-commit 272d1a9241643c479b7f4cabbd1c40edccbe1b16
-Author: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+On Thu, Oct 15, 2026 at 05:51:03PM +0100, Lorenzo Stoakes (ARM) wrote:
+> On Thu, Sep 03, 2026 at 05:06:01PM +0100, Alexandru Elisei wrote:
+> > Add the SPE capability that will be used by userspace to test if KVM
+> > supports SPE virtualization.
+> 
+> You are also adding spe.c too right? Which is adding functionality for the
+> perf driver to call into? Probably worth mentioning that you're adding the
+> foundations of this stuff in the commit message also.
 
-perf: add MIPS Coherence Manager 3 (CM3) PMU driver
+Done.
 
-This commit adds an uncore PMU driver and documentation for the MIPS
-Coherence Manager 3 (CM3) performance and cycle counters.
+> 
+> >
+> > The SPE driver supports heterogenous systems. Keep track of all the
+> > available Statistical Profiling Units (SPUs) in the system, because KVM
+> > will require the user to associate a VM with exactly one SPU.
+> 
+> I guess questions more for my understanding here :)
+> 
+> Is it one SPU per core, or is it some property of heterogenous systems,
+> i.e. 1 per big/LITTLE etc.?
 
-> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
-> index 245e7bb763b99..2dbed2fc7b030 100644
-> --- a/drivers/perf/Kconfig
-> +++ b/drivers/perf/Kconfig
-> @@ -75,6 +75,18 @@ config ARM_XSCALE_PMU
->  	depends on ARM_PMU && CPU_XSCALE
->  	def_bool y
-> =20
-> +config MIPS_CM3_PMU
-> +	tristate "MIPS Coherence Manager 3 (CM3) PMU"
-> +	depends on MIPS_CM
+Usually one per CPU cluster/group: in a homogeneous CPU, one instance; in a
+CPU with big cores and little cores, there would be two SPE instances; in a
+CPU with big, medium and little, three instances. I'm sure it's possible to
+come up with more exotic configurations.
 
-[Severity: Low]
-Should MIPS_CM3_PMU depend on MIPS_CPS rather than MIPS_CM?
+The SPE driver supports this partitioning only with device tree, not with
+ACPI (for now, there's a series on the mailing list to fix this) and it
+looks at the ppi-partitions node to determine which CPUs are associated
+with each SPE instance. The node is described in
+Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml.
 
-MIPS_GIC selects MIPS_CM even when CONFIG_MIPS_CPS=3Dn and CONFIG_SMP=3Dn.
-On a !CONFIG_SMP build, irq_set_affinity() is a stub returning -EINVAL, so
-cm3_pmu_online_cpu() unconditionally triggers WARN_ON() when an overflow
-IRQ is present; without CONFIG_MIPS_CPS, cps_smp_setup() also never
-populates the cluster ID in cpu_data[].globalnumber.
+For example, look at arch/arm64/boot/dts/rockchip/rk3399-base.dtsi, at the
+PMU (not SPE) nodes: there's pmu_a53, associated with ppi_cluster0, which
+is interrupt-partition-0, and it includes CPUs cpu_l0 to cpu_l3 (I assume
+'l' here stands for 'little'). Then there's also pmu_a72, associated with
+ppi_cluster1, which includes CPUs cpu_b0 and cpu_b1 (where 'b' is probably
+'big').
 
-> diff --git a/drivers/perf/mips_cm3_pmu.c b/drivers/perf/mips_cm3_pmu.c
-> new file mode 100644
-> index 0000000000000..6d53535473b96
-> --- /dev/null
-> +++ b/drivers/perf/mips_cm3_pmu.c
-[ ... ]
-> +static void cm3_pmu_update(struct perf_event *event)
-> +{
-> +	struct cm3_pmu *cm3_pmu =3D to_cm3_pmu(event->pmu);
-> +	struct hw_perf_event *hwc =3D &event->hw;
-> +	u32 ov_bit =3D cm3_pmu_overflow_bit(hwc->idx);
-> +	u64 delta, prev, new;
-> +	bool overflowed =3D false;
-> +
-> +	/* Counts were harvested when the cluster went down, nothing since */
-> +	if (READ_ONCE(cm3_pmu->paused))
-> +		return;
-> +
-> +	/*
-> +	 * When polling, the counter cannot wrap twice between two reads and
-> +	 * the 32-bit difference tells the whole story. With the overflow
-> +	 * interrupt the counter is only read on demand and may have made a
-> +	 * full turn since the last read, which the overflow status tells.
-> +	 * It is read and cleared before the counter so that a wrap seen
-> +	 * here is also reflected in the counter value; a wrap happening in
-> +	 * between is accounted by the next update, which the interrupt it
-> +	 * raises makes sure happens. In interrupt mode every access to the
-> +	 * event runs on cm3_pmu->on_cpu with interrupts disabled, so the
-> +	 * status and the counter are read consistently.
-> +	 */
-> +	if (cm3_pmu->irq > 0) {
-> +		overflowed =3D CM3_PMU_READ(cm3_pmu, pc_ov) & ov_bit;
-> +		if (overflowed)
-> +			CM3_PMU_WRITE(cm3_pmu, pc_ov, ov_bit);
-> +	}
-> +
-> +	do {
-> +		prev =3D local64_read(&hwc->prev_count);
-> +		new =3D cm3_pmu_read_counter(cm3_pmu, hwc->idx);
-> +	} while (local64_cmpxchg(&hwc->prev_count, prev, new) !=3D prev);
-> +
-> +	/*
-> +	 * If the counter wrapped and now shows a value not below the
-> +	 * previous one, it made a full turn on top of the 32-bit difference.
-> +	 */
-> +	delta =3D (new - prev) & CM3_PMU_COUNTER_MASK;
-> +	if (overflowed && new >=3D prev)
-> +		delta +=3D CM3_PMU_COUNTER_MASK + 1;
-> +
-> +	local64_add(delta, &event->count);
-> +}
+If SPE were supported by all the cores, there would have been two
+instances: spe_a53, associated with ppi_cluster0, and spe_a72, associated
+with ppi_cluster1. If SPE were supported only on the big cores, there would
+have been one instance, spe_a72 associated with ppi_cluster1 (naming is
+obviously not set in stone, that's just an example).
 
-[Severity: Medium]
-Can cm3_pmu_update() double-count a counter wrap in interrupt mode and
-inflate event->count by 2^32?
+I think I know what you're going to say and you are right: yes, there are
+no device tree files for heterogeneous systems with SPE. Supporting this
+type of systems was requested by Will Deacon, the SPE driver maintainer,
+because the SPE driver supports them.
 
-If hwc->prev_count holds a non-zero value prev and the counter wraps to a
-small value (new < prev) between reading pc_ov and reading the counter,
-the first cm3_pmu_update() sees overflowed =3D=3D false, updates prev_count=
- to
-new, and already accounts for the wrap in (new - prev) &
-CM3_PMU_COUNTER_MASK while leaving ov_bit set in pc_ov.  When the pending
-overflow interrupt then runs cm3_pmu_update(), it sees overflowed =3D=3D tr=
-ue
-with the counter >=3D the new prev_count and adds CM3_PMU_COUNTER_MASK + 1 a
-second time.
+> 
+> How can a user decide which? Do you actually expose the ability to select a
+> named SPU, or is it automatically determined based upon which CPUs are used
+> by the VM?
 
-Similarly, because the hardware sets ov_bit when the counter reaches
-0xffffffff rather than when it wraps to 0, handling the interrupt or
-reading the event while the counter is still at 0xffffffff satisfies
-overflowed && new >=3D prev, adding 2^32 before the wrap to 0 adds 1 on the
-next update.
+All SPE instances are exposed in /sys/bus/event_source/devices. This is an
+example for an Orion O6 board (with ACPI and the driver hacked to make it
+probe successfully):
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261112-i6500-cm3-=
-pmu-v2-0-cd2569571819@mobileye.com?part=3D5
+$ ls /sys/bus/event_source/devices/
+total 0
+lrwxrwxrwx 1 root root 0 Nov 12  2026 arm_spe_0 -> ../../../devices/platform/arm,spe-v1/arm_spe_0/
+lrwxrwxrwx 1 root root 0 Nov 12  2026 armv8_pmuv3_0 -> ../../../devices/armv8_pmuv3_0/
+lrwxrwxrwx 1 root root 0 Nov 12  2026 armv8_pmuv3_1 -> ../../../devices/armv8_pmuv3_1/
+lrwxrwxrwx 1 root root 0 Nov 12  2026 breakpoint -> ../../../devices/breakpoint/
+lrwxrwxrwx 1 root root 0 Nov 12  2026 kprobe -> ../../../devices/kprobe/
+lrwxrwxrwx 1 root root 0 Nov 12  2026 software -> ../../../devices/software/
+lrwxrwxrwx 1 root root 0 Nov 12  2026 tracepoint -> ../../../devices/tracepoint/
+lrwxrwxrwx 1 root root 0 Nov 12  2026 uprobe -> ../../../devices/uprobe/
+
+Notice how there are two PMU instances, but only one SPE instances, that's
+because not all CPUs have SPE.
+
+It's up to the user to configure which one the VM uses - see patch #13 in
+the series, "KVM: arm64: Add SPE VCPU device attribute to set the SPE
+device". As for an example implementation, the user specifies on which
+physical CPUs the VM runs, and from there kvmtool finds the SPE instance
+that includes those CPUs. See my kvmtool patches [0], namely
+spe__init() -> find_pmu() [1] and what find_pmu() does [2].
+
+Having KVM trying to guess what userspace wants sounds frought with danger
+to me.
+
+Two different SPE instances cannot be used interchangeably, because A. they
+might be totally different implementations (different versions of SPE,
+different implemented registers, different events, etc), and even if they
+are in theory the same, the events they are recording might have different
+semantics across different CPU clusters. For example, Cortex-A53 is in
+in-order, Cortex-A72 is out-of-order. How is the guest going to make sense
+of any record relating to speculation, and how is the guest going to know
+which record was for an instruction sampled on which core?
+
+[0] https://gitlab.arm.com/linux-arm/kvmtool-ae/-/commit/d93b287acad184be48118448fa8b2c7ae6cae249
+[1] https://gitlab.arm.com/linux-arm/kvmtool-ae/-/blob/kvm-spe-v7/arm64/spe.c#L111
+[2] https://gitlab.arm.com/linux-arm/kvmtool-ae/-/blob/kvm-spe-v7/arm64/pmu.c#L195
+
+> 
+> What if a VM spans both 'big' and 'LITTLE' cores?
+
+I think you might have answered that yourself, judging from your subsequent
+comments :) Similar to the PMU, KVM will not allow that, and a VCPU will
+exit with KVM_EXIT_FAIL_ENTRY if it's scheduled on a physical CPU that is
+not part of the cluser that belongs to the SPE instance assigned to the VM.
+
+In general, even if KVM might allow the user to create a VM with VCPUs with
+mismatched features, this is not supported and it will almost definitely
+blow up at some point. At least, that was the stance of the KVM maintainer
+a few years ago, when KVM_ARM_VCPU_PMU_V3_SET_PMU was added.
+
+> 
+> >
+> > Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> > ---
+> >  Documentation/virt/kvm/api.rst   | 10 ++++++
+> >  arch/arm64/include/asm/kvm_spe.h | 18 ++++++++++
+> >  arch/arm64/kvm/Makefile          |  1 +
+> >  arch/arm64/kvm/arm.c             |  4 +++
+> >  arch/arm64/kvm/spe.c             | 56 ++++++++++++++++++++++++++++++++
+> >  drivers/perf/arm_spe_pmu.c       |  4 +++
+> >  include/linux/perf/arm_spe_pmu.h | 12 +++++++
+> 
+> The KVM arm MAINTAINERS entry has:
+> 
+> F:	arch/arm64/kvm/
+> F:	include/kvm/arm_*
+> 
+> So arch/arm64/kvm/spe.c and include/linux/perf/arm_spe_pmu.h don't need any
+> updates there.
+> 
+> >  include/uapi/linux/kvm.h         |  1 +
+> >  8 files changed, 106 insertions(+)
+> >  create mode 100644 arch/arm64/include/asm/kvm_spe.h
+> >  create mode 100644 arch/arm64/kvm/spe.c
+> >
+> > diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> > index e0430cc750c9..1ed5c389c7a4 100644
+> > --- a/Documentation/virt/kvm/api.rst
+> > +++ b/Documentation/virt/kvm/api.rst
+> > @@ -9600,6 +9600,16 @@ take care to differentiate between these cases.
+> >  The presence of this capability indicates that the nested KVM guest can
+> >  start in ESA mode.
+> >
+> > +8.48 KVM_CAP_ARM_SPE
+> > +--------------------
+> > +
+> > +:Capability: KVM_CAP_ARM_SPE
+> > +:Architectures: arm64
+> > +:Type: vm
+> > +
+> > +This capability indicates that Statistical Profiling Extension (SPE)
+> > +virtualization is available in KVM.
+> 
+> Is it worth adding something here about the perf driver? As this seems key
+> to the thing. Or is that too much of an implementation detail?
+
+I'll add something, because I don't think the dependency is obvious.
+
+> 
+> > +
+> >  9. Known KVM API problems
+> >  =========================
+> >
+> > diff --git a/arch/arm64/include/asm/kvm_spe.h b/arch/arm64/include/asm/kvm_spe.h
+> > new file mode 100644
+> > index 000000000000..f05e6d3f5705
+> > --- /dev/null
+> > +++ b/arch/arm64/include/asm/kvm_spe.h
+> > @@ -0,0 +1,18 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +/*
+> > + * Copyright (C) 2021 - ARM Ltd
+> > + */
+> > +
+> > +#ifndef __ARM64_KVM_SPE_H__
+> > +#define __ARM64_KVM_SPE_H__
+> > +
+> > +#ifdef CONFIG_KVM_ARM_SPE
+> > +bool kvm_supports_spe(void);
+> > +#else
+> > +static __always_inline bool kvm_supports_spe(void)
+> 
+> Very nitty, but not sure if __always_inline is strictly necessary, you'd hope
+> that the compiler would naturally inline a false on optimisation :)
+
+I think that's an artifact from an earlier iteration, when it was called
+from the hyp object, which is a different namespace than the rest of the
+kernel and the __always_inline was required to make sure the function was
+copied at the call sites.
+
+I'll remove.
+
+> 
+> > +{
+> > +	return false;
+> > +}
+> > +#endif /* CONFIG_KVM_ARM_SPE */
+> > +
+> > +#endif /* __ARM64_KVM_SPE_H__ */
+> > diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
+> > index 59612d2f277c..9ee271f713cd 100644
+> > --- a/arch/arm64/kvm/Makefile
+> > +++ b/arch/arm64/kvm/Makefile
+> > @@ -29,6 +29,7 @@ kvm-y += arm.o mmu.o mmio.o psci.o hypercalls.o pvtime.o \
+> >  kvm-$(CONFIG_HW_PERF_EVENTS)  += pmu-emul.o pmu.o
+> >  kvm-$(CONFIG_ARM64_PTR_AUTH)  += pauth.o
+> >  kvm-$(CONFIG_PTDUMP_STAGE2_DEBUGFS) += ptdump.o
+> > +kvm-$(CONFIG_KVM_ARM_SPE)     += spe.o
+> >
+> >  kvm-$(CONFIG_NVHE_EL2_TRACING) += hyp_trace.o
+> >
+> > diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+> > index 8b080804bc90..eca1184ef9dd 100644
+> > --- a/arch/arm64/kvm/arm.c
+> > +++ b/arch/arm64/kvm/arm.c
+> > @@ -42,6 +42,7 @@
+> >  #include <asm/kvm_nested.h>
+> >  #include <asm/kvm_pkvm.h>
+> >  #include <asm/kvm_ptrauth.h>
+> > +#include <asm/kvm_spe.h>
+> >  #include <asm/sections.h>
+> >  #include <asm/stacktrace/nvhe.h>
+> >
+> > @@ -468,6 +469,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+> >  	case KVM_CAP_ARM_PMU_V3_STRICT:
+> >  		r = kvm_supports_guest_pmuv3();
+> >  		break;
+> > +	case KVM_CAP_ARM_SPE:
+> > +		r = kvm_supports_spe();
+> > +		break;
+> >  	case KVM_CAP_ARM_INJECT_SERROR_ESR:
+> >  		r = cpus_have_final_cap(ARM64_HAS_RAS_EXTN);
+> >  		break;
+> > diff --git a/arch/arm64/kvm/spe.c b/arch/arm64/kvm/spe.c
+> > new file mode 100644
+> > index 000000000000..646806a60d66
+> > --- /dev/null
+> > +++ b/arch/arm64/kvm/spe.c
+> > @@ -0,0 +1,56 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright (C) 2021 - ARM Ltd
+> > + */
+> > +
+> > +#include <linux/cpumask.h>
+> > +#include <linux/kvm_host.h>
+> > +#include <linux/perf/arm_spe_pmu.h>
+> > +
+> > +#include <asm/kvm_spe.h>
+> > +#include <asm/sysreg.h>
+> 
+> NIT: include <linux/cleanup.h> for guard(mutex)() etc.?
+
+Ok.
+
+> 
+> > +
+> > +static LIST_HEAD(spe_pmus);
+> > +static DEFINE_MUTEX(spe_pmus_lock);
+> > +
+> > +struct spe_pmu_entry {
+> > +	struct list_head link;
+> > +	struct arm_spe_pmu *spe_pmu;
+> > +};
+> 
+> This seems like an odd way of making this into a list, can't you just embed
+> list_head in arm_spe_pmu?
+> 
+> Then adding becomes:
+> 
+> list_add_tail(&spe_pmu->link, &spu_pmus);
+> 
+> And removing:
+> 
+> list_del(&spe_pmu->link);
+> 
+> And you can avoid the alloc below too.
+
+This is the same pattern used for the PMU. Seems like a small thing, so I
+think consistency is better? I don't expect more than three SPE instances
+in a system (little + medium + big), so the extra 3 * 8 bytes should not be
+an issue?
+
+On the other hand, it is indeed more common to embed list_head in struct
+arm_spe_pmu. Up to you what you prefer.
+
+> 
+> 
+> > +
+> > +void kvm_spe_add_instance(struct arm_spe_pmu *spe_pmu)
+> 
+> Hmm I'm guessing this is per-SPU but no mention of SPU in the function
+> name? Is an 'SPE instance' equivalent?
+
+Yes, they are equivalent, my bad for not explaining it properly.
+
+> 
+> If so, maybe worth referencing SPE instances rather than SPUs in the commit
+> message, or at least say something like 'otherwise known as SPE instances'.
+
+Indeed, done.
+
+> 
+> > +{
+> > +	struct spe_pmu_entry *entry;
+> > +
+> > +	guard(mutex)(&spe_pmus_lock);
+> > +
+> > +	entry = kmalloc(sizeof(*entry), GFP_KERNEL);
+> 
+> The convention is kmalloc_obj() now. Which also lets you elide GFP_KERNEL
+> so this can be:
+
+Done.
+
+> 
+> 	entry = kmalloc_obj(*entry);
+> 
+> > +	if (!entry)
+> > +		return;
+> 
+> Hmm, shouldn't failing to allocate here be an error, or at least a warning?
+
+I don't think it's something that should cause the probe to fail. I could
+add a warning, I guess, to let the user know why KVM_CAP_ARM_SPE is missing
+even though the SPE module was loaded successfully.
+
+> 
+> > +
+> > +	entry->spe_pmu = spe_pmu;
+> > +	list_add_tail(&entry->link, &spe_pmus);
+> > +}
+> > +EXPORT_SYMBOL_FOR_MODULES(kvm_spe_add_instance, "arm_spe_pmu");
+> > +
+> > +void kvm_spe_remove_instance(struct arm_spe_pmu *spe_pmu)
+> > +{
+> > +	struct spe_pmu_entry *entry, *tmp;
+> > +
+> > +	guard(mutex)(&spe_pmus_lock);
+> > +
+> > +	list_for_each_entry_safe(entry, tmp, &spe_pmus, link) {
+> 
+> You break once you find the entry, so doesn't have to be the _safe variant.
+
+Hmm... in my head, the _safe variant was always associated with deletion,
+and not having the safe variant might cause a bug, if in the future, the
+body of the loop is modified and the break removed.
+
+Do you strongly oppose to keeping the safe variant?
+
+Thanks,
+Alex
+
+> 
+> But can avoid all the complexity with an embedded list_head in the spe_pmu
+> type if it's possible to put it there!
+> 
+> > +		if (entry->spe_pmu == spe_pmu) {
+> > +			list_del(&entry->link);
+> > +			kfree(entry);
+> > +			break;
+> > +		}
+> > +	}
+> > +}
+> > +EXPORT_SYMBOL_FOR_MODULES(kvm_spe_remove_instance, "arm_spe_pmu");
+> > +
+> > +bool kvm_supports_spe(void)
+> > +{
+> > +	guard(mutex)(&spe_pmus_lock);
+> > +	return !list_empty(&spe_pmus);
+> > +}
+> > diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+> > index 42ba0924bd02..f24b122a087c 100644
+> > --- a/drivers/perf/arm_spe_pmu.c
+> > +++ b/drivers/perf/arm_spe_pmu.c
+> > @@ -1370,6 +1370,8 @@ static int arm_spe_pmu_device_probe(struct platform_device *pdev)
+> >  	if (ret)
+> >  		goto out_teardown_dev;
+> >
+> > +	kvm_spe_add_instance(spe_pmu);
+> > +
+> >  	return 0;
+> >
+> >  out_teardown_dev:
+> > @@ -1383,6 +1385,8 @@ static void arm_spe_pmu_device_remove(struct platform_device *pdev)
+> >  {
+> >  	struct arm_spe_pmu *spe_pmu = platform_get_drvdata(pdev);
+> >
+> > +	kvm_spe_remove_instance(spe_pmu);
+> > +
+> >  	arm_spe_pmu_perf_destroy(spe_pmu);
+> >  	arm_spe_pmu_dev_teardown(spe_pmu);
+> >  	free_percpu(spe_pmu->handle);
+> > diff --git a/include/linux/perf/arm_spe_pmu.h b/include/linux/perf/arm_spe_pmu.h
+> > index 97b14e236fcd..bdb703558a87 100644
+> > --- a/include/linux/perf/arm_spe_pmu.h
+> > +++ b/include/linux/perf/arm_spe_pmu.h
+> > @@ -49,4 +49,16 @@ struct arm_spe_pmu {
+> >
+> >  #define to_spe_pmu(p) (container_of(p, struct arm_spe_pmu, pmu))
+> >
+> > +#ifdef CONFIG_KVM_ARM_SPE
+> > +void kvm_spe_add_instance(struct arm_spe_pmu *spe_pmu);
+> > +void kvm_spe_remove_instance(struct arm_spe_pmu *spe_pmu);
+> > +#else
+> > +static inline void kvm_spe_add_instance(struct arm_spe_pmu *spe_pmu)
+> > +{
+> > +}
+> > +static inline void kvm_spe_remove_instance(struct arm_spe_pmu *spe_pmu)
+> > +{
+> > +}
+> > +#endif /* CONFIG_KVM_ARM_SPE */
+> > +
+> >  #endif /* __PERF_ARM_SPE_PMU_H__ */
+> > diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> > index ac2d77d14963..1565a609890b 100644
+> > --- a/include/uapi/linux/kvm.h
+> > +++ b/include/uapi/linux/kvm.h
+> > @@ -999,6 +999,7 @@ struct kvm_enable_cap {
+> >  #define KVM_CAP_S390_HPAGE_2G 249
+> >  #define KVM_CAP_PPC_COMPAT_CAPS 250
+> >  #define KVM_CAP_ARM_PMU_V3_STRICT 251
+> > +#define KVM_CAP_ARM_SPE 252
+> >
+> >  struct kvm_irq_routing_irqchip {
+> >  	__u32 irqchip;
+> > --
+> > 2.43.0
+> >
+> >
+> 
+> --
+> Cheers, Lorenzo
