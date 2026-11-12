@@ -1,56 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.48
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794453916;
-	b=dw9g3WY+vlR1IhsEsXSITCMhlMrf0klPyYOT3iSUIsroYeW4BSjrJ0/PJWo1Hq6msNci
-	 N6IDNig7pXGaFKcR6P6JyM4DDhb4FTNas2rmhMCkrSlznBrBDngzhMBwWcgyGy5igHOMn
-	 rerZ6mV4dKol0KORdv9h1ZSSQc8gocjwQcGoGihkaBGUCmfk94OPYJ7CFy2r+oaZtl42K
-	 IPxrRynOUg0o6eqt5tlygM1qmbmXjsK6f5IBXzdWZg6Y3OVZCuCR0f610lfhtnAR4T85G
-	 hBsBCrpTVZunQfSvWoHdM4XBaBPNOrEiDWfh+4uSQmESB3oyxf3tHrQKzAiUdBbld4Q==
+	t=1794455360;
+	b=GvA4VTuQodQQ/rt8oZEiT/cr89Jomnn6IObVol23qTb7qqCxdi5LpAZ4zEhQOfUMP4lK
+	 yKJPewuR6pcQbwwtb4lnXbNFQkB7IevnNNmEtMo5WnnWDFZNoKGRkPCvzAD4+kH5sZ+vP
+	 J+oiTXdKh/NJGyAaTaHgX8w28rQOBPZoCkbX/3onl8CWt/N8g53zfRGpoSzNogEGEbfs1
+	 4CvAbj2nXyY1hXxTdxdboq81ffbL08o2zJXUW4Zmnn1zibS/7Vk0NbuZByIi/YHAlakQK
+	 rDAoSyDX9zjBntmKuSzxrfRhzTCR8u3tH8S1v8gNasB8BYtXwKVL1RvI0Bkrc5jbY0Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794453916;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=RXeTn8x2b+rBfnyuV1F7rXQQUwpHzowNA8x5LaoSaRA=;
-	b=uBd5P7XyK1r03kP8FOd6q+wtBfOl6JYZRI43ULC7arxleZDd4rzryE6+6vt87+rIj6bD
-	 Rr7K81Gi5vl8g/wIRU8BA0PyzX/xfd5ET7FMGX3079ts0Pbdno9BcAqV7xTLugXOGhyw3
-	 umcEDbq+nNassWYqArn/568Ab+lAR7lLgBI5j7w8ipLFGnya8vaCeQxIys17e4rKKvwCT
-	 XL/TE5WOWPII8Q+QbrtKNZqlmG+9New3mpgx4j+IS3hlOMiO8wYiYwGaMn+HDNehVJJ31
-	 h8uMOR7iwAfkdAvg8ovYz9JWN/Qop0ak+hSN3UoUYggze6NkzdeNV6H0h6apKsdqsOQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794455360;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=25tsZUpiQ0lVQNm9JwfGrkVYEdwIvgyagRg9J+KAyDA=;
+	b=iQC422Xuj+ISJQC6BzuUaoK3Rt/ra6+IB1tWpTMoqSfsZ/qdJ4cEcxPb8JdyE3UAcF57
+	 6GJJiNJk/85zzV48Vbu5OtfsiqL3Dal7N4LittYJePdGflpVLhUwgWrH+plwp2g6golzD
+	 oSdBLds7Wt4w9iJNJNmIpEjMqrQRD0TvVKNw6Ze0A7hGYYaS+BXkJJcH6GEKSkrH16wMi
+	 QWJ/EbvbfBu1ZwzxeBQoHWpUmcWGKk/vLB3rLdy4xSKgXeuDtvgocMMnKL6jQhwZBRY+2
+	 Z6Fro3dTgUt/fbJf0ZnB5RGDijfsnl7qmm5/noKA6QxwhaGEuQbxzUOqfF5o8gAGL7A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=k7o4EjPw;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=hOFGclu4;
+	arc=none smtp.remote-ip=209.85.216.48
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD1B606A323
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 03:25:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41A8606A321
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 03:49:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D41A8606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=k7o4EjPw
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AFC81F00A08;
-	Thu, 12 Nov 2026 03:25:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794453916;
-	bh=RXeTn8x2b+rBfnyuV1F7rXQQUwpHzowNA8x5LaoSaRA=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=k7o4EjPwuttrYjlxG9n8Yrt9DtOytHCOQQp5IINgT2zB9fGdlFkDYK1/5b320sklo
-	 Hsqb86ahKB9d8EBtREIZByQZk2O/YTejGmwh6S/6oO1RRfmPelGOR+t7zG28T9jGme
-	 skt8t9XM4l7sTDGzpps9pT7c8CCFlg4VShC7WpU471wS9zuDNwooLrx/1qyQ1+pvw/
-	 S9wu1YxyRBYeT+CTBHzeNlsm98yAIed4BUQ4jEsk4WcUNWKjJamYQPwO/wfOjWrHmU
-	 hhMQktIFX+2zIyQDh/kUpQVsdtbVWpuWazxtEVefxEFzqBpEcMHrBm5lT8goaBv1EG
-	 w9o+4tSp9szpw==
-Message-ID: <sashiko-outbox-210269@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf trace: guard free(new_filter) to avoid double-free
- on OOM
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Gu Bin" <gubin@cmss.chinamobile.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261112031810.1899-1-gubin@cmss.chinamobile.com>
-References: <20261112031810.1899-1-gubin@cmss.chinamobile.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 03:25:15 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=hOFGclu4
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3adac5b29ebso2317662a91.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 19:49:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794455359; x=1795060159; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=25tsZUpiQ0lVQNm9JwfGrkVYEdwIvgyagRg9J+KAyDA=;
+        b=hOFGclu4HudCtVI9CQuP8pEykqKRvrYhDMXesAcE3Fu7IzxEMClz7O3PelcWZZ6w25
+         eszIQU79C2e3saIwpL3wfee0hRUHfYEr1nchlZtxF9Mq6l4yiFOm0ho0oZsB5kzh6zX5
+         AURwc2ibA1EQYPnlQyhV9SkKjg6xsXTBXXzlM4S1Go8b8z9MebhuJdKjZ0by/aWiNIwp
+         H1LgIxhVyUjqYNRoYr+k7LjVC5uKyYOtG1VAaYHVZZgar3sopj7q+XzbhnOtKmDYs17k
+         xi9j4V9wu3EFFTkag2USrKV1zCFk3NUtSuwSPp2geOlL8/Z64lTkEtG+zxnWYP3dZ89K
+         AT1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794455359; x=1795060159;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=25tsZUpiQ0lVQNm9JwfGrkVYEdwIvgyagRg9J+KAyDA=;
+        b=qYUDrNz2o01Fgp0VbBinMlCef/sViL/ItAcHpbckh9YmbDmtKgehvIa8oiqM79TeoL
+         2786dAZ+jUOmTAKA60WinDe/Cgfh52Gb/jCsjFbHvtBCgXIYkzrUeuJbXOZdrns6ro92
+         lxr7HNg2ebcZ+S1+DLJtpy/dBkO9oEtj65j5xd3eZByAHLbUmpSeM0uHfsTJSRimV1MD
+         hohXNmC+gwfaV1t9FIv7oAP+CV6mOv9YpPWDzCp8Nn1ktWgOgPekDcYv6k7ngBIfnDKw
+         qaB1qf5NGvL+lKnkJW9y/1u6d9jwVKgpo83zs7KRVkrUdJb67Tx9ppkhJQHVEAOxDVne
+         yPug==
+X-Forwarded-Encrypted: i=1; AL+hErF0u3ER0D2I39C7/sdklMss/JSJFyLLOCctgevERh9I1+XrIfVrZEzzoa+SnW5PLAN+5JztQthL919g1pBO6ti7@vger.kernel.org
+X-Gm-Message-State: APuU4Z8gwcF3+gZX4opzYWNQ0jE8bZ66nZrihiLVpYr+27410BsEXjbJ
+	LXGeYAO85lT55qtaDUJDYjqBbJSRxmv1sOKkSbe+N3VELbaWNz8ufTvx
+X-Gm-Gg: AYBFou2MRB6WNhOa4tG+3KHGi/PuFfQQ+8Es9hGqhVw7I2c5qncLu1SyZIjQdwntEPT
+	vUnK91JZzQhFzvYhVgbOuC9OAwL7psf1BWl5B9ylNkSGaVIa/aY1e/8Gj3VC0s9WmH+2u8qPCfg
+	+XiEjf3CT/SMHuK+Jz/yH67iGsHhSGm9zzffvCN0zW0V4PnN1g2Vv5wl1mBq2EWDJ47t25dg84Z
+	DabguStB7nqEXJOB8P/JFdnwMweyQYox9HRDGWYkeAJJaamfK7GLPiZMEvA8Yxkaj9l4iaPEkyx
+	gzGRopJP6CPkOjYjd1JEzQSFs0kYMM3/eJRt+G9VNQeytR5CGCMjoOFDSsfhHqAHTjpaCsv6lxI
+	mF9f0mWXezWFe8CPJKfF56qs+qzVDtXC2/hPyHhowUDNqdl//Y24lBOBr6Z2gqpSIYGtOCd1pQ7
+	aRFEXm0A/q7GrZq4vCCz0o8nJij4ABrGpuYQN6YYQf1hk2VCTLyJRRcEeOzuQZXdFvNHI+Sylo/
+	hgogF9FtLkNB1Jcu5dy3ZM3DPoZIVtjmBxTIToctx3oC0nr71tyVNLx0nZNHo/TA/LoD6T0R1/Q
+	SaNrfpezWoSSiPmThKEqvhKlOGBMQ+sG/cTdfjeoReWOtsZQgV2qNLchPJdXKCwKRr2sD05k4ij
+	w0VGKhnsk
+X-Received: by 2002:a17:90a:da83:b0:3ac:4e18:2390 with SMTP id 98e67ed59e1d1-3b182defb03mr4367944a91.7.1794455359061;
+        Wed, 11 Nov 2026 19:49:19 -0800 (PST)
+Received: from thinkpad.tail59a646.ts.net ([112.199.224.229])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b197c4eea2sm2135404a91.5.2026.11.11.19.49.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Nov 2026 19:49:18 -0800 (PST)
+From: Hang Zhengyang <hang.zhengyang1010@gmail.com>
+To: TAKANO Mitsuhiro <takano32@gmail.com>,
+	linux-perf-users@vger.kernel.org
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] perf stat: Count kernel events in a group led by a tool event
+Date: Thu, 12 Nov 2026 11:49:13 +0800
+Message-ID: <20261112034914.3704801-1-hang.zhengyang1010@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <sashiko-outbox-208886@kernel.org>
+References: <20261111-tool-pmu-leader-v2-1-3faa0fb98c51@gmail.com> <20261111110616.2249764-1-takano32@gmail.com> <sashiko-outbox-208886@kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,61 +100,24 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found no new issues
-in this patch, but noticed 1 related pre-existing issue it does not
-introduce:
-- [Medium] perf trace: unhandled -ENOMEM in trace__expand_filter() [1]
---
+On Wed, 11 Nov 2026 11:33:19 +0000, sashiko-bot@kernel.org wrote:
+> [...] leave tool event members enabled during -D / --control and
+> leave tool event leaders disabled during exec workloads?
 
-commit e8aa93f0bab0450d21dc93c231c980b9474cb264
-Author: Gu Bin <gubin@cmss.chinamobile.com>
+Both happen without this patch too, with tool events outside any
+group (perf-tools-next cc905a18a647):
 
-perf trace: guard free(new_filter) to avoid double-free on OOM
+  $ perf stat -e user_time,system_time -- dd if=/dev/zero of=/dev/null bs=1 count=300000
+  -> user_time 0, system_time 0
 
-This commit guards free(new_filter) on the asprintf() failure path in
-trace__expand_filter() so that evsel->filter is not freed when new_filter
-still aliases it.
+  $ perf stat -D 400 -e user_time,system_time -- sh -c 'dd ... ; sleep 0.6'
+  -> user_time 173 ms, system_time 137 ms, though dd ends within 400 ms
 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 4094141461f91..f4a67491f5be1 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -4679,7 +4679,8 @@ static int trace__expand_filter(struct trace *trace=
-, struct evsel *evsel)
-> =20
->  					if (asprintf(&n, "%.*s%s%s", expansion_offset, new_filter, expansio=
-n, right_end) < 0) {
->  						pr_debug(" out of memory!\n");
-> -						free(new_filter);
-> +						if (new_filter !=3D evsel->filter)
-> +							free(new_filter);
->  						return -1;
->  					}
->  					if (new_filter !=3D evsel->filter)
+The first is what TAKANO's "perf stat: Start tool events when
+enable_on_exec is used" fixes.
 
-[Severity: Medium]
-This problem wasn't introduced by this patch, but at the end of
-trace__expand_filter(), should the return value of evsel__set_filter() be
-checked [1]?
-
-tools/perf/builtin-trace.c:trace__expand_filter() {
-	...
-	if (new_filter !=3D evsel->filter) {
-		pr_debug("New filter for %s: %s\n", evsel->name, new_filter);
-		evsel__set_filter(evsel, new_filter);
-		free(new_filter);
-	}
-
-	return 0;
-}
-
-If strdup() inside evsel__set_filter() fails with -ENOMEM, the failure is
-silently ignored and trace__expand_filter() returns 0, leaving the
-unexpanded filter in place.
-
-[1] https://sashiko.dev/#/bug/linux-cbf4bb01-a981-47dc-b440-68e5c9c3e81c
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261112031810.1899=
--1-gubin@cmss.chinamobile.com?part=3D1
+Thanks,
+Hang
