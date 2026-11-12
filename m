@@ -1,56 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794524426;
-	b=1WN0oXD5EmZZmF3qHFDGZWc+9KPoRkueAfxnnGLGW4FFe7ShvUG7Eeidibgsdc2tl4fR
-	 JGj5+14LTrgekPMRVUr2q9ICB9+nCcSkegt4dnHOGCk11ogNn8fWHfLq9up9JzomP18sb
-	 zxuJwzV8VexWPr2iu6YY6u4uE9cPAFrR7sHRqGwfXiI65YEDFILAv2dawEzQWM8niwdov
-	 kJ2X15uMWUjYclcfug6zsYc8IEgoC0ViLqvQISyXyWBi5Jdad4fAvfpR1zRK2Ttl0CSSP
-	 zIabu87iakmlITv3+03ftWh23wRw6+mV0HbVgAx2UKEk2hpyDtLWJCHno/ykDAnFLjw==
+	t=1794526665;
+	b=hM+b4rr/9wmicmz47/Uml3nQQIaNr28/+zbVPB3kZHfWDMTtpwtuWRres96YOwlYKR4d
+	 +ufC299/6oMBohla3b5I9uf0H2MAPVQ0z8xtgH3y7KUhPWkYvIMcu4Uf1BRiBxVng1gqF
+	 CgOy+lGY7nmH/gXuvl95Ny774pxgq5tuhg2XTBij191kOjnu+9UBcFuSpqs0QeK952Bhl
+	 lAfgHou0ph44Gr0a+hSNG334uNH2KR/4srATiRx9EhRhxzajqXgkOG6fqEkaD3AXLuvcg
+	 TsJWX7cKLFUkubIwgPkbEGgQDpaZ1SQGVbCrpurebwl4PVLD/fzKYBEbRHL8EKoUDBw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794524426;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=iwRaS3TEjHUe60O3uYbunfTxY8A7J6SsfpcFnUuYyEg=;
-	b=Lo8riaZfit4Edcm6opS5fUgYPXgnrqQ0Xf/4tLTT9ORRI6CAJSH6Ae1TQubpZv7e3smf
-	 zFr5rRyNtaSKQ6uVsvwM7r+eJnw+brgGFgIOQQPobojFCA09MntxI45os7ySu8u2GEL+0
-	 uSPkqYGIv8g2C8kiq/GgD6cm6ZyvH6OHxvYp0cZcyk7egEO2MRnGgseB4ii8z2VVjKcRR
-	 6tfQzx+8/qw7B3LN4dC83d1YTfRAZAtzgCYliWu8j2mLduHOA2TSqeYC0GOB8hDQNgOC0
-	 tqgcCs5qBSosC0yE+ByRiMHnLnXnk4g7RuAJdSBZovRYgrNhngMxrmZkgrnY2gTUOFw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794526665;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
+	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
+	 Content-Type;
+	bh=Rfpzb/ezDwI38PLxzrjqkaoWvyzmkf9DKdXHTzqeDHo=;
+	b=wX1IN6M5yfZjpi8tl8Df1NYEej2XhYUbgE+kbZtoa54rvaK+e7awmzzfowYQ0OrXYS7J
+	 pT5ol0l0lozYj3DRVDedTSPoF1BhV56rKQSescshB9+t1X0QldRmI59N+4v6t9Xw1hCTG
+	 ig5NsgJcXFBnFb5GI+ZmW87KyCBR9eGNWLA0PL6mPE2ppHPjtknFWJAVs6MCxDfu3E8o7
+	 4SYQTlT6brWshcDOqsxEVXsOSFLUcZc7CWSf5g/WQxqexeigoTPFQDgESJ+XYK5Ep4Ckk
+	 UI5SeSsKR8ZqTnF4jfTKWRgOOQnqMhzX+yjJgmBdPs+/fsYuU2q+Lg/zv0cHhHtn/xQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=C3iRykh4;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=dRjwUjW2;
+	arc=none smtp.remote-ip=74.125.82.198
+Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA210606A321
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 23:00:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61750606A321
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 23:37:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 61750606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=C3iRykh4
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98CA91F000C4;
-	Thu, 12 Nov 2026 23:00:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794524426;
-	bh=iwRaS3TEjHUe60O3uYbunfTxY8A7J6SsfpcFnUuYyEg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=C3iRykh4MR/3AX3ig2zGTkngEHsbz7ZcJupADIJ3NXW5cY7ftszafuCC2FDzyZD+V
-	 QJN3ZebARE7gC6nhjIUs7+a0TcUlUKsiBkJvVPLCwtfx01kMsjT3kzOpGRwIg/VSnp
-	 UhQku7G1eqij4j9MZyMb3C4mxwFCfX6NL+FvwEEPnKhwGNKRW3t2BAVKPXbkHIyLy4
-	 1E3i0iZUZpqOHnbmsTjYET/02BAEuiOIMKqv3Szy7zBVuHXaztSEZ8Vinlgm85F2dS
-	 RAn+LBg6YmBbfuIcPAn116oLhPNVIbN42fuij3xpxxnxpGi29B3pOEoDNsyD9P6YxU
-	 WAD6I2jjtq0cA==
-Message-ID: <sashiko-outbox-211930@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/4] irqchip/ath79-misc: convert to a platform driver
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Rosen Penev" <rosenp@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261112224445.213324-4-rosenp@gmail.com>
-References: <20261112224445.213324-1-rosenp@gmail.com>
- <20261112224445.213324-4-rosenp@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 23:00:25 +0000
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=dRjwUjW2
+Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-375bac6bd21so255273eec.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 15:37:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1794526663; x=1795131463; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Rfpzb/ezDwI38PLxzrjqkaoWvyzmkf9DKdXHTzqeDHo=;
+        b=dRjwUjW2UKdovWxEID3EkzbnWLLTHk2mgUZYMXCc51U73cat8RdI8KiDjgQ5Uc11vw
+         SuRF/vhkgtERht4/+O0rSeJT96rCH3XJXROwsEIrxr/6NzaNNubG52l9olc63khmh7Kt
+         HKDTO58AJOp8CupoVuNzGzUMgNdQbu9dF4hoMJcDOiQUU8twttGMZAaapuK6wxQPtXx9
+         +ZnrrJJi04kY4HVmjalrqkG9qTZ4QshMocNKYWs06nZ1jL34m2L6Pp+lB1wWQNH6CyF7
+         ZBfCshH5ZAkIpFA6TAaZL/97ryAP5eEYyYIYuj6fp+c3VB++Vt+Pkgk4FLaf4JTEO6Zu
+         ycvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794526663; x=1795131463;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Rfpzb/ezDwI38PLxzrjqkaoWvyzmkf9DKdXHTzqeDHo=;
+        b=G3N/yg3tyy0aG/cwzWKFIA+OoYhyIsO4ttSX44jNpJEP9MX10Gs7P7/yQEIiA8vH1p
+         ZKib1A0CUyv24/le6PXWnIBGojnXxIEUOZaStCS21fUqk8q4gHBfzShpAqlGIdvQgh47
+         yFYkaAbYnHeQynJi7prg8m1ifNRIUbBC2oMhMdi8SF47Hvf/GO5gedN3h7lY3itpKmZY
+         iemN7NC7iWJwI6+hopjwxN4nFTC3xPsIR790r25dipRlroWs1Egd/suv/tdOoP4uq2q5
+         /si+aMuJxRVm4MK0Q3vIJ0HDJf4U15DA8OK8779VO9lemxf/SCynhl9USgJ49jzO9Dkg
+         S0dw==
+X-Forwarded-Encrypted: i=1; AL+hErEu2RmiyS1/G79TDELvgY9Oll6Oj8Tz22E5y4ftb84Kl5gpD+ISta1ZbU8FGKY/hl0scI2fioqOJ37UhqVbDISP@vger.kernel.org
+X-Gm-Message-State: APuU4Z8a6eSezvlnicvyIo78aLi2GtDZJSVFTuHoDy85LJ31R+E8ltQ6
+	EOz/eqEYQ+r1E9gpxwaAgO8dOmx+45RSvR++JMGnc4J6CUJkQbzyjj6vDv0nulBwGNP4FrXGK3R
+	9UhLlV+s7fA==
+X-Received: from dybpd9.prod.google.com ([2002:a05:7301:4549:b0:36a:1c45:2f79])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:2103:b0:36a:1a7b:d1bb
+ with SMTP id 5a478bee46e88-377e1af5c7bmr3672824eec.22.1794526663031; Thu, 12
+ Nov 2026 15:37:43 -0800 (PST)
+Date: Thu, 12 Nov 2026 15:37:33 -0800
+In-Reply-To: <20261023054952.2503540-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,153 +78,105 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+Mime-Version: 1.0
+References: <20261023054952.2503540-1-irogers@google.com>
+X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
+Message-ID: <20261112233738.699031-1-irogers@google.com>
+Subject: [PATCH v6 0/2] perf timechart: Add --live mode to the TUI and test
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
+	atrajeev@linux.ibm.com, changbin.du@huawei.com, dapeng1.mi@linux.intel.com, 
+	james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
+	tanze@kylinos.cn, thomas.falcon@intel.com, wutengda@huaweicloud.com
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [High] irqchip/ath79-misc: ath79_misc_intc_probe() clobbers QCA956x
-  timer mask
---
+Add a '--live' option to 'perf timechart' and 'ttimechart.py' that streams
+live scheduler, power, or I/O (-I/--io-only) events from a 'perf record'
+subprocess over a pipe and displays them in the Textual TUI with a rolling
+time window (--window, default 10s), pause/resume via the control pipe, an
+optional workload after '--' that stops recording when it exits, and
+optional output recording (-o), along with headless shell tests in
+test_ttimechart_python.sh.
 
-commit 60ba869db8725142b0f8869ed514d502d7719988
-Author: Rosen Penev <rosenp@gmail.com>
+Assisted-by: Antigravity:gemini-3.1-pro
 
-irqchip/ath79-misc: convert to a platform driver
+v6: Rebase onto perf-tools-next and address Sashiko review feedback:
+    - Patch 1: Queue pause/resume gap timestamps in a deque so rapid
+      pause/resume cycles before buffered events arrive still close
+      pre-pause open task and CPU states at each gap.
+    - Patch 1: Increment nr_samples inside TimechartData.lock and check/update
+      refreshed_samples in the same lock acquisition as checkpoint() in
+      live_refresh() so final buffered events aren't missed when paused.
+    - Patch 1: Keep cursor following in sync when zooming in/out, resetting
+      zoom with '0' after moving the cursor, or jumping to a waker ('w').
+    - Patch 1: Filter out all threads of ttimechart.py (via comm) and the
+      child perf record process (via $$) on syscall tracepoints in --live -I
+      mode, and ignore filtered I/O events before counting nr_samples.
+    - Patch 1: Track record boundaries in LiveRecorder's pipe pump and emit a
+      synthetic PERF_RECORD_FINISHED_ROUND when perf record goes idle or
+      pauses so ordered_events does not hold back the latest round.
+    - Patch 1: Always drain perf record's stdout on stop so perf record can
+      flush and terminate its workload cleanly without blocking on pipe writes,
+      and kill its process group if wait times out.
+    - Patch 2: Gate the LiveRecorder task-clock subtest on system-wide
+      task-clock permissions so unprivileged runs under perf_event_paranoid > 0
+      skip cleanly, and add synthetic tests for multiple pause gaps, round
+      tracking, and cursor following.
+    v5: https://lore.kernel.org/linux-perf-users/20261023054952.2503540-1-irogers@google.com/
 
-This commit converts the ath79-misc interrupt controller driver from
-IRQCHIP_DECLARE() to a platform driver using device-managed resources.
+v5: Address Sashiko review feedback:
+    - Patch 1: Always record system wide, as 'perf timechart record'
+      does, as switches into a task and idle states aren't seen by
+      per-task events when only a workload was recorded.
+    - Patch 1: Don't move a task's state start back before its recorded
+      history when its switch out and back in were lost, which inflated
+      its running time.
+    - Patch 1: Serialize LiveRecorder.stop() calls from the UI thread and
+      the thread processing events.
+    - Patch 2: Only run the live recording test when scheduler events can
+      be recorded system wide.
+    v4: https://lore.kernel.org/linux-perf-users/20261023050207.2449976-1-irogers@google.com/
 
-> diff --git a/drivers/irqchip/irq-ath79-misc.c b/drivers/irqchip/irq-ath79=
--misc.c
-> index 5cedea5234e05..b06ece446746c 100644
-> --- a/drivers/irqchip/irq-ath79-misc.c
-> +++ b/drivers/irqchip/irq-ath79-misc.c
-[ ... ]
-> @@ -124,65 +125,54 @@ static const struct irq_domain_ops misc_irq_domain_=
-ops =3D {
->  	.map =3D misc_map,
->  };
-> =20
-> -static void __init ath79_misc_intc_domain_init(
-> -	struct irq_domain *domain, int irq)
-> -{
-> -	void __iomem *base =3D domain->host_data;
-> -
-> -	/* Disable and clear all interrupts */
-> -	__raw_writel(0, base + AR71XX_RESET_REG_MISC_INT_ENABLE);
-> -	__raw_writel(0, base + AR71XX_RESET_REG_MISC_INT_STATUS);
-> -
-> -	irq_set_chained_handler_and_data(irq, ath79_misc_irq_handler, domain);
-> -}
-> -
-> -static int __init ath79_misc_intc_of_init(
-> -	struct device_node *node, struct device_node *parent)
-> +static int ath79_misc_intc_probe(struct platform_device *pdev)
->  {
-> +	struct device *dev =3D &pdev->dev;
->  	struct irq_domain *domain;
->  	void __iomem *base;
->  	int irq;
-> =20
-> -	irq =3D irq_of_parse_and_map(node, 0);
-> -	if (!irq) {
-> -		pr_err("Failed to get MISC IRQ\n");
-> -		return -EINVAL;
-> -	}
-> +	irq =3D platform_get_irq(pdev, 0);
-> +	if (irq < 0)
-> +		return irq;
-> =20
-> -	base =3D of_iomap(node, 0);
-> -	if (!base) {
-> -		pr_err("Failed to get MISC IRQ registers\n");
-> -		return -ENOMEM;
-> -	}
-> +	base =3D devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> =20
-> -	domain =3D irq_domain_create_linear(of_fwnode_handle(node), ATH79_MISC_=
-IRQ_COUNT,
-> -				&misc_irq_domain_ops, base);
-> -	if (!domain) {
-> -		pr_err("Failed to add MISC irqdomain\n");
-> -		return -EINVAL;
-> -	}
-> +	domain =3D devm_irq_domain_create_linear(dev, dev_fwnode(dev),
-> +					       ATH79_MISC_IRQ_COUNT,
-> +					       &misc_irq_domain_ops, base);
-> +	if (!domain)
-> +		return dev_err_probe(dev, -ENOMEM, "failed to add the irq domain\n");
-> +
-> +	/* Disable and clear all interrupts */
-> +	__raw_writel(0, base + AR71XX_RESET_REG_MISC_INT_ENABLE);
-> +	__raw_writel(0, base + AR71XX_RESET_REG_MISC_INT_STATUS);
-> =20
-> -	ath79_misc_intc_domain_init(domain, irq);
-> +	irq_set_chained_handler_and_data(irq, ath79_misc_irq_handler, domain);
->  	ath79_misc_domain =3D domain;
-> +
->  	return 0;
->  }
-> =20
-> -static int __init ar7100_misc_intc_of_init(
-> -	struct device_node *node, struct device_node *parent)
-> +static int ar7100_misc_intc_probe(struct platform_device *pdev,
-> +				  struct device_node *parent)
->  {
->  	ath79_misc_irq_chip.irq_mask_ack =3D ar71xx_misc_irq_mask;
-> -	return ath79_misc_intc_of_init(node, parent);
-> +	return ath79_misc_intc_probe(pdev);
->  }
-> =20
-> -IRQCHIP_DECLARE(ar7100_misc_intc, "qca,ar7100-misc-intc",
-> -		ar7100_misc_intc_of_init);
-> -
-> -static int __init ar7240_misc_intc_of_init(
-> -	struct device_node *node, struct device_node *parent)
-> +static int ar7240_misc_intc_probe(struct platform_device *pdev,
-> +				  struct device_node *parent)
->  {
->  	ath79_misc_irq_chip.irq_ack =3D ar724x_misc_irq_ack;
-> -	return ath79_misc_intc_of_init(node, parent);
-> +	return ath79_misc_intc_probe(pdev);
->  }
-> =20
-> -IRQCHIP_DECLARE(ar7240_misc_intc, "qca,ar7240-misc-intc",
-> -		ar7240_misc_intc_of_init);
-> +IRQCHIP_PLATFORM_DRIVER_BEGIN(ath79_misc_intc)
-> +IRQCHIP_MATCH("qca,ar7100-misc-intc", ar7100_misc_intc_probe)
-> +IRQCHIP_MATCH("qca,ar7240-misc-intc", ar7240_misc_intc_probe)
-> +IRQCHIP_PLATFORM_DRIVER_END(ath79_misc_intc)
+v4: Address Sashiko review feedback on patch 1:
+    - Don't prune live history past the last event, so open states aren't
+      lost when no events arrive for a window, and don't count a still
+      running task's open segment as a switch.
+    - Keep showing the window at the end of recording, rather than jumping
+      back to already pruned history, and prune events flushed as perf
+      record exits.
+    - Close open task, CPU and I/O states when resuming after a pause,
+      rather than extending them across the unrecorded gap, and close the
+      running task when a switch away from it was lost.
+    - Stop perf record and close the files and pipes if
+      LiveRecorder.start() fails after starting it, and close the data pipe
+      read ends in LiveRecorder.stop().
+    v3: https://lore.kernel.org/linux-perf-users/20261023041819.2361900-1-irogers@google.com/
 
-[Severity: High]
-Does probing ath79_misc_intc at device_initcall time clobber
-MISC_INT_MIPS_SI_TIMERINT_MASK in AR71XX_RESET_REG_MISC_INT_ENABLE on
-QCA956x?
+v3: Address Sashiko review feedback:
+    - Patch 1: Explicitly include <string.h> in builtin-timechart.c.
+    - Patch 1: Reject non-finite --window values (e.g. 'inf') that
+      overflowed converting to nanoseconds.
+    - Patch 2: Stop the fake recorder in a try/finally in the synthetic
+      live UI test so a failed check can't leave its background thread
+      running and hang the test.
+    Rebase onto the latest perf-tools-next.
+    v2: https://lore.kernel.org/linux-perf-users/20261014042249.2379829-1-irogers@google.com/
 
-With IRQCHIP_DECLARE(), this driver ran during init_IRQ() before
-time_init() -> plat_time_init() -> of_clk_init() called
-qca956x_clocks_init():
+v2: Rebase the remaining 2 patches onto perf-tools-next after patches 1-11
+    of v1 were merged.
 
-arch/mips/ath79/clock.c:qca956x_clocks_init() {
-	...
-	/*
-	 * QCA956x timer init workaround has to be applied right before setting
-	 * up the clock. Else, there will be no jiffies
-	 */
-	u32 misc;
+Alice Rogers (2):
+  perf timechart: Add a --live mode to the TUI
+  perf test: Test perf timechart --live
 
-	misc =3D ath79_reset_rr(AR71XX_RESET_REG_MISC_INT_ENABLE);
-	misc |=3D MISC_INT_MIPS_SI_TIMERINT_MASK;
-	ath79_reset_wr(AR71XX_RESET_REG_MISC_INT_ENABLE, misc);
-	...
-}
+ tools/perf/Documentation/perf-timechart.txt   |   20 +-
+ tools/perf/builtin-timechart.c                |   80 +-
+ tools/perf/python/ttimechart.py               | 1232 +++++++++++++++--
+ .../tests/shell/test_ttimechart_python.sh     |  355 +++++
+ 4 files changed, 1590 insertions(+), 97 deletions(-)
 
-Moving registration to IRQCHIP_PLATFORM_DRIVER_BEGIN() runs
-ath79_misc_intc_probe() after time_init(), where the unconditional write of
-0 to AR71XX_RESET_REG_MISC_INT_ENABLE clears MISC_INT_MIPS_SI_TIMERINT_MASK
-and breaks the CPU timer interrupt on QCA956x, TP9343, and QCN550x SoCs.
+-- 
+2.56.1.703.gf848ed807c-goog
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261112224445.2133=
-24-1-rosenp@gmail.com?part=3D3
