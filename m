@@ -1,56 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=111.22.67.139
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794471319;
-	b=vapCd0fGRiR7/pEkc0lTs2Qo99G7lg+d01YyOzzH839fB0/hmir7y/yn5FqA8oOwwYXX
-	 5tjvDGSoHAln4PUhmzGMBeJYtekEfGyVb++kA88faxULyJrEC+xqmOroqvUGxx53YuTch
-	 sUdU+iBcVqTA/+cHX1Ai1ogxhtE+cr811ojaffGo5AXZHQJO7KpiW/l68d7ZRx3a0KgLe
-	 4PG5IMS7pWtMq1O5iVPD5X4lpnLudM/QAqT6Zizml/UG+Y8WcrJ6mLBvI2RmwnbEhOLVP
-	 r8v/774HndlRHJrdTjcLPIkHk4fCLiu6IksMNXKgN9aGq8E8zs7pIEihBKIarewI6gA==
+	t=1794472297;
+	b=dmX5uwUn1ZvdtoF6yAjW+KvlwbAozetb7j/idl2xudgrSouu+bOe7VvXxjM5viGWpRib
+	 rHTkQ7ve8/il7lFUkcySqQo5A6h1FaZoMgfD9GvISb8DLb5VtJpcgpDnJ8UlWsR3oZm5m
+	 1pSOUpQOiCfwOtGbuBqztAIV/TB3XrHNzqL1FsRJc9fqP5Ze1/x7n5hKLzWE0q/W0pIFZ
+	 mjZpmQIDz88preFXEOeeOt13B+iDui38zU/Ls9mtCnQQKYso0iJsnVnGMeQdK/RGHIlNR
+	 clIuPNtUAPJLQoLLh/3o6m1T3Olua1phdjJvoqyaZHhB51DjYwpdF1rATGoNqveaVIQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794471319;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=uZZ/RA1zPCfCU5K9Tt4iqVnW4BOixVxPGoMVM/B9JUo=;
-	b=hFVsuyZ8Qq0wmZSvQ8EBvg4o+4Tu1xhpnGAQHMAFl0MSfAIzIz+9svNSnnIXmTZobxa4
-	 uknM9eIcvudJ53vPW+tz4QvxzmuWF0hEJZcIJpD0sYG6sJcazUnDmPo7XUjla1SEfPgPr
-	 M/+/dx3Zdv0olhdiDNAZNVOZZ0NQXPEfMvdEewmiUtSNzfOhjI7trybLGQkHOQN9xgywe
-	 11OhOPEUV1ZCEKH/2ZB/O/bQQ2Gygc31rdLXX6xZHnBxhgF5MB5dhh24KHRMsJm4vkJU8
-	 54Y8NgRewblcjY5HlCV/Mpn2Z4PceRcezCQ/ZabNiZvWeLNecL9k0TYX8lsWyLVklYg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794472297;
+	h=DMARC-Filter:DKIM-Signature:X-RM-TagInfo:X-RM-SPAM-FLAG:Received:
+	 X-RM-TRANSID:X-RM-TagInfo:X-RM-SPAM-FLAG:Received:X-RM-TRANSID:From:
+	 To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=WTMP0qB+Gr3K1SJjWUtokclRO7IURpuNe512cL5dDeY=;
+	b=Q7hdaEjOdV/owpkXcAYs1TfAaMwJ4qAJ9uD5MITLg/nYGuTL3Q+gYgAsUIGAdIQILiQm
+	 DfakroQBnFO16bxk5GSJDdhVuwXh8iAVq1MvYwrME2HmlrtZoq+RX3+w7Fy/3zeeoHvR0
+	 q6vlFfn1djwe6y0PKTfE6SFGU7TZRFhIiule+XRfvsZU2DQDSlcp399zwX0xIYk8wz5sU
+	 rxD1wfdLRLOGzNu6zz8LD+G00sZiUMMPTChRE43fO7PS/f6VI6QuvMDwQdMW3P7FEA3z7
+	 CprwwKKAfGgu/T396raWUmNHzCk05KU4HPOgPa5jfdIWue6QZIMllivtyBkEsqdFxaQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WcBddydv;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FA2606E94B
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 08:15:19 +0000 (UTC)
+	dmarc=pass header.from=cmss.chinamobile.com;
+	spf=pass smtp.mailfrom=cmss.chinamobile.com;
+	dkim=pass header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=AWJttntf;
+	arc=none smtp.remote-ip=111.22.67.139
+Received: from cmccmta6.chinamobile.com (cmccmta6.chinamobile.com [111.22.67.139])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA962606E987;
+	Thu, 12 Nov 2026 08:31:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AA962606E987
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmss.chinamobile.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WcBddydv
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF66F1F00A0A;
-	Thu, 12 Nov 2026 08:15:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794471319;
-	bh=uZZ/RA1zPCfCU5K9Tt4iqVnW4BOixVxPGoMVM/B9JUo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=WcBddydvIJe+B82vW7wXrbz66oaixS8cymWsFCzCMvWD8CTVXKGIODpGA7mTm9gkp
-	 +GLAJZ+8ofWTN5cd8GykHmB3WyYIjUM9iaHA9/SMzlNk7hXYLQF0fpkwazrmXM5V+Y
-	 JAPlRR7+y/eeFurZEc0/I3+dHQzfgYMovtIVUqB3xWTokJ/h9W/eAlUfaRRHL4PKkp
-	 ZkCv67CvAf+e5avaKhgWiQCobOYZIhh+51y3QTeFnG/kUwj/PQGQ3lAfGqD2HqvJUJ
-	 i7DcXRnngNnObbRcxlONhNcJ/wN4N9QI5TDxe77PH4X8r/X7Js+/AsevQlSin+neZh
-	 uncJpkOsPQBLA==
-Message-ID: <sashiko-outbox-210681@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf trace: propagate evsel__set_filter() error in
- trace__expand_filter()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Gu Bin" <gubin@cmss.chinamobile.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261112080924.2082-1-gubin@cmss.chinamobile.com>
-References: <20261112080924.2082-1-gubin@cmss.chinamobile.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 12 Nov 2026 08:15:18 +0000
+	dkim=pass (1024-bit key) header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=AWJttntf
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=cmss.chinamobile.com; s=default; l=0;
+	h=from:subject:message-id:to:cc:mime-version;
+	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+	b=AWJttntfeactBmaEDNemcBJlaLhBPo46gTIg3SJ4VkC6skVmUVfp6Nwt3cPt6u9+/FOcqbspeCkCC
+	 iz6qqJA14swJBcNKF4mPCpImJqVcYebtlgciJxdDzghOdTPe+CXq+kCyeymoI9STmjO7jsNKL8qV+i
+	 5BbjABWJ/xvWjbL8=
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
+	by rmmx-syy-dmz-app09-12009 (RichMail) with SMTP id 2ee96af579628d8-e5d3c;
+	Thu, 12 Nov 2026 16:31:33 +0800 (CST)
+X-RM-TRANSID:2ee96af579628d8-e5d3c
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from FHB-W5100250 (unknown[36.137.216.21])
+	by rmsmtp-syy-appsvr03-12003 (RichMail) with SMTP id 2ee36af5795ef03-f838a;
+	Thu, 12 Nov 2026 16:31:33 +0800 (CST)
+X-RM-TRANSID:2ee36af5795ef03-f838a
+From: Gu Bin <gubin@cmss.chinamobile.com>
+To: acme@kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf trace: free intlist on filter_pids calloc failure
+Date: Thu, 12 Nov 2026 16:31:22 +0800
+Message-ID: <20261112083123.2154-1-gubin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.50.1.windows.1
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,26 +75,56 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-> At the end of trace__expand_filter(), the return value of
-> evsel__set_filter() is ignored. When the strdup() inside fails with
-> -ENOMEM, the function returns 0 anyway, leaving evsel->filter holding
-> the unexpanded filter, which still contains the symbolic constants the
-> loop meant to resolve. The failure then surfaces later and indirectly:
-> evlist__apply_filters() passes the unexpanded string to the tracepoint
-> filter parser, which rejects the symbolic name, so perf trace fails to
-> start with a filter syntax error whose real cause is the missed
-> allocation.
->=20
-> Propagate the error so the -ENOMEM is reported at the source and the
-> caller fails immediately.
->=20
-> Fixes: 90df0249c2ea ("perf trace: Expand strings in filters to integers")
-> Signed-off-by: Gu Bin <gubin@cmss.chinamobile.com>
+trace__set_filter_pids_from_option() builds an intlist and stores its
+entry count in trace->filter_pids.nr before allocating the entries
+array.  If that calloc fails, the function jumps to the out label,
+which returns without freeing the intlist: the option callback exits
+perf with an error, so the leak is the only damage, but it is
+triggered on every --filter-pids run under memory pressure.
 
-Sashiko has reviewed this patch and found no issues.
+Restructure the function so that every path that has created the
+intlist also frees it: the failure path now falls through to
+intlist__delete() as well, and the out label is gone.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261112080924.2082=
--1-gubin@cmss.chinamobile.com?part=3D1
+Fixes: f078c3852c73 ("perf trace: Introduce --filter-pids")
+Signed-off-by: Gu Bin <gubin@cmss.chinamobile.com>
+---
+ tools/perf/builtin-trace.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 4094141461f91..d435b35f1351c 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -5432,17 +5432,16 @@ static int trace__set_filter_pids_from_option(const struct option *opt, const ch
+ 	i = trace->filter_pids.nr = intlist__nr_entries(list) + 1;
+ 	trace->filter_pids.entries = calloc(i, sizeof(pid_t));
+ 
+-	if (trace->filter_pids.entries == NULL)
+-		goto out;
++	if (trace->filter_pids.entries) {
++		trace->filter_pids.entries[0] = getpid();
+ 
+-	trace->filter_pids.entries[0] = getpid();
++		for (i = 1; i < trace->filter_pids.nr; ++i)
++			trace->filter_pids.entries[i] = intlist__entry(list, i - 1)->i;
+ 
+-	for (i = 1; i < trace->filter_pids.nr; ++i)
+-		trace->filter_pids.entries[i] = intlist__entry(list, i - 1)->i;
++		ret = 0;
++	}
+ 
+ 	intlist__delete(list);
+-	ret = 0;
+-out:
+ 	return ret;
+ }
+ 
+-- 
+2.50.1.windows.1
+
+
 
