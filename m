@@ -1,72 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=111.22.67.139
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794472297;
-	b=dmX5uwUn1ZvdtoF6yAjW+KvlwbAozetb7j/idl2xudgrSouu+bOe7VvXxjM5viGWpRib
-	 rHTkQ7ve8/il7lFUkcySqQo5A6h1FaZoMgfD9GvISb8DLb5VtJpcgpDnJ8UlWsR3oZm5m
-	 1pSOUpQOiCfwOtGbuBqztAIV/TB3XrHNzqL1FsRJc9fqP5Ze1/x7n5hKLzWE0q/W0pIFZ
-	 mjZpmQIDz88preFXEOeeOt13B+iDui38zU/Ls9mtCnQQKYso0iJsnVnGMeQdK/RGHIlNR
-	 clIuPNtUAPJLQoLLh/3o6m1T3Olua1phdjJvoqyaZHhB51DjYwpdF1rATGoNqveaVIQ==
+	t=1794472948;
+	b=1bLu+t6PFEk0490HDZrD748QEvGapi1Iv/gFDuwlsDJNpvCGAMQvqb0xd5ya4/teczdx
+	 spTxoZVYPO58WAFr19xjMpBAxoaa6srt4HUCY4vwn9iy3jbULyS3Ph6ULKhtp6gFmUIvK
+	 TXye7FBo7384tyEu9lLVxGJqDNIAQS8PLEOZyeLn1kK5AhecFWUVop5pPuMoTjDsjbG7r
+	 WsxQjALkl2vOKuUj3Ij7vATzqn7IbXTkBw4ckmLj+JOweTnHZKIvf/PbSUdhfNtes/Zbc
+	 vqDas73kPypRzNLYGRljn1jIUJ8X4oTMgb4nbSNLaiq4O+EDw+3iVdiUEsqO0wzdaug==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794472297;
-	h=DMARC-Filter:DKIM-Signature:X-RM-TagInfo:X-RM-SPAM-FLAG:Received:
-	 X-RM-TRANSID:X-RM-TagInfo:X-RM-SPAM-FLAG:Received:X-RM-TRANSID:From:
-	 To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=WTMP0qB+Gr3K1SJjWUtokclRO7IURpuNe512cL5dDeY=;
-	b=Q7hdaEjOdV/owpkXcAYs1TfAaMwJ4qAJ9uD5MITLg/nYGuTL3Q+gYgAsUIGAdIQILiQm
-	 DfakroQBnFO16bxk5GSJDdhVuwXh8iAVq1MvYwrME2HmlrtZoq+RX3+w7Fy/3zeeoHvR0
-	 q6vlFfn1djwe6y0PKTfE6SFGU7TZRFhIiule+XRfvsZU2DQDSlcp399zwX0xIYk8wz5sU
-	 rxD1wfdLRLOGzNu6zz8LD+G00sZiUMMPTChRE43fO7PS/f6VI6QuvMDwQdMW3P7FEA3z7
-	 CprwwKKAfGgu/T396raWUmNHzCk05KU4HPOgPa5jfdIWue6QZIMllivtyBkEsqdFxaQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794472948;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=VBDehPp+MILCFYJkYs2rqgFfZ4uzdEhwJnd5T4YuBGQ=;
+	b=e8EkH0nD1XSYy+uULt/+9L9jZ8K4i4Hiupj+vNeykrju9Yw6vTM1FViYgodOl8Ww5aww
+	 4rekSTAF0l9yUO39ouFt6pjpJJku902SsfwnR+kjW0326X14jSLy7UtBEuStI51nijkw3
+	 x018w3q/IBwFapQkE0tKHxfOy+ikVMt+15Ft7xyqiN4zZicBeUjkM3TRicZlN4gEyixOg
+	 4Mz0jIQe7tOupWt9ef652GiH/sjbY6k/tmrtZVIvTiosJ1qc/7/JzknkbZtb2LVCj+fJ+
+	 pmYkve8ldAeLuhRPEJpNpx+R93vRht6kPx8MT7tJlocN4Z3j84uHFns0M3jivN9/Miw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=cmss.chinamobile.com;
-	spf=pass smtp.mailfrom=cmss.chinamobile.com;
-	dkim=pass header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=AWJttntf;
-	arc=none smtp.remote-ip=111.22.67.139
-Received: from cmccmta6.chinamobile.com (cmccmta6.chinamobile.com [111.22.67.139])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA962606E987;
-	Thu, 12 Nov 2026 08:31:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AA962606E987
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmss.chinamobile.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WgjFhMBM;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78123607280D
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 08:42:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=AWJttntf
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=cmss.chinamobile.com; s=default; l=0;
-	h=from:subject:message-id:to:cc:mime-version;
-	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-	b=AWJttntfeactBmaEDNemcBJlaLhBPo46gTIg3SJ4VkC6skVmUVfp6Nwt3cPt6u9+/FOcqbspeCkCC
-	 iz6qqJA14swJBcNKF4mPCpImJqVcYebtlgciJxdDzghOdTPe+CXq+kCyeymoI9STmjO7jsNKL8qV+i
-	 5BbjABWJ/xvWjbL8=
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
-	by rmmx-syy-dmz-app09-12009 (RichMail) with SMTP id 2ee96af579628d8-e5d3c;
-	Thu, 12 Nov 2026 16:31:33 +0800 (CST)
-X-RM-TRANSID:2ee96af579628d8-e5d3c
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from FHB-W5100250 (unknown[36.137.216.21])
-	by rmsmtp-syy-appsvr03-12003 (RichMail) with SMTP id 2ee36af5795ef03-f838a;
-	Thu, 12 Nov 2026 16:31:33 +0800 (CST)
-X-RM-TRANSID:2ee36af5795ef03-f838a
-From: Gu Bin <gubin@cmss.chinamobile.com>
-To: acme@kernel.org
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf trace: free intlist on filter_pids calloc failure
-Date: Thu, 12 Nov 2026 16:31:22 +0800
-Message-ID: <20261112083123.2154-1-gubin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.50.1.windows.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WgjFhMBM
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 360B21F00A0C;
+	Thu, 12 Nov 2026 08:42:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794472948;
+	bh=VBDehPp+MILCFYJkYs2rqgFfZ4uzdEhwJnd5T4YuBGQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=WgjFhMBMWEsiLwhPYl9ugGGqNLwpoIQHxbOTjCfCSotIFJc3tV5n0mdTVNV7GBO4V
+	 ddF06DW1dYpV8SEnKR4/XVGDIVbMoSQHsxjRevZ8rX7jeztgDqBdvbHotLZg0v384p
+	 glE7CBaRnfAvfikAuOtFbyXyKUhQCjSSQtT0v9u530IjIAJD7TncKSxcYVUSdpgxua
+	 dmsJERsCvuvTVxtISO9iOFgcgt9061JDtQh2egBtyyQPlFuAwaNY3k/BSh5Jw0IXGR
+	 fKwyQaeeDm5oTuO/lBdKoL2OI/fbGuu1F4xrDhn9A+FIh+LxcOe39q1MmKIepRTtMU
+	 IKcv8xCf/v+Vg==
+Message-ID: <sashiko-outbox-210765@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf trace: free intlist on filter_pids calloc failure
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Gu Bin" <gubin@cmss.chinamobile.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261112083123.2154-1-gubin@cmss.chinamobile.com>
+References: <20261112083123.2154-1-gubin@cmss.chinamobile.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 12 Nov 2026 08:42:27 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -75,56 +58,53 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-trace__set_filter_pids_from_option() builds an intlist and stores its
-entry count in trace->filter_pids.nr before allocating the entries
-array.  If that calloc fails, the function jumps to the out label,
-which returns without freeing the intlist: the option callback exits
-perf with an error, so the leak is the only damage, but it is
-triggered on every --filter-pids run under memory pressure.
+Thank you for your contribution! Sashiko AI review found no new issues
+in this patch, but noticed 1 related pre-existing issue it does not
+introduce:
+- [Medium] perf trace: memory leak in trace__exit() [1]
+--
 
-Restructure the function so that every path that has created the
-intlist also frees it: the failure path now falls through to
-intlist__delete() as well, and the out label is gone.
+commit e8d1d018ef3c0a4fdf8d8ce3c0227b4280b491f6
+Author: Gu Bin <gubin@cmss.chinamobile.com>
 
-Fixes: f078c3852c73 ("perf trace: Introduce --filter-pids")
-Signed-off-by: Gu Bin <gubin@cmss.chinamobile.com>
----
- tools/perf/builtin-trace.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+perf trace: free intlist on filter_pids calloc failure
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 4094141461f91..d435b35f1351c 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -5432,17 +5432,16 @@ static int trace__set_filter_pids_from_option(const struct option *opt, const ch
- 	i = trace->filter_pids.nr = intlist__nr_entries(list) + 1;
- 	trace->filter_pids.entries = calloc(i, sizeof(pid_t));
- 
--	if (trace->filter_pids.entries == NULL)
--		goto out;
-+	if (trace->filter_pids.entries) {
-+		trace->filter_pids.entries[0] = getpid();
- 
--	trace->filter_pids.entries[0] = getpid();
-+		for (i = 1; i < trace->filter_pids.nr; ++i)
-+			trace->filter_pids.entries[i] = intlist__entry(list, i - 1)->i;
- 
--	for (i = 1; i < trace->filter_pids.nr; ++i)
--		trace->filter_pids.entries[i] = intlist__entry(list, i - 1)->i;
-+		ret = 0;
-+	}
- 
- 	intlist__delete(list);
--	ret = 0;
--out:
- 	return ret;
- }
- 
--- 
-2.50.1.windows.1
+This commit restructures trace__set_filter_pids_from_option() so that the
+temporary intlist is freed even when allocating trace->filter_pids.entries
+fails.
 
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 4094141461f91..d435b35f1351c 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -5432,17 +5432,16 @@ static int trace__set_filter_pids_from_option(con=
+st struct option *opt, const ch
+>  	i =3D trace->filter_pids.nr =3D intlist__nr_entries(list) + 1;
+>  	trace->filter_pids.entries =3D calloc(i, sizeof(pid_t));
+> =20
+> -	if (trace->filter_pids.entries =3D=3D NULL)
+> -		goto out;
+> +	if (trace->filter_pids.entries) {
+> +		trace->filter_pids.entries[0] =3D getpid();
+> =20
+> -	trace->filter_pids.entries[0] =3D getpid();
+> +		for (i =3D 1; i < trace->filter_pids.nr; ++i)
+> +			trace->filter_pids.entries[i] =3D intlist__entry(list, i - 1)->i;
+> =20
+> -	for (i =3D 1; i < trace->filter_pids.nr; ++i)
+> -		trace->filter_pids.entries[i] =3D intlist__entry(list, i - 1)->i;
+> +		ret =3D 0;
+> +	}
 
+[Severity: Medium]
+This problem wasn't introduced by this patch, but does trace__exit() leak
+trace->filter_pids.entries [1]?  trace__set_filter_pids_from_option()
+allocates the array with calloc(), and trace__exit() never frees it on
+teardown.
 
+[1] https://sashiko.dev/#/bug/linux-ae3f475f-4084-473d-a5c5-25fd465ce61d
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261112083123.2154=
+-1-gubin@cmss.chinamobile.com?part=3D1
