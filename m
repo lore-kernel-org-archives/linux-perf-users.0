@@ -1,75 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.70
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794446124;
-	b=ek0okW3Fjt/u4GkvM0PF50B06N3bPduQDWZXBzobOe91HEtmczc6trvzVsYg984DD1/r
-	 ZWaoEoshv4jdP3qGSWFWmRfZx7jXWNu1SeXrQl2qqBf+nWVZ+c/RjjLrm1T/d7g2o5a/a
-	 bzSqkKBya+H4EDVRygr7EzYejS/BRiPsqUkcgIXbEtmTVlvQIL3Cjh2Dts+BkdOSFf4vx
-	 sF5fJjammKAlKUfDHasQeyildrdwVQLYnVPLzfLbKoV9qTGkN0qd7VK97UuGSOEt4QsiU
-	 AacYpuj7L/pfDgvlwcU2PUxJYTVQaHtnebp9lCbLG0cdYmP9UrvT9qiJCDJxrPLATGw==
+	t=1794446126;
+	b=B/2B4Wri0lFauhhzm9nyUwRclXoukIBI/LgJ6j61rPSZi7aQK0SaMvjhngmhA0KvHTeu
+	 MLR3RGEfwtbvhqHkAwdpFI9KUutTHQmgHj9YlLjzMcReJP56Q6tO23uG9Z2esYxHNzE9m
+	 7GpK0rvOfkRscf1B0vx5oolZdqNHzCzSz0JnM1Km29AYVqZne+/0LLxhYS4Zn4gBGr3mO
+	 ty/97FgMULi+aSj8ZhhKsqep6+nOr0osS1qU9rNZyj8lxIuZTDxlOu42RKMN6yHtd9L82
+	 NvIX4OHmmBilee3yl9OfUzceEGfoQvAWtskVZIhNpT/9s0SL7i2v33tVFKlHWBFdzFQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794446124;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794446126;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=t4mmpYAAB5nspJI5JB7CDrr7JDrHcqy1ptTPlsjfoME=;
-	b=jVKwNGKJsoDZ3SUOxeKhwmIRHbNAzoP+21dEBwYRMG48bvSimePS+TxMFtcEc2NpQ4DN
-	 FvLhYV7XashGK3zucpxhnGdD3aOH6LuEH0hFqzcFsy86iHjUSFNnI0Xxn1aiYieZyanXm
-	 E5qJeqE5gsHoFVkXaWJvBFGnYE6SCZqt+UJACmsJu+zMTdC+zZv32m3ah5cdn4zuB/Mb5
-	 Xs9sJ4p7S5oITX87SoVejMCfmVgfJJbDvC40PIRt22vSOiOcZTycKLS6TlBN0A5t/XhTV
-	 zMtSNl0/qbTgIo6bmYF6i8oshVTId7Ad5v/P/2rvIvwt2ss1TmOzQ+tpu32nAjk3ACw==
+	bh=8xH0foyL4r9PEu2rzsNYeY924b5ApOf8nN/pF0nQXrw=;
+	b=EHdt4rMtpcr5JL5GPlA+DOSYNZiN9FzFEjrBxsvFzlBbRHIwwLpE9Hb2D+DP/kms6tpq
+	 0HSic5SOlq55XTRfq6lj6fZrn4zN6VxeLbAUG6j8bbXjKoo67O4DZEZhyl9rR1bijzFzV
+	 ZfcFwHjN6+1P7XlLzhMtWssYI2KXJVmerXtiaa+N1sgcYyqUIsi1BD4m5oPW7CMepXKPR
+	 JoqQS2GSfWWAWVaK1PbLfWsjK8uYZjSExM0WV0bG1gsN5hDz9Y0tFvEHRnErQXyx0oUgI
+	 LlxJupF5EKOTylmGxRpLsxfqpdHbHuMjCYf3gDFJYRo8lC7Ct5oN6nSFrC//u4k9vFA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=S9Mmbbnw;
-	arc=none smtp.remote-ip=74.125.82.199
-Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="Qz/bM3lR";
+	arc=none smtp.remote-ip=74.125.82.70
+Received: from mail-dl1-f70.google.com (mail-dl1-f70.google.com [74.125.82.70])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88612606A326
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 01:15:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 88612606A326
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C816606A32A
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 01:15:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8C816606A32A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=S9Mmbbnw
-Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-36ecd5db581so511644eec.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 17:15:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Qz/bM3lR
+Received: by mail-dl1-f70.google.com with SMTP id a92af1059eb24-1a2af4c8cbaso2917252c88.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 17:15:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794446122; x=1795050922; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794446125; x=1795050925; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=t4mmpYAAB5nspJI5JB7CDrr7JDrHcqy1ptTPlsjfoME=;
-        b=S9MmbbnwvxMFaVSXSZ0+LcX04EvxGcthAHSv2gJ9cadC5/Iil6qn9szX+oGBO0YnIq
-         x3lzzVYbAL27ZEii8AF6vpXW0ujtqkJNOR9qDRXjjr4v3hwE+PAYu0hezxUFgorTKLrg
-         /2a2Y9ntzOKgPk0KMl9cf4B+f8uu0wrmYYC0Tje3lGJ+YJrN39xDcJPerMQWFvZhNKPf
-         XxZwWTG+0JClT0+bc/wp5ouTsDi3PmGLcdh9DhXlZlTAI8HN2jVQPttKPuXmxAbCIg9d
-         PCpFH397QpW1yvsf8DwCIBshCxFJI43J/JZ5h/N06knBHn4s2W3DgSA/Kc5/g56zNKAf
-         909g==
+        bh=8xH0foyL4r9PEu2rzsNYeY924b5ApOf8nN/pF0nQXrw=;
+        b=Qz/bM3lRWEjokeY44JlXjqPl4cEswls91MH6qoLcF8yZRzx5RwcwINymLxLdhbThyy
+         miLtElbFgqLffdhp6gko/JOLMAIeCnd/2wcSMZp/R2Y3/9FOpgvO/8B1lCPEOtazC5w+
+         L5E1zIzMTOaGegIKMwSPbtwAAWvcWr4p4NZEgDBGdxjX4o8Eo+y1L0O1FmitESRlhauv
+         rBXG0S3nHWCjNQ+PHAJRjWETtlYFshowdcm0XRotxsGwOG65DGb4FBSpq+wCvXogisOD
+         SrjCQ/SHAnjvh10B30e2VsaKkT6VTAOPJQP76uAdt7heJZ0Wg4o/IsMTO0N6COmxcLzp
+         w7Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794446122; x=1795050922;
+        d=1e100.net; s=20260707; t=1794446125; x=1795050925;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=t4mmpYAAB5nspJI5JB7CDrr7JDrHcqy1ptTPlsjfoME=;
-        b=kGe86H5BT1YPUmq7vW+f461VAfzDJytTtzvaDvhkSxzf5mXEfHGtXasf9zJXvFLFgt
-         R3bRIGIK/IGRguSrmm93Vz+TIl6q/XKbG0AsXckSEQutOG3RnNjZERBC2hHmOfw2Xcz/
-         Y7CAG+PTeuecXpNC42q1APhWrDlVYT7KogHPkVs0V9BS4pKlruf/VB8ty9fYlY91SlcJ
-         vADc0ay02XSOiyNbwnQkwgtq06/MgfxXsxbsIwdi2lEjTm+NXwzy0aVNy3+60OER+/J2
-         ivFdfWREWmS/GQCUrkQSDlWr6WjgmSCLiLHf8ja0Hj2bf6f+IGqDc3ouQhgPzKO67gr6
-         XaiQ==
-X-Forwarded-Encrypted: i=1; AL+hErFB67fGGHxqDGIfpQIvdtUsgy/mMA9eMqyCD2ytqTp9MXX4vxVc/hZ7fb8R4z+TlN7bnHhtQsB6NzJwrm/lXvxX@vger.kernel.org
-X-Gm-Message-State: APuU4Z+phWUOastlC/MGkum7mHlz0lH4qSs0DnCzE4zNVAtvlh7TQxLr
-	XAcsAZZPz7vAx0ReV0JaYJy0+ZSZax2OsG7hY6/FE2F2XNolXUYNqWebPJKWWESVDDDng8CqkVZ
-	1FeRx8LDHpw==
-X-Received: from dlbrx10.prod.google.com ([2002:a05:7022:170a:b0:143:7311:4b88])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2906:b0:143:271a:3df2
- with SMTP id a92af1059eb24-1b3c0361cc2mr3305997c88.44.1794446122041; Wed, 11
- Nov 2026 17:15:22 -0800 (PST)
-Date: Wed, 11 Nov 2026 17:15:09 -0800
-In-Reply-To: <20261022204627.1813821-1-irogers@google.com>
+        bh=8xH0foyL4r9PEu2rzsNYeY924b5ApOf8nN/pF0nQXrw=;
+        b=cSeH60BBZf33VmnTtn5dTsAdx68bQQKrVGAGLohSt0rCR5ix3MqMro4njqPYuDVGyO
+         KdqXoOSaorkdOcGftwlvfUPTtCc7s4SOQuKoAmk0W9YZTbwwnWy4sJBdQ/3A7mAswZ/Z
+         G2Ban7WkF8FpaX9OHPOEfbnR2BajjJWOx31RcOWDv9adzcXjCVrX2JroFs7CNeESjG7w
+         zTlrvIrmNhuxR4ev5Yym256rNcjMl/64Hp/3dIcJPOo5o/ye05nBwzbwQuQhnhsZ1TAt
+         GzzlZYfwoS9KX2oNgiN2X7MrOBrhqSr1Gt1e60TwiPS9280Z1IhpebjyvWTADvlTLAlR
+         UJHw==
+X-Forwarded-Encrypted: i=1; AL+hErFsML94/I1k0Uteov83jPjNHttSqmfZCYYsZ55J/gaS38DQ240pjtQVKOetxpYb6KG2XLaHABu7DDqQW0SrsDZ4@vger.kernel.org
+X-Gm-Message-State: APuU4Z9V8EC4uTfr2NOzC3mCbNcgW5X79ZEcgzPOooCE7lRz02RSPqVK
+	f/DRS8/aJxofiCnNMiTWSJ4h6b+RZS9RJffVeeFNFgi/LmUqY5gsACUbKPihpV/RECgtP87f+kz
+	SlEDyqX1/wQ==
+X-Received: from dlah8.prod.google.com ([2002:a05:701b:2608:b0:1b3:befc:72bc])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ec86:b0:1b2:4998:a0df
+ with SMTP id a92af1059eb24-1b3c0338950mr4348715c88.35.1794446124205; Wed, 11
+ Nov 2026 17:15:24 -0800 (PST)
+Date: Wed, 11 Nov 2026 17:15:10 -0800
+In-Reply-To: <20261112011514.4032822-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -79,10 +79,11 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 Mime-Version: 1.0
-References: <20261022204627.1813821-1-irogers@google.com>
+References: <20261022204627.1813821-1-irogers@google.com> <20261112011514.4032822-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.0.567.gdb80ae8cd5-goog
-Message-ID: <20261112011514.4032822-1-irogers@google.com>
-Subject: [PATCH v4 0/5] perf build: Support building BPF skeletons with bpf-gcc
+Message-ID: <20261112011514.4032822-2-irogers@google.com>
+Subject: [PATCH v4 1/5] tools build: Fix version-ge3 and version-lt3 for
+ <3-part versions
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, andrii@kernel.org, cupertino.miranda@oracle.com, 
@@ -92,68 +93,42 @@ Cc: adrian.hunter@intel.com, andrii@kernel.org, cupertino.miranda@oracle.com,
 	yonghong.song@linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-Currently the perf build requires clang (>= 12.0.1) to compile BPF
-skeleton programs (.bpf.c -> .bpf.o). bpf-gcc (>= 14.0.0) also supports
-BPF CO-RE and BTF generation and is already supported in
-tools/testing/selftests/bpf/Makefile.
+version-ge3 and version-lt3 concatenate their two arguments as
+"$(1).$(2)" and parse fields $1..$6 with awk -F'.'. When $(1) is empty
+or has fewer than three dot-separated components (for example GCC's
+1- or 2-part -dumpversion output), fields $4..$6 shift across the
+boundary between $(1) and $(2). In particular, calling version-lt3 with
+an empty $(1) against "14.0.0" evaluates 0 < 0 and returns 0 (false).
 
-This series updates the perf build to support both clang and bpf-gcc,
-broken into small bisectable commits:
-- Patch 1 fixes version-ge3 and version-lt3 in tools/scripts/utilities.mak
-  so empty or fewer-than-3-component version strings do not shift awk
-  fields across arguments.
-- Patch 2 syncs bpf_skel.mak's get_sys_includes with
-  tools/testing/selftests/bpf/Makefile for LoongArch and MIPS.
-- Patch 3 updates Makefile.config, Makefile.perf, and bpf_skel.mak to
-  prefer bpf-gcc when building perf with GCC (CC_NO_CLANG=1) and clang
-  when building with Clang/LLVM (CC_NO_CLANG=0), while respecting
-  explicit BPF_GCC=... or CLANG=... command-line overrides and falling
-  back to whichever compiler is available.
-- Patch 4 introduces tools/build/Makefile.feature in
-  tools/perf/tests/make and switches the existing libbfd and llvm probes
-  to reuse libbfd-threadsafe and llvm-perf.
-- Patch 5 adds make_bpf_skel_clang and make_bpf_skel_bpf_gcc build-test
-  targets to tools/perf/tests/make and verifies with
-  'perf check -q feature bpf_skeletons' that BPF skeleton support is
-  enabled (or disabled with exit code 1 for make_no_bpf_skel) as
-  expected.
+Pass $(1) and $(2) as separate awk variables and split each into its own
+array so missing components default to 0 without shifting fields across
+arguments.
 
-This series was developed and reviewed with assistance from an AI coding
-agent (Gemini 3.1 Pro) and reviewed with Sashiko.
+Fixes: a9b451509565 ("tools build: Add 3-component logical version comparators")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/scripts/utilities.mak | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-v4:
-  - Rebase onto perf-tools-next and drop Assisted-by tags per commit
-    1e035297ffda ("docs: remove Assisted-by references").
-  - Split the series into 5 smaller patches for bisection, separating
-    the utilities.mak version-ge3/version-lt3 fix (requested by Namhyung
-    Kim), the get_sys_includes sync, and the Makefile.feature
-    refactoring in tools/perf/tests/make.
-v3:
-  - Reuse tools/build/Makefile.feature and tools/scripts/utilities.mak
-    in tools/perf/tests/make rather than open-coding compiler feature
-    probes, and explicitly check for exit code 1 from 'perf check' in
-    make_no_bpf_skel so crashes are not masked by shell negation.
-v2:
-  - Pass only -dumpfullversion when querying BPF_GCC_VERSION, guard
-    against an empty version string, and fix version-ge3 / version-lt3
-    in tools/scripts/utilities.mak so empty or <3-component version
-    strings do not shift awk fields and evaluate as false in version-lt3.
-
-Ian Rogers (5):
-  tools build: Fix version-ge3 and version-lt3 for <3-part versions
-  perf build: Sync bpf_skel.mak get_sys_includes with selftests/bpf
-  perf build: Support building BPF skeletons with bpf-gcc
-  perf test make: Reuse Makefile.feature for libbfd and llvm probes
-  perf test make: Add BPF skeleton build tests for clang and bpf-gcc
-
- tools/perf/Makefile.config     | 83 +++++++++++++++++++++++++++-------
- tools/perf/Makefile.perf       |  8 +++-
- tools/perf/bpf_skel.mak        | 36 ++++++++++-----
- tools/perf/tests/make          | 76 +++++++++++++++++++++++++------
- tools/scripts/Makefile.include |  1 +
- tools/scripts/utilities.mak    |  4 +-
- 6 files changed, 164 insertions(+), 44 deletions(-)
-
+diff --git a/tools/scripts/utilities.mak b/tools/scripts/utilities.mak
+index d69d0345cc23..746aaf6e5145 100644
+--- a/tools/scripts/utilities.mak
++++ b/tools/scripts/utilities.mak
+@@ -186,7 +186,7 @@ _gea_err  = $(if $(1),$(error Please set '$(1)' appropriately))
+ # was to check the flex version to see if we can use compiler warnings as
+ # errors for one of the cases flex generates code C compilers complains about.
+ 
+-version-ge3 = $(shell echo "$(1).$(2)" | awk -F'.' '{ printf("%d\n", (10000000 * $$1 + 10000 * $$2 + $$3) >= (10000000 * $$4 + 10000 * $$5 + $$6)) }')
++version-ge3 = $(shell awk -v v1="$(1)" -v v2="$(2)" 'BEGIN { split(v1, a, "."); split(v2, b, "."); printf("%d\n", (10000000 * a[1] + 10000 * a[2] + a[3]) >= (10000000 * b[1] + 10000 * b[2] + b[3])) }')
+ 
+ # version-lt3
+ #
+@@ -196,4 +196,4 @@ version-ge3 = $(shell echo "$(1).$(2)" | awk -F'.' '{ printf("%d\n", (10000000 *
+ # check the flex version to see if we can use compiler warnings as errors for
+ # one of the cases flex generates code C compilers complains about.
+ 
+-version-lt3 = $(shell echo "$(1).$(2)" | awk -F'.' '{ printf("%d\n", (10000000 * $$1 + 10000 * $$2 + $$3) < (10000000 * $$4 + 10000 * $$5 + $$6)) }')
++version-lt3 = $(shell awk -v v1="$(1)" -v v2="$(2)" 'BEGIN { split(v1, a, "."); split(v2, b, "."); printf("%d\n", (10000000 * a[1] + 10000 * a[2] + a[3]) < (10000000 * b[1] + 10000 * b[2] + b[3])) }')
 -- 
 2.56.0.567.gdb80ae8cd5-goog
 
