@@ -1,97 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.177
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794455360;
-	b=GvA4VTuQodQQ/rt8oZEiT/cr89Jomnn6IObVol23qTb7qqCxdi5LpAZ4zEhQOfUMP4lK
-	 yKJPewuR6pcQbwwtb4lnXbNFQkB7IevnNNmEtMo5WnnWDFZNoKGRkPCvzAD4+kH5sZ+vP
-	 J+oiTXdKh/NJGyAaTaHgX8w28rQOBPZoCkbX/3onl8CWt/N8g53zfRGpoSzNogEGEbfs1
-	 4CvAbj2nXyY1hXxTdxdboq81ffbL08o2zJXUW4Zmnn1zibS/7Vk0NbuZByIi/YHAlakQK
-	 rDAoSyDX9zjBntmKuSzxrfRhzTCR8u3tH8S1v8gNasB8BYtXwKVL1RvI0Bkrc5jbY0Q==
+	t=1794461790;
+	b=gzPniucnApb5NSRkrC/Yhpe1qQcdm//ziAVbQvl2Kt36Z5LAiMQffbWfrNLT1Fc1aK8y
+	 XqscztRJBw2IwJQGwHTGzwvJJM6xWY1Sj25P1SxNehUbKlPckuEnY00b/Au7UcJcC2FIB
+	 l5PNnU8bAJMuglkVHOF+sF9ikAg7sdUb30fdV2c+cGdFqframpomV5zHg13dCSMOjbIOj
+	 08By3BSTYzAmqT2QlyDk6OFeKvxDMiFv2Uh1cq99YyEIY7v5O+fAt8S/OuxCAPd+xjZPX
+	 X4YRrDNPRynY/I4/2brzmyjfsRkUAmtJQcWRZ/5dY7OHAJ1TO+IMrcYzbzq9RVf9wrQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794455360;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794461790;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=25tsZUpiQ0lVQNm9JwfGrkVYEdwIvgyagRg9J+KAyDA=;
-	b=iQC422Xuj+ISJQC6BzuUaoK3Rt/ra6+IB1tWpTMoqSfsZ/qdJ4cEcxPb8JdyE3UAcF57
-	 6GJJiNJk/85zzV48Vbu5OtfsiqL3Dal7N4LittYJePdGflpVLhUwgWrH+plwp2g6golzD
-	 oSdBLds7Wt4w9iJNJNmIpEjMqrQRD0TvVKNw6Ze0A7hGYYaS+BXkJJcH6GEKSkrH16wMi
-	 QWJ/EbvbfBu1ZwzxeBQoHWpUmcWGKk/vLB3rLdy4xSKgXeuDtvgocMMnKL6jQhwZBRY+2
-	 Z6Fro3dTgUt/fbJf0ZnB5RGDijfsnl7qmm5/noKA6QxwhaGEuQbxzUOqfF5o8gAGL7A==
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:From:To:
+	 Cc:In-Reply-To:References:Date:Message-Id:X-Mailer;
+	bh=e2soeXJ852281gC+OC2yZSX9G2s4v3lG9pbKt+VP0DM=;
+	b=bFXVgaVnukBuGDlnXdffIeBXRqbUnhLlACflJBcJ8swhbEBvKB1O4Yq/dnKJqOeTPsZ+
+	 Z/7L6lVL65BzpEVaCIvcYsRwyVOav4pj8Kp/+W+FE3JxC8svFZxuzKFxc+WNNyhfjAzYj
+	 ZlQGqYJsn+7S9h9MgVE+NiLIdEfPfNtQuyskc8KEHhYQTrsw6I8MXprtqXSBSXt2Ndoqh
+	 kJSjjueQPsc1Mumv7P0jCaHdKjpJzGX/woe9lEscSMmHWesDUvZ1ZDq1Gm1krVm9rtBxR
+	 j1s9GFPJRyRuR15KsEH+uxAyw8/FeCB16wVGYhFBmR4VAMc8yac9FTLyiYFDf331ADQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=hOFGclu4;
-	arc=none smtp.remote-ip=209.85.216.48
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	dmarc=none header.from=gourry.net;
+	spf=pass smtp.mailfrom=gourry.net;
+	dkim=pass header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=EzLeINlq;
+	arc=none smtp.remote-ip=209.85.222.177
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41A8606A321
-	for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 03:49:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D41A8606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428FA606A33D
+	for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 05:36:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 428FA606A33D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=hOFGclu4
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3adac5b29ebso2317662a91.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 19:49:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=EzLeINlq
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-93e6eb77f0bso350310385a.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Nov 2026 21:36:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794455359; x=1795060159; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=25tsZUpiQ0lVQNm9JwfGrkVYEdwIvgyagRg9J+KAyDA=;
-        b=hOFGclu4HudCtVI9CQuP8pEykqKRvrYhDMXesAcE3Fu7IzxEMClz7O3PelcWZZ6w25
-         eszIQU79C2e3saIwpL3wfee0hRUHfYEr1nchlZtxF9Mq6l4yiFOm0ho0oZsB5kzh6zX5
-         AURwc2ibA1EQYPnlQyhV9SkKjg6xsXTBXXzlM4S1Go8b8z9MebhuJdKjZ0by/aWiNIwp
-         H1LgIxhVyUjqYNRoYr+k7LjVC5uKyYOtG1VAaYHVZZgar3sopj7q+XzbhnOtKmDYs17k
-         xi9j4V9wu3EFFTkag2USrKV1zCFk3NUtSuwSPp2geOlL8/Z64lTkEtG+zxnWYP3dZ89K
-         AT1g==
+        d=gourry.net; s=google; t=1794461788; x=1795066588; darn=vger.kernel.org;
+        h=message-id:date:references:in-reply-to:cc:to:from:subject
+         :content-transfer-encoding:content-type:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=e2soeXJ852281gC+OC2yZSX9G2s4v3lG9pbKt+VP0DM=;
+        b=EzLeINlqWKLSrVyAYeG69cub/PpkhXEpvLI85c2/Wn4DBrX36De6eOjOc825yh2/s8
+         /BMocYYbFGCIGlSENImF1edskqevAV/Kuf1SeaFnM5vAAp8DG8IO1FgayCsUEWs73OHL
+         1RmURtZJc9D4dd17Nf7TyLA18R4yata5cpiLNB4SZ3wXp+wb6mfksV9V6NYOJLevPnzx
+         KS0lFdrtd+eUvcxCI5cIGAuAdA3+x/lK/g0n6XOLpuLtAwXE7FSdI5GYz16DwRhEZcI+
+         e0xi/xTmcXSNKhZMTs2dmsnafffo4Jcsb0EhR1rdi49ZUTTTqLCosCyqFBij3UK+VNvA
+         tckg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794455359; x=1795060159;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=25tsZUpiQ0lVQNm9JwfGrkVYEdwIvgyagRg9J+KAyDA=;
-        b=qYUDrNz2o01Fgp0VbBinMlCef/sViL/ItAcHpbckh9YmbDmtKgehvIa8oiqM79TeoL
-         2786dAZ+jUOmTAKA60WinDe/Cgfh52Gb/jCsjFbHvtBCgXIYkzrUeuJbXOZdrns6ro92
-         lxr7HNg2ebcZ+S1+DLJtpy/dBkO9oEtj65j5xd3eZByAHLbUmpSeM0uHfsTJSRimV1MD
-         hohXNmC+gwfaV1t9FIv7oAP+CV6mOv9YpPWDzCp8Nn1ktWgOgPekDcYv6k7ngBIfnDKw
-         qaB1qf5NGvL+lKnkJW9y/1u6d9jwVKgpo83zs7KRVkrUdJb67Tx9ppkhJQHVEAOxDVne
-         yPug==
-X-Forwarded-Encrypted: i=1; AL+hErF0u3ER0D2I39C7/sdklMss/JSJFyLLOCctgevERh9I1+XrIfVrZEzzoa+SnW5PLAN+5JztQthL919g1pBO6ti7@vger.kernel.org
-X-Gm-Message-State: APuU4Z8gwcF3+gZX4opzYWNQ0jE8bZ66nZrihiLVpYr+27410BsEXjbJ
-	LXGeYAO85lT55qtaDUJDYjqBbJSRxmv1sOKkSbe+N3VELbaWNz8ufTvx
-X-Gm-Gg: AYBFou2MRB6WNhOa4tG+3KHGi/PuFfQQ+8Es9hGqhVw7I2c5qncLu1SyZIjQdwntEPT
-	vUnK91JZzQhFzvYhVgbOuC9OAwL7psf1BWl5B9ylNkSGaVIa/aY1e/8Gj3VC0s9WmH+2u8qPCfg
-	+XiEjf3CT/SMHuK+Jz/yH67iGsHhSGm9zzffvCN0zW0V4PnN1g2Vv5wl1mBq2EWDJ47t25dg84Z
-	DabguStB7nqEXJOB8P/JFdnwMweyQYox9HRDGWYkeAJJaamfK7GLPiZMEvA8Yxkaj9l4iaPEkyx
-	gzGRopJP6CPkOjYjd1JEzQSFs0kYMM3/eJRt+G9VNQeytR5CGCMjoOFDSsfhHqAHTjpaCsv6lxI
-	mF9f0mWXezWFe8CPJKfF56qs+qzVDtXC2/hPyHhowUDNqdl//Y24lBOBr6Z2gqpSIYGtOCd1pQ7
-	aRFEXm0A/q7GrZq4vCCz0o8nJij4ABrGpuYQN6YYQf1hk2VCTLyJRRcEeOzuQZXdFvNHI+Sylo/
-	hgogF9FtLkNB1Jcu5dy3ZM3DPoZIVtjmBxTIToctx3oC0nr71tyVNLx0nZNHo/TA/LoD6T0R1/Q
-	SaNrfpezWoSSiPmThKEqvhKlOGBMQ+sG/cTdfjeoReWOtsZQgV2qNLchPJdXKCwKRr2sD05k4ij
-	w0VGKhnsk
-X-Received: by 2002:a17:90a:da83:b0:3ac:4e18:2390 with SMTP id 98e67ed59e1d1-3b182defb03mr4367944a91.7.1794455359061;
-        Wed, 11 Nov 2026 19:49:19 -0800 (PST)
-Received: from thinkpad.tail59a646.ts.net ([112.199.224.229])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b197c4eea2sm2135404a91.5.2026.11.11.19.49.16
+        d=1e100.net; s=20260707; t=1794461788; x=1795066588;
+        h=message-id:date:references:in-reply-to:cc:to:from:subject
+         :content-transfer-encoding:content-type:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=e2soeXJ852281gC+OC2yZSX9G2s4v3lG9pbKt+VP0DM=;
+        b=If1iTRDfoUk1o5Oqr6pYnpSU/DK6GcLuyHN//0NdhnIX1mHxQVG+Of/RMKJ1QdRfba
+         8onuy3cdX4hb+CVd+/48oLJo4wsMyJIoiMUA5dBbJwD8BY13Rx+88+xLIG50F6DGsPqV
+         64jv+DuyfEERbRFFN7wMBU670xUfCo0B/KyazwlH1gzTQqqE0zJe2wkplPrD6zzx9HHX
+         SFix8Kr4fCvj4xBOWAcWxiM1W8Y6QcdYhryIfCwTrV+YOYaEEUYMkxQF0sNhYss8rrFo
+         aOY9CdlD42iZY8C+OsYz3ZN22SyP76djioC2BWGpGamDzFw0rFcHBhUgnRISQLTxKKid
+         xKSQ==
+X-Forwarded-Encrypted: i=1; AL+hErFOwDyidMEgnXtqfrPPsfp72JrvUMB43CkS4qpjlHCHQejM/Xz8k9IpzaOmGWrH6XscHb6+k4XfxagVmPNLxSUd@vger.kernel.org
+X-Gm-Message-State: APuU4Z/NtELwsadQ0fQRQUxhQW5wrLpFqqiMhGeLbe0Bn+RfIIrYQC9x
+	lJL5SOm8mrYpCw/fr/bK4um5vT9Flw4NHaWNGRFX6v2vTSCYTICeFhB3IKlu1/czP68=
+X-Gm-Gg: AYBFou1bVrFdW4IGoM5sYdIyEIdfzGT8Z1zpwCftskJXnyT8Je7AkLKljRPYTQ3UjE/
+	7ETevl/4vt7wUxoSWkHHOzcK3kuDlaV7G99KPyQ2G4WOgsXve4CNNi3INZD2Uyc+MRWJP7lq6kI
+	0NnAoLZyN9i82j8cQGlZt2zJ9ZIRqsS7z3r4oraJuaT5ZtFWS2WTmoGgfLLo1hQxWfXLE3PbSLS
+	9b6aI+prK3+S/+i3dgIkxB8M2Diiyk9xTnd+2ylR5C340zQ4XfVVmnZeI0b79rtXfKmt2kRK1bj
+	fapfSVf+ZNlPGgbZVErqx98ztLbVJ6pXWme1Jt5Mv4EQhoKI3F00NnyuTH3vHXGgEEUmMKjIEEN
+	aFDbg0L3xQ4bsAHRUZ4JGZUrU2N41VlYSpBKUX0imVOqA0enSySmpc1k3PaFelG6xfbse6NtxQ8
+	3hp6tWXy8J4IbAYStMtLkMYt3F/nooOrlHMfnc8etwtAZQgVtfwEGjwGipOzNixRRoJ8uHS44VQ
+	Rl8INZOtefMCkF8TOdR+OeylyB/J/8BNf3fUm7/6XL6NWXHaZRNzKz1TOXrTJhQ+b0jeFUtKPxB
+	9u51tb5a5QitOOMypFgpMoCdBIzCabWKsr0ErCjLReURldWZd5U6ETlEYLfer5T7LJyyYmNf9fW
+	hKwxorlw=
+X-Received: by 2002:a05:620a:4481:b0:93c:c2c2:40eb with SMTP id af79cd13be357-947b0046fb4mr764496385a.66.1794461787830;
+        Wed, 11 Nov 2026 21:36:27 -0800 (PST)
+Received: from [192.168.50.231] (pool-71-191-145-202.washdc.fios.verizon.net. [71.191.145.202])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-9479e4fa312sm647786285a.0.2026.11.11.21.36.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Nov 2026 19:49:18 -0800 (PST)
-From: Hang Zhengyang <hang.zhengyang1010@gmail.com>
-To: TAKANO Mitsuhiro <takano32@gmail.com>,
-	linux-perf-users@vger.kernel.org
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] perf stat: Count kernel events in a group led by a tool event
-Date: Thu, 12 Nov 2026 11:49:13 +0800
-Message-ID: <20261112034914.3704801-1-hang.zhengyang1010@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <sashiko-outbox-208886@kernel.org>
-References: <20261111-tool-pmu-leader-v2-1-3faa0fb98c51@gmail.com> <20261111110616.2249764-1-takano32@gmail.com> <sashiko-outbox-208886@kernel.org>
+        Wed, 11 Nov 2026 21:36:27 -0800 (PST)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -101,23 +89,85 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 08/13] mm: convert miscellaneous VMA flag tests to use
+ vma_flags_t
+From: "Gregory Price (Meta)" <gourry@gourry.net>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+ David Hildenbrand <david@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
+ John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+ Rik van Riel <riel@surriel.com>, "Liam R. Howlett" <liam@infradead.org>, 
+ Vlastimil Babka <vbabka@kernel.org>, Harry Yoo <harry@kernel.org>, 
+ Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>, 
+ Zi Yan <ziy@nvidia.com>, Matthew Brost <matthew.brost@intel.com>, 
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Byungchul Park <byungchul@sk.com>, 
+ Gregory Price <gourry@gourry.net>, 
+ Ying Huang <ying.huang@linux.alibaba.com>, 
+ Alistair Popple <apopple@nvidia.com>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, 
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+ Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, 
+ Xu Xin <xu.xin@linux.dev>, Chengming Zhou <chengming.zhou@linux.dev>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
+ "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
+ Shrikanth Hegde <sshegde@linux.ibm.com>, Pedro Falcato <pfalcato@suse.de>, 
+ Kairui Song <kasong@tencent.com>, Qi Zheng <qi.zheng@linux.dev>, 
+ Shakeel Butt <shakeel.butt@linux.dev>, 
+ Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, 
+ Wei Xu <weixugc@google.com>, Baoquan He <baoquan.he@linux.dev>, 
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+ Michal Hocko <mhocko@suse.com>, Leon Romanovsky <leon@kernel.org>, 
+ SJ Park <sj@kernel.org>, Rakie Kim <rakie.kim@sk.com>, 
+ David Rientjes <rientjes@google.com>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+ John Johansen <john.johansen@canonical.com>, 
+ Georgia Garcia <georgia.garcia@canonical.com>, 
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+ "Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>, 
+ Roberto Sassu <roberto.sassu@huawei.com>, 
+ Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
+ Eric Snowberg <eric.snowberg@oracle.com>, Fan Wu <wufan@kernel.org>, 
+ Stephen Smalley <stephen.smalley.work@gmail.com>, 
+ =?utf-8?q?Ondrej_Mosn=C3=A1=C4=8Dek?= <omosnacek@gmail.com>, 
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ kvm@vger.kernel.org, damon@lists.linux.dev, 
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
+ linux-integrity@vger.kernel.org, selinux@vger.kernel.org
+In-Reply-To: <20261105-late-2026-vma-flags-v1-8-0d3cd15ab75f@kernel.org>
+References: <20261105-late-2026-vma-flags-v1-0-0d3cd15ab75f@kernel.org>
+ <20261105-late-2026-vma-flags-v1-8-0d3cd15ab75f@kernel.org>
+Date: Thu, 12 Nov 2026 00:36:24 -0500
+Message-Id: <179446178440.482102.12362401790016415292.b4-reply@b4>
+X-Mailer: b4 0.17-dev
 
-On Wed, 11 Nov 2026 11:33:19 +0000, sashiko-bot@kernel.org wrote:
-> [...] leave tool event members enabled during -D / --control and
-> leave tool event leaders disabled during exec workloads?
+On 2026-11-05 21:30 +0000, Lorenzo Stoakes (ARM) wrote:
+> Replace use of the legacy vm_flags_t flags with vma_flags_t values in the
+> remaining straightforward VMA flag tests scattered throughout core mm, HMM
+> (and its test module), DAMON and the OOM reaper.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
-Both happen without this patch too, with tool events outside any
-group (perf-tools-next cc905a18a647):
+Acked-by: Gregory Price (Meta) <gourry@gourry.net>
 
-  $ perf stat -e user_time,system_time -- dd if=/dev/zero of=/dev/null bs=1 count=300000
-  -> user_time 0, system_time 0
+-- 
+~Gregory
 
-  $ perf stat -D 400 -e user_time,system_time -- sh -c 'dd ... ; sleep 0.6'
-  -> user_time 173 ms, system_time 137 ms, though dd ends within 400 ms
-
-The first is what TAKANO's "perf stat: Start tool events when
-enable_on_exec is used" fixes.
-
-Thanks,
-Hang
