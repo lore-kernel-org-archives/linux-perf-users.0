@@ -1,72 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.200
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794599786;
-	b=vdeiVJrrxyl2E+5keFy37umDY08TuVhXk4Zeiy9bOVfivGGNYSonKYOiPs1nBtlvNsiI
-	 MvF2G8yDu/9FUx6TaJEowp/64u+o6+rbUOZ5k7GXkvju4pQWa80SlgWuFj6AFrryCtPLs
-	 UvlAMNPGTMSxFc3QFYImMJDD+bMGcS8in9Yl/JM1Ru8YiMMsvyrv20UBQpk8GKWgSe6cl
-	 vKNqHcnEpnM4IePo0l+lhqzF0oNCseFTkTtePXcCqHlwk1BlWrsFyZXzmkTDeG8Rc2MrD
-	 YnvhR4xTcKfUMj0X/4Ncrb4xDUgC9V6MIHmdfYvthxlWTSmZleAQfMEUYZU6yXgkCew==
+	t=1794599789;
+	b=jJuHmDrfTeU39V98EMYu1VKWnWlHMjoUJTnjuLMzDky6OtpIDH+TWtez725qUyFQlPOf
+	 Yjg0uwQR9IUgrsSHW2DOebEWYl3Qit8NVP8tRf2hYZBINGxlYCs0GI1eYXAvCrsnKvdhe
+	 TZmf1yrqRrma0wzNlsrPG2AMLvJmk2dVZMu3a9PZw9UzZlS5wqWzGxCrfBbMsyBDezatP
+	 9Jd6SbJh0n4dpJnuw4RtXv7QLkS69POQaw/klrwTib8XyRlw7BPBx83kWbYJk1Hb5kWRu
+	 LVm16MFmMRhI6PCnRN8Y+HaStpHCww9n4zjw+lCauKjZ2tbysj55pqmg/bWU/bfXQIw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794599786;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794599789;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Received:Date:In-Reply-To:Mime-Version:
 	 References:X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=z5ejdXTNrA/iCN+/s2Xu5N3ubGR15XLB4rWgV9wx/pU=;
-	b=RVqedmtgHDi4ONya/Kdk/KL+iwACwMAoptAD0Y+oidalLOJcjx4xMNWsb6bPe49XmMeK
-	 2g46HpivqmwSru5IFZX10Vkf0qGkXMpI/Qz2YsKaqwKmUhp2lpSMtiQAaLFFQVxU+qIvd
-	 NmGd1VfF3i3+KEvzSSqLo88QZw4wkklMvDi5P86F39lxI7VDEkczTG32af2b17h/YBb5c
-	 dAj77aJlLxJqL2OW2iJ/+BqlMvFR6RRWlWZmM+0OkBfz6CZT9eJFJlRaoRw2CCuC/IZDl
-	 L0fAb8gTl/kPAkhEZdqu8sT2MsGKZ29zn4ZWG2kA5UR3ifFuW0NXhd4UUZTbTUBfy0A==
+	bh=bX4pcxEKG2ohU+3GOdY4b0otEPuYT1yF5dLVL0983no=;
+	b=4GNrogyf1UJbIAwOlaV2iOx6XlQ2YSRVn45nBN2UcGNIk/oA0nMDbZ0ojdk6iuFsvuIh
+	 YWHmvInwKnj3FwhnveCKIeXiHVsezwtMDkeVgSItHPSZHcavKLzawF02nKn2a8I2gekpL
+	 lxpOq37kkCJVGn8cnZ7HgL753pmEcRbroiFK9djWZsNC3WKA9GHPYbBQrSNrP3H9t2nyh
+	 iPzmjRmmzetb2zo4OsS8lv337C0841mBH3wnppgCptBbhIWWqjsgmbx5If6P2ULv4Qra1
+	 Z9ULqxNEJLbzNRYkOKvZru/ivM8nt+2ZE+KSQPa9xweWrRcvu/bR+LqZ2Mh+yszX0gw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ZyOX5b8o;
-	arc=none smtp.remote-ip=74.125.82.198
-Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=pIaAED33;
+	arc=none smtp.remote-ip=74.125.82.200
+Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF2EA60A6F6B
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 19:56:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CF2EA60A6F6B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B87660A6F6B
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 19:56:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4B87660A6F6B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ZyOX5b8o
-Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-36f26e6abe9so1650979eec.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 11:56:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=pIaAED33
+Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-36f26e6abe9so1651018eec.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 11:56:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794599785; x=1795204585; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794599787; x=1795204587; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=z5ejdXTNrA/iCN+/s2Xu5N3ubGR15XLB4rWgV9wx/pU=;
-        b=ZyOX5b8ofbZpWQmoJCbQOeuIp769cz46KXBMdmC2yJjSn0MYLD9dhQvheiVvxQEOqN
-         mgHQSaSysT1F24urGSF1GcssHq1s3PR0AOb5gJBeJzLcnIFYQHaeFlUJdTtQsjxRPsPZ
-         gOlfG757tNnUVHvsLrfiSkoWJSCPcMomE//tpFCItDg5NfApmIV5Q54bWHBWn27y+cxY
-         ogzCgN2yYm4HezHzByV9LoVvOfZ+gjQISH1xEj8KzT9dLEOAYGXiN954SV4whsDzzcHY
-         dxmiJrDDLb+B1pKWB9dAzXJBDWq9kxjqNoMB9FkGQLxrNbIFMul2/MutNvrgz1LKrLRi
-         nwrw==
+        bh=bX4pcxEKG2ohU+3GOdY4b0otEPuYT1yF5dLVL0983no=;
+        b=pIaAED33uD7RTwAp4fKFjxBgK8Aj74rkzOvj7SZQZyW1BlL7OcD64maSX26NBDGyAP
+         H0s5/r8fU07Zn7uY94DIqCEpJSnDw2/zQqiNR4RxV822vfZqYNObwVW7P65HOBnVXmFn
+         w1397hpva+jngqpYNYC8T4gw4ySE3KasG1yn10auvSNQVcWpBEZRMeZ2ycf65R4Ycm2u
+         Q5sDSF0qUB4nz94OOY8/rDHh17UINgJHHWTc28LHgRsa5TyKSOdDJXQgEIP9qI4K7omb
+         HXI9Uy2UUxuVQnzcieraI0gCbDdIra+vNa6rB/5zXnzDmL7YiBUgGNcmcdX0JFrvCpA0
+         mmrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794599785; x=1795204585;
+        d=1e100.net; s=20260707; t=1794599787; x=1795204587;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=z5ejdXTNrA/iCN+/s2Xu5N3ubGR15XLB4rWgV9wx/pU=;
-        b=t0FQWvekrzdcrSibhbxC3N7k+ps2s2YCS3j3kM64kuEbPpIw2zofYXCWlyM4Kut37G
-         ZHwuOKinpGg5FcAosAC0fCS0xV2mG10lv7eK3HKNHMO8X0mEcY8LQH3riZxITMXlxkbk
-         nhsT0VvIy9vyAWzfJGNLIImTMIXQ3Ynm5L/S19OJOaSmQXm+2GQF7x+Dhto+Wz2e+p3i
-         SVP64OPJNmj1cgUOngqIJdHIDEoQkWXwua3SgwLrBxs8BNvvkLRp9UWXiIBH4CqO208g
-         wTebHarIBzb2XYxzW72l1cXN+v0y9OJa1UKYvNw6roJVdkW4sA+d1iBObG4rr+Zgzseo
-         VBXQ==
-X-Gm-Message-State: APuU4Z+UqNUxr/kOq7ZMVmUvYw1JSVHxtF+9eybrp9VjyYnXhbO0Gbiq
-	zXe1CnKSHExrcA6b7EnB4XEX4Nqggu7W14pKi2pXYONiQf2cjY5CbAT5UWy/yeIAo4zTXHgj1j5
-	7o4EcDBpvTg==
-X-Received: from dycc23.prod.google.com ([2002:a05:693c:60d7:b0:372:278c:c777])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:7193:b0:376:19bd:2af9
- with SMTP id 5a478bee46e88-3796366047bmr3164594eec.5.1794599784592; Fri, 13
- Nov 2026 11:56:24 -0800 (PST)
-Date: Fri, 13 Nov 2026 11:55:53 -0800
+        bh=bX4pcxEKG2ohU+3GOdY4b0otEPuYT1yF5dLVL0983no=;
+        b=S9gZZScb0rYUci/eowRhLAlXegMGYu7zO8ctF9lR9Dwd+PybYJ01kXicDb96Lp74oA
+         7nOLmZ1pv+Jt7BX3h9YoSZ79AhTph0yH+8cshoWXdexCu5ekEspsUkdpTSRPqluKDXtU
+         S3+9X0lYbtZV13IAWGDOZn04mEBoXWqqDB0r5yH+jAhtSsr2KekbYPjybn5SvaLVDc9e
+         RAOkp/a876cT0hTKRafmfnJ/2XU4BHR3W24q2AbRK79Bodm0dqwBZMU59tQgQEtEdz9O
+         MA91NY1q34qv+SzvEeGHGzAd3x4WoLHrh/uy2TiXRqXk/+2sucAtLleyQHoN4xfyoUYe
+         eGCQ==
+X-Gm-Message-State: APuU4Z/7zGHqkh9ck+LXDuihu+OoFohFcqWqZw/cuXciorqhstzhDjdU
+	cVVERrbHgyqQaHstkp3Z9BpuQyr46VagntZSqjjIkG8ES/K3Q2/owjX5UXPsyV1/4mbyvw+Gr36
+	HYoqs3JxScw==
+X-Received: from dyvp16.prod.google.com ([2002:a05:693c:8850:b0:36a:184b:374c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:c88:b0:36d:7f5f:7e97
+ with SMTP id 5a478bee46e88-37967dd734emr4600385eec.40.1794599786888; Fri, 13
+ Nov 2026 11:56:26 -0800 (PST)
+Date: Fri, 13 Nov 2026 11:55:54 -0800
 In-Reply-To: <20261113195601.2872738-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -79,8 +79,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261113195601.2872738-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
-Message-ID: <20261113195601.2872738-9-irogers@google.com>
-Subject: [PATCH v2 08/16] perf pmu: Probe event group size limits
+Message-ID: <20261113195601.2872738-10-irogers@google.com>
+Subject: [PATCH v2 09/16] perf pmu: Probe user and interrupt sample register masks
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -89,288 +89,401 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Extend perf_pmu__probe() with check_group_active() and
-probe_group_limits() to determine the maximum number of events in a
-group that are counted simultaneously, without multiplexing
-(max_group_size). After each event is added to the group, the group is
-enabled and checked to be counting by comparing time_running with
-time_enabled.
+Extend perf_pmu__probe() with probe_pmu_regs_one() to probe supported
+register sampling masks for PERF_SAMPLE_REGS_USER and
+PERF_SAMPLE_REGS_INTR when supported by the PMU.
 
-The number of events in a group accepted by perf_event_open() isn't
-reported as it doesn't reflect what can be counted: disabled events are
-accepted so that groups may be scheduled by hand and many PMUs accept
-groups of enabled events that can never be scheduled.
-
-On core PMUs, where cycles and instructions may use dedicated fixed
-counters, also probe a group of general-purpose (GP) hardware events to
-determine max_gp_group_size.
+Test the architecture's base general-purpose register mask as a batch
+before falling back to per-register probing if needed, and on hardware
+PMUs also probe extended GPRs (such as x86 APX R16-R31 and CET SSP) and
+SIMD vector/predicate register classes via PERF_SAMPLE_REGS_ABI_SIMD.
+Without the SIMD ABI, probe registers like the x86 XMM registers. Add
+perf_reg_probe_candidates() so the architecture provides the candidate
+extended registers for each ABI and sampling direction.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/pmu.c | 210 ++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/pmu.h |  14 +++
- 2 files changed, 224 insertions(+)
+ .../perf/util/perf-regs-arch/perf_regs_x86.c  |  10 +
+ tools/perf/util/perf_regs.c                   |  16 ++
+ tools/perf/util/perf_regs.h                   |   2 +
+ tools/perf/util/pmu.c                         | 244 ++++++++++++++++++
+ tools/perf/util/pmu.h                         |  28 ++
+ 5 files changed, 300 insertions(+)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index a45d42b6e59a..eb7a4736b30e 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -3126,6 +3126,123 @@ static bool try_open_attr_variants(struct perf_event_attr *attr,
- 	return false;
+diff --git a/tools/perf/util/perf-regs-arch/perf_regs_x86.c b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
+index 8cb9dfa6c7d3..6dd2439d5a4a 100644
+--- a/tools/perf/util/perf-regs-arch/perf_regs_x86.c
++++ b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
+@@ -318,6 +318,16 @@ uint64_t __perf_reg_mask_x86(bool intr, int *abi)
+ 	return mask;
+ }
+ 
++uint64_t __perf_reg_probe_candidates_x86(bool intr __maybe_unused, bool simd)
++{
++	/* With the SIMD ABI, the APX eGPRs and CET SSP. */
++	if (simd)
++		return GENMASK_ULL(PERF_REG_X86_R31, PERF_REG_X86_R16) | BIT_ULL(PERF_REG_X86_SSP);
++
++	/* Otherwise the XMM registers, supported via XSAVES or PEBS. */
++	return PERF_REG_EXTENDED_MASK;
++}
++
+ static const char *__arch_reg_gpr_name(int id)
+ {
+ 	switch (id) {
+diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
+index c8242b7e1db5..76be1f2f823f 100644
+--- a/tools/perf/util/perf_regs.c
++++ b/tools/perf/util/perf_regs.c
+@@ -275,6 +275,22 @@ uint64_t perf_user_simd_reg_class_mask(uint16_t e_machine, bool pred)
+ 	}
  }
  
 +/*
-+ * Enable @leader_fd's group briefly and verify that both the group leader and
-+ * @last_fd run for 100% of their enabled time without multiplexing.
++ * Registers, beyond the basic general purpose registers, that a PMU may
++ * support sampling and that should be probed for with perf_event_open(). The
++ * PERF_SAMPLE_REGS_ABI_SIMD ABI (@simd) may change the meaning of bits.
 + */
-+static bool check_group_active(int leader_fd, int last_fd)
++uint64_t perf_reg_probe_candidates(uint16_t e_machine, bool intr, bool simd)
 +{
-+	u64 before[3] = { 0, 0, 0 };
-+	u64 after[3] = { 0, 0, 0 };
-+	u64 f_before[3] = { 0, 0, 0 };
-+	u64 f_after[3] = { 0, 0, 0 };
-+	u64 delta_ena, delta_run;
-+	bool check_follower = false;
-+
-+	if (read(leader_fd, before, sizeof(before)) != sizeof(before))
-+		return false;
-+
-+	if (last_fd >= 0 && read(last_fd, f_before, sizeof(f_before)) == sizeof(f_before))
-+		check_follower = true;
-+
-+	if (ioctl(leader_fd, PERF_EVENT_IOC_ENABLE, PERF_IOC_FLAG_GROUP) < 0)
-+		return false;
-+
-+	for (int spin = 0; spin < 20000; spin++)
-+		barrier();
-+
-+	ioctl(leader_fd, PERF_EVENT_IOC_DISABLE, PERF_IOC_FLAG_GROUP);
-+
-+	if (read(leader_fd, after, sizeof(after)) != sizeof(after))
-+		return false;
-+
-+	if (check_follower && read(last_fd, f_after, sizeof(f_after)) != sizeof(f_after))
-+		return false;
-+
-+	delta_ena = after[1] - before[1];
-+	delta_run = after[2] - before[2];
-+	if (delta_ena == 0 || delta_run != delta_ena)
-+		return false;
-+
-+	if (check_follower) {
-+		u64 f_delta_ena = f_after[1] - f_before[1];
-+		u64 f_delta_run = f_after[2] - f_before[2];
-+
-+		if (f_delta_ena == 0 || f_delta_run != f_delta_ena)
-+			return false;
++	switch (e_machine) {
++	case EM_386:
++	case EM_X86_64:
++		return __perf_reg_probe_candidates_x86(intr, simd);
++	default:
++		return 0;
 +	}
-+
-+	return true;
 +}
 +
-+/*
-+ * Probe the maximum number of events in a group that are counted
-+ * simultaneously, without multiplexing. Opening a group doesn't imply it can
-+ * be scheduled, many PMUs accept groups of enabled events that can never be
-+ * counted, so after each follower is added the group is enabled and checked
-+ * to be running.
-+ */
-+static void probe_group_limits(const struct perf_event_attr *attrs, size_t nr_attrs,
-+			       pid_t pid, int cpu, unsigned long flags,
-+			       int *max_size, bool *capped)
-+{
-+	struct perf_event_attr leader_attr;
-+	int leader_fd;
-+	int fds[MAX_PROBE_GROUP_SIZE];
-+	int nr_followers = 0;
-+	enum rlimit_action set_rlimit = NO_CHANGE;
-+
-+	*max_size = 0;
-+	*capped = false;
-+
-+	if (!attrs || nr_attrs == 0)
-+		return;
-+
-+	leader_attr = attrs[0];
-+	leader_attr.disabled = 1;
-+	leader_attr.read_format = PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_TOTAL_TIME_RUNNING;
-+
-+	/* The times are needed to determine whether the group is counting. */
-+	leader_fd = sys_perf_event_open(&leader_attr, pid, cpu, -1, flags);
-+	if (leader_fd < 0)
-+		return;
-+
-+	if (!check_group_active(leader_fd, -1))
-+		goto out;
-+	*max_size = 1;
-+
-+	for (int count = 2; count <= MAX_PROBE_GROUP_SIZE; count++) {
-+		struct perf_event_attr follower_attr = attrs[(count - 1) % nr_attrs];
-+		int fd;
-+
-+		follower_attr.disabled = 0;
-+		follower_attr.read_format = leader_attr.read_format;
-+
-+		fd = sys_perf_event_open(&follower_attr, pid, cpu, leader_fd, flags);
-+		if (fd < 0 && errno == EMFILE && rlimit__increase_nofile(&set_rlimit))
-+			fd = sys_perf_event_open(&follower_attr, pid, cpu, leader_fd, flags);
-+		if (fd < 0) {
-+			/* The leader's times show whether the whole group is counting. */
-+			follower_attr.read_format = 0;
-+			fd = sys_perf_event_open(&follower_attr, pid, cpu, leader_fd, flags);
-+		}
-+		if (fd < 0)
-+			break;
-+
-+		fds[nr_followers++] = fd;
-+		if (!check_group_active(leader_fd, fd))
-+			break;
-+		*max_size = count;
-+	}
-+
-+	if (*max_size >= MAX_PROBE_GROUP_SIZE)
-+		*capped = true;
-+out:
-+	for (int i = 0; i < nr_followers; i++)
-+		close(fds[i]);
-+	close(leader_fd);
-+}
-+
- enum probe_exclude_flag {
- 	PROBE_EXCLUDE_USER,
- 	PROBE_EXCLUDE_KERNEL,
-@@ -3946,6 +4063,99 @@ static void __perf_pmu__probe(struct perf_pmu *pmu, int pmu_cpu)
- 		}
- 	}
+ uint64_t perf_intr_simd_reg_class_bitmap_qwords(uint16_t e_machine, int reg_c,
+ 						uint16_t *qwords, bool pred)
+ {
+diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+index c9f461b6f11f..095dd603bca9 100644
+--- a/tools/perf/util/perf_regs.h
++++ b/tools/perf/util/perf_regs.h
+@@ -27,6 +27,7 @@ uint64_t perf_intr_simd_reg_class_bitmap_qwords(uint16_t e_machine, int reg_c,
+ uint64_t perf_user_simd_reg_class_bitmap_qwords(uint16_t e_machine, int reg_c,
+ 						uint16_t *qwords, bool pred);
+ const char *perf_simd_reg_class_name(uint16_t e_machine, int id, bool pred);
++uint64_t perf_reg_probe_candidates(uint16_t e_machine, bool intr, bool simd);
  
-+	/* 6. Max number of events in a group counted simultaneously. */
-+	if (pmu->name && (!strcmp(pmu->name, "kprobe") || !strcmp(pmu->name, "uprobe"))) {
-+		if (pmu->probed.can_leader_sampling || pmu->probed.can_sw_grouping) {
-+			pmu->probed.max_group_size = MAX_PROBE_GROUP_SIZE;
-+			pmu->probed.max_group_capped = true;
+ int __perf_sdt_arg_parse_op_arm64(char *old_op, char **new_op);
+ uint64_t __perf_reg_mask_arm64(bool intr);
+@@ -81,6 +82,7 @@ uint64_t __perf_simd_reg_class_mask_x86(bool intr, bool pred);
+ uint64_t __perf_simd_reg_class_bitmap_qwords_x86(int reg_c, uint16_t *qwords,
+ 						 bool intr, bool pred);
+ const char *__perf_simd_reg_class_name_x86(int id, bool pred);
++uint64_t __perf_reg_probe_candidates_x86(bool intr, bool simd);
+ 
+ static inline uint64_t DWARF_MINIMAL_REGS(uint16_t e_machine)
+ {
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index eb7a4736b30e..cf1bf1a871e9 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -3397,6 +3397,232 @@ static void probe_sample_types(struct perf_pmu *pmu,
+ 	pmu->probed.can_weight = !!(pmu->probed.sample_types & PERF_SAMPLE_WEIGHT);
+ }
+ 
++/*
++ * Probe supported general-purpose, extended GPR, and SIMD vector/predicate
++ * register sampling masks for either PERF_SAMPLE_REGS_USER (!@intr) or
++ * PERF_SAMPLE_REGS_INTR (@intr).
++ */
++static void probe_pmu_regs_one(const struct perf_pmu *pmu,
++			       const struct perf_event_attr *base_attr,
++			       pid_t pid, int cpu, unsigned long flags,
++			       int max_precise, bool intr,
++			       u64 *out_mask, int *out_abi,
++			       u64 *out_simd_mask, u64 *out_pred_mask)
++{
++	int dummy_abi = -1;
++	u64 gpr_mask = intr ? perf_intr_reg_mask(EM_HOST, &dummy_abi) :
++			      perf_user_reg_mask(EM_HOST, &dummy_abi);
++	u64 sample_type = intr ? PERF_SAMPLE_REGS_INTR : PERF_SAMPLE_REGS_USER;
++	u64 mask = 0;
++	int abi = 0;
++	struct perf_event_attr attr = *base_attr;
++	int fd;
++
++	attr.disabled = 1;
++	attr.sample_period = base_attr->sample_period ?: 10000;
++	attr.sample_type = sample_type;
++
++	if (gpr_mask) {
++		if (intr)
++			attr.sample_regs_intr = gpr_mask;
++		else
++			attr.sample_regs_user = gpr_mask;
++
++		fd = sys_perf_event_open(&attr, pid, cpu, -1, flags);
++		if (fd >= 0) {
++			close(fd);
++			mask |= gpr_mask;
 +		} else {
-+			pmu->probed.max_group_size = 1;
++			for (int b = 0; b < 64; b++) {
++				if (!(gpr_mask & BIT_ULL(b)))
++					continue;
++				if (intr)
++					attr.sample_regs_intr = BIT_ULL(b);
++				else
++					attr.sample_regs_user = BIT_ULL(b);
++				fd = sys_perf_event_open(&attr, pid, cpu, -1, flags);
++				if (fd >= 0) {
++					close(fd);
++					mask |= BIT_ULL(b);
++				}
++			}
 +		}
-+	} else {
-+		probe_group_limits(group_attrs, nr_group_attrs, pid, cpu, flags,
-+				   &pmu->probed.max_group_size,
-+				   &pmu->probed.max_group_capped);
++	}
++
++	if (perf_pmu__is_software(pmu)) {
++		*out_mask = mask;
++		*out_abi = abi;
++		return;
 +	}
 +
 +	/*
-+	 * On core PMUs, cycles/instructions may use fixed counters in addition
-+	 * to general-purpose (GP) programmable counters. Probe a GP-only event
-+	 * group rotating through distinct GP events to determine the GP limit.
++	 * Probe extended GPRs outside the base GPR mask with the
++	 * PERF_SAMPLE_REGS_ABI_SIMD ABI (e.g. APX R16-R31 and CET SSP).
++	 * Note: perf_pmu__probe() actively probes the running host kernel via
++	 * perf_event_open(), so EM_HOST is used intentionally here.
 +	 */
-+	if (pmu->is_core) {
-+		static const char * const gp_events[] = {
-+			"branches",
-+			"branch-misses",
-+			"cache-misses",
-+			"cache-references",
-+			"bus-cycles",
-+			"stalled-cycles-frontend",
-+			"stalled-cycles-backend",
-+		};
-+		static const int gp_configs[] = {
-+			PERF_COUNT_HW_BRANCH_INSTRUCTIONS,
-+			PERF_COUNT_HW_BRANCH_MISSES,
-+			PERF_COUNT_HW_CACHE_MISSES,
-+			PERF_COUNT_HW_CACHE_REFERENCES,
-+			PERF_COUNT_HW_BUS_CYCLES,
-+			PERF_COUNT_HW_STALLED_CYCLES_FRONTEND,
-+			PERF_COUNT_HW_STALLED_CYCLES_BACKEND,
-+		};
-+		struct perf_event_attr gp_attrs[MAX_PROBE_GROUP_SIZE];
-+		size_t nr_gp_attrs = 0;
-+		pid_t gp_pid = pid;
-+		int gp_cpu = cpu;
-+		int gp_err = 0;
++	{
++		u64 ext_gpr_mask = perf_reg_probe_candidates(EM_HOST, intr, /*simd=*/true) &
++				   ~gpr_mask;
 +
-+		for (size_t i = 0;
-+		     i < ARRAY_SIZE(gp_events) && nr_gp_attrs < MAX_PROBE_GROUP_SIZE; i++) {
-+			char gp_buf[256];
-+			struct perf_event_attr gp_attr;
-+			bool parsed;
++		if (ext_gpr_mask) {
++			struct perf_event_attr e_attr = *base_attr;
++			bool ext_batch_ok = false;
 +
-+			snprintf(gp_buf, sizeof(gp_buf), "%s/%s/", pmu->name, gp_events[i]);
-+			memset(&gp_attr, 0, sizeof(gp_attr));
-+			parsed = parse_candidate_attr(gp_buf, &gp_attr);
-+			if (!parsed) {
-+				gp_attr.type = PERF_TYPE_HARDWARE;
-+				gp_attr.size = sizeof(gp_attr);
-+				gp_attr.config = gp_configs[i];
-+				if (perf_pmus__host_supports_extended_type())
-+					gp_attr.config |= (__u64)pmu->type << PERF_PMU_TYPE_SHIFT;
++			e_attr.size = sizeof(e_attr);
++			e_attr.disabled = 1;
++			e_attr.sample_period = base_attr->sample_period ?: 10000;
++			e_attr.sample_type = sample_type;
++			e_attr.sample_simd_regs_enabled = 1;
++			if (intr)
++				e_attr.sample_regs_intr = ext_gpr_mask;
++			else
++				e_attr.sample_regs_user = ext_gpr_mask;
++
++			fd = sys_perf_event_open(&e_attr, pid, cpu, -1, flags);
++			if (fd < 0 && intr && max_precise > 0) {
++				e_attr.precise_ip = 1;
++				fd = sys_perf_event_open(&e_attr, pid, cpu, -1, flags);
 +			}
-+			gp_attr.sample_period = base_attr.sample_period;
-+			gp_attr.freq = base_attr.freq;
-+			gp_attr.sample_type = base_attr.sample_type;
-+			gp_attr.exclude_user = base_attr.exclude_user;
-+			gp_attr.exclude_kernel = base_attr.exclude_kernel;
-+			gp_attr.exclude_hv = base_attr.exclude_hv;
-+			gp_attr.exclude_idle = base_attr.exclude_idle;
-+			gp_attr.exclude_host = base_attr.exclude_host;
-+			gp_attr.exclude_guest = base_attr.exclude_guest;
-+			gp_attr.disabled = 1;
++			if (fd >= 0) {
++				close(fd);
++				mask |= ext_gpr_mask;
++				abi |= PERF_SAMPLE_REGS_ABI_SIMD;
++				ext_batch_ok = true;
++			}
 +
-+			if (nr_gp_attrs == 0) {
-+				if (try_open_attr_variants(&gp_attr, false, pmu_cpu,
-+							   flags, &gp_pid, &gp_cpu, &gp_err)) {
-+					gp_attrs[nr_gp_attrs++] = gp_attr;
-+				}
-+			} else {
-+				int fd = sys_perf_event_open(&gp_attr, gp_pid, gp_cpu, -1, flags);
-+
-+				if (fd >= 0) {
-+					close(fd);
-+					gp_attrs[nr_gp_attrs++] = gp_attr;
++			if (!ext_batch_ok) {
++				for (int b = 0; b < 64; b++) {
++					if (!(ext_gpr_mask & BIT_ULL(b)))
++						continue;
++					e_attr.precise_ip = base_attr->precise_ip;
++					if (intr)
++						e_attr.sample_regs_intr = BIT_ULL(b);
++					else
++						e_attr.sample_regs_user = BIT_ULL(b);
++					fd = sys_perf_event_open(&e_attr, pid, cpu, -1, flags);
++					if (fd < 0 && intr && max_precise > 0) {
++						e_attr.precise_ip = 1;
++						fd = sys_perf_event_open(&e_attr, pid, cpu, -1,
++									 flags);
++					}
++					if (fd >= 0) {
++						close(fd);
++						mask |= BIT_ULL(b);
++						abi |= PERF_SAMPLE_REGS_ABI_SIMD;
++					}
 +				}
 +			}
-+		}
-+
-+		if (nr_gp_attrs > 0) {
-+			probe_group_limits(gp_attrs, nr_gp_attrs, gp_pid, gp_cpu, flags,
-+					   &pmu->probed.max_gp_group_size,
-+					   &pmu->probed.max_gp_group_capped);
 +		}
 +	}
 +
- 	if (keepalive_fd >= 0)
- 		close(keepalive_fd);
- 	pmu->probed.checked = true;
++	for (int is_pred = 0; is_pred <= 1; is_pred++) {
++		bool pred = is_pred != 0;
++		u64 class_mask = intr ?
++			perf_intr_simd_reg_class_mask(EM_HOST, pred) :
++			perf_user_simd_reg_class_mask(EM_HOST, pred);
++		u64 supported_classes = 0;
++
++		for (int reg_c = 0; reg_c < 64; reg_c++) {
++			struct perf_event_attr s_attr = *base_attr;
++			u16 qwords = 0;
++			u64 bitmap;
++
++			if (!(class_mask & BIT_ULL(reg_c)))
++				continue;
++			bitmap = intr ?
++				perf_intr_simd_reg_class_bitmap_qwords(EM_HOST, reg_c,
++								       &qwords, pred) :
++				perf_user_simd_reg_class_bitmap_qwords(EM_HOST, reg_c,
++								       &qwords, pred);
++			if (!bitmap || !qwords)
++				continue;
++
++			s_attr.size = sizeof(s_attr);
++			s_attr.disabled = 1;
++			s_attr.sample_period = base_attr->sample_period ?: 10000;
++			s_attr.sample_type = sample_type;
++			s_attr.sample_simd_regs_enabled = 1;
++			if (pred) {
++				s_attr.sample_simd_pred_reg_qwords = qwords;
++				if (intr)
++					s_attr.sample_simd_pred_reg_intr = bitmap;
++				else
++					s_attr.sample_simd_pred_reg_user = bitmap;
++			} else {
++				s_attr.sample_simd_vec_reg_qwords = qwords;
++				if (intr)
++					s_attr.sample_simd_vec_reg_intr = bitmap;
++				else
++					s_attr.sample_simd_vec_reg_user = bitmap;
++			}
++
++			fd = sys_perf_event_open(&s_attr, pid, cpu, -1, flags);
++			if (fd < 0 && intr && max_precise > 0) {
++				s_attr.precise_ip = 1;
++				fd = sys_perf_event_open(&s_attr, pid, cpu, -1, flags);
++			}
++			if (fd >= 0) {
++				close(fd);
++				supported_classes |= BIT_ULL(reg_c);
++				abi |= PERF_SAMPLE_REGS_ABI_SIMD;
++			}
++		}
++
++		if (pred)
++			*out_pred_mask = supported_classes;
++		else
++			*out_simd_mask = supported_classes;
++	}
++
++	if (!(abi & PERF_SAMPLE_REGS_ABI_SIMD)) {
++		/* Registers like x86 XMM without the SIMD ABI. */
++		u64 ext_mask = perf_reg_probe_candidates(EM_HOST, intr, /*simd=*/false) &
++			       ~gpr_mask;
++		struct perf_event_attr x_attr = *base_attr;
++		bool batch_ok = false;
++
++		x_attr.disabled = 1;
++		x_attr.sample_period = base_attr->sample_period ?: 10000;
++		x_attr.sample_type = sample_type;
++		if (intr && max_precise > 0)
++			x_attr.precise_ip = 1;
++
++		if (ext_mask) {
++			if (intr)
++				x_attr.sample_regs_intr = ext_mask;
++			else
++				x_attr.sample_regs_user = ext_mask;
++
++			fd = sys_perf_event_open(&x_attr, pid, cpu, -1, flags);
++			if (fd >= 0) {
++				close(fd);
++				mask |= ext_mask;
++				batch_ok = true;
++			}
++		}
++
++		if (!batch_ok) {
++			for (int b = 0; b < 64; b++) {
++				if (!(ext_mask & BIT_ULL(b)))
++					continue;
++				if (intr)
++					x_attr.sample_regs_intr = BIT_ULL(b);
++				else
++					x_attr.sample_regs_user = BIT_ULL(b);
++				fd = sys_perf_event_open(&x_attr, pid, cpu, -1, flags);
++				if (fd >= 0) {
++					close(fd);
++					mask |= BIT_ULL(b);
++				}
++			}
++		}
++	}
++
++	*out_mask = mask;
++	*out_abi = abi;
++}
++
+ /*
+  * Pack @value into the perf_event_attr config field named by the sysfs format
+  * @name of @pmu, e.g. "rdpmc" defined as "config1:1". Returns false if the
+@@ -3794,6 +4020,24 @@ static void __perf_pmu__probe(struct perf_pmu *pmu, int pmu_cpu)
+ 		}
+ 	}
+ 
++	/* 3b. User and interrupt register sampling masks */
++	if (pmu->probed.sample_types & PERF_SAMPLE_REGS_USER) {
++		probe_pmu_regs_one(pmu, &base_attr, pid, cpu, flags,
++				   pmu->probed.max_precise, /*intr=*/false,
++				   &pmu->probed.user_regs_mask,
++				   &pmu->probed.user_regs_abi,
++				   &pmu->probed.user_simd_mask,
++				   &pmu->probed.user_pred_mask);
++	}
++	if (pmu->probed.sample_types & PERF_SAMPLE_REGS_INTR) {
++		probe_pmu_regs_one(pmu, &base_attr, pid, cpu, flags,
++				   pmu->probed.max_precise, /*intr=*/true,
++				   &pmu->probed.intr_regs_mask,
++				   &pmu->probed.intr_regs_abi,
++				   &pmu->probed.intr_simd_mask,
++				   &pmu->probed.intr_pred_mask);
++	}
++
+ 	/* 4. Privilege / exclusion modifiers */
+ 	pmu->probed.exclude_user =
+ 		test_exclude_flag(&base_attr, pid, cpu, flags, PROBE_EXCLUDE_USER);
 diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 8efffbac3cbf..cacb8bc5198b 100644
+index cacb8bc5198b..66ee3841872a 100644
 --- a/tools/perf/util/pmu.h
 +++ b/tools/perf/util/pmu.h
-@@ -278,6 +278,10 @@ struct perf_pmu {
- 		bool exclude_host;
- 		/** @probed.exclude_guest: Supports perf_event_attr::exclude_guest. */
- 		bool exclude_guest;
-+		/** @probed.max_group_capped: Was max_group_size capped at probe limit? */
-+		bool max_group_capped;
-+		/** @probed.max_gp_group_capped: Was max_gp_group_size capped at probe limit? */
-+		bool max_gp_group_capped;
- 		/** @probed.probe_event: Name of the event used to probe the PMU. */
- 		char *probe_event;
- 		/** @probed.open_err: errno if open_supported is false. */
-@@ -286,6 +290,16 @@ struct perf_pmu {
- 		int max_precise;
- 		/** @probed.precise_mask: Bitmask of supported precise_ip levels (1..3). */
- 		unsigned int precise_mask;
-+		/**
-+		 * @probed.max_group_size: Max events in a group counted
-+		 * simultaneously, without multiplexing.
-+		 */
-+		int max_group_size;
-+		/**
-+		 * @probed.max_gp_group_size: Max general-purpose counter events
-+		 * in a group counted simultaneously, without multiplexing.
-+		 */
-+		int max_gp_group_size;
+@@ -300,11 +300,39 @@ struct perf_pmu {
+ 		 * in a group counted simultaneously, without multiplexing.
+ 		 */
+ 		int max_gp_group_size;
++		/** @probed.user_regs_abi: ABI flags for user_regs_mask. */
++		int user_regs_abi;
++		/** @probed.intr_regs_abi: ABI flags for intr_regs_mask. */
++		int intr_regs_abi;
  		/**
  		 * @probed.sample_types: Bitmask of supported
  		 * enum perf_event_sample_format flags.
+ 		 */
+ 		u64 sample_types;
++		/** @probed.user_regs_mask: Bitmask of supported sample_regs_user registers. */
++		u64 user_regs_mask;
++		/** @probed.intr_regs_mask: Bitmask of supported sample_regs_intr registers. */
++		u64 intr_regs_mask;
++		/**
++		 * @probed.user_simd_mask: Bitmask of supported user SIMD vector
++		 * register classes.
++		 */
++		u64 user_simd_mask;
++		/**
++		 * @probed.user_pred_mask: Bitmask of supported user SIMD predicate
++		 * register classes.
++		 */
++		u64 user_pred_mask;
++		/**
++		 * @probed.intr_simd_mask: Bitmask of supported intr SIMD vector
++		 * register classes.
++		 */
++		u64 intr_simd_mask;
++		/**
++		 * @probed.intr_pred_mask: Bitmask of supported intr SIMD predicate
++		 * register classes.
++		 */
++		u64 intr_pred_mask;
+ 	} probed;
+ };
+ 
 -- 
 2.56.1.703.gf848ed807c-goog
 
