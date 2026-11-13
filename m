@@ -1,72 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=111.22.67.137
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794559936;
-	b=UQ/sUSK17jmOYn9NPJMKf2UuM6wIUeQMWCO7VgeQfhoDDp0wmqOSDJ4IeNKsAaA2GYgI
-	 iueXaOFq1YQ71htkDmXF5Ua4Qxmi19XMZQ17AZqO5nQXl2y/kJCyOxa6vBtT142lQn5Tw
-	 AypfFerOkmtJJU+PGz5SwxS3EoYfMGbzsw4KiLWNzbY1YhNJ9bKxpoO0Y1BxIlxDuccOu
-	 00M6S9H8P797QD730aTLZt3XP173D386zQAqiVlDVhRgeok2+/pbylu19cImxgiGR9EAq
-	 olzdRNolHItXWuJLwh4xiXZF8zuSmZkpfKbFrs/ZiL1xD2TpyQ/7F13TZ/zibZGx/7A==
+	t=1794560435;
+	b=tSOC0VIpaROJ7AGvBafXaHUH8xKYpSnIKr4EYOBiHB8x2NM5bUJaYZnfR8X2Ba0IAHvq
+	 ezPanYiNqfsuO4MHGUfTrVvg78Gyfxa6uCdFfRGkkli+mMeC3OSAA/kGqQlJbHuJRXeXR
+	 XTvQ0q9uI+RNFgsTINZ+p4EJW0LwYFBDUmi1/IKA3dLBk+Litf9xxIZE+EkqP+PkUnLW7
+	 ijVinhrtp66awbBfDNfdan+kUgqNAzOhnHjxi3LaNR7E6jP//SUk/sTbudJJOYn+2ejeT
+	 Oz9oLooH6oATVEMrOQiyQnC6odWy2X0JtmEQ+BNtvSOttUwFBdBzqIu66xLFzXBb5mw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794559936;
-	h=DMARC-Filter:DKIM-Signature:X-RM-TagInfo:X-RM-SPAM-FLAG:Received:
-	 X-RM-TRANSID:X-RM-TagInfo:X-RM-SPAM-FLAG:Received:X-RM-TRANSID:From:
-	 To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=wtaaWGkNtrZKN3+YRi7hlUoVrdf0ltLOVxSsQvs6oT0=;
-	b=00LG11jM1TjqmCWWOnneLpXqnDXtprqb+lfTPZ2S8eUkPOB2XWLfdh6pBuHkhVG9TMRY
-	 AUinibXAL0wUZ6I/X8PiOmCcSxBE7XuDzK3xtYXmWZdQCEG8u71fBzKmv5lDnnXcB8Wwv
-	 mXbeEM+5fr1CUSuXdxrTBOM3FrsUlDk1vm3X71kH4HgGJWqJK9+6Fb6mS6SDplCtOAeHZ
-	 USskdBCERtEvvFTY6f8UFT1W8Pbze+gTgDNOiY6wKs4eGWA2cJBw72CA8btlZ2P4P/KzC
-	 gS5MdJSlzO510xTHcPnVHXsiPGRDsaZ9PET25Fl1m/WtwcsDaqJCmZhzkOxaPrXaTWg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794560435;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=Jnb+Cl5lZq6ZnAks751sAdzTI25zlIMijUSm1Lxgy5I=;
+	b=Du9NlqaTAQPSC0XlGNVYF4BBDPoZUmik8853LwcCJ4bthgDkYtgTJKkOZjqlG5eqdChG
+	 FgRPnondXE+g5u1yrOYWVNmDk4AA9cVqx5qIBS9wHt82aNHabNnf6pK2uqKAhrrreNqQ0
+	 nwPUsSuFPXNH3GP9fCugo2ZoatKVGZJMV0r5NwT6jSJnt8iKoyT0imArDDfUGzrY8eD3C
+	 GgVdmGyGwzj2ZOgFDvtIhwhGBSSWXBDh7hF3X13/PW2cekEFHVzRmi/ka+cm8FLmp+7GE
+	 r+JXRtp1x/mG6yEzeH3FiGQ6Sr4/LoqAqRKQnZhhVrkP+Mk6HcQnf/IKs2i8TWbiYng==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=cmss.chinamobile.com;
-	spf=pass smtp.mailfrom=cmss.chinamobile.com;
-	dkim=pass header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=S2mnvMAy;
-	arc=none smtp.remote-ip=111.22.67.137
-Received: from cmccmta4.chinamobile.com (cmccmta4.chinamobile.com [111.22.67.137])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52B6960A5BE1;
-	Fri, 13 Nov 2026 08:52:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 52B6960A5BE1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmss.chinamobile.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h0YwKjDi;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E7A606A31C
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 09:00:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=S2mnvMAy
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=cmss.chinamobile.com; s=default; l=0;
-	h=from:subject:message-id:to:cc:mime-version;
-	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-	b=S2mnvMAy3kFHMjSeSlC0WWNjRfrCSRz5XxZxR08Tw6kzx/FCdc2x5lU4boPhttP8MsfWTonubkQOD
-	 46U7r2k7XRtcZALvuN4/HdGE7ejAjKfnFLQzRAChcOT21kNshVkxVWn6pUQ9I0Gb34ueOEutXKqeQ4
-	 u/1rF3qMZ1MbSzLQ=
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
-	by rmmx-syy-dmz-app08-12008 (RichMail) with SMTP id 2ee86af6cfbb51a-8a7e4;
-	Fri, 13 Nov 2026 16:52:11 +0800 (CST)
-X-RM-TRANSID:2ee86af6cfbb51a-8a7e4
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from FHB-W5100250 (unknown[36.137.216.21])
-	by rmsmtp-syy-appsvr10-12010 (RichMail) with SMTP id 2eea6af6cfb4353-1edfa;
-	Fri, 13 Nov 2026 16:52:11 +0800 (CST)
-X-RM-TRANSID:2eea6af6cfb4353-1edfa
-From: Gu Bin <gubin@cmss.chinamobile.com>
-To: acme@kernel.org
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf parse-events: free evsel and config terms if term conversion fails
-Date: Fri, 13 Nov 2026 16:52:00 +0800
-Message-ID: <20261113085202.2334-1-gubin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.50.1.windows.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h0YwKjDi
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46BB61F000C4;
+	Fri, 13 Nov 2026 09:00:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794560435;
+	bh=Jnb+Cl5lZq6ZnAks751sAdzTI25zlIMijUSm1Lxgy5I=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=h0YwKjDizhT6S8FvKW2/ZiSHzwbD1LezpcyCJmB09tdVuT4slcw3TvTAbj7C3W9BR
+	 2C3yUWd3g0Fp9yptBGGpdXFjvuPoR80jHjBHQ7nuK+2BZQybZtKg3jAdTuHuObLH3N
+	 3T8na6H9qg+PkuZ4cR0N4+U4Jos/uGLA/LUc0qX35Na4GGOLEZXljE7CAnFEvK48HA
+	 975iTPSh27sdZsCzzq2qO16TBbJx8VPOlz4PtZhMkQUkv7bvtkk9w8zNfQ7O3qGIVB
+	 2ZCvCz7tdesT8xdsBfkK7lhR5CaZzfCIJgLigQIKeap+gF5gw/Jl32i1PemJVKYvbg
+	 at64QWGyBvkMw==
+Message-ID: <sashiko-outbox-212492@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf parse-events: free evsel and config terms if term
+ conversion fails
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Gu Bin" <gubin@cmss.chinamobile.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261113085202.2334-1-gubin@cmss.chinamobile.com>
+References: <20261113085202.2334-1-gubin@cmss.chinamobile.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 13 Nov 2026 09:00:34 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -75,44 +59,67 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-add_tracepoint() creates the evsel with evsel__newtp_idx() before
-converting the user-supplied config terms with get_config_terms().
-If a term allocation fails there, the function returns -ENOMEM with
-the evsel not yet on any list, so nobody frees it, and the terms
-that get_config_terms() already queued on the local config_terms
-list are leaked as well.
+Thank you for your contribution! Sashiko AI review found no new issues
+in this patch, but noticed 1 related pre-existing issue it does not
+introduce:
+- [Medium] perf parse-events: memory leak in parse_events_terms__copy()
+  [1]
+--
 
-Free the partially built config_terms list, then release the evsel
-with evsel__put(), before returning.
+commit 4ef9371b87de8bcf35fad7acbbc63f271bc56ae7
+Author: Gu Bin <gubin@cmss.chinamobile.com>
 
-Fixes: e637d17757a1 ("perf tools: Enable event_config terms to tracepoint events")
-Signed-off-by: Gu Bin <gubin@cmss.chinamobile.com>
----
- tools/perf/util/parse-events.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+perf parse-events: free evsel and config terms if term conversion fails
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index f3ba70d4f76b..e4f842532145 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -490,8 +490,11 @@ static int add_tracepoint(struct parse_events_state *parse_state,
- 	if (head_config) {
- 		LIST_HEAD(config_terms);
- 
--		if (get_config_terms(head_config, &config_terms))
-+		if (get_config_terms(head_config, &config_terms)) {
-+			free_config_terms(&config_terms);
-+			evsel__put(evsel);
- 			return -ENOMEM;
-+		}
- 		list_splice(&config_terms, &evsel->config_terms);
- 	}
- 
--- 
-2.50.1.windows.1
+This commit frees the partially populated config_terms list and releases the
+allocated evsel when get_config_terms() fails in add_tracepoint().
 
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
+s.c
+> index f3ba70d4f76b2..e4f8425321451 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -490,8 +490,11 @@ static int add_tracepoint(struct parse_events_state =
+*parse_state,
+>  	if (head_config) {
+>  		LIST_HEAD(config_terms);
+> =20
+> -		if (get_config_terms(head_config, &config_terms))
+> +		if (get_config_terms(head_config, &config_terms)) {
+> +			free_config_terms(&config_terms);
+> +			evsel__put(evsel);
+>  			return -ENOMEM;
+> +		}
+>  		list_splice(&config_terms, &evsel->config_terms);
+>  	}
 
+[Severity: Medium]
+This problem wasn't introduced by this patch, but can
+parse_events_terms__copy() similarly leak [1] the cloned terms on
+dest->terms when parse_events_term__clone() fails partway through the list?
 
+tools/perf/util/parse-events.c:parse_events_terms__copy() {
+	list_for_each_entry (term, &src->terms, list) {
+		struct parse_events_term *n;
+		int ret;
+
+		ret =3D parse_events_term__clone(&n, term);
+		if (ret)
+			return ret;
+
+		list_add_tail(&n->list, &dest->terms);
+	}
+	return 0;
+}
+
+When parse_events_add_pmu() or parse_events_multi_pmu_add() calls
+parse_events_terms__copy() into a local parsed_terms struct and returns on
+error without calling parse_events_terms__exit(), any already cloned
+parse_events_term entries and their strings are leaked.
+
+[1] https://sashiko.dev/#/bug/linux-dd6119ed-0ace-40b2-bfe9-492b265c7283
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113085202.2334=
+-1-gubin@cmss.chinamobile.com?part=3D1
