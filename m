@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794582380;
-	b=Kx0tEbQ4j0A8ktNW5hCHy3XVXkQX6Ibk/uRWuAr8rPtCyqQgAJiA01AD5Armgy7JxU8i
-	 qsUqT//+/gIAs326LO1oSPqNlDk+teF0dLoxNvR2UGxf4IfKDd5K0qhpZMfWH2VWv+3dC
-	 QRuLXRFA9wn+gTwLbPE+tDQi4qttrJcXU+3+X+zndPSoAQ1L+CreYGe13UiFvAEWsA3cO
-	 ii2w+Cjbo6aE9EZOwlgl/dK/NIVSsfEEWP75iI92xyrrrGVU9KhspenM+FAdnMyb7Xwr9
-	 15E16aYxaC3RE6/6Qu6NW7/sBQmWBlbNbNhecg3rHp55up0S7wM2NDPUb+qZFgUi8/A==
+	t=1794582385;
+	b=IdgeocdcP3dkPO87PiXLxBINy5VCT541uOtpvzH+4i8xAew6JLEfpc0HZiIQYiEsuWWH
+	 DMBj/iEJzu30cpNDoNGfZU/OOCGFvAVfumAzNjkgsqKh/JMmmxdhqu080RihXkQJWQjsh
+	 RIvjFoYWYyhWp6itHfUHkaa1ApuoKMQvS0NcEJdTK+WL3F7DwvNIN7rEXsm2/k/ysxBu6
+	 BivyP/XDg3lgfXjz7iTPTD3Ag2aX96dC4ElWWOpXgd+9Y+0iywX6tae4GLNcPJs40F/aW
+	 2yBZKj4K74WjdgARHPQQ0qF2hiaHrIYEcU9Tm17UjY/pHIYiATZccmiysg/XesYPe3w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794582380;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794582385;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=zSkaJp+jm7VGY1BsoqIkTEeAapZepwmppRz6H7Yg+iw=;
-	b=qDVv2kSpkfq/CieQRVaLqcpobDvHue7VNs5u8XCl2SgzOdvGA5TKmBwHZnhy7p9iz1f8
-	 PhGj/uUUzKqyuEebeDB+wbJYfmsWX48iCNhwiXJ+Rvs8SEmyHXwraX8iu/773y++nAfiI
-	 +gQR4AtvyWNG/7iHfKW3LeVsTTDxiFYgLfoMxFap0EoZ/7sbf9uckXVo8U0Pu93DutllF
-	 IF1ModCALp8aiz7ZNxidwrk4Cf8n/UIJtky0fJt+bnhnm3t9VitF5HzgJUv78OsN55y+t
-	 gcfaa0iGfCtlQj2T15KcC5KHYaVN5+bEcdK+a2DagbLVxhdbjlQj9e/v5yWSjG7vBIw==
+	bh=heKncXN2ESk9KNPzZANxBokZt3UOa99KaEx4tb00rrQ=;
+	b=Czaup6GBl1MXq9XK94x7fn30WiAjiQHr8kdVxQYf857gboJYUPZj6m7XqQqwU5JKekBk
+	 /FDkEalyjtdGnWF9DleOfmLeaBx3sscMFGFPERA8MgxSAaleXZxzy7bsk3F6rpaLXpJ1s
+	 BKrN9DavzsV2f8RodGk9VTpphPLqJlxAnpdUElpoSSFDtRh8D61wU5JvsF+ZGkvml0YJJ
+	 sdm6w3sGP7p0lvSh3l/ZopgB2nEaw4R5SI/ipGOLmxRW4ohdzIE6pamX2eLiFycOT1o3b
+	 jGxvWRkab1UNIPK0HSDhoMjDm/5DZSpMPxLd7a5VogpvVKa/3runF68WIE6zrYGq55w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="A8mZ5/b4";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Fnk7FqAx;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1196606A88E;
-	Fri, 13 Nov 2026 15:06:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA5360A3828;
+	Fri, 13 Nov 2026 15:06:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=A8mZ5/b4
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 697521F000C4;
-	Fri, 13 Nov 2026 15:06:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Fnk7FqAx
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2F2C1F000C6;
+	Fri, 13 Nov 2026 15:06:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794582379;
-	bh=zSkaJp+jm7VGY1BsoqIkTEeAapZepwmppRz6H7Yg+iw=;
+	s=k20260515; t=1794582385;
+	bh=heKncXN2ESk9KNPzZANxBokZt3UOa99KaEx4tb00rrQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=A8mZ5/b4AiSvyz6/B/8zSAW1/U9SJynHtgtKejCgG5EpkOD9+YgLt0aLp0SOBjxW2
-	 Cadfb9Qu5OxfiGL1P5hVAlvcKdMuAqk/xyk17aBJQ5qt17NW+Ojih1LQXuCBALv0jT
-	 wMjV2vpC3gOpoDE8m+yQ250RpaEm/DfUYTBjf35F5ebkLvwIBZJrxGX/PUorR9uu6j
-	 KLPl7IjppPs5a0w02rDVmlJouH1qS48Nh19CWUHF3KwYyE0XKKTvqLGaHRmw5q0gSG
-	 UYZ1+5RkDK7PyllfB8kQ9AURhVOsJj2DEQ/cjEpTUSGOR8z7kU14zTeZRjBqVUCXM6
-	 dx4SvXhdjTyug==
+	b=Fnk7FqAxpSVCpNcFpuLc52WpcObncRVHxyP6YyrDgbK/OnQ7RMxaK3FKciRk8fikG
+	 BW8niFcyQib2JLb1TnpXT19I3pwYRtRAIXk02CGLqeshIty2QBOrPlzmGY5JeF2od5
+	 I3TPJcmkr6LlHSd86BYtGcF0w7V0SWF+ShtWXS3OZsiQJqff8Xc6QMnpc0OdWpnA3B
+	 IBuq9B4/P3LJiwMdCT1TN22KJEYCt2ToPjtEjw56Q4lnKtmwn+AgcF9x9e/N19DTO+
+	 8F+5IPa2mXEoCUEo6Y03bPZ0SYxldQbTY45MeQjMycDvgdVSb7cEZLEArQTe8Nc/QZ
+	 8wXY8xLXvmcOg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v1 06/12] perf annotate: Print the stats after the annotations
-Date: Fri, 13 Nov 2026 12:05:47 -0300
-Message-ID: <20261113150555.1163049-7-acme@kernel.org>
+Subject: [PATCH v1 08/12] perf build: Record the display-only features in FEATURE-DUMP
+Date: Fri, 13 Nov 2026 12:05:49 -0300
+Message-ID: <20261113150555.1163049-9-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261113150555.1163049-1-acme@kernel.org>
 References: <20261113150555.1163049-1-acme@kernel.org>
@@ -70,117 +70,35 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The instruction stats are printed before the loop that accounts them,
-so 'perf annotate --code-with-type --insn-stat' always shows zeros.
-The data type counters are updated in --code-with-type mode too, but
-only --data-type mode accounts their total, so they are incomplete
-there.
+llvm-perf and rust are in FEATURE_DISPLAY but not in FEATURE_TESTS: they
+can't be part of the test-all fast path, which sets every FEATURE_TESTS
+entry to 1 when test-all.c builds.  Since FEATURE-DUMP is written from
+FEATURE_TESTS only, a FEATURES_DUMP= build, as used by build-test, never
+sees them and silently builds without libLLVM and the rust workloads.
 
-Print both after the annotation loops, the data type part only with
---data-type.
+Append the display features that aren't in FEATURE_TESTS to the dump
+after the regular feature checks have run.
 
-Fixes: 58824fa0087e1cb7 ("perf annotate: Add --insn-stat option for debugging")
-Fixes: 61a9741e9f78c64c ("perf annotate: Add --type-stat option for debugging")
-Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: 206dcfca1f5cfac3 ("perf build: Autodetect minimum required llvm-dev version")
+Fixes: 3f5dfa472ea6771c ("tools build: Fix rust feature detection")
+Cc: James Clark <james.clark@linaro.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-annotate.c            | 10 ++--
- tools/perf/tests/shell/annotate_stats.sh | 58 ++++++++++++++++++++++++
- 2 files changed, 63 insertions(+), 5 deletions(-)
- create mode 100755 tools/perf/tests/shell/annotate_stats.sh
+ tools/perf/Makefile.config | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 331adbdbd635917d..973f4950abd6f917 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -414,11 +414,6 @@ static void hists__find_annotations(struct hists *hists,
- 	struct rb_node *nd = rb_first_cached(&hists->entries), *next;
- 	int key = K_RIGHT;
- 
--	if (ann->type_stat)
--		print_annotate_data_stat(&ann_data_stat);
--	if (ann->insn_stat)
--		print_annotate_item_stat(&ann_insn_stat, "Instruction");
--
- 	while (nd) {
- 		struct hist_entry *he = rb_entry(nd, struct hist_entry, rb_node);
- 		struct annotation *notes;
-@@ -660,6 +655,11 @@ static int __cmd_annotate(struct perf_annotate *ann)
- 		hists__find_annotations(hists, pos, ann);
- 	}
- 
-+	if (ann->data_type && ann->type_stat)
-+		print_annotate_data_stat(&ann_data_stat);
-+	if (ann->insn_stat)
-+		print_annotate_item_stat(&ann_insn_stat, "Instruction");
-+
- 	if (use_browser == 2) {
- 		void (*show_annotations)(void);
- 
-diff --git a/tools/perf/tests/shell/annotate_stats.sh b/tools/perf/tests/shell/annotate_stats.sh
-new file mode 100755
-index 0000000000000000..82d2becdff141138
---- /dev/null
-+++ b/tools/perf/tests/shell/annotate_stats.sh
-@@ -0,0 +1,58 @@
-+#!/bin/bash
-+# perf annotate instruction stats test
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+perfout=$(mktemp /tmp/__perf_test.perf.out.XXXXX)
-+
-+cleanup()
-+{
-+	rm -f "$perfdata" "$perfout"
-+	trap - EXIT TERM INT
-+}
-+
-+trap_cleanup()
-+{
-+	echo "Unexpected signal in ${FUNCNAME[1]}"
-+	cleanup
-+	exit 1
-+}
-+trap trap_cleanup EXIT TERM INT
-+
-+# No point in recording if the PMU cannot do memory events.
-+if perf mem record -o /dev/null -- true 2>&1 | \
-+		grep -q "failed: no PMU supports the memory events"; then
-+	cleanup
-+	exit 2
-+fi
-+if ! perf mem record -o /dev/null -- true 2>/dev/null; then
-+	echo "Skip: cannot record memory events on this PMU"
-+	cleanup
-+	exit 2
-+fi
-+
-+if ! perf mem record -o "$perfdata" -- perf test -w datasym > /dev/null 2>&1; then
-+	echo "FAIL: perf mem record"
-+	cleanup
-+	exit 1
-+fi
-+
-+if ! perf annotate --code-with-type --insn-stat -i "$perfdata" --stdio \
-+		--percent-limit 1 > "$perfout" 2>/dev/null; then
-+	echo "FAIL: perf annotate"
-+	cleanup
-+	exit 1
-+fi
-+
-+# The instruction stats are accounted while the instructions are
-+# displayed; printing them before the display loop shows zeros.
-+if ! grep -Eq '^total [1-9][0-9]*,' "$perfout"; then
-+	echo "FAIL: instruction stats not accounted"
-+	cleanup
-+	exit 1
-+fi
-+
-+echo "instruction stats accounted"
-+cleanup
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index b4764f69f47f4d8c..1b5caa246345c9bb 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -1310,3 +1310,7 @@ endif
+ # tests.
+ $(shell rm -f $(FEATURE_DUMP_FILENAME))
+ $(foreach feat,$(FEATURE_TESTS),$(shell echo "$(call feature_assign,$(feat))" >> $(FEATURE_DUMP_FILENAME)))
++# Features only in FEATURE_DISPLAY aren't part of the test-all fast path, so
++# they have to be checked explicitly and recorded here too, otherwise a
++# FEATURES_DUMP= build silently disables them (llvm-perf, rust).
++$(foreach feat,$(filter-out $(FEATURE_TESTS),$(FEATURE_DISPLAY)),$(shell echo "$(call feature_assign,$(feat))" >> $(FEATURE_DUMP_FILENAME)))
 -- 
 2.56.0
 
