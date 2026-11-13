@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794600551;
-	b=cQ7xZcXpk5kEPlnc9f6eN0EGS/+bko6eLOotRpnXG8QQwrJSH88sKjHD8PGwQl30jKME
-	 9nbOXBs4QKKEtAA13MO0rc6GAWamwSl81Dxa67XkKUs+RF7juiFVqWT01phQS9iQFEtaN
-	 MpdT7EIYF1NpeNLARThOg0AuJUaqnVRrqSztSLAXI6l+ZvHVzQUSz7P6izOrS7IS73hiA
-	 vPpp25D9Ufl6NXiCr6ImRGX7RU2wLynaGeQQrQaFA+JqvuEt066skiUXCT1j75Yuyg5qm
-	 XSkhkTa+PXgZZsmuwH+ZAjTWC3FVxNl5eb0RupDdskVDuZ+2besdB2L3cve3VrC394w==
+	t=1794600556;
+	b=WSnbd9EiSwVCDMMOiQG51H30uUgUi5tjhIQKsqOtSsEPRQXr+Edy43BOWc/KwiT4bVxT
+	 uPu06DKUnGHnHF8B99c9mOARePol5H4q5MpK/VjX69mpIeK6lfR8DMEP61iXsR0tyWqkt
+	 zLRCulyVWK7KQEXQ1N8l1mtRP0MTJbfXy/3twvi1aDRRLUxj9oZM/2WxwXp4aEPToeP+L
+	 EP/C62UJDr5ZOdUtqQ+oPhZ2Vwni8H1iWsPStkkdif6N6K94IcmuJsrHCEpHkPC99yiS9
+	 AJ4A6qSbqWfkNwiut7CmcxOd5v6Yv7uo6gx966043bdkMeMB7YnluHLaf0WrHBQ7khw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794600551;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794600556;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=2e0D4VsHpXShUxzHyxdi5LrTZGO+JfPq7HMyVhQ0gqY=;
-	b=NMVUN/05QhE4WvaYz3X7SD/rJPDaM34/QjfMzDo0h3/DW7DaoBN1gyWKPwAGzDG29I0s
-	 IjfouIjeLO1ey2ZCNy1v9NoOaWNlK9G9s0/WQmbV4SEAnXWlSA8BVvf9D4T8Xil70+vqg
-	 kYWe2pInxl+yV3tX4pCX7s0hxYNfd/Sgfvhv6HLCGU6UQxJ4kF4RZUX4wVEaQ2Z4SIVo8
-	 xVT3CeRgzO3JLw46d9nwV8Dv5kuhHiqBb6naH6R5zm9gOO07VXW4GM8PH5kwthvlRwYy8
-	 2ueERDJ3QlcuIr/ZwmjCMzxcY0nXaouSGwvA+hsO/KOXeYqIC7uIsbwI4x5eCp48T+g==
+	bh=aXhUZRiibjudBPuJybTNMVpnE84LXFHMI9y/tCiYIaY=;
+	b=CYwPFszrT5yEUvILcXyDKWnfEHc+YS/byBjV29L0nDCAzm/C96UiXfSWgKh8ledOtTmK
+	 dELTxuNTZ1IK6xZ0lDlMc/S7YofC3kC1booIQcCxnSKXaJzpdcp/WKJdivm+cizPT2Fek
+	 xlSPK/ADoF5fcQ2jesV4I6ekgDYWd50ZIQefwjKa7ABPY3Mu7k6KRKv09VIqiFcJIZro0
+	 GTePEmJFCyM2idPmX/cBU18wrrAMIZ4+igqsKRgQ8ZhW8ZzmZ3xSH2ri6TqAnoy8a+Atk
+	 ewf2Qkc6ohDJELHg5pf/j+oWuzxDGM/wIA2BbedAk9JJoBkMqOJNGCe4ZkOtzh9O0xQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jxUEmtiX;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=b8Sn+71K;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D953606A8B8;
-	Fri, 13 Nov 2026 20:09:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDB4606A336;
+	Fri, 13 Nov 2026 20:09:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jxUEmtiX
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C52BF1F000CF;
-	Fri, 13 Nov 2026 20:09:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=b8Sn+71K
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F5DE1F000CA;
+	Fri, 13 Nov 2026 20:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794600551;
-	bh=2e0D4VsHpXShUxzHyxdi5LrTZGO+JfPq7HMyVhQ0gqY=;
+	s=k20260515; t=1794600556;
+	bh=aXhUZRiibjudBPuJybTNMVpnE84LXFHMI9y/tCiYIaY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=jxUEmtiXIyGgBUbtPNIXtXwxdcokhH8yv5O76a1tJrRA5xfBleOBgKdYH2FUh5rM2
-	 xrYNVXJ/4W9rs7i1/tthpmLtx3IbdKxN5IOWqEC4mNRh3byyj/SGOHZAYKbfOWZrWm
-	 0YNekGJvBaZwFX+a4mTA7znNe+VUe8UfXMQi86xckbT7pL4OOPeSUSjCvjvZ55+U1T
-	 0PNSH5t6Vm7FQqy+WCvlAG8ERKWQdW5zlS3XyoSjzOA62XnX9veZcWVXLTmxN8a3M/
-	 unjXvKuv/jxrzE49meu4trDozOEzWQnOe3pI0TiRygsM8gCOQy+9MkP5kqlVQ8nVgZ
-	 sY4/BTeP1AsHQ==
+	b=b8Sn+71KemsPhnNFilha26JjkNqkPZNMvlgFjngdBohHF4Rra5PgwAsgeLkf2UMMg
+	 aU4ScaEr+CdtsYt3a9wHTP3lk6xEr/If+mgmBBissaoBJ7PMTNfsCoC/2ZXb7n8Vpl
+	 mJomb6SMHRwt0kIO1diqT50hcbEDGUsJ/qxeRA4dV+04HVWiNq8qC75fawe4Q03qp+
+	 M3x6wBgmjMopWmva6qcOo6rlw4flWHR/QTQ3IsVlIwvhaXK/NyKvjl92wrhtwOGqZl
+	 /AWARQ/ORlwLd6QS8dU2ei46mj3vAXDPUxaYhyI4i70+S4LDuN1Vk6xopckSHbDfEN
+	 XoMVTx8BMnjHQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v2 05/11] perf tests: Exercise data type resolution from a register
-Date: Fri, 13 Nov 2026 17:08:43 -0300
-Message-ID: <20261113200850.2803460-6-acme@kernel.org>
+Subject: [PATCH v2 07/11] perf tests: Silence the libbfd probe in build-test
+Date: Fri, 13 Nov 2026 17:08:45 -0300
+Message-ID: <20261113200850.2803460-8-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261113200850.2803460-1-acme@kernel.org>
 References: <20261113200850.2803460-1-acme@kernel.org>
@@ -70,146 +70,34 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-At -O2 a struct pointer lives in a register and DWARF describes it with
-a register location, while the unoptimized workloads the data type tests
-profile keep their variables on the stack.
+build-test evaluates the libbfd probe at parse time and the compiler's
+stderr isn't captured by $(shell ...), so without binutils-devel it
+prints "bfd.h: No such file or directory" once per tests/make
+invocation, five times per run.
 
-Build a workload with a noinline function that gets the pointer from a
-volatile global, which keeps it in a register, and check that its three
-member accesses are resolved from that location.
+Redirect the compiler's stderr; the empty result still skips the
+nondistro tests as intended.
 
+Fixes: 523471c5163659c6 ("perf build: Skip nondistro build test if libbfd is old")
+Cc: James Clark <james.clark@linaro.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/data_type_register.sh | 120 +++++++++++++++++++
- 1 file changed, 120 insertions(+)
- create mode 100755 tools/perf/tests/shell/data_type_register.sh
+ tools/perf/tests/make | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/data_type_register.sh b/tools/perf/tests/shell/data_type_register.sh
-new file mode 100755
-index 0000000000000000..e0369f076ae6f4b2
---- /dev/null
-+++ b/tools/perf/tests/shell/data_type_register.sh
-@@ -0,0 +1,120 @@
-+#!/bin/bash
-+# perf data type profiling tests for register variables
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+perfout=$(mktemp /tmp/__perf_test.perf.out.XXXXX)
-+prog=$(mktemp /tmp/__perf_test.regs.XXXXX)
-+src="${prog}.c"
-+
-+cleanup()
-+{
-+	rm -f "$perfdata" "$perfout" "$prog" "$src"
-+	trap - EXIT TERM INT
-+}
-+
-+trap_cleanup()
-+{
-+	echo "Unexpected signal in ${FUNCNAME[1]}"
-+	cleanup
-+	exit 1
-+}
-+trap trap_cleanup EXIT TERM INT
-+
-+if ! perf check feature -q dwarf; then
-+	echo "Skip: no DWARF (libdw) support"
-+	cleanup
-+	exit 2
-+fi
-+
-+# No point in recording if the PMU cannot do memory events.
-+if perf mem record -o /dev/null -- true 2>&1 | \
-+		grep -q "failed: no PMU supports the memory events"; then
-+	cleanup
-+	exit 2
-+fi
-+if ! perf mem record -o /dev/null -- true 2>/dev/null; then
-+	echo "Skip: cannot record memory events on this PMU"
-+	cleanup
-+	exit 2
-+fi
-+
-+cat > "$src" <<'EOF'
-+#include <signal.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+
-+struct node {
-+	long a;
-+	long b;
-+	long c;
-+};
-+
-+static struct node n;
-+static struct node *volatile vp;
-+static volatile sig_atomic_t done;
-+
-+static void stop(int sig)
-+{
-+	done = 1;
-+}
-+
-+__attribute__((noinline)) static long touch(struct node *p)
-+{
-+	long sum = 0;
-+
-+	sum += p->a;
-+	p->b = sum;
-+	sum += p->c;
-+	return sum;
-+}
-+
-+int main(void)
-+{
-+	unsigned long sum = 0;
-+
-+	vp = &n;
-+	signal(SIGALRM, stop);
-+	alarm(1);
-+
-+	while (!done)
-+		sum += touch(vp);
-+
-+	return sum != 0;
-+}
-+EOF
-+
-+# -O2: the pointer stays in a register, so the accesses are resolved
-+# from its type state instead of from a stack slot.
-+if ! cc -O2 -g -fPIE -pie -o "$prog" "$src" 2>/dev/null; then
-+	echo "Skip: cannot build the workload"
-+	cleanup
-+	exit 2
-+fi
-+
-+if ! perf mem record -o "$perfdata" -- "$prog" > /dev/null 2>&1; then
-+	echo "FAIL: perf mem record"
-+	cleanup
-+	exit 1
-+fi
-+
-+if ! perf annotate --code-with-type -i "$perfdata" --stdio \
-+		--percent-limit 1 > "$perfout" 2>/dev/null; then
-+	echo "FAIL: perf annotate"
-+	cleanup
-+	exit 1
-+fi
-+
-+for member in "+0 (a)" "+0x8 (b)" "+0x10 (c)"; do
-+	if ! grep -Fq "# data-type: struct node ${member}" "$perfout"; then
-+		echo "FAIL: member ${member} not resolved from the register"
-+		cleanup
-+		exit 1
-+	fi
-+done
-+
-+echo "register held access resolved"
-+
-+cleanup
+diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+index 7524de5228029e7e..e6d7ac49b5b1693d 100644
+--- a/tools/perf/tests/make
++++ b/tools/perf/tests/make
+@@ -128,7 +128,7 @@ make_minimal        += NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1
+ make_minimal        += NO_CAPSTONE=1
+ 
+ # binutils 2_42 and newer have bfd_thread_init()
+-new_libbfd := $(shell echo '#include <bfd.h>' | $(CC) -E -x c - | grep bfd_thread_init)
++new_libbfd := $(shell echo '#include <bfd.h>' | $(CC) -E -x c - 2>/dev/null | grep bfd_thread_init)
+ 
+ # Whether libLLVM can be built, which needs the llvm-devel/llvm-dev headers and
+ # libraries of version 13 or newer, not just llvm-config. This mirrors the
 -- 
 2.56.0
 
