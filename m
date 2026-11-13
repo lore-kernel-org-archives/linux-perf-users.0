@@ -1,54 +1,53 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1794589091;
-	b=l55iTGCDEl/b4PYYMxv2Covo5pN9+3NEbTDf3WOt1k7MN2Mro/iTsStv9rALNSkvY17H
-	 Z/wL0WdPx91NTVabbi4d8vgu2+I5Xx/Lf4ztadNvrz6AM3244O08j/0Eo7HxjzlE+k9fP
-	 CDXG32WUyPnpV7n7CTKpKkPzwo4wNz5fq+ISlxS7HFcEqVFu3lisjcK0czySuB/GpN2Ux
-	 X7YbFN00d9jxkRiUiWN/XUY8PPABxePoq4Vn4EMmwchpyoN80r87YgUVz62D5K7cxEhSd
-	 3OM2UNQWsXH0wJoLSeY6yyWBGT3OSb6nhYhTS8YE1G6X83M2LjRXytewt9qv3C7bPTg==
+	b=JdD8VyqrKBUznHVlJxMvnJ8HEa2FqOeT3NT1nXTXEnLpxq7SwSfH+EI19VO/cajdF8hR
+	 ia90hqCnnoAQt0pYS7rXqNGl4r7SoGslJvQFKOnqxBfWqddXqqsp4/q6WfE6XZ7DK028t
+	 HMeAFtoflta8ehwPjQo86PpWFWYyJEIp/HhcA/3V11MMpa+D/IyNG3FP0AsR91TdHfJR9
+	 D54PfIiK7Eu3csFhOs6Zg/Qss8yJJhTg5afKhGYUC8Hs74HKsli8o/Ndnsiy6tHVm1ete
+	 mnsJh/FGIMvg1bBpgyIC/slOFuJI/SvUUlSEwNmj2vPbFhj2XxZZ8a+Y5vCd2tqWABA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794589091;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=yHYaQNE9cxNG9RgctsKOJXBnU55Jz85cnLgyAyhctA4=;
-	b=j1PKm7UKD6csBfo2rKmFWmEN8fCsPG3RxkWdQx10f800sOiutoxov7uRi7eDfyqfT0nv
-	 rFVglFDGN7IBuJQNxs13gTVuRG+Eay5PFQVLxJW3Fd0JbFjlc1SSYNBBIxr0ViT1zct8m
-	 4hyom6qggasXCnd/2nCBZg1rarx0YcqPwDbmRknHHv9O70+Gt6CKRCm19vnBnKRYRm8gM
-	 InSrzahpg3gPrwLfQV8E2uHAsOGkKib2DTRRw4uwA6EITo3FjY+WJ6+hmv79FWVCUd6wP
-	 dGxnWXrbXthCqa+vFAw69Ii2LXU319hRU60H8yOqm4BdOxGH29wdHaJ1RZDn5wIQo/Q==
+	bh=/ULKk6K4SdqZ2G3eH7i5l1P0aPeELARH5eAJpZr1Hfs=;
+	b=GNKA+3+EfIWmLZZXCUEmMkMQe7E3Khv3MlLgi2KNsUx+o6biGRwFAm38itgLxvjzTHBp
+	 R2Hgc6hVMsNYhFL55oSfCi+if39NNJMrptQ25P04z2BnxQHe2hfUegT3EoiM0ULp/QOUr
+	 cNmp9eQVU37pSgoBQgB+EpdoqK6V2QuLxjnBzvDg7FCrYy0iXfWuDZ/cgTyPI/ZsOZ3VK
+	 AhaCNRR7RJLTIiY7MruRRFMRyo9dB41K+sk8UnlgNQ7cpLTNiwco7LeCk7kSqwxlppPls
+	 Lc+0oMJhMzNs0LQg0UFj6UTwov1EnVyRf2n+wPsOe3jjnb6Gu6O2qLeJMsbueB8b6PA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Nz/CyDsn";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hGeTTvAy;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C70606A323
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 16:58:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1320606A331
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 16:58:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Nz/CyDsn
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8D941F000C4;
-	Fri, 13 Nov 2026 16:58:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hGeTTvAy
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54B431F000C5;
+	Fri, 13 Nov 2026 16:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794589090;
-	bh=yHYaQNE9cxNG9RgctsKOJXBnU55Jz85cnLgyAyhctA4=;
+	s=k20260515; t=1794589091;
+	bh=/ULKk6K4SdqZ2G3eH7i5l1P0aPeELARH5eAJpZr1Hfs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Nz/CyDsnz3j7MS6ScO4+sZTKOmVWyJVjpM+rKW6isDGkD0qjXPkpoeCxo3YBB+yBB
-	 x43eVM/M/PG+h3WQgS/h1yekh8K7M9kBHEmFFE8LrVQnbdwTnAngwDwn/m/AULkLID
-	 Pg/6Wpnx2A2uUloxmI0Z5hVryxLXeRclf/r/aoq8X9x6wAMxIsq3y4M+LTFb0kQtP1
-	 mUtaeiU5kIsVT7hVl0DiyOskds3s8DoFtnVTYh4u2qSpvyiFU/CZ7/+L0QUcfYCLXq
-	 EUJtnI3DKGyw/FzXh9Zg7CfwTwN3n8IF+iHGTnJR/f622XoUvu5Sjo0zLO9KtkDilZ
-	 pNkwlwVm4Mj6Q==
-Message-ID: <sashiko-outbox-213256@kernel.org>
+	b=hGeTTvAyYciICb9UiGKU8l4Kpf+STGnUVh19L5sY42tPxtYbI72v0iAZzKfWcACNc
+	 Tsly69L3FLC27UnbKolzIseVtm8qcMWwW0Dkyl+23x/nnpreHckIQCmWT1hQMZvK/W
+	 RqC7fAnJFKssPpMn4wNns0crBpNuUlJddbqtTMEVpcpWFnhIIwrYj+h7vroBH/3QGf
+	 Bux0WjBeDUJ5c/9yfAez6sgjV6VhEZI23FYBU75bzgPdsZl+mEV8OP7dBXobpYA7vR
+	 530MGoSjpE+1nHJcQAUBgA9uQnG81cLxTzZ5Sn7SRcjGrvAtX7Vk85zoMuybNMaLJn
+	 ETqfP2ZiwlWnA==
+Message-ID: <sashiko-outbox-213257@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v13 08/21] perf dsos: Skip BPF and OOL DSOs in
- dsos__find_kernel_dso()
+Subject: Re: [PATCH v13 13/21] perf dso: Expand context analysis annotations
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261113164152.2095566-9-irogers@google.com>
+In-Reply-To: <20261113164152.2095566-14-irogers@google.com>
 References: <20261113164152.2095566-1-irogers@google.com>
- <20261113164152.2095566-9-irogers@google.com>
+ <20261113164152.2095566-14-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Date: Fri, 13 Nov 2026 16:58:10 +0000
@@ -61,15 +60,10 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Factor out dso__is_bpf_prog() from __map__is_bpf_prog() and update
-> dsos__find_kernel_dso_cb() to skip dso__is_bpf_prog(dso),
-> DSO_BINARY_TYPE__BPF_IMAGE, and DSO_BINARY_TYPE__OOL so that
-> dsos__find_kernel_dso() does not match ksymbol DSOs in machine->dsos.
-> In machine__process_ksymbol_register(), also check
-> event->ksymbol.ksym_type =3D=3D PERF_RECORD_KSYMBOL_TYPE_BPF before setti=
-ng
-> DSO_BINARY_TYPE__BPF_IMAGE for is_bpf_image() symbols prior to inserting
-> the DSO.
+> Annotate struct dsos fields with __guarded_by(&lock), annotate
+> dso__data_open and fd_limit in util/dso.c with
+> __guarded_by(&dso__data_open_lock), and tighten __dsos__findnew_id() and
+> __dsos__addnew_id() from shared to exclusive lock requirements.
 >=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
@@ -77,5 +71,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113164152.2095=
-566-1-irogers@google.com?part=3D8
+566-1-irogers@google.com?part=3D13
 
