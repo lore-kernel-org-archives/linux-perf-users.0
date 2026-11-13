@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.200
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.70
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794590278;
-	b=Zj7nBFKO3+3iH9NdC8bv5sjDodmZEoNrI1KkkkYftaCLq/74wOcPF3Z2TfA3uduxDBeI
-	 67Q9MB+5621dLGjztoFng0/6vtDlPCHUK4yzcLeNPMh5+0G5JXv1x4DuusmXUSVqrGbYZ
-	 1CYEThW6DAFeiarPk4fZ5PcIZq8VI9Pf7M6kvCUh58GSi+SuM+75s4qj5FTL/18Kx5ly4
-	 7kDp3kPVUtvAqlffm7HQxWUrtHvw+WlFPeMzq6vAgBZNNFfloEeurv4R/NUSf9DXtHK5r
-	 SFKO/WDCQ3GBRCIkui45zTGYRmhkGANX+UxJ8lDVqOGKmE/Hy6w68j7eJ/3Vee0piFg==
+	t=1794590280;
+	b=bPgYayVKMlb6yomZFWMXo6SL21F7TOdD7LnEF4sZwR5gkvzE2qgF+s0WFgZa32QlXWKQ
+	 WPK68CgohAlaslWqK5/R5JUj03kqtz0V2FtbIOI6ELxRYwV1+SLBJNZ0qntcyc7/9wmwm
+	 IC4nq7MFZROAQu4pokxUjVyRe/Ipak5JQzw+TtuqvZAZI/V9V6hvczglw3uR2S9yni3z8
+	 RyRsBNLCu8B6+GF1Oj1Htl5bxpaVDekIgCtrpoaUaYxI44Iz+XwxsuWQo0FKQ7vO8Q3gj
+	 6yH2AUmGRE/a5qPvNTkNMOm2QPIwcXZZJ0WLKiQ6P9B052XrbCNLWajbS9Mo7WMHCZw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794590278;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794590280;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=eaeK/WXL0q4XXafa02fuWe5eh2hPzq9uFX73QVahXC4=;
-	b=g7INVgR6lrWKs6ZIWEqHC8ICNv92xhReNNl39eH2WREacNYuN9b6wZe8L6/2JfqaU9yn
-	 wMinvf5oa+YJgkpcomCp+q45ctC0xq3cA4au0PfVokpeXFyqbXXFf1AeX+/aKtloNMGVr
-	 5D63XQERJ+I0xIEoDTvjz43C4S2mEz/BHRnQHa0BZxUtS5XnuBe+fOdLsxkuG4rv2Eztl
-	 v1tDEUqgMsyJrlbwqizLOJiPnm3vSg86XatsiFuN5OEhamr2QEXMcUniuugCn4mPuIEYE
-	 CUwyd3oArTHcl6QxzKhZjKZnjhcXXdm5nmcEA9ewM2Vtm705GpHCTZ5dzNpANymvp8g==
+	bh=nHgv6a3hA/GCMYg2RN4u4+quJsc0ftn7ytRR3fNbMco=;
+	b=1NbzA7W1J86jlg/wMbDClz4/f3f/aHdpxCMadKEh0YwYPX83yAdzdBgnB01lu++vIZA0
+	 ld9JijNonQbMwh2BnjevIb1nqQkoZ87y4LY+oRGjTaMgG3N1U99jcrYXBvhQM1EHv5IZT
+	 p2zzjqtPQAobazbeUJJZqI77+efaO9M6ReXkJc/+sLVwWkyaqahNIiiNbayIXsjMl0vi0
+	 7ByhHLiFrg4hG3Ml/C36OTMCjKy7SZ38LPK4gUZQ1T6vpVQy5WkAk8+eTUIvm09ZZNDkM
+	 Js0PkaupX6fqhCw2H1jC5L9Nxts3SyYYwtCPKVy1oHd14V87E4vW33WczJedQvxkc4Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="Q/AP4ymh";
-	arc=none smtp.remote-ip=74.125.82.200
-Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=gxjEkPGu;
+	arc=none smtp.remote-ip=74.125.82.70
+Received: from mail-dl1-f70.google.com (mail-dl1-f70.google.com [74.125.82.70])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF7D606B21D
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 17:17:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DAF7D606B21D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E90606CED0
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 17:18:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 87E90606CED0
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Q/AP4ymh
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-33c35f5ca6cso1786945eec.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 09:17:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=gxjEkPGu
+Received: by mail-dl1-f70.google.com with SMTP id a92af1059eb24-1383723dfddso1328438c88.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 09:18:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794590277; x=1795195077; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794590280; x=1795195080; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=eaeK/WXL0q4XXafa02fuWe5eh2hPzq9uFX73QVahXC4=;
-        b=Q/AP4ymhdS+SNTMcdmYpGp4x+aIU391FdBW2yMWa93oVwkK73Ih2kVP8xn1pumQnZF
-         v+Uroj35f287wIga8XdQCC+tM7QMclyjnamrEb5Rdyyy1V3GyKOMXxBSr2qeU7QqeRP8
-         5jR85+dvGukqQGsuWlmXNYk5UerqYrwL6ovCCUx/1B4bc7JGO5LwFN+qK6bC/isuxLEd
-         9gn8e3oJ6jHZHSXlO+BzG9feX8jrMJiEnKpX6CNsm77Lac/q9kk8Ue5tMH1AVZ4WuoWF
-         9YXNez5yr+daMWvRmSfMTuxKh5EJK6P8FSsb4LPhUROK/9qo+Q99cwiwFeikRG4IZDcw
-         HBfg==
+        bh=nHgv6a3hA/GCMYg2RN4u4+quJsc0ftn7ytRR3fNbMco=;
+        b=gxjEkPGuNJdN2A8Fi3icBkRYrPWEkqTFNkkiXZFokKFdyf4fFkwWpvd4SvZOkCumyR
+         hcplTE/tkMYHvqJz6/MZ44rSj9vQEzo0qrAbTG3yrvph2xrp6FXXgqzTlXXWT50z7L/N
+         +59jDAy000tE1uu+kFFBK15cFyM3/dIE/pnyTeCV8kRNrbseWn+DIVnG4ZQNv074vPZ9
+         Lg6R6rWQqO4CJJSdFWaz1ug+Np67YPsl7VlClygyUjag8coWiHSTNyzE6JzZJZMsHy6k
+         hQ3xnbqROMJUxAR+mZQhKhlCeHX+wOcKGYiuvabrat3mDhuCavX491h+y1h9hd5gZbcc
+         kjSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794590277; x=1795195077;
+        d=1e100.net; s=20260707; t=1794590280; x=1795195080;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=eaeK/WXL0q4XXafa02fuWe5eh2hPzq9uFX73QVahXC4=;
-        b=O41Bd5JSUs646QjYMlOv844aekZw2HTR+InmwIfgeh3xqwsNBCOmaZPRPVrmUcbSKn
-         IxcPlDNmnNLFECQI2DXekQJQ3enVtg8yKwkkUqxEnUHMctnmG6P8WEvBI3h+DyITcu8W
-         N5TIsrKwa4u24YX8XT1JwC5lVo+NGzOtIAqQ5YerWacJCzGNtzS1/QNkCao8evGN8TlV
-         f/4ooMhOdncPGTN1pYCOL0vXjvCGDM54rNtHR6FqXYmFQphw1cDxM8vZWiP8e0aHU3wm
-         SekclKPudBg4wHAQ1gmOt6krEpITCiP5O+MH6jUOfJ302tgExm4aiiCek+yjMK4WLUON
-         MClQ==
-X-Forwarded-Encrypted: i=1; AL+hErF+9ECsKVxkXjZQxUu1z3beT1m/FgzeGweSW0iQ594JHptZYdU1faSXNdgBOJE/jIpVur3I9U4jalxn3RizaCIK@vger.kernel.org
-X-Gm-Message-State: APuU4Z8eIrzxTEZ+IhI1ewvcZub6C3lViNu8mNYpmj8kE//7vuSScG/i
-	EJ4yCovY2O130yyTvC/fTc2RugyAcx+lBbRrkYxXIWT+61+RmD0hLz6ZTEYyE+D/5pRQjlRj/yh
-	LF2sYTsTqEg==
-X-Received: from dli14-n2.prod.google.com ([2002:a05:7022:28e:20b0:184:6cc9:b13c])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7023:a88:b0:1b2:611a:89fd
- with SMTP id a92af1059eb24-1b50315f753mr3016164c88.45.1794590276616; Fri, 13
- Nov 2026 09:17:56 -0800 (PST)
-Date: Fri, 13 Nov 2026 09:17:12 -0800
+        bh=nHgv6a3hA/GCMYg2RN4u4+quJsc0ftn7ytRR3fNbMco=;
+        b=1FVj6EMUcRQ2SUSRPs5NxuS4XHL3hqCnMew84yHJOp9Hz9ym+bfq3iLy1l3hGpaxTi
+         PAvJMDt5HwCam1EdubjGTtWPCyR9PqqIm3n4W++syDZ+A/KS2euLCsphlrSELPnXMxFq
+         hq0+WYH/gU371jwxUOANQ4zF7rFuhidqtNKic6w2OlJlIx6Xz1O+6xWb/svIsA1Z/FVl
+         OoYvrnew2nERkc08/X3dFzRD8ITH15RxO0n3TdxrmByxUzXNhBbEjYC27Y0OucRF7VDT
+         HxtXT6Bpi4dGcj1weiB1gV+ZXqKsQoxEm0obTC44SbMl+MPeSxxMRaFK7rHDwxLnU1wl
+         ilXg==
+X-Forwarded-Encrypted: i=1; AL+hErF22h+edNKdDeWWfukeQVknPdLuJvp9D5XQllH9d/IGtvs9wVggJ1zRJUDTmiYs8UAcBgSMNlpdHcHv2J2thcA1@vger.kernel.org
+X-Gm-Message-State: APuU4Z+x/QWE7qLadsjvilhpWgJOv/3GYj53CLlsh1cHbaaIvNa9PSaF
+	XmIVErlDoaaLVBsp47GfZalIwIUadmOlbQK3QpDLVYylA/bot5EUvPGW94sVavubNbMdlSOeccn
+	xIKunADIiVw==
+X-Received: from dlam22-n2.prod.google.com ([2002:a05:701b:2096:20b0:1b2:3edb:a716])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:4583:10b0:1b2:42e3:e5d7
+ with SMTP id a92af1059eb24-1b5031320femr2706606c88.34.1794590279276; Fri, 13
+ Nov 2026 09:17:59 -0800 (PST)
+Date: Fri, 13 Nov 2026 09:17:13 -0800
 In-Reply-To: <20261113171734.2188066-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,9 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261110220803.2503416-1-irogers@google.com> <20261113171734.2188066-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
-Message-ID: <20261113171734.2188066-2-irogers@google.com>
-Subject: [PATCH v4 01/23] perf machine: Fix NULL deref on allocation failure
- in __machine__findnew_thread()
+Message-ID: <20261113171734.2188066-3-irogers@google.com>
+Subject: [PATCH v4 02/23] perf threads: Avoid table->lock self-deadlock in threads__for_each_thread()
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, haghdoost@uber.com, 
 	namhyung@kernel.org
@@ -92,38 +91,81 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-When threads__findnew() fails to allocate a struct thread (or fails to
-insert it into the shard hashmap and no concurrent thread inserted the
-tid), it returns NULL with *created == false.
+threads__for_each_thread() holds down_read(&table->lock) while invoking
+its callback fn(). Callbacks such as perf_session__e_machine_cb() call
+thread__e_machine_endian(), which calls machine__findnew_thread(machine,
+pid, pid) when pid != tid. Both threads__find() (via
+threads_table_entry__set_last_match()) and threads__findnew() acquire
+down_write(&table->lock) on pid's shard, triggering a read-to-write
+self-deadlock whenever pid and tid hash to the same shard.
 
-In __machine__findnew_thread(), the !created branch unconditionally
-passed th to machine__update_thread_pid(), which immediately
-dereferenced NULL via thread__pid(th) instead of propagating NULL to the
-caller.
-
-Guard the machine__update_thread_pid() call with 'else if (th)' so
-allocation failure returns NULL cleanly.
+Snapshot each shard's threads with thread__get() references (using a
+stack buffer with a heap fallback for large shards) and release
+table->lock before invoking fn(), matching maps__load_maps().
 
 Fixes: d436f90a64f3 ("perf machine: Move machine's threads into its own abstraction")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/machine.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/threads.c | 35 ++++++++++++++++++++++++++++-------
+ 1 file changed, 28 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 5eb5efa4eb90..dc0aaac992f9 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -568,8 +568,9 @@ static struct thread *__machine__findnew_thread(struct machine *machine,
- 			thread__put(th);
- 			return NULL;
- 		}
--	} else
-+	} else if (th) {
- 		machine__update_thread_pid(machine, th, pid);
-+	}
+diff --git a/tools/perf/util/threads.c b/tools/perf/util/threads.c
+index 6ca0b178fb6c..5db81b9debb5 100644
+--- a/tools/perf/util/threads.c
++++ b/tools/perf/util/threads.c
+@@ -1,4 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include <errno.h>
++#include <stdlib.h>
++#include <linux/kernel.h>
+ #include "threads.h"
+ #include "machine.h"
+ #include "thread.h"
+@@ -171,20 +174,38 @@ int threads__for_each_thread(struct threads *threads,
+ {
+ 	for (int i = 0; i < THREADS__TABLE_SIZE; i++) {
+ 		struct threads_table_entry *table = &threads->table[i];
++		struct thread *stack_threads[32];
++		struct thread **shard_threads = stack_threads;
+ 		struct hashmap_entry *cur;
+-		size_t bkt;
++		size_t bkt, cnt, idx = 0;
++		int rc = 0;
  
- 	return th;
+ 		down_read(&table->lock);
+-		hashmap__for_each_entry(&table->shard, cur, bkt) {
+-			int rc = fn((struct thread *)cur->pvalue, data);
+-
+-			if (rc != 0) {
++		cnt = hashmap__size(&table->shard);
++		if (cnt == 0) {
++			up_read(&table->lock);
++			continue;
++		}
++		if (cnt > ARRAY_SIZE(stack_threads)) {
++			shard_threads = malloc(cnt * sizeof(*shard_threads));
++			if (!shard_threads) {
+ 				up_read(&table->lock);
+-				return rc;
++				return -ENOMEM;
+ 			}
+ 		}
++		hashmap__for_each_entry(&table->shard, cur, bkt)
++			shard_threads[idx++] = thread__get((struct thread *)cur->pvalue);
+ 		up_read(&table->lock);
++
++		for (size_t j = 0; j < idx; j++) {
++			if (rc == 0)
++				rc = fn(shard_threads[j], data);
++			thread__put(shard_threads[j]);
++		}
++		if (shard_threads != stack_threads)
++			free(shard_threads);
++		if (rc != 0)
++			return rc;
+ 	}
+ 	return 0;
+-
  }
 -- 
 2.56.1.703.gf848ed807c-goog
