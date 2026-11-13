@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794599962;
-	b=Vc1+OaSW9Y5FscxftgoZra5qeV1XkGEs+2oDpjokLVybJy/ASJSSHD753ngLrHP0HVbr
-	 OfSBnErPGZkfgf5xJ3AJE8GAL3JRKQaQbwe4/rFH/NzFSEPeEj0fSsWNhoreP4CYoq4rZ
-	 x9yQHQz/RC3Dkhzs2JknFUi2CVBoPm1ew5hckyyT6nwaItjXAMuJ9eD1Hb3J4fP2z//5g
-	 mkAeFtgf7NZDfQj/bkox2fv/STFTi0uXa9qiI960Nudcx9OPsApQmudqguecwd4wVPt6C
-	 skW6HUQB18If89DjTeo1CW+Hy71X7UY8VA6iFSTsM6mq+OjlUa9zx19inZ347sANVyA==
+	t=1794600055;
+	b=LdtFIOBXZKmNsV+mn9DivPH8u503QLEIUMI29i7aD116JOjwx7LpIK8Nzxizet8vUbAc
+	 qVezaaP2fesoUbncyJxuAOWSLXboT6ZKhWiV9TlT22V8VodIr8xzWSRhxJ70nZeEAafvX
+	 gCwIN0izDJXkVJEuZu2OZkXMbu1yQFLiPbGHxzhe2wddCPslBF0XvAJi+GOpSwgcqNvGY
+	 uLIC/dYTjLcZrehmcFj+eiNpM1snA8TlZrLuHgp/jI9lhO1u2/tkbG0wWNTZ217XlaiUm
+	 Eves+tWthMdxx0jEL+XMjDx8N2YMJziPkWGeLr4VnLyE75yLHbnn6FAQwVSqNOCkJ/Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794599962;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794600055;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=mG70MyN6gX/+qqSgfdzNQSnAPJydO6tol8ZSQWkc35c=;
-	b=HcfTYG6BRlkZg0+PsI6IqbmzmhUf6kyInPaGPEU5qlTuyvyIad5oP0UH0ZfM5HeLiuXm
-	 P6nbwgPXZ1ZveOq4zBHUXUW63zQi2CSAbVaB+1pr0QUQ2VO4kU0D0loiziH38LW+hL8NW
-	 2xRHJFtWHgPT6JTI85f3AhSP9huxTZOeeLGDTNYTDzzVJEyFzTJ5r8pN67zPdVPZ2SrKY
-	 sO0MNaGkHjgy1A47hw7AVg8Lrn9VrSOYwT2lWk7Wdc83DUqOOcl2Xh/fd6W63ZRx5vLjr
-	 Fy1n7lrEu4Dclpa/IZDk8h8KH2KsenKbWt7B6QF5gg2YH7vGx/iKDUDA0dr+KFwi5VA==
+	bh=wwBmaQ92qAcGNlOC3SfjTccqU72Gj59jRbnK6NdfSH4=;
+	b=cVc49Amu8CyIXST9M4dg+hw5L4bxlHqzioHyToR5DfdhjVOWdtNR/pD2UjRRM507rKDW
+	 Auow5xThF1Hviua8mS3MgELwgCxOrdScE4wF3H9TBklcmxiUgKBTiNvblQaXjUV83ePx3
+	 ub5/br+hszoMFAt+exz+hG5WbrhBiffPN6Sq9TCdxTakNIWCBfJ5Y+CkFDD6zNQxaMBQ+
+	 yFBIa09v5xa4F9z9m9YV8bPhP4PoWMnOHMGm7OcCRFd22SURcXngQvthvBh0QR9hwwx8I
+	 xYlsi+4+NVekkOn2SSNdiQwDYZ8qdrTrTElaaUHLRYDjXUUQmvQBhcbwcADGpaRyUog==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iSb7I7MF;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=f6UQ7At0;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C39C606B574
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 19:59:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4E9F606A33F
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 20:00:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iSb7I7MF
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF2AB1F000C4;
-	Fri, 13 Nov 2026 19:59:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=f6UQ7At0
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1829F1F000C5;
+	Fri, 13 Nov 2026 20:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794599961;
-	bh=mG70MyN6gX/+qqSgfdzNQSnAPJydO6tol8ZSQWkc35c=;
+	s=k20260515; t=1794600055;
+	bh=wwBmaQ92qAcGNlOC3SfjTccqU72Gj59jRbnK6NdfSH4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=iSb7I7MFg+lQNyUzNl72gupvf7SZtlGtMuIXw/eh5HNQ3Pp5zZQAML2sGZ1Kgglv8
-	 VCJXws5eUb6a1bf2DrFiBJxCF/qG19HlANgSp0mQC8tRZLA0z5/7crM6txG6w8N8Az
-	 YyJ8Vjy9/0Yn1DV5HeFgLV4Eit1vWNi/Ii+v0FSRAgEpERHg0kWk2FyCUlLcWaIckS
-	 4rM+TWMPADWcMhehSJW5SG6+w466QUDGNOTB8x/MjItMKo3s+adt5yP0/EdXvh3HWq
-	 x2o4hXT+bm8k2+l4GK3+U5gS7TzSmHp8QLNXlUXwLh6BnR4HKuFM1XZ9r+koNh5o1p
-	 8okKnuerI8bJg==
-Message-ID: <sashiko-outbox-213594@kernel.org>
+	b=f6UQ7At0qbwo/t9IKHyFazJcqhBxhKg6Uq4ioq5EoYf1D4JyJvzMPn6ATu4vNwlox
+	 2Q2biEPVlYfbCT52iC8r78aC5TJ0Qqb3oTl0UCw7OgpUjbKYzQaBRvwuN0GWdkSzJI
+	 TDrXteOWDKfEP9IKGQ1o90B71kMfKbZxkGMZST+co8YoqFbE6fe4o08/hALuKQWhgI
+	 lslKU+xVJkO4YvQQev6yO8gPYOVmgt43VCMVUEeMQaG0TELL/3EgSOMhXcCjGiqlWW
+	 8CGntPL33i56ekhnkFtn9CLLpMKchsU/hybWGIx7ttu7PadL7CNCo4ciLq1Wb3JxPV
+	 LdPyfZ6kxtsHA==
+Message-ID: <sashiko-outbox-213599@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 04/30] perf metricgroup: Don't prefer tool events for
- displaying a metric
+Subject: Re: [PATCH v2 17/30] perf dwarf-regs: Add e_machine__same_arch()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261113195335.2865725-5-irogers@google.com>
+In-Reply-To: <20261113195335.2865725-18-irogers@google.com>
 References: <20261113195335.2865725-1-irogers@google.com>
- <20261113195335.2865725-5-irogers@google.com>
+ <20261113195335.2865725-18-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Nov 2026 19:59:21 +0000
+Date: Fri, 13 Nov 2026 20:00:54 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,24 +60,27 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> pick_display_evsel() selects the event of a metric that perf stat shows
-> the metric alongside, preferring an event that isn't a tool event, such
-> as duration_time, and that is used by the fewest metrics. A tool event
-> used by fewer metrics replaced a non-tool event, so whether the metric
-> was displayed with a tool event depended on the order of the metric's
-> events. For example, CPUs_utilized could be shown alongside the
-> duration_time tool event rather than cpu-clock, and cpu-clock not shown.
+> The 32-bit and 64-bit variants of some architectures have different ELF
+> machines, such as EM_386 and EM_X86_64, while others, such as RISC-V,
+> MIPS and PA-RISC, use one ELF machine for both. Code wanting to know if
+> two ELF machines are the same architecture either normalized the ELF
+> machine itself, as in pmu_events_map__e_machine_matches(), or compared
+> the strings from perf_env__arch(). perf_env__arch() maps EM_386 and
+> EM_X86_64 to "x86", but distinguishes "riscv" and "riscv64", "mips" and
+> "mips64", and "parisc" and "parisc64" by whether the kernel is 64-bit,
+> and computing it requires string lookups.
 >=20
-> Only compare the number of uses of events that are both, or both not,
-> tool events.
+> Add e_machine__64bit(), giving the ELF machine of the 64-bit variant of
+> an architecture, and e_machine__same_arch() next to EM_HOST. EM_ARM and
+> EM_AARCH64 remain distinct architectures. Use them when matching
+> pmu-events tables and in is_pmu_core_len(), which compares a perf_env's
+> architecture with the host's.
 >=20
-> Fixes: c8035a496141 ("perf metricgroup: Add care to picking the evsel for=
- displaying a metric")
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113195335.2865=
-725-1-irogers@google.com?part=3D4
+725-1-irogers@google.com?part=3D17
 
