@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794600556;
-	b=WSnbd9EiSwVCDMMOiQG51H30uUgUi5tjhIQKsqOtSsEPRQXr+Edy43BOWc/KwiT4bVxT
-	 uPu06DKUnGHnHF8B99c9mOARePol5H4q5MpK/VjX69mpIeK6lfR8DMEP61iXsR0tyWqkt
-	 zLRCulyVWK7KQEXQ1N8l1mtRP0MTJbfXy/3twvi1aDRRLUxj9oZM/2WxwXp4aEPToeP+L
-	 EP/C62UJDr5ZOdUtqQ+oPhZ2Vwni8H1iWsPStkkdif6N6K94IcmuJsrHCEpHkPC99yiS9
-	 AJ4A6qSbqWfkNwiut7CmcxOd5v6Yv7uo6gx966043bdkMeMB7YnluHLaf0WrHBQ7khw==
+	t=1794600559;
+	b=iWjXbplFUcB0lm+z8+Q65QMrNvfCK/GqGhv4/WOznpWIxhGWTrW7vwYcaStwESOx+tZZ
+	 X3Eap9UhFeaFNNIQ4admPu1id32q8Z5faWebSBdZc0HG4JQGX1XSQJIjzDjU+wBaqUM+8
+	 dcmH2jybSgb3SSrF9wnjndPAEFYXVD05WIpA5hSLp0qcBl0978u3lNpQQrgwulr3ZKNXI
+	 DMOrKBCWtXqdoOpRyGCPffpCSTiX4xitiAo7C+01koeybhbor9E2LxLd20qAmy2f3OeKf
+	 DN6+MQDbzEwasSB2rpKNVmQPQ8nSFj48yjm9MsjBfkgXmisWpsNqhsb0IXaGKT5Y2OQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794600556;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794600559;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=aXhUZRiibjudBPuJybTNMVpnE84LXFHMI9y/tCiYIaY=;
-	b=CYwPFszrT5yEUvILcXyDKWnfEHc+YS/byBjV29L0nDCAzm/C96UiXfSWgKh8ledOtTmK
-	 dELTxuNTZ1IK6xZ0lDlMc/S7YofC3kC1booIQcCxnSKXaJzpdcp/WKJdivm+cizPT2Fek
-	 xlSPK/ADoF5fcQ2jesV4I6ekgDYWd50ZIQefwjKa7ABPY3Mu7k6KRKv09VIqiFcJIZro0
-	 GTePEmJFCyM2idPmX/cBU18wrrAMIZ4+igqsKRgQ8ZhW8ZzmZ3xSH2ri6TqAnoy8a+Atk
-	 ewf2Qkc6ohDJELHg5pf/j+oWuzxDGM/wIA2BbedAk9JJoBkMqOJNGCe4ZkOtzh9O0xQ==
+	bh=heKncXN2ESk9KNPzZANxBokZt3UOa99KaEx4tb00rrQ=;
+	b=pjJidh1tl86Ir3QRzVkA643BI/fOj5K1Gn7MeV9c3ezafK/i5Uc2dWDHCCy4rqO8Nkls
+	 IG4TxdtYyqD6nrBNpSP0JU26+N81H2gUvYRiJwp4Yp+9jU35ElTpmBRK9Fzf4WnjGkAJA
+	 RkHY1gBnk/w5Xo6cSiH0FdZmpllqeQWXkEbUIAOdJr1d5BMB08qu0GELSj7n4oeXxtTl1
+	 cOgQi7+KEmCRGxqFYV89WhzY8V6QP+O2ojj0kzSHcol98yJey9dLNxqzLQpQOQQu/K9r9
+	 1oOKCWyRKDsVOcfn69SyTHs6fv4ZtDBLZc2zSmY570GF/n+0m6pDfywwDN7H1cgIPDg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=b8Sn+71K;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=C7VU5EIL;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDB4606A336;
-	Fri, 13 Nov 2026 20:09:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D80606A89E;
+	Fri, 13 Nov 2026 20:09:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=b8Sn+71K
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F5DE1F000CA;
-	Fri, 13 Nov 2026 20:09:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=C7VU5EIL
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D920F1F000C6;
+	Fri, 13 Nov 2026 20:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794600556;
-	bh=aXhUZRiibjudBPuJybTNMVpnE84LXFHMI9y/tCiYIaY=;
+	s=k20260515; t=1794600559;
+	bh=heKncXN2ESk9KNPzZANxBokZt3UOa99KaEx4tb00rrQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=b8Sn+71KemsPhnNFilha26JjkNqkPZNMvlgFjngdBohHF4Rra5PgwAsgeLkf2UMMg
-	 aU4ScaEr+CdtsYt3a9wHTP3lk6xEr/If+mgmBBissaoBJ7PMTNfsCoC/2ZXb7n8Vpl
-	 mJomb6SMHRwt0kIO1diqT50hcbEDGUsJ/qxeRA4dV+04HVWiNq8qC75fawe4Q03qp+
-	 M3x6wBgmjMopWmva6qcOo6rlw4flWHR/QTQ3IsVlIwvhaXK/NyKvjl92wrhtwOGqZl
-	 /AWARQ/ORlwLd6QS8dU2ei46mj3vAXDPUxaYhyI4i70+S4LDuN1Vk6xopckSHbDfEN
-	 XoMVTx8BMnjHQ==
+	b=C7VU5EILi2drvLjywTM03MREXGOfEkm7quNUroQ6Z1A8kwLFezZUeMdsSnxQc03vq
+	 +6TrDxFY/aQ4T4AYY8zAYGEeFbxv4u661WTtiHw11pxJsIW96iSZFFwInVa9Z1mQg8
+	 JsyIu5WrACEFzJJZj3gGAzpCKbWdpay9QusXgldqKhuxuLcscHTa2QN1az8bECAME5
+	 FySEojaxG1D6tQKn/R1X5H6YuZ4Qwuk5GjCe3hNdbFcKZaomdtTMyDvOS1KlT9vZki
+	 8sy2csrkwrDt8dgXsy31yasmKlCwtcW2ptDjQ82JkKxI09a9iAlxvtDSh1fpD4XZO5
+	 snvz6sEyxOARQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v2 07/11] perf tests: Silence the libbfd probe in build-test
-Date: Fri, 13 Nov 2026 17:08:45 -0300
-Message-ID: <20261113200850.2803460-8-acme@kernel.org>
+Subject: [PATCH v2 08/11] perf build: Record the display-only features in FEATURE-DUMP
+Date: Fri, 13 Nov 2026 17:08:46 -0300
+Message-ID: <20261113200850.2803460-9-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261113200850.2803460-1-acme@kernel.org>
 References: <20261113200850.2803460-1-acme@kernel.org>
@@ -70,34 +70,35 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-build-test evaluates the libbfd probe at parse time and the compiler's
-stderr isn't captured by $(shell ...), so without binutils-devel it
-prints "bfd.h: No such file or directory" once per tests/make
-invocation, five times per run.
+llvm-perf and rust are in FEATURE_DISPLAY but not in FEATURE_TESTS: they
+can't be part of the test-all fast path, which sets every FEATURE_TESTS
+entry to 1 when test-all.c builds.  Since FEATURE-DUMP is written from
+FEATURE_TESTS only, a FEATURES_DUMP= build, as used by build-test, never
+sees them and silently builds without libLLVM and the rust workloads.
 
-Redirect the compiler's stderr; the empty result still skips the
-nondistro tests as intended.
+Append the display features that aren't in FEATURE_TESTS to the dump
+after the regular feature checks have run.
 
-Fixes: 523471c5163659c6 ("perf build: Skip nondistro build test if libbfd is old")
+Fixes: 206dcfca1f5cfac3 ("perf build: Autodetect minimum required llvm-dev version")
+Fixes: 3f5dfa472ea6771c ("tools build: Fix rust feature detection")
 Cc: James Clark <james.clark@linaro.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/make | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/Makefile.config | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-index 7524de5228029e7e..e6d7ac49b5b1693d 100644
---- a/tools/perf/tests/make
-+++ b/tools/perf/tests/make
-@@ -128,7 +128,7 @@ make_minimal        += NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1
- make_minimal        += NO_CAPSTONE=1
- 
- # binutils 2_42 and newer have bfd_thread_init()
--new_libbfd := $(shell echo '#include <bfd.h>' | $(CC) -E -x c - | grep bfd_thread_init)
-+new_libbfd := $(shell echo '#include <bfd.h>' | $(CC) -E -x c - 2>/dev/null | grep bfd_thread_init)
- 
- # Whether libLLVM can be built, which needs the llvm-devel/llvm-dev headers and
- # libraries of version 13 or newer, not just llvm-config. This mirrors the
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index b4764f69f47f4d8c..1b5caa246345c9bb 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -1310,3 +1310,7 @@ endif
+ # tests.
+ $(shell rm -f $(FEATURE_DUMP_FILENAME))
+ $(foreach feat,$(FEATURE_TESTS),$(shell echo "$(call feature_assign,$(feat))" >> $(FEATURE_DUMP_FILENAME)))
++# Features only in FEATURE_DISPLAY aren't part of the test-all fast path, so
++# they have to be checked explicitly and recorded here too, otherwise a
++# FEATURES_DUMP= build silently disables them (llvm-perf, rust).
++$(foreach feat,$(filter-out $(FEATURE_TESTS),$(FEATURE_DISPLAY)),$(shell echo "$(call feature_assign,$(feat))" >> $(FEATURE_DUMP_FILENAME)))
 -- 
 2.56.0
 
