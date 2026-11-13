@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794600866;
-	b=nSSbuCEZCFUcEGHvtI8jdFnKVW/PxiQbSubLnXdlhGE1mvDqkj3VHA5ZleDp2RXFrqu/
-	 IsiaQ2GwvU3hFE7nPmwaYAZnU94tKTeviTJ1ATGERmV8fvAKvNR/KRRQ3bDJztd0WT0/l
-	 dwWmvX1S8McMS6TokVYrbta2fRpwbd/yjY04bRfHyaOLxSfsGDg+UPhPOrw95Fx4tdyOG
-	 quLoQTb7ZW8DsSRPBD5CdsFLY1MlFUxG0ddbe/msMkhi7YgASNNVbJbYvmlAuZYKhPjXH
-	 TuLTeuzIbfpf6mAJwwIJghtELajAYrG5oieXEmu+StCg7iEDiwmizWMZLA1QvLzOb6g==
+	t=1794601136;
+	b=O0k2S5EJvdMOOTrWA3kbClcLebZOq9Gp9Cx9GGPZCLD5jXSBLrPO2P45QKleBOLcz7Jl
+	 JDM5owl+d59VyDcyK485HO95HGRJs2Wc3SJwnok3U5ocJm0U6ZC9swjIzkE6kr2FMMtm8
+	 7QyoIVZyQh2bc4xVPMHc1dgDTxaRq5b4Tj8FggcTu84NsMhglNkcskZZ2bVdJyNsFZx44
+	 MSVr5RDEL6EgRCjGBGpcqta/PNJdK/1Fvq2ehtx4AQn8uvVA9506r6Dh5xO645K9P7ybq
+	 SA/IpO4mydWv4ywko1sIwcr/ARLjo+UZG3SUrauYarkY7oTszSaYqk8ePSKZ3A6F9sA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794600866;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794601136;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=32bYy2ysQybawlfjEUgUmqO1t3m38aKIFHgec7/05EY=;
-	b=RC+xFIIAi6yqOH6ENAzI3gvoaXugZVIX7CmoLJY524BYmHKMxAL9zdDT5QJqToYbL02i
-	 DfrZqAZry+uvmO59hNX/zD3m6P2FS16iC6X02XzV03OdyOPC7+pdfBefroS87iRPSn3s+
-	 asKIk9OwSTn+k9FT4L6Hcr704J1VI77B+h3fe+zGKtXwCctx4mRZ7QyBx/0UrhwhxXTHA
-	 Jzqf/AJbhFV0/ALUl64e6taqxvDKfPuXhBfc5a50VfDUlq5iSreqW+/5kUiM1mpADGJyw
-	 Fl7OYfuTODkbRJ0ARaGh9CnDUaVa1bG5M2C6WV577jQtB5C+EnAo5VuDPryumGnus6g==
+	bh=u76idVuihWoM+CR6wbi28HEvualfPFIGL0+JjzgEAWs=;
+	b=3iSoTYdmJwbSbngoj4dBAu/qiLw+TdCUwJ7j+YnVuyfwYbYEfVJiSv8UnDE59WiZJayN
+	 ymqpiF6G9jNN/OsXd7oEwqOWqdef9OUJt+k79LCAoelwjd5v7+kLEQ8PQN8K1X9qL0xbU
+	 NFiyUMPGML/8t0hFYCsmbZL15EuBkbN3Q/9V2VJtX3qSOWm5cWSH1wOuXiPq4fbG3RaTA
+	 M2qEdNkYLAJvPy1e7uXmmLJ7otT9UKHClcFEzVSC2kQ0FhMaiDN08gyFkavIgIB/lIAyJ
+	 r10B6Ud5pQclSCBImC3c85qiK0JOpDHs8v9ZDc5rGLYHDsSZT0GVC9QUo5hA1y6Cwbw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kAg+iMLI;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KNEVlSBO;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9322606A32D
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 20:14:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1639606A323
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 20:18:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kAg+iMLI
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EB331F000C4;
-	Fri, 13 Nov 2026 20:14:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KNEVlSBO
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36CDC1F000C4;
+	Fri, 13 Nov 2026 20:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794600866;
-	bh=32bYy2ysQybawlfjEUgUmqO1t3m38aKIFHgec7/05EY=;
+	s=k20260515; t=1794601136;
+	bh=u76idVuihWoM+CR6wbi28HEvualfPFIGL0+JjzgEAWs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kAg+iMLITS1ViF9YBTpDjs1k55M0RQNwd22T8a2p1Aw9gt9ZybxmncKecoCVStexm
-	 9BogMedTBsUAy4B7mhBlNKgnmzVuF/AASNW06PchNHUeSdCHF5KgXreLXeRBVR0X8J
-	 iVmdRjuE1QOpDgH7SnwWywj0PfntcD0R0ft26Isrcuy0NyX8wJC4J9eWsfRbTShJIl
-	 45n9tzs7RzSB4EO/IaIJvB1Q19vZOO1o5k+y2SW+vkvyP+qbySyGWMR0koEeHEiCqt
-	 H+OgK02L164h+IVceiomgNUxs7Op6YtoxbjHD9VsCwx9oh9dirrgCTn10PDQL/7BIA
-	 G52W8RpsHa3zQ==
-Message-ID: <sashiko-outbox-213630@kernel.org>
+	b=KNEVlSBO/YCGg+UCA2q0298nFBHaMv7NgPN4Uogd9jiHsXyTK3oUQyMLf/n0TKQsF
+	 xPmUwS5IWn0uGdFG8G+O6PgPFF5UoDRVpcr1zIIJqTvUI1A0Z+3ZcbdYGcI/djUW7a
+	 sij3aP6jC7iRMcPUzWk+r8R4vSqo/K9l2d9tHZj0Ia5tyKVGZsCcrBn6Hnsir2uW1A
+	 AQhMN34PLx9GIbPiqyCEzyKd6z6ZbveUTh5JZDqpqcIdK9DUnRBl7dYc/jS6n6h22P
+	 p7vqD2bkj9RwOd5j3sMitdFdJv3B91Q5Cz6BPdtjt1x+Ch7TdBWWEbQ/460UMXsgJO
+	 3gb+KZwGM1o7Q==
+Message-ID: <sashiko-outbox-213632@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 24/30] perf stat: Share events between metrics and
- command line events
+Subject: Re: [PATCH v2 07/11] perf tests: Silence the libbfd probe in
+ build-test
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261113195335.2865725-25-irogers@google.com>
-References: <20261113195335.2865725-1-irogers@google.com>
- <20261113195335.2865725-25-irogers@google.com>
+In-Reply-To: <20261113200850.2803460-8-acme@kernel.org>
+References: <20261113200850.2803460-1-acme@kernel.org>
+ <20261113200850.2803460-8-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Nov 2026 20:14:25 +0000
+Date: Fri, 13 Nov 2026 20:18:55 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,28 +61,24 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> The metrics added by -T, --smi-cost, --topdown and the Default metric
-> groups were parsed into a separate evlist and then added to the events
-> from the command line, so they didn't share events with them or, for
-> the Default metric groups, with each other.
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> Parse them directly into evsel_list so that the evsel matcher of
-> metricgroup__parse_groups() shares events counting the same thing. Only
-> mark the newly added events as skippable and keep the evsel indices in
-> list order after sorting the Default metric events, as required when
-> writing the group descriptions of a perf.data file. This removes the
-> copying of the metric events from the separate evlist with
-> metricgroup__copy_metric_events(), which crashed for "perf stat -T" on
-> an Alder Lake system.
+> build-test evaluates the libbfd probe at parse time and the compiler's
+> stderr isn't captured by $(shell ...), so without binutils-devel it
+> prints "bfd.h: No such file or directory" once per tests/make
+> invocation, five times per run.
 >=20
-> For example, "perf stat -e duration_time -T" now uses the duration_time
-> event from the command line for the transaction metrics.
+> Redirect the compiler's stderr; the empty result still skips the
+> nondistro tests as intended.
 >=20
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Fixes: 523471c5163659c6 ("perf build: Skip nondistro build test if libbfd=
+ is old")
+> Cc: James Clark <james.clark@linaro.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113195335.2865=
-725-1-irogers@google.com?part=3D24
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113200850.2803=
+460-1-acme@kernel.org?part=3D7
 
