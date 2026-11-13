@@ -1,57 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794582885;
-	b=diPhRHsNNeQ93Zbo2G6+OfstaLTAJVDTtuCjp7eiM7E/yvlGz87hhIEFGm3MMAcen3OF
-	 vtxJEtH2xlsKhMIZdBTEh5F67MnO79aTp0jO2+ZOybuUKzaNEVlkbb0csLB/8uKT1jCPW
-	 6BB0g3tWyqJEpuN7O6mquBTjXItAvrTAEdgO3BudEcHyFM+vDAWxAK/vavdW8kz7BsAGF
-	 bSQKVeLMPT9bCxm32/Rz/5OtArP/H/z9XCjLNVL74KpSE/xKlZaBUzVrU7prrAGhYCDo9
-	 QpTYb9kM+7ZkXyqEcYKzGMmJ5d5dDcTK1EvaoPtSoe4VgcjAC89JUprgU+c8AiPHBPw==
+	t=1794582953;
+	b=lf05O3XXn3K9iF5wnq6/i89PFQoIMu4TEiVuIgv7rx+C2N+2KDYHwUetn3wjs9JGnU/C
+	 3dG/SKCYVEWJGMhfnl/HnvsIu+xY7i9y+HpY+SufeZWVuaoL6ZnCNffrhwoS7WI551keB
+	 e+pdGIyIvRs0kQAqg4l3D6YH4fmPhz1mKd6PkqH7wa3iEEOJyq9Nw4Zzbp2dBsoSxIJzD
+	 WwabfgTSWb+ddoyqpB7RFHux4Akb2mhcRIibrJE1FpNiIGkn65QM+GjoQo+DRGOoHH2/8
+	 FuB/+04P/hvAoC7Q7mg/nHh8g0V04EGcuKRpY41JZ4w6hxucJOeT/ERmgmhJ+FIJNfg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794582885;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=uAuiYxwFx16oZHq911IEmZYh55fRZWZ8SzilO+xE/cg=;
-	b=Gu4lk90DyfoOtn9vabjGQvgASO+vjAX6smItb6Tfq+8FCIQBM0ygsKAzud9uZXme+HP5
-	 DYeaXqEv+kTIW184WDJCoO7ANwy5YvnKqph+8hCQSmSD+mBYsPjS3sNuIE7l3KjJbYrwm
-	 9INh5CmcuvYoxtEvx/ws1faKA2fKFwc6wbaQ0gTNwd9RqD3LCQSlLWsnKtfSah9P/NpRm
-	 vhNt5Qq/TcQmi9OcpuXRbvHfXtcF661djYajCTNrEd9id6WKSDFhmES3GgAopywGpfmaX
-	 aIfATsaW/CJfJ78va48xwtoN3BmUcctlHXpBnFUY1tnSdofjSJkIXOe2ewyEBq19xqg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794582953;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=V1YWPttXEi6HW26RX2hE76PCKuzOoDlXU7K4UAZ3+NM=;
+	b=Qc5zfa6Zx7sMOodbZh9vabwQiljTnKXe0N61xazvUaH8jGpxQzvcFpSyB5mpMnQxxMkO
+	 IzukYgJ6SODaRTRdBnH8OdOxqqR42kmAJsexuRf1icJrHwwA+FkMnKqHWgducSx7Krkmb
+	 6QmQEEjrJ1Q9H7n/glIom9UHNmlfV9Yyik1/AF/Lgx+DpX5La/TXa+IhyHN53mpirRCmh
+	 ev5Pj/QZhRdhtHvv/nBBSAN621o6um93WC6nLBoJ5HsbFpm6LK8SYpsKFyUZAFriKyFjV
+	 QIPDIGX6v/3TJkMD1d762zWSmAGvwVnUdVInX4tGHaTTjTELWbsygGCICo6j6f+BMgg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PpyG9jCF;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B91606A32D
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 15:14:44 +0000 (UTC)
+	dmarc=pass header.from=arm.com;
+	spf=pass smtp.mailfrom=arm.com;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=qXQmrCKd;
+	arc=none smtp.remote-ip=217.140.110.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E63F1606A339;
+	Fri, 13 Nov 2026 15:15:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E63F1606A339
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PpyG9jCF
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D5701F000C8;
-	Fri, 13 Nov 2026 15:14:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794582884;
-	bh=uAuiYxwFx16oZHq911IEmZYh55fRZWZ8SzilO+xE/cg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=PpyG9jCFI41z3s9QjL/c6owgVz6ZinTo/dXx0xx0yEL0niG40XncETHDoYROCDIMD
-	 lpZcsirtY53k10vAjHmkeRCV5xPCJFHGOZfNjx8EPe20hQmjpgwuOKH04+KQK6PsUJ
-	 UdnUkeUC28m4vJ1fnZ6+bifcU89w9E/Qr9H9Z/4dv+XsuAqVyXF+AV8dTdId9lMC1g
-	 X5CoYuWL3Ar1ijdJWy4iTmC5Um4kv48jxTyNyYxdUF4g1CB8yj5EswbX5tS4qdnJjG
-	 t3ZeNLz4Pl0lyI7GE216vA39ZANz33yjoF3HIql0sJwetm1L398XFX5Mircjl8v2on
-	 tQdFThWQwuMNw==
-Message-ID: <sashiko-outbox-213069@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 08/12] perf build: Record the display-only features
- in FEATURE-DUMP
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261113150555.1163049-9-acme@kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=qXQmrCKd
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3EF42339;
+	Fri, 13 Nov 2026 07:15:49 -0800 (PST)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CFC833F85F;
+	Fri, 13 Nov 2026 07:15:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1794582952; bh=8/RunaI4RGgcBAEHTWjUlS5O+ROOwppaIYc4rMMVIgQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qXQmrCKdi1XXeajyZbt39aciqGvxmgxylKAOnZn9jFgyQyQT0v3dVwUbv043MzOew
+	 ZkQ3ZE4Lyo37EbONSQS25IILhW1hwvz2fcMG4WRg4ebIDlK7rDaERQ++wlT1sdV/R3
+	 XHgX7CusAxNk7G8oJIaQ+uGx9pbcs0ualP1x0W3U=
+Date: Fri, 13 Nov 2026 15:15:49 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Mike Leach <mike.leach@arm.com>,
+	Robert Walker <robert.walker@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v1 09/12] perf cs-etm: Fall back to the recorded
+ instruction size on a failed read
+Message-ID: <20261113151549.GR9176@e132581.arm.com>
 References: <20261113150555.1163049-1-acme@kernel.org>
- <20261113150555.1163049-9-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Nov 2026 15:14:44 +0000
+ <20261113150555.1163049-10-acme@kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,27 +70,28 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261113150555.1163049-10-acme@kernel.org>
 
+Hi Arnaldo,
+
+On Fri, Nov 13, 2026 at 12:05:50PM -0300, Arnaldo Carvalho de Melo wrote:
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
->=20
-> llvm-perf and rust are in FEATURE_DISPLAY but not in FEATURE_TESTS: they
-> can't be part of the test-all fast path, which sets every FEATURE_TESTS
-> entry to 1 when test-all.c builds.  Since FEATURE-DUMP is written from
-> FEATURE_TESTS only, a FEATURES_DUMP=3D build, as used by build-test, never
-> sees them and silently builds without libLLVM and the rust workloads.
->=20
-> Append the display features that aren't in FEATURE_TESTS to the dump
-> after the regular feature checks have run.
->=20
-> Fixes: 206dcfca1f5cfac3 ("perf build: Autodetect minimum required llvm-de=
-v version")
-> Fixes: 3f5dfa472ea6771c ("tools build: Fix rust feature detection")
-> Cc: James Clark <james.clark@linaro.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> cs_etm__t32_instr_size() reads the instruction bytes from the traced
+> program's memory to tell a 16-bit from a 32-bit T32 instruction, but it
+> ignores cs_etm__frontend_mem_access() failing, which happens when the
+> DSO or its debug data is missing, and then reads the uninitialized
+> buffer.  GCC 16 warns about it and build-test fails with -Werror.
+> 
+> Use the instruction size recorded by the decoder, as the A32/A64 path
+> already does, when the read doesn't return the full two bytes.
 
-Sashiko has reviewed this patch and found no issues.
+This patch is duplicate with:
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113150555.1163=
-049-1-acme@kernel.org?part=3D8
+https://lore.kernel.org/linux-perf-users/20261113-perf_fix_gcc15_failure-v1-0-eae592c5ff64@arm.com/T/#m5f610e381705bc587a9ce3d31be4e1e0ed595506
 
+I prefer that one, it handle cs_etm__frontend_mem_access() failure
+throughly.
