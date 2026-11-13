@@ -1,62 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794600568;
-	b=f6lA6mp4OHwOXsfez4585jjvlzHrKfgCCXaybi/zlnJSlAS0cV9PFFXoZQq/aBpSNx3x
-	 zE1DpqsIXOC9e6ksy3+h/5aWAFHtECKlOca/qoFMPZ+yrDbq6bj7xk3JuDbJlBGX6IXJ9
-	 F9V0ie/e8OTBJlPGKxc/5Y/U1Vf5LyeGtQT5yeRLGxUZLPIV5c/l45qkk8a0/gUr+9wQj
-	 RMiH0wkAI7aJ6rMrEOfaBbHbPP86LjhaCce43g7dYdDPA5UqikRs8fewwplr7f4jisEin
-	 Wrx4zPWpqKB+8QHlU+4YjT838Dq2UWQIGHbPlYR81LbHye3FDR2b9Q9sq0VxB5cEDrw==
+	t=1794600655;
+	b=DK9t7PiSjEhVQIrR/PTuk60zR2f7tKb1D0Ptkeom7jAXt6rxGvdcIth0iTR8AsggLj3o
+	 M23yDGcHsruxKAPOjejsi5EMQE+bbLDAmH9zLSQp3hGgUA9Zt5LHxaAS2858NduuoALa2
+	 j0k3TPmHATWzwwAGTfNb6TtJE874/OvhyD2a8nEK8Ns90E7VSjAUG61wrbJH0VF7SSEVH
+	 MEwUZyew0VnHkrEzHVAmS2GwdjZtPem+Nom/2+FEmz15H9gughphGZSbuMB58sHQbgZh7
+	 h7gTMbNJrWpHFwv/BiZJnzAfNm1Wnb5BQxvMVMUy4Po5h/9YIrNj+36py+D8lDNWQIQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794600568;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=KX+bt6x4O+wdhm+tqQl1JkjXBpFPjHXF5FgbUfKl0ok=;
-	b=rRinCFzrOkuzVHVRqEJliAE4GPmc1xuOqKF/R54h6WHt9UKXKEX89rvll039yWanHZxv
-	 4zdBaaaaMvluWSbIGlvuV0U9Kz+g0N4QaKLkvD/0kBUMqoQt/X/NRZJvVsJeLBxCOAt0q
-	 p0oW9eiENCVh4m9LMNQmHzI++Kb9lRR4JrHKP6Mq3hbQ3Xa7yzau0NgT0Uqix79nvT+sL
-	 oHJq+zREvXaQYKluRNe98due5n28zkuMfCHIsKwSQY+8kRh3YJviwWGlaosgA2ckn+Gls
-	 Z4qTT7bUok3fsXGi8y6fqHzg9xKapgIWKjNhPnNLfaZHq6ZU9TG8uYE5A3M/7Q3IcEg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794600655;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=wRQEJU4wxCFa/kAvdyFoujgeAFZtZzaav9lLdzruEYI=;
+	b=zVqSWtA37jv/KpesGdAWouErb67aouPTa/FXCpjEZHa44mGRh+uExTORVI1mvp4GJ1mj
+	 eWrAQMhXpqpeEJGf5t3ZyS6hNOci5gaPM62ZTI7A73/viBM+90EzvKXfBwXBfWEKPC1Cn
+	 toausfdHeGS28s/AjGwI81h8ezkUZ8zBZ7T9JqyKLqZqrc7C94F9z7s/9LI5XF+JtFJI8
+	 yE3mjxMqFJnlbOFlmwavi0a+R6wYGUmM7S973o0dw5J5KOIDNwCOBd+2eCArgoitUYaoM
+	 WIQOYUofjwfvcrEnvz1GLshgS4/w6T+vKKJTudQjAZ8rZ6u7bMLGpEJ1shyhzPoXNdQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eChSUlAm;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JQHLq7to;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EDD6606A8BC;
-	Fri, 13 Nov 2026 20:09:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A899606A331
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 20:10:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eChSUlAm
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CD1E1F000C5;
-	Fri, 13 Nov 2026 20:09:25 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JQHLq7to
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B0A01F000C4;
+	Fri, 13 Nov 2026 20:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794600567;
-	bh=KX+bt6x4O+wdhm+tqQl1JkjXBpFPjHXF5FgbUfKl0ok=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=eChSUlAmfQ2Uyf51R6XXjyVqcP1Z8DdVVGgV8zSr6m4qmXOeaTk4gcC2vO2vEAqd4
-	 7O+rsGhqDExPuf0Fzk18wqexfjqxKKrS65MSoWOQBG9HGMxpj6C+p+ZQXOjmxIbEc0
-	 nKsO7oQUl1pMTVYogTmsi16y5ceqfqHeo0NPFsfAJDBZl+Sw9cQW8gPy62I8aE9/lj
-	 jWoUN6gXXljuqODk6mtA0ZfGXNEYfOYAZC79NcFdzVNhAbBGr8dE9Wclwk/MpO5FtW
-	 jsDYP8aSX0pclG5ikK6waY0b9OQWxMp43rvCosN/mOcf6zAIA+4D5elVBo4r6amhB2
-	 2pUsIzFmDARlw==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v2 11/11] perf test: Skip the LBR inline unwinding check when unsupported
-Date: Fri, 13 Nov 2026 17:08:49 -0300
-Message-ID: <20261113200850.2803460-12-acme@kernel.org>
-X-Mailer: git-send-email 2.56.1
-In-Reply-To: <20261113200850.2803460-1-acme@kernel.org>
-References: <20261113200850.2803460-1-acme@kernel.org>
+	s=k20260515; t=1794600655;
+	bh=wRQEJU4wxCFa/kAvdyFoujgeAFZtZzaav9lLdzruEYI=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=JQHLq7tolAFSqsmXslH27TrLbUwqCCKzWFyJHnkm2pASWLRgiLuLQlikhMhHiqbOX
+	 3l84oAJ74esTmqvO7fZiEK/EoefPlmTjqsRBbix0WebcYO1arAF/t6F0zlPaUZ999S
+	 F3Ee2IDbaWLo+sxge2eYENVD5kZrLT0KTlRa6ScfS8gnpPCuiAHGMAg+oEXEYV1Luf
+	 x57kqlwyciLy//0K/BE2i/uvPDkiuhZHrKH1uz5i9p3VZ83wrU9l6SwvKFVpE38deE
+	 Fvam2zODbzbKhB+xhZ5OJfgWoEhHvnJoJ++bnHDJBPKYcNcNn8qM01jLjGf0XLPd3x
+	 k3Pr3znAYTa9g==
+Message-ID: <sashiko-outbox-213620@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 07/30] perf pmu: Add from_env parameter to
+ perf_pmu__init()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261113195335.2865725-8-irogers@google.com>
+References: <20261113195335.2865725-1-irogers@google.com>
+ <20261113195335.2865725-8-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 13 Nov 2026 20:10:54 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -65,45 +60,20 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Add a boolean from_env field to struct perf_pmu initialized via
+> perf_pmu__init() to distinguish PMUs reconstructed from perf_env
+> headers from live host PMUs. Guard tp_pmu, hwmon_pmu, and drm_pmu
+> callbacks on !pmu->from_env so perf.data-derived PMUs do not access
+> host tracepoints or cast plain struct perf_pmu allocations via
+> container_of(). The hwmon and drm evsel open and read callbacks fail
+> with -EINVAL for such PMUs.
+>=20
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-The check only looks for the PMU's caps/branches file before recording
-with --call-graph lbr.  AMD BRS advertises branches but only samples its
-own retired branches event, so the record with cycles is rejected and
-the test fails instead of skipping.
+Sashiko has reviewed this patch and found no issues.
 
-Probe the record and skip when it fails, as the branch stack test does.
-
-Fixes: 446c595dc0dd ("perf test addr2line_inlines: Ensure inline information shows on LBR leaves")
-Cc: Ian Rogers <irogers@google.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/tests/shell/addr2line_inlines.sh | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/shell/addr2line_inlines.sh b/tools/perf/tests/shell/addr2line_inlines.sh
-index e8754ef2d7f21ac2..6fe47909dae4f812 100755
---- a/tools/perf/tests/shell/addr2line_inlines.sh
-+++ b/tools/perf/tests/shell/addr2line_inlines.sh
-@@ -71,7 +71,14 @@ test_lbr() {
-     fi
- 
-     # Record data. Currently only dwarf callchains support inlined functions.
--    perf record --call-graph lbr -e cycles:u -o "${perf_data}" -- perf test -w inlineloop 1
-+    # Some PMUs advertise branches but reject branch sampling for cycles, e.g.
-+    # AMD BRS, which only samples its own retired branches event.
-+    if ! perf record --call-graph lbr -e cycles:u -o "${perf_data}" -- \
-+            perf test -w inlineloop 1 2>/dev/null
-+    then
-+        echo "Skip: LBR not supported by the PMU"
-+        return
-+    fi
- 
-     # Check output with inline (default) and srcline
-     perf script -i "${perf_data}" --fields +srcline > "${perf_script_txt}"
--- 
-2.56.0
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113195335.2865=
+725-1-irogers@google.com?part=3D7
 
