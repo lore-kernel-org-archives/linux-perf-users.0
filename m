@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.200
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794588158;
-	b=t3uPgbxHuBr9f+axJkUzdjd2adYx2o90UQHjKD5D5IDnpbeNBtGzQ9nqhl447PDF0GmG
-	 o5lHX4frz5egLyPIZcvrIH3ATzWZMkz4TqkpV/Usi15zf3asJPeY+8vUwkZFGuHJhUeeR
-	 0Kr68ge0jp3bhKFgnqc/ffZr2mCqZtn0eVout5Hird5gYSlFyhdGcMzU//jOe6UZymeZc
-	 5mgoQQ78LFmB58NAONbYO4diqG1gnjkKNlR5i8UoFQA9FTRF5c0uv9c/Vjq4GoAeYTlcr
-	 iGFR2lT8L35CwKi/ON/uFb1ClX2zVreFBG2h8Y77d35IC+6H+Pn6TKpTNzOTTzR5EPw==
+	t=1794588160;
+	b=dlCj4HoZIL4jgdDSBj3jIvPqTEgab50ukUXD4YQNPtVDVriyATHMW382FZecAXPF3eNc
+	 SWRXJ7U+x78Sybcy19CPv0797MU2Tlf/R8Xymzlt1ltQQWfZ3I+Nki3S9DAB63fPCIU3Z
+	 J4BwSACHDHTwuWqCH4V0yWrUf64uhJXkMdIG3YIIUmrDv7iE1lncnlFiFWGL+qlVB+qj8
+	 0ids1yM2rCqYwctGV4aukC79dGCP/oS5l8vzF1Ij3j+ZvTY7lob29LBirvjBMqmT3zwt+
+	 tW8BZLoW35FM6j0i2XBuPbDqZnA/KekMAsFvYUYrqOHu33eehG00l13y44wwctgxSNA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794588158;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794588160;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=Me5yfIzDRGI7/xvPxV35hthDkGXlSHz/rORd9jtaqKo=;
-	b=VsQdwVSUKQMoyt10vPPwPHcPXyWPP5DYJCf0c9ULmXPlFqEubLkSAS+2NFnLYh5xfqfW
-	 /Ty/0gB0y4GYag21iT5MKMxQaOXCbqV+uHownYVpm9v1oGhf9iIQtHkoQFTQjVL6I+Sm/
-	 Y+x2WqRbxYyhNZZlpEdlKbisBfnIjCa70+jfTHpnrvv6I4WmodHKBqKtoXoLuUNx7C18X
-	 LeEEME7Drme2LbqLz8G7YSMb7zh8h+fingskiwjMx9uOy025gbjwjQpIN+3Drc7sOd5F8
-	 z3S72xwwO3ebFDU9q02FrSgOJGioIvyvKxlXlcqprF2p2wvUjsEG9A6WUKVo3Vn/l5Q==
+	bh=voTyupXwnYR5Hpq3PVrUMc5w4XO7UW4Vq4l6eMvf/fs=;
+	b=gqhoBvxhAhxRko4b19ZKo5MkZbvOyA8pzcDYnXj0Q6vpGPeRUE7tyTgR7gfw5CpXGcQf
+	 j4JxzWyJn4+7PeO/rL+uRVrDkrcTZNdnvFIEApc0utvv4G9pCNCWKLaF8WPrkurgUWLYS
+	 i/fX49YeqtczDrBbnfkokRUu4mou6dGuXnifRhy4pT5129s5CiySq/dBR67zkAATdW2QY
+	 KqcNkpJAivBJKl9MC5zcPSyienxBop+Dtwn5YupZ+1W9agheFcPnPCZ3dOi6sidOhtIph
+	 q1X/5CG1G/rWBOJPiBfIXxM4IOVVE1353LbfiI5Kj8pnixYdv0ZSBaMgi0EIzPAy3zg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=AfrOrdF0;
-	arc=none smtp.remote-ip=74.125.82.200
-Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=bGp30eVs;
+	arc=none smtp.remote-ip=74.125.82.198
+Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E916074E17
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 16:42:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E6E916074E17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE286074E29
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 16:42:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EFE286074E29
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=AfrOrdF0
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-33c35f5ca6cso1739126eec.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 08:42:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=bGp30eVs
+Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-30c0d568830so1587774eec.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 08:42:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794588157; x=1795192957; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794588159; x=1795192959; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Me5yfIzDRGI7/xvPxV35hthDkGXlSHz/rORd9jtaqKo=;
-        b=AfrOrdF0DbjjjVl2799XgV5rVH458X+uEeRIFQqxiRh3sPFGhMhlN5tALRMgloQ+Es
-         /MzkJX2N+Fnc4Pt59wE2tc2Wq3xCxSiotreEvntrxuBr48RNLi4eYg8/6ww2n+QZW0OP
-         5hOqtw6JL91rx1jYZDB6UQlS9yPyL6AHvZC1GBBO1iXjNZpXHEt2YelXygvtrzDdbfJR
-         seFFNQohfoxFi4f0ChYWSWohj3apGnFzs3pjrjcNy1MGlmQnV5eMSuNOIPenACGQf5kx
-         Zx3kLS8E/uM/ButS4AwHfQBchLSnS6SrY4gS7p1H0sWUgG0fiRHakyQloDlkNZTTSo+W
-         LYOA==
+        bh=voTyupXwnYR5Hpq3PVrUMc5w4XO7UW4Vq4l6eMvf/fs=;
+        b=bGp30eVs0iSweJFwRi0SYrXy4qNz2rBBBv6MlYwvYII6zhWqXTK/lI0yoaMBrJUHDY
+         /2QV999MKXV6C2EaRnMS5/K52Y2iIsQYLvzg5zPFCLU3K4p4kSQweQi64SDLzPFPkTOZ
+         GOHgtxRxGOp+tVmBLyLxhumnMDyMA+IcmU7FTl7hVtXQGiANqUDd0kvD0zRMYVa4gVhZ
+         tVVd7wk9b39C+AAZO3taqehEIxBqHwBYSNLXGDR6NVma61JVXcT1jo8qqzwbjFZUbKoa
+         RSLghyPRw8nzaqld3+yVE2u9JVeTdXi3tImJdPB7jBaxhfcic354q6tn0dTi0y8t23cE
+         x8Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794588157; x=1795192957;
+        d=1e100.net; s=20260707; t=1794588159; x=1795192959;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Me5yfIzDRGI7/xvPxV35hthDkGXlSHz/rORd9jtaqKo=;
-        b=gSTcppUutlqFcFmZ+eP2ognUQcquSInaCAKXQ3C/pi7bUldgVeabiDmaSWnS+YRNOu
-         fld5BKcKnzaAMh9dPoKVpvPS9CjTBVi9O2w52Lp3ZEaUVqjEj7FHcRNa9FjGVQRf+97q
-         uP2457zK7oUzU/xPEzAaMmjSPjD/caIpuGZDXjE0/AeeO9hK/WBbadAyZ72i+YlmfAph
-         FChmLyzFGl2zoZwH7kwzSE8Zkyf1sRDjpecWB/WWEAO3gNnyKZLkBBWRXcDz2bBnPNjg
-         JsSH3gxBf4i2TrRsSG4Mjaiel5vbdXhu3OdbukFY7dHc9RcAy9HJa7FGU4GKMf1pefx3
-         kqiA==
-X-Forwarded-Encrypted: i=1; AL+hErFTZtxO0ldFsV03WhKQJb7c1tFM8eEB6vQrfc3trfhbyYFGbhb5FiWoMl3Tx/xshqfG8YJVvg18uYQw9NhOtMyu@vger.kernel.org
-X-Gm-Message-State: APuU4Z8Ti00v5L0BYf4lryxmVH1myGRhK9nV4d3BCJtl904Kt3bb1gBn
-	drrniO05t6iK1mCWJuggFwwWzFvJfuBKqy9mBBCk8a5cXNTn7PYDMR7WStC5btnIq20yHFcnNaI
-	bIDRk2E8OBw==
-X-Received: from dlbuy12.prod.google.com ([2002:a05:7022:1e0c:b0:1b0:166c:6a91])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:4508:20b0:163:c5eb:d42f
- with SMTP id a92af1059eb24-1b503060401mr2912951c88.5.1794588156804; Fri, 13
- Nov 2026 08:42:36 -0800 (PST)
-Date: Fri, 13 Nov 2026 08:41:49 -0800
+        bh=voTyupXwnYR5Hpq3PVrUMc5w4XO7UW4Vq4l6eMvf/fs=;
+        b=GMGijJZh3bNuqj9/xy5/A8NMSABYkNYQfIjXX5cplgThDpVdFBL1WCYYVEa0XGdVlq
+         AkqkIxtZUAa7hRurnjUMYog+0UGPRYiS3Kz1Dr0rgoOo9jDPKpHrNp1kRXIBl7+Mg/3A
+         NmdrMU3TZawlgAvxVJO2Xn/+XMav91fNNnSp696xW2jPxUzmW0bLfS3Ca5EQIVXDdgA+
+         x5exCpPtaJsFSYKONBu8jm7K8Rz8PpIRmq14prK1NXJLrQadbkCKAAFGYLPkKRv+i7Yq
+         c0ThYTxhv+oYs5ETLXFInpPmZDHU7jHDKGNSoU5H2rB6y7edO+wE2EHCaXAL99cSWbN4
+         5Tfw==
+X-Forwarded-Encrypted: i=1; AL+hErHEj1RtcaT1UxzTtb2jguERFamJlZ9gNUGrHGJb1ik7zi0hcwXW+PzXgEuSzWYrpzIucjQqm2pPf0fYUGNHFliS@vger.kernel.org
+X-Gm-Message-State: APuU4Z+PHR4KLgbdhvbZ8fbQrJBh+52c/OHdN4hEL4miOXUFe7KKiFk5
+	XajeM6i6q6RZuguKLAGfENSNv6OcmRn/YYjV0Gpo9KfguE1uFlfDtCSkrRkNBoZV5o41hliacmb
+	6e3HFoCW6wg==
+X-Received: from dybmi46.prod.google.com ([2002:a05:7301:fae:b0:36a:eec:f68c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:7481:b0:36a:1f4f:3e9
+ with SMTP id 5a478bee46e88-379677f25d5mr3766972eec.20.1794588158792; Fri, 13
+ Nov 2026 08:42:38 -0800 (PST)
+Date: Fri, 13 Nov 2026 08:41:50 -0800
 In-Reply-To: <20261113164152.2095566-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,8 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261113164152.2095566-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
-Message-ID: <20261113164152.2095566-19-irogers@google.com>
-Subject: [PATCH v13 18/21] perf env: Add __guarded_by and __must_hold annotations
+Message-ID: <20261113164152.2095566-20-irogers@google.com>
+Subject: [PATCH v13 19/21] perf maps: Fix lock inversion in maps__load_first()
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, bvanassche@acm.org, elver@google.com, 
@@ -92,105 +92,39 @@ Cc: adrian.hunter@intel.com, bvanassche@acm.org, elver@google.com,
 	ndesaulniers@google.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add __guarded_by(), __must_hold(), and __must_hold_shared() annotations
-to the bpf_progs and cgroups trees and helpers in struct perf_env.
+In maps__load_first(), take a reference to the first map and drop
+maps__lock(maps) before calling map__load() to avoid a read-to-write
+self-deadlock when loading kernel maps inserts extra trampoline maps.
 
+Fixes: e77b0236cd0c ("perf maps: Add maps__load_first()")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/bpf-event.h |  5 +++--
- tools/perf/util/env.c       |  1 +
- tools/perf/util/env.h       | 19 +++++++++++--------
- 3 files changed, 15 insertions(+), 10 deletions(-)
+ tools/perf/util/maps.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
-index da4eeb4a1a73..3f3323f98f49 100644
---- a/tools/perf/util/bpf-event.h
-+++ b/tools/perf/util/bpf-event.h
-@@ -6,11 +6,11 @@
- #include <linux/rbtree.h>
- #include <api/fd/array.h>
- #include <stdio.h>
-+#include "env.h"
+diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+index f808df2fe77b..7ca33e5218e7 100644
+--- a/tools/perf/util/maps.c
++++ b/tools/perf/util/maps.c
+@@ -1459,10 +1459,15 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
  
- struct bpf_prog_info;
- struct machine;
- union perf_event;
--struct perf_env;
- struct perf_sample;
- struct perf_session;
- struct record_opts;
-@@ -42,7 +42,8 @@ int machine__process_bpf(struct machine *machine, union perf_event *event,
- int evlist__add_bpf_sb_event(struct evlist *evlist, struct perf_env *env);
- void __bpf_event__print_bpf_prog_info(struct perf_bpil *info_linear,
- 				      struct perf_env *env,
--				      FILE *fp);
-+				      FILE *fp)
-+	__must_hold_shared(&env->bpf_progs.lock);
- void bpf_metadata_free(struct bpf_metadata *metadata);
- #else
- static inline int machine__process_bpf(struct machine *machine __maybe_unused,
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 50993b0dedc5..9e8e5d1d822a 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -302,6 +302,7 @@ void perf_env__exit(struct perf_env *env)
- }
- 
- void perf_env__init(struct perf_env *env)
-+	__context_unsafe(/* initialization */)
+ void maps__load_first(struct maps *maps)
  {
- 	memset(env, 0, sizeof(*env));
- #ifdef HAVE_LIBBPF_SUPPORT
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index 23d35425efe3..6b2083e3640c 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -139,16 +139,16 @@ struct perf_env {
- 	 */
- 	struct {
- 		struct rw_semaphore	lock;
--		struct rb_root		infos;
--		u32			infos_cnt;
--		struct rb_root		btfs;
--		u32			btfs_cnt;
-+		struct rb_root		infos __guarded_by(&lock);
-+		u32			infos_cnt __guarded_by(&lock);
-+		struct rb_root		btfs __guarded_by(&lock);
-+		u32			btfs_cnt __guarded_by(&lock);
- 	} bpf_progs;
- #endif // HAVE_LIBBPF_SUPPORT
- 	/* same reason as above (for perf-top) */
- 	struct {
- 		struct rw_semaphore	lock;
--		struct rb_root		tree;
-+		struct rb_root		tree __guarded_by(&lock);
- 	} cgroups;
+-	down_read(maps__lock(maps));
++	struct map *first = NULL;
  
- 	/* For fast cpu to numa node lookup via perf_env__numa_node */
-@@ -223,7 +223,8 @@ int perf_env__nr_cpus_avail(struct perf_env *env);
- void perf_env__init(struct perf_env *env);
- #ifdef HAVE_LIBBPF_SUPPORT
- bool __perf_env__insert_bpf_prog_info(struct perf_env *env,
--				      struct bpf_prog_info_node *info_node);
-+				      struct bpf_prog_info_node *info_node)
-+	__must_hold(&env->bpf_progs.lock);
- bool perf_env__insert_bpf_prog_info(struct perf_env *env,
- 				    struct bpf_prog_info_node *info_node);
- struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
-@@ -233,9 +234,11 @@ void perf_env__iterate_bpf_prog_info(struct perf_env *env,
- 						void *data),
- 				     void *data);
- bool perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
--bool __perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
-+bool __perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node)
-+	__must_hold(&env->bpf_progs.lock);
- struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
--struct btf_node *__perf_env__find_btf(struct perf_env *env, __u32 btf_id);
-+struct btf_node *__perf_env__find_btf(struct perf_env *env, __u32 btf_id)
-+	__must_hold_shared(&env->bpf_progs.lock);
- #endif // HAVE_LIBBPF_SUPPORT
- 
- int perf_env__numa_node(struct perf_env *env, struct perf_cpu cpu);
++	down_read(maps__lock(maps));
+ 	if (maps__nr_maps(maps) > 0)
+-		map__load(maps__maps_by_address(maps)[0]);
+-
++		first = map__get(maps__maps_by_address(maps)[0]);
+ 	up_read(maps__lock(maps));
++
++	if (first) {
++		map__load(first);
++		map__put(first);
++	}
+ }
 -- 
 2.56.1.703.gf848ed807c-goog
 
