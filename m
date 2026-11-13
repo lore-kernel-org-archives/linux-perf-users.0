@@ -1,72 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.197
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794599626;
-	b=VavSyXFxEbuCRGiKiPWcl/0PYBvldpg1mxWXzORl7KJos2qImS4GpiS/w8jLlGw90/li
-	 CUwPU8WsVrco6lK04W2o2Qiknf9i4UV7Tg+b3bt8iq7IbvoFotGa7r9nIINhiB3/tggmX
-	 bXKeFysYNfn54p5ID7c1ee3DZkFQc25vv00fVDANMPAGCyJRJtlIm6vGurA5AGN64jVIN
-	 Mkg9y/tBBYq2+GQos+MvD38OijjFpsDQMIze80OMSiQ/qFBNE1/2BGsSWQR65GA5Ol/qu
-	 RBMnzdMq8ykFeP3VLVd13z6wNwx+2ClZRasxh+BM+X7OcA6xQTiYLGEgk1RNRBCMYSg==
+	t=1794599630;
+	b=NMDEz0RFbp3EjIRsPklFkyR4Al+y8Cl4okC5CC8KuwGGfu5GMXqkCnGTs71JUloAejzN
+	 4baRil5DZ0UnkBIQ/YREVZN2NB4u4Jwu7apY/Y1eEdFaWqY+UOnZnXb8yP/xCeyQBRCLV
+	 Xwis7HowhSLTyPHNx5a/pIKnGOtCWsb9QCrSoxQmExl5lMSTqbLHNovbnToo9xDmr2XAF
+	 wg2MMBi0DK/YeBTVs5TIvIoiFTi3zm0UlvPdYrqum1VP6jH8ArIv+i2+y6ttWVH6Lv/Jw
+	 TAQJQxi2yFoeOTpdKq9dU2MlrXJhlqXLRJuAjRL8r6dcxkZyVwxN5DEIA4Z84E/V9QA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794599626;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794599630;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Received:Date:In-Reply-To:Mime-Version:
 	 References:X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=yZK0I0eEPwGAQ1xcP6pQmWLybyZKGwMTjQ0dOlFSYB8=;
-	b=NWTCV2vN39WvduioBS+QpTjPyvuQVDGl0kIioRN9kuQIgTniTm+VNzuUwIl0wzxpnmpf
-	 efH6PM0wWRq2oH1i7IfFk/8gGW674iGEywLXimS1MB74dWwQnJhmqfVhe/aKUHdITVi3v
-	 az9sygdsvZbaEST+c3+j0t/cmkcN0MYD8ZO3DBf1sgiHyzeujxkQI6PhO9tGi8siim5KT
-	 oQjgoF3QLaJWpQHgdd1PN/oRD843ggwYvZo9aPPayssm3lm/k/9S6tuowS6Jjr2Z6jJRg
-	 QZZQtsPrWY2T/+J8pKfrB015p02kIRLWYgK05CkpK2O1QlYfdgG8jhz91OnNYq4UeWw==
+	bh=6O38ETLEbj32ufhG7MyecNbPniPzbxOSw7ptiJplfvA=;
+	b=VL+qZqMtTJxIUkzgoc5t6M60oNyc7H7gZxWZKNBU19mOJVGVF/VJD2U9cSbDHGiogTZL
+	 T7hy4BXuC7mRq8VkTDRJORHnDZin92D56B4sBMp2IOZvInz81dCa/UFVZi19UNRVPiZvj
+	 0hZ6PmL3QBCRZ2PB0mit78V/yIKliphiHpIZAKWV3H6raRZNupwtbYpGr7QMKZFRE/VNR
+	 IcJaTEifFZSPSfLLjzG1D8GzNyx8X/ZCtf5tPMznTz5fSMdMgy8rjD/uYCsLqO/d+6tuV
+	 UMERHVp+Fm9y/LHjMpzzPihHXlt+t/0hYAuqC3ZP18ihsR/tWv0z1HA352MoBVtksdw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=UsSHsvl+;
-	arc=none smtp.remote-ip=74.125.82.197
-Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=UIc+KZIn;
+	arc=none smtp.remote-ip=74.125.82.198
+Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80524606A886
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 19:53:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 80524606A886
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9836560A260A
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 19:53:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9836560A260A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=UsSHsvl+
-Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-370230d93efso5988242eec.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 11:53:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=UIc+KZIn
+Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-36d1353fdcdso5889027eec.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 11:53:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794599626; x=1795204426; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794599629; x=1795204429; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=yZK0I0eEPwGAQ1xcP6pQmWLybyZKGwMTjQ0dOlFSYB8=;
-        b=UsSHsvl+ZVJm5zPQej8h/ho8NG5MhRxPnMkNYKGfPbdh2KmLyF8FVyBA8i8C6GPrz9
-         y80xS4SC6yOm40O+JyPq1HbEMLaegZKgeGemHnyrqEqcFC5o/DSVWIUxWZ4EJERnANro
-         wMmD4T7oZhmDnnqBtvblFRVdxtQiwnTp//1sSRJp44JXFKREOPEQx/UrMWh8h0gbEITo
-         sj9kX3PMw2ZHIBadQ7KGoivlIEfuI/SchZhM2/UaWaEscSw5yByxpStkSdwIm2I1MpIx
-         oHlWCnJTjEFFoZ6A83m1axb45VH8YcMX8eIFMJ0408P1FPH4eMpq2V6Ff7FOMZ8baIGl
-         9e3w==
+        bh=6O38ETLEbj32ufhG7MyecNbPniPzbxOSw7ptiJplfvA=;
+        b=UIc+KZInkfeSJgsOHmWiulrirJAbIp9dI6rhRqKPFFI2NOCiuIYN0u8I6Z8K4CBD32
+         vl9EbQ3PS+mddtf6yYgnlOaZCBKaE07O+K8kPnG8SAI4c/mYVeTpcNFk4nKvuxABLGLz
+         bifS/FD57HYhJkEjnI/1yxtfgCCsH7/EW+qA1W46eKV1ineweol54mlUF7F7Un6QaHsU
+         1DUGr7ixIzDXK1St6DBfy6cUJNp9cbk5+2/vH87h/1y6L5YKAnEuESzRp9U7asUJJQgn
+         itTQHcaI5eFZwIOzqUzcZDM51hfhAsjSoLKXvDm+qCc/GXTN6YPKk/RDheuhtSm45UkT
+         dZ0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794599626; x=1795204426;
+        d=1e100.net; s=20260707; t=1794599629; x=1795204429;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=yZK0I0eEPwGAQ1xcP6pQmWLybyZKGwMTjQ0dOlFSYB8=;
-        b=kHQp1l3DzAd6MC02fNlyexShaTjlCsyIy/E43SMcEPqJzvavrPzcD28AV93sjwwfW4
-         ++07qup2ZMsPzlXLe/NUDzLAFzOM7uPRCADr7MaonFRBnPUlxYMzn6tQsvUX9OWDk3AF
-         dQn5m8RsVfvROiBjWcV8s8DKeKJFwEcaaDT0j2dkW+Q4HORFaLV5RQsFd7HkMLxTseeS
-         QhAZ3ANVQF6KukLHR0YE+ttdHdIkYgKDORu6aSWOvzkKviWEU5ouYDKbnT6CUxOnrVja
-         ELdzOKBwmP3vK74nzMn0l/79vh4KzCMjYUuABh9yJr3L+sKUAd72kB2FiQ8MOr6SuK9a
-         6XeA==
-X-Gm-Message-State: APuU4Z+0irq3QIRolClHQhjG004Pjq3NEF0ekmgfIa1ANjIrVSELm9px
-	AQoeWpqszKuvaoY0o6dNJUUzLn+Fr4xeIPN/txH2Dr3hUPcUUEjtnWL3Rr5KuXNQJOxLv2UCKnH
-	gyjD1Vlcupw==
-X-Received: from dyjt26.prod.google.com ([2002:a05:7300:7b1a:b0:351:16da:ebbc])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:f401:b0:36a:1489:fdf6
- with SMTP id 5a478bee46e88-37966387750mr3171685eec.11.1794599625370; Fri, 13
- Nov 2026 11:53:45 -0800 (PST)
-Date: Fri, 13 Nov 2026 11:53:08 -0800
+        bh=6O38ETLEbj32ufhG7MyecNbPniPzbxOSw7ptiJplfvA=;
+        b=jkQpRa/mi5hwwijxGOlIBSHJY9q7rvkyrC2B8Np0xwOLYmYZnldoxxyEuUXs8lodNd
+         W435o2WTwF8tDp4wkZxjuvjgw+Htd4oQjBA117XkRGiOaXBT+UElsOoPUBUUXm+bFXb4
+         ijgk4IL55T2XBDtgt8OfJgAfR0q07w06oH2+y4rvIyemUjqnaDzndYLVtUWkNGmKqime
+         555DozoCWvTYNMvPc5adfBCsjrLC7H24BVc8wxnrphbJUI4Vjah335xd6RlKgLsILIju
+         LdCDm9yxP3EDlsak+aIAVvrSM5ZDWLes3ENJPpheGNfJkLnkvQUNfsuKXKK9bZPWI8gD
+         zoqA==
+X-Gm-Message-State: APuU4Z/UHTtOYFYZDMA6742O3CDyyBo1pf/+QqY3SGZNaUH3Hsc+xj2G
+	5IOeQ4r/78WzOTfyJUHhfwHcHKviTQrYpo5Y9ktNYwAIdWOf01aAIUXaUxQNl99AWkIaw00UFka
+	nGZLt/QDh6g==
+X-Received: from dyhb22.prod.google.com ([2002:a05:7300:1496:b0:36a:ead:4dcc])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:fd09:b0:36d:4570:a32d
+ with SMTP id 5a478bee46e88-37963953f0amr2866228eec.2.1794599628447; Fri, 13
+ Nov 2026 11:53:48 -0800 (PST)
+Date: Fri, 13 Nov 2026 11:53:09 -0800
 In-Reply-To: <20261113195335.2865725-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -79,9 +79,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261113195335.2865725-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
-Message-ID: <20261113195335.2865725-4-irogers@google.com>
-Subject: [PATCH v2 03/30] perf script: Don't drop metric samples for CPUs
- missing from the evsel
+Message-ID: <20261113195335.2865725-5-irogers@google.com>
+Subject: [PATCH v2 04/30] perf metricgroup: Don't prefer tool events for
+ displaying a metric
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -90,62 +90,40 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-perf script -F metric looks up the index of the sample's CPU in the
-evsel's CPU map and, when it isn't present, prints "Missing CPU map
-entry for CPU <n>" and ignores the sample. When the perf.data file
-doesn't record the CPUs of an event, as is the case for perf record,
-__perf_evlist__propagate_maps() sets the evsel's CPUs to the host's
-online CPUs. If a CPU is offline when perf script is run, or the
-perf.data file was recorded on a machine with more CPUs, then every
-sample on such a CPU is dropped from the metrics with a message, for
-example thousands of:
+pick_display_evsel() selects the event of a metric that perf stat shows
+the metric alongside, preferring an event that isn't a tool event, such
+as duration_time, and that is used by the fewest metrics. A tool event
+used by fewer metrics replaced a non-tool event, so whether the metric
+was displayed with a tool event depended on the order of the metric's
+events. For example, CPUs_utilized could be shown alongside the
+duration_time tool event rather than cpu-clock, and cpu-clock not shown.
 
-  Missing CPU map entry for CPU 1
+Only compare the number of uses of events that are both, or both not,
+tool events.
 
-perf script currently only supports global aggregation of the counts
-used for metrics, the counts of all CPUs are summed. So place the counts
-of a sample whose CPU isn't in the evsel's CPU map in the first CPU of
-the map, as was already done for samples without a CPU. This doesn't
-change the metric values computed for samples of the CPUs in the map,
-the summed counts just include the previously dropped samples, and so
-isn't a regression. Aggregating per CPU, and using the CPUs of the
-perf.data file's environment rather than the host's, would be future
-improvements.
-
-Fixes: 3622990efaab ("perf script: Change metric format to use json metrics")
+Fixes: c8035a496141 ("perf metricgroup: Add care to picking the evsel for displaying a metric")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-script.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ tools/perf/util/metricgroup.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index c5a9651a197c..97bad639753f 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2557,15 +2557,14 @@ static void perf_sample__fprint_metric(struct thread *thread,
- 	/* Update the evsel's count using the sample's data. */
- 	cpu_map_idx = perf_cpu_map__idx(evsel->core.cpus, (struct perf_cpu){sample->cpu});
- 	if (cpu_map_idx < 0) {
--		/* Missing CPU, check for any CPU. */
--		if (perf_cpu_map__cpu(evsel->core.cpus, /*idx=*/0).cpu == -1 ||
--		    sample->cpu == (u32)-1) {
--			/* Place the counts in the which ever CPU is first in the map. */
--			cpu_map_idx = 0;
--		} else {
--			pr_info("Missing CPU map entry for CPU %d\n", sample->cpu);
--			return;
--		}
-+		/*
-+		 * The evsel's CPUs may not contain the sample's CPU, for
-+		 * example the sample may have no CPU or, when the perf.data
-+		 * file doesn't record the evsel's CPUs, the evsel's CPUs are
-+		 * the host's online CPUs. As only global aggregation is
-+		 * supported, place the counts in the first CPU of the map.
-+		 */
-+		cpu_map_idx = 0;
- 	}
- 	thread_map_idx = perf_thread_map__idx(evsel->core.threads, sample->tid);
- 	if (thread_map_idx < 0) {
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 779fe56fe8d0..98f3ba8f9533 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -1388,8 +1388,10 @@ static struct evsel *pick_display_evsel(struct list_head *metric_list,
+ 		struct evsel *candidate = metric_events[i];
+ 		size_t candidate_uses = count_uses(metric_list, candidate);
+ 
+-		if ((selected_is_tool && !evsel__is_tool(candidate)) ||
+-		    (candidate_uses < selected_uses)) {
++		bool candidate_is_tool = evsel__is_tool(candidate);
++
++		if ((selected_is_tool && !candidate_is_tool) ||
++		    (selected_is_tool == candidate_is_tool && candidate_uses < selected_uses)) {
+ 			selected = candidate;
+ 			selected_uses = candidate_uses;
+ 			selected_is_tool = evsel__is_tool(selected);
 -- 
 2.56.1.703.gf848ed807c-goog
 
