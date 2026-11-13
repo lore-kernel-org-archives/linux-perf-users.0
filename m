@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794582389;
-	b=BYZNSjFuPN7v7fKgYKoBtS41rk5DinSd/9enNtMkPguMnNzqOMbcM0+EEUMWrwSoJkh1
-	 QhqdlBZ/Aw4FA/jWJKf32byRnY5twOrVCqBwNDdEtcf9dCKV1WlWy2tbR1QMvY49Ktivq
-	 4Qk/K2IByLckcYqEBpFlXOHsulx5gW5dUi5xnnNB5VABjbTDrnmN2CT7I4AD967JOE9Ob
-	 mbybFTE/1PVvN42Sx+lN8qC4dYKmsuzqXbWXOcUNz5psL2elDPDF1MCyIgrCftuaMFdUp
-	 khQni22+hZfEIP8TDtF1esC0QyHqktyY5X/c3FGs8M3Z96G0EQa9KcLxnI8+Dn0SSfA==
+	t=1794582392;
+	b=WnP0qlLd7rjFYAnz9nvx23UJv1My0dMjHkE53zBdMzgDfeCAGdQbm+G+pKS5nQiwN6bg
+	 CJcP28axgcoNsHM7lyhRGsOgwQOtvvKh4cQyBgih+0SIp+fGsftn+o2lIwN+pppz9OCMV
+	 MiK/Eq+fkPNTlD7RRkgKQ6mG9QFZkQQ+hhqbQz0yY9a0aRqLOt71Wh043+q50iFzpF/9r
+	 xUV8b48wfM0BK/4pz1VKBrIpyC1P/RTceXNxZnPEM+ewpi8FQfRrfUccgjA5zA/+j98M8
+	 RaaryUC+xnMcMG04grPytwIPgvSHv9GkIL4wGFJ20qWh1ZffGws1b3cgAHAX9Nfg18A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794582389;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794582392;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=6HGWkCDBHmlGJfJwDjjX0Ph1nyw6UI7RFOL+RhCg8RY=;
-	b=sy8wmxHClDjKsupfD370auiAhHDf9Kz6yQR1onoyTy1qAhg4D6Hkn3a2G/MwIaFMQjzK
-	 HGL03BItr+Wq10V3n7qtMMsqNu/oecqEvsdCtA71697CCnPQug7Nrtq10WNGeudzgJr06
-	 /tJxJrIzNGKtet68Xxj3Xj51Q4M/KqXla+B7V7S3QJo783MYjhojvHeNJS9u6QO8c/Vih
-	 8wAsBdIaW3SgSzWCXvysMqJrvSq4F7AeJtKph4sqNGkhH/7AgxiCgdjjfZ+h+WGWdSW24
-	 EGZzUcb9DIq5jhGCw4phS2pGQFw8JaxX7PwHg771aV+QM8KPLtas/mBSJlrSvVfG21A==
+	bh=8CcyYADhin+8i7oHA84mSiYxGkyQxGlWj0NcUes1MvU=;
+	b=C7nmygWxuX/d98Auc0NUHauR93eyvq6bATvNYG5XLDc9K5o0aftTeE2MAGR0geQqw7/N
+	 I3rsSO6UMgpdOSejVggj5MHTb1mXMlV5De99tM5a+fxLtj1B65gQIZTKDLZgL4X8rdLpH
+	 gHZsdudoT/nn5TigFE5rohziE2EdgLwZhalvyq5Gz8YCw7w5DqsZ+5SmX8DXJzJZ9q12G
+	 Dz0rBZRktkmf0PCU7iTGWCW6N7YoggRIQjehFuZTRtL0a9gCGWDFU17YghkQ7BM/+luVw
+	 hswO2RAcDMNZQmw6ZQl3YOWCCVDFW2vnfsAIjmrVo+NC+7fIHfsWX+3PObI7mtE7JHw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OLU3byo1;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DXDilvhc;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3FE606A89F;
-	Fri, 13 Nov 2026 15:06:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0CD60A5BCE;
+	Fri, 13 Nov 2026 15:06:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OLU3byo1
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD0A21F000CB;
-	Fri, 13 Nov 2026 15:06:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DXDilvhc
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89DEC1F000C4;
+	Fri, 13 Nov 2026 15:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794582389;
-	bh=6HGWkCDBHmlGJfJwDjjX0Ph1nyw6UI7RFOL+RhCg8RY=;
+	s=k20260515; t=1794582392;
+	bh=8CcyYADhin+8i7oHA84mSiYxGkyQxGlWj0NcUes1MvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=OLU3byo1mdgmz/XiNroAWEmhpC9vNhR9qoz7+z/VUH0wXtPe1lRj1oKCw0teXreqx
-	 Xs805ovqFWTJNCywUghr3gwOLstucn8dyGzP18SGVZIInnx4fwm/20dZCtnJpV+wpN
-	 ZkNiqX8Oavin41KF7T6AGwgawdaXpMSKlmV21OYIowhqNLnvnzCC/qD/SxIfwnLa57
-	 DbfYFueNfB9YUkxZuvpQO1UGLFfySNAxqhYymwpmVTgCsY4ws1elaff7HUJcURAPvq
-	 jFhpLEbq2zwF5t6LInOjMrVCSMZkyvse6hnLXHy4zvSe+6LmdSfeudTeZF9Y2zb4mi
-	 Vsd6g3OhzElsQ==
+	b=DXDilvhc+XuUR2MrmPOMyyEs+CcUSHvYCRDH/5WUqKkuhtj+cf1Fz+1LxaU5XJOHN
+	 Pukb3bCFx+TmINQGxH5QfSWXmqTuTOEO6nAY0e8DAv9rq6ThtLrxkAimkspcB4dO/A
+	 7S5B3C/Ge1cwAwfzN1A7hz/H0toxOPPOxCKFoAnH8YnB/vtAz01dTkbmegSRAbHVZk
+	 TLl9hfEyfEl7nAb0VPq1Z3ZNKlXp9oQqepEXVZV067LP3+3Xj+0dzdRxg6UQ4bLDu4
+	 ZX7zYr4MWZ3JCD3mdpF9U6pFvanr4tDYuzgdjPCc8iamKJR5r+HJqZ3aZfAdNKj8jq
+	 XcyjSzpNSBAsQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -50,16 +50,11 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Leo Yan <leo.yan@arm.com>,
-	Mike Leach <mike.leach@arm.com>,
-	Robert Walker <robert.walker@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v1 09/12] perf cs-etm: Fall back to the recorded instruction size on a failed read
-Date: Fri, 13 Nov 2026 12:05:50 -0300
-Message-ID: <20261113150555.1163049-10-acme@kernel.org>
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH v1 10/12] perf tests: Fix the Intel PT virtual LBR check
+Date: Fri, 13 Nov 2026 12:05:51 -0300
+Message-ID: <20261113150555.1163049-11-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261113150555.1163049-1-acme@kernel.org>
 References: <20261113150555.1163049-1-acme@kernel.org>
@@ -74,49 +69,56 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+The record this check uses writes aux samples, and with the single data
+page the other tests ask for they are lost:
 
-cs_etm__t32_instr_size() reads the instruction bytes from the traced
-program's memory to tell a 16-bit from a 32-bit T32 instruction, but it
-ignores cs_etm__frontend_mem_access() failing, which happens when the
-DSO or its debug data is missing, and then reads the uninitialized
-buffer.  GCC 16 warns about it and build-test fails with -Werror.
+  Warning: Processed 29 samples and lost 100.00%
 
-Use the instruction size recorded by the decoder, as the A32/A64 path
-already does, when the read doesn't return the full two bytes.
+so no branches are decoded and the check fails with "Failed with virtual
+lbr".  Record with 4 data pages and 128 auxtrace pages: the same trace
+decodes 64 branches and still fits the mlock budget.
 
-Fixes: a7ee4d625ede4f62 ("perf cs-etm: Support for ARM A32/T32 instruction sets in CoreSight trace")
-Cc: James Clark <james.clark@linaro.org>
-Cc: Leo Yan <leo.yan@arm.com>
-Cc: Mike Leach <mike.leach@arm.com>
-Cc: Robert Walker <robert.walker@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: coresight@lists.linaro.org
-Cc: linux-arm-kernel@lists.infradead.org
+Require the python perf module to provide session, not just to be
+importable: a perf whose python bindings are not found can pick up an
+unrelated module and fail with
+
+  Error processing events: module 'perf' has no attribute 'session'
+
+instead of skipping the subtest.
+
+Detected building perf on fedora:44 on the runner with Intel PT hardware,
+where the subtest failed with "Failed with virtual lbr" in the container,
+and with the python error when run as root on the same machine.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ tools/perf/tests/shell/test_intel_pt.sh | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 3e01b401ca6f3a08..5d53ed74ae8835a9 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -1370,9 +1370,12 @@ static inline int cs_etm__t32_instr_size(struct cs_etm_queue *etmq,
- 					 struct cs_etm_packet *packet, u64 addr)
- {
- 	u8 instrBytes[2];
-+	u32 len;
+diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
+index c0ecece0a8255124..511440b5956a6897 100755
+--- a/tools/perf/tests/shell/test_intel_pt.sh
++++ b/tools/perf/tests/shell/test_intel_pt.sh
+@@ -384,13 +384,14 @@ test_virtual_lbr()
+ 	# shellcheck source=lib/setup_python.sh
+ 	. "${shelldir}"/lib/setup_python.sh
  
--	cs_etm__frontend_mem_access(etmq, tidq, packet, addr,
--				    ARRAY_SIZE(instrBytes), instrBytes);
-+	len = cs_etm__frontend_mem_access(etmq, tidq, packet, addr,
-+					  ARRAY_SIZE(instrBytes), instrBytes);
-+	if (len != ARRAY_SIZE(instrBytes))
-+		return packet->last_instr_size;
- 	/*
- 	 * T32 instruction size is indicated by bits[15:11] of the first
- 	 * 16-bit word of the instruction: 0b11101, 0b11110 and 0b11111
+-	if ! "$PYTHON" -c 'import perf' > /dev/null 2>&1; then
+-		echo "SKIP: Python perf module not found"
++	if ! "$PYTHON" -c 'import perf; perf.session' > /dev/null 2>&1; then
++		echo "SKIP: Python perf module with session support not found"
+ 		return 2
+ 	fi
+ 
+-	# Check if virtual lbr is working
+-	perf_record_no_bpf -o "${tmpfile}" --aux-sample \
++	# Check if virtual lbr is working.  This records aux samples, which a
++	# single data page overruns, so give it more room than the other tests.
++	perf_record_no_bpf -m 4,128 -o "${tmpfile}" --aux-sample \
+ 		-e '{intel_pt//,cycles}:u' perf test -w brstack || return 1
+ 	perf inject --itrace=L -i "${tmpfile}" -o "${perfdatafile}" || return 1
+ 	output=$("$PYTHON" "${shelldir}/lib/perf_brstack_max.py" -i "${perfdatafile}") || return 1
 -- 
 2.56.0
 
