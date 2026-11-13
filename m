@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794582523;
-	b=J1qBAPc/LoosjCwvCsvZ6rVDLrEt89prCet9PibFwp0xEXLemeybF4mOQ1A4WS72z7WF
-	 0FD+8JaBwi1kIEpkC1iVIp6Ktyf1juSlWgIjZfln2CvxNrz0furLx35TycTRXfi01jPyr
-	 nUARsKWx6bhzpHVVk7IcMyBYAlqcRuN02qqHJpa5CsVxOtb8eTwmtaxaGTk+jBgcXMJf/
-	 FIlobt6PTU3WO7JmxnRejhlngLXjmLNhUx6B0ml9hf4S5TAeJdWRSUSee7SMLrPbO5s6h
-	 MM7hIkRLRP+HHvAYDSc0pNtOl9Ctl0sJ7Gr7imyDN1LEGIWMXJk5xm6wQpOMvtaRsUg==
+	t=1794582692;
+	b=jTzFqdDrC5W9wZfoBdZUo3feEBrR9uvE6hSy2DTtNjeoKz9EblalCLUB+IEEpLMj3diK
+	 dTUMkgBxeU+dW5Sst5XJ98HKjP2xctSSGHgZH4ngvB6qnG2oKfi3Mup7nRwG3H6gVeT8j
+	 HYfQaq8KNcTumUAR1VLZUiCeZ4GLQzzhhglUv1sS0cOq4DROcqigjO8AByYxY3/4n/3Nf
+	 f0IRHqlidkchhw6WS9h8pOQZT2S9TUnqneEe8PDbaPscoKtKpYfuTE1jBwvWyzss0+V93
+	 zpEID5GCSEOI5znOyfuV2g94Q/lYYRBLCZTMz3M/w2DIckz+7QRgOWNdy2BZVTx7Mhg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794582523;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794582692;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=vY9BfxyQiz87xNJlIMpL+BCcg0W0W3AJJTSflssYYv4=;
-	b=idlVhpDWWRCd7CO3wBv19BxsJFzqgnQGqAwrJD7dtug6kh9Ke7t0tuMOHoCdjcqMv5Ta
-	 2uKN5D6HR0+14W+Cy64THCYz+w07DL4Ov3Zv5jjMtH5DrjgOpQbVHsZ41BIEd5wdsb5FO
-	 DC/+ZTRUlDfKPyVpy6l7U5HbxLYElO4if3Daf1tVSVn4Md68UDAZFRTJcJMy+Ha+krs9V
-	 QoPmBW43COLsNP3ixT7bVJ3eLZakVr9DsSz6mDHaePFL/n9HRn/8VX0wHYiZ0oGZ2WiMS
-	 cVdgo93a3jvg0afhWewB+2HSKf8eg+4MbR8Tm4XxTP2pAh9ZMfOG7CrogaBwcZR288A==
+	bh=TtXvpb2DbLcHcKMh9wZ3VEZULOnohjbmHGHE8ymY+t0=;
+	b=QemhEzErv2KNrVPVpbkVDTF7WRlVdFWGDhZ6VJCPaKTu2K9hsUnhAU8EgMlXcPhBYvl4
+	 1LL17DUHok/cbwOMzA/g+CVtA9LMO8tk0Zy6WfRscmEKj5PiwtB4xW1WV/YMf33pwTFOz
+	 tw1vlbi3cVoKU3vltfFUYUCz0MOduBFUcKaHWt+71DwNFpy/ZGdpNyiP5G5Ex5H9Vtr9d
+	 tc5B4J9gPF9m6F3TX4GB9n7hr2Pk8u0t/6AbVakJP/ctJTrA3X+XkpLnI9WE8dBiewDrB
+	 BlyJQ+M9ytOLmHtQGtt+rIU/1Ztm9nIhODZU6YENw9pTmzKAuuoq6ZJ5Vucnt5x+ExA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mQXYJ9Jc;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RQoC0OQt;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3E560A2607
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 15:08:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55DF8606A32D
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 15:11:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mQXYJ9Jc
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBFD61F000C6;
-	Fri, 13 Nov 2026 15:08:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RQoC0OQt
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEB271F000C4;
+	Fri, 13 Nov 2026 15:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794582523;
-	bh=vY9BfxyQiz87xNJlIMpL+BCcg0W0W3AJJTSflssYYv4=;
+	s=k20260515; t=1794582692;
+	bh=TtXvpb2DbLcHcKMh9wZ3VEZULOnohjbmHGHE8ymY+t0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mQXYJ9JcAFa3GUWQ/s1GVN+pK3rSniaTEqA7Su0BqPuKYDRp/BYzEhvSRk831GkNm
-	 RaGK674bxIr2yVciYh5l3xv5KI3R/fLGHDB4KjDqkQx0yiJJzNasnNRHd2r5t1C+pi
-	 08+SuiPOJNqwHqYjuE9F/DWCwWYJsXA8r3G4CpfH8Vel3I/u6hbDJn0SoMMOpkTYSE
-	 CCPrXBqpR0OI045m4Zvq/SQMNDEEkMfWaK5SP8nvn6+foA4nXctdmz5yhJuxQj/5tZ
-	 HRTSvml4dCdQh14cJ/YavTD1U/3udY5L8MWQ04h77Ij1AhTQzuNHwdhR+GiHho+Fbj
-	 B1ndgEVwDZYwg==
-Message-ID: <sashiko-outbox-213057@kernel.org>
+	b=RQoC0OQtViiUvYt68EwvKZ6wapS2/5ex/fFSMIGlvzFH03pqkz0guciaQjuF50aJy
+	 9JRKDWhjhhI79tfPv3KZB3kBFv1Fv0PWaNMa7X5rUG53FJqKC9fgaIgCMRcM14rigc
+	 nwPF/WjkWAD5nntEQuualTBn9epX3AuTfCMZYsxenmKwVC2JKKy/WRQmWyOpNVPFve
+	 aNYAZfhOlWvGmoIRpyIg+BKKhEwBUD/H/r3ANQ4tiMxavXiEQVFwqhR8b2SOKEB/AC
+	 uSqoMY5HeFniRTTM5Dkc2jT1QA6wfujAzIBI4wCiJhqeTh5qgsgjKptaNLkFamv/zU
+	 79oC+7hcML5Bw==
+Message-ID: <sashiko-outbox-213061@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 07/12] perf tests: Silence the libbfd probe in
- build-test
+Subject: Re: [PATCH v1 09/12] perf cs-etm: Fall back to the recorded
+ instruction size on a failed read
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261113150555.1163049-8-acme@kernel.org>
+In-Reply-To: <20261113150555.1163049-10-acme@kernel.org>
 References: <20261113150555.1163049-1-acme@kernel.org>
- <20261113150555.1163049-8-acme@kernel.org>
+ <20261113150555.1163049-10-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Nov 2026 15:08:42 +0000
+Date: Fri, 13 Nov 2026 15:11:31 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,22 +63,29 @@ Precedence: list
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> build-test evaluates the libbfd probe at parse time and the compiler's
-> stderr isn't captured by $(shell ...), so without binutils-devel it
-> prints "bfd.h: No such file or directory" once per tests/make
-> invocation, five times per run.
+> cs_etm__t32_instr_size() reads the instruction bytes from the traced
+> program's memory to tell a 16-bit from a 32-bit T32 instruction, but it
+> ignores cs_etm__frontend_mem_access() failing, which happens when the
+> DSO or its debug data is missing, and then reads the uninitialized
+> buffer.  GCC 16 warns about it and build-test fails with -Werror.
 >=20
-> Redirect the compiler's stderr; the empty result still skips the
-> nondistro tests as intended.
+> Use the instruction size recorded by the decoder, as the A32/A64 path
+> already does, when the read doesn't return the full two bytes.
 >=20
-> Fixes: 523471c5163659c6 ("perf build: Skip nondistro build test if libbfd=
- is old")
+> Fixes: a7ee4d625ede4f62 ("perf cs-etm: Support for ARM A32/T32 instructio=
+n sets in CoreSight trace")
 > Cc: James Clark <james.clark@linaro.org>
+> Cc: Leo Yan <leo.yan@arm.com>
+> Cc: Mike Leach <mike.leach@arm.com>
+> Cc: Robert Walker <robert.walker@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: coresight@lists.linaro.org
+> Cc: linux-arm-kernel@lists.infradead.org
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113150555.1163=
-049-1-acme@kernel.org?part=3D7
+049-1-acme@kernel.org?part=3D9
 
