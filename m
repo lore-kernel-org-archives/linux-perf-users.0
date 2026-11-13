@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794583444;
-	b=WQmSJLkcLxY/R9eZA4ZQxqKA2xA0WjSeFpv9317vPsfK/LF5FbDr43KpvKkhowoIUSHL
-	 SwkPiEvYWIdIuMQa4Y+E1UPobv96VbI/DSRAVmC28rnBbhNQH4WiqlkOfLRI+5SmRibN+
-	 c16z13QSSdhL+7SHQ0yu+pUkcd8mxVPZOAYXEloZTdSsljXexsi9da8AMeWlT8qGol1w2
-	 nAovLL7d7++CVCTFXQZBXFXuo92Vuve9Y39mE4uJPQ7VKUlV6pR8BuF51gKyvb1LZPCa5
-	 FIL/3VUDpFgKLzmdW70dujajQ/gZvpBWBkGEnHurqmee5or4hw4jBLaUchSblDPj2YA==
+	t=1794583525;
+	b=FqwXA4IDRFsR519lKmhtN6BYo3RB0wypEvRuuJX0yGL1TNB4DORW4xcHdeoiAs69ZZIJ
+	 ttNfeA9OSm6VRqgI66cWQYj4QmuQrB7KfrLBDUFOBENutsd/gTCeQFAFqjPIcItCCLrXV
+	 JFcUz7vd94qVgIi/8xncvRxYW7n7Fg8KCmf61RL3zyHiV4Ce+zwgRYzgIJS9AbaRnrxtI
+	 s7Tj4K7nFUub/1D1I7lErhUBLzAG30/a9ou8h9rDFjAUi/U0u4WeIhxTy66P+Rjg7b5Rl
+	 VgeS7/fkWbKHJtCCphK+5cChthcSkSzT4ZqgWf6OsQuOv5EExQM4uuILl8rJspBPZvA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794583444;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794583525;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=FLPcBLPab19O7unbB2ofTytG6XM/XVPpZr7w0okOf+Q=;
-	b=IWDYvTK/dVRLnuPSadl7MnGeF/bR796ad0ObhecJAwIElAjaRwZOBt+uhVJbFoqvxRXm
-	 VUVHnFn7YhGWMtZhcJ8KrSNvakaFPRljjCG68ZApHldVhzNeOAiokW8QpJWEoJ2gi1o3C
-	 YM7FCZF40oBi4L2hpaRMuoPBEZmIznnq9ki7s1s9Qw5lr7HkuGzpe05fYYlC+rF/ShaRk
-	 C0IGVrfSgsqx+1kpoh1jxn5KUwDNx8qDJ+wr/0fB8o9zpopL7jmKdma2hNiQQaoVvUYUx
-	 KcAfBUHgOE/IGwj/pjzflag9kqQwDXeeihlztRNiDHbnngAv+E0vH5YhXDftdALm+Aw==
+	bh=wGJQgONfVfGLqqyMqngsn+i3UCBsZZX+7hf96apUU48=;
+	b=DcHfxK6Gvhj6nydkpLKSMdAuRYmh7c2g4i/qXxvDDlXMi3WvN0KzXvZUFALQR7c5ntyZ
+	 Gw64qj9Ym/b9PgKsIntw26XjkOyTYsylwsLtKcVr8oMDYUB1LXHzzd7VfSwW12mOHXR5p
+	 AlFNC6e/pQK34jGZHbptNtpD3tYMSsPD6HMg0i6U9kHxZLi7nWHfBTS05VI4zjmjRY27Z
+	 xHw/laaVMDLG0SGAZlQqLAbKC8aBI/lDIYZEx0kRkqf02mT5vrDwnmbytJlXNXq0WmVC7
+	 88s07EqtOPzsw4GU2fjBq+/M0G+x1tVjo8aQJYwkm0/IQVGUf/lcDZ5rTj3ltZ3cSNg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LYs9Pm9u;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W2z1UxNI;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F05606A323
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 15:24:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65610606A32D
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 15:25:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LYs9Pm9u
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 414E41F000C4;
-	Fri, 13 Nov 2026 15:24:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W2z1UxNI
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBCA11F000C4;
+	Fri, 13 Nov 2026 15:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794583443;
-	bh=FLPcBLPab19O7unbB2ofTytG6XM/XVPpZr7w0okOf+Q=;
+	s=k20260515; t=1794583525;
+	bh=wGJQgONfVfGLqqyMqngsn+i3UCBsZZX+7hf96apUU48=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=LYs9Pm9uJWbOsfJuLDQdAUL+hEKRVq4EHqRIobXK2UBacsieGq+GCw22KTibU7d0R
-	 N5yjZzz2ZMVfg1Lpd27yehcQTZslVPMEq55xbNW1eqtDuDukFcTgEzxBVv5G5Cn5XJ
-	 r+tmIQlo5dLp6C/XncS6d/lr1XwEV5kixY8ujvxvIYkMel8IOmvVQ+Rz70DTTvIm9u
-	 d0XsxWbMlA5QDYKvFhUwmxU5igagjuWtjBXuMEJh8sgM9rWQybzSjj5sg5I7+eHpmZ
-	 /Kgi5STVWafmGhgnFzhx/fGTLy+Jk7HWCmMO32vdPn/7xN/G4SSHd0s3g9AflBXuq0
-	 wuqaHnA9f+DHQ==
-Message-ID: <sashiko-outbox-213083@kernel.org>
+	b=W2z1UxNIFUTFoLH7DAiZ7yGq1VtY27917bl4g7TQFlGlASCxAz7+k2vEUhGOlmxxq
+	 bFXVatYx3XT8I7y6dX3qfn8Gj2i55lFe2b8cZ0alDdMpQW1FsVLuPWHLZS22BOrCFl
+	 BZPhPcKbf+y6CDdgIps3mjMLcxFBPucP3QZazJrzKB+wwKJ3Jb9R/u6F7iYojlx5T/
+	 AHYotpKtzKK1pUzccfRJtA1D35kMYu4JNHsBfaGm70jsgKRQ/lS5rYG3u99Whyr5+g
+	 ujsYVHOIe11KVENqKZT8V/E0OslSuqaNIXGNu8QTVia7m+uxB+BgKvA/cizagKOoHH
+	 8pm7q2ebi300g==
+Message-ID: <sashiko-outbox-213085@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 06/12] perf annotate: Print the stats after the
- annotations
+Subject: Re: [PATCH v1 10/12] perf tests: Fix the Intel PT virtual LBR check
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261113150555.1163049-7-acme@kernel.org>
+In-Reply-To: <20261113150555.1163049-11-acme@kernel.org>
 References: <20261113150555.1163049-1-acme@kernel.org>
- <20261113150555.1163049-7-acme@kernel.org>
+ <20261113150555.1163049-11-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Nov 2026 15:24:02 +0000
+Date: Fri, 13 Nov 2026 15:25:24 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,54 +62,46 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [Low] perf test: missing DWARF feature check in annotate_stats.sh
-  without libdw
+- [Low] perf tests: missing Fixes: trailer for commit 915d6b14dc0c
 --
 
-commit a3aa8082d0e5c5ce9cb6c085dad08c8447fc23aa
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+commit 8d6a959ddd3628adc90143588c99d2bf9b1a9f23
+Author: Arnaldo Carvalho de Melo <acme@kernel.org>
 
-perf annotate: Print the stats after the annotations
-
-This commit moves the printing of data type and instruction stats in
-perf annotate to after the annotation loops and adds a shell test for
-instruction stats.
-
-> diff --git a/tools/perf/tests/shell/annotate_stats.sh b/tools/perf/tests/=
-shell/annotate_stats.sh
-> new file mode 100755
-> index 0000000000000..82d2becdff141
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/annotate_stats.sh
-
-[ ... ]
-
-> +if ! perf annotate --code-with-type --insn-stat -i "$perfdata" --stdio \
-> +		--percent-limit 1 > "$perfout" 2>/dev/null; then
-> +	echo "FAIL: perf annotate"
-> +	cleanup
-> +	exit 1
-> +fi
-> +
-> +# The instruction stats are accounted while the instructions are
-> +# displayed; printing them before the display loop shows zeros.
-> +if ! grep -Eq '^total [1-9][0-9]*,' "$perfout"; then
-> +	echo "FAIL: instruction stats not accounted"
-> +	cleanup
-> +	exit 1
-> +fi
+> perf tests: Fix the Intel PT virtual LBR check
+>
+> The record this check uses writes aux samples, and with the single data
+> page the other tests ask for they are lost:
+>
+>   Warning: Processed 29 samples and lost 100.00%
+>
+> so no branches are decoded and the check fails with "Failed with virtual
+> lbr".  Record with 4 data pages and 128 auxtrace pages: the same trace
+> decodes 64 branches and still fits the mlock budget.
+>
+> Require the python perf module to provide session, not just to be
+> importable: a perf whose python bindings are not found can pick up an
+> unrelated module and fail with
+>
+>   Error processing events: module 'perf' has no attribute 'session'
+>
+> instead of skipping the subtest.
+>
+> Detected building perf on fedora:44 on the runner with Intel PT hardware,
+> where the subtest failed with "Failed with virtual lbr" in the container,
+> and with the python error when run as root on the same machine.
+>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 [Severity: Low]
-Will this test fail with exit status 1 instead of skipping when perf is
-built without libdw dwarf support (HAVE_LIBDW_SUPPORT)?
+Both the python perf module check and the perf_record_no_bpf call in
+test_virtual_lbr() were introduced by 915d6b14dc0c ("perf test: Migrate
+Intel PT virtual LBR test to Python API").  Should this include:
 
-Unlike --data-type, --code-with-type does not exit early when
-HAVE_LIBDW_SUPPORT is disabled.  Instead, debuginfo__new() returns NULL,
-so annotation_line__print() skips __hist_entry__get_data_type() and
-prints "total 0".  Checking "perf check feature -q dwarf" before running
-the test, as in data_type_register.sh, would skip cleanly with exit
-status 2.
+  Fixes: 915d6b14dc0c ("perf test: Migrate Intel PT virtual LBR test to Pyt=
+hon API")
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113150555.1163=
-049-1-acme@kernel.org?part=3D6
+049-1-acme@kernel.org?part=3D10
