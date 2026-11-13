@@ -1,56 +1,60 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794598855;
-	b=dBAE62EDmLXoDV0MgcUNxgvwJ0Pun9pPyBUpLwquBdOOkQV9sW9nVmSQX+pIFfRsboIk
-	 SwHVh7ySsvevWDgjA7OvbPmefTcnDTWo1d4XTTbNGsmF/FIxinGOa7E+5TeNu0dH/FSkq
-	 12D8MB8xg+7L+jzoxHfHpEo2qRYTthFo+E8Lli5WPTIq8D2uOxhiBX/TSxGgvJHYNXCDC
-	 quiywsp/Kew3WbudfWDEdz8dAb2W7IThG10n34LBXJPD5kIVXLOCJVXxXKL+pQ+8xUEHz
-	 af1xj5LPkB42khAAlYdhRF0AgaiGooiJGjrbyaSZGkxlXVVuGTRjGUT++zMvjq5iomA==
+	t=1794599076;
+	b=kFVdNEg/W8JYsd8vOJD83OhN+SdEl/z8QOUqWa+d3gVBSDpnyPNMmN4zU1B/6QWL+1v0
+	 0tpbaIlFH33kvQHj8RZw8OVXxfA9ST6di+yRUqxJy9Q24FI3CqjtjPvq6am8DzgEVBOy9
+	 copakvtvTP8i2F6EU2fDQOonOuP92rO5PmvhVnw7CebgSr8puM+vqEgoqU5qFrxNgYxLt
+	 NnIgFOFpqK/ZymzcE5Svrup0ABLpxZa+Js5R9D1rBseurb792BjUI98Ln5IJ8moP+/sE0
+	 3rbi5b6yV3ckAQM8dzynoCn2VaiFDjuASgAKtv2n5C+X7t1m2qy+Qlr8wkOY29Xk/nw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794598855;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=AQwi/effThSliBhF6fsw5Ok9qQ4ujy7ppAm36/REpa4=;
-	b=UUHqwmcldJWehJvx4WO226CmcBQldIszs6NFBNDZHmmKXOMOnSdqmIiqYGnV10i7maUa
-	 85bTxJr3ZJB5AU/LDRT9gh7h0pf2SuBabHrIRnuxOya4WsHr6TGt8cPKbRDn7BGHTZqlm
-	 ZOeJICVGgsZ0aOjqR16NOuFA7MFi2WNhMcwqLHl18qbZWNPWg/5cGOkQxbKxQt0CLB78r
-	 WrpKtWn4nzH89o5CF+rxpPZMFNBB+SQ5AgY7vFidr7ajgxNdxmrQQnR3Dn1PPmdXe8vAA
-	 KMmxhixbqwl5gGcQ/Bc71+T5y4BKD53b25N56aMcdpd4gxbziuVKu8OsUGnPoQHS/dg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794599076;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=pFZkk8GSif8a+05DQi0f2eWQqaqvJmxfe/oV6ObPwzg=;
+	b=0IaA/vtsU9sQi0OZyBla95JYORbpTSC46RaUCy/CwBRuWzv35A93onw6Qv7Tz2pJZR8A
+	 x9z81JPzL6WXLS7Xp6K/kjZ0GUShgwev7Thy2zubh5Ea7RVbD/Ruv+wvkyhm0LKayFFv7
+	 NzUGlTcM5dpwErsZBTjgqeCVg03G4VGD2T7OeGGolEpf28dvJGcD1mHA9xrH1yjJDMRC6
+	 fLtM5dkW9AK2YuMNqAxRrkZ6d0ZWsJilSCOPZe0y1wY/No3+MdyBQIHPPdhwi73mNFIXj
+	 iAmzHXgvbckEgNTjlN3dKi5E1rMgfb/4sP30ShSgClM557rgtAQINje6BeykDZ1GYGQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hXUuZR13;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YZBV0ug5;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C5E606A338
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 19:40:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3497606A333;
+	Fri, 13 Nov 2026 19:44:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hXUuZR13
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03C231F000C4;
-	Fri, 13 Nov 2026 19:40:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YZBV0ug5
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45C921F000C4;
+	Fri, 13 Nov 2026 19:44:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794598855;
-	bh=AQwi/effThSliBhF6fsw5Ok9qQ4ujy7ppAm36/REpa4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=hXUuZR13ADB22lXSBgLtUjiG0qgBItqIOjTuRkIQ7i6vXtxRGWZSLNyZOFRvVGjWd
-	 dcCemth0RcCA46Di97Og+hb5xFtBlGlVL4k54+mK+eHKtL+OhDLWx2FpbmLKIjBkvM
-	 lMywE9psgue6XAojI2GQDmrqKBuYO1UnCyr+HvwTyMTo5iHEdU6Gn6wSsHcw4ukGRz
-	 +zOeZhTSBizGffZQ+42IqnuXFzZHO70hJcldfQxJnoaHkFBWhZy4jhrOz4/XTkcdbJ
-	 LKE24AhGf0N1VwK68Qm1cM7kIDLxAhZ1Uv71NtSdUYp+dYFbjXJNgGRj2lX3snVMs3
-	 vjZchVWTPs/OQ==
-Message-ID: <sashiko-outbox-213562@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 2/3] perf pmu: Implement tool-provided NVMe PMU
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org, linux-nvme@lists.infradead.org
-In-Reply-To: <20261113191234.2509964-3-irogers@google.com>
-References: <20261113191234.2509964-1-irogers@google.com>
- <20261113191234.2509964-3-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Nov 2026 19:40:54 +0000
+	s=k20260515; t=1794599076;
+	bh=pFZkk8GSif8a+05DQi0f2eWQqaqvJmxfe/oV6ObPwzg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=YZBV0ug52ZeDeHR13YHljC2hoLrQVK1kJBT85iIp9A17ndKdf1Yv2NXChIIOGufPS
+	 iNGmWho69ov3rs0ZR3gpNuSRIUUPVym5mbxm3PYun1euzRvRSmuLjd6QbMe/lJ9EzR
+	 EyE2yQrNHPGDTbOPQGwl0AIioMb7PHIWKJ/3XDSr88ocNKQ95rpmI38Wnx/eSu+dLW
+	 uCV7DCLVj6P8gizgt55ktVMhIZ3Y0b/ZFnKYuHblff3g2Nf1eavRURSXdNMCVFkFro
+	 9DLVvVA6qqjJmEFR8e6D+KMMrO3KDTr+pjMv9Sv8MPJD9nCasLCpDhZbzG7hOIfDMf
+	 PrEnHQVyAEqUA==
+Date: Fri, 13 Nov 2026 13:44:33 -0600
+From: Rob Herring <robh@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] libperf mmap: In user mmap rdpmc avoid undefined
+ behavior
+Message-ID: <20261113194433.GA3321047-robh@kernel.org>
+References: <20250914182437.1959331-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,139 +63,65 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250914182437.1959331-1-irogers@google.com>
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issues to consider:
-- [Medium] perf pmu: missing errno and err_thread handling in
-  evsel__nvme_pmu_open()
-- [Medium] perf evsel: PERF_EVENT_IOC_ENABLE/DISABLE ioctls issued on
-  NVMe device fds
---
+On Sun, Sep 14, 2025 at 11:24:37AM -0700, Ian Rogers wrote:
+> A shift left of a signed 64-bit s64 may overflow and result in
+> undefined behavior caught by ubsan. Switch to a u64 instead.
 
-commit 1cca3c688611b8ef7867f412d383cb3ae7a315e1
-Author: Ian Rogers <irogers@google.com>
+This change was just brought to my attention...
 
-perf pmu: Implement tool-provided NVMe PMU
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/lib/perf/mmap.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
+> index c1a51d925e0e..ec124eb0ec0a 100644
+> --- a/tools/lib/perf/mmap.c
+> +++ b/tools/lib/perf/mmap.c
+> @@ -508,7 +508,7 @@ int perf_mmap__read_self(struct perf_mmap *map, struct perf_counts_values *count
+>  		idx = READ_ONCE(pc->index);
+>  		cnt = READ_ONCE(pc->offset);
+>  		if (pc->cap_user_rdpmc && idx) {
+> -			s64 evcnt = read_perf_counter(idx - 1);
+> +			u64 evcnt = read_perf_counter(idx - 1);
 
-This commit adds a tool-provided PMU for NVMe controllers using libnvme,
-exposing metrics from standard NVMe log pages under nvme_<ctrl> PMUs.
+According to uapi/linux/perf_event.h, this needs to be signed to sign 
+extend the counter value:
 
-> diff --git a/tools/perf/util/nvme_pmu.c b/tools/perf/util/nvme_pmu.c
-> new file mode 100644
-> index 0000000000000..3ee967505dec6
-> --- /dev/null
-> +++ b/tools/perf/util/nvme_pmu.c
+        /*
+         * If cap_user_rdpmc this field provides the bit-width of the value
+         * read using the rdpmc() or equivalent instruction. This can be used
+         * to sign extend the result like:
+         *
+         *   pmc <<= 64 - width;
+         *   pmc >>= 64 - width; // signed shift right
+         *   count += pmc;
+         */
 
-[ ... ]
+It looks like a left/right shift has gone from implementation defined to 
+undefined behavior. According to the internet, the right way would be 
+something like this:
 
-> +static int nvme_pmu__read_val(int fd, uint64_t config, uint64_t *val)
-> +{
+u64 sign_bit = 1ULL << (width - 1);
+s64 val64 = (s64)(((raw & ((1ULL << width) - 1)) ^ sign_bit) - sign_bit);
 
-[ ... ]
+>  			u16 width = READ_ONCE(pc->pmc_width);
+>  
+>  			evcnt <<= 64 - width;
 
-> +	if (ret < 0)
-> +		return -errno ?: -EIO;
-> +	if (ret > 0)
-> +		return -EOPNOTSUPP;
+The left and then right shift here is probably redundant. I suppose 
+there could be garbage in the upper bits to zero out, but I think 
+read_perf_counter() should ensure there isn't.
 
-[ ... ]
+Did the need for signed values go away or was wrong to begin with?
 
-> +int evsel__nvme_pmu_open(struct evsel *evsel,
-> +			 struct perf_thread_map *threads,
-> +			 int start_cpu_map_idx, int end_cpu_map_idx)
-> +{
-> +	struct nvme_pmu *nvm =3D container_of(evsel->pmu, struct nvme_pmu, pmu);
-> +	int idx =3D start_cpu_map_idx, thread =3D 0, nthreads, err =3D 0;
-> +	int max_cpus, max_threads;
-> +	char path[PATH_MAX];
-> +
-> +	if (evsel->core.attr.sample_period || !evsel->core.fd)
-> +		return -EINVAL;
-> +
-> +	snprintf(path, sizeof(path), "/dev/%s", nvm->dev_name);
+At a minimum, the header comments which documents the proper sequence no 
+longer matches the implementation.
 
-[ ... ]
-
-> +	for (idx =3D start_cpu_map_idx; idx < end_cpu_map_idx; idx++) {
-> +		for (thread =3D 0; thread < nthreads; thread++) {
-> +			uint64_t *initial_val;
-> +			int fd =3D open(path, O_RDONLY | O_CLOEXEC);
-> +
-> +			FD(evsel, idx, thread) =3D fd;
-
-[Severity: Medium]
-Does storing a /dev/nvmeX file descriptor in evsel->core.fd cause
-evsel__enable_cpu(), evsel__enable(), evsel__disable_cpu() and
-evsel__disable() to fail with -ENOTTY?
-
-Those functions only special-case evsel__is_tool(evsel) and otherwise call
- into libperf:
-
-tools/perf/util/evsel.c:evsel__enable_cpu() {
-	if (evsel__is_tool(evsel))
-		err =3D evsel__tool_pmu_enable_cpu(evsel, cpu_map_idx);
-	else
-		err =3D perf_evsel__enable_cpu(&evsel->core, cpu_map_idx);
-
-	if (!err && evsel__is_group_leader(evsel)) {
-    ...
-}
-
-perf_evsel__enable_cpu() and its enable/disable counterparts issue
-PERF_EVENT_IOC_ENABLE and PERF_EVENT_IOC_DISABLE on every fd in
-evsel->core.fd, which the NVMe character device rejects with -ENOTTY.
-That leaves evsel->disabled stale and aborts the group loop before
-userspace members such as duration_time, user_time or system_time are
-enabled or disabled in mixed groups.
-
-> +			if (fd < 0) {
-> +				err =3D -errno;
-> +				goto out_close;
-> +			}
-> +			initial_val =3D xyarray__entry(evsel->nvme.initial_values, idx, threa=
-d);
-> +			err =3D nvme_pmu__read_val(fd, evsel->core.attr.config, initial_val);
-> +			if (err) {
-> +				close(fd);
-> +				FD(evsel, idx, thread) =3D -1;
-> +				goto out_close;
-> +			}
-> +		}
-> +	}
-> +	return 0;
-> +out_close:
-> +	if (err)
-> +		threads->err_thread =3D thread;
-> +
-> +	do {
-> +		while (--thread >=3D 0) {
-> +			if (FD(evsel, idx, thread) >=3D 0)
-> +				close(FD(evsel, idx, thread));
-> +			FD(evsel, idx, thread) =3D -1;
-> +		}
-> +		thread =3D nthreads;
-> +	} while (--idx >=3D start_cpu_map_idx);
-> +	return err;
-> +}
-
-[Severity: Medium]
-Does evsel__nvme_pmu_open() leave errno unset or clobbered on failure while
-also setting threads->err_thread for a controller-wide device?
-
-Callers of evsel__open() and evsel__open_per_cpu_and_thread() such as
-__run_perf_stat(), record__open() and __cmd_top() read errno after a
-negative return.  When a controller does not support an optional log page
-(such as FDP, ZNS or Endurance Group), libnvme returns a positive NVMe
-status code without setting errno, and nvme_pmu__read_val() returns
--EOPNOTSUPP with errno still 0 (or clobbered by close()).  The -EINVAL and
-!HAVE_LIBNVME_SUPPORT error returns likewise do not set errno.
-
-In addition, setting threads->err_thread =3D thread causes
-stat_handle_error() in perf stat --per-thread mode to treat a controller
-open or log error as a dead thread, removing every thread from the thread
-map in a retry loop until nthreads reaches 0 and evsel__nvme_pmu_open()
-returns 0 with no descriptors opened.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113191234.2509=
-964-1-irogers@google.com?part=3D2
+Rob
