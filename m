@@ -1,92 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=212.227.17.20
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794607969;
-	b=mSbfJ8rhEFCcBTMwybFFP0//WUzgcEN66mVV+qrwP102gRkJoWiKkrMaul6kTqGlhPWx
-	 +efrNBHaJACymiy9p9N7Kzgy/zkKOUSCGlvn7s2d+bYbhh5jXrPKYRX08NI+p6dxQiWDG
-	 VH4cqqoDhvoOVuy32eD7yUgBUhCXlZ7dURcQTmBKvjFL70D7M37zyHKiropgaFn+BQ6z6
-	 8+SeQXZPRy3PQPsn6BvCz/NRVOjjW6B55HFbBuQ8C3F97Ibu+qTnbJmk2jhfa+XBLjIH/
-	 EuvF1LdnpcS/cj/EOr2pRa3sGXyOOBn3flIu4zwyvIPuLRgBmKCOwL3t8CK0QIYLL6w==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794607969;
-	h=DMARC-Filter:DKIM2-Signature:Message-Instance:DKIM-Signature:
-	 X-UI-Sender-Class:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-Provags-ID:
-	 X-Spam-Flag:UI-OutboundReport;
-	bh=bIbjncsqO/4pvbgKTGgg9uQBds+FvcX31Fd72Ll9c/g=;
-	b=iO+A6X0jhvNej1YKKDGfzB8XFCTFchBYhuZSCBzxwymGU4dxmIZzwVS9XzCIY1B979vn
-	 ojf2vW33lDAtPyxFyyOjovRvDtPZZuiaf1/qe3T45FhqkaUjGFiMTNK/uwBSWPTf+222n
-	 JhnMXfQXgR6X5H4hte/N7kUIbxM49a/P0FuZTgHFzQQex3ts8OrADd+QqhbRfUQZPNb+f
-	 C6DPmXWQm9z3RPXufXCJwPC9E1Pngz9BKEbCyLnmc9xMlF2qeIdMyCABIOXJ1zdh3sRGa
-	 70w9G+qfFnF8fgGwvEFw+IOOqGwkM7zo+XeTldy3Kn9SQv8YPNQVtjosias4OePiizw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmx.de;
-	spf=pass smtp.mailfrom=gmx.de;
-	dkim=pass header.d=gmx.de header.i=f3lix.dev@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=lbNhEsb3;
-	arc=none smtp.remote-ip=212.227.17.20
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.171
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794608182;
+	b=BSiFbb501VIOHJiOyP5SPmixpiobfkUI426kf9PKSY/Vu5/jDDIhp8qgZKdURsFQAS0x
+	 VpRAYGVuL5E1wN7B00pCBF48n81SBiAoqkROqFIZsgz4p4QHStMCgQ1snig5CKbj1sURh
+	 fXEytEqQJZZMwjCX6eCVgkycpho4RrgMwZVIe8bpvQvYFeYeH2ZgM8fHmafL4EO9G04ug
+	 erbcrpaXYVYzZ/EhoUU7rfabS1I754rg0sJZXotWD7/tG4+w3c/7U1th4zHHXa3hfx/cU
+	 InmOCNyrJGJthat8o0Y7woYN0NdjIxJB6rN1vGH8BtRaeiHIfLtB3DyouEv3ZE8PR6Q==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794608182;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=/HbOdkXMag7+QwoV4l3OE5fq7viwxSbwmRnha1ZYaRM=;
+	b=0ViFJKqLsj/GlTY/tvkexYvZFdUlRQa8Ao4OmJeACRR5xKgE8go+TsIrrh3pO/GA/CUi
+	 2v1NRw9eLddTteKx9wPy4XP63TWv4cFKu8StMvNQpN9ar6gKTSXsY1kdV2Zfnbj613/t2
+	 MAS0/zYFBGyk+Pi8Sm0X2HygvENg6kNpi4tEAjuk2bmBYkLqdR2wR0p2VyRfIBGsowOqz
+	 KQVImdZ1IcApSLc+jt3UooJpRY2axGGh8fyoUglp23GopXXMBBnMap3nu977qEBGhEFH4
+	 d153HHyWlklpyVg0dzcb/pvEmB6fYRkppWowMLruTP4rmyhKlAuBoZM8XfeYFrmzuYA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="D/xY6zeI";
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.171
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C71606A338
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 22:12:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E8C71606A338
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE14606A33A
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 22:16:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9CE14606A33A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=f3lix.dev@gmx.de header.a=rsa-sha256 header.s=s31663417 header.b=lbNhEsb3
-DKIM2-Signature:  i=1; m=1; t=1794607966;
- mf=PGYzbGl4LmRldkBnbXguZGU+;
- rt=PGxpbnV4LXBlcmYtdXNlcnNAdmdlci5rZXJuZWwub3JnPg==;
- d=gmx.de;
- s=s31663417:rsa-sha256:BY3pfysMj5Cebbg8050IPubxX86m
-   kQfD3PnRjjwZRaORJM2/sTqtPWxV9Th8hb73BgS+NJigiGXYo+AjKpGT7OYXZlFWYFSMIhh77wk
-   ScDzGGqmA/Q+9D9tvuTZt1ENT55EdW1EG8XZRqcc03YNlwzH/5yvvVrQ0fRNxPu2yZWD/xVOI09
-   yp4+Yak/+3Nee9rpV98YhHKGmK5r7PnsGnIx732CIBOzesrKCmQDtS+58vweRSRKznDm6WzzJmu
-   mSpgwb96siD6Hm2lLms4G9d4h4PZLuDDIWsdLnc8wXHU2xlQvGaK5czkqJqEj76CKJxClgphRv+
-   b7G+FSkKxsNqtA==;
-Message-Instance:  m=1;
- h=sha256:
-   a7+q3gKxZCuWENP4aUNwZ2r84GFElUqI4Z+SEsMKYnI=:
-   7j+GxF8kRqQPdwxWg0x21hzpQno63uZ1HAcP7K/63Sg=,
-  sha512:
-   yarEuFoUG73Ww0NXDi3f9g4xvqcoi1Nl7KvK2GouGX6CsqVRcmbokOc1WYpgu10WtodlLPLcw7vWMs1WkJgiYQ==:
-   vDRf4iAdpMorThC3ozUPnlIykk8PbYOAUGjzik9nP0qPTIGaP3WVTMwOhZ4N1m06jERjq2q6MJoRcBzWrjIy5g==;
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1794607953; x=1795212753; i=f3lix.dev@gmx.de;
-	bh=bIbjncsqO/4pvbgKTGgg9uQBds+FvcX31Fd72Ll9c/g=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=lbNhEsb33ZGf/CJquxg9smV5wFpgMFqIDvbSPY7o8LqTQXjz/+lAmZDDW3cCTMf7
-	 dGZZWukGvYPl/Ot1cvdoThdVlvEhxk/H4tMJpGp98cUeSqcTMRfuRQhKkxMmTTOVK
-	 LA5vtpG49BSMjHJIiAV6ko6u2HtX6D/WqTDOLbbY01541QU5tY+g0qEEXvOiW/bFj
-	 MoyGovK+IGj40HgdNbDZmB4ib9QhsltggC0ZLLKPCedLZQLiiuhHjnbjyjiWbZjTu
-	 sOM6+D5EDEchVODpEOI9k23L3iMjqDr1af16QPKkF2rgpHp3e6qocjSnNGDx10C8J
-	 zBNpFVuGj8aBWvz7Ug==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MMXQF-1x8XLi0u9v-00INGg; Fri, 13
- Nov 2026 23:12:33 +0100
-From: Felix Hoffmann <f3lix.dev@gmx.de>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	linux-perf-users@vger.kernel.org
-Cc: Marco Elver <elver@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] perf: Hold exec lock until owner-list publication
-Date: Fri, 13 Nov 2026 23:12:20 +0100
-Message-ID: <20261113221220.162338-1-f3lix.dev@gmx.de>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=D/xY6zeI
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-55be673e029so22171cf.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 14:16:20 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794608180; cv=none;
+        d=google.com; s=arc-20260327;
+        b=W+uEDtBN0nATTAvnVx6Tfz2TSmk7CQujk+7nPGuOJ7ZaxmwhaOKs8eviAmQPjv2SBT
+         /GpH928TTzBjlKqOqquGEL9kY3nr2D7jgYuaQa8G+KnWtXOwnLQRk/+Y/ZeF5ZMCF+9X
+         BBxN2G93xMRwiTxMENezZ576AzetPP261IIv7dGpf5uX+g8NoM7p6cVqK2kKm0fEqYBK
+         YxMzDj8o08CgdbslqIpjqxc5A5b7p/UUs4vdnzquDlSRBzXyyvh3lYM61I2Z5LJLiOka
+         TEI14m6lhQpNMp0A4C+uhJpmmCIoKm+9/g54FzlIrFunqrNxr5LgfWpY0k/vlqhjCC22
+         2pvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=/HbOdkXMag7+QwoV4l3OE5fq7viwxSbwmRnha1ZYaRM=;
+        fh=nJRy82GQRma6oGptQ8ga9eKX4Bb75nsn/Hem3hPlL4U=;
+        b=VJB8zGPPVLDBxLYHXvlSkCdyIhFBO0swxELHPtaoQ5oQcguUm6KmbJ4pv0nxOHtFgU
+         OLrL0PWcMKQoGPgG5FikdIFuJZ+LuDTDnKPcgf7/ph7+aue4h9eiw3ae2OJejCYKFp3/
+         6iOQfD8VDr9xtmZTmfumiSoHHqY2POQXck3PaQ7HWAu7B5V7grkkyi91MiJv4fuyfEcU
+         fShKqffY9/0iuUe58JXs/nLHt/51eHfL/mhTrmbjH+SfjStu40dpmS1ZHiAC52OmScUb
+         kalWumhLHe+QtS1p9VNbpFnw7fPGDesIcWb+uFDIUOBe5puW+YXpkbfQ+bupHa0gGZPI
+         ba4g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1794608180; x=1795212980; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=/HbOdkXMag7+QwoV4l3OE5fq7viwxSbwmRnha1ZYaRM=;
+        b=D/xY6zeIYBb/bGw4iaadffq6fSa3xmPLTrPYDHWw96cQSyEosZ/6rF//tY3MkbNjS5
+         uSB4koX7v+xuVLXcNFBHxglWKUhkhdCCxEhSq/ZTopfQ7XydKsNdQz5fTNnCM8ifEyPD
+         4STKKe6f7qL74705mujY0LeDPfn1FFYK6rcUzOLyMh89bgbTxb9Z4ehcZzpQ7+xOYUIO
+         RNP3WqET93kZjvtvMLEVU8zlzjn6fP4dzqPjhDlv+uluYgXECar8fRi1bQ5y0A0Nl9Q9
+         kW3yJXGSqCyRi1lWNv+Ql2FSg9HIvRxNOD96gqZw9zI5RSYYbDgRy0FlQPkwHIRZpPEO
+         2d+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794608180; x=1795212980;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=/HbOdkXMag7+QwoV4l3OE5fq7viwxSbwmRnha1ZYaRM=;
+        b=VFpzzP2fLVgnTxY6IgiqZ3ltfFSYZor4MkhQh6K8DFNRGwsIE97zNr7SKEnpx6SdJ2
+         m3v8pHiN1+WdVzwmNdIazoF77kYu0eHWzZuLymFYb+98r9aZO2RBxZHE0SFQBwBi0grn
+         mAvS/6XZ1AkvPsyih59ZMsnmMroaAjr2jNp+k0KGgo8cbT3kvFJ5jxhjBYBoy4+qX4KW
+         OldKJ8WGZ7J3Zu83yhH8yLsa71qy6CbI5n2oDlC2heXQ/l1EkcPycdDLqZWpB2QuvQL7
+         TkQvRJmZ8RoHKTtyPn6dn4EuxFFqo+914CnnUze1Lzw9xAeXW9SR7GU6rplEuORIZiOI
+         qoVA==
+X-Forwarded-Encrypted: i=1; AL+hErFMtUruL/Tu/JqYu3DzPFCdFahly/qi1dDaVM1QiXaK64Fsf1OL+uWNKeaD3tXppmNPJPd3UPqrzzla55r+u6E8@vger.kernel.org
+X-Gm-Message-State: APuU4Z8MwB+nVJedSu6cNtTIBsXXdqE74TJpgr47xqZ0k3StEHcO3A+H
+	yAzb1Y1CzWb1tpTjgy4FhRFWrBh8pqk3eHPHb8U14ai9tNxPv4JLOcZ5+n5aEm2+c8VIqABIKMx
+	itH20EaiRZ8+xvn3Ui9GijAOZ6T3DtjksaFxzjtFl
+X-Gm-Gg: AYBFou3xrOEQ+OJj3BlYR3AcZOl3beJvZby/lRJbl6c8otBPJhivhPAyArsw8GP3TbD
+	z5EWlohV7sCGslaeynYck8OMg3aSrLFpHE6IAyNgHusJbV66gfTBxE3qT4pHx2Qyg3veyq3Nm1e
+	rtjixrtcskB6EGcKO5/YNZfRlAXHqHxA8F6XpWfVCBcw6n76LyRAIy82jxnmI8JSdD39Q6PNjfp
+	UOPo/li3eI1iTgS0158iqP6iR37u8o1U5wwqLsxu4n7K/do46KHPzG0XsSxB+6mno35AMHpE4nM
+	+QLz4lUB8lhvUuRSAlJgc+zs8L8wMJ3h0tIlz6/gPZxSOJAUQWKg1q4zIzFYt+9T2ppxUGeZXZl
+	8HnKbZOS1wXg4IoNgjJ1DbXeH4LJL0UY+Crtvtnyr1WpXDqrxWTzVJuJqCVbTP/PK1Yw=
+X-Received: by 2002:a05:622a:53ca:b0:536:78de:775f with SMTP id
+ d75a77b69052e-55c69c2ff17mr2165351cf.15.1794608179013; Fri, 13 Nov 2026
+ 14:16:19 -0800 (PST)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -96,172 +104,136 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+References: <20261113200850.2803460-1-acme@kernel.org>
+In-Reply-To: <20261113200850.2803460-1-acme@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 13 Nov 2026 14:16:05 -0800
+X-Gm-Features: AclHuK9NmNvcoESLqmGVD7lFBNU2Bql3t-oShpEw5-RBrs7NGcZUCfG6SP9QtS4
+Message-ID: <CAP-5=fV1FRJcyCHg7vNjptZU996PBXcEcve5m3sYkUtdWSmT8w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/11] perf coverage: A harness for perf, and the fixes
+ it found
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Gfi6xHa+n0OvIvo97DzBHqBW6kyEB1Vsdn/83c2R/teVa2aou9H
- NI5Mzqdu0Vu0flD/h+WI4Hv5u487P7wqcCU/lCkNvGxQaX837x1P4JrEzD+b2xH35RhqzKG
- bvbQM4MaFcPiqHy6QUsjjSCehg7oI9jcebSfaarkUcwF8lRlNIIfQA51Gi2CWSfbGc5PMf2
- +d6BU0Q7iLMAMj7ti8Dew==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:W7egKwAczKE=;rdOReuTFot09TvfnIFb2qfJWUHj
- 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
- j3vHFPGgafDWkCrkIg==
 
-perf_event_open() installs a remove-on-exec event in the target context
-while holding the target task's exec_update_lock. It then drops that lock
-before linking the event into the opener's perf_event_list.
+On Fri, Nov 13, 2026 at 12:08=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+>
+> Hi,
+>
+>         Please consider merging,
+>
+> Nothing measured how much of perf the test suite reaches.  Patch 1 adds
+> tools/perf/scripts/coverage.sh: it builds perf with clang source based
+> coverage, runs the complete perf test suite and reports line and function
+> coverage, optionally against a baseline, with --table and --html like
+> pahole's coverage_table.py.  Also as 'make -C tools/perf coverage',
+> 'coverage-prep' and 'coverage-table'.
+>
+> The rest is what the first runs found, in the code, the build and the
+> tests:
+>
+>   - clang DWARF 5 describes globals with DW_OP_addrx, which was not
+>     resolved (patch 2).
+>   - The flexible array member had no test; one showed the struct row at
+>     0.00% while the member said 100.00% (patches 3-4).
+>   - A struct pointer that -O2 keeps in a register was not resolved from
+>     its DWARF location (patch 5).
+>   - --insn-stat was printed before the loop that accounts the samples,
+>     so --code-with-type showed zeros (patch 6).
+>   - The libbfd probe printed a missing bfd.h error five times per
+>     build-test run (patch 7).
+>   - FEATURE-DUMP didn't record llvm-perf and rust, disabling both in the
+>     build-test builds (patch 8).
+>   - The Intel PT virtual LBR check lost every aux sample with a single
+>     data page (patch 9).
+>   - The dlfilter test kept samples whose IP the kernel now zeroes on a
+>     userspace-to-kernel skid (patch 10).
+>   - The LBR inline unwinding check failed instead of skipping when the
+>     AMD PMU rejects branch sampling (patch 11).
+>
+> In a root run on this box the suite covered 49.16% of perf's 201,180
+> lines.  The POLL_HUP tracepoint regression and the lock contention count
+> fail in code this series does not change; the LBR inline unwinding check
+> failed there and now skips.
+>
+> The numbers above are from v1 and are slightly different here: the
+> cs-etm patch was dropped and the issues reported in the v1 review were
+> addressed, which changes both the tree and what the report counts.
+>
+> The harness and the tests were developed with an AI coding assistant
+> (OpenCode), which drafted the script and the tests and helped debug the
+> failures; I reviewed every change and reproduced each failure before
+> fixing it.
+>
+> What changed from v1:
+>
+>   - Patch 9 (cs-etm) is gone: Leo Yan's series replaces it.
+>   - Patch 1: O=3D is accepted by all targets, the Python extension is in
+>     the report, -f is normalized and the delta matches its baseline.
+>   - Patch 4: the TUI browser counts flexible array accesses too.
+>   - Patch 6: the stats test skips without libdw.
+>   - Patches 9 and 11 (were 10 and 12): Fixes tags corrected.
+>
+> Best regards,
+>
+> - Arnaldo
+>
+> Arnaldo Carvalho de Melo (11):
+>   perf scripts: Add a coverage harness for perf
+>   perf annotate-data: Resolve DW_OP_addrx global variables
+>   perf tests: Exercise the flexible array member path
+>   perf annotate-data: Count flexible array accesses for the whole struct
+>   perf tests: Exercise data type resolution from a register
+>   perf annotate: Print the stats after the annotations
+>   perf tests: Silence the libbfd probe in build-test
+>   perf build: Record the display-only features in FEATURE-DUMP
+>   perf tests: Fix the Intel PT virtual LBR check
+>   perf test: Drop samples without an IP in the dlfilter test
+>   perf test: Skip the LBR inline unwinding check when unsupported
 
-A concurrent target exec can therefore find the installed event and call
-perf_remove_from_owner() before owner_entry has been initialized as a list
-node. The resulting list_del() on the zeroed node triggers list corruption
-and can panic the kernel.
+Thanks for working on this! Patches 2, 3 and 5 add small C programs
+compiled in a shell test. These are a pain for our CI framework; could
+we add them as perf test workloads?
 
-Keep exec_update_lock held until the event has been published in its
-owner's list. This closes the visibility gap while retaining the existing
-lock ordering.
+Thanks,
+Ian
 
-Fixes: 2e498d0a74e5 ("perf: Add support for event removal on exec")
-Cc: stable@vger.kernel.org
-Signed-off-by: Felix Hoffmann <f3lix.dev@gmx.de>
-=2D--
-Tested on x86-64 with KASAN enabled:
-
-  - on the unmodified current kernel, the unprivileged reproducer triggere=
-d
-    list_del() corruption in perf_remove_from_owner() and panicked at roun=
-d
-    4,400 as UID 1000
-  - with this change, the identical reproducer completed 10,000 rounds and
-    8,395,975 successful perf_event_open() calls without a BUG, warning,
-    KASAN report or panic
-  - kernel/events/core.o builds with W=3D1 and the KASAN-enabled x86-64 ke=
-rnel
-    builds successfully
-
-The reproducer and complete console logs are available privately on reques=
-t.
- kernel/events/core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f5f2261f1fe6f..f4f292f7b47e2 100644
-=2D-- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -14414,15 +14414,15 @@ SYSCALL_DEFINE5(perf_event_open,
-=20
- 	mutex_unlock(&ctx->mutex);
-=20
-+	mutex_lock(&current->perf_event_mutex);
-+	list_add_tail(&event->owner_entry, &current->perf_event_list);
-+	mutex_unlock(&current->perf_event_mutex);
-+
- 	if (task) {
- 		up_read(&task->signal->exec_update_lock);
- 		put_task_struct(task);
- 	}
-=20
--	mutex_lock(&current->perf_event_mutex);
--	list_add_tail(&event->owner_entry, &current->perf_event_list);
--	mutex_unlock(&current->perf_event_mutex);
--
- 	/*
- 	 * File reference in group guarantees that group_leader has been
- 	 * kept alive until we place the new event on the sibling_list.
-=2D-=20
-2.43.0
-
+>  tools/perf/.gitignore                         |   1 +
+>  tools/perf/Makefile                           |  11 +-
+>  tools/perf/Makefile.config                    |   4 +
+>  tools/perf/Makefile.perf                      |   4 +
+>  tools/perf/builtin-annotate.c                 |  10 +-
+>  tools/perf/scripts/coverage.sh                | 722 ++++++++++++++++++
+>  tools/perf/tests/make                         |   2 +-
+>  tools/perf/tests/shell/addr2line_inlines.sh   |   9 +-
+>  tools/perf/tests/shell/annotate_stats.sh      |  64 ++
+>  .../perf/tests/shell/data_type_flex_array.sh  | 142 ++++
+>  .../tests/shell/data_type_profiling_clang.sh  | 108 +++
+>  tools/perf/tests/shell/data_type_register.sh  | 120 +++
+>  tools/perf/tests/shell/script_dlfilter.sh     |   2 +-
+>  tools/perf/tests/shell/test_intel_pt.sh       |   9 +-
+>  tools/perf/ui/browsers/annotate-data.c        |   7 +-
+>  tools/perf/util/annotate-data.c               |  24 +-
+>  tools/perf/util/annotate-data.h               |   3 +
+>  tools/perf/util/dwarf-aux.c                   |  42 +-
+>  18 files changed, 1260 insertions(+), 24 deletions(-)
+>  create mode 100755 tools/perf/scripts/coverage.sh
+>  create mode 100755 tools/perf/tests/shell/annotate_stats.sh
+>  create mode 100755 tools/perf/tests/shell/data_type_flex_array.sh
+>  create mode 100755 tools/perf/tests/shell/data_type_profiling_clang.sh
+>  create mode 100755 tools/perf/tests/shell/data_type_register.sh
+>
+>
+> base-commit: cc905a18a647a8e3ad42cd1596baa0e08fba26eb
+> v1-head: 3f5465bea8f5a97a
+> --
+> 2.56.0
+>
