@@ -1,57 +1,65 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794567528;
-	b=Oz9EnPBhbfn49g5o4ZDkIkiudA54aBVcZ8J7KnXARzSewCG80gHS5COJ4gh/WDIscwNv
-	 4jB9IFmKxLtN8qtGrbMrLyM4Ittac6nXvv+/YVUo7uKjAwt8L9y6KWbzghhRUaykSNyxQ
-	 3WQFIfEX6nq0U0SQy85cV7wZF3SAGlEdSJHahLkZmsojwCJ1ep8jNS7tN5UlB9TkvvfSu
-	 2szZ/H1ByPd97+5stVXSSwuufs8cltGRC8qno8AKv6I9OqCwb2HlYSEjxh86qMhhQhwEm
-	 52mIFcjDZjEzKI6JZ6zvHOWPXF+ACYAYTBajBsX1PyMZL1UNizVTtNEclr3XcPaELaQ==
+	t=1794567572;
+	b=Sowt9RwvnJCQMnca7CjpKzE5oTgZA3+2McpC5fZS41NDTFZZ2Tx+pajFn8QRZlxOSTmS
+	 C8TGre94RYVq8/bYW+TYeyr40TqtTpzM7boeuTe8HOhdBwFFKjb16uKk7sw+gmIGtvNpD
+	 4m771Pdr3Z/6lb6jDSHNGYgG00xt8QDPHrUozqRo9XXGHNMp7FxJ8Nb8N00HYUlnMo8As
+	 wYhQteIdnUghxxmt5x5C+a85bjS6py5xSO1bBWkRN1COvmTHwIwtN+DHrsXu/HfXE34M4
+	 gwQprwCNvNFwwAygWhUEG2IhdAnkZ7/55R4TNISVW82RpziVGisqvmj4bKoG5LpowFg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794567528;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=n2uGRD+w0BMjqx851vNrxQvVPabKmeaHp+sWVbWqVeM=;
-	b=zcvEawGqcwCh0rxfSDHkYWVLFfspiKFDhxHiDe2armG23mcSM/VdYUzuKmyCZ+caJW4z
-	 CVgWlNlIjDfj+aKZuoranpKhrwP6S6wTRAKZ/wLvjwumg1o3V2o2qITd35rnEYk162Sfm
-	 HwE2TjOHLOY+4VLBRngpus/5Iu78sZAgU8mBzBLkDEyeO21PvHeROd1add3Ix6wjv6KL3
-	 +oSYGT8JLFK4NDSI6XUrds6pRZEon23T27WwISXX7dLbDd/GLBbeS03o4dybOtwCijJj0
-	 EMxnSfG+iAWP+4XYO21yp6A5/CHWh37QPgMAhczV+6rc+Sw1dyne9WvGy4c0LzLbF4Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794567572;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To;
+	bh=oo7RjrzXgo/CEjpliqz3gqGyxd1KPs7Uh1SXdbTUxR0=;
+	b=UBD66G2z/VATEiJdqPV7k0nkf5CMp2Wtg/ZDyzyT8Zy7iPtezza12/d7Tk2gQhlNhild
+	 k0DPcpu+VDU3a0HxPrV50nxMvV6mb2oN46AnjYzh4UiO+8oirAXp7Np2Zg+lXNWcv6if5
+	 Jh5T0Lm2nBxuqu2Bq/IzZwxJ0GXusorYbQrgdq5NzCSqjRO+tFlZmM9Ckt37IoV3qNyj0
+	 +b7+UQ5KQHU06Zu7MQBEA+gdlZPQSSUKw8u0f4JkNCLNcVIUk/IDXnZEAmwLSoLkVxn5Y
+	 cZMNcaRyw4ErKA4ip1LVOKfulh38fe7BSAhUSIuprzuwplYIH54SqJsnRczWspZ1+WQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JTu2Ikl+;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8706A606BD80
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 10:58:48 +0000 (UTC)
+	dmarc=pass header.from=arm.com;
+	spf=pass smtp.mailfrom=arm.com;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=eHdmZKVl;
+	arc=none smtp.remote-ip=217.140.110.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B91A8606A339;
+	Fri, 13 Nov 2026 10:59:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B91A8606A339
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JTu2Ikl+
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 080881F000C5;
-	Fri, 13 Nov 2026 10:58:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794567528;
-	bh=n2uGRD+w0BMjqx851vNrxQvVPabKmeaHp+sWVbWqVeM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=JTu2Ikl+9xqsa8dwZbhK8RgxrCwQgz5WRwacMvAA5CW4aut5T7t5xc4dD4kSsG+mi
-	 BxcV82lg4CZhdMGOTJrAMsW+fVPpNfrDPZejTX9Hs9yKVFMjZHRvzXBLG7P39cpX2O
-	 B8oQAyszNQRsBG9xPqSlqZCks1XknnTYgEYokfQVGFhnCrbTi6flrD9qKhOf5qQ1+z
-	 GDfQwwIY4A1iv3EdBu3l+vb6JmpdWLYye9NxFMCVo+toObezEDhoQh86/enMskiMA2
-	 zsRnJhrr5+jXclaXRwq58PaUVOdWJVus4Iv35GdMf+fHBv0+jaGjannAVejKxfhSpE
-	 GlzKh6gyKBlpw==
-Message-ID: <sashiko-outbox-212653@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/3] perf cs-etm: Initialize the Thumb instruction
- buffer
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Leo Yan" <leo.yan@arm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261113-perf_fix_gcc15_failure-v1-1-eae592c5ff64@arm.com>
-References: <20261113-perf_fix_gcc15_failure-v1-0-eae592c5ff64@arm.com>
- <20261113-perf_fix_gcc15_failure-v1-1-eae592c5ff64@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Nov 2026 10:58:47 +0000
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=eHdmZKVl
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E9DE1C0A;
+	Fri, 13 Nov 2026 02:59:28 -0800 (PST)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C858E3F673;
+	Fri, 13 Nov 2026 02:59:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1794567571; bh=XUZhmq3u2xNG1YGicKKUsCPDU/uHI8M/joODV72JgGs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eHdmZKVlUeRxbO1js0VxizZUUCi7kGK+xvO/6P5sh6DJZKnORb99eLSQS/SQghozh
+	 ktmmK0lqA7D3BO5kICPE1q4y7Jf8241rP8coqLJZp9JJ52aQ6jw7jbkOOwJMXtJgi4
+	 tJDI3pvxprJULRN9Te+ZFfeWCxGLIRRfLB1jHb1s=
+Date: Fri, 13 Nov 2026 10:59:28 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Mike Leach <mike.leach@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 10/14] perf cs-etm: Synthesize exception entries
+ separately from branches
+Message-ID: <20261113105928.GN9176@e132581.arm.com>
+References: <20261030-perf_cs_etm_fix_non_taken-v3-0-7629b52ab047@arm.com>
+ <20261030-perf_cs_etm_fix_non_taken-v3-10-7629b52ab047@arm.com>
+ <CAP-5=fUMwOb6Gj+5DOu9-yNmthDz5ghAqrzmZ4ACX0g+9WB59w@mail.gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,27 +68,51 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUMwOb6Gj+5DOu9-yNmthDz5ghAqrzmZ4ACX0g+9WB59w@mail.gmail.com>
 
-> cs_etm__frontend_mem_access() can return zero or a short read without
-> fully initializing instrBytes. cs_etm__t32_instr_size() nevertheless
-> inspects its second byte. With CORESIGHT=3D1 and -O3, GCC 15.2.0 reports:
->=20
->   error: 'instrBytes' may be used uninitialized
->=20
-> Zero-initialize the buffer to avoid reading uninitialized stack data
-> when instruction memory is unavailable and fix the build failure.
->=20
-> Reported-by: Ian Rogers <irogers@google.com>
-> Closes: https://lore.kernel.org/linux-perf-users/20261030-perf_cs_etm_fix=
-_non_taken-v3-0-7629b52ab047@arm.com/T/#m64fb81c665214b79883d9be815b40ac5f6=
-669628
-> Fixes: a7ee4d625ede ("perf cs-etm: Support for ARM A32/T32 instruction se=
-ts in CoreSight trace")
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
+Hi Ian,
 
-Sashiko has reviewed this patch and found no issues.
+On Thu, Nov 12, 2026 at 11:07:55PM -0800, Ian Rogers wrote:
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113-perf_fix_g=
-cc15_failure-v1-0-eae592c5ff64@arm.com?part=3D1
+[...]
 
+> Hi Leo,
+> 
+> After commit 9648f9fc3525 ("perf cs-etm: Synthesize exception entries
+> separately from branches") in perf-tools-next, perf's build-test
+> (`make -C tools/perf O=/tmp/build CORESIGHT=1`, i.e. `make_with_coresight_O`)
+> with GCC 15.2.0 (`gcc (Debian 15.2.0-14) 15.2.0`, `-O3`) fails with:
+> 
+>   In function ‘cs_etm__t32_instr_size’,
+>       inlined from ‘cs_etm__instr_size’ at util/cs-etm.c:1390:10,
+>       inlined from ‘cs_etm__copy_insn’ at util/cs-etm.c:1572:21:
+>   util/cs-etm.c:1381:28: error: ‘instrBytes’ may be used uninitialized
+>  [-Werror=maybe-uninitialized]
+>    1381 |         return ((instrBytes[1] & 0xF8) >= 0xE8) ? 4 : 2;
+>             |                  ~~~~~~~~~~^~~
+>   util/cs-etm.c: In function ‘cs_etm__copy_insn’:
+>   util/cs-etm.c:1372:12: note: ‘instrBytes’ declared here
+>    1372 |         u8 instrBytes[2];
+>             |            ^~~~~~~~~~
+> 
+> The uninitialized `instrBytes` in cs_etm__t32_instr_size() is actually
+> pre-existing from commit a7ee4d625ede ("perf cs-etm: Support for ARM
+> A32/T32 instruction sets in CoreSight trace"): cs_etm__frontend_mem_access()
+> (via __cs_etm__mem_access()) can return 0 without writing to instrBytes
+> when thread__find_map(), map__dso(), or dso__data_read_offset() fails.
+> The changes around cs_etm__copy_insn() in this patch just shifted GCC's
+> -O3 inlining enough for it to inline __cs_etm__mem_access() and spot the
+> uninitialized read of instrBytes[1].
+> 
+> Zero-initializing `u8 instrBytes[2] = {};` (similar to instr16/instr32 in
+> cs_etm__is_svc_instr()) or checking that cs_etm__frontend_mem_access() read
+> ARRAY_SIZE(instrBytes) bytes before inspecting instrBytes[1] should fix it.
+
+See the series to fix the issue:
+https://lore.kernel.org/linux-perf-users/20261113-perf_fix_gcc15_failure-v1-0-eae592c5ff64@arm.com/T/#mcbc1b4ce7284c9575b273d504354ac733bcf39aa
+
+Thanks for sharing the log and analysis.
