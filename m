@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.69
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.71
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794606608;
-	b=IytCcdHDzyKMDart30O56y1BNLY2+nJbBjPbIRrP5vd01KXJwpcoCDxYBMyjHc6S+Yfs
-	 fa1jxVIOVA7BIKUzzPS2R02etd7gqQAnNoC3gN1JZdU89iVmHHT/Jy6p+403cgj4V2zfV
-	 Ykp2MjU4K+E/QAdQ6ukBGuCMI9i46ugoB2Iz8CyfeQWAUHtfWOoV+Ot9TLtMYGvolpo7J
-	 BHc55IwEUm7XRi7rI2ma/7pGa1edhWUv9XOQlFcSiD9G20qGY9li4hI/btBOcPxhjGwLf
-	 a5Nzd8ZpCblIN2kQ9BZejNxGJzq8vugUEWMQAQxPKu9rt+6ydZZ6dStsV6KljU7mDaQ==
+	t=1794606611;
+	b=A8XoK8A7d477m2nTX/RWIR6CZNJ7s9d1dEUj4qMt2UGkBJ8t39xtG3VHDKp0Kh3SJcId
+	 f5b11/otaeGQXrv29dYjAfDvA7gQc+zDqIFiLJj18QkmlmpN/S8I+c9Alc6/19jO5BdZT
+	 fAsYaSOUo/9J3zLya15IMX/lzEO+MStso+cg1oqilJqQ2p4RSjycAd38wcBDS67Ag/yFs
+	 xDiilvhnqyZ7TKmbHk5DJEEcMi2Dg9MaQrFxMmmu9zoinjR59HfzFPXvu10LYnSPr3JOh
+	 xlLXCNvjn6GrVxrNWmNP+jgGIkLfC9bsTt4jMxqU4FgxM6miRs9QHeNE4hnNIgjy6XA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794606608;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794606611;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=M7M6ChNDEA0jcvgLZz8uppZnHneIa4DE6GM95tvdqNA=;
-	b=YYcXTupIlsBDlVaYSn6ni4hqz3l4z7+EOp/P5R9i2iBZx18agYylRdjoQEMQFc/GjrMb
-	 Mi2QwQS04HrkH+TYBejnturkpdDCWAgC0vusVkreYCPwuSuerMITIDmTNSdKk4rY4WNhE
-	 4SbLgADwCo05qktnNt+WmqZPq9P6WwByF8GyoF5tugW0tYuK0PFJUxSu691bnW3Feo63+
-	 84vPh94c030Yfawjby9eghqNGsMBPgaymspu90s1S7dwfGwhbCozpT8snW+yVObK+Xy9K
-	 5DEhjxzRZgcusYWaBQ8hs8B3KABIi/hrKsx1TYKE4F42Y8gHzEsyvGUqxuvuT18cVLw==
+	bh=bXogm2TJduwpsZYvgZveO8MsbB/2neyvTtGG+82aO2o=;
+	b=E91HqVzhBVIXQLZjV5YMeMNTmnrljD4KRGqAorXx2cDQfGOORS8pUlxDANXKfTAHwIOc
+	 Da+tHoMwZfrcRrz/PYF7LVHspavyqbjUzIR9WaX1OmCEBbm+bod/mr9h9BNj70/7twOCW
+	 J6zvtIeF40cR7klUSEVoMtmTRbs29okPuRNJ53R10tHZgFFwDZdyoDC6YQ7pHrhttXLbs
+	 5R2q7MDKUfsici7f/lgywF1dE3Z1GUUwfPa+CiTj3Mpx+Dt8YJCinCs4A0O1xEndJLGJ+
+	 Mxo6LSF/2ys21kjMcwG0EVJzbKAX9d4/NgSKVEzhLGDuz8OdCN9qTsP0sUDJNYWmooA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=XrbI0yZR;
-	arc=none smtp.remote-ip=74.125.82.69
-Received: from mail-dl1-f69.google.com (mail-dl1-f69.google.com [74.125.82.69])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=hxblArbZ;
+	arc=none smtp.remote-ip=74.125.82.71
+Received: from mail-dl1-f71.google.com (mail-dl1-f71.google.com [74.125.82.71])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A37760A2631
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 21:50:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4A37760A2631
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F3B60A6F77
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 21:50:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 09F3B60A6F77
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=XrbI0yZR
-Received: by mail-dl1-f69.google.com with SMTP id a92af1059eb24-139b62317d0so235822c88.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 13:50:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=hxblArbZ
+Received: by mail-dl1-f71.google.com with SMTP id a92af1059eb24-1b3b63b9665so603639c88.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 13:50:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794606607; x=1795211407; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794606610; x=1795211410; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=M7M6ChNDEA0jcvgLZz8uppZnHneIa4DE6GM95tvdqNA=;
-        b=XrbI0yZRF4kyWXS5D4kXsAi+vemOdgh0xc8/jjvRnNOvohgfgjFRiDNU9N7JoytJVt
-         imXLL5ncX9vPh2OCfo0j1QJG2hoIZJzDhrHusMfX1R64TjoM4IP8/JPa+vhLFHQuwl4r
-         WDjvhdBMSx49mrTLpVIN0+h9qyG2FoP9yLGo2XNJD3cdYaxeMkAffvHLk0U4z33/6zzD
-         0q8vJlipFXdtpAUImBwYz3GlbxFBrtbf7aDP1fbHM1skx9YY9OPP3nSnoENlA4YQTssz
-         GEHpniWQZMVSYtg/+Q8yNXKSRorMjn0hbaEOFqo11kzGhZsXDraAGBUtbecKJ98n6rGl
-         r2bQ==
+        bh=bXogm2TJduwpsZYvgZveO8MsbB/2neyvTtGG+82aO2o=;
+        b=hxblArbZkamRvUy9Lm9faZJ+YH8WQcW0JyIEbPfjDaTUyWqsflPbGU/vhsVrwhIzjd
+         70lwgtDImkCzN4NWOEgjJ+mtGrMR/n1cqYOAnLP0Xc7FOEpmHO6YqILrRV16zHDAj81m
+         Avry3cxPDNtBrtgS5kUvGGJ3fa5fyA5RduyOFnAJIj1o9pNOJ4AceYvHT7NA/VmDt3S0
+         vL5YHmEEX6LAfzeuzNbMDEdLVZmM7KZHFlDoyBVrrUlHcQWK6To2JzNA7dBxmlW8KxS5
+         NoqyldSAuyvesfcrie685lPZ6/LwZgKJB6xF1W5PVd6EPqKvyet2vMghst0yCcim0F7d
+         voKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794606607; x=1795211407;
+        d=1e100.net; s=20260707; t=1794606610; x=1795211410;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=M7M6ChNDEA0jcvgLZz8uppZnHneIa4DE6GM95tvdqNA=;
-        b=kGrFqhL8biEmtZFMJaOVKGJUiktDyo7QGslEB4b0EB3cZsgeSECPfium0w7qh5zQ2l
-         B4Uo9O65W/ONS08Vxr4OQmolMUmWGJaKJJuBSbnh+Q4mucAZnMqQ1gXoVZWX3qx+pvmp
-         X4DID8UWxkFgaeGBfUMmMwt72teivql3oS4Qe35vh81IHy/6ZxcnhVtX81BWIPLuQBoD
-         6Qy2XU8L3pGYIM1gFmhB2YdCc5l1qetxxmv1uQvSdad0LcXfDHxtwDQtP6CxokOB9hzx
-         taB+BraYjUx0YAGHDOoatsg4cN0Fl2i6taQHqiM38+B+CNrH0EO7ntrpr8Hs6pBQU2la
-         xBZg==
-X-Forwarded-Encrypted: i=1; AL+hErE1id6RKq9J19fPUBUrgJnqNVpAecc2Jldbfr33j/i10vh/CuLOcZitaEdU/jrSlzyS1VgSUEMpi+jtCx4f1/Lx@vger.kernel.org
-X-Gm-Message-State: APuU4Z+BBW1/b+e8CB2dmDrAwnMA0dSpgrml2wsrqkYZHu8EANYMNXzw
-	qUzH32sEwt31x9H8SSHKlm+GkyuNZubsFjumkKpDZOf8kiUWSzQmVowg9BeYCvpqG56nXb9I5UB
-	uxiy9FMQjHA==
-X-Received: from dlai16.prod.google.com ([2002:a05:701b:2710:b0:1a3:c305:2584])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:4248:10b0:1b3:b455:93db
- with SMTP id a92af1059eb24-1b503131b06mr3912773c88.24.1794606607179; Fri, 13
- Nov 2026 13:50:07 -0800 (PST)
-Date: Fri, 13 Nov 2026 13:48:45 -0800
+        bh=bXogm2TJduwpsZYvgZveO8MsbB/2neyvTtGG+82aO2o=;
+        b=tIpMGTpA7TITt7y4+YiDG23PGeQqI9oq6dmIt4Z8CLXrt8YotI6FBFVF381ZQOTLb0
+         uapcttcu+ldBIr6hDKYT2fSOGKjQaxJrOoRzKlJy6yceeWXcyl2j5KAApEciSK+rckDA
+         wBBj0LQUc9i0DyMK48xn/9nnYQRtWMufHRE/wph0nwUCpEfSU85adfHjabYCZgCEyS5s
+         JIRKIhk5UZ9AKPmJDBEnYcp9uQeWwJqcGpXcyrsly4+4Y1o66/uUnHC5mwejakQ9mh6r
+         AwdwPaSV5h29SSqeWJHdSWOrLPiAuVMJ+2wHyi5mLtr7NlawjaA6tbNZ1OPe10lmB4rv
+         sZ5w==
+X-Forwarded-Encrypted: i=1; AL+hErEZx8Y/IJi6dC2Y05LV9MctmesGQlZPaoAYMvvXmPIoA/hRPF4r/XtT6ml72LigMh7DjoynpMlm/iVjdEwF4P0N@vger.kernel.org
+X-Gm-Message-State: APuU4Z9c83lujbMqhbW7JK/8LVU/pjPMbgHpFZ0sjICk8l+BIuOmrrtE
+	ZqLZRpQspg4fKfXnGGK/xa08zBg4R6+orcwrygpJhOtk0X0zDtbfrAFDQey8k7Tv9bOmlygG2b5
+	frMfcG/T76A==
+X-Received: from dybnj40.prod.google.com ([2002:a05:7300:d0a8:b0:36a:de0:d28a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:7a12:b0:36c:dbac:705d
+ with SMTP id 5a478bee46e88-37967506a76mr3300984eec.15.1794606609796; Fri, 13
+ Nov 2026 13:50:09 -0800 (PST)
+Date: Fri, 13 Nov 2026 13:48:46 -0800
 In-Reply-To: <20261113214850.3329699-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,8 +81,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261113214850.3329699-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
-Message-ID: <20261113214850.3329699-22-irogers@google.com>
-Subject: [PATCH v1 21/26] perf annotate: Use generic hashmap for browser type_hash
+Message-ID: <20261113214850.3329699-23-irogers@google.com>
+Subject: [PATCH v1 22/26] perf annotate-data: Use generic hashmap for
+ type_hist samples
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
@@ -91,109 +92,68 @@ Cc: Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Convert annotate_browser::type_hash and annotation_print_data::type_hash
-in util/annotate.{c,h} and ui/browsers/annotate.c to
-DECLARE_HASHMAP(type_hash_map, long, struct type_hash_entry *).
+Convert type_hist::samples in util/annotate-data.{c,h} and
+ui/browsers/annotate-data.c to
+DECLARE_HASHMAP(type_hist_map, int, struct type_hist_entry *).
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/ui/browsers/annotate.c | 18 +++++++++---------
- tools/perf/util/annotate.c        |  5 -----
- tools/perf/util/annotate.h        |  8 +++++++-
- 3 files changed, 16 insertions(+), 15 deletions(-)
+ tools/perf/util/annotate-data.c | 10 +++++-----
+ tools/perf/util/annotate-data.h |  5 ++++-
+ 2 files changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 8b0c933caf2e..7899c3e2b07a 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -39,7 +39,7 @@ struct annotate_browser {
- 	struct hist_entry	   *he;
- 	struct debuginfo	   *dbg;
- 	struct evsel		   *evsel;
--	struct hashmap		   *type_hash;
-+	struct type_hash_map	   *type_hash;
- 	bool			    searching_backwards;
- 	char			    search_bf[128];
- };
-@@ -1131,8 +1131,8 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 			if (browser->dbg == NULL)
- 				browser->dbg = dso__debuginfo(map__dso(ms->map));
- 			if (browser->type_hash == NULL) {
--				browser->type_hash = hashmap__new(type_hash, type_equal,
--								  /*ctx=*/NULL);
-+				browser->type_hash = type_hash_map__new(type_hash, type_equal,
-+									/*ctx=*/NULL);
- 			}
- 			annotate_browser__show(browser, title, help);
- 			annotate_browser__debuginfo_warning(browser);
-@@ -1233,7 +1233,7 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
- 
- 	if (annotate_opts.code_with_type) {
- 		browser.dbg = dso__debuginfo(dso);
--		browser.type_hash = hashmap__new(type_hash, type_equal, /*ctx=*/NULL);
-+		browser.type_hash = type_hash_map__new(type_hash, type_equal, /*ctx=*/NULL);
- 	}
- 
- 	browser.b.width = notes->src->widths.max_line_len +
-@@ -1265,12 +1265,12 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
- 	debuginfo__delete(browser.dbg);
- 
- 	if (browser.type_hash) {
--		struct hashmap_entry *cur;
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index 2332d465f975..dabbbb34fcd8 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -2059,12 +2059,12 @@ static int alloc_data_type_histograms(struct annotated_data_type *adt, int nr_en
+ static void delete_data_type_histograms(struct annotated_data_type *adt)
+ {
+ 	for (int i = 0; i < adt->nr_histograms; i++) {
+-		struct hashmap *map = &adt->histograms[i].samples;
+-		struct hashmap_entry *pos, *tmp;
 -		size_t bkt;
-+		long key;
-+		struct type_hash_entry *val;
++		struct type_hist_map *map = &adt->histograms[i].samples;
++		int offset;
++		struct type_hist_entry *entry;
  
--		hashmap__for_each_entry(browser.type_hash, cur, bkt)
--			zfree(&cur->pvalue);
--		hashmap__free(browser.type_hash);
-+		hashmap__for_each(browser.type_hash, key, val)
-+			free(val);
-+		type_hash_map__free(browser.type_hash);
+-		hashmap__for_each_entry_safe(map, pos, tmp, bkt)
+-			free(pos->pvalue);
++		hashmap__for_each_safe(map, offset, entry)
++			free(entry);
+ 		hashmap__clear(map);
  	}
  
- 	if (not_annotated && !notes->src->tried_source)
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index c6325040452f..ee47dcdc1f18 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -2075,11 +2075,6 @@ int annotation_br_cntr_entry(char **str, int br_cntr_nr,
- 	return -ENOMEM;
- }
+diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+index 184262c73562..b5b780d26004 100644
+--- a/tools/perf/util/annotate-data.h
++++ b/tools/perf/util/annotate-data.h
+@@ -8,6 +8,7 @@
+ #include <linux/types.h>
+ #include "dwarf-regs.h"
+ #include "annotate.h"
++#include "hashmap.h"
  
--struct type_hash_entry {
--	struct annotated_data_type *type;
--	int offset;
--};
--
- static int disasm_line__snprint_type_info(struct disasm_line *dl,
- 					  char *buf, int len,
- 					  struct annotation_print_data *apd)
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 495c8602864c..2757fb07d4ec 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -202,13 +202,19 @@ struct annotation_write_ops {
- 	void (*write_graph)(void *obj, int graph);
+ #ifdef HAVE_LIBDW_SUPPORT
+ #include "debuginfo.h"
+@@ -81,6 +82,8 @@ struct type_hist_entry {
+ 	u64 period;
  };
  
-+struct type_hash_entry {
-+	struct annotated_data_type *type;
-+	int offset;
-+};
-+DECLARE_HASHMAP(type_hash_map, long, struct type_hash_entry *);
++DECLARE_HASHMAP(type_hist_map, int, struct type_hist_entry *);
 +
- struct annotation_print_data {
- 	struct hist_entry *he;
- 	struct evsel *evsel;
- 	const struct arch *arch;
- 	struct debuginfo *dbg;
- 	/* save data type info keyed by al->offset */
--	struct hashmap *type_hash;
-+	struct type_hash_map *type_hash;
- 	/* It'll be set in hist_entry__annotate_printf() */
- 	int addr_fmt_width;
+ /**
+  * struct type_hist - Type histogram for each event
+  * @nr_samples: Total number of samples in this data type
+@@ -90,7 +93,7 @@ struct type_hist_entry {
+ struct type_hist {
+ 	u64			nr_samples;
+ 	u64			period;
+-	struct hashmap		samples;
++	struct type_hist_map	samples;
  };
+ 
+ /**
 -- 
 2.56.1.703.gf848ed807c-goog
 
