@@ -1,58 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794590799;
-	b=ybrSRe7GBCOK8Yw5Gcc261lcVIKpdRCv/fuMCGkp18nwh5rQDlL7wZ28L+TmvwB+5KtG
-	 0F5u2AjjuEunMOV2+mK5/JheFwUfAF6lUsx/WbMan3G9XZjM/880RFlLPZBJOxKH8z3pj
-	 QWZbtmEF8EFAWkvKVeDprf1WealAzzpalHRGDtPJW6BqVxAxykRGE4AfFr59T0RvGeolN
-	 dYe67ZFrwClv4YEFRwIHpwQKnnmQUHuaEbO6oPzunkvn8NgHfkK/4kmu5AD0C5c1Scccj
-	 N4M7RWcxfEbdkG3Qpn/cEE66ePP9n1n6lNyHBz9diOEacQ86T6W+45M8JZ2Fc43nfAA==
+	t=1794590867;
+	b=sH+8y/I3bb4mhNEl5LBbOXb+LP31lfxThQwYGQ0FGvJky2BkrSt7989PPM4THK7THOWx
+	 KOl0hUG2cVgmGN3v1ROKXPI/jiSVURyHrb8645v8pkgmZtzB/maKMRy4niRoPM0DMUT+f
+	 t+MA0BZitM/qD8/jd+k33f7dgaa8oVu2Qkp9BRil/7G+LW+PfkKP1SUt9+beX0uLzFab1
+	 E6/EGrmp2CYMDwl82eV+UPxY1ScVLnXL9h5JUaPEbQqxVm07oA/SW4dSrk9pwycC59Ygk
+	 EWyHpsQUDQbHe0Hy/leHzzFq4X8wx1EE4QlFXh/hEgUocpjeDs2488w4AisqRLXI13g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794590799;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794590867;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=tSRn6u44qc6LyS1TU22HAgpkF43d7i+1LQKLQqFT+6E=;
-	b=Es8ZXATUQbbLxdU989dAI0QIEeXMvdQC/0u2yMsyCYEka/b6t0YvZ1RxnSwpT9Q6YVC9
-	 1dDF4j4C8VC5/d264Rsfq+W2fJJ8aTo2fuYhd028QiQDSWD0ZpmYzzIvv48O+GsoTmFaj
-	 jV6sa48Enqzir0ILQXb6LtP8QmeN61H+IVrshcmM3YOS4M+asPtJ8DtHQ03MOc5Euuo6u
-	 x0as54TJC05uqLlfZtuYlVaQc0G3C756Jasi1lJYIpHxQ1K61ohfR3qGIKnyL26uVladW
-	 hDlcWYg5aixfHCx73x6ZQD3IDfifXrSU6K0Dy94+zZeJAff8t/94PNafn8V0E0LH4WQ==
+	bh=bt1ta6IRKXFF60Wz28XxiAQkHAXgTLwecutwDfhAqy4=;
+	b=JixIIDzUefL0k5iy5yHWokcQhWwbhSoUERoLlndo43SxiPF5v0LP5J7vXTCR1YqVxDrs
+	 lCa17yer/sfI+Lx60IS8wFTxs0tWw2S9Z7rZQTe/5Xo2da/yCS9EkPYbN1F6/xIO2hjEY
+	 EiTh50kB0WcF9KzLEULYYDGd99yeOZGHUD0yXWbsnKraw1OIRXaGcA3BUktEs7u+A08qh
+	 OeywUPbL8KAZwD+aS4YmTHbcnneRKpbCkYvPor75lt6qSk/l2vg3AdQpvQK7hW2+yXBpY
+	 cJU9Y55wvpr6PL6t5iTsR4sKAhElKR8IL/HNV0FsQK8y+jukaaZZrgpGoZ8Jgze30bw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aYQUtV+u;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XAEp0Iw5;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70997607D2E1
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 17:26:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B36D606D852
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 17:27:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aYQUtV+u
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D5581F000C5;
-	Fri, 13 Nov 2026 17:26:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XAEp0Iw5
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4FC41F000C7;
+	Fri, 13 Nov 2026 17:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794590799;
-	bh=tSRn6u44qc6LyS1TU22HAgpkF43d7i+1LQKLQqFT+6E=;
+	s=k20260515; t=1794590866;
+	bh=bt1ta6IRKXFF60Wz28XxiAQkHAXgTLwecutwDfhAqy4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=aYQUtV+uAm0fJWgFdoYhKWwtxbfNumubh5vjjv1S++7ciWRRq0pqDxV2CenCxmAZw
-	 rCnMZKo3sMRj9LIS9oUA+6QHkH7TqubYURWqkIiqP9CUAppVvgONWBDEfRRR+qLQdE
-	 +I66jJQUW+gaLcIFFn/6U0otw2siC/XPIwyT199TzCPoiVh1tG7bG4ANNM6le4LL2W
-	 BflTwJvZLUPQlRpEqn2mxGEdWjMKVBU9FaAFqS2XuN2sKMZoTM6DjK4sZwqe4qgBDH
-	 ZFeIQWF5iy0lUsFAe3lKt1mDgKiclgAUM5CH6ogSsn73XlF4v237QV0xlb4njD+ASx
-	 rtvYrYmtuSCxg==
-Message-ID: <sashiko-outbox-213305@kernel.org>
+	b=XAEp0Iw5GpCp1AobCKdSMSX92YAjvV6bj1Jx0CQWfuNQ8VhkGC7k2I79DwNW0XQn0
+	 JrUyJgZeerBx4KlvYYe7eOMlxozJE47nONKQSajsumIBmF51HelkX7NB5Fimhes+pn
+	 IBUByikzEdgrZZKb0YQ6zdqBHM0YHdvC1XX9pySbaUb4tovHklqDW/VGYwV2uJajE5
+	 wdOsNbwrgg27Q0Lm71+LlFjQb06T6CpYaWSf7RmEWUsMEZxbrsr47SnLSOF780JfcL
+	 Zf07KccdjzrZBN3IV7VQJN0+4pu6/TxTPlPd5UBmzaMvucirg5P0Hsjlk0FhjIAy9d
+	 FiE8jzR7gXl7A==
+Message-ID: <sashiko-outbox-213307@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 01/23] perf machine: Fix NULL deref on allocation
- failure in __machine__findnew_thread()
+Subject: Re: [PATCH v4 07/23] perf rwsem: Add down_read_trylock() and
+ down_write_trylock()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261113171734.2188066-2-irogers@google.com>
+In-Reply-To: <20261113171734.2188066-8-irogers@google.com>
 References: <20261110220803.2503416-1-irogers@google.com>
  <20261113171734.2188066-1-irogers@google.com>
- <20261113171734.2188066-2-irogers@google.com>
+ <20261113171734.2188066-8-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Nov 2026 17:26:38 +0000
+Date: Fri, 13 Nov 2026 17:27:46 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -62,25 +62,23 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> When threads__findnew() fails to allocate a struct thread (or fails to
-> insert it into the shard hashmap and no concurrent thread inserted the
-> tid), it returns NULL with *created =3D=3D false.
+> On-demand memory shrinking (perf_session__shrink(), dsos__shrink(),
+> symbols__shrink()) can be triggered from OOM recovery inside allocation
+> wrappers while the current thread already holds a rw_semaphore (such as
+> symbols->lock, dsos->lock, or machines->lock). Non-blocking trylock
+> primitives are needed so shrinking paths can safely skip any locked
+> container without deadlocking.
 >=20
-> In __machine__findnew_thread(), the !created branch unconditionally
-> passed th to machine__update_thread_pid(), which immediately
-> dereferenced NULL via thread__pid(th) instead of propagating NULL to the
-> caller.
+> Add non-blocking down_read_trylock() and down_write_trylock() wrappers
+> around pthread_rwlock_tryrdlock() / pthread_rwlock_trywrlock() and
+> pthread_mutex_trylock() along with SHARED_TRYLOCK_FUNCTION and
+> EXCLUSIVE_TRYLOCK_FUNCTION thread-safety annotations.
 >=20
-> Guard the machine__update_thread_pid() call with 'else if (th)' so
-> allocation failure returns NULL cleanly.
->=20
-> Fixes: d436f90a64f3 ("perf machine: Move machine's threads into its own a=
-bstraction")
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113171734.2188=
-066-1-irogers@google.com?part=3D1
+066-1-irogers@google.com?part=3D7
 
