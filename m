@@ -1,91 +1,99 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.48
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.171
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794552031;
-	b=B60hf4lrMQHmqix/eWu1wtluRItPtP9dC6Gwkz5ysy0X2Iw2NVuKT/u2oN/7Ma7diRof
-	 /OSPQrW2m2QdHaiBOvLd9qoPOu95JuoRk/V5C6m686efnNIjam1IWg2pVDEDwdj8JPbgo
-	 IxIMfxUfwH2y4Vj2qPuf9ESVxH21l2fLlug2fqigw+GrGBahVAwx9sdigYDFy1ntkN6fU
-	 mvMOEYj2XwD/HCbqlgC4U8/0nj422Ya4RyYWjZ9EzqGRFkvosxb/KaniuXf43CAs3I3Hj
-	 98ok19rUt4xukYX5+wBFVwak0OcjPUNnEUOlHlyfkUadqpZRKxtMMSAeMt0hPSZw88w==
+	t=1794552779;
+	b=ADVAbn3M9g49Z2ijZ9Zcch9z+6Kx5YpBLIX4T6d4czHcATZQkW3X5J2M8YRcJusx5tE9
+	 liFx0qqXVYaYG+5laoHjMzmvaGBKr9xMWl6OexWXyKjJ3wYwD90m8Hlun54NSwUNgR3iw
+	 gbdw0T4zqfkbGXKECByyz/Tr+E6GbjCsv08TrbYOr3t0KFQEpquhHkAf/eD4RWWMfi1uR
+	 fVShiyTYnv5d3QI5/hkUC7hUpAAZHBSAdmlOmPIuJHyBQgFaFi2CqFsWMRpicReQFnpdo
+	 6KFuSUTru8rEWz53N4JNjI1HZmh5CJrIVcbm1xFpUWNduAWQhDZ0es/ZMI3FFESufcg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794552031;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794552779;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
-	 Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Mailer;
-	bh=t6Jg07tsLCsIeZZ/dxjj77HUXiYcwZwtBpyyogJ2quQ=;
-	b=ySg3IshAALcdLyaICQIBayX7rIauCrJLH68KikDJBdKuQOrHrvyl9G1Rs2X74F0zw9HC
-	 sD86eixJwztGa33hPtEwfmMfgp/nG0WF2yxB+VOrt7pzYpJBL87lt7pGqH1eBmq6OLJwd
-	 SPIbopi6Jm09uE5xg5WxNrdRMMY1bPumnxV99d8B/oveg+LjMu26uSHXF1S4NZ5ETE4mm
-	 79NPtfBJSQFjkuZDnNp/FnB9J9oqHBB/JL6CdVfeYcLHKOrMiQ7lx6TpkpFxhetCqcA5E
-	 4vDsrcOtVn0YOST3/Mu+81ZDenZVhj9BDnBky2n/rLOO8WoQ2t2xea4SrsWpIaoG5hQ==
+	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=VIJHAgcH0kNWNFXAVV2FGeNxRIHtnxTUPfAN1k4v8u4=;
+	b=zs4dRIWwraD8iKFi6dyGXHGc7xNg5+rVxRYDAluUkiFmfvDjvK7nG9+oVOMR6rBC334T
+	 bi0lJJM/uH8OMsMC+p+hGkR3YdFNp+YjJzBe8A6PoIdXv1omv8/+dSCW8K04DtEikR95o
+	 bMGlcDh8GhWlZsU1hmp8/92z9tl6vkgsaoR5gax9tGpqPsYVTIaNenjYs8vdy//8P7ut7
+	 PMGH4SYNYQZ0hBMDUkV9NbMyfxSh/gFGn/HbVuayftW5zWQB0RygNSYC5padffZvXM778
+	 +u6gMTdFXxy6wbbDd+UffGmo0nxvs4+oAWegLYBcqmHoFGCasb8WyxNS72B2Q3hYHPQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=HlQfVMpm;
-	arc=none smtp.remote-ip=74.125.82.48
-Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Rk08dtVx;
+	arc=none smtp.remote-ip=209.85.210.171
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804CE606A321
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 06:40:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 804CE606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E032D606A334
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 06:52:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E032D606A334
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=HlQfVMpm
-Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-170135e43c7so1786926c88.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 22:40:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Rk08dtVx
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-8b5efadd183so801374b3a.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2026 22:52:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794552031; x=1795156831; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=t6Jg07tsLCsIeZZ/dxjj77HUXiYcwZwtBpyyogJ2quQ=;
-        b=HlQfVMpmbEDTrNrrWd/Agx9fT8zq0CquQIgQG7OCVqMCz4pwt8aCl11JUKU2nH9JGx
-         NrKPF7dgqrnQfzH2+jbuvJtItlMZ2kMDxO7mFnEAwa7FXJBiSf7a7wxZg4Bhih9EJ3k5
-         I/Dlyasiiy8k5Crd6FLmJqbOZt/IC6kvl1y3Vz4gf1vwzNdt7jhtbo1aGWt3UN/DcQ0k
-         DQbYZIxnrmTfPIV8UFcLXzr1DJNWnYVK5WeAZW99K0i9nox6EZy7tmA5NXAea+sAxBOu
-         QSUn9TsBncc4x2UAKHwIc7SVg+Fmex3FVLffjJ3Ssdx2ICfL4h1bwwABg9qNs1Oe3OHr
-         PMdw==
+        d=gmail.com; s=20260707; t=1794552778; x=1795157578; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=VIJHAgcH0kNWNFXAVV2FGeNxRIHtnxTUPfAN1k4v8u4=;
+        b=Rk08dtVx4lCFtpfuuUl022D9CDEsg7463Ro0IujuUYYx0m+kLT1CYmxAom5uSHr29v
+         dCBzY40erU72AEmYZjsChyYPPs9v7+tzmoAscD0rqe2YEWRz86PFXu2a1f8LmQwOqHFa
+         UoIHRK+mPc1SdThfCKBSOALw9CLE1bno63yygSz71zhk2CJ8g1SYBdPSGMHqt5I3wyea
+         eKG2DAo6NYR04C8ur/j4D+iVHaWqNUaPLz+88sNWa2ApY7UOx0jLt6ZLE1dfv2TLdRR8
+         z7WVn+eNOcdA3JPfUEd3thgmGJRy2aJqlORvzl1yPryjxW/L8GnFovsQn6DURi68aaiV
+         mzqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794552031; x=1795156831;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=t6Jg07tsLCsIeZZ/dxjj77HUXiYcwZwtBpyyogJ2quQ=;
-        b=HljMgUvpMZRaSk/xJWzZZchXhX9Pnc8mSz/kc2JjkIshdhncqIrYGWlZGVXIneVOJ1
-         MD7vhlBwem4VqMMRlvAKbv1QGt1l87ggQbhHaZphWVUzZ/KFHPq4skRjXDoXOt1mErQ4
-         4M/7DtWkf3XfeVaH1VEoLK6iAC25BSZDgQHwaINb82HIuagG49QWF+mED83eYgb1IrVT
-         V7gg0HGrLxJEjVRAYSBrAvlxTyESFAzcPXSlQ+CzcyxfBs6DLyK1o2R202/gGOhYZelH
-         ca+jsN12pLgzjB0LgdD1jeq8Ow1rnDn1gGhap0rLlQz7yGOGZzjGDg9iafjjnrRRJw71
-         cSFA==
-X-Gm-Message-State: APuU4Z9O7kE2DCq1JHzx54zO47/0q5npbKQXba1jXODSPSchRU3eqAIq
-	dIeYnnBQq0bYecBBjPZ7BKwH5Kby0Kuqx96UMGIxyBxPQxk1ZGKY1UjG
-X-Gm-Gg: AYBFou2ysZQR9kinuYzQDFlFODypVB7NcrZJ5VTGGytoIlsEwudkLZ0EYcEpZTf9KV/
-	tJ9jJ9Y0XMCLSv72rj0B2AuNbGBTsjE5e5JtBr9fit4od9ylKiPSZNRTMv8uaMX1YD8uOmHY3lx
-	yA8Huf3cYUhnwey0xh0PA21HGGSdIyaoytSUBsiO8uXTUdeu/jvXUvX30kSwVuRIUnwbpF9Fxto
-	jQ9i26Hyvp6CMdCdwK7jH+mAzl2VFC75+ixU8sXURbvLkMwwc5m8sovjOnJniPAcC612IP+VBAX
-	MRYbP0gsW9eUxwsrRKlbPKuZYHqBQ8QlIrpXxtcPRLVLNflPYG3XhdSI3NUahBWBFiQd24vY6e+
-	+WBMq4IaIG+ZA1Z0e1iEY8AswBr5xb2VeUwEOyaTlqHJMSwdHZk9WncEFLnLCXhQ/88huCDFPhf
-	lBhNLjrgN6pYMdpCFrI1GVqIh0ZYX10kE4Y6sqDv7b5t5k62EDPYStbEfHaIcmYi5RkjLh+yxhL
-	zqLf5WkUW76NGxYW1zhB9M9iqCG3ci/JJb2WDH/hYqIpiD8ehTxRZLF/3KJ/31nh+FsPhuUT6NI
-	5++Z+KCP7iMwUQDbg/kXHfj7sYjmaJlbv3GeWnHfzh1LORE=
-X-Received: by 2002:a05:701b:4248:10b0:1b3:b455:93db with SMTP id a92af1059eb24-1b503131b06mr1869718c88.24.1794552030463;
-        Thu, 12 Nov 2026 22:40:30 -0800 (PST)
-Received: from [127.0.1.1] ([161.33.196.121])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b5031918c7sm6321205c88.9.2026.11.12.22.40.28
+        d=1e100.net; s=20260707; t=1794552778; x=1795157578;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=VIJHAgcH0kNWNFXAVV2FGeNxRIHtnxTUPfAN1k4v8u4=;
+        b=IKj7q408Kp+G75pClFmlUeEBtmp2OttG8hiIrVysLa4D+j1e2Ojzy9wrnlU6gQ8shN
+         zfLXPNZXgSj5F1nzu0WmCJlEqiY8Z5gw0QwMN4UY6WlF9lMXFuHU4qdYzIqeuUovIt6d
+         Z2Nx0LvHSQIt0JEgw+LOV43IFIJiWQ6ZR1lKQYYnUlHAXZoRVv0K+9+bAD8D94xFSeXq
+         wkPCoBEcUZCjhXzl2DqhpKP7cCWEqyLRHYqne/cRJYFoMDtBAMglsKeEr03wC0Nmdecx
+         iPEIxeVi9OQSFMlFTt+TtjmojUaX6mCm2mgjTlMtOOVudbhkkJbyES9/fC0onsy3akRM
+         nRjw==
+X-Gm-Message-State: APuU4Z/lYXj3pUc2BKk3sUhIyD7bpfFY4nVnnhAITim+AiYT/Mx/jmwP
+	llj3aIU0MIhquwJhMEeA+qASwiwUjdT6xivAZ+S8guqFpHPq2nTwpPPjSeVFjg==
+X-Gm-Gg: AYBFou2aRXdiR2N9Gc7LmDO74GuWHo9rUOBhHFaKqpQo3XhB2RDWb1ua+CMt/ShYe9n
+	Y7KCtcJdCMvP/QLeuoV5x/AVecKmkk6Umj1imsHHont1e/dMKCZ5gZqlQs6g2qyHOXO9qUivAS/
+	ztwVnj8meiYzQD/yfBa7DcQ/FXWGxPFQP1S6na8BvZEtSL8CZO8KPqbbV1JLmcA8SoVfg5ToPvW
+	9csj2z4MmFNAtLT/3yROMHObmK+9qLmc+cgkUG7j0nJ34vRbU4RZ2JOb5JF4Z7uJGOi6Jf9zes/
+	3C19JdH9KyfVvc8ZgR0Ct2qEvSAsBKssynEAyzo2McmApKNccDppbZOJCJ8MqjQOFrgNFOBIg5i
+	1/Y7YaL+qbMS6zUySPZA7o7bUI8LPJQ7zB7gAhnIU9cb4+fO3qdYyIpFGqwX698LF3XiskChB72
+	N7rPoiG6oVjFWAOIEUi75wQq32reQ9N4br1+Jlj13zUoIYzVmWtforzeD9y+M2jcOidgzZ+6zzi
+	dwMgTy0QXaq4vi57v9Z888qtROA7pwZNdLAKmTcOrTfyKzwHbkPOVS0umPfvZ9WdRftY+j2xKcc
+	qqtc0LKsQLkvbjOhxeCw
+X-Received: by 2002:a17:90b:5910:b0:3ae:3b3d:c617 with SMTP id 98e67ed59e1d1-3b1b0cc8f69mr806113a91.29.1794552777743;
+        Thu, 12 Nov 2026 22:52:57 -0800 (PST)
+Received: from a1-free ([161.33.196.121])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b1b3d279d8sm869257a91.2.2026.11.12.22.52.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Nov 2026 22:40:29 -0800 (PST)
+        Thu, 12 Nov 2026 22:52:57 -0800 (PST)
 From: TAKANO Mitsuhiro <takano32@gmail.com>
-To: James Clark <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, John Garry <john.garry@linux.dev>, Ilkka Koskinen <ilkka@os.amperecomputing.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf vendor events arm64 AmpereOneX: Fix misspelled PublicDescription keys
-Date: Fri, 13 Nov 2026 06:40:27 +0000
-Message-ID: <179455202729.738309.5850348519213838978@gmail.com>
-In-Reply-To: <1e5907fc-40c6-4025-8d27-a92b3cb2845a@linaro.org>
-References: <20261108183846.3804875-1-takano32@gmail.com> <bf6925f6-613f-4e20-8491-2a99183f34fb@linaro.org> <1e5907fc-40c6-4025-8d27-a92b3cb2845a@linaro.org>
+To: linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: James Clark <james.clark@linaro.org>,
+	Ian Rogers <irogers@google.com>,
+	John Garry <john.garry@linux.dev>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	TAKANO Mitsuhiro <takano32@gmail.com>
+Subject: [PATCH v2] perf vendor events arm64 AmpereOneX: Fix misspelled PublicDescription keys
+Date: Fri, 13 Nov 2026 06:52:53 +0000
+Message-ID: <20261113065253.746615-1-takano32@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20261108183846.3804875-1-takano32@gmail.com>
+References: <20261108183846.3804875-1-takano32@gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -95,57 +103,157 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Mailer: kpatch-send.py
 
-On 2026-11-11 14:03, James Clark wrote:
+Sixteen of the 28 entries in mmu.json spell PublicDescription as
+"PublicDescrition"; the other 12 spell it correctly.  jevents.py reads
+only the keys it asks for by name, so those 16 fields are dead.
 
-> The linked patches seem like a bigger change than what I'd expect. I'm
-> not sure that's necessary for something conceptually as simple as
-> "validate the json files".
+Fixing them does not change the perf list output: every one of the 16
+entries has a BriefDescription with the same text, and jevents.py drops
+the long description when it equals the brief one (jevents.py:405).
+Running jevents.py for arm64 before and after this change gives a
+byte-identical generated string table (1580383 bytes both times).
 
-Agreed, and that version is gone.  What is posted now is one patch: the
-list of keys a table may carry, and a walk that reports the ones it does
-not.  No schema, no similarity, no metric-name check, nothing wired into
-the build.
+The file becomes self-consistent again, and the field works if the brief
+text is ever changed on its own.  No text, name, code or expression
+changes.
 
-https://lore.kernel.org/linux-perf-users/20261113032927.634183-1-takano32@gmail.com/
+Written with Hermes Agent, an LLM assistant; the author reviewed it and
+ran the generator as described.  perf was built, not run against
+hardware.
 
-> I'm also a bit lost about the relationship between "[PATCH 0/3] perf
-> jevents: Report the JSON keys that jevents.py never reads" and "[PATCH]
-> perf jevents: Check the JSON keys that jevents.py never reads".
+Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
+---
+v2: rebased on 7.4-rc2.  The arm64 string table generated with
+    jevents.py is byte identical before and after the change
+    (1580383 bytes), measured again on this base.
 
-The 0/3 was the first posting, and it had collected two unrelated changes
-on the way - a report for a metric expression with no event behind it, and
-making the arch argument optional.  Both are dropped.  Since v7 it is a
-single patch, and the only thing it does is the key check.
+ .../arch/arm64/ampere/ampereonex/mmu.json     | 32 +++++++++----------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-> Even without jsonschema I can't see why a validator can't be written in
-> less than 10 lines.
+diff --git a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/mmu.json b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/mmu.json
+index 66d83b680651..9457f9be4ecc 100644
+--- a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/mmu.json
++++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/mmu.json
+@@ -30,37 +30,37 @@
+         "BriefDescription": "Data TLB translation cache hit on S2L2 walk cache entry"
+     },
+     {
+-        "PublicDescrition": "Data TLB translation cache hit on S2L1 walk cache entry",
++        "PublicDescription": "Data TLB translation cache hit on S2L1 walk cache entry",
+         "EventCode": "0xd805",
+         "EventName": "MMU_D_TRANS_CACHE_HIT_S2L1_WALK",
+         "BriefDescription": "Data TLB translation cache hit on S2L1 walk cache entry"
+     },
+     {
+-        "PublicDescrition": "Data TLB translation cache hit on S2L0 walk cache entry",
++        "PublicDescription": "Data TLB translation cache hit on S2L0 walk cache entry",
+         "EventCode": "0xd806",
+         "EventName": "MMU_D_TRANS_CACHE_HIT_S2L0_WALK",
+         "BriefDescription": "Data TLB translation cache hit on S2L0 walk cache entry"
+     },
+     {
+-        "PublicDescrition": "Data-side S1 page walk cache lookup",
++        "PublicDescription": "Data-side S1 page walk cache lookup",
+         "EventCode": "0xd807",
+         "EventName": "MMU_D_S1_WALK_CACHE_LOOKUP",
+         "BriefDescription": "Data-side S1 page walk cache lookup"
+     },
+     {
+-        "PublicDescrition": "Data-side S1 page walk cache refill",
++        "PublicDescription": "Data-side S1 page walk cache refill",
+         "EventCode": "0xd808",
+         "EventName": "MMU_D_S1_WALK_CACHE_REFILL",
+         "BriefDescription": "Data-side S1 page walk cache refill"
+     },
+     {
+-        "PublicDescrition": "Data-side S2 page walk cache lookup",
++        "PublicDescription": "Data-side S2 page walk cache lookup",
+         "EventCode": "0xd809",
+         "EventName": "MMU_D_S2_WALK_CACHE_LOOKUP",
+         "BriefDescription": "Data-side S2 page walk cache lookup"
+     },
+     {
+-        "PublicDescrition": "Data-side S2 page walk cache refill",
++        "PublicDescription": "Data-side S2 page walk cache refill",
+         "EventCode": "0xd80a",
+         "EventName": "MMU_D_S2_WALK_CACHE_REFILL",
+         "BriefDescription": "Data-side S2 page walk cache refill"
+@@ -90,61 +90,61 @@
+         "BriefDescription": "Level 2 instruction translation buffer allocation"
+     },
+     {
+-        "PublicDescrition": "Instruction TLB translation cache hit on S1L2 walk cache entry",
++        "PublicDescription": "Instruction TLB translation cache hit on S1L2 walk cache entry",
+         "EventCode": "0xd901",
+         "EventName": "MMU_I_TRANS_CACHE_HIT_S1L2_WALK",
+         "BriefDescription": "Instruction TLB translation cache hit on S1L2 walk cache entry"
+     },
+     {
+-        "PublicDescrition": "Instruction TLB translation cache hit on S1L1 walk cache entry",
++        "PublicDescription": "Instruction TLB translation cache hit on S1L1 walk cache entry",
+         "EventCode": "0xd902",
+         "EventName": "MMU_I_TRANS_CACHE_HIT_S1L1_WALK",
+         "BriefDescription": "Instruction TLB translation cache hit on S1L1 walk cache entry"
+     },
+     {
+-        "PublicDescrition": "Instruction TLB translation cache hit on S1L0 walk cache entry",
++        "PublicDescription": "Instruction TLB translation cache hit on S1L0 walk cache entry",
+         "EventCode": "0xd903",
+         "EventName": "MMU_I_TRANS_CACHE_HIT_S1L0_WALK",
+         "BriefDescription": "Instruction TLB translation cache hit on S1L0 walk cache entry"
+     },
+     {
+-        "PublicDescrition": "Instruction TLB translation cache hit on S2L2 walk cache entry",
++        "PublicDescription": "Instruction TLB translation cache hit on S2L2 walk cache entry",
+         "EventCode": "0xd904",
+         "EventName": "MMU_I_TRANS_CACHE_HIT_S2L2_WALK",
+         "BriefDescription": "Instruction TLB translation cache hit on S2L2 walk cache entry"
+     },
+     {
+-        "PublicDescrition": "Instruction TLB translation cache hit on S2L1 walk cache entry",
++        "PublicDescription": "Instruction TLB translation cache hit on S2L1 walk cache entry",
+         "EventCode": "0xd905",
+         "EventName": "MMU_I_TRANS_CACHE_HIT_S2L1_WALK",
+         "BriefDescription": "Instruction TLB translation cache hit on S2L1 walk cache entry"
+     },
+     {
+-        "PublicDescrition": "Instruction TLB translation cache hit on S2L0 walk cache entry",
++        "PublicDescription": "Instruction TLB translation cache hit on S2L0 walk cache entry",
+         "EventCode": "0xd906",
+         "EventName": "MMU_I_TRANS_CACHE_HIT_S2L0_WALK",
+         "BriefDescription": "Instruction TLB translation cache hit on S2L0 walk cache entry"
+     },
+     {
+-        "PublicDescrition": "Instruction-side S1 page walk cache lookup",
++        "PublicDescription": "Instruction-side S1 page walk cache lookup",
+         "EventCode": "0xd907",
+         "EventName": "MMU_I_S1_WALK_CACHE_LOOKUP",
+         "BriefDescription": "Instruction-side S1 page walk cache lookup"
+     },
+     {
+-        "PublicDescrition": "Instruction-side S1 page walk cache refill",
++        "PublicDescription": "Instruction-side S1 page walk cache refill",
+         "EventCode": "0xd908",
+         "EventName": "MMU_I_S1_WALK_CACHE_REFILL",
+         "BriefDescription": "Instruction-side S1 page walk cache refill"
+     },
+     {
+-        "PublicDescrition": "Instruction-side S2 page walk cache lookup",
++        "PublicDescription": "Instruction-side S2 page walk cache lookup",
+         "EventCode": "0xd909",
+         "EventName": "MMU_I_S2_WALK_CACHE_LOOKUP",
+         "BriefDescription": "Instruction-side S2 page walk cache lookup"
+     },
+     {
+-        "PublicDescrition": "Instruction-side S2 page walk cache refill",
++        "PublicDescription": "Instruction-side S2 page walk cache refill",
+         "EventCode": "0xd90a",
+         "EventName": "MMU_I_S2_WALK_CACHE_REFILL",
+         "BriefDescription": "Instruction-side S2 page walk cache refill"
 
-It can, and that is what v10 is.  The check itself is
-
-  for path in sorted(Path(root).rglob('*.json')):
-    if path.name.endswith('metricgroups.json'):
-      continue
-    for obj in json.loads(path.read_text(encoding='utf-8')):
-      if extra := set(obj) - _TABLE_KEYS:
-        print(f'{path}: {sorted(extra)}')
-        bad += 1
-
-plus a directory check, the 51-word list, and a shell test that feeds it a
-known key and a bad one.  On today's tree it reports 19 keys in four
-tables.
-
-My earlier answer to this went into the other thread by mistake (wrong
-In-Reply-To), which is why this one looked unanswered.
-
-This thread is the data half: the 16 keys in ampereonex/mmu.json and the 3
-in the AMD tables are still in the tree, so the check reports them today.
-I can post the corrected table as a v2 whenever you want it - the check is
-not a prerequisite for it.
-
-Written with Hermes Agent, an LLM assistant; the author reviewed it and ran
-the checks it describes.
+base-commit: 7475ea8b58616b33c04afb976cf0fbaad9dd63fb
+-- 
+2.53.0
 
