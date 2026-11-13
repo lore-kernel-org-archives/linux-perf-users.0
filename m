@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.71
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.160.69
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794590293;
-	b=Z0upVaOwEc4t1eTVJOTou7Weac5UZaHJwy+RAxtprODc6SoO93W45gB74T3ej+jXHSen
-	 ByFavQ+fsUOUjmnK6JGB0SpRbg8GWtSYdgI7lEQnoLUbcvKUIOEsx8RTtVOB00J6DRqvJ
-	 SdnOSjF4udpP6WH7W1KVKo5bJbzQ43CXTbmBKJKEsO97jSWRjpM3hJzYGFk3Uu9EI5xmE
-	 ZVe/LUMmXfDdv6wjpjI1OF5/lMB8lkW7shOPCb6OJ2VjyJwmPPcU3vi5NJw2dwhc+YtNO
-	 U8/uk4pVRbQe5j4xuhAUk0vPkpNVsdomnW3y3QXnmFiwdIWC98gD//ps4RKaUDNnJ8Q==
+	t=1794590296;
+	b=EUmA1Pnnjav4+qkjbEtcQ4yJvDXWA4onjZphKE1y09UXZAqBTLlq6b+VIsCsMRMlwOBS
+	 lAancG2ThqVMjdgkJArtE1Oay0XjglzvQ+0R89g/j/oeGQYBZIgNYeoZxHlDM5hcilCFh
+	 K2dkkkBcDnkb9wviNDw2+lsda4X8SXPbNULkJx3xxyY++oHrTmuJ8JLikYANCY4xNqj91
+	 7g0EmfJvEY0D6wlaoTlsT769CowOvC4rjH1MeVF3aOIsya2S7dAK98ogdvFiJ3PpQOi4e
+	 BhlvFZfi1G3+ygr5c1g9TnNJdiT5BmvDUzUMW+bKQIsrLzVsRL9UdS1d/OUNA+KwA4A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794590293;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794590296;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=tWKhcWpD9mj2d8PnUU3UkZsThd7QQmlRjYnUzdhDGBc=;
-	b=1fyWpSsuYZzpUo5nkyOVcNOKU8Whsu4ghBpTdyAxNzQEIoYFVtV1aJFNO04sKFrAYlU+
-	 y9zzIlZpsH5Kxsx7lgS2xYAQLVThpClLyfzLbZ36pJypsuRv5lGi0xlu3n94i0JdZI8/h
-	 oFpgKlugU6k7MUjNV7SfY9uQTpnX5lKG5OKcNYTqefUwBx+SvtnukmhWybUmSpQdqFKhp
-	 y0t1CR9g3BHEE+1iuGbbShrwwTXIJtmNgNSDuLskMtwk+LemOvqqK07Lzvcx8boGeAltZ
-	 MHZm/UkFQ2p0fEle74bbF6NciQ1ZqeSuhKlR0I3/oYnI5hYlxfYt8Q//PINSGu8dNfg==
+	bh=FqXrkekpazBGo74ROnhtZH/D/ijqIvj3BVMdkvQVaV4=;
+	b=YxOTW78ZdYycZc67nDxbYSiC2sHgKIfL6FV+83ClG0fX7kXwy0rFiGQj7TLAgg7r2EHD
+	 z5dKGRyDsSoTnfutlP4viPnAAsunUPpbPSBhGz4I7i/pJLUX+ghmwyFhTr1Gl5qoGOYbz
+	 8HDV0Q/b2v66/wl3wguiRgZTE3K9Lu+/i2FwCCldVXGkBSAjs8Oh/d9EJh9tPGaN3teEd
+	 DpwsIPsRkrgmCENWgYIinUcusOAZaaNl5g9fKD8LDApppciejHpD+aMVLvCUTN2CRF8P/
+	 InSIbUrY1vHt2ssTIPXR1flp1Scyddpfqzx8858W0plj42NpUjQYB5jcf8/oHRPzUIA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="V/z+4bs8";
-	arc=none smtp.remote-ip=74.125.82.71
-Received: from mail-dl1-f71.google.com (mail-dl1-f71.google.com [74.125.82.71])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=UMyk5pVl;
+	arc=none smtp.remote-ip=209.85.160.69
+Received: from mail-oa1-f69.google.com (mail-oa1-f69.google.com [209.85.160.69])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9B6607A5FC
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 17:18:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4A9B6607A5FC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A990607B59A
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 17:18:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6A990607B59A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=V/z+4bs8
-Received: by mail-dl1-f71.google.com with SMTP id a92af1059eb24-1b238436265so571276c88.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 09:18:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=UMyk5pVl
+Received: by mail-oa1-f69.google.com with SMTP id 586e51a60fabf-46dade0d7cdso1145292fac.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 09:18:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794590291; x=1795195091; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794590294; x=1795195094; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=tWKhcWpD9mj2d8PnUU3UkZsThd7QQmlRjYnUzdhDGBc=;
-        b=V/z+4bs83TrSCAPh7xtP/G6TLt7Jb+F0KcjVqXcQswmAOt3FCP5X6OQW9+88yDFEVH
-         WlDYMA9+G1JNF044GMulzrTgeZqjotijVLYuX0lAGM7zl21pQZlVCRoqGWBLAlLEiWT/
-         WmVcuCyRhk1KhBxcyOaM0ijSRKi5acFUv4tF/SQxcVbpZqz+pPkQDD67rPbhAyKiMJng
-         yblJb5Jx9pgwrkoc1tuxdikItr9cIKyt1wH4HWg7XHVmUdIo7QoH3aK4R0CEe/dHUQ/P
-         eIUepxg/jcf8ZtVH5AQCfaQJznfTO7wSRPgLBRscLteM1bsWDjAC3ANbQ/QSupzxymJk
-         VFhg==
+        bh=FqXrkekpazBGo74ROnhtZH/D/ijqIvj3BVMdkvQVaV4=;
+        b=UMyk5pVlrfLZcmWajc9eoQ5rqc8ncqPc1DnN4iLD5fs01dI25x1QkSlq9L5TCL1Uur
+         PEYxbFUv/iBEXKfkOWnpnShY52WmxMChZzHyev2tON/wlCgpQ17aPPB9GPF6dlKg29ol
+         QdW7/tnSNek87lrNfrOyoFQaqGav+K7EMCr7Yx5xrAPsbRalZrrI/JQRYdTqWqq1gD3x
+         sgSrfEgHa+MTbtaw+8XkszlHkXcyyQ4jJ6U/yjnLy8OkujERIvTJJzd3JhvG/fM4MGGL
+         kT5fhFALvoyj1TtlhV8nIb731cU4s7K8iQLo8aIza0oiJ3KJ30OtTYps0biT2KvmzkKc
+         9IGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794590291; x=1795195091;
+        d=1e100.net; s=20260707; t=1794590294; x=1795195094;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=tWKhcWpD9mj2d8PnUU3UkZsThd7QQmlRjYnUzdhDGBc=;
-        b=GrZ3nna49E/RIl07C/idXMxtck0KfAA2sS2q7zRoKCV3FXEBrqp04dh/0Lr8tkvz1f
-         PJOTPNbltjrCjb+g9ZglvECGJk/YtT+DiZqdBS338M9yk6dl7ntmmQ4swNuoPgBGIr06
-         x5cO5p649LrCZaabQ06NcBiSSL/lOf0blqlqRC3epuBs56TWVmzStrvQT/hnynbIFF4M
-         4UpaOm2Xmx+Gr/OUNvMB7ePBoYIWfT9lLyUbiZiFDu+WD1HEuk995V1Phzv0vtkQCn3v
-         WNjeCN9Dq0+6DM5C4LNc7DWCVJtkC1KplhA/ke3OVkjRMPY/C8y7BZlQ1B+OJieFQYqB
-         3ydg==
-X-Forwarded-Encrypted: i=1; AL+hErHaFVwQMD90idPk38P73H5SznXSi7b6wA6ick1bKgZiT2nucZzEI60II+f5w36Vu7ebyxrHzM3fNZfKFYoYmnYT@vger.kernel.org
-X-Gm-Message-State: APuU4Z9jg5kM699h1XR88cV8Ys4TXoARawFT95PzlD6CRddpltrwilEb
-	bsxQ++XF268IA8u4oDuAYdVWKUPuiHl2c2UZBi82MUM1RE0Jc5J6RNKNN15BdDefs5zjHN6Dem/
-	O5DmPjN2p7g==
-X-Received: from dlbvv12.prod.google.com ([2002:a05:7022:5f0c:b0:1b3:b6c4:6fd4])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7023:a42:b0:1af:16c4:d06b
- with SMTP id a92af1059eb24-1b5030a3490mr2624195c88.10.1794590289931; Fri, 13
- Nov 2026 09:18:09 -0800 (PST)
-Date: Fri, 13 Nov 2026 09:17:17 -0800
+        bh=FqXrkekpazBGo74ROnhtZH/D/ijqIvj3BVMdkvQVaV4=;
+        b=vR1xU3RrtYYW3A49VRhRh4K1KGwVpC8ibXioYxGpY9TxXSTBti8Jw8lEyG+vU64csZ
+         K3xCW9/K1EDAZiBHKhV+y18iesc2yeaDox2r0n5jcTUXk3r6YKamxT8MKdHIsrohRfv+
+         SlUFVeSzT/B0AG1J7YLZG4vk43OFP4WpQIxUfYJsK0jfiqCMYgQseXnVY29eWDhef1H3
+         lA/mFXNk96vYxGeT24OKi0lZOs1B+72e6o9teSZw4wRcKYpKONnl7xMVYrVjHL6nf9B3
+         XXvqfuUFh2KWHWyLfMzJd4QYrHvvJQrMxIJS4mYtASVqxvyHJS6sT6Ra/FBykUQslvlo
+         Itdw==
+X-Forwarded-Encrypted: i=1; AL+hErEySmSvFQP81KenkI4GftKaxZq+AeAG/7a3uiXl2YmGsS5bMwv3XovtE81+L97vgypSglta4x3tQGuo8Epbfd6i@vger.kernel.org
+X-Gm-Message-State: APuU4Z+td47PRnYM3QwKbGtUmFr0rCMOJ25NGQ3dEoi1ZgEJP9GzYuty
+	AI4otQsqRRbUFV0npDVXckWs8HmNvctzDTo+smQsPSAtG05J0l7A53td+Y6xs0yCGNGG7U0baId
+	r+ctr/6JkAQ==
+X-Received: from ioeu21.prod.google.com ([2002:a05:6602:2415:b0:9c7:5b22:eaaa])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6808:e88:b0:564:3fe1:2f95
+ with SMTP id 5614622812f47-56e66063859mr2434950b6e.56.1794590294004; Fri, 13
+ Nov 2026 09:18:14 -0800 (PST)
+Date: Fri, 13 Nov 2026 09:17:18 -0800
 In-Reply-To: <20261113171734.2188066-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,8 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261110220803.2503416-1-irogers@google.com> <20261113171734.2188066-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
-Message-ID: <20261113171734.2188066-7-irogers@google.com>
-Subject: [PATCH v4 06/23] perf vdso: Constify dso parameter in dso__is_vdso()
+Message-ID: <20261113171734.2188066-8-irogers@google.com>
+Subject: [PATCH v4 07/23] perf rwsem: Add down_read_trylock() and down_write_trylock()
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, haghdoost@uber.com, 
 	namhyung@kernel.org
@@ -91,45 +91,109 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-dso__can_shrink_symbols(const struct dso *dso) needs to query
-dso__is_vdso(dso) on a const struct dso pointer to exclude vDSO images
-from symbol shrinking.
+On-demand memory shrinking (perf_session__shrink(), dsos__shrink(),
+symbols__shrink()) can be triggered from OOM recovery inside allocation
+wrappers while the current thread already holds a rw_semaphore (such as
+symbols->lock, dsos->lock, or machines->lock). Non-blocking trylock
+primitives are needed so shrinking paths can safely skip any locked
+container without deadlocking.
 
-Change the parameter of dso__is_vdso() from 'struct dso *' to
-'const struct dso *'.
+Add non-blocking down_read_trylock() and down_write_trylock() wrappers
+around pthread_rwlock_tryrdlock() / pthread_rwlock_trywrlock() and
+pthread_mutex_trylock() along with SHARED_TRYLOCK_FUNCTION and
+EXCLUSIVE_TRYLOCK_FUNCTION thread-safety annotations.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/vdso.c | 2 +-
- tools/perf/util/vdso.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/mutex.h |  3 +++
+ tools/perf/util/rwsem.c | 20 ++++++++++++++++++++
+ tools/perf/util/rwsem.h | 11 +++++++++++
+ 3 files changed, 34 insertions(+)
 
-diff --git a/tools/perf/util/vdso.c b/tools/perf/util/vdso.c
-index c12f5d8c4bf6..7f2dde70f3e4 100644
---- a/tools/perf/util/vdso.c
-+++ b/tools/perf/util/vdso.c
-@@ -361,7 +361,7 @@ struct dso *machine__findnew_vdso(struct machine *machine,
- 	return __machine__addnew_vdso(machine, DSO__NAME_VDSO, file);
+diff --git a/tools/perf/util/mutex.h b/tools/perf/util/mutex.h
+index 5de1065ea2b9..de7dd6d8326c 100644
+--- a/tools/perf/util/mutex.h
++++ b/tools/perf/util/mutex.h
+@@ -57,6 +57,8 @@
+ /* Documents functions that try to acquire a lock, and return success or failure. */
+ #define EXCLUSIVE_TRYLOCK_FUNCTION(...) \
+ 	__attribute__((exclusive_trylock_function(__VA_ARGS__)))
++#define SHARED_TRYLOCK_FUNCTION(...) \
++	__attribute__((shared_trylock_function(__VA_ARGS__)))
+ 
+ /* Documents a function that expects a mutex to be held prior to entry. */
+ #define EXCLUSIVE_LOCKS_REQUIRED(...) __attribute__((exclusive_locks_required(__VA_ARGS__)))
+@@ -78,6 +80,7 @@
+ #define SHARED_LOCK_FUNCTION(...)
+ #define UNLOCK_FUNCTION(...)
+ #define EXCLUSIVE_TRYLOCK_FUNCTION(...)
++#define SHARED_TRYLOCK_FUNCTION(...)
+ #define EXCLUSIVE_LOCKS_REQUIRED(...)
+ #define SHARED_LOCKS_REQUIRED(...)
+ #define NO_THREAD_SAFETY_ANALYSIS
+diff --git a/tools/perf/util/rwsem.c b/tools/perf/util/rwsem.c
+index 1d15c0e3732b..9548a3b44f16 100644
+--- a/tools/perf/util/rwsem.c
++++ b/tools/perf/util/rwsem.c
+@@ -36,6 +36,16 @@ int down_read(struct rw_semaphore *sem)
+ #endif
  }
  
--bool dso__is_vdso(struct dso *dso)
-+bool dso__is_vdso(const struct dso *dso)
++bool down_read_trylock(struct rw_semaphore *sem)
++	NO_THREAD_SAFETY_ANALYSIS
++{
++#if RWS_ERRORCHECK
++	return mutex_trylock(&sem->mtx);
++#else
++	return pthread_rwlock_tryrdlock(&sem->lock) == 0;
++#endif
++}
++
+ int up_read(struct rw_semaphore *sem)
+ 	NO_THREAD_SAFETY_ANALYSIS
  {
- 	return !strcmp(dso__short_name(dso), DSO__NAME_VDSO) ||
- 	       !strcmp(dso__short_name(dso), DSO__NAME_VDSO32) ||
-diff --git a/tools/perf/util/vdso.h b/tools/perf/util/vdso.h
-index bc74ace603ae..b6e05bc2d9f3 100644
---- a/tools/perf/util/vdso.h
-+++ b/tools/perf/util/vdso.h
-@@ -19,7 +19,7 @@ static inline bool is_vdso_map(const char *filename)
+@@ -58,6 +68,16 @@ int down_write(struct rw_semaphore *sem)
+ #endif
+ }
  
- struct dso;
++bool down_write_trylock(struct rw_semaphore *sem)
++	NO_THREAD_SAFETY_ANALYSIS
++{
++#if RWS_ERRORCHECK
++	return mutex_trylock(&sem->mtx);
++#else
++	return pthread_rwlock_trywrlock(&sem->lock) == 0;
++#endif
++}
++
+ int up_write(struct rw_semaphore *sem)
+ 	NO_THREAD_SAFETY_ANALYSIS
+ {
+diff --git a/tools/perf/util/rwsem.h b/tools/perf/util/rwsem.h
+index b102d8143181..53c45990d9c9 100644
+--- a/tools/perf/util/rwsem.h
++++ b/tools/perf/util/rwsem.h
+@@ -22,9 +22,20 @@ int init_rwsem(struct rw_semaphore *sem);
+ int exit_rwsem(struct rw_semaphore *sem);
  
--bool dso__is_vdso(struct dso *dso);
-+bool dso__is_vdso(const struct dso *dso);
+ int down_read(struct rw_semaphore *sem) SHARED_LOCK_FUNCTION(sem);
++/*
++ * Tries to acquire a shared read lock without blocking. Per POSIX
++ * pthread_rwlock_tryrdlock(), succeeds when no writer holds or blocks on @sem
++ * (including when the calling thread already holds a read lock on @sem).
++ */
++bool down_read_trylock(struct rw_semaphore *sem) SHARED_TRYLOCK_FUNCTION(true, sem);
+ int up_read(struct rw_semaphore *sem) UNLOCK_FUNCTION(sem);
  
- struct machine;
- struct thread;
+ int down_write(struct rw_semaphore *sem) EXCLUSIVE_LOCK_FUNCTION(sem);
++/*
++ * Tries to acquire an exclusive write lock without blocking. Returns false if
++ * any thread (including the calling thread) holds a read or write lock on @sem.
++ */
++bool down_write_trylock(struct rw_semaphore *sem) EXCLUSIVE_TRYLOCK_FUNCTION(true, sem);
+ int up_write(struct rw_semaphore *sem) UNLOCK_FUNCTION(sem);
+ 
+ #endif /* _PERF_RWSEM_H */
 -- 
 2.56.1.703.gf848ed807c-goog
 
