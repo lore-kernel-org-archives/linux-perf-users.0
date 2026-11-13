@@ -1,56 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.200
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794603908;
-	b=OrJIdTkZK5/9O7VRjt9TBcFRn5fe+NN92/lH2gi4A+1QFeqC7TCAu4YhvGCanaPEqR+z
-	 tcDlIASmcSg9KnZVc5sAAeBcS7GfNVtVK4Qq+YUMyWm6se022zqMUkARt3EaFpor9VEvH
-	 OskWC9GjKUh2iaXe56uFJ3LOePDmvpEorW5QBsoT3eC4QB+6U2UqIKbQ8slmHntRj7U/l
-	 y6Ri5xLT8oVCfMFr5/CfmNQLFBMTLxwQAl0gGUtap745QheXEjhLVFiqNLVT9rZxJ78g0
-	 OVFdFb0AZYVsKSNcHzWQOYslGXRpoK6xKeWKZXbkT9EEYv1C5pRsdVnK3xoFbEKCC5Q==
+	t=1794604116;
+	b=0OCVGeoyJ9SS0fiEoyCwKIkldS6Pr7UX19Huttbnoy7kHtM7AUM4HTTcLaflf4FHefGc
+	 OrwtLPEIYgyY13xEWxZkf9veNSMqTbUv06Iw59sTMbEf9hSYnbfRKqnUd+EN+9wKacPwH
+	 oWwPh2w0DyH2F9MnWJPmHLP2KUlgiGap/o334b4eJD/TACJsKXl+6SS/nVt0jQFj1K2w3
+	 ToFRNgQuRqCJ/ODCL+t9ALLWJXC9vWaIgm5mzh+qlV4NF81s3VJN2QgGq8bdT8G7hLpXA
+	 oNiu7SHtcVPzZh9fAot2f16+9nfszVpOm+XTIEFimg4+6nrXS7zGIeWaNfJ5WyAJlSA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794603908;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=Jbq1KlcC23l8K3eiUCCiu3as+w9HeADN+7P0Eq9a7iQ=;
-	b=WjV6uTl3d1q/eXS0Y2RhV6UkfaFUyBjKu51ih4T3M18WYeVfaGMcVaQut5dha+4toKef
-	 icTqP+nAoSgEleIprzf/IKFDOauN4ycUp359gwnzegfH95FlgmalQrC5h7Wv+qjpyqhxG
-	 bCQGG/sn/fW/NhWcKaae6lz6+wTltDxrf7a3iDYw3pigvFOVH5dUTRNrcdw8XYJVL7mxm
-	 tjG3ko+E5R+uRWJnu2fEboT7QAWqT8DjhxAiWiJQlWFkciJknKk/9Xu3CrmvTTvNQshTq
-	 H2gbAUuRsLr+VZeNU9I2j6QhFKuKxa/ZSDC3H8jbXGvz8Isvtz9+8qyY40lSJDYibZw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794604116;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
+	 X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
+	bh=lMtcuVS2Lr0ebu7RDUJZZXSvMpZ4q3ZWjn8clXjumSk=;
+	b=CQS59Fg6hNm/U9Ol3DEmr84ueyqX+gdmqgWhMnK2cSj9SU2hKb7LHdI1CWty4W7ylF3W
+	 64aZhusTUJDDpk7Zqo6XisFDsm/nK0gB2AyGKgSWGPXX/lWzHPmQ+uHq8j/nnTnNTsdv+
+	 RxW8UwDKu8CAp7VQPk+0pqoDLsaDtx+jqbOAtgTUYmmdO0M4MBir0DQD5U3bva4o6Cav6
+	 gUUHGR3AC8kREuNWJQNM4SeZRduvulQQ3v2tyYMghNXhsU5bL2O+1L1EeQU1/vCwu3Vw2
+	 CH32g5NlbwpRv9qNRMadPSVMhy0VKSwYw847HrKdMDXuhAX/TuUhbGoNsnxtyQqMF9g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nr8QMCEy;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=XLSA43if;
+	arc=none smtp.remote-ip=74.125.82.200
+Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8515E606A327
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 21:05:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04392606A33F
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 21:08:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 04392606A33F
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nr8QMCEy
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02A541F000C4;
-	Fri, 13 Nov 2026 21:05:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794603908;
-	bh=Jbq1KlcC23l8K3eiUCCiu3as+w9HeADN+7P0Eq9a7iQ=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nr8QMCEyicTQFic5edtp0RuaexEw6dbdgXIvXfgMSdD89pDKVUpxaR6Qq+v497lRs
-	 rmlA4hXT7cjU3ltJfPPVeAHAiBsrvOIUkdIPS+69h6/9r1mkdy1ARei0Gyqvn9hkb7
-	 trwZKAvyeFheiXvfZ6TC+gkCCwU0+FFcpNA68FPnw42nVZ9Ow4Cv35dtMJFQZdcSeK
-	 rB9ft6uFEzqf3YYF1Lu+EesaR85UiLIoc2KeLCfL14DRORPoZRJqMB3AY3pzASjHO6
-	 n8EH13KmKn1QZ/wOZfoq8xAL+yxIxz0aCQxILd9iLVFtr1SfHagdbCLbRhDGnpXkEt
-	 tcranRROVwPEQ==
-Message-ID: <sashiko-outbox-213689@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 25/30] perf pmus: Add perf_pmus__read_from_env()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261113195335.2865725-26-irogers@google.com>
-References: <20261113195335.2865725-1-irogers@google.com>
- <20261113195335.2865725-26-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Nov 2026 21:05:07 +0000
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=XLSA43if
+Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-30bcb065bfdso1804740eec.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 13:08:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1794604114; x=1795208914; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=lMtcuVS2Lr0ebu7RDUJZZXSvMpZ4q3ZWjn8clXjumSk=;
+        b=XLSA43ifBpJMwqdFTXSCPoLiCa5C7VQwLIIKh/s5nAe+8RwL4hoqjGpholFeml7Xtf
+         B+NZRDj+NMWkKSdeAEIVpICAhIWsYBU/EBNA6NVBKbNOmxyzmfaj8JAHt2YR4AnDTskw
+         PIp2pXfp7W3jXfVJqs6vuNBq6rhc5kDa/C5v12RDanPPQZT6pyp6UJJgXXHUm0K7n46b
+         oDISPumYbcan2xOp++LSgACnJVENV91F+UaMY937dKd1L69jveIv/vVgGksX3OACCxDS
+         SZmlRE5LrYo+u1qUBpMjHwILBUUMbsg0cCPbN43vN2crGfJPRVNw0ZrdTLV/OxY7+TvB
+         tf+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794604114; x=1795208914;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=lMtcuVS2Lr0ebu7RDUJZZXSvMpZ4q3ZWjn8clXjumSk=;
+        b=GCAhmU2w44pvSv2prO6Fx75IIqpfcor8Y8F6rTjTxEnlDMcXwFgoDlJpEBLxYhnDWX
+         wirLA5wCK521cZXYsu9fT/M7AorZs2AX2gkqqw2IZK0eeQXwIjz37xCOKW0+9Dm/SMD0
+         V9sn4rxGBdBcpkpQ0m639Y1HCI8xJPyvQnNR/5aNDVF4GcloKtYezKgAaoFhRVUxnXxY
+         IIfAb0yCamHireidL0UrUfHhRlj9/KVLP1fcI+IqoYtjwzbpewo2vRIxL8FgOjGHr8Xc
+         nY1Z7yUuYsCh0PuL98+ZoIv6Rt3q8YS7L6S2m+M2ayuteiKFviVoBpLyCN23CSBCw6/U
+         kKaw==
+X-Forwarded-Encrypted: i=1; AL+hErGVxW1DEI+BiuAk39kuzmZWpsaEtDuxGvn8nP72wLHwkoLA5+dW/svrg6Q5Jhjk4XiwuKQC3iUUBOGnpLt0p8/B@vger.kernel.org
+X-Gm-Message-State: APuU4Z95qL/J+l7kzG2lGLDxNhrxvMYhdTxAZeZRNcnq/DZm4TK0QYQh
+	wnVZutvmxnyAqDJ/wc0ip6odMplCs7qgLpwyu5ap0pe043HLnjter3G+UboJVsDjNw0ME/bDRA2
+	0+XWP3yVxXg==
+X-Received: from dyab1.prod.google.com ([2002:a05:693c:8301:b0:36e:f67b:23ab])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:b06:b0:36a:1089:9836
+ with SMTP id 5a478bee46e88-3796628ce32mr2632208eec.15.1794604113673; Fri, 13
+ Nov 2026 13:08:33 -0800 (PST)
+Date: Fri, 13 Nov 2026 13:08:12 -0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,144 +75,142 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
+Message-ID: <20261113210822.3112700-1-irogers@google.com>
+Subject: [PATCH 00/10] perf jevents: Block-indexed string compression and
+ default JEVENTS_ARCH=all
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issues to consider:
-- [Medium] perf pmus: empty core_pmus in perf_pmus__read_from_env()
-  without cpu caps
-- [Medium] perf pmus: broken event config name lookup in
-  env_pmu_find_or_add()
---
+Compiled-in PMU event and metric tables (pmu-events-in.o) currently
+store ~6.9 MiB of uncompressed string data in .rodata on x86 alone,
+causing JEVENTS_ARCH to default to $(SRCARCH) rather than all and
+preventing out-of-the-box cross-architecture perf.data event/metric
+resolution unless explicitly built with JEVENTS_ARCH=all.
 
-commit 62379d346fd8a3e273dd7df18d358ca721a7bc84
-Author: Ian Rogers <irogers@google.com>
+Compressing big_c_string as a single whole-table stream would force perf
+to allocate and decompress megabytes of unused CPU models' strings on
+startup just to resolve a single event, whereas compressing individual
+short strings suffers from poor compression ratios and per-string
+framing overhead.
 
-perf pmus: Add perf_pmus__read_from_env()
+Instead, this series introduces "block-indexed string compression":
+sorted, suffix-folded event and metric byte records are packed into
+~8 KiB blocks without splitting records across block boundaries, each
+block is compressed independently (sharing a single preset or trained
+dictionary across blocks so ~8 KiB blocks retain high compression
+ratios), and every uint32_t string offset is encoded as
+(block_id << 16) | sub_offset. An ~8 KiB target block size sits at the
+knee of the compression vs. random-access curve (smaller 1-4 KiB blocks
+pay 22-128% more .rodata for per-block entropy headers and index
+entries, while larger 16-64 KiB blocks yield <15% extra savings at 2-8x
+higher decompression and page-fault cost per binary-search probe). At
+runtime, pmu_events__get_string() uses a lock-free atomic block pointer
+cache to decompress only the touched ~8 KiB blocks on demand, leaving
+untouched CPU models' and non-host architectures' blocks compressed in
+.rodata at zero runtime CPU or heap cost.
 
-This commit adds perf_pmus__read_from_env() and perf_pmu__add_cap() to
-reconstruct core and other PMU lists and capabilities from perf.data
-header metadata, and lazily populates env->pmus in perf_env__pmus().
+The series starts with a standalone BigCString raw-byte fix for
+describe_metricgroup() binary-search ordering, prepares the string and
+PMU table layout, adds the zlib, lzma, and zstd block compression
+backends, and switches the default JEVENTS_ARCH to all:
 
-> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> index 6d68371107aa1..b924ff6180e41 100644
-> --- a/tools/perf/util/pmus.c
-> +++ b/tools/perf/util/pmus.c
+- Bug fix, string layout, and hot-path isolation (Patches 1-4):
+  - Patch 1 stores raw NUL-delimited UTF-8 bytes in BigCString instead
+    of C-escaped strings, fixing suffix folding and describe_metricgroup()
+    binary-search ordering on prefix-overlapping names (such as "Bad" vs
+    "BadSpec"; Fixes: 66c6e0c10027) without changing empty-pmu-events.c
+    so it can be cherry-picked standalone.
+  - Patch 2 partitions non-folded BigCString event strings before metric
+    strings and sorts entries lexicographically by their raw UTF-8 byte
+    sequence within each partition so identically prefixed event names,
+    encodings, descriptions, and metric expressions cluster into
+    adjacent ~8 KiB blocks, improving block compression ratios by
+    ~20-23%.
+  - Patch 3 stores PMU names directly as const char *pmu_name string
+    literals in struct pmu_table_entry (only 68 unique PMU names / 536 B
+    across ~443 rows across all architectures, already in .data.rel.ro)
+    so the compiler/linker merge them in .rodata.str1.1 and hot PMU
+    wildcard scans never touch big_c_string or trigger block
+    decompression.
+  - Patch 4 encapsulates big_c_string offset lookups behind
+    pmu_events__get_string(uint32_t offset) across pmu-events.c and
+    pmu-events-string.c.
+- On-demand block decompression backends (Patches 5-8):
+  - Patch 5 packs big_c_string into ~8 KiB record-aligned blocks indexed
+    by (block_id << 16) | sub_offset, adds lock-free thread-safe atomic
+    per-block decompression on demand, and adds --compress=zlib using
+    raw Deflate with a <= 32 KiB preset dictionary.
+  - Patch 6 adds --compress=lzma using raw LZMA2 per block with a 64 KiB
+    dictionary window.
+  - Patch 7 adds --compress=zstd using ZSTD_decompress_usingDDict() per
+    block with a once-digested shared 64 KiB ZSTD_DDict (~26% smaller
+    .rodata than dictionary-free ~8 KiB zstd blocks).
+  - Patch 8 wires JEVENTS_COMPRESS into Makefile.perf and
+    pmu-events/Build, preferring zstd, then zlib, then lzma, and falling
+    back to none.
+- Testing and JEVENTS_ARCH=all default (Patches 9-10):
+  - Patch 9 adds prefix-overlapping metricgroups.json test coverage and
+    an 8-thread concurrent event/metric/metricgroup stress test in
+    perf test pmu-events.
+  - Patch 10 switches the default JEVENTS_ARCH to all. Bundling all
+    architectures (x86, arm64, powerpc, riscv, s390, nds32) with zstd
+    shrinks pmu-events-in.o from 7.16 MiB (x86 + none) to 1.11 MiB
+    (all + zstd, -84.5%) and cuts the stripped perf binary from
+    13.32 MiB to 7.28 MiB (-45.4%), with ~3 ms median wall-clock
+    overhead on 'perf stat true'.
 
-[ ... ]
+AI Assistance Disclosure (per Documentation/process/coding-assistants.rst
+and Documentation/process/generated-content.rst):
+- Tools used: Antigravity coding assistant and Sashiko automated patch
+  review.
+- Summary of prompts and assistance: Interactive design and
+  implementation of the BigCString raw-byte fix and alphabetical
+  sorting, struct pmu_table_entry PMU name string literals, lock-free
+  8 KiB block-indexed decompression across zlib, lzma, and zstd,
+  Makefile.config/Build integration, multithreaded unit tests,
+  size/latency benchmarking, and Sashiko review fixes.
+- Testing performed: Built and tested JEVENTS_COMPRESS={none,zlib,lzma,zstd}
+  and NO_JEVENTS=1, JEVENTS_ARCH={x86,all}, AddressSanitizer +
+  LeakSanitizer, perf test (pmu-events, make, metric parsing), and
+  scripts/checkpatch.pl.
 
-> @@ -981,3 +984,234 @@ struct perf_pmu *perf_pmus__fake_pmu(void)
-> =20
->  	return &fake;
->  }
+Ian Rogers (10):
+  perf jevents: Store raw bytes in BigCString instead of C-escaped
+    strings
+  perf jevents: Sort BigCString entries alphabetically
+  perf jevents: Store PMU names as string literals in struct
+    pmu_table_entry
+  perf jevents: Encapsulate big_c_string lookups behind
+    pmu_events__get_string()
+  perf jevents: Add block-indexed string packing and --compress=zlib
+  perf jevents: Add --compress=lzma block compression backend
+  perf jevents: Add --compress=zstd block compression backend
+  perf build: Enable jevents string compression when available
+  perf tests pmu-events: Test metricgroup descriptions and concurrent
+    lookups
+  perf build: Default JEVENTS_ARCH to all
 
-[ ... ]
+ tools/perf/.gitignore                         |    1 +
+ tools/perf/Makefile.config                    |    9 +-
+ tools/perf/Makefile.perf                      |   13 +-
+ tools/perf/pmu-events/Build                   |   49 +-
+ .../arch/test/test_soc/cpu/metricgroups.json  |    4 +
+ tools/perf/pmu-events/empty-pmu-events.c      | 7804 +++++++++--------
+ tools/perf/pmu-events/jevents.py              |  967 +-
+ tools/perf/tests/make                         |    5 +-
+ tools/perf/tests/pmu-events.c                 |  209 +-
+ 9 files changed, 5015 insertions(+), 4046 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/test/test_soc/cpu/metricgroups.json
 
-> +	pmu->pmus =3D pmus;
-> +	pmu->sysfs_aliases_loaded =3D true;
-> +	pmu->caps_initialized =3D true;
-> +	pmu->max_precise =3D -1;
-> +	pmu->is_core =3D env_is_pmu_core(name, env);
-> +	pmu->auxtrace =3D !strcmp(name, "intel_pt") ||
-> +			!strcmp(name, "intel_bts") ||
-> +			!strcmp(name, "cs_etm") ||
-> +			strstarts(name, "arm_spe") ||
-> +			strstarts(name, "hisi_ptt");
-> +	pmu->is_uncore =3D !pmu->is_core && !pmu->auxtrace &&
-> +			 !perf_pmu__is_software(pmu) &&
-> +			 (perf_pmu__kind(pmu) =3D=3D PERF_PMU_KIND_PE ||
-> +			  pmu->type =3D=3D PERF_PMU_TYPE_FAKE);
-> +
-> +	if (!strcmp(name, "software") || !strcmp(name, "tool"))
-> +		pmu->events_table =3D perf_pmu__default_core_events_table();
-> +	else if (core_table && (pmu->is_core || pmu->is_uncore))
-> +		pmu->events_table =3D core_table;
 
-[Severity: Medium]
-Does setting pmu->events_table on an env-backed PMU while leaving
-pmu->format empty break perf_pmu__name_from_config() and leak help_msg?
-
-When print_event_desc() or evsel__fprintf() calls
-perf_event_attr__fprintf() with perf_env__pmus(env),
-perf_pmu__for_each_name_from_config() loads the JSON aliases from
-pmu->events_table via pmu_add_cpu_aliases() and calls
-perf_pmu__parse_terms_to_attr() -> pmu_config_term() with err =3D=3D NULL on
-each alias.  Because pmu->format is empty, pmu_find_format() returns NULL
-for every format term (such as event=3D or umask=3D):
-
-tools/perf/util/pmu.c:pmu_config_term() {
-    ...
-	format =3D pmu_find_format(&pmu->format, term->config);
-	if (!format) {
-		char *pmu_term =3D pmu_formats_string(&pmu->format);
-		char *unknown_term;
-		char *help_msg;
-    ...
-		help_msg =3D parse_events_formats_error_string(pmu_term);
-		if (err) {
-			parse_events_error__handle(err, term->err_term,
-						   unknown_term,
-						   help_msg);
-		} else {
-			pr_debug("%s (%s)\n", unknown_term, help_msg);
-			free(unknown_term);
-		}
-		free(pmu_term);
-		return -EINVAL;
-	}
-    ...
-}
-
-As a result, perf_pmu__name_from_config() fails to resolve format-based
-event names, and every alias iteration leaks help_msg in the !err branch.
-
-[ ... ]
-
-> +int perf_pmus__read_from_env(struct perf_pmus *pmus, struct perf_env *en=
-v)
-> +{
-> +	const struct pmu_events_table *core_table =3D NULL;
-> +	struct perf_pmu *pmu;
-> +
-> +	if (!pmus || !env)
-> +		return -EINVAL;
-> +
-> +	perf_pmus__exit(pmus);
-> +	pmus->read_pmu_types =3D PERF_TOOL_PMU_TYPE_ALL_MASK;
-
-[ ... ]
-
-> +	if (env->nr_cpu_pmu_caps > 0 && env->cpu_pmu_caps) {
-> +		pmu =3D pmu_find(pmus, "cpu");
-> +		if (!pmu && !list_empty(&pmus->core_pmus)) {
-> +			/* Match the writer's perf_pmus__find_core_pmu() order. */
-> +			list_sort(NULL, &pmus->core_pmus, pmus_cmp);
-> +			pmu =3D list_first_entry(&pmus->core_pmus, struct perf_pmu, list);
-> +			if (pmu->nr_caps > 0)
-> +				pmu =3D NULL;
-> +		} else if (!pmu) {
-> +			pmu =3D env_pmu_find_or_add(pmus, "cpu", PERF_TYPE_RAW,
-> +						  env, core_table);
-> +		}
-> +		if (pmu)
-> +			env_pmu_add_caps_strings(pmu, env->nr_cpu_pmu_caps, env->cpu_pmu_caps=
-);
-> +	}
-
-[Severity: Medium]
-Can perf_pmus__read_from_env() leave pmus->core_pmus empty when
-env->nr_cpu_pmu_caps is 0?
-
-Unlike pmu_read_sysfs(), which always creates a placeholder core PMU when
-pmus->core_pmus is empty, the fallback env_pmu_find_or_add(pmus, "cpu",
-PERF_TYPE_RAW, ...) here only runs when env->nr_cpu_pmu_caps > 0.  If a
-perf.data file has HEADER_PMU_MAPPINGS or HEADER_PMU_CAPS without CPU PMU
-capabilities and no PMU name matches env_is_pmu_core() (for example, a VM
-recording with only software and tracepoint PMUs), pmus->core_pmus stays
-empty while pmus->read_pmu_types is set to PERF_TOOL_PMU_TYPE_ALL_MASK,
-preventing pmu_read_sysfs() from creating the placeholder.
-perf_pmus__find_core_pmu() and evsel__find_pmu() then return NULL for
-PERF_TYPE_HARDWARE, PERF_TYPE_HW_CACHE, and PERF_TYPE_RAW events.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113195335.2865=
-725-1-irogers@google.com?part=3D25
+base-commit: 4af65363b11fc4fe65fcb497f68bbe4f3e3a4d2c
+-- 
+2.56.1.703.gf848ed807c-goog
