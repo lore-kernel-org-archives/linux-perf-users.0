@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.197
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794606582;
-	b=Y4RW4Ibj6a1xu2px91rxUFvRHMwdejp2uZHWPX1m7pIMwFXjEMm0WIchQPKk8GReDGEX
-	 FYd5zzmwLPqtquNy07Ththnc4zpB9KeDpaM6lcTpDddLelte3051L3HaCQsdPwK6SXg6O
-	 JIaytlSoKVQtZRHxalF0SHSJOGLfS7kzPVqXIEwLxHNuZT9esxcjNds39sIbEF52lLxB/
-	 4JQktIonYtUISEBg7gqOMp40AmEjnTUkRYxl1eyKt1ykD4hniI7pPahcUsY2Q1JTy6iAe
-	 ZLXVnsEzkZibS0xwysfnDCvlTmh1DX6POR0od28JRRm21KdQ2LNvKH1bc0p2Uk1K4BQ==
+	t=1794606585;
+	b=iH/bbaFx9VObQzFrqOf188xe3panqYnEeVUooxNMhwudC47h9GjdRyTLdK5xhMmHATrF
+	 kA3QEvP/xqlKXlsQfFQvzzFxY3QAUfIThBe9/myuyB/d//ECd2OQDp8CRozHyY+XP2P60
+	 uLcFvcxXdrAv62vSJlY2iKgJWDZo5pUKwZpF6to2knCBqHnfXVMpghvRnYYcZSEcsPMx9
+	 D2g3tXMmwWTDVnND1gpX1LNECJgE+m/YlqZqAu4X6LRl7yrhl57OlPJ16Bud8ngkU0JsB
+	 8KX8Na1KLuAlYVp3qU6sfra59YPI9lb7UBWsMAz4n7dyAxXaipoKj0waBey4iqColgw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794606582;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794606585;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=6TbHZoX/BlYBOr1K+nonbwDLBEmDmf3lXau0dRjbxaA=;
-	b=RxgPGf4tCKcekrhp6x1V4LAME5qXJrwRnqn1Zoe8sdboshWi6PB2nm81nGMIJXFRbEOM
-	 u0z9U2CNvsCYw1CYHpG2U6zZjoI/W2+puSc+ezL+Ox06KxomFKd3prG5rBXT/Dcu38DlW
-	 O28Q1EEYUFBRLK4qYCF4WnknleNeOnN8AGSGsHOthZvXqKmU8mMA1dVVW1+uvWA3gZ/kA
-	 ssyjjP6n32V6r27UGt5U3/+12kglHqL7Hq1VOj7nCv0kSwXsRyVjah7fODRUGUXOhn0Is
-	 srV38+w0WVN8aBBVb0qpstwc0lGg59D+WJ8pFIOcrsPxa5xmBa3/XyzuNVKLZxtODxg==
+	bh=X/OOpg/RGkyhTP7uOfnk3EfDfXfXJgmBMTxuwOM2NpE=;
+	b=pButqTQRDX7bYpgoJ2LHK6F/uZ/lygeNYBley0H7nxkFhnTsgzF7AblCkKafyhNa4g0v
+	 DwO5yvlkX4gkYT3r8To3CLNAR/V8W5z2tA3QnmUFaKFX0gJnMC9v3riTOQpRopplSYvPd
+	 SO+fWVCrIQmlLO2aaEr5X0/1zAdDlru8+92/QHL1TwVAm1f3LCHHsKi0nqvpTouPpvDz+
+	 GxiIUhVxg6bOS1DZG63xMZ1tnLnKlKGPSTaj1rarHkNgRaEQRkcVcJ505DN8QG/bJCpwE
+	 zEY1g83kbBhNkoCS+vNliVi/Ia636Fyt4uF2pTbS+7xgTkr/wwZ7k0SVyEPYevO8ejQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=p1HOHlJo;
-	arc=none smtp.remote-ip=74.125.82.197
-Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="hF+x7Kr/";
+	arc=none smtp.remote-ip=74.125.82.198
+Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C58360A5BC1
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 21:49:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9C58360A5BC1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8054360A5BE6
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 21:49:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8054360A5BE6
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=p1HOHlJo
-Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-378722fd4a3so1684110eec.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 13:49:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=hF+x7Kr/
+Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-36a3451ea93so1458404eec.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 13:49:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794606581; x=1795211381; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794606584; x=1795211384; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=6TbHZoX/BlYBOr1K+nonbwDLBEmDmf3lXau0dRjbxaA=;
-        b=p1HOHlJosggpU4ZHrS3STEbwHSMP8/zvE/U0v95nrdM1BARb4gygYpQdOUthsHFRmh
-         vFxsHKM0aE64wFoZOqYp21qB4tuIOd8eXEPKAXd4nkfmyCTbiYPEveNjRmxY7TabSZts
-         gsDYfWEC+L0hLUgmFEGLrZawboxN7A1DPjIPjLsMLwI3pRmO/E6MZuYmOAdkrF4JPEDm
-         qAZyIV3YRIX1SbLuyKScCPYb6qb/VN1m4XB74teW1skdtj0WX5+YCHZZo3wiWju0h6Qa
-         XZTLrYv9K7QnJinrbuq3XJOQ6G82azv5QqryuKqya5vxE3QN/FA0GLgt4NC6KmUK3Weq
-         BGyA==
+        bh=X/OOpg/RGkyhTP7uOfnk3EfDfXfXJgmBMTxuwOM2NpE=;
+        b=hF+x7Kr/R2M7OyC0n00fyQvcFGip2bBhoJ1Z1DqJ7AH32QVt1ruiiHraKvaaCnI6+z
+         0qBiu1SCS7PNmhUIg5SKBSez1rJTloizFw1q1vbDCvXlXXH+vbFw0InV2UA5ll6By7UQ
+         Y35Xf0474VV7YgVohrhlA1R9d4hr8rarwyI/T5B3g7ctziVnRrI2py7xLDRNRPo+Z7C/
+         R4QsrsUu8HDXdoKLolfH/QdvYjCxzupbSPAAorIUWxJBZgDzoU6SoLK2F+YHkbYzcweL
+         vbgkWKT9599Kg6jbNBJa/itEGNR5cRU1VcP7lwiVHMS41TCxQM1/cZevbaYPE9iYgmQ1
+         gMHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794606581; x=1795211381;
+        d=1e100.net; s=20260707; t=1794606584; x=1795211384;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=6TbHZoX/BlYBOr1K+nonbwDLBEmDmf3lXau0dRjbxaA=;
-        b=HCcfe7G6AwDfM5+Hqpnzj9jshBq68j3fFBdCdJmSEQ371tX/KtiDfz04wfIYHVJshI
-         oUWBIO3dLIqheFb7zP5CDfUFoniKEXXPkXkkQlZJGuDIoWslXz/XJVJAw9GJhGKC9W4P
-         mTwVS5ZztBpIz/BoH7jxkOhJsBGxX/bnrBHZEbvjrIXHD3WXi+vr5QIktyKe9krA+uAI
-         uhS5ys9qr6AjUWgzuOUT4NZed+jCye3s0ZpaEwodKwS8ezqpRhqiZzHs/A3iER/YVTos
-         cVDZgr2VnDblCuGS/KwKqyCmEsksUBdMhHuYsPzMpAyknzGKG3Ef9qjsfED9FA0HFHXW
-         +y4w==
-X-Forwarded-Encrypted: i=1; AL+hErHQwSp05lyDgSfveH0AYFIItTcCSFaIWJ6zMCrLlS80XF04ibxMyQCcyFGjiav4nQi6Cu6mXasYdPT+vCxlKely@vger.kernel.org
-X-Gm-Message-State: APuU4Z/DL82FkJuCt2KATHV67afg8LY/+QLozNQ28TwUKaQWtBlkPlag
-	q7hNUsIluS6oNL0fUW9DDwMQ3eO7jRqvFk89Kgp01NO0bW1khFfLYUD3y1WUnl8tBjurEJHXC7s
-	uxzoyDUSWRw==
-X-Received: from dycaa11.prod.google.com ([2002:a05:7301:540b:b0:36d:ad72:d847])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:8114:b0:36e:a321:5353
- with SMTP id 5a478bee46e88-37963371e09mr3567244eec.2.1794606579908; Fri, 13
- Nov 2026 13:49:39 -0800 (PST)
-Date: Fri, 13 Nov 2026 13:48:35 -0800
+        bh=X/OOpg/RGkyhTP7uOfnk3EfDfXfXJgmBMTxuwOM2NpE=;
+        b=tld7ZLSD4Maolo+d2pO50ENvbHnWeSaJl/G6NDWtm44OH0KZyOSrs33UwnnAxO/KAf
+         C3H4YEwV5AdoFv+BSRChh2oApadDDUAvlA413imcPc+n9RSwbdVQxLOFjz9yA6bCf0s1
+         cyhB+OGD+LyW+xPDB8E2mRTTCrqbeR2By8w0t3v7bj2OJ9ncp3aKil+yML2rO5E7CL54
+         ov2u9qC+HH5OV4XutoP5SHCYj1CXFbg85w6o00PiBJ0yN9cQgyx4lw/cu6xZhZeO+9kG
+         35nP+OeMlT6d/6P19x29972u1nQBp1wOyRMCOljQvyodBx0/kN3jLExQH6JGUiivs1oq
+         1QmQ==
+X-Forwarded-Encrypted: i=1; AL+hErGikGpYuXlWOWHko9nuc/z0pbURmR0WsCcXJPOVIFXUIV02FB3DZ4PrS98jM0SFx0W8hNxNmJkApLjVxAnP+XWu@vger.kernel.org
+X-Gm-Message-State: APuU4Z9Yg7vGDNv7fAIIfKgMiWB0KGAH1/h/O/RKbugOMoPYPt2Aw/BJ
+	2tP16FU3hEFy/JT+dLsZ9kIWbMKN6eXP/B+EAWl65r1ve5J3b4+xWACESNbflwmH4tqpPBJtK2W
+	aUq1ECbeU+A==
+X-Received: from dyab25.prod.google.com ([2002:a05:693c:8319:b0:372:7af9:c0a7])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:864b:10b0:35e:f4ac:5f8e
+ with SMTP id 5a478bee46e88-37960384530mr3381604eec.0.1794606583452; Fri, 13
+ Nov 2026 13:49:43 -0800 (PST)
+Date: Fri, 13 Nov 2026 13:48:36 -0800
 In-Reply-To: <20261113214850.3329699-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,8 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261113214850.3329699-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
-Message-ID: <20261113214850.3329699-12-irogers@google.com>
-Subject: [PATCH v1 11/26] perf trace: Use generic hashmap for syscall_stats
+Message-ID: <20261113214850.3329699-13-irogers@google.com>
+Subject: [PATCH v1 12/26] perf trace: Use generic hashmap for bpf-trace-summary
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
@@ -91,138 +91,81 @@ Cc: Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Convert trace and thread_trace syscall_stats maps in builtin-trace.c to
-DECLARE_HASHMAP(syscall_stats_map, long, struct syscall_stats *) and
-replace direct struct hashmap_entry and map->sz accesses with
-hashmap__for_each() and hashmap__size().
+Convert the syscall summary hashmaps in util/bpf-trace-summary.c to
+DECLARE_HASHMAP(syscall_data_map, long, struct syscall_data *) and use
+hashmap__for_each() instead of struct hashmap_entry iteration.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-trace.c | 43 ++++++++++++++++++++------------------
- 1 file changed, 23 insertions(+), 20 deletions(-)
+ tools/perf/util/bpf-trace-summary.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 128efe1be8c3..dcd7890db8ac 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -141,6 +141,9 @@ struct syscall_fmt {
- 	bool	   hexret;
+diff --git a/tools/perf/util/bpf-trace-summary.c b/tools/perf/util/bpf-trace-summary.c
+index 9a31dbf06cbb..2cc42f19d223 100644
+--- a/tools/perf/util/bpf-trace-summary.c
++++ b/tools/perf/util/bpf-trace-summary.c
+@@ -113,6 +113,8 @@ struct syscall_data {
+ 	struct syscall_node *nodes;
  };
  
-+struct syscall_stats;
-+DECLARE_HASHMAP(syscall_stats_map, long, struct syscall_stats *);
++DECLARE_HASHMAP(syscall_data_map, long, struct syscall_data *);
 +
- struct trace {
- 	struct perf_env		host_env;
- 	struct perf_tool	tool;
-@@ -187,7 +190,7 @@ struct trace {
- 	 * into the key, but this would make the code inconsistent with the
- 	 * per-thread version.
- 	 */
--	struct hashmap		*syscall_stats;
-+	struct syscall_stats_map	*syscall_stats;
- 	double			duration_filter;
- 	double			runtime_ms;
- 	unsigned long		pfmaj, pfmin;
-@@ -1658,7 +1661,7 @@ struct thread_trace {
- 		struct file   *table;
- 	} files;
- 
--	struct hashmap *syscall_stats;
-+	struct syscall_stats_map *syscall_stats;
- };
- 
- static size_t syscall_id_hash(long key, void *ctx __maybe_unused)
-@@ -1671,22 +1674,22 @@ static bool syscall_id_equal(long key1, long key2, void *ctx __maybe_unused)
- 	return key1 == key2;
+ static int datacmp(const void *a, const void *b)
+ {
+ 	const struct syscall_data * const *sa = a;
+@@ -169,7 +171,7 @@ static int print_common_stats(struct syscall_data *data, int max_summary, FILE *
+ 	return printed;
  }
  
--static struct hashmap *alloc_syscall_stats(void)
-+static struct syscall_stats_map *alloc_syscall_stats(void)
+-static int update_thread_stats(struct hashmap *hash, struct syscall_key *map_key,
++static int update_thread_stats(struct syscall_data_map *hash, struct syscall_key *map_key,
+ 			       struct syscall_stats *map_data)
  {
--	return hashmap__new(syscall_id_hash, syscall_id_equal, NULL);
-+	return syscall_stats_map__new(syscall_id_hash, syscall_id_equal, NULL);
+ 	struct syscall_data *data;
+@@ -233,7 +235,7 @@ static int print_thread_stats(struct syscall_data **data, int nr_data, int max_s
+ 	return printed;
  }
  
--static void delete_syscall_stats(struct hashmap *syscall_stats)
-+static void delete_syscall_stats(struct syscall_stats_map *syscall_stats)
+-static int update_total_stats(struct hashmap *hash, struct syscall_key *map_key,
++static int update_total_stats(struct syscall_data_map *hash, struct syscall_key *map_key,
+ 			      struct syscall_stats *map_data)
  {
--	struct hashmap_entry *pos;
+ 	struct syscall_data *data;
+@@ -305,7 +307,7 @@ static int print_total_stats(struct syscall_data **data, int nr_data, int max_su
+ 	return printed;
+ }
+ 
+-static int update_cgroup_stats(struct hashmap *hash, struct syscall_key *map_key,
++static int update_cgroup_stats(struct syscall_data_map *hash, struct syscall_key *map_key,
+ 			       struct syscall_stats *map_data)
+ {
+ 	struct syscall_data *data;
+@@ -379,12 +381,12 @@ int trace_print_bpf_summary(FILE *fp, int max_summary)
+ 	struct bpf_map *map = skel->maps.syscall_stats_map;
+ 	struct syscall_key *prev_key, key;
+ 	struct syscall_data **data = NULL;
+-	struct hashmap schash;
+-	struct hashmap_entry *entry;
++	struct syscall_data_map schash;
++	long entry_key;
++	struct syscall_data *entry_val;
+ 	int nr_data = 0;
+ 	int printed = 0;
+ 	int i;
 -	size_t bkt;
-+	long key;
-+	struct syscall_stats *val;
  
- 	if (!syscall_stats)
- 		return;
+ 	hashmap__init(&schash, sc_node_hash, sc_node_equal, /*ctx=*/NULL);
  
--	hashmap__for_each_entry(syscall_stats, pos, bkt)
--		zfree(&pos->pvalue);
--	hashmap__free(syscall_stats);
-+	hashmap__for_each(syscall_stats, key, val)
-+		free(val);
-+	syscall_stats_map__free(syscall_stats);
- }
- 
- static struct thread_trace *thread_trace__new(struct trace *trace)
-@@ -2865,7 +2868,7 @@ static void thread__update_stats(struct thread *thread, struct thread_trace *ttr
- 				 int id, struct perf_sample *sample, long err,
- 				 struct trace *trace)
- {
--	struct hashmap *syscall_stats = ttrace->syscall_stats;
-+	struct syscall_stats_map *syscall_stats = ttrace->syscall_stats;
- 	struct syscall_stats *stats = NULL;
- 	u64 duration = 0;
- 
-@@ -5210,25 +5213,25 @@ static int entry_cmp(const void *e1, const void *e2)
- 	return entry1->msecs > entry2->msecs ? -1 : 1;
- }
- 
--static struct syscall_entry *syscall__sort_stats(struct hashmap *syscall_stats)
-+static struct syscall_entry *syscall__sort_stats(struct syscall_stats_map *syscall_stats)
- {
- 	struct syscall_entry *entry;
--	struct hashmap_entry *pos;
--	unsigned bkt, i, nr;
-+	unsigned int i, nr;
-+	long id;
-+	struct syscall_stats *ss;
- 
--	nr = syscall_stats->sz;
-+	nr = hashmap__size(syscall_stats);
- 	entry = malloc(nr * sizeof(*entry));
- 	if (entry == NULL)
- 		return NULL;
+@@ -420,8 +422,8 @@ int trace_print_bpf_summary(FILE *fp, int max_summary)
+ 		goto out;
  
  	i = 0;
--	hashmap__for_each_entry(syscall_stats, pos, bkt) {
--		struct syscall_stats *ss = pos->pvalue;
-+	hashmap__for_each(syscall_stats, id, ss) {
- 		struct stats *st = &ss->stats;
+-	hashmap__for_each_entry(&schash, entry, bkt)
+-		data[i++] = entry->pvalue;
++	hashmap__for_each(&schash, entry_key, entry_val)
++		data[i++] = entry_val;
  
- 		entry[i].stats = ss;
- 		entry[i].msecs = (u64)st->n * (avg_stats(st) / NSEC_PER_MSEC);
--		entry[i].syscall = pos->key;
-+		entry[i].syscall = id;
- 		i++;
- 	}
- 	assert(i == nr);
-@@ -5238,7 +5241,7 @@ static struct syscall_entry *syscall__sort_stats(struct hashmap *syscall_stats)
- }
- 
- static size_t syscall__dump_stats(struct trace *trace, int e_machine, FILE *fp,
--				  struct hashmap *syscall_stats)
-+				  struct syscall_stats_map *syscall_stats)
- {
- 	size_t printed = 0;
- 	int lines = 0;
-@@ -5255,7 +5258,7 @@ static size_t syscall__dump_stats(struct trace *trace, int e_machine, FILE *fp,
- 	printed += fprintf(fp, "                                     (msec)    (msec)    (msec)    (msec)        (%%)\n");
- 	printed += fprintf(fp, "   --------------- --------  ------ -------- --------- --------- ---------     ------\n");
- 
--	for (size_t i = 0; i < syscall_stats->sz; i++) {
-+	for (size_t i = 0; i < hashmap__size(syscall_stats); i++) {
- 		struct syscall_entry *entry = &entries[i];
- 		struct syscall_stats *stats = entry->stats;
+ 	qsort(data, nr_data, sizeof(*data), datacmp);
  
 -- 
 2.56.1.703.gf848ed807c-goog
