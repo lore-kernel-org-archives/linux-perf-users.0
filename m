@@ -1,75 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.200
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.198
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794613069;
-	b=2fPJLI7pEZ1cd0ZN8lgKacuyC/Rzgt9gwZSEqwZFn4Fb8PIZCR3i8ELsRtth7xsAl9KV
-	 CRlm0lqZ5qp1SXOu8SeV2hY0oVzhysQJ4HVuIkq9KZtUOwDOakkmWWW1dbOUgFaIP+gj7
-	 6L2Zh0MI7wbSatSw/mtuWm/naE8VqPdKXEsyFRS/Tt8f0YqJXWrZiFaoSK1/rjH9UvW2I
-	 CVJUL1+lfHLi7Q5EyTfBRFSL/YDVKunCzwAyaqvzGusHZJ9sqlg+m7272/PhbKCIkgL4k
-	 Uhx0BYM9a5SkdCeYTT0G6vA0SIaHL/8rOdH+M6ME6oS8y4qargJLLjPgzPwW3pUDraQ==
+	t=1794613070;
+	b=ufvneMMVUySZbPSfY77x6VdCApCPcpHxPdXL3bFeuQzGTPosNti9T+fl16S2CTqzEjGf
+	 74gRN2u1skejxUKnBY3u7BeoLRfv+8VX/PEM8D1x8EfHSVHN+iDkxTHINy8BpvX5Rylgu
+	 nH+tOynDoLates9B1W7zqb/im0Qp1uKVPJLvpgAeuIzRTQFnmWXJCF6m8BfZmFfiux7tf
+	 BZsb3z8fzAJeHNdTSnrfEXzBa1wiGDotC2FeGziDZfCiLdUVVoX6g4HpD6qNFFDIYyYVJ
+	 bg/0d/TirtRUNdc3P7KJPbc2SOL2upU4t8hx5PppXXhG9XRMwf/D8CmhhmKKC1x2Rxg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794613069;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794613070;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type:Content-Transfer-Encoding;
-	bh=F5CDZ1JWHhEdFBYjLq8IbYW2bP/odnNfvavGEVAdPAY=;
-	b=yFAX8/a860R6pQxt0l9UbuuaREeX/frqj2mBsC/QPUFdpZU+ifnhz4rf+RGTlKhSHba3
-	 PA+HxfazCMSzFEmvpBIEOceBhtNltffDrhyCgJejDxHLL0opaHEFUGJsA0purNTupiJSO
-	 nt+VtVC/cNBzjZFicozoA93qZb/0Z+MwypFZ92czDVjhIQ6gjwvJybeIglFLrlHvvFsUV
-	 SrGDykWJehyuw6bXv0V5NQ8VOvsAbXx8OKWq+Em8pE7IiEaEcZUnrwOMzzsBjtt+sem9L
-	 uwjGKXV0M/SKU2Jzd27HIbLA8hxsZ6ReFVyHKdID2H2oDc/nMivMjRIF92Yvr3i00bQ==
+	bh=bvYtgIwm0dIvAof3bYYExPnF0b+1e6DfTMpx/hgowV8=;
+	b=cz+QFMdTFsmsYZM7fc5bXVsWJLFbJhsnVUtVEZCjp2Kkgp8ZpNdE2o6Vrz4EDE2RAkWC
+	 ayGEt4bcwapsvoT9JQZBTluHzF2lHOZtSDuqKxL7drEPC4TQigiH4J1dx+UCuzRz81VkF
+	 dYgZJ8awoqR2QzPElx00uewsggrGihxjOSRxHgoAAv5hz0ssfCcTxy4MH8gLrKzs6nRLj
+	 Rkd3iyoxnVD3GIUZxGeliSvxB09hWR6AINY7H5042QgIiPfQRUAyADF8Q78p99qv+D36s
+	 c3gvdxTTV4r9IsvztVhjLiAg1j/ZHaPtf4b79FT7Pdw6krcNAwIZVP2sm9MkGweMGdQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=JjWnuGzl;
-	arc=none smtp.remote-ip=74.125.82.200
-Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=c2zzK9gb;
+	arc=none smtp.remote-ip=209.85.215.198
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9AE606A881
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 23:37:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7D9AE606A881
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F9D606A32D
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 23:37:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 34F9D606A32D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=JjWnuGzl
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-375bac6bd21so1121700eec.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 15:37:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=c2zzK9gb
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-cdb8e8bccdeso775227a12.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 15:37:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794613066; x=1795217866; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794613068; x=1795217868; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=F5CDZ1JWHhEdFBYjLq8IbYW2bP/odnNfvavGEVAdPAY=;
-        b=JjWnuGzl5rwC15WZHpYPzORPWu1ZstkvDosccwKY+egLRTP0PJez731mXsspbCpHSJ
-         BI10BS68YW/j/ISXK2cTcWwuT9Hmmy3pQHjmnuwhZ0VN4mSUQZiXiFunDh0vWpZvHHAn
-         zh9veCYkbygzErVTupTEtrixdq0JYwwNjbU4ALev8YLEqLTlUQ3O7NP6Xcx7v2XsCWuK
-         f76KzN2TZSrt/7CMQCe4qzK5rPcXSzmPpUdnIhZI6DcY/mzULr5CYue8bxuyjwlu/pg5
-         O4RdiArmPwh6PPVm0YGLsBi70UQXDKEN0vbB89ISv0VQ+pPkDm/dKpxWddLeHnVw6gx9
-         FhHw==
+        bh=bvYtgIwm0dIvAof3bYYExPnF0b+1e6DfTMpx/hgowV8=;
+        b=c2zzK9gbR/lRqXzdj+W4e+t5VA532hBCMGktqq2DW7Jgp9R8umO/sRz2PisShjDCcg
+         sj+HZjmooLF83bfPUaCzL/ubZz26sXsmU8ODxCXMQgIEyuWzmv3aqNTldnrlle3g0Zsb
+         KE141sJinzxXlgKNVK6mTcORA5crPlmFZfgfLwh7/FfEZBTYtaRn/cTzzR8QoYOF8lSw
+         YCbXCvEo50S+kof2w3PdCLJEGxEGnVF28Yl+wh3pcxyI6I4ogdNx7sPrOmiJ8avA6p1b
+         gms94XvId/TBgSV9cH4ajK9Jt2Pmiqv4FJhRuIeHig1Ex0kBpkYBdo7nVw98PYmRtPVS
+         0/Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794613066; x=1795217866;
+        d=1e100.net; s=20260707; t=1794613068; x=1795217868;
         h=content-transfer-encoding:content-type:cc:to:from:subject
          :message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=F5CDZ1JWHhEdFBYjLq8IbYW2bP/odnNfvavGEVAdPAY=;
-        b=WZmxkxxmWLuK+SOV2llX0rzHbJMywdge28fUI7BadAjoxuGYD/XG1n8DMZmLKeD79w
-         ruKWX+J5mRslYrpyiFAFKYUkK2c2rz0ixBNgNPiqRAjws4FNzySfm7Y19U/hDIAAV9M8
-         5FXQal7jsw2mJFJffsIpHe+TuM92j4hR8RkCqCca5qO6QAilFOzU43t1vP4LujU/5C5B
-         oG5u6b1CmVobYH8rfpTrFDNbivT8n18Vy/gdLfOBWLkRPG4SVdgHyfRf9NMQVw6QnEvH
-         0wKCg7f2e+vA1XuPKPqGtzq1FGoK5uI7JoCPxf9jLTGA8AOgvnenA4EzvZyxh3eXjJ3d
-         qnng==
-X-Forwarded-Encrypted: i=1; AL+hErGU4WpFOasNOYKB1/KcbQgK20p6CZ7M17VdQO9xiz3AX/zTNFpXRLmJ4ZpywvcafLoafl9BM1spxEvEki/wFHlp@vger.kernel.org
-X-Gm-Message-State: APuU4Z9R9rEXOPtvunp+iJGtvdvea6Cii712AHt+/QsfMGTENncWGoPs
-	QLpJseO7mfDUw5A9IYAjYVdN0LwbJm8Pnkf67yn6aRcbuM8AiaRhDqecWtU8PTQNgzNFWv9o7Gc
-	OKD3CdlBzbA==
-X-Received: from dyff26.prod.google.com ([2002:a05:693c:805a:b0:378:1191:3e95])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:87d4:10b0:371:197b:5ade
- with SMTP id 5a478bee46e88-377e1016802mr6317848eec.11.1794613065746; Fri, 13
- Nov 2026 15:37:45 -0800 (PST)
-Date: Fri, 13 Nov 2026 15:37:36 -0800
+        bh=bvYtgIwm0dIvAof3bYYExPnF0b+1e6DfTMpx/hgowV8=;
+        b=Mv9VFOsWYFqzHBpYO1FkfwnEF2Yx/1krXKORtFjLJe3HT/7pF1DQWKWkUxdErof2cw
+         X+yPd8UrBDOfZ+5rhbSkseXTP5Qqp/QZSqf7x50vDYHy1DkRaPcVqspAsJfgP4LCOLLC
+         ji+xfT88cMqWNjyaCIki7nHfhUU3CJHiXMAZcJOr3xXGctX13sqTwNg5PZHWz9M6ngFI
+         UcIcNYmNsF8LgDAQGvkDPQotdX5sGOBJ51lL/QQjmnBKfbAI6WJveL/YejxVdXXT1OPm
+         niy3/Ayj6/EfHLpMstH+WDOPmVr7u7KYPHAfTvoBJyUM+0ouv6xuhItbKsgedoSPBScW
+         m2lQ==
+X-Forwarded-Encrypted: i=1; AL+hErFt4vCiZxcoddH7lLxyEjm1IVa01opq8+FDIP32jZhhz+0JKjaZIfvs7u67zQkeKsnhPG4LGgNpFvW2JoWvw57M@vger.kernel.org
+X-Gm-Message-State: APuU4Z9pDc2RSfulZ+wbQPf5TggaVwlABnBG2LIKwq7EIlNvRo2wCmPl
+	X5SIJrVDfLQgrSmsT6GKJpnmCbZ+dYFtrvl/NHJnbTKo4USvhI7zvFCSV3OnktJr0mOSMAKQZDz
+	/OS1zcRbS2g==
+X-Received: from pjbbp7.prod.google.com ([2002:a17:90b:c07:b0:3b1:2eb3:19c7])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:e016:b0:3b1:b9ed:5dd0
+ with SMTP id 98e67ed59e1d1-3b1b9ed5e3fmr1892655a91.35.1794613068188; Fri, 13
+ Nov 2026 15:37:48 -0800 (PST)
+Date: Fri, 13 Nov 2026 15:37:37 -0800
 In-Reply-To: <20261113233739.3626499-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -82,8 +82,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261113233739.3626499-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
-Message-ID: <20261113233739.3626499-2-irogers@google.com>
-Subject: [PATCH v2 1/4] perf tool_pmu: Add memory events
+Message-ID: <20261113233739.3626499-3-irogers@google.com>
+Subject: [PATCH v2 2/4] perf tool_pmu: Add network events
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -95,653 +95,338 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Add tool PMU events to report memory usage information exposed by
-/proc/pid/smaps_rollup and /proc/pid/statm.
+Add system-wide tool PMU events to report network statistics from
+/proc/net/dev. Since /proc/pid/net/dev reports statistics for the entire
+network namespace rather than an individual process, reject opening
+these events in per-process or cgroup mode.
 
-The following events are added:
-- memory_anon_huge_pages: Anonymous Huge Pages memory in bytes.
-- memory_anonymous: Anonymous (non-file-backed) memory in bytes.
-- memory_data: Data and stack segment memory in bytes.
-- memory_file_pmd_mapped: File-backed PMD-mapped memory in bytes.
-- memory_ksm: Kernel Samepage Merging (KSM) memory in bytes.
-- memory_lazyfree: LazyFree marked memory in bytes.
-- memory_locked: RAM-locked memory in bytes.
-- memory_private_clean: Private clean memory in bytes.
-- memory_private_dirty: Private dirty memory in bytes.
-- memory_private_hugetlb: Private Huge Pages memory in bytes.
-- memory_pss: Proportional Set Size (PSS) in bytes.
-- memory_pss_anon: Anonymous PSS memory in bytes.
-- memory_pss_dirty: Dirty PSS memory in bytes.
-- memory_pss_file: File-backed PSS memory in bytes.
-- memory_pss_shmem: Shared PSS memory in bytes.
-- memory_referenced: Referenced/accessed memory in bytes.
-- memory_rss: Resident Set Size (RSS) in bytes.
-- memory_shared_clean: Shared clean memory in bytes.
-- memory_shared_dirty: Shared dirty memory in bytes.
-- memory_shared_hugetlb: Shared Huge Pages memory in bytes.
-- memory_shmem_pmd_mapped: Shared PMD-mapped memory in bytes.
-- memory_size: Virtual memory size in bytes.
-- memory_swap: Swapped-out memory in bytes.
-- memory_swap_pss: Proportional swap memory (SwapPss) in bytes.
-- memory_text: Code (text segment) memory in bytes.
-- memory_uss: Unique Set Size (USS) in bytes.
+The following events are added for both RX (receive) and TX (transmit):
+- bytes
+- packets
+- errors
+- drop
+- fifo
+- frame (RX only) / colls (TX only)
+- compressed
+- multicast (RX only) / carrier (TX only)
 
-The events are aggregated across processes in system-wide mode, or
-reported per-process when monitoring specific tasks. In per-process mode,
-open a /proc/<pid> directory descriptor and resolve statm or smaps_rollup
-on each read so post-exec address spaces are observed without PID-reuse
-races, and deduplicate sibling threads sharing a Tgid so multi-threaded
-processes are not multiplied by thread count.
+Track initial and accumulated values across enable/disable transitions so
+perf stat reports deltas over the measurement period rather than
+cumulative totals since boot. Also honor the group leader's
+attr.disabled state when opening grouped tool events and map CPU indices
+safely in evsel__enable_cpu(), evsel__disable_cpu(), and tool_pmu xyarray
+lookups when single-CPU tool events are grouped with per-CPU events.
 
-Because /proc/<pid>/statm and /proc/<pid>/smaps_rollup require a live
-mm_struct at counter read time, non-memory_rss per-process events require
-an active target at read time (such as -p <pid> or -I interval mode while
-a workload runs). For memory_rss, fall back to wait4 rusage ru_maxrss
-when a forked workload has already terminated at counter read time.
+Example output:
 
-Example per-process and system-wide output:
-
-  $ perf stat -e memory_size,memory_rss,memory_pss,memory_uss \
-      -e memory_data,memory_text -p 3558512 -- sleep 0.1
-
-   Performance counter stats for process id '3558512':
-
-           7,520,256      memory_size
-           4,542,464      memory_rss
-             585,728      memory_pss
-             356,352      memory_uss
-             458,752      memory_data
-             892,928      memory_text
-
-         0.101111221 seconds time elapsed
-
-  $ perf stat -a -e memory_size,memory_rss,memory_pss,memory_uss sleep 0.1
+  $ perf stat -a -e net_rx_bytes,net_rx_packets,net_tx_bytes \
+      -e net_tx_packets -- sleep 0.02
 
    Performance counter stats for 'system wide':
 
-  104,040,572,162,048      memory_size
-      40,880,496,640      memory_rss
-      24,085,870,592      memory_pss
-      22,840,549,376      memory_uss
+              16,971      net_rx_bytes
+                  10      net_rx_packets
+              17,214      net_tx_bytes
+                  10      net_tx_packets
 
-         0.101068461 seconds time elapsed
+         0.017721776 seconds time elapsed
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c                     |  81 ++-
- .../pmu-events/arch/common/common/tool.json   | 156 +++++
- tools/perf/pmu-events/empty-pmu-events.c      | 326 +++++++----
- tools/perf/util/tool_pmu.c                    | 552 ++++++++++++++++--
- tools/perf/util/tool_pmu.h                    |  26 +
- 5 files changed, 954 insertions(+), 187 deletions(-)
+ .../pmu-events/arch/common/common/tool.json   |  96 ++++++
+ tools/perf/pmu-events/empty-pmu-events.c      | 286 +++++++++++-------
+ tools/perf/util/evsel.c                       |  53 +++-
+ tools/perf/util/tool_pmu.c                    | 263 ++++++++++++++--
+ tools/perf/util/tool_pmu.h                    |  17 ++
+ 5 files changed, 571 insertions(+), 144 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 37752d6bfef4..d2c8c0ccea49 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -139,6 +139,7 @@ static const char		*output_name;
- static int			output_fd;
- static char			*metrics;
- static struct rusage_stats	ru_stats;
-+static bool			ru_stats_valid;
-=20
- struct perf_stat {
- 	bool			 record;
-@@ -283,12 +284,13 @@ static int read_single_counter(struct evsel *counter,=
- int cpu_map_idx, int threa
- 	int err =3D evsel__read_counter(counter, cpu_map_idx, thread);
-=20
- 	/*
--	 * Reading user and system time will fail when the process
--	 * terminates. Use the wait4 values in that case.
-+	 * Reading user, system time and memory_rss will fail when a forked
-+	 * workload terminates. Use the wait4 values in that case.
- 	 */
--	if (err && cpu_map_idx =3D=3D 0 &&
-+	if (err && cpu_map_idx =3D=3D 0 && thread =3D=3D 0 && ru_stats_valid &&
- 	    (evsel__tool_event(counter) =3D=3D TOOL_PMU__EVENT_USER_TIME ||
--	     evsel__tool_event(counter) =3D=3D TOOL_PMU__EVENT_SYSTEM_TIME)) {
-+	     evsel__tool_event(counter) =3D=3D TOOL_PMU__EVENT_SYSTEM_TIME ||
-+	     evsel__tool_event(counter) =3D=3D TOOL_PMU__EVENT_MEMORY_RSS)) {
- 		struct perf_counts_values *count =3D
- 			perf_counts(counter->counts, cpu_map_idx, thread);
- 		struct perf_counts_values *old_count =3D NULL;
-@@ -299,10 +301,15 @@ static int read_single_counter(struct evsel *counter,=
- int cpu_map_idx, int threa
-=20
- 		if (evsel__tool_event(counter) =3D=3D TOOL_PMU__EVENT_USER_TIME)
- 			val =3D ru_stats.ru_utime_usec_stat.mean;
--		else
-+		else if (evsel__tool_event(counter) =3D=3D TOOL_PMU__EVENT_SYSTEM_TIME)
- 			val =3D ru_stats.ru_stime_usec_stat.mean;
-+		else
-+			val =3D (u64)stat_config.ru_data.ru_maxrss * 1024ULL;
-=20
--		count->val =3D val;
-+		if (evsel__tool_event(counter) =3D=3D TOOL_PMU__EVENT_MEMORY_RSS && old_=
-count)
-+			count->val =3D old_count->val + val;
-+		else
-+			count->val =3D val;
- 		if (old_count) {
- 			count->run =3D old_count->run + 1;
- 			count->ena =3D old_count->ena + 1;
-@@ -612,6 +619,34 @@ static void compute_tts(struct timespec *time_start, s=
-truct timespec *time_stop,
- 	*time_to_sleep =3D tts;
- }
-=20
-+static void update_rusage_stats(const struct rusage *rusage)
-+{
-+	const u64 us_to_ns =3D 1000;
-+	const u64 s_to_ns =3D 1000000000;
-+
-+	update_stats(&ru_stats.ru_utime_usec_stat,
-+		(rusage->ru_utime.tv_usec * us_to_ns + rusage->ru_utime.tv_sec * s_to_ns=
-));
-+	update_stats(&ru_stats.ru_stime_usec_stat,
-+		(rusage->ru_stime.tv_usec * us_to_ns + rusage->ru_stime.tv_sec * s_to_ns=
-));
-+	ru_stats_valid =3D true;
-+}
-+
-+static bool reap_workload(int *status, int options)
-+{
-+	pid_t pid =3D evlist__workload_pid(evsel_list);
-+
-+	if (pid <=3D 0)
-+		return false;
-+
-+	if (wait4(pid, status, options, &stat_config.ru_data) <=3D 0)
-+		return false;
-+
-+	child_pid =3D -1;
-+	evlist__set_workload_pid(evsel_list, -1);
-+	update_rusage_stats(&stat_config.ru_data);
-+	return true;
-+}
-+
- static int dispatch_events(bool forks, int timeout, int interval, int *tim=
-es)
- {
- 	int child_exited =3D 0, status =3D 0;
-@@ -628,18 +663,20 @@ static int dispatch_events(bool forks, int timeout, i=
-nt interval, int *times)
- 	time_to_sleep =3D sleep_time;
-=20
- 	while (!done) {
--		if (forks) {
--			child_exited =3D waitpid(child_pid, &status, WNOHANG);
--		} else {
-+		if (forks)
-+			child_exited =3D reap_workload(&status, WNOHANG) ? 1 : 0;
-+		else
- 			child_exited =3D !is_target_alive(&target,
- 							evlist__core(evsel_list)->threads) ? 1 : 0;
--		}
-+
- 		if (child_exited)
- 			break;
-=20
- 		clock_gettime(CLOCK_MONOTONIC, &time_start);
- 		if (!(evlist__poll(evsel_list, time_to_sleep) > 0)) { /* poll timeout or=
- EINTR */
--			if (timeout || handle_interval(interval, times))
-+			if (forks && reap_workload(&status, WNOHANG))
-+				child_exited =3D 1;
-+			if (timeout || handle_interval(interval, times) || child_exited)
- 				break;
- 			time_to_sleep =3D sleep_time;
- 		} else { /* fd revent */
-@@ -761,17 +798,6 @@ static int create_perf_stat_counter(struct evsel *evse=
-l,
- 					      evsel->core.threads);
- }
-=20
--static void update_rusage_stats(const struct rusage *rusage)
--{
--	const u64 us_to_ns =3D 1000;
--	const u64 s_to_ns =3D 1000000000;
--
--	update_stats(&ru_stats.ru_utime_usec_stat,
--		(rusage->ru_utime.tv_usec * us_to_ns + rusage->ru_utime.tv_sec * s_to_ns=
-));
--	update_stats(&ru_stats.ru_stime_usec_stat,
--		(rusage->ru_stime.tv_usec * us_to_ns + rusage->ru_stime.tv_sec * s_to_ns=
-));
--}
--
- static int __run_perf_stat(int argc, const char **argv, int run_idx)
- {
- 	int interval =3D stat_config.interval;
-@@ -787,6 +813,8 @@ static int __run_perf_stat(int argc, const char **argv,=
- int run_idx)
- 	int err, open_err =3D 0;
- 	bool second_pass =3D false, has_supported_counters;
-=20
-+	ru_stats_valid =3D false;
-+
- 	if (forks) {
- 		if (evlist__prepare_workload(evsel_list, &target, argv, is_pipe,
- 					     workload_exec_failed_signal) < 0) {
-@@ -979,11 +1007,9 @@ static int __run_perf_stat(int argc, const char **arg=
-v, int run_idx)
- 	if (forks) {
- 		if (interval || timeout || evlist__ctlfd_initialized(evsel_list))
- 			status =3D dispatch_events(forks, timeout, interval, &times);
--		if (child_pid !=3D -1) {
--			if (timeout)
--				kill(child_pid, SIGTERM);
--			wait4(child_pid, &status, 0, &stat_config.ru_data);
--		}
-+		if (child_pid !=3D -1 && timeout)
-+			kill(child_pid, SIGTERM);
-+		reap_workload(&status, 0);
-=20
- 		if (workload_exec_errno) {
- 			errno =3D workload_exec_errno;
-@@ -1026,7 +1052,6 @@ static int __run_perf_stat(int argc, const char **arg=
-v, int run_idx)
- 		evlist__reset_aggr_stats(evsel_list);
- 	} else {
- 		update_stats(stat_config.walltime_nsecs_stats, t1 - t0);
--		update_rusage_stats(&stat_config.ru_data);
- 	}
-=20
- 	/*
 diff --git a/tools/perf/pmu-events/arch/common/common/tool.json b/tools/per=
 f/pmu-events/arch/common/common/tool.json
-index 14d0d60a1976..9e0e89553847 100644
+index 9e0e89553847..a332cbf842f7 100644
 --- a/tools/perf/pmu-events/arch/common/common/tool.json
 +++ b/tools/perf/pmu-events/arch/common/common/tool.json
-@@ -82,5 +82,161 @@
-     "EventName": "target_cpu",
-     "BriefDescription": "1 if CPUs being analyzed, 0 if threads/processes"=
-,
-     "ConfigCode": "14"
+@@ -238,5 +238,101 @@
+     "EventName": "memory_uss",
+     "BriefDescription": "Unique Set Size (USS) in bytes",
+     "ConfigCode": "40"
 +  },
 +  {
 +    "Unit": "tool",
-+    "EventName": "memory_anon_huge_pages",
-+    "BriefDescription": "Memory backed by anonymous huge pages in bytes",
-+    "ConfigCode": "15"
++    "EventName": "net_rx_bytes",
++    "BriefDescription": "System-wide network received bytes",
++    "ConfigCode": "41"
 +  },
 +  {
 +    "Unit": "tool",
-+    "EventName": "memory_anonymous",
-+    "BriefDescription": "Memory not mapped to a file (anonymous) in bytes"=
-,
-+    "ConfigCode": "16"
++    "EventName": "net_rx_packets",
++    "BriefDescription": "System-wide network received packets",
++    "ConfigCode": "42"
 +  },
 +  {
 +    "Unit": "tool",
-+    "EventName": "memory_data",
-+    "BriefDescription": "Memory dedicated to data and stack in bytes",
-+    "ConfigCode": "17"
++    "EventName": "net_rx_errors",
++    "BriefDescription": "System-wide network received errors",
++    "ConfigCode": "43"
 +  },
 +  {
 +    "Unit": "tool",
-+    "EventName": "memory_file_pmd_mapped",
-+    "BriefDescription": "Memory backed by file and mapped with Page Middle=
- Directory (PMD) in bytes",
-+    "ConfigCode": "18"
++    "EventName": "net_rx_drop",
++    "BriefDescription": "System-wide network received dropped packets",
++    "ConfigCode": "44"
 +  },
 +  {
 +    "Unit": "tool",
-+    "EventName": "memory_ksm",
-+    "BriefDescription": "Memory shared via Kernel Samepage Merging (KSM) i=
-n bytes",
-+    "ConfigCode": "19"
++    "EventName": "net_rx_fifo",
++    "BriefDescription": "System-wide network received fifo overruns",
++    "ConfigCode": "45"
 +  },
 +  {
 +    "Unit": "tool",
-+    "EventName": "memory_lazyfree",
-+    "BriefDescription": "Memory marked as LazyFree in bytes",
-+    "ConfigCode": "20"
++    "EventName": "net_rx_frame",
++    "BriefDescription": "System-wide network received framing errors",
++    "ConfigCode": "46"
 +  },
 +  {
 +    "Unit": "tool",
-+    "EventName": "memory_locked",
-+    "BriefDescription": "Memory locked in RAM in bytes",
-+    "ConfigCode": "21"
++    "EventName": "net_rx_compressed",
++    "BriefDescription": "System-wide network received compressed packets",
++    "ConfigCode": "47"
 +  },
 +  {
 +    "Unit": "tool",
-+    "EventName": "memory_private_clean",
-+    "BriefDescription": "Private clean memory (not shared, not modified) i=
-n bytes",
-+    "ConfigCode": "22"
++    "EventName": "net_rx_multicast",
++    "BriefDescription": "System-wide network received multicast packets",
++    "ConfigCode": "48"
 +  },
 +  {
 +    "Unit": "tool",
-+    "EventName": "memory_private_dirty",
-+    "BriefDescription": "Private dirty memory (not shared, modified) in by=
-tes",
-+    "ConfigCode": "23"
++    "EventName": "net_tx_bytes",
++    "BriefDescription": "System-wide network transmitted bytes",
++    "ConfigCode": "49"
 +  },
 +  {
 +    "Unit": "tool",
-+    "EventName": "memory_private_hugetlb",
-+    "BriefDescription": "Private memory backed by huge pages in bytes",
-+    "ConfigCode": "24"
++    "EventName": "net_tx_packets",
++    "BriefDescription": "System-wide network transmitted packets",
++    "ConfigCode": "50"
 +  },
 +  {
 +    "Unit": "tool",
-+    "EventName": "memory_pss",
-+    "BriefDescription": "Proportional Share Size (PSS) in bytes",
-+    "ConfigCode": "25"
++    "EventName": "net_tx_errors",
++    "BriefDescription": "System-wide network transmitted errors",
++    "ConfigCode": "51"
 +  },
 +  {
 +    "Unit": "tool",
-+    "EventName": "memory_pss_anon",
-+    "BriefDescription": "Proportional Share Size (PSS) for anonymous memor=
-y in bytes",
-+    "ConfigCode": "26"
++    "EventName": "net_tx_drop",
++    "BriefDescription": "System-wide network transmitted dropped packets",
++    "ConfigCode": "52"
 +  },
 +  {
 +    "Unit": "tool",
-+    "EventName": "memory_pss_dirty",
-+    "BriefDescription": "Proportional Share Size (PSS) for dirty memory in=
- bytes",
-+    "ConfigCode": "27"
++    "EventName": "net_tx_fifo",
++    "BriefDescription": "System-wide network transmitted fifo overruns",
++    "ConfigCode": "53"
 +  },
 +  {
 +    "Unit": "tool",
-+    "EventName": "memory_pss_file",
-+    "BriefDescription": "Proportional Share Size (PSS) for file-backed mem=
-ory in bytes",
-+    "ConfigCode": "28"
++    "EventName": "net_tx_colls",
++    "BriefDescription": "System-wide network transmitted collisions",
++    "ConfigCode": "54"
 +  },
 +  {
 +    "Unit": "tool",
-+    "EventName": "memory_pss_shmem",
-+    "BriefDescription": "Proportional Share Size (PSS) for shared memory i=
-n bytes",
-+    "ConfigCode": "29"
++    "EventName": "net_tx_carrier",
++    "BriefDescription": "System-wide network transmitted carrier losses",
++    "ConfigCode": "55"
 +  },
 +  {
 +    "Unit": "tool",
-+    "EventName": "memory_referenced",
-+    "BriefDescription": "Memory marked as referenced/accessed in bytes",
-+    "ConfigCode": "30"
-+  },
-+  {
-+    "Unit": "tool",
-+    "EventName": "memory_rss",
-+    "BriefDescription": "Resident Set Size (RSS) in bytes",
-+    "ConfigCode": "31"
-+  },
-+  {
-+    "Unit": "tool",
-+    "EventName": "memory_shared_clean",
-+    "BriefDescription": "Shared clean memory (shared with other processes,=
- not modified) in bytes",
-+    "ConfigCode": "32"
-+  },
-+  {
-+    "Unit": "tool",
-+    "EventName": "memory_shared_dirty",
-+    "BriefDescription": "Shared dirty memory (shared with other processes,=
- modified) in bytes",
-+    "ConfigCode": "33"
-+  },
-+  {
-+    "Unit": "tool",
-+    "EventName": "memory_shared_hugetlb",
-+    "BriefDescription": "Shared memory backed by huge pages in bytes",
-+    "ConfigCode": "34"
-+  },
-+  {
-+    "Unit": "tool",
-+    "EventName": "memory_shmem_pmd_mapped",
-+    "BriefDescription": "Shared memory mapped with Page Middle Directory (=
-PMD) in bytes",
-+    "ConfigCode": "35"
-+  },
-+  {
-+    "Unit": "tool",
-+    "EventName": "memory_size",
-+    "BriefDescription": "Virtual memory size in bytes",
-+    "ConfigCode": "36"
-+  },
-+  {
-+    "Unit": "tool",
-+    "EventName": "memory_swap",
-+    "BriefDescription": "Memory swapped out to disk in bytes",
-+    "ConfigCode": "37"
-+  },
-+  {
-+    "Unit": "tool",
-+    "EventName": "memory_swap_pss",
-+    "BriefDescription": "Proportional Share Size (PSS) for swap memory in =
-bytes",
-+    "ConfigCode": "38"
-+  },
-+  {
-+    "Unit": "tool",
-+    "EventName": "memory_text",
-+    "BriefDescription": "Memory dedicated to code (text segment) in bytes"=
-,
-+    "ConfigCode": "39"
-+  },
-+  {
-+    "Unit": "tool",
-+    "EventName": "memory_uss",
-+    "BriefDescription": "Unique Set Size (USS) in bytes",
-+    "ConfigCode": "40"
++    "EventName": "net_tx_compressed",
++    "BriefDescription": "System-wide network transmitted compressed packet=
+s",
++    "ConfigCode": "56"
    }
  ]
 diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-even=
 ts/empty-pmu-events.c
-index 7df1552403e7..8d1b9e9b4f58 100644
+index 8d1b9e9b4f58..8705f32563a6 100644
 --- a/tools/perf/pmu-events/empty-pmu-events.c
 +++ b/tools/perf/pmu-events/empty-pmu-events.c
-@@ -2544,116 +2544,168 @@ static const char *const big_c_string =3D
- /* offset=3D126320 */
- "target_cpu\000tool\0001 if CPUs being analyzed, 0 if threads/processes\00=
-0config=3D0xe\000\00000\000\000\000\000\000"
- /* offset=3D126404 */
-+"memory_anon_huge_pages\000tool\000Memory backed by anonymous huge pages i=
-n bytes\000config=3D0xf\000\00000\000\000\000\000\000"
-+/* offset=3D126498 */
-+"memory_anonymous\000tool\000Memory not mapped to a file (anonymous) in by=
-tes\000config=3D0x10\000\00000\000\000\000\000\000"
-+/* offset=3D126589 */
-+"memory_data\000tool\000Memory dedicated to data and stack in bytes\000con=
-fig=3D0x11\000\00000\000\000\000\000\000"
-+/* offset=3D126670 */
-+"memory_file_pmd_mapped\000tool\000Memory backed by file and mapped with P=
-age Middle Directory (PMD) in bytes\000config=3D0x12\000\00000\000\000\000\=
-000\000"
-+/* offset=3D126793 */
-+"memory_ksm\000tool\000Memory shared via Kernel Samepage Merging (KSM) in =
-bytes\000config=3D0x13\000\00000\000\000\000\000\000"
-+/* offset=3D126886 */
-+"memory_lazyfree\000tool\000Memory marked as LazyFree in bytes\000config=
-=3D0x14\000\00000\000\000\000\000\000"
-+/* offset=3D126962 */
-+"memory_locked\000tool\000Memory locked in RAM in bytes\000config=3D0x15\0=
-00\00000\000\000\000\000\000"
-+/* offset=3D127031 */
-+"memory_private_clean\000tool\000Private clean memory (not shared, not mod=
-ified) in bytes\000config=3D0x16\000\00000\000\000\000\000\000"
-+/* offset=3D127134 */
-+"memory_private_dirty\000tool\000Private dirty memory (not shared, modifie=
-d) in bytes\000config=3D0x17\000\00000\000\000\000\000\000"
-+/* offset=3D127233 */
-+"memory_private_hugetlb\000tool\000Private memory backed by huge pages in =
-bytes\000config=3D0x18\000\00000\000\000\000\000\000"
-+/* offset=3D127326 */
-+"memory_pss\000tool\000Proportional Share Size (PSS) in bytes\000config=3D=
-0x19\000\00000\000\000\000\000\000"
-+/* offset=3D127401 */
-+"memory_pss_anon\000tool\000Proportional Share Size (PSS) for anonymous me=
-mory in bytes\000config=3D0x1a\000\00000\000\000\000\000\000"
-+/* offset=3D127502 */
-+"memory_pss_dirty\000tool\000Proportional Share Size (PSS) for dirty memor=
-y in bytes\000config=3D0x1b\000\00000\000\000\000\000\000"
-+/* offset=3D127600 */
-+"memory_pss_file\000tool\000Proportional Share Size (PSS) for file-backed =
-memory in bytes\000config=3D0x1c\000\00000\000\000\000\000\000"
-+/* offset=3D127703 */
-+"memory_pss_shmem\000tool\000Proportional Share Size (PSS) for shared memo=
-ry in bytes\000config=3D0x1d\000\00000\000\000\000\000\000"
-+/* offset=3D127802 */
-+"memory_referenced\000tool\000Memory marked as referenced/accessed in byte=
-s\000config=3D0x1e\000\00000\000\000\000\000\000"
-+/* offset=3D127891 */
-+"memory_rss\000tool\000Resident Set Size (RSS) in bytes\000config=3D0x1f\0=
-00\00000\000\000\000\000\000"
-+/* offset=3D127960 */
-+"memory_shared_clean\000tool\000Shared clean memory (shared with other pro=
-cesses, not modified) in bytes\000config=3D0x20\000\00000\000\000\000\000\0=
-00"
-+/* offset=3D128078 */
-+"memory_shared_dirty\000tool\000Shared dirty memory (shared with other pro=
-cesses, modified) in bytes\000config=3D0x21\000\00000\000\000\000\000\000"
-+/* offset=3D128192 */
-+"memory_shared_hugetlb\000tool\000Shared memory backed by huge pages in by=
-tes\000config=3D0x22\000\00000\000\000\000\000\000"
-+/* offset=3D128283 */
-+"memory_shmem_pmd_mapped\000tool\000Shared memory mapped with Page Middle =
-Directory (PMD) in bytes\000config=3D0x23\000\00000\000\000\000\000\000"
-+/* offset=3D128395 */
-+"memory_size\000tool\000Virtual memory size in bytes\000config=3D0x24\000\=
-00000\000\000\000\000\000"
-+/* offset=3D128461 */
-+"memory_swap\000tool\000Memory swapped out to disk in bytes\000config=3D0x=
-25\000\00000\000\000\000\000\000"
-+/* offset=3D128534 */
-+"memory_swap_pss\000tool\000Proportional Share Size (PSS) for swap memory =
-in bytes\000config=3D0x26\000\00000\000\000\000\000\000"
-+/* offset=3D128630 */
-+"memory_text\000tool\000Memory dedicated to code (text segment) in bytes\0=
-00config=3D0x27\000\00000\000\000\000\000\000"
-+/* offset=3D128716 */
-+"memory_uss\000tool\000Unique Set Size (USS) in bytes\000config=3D0x28\000=
+@@ -2596,116 +2596,148 @@ static const char *const big_c_string =3D
+ /* offset=3D128716 */
+ "memory_uss\000tool\000Unique Set Size (USS) in bytes\000config=3D0x28\000=
 \00000\000\000\000\000\000"
-+/* offset=3D128783 */
+ /* offset=3D128783 */
++"net_rx_bytes\000tool\000System-wide network received bytes\000config=3D0x=
+29\000\00000\000\000\000\000\000"
++/* offset=3D128856 */
++"net_rx_packets\000tool\000System-wide network received packets\000config=
+=3D0x2a\000\00000\000\000\000\000\000"
++/* offset=3D128933 */
++"net_rx_errors\000tool\000System-wide network received errors\000config=3D=
+0x2b\000\00000\000\000\000\000\000"
++/* offset=3D129008 */
++"net_rx_drop\000tool\000System-wide network received dropped packets\000co=
+nfig=3D0x2c\000\00000\000\000\000\000\000"
++/* offset=3D129090 */
++"net_rx_fifo\000tool\000System-wide network received fifo overruns\000conf=
+ig=3D0x2d\000\00000\000\000\000\000\000"
++/* offset=3D129170 */
++"net_rx_frame\000tool\000System-wide network received framing errors\000co=
+nfig=3D0x2e\000\00000\000\000\000\000\000"
++/* offset=3D129252 */
++"net_rx_compressed\000tool\000System-wide network received compressed pack=
+ets\000config=3D0x2f\000\00000\000\000\000\000\000"
++/* offset=3D129343 */
++"net_rx_multicast\000tool\000System-wide network received multicast packet=
+s\000config=3D0x30\000\00000\000\000\000\000\000"
++/* offset=3D129432 */
++"net_tx_bytes\000tool\000System-wide network transmitted bytes\000config=
+=3D0x31\000\00000\000\000\000\000\000"
++/* offset=3D129508 */
++"net_tx_packets\000tool\000System-wide network transmitted packets\000conf=
+ig=3D0x32\000\00000\000\000\000\000\000"
++/* offset=3D129588 */
++"net_tx_errors\000tool\000System-wide network transmitted errors\000config=
+=3D0x33\000\00000\000\000\000\000\000"
++/* offset=3D129666 */
++"net_tx_drop\000tool\000System-wide network transmitted dropped packets\00=
+0config=3D0x34\000\00000\000\000\000\000\000"
++/* offset=3D129751 */
++"net_tx_fifo\000tool\000System-wide network transmitted fifo overruns\000c=
+onfig=3D0x35\000\00000\000\000\000\000\000"
++/* offset=3D129834 */
++"net_tx_colls\000tool\000System-wide network transmitted collisions\000con=
+fig=3D0x36\000\00000\000\000\000\000\000"
++/* offset=3D129915 */
++"net_tx_carrier\000tool\000System-wide network transmitted carrier losses\=
+000config=3D0x37\000\00000\000\000\000\000\000"
++/* offset=3D130002 */
++"net_tx_compressed\000tool\000System-wide network transmitted compressed p=
+ackets\000config=3D0x38\000\00000\000\000\000\000\000"
++/* offset=3D130096 */
  "bp_l1_btb_correct\000branch\000L1 BTB Correction\000event=3D0x8a\000\0000=
 0\000\000\000\000\000"
--/* offset=3D126466 */
-+/* offset=3D128845 */
+-/* offset=3D128845 */
++/* offset=3D130158 */
  "bp_l2_btb_correct\000branch\000L2 BTB Correction\000event=3D0x8b\000\0000=
 0\000\000\000\000\000"
--/* offset=3D126528 */
-+/* offset=3D128907 */
+-/* offset=3D128907 */
++/* offset=3D130220 */
  "l3_cache_rd\000cache\000L3 cache access, read\000event=3D0x40\000\00000\0=
 00\000\000\000Attributable Level 3 cache access, read\000"
--/* offset=3D126626 */
-+/* offset=3D129005 */
+-/* offset=3D129005 */
++/* offset=3D130318 */
  "segment_reg_loads.any\000other\000Number of segment register loads\000eve=
 nt=3D6,period=3D200000,umask=3D0x80\000\00000\000\000\000\000\000"
--/* offset=3D126728 */
-+/* offset=3D129107 */
+-/* offset=3D129107 */
++/* offset=3D130420 */
  "dispatch_blocked.any\000other\000Memory cluster signals to block micro-op=
  dispatch for any reason\000event=3D9,period=3D200000,umask=3D0x20\000\0000=
 0\000\000\000\000\000"
--/* offset=3D126861 */
-+/* offset=3D129240 */
+-/* offset=3D129240 */
++/* offset=3D130553 */
  "eist_trans\000other\000Number of Enhanced Intel SpeedStep(R) Technology (=
 EIST) transitions\000event=3D0x3a,period=3D200000\000\00000\000\000\000\000=
 \000"
--/* offset=3D126979 */
-+/* offset=3D129358 */
+-/* offset=3D129358 */
++/* offset=3D130671 */
  "hisi_sccl,ddrc\000"
--/* offset=3D126994 */
-+/* offset=3D129373 */
+-/* offset=3D129373 */
++/* offset=3D130686 */
  "uncore_hisi_ddrc.flux_wcmd\000uncore\000DDRC write commands\000event=3D2\=
 000\00000\000\000\000\000\000"
--/* offset=3D127064 */
-+/* offset=3D129443 */
+-/* offset=3D129443 */
++/* offset=3D130756 */
  "uncore_cbox\000"
--/* offset=3D127076 */
-+/* offset=3D129455 */
+-/* offset=3D129455 */
++/* offset=3D130768 */
  "unc_cbo_xsnp_response.miss_eviction\000uncore\000A cross-core snoop resul=
 ted from L3 Eviction which misses in some processor core\000event=3D0x22,um=
 ask=3D0x81\000\00000\000\000\000\000\000"
--/* offset=3D127230 */
-+/* offset=3D129609 */
+-/* offset=3D129609 */
++/* offset=3D130922 */
  "event-hyphen\000uncore\000UNC_CBO_HYPHEN\000event=3D0xe0\000\00000\000\00=
 0\000\000\000"
--/* offset=3D127284 */
-+/* offset=3D129663 */
+-/* offset=3D129663 */
++/* offset=3D130976 */
  "event-two-hyph\000uncore\000UNC_CBO_TWO_HYPH\000event=3D0xc0\000\00000\00=
 0\000\000\000\000"
--/* offset=3D127342 */
-+/* offset=3D129721 */
+-/* offset=3D129721 */
++/* offset=3D131034 */
  "hisi_sccl,l3c\000"
--/* offset=3D127356 */
-+/* offset=3D129735 */
+-/* offset=3D129735 */
++/* offset=3D131048 */
  "uncore_hisi_l3c.rd_hit_cpipe\000uncore\000Total read hits\000event=3D7\00=
 0\00000\000\000\000\000\000"
--/* offset=3D127424 */
-+/* offset=3D129803 */
+-/* offset=3D129803 */
++/* offset=3D131116 */
  "uncore_imc_free_running\000"
--/* offset=3D127448 */
-+/* offset=3D129827 */
+-/* offset=3D129827 */
++/* offset=3D131140 */
  "uncore_imc_free_running.cache_miss\000uncore\000Total cache misses\000eve=
 nt=3D0x12\000\00000\000\000\000\000\000"
--/* offset=3D127528 */
-+/* offset=3D129907 */
+-/* offset=3D129907 */
++/* offset=3D131220 */
  "uncore_imc\000"
--/* offset=3D127539 */
-+/* offset=3D129918 */
+-/* offset=3D129918 */
++/* offset=3D131231 */
  "uncore_imc.cache_hits\000uncore\000Total cache hits\000event=3D0x34\000\0=
 0000\000\000\000\000\000"
--/* offset=3D127604 */
-+/* offset=3D129983 */
+-/* offset=3D129983 */
++/* offset=3D131296 */
  "uncore_sys_ddr_pmu\000"
--/* offset=3D127623 */
-+/* offset=3D130002 */
+-/* offset=3D130002 */
++/* offset=3D131315 */
  "sys_ddr_pmu.write_cycles\000uncore\000ddr write-cycles event\000event=3D0=
 x2b\000v8\00000\000\000\000\000\000"
--/* offset=3D127699 */
-+/* offset=3D130078 */
+-/* offset=3D130078 */
++/* offset=3D131391 */
  "uncore_sys_ccn_pmu\000"
--/* offset=3D127718 */
-+/* offset=3D130097 */
+-/* offset=3D130097 */
++/* offset=3D131410 */
  "sys_ccn_pmu.read_cycles\000uncore\000ccn read-cycles event\000config=3D0x=
 2c\0000x01\00000\000\000\000\000\000"
--/* offset=3D127795 */
-+/* offset=3D130174 */
+-/* offset=3D130174 */
++/* offset=3D131487 */
  "uncore_sys_cmn_pmu\000"
--/* offset=3D127814 */
-+/* offset=3D130193 */
+-/* offset=3D130193 */
++/* offset=3D131506 */
  "sys_cmn_pmu.hnf_cache_miss\000uncore\000Counts total cache misses in firs=
 t lookup result (high priority)\000eventid=3D1,type=3D5\000(434|436|43c|43a=
 ).*\00000\000\000\000\000\000"
--/* offset=3D127957 */
-+/* offset=3D130336 */
+-/* offset=3D130336 */
++/* offset=3D131649 */
  "CPUs_utilized\000Default\000(software@cpu\\-clock\\,name\\=3Dcpu\\-clock@=
  if #target_cpu else software@task\\-clock\\,name\\=3Dtask\\-clock@) / (dur=
 ation_time * 1e9)\000\000Average CPU utilization\000\0001CPUs\000\000\000\0=
 00011"
--/* offset=3D128143 */
-+/* offset=3D130522 */
+-/* offset=3D130522 */
++/* offset=3D131835 */
  "cs_per_second\000Default\000software@context\\-switches\\,name\\=3Dcontex=
 t\\-switches@ * 1e9 / (software@cpu\\-clock\\,name\\=3Dcpu\\-clock@ if #tar=
 get_cpu else software@task\\-clock\\,name\\=3Dtask\\-clock@)\000\000Context=
  switches per CPU second\000\0001cs/sec\000\000\000\000011"
--/* offset=3D128376 */
-+/* offset=3D130755 */
+-/* offset=3D130755 */
++/* offset=3D132068 */
  "migrations_per_second\000Default\000software@cpu\\-migrations\\,name\\=3D=
 cpu\\-migrations@ * 1e9 / (software@cpu\\-clock\\,name\\=3Dcpu\\-clock@ if =
 #target_cpu else software@task\\-clock\\,name\\=3Dtask\\-clock@)\000\000Pro=
 cess migrations to a new CPU per CPU second\000\0001migrations/sec\000\000\=
 000\000011"
--/* offset=3D128636 */
-+/* offset=3D131015 */
+-/* offset=3D131015 */
++/* offset=3D132328 */
  "page_faults_per_second\000Default\000software@page\\-faults\\,name\\=3Dpa=
 ge\\-faults@ * 1e9 / (software@cpu\\-clock\\,name\\=3Dcpu\\-clock@ if #targ=
 et_cpu else software@task\\-clock\\,name\\=3Dtask\\-clock@)\000\000Page fau=
 lts per CPU second\000\0001faults/sec\000\000\000\000011"
--/* offset=3D128867 */
-+/* offset=3D131246 */
+-/* offset=3D131246 */
++/* offset=3D132559 */
  "insn_per_cycle\000Default\000instructions / cpu\\-cycles\000insn_per_cycl=
 e < 1\000Instructions Per Cycle\000\0001instructions\000\000\000\000001"
--/* offset=3D128980 */
-+/* offset=3D131359 */
+-/* offset=3D131359 */
++/* offset=3D132672 */
  "stalled_cycles_per_instruction\000Default\000(max(stalled\\-cycles\\-fron=
 tend, stalled\\-cycles\\-backend) / instructions if has_event(stalled\\-cyc=
 les\\-frontend) & has_event(stalled\\-cycles\\-backend) else (stalled\\-cyc=
@@ -749,1201 +434,1024 @@ les\\-frontend / instructions if has_event(stalled\\-cycles\\-frontend) els=
 e (stalled\\-cycles\\-backend / instructions if has_event(stalled\\-cycles\=
 \-backend) else 0)))\000\000Max front or backend stalls per instruction\000=
 \000\000\000\000\000001"
--/* offset=3D129405 */
-+/* offset=3D131784 */
+-/* offset=3D131784 */
++/* offset=3D133097 */
  "frontend_cycles_idle\000Default\000(stalled\\-cycles\\-frontend / cpu\\-c=
 ycles if has_event(stalled\\-cycles\\-frontend) else 0)\000frontend_cycles_=
 idle > 0.1\000Frontend stalls per cycle\000\000\000\000\000\000001"
--/* offset=3D129584 */
-+/* offset=3D131963 */
+-/* offset=3D131963 */
++/* offset=3D133276 */
  "backend_cycles_idle\000Default\000(stalled\\-cycles\\-backend / cpu\\-cyc=
 les if has_event(stalled\\-cycles\\-backend) else 0)\000backend_cycles_idle=
  > 0.2\000Backend stalls per cycle\000\000\000\000\000\000001"
--/* offset=3D129758 */
-+/* offset=3D132137 */
+-/* offset=3D132137 */
++/* offset=3D133450 */
  "cycles_frequency\000Default\000cpu\\-cycles / (software@cpu\\-clock\\,nam=
 e\\=3Dcpu\\-clock@ if #target_cpu else software@task\\-clock\\,name\\=3Dtas=
 k\\-clock@)\000\000Cycles per CPU second\000\0001GHz\000\000\000\000011"
--/* offset=3D129934 */
-+/* offset=3D132313 */
+-/* offset=3D132313 */
++/* offset=3D133626 */
  "branch_frequency\000Default\000branches / (software@cpu\\-clock\\,name\\=
 =3Dcpu\\-clock@ if #target_cpu else software@task\\-clock\\,name\\=3Dtask\\=
 -clock@)\000\000Branches per CPU second\000\0001000M/sec\000\000\000\000011=
 "
--/* offset=3D130114 */
-+/* offset=3D132493 */
+-/* offset=3D132493 */
++/* offset=3D133806 */
  "branch_miss_rate\000Default\000branch\\-misses / branches\000branch_miss_=
 rate > 0.05\000Branch miss rate\000\000100%\000\000\000\000001"
--/* offset=3D130218 */
-+/* offset=3D132597 */
+-/* offset=3D132597 */
++/* offset=3D133910 */
  "l1d_miss_rate\000Default2\000L1\\-dcache\\-load\\-misses / L1\\-dcache\\-=
 loads\000l1d_miss_rate > 0.05\000L1D  miss rate\000\000100%\000\000\000\000=
 001"
--/* offset=3D130334 */
-+/* offset=3D132713 */
+-/* offset=3D132713 */
++/* offset=3D134026 */
  "llc_miss_rate\000Default2\000LLC\\-load\\-misses / LLC\\-loads\000llc_mis=
 s_rate > 0.05\000LLC miss rate\000\000100%\000\000\000\000001"
--/* offset=3D130435 */
-+/* offset=3D132814 */
+-/* offset=3D132814 */
++/* offset=3D134127 */
  "l1i_miss_rate\000Default3\000L1\\-icache\\-load\\-misses / L1\\-icache\\-=
 loads\000l1i_miss_rate > 0.05\000L1I miss rate\000\000100%\000\000\000\0000=
 01"
--/* offset=3D130550 */
-+/* offset=3D132929 */
+-/* offset=3D132929 */
++/* offset=3D134242 */
  "dtlb_miss_rate\000Default3\000dTLB\\-load\\-misses / dTLB\\-loads\000dtlb=
 _miss_rate > 0.05\000dTLB miss rate\000\000100%\000\000\000\000001"
--/* offset=3D130656 */
-+/* offset=3D133035 */
+-/* offset=3D133035 */
++/* offset=3D134348 */
  "itlb_miss_rate\000Default3\000iTLB\\-load\\-misses / iTLB\\-loads\000itlb=
 _miss_rate > 0.05\000iTLB miss rate\000\000100%\000\000\000\000001"
--/* offset=3D130762 */
-+/* offset=3D133141 */
+-/* offset=3D133141 */
++/* offset=3D134454 */
  "l1_prefetch_miss_rate\000Default4\000L1\\-dcache\\-prefetch\\-misses / L1=
 \\-dcache\\-prefetches\000l1_prefetch_miss_rate > 0.05\000L1 prefetch miss =
 rate\000\000100%\000\000\000\000001"
--/* offset=3D130910 */
-+/* offset=3D133289 */
+-/* offset=3D133289 */
++/* offset=3D134602 */
  "CPI\000\0001 / IPC\000\000\000\000\000\000\000\000000"
--/* offset=3D130933 */
-+/* offset=3D133312 */
+-/* offset=3D133312 */
++/* offset=3D134625 */
  "IPC\000group1\000inst_retired.any / cpu_clk_unhalted.thread\000\000\000\0=
 00\000\000\000\000000"
--/* offset=3D130997 */
-+/* offset=3D133376 */
+-/* offset=3D133376 */
++/* offset=3D134689 */
  "Frontend_Bound_SMT\000\000idq_uops_not_delivered.core / (4 * (cpu_clk_unh=
 alted.thread / 2 * (1 + cpu_clk_unhalted.one_thread_active / cpu_clk_unhalt=
 ed.ref_xclk)))\000\000\000\000\000\000\000\000000"
--/* offset=3D131164 */
-+/* offset=3D133543 */
+-/* offset=3D133543 */
++/* offset=3D134856 */
  "dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_retired.any\000\000\00=
 0\000\000\000\000\000000"
--/* offset=3D131229 */
-+/* offset=3D133608 */
+-/* offset=3D133608 */
++/* offset=3D134921 */
  "icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retired.any\000\000=
 \000\000\000\000\000\000000"
--/* offset=3D131297 */
-+/* offset=3D133676 */
+-/* offset=3D133676 */
++/* offset=3D134989 */
  "cache_miss_cycles\000group1\000dcache_miss_cpi + icache_miss_cycles\000\0=
 00\000\000\000\000\000\000000"
--/* offset=3D131369 */
-+/* offset=3D133748 */
+-/* offset=3D133748 */
++/* offset=3D135061 */
  "DCache_L2_All_Hits\000\000l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit +=
  l2_rqsts.rfo_hit\000\000\000\000\000\000\000\000000"
--/* offset=3D131464 */
-+/* offset=3D133843 */
+-/* offset=3D133843 */
++/* offset=3D135156 */
  "DCache_L2_All_Miss\000\000max(l2_rqsts.all_demand_data_rd - l2_rqsts.dema=
 nd_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_miss\000\000\000\000\0=
 00\000\000\000000"
--/* offset=3D131599 */
-+/* offset=3D133978 */
+-/* offset=3D133978 */
++/* offset=3D135291 */
  "DCache_L2_All\000\000DCache_L2_All_Hits + DCache_L2_All_Miss\000\000\000\=
 000\000\000\000\000000"
--/* offset=3D131664 */
-+/* offset=3D134043 */
+-/* offset=3D134043 */
++/* offset=3D135356 */
  "DCache_L2_Hits\000\000d_ratio(DCache_L2_All_Hits, DCache_L2_All)\000\000\=
 000\000\000\000\000\000000"
--/* offset=3D131733 */
-+/* offset=3D134112 */
+-/* offset=3D134112 */
++/* offset=3D135425 */
  "DCache_L2_Misses\000\000d_ratio(DCache_L2_All_Miss, DCache_L2_All)\000\00=
 0\000\000\000\000\000\000000"
--/* offset=3D131804 */
-+/* offset=3D134183 */
+-/* offset=3D134183 */
++/* offset=3D135496 */
  "M1\000\000ipc + M2\000\000\000\000\000\000\000\000000"
--/* offset=3D131827 */
-+/* offset=3D134206 */
+-/* offset=3D134206 */
++/* offset=3D135519 */
  "M2\000\000ipc + M1\000\000\000\000\000\000\000\000000"
--/* offset=3D131850 */
-+/* offset=3D134229 */
+-/* offset=3D134229 */
++/* offset=3D135542 */
  "M3\000\0001 / M3\000\000\000\000\000\000\000\000000"
--/* offset=3D131871 */
-+/* offset=3D134250 */
+-/* offset=3D134250 */
++/* offset=3D135563 */
  "L1D_Cache_Fill_BW\000\00064 * l1d.replacement / 1e9 / duration_time\000\0=
 00\000\000\000\000\000\000000"
  ;
 =20
-@@ -5158,6 +5210,58 @@ static const struct compact_pmu_event pmu_events__co=
+@@ -5262,6 +5294,38 @@ static const struct compact_pmu_event pmu_events__co=
 mmon_tool[] =3D {
- 	{ 125073 },
- 	/* has_pmem\000tool\0001 if persistent memory installed otherwise 0\000co=
-nfig=3D4\000... */
- 	{ 125287 },
-+	/* memory_anon_huge_pages\000tool\000Memory backed by anonymous huge page=
-s in bytes... */
-+	{ 126404 },
-+	/* memory_anonymous\000tool\000Memory not mapped to a file (anonymous) in=
- bytes\000... */
-+	{ 126498 },
-+	/* memory_data\000tool\000Memory dedicated to data and stack in bytes\000=
-config=3D0x1... */
-+	{ 126589 },
-+	/* memory_file_pmd_mapped\000tool\000Memory backed by file and mapped wit=
-h Page Mid... */
-+	{ 126670 },
-+	/* memory_ksm\000tool\000Memory shared via Kernel Samepage Merging (KSM) =
-in bytes\0... */
-+	{ 126793 },
-+	/* memory_lazyfree\000tool\000Memory marked as LazyFree in bytes\000confi=
-g=3D0x14\000... */
-+	{ 126886 },
-+	/* memory_locked\000tool\000Memory locked in RAM in bytes\000config=3D0x1=
-5\000\00000\... */
-+	{ 126962 },
-+	/* memory_private_clean\000tool\000Private clean memory (not shared, not =
-modified) ... */
-+	{ 127031 },
-+	/* memory_private_dirty\000tool\000Private dirty memory (not shared, modi=
-fied) in b... */
-+	{ 127134 },
-+	/* memory_private_hugetlb\000tool\000Private memory backed by huge pages =
-in bytes\0... */
-+	{ 127233 },
-+	/* memory_pss\000tool\000Proportional Share Size (PSS) in bytes\000config=
-=3D0x19\000\... */
-+	{ 127326 },
-+	/* memory_pss_anon\000tool\000Proportional Share Size (PSS) for anonymous=
- memory in... */
-+	{ 127401 },
-+	/* memory_pss_dirty\000tool\000Proportional Share Size (PSS) for dirty me=
-mory in by... */
-+	{ 127502 },
-+	/* memory_pss_file\000tool\000Proportional Share Size (PSS) for file-back=
-ed memory ... */
-+	{ 127600 },
-+	/* memory_pss_shmem\000tool\000Proportional Share Size (PSS) for shared m=
-emory in b... */
-+	{ 127703 },
-+	/* memory_referenced\000tool\000Memory marked as referenced/accessed in b=
-ytes\000co... */
-+	{ 127802 },
-+	/* memory_rss\000tool\000Resident Set Size (RSS) in bytes\000config=3D0x1=
-f\000\00000\... */
-+	{ 127891 },
-+	/* memory_shared_clean\000tool\000Shared clean memory (shared with other =
-processes,... */
-+	{ 127960 },
-+	/* memory_shared_dirty\000tool\000Shared dirty memory (shared with other =
-processes,... */
-+	{ 128078 },
-+	/* memory_shared_hugetlb\000tool\000Shared memory backed by huge pages in=
- bytes\000... */
-+	{ 128192 },
-+	/* memory_shmem_pmd_mapped\000tool\000Shared memory mapped with Page Midd=
-le Directo... */
-+	{ 128283 },
-+	/* memory_size\000tool\000Virtual memory size in bytes\000config=3D0x24\0=
-00\00000\000... */
-+	{ 128395 },
-+	/* memory_swap\000tool\000Memory swapped out to disk in bytes\000config=
-=3D0x25\000\00... */
-+	{ 128461 },
-+	/* memory_swap_pss\000tool\000Proportional Share Size (PSS) for swap memo=
-ry in byte... */
-+	{ 128534 },
-+	/* memory_text\000tool\000Memory dedicated to code (text segment) in byte=
-s\000confi... */
-+	{ 128630 },
-+	/* memory_uss\000tool\000Unique Set Size (USS) in bytes\000config=3D0x28\=
+ 	{ 128630 },
+ 	/* memory_uss\000tool\000Unique Set Size (USS) in bytes\000config=3D0x28\=
 000\00000\00... */
-+	{ 128716 },
+ 	{ 128716 },
++	/* net_rx_bytes\000tool\000System-wide network received bytes\000config=
+=3D0x29\000\00... */
++	{ 128783 },
++	/* net_rx_compressed\000tool\000System-wide network received compressed p=
+ackets\000... */
++	{ 129252 },
++	/* net_rx_drop\000tool\000System-wide network received dropped packets\00=
+0config=3D0x... */
++	{ 129008 },
++	/* net_rx_errors\000tool\000System-wide network received errors\000config=
+=3D0x2b\000\... */
++	{ 128933 },
++	/* net_rx_fifo\000tool\000System-wide network received fifo overruns\000c=
+onfig=3D0x2d... */
++	{ 129090 },
++	/* net_rx_frame\000tool\000System-wide network received framing errors\00=
+0config=3D0x... */
++	{ 129170 },
++	/* net_rx_multicast\000tool\000System-wide network received multicast pac=
+kets\000co... */
++	{ 129343 },
++	/* net_rx_packets\000tool\000System-wide network received packets\000conf=
+ig=3D0x2a\00... */
++	{ 128856 },
++	/* net_tx_bytes\000tool\000System-wide network transmitted bytes\000confi=
+g=3D0x31\000... */
++	{ 129432 },
++	/* net_tx_carrier\000tool\000System-wide network transmitted carrier loss=
+es\000conf... */
++	{ 129915 },
++	/* net_tx_colls\000tool\000System-wide network transmitted collisions\000=
+config=3D0x3... */
++	{ 129834 },
++	/* net_tx_compressed\000tool\000System-wide network transmitted compresse=
+d packets\... */
++	{ 130002 },
++	/* net_tx_drop\000tool\000System-wide network transmitted dropped packets=
+\000config... */
++	{ 129666 },
++	/* net_tx_errors\000tool\000System-wide network transmitted errors\000con=
+fig=3D0x33\0... */
++	{ 129588 },
++	/* net_tx_fifo\000tool\000System-wide network transmitted fifo overruns\0=
+00config=3D0... */
++	{ 129751 },
++	/* net_tx_packets\000tool\000System-wide network transmitted packets\000c=
+onfig=3D0x32... */
++	{ 129508 },
  	/* num_cores\000tool\000Number of cores. A core consists of 1 or more thr=
 ead, with ... */
  	{ 125363 },
  	/* num_cpus\000tool\000Number of logical Linux CPUs. There may be multipl=
 e such CPU... */
-@@ -5203,39 +5307,39 @@ static const struct pmu_table_entry pmu_events__com=
+@@ -5307,39 +5371,39 @@ static const struct pmu_table_entry pmu_events__com=
 mon[] =3D {
 =20
  static const struct compact_pmu_event pmu_metrics__common_default_core[] =
 =3D {
  	/* CPUs_utilized\000Default\000(software@cpu\\-clock\\,name\\=3Dcpu\\-clo=
 ck@ if #targ... */
--	{ 127957 },
-+	{ 130336 },
+-	{ 130336 },
++	{ 131649 },
  	/* backend_cycles_idle\000Default\000(stalled\\-cycles\\-backend / cpu\\-=
 cycles if ... */
--	{ 129584 },
-+	{ 131963 },
+-	{ 131963 },
++	{ 133276 },
  	/* branch_frequency\000Default\000branches / (software@cpu\\-clock\\,name=
 \\=3Dcpu\\-c... */
--	{ 129934 },
-+	{ 132313 },
+-	{ 132313 },
++	{ 133626 },
  	/* branch_miss_rate\000Default\000branch\\-misses / branches\000branch_mi=
 ss_rate > ... */
--	{ 130114 },
-+	{ 132493 },
+-	{ 132493 },
++	{ 133806 },
  	/* cs_per_second\000Default\000software@context\\-switches\\,name\\=3Dcon=
 text\\-switc... */
--	{ 128143 },
-+	{ 130522 },
+-	{ 130522 },
++	{ 131835 },
  	/* cycles_frequency\000Default\000cpu\\-cycles / (software@cpu\\-clock\\,=
 name\\=3Dcpu... */
--	{ 129758 },
-+	{ 132137 },
+-	{ 132137 },
++	{ 133450 },
  	/* dtlb_miss_rate\000Default3\000dTLB\\-load\\-misses / dTLB\\-loads\000d=
 tlb_miss_r... */
--	{ 130550 },
-+	{ 132929 },
+-	{ 132929 },
++	{ 134242 },
  	/* frontend_cycles_idle\000Default\000(stalled\\-cycles\\-frontend / cpu\=
 \-cycles i... */
--	{ 129405 },
-+	{ 131784 },
+-	{ 131784 },
++	{ 133097 },
  	/* insn_per_cycle\000Default\000instructions / cpu\\-cycles\000insn_per_c=
 ycle < 1\0... */
--	{ 128867 },
-+	{ 131246 },
+-	{ 131246 },
++	{ 132559 },
  	/* itlb_miss_rate\000Default3\000iTLB\\-load\\-misses / iTLB\\-loads\000i=
 tlb_miss_r... */
--	{ 130656 },
-+	{ 133035 },
+-	{ 133035 },
++	{ 134348 },
  	/* l1_prefetch_miss_rate\000Default4\000L1\\-dcache\\-prefetch\\-misses /=
  L1\\-dcac... */
--	{ 130762 },
-+	{ 133141 },
+-	{ 133141 },
++	{ 134454 },
  	/* l1d_miss_rate\000Default2\000L1\\-dcache\\-load\\-misses / L1\\-dcache=
 \\-loads\0... */
--	{ 130218 },
-+	{ 132597 },
+-	{ 132597 },
++	{ 133910 },
  	/* l1i_miss_rate\000Default3\000L1\\-icache\\-load\\-misses / L1\\-icache=
 \\-loads\0... */
--	{ 130435 },
-+	{ 132814 },
+-	{ 132814 },
++	{ 134127 },
  	/* llc_miss_rate\000Default2\000LLC\\-load\\-misses / LLC\\-loads\000llc_=
 miss_rate ... */
--	{ 130334 },
-+	{ 132713 },
+-	{ 132713 },
++	{ 134026 },
  	/* migrations_per_second\000Default\000software@cpu\\-migrations\\,name\\=
 =3Dcpu\\-mig... */
--	{ 128376 },
-+	{ 130755 },
+-	{ 130755 },
++	{ 132068 },
  	/* page_faults_per_second\000Default\000software@page\\-faults\\,name\\=
 =3Dpage\\-faul... */
--	{ 128636 },
-+	{ 131015 },
+-	{ 131015 },
++	{ 132328 },
  	/* stalled_cycles_per_instruction\000Default\000(max(stalled\\-cycles\\-f=
 rontend, s... */
--	{ 128980 },
-+	{ 131359 },
+-	{ 131359 },
++	{ 132672 },
 =20
  };
 =20
-@@ -5249,41 +5353,41 @@ static const struct pmu_table_entry pmu_metrics__co=
+@@ -5353,41 +5417,41 @@ static const struct pmu_table_entry pmu_metrics__co=
 mmon[] =3D {
 =20
  static const struct compact_pmu_event pmu_events__test_soc_cpu_default_cor=
 e[] =3D {
  	/* bp_l1_btb_correct\000branch\000L1 BTB Correction\000event=3D0x8a\000\0=
 0000\000\000... */
--	{ 126404 },
-+	{ 128783 },
+-	{ 128783 },
++	{ 130096 },
  	/* bp_l2_btb_correct\000branch\000L2 BTB Correction\000event=3D0x8b\000\0=
 0000\000\000... */
--	{ 126466 },
-+	{ 128845 },
+-	{ 128845 },
++	{ 130158 },
  	/* dispatch_blocked.any\000other\000Memory cluster signals to block micro=
 -op dispat... */
--	{ 126728 },
-+	{ 129107 },
+-	{ 129107 },
++	{ 130420 },
  	/* eist_trans\000other\000Number of Enhanced Intel SpeedStep(R) Technolog=
 y (EIST) t... */
--	{ 126861 },
-+	{ 129240 },
+-	{ 129240 },
++	{ 130553 },
  	/* l3_cache_rd\000cache\000L3 cache access, read\000event=3D0x40\000\0000=
 0\000\000\00... */
--	{ 126528 },
-+	{ 128907 },
+-	{ 128907 },
++	{ 130220 },
  	/* segment_reg_loads.any\000other\000Number of segment register loads\000=
 event=3D6,pe... */
--	{ 126626 },
-+	{ 129005 },
+-	{ 129005 },
++	{ 130318 },
  };
  static const struct compact_pmu_event pmu_events__test_soc_cpu_hisi_sccl_d=
 drc[] =3D {
  	/* uncore_hisi_ddrc.flux_wcmd\000uncore\000DDRC write commands\000event=
 =3D2\000\00000... */
--	{ 126994 },
-+	{ 129373 },
+-	{ 129373 },
++	{ 130686 },
  };
  static const struct compact_pmu_event pmu_events__test_soc_cpu_hisi_sccl_l=
 3c[] =3D {
  	/* uncore_hisi_l3c.rd_hit_cpipe\000uncore\000Total read hits\000event=3D7=
 \000\00000\0... */
--	{ 127356 },
-+	{ 129735 },
+-	{ 129735 },
++	{ 131048 },
  };
  static const struct compact_pmu_event pmu_events__test_soc_cpu_uncore_cbox=
 [] =3D {
  	/* event-hyphen\000uncore\000UNC_CBO_HYPHEN\000event=3D0xe0\000\00000\000=
 \000\000\000... */
--	{ 127230 },
-+	{ 129609 },
+-	{ 129609 },
++	{ 130922 },
  	/* event-two-hyph\000uncore\000UNC_CBO_TWO_HYPH\000event=3D0xc0\000\00000=
 \000\000\000... */
--	{ 127284 },
-+	{ 129663 },
+-	{ 129663 },
++	{ 130976 },
  	/* unc_cbo_xsnp_response.miss_eviction\000uncore\000A cross-core snoop re=
 sulted fro... */
--	{ 127076 },
-+	{ 129455 },
+-	{ 129455 },
++	{ 130768 },
  };
  static const struct compact_pmu_event pmu_events__test_soc_cpu_uncore_imc[=
 ] =3D {
  	/* uncore_imc.cache_hits\000uncore\000Total cache hits\000event=3D0x34\00=
 0\00000\000\... */
--	{ 127539 },
-+	{ 129918 },
+-	{ 129918 },
++	{ 131231 },
  };
  static const struct compact_pmu_event pmu_events__test_soc_cpu_uncore_imc_=
 free_running[] =3D {
  	/* uncore_imc_free_running.cache_miss\000uncore\000Total cache misses\000=
 event=3D0x12... */
--	{ 127448 },
-+	{ 129827 },
+-	{ 129827 },
++	{ 131140 },
 =20
  };
 =20
-@@ -5296,61 +5400,61 @@ static const struct pmu_table_entry pmu_events__tes=
+@@ -5400,61 +5464,61 @@ static const struct pmu_table_entry pmu_events__tes=
 t_soc_cpu[] =3D {
  	{
  		.entries =3D pmu_events__test_soc_cpu_hisi_sccl_ddrc,
  		.num_entries =3D ARRAY_SIZE(pmu_events__test_soc_cpu_hisi_sccl_ddrc),
--		.pmu_name =3D { 126979 /* hisi_sccl,ddrc\000 */ },
-+		.pmu_name =3D { 129358 /* hisi_sccl,ddrc\000 */ },
+-		.pmu_name =3D { 129358 /* hisi_sccl,ddrc\000 */ },
++		.pmu_name =3D { 130671 /* hisi_sccl,ddrc\000 */ },
  	},
  	{
  		.entries =3D pmu_events__test_soc_cpu_hisi_sccl_l3c,
  		.num_entries =3D ARRAY_SIZE(pmu_events__test_soc_cpu_hisi_sccl_l3c),
--		.pmu_name =3D { 127342 /* hisi_sccl,l3c\000 */ },
-+		.pmu_name =3D { 129721 /* hisi_sccl,l3c\000 */ },
+-		.pmu_name =3D { 129721 /* hisi_sccl,l3c\000 */ },
++		.pmu_name =3D { 131034 /* hisi_sccl,l3c\000 */ },
  	},
  	{
  		.entries =3D pmu_events__test_soc_cpu_uncore_cbox,
  		.num_entries =3D ARRAY_SIZE(pmu_events__test_soc_cpu_uncore_cbox),
--		.pmu_name =3D { 127064 /* uncore_cbox\000 */ },
-+		.pmu_name =3D { 129443 /* uncore_cbox\000 */ },
+-		.pmu_name =3D { 129443 /* uncore_cbox\000 */ },
++		.pmu_name =3D { 130756 /* uncore_cbox\000 */ },
  	},
  	{
  		.entries =3D pmu_events__test_soc_cpu_uncore_imc,
  		.num_entries =3D ARRAY_SIZE(pmu_events__test_soc_cpu_uncore_imc),
--		.pmu_name =3D { 127528 /* uncore_imc\000 */ },
-+		.pmu_name =3D { 129907 /* uncore_imc\000 */ },
+-		.pmu_name =3D { 129907 /* uncore_imc\000 */ },
++		.pmu_name =3D { 131220 /* uncore_imc\000 */ },
  	},
  	{
  		.entries =3D pmu_events__test_soc_cpu_uncore_imc_free_running,
  		.num_entries =3D ARRAY_SIZE(pmu_events__test_soc_cpu_uncore_imc_free_run=
 ning),
--		.pmu_name =3D { 127424 /* uncore_imc_free_running\000 */ },
-+		.pmu_name =3D { 129803 /* uncore_imc_free_running\000 */ },
+-		.pmu_name =3D { 129803 /* uncore_imc_free_running\000 */ },
++		.pmu_name =3D { 131116 /* uncore_imc_free_running\000 */ },
  	},
  };
 =20
  static const struct compact_pmu_event pmu_metrics__test_soc_cpu_default_co=
 re[] =3D {
  	/* CPI\000\0001 / IPC\000\000\000\000\000\000\000\000000 */
--	{ 130910 },
-+	{ 133289 },
+-	{ 133289 },
++	{ 134602 },
  	/* DCache_L2_All\000\000DCache_L2_All_Hits + DCache_L2_All_Miss\000\000\0=
 00\000\000... */
--	{ 131599 },
-+	{ 133978 },
+-	{ 133978 },
++	{ 135291 },
  	/* DCache_L2_All_Hits\000\000l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hi=
 t + l2_rqs... */
--	{ 131369 },
-+	{ 133748 },
+-	{ 133748 },
++	{ 135061 },
  	/* DCache_L2_All_Miss\000\000max(l2_rqsts.all_demand_data_rd - l2_rqsts.d=
 emand_data... */
--	{ 131464 },
-+	{ 133843 },
+-	{ 133843 },
++	{ 135156 },
  	/* DCache_L2_Hits\000\000d_ratio(DCache_L2_All_Hits, DCache_L2_All)\000\0=
 00\000\000... */
--	{ 131664 },
-+	{ 134043 },
+-	{ 134043 },
++	{ 135356 },
  	/* DCache_L2_Misses\000\000d_ratio(DCache_L2_All_Miss, DCache_L2_All)\000=
 \000\000\0... */
--	{ 131733 },
-+	{ 134112 },
+-	{ 134112 },
++	{ 135425 },
  	/* Frontend_Bound_SMT\000\000idq_uops_not_delivered.core / (4 * (cpu_clk_=
 unhalted.t... */
--	{ 130997 },
-+	{ 133376 },
+-	{ 133376 },
++	{ 134689 },
  	/* IPC\000group1\000inst_retired.any / cpu_clk_unhalted.thread\000\000\00=
 0\000\000\... */
--	{ 130933 },
-+	{ 133312 },
+-	{ 133312 },
++	{ 134625 },
  	/* L1D_Cache_Fill_BW\000\00064 * l1d.replacement / 1e9 / duration_time\00=
 0\000\000\... */
--	{ 131871 },
-+	{ 134250 },
+-	{ 134250 },
++	{ 135563 },
  	/* M1\000\000ipc + M2\000\000\000\000\000\000\000\000000 */
--	{ 131804 },
-+	{ 134183 },
+-	{ 134183 },
++	{ 135496 },
  	/* M2\000\000ipc + M1\000\000\000\000\000\000\000\000000 */
--	{ 131827 },
-+	{ 134206 },
+-	{ 134206 },
++	{ 135519 },
  	/* M3\000\0001 / M3\000\000\000\000\000\000\000\000000 */
--	{ 131850 },
-+	{ 134229 },
+-	{ 134229 },
++	{ 135542 },
  	/* cache_miss_cycles\000group1\000dcache_miss_cpi + icache_miss_cycles\00=
 0\000\000\... */
--	{ 131297 },
-+	{ 133676 },
+-	{ 133676 },
++	{ 134989 },
  	/* dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_retired.any\000\000=
 \000\000\0... */
--	{ 131164 },
-+	{ 133543 },
+-	{ 133543 },
++	{ 134856 },
  	/* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retired.any\000\=
 000\000\00... */
--	{ 131229 },
-+	{ 133608 },
+-	{ 133608 },
++	{ 134921 },
 =20
  };
 =20
-@@ -5364,15 +5468,15 @@ static const struct pmu_table_entry pmu_metrics__te=
+@@ -5468,15 +5532,15 @@ static const struct pmu_table_entry pmu_metrics__te=
 st_soc_cpu[] =3D {
 =20
  static const struct compact_pmu_event pmu_events__test_soc_sys_uncore_sys_=
 ccn_pmu[] =3D {
  	/* sys_ccn_pmu.read_cycles\000uncore\000ccn read-cycles event\000config=
 =3D0x2c\0000x0... */
--	{ 127718 },
-+	{ 130097 },
+-	{ 130097 },
++	{ 131410 },
  };
  static const struct compact_pmu_event pmu_events__test_soc_sys_uncore_sys_=
 cmn_pmu[] =3D {
  	/* sys_cmn_pmu.hnf_cache_miss\000uncore\000Counts total cache misses in f=
 irst looku... */
--	{ 127814 },
-+	{ 130193 },
+-	{ 130193 },
++	{ 131506 },
  };
  static const struct compact_pmu_event pmu_events__test_soc_sys_uncore_sys_=
 ddr_pmu[] =3D {
  	/* sys_ddr_pmu.write_cycles\000uncore\000ddr write-cycles event\000event=
 =3D0x2b\000v8... */
--	{ 127623 },
-+	{ 130002 },
+-	{ 130002 },
++	{ 131315 },
 =20
  };
 =20
-@@ -5380,17 +5484,17 @@ static const struct pmu_table_entry pmu_events__tes=
+@@ -5484,17 +5548,17 @@ static const struct pmu_table_entry pmu_events__tes=
 t_soc_sys[] =3D {
  	{
  		.entries =3D pmu_events__test_soc_sys_uncore_sys_ccn_pmu,
  		.num_entries =3D ARRAY_SIZE(pmu_events__test_soc_sys_uncore_sys_ccn_pmu)=
 ,
--		.pmu_name =3D { 127699 /* uncore_sys_ccn_pmu\000 */ },
-+		.pmu_name =3D { 130078 /* uncore_sys_ccn_pmu\000 */ },
+-		.pmu_name =3D { 130078 /* uncore_sys_ccn_pmu\000 */ },
++		.pmu_name =3D { 131391 /* uncore_sys_ccn_pmu\000 */ },
  	},
  	{
  		.entries =3D pmu_events__test_soc_sys_uncore_sys_cmn_pmu,
  		.num_entries =3D ARRAY_SIZE(pmu_events__test_soc_sys_uncore_sys_cmn_pmu)=
 ,
--		.pmu_name =3D { 127795 /* uncore_sys_cmn_pmu\000 */ },
-+		.pmu_name =3D { 130174 /* uncore_sys_cmn_pmu\000 */ },
+-		.pmu_name =3D { 130174 /* uncore_sys_cmn_pmu\000 */ },
++		.pmu_name =3D { 131487 /* uncore_sys_cmn_pmu\000 */ },
  	},
  	{
  		.entries =3D pmu_events__test_soc_sys_uncore_sys_ddr_pmu,
  		.num_entries =3D ARRAY_SIZE(pmu_events__test_soc_sys_uncore_sys_ddr_pmu)=
 ,
--		.pmu_name =3D { 127604 /* uncore_sys_ddr_pmu\000 */ },
-+		.pmu_name =3D { 129983 /* uncore_sys_ddr_pmu\000 */ },
+-		.pmu_name =3D { 129983 /* uncore_sys_ddr_pmu\000 */ },
++		.pmu_name =3D { 131296 /* uncore_sys_ddr_pmu\000 */ },
  	},
  };
 =20
-diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
-index d2f7591747d9..0ae08cd910bc 100644
---- a/tools/perf/util/tool_pmu.c
-+++ b/tools/perf/util/tool_pmu.c
-@@ -12,10 +12,17 @@
- #include "tsc.h"
- #include <api/fs/fs.h>
- #include <api/io.h>
-+#include <api/io_dir.h>
- #include <internal/threadmap.h>
- #include <perf/threadmap.h>
-+#include <ctype.h>
-+#include <errno.h>
- #include <fcntl.h>
-+#include <limits.h>
-+#include <stdio.h>
-+#include <stdlib.h>
- #include <strings.h>
-+#include <unistd.h>
-=20
- #define INVALID_START_TIME ~0ULL
-=20
-@@ -35,6 +42,32 @@ static const char *const tool_pmu__event_names[TOOL_PMU_=
-_EVENT_MAX] =3D {
- 	"system_tsc_freq",
- 	"core_wide",
- 	"target_cpu",
-+	"memory_anon_huge_pages",
-+	"memory_anonymous",
-+	"memory_data",
-+	"memory_file_pmd_mapped",
-+	"memory_ksm",
-+	"memory_lazyfree",
-+	"memory_locked",
-+	"memory_private_clean",
-+	"memory_private_dirty",
-+	"memory_private_hugetlb",
-+	"memory_pss",
-+	"memory_pss_anon",
-+	"memory_pss_dirty",
-+	"memory_pss_file",
-+	"memory_pss_shmem",
-+	"memory_referenced",
-+	"memory_rss",
-+	"memory_shared_clean",
-+	"memory_shared_dirty",
-+	"memory_shared_hugetlb",
-+	"memory_shmem_pmd_mapped",
-+	"memory_size",
-+	"memory_swap",
-+	"memory_swap_pss",
-+	"memory_text",
-+	"memory_uss",
- };
-=20
- bool tool_pmu__skip_event(const char *name __maybe_unused)
-@@ -203,6 +236,205 @@ static int read_pid_stat_field(int fd, int field, __u=
-64 *val)
- 	return -EINVAL;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 6d69f63b7fb1..a508e438bb03 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1899,6 +1899,46 @@ int evsel__append_addr_filter(struct evsel *evsel, c=
+onst char *filter)
+ 	return evsel__append_filter(evsel, "%s,%s", filter);
  }
 =20
-+static bool tool_pmu__is_memory_event(enum tool_pmu_event ev)
++static int evsel__group_member_cpu_action(struct evsel *leader, struct evs=
+el *member,
++					  int cpu_map_idx, bool enable)
 +{
-+	return ev >=3D TOOL_PMU__EVENT_MEMORY_ANON_HUGE_PAGES &&
-+	       ev <=3D TOOL_PMU__EVENT_MEMORY_USS;
-+}
++	struct perf_cpu cpu;
++	int m_idx;
 +
-+static const char *tool_pmu__memory_event_to_key(enum tool_pmu_event ev)
-+{
-+	switch (ev) {
-+	case TOOL_PMU__EVENT_MEMORY_ANON_HUGE_PAGES: return "AnonHugePages:";
-+	case TOOL_PMU__EVENT_MEMORY_ANONYMOUS: return "Anonymous:";
-+	case TOOL_PMU__EVENT_MEMORY_FILE_PMD_MAPPED: return "FilePmdMapped:";
-+	case TOOL_PMU__EVENT_MEMORY_KSM: return "KSM:";
-+	case TOOL_PMU__EVENT_MEMORY_LAZYFREE: return "LazyFree:";
-+	case TOOL_PMU__EVENT_MEMORY_LOCKED: return "Locked:";
-+	case TOOL_PMU__EVENT_MEMORY_PRIVATE_CLEAN: return "Private_Clean:";
-+	case TOOL_PMU__EVENT_MEMORY_PRIVATE_DIRTY: return "Private_Dirty:";
-+	case TOOL_PMU__EVENT_MEMORY_PRIVATE_HUGETLB: return "Private_Hugetlb:";
-+	case TOOL_PMU__EVENT_MEMORY_PSS: return "Pss:";
-+	case TOOL_PMU__EVENT_MEMORY_PSS_ANON: return "Pss_Anon:";
-+	case TOOL_PMU__EVENT_MEMORY_PSS_DIRTY: return "Pss_Dirty:";
-+	case TOOL_PMU__EVENT_MEMORY_PSS_FILE: return "Pss_File:";
-+	case TOOL_PMU__EVENT_MEMORY_PSS_SHMEM: return "Pss_Shmem:";
-+	case TOOL_PMU__EVENT_MEMORY_REFERENCED: return "Referenced:";
-+	case TOOL_PMU__EVENT_MEMORY_RSS: return "Rss:";
-+	case TOOL_PMU__EVENT_MEMORY_SHARED_CLEAN: return "Shared_Clean:";
-+	case TOOL_PMU__EVENT_MEMORY_SHARED_DIRTY: return "Shared_Dirty:";
-+	case TOOL_PMU__EVENT_MEMORY_SHARED_HUGETLB: return "Shared_Hugetlb:";
-+	case TOOL_PMU__EVENT_MEMORY_SHMEM_PMD_MAPPED: return "ShmemPmdMapped:";
-+	case TOOL_PMU__EVENT_MEMORY_SWAP: return "Swap:";
-+	case TOOL_PMU__EVENT_MEMORY_SWAP_PSS: return "SwapPss:";
-+	case TOOL_PMU__EVENT_MEMORY_DATA:
-+	case TOOL_PMU__EVENT_MEMORY_SIZE:
-+	case TOOL_PMU__EVENT_MEMORY_TEXT:
-+	case TOOL_PMU__EVENT_MEMORY_USS:
-+	case TOOL_PMU__EVENT_DURATION_TIME:
-+	case TOOL_PMU__EVENT_USER_TIME:
-+	case TOOL_PMU__EVENT_SYSTEM_TIME:
-+	case TOOL_PMU__EVENT_HAS_PMEM:
-+	case TOOL_PMU__EVENT_NUM_CORES:
-+	case TOOL_PMU__EVENT_NUM_CPUS:
-+	case TOOL_PMU__EVENT_NUM_CPUS_ONLINE:
-+	case TOOL_PMU__EVENT_NUM_DIES:
-+	case TOOL_PMU__EVENT_NUM_PACKAGES:
-+	case TOOL_PMU__EVENT_SLOTS:
-+	case TOOL_PMU__EVENT_SMT_ON:
-+	case TOOL_PMU__EVENT_SYSTEM_TSC_FREQ:
-+	case TOOL_PMU__EVENT_CORE_WIDE:
-+	case TOOL_PMU__EVENT_TARGET_CPU:
-+	case TOOL_PMU__EVENT_NONE:
-+	case TOOL_PMU__EVENT_MAX:
-+	default: return NULL;
-+	}
-+}
++	if (perf_cpu_map__equal(leader->core.cpus, member->core.cpus))
++		return enable ? evsel__enable_cpu(member, cpu_map_idx)
++			      : evsel__disable_cpu(member, cpu_map_idx);
 +
-+static int read_proc_status_u64(struct io *io, const char *key, u64 *val)
-+{
-+	int ch;
-+
-+	while ((ch =3D io__get_char(io)) !=3D -1) {
-+		/* Check if line starts with key */
-+		if (ch =3D=3D key[0]) {
-+			const char *k =3D key + 1;
-+
-+			while (*k && (ch =3D io__get_char(io)) =3D=3D *k)
-+				k++;
-+
-+			if (!*k) {
-+				/* Found key, skip whitespace */
-+				while ((ch =3D io__get_char(io)) =3D=3D ' ' || ch =3D=3D '\t')
-+					;
-+				/* Read value */
-+				if (ch >=3D '0' && ch <=3D '9') {
-+					*val =3D ch - '0';
-+					while ((ch =3D io__get_char(io)) >=3D '0' && ch <=3D '9')
-+						*val =3D *val * 10 + (ch - '0');
-+					if (ch !=3D '\n' && ch !=3D -1)
-+						read_until_char(io, '\n');
-+					return 0;
-+				}
-+			}
-+		}
-+		/* Skip rest of line */
-+		if (ch !=3D '\n' && ch !=3D -1)
-+			read_until_char(io, '\n');
-+	}
-+	return -EINVAL;
-+}
-+
-+static int read_pid_tgid(int dir_fd, int *tgid)
-+{
-+	char buf[1024];
-+	struct io io;
-+	u64 val;
-+	int fd, ret;
-+
-+	fd =3D openat(dir_fd, "status", O_RDONLY);
-+	if (fd < 0)
-+		return -errno;
-+
-+	io__init(&io, fd, buf, sizeof(buf));
-+	ret =3D read_proc_status_u64(&io, "Tgid:", &val);
-+	close(fd);
-+	if (!ret)
-+		*tgid =3D (int)val;
-+	return ret;
-+}
-+
-+static int read_smaps_rollup_field(struct io *io, const char *key, u64 *va=
-l)
-+{
-+	int ret =3D read_proc_status_u64(io, key, val);
-+
-+	if (!ret)
-+		*val *=3D 1024; /* Convert kB to bytes */
-+	return ret;
-+}
-+
-+static int read_smaps_rollup(int fd, enum tool_pmu_event ev, u64 *val)
-+{
-+	char buf[4096];
-+	struct io io;
-+
-+	lseek(fd, 0, SEEK_SET);
-+	io__init(&io, fd, buf, sizeof(buf));
-+
-+	if (ev =3D=3D TOOL_PMU__EVENT_MEMORY_USS) {
-+		u64 pc, pd;
-+		int ret;
-+
-+		ret =3D read_smaps_rollup_field(&io, "Private_Clean:", &pc);
-+		if (ret)
-+			return ret;
-+		ret =3D read_smaps_rollup_field(&io, "Private_Dirty:", &pd);
-+		if (ret) {
-+			lseek(fd, 0, SEEK_SET);
-+			io__init(&io, fd, buf, sizeof(buf));
-+			ret =3D read_smaps_rollup_field(&io, "Private_Dirty:", &pd);
-+			if (ret)
-+				return ret;
-+		}
-+		*val =3D pc + pd;
++	if (member->core.reads_only_on_cpu_idx0) {
++		if (cpu_map_idx =3D=3D 0 && perf_cpu_map__nr(member->core.cpus) > 0)
++			return enable ? evsel__enable_cpu(member, 0)
++				      : evsel__disable_cpu(member, 0);
 +		return 0;
 +	}
 +
-+	return read_smaps_rollup_field(&io, tool_pmu__memory_event_to_key(ev), va=
-l);
-+}
++	if (leader->core.reads_only_on_cpu_idx0) {
++		if (cpu_map_idx =3D=3D 0) {
++			int nr =3D perf_cpu_map__nr(member->core.cpus);
 +
-+static int read_statm(int fd, enum tool_pmu_event ev, u64 *val)
-+{
-+	long page_sz =3D sysconf(_SC_PAGE_SIZE);
-+	char buf[128];
-+	struct io io;
-+	__u64 v;
-+
-+	if (page_sz <=3D 0)
-+		return -EINVAL;
-+
-+	io__init(&io, fd, buf, sizeof(buf));
-+	lseek(fd, 0, SEEK_SET);
-+
-+	/* Size */
-+	if (io__get_dec(&io, &v) !=3D ' ')
-+		return -EINVAL;
-+	if (ev =3D=3D TOOL_PMU__EVENT_MEMORY_SIZE) {
-+		*val =3D v * page_sz;
-+		return 0;
-+	}
-+
-+	/* Resident */
-+	if (io__get_dec(&io, &v) !=3D ' ') /* Skip */
-+		return -EINVAL;
-+
-+	/* Shared */
-+	if (io__get_dec(&io, &v) !=3D ' ') /* Skip */
-+		return -EINVAL;
-+
-+	/* Text */
-+	if (io__get_dec(&io, &v) !=3D ' ')
-+		return -EINVAL;
-+	if (ev =3D=3D TOOL_PMU__EVENT_MEMORY_TEXT) {
-+		*val =3D v * page_sz;
-+		return 0;
-+	}
-+
-+	/* Lib */
-+	if (io__get_dec(&io, &v) !=3D ' ') /* Skip */
-+		return -EINVAL;
-+
-+	/* Data */
-+	if (io__get_dec(&io, &v) < 0)
-+		return -EINVAL;
-+	if (ev =3D=3D TOOL_PMU__EVENT_MEMORY_DATA) {
-+		*val =3D v * page_sz;
-+		return 0;
-+	}
-+
-+	return -EINVAL;
-+}
-+
- int evsel__tool_pmu_prepare_open(struct evsel *evsel,
- 				 struct perf_cpu_map *cpus,
- 				 int nthreads)
-@@ -258,19 +490,138 @@ static int tool_pmu__read_stat(struct evsel *evsel, =
-int cpu_map_idx, int thread,
- 	return err;
- }
-=20
-+static int open_memory_pid_dir(enum tool_pmu_event ev, int pid,
-+			       int *seen_tgids, int *nr_seen_tgids, int *out_fd)
-+{
-+	const char *file =3D "smaps_rollup";
-+	int dir_fd, test_fd, tgid =3D -1;
-+	char buf[PATH_MAX];
-+
-+	*out_fd =3D -1;
-+	snprintf(buf, sizeof(buf), "%s/%d", procfs__mountpoint(), pid);
-+	dir_fd =3D open(buf, O_RDONLY | O_DIRECTORY);
-+	if (dir_fd < 0)
-+		return -errno;
-+
-+	if (seen_tgids) {
-+		int err =3D read_pid_tgid(dir_fd, &tgid);
-+
-+		if (err) {
-+			close(dir_fd);
-+			return err;
-+		}
-+		for (int i =3D 0; i < *nr_seen_tgids; i++) {
-+			if (seen_tgids[i] =3D=3D tgid) {
-+				close(dir_fd);
-+				return 0;
-+			}
-+		}
-+	}
-+
-+	if (ev =3D=3D TOOL_PMU__EVENT_MEMORY_SIZE ||
-+	    ev =3D=3D TOOL_PMU__EVENT_MEMORY_DATA ||
-+	    ev =3D=3D TOOL_PMU__EVENT_MEMORY_TEXT)
-+		file =3D "statm";
-+
-+	test_fd =3D openat(dir_fd, file, O_RDONLY);
-+	if (test_fd < 0) {
-+		int err =3D -errno;
-+
-+		close(dir_fd);
-+		return err;
-+	}
-+	close(test_fd);
-+
-+	if (seen_tgids)
-+		seen_tgids[(*nr_seen_tgids)++] =3D tgid;
-+
-+	*out_fd =3D dir_fd;
-+	return 0;
-+}
-+
-+static int evsel__tool_pmu_open_one(struct evsel *evsel, enum tool_pmu_eve=
-nt ev,
-+				    int pid, int idx, int thread,
-+				    int *seen_tgids, int *nr_seen_tgids)
-+{
-+	if (ev =3D=3D TOOL_PMU__EVENT_USER_TIME || ev =3D=3D TOOL_PMU__EVENT_SYST=
-EM_TIME) {
-+		__u64 *start_time =3D NULL;
-+		__u64 *accumulated_time =3D NULL;
-+		char buf[PATH_MAX];
-+		int fd, err;
-+
-+		if (pid > -1) {
-+			snprintf(buf, sizeof(buf), "%s/%d/stat", procfs__mountpoint(), pid);
-+			evsel->pid_stat =3D true;
-+		} else {
-+			snprintf(buf, sizeof(buf), "%s/stat", procfs__mountpoint());
-+		}
-+		fd =3D open(buf, O_RDONLY);
-+		FD(evsel, idx, thread) =3D fd;
-+		if (fd < 0)
-+			return -errno;
-+
-+		start_time =3D xyarray__entry(evsel->process_time.start_times, idx, thre=
-ad);
-+		accumulated_time =3D xyarray__entry(evsel->process_time.accumulated_time=
-s,
-+						  idx, thread);
-+		*accumulated_time =3D 0;
-+
-+		if (evsel->core.attr.disabled) {
-+			evsel->disabled =3D true;
-+			*start_time =3D INVALID_START_TIME;
-+		} else {
-+			evsel->disabled =3D false;
-+			err =3D tool_pmu__read_stat(evsel, idx, thread, start_time);
-+			if (err) {
-+				close(fd);
-+				FD(evsel, idx, thread) =3D -1;
-+				return err;
-+			}
-+		}
-+	} else if (tool_pmu__is_memory_event(ev)) {
-+		int fd =3D -1;
-+
-+		if (evsel->cgrp)
-+			return -EINVAL;
-+
-+		evsel->disabled =3D evsel->core.attr.disabled;
-+		if (pid > -1) {
-+			evsel->pid_stat =3D true;
-+			if (idx =3D=3D 0) {
-+				int err =3D open_memory_pid_dir(ev, pid, seen_tgids,
-+							      nr_seen_tgids, &fd);
++			for (m_idx =3D 0; m_idx < nr; m_idx++) {
++				int err =3D enable ? evsel__enable_cpu(member, m_idx)
++						 : evsel__disable_cpu(member, m_idx);
 +
 +				if (err)
 +					return err;
 +			}
 +		}
-+		/*
-+		 * For per-process, FD holds /proc/<pid> directory fd so
-+		 * smaps_rollup/statm are opened on read (avoiding caching a
-+		 * pre-exec mm_struct), or -1 for deduplicated sibling threads.
-+		 * For system-wide (pid =3D=3D -1), we aggregate in read().
-+		 */
-+		FD(evsel, idx, thread) =3D fd;
++		return 0;
++	}
++
++	cpu =3D perf_cpu_map__cpu(leader->core.cpus, cpu_map_idx);
++	m_idx =3D perf_cpu_map__idx(member->core.cpus, cpu);
++	if (m_idx >=3D 0)
++		return enable ? evsel__enable_cpu(member, m_idx)
++			      : evsel__disable_cpu(member, m_idx);
++	return 0;
++}
++
+ /* Caller has to clear disabled after going through all CPUs. */
+ int evsel__enable_cpu(struct evsel *evsel, int cpu_map_idx)
+ {
+@@ -1922,7 +1962,8 @@ int evsel__enable_cpu(struct evsel *evsel, int cpu_ma=
+p_idx)
+ 				 * group leader. We must manually enable them in
+ 				 * userspace.
+ 				 */
+-				int mem_err =3D evsel__enable_cpu(member, cpu_map_idx);
++				int mem_err =3D evsel__group_member_cpu_action(evsel, member,
++									     cpu_map_idx, true);
+=20
+ 				if (mem_err)
+ 					return mem_err;
+@@ -1991,7 +2032,8 @@ int evsel__disable_cpu(struct evsel *evsel, int cpu_m=
+ap_idx)
+ 				 * kernel when disabling the group leader. We must
+ 				 * manually disable them in userspace.
+ 				 */
+-				int mem_err =3D evsel__disable_cpu(member, cpu_map_idx);
++				int mem_err =3D evsel__group_member_cpu_action(evsel, member,
++									     cpu_map_idx, false);
+=20
+ 				if (mem_err)
+ 					return mem_err;
+@@ -2099,11 +2141,8 @@ static void evsel__exit(struct evsel *evsel)
+ 	if (evsel__priv_destructor)
+ 		evsel__priv_destructor(evsel->priv);
+ 	perf_evsel__object.fini(evsel);
+-	if (evsel__tool_event(evsel) =3D=3D TOOL_PMU__EVENT_SYSTEM_TIME ||
+-	    evsel__tool_event(evsel) =3D=3D TOOL_PMU__EVENT_USER_TIME) {
+-		xyarray__delete(evsel->process_time.start_times);
+-		xyarray__delete(evsel->process_time.accumulated_times);
+-	}
++	if (evsel__is_tool(evsel))
++		evsel__tool_pmu_exit(evsel);
+ }
+=20
+ void evsel__put(struct evsel *evsel)
+diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
+index 0ae08cd910bc..655b22104320 100644
+--- a/tools/perf/util/tool_pmu.c
++++ b/tools/perf/util/tool_pmu.c
+@@ -68,6 +68,22 @@ static const char *const tool_pmu__event_names[TOOL_PMU_=
+_EVENT_MAX] =3D {
+ 	"memory_swap_pss",
+ 	"memory_text",
+ 	"memory_uss",
++	"net_rx_bytes",
++	"net_rx_packets",
++	"net_rx_errors",
++	"net_rx_drop",
++	"net_rx_fifo",
++	"net_rx_frame",
++	"net_rx_compressed",
++	"net_rx_multicast",
++	"net_tx_bytes",
++	"net_tx_packets",
++	"net_tx_errors",
++	"net_tx_drop",
++	"net_tx_fifo",
++	"net_tx_colls",
++	"net_tx_carrier",
++	"net_tx_compressed",
+ };
+=20
+ bool tool_pmu__skip_event(const char *name __maybe_unused)
+@@ -271,6 +287,22 @@ static const char *tool_pmu__memory_event_to_key(enum =
+tool_pmu_event ev)
+ 	case TOOL_PMU__EVENT_MEMORY_SIZE:
+ 	case TOOL_PMU__EVENT_MEMORY_TEXT:
+ 	case TOOL_PMU__EVENT_MEMORY_USS:
++	case TOOL_PMU__EVENT_NET_RX_BYTES:
++	case TOOL_PMU__EVENT_NET_RX_PACKETS:
++	case TOOL_PMU__EVENT_NET_RX_ERRORS:
++	case TOOL_PMU__EVENT_NET_RX_DROP:
++	case TOOL_PMU__EVENT_NET_RX_FIFO:
++	case TOOL_PMU__EVENT_NET_RX_FRAME:
++	case TOOL_PMU__EVENT_NET_RX_COMPRESSED:
++	case TOOL_PMU__EVENT_NET_RX_MULTICAST:
++	case TOOL_PMU__EVENT_NET_TX_BYTES:
++	case TOOL_PMU__EVENT_NET_TX_PACKETS:
++	case TOOL_PMU__EVENT_NET_TX_ERRORS:
++	case TOOL_PMU__EVENT_NET_TX_DROP:
++	case TOOL_PMU__EVENT_NET_TX_FIFO:
++	case TOOL_PMU__EVENT_NET_TX_COLLS:
++	case TOOL_PMU__EVENT_NET_TX_CARRIER:
++	case TOOL_PMU__EVENT_NET_TX_COMPRESSED:
+ 	case TOOL_PMU__EVENT_DURATION_TIME:
+ 	case TOOL_PMU__EVENT_USER_TIME:
+ 	case TOOL_PMU__EVENT_SYSTEM_TIME:
+@@ -435,13 +467,110 @@ static int read_statm(int fd, enum tool_pmu_event ev=
+, u64 *val)
+ 	return -EINVAL;
+ }
+=20
++static bool tool_pmu__is_net_event(enum tool_pmu_event ev)
++{
++	return ev >=3D TOOL_PMU__EVENT_NET_RX_BYTES &&
++	       ev <=3D TOOL_PMU__EVENT_NET_TX_COMPRESSED;
++}
++
++static bool tool_pmu__has_start_times(enum tool_pmu_event ev)
++{
++	return ev =3D=3D TOOL_PMU__EVENT_USER_TIME ||
++	       ev =3D=3D TOOL_PMU__EVENT_SYSTEM_TIME ||
++	       tool_pmu__is_net_event(ev);
++}
++
++static int read_net_dev_col(struct io *io, __u64 *val, int *term)
++{
++	int ch;
++
++	do {
++		ch =3D io__get_char(io);
++		if (ch =3D=3D -1 || ch =3D=3D '\n') {
++			*term =3D ch;
++			return -EINVAL;
++		}
++	} while (ch =3D=3D ' ' || ch =3D=3D '\t');
++
++	if (ch < '0' || ch > '9') {
++		*term =3D ch;
++		return -EINVAL;
++	}
++
++	*val =3D ch - '0';
++	while (true) {
++		ch =3D io__get_char(io);
++		if (ch >=3D '0' && ch <=3D '9') {
++			*val =3D (*val * 10) + (ch - '0');
++		} else {
++			*term =3D ch;
++			return 0;
++		}
++	}
++}
++
++static int read_net_dev(int fd, enum tool_pmu_event ev, __u64 *val)
++{
++	struct io io;
++	char buf[4096];
++	int index =3D ev - TOOL_PMU__EVENT_NET_RX_BYTES;
++
++	io__init(&io, fd, buf, sizeof(buf));
++	lseek(fd, 0, SEEK_SET);
++
++	/*
++	 * Drop two header lines:
++	 * Inter-|   Receive                                                |  Tr=
+ansmit
++	 *  face |bytes    packets errs drop fifo frame compressed multicast|byte=
+s ...
++	 */
++	if (!read_until_char(&io, '\n'))
++		return -EINVAL;
++	if (!read_until_char(&io, '\n'))
++		return -EINVAL;
++
++	*val =3D 0;
++	while (true) {
++		int ch =3D io__get_char(&io);
++		int i, term =3D 0;
++		__u64 v;
++
++		if (ch =3D=3D -1)
++			break;
++		while (ch =3D=3D ' ' || ch =3D=3D '\t')
++			ch =3D io__get_char(&io);
++		if (ch =3D=3D -1)
++			break;
++		while (ch !=3D ':' && ch !=3D -1 && ch !=3D '\n')
++			ch =3D io__get_char(&io);
++		if (ch !=3D ':') {
++			if (ch =3D=3D '\n')
++				continue;
++			if (ch =3D=3D -1)
++				break;
++			read_until_char(&io, '\n');
++			continue;
++		}
++		for (i =3D 0; i < index; i++) {
++			if (read_net_dev_col(&io, &v, &term))
++				break;
++		}
++		if (i =3D=3D index && !read_net_dev_col(&io, &v, &term))
++			*val +=3D v;
++		if (term !=3D '\n' && term !=3D -1)
++			read_until_char(&io, '\n');
++		if (term =3D=3D -1)
++			break;
 +	}
 +	return 0;
 +}
 +
- int evsel__tool_pmu_open(struct evsel *evsel,
- 			 struct perf_thread_map *threads,
- 			 int start_cpu_map_idx, int end_cpu_map_idx)
+ int evsel__tool_pmu_prepare_open(struct evsel *evsel,
+ 				 struct perf_cpu_map *cpus,
+ 				 int nthreads)
  {
  	enum tool_pmu_event ev =3D evsel__tool_event(evsel);
--	int pid =3D -1, idx =3D 0, thread =3D 0, nthreads, err =3D 0, old_errno;
-+	int pid =3D -1, idx =3D 0, thread =3D 0, nthreads, err =3D 0;
-+	int *seen_tgids =3D NULL, nr_seen_tgids =3D 0;
-+
-+	if (evsel->core.attr.sample_period) { /* no sampling */
-+		errno =3D EINVAL;
-+		return -EINVAL;
-+	}
 =20
- 	if (ev =3D=3D TOOL_PMU__EVENT_NUM_CPUS)
+-	if (ev =3D=3D TOOL_PMU__EVENT_SYSTEM_TIME || ev =3D=3D TOOL_PMU__EVENT_US=
+ER_TIME) {
++	if (tool_pmu__has_start_times(ev)) {
+ 		if (!evsel->process_time.start_times) {
+ 			evsel->process_time.start_times =3D
+ 				xyarray__new(perf_cpu_map__nr(cpus), nthreads, sizeof(__u64));
+@@ -464,7 +593,8 @@ static int tool_pmu__read_stat(struct evsel *evsel, int=
+ cpu_map_idx, int thread,
+ {
+ 	enum tool_pmu_event ev =3D evsel__tool_event(evsel);
+ 	bool system =3D ev =3D=3D TOOL_PMU__EVENT_SYSTEM_TIME;
+-	int fd =3D FD(evsel, cpu_map_idx, thread);
++	int *fd_ptr =3D evsel->core.fd ? xyarray__entry(evsel->core.fd, cpu_map_i=
+dx, thread) : NULL;
++	int fd =3D fd_ptr ? *fd_ptr : -1;
+ 	int err =3D 0;
+=20
+ 	if (fd < 0) {
+@@ -472,6 +602,13 @@ static int tool_pmu__read_stat(struct evsel *evsel, in=
+t cpu_map_idx, int thread,
  		return 0;
+ 	}
 =20
- 	if (ev =3D=3D TOOL_PMU__EVENT_DURATION_TIME) {
--		if (evsel->core.attr.sample_period) /* no sampling */
--			return -EINVAL;
- 		evsel->duration_time.accumulated_time =3D 0;
- 		if (evsel->core.attr.disabled) {
- 			evsel->disabled =3D true;
-@@ -286,62 +637,33 @@ int evsel__tool_pmu_open(struct evsel *evsel,
- 		pid =3D evsel->cgrp->fd;
-=20
- 	nthreads =3D perf_thread_map__nr(threads);
-+	if (tool_pmu__is_memory_event(ev) && !evsel->cgrp && !evsel->core.system_=
-wide &&
-+	    nthreads > 1 && start_cpu_map_idx =3D=3D 0 && end_cpu_map_idx > 0) {
-+		seen_tgids =3D calloc(nthreads, sizeof(*seen_tgids));
-+		if (!seen_tgids) {
-+			errno =3D ENOMEM;
-+			return -ENOMEM;
-+		}
++	if (tool_pmu__is_net_event(ev)) {
++		if (cpu_map_idx =3D=3D 0 && thread =3D=3D 0)
++			return read_net_dev(fd, ev, val);
++		*val =3D 0;
++		return 0;
 +	}
 +
- 	for (idx =3D start_cpu_map_idx; idx < end_cpu_map_idx; idx++) {
- 		for (thread =3D 0; thread < nthreads; thread++) {
- 			if (!evsel->cgrp && !evsel->core.system_wide)
- 				pid =3D perf_thread_map__pid(threads, thread);
-=20
--			if (ev =3D=3D TOOL_PMU__EVENT_USER_TIME || ev =3D=3D TOOL_PMU__EVENT_SY=
-STEM_TIME) {
--				__u64 *start_time =3D NULL;
--				__u64 *accumulated_time =3D NULL;
--				int fd;
--
--				if (evsel->core.attr.sample_period) {
--					/* no sampling */
--					err =3D -EINVAL;
--					goto out_close;
--				}
--				if (pid > -1) {
--					char buf[64];
--
--					snprintf(buf, sizeof(buf), "/proc/%d/stat", pid);
--					fd =3D open(buf, O_RDONLY);
--					evsel->pid_stat =3D true;
--				} else {
--					fd =3D open("/proc/stat", O_RDONLY);
--				}
--				FD(evsel, idx, thread) =3D fd;
--				if (fd < 0) {
--					err =3D -errno;
--					goto out_close;
--				}
--				start_time =3D xyarray__entry(evsel->process_time.start_times, idx,
--							    thread);
--				accumulated_time =3D xyarray__entry(
--					evsel->process_time.accumulated_times, idx, thread);
--				*accumulated_time =3D 0;
--
--				if (evsel->core.attr.disabled) {
--					evsel->disabled =3D true;
--					*start_time =3D INVALID_START_TIME;
--				} else {
--					evsel->disabled =3D false;
--					err =3D tool_pmu__read_stat(evsel, idx, thread, start_time);
--					if (err) {
--						close(fd);
--						FD(evsel, idx, thread) =3D -1;
--						goto out_close;
--					}
--				}
--			}
-+			err =3D evsel__tool_pmu_open_one(evsel, ev, pid, idx, thread,
-+						       seen_tgids, &nr_seen_tgids);
-+			if (err)
-+				goto out_close;
- 		}
- 	}
-+	free(seen_tgids);
+ 	lseek(fd, 0, SEEK_SET);
+ 	if (evsel->pid_stat) {
+ 		if (cpu_map_idx =3D=3D 0)
+@@ -539,40 +676,58 @@ static int open_memory_pid_dir(enum tool_pmu_event ev=
+, int pid,
  	return 0;
- out_close:
-+	free(seen_tgids);
- 	if (err)
- 		threads->err_thread =3D thread;
-=20
--	old_errno =3D errno;
- 	do {
- 		while (--thread >=3D 0) {
- 			if (FD(evsel, idx, thread) >=3D 0)
-@@ -350,7 +672,7 @@ int evsel__tool_pmu_open(struct evsel *evsel,
- 		}
- 		thread =3D nthreads;
- 	} while (--idx >=3D start_cpu_map_idx);
--	errno =3D old_errno;
-+	errno =3D -err;
- 	return err;
  }
 =20
-@@ -486,6 +808,32 @@ bool tool_pmu__read_event(enum tool_pmu_event ev,
- 		*result =3D system_wide || (user_requested_cpu_list !=3D NULL) ? 1 : 0;
- 		return true;
++static bool tool_pmu__is_initially_disabled(const struct evsel *evsel)
++{
++	const struct evsel *leader =3D evsel__leader(evsel);
++
++	return evsel->core.attr.disabled || (leader && leader->core.attr.disabled=
+);
++}
++
+ static int evsel__tool_pmu_open_one(struct evsel *evsel, enum tool_pmu_eve=
+nt ev,
+ 				    int pid, int idx, int thread,
+ 				    int *seen_tgids, int *nr_seen_tgids)
+ {
+-	if (ev =3D=3D TOOL_PMU__EVENT_USER_TIME || ev =3D=3D TOOL_PMU__EVENT_SYST=
+EM_TIME) {
++	if (tool_pmu__has_start_times(ev)) {
+ 		__u64 *start_time =3D NULL;
+ 		__u64 *accumulated_time =3D NULL;
+ 		char buf[PATH_MAX];
+-		int fd, err;
+-
+-		if (pid > -1) {
+-			snprintf(buf, sizeof(buf), "%s/%d/stat", procfs__mountpoint(), pid);
+-			evsel->pid_stat =3D true;
++		int fd =3D -1, err;
++
++		if (tool_pmu__is_net_event(ev)) {
++			if (pid > -1 || evsel->cgrp)
++				return -EINVAL;
++			if (idx =3D=3D 0 && thread =3D=3D 0) {
++				snprintf(buf, sizeof(buf), "%s/net/dev", procfs__mountpoint());
++				fd =3D open(buf, O_RDONLY);
++				if (fd < 0)
++					return -errno;
++			}
+ 		} else {
+-			snprintf(buf, sizeof(buf), "%s/stat", procfs__mountpoint());
++			if (pid > -1) {
++				snprintf(buf, sizeof(buf), "%s/%d/stat", procfs__mountpoint(), pid);
++				evsel->pid_stat =3D true;
++			} else {
++				snprintf(buf, sizeof(buf), "%s/stat", procfs__mountpoint());
++			}
++			fd =3D open(buf, O_RDONLY);
++			if (fd < 0)
++				return -errno;
+ 		}
+-		fd =3D open(buf, O_RDONLY);
+ 		FD(evsel, idx, thread) =3D fd;
+-		if (fd < 0)
+-			return -errno;
+-
+ 		start_time =3D xyarray__entry(evsel->process_time.start_times, idx, thre=
+ad);
+ 		accumulated_time =3D xyarray__entry(evsel->process_time.accumulated_time=
+s,
+ 						  idx, thread);
+ 		*accumulated_time =3D 0;
 =20
-+	case TOOL_PMU__EVENT_MEMORY_SIZE:
-+	case TOOL_PMU__EVENT_MEMORY_RSS:
-+	case TOOL_PMU__EVENT_MEMORY_PSS:
-+	case TOOL_PMU__EVENT_MEMORY_SHARED_CLEAN:
-+	case TOOL_PMU__EVENT_MEMORY_SHARED_DIRTY:
-+	case TOOL_PMU__EVENT_MEMORY_PRIVATE_CLEAN:
-+	case TOOL_PMU__EVENT_MEMORY_PRIVATE_DIRTY:
-+	case TOOL_PMU__EVENT_MEMORY_USS:
-+	case TOOL_PMU__EVENT_MEMORY_SWAP:
-+	case TOOL_PMU__EVENT_MEMORY_SWAP_PSS:
-+	case TOOL_PMU__EVENT_MEMORY_PSS_DIRTY:
-+	case TOOL_PMU__EVENT_MEMORY_PSS_ANON:
-+	case TOOL_PMU__EVENT_MEMORY_PSS_FILE:
-+	case TOOL_PMU__EVENT_MEMORY_PSS_SHMEM:
-+	case TOOL_PMU__EVENT_MEMORY_REFERENCED:
-+	case TOOL_PMU__EVENT_MEMORY_ANONYMOUS:
-+	case TOOL_PMU__EVENT_MEMORY_KSM:
-+	case TOOL_PMU__EVENT_MEMORY_LAZYFREE:
-+	case TOOL_PMU__EVENT_MEMORY_ANON_HUGE_PAGES:
-+	case TOOL_PMU__EVENT_MEMORY_SHMEM_PMD_MAPPED:
-+	case TOOL_PMU__EVENT_MEMORY_FILE_PMD_MAPPED:
-+	case TOOL_PMU__EVENT_MEMORY_SHARED_HUGETLB:
-+	case TOOL_PMU__EVENT_MEMORY_PRIVATE_HUGETLB:
-+	case TOOL_PMU__EVENT_MEMORY_LOCKED:
-+	case TOOL_PMU__EVENT_MEMORY_DATA:
-+	case TOOL_PMU__EVENT_MEMORY_TEXT:
+-		if (evsel->core.attr.disabled) {
++		if (tool_pmu__is_initially_disabled(evsel)) {
+ 			evsel->disabled =3D true;
+ 			*start_time =3D INVALID_START_TIME;
+ 		} else {
+ 			evsel->disabled =3D false;
+ 			err =3D tool_pmu__read_stat(evsel, idx, thread, start_time);
+ 			if (err) {
+-				close(fd);
++				if (fd >=3D 0)
++					close(fd);
+ 				FD(evsel, idx, thread) =3D -1;
+ 				return err;
+ 			}
+@@ -583,7 +738,7 @@ static int evsel__tool_pmu_open_one(struct evsel *evsel=
+, enum tool_pmu_event ev,
+ 		if (evsel->cgrp)
+ 			return -EINVAL;
+=20
+-		evsel->disabled =3D evsel->core.attr.disabled;
++		evsel->disabled =3D tool_pmu__is_initially_disabled(evsel);
+ 		if (pid > -1) {
+ 			evsel->pid_stat =3D true;
+ 			if (idx =3D=3D 0) {
+@@ -623,7 +778,7 @@ int evsel__tool_pmu_open(struct evsel *evsel,
+=20
+ 	if (ev =3D=3D TOOL_PMU__EVENT_DURATION_TIME) {
+ 		evsel->duration_time.accumulated_time =3D 0;
+-		if (evsel->core.attr.disabled) {
++		if (tool_pmu__is_initially_disabled(evsel)) {
+ 			evsel->disabled =3D true;
+ 			evsel->duration_time.start_time =3D INVALID_START_TIME;
+ 		} else {
+@@ -834,6 +989,22 @@ bool tool_pmu__read_event(enum tool_pmu_event ev,
+ 	case TOOL_PMU__EVENT_MEMORY_LOCKED:
+ 	case TOOL_PMU__EVENT_MEMORY_DATA:
+ 	case TOOL_PMU__EVENT_MEMORY_TEXT:
++	case TOOL_PMU__EVENT_NET_RX_BYTES:
++	case TOOL_PMU__EVENT_NET_RX_PACKETS:
++	case TOOL_PMU__EVENT_NET_RX_ERRORS:
++	case TOOL_PMU__EVENT_NET_RX_DROP:
++	case TOOL_PMU__EVENT_NET_RX_FIFO:
++	case TOOL_PMU__EVENT_NET_RX_FRAME:
++	case TOOL_PMU__EVENT_NET_RX_COMPRESSED:
++	case TOOL_PMU__EVENT_NET_RX_MULTICAST:
++	case TOOL_PMU__EVENT_NET_TX_BYTES:
++	case TOOL_PMU__EVENT_NET_TX_PACKETS:
++	case TOOL_PMU__EVENT_NET_TX_ERRORS:
++	case TOOL_PMU__EVENT_NET_TX_DROP:
++	case TOOL_PMU__EVENT_NET_TX_FIFO:
++	case TOOL_PMU__EVENT_NET_TX_COLLS:
++	case TOOL_PMU__EVENT_NET_TX_CARRIER:
++	case TOOL_PMU__EVENT_NET_TX_COMPRESSED:
  	case TOOL_PMU__EVENT_NONE:
  	case TOOL_PMU__EVENT_DURATION_TIME:
  	case TOOL_PMU__EVENT_USER_TIME:
-@@ -517,6 +865,55 @@ static void perf_counts__update(struct perf_counts_val=
-ues *count,
- 		count->lost =3D 0;
+@@ -928,7 +1099,11 @@ int evsel__tool_pmu_enable_cpu(struct evsel *evsel, i=
+nt cpu_map_idx)
+ 		return 0;
  	}
- }
+=20
+-	if (ev =3D=3D TOOL_PMU__EVENT_USER_TIME || ev =3D=3D TOOL_PMU__EVENT_SYST=
+EM_TIME) {
++	if (tool_pmu__has_start_times(ev)) {
++		if (!evsel->process_time.start_times || cpu_map_idx < 0 ||
++		    cpu_map_idx >=3D xyarray__max_x(evsel->process_time.start_times))
++			return 0;
 +
-+static int tool_pmu__aggregate_memory_event(enum tool_pmu_event ev, u64 *v=
-al)
-+{
-+	struct io_dir iod;
-+	struct io_dirent64 *ent;
-+	char buf[PATH_MAX];
-+	int fd, proc_fd;
-+	u64 pid_val;
+ 		nthreads =3D xyarray__max_y(evsel->process_time.start_times);
+ 		for (thread =3D 0; thread < nthreads; thread++) {
+ 			__u64 *start_time =3D xyarray__entry(evsel->process_time.start_times,
+@@ -979,7 +1154,12 @@ int evsel__tool_pmu_disable_cpu(struct evsel *evsel, =
+int cpu_map_idx)
+ 		return 0;
+ 	}
+=20
+-	if (ev =3D=3D TOOL_PMU__EVENT_USER_TIME || ev =3D=3D TOOL_PMU__EVENT_SYST=
+EM_TIME) {
++	if (tool_pmu__has_start_times(ev)) {
++		if (!evsel->process_time.start_times || !evsel->process_time.accumulated=
+_times ||
++		    cpu_map_idx < 0 ||
++		    cpu_map_idx >=3D xyarray__max_x(evsel->process_time.start_times))
++			return 0;
 +
-+	*val =3D 0;
-+	proc_fd =3D open(procfs__mountpoint(), O_DIRECTORY | O_RDONLY);
-+	if (proc_fd < 0)
-+		return -errno;
+ 		nthreads =3D xyarray__max_y(evsel->process_time.start_times);
+ 		for (thread =3D 0; thread < nthreads; thread++) {
+ 			__u64 *start_time =3D xyarray__entry(evsel->process_time.start_times,
+@@ -1065,11 +1245,29 @@ int evsel__tool_pmu_read(struct evsel *evsel, int c=
+pu_map_idx, int thread)
+ 		}
+ 		break;
+ 	case TOOL_PMU__EVENT_USER_TIME:
+-	case TOOL_PMU__EVENT_SYSTEM_TIME: {
+-		__u64 accumulated =3D *(__u64 *)xyarray__entry(evsel->process_time.accum=
+ulated_times,
+-							     cpu_map_idx, thread);
+-
+-		if (evsel->disabled) {
++	case TOOL_PMU__EVENT_SYSTEM_TIME:
++	case TOOL_PMU__EVENT_NET_RX_BYTES:
++	case TOOL_PMU__EVENT_NET_RX_PACKETS:
++	case TOOL_PMU__EVENT_NET_RX_ERRORS:
++	case TOOL_PMU__EVENT_NET_RX_DROP:
++	case TOOL_PMU__EVENT_NET_RX_FIFO:
++	case TOOL_PMU__EVENT_NET_RX_FRAME:
++	case TOOL_PMU__EVENT_NET_RX_COMPRESSED:
++	case TOOL_PMU__EVENT_NET_RX_MULTICAST:
++	case TOOL_PMU__EVENT_NET_TX_BYTES:
++	case TOOL_PMU__EVENT_NET_TX_PACKETS:
++	case TOOL_PMU__EVENT_NET_TX_ERRORS:
++	case TOOL_PMU__EVENT_NET_TX_DROP:
++	case TOOL_PMU__EVENT_NET_TX_FIFO:
++	case TOOL_PMU__EVENT_NET_TX_COLLS:
++	case TOOL_PMU__EVENT_NET_TX_CARRIER:
++	case TOOL_PMU__EVENT_NET_TX_COMPRESSED: {
++		__u64 *accumulated_ptr =3D evsel->process_time.accumulated_times ?
++			xyarray__entry(evsel->process_time.accumulated_times, cpu_map_idx, thre=
+ad) :
++			NULL;
++		__u64 accumulated =3D accumulated_ptr ? *accumulated_ptr : 0;
 +
-+	io_dir__init(&iod, proc_fd);
-+
-+	while ((ent =3D io_dir__readdir(&iod)) !=3D NULL) {
-+		if (!isdigit((unsigned char)ent->d_name[0]))
-+			continue;
-+
-+		if (!io_dir__is_dir(&iod, ent))
-+			continue;
-+
-+		if (ev =3D=3D TOOL_PMU__EVENT_MEMORY_SIZE ||
-+		    ev =3D=3D TOOL_PMU__EVENT_MEMORY_DATA ||
-+		    ev =3D=3D TOOL_PMU__EVENT_MEMORY_TEXT)
-+			snprintf(buf, sizeof(buf), "%s/statm", ent->d_name);
-+		else
-+			snprintf(buf, sizeof(buf), "%s/smaps_rollup", ent->d_name);
-+
-+		fd =3D openat(proc_fd, buf, O_RDONLY);
-+		if (fd < 0)
-+			continue;
-+
-+		if (ev =3D=3D TOOL_PMU__EVENT_MEMORY_SIZE ||
-+		    ev =3D=3D TOOL_PMU__EVENT_MEMORY_DATA ||
-+		    ev =3D=3D TOOL_PMU__EVENT_MEMORY_TEXT) {
-+			if (!read_statm(fd, ev, &pid_val))
-+				*val +=3D pid_val;
-+		} else {
-+			if (!read_smaps_rollup(fd, ev, &pid_val))
-+				*val +=3D pid_val;
-+		}
-+		close(fd);
-+	}
-+	close(proc_fd);
-+	return 0;
-+}
-+
- int evsel__tool_pmu_enable_cpu(struct evsel *evsel, int cpu_map_idx)
- {
- 	enum tool_pmu_event ev =3D evsel__tool_event(evsel);
-@@ -690,6 +1087,65 @@ int evsel__tool_pmu_read(struct evsel *evsel, int cpu=
-_map_idx, int thread)
- 		adjust =3D true;
++		if (!accumulated_ptr || evsel->disabled) {
+ 			delta_start =3D accumulated;
+ 		} else {
+ 			__u64 *start_time =3D xyarray__entry(evsel->process_time.start_times,
+@@ -1078,13 +1276,14 @@ int evsel__tool_pmu_read(struct evsel *evsel, int c=
+pu_map_idx, int thread)
+=20
+ 			err =3D tool_pmu__read_stat(evsel, cpu_map_idx, thread, &cur_time);
+ 			if (!err) {
+-				if (*start_time !=3D INVALID_START_TIME && cur_time >=3D *start_time)
++				if (start_time && *start_time !=3D INVALID_START_TIME &&
++				    cur_time >=3D *start_time)
+ 					delta_start =3D accumulated + (cur_time - *start_time);
+ 				else
+ 					delta_start =3D accumulated;
+ 			}
+ 		}
+-		adjust =3D true;
++		adjust =3D (ev =3D=3D TOOL_PMU__EVENT_USER_TIME || ev =3D=3D TOOL_PMU__E=
+VENT_SYSTEM_TIME);
  		break;
  	}
-+	case TOOL_PMU__EVENT_MEMORY_SIZE:
-+	case TOOL_PMU__EVENT_MEMORY_RSS:
-+	case TOOL_PMU__EVENT_MEMORY_PSS:
-+	case TOOL_PMU__EVENT_MEMORY_SHARED_CLEAN:
-+	case TOOL_PMU__EVENT_MEMORY_SHARED_DIRTY:
-+	case TOOL_PMU__EVENT_MEMORY_PRIVATE_CLEAN:
-+	case TOOL_PMU__EVENT_MEMORY_PRIVATE_DIRTY:
-+	case TOOL_PMU__EVENT_MEMORY_USS:
-+	case TOOL_PMU__EVENT_MEMORY_SWAP:
-+	case TOOL_PMU__EVENT_MEMORY_SWAP_PSS:
-+	case TOOL_PMU__EVENT_MEMORY_PSS_DIRTY:
-+	case TOOL_PMU__EVENT_MEMORY_PSS_ANON:
-+	case TOOL_PMU__EVENT_MEMORY_PSS_FILE:
-+	case TOOL_PMU__EVENT_MEMORY_PSS_SHMEM:
-+	case TOOL_PMU__EVENT_MEMORY_REFERENCED:
-+	case TOOL_PMU__EVENT_MEMORY_ANONYMOUS:
-+	case TOOL_PMU__EVENT_MEMORY_KSM:
-+	case TOOL_PMU__EVENT_MEMORY_LAZYFREE:
-+	case TOOL_PMU__EVENT_MEMORY_ANON_HUGE_PAGES:
-+	case TOOL_PMU__EVENT_MEMORY_SHMEM_PMD_MAPPED:
-+	case TOOL_PMU__EVENT_MEMORY_FILE_PMD_MAPPED:
-+	case TOOL_PMU__EVENT_MEMORY_SHARED_HUGETLB:
-+	case TOOL_PMU__EVENT_MEMORY_PRIVATE_HUGETLB:
-+	case TOOL_PMU__EVENT_MEMORY_LOCKED:
-+	case TOOL_PMU__EVENT_MEMORY_DATA:
-+	case TOOL_PMU__EVENT_MEMORY_TEXT: {
-+		u64 val =3D 0;
+ 	case TOOL_PMU__EVENT_MEMORY_SIZE:
+@@ -1163,6 +1362,18 @@ int evsel__tool_pmu_read(struct evsel *evsel, int cp=
+u_map_idx, int thread)
+ 	return 0;
+ }
+=20
++void evsel__tool_pmu_exit(struct evsel *evsel)
++{
++	enum tool_pmu_event ev =3D evsel__tool_event(evsel);
 +
-+		if (evsel->pid_stat) {
-+			if (cpu_map_idx =3D=3D 0) {
-+				int dir_fd =3D FD(evsel, 0, thread);
-+
-+				if (dir_fd >=3D 0) {
-+					bool is_statm =3D ev =3D=3D TOOL_PMU__EVENT_MEMORY_SIZE ||
-+							ev =3D=3D TOOL_PMU__EVENT_MEMORY_DATA ||
-+							ev =3D=3D TOOL_PMU__EVENT_MEMORY_TEXT;
-+					int fd =3D openat(dir_fd,
-+							is_statm ? "statm" : "smaps_rollup",
-+							O_RDONLY);
-+					int ret;
-+
-+					if (fd < 0)
-+						return -errno;
-+					ret =3D is_statm ? read_statm(fd, ev, &val)
-+						       : read_smaps_rollup(fd, ev, &val);
-+					close(fd);
-+					if (ret)
-+						return ret;
-+				}
-+			}
-+		} else if (cpu_map_idx =3D=3D 0 && thread =3D=3D 0) {
-+			int ret =3D tool_pmu__aggregate_memory_event(ev, &val);
-+
-+			if (ret)
-+				return ret;
-+		}
-+		perf_counts__update(count, old_count, /*raw=3D*/false, val);
-+		return 0;
++	if (tool_pmu__has_start_times(ev)) {
++		xyarray__delete(evsel->process_time.start_times);
++		xyarray__delete(evsel->process_time.accumulated_times);
++		evsel->process_time.start_times =3D NULL;
++		evsel->process_time.accumulated_times =3D NULL;
 +	}
- 	case TOOL_PMU__EVENT_NONE:
- 	case TOOL_PMU__EVENT_MAX:
- 	default:
++}
++
+ struct perf_pmu *tool_pmu__new(void)
+ {
+ 	struct perf_pmu *tool =3D zalloc(sizeof(struct perf_pmu));
 diff --git a/tools/perf/util/tool_pmu.h b/tools/perf/util/tool_pmu.h
-index f66d24cf3502..99a2ea1548f8 100644
+index 99a2ea1548f8..f972995bb8ed 100644
 --- a/tools/perf/util/tool_pmu.h
 +++ b/tools/perf/util/tool_pmu.h
-@@ -24,6 +24,32 @@ enum tool_pmu_event {
- 	TOOL_PMU__EVENT_SYSTEM_TSC_FREQ,
- 	TOOL_PMU__EVENT_CORE_WIDE,
- 	TOOL_PMU__EVENT_TARGET_CPU,
-+	TOOL_PMU__EVENT_MEMORY_ANON_HUGE_PAGES,
-+	TOOL_PMU__EVENT_MEMORY_ANONYMOUS,
-+	TOOL_PMU__EVENT_MEMORY_DATA,
-+	TOOL_PMU__EVENT_MEMORY_FILE_PMD_MAPPED,
-+	TOOL_PMU__EVENT_MEMORY_KSM,
-+	TOOL_PMU__EVENT_MEMORY_LAZYFREE,
-+	TOOL_PMU__EVENT_MEMORY_LOCKED,
-+	TOOL_PMU__EVENT_MEMORY_PRIVATE_CLEAN,
-+	TOOL_PMU__EVENT_MEMORY_PRIVATE_DIRTY,
-+	TOOL_PMU__EVENT_MEMORY_PRIVATE_HUGETLB,
-+	TOOL_PMU__EVENT_MEMORY_PSS,
-+	TOOL_PMU__EVENT_MEMORY_PSS_ANON,
-+	TOOL_PMU__EVENT_MEMORY_PSS_DIRTY,
-+	TOOL_PMU__EVENT_MEMORY_PSS_FILE,
-+	TOOL_PMU__EVENT_MEMORY_PSS_SHMEM,
-+	TOOL_PMU__EVENT_MEMORY_REFERENCED,
-+	TOOL_PMU__EVENT_MEMORY_RSS,
-+	TOOL_PMU__EVENT_MEMORY_SHARED_CLEAN,
-+	TOOL_PMU__EVENT_MEMORY_SHARED_DIRTY,
-+	TOOL_PMU__EVENT_MEMORY_SHARED_HUGETLB,
-+	TOOL_PMU__EVENT_MEMORY_SHMEM_PMD_MAPPED,
-+	TOOL_PMU__EVENT_MEMORY_SIZE,
-+	TOOL_PMU__EVENT_MEMORY_SWAP,
-+	TOOL_PMU__EVENT_MEMORY_SWAP_PSS,
-+	TOOL_PMU__EVENT_MEMORY_TEXT,
-+	TOOL_PMU__EVENT_MEMORY_USS,
+@@ -50,6 +50,22 @@ enum tool_pmu_event {
+ 	TOOL_PMU__EVENT_MEMORY_SWAP_PSS,
+ 	TOOL_PMU__EVENT_MEMORY_TEXT,
+ 	TOOL_PMU__EVENT_MEMORY_USS,
++	TOOL_PMU__EVENT_NET_RX_BYTES,
++	TOOL_PMU__EVENT_NET_RX_PACKETS,
++	TOOL_PMU__EVENT_NET_RX_ERRORS,
++	TOOL_PMU__EVENT_NET_RX_DROP,
++	TOOL_PMU__EVENT_NET_RX_FIFO,
++	TOOL_PMU__EVENT_NET_RX_FRAME,
++	TOOL_PMU__EVENT_NET_RX_COMPRESSED,
++	TOOL_PMU__EVENT_NET_RX_MULTICAST,
++	TOOL_PMU__EVENT_NET_TX_BYTES,
++	TOOL_PMU__EVENT_NET_TX_PACKETS,
++	TOOL_PMU__EVENT_NET_TX_ERRORS,
++	TOOL_PMU__EVENT_NET_TX_DROP,
++	TOOL_PMU__EVENT_NET_TX_FIFO,
++	TOOL_PMU__EVENT_NET_TX_COLLS,
++	TOOL_PMU__EVENT_NET_TX_CARRIER,
++	TOOL_PMU__EVENT_NET_TX_COMPRESSED,
 =20
  	TOOL_PMU__EVENT_MAX,
  };
+@@ -87,6 +103,7 @@ int evsel__tool_pmu_enable(struct evsel *evsel);
+ int evsel__tool_pmu_disable_cpu(struct evsel *evsel, int cpu_map_idx);
+ int evsel__tool_pmu_disable(struct evsel *evsel);
+ int evsel__tool_pmu_read(struct evsel *evsel, int cpu_map_idx, int thread)=
+;
++void evsel__tool_pmu_exit(struct evsel *evsel);
+=20
+ struct perf_pmu *tool_pmu__new(void);
+=20
 --=20
 2.56.1.703.gf848ed807c-goog
 
