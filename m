@@ -1,72 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.197
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.167.198
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794599791;
-	b=Yzp5E9V2/FPw1Hs8T4Igm3YRNlC7CskLPKuTCliSByo52UolHHXtETvNbvW0D3zv3FO3
-	 PDobj4/9UGeo8zT9Us/4SvGk4aCz5m8At89M6KpgA+PMTO/b5lfaT2Ff4aXojoNp5/FHI
-	 F5DlX/c94xRyYLOMEOyo6CAPQU5dmBRWj6BUKObzvL5DOV75K/M4d75na3n8mjqpj05zz
-	 A94acq/QP841w6uh3k6p7S8AAYNZrEjist7njMSEgPiK6H2LG7dablzfU3y6DgopVb9RC
-	 CdurG2LSjikb4H/RqoChn+RqUZCL4HEPaG1NxnqPfkSy5T3SQPQNioEaNHKuT0Xy2WQ==
+	t=1794599794;
+	b=dTGYWbQRMMC3/qccNRoCBtBB3B5ViXugtarL0Q5Q62v9509zruaEc9cfCXRSRO/4dwA9
+	 VjQMw/tyiGGrTwi8QekvUNxVh5/XfBn2W6nPMFqPJPVTeVWZdndksTh5Ka3THKd9BCB5R
+	 26/hZuopn69f+hFRNUfzzM0VvBF07txgkHSnzujELrzciTzaexCZnMY4xXf5H+3YN7HPr
+	 9vdwiOgPJgBdsbqdzT5j2H5Z3X9GOkKMJ0CJ5JKwAmjJxD/jyut3C0ZAybXnNRWQIzGsV
+	 2nmiPtAwSwL8WRDXEcJwmVLpBLP0CybWTgW/HH0Sjp9gn/1QnFXO7UaD7ZNbEwd3NXA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794599791;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794599794;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Received:Date:In-Reply-To:Mime-Version:
 	 References:X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=WHeTHmrB7DIAjgCmjri0/g1fCWtn3STru0M2k09ou28=;
-	b=4DvNTIbOV8YJlB8/iLDAlTitF9pNDFVaA7gZ+oEPQWQjtarRsdnIwzMaefCidmea9d0m
-	 7OQWb1Zo5ct6K/wtsXWuLLWFIu8M8jYMgkeU9l8Sn5tH2zvixF+V29qga6E4/O32uBx8d
-	 BlNm4Vlj+xgKQg6VCIT+Hvn3JVxE4OxmAVd+pgT83j88PTXLrnvzTlgdFxXVtVfsPgoqQ
-	 tDN5Usxn1/igPMbgPWQ2/NaSOrFB1j9ZZIHYmMEzqmgJWR0+JPx3GOyNiwkLRPVdT8P30
-	 DP1Rd3aCxKmHpNSjWFYzKPHWVh7hTCn1iWmKUPtuH+xdO0mtV6DEXtiWTIaGmanZ1zw==
+	bh=6DfreFz7WlDQRhWElU93m9m7uq8k9MNAGFQ/T52xNpA=;
+	b=GnJohCF+vO3YXLO4ZKNnRgWThzzC1GcNrC95O0oKeMI3Bzn1j1qHuN3Em25ymF+psFdA
+	 pg2lMj2OLkIsckztL/oGPTZwttae/vgXCEDKxxj/fmEqc/PYmxNsdA7Ow4yFh7sh51Wmw
+	 LFOcVPOji+Zc01MHlsVROq9kdXFAe3+7hpSizgbmJuZqfzF4zEUPevS4s+dQvUJz2JNqI
+	 +Qfu6gMhnQzCBsc/Wx81OKbOyOygumodlwXgZsBKgZCZXKUmm7u2BJw+YdzkyDZRlPZGx
+	 9RyehcXG2ILC3+in5YcYGdtrN7wXNSYcUlvxUyy0PYHjaaqCz4gHff3HLyvEVAXEDqQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=S8AljhnB;
-	arc=none smtp.remote-ip=74.125.82.197
-Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=GvIkChEs;
+	arc=none smtp.remote-ip=209.85.167.198
+Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com [209.85.167.198])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE979606B567
-	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 19:56:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CE979606B567
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB020606F378
+	for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 19:56:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CB020606F378
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=S8AljhnB
-Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-370230d93efso5997293eec.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 11:56:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=GvIkChEs
+Received: by mail-oi1-f198.google.com with SMTP id 5614622812f47-567e742f481so838802b6e.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 11:56:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794599790; x=1795204590; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794599793; x=1795204593; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=WHeTHmrB7DIAjgCmjri0/g1fCWtn3STru0M2k09ou28=;
-        b=S8AljhnBq6lcwvaQxv38KdnoesZRBGfElFpoTb2chQq+550OLvqcspXpQqpGmdBHYm
-         R8WCjqt8MCjAloFeeXx+Fure9TLqx+CPyw5XiaKfHOBEH/JVEivDOy4wdmphis+kL2L/
-         GLDoxGn/S9q1Nzg2D8qOx/KqMb3YiN73UxP/Gd4zJUkSVT1GHUHhPjt7pPYhHxeCjSP5
-         glTle7XMhj1St/doih9M31n1SXJhMdMGtm6rKJuB5H9uCsTTsb666FI7VxMKEHfGVMwK
-         S1PgMgWpUG9N6SjP/mwBM/9YQB0DjlPu5k1camt2NIFdIIArxwN6WBAd9I0xRMr+MVk5
-         GC9g==
+        bh=6DfreFz7WlDQRhWElU93m9m7uq8k9MNAGFQ/T52xNpA=;
+        b=GvIkChEs0eI7TLyNNTrmK7N9SUOTxEcIOxbyZpCRsSmwB9KRtTYVAjakrKF0HxEbM+
+         9jC4ggZnG5/5qP/+rmFCEesdcZ7e4japQ6ibRvLzILYLqUCYQRmMCNJK7f5vVQST986S
+         hePXjtTbmrE6P6BN+1vtSkMrnjPyhTDdJoDxqskaso4ky5/OgCCuZA/q16AZ5S+PGOBF
+         RuXU35kBAz+NZmF3PdaIFTsYNgecOBivbGP+IqsUJPTww5wDgj1Rzt/szEwvtxnfuAbi
+         lLQ5s7Ic3UwP/AIHy1yhr9/DasZVrEzCLy1aYwUkX7NlraOSUawPtJKPxK6NiNq+k2w1
+         lrAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794599790; x=1795204590;
+        d=1e100.net; s=20260707; t=1794599793; x=1795204593;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=WHeTHmrB7DIAjgCmjri0/g1fCWtn3STru0M2k09ou28=;
-        b=prleFR71FuimSEaW2lgytvLqTuaosuD9ts9/Mdq+SOb5hJNaklXn7EkI6SP2xiJ8Eo
-         DuRNSjmbRVcaHZo4lP2p4QQCGjtiYoJRG6pFi/e6gw6VI5qnX/Xdd2aqHET4G9iqgDAc
-         7rgcgHkOAl00mfXLf/EKmdBGzneQEj63MbhV0+3TqT2OZqH++5I+Om9W2DaV+wP4RkEw
-         7KoVWxifQsRoYtJt5GNDlyKbQQ4SUDbPVwWXx0aKYgguMcqKpcI8/nx8/p5YELeIxXwm
-         /JpvayueQhtiSQNKkgb1t2C/fTjYmysOuuHrEli8+7w9XlfHssvhgJPzpVFSmXrK2zST
-         oKIA==
-X-Gm-Message-State: APuU4Z9MN5FvLjbpHLsR0voVK5XZ/AuEqSMQW7VN4z2I3sSXjpxoqASN
-	GN3QFEFxus5e5C4ALcqOO2kWUafOCLNhYhInwTKOUsSgGOMxLr3y6gupTl5WdZVOdciHemGuLV0
-	7IExX+O292Q==
-X-Received: from dyp6.prod.google.com ([2002:a05:693c:65c6:b0:370:f640:2508])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:60ce:b0:36e:8410:ecf6
- with SMTP id 5a478bee46e88-37966387d74mr3427093eec.13.1794599789512; Fri, 13
- Nov 2026 11:56:29 -0800 (PST)
-Date: Fri, 13 Nov 2026 11:55:55 -0800
+        bh=6DfreFz7WlDQRhWElU93m9m7uq8k9MNAGFQ/T52xNpA=;
+        b=NG5m6WG9285O3AH5krvY2pC2WzYzIu0YkxCfZQFtoRQ10dtq50X27i79YtNWFMdgEp
+         ZWqnC79ZfxuPFNLqYpdxr7fBTconXTkLHzDO2lFskaE+RVlQwnizF9/dCVlDvVdDdXtN
+         5gViLBoMG4I5FXCUPTV0pL1/jgHRyxFNP/pnRH4HAR/lDY4zZHXWlmJYtjE/jbSZl5D5
+         6VF89BLW5s08K+u+sed+2TfVW4HSB6WhEwiwkItApmDUXHPrdVfnDqul2GofbraVNRK3
+         YOcdIjsGF1yu3HwAumNj0t1Q3OS0g7lxZav/QFaoOkNEXOfwWO481DDigSRjf8PEvNmI
+         M+Xg==
+X-Gm-Message-State: APuU4Z96OxxYWliUjX2yMf1cQQ5uPm/K1Acr8vQpVFIJ5h00bgtMTlHd
+	q5dZ9rlilQR13sG1BA7dxf13lGuhBzdEdCA8guY02/Xh1HtZjppSsPcXSzDjXtp/Lo+jufEeabD
+	PQZkhjN2elg==
+X-Received: from ilec16-n2.prod.google.com ([2002:a05:6e02:6150:20b0:549:aa38:c1ba])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6808:1816:b0:53a:8c5:d7d7
+ with SMTP id 5614622812f47-56e6626d27cmr2851925b6e.58.1794599792582; Fri, 13
+ Nov 2026 11:56:32 -0800 (PST)
+Date: Fri, 13 Nov 2026 11:55:56 -0800
 In-Reply-To: <20261113195601.2872738-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -79,9 +79,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261113195601.2872738-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
-Message-ID: <20261113195601.2872738-11-irogers@google.com>
-Subject: [PATCH v2 10/16] perf pmu: Probe interrupt registers that require
- precise sampling
+Message-ID: <20261113195601.2872738-12-irogers@google.com>
+Subject: [PATCH v2 11/16] perf pmu: Probe memory profiling events and sample formats
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -90,274 +89,200 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Some interrupt registers can only be sampled with precise sampling, for
-example on x86 the XMM registers are captured in PEBS records and
-x86_pmu_hw_config() rejects them in sample_regs_intr without precise_ip.
-The interrupt register probe tried precise sampling as a fallback, or
-for the legacy extended registers unconditionally, so the probed mask
-didn't show which registers require it.
-
-Add probe_regs_open() that opens without precise sampling first and
-records when only the precise open succeeds, and record the interrupt
-registers and SIMD register classes that require precise sampling in
-intr_regs_precise_mask, intr_simd_precise_mask and
-intr_pred_precise_mask.
+Extend perf_pmu__probe() with try_open_mem_evlist() and
+probe_mem_events() to test which perf_mem_events types (such as
+ldlat-loads and ldlat-stores) can be opened on the PMU and which
+additional memory sample formats (PERF_SAMPLE_WEIGHT,
+PERF_SAMPLE_WEIGHT_STRUCT, PERF_SAMPLE_PHYS_ADDR,
+PERF_SAMPLE_DATA_PAGE_SIZE, PERF_SAMPLE_TRANSACTION) are supported with
+them.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/pmu.c | 117 +++++++++++++++++++++++++++---------------
- tools/perf/util/pmu.h |  16 ++++++
- 2 files changed, 92 insertions(+), 41 deletions(-)
+ tools/perf/util/pmu.c | 139 ++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/pmu.h |   7 +++
+ 2 files changed, 146 insertions(+)
 
 diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index cf1bf1a871e9..80159358318e 100644
+index 80159358318e..45c557c85c5e 100644
 --- a/tools/perf/util/pmu.c
 +++ b/tools/perf/util/pmu.c
-@@ -3397,18 +3397,50 @@ static void probe_sample_types(struct perf_pmu *pmu,
- 	pmu->probed.can_weight = !!(pmu->probed.sample_types & PERF_SAMPLE_WEIGHT);
+@@ -3652,6 +3652,142 @@ static void probe_pmu_regs_one(const struct perf_pmu *pmu,
+ 		*out_pred_precise_mask = pred_precise_mask;
  }
  
-+/*
-+ * Open @attr, if that fails and @try_precise then retry with precise sampling,
-+ * setting @needs_precise when only the precise open succeeds. Returns whether
-+ * either open succeeded.
-+ */
-+static bool probe_regs_open(struct perf_event_attr *attr, pid_t pid, int cpu,
-+			    unsigned long flags, bool try_precise, bool *needs_precise)
++static bool try_open_mem_evlist(struct evlist *evlist,
++				const struct perf_event_attr *base_attr,
++				pid_t pid, int cpu, unsigned long flags,
++				int precise_ip, u64 sample_type)
 +{
-+	u8 precise_ip = attr->precise_ip;
-+	int fd = sys_perf_event_open(attr, pid, cpu, -1, flags);
++	int fds[16];
++	size_t nr_fds = 0;
++	int leader_fd = -1;
++	struct evsel *evsel;
++	bool ok = true;
 +
-+	*needs_precise = false;
-+	if (fd < 0 && try_precise && !precise_ip) {
-+		attr->precise_ip = 1;
-+		fd = sys_perf_event_open(attr, pid, cpu, -1, flags);
-+		attr->precise_ip = precise_ip;
-+		*needs_precise = fd >= 0;
++	evlist__for_each_entry(evlist, evsel) {
++		struct perf_event_attr attr = evsel->core.attr;
++		int fd;
++
++		if (nr_fds >= ARRAY_SIZE(fds)) {
++			ok = false;
++			break;
++		}
++
++		attr.disabled = (leader_fd < 0) ? 1 : 0;
++		attr.sample_period = attr.sample_period ?: 10000;
++		attr.sample_type = sample_type;
++		attr.exclude_user = base_attr->exclude_user;
++		attr.exclude_kernel = base_attr->exclude_kernel;
++		attr.exclude_hv = base_attr->exclude_hv;
++		attr.exclude_idle = base_attr->exclude_idle;
++		attr.exclude_host = base_attr->exclude_host;
++		attr.exclude_guest = base_attr->exclude_guest;
++		if (evsel->precise_max || precise_ip > 0)
++			attr.precise_ip = precise_ip;
++
++		fd = sys_perf_event_open(&attr, pid, cpu, leader_fd, flags);
++		if (fd < 0) {
++			ok = false;
++			break;
++		}
++		if (leader_fd < 0)
++			leader_fd = fd;
++		fds[nr_fds++] = fd;
 +	}
-+	if (fd < 0)
-+		return false;
-+	close(fd);
-+	return true;
++
++	for (size_t i = nr_fds; i > 0; i--)
++		close(fds[i - 1]);
++
++	return ok && nr_fds > 0;
++}
++
++/*
++ * Probe which perf_mem_events types (e.g. ldlat-loads, ldlat-stores) and
++ * additional memory sample formats can be opened on @pmu.
++ */
++static void probe_mem_events(struct perf_pmu *pmu,
++			     const struct perf_event_attr *base_attr,
++			     pid_t pid, int cpu, unsigned long flags)
++{
++	static const u64 extra_mem_stypes[] = {
++		PERF_SAMPLE_WEIGHT,
++		PERF_SAMPLE_WEIGHT_STRUCT,
++		PERF_SAMPLE_PHYS_ADDR,
++		PERF_SAMPLE_DATA_PAGE_SIZE,
++		PERF_SAMPLE_TRANSACTION,
++	};
++
++	if (!pmu->mem_events)
++		return;
++
++	perf_pmu__mem_events_init_pmu(pmu);
++
++	for (int j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
++		struct perf_mem_event *e = perf_pmu__mem_events_ptr(pmu, j);
++		const char *s;
++		char buf[256];
++		struct evlist *evlist;
++		struct parse_events_error err;
++		struct evsel *first;
++		int max_p, min_p, working_p = -1;
++		u64 base_stype = PERF_SAMPLE_IP | PERF_SAMPLE_ADDR | PERF_SAMPLE_DATA_SRC;
++		int ret;
++
++		if (!e || !e->tag || !e->supported)
++			continue;
++
++		s = perf_pmu__mem_events_name(pmu, j, buf, sizeof(buf));
++		if (!s)
++			continue;
++
++		evlist = evlist__new();
++		if (!evlist)
++			continue;
++
++		parse_events_error__init(&err);
++		ret = __parse_events(evlist, s, /*pmu_filter=*/NULL,
++				     /*cputype_filter=*/false, &err, /*fake_pmu=*/false,
++				     /*warn_if_reordered=*/false, /*fake_tp=*/false);
++		parse_events_error__exit(&err);
++		if (ret || evlist__empty(evlist)) {
++			evlist__put(evlist);
++			continue;
++		}
++
++		first = evlist__first(evlist);
++		if (first->precise_max) {
++			max_p = pmu->probed.max_precise > 0 ? pmu->probed.max_precise : 3;
++			min_p = 1;
++		} else {
++			max_p = first->core.attr.precise_ip;
++			min_p = first->core.attr.precise_ip;
++		}
++
++		for (int p = max_p; p >= min_p; p--) {
++			if (try_open_mem_evlist(evlist, base_attr, pid, cpu,
++						flags, p, base_stype)) {
++				working_p = p;
++				break;
++			}
++		}
++
++		if (working_p >= 0) {
++			pmu->probed.mem_events_mask |= (1u << j);
++			pmu->probed.mem_sample_types |= PERF_SAMPLE_ADDR | PERF_SAMPLE_DATA_SRC;
++
++			for (size_t k = 0; k < ARRAY_SIZE(extra_mem_stypes); k++) {
++				u64 st = base_stype | extra_mem_stypes[k];
++
++				if (try_open_mem_evlist(evlist, base_attr, pid, cpu,
++							flags, working_p, st)) {
++					pmu->probed.mem_sample_types |= extra_mem_stypes[k];
++				}
++			}
++		}
++
++		evlist__put(evlist);
++	}
 +}
 +
  /*
-  * Probe supported general-purpose, extended GPR, and SIMD vector/predicate
-  * register sampling masks for either PERF_SAMPLE_REGS_USER (!@intr) or
-- * PERF_SAMPLE_REGS_INTR (@intr).
-+ * PERF_SAMPLE_REGS_INTR (@intr). For interrupt registers, the registers and
-+ * register classes that can only be sampled with precise sampling are
-+ * recorded in @out_precise_mask, @out_simd_precise_mask and
-+ * @out_pred_precise_mask, which may be NULL for user registers.
-  */
- static void probe_pmu_regs_one(const struct perf_pmu *pmu,
- 			       const struct perf_event_attr *base_attr,
- 			       pid_t pid, int cpu, unsigned long flags,
- 			       int max_precise, bool intr,
- 			       u64 *out_mask, int *out_abi,
--			       u64 *out_simd_mask, u64 *out_pred_mask)
-+			       u64 *out_simd_mask, u64 *out_pred_mask,
-+			       u64 *out_precise_mask, u64 *out_simd_precise_mask,
-+			       u64 *out_pred_precise_mask)
- {
-+	bool try_precise = intr && max_precise > 0;
-+	u64 precise_mask = 0, simd_precise_mask = 0, pred_precise_mask = 0;
-+	bool needs_precise;
- 	int dummy_abi = -1;
- 	u64 gpr_mask = intr ? perf_intr_reg_mask(EM_HOST, &dummy_abi) :
- 			      perf_user_reg_mask(EM_HOST, &dummy_abi);
-@@ -3479,14 +3511,11 @@ static void probe_pmu_regs_one(const struct perf_pmu *pmu,
- 			else
- 				e_attr.sample_regs_user = ext_gpr_mask;
- 
--			fd = sys_perf_event_open(&e_attr, pid, cpu, -1, flags);
--			if (fd < 0 && intr && max_precise > 0) {
--				e_attr.precise_ip = 1;
--				fd = sys_perf_event_open(&e_attr, pid, cpu, -1, flags);
--			}
--			if (fd >= 0) {
--				close(fd);
-+			if (probe_regs_open(&e_attr, pid, cpu, flags, try_precise,
-+					    &needs_precise)) {
- 				mask |= ext_gpr_mask;
-+				if (needs_precise)
-+					precise_mask |= ext_gpr_mask;
- 				abi |= PERF_SAMPLE_REGS_ABI_SIMD;
- 				ext_batch_ok = true;
- 			}
-@@ -3495,22 +3524,16 @@ static void probe_pmu_regs_one(const struct perf_pmu *pmu,
- 				for (int b = 0; b < 64; b++) {
- 					if (!(ext_gpr_mask & BIT_ULL(b)))
- 						continue;
--					e_attr.precise_ip = base_attr->precise_ip;
- 					if (intr)
- 						e_attr.sample_regs_intr = BIT_ULL(b);
- 					else
- 						e_attr.sample_regs_user = BIT_ULL(b);
--					fd = sys_perf_event_open(&e_attr, pid, cpu, -1, flags);
--					if (fd < 0 && intr && max_precise > 0) {
--						e_attr.precise_ip = 1;
--						fd = sys_perf_event_open(&e_attr, pid, cpu, -1,
--									 flags);
--					}
--					if (fd >= 0) {
--						close(fd);
--						mask |= BIT_ULL(b);
--						abi |= PERF_SAMPLE_REGS_ABI_SIMD;
--					}
-+					if (!probe_regs_open(&e_attr, pid, cpu, flags,
-+							     try_precise, &needs_precise))
-+						continue;
-+					mask |= BIT_ULL(b);
-+					precise_mask |= needs_precise ? BIT_ULL(b) : 0;
-+					abi |= PERF_SAMPLE_REGS_ABI_SIMD;
- 				}
- 			}
- 		}
-@@ -3521,7 +3544,7 @@ static void probe_pmu_regs_one(const struct perf_pmu *pmu,
- 		u64 class_mask = intr ?
- 			perf_intr_simd_reg_class_mask(EM_HOST, pred) :
- 			perf_user_simd_reg_class_mask(EM_HOST, pred);
--		u64 supported_classes = 0;
-+		u64 supported_classes = 0, precise_classes = 0;
- 
- 		for (int reg_c = 0; reg_c < 64; reg_c++) {
- 			struct perf_event_attr s_attr = *base_attr;
-@@ -3557,22 +3580,22 @@ static void probe_pmu_regs_one(const struct perf_pmu *pmu,
- 					s_attr.sample_simd_vec_reg_user = bitmap;
- 			}
- 
--			fd = sys_perf_event_open(&s_attr, pid, cpu, -1, flags);
--			if (fd < 0 && intr && max_precise > 0) {
--				s_attr.precise_ip = 1;
--				fd = sys_perf_event_open(&s_attr, pid, cpu, -1, flags);
--			}
--			if (fd >= 0) {
--				close(fd);
-+			if (probe_regs_open(&s_attr, pid, cpu, flags, try_precise,
-+					    &needs_precise)) {
- 				supported_classes |= BIT_ULL(reg_c);
-+				if (needs_precise)
-+					precise_classes |= BIT_ULL(reg_c);
- 				abi |= PERF_SAMPLE_REGS_ABI_SIMD;
- 			}
- 		}
- 
--		if (pred)
-+		if (pred) {
- 			*out_pred_mask = supported_classes;
--		else
-+			pred_precise_mask = precise_classes;
-+		} else {
- 			*out_simd_mask = supported_classes;
-+			simd_precise_mask = precise_classes;
-+		}
+  * Pack @value into the perf_event_attr config field named by the sysfs format
+  * @name of @pmu, e.g. "rdpmc" defined as "config1:1". Returns false if the
+@@ -4073,6 +4209,9 @@ static void __perf_pmu__probe(struct perf_pmu *pmu, int pmu_cpu)
+ 				   &pmu->probed.intr_pred_precise_mask);
  	}
  
- 	if (!(abi & PERF_SAMPLE_REGS_ABI_SIMD)) {
-@@ -3585,8 +3608,6 @@ static void probe_pmu_regs_one(const struct perf_pmu *pmu,
- 		x_attr.disabled = 1;
- 		x_attr.sample_period = base_attr->sample_period ?: 10000;
- 		x_attr.sample_type = sample_type;
--		if (intr && max_precise > 0)
--			x_attr.precise_ip = 1;
- 
- 		if (ext_mask) {
- 			if (intr)
-@@ -3594,10 +3615,11 @@ static void probe_pmu_regs_one(const struct perf_pmu *pmu,
- 			else
- 				x_attr.sample_regs_user = ext_mask;
- 
--			fd = sys_perf_event_open(&x_attr, pid, cpu, -1, flags);
--			if (fd >= 0) {
--				close(fd);
-+			if (probe_regs_open(&x_attr, pid, cpu, flags, try_precise,
-+					    &needs_precise)) {
- 				mask |= ext_mask;
-+				if (needs_precise)
-+					precise_mask |= ext_mask;
- 				batch_ok = true;
- 			}
- 		}
-@@ -3610,10 +3632,11 @@ static void probe_pmu_regs_one(const struct perf_pmu *pmu,
- 					x_attr.sample_regs_intr = BIT_ULL(b);
- 				else
- 					x_attr.sample_regs_user = BIT_ULL(b);
--				fd = sys_perf_event_open(&x_attr, pid, cpu, -1, flags);
--				if (fd >= 0) {
--					close(fd);
-+				if (probe_regs_open(&x_attr, pid, cpu, flags, try_precise,
-+						    &needs_precise)) {
- 					mask |= BIT_ULL(b);
-+					if (needs_precise)
-+						precise_mask |= BIT_ULL(b);
- 				}
- 			}
- 		}
-@@ -3621,6 +3644,12 @@ static void probe_pmu_regs_one(const struct perf_pmu *pmu,
- 
- 	*out_mask = mask;
- 	*out_abi = abi;
-+	if (out_precise_mask)
-+		*out_precise_mask = precise_mask;
-+	if (out_simd_precise_mask)
-+		*out_simd_precise_mask = simd_precise_mask;
-+	if (out_pred_precise_mask)
-+		*out_pred_precise_mask = pred_precise_mask;
- }
- 
- /*
-@@ -4027,7 +4056,10 @@ static void __perf_pmu__probe(struct perf_pmu *pmu, int pmu_cpu)
- 				   &pmu->probed.user_regs_mask,
- 				   &pmu->probed.user_regs_abi,
- 				   &pmu->probed.user_simd_mask,
--				   &pmu->probed.user_pred_mask);
-+				   &pmu->probed.user_pred_mask,
-+				   /*out_precise_mask=*/NULL,
-+				   /*out_simd_precise_mask=*/NULL,
-+				   /*out_pred_precise_mask=*/NULL);
- 	}
- 	if (pmu->probed.sample_types & PERF_SAMPLE_REGS_INTR) {
- 		probe_pmu_regs_one(pmu, &base_attr, pid, cpu, flags,
-@@ -4035,7 +4067,10 @@ static void __perf_pmu__probe(struct perf_pmu *pmu, int pmu_cpu)
- 				   &pmu->probed.intr_regs_mask,
- 				   &pmu->probed.intr_regs_abi,
- 				   &pmu->probed.intr_simd_mask,
--				   &pmu->probed.intr_pred_mask);
-+				   &pmu->probed.intr_pred_mask,
-+				   &pmu->probed.intr_regs_precise_mask,
-+				   &pmu->probed.intr_simd_precise_mask,
-+				   &pmu->probed.intr_pred_precise_mask);
- 	}
- 
++	/* 3c. Memory event types and memory sample formats */
++	probe_mem_events(pmu, &base_attr, pid, cpu, flags);
++
  	/* 4. Privilege / exclusion modifiers */
+ 	pmu->probed.exclude_user =
+ 		test_exclude_flag(&base_attr, pid, cpu, flags, PROBE_EXCLUDE_USER);
 diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 66ee3841872a..21c4b1a4b608 100644
+index 21c4b1a4b608..ee56570cac00 100644
 --- a/tools/perf/util/pmu.h
 +++ b/tools/perf/util/pmu.h
-@@ -333,6 +333,22 @@ struct perf_pmu {
- 		 * register classes.
+@@ -304,11 +304,18 @@ struct perf_pmu {
+ 		int user_regs_abi;
+ 		/** @probed.intr_regs_abi: ABI flags for intr_regs_mask. */
+ 		int intr_regs_abi;
++		/** @probed.mem_events_mask: Bitmask of memory event types verified by probing. */
++		unsigned int mem_events_mask;
+ 		/**
+ 		 * @probed.sample_types: Bitmask of supported
+ 		 * enum perf_event_sample_format flags.
  		 */
- 		u64 intr_pred_mask;
+ 		u64 sample_types;
 +		/**
-+		 * @probed.intr_regs_precise_mask: Subset of intr_regs_mask that
-+		 * can only be sampled with precise sampling, such as x86 XMM
-+		 * registers that are captured by PEBS.
++		 * @probed.mem_sample_types: Bitmask of memory sample formats
++		 * verified on mem_events.
 +		 */
-+		u64 intr_regs_precise_mask;
-+		/**
-+		 * @probed.intr_simd_precise_mask: Subset of intr_simd_mask that
-+		 * can only be sampled with precise sampling.
-+		 */
-+		u64 intr_simd_precise_mask;
-+		/**
-+		 * @probed.intr_pred_precise_mask: Subset of intr_pred_mask that
-+		 * can only be sampled with precise sampling.
-+		 */
-+		u64 intr_pred_precise_mask;
- 	} probed;
- };
- 
++		u64 mem_sample_types;
+ 		/** @probed.user_regs_mask: Bitmask of supported sample_regs_user registers. */
+ 		u64 user_regs_mask;
+ 		/** @probed.intr_regs_mask: Bitmask of supported sample_regs_intr registers. */
 -- 
 2.56.1.703.gf848ed807c-goog
 
