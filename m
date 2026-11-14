@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794633144;
-	b=kD3H8HXzQPEy2h/E9eKKdw1rqCps0MuhvDQyG/qsl+GSUJpd/cbRw/x143CnB8gokU3W
-	 V4Z438S0MbGD2cNFyNKsn8ZYfWaG+QLTFkhf4luj3IqPYbyf0c1qK2JO2xRB9Uqy13Qz1
-	 RG5IgAXZDxj3N9iw59M3k62st6IuV3k/eAkudAMZaA6FjpTYf4oPtGm0aLhZ1g21HoxC5
-	 QeOdRCTNKHGnWoaPVMMQ5Ww+mrPEtFnvJsOb/5Mk/Qtn7GjlJCtHTwFjkmCg2eB2llvoB
-	 /RB7+tivkha5cqEYCSyXw9G38vcxIgaJDuzxE156pN8UZIQq3GTVxdB646WCVTaDmHg==
+	t=1794633413;
+	b=SRgGv31lzNoplWFjq0iMtACh053CZW/ikU37aH/Y2TEIdINBy/nigYjU/l6EfpPe/PRb
+	 EKU9KTIsvoqInkqxnTDTmWDkFvfhrxET5kD/PMu9CUXJKmszgXF1d62nQxPFv1R6Qd0FQ
+	 fYnhO924VhLjsAvqLH7QPbSrTPanS36W7T/GADG9jf20t7SVXEo9aZz7mK/gEUh/Ho+7y
+	 51yJh3d/KsVU9waxuh5FL448q2WFcopTG8kW3PMDMfqMP3SirQaQ4s5WptO2AwDdz9Zoh
+	 UHBHV/MPRDt97oJZKsLA9F68hoaC6ZwuZntQ+95DoLgnjSWz0l3Br1iyaRdFzobDn4A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794633144;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794633413;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=FAeB54R1AuC2AGW0+Kk01x/5GtvdHLbw0Od/rfUvLtU=;
-	b=Wbyg1xZ5myC5Xmi8j7z+vyS2ynK001zL2I+IISRe263c14Mn1ztRGQOjQn//UicnSczJ
-	 FDahGdzUJpbpB7Hz9qTb2ticqjYdvG0nY7kXU++3TAxJCHekiFWeaVd4yquSA316LWspZ
-	 Dk4Kw9pJEK8lH6rAxLLfMGbhAUiyYcXaT3j/ssG08k1YWDfP1cIgGCwdyAAwYCTYHkidm
-	 zRJ6qxC04DYegeRm9/fCxu8BxClxkCO2KW+mKdtTe/wOLdJWjgNeelTWgbTmrJRpRxvan
-	 N6xTmzKywFoj4B1Ss0sLRokF+UfFqFF8FGoTW5wA4xm2ncAR0/qD3Liq7eMbrIscqWw==
+	bh=o2Y2PaTIQsrCuOTyQqqfoj07/A3kBcw1Kx6L2BZpChc=;
+	b=AFSoQuK8/r1/CAYOEvOfb/EspP7qspTvHUvoF0KTa4QiKBEcilOpa5QPebgaUJf3/5kD
+	 1616tCWlqp3XWtPFlCO0IbNChO4YveaT2chp5S3h8J5qD9s1Py/8lrfa6SUfYrwTo2xDB
+	 TpY4/+667ba9XAPz/CUAigj/WrA/JPdXUty0dI9tqztA4k8FgNSJFrVZZ5g1KQ7GAOFOO
+	 aX8ZA4M59yM5eU1YrEcsb09Ugctos6DZQ3HQh9y4YgWT1nWqfZlJdSJjs1mKp5/cPYUXY
+	 9uKT/0Ft9k4TAhMhfkSV+Bdw2hPbgXsI8XG5B3JojBoKVU3HXqCg/CnZBp+VAaBtiig==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aJ7GiD5U;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XgDhBEmA;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65985606A329
-	for <linux-perf-users@vger.kernel.org>; Sat, 14 Nov 2026 05:12:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B26606A323
+	for <linux-perf-users@vger.kernel.org>; Sat, 14 Nov 2026 05:16:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aJ7GiD5U
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D40C91F000C4;
-	Sat, 14 Nov 2026 05:12:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XgDhBEmA
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F5831F000C4;
+	Sat, 14 Nov 2026 05:16:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794633144;
-	bh=FAeB54R1AuC2AGW0+Kk01x/5GtvdHLbw0Od/rfUvLtU=;
+	s=k20260515; t=1794633412;
+	bh=o2Y2PaTIQsrCuOTyQqqfoj07/A3kBcw1Kx6L2BZpChc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=aJ7GiD5UVHRaiGXptvzwTyyLgGaIzoh1//z/35U5bGVLrpJW6+leJv6gdb2/3RcEJ
-	 p+PPwjv2mS3Bf8o5SX1ij9QijV/DLHlFf1w+f7zIJGA1sHLRBhYLxWSR1Fy7MBKcZ4
-	 jfTXWQAte1I/36dR3ubLm9LdtNLHGiXa4EmYlUqtEmkLkWcRyeqqwdqidopnO8V0/6
-	 x7WW3NIXgIRRgPjys8y9B3ZOFdCpKOSdyrV8Gdy/9gSqkKQyIr1XfHsS4uSw+TattQ
-	 giAE6oKBxvVh1W+59xZu56JJs4cXV9nwswFeC+9z//y7F628ZXQEJNQGfbeMofmXRV
-	 kXIJxPpowwaKA==
-Message-ID: <sashiko-outbox-214156@kernel.org>
+	b=XgDhBEmAK5T6TiHph+TBpgwEnvOSXS8vLutFpUT45vLgBam43RIFA/PnYowQFK6BQ
+	 B2gKQGQgB54X4nJLBdoEPAefSNzfjqjLrhf+DcCYvNqjLAuUbOpLeNkUZT/no6AfHl
+	 Z3TjEAuX4uOlbBhkoNXuMbD2tkqIfkU1qlC/B8wQiN/l6KGQ2NrBd9ef/UpH+awu9A
+	 rXcS4EYK7MZmjRF49stM7y3Mxr7DnoJUzFlEaBysC68U9ZbJKiiW8A3k6KCJAydmYV
+	 fMv6xyZdOzHAwQRq1/q8/4nbvaiFuFRVuHLwB6LvYCUwTGNs6hGwbJBP+mIhkCTpmY
+	 TBl8tclnUQq6g==
+Message-ID: <sashiko-outbox-214164@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 1/4] perf symbols: Split out name-independent
- duplicate symbol selection
+Subject: Re: [PATCH v7 2/4] perf symbols: Point to the symbol name instead
+ of embedding it
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Alireza Haghdoost" <haghdoost@uber.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261113-perf-symbol-memory-send-v7-1-d992eced9f9c@uber.com>
+In-Reply-To: <20261113-perf-symbol-memory-send-v7-2-d992eced9f9c@uber.com>
 References: <20261113-perf-symbol-memory-send-v7-0-d992eced9f9c@uber.com>
- <20261113-perf-symbol-memory-send-v7-1-d992eced9f9c@uber.com>
+ <20261113-perf-symbol-memory-send-v7-2-d992eced9f9c@uber.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 14 Nov 2026 05:12:23 +0000
+Date: Sat, 14 Nov 2026 05:16:52 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,20 +63,16 @@ Precedence: list
 
 > From: Alireza Haghdoost <haghdoost@uber.com>
 >=20
-> This patch is a refactoring and does not change behavior. It moves the
-> size, type and binding checks from choose_best_symbol() to
-> choose_best_symbol_by_attrs(), and adds symbol__choice_needs_names() to
-> tell whether choosing between two symbols needs their names.
+> This patch changes the name field of struct symbol from a flexible
+> array (char name[]) to a pointer (char *name). It does not change
+> behavior, but each symbol allocation grows by 8 bytes on 64-bit hosts.
 >=20
-> symbols__fixup_duplicate() keeps one of the symbols that share a start
-> address. It compares size, type and binding first. If those are equal,
-> it compares leading underscores, name lengths and the result of
-> arch__choose_best_symbol().
->=20
-> An unresolved lazy symbol stores a file offset instead of a name
-> pointer, so the lazy loader cannot call choose_best_symbol() before it
-> has read both names. The new helper lets it leave the names unread when
-> the attributes already pick one of the symbols.
+> The next patch creates symbols whose names are read only when needed.
+> perf does not know the length of such a name when it creates the symbol,
+> so it cannot allocate the name after the symbol. It cannot reallocate
+> the symbol later either, because the rb-tree and the callers hold
+> pointers to it. With a pointer, the name is allocated separately and set
+> when it is read.
 >=20
 > Reviewed-by: Ian Rogers <irogers@google.com>
 > Signed-off-by: Alireza Haghdoost <haghdoost@uber.com>
@@ -85,5 +81,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113-perf-symbo=
-l-memory-send-v7-0-d992eced9f9c@uber.com?part=3D1
+l-memory-send-v7-0-d992eced9f9c@uber.com?part=3D2
 
