@@ -1,60 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=185.70.43.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794633915;
-	b=G2PERFo3UhdS1U/eLRuNIr/bEDk9LHeYp5Cj7N6eyZPtsbU0DQ2rHFzuD3f0VhfR2I3N
-	 T32kii5/7rkKvV0sZ/4CDq+rRsEUXoGGTUzlX1BjSdh1icNJO4PqhsxlSbFeJgcUFYK2h
-	 sDamW4iTQAD7enM6xvUNPXbfhejIYILdCxMCrjV7bHWjwCZd0UvMPSa8EF3fMjupFrK2J
-	 Qh8OXrxB5PoO5gTk84pw/bavi8hdxob2q5yBKRqi2FN8apUCMFoqX7SG9JWY/d+CIoOUS
-	 Tzisb2gzuT/GYh5cUar2t/AKj7mTMzXzNTUupc7Ybk4QcyyNJbSG9o7RtZXSnRau6bg==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794633915;
-	h=DMARC-Filter:DKIM-Signature:Date:To:From:Cc:Subject:Message-ID:
-	 In-Reply-To:References:Feedback-ID:X-Pm-Message-ID:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=G957/sYSSjsxjXZ6xa/V+ZGQcypevMQZrpwRMmbz3rI=;
-	b=cwXWFD+Dl9pAMYxjbq2wbv0KnjHziEejiHqjiZbnZrkWh6n9oNFLOmKJI7ForO4BgLTV
-	 UwLMuPBSSTAFNreqeD5E+wryKCC9RroQPuwg0pEbjPhnVTWh79sbgaurmY4yuC9ryJWAq
-	 8ExakOuqO1M6if+ZaBkzj2yBWC82j2kLBq/+EkAI3oJBkPaZrprC1Fkqe2IEG7ZjYAcVf
-	 b5QI2YkkFHuRiYNAOV1DnExIDXB7oyCQKsLbJ7hLNnADBi4OnMTU4IkmlkBnbo6uG1f6o
-	 oUPtN94/Cgia+ao0PBhajUFBNyMjFwD6C7xV9R7LHIXmMkmqofGVB9EPP1EoUfgNZTw==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=1g4.org;
-	spf=pass smtp.mailfrom=1g4.org;
-	dkim=pass header.d=1g4.org header.i=@1g4.org header.a=rsa-sha256 header.s=protonmail header.b=h3oMVmAo;
-	arc=none smtp.remote-ip=185.70.43.18
-Received: from mail-4318.protonmail.ch (mail-4318.protonmail.ch [185.70.43.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.172
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794633954;
+	b=sEQMEdUhxdkgh9bzRRBx6F5A9UvJ1nxCZioo6CaSwJnkc+flH7N3dXVLJJx4hUtw2zIu
+	 NCgcY2NiJU5uzL9NDbd7DziOOM+T/NNq7jUPvnFpUaxLNRqCHxJj2PmiBLcTsKO+PkmDf
+	 sTsFX1D3cNZXMPgCbhiqQ1ACwGOVZk1p5wr6uzYMMt9G3+kLS1T7Bhb+X9nQHbDdiiz0t
+	 jY4Ct3JEXu4DedTAQXDpzYcc3SsJ64h9/rBVvJeJGJpLsXhaWeXQJBaj854QmQ5O/YPfc
+	 TiZmXr4RXMLBMUKBJeWMtqtFwuBozbJX4UNhQDQo4B3WjmivFvfFL7GWSkFgNihe+mQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794633954;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type;
+	bh=oLPN0CJ8BvFmHWFTOBHnK/cJFGHdPvZYXnS75mvoNZg=;
+	b=POpxA7/auFjJIw2RvUtll9wpBucMStZkOVS5kuwTE2h/v9yFBUITFADhGRpEIvUGUzLX
+	 q3z8uuOHcZG539OU6fA+2NCmTfygMVojREKKlMG/Eaj93qyhDd8c0Gmp94YYdHgwVa+dp
+	 253mV+se29TKydza+ZDCCZukG5xeyG6LXYRqD/BuQ9ceYyhKNvAYk8SGJKLd3gra4i0UY
+	 v2M5ZKE4aNluyq/Nm9MKMvBJicKZQY9+2T8kEZV7cRrs3ejY16XRbwwOQrbz3Tr3Fu1Yr
+	 XimLPBQEO7nd0cKDR0+ObmjNNRcz41K24TQ/IEop7nx6lexuvEviV6FKogCO76mbxfQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=uber.com;
+	spf=fail smtp.mailfrom=uber.com;
+	dkim=pass header.d=uber.com header.i=@uber.com header.a=rsa-sha256 header.s=google header.b=SBYJeOet;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.172
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92FAA606A327
-	for <linux-perf-users@vger.kernel.org>; Sat, 14 Nov 2026 05:25:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 92FAA606A327
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=1g4.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1g4.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5313606A32D
+	for <linux-perf-users@vger.kernel.org>; Sat, 14 Nov 2026 05:25:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A5313606A32D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=uber.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=1g4.org header.i=@1g4.org header.a=rsa-sha256 header.s=protonmail header.b=h3oMVmAo
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=1g4.org;
-	s=protonmail; t=1794633908; x=1794893108;
-	bh=G957/sYSSjsxjXZ6xa/V+ZGQcypevMQZrpwRMmbz3rI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=h3oMVmAopLQfnIYX/WY17dQfkb3DrY/KbOWg13XYhq7ETZuORtXvba358moIARq+f
-	 +ddUkJED1ugY8XVIU/aRwbJn9QF0nTKe1U7eBC5KnyuXGp8de9dtW9RkIAMrzsiyqt
-	 hAhscnTT82FkjBtYfJFZr0LSIQKYOVHdQdFTSFlrqT2RX7RcOtnpOEDA7uwahNZBKQ
-	 FFUDOgglCBiG58XPNs8ovWKWNT5jLgaO9vRRrzO8HnUgOSVpvIjdObttbRRcsqrXK5
-	 H2w4aGSQlp8kONtET/0Xtu6WY1ecIhGRlXyTaNKSTZfeUmkBQydwIU6f6swUCtk0BT
-	 ETCbGBNRtWiaA==
-Date: Sat, 14 Nov 2026 05:25:01 +0000
-To: Namhyung Kim <namhyung@kernel.org>
-From: Paul Moses <p@1g4.org>
-Cc: acme@kernel.org, peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org, atrajeev@linux.vnet.ibm.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] perf record: reject CPU indices equal to the mask size
-Message-ID: <IXvxC0HMcBQR9FfdoTQXA2g84e5zjblvs2JieHL43ZVk00pM5aBX4sAeleDdL2AYcb6YF0rxFcdcOOd4CKrT4kJBRgnrYaVv6Cqpqcc9-sE=@1g4.org>
-In-Reply-To: <au1_ow_duqzf7nyY@google.com>
-References: <20261030064825.2156317-1-p@1g4.org> <au1_ow_duqzf7nyY@google.com>
-Feedback-ID: 8253658:user:proton
-X-Pm-Message-ID: 6a3d9a7cbb06d8b5f2a4c2166ce1a1c097ee46c4
+	dkim=pass (1024-bit key, unprotected) header.d=uber.com header.i=@uber.com header.a=rsa-sha256 header.s=google header.b=SBYJeOet
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-8b0ca1ebc8bso20854557b3.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 13 Nov 2026 21:25:53 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794633953; cv=none;
+        d=google.com; s=arc-20260327;
+        b=NyQlY8GMy/A2jNhhK/Te9/GjYV6N8vvSWuqu3ItG8mASmcl+n9TxZB8asB1sFRR557
+         esCiR2zyTB/AQjYoQZgiWSwRj+M+GMojquAyKKYX/vsxxwYwFlHKs4PhYVsRayajqfsp
+         7sjDmBIyqGGDon2LgveOC7BYNkF3lTKenzdm+SdX0qr+1VSmyRI3RdhNMQxIoPjVfJ3E
+         IyYZgju3NKUEQ0BUPgGGVmRlz5SO1c89nEjQxQ7ONfO/z9U3usl6wJjUelMAIrgT5x/X
+         S9AuYNNDjm5/5oyf9QFbIOmjMzr0ku4+AGYhJeQuO87i0BCSQMCuUFBaMxv8D9Mr/qH7
+         mppg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=oLPN0CJ8BvFmHWFTOBHnK/cJFGHdPvZYXnS75mvoNZg=;
+        fh=3VIhTK4R7xD0GL/7oPYiIHq71pfaYe0F9738LCetKIE=;
+        b=NTrBJvpe04Yqp2IDva01n9JKwWoYyHA1PDTiHOm5d2Hc/rKUfmaBUuhy1psQjGPK9L
+         wDSeviHWWvR0q40UM/SuxUS6+iiNb4t24SBNNu6KvVZsmC2uj0NWih1z+TAOOov63bqb
+         YUmH78MqlkddDeAGR+GRwdufa7vAGF24fbOrNwWqIEom/0Kfo9K9YBu7VrdUk2rEK2F0
+         lnMORoIKdEn+fE5uXCjBGRWQ2+2AfZEJn4sRurGCeNV+l2CMYm6BbPyP8FIfhfl2WjYP
+         5k9x2gmeWKCBzwXw2HoXDrEH8XDi+RGeOlRxwZ6huI+9wq9GeFI4hlkdlZjY/R3dnThY
+         RE5Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=uber.com; s=google; t=1794633953; x=1795238753; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=oLPN0CJ8BvFmHWFTOBHnK/cJFGHdPvZYXnS75mvoNZg=;
+        b=SBYJeOetIb25zgwsmryUxtWfvuRl5/0eqvRzZu9ei9ShexP9T9ws+QhqO5Ee6/UFdw
+         RE986ufkKxzoAFtvzyk8wXqR/bPVwhSqLQ9q/hbhjqXCP13lpPIKsu0dnfWOZg+dTyS8
+         +dZYI8nkUdNVvWyvqRWHWBNgWZ335v6Lw0Evo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794633953; x=1795238753;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=oLPN0CJ8BvFmHWFTOBHnK/cJFGHdPvZYXnS75mvoNZg=;
+        b=WNQHK98fSFu1KGTsdjHSsF8zE9vYyBFNDOuOCClodvVyY/gXHYXVjmlAdhBI+gYPna
+         N1igjSXml2tcKuhhBKmCqVSwSA+R/QJEKl4xdB0Ge/jTQMi5Jo0WpEr+OdlsMydD4IiM
+         ItwM0mtea24VoDcFqbPwtgDJ7h7Bm/OticVVGbEfAAExvM/1lhV+e2iScVypp8vtV5YS
+         mp0ErvoNqAfAIpS9gVCsYabmZXIrGaWNLyTX8NKHpmu5ck9VBRbOXByRdImkY23jdrLH
+         K9txw4ibaWOYhn0kl4Q2lmXvkzLCT7VcntDrRs5BUUTzwB0Pl390gYmEw+gYVZ0dcnYZ
+         IF4w==
+X-Forwarded-Encrypted: i=1; AL+hErHV102MOK9FF1sFIqRe2H8xrHx+6d1DcdkjctjAzMGpsRSqf0DPrV4OYQmV03RlzIpZCJ7cTfuxHy/+knUr9iW/@vger.kernel.org
+X-Gm-Message-State: APuU4Z/H5jlIZUgjjh/tvH90N0O8sz2R1RnRw2YW2bw2XZ10UY/76W4H
+	68zygXtme+lxVyTG1gXWo2aoIsqbhGCUvS2oEz6ktUlgs95infEf8DW52DUIUd/X4lO5h5IUjbg
+	Wep8koT/Ude/cVrXb6m5pkNOdCxJ4BseiT04+bvB9Lw==
+X-Gm-Gg: AYBFou2/MCeXgsWQSd0Y0Obn0aOFyZMYExW3zCmFVrxg8EuiRueyeoZRMqdbIbwwCcS
+	12t0k3ayhMmqUPnj/KwO3UyRMT7or/MVO4SwIvw4l+e1A1byI4RTEu41/yM304XsTa2p+PlRtUA
+	jebbpEBFz0qWqea8Ws9LE8LJb5i3J24pIMV4rV+ja0iNOgyMrlvksRsGSI0WIjQhb1hQldRD1jf
+	MARF8I/APyTKHi66dTnFTXefGLBl3ObZxYXtT8QV82jpk3rngq5TwQhM10ufbML9FtSq4WIkoG/
+	tR1mmPSOZW8lz2iGADEFjrJIG5K2coLbDVWDfM2ae/HSjKqnQd9l6DXqI/3SI+VqwZUza6VMF61
+	5/43clmHpCEyso832CvuGJt6/t9uLbBv6MI5H30BTph0ojQXxecAAXhYM8MaqlFfPzjyL5g==
+X-Received: by 2002:a05:690c:f03:b0:8b1:60a1:cd3c with SMTP id
+ 00721157ae682-8b4aa2a7bfbmr33554237b3.41.1794633952373; Fri, 13 Nov 2026
+ 21:25:52 -0800 (PST)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -64,133 +100,50 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20261110220803.2503416-1-irogers@google.com> <20261113171734.2188066-1-irogers@google.com>
+In-Reply-To: <20261113171734.2188066-1-irogers@google.com>
+From: Alireza Haghdoost <haghdoost@uber.com>
+Date: Fri, 13 Nov 2026 21:25:34 -0800
+X-Gm-Features: AclHuK-aRGtejtjQzTD9T388HsZw1Y1VUwJ_eg0M38a3xXK3Tk0yjsKw_HGzd1Q
+Message-ID: <CA+w=M=SnFtEHA9NhSM8gyCGuA19Oazpx6X7yYTtgatsi3rKfCg@mail.gmail.com>
+Subject: Re: [PATCH v4 00/23] perf symbol: Sorted arrays, DSO-owned lifetimes,
+ and memory shrinking
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com, 
+	james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Fri, Nov 13, 2026 at 9:17 AM Ian Rogers <irogers@google.com> wrote:
+>
+> When profiling large binaries or long-running workloads with many DSOs and
+> threads, symbol and DSO tables frequently dominate perf's memory footprint
+> and startup latency.
+[...]
 
-On Friday, November 6th, 2026 at 1:20 AM, Namhyung Kim <namhyung@kernel.org=
-> wrote:
+Hi Ian,
 
-> On Fri, Oct 30, 2026 at 06:48:50AM +0000, Paul wrote:
-> > From: Paul Moses <p@1g4.org>
-> >
-> > record__mmap_cpu_mask_init() rejects CPU indices greater than nbits but
-> > accepts nbits itself. Valid indices end at nbits - 1. When nbits is a
-> > multiple of BITS_PER_LONG, __set_bit() accesses the word immediately pa=
-st
-> > the bitmap allocation.
-> >
-> > User specified recording thread masks reach this write before they are
-> > intersected with the selected CPU mask. For example, an affinity mask
-> > containing CPU 64 overruns a bitmap allocated for 64 possible CPUs.
->=20
-> What's the exact command line?
->=20
+Thanks for v4, and for pulling the three fixes out; they are in
+perf-tools-next now. I posted v7 of the lazy loading series on current
+perf-tools-next. I apologize for the late turnover.
 
-  mkdir -p /tmp/perf-asan-build
-  make -C /usr/src/linux-7.x/tools/perf O=3D/tmp/perf-asan-build -j"$(nproc=
-)" \
-    WERROR=3D0 NO_RUST=3D1 NO_SHELLCHECK=3D1 NO_LIBPYTHON=3D1 \
-    EXTRA_CFLAGS=3D'-fsanitize=3Daddress -fno-omit-frame-pointer -g' \
-    LDFLAGS=3D'-fsanitize=3Daddress' perf
+Lazy loading stays opt-in there for now (just don't have confidence
+yet to make it default, see
+my reply on v6 4/5). From reading v4, the two series overlap in three places:
 
-  qemu-system-x86_64 -enable-kvm -cpu host -smp 64 -m 4G \
-    -kernel /boot/vmlinuz-$(uname -r) \
-    -initrd /tmp/perf-guest-sym.cpio.zst \
-    -append 'console=3DttyS0 rdinit=3D/init panic=3D-1 loglevel=3D4' \
-    -nographic -no-reboot
+- Both use bit 14 of the symbol flags: SYMBOL_FLAG_ANNOTATED in 11/23
+  and SYMBOL_FLAG_LAZY_NAME in v7 3/4. Bit 15 is the last free one.
+- 18/23 replaces the rb-tree. v7 3/4 walks it in two places during
+  loading: the alias name loading before symbols__fixup_duplicate(),
+  and the check that skips a .dynsym entry copying a lazy .symtab
+  symbol. Both would become walks over the sorted array.
+- 15/23 defers elf_sym__name() in dso__load_sym_internal(), the loop
+  where v7 records the name offset instead of the name. Both want the
+  name as late as possible, so this looks mechanical.
 
-  ASAN_SYMBOLIZER_PATH=3D/bin/llvm-symbolizer \
-  ASAN_OPTIONS=3Ddetect_leaks=3D0:abort_on_error=3D1:symbolize=3D1 \
-  /perf record -e cpu-clock -C 0 --threads=3D0/64 -o /tmp/perf.data -- slee=
-p 0.05
+Namhyung, which order do you prefer? lazy loading v7 is four patches;
+if Ian's v4 goes
+first, I'll rebase v7 on it.
 
-RUNNING: perf record -e cpu-clock -C 0 --threads=3D0/64
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=3D=3D540=3D=3DERROR: AddressSanitizer: heap-buffer-overflow on address 0x6=
-c9cc78223b8 at pc 0x60af685bdb4d bp 0x7ffd1e954400 sp 0x7ffd1e9543f8
-READ of size 8 at 0x6c9cc78223b8 thread T0
-    #0 0x60af685bdb4c in ___set_bit /usr/src/linux-7.x/tools/include/asm-ge=
-neric/bitops/non-atomic.h:22:6
-    #1 0x60af685bdb4c in record__mmap_cpu_mask_init /usr/src/linux-7.x/tool=
-s/perf/builtin-record.c:3695:3
-    #2 0x60af685bde4d in record__mmap_cpu_mask_init_spec /usr/src/linux-7.x=
-/tools/perf/builtin-record.c:3710:6
-    #3 0x60af685bde4d in record__init_thread_masks_spec /usr/src/linux-7.x/=
-tools/perf/builtin-record.c:3819:9
-    #4 0x60af685b9bcc in record__init_thread_user_masks /usr/src/linux-7.x/=
-tools/perf/builtin-record.c:4015:8
-    #5 0x60af685b9bcc in record__init_thread_masks /usr/src/linux-7.x/tools=
-/perf/builtin-record.c:4075:9
-    #6 0x60af685b809a in cmd_record /usr/src/linux-7.x/tools/perf/builtin-r=
-ecord.c:4395:8
-    #7 0x60af686cc167 in run_builtin /usr/src/linux-7.x/tools/perf/perf.c:3=
-48:11
-    #8 0x60af686cb739 in main /usr/src/linux-7.x/tools/perf/perf.c
-    #9 0x707cd1a470b9  (/lib/ld-musl-x86_64.so.1+0x690b9) (BuildId: d1535db=
-89359be00fb635e9145a3a49d0cbd8261)
-
-0x6c9cc78223b8 is located 0 bytes after 8-byte region [0x6c9cc78223b0,0x6c9=
-cc78223b8)
-allocated by thread T0 here:
-    #0 0x60af685506d2 in calloc (/perf+0xc266d2) (BuildId: c5c8ceb2947501d8=
-a08fbc5dd506840be170f336)
-    #1 0x60af685bdcd9 in bitmap_zalloc /usr/src/linux-7.x/tools/include/lin=
-ux/bitmap.h:121:9
-    #2 0x60af685bdcd9 in record__mmap_cpu_mask_alloc /usr/src/linux-7.x/too=
-ls/perf/builtin-record.c:3093:15
-    #3 0x60af685bdcd9 in record__thread_mask_alloc /usr/src/linux-7.x/tools=
-/perf/builtin-record.c:3117:8
-    #4 0x60af685bdcd9 in record__init_thread_masks_spec /usr/src/linux-7.x/=
-tools/perf/builtin-record.c:3807:8
-    #5 0x60af685b9bcc in record__init_thread_user_masks /usr/src/linux-7.x/=
-tools/perf/builtin-record.c:4015:8
-    #6 0x60af685b9bcc in record__init_thread_masks /usr/src/linux-7.x/tools=
-/perf/builtin-record.c:4075:9
-    #7 0x60af685b809a in cmd_record /usr/src/linux-7.x/tools/perf/builtin-r=
-ecord.c:4395:8
-    #8 0x60af686cc167 in run_builtin /usr/src/linux-7.x/tools/perf/perf.c:3=
-48:11
-    #9 0x60af686cb739 in main /usr/src/linux-7.x/tools/perf/perf.c
-    #10 0x707cd1a470b9  (/lib/ld-musl-x86_64.so.1+0x690b9) (BuildId: d1535d=
-b89359be00fb635e9145a3a49d0cbd8261)
-
-SUMMARY: AddressSanitizer: heap-buffer-overflow /usr/src/linux-7.x/tools/in=
-clude/asm-generic/bitops/non-atomic.h:22:6 in ___set_bit
-Shadow bytes around the buggy address:
-  0x6c9cc7822100: fa fa fd fa fa fa 00 fa fa fa 00 fa fa fa fd fa
-  0x6c9cc7822180: fa fa 01 fa fa fa 00 fa fa fa fd fa fa fa 00 fa
-  0x6c9cc7822200: fa fa 00 fa fa fa 00 fa fa fa 00 fa fa fa 00 fa
-  0x6c9cc7822280: fa fa 02 fa fa fa 00 fa fa fa 03 fa fa fa fd fa
-  0x6c9cc7822300: fa fa fd fa fa fa 00 fa fa fa 00 fa fa fa 00 fa
-=3D>0x6c9cc7822380: fa fa 00 fa fa fa 00[fa]fa fa fd fd fa fa fd fa
-  0x6c9cc7822400: fa fa 00 02 fa fa 00 fa fa fa fa fa fa fa fa fa
-  0x6c9cc7822480: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x6c9cc7822500: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x6c9cc7822580: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x6c9cc7822600: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-Shadow byte legend (one shadow byte represents 8 application bytes):
-  Addressable:           00
-  Partially addressable: 01 02 03 04 05 06 07=20
-  Heap left redzone:       fa
-  Freed heap region:       fd
-  Stack left redzone:      f1
-  Stack mid redzone:       f2
-  Stack right redzone:     f3
-  Stack after return:      f5
-  Stack use after scope:   f8
-  Global redzone:          f9
-  Global init order:       f6
-  Poisoned by user:        f7
-  Container overflow:      fc
-  Array cookie:            ac
-  Intra object redzone:    bb
-  ASan internal:           fe
-  Left alloca redzone:     ca
-  Right alloca redzone:    cb
-=3D=3D540=3D=3DABORTING
-Aborted
-PERF_RC=3D134
-
+Thanks,
+Alireza
