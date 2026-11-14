@@ -1,95 +1,103 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.170
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794673850;
-	b=cItl4GNUY5s1g2SvheWj5LdQQtWpz6PnRkxihcH5TLiCsuEbJxQ5PWlKEzS8p8hvSka1
-	 gU57YGhK8Lvj/IuEi+CVTRcz+CgIhlsZ7ZQ+tKtBoz6Ut3JIsIYCT2603oERp13/fpzNO
-	 qs59gj+JKRegU4aremUMS/qF7i4ybCaQzEVDNag4+o6o/sJCQvwTwqpnz9qKEIQljbBrY
-	 jJp5SGTKROptNeoOIMcK7d1NeIlFKag2yJrV0+QMK70t19dqmQWYOMgNDuVsB7I5aQ4Pi
-	 JKlsy1kJuwN3uo4AeA2l09VcEWJaQUUJ6p7qpRfAqCrX+2tfXwzmuL57Kk5ij5NU9Kg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794673850;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.222.176
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794681091;
+	b=m/II8IcohiVUW/8xM7V4pjrOee3SGG2Go0oim8dGUpd7skztgH1k2mbhxzQkV81m6ZkC
+	 rxaonavQZ17lWJtZgrm3jO7R2tEuZq30PWmJ9oQQyLqyNf6qsg8E0U9W36tZNZ8iPcaaZ
+	 QoHytDhi5nquZi0diOa1xRbsDs54hYub67ZX20F+BXIgLU1O/S8DFSb6GNiIQay9zpYof
+	 AYqnq32AqB2kfDzKZA5yQ/usX0dSalnmfJoB150UHy2+KPEXOxippZQs9qIPalqop3av5
+	 JfB3JJ2JhTKk0Mre8RLU6uxgFbT/OREFpa3tsf4LhP5O3DwyOdn9e4Vk5yyXy0jcNTA==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794681091;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:References:
-	 In-Reply-To:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
-	 Content-Type;
-	bh=fGWxKs0ygx50ezpgbkqjOUBZBQlCGRAkgSt+Tpagf3c=;
-	b=RBp8lKBLZoCNpgrls0D+6vnA4+U9kUa2EkuGnV9oLqvfy1MxgsRkbNNTDMpc7rGHfSyL
-	 s8RCx6/ca3MEGc9Ynd9ADf3xVg2CFuok1tI3oQUS0aep5qWlO133G5E/WqqC07aNv7dHw
-	 +6zuJYco1rG7l5OSNUraLRW/qlcWKtHqswzEp2ahVR4j7r/n82ZQlTCgNN6uQWM0UluR/
-	 Qnztt2SgKD42fTHHvghnECbYKbWfRNaE1l1oMayhAUKeLj6e5FzOSCBSrnQBkwe75aXw4
-	 42xASJ3wajYsZ5ZOYa/sGONKar1EqH1r3ivh96VzBRQfZUgCFO5cYX1pq/yLLHRzBEw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=uber.com;
-	spf=fail smtp.mailfrom=uber.com;
-	dkim=pass header.d=uber.com header.i=@uber.com header.a=rsa-sha256 header.s=google header.b=i4ZhSP5o;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.170
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=mLtlrhyK/6g0u52Jzk6ZQfKICIxuEk7VcSNcDVEOcMc=;
+	b=L6+XSMt0QAPFukydCFTrXkHoogECRp9oGPBjqNR1Rt53dqbBRd5toU3mwKZhTYHC19xE
+	 Wtqnw0hYwHN61JV/DxV5ZQdLAmiVb+RGcUxm/jFEm7QtAtQqK1lmCeBfFJJUcX72c2EkT
+	 QzVUZ4VfLdAO3MD5v+C/56NS9F7FduHoc0GqZsMkK6Qh1nNb6edYe/AsMDjB7+2TvbIDU
+	 0YqJUz+hhsB5H+z7TMSJUE2GxPgaFy46lo06LCYZ8Ix5ywaK5VVMGMaWUgaY0vDUBVUZc
+	 wZJCIb7p1h+CPMXfJnmD10sYdiWV+eqTEJwBZ/MgFvvAEQ6sqkSpUpH5zVXd7EWB6tw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ZZU8Wv8c;
+	arc=none smtp.remote-ip=209.85.222.176
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37F9606A329
-	for <linux-perf-users@vger.kernel.org>; Sat, 14 Nov 2026 16:30:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A37F9606A329
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=uber.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D459606A329
+	for <linux-perf-users@vger.kernel.org>; Sat, 14 Nov 2026 18:31:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3D459606A329
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.a=rsa-sha256 header.s=google header.b=i4ZhSP5o
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-8b4c2da74c0so1603967b3.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 14 Nov 2026 08:30:49 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794673849; cv=none;
-        d=google.com; s=arc-20260327;
-        b=p2MbfbJfYtdtgXo5qk3/Y4ra16sONm5hWHjSUABc0Wk85ceCRCDF1ylO+t7mJ9XNUB
-         0QkMWQ/FFdsHI6vDoXTn1uxfAH58riAXJFOzSmTOj7L6qVPvBtcD+XtCus7jnksTNsFo
-         Rn2mnrePxu53rr/fbISQFYJ3TQ3STxNWYtHjRTg1JWi8MttdAtRs4ho5eRZihYgLnneT
-         gHD6VIsSIyEo/gpJraA6AViivDdqWPfltQ62WvyWcnsbXE/3Os0vfYP2Rqj/l9cbdxt9
-         jrGne5ew7v0vShHrFEOE6c3Wfoh5P+JMxOF0UACoSDpHNbbD71k12UU4llf/jChS4xKx
-         RJnw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=fGWxKs0ygx50ezpgbkqjOUBZBQlCGRAkgSt+Tpagf3c=;
-        fh=0zVHGC//SC94CWFKHtFt4lnskmkXkJNNy7lE0FDd3Ck=;
-        b=WZbeshRSzoeMtTsFyiy6J2LSM+cQXL/bM7AOxDJMagH/wZp71McOg8ZNFtC7Fodwhy
-         gxCitS6+7Nt9MFxDdTAfPmwEkIZcmLcoCOZ6PrH5lcvhe3enOdhi1gxpmU9H52ADFr78
-         inO2Rj5qcQJhn5jRYOvJ92N9HFqMXPveQbxTPdAg/qbvA6NIi22hvysWVFVtThpp/hFf
-         uBQFk5sbNpY1z9dXDf3CneuoOTpt6DsuJ3x98+2+g7f0r8OG/t2CF6HZdxR9ZdH2YobJ
-         9Yg6kByPUnFyXYxaYh6MAESf9X7IPc6HKQSzdksBPEwkW9tU1rapQKH3DLkwfNO1x/Sr
-         06Lg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=ZZU8Wv8c
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-939ed428e11so43065985a.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 14 Nov 2026 10:31:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=uber.com; s=google; t=1794673849; x=1795278649; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=fGWxKs0ygx50ezpgbkqjOUBZBQlCGRAkgSt+Tpagf3c=;
-        b=i4ZhSP5oXiQ3T1CerJIB+TQSq54f1qTsemaIa3/SBpZyykbgE6psqWjcgUh4b3riwE
-         XQRebrM3n8slgNf8a2Ms+5onwWT1NQWPWBR8tqkKlanMuJl58Sf/SpuVXwmYBwRu6KBP
-         U2WMoUxX4lW/6k5DGE+p5EUen+BeKG48gWbGA=
+        d=gmail.com; s=20260707; t=1794681089; x=1795285889; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=mLtlrhyK/6g0u52Jzk6ZQfKICIxuEk7VcSNcDVEOcMc=;
+        b=ZZU8Wv8co+qWSZtx8nc3GIbSAtiq9clqcMpHrBzyvLcZcvMEU6V22rYopnyG4I0Mp7
+         nsPDASa5XCjbJ0yKkl/TjS8v7NR2uM1iTYdzlLH95LYIy8lg9s1HwN64p0JKpUk+BPWM
+         wHsheBBPOI1NYs9GDJz7t974CN7xgQoZwQMq/OyxY2K1g/vgDK+6NJtmgOBIqh4PM9eD
+         QLsr2HGLQceP9rSCESuySRNiMNB8U+egSh4RtO/j0RQFVaCQk1oIR9Ai8GTsnNwCaxgK
+         i2PYA3WOTaNxaeeAEGp10UTi585R11cChkruNP43uTQZXJa4cncL1MyBYvV8guCKoe85
+         HZWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794673849; x=1795278649;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=fGWxKs0ygx50ezpgbkqjOUBZBQlCGRAkgSt+Tpagf3c=;
-        b=SeOZkRmPP9NXWRdOJtqXqEoeNnKhIt5R4vp5OEQ3mFbBqFp35uv8JjDF7Ej5l/wwX2
-         bqDREoMS/uIKB3kJv0ZGEizmjKYjNocLwpZwxo80rrYqEs+23DlqnYsvGbAauxghYq06
-         KDJZNsz/ADH9eHdxW3n5vSNU+KYaDni7qIgb6ZLq1rmX0j9Pju0QmfrwNhJGx+szOeMI
-         hvt9Pam2nMuacRp/93DgBwgkidyDpp0ORjvcfE9Mq2IuiNEzKtS7o9/odCqqSZoNX5xs
-         nMRikzhup+jErbLuUiUTEXM4POytlS9YTIA0hqZMLEZAeREWr0ahoEblZRjMgTOD+xLn
-         2+Fw==
-X-Gm-Message-State: APuU4Z8pr8bCYoPjLcMaEMn0VKa1PQhKKVXrl8kCAPTjjXI8oE/KRAO6
-	fLsdFQAsE0JdL3eQhVUG2rpRtAvCoVKjyMw6yvQTUaskwzG4AmbxIi3sG7yGm7N7No9o6JbiyXM
-	Nq6/pz25gKsBjRRWFCJfEmkErIeXWe78Sxv3vkYUWTD4zMfQ6NCHcOyu5BWs3
-X-Gm-Gg: AYBFou0xcCsCyusB3Bxb+nH3XSH0YiXDAVwadlNXaYIAJZ/QdXz/YicFZi+JNwLHWj/
-	K6v4wMPNNSGDqycp4Azboz3UVVYQlVclLEvRbg9Oweu1O+Pu+WolbZNWlaNrNlJW1Etxv7PQHQN
-	p2FfukhO7+ABNNj5DJjTPE3UbuIgiDso0A/P5eL4Jy66XBMHckDdpajOxURtOKuNKJFAZQO1Syn
-	4D2nJ0U8YF2j4vyZL430YlhBuO3DLZ07eEE4ypVDB40yyb2cdLHzwBhnxYqTcqd6k+EL7lYSlZ8
-	G893z9xyPTEFzae6WyCesVkVAEgyOr2pUbz5hIzWxQxrpVn9/UjUYqupLH3b5dWpXojG+0o0bKx
-	UMGxfrWFYandcjZW43rQfLIkhl7/VJtNK8SvUlWHMzavzcJYgVeGkVCQvHy1lCiMObQidlA==
-X-Received: by 2002:a05:690c:f03:b0:8b1:8aba:afe5 with SMTP id
- 00721157ae682-8b4aa2eb937mr32268107b3.28.1794673848298; Sat, 14 Nov 2026
- 08:30:48 -0800 (PST)
+        d=1e100.net; s=20260707; t=1794681089; x=1795285889;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=mLtlrhyK/6g0u52Jzk6ZQfKICIxuEk7VcSNcDVEOcMc=;
+        b=trjdjz9ki610wZyfaYaEgsw6AOfKgp9TyTrg5sd/d76DTeqtlcE/88nZzhjY042pXv
+         iO3Napai/uZAXKQPc8DX1oEhHGEyLwSwsu9V32NAshCMwEFfCkfpsTqWD5wSwt/1i27m
+         JbVqICXUQIQPsAlAT1iG/O0tUT0/+RKwXDR39s9wMtJwTYmm9M6BpjSk5mhQhcODu5Km
+         chNnqa0cP74ThhBwU4v3J/Bg0mFSsJNmI6FysS+NQ79KuGZYrhZRdIOMABhl0kFqO8rN
+         5AmYtrEssZFkq3H5gG9RSoikgVO6cP8bdUz4ZE8rVJrk9oo1AhdPa5QjWTvoID64xs8z
+         qQjA==
+X-Forwarded-Encrypted: i=1; AL+hErHLi0YyxDxx6y7QGLLdXNzKg0uR7B/KXWrp40WvxJnDzD9zEcI5kU/X1eN8CONB5wv7aTLkd3PBPd39rogrMmwH@vger.kernel.org
+X-Gm-Message-State: APuU4Z/fB1Qlnx6ujAK5j+G86SVmerxMt7KEhRNOiV6v96huPHiS+Uni
+	iGjadsXoJkKHA4UjY5+1uYtkJyy7c28HYOe1MhMsxQBw1G4o57KleNaZ
+X-Gm-Gg: AYBFou1hCEiidZj0XAkK7yRIBK4SWYXIhM4btlApN35lbuxdwpWVD02sP/5wukbiCp7
+	9JzTWgJRiRa4ms9YqhjJLnmoxFvyacMBq6Nzz1gbVfxddnfrD/nBCjg8pvR5QFNlRoFdou1dTbT
+	n81L9un+97B6cJiHJlSMpqfJW+OYm/1XUJp69436tW/4jk+p+ln+IXUSyklj6484i9PaWCdW7ZR
+	sWnxpp9JxG5zn+WSWyOBCixQyl9igPuHnAntStnjMmagYmZsgFwBpfEE3TauSOGJveSgF2WWGsx
+	qKlUWyfRNlfuNPf0cdJ2T3bgSUyKNw7KprBPwSmOushNzw6etcMFR5rEmqiHNhnEXzFiujLD+T9
+	dSsKL5+s7UUOgaMywOKBeRMMwS+IFUcf0bbPF3YHHLUy6RA79aHmYcJFn1O3UQDZ9nk02QvD4p7
+	mCgIyNasA4Ihi4XvtsdjJn2feHdE1tiQj8DQbgByRpgOUaIMP/XD/HZJS23aP91BWTu97+KSVEA
+	z9WEy/2pZuTrzOCHFl/irlOxWt2uMTCctOGspEjnKq9Nm68FerxOp+oMR79eLg7cHm6i3DQhjF3
+	TZ/KR/9ECtLN1FXr3Za97IhWuRCXuOO0rVX6LXjzc+kz/m0APP0laSvFYYeRQbELLVQ=
+X-Received: by 2002:a05:620a:8a0d:b0:949:728b:51f with SMTP id af79cd13be357-949728b15edmr90967285a.6.1794681089114;
+        Sat, 14 Nov 2026 10:31:29 -0800 (PST)
+Received: from yaozhao-prestige14a10sc ([198.58.190.97])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-9494c836f62sm458876785a.23.2026.11.14.10.31.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Nov 2026 10:31:28 -0800 (PST)
+From: Yao <dragonlinux@gmail.com>
+To: 
+Cc: yao <dragonlinux@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Jin Yao <yao.jin@linux.intel.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] perf annotate: fix annotate crash for fused instructions
+Date: Sat, 14 Nov 2026 13:31:21 -0500
+Message-ID: <20261114183124.685561-1-dragonlinux@gmail.com>
+X-Mailer: git-send-email 2.56.1
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -99,35 +107,83 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261113-perf-symbol-memory-send-v7-0-d992eced9f9c@uber.com>
- <20261113-perf-symbol-memory-send-v7-3-d992eced9f9c@uber.com> <sashiko-outbox-214179@kernel.org>
-In-Reply-To: <sashiko-outbox-214179@kernel.org>
-From: Alireza Haghdoost <haghdoost@uber.com>
-Date: Sat, 14 Nov 2026 08:30:32 -0800
-X-Gm-Features: AclHuK982XcYJYA8AaQABqiKfcQLmXN3r5fAt__j6RIZF2emENSLWSuiIVJOgKw
-Message-ID: <CA+w=M=ToJ-WYOZc4GhOPNDF3cbu-bPuCqhbMqvQMZL+pdOmuTg@mail.gmail.com>
-Subject: Re: [PATCH v7 3/4] perf script: Add --lazy-load-symbols to load
- symbol names lazily
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-> [Severity: Low]
-> Can skipping the .dynsym copy here change how symbols__fixup_end() and
-> symbols__fixup_duplicate() resolve symbols when .symtab also has a
-> zero-size symbol at the same address?
+From: yao <dragonlinux@gmail.com>
 
-This is valid and I reproduced it with a small binary whose .symtab
-has a sized function followed by a zero-size STT_FUNC label at the same
-address, with the function exported in .dynsym. In this repro eager resolves the
-address to the function, lazy resolved it to the label. It needs that
-exact layout
-and symbol order, so I expect it to be rare; it does not occur in perf
-itself or in a profile with about 1M symbols.
+Function is_fused tries to find the previous fused instruction with the
+current conditional jump instruction in the annotate_line list.
+disasm_line is the container of annotate_line.
+The annotate_line list uses list_head and the head is in annotated_source:
+notes->src which is not an annotate_line, so it couldn't walk without
+checking the list_head. If so it will read annoted_source neighbour memory
+mistakenly and most likely cause crash.
 
-I can fix this in v8, add a loginc in lazy_dynsym_copy() to skip the copy only
-when the last symbol already at that address has a non-zero size,
-so the lazy tree gets the same fixup as the eager one.
+Fix the case where current instruction is a conditional jump and it is
+the first instruction in the disassembled list, the original code will
+walk to the head and treats it as disasm_line which is not.
 
-Thanks,
-Alireza
+    -------- backtrace --------
+    #0 0x564dd8d5d5cd in ui__signal_backtrace setup.c:0
+    #1 0x7f1737e3e6f0 libc.so.6[3e6f0]
+    #2 0x7f1737ec10b1 strstr-sse2-unaligned.S:41
+    #3 0x564dd8d625ef in intel__ins_is_fused annotate-x86.c:0
+    #4 0x564dd8d4bcde in annotate_browser__refresh annotate.c:0
+    #5 0x564dd8d49bd6 in __ui_browser__refresh.isra.0 browser.c:0
+    #6 0x564dd8d4a960 in ui_browser__run ??:0
+    #7 0x564dd8d4cbcf in __hist_entry__tui_annotate ??:0
+    #8 0x564dd8d50a91 in do_annotate hists.c:0
+    #9 0x564dd8d58bb1 in evsel__hists_browse hists.c:0
+    #10 0x564dd8d5a7fa in evlist__tui_browse_hists ??:0
+    #11 0x564dd8bf7a98 in cmd_report help.c:109
+    #12 0x564dd8c713e4 in handle_internal_command help.c:109
+    #13 0x564dd8bd6ac2 in main ??:0
+    #14 0x7f1737e27781 libc_start_call_main.h:83
+    #15 0x7f1737e278b9 in __libc_start_main libc-start.c:127
+    #16 0x564dd8bd7095 in _start help.c:109
+
+Fixes: 7efbcc8c075c ("perf annotate: Fix fused instr logic for assembly functions")
+
+Signed-off-by: yao <dragonlinux@gmail.com>
+---
+ tools/perf/ui/browsers/annotate.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index cf36b5347f72..07449944fa2e 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -155,17 +155,26 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
+ 
+ static int is_fused(struct annotate_browser *ab, struct disasm_line *cursor)
+ {
+-	struct disasm_line *pos = list_prev_entry(cursor, al.node);
++	struct annotation *notes = browser__annotation(&ab->b);
++	struct list_head *node = cursor->al.node.prev;
++	struct disasm_line *pos;
+ 	const char *name;
+ 	int diff = 1;
+ 
+-	while (pos && pos->al.offset == -1) {
+-		pos = list_prev_entry(pos, al.node);
++	/*
++	 * backwalk to the nearest neighbour instruction till the list head
++	 * instructions/non-insn are ordered from head to tail
++	 * head is not a annotate_line/disasm_line
++	 */
++	for (; node != &notes->src->source; node = node->prev) {
++		pos = list_entry(node, struct disasm_line, al.node);
++		if (pos->al.offset != -1)
++			break;
+ 		if (!annotate_opts.hide_src_code)
+ 			diff++;
+ 	}
+ 
+-	if (!pos)
++	if (node == &notes->src->source)
+ 		return 0;
+ 
+ 	if (ins__is_lock(&pos->ins))
+-- 
+2.56.1
+
