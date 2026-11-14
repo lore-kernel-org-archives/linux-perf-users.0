@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794615528;
-	b=dui84y8NwbYxg2Hd8PW2Qe2Cf/ogA5OZvUqe2z2hLZf5uohe1pLoNTBx04WtvbQR/DYH
-	 U+Bhvswi0goPjzt53ydWfMtS7Lci4L6O3HCT3lM3IJu6RYPfa8FQOv9jfj3+ZXHvEgITt
-	 SEf30WAuImJt4e81ogonSPnlvhoFpu3oevcmE207PrLMG0mcQZFCFB8SlMQHrjo5RIyw4
-	 R6kKr35CCn2D8xLrPW41AnjnJN+moEP5saalyRHRA/LTgzpVRHMOuSyl0h8tShUiL9LMj
-	 aWkQr4qDfntHWY2p7gO3BdZ0iIKIiHDf2/DB+GYL4SoWCwvCt41ZNlobVTLuFG6VVkw==
+	t=1794615531;
+	b=CAWauCbDlHnW0jiHy/FEJM1WAEFSoeA/nTJZhj25uiVMPX1jDweUsZx8BFDgTy3+Z3Bq
+	 +XfizEX9UjmE+4gsB91bugpXWwBAGL58G2XQSTa9i8Koz59dR5irbmAnhPIIzpGcs9g24
+	 GCWSwBPqqx0HdQqAWK2x/CrspkYwmxoNS55gwuvauz1ZoUaYjcZKCtSC4iEinQK7xde8R
+	 /RBzXLJ22XN83w5VdmI2RuZJkizXUF4sfkgHPgskR+W5LsJa4Yn/nH+rQFFCvVxlj2Fy5
+	 OyMLe3vNwZBaMj437r0BJ0Ucuytnqkml7EzS0/RYLeqvhxorfL9vWlrROSlYYHfXCWQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794615528;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794615531;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=6y9QE6jrL4hwSU15y6udJxlINtEcQ9mhA2x1WVNSoNo=;
-	b=FBr4ez+eupeQSWBGHlG2m8VNi6JIhZOLhYVvtfr/KWxOzFf6QIQdza6J8RGz8daXDeFq
-	 dp7BABP7kTxgvFFp90UKX2RBZTIHo2dZuLIOOe0XJj8oDVzp6iS/a7uiqgXEIm2LDdRIX
-	 AW3gqB10DAjzvyEqWWIj0OP9gGwI3ddh6qzjsRdC41W6jwowMRGMyjcdG6PYP6uhuMQQP
-	 AADuiX9IU46lHMESv00GlKCRsi/8mPyqpXoTAnKIwNzKKgVZM/IGSz9g4Y9jg1URLy+yI
-	 pab545UDsG9gvx7bZbNFf1o7USwpzDamJ9bcoa84iD51TIl2YxCs5qi5s2dPMLhQn4w==
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=TL91F9v5y+iVASSEgSyoU/mO9eBJEE/mzexNJMkj6kw=;
+	b=2Z6E9i5l6d9pycPXYSpJBSKLZhHPlrNClHe3jc+XodJSRzXCtjjR4/5tpl92Jru4u/6y
+	 I9Se8kp6S4KapbKDk50+FuYYrf7GT/nfFCojRwrlULoST9AVoswiwgvCjtjK5XhpYsdFP
+	 RMJmTIujEbzzk/nfkniDVB12i5RWevZ+34p/NBJW4ydvYRU9PLfTqz8MS7mhOoqPcsBIS
+	 QNwZijDzGFmnsW+6TUVvwgmkDVDWIU88Bd6kBf5e6NUwtvitVqpo+BVGjnXS+zlSa9Wdd
+	 swhDIkis1eSGNm62ua1lW6x+PFQzHr9C16UyAgB1JA4I+I28jiprhSPM3gHhyzSBXuA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="iBH/HQl+";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WeFcb+CC;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13280606A334;
-	Sat, 14 Nov 2026 00:18:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA8B606A323;
+	Sat, 14 Nov 2026 00:18:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iBH/HQl+
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 815B91F000C4;
-	Sat, 14 Nov 2026 00:18:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WeFcb+CC
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A52901F000C5;
+	Sat, 14 Nov 2026 00:18:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794615527;
-	bh=6y9QE6jrL4hwSU15y6udJxlINtEcQ9mhA2x1WVNSoNo=;
-	h=From:To:Cc:Subject:Date;
-	b=iBH/HQl+hnAa1Q0SwQNKcQJ2kuRKBwgvwknCObI4/plivGobr6wfJnHn7jX01FEHq
-	 mU8ZVgjRL3ZED9xj7PPuMfjXS9ldB1wm7opTb2bTeVtGTZA/FQy4VjAPWtqrjmoYUk
-	 aFSZRjQA/YkVTXl8nzKSyvSIDZ0gKdPjAxR217hFQXBkW7MeldjLIXdKSNdqvO9CW9
-	 3yrA8gnDVxjweP6tLFQ7n0YQppG7OIuJjX940V8X1CUqfEzpP4zCp+4O4DlMhO8ttG
-	 x+yNN5VfTZe+jE/rasvYofrSWwcRQN1IGqizPzSv6KSQBFvmkpKpUCn+EQgJI6VRNn
-	 2uDaq/QX1GSng==
+	s=k20260515; t=1794615530;
+	bh=TL91F9v5y+iVASSEgSyoU/mO9eBJEE/mzexNJMkj6kw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=WeFcb+CC/wJSw0oC3ElbhSPB6pyEvS0JvHHC0leghOZ6kDbQdkDWci/m30NbEX6qx
+	 qEEi8ql/TtMK0sFL3QBfLWWtMWNgQTZ3SzRpWNNLRvz1Lm+qsyBV6DuJ8sZU3+iJBr
+	 0/0CGRfTYqTctISkH5WD20tnV+38papDstKGpqDBHPxPXVevdJGvp4xLSWn0xlCTUF
+	 ITCKKAuAierlgiIUDLMrtbPqWrZ2Ntvn7Mv6zJhuoRqDuVzRpjnPULzbjlIv/GKbvg
+	 FruZZwJL7xQ4FVyb1YPEPxcYfBbOf0SMNZmDeSJqOlIaLybT4dGyzt5G/Tjohdnqz1
+	 j8c6wuZvb1kmQ==
 From: Andrii Nakryiko <andrii@kernel.org>
 To: bpf@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
@@ -50,10 +50,12 @@ Cc: catalin.marinas@arm.com,
 	jolsa@kernel.org,
 	rostedt@goodmis.org,
 	Andrii Nakryiko <andrii@kernel.org>
-Subject: [PATCH bpf-next 0/3] Fix duplicate caller frame in arm64 stack traces
-Date: Fri, 13 Nov 2026 16:18:43 -0800
-Message-ID: <20261114001846.873499-1-andrii@kernel.org>
+Subject: [PATCH bpf-next 1/3] arm64: perf: Don't report the caller twice in caller-regs callchains
+Date: Fri, 13 Nov 2026 16:18:44 -0800
+Message-ID: <20261114001846.873499-2-andrii@kernel.org>
 X-Mailer: git-send-email 2.53.1
+In-Reply-To: <20261114001846.873499-1-andrii@kernel.org>
+References: <20261114001846.873499-1-andrii@kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -65,28 +67,49 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On arm64 the caller is reported twice when the kernel builds a callchain for
-the current task from regs filled by perf_fetch_caller_regs(), instead of regs
-saved by a real exception. There was a similar problem on x86-64, but it was
-since fixed. Now it's time for arm64.
+perf_arch_fetch_caller_regs() sets regs->pc to the return address of
+the function it is used in (CALLER_ADDR0), but points regs->regs[29]
+at that function's own frame record, whose saved LR is that same
+return address. perf_callchain_kernel() reports regs->pc and then
+unwinds from the frame record at x29, so the caller shows up twice at
+the top of every kernel callchain built from perf_fetch_caller_regs():
+tracepoint events, software events emitted by __perf_sw_event_sched()
+(context-switches, cgroup-switches, cpu-migrations), and
+bpf_get_stack() and bpf_get_stackid() in tracepoint, raw tracepoint,
+tp_btf and fentry/fexit programs. E.g., for a tracepoint program
+attached to sched_process_fork:
 
-Patch 1 has the fix, patches 2-3 add BPF selftests for this.
+  __traceiter_sched_process_fork+0x44
+  __traceiter_sched_process_fork+0x44
+  kernel_clone+0x250
+  ...
 
-I'm targeting bpf-next because of BPF selftests and to have BPF CI test
-everything. Patch 1 doesn't have to go through bpf-next, but it's simple enough,
-so if arm64 folks are ok with that, please ack and then we'll land everything
-in one go into bpf-next.
+Use __builtin_frame_address(1), the caller's frame record, the same
+way kunwind_init_from_caller() does, so that pc and x29 describe the
+same frame.
 
-Andrii Nakryiko (3):
-  arm64: perf: Don't report the caller twice in caller-regs callchains
-  selftests/bpf: Add stacktrace_ips test for tracepoint
-  selftests/bpf: Run stacktrace_ips raw_tp, tp and fentry tests on arm64
+x86 had the same duplicate entry, fixed by commit 6d08340d1e35
+("Revert "perf/x86: Always store regs->ip in perf_callchain_kernel()"").
 
- arch/arm64/include/asm/perf_event.h           |  2 +-
- .../selftests/bpf/prog_tests/stacktrace_ips.c | 67 ++++++++++++++++++-
- .../selftests/bpf/progs/stacktrace_ips.c      | 18 ++++-
- 3 files changed, 81 insertions(+), 6 deletions(-)
+Fixes: 5b09a094f2fb ("arm64: perf: Fix callchain parse error with kernel tracepoint events")
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+---
+ arch/arm64/include/asm/perf_event.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/arm64/include/asm/perf_event.h b/arch/arm64/include/asm/perf_event.h
+index ee45b4e77347..13efb46f0fe8 100644
+--- a/arch/arm64/include/asm/perf_event.h
++++ b/arch/arm64/include/asm/perf_event.h
+@@ -15,7 +15,7 @@
+ 
+ #define perf_arch_fetch_caller_regs(regs, __ip) { \
+ 	(regs)->pc = (__ip);    \
+-	(regs)->regs[29] = (unsigned long) __builtin_frame_address(0); \
++	(regs)->regs[29] = (unsigned long) __builtin_frame_address(1); \
+ 	(regs)->sp = current_stack_pointer; \
+ 	(regs)->pstate = PSR_MODE_EL1h;	\
+ }
 -- 
 2.53.1-Meta
 
