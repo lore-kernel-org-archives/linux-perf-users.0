@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794633413;
-	b=SRgGv31lzNoplWFjq0iMtACh053CZW/ikU37aH/Y2TEIdINBy/nigYjU/l6EfpPe/PRb
-	 EKU9KTIsvoqInkqxnTDTmWDkFvfhrxET5kD/PMu9CUXJKmszgXF1d62nQxPFv1R6Qd0FQ
-	 fYnhO924VhLjsAvqLH7QPbSrTPanS36W7T/GADG9jf20t7SVXEo9aZz7mK/gEUh/Ho+7y
-	 51yJh3d/KsVU9waxuh5FL448q2WFcopTG8kW3PMDMfqMP3SirQaQ4s5WptO2AwDdz9Zoh
-	 UHBHV/MPRDt97oJZKsLA9F68hoaC6ZwuZntQ+95DoLgnjSWz0l3Br1iyaRdFzobDn4A==
+	t=1794633579;
+	b=H6YX1NE9aT+d1NMBmX9Fh7/dx8FauMvYkkJeIrUUzmdiPs/+M46EIDbWEiuc9Gqw4S4A
+	 hwN/GgkO9xFK/GY41Fpiau9QO2LTbceev9wsFWcFXfZByovfn+/X8hL8oGUXjTdh4fo6P
+	 9b2Y581sWO5vBQnSMgrUs8UejuYOYBHX8VavBBq6PttgpJXZMdUWOcH6g53+BJBnrB54Z
+	 51Pr3BUzNuesnmoGdv2hs88cSt7gTWNlWkIYKoYRDADn77mMeJ9aK79BUO+AVHxmov6xQ
+	 L2sKEAi4emzuI6sEgCJHzds8/HhGBgC03ctnEtE9+1wAPMnQ+jgUch3zQsFoJVehVoQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794633413;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794633579;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=o2Y2PaTIQsrCuOTyQqqfoj07/A3kBcw1Kx6L2BZpChc=;
-	b=AFSoQuK8/r1/CAYOEvOfb/EspP7qspTvHUvoF0KTa4QiKBEcilOpa5QPebgaUJf3/5kD
-	 1616tCWlqp3XWtPFlCO0IbNChO4YveaT2chp5S3h8J5qD9s1Py/8lrfa6SUfYrwTo2xDB
-	 TpY4/+667ba9XAPz/CUAigj/WrA/JPdXUty0dI9tqztA4k8FgNSJFrVZZ5g1KQ7GAOFOO
-	 aX8ZA4M59yM5eU1YrEcsb09Ugctos6DZQ3HQh9y4YgWT1nWqfZlJdSJjs1mKp5/cPYUXY
-	 9uKT/0Ft9k4TAhMhfkSV+Bdw2hPbgXsI8XG5B3JojBoKVU3HXqCg/CnZBp+VAaBtiig==
+	bh=CqK6LAzEHR6m7cruH/u2MLgHblxMLPEfHrzXGmNuLVM=;
+	b=l/4nYxl2vx1cM14YHW4s419mOMXBJh3+gH1Zdlc8mI5ROW4HY/XGn0Va44AARWtic67I
+	 3oReB1Ik4aNpZ/JKjob76spXi95mF0rZrp+TN9h9J+38vSev5pBxRXnpZ1RlGrp+Zo5kc
+	 Bar4f4ZLC52e9Xq0KgCM7UCKDwEeM6ncjsc3DV7VXejKEvldqvLJPTUe1sFGsZMKlkzLW
+	 yCrYN/9kJFPnn/L7BJHXIdsnIlV/+YwiMii+oLXavQ8qgalX5eA4vqBO6+0EnRKHungO2
+	 zKK75azx2Ix+U1OlYgWpweFBHOo/MY7eeVSJUF50nhInuRsloeXVL/QUV6cxoZszjjQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XgDhBEmA;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jsMRFNLe;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B26606A323
-	for <linux-perf-users@vger.kernel.org>; Sat, 14 Nov 2026 05:16:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B08D606A329
+	for <linux-perf-users@vger.kernel.org>; Sat, 14 Nov 2026 05:19:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XgDhBEmA
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F5831F000C4;
-	Sat, 14 Nov 2026 05:16:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jsMRFNLe
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C47F61F000C4;
+	Sat, 14 Nov 2026 05:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794633412;
-	bh=o2Y2PaTIQsrCuOTyQqqfoj07/A3kBcw1Kx6L2BZpChc=;
+	s=k20260515; t=1794633578;
+	bh=CqK6LAzEHR6m7cruH/u2MLgHblxMLPEfHrzXGmNuLVM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=XgDhBEmAK5T6TiHph+TBpgwEnvOSXS8vLutFpUT45vLgBam43RIFA/PnYowQFK6BQ
-	 B2gKQGQgB54X4nJLBdoEPAefSNzfjqjLrhf+DcCYvNqjLAuUbOpLeNkUZT/no6AfHl
-	 Z3TjEAuX4uOlbBhkoNXuMbD2tkqIfkU1qlC/B8wQiN/l6KGQ2NrBd9ef/UpH+awu9A
-	 rXcS4EYK7MZmjRF49stM7y3Mxr7DnoJUzFlEaBysC68U9ZbJKiiW8A3k6KCJAydmYV
-	 fMv6xyZdOzHAwQRq1/q8/4nbvaiFuFRVuHLwB6LvYCUwTGNs6hGwbJBP+mIhkCTpmY
-	 TBl8tclnUQq6g==
-Message-ID: <sashiko-outbox-214164@kernel.org>
+	b=jsMRFNLe/btokCP+78+R1sa5zNETa9klFXsNpxhl/VribUCYWo2rUHnb4luES7ajE
+	 X/irLdHrc2Q+AzqaULmrM2ZvVujeIjXDoOvfrn2Bqk1FIidNP65gfSdvU2ZCCTnLu1
+	 Wz2Gqy+/88ET2v7w3NpUS6C62MJsYvDi2p6CTTGv+jrYhxGVWhFVgV2M70llLcBuNN
+	 99Wc3uJUlvYIZJKnQGI8H9hopNm5OhMhYTg7hf+yzFpWN7EZVymQq/eUxxPCheWvXP
+	 S2OO2Q1nmX+ThnYSD7XS5qJ3y7u206mrf+eK1R6oPimsT+2bNrXe/Y36APA3/PPDvZ
+	 9Hfup/e0WXQMw==
+Message-ID: <sashiko-outbox-214167@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 2/4] perf symbols: Point to the symbol name instead
- of embedding it
+Subject: Re: [PATCH v7 4/4] perf test: Test lazy symbol name loading
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Alireza Haghdoost" <haghdoost@uber.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261113-perf-symbol-memory-send-v7-2-d992eced9f9c@uber.com>
+In-Reply-To: <20261113-perf-symbol-memory-send-v7-4-d992eced9f9c@uber.com>
 References: <20261113-perf-symbol-memory-send-v7-0-d992eced9f9c@uber.com>
- <20261113-perf-symbol-memory-send-v7-2-d992eced9f9c@uber.com>
+ <20261113-perf-symbol-memory-send-v7-4-d992eced9f9c@uber.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 14 Nov 2026 05:16:52 +0000
+Date: Sat, 14 Nov 2026 05:19:38 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,23 +62,33 @@ Precedence: list
 
 > From: Alireza Haghdoost <haghdoost@uber.com>
 >=20
-> This patch changes the name field of struct symbol from a flexible
-> array (char name[]) to a pointer (char *name). It does not change
-> behavior, but each symbol allocation grows by 8 bytes on 64-bit hosts.
+> Add a "Lazy symbol loading" unit test suite. It covers duplicate
+> selection without names, lazy names that take one or more reads or
+> cannot be read at all, lookups from several threads while another one
+> walks the symbols, eager and lazy parity on a real DSO (perf itself, or
+> the one given with --dso), and a symbol table file that is replaced
+> after the first name was read.
 >=20
-> The next patch creates symbols whose names are read only when needed.
-> perf does not know the length of such a name when it creates the symbol,
-> so it cannot allocate the name after the symbol. It cannot reallocate
-> the symbol later either, because the rb-tree and the callers hold
-> pointers to it. With a pointer, the name is allocated separately and set
-> when it is read.
+> Add two shell tests. lazy_load_symbols_parity.sh runs the parity test
+> on four small binaries built for the loader's corner cases: split
+> debuginfo whose function section is NOBITS in the debug file, a shared
+> library with .dynsym-only symbols and aliases, a stripped library with
+> .gnu_debugdata, and on x86_64 an IFUNC behind an IRELATIVE PLT slot.
+> script_lazy_load_symbols.sh records a small callchain profile and checks
+> that perf script prints the same output with and without
+> --lazy-load-symbols. As root, it also checks that names are read from
+> the build-id cache when the profiled process is in another mount
+> namespace.
 >=20
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> Both shell tests skip a case, rather than fail it, when the toolchain
+> produced a file whose names perf loads eagerly anyway (PPC64 ELFv1 .opd,
+> .gnu_debugdata or a compressed .strtab).
+>=20
 > Signed-off-by: Alireza Haghdoost <haghdoost@uber.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261113-perf-symbo=
-l-memory-send-v7-0-d992eced9f9c@uber.com?part=3D2
+l-memory-send-v7-0-d992eced9f9c@uber.com?part=3D4
 
