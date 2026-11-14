@@ -1,85 +1,85 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.169
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794699448;
-	b=g1HJdQCCM5hDstdaiQPLiYxCtKAPGbJ3UQBC9q5u4P60HKdTfjgVOVNMR9T5M9CVNZ/9
-	 D59p5W3F5Eb3kc8iqFO7/XLNkycE0xFM+eb3jSDp/TaB9IBMYrD90J/yTlDOT0oVvDsG9
-	 W4a/gzfF+gA3EFRDMe6XpGKB7gP5SU7yx+XDd/wukOTwBmmzYvxajOYiDrT33r+gWNVnu
-	 ucXfKNldaaN9pbBphTkLVqPRAu+GRg/JebyPC1AMpjKFbACdzRewmbs1hZ0M8OUJ50hIL
-	 tZAWlYi0E1UHd7C6Zn8HuisJDtX9RDyKkfmwoBEHGdyZt+WcAtoPCgOpaIem4AJVSmg==
+	t=1794699451;
+	b=DHppRlnPbLWngA/QmDBTz5qKf77LW/cOXY4LxOsGBoAntLmNHWOpi6Nc1G7FnB3ZhUoQ
+	 D/PbechCVuV/45jifRmarCLO5k3R1xIwyNqRSLMKE/Wz7pwPUmPZPkqaSeNv0ABn6AlCw
+	 ZD29NCuU/B+7qLwByqKygAXBoB2/V3pMGkgu3hy9UME4NKr13uZDGCI3a9AHmQ1hd3zay
+	 9omnQxxcghb+XbswIL2HDTY7eZRw9ZbY9NytrOZQEnJl6DJthy5MhPa4jCK94LHXnkdQt
+	 GW/hK/PpaAAS4Fi/l9aOWLPOQg/kYRTq8xj7S/GeSUWjUjPFEfPSnitdnB7GOPRcwfA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794699448;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794699451;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=/05SBYoZ3//tmYEVR+U9kWXjnHi+JJTkJcmENCb0oJo=;
-	b=YXK2R8vOPB5a4lzjZkCzMdiPqYmMbHcQIyRYETB3QoHZjFg+AhcnT6aZXQvGhKLrPtMk
-	 Pzqb2us43jiZcSg/sHTOVvNhdDxJvqrFhToAhpeO8/1JYcxr6iY1pfp+wpbEb1Rn0Krhq
-	 3nrYGs8lipU4mGORBn3hA0kSLwy4K2EdvfneCADi8N6HUYeYbDTRFLxxKBVJ1XtPB28gf
-	 8PHMnJEjoJ9uK2SDvZg9Hj/NZhz8mYU+jqu2ZW/pWsYlP9a9cEdVNU1al6/0SRhN1dyzY
-	 JEhAQP4ZpQuUjPSKOkR5SLgQLMh114PtC2E9zI4FldY9Z4MDGr43BP7WiNBSm+xXR0w==
+	bh=a/wS6Yxk7+tECj0s54STfUWVzey+C0tieK8m7kinAtY=;
+	b=UgEevBTHryhat6RCuBKsvX1QMgvPdKJwnjYZ/XcijHTLxOxeo7m1w3r0xZfr0YA6ZA4q
+	 rOJmV4IuipRMLQWuSiSktBTGCoqo+HYsSqggg5pavwFrkruw6OrWSVABdKhXdGhcJH5Ga
+	 sl4ImiYBmv3bN5dMRLO1seAj8dz5QQGygnzweXHxNBzGsn8Nmd/Pp9c7EqSSpr35qfbch
+	 n3sxq7lkeEwkIov3dIgvPBFJNbKrLfA/Ddqy7H6PSsr6Vga7cQq9acMuxxxnHsHpleQWn
+	 9AP1UNU8ev/Mm90KP4sPueRC9Q//Q2PW+MYqL8UtdedCvpL5k/H5i9HMypouJ7ku9bQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=WIUBClTd;
-	arc=none smtp.remote-ip=209.85.215.174
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=sGGj8G39;
+	arc=none smtp.remote-ip=209.85.210.169
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8247E606A33F
-	for <linux-perf-users@vger.kernel.org>; Sat, 14 Nov 2026 23:37:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8247E606A33F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32FA606A891
+	for <linux-perf-users@vger.kernel.org>; Sat, 14 Nov 2026 23:37:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E32FA606A891
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=WIUBClTd
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-cc4be0e5351so835354a12.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 14 Nov 2026 15:37:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=sGGj8G39
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-8b68e59ab33so2476095b3a.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 14 Nov 2026 15:37:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1794699448; x=1795304248; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1794699450; x=1795304250; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=/05SBYoZ3//tmYEVR+U9kWXjnHi+JJTkJcmENCb0oJo=;
-        b=WIUBClTdxSmsCjNFgZRykFI8qBlFs90zubMVLvHdAEPI0NnJmjEootK/nv4yun3Tup
-         e6QBGb8VPaN3mi6fpFVVDaMLWPlObza3U2yXMqx+mXwu1a1GIIPPu0UnJiF9cnQKiO6r
-         vxq3sgkSELHUUrf5NkER5QWnv2T424w7QC0V+/K3t8n7rZqnH9ftcbM8z0Ou7lkY+cCA
-         uTmwWJ2UFakdP2BlLyfLHl8cKdk/7nBVcoHEckH33RGcu5OpDT1MVPvUVUZSfh3FcISq
-         zRacdjJVZVmHWdVs6G3HUMWBHeiibmDY6iNZlJ463Ubo6Gvywxjlh3rzFgGlyL6DQv2Q
-         oRRQ==
+        bh=a/wS6Yxk7+tECj0s54STfUWVzey+C0tieK8m7kinAtY=;
+        b=sGGj8G399ZF31uILhnt5fqpBTS93oUlFlXCu9ne5PNel6hESS6eCg5Cx7fn3ZCBlFe
+         oxdxc4STyzHOiUpheFiC2TsLQ/nQFezbJ1bVf98u+8/TdF8CZ4oolWnvdTaOjrpMgC9O
+         mX+erfavcN+ALosfLrNvHxOUVX5hDGRCxrf2DYFN5vlwSqM6bz/bibjBYxVL4O9FO7Os
+         kQqE/sTCymdhbLvav1w58eVJwr1Ak+cV4ilPGNYlgYUkVbt/72MvEq71q0AQ2uU5qKVQ
+         bzJCsunwS+EYxAF4OdP66Q7clln3J7cD6t7FaUmp4sPiEadxRjJ7+PT1YCpvPhgNxRhs
+         AWhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794699448; x=1795304248;
+        d=1e100.net; s=20260707; t=1794699450; x=1795304250;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=/05SBYoZ3//tmYEVR+U9kWXjnHi+JJTkJcmENCb0oJo=;
-        b=BVCvVtv/6qNascZSjNfnDOW1nYOb3er4KG97qNQNztgvHyP37obFXSeo/yRCXnLauk
-         Um30fSxG5O0RCzXXjXydd7cVY4v6h6vW7cbnPWO1QAQD1540oilyT1cXRkJ9UySFRkcJ
-         3UAUrZwpsVB5uaRliLbOTS/1lZD17LU/KWv4Mf0zrR5Xzv0CzdZ7TRKExccyNwaX+Z0K
-         U/rQHEBWQlQlLCwBQa9w+abItoQzTIazTr+3tc4g1RjeHmHbdIxmyaA+BkmsyGWPW1tY
-         WHgvsdxZm0Ye0msfDUfpsmkRs/7ssGzocxpJGnmXVg7D6STAZ6D3Q2xIxh4+eCay35N3
-         ktvw==
-X-Forwarded-Encrypted: i=1; AL+hErEMpCkqGNXdlDva1UxLLR3kQjsGT3fQW9E5reCTvwhEwQU0XdAR/zfn8DNhtAHHfJxGsmy/jIWL8k6mcJNumnJY@vger.kernel.org
-X-Gm-Message-State: APuU4Z8voYHC2MvU0C0s6YEcSeYgm9A6CNAVTKZBXyyOYCaX4k6kuwJW
-	hBPjakZv8WKhYuLxyfvdbCdwEWKGJXv45g+0b9I3LDtlb1CAXekOQqfAkAmnGQ==
-X-Gm-Gg: AYBFou1H2iTVf+9Z6f4Lx0RaHGlmRdNMsTtru3xNP07jiG0y8RWSPiq8fsHJbI5p5YC
-	/AxO4UszXNEHzqV1WfpIrOtHDNWbDNW8C/ag4BbobQ6WI7p2czNHxtuj+HXzz/38rXXJs4enmkp
-	xCah5aVL6RZ8GiHA+h03DYve60tdF/wtHkp0Zdt0uZXlh9TyQ89Kk58JAyKNLXL78kL7NYIGvRi
-	XgmdrM8OFLOJrGN4xz9A+8053n+oouP2qPFW1XxcFR/y59PQ97lK+o+zs1U9s6s13ngModl6Pra
-	IfPqlV06BU7Dh8EjqKKj/wHCOIkdsCNmVA1j4Ap1QW25fgc/7gr+Cm6enPhzfWrT/aCMivoDW72
-	DMRV4ZmVzlUgcbIu5kTpJ+Uc5uMtoPcooK+zL23TwHggTDfINMDMCY5kt66EdSjT9H8VrmEvGMg
-	cajYwuWMLa5J02hZ4Ra93WAbwydvTGCbdshuPe5NLvBJqjf1plCFKDPzALKgR9x2eKBfpeNpb4x
-	5axfcByOt2hvluz0ybI0NIWwbRpw/4Xbi6Jk/HuWV7WR5l2OaOONLzEzw/FabTwfXXAWUPsTFmd
-	LdpQ0H90jILe0makNlnwgn0XZF3VPEE/MNB3grXvI0n0O5I4Loz3J17y5hRrrxihj9V0fFNyXEF
-	PWqwu4We5qvwj9A9GaULngUQgZpB6HRWYWv9WKX1Bk1EodkolYHk/OwBLCIF2NGGD4At5/vWXLS
-	9VWw==
-X-Received: by 2002:a05:6a00:2346:b0:8a0:2914:5d27 with SMTP id d2e1a72fcca58-8beb714f59cmr6118058b3a.44.1794699447603;
-        Sat, 14 Nov 2026 15:37:27 -0800 (PST)
+        bh=a/wS6Yxk7+tECj0s54STfUWVzey+C0tieK8m7kinAtY=;
+        b=WElxSb3AMnf13QCVjYWcVRRGTfxoMu5qvHS5lx2J0jSXd6UjnclY/rdShjj3M44fli
+         Ug2VZoLEc29i2x62isqCY/dqzfo13eru84Liky1UnAh5WYa6S8VMMG8mabKMbobl/JBw
+         S7Btkkgk0wf4TPPd5SmewwzTKXV1oll8hguweX5LdsbtdjX95VplrtKIGhQO+WlyLABU
+         nw2NeeRQ1hxSuyaB9D5x/wkHxXs+wyGMpRkvrrj2NK5d7LtyTmI0AaD8EF6phqWFU/5H
+         Ch1+usfesRgCAx+n21hUeBr0r+job9iB04M0Pw+GHZtq9u3QuHxGK7MLhswQFgZBlt7j
+         hW3A==
+X-Forwarded-Encrypted: i=1; AL+hErEeU8h0tlJx5ngfEdGSoaTvKoYvpfSVQOoXC0wq2IYrUQWTXuxQAN4BAuBj1oUbepm70bbmr9kFQ8HuaGCNyPIH@vger.kernel.org
+X-Gm-Message-State: APuU4Z94c4zGfBRC+wWVn0xkPOgW0X8nPhccFPzCopRpdNejwEzYuwLi
+	BiTdrHQ6EZYuVvBtZAjZeBzAyxXC3iYPSOB0P7J2x1zuyLpq0GVRISvf
+X-Gm-Gg: AYBFou2JGBxTvqRaqg+yzeoQ1mPMFlQlG5bjp9GAvlUCaGJ17ypw+cJYLhf7utp43dl
+	ReaG53+zHd5XPDQMSysZixGAISKoBByq0GPkSbT3q2/xFCWgqnzplgTEYp9K+6e1ozMxRx0mpn8
+	9TmBv+zDFRGJh94kBEYJtDe50F9HWq0lGt/iC/glt06WjYIASIrqj4ucCEpkEpzQnIIQNzmfs+G
+	VltOk+l+c+0zVoyGBKjERRWSjy/4LCGsAzO27ssQ6LRhusVmVFxNTDySrAOm/6mcDAowA+QBbIp
+	jiydylFGnubWYmfinfR/jX9R4AjgcpDPGuFG6ovTcLblkCWRcuDH/WOR/z8c9gBw6H3uf5XHwxK
+	HmbJ9MoxiRW4JAhUkCq2RczvogEPqj5xhoV3fhAy0EnAGK/4CuzQ8H5ltmJPEg2eckM0lkT5ivf
+	FAiNIvn3/wQ8exHamD+iYQwD/+ZQQFJgWBeWNCZGkvNabnm3tMlMJhYu1/tFJbM7RXW2xK2DpmG
+	VIlvqOG/Yld+Aq9dKNnydY//3adVovcIKFHRsrZIa4ubWk+/rqFg0ySPM5JTgrUv2aV0ngQq1ZL
+	IMma/8/9n/06LXGMUgKRhJ6dkZDiAeHE33szDxHnRdNlFwq9JsAPc5U4PJD1Mfr1wuyz2yh4PRv
+	0HAl/Ek/quZ0PLr1LSk2cvmE4Z4n7DzOzVwWu6qRoUVyA8HXZ7MePz9zBRcqTBZojLW3cgDmCrv
+	GbEw==
+X-Received: by 2002:a05:6a00:2c95:b0:878:34d7:697b with SMTP id d2e1a72fcca58-8beb7d1cca2mr6147034b3a.41.1794699450161;
+        Sat, 14 Nov 2026 15:37:30 -0800 (PST)
 Received: from ryzen.lan ([2601:644:8000:37f::e34])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8bed2d0f473sm2306372b3a.53.2026.11.14.15.37.24
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8bed2d0f473sm2306372b3a.53.2026.11.14.15.37.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Nov 2026 15:37:26 -0800 (PST)
+        Sat, 14 Nov 2026 15:37:28 -0800 (PST)
 From: Rosen Penev <rosenp@gmail.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -97,9 +97,9 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-mips@vger.kernel.org
-Subject: [PATCH v2 1/4] MIPS: perf: look up the PMU interrupt when it is requested
-Date: Sat, 14 Nov 2026 15:37:15 -0800
-Message-ID: <20261114233718.86520-2-rosenp@gmail.com>
+Subject: [PATCH v2 2/4] irqchip/ath79-misc: map the performance counter interrupt on demand
+Date: Sat, 14 Nov 2026 15:37:16 -0800
+Message-ID: <20261114233718.86520-3-rosenp@gmail.com>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261114233718.86520-1-rosenp@gmail.com>
 References: <20261114233718.86520-1-rosenp@gmail.com>
@@ -114,93 +114,59 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-init_hw_perf_events() is an early_initcall and asks the platform for
-the counter overflow interrupt through get_c0_perfcount_int(). On
-ath79, that interrupt goes through the MISC interrupt controller, so
-the controller has to be initialized from IRQCHIP_DECLARE before the
-early initcalls, even though nothing else needs it that early.
-
-The interrupt is only requested when the first event is created. Look
-it up then, so that it can come from an interrupt controller probed as
-a platform driver. The boot message no longer prints the interrupt.
+The MIPS perf code now asks for the counter overflow interrupt when the
+first event is created, instead of from an early_initcall. Create the
+mapping in get_c0_perfcount_int() then, instead of when the controller
+is initialized, so that the controller no longer has to be ready before
+the early initcalls.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- arch/mips/kernel/perf_event_mipsxx.c | 30 +++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 12 deletions(-)
+ drivers/irqchip/irq-ath79-misc.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/arch/mips/kernel/perf_event_mipsxx.c b/arch/mips/kernel/perf_event_mipsxx.c
-index 196a070349b0..4d660952e643 100644
---- a/arch/mips/kernel/perf_event_mipsxx.c
-+++ b/arch/mips/kernel/perf_event_mipsxx.c
-@@ -589,10 +589,25 @@ static atomic_t active_events = ATOMIC_INIT(0);
- static DEFINE_MUTEX(pmu_reserve_mutex);
- static int (*save_perf_irq)(void);
+diff --git a/drivers/irqchip/irq-ath79-misc.c b/drivers/irqchip/irq-ath79-misc.c
+index 258b8e9a2d57..5cedea5234e0 100644
+--- a/drivers/irqchip/irq-ath79-misc.c
++++ b/drivers/irqchip/irq-ath79-misc.c
+@@ -23,11 +23,19 @@
+ #define ATH79_MISC_IRQ_COUNT			32
+ #define ATH79_MISC_PERF_IRQ			5
  
-+/*
-+ * The interrupt is looked up when the first event is created, not when the
-+ * PMU is registered: on some platforms, the interrupt controller that the
-+ * counter overflow is wired to is only probed after the early initcalls.
-+ */
-+static int mipspmu_find_irq(void)
-+{
-+	if (get_c0_perfcount_int)
-+		return get_c0_perfcount_int();
-+	if (cp0_perfcount_irq >= 0)
-+		return MIPS_CPU_IRQ_BASE + cp0_perfcount_irq;
-+	return -1;
-+}
+-static int ath79_perfcount_irq;
++static struct irq_domain *ath79_misc_domain;
+ 
++/* Called by the MIPS perf code when the first event is created. */
+ int get_c0_perfcount_int(void)
+ {
+-	return ath79_perfcount_irq;
++	unsigned int irq;
 +
- static int mipspmu_get_irq(void)
++	if (!ath79_misc_domain)
++		return -1;
++
++	irq = irq_create_mapping(ath79_misc_domain, ATH79_MISC_PERF_IRQ);
++
++	return irq ? irq : -1;
+ }
+ EXPORT_SYMBOL_GPL(get_c0_perfcount_int);
+ 
+@@ -121,8 +129,6 @@ static void __init ath79_misc_intc_domain_init(
  {
- 	int err;
+ 	void __iomem *base = domain->host_data;
  
-+	mipspmu.irq = mipspmu_find_irq();
- 	if (mipspmu.irq >= 0) {
- 		/* Request my own irq handler. */
- 		err = request_irq(mipspmu.irq, mipsxx_pmu_handle_irq,
-@@ -1889,7 +1904,7 @@ static const struct mips_perf_event *octeon_pmu_map_raw_event(u64 config)
- static int __init
- init_hw_perf_events(void)
- {
--	int counters, irq, pmu_type;
-+	int counters, pmu_type;
- 
- 	pr_info("Performance counters: ");
- 
-@@ -1904,13 +1919,6 @@ init_hw_perf_events(void)
- 		counters = counters_total_to_per_cpu(counters);
- #endif
- 
--	if (get_c0_perfcount_int)
--		irq = get_c0_perfcount_int();
--	else if (cp0_perfcount_irq >= 0)
--		irq = MIPS_CPU_IRQ_BASE + cp0_perfcount_irq;
--	else
--		irq = -1;
+-	ath79_perfcount_irq = irq_create_mapping(domain, ATH79_MISC_PERF_IRQ);
 -
- 	mipspmu.map_raw_event = mipsxx_pmu_map_raw_event;
- 
- 	switch (current_cpu_type()) {
-@@ -2017,7 +2025,6 @@ init_hw_perf_events(void)
+ 	/* Disable and clear all interrupts */
+ 	__raw_writel(0, base + AR71XX_RESET_REG_MISC_INT_ENABLE);
+ 	__raw_writel(0, base + AR71XX_RESET_REG_MISC_INT_STATUS);
+@@ -157,6 +163,7 @@ static int __init ath79_misc_intc_of_init(
  	}
  
- 	mipspmu.num_counters = counters;
--	mipspmu.irq = irq;
- 
- 	if (read_c0_perfctrl0() & MIPS_PERFCTRL_W) {
- 		if (get_loongson3_pmu_type() == LOONGSON_PMU_TYPE2) {
-@@ -2044,9 +2051,8 @@ init_hw_perf_events(void)
- 
- 	on_each_cpu(reset_counters, (void *)(long)counters, 1);
- 
--	pr_cont("%s PMU enabled, %d %d-bit counters available to each "
--		"CPU, irq %d%s\n", mipspmu.name, counters, counter_bits, irq,
--		irq < 0 ? " (share with timer interrupt)" : "");
-+	pr_cont("%s PMU enabled, %d %d-bit counters available to each CPU\n",
-+		mipspmu.name, counters, counter_bits);
- 
- 	perf_pmu_register(&pmu, "cpu", PERF_TYPE_RAW);
+ 	ath79_misc_intc_domain_init(domain, irq);
++	ath79_misc_domain = domain;
+ 	return 0;
+ }
  
 -- 
 2.56.1
