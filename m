@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794707287;
-	b=RbeEreBdQG1n74FYHnRr6uHZVQlnNkk4xAJaoWtBXJOILI5unDOgCFor2drxHALggna1
-	 o+ME1R73pbOlSsrLVhX5vYHnCC7H7MsdSAtd6wJQVVikkF2oy/Q1z9eHWyRafb2pDsgtL
-	 hiodSny6kVHbFOejhrMN77hpuI0r/MAmicc04D9JDteFu5r2PB2fwFKOallNMEXAcMoRZ
-	 Z+smB3r433Mi7CMvTzJyJTZGSNkCvFhZyN3IZclGQF9exmq+dA5k/NeUxaT8BdMeruz4A
-	 P0OXZxJ4ZZdQVY6Jxoq78OqOSPBPkRJ31JEAHEouP2R+Wfztp2c2EnB4W3r4cKbEPSg==
+	t=1794707333;
+	b=MsPliTDs3S3yWrK2nkteg0fqF4Quv/7b+tM9Ai57EhXQeuIv+aLb6YQR4Doee4gEyI9L
+	 Xxzw7I4qste3KNC+AQK1gLcnm+hhxe2CyxBWZ71Rl9J7L/yv5Q5TbcGk5x00aKIF+1m1b
+	 1/V8iaYsRTFFebjGwpzxlNq49NtDpAGraNx61dHngiZF932lhkzU8CZOP0/id4+VdfXYs
+	 +o/7dqmrUEAGDdkwp2Kpp2N2xh6aFFObzgto8e3MOK+8wHkuSGMxmiqLHH0gHb6SPtiU+
+	 6qPjsRyHdkKInUbF79JcqsK1uxoFXdQOxecxmwaZVa6H+NgCibFkQs3k98vh6mLDELQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794707287;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794707333;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=8p0CR49Pj0Mb0tOPY71R4JrDVEt3Y8ekfNJfOQCkQ/c=;
-	b=oBF47SSafX51rggCpuVMJR4wmg5BWKLb1/D2BotHrYLAGnnJtYQN9NSJeoEk/a4YSqzi
-	 REAaH+0ffO8m8exstgIdZ+I0c317I+7xNx7MardhRaIkDjfvl0hex9NmwwDXnc+LmSjw2
-	 iuASwzkoSQkn1+SxjgLLCKUrIRgBtaoJ/umBrmPJ20Zy69l98AS39mgVCfL/dsq14SR9x
-	 A5oVyBFm3dwju8Y1T3LHMCyx0xZ2aWx2Res6PGgSqLCtCSF417Yqbh9nQMRm6fWQnHXPT
-	 aT3WytUcvqq0OStQ6D6tyese6fgm377YX8agnfDqvAPEuUwaRdWfbAsmUbO+MIpypXg==
+	bh=ClcR3mo+/g6MHRjbbcH1s1bmIVZQOs7mMCcNlpHkHJ4=;
+	b=bRVsEcXX0K/pWDIQ6hBfPu1ESDF07C0Lk9yoXYpLBI95TBizFtQUk+/e2/yrHioeefdB
+	 o2d7ea2j7+5kUASSibVPUI72pRpEi1tYU5/zu81n0yh6DtPv2jyt78h9zbpsHcmZXQ8yx
+	 pcXBOCRG1ClKHAT1/sVl6PSt3RedPFIn24In9H/LHx/3kW/Ao6KbBEYx4YcB1nXDp2vCI
+	 z2mGq5tcsu0RF+S3QL8rdxTf0uQdHggnSIeyGD2QYyfhrmyig5HHA0DFXwk9DWypqoiMi
+	 TtKCkMJwdnkVO6E9K+p6cFdhdjDJypNm2AWfYO+/lyxe3jTSIoiBWGDkzzP7kr7ez3Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Rb5m4p5c;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="d32/8c+Q";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C44606A327
-	for <linux-perf-users@vger.kernel.org>; Sun, 15 Nov 2026 01:48:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F1B606A323
+	for <linux-perf-users@vger.kernel.org>; Sun, 15 Nov 2026 01:48:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Rb5m4p5c
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA2DE1F000C4;
-	Sun, 15 Nov 2026 01:48:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d32/8c+Q
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77B841F000C4;
+	Sun, 15 Nov 2026 01:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794707286;
-	bh=8p0CR49Pj0Mb0tOPY71R4JrDVEt3Y8ekfNJfOQCkQ/c=;
+	s=k20260515; t=1794707332;
+	bh=ClcR3mo+/g6MHRjbbcH1s1bmIVZQOs7mMCcNlpHkHJ4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Rb5m4p5cAKyavy3EW6mn2G3oRZ5veatxbBv4gUke8ep4N0atdpFGB+eWoiVqwk+Mp
-	 P0YWrPVwd6S/T9X2sLMfuYhpdIpE+2CbfwwnDfvRQpxrDk8XCwIS1afvhtWEIzjYZ0
-	 bND7CjKs+hFdEt3vHYlmzJZNgW2NSs1ACoFzFosv6SmjFnpO7vpswLvSi5SqqHsKpm
-	 Q4OTNDQDTkXIJclrC/gXTiPyabUV5Gn82BuK1V+JVpFywKECY1O+KiySte0vaHAXIx
-	 WLjwbPRwRvL7ymQtvfTcxX+ALDfTCNuFPkPhs9UePSBUdBxFFfh/ZiKp2Fi3qN+2Ou
-	 mVszZgfjLezdQ==
-Message-ID: <sashiko-outbox-215171@kernel.org>
+	b=d32/8c+QYzDM4LK4M2xKObuWt35FcNv3OGVJidyATSARu4ESVZseuunO3T6s65rFm
+	 E50nh98FWxTv09vbw5+ZX/ePu944/emPa2b35wOAg+IRb012lmB3o2UVJC9e92aRaD
+	 6tPl42L+NxkqkVBvsa5iDJzoagY5eUuQTnp9oVgzWoHT2b9NE0pUetodBJJ4rXnNSK
+	 tMfxeLSqwJe9hRPE0bAEJowF8zj2NYYU/Exew56lFyBXitMgTLp/vRgHcPTraKE7RV
+	 ZoWeBtNCyuGUyNZkYo8EvBLDIF6vBJ+wNcj7hIildS7q+QnpvSxCDvbzAPAiWFh9sU
+	 ZsA4Btt4Ist1w==
+Message-ID: <sashiko-outbox-215172@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 06/12] perf tests: Exercise data type resolution from
- a register
+Subject: Re: [PATCH v3 12/12] perf test: Skip the LBR inline unwinding check
+ when unsupported
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261115014102.2879372-7-acme@kernel.org>
+In-Reply-To: <20261115014102.2879372-13-acme@kernel.org>
 References: <20261115014102.2879372-1-acme@kernel.org>
- <20261115014102.2879372-7-acme@kernel.org>
+ <20261115014102.2879372-13-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 15 Nov 2026 01:48:06 +0000
+Date: Sun, 15 Nov 2026 01:48:51 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,19 +61,21 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> At -O2 a struct pointer lives in a register and DWARF describes it with
-> a register location, while the unoptimized workloads the data type tests
-> profile keep their variables on the stack.
+> The check only looks for the PMU's caps/branches file before recording
+> with --call-graph lbr.  AMD BRS advertises branches but only samples its
+> own retired branches event, so the record with cycles is rejected and
+> the test fails instead of skipping.
 >=20
-> Add a regptr workload with a noinline function that gets the pointer from
-> a volatile global, which keeps it in a register, and check that its three
-> member accesses are resolved from that location.
+> Probe the record and skip when it fails, as the branch stack test does.
 >=20
+> Fixes: 446c595dc0dd ("perf test addr2line_inlines: Ensure inline informat=
+ion shows on LBR leaves")
+> Cc: Ian Rogers <irogers@google.com>
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261115014102.2879=
-372-1-acme@kernel.org?part=3D6
+372-1-acme@kernel.org?part=3D12
 
