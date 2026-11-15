@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794706898;
-	b=ouQMykhxuQy7sRZdW6DLegvyncrNMmBGgRiHCcK0hxF26gpGnS4ORgc3WsYwBoemB+C1
-	 qqbia0RutYN5D5NzO9crf0g1KoYamV/qYLNouWMzobKkGHPg3AlC0V00uWD+zyESwWg3K
-	 TzWmolQItOoqjWcmQme459tD8knQQtSH0KPOzdz5jwebjwgVwdZJ00P6y09mys5hoOARk
-	 QlqT87l2aShNslMD2K2Zbt47GoKOOpne85fH+SCWbHBx2BLU9CetZHBu19toesZOhjD97
-	 Il4iSLxWSNKzPwiOsFvwtIlkoL1kKYt50L6ijiYzXASveYboEBGpMRdgn7a2L8qdmSg==
+	t=1794706904;
+	b=zkxPtZtdafHXBg9GwFTFdul3dcqx3BfSWtDb/5RW4RklqhASZV454szaalL6iQ1/ra/G
+	 QZKT7TqpSJeSdMb88dHjkkX5YwlZZq7XYVxZWA4NqoR32j9R8ja/LtIHxZcnYVR1yEIN6
+	 A6gG7KJO00Yt4XIwT2Y/DYLg+QCP+joF4OfohTK2yhPiB/cSti0rGm+6LUeUOZMjXW1mD
+	 i4HPBYL/Myk+RHKcqHH0Z9Cf00VW4Ejp8KPuzBYuRoEbPo6YvhTXgKJnYqGuZuTwRfPfB
+	 NzKVd3SjbuZpg9HwYjfoffA36eXj4UYYx6gxRkKCi5JJnyMIEmtPoBpQP8V3Y/26O1g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794706898;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794706904;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=iT/MoQupol8iNbk2531HTgOEAOEfgGTm9mLESO53EJQ=;
-	b=bhs6gsRQvR2vMjjw6oNHd8UdsEfRp9CnqlDeB86aYCsBulxpdKVHpUdJSi2vrCL+xWBT
-	 /LN6750kHwH4EHSDgyGITi7A2u9bCVBuFXy6baaH6N9yrwGwNBy5PhLG4foHAkVc95aew
-	 Kz2A49vOy6IYQx3Xrj/VrJNkRm/vGOwlQTzXd5UepTw0xjNoBNIyP7qWXG5DImxk0l2jw
-	 OdHgCnOPO0+tUgOMZscJPd5w/O51bCeXvLPyhO8bAV/8545JikqhnreDygQ31JRMMAkfs
-	 /01sKenlg6JkjJLEgzt8KJA9Kxv7tD+fRkNTNkHHCRUOdcEhjKH7pmIFENEhPnAUQfg==
+	bh=9e3Qa//uWc3BpHB8ONOCYmO2C1eCwrThoVAQoCUkmd4=;
+	b=ttLVpmkqvACyYhz95AQ/scgvFD2PWCnXQMWTxAM0sTiLzqvM+Z0/TeWYSSYc1RqdjNDW
+	 AKmGpklYOyL5em6Glf5ShIhqCHwWTj8lAEbFOt3IRnM0Ou35vWFXl847FSIGfMawsoGCz
+	 VXMrTMnCbx+MWDxZlkwaBcJsexNEqwjItKDOEyvKLP2eV3fe9LiXYRB08TfI5Bw0txNB9
+	 nXahRlneBAlCdAprckWq3ykgl3rJ138vB1IDeHV2GimqnGdJJ4PgWSA6CFqozAlEPLiUV
+	 8y0V2w12PDY1OumSzpfl9HpHvrx/jRF/EaJuQe/GzxMVw2KFYMjoKbD+oMiZc6IxcDg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F51eFQiq;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dGa0UFVl;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE1660A260F;
-	Sun, 15 Nov 2026 01:41:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342ED606A89B;
+	Sun, 15 Nov 2026 01:41:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F51eFQiq
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5E041F000C6;
-	Sun, 15 Nov 2026 01:41:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dGa0UFVl
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E51C1F000C4;
+	Sun, 15 Nov 2026 01:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794706898;
-	bh=iT/MoQupol8iNbk2531HTgOEAOEfgGTm9mLESO53EJQ=;
+	s=k20260515; t=1794706904;
+	bh=9e3Qa//uWc3BpHB8ONOCYmO2C1eCwrThoVAQoCUkmd4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=F51eFQiqBrifl1IjsVPxL7CN+6yd3g/DbAZpqBvdGMJBGOOT/Ecx+t/C4Q8atczaQ
-	 OEJa4u4UvVulUday7fFcVVFf7XMFV5BTnrc4TsJJrzhB+89wMqd6lZ1NEUnENvr9Xi
-	 TvvfoQjylvX6dv6Q1TkRHuA+xGo9DOL2HAASb2fvG3mTIzj8gJmy0b+AF439GL3Zfa
-	 hQJgZRekv1IuvM7ezw/EMSl5sS8WoPPp1CaiuQvkiTJNRpF0IbVfzCN0fccA6pRwSZ
-	 p53v+owEjEb1t82sXWV3WtmaeoD29maA6n14zK+fhlyl8tzOGb+1n13Y4ct0mr6pYA
-	 FHh+B5129cwXw==
+	b=dGa0UFVlouYCaxmU110uE5Eos+i25w0ZGABukVoekB18vHR1IkHDHwMxRDM3No4Se
+	 Pi6+ihI81j94LcleK0ibxPIuQpP6kuaOpM2c8zFF5ZJ5yUkC6C7+pNd4JI2nbfWihe
+	 lit1H9GZzUFvMbV7kRd3bNqQlXYAZn/HTPCc0u2UdJMLk2OBJsX4gxrqHxAkJceac+
+	 Y6jwnINIiglhzwKmjcdsHrGsBRzNQvG9wgIFN16EfKmycm4edir/uC8RbAC388VQcQ
+	 m09bkAXoOl9G3C0CJD/nTf7c62drNlzpj6ZQh/rjfTPpKAqAP95yDa+yu9Mdf2iBk6
+	 JXaUoNqLr5+ig==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -52,9 +52,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v3 10/12] perf tests: Fix the Intel PT virtual LBR check
-Date: Sat, 14 Nov 2026 22:40:58 -0300
-Message-ID: <20261115014102.2879372-11-acme@kernel.org>
+Subject: [PATCH v3 12/12] perf test: Skip the LBR inline unwinding check when unsupported
+Date: Sat, 14 Nov 2026 22:41:00 -0300
+Message-ID: <20261115014102.2879372-13-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261115014102.2879372-1-acme@kernel.org>
 References: <20261115014102.2879372-1-acme@kernel.org>
@@ -69,56 +69,40 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The record this check uses writes aux samples, and with the single data
-page the other tests ask for they are lost:
+The check only looks for the PMU's caps/branches file before recording
+with --call-graph lbr.  AMD BRS advertises branches but only samples its
+own retired branches event, so the record with cycles is rejected and
+the test fails instead of skipping.
 
-  Warning: Processed 29 samples and lost 100.00%
+Probe the record and skip when it fails, as the branch stack test does.
 
-so no branches are decoded and the check fails with "Failed with virtual
-lbr".  Record with 4 data pages and 128 auxtrace pages: the same trace
-decodes 64 branches and still fits the mlock budget.
-
-Require the python perf module to provide session, not just to be
-importable: a perf whose python bindings are not found can pick up an
-unrelated module and fail with
-
-  Error processing events: module 'perf' has no attribute 'session'
-
-instead of skipping the subtest.
-
-Detected building perf on fedora:44 on the runner with Intel PT hardware,
-where the subtest failed with "Failed with virtual lbr" in the container,
-and with the python error when run as root on the same machine.
-
-Fixes: 915d6b14dc0c ("perf test: Migrate Intel PT virtual LBR test to Python API")
+Fixes: 446c595dc0dd ("perf test addr2line_inlines: Ensure inline information shows on LBR leaves")
+Cc: Ian Rogers <irogers@google.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/test_intel_pt.sh | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ tools/perf/tests/shell/addr2line_inlines.sh | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
-index c0ecece0a8255124..511440b5956a6897 100755
---- a/tools/perf/tests/shell/test_intel_pt.sh
-+++ b/tools/perf/tests/shell/test_intel_pt.sh
-@@ -384,13 +384,14 @@ test_virtual_lbr()
- 	# shellcheck source=lib/setup_python.sh
- 	. "${shelldir}"/lib/setup_python.sh
+diff --git a/tools/perf/tests/shell/addr2line_inlines.sh b/tools/perf/tests/shell/addr2line_inlines.sh
+index e8754ef2d7f21ac2..6fe47909dae4f812 100755
+--- a/tools/perf/tests/shell/addr2line_inlines.sh
++++ b/tools/perf/tests/shell/addr2line_inlines.sh
+@@ -71,7 +71,14 @@ test_lbr() {
+     fi
  
--	if ! "$PYTHON" -c 'import perf' > /dev/null 2>&1; then
--		echo "SKIP: Python perf module not found"
-+	if ! "$PYTHON" -c 'import perf; perf.session' > /dev/null 2>&1; then
-+		echo "SKIP: Python perf module with session support not found"
- 		return 2
- 	fi
+     # Record data. Currently only dwarf callchains support inlined functions.
+-    perf record --call-graph lbr -e cycles:u -o "${perf_data}" -- perf test -w inlineloop 1
++    # Some PMUs advertise branches but reject branch sampling for cycles, e.g.
++    # AMD BRS, which only samples its own retired branches event.
++    if ! perf record --call-graph lbr -e cycles:u -o "${perf_data}" -- \
++            perf test -w inlineloop 1 2>/dev/null
++    then
++        echo "Skip: LBR not supported by the PMU"
++        return
++    fi
  
--	# Check if virtual lbr is working
--	perf_record_no_bpf -o "${tmpfile}" --aux-sample \
-+	# Check if virtual lbr is working.  This records aux samples, which a
-+	# single data page overruns, so give it more room than the other tests.
-+	perf_record_no_bpf -m 4,128 -o "${tmpfile}" --aux-sample \
- 		-e '{intel_pt//,cycles}:u' perf test -w brstack || return 1
- 	perf inject --itrace=L -i "${tmpfile}" -o "${perfdatafile}" || return 1
- 	output=$("$PYTHON" "${shelldir}/lib/perf_brstack_max.py" -i "${perfdatafile}") || return 1
+     # Check output with inline (default) and srcline
+     perf script -i "${perf_data}" --fields +srcline > "${perf_script_txt}"
 -- 
 2.56.0
 
