@@ -1,63 +1,62 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794715970;
-	b=kSLDBIu3zL7s56iX7N+Mp9FfwL3FHYVtA+gwHQXmSm6jiXWReiPxKZ7ejF2cWV6yAAS9
-	 H0u/pFkh+ebXky71WwXRW0EqPjrkx55m5qjUQJj70eRFYLCua8C6hzFKuUHdr7O5OYXVc
-	 JNoDBNO3ZilzQI2J+d79rxvWWMVac6bnqaKX0wlRqFOwjasWAymC79xd6rk81ziutZgBG
-	 FJRLYOyclMqKdoY63hH172FL6sAOR5AfG+FmQ+Km7vOK5Ya+nPcoEiaPGb7faeq86leFX
-	 GTFcWsfSIpNNOCZKD4G0SeiqhwRluXZU+i6IYWClw53rIin8U/2pAfTrlM+X52KpQ6Q==
+	t=1794715972;
+	b=ayVvnkaiofmq5L/m3WlysGwt4agNcVQCp6V9kEkthdjshP4vy6wv7k97ZwJUcPxlU+9F
+	 0nY7LNGzjwnEZiSObK8I97PLyWwwsKdWX6fd03t3eXqQy1Ic2WB8hyqalaxryATgpiIcC
+	 dJ2/qpnXM/Vf+EFoeBowb+dth3WTcGVlIu28v2y1O+5OEWH71E/Vq6WKRma8tYhD+L/rC
+	 ixonUC8cG30JcWDtuoMH3KTNpguHLitB7FqsZl/bxdNDmIR1diOyQ/DUR30zBgCGV2uki
+	 +TZ/wv6XizQPwrYhKCCdVBbM2NPLdCpkE3C1AJB4k4CaQ90lCTEoYzyTbi9Zvff7Jqw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794715970;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794715972;
 	h=Received:DKIM-Signature:From:To:Cc:In-Reply-To:References:Subject:
 	 Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 X-Mailer;
-	bh=9LSITRiQijYSFrT/DvW/alE/qNZS9UkZJZR6baRYh7c=;
-	b=oo873mOqe2z/JOwz2kC02Amn4C3L4OG8QuxRLDzYpZ6DxNPGXYJS73rNF8srS0Xaj86y
-	 qhC9wOhzmu9FIofeX0DnG9kxT6yuwgg5sl/HOSVZul+41uXf4EZX8fWBXC2EUGB5l2mgW
-	 e9/+rGJCvqSt4Q1ObeOcP5708ZV53pXor06XwDGtTUplGgOD3ZgFrsPcfsxdq8BOrwaKr
-	 VeQBKHbqkASPMMownHQIP4DYZo4XCc/1EFi5eFZBlo00Ky7zYFmyZdmdj5/0UG0m2BFIX
-	 AISJXdKSyRQKxngPQcOBMzlOruo+apffFTWLGyhbjhZfTPYM9j4Lmkr4kzrd7ghL+VA==
+	bh=8NzzDHq0v8fLTEA7pH4bKwmA0BS+yC+Ws2gUNb3zWRs=;
+	b=cO9DF+MMeJ7GBU06Gn1MWHtZOJbwxLFuU81aPM7cGn2w5EZBrUT+bQLDzK+Na9VG4lbn
+	 7XUf/fxR1vrTNS/2YHmxNWv+zbT/vPTrHfru6xX0SJuNuaWn4o9dWiWkMJIVY7tXpoHuV
+	 7iMyE4CpeFluSCiGbszm5/OU+iriTNOjwZOoco7vSBRVDFJLrOR79TewOhtzENg/MWy9f
+	 YNroVFlFo8UhI384mDMO1mIlib5M10XPJjxWEP3I5/oo27tryCpuGnrvC7s3B9zMjBfMl
+	 xCygHfE/z92oXcbvcOsKakE8MhvigJ7OuzIolD5qmxCbkskN1VnwM88Mz6h7h2V7Dpg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Xet/4il+";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Q/joS4we";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D664A606A329;
-	Sun, 15 Nov 2026 04:12:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7978606A338;
+	Sun, 15 Nov 2026 04:12:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Xet/4il+
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6D0F1F000C4;
-	Sun, 15 Nov 2026 04:12:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Q/joS4we
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFAD51F000CB;
+	Sun, 15 Nov 2026 04:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794715970;
-	bh=9LSITRiQijYSFrT/DvW/alE/qNZS9UkZJZR6baRYh7c=;
+	s=k20260515; t=1794715971;
+	bh=8NzzDHq0v8fLTEA7pH4bKwmA0BS+yC+Ws2gUNb3zWRs=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=Xet/4il+dGcvuGes9tzT4hdSBJrGxUksvumEEHXtXMiBDsgE99lvWgkP5tcIleqrp
-	 BaHSwcuTFh2YiLYZ47ChkNGRnQnXpjVkBVEsrjIsKrUJhzriN+MYNjW1F8a6Kl04Xk
-	 yHSHHbt/oIXY2cCG8254bgHReOBjxk91W48vcYWiEqozZ//y1/hRMBrmWQRDIONG2/
-	 FzIE1XDK6/245EUOta3kwn9sRmLzx9zvezNcIKWU9VzjSSrPqFj0bQ7k4T1kZNQizt
-	 Laz3LTs6v1ewixSu1zovzjUcyD6MF2MQfdSA1+qc6lhdy5fTEQ5sABowpYTyYqOtbU
-	 +Y6o1+7kkmOyQ==
+	b=Q/joS4we+woua4v4UJHhvwqzYXlJdGiyQvWOTVQXzvalBqkzupUCvo6J8ZSj7KBbX
+	 X/ILS5u8UzyV0YYmIrKJarKAzzhthKQ7msOhJGemOCpPslsXWkF4l8C5ilB6uswBCi
+	 JZGx8ugJKbt7JKtXLbAmNgybCGUqcfX0WjHfgJJu5RXeFdHyGWkm7mm0plb3BUaJw2
+	 huTGmCTgEeNxnvJnB4rhBz6ySxyG+n65lzBwxPzNclvEYo2P9D4YrS3hhMgGRBw5kz
+	 /KXp2oQKM/j1PSvzOd7Jx6pkH5F9g0hPDGbKRZqrVZhHFVDCpIa9vV3l2FvbVYl8Px
+	 oyTTF35vkEvaQ==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
- Adrian Hunter <adrian.hunter@intel.com>, Quentin Monnet <qmo@kernel.org>, 
- Josh Poimboeuf <jpoimboe@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>, 
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
- Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, 
- linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20261104043006.1199857-1-irogers@google.com>
-References: <20261104043006.1199857-1-irogers@google.com>
-Subject: Re: [PATCH v3 0/4] tools build: Fixes for libbfd -lzstd dependency
-Message-Id: <179471596839.616307.5061349136120813335.b4-ty@b4>
-Date: Sat, 14 Nov 2026 20:12:48 -0800
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Sandipan Das <sandipan.das@amd.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+ Ananth Narayan <ananth.narayan@amd.com>
+In-Reply-To: <cover.1791791463.git.sandipan.das@amd.com>
+References: <cover.1791791463.git.sandipan.das@amd.com>
+Subject: Re: [PATCH 0/3] perf vendor events amd: Add Zen 6 data fabric
+ events and metrics
+Message-Id: <179471596938.616307.7290987992294705558.b4-ty@b4>
+Date: Sat, 14 Nov 2026 20:12:49 -0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -71,19 +70,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Tue, 03 Nov 2026 20:30:02 -0800, Ian Rogers wrote:
-> This series addresses build problems when linking against static
-> libbfd/libopcodes on distributions like Fedora where binutils is built
-> with zstd section decompression support (requiring '-liberty -lz -lzstd'
-> together).
+On Mon, 12 Oct 2026 13:23:29 +0530, Sandipan Das wrote:
+> Add data fabric events and metrics sourced from Volume 3 of the
+> Processor Programming Reference (PPR) for AMD Family 1Ah Model 51h
+> Revision B0 processors, available at the link below.
+> https://bugzilla.kernel.org/attachment.cgi?id=311021
 > 
-> In v2, commit 89d001d48ec7 ("tools build: Add zstd to the binutils
-> library feature tests") landed in tools/build/feature/Makefile at the
-> same time, creating a merge conflict and only adding '|| $(BUILD_BFD)
-> -lzstd' without '-liberty -lz' or the corresponding
-> libbfd-liberty-z-zstd feature check in perf and bpftool (so even if
-> test-libbfd.bin passed with -lzstd, perf and bpftool would link only
-> '-lbfd -lopcodes' without '-lzstd').
+> While at it, also clean up redundant attributes for other metrics.
 > 
 > [...]
 
