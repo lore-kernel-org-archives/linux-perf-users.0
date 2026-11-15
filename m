@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794706895;
-	b=3EgucXkuy8iaS26YnwTAtD6qtX7qFzUBS/pFvYOVMTq7YgVNsNXx/beD4oV+5UPVVEE5
-	 k4tQ+zEO05PRg2ONvrtGb4C/gzqXuhruTpxvIb4+WE7/NdNZbJk34mtZC9StRpF2dK3Yz
-	 PS/RXlpgZjYRadURkhevdFN3CQvxPZd3BJcdwdu6rjWpYRuoWbSE1zMjIe6ZIz+EHAuvn
-	 LBW1UP8UKtNEjpGUnkhZdWekZDStF2QMeHmYMJm+aR4jwiqXFChN3leEn8uComQEFA+s3
-	 lYUA5NAeFY7OIuMcQTCKn4OZ8cv+avh85m62ZLqdQhDqFgwI9TtB4F8p6iTRtrA0V9w==
+	t=1794706898;
+	b=ouQMykhxuQy7sRZdW6DLegvyncrNMmBGgRiHCcK0hxF26gpGnS4ORgc3WsYwBoemB+C1
+	 qqbia0RutYN5D5NzO9crf0g1KoYamV/qYLNouWMzobKkGHPg3AlC0V00uWD+zyESwWg3K
+	 TzWmolQItOoqjWcmQme459tD8knQQtSH0KPOzdz5jwebjwgVwdZJ00P6y09mys5hoOARk
+	 QlqT87l2aShNslMD2K2Zbt47GoKOOpne85fH+SCWbHBx2BLU9CetZHBu19toesZOhjD97
+	 Il4iSLxWSNKzPwiOsFvwtIlkoL1kKYt50L6ijiYzXASveYboEBGpMRdgn7a2L8qdmSg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794706895;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794706898;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=6BsHS0JIId02xPyH1khlTudO2pFJc4FlMUWiQXC02bs=;
-	b=JqSbAMIqXiLnHt/7m9zHPmXX+dXBbRAN7OdMKNsX18KpV4v5qxKL88PmmV/yIQy9dFJo
-	 B7vMwBUflZTlNHtVqSK4KQ5jcTs7g/q6IIlto17Lr84zX/e8SXRnADj/vqT/3LET+vLDE
-	 DVNRNxAU+7s1jxZ66U9RogOIG2/L65QVr0Yj076oV29e32myMZZXQilEpIWIg2tWprp5e
-	 EEx3EDfGkgwsPSYGI+k0VmamUEjPGVDhTW7JG0TYPCslDtQBdDKia/IrZhvKQNd9EBs0V
-	 vysQTxBjiRmR5APaS4baEJn7BsfL151echxq4VNADNoOQypGMg48+cvapev600R1Tdw==
+	bh=iT/MoQupol8iNbk2531HTgOEAOEfgGTm9mLESO53EJQ=;
+	b=bhs6gsRQvR2vMjjw6oNHd8UdsEfRp9CnqlDeB86aYCsBulxpdKVHpUdJSi2vrCL+xWBT
+	 /LN6750kHwH4EHSDgyGITi7A2u9bCVBuFXy6baaH6N9yrwGwNBy5PhLG4foHAkVc95aew
+	 Kz2A49vOy6IYQx3Xrj/VrJNkRm/vGOwlQTzXd5UepTw0xjNoBNIyP7qWXG5DImxk0l2jw
+	 OdHgCnOPO0+tUgOMZscJPd5w/O51bCeXvLPyhO8bAV/8545JikqhnreDygQ31JRMMAkfs
+	 /01sKenlg6JkjJLEgzt8KJA9Kxv7tD+fRkNTNkHHCRUOdcEhjKH7pmIFENEhPnAUQfg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bIIQveY8;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F51eFQiq;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE7E4606A323;
-	Sun, 15 Nov 2026 01:41:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE1660A260F;
+	Sun, 15 Nov 2026 01:41:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bIIQveY8
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E41A21F000C5;
-	Sun, 15 Nov 2026 01:41:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F51eFQiq
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5E041F000C6;
+	Sun, 15 Nov 2026 01:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794706895;
-	bh=6BsHS0JIId02xPyH1khlTudO2pFJc4FlMUWiQXC02bs=;
+	s=k20260515; t=1794706898;
+	bh=iT/MoQupol8iNbk2531HTgOEAOEfgGTm9mLESO53EJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bIIQveY8iqew80gwi3orr3dD4CJVorgbK7avnIO4tu8TXPxNZsQcikr6rByVDIbtZ
-	 l7KWH2RXhVVBU3dHnH0PNzXjw0HTTXVnb0t8jviZ4kpxBTe3oMgDkZcCVoWWTou1iI
-	 Twc1Eh04OnGmqdlu4Lln595nYaAtFr0ai+7klTwV+m3phQCtlDaCIlHcsWDLMjzD0J
-	 dvBR3z+dq/gv7qNUngyefw5NZHCSy6PmHPvUxyYQSaqRdIWY+t0E0QaHDyw8weYWga
-	 NCbGhFYtneblEYLr6MSamX3VUxgDuBWtkSlbtk0gNPbT78g3446QUiGHtI3ALmY9Vs
-	 /RjoTYejnNTsg==
+	b=F51eFQiqBrifl1IjsVPxL7CN+6yd3g/DbAZpqBvdGMJBGOOT/Ecx+t/C4Q8atczaQ
+	 OEJa4u4UvVulUday7fFcVVFf7XMFV5BTnrc4TsJJrzhB+89wMqd6lZ1NEUnENvr9Xi
+	 TvvfoQjylvX6dv6Q1TkRHuA+xGo9DOL2HAASb2fvG3mTIzj8gJmy0b+AF439GL3Zfa
+	 hQJgZRekv1IuvM7ezw/EMSl5sS8WoPPp1CaiuQvkiTJNRpF0IbVfzCN0fccA6pRwSZ
+	 p53v+owEjEb1t82sXWV3WtmaeoD29maA6n14zK+fhlyl8tzOGb+1n13Y4ct0mr6pYA
+	 FHh+B5129cwXw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -52,9 +52,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v3 09/12] perf build: Record the display-only features in FEATURE-DUMP
-Date: Sat, 14 Nov 2026 22:40:57 -0300
-Message-ID: <20261115014102.2879372-10-acme@kernel.org>
+Subject: [PATCH v3 10/12] perf tests: Fix the Intel PT virtual LBR check
+Date: Sat, 14 Nov 2026 22:40:58 -0300
+Message-ID: <20261115014102.2879372-11-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261115014102.2879372-1-acme@kernel.org>
 References: <20261115014102.2879372-1-acme@kernel.org>
@@ -69,35 +69,56 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-llvm-perf and rust are in FEATURE_DISPLAY but not in FEATURE_TESTS: they
-can't be part of the test-all fast path, which sets every FEATURE_TESTS
-entry to 1 when test-all.c builds.  Since FEATURE-DUMP is written from
-FEATURE_TESTS only, a FEATURES_DUMP= build, as used by build-test, never
-sees them and silently builds without libLLVM and the rust workloads.
+The record this check uses writes aux samples, and with the single data
+page the other tests ask for they are lost:
 
-Append the display features that aren't in FEATURE_TESTS to the dump
-after the regular feature checks have run.
+  Warning: Processed 29 samples and lost 100.00%
 
-Fixes: 206dcfca1f5cfac3 ("perf build: Autodetect minimum required llvm-dev version")
-Fixes: 3f5dfa472ea6771c ("tools build: Fix rust feature detection")
-Cc: James Clark <james.clark@linaro.org>
+so no branches are decoded and the check fails with "Failed with virtual
+lbr".  Record with 4 data pages and 128 auxtrace pages: the same trace
+decodes 64 branches and still fits the mlock budget.
+
+Require the python perf module to provide session, not just to be
+importable: a perf whose python bindings are not found can pick up an
+unrelated module and fail with
+
+  Error processing events: module 'perf' has no attribute 'session'
+
+instead of skipping the subtest.
+
+Detected building perf on fedora:44 on the runner with Intel PT hardware,
+where the subtest failed with "Failed with virtual lbr" in the container,
+and with the python error when run as root on the same machine.
+
+Fixes: 915d6b14dc0c ("perf test: Migrate Intel PT virtual LBR test to Python API")
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.config | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/tests/shell/test_intel_pt.sh | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index b4764f69f47f4d8c..1b5caa246345c9bb 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -1310,3 +1310,7 @@ endif
- # tests.
- $(shell rm -f $(FEATURE_DUMP_FILENAME))
- $(foreach feat,$(FEATURE_TESTS),$(shell echo "$(call feature_assign,$(feat))" >> $(FEATURE_DUMP_FILENAME)))
-+# Features only in FEATURE_DISPLAY aren't part of the test-all fast path, so
-+# they have to be checked explicitly and recorded here too, otherwise a
-+# FEATURES_DUMP= build silently disables them (llvm-perf, rust).
-+$(foreach feat,$(filter-out $(FEATURE_TESTS),$(FEATURE_DISPLAY)),$(shell echo "$(call feature_assign,$(feat))" >> $(FEATURE_DUMP_FILENAME)))
+diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
+index c0ecece0a8255124..511440b5956a6897 100755
+--- a/tools/perf/tests/shell/test_intel_pt.sh
++++ b/tools/perf/tests/shell/test_intel_pt.sh
+@@ -384,13 +384,14 @@ test_virtual_lbr()
+ 	# shellcheck source=lib/setup_python.sh
+ 	. "${shelldir}"/lib/setup_python.sh
+ 
+-	if ! "$PYTHON" -c 'import perf' > /dev/null 2>&1; then
+-		echo "SKIP: Python perf module not found"
++	if ! "$PYTHON" -c 'import perf; perf.session' > /dev/null 2>&1; then
++		echo "SKIP: Python perf module with session support not found"
+ 		return 2
+ 	fi
+ 
+-	# Check if virtual lbr is working
+-	perf_record_no_bpf -o "${tmpfile}" --aux-sample \
++	# Check if virtual lbr is working.  This records aux samples, which a
++	# single data page overruns, so give it more room than the other tests.
++	perf_record_no_bpf -m 4,128 -o "${tmpfile}" --aux-sample \
+ 		-e '{intel_pt//,cycles}:u' perf test -w brstack || return 1
+ 	perf inject --itrace=L -i "${tmpfile}" -o "${perfdatafile}" || return 1
+ 	output=$("$PYTHON" "${shelldir}/lib/perf_brstack_max.py" -i "${perfdatafile}") || return 1
 -- 
 2.56.0
 
