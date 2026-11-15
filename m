@@ -1,55 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.224.42
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794703140;
-	b=3sOiMgeFt7mm1JZmG8ZcAj0c2xoCCuMz2gB3hVn3d8/t2Gn+8bWYnXjv/7ioyy0I/+5T
-	 tSrZwqrqZtqOnZAROJK5A6qhsPJNyGo+8jnuzVlhiPVqYdvobTmSFBPAKpQXQ0O2Q0Nl/
-	 Ox6K/QXi/Fddps2xZz1XRIcMjcAib8D+W3eAu450JABTkpYmoke1xcfCg9asNg3eesgiE
-	 gAkowFNifK8WoR+8DHPn+oXKd/tNzE5hfmBtdiQs4he+LpRmaH7OhpBSRiDbLAn+QOvpu
-	 pV4NExPbzCG1VnSvwXPBHTZZ8Yy/kpXRSv+JSIxcCKYe0swjm0QQJFfnlbPxuiN0fWQ==
+	t=1794703163;
+	b=Je8lHWYo2eCGyZRybcXMOQXJs6EvdnaTIh67yOV/sbxyUaisUHv1h/s9X1KORt5Sf8St
+	 tihilcKFwdvS7/W37HnX0YDzdiQGeZafr0Z74vnyLlvrQo8wqlxt8WMwe48DH7HyUlhK1
+	 NHplmDRARiFpgAx3Qo9MK+E04IiHPtc3pca4GvIBFqjIevRwiAR0I7jJh6zlbpkfQcq96
+	 5U5f5lv/OwmkClDsAph/MxzSasxZJzpEN/Ne9bzIby4FXyNJu7RoTqvH/Z6VpWRkgSyr2
+	 yb4ta8+PjY1aMFqZ+87TfisTNN1ajY7qhyzjb61iOYTLbIF/zedughmOBkPLC2BjeBQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794703140;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=eBmyEKM0Wrx3sxrlLws63NDpS25wuDbCDTl2Lm4kK0M=;
-	b=Eo6FMdM1fF5aFfOPkls4Hq1KgXi2kBmZYonjzeGLaHH9GhYn468/bnSHor0DgTr/3BPz
-	 j9GHoblkN59zUAzYhbRXAng4u6qdmX12WDsBOh39fQRzcMe7OsVgo1qBz+M/zRX377+zo
-	 /q1VDpuQXruUzBkVxCukpTCbXbVNue57xOkBWzhlUErSOV56w/Osnd44O+xvdkIzG8lpV
-	 XPgt0yhk/fZApKKXclKmwUxLidjFRN778RmQEtFbKbPlDSdg24mOKCyc1B7zMdnf6yKV2
-	 zDkol2VsR7g1AMcOOlPKN7gCcCFq2d3VpatL1yWjPe7HX2LFECPSpsRXeDEMDP5Yg3Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794703163;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=4GrWQhdlUN8PHyNIAm8fqZHJSbDfpomlm+th0sM4Aj4=;
+	b=2OP9+oIQs4Y0g0yEGwmPtN1zpq2l4cVEPbqcKET93vwdnlTixQ2N5wA/nSARRsKCsaXj
+	 Bdvn1feGhF/OeqWk8bQJOZH4FgLRSuniWrvDHMIqpwWIj/Xaq1nZPVxTngyCtun8RQyaQ
+	 HNL8FfyuK0ojJFcloHz8uWFcdjT10ggsdiRnAKEoL3jesUeSqrBgfYqPfzxNYKWE0GHjb
+	 1gXlFobS+OgM9ajJyvgpvUayRWv96uIR3Bbqw7uLL1xZ/vKBx3gzvEphvH4sz6okbZid7
+	 Shj3AF0vDHmhyNE2hNn0UNX6UcN9230vUyVr5SVX308PsmJ9moG3vnYFWPcs2CAK27g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fn+NhhDE;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=zpMsZLld;
+	arc=none smtp.remote-ip=74.125.224.42
+Received: from mail-yx1-f42.google.com (mail-yx1-f42.google.com [74.125.224.42])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991E2606A323
-	for <linux-perf-users@vger.kernel.org>; Sun, 15 Nov 2026 00:39:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A098606A327
+	for <linux-perf-users@vger.kernel.org>; Sun, 15 Nov 2026 00:39:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4A098606A327
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fn+NhhDE
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4744C1F000C4;
-	Sun, 15 Nov 2026 00:39:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794703140;
-	bh=eBmyEKM0Wrx3sxrlLws63NDpS25wuDbCDTl2Lm4kK0M=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fn+NhhDEgYvNbVq3b/Ldyl0xlUWQ6+a4nznxSkrIlyn9VpbEQjDzE/wkoFFgG4/E/
-	 Qub31VikDNhlm1EqxjDmlUTila91jnReiCYMcyy8sTFtmISq35UkCp37vo9DiAq/DK
-	 9yG9AVRCnumIdU9YwoOu6Sqn2Kgumt1xqRIFNl1UMmoiDSkohHMg2uu1rlLbMMlB7P
-	 wnF906kt2oGyHP6eGMrNnJuGFGdSPoxyUotz8QXfKjivH2C1oPslerzChbf32N3LHh
-	 KwAkfJARZtLEUOoWRpKpsvSYSmY3FzlDWTr26MGkeVBNgmvXXJzyyueHnNSSdrZmcb
-	 v5+Y5rXZl4xxw==
-Message-ID: <sashiko-outbox-215154@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf tools: Stop using the deprecated argparse.FileType
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Lalit Maganti" <lalitmaganti@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261115003507.1872482-1-lalitmaganti@gmail.com>
-References: <20261115003507.1872482-1-lalitmaganti@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 15 Nov 2026 00:38:59 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=zpMsZLld
+Received: by mail-yx1-f42.google.com with SMTP id 956f58d0204a3-67dae7d3f7dso121149d50.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 14 Nov 2026 16:39:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1794703161; x=1795307961; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=4GrWQhdlUN8PHyNIAm8fqZHJSbDfpomlm+th0sM4Aj4=;
+        b=zpMsZLld4xitce8pr3dzn0VlBsHrJENUQTpe4b1oBHHu+eNxusDc8Ew0El03W9fZWW
+         aAVGy0BnBHgdk/NEGTfqb01gm7XdPdHtZmBWWvdaJTBDPp0UwV6wrfuUo48DMX3ogGWG
+         juiZJhjMR5nxJ/8Ws2RD4u2qoCO5R7azV2kBbxqJlmDdKC3rgn/ICBIqWxvlEpIN2QvO
+         vFJF0LfKb4g9on1As8gHew0w/PrAV/sge76xEcPXyC52CQKi89i65MyOrvOHy8fsa1my
+         t7DN5nodoVTxapOkY0R50vQo7Rtm0NyaDwJSC94UcyCVbGllIv954XUzywIcDV4Wv4XS
+         Xe4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794703161; x=1795307961;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=4GrWQhdlUN8PHyNIAm8fqZHJSbDfpomlm+th0sM4Aj4=;
+        b=XBtXqFZc77OEXG90LJYKMr0Njl+rZbP47q859RtbxVs5lpnfNRu0pShu7HfqsVPsGK
+         G/G7aA9Pgp30r9sIrDgiiaFlgHbXuBRJYze/OhnXsHDAgOwxDgrG82fqQsSO8BjpghT6
+         9rYNSDAOlajTD4cB1HC5vdZSaf3If7Unenq3By85nfUv4EIdWpkWWT3n24qM9AqauK4q
+         5QSxgwtWaeDVQvUevuOnpY/JElqtL/EWCli1kdB2C/yOeb+oyMpG/nLHGJ2V2Q59ObUC
+         r/w1LMvxM/s5RMadUT40Af5KgAr6NXuY1IG96FZmrtqkf+B1urBgb+nyO7STS+TsyA3e
+         KjRQ==
+X-Forwarded-Encrypted: i=1; AL+hErFMO3Q54wGlS3r4kLsG+zfKurvfFx6/K/exg0mXuHyxzXWdTFML/hKWMMhgBTCcxpxHH9mu4LRqMOjS0QpiIqQL@vger.kernel.org
+X-Gm-Message-State: APuU4Z+nLq+HJuyiVrOBkTtY4ScgIGCI3azeQGAtzRJMao9VNI78e1qD
+	wmvP5lN6SOgjJ4j0wtnv5VAULI3SyiuVQ9cw6zXSqe/dWQXQf6ZhW3H6
+X-Gm-Gg: AYBFou30fslXS6KbEHzLRV9+Dd20+XtmuL/Ee+pEz2UJ54kE5ds6dL1OEFYWegoWCU6
+	QrV1yMzchYL1zfQwIhgRf9YKZ5YK9/3l4HDY01AN/ZESM1HUnlLwjxmiXmrt+GiLkXD1DOucSJB
+	WPih3yDdMAaZjsF+BTVLp9o3r+sD09gA4oNMUiWvK/ucnBiOSCvPy3hh47dReIdBIBkAlJHJ0XL
+	rfxD7QKVMhyV2yWVwWBsTWIhWXAq/sH8dgnwf0xizueO97SG370bPZROzYyNJORvwBsWd891p9q
+	fSFf5/JRT8SxaB9DeVb/ffAsTiFYoBtHlDIzFmdR7NPjbxFNIldmc2ayEiJNHrX08uDyKro32CX
+	2aK8Toan2ochoPc1uBZAe5Ev/iN9giJ89wEJdVz7YpUBMbGvySvgG4uOcNs3DYkqPmxsIS0Wak5
+	xwhAUisqwG6HslrqM3HlYPhAOPLViTc6mcM5lFQ5NvxIPE0ADBvWMUyUkNPU62woGGNpKVn25xn
+	CUKwlIUGn5Gu/JOVOXLV0OJdG20wkLCTLG90LdPQ6PEZlR/BcYN/uGzL7KPnOlLr3RUdlq2L7L7
+	nr2+fAF0M5Omf7bom1ahJ6KSZCTFxJs313/2NmJZxsE021Mu8ABwBITr
+X-Received: by 2002:a05:690e:807:20b0:679:b98d:9b7f with SMTP id 956f58d0204a3-67d893e4231mr2208264d50.11.1794703161195;
+        Sat, 14 Nov 2026 16:39:21 -0800 (PST)
+Received: from codey.attlocal.net ([2600:1700:22f5:3930::a])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-67db0361f39sm189602d50.19.2026.11.14.16.39.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Nov 2026 16:39:20 -0800 (PST)
+From: Lalit Maganti <lalitmaganti@gmail.com>
+To: acme@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com
+Cc: adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	jolsa@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lalit Maganti <lalitmaganti@gmail.com>
+Subject: [PATCH 0/4] perf python: Add a script to open profiles in the Perfetto UI
+Date: Sun, 15 Nov 2026 00:39:12 +0000
+Message-ID: <20261115003916.1873857-1-lalitmaganti@gmail.com>
+X-Mailer: git-send-email 2.56.0
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -58,31 +103,62 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-> Python 3.14 deprecates argparse.FileType, and pylint 4 warns about each
-> use of it. The perf build runs pylint and treats its warnings as errors,
-> so the default build fails:
->=20
->   pmu-events/jevents.py:1494:26: W4904: Using deprecated class FileType o=
-f module argparse (deprecated-class)
->   pmu-events/jevents.py:1496:33: W4904: Using deprecated class FileType o=
-f module argparse (deprecated-class)
->   tests/shell/lib/perf_json_output_lint.py:23:31: W4904: Using deprecated=
- class FileType of module argparse (deprecated-class)
->=20
-> Take plain file names and open the files after parsing, as the
-> deprecation warning suggests. The output of jevents.py is unchanged.
->=20
-> Fixes: 5fe83fb352c8 ("perf build: Make pylint build test opt-out (NO_PYLI=
-NT=3D1)")
-> Link: https://lore.kernel.org/linux-perf-users/20261018070110.927636-1-la=
-litmaganti@gmail.com/
-> Assisted-by: LLM
-> Signed-off-by: Lalit Maganti <lalitmaganti@gmail.com>
+This series adds a perf script that converts the samples in a perf.data
+file to a Perfetto trace and opens it in the Perfetto UI
+(https://ui.perfetto.dev):
 
-Sashiko has reviewed this patch and found no issues.
+  $ perf record -g -- ./workload
+  $ perf script perfetto
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261115003507.1872=
-482-1-lalitmaganti@gmail.com?part=3D1
+Unlike a flame graph, the trace keeps the time of every sample, so you
+can see what each thread was running over time, get a flame graph for
+any time range, thread or process, and query the samples with SQL.
+
+The samples are written as Perfetto StackSample packets [1]. The few
+protobuf messages needed are encoded by hand, so the script only needs
+the Python standard library.
+
+ - Patches 1 and 2 add what the script needs from the perf module:
+   whether a frame is in the kernel, and the clock from perf record -k.
+ - Patch 3 adds the script and a shell test.
+ - Patch 4 compresses the trace (zstd, or gzip on Python < 3.14), which
+   makes it 3-4x smaller.
+
+I compared the output with perf report and perf script --no-inline
+(the perf module doesn't expand inlined frames) on x86 and arm64. The
+samples, their periods and their callchains match for:
+ - cpu-clock, cycles and {cycles,instructions} groups
+ - recordings with and without callchains
+ - perf record -k CLOCK_MONOTONIC and CLOCK_BOOTTIME
+ - pipe mode (perf record -o - | perf script perfetto -i -)
+ - system-wide recording on arm64
+
+DWARF callchains need a separate fix to the perf module, "perf python:
+Accept events larger than union perf_event" [2]. Without it, the script
+exits with an error on --call-graph dwarf recordings.
+
+[1] https://github.com/google/perfetto/blob/main/protos/perfetto/trace/profiling/stack_sample.proto
+[2] https://lore.kernel.org/linux-perf-users/20261018074528.974953-1-lalitmaganti@gmail.com/
+
+Lalit Maganti (4):
+  perf python: Add kernel attribute to callchain_node
+  perf python: Add clockid attribute to session
+  perf python: Add perfetto script to open profiles in the Perfetto UI
+  perf python: Compress the traces of the perfetto script
+
+ tools/perf/python/perf.pyi                |   2 +
+ tools/perf/python/perfetto.py             | 675 ++++++++++++++++++++++
+ tools/perf/tests/shell/script_perfetto.sh |  98 ++++
+ tools/perf/util/python.c                  |  17 +
+ 4 files changed, 792 insertions(+)
+ create mode 100755 tools/perf/python/perfetto.py
+ create mode 100755 tools/perf/tests/shell/script_perfetto.sh
+
+
+base-commit: a1c3b14c28ebfa79dd56e2743c2fbad0c02a7146
+-- 
+2.56.0
 
