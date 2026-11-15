@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794706886;
-	b=MkSwM1JvCz163AElpv8hj5brPb/w++pAO7yjFaceIENDVmbVTGulKLcKuKY5AhcQDr0S
-	 oMAsU9uNEkZK+XPtp+oqkYii1dHQgQU49Utv4t9XfeoWqgWbugUytlcqCjTbxJSpwNs1a
-	 svL/HKOpHE5KfJk2IykKlSI3smdSsJ7KYHcXKfBMkvcURNT48NefL0azK1v4breIjrYwb
-	 ZXgF8W57jNOCWlY3LU1aIco9qajk++6UZ7wz6hBsxuu37+h7fS3fnca8zBa7jBx14vspZ
-	 SH5cKoAJ+zhFxWUsvgxGhFNUH4b3/jvPfyJDhHqWJy59sN2uJ76c1oQLeZULnKt9zxA==
+	t=1794706889;
+	b=afwRZEX7pHAtRDgQj6IEGP5HoTmWqqurWfyIarSRbUihZq5qXyNJQeh6SK7jzfznDf9M
+	 lQ+Ii6GipP8ko08aTyybpoMduX6mJlUf1agEAwpIoTSNJf1H8nCdFSzRAhn2fu+O0FBj8
+	 Pr7QvxINXCNnXjQYGps21AoQHwbuxxmjsrSrHLIel8NX/pM05ozOpSzKbK+oK1NWbbrjq
+	 WdkyEl0PT+TI01oi7sQ4qVCJIgkmsDHKcxJVpDt0225qJAIVAQsutAfa+wFLsG5UI2Pla
+	 idX3TCiB9uscYkD4ckmbnH4gz8JLiBQN9c6Ez6sBRk7BDM6QmQbbnU1mNHkfHLk/TQA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794706886;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794706889;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=YbW431jVUYKxJtFo/3WpaU2FxmrqRnnJ/Lg3PCsgoUU=;
-	b=AnPyNxPJlom/HW6fRRhRgrdxwWNupqI6I0I3Nrh92DKZrdoh1ftyfk25ZTKT18dzSMob
-	 v3o5viKIFzn0V8gagBR4Be3UEaXPrnEgq+3pa0AUcubVkIkpJA0HqyeTLd/WR6Vp3t+WG
-	 8a1nIR1RvRwJDWyRVf/oHZHcg0vHk9aRLv3CCpSN6KianSpTAjbOgi7zw0FRaYPu3nXV4
-	 kAbBaeS4G4K0qiw0KRVdspzQGS8WQ8Igj5rFngTwfasFBPBDNuuSKTHX/08qWS+pF5Mhq
-	 dYsJGIK+BgOX3rJLpnberU2t/M55T0EY77lzONTc5ZUJvUkrf+52Q9O7WsE2KL3gcqQ==
+	bh=CPRuPdbTgWzGWGpOkDp04avXYG/mCAE3FTmDm2VUafY=;
+	b=b9RtkgrxDf7wSlKi9TVuH1IHIKH/pBxMROrQqtK10rwPyX8fbZeQWb5jLoHX6yDgwDS5
+	 ibWrS2Cmi4CxPl89tDXCbUgRvaCYd+3h3Sl2EWJg0xKuRcuT4fN25Z7kYX2c/t9HOr2Ls
+	 wIf+XT4fgKQ/JyMPX3e23+0l7XHdlDUD6/X054vWIZIO8i9uX+KbJYvoSe3v2+qPSkRm3
+	 RfnPpFb2uasOjlel9FiWducuXyqHcMFT9VcbtCksgPkNA6unQpZcZbXrroktKZqRQX4fU
+	 vodmjhpw5SpafJ8taiSJSOkbeK0rBpgyHiWg2Tp621dmwRsNOzg/Y7WJ84kDwSmEiFw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aqYPnBkS;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=N4BhVx2m;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC19606A88A;
-	Sun, 15 Nov 2026 01:41:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08508606A89A;
+	Sun, 15 Nov 2026 01:41:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aqYPnBkS
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B1CC1F000C6;
-	Sun, 15 Nov 2026 01:41:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=N4BhVx2m
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CDF81F000C4;
+	Sun, 15 Nov 2026 01:41:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794706886;
-	bh=YbW431jVUYKxJtFo/3WpaU2FxmrqRnnJ/Lg3PCsgoUU=;
+	s=k20260515; t=1794706888;
+	bh=CPRuPdbTgWzGWGpOkDp04avXYG/mCAE3FTmDm2VUafY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=aqYPnBkSGLOGVrtpNsW91QG9ZoN7Kvl5BA11TdeLKc/C+h+lw3byCY/MLIIPPyhIP
-	 7nAhBWbG9+mdQUKNtwT53kzQZgblP151qruX7h6i2isvoNJanQ+VYC11RR80hEfZDw
-	 vDRf2gyaC/vx3a8hExhhd4vSjEebjav+hq9ZViagIkILq0Hi8R34dssgSwqvEUxTWD
-	 WltjVZ27wHCqckPngvOdYll1VdqbtEmjTGki98lUMSDErmGrVdaJQfeptPZRli3Ocx
-	 lgyDi90CZ6DWE9ICn2c35c5FakpGewI32PYNoK3iyFNefehPTBo5o8b4MzB5oOfdD7
-	 E3iNbc11ugudw==
+	b=N4BhVx2m8/DjQzxXZxegTOfSlMdAcOGVhQcujzdyNMwTse7D9XoE2bmryoY48Xa8X
+	 krtZ0pyvoSQ5BLX8OJLpbfeh/KIqB+bkNsD5EhcyAthJ463vvVdDHL5P9gpHX0iFIQ
+	 Kkqhrbaku42JdEGMQHOTAI62ArnhkVkr1GP0gKPFL2kALSXRdKHQwzk9cMHAPTezPW
+	 r0Wgt7yFFVDApWs0HdgSmWiZhhYBpufIXoyLWQwf+EvWdLGLS73DrbOcPCzmVMocoF
+	 CtGK+XjPypTbiUT2ysEbDamXw4rPSmLyTqKdlUKFJxaxbRjzpFweYZHjvJ1auof3F3
+	 1gd/Ew7OkHCow==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -52,9 +52,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v3 06/12] perf tests: Exercise data type resolution from a register
-Date: Sat, 14 Nov 2026 22:40:54 -0300
-Message-ID: <20261115014102.2879372-7-acme@kernel.org>
+Subject: [PATCH v3 07/12] perf annotate: Print the stats after the annotations
+Date: Sat, 14 Nov 2026 22:40:55 -0300
+Message-ID: <20261115014102.2879372-8-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261115014102.2879372-1-acme@kernel.org>
 References: <20261115014102.2879372-1-acme@kernel.org>
@@ -69,45 +69,61 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-At -O2 a struct pointer lives in a register and DWARF describes it with
-a register location, while the unoptimized workloads the data type tests
-profile keep their variables on the stack.
+The instruction stats are printed before the loop that accounts them,
+so 'perf annotate --code-with-type --insn-stat' always shows zeros.
+The data type counters are updated in --code-with-type mode too, but
+only --data-type mode accounts their total, so they are incomplete
+there.
 
-Add a regptr workload with a noinline function that gets the pointer from
-a volatile global, which keeps it in a register, and check that its three
-member accesses are resolved from that location.
+Print both after the annotation loops, the data type part only with
+--data-type.
 
+Fixes: 58824fa0087e1cb7 ("perf annotate: Add --insn-stat option for debugging")
+Fixes: 61a9741e9f78c64c ("perf annotate: Add --type-stat option for debugging")
+Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/builtin-test.c              |  1 +
- tools/perf/tests/shell/data_type_register.sh | 64 ++++++++++++++++++++
- tools/perf/tests/tests.h                     |  1 +
- tools/perf/tests/workloads/Build             |  2 +
- tools/perf/tests/workloads/regptr.c          | 60 ++++++++++++++++++
- 5 files changed, 128 insertions(+)
- create mode 100755 tools/perf/tests/shell/data_type_register.sh
- create mode 100644 tools/perf/tests/workloads/regptr.c
+ tools/perf/builtin-annotate.c            | 10 ++--
+ tools/perf/tests/shell/annotate_stats.sh | 64 ++++++++++++++++++++++++
+ 2 files changed, 69 insertions(+), 5 deletions(-)
+ create mode 100755 tools/perf/tests/shell/annotate_stats.sh
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 18311673b231e657..b6d31f5f009d206b 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -201,6 +201,7 @@ static struct test_workload *workloads[] = {
- 	&workload__false_sharing,
- 	&workload__global_data,
- 	&workload__flex_array,
-+	&workload__regptr,
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 331adbdbd635917d..973f4950abd6f917 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -414,11 +414,6 @@ static void hists__find_annotations(struct hists *hists,
+ 	struct rb_node *nd = rb_first_cached(&hists->entries), *next;
+ 	int key = K_RIGHT;
  
- #ifdef HAVE_RUST_SUPPORT
- 	&workload__code_with_type,
-diff --git a/tools/perf/tests/shell/data_type_register.sh b/tools/perf/tests/shell/data_type_register.sh
+-	if (ann->type_stat)
+-		print_annotate_data_stat(&ann_data_stat);
+-	if (ann->insn_stat)
+-		print_annotate_item_stat(&ann_insn_stat, "Instruction");
+-
+ 	while (nd) {
+ 		struct hist_entry *he = rb_entry(nd, struct hist_entry, rb_node);
+ 		struct annotation *notes;
+@@ -660,6 +655,11 @@ static int __cmd_annotate(struct perf_annotate *ann)
+ 		hists__find_annotations(hists, pos, ann);
+ 	}
+ 
++	if (ann->data_type && ann->type_stat)
++		print_annotate_data_stat(&ann_data_stat);
++	if (ann->insn_stat)
++		print_annotate_item_stat(&ann_insn_stat, "Instruction");
++
+ 	if (use_browser == 2) {
+ 		void (*show_annotations)(void);
+ 
+diff --git a/tools/perf/tests/shell/annotate_stats.sh b/tools/perf/tests/shell/annotate_stats.sh
 new file mode 100755
-index 0000000000000000..0b7cb4bfe0aacfbe
+index 0000000000000000..fe4891e8535d3944
 --- /dev/null
-+++ b/tools/perf/tests/shell/data_type_register.sh
++++ b/tools/perf/tests/shell/annotate_stats.sh
 @@ -0,0 +1,64 @@
 +#!/bin/bash
-+# perf data type profiling tests for register variables
++# perf annotate instruction stats test
 +# SPDX-License-Identifier: GPL-2.0
 +
 +set -e
@@ -147,124 +163,29 @@ index 0000000000000000..0b7cb4bfe0aacfbe
 +	exit 2
 +fi
 +
-+if ! perf mem record -o "$perfdata" -- perf test -w regptr 1 > /dev/null 2>&1; then
++if ! perf mem record -o "$perfdata" -- perf test -w datasym > /dev/null 2>&1; then
 +	echo "FAIL: perf mem record"
 +	cleanup
 +	exit 1
 +fi
 +
-+if ! perf annotate --code-with-type -i "$perfdata" --stdio \
++if ! perf annotate --code-with-type --insn-stat -i "$perfdata" --stdio \
 +		--percent-limit 1 > "$perfout" 2>/dev/null; then
 +	echo "FAIL: perf annotate"
 +	cleanup
 +	exit 1
 +fi
 +
-+for member in "+0 (a)" "+0x8 (b)" "+0x10 (c)"; do
-+	if ! grep -Fq "# data-type: struct node ${member}" "$perfout"; then
-+		echo "FAIL: member ${member} not resolved from the register"
-+		cleanup
-+		exit 1
-+	fi
-+done
++# The instruction stats are accounted while the instructions are
++# displayed; printing them before the display loop shows zeros.
++if ! grep -Eq '^total [1-9][0-9]*,' "$perfout"; then
++	echo "FAIL: instruction stats not accounted"
++	cleanup
++	exit 1
++fi
 +
-+echo "register held access resolved"
++echo "instruction stats accounted"
 +cleanup
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index f99910b0f8d93a82..6d284bc79cc31779 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -274,6 +274,7 @@ DECLARE_WORKLOAD(callchain);
- DECLARE_WORKLOAD(false_sharing);
- DECLARE_WORKLOAD(global_data);
- DECLARE_WORKLOAD(flex_array);
-+DECLARE_WORKLOAD(regptr);
- 
- #ifdef HAVE_RUST_SUPPORT
- DECLARE_WORKLOAD(code_with_type);
-diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-index 74a0cbe49dc93533..17189458032c0a17 100644
---- a/tools/perf/tests/workloads/Build
-+++ b/tools/perf/tests/workloads/Build
-@@ -19,6 +19,7 @@ perf-test-y += callchain.o
- perf-test-y += false_sharing.o
- perf-test-y += global_data.o
- perf-test-y += flex_array.o
-+perf-test-y += regptr.o
- 
- ifeq ($(CONFIG_RUST_SUPPORT),y)
-     perf-test-y += code_with_type.o
-@@ -39,3 +40,4 @@ CFLAGS_callchain.o        = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_false_sharing.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_global_data.o      = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_flex_array.o       = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-+CFLAGS_regptr.o           = -g -O2
-diff --git a/tools/perf/tests/workloads/regptr.c b/tools/perf/tests/workloads/regptr.c
-new file mode 100644
-index 0000000000000000..d5d357b047e1cfd1
---- /dev/null
-+++ b/tools/perf/tests/workloads/regptr.c
-@@ -0,0 +1,60 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * A struct pointer that -O2 keeps in a register, so the member accesses
-+ * have to be resolved from the register's type state and not from a
-+ * stack slot.
-+ *
-+ * See tests/shell/data_type_register.sh.
-+ */
-+#include <signal.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <linux/compiler.h>
-+#include "../tests.h"
-+
-+struct node {
-+	long long a;
-+	long long b;
-+	long long c;
-+};
-+
-+static struct node n;
-+static struct node *volatile vp;
-+static volatile unsigned long long reg_sink;
-+static volatile sig_atomic_t done;
-+
-+static void sighandler(int sig __maybe_unused)
-+{
-+	done = 1;
-+}
-+
-+static noinline long long touch(struct node *p)
-+{
-+	long long sum = 0;
-+
-+	sum += p->a;
-+	p->b = sum;
-+	sum += p->c;
-+	return sum;
-+}
-+
-+static int regptr(int argc, const char **argv)
-+{
-+	unsigned long long sum = 0;
-+	int sec = 1;
-+
-+	if (argc > 0)
-+		sec = atoi(argv[0]);
-+
-+	vp = &n;
-+	signal(SIGINT, sighandler);
-+	signal(SIGALRM, sighandler);
-+	alarm(sec);
-+
-+	while (!done)
-+		sum += touch(vp);
-+	reg_sink = sum;
-+	return 0;
-+}
-+
-+DEFINE_WORKLOAD(regptr);
 -- 
 2.56.0
 
