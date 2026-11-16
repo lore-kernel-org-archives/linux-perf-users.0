@@ -1,74 +1,74 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.199
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794810894;
-	b=JNeID4Bi6WcPxgDr3F1SqPdZwXPIqo6dPo9dsIpeKZNoLgN/9jkojvkWF6W9mSmlkZbA
-	 +HuFTrb8S3DSkb1O1Mu3YXCbKfuGsePuQe80YTsGSbZAAliEh5LJtE5Htt62USSgONLjW
-	 XeknEdxyvh1OXH2+05dW4qTTRdEiMxxW/8SheJtN6E0I7DXgLyGvgOyanE2ChH8vVnFRg
-	 ccFTt76clGWxs+QtYUpCQIos0cFRi580UXAYmW3qNtzHAAcBOqCChPLo5y3S111JUg8fM
-	 qzQwZQ09Z4Yz0wxhIyZkSi3RyrHHmZK0U7gXDZDocZ+VHWx1nsHX92RAEU8ZuEFFtZw==
+	t=1794810895;
+	b=EDyeo04oKuSrrdjkTAIMp0+/BEajqhCU1+UlC8c3macTAY8hg66TlA/11E8v/aVhUhUU
+	 2slZv4d5t+d2R5Uig5y8amn/e15Z94yBajOSrH5jOyOYrig9HYeuPRTw52fJ/XewL55fQ
+	 f2KIzaqE2y9W9u4iu4zW12PRhB/waf9Y6zz03PtVmY6Jk8HErr/8t3F331yBbTgKbbNcL
+	 +hoUjMr3VBcSae09lbZ3VA0xywTu3DHlk33O53F4DndPJu+wYjfOewOYtbQNtKGjOOmHW
+	 clHNhZEPWaljzbY3POxkXaNKrkHOH3qtZvJ37QhcwV6cL9gLHHKkE0otlz/YF8enDWA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794810894;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794810895;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=fJQuSCF+YkdrmLTfELxmjEbQK8kWx5nq779aaj4jMiY=;
-	b=K51y8UhSqi4OCh6SaETmka8CbuKh3ZkHSwW1WfW60YdWO6qoV3f/xKlOPKtg4nBm2+X0
-	 H1XHmkWvp+R5q7Yh3VMIovAIGOgAbJqOxaMVScXwyKj6cEm+UVf3Ggr/4zHLSHsHhHJBf
-	 CYPS/hfItzhfeZguBVAO7mbgRAPoPfU3SL/9pPdJacfEAOQyVQv26oPbMg4rxGeRpr9rR
-	 xgv73sW3hfUHWixZah3v/Qh/sNL6oEVSF+/MPITTTzLlFS/6QBGrUL68J7is2c9hiJ82g
-	 a1mlQOqllPYuHg5Lyt2vUp5Jj8aRBedH1CHS9IpAkWy8BJrjSJuFCvrjV/GiJR0F/Tw==
+	bh=wPy/Ks9GtjoR67/JiqWkVgdMRu7+K0pLJXssj+f4I7k=;
+	b=2Y80VJQFq+qAG8eueGb1PWRQwDu9oEuf0+uyKNjZEEqbSY8ks9Tj5Y1Tl5L0nEyBroF+
+	 KkPEm8+UIv9S8sdPU6FirdsXRovC+loo9dBudmEsQ3uBaHbXy6X9y5uNc8j7ZGkxb1Ve4
+	 83ozoXtznTea/2y3VFei5GmV/AsV20RyYoMs73OJb2mUR30vIPssZc0YXhDu7QBKBt55M
+	 33msOrPCIArYoJcfOwJ8+LLbo+0THCyNxwtXt2yF5uEie3PcHlp4YHI4D40UHBrymrFD2
+	 4ONPhpXPDSpqZKEngGlm8UXIPY965EF8jXFTZfXs5HF99nlgRZbrLf5DS9Uovogh9ZA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=GaTPT8FT;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=LSphxBym;
 	arc=none smtp.remote-ip=74.125.82.199
 Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16616606A893
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 06:34:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 16616606A893
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3103606A8BC
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 06:34:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B3103606A8BC
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=GaTPT8FT
-Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-33713e5e6daso2908370eec.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 15 Nov 2026 22:34:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=LSphxBym
+Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-33c35f5ca6cso4582977eec.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 15 Nov 2026 22:34:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794810892; x=1795415692; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794810894; x=1795415694; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=fJQuSCF+YkdrmLTfELxmjEbQK8kWx5nq779aaj4jMiY=;
-        b=GaTPT8FTwjzzZcffXkMp0s98W18hP21kogeS25ULMJra4NbG/gQQWZw27OJIuCZg3U
-         QaXBldN/rNon9c5gpHMZ1AV5t6k7Wg54Mt54xB55Ae2gpcEIIVwdrUxVCAriZXEGdDDe
-         0hbicPKAdwsXhyso6CgdGw4Qw7lKoWueuhj1VwM+r3GqobPMIOaksyyre9VAn7PoNNtC
-         4/hHKxcE6tJFort2zUTlZU3392dhcENkQw3dGT+D5COaJm5Dj9nwlZaam8MvU+PDov//
-         wWnWvhUZ7caVyYgvmEe1PHiD1n3UVi+Pjs4XJRcGLOPv10SqjPDJ6GU3mtAM81JpV4oa
-         X2gg==
+        bh=wPy/Ks9GtjoR67/JiqWkVgdMRu7+K0pLJXssj+f4I7k=;
+        b=LSphxBymGM1vC/DnVt6o66YxzRCSSd1Lzt8JdC+yV4qNduGvQmVBzUtn8cTo9RHchC
+         JENMnG4kniUV00+PpxS0axCMAo0TxaC2jA6mpbbUNneOLWUu2UHB1HcGlBnWFzpQUKYk
+         SMCaUyQUrVwjTNH5SxrpwBhjPvDPqxGtZCuL0G8hObolofl3gGhQOvIRBrCll4AGYxPo
+         JbAfBKtXJVpVQo0vl+lufb6uGT4pJT6NethMc2z4P9gRhudPLs8pKOGOppsoGMfnhMsW
+         Kl3BTbaVgSy7pWvKMjnoS/ZyMgSAuUGV+xzkp/qS2758nKEADR8JWRoSVD3RzBx66F6b
+         Libg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794810892; x=1795415692;
+        d=1e100.net; s=20260707; t=1794810894; x=1795415694;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=fJQuSCF+YkdrmLTfELxmjEbQK8kWx5nq779aaj4jMiY=;
-        b=qWEskU8jk2msVBqgRuGY+B+Gbh6xgVV6AniVCPUYVGafGpB2k9N4epHvLvOZ2H/DIE
-         vEV59KTjWFt1HV6jj5YCpohMAI8GT3A33UKUoj/APfylRFxF4AdO6tSndw75n84hj6Ms
-         1XN+c/4z13CCeTcamBp+r3nj6V9yF1/fIOHCW0PYOvoAlvl4lOmX5Er2H1PseCDig+ti
-         GQR0VKbP3TzjiLnOUfUXnPHP5PE5nH5TCY5LIrxtZ22SPxQBsSG9zVxXjhu2/exTCOte
-         KY/0LZeMQZixay5yKa0BskK1ysHZ9ijb/yRkhKK6yaOTG5MdSF2dnIaMg+83xKb33hqt
-         ybyg==
-X-Forwarded-Encrypted: i=1; AL+hErEhmbqO2tf69E3J0tluJTj3gU5+oG4O/hYBcZTTx17gOFrmnkx+NPTYGiHYmIl0bNISvP8ziIl3wIQHJnCcjteg@vger.kernel.org
-X-Gm-Message-State: APuU4Z/HyeeSkjcwR+aKh6jfEspec+vxPeRU690ynMkAAOlz8vS+9QF8
-	6u8gteZVWycATfuHk+lwMwDiTSIlrnzx2plf741fV5N0YJpyV4Cj7M5SGcYHbU+uIqsq14dXeTJ
-	PpT4iVNyl7Q==
-X-Received: from dycmb12-n1.prod.google.com ([2002:a05:693c:20cc:10b0:37b:7764:f755])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:5416:b0:375:7be3:1bbd
- with SMTP id 5a478bee46e88-37967ae6b5bmr10112487eec.23.1794810891869; Sun, 15
- Nov 2026 22:34:51 -0800 (PST)
-Date: Sun, 15 Nov 2026 22:34:32 -0800
+        bh=wPy/Ks9GtjoR67/JiqWkVgdMRu7+K0pLJXssj+f4I7k=;
+        b=fgkxjjia+3niyqaUftNmVq690PZUU3FzweATz+pdS4G+HHTRYJjc1Wx5GILwvED4Sy
+         agL8E03kg63hpovrInEK/pKdzrtKfGUpDKVRmeH9H2APi3PnU99+0Q2C9JPVzkIs9aAb
+         hlmXO873DnmUde1l2whyleCzFbftOEvOtWXq+BxRH67vsO3fYUsJdktENzga4VJTxVe1
+         NGH3MZr3445q3Ytn3AtrkzAGhS+Kf3KnnoR4olACiEF6G9q5Nu93no4pjaj5gCN9Oglp
+         0QxmET7f8akjlXA0//ZnPFy7Bxoo0DPtiLWGQSm8yvoyslfSwiIfB3PRb8IMieNRQAIp
+         gjwA==
+X-Forwarded-Encrypted: i=1; AL+hErHeiKuhH7dod+jGixRaRS7UyOfbKiEACLIjsn3BQrI/VnSV7gaGFdgWktCOzSA+7luA5kfj6Qi9cyY+TLExzHa8@vger.kernel.org
+X-Gm-Message-State: APuU4Z8tQJyJO+Tsl30c46fPgtTU3cguvn5iNhitdAhZNpa+FifU4oI9
+	/zwEZ7ZbG+62Sz7C0JM+kovEn+MNB8dz1REiOd0jTpHfsuXoNn2Wjfwovo16XbsGSL1fCrg8P7y
+	rVDDG38eTWA==
+X-Received: from dyaw16-n2.prod.google.com ([2002:a05:693c:4150:20b0:34c:9660:9612])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:4003:b0:369:9af5:7bc9
+ with SMTP id 5a478bee46e88-3796696128emr9921142eec.23.1794810893701; Sun, 15
+ Nov 2026 22:34:53 -0800 (PST)
+Date: Sun, 15 Nov 2026 22:34:33 -0800
 In-Reply-To: <20261116063435.2817923-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,9 +81,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261116063435.2817923-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
-Message-ID: <20261116063435.2817923-7-irogers@google.com>
-Subject: [PATCH v5 6/9] perf symbol: Optimize symbol sorting with natural-run
- merge sort and binary insertion
+Message-ID: <20261116063435.2817923-8-irogers@google.com>
+Subject: [PATCH v5 7/9] perf symbol: Add memory shrinking for symbols, DSOs,
+ and machines
 From: Ian Rogers <irogers@google.com>
 To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
 	Alireza Haghdoost <haghdoost@uber.com>, Ian Rogers <irogers@google.com>
@@ -92,605 +92,795 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Jiri 
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-ELF .symtab and .dynsym sections are typically already mostly ordered by
-address in ascending runs, and dynamic symbol resolution
-(dso__insert_symbol()) frequently inserts one or a few symbols into an
-already-sorted DSO symbol table. Invoking full-array qsort() on every
-sort after incremental insertions or across pre-ordered ELF runs spends
-avoidable CPU time in symbol comparisons.
+When profiling large workloads or systems with thousands of processes and
+shared libraries, perf can accumulate significant memory in loaded DSO
+symbol tables, secondary name-sorted symbol indices, cached DSO file data,
+and DWARF/addr2line state.
 
-Speed up symbol array sorting and out-of-order symbol insertions:
+Because the lifetime of struct symbol is controlled by its owning
+struct dso, symbols in a referenced DSO (refcnt > 1) must remain valid for
+the lifetime of the DSO reference. However, auxiliary per-DSO allocations
+and unreferenced DSOs can still be reclaimed under memory pressure:
 
-- Track the sorted prefix length (@sorted_cnt) in struct symbols and
-  replace full-array qsort() with a natural-run merge sort
-  (symbols__sort_range_with_tmp()) and galloping binary-search merge
-  (symbols__merge_runs()), plus an O(N) in-place binary insertion fast
-  path when <= 8 symbols are appended.
-- Insert directly into sorted position in dso__insert_symbol() when
-  symbols->sorted is true so dynamic single-symbol insertions maintain
-  the sorted invariant without triggering full re-sorts.
+1. symbols__shrink(): Reclaims the secondary name-sorted index
+   (symbols_by_name, which is rebuilt on demand by dso__sort_by_name())
+   and trims unused over-allocated tail capacity in the symbols array.
 
-Using 'perf bench internals symbols':
+2. dso__shrink(): Releases cached DSO resources (open file descriptor,
+   cached 4KB data pages, addr2line handles, and libdw DWARF contexts).
+   When a DSO in a dsos collection has no external references
+   (refcnt == 1), dso__shrink() also evicts its unannotated symbol table
+   via symbols__try_delete_unannotated() and marks the DSO unloaded so it
+   can be reloaded on demand if mapped again; otherwise it calls
+   symbols__shrink() to reclaim auxiliary symbol arrays.
 
-  Before:
-    Average DSO load + sort: 6.242 msec (+- 0.057 msec)
-    Average bulk insert + lookup: 1404.150 usec (+- 18.752 usec)
-    Average append + lookup: 40429.750 usec (+- 507.578 usec)
-  After (-7.0% load, -13.9% bulk, -99.6% append):
-    Average DSO load + sort: 5.808 msec (+- 0.047 msec)
-    Average bulk insert + lookup: 1209.250 usec (+- 18.446 usec)
-    Average append + lookup: 152.900 usec (+- 0.736 usec)
+3. dsos__shrink(), machine__shrink(), machines__shrink(), and
+   perf_session__shrink(): Walk the session's host and guest machines to
+   shrink DSOs and evict unreferenced user DSOs (refcnt == 1, not kernel,
+   not vDSO, not hit, and not carrying header build-ids), followed by
+   malloc_trim(0) on glibc to return freed heap pages to the OS.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/symbol.c | 413 +++++++++++++++++++++++++++++++++++++--
- tools/perf/util/symbol.h |  11 +-
- 2 files changed, 405 insertions(+), 19 deletions(-)
+ tools/perf/util/dso.c     | 311 ++++++++++++++++++++++++++++++++++----
+ tools/perf/util/dso.h     |  14 +-
+ tools/perf/util/dsos.c    |  50 ++++++
+ tools/perf/util/dsos.h    |   2 +
+ tools/perf/util/machine.c |  29 ++++
+ tools/perf/util/machine.h |   3 +
+ tools/perf/util/session.c |   8 +
+ tools/perf/util/session.h |   2 +
+ tools/perf/util/symbol.c  |  67 +++++++-
+ tools/perf/util/symbol.h  |   3 +
+ 10 files changed, 455 insertions(+), 34 deletions(-)
 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index f1e3d7af714c..8a47d1a44e5c 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -219,6 +219,7 @@ void symbols__init(struct symbols *symbols)
- 	symbols->symbols = NULL;
- 	symbols->symbols_by_name = NULL;
- 	symbols->cnt = 0;
-+	symbols->sorted_cnt = 0;
- 	symbols->allocated = 0;
- 	symbols->num_by_name = 0;
- 	symbols->sorted = true;
-@@ -233,6 +234,7 @@ static void symbols__delete_locked(struct symbols *symbols)
- 	zfree(&symbols->symbols);
- 	zfree(&symbols->symbols_by_name);
- 	symbols->cnt = 0;
-+	symbols->sorted_cnt = 0;
- 	symbols->allocated = 0;
- 	symbols->num_by_name = 0;
- 	symbols->sorted = true;
-@@ -263,37 +265,311 @@ static inline bool symbol__less_or_equal(const struct symbol *a, const struct sy
- 	return a->start <= b->start;
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 3d7db37ff095..0d205015c6dc 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -2,6 +2,7 @@
+ #include "dso.h"
+ 
+ #include <errno.h>
++#include <stdatomic.h>
+ #include <stdlib.h>
+ 
+ #include <asm/bug.h>
+@@ -15,6 +16,7 @@
+ #include <sys/types.h>
+ #include <unistd.h>
+ 
++#include "annotate.h"
+ #include "annotate-data.h"
+ #include "auxtrace.h"
+ #include "compress.h"
+@@ -552,17 +554,20 @@ static void dso__list_add(struct dso *dso) EXCLUSIVE_LOCKS_REQUIRED(_dso__data_o
+ 	dso__data_open_cnt++;
  }
  
--static int symbols__sort_cmp(const void *vlhs, const void *vrhs)
-+static unsigned int symbols__upper_bound(struct symbol **arr, unsigned int len,
-+					 const struct symbol *sym)
+-static void dso__list_del(struct dso *dso) EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
++static struct dso *dso__list_del(struct dso *dso)
++	EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
  {
--	const struct symbol *lhs = *((const struct symbol **)vlhs);
--	const struct symbol *rhs = *((const struct symbol **)vrhs);
-+	unsigned int low = 0, high = len;
- 
--	if (lhs->start != rhs->start)
--		return lhs->start < rhs->start ? -1 : 1;
--	return 0;
-+	while (low < high) {
-+		unsigned int mid = low + (high - low) / 2;
++	struct dso *put_dso = NULL;
 +
-+		if (symbol__less_or_equal(arr[mid], sym))
-+			low = mid + 1;
-+		else
-+			high = mid;
-+	}
-+	return low;
-+}
-+
-+static unsigned int symbols__lower_bound(struct symbol **arr, unsigned int len,
-+					 const struct symbol *sym)
-+{
-+	unsigned int low = 0, high = len;
-+
-+	while (low < high) {
-+		unsigned int mid = low + (high - low) / 2;
-+
-+		if (!symbol__less_or_equal(sym, arr[mid]))
-+			low = mid + 1;
-+		else
-+			high = mid;
-+	}
-+	return low;
-+}
-+
-+static void symbols__insertion_sort_range(struct symbol **arr,
-+					  unsigned int start,
-+					  unsigned int end)
-+{
-+	for (unsigned int i = start + 1; i < end; i++) {
-+		struct symbol *sym = arr[i];
-+
-+		if (!symbol__less_or_equal(arr[i - 1], sym)) {
-+			unsigned int pos = start +
-+				symbols__upper_bound(&arr[start], i - start, sym);
-+
-+			memmove(&arr[pos + 1], &arr[pos],
-+				(i - pos) * sizeof(struct symbol *));
-+			arr[pos] = sym;
-+		}
-+	}
-+}
-+
-+static void symbols__merge_runs(struct symbol **arr,
-+				unsigned int left,
-+				unsigned int mid,
-+				unsigned int right,
-+				struct symbol **tmp)
-+{
-+	unsigned int first_left, last_left, left_len, right_len;
-+	unsigned int i, j, dst;
-+
-+	if (left >= mid || mid >= right)
-+		return;
-+	if (symbol__less_or_equal(arr[mid - 1], arr[mid]))
-+		return;
-+
-+	first_left = left + symbols__upper_bound(&arr[left], mid - left, arr[mid]);
-+	right_len = right - mid;
-+
-+	if (mid - first_left <= right_len) {
-+		left_len = mid - first_left;
-+		memcpy(tmp, &arr[first_left], left_len * sizeof(struct symbol *));
-+		i = 0;
-+		j = mid;
-+		dst = first_left;
-+		while (i < left_len && j < right) {
-+			if (symbol__less_or_equal(tmp[i], arr[j])) {
-+				arr[dst++] = tmp[i++];
-+			} else {
-+				arr[dst++] = arr[j++];
-+				if (right - j >= 16 &&
-+				    (right - j) > 8 * (left_len - i) &&
-+				    !symbol__less_or_equal(tmp[i], arr[j])) {
-+					unsigned int step =
-+						symbols__lower_bound(&arr[j], right - j, tmp[i]);
-+
-+					if (step > 0) {
-+						memmove(&arr[dst], &arr[j],
-+							step * sizeof(struct symbol *));
-+						dst += step;
-+						j += step;
-+					}
-+				}
-+			}
-+		}
-+		if (i < left_len)
-+			memcpy(&arr[dst], &tmp[i], (left_len - i) * sizeof(struct symbol *));
-+		return;
-+	}
-+
-+	last_left = first_left +
-+		    symbols__upper_bound(&arr[first_left], mid - first_left, arr[right - 1]);
-+	left_len = last_left - first_left;
-+
-+	memcpy(tmp, &arr[mid], right_len * sizeof(struct symbol *));
-+	if (last_left < mid) {
-+		memmove(&arr[last_left + right_len], &arr[last_left],
-+			(mid - last_left) * sizeof(struct symbol *));
-+	}
-+
-+	if (first_left == last_left) {
-+		memcpy(&arr[first_left], tmp, right_len * sizeof(struct symbol *));
-+		return;
-+	}
-+
-+	i = last_left;
-+	j = right_len;
-+	dst = last_left + right_len;
-+	while (i > first_left && j > 0) {
-+		if (symbol__less_or_equal(arr[i - 1], tmp[j - 1])) {
-+			arr[--dst] = tmp[--j];
-+		} else {
-+			arr[--dst] = arr[--i];
-+			if (i - first_left >= 16 &&
-+			    (i - first_left) > 8 * j &&
-+			    !symbol__less_or_equal(arr[i - 1], tmp[j - 1])) {
-+				unsigned int pos = first_left +
-+					symbols__upper_bound(&arr[first_left],
-+							     i - first_left,
-+							     tmp[j - 1]);
-+				unsigned int step = i - pos;
-+
-+				if (step > 0) {
-+					dst -= step;
-+					i = pos;
-+					memmove(&arr[dst], &arr[pos],
-+						step * sizeof(struct symbol *));
-+				}
-+			}
-+		}
-+	}
-+	if (j > 0)
-+		memcpy(&arr[first_left], tmp, j * sizeof(struct symbol *));
-+}
-+
-+struct symbol_run {
-+	unsigned int start;
-+	unsigned int len;
-+};
-+
-+static void symbols__sort_range_with_tmp(struct symbol **arr, unsigned int n,
-+					 struct symbol **tmp)
-+{
-+	struct symbol_run runs[64];
-+	unsigned int nr_runs = 0;
-+	unsigned int i = 0;
-+
-+	if (n <= 32) {
-+		symbols__insertion_sort_range(arr, 0, n);
-+		return;
-+	}
-+
-+	while (i < n) {
-+		unsigned int start = i++;
-+
-+		if (i < n) {
-+			if (symbol__less_or_equal(arr[i - 1], arr[i])) {
-+				while (i < n && symbol__less_or_equal(arr[i - 1], arr[i]))
-+					i++;
-+			} else {
-+				while (i < n && !symbol__less_or_equal(arr[i - 1], arr[i]))
-+					i++;
-+				for (unsigned int lo = start, hi = i - 1; lo < hi; lo++, hi--) {
-+					struct symbol *swap = arr[lo];
-+
-+					arr[lo] = arr[hi];
-+					arr[hi] = swap;
-+				}
-+			}
-+		}
-+
-+		if (i - start < 32 && i < n) {
-+			i = min(start + 32U, n);
-+			symbols__insertion_sort_range(arr, start, i);
-+		}
-+
-+		runs[nr_runs++] = (struct symbol_run){
-+			.start = start,
-+			.len = i - start,
-+		};
-+
-+		while (nr_runs > 1) {
-+			unsigned int r = nr_runs - 2;
-+
-+			if (nr_runs >= 3 &&
-+			    runs[nr_runs - 3].len <=
-+			    runs[nr_runs - 2].len + runs[nr_runs - 1].len) {
-+				if (runs[nr_runs - 3].len < runs[nr_runs - 1].len)
-+					r = nr_runs - 3;
-+			} else if (runs[nr_runs - 2].len > runs[nr_runs - 1].len &&
-+				   nr_runs < ARRAY_SIZE(runs)) {
-+				break;
-+			}
-+
-+			symbols__merge_runs(arr, runs[r].start,
-+					    runs[r + 1].start,
-+					    runs[r + 1].start + runs[r + 1].len,
-+					    tmp);
-+			runs[r].len += runs[r + 1].len;
-+			if (r + 2 < nr_runs)
-+				runs[r + 1] = runs[r + 2];
-+			nr_runs--;
-+		}
-+	}
-+
-+	while (nr_runs > 1) {
-+		unsigned int r = nr_runs - 2;
-+
-+		if (nr_runs >= 3 && runs[nr_runs - 3].len < runs[nr_runs - 1].len)
-+			r = nr_runs - 3;
-+		symbols__merge_runs(arr, runs[r].start,
-+				    runs[r + 1].start,
-+				    runs[r + 1].start + runs[r + 1].len,
-+				    tmp);
-+		runs[r].len += runs[r + 1].len;
-+		if (r + 2 < nr_runs)
-+			runs[r + 1] = runs[r + 2];
-+		nr_runs--;
-+	}
+ 	list_del_init(&dso__data(dso)->open_entry);
+ #ifdef REFCNT_CHECKING
+-	mutex_unlock(dso__data_open_lock());
+-	dso__put(dso__data(dso)->dso);
+-	mutex_lock(dso__data_open_lock());
++	put_dso = dso__data(dso)->dso;
++	dso__data(dso)->dso = NULL;
+ #endif
+ 	WARN_ONCE(dso__data_open_cnt <= 0,
+ 		  "DSO data fd counter out of bounds.");
+ 	dso__data_open_cnt--;
++	return put_dso;
  }
  
- static void symbols__sort_locked(struct symbols *symbols)
- {
--	if (symbols->sorted)
-+	unsigned int m = symbols->sorted_cnt;
-+	unsigned int k;
-+
-+	if (symbols->sorted && symbols->sorted_cnt == symbols->cnt)
-+		return;
-+
-+	if (m > symbols->cnt)
-+		m = 0;
-+	k = symbols->cnt - m;
-+
-+	if (k == 0) {
-+		symbols->sorted = true;
- 		return;
-+	}
+ static void close_first_dso(void);
+@@ -729,13 +734,26 @@ static int open_dso(struct dso *dso, struct machine *machine)
+ 	return fd;
+ }
  
--	if (symbols->cnt > 1) {
--		qsort(symbols->symbols, symbols->cnt, sizeof(struct symbol *),
--		      symbols__sort_cmp);
-+	/*
-+	 * When only a few symbols have been appended since the last sort
-+	 * (including single-symbol insertions), insert them directly at
-+	 * their binary-searched sorted positions in O(N) without allocating.
-+	 */
-+	if (k <= 8 || symbols->cnt <= 64) {
-+		symbols__insertion_sort_range(symbols->symbols, 0, symbols->cnt);
-+		symbols->sorted_cnt = symbols->cnt;
-+		symbols->sorted = true;
-+		return;
++static struct dso *__close_data_fd(struct dso *dso)
++	EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
++{
++	if (dso__data(dso)->fd < 0)
++		return NULL;
++
++	close(dso__data(dso)->fd);
++	dso__data(dso)->fd = -1;
++	dso__data(dso)->file_size = 0;
++	return dso__list_del(dso);
++}
++
+ static void close_data_fd(struct dso *dso) EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
+ {
+-	if (dso__data(dso)->fd >= 0) {
+-		close(dso__data(dso)->fd);
+-		dso__data(dso)->fd = -1;
+-		dso__data(dso)->file_size = 0;
+-		dso__list_del(dso);
++	struct dso *put_dso = __close_data_fd(dso);
++
++	if (put_dso) {
++		mutex_unlock(dso__data_open_lock());
++		dso__put(put_dso);
++		mutex_lock(dso__data_open_lock());
  	}
-+
-+	if (symbols->sorted) {
-+		/*
-+		 * Both [0 .. m) and the sorted tail [m .. cnt) are already
-+		 * sorted; merge them into a single sorted run.
-+		 */
-+		struct symbol **tmp = malloc(min(m, k) * sizeof(struct symbol *));
-+
-+		if (tmp) {
-+			symbols__merge_runs(symbols->symbols, 0, m, symbols->cnt, tmp);
-+			free(tmp);
-+		} else {
-+			symbols__insertion_sort_range(symbols->symbols, 0, symbols->cnt);
-+		}
-+	} else if (m <= 1) {
-+		struct symbol **tmp = malloc(((symbols->cnt + 1) / 2) * sizeof(struct symbol *));
-+
-+		if (tmp) {
-+			symbols__sort_range_with_tmp(symbols->symbols, symbols->cnt, tmp);
-+			free(tmp);
-+		} else {
-+			symbols__insertion_sort_range(symbols->symbols, 0, symbols->cnt);
-+		}
-+	} else {
-+		struct symbol **tmp = malloc(k * sizeof(struct symbol *));
-+
-+		if (tmp) {
-+			symbols__sort_range_with_tmp(&symbols->symbols[m], k, tmp);
-+			symbols__merge_runs(symbols->symbols, 0, m, symbols->cnt, tmp);
-+			free(tmp);
-+		} else {
-+			symbols__insertion_sort_range(symbols->symbols, 0, symbols->cnt);
-+		}
-+	}
-+
-+	symbols->sorted_cnt = symbols->cnt;
- 	symbols->sorted = true;
  }
  
- /*
-  * Acquire @symbols->lock for reading after ensuring @symbols->symbols is
-- * sorted.
-+ * fully sorted into a single contiguous run.
+@@ -828,9 +846,12 @@ static void check_data_close(void) EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock
   */
- void symbols__sort_read_lock(struct symbols *symbols)
- 	NO_THREAD_SAFETY_ANALYSIS
+ void dso__data_close(struct dso *dso)
  {
- 	down_read(&symbols->lock);
--	while (!symbols->sorted) {
-+	while (!symbols->sorted || symbols->sorted_cnt < symbols->cnt) {
- 		up_read(&symbols->lock);
- 		down_write(&symbols->lock);
- 		symbols__sort_locked(symbols);
-@@ -342,6 +618,7 @@ void symbols__fixup_duplicate(struct symbols *symbols)
- 		}
- 	}
- 	symbols->cnt = write_idx + 1;
-+	symbols->sorted_cnt = symbols->cnt;
- 	zfree(&symbols->symbols_by_name);
- 	symbols->num_by_name = 0;
- 	symbols->sorted_by_name = false;
-@@ -517,9 +794,15 @@ static int __symbols__insert(struct symbols *symbols, struct symbol *sym)
- 		symbols->allocated = to_allocate;
- 	}
- 
--	if (symbols->sorted && symbols->cnt > 0 &&
--	    !symbol__less_or_equal(symbols->symbols[symbols->cnt - 1], sym))
-+	if (symbols->sorted && symbols->sorted_cnt == symbols->cnt) {
-+		if (symbols->cnt == 0 ||
-+		    symbol__less_or_equal(symbols->symbols[symbols->cnt - 1], sym))
-+			symbols->sorted_cnt = symbols->cnt + 1;
-+		else
-+			symbols->sorted = false;
-+	} else {
- 		symbols->sorted = false;
-+	}
- 
- 	symbols->symbols[symbols->cnt++] = sym;
- 	zfree(&symbols->symbols_by_name);
-@@ -528,6 +811,69 @@ static int __symbols__insert(struct symbols *symbols, struct symbol *sym)
- 	return 0;
++	struct dso *put_dso;
++
+ 	mutex_lock(dso__data_open_lock());
+-	close_dso(dso);
++	put_dso = __close_data_fd(dso);
+ 	mutex_unlock(dso__data_open_lock());
++	dso__put(put_dso);
  }
  
-+static int __symbols__insert_sorted(struct symbols *symbols, struct symbol *sym)
-+{
-+	unsigned int idx;
-+
-+	if (!symbols->sorted)
-+		return __symbols__insert(symbols, sym);
-+
-+	if (symbols->cnt == symbols->allocated) {
-+		unsigned int to_allocate = symbols->allocated ? symbols->allocated * 2 : 32;
-+		struct symbol **temp = realloc(symbols->symbols,
-+					       sizeof(struct symbol *) * to_allocate);
-+
-+		if (!temp) {
-+			symbol__delete(sym);
-+			return -ENOMEM;
-+		}
-+		symbols->symbols = temp;
-+		symbols->allocated = to_allocate;
-+	}
-+
-+	if (symbols->sorted_cnt == symbols->cnt) {
-+		if (symbols->cnt == 0 ||
-+		    symbol__less_or_equal(symbols->symbols[symbols->cnt - 1], sym)) {
-+			symbols->symbols[symbols->cnt++] = sym;
-+			symbols->sorted_cnt = symbols->cnt;
-+		} else if (symbols->cnt < 64) {
-+			idx = symbols__upper_bound(symbols->symbols, symbols->cnt, sym);
-+			memmove(&symbols->symbols[idx + 1], &symbols->symbols[idx],
-+				(symbols->cnt - idx) * sizeof(struct symbol *));
-+			symbols->symbols[idx] = sym;
-+			symbols->cnt++;
-+			symbols->sorted_cnt = symbols->cnt;
-+		} else {
-+			/*
-+			 * Start a sorted tail buffer at symbols[sorted_cnt .. cnt)
-+			 * so out-of-order insertions do not memmove the entire
-+			 * primary sorted prefix on every call.
-+			 */
-+			symbols->symbols[symbols->cnt++] = sym;
-+		}
-+	} else {
-+		unsigned int tail_cnt = symbols->cnt - symbols->sorted_cnt;
-+
-+		idx = symbols->sorted_cnt +
-+		      symbols__upper_bound(&symbols->symbols[symbols->sorted_cnt],
-+					   tail_cnt, sym);
-+		memmove(&symbols->symbols[idx + 1], &symbols->symbols[idx],
-+			(symbols->cnt - idx) * sizeof(struct symbol *));
-+		symbols->symbols[idx] = sym;
-+		symbols->cnt++;
-+		tail_cnt++;
-+
-+		if (tail_cnt >= 256 &&
-+		    (size_t)tail_cnt * tail_cnt >= symbols->sorted_cnt)
-+			symbols__sort_locked(symbols);
-+	}
-+
-+	zfree(&symbols->symbols_by_name);
-+	symbols->num_by_name = 0;
-+	symbols->sorted_by_name = false;
-+	return 0;
+ static int dso__find_binary_type_locked(struct dso *dso)
+@@ -1075,12 +1096,12 @@ static int bpf_size(struct dso *dso)
+ #endif // HAVE_LIBBPF_SUPPORT
+ 
+ static void
+-dso_cache__free(struct dso *dso)
++__dso_cache__free(struct dso *dso)
++	EXCLUSIVE_LOCKS_REQUIRED(dso__lock(dso))
+ {
+ 	struct rb_root *root = &dso__data(dso)->cache;
+ 	struct rb_node *next = rb_first(root);
+ 
+-	mutex_lock(dso__lock(dso));
+ 	while (next) {
+ 		struct dso_cache *cache;
+ 
+@@ -1089,6 +1110,13 @@ dso_cache__free(struct dso *dso)
+ 		rb_erase(&cache->rb_node, root);
+ 		free(cache);
+ 	}
 +}
 +
- int symbols__insert(struct symbols *symbols, struct symbol *sym)
++static void
++dso_cache__free(struct dso *dso)
++{
++	mutex_lock(dso__lock(dso));
++	__dso_cache__free(dso);
+ 	mutex_unlock(dso__lock(dso));
+ }
+ 
+@@ -1243,27 +1271,30 @@ static struct dso_cache *dso_cache__populate(struct dso *dso,
+ 	return cache;
+ }
+ 
+-static struct dso_cache *dso_cache__find(struct dso *dso,
+-					 struct machine *machine,
+-					 u64 offset,
+-					 ssize_t *ret)
+-{
+-	struct dso_cache *cache = __dso_cache__find(dso, offset);
+-
+-	return cache ? cache : dso_cache__populate(dso, machine, offset, ret);
+-}
+-
+ static ssize_t dso_cache_io(struct dso *dso, struct machine *machine,
+ 			    u64 offset, u8 *data, ssize_t size, bool out)
  {
- 	int ret;
-@@ -589,8 +935,24 @@ static struct symbol *symbols__find(struct symbols *symbols, u64 ip)
- 	if (symbols == NULL)
- 		return NULL;
+ 	struct dso_cache *cache;
+ 	ssize_t ret = 0;
  
--	symbols__sort_read_lock(symbols);
--	res = symbols__find_range(symbols->symbols, symbols->cnt, ip);
-+	down_read(&symbols->lock);
-+	while (!symbols->sorted) {
-+		up_read(&symbols->lock);
-+		down_write(&symbols->lock);
-+		symbols__sort_locked(symbols);
-+		up_write(&symbols->lock);
-+		down_read(&symbols->lock);
+-	cache = dso_cache__find(dso, machine, offset, &ret);
+-	if (!cache)
+-		return ret;
++	mutex_lock(dso__lock(dso));
++	cache = __dso_cache__find(dso, offset);
++	while (!cache) {
++		mutex_unlock(dso__lock(dso));
++		cache = dso_cache__populate(dso, machine, offset, &ret);
++		if (!cache)
++			return ret;
++		mutex_lock(dso__lock(dso));
++		/*
++		 * Re-lookup under dso__lock(dso) in case dso__shrink() freed
++		 * the cache while the lock was dropped.
++		 */
++		cache = __dso_cache__find(dso, offset);
 +	}
-+
-+	res = symbols__find_range(symbols->symbols, symbols->sorted_cnt, ip);
-+	if (symbols->sorted_cnt < symbols->cnt) {
-+		struct symbol *tail_res;
-+
-+		tail_res = symbols__find_range(&symbols->symbols[symbols->sorted_cnt],
-+					       symbols->cnt - symbols->sorted_cnt, ip);
-+		if (tail_res && (!res || tail_res->start > res->start))
-+			res = tail_res;
-+	}
- 	up_read(&symbols->lock);
  
- 	return res;
-@@ -735,7 +1097,13 @@ static struct symbol *symbols__find_by_name(struct symbol *symbols[],
- 
- int dso__insert_symbol(struct dso *dso, struct symbol *sym)
- {
--	return symbols__insert(dso__symbols(dso), sym);
-+	struct symbols *symbols = dso__symbols(dso);
-+	int ret;
-+
-+	down_write(&symbols->lock);
-+	ret = __symbols__insert_sorted(symbols, sym);
-+	up_write(&symbols->lock);
+-	return dso_cache__memcpy(cache, offset, data, size, out);
++	ret = dso_cache__memcpy(cache, offset, data, size, out);
++	mutex_unlock(dso__lock(dso));
 +	return ret;
  }
  
- void dso__delete_symbol(struct dso *dso, struct symbol *sym)
-@@ -743,11 +1111,15 @@ void dso__delete_symbol(struct dso *dso, struct symbol *sym)
- 	struct symbols *symbols = dso__symbols(dso);
+ /*
+@@ -1803,7 +1834,7 @@ int dso__name_len(const struct dso *dso)
  
- 	down_write(&symbols->lock);
--	for (unsigned int i = 0; i < symbols->cnt; i++) {
-+	for (unsigned int i = symbols->cnt; i-- > 0; ) {
- 		if (symbols->symbols[i] == sym) {
- 			memmove(&symbols->symbols[i], &symbols->symbols[i + 1],
- 				(symbols->cnt - i - 1) * sizeof(struct symbol *));
- 			symbols->cnt--;
-+			if (i < symbols->sorted_cnt)
-+				symbols->sorted_cnt--;
-+			if (symbols->sorted_cnt == symbols->cnt)
-+				symbols->sorted = true;
- 			zfree(&symbols->symbols_by_name);
- 			symbols->num_by_name = 0;
- 			symbols->sorted_by_name = false;
-@@ -1094,6 +1466,7 @@ static int maps__split_kallsyms_for_kcore(struct maps *kmaps, struct dso *dso)
- 	old_cnt = root->cnt;
- 	root->symbols = NULL;
- 	root->cnt = 0;
-+	root->sorted_cnt = 0;
- 	root->allocated = 0;
- 	root->sorted = true;
- 	zfree(&root->symbols_by_name);
-@@ -1168,6 +1541,7 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
- 	old_allocated = root->allocated;
- 	root->symbols = NULL;
- 	root->cnt = 0;
-+	root->sorted_cnt = 0;
- 	root->allocated = 0;
- 	root->sorted = true;
- 	zfree(&root->symbols_by_name);
-@@ -1314,6 +1688,7 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
- 	if (root->cnt == 0) {
- 		root->symbols = old_symbols;
- 		root->cnt = write_idx;
-+		root->sorted_cnt = write_idx;
- 		root->allocated = old_allocated;
- 		root->sorted = true;
- 		old_symbols = NULL;
-@@ -1343,12 +1718,14 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
- 	if (root->cnt == 0) {
- 		root->symbols = old_symbols;
- 		root->cnt = write_idx;
-+		root->sorted_cnt = (delta == 0) ? write_idx : 0;
- 		root->allocated = old_allocated;
- 		root->sorted = (delta == 0);
- 		old_symbols = NULL;
- 	} else {
- 		for (unsigned int j = 0; j < write_idx; j++)
- 			__symbols__insert(root, old_symbols[j]);
-+		root->sorted_cnt = 0;
- 		root->sorted = false;
+ bool dso__loaded(const struct dso *dso)
+ {
+-	return RC_CHK_ACCESS(dso)->loaded;
++	return atomic_load_explicit(&RC_CHK_ACCESS(dso)->loaded, memory_order_acquire);
+ }
+ 
+ bool dso__sorted_by_name(const struct dso *dso)
+@@ -1835,7 +1866,7 @@ struct dso *dso__new_id(const char *name, const struct dso_id *id)
+ 		dso->binary_type = DSO_BINARY_TYPE__NOT_FOUND;
+ 		dso->dbginfo_type = DSO_BINARY_TYPE__NOT_FOUND;
+ 		dso->is_64_bit = (sizeof(void *) == 8);
+-		dso->loaded = 0;
++		atomic_init(&dso->loaded, false);
+ 		dso->rel = 0;
+ 		dso->has_srcline = 1;
+ 		dso->a2l_fails = 1;
+@@ -1862,7 +1893,7 @@ struct dso *dso__new(const char *name)
+ 	return dso__new_id(name, NULL);
+ }
+ 
+-void dso__delete(struct dso *dso)
++static void __dso__delete(struct dso *dso, bool close_data)
+ {
+ 	if (dso__dsos(dso))
+ 		pr_err("DSO %s is still in rbtree when being deleted!\n", dso__long_name(dso));
+@@ -1884,7 +1915,8 @@ void dso__delete(struct dso *dso)
+ 		RC_CHK_ACCESS(dso)->long_name_allocated = false;
  	}
- 	zfree(&root->symbols_by_name);
+ 
+-	dso__data_close(dso);
++	if (close_data)
++		dso__data_close(dso);
+ 	auxtrace_cache__free(RC_CHK_ACCESS(dso)->auxtrace_cache);
+ 	dso_cache__free(dso);
+ 	dso__free_a2l(dso);
+@@ -1896,6 +1928,222 @@ void dso__delete(struct dso *dso)
+ 	RC_CHK_FREE(dso);
+ }
+ 
++void dso__delete(struct dso *dso)
++{
++	__dso__delete(dso, /*close_data=*/true);
++}
++
++bool dso__can_shrink_symbols(const struct dso *dso)
++{
++	const char *name;
++
++	if (!dso || !dso__loaded(dso))
++		return false;
++
++	if (dso__kernel(dso) || dso__is_kmod(dso))
++		return false;
++
++	if (dso__is_vdso(dso))
++		return false;
++
++	switch (dso__binary_type(dso)) {
++	case DSO_BINARY_TYPE__KALLSYMS:
++	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
++	case DSO_BINARY_TYPE__VMLINUX:
++	case DSO_BINARY_TYPE__GUEST_VMLINUX:
++	case DSO_BINARY_TYPE__KCORE:
++	case DSO_BINARY_TYPE__GUEST_KCORE:
++	case DSO_BINARY_TYPE__BPF_PROG_INFO:
++	case DSO_BINARY_TYPE__BPF_IMAGE:
++	case DSO_BINARY_TYPE__OOL:
++	case DSO_BINARY_TYPE__JAVA_JIT:
++	case DSO_BINARY_TYPE__GUEST_KMODULE:
++	case DSO_BINARY_TYPE__GUEST_KMODULE_COMP:
++	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE:
++	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP:
++		return false;
++	case DSO_BINARY_TYPE__DEBUGLINK:
++	case DSO_BINARY_TYPE__BUILD_ID_CACHE:
++	case DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
++	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
++	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
++	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
++	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
++	case DSO_BINARY_TYPE__GNU_DEBUGDATA:
++	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
++	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
++	case DSO_BINARY_TYPE__NOT_FOUND:
++	default:
++		break;
++	}
++
++	switch (dso__symtab_type(dso)) {
++	case DSO_BINARY_TYPE__KALLSYMS:
++	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
++	case DSO_BINARY_TYPE__VMLINUX:
++	case DSO_BINARY_TYPE__GUEST_VMLINUX:
++	case DSO_BINARY_TYPE__KCORE:
++	case DSO_BINARY_TYPE__GUEST_KCORE:
++	case DSO_BINARY_TYPE__BPF_PROG_INFO:
++	case DSO_BINARY_TYPE__BPF_IMAGE:
++	case DSO_BINARY_TYPE__OOL:
++	case DSO_BINARY_TYPE__JAVA_JIT:
++	case DSO_BINARY_TYPE__GUEST_KMODULE:
++	case DSO_BINARY_TYPE__GUEST_KMODULE_COMP:
++	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE:
++	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP:
++	case DSO_BINARY_TYPE__NOT_FOUND:
++		return false;
++	case DSO_BINARY_TYPE__DEBUGLINK:
++	case DSO_BINARY_TYPE__BUILD_ID_CACHE:
++	case DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
++	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
++	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
++	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
++	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
++	case DSO_BINARY_TYPE__GNU_DEBUGDATA:
++	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
++	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
++	default:
++		break;
++	}
++
++	name = dso__long_name(dso);
++	if (!name || name[0] == '[' || is_perf_pid_map_name(name) ||
++	    strstr(name, " (deleted)") != NULL)
++		return false;
++
++	return true;
++}
++
++static bool dso__has_annotated_inlines(struct dso *dso)
++{
++	struct rb_root_cached *tree = dso__inlined_nodes(dso);
++	struct rb_node *nd;
++
++	for (nd = rb_first_cached(tree); nd; nd = rb_next(nd)) {
++		struct inline_node *node = rb_entry(nd, struct inline_node, rb_node);
++		struct inline_list *ilist;
++
++		list_for_each_entry(ilist, &node->val, list) {
++			if (ilist->symbol && symbol__annotated(ilist->symbol))
++				return true;
++		}
++	}
++	return false;
++}
++
++static void dso__delete_inlines_and_srclines(void *ctx)
++{
++	struct dso *dso = ctx;
++
++	/* Free inlines before symbols, as inline frames reference symbols. */
++	inlines__tree_delete(dso__inlined_nodes(dso));
++	srcline__tree_delete(dso__srclines(dso));
++}
++
++size_t dso__shrink(struct dso *dso)
++	NO_THREAD_SAFETY_ANALYSIS
++{
++	size_t freed = 0;
++
++	if (!dso)
++		return 0;
++
++	if (mutex_trylock(dso__data_open_lock())) {
++		struct dso *put_dso = NULL;
++
++		if (dso__data(dso)->fd >= 0) {
++			put_dso = __close_data_fd(dso);
++			freed++;
++		}
++		mutex_unlock(dso__data_open_lock());
++		dso__put(put_dso);
++	}
++
++	if (!mutex_trylock(dso__lock(dso)))
++		return freed;
++
++	if (!dso__kernel(dso) && dso__binary_type(dso) != DSO_BINARY_TYPE__OOL &&
++	    !RB_EMPTY_ROOT(&dso__data(dso)->cache)) {
++		__dso_cache__free(dso);
++		freed++;
++	}
++	if (dso__a2l(dso)) {
++		dso__free_a2l(dso);
++		freed++;
++	}
++#ifdef HAVE_LIBBFD_SUPPORT
++	if (dso__a2l_libbfd(dso)) {
++		dso__free_a2l_libbfd(dso);
++		freed++;
++	}
++#endif
++#ifdef HAVE_LIBDW_SUPPORT
++	if (dso__libdw(dso)) {
++		dso__free_libdw(dso);
++		freed++;
++	}
++#endif
++
++	if (dso__dsos(dso) && refcount_read(dso__refcnt(dso)) == 1 &&
++	    dso__can_shrink_symbols(dso) && dso__has_symbols(dso) &&
++	    !dso__has_annotated_inlines(dso) &&
++	    symbols__try_delete_unannotated(dso__symbols(dso),
++					    dso__delete_inlines_and_srclines, dso)) {
++		atomic_store_explicit(&RC_CHK_ACCESS(dso)->loaded, false,
++				      memory_order_release);
++		freed++;
++	} else {
++		freed += symbols__shrink(dso__symbols(dso));
++	}
++
++	mutex_unlock(dso__lock(dso));
++	return freed;
++}
++
++/*
++ * Try to evict an unreferenced @dso from its owning struct dsos (whose write
++ * lock must be held by the caller) without blocking on any lock.
++ */
++bool dso__try_evict(struct dso *dso)
++	NO_THREAD_SAFETY_ANALYSIS
++{
++	bool can_evict;
++
++	if (!dso ||
++	    dso__has_symbols(dso) ||
++	    dso__header_build_id(dso) ||
++	    dso__hit(dso) ||
++	    dso__kernel(dso) ||
++	    dso__is_vdso(dso) ||
++	    refcount_read(dso__refcnt(dso)) != 1)
++		return false;
++
++	if (!mutex_trylock(dso__data_open_lock()))
++		return false;
++
++	can_evict = dso__data(dso)->fd < 0 &&
++		    list_empty(&dso__data(dso)->open_entry) &&
++		    refcount_read(dso__refcnt(dso)) == 1 &&
++		    mutex_trylock(dso__lock(dso));
++	if (can_evict) {
++		if (dso__has_symbols(dso) || dso__has_annotated_inlines(dso))
++			can_evict = false;
++		mutex_unlock(dso__lock(dso));
++	}
++	mutex_unlock(dso__data_open_lock());
++	if (!can_evict)
++		return false;
++
++	dso__set_dsos(dso, NULL);
++	if (refcount_dec_and_test(&RC_CHK_ACCESS(dso)->refcnt))
++		__dso__delete(dso, /*close_data=*/false);
++	else
++		RC_CHK_PUT(dso);
++	return true;
++}
++
+ struct dso *dso__get(struct dso *dso)
+ {
+ 	struct dso *result;
+@@ -1909,7 +2157,8 @@ struct dso *dso__get(struct dso *dso)
+ void dso__put(struct dso *dso)
+ {
+ #ifdef REFCNT_CHECKING
+-	if (dso && dso__data(dso) && refcount_read(&RC_CHK_ACCESS(dso)->refcnt) == 2)
++	if (dso && dso__data(dso) && dso__data(dso)->fd >= 0 &&
++	    refcount_read(&RC_CHK_ACCESS(dso)->refcnt) == 2)
+ 		dso__data_close(dso);
+ #endif
+ 	if (dso && refcount_dec_and_test(&RC_CHK_ACCESS(dso)->refcnt))
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index f23cf9957aec..962e1ad0c463 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -6,6 +6,7 @@
+ #include <linux/types.h>
+ #include <linux/rbtree.h>
+ #include <sys/types.h>
++#include <stdatomic.h>
+ #include <stdbool.h>
+ #include <stdio.h>
+ #include <linux/bitops.h>
+@@ -346,7 +347,7 @@ DECLARE_RC_STRUCT(dso) {
+ 	u8		 is_64_bit:1;
+ 	u8		 bintype_searched:1;
+ 	u8		 debuginfo_searched:1;
+-	bool		 loaded;
++	_Atomic bool	 loaded;
+ 	u8		 rel;
+ 	char		 name[];
+ };
+@@ -602,7 +603,7 @@ static inline enum dso_load_errno *dso__load_errno(struct dso *dso)
+ 
+ static inline void dso__set_loaded(struct dso *dso)
+ {
+-	RC_CHK_ACCESS(dso)->loaded = true;
++	atomic_store_explicit(&RC_CHK_ACCESS(dso)->loaded, true, memory_order_release);
+ }
+ 
+ static inline struct mutex *dso__lock(struct dso *dso)
+@@ -783,6 +784,15 @@ static inline bool dso__has_symbols(const struct dso *dso)
+ 	return RC_CHK_ACCESS(dso)->symbols.cnt > 0;
+ }
+ 
++static inline refcount_t *dso__refcnt(struct dso *dso)
++{
++	return &RC_CHK_ACCESS(dso)->refcnt;
++}
++
++bool dso__can_shrink_symbols(const struct dso *dso);
++bool dso__try_evict(struct dso *dso);
++size_t dso__shrink(struct dso *dso);
++
+ char *dso__filename_with_chroot(const struct dso *dso, const char *filename);
+ 
+ bool dso__sorted_by_name(const struct dso *dso);
+diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
+index e927e707abac..52d80219ac2f 100644
+--- a/tools/perf/util/dsos.c
++++ b/tools/perf/util/dsos.c
+@@ -6,6 +6,9 @@
+ #include "vdso.h"
+ #include "namespaces.h"
+ #include <errno.h>
++#ifdef __GLIBC__
++#include <malloc.h>
++#endif
+ #include <stdlib.h>
+ #include <string.h>
+ #include <symbol.h> // filename__read_build_id
+@@ -493,3 +496,50 @@ int dsos__for_each_dso(struct dsos *dsos, int (*cb)(struct dso *dso, void *data)
+ 	up_read(&dsos->lock);
+ 	return err;
+ }
++
++size_t dsos__shrink(struct dsos *dsos)
++{
++	unsigned int write_idx = 0;
++	size_t freed = 0;
++	bool any_removed = false;
++
++	down_write(&dsos->lock);
++
++	for (unsigned int read_idx = 0; read_idx < dsos->cnt; read_idx++) {
++		struct dso *dso = dsos->dsos[read_idx];
++
++		freed += dso__shrink(dso);
++
++		if (dso__try_evict(dso)) {
++			any_removed = true;
++			freed++;
++			continue;
++		}
++		dsos->dsos[write_idx++] = dso;
++	}
++
++	dsos->cnt = write_idx;
++	if (any_removed) {
++		if (write_idx == 0) {
++			zfree(&dsos->dsos);
++			dsos->allocated = 0;
++			dsos->sorted = true;
++		} else if (write_idx < dsos->allocated / 2) {
++			struct dso **shrunk = realloc(dsos->dsos,
++						      write_idx * sizeof(struct dso *));
++			if (shrunk) {
++				dsos->dsos = shrunk;
++				dsos->allocated = write_idx;
++			}
++		}
++	}
++
++	up_write(&dsos->lock);
++
++#ifdef __GLIBC__
++	if (freed > 0)
++		malloc_trim(0);
++#endif
++
++	return freed;
++}
+diff --git a/tools/perf/util/dsos.h b/tools/perf/util/dsos.h
+index a26774950866..151efdba2aa4 100644
+--- a/tools/perf/util/dsos.h
++++ b/tools/perf/util/dsos.h
+@@ -49,4 +49,6 @@ struct dso *dsos__find_kernel_dso(struct dsos *dsos);
+ 
+ int dsos__for_each_dso(struct dsos *dsos, int (*cb)(struct dso *dso, void *data), void *data);
+ 
++size_t dsos__shrink(struct dsos *dsos);
++
+ #endif /* __PERF_DSOS */
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index e8a3d8095346..60eed6ae3ba1 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -3441,3 +3441,32 @@ int machine__hit_all_dsos(struct machine *machine)
+ {
+ 	return dsos__hit_all(&machine->dsos);
+ }
++
++size_t machine__shrink(struct machine *machine)
++{
++	if (!machine)
++		return 0;
++
++	return dsos__shrink(&machine->dsos);
++}
++
++size_t machines__shrink(struct machines *machines)
++{
++	struct rb_node *nd;
++	size_t freed;
++
++	if (!machines)
++		return 0;
++
++	freed = machine__shrink(&machines->host);
++
++	down_read(&machines->lock);
++	for (nd = rb_first_cached(&machines->guests); nd; nd = rb_next(nd)) {
++		struct machine *pos = rb_entry(nd, struct machine, rb_node);
++
++		freed += machine__shrink(pos);
++	}
++	up_read(&machines->lock);
++
++	return freed;
++}
+diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+index 80191545ee8a..0f4c0ae5b56d 100644
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -338,4 +338,7 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
+ 
+ int machine__hit_all_dsos(struct machine *machine);
+ 
++size_t machine__shrink(struct machine *machine);
++size_t machines__shrink(struct machines *machines);
++
+ #endif /* __PERF_MACHINE_H */
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index a58b4fe44b62..d5cb5e94a54a 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -4266,3 +4266,11 @@ uint16_t perf_session__e_machine(struct perf_session *session, uint32_t *e_flags
+ 	 */
+ 	return perf_env__e_machine_nocache(env, e_flags);
+ }
++
++size_t perf_session__shrink(struct perf_session *session)
++{
++	if (!session)
++		return 0;
++
++	return machines__shrink(&session->machines);
++}
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index 05ea2c1ee8c9..cbea6792a008 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -211,4 +211,6 @@ int perf_event__process_finished_round(const struct perf_tool *tool,
+ struct perf_env *perf_session__env(struct perf_session *session);
+ uint16_t perf_session__e_machine(struct perf_session *session, uint32_t *e_flags);
+ 
++size_t perf_session__shrink(struct perf_session *session);
++
+ #endif /* __PERF_SESSION_H */
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 8a47d1a44e5c..e8b1445fd198 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <dirent.h>
+ #include <errno.h>
++#include <stdatomic.h>
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
+@@ -254,6 +255,68 @@ void symbols__exit(struct symbols *symbols)
+ 	exit_rwsem(&symbols->lock);
+ }
+ 
++bool symbols__try_delete_unannotated(struct symbols *symbols,
++				     void (*pre_delete)(void *ctx), void *ctx)
++{
++	down_write(&symbols->lock);
++	for (unsigned int i = 0; i < symbols->cnt; i++) {
++		if (symbol__annotated(symbols->symbols[i])) {
++			up_write(&symbols->lock);
++			return false;
++		}
++	}
++
++	if (pre_delete)
++		pre_delete(ctx);
++
++	symbols__delete_locked(symbols);
++	up_write(&symbols->lock);
++	return true;
++}
++
++/*
++ * Reclaim auxiliary memory from @symbols without freeing live symbol
++ * entries (whose lifetimes are owned by the containing struct dso):
++ * - Free the secondary name-sorted index (@symbols_by_name), which is
++ *   rebuilt on demand by dso__sort_by_name().
++ * - Trim unused over-allocated tail capacity in @symbols->symbols.
++ *
++ * Returns the number of buffers reclaimed/shrunk.
++ */
++size_t symbols__shrink(struct symbols *symbols)
++{
++	size_t freed = 0;
++
++	down_write(&symbols->lock);
++
++	if (symbols->symbols_by_name) {
++		zfree(&symbols->symbols_by_name);
++		symbols->num_by_name = 0;
++		symbols->sorted_by_name = false;
++		freed++;
++	}
++
++	if (symbols->cnt == 0) {
++		if (symbols->allocated > 0) {
++			zfree(&symbols->symbols);
++			symbols->allocated = 0;
++			symbols->sorted = true;
++			freed++;
++		}
++	} else if (symbols->cnt < symbols->allocated) {
++		struct symbol **shrunk = realloc(symbols->symbols,
++						 symbols->cnt * sizeof(struct symbol *));
++		if (shrunk) {
++			symbols->symbols = shrunk;
++			symbols->allocated = symbols->cnt;
++			freed++;
++		}
++	}
++
++	up_write(&symbols->lock);
++	return freed;
++}
++
+ /*
+  * Order symbols by start address only, preserving insertion order among
+  * symbols sharing the same start address (matching the previous rbtree
+@@ -2428,8 +2491,9 @@ int dso__load(struct dso *dso, struct map *map)
+ 	/* check again under the dso->lock */
+ 	if (dso__loaded(dso)) {
+ 		ret = 1;
+-		goto out;
++		goto out_unlock;
+ 	}
++	atomic_store_explicit(&RC_CHK_ACCESS(dso)->loaded, false, memory_order_release);
+ 
+ 	kmod = dso__is_kmod(dso);
+ 
+@@ -2587,6 +2651,7 @@ int dso__load(struct dso *dso, struct map *map)
+ 		ret = 0;
+ out:
+ 	dso__set_loaded(dso);
++out_unlock:
+ 	mutex_unlock(dso__lock(dso));
+ 	nsinfo__mountns_exit(&nsc);
+ 
 diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index adfb1a3a89be..ce7be4b18a11 100644
+index ce7be4b18a11..d70c01609017 100644
 --- a/tools/perf/util/symbol.h
 +++ b/tools/perf/util/symbol.h
-@@ -113,11 +113,20 @@ struct symbols {
- 	struct symbol **symbols_by_name;
- 	/** @cnt: Number of valid entries in @symbols. */
- 	unsigned int cnt;
-+	/**
-+	 * @sorted_cnt: Number of leading entries in @symbols that form the
-+	 * primary sorted prefix. When @sorted is true and @sorted_cnt < @cnt,
-+	 * the remaining tail @symbols[@sorted_cnt .. @cnt - 1] is also sorted.
-+	 */
-+	unsigned int sorted_cnt;
- 	/** @allocated: Capacity (in entries) of the @symbols allocation. */
- 	unsigned int allocated;
- 	/** @num_by_name: Number of valid entries in @symbols_by_name. */
- 	unsigned int num_by_name;
--	/** @sorted: True when @symbols is sorted by address range. */
-+	/**
-+	 * @sorted: True when @symbols[0 .. @sorted_cnt - 1] and any tail
-+	 * @symbols[@sorted_cnt .. @cnt - 1] are sorted by start address.
-+	 */
- 	bool sorted;
- 	/**
- 	 * @sorted_by_name: True when @symbols_by_name is populated and sorted
+@@ -139,6 +139,9 @@ void symbol__delete(struct symbol *sym);
+ void symbols__init(struct symbols *symbols);
+ void symbols__exit(struct symbols *symbols);
+ void symbols__delete(struct symbols *symbols);
++bool symbols__try_delete_unannotated(struct symbols *symbols,
++				     void (*pre_delete)(void *ctx), void *ctx);
++size_t symbols__shrink(struct symbols *symbols);
+ void symbols__sort_read_lock(struct symbols *symbols) SHARED_LOCK_FUNCTION(symbols->lock);
+ 
+ static inline u8 symbol__type(const struct symbol *sym)
 -- 
 2.56.1.703.gf848ed807c-goog
 
