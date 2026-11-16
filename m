@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794810029;
-	b=JDFG17tm5InD1NJXrwMQbnXKfJi1en6kNYRq7tNQFAcr/sm/xyaumayjGih5lqYnijcX
-	 5DN9mwlzYh1Dm/d/1T18bcGV1xP+6PEPepts6IS195ngZKCkYcduybLrGtDWg5oYWsoe1
-	 r25zQ4yJHBgm+ukYxvqA8W1/jmwZgHhMX9mHKdrCetAfY0v2eVDHpela0aZidtGWt2AN0
-	 9z9ac412B1+Og5C5SaUyukDWWNLPnvKURr9odTqgZLFRqROoFmas4SQwlSx0o9CkDyf3h
-	 rONWasJhey8EzKCLEayY+DK/tzsx/BDh0sKasOk/76829RhQXK4lg1a6K1CDalQmICg==
+	t=1794810268;
+	b=IniqFrJ9UIxN97HtOrjv5IjkAB18Q3oqjLOLP5vWaFOxDhKcFukd/MI5Ys1oKf2k2ci7
+	 JL+Ehy/nXy3AS9JrODxj2mHZzQtdQIq1KvvllNHYESxRRP0U7n5T7tXRTLCSmJBisOXca
+	 GmqsC8xQDM4VeXusEMTxUBSRFAMX+J+CgT40WaPMddAVtM1zRFSc3QmBgaYW/9ZZdw7dG
+	 Lu9vKRp3jJMGu2yQTRRbVGAfBUckYENDDUO2DKuZpJxVhDa1GHU3nB7vHTKpag87S5C3o
+	 Juw5sxgBf1uQe7qkeD6rg/jDILeB5pWhABNHB3UzGhzyM9SUTY75KQRMq0AaXjgEhVg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794810029;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794810268;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=NpBJPnfXG9wk02UFI4+Xt2ZnsLfLAt9L52hAXt1auZo=;
-	b=JOm8aqqQO9ofGTSieO9qFnzr3JQG6PLEkaRgcwiuUMvkk6Lnu1qRoXTq1vlK6auRkMv3
-	 aYwMVBWUcEJqq98U0UAFFcV1Im6UzkjLunIfl4zXFLANwFYYGUIPQuyTsiUAzUoHcjcEg
-	 nOl9n3wtDfvQgo/yWyD0NwiizblsFtlt5p5MrOgBUWo9dOwSIVZwDh3yJ1D7Sk5IAMF38
-	 tdeEja5Vj8ezbAl7JeqstfUkbPRnEwde3X6UuEGlV3E8C06hpI1FAv7EK6szt3hsWc+Wp
-	 YPfMFCZfIQKULF9T4sHJosltDT0z9iEf1/1KQ+ZkzvKDXuJP6DUgknD3gdPHj0qWcOg==
+	bh=d6OOQIxy7K2OqCiaertVQrm788qnC8i9l5+BKMlCLi0=;
+	b=RQrGjkYsrwZvMg07ZcxcRXZftJoteFBfqwdUmJSWbvSPDcFPWHzMEmkktpjMT1gbCx4o
+	 vmhulUJ5IYNFS3yu7ZKnshrinK6+P0FBgq+i3GhguFWSfKzCpdX/a0L29SrSpTF6uYvK3
+	 U50dJR4RaYwwH9kMIXmaIM+263tqeH7ntb0Pk+mhQwYlQnJLKL+hqBgoBN81in01/lHBD
+	 AzXXddIWROt2uU88hPBQ1NpTQIVwqWz3Y/6zOdXpBzA5Vu382i8oxVQeQJFiyTuo6UIH/
+	 k6LB8klnRDXrQ/psRfavxrmOQRJrAcC33Q8fa5uuZUL5TRt7JIO9il+H8u9Yh5kJQOw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YUwFFZ0Y;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d7Zt7x1t;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000C2606A336;
-	Mon, 16 Nov 2026 06:20:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D5A606A31C
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 06:24:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YUwFFZ0Y
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9A7B1F000C5;
-	Mon, 16 Nov 2026 06:20:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=d7Zt7x1t
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A49FC1F000C4;
+	Mon, 16 Nov 2026 06:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794810028;
-	bh=NpBJPnfXG9wk02UFI4+Xt2ZnsLfLAt9L52hAXt1auZo=;
+	s=k20260515; t=1794810267;
+	bh=d6OOQIxy7K2OqCiaertVQrm788qnC8i9l5+BKMlCLi0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YUwFFZ0Y8M/EQguY+k+h+DcuCgF5LKaukqdHjXvnvYBorg1pGPRTdNDaeIK37d4RB
-	 WNQJ7Gl8p+azlP/lQE465UF5JOEprC5Bxwc4ZCY4CA/LZOhQsOxnq2g8azn3VZ4PDE
-	 iRypm9xmWZqX3xhpn5V2RRB7nvUA8EIAKSTJJiw/1jVspUhB6evVwDv+ZqmVk/Absr
-	 nfbTJt3AXV/HUUtk8ORdP7YTnmflCjTpb1iFMc6fUgciPsQhBARBIV9Hn38tOM9g7J
-	 YU8uPL4UemPrc9/0i55WnSYFmDmqzKj80aabmeUaj/V8BE/YF2OuXZTasSr9HyQkb9
-	 x1ZdfkKbWpsMA==
-Message-ID: <sashiko-outbox-216266@kernel.org>
+	b=d7Zt7x1tSIu9thcLcwgQeV42vNtT+GoriRB9bNCg2KcHOpJO1GiYNJJ+d/n8SNNXm
+	 cOhKOD6q9Nb677M3RnoTm7KeWerUYT7PFq3JhfViQiZA1hPYSkB7ixsfsJhLGA+3uZ
+	 dCuN8qf9Yz9CAsaJ9sRLxmsX4LZ+sAfes8Hus2Q6ECFfPYJcBarWenRuszvWpmAruM
+	 8SAleO9L1vl+HxJDbHgSgkE6ce+86WTUf78jQYV0LRK6h++zm4NVeeUGrVMq9jNg3M
+	 RTcwv5+2yXV2gi3+u21U5tBWm4J2zo8MPp04QicaLY/fwu/huzAUQJpV4WdtzX7EDs
+	 CZ8f6iK5vXWPw==
+Message-ID: <sashiko-outbox-216273@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v20 08/11] tracing/wprobe: Add set_wprobe and
- clear_wprobe event triggers
+Subject: Re: [PATCH v2 11/11] perf tests: Add namespace, nsinfo, and boot ID
+ tests
 Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <179480684514.38065.14028970872476288842.stgit@devnote2>
-References: <179480675130.38065.3086970856119381693.stgit@devnote2>
- <179480684514.38065.14028970872476288842.stgit@devnote2>
+To: "Namhyung Kim" <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261116055731.707164-12-namhyung@kernel.org>
+References: <20261116055731.707164-1-namhyung@kernel.org>
+ <20261116055731.707164-12-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 16 Nov 2026 06:20:28 +0000
+Date: Mon, 16 Nov 2026 06:24:27 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,500 +61,239 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 9 potential
+Thank you for your contribution! Sashiko AI review found 7 potential
 issues to consider:
-- [Medium] tracing/wprobe: stale work_pending after cancel_work_sync()
-  wedges triggers
-- [Medium] tracing/wprobe: race and UAF on bp_event in
-  wprobe_trigger_free() teardown
-- [Medium] tracing/wprobe: broken trace_probe_is_enabled() check in
-  trigger parse
-- [Medium] tracing/wprobe: TASK_SIZE in trace_wprobe_is_valid_addr()
-  allows user addr
-- [Medium] tracing/wprobe: unrestored tw->addr after set_wprobe breaks
-  show and match
-- [Medium] tracing/wprobe: stale breakpoint hits fire triggers in
-  wprobe_trace_handler()
-- [Medium] tracing/wprobe: self-deadlock on tw->lock in wprobe_trigger()
-- [Low] tracing/wprobe: in-place NUL mutation of glob truncates trigger
-  error_log
-- [Low] tracing/wprobe: unlocked double read of tw->addr in
-  trace_wprobe_show()
+- [Medium] perf tests: unlinked DSO triggers assert in
+  run_mountns_and_chroot_tests()
+- [Low] perf tests: raw nsinfo pointer comparison in
+  test__nsinfo_thread_liveness()
+- [Low] perf tests: missing signal.h include in namespaces.c
+- [Low] perf tests: TEST_ASSERT_VAL() skips cleanup in
+  test__nsinfo_boot_id()
+- [Low] perf tests: leaked thread ref on failure in
+  test__nsinfo_thread_liveness()
+- [Low] perf tests: leaked chroot path string on failure in namespaces.c
+- [Low] perf tests: unchecked allocations in
+  run_mountns_and_chroot_tests()
 --
 
-commit 86f0de972cafa3458ae22f00d7d3014fc1fc6164
-Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+commit c5ab486958138682ed6911ecda820dca7b29d74d
+Author: Namhyung Kim <namhyung@kernel.org>
 
-tracing/wprobe: Add set_wprobe and clear_wprobe event triggers
+perf tests: Add namespace, nsinfo, and boot ID tests
 
-This commit adds set_wprobe and clear_wprobe event triggers to dynamically
-configure and clear hardware watchpoint addresses from trace event fields.
+This commit adds a unit test suite for namespaces, nsinfo, and boot ID
+handling, and extends the perf header shell test to verify the boot ID.
 
-Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.=
-1785067572.git.wangjinchao600@gmail.com/
+> diff --git a/tools/perf/tests/namespaces.c b/tools/perf/tests/namespaces.c
+> new file mode 100644
+> index 0000000000000..cfc654db48f92
+> --- /dev/null
+> +++ b/tools/perf/tests/namespaces.c
+> @@ -0,0 +1,1035 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <errno.h>
+> +#include <fcntl.h>
+> +#include <limits.h>
+> +#include <pthread.h>
+> +#include <sched.h>
+> +#include <stdbool.h>
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <sys/mman.h>
+> +#include <sys/mount.h>
+> +#include <sys/stat.h>
+> +#include <sys/syscall.h>
+> +#include <sys/types.h>
+> +#include <sys/wait.h>
+> +#include <unistd.h>
 
-> diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
-> index 644183cf5155e..d2b41aa69cfdf 100644
-> --- a/kernel/trace/trace_wprobe.c
-> +++ b/kernel/trace/trace_wprobe.c
-
-[ ... ]
-
-> @@ -217,28 +241,143 @@ static int __register_trace_wprobe(struct trace_wp=
-robe *tw)
->  	attr.bp_len =3D tw->len;
->  	attr.bp_type =3D tw->type;
-> =20
-> -	tw->bp_event =3D register_wide_hw_breakpoint(&attr, wprobe_perf_handler=
-, tw);
-> +	cpus_read_lock();
-> +	tw->bp_event =3D register_wide_hw_breakpoint_cpuslocked(&attr,
-> +							      wprobe_perf_handler,
-> +							      tw);
->  	if (IS_ERR_PCPU(tw->bp_event)) {
->  		int ret =3D PTR_ERR_PCPU(tw->bp_event);
-> =20
->  		tw->bp_event =3D NULL;
-> +		cpus_read_unlock();
->  		return ret;
->  	}
-> =20
-> +	mutex_lock(&wprobe_mutex);
-> +	list_add(&tw->active_list, &active_wprobes);
-> +	mutex_unlock(&wprobe_mutex);
-> +	cpus_read_unlock();
-> +
->  	return 0;
->  }
-> =20
->  static void __unregister_trace_wprobe(struct trace_wprobe *tw)
->  {
->  	if (tw->bp_event) {
-> +		mutex_lock(&wprobe_mutex);
-> +		list_del_init(&tw->active_list);
-> +		mutex_unlock(&wprobe_mutex);
-> +
-> +		irq_work_sync(&tw->irq_work);
-> +		cancel_work_sync(&tw->work);
->  		unregister_wide_hw_breakpoint(tw->bp_event);
->  		tw->bp_event =3D NULL;
->  	}
->  }
-
-[Severity: Medium]
-Does cancelling tw->work in __unregister_trace_wprobe() leave
-tw->work_pending stuck at 1?
-
-wprobe_trigger() sets tw->work_pending to 1 before queueing tw->irq_work,
-and only wprobe_work_func() resets it to 0.  If __unregister_trace_wprobe()
-runs after wprobe_irq_work_func() schedules tw->work but before
-wprobe_work_func() executes, cancel_work_sync(&tw->work) cancels the work
-item without clearing tw->work_pending.  Every later trigger evaluation on
-that wprobe then sees atomic_read(&tw->work_pending) !=3D 0 in
-__wprobe_count_func(), increments tw->missed, and drops all future updates.
+[Severity: Low]
+run_mountns_and_chroot_tests() calls kill() with SIGKILL, so signal.h
+should be included explicitly rather than relying on transitive headers.
 
 [ ... ]
 
-> @@ -788,6 +945,10 @@ static int trace_wprobe_show(struct seq_file *m, str=
-uct dyn_event *ev)
->  				   tw->offset, len);
->  		else
->  			seq_printf(m, " %s@%s:%d", type_str, tw->symbol, len);
-> +#ifdef CONFIG_WPROBE_TRIGGERS
-> +	} else if (tw->addr =3D=3D WPROBE_DEFAULT_CLEAR_ADDRESS) {\
-> +		seq_printf(m, " %s@-1:%d", type_str, len);
+> +static int test__nsinfo_boot_id(struct test_suite *test __maybe_unused,
+> +				int subtest __maybe_unused)
+> +{
+> +	struct perf_env live_env, off_env;
+> +	char host_boot_id[64];
+> +	const char *bid;
+> +	int ret =3D TEST_FAIL;
+> +
+> +	if (read_host_boot_id_str(host_boot_id, sizeof(host_boot_id)) < 0) {
+> +		pr_debug("SKIP: cannot read host boot_id from procfs\n");
+> +		return TEST_SKIP;
+> +	}
+> +
+> +	perf_env__init(&live_env);
+> +	perf_env__init(&off_env);
+> +
+> +	TEST_ASSERT_VAL("NULL env should match current host boot",
+> +			perf_env__is_same_boot(NULL));
+> +
+> +	TEST_ASSERT_VAL("live env should match current host boot",
+> +			perf_env__is_same_boot(&live_env));
+
+[Severity: Low]
+Does TEST_ASSERT_VAL() return TEST_FAIL directly and skip
+perf_env__exit() at the out label if either check fails?  Jumping to out
+instead avoids leaking live_env.boot_id and leaving the perf_env locks
+undestroyed.
+
+[ ... ]
+
+> +	thread__e_machine_endian(off_sub, off_m, NULL, NULL);
+> +	if (machine__find_thread(off_m, self_pid, self_pid) !=3D NULL) {
+> +		pr_debug("thread__e_machine_endian() unexpectedly recreated exited lea=
+der\n");
+> +		goto out;
+> +	}
+> +	machine__remove_thread(off_m, off_sub);
+> +	thread__put(off_sub);
+> +	off_sub =3D NULL;
+> +
+> +	/* Live thread tracking, reset on exec/namespaces, and exit propagation=
+. */
+> +	th =3D machine__findnew_thread(live_m, self_pid, self_pid);
+> +	if (!th || !thread__is_alive(th)) {
+> +		pr_debug("current live thread reported as dead\n");
+> +		goto out;
+> +	}
+> +
+> +	nsi1 =3D thread__get_nsinfo(th);
+> +	if (!nsi1)
+> +		goto out;
+> +
+> +	if (__thread__set_comm(th, "execed", 1000, /*exec=3D*/true) !=3D 0)
+> +		goto out;
+> +	nsi2 =3D thread__get_nsinfo(th);
+> +	if (!nsi2 || nsi2 =3D=3D nsi1) {
+> +		pr_debug("exec did not replace thread->nsinfo\n");
+> +		goto out;
+> +	}
+> +
+> +	ns_ev =3D calloc(1, sizeof(*ns_ev) + sizeof(ns_ev->link_info[0]));
+> +	if (!ns_ev)
+> +		goto out;
+> +	ns_ev->nr_namespaces =3D 1;
+> +	if (thread__set_namespaces(th, 2000, ns_ev) !=3D 0) {
+> +		free(ns_ev);
+> +		goto out;
+> +	}
+> +	free(ns_ev);
+> +
+> +	nsi3 =3D thread__get_nsinfo(th);
+> +	if (!nsi3 || nsi3 =3D=3D nsi2) {
+> +		pr_debug("PERF_RECORD_NAMESPACES did not replace thread->nsinfo\n");
+> +		goto out;
+> +	}
+
+[Severity: Low]
+Should nsi2 =3D=3D nsi1 and nsi3 =3D=3D nsi2 use RC_CHK_EQUAL() instead of =
+raw
+pointer equality?
+
+Because struct nsinfo is declared with DECLARE_RC_STRUCT(nsinfo), each
+thread__get_nsinfo() call allocates a distinct wrapper pointer when built
+with REFCNT_CHECKING, so raw pointer equality will always evaluate to
+false even if thread->nsinfo was not replaced.
+
+[ ... ]
+
+> +	memset(&ev, 0, sizeof(ev));
+> +	ev.fork.header.type =3D PERF_RECORD_EXIT;
+> +	ev.fork.header.size =3D sizeof(ev.fork);
+> +	ev.fork.pid =3D self_pid;
+> +	ev.fork.tid =3D self_pid;
+> +	ev.fork.ppid =3D 1;
+> +	ev.fork.ptid =3D 1;
+> +	if (perf_event__exit_del_thread(&tool, &ev, &sample, live_m) !=3D 0)
+> +		goto out;
+> +	if (!RC_CHK_ACCESS(del_nsi)->exited || nsinfo__check_proc(del_nsi) ||
+> +	    machine__find_thread(live_m, self_pid, self_pid) !=3D NULL) {
+> +		pr_debug("perf_event__exit_del_thread() did not mark nsinfo exited\n");
+> +		goto out;
+> +	}
+
+[Severity: Low]
+Does calling machine__find_thread() directly in the if condition here and
+after thread__e_machine_endian() above leak a thread reference if a
+thread is found?  machine__find_thread() returns a refcounted struct
+thread * that must be released with thread__put().
+
+[ ... ]
+
+> +	/* Guarded chroot/build-id lookups must bail out immediately when exite=
+d. */
+> +	dso =3D dso__new("/bin/sh");
+> +	nsi =3D nsinfo__new_thread(getpid(), getpid());
+> +	if (!dso || !nsi)
+> +		goto out;
+> +	nsinfo__set_exited(nsi);
+> +	dso__set_nsinfo(dso, nsinfo__get(nsi));
+> +
+> +	if (dso__filename_with_chroot(dso, "/bin/sh") !=3D NULL) {
+> +		pr_debug("dso__filename_with_chroot() did not respect exited nsinfo\n"=
+);
+> +		goto out;
+> +	}
+
+[Severity: Low]
+Does this leak the heap string returned by dso__filename_with_chroot() if
+the check fails (as well as in the exited chroot check in
+run_mountns_and_chroot_tests() below)?
+
+[ ... ]
+
+> +	dso =3D dso__new(target_bin);
+> +	if (!dso) {
+> +		machine__exit(&machine);
+> +		goto out_wait;
+> +	}
+> +	dso__set_nsinfo(dso, nsinfo__get(nsi));
+> +#ifndef HAVE_LIBELF_SUPPORT
+> +	/* Without libelf, filename__has_section() cannot auto-detect binary_ty=
+pe. */
+> +	dso__set_binary_type(dso, DSO_BINARY_TYPE__SYSTEM_PATH_DSO);
+> +	dso__set_bintype_searched(dso);
 > +#endif
->  	} else {
->  		seq_printf(m, " %s@0x%lx:%d", type_str, tw->addr, len);
->  	}
-
-[Severity: Low]
-Can trace_wprobe_show() print the raw address of
-wprobe_trigger_clear_target instead of -1?
-
-wprobe_trigger() updates tw->addr concurrently under tw->lock without
-holding dyn_event_ops_mutex.  Because trace_wprobe_show() reads tw->addr a
-second time in the else branch instead of reading it once with READ_ONCE()
-into a local variable, a concurrent clear_wprobe trigger setting tw->addr
-to WPROBE_DEFAULT_CLEAR_ADDRESS between the comparison and seq_printf()
-causes dynamic_events to print the address of wprobe_trigger_clear_target.
-
-> @@ -800,9 +961,635 @@ static int trace_wprobe_show(struct seq_file *m, st=
-ruct dyn_event *ev)
-
-[ ... ]
-
-> +static bool __wprobe_count_func(struct event_trigger_data *data,
-> +				unsigned long addr)
-> +{
-> +	struct wprobe_trigger_data *wprobe_data =3D data->private_data;
-> +	struct trace_wprobe *tw =3D wprobe_data->tw;
-> +	unsigned long cur_addr;
-> +
-> +	if (atomic_read(&tw->work_pending))
-> +		return false;
-> +
-> +	cur_addr =3D READ_ONCE(tw->addr);
-> +
-> +	if (!wprobe_data->clear) {
-> +		if (cur_addr !=3D WPROBE_DEFAULT_CLEAR_ADDRESS)
-> +			return false;
-> +		if (!trace_wprobe_is_valid_addr(addr, tw->len))
-> +			return false;
+> +	if (dso__data_read_offset(dso, &machine, 0, magic, sizeof(magic)) !=3D =
+sizeof(magic) ||
+> +	    memcmp(magic, "\x7f" "ELF", 4) !=3D 0) {
 
 [Severity: Medium]
-Can trace_wprobe_is_valid_addr() allow a set_wprobe trigger to install a
-user-space watchpoint address when a 32-bit compat task is running?
+Does calling dso__data_read_offset() on a standalone dso without adding
+it via dsos__add(&machine.dsos, dso) trigger an assertion failure in
+DEBUG=3D1 builds?
 
-kernel/trace/trace_wprobe.c:trace_wprobe_is_valid_addr() {
-	if (addr < TASK_SIZE)
-		return false;
+dso__data_read_offset() -> data_read_write_offset() ->
+dso__data_file_size() -> file_size() -> try_to_open_dso() -> open_dso()
+calls dso__list_add(dso), which asserts that dso__dsos(dso) is non-NULL:
+
+tools/perf/util/dso.c:dso__list_add() {
     ...
+	/* Assume the dso is part of dsos, hence the optional reference count abov=
+e. */
+	assert(dso__dsos(dso));
 }
 
-On 64-bit architectures with 32-bit compatibility mode (such as x86_64 with
-CONFIG_IA32_EMULATION), TASK_SIZE depends on the current task's personality
-and evaluates to IA32_PAGE_OFFSET (~4 GiB) when a 32-bit compat task is
-running.  Because modify_local_hw_breakpoint_addr() bypasses
-arch_check_bp_in_kernelspace() (which checks TASK_SIZE_MAX), a set_wprobe
-trigger firing in the context of a 32-bit compat task accepts any aligned
-64-bit user-space address in [IA32_PAGE_OFFSET, TASK_SIZE_MAX) and programs
-it into the CPU-wide hardware debug registers.  Using TASK_SIZE_MAX (or
-arch_check_bp_in_kernelspace()) avoids depending on current.
-
 [ ... ]
 
-> +static void wprobe_trigger(struct event_trigger_data *data,
-> +			   struct trace_buffer *buffer,  void *rec,
-> +			   struct ring_buffer_event *event)
-> +{
-> +	struct wprobe_trigger_data *wprobe_data =3D data->private_data;
-> +	struct trace_wprobe *tw =3D wprobe_data->tw;
-> +	unsigned long target_addr, addr =3D 0, flags;
+> +			if (cpid > 0 && read(cpipe[0], &sig, 1) =3D=3D 1 && sig =3D=3D '1') {
+> +				struct nsinfo *cnsi =3D nsinfo__new_thread(cpid, cpid);
+> +				struct stat st1, st2;
+> +				char *resolved =3D NULL;
 > +
-> +	if (in_nmi())
-> +		return;
-> +
-> +	if (wprobe_data->field) {
-> +		if (!rec)
-> +			return;
-> +		addr =3D *(unsigned long *)((char *)rec + wprobe_data->offset);
-> +		addr +=3D wprobe_data->adjust;
-> +	}
-> +
-> +	raw_spin_lock_irqsave(&tw->lock, flags);
-> +
-> +	if (!__wprobe_count_func(data, addr)) {
-> +		atomic_inc(&tw->missed);
-> +		goto out;
-> +	}
-> +
-> +	/*
-> +	 * For counted triggers, verify data->count is still available under
-> +	 * tw->lock to prevent concurrent executions from exceeding the limit.
-> +	 */
-> +	if ((data->flags & EVENT_TRIGGER_FL_COUNT) && !data->count)
-> +		goto out;
-> +
-> +	target_addr =3D wprobe_data->clear ? WPROBE_DEFAULT_CLEAR_ADDRESS : add=
-r;
-> +
-> +	/*
-> +	 * Try updating the hardware breakpoint on the local CPU first.
-> +	 * If this fails, skip updating tw->addr and do not queue irq_work.
-> +	 * Note that this wprobe will not be traced until tw_addr is updated.
-> +	 * (e.g. NMI happens on this CPU.)
-> +	 */
-> +	if (trace_wprobe_update_local(tw, target_addr)) {
-> +		atomic_inc(&tw->missed);
-> +		goto out;
-> +	}
-> +
-> +	/*
-> +	 * Decrement data->count here under tw->lock only after the local
-> +	 * hardware breakpoint has been successfully updated. This avoids:
-> +	 * 1) Consuming count on trigger attempts that failed/missed.
-> +	 * 2) Race windows where concurrent CPUs decrement count and underflow
-> +	 *    to -1 (unlimited).
-> +	 */
-> +	if (data->flags & EVENT_TRIGGER_FL_COUNT) {
-> +		if (data->count > 0)
-> +			(data->count)--;
-> +	}
-> +
-> +	WRITE_ONCE(tw->addr, target_addr);
-> +	if (!wprobe_data->clear)
-> +		clear_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &wprobe_data->file->flags);
-> +	else
-> +		set_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &wprobe_data->file->flags);
-> +
-> +	/*
-> +	 * For other CPUs, kick irq_work to asynchronously propagate
-> +	 * the new address.
-> +	 */
-> +	if (num_online_cpus() > 1) {
-> +		atomic_set(&tw->work_pending, 1);
-> +		irq_work_queue(&tw->irq_work);
-> +	}
-> +
-> +out:
-> +	raw_spin_unlock_irqrestore(&tw->lock, flags);
-> +}
-
-[Severity: Medium]
-Can wprobe_trigger() self-deadlock on tw->lock if a nested event fires
-while tw->lock is held?
-
-wprobe_trigger()
-  raw_spin_lock_irqsave(&tw->lock, flags)
-  irq_work_queue(&tw->irq_work)
-    ...
-      native_write_msr()
-        trace_write_msr()
-          ...
-            wprobe_trigger()
-              raw_spin_lock_irqsave(&tw->lock, flags)  <-- spins forever
-
-While wprobe_trigger() holds tw->lock, irq_work_queue() on x86 with x2APIC
-raises a self-IPI via native_write_msr(), firing the msr:write_msr
-tracepoint, and functions called by trace_wprobe_update_local() (such as
-modify_local_hw_breakpoint_addr()) can also be traced by fprobe events.  If
-a wprobe trigger targeting the same trace_wprobe is attached to one of
-those nested events, the inner wprobe_trigger() runs on the same CPU with
-in_nmi() =3D=3D false and spins forever on tw->lock.
-
-[Severity: Medium]
-Can a stale breakpoint hit on a remote CPU fire unconditional triggers
-attached to the wprobe event after clear_wprobe or set_wprobe updates
-tw->addr?
-
-CPU0                              CPU1
-wprobe_trigger()
-  WRITE_ONCE(tw->addr,
-    WPROBE_DEFAULT_CLEAR_ADDRESS)
-  set_bit(SOFT_DISABLED_BIT, ...)
-  irq_work_queue(&tw->irq_work)
-                                  wprobe_perf_handler()
-                                    wprobe_trace_handler(tw, old_addr, ...)
-                                      trace_trigger_soft_disabled(trace_fil=
-e)
-                                        event_triggers_call(...)
-                                      if (READ_ONCE(tw->addr) !=3D addr)
-                                        return;
-
-kernel/trace/trace_wprobe.c:wprobe_trace_handler() {
-    ...
-	if (trace_trigger_soft_disabled(trace_file))
-		return;
-
-	if (READ_ONCE(tw->addr) !=3D addr)
-		return;
-    ...
-}
-
-Because remote CPUs update their hardware debug registers asynchronously via
-tw->work, a remote CPU can still take a breakpoint exception for the old
-address after tw->addr has changed.  In wprobe_trace_handler(),
-trace_trigger_soft_disabled() runs before the READ_ONCE(tw->addr) !=3D addr
-check, which invokes __trace_trigger_soft_disabled() ->
-event_triggers_call() and fires any unconditional triggers (such as
-traceoff, snapshot, or stacktrace) attached to the wprobe event.  Checking
-READ_ONCE(tw->addr) !=3D addr before trace_trigger_soft_disabled() avoids
-firing triggers on stale hits.
-
-[ ... ]
-
-> +static void release_private_wprobe_trigger_data(struct event_trigger_dat=
-a *data)
-> +{
-> +	struct wprobe_trigger_data *wprobe_data =3D data->private_data;
-> +
-> +	/* The file may already be freed here, only the call is kept alive */
-> +	trace_event_put_ref(trace_probe_event_call(&wprobe_data->tw->tp));
-> +	free_wprobe_trigger_data(wprobe_data);
-> +}
-
-[ ... ]
-
-> +static void wprobe_trigger_free(struct event_trigger_data *data)
-> +{
-> +	struct wprobe_trigger_data *wprobe_data =3D data->private_data;
-> +
-> +	if (WARN_ON_ONCE(data->ref <=3D 0))
-> +		return;
-> +
-> +	data->ref--;
-> +	if (!data->ref) {
-> +		/* Remove the SOFT_MODE flag */
-> +		trace_event_enable_disable(wprobe_data->file, 0, 1);
-> +		data->private_data_free =3D release_private_wprobe_trigger_data;
-> +		trigger_data_free(data);
-> +	}
-> +}
-
-[Severity: Medium]
-Can wprobe_trigger_free() unregister and free tw->bp_event while an
-in-flight wprobe_trigger() is still using it?
-
-CPU0                              CPU1
-clear_event_triggers()
-  list_del_rcu(&data->list)
-  wprobe_trigger_free(data)
-    trace_event_enable_disable()
-      ...
-        __unregister_trace_wprobe(tw)
-          unregister_wide_hw_breakpoint(
-            tw->bp_event)
-                                  wprobe_trigger()
-                                    trace_wprobe_update_local(tw, ...)
-                                      bp =3D *this_cpu_ptr(tw->bp_event)
-                                      modify_local_hw_breakpoint_addr(bp, .=
-..)
-                                        <-- use-after-free
-          tw->bp_event =3D NULL
-    trigger_data_free(data)
-      /* tracepoint_synchronize_unregister() happens later in kthread */
-
-When a trace instance is removed, clear_event_triggers() calls
-data->cmd_ops->free(data) immediately after list_del_rcu() without waiting
-for tracepoint_synchronize_unregister().  Because wprobe_trigger_free()
-calls trace_event_enable_disable() before trigger_data_free() waits for
-in-flight tracepoints, __unregister_trace_wprobe() frees the per-CPU
-perf_event breakpoints and tw->bp_event before clearing tw->bp_event =3D NU=
-LL
-and without synchronizing with tw->lock, while a concurrent wprobe_trigger()
-on another CPU dereferences tw->bp_event and queues tw->irq_work after
-irq_work_sync() has already returned.
-
-Conversely, when a user removes a trigger via wprobe_unregister_trigger(),
-tracepoint_synchronize_unregister() has already completed, but deferring
-trace_event_put_ref() to release_private_wprobe_trigger_data() on
-trigger_kthread means an immediate dynamic_events removal of the wprobe can
-race with the kthread and fail with -EBUSY.
-
-> +static int wprobe_trigger_cmd_parse(struct event_command *cmd_ops,
-> +				    struct trace_event_file *file,
-> +				    char *glob, char *cmd,
-> +				    char *param_and_filter)
-> +{
-> +	/*
-> +	 * set_wprobe:EVENT:FIELD[+OFFS]
-> +	 * clear_wprobe:EVENT[:FIELD[+OFFS]]
-> +	 */
-> +	struct wprobe_trigger_data *wprobe_data =3D NULL;
-> +	struct event_trigger_data *trigger_data =3D NULL;
-> +	struct trace_event_file *wprobe_file;
-> +	struct trace_array *tr =3D file->tr;
-> +	char *event_str, *field_str, *comment;
-> +	struct ftrace_event_field *field;
-> +	struct trace_event_call *event;
-> +	bool remove, clear =3D false;
-> +	unsigned long orig_addr =3D 0;
-> +	struct trace_wprobe *tw;
-> +	char *param, *filter;
-> +	int ret;
-> +
-> +	remove =3D event_trigger_check_remove(glob);
-> +
-> +	if (!strcmp(cmd, CLEAR_WPROBE_STR))
-> +		clear =3D true;
-> +
-> +	if (param_and_filter) {
-> +		/* Recover original trigger string to show the error log correctly. */
-> +		if (*(param_and_filter - 1) =3D=3D '\0')
-> +			*(param_and_filter - 1) =3D ':';
-> +		comment =3D strchr(param_and_filter, '#');
-> +		if (comment)
-> +			*comment =3D '\0';
-> +	}
-> +
-> +	if (event_trigger_empty_param(param_and_filter)) {
-> +		wprobe_trigger_log_err(file, glob, strlen(cmd) + 1, WPROBE_NOT_FOUND);
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret =3D event_trigger_separate_filter(param_and_filter, &param, &filter=
-, true);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (file->event_call->flags & TRACE_EVENT_FL_KPROBE) {
-> +		wprobe_trigger_log_err(file, glob, 0, WPROBE_ON_KPROBE);
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	event_str =3D strsep(&param, ":");
+> +				chroot_dso =3D dso__new("/chroot_elf");
+> +				if (chroot_dso && cnsi) {
 
 [Severity: Low]
-Does mutating param_and_filter in place truncate the command string logged
-by wprobe_trigger_log_err()?
-
-param_and_filter points into the glob buffer.  Although the code restores
-the colon at *(param_and_filter - 1), subsequent calls to
-event_trigger_separate_filter(), strsep(&param, ":"), and *offs =3D '\0'
-insert NUL terminators directly into glob.  Any later
-wprobe_trigger_log_err(file, glob, ...) call for a bad field, offset, or
-count logs only the truncated prefix of glob while passing an error caret
-offset past the end of the logged string.  Also, when param_and_filter is
-NULL (for example, writing "set_wprobe" with no colon), strlen(cmd) + 1
-points one byte past the NUL terminator of glob.
-
-> +	/* Find target wprobe */
-> +	tw =3D find_trace_wprobe(event_str, WPROBE_EVENT_SYSTEM);
-> +	if (!tw) {
-> +		wprobe_trigger_log_err(file, glob, event_str - glob, WPROBE_NOT_FOUND);
-> +		return -ENOENT;
-> +	}
-> +	/* The target wprobe must not be used (unless clear) */
-> +	if (!remove && !clear && trace_probe_is_enabled(&tw->tp)) {
-> +		wprobe_trigger_log_err(file, glob, event_str - glob, WPROBE_BUSY);
-> +		return -EBUSY;
-> +	}
-
-[Severity: Medium]
-Does checking trace_probe_is_enabled(&tw->tp) here conflate manual enabling
-with trigger soft-enabling?
-
-Both set_wprobe and clear_wprobe call trace_event_enable_disable(wprobe_fil=
-e,
-1, 1), which sets TP_FLAG_TRACE on tw->tp and makes
-trace_probe_is_enabled(&tw->tp) return true.  As a result, registering
-clear_wprobe before set_wprobe, re-adding set_wprobe after removing it while
-clear_wprobe is still attached, or attaching set_wprobe to a second event
-all fail with -EBUSY.  When clear_wprobe is registered first, tw->addr is
-also not initialized to WPROBE_DEFAULT_CLEAR_ADDRESS because that assignment
-is gated on !clear.
-
-Conversely, because clear_wprobe skips this busy check, it can be attached
-to a wprobe that was manually enabled by the user (where sm_ref =3D=3D 0); =
-when
-clear_wprobe fires or is later removed, it soft-disables or unregisters the
-manually enabled wprobe.
-
-[ ... ]
-
-> +	if (!clear) {
-> +		orig_addr =3D tw->addr;
-> +		WRITE_ONCE(tw->addr, WPROBE_DEFAULT_CLEAR_ADDRESS);
-> +	}
-> +
-> +	ret =3D trace_event_enable_disable(wprobe_file, 1, 1);
-
-[Severity: Medium]
-Does overwriting tw->addr without restoring it on trigger teardown break
-trace_wprobe_show() and dynamic_events deletion?
-
-When set_wprobe is registered and fires, tw->addr is overwritten first with
-WPROBE_DEFAULT_CLEAR_ADDRESS and then with the runtime target address, and
-removing the trigger leaves tw->addr at that runtime value.  For a wprobe
-created with rw@-1:8, removing set_wprobe after it fires causes
-trace_wprobe_show() to print the runtime address instead of -1, and
-deleting the wprobe with "!w:watch rw@-1:8 ..." fails in
-trace_wprobe_match_command_head() because tw->addr no longer equals
-WPROBE_DEFAULT_CLEAR_ADDRESS.  For a symbol-based wprobe, tw->symbol remains
-set while tw->addr is left clobbered, so trace_wprobe_show() still shows
-@symbol while re-enabling the wprobe watches the wrong address.
+If either nsinfo__new_thread() or dso__new() returns NULL here, does the
+test silently skip the chroot checks and still set ret =3D TEST_OK?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/179480675130.38065.=
-3086970856119381693.stgit@devnote2?part=3D8
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261116055731.7071=
+64-1-namhyung@kernel.org?part=3D11
