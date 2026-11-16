@@ -1,64 +1,65 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794825453;
-	b=i+xcA6xqC6d5BBwghWeMC+Gr0pJjrSC2a21fNsgFMHplyetS6T2XcMpWvyEWsJguCvkC
-	 WScSXGRA4mrfPgUAAVELuLfDqJ0TGiK4W9qUkB/zY7wSfqM2LXeV6bA2nA1tFEWDX2Lor
-	 NYlARseNwMnsrk/sDtsIZPJFTzXLLMLG2A8DNn4u6UXnP1zzVQMAoOHPpRpjxoQWjc2Xu
-	 24J9ZRX2ihaMRPzHlM2uH8CmVcSVTtJdsIZ3lA1WdvEDezGsszzwh9H+Pk1FR05BTScRH
-	 JKuLJq7VDeeyi2XUxihleblfCBdcjQbYKAYOCYKSdeGoGb/YoowiEgBx9v3CIxKOAVw==
+	t=1794829661;
+	b=QGOgRdgbkfAhcDP82oSBrLSgNbNFQrBn7PLyNqTDBtmzuukBs9UW48E5NCJ7xTHTjA+m
+	 vyzQXoVbzTtCLc8M7SbP/A8VCAJe2i3ETkW4dDayxFprNz9BxryzA1XF1vkbMNXQSsrt6
+	 fymI8NTTiunWjYhnoRxbFTXjVKS8QE/AEuZWxbz4NV5MPaDJ9VwyPUCLX9m1eLQKZO5aw
+	 1yCoxEtpmwZIE7jQROKJdgKqb+BucXLYrM0AubTLDoOZ01GeKfZeOEsT5D8HMkvUdvkgK
+	 DFQ8KqR6j6HtJvw0kDX6rhWH+vFbO0avuJIKYslLG//OPpJkIATS7a3ZgLUd3qCXhZA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794825453;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To;
-	bh=/ZtzIqGKVBjlBBIyqu9fROMer7QN/0/V51r6Lfy880U=;
-	b=LPFqI5U5y7P9vduauiQ+976nW9QM4vujhbMJ7wqoKJEIj7sds8nrrywxJQ+SJqnOf0av
-	 36VrLHXyG/NttrKl85ta8Y5eR6oPqqtFvITram1QZ34B8k5b3EOTlXfqU1vegxmD74TFK
-	 YaNst2LZfnDKkTyUKCwFDfXzB1lw50gzaIelHibeSSlCU4ME9t2NDA+exf8I78816b9Ag
-	 WTeMbASkFw1o4WK23giyHNdd8kq1c2b93C1yoB11tzHToddsxLV/Sv0tXKNl1mqSgbvw8
-	 LNA1AyOvLfJtmA4EG3ieiED1atBAkxmYetuYlUgiUJD2SRaoAI2QvgP3kuV/gdvXLew==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794829661;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=fawrS/3ssONFT5J61BoyKpRzvTv/DunyIOYxlv8HJm0=;
+	b=4vvpu4egNaHA2Sgl7VQEyGec3w2s07+17BXIWF6+JIn0Dga0SvIABv0QnclyEAzXmU3M
+	 RwPtxAqFzWwzvfcyQJtqKNmlMcbRbcXT8Bv0lvNu3wtDuQdbbOI83b7PINO+fvLv5EF9/
+	 iB5bCkg4zaiLvXrjQSyo7xwYYQT9AJNmF2qYcnUM3JXwQ9KyoU70wG0r/BC9TGc6EHLAl
+	 D84KnkosqTIWe+Q4lAxUAMDbAofPp2huEIDdQvxZdwKuYAQnmO5gRhRzfsysa8v/rlC9N
+	 rMO9rRZaX+3gihi7nTJ7wtYvF61OL9NjJ4RoxCP3n+nreY8XQ/QDiLbMKy86D2gN6yg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=arm.com;
-	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b="aEv3CH/d";
-	arc=none smtp.remote-ip=217.140.110.172
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C37CD606A31C;
-	Mon, 16 Nov 2026 10:37:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C37CD606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Rsw5+En3;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965FB606A31C;
+	Mon, 16 Nov 2026 11:47:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=aEv3CH/d
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF3131476;
-	Mon, 16 Nov 2026 02:37:28 -0800 (PST)
-Received: from localhost (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8920B3F632;
-	Mon, 16 Nov 2026 02:37:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1794825451; bh=fHZnIIQvAnQEZYB1ohrXNN6xTkU9UWERfy/JRkWqdUc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aEv3CH/dircAIumFk9ZT6vTv8qcWLVhR94/xOQnKX/CpPjJCV0PznJfRdIjZAYN7L
-	 +YxzjcZvjTvjXurJzyQsvvit8GW23xjZIXxlxj5mWJpfqA0S46ey9vBdOifk2b4hNL
-	 Mwf4F9KJ/H8v0uw2yHTNFd0tiVyPjjlpOGpQuXQA=
-Date: Mon, 16 Nov 2026 10:37:29 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Johnny Fan <johnny.fan@cixtech.com>
-Cc: will@kernel.org, mark.rutland@arm.com, suzuki.poulose@arm.com,
-	jeremy.linton@arm.com, maz@kernel.org, mike.leach@arm.com,
-	james.clark@linaro.org, alexander.shishkin@linux.intel.com,
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	cix-kernel-upstream@cixtech.com, jie.fu@cixtech.com,
-	bob.zhang@cixtech.com, Fugang Duan <fugang.duan@cixtech.com>
-Subject: Re: [PATCH v3 2/2] perf: arm_pmu_acpi: Support heterogeneous ACPI
- systems
-Message-ID: <20261116103729.GT9176@e132581.arm.com>
-References: <20261102084153.3975282-1-johnny.fan@cixtech.com>
- <20261102084153.3975282-3-johnny.fan@cixtech.com>
- <20261113160041.GS9176@e132581.arm.com>
- <avpxRZFX4Iebu0l3@JohnnyFan>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Rsw5+En3
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 481051F000C4;
+	Mon, 16 Nov 2026 11:47:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794829661;
+	bh=fawrS/3ssONFT5J61BoyKpRzvTv/DunyIOYxlv8HJm0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Rsw5+En3+9wrQKzmbmtFGi8MVW112ImjuZZC4tc3VB0P6R4WR2aAo9XonN9s3vSG1
+	 z+Mv61pulx2NsWwq879gwfSqoZjziMhEbwuoBO2py/jmxqCKJeY3JZ8Audt/3rP2ik
+	 rK0R1RCSx/qUTBqZKJe2joy7y4L1rhXCcBE2g7o8Ql3SHNnb18NnIKL3hKcY96xexB
+	 ne7KMyzfCTP9YWC4mOhtgvymbapz9NWR/Ea0/NP1FSgkGp8f+0+yCnNUfVYgWaGh3+
+	 IBndu8EV0BA+sxc+KLKzA0xiIlzQdQZnO/bEKmEm9AGnBpAgvtVvRfECgM3P87xeZq
+	 ukv0T+kV6tXHw==
+Date: Mon, 16 Nov 2026 12:47:32 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, =?utf-8?Q?Beno=C3=AEt?= Monin <benoit.monin@bootlin.com>, 
+	Gregory CLEMENT <gregory.clement@bootlin.com>, =?utf-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>, 
+	Fu Chao-Ying <chao-ying.fu@globalfoundries.com>, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-rt-devel@lists.linux.dev, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 4/6] dt-bindings: mips: mti,mips-cm: add performance
+ counter interrupt
+Message-ID: <20261116-inescapable-dangerous-hummingbird-0faed6@quoll>
+References: <20261112-i6500-cm3-pmu-v2-0-cd2569571819@mobileye.com>
+ <20261112-i6500-cm3-pmu-v2-4-cd2569571819@mobileye.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -70,37 +71,22 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <avpxRZFX4Iebu0l3@JohnnyFan>
+In-Reply-To: <20261112-i6500-cm3-pmu-v2-4-cd2569571819@mobileye.com>
 
-On Mon, Nov 16, 2026 at 10:58:13AM +0800, Johnny Fan wrote:
-> On Fri, Nov 13, 2026 at 04:00:41PM +0000, Leo Yan wrote:
+On Thu, Nov 12, 2026 at 02:29:01PM +0200, Vladimir Kondratiev wrote:
+> The CM3 asserts so_cm_perf_cnt_int when one of its performance counters
+> overflows. Whether that output is connected to an interrupt controller
+> input is up to the SoC integrator, so describe it as an optional
+> 'interrupts' property of the coherency-manager node. When absent, the
+> counters have to be polled by software.
 > 
-> [...]
-> 
-> > Based on above idea, I would fold your patch into my series (but I will
-> > drop the first patch for changing TRBE/SPE drivers). I will keep you as
-> > the author but please bear me a bit that I may refactor it to fit into
-> > the extensions. Hope this is fine for you.
-> 
-> 
-> Hi Leo,
-> 
-> Thanks for the detailed review, and yes — please go ahead and fold it
-> into your series. I'm happy for you to keep me as the author and to
-> refactor it as you see fit.
+> Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+> ---
+>  Documentation/devicetree/bindings/mips/mti,mips-cm.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-Cool!
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 
-> I'll hold off posting a v4 so we don't end up with two versions under
-> review. Ping me when there's something you'd like tested on the CIX
-> board.
+Best regards,
+Krzysztof
 
-Thanks for offering to test! I'll test on my Orion6 board and send out
-the patches this week. You're welcome to test them and any comments.
-
-Even if we're testing on the same SoC, your results would still be
-valuable, maybe we're using different firmware versions.
-
-Thanks,
-Leo
