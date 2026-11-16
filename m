@@ -1,57 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794808630;
-	b=v4Db1KZlqE2nMYcIti98AJY5794RePmsOQqH5DniP5u4WS2M+zfFFqthJ0avXDZNeWyf
-	 HwOiMU0PE91dSJ56amp38EXSdiywlFKxUqOejSwV9IHepLtVzNnPIl9QaGrUkkndO7opN
-	 5f1HeoDqqR55Zv0N5WrX73N/bp94AYrvFt2K+DSQuQ7MU1p45PdQtIxjVP3c/BrIEntGt
-	 fdVpV2plQYaN6Da1tdT8cHkMYxtiU31wG2NOfmUi14QI83kU8KPT0z6zxFeXKoRUBd558
-	 aTZE6rnspZkZsOShZnGdz5ZWrNO27zc304baSoyYUfNQWwqdl81C2s80FR0qcLQJuEA==
+	t=1794808653;
+	b=O0A+izNNJ/uITn4LPg19vJ9mVRigzl1PB46zCnrDmQkLYxbC56hhzkvpoDv7TyZ12NmL
+	 IqjvxSNgRm75vrMCZqiBH7Mmd3J97Xv4Udoi7LRFFiztGA7jomItkEUwxZbsvNW4tJA10
+	 IoVOOAVpk1CFkU/T+Cpqd6PXR0545t7kZuHrkakzO014D1PHHae9ab0NIRvcEH7kgMmJT
+	 pRpLyUDkcRZ3szwh5Ls8WyPMdkZylFaGI4MLVjR55jvqj4QCiecSkikuzpOuGhBopDKRC
+	 H+mFIqmDt2D+8Eq8f97n33unYs3T6kTNt6Hc+HKPZkeyzos8esSCY/gxuS/JnNOq1Xg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794808630;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=bdSb0XXFB/ytXc4i7kSwG5tKuvQ8028StWzRvalMHko=;
-	b=cbkR3oCoif6+yljbLWNfSWeXwm4sB2LiPgW+CFcD+UwaMrTH1VNrAX0Z/E2Ht0gFNjHb
-	 D1Ctxg4v6vYr7WBu3FE/oSO4YNioJ6xmhoZ6VRj7Y/whGEBAM16eRG27n9dtos/LUhqAX
-	 3FHtj3yojhSLiA/CXm7VSyXbTJxF7BmfKYYTSarui7kW1R6nLfKB/y4iJkmLgSrhGi4j5
-	 K68IVyC2t2cgpF3BocLWNinrZvArN6ZFoxKbq7TgnwnlrWZWCQ1DTy21KmTNsOuelUCDL
-	 ho4MqCnN4+TnfnLZED9HbutO+LnvuPyeyeAma3qToRXKRMtOxtF4djyZD/sEy6PtcMg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794808653;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=pUkY7H2c1MzfnfTXtCUx8vT1H+3fS6TIyxEqBd2KBrc=;
+	b=hg4gGCt2kiNvx+YHPzCdrBc7KdID0atQTpv1iNVg1kAnUFKXhUeYWeHrHgZhqtj+IGIB
+	 20J70jUZfLOYWHcxFFV7jjQAb6pHLTlXtqcn4L/+SZRPJZ+CxMMf0eP4Shzh7p2F3dHD6
+	 o6JZ0tzpv8LF+Q3WghcODbr6p9CTe0s1HaNqvUK3UIVRQMB+LIx0jAKSWh1ufCD31YU/s
+	 1Lja6S2Al/jMDnuqlCzEO1vXV+YLBZM1jUKp1TsOCLCTKawMbm0nLS3Po0w6WPtKlUtvu
+	 JUoE9uZhasfc16QQRdT1ZIPbEidHAejVzlRLXKgIrU+KOm6nCPImSekfijFzDObylTA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iKxpAgYc;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R0sjcmhE;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 197F7606A31C
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 05:57:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9CD606A323;
+	Mon, 16 Nov 2026 05:57:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iKxpAgYc
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA53D1F000C4;
-	Mon, 16 Nov 2026 05:57:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R0sjcmhE
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD4281F000C4;
+	Mon, 16 Nov 2026 05:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794808630;
-	bh=bdSb0XXFB/ytXc4i7kSwG5tKuvQ8028StWzRvalMHko=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=iKxpAgYck8fjtYNB+Cg1uFNLhVgGl3hyAm/voujXHzFiozIylnl4JOT16bGosQxu0
-	 wsTt+IdQw8a7l1x9jbW3hGAK/w1pmkKwx46hSwlLRZ4+xcx+15q+QxQ62JlrS/9XBA
-	 geUSZupdWk+S7Ubw2HXm/DnsKDiw4M5h160cZ5kz+q4TDdp8Vyk7marqo3cY5SHD4o
-	 OCWogFVIG+awwIhf9RKLxoXJ2BvUMyR6Wot4/HO0CBjiSAgi4roWx6QaDMZMYorVQO
-	 pLp0/SUC+MAIDpBGaxJz0QIP61dIP0jy2jm++Puzz+nVi2M8l75E3BdWE3CAPUjbLl
-	 ikvQ1WmhM6K9A==
-Message-ID: <sashiko-outbox-216237@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v20 02/11] HWBP: Add modify_local_hw_breakpoint_addr()
- API
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <179480677551.38065.16911166185560694375.stgit@devnote2>
-References: <179480675130.38065.3086970856119381693.stgit@devnote2>
- <179480677551.38065.16911166185560694375.stgit@devnote2>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 16 Nov 2026 05:57:09 +0000
+	s=k20260515; t=1794808653;
+	bh=pUkY7H2c1MzfnfTXtCUx8vT1H+3fS6TIyxEqBd2KBrc=;
+	h=From:To:Cc:Subject:Date;
+	b=R0sjcmhErD0xx/tUVobgJs0LLQu8NQeyhvuxlBw8rxaGcTK0Rg23TL+WFzntwE/pq
+	 9bWpHjKVnQboPC/1stBBKMpe6oxcT5rMWf2qUNWWFxL1vXNPRCa/lciEXLEacksJcD
+	 /cwZYpqjpeSCIyLvJA18Qu5xUSFnBbq8zyJtEazeEvnOaCWtmwGvWVZ0WI51/ZOzL6
+	 /+nvTYicszk2cDM3hHhPhtgCkZdMw+zgo4IRjduZon1503ESF5q7dR86FWXJSSimpS
+	 dcpEW9ruNQfiQ7q61tDJcFWS3l0UJ65KEcbAyneJwc1B5cszhwzSYR1rnuhm/uRh3q
+	 mkSmsLOY4hiXQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v2 00/11] perf tools: Enhance namespace and chroot handling
+Date: Sun, 15 Nov 2026 21:57:20 -0800
+Message-ID: <20261116055731.707164-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,26 +61,87 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->=20
-> Add modify_local_hw_breakpoint_addr() to update only the watched
-> address of an installed hardware breakpoint on the local CPU without
-> releasing and reserving its hardware slot. This is available when the
-> architecture selects CONFIG_HAVE_MODIFY_LOCAL_HW_BREAKPOINT_ADDR.
->=20
-> The caller must provide an installed local event and a valid address,
-> and update other CPUs separately.
->=20
-> Link: https://lore.kernel.org/all/f9c49dfa49bdc57ba8c0574bc9981c1e581acf9=
-2.1785067572.git.wangjinchao600@gmail.com/
->=20
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
+Hello,
 
-Sashiko has reviewed this patch and found no issues.
+This series improves namespace and chroot handling when perf accesses
+files from /proc.  It defers reading /proc until namespace info is
+actually needed, verifies thread liveness, matching boot IDs, and
+mount namespace inodes against PID/TID recycling, and avoids entering
+target mount namespaces for host-side files such as the build-id cache.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/179480675130.38065.=
-3086970856119381693.stgit@devnote2?part=3D2
+It's assisted by LLM.
+
+v2 changes:
+
+ * Keep dso__filename_with_chroot() (guarded by nsinfo__check_proc())
+   instead of calling chroot() inside nsinfo__mountns_enter().
+ * Add a mutex lock to struct nsinfo and replace thread->nsinfo safely on
+   exec/namespace events rather than mutating shared instances in place.
+ * Mark offline sessions explicitly, propagate exit on fork replacement
+   and perf_event__exit_del_thread(), and guard sub-thread fallback in
+   thread__e_machine_endian().
+ * Gate mount namespace entry for debuginfo/binary probing callers,
+   include distro debuginfo types, and handle build-id lookups in
+   symbol-minimal's dso__load_sym().
+ * Add unit and shell tests for namespace, nsinfo, chroot, and boot ID
+   handling.
+
+v1: https://lore.kernel.org/r/20261023071141.134149-1-namhyung@kernel.org
+
+Thanks,
+Namhyung
+
+
+Namhyung Kim (11):
+  perf tools: Add HEADER_BOOT_ID feature
+  perf tools: Add perf_env__is_same_boot()
+  perf tools: Add nsinfo__new_thread() to track tid
+  perf tools: Add lock to struct nsinfo
+  perf tools: Defer /proc lookup until nsinfo is used
+  perf tools: Verify thread status and mount namespace inode
+  perf tools: Check thread liveness when accessing /proc
+  perf tools: Export filename__read_build_id_ns()
+  perf tools: Only enter mount namespace if necessary
+  perf tools: Scope mount namespace entry in dso__load()
+  perf tests: Add namespace, nsinfo, and boot ID tests
+
+ .../Documentation/perf.data-file-format.txt   |    5 +
+ tools/perf/builtin-inject.c                   |   15 +-
+ tools/perf/builtin-trace.c                    |    2 +-
+ tools/perf/tests/Build                        |    1 +
+ tools/perf/tests/builtin-test.c               |    1 +
+ tools/perf/tests/namespaces.c                 | 1035 +++++++++++++++++
+ tools/perf/tests/shell/header.sh              |    9 +
+ tools/perf/tests/tests.h                      |    1 +
+ tools/perf/util/build-id.c                    |   14 +-
+ tools/perf/util/capstone.c                    |    8 +-
+ tools/perf/util/debuginfo.c                   |   19 +-
+ tools/perf/util/disasm.c                      |    8 +-
+ tools/perf/util/dso.c                         |   59 +-
+ tools/perf/util/dso.h                         |   34 +
+ tools/perf/util/dsos.c                        |   17 +-
+ tools/perf/util/env.c                         |   69 ++
+ tools/perf/util/env.h                         |    4 +
+ tools/perf/util/event.c                       |    1 +
+ tools/perf/util/header.c                      |   28 +
+ tools/perf/util/header.h                      |    1 +
+ tools/perf/util/jitdump.c                     |    2 +-
+ tools/perf/util/machine.c                     |   16 +-
+ tools/perf/util/map.c                         |    2 +-
+ tools/perf/util/namespaces.c                  |  273 ++++-
+ tools/perf/util/namespaces.h                  |   10 +
+ tools/perf/util/session.c                     |    1 +
+ tools/perf/util/symbol-minimal.c              |    4 +-
+ tools/perf/util/symbol.c                      |   45 +-
+ tools/perf/util/symbol.h                      |    3 +
+ tools/perf/util/thread.c                      |   95 +-
+ tools/perf/util/thread.h                      |   13 +-
+ 31 files changed, 1651 insertions(+), 144 deletions(-)
+ create mode 100644 tools/perf/tests/namespaces.c
+
+-- 
+2.56.0.611.g1030f0b940-goog
 
