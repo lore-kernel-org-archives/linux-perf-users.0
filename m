@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794872855;
-	b=pLjML1yxeiiJba4/mPPdjEX6HFpilOnHLNc86fTMA1rIv8ornVCZ4k/pXBYSsRkY+JPg
-	 edao85Lr0fUwMIJ2mkEW6vfk9cFwLK6hTcXo3DK2yj6lL1Yw7Di9T8yF7e2T5ZirDBgBM
-	 miWOoskOzQIbifFTIEBRXyMjcov0J1W5P3B/U4Qq1kGi2mf+5jpvS7388EIBclsQSwjN3
-	 4r0Sfr1bU0JjfRi+AZoyww61JM7ph9EYlB59ahLFI3SYKRnlu2OVIpNSe1MQKI0eKg3PK
-	 Jv69bmzGWgQPagqG1jYjYMTJ52btIxAvsfFL4Gliieg3bp1wQcaZbCjimkBD3bYrCbA==
+	t=1794872853;
+	b=sEeMdxFA/h9XF4/kTMSTWRR50QCziRd6Ty6HOQrtxSmCk37Uilx+gnqin96N8T4j6TGa
+	 iubTzsiikpWv0ZYpLwjY0uHHrUnOQsoMGCSJPJrdfgGiJ+60puea0shdU5TC9IPwU6UGN
+	 /y5ekaSKeAqK1I3c3vHvOoXHK9IqVD0wIcrFdLsz5ZaraNtGy94zg7nA2qfnow2tnvlx5
+	 0e1/pmDgHIjXOaht7g8Kf97xkADLJbmB8Rr2tpoXNEi1j3qvb4hOPBVbjqwAuxk5u8Gp9
+	 PnEjOd52zEuV+dI8umSuVFePH1CtERKTgUIaXEQ93pycY/5uVuNjJoI7n49cw+7diMw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794872855;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794872853;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=44M5CZ0ALtHmaz+dPQtDVPPyPJdEq+3uVAhgHrI6l7U=;
-	b=VIJ5Aqgt/KH08OOfSTgJs5HnIR+blcyjgGa4fdk0lCw3Vliam9fpGcLdHCE2XfWeBvkQ
-	 zYX/G/tOzc9QZP1B8PRYTU4lTQyU9qtiKTP37S9Z8s3ITY5SgPnTiSkqg0HaWYp8TnCLQ
-	 JCKwlP9lj2F+TmDA0cH4sCS352hYGnIafi/WSgoHU/bk3nYunEtQcPCCkoCSlUbC2VHUT
-	 mpknW3eQvyLJuvIPfi/ApCZ5lpR8aUWjYcsaI4ZKoIIBHbG1ztpm1RSYWdAeBMjQ37yVc
-	 HRo9hCufgMyGiJJfaopyBIrZNPAIxMjE3iFLf3qHIkA/IDSJBD2GEvnETAvrjx0fFqQ==
+	bh=Zv27WeyfKuHk934BOkoEy9pjYUUOCVBJyFWVBjr4R9k=;
+	b=dHcH3wizwT0zQmS8ck07C2wl2jYDmu5P5EM75q4LexLkXEB3tYwU8xmV040/5IjsJvmW
+	 yIyb+q6Md7XgynRVmSUWFMflEbMQsoO9FtL1blV8D5sRLQaBBk29mLAtZ8GUDqxbVmkIe
+	 MsJFsiZwTgLwWGJSN+oapw2fOMt83t+rKIAH4YirybiO+s3hgQmXvQ849uFN7VEECo+MC
+	 XDIMyOpFT64h10937nMPrAIeKg6SPt3WzRJaoKcqwJI/9flP1m1WpCSjV0HMrWw94jVWG
+	 4Ic4923C6iSzeQjq2jyy9uG76e5LWw/5df1Zgm2bJ0h8v8wchBQ9YXc+3a/qWddNQ5A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Uyps73ba;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hpU9CgYB;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0183606A882;
-	Mon, 16 Nov 2026 23:47:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Uyps73ba
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B9E31F000C7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D38606A331;
 	Mon, 16 Nov 2026 23:47:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hpU9CgYB
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9012A1F000C4;
+	Mon, 16 Nov 2026 23:47:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794872855;
-	bh=44M5CZ0ALtHmaz+dPQtDVPPyPJdEq+3uVAhgHrI6l7U=;
+	s=k20260515; t=1794872852;
+	bh=Zv27WeyfKuHk934BOkoEy9pjYUUOCVBJyFWVBjr4R9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Uyps73basFqklNEGsEqiqY7GbHBX293KZFg0SWwu30bIuYYFisjI+P4Hc2mhW4sK8
-	 vV2iXPEPaYBl/mh/gjXcHZzAkEcfdhXY/eoQoztp7E/fJF6++/IOe+kV3DxpfS4CLE
-	 NgHzJEYzy8W7DdcNPhS+FI3iAnRbNg+nAY6I6N2ByO09F5/jd7vIUN+vhgCc6zgupc
-	 G0aLSWqv8dxs8nCqsagcaEgMNaGKq9pDE7aFbGgzzjt+5dewy9hjP1m+UOZEwHq7VZ
-	 oOo8vJ4DfKrId92PD+/ejuolbDbmjx7AyPVO38UYc3js9bveo8KWOTaNI3JmIfij09
-	 5EVlFsg18FwEA==
+	b=hpU9CgYBqcjQHU+71NwMwTHYyzBzoSSqi0q3F0JGKtEQ09wUFQn+qjWjYi+0YJKOz
+	 m5rRFiEFnQv93ebZ0u12gd9UNo1QWuoyKjwV9YbISVJ4QTEDkWzWoXxxbdYvWedn2z
+	 iTAxdOtkTMs8Q9IO5i0I9PhMgm+UUclCD8cjQ/e4fkV4xy7RjUk6S8RL2/g0REcEni
+	 2pphGl6iP47xhi2kcazexVYcmFBDv5KvPTWObO7pw8G2SIQnoph2tqizqbN6eEfw6y
+	 MY4k8zTzMPDvJYMfzdfzG+ZmxJx1+N0hApJvRdWb2Zdu11h5ksryISDZxwUu2qdjIX
+	 XGWeDB5aEfczg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v4 11/12] perf test: Drop samples without an IP in the dlfilter test
-Date: Mon, 16 Nov 2026 20:46:57 -0300
-Message-ID: <20261116234659.3950531-12-acme@kernel.org>
+Subject: [PATCH v4 10/12] perf tests: Fix the Intel PT virtual LBR check
+Date: Mon, 16 Nov 2026 20:46:56 -0300
+Message-ID: <20261116234659.3950531-11-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261116234659.3950531-1-acme@kernel.org>
 References: <20261116234659.3950531-1-acme@kernel.org>
@@ -70,37 +70,57 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Since v7.3 the kernel zeroes PERF_SAMPLE_IP when a userspace-only event
-skids into kernel mode, so that kernel register state is not exposed to
-an unprivileged event (166f10836a653dfa "perf/core: Fix kernel register
-info leak via hardware skid").
+The record this check uses writes aux samples, and with the single data
+page the other tests ask for they are lost:
 
-The test dlfilter keeps those samples, and the check that nothing but
-test_loop survives then trips on their lines: the comm column reads
-"perf".  Drop them, which is what the test wants, everything except
-test_loop must be filtered out.
+  Warning: Processed 29 samples and lost 100.00%
 
-Fixes: 199d5e872a9ce737 ("perf tests script dlfilter: Add a dlfilter test")
+so no branches are decoded and the check fails with "Failed with virtual
+lbr".  Record with 4 data pages and 128 auxtrace pages: the same trace
+decodes 64 branches and still fits the mlock budget.
+
+Require the python perf module to provide session, not just to be
+importable: a perf whose python bindings are not found can pick up an
+unrelated module and fail with
+
+  Error processing events: module 'perf' has no attribute 'session'
+
+instead of skipping the subtest.
+
+Detected building perf on fedora:44 on the runner with Intel PT hardware,
+where the subtest failed with "Failed with virtual lbr" in the container,
+and with the python error when run as root on the same machine.
+
+Fixes: 915d6b14dc0c ("perf test: Migrate Intel PT virtual LBR test to Python API")
 Reviewed-by: Ian Rogers <irogers@google.com>
-Cc: Ian Rogers <irogers@google.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/script_dlfilter.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/tests/shell/test_intel_pt.sh | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/tests/shell/script_dlfilter.sh b/tools/perf/tests/shell/script_dlfilter.sh
-index 88222280f6094fd0..797cd9ae84141f64 100755
---- a/tools/perf/tests/shell/script_dlfilter.sh
-+++ b/tools/perf/tests/shell/script_dlfilter.sh
-@@ -46,7 +46,7 @@ int filter_event(void *data, const struct perf_dlfilter_sample *sample, void *ct
- 	const struct perf_dlfilter_al *al;
+diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
+index c0ecece0a8255124..511440b5956a6897 100755
+--- a/tools/perf/tests/shell/test_intel_pt.sh
++++ b/tools/perf/tests/shell/test_intel_pt.sh
+@@ -384,13 +384,14 @@ test_virtual_lbr()
+ 	# shellcheck source=lib/setup_python.sh
+ 	. "${shelldir}"/lib/setup_python.sh
  
- 	if (!sample->ip)
--		return 0;
-+		return 1;
+-	if ! "$PYTHON" -c 'import perf' > /dev/null 2>&1; then
+-		echo "SKIP: Python perf module not found"
++	if ! "$PYTHON" -c 'import perf; perf.session' > /dev/null 2>&1; then
++		echo "SKIP: Python perf module with session support not found"
+ 		return 2
+ 	fi
  
- 	al = perf_dlfilter_fns.resolve_ip(ctx);
- 	if (!al || !al->sym || strcmp(al->sym, "test_loop"))
+-	# Check if virtual lbr is working
+-	perf_record_no_bpf -o "${tmpfile}" --aux-sample \
++	# Check if virtual lbr is working.  This records aux samples, which a
++	# single data page overruns, so give it more room than the other tests.
++	perf_record_no_bpf -m 4,128 -o "${tmpfile}" --aux-sample \
+ 		-e '{intel_pt//,cycles}:u' perf test -w brstack || return 1
+ 	perf inject --itrace=L -i "${tmpfile}" -o "${perfdatafile}" || return 1
+ 	output=$("$PYTHON" "${shelldir}/lib/perf_brstack_max.py" -i "${perfdatafile}") || return 1
 -- 
 2.56.0
 
