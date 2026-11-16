@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794807263;
-	b=GVASQfbB0v+UVYDGDWZ9ZMzewi0Ldx7jqiBJi6OuOjiEQcLw11ZHohdlfzC93gwGutol
-	 T6NR/b1mlOcNLiwUD1cwWAxcaIelesrp/A3UhlZwFAVh6LrNydzJEDBjAySuKdT3ksVAL
-	 AQd1R9YZUaSbRMtgTHvD49gS4634+6l17XYHH5dIcQJgtXDTAsg/I0VfK5Hlqxtz5dsog
-	 ai9K2FBAuGUmQ4cQl2rBok8WMjmDi8OkmTlZazZpZQtO53gJiwjjYXKROkqWHTtsWvSVt
-	 P0RzlkdunLjMRx0ktKc08KdavO/M9YLdwLqkN9Fq0E7L0KzF/rhYeVHqJueoKyZu09g==
+	t=1794807730;
+	b=V3d9/UzOQOsIA2ZcW/MKbnhsXxefOziUiYHmCXvvUkwIrZ56iR8cv8k+cIuD5Midx3Vv
+	 dkdlekdPAjXxDpPaD3eWRXILfGeLScPzPc29WCU8m53oyWmNwmGmred9TEiRhub3bMbcM
+	 cGCO+9GWeKtwjHla66K30HbSp6l7cYiLYhiVx2W+Nh9VB5/JSeYHGBvjGLknLkr2kHwtC
+	 mXEyvqLKMPNtMydaG+MvJHUoeppFiBNo9cFFPhSAvcue3NRCwos4J/q2wuVtYvFNg3/gR
+	 X/ROBmKxjEiS4EZs5RcFEbKtUKGTanv8/gq22fjbqDaDi4ks0CdQUcv1xtTVte96W1A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794807263;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794807730;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=Puhvu/VqKukUdpYrSeb/7sFhG19Gax7hqVqTtZ1a/VM=;
-	b=1YGblr+9qJwtypx0/nOgx/4Q4tpIjjUrdzvQf0LnLsxLOmhJAMjCpx5p+01csh1cKw8n
-	 T38LI09fkJe4uq4JidBEG2uRIMS77Jrxe472JDHcUbCh99kBktnl+DLu5XVT8TZJW9Nvu
-	 cj5tmxbNDpq16sFA9bZ5ulJfvPFjsDVoVjpZjBgCxDh+Vh15aV+oDWottQz484gAGTw6x
-	 J1+3rKKI6QNT6hhFk3O2u2Cy3mPSNEZUcH+BA71CEAmTxScaP6iwqYY3MF553EIH0ByW3
-	 K/0s6sKBE2ffq/UTQ2aNNHbRoKReBaagxJGRJDsuXKS1zlIVdif9HPKThc1XvgRkepQ==
+	bh=SJ1dM98vZXyxYwzNicvRdZj+K8KZ4aJ3tcWC8NAKDSw=;
+	b=XmzFGyViYCCMAQwtyIsLfGTuANEtk5n5q2ZP9wihYxI4Qta4fcAu/V7CzNUAk56qKDO8
+	 KsqrfGYI+5kAQJWLvtKGHb4I9weLLw5pLnAynKf+6d9byjZq8fkyIzJdjqMRaLa9pyssJ
+	 KpJ1UafKqIB7l2Nah+B56qxX5xPFhDgsi8X0D1Gor+zyRGYfyBdSTnXBGuptviMNWOSF/
+	 MlxJShqECf5SGuqHvc1/auJLbe9AmM4bVXWbZOLvBbbiTw5D/YLn7+xWlymeoOPFX6N6L
+	 foNxmIGX0LBs0nZzk4VCBDLUhJlMfIDwr9h46aPOVQc96GXSnypfJ04yxx/NKolIIqQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OO2MhFqh;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="LumxJTt/";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63E19606A888
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 05:34:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1D1606A31C
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 05:42:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OO2MhFqh
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD1D71F000C7;
-	Mon, 16 Nov 2026 05:34:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LumxJTt/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D6051F000C4;
+	Mon, 16 Nov 2026 05:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794807263;
-	bh=Puhvu/VqKukUdpYrSeb/7sFhG19Gax7hqVqTtZ1a/VM=;
+	s=k20260515; t=1794807729;
+	bh=SJ1dM98vZXyxYwzNicvRdZj+K8KZ4aJ3tcWC8NAKDSw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=OO2MhFqhWqiPnsVlvZweM9Uul4mNdMlgf2/TLus1AhmLNdgW7Tk7QoPzW3eLw7RC5
-	 Etug4UxGpUKyy8eATqXKNgjDeS3C7xFoFfn+HluENrlE+8BdZy3oyK5M2RALjovLA6
-	 bjVqMbml+GSrJG0WIUQ+SQH8BWiHSUoez55BHM/qfsiC+097+TMQwLQL93GnosZ0/R
-	 xr+OvHesjInniMHRyZLIF39CJ6wGtgg+FzRimLjs9ngQzKRtphXBB/gc0fsOmrZ8Rq
-	 +H0etNsR23odIDjEORFSMw2g+ua4pJD1/nk2vO2YDFbpTKkE3UMgQ9oBrh3o3/LEil
-	 tIqrUSgKL/rAg==
-Message-ID: <sashiko-outbox-216214@kernel.org>
+	b=LumxJTt/3eFZiqlhYgFkYp6y8oQd/MNeLdzLWu97FTMZ10xSsZmn5a8Arivim8wHr
+	 tAk87G+9hogZwfhqrNZWvjtpwr3fS9g9hEvI02VkojnDkuFDN2uvabqn8L4DIRYSWG
+	 IlRDlcX2er6MUAW+4oOkNzxn30ltA77BeDJqGHCUdF1xk2dUWgKUlTykOWO8I4L2j9
+	 eG9EgNKFmd4N2f+HBEOltaXoCTjWY0a8mebunuX7P88f7uezV7KPwcQp9+RrXmwDOB
+	 PUiywmWyj0xt0FF4qG7fF0NFmQnxwTiQjAA330TfXk5LpY/wqzW4bBFUChHOJTh3UR
+	 j1YZHDlh2gMgg==
+Message-ID: <sashiko-outbox-216221@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v20 05/11] x86: hw_breakpoint: Add a kconfig to clarify
- when a breakpoint fires
+Subject: Re: [PATCH v20 07/11] selftests: tracing: Add syntax testcase for
+ wprobe
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <179480681023.38065.9381486145352859573.stgit@devnote2>
+In-Reply-To: <179480683347.38065.11389672080760832332.stgit@devnote2>
 References: <179480675130.38065.3086970856119381693.stgit@devnote2>
- <179480681023.38065.9381486145352859573.stgit@devnote2>
+ <179480683347.38065.11389672080760832332.stgit@devnote2>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 16 Nov 2026 05:34:22 +0000
+Date: Mon, 16 Nov 2026 05:42:09 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,9 +63,8 @@ Precedence: list
 
 > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 >=20
-> Add CONFIG_HAVE_POST_BREAKPOINT_HOOK which indicates the hw_breakpoint
-> on that architecture fires after the target memory has been modified.
-> This is currently x86 only behavior.
+> Add "wprobe_syntax_errors.tc" testcase for testing syntax errors
+> of the watch probe events.
 >=20
 > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
@@ -73,5 +72,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/179480675130.38065.=
-3086970856119381693.stgit@devnote2?part=3D5
+3086970856119381693.stgit@devnote2?part=3D7
 
