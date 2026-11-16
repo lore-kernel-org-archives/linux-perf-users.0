@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794872842;
-	b=Gvf4sofGlU9QPBYP9Zw3EqIuc+zPBklss+yCHDD7P+r+7aVVL/XMUsvRpJD0qgoSEdU8
-	 s45IaiUL30C+Tsf12JTaqKkU8VbUsueFbigcjV+bD3J1O1t+JlKcNDMYcjKlc8Kk6cEL0
-	 B0lB+bvvtnvZcILHqlbXwL9AJoLMsv44Sfs2KJEsHCVXhDxEI8klx4YpcqLZIPd9VfaBi
-	 +IB/i7a/yjSPZn0umuyIcJcfjE0NA6vl1VnT8fSR8ofKuQTUFlyI4BGVi84SXwjx7ewsQ
-	 nobGkXoxYate1NUX01rw2tt3WGfnC3PU6/ChxcrdJbeQFyiCNGIOyF53CnuqQqRsy8g==
+	t=1794872839;
+	b=J1CVe/1EzUuhge7Hh8q3Tis++ug+a/3CpdANiGJen/otsKGCuqQBZFiaCIzZoIV5c0Xe
+	 0lzXDVk7M9tqHdFapj35cnqpEKkq+hCBJ9gWSnDO8Nkvh38/HG1qXMJItvtsQ9L7LjY3u
+	 KS1evvD4RjKKSAnd93Xp7KzrZDsTelGoOzEdh6SkQIDhtW0IiGbcE8dI0tiLCWIXx9/DG
+	 lc2y+Llu8W7s2wQo59ZWtto/QkfsacMzpLlS8vCTLSV1ljy5FTaJ3JI08qRAe0Gr9zRef
+	 e5YFOQBnf8IewtPjGWyiZ0uvP/kzk6pB+JdVB0ecbopXNLE73J0jc0XjnFU0xVRKroA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794872842;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794872839;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=UYvMmBYoy6h4moZsioDbVpUOlDA2ODpdUlzjP0zQtxA=;
-	b=d2YnPOKdkizYqapIVN2Lq8xXHmIZGAPG++diImYufh8shzv9Slye9yu2kZsMq2aRomvP
-	 Sdjnx5tHyBe2KoCiL6uPk5XB8nXcXye0Y2DIcaOH8+IwtP78d9BFo/gJxAcC9dbC8V7lw
-	 tkvLInBLR+2q+7iFtjoa/v3OqU+nbJCwpwUFhcROw71S26LNHsR1D4fTdOSBY1kOSGuhC
-	 UK0L8OBbilJ/VbYQFj8FcHMrWp1tlUCloCtA8nKtre2xZdIzw88iPUWXZiEMgvqS7G4rd
-	 Go/5IXTlYRO53D27PPHfSb+vytEXMu9v/DnyE6ulPWdC4t9VHbiFsZMR4QzOe5vFymw==
+	bh=+cYa4Wtb3OS1VE0qCHyEaszKAI58s64yG/lCaQ4yzk8=;
+	b=Wbsa5Km+VGn/Fg9WoIVZ5LZV0958mlPf8K7Hy6kns7XgIu68v4BYntFpruF4aOyA0Rs3
+	 pQGh+yOcJbMX7o/xWNrEUoDpzq5bOjUmWKuspOOkNJAKqwgXX0hhUCD/Xgnr0QDwFWdG5
+	 iqjqo0H5GBVN6BBSANVvVF66rScePY22BpvbcsEfbw0cMlXYDLlFSWHFjamf7wCVeROu8
+	 uJkqa3VgFvEU0P0HQROc7TKnZty5dKXtBbJEq7gm3F6whmrYbOViSD4kH4gpljnPCjlu9
+	 xUnoVuk5s7zkyldhEQqyybfDs7Aw+zjritta+YQqaXxCNleU7U2a82Ijmhexa+exk+A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VzkxNb37;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=L62dAB+r;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 685A3606A33D;
-	Mon, 16 Nov 2026 23:47:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VzkxNb37
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACF321F000CB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6661C606A32F;
 	Mon, 16 Nov 2026 23:47:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=L62dAB+r
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1AC51F000CB;
+	Mon, 16 Nov 2026 23:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794872842;
-	bh=UYvMmBYoy6h4moZsioDbVpUOlDA2ODpdUlzjP0zQtxA=;
+	s=k20260515; t=1794872839;
+	bh=+cYa4Wtb3OS1VE0qCHyEaszKAI58s64yG/lCaQ4yzk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=VzkxNb37GsaWvuH5aEa8cBDgU+sVYMvPFkTEU6x8g32ihNpg9gHa6JifBPnjLgPio
-	 MhyYR2WNsvQxvraeEkVNfhtk5WATC2b5Q0jnERzy5K26ZJ2fw6OqGxdQ3/6qMgo51Q
-	 dW79rYdH0qwwtFXRtbPWd2Gg0tg2rHejzrPaatm4OiagMk+3lzIb6VJt/g6uLTmbIK
-	 /K2efhaYnjiCDDFPHe2udEDOO5+j0uy1y6aKNpymJI71ZGQyUrD9kunpsFVm4HyL/+
-	 QJgQVCoty0beU3YbkUJsFjf2sms2fkkMUbHgdIr0k64q+4JFimF48qr785AIf1t7H9
-	 fLSJdnqDQkiEw==
+	b=L62dAB+rIj/jQwe6CYyin5RyX9mzvwpfCWgBEpArPam8w2GvHOjezlBurqv8FI18l
+	 Y6F+W1y+yI/23gJT6kY45wetRzmKo4k4pXmHseRBRtphcBCKVs1wHGRg4Jn3sCKgb4
+	 EqmEhk1WoYUxMepO3/t+e5+VsBVrr/McOvJ10fSDc5cE8fdWgShhW0pNa83XMg+DNd
+	 MZ2A7oy7oY/mkokqkp3IYm+8ds0ZOnbMY7VaayolxpPxWcTRAixU/LXbsYo2feT8lz
+	 v39uzwLjioI0Ajtp+Fjn3loTwfakzK6UuYDQYQxI7CXJxbk6miftyXDnPSA8yPdUTd
+	 btA+SlAuFRV0w==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v4 06/12] perf tests: Exercise data type resolution from a register
-Date: Mon, 16 Nov 2026 20:46:52 -0300
-Message-ID: <20261116234659.3950531-7-acme@kernel.org>
+Subject: [PATCH v4 05/12] perf annotate-data: Count flexible array accesses for the whole struct
+Date: Mon, 16 Nov 2026 20:46:51 -0300
+Message-ID: <20261116234659.3950531-6-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261116234659.3950531-1-acme@kernel.org>
 References: <20261116234659.3950531-1-acme@kernel.org>
@@ -70,203 +70,186 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-At -O2 a struct pointer lives in a register and DWARF describes it with
-a register location, while the unoptimized workloads the data type tests
-profile keep their variables on the stack.
+The per-member percentage sums the histogram entries in the member's
+own [offset, offset + size) range.  A flexible array member is resolved
+past the end of its struct, so the struct row only covered its declared
+size and showed 0.00% while the member row showed 100.00% and the
+header said N samples.
 
-Add a regptr workload with a noinline function that gets the pointer from
-a volatile global, which keeps it in a register, and check that its three
-member accesses are resolved from that location.
+Take a member's extent as the end of its last child as well, so the
+struct counts what was resolved past it.  Union members all start at
+offset 0, so a plain union keeps its size; a member that is itself a
+struct with a flexible array extends the union too.  The TUI browser
+accounts the members the same way, use the extent there as well.
 
+Extend tests/shell/data_type_flex_array.sh to check that the accesses
+count for the struct in the percent, samples and period columns.
+
+Fixes: aaca646915a1bb53 ("perf annotate-data: Adjust type offset for flex-array")
 Reviewed-by: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/builtin-test.c              |  1 +
- tools/perf/tests/shell/data_type_register.sh | 64 ++++++++++++++++++++
- tools/perf/tests/tests.h                     |  1 +
- tools/perf/tests/workloads/Build             |  2 +
- tools/perf/tests/workloads/regptr.c          | 60 ++++++++++++++++++
- 5 files changed, 128 insertions(+)
- create mode 100755 tools/perf/tests/shell/data_type_register.sh
- create mode 100644 tools/perf/tests/workloads/regptr.c
+ .../perf/tests/shell/data_type_flex_array.sh  | 40 ++++++++++++++++++-
+ tools/perf/ui/browsers/annotate-data.c        |  7 ++--
+ tools/perf/util/annotate-data.c               | 24 ++++++++++-
+ tools/perf/util/annotate-data.h               |  8 ++++
+ 4 files changed, 72 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 18311673b231e657..b6d31f5f009d206b 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -201,6 +201,7 @@ static struct test_workload *workloads[] = {
- 	&workload__false_sharing,
- 	&workload__global_data,
- 	&workload__flex_array,
-+	&workload__regptr,
+diff --git a/tools/perf/tests/shell/data_type_flex_array.sh b/tools/perf/tests/shell/data_type_flex_array.sh
+index 8d6b277991aea96e..c8e8ccd130abd771 100755
+--- a/tools/perf/tests/shell/data_type_flex_array.sh
++++ b/tools/perf/tests/shell/data_type_flex_array.sh
+@@ -66,5 +66,43 @@ if ! grep -Fq "# data-type: struct flex +0x4 (data)" "$perfout"; then
+ 	exit 1
+ fi
  
- #ifdef HAVE_RUST_SUPPORT
- 	&workload__code_with_type,
-diff --git a/tools/perf/tests/shell/data_type_register.sh b/tools/perf/tests/shell/data_type_register.sh
-new file mode 100755
-index 0000000000000000..0b7cb4bfe0aacfbe
---- /dev/null
-+++ b/tools/perf/tests/shell/data_type_register.sh
-@@ -0,0 +1,64 @@
-+#!/bin/bash
-+# perf data type profiling tests for register variables
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+perfout=$(mktemp /tmp/__perf_test.perf.out.XXXXX)
-+
-+cleanup()
-+{
-+	rm -f "$perfdata" "$perfout"
-+	trap - EXIT TERM INT
-+}
-+
-+trap_cleanup()
-+{
-+	echo "Unexpected signal in ${FUNCNAME[1]}"
-+	cleanup
-+	exit 1
-+}
-+trap trap_cleanup EXIT TERM INT
-+
-+if ! perf check feature -q dwarf; then
-+	echo "Skip: no DWARF (libdw) support"
-+	cleanup
-+	exit 2
-+fi
-+
-+# No point in recording if the PMU cannot do memory events.
-+if perf mem record -o /dev/null -- true 2>&1 | \
-+		grep -q "failed: no PMU supports the memory events"; then
-+	cleanup
-+	exit 2
-+fi
-+if ! perf mem record -o /dev/null -- true 2>/dev/null; then
-+	echo "Skip: cannot record memory events on this PMU"
-+	cleanup
-+	exit 2
-+fi
-+
-+if ! perf mem record -o "$perfdata" -- perf test -w regptr 1 > /dev/null 2>&1; then
-+	echo "FAIL: perf mem record"
+-echo "flexible array member resolved"
++# The accesses to the flexible array are resolved past the end of the
++# struct: they must count for the struct, not only for the member.
++if ! perf annotate --data-type -i "$perfdata" --stdio > "$perfout" 2>/dev/null; then
++	echo "FAIL: perf annotate --data-type"
 +	cleanup
 +	exit 1
 +fi
 +
-+if ! perf annotate --code-with-type -i "$perfdata" --stdio \
-+		--percent-limit 1 > "$perfout" 2>/dev/null; then
-+	echo "FAIL: perf annotate"
++if ! awk '
++	$1 + 0 == 100.00 && /struct flex/ { struct_ok = 1 }
++	$1 + 0 == 100.00 && /char\[\]/ && /data;/ { data_ok = 1 }
++	$1 + 0 == 0.00 && /int/ && /len;/ { len_ok = 1 }
++	END { exit !(struct_ok && data_ok && len_ok) }
++' <(sed -n "/^Annotate type: 'struct flex' in/,/^Annotate type: /p" "$perfout"); then
++	echo "FAIL: --data-type does not count the flexible array accesses"
 +	cleanup
 +	exit 1
 +fi
 +
-+for member in "+0 (a)" "+0x8 (b)" "+0x10 (c)"; do
-+	if ! grep -Fq "# data-type: struct node ${member}" "$perfout"; then
-+		echo "FAIL: member ${member} not resolved from the register"
++# Same with the samples and period columns, the other two display modes.
++for mode in --show-nr-samples --show-total-period; do
++	if ! perf annotate --data-type -i "$perfdata" --stdio "$mode" > "$perfout" 2>/dev/null; then
++		echo "FAIL: perf annotate --data-type $mode"
++		cleanup
++		exit 1
++	fi
++
++	if ! awk '
++		$1 + 0 > 0 && /struct flex/ { total = $1 + 0 }
++		/char\[\]/ && /data;/ { data = $1 + 0 }
++		END { exit !(total > 0 && total == data) }
++	' <(sed -n "/^Annotate type: 'struct flex' in/,/^Annotate type: /p" "$perfout"); then
++		echo "FAIL: --data-type $mode does not count the flexible array accesses"
 +		cleanup
 +		exit 1
 +	fi
 +done
 +
-+echo "register held access resolved"
-+cleanup
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index f99910b0f8d93a82..6d284bc79cc31779 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -274,6 +274,7 @@ DECLARE_WORKLOAD(callchain);
- DECLARE_WORKLOAD(false_sharing);
- DECLARE_WORKLOAD(global_data);
- DECLARE_WORKLOAD(flex_array);
-+DECLARE_WORKLOAD(regptr);
++echo "flexible array member resolved and counted"
+ cleanup
+diff --git a/tools/perf/ui/browsers/annotate-data.c b/tools/perf/ui/browsers/annotate-data.c
+index 0f778788df4a934b..e4047e97e8a943a4 100644
+--- a/tools/perf/ui/browsers/annotate-data.c
++++ b/tools/perf/ui/browsers/annotate-data.c
+@@ -53,12 +53,11 @@ static int get_member_overhead(struct annotated_data_type *adt,
+ 			       struct evsel *leader)
+ {
+ 	struct annotated_member *member = entry->data;
+-	int i, k;
++	int i, k, end = annotated_member__extent(member);
  
- #ifdef HAVE_RUST_SUPPORT
- DECLARE_WORKLOAD(code_with_type);
-diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-index 74a0cbe49dc93533..17189458032c0a17 100644
---- a/tools/perf/tests/workloads/Build
-+++ b/tools/perf/tests/workloads/Build
-@@ -19,6 +19,7 @@ perf-test-y += callchain.o
- perf-test-y += false_sharing.o
- perf-test-y += global_data.o
- perf-test-y += flex_array.o
-+perf-test-y += regptr.o
+-	for (i = 0; i < member->size; i++) {
++	for (i = member->offset; i < end; i++) {
+ 		struct type_hist *h;
+ 		struct evsel *evsel;
+-		int offset = member->offset + i;
  
- ifeq ($(CONFIG_RUST_SUPPORT),y)
-     perf-test-y += code_with_type.o
-@@ -39,3 +40,4 @@ CFLAGS_callchain.o        = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_false_sharing.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_global_data.o      = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_flex_array.o       = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-+CFLAGS_regptr.o           = -g -O2
-diff --git a/tools/perf/tests/workloads/regptr.c b/tools/perf/tests/workloads/regptr.c
-new file mode 100644
-index 0000000000000000..d5d357b047e1cfd1
---- /dev/null
-+++ b/tools/perf/tests/workloads/regptr.c
-@@ -0,0 +1,60 @@
-+// SPDX-License-Identifier: GPL-2.0
+ 		k = 0;
+ 		for_each_group_evsel(evsel, leader) {
+@@ -69,7 +68,7 @@ static int get_member_overhead(struct annotated_data_type *adt,
+ 				continue;
+ 
+ 			h = &adt->histograms[evsel->core.idx];
+-			if (hashmap__find(&h->samples, offset, &hist))
++			if (hashmap__find(&h->samples, i, &hist))
+ 				update_hist_entry(&entry->hists[k], hist);
+ 			k++;
+ 		}
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index d8d00646ef63b30f..a74f894cbda70f5d 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -2237,6 +2237,25 @@ static void print_annotated_data_value(struct type_hist *h, u64 period, int nr_s
+ 		color_fprintf(stdout, color, " %7.2f", percent);
+ }
+ 
 +/*
-+ * A struct pointer that -O2 keeps in a register, so the member accesses
-+ * have to be resolved from the register's type state and not from a
-+ * stack slot.
-+ *
-+ * See tests/shell/data_type_register.sh.
++ * A flexible array member is resolved past the end of its parent, so the
++ * parent's samples are not bounded by its size.
 + */
-+#include <signal.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <linux/compiler.h>
-+#include "../tests.h"
-+
-+struct node {
-+	long long a;
-+	long long b;
-+	long long c;
-+};
-+
-+static struct node n;
-+static struct node *volatile vp;
-+static volatile unsigned long long reg_sink;
-+static volatile sig_atomic_t done;
-+
-+static void sighandler(int sig __maybe_unused)
++int annotated_member__extent(struct annotated_member *member)
 +{
-+	done = 1;
++	struct annotated_member *child;
++	int end = member->offset + member->size;
++
++	list_for_each_entry(child, &member->children, node) {
++		int child_end = annotated_member__extent(child);
++
++		if (child_end > end)
++			end = child_end;
++	}
++
++	return end;
 +}
 +
-+static noinline long long touch(struct node *p)
-+{
-+	long long sum = 0;
+ static void print_annotated_data_type(struct annotated_data_type *mem_type,
+ 				      struct annotated_member *member,
+ 				      struct evsel *evsel, int indent)
+@@ -2244,6 +2263,7 @@ static void print_annotated_data_type(struct annotated_data_type *mem_type,
+ 	struct annotated_member *child;
+ 	struct type_hist *h;
+ 	int i, nr_events = 0, samples = 0;
++	int end = annotated_member__extent(member);
+ 	u64 period = 0;
+ 	int width = symbol_conf.show_total_period ? 11 : 7;
+ 	struct evsel *pos;
+@@ -2257,10 +2277,10 @@ static void print_annotated_data_type(struct annotated_data_type *mem_type,
+ 
+ 		samples = 0;
+ 		period = 0;
+-		for (i = 0; i < member->size; i++) {
++		for (i = member->offset; i < end; i++) {
+ 			struct type_hist_entry *entry;
+ 
+-			if (!hashmap__find(&h->samples, member->offset + i, &entry))
++			if (!hashmap__find(&h->samples, i, &entry))
+ 				continue;
+ 
+ 			samples += entry->nr_samples;
+diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+index 184262c7356213fa..6e0d410929651426 100644
+--- a/tools/perf/util/annotate-data.h
++++ b/tools/perf/util/annotate-data.h
+@@ -260,6 +260,9 @@ void global_var_type__tree_delete(struct rb_root *root);
+ /* Print data type annotation (including members) on stdout */
+ int hist_entry__annotate_data_tty(struct hist_entry *he, struct evsel *evsel);
+ 
++/* End offset of a member, including a flexible array's children */
++int annotated_member__extent(struct annotated_member *member);
 +
-+	sum += p->a;
-+	p->b = sum;
-+	sum += p->c;
-+	return sum;
+ /* Get name of member field at the given offset in the data type */
+ int annotated_data_type__get_member_name(struct annotated_data_type *adt,
+ 					 char *buf, size_t sz, int member_offset);
+@@ -316,6 +319,11 @@ static inline int hist_entry__annotate_data_tty(struct hist_entry *he __maybe_un
+ 	return -1;
+ }
+ 
++static inline int annotated_member__extent(struct annotated_member *member)
++{
++	return member->offset + member->size;
 +}
 +
-+static int regptr(int argc, const char **argv)
-+{
-+	unsigned long long sum = 0;
-+	int sec = 1;
-+
-+	if (argc > 0)
-+		sec = atoi(argv[0]);
-+
-+	vp = &n;
-+	signal(SIGINT, sighandler);
-+	signal(SIGALRM, sighandler);
-+	alarm(sec);
-+
-+	while (!done)
-+		sum += touch(vp);
-+	reg_sink = sum;
-+	return 0;
-+}
-+
-+DEFINE_WORKLOAD(regptr);
+ static inline int annotated_data_type__get_member_name(struct annotated_data_type *adt __maybe_unused,
+ 						       char *buf __maybe_unused,
+ 						       size_t sz __maybe_unused,
 -- 
 2.56.0
 
