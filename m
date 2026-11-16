@@ -1,47 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.93.99
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794809575;
-	b=fX4ORqKak73nFIp8qO01Ym11FZRGeKS35xpasDXDO9ZLXp7HMxfNu3HG2WOEP/pA59QJ
-	 govVaIi4mbwgX4KKy+wQp+UbcrPrFV8TPLluj75xatXqPC+oFutU9bCcErNmbIW69f4yo
-	 X3vMHcJqqZxb9AqLmiimO7UTt539xphra/ZJF8XuC5XjA5tPZYK2ctMs1cNFFvs9xM+S9
-	 wZPTgsgO86wdYGUOtvTepwMGSpGkwYwLyHz0oqx/sP+/EoZti+APpsG366PtG9whPoZUE
-	 StkQT/4NTcX2CFYwainBGdexx2VMKPUGXEkDXsfIIKFS++YOmf8QvMebrBRm/Lnviag==
+	t=1794809651;
+	b=kN0zmTp8yZGAMgQ4QGpJWdP9Vj/gjWTJN2pV0+gJco/DPvbwJM+pJDjHlYcTrL5S2CR8
+	 N9/IuStVJqdz+EhXzxVJ5p+cqMzogSMADH4YBFJgtgZRioD1KYKBeQRQkxlzniqXHzhCc
+	 CRlb1LL5OMnBoBSfOjfOKSQlM+eTE0ttICkGrtc93GlUhkfMcADT0E+VotSkrgyHmcIb8
+	 XclL6qaAJEMH5mg5mnGCEkjpmqjjXgkEZdeBKPEF/Pbb542fL8/6u1lOIxSsXtE58GvuF
+	 sb6Sm2TgSHXqFVJBh5wB3/HXXlu2uaexr1VCXHCTUlASlCzYtklboVw6VG//7ibIxYw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794809575;
-	h=DMARC-Filter:Received:Received:Received:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
-	 X-Coremail-Antispam:X-CM-SenderInfo;
-	bh=AzcwurnxvgVQyVUEUuJ8r5yV+fu5uhMOXQvuAxcek8c=;
-	b=z+ctwL8tTbPXj2UdW55VwcANFJgXLCMYyeP9FLZkzwfU6vFvpqvrWBG1OSa/gxqMlL8Z
-	 EInedHO+zqnkYLzpzfNSk4DsDIbBqiMMumTTs7DYD97E5Lqvn8NdtLYRLybIvaoVD6+jU
-	 7iy9VvAixJqMJu6Z1rGTS9wGNACH5lt82KffEhmu1mGXp+ual42KesDuHfikUpT2/qK+h
-	 h7RQpPHZ7mJR2J28gvACT/G3RMaiRS8HehGyoEphTGKhY6EH4WKYdJeJIEt8PbK4Trq4b
-	 x4fe0AWNN/zC+YpQzOCe5OCdO+qXLkV9Pdw7/PI14eReXhzwKKuyFJnZpP7AGv0nV0Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794809651;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=/KwszXI6jl/gQ5LR9Pby9P+o2IEtYv4ZsLPkntkqn+k=;
+	b=fUNP0Q2i+RhYisq6tcGV/o3HsyizgksH4W/pqiO5GAoOUizTLxKKhR4t1UYUIHYl4UR4
+	 SVqaqw39IwD6MLkN5b7hk+SY6KxhscZ+UPsIrCaYB2PPEUqHiHTZowtrPa/pm9vf1vZpm
+	 96nLu2UL6GmDXXIaV9vbu3kgIS1V8lRZzcOCLJp8Gak7URW27JLxmSzimp6siq4+nj1xD
+	 I1LDdVcpi/g1JyD+Vy4wx/DqQQfF9kiuaKzRjPr1UKwQbkOEgQYvgg0Wnsp0uHJVdH+pO
+	 ehy1OKz9ayKEKpq6mK0vcWmGOy5AEUuGetNF0EJzIY7sHcCh94A2adwjz3Kl4HyYAew==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=huaweicloud.com;
-	spf=pass smtp.mailfrom=huaweicloud.com;
-	arc=none smtp.remote-ip=124.71.93.99
-Received: from dggmsgout11.his.huawei.com (dggmsgout11.his.huawei.com [124.71.93.99])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TA2Uqt1l;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28582606A335;
-	Mon, 16 Nov 2026 06:12:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 28582606A335
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggmsgout11.his.huawei.com (SkyGuard) with ESMTP id 4jScvc0Tlrz1c0Qv;
-	Mon, 16 Nov 2026 14:11:56 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id D47F84070B;
-	Mon, 16 Nov 2026 14:12:44 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP2 (Coremail) with UTF8SMTPA id Syh0CgAn+O3bnvpqP_YBEg--.43654S2;
-	Mon, 16 Nov 2026 14:12:44 +0800 (CST)
-Message-ID: <13443f76-38d6-4d52-9d86-285568c9e290@huaweicloud.com>
-Date: Mon, 16 Nov 2026 14:12:43 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BEB8606A323
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 06:14:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TA2Uqt1l
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 955AB1F000C4;
+	Mon, 16 Nov 2026 06:14:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794809650;
+	bh=/KwszXI6jl/gQ5LR9Pby9P+o2IEtYv4ZsLPkntkqn+k=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=TA2Uqt1lMud3xiXcUnbkcSiJWFH/2jzx9WfJEWm3AksgOSLgeoOSvl7i3F8TwJSzz
+	 PHEjO3p7DPvJTixl/hJUUwsDnLmn51xReYS4Yl/bd7pd1a7Dp39eoc4iDs0qP0nikW
+	 sm+rWb5eilE49wvrj0g8h70cLplsb2svnLT5aByYn0KABztPLzGEn3MIflDdr5TjM5
+	 ROlV8nf+M5eMygdeDGZ0Fpav63fy+tGWqavklq2RG3JTli+Foi17QbtK4oTI+g8kOk
+	 MeoU33hKT5cQm6h1IXNnvi6lZ1hnv/NSrfgDg0EVsR22fadlS/4I/GJsEP5SfPx9ea
+	 KWT9VLXxOqWPg==
+Message-ID: <sashiko-outbox-216248@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 06/11] perf tools: Verify thread status and mount
+ namespace inode
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Namhyung Kim" <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261116055731.707164-7-namhyung@kernel.org>
+References: <20261116055731.707164-1-namhyung@kernel.org>
+ <20261116055731.707164-7-namhyung@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 16 Nov 2026 06:14:10 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -50,85 +60,105 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] perf/core: Fix sigtrap task_work races
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1793870900.git.wutengda@huaweicloud.com>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <cover.1793870900.git.wutengda@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgAn+O3bnvpqP_YBEg--.43654S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7KFyruF1fGFy7Gw4kGw4Durg_yoW8Ary8pF
-	43ur1Skw48GrWIva1avw48Aa1ruw4Fqa13Grs3Kw1jyF45ZFy5XFW7Kr4Y9F4UCr92yFyI
-	yw4vvFWkur1jvFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
-	7KsUUUUUU==
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-Hi,
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Low] perf namespaces: nsinfo__init_locked() returns 0 when stat()
+  fails
+--
 
-Friendly ping. 
-This has been pending for ~10 days. Any chance you could take a look?
+commit e6cbb7bd6fc00579ed776b5b31e5e5cfe0cc41a2
+Author: Namhyung Kim <namhyung@kernel.org>
 
-Thanks,
-Tengda
+perf tools: Verify thread status and mount namespace inode
 
-On 2026/11/5 17:30, Tengda Wu wrote:
-> Two fixes for sigtrap task_work handling since the switch to always
-> enqueue SIGTRAP via task_work.
-> 
-> The warning splats and PoCs for both patches are too long to inline in
-> the commit messages. They are sent as separate replies to this cover
-> letter, one per patch.
-> 
-> Patch 1 fixes a re-entrancy race in __perf_event_overflow(): pending_work
-> was set only after task_work_add(), so an NMI could re-enter and enqueue
-> the same pending_task twice, creating a cycle in the task work list and
-> unbalancing the event refcount. Claim pending_work with cmpxchg() before
-> enqueuing, and clear it if the enqueue fails.
-> 
-> Patch 2 fixes a WARN_ON_ONCE() in perf_sigtrap() triggered by the context
-> fast-swap path swapping ctx->task while a sigtrap event has pending task
-> work. SIGTRAP is targeted at ctx->task, so exclude sigtrap events from
-> fast-swap alongside inherit+sample-read events.
-> 
-> Changelog
-> =========
-> v2 -> v3:
->   - v2: https://lore.kernel.org/all/20261102021355.650671-1-wutengda@huaweicloud.com/
->   - Added Patch 2 to fix WARN_ON_ONCE() in perf_sigtrap()
-> v1 -> v2:
->   - v1: https://lore.kernel.org/all/20261031114520.642476-1-wutengda@huaweicloud.com/
->   - Drop the redundant event->pending_work assignment. (Sashiko)
-> 
-> Tengda Wu (2):
->   perf/core: Prevent duplicate sigtrap task work enqueue
->   perf/core: Disable context fast-swap for sigtrap events
-> 
->  include/linux/perf_event.h |  6 ++----
->  kernel/events/core.c       | 30 ++++++++++++++++++------------
->  2 files changed, 20 insertions(+), 16 deletions(-)
-> 
+This commit verifies that /proc/<pid>/task/<tid>/status exists with a
+matching Tgid and checks the mount namespace inode via fstat() before
+entering a thread's mount namespace.
 
+> diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
+> index afd8ad7f843ec..860b90e8384ed 100644
+> --- a/tools/perf/util/namespaces.c
+> +++ b/tools/perf/util/namespaces.c
+
+[ ... ]
+
+> @@ -101,16 +116,41 @@ static int nsinfo__init_locked(struct nsinfo *nsi)
+>  	char *newns =3D NULL;
+>  	struct stat old_stat;
+>  	struct stat new_stat;
+> +	pid_t tgid =3D 0, nstgid =3D 0;
+> +	bool in_pidns =3D false;
+>  	int rv =3D -1;
+> =20
+> +	if (RC_CHK_ACCESS(nsi)->exited)
+> +		return -1;
+> +
+>  	RC_CHK_ACCESS(nsi)->inited =3D true;
+> =20
+> +	/*
+> +	 * Verify that the thread (pid, tid) still exists in /proc and its Tgid
+> +	 * matches pid (guarding against PID/TID recycling), while resolving the
+> +	 * innermost tgid if the process is in a different PID namespace.
+> +	 */
+> +	if (snprintf(spath, PATH_MAX, "/proc/%d/task/%d/status",
+> +		     nsinfo__pid(nsi), nsinfo__tid(nsi)) >=3D PATH_MAX)
+> +		goto out;
+> +
+> +	rv =3D nsinfo__get_nspid(&tgid, &nstgid, &in_pidns, spath);
+> +	if (rv < 0 || tgid !=3D nsinfo__pid(nsi)) {
+> +		nsinfo__set_exited_locked(nsi);
+> +		rv =3D -1;
+> +		goto out;
+> +	}
+> +
+> +	RC_CHK_ACCESS(nsi)->tgid =3D tgid;
+> +	RC_CHK_ACCESS(nsi)->nstgid =3D nstgid;
+> +	RC_CHK_ACCESS(nsi)->in_pidns =3D in_pidns;
+> +
+>  	if (snprintf(oldns, PATH_MAX, "/proc/self/ns/mnt") >=3D PATH_MAX)
+> -		return rv;
+> +		return -1;
+> =20
+>  	if (asprintf(&newns, "/proc/%d/task/%d/ns/mnt",
+>  		     nsinfo__pid(nsi), nsinfo__tid(nsi)) =3D=3D -1)
+> -		return rv;
+> +		return -1;
+> =20
+>  	if (stat(oldns, &old_stat) < 0)
+>  		goto out;
+> @@ -124,19 +164,10 @@ static int nsinfo__init_locked(struct nsinfo *nsi)
+>  	if (old_stat.st_ino !=3D new_stat.st_ino) {
+>  		RC_CHK_ACCESS(nsi)->need_setns =3D true;
+>  		RC_CHK_ACCESS(nsi)->mntns_path =3D newns;
+> +		RC_CHK_ACCESS(nsi)->mntns_ino =3D new_stat.st_ino;
+>  		newns =3D NULL;
+>  	}
+> =20
+> -	/* If we're dealing with a process that is in a different PID namespace,
+> -	 * attempt to work out the innermost tgid for the process.
+> -	 */
+> -	if (snprintf(spath, PATH_MAX, "/proc/%d/task/%d/status",
+> -		     nsinfo__pid(nsi), nsinfo__tid(nsi)) >=3D PATH_MAX)
+> -		goto out;
+> -
+> -	rv =3D nsinfo__get_nspid(&RC_CHK_ACCESS(nsi)->tgid, &RC_CHK_ACCESS(nsi)=
+->nstgid,
+> -			       &RC_CHK_ACCESS(nsi)->in_pidns, spath);
+> -
+>  out:
+>  	free(newns);
+>  	return rv;
+
+[Severity: Low]
+Does nsinfo__init_locked() return 0 instead of -1 when stat() fails?
+
+Moving nsinfo__get_nspid() ahead of the stat() checks sets rv to 0 on
+success.  If stat(newns, &new_stat) then fails (for example with EACCES
+because /proc/<pid>/task/<tid>/ns/mnt requires PTRACE_MODE_READ_FSCREDS
+while status is world-readable), jumping to out returns 0 to callers of
+nsinfo__init().
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261116055731.7071=
+64-1-namhyung@kernel.org?part=3D6
