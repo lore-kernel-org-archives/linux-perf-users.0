@@ -1,49 +1,76 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=180.76.5.236
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794821228;
-	b=43HpOMb1Pmia3nT3yeWls15kCefrtAxwjT08znmnAZP4ZZbUvwu1Rs1i9BIdhV4FC+Z6
-	 zfvkaWE9oxz/yoPx3WSDYCqD3Ru2dCA5xpyK6Udu/wT4FHX8/364H+Abosq72g6S4kGq0
-	 9/6OfX9aBaVZcnOfecKWZjzfyM+2sZnf5Yr9amBd+hutwO12HdMexyfaJez8T8J+uUhBT
-	 r/756g0YTnaB/tIt5Nfs1PeIKqd4kR3eq0BxfJ9q8Etq4GzOaQeVmG9+Pl8kb/AsUsX9s
-	 cSqwSfxpzoI/SmNejHSHpX8sMpRweK7fNZmgJqN7jTg2Sm5eW+vlJt14/S6Jui6tF1w==
+	t=1794822431;
+	b=kmRkwhv57sxgUpRb+MEQ3zhSZ9V67OUd0jjMLUM3Tui4bp/nBB5scRJp00mEydMyJ0y/
+	 GD5pD6AA1hz77uXxnFV1UNTJ7XowxY4J46h87SxogB8p43m2gctud9QBMBH5HJgaTKWLy
+	 T6qVt+oVk+52JdCZOiYxaIJhZt1X62gUXFg5peaqpZQ/N6FdjEy+HviVmHhOaYn6pLHxw
+	 sIYogUoencL1fWsjW1OxAalUWXJne+L/nKIo9QWT8zS23CbKOQihEbvEzt65Gvg0iEEQZ
+	 2FOmqnh+JbPwLhl9cgmB3ZxWhsWwYYhxT43tClPmQC32tpALPFlXpK0O09bdK7DN2gA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794821228;
-	h=DMARC-Filter:X-MD-Sfrom:X-MD-SrcIP:From:To:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Type:X-Originating-IP:X-ClientProxiedBy:
-	 DKIM-Signature;
-	bh=MWsVBLgZW16pqsBfRZm53nUtd+lGf7v+gvt3DbChD1k=;
-	b=kspfkudCWbmju/SAMiTYp6/iywVBtFU2B3mpD6v0Oij1C1FcC3eTMPDZ4Wc/lqDlBWTj
-	 U6EzQy9N7HTIAQsoSvZ6XYvzn4jZI39j/usycQGSsCP4CGXHNazh8wvGK3WIrw06QUa8L
-	 DJLzZjCpcU2pexB94sGMVr3tCDjKLS2+Od8xs/cvvepyNcn/rqOUMYsItx1WGgRpIdXZF
-	 ua84AsHhPYaIhIIKGro8iGUuwXD61hrNveXZCadl8GRQd2ji/QbHziAleRFQSl6AnNeAs
-	 orURovDbEVUWDeD8eLytyO2Yj52M7XdWk5p+XDTk5QhhdN1vRnHoepPRgC28u852MNw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794822431;
+	h=DMARC-Filter:Date:DKIM-Signature:DKIM-Signature:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To;
+	bh=fsPsMFn8hWSINzFyIgJpitEGrKFPlA0wibbGI4KQ4Xw=;
+	b=06pCffeJnMt2c8M7mDrG4TybpO58zzuN4ouY97zIcK1ke4Xx7ygkDXDtSdNhOX4LDdDs
+	 N5L1BAXwarDEGhzidwXLcJzH6TZKwrNhp16XbEfvedhs22yTYWpYh8i1rfBiH9KmZ2iFC
+	 FiXOvuJNUGiHCHo9cIaBjDea4UUuG4eGbIb1sXY+rs3oPTbgV2mQFiUEOwvSO+l1rwYbA
+	 YhQRuohoDMbWeFJaZkHvdEBrOAIzzIzjVYVKxX+bNDmFqL4xgFAvoRdx7fCclLLdNSJxF
+	 wk+rA1rVkrYkMdPGlGqFUnXieL9YfHo5lqtHaHRKWSHklsKqY54PU/qgxHg9AZDNc2A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=baidu.com;
-	spf=pass smtp.mailfrom=baidu.com;
-	dkim=pass header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=G6SRAoyy;
-	arc=none smtp.remote-ip=180.76.5.236
-Received: from outbound.baidu.com (outbound.baidu.com [180.76.5.236])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 69A2A606A323;
-	Mon, 16 Nov 2026 09:27:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 69A2A606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
+	dmarc=pass header.from=linutronix.de;
+	spf=pass smtp.mailfrom=linutronix.de;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=hJLV6ZQi;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=m3Mji7C+;
+	arc=none smtp.remote-ip=193.142.43.55
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662E9606A31C;
+	Mon, 16 Nov 2026 09:47:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 662E9606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=G6SRAoyy
-X-MD-Sfrom: lirongqing@baidu.com
-X-MD-SrcIP: 172.31.50.47
-From: lirongqing <lirongqing@baidu.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
-	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, Li RongQing <lirongqing@baidu.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] perf intel-pt: Save the reference window used to detect snapshot wraps
-Date: Mon, 16 Nov 2026 17:26:50 +0800
-Message-ID: <20261116092650.1714-1-lirongqing@baidu.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=hJLV6ZQi;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=m3Mji7C+
+Date: Mon, 16 Nov 2026 10:47:06 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1794822428;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fsPsMFn8hWSINzFyIgJpitEGrKFPlA0wibbGI4KQ4Xw=;
+	b=hJLV6ZQiRHk/LYJPQMwf0Zeqs0xt5jqEx3eeUGUZkjI4t4H8JK5j0MdNYRUwZLSKR/XfP7
+	45Nz2QtzA2QnCLha2IuEvBevBpzDXQxQy+Ny7NYRniBQzcosL0eT8a0CpfrTX1jk8JcVj2
+	iYvMa/jKoUIpXcGr9q8HS1jEs91YLgt5DnjanGc9TCWxkjR3WIh5uWmdPPirN/OdftUIoq
+	JYgn78lufZoqXagML0I0HSq4SqWN1mthQxy73mZSqSKLO+Om2o/xEa4JFXT+e0PTX8yljB
+	+p/BcRm859F9qwDVnhqGBbsn3j3rq7CeRmYQDpLhX8JzDOCA7wH/LXbFDKE44g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1794822428;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fsPsMFn8hWSINzFyIgJpitEGrKFPlA0wibbGI4KQ4Xw=;
+	b=m3Mji7C+1Lc7pTYKmsbndx4QOXyzTON6cxHUNfSu6+pHN9LTWMrNZmaWmyb8kcQHuubRth
+	uQTVvf3caGj6PPDw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Tengda Wu <wutengda@huaweicloud.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] perf/core: Prevent duplicate sigtrap task work
+ enqueue
+Message-ID: <20261116094706.GX5vD02a@linutronix.de>
+References: <cover.1793870900.git.wutengda@huaweicloud.com>
+ <ff842e802e9ecb74510a90964f8ad2c4825834b7.1793870900.git.wutengda@huaweicloud.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -53,54 +80,110 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: bjhj-exc8.internal.baidu.com (172.31.3.18) To
- bjkjy-exc3.internal.baidu.com (172.31.50.47)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=baidu.com;
-	s=selector1; t=1794821223;
-	bh=MWsVBLgZW16pqsBfRZm53nUtd+lGf7v+gvt3DbChD1k=;
-	h=From:To:Subject:Date:Message-ID:Content-Type;
-	b=G6SRAoyyhIyD6LSu1UrMc7QsVRbZpN0rQdazkUTEomGCmciKgf5hGQYiA0e/5OwgY
-	 oYSBk7+orb2ii3j70mQq3tDAkjtOV3kVPmm7AEgUbiFq6rtg2A699pSzlgTgROqAGr
-	 GujlEY6+GMujyzrYhiu+5noyYjQzm+UDLOxPPxu9LhSZnKJ7kMUIr0aB6hTblngciA
-	 Mi+EGH7PUMwAvKLzxHAxsOpmVru7m9Zgr2vnU3Ojxz93kCKADcvDURg4Ye4K2IJQGi
-	 ZwZChmhEZLbM+khRC+szNt6jtvO6/UKtcuSejESXB7uuy9rnOD/3YWocUQPJv9QInW
-	 lydN6i4d2XDqw==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ff842e802e9ecb74510a90964f8ad2c4825834b7.1793870900.git.wutengda@huaweicloud.com>
 
-From: Li RongQing <lirongqing@baidu.com>
+On 2026-11-05 09:30:43 [+0000], Tengda Wu wrote:
+> The sigtrap handling in __perf_event_overflow() checks
+> event->pending_work before calling task_work_add(), but only sets
+> pending_work after the task work has been queued.
+> 
+> This leaves a window where an NMI can interrupt task_work_add()
+> and re-enter __perf_event_overflow() for the same event. Since
+> pending_work is still zero, the nested invocation can enqueue
+> the same pending_task again.
+> 
+> The re-entrant call path is:
+> 
+>   __perf_event_overflow()
+>     task_work_add()
+>       kasan_record_aux_stack()
+>         <NMI>
+>           __perf_event_overflow()
+>             task_work_add()
+> 
+> The nested invocation can enqueue pending_task before the
+> outer invocation does. When the outer invocation resumes, it
+> inserts the same task_work entry again, potentially creating
+> a cycle in the task work list.
+> 
+> This causes perf_pending_task() to be executed repeatedly
+> and leads to unbalanced event reference counting.
+> 
+> Use cmpxchg() to atomically claim pending_work before calling
+> task_work_add(). This ensures that only one invocation can
+> enqueue the pending_task, even when interrupted by an NMI.
+> 
+> If task_work_add() fails, clear the pending_work claim so that
+> a subsequent overflow can retry.
+> 
+> Also use READ_ONCE() when checking pending_work in the
+> exclude_kernel warning path to avoid an unsynchronized read.
+> 
+> Fixes: c5d93d23a260 ("perf: Enqueue SIGTRAP always via task_work.")
+> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+> ---
+>  kernel/events/core.c | 23 ++++++++++++-----------
+>  1 file changed, 12 insertions(+), 11 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 457d75ea7142..ee5c59158b89 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -10925,16 +10925,17 @@ static int __perf_event_overflow(struct perf_event *event,
+>  
+>  		notify_mode = in_nmi() ? TWA_NMI_CURRENT : TWA_RESUME;
+>  
+> -		if (!event->pending_work &&
+> -		    !task_work_add(current, &event->pending_task, notify_mode)) {
+> -			event->pending_work = pending_id;
+> -			local_inc(&event->ctx->nr_no_switch_fast);
+> -			WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
+> -
+> -			event->pending_addr = 0;
+> -			if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
+> -				event->pending_addr = data->addr;
+> -
+> +		if (cmpxchg(&event->pending_work, 0, pending_id) == 0) {
 
-The snapshot reference offset is initialized to the end of the AUX
-buffer and does not change. The comparison checks that fixed window,
-but the reference update copies bytes immediately before the current
-head instead.
+would cmpxchg_acquire() here make sense?
 
-Two snapshots before the trace reaches the buffer end can consequently
-compare trace bytes against an untouched tail and falsely report a wrap.
-The reader then treats the buffer as full and emits stale or unwritten
-bytes in addition to the new trace.
+> +			if (!task_work_add(current, &event->pending_task, notify_mode)) {
+> +				local_inc(&event->ctx->nr_no_switch_fast);
+> +				WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
+> +
+> +				event->pending_addr = 0;
+> +				if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
+> +					event->pending_addr = data->addr;
+> +			} else {
+> +				cmpxchg(&event->pending_work, pending_id, 0);
 
-Copy the window ending at ref_offset plus its size, matching the window
-used by the comparison.
+if the task_work_add() fails then smp_store_release(, 0) since only the
+executed task_work can release it back to 0. The cmpxchg seems not
+needed.
 
-Fixes: 90e457f7be08 ("perf tools: Add Intel PT support")
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
----
- tools/perf/arch/x86/util/intel-pt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +			}
+>  		} else if (event->attr.exclude_kernel && valid_sample) {
+>  			/*
+>  			 * Should not be able to return to user space without
+> @@ -10948,7 +10949,7 @@ static int __perf_event_overflow(struct perf_event *event,
+>  			 *     To approximate progress (with false negatives),
+>  			 *     check 32-bit hash of the current IP.
+>  			 */
+> -			WARN_ON_ONCE(event->pending_work != pending_id);
+> +			WARN_ON_ONCE(READ_ONCE(event->pending_work) != pending_id);
+smp_load_acquire()
 
-diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-index a533114..5e38b9c 100644
---- a/tools/perf/arch/x86/util/intel-pt.c
-+++ b/tools/perf/arch/x86/util/intel-pt.c
-@@ -1091,7 +1091,7 @@ static bool intel_pt_wrapped(struct intel_pt_recording *ptr, int idx,
- 				       data, head);
- 
- 	intel_pt_copy_ref(ref->ref_buf, ptr->snapshot_ref_buf_size, mm->len,
--			  data, head);
-+			  data, ref->ref_offset + ptr->snapshot_ref_buf_size);
- 
- 	return wrapped;
- }
--- 
-2.9.4
+perf_pending_task() could maybe get a xchg_release(, 0). This however is
+wrong because it would reset perf_event::pending_work and make it
+available for __perf_event_overflow() again. I think it should have a
+load_acquire() first, and have the store_release() after perf_sigtrap().
 
+Comments?
+
+>  		}
+>  	}
+>  
+
+Sebastian
