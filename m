@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.200
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794815126;
-	b=TNXZeZ4pxqiGEOMjQK/ot3t/tNP51GY7BjUqQ7V3yr8AHddJ31MA5bnlAqHvBZQYxzba
-	 uAdosD24nkP/V+jhVUFUcitwpAZpdv/jVk76ieY4PR1skguSMga99O+1mpt4iYHWuF7/S
-	 vx6P2meWRUyCXmhHf5oHWzwO9+3zK9nvK6hxq3VDv+kPo0lfHZ6cJ0/yAFyLV+9Th2LS2
-	 jOU4jjIZLboPJIVoWrvmvXGlnUIh4TK9gR0evLj/l8b6GXIxd2+lHfW5IuUgO4UsvkrbT
-	 C/Vc1SdvR2Jk5oN5Yqrgcfobwa+P6MLD8todA7651sAEcPfWx0qdMvjbAvByKjAtHRw==
+	t=1794815129;
+	b=TCpIsAFWuqEnlXPvCKnxuaGO2/DKxxh0oRrjkKv5umXC8zMUSz6JjQOad5i7Ee1JlL/w
+	 zBijmuunRsWA6LdjHGBcMJ5qzwc/oEU6tEvFIxHvy5uTSiLY/EON1c8oqAyGQ3NY5KP76
+	 xLciHcSDp+et8XaLtdc1Y2qjbtmHzmGAg9QVedxYoNP2QSPQiIEzeVqLEGHgurMdKHvpW
+	 ac4r0GvZo8TXc1/PkmOVZgPYtB2WatJbsr43JaKBbA2yEBcnMnU05yHjSUiPyRYKtOkaB
+	 w3mIcuG3n5yt8dMJCxyna03/d8THw1pK9FSVRbOEt/WrDmC+Kp/j4vUr1NSdmqV43qA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794815126;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794815129;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=IyWxbg8JfKyS9ECLJkNu4MChBueQzs+8RBXPCvcMWVo=;
-	b=TgS5P7DcOEFQCtpWmyfWS9lH+NnzGcUV1bBlbJ8XJvoQsOdmZlZmQkvJllmAxfrz9mks
-	 w2PdI3h7zUjNP/AtvoMrdn9RH0D+IjjuXKekjAbhwQPz8hSiquweMhrJiKMxfyQOgKDnF
-	 wFqAcvXIF0pBRKsjBKblC4qadKWpItWqu/hc+ixo1BBkBzIuzOyzbhMEXeOUlGmNnGLF4
-	 ZGJK5HGurW3zMgDdRJg9nWop+PDv5YOshHAss5/zUZpb69i1w8JVta0ggkNEv1ASkULSp
-	 2TcFqytBrsHWdlm5CC5wSW1opURHTPZGa5/QsGEHaIPw/Alawjw1XL/95VU1RE5l+Ag==
+	bh=c7hQtHwQFKlv/0gfya55v+DdzXt6nIzR/TMCTaOjEKM=;
+	b=P0pk/yK4MjXz9a5x2f1axeQ0J+jApXC1IF5doPiEyKKkoxQUJ7+ncudybNgBrH3G7dw+
+	 FihfKPkUdPM2PAIPooqLfvAuzHQIixlcBelUdU+glRsv9TpSMhGDkxKp864VS+OX1NBpB
+	 ZCM/2HWp2P+ur+TZTwnxnWGrFzfJzanYrtfpL4ksY3N++ygHeKq8nTkYn2ZIHGV97J0gE
+	 UfoWs8GuelpOY8GJ/N3taXlQ6drvdDrup0x8YZTgUL4GRcTo5CmK0WkeBtRBuq+AU/MUc
+	 +TGmlGImcgRVRgjpZvWW/QZdLsC+EIPgFJcOz3rLRQ/HX/SgZjwUYn16CDorrjDK70A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=nwHctiAs;
-	arc=none smtp.remote-ip=74.125.82.200
-Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=hhFGh2Eu;
+	arc=none smtp.remote-ip=74.125.82.198
+Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFD1606A896
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 07:45:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6BFD1606A896
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7ED606A8A1
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 07:45:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2F7ED606A8A1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=nwHctiAs
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-36d1353fdcdso1873223eec.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 15 Nov 2026 23:45:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=hhFGh2Eu
+Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-30bcb065bfdso4012886eec.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 15 Nov 2026 23:45:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794815125; x=1795419925; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794815127; x=1795419927; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=IyWxbg8JfKyS9ECLJkNu4MChBueQzs+8RBXPCvcMWVo=;
-        b=nwHctiAsD7wB7EtEdULHadVClN2NdAZG3JO/Yhqj9hkICWwRCLKK6zuN4xJ4QxUURC
-         rCIbPxI4HRx6t7OkL3U4JAqQZ1o62aewmwJwnZU60Azyi+XBf33EM3EtSrOT/fTV7W0+
-         OUpb9Y5SP1HQAjY3qcHyZeZQD7ov3YZSaL2nghDShbB6BxTJo7IZQBYljT7FdFG/b61y
-         gNmln/Y4+6vSZD7YSeOb0kGBfHXzk3CnPcdCucfBzQBWSvGhfbzdwdwXPgllVzBUzOzc
-         u+KTgFlQi+4mfP1RXFhBT2doRP6lDLYcqOXJV32wE+6RY2/LeN5PbtR78Fdt9zYEddZw
-         mvmQ==
+        bh=c7hQtHwQFKlv/0gfya55v+DdzXt6nIzR/TMCTaOjEKM=;
+        b=hhFGh2EuzQkFCrF8mS+4X6Q3kwPhAuV2zdKGBIbCb+e/AR+ay5O3PwfPdKFZjwqjD2
+         bsTUlW6zSQIJdaN4G9ErmYvYGjqlL+3JOfrsI+13zbjDftDn+uGu/HQDrJnCAAgf01E1
+         2sclThx4s8XsxvUuzP7FC5kR8hlSW2y4f4MDa7TSJKyLEu6HmiWWLicOxiifgqoOe2kh
+         ZbcLHP5lgsU2NPIoUMt20Wf1JaW9WTXix/AEhmwLerREtMaX3AYZ3+1yD8q+2qzkHH/g
+         DuXC8vwVASwMJaGfyUeXsFIvq/y9b/Ei6WNqf3H66aqN9ntPSmMPjrXEkrjiR9BrZOr3
+         co/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794815125; x=1795419925;
+        d=1e100.net; s=20260707; t=1794815127; x=1795419927;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=IyWxbg8JfKyS9ECLJkNu4MChBueQzs+8RBXPCvcMWVo=;
-        b=Svh4Gn6PmgmbDabwyL1kOlWR5mRcS7AtCplnq+IXqhep5Doo4i8kNCrQ2Rx1oe0eyD
-         pAJQRD01h4kb+10C9IzW+kQqQiOZ2c+gskBigx93BOw2Cwyq7/ZdbMyyVFB630rVrdgi
-         5OsRIPleAZ+v7QGkfV3kflnr+pTg4KhlxcwUZQLdcNRCTeoGTLAKkFpWxeuki83Po+Wb
-         77od6HhjUAtyOZcZ5yhQ1cgxfq6THjdRws7C09FicG6EtHHPhwyCpRExhwOyXYk9XjLX
-         LztmGwJyjiF7ssx4W6FB0waXPjdoSMZO7Upa8Kws6NTYb1hngvn2aXKjv8xuNg4TkMDa
-         Igug==
-X-Forwarded-Encrypted: i=1; AL+hErFcgh94todw/aMtkhBQwQagyAbSaTdevSuGcIDRNykxFVQZDAyZGOlRcKOEQVwgtJX9Z25BlofTax6g6/ao2xyD@vger.kernel.org
-X-Gm-Message-State: APuU4Z/nMIRGqVHaiSg8nE/NRfRHgCWKlsDHKksgDmrZenki8avJGPFt
-	pC6KBv08kBypVicf9caTDfqe5290BbTvPA628k+LCbmUMXqRVCpqaGM2p4J6YMWtAhyCseK69+C
-	9r2mfFKb3Pg==
-X-Received: from dlbrs1.prod.google.com ([2002:a05:7022:f681:b0:184:6cc9:b13c])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2706:b0:1b5:126c:eb88
- with SMTP id a92af1059eb24-1b5126cec12mr6665964c88.45.1794815125098; Sun, 15
- Nov 2026 23:45:25 -0800 (PST)
-Date: Sun, 15 Nov 2026 23:44:04 -0800
+        bh=c7hQtHwQFKlv/0gfya55v+DdzXt6nIzR/TMCTaOjEKM=;
+        b=i6tl/yhCHFBMkatrAHV9ed/lmf2qLQsopihjrFqAL/v3CxRhmN6W3bAD6NUXyequ3H
+         afltN9QbaKNWtr+sBzU+WhmlWkVn3zlcjlJc2Ik/lYUSAeDAILiQgxE6W+cVwinnhQLp
+         Y9Z82MOT6qkUUoBvu8GQSAXjxvn6qEzflB/94J2YS+tAL6Gu90nUFwQFKwnmkHE5JJIP
+         oeiO1uUySD1NYmrWaUXP4BZTr4JIrH86zme9MlzupzvJ7CfCu9ZKJ4UEuq5SXUU3rZnd
+         /IpcBVUtzR8mqnsl2eIFrech8DDOh3MRcK0phLjCmdgnFrst0oAD/48kxASnJlyb8eOW
+         HWpw==
+X-Forwarded-Encrypted: i=1; AL+hErE+9P3OZsx8MNcTkrTP8GGWp8Oqxi1S2JouDK3QKNJvFuLaNWhya32O0/BgwPh+TYoHUWsCvQO6Lrn6JEx2TnM8@vger.kernel.org
+X-Gm-Message-State: APuU4Z9QSyvxvKoQuzkly5JsK8ZCKI0psiPxQl+Yl28NuWjiCIYFt24U
+	Nwg5+LShhR/p+krqk7I+X0WAO6iYDaH4qJaj4o5VF/0nMUExC2bhwz/1lNaN2CQc6OMUCE+xEGV
+	OIOzMdIAfJw==
+X-Received: from dybtv9.prod.google.com ([2002:a05:7300:f489:b0:36d:8068:9180])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:87d7:20b0:35f:8c5d:5928
+ with SMTP id 5a478bee46e88-37967125e78mr8805064eec.30.1794815127027; Sun, 15
+ Nov 2026 23:45:27 -0800 (PST)
+Date: Sun, 15 Nov 2026 23:44:05 -0800
 In-Reply-To: <20261116074414.3174737-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,9 +81,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261116074414.3174737-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
-Message-ID: <20261116074414.3174737-10-irogers@google.com>
-Subject: [PATCH v3 09/19] perf inject: Fix PERF_SAMPLE_READ layout and bounds
- checks in aslr_tool__process_sample()
+Message-ID: <20261116074414.3174737-11-irogers@google.com>
+Subject: [PATCH v3 10/19] tools headers UAPI: Sync linux/perf_event.h for
+ struct perf_build_id
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -101,185 +101,242 @@ Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
 	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-In aslr_tool__process_sample(), PERF_SAMPLE_READ only copied the id word
-when evsel->core.attr.read_format had PERF_FORMAT_ID set, whereas the
-kernel and __evsel__parse_sample() unconditionally include the id word in
-both single-counter and PERF_FORMAT_GROUP modes. When PERF_FORMAT_ID was
-not explicitly set in attr.read_format, in_array[i] became desynchronized
-with subsequent sample fields.
+Synchronize tools/include/uapi/linux/perf_event.h, define struct
+perf_build_id in tools/lib/perf/include/perf/event.h (keeping the
+existing anonymous build_id_size/build_id fields in struct
+perf_record_mmap2 for source compatibility), and update perf tools to
+use struct perf_build_id.
 
-In addition, CHECK_BOUNDS() used addition (i + required_i > max_i) which
-could overflow, and the dropped PERF_SAMPLE_RAW, PERF_SAMPLE_STACK_USER,
-and PERF_SAMPLE_AUX handlers copied word-rounded lengths into out_array
-before discarding the sample.
-
-Unconditionally copy the id word in PERF_SAMPLE_READ using
-sample_read_value_size() with division-based bounds checks, make
-CHECK_BOUNDS() subtraction-based, and drop RAW/STACK_USER/AUX samples
-directly without dead copies.
-
-Fixes: 575c6d2bc470 ("perf inject/aslr: Implement sample address remapping")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/aslr.c | 95 +++++++++---------------------------------
- 1 file changed, 20 insertions(+), 75 deletions(-)
+ tools/include/uapi/linux/perf_event.h | 13 ++++++++++
+ tools/lib/perf/include/perf/event.h   | 14 +++++++++--
+ tools/perf/builtin-inject.c           |  3 ++-
+ tools/perf/util/event.c               |  4 +--
+ tools/perf/util/machine.c             |  3 ++-
+ tools/perf/util/python.c              |  8 +++---
+ tools/perf/util/synthetic-events.c    | 36 ++++++++++++++-------------
+ 7 files changed, 54 insertions(+), 27 deletions(-)
 
-diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
-index dee077cca5fe..e236d5287043 100644
---- a/tools/perf/util/aslr.c
-+++ b/tools/perf/util/aslr.c
-@@ -8,6 +8,7 @@
- #include "evlist.h"
- #include "machine.h"
- #include "map.h"
-+#include "sample.h"
- #include "thread.h"
- #include "tool.h"
- #include "session.h"
-@@ -780,7 +781,7 @@ static int aslr_tool__process_sample(const struct perf_tool *tool,
- 	out_array = &new_event->sample.array[0];
+diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+index c49fc76292f7..deb7c42d109b 100644
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
+@@ -1099,6 +1099,18 @@ enum perf_event_type {
+ 	 */
+ 	PERF_RECORD_SAMPLE			= 9,
  
- #define CHECK_BOUNDS(required_i, required_j) \
--	(i + (required_i) > max_i || j + (required_j) > max_j)
-+	((required_i) > max_i - i || (required_j) > max_j - j)
- 
- #define COPY_U64() \
- 	do { \
-@@ -835,18 +836,20 @@ static int aslr_tool__process_sample(const struct perf_tool *tool,
- 	if (orig_sample_type & PERF_SAMPLE_PERIOD)
- 		COPY_U64(); /* period */
- 	if (orig_sample_type & PERF_SAMPLE_READ) {
--		if ((evsel->core.attr.read_format & PERF_FORMAT_GROUP) == 0) {
-+		u64 read_format = evsel->core.attr.read_format;
++	/*
++	 * Build IDs may be present in a number of events. They have a
++	 * consistent encoding of:
++	 *
++	 * struct perf_build_id {
++	 *	u8		size;
++	 *	u8		__reserved_1;
++	 *	u16		__reserved_2;
++	 *	u8		data[20];
++	 * };
++	 */
 +
-+		if ((read_format & PERF_FORMAT_GROUP) == 0) {
- 			COPY_U64(); /* value */
--			if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
-+			if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
- 				COPY_U64(); /* time_enabled */
--			if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
-+			if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
- 				COPY_U64(); /* time_running */
--			if (evsel->core.attr.read_format & PERF_FORMAT_ID)
--				COPY_U64(); /* id */
--			if (evsel->core.attr.read_format & PERF_FORMAT_LOST)
-+			/* PERF_FORMAT_ID is forced for PERF_SAMPLE_READ */
-+			COPY_U64(); /* id */
-+			if (read_format & PERF_FORMAT_LOST)
- 				COPY_U64(); /* lost */
- 		} else {
--			u64 nr;
-+			u64 nr, entry_words;
+ 	/*
+ 	 * The MMAP2 records are an augmented version of MMAP, they add
+ 	 * maj, min, ino numbers to be used to uniquely identify each mapping
+@@ -1123,6 +1135,7 @@ enum perf_event_type {
+ 	 *			u16		__reserved_2;
+ 	 *			u8		build_id[20];
+ 	 *		};
++	 *		struct perf_build_id	bid;
+ 	 *	};
+ 	 *	u32				prot, flags;
+ 	 *	char				filename[];
+diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
+index fdced574c889..867dd55f0969 100644
+--- a/tools/lib/perf/include/perf/event.h
++++ b/tools/lib/perf/include/perf/event.h
+@@ -26,6 +26,15 @@ struct perf_record_mmap {
+ 	char			 filename[PATH_MAX];
+ };
  
- 			if (CHECK_BOUNDS(1, 1)) {
- 				ret = -EFAULT;
-@@ -854,17 +857,18 @@ static int aslr_tool__process_sample(const struct perf_tool *tool,
- 			}
- 			nr = in_array[i];
- 			COPY_U64();
--			if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
-+			if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
- 				COPY_U64(); /* time_enabled */
--			if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
-+			if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
- 				COPY_U64(); /* time_running */
--			for (u64 cntr = 0; cntr < nr; cntr++) {
--				COPY_U64(); /* value */
--				if (evsel->core.attr.read_format & PERF_FORMAT_ID)
--					COPY_U64(); /* id */
--				if (evsel->core.attr.read_format & PERF_FORMAT_LOST)
--					COPY_U64(); /* lost */
-+			entry_words = sample_read_value_size(read_format) / sizeof(u64);
-+			if (nr > (max_i - i) / entry_words ||
-+			    nr > (max_j - j) / entry_words) {
-+				ret = -EFAULT;
-+				goto out_put;
- 			}
-+			for (u64 cntr = 0; cntr < nr * entry_words; cntr++)
-+				out_array[j++] = in_array[i++];
- 		}
- 	}
- 	if (orig_sample_type & PERF_SAMPLE_CALLCHAIN) {
-@@ -934,16 +938,6 @@ static int aslr_tool__process_sample(const struct perf_tool *tool,
- 		}
- 	}
- 	if (orig_sample_type & PERF_SAMPLE_RAW) {
--		size_t bytes = sizeof(u32) + sample->raw_size;
--		size_t u64_words = (bytes + 7) / 8;
--
--		if (i + u64_words > max_i || j + u64_words > max_j) {
--			ret = -EFAULT;
--			goto out_put;
--		}
--		memcpy(&out_array[j], &in_array[i], bytes);
--		i += u64_words;
--		j += u64_words;
- 		/*
- 		 * TODO: certain raw samples can be remapped, such as
- 		 * tracepoints by examining their fields.
-@@ -1041,30 +1035,6 @@ static int aslr_tool__process_sample(const struct perf_tool *tool,
- 		}
- 	}
- 	if (orig_sample_type & PERF_SAMPLE_STACK_USER) {
--		u64 size;
--
--		if (CHECK_BOUNDS(1, 1)) {
--			ret = -EFAULT;
--			goto out_put;
--		}
--		size = in_array[i];
--		COPY_U64();
--		if (size > 0) {
--			size_t u64_words = size / 8 + (size % 8 ? 1 : 0);
--
--			if (u64_words > max_i - i || u64_words > max_j - j) {
--				ret = -EFAULT;
--				goto out_put;
--			}
--			memcpy(&out_array[j], &in_array[i], size);
--			if (size % 8) {
--				size_t pad = 8 - (size % 8);
--
--				memset(((char *)&out_array[j]) + size, 0, pad);
--			}
--			i += u64_words;
--			j += u64_words;
--		}
- 		/* TODO: can this be less conservative? */
- 		pr_debug("Dropping stack user sample as possible ASLR leak\n");
- 		ret = 0;
-@@ -1110,31 +1080,6 @@ static int aslr_tool__process_sample(const struct perf_tool *tool,
- 		COPY_U64(); /* code_page_size */
++#define PERF_BUILD_ID_SIZE 20
++
++struct perf_build_id {
++	__u8	 size;
++	__u8	 __reserved_1;
++	__u16	 __reserved_2;
++	__u8	 data[PERF_BUILD_ID_SIZE];
++};
++
+ struct perf_record_mmap2 {
+ 	struct perf_event_header header;
+ 	__u32			 pid, tid;
+@@ -43,8 +52,9 @@ struct perf_record_mmap2 {
+ 			__u8	 build_id_size;
+ 			__u8	 __reserved_1;
+ 			__u16	 __reserved_2;
+-			__u8	 build_id[20];
++			__u8	 build_id[PERF_BUILD_ID_SIZE];
+ 		};
++		struct perf_build_id bid;
+ 	};
+ 	__u32			 prot;
+ 	__u32			 flags;
+@@ -321,7 +331,7 @@ struct perf_record_header_build_id {
+ 	union {
+ 		__u8		 build_id[24];
+ 		struct {
+-			__u8	 data[20];
++			__u8	 data[PERF_BUILD_ID_SIZE];
+ 			__u8	 size;
+ 			__u8	 reserved1__;
+ 			__u16	 reserved2__;
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index b887a4398f96..a278c360b058 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -811,7 +811,8 @@ static int perf_event__repipe_mmap2(const struct perf_tool *tool,
+ 	struct dso_id id = dso_id_empty;
  
- 	if (orig_sample_type & PERF_SAMPLE_AUX) {
--		u64 size;
--
--		if (CHECK_BOUNDS(1, 1)) {
--			ret = -EFAULT;
--			goto out_put;
--		}
--		out_array[j] = in_array[i];
--		size = out_array[j++];
--		i++;
--		if (size > 0) {
--			size_t u64_words = size / 8 + (size % 8 ? 1 : 0);
--
--			if (u64_words > max_i - i || u64_words > max_j - j) {
--				ret = -EFAULT;
--				goto out_put;
--			}
--			memcpy(&out_array[j], &in_array[i], size);
--			if (size % 8) {
--				size_t pad = 8 - (size % 8);
--
--				memset(((char *)&out_array[j]) + size, 0, pad);
--			}
--			i += u64_words;
--			j += u64_words;
--		}
- 		/* TODO: can this be less conservative? */
- 		pr_debug("Dropping aux sample as possible ASLR leak\n");
- 		ret = 0;
+ 	if (event->header.misc & PERF_RECORD_MISC_MMAP_BUILD_ID) {
+-		build_id__init(&id.build_id, event->mmap2.build_id, event->mmap2.build_id_size);
++		build_id__init(&id.build_id, event->mmap2.bid.data,
++			       event->mmap2.bid.size);
+ 	} else {
+ 		id.maj = event->mmap2.maj;
+ 		id.min = event->mmap2.min;
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index 2f80e364659f..cefb32833da8 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -335,8 +335,8 @@ size_t perf_event__fprintf_mmap2(union perf_event *event, FILE *fp)
+ 		char sbuild_id[SBUILD_ID_SIZE];
+ 		struct build_id bid;
+ 
+-		build_id__init(&bid, event->mmap2.build_id,
+-			       event->mmap2.build_id_size);
++		build_id__init(&bid, event->mmap2.bid.data,
++			       event->mmap2.bid.size);
+ 		build_id__snprintf(&bid, sbuild_id, sizeof(sbuild_id));
+ 
+ 		return fprintf(fp, " %d/%d: [%#" PRI_lx64 "(%#" PRI_lx64 ") @ %#" PRI_lx64
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 5b4550e97172..c7f5ef32d5bd 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1828,7 +1828,8 @@ int machine__process_mmap2_event(struct machine *machine,
+ 		perf_event__fprintf_mmap2(event, stdout);
+ 
+ 	if (event->header.misc & PERF_RECORD_MISC_MMAP_BUILD_ID) {
+-		build_id__init(&dso_id.build_id, event->mmap2.build_id, event->mmap2.build_id_size);
++		build_id__init(&dso_id.build_id, event->mmap2.bid.data,
++			       event->mmap2.bid.size);
+ 	} else {
+ 		dso_id.maj = event->mmap2.maj;
+ 		dso_id.min = event->mmap2.min;
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 902157c472b3..1efbe5bb26b1 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -302,12 +302,12 @@ static PyObject *pyrf_mmap2_event__get_build_id(PyObject *self, void *closure __
+ 	if (!(pevent->event->header.misc & PERF_RECORD_MISC_MMAP_BUILD_ID))
+ 		Py_RETURN_NONE;
+ 
+-	int size = pevent->event->mmap2.build_id_size;
++	size_t size = pevent->event->mmap2.bid.size;
+ 
+-	if (size > 20)
+-		size = 20;
++	if (size > sizeof(pevent->event->mmap2.bid.data))
++		size = sizeof(pevent->event->mmap2.bid.data);
+ 
+-	return PyBytes_FromStringAndSize((const char *)pevent->event->mmap2.build_id, size);
++	return PyBytes_FromStringAndSize((const char *)pevent->event->mmap2.bid.data, size);
+ }
+ 
+ static PyGetSetDef pyrf_mmap2_event__getset[] = {
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index 3c8d29f27fd9..57d6efe9e5f5 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -452,7 +452,7 @@ static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
+ 	}
+ 
+ 	if (event->header.misc & PERF_RECORD_MISC_MMAP_BUILD_ID) {
+-		build_id__init(&dso_id.build_id, event->build_id, event->build_id_size);
++		build_id__init(&dso_id.build_id, event->bid.data, event->bid.size);
+ 	} else {
+ 		dso_id.maj = event->maj;
+ 		dso_id.min = event->min;
+@@ -479,11 +479,11 @@ static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
+ 
+ out:
+ 	if (rc == 0) {
+-		memcpy(event->build_id, bid.data, sizeof(bid.data));
+-		event->build_id_size = (u8) bid.size;
++		memcpy(event->bid.data, bid.data, sizeof(bid.data));
++		event->bid.size = (u8) bid.size;
+ 		event->header.misc |= PERF_RECORD_MISC_MMAP_BUILD_ID;
+-		event->__reserved_1 = 0;
+-		event->__reserved_2 = 0;
++		event->bid.__reserved_1 = 0;
++		event->bid.__reserved_2 = 0;
+ 
+ 		if (dso && !dso__has_build_id(dso))
+ 			dso__set_build_id(dso, &bid);
+@@ -611,8 +611,10 @@ int perf_event__synthesize_mmap_events(const struct perf_tool *tool,
+ 		event->mmap2.prot = prot;
+ 		event->mmap2.flags = flags;
+ 
+-		if (!symbol_conf.no_buildid_mmap2)
+-			perf_record_mmap2__read_build_id(&event->mmap2, machine, false);
++		if (!symbol_conf.no_buildid_mmap2) {
++			perf_record_mmap2__read_build_id(&event->mmap2, machine,
++							 /*is_kernel=*/false);
++		}
+ 
+ 		if (perf_tool__process_synth_event(tool, event, machine, process) != 0) {
+ 			rc = -1;
+@@ -807,12 +809,12 @@ static int perf_event__synthesize_modules_maps_cb(struct map *map, void *data)
+ 
+ 		/* Clear stale build ID and entire union from previous module iteration */
+ 		event->mmap2.header.misc &= ~PERF_RECORD_MISC_MMAP_BUILD_ID;
+-		memset(event->mmap2.build_id, 0, sizeof(event->mmap2.build_id));
+-		event->mmap2.build_id_size = 0;
+-		event->mmap2.__reserved_1 = 0;
+-		event->mmap2.__reserved_2 = 0;
++		memset(event->mmap2.bid.data, 0, sizeof(event->mmap2.bid.data));
++		event->mmap2.bid.size = 0;
++		event->mmap2.bid.__reserved_1 = 0;
++		event->mmap2.bid.__reserved_2 = 0;
+ 
+-		perf_record_mmap2__read_build_id(&event->mmap2, args->machine, false);
++		perf_record_mmap2__read_build_id(&event->mmap2, args->machine, /*is_kernel=*/false);
+ 	} else {
+ 		const char *long_name = dso__long_name(dso);
+ 
+@@ -1299,7 +1301,7 @@ static int __perf_event__synthesize_kernel_mmap(const struct perf_tool *tool,
+ 		event->mmap2.len   = map__end(map) - event->mmap.start;
+ 		event->mmap2.pid   = machine->pid;
+ 
+-		perf_record_mmap2__read_build_id(&event->mmap2, machine, true);
++		perf_record_mmap2__read_build_id(&event->mmap2, machine, /*is_kernel=*/true);
+ 	} else {
+ 		size = snprintf(event->mmap.filename, sizeof(event->mmap.filename),
+ 				"%s%s", machine->mmap_name, kmap->ref_reloc_sym->name) + 1;
+@@ -2530,10 +2532,10 @@ int perf_event__synthesize_mmap2_build_id(const struct perf_tool *tool,
+ 	ev.mmap2.len = len;
+ 	ev.mmap2.pgoff = pgoff;
+ 
+-	ev.mmap2.build_id_size = bid->size;
+-	if (ev.mmap2.build_id_size > sizeof(ev.mmap2.build_id))
+-		ev.mmap2.build_id_size = sizeof(ev.mmap2.build_id);
+-	memcpy(ev.mmap2.build_id, bid->data, ev.mmap2.build_id_size);
++	ev.mmap2.bid.size = bid->size;
++	if (ev.mmap2.bid.size > sizeof(ev.mmap2.bid.data))
++		ev.mmap2.bid.size = sizeof(ev.mmap2.bid.data);
++	memcpy(ev.mmap2.bid.data, bid->data, ev.mmap2.bid.size);
+ 
+ 	ev.mmap2.prot = prot;
+ 	ev.mmap2.flags = flags;
 -- 
 2.56.1.703.gf848ed807c-goog
 
