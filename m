@@ -1,55 +1,54 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794831112;
-	b=cnyg8icrxdDDEY1fD4TSzrqVwbQNyfCfbqLgbB5QCX4NSxIaZ9MsKkwtVuyBMSlXK+q5
-	 NEhS2GS0sK+vkQyOKzcmZjy0BEhKvS6rk2LWjeqNZoRK3Ek+HQ8SkQwe8FUyl0UbADYbH
-	 6KQkM/08IyjXBrKFwLI7BCH7SYEiJ3BWGe/LW0J0GvUPvDjBts25J4JlX77qcXXeQSr5N
-	 hF2UvqMyF88CmNOOyauZfxfqj+TpRmyFtD/g6fsBVIw1UqCCoo/tjlJpDx5/OTAI61oPo
-	 BfQQH5zGr+ZVnTdj0qFrWmWCazASGHcUoQz46WaGiTJWr9T+UISPIEULqY/U2qlQRyg==
+	t=1794831134;
+	b=0Y39JNb89lZdrzZPrDBnAToCwuoyQIDXTrQZtdIaGr+TEmjUuDbKTA7D6xVUEVL1FtGU
+	 1OpJw3XmJ9xzrujrhzL0qggJGEZnP6/tMP2wGM5QFajvmJPhjVLh7PTSNicqHqYk4C2Xw
+	 4gTx7uN2rq0tm/1aRFP++qu+oUAqTBMQX978Ac0d8j62UtsfEs5Bu93A/UR1sXbJAOt/J
+	 RZE5R2psM9qVAHYbWC40wwVa8bF0h+xfXfIL1QwWtySs4P2pZVlDIe6mVgVCAkwSOZhH+
+	 KxrcY9HCnQniFHDX+4hoo33Mj+cspHvbCV5OBYU2N76Rv7Q/SDb+tlWnDpC57tAAh2g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794831112;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	a=rsa-sha256; c=relaxed/relaxed; t=1794831134;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=v2otf5CLoBxNheESy/FX0zrwueCxq+vuQ6gthk9pRAc=;
-	b=eKjyIwHB/a3wYGGGg6gl6Vx0YRX7mM0YcRby9UMkqL9PJ1FHRIKVS27HG4zp8LvTEOXu
-	 QAH7bgkvyur43BB7Pw2VURYf4mRquCGmPjAEIjzn6xxYMAT+xIJPcuTTpjIHhJTA89FXf
-	 MuORR1J+XspSL5viGzEVOfwbG9V0SYN5Ucrtvn3YefWkG55alGwSAyT2LUIeV6Pzw5Pjz
-	 zpzaH3CYzq+B3alibo1eAye4GGjjZtAn41V0PLLaBWeKYMX/DRDgKmsE8gfjcQM2qUyxX
-	 0i4ZIR+eG2KDF0cSJs8oeNGXo2tRFHVjRFTznWbhs8woe/GiMroGT2XBSaMDIhhpiGg==
+	bh=u5U1Hx7OrRdS/ClSeZ3CvlATNB/smujSv3WnODh3vbM=;
+	b=q3yp0EqRlPsptQu1OdGp63WqUohOU6z09Ps7KwGPSzZRZqnJ/O3SKC1MdIzGE995vFkl
+	 vhQYT4Q13v7oLzbPxdA0I23NOlzF92GqRKE/bVoLi2cJC5d5d0HArveNE/a2XD0QJFyPv
+	 iw9gJaqoRahP+OWSvNpQ//83oV/6Q8NaYDa0622RtNiGS1W6qxDRI41AHg/aKLWCEJBTY
+	 u+EszzgxdhGG6HjJ8ommNIgz4XO3fVaz4LNVSGbyvHkC463RcrO1E/3CpdbfUbVFTDJhf
+	 3Wa45LY8i7AHIUGnyp5lESebLKItOTE6DH2FAtTJXxfPWyZzrpve2SIhLWjDMoKvwwQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QxTOAlOM;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IlIeX9cw;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FD5606A31C
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 12:11:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F521606A323
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 12:12:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QxTOAlOM
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 212031F000C4;
-	Mon, 16 Nov 2026 12:11:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IlIeX9cw
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF85A1F000C4;
+	Mon, 16 Nov 2026 12:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794831112;
-	bh=v2otf5CLoBxNheESy/FX0zrwueCxq+vuQ6gthk9pRAc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=QxTOAlOM8rnci3LEo/ReAvWcicyvHyU2lqqEbKae1BlDFytxIbLAfdttWiR4iHw0a
-	 VwO4mmEbermNiOhbYV2R7F3Cgq6gLt0DL66Iy3B1Uz8XaJFsnpxcPCnBmBCLgh1vEJ
-	 ARZxpY+hTiK3xTk/avvEn+YDv6/1I5NsJAUbJsbbheCUbUk2TpG9k9x32nS2SfLjCd
-	 AsEcK99jKmRv09iklX0mPQdms5l68s4YT/vaKYkdtZ3MwZE2oEbyVeXVT3jnzL60LI
-	 WnO1WCOV2W3OyG3AUyK09N3Vg93I3I+k0LdpnTJ+tkuuevgzpXoSTSbecEFBmfs+hF
-	 BdVlfoyr60McQ==
-Message-ID: <sashiko-outbox-216989@kernel.org>
+	s=k20260515; t=1794831134;
+	bh=u5U1Hx7OrRdS/ClSeZ3CvlATNB/smujSv3WnODh3vbM=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=IlIeX9cwyZwhqBmpEKhWHj5xnc6P/gfKIieXJNoM+sSriicEhlIZNBMMiqD+tS2jh
+	 umXnu/pzlKSCGTX8+TRR6Re5A7EhO+m4LcUd846F/3OdLiWatv9D+F72vRrZ2Jjxpp
+	 6sAhVFBsy3UHcxXjLbkfXDeUFUHQlZJ36mJ2jUK+T2H9hmvNLAYl9gp4c65FN0voLr
+	 aBizV9KGD+M4e3BD4nSCZelw8DQwAq0ZSVAFIiEXBU+bK72cnhuJmFB2JPNnw5l/a6
+	 lzHSClWBYA1HnqYJ/U0dTd/wSCTI1LZoU44pTovSTK5MrdQ0oCmT01sSgQFnf+FDrH
+	 RFleN+e5o017Q==
+Message-ID: <sashiko-outbox-216991@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf/core: Protect ctx after dropping its reference
+Subject: Re: [PATCH v3] x86/events/amd/iommu: Use a per-IOMMU cpumask
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Haoli Zhang" <26031212468@stu.xidian.edu.cn>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261116120452.22269-1-26031212468@stu.xidian.edu.cn>
-References: <20261116120452.22269-1-26031212468@stu.xidian.edu.cn>
+To: "Vasant Hegde" <vasant.hegde@amd.com>, linux-perf-users@vger.kernel.org
+In-Reply-To: <20261116115350.13740-1-vasant.hegde@amd.com>
+References: <20261116115350.13740-1-vasant.hegde@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 16 Nov 2026 12:11:51 +0000
+Date: Mon, 16 Nov 2026 12:12:13 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,40 +58,30 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Take an RCU read lock before decrementing the reference and retain it
-> through the non-final branch's tombstone check and wakeup. This keeps ctx
-> alive until that branch has finished. When the decrement is final,
-> release the read lock immediately; that caller continues the final
-> cleanup and queues the RCU callback.
+> IOMMU performance counters are accessed via MMIO. The AMD IOMMU PMUs
+> share one global cpumask, fixed to CPU0, so every IOMMU's events are
+> read through the same CPU. That prevents collecting per-NUMA-node
+> numbers (for example perf stat --per-socket). The mask is also never
+> updated, so counting stops if that CPU goes offline.
 >=20
-> Read ctx->task with READ_ONCE(), matching the WRITE_ONCE() used when the
-> task context is marked as a tombstone. Keep smp_mb__after_atomic(): it
-> preserves the existing wait_var_event() ordering, while RCU protects the
-> context's lifetime.
+> Give each IOMMU PMU its own cpumask. The CPU is chosen from the online
+> CPUs of the NUMA node of the IOMMU's PCI device, via
+> amd_iommu_idx_to_dev(). If the node is unknown or has no online CPU,
+> any online CPU is used. If no online CPU exists at all, that PMU is
+> not registered.
 >=20
-> A similar fix was posted by Weiming Shi in October:
-> https://lkml.iu.edu/2610.0/09721.html. This version releases the RCU
-> read lock immediately on the final-put path and uses READ_ONCE() for the
-> lockless ctx->task check.
+> A CPU hotplug callback moves the reader when that CPU goes offline,
+> preferring another online CPU on the same node. If the reader had to
+> leave the node, it moves back when a CPU on that node comes online.
+> Events are pinned to the current reader so they share one context and
+> migrate together.
 >=20
-> The report shows the access in put_ctx() reached through event release,
-> and the free callback was queued from task-exit context cleanup. These
-> stacks are consistent with the post-decrement lifetime race described
-> above.
->=20
-> Fixes: 59f3aa4a3ee2 ("perf: Simplify perf_event_free_task() wait")
-> Reported-by: syzbot+56ad4cdaff8716472033@syzkaller.appspotmail.com
-> Closes: https://syzbot.org/bug?extid=3D56ad4cdaff8716472033
-> Link: https://lkml.iu.edu/2610.0/09721.html
-> Co-developed-by: Jinning Zhang <25031212117@stu.xidian.edu.cn>
-> Signed-off-by: Jinning Zhang <25031212117@stu.xidian.edu.cn>
-> Co-developed-by: Bin Yu <byu@xidian.edu.cn>
-> Signed-off-by: Bin Yu <byu@xidian.edu.cn>
-> Signed-off-by: Haoli Zhang <26031212468@stu.xidian.edu.cn>
+> Assisted-by: Cursor
+> Signed-off-by: Vasant Hegde <vasant.hegde@amd.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261116120452.2226=
-9-1-26031212468@stu.xidian.edu.cn?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261116115350.1374=
+0-1-vasant.hegde@amd.com?part=3D1
 
