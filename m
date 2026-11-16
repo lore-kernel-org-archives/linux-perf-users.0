@@ -1,59 +1,52 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794852242;
-	b=bkkiq7ae0lDqKPl+Lv5XvEz2sjJYkPmmTRnSk5SNWCxACtOnkpD2fU4BOKu4vwct8ajO
-	 sDbzhbmQdyoox6Qbd47jXB+atK7Bp6qj4/gmXQHu8AbT60wiZatg6cdtVZP01S4NJf6aa
-	 cZjMHzfNVqKZKTWQqtPIdov07M31SJEr9WYyVOf/HKjgk2t/3cxjvubnliv2i8FuKfTKB
-	 mXNE7cXF6GxN/xgtRT94YvRDhZKSBZnyNI3HBc303hy9voxWMgtcGBeQ46tR0yXJM8zND
-	 C9NcEUUJarlald872hrKYW5Y+DbIJodHcn/WF8iuN8Ou3dCaSOY9jvh7TvoY3b4t1bg==
+	t=1794853333;
+	b=ySL31mFHeTktWKL6lkbiij9GjVpu3gJzVRNQD5zykddKu2inMrMLg1f2Gxy3yS0Z1iiW
+	 pXWSb83fCPDFrUeaYOS2Wq0a7vss5OfTUOcdE1D/XXN8oh3Ct2+mYYYWT4QWJJ9yoiG0F
+	 k/NE3nlkQ3XurOLSNDoLrLqmyvdez70UBDEuSLnQDV8mFcgfkxUJN1AQC74Nkl7bwCAlM
+	 GN70pCne0ANrNnw2HjEZiH3m5yWyIJ+tI6cKG2GM6Zpg7Bj+8RpaWcm3PoOyJ5vj8DnQf
+	 bvzYldkrTDFdO1IoR/NpW8A/o1QAj6uS0L3Z0rpRM/2lDUcjUesTpwNKbYzdwjztA+g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794852242;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=PjgDifA+WY+ML1G6HjbkqA7torFG5UegbIaFkipl26w=;
-	b=OyIoXgwG5lvkJjmvY/hH7Qfwt9lKjjrJ+RtvY/UHj//bwoH6fnyCNhkotb4Ewd62Fd2/
-	 ZQsnkqKkD2K0Opk4NUfy9pGMA8NI+XJPZtYOY35C8Uim33EZG+ikXaJtSntj8ZE8fCCj1
-	 s4ZIcXOQ+gHZe6odTh64sxsdWphFDzrx3QGrCCiAnpurpFjdfdxwNcW1WFJ008DK5Nb39
-	 XsNwXOz3RFEmh+GU2M+mEWn6SXIfz9o61GZntmzR/ytLXoRyIJiir697vd6/EzJ93JJVx
-	 7K0QDa80HOcZ3kLtNDRv97AsUyDAZ+aHClBRMV4A5xZ5r22hDRJyTdZ1nndt26wuXsw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794853333;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:From:Subject:Date:
+	 Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:X-Developer-Signature:
+	 X-Developer-Key;
+	bh=Bx9BFmE1wLXw81GEy8xTvfh2DHQC7Qib0epoWWtsHZg=;
+	b=OZXKOj/b4fdbbGuB7xhnu/Jvl00vNhUtoGKUryEG8Q+r1R4YG3ecf38uUVa+gSIqBk7u
+	 6qJss6NDt18gcbqne7p/53bdnoiL8Qwb7AhoxKFSfFVTk0PJ8THjZutcLqfiwhrlhy1X+
+	 FEQHMl7bKczaYUCXVGQ/rVpUWV76MjvLrHN/QjZ/UD4KbzHzDYyrupftS5tEi/6iBESSE
+	 yHh7dR8WBPFbGWfwyqP+7iw2n7VaMJJs5nAfAzc3W4lc2cwTIXff5NngIQFlYfV7WxG9L
+	 IJKOYLjhpBZKE3gq+s6s7A8RNIkWS3fHll3NhNRYRzsd8uJzfhq3KNobgboHpqoWm7Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BZQvZvdn;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856A6606A322;
-	Mon, 16 Nov 2026 18:04:02 +0000 (UTC)
+	dmarc=pass header.from=arm.com;
+	spf=pass smtp.mailfrom=arm.com;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=UlTR1XYG;
+	arc=none smtp.remote-ip=217.140.110.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64050606A31C;
+	Mon, 16 Nov 2026 18:22:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 64050606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BZQvZvdn
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 370F81F000C4;
-	Mon, 16 Nov 2026 18:03:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794852242;
-	bh=PjgDifA+WY+ML1G6HjbkqA7torFG5UegbIaFkipl26w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=BZQvZvdnCu1giJ3n9uXH1U5699IR0+LrLB7Y8Ha/qpjipq/k5KAbUrH5utPqTM5P2
-	 HQDKJxG2+GlXB9EMO6S7nFz2X7N/LHyZ6IHoJZL/izg8PP93rExefpbo5vm3mloKRa
-	 pquMJdJ/EkrGWpEF82c9Tac77BaJO/elDrRDLvseO8kGHFFr9ElDzVxdnFo4NpxuDI
-	 lrmoqU/D/flKe151y5d8z45H0et4/vOMd8L/XnUrw8RDiVqZpVp+2QLnOUchXm4O7S
-	 nc4QlNJARiOkUGcp1ZAUe1yt0XzD7T8MEev8Q2gpJuoz60e9RMvFHiVQ7UMfyoqxvX
-	 Gn3/KbYdSR6Qg==
-Date: Mon, 16 Nov 2026 18:03:49 +0000
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Alexandru Elisei <alexandru.elisei@arm.com>
-Cc: maz@kernel.org, oupton@kernel.org, fuad.tabba@linux.dev, 
-	joey.gouly@arm.com, seiden@linux.ibm.com, suzuki.poulose@arm.com, 
-	yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	will@kernel.org, mark.rutland@arm.com, linux-perf-users@vger.kernel.org, 
-	catalin.marinas@arm.com, james.clark@linaro.org
-Subject: Re: [RFC PATCH v7 04/28] perf: arm_spe_pmu: Move struct arm_spe_pmu
- to a separate header file
-Message-ID: <avtFfIHH5KP01r0j@gremlin>
-References: <20260903160623.315525-1-alexandru.elisei@arm.com>
- <20260903160623.315525-5-alexandru.elisei@arm.com>
- <atDgBR0WOGHUsLaF@gremlin>
- <avSjIvJM5TZAuQlG@raptor>
+	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=UlTR1XYG
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A07C41684;
+	Mon, 16 Nov 2026 10:22:08 -0800 (PST)
+Received: from e132581.arm.com (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 925C03F632;
+	Mon, 16 Nov 2026 10:22:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1794853331; bh=goJwv/swJu68Y9hAS2XUupq7PiPrjIfLYlStZrGMjm0=;
+	h=From:Subject:Date:To:Cc:From;
+	b=UlTR1XYGFmGx57WHb+xFLIaoTlc9SWjhRZzd27Td4eV42hOpsw40LqOrDG/7iSgtX
+	 TIy5sLSf7nHcRqzEqquUlPfxvS3l7C/ndYlKT1Bksy+6Ls6eVuiaC7x0rgmD9F2mZQ
+	 5O//L1uzfYhNyp1/14QAlVJM4YW73pn/rIJ954G4=
+From: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH 0/8] ACPI: arm64: Support PMU on Heterogeneous Systems
+Date: Mon, 16 Nov 2026 18:21:27 +0000
+Message-Id: <20261116-acpi_arm_pmu_registration_hmp-v1-0-0371d4eca626@arm.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,177 +56,119 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <avSjIvJM5TZAuQlG@raptor>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKdJ+2oC/4WNwQqDMBBEf0X23JSsEKk99T+KhDRZdQ/RsLHSI
+ v57U+m9xzfMvNkgkzBluFYbCK2ceZ4K4KkCP7ppIMWhMNS6bhB1q5xPbJ1Em+LTCg2cF3FLWdk
+ xJtV40xrf63AJBMWRhHp+Hf57V3gs9Vnex92K3/RnRvxjXlFp9WiDN7rHQGRupXr2c4Ru3/cP5
+ yuevMgAAAA=
+X-Change-ID: 20261109-acpi_arm_pmu_registration_hmp-6c595cf0d8de
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Daniel Scally <djrscally@gmail.com>, 
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Bartosz Golaszewski <brgl@kernel.org>, 
+ Saravana Kannan <saravanak@kernel.org>, Will Deacon <will@kernel.org>, 
+ Thomas Gleixner <tglx@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ Hanjun Guo <guohanjun@huawei.com>, Jeremy Linton <jeremy.linton@arm.com>, 
+ Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Sudeep Holla <sudeep.holla@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Mike Leach <mike.leach@arm.com>, James Clark <james.clark@linaro.org>, 
+ Anshuman Khandual <anshuman.khandual@arm.com>, Al Grant <al.grant@arm.com>, 
+ "Johnny.Fan" <johnny.fan@cixtech.com>, linux-acpi@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, driver-core@lists.linux.dev, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794853327; l=3514;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=goJwv/swJu68Y9hAS2XUupq7PiPrjIfLYlStZrGMjm0=;
+ b=56hWmS+3xC7LmrbBWUKHF9DrbRdWd6N36Fs78LtUwPpuAQFmSQns9f24Hao9oUvCm380XIMCE
+ jwOjkO90ZeDBQMKP870C1FH435FZioX3FoPWaALnB24SOlEKVFsakAy
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-On Wed, Nov 11, 2026 at 05:17:22PM +0000, Alexandru Elisei wrote:
-> Hi Lorenzo,
->
-> On Thu, Oct 15, 2026 at 03:40:09PM +0100, Lorenzo Stoakes (ARM) wrote:
-> > On Thu, Sep 03, 2026 at 05:05:59PM +0100, Alexandru Elisei wrote:
-> > > KVM will soon want to make use of struct arm_spe_pmu, move it to a separate
-> > > header where it will be easily accessible.
-> > >
-> > > Cc: Will Deacon <will@kernel.org>
-> > > Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
-> >
-> > Looks to be a straightforward mechanical change, couple nits below but with
-> > those addressed:
-> >
-> > Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> >
-> > > ---
-> > >  drivers/perf/arm_spe_pmu.c       | 33 +--------------------
-> > >  include/linux/perf/arm_spe_pmu.h | 50 ++++++++++++++++++++++++++++++++
-> >
-> > This should be added to MAINTAINERS too I think?
->
-> Added this under ARM PMU PROFILING AND DEBUGGING:
->
-> +F:     include/linux/perf/arm_spe_pmu.h
->
-> >
-> > >  2 files changed, 51 insertions(+), 32 deletions(-)
-> > >  create mode 100644 include/linux/perf/arm_spe_pmu.h
-> > >
-> > > diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> > > index b70f3fedf028..79c571a649d5 100644
-> > > --- a/drivers/perf/arm_spe_pmu.c
-> > > +++ b/drivers/perf/arm_spe_pmu.c
-> > > @@ -28,6 +28,7 @@
-> > >  #include <linux/of.h>
-> > >  #include <linux/perf_event.h>
-> > >  #include <linux/perf/arm_pmu.h>
-> > > +#include <linux/perf/arm_spe_pmu.h>
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/printk.h>
-> > >  #include <linux/slab.h>
-> > > @@ -67,38 +68,6 @@ struct arm_spe_pmu_buf {
-> > >  	void					*base;
-> > >  };
-> > >
-> > > -struct arm_spe_pmu {
-> > > -	struct pmu				pmu;
-> > > -	struct platform_device			*pdev;
-> > > -	cpumask_t				supported_cpus;
-> > > -	struct hlist_node			hotplug_node;
-> > > -
-> > > -	int					irq; /* PPI */
-> > > -	u16					pmsver;
-> > > -	u16					min_period;
-> > > -	u16					counter_sz;
-> > > -
-> > > -#define SPE_PMU_FEAT_FILT_EVT			(1UL << 0)
-> > > -#define SPE_PMU_FEAT_FILT_TYP			(1UL << 1)
-> > > -#define SPE_PMU_FEAT_FILT_LAT			(1UL << 2)
-> > > -#define SPE_PMU_FEAT_ARCH_INST			(1UL << 3)
-> > > -#define SPE_PMU_FEAT_LDS			(1UL << 4)
-> > > -#define SPE_PMU_FEAT_ERND			(1UL << 5)
-> > > -#define SPE_PMU_FEAT_INV_FILT_EVT		(1UL << 6)
-> > > -#define SPE_PMU_FEAT_DISCARD			(1UL << 7)
-> > > -#define SPE_PMU_FEAT_EFT			(1UL << 8)
-> > > -#define SPE_PMU_FEAT_FDS			(1UL << 9)
-> > > -#define SPE_PMU_FEAT_DEV_PROBED			(1UL << 63)
-> > > -	u64					features;
-> > > -
-> > > -	u64					pmsevfr_res0;
-> > > -	u16					max_record_sz;
-> > > -	u16					align;
-> > > -	struct perf_output_handle __percpu	*handle;
-> > > -};
-> > > -
-> > > -#define to_spe_pmu(p) (container_of(p, struct arm_spe_pmu, pmu))
-> > > -
-> > >  /* Convert a free-running index from perf into an SPE buffer offset */
-> > >  #define PERF_IDX2OFF(idx, buf) \
-> > >  	((idx) % ((unsigned long)(buf)->nr_pages << PAGE_SHIFT))
-> > > diff --git a/include/linux/perf/arm_spe_pmu.h b/include/linux/perf/arm_spe_pmu.h
-> > > new file mode 100644
-> > > index 000000000000..af86fd184050
-> > > --- /dev/null
-> > > +++ b/include/linux/perf/arm_spe_pmu.h
-> > > @@ -0,0 +1,50 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> >
-> > Pedantic I know, sorry :P but as per Documentation/process/license-rules.rst:
-> >
-> >       C source:	// SPDX-License-Identifier: <SPDX License Expression>
-> >       C header:	/* SPDX-License-Identifier: <SPDX License Expression> */
-> >       ...
-> >
-> > So should be /* */ here.
->
-> Fixed.
->
-> >
-> > > +/*
-> > > + * Split from driver/perf/arm_spe_pmu.c
-> >
-> > NIT: should be drivers/...
->
-> Fixed.
->
-> Thanks,
-> Alex
->
-> >
-> > > + *
-> > > + * Copyright (C) 2016 ARM Limited
-> > > + */
-> > > +
-> > > +#ifndef __PERF_ARM_SPE_PMU_H__
-> > > +#define __PERF_ARM_SPE_PMU_H__
-> > > +
-> > > +#include <linux/cpumask.h>
-> > > +#include <linux/container_of.h>
-> > > +#include <linux/list.h>
-> > > +#include <linux/perf_event.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/types.h>
-> > > +
-> > > +struct arm_spe_pmu {
-> > > +	struct pmu				pmu;
-> > > +	struct platform_device			*pdev;
-> > > +	cpumask_t				supported_cpus;
-> > > +	struct hlist_node			hotplug_node;
-> > > +
-> > > +	int					irq; /* PPI */
-> > > +	u16					pmsver;
-> > > +	u16					min_period;
-> > > +	u16					counter_sz;
-> > > +
-> > > +#define SPE_PMU_FEAT_FILT_EVT			(1UL << 0)
-> > > +#define SPE_PMU_FEAT_FILT_TYP			(1UL << 1)
-> > > +#define SPE_PMU_FEAT_FILT_LAT			(1UL << 2)
-> > > +#define SPE_PMU_FEAT_ARCH_INST			(1UL << 3)
-> > > +#define SPE_PMU_FEAT_LDS			(1UL << 4)
-> > > +#define SPE_PMU_FEAT_ERND			(1UL << 5)
-> > > +#define SPE_PMU_FEAT_INV_FILT_EVT		(1UL << 6)
-> > > +#define SPE_PMU_FEAT_DISCARD			(1UL << 7)
-> > > +#define SPE_PMU_FEAT_EFT			(1UL << 8)
-> > > +#define SPE_PMU_FEAT_FDS			(1UL << 9)
-> > > +#define SPE_PMU_FEAT_DEV_PROBED			(1UL << 63)
-> > > +	u64					features;
-> > > +
-> > > +	u64					pmsevfr_res0;
-> > > +	u16					max_record_sz;
-> > > +	u16					align;
-> > > +	struct perf_output_handle __percpu	*handle;
-> > > +};
-> > > +
-> > > +#define to_spe_pmu(p) (container_of(p, struct arm_spe_pmu, pmu))
-> > > +
-> > > +#endif /* __PERF_ARM_SPE_PMU_H__ */
-> > > --
-> > > 2.43.0
-> > >
-> > >
-> >
-> > --
-> > Cheers, Lorenzo
+This series follows Johnny Fan's SPE/TRBE work [1], which requires
+ACPI-specific IRQ affinity handling in the drivers. It provides a common
+way to describe PPI affinity for devices created from the MADT.
 
-Cheers for all above!
+Register one platform device for each group of CPUs with the same MIDR.
+Associate a software node with each device to expose its CPU mask through
+platform_get_irq_affinity(). SPE and TRBE drivers can then obtain affinity
+without ACPI-specific handling or a processor-container companion.
 
---
-Cheers, Lorenzo
+Grouping by MIDR allows CPU PMU events to follow tasks across compatible
+CPUs, including CPUs in different processor containers. SPE and TRBE
+require a shared GSI within each group. CPU PMUs can also use per-CPU SPIs
+and reuse the platform probe path used for DT. Move the common ACPI device
+registration to drivers/acpi/arm64/.
+
+This series has been tested on Orion O6, with four little Cortex-A520
+cores (CPUs 2-5) and eight big Cortex-A720 cores (CPUs 0-1 and 6-11).
+It exposes the following PMU devices:
+
+  # ls /sys/bus/event_source/devices/
+  arm_spe_0  armv8_pmuv3_0  armv8_pmuv3_1  breakpoint  cs_etm  kprobe  software  tracepoint  uprobe
+  # cat /sys/bus/event_source/devices/armv8_pmuv3_0/cpus
+  0-1,6-11
+  # cat /sys/bus/event_source/devices/armv8_pmuv3_1/cpus
+  2-5
+  # cat /sys/bus/event_source/devices/arm_spe_0/cpumask
+  0-1,6-11
+  # ls /sys/bus/event_source/devices/cs_etm/sinks/
+  trbe0  trbe1  trbe10  trbe11  trbe2  trbe3  trbe4  trbe5  trbe6  trbe7  trbe8  trbe9
+
+The CPU PMU masks match the MIDR groups: eight A720 CPUs and four A520
+CPUs. SPE uses the A720 mask, and TRBE exposes one sink per CPU.
+
+[1] https://lore.kernel.org/linux-arm-kernel/20261102084153.3975282-1-johnny.fan@cixtech.com/
+
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+Johnny.Fan (1):
+      perf/arm_pmu: Register ACPI SPE and TRBE devices with software nodes
+
+Leo Yan (7):
+      device property: Add firmware node IRQ affinity callbacks
+      device property: Add software-node IRQ affinity masks
+      perf/arm_pmu: Prepare ACPI registration for per-CPU interrupts
+      perf/arm_pmu: Register ACPI CPU PMUs as platform devices
+      perf/arm_pmu: Support ACPI devices in the platform probe
+      perf/arm_pmu: Use ACPI CPU affinity in IRQ handling
+      ACPI: arm64: Move PMU device registration to drivers/acpi/arm64/
+
+ MAINTAINERS                     |   1 +
+ arch/arm64/include/asm/acpi.h   |   3 +
+ drivers/acpi/arm64/Kconfig      |   4 +
+ drivers/acpi/arm64/Makefile     |   1 +
+ drivers/acpi/arm64/pmu.c        | 393 +++++++++++++++++++++++++++++++++++
+ drivers/acpi/property.c         |   8 +
+ drivers/base/platform.c         |   7 +-
+ drivers/base/property.c         |  15 ++
+ drivers/base/swnode.c           |  53 +++++
+ drivers/of/property.c           |   7 +
+ drivers/perf/Kconfig            |   4 -
+ drivers/perf/Makefile           |   1 -
+ drivers/perf/arm_pmu.c          |   3 +-
+ drivers/perf/arm_pmu_acpi.c     | 438 ----------------------------------------
+ drivers/perf/arm_pmu_platform.c |  62 +++++-
+ drivers/perf/arm_pmuv3.c        |   5 +-
+ include/linux/cpuhotplug.h      |   1 -
+ include/linux/fwnode.h          |   5 +
+ include/linux/perf/arm_pmu.h    |  12 +-
+ include/linux/property.h        |   6 +
+ 20 files changed, 552 insertions(+), 477 deletions(-)
+---
+base-commit: aebb7274476403040d582c61478df8f4a7bf9cd3
+change-id: 20261109-acpi_arm_pmu_registration_hmp-6c595cf0d8de
+
+Best regards,
+-- 
+Leo Yan <leo.yan@arm.com>
+
