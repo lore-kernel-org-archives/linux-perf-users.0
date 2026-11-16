@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794853686;
-	b=OixcOhK+QpY5ewjLIR21FPxIXsTYjkZ+L1GerxYrfxjKOerezRue9zQLRgQJuNQArPT8
-	 /JeSjt3PWTVORzIFWU8SFkE4z3veu5FwvK5T1HtUTNzeppobfgvx5x9YmkSgN3QsBc7eH
-	 TkbmMgr8rxo9uvA+rtt+nGiJYC2GY8jd+VtsBxbluOAF6CnjjkDpjuEb1ysPXPgm6bQuG
-	 KAAnqqjnCWM1gEjclYrmSAXU2qs45dVFP8RZWcnvJE1IrWodsDqqWLyOxyflhd098IkGr
-	 qTH2BNZ7DGn181Du8Es5L+ARw26b0N1cfdrqOMC84Nlrj1fpKpSjeXyd1nMw+cqUdvQ==
+	t=1794853779;
+	b=RCRgCLJwq5W/cWF3uGSU7M19HPEMa/05ooTfPDTxMSjiR5GLtSTn+CWLPIN3B4XMxhix
+	 4RZlcLYHei6CjLoUQ1vwYqWPsowkLo+uN4Pje2qvH1Lo98336GLbwsGvbYgWPYmnLp6li
+	 dv1IEFb9KXb6pCHGx/ySjIT29gKLWgf0WVtHrhxPB6/KtPnJjk70llkpyivxnS8MJ/XCm
+	 E5bcmxxLWTUYPB1kBov7i4YBGUVbywf9CElWTfhhqzcWOqzygELkGuaz61BnPF/rYD6Pv
+	 E3fJ2Wds2joRXX4JmABhwHNAVtbou6B4mvDBTlRA0zQ0yF20qbK5sStrg2OrfOLoEGg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794853686;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794853779;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=uCHFCcVDPJ3SgVTW8b/FBH/mTA+9kEqF9dktRcg4nfk=;
-	b=qTqVCdqRBK5jqSt/dR8yjh9Tne2tsdhTfJj7BNjwWSKOFoiaI7jz/1M6sgzVrpt8IxjX
-	 6Xws2ApVu5IR7BASfXQyFhCS45C+tU0ydKAwuo/vpIzyJck/MD+z3GPN8BTlAxRpAsOVQ
-	 TA1ftlcswVWL3qW4VyyVBoVnR1OrGJvRBEimfee6l/usDzFNbw0fh9WQBKuIoOeZdU/X1
-	 d5a61HpptHunHrNHEjw7k8PV+EbLOKBT4V9Ni3PtoT3SV7w4AWftaziLskMI3XxUypzoe
-	 mGSXcmtFZxxx35ZRZ9kqTYzEWpBHUa14zEmUwAgno0Z2n84fEl6DtLn6uFWySNLY9UQ==
+	bh=ogtR6lS7N+dPu8nRQ1T88G8abXvdW9rQzJfQqomzZ/w=;
+	b=3q956Vbnim2w6KjAqkbFSZZtygqmJQR0L4HZOnyfX1akenTG8d6WcrSED0KnQ6ziaIXI
+	 tVkqxgqM3ONoc7XR5LUSfL4oGP8nHXEVZ6rKFwtK4yoI4w1xuTfY6q1PzD0rKmgHxiid1
+	 kC6lP8q74DcOH6lAT6QYmCKAvTkEU14ptnzsuXyt1mESY4dNI+mQEvhWoGMSSEa9HCNub
+	 fZjdvYhy8t7ugG4Nbi9I8UL/nDcVW7e73yK5GHaE352WHOtIBit7h/rY+DcXfUOQuFtFP
+	 SPMW3RJpJF/IapcO5Cs0fkVHhHLN1MRcYC0nEvMWVLnkibzN4k08cvpNg3Xi8zlcGZA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=I3lZKnTD;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bjNSSxXd;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17C1606A33F
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 18:28:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44321606A31C
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 18:29:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=I3lZKnTD
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63AC11F000CB;
-	Mon, 16 Nov 2026 18:28:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bjNSSxXd
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B62731F000C9;
+	Mon, 16 Nov 2026 18:29:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794853686;
-	bh=uCHFCcVDPJ3SgVTW8b/FBH/mTA+9kEqF9dktRcg4nfk=;
+	s=k20260515; t=1794853778;
+	bh=ogtR6lS7N+dPu8nRQ1T88G8abXvdW9rQzJfQqomzZ/w=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=I3lZKnTDQGGiyF9ee+ueC0RjD5h14O37QV4omwxDZX7GAOzsXYCyi/f5DKf990BZw
-	 UMSEKZy6Kqe8TjJ0t8nvAzoXQyd/7qvTlyjnftz1RzAX/L0KLmYxTNeTednljwQbnP
-	 1vjrv2Bhdm15zQFwF8mDC0jgbFegnshUqqXjXbdreUmS6724goVPXCU/BtaClVMbb5
-	 otHlnyyoCzxIiPIpequffUD6njM8JJjXUk7DrGccJrkvMAwPdTrpJVZ0wmFb2rBXEp
-	 3LxMu4gryHFme4GYhj9m6lA/vcA46IINrpzW7H2EHIoQlPKcn1kgZE/aCfWqUwmnRS
-	 uP+EB/OLP2MOw==
-Message-ID: <sashiko-outbox-217498@kernel.org>
+	b=bjNSSxXdVYtdMApeac1/ZILbqOWjlJZLAHqdUXyufuGaVS36q5A9rxfzdMCSZpjCQ
+	 s/IPCtPrciDrKGTmk4NT2TylsCE+47i4+U6KiX4VuMoHpunJpiXQEdSUGhP6pMt3xH
+	 kc4G/DyY5GtYi9fiNOyhYiLy2vVvmq658jQ2pYJVYEhRxwgxAiRmRaDJ+w4I+I3py2
+	 SngYhDQwO8g+110dfD2BgPfw6kB39oZ0uEgENBwVWW8nMkqJ+2gr+V77tmdrYk30RE
+	 asPSgs1IyxG0zzVHpQlh/EvoViUOvFXZDJ+Porz7wIexT3M3AQGjc3kA68SW0ss9Y+
+	 si9DpAXBTxoBw==
+Message-ID: <sashiko-outbox-217500@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/8] device property: Add firmware node IRQ affinity
- callbacks
+Subject: Re: [PATCH 2/8] device property: Add software-node IRQ affinity
+ masks
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Leo Yan" <leo.yan@arm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261116-acpi_arm_pmu_registration_hmp-v1-1-0371d4eca626@arm.com>
+In-Reply-To: <20261116-acpi_arm_pmu_registration_hmp-v1-2-0371d4eca626@arm.com>
 References: <20261116-acpi_arm_pmu_registration_hmp-v1-0-0371d4eca626@arm.com>
- <20261116-acpi_arm_pmu_registration_hmp-v1-1-0371d4eca626@arm.com>
+ <20261116-acpi_arm_pmu_registration_hmp-v1-2-0371d4eca626@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 16 Nov 2026 18:28:05 +0000
+Date: Mon, 16 Nov 2026 18:29:38 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,12 +61,14 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Platform IRQ affinity lookup currently selects the OF or ACPI helper
-> directly. Add fwnode_irq_get_affinity() and an irq_get_affinity operation
-> implemented by both firmware types.
+> Devices created from firmware tables may need CPU affinity information
+> without a corresponding firmware node. Allow software nodes to supply
+> this information through the common firmware node IRQ affinity API.
 >=20
-> Use the new helper for platform devices, preserving the existing fallback
-> to cpu_possible_mask when affinity information is unavailable.
+> Add software_node_add_irq_affinity() to copy a CPU mask for an IRQ index,
+> and implement the software node irq_get_affinity callback. Keep each mask
+> until the node is released and reject replacement so borrowed masks remain
+> valid for the node's lifetime.
 >=20
 > Signed-off-by: Leo Yan <leo.yan@arm.com>
 
@@ -74,5 +76,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261116-acpi_arm_p=
-mu_registration_hmp-v1-0-0371d4eca626@arm.com?part=3D1
+mu_registration_hmp-v1-0-0371d4eca626@arm.com?part=3D2
 
