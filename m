@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794806874;
-	b=0AbehJ8Ru5iDQsnltwsOQsMGmX2SwpLvrLTt1rmrLiNnp9gHouoohAGmhaPZuGsW2yLS
-	 hRB10JMNIyBwfNKu7bkyLoneNJG/a5cKRf42kIUwyUx5oLIGGHuScG7gO5mfQ8HxyHLQL
-	 2G9OAPPUY/ysuwGvMmtO8h1QRgccotrwqlAthHGgT3FRIFr+n6OxCu3sy88lf+t00jzVI
-	 jffp47aVYXCvrSeqo0O5v5emL/H4bkJsGk2V7ppv1wsTkTuriSDd31u1T/GPFxxwsUwIV
-	 IU3LLg8tW8RWFcU7d+eP0dO1zfmbpSlWwBNNvCCx5Nx7xYMsRXonkfrV5B78QFHLS0A==
+	t=1794806885;
+	b=JoQM3w5rUPqmpffz4kSe1OM9DOtc2f1XYnc0TSUhdt+7KmCT4M3eHSRQOy1bdCdc56n7
+	 LWQH3KK+brY7SfxRia+T+L8cKFsOZNy/gVwie/UZYwJM2hB09kfEmg78R77V4EM96nfrl
+	 Ewk6Q9F+OUxeO7vQIxalSHm+zbJGtb+u8H+doCezYsnv467xGskdk9DASfsjpyImqUl68
+	 bu+BS5efLe3ZPajJC+EcyWCPCFzafvb7IwifaXZ+6tixLp/giaKL0rYoMG72F8esQk/Kf
+	 6j5fhxOFXLAW7fOgW3Kv61CGH3SXOuxuF2vS2Gdv2QuCbpY9ybDoXpCvgbFdK+88w2w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794806874;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794806885;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=O5NHkt7NnhngHzPzgF85NF8OYuuc5xB3hiYQ4yQmNmk=;
-	b=gmwlUidGKyQDfNo+vunWKL1opddVkQxMed8FRAaaAVH79FhYMja9QNAxy4xnDkXJ8lY1
-	 71Wh6JqUMzsuXTqtvj72HHbJ5JnGa6Crbb2FOehkOXg5Iif/BnWLFpPZ8XeuTvC0Oncce
-	 dUMo6IRxe5ENzrp8d8vFh47iaMLdY7iRie/XkeePadGnpOE4TdmX6eBBy6XwyQ8RxQxNe
-	 Mwfln4YyjquXJ1px9YcBwR/g7hhOP5Vo+O0lAy9GGVVFXUmdHY31iqfsU92zPBkpSvfi3
-	 Rep9nrN1R1rdFjs4sEm5NfvRyLxJmvLc5y9kwwDn4KIWW+XcLKLNgYfVJOqPXE/00zg==
+	bh=x3QSZHFT9PPgzD13T2KJhHeKljohuSKvmONHdw/P+DE=;
+	b=aWxzlvp6xeTkXwhhxlpvjum5mCT1hE9KAYZ0c12FLgQ4biQJgJI9GytxkLbDU3MUd5Kr
+	 RavtrMd3Bk29Nlt2ItGnf7oYR25yqjkH65qAVmwfLEpCdNryB3X4R2fZ2LKW6/XFsAM2X
+	 QEsnINBAUZKS9UGa4zBgCIJVbyFIAwGjqtrFkbC9uwozfVZJFxNymytEJSTtnHvBL1eMY
+	 SBMqCTBu9Lw7EQF0H5hHkRwlC1vlLHYgWVjDBNs4sJBGHzteRq0g35ga+ORXcgeJO7D/Y
+	 SVPdyXjH1yyi/0VieT5lQPapzyyn2fKSrd2eYIVW8vjhBnhzZQIpN3b2Kd5ScOKfofA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TPRHNCel;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jZaAfc4h;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C64606A31C;
-	Mon, 16 Nov 2026 05:27:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A87606A33A;
+	Mon, 16 Nov 2026 05:28:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TPRHNCel
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B10B41F000C4;
-	Mon, 16 Nov 2026 05:27:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jZaAfc4h
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D82241F000C4;
+	Mon, 16 Nov 2026 05:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794806874;
-	bh=O5NHkt7NnhngHzPzgF85NF8OYuuc5xB3hiYQ4yQmNmk=;
+	s=k20260515; t=1794806885;
+	bh=x3QSZHFT9PPgzD13T2KJhHeKljohuSKvmONHdw/P+DE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=TPRHNCelxn+WmCyMMDl+XKOkjxyOUE5CDlfXWG3PWjeDwBygDomdjcwQD1JE+uZ1C
-	 hjoA0CAR8viE03Qf25Tmia5z8TW4mLaaRLBUQ5PRX4/nBwGgZY4FvaMRHxM8aVOEVW
-	 74wQBaAdC3SElUyDVrmzfgGov07qX+SDQgEnmqMkTqhHuWIsL18YwOzvXWt89KfBck
-	 obXluKKLiUevIvtUU2imBqTsCRnp9KHHm4EysiHzX/gx+CAAPwEsKD8meX/9FV+A10
-	 J1DvAelwAXBGet3+IsFcKsl1xhc5PT41ZewAO/mxrPP82rmHnfJ2c2sfDTmhASTLz4
-	 ne3Ud+S9ojG5Q==
+	b=jZaAfc4hZ3NAvnFrjXIwdsp8+QszqvV2yIwVPKuxTlcv5+o8WrPlrmOYeIe/JASFS
+	 9j69pTCDW7ePNmXvBTF718FEI+n+2HeSRWKRlYJU0og7ic3GpDpFw3zam3wZ8MQytI
+	 c4yLprpDCcxU6biRinr/moGj4tvg4eNH0mgh1CqOPoxcQgOvDtnGKFDk7+IHJc6Zfl
+	 v7fJx6F03SNhP0AvBEehhnwPCemnhDQEc4UsHCMQEnQmRqljmtRYnl/F22roJUgA+9
+	 1t5WZDiE/Xi8P0niwcW8a5WRrNCxPC4V4UIN0S70ZYtXcf6VH42K4U0SpzXY3iuZt3
+	 58kksITAtXaXQ==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -58,9 +58,9 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	x86@kernel.org
-Subject: [PATCH v20 10/11] tracing/wprobe: Support BTF typecast in fetchargs
-Date: Mon, 16 Nov 2026 14:27:48 +0900
-Message-ID: <179480686808.38065.8907197983948637551.stgit@devnote2>
+Subject: [PATCH v20 11/11] tracing/wprobe: Support BTF struct offset resolution in set_wprobe trigger
+Date: Mon, 16 Nov 2026 14:27:59 +0900
+Message-ID: <179480687961.38065.3960820028039271755.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179480675130.38065.3086970856119381693.stgit@devnote2>
 References: <179480675130.38065.3086970856119381693.stgit@devnote2>
@@ -79,143 +79,433 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Allow BTF typecast syntax (STRUCT)FETCHARG->MEMBER in wprobe event
-fetchargs. Previously, handle_typecast() rejected any probe context
-that was not a function entry/return or tracepoint event probe.
+Allow set_wprobe trigger to use BTF struct offset resolution to specify
+the target address field.
 
-Wprobe events use $addr (the accessed address) and $value (the value
-at that address). By enabling BTF typecast, users can now cast these
-to a concrete struct type and access its fields directly. For example:
-
-  echo 'w:watch rw@-1:8 dflag=(dentry)$addr->d_flags' >> dynamic_events
-
-With a set_wprobe trigger pointing the watchpoint at a dentry address,
-the resulting trace shows d_flags being accessed at that location.
-
-Note that $addr and $value are restricted to kernel-space memory,
-which is consistent with the existing TPARG_FL_KERNEL flag used when
-parsing wprobe fetchargs.
+Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.1785067572.git.wangjinchao600@gmail.com/
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
 Changes in v20:
- - Verify BTF typecast fields (counter= and expires=) in trace output in
-   trigger-wprobe-btf-typecast.tc, and test direct (STRUCT)$addr->MEMBER
-   and (STRUCT)$value->MEMBER typecasts.
- - Drop redundant fprobe README check in trigger-wprobe-btf-typecast.tc.
+ - Verify resolved non-zero BTF offset in trigger file and test
+   clear_wprobe with BTF struct offset resolution in
+   trigger-wprobe-btf-offset.tc.
+ - Drop redundant fprobe README check in trigger-wprobe-btf-offset.tc.
 Changes in v18:
+ - In get_offset_of_field(), rename mtype to container and document that
+   it represents the containing structure/union type (handling anonymous
+   structures/unions) rather than member's own type.
+ - In get_offset_of_field(), verify bit offset is byte-aligned before
+   returning byte offset.
  - Add "set_wprobe:<wprobe-event>":README to requires line in
-   trigger-wprobe-btf-typecast.tc so the test is skipped if
+   trigger-wprobe-btf-offset.tc so the test is skipped if
    CONFIG_WPROBE_TRIGGERS is disabled.
 Changes in v15:
- - Document BTF typecast syntax for wprobe fetchargs in wprobetrace.rst.
+ - Duplicate field string to avoid modifying glob in place in
+   wprobe_trigger_typecast_parse() so tracing_log_err() prints pristine
+   command string.
+ - Remove leftover offset and adjust debug print in wprobe_trigger_print().
+ - Document BTF struct offset resolution syntax in wprobetrace.rst.
  - Add explicit failure checks with fail helper in
-   trigger-wprobe-btf-typecast.tc.
- - Declare fprobe README requirement in trigger-wprobe-btf-typecast.tc.
+   trigger-wprobe-btf-offset.tc.
+ - Declare fprobe README requirement in trigger-wprobe-btf-offset.tc.
 Changes in v14:
  - Update dummy wprobe event definition to use '-1' instead of '0'.
-Changes in v11:
- - Update trigger-wprobe-btf-typecast.tc to use trace-events-sample
-   kernel module.
- - Fix commit comment.
-Changes in v9:
- - Newly added.
+ - Pass member_type to btf_find_struct_member() and check its kflag in
+   get_offset_of_field().
+Changes in v13:
+ - Check for field token before calling wprobe_trigger_field_parse() in
+   clear_wprobe to avoid spurious error log entries on numeric counts.
+Changes in v12:
+ - Refactor field parsing logic into wprobe_trigger_field_parse().
+ - Remove unused variable count_str in wprobe_trigger_cmd_parse().
 ---
- Documentation/trace/wprobetrace.rst                |    8 ++
- kernel/trace/trace_probe.c                         |   13 +++
- kernel/trace/trace_probe.h                         |    5 +
- tools/testing/selftests/ftrace/config              |    1 
- .../test.d/trigger/trigger-wprobe-btf-typecast.tc  |   85 ++++++++++++++++++++
- 5 files changed, 111 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc
+ Documentation/trace/wprobetrace.rst                |    7 
+ kernel/trace/trace_wprobe.c                        |  304 +++++++++++++++-----
+ .../test.d/trigger/trigger-wprobe-btf-offset.tc    |   94 ++++++
+ 3 files changed, 327 insertions(+), 78 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-offset.tc
 
 diff --git a/Documentation/trace/wprobetrace.rst b/Documentation/trace/wprobetrace.rst
-index df8985283312..20a11443c6db 100644
+index 20a11443c6db..1d9b32d02d53 100644
 --- a/Documentation/trace/wprobetrace.rst
 +++ b/Documentation/trace/wprobetrace.rst
-@@ -47,6 +47,14 @@ Synopsis of wprobe-events
-                   (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
-                   (x8/x16/x32/x64), "char", "string", "ustring", "symbol", "symstr"
-                   and bitfield are supported.
-+   (STRUCT[,ASGN])FETCHARG->MEMBER[->MEMBER] : If BTF is supported, typecast
-+                  FETCHARG to a pointer to STRUCT and then dereference the
-+                  pointer defined by ->MEMBER. ASGN can be specified optionally.
-+                  If ASGN is specified, FETCHARG will be cast to the same offset
-+                  position as the ASGN member, rather than to the beginning of
-+                  the STRUCT.
-+   (STRUCT[,ASGN])(FETCHARG)->MEMBER[->MEMBER] : typecast can nest, so the above
-+                  can also be used with another FETCHARG.
+@@ -90,10 +90,17 @@ Combination with trigger action
+ The event trigger action can extend the utilization of this wprobe.
  
-    (\*1) This is useful for fetching a field of data structures.
-    (\*2) "u" means user-space dereference.
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index e2813eed0db4..fe04bdbf31da 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -928,6 +928,16 @@ static int query_btf_struct(const char *sname, struct traceprobe_parse_context *
- 		ctx->struct_btf = NULL;
+ - set_wprobe:WPEVENT:FIELD[+|-ADJUST][:COUNT]
++- set_wprobe:WPEVENT:(STRUCT[,ASGN])EVENT_FIELD->MEMBER[+|-ADJUST][:COUNT]
+ - clear_wprobe:WPEVENT[:FIELD[+|-ADJUST][:COUNT]]
++- clear_wprobe:WPEVENT[:(STRUCT[,ASGN])EVENT_FIELD->MEMBER[+|-ADJUST][:COUNT]]
+ 
+ Set these triggers to the target event, then the WPROBE event will be
+ setup to trace the memory access at FIELD[+|-ADJUST] address.
++If BTF is supported, the target address can also be resolved using BTF
++struct offset resolution: `(STRUCT[,ASGN])EVENT_FIELD->MEMBER[+|-ADJUST]`.
++Here, EVENT_FIELD is an event field containing a pointer to STRUCT (or to
++the ASGN member if ASGN is specified), and MEMBER is the struct member whose
++offset is resolved automatically via BTF.
+ When clear_wprobe is hit, if FIELD is NOT specified, the WPEVENT is
+ forcibly cleared. If FIELD[+|-ADJUST] is set, it clears WPEVENT only
+ if its watching address is the same as the FIELD[+|-ADJUST] value.
+diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
+index d2b41aa69cfd..ad9ab606d3f4 100644
+--- a/kernel/trace/trace_wprobe.c
++++ b/kernel/trace/trace_wprobe.c
+@@ -29,6 +29,7 @@
+ #include <asm/ptrace.h>
+ 
+ #include "trace.h"
++#include "trace_btf.h"
+ #include "trace_dynevent.h"
+ #include "trace_probe.h"
+ #include "trace_probe_kernel.h"
+@@ -1230,6 +1231,223 @@ static void wprobe_trigger_free(struct event_trigger_data *data)
  	}
- 
-+	if (ctx->btf) {
-+		id = btf_find_by_name_kind(ctx->btf, sname, BTF_KIND_STRUCT);
-+		if (id > 0) {
-+			btf_get(ctx->btf);
-+			ctx->struct_btf = ctx->btf;
-+			ctx->last_struct = btf_type_by_id(ctx->struct_btf, id);
-+			return 0;
-+		}
-+	}
-+
- 	id = bpf_find_btf_id(sname, BTF_KIND_STRUCT, &btf);
- 	if (id < 0)
- 		return id;
-@@ -1003,7 +1013,8 @@ static int handle_typecast(char *arg, struct traceprobe_parse_context *ctx)
- 
- 	if (!(tparg_is_event_probe(ctx->flags) ||
- 	      tparg_is_function_entry(ctx->flags) ||
--	      tparg_is_function_return(ctx->flags))) {
-+	      tparg_is_function_return(ctx->flags) ||
-+	      tparg_is_wprobe(ctx->flags))) {
- 		trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
- 		return -EOPNOTSUPP;
- 	}
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 1e11077ead67..c54c554b1949 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -439,6 +439,11 @@ static inline bool tparg_is_event_probe(unsigned int flags)
- 	return !!(flags & TPARG_FL_TEVENT);
  }
  
-+static inline bool tparg_is_wprobe(unsigned int flags)
++#ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
++
++static int get_offset_of_field(struct btf *btf, const struct btf_type *type, char *field_name)
 +{
-+	return !!(flags & TPARG_FL_WPROBE);
++	const struct btf_member *field;
++	const struct btf_type *container;
++	int bitoffs = 0;
++	u32 anon_offs;
++	char *next;
++
++	do {
++		next = strchr(field_name, '.');
++		if (next)
++			*next++ = '\0';
++
++		anon_offs = 0;
++		/*
++		 * btf_find_struct_member() returns the actual containing
++		 * structure/union type in @container (which can be an
++		 * inner anonymous struct/union rather than @type).
++		 */
++		field = btf_find_struct_member(btf, type, field_name, &anon_offs, &container);
++		if (IS_ERR_OR_NULL(field))
++			return -ENOENT;
++
++		if (btf_type_kflag(container)) {
++			/* Reject bitfield member access */
++			if (BTF_MEMBER_BITFIELD_SIZE(field->offset))
++				return -EINVAL;
++			bitoffs += anon_offs + BTF_MEMBER_BIT_OFFSET(field->offset);
++		} else {
++			bitoffs += anon_offs + field->offset;
++		}
++
++		field_name = next;
++		if (next) {
++			type = btf_type_skip_modifiers(btf, field->type, NULL);
++			if (!type)
++				return -ENOENT;
++		}
++	} while (next);
++
++	if (bitoffs % BITS_PER_BYTE)
++		return -EINVAL;
++
++	return bitoffs / BITS_PER_BYTE;
 +}
 +
- /* Each typecast consumes nested level. So the max number of typecast is 8. */
- #define TRACEPROBE_MAX_NESTED_LEVEL 8
++/* btf_put(NULL) is acceptable. */
++DEFINE_FREE(btf_put, struct btf *, btf_put(_T))
++
++/* parse typecast: (TYPE[,ASGN])EVENT_FIELD->FIELD[.SUBFIELD...][+-OFFS] and set adjust. */
++static int wprobe_trigger_typecast_parse(char *field_str,
++					 struct trace_event_file *file,
++					 struct wprobe_trigger_data *wprobe_data,
++					 const char *glob)
++{
++	struct btf *btf __free(btf_put) = NULL;
++	char *buf __free(kfree) = NULL;
++	struct ftrace_event_field *field;
++	const struct btf_type *type;
++	char *assign_field;
++	char *event_field;
++	char *type_field;
++	char *type_name;
++	char *offs;
++	long val = 0;
++	int base_offset = field_str - glob;
++	int event_field_offset;
++	int id, adjust;
++
++	buf = kstrdup(field_str, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++
++	type_name = buf + 1;
++	event_field = strchr(type_name, ')');
++	if (!event_field) {
++		wprobe_trigger_log_err(file, glob,
++				       base_offset + (type_name - buf),
++				       DEREF_OPEN_BRACE);
++		return -EINVAL;
++	}
++	*event_field++ = '\0';
++
++	/* Check the optional assign field. */
++	assign_field = strchr(type_name, ',');
++	if (assign_field)
++		*assign_field++ = '\0';
++
++	/* Get the type field name. */
++	type_field = strstr(event_field, "->");
++	if (!type_field) {
++		wprobe_trigger_log_err(file, glob,
++				       base_offset + (event_field - buf),
++				       TYPECAST_REQ_FIELD);
++		return -EINVAL;
++	}
++	*type_field = '\0';
++	type_field += 2;
++
++	offs = strpbrk(type_field, "+-");
++	if (offs) {
++		if (kstrtol(offs, 0, &val) < 0) {
++			wprobe_trigger_log_err(file, glob,
++					       base_offset + (offs - buf),
++					       BAD_DEREF_OFFS);
++			return -EINVAL;
++		}
++		*offs = '\0';
++	}
++
++	/* find type from BTF */
++	id = bpf_find_btf_id(type_name, BTF_KIND_STRUCT, &btf);
++	if (id < 0) {
++		wprobe_trigger_log_err(file, glob,
++				       base_offset + (type_name - buf),
++				       BAD_BTF_TID);
++		return id;
++	}
++
++	type = btf_type_by_id(btf, id);
++	if (!type) {
++		wprobe_trigger_log_err(file, glob,
++				       base_offset + (type_name - buf),
++				       BAD_BTF_TID);
++		return -EINVAL;
++	}
++
++	adjust = get_offset_of_field(btf, type, type_field);
++	if (adjust < 0) {
++		wprobe_trigger_log_err(file, glob,
++				       base_offset + (type_field - buf),
++				       NO_BTF_FIELD);
++		return adjust;
++	}
++	wprobe_data->adjust = adjust + val;
++
++	if (assign_field) {
++		/* assign_field should be a struct field */
++		adjust = get_offset_of_field(btf, type, assign_field);
++		if (adjust < 0) {
++			wprobe_trigger_log_err(file, glob,
++					       base_offset + (assign_field - buf),
++					       NO_BTF_FIELD);
++			return adjust;
++		}
++		wprobe_data->adjust -= adjust;
++	}
++
++	event_field_offset = base_offset + (event_field - buf);
++	field = trace_find_event_field(file->event_call, event_field);
++	if (!field) {
++		wprobe_trigger_log_err(file, glob, event_field_offset, NO_EVENT_FIELD);
++		return -ENOENT;
++	}
++	if (field->size != sizeof(void *)) {
++		wprobe_trigger_log_err(file, glob, event_field_offset, WPROBE_BAD_FIELD);
++		return -ENOEXEC;
++	}
++	wprobe_data->offset = field->offset;
++	wprobe_data->field = kstrdup(event_field, GFP_KERNEL);
++	if (!wprobe_data->field)
++		return -ENOMEM;
++
++	return 0;
++}
++#else
++static int wprobe_trigger_typecast_parse(char *field_str,
++					 struct trace_event_file *file,
++					 struct wprobe_trigger_data *wprobe_data,
++					 const char *glob)
++{
++	wprobe_trigger_log_err(file, glob, field_str - glob, NOSUP_BTFARG);
++	return -EOPNOTSUPP;
++}
++#endif /* CONFIG_PROBE_EVENTS_BTF_ARGS */
++
++static int wprobe_trigger_field_parse(char *field_str, struct trace_event_file *file,
++					struct wprobe_trigger_data *wprobe_data,
++					const char *glob)
++{
++	struct ftrace_event_field *field;
++	char *offs;
++
++	if (field_str[0] == '(')
++		return wprobe_trigger_typecast_parse(field_str, file, wprobe_data, glob);
++
++	offs = strpbrk(field_str, "+-");
++	if (offs) {
++		long val;
++
++		if (kstrtol(offs, 0, &val) < 0) {
++			wprobe_trigger_log_err(file, glob, offs - glob, BAD_DEREF_OFFS);
++			return -EINVAL;
++		}
++		wprobe_data->adjust = val;
++		*offs = '\0';
++	}
++
++	field = trace_find_event_field(file->event_call, field_str);
++	if (!field) {
++		wprobe_trigger_log_err(file, glob, field_str - glob, NO_EVENT_FIELD);
++		return -ENOENT;
++	}
++	if (field->size != sizeof(void *)) {
++		wprobe_trigger_log_err(file, glob, field_str - glob, WPROBE_BAD_FIELD);
++		return -ENOEXEC;
++	}
++	wprobe_data->offset = field->offset;
++	wprobe_data->field = kstrdup(field_str, GFP_KERNEL);
++	if (!wprobe_data->field)
++		return -ENOMEM;
++
++	return 0;
++}
++
+ static int wprobe_trigger_cmd_parse(struct event_command *cmd_ops,
+ 				    struct trace_event_file *file,
+ 				    char *glob, char *cmd,
+@@ -1242,10 +1460,8 @@ static int wprobe_trigger_cmd_parse(struct event_command *cmd_ops,
+ 	struct wprobe_trigger_data *wprobe_data = NULL;
+ 	struct event_trigger_data *trigger_data = NULL;
+ 	struct trace_event_file *wprobe_file;
++	char *event_str, *comment;
+ 	struct trace_array *tr = file->tr;
+-	char *event_str, *field_str, *comment;
+-	struct ftrace_event_field *field;
+-	struct trace_event_call *event;
+ 	bool remove, clear = false;
+ 	unsigned long orig_addr = 0;
+ 	struct trace_wprobe *tw;
+@@ -1306,93 +1522,25 @@ static int wprobe_trigger_cmd_parse(struct event_command *cmd_ops,
  
-diff --git a/tools/testing/selftests/ftrace/config b/tools/testing/selftests/ftrace/config
-index 7e07088464b6..05654c1c4ffd 100644
---- a/tools/testing/selftests/ftrace/config
-+++ b/tools/testing/selftests/ftrace/config
-@@ -2,6 +2,7 @@ CONFIG_BOOT_CONFIG=y
- CONFIG_BOOTTIME_TRACING=y
- CONFIG_BPF_SYSCALL=y
- CONFIG_DEBUG_INFO_BTF=y
-+CONFIG_DEBUG_INFO_BTF_MODULES=y
- CONFIG_DEBUG_INFO_DWARF4=y
- CONFIG_EPROBE_EVENTS=y
- CONFIG_FPROBE=y
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc
+ 	/* clear_wprobe does not need field, but can have optional field. */
+ 	if (!clear) {
+-		char *offs;
++		char *field_str = strsep(&param, ":");
+ 
+-		/* Find target field, which must be equivalent to "void *" */
+-		field_str = strsep(&param, ":");
+ 		if (!field_str) {
+ 			wprobe_trigger_log_err(file, glob, strlen(glob), WPROBE_NEED_FIELD);
+ 			ret = -EINVAL;
+ 			goto out_free;
+ 		}
+-
+-		offs = strpbrk(field_str, "+-");
+-		if (offs) {
+-			long val;
+-
+-			if (kstrtol(offs, 0, &val) < 0) {
+-				wprobe_trigger_log_err(file, glob, offs - glob, BAD_DEREF_OFFS);
+-				ret = -EINVAL;
+-				goto out_free;
+-			}
+-			wprobe_data->adjust = val;
+-			*offs = '\0';
+-		}
+-
+-		event = file->event_call;
+-		field = trace_find_event_field(event, field_str);
+-		if (!field) {
+-			wprobe_trigger_log_err(file, glob, field_str - glob, NO_EVENT_FIELD);
+-			ret = -ENOENT;
+-			goto out_free;
+-		}
+-
+-		if (field->size != sizeof(void *)) {
+-			wprobe_trigger_log_err(file, glob, field_str - glob, WPROBE_BAD_FIELD);
+-			ret = -ENOEXEC;
+-			goto out_free;
+-		}
+-		wprobe_data->offset = field->offset;
+-		wprobe_data->field = kstrdup(field_str, GFP_KERNEL);
+-		if (!wprobe_data->field) {
+-			ret = -ENOMEM;
++		ret = wprobe_trigger_field_parse(field_str, file, wprobe_data, glob);
++		if (ret < 0)
+ 			goto out_free;
+-		}
+-	} else if (param && (isalpha(param[0]) || param[0] == '_')) {
++	} else if (param && (isalpha(param[0]) || param[0] == '_' || param[0] == '(')) {
+ 		if (strncmp(param, "count=", 6) != 0 &&
+ 		    (strcmp(param, "unlimited") != 0 ||
+ 		     trace_find_event_field(file->event_call, "unlimited"))) {
+-			char *offs;
+-
+-			field_str = strsep(&param, ":");
+-			offs = strpbrk(field_str, "+-");
+-			if (offs) {
+-				long val;
+-
+-				if (kstrtol(offs, 0, &val) < 0) {
+-					wprobe_trigger_log_err(file, glob,
+-							       offs - glob,
+-							       BAD_DEREF_OFFS);
+-					ret = -EINVAL;
+-					goto out_free;
+-				}
+-				wprobe_data->adjust = val;
+-				*offs = '\0';
+-			}
+-
+-			event = file->event_call;
+-			field = trace_find_event_field(event, field_str);
+-			if (!field) {
+-				wprobe_trigger_log_err(file, glob,
+-						       field_str - glob,
+-						       NO_EVENT_FIELD);
+-				ret = -ENOENT;
+-				goto out_free;
+-			}
++			char *field_str = strsep(&param, ":");
+ 
+-			if (field->size != sizeof(void *)) {
+-				wprobe_trigger_log_err(file, glob,
+-						       field_str - glob,
+-						       WPROBE_BAD_FIELD);
+-				ret = -ENOEXEC;
++			ret = wprobe_trigger_field_parse(field_str, file, wprobe_data, glob);
++			if (ret < 0)
+ 				goto out_free;
+-			}
+-			wprobe_data->offset = field->offset;
+-			wprobe_data->field = kstrdup(field_str, GFP_KERNEL);
+-			if (!wprobe_data->field) {
+-				ret = -ENOMEM;
+-				goto out_free;
+-			}
+ 		}
+ 	}
+ 
+diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-offset.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-offset.tc
 new file mode 100644
-index 000000000000..cee5d7b7528f
+index 000000000000..0da7323b2786
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc
-@@ -0,0 +1,85 @@
++++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-offset.tc
+@@ -0,0 +1,94 @@
 +#!/bin/sh
 +# SPDX-License-Identifier: GPL-2.0
-+# description: event trigger - test wprobe trigger with BTF typecast fetchargs
++# description: event trigger - test set_wprobe trigger with BTF struct offset
 +# requires: dynamic_events "w[:[<group>/][<event>]] [r|w|rw]@<addr>[:<len>]":README "f[:[<group>/][<event>]] <func-name>[%return] [<args>]":README events/sched/sched_process_fork/trigger "[(structname[,field])]<argname>[->field[->field|.field...]]":README "set_wprobe:<wprobe-event>":README
 +
 +fail() { #msg
@@ -250,46 +540,55 @@ index 000000000000..cee5d7b7528f
 +    exit_unresolved
 +fi
 +
-+:;: "Add a wprobe event with BTF typecast fetchargs" ;:
-+# (foo_timer_data,timer)$addr->counter reads counter from struct foo_timer_data via BTF typecast
-+# (timer_list)$addr->expires reads expires directly from struct timer_list via BTF typecast
-+echo 'w:watch rw@-1:8 address=$addr counter=(foo_timer_data,timer)$addr->counter expires=(timer_list)$addr->expires' >> dynamic_events
-+echo 'w:watch_val rw@-1:8 val_exp=(timer_list)$value->expires' >> dynamic_events
-+
-+:;: "Check the wprobe event is registered with counter and expires fields" ;:
-+if ! grep -q "counter=.*expires=" dynamic_events; then
-+  fail "Failed to register BTF typecast fields in dynamic_events"
-+fi
-+echo '-:watch_val' >> dynamic_events
++:;: "Add a wprobe event watching 8 bytes" ;:
++echo 'w:watch rw@-1:8 address=$addr value=$value' >> dynamic_events
 +
 +:;: "Add fprobe event for sample_timer_cb" ;:
++# sample_timer_cb(struct timer_list *t)
++# container_of(t, struct foo_timer_data, timer)
 +echo 'f:fprobes/testevent sample_timer_cb timer=t' >> dynamic_events
 +
 +:;: "Enable all events before setting triggers" ;:
 +echo 1 > tracing_on
 +echo 1 >> events/fprobes/testevent/enable
 +
-+:;: "Set set_wprobe trigger on testevent" ;:
-+echo 'set_wprobe:watch:timer' >> events/fprobes/testevent/trigger
-+if ! grep -q ^set_wprobe events/fprobes/testevent/trigger; then
-+  fail "Failed to set set_wprobe trigger"
++:;: "Set set_wprobe trigger using BTF struct offset resolution" ;:
++# Syntax: set_wprobe:WPEVENT:(STRUCT,FIELD)EVENT_FIELD->MEMBER
++# (foo_timer_data,timer) is the BTF struct type and field name
++# timer->expires is the struct member whose offset is resolved automatically via BTF
++echo 'set_wprobe:watch:(foo_timer_data,timer)timer->timer.expires' >> events/fprobes/testevent/trigger
++if ! grep -Eq '^set_wprobe:watch:timer\+[1-9][0-9]*:unlimited' events/fprobes/testevent/trigger; then
++  fail "Failed to set set_wprobe trigger with resolved non-zero BTF offset"
 +fi
 +
 +# Wait for sample_timer_cb to fire and set_wprobe trigger to activate
 +sleep 3
 +
-+:;: "Check set_wprobe trigger activated the watchpoint and logged BTF fields" ;:
-+if ! grep -q "watch:.*counter=.*expires=" trace; then
-+  fail "Failed to trigger watchpoint or log BTF typecast fields"
++:;: "Check set_wprobe trigger activated the watchpoint" ;:
++if ! grep -q watch trace; then
++  fail "Failed to trigger watchpoint"
++fi
++
++:;: "Test clear_wprobe with BTF struct offset resolution" ;:
++echo 'clear_wprobe:watch:(foo_timer_data,timer)timer->timer.expires' >> events/fprobes/testevent/trigger
++echo '!set_wprobe:watch:(foo_timer_data,timer)timer->timer.expires' >> events/fprobes/testevent/trigger
++sleep 2
++clear_trace
++sleep 1
++if ! grep -q '^0\*' events/wprobes/watch/enable; then
++  fail "clear_wprobe with BTF offset did not soft-disable watchpoint"
++fi
++if grep -q watch trace; then
++  fail "Failed to clear watchpoint with BTF offset"
 +fi
 +
 +:;: "Remove wprobe triggers" ;:
-+echo '!set_wprobe:watch:timer' >> events/fprobes/testevent/trigger
++echo '!clear_wprobe:watch:(foo_timer_data,timer)timer->timer.expires' >> events/fprobes/testevent/trigger
 +if grep -q ^set_wprobe events/fprobes/testevent/trigger; then
 +  fail "Failed to remove set_wprobe trigger"
 +fi
-+if ! grep -q '^1$' events/wprobes/watch/enable; then
-+  fail "Watchpoint did not stay enabled after removing set_wprobe trigger"
++if grep -q ^clear_wprobe events/fprobes/testevent/trigger; then
++  fail "Failed to remove clear_wprobe trigger"
 +fi
 +
 +:;: "Disable events and remove dynamic events" ;:
