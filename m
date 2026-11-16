@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794808323;
-	b=uncbja80dxXaO408sH/xWU2Xt8Dc/AOT3UNWW0+dcAMO1MVu3ubi3HbIb3CW62aU8SWV
-	 H9rMENdkXXIZ6eLE/SCmm/lx2m5AlnImowpiZE3cZzVFhcMaQRHv8nlA0J2XtAJETpeiv
-	 DDSZixmAfaCbRCkTZHV2Mx2G+o6M2EQRt/d3IrhvEQubQtk3zM9JMwKb4+cXErc/h0h+v
-	 6SPxWezIpHrf/9yxZWdPL6P8pIa+m2+y11NKz3Bpwwq/t37+MuhVsp0brnWvS/0DnHImf
-	 v/o9EhT0p3omy2vPKbzIulCGhgZrfG5GPiLkl+nu4CeNRdzZrzQscX9n7rvsVkomCOQ==
+	t=1794808609;
+	b=x5egvlUjTQvHu3uQGUcXxbM1aQev6h98Fq1WWjJh62vTbmauFJs/s+ViiW9Hz99J6RHQ
+	 nefr6gfsNvTqwPcJJQi09SjwuFYcYtL6X6vIzZxxVuAaXvtKNiM7jisOoHUOo2I5KWhSM
+	 KizZATl2zUxQs+o6cdFB10xGBYLr587klg8SO3wEA8rNqcTfcK8Bo7qL1DIXXqia0cruE
+	 vl/w0JSEPHzd1l3JFFcZdWtT94LFUNsZlSf+oZFIzjTvWv/YJX1g8D/L5Ps37dYkiFXFP
+	 ZcGCDLyh4IsICRxf9u1OcVdjsJmZPHO+uIgdyEe0RSW93vZjvbMJFuCSsNkIk8gCo2w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794808323;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794808609;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=21lrakUQobOh3xeTOt2wYElHrzwPEdXy3hVkgjmKexE=;
-	b=Ty3CxAZSKqBFwjhGJUB+/7D/M1uXI4cODx8WKy5/1/Y2UxWeKGcamTfq50nYqNvELi6i
-	 0yMBZOtUqxWn+C2jRqYE+NAbhUsjr8fNao9iyzAeDuIFDyd6vsFvV+93t/bQbPbGKIL8A
-	 6QXOJte/LQwmIPAdJ+gASGw2WseApy1s/PjMZvBOnSIvbDLUgJBFrpXUgi9hj9E5W0ciH
-	 hrfbOrb8XXGlhEVQMwf1GipRxuQDl+SCbBR5pTMMvBQKI6ZldNsz/atxTuXc8z1Y2X1dQ
-	 5UBIbywoOEfSqQDHg4lFBEHnnjo8mKd5jsn92KHFauRnMzjuh640U1TkC+PuNmgdRhg==
+	bh=8ikGpskDhsfYR6LF1VxG+4qcHnBuW3PWj6qvNRfOBHk=;
+	b=JOh7fHTNoWVls25Tb8HTKlzSoS+kjKviESy60TsQy1y4qg2fMoIzVwHiFtB0hg4Q0qAE
+	 G5SF/icnYqyJieoCSAB3d5wmSRXp3j4KWS5KAoXUZxLrsl3yx4sPSyaYe/doG8cH+8oxw
+	 HIRFtzPdc4hmAPDjd0kJnfZ8o4VJw8q/RCwqvgU7vitTiZTMtdkLqLCP69BvG509bvrZ9
+	 0Xz7/lr/hLoVp+VIrRNzFexfAYaewipifGUgzy9Vsq4jDn2s1s/zMNwXFUp32Jw5av8JE
+	 nzSr6n2p00Cmes+lFDTF85sYPP+78Kmw02Fmsh/S0hsRNubLVappX5NEjuIzfswa9Kg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CbSdTX0o;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Hmk/AZnq";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53AEE606A31C;
-	Mon, 16 Nov 2026 05:52:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70208606A329;
+	Mon, 16 Nov 2026 05:56:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CbSdTX0o
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 068401F000C4;
-	Mon, 16 Nov 2026 05:52:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Hmk/AZnq
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 195C71F000C5;
+	Mon, 16 Nov 2026 05:56:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794808323;
-	bh=21lrakUQobOh3xeTOt2wYElHrzwPEdXy3hVkgjmKexE=;
+	s=k20260515; t=1794808609;
+	bh=8ikGpskDhsfYR6LF1VxG+4qcHnBuW3PWj6qvNRfOBHk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CbSdTX0o3lWH3oTLs8ZgRq/2O7RJecGlggApuVIZLa8ikGkvtSO+gagLn2pvJS9G0
-	 7bB97gjRf1j2zotcdzpJCDy9cS6tzNyRj1Esgg7r/g/8Vy7Y9Q5nfFBuYGUE3MkG6Q
-	 ET54bemkmkHKs0bqtbASGgdY5xfxMjG9jy85UMoimRFQfRkKXsWmyMA5dmV0uIlCX0
-	 +qcbef1RfnLMcXGB1nKOhYxJucnUO9/6Nfv6zZy2PvCv/LsHfjJds+6CtXV5ixqUfR
-	 tGlsbYo29+KFDb0xzuzvyYRbcAD30U1vjBRoaDhz6XHA6i+VE2mzQfEECtxjIhmR9e
-	 aTVcvefdY0sQQ==
-Message-ID: <sashiko-outbox-216232@kernel.org>
+	b=Hmk/AZnqirOzpN9I41cD/AzrSKjc9bETXMddsZnrmSdq4nSpGfqpnrv5eJ9MoYp2Q
+	 tuo08glsL53/qTcUgAXVfbZFZPnyosKB/rEyJfHgkVf78AM4KoIszxYINsfrVrsYux
+	 6MnhhRrp72llzK0XxiL/OoSQ3voaXLYC3sKV5A/SahzOhFDpnwcLiT1fMt0aKWsBZO
+	 VDqdKVAAA/kRLUUeIWkZwzwMh8Dyv3jxLEM4X98ol2NNbKsmbYBLfFm/QeAlRXyg4u
+	 TMnI164p9QeKxUaM302TrozguOaZbbSufq72BBbPfb8T3rIp2duh0bKl/KIvvOi41N
+	 Q0x7Saj0AiITA==
+Message-ID: <sashiko-outbox-216236@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v20 09/11] selftests: tracing: Add wprobe trigger
- testcases
+Subject: Re: [PATCH v20 04/11] tracing/wprobe: Add wprobe (watchpoint probe)
+ trace event support
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
 Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <179480685671.38065.18275795234795685673.stgit@devnote2>
+In-Reply-To: <179480679855.38065.12988926948228161902.stgit@devnote2>
 References: <179480675130.38065.3086970856119381693.stgit@devnote2>
- <179480685671.38065.18275795234795685673.stgit@devnote2>
+ <179480679855.38065.12988926948228161902.stgit@devnote2>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 16 Nov 2026 05:52:02 +0000
+Date: Mon, 16 Nov 2026 05:56:48 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,123 +61,162 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 2 potential
+Thank you for your contribution! Sashiko AI review found 3 potential
 issues to consider:
-- [Low] selftests: ftrace: race checking count=3D1 on active timer in
-  trigger-wprobe.tc
-- [Low] selftests: ftrace: race truncating dynamic_events after wprobe
-  trigger removal
+- [Medium] tracing/wprobe: unheld lock and symbol lookup in
+  trace_wprobe_match()
+- [Medium] tracing/wprobe: TASK_SIZE check in
+  trace_wprobe_is_valid_addr()
+- [Medium] tracing/wprobe: trace_ctx underflow in wprobe_trace_handler()
 --
 
-commit 99426394cee3a23084f980a46322a802a391dabe
+commit ba36417426baa731cd50929b7289160f5b44d5a3
 Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-selftests: tracing: Add wprobe trigger testcases
+tracing/wprobe: Add wprobe (watchpoint probe) trace event support
 
-This commit adds ftrace selftests covering set_wprobe and clear_wprobe
-event triggers, including CPU hotplug and trigger syntax error checks.
+This commit adds hardware-breakpoint-based dynamic trace event support
+(wprobe) to trace data read and write accesses and log the access context
+and fetchargs.
 
 Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.=
 1785067572.git.wangjinchao600@gmail.com/
 
-> diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe=
-.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+> diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
 > new file mode 100644
-> index 0000000000000..13cacfd376e79
+> index 0000000000000..644183cf5155e
 > --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+> +++ b/kernel/trace/trace_wprobe.c
+[ ... ]
+> +static bool trace_wprobe_match_command_head(struct trace_wprobe *tw,
+> +					    int argc, const char **argv)
+> +{
+> +	char *symbol __free(kfree) =3D NULL;
+> +	unsigned long addr;
+> +	int type, len, offset;
+> +
+> +	if (!argc)
+> +		return true;
+> +
+> +	if (parse_address_spec(argv[0], &addr, &type, &len, &symbol, &offset))
+> +		return false;
+> +
+> +	if (tw->type !=3D type || tw->len !=3D len)
+> +		return false;
+> +
+> +	if (tw->symbol) {
+> +		if (!symbol || strcmp(tw->symbol, symbol) !=3D 0 ||
+> +		    tw->offset !=3D offset)
+> +			return false;
+> +	} else if (symbol || tw->addr !=3D addr) {
+> +		return false;
+> +	}
+> +
+> +	argc--;
+> +	argv++;
+> +	return trace_probe_match_command_args(&tw->tp, argc, argv);
+> +}
+
+[Severity: Medium]
+Can calling parse_address_spec() from trace_wprobe_match_command_head()
+trigger a lockdep warning and race on trace_probe_log?
+
+dyn_event_release() invokes pos->ops->match() under event_mutex without
+holding dyn_event_ops_mutex.  When argv[0] does not parse as a valid wprobe
+specification (for example, while dyn_event_release() walks past a wprobe
+when removing another probe type with arguments, or when a user passes a
+non-matching spec), parse_address_spec() calls trace_probe_log_err() ->
+__trace_probe_log_err():
+
+kernel/trace/trace_probe.c:__trace_probe_log_err() {
+	lockdep_assert_held(&dyn_event_ops_mutex);
+
+	if (!trace_probe_log.argv || !trace_probe_log.argc)
+		return;
+    ...
+}
+
+Because dyn_event_ops_mutex is not held, lockdep_assert_held() fires and
+__trace_probe_log_err() can race with a concurrent dyn_event_create() thread
+initializing or freeing trace_probe_log.argv.
+
+In addition, parse_address_spec() requires kallsyms_lookup_name() to succeed
+even when matching a symbol-based wprobe where only tw->symbol and tw->offs=
+et
+are compared.  If the watched module has been unloaded, kallsyms_lookup_nam=
+e()
+returns 0 and prevents removing the wprobe using its full specification.
 
 [ ... ]
 
-> +:;: "Test field offset, count limit, and conditional clear_wprobe" ;:
-> +clear_trace
-> +echo 'set_wprobe:watch:timer+16:1' >> events/fprobes/testevent/trigger
-> +if ! grep -q '^set_wprobe:watch:timer+16:count=3D1' events/fprobes/teste=
-vent/trigger; then
-> +  fail "Failed to set counted set_wprobe trigger with offset"
-> +fi
-
-[Severity: Low]
-Can sample_timer_cb() fire before grep reads events/fprobes/testevent/trigg=
-er
-here?
-
-events/fprobes/testevent/enable is already set to 1 while sample_timer_cb()
-runs every second on a timer.  If the timer expires between registering the
-trigger and spawning grep, wprobe_trigger() decrements data->count from 1 to
-0:
-
-shell                             <softirq>
-write()
-  wprobe_register_trigger()
-                                  sample_timer_cb()
-                                    wprobe_trigger()
-                                      data->count-- (1 -> 0)
-grep
-  wprobe_trigger_print()
-    prints count=3D0  <-- grep for count=3D1 fails
-
-Disabling testevent while registering and checking count=3D1, or matching
-count=3D[01] before the post-sleep count=3D0 check, would avoid a spurious =
-test
-failure.
-
+> +static void wprobe_trace_handler(struct trace_wprobe *tw,
+> +				 unsigned long addr,
+> +				 struct pt_regs *regs,
+> +				 struct trace_event_file *trace_file)
+> +{
+> +	struct wprobe_trace_entry_head *entry;
+> +	struct trace_event_call *call =3D trace_probe_event_call(&tw->tp);
+> +	struct trace_event_buffer fbuffer;
+> +	int dsize;
 > +
-> +sleep 2
-> +if ! grep -q watch trace; then
-> +  fail "Failed to trigger watchpoint with field offset and count"
-> +fi
-> +if ! grep -q '^set_wprobe:watch:timer+16:count=3D0' events/fprobes/teste=
-vent/trigger; then
-> +  fail "Counted set_wprobe trigger did not decrement count to 0"
-> +fi
+> +	if (WARN_ON_ONCE(call !=3D trace_file->event_call))
+> +		return;
 > +
-> +echo 'clear_wprobe:watch:timer+16' >> events/fprobes/testevent/trigger
-> +echo '!set_wprobe:watch:timer+16' >> events/fprobes/testevent/trigger
-> +sleep 2
-> +clear_trace
-> +sleep 1
-> +if ! grep -q '^0\*' events/wprobes/watch/enable; then
-> +  fail "Conditional clear_wprobe did not soft-disable watchpoint"
-> +fi
-> +if grep -q watch trace; then
-> +  fail "Failed to clear watchpoint with conditional clear_wprobe"
-> +fi
-> +echo '!clear_wprobe:watch:timer+16' >> events/fprobes/testevent/trigger
+> +	if (trace_trigger_soft_disabled(trace_file))
+> +		return;
 > +
-> +:;: "Disable events and remove dynamic events" ;:
-> +echo 0 > events/enable
-> +echo > dynamic_events
+> +	if (READ_ONCE(tw->addr) !=3D addr)
+> +		return;
+> +
+> +	dsize =3D __get_data_size(&tw->tp, (void *)addr, NULL);
+> +
+> +	entry =3D trace_event_buffer_reserve(&fbuffer, trace_file,
+> +					   sizeof(*entry) + tw->tp.size + dsize);
+> +	if (!entry)
+> +		return;
 
-[Severity: Low]
-Can truncating dynamic_events immediately after removing clear_wprobe fail
-with -EBUSY?
+[Severity: Medium]
+Does calling trace_event_buffer_reserve() without disabling preemption
+underflow trace_ctx when CONFIG_PREEMPTION is enabled?
 
-When a wprobe trigger is registered, wprobe_trigger_cmd_parse() takes a
-reference on the target wprobe event via trace_event_try_get_ref().
-Unregistering the trigger calls wprobe_trigger_free() -> trigger_data_free(=
-),
-which defers release_private_wprobe_trigger_data() -> trace_event_put_ref()
-to trigger_kthread after tracepoint_synchronize_unregister() finishes:
+Hardware breakpoint exceptions invoke perf_bp_event() -> ... ->
+wprobe_perf_handler() with interrupts disabled, without incrementing the low
+8-bit preemption count.  trace_event_buffer_reserve() calls
+tracing_gen_ctx_dec(), which decrements trace_ctx assuming the caller disab=
+led
+preemption.  When a watchpoint hits in preemptible kernel context where the
+preemption and migration-disable counts are 0, subtracting 1 underflows tho=
+se
+fields to 0xff and borrows from bit 16 (TRACE_FLAG_IRQS_OFF), corrupting the
+recorded preempt_count and clearing the irqs-off flag in the trace entry.
+Acquiring guard(preempt_notrace)() before trace_event_buffer_reserve() (as =
+in
+trace_fprobe.c) avoids the underflow.
 
-shell                             trigger_kthread
-write("!clear_wprobe:...")
-  wprobe_unregister_trigger()
-    trigger_data_free()
-write("" > dynamic_events)
-  dyn_events_release_all()
-    unregister_trace_wprobe()
-      trace_event_dyn_busy()  <-- returns -EBUSY
-                                  tracepoint_synchronize_unregister()
-                                  release_private_wprobe_trigger_data()
-                                    trace_event_put_ref()
+[ ... ]
 
-The same race applies to cleanup_wprobe_triggers() and to
-trigger-wprobe-hotplug.tc where echo > dynamic_events runs immediately after
-removing the triggers; calling clear_dynamic_events (which retries in a loo=
-p)
-or sleeping before truncating dynamic_events would avoid this.
+> +static bool trace_wprobe_is_valid_addr(unsigned long addr, int len)
+> +{
+> +	if (addr < TASK_SIZE)
+> +		return false;
+> +
+> +	if (addr & (len - 1))
+> +		return false;
+> +
+> +	return true;
+> +}
+
+[Severity: Medium]
+Should trace_wprobe_is_valid_addr() check TASK_SIZE_MAX (or
+arch_check_bp_in_kernelspace()) instead of TASK_SIZE?
+
+On 64-bit architectures with CONFIG_COMPAT, TASK_SIZE evaluates to the
+current task's address limit (such as IA32_PAGE_OFFSET when a 32-bit task
+writes to dynamic_events), which allows addresses in [TASK_SIZE,
+TASK_SIZE_MAX) to pass validation and register a CPU-wide hardware watchpoi=
+nt
+on a 64-bit user-space address.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/179480675130.38065.=
-3086970856119381693.stgit@devnote2?part=3D9
+3086970856119381693.stgit@devnote2?part=3D4
