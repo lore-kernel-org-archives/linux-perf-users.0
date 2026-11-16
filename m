@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794812761;
-	b=jgO7F21L0yPWUWo0d9GPrdqg5BFNV75IlaMl97z60gO+NwZb/SdLTFw1c5k/TZ+m8pcf
-	 2UMmNBJ5pnWihhf2gXKSskoBw6qmQZy/pQdVcJckqurPc4k/0/i/9mxuBztHvEAOzcNvP
-	 Cc4+W+C91qfLMxsqvkHIUMsJFXSl8m8Dd5IVPG5k7m/mL9fZF+xuzZNl75YUhJaRb7Wuc
-	 knGlZeULAp2Nnzq4NbbRU8BANeBg32cLaOMf4KP2HOEr50/MulQYLUI7rPaR6EnJn1BfQ
-	 MRpwYwuNEbICzxR12FhIFWLKto5XmeVG52QouoSR4YW8BERlAqBE0OftE5ZaowLL81A==
+	t=1794812772;
+	b=XYCTgUrvGpzDG1X7aUhaGoo227V/bV7hC/ogyb/XNstjAy3aazDwr1U+1qa1YB8ZTzMw
+	 BzSQ46BRA210nqw8sDlmsBIHXwnNOhldU8e15mJTvznoycG2xnFaFBR83GdthMqSPJT+L
+	 hnAQ6FsA1Tr+N2cHtgDx7ug2CZD5uLCEeyDay/Bag72nL/Jex/yW7Hqpq+lnyvfSZeSwk
+	 a8aGpy/JjWyRpvmky7GriPm1RSf9s+JS6jbGyNMTs1GuFyQVGouO3YTIRdIwkx9nv4vs6
+	 1BXTuHtVfooVKCFldpPL2sqtgq6wAghpyXtAhVwJqh7djtu0C3bDiSz0G3zEP+Lq6sQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794812761;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794812772;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=xv3fh+JgaQYYINHfPq5Pi7O/QW3CQlovfxCJJVKunqY=;
-	b=Dn6mamscJl62SsfF7Q5x0ijkvM+Ah3D/SZZRte9k8i5W55GrKzQYp0UcQ7KNpL0xaeau
-	 qtHJB4OFfhZi/J5+hkAx7NAPsfuV4kVqx5PSIrrX6b7jxzl+1BvqJeWQ4GSV1FF/+nGwR
-	 a4xN6QHBALDiRGsb5mfbLSIZfCrZpcR5dB7Bthvf7Op3Mrebh9ky85pv124iaevnq/cRd
-	 uUp2JU/cxS/ksEasLqFCZJ3/Mzt4Eb2lOVbfNlhz5kSwvDd3iqLcP3tp4AoQfWVX9Ginw
-	 jZm2kLFf9TABlIL7Bp4TJxOvsqFQbU8aDUYHRkrw258G85HiWmtGVXDYUEEFPFX2pPQ==
+	bh=zXd47ITa0JV+lDSsDZIOkch2/W/1+pVuqUndSpLTm+4=;
+	b=QkoqAEa+rL4UCMbI8NA5NHuFgukrvj45HVRH01NeMU7vO3b01rmnVIeFSEYE3Rl5JImD
+	 y2UPq/XxMudAiCPj+1a4I/Sh6+WlXE+rbBDaQqtOOOnVUTXRrJ+tVWcz/oJQFSb28av88
+	 FhxKxC2kkkarJ+V8jOgCeIO6DJhkf0xREI2koGoPCjCd6H8gSn6hSSR90Q9fDXhq/T2YO
+	 k9zIpqeb/hQeC4YYq4qfwcXtK9ddxfoOH/+84/jV8Fa4+mymjpihJ3vafGB83cqUM7jYp
+	 Cb2lY0h7KwA5sIaATCQtQwwK2Rakuq/pK3blzRJItO2GRCg9JSiTOGrVZ6u97B0OK5A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W4+BEVIc;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mYvVeCQs;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF9D606A323
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 07:06:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA97606A31C
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 07:06:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W4+BEVIc
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAB641F000C4;
-	Mon, 16 Nov 2026 07:06:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mYvVeCQs
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46E5C1F000C4;
+	Mon, 16 Nov 2026 07:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794812761;
-	bh=xv3fh+JgaQYYINHfPq5Pi7O/QW3CQlovfxCJJVKunqY=;
+	s=k20260515; t=1794812772;
+	bh=zXd47ITa0JV+lDSsDZIOkch2/W/1+pVuqUndSpLTm+4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=W4+BEVIcSYIxUne3oMcAFCVkBy2NF9UOY1cSDIX2cRnTCw8UpNoLB/YZSn+9jzHms
-	 IxXUnXxoZBLRpEaWFzXw5LPTyqYd4apl+ebDsUnM+7akK5sya8LafSPILei5ImzFDr
-	 oQS7fnD+MXlEoOMr4OoYUjg7Bswo6a9tAbclxX40SNVJZ82QgFUTpSH8hhia8DPXri
-	 8uvBFKNtpdq4GTLYPOXYB7vpNhDFoDl1wcXU+5wsh8J6ifwP5hCR4CVRPwjjqnEcZM
-	 hmmMhxJoN55TkNTINrTyvXZU4fJEumaiIER28dG3gjDcM/MXlc89i1HVxnq0JDYTJK
-	 mvq2K7pZUbXLA==
-Message-ID: <sashiko-outbox-216378@kernel.org>
+	b=mYvVeCQsxkbvjnCBF2MSJfxhZOSrxzCgeTV2ozyh7wefdSLyotHPhIBrcMQ2TzRVY
+	 NG2FIKUz1WXIZGiSRhxsJKHpxpPHRKGoeQeTFXemWkCaQo74nU2hDR5PtLsW75GB6f
+	 uQhqwehSykk6uVVYlTLlhQGjN3jK2EqFDR+VrI0T5ehvaYmBsRsLEZHT552Xo+LveS
+	 42VYUgmxnHMNf18X9Zq1NG8GD0Au8JFLE2tBMW4n2fpbhRE87ZcPzGPvGCFUUpUNjI
+	 0kLSNhNAq/tLjUNnoErbV2UHznT75HtgC1E2h4Ejb9BmKVt+9MRVfUhHuN0GyrSUD/
+	 0gWRJFISn3EVQ==
+Message-ID: <sashiko-outbox-216380@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 04/10] perf jevents: Encapsulate big_c_string lookups
- behind pmu_events__get_string()
+Subject: Re: [PATCH v5 4/9] perf maps: Optimize tail insertion and
+ small-append sorting
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261116070038.2968725-5-irogers@google.com>
-References: <20261116070038.2968725-1-irogers@google.com>
- <20261116070038.2968725-5-irogers@google.com>
+In-Reply-To: <20261116063435.2817923-5-irogers@google.com>
+References: <20261116063435.2817923-1-irogers@google.com>
+ <20261116063435.2817923-5-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 16 Nov 2026 07:06:00 +0000
+Date: Mon, 16 Nov 2026 07:06:11 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,31 +61,31 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Replace direct &big_c_string[offset] indexing in decompress_event(),
-> decompress_metric(), and describe_metricgroup() with calls to
-> pmu_events__get_string(uint32_t offset), and change compact_pmu_event
-> and metricgroups offsets to uint32_t.
+> User-space map insertions (from /proc/pid/maps synthesis, runtime
+> PERF_RECORD_MMAP2, and jitdump) and BPF ksymbol registrations all flow
+> through maps__fixup_overlap_and_insert() -> first_ending_after().
+> Currently first_ending_after() has a fast-path check for the first map
+> (maps_by_address[0]), but no fast-path check for the last map
+> (maps_by_address[high]). Because /proc/pid/maps entries are synthesized
+> in ascending address order, every synthesized mapping starts at or after
+> maps_by_address[high]'s end, yet currently executes the full O(log N)
+> binary search loop. Add a tail check in first_ending_after() so
+> non-overlapping ascending insertions complete in O(1).
 >=20
-> When generating a single file (such as empty-pmu-events.c), emit
-> pmu_events__get_string() as a static inline helper indexing
-> static const char big_c_string[]. When generating separate pmu-events.c
-> and pmu-events-string.c files, keep big_c_string static to
-> pmu-events-string.c and expose pmu_events__get_string() across the two
-> generated translation units. Also add explicit POSIX standard header
-> inclusions to the generated C files.
->=20
-> This cleanly isolates the string storage representation inside
-> pmu-events-string.c so subsequent patches can replace flat byte offsets
-> into big_c_string[] with block-indexed string compression (where each
-> uint32_t offset encodes (block_id << 16) | sub_offset into independently
-> compressed ~8 KiB blocks decompressed on demand) without changing
-> pmu-events.c.
+> Additionally, track the sorted prefix lengths (nr_addr_sorted and
+> nr_name_sorted) in struct maps:
+> - In __maps__sort_by_address() and maps__sort_by_name(), when the
+>   unsorted tail is small (k <=3D 8) or the total map count is small
+> [ ... ]
+>   After (-6.9% ascending, -98.7% append):
+>     Average ascending insert + lookup: 58.970 usec (+- 0.609 usec)
+>     Average append + lookup: 96.670 usec (+- 1.353 usec)
 >=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261116070038.2968=
-725-1-irogers@google.com?part=3D4
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261116063435.2817=
+923-1-irogers@google.com?part=3D4
 
