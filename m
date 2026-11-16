@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794873320;
-	b=LrDq9rI57kdL3WUAuwelqkFxy9EoHDaLPKZd797U0r3sxOY/OpOuQd7o6eKIMro1tnBl
-	 9oiSuZ+gSAbUkCRQ0LDy3UF7gcgCUurGCn9OzaOyawH0sDUuoxoq46E2nqpQkfj9157pS
-	 jidA+uYTMLIvmo/P1kMCn+fH9SQs64kOOsh771DeoP9TmVowDVZ/adJWulPn8zvZhE+OF
-	 zxkCsZiHvL8nq81BjjwW7QxG6eJtFtMjYoidGpCUMwi76RVtTI37rnCPO+GGQefomPA6F
-	 JU+XOGlQx7oyYgw3Jlp0q7gpdTVYwCWDtgTsivmne9ySR80DXzfTdFZQS4KEXWwhPwQ==
+	t=1794873356;
+	b=SQN8lvTm+gkpH0ZZ5I3qhGV3rLL7tI83L053naBNb7/AiIsYI3E5adVkrJNSR2pbFTKx
+	 xGUaBk6DBTJv2E7pzPgF9qugwmceE9ugA7Cv3AyAk3nkiH6RrC2La3+jVQo9sAU/rBKLo
+	 65CTc0FR6zR/dzWb1+ZDNcWCEPKcCF2vwt84QQyRU78U6Y5IvP9UqqKxuPfR80hyEVvVW
+	 XA5WKLQqSkMlnIf6BIIEM4EKHoj1zqC9A2EKFYoJO4U4fJbcgmZL/LEKvd63PM9Q8vkQr
+	 iMZ0AwRZAhBQdXOnNefG6jMRIzq9ETUC2TTh7YWNWUrw26t5zZkrl8egPgrP5N/9Q0g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794873320;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794873356;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=PHLpIxFBCT1WuxstcAVXiNgWPPCZbZ9ha7WoiwUWz/Q=;
-	b=okO4ZIqen65p80/YcEUW/NIBcnyQK7eXgo0WRH2jzKUACPpl/uqnIMkemNmGphYJnHUS
-	 LzSvaIYSi594p5XK2QQJu5PZv8nP0KJethO9wN/2XpMAoVWKBZTU77+XVQyzsm4qAsWpb
-	 8mfWyA2mwOP0gn5mS1qIldBao8VKT2OyXkd1bSRVGCRKOAfZu67zj6iibaJsPxWPOxxi7
-	 GYO0jG5ebD2UhIJVHaN++QnvUESmhfSIUOWeqLjfjhc3PKCBFj34QvLQUNM39HaUjCgqL
-	 tEuOdg6sBJMt5FqDPaiAfkBdhxIs3wJdgTf9hoF7b+ihhxyYfWp6O5ZFnYrUlNmAepA==
+	bh=+9ANZd7pWM4DgGcRZX8SNgWfpoFSUah/5sDy8HeQFms=;
+	b=JST9X5V2XYjduH/5N6qWnTtFVr1VYj+07uUCGED/pavF9SB0IAdwHZUTXaiFzJb8WpEp
+	 X/7vc87PWi5qPSD3IFIESqgVKyTIMh8VrUcJvBcqEJQJrsVm8w/xocs3TWMLT2LRQlsdD
+	 0vJ4PaKCM2maKzy5b4OjYnd6+IvcCTjTJZIwOytTkVK5jgaUkhKwdBpFEBBySzYC5wAL8
+	 rZYRhCGVuVTkgBhVmGoV7gVddbS6jQJf642NVfl3HGpu7r3hcbh201jfcLATkNseufVkw
+	 zoUDVDXOpz1CysNn9Lo0TfaHoh5IkfNbpR6/cZrfo4XmagpTQqhtss62GYdfLGnUidw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OT8gtaPZ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iYS+2FCh;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34BBA606A31C
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 23:55:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12781606A334
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 23:55:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OT8gtaPZ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 943D21F000C5;
-	Mon, 16 Nov 2026 23:55:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iYS+2FCh
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D60D1F000C5;
+	Mon, 16 Nov 2026 23:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794873319;
-	bh=PHLpIxFBCT1WuxstcAVXiNgWPPCZbZ9ha7WoiwUWz/Q=;
+	s=k20260515; t=1794873355;
+	bh=+9ANZd7pWM4DgGcRZX8SNgWfpoFSUah/5sDy8HeQFms=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=OT8gtaPZEkd7gm0LxK727CyNmFrmIC29K5mWZefx5TwEK6lUT/wtsSuQ1bVDUf6bW
-	 JyIaE7jTAwagPbpPjsozMpFAqpY3ahoZHPdZ9N3ea3q9NmgKkwjser6WhonmAHFtzj
-	 m7TXfO3MKHcJpt9yHNWHhKxbXZmfptlNx5CLRNdL+vy8S/a4WntznidVy5WM4zZToT
-	 rwAdDt1pULOvX/Hs4T0Ygu8VFILZoFKCBaMfa3rHJKbCPGBCCW8faaNQmHc67aWIXZ
-	 UCm7TKLFM2M3ZYeJLtH0e8BG6WwqZit8hMJJrI+stlMOS7ZRkJ/wDu9A5IVjHAxkHB
-	 TFtDY+G+X+T0A==
-Message-ID: <sashiko-outbox-217940@kernel.org>
+	b=iYS+2FChgiXIG6Ie3Vk6gOmVL0l8KNIp6dDPuCfSXjMz2hY5m35QQZNB1XX2+0LW5
+	 Q3GOVfMzr0iQho0mnQvuvHO4vnk/Jnxu6/UjoIMbDwBB4d/qUESQeDU1VM4MQLG6jA
+	 llL491FaQKVWtYqTzhe6Dy3j2N1JcfU9f2wF7oHTjindMP/9E+SacEVwzfYquOwjr1
+	 +Y93cmTKIjNiCeFHbVmxEx6fDxatHmVipj08swuWEHvTlh7/Kh4cGbSNXE7uxmrHHZ
+	 Cj87UM7/RuOorRjzIv8F3vzXF+ps35y9fgx6z5ML0Eyo5oMdkWtGWXjCddM26tOn6P
+	 Jy7Gwbnw5ODIg==
+Message-ID: <sashiko-outbox-217942@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 07/12] perf annotate: Print the stats after the
- annotations
+Subject: Re: [PATCH v4 01/12] perf scripts: Add a coverage harness for perf
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261116234659.3950531-8-acme@kernel.org>
+In-Reply-To: <20261116234659.3950531-2-acme@kernel.org>
 References: <20261116234659.3950531-1-acme@kernel.org>
- <20261116234659.3950531-8-acme@kernel.org>
+ <20261116234659.3950531-2-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 16 Nov 2026 23:55:19 +0000
+Date: Mon, 16 Nov 2026 23:55:55 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,25 +62,29 @@ Precedence: list
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> The instruction stats are printed before the loop that accounts them,
-> so 'perf annotate --code-with-type --insn-stat' always shows zeros.
-> The data type counters are updated in --code-with-type mode too, but
-> only --data-type mode accounts their total, so they are incomplete
-> there.
+> Build perf with clang source based coverage, run the complete perf test
+> suite, merge the raw profiles and report line and function coverage for
+> the whole tree, optionally against a baseline.  This is pahole's
+> coverage/coverage.sh + coverage-diff.sh merged into one script, wired as
+> 'make -C tools/perf coverage' and listed in 'make help'.
 >=20
-> Print both after the annotation loops, the data type part only with
-> --data-type.
+> Without -f the report lists the files with the most uncovered lines,
+> which is where new tests should try to get more coverage; -t narrows
+> the tests, -f focuses on specific files, --html writes a browsable
+> report and --table/-T, also available as 'make -C tools/perf
+> coverage-table', prints the last run as an ASCII table with the
+> per-file line and function coverage, like pahole's coverage_table.py.
 >=20
-> Fixes: 58824fa0087e1cb7 ("perf annotate: Add --insn-stat option for debug=
-ging")
-> Fixes: 61a9741e9f78c64c ("perf annotate: Add --type-stat option for debug=
-ging")
-> Cc: Namhyung Kim <namhyung@kernel.org>
+> [ ... ]
+>=20
+> 169 tests passed, 27 skipped, one failure (20.2: Tracepoint event), in
+> code this series does not change.
+>=20
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261116234659.3950=
-531-1-acme@kernel.org?part=3D7
+531-1-acme@kernel.org?part=3D1
 
