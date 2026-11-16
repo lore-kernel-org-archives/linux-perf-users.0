@@ -1,76 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794822431;
-	b=kmRkwhv57sxgUpRb+MEQ3zhSZ9V67OUd0jjMLUM3Tui4bp/nBB5scRJp00mEydMyJ0y/
-	 GD5pD6AA1hz77uXxnFV1UNTJ7XowxY4J46h87SxogB8p43m2gctud9QBMBH5HJgaTKWLy
-	 T6qVt+oVk+52JdCZOiYxaIJhZt1X62gUXFg5peaqpZQ/N6FdjEy+HviVmHhOaYn6pLHxw
-	 sIYogUoencL1fWsjW1OxAalUWXJne+L/nKIo9QWT8zS23CbKOQihEbvEzt65Gvg0iEEQZ
-	 2FOmqnh+JbPwLhl9cgmB3ZxWhsWwYYhxT43tClPmQC32tpALPFlXpK0O09bdK7DN2gA==
+	t=1794822539;
+	b=yFEwS+58yUog/Aou+nZpHFaJ44pzq+nmxwnZoTDRNIOafqHC3JtNuzgczRE/ZvnPn1Y+
+	 cMsMRgGNIPUE8nYNAZApZOk15oQcQxWho0wNT3vUu7Q6fhKsd6/V2+adnPmyp9OCaj3pP
+	 DuD+HJmJ04HClDuxnR3F9l5qreY9/fQxke1r6Vu53cVO25Q5yUjyJkZ/SseFWs/9/lJqe
+	 HukYnCTL/J7tUtceM4i0ZI45DusJE6Lj78yqtf9WQWv/egCcDHKlaICrScKEhHyWB2mKc
+	 7saHe/E9Tmo/PdgnVJzhFQfw2Gjej/+xCrVBBMQqAkOnLuczNFxIpxNTtorFzdn0Caw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794822431;
-	h=DMARC-Filter:Date:DKIM-Signature:DKIM-Signature:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To;
-	bh=fsPsMFn8hWSINzFyIgJpitEGrKFPlA0wibbGI4KQ4Xw=;
-	b=06pCffeJnMt2c8M7mDrG4TybpO58zzuN4ouY97zIcK1ke4Xx7ygkDXDtSdNhOX4LDdDs
-	 N5L1BAXwarDEGhzidwXLcJzH6TZKwrNhp16XbEfvedhs22yTYWpYh8i1rfBiH9KmZ2iFC
-	 FiXOvuJNUGiHCHo9cIaBjDea4UUuG4eGbIb1sXY+rs3oPTbgV2mQFiUEOwvSO+l1rwYbA
-	 YhQRuohoDMbWeFJaZkHvdEBrOAIzzIzjVYVKxX+bNDmFqL4xgFAvoRdx7fCclLLdNSJxF
-	 wk+rA1rVkrYkMdPGlGqFUnXieL9YfHo5lqtHaHRKWSHklsKqY54PU/qgxHg9AZDNc2A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794822539;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=ZxpDKOl/G+AtD/GcW8ror8whKXEyMxooooWhBhbV+H0=;
+	b=dXjGtPwY1gOkOVb1QrxExkMH/ZBl8FO0M0ZLnL4voAlqupCDrfqmuGuH5kU/JZXoWW3f
+	 lkCLO74YKH4jr3P1nLTA6IJmQxCErjXBV6D/7NKUgKvqXlOkhaCPFFZh9+Ix3ubObGrXu
+	 DYxIkjSEAj0lGZye590zn4Rzs5RLzPXBCb1RNXOddQfkfBQoa4CnV9nEeMpSeQBani0Vi
+	 pu0CQDOmfJJqqcSSZi6jdIQABwtojSZBcCjatv41Y+L59OWmFK1nHA0nCcIggbiN1Oqt9
+	 SryxlEwgciv2KvmuLn/UahVBrs901dOYnZcoGIM1eIV4g3uxK1Y6QY2y5/1Cf+ADcFA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linutronix.de;
-	spf=pass smtp.mailfrom=linutronix.de;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=hJLV6ZQi;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=m3Mji7C+;
-	arc=none smtp.remote-ip=193.142.43.55
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TsIhnOfY;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662E9606A31C;
-	Mon, 16 Nov 2026 09:47:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 662E9606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CBDB606A323
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 09:48:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=hJLV6ZQi;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=m3Mji7C+
-Date: Mon, 16 Nov 2026 10:47:06 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1794822428;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fsPsMFn8hWSINzFyIgJpitEGrKFPlA0wibbGI4KQ4Xw=;
-	b=hJLV6ZQiRHk/LYJPQMwf0Zeqs0xt5jqEx3eeUGUZkjI4t4H8JK5j0MdNYRUwZLSKR/XfP7
-	45Nz2QtzA2QnCLha2IuEvBevBpzDXQxQy+Ny7NYRniBQzcosL0eT8a0CpfrTX1jk8JcVj2
-	iYvMa/jKoUIpXcGr9q8HS1jEs91YLgt5DnjanGc9TCWxkjR3WIh5uWmdPPirN/OdftUIoq
-	JYgn78lufZoqXagML0I0HSq4SqWN1mthQxy73mZSqSKLO+Om2o/xEa4JFXT+e0PTX8yljB
-	+p/BcRm859F9qwDVnhqGBbsn3j3rq7CeRmYQDpLhX8JzDOCA7wH/LXbFDKE44g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1794822428;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fsPsMFn8hWSINzFyIgJpitEGrKFPlA0wibbGI4KQ4Xw=;
-	b=m3Mji7C+1Lc7pTYKmsbndx4QOXyzTON6cxHUNfSu6+pHN9LTWMrNZmaWmyb8kcQHuubRth
-	uQTVvf3caGj6PPDw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Tengda Wu <wutengda@huaweicloud.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] perf/core: Prevent duplicate sigtrap task work
- enqueue
-Message-ID: <20261116094706.GX5vD02a@linutronix.de>
-References: <cover.1793870900.git.wutengda@huaweicloud.com>
- <ff842e802e9ecb74510a90964f8ad2c4825834b7.1793870900.git.wutengda@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TsIhnOfY
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC6E81F000C4;
+	Mon, 16 Nov 2026 09:48:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794822539;
+	bh=ZxpDKOl/G+AtD/GcW8ror8whKXEyMxooooWhBhbV+H0=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=TsIhnOfYIxGZxhlxAuuQdTSewsDw9MzxIRRJyJjcsRnA3V+eTvQi13fNubR0B72FB
+	 QzDWxeXVQi+XiCCK+OD/FYchNao0CPI6G0rcjq0KRUctSnoCvbUeVUGJT2fZp14TFq
+	 03Y3UhCt9tb0wzkNnSDHz5Az/Ry2PvfdbUby6u1vOH4ftuhugohLsUdRXdd4FNDcVN
+	 fEqMBHaetzU+VQ/onjXoyK29OKhPeBVpOIJZrfGQZMlo/8gwBAL4IfHNY6HIxPgFas
+	 b2FCNiwQOjARcLf6B1m0G0T+y6pao/qX+Nn+lE+07c8OqL7FvVhJhPC/+47kF5jWjU
+	 rvANyeAShxolw==
+Message-ID: <sashiko-outbox-216640@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf intel-pt: Save the reference window used to detect
+ snapshot wraps
+Reply-To: sashiko-reviews@lists.linux.dev
+To: lirongqing <lirongqing@baidu.com>, linux-perf-users@vger.kernel.org
+In-Reply-To: <20261116092650.1714-1-lirongqing@baidu.com>
+References: <20261116092650.1714-1-lirongqing@baidu.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 16 Nov 2026 09:48:58 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -79,111 +58,86 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ff842e802e9ecb74510a90964f8ad2c4825834b7.1793870900.git.wutengda@huaweicloud.com>
 
-On 2026-11-05 09:30:43 [+0000], Tengda Wu wrote:
-> The sigtrap handling in __perf_event_overflow() checks
-> event->pending_work before calling task_work_add(), but only sets
-> pending_work after the task work has been queued.
-> 
-> This leaves a window where an NMI can interrupt task_work_add()
-> and re-enter __perf_event_overflow() for the same event. Since
-> pending_work is still zero, the nested invocation can enqueue
-> the same pending_task again.
-> 
-> The re-entrant call path is:
-> 
->   __perf_event_overflow()
->     task_work_add()
->       kasan_record_aux_stack()
->         <NMI>
->           __perf_event_overflow()
->             task_work_add()
-> 
-> The nested invocation can enqueue pending_task before the
-> outer invocation does. When the outer invocation resumes, it
-> inserts the same task_work entry again, potentially creating
-> a cycle in the task work list.
-> 
-> This causes perf_pending_task() to be executed repeatedly
-> and leads to unbalanced event reference counting.
-> 
-> Use cmpxchg() to atomically claim pending_work before calling
-> task_work_add(). This ensures that only one invocation can
-> enqueue the pending_task, even when interrupted by an NMI.
-> 
-> If task_work_add() fails, clear the pending_work claim so that
-> a subsequent overflow can retry.
-> 
-> Also use READ_ONCE() when checking pending_work in the
-> exclude_kernel warning path to avoid an unsynchronized read.
-> 
-> Fixes: c5d93d23a260 ("perf: Enqueue SIGTRAP always via task_work.")
-> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
-> ---
->  kernel/events/core.c | 23 ++++++++++++-----------
->  1 file changed, 12 insertions(+), 11 deletions(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 457d75ea7142..ee5c59158b89 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -10925,16 +10925,17 @@ static int __perf_event_overflow(struct perf_event *event,
->  
->  		notify_mode = in_nmi() ? TWA_NMI_CURRENT : TWA_RESUME;
->  
-> -		if (!event->pending_work &&
-> -		    !task_work_add(current, &event->pending_task, notify_mode)) {
-> -			event->pending_work = pending_id;
-> -			local_inc(&event->ctx->nr_no_switch_fast);
-> -			WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
-> -
-> -			event->pending_addr = 0;
-> -			if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
-> -				event->pending_addr = data->addr;
-> -
-> +		if (cmpxchg(&event->pending_work, 0, pending_id) == 0) {
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Medium] perf intel-pt: fixed tail window in intel_pt_wrapped()
+  falsely detects wraps
+--
 
-would cmpxchg_acquire() here make sense?
+commit db3c47adedfe1494edbb28fa120460d2030e1f73
+Author: Li RongQing <lirongqing@baidu.com>
 
-> +			if (!task_work_add(current, &event->pending_task, notify_mode)) {
-> +				local_inc(&event->ctx->nr_no_switch_fast);
-> +				WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
-> +
-> +				event->pending_addr = 0;
-> +				if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
-> +					event->pending_addr = data->addr;
-> +			} else {
-> +				cmpxchg(&event->pending_work, pending_id, 0);
+perf intel-pt: Save the reference window used to detect snapshot wraps
 
-if the task_work_add() fails then smp_store_release(, 0) since only the
-executed task_work can release it back to 0. The cmpxchg seems not
-needed.
+This commit changes intel_pt_wrapped() to copy the snapshot reference buffer
+from ref->ref_offset + ptr->snapshot_ref_buf_size instead of head.
 
-> +			}
->  		} else if (event->attr.exclude_kernel && valid_sample) {
->  			/*
->  			 * Should not be able to return to user space without
-> @@ -10948,7 +10949,7 @@ static int __perf_event_overflow(struct perf_event *event,
->  			 *     To approximate progress (with false negatives),
->  			 *     check 32-bit hash of the current IP.
->  			 */
-> -			WARN_ON_ONCE(event->pending_work != pending_id);
-> +			WARN_ON_ONCE(READ_ONCE(event->pending_work) != pending_id);
-smp_load_acquire()
+> diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/ut=
+il/intel-pt.c
+> index 4c183ccf4e5b6..f034e3d55051a 100644
+> --- a/tools/perf/arch/x86/util/intel-pt.c
+> +++ b/tools/perf/arch/x86/util/intel-pt.c
+> @@ -1092,7 +1092,7 @@ static bool intel_pt_wrapped(struct intel_pt_record=
+ing *ptr, int idx,
+>  				       data, head);
+> =20
+>  	intel_pt_copy_ref(ref->ref_buf, ptr->snapshot_ref_buf_size, mm->len,
+> -			  data, head);
+> +			  data, ref->ref_offset + ptr->snapshot_ref_buf_size);
+> =20
+>  	return wrapped;
+>  }
 
-perf_pending_task() could maybe get a xchg_release(, 0). This however is
-wrong because it would reset perf_event::pending_work and make it
-available for __perf_event_overflow() again. I think it should have a
-load_acquire() first, and have the store_release() after perf_sigtrap().
+[Severity: Medium]
+Does keeping ref->ref_offset fixed at the end of the AUX buffer cause
+intel_pt_wrapped() to falsely report wraps?
 
-Comments?
+intel_pt_alloc_snapshot_ref() initializes ref->ref_offset to
+mm->len - ptr->snapshot_ref_buf_size (the window immediately preceding the
+initial head at 0).  With ref->ref_offset never updated, ref_end in
+intel_pt_compare_ref() is always mm->len:
 
->  		}
->  	}
->  
+tools/perf/arch/x86/util/intel-pt.c:intel_pt_compare_ref() {
+	size_t ref_end =3D ref_offset + ref_size;
 
-Sebastian
+	if (ref_end > buf_size) {
+		if (head > ref_offset || head < ref_end - buf_size)
+			return true;
+	} else if (head > ref_offset && head < ref_end) {
+		return true;
+	}
+
+	return intel_pt_compare_buffers(ref_buf, ref_size, data, ref_offset,
+					buf_size);
+}
+
+Whenever a snapshot is taken with head in (ref_offset, mm->len),
+intel_pt_compare_ref() unconditionally returns true before comparing
+ref_buf, even before the first wrap or when head has not moved at all.  In
+addition, any later snapshot whose trace merely crosses the end of the AUX
+buffer from *old <=3D ref_offset to *head < *old overwrites that fixed tail
+window and triggers wrapped =3D true without having wrapped a full mm->len
+around *old.
+
+When wrapped is true, intel_pt_find_snapshot() sets *old =3D *head and
+*head +=3D mm->len instead of advancing from the previous *old, so
+__auxtrace_mmap__read() emits unwritten zero bytes before the first wrap or
+re-emits stale trace bytes that were already recorded in earlier snapshots.
+
+Instead of copying the fixed window at the end of the buffer,
+intel_pt_wrapped() should keep copying the window preceding head and update
+ref->ref_offset to match (head - ptr->snapshot_ref_buf_size, wrapped modulo
+mm->len).  Note that with a sliding ref->ref_offset that can wrap across
+mm->len, intel_pt_compare_buffers() also needs part_size =3D buf2_size - of=
+fs2
+rather than end2 - buf2_size to avoid reading past buf2 + buf2_size, and the
+head < ref_size branch of intel_pt_copy_ref() needs to place the tail segme=
+nt
+data + buf_size - (ref_size - head) at the start of ref_buf followed by
+data[0..head) so the two halves match the order expected by
+intel_pt_compare_buffers().
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261116092650.1714=
+-1-lirongqing@baidu.com?part=3D1
