@@ -1,56 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794813400;
-	b=mrMhtKPUr3GfvEkFcmyec5+hCe7GptCF/gSHOXvtSDO7oXbAA2OmpcI/BhlxiG5+5i7R
-	 ADYfABvgRqTEcgUzvqUiUwZ65uJ5M+Q8OCh4tkpw9usKkUD992jDMKPtt8pmmdyGbQcn6
-	 zVfkOuBUx/lAuJGK0826cdgTVSK9AxpztUgRr+DRsIG9lG5ix3a9mmyWnNt4v7rLE16RX
-	 jYE4kQoN9xrpz/5gkmFcLw/PtXqpxtMcDNNEe1npTvLaWgPm7aBtOxkx5h4nelyn9TNkH
-	 gmQAvyOuDlu9aBp1ilqA+IgOAErl24TN3yzi5syDGrAtyCq2HMnFUyI8WdFO3lt+A2A==
+	t=1794813492;
+	b=pt7AL/WM45n/czG9pdmXDFt4NtprpXzgk4BEfWk79MncYK/znF8KAEfVNnFZM+9E9+CI
+	 1DYKCIkn4GTQJgpMfTitpXxvj8LxpoF/AaqhM4ZlT9A6DRqjKKnr2BjjHNT5o/cO/oKKa
+	 1xRxwsSF/hCfGhdOVPzoaj/1f/yc/oCO2/djB5cFWdKlOybuQQ84bnetJVU55brtVmuVk
+	 LNWWjdL+Ild2eWpLQbwVO6YoUGbCnBC+59u8uStOa0fqE6z05338vkyzqQxLrwveAzcnc
+	 YqnMUNXbNeoH9YChB9Sy0kcNVrL0A/lO6xK/Rpbs5N9GygRxTGx0eWY0HTg3XTOJ2Pg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794813400;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794813492;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=DLl6aDnmJbj8IA4uLSPYrozTWC0vOM/APdynSpp932A=;
-	b=mZsyh2xiud0pJtzlcphsLirZud9QKcjL6BEGZt9bQGaIq38y2XxHOs29ewcjd3SM0r+m
-	 BxnEU8rIsFrEz2BHXCECyZ9Ptkj3ilp7Tw5j3H74mTJ+7Y69bDQCYHMbp4XkwFlKn3amE
-	 Pp49JBQFSBEkbcxgU4pQt7ikY22BEK31jNfaYUqhfSnedCfuYQjf7lJJdEx6J5iyq9XGC
-	 6k7TgNEti2IPNtUGY1W7NsCFu2paAvwRm2aFr/L9v3bOYNuoA72ibnFncjPlGnbxZxasv
-	 FSo+lsSxfl734A5ffoZScErp8JjSisDd3cIFqWxnJlxpuHioJnaj/w2+2y7CVfAwenQ==
+	bh=G6/Z1pkHr+urpMsG5Mgaks1l3Lmvfk6OLLyC3/jYG44=;
+	b=mYLfjfJEXCaASS4/XqGRCP09w9VhZMl6/Hb6usfj4rOpsTHsUVdbpzeFL4/CayUExPP5
+	 HCRW4syG5VkHx0RcAb7cqxlm42uMUzoEF/v7aWlfdYro9T1wlTvZUYs5sZoQuObm5vcIQ
+	 RYg8JlVclMgoNM7yDL0Ecc2rKLYi0EQQHA0oQ7c3hSUoNoUWkUgS1uqmxqWRqJr7Bsz6h
+	 NpD92Mae/tnXZZKRgIynx1Ny2RtKnA48jscLe2/g4eLYFktwdIdMTb1SRBUe+Eyq63pqy
+	 2PdrhMlgzp0TmdAzcJEBfQ8bs1W/fx2uOEMlg/sHF62dEI0V2EfZGtJ8gr0FktmWKOA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jGYCJLkJ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dT1KwhLE;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56E2606A329
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 07:16:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4752606A31C
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 07:18:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jGYCJLkJ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42D581F000C4;
-	Mon, 16 Nov 2026 07:16:40 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dT1KwhLE
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D6A61F000C6;
+	Mon, 16 Nov 2026 07:18:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794813400;
-	bh=DLl6aDnmJbj8IA4uLSPYrozTWC0vOM/APdynSpp932A=;
+	s=k20260515; t=1794813492;
+	bh=G6/Z1pkHr+urpMsG5Mgaks1l3Lmvfk6OLLyC3/jYG44=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jGYCJLkJMxaDOn9GWsxbyQusrntEVJGnkmrJ++43P8yxYpGP/1trfoi0RYU/copeE
-	 mSrt2c7TLzkSc0O8pvnp1krGvrNk+4DU9342N9TjS/ho8vuy1lHGjKMnkQx4vS3MUL
-	 fy7SNjwJu2KRhrv3WItY5QAp+DVNSQuuMvpcCK9BajIF5TpZwkGvSbmBv88TEy9cEt
-	 0hfc06NCoSbukkVXcQznDPBEnnL//0vxGX3ZVHRyCQSPsx2Hl3Q7kkZPwrcEn49+Wu
-	 X0nDPUGrGi7lEoCa7y/niZMW/LbE3f00tDrKGyOTV02RlI5Xj3Ajbjt78hsAisFFBU
-	 ckpblHVAN901w==
-Message-ID: <sashiko-outbox-216400@kernel.org>
+	b=dT1KwhLEMRQKPGpkdx0BOQJROerQeUmabvpZMpk3HOOOmSOyDpKZHSRyJIlCFp+T5
+	 ReYwqthKjtSpoT8z+FWLJLqyCl2wOeqBv7wZp3Tjz9SynlfPkymzTcPus4rbldt1f+
+	 msmnDSruEOYxIHq64uSicziWdWtg4eJb06DEOXzmImgXB9aYnTIj4wZWkZtByHbzXY
+	 CPZYCLHnRSzHHCobYl0J4NJGpb9nOpxTtg1H9jIbR8Vrs8qcn8kIB0aB+446NrzGLY
+	 wI7SIIDOsY4R4FFiUp/Nuj0wnlcphlJ+uUJHCO7BjVbUfl/Xe847adAVSewodGfLT+
+	 xGj3NYzf2EwZg==
+Message-ID: <sashiko-outbox-216402@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 10/10] perf build: Default JEVENTS_ARCH to all
+Subject: Re: [PATCH v5 6/9] perf symbol: Optimize symbol sorting with
+ natural-run merge sort and binary insertion
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261116070038.2968725-11-irogers@google.com>
-References: <20261116070038.2968725-1-irogers@google.com>
- <20261116070038.2968725-11-irogers@google.com>
+In-Reply-To: <20261116063435.2817923-7-irogers@google.com>
+References: <20261116063435.2817923-1-irogers@google.com>
+ <20261116063435.2817923-7-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 16 Nov 2026 07:16:39 +0000
+Date: Mon, 16 Nov 2026 07:18:11 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,31 +61,79 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Because block-indexed string compression packs PMU event and metric
-> strings into independently compressed ~8 KiB blocks decompressed on
-> demand via (block_id << 16) | sub_offset, bundling non-host
-> architectures' compressed blocks in .rodata incurs zero runtime
-> decompression CPU or heap memory unless those architectures are queried.
-> With zstd enabled, bundling PMU event and metric tables for all
-> architectures (JEVENTS_ARCH=3Dall) is 5.77 MiB smaller overall than an
-> uncompressed x86-only build (JEVENTS_ARCH=3Dx86 JEVENTS_COMPRESS=3Dnone),
-> cutting the stripped perf binary nearly in half (-45.4%) while enabling
-> cross-architecture perf.data analysis out of the box:
->=20
->   Component                   x86 + none      all + zstd      Delta
->   -----------------------------------------------------------------
->   pmu-events-string.o (dec)   6,901,987 B      794,032 B    -88.5%
->   pmu-events.o (dec)            257,987 B      314,940 B    +22.1%
-> [ ... ]
-> to NO_JEVENTS=3D1 if that architecture lacks mapfile.csv), and update
-> tools/perf/tests/make to exercise JEVENTS_ARCH=3D$(SRCARCH) alongside the
-> new default.
->=20
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Medium] perf symbol: wrong lookup in symbols__find() across split
+  sorted tail
+--
 
-Sashiko has reviewed this patch and found no issues.
+commit fe0c37e5a14b36cd2ffee46afb7fd00db4d2fa19
+Author: Ian Rogers <irogers@google.com>
+
+perf symbol: Optimize symbol sorting with natural-run merge sort and binary=
+ insertion
+
+This commit replaces full-array qsort() with natural-run merge sort and
+binary insertion, and maintains a sorted prefix and sorted tail to speed
+up incremental symbol insertions and sorting.
+
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index f1e3d7af714c1..8a47d1a44e5c7 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+
+[ ... ]
+
+> @@ -589,8 +935,24 @@ static struct symbol *symbols__find(struct symbols *=
+symbols, u64 ip)
+>  	if (symbols =3D=3D NULL)
+>  		return NULL;
+> =20
+> -	symbols__sort_read_lock(symbols);
+> -	res =3D symbols__find_range(symbols->symbols, symbols->cnt, ip);
+> +	down_read(&symbols->lock);
+> +	while (!symbols->sorted) {
+> +		up_read(&symbols->lock);
+> +		down_write(&symbols->lock);
+> +		symbols__sort_locked(symbols);
+> +		up_write(&symbols->lock);
+> +		down_read(&symbols->lock);
+> +	}
+> +
+> +	res =3D symbols__find_range(symbols->symbols, symbols->sorted_cnt, ip);
+> +	if (symbols->sorted_cnt < symbols->cnt) {
+> +		struct symbol *tail_res;
+> +
+> +		tail_res =3D symbols__find_range(&symbols->symbols[symbols->sorted_cnt=
+],
+> +					       symbols->cnt - symbols->sorted_cnt, ip);
+> +		if (tail_res && (!res || tail_res->start > res->start))
+> +			res =3D tail_res;
+> +	}
+>  	up_read(&symbols->lock);
+> =20
+>  	return res;
+
+[Severity: Medium]
+Can symbols__find() return an earlier symbol instead of NULL when a
+symbol with a higher start address in the other sorted slice ends before
+ip?
+
+In a single sorted array, symbols__find_range() only checks
+symbol__covers() on the equal-start group with the highest start <=3D ip
+and returns NULL if those symbols end before ip, even if an earlier
+symbol still covers ip.
+
+When dso__insert_symbol() places an out-of-order symbol into the sorted
+tail (for example via symbol__new_unresolved() or db_ids_from_al()),
+calling symbols__find_range() on the prefix and tail independently loses
+the highest start <=3D ip whenever that slice's candidate does not cover
+ip and returns NULL.  If the prefix has [0x0, 0x40) and the tail has
+[0x20, 0x30), looking up 0x34 gets res =3D [0x0, 0x40) and tail_res =3D NUL=
+L,
+so symbols__find() returns [0x0, 0x40) until the tail is later merged,
+after which the same lookup returns NULL.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261116070038.2968=
-725-1-irogers@google.com?part=3D10
-
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261116063435.2817=
+923-1-irogers@google.com?part=3D6
