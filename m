@@ -1,55 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=180.76.5.236
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794817587;
-	b=ysGPtFPr9l1Qj3YqQV378IY7IlFVT7qed4BIzgBgwEN8s03bHGZXgULGcbrtsAGqTR9Q
-	 r+ZiVJa9GQ34rkrIxWpJLgz6wHRW3ZRRyOgUBTItGHG7OArL16tT9xwAPhHTC2yUitfhm
-	 1GMW7oz5C+38vMz/5TtahRMBNYbB+3vDBgawjDb5noSc8+EWjCzZ5R1jXn+mS0kXOtrE7
-	 RljfG8u0vBM5zm8+ayC24wlgFUBdAFOUnHFCrjQojeh4MzZ9Fjzu9qH+7MadhX/6jnv3F
-	 yPZZe9KzS0HuGn+8/op1ndEmFIgoSYNpB8clZSSSNYPp4s00rjrplEhCJzbMzhgGSIA==
+	t=1794821228;
+	b=43HpOMb1Pmia3nT3yeWls15kCefrtAxwjT08znmnAZP4ZZbUvwu1Rs1i9BIdhV4FC+Z6
+	 zfvkaWE9oxz/yoPx3WSDYCqD3Ru2dCA5xpyK6Udu/wT4FHX8/364H+Abosq72g6S4kGq0
+	 9/6OfX9aBaVZcnOfecKWZjzfyM+2sZnf5Yr9amBd+hutwO12HdMexyfaJez8T8J+uUhBT
+	 r/756g0YTnaB/tIt5Nfs1PeIKqd4kR3eq0BxfJ9q8Etq4GzOaQeVmG9+Pl8kb/AsUsX9s
+	 cSqwSfxpzoI/SmNejHSHpX8sMpRweK7fNZmgJqN7jTg2Sm5eW+vlJt14/S6Jui6tF1w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794817587;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=vsehUs2P1+pXDxx3gq2LzgWUZ10DpAYNe02LkeVlUNg=;
-	b=Y8rz/7Ki6P9uUZM7iy+EvSMeIACrIuPAcybe8ndAsvRO50p+nD/0obJmKaRC7McdRyLD
-	 dsl1el7dd9yrF1OkwaRbc5mEcGFVBD2urJI1hPagT3w8Z76HOgzfnSibnoRv+yfj5bZQP
-	 XCLSOghVjupKzp+pXta6TCYN0C/c7hMjYgnxWE9gCMd76GKKuBDLJOD4/6I3d+RWl30Sa
-	 WSkvan/oL5R4H4n9C9/N85CrdkkrCazvWp2LMszzZyikJu19prieFvsQVgS19th+pPpTO
-	 4A4KiqKJ+QRg2zoWxTemk3O6I9J+ESFo51FGZwYrEYcnMdoLiNw42v9kSnxDE6OZyFg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794821228;
+	h=DMARC-Filter:X-MD-Sfrom:X-MD-SrcIP:From:To:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Type:X-Originating-IP:X-ClientProxiedBy:
+	 DKIM-Signature;
+	bh=MWsVBLgZW16pqsBfRZm53nUtd+lGf7v+gvt3DbChD1k=;
+	b=kspfkudCWbmju/SAMiTYp6/iywVBtFU2B3mpD6v0Oij1C1FcC3eTMPDZ4Wc/lqDlBWTj
+	 U6EzQy9N7HTIAQsoSvZ6XYvzn4jZI39j/usycQGSsCP4CGXHNazh8wvGK3WIrw06QUa8L
+	 DJLzZjCpcU2pexB94sGMVr3tCDjKLS2+Od8xs/cvvepyNcn/rqOUMYsItx1WGgRpIdXZF
+	 ua84AsHhPYaIhIIKGro8iGUuwXD61hrNveXZCadl8GRQd2ji/QbHziAleRFQSl6AnNeAs
+	 orURovDbEVUWDeD8eLytyO2Yj52M7XdWk5p+XDTk5QhhdN1vRnHoepPRgC28u852MNw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="UN/276QQ";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B2D606A323
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 08:26:27 +0000 (UTC)
+	dmarc=pass header.from=baidu.com;
+	spf=pass smtp.mailfrom=baidu.com;
+	dkim=pass header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=G6SRAoyy;
+	arc=none smtp.remote-ip=180.76.5.236
+Received: from outbound.baidu.com (outbound.baidu.com [180.76.5.236])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 69A2A606A323;
+	Mon, 16 Nov 2026 09:27:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 69A2A606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UN/276QQ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE7611F000C4;
-	Mon, 16 Nov 2026 08:26:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794817586;
-	bh=vsehUs2P1+pXDxx3gq2LzgWUZ10DpAYNe02LkeVlUNg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=UN/276QQiYWrQM7XoizMVc1sdszUNL5wz+r6wQ5mdCVsv2eDTaG6QkJXcrJGYJT4f
-	 B1fkcvlS2nxtHL+4mdNqfkEMo+Lk38wphfP20nNfB+qZBQ+JRc74pCQGx6IwZkSdwO
-	 1q9E9jv0xpdvXimXUa1p8dj+HS9BO+fWdxwxBk1aapYUIVPb98czaXXK7edHY4QU5l
-	 hYdOZYgBBC0SSY700n7flaja2bxyJrpFuytp9DXeyEeEGq4IEG8cL/6ynGKtTymitg
-	 LnKJlDnnoITInxkcez0CdlIF0LXRt8inxjEO70up3tpgoVN6Yw7LesxRUjkjs7X2nG
-	 B/IxIt0jbs2+w==
-Message-ID: <sashiko-outbox-216527@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf: Reject group leaders detached by CPU hot-unplug
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Daniel Wade" <danjwade95@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261116081248.21059-1-danjwade95@gmail.com>
-References: <20261116081248.21059-1-danjwade95@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 16 Nov 2026 08:26:26 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=G6SRAoyy
+X-MD-Sfrom: lirongqing@baidu.com
+X-MD-SrcIP: 172.31.50.47
+From: lirongqing <lirongqing@baidu.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, Li RongQing <lirongqing@baidu.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] perf intel-pt: Save the reference window used to detect snapshot wraps
+Date: Mon, 16 Nov 2026 17:26:50 +0800
+Message-ID: <20261116092650.1714-1-lirongqing@baidu.com>
+X-Mailer: git-send-email 2.17.1
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -58,73 +52,55 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain
+X-ClientProxiedBy: bjhj-exc8.internal.baidu.com (172.31.3.18) To
+ bjkjy-exc3.internal.baidu.com (172.31.50.47)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=baidu.com;
+	s=selector1; t=1794821223;
+	bh=MWsVBLgZW16pqsBfRZm53nUtd+lGf7v+gvt3DbChD1k=;
+	h=From:To:Subject:Date:Message-ID:Content-Type;
+	b=G6SRAoyyhIyD6LSu1UrMc7QsVRbZpN0rQdazkUTEomGCmciKgf5hGQYiA0e/5OwgY
+	 oYSBk7+orb2ii3j70mQq3tDAkjtOV3kVPmm7AEgUbiFq6rtg2A699pSzlgTgROqAGr
+	 GujlEY6+GMujyzrYhiu+5noyYjQzm+UDLOxPPxu9LhSZnKJ7kMUIr0aB6hTblngciA
+	 Mi+EGH7PUMwAvKLzxHAxsOpmVru7m9Zgr2vnU3Ojxz93kCKADcvDURg4Ye4K2IJQGi
+	 ZwZChmhEZLbM+khRC+szNt6jtvO6/UKtcuSejESXB7uuy9rnOD/3YWocUQPJv9QInW
+	 lydN6i4d2XDqw==
 
-Thank you for your contribution! Sashiko AI review found no new issues
-in this patch, but noticed 1 related pre-existing issue it does not
-introduce:
-- [Critical] perf/core: KASLR bypass via attr.ksymbol in
-  sys_perf_event_open() [1]
---
+From: Li RongQing <lirongqing@baidu.com>
 
-commit c3cb272ab78e2aa66bba3e8476259e9d9e767fba
-Author: Daniel Wade <danjwade95@gmail.com>
+The snapshot reference offset is initialized to the end of the AUX
+buffer and does not change. The comparison checks that fixed window,
+but the reference update copies bytes immediately before the current
+head instead.
 
-perf: Reject group leaders detached by CPU hot-unplug
+Two snapshots before the trace reaches the buffer end can consequently
+compare trace bytes against an untouched tail and falsely report a wrap.
+The reader then treats the buffer as full and emits stale or unwritten
+bytes in addition to the new trace.
 
-This commit rejects group leaders that are no longer attached to a context =
-in
-perf_event_open() so siblings cannot be added to leaders detached by
-hot-unplug.
+Copy the window ending at ref_offset plus its size, matching the window
+used by the comparison.
 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 614f9f0e65005..8c2ae7d082d68 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -14288,6 +14288,18 @@ SYSCALL_DEFINE5(perf_event_open,
->  			goto err_locked;
->  		}
-> =20
-> +		/*
-> +		 * Likewise against CPU hot-unplug, which detaches the events
-> +		 * of a CPU context and breaks up its groups without putting
-> +		 * them in a terminal state. perf_group_detach() does nothing
-> +		 * for a leader that is already detached, so a sibling added
-> +		 * to one would stay linked to it after the leader is freed.
-> +		 */
-> +		if (!(group_leader->attach_state & PERF_ATTACH_CONTEXT)) {
-> +			err =3D -ENODEV;
-> +			goto err_locked;
-> +		}
+Fixes: 90e457f7be08 ("perf tools: Add Intel PT support")
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+---
+ tools/perf/arch/x86/util/intel-pt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[Severity: Critical]
-This problem wasn't introduced by this patch, but shouldn't the
-perf_allow_kernel() check earlier in perf_event_open() also cover
-attr.ksymbol and attr.bpf_event [1]?
+diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
+index a533114..5e38b9c 100644
+--- a/tools/perf/arch/x86/util/intel-pt.c
++++ b/tools/perf/arch/x86/util/intel-pt.c
+@@ -1091,7 +1091,7 @@ static bool intel_pt_wrapped(struct intel_pt_recording *ptr, int idx,
+ 				       data, head);
+ 
+ 	intel_pt_copy_ref(ref->ref_buf, ptr->snapshot_ref_buf_size, mm->len,
+-			  data, head);
++			  data, ref->ref_offset + ptr->snapshot_ref_buf_size);
+ 
+ 	return wrapped;
+ }
+-- 
+2.9.4
 
-An unprivileged user can open an event with exclude_kernel=3D1 alongside
-ksymbol=3D1 or bpf_event=3D1 to bypass perf_allow_kernel():
-
-kernel/events/core.c:SYSCALL_DEFINE5(perf_event_open) {
-    ...
-	if (!attr.exclude_kernel || attr.text_poke ||
-	    ((attr.sample_type & PERF_SAMPLE_CALLCHAIN) &&
-	     !attr.exclude_callchain_kernel)) {
-		err =3D perf_allow_kernel();
-		if (err)
-			return err;
-	}
-    ...
-}
-
-When perf_event_ksymbol() or perf_event_bpf_event() later broadcasts sideba=
-nd
-records via perf_iterate_sb(), perf_event_ksymbol_match() and
-perf_event_bpf_match() only test event->attr.ksymbol and
-event->attr.bpf_event without checking exclude_kernel, leaking raw kernel
-symbol and trampoline addresses to unprivileged users.
-
-[1] https://sashiko.dev/#/bug/linux-8c1072ab-5584-4983-bcd9-f12f87444ea2
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261116081248.2105=
-9-1-danjwade95@gmail.com?part=3D1
