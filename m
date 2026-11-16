@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1794808654;
-	b=jaeYeRt4PeJRb3XQ1WjZ2YY5TQdJb30JMQjzLpRCJNLvP4UUWioa9KRRj1EA1pSJols3
-	 +8NgbRMaFUEegVHkE5zTZVHeGcSWqntz2X254NncsTOZ4HN8+qrMoB1MWMqvEKMTeLs/D
-	 7P+6QklTk4CvdASg6Cl/OHKILS6g/rF9hbdLCSmgSAxaiH/Dq1Kc24EQzByI9P5EgXoO/
-	 BIyv08d/WhbwMhu7J1aoLsz8tmXX5XIo/C0ZEHW1g+bW6XoMMvgsZV4g0WZlR2qqP+qGt
-	 Exqq3NOnZM7akrLQ9DIINXQe9jfGf0UJhXYBfy75rONMNOKShTFZTmLOxLF3pW5N/bA==
+	b=ZgTy3clXbTHj7BY09iD07cNYxqam645a/eu4kkR2iyPhCmWM5vF0IHr/bBibzUOlkch8
+	 kTyrL55vIAElSmZU+KtpGbTvaP6BgjpaxnxrIN5/HEUXZ3dy8aProRu2hvHQ++4ai9BrJ
+	 70JS5cpKd1vbkHRMolsOuLlMhc9ZDDj9Xon/Rse7NQDhKonmYJ/FEZznTKfyY1lPGlsZ1
+	 ThYLuRwxv/uiAeU29c64RNKoLaDUWdMi2jHbpoI4Qn8PLaPJ3NcRX+aKwwmALRsFE9tcB
+	 5/Lozg/pHZT27IKmHEIsGifiFtyU+c5EsLSOJcmtCqojljzP4TLrN1iA2qL+2BsSgEg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794808654;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=gMtU4LCERX9WZHMt3Ydl78C77Xu1fXER8ZUMWmXR5EI=;
-	b=l4BUu7+Qt4epwp+Vywt7RCBGkyUAACTJsaYwHQEDybRUiRlZoDtC+uAwtLkUkmvBUcR1
-	 q6auXEv/ti+7aFyk8PyXLF+H8Hj+21whrzori5CJBlV9FUofHNs9BctahOrfrrw6zle8l
-	 pjeUfTWl7h9yisLZgwn8HYKID4cEdu6VSEehnPCGOv+6KVuADV3Cn66AE5j/teM1SHZPg
-	 TLa6Ko+AZnmk9NLb2eazRofk7FabTaVhL0oZgmd87L+0a0xkp0UGceyBf8tPiShOmFvpf
-	 fIlXuxVXP9AEZx4iWIlK5tvzUgHwYcAppZ9vkRRy38ivfKcRnkOdsPeNeyorNTS/GBw==
+	bh=DIdpOq5rw6vk6lybEXu61ml8hQXCIki4b4iRn16iOi4=;
+	b=fdbxSv+bno48DWaZnQzUQ+NEPOscQINSnpiIFLd4wiTACdFA+k36iNLJou3F4w87+BIW
+	 IX4H4KDel7riwXUbLTWyyPAKwF09yccNLTmONHD17LAC2Rv950kCzayWMeMNQvihwpENq
+	 eLis3xuD3spTRBabdmTmlPp1Uam8/vnyjiKVG0zZL/vZh2pN5WYZLXiGWBH/F/j5eYFrD
+	 /w+36gTVPGk5XZKtbMcyKiy5AclPf9X1xBggVsU8Y1eyOtS6M63MTUjYp4PUnw3honGo8
+	 91yFZVttD0FvSGCUbvnpEX2i/L9zYUluNzuWpOBcRoUPmUp300bc+wVD5rdwbXpMWVg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CccuBun+;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VeyvlSZM;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52FF7606A334;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA1B606A33B;
 	Mon, 16 Nov 2026 05:57:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CccuBun+
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A96771F000C5;
-	Mon, 16 Nov 2026 05:57:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VeyvlSZM
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EE7A1F000CA;
+	Mon, 16 Nov 2026 05:57:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1794808654;
-	bh=gMtU4LCERX9WZHMt3Ydl78C77Xu1fXER8ZUMWmXR5EI=;
+	bh=DIdpOq5rw6vk6lybEXu61ml8hQXCIki4b4iRn16iOi4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=CccuBun+nX0Vr+P++1DeghzPHogTAoK16VEguuKK3pMdSYNbHHwEWZg/8al8lN6fV
-	 OX2IOI9orubUidx/IsnR63bYntpG30ZAE23Tzbs5Mx7l/hp9eH6JZQJYaY3l2FB1vi
-	 ffWpfUKPWc/ZqtrkcoGQLgant4YE6TTZ/D8SA0pvNjG80RudY4Fhsm3T6pqu2EPBzU
-	 LAgVm7lgpHmEc/GQcThcB85XJintBj5pxJufa0rX3/zzoVEm+lsfqJlskD9c/tObDp
-	 t/ppyhXXP70DtBwhqZ87kp9jamz/zSE5W1yCdzr1r6GWMBGUDyundFcmSdefnVpv4f
-	 YSfUzm5ydIdBQ==
+	b=VeyvlSZM3UXIb3uQ1z/WF9lx6kGifVTzQ+KM5xhAP70++rKIq+xTrWxMelF2p/Kt+
+	 c+OgZtSn9Z5je2fgFlovK2G+pNauu4ScRvx/q+NrqjfCEY6Ju6DutyWTGYYopIVaOR
+	 USDQcVlUCgml4i1u9U8XMrv/cGWEqjlvnKMWWvSV+BB9qngk2EV28lG5RWubZv8App
+	 In6neXuHlu4HbsIMP9fVtKeOenFjBBMbi3nmCYRMuFTFcNoSA3UaEZv9OkiVcGEPYK
+	 E/ulBS22CDeXX/oQaBeKdkDTHkhSGXO37aLjjbVo7yZNXL8fDiYxxe1PTr/TylpZ4p
+	 AMwTH2jwLOtSQ==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -49,9 +49,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 02/11] perf tools: Add perf_env__is_same_boot()
-Date: Sun, 15 Nov 2026 21:57:22 -0800
-Message-ID: <20261116055731.707164-3-namhyung@kernel.org>
+Subject: [PATCH v2 03/11] perf tools: Add nsinfo__new_thread() to track tid
+Date: Sun, 15 Nov 2026 21:57:23 -0800
+Message-ID: <20261116055731.707164-4-namhyung@kernel.org>
 X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
 In-Reply-To: <20261116055731.707164-1-namhyung@kernel.org>
 References: <20261116055731.707164-1-namhyung@kernel.org>
@@ -66,64 +66,158 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add perf_env__is_same_boot() to compare the recorded boot_id in struct
-perf_env against the running host's /proc/sys/kernel/random/boot_id.
-For live sessions where no offline header was populated, it falls back
-to reading the host boot_id and returns true.
+Record the thread ID (tid) in struct nsinfo via nsinfo__new_thread() and
+access /proc/<pid>/task/<tid>/ status and ns/mnt paths instead of only
+/proc/<pid>/.  Also recreate thread->nsinfo when the pid of the thread
+is updated.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/env.c | 25 +++++++++++++++++++++++++
- tools/perf/util/env.h |  1 +
- 2 files changed, 26 insertions(+)
+ tools/perf/util/machine.c    |  3 +++
+ tools/perf/util/namespaces.c | 22 ++++++++++++++++++----
+ tools/perf/util/namespaces.h |  3 +++
+ tools/perf/util/thread.c     |  2 +-
+ 4 files changed, 25 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 24de685486af9bd5..91ab4ccaf5a9475c 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -444,6 +444,31 @@ const char *perf_env__boot_id(struct perf_env *env)
- 	return boot_id;
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 5b4550e97172db54..ac857b395882f569 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -19,6 +19,7 @@
+ #include "branch.h"
+ #include "mem-events.h"
+ #include "mem-info.h"
++#include "namespaces.h"
+ #include "path.h"
+ #include "srcline.h"
+ #include "symbol.h"
+@@ -516,6 +517,8 @@ static void machine__update_thread_pid(struct machine *machine,
+ 		return;
+ 
+ 	thread__set_pid(th, pid);
++	nsinfo__zput(RC_CHK_ACCESS(th)->nsinfo);
++	RC_CHK_ACCESS(th)->nsinfo = nsinfo__new_thread(pid, thread__tid(th));
+ 
+ 	if (thread__pid(th) == thread__tid(th))
+ 		return;
+diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
+index 01502570b32d02ab..f426eba04d6ef449 100644
+--- a/tools/perf/util/namespaces.c
++++ b/tools/perf/util/namespaces.c
+@@ -106,7 +106,8 @@ int nsinfo__init(struct nsinfo *nsi)
+ 	if (snprintf(oldns, PATH_MAX, "/proc/self/ns/mnt") >= PATH_MAX)
+ 		return rv;
+ 
+-	if (asprintf(&newns, "/proc/%d/ns/mnt", nsinfo__pid(nsi)) == -1)
++	if (asprintf(&newns, "/proc/%d/task/%d/ns/mnt",
++		     nsinfo__pid(nsi), nsinfo__tid(nsi)) == -1)
+ 		return rv;
+ 
+ 	if (stat(oldns, &old_stat) < 0)
+@@ -127,7 +128,8 @@ int nsinfo__init(struct nsinfo *nsi)
+ 	/* If we're dealing with a process that is in a different PID namespace,
+ 	 * attempt to work out the innermost tgid for the process.
+ 	 */
+-	if (snprintf(spath, PATH_MAX, "/proc/%d/status", nsinfo__pid(nsi)) >= PATH_MAX)
++	if (snprintf(spath, PATH_MAX, "/proc/%d/task/%d/status",
++		     nsinfo__pid(nsi), nsinfo__tid(nsi)) >= PATH_MAX)
+ 		goto out;
+ 
+ 	rv = nsinfo__get_nspid(&RC_CHK_ACCESS(nsi)->tgid, &RC_CHK_ACCESS(nsi)->nstgid,
+@@ -150,11 +152,11 @@ static struct nsinfo *nsinfo__alloc(void)
+ 	return res;
  }
  
-+static char *host_boot_id;
-+
-+static void init_host_boot_id(void)
-+{
-+	host_boot_id = read_host_boot_id();
-+}
-+
-+bool perf_env__is_same_boot(struct perf_env *env)
-+{
-+	const char *env_boot_id;
-+
-+	DO_ONCE(init_host_boot_id);
-+	if (!host_boot_id)
-+		return false;
-+
-+	if (!env)
-+		return true;
-+
-+	env_boot_id = perf_env__boot_id(env);
-+	if (!env_boot_id)
-+		return false;
-+
-+	return !strcmp(env_boot_id, host_boot_id);
-+}
-+
- int perf_env__set_cmdline(struct perf_env *env, int argc, const char *argv[])
+-struct nsinfo *nsinfo__new(pid_t pid)
++struct nsinfo *nsinfo__new_thread(pid_t pid, pid_t tid)
  {
- 	int i;
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index aafd213c7523c018..856385624cee6adf 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -190,6 +190,7 @@ int perf_env__kernel_is_64_bit(struct perf_env *env);
- bool perf_arch_is_big_endian(const char *arch);
- const char *perf_env__os_release(struct perf_env *env);
- const char *perf_env__boot_id(struct perf_env *env);
-+bool perf_env__is_same_boot(struct perf_env *env);
+ 	struct nsinfo *nsi;
  
- int perf_env__set_cmdline(struct perf_env *env, int argc, const char *argv[]);
+-	if (pid == 0)
++	if (pid <= 0 || tid <= 0)
+ 		return NULL;
+ 
+ 	nsi = nsinfo__alloc();
+@@ -162,6 +164,7 @@ struct nsinfo *nsinfo__new(pid_t pid)
+ 		return NULL;
+ 
+ 	RC_CHK_ACCESS(nsi)->pid = pid;
++	RC_CHK_ACCESS(nsi)->tid = tid;
+ 	RC_CHK_ACCESS(nsi)->tgid = pid;
+ 	RC_CHK_ACCESS(nsi)->nstgid = pid;
+ 	nsinfo__clear_need_setns(nsi);
+@@ -176,6 +179,11 @@ struct nsinfo *nsinfo__new(pid_t pid)
+ 	return nsi;
+ }
+ 
++struct nsinfo *nsinfo__new(pid_t pid)
++{
++	return nsinfo__new_thread(pid, pid);
++}
++
+ static const char *nsinfo__mntns_path(const struct nsinfo *nsi)
+ {
+ 	return RC_CHK_ACCESS(nsi)->mntns_path;
+@@ -193,6 +201,7 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
+ 		return NULL;
+ 
+ 	RC_CHK_ACCESS(nnsi)->pid = nsinfo__pid(nsi);
++	RC_CHK_ACCESS(nnsi)->tid = nsinfo__tid(nsi);
+ 	RC_CHK_ACCESS(nnsi)->tgid = nsinfo__tgid(nsi);
+ 	RC_CHK_ACCESS(nnsi)->nstgid = nsinfo__nstgid(nsi);
+ 	RC_CHK_ACCESS(nnsi)->need_setns = nsinfo__need_setns(nsi);
+@@ -265,6 +274,11 @@ pid_t nsinfo__pid(const struct nsinfo  *nsi)
+ 	return RC_CHK_ACCESS(nsi)->pid;
+ }
+ 
++pid_t nsinfo__tid(const struct nsinfo  *nsi)
++{
++	return RC_CHK_ACCESS(nsi)->tid;
++}
++
+ bool nsinfo__in_pidns(const struct nsinfo *nsi)
+ {
+ 	return RC_CHK_ACCESS(nsi)->in_pidns;
+diff --git a/tools/perf/util/namespaces.h b/tools/perf/util/namespaces.h
+index e95c79b80e27c8fc..ea645954944de4be 100644
+--- a/tools/perf/util/namespaces.h
++++ b/tools/perf/util/namespaces.h
+@@ -32,6 +32,7 @@ void namespaces__free(struct namespaces *namespaces);
+ 
+ DECLARE_RC_STRUCT(nsinfo) {
+ 	pid_t			pid;
++	pid_t			tid;
+ 	pid_t			tgid;
+ 	pid_t			nstgid;
+ 	bool			need_setns;
+@@ -48,6 +49,7 @@ struct nscookie {
+ 
+ int nsinfo__init(struct nsinfo *nsi);
+ struct nsinfo *nsinfo__new(pid_t pid);
++struct nsinfo *nsinfo__new_thread(pid_t pid, pid_t tid);
+ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi);
+ 
+ struct nsinfo *nsinfo__get(struct nsinfo *nsi);
+@@ -58,6 +60,7 @@ void nsinfo__clear_need_setns(struct nsinfo *nsi);
+ pid_t nsinfo__tgid(const struct nsinfo  *nsi);
+ pid_t nsinfo__nstgid(const struct nsinfo  *nsi);
+ pid_t nsinfo__pid(const struct nsinfo  *nsi);
++pid_t nsinfo__tid(const struct nsinfo  *nsi);
+ bool nsinfo__in_pidns(const struct nsinfo  *nsi);
+ void nsinfo__set_in_pidns(struct nsinfo *nsi);
+ 
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index 91118c301913b834..d12eb6bc63313b00 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -71,7 +71,7 @@ struct thread *thread__new(pid_t pid, pid_t tid)
+ 		list_add(&comm->list, thread__comm_list(thread));
+ 		refcount_set(thread__refcnt(thread), 1);
+ 		/* Thread holds first ref to nsdata. */
+-		RC_CHK_ACCESS(thread)->nsinfo = nsinfo__new(pid);
++		RC_CHK_ACCESS(thread)->nsinfo = nsinfo__new_thread(pid, tid);
+ 		srccode_state_init(thread__srccode_state(thread));
+ 	}
  
 -- 
 2.56.0.611.g1030f0b940-goog
