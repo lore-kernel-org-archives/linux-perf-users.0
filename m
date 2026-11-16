@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794872844;
-	b=pCACpmXsUWP0UMNZdiluL/lhvMw3U76UfGy3/yxT5dz6aS+Odkn23AfHFhyEZuG6lKAV
-	 rtsimaVpI6vzCanCYeZH/2+aLa10OcxVSiBKbFWzObEvEsj0mST/9FW1Z4ra2e/TQ1AU5
-	 /ZnCF+KAfQMIM0gfhEsQaiBhNSp+6ePgZpn/b37kzYce/nQjJdSwE37vkbD2Gza9W2/2T
-	 5jsttZzjuablFkV9UJ+f87co6NuLvRngzRd8617E04xEsdgbvwaU7EUFeX6+snmorPSzd
-	 v9zT/FvHH9DrUihBCHXrt7D/Rn5dFp4Cn6sm3cm2RhQ4YoIuWSBWd7HT9lL/tVKsb5w==
+	t=1794872847;
+	b=sbg6TFews2AkhVwzf5ikZkAGhPtAtIFJFRrJLGATL3MAknFX+SPxBZe+76d+2d53hKnQ
+	 GNweGBHahMoYLbUaTD3i+emBTfYDOfROctAIM3tj6BjwJFwzD7SVG3bDjzqYw46Qyshlx
+	 0Mz4wcKjxNf+gFU+vSg5Bi0tYw18gHN9+RrjfXP//duZSIAllQGVYnS7RJmaF3rpjWKMm
+	 qlQnEGBLsKWim6aCiiXld9DZEstCUMpeX2K1FnKccCg5QGJJgByGLvujzDZu0m0xWtEv2
+	 PvR4FqoE0J9BRL1gVw/8MJyze0iSgDvv/6PEFX5H/Uq2e/P1HtN8EIbUeeUaknZaJAA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794872844;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794872847;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=CMq1iVvdVXQxngRn6MO8txuC3mJsj1mWiq7wzEMFd44=;
-	b=HcY6Rc5CWAEcD4jmDKVzZRgq8PmJ0klAlBLFWycEFhYQXEv7+mi5p6DjIZH38d3FdSLu
-	 xkRl0vulUu8LryfjB8iY4wJ7wJ+fForhbafC3HobS5DeDCO9660Npd4NiVHbcP+UyZlfd
-	 7KnUe3ORwetGsOQ1Pi1iRAnmOGzWKzsuVi8/pKG85vXf9bjqRhy2jWIMH98hrikt2mko+
-	 vKUJ8SJXWiW2GC0kNxa/s4WUxchiveiT5sZktP4IvXLPBdLFeeV4bscSqIAFAGGM8R+/Y
-	 yR9ybCzUZ1+s383uNjP7HIhR/T+NbWGrYV0cbzfMPhTQo8AYBktyWXxyCaUFzPpPZ9A==
+	bh=BPc5SLhnTp1+AhX70HT21NXZlM36xtIHfw6YHwhe0to=;
+	b=VYrhrqGg0UiM1rX8Tnk7pTVl6RjWFatKUEDeQ39MaTnCJlZp9vZkXzSCXbrVmsf8Y3S8
+	 ITX+TdUU9ovUEjE9sfEk2UgHE32E4rUV4IDWHJHbye0CI6wiU653CDUoakDYlQW/bDeiX
+	 F0chEV4NLYyZ85jCjl8Za+IKn1+8Cdznnw88Ylz97WJ/B3PLjRpDGaYRKjPMAuayVq5up
+	 ftqaCshkWtg/e8iEjYoQaIu3z2Go6/rPfTPEFswh1lTWc5PCsRLXw79lAgj1e6J0Ee/jO
+	 5KLCIbeqi63JSkwA4QiRc7TqOnua2Et0ApJnq+fizcW165/1D5Kzzl/ZIUB+jLFkmfQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ETlmjLXv;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=acN297VA;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17D6606A331;
-	Mon, 16 Nov 2026 23:47:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DAF4606A334;
+	Mon, 16 Nov 2026 23:47:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ETlmjLXv
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68F091F000CC;
-	Mon, 16 Nov 2026 23:47:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=acN297VA
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 246CF1F000C6;
+	Mon, 16 Nov 2026 23:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794872844;
-	bh=CMq1iVvdVXQxngRn6MO8txuC3mJsj1mWiq7wzEMFd44=;
+	s=k20260515; t=1794872847;
+	bh=BPc5SLhnTp1+AhX70HT21NXZlM36xtIHfw6YHwhe0to=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ETlmjLXvWRdrFobMtSykKjfUu6caAAYnhVi7WEYU7rSOvWuATp/Vk0upKxa6aHixH
-	 wqEfzK1uDN7N8poeCO5OOsESW2IGYxDExqKYVASWZqWTx1SN/2aWuOX1tVCDIZew7C
-	 1/kx1LxGZ4yRYm92z1V7yeq6dfaV/K1blij8yaLaD5c82l5b3qynx6Deh/rmR4EQF9
-	 +B/YeFWg6zrkx13XFjt24GgIFuPLtRISF++Tg1ZdkQAo9+UacgnK5oXBxvcb+Q8w34
-	 2Mzo2JEq1ykon7uM7tjGB6MIWxDnoeUFQlUBM3+yumc7EuWpEGD7KtqViI225oJjxp
-	 K66ieEnyGXKWA==
+	b=acN297VAk2x1eMmv7mR2WD9TpnN+gu5sDbzX+yTWnG6aLAWyB7MrmBKbp31Wua2OL
+	 nSEqvDGwGBVG9/ALlfb65cPIT99UrQZer6CazKIV+cIjR/ORfCDbYgO6WWVh6jeeZ5
+	 ecwmilPy0bhEEsLmK9SA891c4b40X3LakkbMvx0sPKUcdtSF//uUbzsB2Gf4xEOEbm
+	 W0SONTXra5YTFkADTIqFogEVwph/Fx3IiCs3r0hoknrLqMt8YGqHl4mikL+UJ/WKlT
+	 vXyrqgc7ao3qWEWKtiSdsXUZEAbXRoIfn04RRr63IlxoNGq0hHtDgvhGWRaOENKfiR
+	 jDHBq4nQe1vJw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v4 07/12] perf annotate: Print the stats after the annotations
-Date: Mon, 16 Nov 2026 20:46:53 -0300
-Message-ID: <20261116234659.3950531-8-acme@kernel.org>
+Subject: [PATCH v4 08/12] perf tests: Silence the libbfd probe in build-test
+Date: Mon, 16 Nov 2026 20:46:54 -0300
+Message-ID: <20261116234659.3950531-9-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261116234659.3950531-1-acme@kernel.org>
 References: <20261116234659.3950531-1-acme@kernel.org>
@@ -70,123 +70,35 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The instruction stats are printed before the loop that accounts them,
-so 'perf annotate --code-with-type --insn-stat' always shows zeros.
-The data type counters are updated in --code-with-type mode too, but
-only --data-type mode accounts their total, so they are incomplete
-there.
+build-test evaluates the libbfd probe at parse time and the compiler's
+stderr isn't captured by $(shell ...), so without binutils-devel it
+prints "bfd.h: No such file or directory" once per tests/make
+invocation, five times per run.
 
-Print both after the annotation loops, the data type part only with
---data-type.
+Redirect the compiler's stderr; the empty result still skips the
+nondistro tests as intended.
 
-Fixes: 58824fa0087e1cb7 ("perf annotate: Add --insn-stat option for debugging")
-Fixes: 61a9741e9f78c64c ("perf annotate: Add --type-stat option for debugging")
-Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: 523471c5163659c6 ("perf build: Skip nondistro build test if libbfd is old")
+Reviewed-by: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-annotate.c            | 10 ++--
- tools/perf/tests/shell/annotate_stats.sh | 64 ++++++++++++++++++++++++
- 2 files changed, 69 insertions(+), 5 deletions(-)
- create mode 100755 tools/perf/tests/shell/annotate_stats.sh
+ tools/perf/tests/make | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 331adbdbd635917d..973f4950abd6f917 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -414,11 +414,6 @@ static void hists__find_annotations(struct hists *hists,
- 	struct rb_node *nd = rb_first_cached(&hists->entries), *next;
- 	int key = K_RIGHT;
+diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+index 7524de5228029e7e..e6d7ac49b5b1693d 100644
+--- a/tools/perf/tests/make
++++ b/tools/perf/tests/make
+@@ -128,7 +128,7 @@ make_minimal        += NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1
+ make_minimal        += NO_CAPSTONE=1
  
--	if (ann->type_stat)
--		print_annotate_data_stat(&ann_data_stat);
--	if (ann->insn_stat)
--		print_annotate_item_stat(&ann_insn_stat, "Instruction");
--
- 	while (nd) {
- 		struct hist_entry *he = rb_entry(nd, struct hist_entry, rb_node);
- 		struct annotation *notes;
-@@ -660,6 +655,11 @@ static int __cmd_annotate(struct perf_annotate *ann)
- 		hists__find_annotations(hists, pos, ann);
- 	}
+ # binutils 2_42 and newer have bfd_thread_init()
+-new_libbfd := $(shell echo '#include <bfd.h>' | $(CC) -E -x c - | grep bfd_thread_init)
++new_libbfd := $(shell echo '#include <bfd.h>' | $(CC) -E -x c - 2>/dev/null | grep bfd_thread_init)
  
-+	if (ann->data_type && ann->type_stat)
-+		print_annotate_data_stat(&ann_data_stat);
-+	if (ann->insn_stat)
-+		print_annotate_item_stat(&ann_insn_stat, "Instruction");
-+
- 	if (use_browser == 2) {
- 		void (*show_annotations)(void);
- 
-diff --git a/tools/perf/tests/shell/annotate_stats.sh b/tools/perf/tests/shell/annotate_stats.sh
-new file mode 100755
-index 0000000000000000..fe4891e8535d3944
---- /dev/null
-+++ b/tools/perf/tests/shell/annotate_stats.sh
-@@ -0,0 +1,64 @@
-+#!/bin/bash
-+# perf annotate instruction stats test
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+perfout=$(mktemp /tmp/__perf_test.perf.out.XXXXX)
-+
-+cleanup()
-+{
-+	rm -f "$perfdata" "$perfout"
-+	trap - EXIT TERM INT
-+}
-+
-+trap_cleanup()
-+{
-+	echo "Unexpected signal in ${FUNCNAME[1]}"
-+	cleanup
-+	exit 1
-+}
-+trap trap_cleanup EXIT TERM INT
-+
-+if ! perf check feature -q dwarf; then
-+	echo "Skip: no DWARF (libdw) support"
-+	cleanup
-+	exit 2
-+fi
-+
-+# No point in recording if the PMU cannot do memory events.
-+if perf mem record -o /dev/null -- true 2>&1 | \
-+		grep -q "failed: no PMU supports the memory events"; then
-+	cleanup
-+	exit 2
-+fi
-+if ! perf mem record -o /dev/null -- true 2>/dev/null; then
-+	echo "Skip: cannot record memory events on this PMU"
-+	cleanup
-+	exit 2
-+fi
-+
-+if ! perf mem record -o "$perfdata" -- perf test -w datasym > /dev/null 2>&1; then
-+	echo "FAIL: perf mem record"
-+	cleanup
-+	exit 1
-+fi
-+
-+if ! perf annotate --code-with-type --insn-stat -i "$perfdata" --stdio \
-+		--percent-limit 1 > "$perfout" 2>/dev/null; then
-+	echo "FAIL: perf annotate"
-+	cleanup
-+	exit 1
-+fi
-+
-+# The instruction stats are accounted while the instructions are
-+# displayed; printing them before the display loop shows zeros.
-+if ! grep -Eq '^total [1-9][0-9]*,' "$perfout"; then
-+	echo "FAIL: instruction stats not accounted"
-+	cleanup
-+	exit 1
-+fi
-+
-+echo "instruction stats accounted"
-+cleanup
+ # Whether libLLVM can be built, which needs the llvm-devel/llvm-dev headers and
+ # libraries of version 13 or newer, not just llvm-config. This mirrors the
 -- 
 2.56.0
 
