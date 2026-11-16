@@ -1,77 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.94.104
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794840522;
-	b=sgw3H5v09G5/kFKxaY1wyihXNJIy8HtoEEexR211OboERrxT0FzBhtHztggnpqw+bHlm
-	 103xcPKyhD53aC7/AkHc5foD+k0zzGzxWSDSRTOSfBH36B9aWn6QNUple2gXJS+HHqBxy
-	 tlc4JX4nsdVDhzUEvP4TzCwEmwaN+/Qh48L9olzzxZY1VDssP+je4korEQVHD7Nd5l04X
-	 x5h+/1SS1DciKNWhTrDDti21kdi7g54SqHt7i9qbAdkFlp3aQLdkEKNALV7f9WcjrFiSH
-	 r0SDp1IqSRsxFi/2m1DDPVjxFjfnKmnQyfpuwurzTKCs3bJGVrvBQCJ1KAgCQBVd4Aw==
+	t=1794841024;
+	b=Dd943B/T0Ycu6+qBf6ZnwLSCPkj68ErK0dHfyYoSTU1Ou8FdxA9P8/dr++jLEzn5kdqe
+	 pmggFQ7jlbzotnKFb9GVbzwkf2frYOtR2z8J4QlcS/Z25jVyyiC8qFJizWEE4U4jeVfT1
+	 rRfmZVON2dJjb5jPNlXEyHyCp24G9MHQIioEli5ogXzJ8aAYiJ5uP2HT8czYWNMb5BRSN
+	 9N559v7MF+SNbfD4MLAYL7hkRbqhhUAjkbQeDPB0aA8AdR+oPOc7HVDsKJW6xmBZwiiu3
+	 bMuvx8nI+AutIUmdF4KyL2sOl+5sEzRnR2lJh/RqJkOgfj/Xu/eBPNNhEnoaxOc+FOg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794840522;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:X-Scanned-By;
-	bh=pA9V8D1wG0Eyw/8znW28sdVPMMRkVzuOllQ2VtP8AA4=;
-	b=0rxZpqEeEItiL8W0BXi2K6krEFoUDWLEE6M2XfA76UtALqvgZdR3EfQZZv6SLzlKDBm5
-	 PVRB92pYXZZwRvqR7XNnipfwlSCNLZrJJYSb4oT98FKazzB1hwnkIAkwZxBZOJzNIQ+8i
-	 EBcpoIk50Cpe6YvDmcqAHLTUkBGxAQjndt88hIDZGe2VO0Rpyn2jmRh1ivHGyjJQhL2Wu
-	 NG+Y5CFWPwFDmuR80tTlyItfEM25EC1M0Db3tSXBArnZDnhl/V2jV+/4KOivxKxOScmSi
-	 oO2JYk2bvk2K2fg3ag7cM+G20HnxNbtqC+REx9Pky2doFRqQwx1O0Paa8CO4XBLb5Iw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794841024;
+	h=DMARC-Filter:Received:Received:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-Coremail-Antispam:X-CM-SenderInfo;
+	bh=eCSCfWBLYphepyujzWfO5Q8lDkGNEXJ5KW1AbtemZLw=;
+	b=EANZRjXMMJXhhnNgfp3f4JqeuSCtY8W4RRAhhBo1qIuAsoVDlAj7TrgOvooHXRFeMWAb
+	 m6piLkEoq1WKHuoqbftW6dXmhD03yPzoHSpd8l0WGqOhp+BoiweCCg1hVGxcO8AB/ZxaC
+	 ss2G1T+oHiWrIEl8ycGzSvq+L/AyPIjntqNtqV0zEqT4fdAkCeuQ4UD53pKfSX8Sm+dMp
+	 N3PDlxTIPJdau5wPijmZwKcI9FLArGgFS/mtd/Xe2eedNhZbgarTjgdjkqw81gcjUg7hp
+	 M5iyMJDWr0NlXZZgNAmF6rp9l7tdexUioStPIzJJ/iTENXJsl9Ab+lPmo2qibdOIXAw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=TOzsbREo;
-	arc=none smtp.remote-ip=170.10.129.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	dmarc=none header.from=huaweicloud.com;
+	spf=pass smtp.mailfrom=huaweicloud.com;
+	arc=none smtp.remote-ip=124.71.94.104
+Received: from dggmsgout13.his.huawei.com (dggmsgout13.his.huawei.com [124.71.94.104])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442F2606A323
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 14:48:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 442F2606A323
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=TOzsbREo
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1794840521;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pA9V8D1wG0Eyw/8znW28sdVPMMRkVzuOllQ2VtP8AA4=;
-	b=TOzsbREo1IcUgxlRWcfAE356dd/3ZKMOfvXUGygAH/2I2sPrcc8XC1VxypGu+GUnwlTAiN
-	9SW1NrBA97lHPr5e2k6oYC+A16SqvGWvSox33EccfDmSTpPWf/NoaeXq4hnUcS5WKGsRpn
-	uFk2PKY6cYCoEHYCuLE7AkbuH5IPb0g=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-583-1M6OWw6JPauSGN-kCBZULQ-1; Mon,
- 16 Nov 2026 09:48:37 -0500
-X-MC-Unique: 1M6OWw6JPauSGN-kCBZULQ-1
-X-Mimecast-MFC-AGG-ID: 1M6OWw6JPauSGN-kCBZULQ_1794840516
-Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 05B7A18002CC;
-	Mon, 16 Nov 2026 14:48:36 +0000 (UTC)
-Received: from onestero-thinkpadp1gen7.tpbc.csb (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 27D3141F;
-	Mon, 16 Nov 2026 14:48:32 +0000 (UTC)
-Received: by onestero-thinkpadp1gen7.tpbc.csb (nbSMTP-1.00) for uid 13628
-	oleg@redhat.com; Mon, 16 Nov 2026 15:48:35 +0100 (CET)
-Date: Mon, 16 Nov 2026 15:48:31 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Avi Weiss <thnkslprpt@gmail.com>
-Cc: mhiramat@kernel.org, peterz@infradead.org, andrii@kernel.org,
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: avoid postponing return-probe SRCU lease
- expiration
-Message-ID: <avsXv0CMBoilsB_1@redhat.com>
-References: <20261115155921.260878-1-thnkslprpt@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0632C606A31C;
+	Mon, 16 Nov 2026 14:57:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0632C606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.198])
+	by dggmsgout13.his.huawei.com (SkyGuard) with ESMTP id 4jSrXM5fvGz1rq6w;
+	Mon, 16 Nov 2026 22:56:03 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id B925440576;
+	Mon, 16 Nov 2026 22:56:52 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP2 (Coremail) with UTF8SMTPA id Syh0CgCnduyzGftqetMwEg--.57019S2;
+	Mon, 16 Nov 2026 22:56:52 +0800 (CST)
+Message-ID: <c752b9eb-9f18-4d6a-b5d9-62f3b0d3e0f6@huaweicloud.com>
+Date: Mon, 16 Nov 2026 22:56:51 +0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -81,49 +51,155 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261115155921.260878-1-thnkslprpt@gmail.com>
-X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] perf/core: Prevent duplicate sigtrap task work
+ enqueue
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1793870900.git.wutengda@huaweicloud.com>
+ <ff842e802e9ecb74510a90964f8ad2c4825834b7.1793870900.git.wutengda@huaweicloud.com>
+ <20261116094706.GX5vD02a@linutronix.de>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <20261116094706.GX5vD02a@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:Syh0CgCnduyzGftqetMwEg--.57019S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxWr15ZFWfKF1fCF4DGr4DArb_yoWrAry7pr
+	WfJan8KayUXrnFv345tr1kAr18Ww4Fqws8Crs5Ga4fAF1YvrykXay7GF1YvFs8ArnrAayI
+	vw4j9rW7u34UXFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
+	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
+	7KsUUUUUU==
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-On 11/15, Avi Weiss wrote:
->
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -2052,6 +2052,9 @@ static void ri_timer(struct timer_list *timer)
->  	 */
->  	raw_write_seqcount_begin(&utask->ri_seqcount);
->
-> +	/* Pair with prepare_uretprobe() to avoid a missed rearm. */
-> +	smp_mb();
-> +
->  	for_each_ret_instance_rcu(ri, utask->return_instances)
->  		hprobe_expire(&ri->hprobe, false);
->
-> @@ -2304,7 +2307,9 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs,
->  	ri->next = utask->return_instances;
->  	rcu_assign_pointer(utask->return_instances, ri);
->
-> -	mod_timer(&utask->ri_timer, jiffies + RI_TIMER_PERIOD);
-> +	/* Pair with ri_timer() after publishing the instance. */
-> +	smp_mb();
-> +	timer_reduce(&utask->ri_timer, jiffies + RI_TIMER_PERIOD);
 
-Hmm... timer_reduce() looks a bit confusing to me, perhaps
 
-	if (!timer_pending(...))
-		add_timer(...);
+On 2026/11/16 17:47, Sebastian Andrzej Siewior wrote:
+> On 2026-11-05 09:30:43 [+0000], Tengda Wu wrote:
+>> The sigtrap handling in __perf_event_overflow() checks
+>> event->pending_work before calling task_work_add(), but only sets
+>> pending_work after the task work has been queued.
+>>
+>> This leaves a window where an NMI can interrupt task_work_add()
+>> and re-enter __perf_event_overflow() for the same event. Since
+>> pending_work is still zero, the nested invocation can enqueue
+>> the same pending_task again.
+>>
+>> The re-entrant call path is:
+>>
+>>   __perf_event_overflow()
+>>     task_work_add()
+>>       kasan_record_aux_stack()
+>>         <NMI>
+>>           __perf_event_overflow()
+>>             task_work_add()
+>>
+>> The nested invocation can enqueue pending_task before the
+>> outer invocation does. When the outer invocation resumes, it
+>> inserts the same task_work entry again, potentially creating
+>> a cycle in the task work list.
+>>
+>> This causes perf_pending_task() to be executed repeatedly
+>> and leads to unbalanced event reference counting.
+>>
+>> Use cmpxchg() to atomically claim pending_work before calling
+>> task_work_add(). This ensures that only one invocation can
+>> enqueue the pending_task, even when interrupted by an NMI.
+>>
+>> If task_work_add() fails, clear the pending_work claim so that
+>> a subsequent overflow can retry.
+>>
+>> Also use READ_ONCE() when checking pending_work in the
+>> exclude_kernel warning path to avoid an unsynchronized read.
+>>
+>> Fixes: c5d93d23a260 ("perf: Enqueue SIGTRAP always via task_work.")
+>> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+>> ---
+>>  kernel/events/core.c | 23 ++++++++++++-----------
+>>  1 file changed, 12 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 457d75ea7142..ee5c59158b89 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -10925,16 +10925,17 @@ static int __perf_event_overflow(struct perf_event *event,
+>>  
+>>  		notify_mode = in_nmi() ? TWA_NMI_CURRENT : TWA_RESUME;
+>>  
+>> -		if (!event->pending_work &&
+>> -		    !task_work_add(current, &event->pending_task, notify_mode)) {
+>> -			event->pending_work = pending_id;
+>> -			local_inc(&event->ctx->nr_no_switch_fast);
+>> -			WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
+>> -
+>> -			event->pending_addr = 0;
+>> -			if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
+>> -				event->pending_addr = data->addr;
+>> -
+>> +		if (cmpxchg(&event->pending_work, 0, pending_id) == 0) {
+> 
+> would cmpxchg_acquire() here make sense?
+> 
+>> +			if (!task_work_add(current, &event->pending_task, notify_mode)) {
+>> +				local_inc(&event->ctx->nr_no_switch_fast);
+>> +				WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
+>> +
+>> +				event->pending_addr = 0;
+>> +				if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
+>> +					event->pending_addr = data->addr;
+>> +			} else {
+>> +				cmpxchg(&event->pending_work, pending_id, 0);
+> 
+> if the task_work_add() fails then smp_store_release(, 0) since only the
+> executed task_work can release it back to 0. The cmpxchg seems not
+> needed.
+> 
+>> +			}
+>>  		} else if (event->attr.exclude_kernel && valid_sample) {
+>>  			/*
+>>  			 * Should not be able to return to user space without
+>> @@ -10948,7 +10949,7 @@ static int __perf_event_overflow(struct perf_event *event,
+>>  			 *     To approximate progress (with false negatives),
+>>  			 *     check 32-bit hash of the current IP.
+>>  			 */
+>> -			WARN_ON_ONCE(event->pending_work != pending_id);
+>> +			WARN_ON_ONCE(READ_ONCE(event->pending_work) != pending_id);
+> smp_load_acquire()
+> 
+> perf_pending_task() could maybe get a xchg_release(, 0). This however is
+> wrong because it would reset perf_event::pending_work and make it
+> available for __perf_event_overflow() again. I think it should have a
+> load_acquire() first, and have the store_release() after perf_sigtrap().
+> 
+> Comments?
+> 
+>>  		}
+>>  	}
+>>  
+> 
+> Sebastian
 
-make more sense?
+Sounds reasonable. After switching to acquire/release, the local tests pass for now.
+Will send it out later.
 
-Either way, I am not sure I fully understand the memory barriers... Looks
-correct, but IMO the "Pair with ..." comments do not really help.
-
-IIUC, prepare_uretprobe() needs mb() between STORE in rcu_assign_pointer()
-and LOAD in timer_pending(); while ri_timer() needs mb() between STORE in
-expire_timers()->detach_timer() and LOAD in for_each_ret_instance_rcu().
-
-Right?
-
-Oleg.
+Thanks,
+Tengda
 
