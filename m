@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794873005;
-	b=xs3RLqCw5S0DHNSSw1kPnjTK2bBBmosjFPeHtgm+BNJhHnffHzS10ZoAWJK6l3l7Wr2H
-	 GzSgHPqceDgvB98jKxqOOI9LImgnCTAfal4R1YONyKl/mnIgnshJ67UVfRxhL0GEgVOCX
-	 iucTtOK6l92HfF80bfRI7v2EIWytDoYvQuV1Mcw+ong9A/DRWKvjDnY82i8KoQE7vKWEO
-	 CFYZhVYezh3KwShuw8A7XdVjINLXvSenaR2xWLh+LGIpOunl8KK+01ZJJbL0j0Hk0bHxf
-	 KIDDTz6vWckbboJQXfQjK6lj79KcK/5x1uESff7h10B8TTTauIany2BZB5ZkTL4NJhA==
+	t=1794873302;
+	b=z6g/eZ6ZsBgc0SizV6phdk1kTlNrB8+xju8iOW7XJI/YJxUlj+i+k99uBSulriqqUSoJ
+	 Ybac9iGhxZaOiqRZPUccszP7WHhTeOHZowinophhmLW2VgiaZ8GmuvkumdBKRq/VyVhZn
+	 uoZ+8FQBsHl1mUgcTdJliTB+gXrTTuHvquRij390CidoRtCO4Br7S9818hrAQGWQWYsO7
+	 g8l+eplC1KGWzHV1iovX6ZsNRUcFYsQ4kPRi6s9rjYNs4vDV5E+7f7BF99PR7uMhEcgS4
+	 9hVLA/JkkQTckhF8xaCwHWW7es/elBd6illh/M1D0dXDlN27wskEKw1+PCFe5HX1h6Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794873005;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794873302;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=oVaiTo9+IO3/hvihsWHa7aaH+PZTtONZBvDfHg4EQGE=;
-	b=bRIq+8C7QAvnTbeYO28QxKZvIL42Pm85bgMKxLI7EbIR723A/XVewoX12tJqkXtybAz5
-	 9GA1Cu1p2VLMu3eXfo1zwj1qLkkCUaKRVwBK2jHve10N0HL0080Uc3y3JM7cIr8AvPOl5
-	 Fu0FaDS1oBDRMkonqqDtJqClRWQGHMt50HX28X0SlkUmnlKVNavCAGjazSY27ApXUnMR4
-	 n/n0oWPE4m9VNa1mJndum/WJK3c0FAkU4YZRHsgbSJ66WD6bvSALYJ78mswlEZ212zx8V
-	 zqOq1SuwUcobtejkXrzaKBBdu6S8TSoF15ZVtBMZJoEpdaaH19NiO9HtUQwUKV3B4Cw==
+	bh=abFCMoQhgsqPVonJqFZEo0m8wmoGahVfLLFao2akKpY=;
+	b=3zie9OhhXihpTDknHlKCxuvHACVkAq6W/GZlFhCKrbfFhiGragcOcPSYDkYSYDtUvl07
+	 10WDs4+cxTswp+UFUslJ2exjcSA0DotKs78OXLBWE7Ar1liiJiSMFtwi+RMtwDMLKxivO
+	 QRCY+Qmbd/HPsr+pmAWJ39+B5LLn50irqwYCK7h8gdxYQLlxNuDc8ZPvp41ULrX9Y6VqY
+	 2v6W7c65MuL21pyr+t/YqQ6TSRnMX+QPbI483r2iOqXdd7+aFeEKPAlAud4hiTiPip7VU
+	 nU14BfB8C3SGnMsWje61G0ZC0bY1EJ4ijsss9/c9WoCpsvYgEQGgy0FdacXUMxILMJQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AvVNUfxm;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mL5B6LB9;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F556606A31C
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 23:50:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A01606A31C
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 23:55:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AvVNUfxm
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97E631F000C7;
-	Mon, 16 Nov 2026 23:50:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mL5B6LB9
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44AD91F000C4;
+	Mon, 16 Nov 2026 23:55:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794873004;
-	bh=oVaiTo9+IO3/hvihsWHa7aaH+PZTtONZBvDfHg4EQGE=;
+	s=k20260515; t=1794873302;
+	bh=abFCMoQhgsqPVonJqFZEo0m8wmoGahVfLLFao2akKpY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=AvVNUfxmolKEy+QV3mShsgGqCn6NO20YWhZEjPFLLr7TOtmiS7sUjmQAYJWhtQIhK
-	 uU1yoSGaR6ocIhHpoQOf30oiMJ6FOVFgW2LT7iXvWDLIul+9dfdJcDXDE3JdOEDT6l
-	 UPgFa5kc7qbJHBAh5yjQw3oml7yHkjFEZMWA+yFC7QZnuIsbHwPwGnvfsllHNpuMq/
-	 l8KNjF21U0zT9IXvxWPeWL5RjQNOM2MSzTVTDAIBxfTpB7qXg6nBvQ7JpkSkYp3XQv
-	 1FFt/bP5ZYcNSxvHOeAaxLNSS9N3P1oAAz5fzbG2j4VJ60fQa5NTDAHPrUoUNzrre9
-	 SGb3294V3UgDw==
-Message-ID: <sashiko-outbox-217929@kernel.org>
+	b=mL5B6LB9u5/QbGg++OScPMFahtUZwxsrDrPJks01SgQdni1KKRbjAo4jQoe9mbZq3
+	 i1d0juVbLU2XGOdGRXxJcL/mvkb05K1bOaMuzkRrtLRoqpIhIxkzSs/7fTF05y//xa
+	 9bvJuZPxkuXueNpPsfLbCRASvijQ60A6AxEblLes8vVfKStlDK3td0iDAkJQKTf9yR
+	 xoQ8oZL9nfPAWZO/oumRqu09FJeMmhgqrFrr5aM0PFaGXloCHOuTDm2sJZMAto3WOf
+	 0yL/cqfoh5Squx4CDJik5cKskkJ8MQZPhVJ5dQRBRY5Lg6gQbVHTJRrx2vw6sWZWO0
+	 95QSBfJV3sQ5g==
+Message-ID: <sashiko-outbox-217938@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 08/12] perf tests: Silence the libbfd probe in
- build-test
+Subject: Re: [PATCH v4 05/12] perf annotate-data: Count flexible array
+ accesses for the whole struct
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261116234659.3950531-9-acme@kernel.org>
+In-Reply-To: <20261116234659.3950531-6-acme@kernel.org>
 References: <20261116234659.3950531-1-acme@kernel.org>
- <20261116234659.3950531-9-acme@kernel.org>
+ <20261116234659.3950531-6-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 16 Nov 2026 23:50:04 +0000
+Date: Mon, 16 Nov 2026 23:55:01 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,23 +63,30 @@ Precedence: list
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> build-test evaluates the libbfd probe at parse time and the compiler's
-> stderr isn't captured by $(shell ...), so without binutils-devel it
-> prints "bfd.h: No such file or directory" once per tests/make
-> invocation, five times per run.
+> The per-member percentage sums the histogram entries in the member's
+> own [offset, offset + size) range.  A flexible array member is resolved
+> past the end of its struct, so the struct row only covered its declared
+> size and showed 0.00% while the member row showed 100.00% and the
+> header said N samples.
 >=20
-> Redirect the compiler's stderr; the empty result still skips the
-> nondistro tests as intended.
+> Take a member's extent as the end of its last child as well, so the
+> struct counts what was resolved past it.  Union members all start at
+> offset 0, so a plain union keeps its size; a member that is itself a
+> struct with a flexible array extends the union too.  The TUI browser
+> accounts the members the same way, use the extent there as well.
 >=20
-> Fixes: 523471c5163659c6 ("perf build: Skip nondistro build test if libbfd=
- is old")
+> Extend tests/shell/data_type_flex_array.sh to check that the accesses
+> count for the struct in the percent, samples and period columns.
+>=20
+> Fixes: aaca646915a1bb53 ("perf annotate-data: Adjust type offset for flex=
+-array")
 > Reviewed-by: Ian Rogers <irogers@google.com>
-> Cc: James Clark <james.clark@linaro.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261116234659.3950=
-531-1-acme@kernel.org?part=3D8
+531-1-acme@kernel.org?part=3D5
 
