@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794806816;
-	b=hSzxnYE9igSdaC/2yDUaPw68Zd9G/PaQM15DbOudKwsrfrIZ+Yn4imb8ub2g3Uh+mr5A
-	 CRnof4KRdJwwxQa4ex48VoaZydPbJq+CusjUzQ1MQyr0OJyYxRpr+pRMRMlz5+ExTp7NK
-	 +ScDs8aE4jDkK9zE3VvHTcBJHMOeiFAL1vfaePEQ8NJfVK9KAgvJa4xYhYjXVRNWft7ts
-	 /vVDpjCwnqoQy9srlT+kuDX0C2OXBcuE1QBxYUIOk6ubDtB/LotD8Mpyp7f+z5N3RUk9B
-	 0+YOT+vRTNOW5EVF/nAlAZDNnoLiAbpniGRNaD4LyIiRpg2Ech8/6WKHT3WU4Q99bLw==
+	t=1794806828;
+	b=1Fq0Oe/BAmSZlioM7BO9QTPLIvlBQw3IR0cODnDae+XP4sEJ01cFYcjWuNvJSQjSw18t
+	 8LY6/n39h2NdAqFYufmP8QTsmdQsPpJRz10He2pAS0f8X0XT1SQ5Zsn2NC0UqLfCspfhg
+	 DYY86cG5FY2olEA/zi4CopdBXklUYALg8PJ+fDMukvPIq5+KfaVomSP9YHGluSZQ1VOpe
+	 gssKOWx4S73hmqJzcgny2sUIsYunm66u4e60Dptv+Km86QKD7wvQOcw5BexWT9LJb3W/U
+	 tkchwFKPm5brmh8jChRmXO4391g+otiQKzUMj0p1yIT3hRRKdwzgLq97KIgv2nqEbQg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794806816;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794806828;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=FyS8t9GNSznpC+RFNkXr0aPcazqwtOsN6IdjkdqtAV4=;
-	b=5DdDj+EjckbQVbUU4C6XH/rc1ZsdBEctwkxJyFXd+cjFfDMgS38sh2WKosT3iZ7cuvYR
-	 PpXJPasMxFw7/CQ7WCq7pgk9tqmc15L6MOuTC/go570W1jt3E4WJ0SHtFcr+Ru9Rag9kS
-	 m22PkPCq3EGtMrMxuD3VIDxO+fB8PfjbFA03EGujHNlCO/Gap3Lse5TV73ywkrLuJoI5F
-	 mir2wCM3GKP6QvFH9/RUhyj6VTyrASAQXjlYvNtONpt66QpAxjJEZc2OLMuSsdiOUQTJm
-	 j2KTR3YSVunq+QIvOHiPCFY4bCD7dPbWB6vIHUrpu1Yz90kiabDTxssjGLn3nWgJuKw==
+	bh=qU0BY80Af6d2aUzTDeT+Pj0ji5URWTqkq0aG2w9XCY4=;
+	b=3qbSNirhF0EqE4l2rWcArB2ENhMPu6vBtnqWiDHfZ75Tydv6yoEZb/ES2o68E0kqi4cp
+	 9r7UcXXg9BxWrtLl+Ru74zDVudFpmoX3NT1PnGvZkbdSbLG8E4lT5TsJfjLI9qT29mJN/
+	 d5JHD7GDuA/Dv8kjndrE3fiw383IUvFfqSoHAGrjHVTOygLtGa5bc7EEq9DZavsodt5c7
+	 f38LdNAC2jG7KXd7HR5NzIwJclx6FwFoLsH5KwdRgB0WV2bAf7XtD/7wVUiLrdb5QdRIK
+	 lkRF3AIeKryEQLFVEoiStVx5FaZH5IMMIZjbQyXhUh48VNhih0O3bW5ElKi07L9rx+Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mXH6FoWu;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="lJu456/Y";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C07606A323;
-	Mon, 16 Nov 2026 05:26:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3825E606A31C;
+	Mon, 16 Nov 2026 05:27:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mXH6FoWu
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88D121F000C4;
-	Mon, 16 Nov 2026 05:26:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lJu456/Y
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39E421F000C4;
+	Mon, 16 Nov 2026 05:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794806816;
-	bh=FyS8t9GNSznpC+RFNkXr0aPcazqwtOsN6IdjkdqtAV4=;
+	s=k20260515; t=1794806828;
+	bh=qU0BY80Af6d2aUzTDeT+Pj0ji5URWTqkq0aG2w9XCY4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=mXH6FoWuilKDHQ+OPKYik313sL/zTA2fd8hoHWE1IwgIFn4738PkXhx8urPV6+rzM
-	 ndkG2sEooM/S98JNhcduzK/q+7mvhJCeRQbyOoCIDXdkq96e/nAxbFPXcR9NBDioWD
-	 5APY40e7noQy1zZ7P7QPbLVr02CRHuS3288/C40wpBZZrJjHf2hgZWDLezfiAZFkDf
-	 irHnFJtp+UgRB2gSW8UL/J2A51ajcH1sIViv2OuaWybjtQ8KCiLg7V4hl18pZMU9YM
-	 ktAJvLmSZfaUsduOLNrk3cKziqsbsVpFl/G0IaVrMmT3MMMpnqSu94mG8erXwHT8pu
-	 9rkGDAfxrGKCQ==
+	b=lJu456/YMgNWMppov8pDkK/8JH3e0LzEmj9LtAZKF4ltUELESlSpMCwfbPmh/KxhE
+	 KTGNTMDfkUsMt4cAbxYgvJxUOCSnvYltLu7BaI3scPw2gbgG2GxVeXWBebv/pnldss
+	 qBuWzVhX1bkTMVFC7zfhE8gu53rANtqWW6loYKJ5PKE3rGMbLg2OZ52fRzUo0mw2Yo
+	 5ndZFakP4i0lypxElqcb6sNjjV0AU59DI+UXxBO6TEsUZ7rrRKeEWO0YK4qK+gQ1Q4
+	 05OeaqIqKucBLVqejBIi8vx521LcueyASNq+Nn78faGi0et2H8FJPnG1MQ/CHKKPkX
+	 RuZm65FywP8SA==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -58,9 +58,9 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	x86@kernel.org
-Subject: [PATCH v20 05/11] x86: hw_breakpoint: Add a kconfig to clarify when a breakpoint fires
-Date: Mon, 16 Nov 2026 14:26:50 +0900
-Message-ID: <179480681023.38065.9381486145352859573.stgit@devnote2>
+Subject: [PATCH v20 06/11] selftests: tracing: Add a basic testcase for wprobe
+Date: Mon, 16 Nov 2026 14:27:01 +0900
+Message-ID: <179480682179.38065.15797461233330303156.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179480675130.38065.3086970856119381693.stgit@devnote2>
 References: <179480675130.38065.3086970856119381693.stgit@devnote2>
@@ -79,64 +79,124 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Add CONFIG_HAVE_POST_BREAKPOINT_HOOK which indicates the hw_breakpoint
-on that architecture fires after the target memory has been modified.
-This is currently x86 only behavior.
+Add 'add_remove_wprobe.tc' testcase for testing wprobe event that
+tests adding and removing operations of the wprobe event.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Reviewed-by: Jinchao Wang <wangjinchao600@gmail.com>
 ---
- Changes in v11:
-  - Move select to alphabetically sorted place.
+Changes in v20:
+ - Verify $addr and $value fetchargs in trace output.
+ - Add test checks for access modes (r@, rw@), length specifiers,
+   symbol offset, and spec-based event removal ('!w:...' and '-:...').
+Changes in v17:
+ - Catch failures when enabling wprobe and call exit_unresolved
+   in case hardware watchpoints are exhausted.
+Changes in v9:
+ - Fix command check logic to prevent early exit under 'set -e'
+   (errexit) when grep or test fails.
+ - Simplify enable/disable status checks by removing cat pipes.
+Changes in v8:
+ - Fixed silently test failure path.
 ---
- arch/Kconfig         |   10 ++++++++++
- arch/x86/Kconfig     |    1 +
- kernel/trace/Kconfig |    1 +
- 3 files changed, 12 insertions(+)
+ tools/testing/selftests/ftrace/config              |    1 
+ .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   81 ++++++++++++++++++++
+ 2 files changed, 82 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index ce6fe06838ea..740ba1eb2663 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -474,6 +474,16 @@ config HAVE_MIXED_BREAKPOINTS_REGS
- 	  Select this option if your arch implements breakpoints under the
- 	  latter fashion.
- 
-+config HAVE_POST_BREAKPOINT_HOOK
-+	bool
-+	depends on HAVE_HW_BREAKPOINT
-+	help
-+	  Depending on the arch implementation of hardware breakpoints,
-+	  some of them provide breakpoint hook after the target memory
-+	  is modified.
-+	  Select this option if your arch implements breakpoints overflow
-+	  handler hooks after the target memory is modified.
+diff --git a/tools/testing/selftests/ftrace/config b/tools/testing/selftests/ftrace/config
+index 29f05f7c6e2c..c2caea1ba1f5 100644
+--- a/tools/testing/selftests/ftrace/config
++++ b/tools/testing/selftests/ftrace/config
+@@ -33,3 +33,4 @@ CONFIG_SYNTH_EVENTS=y
+ CONFIG_TRACER_SNAPSHOT=y
+ CONFIG_UPROBES=y
+ CONFIG_UPROBE_EVENTS=y
++CONFIG_WPROBE_EVENTS=y
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+new file mode 100644
+index 000000000000..40c69c3f2ba5
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+@@ -0,0 +1,81 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: Generic dynamic event - add/remove wprobe events
++# requires: dynamic_events "w[:[<group>/][<event>]] [r|w|rw]@<addr>[:<len>]":README
 +
- config HAVE_MODIFY_LOCAL_HW_BREAKPOINT_ADDR
- 	bool
- 	depends on HAVE_HW_BREAKPOINT
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 3c50d5a7e0e8..6536e661995c 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -287,6 +287,7 @@ config X86
- 	select ASYNC_KERNEL_PGTABLE_FREE	if IOMMU_SVA
- 	select MMU_GATHER_MERGE_VMAS
- 	select HAVE_POSIX_CPU_TIMERS_TASK_WORK
-+	select HAVE_POST_BREAKPOINT_HOOK
- 	select HAVE_REGS_AND_STACK_ACCESS_API
- 	select HAVE_RELIABLE_STACKTRACE		if UNWINDER_ORC || STACK_VALIDATION
- 	select HAVE_FUNCTION_ARG_ACCESS_API
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 6200c3ea4cc5..5e2015d1d3b6 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -874,6 +874,7 @@ config WPROBE_EVENTS
- 	bool "Enable wprobe-based dynamic events"
- 	depends on TRACING
- 	depends on HAVE_HW_BREAKPOINT
-+	depends on HAVE_POST_BREAKPOINT_HOOK
- 	select PROBE_EVENTS
- 	select DYNAMIC_EVENTS
- 	help
++echo 0 > events/enable
++echo > dynamic_events
++
++# Use jiffies as a variable that is frequently written to.
++TARGET=jiffies
++
++echo "w:my_wprobe w@$TARGET addr=\$addr val=\$value" >> dynamic_events
++
++if ! grep -q my_wprobe dynamic_events; then
++    echo "Failed to create wprobe event"
++    exit_fail
++fi
++
++if [ ! -d events/wprobes/my_wprobe ]; then
++    echo "Failed to create wprobe event directory"
++    exit_fail
++fi
++
++if ! echo 1 > events/wprobes/my_wprobe/enable; then
++    echo "Failed to enable wprobe (hardware watchpoints may be exhausted)"
++    exit_unresolved
++fi
++
++# Check if the event is enabled
++if ! grep -q 1 events/wprobes/my_wprobe/enable; then
++    echo "Failed to enable wprobe event"
++    exit_fail
++fi
++
++# Let some time pass to trigger the breakpoint
++sleep 1
++
++# Check if we got any trace output with fetchargs
++if ! grep -q "my_wprobe:.*addr=.*val=" trace; then
++    echo "wprobe event was not triggered or missing fetchargs"
++    exit_fail
++fi
++
++echo 0 > events/wprobes/my_wprobe/enable
++
++# Check if the event is disabled
++if ! grep -q 0 events/wprobes/my_wprobe/enable; then
++    echo "Failed to disable wprobe event"
++    exit_fail
++fi
++
++echo "-:my_wprobe" >> dynamic_events
++
++if grep -q my_wprobe dynamic_events; then
++    echo "Failed to remove wprobe event"
++    exit_fail
++fi
++
++if [ -d events/wprobes/my_wprobe ]; then
++    echo "Failed to remove wprobe event directory"
++    exit_fail
++fi
++
++# Test access modes, lengths, symbol offset, and spec-based removal
++echo "w:my_wprobe1 r@$TARGET:1" >> dynamic_events
++echo "w:my_wprobe2 rw@$TARGET+4:4 val=+0(\$addr)" >> dynamic_events
++echo "!w:wprobes/my_wprobe1 r@$TARGET:1" >> dynamic_events
++if grep -q my_wprobe1 dynamic_events; then
++    echo "Failed to remove my_wprobe1 with '!' syntax"
++    exit_fail
++fi
++
++echo "-:wprobes/my_wprobe2 rw@$TARGET+4:4 val=+0(\$addr)" >> dynamic_events
++if grep -q my_wprobe2 dynamic_events; then
++    echo "Failed to remove my_wprobe2 with full spec"
++    exit_fail
++fi
++
++clear_trace
++
++exit 0
 
