@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.197
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.70
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794812534;
-	b=VIBb+L4lbkly45XMl2jSIA5FiezoweIWeEiP2J7gLVlzPdSt+f4PzatyfFB5Lv4ZGz80
-	 ykQUmAJk3nqae8mucgBOprqiyhPy/B/2/z1qUi8O1zsBPAxlYJlReyJs7I1yBrD9NSEup
-	 8OyAptmk8GVrybcC4nkc+uCsoJgUKCwS9fRpF3gRYGxpYNQmxpNg27DGWXUAF08HhPgG5
-	 MrvxlMZgjkwM6SCZfUMYp9F6Z5Ft4lKbyWUiqlmazcqowqjz+BLy27EAafKuyn8NN4dqE
-	 wQvmk/d2QHtw3n7rB5Q2ZAsLGvm1J+YTBIebTO+v9SRGLSdILu39xLx1rR/OEehPyYQ==
+	t=1794812536;
+	b=gz997tCwmQdhost6LNuOKYL+rs6NEKqZNm9OhH82uc4OGinGAoVtIckhQfyMxUJC9usY
+	 BGLENkx4dd4Y2FsHkn9QnAZe7nSYsUjHyvKATXFur45uqZWnZuZ+BAZwF7VudpqAYkBi2
+	 u8rEUZkTB66fvSlXshtO7ejK+n1MgS9oNdXNCPHLWWSSTDZulDcfcOR3QVIWTDMqyvGuJ
+	 LWkI0teRzEhwLQYhxADn5VmVrFZC/y5s0TR+Ci3ikvOJ1RCVr1ogQ6tFIjePeQP6sUTZv
+	 GgUOrFrbd2ZTiqzwTYC6Mx+Vm4XqJP98Zfcg63QpES1AwHeJatO0Plx/0U1jbwFUv2g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794812534;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794812536;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=DQrXLAKRA7QClm7f1DY/8eCpz85TsTppCt1W5RXemgM=;
-	b=o5ldXAX5KWyJ1Zxa6O5juZgllLnPpFw5A3aZsF41ibP9/zo1HgIAvULwBQKr4RGsCtiI
-	 y2TuAlixcfKsYmUF0SVWMnA0BpOhikK3rkL0+X99y+DAEupl4LEUOfs1LtyDGp4ZTMQ6R
-	 N2QLnGw9p+cG6XyCJ7FN6LcdBouxK2H8jT2DHUwP+JivADr5IxWkv7Ghx4yuPoubxia2b
-	 wvRQ4xz6bPa4h2emJZx+MhZkNpXPq4AbjQfzxk12/j12RHYA/xiQIcpAGC6li/6ruU+T9
-	 y1GvM2yzktaF+2YUHxp9L0MGxZXDDnCWqYTNXcfoSgxoNIeEZwLiPfkoSvlMvLgPq4A==
+	bh=W2bXycj3WQdxqUdIhDRadMTPpN5CjivdQTbhjeDz0xI=;
+	b=cWsfoT/DAyr8I/Rs6ZFe+zp+K8XvIiQjqCNR2u/VpXUwH0U7+hJlB5p2vSmCH1bYhQpH
+	 Dmrdmx/kf9BxgeabA2a4BsHgTGbiZxQKsGUPTekh/JHzUUDcxC0QRP99uf7thGBSiWXoj
+	 UWTWEk31doa2YOWZtuFugruuotPsKjlRoHvNm3Xg6p+2fVIL2CDtb+k3gPcbunlNG7hxs
+	 5mkecuyKNOZ5ANLud4/S78OcjrWjozSoUjSHJDrm/BkoMkcsxhO6nYXFk7/aiM7ASk+zA
+	 qn1F2G9gI63opri021tUoQkPxR3eKbYEzhbtyLy3NY12wYoe9nQRA4aAlf/GiUEf2TQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=KrQV0oTb;
-	arc=none smtp.remote-ip=74.125.82.197
-Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=LaK9yebE;
+	arc=none smtp.remote-ip=74.125.82.70
+Received: from mail-dl1-f70.google.com (mail-dl1-f70.google.com [74.125.82.70])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E332B606A330
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 07:02:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E332B606A330
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B632C606A88A
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 07:02:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B632C606A88A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=KrQV0oTb
-Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-30bcb065bfdso3968538eec.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 15 Nov 2026 23:02:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=LaK9yebE
+Received: by mail-dl1-f70.google.com with SMTP id a92af1059eb24-1a71dd190b0so3894675c88.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 15 Nov 2026 23:02:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794812533; x=1795417333; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794812535; x=1795417335; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=DQrXLAKRA7QClm7f1DY/8eCpz85TsTppCt1W5RXemgM=;
-        b=KrQV0oTbR+5J9TKOVNc3B8gDiZdb+vfI+/pY7Ogf3nK9/f5EAOfTr9U8ALPnsN00+z
-         A4KzFOCp3pm0EK4uuPFI+PenPUKrGxLH4y/7bPMS2ICEzI1gs9L7SVJwW9I1B6ovuQGS
-         gceQiV96Ttu7SHBGZYj/x4lBjqVfkOAel5+RYMq48GcHBDq0wJRQ07IyWJurnMdyBmbM
-         nEexEee9Hh3Ik//IUoBty+/S2L+hTXIN0yT1IzZ0DD8HzqS0qkcm7BjaMiVdH/1g2E0Q
-         kPYpgIuNexkTRq7Hu0lyYfbTzuCqESNKLRtq0kN4GFiUYgtjk/yIYBx8RCPFK/tV0zz0
-         zTnA==
+        bh=W2bXycj3WQdxqUdIhDRadMTPpN5CjivdQTbhjeDz0xI=;
+        b=LaK9yebEneU+koiy4m1rPZhjNX8w3OH3bRV7lRsFa44CGnVfNqWPzzRCvQIwuOdRc3
+         wm/prxIaNlTXFm7Bm9rdGJv6srMADF0WfpsEZUE05KHY57Knd9FTzY3SB8e1iJPp7fJ7
+         h02BDGNeTW+E8+H2vawFh7tV1B7s/LpYdyW8IYtrJdb1pp2cJU8OvG/RxidsxihIgOXn
+         b/igFrXjs75A7QQcqdMze7zAzWqPgrF0eySQoZLl0Mkmqv6Kn3tEsRUqQ1umXpe2jxbk
+         4wlQIC9pVFtc+HV4kvIPKO7Pj7uswFCTqLzqZyyBSoJ8wEWTl4jQS0p1ReysYC4is4KC
+         RGFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794812533; x=1795417333;
+        d=1e100.net; s=20260707; t=1794812535; x=1795417335;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=DQrXLAKRA7QClm7f1DY/8eCpz85TsTppCt1W5RXemgM=;
-        b=iH1AwFlAP8LeklOIt0+nyt9l6osWL2bA+dauiExlX9aJ3x6EUHEyxQmiQ7ItiAcvNu
-         1C558E7a4EGpLw4IjxjPik3XFomvTkOaqizVpCghoWb1qZh/qWxHX5csGvMYOp/f6aF5
-         Bv6YuhW7/I1+KLtWFkKF3toF4YL7ljmuJubAadd61vedQuVFGLiIPXOOcq2EMfN72u9a
-         zDjmO7brcyfWV1F56IwfESlbsbFm0YHVC7oFSv0TGyxDGL+KK/H2cBKd88x2bPUAbfFg
-         6ulFNdbvNAfF3WFp+7lu0voHMhkgeaPbQ0Drvf4i6oBdP5kGyyzEH+LWpWmx6vWJfCx1
-         OCDA==
-X-Forwarded-Encrypted: i=1; AL+hErHxDUjAFxB0hjdUbX/NJIxoZFMkcFm28jlg42GZX8w3Lxot3tSvGE92LxX8VfU0Ao2Vz3MtIn32KVGMF37YmRkb@vger.kernel.org
-X-Gm-Message-State: APuU4Z+kf/5Sha1y5wbGvHa4sXrqTFuaztPiNPEos6cHaYQV2HKF5E3F
-	w+k1ge9yYIp6rdXzn/vyopsaDQnnv9j6YFjEjl+y6JeLkoCLGUt1zQDvO+sf2hXdhxCV8XHOzcA
-	Am5YX+nGACg==
-X-Received: from dyaa26.prod.google.com ([2002:a05:693c:40da:b0:376:a62b:ae0a])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:20c4:10b0:375:f17a:d691
- with SMTP id 5a478bee46e88-379678ea195mr10067449eec.38.1794812532568; Sun, 15
- Nov 2026 23:02:12 -0800 (PST)
-Date: Sun, 15 Nov 2026 23:01:50 -0800
+        bh=W2bXycj3WQdxqUdIhDRadMTPpN5CjivdQTbhjeDz0xI=;
+        b=AjkuCDQ0+YATrxlF3/v8ccN8/aU6pptIajjXlqlxWB5HD/dQTF8XxfcxVd0ChQ1JgO
+         2N50zxC2ZMblHd34IvUH0RE0xi5msgNRbn0uAGJhRPf5sd85RAauCVdjkEwlfoWu1F60
+         eBgNUo3njS503FPCxOvA7CIr0vE8kAVjuLsuohX9YaIg/UILfjA56F3tT0tp+1bBUBvx
+         mG5E6oP/D+HpgSn32Bj3M46/TQsrWKQt1L2Uef2uMWRZo2NgxjwbBB5wdxJpHRxruV3Z
+         dVcZJwFaFl2SCzcLW0IRXIdlnb6RcudGrds+ojdSPuUh/KWB9i/Exc0JRddSpRT4pjhh
+         exqQ==
+X-Forwarded-Encrypted: i=1; AL+hErF7bbBkoKyc5bObzR5YSwcaUzKR1wSWDg8CVgGMwQ3rZDF7VnM7zBXmuWT9RWT/CBbD5zTg+TmUjMue7CVvqanF@vger.kernel.org
+X-Gm-Message-State: APuU4Z+DSL6KJkXBv5vZCtQ+hmURPdZvtyKXz35zvkQ6mnnZ4Rj5L8+7
+	RIzW2lAzJlW/aoByMT9UEMJSxElKw2+2hBGU2scLrSJSdn9VerjUJr6qvoQdkkoR2surw3bV/Eg
+	46GI/1suL0g==
+X-Received: from dlgw18-n1.prod.google.com ([2002:a05:701a:cc92:10b0:1b5:3444:f158])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:4213:20b0:1b3:b4cf:8f18
+ with SMTP id a92af1059eb24-1b5031a46bamr10266803c88.41.1794812534506; Sun, 15
+ Nov 2026 23:02:14 -0800 (PST)
+Date: Sun, 15 Nov 2026 23:01:51 -0800
 In-Reply-To: <20261116070200.2972362-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,9 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261116070200.2972362-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
-Message-ID: <20261116070200.2972362-5-irogers@google.com>
-Subject: [PATCH v2 04/11] perf pmu-layer: Add openat-based directory layer
- with literal CPUID/symlink lookup
+Message-ID: <20261116070200.2972362-6-irogers@google.com>
+Subject: [PATCH v2 05/11] perf config: Add pmu-events.dir configuration option
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
@@ -92,1570 +91,268 @@ Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
 	linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add the filesystem-backed PMU layer backends (user_dir_layer_ops and
-sysfs_layer_ops) in util/pmu-layer.c using openat() and io_dir.
+Add [pmu-events] dir to perf_config() (~/.perfconfig,
+$(sysconfdir)/perfconfig, or PERF_CONFIG) to configure one or more
+colon-separated user or system PMU overlay directories (ordered from
+highest to lowest priority) with leading ~/ home expansion.
 
-A user or system overlay directory <root> supports both portable
-multi-CPU trees (keyed by CPUID or uncore identifier) and host-direct
-PMU overrides without requiring a runtime mapfile.csv or regex engine:
+For example, configuring:
 
-  <root>/
+  [pmu-events]
+      dir = ~/.perf-events/local:/opt/pmu-events
+
+allows a developer or fleet administrator to layer host-local or
+stepping-specific patches in ~/.perf-events/local ahead of a shared
+multi-CPU directory tree in /opt/pmu-events:
+
+  ~/.perf-events/local/
+  |-- cpus/GenuineIntel-6-8F-8/cpu/events/
+  |   `-- inst_retired.any.desc         # stepping-specific fixup
+  `-- default_core/metrics/
+      |-- my_ipc                        # host-local custom metric
+      `-- my_ipc.desc
+
+  /opt/pmu-events/
   |-- cpus/
-  |   |-- GenuineIntel-6-4E -> ../models/x86/skylake
-  |   |-- GenuineIntel-6-5E -> ../models/x86/skylake
   |   |-- GenuineIntel-6-8F -> ../models/x86/sapphirerapids
-  |   |-- GenuineIntel-6-8F-8/          # stepping-specific override
-  |   |   `-- cpu/events/inst_retired.any.desc
   |   `-- 0x00000000410fd490 -> ../models/arm64/arm/neoverse-n2
-  |-- sys/
-  |   `-- 43401 -> ../models/arm64/arm/cmn
-  |-- models/
-  |   |-- x86/skylake/
-  |   |   |-- cpu/{events,metrics}/...
-  |   |   `-- uncore_imc/{events,metrics}/...
-  |   `-- arm64/arm/neoverse-n2/
-  |       `-- armv8_pmuv3/{events,metrics}/...
-  |-- default_core/                     # cross-CPU or host-local core
-  |   `-- metrics/my_ipc{,.desc}
-  |-- <pmu>/{events,metrics}/...        # host-direct PMU overrides
-  `-- metricgroups/<group>.desc
+  `-- models/...
 
-Within each <root>, dir_for_each_scope() probes three scopes in order:
+On a Sapphire Rapids stepping 8 host (GenuineIntel-6-8F-8), perf first
+matches ~/.perf-events/local/cpus/GenuineIntel-6-8F-8/ (overriding only
+inst_retired.any.desc while inheriting event encoding terms from lower
+layers) and ~/.perf-events/local/default_core/, then falls back to
+/opt/pmu-events/cpus/GenuineIntel-6-8F -> ../models/x86/sapphirerapids,
+and finally to compiled-in tables and kernel sysfs.
 
-1. CPUID scope (<root>/cpus/<cpuid>/):
-   Queries the PMU's CPUID via get_cpuid_allow_env_override() (using
-   perf_cpu_map__min(pmu->cpus) so heterogeneous core PMUs such as
-   cpu_core and cpu_atom resolve against their own CPU's CPUID, and
-   honoring PERF_CPUID). build_cpuid_candidates() probes the exact
-   CPUID first, followed by deterministic base CPUIDs stripped of
-   stepping or revision fields:
-   - '-' or ',' delimited CPUIDs (x86, s390, RISC-V): strips trailing
-     fields down to two components, e.g.:
-       x86:    GenuineIntel-6-8F-8 -> GenuineIntel-6-8F
-       s390:   IBM,8561,703        -> IBM,8561
-       RISC-V: 0x489-0x8000000000000007-0x1 -> 0x489-0x8000000000000007
-   - ARM64 64-bit hex MIDR (0x + 16 hex digits): masks Variant[23:20]
-     and Revision[3:0] to zero, e.g.:
-       0x00000000411fd493 -> 0x00000000410fd490
-   - PowerPC 32-bit hex PVR (0x + 8 hex digits): masks Revision[15:0]
-     to zero, e.g.:
-       0x00800200 -> 0x00800000
-
-   Each <root> stops at the first matching cpus/<candidate> directory
-   so a stepping directory (such as cpus/GenuineIntel-6-8F-8/) does
-   not merge coarser model events from cpus/GenuineIntel-6-8F/ in the
-   same <root>, while unset sidecars and unoverridden events still fall
-   through to subsequent directories in pmu-events.dir, inbuilt JSON,
-   and sysfs. Because openat() traverses POSIX symlinks in the kernel
-   VFS, multiple CPUIDs sharing a microarchitecture can symlink to a
-   single canonical models/<arch>/<model>/ directory.
-
-2. System/uncore identifier scope (<root>/sys/<id>/):
-   Probes pmu->id read from /sys/bus/event_source/devices/<pmu>/identifier
-   (supporting literal directories or POSIX symlinks).
-
-3. Host-direct scope (<root>/):
-   Probes PMU subdirectories directly under <root>/ plus
-   <root>/metricgroups/<group>.desc.
-
-Within each matched scope, dir_for_each_pmu_subdir() checks the exact
-PMU name (e.g. cpu, cpu_core, uncore_imc_0), pmu->alias_name,
-default_core for core PMUs, and suffix-stripped uncore prefixes (e.g.
-uncore_imc matching uncore_imc_0).
-
-Also parse extended event sidecars (.unit, .scale, .scale-unit,
-.per-pkg, .snapshot, .desc, .long-desc, .topic, .compat, .deprecated,
-.legacy-terms, and .retire-lat-{mean,min,max}), metric sidecars
-(<pmu>/metrics/*), and metricgroup descriptions with %2F escaping for
-'/' in names, and register PMU_LAYER_SYSFS between
-PMU_LAYER_BUILTIN_CPU and PMU_LAYER_BUILTIN_COMMON so single-event
-sysfs lookups resolve lazily via openat() without readdir().
+When pmu-events.dir is unset, PMU_LAYER_USER_DIR is omitted from the
+layer stack so runtime overhead is zero extra syscalls. Reset the layer
+stack in perf_config__exit() and perf_pmus__destroy() so process
+teardown and perf test config isolation reload cleanly, and document
+pmu-events.dir in Documentation/perf-config.txt.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/pmu-layer.c | 1351 ++++++++++++++++++++++++++++++++++-
- tools/perf/util/pmu-layer.h |    6 +
- 2 files changed, 1350 insertions(+), 7 deletions(-)
+ tools/perf/Documentation/perf-config.txt | 42 ++++++++++++++++++
+ tools/perf/util/config.c                 | 15 +++++++
+ tools/perf/util/pmu-layer.c              | 55 +++++++++++++++++++++++-
+ tools/perf/util/pmus.c                   |  2 +
+ 4 files changed, 113 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/pmu-layer.c b/tools/perf/util/pmu-layer.c
-index e4c50cc6d1ea..e54d7e8f487f 100644
---- a/tools/perf/util/pmu-layer.c
-+++ b/tools/perf/util/pmu-layer.c
-@@ -1,23 +1,39 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include <ctype.h>
-+#include <dirent.h>
- #include <errno.h>
-+#include <fcntl.h>
-+#include <limits.h>
- #include <stdbool.h>
- #include <stddef.h>
-+#include <stdint.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
- #include <strings.h>
-+#include <sys/stat.h>
-+#include <sys/types.h>
-+#include <unistd.h>
-+#include <api/fs/fs.h>
-+#include <api/io.h>
-+#include <api/io_dir.h>
- #include <linux/compiler.h>
- #include <linux/err.h>
-+#include <linux/string.h>
- #include <linux/zalloc.h>
-+#include "cpumap.h"
- #include "debug.h"
- #include "hashmap.h"
-+#include "header.h"
- #include "pmu.h"
-+#include "pmus.h"
- #include "pmu-layer.h"
- #include "pmu-events/pmu-events.h"
+diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
+index 6cff6f26af8d..e81c33717688 100644
+--- a/tools/perf/Documentation/perf-config.txt
++++ b/tools/perf/Documentation/perf-config.txt
+@@ -94,6 +94,10 @@ Given a $HOME/.perfconfig like this:
+ 		# Default, disable using /dev/null
+ 		dir = ~/.debug
  
- static struct pmu_layer *pmu_layers;
- static size_t nr_pmu_layers;
- static bool pmu_layers_initialized;
-+static int active_sysfs_override_fd = -1;
++	[pmu-events]
++		# Colon-separated sysfs-style PMU event/metric overlay directories
++		dir = ~/.perf-events
++
+ 	[annotate]
+ 		# Defaults
+ 		hide_src_code = false
+@@ -259,6 +263,44 @@ buildid-cache.*::
  
- static struct perf_pmu_alias *pmu_layer_alloc_alias(const char *name)
- {
-@@ -265,12 +281,40 @@ struct builtin_find_event_ctx {
- 	bool is_common;
- };
+ 		  buildid-cache.debuginfod=http://192.168.122.174:8002
  
-+static bool pmu_layer_alias_is_empty(const struct perf_pmu_alias *alias)
-+{
-+	return !alias->terms && !alias->legacy_terms &&
-+	       !alias->desc && !alias->long_desc && !alias->topic &&
-+	       !alias->pmu_name && !alias->compat && !alias->has_scale &&
-+	       !alias->has_unit && !alias->has_per_pkg &&
-+	       !alias->has_snapshot && !alias->has_deprecated &&
-+	       !alias->has_retire_lat_mean && !alias->has_retire_lat_min &&
-+	       !alias->has_retire_lat_max;
-+}
-+
-+static void pmu_layer_canon_alias_name(struct perf_pmu_alias *alias,
-+				       const char *canon)
-+{
-+	char *dup_name;
-+
-+	if (!canon || !canon[0] || !pmu_layer_alias_is_empty(alias) ||
-+	    !strcmp(alias->name, canon))
-+		return;
-+
-+	dup_name = strdup(canon);
-+	if (dup_name) {
-+		free(alias->name);
-+		alias->name = dup_name;
-+	}
-+}
-+
- static int builtin_find_event_cb(const struct pmu_event *pe,
- 				 const struct pmu_events_table *table __maybe_unused,
- 				 void *vdata)
- {
- 	struct builtin_find_event_ctx *ctx = vdata;
- 
-+	pmu_layer_canon_alias_name(ctx->alias, pe->name);
- 	return pmu_layer_merge_pe(ctx->alias, pe, ctx->is_common);
- }
- 
-@@ -288,6 +332,7 @@ static int builtin_find_sys_event_cb(const struct pmu_event *pe,
- 		return 0;
- 	if (!pmu_uncore_identifier_match(pe->compat, ctx->pmu->id))
- 		return 0;
-+	pmu_layer_canon_alias_name(ctx->alias, pe->name);
- 	return pmu_layer_merge_pe(ctx->alias, pe, /*is_common=*/false);
- }
- 
-@@ -678,6 +723,1264 @@ static const struct pmu_layer_ops builtin_common_layer_ops = {
- 	.load_metricgroup = builtin_common_load_metricgroup,
- };
- 
-+int pmu_layer__encode_filename(const char *name, char *buf, size_t size)
-+{
-+	size_t out = 0;
-+
-+	if (!name || size == 0)
-+		return -EINVAL;
-+
-+	for (size_t i = 0; name[i] != '\0'; i++) {
-+		if (name[i] == '/') {
-+			if (out + 3 >= size)
-+				return -ENAMETOOLONG;
-+			buf[out++] = '%';
-+			buf[out++] = '2';
-+			buf[out++] = 'F';
-+		} else {
-+			if (out + 1 >= size)
-+				return -ENAMETOOLONG;
-+			buf[out++] = name[i];
-+		}
-+	}
-+	buf[out] = '\0';
-+	return 0;
-+}
-+
-+int pmu_layer__decode_filename(const char *encoded, size_t len,
-+			       char *buf, size_t size)
-+{
-+	size_t out = 0;
-+
-+	if (!encoded || size == 0)
-+		return -EINVAL;
-+
-+	for (size_t i = 0; i < len; i++) {
-+		if (i + 2 < len && encoded[i] == '%' && encoded[i + 1] == '2' &&
-+		    (encoded[i + 2] == 'F' || encoded[i + 2] == 'f')) {
-+			if (out + 1 >= size)
-+				return -ENAMETOOLONG;
-+			buf[out++] = '/';
-+			i += 2;
-+		} else {
-+			if (out + 1 >= size)
-+				return -ENAMETOOLONG;
-+			buf[out++] = encoded[i];
-+		}
-+	}
-+	buf[out] = '\0';
-+	return 0;
-+}
-+
-+static int dir_read_file_at(int dirfd, const char *filename, char **out_str)
-+{
-+	struct stat st;
-+	char *buf = NULL;
-+	size_t cap = 256, len = 0;
-+	int fd, ret = 0;
-+
-+	fd = openat(dirfd, filename, O_RDONLY);
-+	if (fd < 0)
-+		return -errno;
-+
-+	if (fstat(fd, &st) < 0) {
-+		ret = -errno;
-+		close(fd);
-+		return ret;
-+	}
-+	if (S_ISDIR(st.st_mode)) {
-+		close(fd);
-+		return -EISDIR;
-+	}
-+
-+	buf = malloc(cap);
-+	if (!buf) {
-+		close(fd);
-+		return -ENOMEM;
-+	}
-+
-+	for (;;) {
-+		ssize_t n;
-+
-+		if (len + 1 >= cap) {
-+			char *next;
-+
-+			cap *= 2;
-+			next = realloc(buf, cap);
-+			if (!next) {
-+				free(buf);
-+				close(fd);
-+				return -ENOMEM;
-+			}
-+			buf = next;
-+		}
-+		n = read(fd, buf + len, cap - len - 1);
-+		if (n < 0) {
-+			if (errno == EINTR)
-+				continue;
-+			ret = -errno;
-+			free(buf);
-+			close(fd);
-+			return ret;
-+		}
-+		if (n == 0)
-+			break;
-+		len += (size_t)n;
-+	}
-+	close(fd);
-+
-+	if (len > 0 && buf[len - 1] == '\n') {
-+		len--;
-+		if (len > 0 && buf[len - 1] == '\r')
-+			len--;
-+	}
-+	buf[len] = '\0';
-+	*out_str = buf;
-+	return 0;
-+}
-+
-+static int parse_bool_str(char *str, bool *out_val)
-+{
-+	size_t len = strlen(str);
-+
-+	while (len > 0 && isspace((unsigned char)str[len - 1]))
-+		str[--len] = '\0';
-+
-+	if (!strcmp(str, "1") || !strcasecmp(str, "true") || !strcasecmp(str, "yes")) {
-+		*out_val = true;
-+		return 0;
-+	}
-+	if (!strcmp(str, "0") || !strcasecmp(str, "false") || !strcasecmp(str, "no")) {
-+		*out_val = false;
-+		return 0;
-+	}
-+	return -EINVAL;
-+}
-+
-+static int dir_apply_event_file(int events_fd, const char *filename,
-+				enum pmu_event_file_kind kind,
-+				const char *pmu_dir_name,
-+				bool is_sysfs,
-+				struct perf_pmu_alias *alias,
-+				bool *matched)
-+{
-+	char *val = NULL;
-+	bool bval;
-+	int r = -ENOENT;
-+
-+	switch (kind) {
-+	case PMU_EVENT_FILE_BASE:
-+		if (!alias->terms) {
-+			r = dir_read_file_at(events_fd, filename, &val);
-+			if (r == 0) {
-+				alias->terms = val;
-+				if (is_sysfs) {
-+					alias->from_sysfs = true;
-+					alias->info_loaded = true;
-+				}
-+			}
-+		}
-+		break;
-+	case PMU_EVENT_FILE_LEGACY_TERMS:
-+		if (!alias->legacy_terms) {
-+			r = dir_read_file_at(events_fd, filename, &val);
-+			if (r == 0)
-+				alias->legacy_terms = val;
-+		}
-+		break;
-+	case PMU_EVENT_FILE_UNIT:
-+		if (!alias->has_unit) {
-+			r = dir_read_file_at(events_fd, filename, &val);
-+			if (r == 0) {
-+				snprintf(alias->unit, sizeof(alias->unit), "%s", val);
-+				alias->has_unit = true;
-+				free(val);
-+			}
-+		}
-+		break;
-+	case PMU_EVENT_FILE_SCALE:
-+		if (!alias->has_scale) {
-+			r = dir_read_file_at(events_fd, filename, &val);
-+			if (r == 0) {
-+				if (perf_pmu__convert_scale(val, NULL, &alias->scale) == 0)
-+					alias->has_scale = true;
-+				free(val);
-+			}
-+		}
-+		break;
-+	case PMU_EVENT_FILE_SCALE_UNIT:
-+		if (!alias->has_scale || !alias->has_unit) {
-+			r = dir_read_file_at(events_fd, filename, &val);
-+			if (r == 0) {
-+				char *unit_str = NULL;
-+				double sval = 1.0;
-+
-+				if (perf_pmu__convert_scale(val, &unit_str, &sval) == 0) {
-+					if (!alias->has_scale) {
-+						alias->scale = sval;
-+						alias->has_scale = true;
-+					}
-+					if (!alias->has_unit && unit_str) {
-+						snprintf(alias->unit, sizeof(alias->unit),
-+							 "%s", unit_str);
-+						alias->has_unit = true;
-+					}
-+				}
-+				free(val);
-+			}
-+		}
-+		break;
-+	case PMU_EVENT_FILE_PER_PKG:
-+		if (!alias->has_per_pkg) {
-+			r = dir_read_file_at(events_fd, filename, &val);
-+			if (r == 0) {
-+				if (parse_bool_str(val, &bval) == 0) {
-+					alias->per_pkg = bval;
-+					alias->has_per_pkg = true;
-+				}
-+				free(val);
-+			}
-+		}
-+		break;
-+	case PMU_EVENT_FILE_SNAPSHOT:
-+		if (!alias->has_snapshot) {
-+			r = dir_read_file_at(events_fd, filename, &val);
-+			if (r == 0) {
-+				if (parse_bool_str(val, &bval) == 0) {
-+					alias->snapshot = bval;
-+					alias->has_snapshot = true;
-+				}
-+				free(val);
-+			}
-+		}
-+		break;
-+	case PMU_EVENT_FILE_DEPRECATED:
-+		if (!alias->has_deprecated) {
-+			r = dir_read_file_at(events_fd, filename, &val);
-+			if (r == 0) {
-+				if (parse_bool_str(val, &bval) == 0) {
-+					alias->deprecated = bval;
-+					alias->has_deprecated = true;
-+				}
-+				free(val);
-+			}
-+		}
-+		break;
-+	case PMU_EVENT_FILE_DESC:
-+		if (!alias->desc) {
-+			r = dir_read_file_at(events_fd, filename, &val);
-+			if (r == 0)
-+				alias->desc = val;
-+		}
-+		break;
-+	case PMU_EVENT_FILE_LONG_DESC:
-+		if (!alias->long_desc) {
-+			r = dir_read_file_at(events_fd, filename, &val);
-+			if (r == 0)
-+				alias->long_desc = val;
-+		}
-+		break;
-+	case PMU_EVENT_FILE_TOPIC:
-+		if (!alias->topic) {
-+			r = dir_read_file_at(events_fd, filename, &val);
-+			if (r == 0)
-+				alias->topic = val;
-+		}
-+		break;
-+	case PMU_EVENT_FILE_COMPAT:
-+		if (!alias->compat) {
-+			r = dir_read_file_at(events_fd, filename, &val);
-+			if (r == 0)
-+				alias->compat = val;
-+		}
-+		break;
-+	case PMU_EVENT_FILE_RETIRE_LAT_MEAN:
-+		if (!alias->has_retire_lat_mean) {
-+			r = dir_read_file_at(events_fd, filename, &val);
-+			if (r == 0) {
-+				if (perf_pmu__convert_scale(val, NULL,
-+							    &alias->retirement_latency_mean) == 0)
-+					alias->has_retire_lat_mean = true;
-+				free(val);
-+			}
-+		}
-+		break;
-+	case PMU_EVENT_FILE_RETIRE_LAT_MIN:
-+		if (!alias->has_retire_lat_min) {
-+			r = dir_read_file_at(events_fd, filename, &val);
-+			if (r == 0) {
-+				if (perf_pmu__convert_scale(val, NULL,
-+							    &alias->retirement_latency_min) == 0)
-+					alias->has_retire_lat_min = true;
-+				free(val);
-+			}
-+		}
-+		break;
-+	case PMU_EVENT_FILE_RETIRE_LAT_MAX:
-+		if (!alias->has_retire_lat_max) {
-+			r = dir_read_file_at(events_fd, filename, &val);
-+			if (r == 0) {
-+				if (perf_pmu__convert_scale(val, NULL,
-+							    &alias->retirement_latency_max) == 0)
-+					alias->has_retire_lat_max = true;
-+				free(val);
-+			}
-+		}
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	if (r == 0) {
-+		if (matched)
-+			*matched = true;
-+		if (!is_sysfs && !alias->pmu_name && pmu_dir_name &&
-+		    strcmp(pmu_dir_name, "default_core") != 0) {
-+			alias->pmu_name = strdup(pmu_dir_name);
-+			if (!alias->pmu_name)
-+				return -ENOMEM;
-+		}
-+	}
-+	return r == -ENOMEM ? -ENOMEM : 0;
-+}
-+
-+static int parse_aggr_mode_str(const char *str, enum aggr_mode_class *out)
-+{
-+	if (!strcasecmp(str, "PerChip") || !strcmp(str, "1")) {
-+		*out = PerChip;
-+		return 0;
-+	}
-+	if (!strcasecmp(str, "PerCore") || !strcmp(str, "2")) {
-+		*out = PerCore;
-+		return 0;
-+	}
-+	return -EINVAL;
-+}
-+
-+static int parse_constraint_str(const char *str, enum metric_event_groups *out)
-+{
-+	if (!strcasecmp(str, "GROUP_EVENTS") || !strcmp(str, "0")) {
-+		*out = MetricGroupEvents;
-+		return 0;
-+	}
-+	if (!strcasecmp(str, "NO_GROUP_EVENTS") || !strcmp(str, "1")) {
-+		*out = MetricNoGroupEvents;
-+		return 0;
-+	}
-+	if (!strcasecmp(str, "NO_GROUP_EVENTS_NMI") ||
-+	    !strcasecmp(str, "NO_NMI_WATCHDOG") || !strcmp(str, "2")) {
-+		*out = MetricNoGroupEventsNmi;
-+		return 0;
-+	}
-+	if (!strcasecmp(str, "NO_GROUP_EVENTS_SMT") || !strcmp(str, "3")) {
-+		*out = MetricNoGroupEventsSmt;
-+		return 0;
-+	}
-+	if (!strcasecmp(str, "NO_THRESHOLD_AND_NMI") || !strcmp(str, "4")) {
-+		*out = MetricNoGroupEventsThresholdAndNmi;
-+		return 0;
-+	}
-+	return -EINVAL;
-+}
-+
-+static int dir_apply_metric_file(int metrics_fd, const char *filename,
-+				 enum pmu_metric_file_kind kind,
-+				 const char *pmu_dir_name,
-+				 struct perf_pmu_metric *metric,
-+				 bool *matched)
-+{
-+	char *val = NULL;
-+	bool bval;
-+	int r = -ENOENT;
-+
-+	switch (kind) {
-+	case PMU_METRIC_FILE_BASE:
-+		if (!metric->metric_expr) {
-+			r = dir_read_file_at(metrics_fd, filename, &val);
-+			if (r == 0)
-+				metric->metric_expr = val;
-+		} else if (faccessat(metrics_fd, filename, F_OK, 0) == 0) {
-+			r = 0;
-+		}
-+		break;
-+	case PMU_METRIC_FILE_SCALE_UNIT:
-+		if (!metric->unit) {
-+			r = dir_read_file_at(metrics_fd, filename, &val);
-+			if (r == 0)
-+				metric->unit = val;
-+		}
-+		break;
-+	case PMU_METRIC_FILE_DESC:
-+		if (!metric->desc) {
-+			r = dir_read_file_at(metrics_fd, filename, &val);
-+			if (r == 0)
-+				metric->desc = val;
-+		}
-+		break;
-+	case PMU_METRIC_FILE_LONG_DESC:
-+		if (!metric->long_desc) {
-+			r = dir_read_file_at(metrics_fd, filename, &val);
-+			if (r == 0)
-+				metric->long_desc = val;
-+		}
-+		break;
-+	case PMU_METRIC_FILE_GROUP:
-+		if (!metric->metric_group) {
-+			r = dir_read_file_at(metrics_fd, filename, &val);
-+			if (r == 0)
-+				metric->metric_group = val;
-+		}
-+		break;
-+	case PMU_METRIC_FILE_NO_GROUP:
-+		if (!metric->metricgroup_no_group) {
-+			r = dir_read_file_at(metrics_fd, filename, &val);
-+			if (r == 0)
-+				metric->metricgroup_no_group = val;
-+		}
-+		break;
-+	case PMU_METRIC_FILE_DEFAULT_GROUP:
-+		if (!metric->default_metricgroup_name) {
-+			r = dir_read_file_at(metrics_fd, filename, &val);
-+			if (r == 0)
-+				metric->default_metricgroup_name = val;
-+		}
-+		break;
-+	case PMU_METRIC_FILE_THRESHOLD:
-+		if (!metric->metric_threshold) {
-+			r = dir_read_file_at(metrics_fd, filename, &val);
-+			if (r == 0)
-+				metric->metric_threshold = val;
-+		}
-+		break;
-+	case PMU_METRIC_FILE_COMPAT:
-+		if (!metric->compat) {
-+			r = dir_read_file_at(metrics_fd, filename, &val);
-+			if (r == 0)
-+				metric->compat = val;
-+		}
-+		break;
-+	case PMU_METRIC_FILE_AGGR_MODE:
-+		if (!metric->has_aggr_mode) {
-+			r = dir_read_file_at(metrics_fd, filename, &val);
-+			if (r == 0) {
-+				if (parse_aggr_mode_str(val, &metric->aggr_mode) == 0)
-+					metric->has_aggr_mode = true;
-+				free(val);
-+			}
-+		}
-+		break;
-+	case PMU_METRIC_FILE_CONSTRAINT:
-+		if (!metric->has_event_grouping) {
-+			r = dir_read_file_at(metrics_fd, filename, &val);
-+			if (r == 0) {
-+				if (parse_constraint_str(val, &metric->event_grouping) == 0)
-+					metric->has_event_grouping = true;
-+				free(val);
-+			}
-+		}
-+		break;
-+	case PMU_METRIC_FILE_SHOW_EVENTS:
-+		if (!metric->has_default_show_events) {
-+			r = dir_read_file_at(metrics_fd, filename, &val);
-+			if (r == 0) {
-+				if (parse_bool_str(val, &bval) == 0) {
-+					metric->default_show_events = bval;
-+					metric->has_default_show_events = true;
-+				}
-+				free(val);
-+			}
-+		}
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	if (r == 0) {
-+		if (matched)
-+			*matched = true;
-+		if (!metric->pmu && pmu_dir_name) {
-+			metric->pmu = strdup(pmu_dir_name);
-+			if (!metric->pmu)
-+				return -ENOMEM;
-+		}
-+	}
-+	return r == -ENOMEM ? -ENOMEM : 0;
-+}
-+
-+static size_t build_cpuid_candidates(const char *cpuid,
-+				     char candidates[][128],
-+				     size_t max_candidates)
-+{
-+	size_t n = 0, len;
-+
-+	if (!cpuid || !cpuid[0] || max_candidates == 0)
-+		return 0;
-+
-+	len = strlen(cpuid);
-+	if (len >= sizeof(candidates[0]))
-+		return 0;
-+
-+	snprintf(candidates[n++], sizeof(candidates[0]), "%s", cpuid);
-+
-+	if (strchr(cpuid, '-') || strchr(cpuid, ',')) {
-+		char sep = strchr(cpuid, '-') ? '-' : ',';
-+		char work[128];
-+
-+		snprintf(work, sizeof(work), "%s", cpuid);
-+		while (n < max_candidates) {
-+			char *last = strrchr(work, sep);
-+
-+			if (!last || last == work || !strchr(work, sep) ||
-+			    strchr(work, sep) == last)
-+				break;
-+			*last = '\0';
-+			snprintf(candidates[n++], sizeof(candidates[0]), "%s", work);
-+		}
-+	} else if (!strncmp(cpuid, "0x", 2) || !strncmp(cpuid, "0X", 2)) {
-+		char *end = NULL;
-+		unsigned long long val = strtoull(cpuid, &end, 16);
-+
-+		if (end && *end == '\0' && n < max_candidates) {
-+			if (len == 18) {
-+				/* ARM64 MIDR: zero Variant[23:20] and Revision[3:0]. */
-+				unsigned long long masked = val & ~0x00f0000fULL;
-+
-+				if (masked != val)
-+					snprintf(candidates[n++], sizeof(candidates[0]),
-+						 "0x%016llx", masked);
-+			} else if (len == 10) {
-+				/* PowerPC PVR: zero Revision[15:0]. */
-+				unsigned long long masked = val & ~0xffffULL;
-+
-+				if (masked != val)
-+					snprintf(candidates[n++], sizeof(candidates[0]),
-+						 "0x%08llx", masked);
-+			}
-+		}
-+	}
-+	return n;
-+}
-+
-+typedef int (*dir_scope_cb)(int scope_fd, struct perf_pmu *pmu, void *ctx);
-+
-+static int dir_for_each_scope(const struct pmu_layer *layer,
-+			      struct perf_pmu *pmu,
-+			      dir_scope_cb cb, void *ctx)
-+{
-+	int root_fd, cpus_fd, ret = 0;
-+
-+	if (!layer->root_path || !layer->root_path[0])
-+		return 0;
-+
-+	root_fd = open(layer->root_path, O_RDONLY | O_DIRECTORY);
-+	if (root_fd < 0)
-+		return 0;
-+
-+	/* 1. Exact and deterministic base CPUID scopes under <root>/cpus/. */
-+	cpus_fd = openat(root_fd, "cpus", O_RDONLY | O_DIRECTORY);
-+	if (cpus_fd >= 0) {
-+		struct perf_cpu cpu = pmu ? perf_cpu_map__min(pmu->cpus)
-+					  : (struct perf_cpu){ -1 };
-+		char *cpuid = get_cpuid_allow_env_override(cpu);
-+
-+		if (!cpuid && pmu)
-+			cpuid = get_cpuid_allow_env_override((struct perf_cpu){ -1 });
-+		if (cpuid) {
-+			char cands[6][128];
-+			size_t nr_cands = build_cpuid_candidates(cpuid, cands,
-+								 ARRAY_SIZE(cands));
-+
-+			for (size_t i = 0; i < nr_cands; i++) {
-+				int scope_fd = openat(cpus_fd, cands[i],
-+						      O_RDONLY | O_DIRECTORY);
-+
-+				if (scope_fd < 0)
-+					continue;
-+				ret = cb(scope_fd, pmu, ctx);
-+				close(scope_fd);
-+				break;
-+			}
-+			free(cpuid);
-+		}
-+		close(cpus_fd);
-+		if (ret) {
-+			close(root_fd);
-+			return ret;
-+		}
-+	}
-+
-+	/* 2. Uncore/system PMU identifier scope under <root>/sys/<pmu->id>/. */
-+	if (pmu && pmu->id && pmu->id[0]) {
-+		int sys_fd = openat(root_fd, "sys", O_RDONLY | O_DIRECTORY);
-+
-+		if (sys_fd >= 0) {
-+			int scope_fd = openat(sys_fd, pmu->id, O_RDONLY | O_DIRECTORY);
-+
-+			if (scope_fd >= 0) {
-+				ret = cb(scope_fd, pmu, ctx);
-+				close(scope_fd);
-+			}
-+			close(sys_fd);
-+			if (ret) {
-+				close(root_fd);
-+				return ret;
-+			}
-+		}
-+	}
-+
-+	/* 3. Host-direct layout directly under <root>/. */
-+	ret = cb(root_fd, pmu, ctx);
-+	close(root_fd);
-+	return ret;
-+}
-+
-+typedef int (*dir_pmu_cb)(int pmu_fd, const char *pmu_dir_name,
-+			  struct perf_pmu *pmu, void *ctx);
-+
-+static bool seen_pmu_dir(const char *seen[], size_t nr_seen, const char *name)
-+{
-+	for (size_t i = 0; i < nr_seen; i++) {
-+		if (!strcmp(seen[i], name))
-+			return true;
-+	}
-+	return false;
-+}
-+
-+static int dir_for_each_pmu_subdir(int scope_fd, struct perf_pmu *pmu,
-+				   dir_pmu_cb cb, void *ctx)
-+{
-+	const char *cands[4];
-+	char no_suffix[MAX_PMU_NAME_LEN];
-+	size_t nr_cands = 0;
-+	int ret = 0;
-+
-+	if (pmu->name && pmu->name[0])
-+		cands[nr_cands++] = pmu->name;
-+
-+	if (pmu->alias_name && pmu->alias_name[0] &&
-+	    !seen_pmu_dir(cands, nr_cands, pmu->alias_name))
-+		cands[nr_cands++] = pmu->alias_name;
-+
-+	if (pmu->is_core && !seen_pmu_dir(cands, nr_cands, "default_core"))
-+		cands[nr_cands++] = "default_core";
-+
-+	if (pmu->is_uncore && pmu->name) {
-+		size_t base_len = pmu_name_len_no_suffix(pmu->name);
-+
-+		if (base_len > 0 && base_len < sizeof(no_suffix) &&
-+		    base_len != strlen(pmu->name)) {
-+			memcpy(no_suffix, pmu->name, base_len);
-+			no_suffix[base_len] = '\0';
-+			if (!seen_pmu_dir(cands, nr_cands, no_suffix))
-+				cands[nr_cands++] = no_suffix;
-+		}
-+	}
-+
-+	for (size_t i = 0; i < nr_cands; i++) {
-+		int pmu_fd = openat(scope_fd, cands[i], O_RDONLY | O_DIRECTORY);
-+
-+		if (pmu_fd < 0)
-+			continue;
-+		ret = cb(pmu_fd, cands[i], pmu, ctx);
-+		close(pmu_fd);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (pmu->is_uncore) {
-+		int dup_fd = dup(scope_fd);
-+
-+		if (dup_fd >= 0) {
-+			struct io_dir dir;
-+			struct io_dirent64 *dent;
-+
-+			io_dir__init(&dir, dup_fd);
-+			while ((dent = io_dir__readdir(&dir)) != NULL) {
-+				int pmu_fd;
-+
-+				if (dent->d_name[0] == '.' ||
-+				    seen_pmu_dir(cands, nr_cands, dent->d_name) ||
-+				    !strcmp(dent->d_name, "cpus") ||
-+				    !strcmp(dent->d_name, "sys") ||
-+				    !strcmp(dent->d_name, "models") ||
-+				    !strcmp(dent->d_name, "metricgroups"))
-+					continue;
-+				if (!perf_pmu__name_wildcard_match(pmu, dent->d_name))
-+					continue;
-+				pmu_fd = openat(scope_fd, dent->d_name,
-+						O_RDONLY | O_DIRECTORY);
-+				if (pmu_fd < 0)
-+					continue;
-+				ret = cb(pmu_fd, dent->d_name, pmu, ctx);
-+				close(pmu_fd);
-+				if (ret)
-+					break;
-+			}
-+			close(dup_fd);
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static int dir_scan_events_fd(int events_fd, const char *pmu_dir_name,
-+			      bool is_sysfs, struct perf_pmu *pmu)
-+{
-+	int dup_fd = dup(events_fd);
-+	struct io_dir dir;
-+	struct io_dirent64 *dent;
-+	int ret = 0;
-+
-+	if (dup_fd < 0)
-+		return -errno;
-+
-+	io_dir__init(&dir, dup_fd);
-+	while ((dent = io_dir__readdir(&dir)) != NULL) {
-+		size_t base_len = 0;
-+		enum pmu_event_file_kind kind;
-+		char decoded[NAME_MAX];
-+		struct perf_pmu_alias *alias;
-+
-+		if (dent->d_name[0] == '.')
-+			continue;
-+
-+		kind = pmu_event_file_kind(dent->d_name, &base_len);
-+		if (base_len == 0 ||
-+		    pmu_layer__decode_filename(dent->d_name, base_len,
-+					       decoded, sizeof(decoded)) != 0)
-+			continue;
-+
-+		alias = pmu_layer_get_or_create_alias(pmu, decoded);
-+		if (!alias) {
-+			ret = -ENOMEM;
-+			break;
-+		}
-+		if (alias->resolved && active_sysfs_override_fd < 0)
-+			continue;
-+
-+		ret = dir_apply_event_file(events_fd, dent->d_name, kind,
-+					   pmu_dir_name, is_sysfs, alias, NULL);
-+		if (ret)
-+			break;
-+	}
-+	close(dup_fd);
-+	return ret;
-+}
-+
-+static int dir_scan_metrics_fd(int metrics_fd, const char *pmu_dir_name,
-+			       struct perf_pmu *pmu)
-+{
-+	int dup_fd = dup(metrics_fd);
-+	struct io_dir dir;
-+	struct io_dirent64 *dent;
-+	int ret = 0;
-+
-+	if (dup_fd < 0)
-+		return -errno;
-+
-+	io_dir__init(&dir, dup_fd);
-+	while ((dent = io_dir__readdir(&dir)) != NULL) {
-+		size_t base_len = 0;
-+		enum pmu_metric_file_kind kind;
-+		char decoded[NAME_MAX];
-+		struct perf_pmu_metric *metric;
-+
-+		if (dent->d_name[0] == '.')
-+			continue;
-+
-+		kind = pmu_metric_file_kind(dent->d_name, &base_len);
-+		if (base_len == 0 ||
-+		    pmu_layer__decode_filename(dent->d_name, base_len,
-+					       decoded, sizeof(decoded)) != 0)
-+			continue;
-+
-+		metric = pmu_layer_get_or_create_metric(pmu, decoded);
-+		if (!metric) {
-+			ret = -ENOMEM;
-+			break;
-+		}
-+
-+		ret = dir_apply_metric_file(metrics_fd, dent->d_name, kind,
-+					    pmu_dir_name, metric, NULL);
-+		if (ret)
-+			break;
-+	}
-+	close(dup_fd);
-+	return ret;
-+}
-+
-+struct dir_find_event_ctx {
-+	const char *name;
-+	struct perf_pmu_alias *alias;
-+};
-+
-+static int dir_probe_user_event_base(int events_fd, const char *enc_base,
-+				     const char *canon_name,
-+				     const char *pmu_dir_name,
-+				     struct perf_pmu_alias *alias)
-+{
-+	static const struct {
-+		const char *suffix;
-+		enum pmu_event_file_kind kind;
-+	} probes[] = {
-+		{ "",			PMU_EVENT_FILE_BASE },
-+		{ ".legacy-terms",	PMU_EVENT_FILE_LEGACY_TERMS },
-+		{ ".unit",		PMU_EVENT_FILE_UNIT },
-+		{ ".scale",		PMU_EVENT_FILE_SCALE },
-+		{ ".scale-unit",	PMU_EVENT_FILE_SCALE_UNIT },
-+		{ ".per-pkg",		PMU_EVENT_FILE_PER_PKG },
-+		{ ".snapshot",		PMU_EVENT_FILE_SNAPSHOT },
-+		{ ".desc",		PMU_EVENT_FILE_DESC },
-+		{ ".long-desc",		PMU_EVENT_FILE_LONG_DESC },
-+		{ ".topic",		PMU_EVENT_FILE_TOPIC },
-+		{ ".compat",		PMU_EVENT_FILE_COMPAT },
-+		{ ".deprecated",	PMU_EVENT_FILE_DEPRECATED },
-+		{ ".retire-lat-mean",	PMU_EVENT_FILE_RETIRE_LAT_MEAN },
-+		{ ".retire-lat-min",	PMU_EVENT_FILE_RETIRE_LAT_MIN },
-+		{ ".retire-lat-max",	PMU_EVENT_FILE_RETIRE_LAT_MAX },
-+	};
-+	char filename[NAME_MAX + 32];
-+	bool was_empty = pmu_layer_alias_is_empty(alias);
-+	bool matched_any = false;
-+
-+	for (size_t i = 0; i < ARRAY_SIZE(probes); i++) {
-+		bool matched = false;
-+		int ret;
-+
-+		snprintf(filename, sizeof(filename), "%s%s", enc_base, probes[i].suffix);
-+		ret = dir_apply_event_file(events_fd, filename, probes[i].kind,
-+					   pmu_dir_name, /*is_sysfs=*/false,
-+					   alias, &matched);
-+		if (ret)
-+			return ret;
-+		if (matched)
-+			matched_any = true;
-+	}
-+
-+	if (was_empty && matched_any && canon_name && strcmp(alias->name, canon_name) != 0) {
-+		char *dup_name = strdup(canon_name);
-+
-+		if (!dup_name)
-+			return -ENOMEM;
-+		free(alias->name);
-+		alias->name = dup_name;
-+	}
-+	return 0;
-+}
-+
-+static int user_dir_find_event_pmu_cb(int pmu_fd, const char *pmu_dir_name,
-+				      struct perf_pmu *pmu __maybe_unused,
-+				      void *vctx)
-+{
-+	struct dir_find_event_ctx *ctx = vctx;
-+	char lower[NAME_MAX], upper[NAME_MAX];
-+	char enc_exact[NAME_MAX], enc_lower[NAME_MAX], enc_upper[NAME_MAX];
-+	const char *enc_cands[3], *raw_cands[3];
-+	size_t nr_cands = 0, len = strlen(ctx->name);
-+	const char *pmu_label;
-+	int events_fd;
-+
-+	if (len == 0 || len >= NAME_MAX || ctx->name[0] == '.' ||
-+	    pmu_event_file_kind(ctx->name, NULL) != PMU_EVENT_FILE_BASE)
-+		return 0;
-+
-+	events_fd = openat(pmu_fd, "events", O_RDONLY | O_DIRECTORY);
-+	if (events_fd < 0)
-+		return 0;
-+
-+	for (size_t i = 0; i < len; i++) {
-+		lower[i] = tolower((unsigned char)ctx->name[i]);
-+		upper[i] = toupper((unsigned char)ctx->name[i]);
-+	}
-+	lower[len] = '\0';
-+	upper[len] = '\0';
-+
-+	if (pmu_layer__encode_filename(ctx->name, enc_exact, sizeof(enc_exact)) == 0) {
-+		enc_cands[nr_cands] = enc_exact;
-+		raw_cands[nr_cands++] = ctx->name;
-+	}
-+	if (strcmp(lower, ctx->name) != 0 &&
-+	    pmu_layer__encode_filename(lower, enc_lower, sizeof(enc_lower)) == 0) {
-+		enc_cands[nr_cands] = enc_lower;
-+		raw_cands[nr_cands++] = lower;
-+	}
-+	if (strcmp(upper, ctx->name) != 0 && strcmp(upper, lower) != 0 &&
-+	    pmu_layer__encode_filename(upper, enc_upper, sizeof(enc_upper)) == 0) {
-+		enc_cands[nr_cands] = enc_upper;
-+		raw_cands[nr_cands++] = upper;
-+	}
-+
-+	pmu_label = !strcmp(pmu_dir_name, "default_core") ? NULL : pmu_dir_name;
-+
-+	for (size_t i = 0; i < nr_cands; i++) {
-+		int ret = dir_probe_user_event_base(events_fd, enc_cands[i], raw_cands[i],
-+						    pmu_label, ctx->alias);
-+		if (ret) {
-+			close(events_fd);
-+			return ret;
-+		}
-+	}
-+
-+	close(events_fd);
-+	return 0;
-+}
-+
-+static int user_dir_find_event_scope_cb(int scope_fd, struct perf_pmu *pmu, void *vctx)
-+{
-+	return dir_for_each_pmu_subdir(scope_fd, pmu, user_dir_find_event_pmu_cb, vctx);
-+}
-+
-+static int user_dir_find_event(const struct pmu_layer *layer,
-+			       struct perf_pmu *pmu, const char *name,
-+			       struct perf_pmu_alias *alias)
-+{
-+	struct dir_find_event_ctx ctx = {
-+		.name = name,
-+		.alias = alias,
-+	};
-+	int ret = dir_for_each_scope(layer, pmu, user_dir_find_event_scope_cb, &ctx);
-+
-+	return ret < 0 ? ret : 0;
-+}
-+
-+static int user_dir_for_each_event_pmu_cb(int pmu_fd, const char *pmu_dir_name,
-+					  struct perf_pmu *pmu, void *vctx __maybe_unused)
-+{
-+	const char *pmu_label;
-+	int events_fd, ret;
-+
-+	events_fd = openat(pmu_fd, "events", O_RDONLY | O_DIRECTORY);
-+	if (events_fd < 0)
-+		return 0;
-+
-+	pmu_label = !strcmp(pmu_dir_name, "default_core") ? NULL : pmu_dir_name;
-+	ret = dir_scan_events_fd(events_fd, pmu_label, /*is_sysfs=*/false, pmu);
-+	close(events_fd);
-+	return ret;
-+}
-+
-+static int user_dir_for_each_event_scope_cb(int scope_fd, struct perf_pmu *pmu, void *vctx)
-+{
-+	return dir_for_each_pmu_subdir(scope_fd, pmu, user_dir_for_each_event_pmu_cb, vctx);
-+}
-+
-+static int user_dir_for_each_event(const struct pmu_layer *layer,
-+				   struct perf_pmu *pmu)
-+{
-+	return dir_for_each_scope(layer, pmu, user_dir_for_each_event_scope_cb, NULL);
-+}
-+
-+struct dir_find_metric_ctx {
-+	const char *name;
-+	struct perf_pmu_metric *metric;
-+};
-+
-+static int user_dir_find_metric_pmu_cb(int pmu_fd, const char *pmu_dir_name,
-+				       struct perf_pmu *pmu __maybe_unused,
-+				       void *vctx)
-+{
-+	static const struct {
-+		const char *suffix;
-+		enum pmu_metric_file_kind kind;
-+	} probes[] = {
-+		{ "",			PMU_METRIC_FILE_BASE },
-+		{ ".scale-unit",	PMU_METRIC_FILE_SCALE_UNIT },
-+		{ ".desc",		PMU_METRIC_FILE_DESC },
-+		{ ".long-desc",		PMU_METRIC_FILE_LONG_DESC },
-+		{ ".group",		PMU_METRIC_FILE_GROUP },
-+		{ ".no-group",		PMU_METRIC_FILE_NO_GROUP },
-+		{ ".default-group",	PMU_METRIC_FILE_DEFAULT_GROUP },
-+		{ ".threshold",		PMU_METRIC_FILE_THRESHOLD },
-+		{ ".compat",		PMU_METRIC_FILE_COMPAT },
-+		{ ".aggr-mode",		PMU_METRIC_FILE_AGGR_MODE },
-+		{ ".constraint",	PMU_METRIC_FILE_CONSTRAINT },
-+		{ ".show-events",	PMU_METRIC_FILE_SHOW_EVENTS },
-+	};
-+	struct dir_find_metric_ctx *ctx = vctx;
-+	char enc_name[NAME_MAX];
-+	char filename[NAME_MAX + 32];
-+	int metrics_fd;
-+
-+	if (!ctx->name[0] || ctx->name[0] == '.' ||
-+	    pmu_metric_file_kind(ctx->name, NULL) != PMU_METRIC_FILE_BASE ||
-+	    pmu_layer__encode_filename(ctx->name, enc_name, sizeof(enc_name)) != 0)
-+		return 0;
-+
-+	metrics_fd = openat(pmu_fd, "metrics", O_RDONLY | O_DIRECTORY);
-+	if (metrics_fd < 0)
-+		return 0;
-+
-+	for (size_t i = 0; i < ARRAY_SIZE(probes); i++) {
-+		int ret;
-+
-+		snprintf(filename, sizeof(filename), "%s%s", enc_name, probes[i].suffix);
-+		ret = dir_apply_metric_file(metrics_fd, filename, probes[i].kind,
-+					    pmu_dir_name, ctx->metric, NULL);
-+		if (ret) {
-+			close(metrics_fd);
-+			return ret;
-+		}
-+	}
-+
-+	close(metrics_fd);
-+	return 0;
-+}
-+
-+static int user_dir_find_metric_scope_cb(int scope_fd, struct perf_pmu *pmu, void *vctx)
-+{
-+	return dir_for_each_pmu_subdir(scope_fd, pmu, user_dir_find_metric_pmu_cb, vctx);
-+}
-+
-+static int user_dir_find_metric(const struct pmu_layer *layer,
-+				struct perf_pmu *pmu, const char *name,
-+				struct perf_pmu_metric *metric)
-+{
-+	struct dir_find_metric_ctx ctx = {
-+		.name = name,
-+		.metric = metric,
-+	};
-+	int ret = dir_for_each_scope(layer, pmu, user_dir_find_metric_scope_cb, &ctx);
-+
-+	return ret < 0 ? ret : 0;
-+}
-+
-+static int user_dir_for_each_metric_pmu_cb(int pmu_fd, const char *pmu_dir_name,
-+					   struct perf_pmu *pmu,
-+					   void *vctx __maybe_unused)
-+{
-+	int metrics_fd, ret;
-+
-+	metrics_fd = openat(pmu_fd, "metrics", O_RDONLY | O_DIRECTORY);
-+	if (metrics_fd < 0)
-+		return 0;
-+
-+	ret = dir_scan_metrics_fd(metrics_fd, pmu_dir_name, pmu);
-+	close(metrics_fd);
-+	return ret;
-+}
-+
-+static int user_dir_for_each_metric_scope_cb(int scope_fd, struct perf_pmu *pmu, void *vctx)
-+{
-+	return dir_for_each_pmu_subdir(scope_fd, pmu, user_dir_for_each_metric_pmu_cb, vctx);
-+}
-+
-+static int user_dir_for_each_metric(const struct pmu_layer *layer,
-+				    struct perf_pmu *pmu)
-+{
-+	return dir_for_each_scope(layer, pmu, user_dir_for_each_metric_scope_cb, NULL);
-+}
-+
-+struct dir_metricgroup_ctx {
-+	const char *group;
-+	struct perf_pmu_metricgroup *mg;
-+};
-+
-+static int dir_probe_metricgroups_fd(int mg_fd, const char *enc_group,
-+				     struct perf_pmu_metricgroup *mg)
-+{
-+	char filename[NAME_MAX + 16];
-+	char *val = NULL;
-+
-+	snprintf(filename, sizeof(filename), "%s.desc", enc_group);
-+	if (dir_read_file_at(mg_fd, filename, &val) == 0) {
-+		mg->desc = val;
-+		return 1;
-+	}
-+	return 0;
-+}
-+
-+static int user_dir_metricgroup_pmu_cb(int pmu_fd, const char *pmu_dir_name __maybe_unused,
-+				       struct perf_pmu *pmu __maybe_unused, void *vctx)
-+{
-+	struct dir_metricgroup_ctx *ctx = vctx;
-+	char enc_group[NAME_MAX];
-+	int mg_fd, ret = 0;
-+
-+	if (pmu_layer__encode_filename(ctx->group, enc_group, sizeof(enc_group)) != 0)
-+		return 0;
-+
-+	mg_fd = openat(pmu_fd, "metricgroups", O_RDONLY | O_DIRECTORY);
-+	if (mg_fd < 0)
-+		return 0;
-+
-+	ret = dir_probe_metricgroups_fd(mg_fd, enc_group, ctx->mg);
-+	close(mg_fd);
-+	return ret;
-+}
-+
-+static int user_dir_metricgroup_scope_cb(int scope_fd, struct perf_pmu *pmu, void *vctx)
-+{
-+	struct dir_metricgroup_ctx *ctx = vctx;
-+	char enc_group[NAME_MAX];
-+	int mg_fd, ret = 0;
-+
-+	if (pmu_layer__encode_filename(ctx->group, enc_group, sizeof(enc_group)) != 0)
-+		return 0;
-+
-+	mg_fd = openat(scope_fd, "metricgroups", O_RDONLY | O_DIRECTORY);
-+	if (mg_fd >= 0) {
-+		ret = dir_probe_metricgroups_fd(mg_fd, enc_group, ctx->mg);
-+		close(mg_fd);
-+		if (ret)
-+			return ret;
-+	}
-+	if (pmu)
-+		return dir_for_each_pmu_subdir(scope_fd, pmu,
-+					       user_dir_metricgroup_pmu_cb, vctx);
-+	return 0;
-+}
-+
-+static int user_dir_load_metricgroup(const struct pmu_layer *layer,
-+				     struct perf_pmu *pmu,
-+				     const char *group,
-+				     struct perf_pmu_metricgroup *mg)
-+{
-+	struct dir_metricgroup_ctx ctx = {
-+		.group = group,
-+		.mg = mg,
-+	};
-+	int ret;
-+
-+	if (mg->desc)
-+		return 0;
-+
-+	ret = dir_for_each_scope(layer, pmu, user_dir_metricgroup_scope_cb, &ctx);
-+	return ret < 0 ? ret : 0;
-+}
-+
-+static const struct pmu_layer_ops __maybe_unused user_dir_layer_ops = {
-+	.find_event = user_dir_find_event,
-+	.for_each_event = user_dir_for_each_event,
-+	.find_metric = user_dir_find_metric,
-+	.for_each_metric = user_dir_for_each_metric,
-+	.load_metricgroup = user_dir_load_metricgroup,
-+};
-+
-+static int sysfs_open_events_dir(struct perf_pmu *pmu)
-+{
-+	char path[PATH_MAX];
-+	size_t len;
-+
-+	if (active_sysfs_override_fd >= 0) {
-+		scnprintf(path, sizeof(path), "%s/events", pmu->name);
-+		return openat(active_sysfs_override_fd, path, O_RDONLY | O_DIRECTORY);
-+	}
-+
-+	if (pmu->sysfs_aliases_loaded)
-+		return -1;
-+
-+	len = perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
-+	if (!len)
-+		return -1;
-+	scnprintf(path + len, sizeof(path) - len, "%s/events", pmu->name);
-+	return open(path, O_RDONLY | O_DIRECTORY);
-+}
-+
-+static int sysfs_layer_find_event(const struct pmu_layer *layer __maybe_unused,
-+				  struct perf_pmu *pmu, const char *name,
-+				  struct perf_pmu_alias *alias)
-+{
-+	char lower[NAME_MAX], upper[NAME_MAX];
-+	const char *cands[3];
-+	size_t nr_cands = 0, len = strlen(name);
-+	int events_fd;
-+
-+	if (pmu->eager_sysfs_loaded)
-+		return 0;
-+
-+	if (len == 0 || len >= NAME_MAX || name[0] == '.' || strchr(name, '/') ||
-+	    pmu_event_file_kind(name, NULL) != PMU_EVENT_FILE_BASE)
-+		return 0;
-+
-+	events_fd = sysfs_open_events_dir(pmu);
-+	if (events_fd < 0) {
-+		if (errno == ENOENT)
-+			pmu->sysfs_aliases_loaded = true;
-+		return 0;
-+	}
-+
-+	cands[nr_cands++] = name;
-+	for (size_t i = 0; i < len; i++) {
-+		lower[i] = tolower((unsigned char)name[i]);
-+		upper[i] = toupper((unsigned char)name[i]);
-+	}
-+	lower[len] = '\0';
-+	upper[len] = '\0';
-+
-+	if (strcmp(lower, name) != 0)
-+		cands[nr_cands++] = lower;
-+	if (strcmp(upper, name) != 0 && strcmp(upper, lower) != 0)
-+		cands[nr_cands++] = upper;
-+
-+	for (size_t i = 0; i < nr_cands; i++) {
-+		struct stat st;
-+		char filename[NAME_MAX + 16];
-+		int fd = openat(events_fd, cands[i], O_RDONLY);
-+
-+		if (fd < 0)
-+			continue;
-+		if (fstat(fd, &st) == 0 && !S_ISDIR(st.st_mode)) {
-+			static const struct {
-+				const char *suffix;
-+				enum pmu_event_file_kind kind;
-+			} sysfs_probes[] = {
-+				{ "",		PMU_EVENT_FILE_BASE },
-+				{ ".unit",	PMU_EVENT_FILE_UNIT },
-+				{ ".scale",	PMU_EVENT_FILE_SCALE },
-+				{ ".per-pkg",	PMU_EVENT_FILE_PER_PKG },
-+				{ ".snapshot",	PMU_EVENT_FILE_SNAPSHOT },
-+			};
-+			close(fd);
-+			pmu_layer_canon_alias_name(alias, cands[i]);
-+			for (size_t j = 0; j < ARRAY_SIZE(sysfs_probes); j++) {
-+				int ret;
-+
-+				snprintf(filename, sizeof(filename), "%s%s",
-+					 cands[i], sysfs_probes[j].suffix);
-+				ret = dir_apply_event_file(events_fd, filename,
-+							   sysfs_probes[j].kind, NULL,
-+							   /*is_sysfs=*/true,
-+							   alias, NULL);
-+				if (ret) {
-+					close(events_fd);
-+					return ret;
-+				}
-+			}
-+			break;
-+		}
-+		close(fd);
-+	}
-+
-+	close(events_fd);
-+	return 0;
-+}
-+
-+static int sysfs_layer_for_each_event(const struct pmu_layer *layer __maybe_unused,
-+				      struct perf_pmu *pmu)
-+{
-+	int events_fd, ret;
-+
-+	if (pmu->eager_sysfs_loaded && active_sysfs_override_fd < 0)
-+		return 0;
-+
-+	events_fd = sysfs_open_events_dir(pmu);
-+	if (events_fd < 0) {
-+		pmu->sysfs_aliases_loaded = true;
-+		return 0;
-+	}
-+
-+	ret = dir_scan_events_fd(events_fd, NULL, /*is_sysfs=*/true, pmu);
-+	close(events_fd);
-+	if (!ret)
-+		pmu->sysfs_aliases_loaded = true;
-+	return ret;
-+}
-+
-+static const struct pmu_layer_ops sysfs_layer_ops = {
-+	.find_event = sysfs_layer_find_event,
-+	.for_each_event = sysfs_layer_for_each_event,
-+};
-+
- static int pmu_layers_append(enum pmu_layer_kind kind,
- 			     const struct pmu_layer_ops *ops,
- 			     const char *root_path)
-@@ -725,6 +2028,10 @@ static int pmu_layers_ensure_init(void)
- 	if (ret)
- 		goto err;
- 
-+	ret = pmu_layers_append(PMU_LAYER_SYSFS, &sysfs_layer_ops, NULL);
-+	if (ret)
-+		goto err;
-+
- 	ret = pmu_layers_append(PMU_LAYER_BUILTIN_COMMON, &builtin_common_layer_ops, NULL);
- 	if (ret)
- 		goto err;
-@@ -786,7 +2093,8 @@ struct perf_pmu_alias *pmu_layer__find_event(struct perf_pmu *pmu,
- 	if (hashmap__find(pmu->aliases, name, &alias))
- 		return alias->terms ? alias : NULL;
- 
--	if (pmu->aliases_loaded)
-+	if (pmu->aliases_loaded ||
-+	    (pmu->cpu_aliases_added && pmu->sysfs_aliases_loaded))
- 		return NULL;
- 
- 	if (pmu_layers_ensure_init())
-@@ -828,17 +2136,21 @@ struct perf_pmu_alias *pmu_layer__find_event(struct perf_pmu *pmu,
- 	return alias;
- }
- 
--int pmu_layer__load_events(struct perf_pmu *pmu)
-+int pmu_layer__load_events_at(struct perf_pmu *pmu, int sysfs_fd)
- {
- 	int ret;
- 
--	if (!pmu || pmu->aliases_loaded)
-+	if (!pmu || pmu->aliases_loaded ||
-+	    (pmu->cpu_aliases_added && pmu->sysfs_aliases_loaded))
- 		return 0;
- 
- 	ret = pmu_layers_ensure_init();
- 	if (ret)
- 		return ret;
- 
-+	if (sysfs_fd >= 0)
-+		active_sysfs_override_fd = sysfs_fd;
-+
- 	/*
- 	 * Any single-event entries cached before full enumeration remain in
- 	 * pmu->aliases; top-down iteration fills any missing events cleanly.
-@@ -849,17 +2161,28 @@ int pmu_layer__load_events(struct perf_pmu *pmu)
- 		if (!layer->ops->for_each_event)
- 			continue;
- 		ret = layer->ops->for_each_event(layer, pmu);
--		if (ret) {
--			pmu_layer_finalize_aliases(pmu, /*promote_legacy=*/false);
--			return ret;
--		}
-+		if (ret)
-+			break;
-+	}
-+
-+	active_sysfs_override_fd = -1;
-+	if (ret) {
-+		pmu_layer_finalize_aliases(pmu, /*promote_legacy=*/false);
-+		return ret;
- 	}
- 
- 	pmu_layer_finalize_aliases(pmu, /*promote_legacy=*/true);
-+	if (sysfs_fd >= 0)
-+		pmu->eager_sysfs_loaded = true;
- 	pmu->aliases_loaded = true;
++pmu-events.*::
++	pmu-events.dir::
++		Specify a directory, or a colon-separated list of directories
++		(ordered from highest to lowest priority), containing sysfs-style
++		PMU event, metric, and metricgroup definitions. Leading '~/' is
++		expanded to '$HOME/'.
+++
++Overlay directories have higher priority than inbuilt JSON tables and kernel
++sysfs ('pmu-events.dir > inbuilt CPU/SoC > sysfs > inbuilt common'). Attributes
++merge top-down per event or metric so individual sidecar files (such as
++'<pmu>/events/<event>.desc' or '<pmu>/metrics/<metric>.threshold') can override
++single fields while preserving lower-layer definitions.
+++
++Within each '<dir>', perf probes three scopes in order:
++'<dir>/cpus/<cpuid>/<pmu>/', '<dir>/sys/<id>/<pmu>/', and host-direct
++'<dir>/<pmu>/' (matching exact PMU names, 'default_core' for core PMUs, and
++suffix-stripped uncore prefixes, plus '<dir>/metricgroups/<group>.desc'). Under
++'<dir>/cpus/', perf tries the exact CPUID first and then deterministic base
++CPUIDs stripped of stepping or revision fields (for example
++'GenuineIntel-6-8F-8' then 'GenuineIntel-6-8F' on x86, '0x00000000411fd493'
++then '0x00000000410fd490' on ARM64, '0x00800200' then '0x00800000' on PowerPC,
++'IBM,8561,703' then 'IBM,8561' on s390, and '0x489-0x8000000000000007-0x1' then
++'0x489-0x8000000000000007' on RISC-V), stopping at the first matching
++'cpus/<candidate>' in that '<dir>' and following POSIX symlinks (such as
++'cpus/GenuineIntel-6-4E -> ../models/x86/skylake') without requiring a
++'mapfile.csv'.
+++
++For example, to layer local overrides ahead of a shared directory in
++'$HOME/.perfconfig' and define a custom metric:
++
++		[pmu-events]
++			dir = ~/.perf-events/local:/opt/pmu-events
++
++		$ mkdir -p ~/.perf-events/local/default_core/metrics
++		$ printf 'instructions / cpu-cycles\n' > ~/.perf-events/local/default_core/metrics/my_ipc
++		$ printf 'Custom instructions per cycle\n' > ~/.perf-events/local/default_core/metrics/my_ipc.desc
++		$ perf stat -M my_ipc true
++
+ annotate.*::
+ 	These are in control of addresses, jump function, source code
+ 	in lines of assembly code from a specific program.
+diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+index 287401f159e6..c9e68f0c6163 100644
+--- a/tools/perf/util/config.c
++++ b/tools/perf/util/config.c
+@@ -33,6 +33,7 @@
+ #include "header.h"
+ #include "mutex.h"
+ #include "path.h"
++#include "pmu-layer.h"
+ #include "srcline.h"
+ #include "unwind.h"
+ #include "util/event.h" /* proc_map_timeout */
+@@ -518,6 +519,16 @@ static int perf_stat_config(const char *var, const char *value)
  	return 0;
  }
  
-+int pmu_layer__load_events(struct perf_pmu *pmu)
++static int perf_pmu_events_config(const char *var, const char *value)
 +{
-+	return pmu_layer__load_events_at(pmu, -1);
++	if (!strcmp(var, "pmu-events.dir")) {
++		if (!value)
++			return config_error_nonbool(var);
++	}
++
++	return 0;
 +}
 +
- int pmu_layer__merge_event_table(struct perf_pmu *pmu,
- 				 const struct pmu_events_table *table)
+ int perf_default_config(const char *var, const char *value,
+ 			void *dummy __maybe_unused)
  {
-@@ -876,6 +2199,20 @@ int pmu_layer__merge_event_table(struct perf_pmu *pmu,
- 						builtin_for_each_event_cb, &ctx);
+@@ -536,6 +547,9 @@ int perf_default_config(const char *var, const char *value,
+ 	if (strstarts(var, "buildid."))
+ 		return perf_buildid_config(var, value);
+ 
++	if (strstarts(var, "pmu-events."))
++		return perf_pmu_events_config(var, value);
++
+ 	if (strstarts(var, "stat."))
+ 		return perf_stat_config(var, value);
+ 
+@@ -917,6 +931,7 @@ void perf_config__exit(void)
+ 	perf_config_set__delete(config_set);
+ 	config_set = NULL;
+ 	mutex_unlock(&config_set_mutex);
++	pmu_layers__exit();
  }
  
-+int pmu_layer__merge_sys_events(struct perf_pmu *pmu)
+ int perf_config_set__write(struct perf_config_set *set,
+diff --git a/tools/perf/util/pmu-layer.c b/tools/perf/util/pmu-layer.c
+index e54d7e8f487f..2c60fc1e3285 100644
+--- a/tools/perf/util/pmu-layer.c
++++ b/tools/perf/util/pmu-layer.c
+@@ -21,6 +21,7 @@
+ #include <linux/err.h>
+ #include <linux/string.h>
+ #include <linux/zalloc.h>
++#include "config.h"
+ #include "cpumap.h"
+ #include "debug.h"
+ #include "hashmap.h"
+@@ -1848,7 +1849,7 @@ static int user_dir_load_metricgroup(const struct pmu_layer *layer,
+ 	return ret < 0 ? ret : 0;
+ }
+ 
+-static const struct pmu_layer_ops __maybe_unused user_dir_layer_ops = {
++static const struct pmu_layer_ops user_dir_layer_ops = {
+ 	.find_event = user_dir_find_event,
+ 	.for_each_event = user_dir_for_each_event,
+ 	.find_metric = user_dir_find_metric,
+@@ -2017,13 +2018,65 @@ void pmu_layers__exit(void)
+ 	pmu_layers_initialized = false;
+ }
+ 
++static int pmu_layers_add_user_dirs(const char *cfg)
 +{
-+	struct builtin_iter_event_ctx ctx = {
-+		.pmu = pmu,
-+		.is_common = false,
-+		.override_existing = true,
-+	};
++	const char *p = cfg;
 +
-+	if (!pmu || !pmu->id)
++	if (!cfg || !cfg[0])
 +		return 0;
 +
-+	return pmu_for_each_sys_event(builtin_for_each_sys_event_cb, &ctx);
++	while (*p) {
++		const char *colon = strchr(p, ':');
++		size_t seg_len = colon ? (size_t)(colon - p) : strlen(p);
++
++		if (seg_len > 0 && seg_len < PATH_MAX) {
++			char raw[PATH_MAX];
++			char expanded[PATH_MAX];
++			const char *use_path = raw;
++			int ret;
++
++			memcpy(raw, p, seg_len);
++			raw[seg_len] = '\0';
++
++			if (raw[0] == '~' && (raw[1] == '\0' || raw[1] == '/')) {
++				const char *home = getenv("HOME");
++
++				if (home && home[0]) {
++					int n = snprintf(expanded, sizeof(expanded),
++							 "%s%s", home, raw + 1);
++
++					if (n < 0 || (size_t)n >= sizeof(expanded))
++						return -ENAMETOOLONG;
++					use_path = expanded;
++				}
++			}
++
++			ret = pmu_layers_append(PMU_LAYER_USER_DIR,
++						&user_dir_layer_ops, use_path);
++			if (ret)
++				return ret;
++		}
++
++		if (!colon)
++			break;
++		p = colon + 1;
++	}
++	return 0;
 +}
 +
- struct perf_pmu_metric *pmu_layer__find_metric(struct perf_pmu *pmu,
- 					       const char *name)
+ static int pmu_layers_ensure_init(void)
  {
-diff --git a/tools/perf/util/pmu-layer.h b/tools/perf/util/pmu-layer.h
-index 330af9415448..5d8a33481410 100644
---- a/tools/perf/util/pmu-layer.h
-+++ b/tools/perf/util/pmu-layer.h
-@@ -154,11 +154,17 @@ void perf_pmu_free_metricgroup(struct perf_pmu_metricgroup *mg);
- void perf_pmu_metric__to_pmu_metric(const struct perf_pmu_metric *src,
- 				    struct pmu_metric *dst);
++	const char *user_dirs;
+ 	int ret;
  
-+int pmu_layer__encode_filename(const char *name, char *buf, size_t size);
-+int pmu_layer__decode_filename(const char *encoded, size_t len,
-+			       char *buf, size_t size);
+ 	if (pmu_layers_initialized)
+ 		return 0;
+ 
++	user_dirs = perf_config_get("pmu-events.dir");
++	ret = pmu_layers_add_user_dirs(user_dirs);
++	if (ret)
++		goto err;
 +
- struct perf_pmu_alias *pmu_layer__find_event(struct perf_pmu *pmu,
- 					     const char *name);
- int pmu_layer__load_events(struct perf_pmu *pmu);
-+int pmu_layer__load_events_at(struct perf_pmu *pmu, int sysfs_fd);
- int pmu_layer__merge_event_table(struct perf_pmu *pmu,
- 				 const struct pmu_events_table *table);
-+int pmu_layer__merge_sys_events(struct perf_pmu *pmu);
+ 	ret = pmu_layers_append(PMU_LAYER_BUILTIN_CPU, &builtin_cpu_layer_ops, NULL);
+ 	if (ret)
+ 		goto err;
+diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+index 8d3238fd23f1..5c21b28e420d 100644
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -17,6 +17,7 @@
+ #include "evsel.h"
+ #include "pmus.h"
+ #include "pmu.h"
++#include "pmu-layer.h"
+ #include "hwmon_pmu.h"
+ #include "tool_pmu.h"
+ #include "print-events.h"
+@@ -147,6 +148,7 @@ void perf_pmus__destroy(void)
+ 		perf_pmu__delete(pmu);
+ 	}
+ 	read_pmu_types = 0;
++	pmu_layers__exit();
+ }
  
- struct perf_pmu_metric *pmu_layer__find_metric(struct perf_pmu *pmu,
- 					       const char *name);
+ static struct perf_pmu *pmu_find(const char *name)
 -- 
 2.56.1.703.gf848ed807c-goog
 
