@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794806828;
-	b=1Fq0Oe/BAmSZlioM7BO9QTPLIvlBQw3IR0cODnDae+XP4sEJ01cFYcjWuNvJSQjSw18t
-	 8LY6/n39h2NdAqFYufmP8QTsmdQsPpJRz10He2pAS0f8X0XT1SQ5Zsn2NC0UqLfCspfhg
-	 DYY86cG5FY2olEA/zi4CopdBXklUYALg8PJ+fDMukvPIq5+KfaVomSP9YHGluSZQ1VOpe
-	 gssKOWx4S73hmqJzcgny2sUIsYunm66u4e60Dptv+Km86QKD7wvQOcw5BexWT9LJb3W/U
-	 tkchwFKPm5brmh8jChRmXO4391g+otiQKzUMj0p1yIT3hRRKdwzgLq97KIgv2nqEbQg==
+	t=1794806840;
+	b=QBTjSM1AvK4mCZvZ+HPXGb/9h5UU9vH2OnvYVEUrPh+6D/sZBkyAdCEX+RyIpz4qeZPR
+	 GKIUZA75PHQ2CfxK4CZ7I+dIdtjfnNq5UqmFx4JzGywGSn67DsMe139S+lJkmLqozhkfl
+	 TIPZPmJmCyjDtANxrd9pts78guHuXFb11kSonB1nP9V41RJLWMeCc2KfzEOh+UF0Wzo4E
+	 xfj/ZeE6wPVO40xMs0WJUKd2dSEWeJm4ACKqzN/4SX2Tb160JrkcfPm6aYMfcOarr9uIg
+	 Np/8CxKFHsvCTYwfpGXWpzZPG8nbZ+a/LLF0NSoXNdbR0Wl1cp2BaWjjz0GsEutctAA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794806828;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794806840;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=qU0BY80Af6d2aUzTDeT+Pj0ji5URWTqkq0aG2w9XCY4=;
-	b=3qbSNirhF0EqE4l2rWcArB2ENhMPu6vBtnqWiDHfZ75Tydv6yoEZb/ES2o68E0kqi4cp
-	 9r7UcXXg9BxWrtLl+Ru74zDVudFpmoX3NT1PnGvZkbdSbLG8E4lT5TsJfjLI9qT29mJN/
-	 d5JHD7GDuA/Dv8kjndrE3fiw383IUvFfqSoHAGrjHVTOygLtGa5bc7EEq9DZavsodt5c7
-	 f38LdNAC2jG7KXd7HR5NzIwJclx6FwFoLsH5KwdRgB0WV2bAf7XtD/7wVUiLrdb5QdRIK
-	 lkRF3AIeKryEQLFVEoiStVx5FaZH5IMMIZjbQyXhUh48VNhih0O3bW5ElKi07L9rx+Q==
+	bh=0kKL4MCl3Q2cnstbHaKC3Eixk3Oh/6nwsOpRNAfpXHg=;
+	b=DLBM5JiWssXOEO3EuslNpYn1I050g7kc0tyBudUkBsYKeJl6nNFPLVYIizd0JK59GgcF
+	 ij8ARpKq/yiGlKBkjb7O/wX5bGbRDZvVWYFkmpOqKiH6efoD3BzSRhdTptgI8m5RZWDaf
+	 3Ee+6emMH0q/IEvES3qio2S6hoReXBIQX7VLb9gmGkY41ApHvh0HDBUJTqxwAhU8WB+6W
+	 pNG//HJQu7ljm/5n3oEScftoqw/7tAdh3T0sZ1XaeNlLM8h42m80Cf5HKSTdBj3dNEq9t
+	 ruZu3HPsbOLTGHx+OHKRar4JpXsneSH66QeFhfencupdj8YVZTHNIRasIhMkV1U27Tg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="lJu456/Y";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h+Fn9XXd;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3825E606A31C;
-	Mon, 16 Nov 2026 05:27:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A05606A31C;
+	Mon, 16 Nov 2026 05:27:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lJu456/Y
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39E421F000C4;
-	Mon, 16 Nov 2026 05:27:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h+Fn9XXd
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE0A31F000C4;
+	Mon, 16 Nov 2026 05:27:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794806828;
-	bh=qU0BY80Af6d2aUzTDeT+Pj0ji5URWTqkq0aG2w9XCY4=;
+	s=k20260515; t=1794806839;
+	bh=0kKL4MCl3Q2cnstbHaKC3Eixk3Oh/6nwsOpRNAfpXHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=lJu456/YMgNWMppov8pDkK/8JH3e0LzEmj9LtAZKF4ltUELESlSpMCwfbPmh/KxhE
-	 KTGNTMDfkUsMt4cAbxYgvJxUOCSnvYltLu7BaI3scPw2gbgG2GxVeXWBebv/pnldss
-	 qBuWzVhX1bkTMVFC7zfhE8gu53rANtqWW6loYKJ5PKE3rGMbLg2OZ52fRzUo0mw2Yo
-	 5ndZFakP4i0lypxElqcb6sNjjV0AU59DI+UXxBO6TEsUZ7rrRKeEWO0YK4qK+gQ1Q4
-	 05OeaqIqKucBLVqejBIi8vx521LcueyASNq+Nn78faGi0et2H8FJPnG1MQ/CHKKPkX
-	 RuZm65FywP8SA==
+	b=h+Fn9XXdEdEBSoAcyScy25PtTSMz8CVYeDsGjbtfJ6sWN22Kk0LZPd1LyAH2VXgTe
+	 tEKEnmSCxUzjhZqKwjhVZMGucdydPXojA5IkjWX0ufGPEcXm/CIBS8WUEcsLXbO/g1
+	 WWFNZocyWB3zzSqR3iFX15hDk/ReZHBZFD6Q/OPAHKa+D6Me9B+mQ/OTv/Qyf+K8Iv
+	 A6RNQt30amYaDLJcfaJrdqTO6J1bfL3JB5U70wPNcT7OO4J+bicaLE7oSNlCvX3kYL
+	 RRC7g1l6xeliPsZl3wdXtZ5NNozBkc1ihqJ3ya7/x+jrh6ilSqWyAsXnmYwWT3i6Uy
+	 S332JUJ64u1+w==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -58,9 +58,9 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	x86@kernel.org
-Subject: [PATCH v20 06/11] selftests: tracing: Add a basic testcase for wprobe
-Date: Mon, 16 Nov 2026 14:27:01 +0900
-Message-ID: <179480682179.38065.15797461233330303156.stgit@devnote2>
+Subject: [PATCH v20 07/11] selftests: tracing: Add syntax testcase for wprobe
+Date: Mon, 16 Nov 2026 14:27:13 +0900
+Message-ID: <179480683347.38065.11389672080760832332.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <179480675130.38065.3086970856119381693.stgit@devnote2>
 References: <179480675130.38065.3086970856119381693.stgit@devnote2>
@@ -79,124 +79,59 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Add 'add_remove_wprobe.tc' testcase for testing wprobe event that
-tests adding and removing operations of the wprobe event.
+Add "wprobe_syntax_errors.tc" testcase for testing syntax errors
+of the watch probe events.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
 Changes in v20:
- - Verify $addr and $value fetchargs in trace output.
- - Add test checks for access modes (r@, rw@), length specifiers,
-   symbol offset, and spec-based event removal ('!w:...' and '-:...').
-Changes in v17:
- - Catch failures when enabling wprobe and call exit_unresolved
-   in case hardware watchpoints are exhausted.
-Changes in v9:
- - Fix command check logic to prevent early exit under 'set -e'
-   (errexit) when grep or test fails.
- - Simplify enable/disable status checks by removing cat pipes.
-Changes in v8:
- - Fixed silently test failure path.
+ - Add error_log to requires line in wprobes_syntax_errors.tc.
+ - Add testcases for unaligned address (BAD_ACCESS_ADDR) and sibling
+   wprobe rejection (WPROBE_NO_SIBLING).
+Changes in v14:
+ - Update comment for invalid offset syntax check to BAD_PROBE_ADDR.
+ - Add testcase for invalid address 0 error check (BAD_ACCESS_ADDR).
+Changes in v12:
+ - Add NO_ARG_BODY error case.
+Changes in v11:
+ - Add WPROBE_NO_MAXACT syntax error case.
 ---
- tools/testing/selftests/ftrace/config              |    1 
- .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   81 ++++++++++++++++++++
- 2 files changed, 82 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+ .../test.d/dynevent/wprobes_syntax_errors.tc       |   28 ++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
 
-diff --git a/tools/testing/selftests/ftrace/config b/tools/testing/selftests/ftrace/config
-index 29f05f7c6e2c..c2caea1ba1f5 100644
---- a/tools/testing/selftests/ftrace/config
-+++ b/tools/testing/selftests/ftrace/config
-@@ -33,3 +33,4 @@ CONFIG_SYNTH_EVENTS=y
- CONFIG_TRACER_SNAPSHOT=y
- CONFIG_UPROBES=y
- CONFIG_UPROBE_EVENTS=y
-+CONFIG_WPROBE_EVENTS=y
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
 new file mode 100644
-index 000000000000..40c69c3f2ba5
+index 000000000000..1f8ffeb57fd2
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
-@@ -0,0 +1,81 @@
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
+@@ -0,0 +1,28 @@
 +#!/bin/sh
 +# SPDX-License-Identifier: GPL-2.0
-+# description: Generic dynamic event - add/remove wprobe events
-+# requires: dynamic_events "w[:[<group>/][<event>]] [r|w|rw]@<addr>[:<len>]":README
++# description: Watch probe event parser error log check
++# requires: dynamic_events error_log "w[:[<group>/][<event>]] [r|w|rw]@<addr>[:<len>]":README
 +
-+echo 0 > events/enable
-+echo > dynamic_events
++check_error() { # command-with-error-pos-by-^
++    ftrace_errlog_check 'wprobe' "$1" 'dynamic_events'
++}
 +
-+# Use jiffies as a variable that is frequently written to.
-+TARGET=jiffies
++check_error '^w'			# NO_ARG_BODY
++check_error 'w^10 w@jiffies'		# WPROBE_NO_MAXACT
++check_error 'w ^symbol'			# BAD_ACCESS_FMT
++check_error 'w ^a@symbol'		# BAD_ACCESS_TYPE
++check_error 'w w@^symbol'		# BAD_ACCESS_ADDR
++check_error 'w w@^0:4'			# BAD_ACCESS_ADDR
++check_error 'w w@^jiffies+1:4'		# BAD_ACCESS_ADDR (unaligned)
++check_error 'w w@jiffies^+offset'	# BAD_PROBE_ADDR
++check_error 'w w@jiffies:^100'		# BAD_ACCESS_LEN
++check_error 'w w@jiffies ^$arg1'	# BAD_VAR
++check_error 'w w@jiffies ^$retval'	# BAD_VAR
++check_error 'w w@jiffies ^$stack'	# BAD_VAR
++check_error 'w w@jiffies ^%ax'		# BAD_VAR
 +
-+echo "w:my_wprobe w@$TARGET addr=\$addr val=\$value" >> dynamic_events
-+
-+if ! grep -q my_wprobe dynamic_events; then
-+    echo "Failed to create wprobe event"
-+    exit_fail
-+fi
-+
-+if [ ! -d events/wprobes/my_wprobe ]; then
-+    echo "Failed to create wprobe event directory"
-+    exit_fail
-+fi
-+
-+if ! echo 1 > events/wprobes/my_wprobe/enable; then
-+    echo "Failed to enable wprobe (hardware watchpoints may be exhausted)"
-+    exit_unresolved
-+fi
-+
-+# Check if the event is enabled
-+if ! grep -q 1 events/wprobes/my_wprobe/enable; then
-+    echo "Failed to enable wprobe event"
-+    exit_fail
-+fi
-+
-+# Let some time pass to trigger the breakpoint
-+sleep 1
-+
-+# Check if we got any trace output with fetchargs
-+if ! grep -q "my_wprobe:.*addr=.*val=" trace; then
-+    echo "wprobe event was not triggered or missing fetchargs"
-+    exit_fail
-+fi
-+
-+echo 0 > events/wprobes/my_wprobe/enable
-+
-+# Check if the event is disabled
-+if ! grep -q 0 events/wprobes/my_wprobe/enable; then
-+    echo "Failed to disable wprobe event"
-+    exit_fail
-+fi
-+
-+echo "-:my_wprobe" >> dynamic_events
-+
-+if grep -q my_wprobe dynamic_events; then
-+    echo "Failed to remove wprobe event"
-+    exit_fail
-+fi
-+
-+if [ -d events/wprobes/my_wprobe ]; then
-+    echo "Failed to remove wprobe event directory"
-+    exit_fail
-+fi
-+
-+# Test access modes, lengths, symbol offset, and spec-based removal
-+echo "w:my_wprobe1 r@$TARGET:1" >> dynamic_events
-+echo "w:my_wprobe2 rw@$TARGET+4:4 val=+0(\$addr)" >> dynamic_events
-+echo "!w:wprobes/my_wprobe1 r@$TARGET:1" >> dynamic_events
-+if grep -q my_wprobe1 dynamic_events; then
-+    echo "Failed to remove my_wprobe1 with '!' syntax"
-+    exit_fail
-+fi
-+
-+echo "-:wprobes/my_wprobe2 rw@$TARGET+4:4 val=+0(\$addr)" >> dynamic_events
-+if grep -q my_wprobe2 dynamic_events; then
-+    echo "Failed to remove my_wprobe2 with full spec"
-+    exit_fail
-+fi
-+
-+clear_trace
++echo 'w:test_wprobe w@jiffies:4' >> dynamic_events
++check_error '^w:test_wprobe r@jiffies:4'	# WPROBE_NO_SIBLING
++echo '-:test_wprobe' >> dynamic_events
 +
 +exit 0
 
