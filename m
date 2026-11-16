@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1794808656;
-	b=kc3S9LllVnRKLuFHHAeAzy1KPpelRAu2z3xZBvLNRC2TgDk4RzAf6czR60ASzpgHsEjd
-	 edsi1rjrHgA3Nk341r4T4E4MY8Gwb3RQYz39BUQKE1f1Ke5PvnIs1vEWFXf/JuYG/GxTc
-	 8kbLWZvqT7blz1/DSeHs8FdK1jfN0YEjQxA9qrrRTFCisukgUY2fXBzIx4Hh+tc00iP+/
-	 DbWBHykVFV90N9Q8uExX7iWd70+YBE5tMIb424BRP0NRsCAYHv/qxqJO1LX3JZ7Eq9NqW
-	 7WOR5BCoME08NUiSXapwYERdMg+3dF+9NzDJcfapT5CrxHuc5j3+7tdbhymVw4jKZVQ==
+	b=b8IqhdCCmReN8ReFrYOEKT4H8w+VAYBKtERMyGt8iyh8pznQuYltAh7f4pxztejFFPl9
+	 GXIUphWrHbhvUkEGcYqWP47m5bg72pSziEvjn/6nub+PIkY65O6RcjOzahyl+vsEoo3He
+	 cxP/0/PbBxhqawbg7T8iZ8CtEG4SwD5o+sPWA2REMQCJQOeUMmMoB3rjkpef3rzynmpIy
+	 EGKsXMHAbrC2bvf+B6T0+Z8xEePq9iP00Xbetq1TEakka9OX2LjVyC+sWV/gz8xFi8/j7
+	 /pwjzbDDp12IPlSkaP4nU4/GwoWMeJoQOYzVHnHIjyOx5aYlimoWfBd7LbKxv3jh3yQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1794808656;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=lWHYzE56HB31oCOOOtBxdHVwyKuuLODF57Vd6oQ+N0o=;
-	b=HqruNRDZkYTjFuTSRXhaVSs6wmgt2BtPiXXaBK3wizTC4NO27bTGB1vn41kQpjkeQFtz
-	 hmlBlm9XP5z/my0JWny6/b+91bFZLewejRCnsut5vRDB3aiBOsmrZ38fDY+gb9/iNyE7O
-	 NjjpJYXa6XwGiVRwLEK6b9x4iHOxY6jue20j3Y0UFVx2Trl99XQCgCnvMhqMoc5ppvQ8f
-	 N3d/gJmIxwLh4H6r+DmA077kpSmzmtOzdlxbUUy1lX5DFo1MexStR/ADSMv3NVlNcCKUG
-	 DdR03B4asChgNMhAGnowotxUwCnTdswajgDj/snb+cQ3LRp0q1bmRQd525MXR3DPwhA==
+	bh=uWbyshmTdblCGxoi1cbj5YzFnxvzENuUhEaTeIH+UE8=;
+	b=Ws1dW8cOMrkX6he5wBgSznYorybEHf2c3f2XZ+OQH+LDgEnhSyspSPYMJmY4yZ9/Mtw/
+	 9DeCAhQbdmaKPekwqnwK1wZe22n7uhlpGnZr/1pjCVVwApBXJNjWdZEpJfG4ui7e4CXhM
+	 M0T8+5ThicnJyH2dETi/umwzvlKngFODDeLU1j2AD3yTsxXA7Y9Z9Bwz5Fgv4JLZ7TkDd
+	 b7DxhoWdGre1M8s7dahun+0XLvIz2FmILzBPXemYr1DsuuxFocieM/JvGjggI+ZU47kfo
+	 YNI/h7FkTsmhqB8w7A2u0+zvCL10y0gTVYoMXH1NguXv+1HLuy/vag1huEDkcStb+LQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="g1M6rI/6";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="OIhmY/RK";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB4A606A89B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C5D606A8AB;
 	Mon, 16 Nov 2026 05:57:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=g1M6rI/6
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EC5B1F00925;
-	Mon, 16 Nov 2026 05:57:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OIhmY/RK
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21AB11F000D3;
+	Mon, 16 Nov 2026 05:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1794808656;
-	bh=lWHYzE56HB31oCOOOtBxdHVwyKuuLODF57Vd6oQ+N0o=;
+	bh=uWbyshmTdblCGxoi1cbj5YzFnxvzENuUhEaTeIH+UE8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=g1M6rI/6qQ1Ub6mdIIFGyL3sdyN3iZoiAea4yC7sAgUcogmAZmFSUiLX/x2vwwfZw
-	 cSN81RJQ3B2pFWDZ7Us0QKqRSOvs6bUlrrhjSQjLjO9KNHzrMeUllEZ1M7C8cp/ShA
-	 JShWM8wcOOD/IasMjXGQ5lQG+1Jl79VnNjDowVDcQ0OEIwK7c/K0iiLRBjnN9vw1VJ
-	 4XGyxMMydX/wsSPHAd5o7WSA2lL10xajG1zvCHkAervjZqIlCxh4+UQz4JZk47/Ny3
-	 +TUvvYM47ca6Y9L/JDh+X9wS0Q7NiHjoiDRDOTN/va1YPaGQZO0loFX8ivH1dEkyV7
-	 N7WyH/aNeS1nA==
+	b=OIhmY/RKN8DYAOJnPPP95qWk5Kg33y7IY15LVG8BVYREnlFsZRAdq9Ia1u4+O4xKd
+	 WX5vLEfIESsoEFZaB32rY/b830I0kSPJubSyeivmfenaXPDlIpbjtR6Q5OdhSVmdzE
+	 t3pOWKpjNLnogvGw9LlOu9WeVZU0YfEFOMlSLV/Aw6WZczQqRcyJdpnl/lUH0nI7D6
+	 SHebstJRG/sQS8whZKnnXA9bV2SBRMSzvFKDBJ9N7O7mX91JbculKqvTQiCSugend2
+	 0rdTZnfaoV2QDTeomTiQVgtPLXKS+jq3i++IF/NiIHggzXkbqbCOtCNKe+YZpO3qhh
+	 k56wIFrV4EvIA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -49,9 +49,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 06/11] perf tools: Verify thread status and mount namespace inode
-Date: Sun, 15 Nov 2026 21:57:26 -0800
-Message-ID: <20261116055731.707164-7-namhyung@kernel.org>
+Subject: [PATCH v2 07/11] perf tools: Check thread liveness when accessing /proc
+Date: Sun, 15 Nov 2026 21:57:27 -0800
+Message-ID: <20261116055731.707164-8-namhyung@kernel.org>
 X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
 In-Reply-To: <20261116055731.707164-1-namhyung@kernel.org>
 References: <20261116055731.707164-1-namhyung@kernel.org>
@@ -66,320 +66,251 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Verify /proc/<pid>/task/<tid>/status exists and has Tgid == pid before
-reading or entering a thread's namespaces to guard against PID/TID
-recycling.
+Add thread__exited() and thread__is_alive(), and mark threads as exited
+on PERF_RECORD_EXIT, replaced parent and child threads on
+PERF_RECORD_FORK, and perf_event__exit_del_thread().
 
-Also record the mount namespace inode (mntns_ino) during initialization
-and verify via fstat() that the opened namespace file descriptor still
-refers to the same mount namespace.
+Propagate thread exit and boot ID mismatch to thread->nsinfo, guard
+/proc accesses with thread__is_alive() and nsinfo__check_proc() (for
+dso__filename_with_chroot()), and avoid synthesizing a live parent
+thread in thread__e_machine_endian() when a sub-thread is no longer
+alive.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/namespaces.c | 139 +++++++++++++++++++++++++++--------
- tools/perf/util/namespaces.h |   4 +
- 2 files changed, 114 insertions(+), 29 deletions(-)
+ tools/perf/builtin-trace.c |  2 +-
+ tools/perf/util/dso.c      |  7 +++-
+ tools/perf/util/event.c    |  1 +
+ tools/perf/util/machine.c  | 17 +++++++---
+ tools/perf/util/thread.c   | 65 +++++++++++++++++++++++++++++++++++---
+ tools/perf/util/thread.h   |  7 ++--
+ 6 files changed, 86 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
-index afd8ad7f843ec09d..860b90e8384ed1f2 100644
---- a/tools/perf/util/namespaces.c
-+++ b/tools/perf/util/namespaces.c
-@@ -65,6 +65,7 @@ static int nsinfo__get_nspid(pid_t *tgid, pid_t *nstgid, bool *in_pidns, const c
- 	char *statln = NULL;
- 	size_t linesz = 0;
- 	char *nspid;
-+	bool got_tgid = false;
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 4094141461f91c32..a21bbf5926617633 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1858,7 +1858,7 @@ static const char *thread__fd_path(struct thread *thread, int fd,
+ 		return NULL;
  
- 	f = fopen(path, "r");
- 	if (f == NULL)
-@@ -75,6 +76,7 @@ static int nsinfo__get_nspid(pid_t *tgid, pid_t *nstgid, bool *in_pidns, const c
- 		if (strstr(statln, "Tgid:") != NULL) {
- 			*tgid = (pid_t)strtol(strrchr(statln, '\t'), NULL, 10);
- 			*nstgid = *tgid;
-+			got_tgid = true;
- 		}
+ 	if ((fd > ttrace->files.max || ttrace->files.table[fd].pathname == NULL)) {
+-		if (!trace->live)
++		if (!trace->live || !thread__is_alive(thread))
+ 			return NULL;
+ 		++trace->stats.proc_getname;
+ 		if (thread__read_fd_path(thread, fd))
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index e46cd614eb21184b..36e6c45dd0383073 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -587,7 +587,12 @@ static int do_open(char *name) EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
  
- 		if (strstr(statln, "NStgid:") != NULL) {
-@@ -91,7 +93,20 @@ static int nsinfo__get_nspid(pid_t *tgid, pid_t *nstgid, bool *in_pidns, const c
- 
- 	fclose(f);
- 	free(statln);
--	return 0;
-+	return got_tgid ? 0 : -1;
-+}
+ char *dso__filename_with_chroot(const struct dso *dso, const char *filename)
+ {
+-	return filename_with_chroot(nsinfo__pid(dso__nsinfo_const(dso)), filename);
++	struct nsinfo *nsi = (struct nsinfo *)dso__nsinfo_const(dso);
 +
-+static void nsinfo__clear_need_setns_locked(struct nsinfo *nsi)
-+{
-+	RC_CHK_ACCESS(nsi)->inited = true;
-+	RC_CHK_ACCESS(nsi)->need_setns = false;
-+	zfree(&RC_CHK_ACCESS(nsi)->mntns_path);
-+}
++	if (!nsinfo__check_proc(nsi))
++		return NULL;
 +
-+static void nsinfo__set_exited_locked(struct nsinfo *nsi)
-+{
-+	RC_CHK_ACCESS(nsi)->exited = true;
-+	nsinfo__clear_need_setns_locked(nsi);
++	return filename_with_chroot(nsinfo__pid(nsi), filename);
  }
  
- static int nsinfo__init_locked(struct nsinfo *nsi)
-@@ -101,16 +116,41 @@ static int nsinfo__init_locked(struct nsinfo *nsi)
- 	char *newns = NULL;
- 	struct stat old_stat;
- 	struct stat new_stat;
-+	pid_t tgid = 0, nstgid = 0;
-+	bool in_pidns = false;
- 	int rv = -1;
+ char *dso__get_filename(struct dso *dso, const char *root_dir, bool *decomp,
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index 2f80e364659fea71..ae0ebda42fa47e8c 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -447,6 +447,7 @@ int perf_event__exit_del_thread(const struct perf_tool *tool __maybe_unused,
+ 		    event->fork.ppid, event->fork.ptid);
  
-+	if (RC_CHK_ACCESS(nsi)->exited)
-+		return -1;
-+
- 	RC_CHK_ACCESS(nsi)->inited = true;
+ 	if (thread) {
++		thread__set_exited(thread, /*exited=*/true);
+ 		machine__remove_thread(machine, thread);
+ 		thread__put(thread);
+ 	}
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index ac857b395882f569..53cda0046d24799c 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -517,8 +517,14 @@ static void machine__update_thread_pid(struct machine *machine,
+ 		return;
  
-+	/*
-+	 * Verify that the thread (pid, tid) still exists in /proc and its Tgid
-+	 * matches pid (guarding against PID/TID recycling), while resolving the
-+	 * innermost tgid if the process is in a different PID namespace.
-+	 */
-+	if (snprintf(spath, PATH_MAX, "/proc/%d/task/%d/status",
-+		     nsinfo__pid(nsi), nsinfo__tid(nsi)) >= PATH_MAX)
-+		goto out;
+ 	thread__set_pid(th, pid);
+-	nsinfo__zput(RC_CHK_ACCESS(th)->nsinfo);
+-	RC_CHK_ACCESS(th)->nsinfo = nsinfo__new_thread(pid, thread__tid(th));
++	thread__reset_nsinfo(th);
++	if (thread__exited(th) || !machine__is_host(machine) ||
++	    !perf_env__is_same_boot(machine->env)) {
++		struct nsinfo *nsi = thread__get_nsinfo(th);
 +
-+	rv = nsinfo__get_nspid(&tgid, &nstgid, &in_pidns, spath);
-+	if (rv < 0 || tgid != nsinfo__pid(nsi)) {
-+		nsinfo__set_exited_locked(nsi);
-+		rv = -1;
-+		goto out;
++		nsinfo__set_exited(nsi);
++		nsinfo__put(nsi);
 +	}
-+
-+	RC_CHK_ACCESS(nsi)->tgid = tgid;
-+	RC_CHK_ACCESS(nsi)->nstgid = nstgid;
-+	RC_CHK_ACCESS(nsi)->in_pidns = in_pidns;
-+
- 	if (snprintf(oldns, PATH_MAX, "/proc/self/ns/mnt") >= PATH_MAX)
--		return rv;
-+		return -1;
  
- 	if (asprintf(&newns, "/proc/%d/task/%d/ns/mnt",
- 		     nsinfo__pid(nsi), nsinfo__tid(nsi)) == -1)
--		return rv;
-+		return -1;
+ 	if (thread__pid(th) == thread__tid(th))
+ 		return;
+@@ -1975,6 +1981,7 @@ int machine__process_fork_event(struct machine *machine, union perf_event *event
+ 	    thread__pid(parent) != (pid_t)event->fork.ppid) {
+ 		dump_printf("removing erroneous parent thread %d/%d\n",
+ 			    thread__pid(parent), thread__tid(parent));
++		thread__set_exited(parent, /*exited=*/true);
+ 		machine__remove_thread(machine, parent);
+ 		thread__put(parent);
+ 		parent = machine__findnew_thread(machine, event->fork.ppid,
+@@ -1983,6 +1990,7 @@ int machine__process_fork_event(struct machine *machine, union perf_event *event
  
- 	if (stat(oldns, &old_stat) < 0)
- 		goto out;
-@@ -124,19 +164,10 @@ static int nsinfo__init_locked(struct nsinfo *nsi)
- 	if (old_stat.st_ino != new_stat.st_ino) {
- 		RC_CHK_ACCESS(nsi)->need_setns = true;
- 		RC_CHK_ACCESS(nsi)->mntns_path = newns;
-+		RC_CHK_ACCESS(nsi)->mntns_ino = new_stat.st_ino;
- 		newns = NULL;
+ 	/* if a thread currently exists for the thread id remove it */
+ 	if (thread != NULL) {
++		thread__set_exited(thread, /*exited=*/true);
+ 		machine__remove_thread(machine, thread);
+ 		thread__put(thread);
+ 	}
+@@ -2030,9 +2038,8 @@ int machine__process_exit_event(struct machine *machine, union perf_event *event
+ 	/* There is no context switch out before exit, so we decrement here. */
+ 	machine->parallelism--;
+ 	if (thread != NULL) {
+-		if (symbol_conf.keep_exited_threads)
+-			thread__set_exited(thread, /*exited=*/true);
+-		else
++		thread__set_exited(thread, /*exited=*/true);
++		if (!symbol_conf.keep_exited_threads)
+ 			machine__remove_thread(machine, thread);
+ 	}
+ 	thread__put(thread);
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index 5d1c886add3e61eb..fda718ea5d7e6276 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -37,6 +37,16 @@ int thread__init_maps(struct thread *thread, struct machine *machine)
+ 		}
  	}
  
--	/* If we're dealing with a process that is in a different PID namespace,
--	 * attempt to work out the innermost tgid for the process.
--	 */
--	if (snprintf(spath, PATH_MAX, "/proc/%d/task/%d/status",
--		     nsinfo__pid(nsi), nsinfo__tid(nsi)) >= PATH_MAX)
--		goto out;
--
--	rv = nsinfo__get_nspid(&RC_CHK_ACCESS(nsi)->tgid, &RC_CHK_ACCESS(nsi)->nstgid,
--			       &RC_CHK_ACCESS(nsi)->in_pidns, spath);
--
- out:
- 	free(newns);
- 	return rv;
-@@ -157,7 +188,7 @@ int nsinfo__init(struct nsinfo *nsi)
- 
- static void nsinfo__ensure_init_locked(struct nsinfo *nsi)
- {
--	if (!RC_CHK_ACCESS(nsi)->inited)
-+	if (!RC_CHK_ACCESS(nsi)->inited && !RC_CHK_ACCESS(nsi)->exited)
- 		nsinfo__init_locked(nsi);
++	if (thread__pid(thread) != 0 || thread__tid(thread) != 0) {
++		if (!machine || !machine__is_host(machine) ||
++		    !perf_env__is_same_boot(machine->env)) {
++			struct nsinfo *nsi = thread__get_nsinfo(thread);
++
++			nsinfo__set_exited(nsi);
++			nsinfo__put(nsi);
++		}
++	}
++
+ 	return thread__maps(thread) ? 0 : -1;
  }
  
-@@ -219,7 +250,9 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
- 	RC_CHK_ACCESS(nnsi)->tid = RC_CHK_ACCESS(nsi)->tid;
- 	RC_CHK_ACCESS(nnsi)->tgid = RC_CHK_ACCESS(nsi)->tgid;
- 	RC_CHK_ACCESS(nnsi)->nstgid = RC_CHK_ACCESS(nsi)->nstgid;
-+	RC_CHK_ACCESS(nnsi)->mntns_ino = RC_CHK_ACCESS(nsi)->mntns_ino;
- 	RC_CHK_ACCESS(nnsi)->inited = RC_CHK_ACCESS(nsi)->inited;
-+	RC_CHK_ACCESS(nnsi)->exited = RC_CHK_ACCESS(nsi)->exited;
- 	RC_CHK_ACCESS(nnsi)->need_setns = RC_CHK_ACCESS(nsi)->need_setns;
- 	RC_CHK_ACCESS(nnsi)->in_pidns = RC_CHK_ACCESS(nsi)->in_pidns;
- 	if (RC_CHK_ACCESS(nsi)->mntns_path) {
-@@ -277,7 +310,7 @@ bool nsinfo__need_setns(const struct nsinfo *nsi)
+@@ -194,9 +204,17 @@ static int __thread__set_namespaces(struct thread *thread, u64 timestamp,
+ static void __thread__reset_nsinfo(struct thread *thread)
+ 	EXCLUSIVE_LOCKS_REQUIRED(thread__namespaces_lock(thread))
+ {
++	struct maps *maps = thread__maps(thread);
++	struct machine *machine = maps ? maps__machine(maps) : NULL;
++	struct nsinfo *nsi;
++
+ 	nsinfo__zput(RC_CHK_ACCESS(thread)->nsinfo);
+-	RC_CHK_ACCESS(thread)->nsinfo = nsinfo__new_thread(thread__pid(thread),
+-							   thread__tid(thread));
++	nsi = nsinfo__new_thread(thread__pid(thread), thread__tid(thread));
++	if (nsi && (thread__exited(thread) ||
++		    (machine && (!machine__is_host(machine) ||
++				 !perf_env__is_same_boot(machine->env)))))
++		nsinfo__set_exited(nsi);
++	RC_CHK_ACCESS(thread)->nsinfo = nsi;
+ }
  
- 	mutex_lock(nsinfo__lock(nsi));
- 	nsinfo__ensure_init_locked((struct nsinfo *)nsi);
--	ret = RC_CHK_ACCESS(nsi)->need_setns;
-+	ret = !RC_CHK_ACCESS(nsi)->exited && RC_CHK_ACCESS(nsi)->need_setns;
- 	mutex_unlock(nsinfo__lock(nsi));
+ void thread__reset_nsinfo(struct thread *thread)
+@@ -317,6 +335,39 @@ int __thread__set_comm(struct thread *thread, const char *str, u64 timestamp,
  	return ret;
  }
-@@ -288,12 +321,47 @@ void nsinfo__clear_need_setns(struct nsinfo *nsi)
- 		return;
  
- 	mutex_lock(nsinfo__lock(nsi));
--	RC_CHK_ACCESS(nsi)->inited = true;
--	RC_CHK_ACCESS(nsi)->need_setns = false;
--	zfree(&RC_CHK_ACCESS(nsi)->mntns_path);
-+	nsinfo__clear_need_setns_locked(nsi);
-+	mutex_unlock(nsinfo__lock(nsi));
-+}
-+
-+void nsinfo__set_exited(struct nsinfo *nsi)
++void thread__set_exited(struct thread *thread, bool exited)
 +{
-+	if (!nsi)
-+		return;
++	RC_CHK_ACCESS(thread)->exited = exited;
++	if (exited) {
++		struct nsinfo *nsi = thread__get_nsinfo(thread);
 +
-+	mutex_lock(nsinfo__lock(nsi));
-+	nsinfo__set_exited_locked(nsi);
- 	mutex_unlock(nsinfo__lock(nsi));
- }
- 
-+bool nsinfo__check_proc(struct nsinfo *nsi)
-+{
-+	char spath[64];
-+	pid_t tgid = 0, nstgid = 0;
-+	bool in_pidns = false;
-+	bool exited;
-+
-+	if (!nsi)
-+		return false;
-+
-+	mutex_lock(nsinfo__lock(nsi));
-+	exited = RC_CHK_ACCESS(nsi)->exited;
-+	mutex_unlock(nsinfo__lock(nsi));
-+	if (exited)
-+		return false;
-+
-+	scnprintf(spath, sizeof(spath), "/proc/%d/task/%d/status",
-+		  nsinfo__pid(nsi), nsinfo__tid(nsi));
-+	if (nsinfo__get_nspid(&tgid, &nstgid, &in_pidns, spath) < 0 ||
-+	    tgid != nsinfo__pid(nsi)) {
 +		nsinfo__set_exited(nsi);
-+		return false;
++		nsinfo__put(nsi);
 +	}
-+
-+	return true;
 +}
 +
- pid_t nsinfo__tgid(const struct nsinfo *nsi)
- {
- 	pid_t ret;
-@@ -349,6 +417,8 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
- {
- 	char curpath[PATH_MAX];
- 	char *mntns_path = NULL;
-+	ino_t mntns_ino = 0;
-+	struct stat st;
- 	int oldns = -1;
- 	int newns = -1;
- 	char *oldcwd = NULL;
-@@ -358,19 +428,26 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
- 
- 	nc->oldns = -1;
- 	nc->newns = -1;
-+	nc->oldcwd = NULL;
- 
- 	if (!nsi)
- 		return;
- 
- 	mutex_lock(&RC_CHK_ACCESS(nsi)->lock);
- 	nsinfo__ensure_init_locked(nsi);
--	if (RC_CHK_ACCESS(nsi)->need_setns && RC_CHK_ACCESS(nsi)->mntns_path)
-+	if (!RC_CHK_ACCESS(nsi)->exited && RC_CHK_ACCESS(nsi)->need_setns &&
-+	    RC_CHK_ACCESS(nsi)->mntns_path) {
- 		mntns_path = strdup(RC_CHK_ACCESS(nsi)->mntns_path);
-+		mntns_ino = RC_CHK_ACCESS(nsi)->mntns_ino;
-+	}
- 	mutex_unlock(&RC_CHK_ACCESS(nsi)->lock);
- 
- 	if (!mntns_path)
- 		return;
- 
-+	if (!nsinfo__check_proc(nsi))
-+		goto out;
++bool thread__is_alive(struct thread *thread)
++{
++	struct maps *maps;
++	struct machine *machine;
++	struct nsinfo *nsi;
++	bool ret;
 +
- 	if (!getcwd(curpath, sizeof(curpath)))
- 		goto out;
- 
-@@ -378,14 +455,19 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
- 	if (!oldcwd)
- 		goto out;
- 
--	oldns = open("/proc/self/ns/mnt", O_RDONLY);
-+	oldns = open("/proc/self/ns/mnt", O_RDONLY | O_CLOEXEC);
- 	if (oldns < 0)
- 		goto errout;
- 
--	newns = open(mntns_path, O_RDONLY);
-+	newns = open(mntns_path, O_RDONLY | O_CLOEXEC);
- 	if (newns < 0)
- 		goto errout;
- 
-+	if (fstat(newns, &st) < 0 || st.st_ino != mntns_ino) {
-+		nsinfo__clear_need_setns(nsi);
-+		goto errout;
-+	}
++	if (!thread || thread__exited(thread))
++		return false;
 +
- 	if (setns(newns, CLONE_NEWNS) < 0)
- 		goto errout;
- 
-@@ -407,17 +489,11 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
- 
- void nsinfo__mountns_exit(struct nscookie *nc)
++	maps = thread__maps(thread);
++	machine = maps ? maps__machine(maps) : NULL;
++	if (machine && (!machine__is_host(machine) ||
++			!perf_env__is_same_boot(machine->env)))
++		return false;
++
++	nsi = thread__get_nsinfo(thread);
++	ret = nsinfo__check_proc(nsi);
++	nsinfo__put(nsi);
++	return ret;
++}
++
+ int thread__set_comm_from_proc(struct thread *thread)
  {
--	if (nc == NULL || nc->oldns == -1 || nc->newns == -1 || !nc->oldcwd)
-+	if (nc == NULL || !nc->oldcwd)
- 		return;
+ 	char path[64];
+@@ -324,6 +375,9 @@ int thread__set_comm_from_proc(struct thread *thread)
+ 	size_t sz;
+ 	int err = -1;
  
--	setns(nc->oldns, CLONE_NEWNS);
--
--	if (nc->oldcwd) {
--		WARN_ON_ONCE(chdir(nc->oldcwd));
--		zfree(&nc->oldcwd);
--	}
--
- 	if (nc->oldns > -1) {
-+		setns(nc->oldns, CLONE_NEWNS);
- 		close(nc->oldns);
- 		nc->oldns = -1;
- 	}
-@@ -426,6 +502,11 @@ void nsinfo__mountns_exit(struct nscookie *nc)
- 		close(nc->newns);
- 		nc->newns = -1;
- 	}
++	if (!thread__is_alive(thread))
++		return -1;
 +
-+	if (nc->oldcwd) {
-+		WARN_ON_ONCE(chdir(nc->oldcwd));
-+		zfree(&nc->oldcwd);
-+	}
+ 	if (!(snprintf(path, sizeof(path), "%d/task/%d/comm",
+ 		       thread__pid(thread), thread__tid(thread)) >= (int)sizeof(path)) &&
+ 	    procfs__read_str(path, &comm, &sz) == 0) {
+@@ -542,7 +596,10 @@ uint16_t thread__e_machine_endian(struct thread *thread, struct machine *machine
+ 	tid = thread__tid(thread);
+ 	pid = thread__pid(thread);
+ 	if (pid != tid) {
+-		struct thread *parent = machine__findnew_thread(machine, pid, pid);
++		struct thread *parent = machine__find_thread(machine, pid, pid);
++
++		if (!parent && thread__is_alive(thread))
++			parent = machine__findnew_thread(machine, pid, pid);
+ 
+ 		if (parent) {
+ 			e_machine = thread__e_machine_endian(parent, machine, &local_e_flags,
+@@ -569,7 +626,7 @@ uint16_t thread__e_machine_endian(struct thread *thread, struct machine *machine
+ 			is_live = !session || !session->data;
+ 		}
+ 		/* Read from /proc/pid/exe if live. */
+-		if (is_live) {
++		if (is_live && thread__is_alive(thread)) {
+ 			e_machine = read_proc_e_machine_for_pid(pid, &local_e_flags,
+ 								&args.is_big_endian);
+ 		} else if (machine && machine->env) {
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index 36f2932422df8988..927b2ddccfc8433d 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -205,11 +205,14 @@ static inline refcount_t *thread__refcnt(struct thread *thread)
+ 	return &RC_CHK_ACCESS(thread)->refcnt;
  }
  
- char *nsinfo__realpath(const char *path, struct nsinfo *nsi)
-diff --git a/tools/perf/util/namespaces.h b/tools/perf/util/namespaces.h
-index 42dcca13b002f153..7bba217aa3fde3d7 100644
---- a/tools/perf/util/namespaces.h
-+++ b/tools/perf/util/namespaces.h
-@@ -37,7 +37,9 @@ DECLARE_RC_STRUCT(nsinfo) {
- 	pid_t			tid;
- 	pid_t			tgid;
- 	pid_t			nstgid;
-+	ino_t			mntns_ino;
- 	bool			inited;
-+	bool			exited;
- 	bool			need_setns;
- 	bool			in_pidns;
- 	char			*mntns_path;
-@@ -60,6 +62,8 @@ void nsinfo__put(struct nsinfo *nsi);
+-static inline void thread__set_exited(struct thread *thread, bool exited)
++static inline bool thread__exited(const struct thread *thread)
+ {
+-	RC_CHK_ACCESS(thread)->exited = exited;
++	return RC_CHK_ACCESS(thread)->exited;
+ }
  
- bool nsinfo__need_setns(const struct nsinfo *nsi);
- void nsinfo__clear_need_setns(struct nsinfo *nsi);
-+void nsinfo__set_exited(struct nsinfo *nsi);
-+bool nsinfo__check_proc(struct nsinfo *nsi);
- pid_t nsinfo__tgid(const struct nsinfo  *nsi);
- pid_t nsinfo__nstgid(const struct nsinfo  *nsi);
- pid_t nsinfo__pid(const struct nsinfo  *nsi);
++void thread__set_exited(struct thread *thread, bool exited);
++bool thread__is_alive(struct thread *thread);
++
+ static inline bool thread__comm_set(const struct thread *thread)
+ {
+ 	return RC_CHK_ACCESS(thread)->comm_set;
 -- 
 2.56.0.611.g1030f0b940-goog
 
