@@ -1,76 +1,64 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794824266;
-	b=p7g2/7gpik3MpsjR4jafyZSYlCa6B7t99p+St5Qd8pq2SrDIZzwyWW8h+h2/3gyZXGVm
-	 IwDj01euXrpL9tl3xJfkkiM2DxzF9gWad+P3W+2+wyxagIWlSbk/1aHkRNhUU0lRXe88M
-	 MlX7zxVnRE5zDfblpsFvVp1bpRup9nr6yiQf87zxhUGd0xJsR0bJt8MihxAhmYleTWfK6
-	 1SyZaTcn1Mg5AJVY7mU90N2IjyYTZ50f9EiR73tzfenmBwfy3yMbm2aHQvmLfTI/tyb6h
-	 MXrMbNBsqhPB6XeWyGihza8j+QUK/fkofGB0vVqkuIs8llqZlzeY4z3clRH5RjSV2yA==
+	t=1794825453;
+	b=i+xcA6xqC6d5BBwghWeMC+Gr0pJjrSC2a21fNsgFMHplyetS6T2XcMpWvyEWsJguCvkC
+	 WScSXGRA4mrfPgUAAVELuLfDqJ0TGiK4W9qUkB/zY7wSfqM2LXeV6bA2nA1tFEWDX2Lor
+	 NYlARseNwMnsrk/sDtsIZPJFTzXLLMLG2A8DNn4u6UXnP1zzVQMAoOHPpRpjxoQWjc2Xu
+	 24J9ZRX2ihaMRPzHlM2uH8CmVcSVTtJdsIZ3lA1WdvEDezGsszzwh9H+Pk1FR05BTScRH
+	 JKuLJq7VDeeyi2XUxihleblfCBdcjQbYKAYOCYKSdeGoGb/YoowiEgBx9v3CIxKOAVw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794824266;
-	h=DMARC-Filter:Date:DKIM-Signature:DKIM-Signature:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To;
-	bh=Gvv2DyAp4JVPfUBKtaM8rPmeQgPIXCGymcJ4/vQH2IE=;
-	b=Co1YlmHB3BbHlT7U3mffP14zPbbX2fpGnlwWNMhhJaCekCmSU5Q+G8AFThsGfaCeNT1W
-	 WeNSrq5pEaYeqeJON2dcGFNb+8qzh7+12+iSIVvJRpOTaWZ2sFtC4AvYo+1yvJcvMtzIu
-	 fWpBdn7SwmKnXU3PNMNzjQb5irEZOE+tI1R6aSyV7bAyD7FVvONz5Ab10A1Z24QMRjkp6
-	 yQPQxs2/h8puPOB3xBRfNwmZzqonUp+lNx+CadaN0o9FL4r32g5SJYSi5W951mr9YpMBO
-	 Nmtzq4mcPx1TzKIoc8sDltgpj+GFAmfr7BVvMjdhoIUwWrEjxlN8LOTfq+x8d5EvOYA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794825453;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To;
+	bh=/ZtzIqGKVBjlBBIyqu9fROMer7QN/0/V51r6Lfy880U=;
+	b=LPFqI5U5y7P9vduauiQ+976nW9QM4vujhbMJ7wqoKJEIj7sds8nrrywxJQ+SJqnOf0av
+	 36VrLHXyG/NttrKl85ta8Y5eR6oPqqtFvITram1QZ34B8k5b3EOTlXfqU1vegxmD74TFK
+	 YaNst2LZfnDKkTyUKCwFDfXzB1lw50gzaIelHibeSSlCU4ME9t2NDA+exf8I78816b9Ag
+	 WTeMbASkFw1o4WK23giyHNdd8kq1c2b93C1yoB11tzHToddsxLV/Sv0tXKNl1mqSgbvw8
+	 LNA1AyOvLfJtmA4EG3ieiED1atBAkxmYetuYlUgiUJD2SRaoAI2QvgP3kuV/gdvXLew==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linutronix.de;
-	spf=pass smtp.mailfrom=linutronix.de;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=1katym5m;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=Z3qyToCD;
-	arc=none smtp.remote-ip=193.142.43.55
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4C4606A336;
-	Mon, 16 Nov 2026 10:17:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3E4C4606A336
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	dmarc=pass header.from=arm.com;
+	spf=pass smtp.mailfrom=arm.com;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b="aEv3CH/d";
+	arc=none smtp.remote-ip=217.140.110.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C37CD606A31C;
+	Mon, 16 Nov 2026 10:37:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C37CD606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=1katym5m;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=Z3qyToCD
-Date: Mon, 16 Nov 2026 11:17:42 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1794824264;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gvv2DyAp4JVPfUBKtaM8rPmeQgPIXCGymcJ4/vQH2IE=;
-	b=1katym5mwk/UMOFz3y8SY7HtyY4qM1tRwBmT4GvIm+ownixD5zibEXS5SwUvEuzFaQnXd9
-	v6Em+HSx6COsoMP9gQAgr9u09Gnwwb+3pEOu9zUnFeOyhP1OlOfErn3KW/RMuKLIEiZ18D
-	bMKNifhkbNgViadEGM0xUYy5Dt7U2R7x1zsYnxzXfnXdeU8JV9xqiXIFXXk13SPvnLLbSi
-	qn55njlPDnPjP0+F5hfnDmsq78ChTRyiD4HLomGAnnA4EQHVk8xWXXQ4zc7HHzLxZR8dYb
-	LQoOG+NECnapgDW7rL10PqMv9MhZyTtkVxhAta+LB2+ektQ78kwvFoHQBUz6QQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1794824264;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gvv2DyAp4JVPfUBKtaM8rPmeQgPIXCGymcJ4/vQH2IE=;
-	b=Z3qyToCDZ/Eqh8pNlhKLuZ3PRnXwUkydSt6uFzBShH1eSkEK7vTXwBqt/Grb2cLxrV5pwW
-	lHHVaOLD8jmIrBBA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Tengda Wu <wutengda@huaweicloud.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] perf/core: Disable context fast-swap for sigtrap
- events
-Message-ID: <20261116101742.11G-Kmmb@linutronix.de>
-References: <cover.1793870900.git.wutengda@huaweicloud.com>
- <f19b29b90fe1d0126fa8f5cd0e7c8d7da07e5a34.1793870900.git.wutengda@huaweicloud.com>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=aEv3CH/d
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF3131476;
+	Mon, 16 Nov 2026 02:37:28 -0800 (PST)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8920B3F632;
+	Mon, 16 Nov 2026 02:37:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1794825451; bh=fHZnIIQvAnQEZYB1ohrXNN6xTkU9UWERfy/JRkWqdUc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aEv3CH/dircAIumFk9ZT6vTv8qcWLVhR94/xOQnKX/CpPjJCV0PznJfRdIjZAYN7L
+	 +YxzjcZvjTvjXurJzyQsvvit8GW23xjZIXxlxj5mWJpfqA0S46ey9vBdOifk2b4hNL
+	 Mwf4F9KJ/H8v0uw2yHTNFd0tiVyPjjlpOGpQuXQA=
+Date: Mon, 16 Nov 2026 10:37:29 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Johnny Fan <johnny.fan@cixtech.com>
+Cc: will@kernel.org, mark.rutland@arm.com, suzuki.poulose@arm.com,
+	jeremy.linton@arm.com, maz@kernel.org, mike.leach@arm.com,
+	james.clark@linaro.org, alexander.shishkin@linux.intel.com,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	cix-kernel-upstream@cixtech.com, jie.fu@cixtech.com,
+	bob.zhang@cixtech.com, Fugang Duan <fugang.duan@cixtech.com>
+Subject: Re: [PATCH v3 2/2] perf: arm_pmu_acpi: Support heterogeneous ACPI
+ systems
+Message-ID: <20261116103729.GT9176@e132581.arm.com>
+References: <20261102084153.3975282-1-johnny.fan@cixtech.com>
+ <20261102084153.3975282-3-johnny.fan@cixtech.com>
+ <20261113160041.GS9176@e132581.arm.com>
+ <avpxRZFX4Iebu0l3@JohnnyFan>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -82,65 +70,37 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <f19b29b90fe1d0126fa8f5cd0e7c8d7da07e5a34.1793870900.git.wutengda@huaweicloud.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <avpxRZFX4Iebu0l3@JohnnyFan>
 
-On 2026-11-05 09:30:44 [+0000], Tengda Wu wrote:
-> perf_sigtrap() contains:
+On Mon, Nov 16, 2026 at 10:58:13AM +0800, Johnny Fan wrote:
+> On Fri, Nov 13, 2026 at 04:00:41PM +0000, Leo Yan wrote:
 > 
-> 	WARN_ON_ONCE(event->ctx->task != current)
+> [...]
 > 
-> The warning assumes that an event's ctx->task always matches the task
-> that ends up running the pending task_work. That assumption can be
-> broken by the context fast-swap path.
+> > Based on above idea, I would fold your patch into my series (but I will
+> > drop the first patch for changing TRBE/SPE drivers). I will keep you as
+> > the author but please bear me a bit that I may refactor it to fit into
+> > the extensions. Hope this is fine for you.
 > 
-> The failure sequence is:
 > 
->   1. A -> B switch, perf_event_context_sched_out() takes the fast path
->      and does WRITE_ONCE(ctx->task, next) / WRITE_ONCE(next_ctx->task, task).
->      An NMI then hits while the context is swapped, and
->      __perf_event_overflow() queues pending task_work on the *current*
->      task (A), even though the event now belongs to B's swapped-in
->      context view.
+> Hi Leo,
 > 
->   2. B -> A switch. Because A now has pending task_work,
->      nr_no_switch_fast is non-zero, so the slow path is taken and
->      ctx->task is *not* swapped back.
-> 
->   3. A returns to user mode, task_work runs perf_pending_task() ->
->      perf_sigtrap(), and event->ctx->task no longer equals current,
->      tripping the WARN_ON_ONCE().
-> 
-> The context fast-swap path was already excluded for events that need
-> stable task association (inherit + sample read). sigtrap events have
-> the same requirement: the SIGTRAP is targeted at ctx->task and must not
-> be delivered after ctx->task has been swapped to another task.
-> 
-> Fix this by also excluding events with attr->sigtrap from the fast-swap
-> path, i.e. bump nr_no_switch_fast for sigtrap events in
-> list_add_event()/list_del_event(), and update the comment describing
-> the invariant accordingly.
-> 
-> Fixes: c5d93d23a260 ("perf: Enqueue SIGTRAP always via task_work.")
-> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
-> ---
->  include/linux/perf_event.h | 6 ++----
->  kernel/events/core.c       | 9 +++++++--
->  2 files changed, 9 insertions(+), 6 deletions(-)
-> 
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -1999,7 +1999,7 @@ list_add_event(struct perf_event *event, struct perf_event_context *ctx)
->  		ctx->nr_user++;
->  	if (event->attr.inherit_stat)
->  		ctx->nr_stat++;
-> -	if (has_inherit_and_sample_read(&event->attr))
-> +	if (has_inherit_and_sample_read(&event->attr) || event->attr.sigtrap)
->  		local_inc(&ctx->nr_no_switch_fast);
+> Thanks for the detailed review, and yes — please go ahead and fold it
+> into your series. I'm happy for you to keep me as the author and to
+> refactor it as you see fit.
 
-This is already done in __perf_event_overflow() while the event is
-added. You are saying this is not enough/ too late. This is required to
-be done/ disabled once the event is created if I understand it.
-If so, do we need to keep this nr_no_switch_fast inc/dec in
-__perf_event_overflow() and perf_pending_task()?
+Cool!
 
-Sebastian
+> I'll hold off posting a v4 so we don't end up with two versions under
+> review. Ping me when there's something you'd like tested on the CIX
+> board.
+
+Thanks for offering to test! I'll test on my Orion6 board and send out
+the patches this week. You're welcome to test them and any comments.
+
+Even if we're testing on the same SoC, your results would still be
+valuable, maybe we're using different firmware versions.
+
+Thanks,
+Leo
