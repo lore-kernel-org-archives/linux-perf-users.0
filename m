@@ -1,52 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794853333;
-	b=ySL31mFHeTktWKL6lkbiij9GjVpu3gJzVRNQD5zykddKu2inMrMLg1f2Gxy3yS0Z1iiW
-	 pXWSb83fCPDFrUeaYOS2Wq0a7vss5OfTUOcdE1D/XXN8oh3Ct2+mYYYWT4QWJJ9yoiG0F
-	 k/NE3nlkQ3XurOLSNDoLrLqmyvdez70UBDEuSLnQDV8mFcgfkxUJN1AQC74Nkl7bwCAlM
-	 GN70pCne0ANrNnw2HjEZiH3m5yWyIJ+tI6cKG2GM6Zpg7Bj+8RpaWcm3PoOyJ5vj8DnQf
-	 bvzYldkrTDFdO1IoR/NpW8A/o1QAj6uS0L3Z0rpRM/2lDUcjUesTpwNKbYzdwjztA+g==
+	t=1794853341;
+	b=A6fIuB3nFsnaHD94ThER+nTOTEA2/IwN9omf+xTNdL3b/lRkmkFQCfvaoffhYx87JcUL
+	 rlR3IvvCV241Y/u7fynKWs5JALxCi4rqinqraU79kTOCwTnla6l+FV21fTsvtFxRq5nVT
+	 rOn1Jbav6Y8Eqn/mdBaZf+UgfouXhBy3ccyg06LNo+thhRmgmruFgVUKUuI+ScgPz1kbi
+	 E2NXmDDftjIpqKSmxdV7wmyGzITGgD4vRhY3l5cW7A8QAlOPW2aWx+SOzy9M92IOAXGPE
+	 VYkqL2FNBnimSfn67ttkgUv2FE62jxWNyJItgGVK00rWtPS+FiI3tkFG6jcVEXkUfRg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794853333;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:From:Subject:Date:
-	 Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	 X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:X-Developer-Signature:
+	a=rsa-sha256; c=relaxed/relaxed; t=1794853341;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:From:Date:Subject:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
+	 References:In-Reply-To:To:Cc:X-Mailer:X-Developer-Signature:
 	 X-Developer-Key;
-	bh=Bx9BFmE1wLXw81GEy8xTvfh2DHQC7Qib0epoWWtsHZg=;
-	b=OZXKOj/b4fdbbGuB7xhnu/Jvl00vNhUtoGKUryEG8Q+r1R4YG3ecf38uUVa+gSIqBk7u
-	 6qJss6NDt18gcbqne7p/53bdnoiL8Qwb7AhoxKFSfFVTk0PJ8THjZutcLqfiwhrlhy1X+
-	 FEQHMl7bKczaYUCXVGQ/rVpUWV76MjvLrHN/QjZ/UD4KbzHzDYyrupftS5tEi/6iBESSE
-	 yHh7dR8WBPFbGWfwyqP+7iw2n7VaMJJs5nAfAzc3W4lc2cwTIXff5NngIQFlYfV7WxG9L
-	 IJKOYLjhpBZKE3gq+s6s7A8RNIkWS3fHll3NhNRYRzsd8uJzfhq3KNobgboHpqoWm7Q==
+	bh=Ld9U2kJWawO8+BzXlSAnk1VRkVDg0Y8wMjAhcptRpHU=;
+	b=SlzNJymT2Hm4HFdyu+dth1YTBVRmt2nvZIEhlukaV+XCQGf/2dme4ywNu+PzV99AbhLJ
+	 vmx/5hbl4c/aSuUbjUnSsdk6HgxwqwxY1SGKPyJLm8p5dG+0JAAuzLnCHytqTkidNhwNM
+	 2ik6742dz+GTdK0UJ73PXju5Zb0e2lUofO079Ta6xh9uM2ghXnrQtyVe1p0rSripHs137
+	 shexDhP1WwAs0BOjTZ6d6KjYC+V/3T9vmG3kW7gcHfHUf0AzT/7+fC+qV4z/IVVfAljWj
+	 i10ZsLhgiQfgnk55OGxhpG6TH3obX6KIcloTC/a8v2CeV+LID5zW2X5Mf8wL7vSrs+w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=arm.com;
 	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=UlTR1XYG;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=KNwyI6DU;
 	arc=none smtp.remote-ip=217.140.110.172
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64050606A31C;
-	Mon, 16 Nov 2026 18:22:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 64050606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C094D606A33A;
+	Mon, 16 Nov 2026 18:22:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C094D606A33A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=UlTR1XYG
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=KNwyI6DU
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A07C41684;
-	Mon, 16 Nov 2026 10:22:08 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3FA1B1BB2;
+	Mon, 16 Nov 2026 10:22:17 -0800 (PST)
 Received: from e132581.arm.com (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 925C03F632;
-	Mon, 16 Nov 2026 10:22:07 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 30F7A3F632;
+	Mon, 16 Nov 2026 10:22:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1794853331; bh=goJwv/swJu68Y9hAS2XUupq7PiPrjIfLYlStZrGMjm0=;
-	h=From:Subject:Date:To:Cc:From;
-	b=UlTR1XYGFmGx57WHb+xFLIaoTlc9SWjhRZzd27Td4eV42hOpsw40LqOrDG/7iSgtX
-	 TIy5sLSf7nHcRqzEqquUlPfxvS3l7C/ndYlKT1Bksy+6Ls6eVuiaC7x0rgmD9F2mZQ
-	 5O//L1uzfYhNyp1/14QAlVJM4YW73pn/rIJ954G4=
+	t=1794853340; bh=V/LDSJSGzghXJO1VTD09y2Y9+Ds1iqTLPb+1X1g1u1Q=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=KNwyI6DUSH9ZqFOXOwAHmI+nIZHHCX1CgxRyTP2JJx0z1dsnojgvsRLT49GQK8DWV
+	 kYbOY/lT+HBDF4odlR1FGfphz1tyJEUOtieP9711eySdkTW4f6bcW7/dXAQ0NfK46K
+	 I0oCl4+oGhd5OszpFlMuFERpdDjgj1/VoEFdIWO0=
 From: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH 0/8] ACPI: arm64: Support PMU on Heterogeneous Systems
-Date: Mon, 16 Nov 2026 18:21:27 +0000
-Message-Id: <20261116-acpi_arm_pmu_registration_hmp-v1-0-0371d4eca626@arm.com>
+Date: Mon, 16 Nov 2026 18:21:29 +0000
+Subject: [PATCH 2/8] device property: Add software-node IRQ affinity masks
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -58,11 +57,9 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAKdJ+2oC/4WNwQqDMBBEf0X23JSsEKk99T+KhDRZdQ/RsLHSI
- v57U+m9xzfMvNkgkzBluFYbCK2ceZ4K4KkCP7ppIMWhMNS6bhB1q5xPbJ1Em+LTCg2cF3FLWdk
- xJtV40xrf63AJBMWRhHp+Hf57V3gs9Vnex92K3/RnRvxjXlFp9WiDN7rHQGRupXr2c4Ru3/cP5
- yuevMgAAAA=
-X-Change-ID: 20261109-acpi_arm_pmu_registration_hmp-6c595cf0d8de
+Message-Id: <20261116-acpi_arm_pmu_registration_hmp-v1-2-0371d4eca626@arm.com>
+References: <20261116-acpi_arm_pmu_registration_hmp-v1-0-0371d4eca626@arm.com>
+In-Reply-To: <20261116-acpi_arm_pmu_registration_hmp-v1-0-0371d4eca626@arm.com>
 To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
  Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>, 
@@ -86,89 +83,165 @@ Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
  devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1794853327; l=3514;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1794853327; l=5316;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=goJwv/swJu68Y9hAS2XUupq7PiPrjIfLYlStZrGMjm0=;
- b=56hWmS+3xC7LmrbBWUKHF9DrbRdWd6N36Fs78LtUwPpuAQFmSQns9f24Hao9oUvCm380XIMCE
- jwOjkO90ZeDBQMKP870C1FH435FZioX3FoPWaALnB24SOlEKVFsakAy
+ bh=V/LDSJSGzghXJO1VTD09y2Y9+Ds1iqTLPb+1X1g1u1Q=;
+ b=egNZpetXUSVXrmJCpvph6uk84Dan/On7mY86Wz9Uw1MSm0IsNoesTEy5sLwbcD4SmxD77fSwI
+ 0Pfu4aEgwy9Bpvnzk879/chQp9fdx4UWd3Uvw9/MWRvRiSFXzpnmSDE
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-This series follows Johnny Fan's SPE/TRBE work [1], which requires
-ACPI-specific IRQ affinity handling in the drivers. It provides a common
-way to describe PPI affinity for devices created from the MADT.
+Devices created from firmware tables may need CPU affinity information
+without a corresponding firmware node. Allow software nodes to supply
+this information through the common firmware node IRQ affinity API.
 
-Register one platform device for each group of CPUs with the same MIDR.
-Associate a software node with each device to expose its CPU mask through
-platform_get_irq_affinity(). SPE and TRBE drivers can then obtain affinity
-without ACPI-specific handling or a processor-container companion.
-
-Grouping by MIDR allows CPU PMU events to follow tasks across compatible
-CPUs, including CPUs in different processor containers. SPE and TRBE
-require a shared GSI within each group. CPU PMUs can also use per-CPU SPIs
-and reuse the platform probe path used for DT. Move the common ACPI device
-registration to drivers/acpi/arm64/.
-
-This series has been tested on Orion O6, with four little Cortex-A520
-cores (CPUs 2-5) and eight big Cortex-A720 cores (CPUs 0-1 and 6-11).
-It exposes the following PMU devices:
-
-  # ls /sys/bus/event_source/devices/
-  arm_spe_0  armv8_pmuv3_0  armv8_pmuv3_1  breakpoint  cs_etm  kprobe  software  tracepoint  uprobe
-  # cat /sys/bus/event_source/devices/armv8_pmuv3_0/cpus
-  0-1,6-11
-  # cat /sys/bus/event_source/devices/armv8_pmuv3_1/cpus
-  2-5
-  # cat /sys/bus/event_source/devices/arm_spe_0/cpumask
-  0-1,6-11
-  # ls /sys/bus/event_source/devices/cs_etm/sinks/
-  trbe0  trbe1  trbe10  trbe11  trbe2  trbe3  trbe4  trbe5  trbe6  trbe7  trbe8  trbe9
-
-The CPU PMU masks match the MIDR groups: eight A720 CPUs and four A520
-CPUs. SPE uses the A720 mask, and TRBE exposes one sink per CPU.
-
-[1] https://lore.kernel.org/linux-arm-kernel/20261102084153.3975282-1-johnny.fan@cixtech.com/
+Add software_node_add_irq_affinity() to copy a CPU mask for an IRQ index,
+and implement the software node irq_get_affinity callback. Keep each mask
+until the node is released and reject replacement so borrowed masks remain
+valid for the node's lifetime.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
-Johnny.Fan (1):
-      perf/arm_pmu: Register ACPI SPE and TRBE devices with software nodes
+ drivers/base/swnode.c    | 53 ++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/property.h |  4 ++++
+ 2 files changed, 57 insertions(+)
 
-Leo Yan (7):
-      device property: Add firmware node IRQ affinity callbacks
-      device property: Add software-node IRQ affinity masks
-      perf/arm_pmu: Prepare ACPI registration for per-CPU interrupts
-      perf/arm_pmu: Register ACPI CPU PMUs as platform devices
-      perf/arm_pmu: Support ACPI devices in the platform probe
-      perf/arm_pmu: Use ACPI CPU affinity in IRQ handling
-      ACPI: arm64: Move PMU device registration to drivers/acpi/arm64/
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index cf495e67f0763ad83a849474152e71d0640c76dd..64d5e12e4871771c20a64162260d92d3e24b4191 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -7,6 +7,7 @@
+  */
+ 
+ #include <linux/container_of.h>
++#include <linux/cpumask.h>
+ #include <linux/device.h>
+ #include <linux/err.h>
+ #include <linux/export.h>
+@@ -21,6 +22,7 @@
+ #include <linux/string.h>
+ #include <linux/sysfs.h>
+ #include <linux/types.h>
++#include <linux/xarray.h>
+ 
+ #include "base.h"
+ 
+@@ -31,6 +33,7 @@ struct swnode {
+ 	int id;
+ 	/* Device the managed node's lifetime is tied to. */
+ 	struct device *owner;
++	struct xarray irq_affinity;
+ 
+ 	/* hierarchy */
+ 	struct ida child_ids;
+@@ -756,6 +759,13 @@ static int software_node_add_links(struct fwnode_handle *fwnode)
+ 	return 0;
+ }
+ 
++static const struct cpumask *
++software_node_irq_get_affinity(const struct fwnode_handle *fwnode,
++			       unsigned int index)
++{
++	return xa_load(&to_swnode(fwnode)->irq_affinity, index);
++}
++
+ static const struct fwnode_operations software_node_ops = {
+ 	.get = software_node_get,
+ 	.put = software_node_put,
+@@ -774,6 +784,7 @@ static const struct fwnode_operations software_node_ops = {
+ 	.graph_get_port_parent = software_node_graph_get_port_parent,
+ 	.graph_parse_endpoint = software_node_graph_parse_endpoint,
+ 	.add_links = software_node_add_links,
++	.irq_get_affinity = software_node_irq_get_affinity,
+ };
+ 
+ /* -------------------------------------------------------------------------- */
+@@ -844,6 +855,8 @@ static void software_node_free(const struct software_node *node)
+ static void software_node_release(struct kobject *kobj)
+ {
+ 	struct swnode *swnode = kobj_to_swnode(kobj);
++	struct cpumask *affinity;
++	unsigned long index;
+ 
+ 	fwnode_links_purge(&swnode->fwnode);
+ 
+@@ -857,6 +870,9 @@ static void software_node_release(struct kobject *kobj)
+ 	if (swnode->allocated)
+ 		software_node_free(swnode->node);
+ 
++	xa_for_each(&swnode->irq_affinity, index, affinity)
++		kfree(affinity);
++	xa_destroy(&swnode->irq_affinity);
+ 	ida_destroy(&swnode->child_ids);
+ 	kfree(swnode);
+ }
+@@ -891,6 +907,7 @@ swnode_register(const struct software_node *node, struct swnode *parent,
+ 	fwnode_init(&swnode->fwnode, &software_node_ops);
+ 
+ 	ida_init(&swnode->child_ids);
++	xa_init(&swnode->irq_affinity);
+ 	INIT_LIST_HEAD(&swnode->entry);
+ 	INIT_LIST_HEAD(&swnode->children);
+ 
+@@ -1050,6 +1067,42 @@ void fwnode_remove_software_node(struct fwnode_handle *fwnode)
+ }
+ EXPORT_SYMBOL_GPL(fwnode_remove_software_node);
+ 
++/**
++ * software_node_add_irq_affinity - Add an IRQ affinity mask to a software node
++ * @fwnode: Software node to associate with the mask
++ * @index: Zero-based IRQ index
++ * @affinity: CPU affinity mask to copy
++ *
++ * The copy remains valid until the software node is released. Call this before
++ * publishing the node to interrupt consumers. An existing mask cannot be
++ * replaced, so masks returned by fwnode_irq_get_affinity() remain valid.
++ *
++ * Return: 0 on success, -EINVAL for an invalid node or mask, -EBUSY if the index
++ * already has a mask, or -ENOMEM if allocation fails.
++ */
++int software_node_add_irq_affinity(struct fwnode_handle *fwnode,
++				   unsigned int index,
++				   const struct cpumask *affinity)
++{
++	struct swnode *swnode = to_swnode(fwnode);
++	struct cpumask *mask;
++	int ret;
++
++	if (!swnode || !affinity)
++		return -EINVAL;
++
++	mask = kmemdup(affinity, cpumask_size(), GFP_KERNEL);
++	if (!mask)
++		return -ENOMEM;
++
++	ret = xa_insert(&swnode->irq_affinity, index, mask, GFP_KERNEL);
++	if (ret)
++		kfree(mask);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(software_node_add_irq_affinity);
++
+ /**
+  * device_add_software_node - Assign software node to a device
+  * @dev: The device the software node is meant for.
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 08c901015a9ea4b9223a29d07749f88a5d672ea7..186a77d1468505a10960efe6cdf7d53750acbf95 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -618,6 +618,10 @@ fwnode_create_software_node(const struct property_entry *properties,
+ 			    const struct fwnode_handle *parent);
+ void fwnode_remove_software_node(struct fwnode_handle *fwnode);
+ 
++int software_node_add_irq_affinity(struct fwnode_handle *fwnode,
++				   unsigned int index,
++				   const struct cpumask *affinity);
++
+ int device_add_software_node(struct device *dev, const struct software_node *node);
+ void device_remove_software_node(struct device *dev);
+ 
 
- MAINTAINERS                     |   1 +
- arch/arm64/include/asm/acpi.h   |   3 +
- drivers/acpi/arm64/Kconfig      |   4 +
- drivers/acpi/arm64/Makefile     |   1 +
- drivers/acpi/arm64/pmu.c        | 393 +++++++++++++++++++++++++++++++++++
- drivers/acpi/property.c         |   8 +
- drivers/base/platform.c         |   7 +-
- drivers/base/property.c         |  15 ++
- drivers/base/swnode.c           |  53 +++++
- drivers/of/property.c           |   7 +
- drivers/perf/Kconfig            |   4 -
- drivers/perf/Makefile           |   1 -
- drivers/perf/arm_pmu.c          |   3 +-
- drivers/perf/arm_pmu_acpi.c     | 438 ----------------------------------------
- drivers/perf/arm_pmu_platform.c |  62 +++++-
- drivers/perf/arm_pmuv3.c        |   5 +-
- include/linux/cpuhotplug.h      |   1 -
- include/linux/fwnode.h          |   5 +
- include/linux/perf/arm_pmu.h    |  12 +-
- include/linux/property.h        |   6 +
- 20 files changed, 552 insertions(+), 477 deletions(-)
----
-base-commit: aebb7274476403040d582c61478df8f4a7bf9cd3
-change-id: 20261109-acpi_arm_pmu_registration_hmp-6c595cf0d8de
-
-Best regards,
 -- 
-Leo Yan <leo.yan@arm.com>
+2.34.1
 
