@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794813604;
-	b=gBwzRlDJDSNihDoiqHiK67nD+vymUz0UE4gilEUz1Df/hCcEFFHLd8K4lnqmph7hW/ta
-	 8VNzCK1n9x/wMGseKA8YpwUHpLj4zYknTa+OqSTxfWtiILrqMeKnshV/GzYPQSw7fqirT
-	 3PdHmoxorFNl9e2QhKt77GXaREq9oqQ1LYi7hebjKVOplm0/UFG1xzIMrQk4pf7+AIT9m
-	 gA2jWUSrYFz+IFLj1Dyc174eVEVCHFCz0OuBh1Y6aXIunYLWRJneoBgDr3f+JEZeyuNyU
-	 IBm7MwCpn0vTiWrwOMCsgkV6WLW120dAQrzQoN5tztCI08kpkc5nFrz9jpJEiHC1ffQ==
+	t=1794814575;
+	b=2Zg6X1FHtuhZ01KxufIb9Bmw9YyLnkowaCFM5NO0qzc1kTX4F55oa9yn/qkwnhkvrnQZ
+	 aPL2h9QYVQ4P0BM2oQ/05/g+vMm8g2bl6XhZcGwC+5fQgMWXo16xD1WUpL4J9g356z+Fb
+	 N8AHYx7rPGd64OCGRNjTCWr8YYEY9ZDfm0/Vmrv7R8p/PGrFgpaWxMMGYiCsme507DQeg
+	 zGd6hXvGagou6P8rd/4CYBEUhtjuEhVjiQtgXR0ufODCVOveM19lfflyXoGi7B6I4icF7
+	 E8EapS1eBChI7gN2VebXqK/IXUg4LcKi8nq/h/7ZalzGnF0TG4DTRgS8CzSt5fTVFlg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794813604;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794814575;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=vnwRPll6DU6+vvUy7+V7CjMVDuNot0bEh8DxJ47ovmI=;
-	b=b5HTPFnDMeY6vxQ44szXRu1f+K5Per6CBMoeqLiD5YMdIGmU4U+uuOhD8IHqZ33ed3UT
-	 K6c+UmatvoicZeYKBDH9OFqEb3S2HsmiBl+2nEgMiSZAfaxfMdA4YoDgN9lK3nwetBKg8
-	 Y19KvzKmmHViaqjwVUCIFQjm2b/BUuCA2jqj1ep1akwJgMguSRsrDYFl/aqp9zXRKVGCf
-	 UvGB2tmRT6RlWO+5rkAGodLsrwKLQ4KAanhsUy+4fh/xX8STY8xcEYYMbshV6tXIVVyt8
-	 mGFAqs4GkZENmSsjcWzXlKeXOVqcIen5qHmePaEIHYq2fLOAQod6QGsAg2Eb/I0RCWg==
+	bh=b3ADc/DvtmT27QNZep4MZ31OjrvKV4pD+zCE+XYmzJk=;
+	b=DFkGl18Cx0Re3mBhl+ZYjaVUsuSBxMkKVgu/ir17bH+zRPBKuv7yQ5AvtPkxTcqVBTwT
+	 lt/Rg+avlrSqvQsk178YFa1paCe+DwovMnRP2VeA0Br30SYhvDlqrO0VURXYfO2ADmgT0
+	 vN6WIey2ZARdObgFqhsbISEFTCXhKRGV60SOClG7Fj208yxZPp7xB5jJDYmqWc5LZI7iI
+	 fJiqkAa2U7IaJkTSmig84mc1e56seavc5dt1u+dxyuAL79BYXTFCIe/UJ3pEmQuy6QChe
+	 PntJ5WgKPKvk+0ks+d/sonq+jjKv4uiSd5v5CiJqLBuphqCQWRTHyWkkIKEsQ88cUgQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=opkdUXwH;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fBQhlZGQ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A87606A32A
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 07:20:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7F8606A335
+	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 07:36:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=opkdUXwH
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 616571F000C4;
-	Mon, 16 Nov 2026 07:20:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fBQhlZGQ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39ED61F000C4;
+	Mon, 16 Nov 2026 07:36:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794813604;
-	bh=vnwRPll6DU6+vvUy7+V7CjMVDuNot0bEh8DxJ47ovmI=;
+	s=k20260515; t=1794814575;
+	bh=b3ADc/DvtmT27QNZep4MZ31OjrvKV4pD+zCE+XYmzJk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=opkdUXwHaeHKKFJGPryq6UMMmXLAEU0N8DEvtUHQqtr22lyJ4JwZFMNR37LiqDiAC
-	 Gep5Pu2SEKn03hsB3cC9FNgl1hxTW9dMFQ2Jw9dPWT80BlI75ZR3GM09GVUCya/VK2
-	 joFS+540ceecJXI0qt3/gQ0WJkKDS+1rSU2ycYvbTRH4zLkfcfzlo9THxohynLshJd
-	 DLoXPT+Lzr+BYCHGJyFFVBklIq6FX/QcDVe1jdOIXZ7Sxu7oME5r9mYQiStjcxXN3x
-	 VZOGVw24jzn/BQ+SfEuXIBMrxAerIALyzDk6yqPgFQ8aZHf28U1UMFjsHEcR+rzw93
-	 Jk5UbO9g5kyxw==
-Message-ID: <sashiko-outbox-216403@kernel.org>
+	b=fBQhlZGQoHDk7OIqoEYw8KLuUyAFoz5yesbdLUGD8REJ7DDsp+Xe7w/PnK1C07PzC
+	 tBUVarZMn6axOsQ/E7EqUSW2dJVxNzV1Uq0UR7JDX8Yqmq6bG7XlT1GJ1R49Gg0dob
+	 fQSbh9DP741putU/OPM0i/K10jLIsUE3WgHAT53up8KmyVFzJPkHJWW+MxBIB+jh4U
+	 xfpKgqn/gus1GXISHps+LwMPUZQAcQvOy5GAP8q7GxU/Nse2dmsx0uGgLeJ1AymBvc
+	 VllC/m3O3u5XWElQULyhDpLJ10hzVJnXHmWPs1f3rowai0ywlbbWLKekeV7uIaXq2j
+	 Mk9LvuWgWKlzA==
+Message-ID: <sashiko-outbox-216442@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 5/9] perf symbol: Switch backing storage from rbtree
- to struct symbols array
+Subject: Re: [PATCH v5 7/9] perf symbol: Add memory shrinking for symbols,
+ DSOs, and machines
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261116063435.2817923-6-irogers@google.com>
+In-Reply-To: <20261116063435.2817923-8-irogers@google.com>
 References: <20261116063435.2817923-1-irogers@google.com>
- <20261116063435.2817923-6-irogers@google.com>
+ <20261116063435.2817923-8-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 16 Nov 2026 07:20:03 +0000
+Date: Mon, 16 Nov 2026 07:36:14 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,25 +61,35 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Previously, DSO symbols were stored in an unprotected rb_root_cached
-> with a 24-byte struct rb_node embedded inside every struct symbol. That
-> design had three drawbacks:
-> 1. Embedding struct rb_node (3 pointers, 24 bytes on 64-bit) accounted
->    for nearly 40% of struct symbol's fixed header size and scattered
->    symbol lookups across non-contiguous heap nodes.
-> 2. Unlike struct dsos and struct maps, the symbol rbtree had no lock
->    protecting concurrent lookups, sorting, and insertions.
-> 3. Deduplicating symbols, splitting kallsyms, and trimming excess symbol
->    container capacity under memory pressure benefit from operating on a
->    compact array under a lock.
+> When profiling large workloads or systems with thousands of processes and
+> shared libraries, perf can accumulate significant memory in loaded DSO
+> symbol tables, secondary name-sorted symbol indices, cached DSO file data,
+> and DWARF/addr2line state.
 >=20
-> Replace struct rb_node in struct symbol with a locked, lazily-sorted
-> pointer array in struct symbols, matching the design of struct dsos and
-> struct maps:
-> [ ... ]
->   After (libLLVM.so.21.1, -22.3% load, -8.1% memory):
->     Average DSO load + sort: 61.074 msec (+- 0.236 msec)
->     Average DSO memory usage: 8755 KB (+- 1 KB)
+> Because the lifetime of struct symbol is controlled by its owning
+> struct dso, symbols in a referenced DSO (refcnt > 1) must remain valid for
+> the lifetime of the DSO reference. However, auxiliary per-DSO allocations
+> and unreferenced DSOs can still be reclaimed under memory pressure:
+>=20
+> 1. symbols__shrink(): Reclaims the secondary name-sorted index
+>    (symbols_by_name, which is rebuilt on demand by dso__sort_by_name())
+>    and trims unused over-allocated tail capacity in the symbols array.
+>=20
+> 2. dso__shrink(): Releases cached DSO resources (open file descriptor,
+>    cached 4KB data pages, addr2line handles, and libdw DWARF contexts).
+>    When a DSO in a dsos collection has no external references
+>    (refcnt =3D=3D 1), dso__shrink() also evicts its unannotated symbol ta=
+ble
+>    via symbols__try_delete_unannotated() and marks the DSO unloaded so it
+>    can be reloaded on demand if mapped again; otherwise it calls
+>    symbols__shrink() to reclaim auxiliary symbol arrays.
+>=20
+> 3. dsos__shrink(), machine__shrink(), machines__shrink(), and
+>    perf_session__shrink(): Walk the session's host and guest machines to
+>    shrink DSOs and evict unreferenced user DSOs (refcnt =3D=3D 1, not ker=
+nel,
+>    not vDSO, not hit, and not carrying header build-ids), followed by
+>    malloc_trim(0) on glibc to return freed heap pages to the OS.
 >=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
@@ -87,5 +97,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261116063435.2817=
-923-1-irogers@google.com?part=3D5
+923-1-irogers@google.com?part=3D7
 
