@@ -1,57 +1,59 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794851729;
-	b=mgEW4ccVLJj9I/5J7HPckGeFQNjkqgQvDStTnCuKiG8jePS7mQyt0T9XMgRrsWrqX8q1
-	 uYl89/2uUbovYjayJ+7lT6OAAfO4ETft2XskB7etvl4Jj4DcyY5J98oIYfjSz5G3iDRMr
-	 igQUTRWAu8x1FV46HO2oFlpid/5vOezjDWuvVKsBbjz4KWXxmQ/NvYQCdL4qm51z85ozh
-	 mp6iIfWgSrUdCYfnLwqXGQGiSV0YdzeoaCWNQy/cbU3gpTfGKwOV8I/Qiw2xmAg2JASAs
-	 WrySP8el0iI1jHkTftPaGZwAobuU1HF/8f4AFpFLA/ZXMHf4NzmQ8pqf2a/GLPxBflw==
+	t=1794851794;
+	b=BZ+yC2GBddWsa0WfaV186M+Hzg5X4zylNQ3hftjQa9nThkhc4GAJPUJ1/1GGTWjmtkKg
+	 PFmNhkGipSwUl7fgxmq1dLdzqDrMl69JW/ekTn3Q4TbiJWLBE4YecSTJXXTRz6IaxFQ7I
+	 Gy8QU9ov5Fu65t+m2YId9nlnPRK2hjv1s7jBGoWY5A4ocfeIHL0D9PGwMmspjJnlAiwaZ
+	 8TXdLpPJjkCenvuGAneSSuzJYa0CzupeMrxNI8gpCU8XKX5uDcoxugF1simnPoGwXiee6
+	 Qe8q7zYPUO0antp3J+y7t4C0UWlkPXSgkvvCLu+VIpbHubIevNztMig5tM/BR226/1w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794851729;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=8X2vHpqbeQYg9dXyyBiD7qN2EUsKqz8HXcbJjAFd56E=;
-	b=ygoUw/fb3L7YI8KDOE5+a3i+Jqy0pJeM/eQFQGBBQYDeir8526X4EIgpEYMI5l8mbCI4
-	 msGk7RJ4C+Csi1RU/CPvDEbvWs5yJPcEce41OaHOwnpyZAj6k7rkhXzDBV9Buh/hNZppJ
-	 GG4amvv3f0AapO7fJZRYdhvtRqAFOz5H5UiHp/ZIC3YoofAGyQjKmaz7LhSUGWzxgF4oT
-	 qw3ZuKfzWm2wHcHORZVJTqaoiVmxMPyCrtSYDaf732zfHECHY0mLsYW0PZStKxW/hOJ9H
-	 uIAfq1+uV30kr4zeoz0e0kB7EakiV7rBCQGla85Qw8ermg2KfKLVAaw5jTiVuGIr60A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794851794;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=fwWQDlnnSTNyph3hgjd/jHBsSgprm3l/XThcAnorVzc=;
+	b=1C/i1uxm0hV2HJTqwX7xAhQPG1Yz21+TK8BQkbWSNpE/Qh++F0FiFY/j028ti4qTgQHt
+	 t+8MB+XL6VULS+18O0/BArcJBinHMjUP5itHv/+WQVAKUFrKr1d8TjZlngU1jKF6OSVHl
+	 XG7FGrSw+DRiweGwcBsGUFE2Y1hb9GhYCn6J6depg9WKoq8Aommz2s9/zrKDUXCoYEdNt
+	 M/D4GHbXXrk5/dSqc9tH5E5Vla+WZWmwB3mkmhh2TWrUbvtInbuDivj7ufCfdFcogPhV3
+	 tgT3lL0mkWjX0oAayenJzfPjLbayALqVxvsGqIXZq7MBvMKD6pKvhQu8+U8MkD7ek/A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EzFAjRFG;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZPmjOCmj;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F060606A31C
-	for <linux-perf-users@vger.kernel.org>; Mon, 16 Nov 2026 17:55:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A6C606A89D;
+	Mon, 16 Nov 2026 17:56:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=EzFAjRFG
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA3B01F000C4;
-	Mon, 16 Nov 2026 17:55:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZPmjOCmj
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 090D91F000C4;
+	Mon, 16 Nov 2026 17:56:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794851728;
-	bh=8X2vHpqbeQYg9dXyyBiD7qN2EUsKqz8HXcbJjAFd56E=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=EzFAjRFGQ6cAVyb3uAUvmuArJr39AlOaG/3oj40aHuZXhjw1jLIqSnoHCPw8SRXQh
-	 KGI8hBhcCctoWI2HnTIUgGYtmuhEkQlBeHfgQhxZhNWyMiWHaxJMbAISf8GNcZWw/D
-	 Bw9mAmhHKcRg0NAvUVsOYbuL9pY1o0lYtChskJso9FgC5C7sUc3apyCztgAXVIwnJN
-	 kwvEY2OZB3X14NcT4mzgQs5Nzofvj6nOXwlcz/AqVE12GYfbgMIDM7yIBwaPMD1VSZ
-	 6c+4mGyKooJ4mUU9MyFtyI9Jnces53VUPAvVFc55j2hsnmpErAixW+EB7nYKIkgMUV
-	 dTrHnnP1i/UFw==
-Message-ID: <sashiko-outbox-217459@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 3/3] MIPS: perf: Add SB1 and SB1A performance counter
- support
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Florian Fainelli" <f.fainelli@gmail.com>
-Cc: =?utf-8?b?b3BlbiBsaXN0OlBFUkZPUk1BTkNFIEVWRU5UUyBTVUJTWVNURU0=?= <linux-perf-users@vger.kernel.org>
-In-Reply-To: <20261116173843.911523-4-f.fainelli@gmail.com>
-References: <20261116173843.911523-1-f.fainelli@gmail.com>
- <20261116173843.911523-4-f.fainelli@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 16 Nov 2026 17:55:28 +0000
+	s=k20260515; t=1794851794;
+	bh=fwWQDlnnSTNyph3hgjd/jHBsSgprm3l/XThcAnorVzc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ZPmjOCmjno9nExForLkbzUF13rzZndhUhxLFyhcs6ndrKiOfrHZB3452l8ISZGQ7a
+	 iYsimyIzyefhY/oc0K0Vfemi/N6TEn8rXGyOpQ0gU73R0/NFoYDoxdzp0d4aDmcgYx
+	 PbYsURnlZMIsvqEfHzK8OzalcWBjck31xbND7wq53aERpH9jocyLE9toVILdqk7A8S
+	 PhulloZRXZGRVjWl41g3MI9mo4O1mXL6sKIAi3Tnw6BpI+V+iQmyzXVQ3AObWBs6Gj
+	 t5ib62RErvLafzsMEoDgEXi6TaWuiDqATzZpnK6iI8setbIO4LkG3gE84ueLqrLBDP
+	 sY89CO5r1y05g==
+Date: Mon, 16 Nov 2026 17:56:28 +0000
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: maz@kernel.org, oupton@kernel.org, fuad.tabba@linux.dev, 
+	joey.gouly@arm.com, seiden@linux.ibm.com, suzuki.poulose@arm.com, 
+	yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	will@kernel.org, mark.rutland@arm.com, linux-perf-users@vger.kernel.org, 
+	catalin.marinas@arm.com, james.clark@linaro.org
+Subject: Re: [RFC PATCH v7 05/28] perf: arm_spe_pmu: Add PMBIDR_EL1 and
+ PMSIDR_EL1 to struct arm_spe_pmu
+Message-ID: <avtDK5rtD38jnhqR@gremlin>
+References: <20260903160623.315525-1-alexandru.elisei@arm.com>
+ <20260903160623.315525-6-alexandru.elisei@arm.com>
+ <atDmDRSNDllpJtmL@gremlin>
+ <avSjyLhFsYjI7tG_@raptor>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,35 +62,151 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <avSjyLhFsYjI7tG_@raptor>
 
-> Support the four CPU-local SB1 performance counters through the MIPS PMU
-> driver. Use 64-bit CP0 accesses for the 40 count bits and overflow bit,
-> validate the documented layout at initialization, and handle sampling on
-> CPU-local IP7. Keep the interrupt masked while no events are scheduled and
-> clear the unused Count/Compare source sharing IP7 before enabling it and
-> in the handler. Reset counters through CPU hotplug callbacks.
->=20
-> Expose the historical OProfile event catalog through raw events and 48
-> sysfs aliases, plus generic cycles, instructions, branches and branch
-> misses. Preserve the catalog's duplicate encodings and disambiguate its
-> duplicate names. Leave generic cache events unmapped where the historical
-> descriptions do not establish a reliable mapping.
->=20
-> Add explicit physical counter selection and independent exclusions for
-> EXL and ordinary kernel execution. These exclusions only remove modes
-> already permitted by perf attributes. Enforce counter 0's cycles-only
-> restriction and reject reserved configurations. Reassign flexible events
-> when fixed-counter requests require it, preserving counts and sampling
-> state, and support groups led by software events. Honor sampling throttli=
-ng.
->=20
-> Document the ABI, hardware assumptions, usage and validation limits.
->=20
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+On Wed, Nov 11, 2026 at 05:20:08PM +0000, Alexandru Elisei wrote:
+> Hi,
+>
+> On Thu, Oct 15, 2026 at 04:12:27PM +0100, Lorenzo Stoakes (ARM) wrote:
+> > I think probably some kind of commit message would be good even for a
+> > trivial change :)
+>
+> Of course, I'll add something here.
+>
+> >
+> > On Thu, Sep 03, 2026 at 05:06:00PM +0100, Alexandru Elisei wrote:
+> > > Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> > > ---
+> > >  drivers/perf/arm_spe_pmu.c       | 3 +++
+> > >  include/linux/perf/arm_spe_pmu.h | 2 ++
+> > >  2 files changed, 5 insertions(+)
+> > >
+> > > diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+> > > index 79c571a649d5..42ba0924bd02 100644
+> > > --- a/drivers/perf/arm_spe_pmu.c
+> > > +++ b/drivers/perf/arm_spe_pmu.c
+> > > @@ -1095,6 +1095,7 @@ static void __arm_spe_pmu_dev_probe(void *info)
+> > >  			"profiling buffer owned by higher exception level\n");
+> > >  		return;
+> > >  	}
+> > > +	spe_pmu->pmbidr_el1 = reg;
+> >
+> > This doesn't seem to be used anywhere in the series?
+>
+> Indeed, that's a leftover from the previous iterations, will remove.
+>
+> >
+> > >
+> > >  	/* Minimum alignment. If it's out-of-range, then fail the probe */
+> > >  	fld = FIELD_GET(PMBIDR_EL1_ALIGN, reg);
+> > > @@ -1107,6 +1108,8 @@ static void __arm_spe_pmu_dev_probe(void *info)
+> > >
+> > >  	/* It's now safe to read PMSIDR and figure out what we've got */
+> > >  	reg = read_sysreg_s(SYS_PMSIDR_EL1);
+> > > +	spe_pmu->pmsidr_el1 = reg;
+> > > +
+> > >  	if (FIELD_GET(PMSIDR_EL1_FE, reg))
+> > >  		spe_pmu->features |= SPE_PMU_FEAT_FILT_EVT;
+> > >
+> > > diff --git a/include/linux/perf/arm_spe_pmu.h b/include/linux/perf/arm_spe_pmu.h
+> > > index af86fd184050..97b14e236fcd 100644
+> > > --- a/include/linux/perf/arm_spe_pmu.h
+> > > +++ b/include/linux/perf/arm_spe_pmu.h
+> > > @@ -21,6 +21,8 @@ struct arm_spe_pmu {
+> > >  	cpumask_t				supported_cpus;
+> > >  	struct hlist_node			hotplug_node;
+> > >
+> > > +	u64					pmbidr_el1;
+> >
+> > Equally, this doesn't seem to be used anywhere in the series, maybe drop?
+>
+> Fixed.
+>
+> >
+> > > +	u64					pmsidr_el1;
+> >
+> > This field is used in kvm_spe_has_feat_spe_fds() and
+> > kvm_spe_has_feat_spe_fne():
+> >
+> > bool kvm_spe_has_feat_spe_fds(struct kvm *kvm)
+> > {
+> > 	...
+> > 	return kvm_has_feat(kvm, ID_AA64DFR0_EL1, PMSVer, V1P4) &&
+> > 	       FIELD_GET(PMSIDR_EL1_FDS, spe_pmu->pmsidr_el1);
+> > }
+> >
+> > bool kvm_spe_has_feat_spe_fne(struct kvm *kvm)
+> > {
+> > 	...
+> > 	return kvm_has_feat(kvm, ID_AA64DFR0_EL1, PMSVer, V1P2) &&
+> > 	       FIELD_GET(PMSIDR_EL1_FnE, spe_pmu->pmsidr_el1);
+> > }
+> >
+> > So checking for FDS and FnE, but these are available as feature flags as
+> > __arm_spe_pmu_dev_probe() gets these:
+> >
+> > static void __arm_spe_pmu_dev_probe(void *info)
+> > {
+> > 	...
+> > 	if (FIELD_GET(PMSIDR_EL1_FnE, reg))
+> > 		spe_pmu->features |= SPE_PMU_FEAT_INV_FILT_EVT;
+> > 	...
+> > 	if (FIELD_GET(PMSIDR_EL1_FDS, reg))
+> > 		spe_pmu->features |= SPE_PMU_FEAT_FDS;
+> > 	...
+> > }
+> >
+> > And then kvm_spe_has_feat_spe_fds() and kvm_spe_has_feat_spe_fne() can be:
+> >
+> > bool kvm_spe_has_feat_spe_fds(struct kvm *kvm)
+> > {
+> > 	...
+> > 	return kvm_has_feat(kvm, ID_AA64DFR0_EL1, PMSVer, V1P4) &&
+> > 	       (spe_pmu->features & SPE_PMU_FEAT_FDS);
+> > }
+> >
+> > bool kvm_spe_has_feat_spe_fne(struct kvm *kvm)
+> > {
+> > 	...
+> > 	return kvm_has_feat(kvm, ID_AA64DFR0_EL1, PMSVer, V1P2) &&
+> > 	       (spe_pmu->features & SPE_PMU_FEAT_INV_FILT_EVT);
+> > }
+> >
+> > Right?
+>
+> In this use case they are functionally the same, yes, but conceptually, they are
+> not the same thing. spe_pmu->features advertises the features that the SPE
+> *driver* supports, PMSIDR_EL1 advertises the features that the *hardware*
+> implements. The two are not always equal.  For example, KVM added handling for
+> the PMSNEVFR_EL1 register (added by FEAT_SPE_FnE), a few years before the SPE
+> driver supported FEAT_SPE_FnE.
+>
+> I can see KVM, in the future, having to virtualize hardware features not
+> supported by the host driver yet, so unless you have a strong objection, I would
+> rather keep the use of the architectural register instead of relying on the
+> driver.
 
-Sashiko has reviewed this patch and found no issues.
+Ack OK, sounds sensible, no strong objection but could you add a sentence to the
+commit msg about that? Thanks! :)
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261116173843.9115=
-23-1-f.fainelli@gmail.com?part=3D3
+>
+> >
+> > So it seems you could drop this patch from the series in general? Is there
+> > another reason to get these fields?
+> >
+> > Also - there seems to be a divergence in the naming there between FnE and
+> > INV_FILT_EVT, is that intentional?
+>
+> I think that's a question for the person who added FEAT_PMU_FEAT_INV_FILT_EVT?
 
+Haha true I suppose so.
+
+>
+> Thanks,
+> Alex
+
+--
+Cheers, Lorenzo
