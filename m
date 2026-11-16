@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794808657;
-	b=vV+RaBBjDrpsLLjVehpnwWdsITAY21c3DmIGRmZ2zPD3b2AoY12pILCejlXChTdePtdM
-	 mHGS/IKusInBsIdldZRg6q7FLSrClx/wo5QuXHsbl5CnC6nOd4RVbZgp7sxDI3mC+fr55
-	 LsLduLdpQzWSiVBVWwPcJqi3eRd/zFzFRZx6IR3QvwApRaZPLxlecLNSmvVkJDTmMEUXs
-	 TJ4X8qhdIXy8gGRcVuIQmDRiihRxyfin7PUyt7fnjPn2Vl+/+fe8FE4TawTWyMpXDXqMh
-	 dUpvDGCNcZRDmXFwO9fJZkLudu0pEFrXcoDont+PpwM6i6/Chf7HDEIj7bu94l8cBfg==
+	t=1794808658;
+	b=HdoWtG8QBPxq8B779CYOmpCTcUySyaK3KHRARW+LY40VwCSrrAjJmDDhR2dRDjVqKZbE
+	 sQtY93Ba+Yt8zuiJ/bxSvY5amlTnoH/WJBfNKL8V0YPF2ebABuNUjv1ZqTTeXTyw9oAhy
+	 Xy9v1lXlewpXkEII2iWTlOS1uxgLGlx4MgrKKxkWHLd5N8GW9JCkZOpBBklbNyYLExl9k
+	 +LHGQQ/kYCWPOjBDx80sNIBw75dF8iVmmBbE7FKefuSCTUuBILTWeSgYxg0hFFBb+k8l+
+	 xUcCPzcxsXNuuBt1xM42jJgSo2MUU5H+4diQZLI2khaJgvKu1rXQPi3vn6g9VFTvllA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794808657;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794808658;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=r+DZc60+5tqUNwki4i/cR/N681kq1FtjzxelTQaXdSM=;
-	b=Mrjdpf/BcTKfiogvFQN2cQ3S7xpom7pfush6mOu58SLt0BjRjKjgrZm1qpbnjG6GxeDX
-	 V4Rm2oV1tUqCwpeClV5XQor/nbZGyaukAxKNanJxFDPW84KDFrqViGPiFlzyGWvhXmjwO
-	 531PFcDVz2q5sl1KR1VF7tQwaLfgPWYNgkX/p0aSD+37pyDLeHXVN0uj17WJJjFfrJpkU
-	 22L/yaCiqBPAdqM5VtbAI9/4LoJ/eJhOlPO00vmHnsJFu9DrTMeEj/xNcMvZP7WgwrOeS
-	 2qq5D6nkt61TotcAyNkM4eSXWsU5iFacpJ5HlE71qdOl5LqvO7AdomrNx6T7AZsS8dQ==
+	bh=FXLTw2ZmcyEOptfBtYE9G82SHiId9pdWmZNnu7krob4=;
+	b=1Oz25At1CW8hEGDPlNyGxkbasQ+mYpKwFOIX+y1wKKeYqNOaKoZHo/MNr9/+I8diTkAK
+	 /L8QAa4rHjLjVHRmEBrFvJM92W2i/zo6WafFY/SJpksA/XcaNDsH+71Vxei8LGEqblvOq
+	 GlHbZpktrD+fg+TteicbEE3N9YnqW+8sL3up6Wf3H09gQk/hixtrO3wmusV6zK0GjEQHJ
+	 bSJdfSe14IyYtP0AqO84D+yZiKxlShpxgK6+CUlQiJQUcswQEZ+tMIy/44dwi6YJBSgtq
+	 D7SN81PFoWLLL3QD9iCYWvQP0KSC5hF9DHuBBtMZevM/qulYgGMGAEZuVOcK7HxowvQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IvDqeg3D;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GS0xdejO;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B68606A8BC;
-	Mon, 16 Nov 2026 05:57:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135FC606A88E;
+	Mon, 16 Nov 2026 05:57:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IvDqeg3D
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9793C1F000CA;
-	Mon, 16 Nov 2026 05:57:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GS0xdejO
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93FBE1F00930;
+	Mon, 16 Nov 2026 05:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794808656;
-	bh=r+DZc60+5tqUNwki4i/cR/N681kq1FtjzxelTQaXdSM=;
+	s=k20260515; t=1794808657;
+	bh=FXLTw2ZmcyEOptfBtYE9G82SHiId9pdWmZNnu7krob4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=IvDqeg3D9y8kQ5w6HcdNt0nB9EXI+Gwts0M+xBclIzhduHbpbElWDBpJ6Uj26H+CW
-	 kZ2bz9JTFIS+Ki2hz06DS/wiMtPOZgjUqpRKf7Wl6KN8ZJ68ZzrNiMPXi/B2It2kKE
-	 LDvZXo2qbUs48nlzRlbo5ank0saGd5iBpwyIzPJkjv3kiCRGC0BqZhzqfGZ+bE0b6z
-	 /dA5gAcj6C6mP7Il/t1ngaJixuRIkbwsvx+wewuy52KFBDITlfS7Q2pNGFejTnMLXl
-	 v7ozhKOBxtkQZ6kFt1LFVxspIbjLQm7WLkYEtT6VPvoeuj3l5iZrTYU/7R0EV3AcSI
-	 6+pomMoNI6O0Q==
+	b=GS0xdejO6v+GXtncZrbGx11c09o6YmzxHxLAzNoycQzAzwHQ9DCPxuJfIsBg8wmsH
+	 VMletcyZiPqnsjRRapM3hezfvIXlZxhOQksjpujDd5IYN6IJph6Ruy76p4sjb3+6aS
+	 3AKZtJQitvkomVaNXi4BQxRMS1Rav0qv1ENNYPqr9UWldBzMa/6+uWWNfF4CC6aGyY
+	 5RGUgBB2wuFsRBZrJ158aV/LPE5wyinXLv77+nRx4Z+1VC5bLqW5V4KsOuyAYj8Vp2
+	 oZB/IGjI3r7TYGaxYfhpz0Cw3dNU0vbxAR4ZKSqRBrFKsluyXtPmA3RHd8HChtgeoG
+	 lZ0USYziBxTDw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -49,9 +49,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 08/11] perf tools: Export filename__read_build_id_ns()
-Date: Sun, 15 Nov 2026 21:57:28 -0800
-Message-ID: <20261116055731.707164-9-namhyung@kernel.org>
+Subject: [PATCH v2 10/11] perf tools: Scope mount namespace entry in dso__load()
+Date: Sun, 15 Nov 2026 21:57:30 -0800
+Message-ID: <20261116055731.707164-11-namhyung@kernel.org>
 X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
 In-Reply-To: <20261116055731.707164-1-namhyung@kernel.org>
 References: <20261116055731.707164-1-namhyung@kernel.org>
@@ -66,149 +66,137 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Export filename__read_build_id_ns(), including a chroot fallback guarded
-by nsinfo__check_proc(), and use it in the dsos callback and
-perf-inject's dso__read_build_id() instead of open-coding
-nsinfo__mountns_enter() and dso__filename_with_chroot() fallbacks.
+Enter the target mount namespace only for the specific binary types
+that need it in dso__load(), and use filename__read_build_id_ns() for
+BUILDID_DEBUGINFO lookup and in symbol-minimal's dso__load_sym() so it
+does not read the wrong build-id from the host filesystem.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-inject.c | 12 +-----------
- tools/perf/util/build-id.c  | 14 +++++++++++---
- tools/perf/util/dsos.c      | 17 +++--------------
- tools/perf/util/symbol.h    |  3 +++
- 4 files changed, 18 insertions(+), 28 deletions(-)
+ tools/perf/util/symbol-minimal.c |  4 ++-
+ tools/perf/util/symbol.c         | 45 +++++++++++++++-----------------
+ 2 files changed, 24 insertions(+), 25 deletions(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 05bf1aae61778952..71ebb5b9ab84cbf7 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -894,24 +894,14 @@ static int perf_event__repipe_tracing_data(const struct perf_tool *tool,
+diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
+index 0a71d146395271a6..5beb73fd508ad079 100644
+--- a/tools/perf/util/symbol-minimal.c
++++ b/tools/perf/util/symbol-minimal.c
+@@ -342,7 +342,9 @@ int dso__load_sym(struct dso *dso, struct map *map __maybe_unused,
+ 	if (ret >= 0)
+ 		RC_CHK_ACCESS(dso)->is_64_bit = ret;
  
- static int dso__read_build_id(struct dso *dso)
- {
--	struct nscookie nsc;
- 	struct build_id bid = { .size = 0, };
- 
- 	if (dso__has_build_id(dso))
- 		return 0;
- 
- 	mutex_lock(dso__lock(dso));
--	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
--	if (filename__read_build_id(dso__long_name(dso), &bid) > 0)
-+	if (filename__read_build_id_ns(dso__long_name(dso), &bid, dso__nsinfo(dso)) > 0)
+-	if (filename__read_build_id(ss->name, &bid) > 0)
++	if (filename__read_build_id_ns(ss->name, &bid,
++				       dso_binary_type__needs_ns(ss->type) ?
++				       dso__nsinfo(dso) : NULL) > 0)
  		dso__set_build_id(dso, &bid);
--	else if (dso__nsinfo(dso)) {
--		char *new_name = dso__filename_with_chroot(dso, dso__long_name(dso));
--
--		if (new_name && filename__read_build_id(new_name, &bid) > 0)
--			dso__set_build_id(dso, &bid);
--		free(new_name);
--	}
--	nsinfo__mountns_exit(&nsc);
- 	mutex_unlock(dso__lock(dso));
- 
- 	return dso__has_build_id(dso) ? 0 : -1;
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index 02233ef0eafff2c2..ff083a594b405208 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -847,15 +847,23 @@ int build_id_cache__remove_s(const char *sbuild_id)
- 	return err;
- }
- 
--static int filename__read_build_id_ns(const char *filename,
--				      struct build_id *bid,
--				      struct nsinfo *nsi)
-+int filename__read_build_id_ns(const char *filename,
-+			       struct build_id *bid,
-+			       struct nsinfo *nsi)
- {
- 	struct nscookie nsc;
- 	int ret;
- 
- 	nsinfo__mountns_enter(nsi, &nsc);
- 	ret = filename__read_build_id(filename, bid);
-+	if (ret < 0 && errno == ENOENT && nsinfo__check_proc(nsi)) {
-+		char *new_name = filename_with_chroot(nsinfo__pid(nsi), filename);
-+
-+		if (new_name) {
-+			ret = filename__read_build_id(new_name, bid);
-+			free(new_name);
-+		}
-+	}
- 	nsinfo__mountns_exit(&nsc);
- 
- 	return ret;
-diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-index e927e707abace9c6..a97fed55286aefca 100644
---- a/tools/perf/util/dsos.c
-+++ b/tools/perf/util/dsos.c
-@@ -4,11 +4,11 @@
- #include "dso.h"
- #include "util.h"
- #include "vdso.h"
--#include "namespaces.h"
- #include <errno.h>
-+#include <linux/perf_event.h>
- #include <stdlib.h>
- #include <string.h>
--#include <symbol.h> // filename__read_build_id
-+#include <symbol.h> // filename__read_build_id_ns
- #include <unistd.h>
- 
- void dsos__init(struct dsos *dsos)
-@@ -70,7 +70,6 @@ struct dsos__read_build_ids_cb_args {
- static int dsos__read_build_ids_cb(struct dso *dso, void *data)
- {
- 	struct dsos__read_build_ids_cb_args *args = data;
--	struct nscookie nsc;
- 	struct build_id bid = { .size = 0, };
- 
- 	if (args->with_hits && !dso__hit(dso) && !dso__is_vdso(dso))
-@@ -79,20 +78,10 @@ static int dsos__read_build_ids_cb(struct dso *dso, void *data)
- 		args->have_build_id = true;
- 		return 0;
- 	}
--	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
--	if (filename__read_build_id(dso__long_name(dso), &bid) > 0) {
-+	if (filename__read_build_id_ns(dso__long_name(dso), &bid, dso__nsinfo(dso)) > 0) {
- 		dso__set_build_id(dso, &bid);
- 		args->have_build_id = true;
--	} else if (errno == ENOENT && dso__nsinfo(dso)) {
--		char *new_name = dso__filename_with_chroot(dso, dso__long_name(dso));
--
--		if (new_name && filename__read_build_id(new_name, &bid) > 0) {
--			dso__set_build_id(dso, &bid);
--			args->have_build_id = true;
--		}
--		free(new_name);
- 	}
--	nsinfo__mountns_exit(&nsc);
  	return 0;
  }
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index dc70bbe8514f4d37..4c0ff9f0c32f8293 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1811,17 +1811,6 @@ int dso__load(struct dso *dso, struct map *map)
+ 	const char *map_path = dso__long_name(dso);
  
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 6347bd218ad5eac4..7ac362b5d53530b0 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -28,6 +28,7 @@
- struct dso;
- struct map;
- struct maps;
-+struct nsinfo;
- struct option;
- struct build_id;
- struct perf_env;
-@@ -211,6 +212,8 @@ struct symbol *dso__next_symbol(struct symbol *sym);
- enum dso_type dso__type_fd(int fd);
+ 	mutex_lock(dso__lock(dso));
+-	perfmap = is_perf_pid_map_name(map_path);
+-
+-	if (perfmap) {
+-		if (dso__nsinfo(dso) &&
+-		    (dso__find_perf_map(newmapname, sizeof(newmapname),
+-					dso__nsinfo_ptr(dso)) == 0)) {
+-			map_path = newmapname;
+-		}
+-	}
+-
+-	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
  
- int filename__read_build_id(const char *filename, struct build_id *id);
-+int filename__read_build_id_ns(const char *filename, struct build_id *bid,
-+			       struct nsinfo *nsi);
- int sysfs__read_build_id(const char *filename, struct build_id *bid);
- int modules__parse(const char *filename, void *arg,
- 		   int (*process_module)(void *arg, const char *name,
+ 	/* check again under the dso->lock */
+ 	if (dso__loaded(dso)) {
+@@ -1845,8 +1834,16 @@ int dso__load(struct dso *dso, struct map *map)
+ 
+ 	dso__set_adjust_symbols(dso, false);
+ 
++	perfmap = is_perf_pid_map_name(map_path);
+ 	if (perfmap) {
++		if (dso__nsinfo(dso) &&
++		    (dso__find_perf_map(newmapname, sizeof(newmapname),
++					dso__nsinfo_ptr(dso)) == 0)) {
++			map_path = newmapname;
++		}
++		nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+ 		ret = dso__load_perf_map(map_path, dso);
++		nsinfo__mountns_exit(&nsc);
+ 		dso__set_binary_type(dso, DSO_BINARY_TYPE__JAVA_JIT);
+ 		dso__set_symtab_type(dso, ret > 0
+ 				? DSO_BINARY_TYPE__JAVA_JIT
+@@ -1869,7 +1866,7 @@ int dso__load(struct dso *dso, struct map *map)
+ 		struct build_id bid = { .size = 0, };
+ 
+ 		__symbol__join_symfs(name, PATH_MAX, dso__long_name(dso));
+-		if (filename__read_build_id(name, &bid) > 0)
++		if (filename__read_build_id_ns(name, &bid, dso__nsinfo(dso)) > 0)
+ 			dso__set_build_id(dso, &bid);
+ 	}
+ 
+@@ -1882,27 +1879,28 @@ int dso__load(struct dso *dso, struct map *map)
+ 		struct symsrc *ss = &ss_[ss_pos];
+ 		bool next_slot = false;
+ 		bool is_reg;
+-		bool nsexit;
++		bool nsenter;
+ 		int bfdrc = -1;
+ 		int sirc = -1;
+ 
+ 		enum dso_binary_type symtab_type = binary_type_symtab[i];
+ 
+-		nsexit = (symtab_type == DSO_BINARY_TYPE__BUILD_ID_CACHE ||
+-		    symtab_type == DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO);
+-
+ 		if (!dso__is_compatible_symtab_type(dso, kmod, symtab_type))
+ 			continue;
+ 
++		nsenter = dso_binary_type__needs_ns(symtab_type);
++		if (nsenter)
++			nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
++
+ 		if (dso__read_binary_type_filename(dso, symtab_type,
+-						   root_dir, name, PATH_MAX))
++						   root_dir, name, PATH_MAX)) {
++			if (nsenter)
++				nsinfo__mountns_exit(&nsc);
+ 			continue;
+-
+-		if (nsexit)
+-			nsinfo__mountns_exit(&nsc);
++		}
+ 
+ 		is_reg = is_regular_file(name);
+-		if (!is_reg && errno == ENOENT && dso__nsinfo(dso)) {
++		if (!is_reg && errno == ENOENT && nsenter && dso__nsinfo(dso)) {
+ 			char *new_name = dso__filename_with_chroot(dso, name);
+ 			if (new_name) {
+ 				is_reg = is_regular_file(new_name);
+@@ -1918,8 +1916,8 @@ int dso__load(struct dso *dso, struct map *map)
+ 		if (is_reg && bfdrc < 0)
+ 			sirc = symsrc__init(ss, dso, name, symtab_type);
+ 
+-		if (nsexit)
+-			nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
++		if (nsenter)
++			nsinfo__mountns_exit(&nsc);
+ 
+ 		if (bfdrc > 0) {
+ 			dso__set_symtab_type(dso, symtab_type);
+@@ -1986,7 +1984,6 @@ int dso__load(struct dso *dso, struct map *map)
+ out:
+ 	dso__set_loaded(dso);
+ 	mutex_unlock(dso__lock(dso));
+-	nsinfo__mountns_exit(&nsc);
+ 
+ 	return ret;
+ }
 -- 
 2.56.0.611.g1030f0b940-goog
 
