@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794872850;
-	b=pAVFEzx2+tgtoFYtRu2iv7VN7ji/CwEJ9yRmqoB947G5PMbAfaxb6mTF6XMKg95eweFo
-	 c2PnU+8fF4ML168GeO8ERhHvA9QFFTra5cqe+ZIZ+1i8KV03UBSv4HLdxnhvHEmL+jLSZ
-	 b6WS0mP0pUeds5J8trW9z2zjVH5a0787GjXpWr6Dh1xpabu2QG6XS3jZJwQpDiS8Qsa3l
-	 O9oZ0r0ohFtBfj59EAsOQMFWSMKcTMwm68qZaTduPkVTqyTybT9vIKQzvtVFC5UeHdeKz
-	 E0iZGXxYaX9bGmTnVMWKk4nhI0d7RHCNyqTLKxTrSIgENOQSYS0ItKwhcKo/o8hgqCw==
+	t=1794872855;
+	b=pLjML1yxeiiJba4/mPPdjEX6HFpilOnHLNc86fTMA1rIv8ornVCZ4k/pXBYSsRkY+JPg
+	 edao85Lr0fUwMIJ2mkEW6vfk9cFwLK6hTcXo3DK2yj6lL1Yw7Di9T8yF7e2T5ZirDBgBM
+	 miWOoskOzQIbifFTIEBRXyMjcov0J1W5P3B/U4Qq1kGi2mf+5jpvS7388EIBclsQSwjN3
+	 4r0Sfr1bU0JjfRi+AZoyww61JM7ph9EYlB59ahLFI3SYKRnlu2OVIpNSe1MQKI0eKg3PK
+	 Jv69bmzGWgQPagqG1jYjYMTJ52btIxAvsfFL4Gliieg3bp1wQcaZbCjimkBD3bYrCbA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794872850;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794872855;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=heKncXN2ESk9KNPzZANxBokZt3UOa99KaEx4tb00rrQ=;
-	b=XigaFjiVu+qd2eoYM/0awLsH/3bu4fz0NP7XjGzzGLW3TuJ149C50JOZiZKbS2RNJ2uz
-	 5ifQ43AmMgZ/U2fPjv/lpPUp7XXVh6x7CoQ37ihPgb5VWPS9yptojNCSMHOfymYmBAKFs
-	 DntpkGZ5GwjfSbGmSlkHCRMQ160U2aw/fmrC77TdsFJlDLYPUwtArfjdTXHetJDwo0pNB
-	 ssI2h9JN30AwJgcNrQ3szh1ttGdElGdaC79QjN51sjk0UoPmG50FAcQowKCLVMTFSD0Ga
-	 k8BqdK/yemAn2If0bGVhHdKGv61MNiP2mMpGvB4tT8LEQ8FMWdYaCkyCjbOclFJ/NQg==
+	bh=44M5CZ0ALtHmaz+dPQtDVPPyPJdEq+3uVAhgHrI6l7U=;
+	b=VIJ5Aqgt/KH08OOfSTgJs5HnIR+blcyjgGa4fdk0lCw3Vliam9fpGcLdHCE2XfWeBvkQ
+	 zYX/G/tOzc9QZP1B8PRYTU4lTQyU9qtiKTP37S9Z8s3ITY5SgPnTiSkqg0HaWYp8TnCLQ
+	 JCKwlP9lj2F+TmDA0cH4sCS352hYGnIafi/WSgoHU/bk3nYunEtQcPCCkoCSlUbC2VHUT
+	 mpknW3eQvyLJuvIPfi/ApCZ5lpR8aUWjYcsaI4ZKoIIBHbG1ztpm1RSYWdAeBMjQ37yVc
+	 HRo9hCufgMyGiJJfaopyBIrZNPAIxMjE3iFLf3qHIkA/IDSJBD2GEvnETAvrjx0fFqQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=D1TBUjUs;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Uyps73ba;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C699606A333;
-	Mon, 16 Nov 2026 23:47:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0183606A882;
+	Mon, 16 Nov 2026 23:47:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=D1TBUjUs
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D49211F000C5;
-	Mon, 16 Nov 2026 23:47:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Uyps73ba
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B9E31F000C7;
+	Mon, 16 Nov 2026 23:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794872850;
-	bh=heKncXN2ESk9KNPzZANxBokZt3UOa99KaEx4tb00rrQ=;
+	s=k20260515; t=1794872855;
+	bh=44M5CZ0ALtHmaz+dPQtDVPPyPJdEq+3uVAhgHrI6l7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=D1TBUjUsBcCewznpSysSRU5LHf+mt5uQw3kyRAewsAsut80RozunsU6xDcAGQwEOP
-	 KhsWYJOofs467prA7E6/wLCwEkqsgBUCfAOGr6xSB2Omk/Tl2yRk8wWxSBznXITSDq
-	 9+WwAna0LLwARQD1FDf97iTHo4sTm127d37BLv0jWI/yIy1vy04KPwT88iOoxeHFRx
-	 4czSDSuxp4iMPXrp7N35ns4UZDeZVQQRA1rzFbTfKyVMKaOFV67EFKKdbSgQHvM0bE
-	 dr+ijId6S2pWyIfutj7XI6RcufDWh2oXzXtKzpF0H214fa5PSO44NKzbAVG633P6Ad
-	 k+LJSkc37THQg==
+	b=Uyps73basFqklNEGsEqiqY7GbHBX293KZFg0SWwu30bIuYYFisjI+P4Hc2mhW4sK8
+	 vV2iXPEPaYBl/mh/gjXcHZzAkEcfdhXY/eoQoztp7E/fJF6++/IOe+kV3DxpfS4CLE
+	 NgHzJEYzy8W7DdcNPhS+FI3iAnRbNg+nAY6I6N2ByO09F5/jd7vIUN+vhgCc6zgupc
+	 G0aLSWqv8dxs8nCqsagcaEgMNaGKq9pDE7aFbGgzzjt+5dewy9hjP1m+UOZEwHq7VZ
+	 oOo8vJ4DfKrId92PD+/ejuolbDbmjx7AyPVO38UYc3js9bveo8KWOTaNI3JmIfij09
+	 5EVlFsg18FwEA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v4 09/12] perf build: Record the display-only features in FEATURE-DUMP
-Date: Mon, 16 Nov 2026 20:46:55 -0300
-Message-ID: <20261116234659.3950531-10-acme@kernel.org>
+Subject: [PATCH v4 11/12] perf test: Drop samples without an IP in the dlfilter test
+Date: Mon, 16 Nov 2026 20:46:57 -0300
+Message-ID: <20261116234659.3950531-12-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261116234659.3950531-1-acme@kernel.org>
 References: <20261116234659.3950531-1-acme@kernel.org>
@@ -70,35 +70,37 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-llvm-perf and rust are in FEATURE_DISPLAY but not in FEATURE_TESTS: they
-can't be part of the test-all fast path, which sets every FEATURE_TESTS
-entry to 1 when test-all.c builds.  Since FEATURE-DUMP is written from
-FEATURE_TESTS only, a FEATURES_DUMP= build, as used by build-test, never
-sees them and silently builds without libLLVM and the rust workloads.
+Since v7.3 the kernel zeroes PERF_SAMPLE_IP when a userspace-only event
+skids into kernel mode, so that kernel register state is not exposed to
+an unprivileged event (166f10836a653dfa "perf/core: Fix kernel register
+info leak via hardware skid").
 
-Append the display features that aren't in FEATURE_TESTS to the dump
-after the regular feature checks have run.
+The test dlfilter keeps those samples, and the check that nothing but
+test_loop survives then trips on their lines: the comm column reads
+"perf".  Drop them, which is what the test wants, everything except
+test_loop must be filtered out.
 
-Fixes: 206dcfca1f5cfac3 ("perf build: Autodetect minimum required llvm-dev version")
-Fixes: 3f5dfa472ea6771c ("tools build: Fix rust feature detection")
-Cc: James Clark <james.clark@linaro.org>
+Fixes: 199d5e872a9ce737 ("perf tests script dlfilter: Add a dlfilter test")
+Reviewed-by: Ian Rogers <irogers@google.com>
+Cc: Ian Rogers <irogers@google.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.config | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/tests/shell/script_dlfilter.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index b4764f69f47f4d8c..1b5caa246345c9bb 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -1310,3 +1310,7 @@ endif
- # tests.
- $(shell rm -f $(FEATURE_DUMP_FILENAME))
- $(foreach feat,$(FEATURE_TESTS),$(shell echo "$(call feature_assign,$(feat))" >> $(FEATURE_DUMP_FILENAME)))
-+# Features only in FEATURE_DISPLAY aren't part of the test-all fast path, so
-+# they have to be checked explicitly and recorded here too, otherwise a
-+# FEATURES_DUMP= build silently disables them (llvm-perf, rust).
-+$(foreach feat,$(filter-out $(FEATURE_TESTS),$(FEATURE_DISPLAY)),$(shell echo "$(call feature_assign,$(feat))" >> $(FEATURE_DUMP_FILENAME)))
+diff --git a/tools/perf/tests/shell/script_dlfilter.sh b/tools/perf/tests/shell/script_dlfilter.sh
+index 88222280f6094fd0..797cd9ae84141f64 100755
+--- a/tools/perf/tests/shell/script_dlfilter.sh
++++ b/tools/perf/tests/shell/script_dlfilter.sh
+@@ -46,7 +46,7 @@ int filter_event(void *data, const struct perf_dlfilter_sample *sample, void *ct
+ 	const struct perf_dlfilter_al *al;
+ 
+ 	if (!sample->ip)
+-		return 0;
++		return 1;
+ 
+ 	al = perf_dlfilter_fns.resolve_ip(ctx);
+ 	if (!al || !al->sym || strcmp(al->sym, "test_loop"))
 -- 
 2.56.0
 
