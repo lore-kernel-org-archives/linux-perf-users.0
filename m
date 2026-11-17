@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794947365;
-	b=Yc4xSCx2y5FssQ4+Q84aM0f00mhEPuAbWYOaO5Ee6ANBRd6s4FnUjurby4mOBAxAOQDw
-	 47jdboEMkrlVBlentWB6jRC6Xc4HwhYGxnQhCM0ZhZcw/hdwUpWslJ2hc5shU1u4l49d1
-	 kup+mKT+3QCRBAwNgqS3L9culhrgI1EblmKiJl84FpxyfJVdan4Rlm5D9mqdy6JJBW2ny
-	 dhXLnzd7RGsNvBpCG9LWUtop7PV/CxCN2/SLx3Kv3ZGz0uGY31pr4Q07qyxxKgXc9m5w/
-	 T75EGYgqu8bKYUqjGQQqC+QxM51GVxkHduRUPRe+UYDSGB+A+/kUYZxgAZRAAsKCUCA==
+	t=1794947726;
+	b=RFmSrGVk2M3OLg4DYG8hPl+ToVwKe0eCSrynN5C07m9Fw3tOln6Xar6Cl+3ICDcgaySY
+	 1XqHDaSNleduScz3pF4H/Q3lJYmk19hoinlisqz0WwXsEbTdiaay1a7Vg8IY+ncMCG04W
+	 GsXa1EkDs4EV3K+U2oZrSPZadRXOCUg6B9jIhynaYSct9D+7evPzbyqx9mcd8dkA4qNTd
+	 eO0RccmaatYuuT+VEXJjuc5N0lqrFt1BrApkVqoo21jDkNcmM7jL/THS23elVoqDOVGSg
+	 IlM8X9/75B7q1yq6owpQ8Tu2HrXpdyr/fP1NlHHha/+yDy+ShkvWq08U/4qciH4I29g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794947365;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794947726;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=cNa1OxYk2O1naRlafQJ4jv4FIRc2V/c+LUL8d5V8lEo=;
-	b=oAqMXseOQQIFvgY+WMQT37LS7TJjPMxSPcHmal9PEGyz1DcDDK4BIX6oUcBcgK7IhRNb
-	 3E9nhLXilK+EiuqD0WESPpcZY+BCSMLabz/Dec8Mk59yJgQnA7pPuE8GlM5ZbPBy+NJTQ
-	 NlxOIGhByNlMo2LpEHzVgSlQ6WmPbpbi7CWN5LuWixxoBxFEShdbAII0pcbrvjtxcnih7
-	 4lvPsy2EoNpVE1a40SO9RRPMlihEOElWizAsV3V5t4Kn4jA4jGfv+BksGHZjkWWf368Nx
-	 v8gPhXJUDqzstM91vyzr2RfDozOgL16RdNXv1qJ/RwE1///MAaP8+LPDJ5A0RElUYkQ==
+	bh=5IiQZbt703Skmjv4QWDhHZuA5YmcgUtpJP94JAXe+F4=;
+	b=hFofTnM6ysT2pf2nDlQv/hX2asPs2P38cHEOtzWQCmFkf3HCp3UvQW8AT9Y8bmfUlBej
+	 Yb8WxJVHGgUgpfHcaj5MikfTalhnIuNfEAlxgyi9CZ4MMiiSo2+b3+vXMUoXE7SdHK8lA
+	 dBj0n3keAgoh0r48CXK6nIyb1iGxD7hK7N/9RlWJhoiYjz/4dZVUuMIFojw2EFVxPFo84
+	 eyxPhG8rH5XLVhKcYjP1fHOqiGMYozoke0F3D4BJjNUPPwDm2GAkzki+jfzNRWPn5RHHU
+	 WEYb36ie/7IKoOlRX7Gr8KQET5QZ7BRK4c0hT6ohC/wTZ3s3Ec4iVqVG35pS4l3cazA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YVKnVQ7H;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nyOn00CF;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5334606A32F
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 20:29:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637F6606A31C
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 20:35:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YVKnVQ7H
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 887911F000CD;
-	Tue, 17 Nov 2026 20:29:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nyOn00CF
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4DC11F000C5;
+	Tue, 17 Nov 2026 20:35:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794947365;
-	bh=cNa1OxYk2O1naRlafQJ4jv4FIRc2V/c+LUL8d5V8lEo=;
+	s=k20260515; t=1794947725;
+	bh=5IiQZbt703Skmjv4QWDhHZuA5YmcgUtpJP94JAXe+F4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YVKnVQ7HyYrBWjww18uh2vAF4W6Rc7JbvATZr2OkQC1rMBxPyvHwJSzNIX3SOA1Np
-	 sh4zkSJZD77sWoJd1ceMrM85L96aogiW2ktSJ2x/ZS2hcI+9uZAlpymAwmKgTlaYWx
-	 ZjHCnEbgdBGdF3ZSRqK/6fa/sZh7QJNzVBDt/CnYJKSYsT8rbz6RMMIozH20q1iO5y
-	 H0oc+mjVWhIw3kaAZieyKBBa+m0dZ/cuh6QR3j3nn2y8Gm2AfQBp/Q/w3BfngwiG2r
-	 lDMVjh4dRcpAfmLbWyDRefRCU8dFX0t7SMclLw85D6uCfUthPU0CKuRi5f/Hjw67a/
-	 lf/c4arQToNww==
-Message-ID: <sashiko-outbox-219605@kernel.org>
+	b=nyOn00CFuGHBvU5gexHeFyFdOiXMSGJdhRvEOmr9EBHwFgs2BsKyb/Idu7X/xPmDh
+	 GkogvyIje0bu5fz6qCfppqzklq738Wlxir8l9zeCIJCtWF7cwKdaOOQT7II+IXvvuc
+	 QZ7scGU3t8UgHIXJPjf2ABHhHmUCPq94OJH+C0edTXahrrQADwRx47uwgq0dHW0tHu
+	 ZsEx5xEVCs1OsZfp3hUtNrq76ruWWKSK0qH1L/TWlTm34OyZGq6mUQUZYGoB2Mka5c
+	 lS76vbWHUI0fi7yh/CG6quKsQbjZFVbveSMwmm8s0Cz0URhNPdfujOyWlqkJpPyrYn
+	 RxeZqG2/pap4Q==
+Message-ID: <sashiko-outbox-219628@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 13/13] perf test: Skip the LBR inline unwinding check
- when unsupported
+Subject: Re: [PATCH v6 03/13] perf annotate: Handle absolute addressing in
+ data type profiling
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261117200433.45174-14-acme@kernel.org>
+In-Reply-To: <20261117200433.45174-4-acme@kernel.org>
 References: <20261117200433.45174-1-acme@kernel.org>
- <20261117200433.45174-14-acme@kernel.org>
+ <20261117200433.45174-4-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 17 Nov 2026 20:29:25 +0000
+Date: Tue, 17 Nov 2026 20:35:23 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,73 +61,33 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Medium] perf test: test_lbr() fails to skip on AMD BRS due to EINVAL
-  vs EOPNOTSUPP
---
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+>=20
+> 32-bit x86 accesses globals with absolute addresses, like
+> "movl %eax,0x8c73448", but the operand parser only recognized the
+> offset(reg) forms, so the operand had no memory reference, the resolver
+> saw a zero data address and resolved nothing.
+>=20
+> Parse a bare "0x" number as an absolute memory operand, leaving jumps,
+> calls, loop* and the 64-bit movabs* out, use the address in the resolver,
+> and let the instruction tracking record the type of an absolute global
+> load in the destination register.  The displacement is sign extended for
+> 64-bit objects, as the CPU does, and zero extended for 32-bit ones.
+> Values that do not fit the int offset, zero, and the operands of
+> relocatable objects, which are unrelocated addends, are skipped.
+>=20
+> With bare numbers being memory operands, a frame base register of -1,
+> "none", would also compare equal to the -1 "no register" of an absolute
+> operand and take it for a stack access, so guard those comparisons.
+> Operands left with no register, like a user space "%gs:imm", are no
+> longer looked up as variables, which can change the data type stats of
+> those samples.
+>=20
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-commit d21ae617447c59168b264906c4d199925c28a698
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-perf test: Skip the LBR inline unwinding check when unsupported
-
-This commit updates test_lbr() in addr2line_inlines.sh to skip the LBR
-test when perf record reports that the PMU does not support branch stack
-sampling.
-
-> diff --git a/tools/perf/tests/shell/addr2line_inlines.sh b/tools/perf/tes=
-ts/shell/addr2line_inlines.sh
-> index e8754ef2d7f21..ca88a6b886ca1 100755
-> --- a/tools/perf/tests/shell/addr2line_inlines.sh
-> +++ b/tools/perf/tests/shell/addr2line_inlines.sh
-[ ... ]
-> @@ -71,7 +73,22 @@ test_lbr() {
->      fi
-> =20
->      # Record data. Currently only dwarf callchains support inlined funct=
-ions.
-> -    perf record --call-graph lbr -e cycles:u -o "${perf_data}" -- perf t=
-est -w inlineloop 1
-> +    # Some PMUs advertise branches but reject branch sampling for cycles=
-, e.g.
-> +    # AMD BRS, which only samples its own retired branches event.
-> +    if ! perf record --call-graph lbr -e cycles:u -o "${perf_data}" -- \
-> +            perf test -w inlineloop 1 2> "${perf_record_err}"
-> +    then
-> +        if grep -Fq "doesn't support branch stack sampling" "${perf_reco=
-rd_err}"
-> +        then
-> +            echo "Skip: LBR not supported by the PMU"
-> +            lbr_skipped=3D1
-> +        else
-> +            cat "${perf_record_err}"
-> +            echo "Inline unwinding lbr verification test [Failed to reco=
-rd]"
-> +            err=3D1
-> +        fi
-> +        return
-> +    fi
-
-[Severity: Medium]
-Does test_lbr() still fail on AMD BRS instead of skipping?
-
-On AMD BRS, amd_brs_hw_config() rejects non-BRS events such as cycles:u
-with -EINVAL rather than -EOPNOTSUPP:
-
-arch/x86/events/amd/brs.c:amd_brs_hw_config() {
-    ...
-	if (!amd_is_brs_event(event))
-		return -EINVAL;
-    ...
-}
-
-In tools/perf/util/evsel.c, evsel__open_strerror() only formats the
-"doesn't support branch stack sampling" message under case EOPNOTSUPP, and
-falls through to the generic Invalid argument message for EINVAL.  As a
-result, grep does not match perf_record_err on AMD BRS and test_lbr() still
-enters the else branch and fails with err=3D1.
+Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261117200433.4517=
-4-1-acme@kernel.org?part=3D13
+4-1-acme@kernel.org?part=3D3
+
