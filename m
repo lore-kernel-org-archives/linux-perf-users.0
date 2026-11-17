@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794946340;
-	b=FzS+l5XbrZ9qXrqAl7MlCdb8PcY1ahohD9r/82cQEDthdA0RE6OUl1r5FqgqoX72LGVP
-	 ypkHb250uN+/+Qt5qQQ6oRr4uQqaidGkZ2Ldpb5OrFNU0yHiU9rjIAI0nYbqv1pTgSjz0
-	 brxfKIfCZpBvEpbtrWemsBHr0MPdP4zg8OfELc7oXGZw8BVo6zlWcz80TprU9XSWZ8zDC
-	 tX2M25YOxrcmCshN5fTMs9QWetjtui8Vtx4IveO4nazMD3IkE9rdSrKGPapwPKGLDUb5l
-	 Nt7EYLDL7Wu8SIwLaxwSrhXBiUrHuxbu1B9SoEZZ5r51pVBL1MHh1LoJjjfLxhSYI+A==
+	t=1794946439;
+	b=Fwnkyhc8r/YBz8OSH+zK/q9yb2Ct5WwwvG4ZcfEHKyGxHuknVBpYS8zd4UaeBdf6lMWR
+	 jiQtrsvBD+nFgN11u5UqYx/CZyKBkbBdJilsQ6m78y0C7Ji3VyWe8MAMNLnI4vxWAx2w8
+	 VbLavXZyLhSXJ4lvhIFL785YYXShde05RHB1bUlVaOh3z9MBKva43XCkMWEdKSAdv31AJ
+	 XyQ326jl3MvATjd3HDY/Tpz72C54VatjETbEVOWKF9ZJogS7WAwD5Sq7V8P9S8G/qD/x5
+	 lI+KiPYBqwcU2lcseUydyQj2PM84u+hj3QyFO5qnHvbUGwsz9nZ/d36VTViKQ/Gtz4g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794946340;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794946439;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=lk7QDq0ABvJznX/mp/Dd4glsBEnYl3qZaseiF/1/YEI=;
-	b=32nTHZCC71N/wsYSlogAt7XGbFQII+7yzw4RFMOY6t+Y7XKMoQ4fMTwDwAMF+2pVFeCS
-	 t9X1lmOV8wlndVpeILGEy35PzxLT4EQhVy+xYQ+1IctCugLcr6qTowIKExUAJK2CT4FW2
-	 l+P1SaHQgIgCJcwpm1fiqdLpmr++5laqhCYSZ/lh0TPWSnC8wR7L5JYsZPV+bYOKW/DHW
-	 9ciZXNy/awPgDw9pt4g8otN/1pXB3EqglJFIKE1W1MvToGj9zJar14TXZo3e928Fot3cD
-	 23lXrIT2i4JuYZaV+35fjbrFvXq5GyCFqCIbY4pSa91MVsPfE4Sftt/2Txh7Ger1qgg==
+	bh=bSNKloEkKaZIWjxUBIDe47VmFDAOb3xA+OTn0+rnoU0=;
+	b=u6Dylnc285RzcLhD/rV0YqhsF2seGlBmsWWR65YVXcjytcH/QwujCprDeBJ/7LBJw/C+
+	 7F6sMpI1PDBAmQMsYC772cf7jkGVkjCrC7KXoOUXCvNEzF15rbbIz5WKKGc78xF55mmHm
+	 WcIiGLNLZPj6/qb/JLx0aLADAX48xQr28hoiP7HVnJ2zeen8shcXGI8WMqbWYiEQ+rRHE
+	 30Xn72IkmduBX8mGAzfbABgQh8lENBB8/2eaUdpIFMAj+drBzbW2VD/bjUKT9RbpaOsOg
+	 /9KIVb4ui64U33VwKBZqYlN5dCWOw6dH8GrLfCMrrLa2n3AktHQgnkmLQwybK3U8BsA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QHGEVT44;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VXdlnNRK;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2EE606A31C
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 20:12:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F25606A31C
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 20:13:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QHGEVT44
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 697381F000C4;
-	Tue, 17 Nov 2026 20:12:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VXdlnNRK
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7603A1F000C4;
+	Tue, 17 Nov 2026 20:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794946340;
-	bh=lk7QDq0ABvJznX/mp/Dd4glsBEnYl3qZaseiF/1/YEI=;
+	s=k20260515; t=1794946439;
+	bh=bSNKloEkKaZIWjxUBIDe47VmFDAOb3xA+OTn0+rnoU0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=QHGEVT44cfiNz7dYO2nRu7MLl9i1akB0m82jVp37oLfvL+CBmlB5+ilRALrs7/R2i
-	 9OzZ9Wx6txNBCPEp1q4tQO4pOApGaMj7R/+BsmS38K23u0giOK3aEfIgiz2nkpBGNp
-	 TWZV4EkbrRwYPNsZs9PNENvhGPSPcDT3Tri1cUn5WGwMcJ/EyjRYFN63igrXx1/Hjh
-	 8Co7wOXt/0VvZBcI5rQeC4FV7aRPkfdpYewZCf1Zy9lEQZbqVWD8LsXjmcN/ImgkwQ
-	 4DrvLXixNUpz0c/LRCJh3u/iisLZArpz6qtxgbeTsbpwConH5Stz3uqDZoNB7ErOwt
-	 nQgGe3rlOPmZg==
-Message-ID: <sashiko-outbox-219575@kernel.org>
+	b=VXdlnNRKgZeAFmo29GTWuFRLmUFfmCjGzN6BuRJm/eeVMgOseddGALBBRptkis4F7
+	 14yd7E7XHpSONlIaH0FG051ZdpKbJ8tfZYjyqUxBlRAkxIEBYhSvTqdYP9ENYeyoqA
+	 HrkEhqyqdrESvpgDnmepadGdSj0FQAjfQR6oG7vDdBKtXPvyPi0SDlPXC2Wzfiawrr
+	 Wf6jVawWxuy6+9tex9A+QCqjk8nm02WqdNSa9MZgIV7zD8Bc66WF7X4zBcCAXRgCOV
+	 3P8JtQt6BDu2cr1myHhDKBhJWIdZJQTOn/2RuaNWY7sUUEOlBJTjD8PAznIgYdA31S
+	 ctfDt1h1fylfw==
+Message-ID: <sashiko-outbox-219580@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 12/13] perf test: Drop samples without an IP in the
- dlfilter test
+Subject: Re: [PATCH v6 04/13] perf tests: Exercise DW_OP_addrx global
+ variables
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261117200433.45174-13-acme@kernel.org>
+In-Reply-To: <20261117200433.45174-5-acme@kernel.org>
 References: <20261117200433.45174-1-acme@kernel.org>
- <20261117200433.45174-13-acme@kernel.org>
+ <20261117200433.45174-5-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 17 Nov 2026 20:12:20 +0000
+Date: Tue, 17 Nov 2026 20:13:59 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,24 +63,19 @@ Precedence: list
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> Since v7.3 the kernel zeroes PERF_SAMPLE_IP when a userspace-only event
-> skids into kernel mode, so that kernel register state is not exposed to
-> an unprivileged event (166f10836a653dfa "perf/core: Fix kernel register
-> info leak via hardware skid").
+> clang emits DW_AT_location with DW_OP_addrx for globals in DWARF 5, gcc
+> emits DW_OP_addr.  The global_data workload keeps a zero initialized
+> struct in .bss and the test checks that its accesses are annotated, so
+> the DW_OP_addrx path is exercised when perf is built with clang and
+> DWARF 5 (e.g. coverage.sh --dwarf-version 5), and the DW_OP_addr one
+> with gcc.  It skips on 32-bit PIE builds, which reach static globals
+> relative to the GOT base register, and the resolver does not track that.
 >=20
-> The test dlfilter keeps those samples, and the check that nothing but
-> test_loop survives then trips on their lines: the comm column reads
-> "perf".  Drop them, which is what the test wants, everything except
-> test_loop must be filtered out.
->=20
-> Fixes: 199d5e872a9ce737 ("perf tests script dlfilter: Add a dlfilter test=
-")
-> Reviewed-by: Ian Rogers <irogers@google.com>
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261117200433.4517=
-4-1-acme@kernel.org?part=3D12
+4-1-acme@kernel.org?part=3D4
 
