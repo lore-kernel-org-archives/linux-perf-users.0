@@ -1,82 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=111.22.67.151
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794907752;
-	b=jqkilJu51IQ+IyhH5ZmdIR1F7y5e7aO/5hrJ4xefzYKwpVFRtbe2iGkozd1tkNDiuvcL
-	 DkhFYFAC0xDiMB3uO/2gjmXXPEhZACa8UohkeFHBkPUfU9EeLoes3SIIusX2vlsSQyaXR
-	 PHtNYKQGcnmZ1e0KiFLkP7hLtRhVTTsgCDNDVGGDUr+7z3sv+9AwGIgxbh3+uJUCMkewK
-	 amexntZdHxc2iPG5o9o7JQLE8oR7UbcNbHBUlhbXGDOwS6ic0WBdBFZf8PJf3nypfrLin
-	 RyyFWwCvEmGSP0XPVNSCKPNvwFNybwZkiRIUWbPToQGSq5CsNhx5B2RXE9XM6zXvYmQ==
+	t=1794909380;
+	b=sYSHzKkxqZo7BArpr02Olf1H/v6xvMRY6OJrFV3QcYMSMr19C0KMCU0+Fdfd8qnm4CuO
+	 Sv9/t4x9A+GFTyniIiQJS3mvXhsoxgiiHWW7YGMmLwf5zcNdNizDJ0lYowApjGMeohjlV
+	 KiJAUwgTYE5jhApkM2x7bHyht1l6wb0CEul1R3kNHZnktktIRzXSamCuKNaInxWwoV1JE
+	 q1UnIIu/BYH58DrqavY9L8a9hYEMLm7gqsLfUs0Dhpef0VygjBun6D1cOGsIsMACApici
+	 7l7GDLSTXH5Hei32lhFQc5W3nY4Vk8XmjewSnwQJgzDQJKUSxoW8hHdQOGf/CRtDEvA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794907752;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To;
-	bh=dF5MViTg8YOEEudif96/pwRP0E0s9rCachj6JTmLUVQ=;
-	b=3EV+I7ojmK6D0vn+5gObrcXtjlqlBioATAFDYURN9kc5YTfxrDFebrVMqOsgMRqdGxkg
-	 QAo9pLe+p1wy29iqUmV2+Ybdgqs8T8H/h7hFQOpn+77MsDt+GMQg+DGjShnDFc0AnjPn6
-	 p/5S342zbL38FOmRYBqpwOgCCAkO6XTBbE7JDLJXhEzOGLgy24YsEpHrtC2BxpZlvtPOV
-	 wT8j962iU5koLJBdOifmmP8jDvrOktWhKTqJ+hMcdx6mOq3rZe7LOtVQL0pQXhGh/MWWj
-	 qQ7bFpJf/9exPjrjtMvSDZIyEcD52dlwvQceftPRqttL1F5rtyiHToly0z4V7SpHQIA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794909380;
+	h=DMARC-Filter:DKIM-Signature:X-RM-TagInfo:X-RM-SPAM-FLAG:Received:
+	 X-RM-TRANSID:X-RM-TagInfo:X-RM-SPAM-FLAG:Received:X-RM-TRANSID:From:
+	 To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=CluE4Dh1kKG4+k2ic12hszvWOzLMpgYMf4ldDPVCJcI=;
+	b=SrOHReWNK9/556ThS21Ct2/a60uYE5agkrW4mO6QnZc6zjipCIpmBtWmOamOEm8FlUCJ
+	 fG1Yzt+yOtGZHuTMmLYFDC5wiVmJ5W2Il+Ku+gkqgWdR8JsnrkOAHeSycgdSwNZbeh7v2
+	 KvCGjrsdvGF8x9WBREQDCvhg/N5ar/JhldWx9o6LzHfjwfPlnIKPWgZfKGzDG7gpwgVpl
+	 lVBeaUGFu0LRIAUUXbJYfu6Bx/3r0i2PLZ6rh0mtru+i4p6mtgAsJ9Yl5gPDLfJnKVG33
+	 JCCk7BDFXZ7enmYz4t9e1sQUVbzqq7LmXaeOUTbUO1emd9+RCEQSmJRsZ1NfbVp++sQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=arm.com;
-	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=msinmYKc;
-	arc=none smtp.remote-ip=217.140.110.172
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AE2A606A31C;
-	Tue, 17 Nov 2026 09:29:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9AE2A606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	dmarc=pass header.from=cmss.chinamobile.com;
+	spf=pass smtp.mailfrom=cmss.chinamobile.com;
+	dkim=pass header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=Gj1dVoh1;
+	arc=none smtp.remote-ip=111.22.67.151
+Received: from cmccmta8.chinamobile.com (cmccmta8.chinamobile.com [111.22.67.151])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2D6A606A31C;
+	Tue, 17 Nov 2026 09:56:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A2D6A606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmss.chinamobile.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=msinmYKc
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C4DE339;
-	Tue, 17 Nov 2026 01:29:07 -0800 (PST)
-Received: from localhost (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2934E3F673;
-	Tue, 17 Nov 2026 01:29:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1794907750; bh=kYJCY4Q16lrxSHjHkE75I7AzcqNZxfjGXDBq1dW4/kA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=msinmYKcP7h/+3CgM+h7kdrK5GrIERhYbL2MsSCCh1EfKnt2NPt+3ozymW9Fx2nYe
-	 iv+ISEGOMpbrbvls5z4OD/fBZ9jT03+KQ7sDkm5g44QFKIvp3D85WWc0SnEgvw/yyd
-	 2MoU69TEdUGgBjY+MbRsUB7Qo6QPuOg9X0UHLyXE=
-Date: Tue, 17 Nov 2026 09:29:08 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Sudeep Holla <sudeep.holla@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Al Grant <al.grant@arm.com>, "Johnny.Fan" <johnny.fan@cixtech.com>,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	driver-core@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/8] device property: Add firmware node IRQ affinity
- callbacks
-Message-ID: <20261117092908.GU9176@e132581.arm.com>
-References: <20261116-acpi_arm_pmu_registration_hmp-v1-0-0371d4eca626@arm.com>
- <20261116-acpi_arm_pmu_registration_hmp-v1-1-0371d4eca626@arm.com>
- <avwFYMdr7g4r6Z9y@ashevche-desk.local>
+	dkim=pass (1024-bit key, unprotected) header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.a=rsa-sha256 header.s=default header.b=Gj1dVoh1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=cmss.chinamobile.com; s=default; l=0;
+	h=from:subject:message-id:to:cc:mime-version;
+	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+	b=Gj1dVoh1WFIXvJZ3Ah+sRLsVD8Q3FoO9LLjluk2hzDE+4x8mnmnUHv17RlMg9ycVYPNrgQ50MUgDN
+	 BWd9YiusCDUqTg1XPpNAh9tiGonRSpyRDhX1dw3j+yxxbaqEmq+OjS3O9ioJmOJxC/8ijIhponNm2E
+	 e/czjf/Oj400vWrw=
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
+	by rmmx-syy-dmz-app06-12006 (RichMail) with SMTP id 2ee66afc24bb383-d6441;
+	Tue, 17 Nov 2026 17:56:14 +0800 (CST)
+X-RM-TRANSID:2ee66afc24bb383-d6441
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from FHB-W5100250 (unknown[36.137.216.21])
+	by rmsmtp-syy-appsvr05-12005 (RichMail) with SMTP id 2ee56afc24b5457-acdda;
+	Tue, 17 Nov 2026 17:56:14 +0800 (CST)
+X-RM-TRANSID:2ee56afc24b5457-acdda
+From: Gu Bin <gubin@cmss.chinamobile.com>
+To: acme@kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf trace: free filter_pids entries in trace__exit()
+Date: Tue, 17 Nov 2026 17:56:00 +0800
+Message-ID: <20261117095603.2397-1-gubin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.50.1.windows.1
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -86,73 +76,33 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <avwFYMdr7g4r6Z9y@ashevche-desk.local>
 
-On Tue, Nov 17, 2026 at 09:42:24AM +0200, Andy Shevchenko wrote:
-> On Mon, Nov 16, 2026 at 06:21:28PM +0000, Leo Yan wrote:
-> > Platform IRQ affinity lookup currently selects the OF or ACPI helper
-> > directly. Add fwnode_irq_get_affinity() and an irq_get_affinity operation
-> > implemented by both firmware types.
-> > 
-> > Use the new helper for platform devices, preserving the existing fallback
-> > to cpu_possible_mask when affinity information is unavailable.
-> 
-> From this commit message it's unclear why we do that. Is it any helpful in the
-> future? If yes, for what?
+trace__set_filter_pids_from_option() allocates trace->filter_pids.entries
+with calloc() when the --filter-pids option is parsed, but trace__exit()
+never frees it.  Free it there along with the other entries array of the
+trace struct, ev_qualifier_ids.
 
-This refactoring lets platform devices backed by swnode provide IRQ
-affinity through the common fwnode interface. Patch 02 provides swnode's
-IRQ affinity callback.
+Fixes: f078c3852c73 ("perf trace: Introduce --filter-pids")
+Signed-off-by: Gu Bin <gubin@cmss.chinamobile.com>
+---
+ tools/perf/builtin-trace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I will reply your comments in patch 02 for why we need swnode to
-store IRQ affinity.
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 4094141461f91..9bd95be106d19 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -5755,6 +5755,7 @@ static void trace__exit(struct trace *trace)
+ 	thread__zput(trace->current);
+ 	strlist__delete(trace->ev_qualifier);
+ 	zfree(&trace->ev_qualifier_ids.entries);
++	zfree(&trace->filter_pids.entries);
+ 	if (trace->syscalls.table) {
+ 		for (size_t i = 0; i < trace->syscalls.table_size; i++)
+ 			syscall__delete(trace->syscalls.table[i]);
+-- 
+2.50.1.windows.1
 
-> ...
-> 
-> > static const struct cpumask *get_irq_affinity(struct platform_device *dev,
-> 
-> >  {
-> >  	const struct cpumask *mask = NULL;
-> >  #ifndef CONFIG_SPARC
-> 
-> > -	struct fwnode_handle *fwnode = dev_fwnode(&dev->dev);
-> > -
-> 
-> Might be unneeded churn — you can leave these two lines being untouched.
-> 
-> > -	if (is_of_node(fwnode))
-> > -		mask = of_irq_get_affinity(to_of_node(fwnode), num);
-> > -	else if (is_acpi_device_node(fwnode))
-> > -		mask = acpi_irq_get_affinity(ACPI_HANDLE_FWNODE(fwnode), num);
-> 
-> > +	mask = fwnode_irq_get_affinity(dev_fwnode(&dev->dev), num);
-> 
-> 	mask = fwnode_irq_get_affinity(fwnode, num);
-> 
-> >  #endif
-> 
-> >  	return mask ?: cpu_possible_mask;
-> 
-> But I understand the point as we have only a single user left. So I am not
-> objecting the proposed approach, just pointed out on an alternative.
 
-I'll keep the local fwnode variable as you suggest.
 
-> ...
-> 
-> > +++ b/include/linux/fwnode.h
-> 
-> >  struct fwnode_operations;
-> >  struct device;
-> > +struct cpumask;
-> 
-> Yes, it's a bit disordered, can you place the new one before the 'device'
-> to follow alphabetical order?
-
-Will do.
-
-Thanks,
-Leo
