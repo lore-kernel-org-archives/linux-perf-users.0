@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794942735;
-	b=1/I9kw3vupFVhX2YM7nGuNJxaaV3D3SfLp/JqG4iTG11pfUnU90vvhq7usXFtOpXdJgK
-	 fphWQo+bHQbed/Vi5kuuktCA1lg1ZkmgBFQy8syj8Iku9oZRKDYEO0ro11NqLVjz/mSo5
-	 WpP3b68ZM/8vaNdmOjxQqlUQtPA/8YL/S4hT8vLrGxzWkJ2vQUtJeRP30lqgW3RY5wDqn
-	 6JEEHmUC3+mcz4UKz2Ni6j6gBu3YauGb5igzPucBC71IsgREjc/4HsvGjQgknwfWySDRT
-	 KagDsTV1EYhjqGDMFVRq9Gu9RA8wSwyoAc7xP+rT3ZyjNPl0IlNk7rypmgw0QJxWkwg==
+	t=1794942873;
+	b=UyxDa6HYphPVQnrxcse7ihXfctFST0bMpzr7aYa3GSDK40Vcy5yMOvTAOYXowKEStrzG
+	 2deFd/bNgzjrRtvTJu7k5CCnXrU8riNL1IjW/DpnZOZw4isDD37xujRJ87ZrKEbpbWZK3
+	 0PN7yoslyEAN+RRCmI0GzojypVipSyukO2L25HsnLUHegIKfKMSlgZGXSDSsNWJznH8aP
+	 mHEPxeBrzyUVZ6KdssCJtYxSpBDZcusKMmqxpqno6bzgr+DmPfAua9N8jiVVJXTsRlBHA
+	 gOc39ZGgR/vAisrTs9H+Ibjsjjxoe5zoBo1bRBHADOB8jC/49kI0wWYAQBzYUF7nvQQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794942735;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794942873;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=LPaDB7BFz4eXUhUxCS5fBKdTBTKKGDiFkbbpBPjP1zo=;
-	b=WmRHgu4Q7d3YBZ9rzAppjfBhU+geNPpADSRuM/CLOrXlcm06s0+kgBFBtNSCJZuqlupO
-	 uKGHZuSSbYxxCy8Lm/UkI31tJYYlTrxGAmpY+VNAbcmNlTerr/ISkWJbn9X5s3yjF6oQG
-	 onQN72sH+qRfHGAkVKYKuM0OKTSpH2De939+wLbgI+kXhH9D+75IiK75sUh8smBnCLZBz
-	 jb07j+keHEKYOaIYYDS2v2DLuFJtOs8fmHXZmj/rmGx//c5BPDgkmy0jrCzvy9pr0vLdf
-	 kvaj1kmv/y3pvT095iMp0U9Ov1zDf/nZ80fLfV6cCWq3iWASkctYa0ySaT+pSY8K5iA==
+	bh=imWRi1hlgdhkJdhqLGAjYxXsY9Nc8x9VhB1eV/Xj1ec=;
+	b=o/0ZBHLSrDm5NmaMHtsEB3G5gyRVLCuaecuG4ppgYl1JWE/z3QkC7K3CGvjYz5/Nzs3l
+	 JyIVwNl5nYWBtv2ZsidEWA7xJrOJoo26DU0h6Hl1tUsRN4yWUGTWkTF8uRCj4hf/Na7mP
+	 D1KwvMsDjKR5CvpSxuJ+e48hyRNdUlZp0oYKCXCYrVF/4eC0hAWW9J+47HZhmp/5HGVYW
+	 uofiEgjVvNw0k9yu72YXtagnKswkXfUTgwCnmLDMfI5sNqZ71q5NNnpM0La71W03jOQjs
+	 HzRYPffxLe9FnL3NPqqf21QIcGAkfVXt7fhCA33kUiRl9S/ScX9pNamSWJftbUD6c8g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=laA4CahL;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Zy6A0Umz;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D676606A337
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 19:12:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3C7606A31C
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 19:14:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=laA4CahL
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00CC61F000C6;
-	Tue, 17 Nov 2026 19:12:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Zy6A0Umz
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BB4F1F000C4;
+	Tue, 17 Nov 2026 19:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794942735;
-	bh=LPaDB7BFz4eXUhUxCS5fBKdTBTKKGDiFkbbpBPjP1zo=;
+	s=k20260515; t=1794942873;
+	bh=imWRi1hlgdhkJdhqLGAjYxXsY9Nc8x9VhB1eV/Xj1ec=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=laA4CahLV8/nSs6BOX/1ByEC1V8l0YRHC7W9t3zHT0FCjfFO8b4UECZHCChAUOHJe
-	 yeR4NZ0NlFbZnavdQnDqOOJUNOSBPYyPwvB6NJrxND93vQUjlg0MyYL8+ki4VS83vK
-	 nre5+vgJn1LJISHdjj9n0KEbJjsOw2PZawBMLmitgW6uX2gpFW/jE5hoKk0BDuoRrR
-	 heRyx590N0lrFble0G3ezvVouFCnW7kkVicn0O2MVCxB03esTXM2nN7s1A/XrfCLGf
-	 uTIox++3bi8cQ8PNjhq5V/q+SRj8cz2/J0DetHCYHLdOfcl8x344ITvWk8lxwdQRjS
-	 ACWqp3DgoVb2g==
-Message-ID: <sashiko-outbox-219451@kernel.org>
+	b=Zy6A0UmzoyBtkcuQOYXxhBepp5INuDrYO646GUsDRAkwYea6XHdXbswOFsD1jD9XK
+	 f6ZpXg7kCo7nLb6fR3l78w/GmPL+H4uQxglpATDDAmBJj3SxawWjKYA2NrCPM0Y6mQ
+	 9+ys6kC+MHzanv0M+EGtWlNn6vK92vp62xbhc2xsfQ/m288Zf7nmDWDJi70M7G3nLD
+	 SjbHn1uoMllrHCdejaYu6cW26Pcl9S2AYxIw7Uhm16SQNeVyvdc1WinY4ZRbkGcNS0
+	 O9YLq6NIT9zo6S8WlY5YuAi6TPsrUBKTfY688HnOeN4dvphYZNEYPARvlpcSqhI3kw
+	 KxQ5n715Qhp8g==
+Message-ID: <sashiko-outbox-219453@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v14 18/23] perf env: Add __guarded_by and __must_hold
- annotations
+Subject: Re: [PATCH v6 9/9] perf test symbols: Add tests for symbol
+ shrinking and session alloc wrappers
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261117184844.99889-19-irogers@google.com>
-References: <20261117184844.99889-1-irogers@google.com>
- <20261117184844.99889-19-irogers@google.com>
+In-Reply-To: <20261117185305.108003-10-irogers@google.com>
+References: <20261117185305.108003-1-irogers@google.com>
+ <20261117185305.108003-10-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 17 Nov 2026 19:12:14 +0000
+Date: Tue, 17 Nov 2026 19:14:32 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,14 +61,37 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Add __guarded_by(), __must_hold(), and __must_hold_shared() annotations
-> to the bpf_progs and cgroups trees and helpers in struct perf_env.
+> Ensure the new symbol sorting, DSO-lifetime symbol and DSO shrinking,
+> dso_symbol reference pinning, on-demand DSO reload after unreferenced
+> eviction, and session-scoped allocation wrappers are verified by
+> 'perf test symbols' (including under REFCNT_CHECKING=3D1).
+>=20
+> Add unit tests to 'perf test symbols' covering:
+> - test_symbols_sorted_insert(): Verify ascending symbols__insert(),
+>   out-of-order dso__insert_symbol() maintaining sorted order, and
+>   unsorted symbols__insert() followed by sort-on-lookup in
+>   dso__find_symbol().
+> - test_symbols_shrink(): Verify symbols__shrink() reclaims the secondary
+>   symbols_by_name index and trims unused capacity in symbols->symbols
+>   while keeping live symbols intact, and verify
+>   symbols__try_delete_unannotated() preserves annotated symbol tables.
+> - test_dsos_shrink(): Verify dsos__shrink() evicts unreferenced user
+>   DSOs while retaining DSOs with active external references and vDSOs.
+> - test_session_alloc_shrink(): Verify machine__session(),
+>   dso__session(), perf_session__malloc/zalloc/calloc/realloc/strdup(),
+>   and perf_session__shrink().
+> - test_dso_shrink_and_reload(): Verify dso__shrink() on a referenced ELF
+>   DSO reclaims auxiliary buffers while preserving symbol pointers,
+>   dso_symbol__copy() pins DSO symbols across dsos__shrink() until
+>   dso_symbol__exit(), and dsos__shrink() on an unreferenced hit DSO
+>   evicts its symbol table and transparently reloads it on a subsequent
+>   map__find_symbol().
 >=20
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261117184844.9988=
-9-1-irogers@google.com?part=3D18
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261117185305.1080=
+03-1-irogers@google.com?part=3D9
 
