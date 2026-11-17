@@ -1,67 +1,121 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794931045;
-	b=aBJtN+Ksj9A0J8Jd5LPhPYT0XzHo1YcWPHd8osnXg2akMytEabGUH29E93K5DuX7ftZ1
-	 WS3jU6i5s6602LAkXNwNdkwCnsTVSVQ48sbGpVifcDbCh9G4HHMi4wt4r77G6jNlN7UDA
-	 +/rHSFMZ3wnopSVtAkZs1cWdrINnTyVWG3doFE0sFP11F/Kj8nBcx+F5vD/iQj2I6fBwp
-	 7LPVe1sTZ1jW2pyqydvPmFHfwuPS1FFgwMHIGKgfEx1akc9KKr82d2878awJ8tPyRWpij
-	 7OT1VsaBBMcRVUQ9Nv9lbP7KAUBOL2JCIVnCoJ5I04S4uwA5pbJ41pKeCDaFsRKj8ZQ==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794931045;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=cs7WmXLtLvfzSaEY3F1n54CWNp97VoAM7iUg02itheI=;
-	b=B5qKcDU3gJLZVRqkSdCxTtn+Y5Iz6UXtMeU5Y/ST3VVgh4BcGTejHFx11CpvgKFXVeDZ
-	 lRqJCURS12ys2UCMGYW3byORHriR+5KUyKtuw8M31OI3/pzPB95hQgMBBKWaYDa9SM0+B
-	 AcRcG/i60s7yLqPK8zUoZ/NNYUnUEyI95bg6PvWZpfmI6rt+7uskai2wN0CyTENXVTLL5
-	 sUxHZmNqt98HTB6B7/Mw5LJZCCLs0FZg95vGO/6lF11NhKFg2mU6FWEn8cemufKeStNpO
-	 m/lVS6OwQWnsX4GPt99KVtUiko0x+p2UyA9FfKo5a+JlkPUiQEfOzfUlIqnhQdPDHqg==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=oiyc4UpX;
-	arc=none smtp.remote-ip=90.155.50.34
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=170.10.133.124
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1794934492;
+	b=2f5FpdPUXbd7Hr6rcxxxJIo7qSzpKd0k6nZW/+U85j5TyFAUaWvIZzMnPuSIAY42GVWO
+	 zxMIDAlYhmSU1Y+SvcyzWsNg3miXn5TIvLEbjT33Lix4pY+GdObsppCUx8HnKL4+LQY7a
+	 UHZwBrOaip5efJnn5EGR0mNmi9iwzoktKLTaJfCLOcwGmDBgJ/wscKgU0xjc1ekg31uPm
+	 vmatj0B4HeTMhCkQRBVmTpvmDkbp5re2/oPTtLT/7Wu0cxu3CxcXWLSJ0574clIA8PfII
+	 Y3p3kA5wvz8c63VCNuMrAqxoLeEzXsaDP0tK8ycAFypjTisC+TGkSSWRB1qqYyA0RjQ==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794934492;
+	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
+	 X-Mimecast-MFC-AGG-ID:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 X-Received:MIME-Version:References:In-Reply-To:From:Date:
+	 X-Gm-Features:Message-ID:Subject:To:Cc:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=DGDRp2kvtb93Toj3Qe9cR7ofTSqhSOCGBjvMYhNFgBc=;
+	b=Ie3Ci7nkfreZw+kxEzLLQBIlXQgmdR21kUgG49OIws4KGKGJWo5iJ9P/kU+vzxW+hlAA
+	 hbPLxfbhq8fGRntjJrg55DT6NKbpqDYf5JdzZq9xSWlhpyTOC3rtEhIUOoXTfMPoJIfLT
+	 9xwkkgMSml6qYOQSnSEwF6OtZp5uAbXlZC4c9tnEmAan7DOrljDvqcqJY0SKc0y/NSM3v
+	 zjGSeJt9hYvEKsVf4GHfUFrBluWZIrP5zSehyt2PYzYfbf+kt6R0Nij0lyJ1LTsKqefX8
+	 NRug1hwzEafu6VUJyxBCVcXi6y9p1RR6oH2K9ERh8HlMSWy8gDfnslUAXZRs+cf5ToA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=redhat.com;
+	spf=pass smtp.mailfrom=redhat.com;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=QHqQsfjQ;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=google header.b=boSBA9BM;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=170.10.133.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE6B606A31C;
-	Tue, 17 Nov 2026 15:57:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0AE6B606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D613F606A32A
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 16:54:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D613F606A32A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=oiyc4UpX
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=cs7WmXLtLvfzSaEY3F1n54CWNp97VoAM7iUg02itheI=; b=oiyc4UpX6RbTwsDS2I3LujqnZW
-	HRIJs/9PBbn8mZq0GuZfrDIQ16tbF1h/PvfrLxPypoNEkW3MxOBfVbhJj6fMJRlpIXBKaGx68NA1A
-	EfP6K+1JTo70X5Whc8ilDho3i0uWSpeNbVPGYWexncBirsBJOIPEuoMQKJRfAQtVO9aNqQb7NCatN
-	PypNXit2SnugLLYR77MBjNx6ekUGeif5HW9WhJZVoLtNh0TIil2/ybz1ze/rkSKP6JstBCZp+QtGl
-	BcVzj0z292TOPFvWuotVJzxtNyeYoZx5WtwqNfX2bC6ftQ9nfgX2OV+sf03lm1bCDUTCEBGOkJJEc
-	Vk6oMoWg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTLYf-00000001uyH-2YiP;
-	Tue, 17 Nov 2026 15:57:21 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id BBFB3300400; Tue, 17 Nov 2026 16:57:20 +0100 (CET)
-Date: Tue, 17 Nov 2026 16:57:20 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Rafael B. Dias" <rafaelbttdias@gmail.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	security@kernel.org
-Subject: Re: [PATCH] perf/core: unaccount mmap pages from the charged owners
-Message-ID: <20261117155720.GB621672@noisy.programming.kicks-ass.net>
-References: <CAFhB66oYbThmK59NiT1YwFZ4z=xkNxj9paga4EJW+mGFHa8f8A@mail.gmail.com>
- <20260722060353.24-1-rafaelbttdias@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=QHqQsfjQ;
+	dkim=pass (2048-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=google header.b=boSBA9BM
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1794934491;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DGDRp2kvtb93Toj3Qe9cR7ofTSqhSOCGBjvMYhNFgBc=;
+	b=QHqQsfjQKtr9LJKCFW64WCyAfWedjSVLliUPZ1Zh85vdoki/F9/VqkoFJU0RMpBOKJ6Xan
+	KUhgcxdDMnHbQ+e46iAJ/IHtsM/vGRRIYXcko7FZK0LuRPalWUoNCLyc4Och2BzsMccoGQ
+	XAu+qvfJ/z8pVAoHeOunYRii3Kf3UE0=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-590-MyKSr65_Pvqq49IBoxpIFA-1; Tue, 17 Nov 2026 11:54:49 -0500
+X-MC-Unique: MyKSr65_Pvqq49IBoxpIFA-1
+X-Mimecast-MFC-AGG-ID: MyKSr65_Pvqq49IBoxpIFA_1794934488
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4a1f03f2e8aso417925e9.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 08:54:49 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1794934488; cv=none;
+        d=google.com; s=arc-20260327;
+        b=g9aD2AftBr556LeJVT8NCXAY2GfXe+sMNzj8UnZHjZWZmLU8/BpLFnR76wOc11EnNj
+         1iBepQy74RozuIBmLEgQoA+ffLZEWDdxsOvH6TIyzhdimhE7CHTXuLRvf7vG+Wdm7/Ap
+         ev/2HEKLZ4r8/xKtUtqHTQAuXxaQjlb7ruRKz/lP3j6r/ieNQDXB7Ec/ejTSPu5z/vjx
+         4b1k8fbN9PUteTrVo6zbQTCocHRvwPSHn38CUImcNcgcHu4dxuczy5RIWv6aIwmnQT0J
+         b1Obs9GUyuYSeNQnsqA3G4GITECAOl/Zswjeo+R916RhClWFpY12W5m4PxRgaboTzgFI
+         4iJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=DGDRp2kvtb93Toj3Qe9cR7ofTSqhSOCGBjvMYhNFgBc=;
+        fh=T1fCoq7zS4xdxkzFa4udfBHj6IO8UL/DFpN+uqfNxyo=;
+        b=XkiFsTF3b2nTL4j7ljKvQuVbpTbDpb9vh7LJQoy1A/NCXAYM+PCO4HsBnQKYezSX87
+         DDXzxV5wK2Wdp66ie+9wEnKfq4gqNCp3XJ9665Cw6oVc5QNSH8dIGYVWBzniAiOxLKHq
+         ADwybVazjc1ZYN7buu5lB8Oc1Gd9BEOBdMyaNKEMgAZFaUclKRkQ9fCWf+qa4YkP6XjN
+         GPJ+WsX5ZEb6bB+sH2sh7hQNZ+3epUZxWirUQKVM2/V4UbbziUboocXL2HR4Qpoz0KtY
+         BwqlGzn8+oFin3veZRRGDmDRCW63XEa6U+ay9lTFXoKAHF/I2hAs1DY6d5dBi9Ocg1OP
+         O8Uw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1794934488; x=1795539288; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=DGDRp2kvtb93Toj3Qe9cR7ofTSqhSOCGBjvMYhNFgBc=;
+        b=boSBA9BMzgzp/9GTmKfzsDUrEtRv3AnbWstOHFz5RtX6cqce2mGNSogsMbMOPU6V7t
+         t8sl1g10XuWgovp0GQ3sglig/7cekSSHrErpAp7g2J5WXMz1WjElWhUBuI6EEVR+S90z
+         MS73Y2D3szqB6xm2oC4MxjbNeYYFab8+w3rtw5oh++JtxsW7LBy+sLA1o16hBpCdaUMI
+         2nQ3yFkVyF1r5bcvfAlywRT/mGzOg9oWln9HDcdjFN1gKVLL9q40dEi1N7X2ZutwIRg0
+         UJDxAZWIhtfjcWCHUxCrQeAyIqiKmYiNMJsSrKtOV4GTBUXrafotFydASMGtuvAItyzB
+         kzqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1794934488; x=1795539288;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=DGDRp2kvtb93Toj3Qe9cR7ofTSqhSOCGBjvMYhNFgBc=;
+        b=y50GLqLxC8PB8IrwHRtBXuMcEBqmYA3sAcTRKqTgPZPYdDsuuXMhqfWpuIhyXE4gOi
+         yKq3sWtmHVfWz32AYemewcMx+2V647cIv3mfqQMUvzwIKapf7N8ojts4SweN9nhQrBbo
+         uzqYW9mIwxdLTztOUxQ8Pmk3+xkL/lTf9HeHAf+CDI9czD3i1ucBdGaSRfquKk/3LsCN
+         ckaT2DG6ysXD59AJKX7hy1MAudtrMqcZMKRhMkHGMml0aSu8uD4x0fx4FuxuRGw4IBpz
+         pC+D3b5Erjn6PA5/bcgZdQf2t90+TppvPzDNA0HgvyVk30eqAeQLd8iT2Rd8oGtaMi0v
+         UPOw==
+X-Forwarded-Encrypted: i=1; AL+hErFOzNd/Rb478kbXveK3Mw9+i87CGxLw4HSLRfwb/HpYPKY4iBOPBUS6d6w4J9X+EGDWzxFBNlACYc8aM+8JxHmM@vger.kernel.org
+X-Gm-Message-State: APuU4Z/kkb0y8qVzDqfJsNXpzNTbwATTMzn00+vUo1WQNkBhkRoiZ0AR
+	o53Ai5zxBtKqX87ulOWFulDWW2bj05ZpTL5Jc6Sv0HZmP5IKfTEErxuf5DSehcEsCCN3+EAdhQe
+	ogHpjgs0m9TY4nUNpABswdshIC3oF1bVNrJ8kw3JCaqbRtnH2pmJOYrnH82oheTdsBQG5leFCn9
+	X/gT9U7wiLZmZPVI5dNpAi3uqvr8xYlh3ozCOlW0DizPwzMQ==
+X-Gm-Gg: AYBFou3P7hbBnGfHoYx093VzxjigjM03oklFdfDGxd4+Ch6AQOvPJc6Hwu2eWfZM7H5
+	rYDCtUGx0FY4iD4KNOKNHIJju2A0jOr6Avrgl5+NecvyQrw2qRJrBPRPQ9EVDWCgfMqDgvLRh8P
+	qrvlaNMAHSYkAqVVBf9hetFw7/1PYo1RNZxtOrnIkKqr/eeTRNwL2oGTIxrcT35WmWJmXT8Q0Xj
+	3hvXJaR/uyBzERosA==
+X-Received: by 2002:a05:600c:6986:b0:4bb:6a2d:b438 with SMTP id 5b1f17b1804b1-4bb6a2db52fmr178231555e9.0.1794934488496;
+        Tue, 17 Nov 2026 08:54:48 -0800 (PST)
+X-Received: by 2002:a05:600c:6986:b0:4bb:6a2d:b438 with SMTP id
+ 5b1f17b1804b1-4bb6a2db52fmr178231035e9.0.1794934488110; Tue, 17 Nov 2026
+ 08:54:48 -0800 (PST)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -71,243 +125,97 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260722060353.24-1-rafaelbttdias@gmail.com>
+References: <20261107023917.40606-1-himanshu.chauhan@oss.qualcomm.com> <20261107023917.40606-9-himanshu.chauhan@oss.qualcomm.com>
+In-Reply-To: <20261107023917.40606-9-himanshu.chauhan@oss.qualcomm.com>
+From: Jesse Taube <jtaubepe@redhat.com>
+Date: Tue, 17 Nov 2026 11:54:35 -0500
+X-Gm-Features: Aa3M54roB7QDb-4IN47SMi2aVS10SiwVpvGI_zdHUzKl8EZH9k7SzFLp96gzPDI
+Message-ID: <CADRr4bc4v4Uaf2_1ZRFJXoru6a=g+PEYgKKK-vEzXgmV6bXqPQ@mail.gmail.com>
+Subject: Re: [PATCH v8 8/8] perf tests: keep bp_signal memory accesses visible
+To: Himanshu Chauhan <himanshu.chauhan@oss.qualcomm.com>, Ingo Molnar <mingo@redhat.com>
+Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org, 
+	Alexandre Ghiti <alex@ghiti.fr>, Oleg Nesterov <oleg@redhat.com>, Kees Cook <kees@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-perf-users@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 22, 2026 at 03:03:53AM -0300, Rafael B. Dias wrote:
-> perf mmap accounting splits pages between user_struct::locked_vm and
-> mm_struct::pinned_vm. The first mapping that allocates a data ring stores
-> the charged user and numeric pinned amount in perf_buffer, but it does not
-> store the mm that received the pinned charge.
-> 
-> A perf event fd can be mapped by more than one process. If a different mm
-> owns the final VMA close, perf_mmap_unaccount() subtracts mmap_locked from
-> that final mm instead of the mm charged at allocation. Repeating this
-> across short-lived donor processes creates a negative pinned_vm balance
-> that can fund later perf mappings beyond RLIMIT_MEMLOCK.
-> 
-> AUX has the same last-VMA assumption. It also subtracts locked_vm from the
-> data ring's mmap_user even when a different user created the AUX mapping.
-> 
-> Retain references to the mm charged for the data ring and to the user and
-> mm charged for AUX. Use those stored owners during final unaccounting and
-> release the references after the counters are restored.
-> 
-> On a two-CPU 6.12.94 KASAN guest, an unprivileged receiver with
+On Fri, Nov 6, 2026 at 9:40=E2=80=AFPM Himanshu Chauhan
+<himanshu.chauhan@oss.qualcomm.com> wrote:
+>
+> In the breakpoint signal handler test, a breakpoint is set on
+> __test_function. Keep that helper as a real call target so the breakpoint
+> has a stable address.
+>
+> The test also relies on the watched variable being accessed as distinct
+> memory operations. Use READ_ONCE() and WRITE_ONCE() for those accesses
+> instead of making the object volatile, so the source marks the exact
+> operations that must be preserved.
+>
+> Signed-off-by: Himanshu Chauhan <himanshu.chauhan@oss.qualcomm.com>
+Reviewed-by: Jesse Taube <jtaubepe@redhat.com>
 
-(that's an old kernel, as in *very* old)
+I personally would send this separately so it's clear that it should
+be applied to the perf tree.
+Thanks,
+Jesse Taube
 
-> RLIMIT_MEMLOCK=0 accumulated 16,385 pages of cross-mm credit and mapped
-> 65,540 KiB on the vulnerable kernel. The same reproducer returned EPERM
-> with this ownership fix. No KASAN report or warning occurred. The patch
-> also builds kernel/events/core.o with x86_64_defconfig on the same base.
-> 
-> Fixes: 26cb63ad11e0 ("perf: Fix perf mmap bugs")
-> Fixes: 36b3db03b474 ("perf/core: Fix the mlock accounting, again")
-> Cc: stable@vger.kernel.org
-> Assisted-by: OpenAI-Codex:gpt-5.6-sol
-> Signed-off-by: Rafael B. Dias <rafaelbttdias@gmail.com>
+> ---
+>  tools/perf/tests/bp_signal.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+>
+> diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
+> index f580ba7486b1..2e4f7747d32f 100644
+> --- a/tools/perf/tests/bp_signal.c
+> +++ b/tools/perf/tests/bp_signal.c
+> @@ -36,15 +36,14 @@ static int fd3;
+>  static int overflows;
+>  static int overflows_2;
+>
+> -static volatile long the_var;
+> -
+> +static long the_var;
+>
+>  /*
+>   * Use ASM to ensure watchpoint and breakpoint can be triggered
+>   * at one instruction.
+>   */
+>  #if defined (__x86_64__)
+> -extern void __test_function(volatile long *ptr);
+> +extern void __test_function(long *ptr);
+>  asm (
+>         ".pushsection .text;"
+>         ".globl __test_function\n"
+> @@ -54,16 +53,19 @@ asm (
+>         "ret\n"
+>         ".popsection\n");
+>  #else
+> -static void __test_function(volatile long *ptr)
+> +static noinline void __test_function(long *ptr)
+>  {
+> -       *ptr =3D 0x1234;
+> +       WRITE_ONCE(*ptr, 0x1234);
+>  }
+>  #endif
+>
+>  static noinline int test_function(void)
+>  {
+> +       long value;
+> +
+>         __test_function(&the_var);
+> -       the_var++;
+> +       value =3D READ_ONCE(the_var);
+> +       WRITE_ONCE(the_var, value + 1);
+>         return time(NULL);
+>  }
+>
+> --
+> 2.43.0
+>
 
-I don't like allowing the AUX stuff to be accounted separately from the
-regular stuff. But also, I think you missed perf_mmap_calc_limits().
-
-What about something like the below?
-
-I am also tempted to add a clause where 'vma->vm_mm != rb->mmap_mm'
-would completely dis-allow the operation.
-
----
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index e870f12c3ad8..b920680aad50 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7046,7 +7046,7 @@ static void perf_mmap_open(struct vm_area_struct *vma)
- }
- 
- static void perf_pmu_output_stop(struct perf_event *event);
--static void perf_mmap_unaccount(struct vm_area_struct *vma, struct perf_buffer *rb);
-+static void perf_mmap_unaccount(struct perf_buffer *rb, long user_extra, long extra);
- 
- /*
-  * A buffer can be mmap()ed multiple times; either directly through the same
-@@ -7082,8 +7082,7 @@ static void perf_mmap_close(struct vm_area_struct *vma)
- 		perf_pmu_output_stop(event);
- 
- 		/* now it's safe to free the pages */
--		atomic_long_sub(rb->aux_nr_pages - rb->aux_mmap_locked, &mmap_user->perf_mlock);
--		atomic64_sub(rb->aux_mmap_locked, &vma->vm_mm->pinned_vm);
-+		perf_mmap_unaccount(rb, rb->aux_nr_pages, rb->aux_mmap_locked);
- 
- 		/* this has to be the last one */
- 		rb_free_aux(rb);
-@@ -7156,7 +7155,7 @@ static void perf_mmap_close(struct vm_area_struct *vma)
- 	 * Aside from that, this buffer is 'fully' detached and unmapped,
- 	 * undo the VM accounting.
- 	 */
--	perf_mmap_unaccount(vma, rb);
-+	perf_mmap_unaccount(rb, data_page_nr(rb) + 1, rb->mmap_locked);
- 
- out_put:
- 	ring_buffer_put(rb); /* could be last */
-@@ -7256,10 +7255,10 @@ static int map_range(struct perf_buffer *rb, struct vm_area_struct *vma)
- 	return err;
- }
- 
--static bool perf_mmap_calc_limits(struct vm_area_struct *vma, long *user_extra, long *extra)
-+static bool __perf_mmap_calc_limits(struct user_struct *user, struct mm_struct *mm,
-+				    long *user_extra, long *extra)
- {
- 	unsigned long user_locked, user_lock_limit, locked, lock_limit;
--	struct user_struct *user = current_user();
- 
- 	user_lock_limit = sysctl_perf_event_mlock >> (PAGE_SHIFT - 10);
- 	/* Increase the limit linearly with more CPUs */
-@@ -7281,31 +7280,36 @@ static bool perf_mmap_calc_limits(struct vm_area_struct *vma, long *user_extra,
- 		 * charge the rest from pinned_vm
- 		 */
- 		*extra = user_locked - user_lock_limit;
--		*user_extra -= *extra;
- 	}
- 
- 	lock_limit = rlimit(RLIMIT_MEMLOCK);
- 	lock_limit >>= PAGE_SHIFT;
--	locked = atomic64_read(&vma->vm_mm->pinned_vm) + *extra;
-+	locked = atomic64_read(&mm->pinned_vm) + *extra;
- 
- 	return locked <= lock_limit || !perf_is_paranoid() || capable(CAP_IPC_LOCK);
- }
- 
--static void perf_mmap_account(struct vm_area_struct *vma, long user_extra, long extra)
-+static bool perf_mmap_calc_limits(struct perf_buffer *rb, long *user_extra, long *extra)
- {
--	struct user_struct *user = current_user();
--
--	atomic_long_add(user_extra, &user->perf_mlock);
--	atomic64_add(extra, &vma->vm_mm->pinned_vm);
-+	return __perf_mmap_calc_limits(rb->mmap_user, rb->mmap_mm, user_extra, extra);
- }
- 
--static void perf_mmap_unaccount(struct vm_area_struct *vma, struct perf_buffer *rb)
-+static void perf_mmap_account(struct perf_buffer *rb, long user_extra, long extra)
- {
- 	struct user_struct *user = rb->mmap_user;
-+	struct mm_struct *mm = rb->mmap_mm;
- 
--	atomic_long_sub((perf_data_size(rb) >> PAGE_SHIFT) + 1 - rb->mmap_locked,
--			&user->perf_mlock);
--	atomic64_sub(rb->mmap_locked, &vma->vm_mm->pinned_vm);
-+	atomic_long_add(user_extra - extra, &user->perf_mlock);
-+	atomic64_add(extra, &mm->pinned_vm);
-+}
-+
-+static void perf_mmap_unaccount(struct perf_buffer *rb, long user_extra, long extra)
-+{
-+	struct user_struct *user = rb->mmap_user;
-+	struct mm_struct *mm = rb->mmap_mm;
-+
-+	atomic_long_sub(user_extra - extra, &user->perf_mlock);
-+	atomic64_sub(extra, &mm->pinned_vm);
- }
- 
- static int perf_mmap_rb(struct vm_area_struct *vma, struct perf_event *event,
-@@ -7344,7 +7348,7 @@ static int perf_mmap_rb(struct vm_area_struct *vma, struct perf_event *event,
- 			 * Success -- managed to mmap() the same buffer
- 			 * multiple times.
- 			 */
--			perf_mmap_account(vma, user_extra, extra);
-+			perf_mmap_account(event->rb, user_extra, extra);
- 			refcount_inc(&event->mmap_count);
- 			return 0;
- 		}
-@@ -7357,7 +7361,7 @@ static int perf_mmap_rb(struct vm_area_struct *vma, struct perf_event *event,
- 		ring_buffer_attach(event, NULL);
- 	}
- 
--	if (!perf_mmap_calc_limits(vma, &user_extra, &extra))
-+	if (!__perf_mmap_calc_limits(current_user(), vma->vm_mm, &user_extra, &extra))
- 		return -EPERM;
- 
- 	if (vma->vm_flags & VM_WRITE)
-@@ -7370,6 +7374,7 @@ static int perf_mmap_rb(struct vm_area_struct *vma, struct perf_event *event,
- 	if (!rb)
- 		return -ENOMEM;
- 
-+	rb->mmap_mm = ({ mmgrab(vma->vm_mm); vma->vm_mm; });
- 	rb->mmap_locked = extra;
- 
- 	ring_buffer_attach(event, rb);
-@@ -7378,7 +7383,7 @@ static int perf_mmap_rb(struct vm_area_struct *vma, struct perf_event *event,
- 	perf_event_init_userpage(event);
- 	perf_event_update_userpage(event);
- 
--	perf_mmap_account(vma, user_extra, extra);
-+	perf_mmap_account(rb, user_extra, extra);
- 	refcount_set(&event->mmap_count, 1);
- 
- 	return 0;
-@@ -7434,7 +7439,7 @@ static int perf_mmap_aux(struct vm_area_struct *vma, struct perf_event *event,
- 		refcount_inc(&rb->aux_mmap_count);
- 
- 	} else {
--		if (!perf_mmap_calc_limits(vma, &user_extra, &extra)) {
-+		if (!perf_mmap_calc_limits(rb, &user_extra, &extra)) {
- 			refcount_dec(&rb->mmap_count);
- 			return -EPERM;
- 		}
-@@ -7455,7 +7460,7 @@ static int perf_mmap_aux(struct vm_area_struct *vma, struct perf_event *event,
- 		rb->aux_mmap_locked = extra;
- 	}
- 
--	perf_mmap_account(vma, user_extra, extra);
-+	perf_mmap_account(rb, user_extra, extra);
- 	refcount_inc(&event->mmap_count);
- 
- 	return 0;
-@@ -7547,6 +7552,7 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
- 		 * attempt use this failed buffer.
- 		 */
- 		if (refcount_read(&event->mmap_count) == 1) {
-+			struct perf_buffer *rb = event->rb;
- 			/*
- 			 * Minimal perf_mmap_close(); there can't be AUX or
- 			 * other events on account of this being the first.
-@@ -7554,7 +7560,7 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
- 			mapped = get_mapped(event, event_unmapped);
- 			if (mapped)
- 				mapped(event, vma->vm_mm);
--			perf_mmap_unaccount(vma, event->rb);
-+			perf_mmap_unaccount(rb, data_page_nr(rb) + 1, rb->mmap_locked);
- 			ring_buffer_attach(event, NULL);	/* drops last rb->refcount */
- 			refcount_set(&event->mmap_count, 0);
- 			return ret;
-diff --git a/kernel/events/internal.h b/kernel/events/internal.h
-index c03c4f2eea57..8a6c620ae91e 100644
---- a/kernel/events/internal.h
-+++ b/kernel/events/internal.h
-@@ -5,6 +5,9 @@
- #include <linux/hardirq.h>
- #include <linux/uaccess.h>
- #include <linux/refcount.h>
-+#include <linux/sched/user.h>
-+#include <linux/perf_event.h>
-+#include <asm/local.h>
- 
- /* Buffer handling */
- 
-@@ -38,6 +41,7 @@ struct perf_buffer {
- 	refcount_t			mmap_count;
- 	unsigned long			mmap_locked;
- 	struct user_struct		*mmap_user;
-+	struct mm_struct		*mmap_mm;
- 
- 	/* AUX area */
- 	struct mutex			aux_mutex;
-@@ -68,6 +72,7 @@ static inline void rb_free_rcu(struct rcu_head *rcu_head)
- 
- 	rb = container_of(rcu_head, struct perf_buffer, rcu_head);
- 	free_uid(rb->mmap_user);
-+	mmdrop(rb->mmap_mm);
- 	rb_free(rb);
- }
- 
