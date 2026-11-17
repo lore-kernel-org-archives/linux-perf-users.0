@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.72
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794941592;
-	b=GfXgIQsdQmgAa7xbaRNGHj/husdyqAyW8A6cH5b/5niAx/ttyokLcgXJhTPyPZujscCY
-	 UG/7zU9RIZ5VXHMSCgRTgQlVk5k33G8fY5opk8erwaIDJRbSokcTEj85BN/6JK5X4NLYe
-	 e01fH01gMSr9z278rFIV+LQHpFdlI6k22TUc5Tb7klbSZdaNlKSCIPjrAn4xOyF1irEKH
-	 3whEuPYnQi0GhFlEhZVbBgSRAmtbxAvFEdzEldXGowlcN7PM+JQVMpsbOWYsponXbE/9j
-	 GE0kQW540Yauw9RCeBuJo6tabpq799Fs4IRoUTsZMzHJGW542PpX0Zm76gCKmINfFPg==
+	t=1794941594;
+	b=j3LR+ULmHpVy4wLQdhZBe/K6fK/tXZqMO+LTAtKL1wVJY9PopfZW9xMFTO/W3aZxsdp4
+	 M+ZUv29/lUG3o3Nw61F0jzb3vbbilHGBt1D79FSC/rw7aHD6i1fneSAKL9TB1gXznomPc
+	 3d6SYNvqVwLonplqMWMOQHUHjgTH+Js2M3bq+Yp3NjMQc4R9GEVD624syLuhueljaiVtI
+	 Rnit8MGJtE60AlEA/S29/EEghC7YOiXiGVh2saaI5H928CWD+E9hf1LltdambLXT1vsYk
+	 DnrKF5HTC+1Huh+A/hY6OlLmU93+v7zr6HRx74MsX6aiqraq52GxrrQv74RrCI9JOjA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794941592;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794941594;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=s3lKOZIehs7zghVMQL3qXW1rl5HT2ZJDnVe3jn0mFR8=;
-	b=01bRaNPadYvw7HoYyN6EpSzOQjQtocEIf3SElGrm8j+ioyRNko4IhcHNQ04C91OWLOkd
-	 Fvf9ilbXQ4PlLWrF1Ub2yw07nRqnEI9qjbyXpCWGhpOM5ksZBnXRWhcQ42HV+zJ2KVEpK
-	 O4kytHfbmM+iBkYhtTXb3wqWpkcCWf9Smv4BB7HX8XYal2BKI50YT+ZqDzb8cnYOC0zyE
-	 8xjuhDmmMg8GHeZqnBSr6WH4tu1d+ZgXQgSzkOv+fCeaYZ7icnbfvEZ3XPZ0n6yY17Kd7
-	 I9eRgi2XWql8kUWNX13OBDThNBlJrPWC4jNgGiGwvIULkFLnfYmJLifSMl+GRcPDulg==
+	bh=ypWzj4jYwl6Le0IOjDsckxtUx9D61jRXn1kfcbsi+J8=;
+	b=rxxIJe+x8ouw+Ifxhsk8S1tI1xgqDUZzwyhEeTx2YPEov+roAairCiuIfzykhOlG2MwT
+	 HJgk8b38Jny1wQA6g3qiFO/I2znSrFQbQb99etX4IwfhhD7L1QV++cT8hw7nFNfwZLdGh
+	 xq6qRZ1zCVsjlMq+eFuNFVa7qCodJS7K9vWTJyMNNy/V8zXy4vyx19ZxMGwZ74TQN3aJr
+	 YgxMnk5kDeCTUVpvJ7ICzdRH5Xe4KHMY6KXVTXpo/6oMloTReNrCaftYKYOxoe3VA18hB
+	 XS0l5WoLct8SZHcQat2/v8IY0RSDGbGj2Cy+9+tzTSbb5zEIjomkAMLnpCB30dcywPQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=cYvPGk5q;
-	arc=none smtp.remote-ip=74.125.82.199
-Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Jzjh2vd4;
+	arc=none smtp.remote-ip=209.85.210.72
+Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com [209.85.210.72])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29ED7606A33A
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 18:53:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 29ED7606A33A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547E3606A332
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 18:53:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 547E3606A332
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=cYvPGk5q
-Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-3821eb27024so224692eec.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 10:53:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Jzjh2vd4
+Received: by mail-ot1-f72.google.com with SMTP id 46e09a7af769-862ae90bbdfso117290a34.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 10:53:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794941591; x=1795546391; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794941593; x=1795546393; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=s3lKOZIehs7zghVMQL3qXW1rl5HT2ZJDnVe3jn0mFR8=;
-        b=cYvPGk5qVirLwkcoSanCeXroyfXujlmhEnc/D+n9MmKg7Z2SfAy94guIWpnYqHNifK
-         K6yYpnD0mhBRu2AEtaidiWVxC+a90ZjaMGyGC1E9j0uOekiNM/qKugnMqVyMeRqIBnsT
-         YworS9yrXreKeiPDNAFr+xxfrvsK93vd8VmdW0fYJ0/PrXdX3RtZma8hLIBaS4/cl3VX
-         o6489fxQFIygqSWS3Lu6gVujAOytZcB8QvbouWrXzGr8h434BIWVKdweMs2XFE9nuYJE
-         zAtw8OWs2QAfQGpps03VHcfb8ZCG0k6AqmkPm3UinYEbjbrp+aE17maNXDAJyytTtSrE
-         QlfQ==
+        bh=ypWzj4jYwl6Le0IOjDsckxtUx9D61jRXn1kfcbsi+J8=;
+        b=Jzjh2vd4lMnT/iwill/GuzfmE6eo9A1VnSNOlSYhRTabCvYgZW6tAldOTpcQXfRYQL
+         5dBFGFQqrIRttKpgG/UMFRp7llJrPZrMu27DXcAqPpVb7SQl669LN2UMQUEQwG013WwQ
+         MRc6b6YWGLJEjP4mDAONQbOExmdeOG54YrylHB4yhJY8kB07zTSPx+2L8VEZSAg8I8nL
+         WliIDNJs2LaDH/17iJcWlXbD6n3chIWTfxEEmRn5L4gKQrCShEJyNJQuxHMiSYsRhoz0
+         HcQ9nOa+P2N+Vf3CcjtMxPg+jbMsmgyy0DMd0qRBd04OyULLIghnjKXdk4v04KhcpFDI
+         2WQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794941591; x=1795546391;
+        d=1e100.net; s=20260707; t=1794941593; x=1795546393;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=s3lKOZIehs7zghVMQL3qXW1rl5HT2ZJDnVe3jn0mFR8=;
-        b=ikjd4cBR/rX7kRPrmp/zKNJCoAKJqS7Xdvf/DaTDJmqwA9WE71IPN1lMrxcvCJto2z
-         D+FMhOb2dSRF9/dMSGQ/hCPUenx04k6N06wV54+7kw/hDxMLsz1sgQQcg4J5L8TfszPB
-         kXaNFyknJfywgq0MJJYiLlAVQJsdGF8lfN4Cl15feKjBx/8PZxwS2HTNr7aN5QNUVNhv
-         3OYtAlmdo2CKxRLXBdQZgwbdlvzqzMWu3Xn66C5KjyWibicleomQa7srhvjDTnO/DJCl
-         VaojLBnnDlWgegXVFYeeIc4w4Q9RPscv+qN6dxyJQxjMrv/gBF7VLK5Bud08MIB1W08f
-         16yg==
-X-Forwarded-Encrypted: i=1; AL+hErGGtK0wbco9xDvKDgjVJwPDg4phXQWVogdy34t4rRlzxcFSW+58vLzLVp949ID+0g9F+Tv+cEqpKsOmSi+DweS4@vger.kernel.org
-X-Gm-Message-State: APuU4Z9WY0vGJ4+DH3yBGPz3xZsgeAX9a+MpDwJTyrbBOHwmH5d/R3ef
-	ID8ghKthSmAl9+0ySVkqN3nlZCfhZY3Xf/z9t3V9MOJS+xlca2SW23TQdxj5tNLf7G5zBhe94Q7
-	cJzlGpfzzmA==
-X-Received: from dycnd20.prod.google.com ([2002:a05:7301:c14:b0:36c:99b8:3ed7])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:cf96:b0:381:17f:2735
- with SMTP id 5a478bee46e88-38281523ee1mr322010eec.27.1794941590795; Tue, 17
- Nov 2026 10:53:10 -0800 (PST)
-Date: Tue, 17 Nov 2026 10:52:57 -0800
+        bh=ypWzj4jYwl6Le0IOjDsckxtUx9D61jRXn1kfcbsi+J8=;
+        b=ksg8FZZFt51WaeRXigN1JvyY4IRmKaBg6+fWvLyvI3MP7dUGuPD4wVIKuGGs8TVBh5
+         xS4ejd1M4L/vX6Dhy2r7IZ4pik9W4JdMsdWdVl4E8JlO74Q0y+C81vMq+mYA2UXxSJ6Z
+         7AQQTcUNaeOUVkrIU+Igf3eaI25rIVvzLhQSeC/wZxm+oaoifqPbiL7/pFTKVxsVImtE
+         EXophwsGLWzBMHroDDmvMHuID8KHNxXaH55Qi4AFGg9lpR6KNbGtBJ59iooNWH0rhlLE
+         LnrnGmueSgiNPLqb27pfLbFaGsHce8ggC24qXWrTTo+Ve4fRnZARrmJBV98sG6Aqf5M9
+         FeBg==
+X-Forwarded-Encrypted: i=1; AL+hErEesxhwid3mm5zMwdMZtUXEVWWa5Uw/48uGVrtGhk+4pZQI9W9ZD6sb2tMy/eyzcBpGKaP53t/mtI7TSg7pOc2L@vger.kernel.org
+X-Gm-Message-State: APuU4Z8OaGoZ1j5jlMYRHI4Yn2IOewDhPQ9BAVf2I7HT8guQ96fprQPn
+	9P3rpegXZOXAi8X7xNBlXERyGEiZaVDzmTHrgXazFS8zLazFl6U10vGimTXPrzqUlKhYAAARXca
+	RK7+fEIJQrQ==
+X-Received: from oatm14-n1.prod.google.com ([2002:a05:687c:448e:10b0:4ae:6ec3:fd95])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6820:f02d:b0:6f8:8385:52a
+ with SMTP id 006d021491bc7-71b1858455cmr215081eaf.58.1794941592986; Tue, 17
+ Nov 2026 10:53:12 -0800 (PST)
+Date: Tue, 17 Nov 2026 10:52:58 -0800
 In-Reply-To: <20261117185305.108003-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,9 +81,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261117185305.108003-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
-Message-ID: <20261117185305.108003-2-irogers@google.com>
-Subject: [PATCH v6 1/9] perf call-path: Use struct dso_symbol to retain symbol
- DSO lifetimes
+Message-ID: <20261117185305.108003-3-irogers@google.com>
+Subject: [PATCH v6 2/9] perf annotate: Move struct annotation to a hashmap and
+ remove symbol_conf.priv_size
 From: Ian Rogers <irogers@google.com>
 To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
 	Alireza Haghdoost <haghdoost@uber.com>, Ian Rogers <irogers@google.com>
@@ -92,559 +92,670 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Jiri 
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-struct call_path stores resolved function symbols for the lifetime of a
-call_path_root (in thread-stack call/return processing and db-export)
-without holding a map reference. Similarly, Python callchain frames and
-nodes store resolved symbols across Python object lifetimes.
+Previously, enabling annotation added sizeof(struct annotation) to
+symbol_conf.priv_size, bloating every loaded struct symbol in every DSO
+even though only a small fraction of symbols are ever annotated.
 
-Replace bare struct symbol * fields in struct call_path,
-struct pyrf_callchain_frame, and struct pyrf_callchain_node with
-struct dso_symbol so that each retained symbol pins its owning
-struct dso until call_path_root__free() or Python deallocation. In
-python.c, this also avoids duplicating symbol names for call_path frames
-and allows pyrf_callchain_node__get_dso() to report the DSO of resolved
-call_path symbols whose ip was zeroed. Also document the DSO-owned
-symbol lifetime invariants in kernel-doc comments on struct dso_symbol
-and struct map_symbol.
+Move struct annotation storage to an on-demand hashmap in
+util/annotate.c keyed by struct symbol pointer, guarded by
+annotations_lock, with an atomic nr_annotations count so unannotated
+sessions skip lock and teardown overhead while symbol__annotated()
+checks the hashmap under a read lock. Return NULL from
+symbol__annotation() on allocation failure and check for NULL at
+entry-point callers.
+
+With annotation, TUI map browser indices, and db-export symbol IDs no
+longer using negative-offset space ahead of struct symbol, remove
+symbol_conf.priv_size and symbol__priv().
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/call-path.c    | 42 ++++++++++++++++++++-------
- tools/perf/util/call-path.h    | 10 ++++---
- tools/perf/util/db-export.c    | 12 ++++++--
- tools/perf/util/map_symbol.h   | 28 ++++++++++++++++++
- tools/perf/util/python.c       | 53 +++++++++++++++-------------------
- tools/perf/util/thread-stack.c | 40 +++++++++++++------------
- 6 files changed, 121 insertions(+), 64 deletions(-)
+ tools/perf/builtin-annotate.c     |   5 +-
+ tools/perf/builtin-top.c          |  21 +++-
+ tools/perf/tests/builtin-test.c   |   1 -
+ tools/perf/ui/browsers/annotate.c |  16 ++-
+ tools/perf/ui/browsers/hists.c    |  23 ++++-
+ tools/perf/ui/gtk/annotate.c      |   4 +
+ tools/perf/util/annotate.c        | 156 +++++++++++++++++++++++++++++-
+ tools/perf/util/annotate.h        |   7 +-
+ tools/perf/util/block-info.c      |   2 +-
+ tools/perf/util/block-range.c     |  11 ++-
+ tools/perf/util/sort.c            |   9 +-
+ tools/perf/util/symbol.c          |  27 ++----
+ tools/perf/util/symbol.h          |   8 +-
+ tools/perf/util/symbol_conf.h     |   1 -
+ 14 files changed, 238 insertions(+), 53 deletions(-)
 
-diff --git a/tools/perf/util/call-path.c b/tools/perf/util/call-path.c
-index 5c60b8be1cf6..eac52a902d6b 100644
---- a/tools/perf/util/call-path.c
-+++ b/tools/perf/util/call-path.c
-@@ -10,13 +10,21 @@
- #include <stdlib.h>
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 331adbdbd635..7cb7e03d9a21 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -441,8 +441,11 @@ static void hists__find_annotations(struct hists *hists,
+ 				goto find_next;
+ 		}
  
- #include "call-path.h"
-+#include "dso.h"
- 
- static void call_path__init(struct call_path *cp, struct call_path *parent,
--			    struct symbol *sym, u64 ip, bool in_kernel)
-+			    const struct dso_symbol *ds, u64 ip, bool in_kernel)
- {
-+	struct symbol *sym = ds ? ds->sym : NULL;
++		if (!symbol__annotated(he->ms.sym))
++			goto find_next;
 +
- 	cp->parent = parent;
--	cp->sym = sym;
--	cp->ip = sym ? 0 : ip;
-+	if (sym) {
-+		dso_symbol__copy(&cp->ds, ds);
-+		cp->ip = 0;
-+	} else {
-+		cp->ds = (struct dso_symbol){};
-+		cp->ip = ip;
-+	}
- 	cp->db_id = 0;
- 	cp->in_kernel = in_kernel;
- 	RB_CLEAR_NODE(&cp->rb_node);
-@@ -39,7 +47,13 @@ void call_path_root__free(struct call_path_root *cpr)
- {
- 	struct call_path_block *pos, *n;
+ 		notes = symbol__annotation(he->ms.sym);
+-		if (notes->src == NULL) {
++		if (!notes || notes->src == NULL) {
+ find_next:
+ 			if (key == K_LEFT || key == '<')
+ 				nd = rb_prev(nd);
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index a3442d2d6edf..a272e6649077 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -140,6 +140,12 @@ static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
+ 	}
  
-+	if (!cpr)
+ 	notes = symbol__annotation(sym);
++	if (!notes) {
++		pr_err("Not enough memory for annotating '%s' symbol!\n",
++		       sym->name);
++		sleep(1);
++		return err;
++	}
+ 	annotation__lock(notes);
+ 
+ 	if (!symbol__hists(sym, evlist__nr_entries(top->evlist))) {
+@@ -213,13 +219,16 @@ static void perf_top__record_precise_ip(struct perf_top *top,
+ 		return;
+ 
+ 	notes = symbol__annotation(sym);
++	if (!notes) {
++		err = -ENOMEM;
++	} else {
++		if (!annotation__trylock(notes))
++			return;
+ 
+-	if (!annotation__trylock(notes))
+-		return;
+-
+-	err = hist_entry__inc_addr_samples(he, sample, ip);
++		err = hist_entry__inc_addr_samples(he, sample, ip);
+ 
+-	annotation__unlock(notes);
++		annotation__unlock(notes);
++	}
+ 
+ 	if (unlikely(err)) {
+ 		/*
+@@ -255,6 +264,8 @@ static void perf_top__show_details(struct perf_top *top)
+ 
+ 	symbol = he->ms.sym;
+ 	notes = symbol__annotation(symbol);
++	if (!notes)
++		return;
+ 
+ 	annotation__lock(notes);
+ 
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 327483f96401..01c78ef20b97 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -2431,7 +2431,6 @@ int cmd_test(int argc, const char **argv)
+ 		test_timeout = 0;
+ 	}
+ 
+-	symbol_conf.priv_size = sizeof(int);
+ 	symbol_conf.try_vmlinux_path = true;
+ 
+ 
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index cf36b5347f72..20345f518066 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -597,6 +597,11 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
+ 	}
+ 
+ 	notes = symbol__annotation(dl->ops.target.sym);
++	if (!notes) {
++		ui__warning("Not enough memory for annotating '%s' symbol!\n",
++			    dl->ops.target.sym->name);
++		return true;
++	}
+ 	annotation__lock(notes);
+ 
+ 	if (!symbol__hists(dl->ops.target.sym, evlist__nr_entries(evsel->evlist))) {
+@@ -1174,7 +1179,7 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+ 			       struct hist_browser_timer *hbt, u64 al_addr)
+ {
+ 	struct symbol *sym = ms->sym;
+-	struct annotation *notes = symbol__annotation(sym);
++	struct annotation *notes;
+ 	struct annotate_browser browser = {
+ 		.b = {
+ 			.refresh = annotate_browser__refresh,
+@@ -1190,7 +1195,7 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+ 	};
+ 	struct dso *dso;
+ 	int ret = -1, err;
+-	int not_annotated = list_empty(&notes->src->source);
++	int not_annotated;
+ 
+ 	if (sym == NULL)
+ 		return -1;
+@@ -1199,6 +1204,13 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+ 	if (dso__annotate_warned(dso))
+ 		return -1;
+ 
++	notes = symbol__annotation(sym);
++	if (!notes) {
++		annotate_browser__symbol_annotate_error(&browser, ENOMEM);
++		return -1;
++	}
++	not_annotated = !notes->src || list_empty(&notes->src->source);
++
+ 	if (not_annotated || !symbol__is_annotate2(sym)) {
+ 		err = symbol__annotate2(ms, evsel, &browser.arch);
+ 		if (err) {
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index 593e1fd5759d..6f9d9f7aec91 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -796,7 +796,10 @@ static void hist_browser__show_callchain_entry(struct hist_browser *browser,
+ {
+ 	int color, width;
+ 	char folded_sign = callchain_list__folded(chain);
+-	bool show_annotated = browser->show_dso && chain->ms.sym && symbol__annotation(chain->ms.sym)->src;
++	struct annotation *notes = (browser->show_dso && chain->ms.sym &&
++				    symbol__annotated(chain->ms.sym)) ?
++				   symbol__annotation(chain->ms.sym) : NULL;
++	bool show_annotated = notes && notes->src;
+ 
+ 	color = HE_COLORSET_NORMAL;
+ 	width = browser->b.width - (offset + 2);
+@@ -2486,8 +2489,11 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
+ 	    perf_env__lookup_objdump(browser->env, &annotate_opts.objdump_path))
+ 		return 0;
+ 
++	if (!symbol__annotated(act->ms.sym))
++		return 0;
++
+ 	notes = symbol__annotation(act->ms.sym);
+-	if (!notes->src)
++	if (!notes || !notes->src)
+ 		return 0;
+ 
+ 	if (browser->block_evsel)
+@@ -2537,6 +2543,7 @@ add_annotate_opt(struct popup_action *act, char **optstr,
+ 		 struct map_symbol *ms,
+ 		 u64 addr)
+ {
++	struct annotation *notes;
+ 	struct dso *dso;
+ 
+ 	if (!ms->map || (dso = map__dso(ms->map)) == NULL || dso__annotate_warned(dso))
+@@ -2545,7 +2552,11 @@ add_annotate_opt(struct popup_action *act, char **optstr,
+ 	if (!ms->sym)
+ 		ms->sym = symbol__new_unresolved(addr, ms->map);
+ 
+-	if (ms->sym == NULL || symbol__annotation(ms->sym)->src == NULL)
++	if (ms->sym == NULL || !symbol__annotated(ms->sym))
++		return 0;
++
++	notes = symbol__annotation(ms->sym);
++	if (!notes || notes->src == NULL)
+ 		return 0;
+ 
+ 	if (asprintf(optstr, "Annotate %s", ms->sym->name) < 0)
+@@ -3204,7 +3215,11 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
+ 				do_annotate(browser, &hotkey_act);
+ 				map_symbol__exit(&hotkey_act.ms);
+ 			} else {
+-				if (symbol__annotation(browser->selection->sym)->src == NULL) {
++				struct annotation *notes;
++
++				notes = symbol__annotated(browser->selection->sym) ?
++					symbol__annotation(browser->selection->sym) : NULL;
++				if (!notes || notes->src == NULL) {
+ 					ui_browser__warning(&browser->b, delay_secs * 2,
+ 						"No samples for the \"%s\" symbol.\n\n"
+ 						"Probably appeared just in a callchain",
+diff --git a/tools/perf/ui/gtk/annotate.c b/tools/perf/ui/gtk/annotate.c
+index 094dfa045b77..13a175c1b6e7 100644
+--- a/tools/perf/ui/gtk/annotate.c
++++ b/tools/perf/ui/gtk/annotate.c
+@@ -44,6 +44,8 @@ static int perf_gtk__get_percent(char *buf, size_t size, struct symbol *sym,
+ 		return 0;
+ 
+ 	notes = symbol__annotation(sym);
++	if (!notes || !notes->src)
++		return 0;
+ 	symhist = annotation__histogram(notes, evsel);
+ 	entry = annotated_source__hist_entry(notes->src, evsel, dl->al.offset);
+ 	if (entry)
+@@ -116,6 +118,8 @@ static int perf_gtk__annotate_symbol(GtkWidget *window, struct map_symbol *ms,
+ 	char s[512];
+ 
+ 	notes = symbol__annotation(sym);
++	if (!notes || !notes->src)
++		return 0;
+ 
+ 	for (i = 0; i < MAX_ANN_COLS; i++) {
+ 		col_types[i] = G_TYPE_STRING;
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 86a4beec6528..66d3453e7ffd 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -8,6 +8,10 @@
+ 
+ #include <errno.h>
+ #include <inttypes.h>
++#include <pthread.h>
++#include <stdatomic.h>
++#include <stdbool.h>
++#include <stddef.h>
+ #include <stdlib.h>
+ #include "util.h" // hex_width()
+ #include "ui/ui.h"
+@@ -35,6 +39,7 @@
+ #include "string2.h"
+ #include "dwarf-regs.h"
+ #include "util/event.h"
++#include "util/rwsem.h"
+ #include "util/sharded_mutex.h"
+ #include "arch/common.h"
+ #include "namespaces.h"
+@@ -118,6 +123,7 @@ static __maybe_unused void annotated_source__delete(struct annotated_source *src
+ 	if (src == NULL)
+ 		return;
+ 
++	annotated_source__purge(src);
+ 	if (src->samples) {
+ 		hashmap__for_each_entry(src->samples, cur, bkt)
+ 			zfree(&cur->pvalue);
+@@ -156,9 +162,141 @@ annotated_source__hist_entry(struct annotated_source *src, const struct evsel *e
+ 	return entry;
+ }
+ 
++/*
++ * Map from struct symbol pointer to struct annotation. Allocated on demand so
++ * unannotated symbols do not pay the memory cost of struct annotation.
++ */
++static struct rw_semaphore _annotations_lock;
++static struct hashmap *annotations GUARDED_BY(_annotations_lock);
++static atomic_size_t nr_annotations;
++
++static void annotations_lock_init(void)
++{
++	init_rwsem(&_annotations_lock);
++}
++
++static struct rw_semaphore *annotations_lock(void) LOCK_RETURNED(_annotations_lock)
++{
++	static pthread_once_t annotations_lock_once = PTHREAD_ONCE_INIT;
++
++	pthread_once(&annotations_lock_once, annotations_lock_init);
++	return &_annotations_lock;
++}
++
++static size_t sym_ptr_hash(long key, void *ctx __maybe_unused)
++{
++	return (size_t)key;
++}
++
++static bool sym_ptr_equal(long key1, long key2, void *ctx __maybe_unused)
++{
++	return key1 == key2;
++}
++
++bool symbol__annotated(const struct symbol *sym)
++{
++	bool found;
++
++	if (!sym || atomic_load_explicit(&nr_annotations, memory_order_acquire) == 0)
++		return false;
++
++	down_read(annotations_lock());
++	found = annotations && hashmap__find(annotations, (long)sym, NULL);
++	up_read(annotations_lock());
++	return found;
++}
++
++struct annotation *symbol__annotation(struct symbol *sym)
++{
++	struct annotation *notes = NULL;
++	long val = 0;
++
++	if (!sym)
++		return NULL;
++
++	/* Fast path: look up existing annotation under read lock. */
++	if (atomic_load_explicit(&nr_annotations, memory_order_acquire) > 0) {
++		down_read(annotations_lock());
++		if (annotations && hashmap__find(annotations, (long)sym, &val))
++			notes = (struct annotation *)val;
++		up_read(annotations_lock());
++		if (notes)
++			return notes;
++	}
++
++	down_write(annotations_lock());
++	if (!annotations) {
++		annotations = hashmap__new(sym_ptr_hash, sym_ptr_equal, NULL);
++		if (IS_ERR(annotations)) {
++			annotations = NULL;
++			up_write(annotations_lock());
++			return NULL;
++		}
++	} else if (hashmap__find(annotations, (long)sym, &val)) {
++		notes = (struct annotation *)val;
++		up_write(annotations_lock());
++		return notes;
++	}
++
++	notes = zalloc(sizeof(*notes));
++	if (!notes)
++		goto err_free_hashmap;
++
++	annotation__init(notes);
++	if (hashmap__add(annotations, (long)sym, notes) < 0) {
++		annotation__exit(notes);
++		free(notes);
++		goto err_free_hashmap;
++	}
++	atomic_fetch_add_explicit(&nr_annotations, 1, memory_order_release);
++	up_write(annotations_lock());
++	return notes;
++
++err_free_hashmap:
++	if (hashmap__size(annotations) == 0) {
++		hashmap__free(annotations);
++		annotations = NULL;
++	}
++	up_write(annotations_lock());
++	return NULL;
++}
++
++void symbol__annotation_delete(struct symbol *sym)
++{
++	struct annotation *notes = NULL;
++	long val = 0;
++
++	/* Unannotated symbols avoid taking annotations_lock for write on teardown. */
++	if (!symbol__annotated(sym))
 +		return;
 +
-+	dso_symbol__exit(&cpr->call_path.ds);
- 	list_for_each_entry_safe(pos, n, &cpr->blocks, node) {
-+		for (size_t i = 0; i < CALL_PATH_BLOCK_SIZE; i++)
-+			dso_symbol__exit(&pos->cp[i].ds);
- 		list_del_init(&pos->node);
- 		free(pos);
- 	}
-@@ -48,7 +62,7 @@ void call_path_root__free(struct call_path_root *cpr)
- 
- static struct call_path *call_path__new(struct call_path_root *cpr,
- 					struct call_path *parent,
--					struct symbol *sym, u64 ip,
-+					const struct dso_symbol *ds, u64 ip,
- 					bool in_kernel)
- {
- 	struct call_path_block *cpb;
-@@ -69,17 +83,20 @@ static struct call_path *call_path__new(struct call_path_root *cpr,
- 	n = cpr->next++ & CALL_PATH_BLOCK_MASK;
- 	cp = &cpb->cp[n];
- 
--	call_path__init(cp, parent, sym, ip, in_kernel);
-+	call_path__init(cp, parent, ds, ip, in_kernel);
- 
- 	return cp;
- }
- 
- struct call_path *call_path__findnew(struct call_path_root *cpr,
- 				     struct call_path *parent,
--				     struct symbol *sym, u64 ip, u64 ks)
-+				     const struct dso_symbol *ds,
-+				     u64 ip, u64 ks)
- {
- 	struct rb_node **p;
- 	struct rb_node *node_parent = NULL;
-+	struct symbol *sym = ds ? ds->sym : NULL;
-+	const void *dso_ptr = (sym && ds->dso) ? RC_CHK_ACCESS(ds->dso) : NULL;
- 	struct call_path *cp;
- 	bool in_kernel = ip >= ks;
- 
-@@ -87,23 +104,28 @@ struct call_path *call_path__findnew(struct call_path_root *cpr,
- 		ip = 0;
- 
- 	if (!parent)
--		return call_path__new(cpr, parent, sym, ip, in_kernel);
-+		return call_path__new(cpr, parent, ds, ip, in_kernel);
- 
- 	p = &parent->children.rb_node;
- 	while (*p != NULL) {
-+		const void *cp_dso_ptr;
-+
- 		node_parent = *p;
- 		cp = rb_entry(node_parent, struct call_path, rb_node);
-+		cp_dso_ptr = cp->ds.dso ? RC_CHK_ACCESS(cp->ds.dso) : NULL;
- 
--		if (cp->sym == sym && cp->ip == ip)
-+		if (cp->ds.sym == sym && cp_dso_ptr == dso_ptr && cp->ip == ip)
- 			return cp;
- 
--		if (sym < cp->sym || (sym == cp->sym && ip < cp->ip))
-+		if (sym < cp->ds.sym ||
-+		    (sym == cp->ds.sym && dso_ptr < cp_dso_ptr) ||
-+		    (sym == cp->ds.sym && dso_ptr == cp_dso_ptr && ip < cp->ip))
- 			p = &(*p)->rb_left;
- 		else
- 			p = &(*p)->rb_right;
- 	}
- 
--	cp = call_path__new(cpr, parent, sym, ip, in_kernel);
-+	cp = call_path__new(cpr, parent, ds, ip, in_kernel);
- 	if (!cp)
- 		return NULL;
- 
-diff --git a/tools/perf/util/call-path.h b/tools/perf/util/call-path.h
-index 5875cfc8106e..e43aa7513633 100644
---- a/tools/perf/util/call-path.h
-+++ b/tools/perf/util/call-path.h
-@@ -11,12 +11,13 @@
- 
- #include <linux/types.h>
- #include <linux/rbtree.h>
-+#include "map_symbol.h"
- 
- /**
-  * struct call_path - node in list of calls leading to a function call.
-  * @parent: call path to the parent function call
-- * @sym: symbol of function called
-- * @ip: only if sym is null, the ip of the function
-+ * @ds: DSO and symbol of function called
-+ * @ip: only if ds.sym is null, the ip of the function
-  * @db_id: id used for db-export
-  * @in_kernel: whether function is a in the kernel
-  * @rb_node: node in parent's tree of called functions
-@@ -27,7 +28,7 @@
-  */
- struct call_path {
- 	struct call_path *parent;
--	struct symbol *sym;
-+	struct dso_symbol ds;
- 	u64 ip;
- 	u64 db_id;
- 	bool in_kernel;
-@@ -63,6 +64,7 @@ void call_path_root__free(struct call_path_root *cpr);
- 
- struct call_path *call_path__findnew(struct call_path_root *cpr,
- 				     struct call_path *parent,
--				     struct symbol *sym, u64 ip, u64 ks);
-+				     const struct dso_symbol *ds,
-+				     u64 ip, u64 ks);
- 
- #endif
-diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
-index 8e08b306c8d3..e7b807e968cf 100644
---- a/tools/perf/util/db-export.c
-+++ b/tools/perf/util/db-export.c
-@@ -361,12 +361,18 @@ static struct call_path *call_path_from_sample(struct db_export *dbe,
- 		db_ids_from_al(dbe, &al, &dso_db_id, &sym_db_id, &offset);
- 
- 		/* add node to the call path tree if it doesn't exist */
--		current = call_path__findnew(dbe->cpr, current,
--					     al.sym, node->ip,
--					     kernel_start);
-+		{
-+			struct dso_symbol ds = dso_symbol__from_al(&al);
-+
-+			current = call_path__findnew(dbe->cpr, current,
-+						     &ds, node->ip,
-+						     kernel_start);
++	down_write(annotations_lock());
++	if (annotations && hashmap__delete(annotations, (long)sym, NULL, &val)) {
++		notes = (struct annotation *)val;
++		atomic_fetch_sub_explicit(&nr_annotations, 1, memory_order_release);
++		if (hashmap__size(annotations) == 0) {
++			hashmap__free(annotations);
++			annotations = NULL;
 +		}
- 
- 		callchain_cursor_advance(cursor);
- 		addr_location__exit(&al);
-+		if (!current)
-+			break;
- 	}
- 
- 	/* Reset the callchain order to its prior value. */
-diff --git a/tools/perf/util/map_symbol.h b/tools/perf/util/map_symbol.h
-index 1781af7bd965..ee53b743fcc1 100644
---- a/tools/perf/util/map_symbol.h
-+++ b/tools/perf/util/map_symbol.h
-@@ -11,11 +11,39 @@ struct maps;
- struct map;
- struct symbol;
- 
-+/**
-+ * struct dso_symbol - A symbol paired with a reference to its owning DSO.
-+ * @dso: Reference-counted DSO (dso__get() / dso__put()) whose symbol table
-+ *       owns the lifetime of @sym. May be %NULL when @sym is %NULL or points
-+ *       to a synthetic symbol not owned by a DSO.
-+ * @sym: Non-reference-counted symbol pointer borrowed from @dso.
-+ *
-+ * struct symbol is not independently reference counted; its memory is owned
-+ * by the symbol table of its containing struct dso. Callers that retain a
-+ * struct symbol pointer beyond a transient lookup without needing the mapping
-+ * context of a struct map must hold a reference on @dso (managed via
-+ * dso_symbol__from_al(), dso_symbol__copy(), and dso_symbol__exit()) so @dso
-+ * and its symbol table cannot be shrunk or freed while @sym is in use.
-+ */
- struct dso_symbol {
- 	struct dso    *dso;
- 	struct symbol *sym;
- };
- 
-+/**
-+ * struct map_symbol - A resolved symbol together with its thread and mapping.
-+ * @thread: Optional reference-counted thread (thread__get() / thread__put())
-+ *          in whose address space @map was resolved.
-+ * @map:    Reference-counted mapping (map__get() / map__put()). Holding a
-+ *          reference on @map transitively pins map__dso(@map), which in turn
-+ *          keeps @sym alive for the lifetime of this struct map_symbol.
-+ * @sym:    Non-reference-counted symbol pointer borrowed from map__dso(@map).
-+ *
-+ * Unlike struct dso_symbol, struct map_symbol preserves the virtual-address
-+ * mapping (@map) and optional @thread context in addition to pinning @sym's
-+ * lifetime transitively through @map's reference on its struct dso (managed
-+ * via map_symbol__copy() and map_symbol__exit()).
-+ */
- struct map_symbol {
- 	struct thread *thread;
- 	struct map    *map;
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 902157c472b3..18dfe21104f4 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -937,14 +937,13 @@ struct pyrf_callchain_node {
- 	PyObject_HEAD
- 	u64 ip;
- 	struct map *map;
--	struct symbol *sym;
--	char *sym_name;
-+	struct dso_symbol ds;
- };
- 
- static void pyrf_callchain_node__delete(struct pyrf_callchain_node *pnode)
- {
- 	map__put(pnode->map);
--	free(pnode->sym_name);
-+	dso_symbol__exit(&pnode->ds);
- 	Py_TYPE(pnode)->tp_free((PyObject *)pnode);
- }
- 
-@@ -957,27 +956,22 @@ static PyObject *pyrf_callchain_node__get_ip(struct pyrf_callchain_node *pnode,
- static PyObject *pyrf_callchain_node__get_symbol(struct pyrf_callchain_node *pnode,
- 						 void *closure __maybe_unused)
- {
--	if (pnode->sym_name)
--		return PyUnicode_FromString(pnode->sym_name);
--	if (pnode->sym)
--		return PyUnicode_FromString(pnode->sym->name);
-+	if (pnode->ds.sym)
-+		return PyUnicode_FromString(pnode->ds.sym->name);
- 	return PyUnicode_FromString("[unknown]");
- }
- 
- static PyObject *pyrf_callchain_node__get_dso(struct pyrf_callchain_node *pnode,
- 					      void *closure __maybe_unused)
- {
-+	struct dso *dso = pnode->ds.dso ?: (pnode->map ? map__dso(pnode->map) : NULL);
- 	const char *dsoname = "[unknown]";
- 
--	if (pnode->map) {
--		struct dso *dso = map__dso(pnode->map);
--
--		if (dso) {
--			if (symbol_conf.show_kernel_path && dso__long_name(dso))
--				dsoname = dso__long_name(dso);
--			else
--				dsoname = dso__name(dso);
--		}
-+	if (dso) {
-+		if (symbol_conf.show_kernel_path && dso__long_name(dso))
-+			dsoname = dso__long_name(dso);
-+		else
-+			dsoname = dso__name(dso);
- 	}
- 	return PyUnicode_FromString(dsoname);
- }
-@@ -987,11 +981,11 @@ static PyObject *pyrf_callchain_node__get_sym_offset(struct pyrf_callchain_node
- {
- 	u64 addr;
- 
--	if (!pnode->sym)
-+	if (!pnode->ds.sym || (!pnode->map && !pnode->ip))
- 		Py_RETURN_NONE;
- 
- 	addr = pnode->map ? map__map_ip(pnode->map, pnode->ip) : pnode->ip;
--	return PyLong_FromUnsignedLongLong(addr - pnode->sym->start);
-+	return PyLong_FromUnsignedLongLong(addr - pnode->ds.sym->start);
- }
- 
- static PyGetSetDef pyrf_callchain_node__getset[] = {
-@@ -1015,8 +1009,7 @@ static PyTypeObject pyrf_callchain_node__type = {
- struct pyrf_callchain_frame {
- 	u64 ip;
- 	struct map *map;
--	struct symbol *sym;
--	char *sym_name;
-+	struct dso_symbol ds;
- };
- 
- struct pyrf_callchain {
-@@ -1030,7 +1023,7 @@ static void pyrf_callchain__delete(struct pyrf_callchain *pchain)
- 	if (pchain->frames) {
- 		for (u64 i = 0; i < pchain->nr_frames; i++) {
- 			map__put(pchain->frames[i].map);
--			free(pchain->frames[i].sym_name);
-+			dso_symbol__exit(&pchain->frames[i].ds);
- 		}
- 		free(pchain->frames);
- 	}
-@@ -1060,8 +1053,7 @@ static PyObject *pyrf_callchain__item(PyObject *obj, Py_ssize_t i)
- 
- 	pnode->ip = pchain->frames[i].ip;
- 	pnode->map = map__get(pchain->frames[i].map);
--	pnode->sym = pchain->frames[i].sym;
--	pnode->sym_name = pchain->frames[i].sym_name ? strdup(pchain->frames[i].sym_name) : NULL;
-+	dso_symbol__copy(&pnode->ds, &pchain->frames[i].ds);
- 
- 	return (PyObject *)pnode;
- }
-@@ -1111,10 +1103,16 @@ static int pyrf_sample_event__resolve_callchain(struct pyrf_event *pevent)
- 		return -ENOMEM;
- 	}
- 	for (u64 i = 0; i < pchain->nr_frames; i++) {
-+		struct dso_symbol ds;
++	}
++	up_write(annotations_lock());
 +
- 		node = callchain_cursor_current(cursor);
-+		ds = (struct dso_symbol){
-+			.dso = (node->ms.sym && node->ms.map) ? map__dso(node->ms.map) : NULL,
-+			.sym = node->ms.sym,
-+		};
- 		pchain->frames[i].ip = node->ip;
- 		pchain->frames[i].map = map__get(node->ms.map);
--		pchain->frames[i].sym = node->ms.sym;
-+		dso_symbol__copy(&pchain->frames[i].ds, &ds);
- 		callchain_cursor_advance(cursor);
- 	}
- 	pevent->callchain = (PyObject *)pchain;
-@@ -4504,10 +4502,9 @@ static PyObject *pyrf_call_path__to_callchain(const struct call_path *cp,
- 		struct pyrf_callchain_frame *frame = &pchain->frames[--nr_frames];
- 
- 		frame->ip = pos->ip;
--		frame->sym = NULL;
--		frame->sym_name = pos->sym ? strdup(pos->sym->name) : NULL;
-+		dso_symbol__copy(&frame->ds, &pos->ds);
- 		frame->map = NULL;
--		if (thread) {
-+		if (thread && !pos->ds.sym) {
- 			struct addr_location al;
- 			u8 cpumode = pos->in_kernel ? PERF_RECORD_MISC_KERNEL
- 						    : PERF_RECORD_MISC_USER;
-@@ -4515,8 +4512,6 @@ static PyObject *pyrf_call_path__to_callchain(const struct call_path *cp,
- 			addr_location__init(&al);
- 			thread__find_map(thread, cpumode, pos->ip, &al);
- 			frame->map = map__get(al.map);
--			if (frame->map)
--				frame->sym = pos->sym;
- 			addr_location__exit(&al);
- 		}
- 	}
-diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-index d452d1a7eabb..aa05acb0467c 100644
---- a/tools/perf/util/thread-stack.c
-+++ b/tools/perf/util/thread-stack.c
-@@ -11,6 +11,7 @@
- #include <errno.h>
- #include <stdlib.h>
- #include <string.h>
-+#include "addr_location.h"
- #include "thread.h"
- #include "event.h"
- #include "machine.h"
-@@ -823,7 +824,7 @@ static int thread_stack__pop_cp(struct thread *thread, struct thread_stack *ts,
- 	if (ts->cnt == 1) {
- 		struct thread_stack_entry *tse = &ts->stack[0];
- 
--		if (tse->cp->sym == sym)
-+		if (tse->cp->ds.sym == sym)
- 			return thread_stack__call_return(thread, ts, --ts->cnt,
- 							 timestamp, ref, false);
- 	}
-@@ -862,21 +863,21 @@ static int thread_stack__bottom(struct thread_stack *ts,
- 				struct addr_location *to_al, u64 ref)
++	if (notes) {
++		annotation__exit(notes);
++		free(notes);
++	}
++}
++
+ void symbol__annotate_zero_histograms(struct symbol *sym)
  {
- 	struct call_path_root *cpr = ts->crp->cpr;
-+	struct dso_symbol ds;
- 	struct call_path *cp;
--	struct symbol *sym;
- 	u64 ip;
+-	struct annotation *notes = symbol__annotation(sym);
++	struct annotation *notes;
++
++	if (!symbol__annotated(sym))
++		return;
++
++	notes = symbol__annotation(sym);
++	if (!notes)
++		return;
  
- 	if (sample->ip) {
- 		ip = sample->ip;
--		sym = from_al->sym;
-+		ds = dso_symbol__from_al(from_al);
- 	} else if (sample->addr) {
- 		ip = sample->addr;
--		sym = to_al->sym;
-+		ds = dso_symbol__from_al(to_al);
- 	} else {
+ 	annotation__lock(notes);
+ 	if (notes->src != NULL) {
+@@ -334,6 +472,9 @@ struct annotated_source *symbol__hists(struct symbol *sym, int nr_hists)
+ {
+ 	struct annotation *notes = symbol__annotation(sym);
+ 
++	if (!notes)
++		return NULL;
++
+ 	if (notes->src == NULL) {
+ 		notes->src = annotated_source__new();
+ 		if (notes->src == NULL)
+@@ -1074,6 +1215,9 @@ void symbol__calc_percent(struct symbol *sym, struct evsel *evsel)
+ {
+ 	struct annotation *notes = symbol__annotation(sym);
+ 
++	if (!notes || !notes->src)
++		return;
++
+ 	annotation__calc_percent(notes, evsel, symbol__size(sym));
+ }
+ 
+@@ -1139,6 +1283,9 @@ int symbol__annotate(struct map_symbol *ms, struct evsel *evsel,
+ 	if (parch)
+ 		*parch = arch;
+ 
++	if (!notes)
++		return ENOMEM;
++
+ 	if (notes->src && !list_empty(&notes->src->source))
  		return 0;
- 	}
  
--	cp = call_path__findnew(cpr, &cpr->call_path, sym, ip,
-+	cp = call_path__findnew(cpr, &cpr->call_path, &ds, ip,
- 				ts->kernel_start);
+@@ -2340,6 +2487,9 @@ int symbol__annotate2(struct map_symbol *ms, struct evsel *evsel,
+ 	size_t size = symbol__size(sym);
+ 	int err;
  
- 	return thread_stack__push_cp(ts, ip, sample->time, ref, cp,
-@@ -908,8 +909,8 @@ static int thread_stack__no_call_return(struct thread *thread,
- {
- 	struct call_path_root *cpr = ts->crp->cpr;
- 	struct call_path *root = &cpr->call_path;
--	struct symbol *fsym = from_al->sym;
--	struct symbol *tsym = to_al->sym;
-+	struct dso_symbol fds = dso_symbol__from_al(from_al);
-+	struct dso_symbol tds = dso_symbol__from_al(to_al);
- 	struct call_path *cp, *parent;
- 	u64 ks = ts->kernel_start;
- 	u64 addr = sample->addr;
-@@ -925,7 +926,7 @@ static int thread_stack__no_call_return(struct thread *thread,
- 
- 		/* If the stack is empty, push the userspace address */
- 		if (!ts->cnt) {
--			cp = call_path__findnew(cpr, root, tsym, addr, ks);
-+			cp = call_path__findnew(cpr, root, &tds, addr, ks);
- 			return thread_stack__push_cp(ts, 0, tm, ref, cp, true,
- 						     false);
- 		}
-@@ -941,7 +942,7 @@ static int thread_stack__no_call_return(struct thread *thread,
- 	else
- 		parent = root;
- 
--	if (parent->sym == from_al->sym) {
-+	if (parent->ds.sym == from_al->sym) {
- 		/*
- 		 * At the bottom of the stack, assume the missing 'call' was
- 		 * before the trace started. So, pop the current symbol and push
-@@ -955,7 +956,7 @@ static int thread_stack__no_call_return(struct thread *thread,
- 		}
- 
- 		if (!ts->cnt) {
--			cp = call_path__findnew(cpr, root, tsym, addr, ks);
-+			cp = call_path__findnew(cpr, root, &tds, addr, ks);
- 
- 			return thread_stack__push_cp(ts, addr, tm, ref, cp,
- 						     true, false);
-@@ -965,7 +966,7 @@ static int thread_stack__no_call_return(struct thread *thread,
- 		 * Otherwise assume the 'return' is being used as a jump (e.g.
- 		 * retpoline) and just push the 'to' symbol.
- 		 */
--		cp = call_path__findnew(cpr, parent, tsym, addr, ks);
-+		cp = call_path__findnew(cpr, parent, &tds, addr, ks);
- 
- 		err = thread_stack__push_cp(ts, 0, tm, ref, cp, true, false);
- 		if (!err)
-@@ -979,13 +980,13 @@ static int thread_stack__no_call_return(struct thread *thread,
- 	 * pop 'from'.
- 	 */
- 
--	cp = call_path__findnew(cpr, parent, tsym, addr, ks);
-+	cp = call_path__findnew(cpr, parent, &tds, addr, ks);
- 
- 	err = thread_stack__push_cp(ts, addr, tm, ref, cp, true, false);
++	if (!notes)
++		return ENOMEM;
++
+ 	err = symbol__annotate(ms, evsel, parch);
  	if (err)
  		return err;
+@@ -2677,6 +2827,8 @@ static struct disasm_line *find_disasm_line(struct symbol *sym, u64 ip,
+ 	struct annotation *notes;
  
--	cp = call_path__findnew(cpr, cp, fsym, ip, ks);
-+	cp = call_path__findnew(cpr, cp, &fds, ip, ks);
+ 	notes = symbol__annotation(sym);
++	if (!notes || !notes->src)
++		return NULL;
  
- 	err = thread_stack__push_cp(ts, ip, tm, ref, cp, true, false);
- 	if (err)
-@@ -1052,7 +1053,8 @@ static int thread_stack__x86_retpoline(struct thread_stack *ts,
- {
- 	struct thread_stack_entry *tse = &ts->stack[ts->cnt - 1];
- 	struct call_path_root *cpr = ts->crp->cpr;
--	struct symbol *sym = tse->cp->sym;
-+	struct symbol *sym = tse->cp->ds.sym;
-+	struct dso_symbol tds = dso_symbol__from_al(to_al);
- 	struct symbol *tsym = to_al->sym;
- 	struct call_path *cp;
- 
-@@ -1068,7 +1070,7 @@ static int thread_stack__x86_retpoline(struct thread_stack *ts,
- 		 * graph, since all the original branches are left unchanged.
- 		 */
- 		ts->cnt -= 1;
--		sym = ts->stack[ts->cnt - 2].cp->sym;
-+		sym = ts->stack[ts->cnt - 2].cp->ds.sym;
- 		if (sym && sym == tsym && to_al->addr != tsym->start) {
- 			/*
- 			 * Target is back to the middle of the symbol we came
-@@ -1087,7 +1089,7 @@ static int thread_stack__x86_retpoline(struct thread_stack *ts,
- 		return 0;
+ 	list_for_each_entry(dl, &notes->src->source, al.node) {
+ 		if (dl->al.offset == -1)
+@@ -2984,7 +3136,7 @@ struct annotated_data_type *hist_entry__get_data_type(struct hist_entry *he)
  	}
  
--	cp = call_path__findnew(cpr, ts->stack[ts->cnt - 2].cp, tsym,
-+	cp = call_path__findnew(cpr, ts->stack[ts->cnt - 2].cp, &tds,
- 				sample->addr, ts->kernel_start);
- 	if (!cp)
- 		return -ENOMEM;
-@@ -1147,6 +1149,7 @@ int thread_stack__process(struct thread *thread, struct comm *comm,
+ 	/* Make sure it has the disasm of the function */
+-	if (symbol__annotate(ms, evsel, &arch) < 0) {
++	if (symbol__annotate(ms, evsel, &arch) != 0) {
+ 		ann_data_stat.no_insn++;
+ 		return NULL;
+ 	}
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index 1b47c1156b9a..bc2237609d6e 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -449,10 +449,9 @@ static inline struct sym_hist *annotation__histogram(struct annotation *notes,
+ struct sym_hist_entry *
+ annotated_source__hist_entry(struct annotated_source *src, const struct evsel *evsel, u64 offset);
  
- 	if (sample->flags & PERF_IP_FLAG_CALL) {
- 		bool trace_end = sample->flags & PERF_IP_FLAG_TRACE_END;
-+		struct dso_symbol tds = dso_symbol__from_al(to_al);
- 		struct call_path_root *cpr = ts->crp->cpr;
- 		struct call_path *cp;
- 		u64 ret_addr;
-@@ -1160,7 +1163,7 @@ int thread_stack__process(struct thread *thread, struct comm *comm,
- 			return 0; /* Zero-length calls are excluded */
+-static inline struct annotation *symbol__annotation(struct symbol *sym)
+-{
+-	return (void *)sym - symbol_conf.priv_size;
+-}
++bool symbol__annotated(const struct symbol *sym);
++struct annotation *symbol__annotation(struct symbol *sym);
++void symbol__annotation_delete(struct symbol *sym);
  
- 		cp = call_path__findnew(cpr, ts->stack[ts->cnt - 1].cp,
--					to_al->sym, sample->addr,
-+					&tds, sample->addr,
- 					ts->kernel_start);
- 		err = thread_stack__push_cp(ts, ret_addr, sample->time, ref,
- 					    cp, false, trace_end);
-@@ -1209,6 +1212,7 @@ int thread_stack__process(struct thread *thread, struct comm *comm,
- 	} else if (sample->flags & PERF_IP_FLAG_BRANCH &&
- 		   from_al->sym != to_al->sym && to_al->sym &&
- 		   to_al->addr == to_al->sym->start) {
-+		struct dso_symbol tds = dso_symbol__from_al(to_al);
- 		struct call_path_root *cpr = ts->crp->cpr;
- 		struct call_path *cp;
+ int addr_map_symbol__inc_samples(struct addr_map_symbol *ams, struct perf_sample *sample);
  
-@@ -1219,7 +1223,7 @@ int thread_stack__process(struct thread *thread, struct comm *comm,
- 		 * when a ret pops the stack, all jmps must be popped off first.
- 		 */
- 		cp = call_path__findnew(cpr, ts->stack[ts->cnt - 1].cp,
--					to_al->sym, sample->addr,
-+					&tds, sample->addr,
- 					ts->kernel_start);
- 		err = thread_stack__push_cp(ts, 0, sample->time, ref, cp, false,
- 					    false);
+diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
+index 1135e54f4c7f..572cfb569849 100644
+--- a/tools/perf/util/block-info.c
++++ b/tools/perf/util/block-info.c
+@@ -134,7 +134,7 @@ int block_info__process_sym(struct hist_entry *he, struct block_hist *bh,
+ 	static struct addr_location al;
+ 	u64 cycles = 0;
+ 
+-	if (!he->ms.map || !he->ms.sym)
++	if (!he->ms.map || !he->ms.sym || !symbol__annotated(he->ms.sym))
+ 		return 0;
+ 
+ 	memset(&al, 0, sizeof(al));
+diff --git a/tools/perf/util/block-range.c b/tools/perf/util/block-range.c
+index 280d695c6c58..9c3d70ffcc29 100644
+--- a/tools/perf/util/block-range.c
++++ b/tools/perf/util/block-range.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "block-range.h"
+ #include "annotate.h"
++#include "symbol.h"
+ #include <assert.h>
+ #include <stdlib.h>
+ 
+@@ -323,10 +324,16 @@ double block_range__coverage(struct block_range *br)
+ 	}
+ 
+ 	sym = br->sym;
+-	if (!sym)
++	if (!sym || !symbol__annotated(sym))
+ 		return -1;
+ 
+-	branch = symbol__annotation(sym)->branch;
++	branch = NULL;
++	{
++		struct annotation *notes = symbol__annotation(sym);
++
++		if (notes)
++			branch = notes->branch;
++	}
+ 	if (!branch)
+ 		return -1;
+ 
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index f4c50f191141..57d7877782d1 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -793,14 +793,19 @@ static int hist_entry__sym_ipc_snprintf(struct hist_entry *he, char *bf,
+ {
+ 
+ 	struct symbol *sym = he->ms.sym;
+-	struct annotated_branch *branch;
++	struct annotated_branch *branch = NULL;
+ 	double ipc = 0.0, coverage = 0.0;
+ 	char tmp[64];
+ 
+ 	if (!sym)
+ 		return repsep_snprintf(bf, size, "%-*s", width, "-");
+ 
+-	branch = symbol__annotation(sym)->branch;
++	if (symbol__annotated(sym)) {
++		struct annotation *notes = symbol__annotation(sym);
++
++		if (notes)
++			branch = notes->branch;
++	}
+ 
+ 	if (branch && branch->hit_cycles)
+ 		ipc = branch->hit_insn / ((double)branch->hit_cycles);
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index dc70bbe8514f..a1ac1cd1d2e7 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -319,19 +319,11 @@ void symbols__fixup_end(struct rb_root_cached *symbols, bool is_kallsyms)
+ struct symbol *symbol__new(u64 start, u64 len, u8 binding, u8 type, const char *name)
+ {
+ 	size_t namelen = strlen(name) + 1;
+-	struct symbol *sym = calloc(1, (symbol_conf.priv_size +
+-					sizeof(*sym) + namelen));
++	struct symbol *sym = calloc(1, sizeof(*sym) + namelen);
++
+ 	if (sym == NULL)
+ 		return NULL;
+ 
+-	if (symbol_conf.priv_size) {
+-		if (symbol_conf.init_annotation) {
+-			struct annotation *notes = (void *)sym;
+-			annotation__init(notes);
+-		}
+-		sym = ((void *)sym) + symbol_conf.priv_size;
+-	}
+-
+ 	sym->start   = start;
+ 	sym->end     = len ? start + len : start;
+ 	atomic_init(&sym->flags, (type << SYMBOL_FLAG_TYPE_SHIFT) |
+@@ -347,14 +339,10 @@ struct symbol *symbol__new(u64 start, u64 len, u8 binding, u8 type, const char *
+ 
+ void symbol__delete(struct symbol *sym)
+ {
+-	if (symbol_conf.priv_size) {
+-		if (symbol_conf.init_annotation) {
+-			struct annotation *notes = symbol__annotation(sym);
+-
+-			annotation__exit(notes);
+-		}
+-	}
+-	free(((void *)sym) - symbol_conf.priv_size);
++	if (!sym)
++		return;
++	symbol__annotation_delete(sym);
++	free(sym);
+ }
+ 
+ void symbol__set_ignore(struct symbol *sym, bool ignore)
+@@ -2479,7 +2467,6 @@ int symbol__annotation_init(void)
+ 		return -1;
+ 	}
+ 
+-	symbol_conf.priv_size += sizeof(struct annotation);
+ 	symbol_conf.init_annotation = true;
+ 	return 0;
+ }
+@@ -2522,8 +2509,6 @@ int symbol__init(struct perf_env *env)
+ 	if (symbol_conf.initialized)
+ 		return 0;
+ 
+-	symbol_conf.priv_size = PERF_ALIGN(symbol_conf.priv_size, sizeof(u64));
+-
+ 	symbol__elf_init();
+ 
+ 	if (symbol_conf.try_vmlinux_path && vmlinux_path__init(env) < 0)
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index 6347bd218ad5..a6a2ab200f98 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -79,8 +79,7 @@ enum symbol_idle_kind {
+ #define SYMBOL_FLAG_ANNOTATE2       (1 << 12)
+ #define SYMBOL_FLAG_IFUNC_ALIAS     (1 << 13)
+ /**
+- * A symtab entry. When allocated this may be preceded by an annotation (see
+- * symbol__annotation) and/or a browser_index (see symbol__browser_index).
++ * A symtab entry.
+  */
+ struct symbol {
+ 	struct rb_node	rb_node;
+@@ -174,11 +173,6 @@ static inline int __symbol__join_symfs(char *bf, size_t size, const char *path)
+ extern int vmlinux_path__nr_entries;
+ extern char **vmlinux_path;
+ 
+-static inline void *symbol__priv(struct symbol *sym)
+-{
+-	return ((void *)sym) - symbol_conf.priv_size;
+-}
+-
+ struct ref_reloc_sym {
+ 	const char	*name;
+ 	u64		addr;
+diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+index 37d35f42dcc1..aaa7148c3ac1 100644
+--- a/tools/perf/util/symbol_conf.h
++++ b/tools/perf/util/symbol_conf.h
+@@ -42,7 +42,6 @@ struct symbol_conf {
+ 	/* Was hybrid_merge given on the command line rather than in a config file? */
+ 	bool		hybrid_merge_set;
+ 	bool		nanosecs;
+-	unsigned short	priv_size;
+ 	bool		try_vmlinux_path,
+ 			init_annotation,
+ 			force,
 -- 
 2.56.1.703.gf848ed807c-goog
 
