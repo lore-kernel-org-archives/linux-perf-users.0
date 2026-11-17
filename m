@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794945913;
-	b=iNW5bOksPSAhjnYTEVoYLwGbRnJuJrJ25+Q15rfBFsRfINgrAznAcOlL4obo3PsJgYZG
-	 u5GO5nja9zLtjjpW+t7eMiQudMB3cksZh2qIiOWxGrc70sno7frbv9afd10ViWeA5d1yP
-	 T//EmMpZqHttWhSYU6IBTSh+FxoMRfQTdhJW5f4hvz4H9xbCkWt36k3yVaXvyvIx63wvn
-	 qVuPrl99YxphicBmkf/RH/hVrDJ3BHR2JC8HPEeiQA+Hs5LMvYicC8Uqm/qDbdGWTjgwN
-	 gtMAl/GIYtpjk/bwwuS1UCdpI5fqaGGM3jRE5mY5byLN7g4FpRM3mK8QnGoNrUjkpKA==
+	t=1794945916;
+	b=cU8Jw4BPaEcHnyJwGm9L/JW41oYbLUIUsZfwZ/KyPP7iMgH460g5BlJ2U+o0ZJjv2ffI
+	 1PyFFkOcXKSMYM9WMC8W7hZfQr4kdyY4mS6MO7zzuMz1znI0W0LOq26TS67LfY+ry1pa0
+	 Ugp6lYTIR8yXnq9+70WuNnQ7VXgaiuKj64h+15EeJCsHmHGkpeEfClh6upXxOTyOqyoe9
+	 uLNSpj36RKukf0bA0bTJ7lfX+5BCsjCUK1Miszd1vMBmaM2qTVsqH5ymb/RV4JAQzj2pp
+	 9Z3XViF9ZjisaKVKLZxHHf/7vA+PTNzExTjXhnjdVSL2mJQNeRqx2QsprmcGGe0IL6A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794945913;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794945916;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=OzrfJus4TpI/Dko4DtIFFHB/mFoe+XSKLpzuiGZA6FM=;
-	b=Xhu3R064lGD/iTEKzgOOWWuZThS5YniheBy5A2oCy3gt2L1iR331+349nAh96mBg8qIL
-	 pCnw4nIJnsyAOwflzo0mr5l0qZYG0EKahwhi/mkbS/2PXIcG7XVDoqU4V2Owtmvjz38YC
-	 hh7bSfpAZJPcpVCgrV6joSEQnOnoBm1EERXCL+G8lRlSfOmLObUUXheGOoDVZkjmuyuts
-	 7PPZyqQetfh25jtYiuydZWgHc5OmA69TYHyxNKXVT0RdEobk1gLCSQurccRSZz33yU1/Y
-	 hHsCtE8o15cL710si01x0742aYvuS/qNchkm6/+icZatZlc8GKTkLj88QXYniYUmOIQ==
+	bh=5XGgD7g5FfN+5XKlQLPs4Cb9tYcgujXE1uddgNLi2X0=;
+	b=elCO7vd84PZ29ppezQH0BPUbKVnzBueYE2bcSQblnwftVf3VBfhIXj4AIoYaDVI+lXxL
+	 QWA9Y72792EOvWHlV8aQiTPPIEl+9AgiUmzA8Olg+lAL7MtmcxeMmwx0bIGZTpP2kaOZ5
+	 TwrqpBORWPLBVU0ytfUQSJs+Gb8byQe3CS73fr2GFwKt8YOtFf9JHl5vzq92UNeKtMhJw
+	 zl8O5Ad9S/D+mTNA+xN1XgeVChCPYAL3Ox8gyPD6w+2ukidmHf+PDLFot+XUIAFo/n4hi
+	 2jE8FE9exWbYBkkczOCXyKFuotDn/egObu5Pl8meaD9kSMYvNoXPTT3tvKnKDlBkxIw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SqpHhJzy;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YaBchpZT;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DB960A5BCA;
-	Tue, 17 Nov 2026 20:05:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8592360A6F51;
+	Tue, 17 Nov 2026 20:05:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SqpHhJzy
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5298A1F000C6;
-	Tue, 17 Nov 2026 20:05:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YaBchpZT
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16DF21F000C6;
+	Tue, 17 Nov 2026 20:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794945913;
-	bh=OzrfJus4TpI/Dko4DtIFFHB/mFoe+XSKLpzuiGZA6FM=;
+	s=k20260515; t=1794945916;
+	bh=5XGgD7g5FfN+5XKlQLPs4Cb9tYcgujXE1uddgNLi2X0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=SqpHhJzy2L8bkCH1dbCR+HxQd7C/+VAa5qAWDbocT8FJY4mmt9bwqpy2znhPf8bay
-	 rFLhrfKSarOwykWRuBhB80xamCEmvvcgSxScQtZePcSVrnfHp+SQ6PjN7pK9nUH/ME
-	 4VyeDGs0d6K/X1cW3Te07+yxZ3DW70gZntdU0Wb4MNXK6qQxfD90myMLpXQS5+31yI
-	 gLpFEqRXi0FzVBzicrUde7dl3Hu7pq2HmKA2RqOadEuBWNoyqfIOwlDrsQHBWrY5a8
-	 UJv/5SWRIR+wz8AGYRbroPGhg1ki7jtl6DEhL6DG4sqhvlIB4kyZ5WIw5XZhe90+l/
-	 KaQmGAEaAXRMA==
+	b=YaBchpZTo3JZBKWcXdrgNVVvsvrVkksxucakSdme5gVQsHnkv+lguSUVj5dIlWy72
+	 Xm9Bzu2+i5ddWFUB822WPj5POpXpkaI1G/7+AuA+GwmhFRAhgPFEDDOEpFNC0r3NE2
+	 /JVn8w59DYV27Ud+g1Y720nid9q6E0eY40zaMwb/GBFK4r1dwpyOmGToUHtZ9YsmVL
+	 JBSFzGfeXLkipj/s5IhVSqNVEdbLQ45StFfWhFQDI8gYpzO//3iqlzihLyGmzE/Pwg
+	 OAV/9zJg2tfP/X//aJdPqTPZY1e7XmX4ks1EMx/Lvb1OQ7ado5RuGVltHUXkdBC58P
+	 JFS6LinVIePOw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v6 12/13] perf test: Drop samples without an IP in the dlfilter test
-Date: Tue, 17 Nov 2026 17:04:30 -0300
-Message-ID: <20261117200433.45174-13-acme@kernel.org>
+Subject: [PATCH v6 13/13] perf test: Skip the LBR inline unwinding check when unsupported
+Date: Tue, 17 Nov 2026 17:04:31 -0300
+Message-ID: <20261117200433.45174-14-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261117200433.45174-1-acme@kernel.org>
 References: <20261117200433.45174-1-acme@kernel.org>
@@ -70,36 +70,68 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Since v7.3 the kernel zeroes PERF_SAMPLE_IP when a userspace-only event
-skids into kernel mode, so that kernel register state is not exposed to
-an unprivileged event (166f10836a653dfa "perf/core: Fix kernel register
-info leak via hardware skid").
+The LBR check considers caps/branches sufficient to record cycles
+with --call-graph lbr. AMD BRS advertises branches but samples only
+its own retired branches event, so the test fails instead of
+skipping.
 
-The test dlfilter keeps those samples, and the check that nothing but
-test_loop survives then trips on their lines: the comm column reads
-"perf".  Drop them, which is what the test wants, everything except
-test_loop must be filtered out.
+Skip only when evsel__open_strerror() reports "doesn't support
+branch stack sampling" (EOPNOTSUPP). Generic EINVAL or "not
+supported" may indicate a regression; show the error and fail.
 
-Fixes: 199d5e872a9ce737 ("perf tests script dlfilter: Add a dlfilter test")
-Reviewed-by: Ian Rogers <irogers@google.com>
+Fixes: 446c595dc0dd1759 ("perf test addr2line_inlines: Ensure inline information shows on LBR leaves")
+Cc: Ian Rogers <irogers@google.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/script_dlfilter.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/tests/shell/addr2line_inlines.sh | 23 ++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/script_dlfilter.sh b/tools/perf/tests/shell/script_dlfilter.sh
-index 88222280f6094fd0..797cd9ae84141f64 100755
---- a/tools/perf/tests/shell/script_dlfilter.sh
-+++ b/tools/perf/tests/shell/script_dlfilter.sh
-@@ -46,7 +46,7 @@ int filter_event(void *data, const struct perf_dlfilter_sample *sample, void *ct
- 	const struct perf_dlfilter_al *al;
+diff --git a/tools/perf/tests/shell/addr2line_inlines.sh b/tools/perf/tests/shell/addr2line_inlines.sh
+index e8754ef2d7f21ac2..ca88a6b886ca1ae3 100755
+--- a/tools/perf/tests/shell/addr2line_inlines.sh
++++ b/tools/perf/tests/shell/addr2line_inlines.sh
+@@ -8,6 +8,8 @@ err=0
+ test_dir=$(mktemp -d /tmp/perf-test-inline-addr2line.XXXXXXXXXX)
+ perf_data="${test_dir}/perf.data"
+ perf_script_txt="${test_dir}/perf_script.txt"
++perf_record_err="${test_dir}/perf_record.err"
++lbr_skipped=0
  
- 	if (!sample->ip)
--		return 0;
-+		return 1;
+ cleanup() {
+     rm -rf "${test_dir}"
+@@ -71,7 +73,22 @@ test_lbr() {
+     fi
  
- 	al = perf_dlfilter_fns.resolve_ip(ctx);
- 	if (!al || !al->sym || strcmp(al->sym, "test_loop"))
+     # Record data. Currently only dwarf callchains support inlined functions.
+-    perf record --call-graph lbr -e cycles:u -o "${perf_data}" -- perf test -w inlineloop 1
++    # Some PMUs advertise branches but reject branch sampling for cycles, e.g.
++    # AMD BRS, which only samples its own retired branches event.
++    if ! perf record --call-graph lbr -e cycles:u -o "${perf_data}" -- \
++            perf test -w inlineloop 1 2> "${perf_record_err}"
++    then
++        if grep -Fq "doesn't support branch stack sampling" "${perf_record_err}"
++        then
++            echo "Skip: LBR not supported by the PMU"
++            lbr_skipped=1
++        else
++            cat "${perf_record_err}"
++            echo "Inline unwinding lbr verification test [Failed to record]"
++            err=1
++        fi
++        return
++    fi
+ 
+     # Check output with inline (default) and srcline
+     perf script -i "${perf_data}" --fields +srcline > "${perf_script_txt}"
+@@ -93,4 +110,8 @@ test_dwarf
+ test_lbr
+ 
+ cleanup
++if [ $err -eq 0 ] && [ $lbr_skipped -eq 1 ]
++then
++    exit 2
++fi
+ exit $err
 -- 
 2.56.0
 
