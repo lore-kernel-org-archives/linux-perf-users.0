@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794942183;
-	b=rBeCUrgvkHOmBcjQ6sJr1i1JAKygiuDjS+MmR/j5NdRtbNsxydVOSAdF0iU1jTgyEHxH
-	 PugLLW0dD4UFXVKUFt1zVhXl1rXOhMkfS5Zd4dJZishNwJDl64eQBwo6NezC+gNeAak+W
-	 E1xCNNgIUrzL1sKKBg+aY6JmiHpfTlMbM6N5AxYOT9FXZW/BEdjXRY3UgPjB8sxihj8El
-	 0oyRXTcefaTD1hTF/GiH0+ftMMdHEZb7mx2I1KMbV8WfCROf0MelaZKHibIIHiJWout/z
-	 sYqmxtHU7oy1H7C88qKmFU4ycznRa0KYLbOYLEeR80xM0ySqFIAV/VLL+Cvb9ZP+e7w==
+	t=1794942189;
+	b=u1aFP75p0nRtR9NoUPJeuHiqxGW+nP7ddc6G8FAJ58tXj9S7DEKEF+k7t2IkhrYg/14Q
+	 H+RuUZKnlNiQw+5z/eo3Rw3fKSu+UApsRIelLYiFgkclkCfRcwMuVVjhEzNlP9O6UKiVf
+	 HUS8I/74jh2x7vcXNHPZmV85vTsSuJR65IzRozzn/+E4yphFAz9yOY23V0PXor/ZP7uWT
+	 Yqdc3GPz8Ie0prQJaBuOSQNoPfk4jvaRozAZU900YA4Z/GLJsaZbtMHHKQZmXlpOFoRfE
+	 35BPQPwuDRsXBZ1S4hPNk4Qkv86mcMcxRbJc51oeUWbSYYn6Od9bWlO/gBXmuxjPaNg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794942183;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794942189;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=hPA+/2ihh4zU62r/x7jr0nQBrvd8Rz3YhqPBwkEZ4FE=;
-	b=3bIWK5OQXeORAfTtwbpwn/EY3AIs5LkXBxHUuvNZDNlhPWuczy+ndE/Xnj2mhrBLQzwS
-	 ijwSOCGvVGf8G3Zk/tlIOCZ1YIcu80iSGTAbxBMLIW15PUJHdMp1N2gw/lEH9bxY1lMQI
-	 JokwKFYORHOrPX3YpZ/KucRHqQvOLUZhvJyz+VEWKxJ4uNpl9177KLanxAYKlH/sCYlNt
-	 JY/awZLB7mhMgAa+mu9hk1WkgyvjY6j0VHACgdK4RdoNWkFBdAYGZPkYv1wLLTLpmUUel
-	 7hH62aRUt8H0ykC1trGsRGJHhESrqqrACE+prUKbF9rAH3Xct7vbN2GSiSIb8omKmWg==
+	bh=9dF5NPm0HLE4KuWhNxg4smhH0ydGBBOKmlWhRelE5tQ=;
+	b=SR//CEqKRkuQNEwcDaOIwiwp7qYQJon528SH0EJUBpWlZxZK7HF5OixHEzzSBZme88JK
+	 u9TV9WwLm5ofGjS/EAGeGnRh5bSo3wnyQ6NUG8jpKvunSK1+2vTK/2eUVILSju8xwK6gh
+	 49iba+ElqI3lpgP5Ai0NV9zY2SP9G1P7A6PEwV5xXGRbPNENb4WOzkGkNwWlqF9n1VFlk
+	 9Tic6fl/XCnRDw1DlsGCyPRAZsl56QcVxe33WnIGncIxN31AgUNej7vgANIr1334PK3jh
+	 fFrblzixyNTswYWw89CG1vBEXvgXYWSPQKUez4y/LDngp7huFrSYBSRrfPX85fUcs/Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Lb/KBjUx";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="KP/fpqxs";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F98606A31C
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 19:03:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE32606A32A
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 19:03:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Lb/KBjUx
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B08651F000C4;
-	Tue, 17 Nov 2026 19:03:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KP/fpqxs
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B0371F000C5;
+	Tue, 17 Nov 2026 19:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794942182;
-	bh=hPA+/2ihh4zU62r/x7jr0nQBrvd8Rz3YhqPBwkEZ4FE=;
+	s=k20260515; t=1794942189;
+	bh=9dF5NPm0HLE4KuWhNxg4smhH0ydGBBOKmlWhRelE5tQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Lb/KBjUxv6uDsF5FOg3IYhQpuGtSm3mPloplKOUw2wZ0Fyt7ucgnvMexzvNyDSHSu
-	 fQ7oh2JQhkS9lcW+TobHLgdAUzqD89nHy6eWdUDDdHSCwOnx8qCi+xB+eM8PMGIU7X
-	 13c6Hr+/CJgVreC2CzCCQsFOYfb9DOBIiWnvQL9whV2jTEBYipw3dpSfFpfEn+klAu
-	 szIuhcA3+GmkFaaV8bgPsV48NpvPxx3p/NL9e0/q4mvRtHJ2mvluDr1VXfeWYNv+A2
-	 JIkcWRBL8rXLEy6RVEir1shlNMDZVicq7ltHkpgMihAaQ2oDYveJI9iqW6qxDclqP1
-	 6ymzvwmLXC/RQ==
-Message-ID: <sashiko-outbox-219427@kernel.org>
+	b=KP/fpqxs/kGbexainTn+LHpuGFvhBTaPYSXuVfpy+AWcfYpx+mVs0cqmdKz301LYV
+	 TQDa0W1axQaXFO4eNhZq3cSPY2KhtFqtiEX+EJyyAXQ5yKLZglZxSfJvm38t8F91XX
+	 YMCACPaWbg4hFPA/nD9zH9ivsbR0/9OnFSO/nQcWaB95Eq+OCH+Yr9HG2GlLQos/6c
+	 B7VZP3xWouqqwHH+3Vxcz4wrLoSoS2vQVePD7G3pOm2fxHn+9ti+xjvEt1/axPtf61
+	 LeEJva4ZOUxLnHPZFCpCWuFMWOLl6bF/tul7U/k275wPOzHNPFJVNTXYJaFaxCzRUF
+	 wLSQGn5LdqQsw==
+Message-ID: <sashiko-outbox-219428@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 1/9] perf call-path: Use struct dso_symbol to retain
- symbol DSO lifetimes
+Subject: Re: [PATCH v14 22/23] perf machine: Hold machines->lock for
+ remaining guests rbtree accesses
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261117185305.108003-2-irogers@google.com>
-References: <20261117185305.108003-1-irogers@google.com>
- <20261117185305.108003-2-irogers@google.com>
+In-Reply-To: <20261117184844.99889-23-irogers@google.com>
+References: <20261117184844.99889-1-irogers@google.com>
+ <20261117184844.99889-23-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 17 Nov 2026 19:03:02 +0000
+Date: Tue, 17 Nov 2026 19:03:07 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,26 +61,25 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> struct call_path stores resolved function symbols for the lifetime of a
-> call_path_root (in thread-stack call/return processing and db-export)
-> without holding a map reference. Similarly, Python callchain frames and
-> nodes store resolved symbols across Python object lifetimes.
+> Commit 1324aa051bed ("perf machine: Protect machines->guests rbtree with
+> a rw_semaphore") added machines->lock to protect machines->guests across
+> util/machine.c, but direct traversals and teardown of machines.guests in
+> util/aslr.c, util/build-id.c, and util/session.c were left unlocked.
 >=20
-> Replace bare struct symbol * fields in struct call_path,
-> struct pyrf_callchain_frame, and struct pyrf_callchain_node with
-> struct dso_symbol so that each retained symbol pins its owning
-> struct dso until call_path_root__free() or Python deallocation. In
-> python.c, this also avoids duplicating symbol names for call_path frames
-> and allows pyrf_callchain_node__get_dso() to report the DSO of resolved
-> call_path symbols whose ip was zeroed. Also document the DSO-owned
-> symbol lifetime invariants in kernel-doc comments on struct dso_symbol
-> and struct map_symbol.
+> Acquire down_read(&machines->lock) around the guest rbtree traversals in
+> aslr_tool__destroy_machines_priv(), perf_session__write_buildid_table(),
+> machines__for_each_dso(), perf_session__read_build_ids(),
+> perf_session__fprintf(), and perf_session__dsos_hit_all(), and hold
+> down_write(&aslr->machines.lock) when erasing remaining guests in
+> aslr_tool__delete().
 >=20
+> Fixes: 1324aa051bed ("perf machine: Protect machines->guests rbtree with =
+a rw_semaphore")
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261117185305.1080=
-03-1-irogers@google.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261117184844.9988=
+9-1-irogers@google.com?part=3D22
 
