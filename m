@@ -1,101 +1,54 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.52
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1794952068;
-	b=fZMdCgQWIvwE8SLn8ZeBoxYs9UA80Amm4E3N9fj4PQhMMKh0hV+mSDF/hmfUa/sDSU6z
-	 UCtLxm1kHq3flTroBK2dpx+jGgdMkEwIbeZyRQPbWxBtX4NVooxfNUIjxkxiDn/DCzyNz
-	 Jj6TKWl2nrieOTB/djFKigsfTYepvEri20BDBrVpJync98qW3j8VSAVj1nXFbWXzQTY+Y
-	 onE6kVs+sSZFyx98+bbz6FeOlwcvs/PAEdp++ohNXQIH0eIOMB1F/64woEtxl+Ot+39SZ
-	 CUir4hP6szjx+Vnh3l1hy4uLtYakkJ8W5EU4y+2dmM6OABGmN8aznk3ZkVzpG96m8PQ==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794952068;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:Reply-To:From:Date:X-Gm-Features:Message-ID:Subject:To:
-	 Cc:Content-Type;
-	bh=vpOOBtKuDULBz9vkdGNDf/DlRcVMG6RbijwbAk547cM=;
-	b=R9J7Jmkmf7JdD0fmZ9kHHqdd2GJJMCkBLKlv8Esd3ZBtlESw4dEfos4a/yYbYy9xnt9n
-	 af8st27gjYcxdgmYlQFIi51GkvPPJ3XXLSFxC0K/cWmPW7wb+OTl/er96cD0leM9mB9rr
-	 y6x4QnnFzRDNHkRTKzuuvE9nRXpvSNer40zgs9pAxvXQSu1V6PSrRzKEaOJ7lgTx6tTRx
-	 60ki4OrXFk5A3h33T5Ra5onWIgRtQebbtsMSpLFF/guYS+bIIUCIQ6lfXvvEPIIWX3F5f
-	 bH8OAJeN/cUek3rA2CvjI6ZL4oX9XcPfE7octTE1wqjYWKyKc4zETAue6IrRcef37kQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=none header.from=ocallahan.org;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=ocallahan-org.20260707.gappssmtp.com header.i=@ocallahan-org.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=sQ9ojPZo;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.208.52
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.167.197
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1794957039;
+	b=tMro7ak+3AFdO3UsJ0dElgdCDGfwEFM77GD9hE6pmuxYZtDG64WflgUauvA4E11OmxK/
+	 jzsSjBIuHbw2sVkhNxJGfmfx/OyNPOR6zxhnljMJJ1rctLcS+j/cYhRhRIzjQkxKUl0YP
+	 UYLCizw3D6O3jGUokljtKJpnQNBvQCjE2/hNmeg0vwC+8FnG8GVj/482AN7zMrqlFzZDH
+	 42COFvLDbLcCsC2xri76d5/FVd6vrgfV1MF4ggc8gvfDaPsQzwgoM3FtiKcwDQ/moFVDV
+	 Nhv01VV/aRJsVpMC4LAqhVtHfWEyHsrbZy6k/x80O2GgqOMf+5UW+PORbZB47QTaPNw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794957039;
+	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:MIME-Version:X-Received:Date:
+	 X-Google-Appengine-App-Id:X-Google-Appengine-App-Id-Alias:Message-ID:
+	 Subject:From:To:Content-Type:Content-Transfer-Encoding;
+	bh=+wBAluwliayr72IP0v4lzu4cOma3Jxi3Zj2huXDAK58=;
+	b=123KwU6sKcKON31qYyTdgqnsv+9iJZm+mGMPKxLzUkMK9KcKdiAnaxcNG/8cWsB4cZ2Q
+	 mG35xy1Cdt4D+AwZ5AJ0KjgJ7K5tSggE0bG+NOtuIuZ2lJIoyhaTTKU61wWpuYF3YdrSo
+	 sM9OuvCOt7mHPMqqs+uSVUU+d1wDGK9S2nuPFQmBTaUK3qcdah1SEFcES7bbIHO5M2aIn
+	 3RcO9XZAoGhVKi3B/KzSix8hZ64ltSrU6tGlDZMsP3K48wLHojWnNeDL39OOszZnuUNfE
+	 a5tYlyEmR5TdTr6JWjhZgvWP7ezWbayimCy8Ztf1u4rdek9otYoXMr8JrQ4VZLLdL5A==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=fail header.from=syzkaller.appspotmail.com;
+	spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com;
+	arc=none smtp.remote-ip=209.85.167.197
+Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com [209.85.167.197])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C51D606A31C
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 21:47:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3C51D606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ocallahan.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=ocallahan-org.20260707.gappssmtp.com header.i=@ocallahan-org.20260707.gappssmtp.com header.a=rsa-sha256 header.s=20260707 header.b=sQ9ojPZo
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6b87a1a2babso1479831a12.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 13:47:48 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1794952066; cv=none;
-        d=google.com; s=arc-20260327;
-        b=HCvrK4DiR2uMZBUS17KHU1UkvdBtTHFr3a4bgSJpP1AQ507CA9HIYHL9aWI5ul9RuT
-         /clyCA6KY/NpqerNz6unuEkzK/IhjCQfQqb7xnQVGKU+tXz9j6ve43NRyoNYNlgR3iRE
-         dfuk4L/8atYUF/jJXzIMUqpckC6HCcIBKLu06gWFzPm+jhTZB9TWvtXCJe1uq3dk8p0a
-         db//d1mbFTptGni8aO+TXL74Mc/Fs6nvZOoMCNzO1CsJUz6+s8GUT7y1YrEe4wupxmJw
-         M+EkMc475LWvEYJg51Q+17Drr9SP8XISzu+6VhfR2GemcMzFxnKXAJ8lzMbAqcut1rBo
-         F7rQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:reply-to:mime-version
-         :dkim-signature;
-        bh=vpOOBtKuDULBz9vkdGNDf/DlRcVMG6RbijwbAk547cM=;
-        fh=qbgStekF7ISj9GVK+ZhxeyePuHOSRtt9VpWvSQ7vBnw=;
-        b=nIjYp635BEJufVVU8FbyECX9/2Zuz1pNNG6TEewo4aqdlxGNOOYSqV2qav2pBPQ79M
-         ZtkjTIMgyikNxQnCm0q+DITOpYsBdk2HmjdqbN29jPIxpBY4VCojM6y0cPnWvCUgYsou
-         /78yB+AGHdHfu2gw1LdI03WFJXxZ8vZlWQH7gU+ZhvjRJEYtghsnpaIy64daRQJbaWoG
-         1EZaXF317ODVXj1NJ9BDXcMBtg/3Ru7mWCGNdN72qiaJ9x0lhqDrtCaBXVwJrFHiqyiS
-         ax9AIbytjYwlssSWt7EkAd30z2pR76yWJTkgy2S3Gr9Q07q+RQHaDSHGb3RwaLVRAmRt
-         HxcA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ocallahan-org.20260707.gappssmtp.com; s=20260707; t=1794952066; x=1795556866; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=vpOOBtKuDULBz9vkdGNDf/DlRcVMG6RbijwbAk547cM=;
-        b=sQ9ojPZoSwGIvhNsN2zWbo0GyOP85wRKSN6ffCHDaXz8bNexlIBKcrp/jb/T/jitpD
-         pRlBgaj4Mg9j8jze2iFWu9n+l1se6EDYZ50cncohlhAJgusLLWRp0VqJ+BBW5AZH+Ee7
-         Alo+oOLYuN3v+MBmsBmRs7Ur9xONV6gK3vIVCb4lvTjfgkbJ6AwybJEBxaR+cgMCfAvY
-         elAbmODvx2ZtRDMaA79sErYIgAwbE3NuE7YKeNjRyYWDGW4InSeLi1UP2X5DLM5EYmsU
-         zuOFUgLoGtYwxz7OgGyXNPy0Iyd1MkGJW/WPM1YS+Z2ibHxbtk676KZV6MplYiFLG5fn
-         dkSg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30FE606A31C
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 23:10:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E30FE606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-oi1-f197.google.com with SMTP id 5614622812f47-4ab4f652f9bso225341b6e.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 15:10:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794952066; x=1795556866;
-        h=content-type:cc:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20260707; t=1794957038; x=1795561838;
+        h=content-transfer-encoding:content-type:to:from:subject:message-id
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=vpOOBtKuDULBz9vkdGNDf/DlRcVMG6RbijwbAk547cM=;
-        b=ufkS4mboUuZZ0tSSk8NVbIKzMJ9TJbH8RicuZPfrBbjg3eFoXn9dJBboudRzmpzJz3
-         yK32dd6p69xdz72mq5St5aHVgknB24RbN72GCwrdYT7cq07+YD49iQ2zhQQ8DTwN07Wa
-         jPEdw3MwjcGHCh4W7YsJI2uB26rrM++3Y5dU35FIDIfrbDSNy5IGQuWuBRRX1Jj0lF/f
-         Qrql4hyCD/7kJOzMIRSXkqBMyrnjKCeeqhbbdxyTdpdNe+EtmNtWso+uMpMOPY3pQM5B
-         hKaF6CMd6MCd00CJG6Jl/+QyhnEBkhEMKayukmvkm4P+neU7w0+irhpE/V+XNXVpCPEI
-         4XGQ==
-X-Forwarded-Encrypted: i=1; AL+hErE+gC4CcZRVjxMv0TX74nncAdXl1RoFamHdPI4OELt1wuKGOG6IvRH1AHz4AE7B7Ki+gFvGX2dSoHb3Pm+HCHAI@vger.kernel.org
-X-Gm-Message-State: APuU4Z98Ar8UP1U/+OaEER0/hxF8z/Ym1r3QcPhdSCoEZ90MNHuq+wXM
-	O5h5m9ACemDL7A1CMOg84tNTyqBA1hbHHEBOeEZoIxBgdFEXu5aFHah4CZbDs+pK7i/lCrhD1yZ
-	PPz8m4RD0+MT5SXBvU5odqqg6P8SsoI4=
-X-Gm-Gg: AYBFou3cOv6dzECSPKdMhXj2WLkcXDmgLhhn97uq5ReJ6791NWJP5BYaYyRzFZ1/tAo
-	OqFThdzkuz62EA4IXkgV8FZgYa4wq8tQaIVyag9vWcTd6Q/i7LUjDX467lunzPLrf0VspQ68m8d
-	gKfyYapqZvOX0mAp3BfLHO3jlo47LrDZFSnz0V8WjakzHjHuuWcLCDBpatPGUDyMmKj5Rt1bvYT
-	Mdu6dr46yMgyukoFyP6UPSYEwrz4SKgdjffiIEF1bEuIMar2gMRXldooxBLn7psZiAre4Q0doVA
-	B5UDuMasTIWeNRAu6WoaTcOJKaaR5xstGoJqgNMYXAEaRc6MI6NFTsfoOREIMIfp8rznUFp+aY+
-	L+DnG2eoDVk8Uw7g6++rvSs4u60wyDtTNRGzc49IpYOdQKxPdA5g7nCqGm0Zu5f8SNL4rIdUCLL
-	faOEWxxd2rhG0I8CWkN/vWSK5k5j2ncuA8q1p/j7kNYgbMfY/941AkaldOdQZKGK1jhdhayq+4V
-	XSWLKV3Oi2JxXIP3IhSAix0ZvNVumV72ZSyJLMIT5r//aBYDwq+
-X-Received: by 2002:aa7:da4c:0:b0:6b7:cb66:682a with SMTP id
- 4fb4d7f45d1cf-6b88815c0aamr273193a12.16.1794952066290; Tue, 17 Nov 2026
- 13:47:46 -0800 (PST)
+        bh=+wBAluwliayr72IP0v4lzu4cOma3Jxi3Zj2huXDAK58=;
+        b=N7VPB41yAzr4d51gRpxICfrtj5WL2fjQHa7KOMEmxeGNjUPS7+Uw3BqnQvWKHwPeJZ
+         zn9k37FR7o14I3cLxT1lFkO6SAt3bYI4OZL7QT2WgGA6WJaWjCAUog1NCDVZo1UCqijW
+         cOY9qE04N2fDCoR1WgirNRle4nnwZfEu2Ygel+CkKlA3TXt+g2l150noiR10q12p9trZ
+         UrHF3addnx5o5B7uoHHiw+Bv3ZJ+T/HuXLsKwl8AdK20lbKMlFLA7nBGtN9sCAsIQxC+
+         1FB5ZNNQ3K3VkoQMpzgFzUesShtS0shcHoZtzbOwYtwYfpw2gfUnJW5F+rGnn4Fv668a
+         k77Q==
+X-Forwarded-Encrypted: i=1; AL+hErEECS1e5iubMu+6r6zVTXW7t0F3MusAeB60Zx5+zISpkSaWdd7DwcenpXVnz3bfLpU3Kl6ps5gOWYchRPnJ7hz2@vger.kernel.org
+X-Gm-Message-State: APuU4Z8TrxmBN2j8cXeyZuPBkD1zYNp2hJ3XAo918rzvKfQbm0Ydeb12
+	XTVyCiemH2dPumsdVvqbxBj8pxNN7NsxmM1xSur2KM3oJHhoogxbkiQnvQZQnQu0T0MyuJWD9s3
+	7jbz1ljyOMoRnglAkbMmsPdzSSzcF8nmvNXncQEWpaWx8RmkxvIGpAewsuns=
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -105,151 +58,383 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Reply-To: robert@ocallahan.org
-From: "Robert O'Callahan" <robert@ocallahan.org>
-Date: Wed, 18 Nov 2026 10:47:33 +1300
-X-Gm-Features: AclHuK_W5EoVeEwhkEt8vYm6YS2532tt9Z3r_pUJEKAKCImxRZu4iFQtMmCjyaU
-Message-ID: <CAOp6jLZoYFuEZxfrvQBbGNyqYpgW2Tbt3qO3GGmvF1qwgcjXDQ@mail.gmail.com>
-Subject: Re: [DISCUSSION] Three problems behind broken "perf --call-graph
- dwarf" on AMD: IP and stack dump mismatch, libdw fails on lld's layout, and
- the unwinder fallback never runs
-To: Ian Rogers <irogers@google.com>
-Cc: gennady.kupava@gmail.com, linux-perf-users@vger.kernel.org
-Content-Type: multipart/mixed; boundary="0000000000004d30cc06607fd820"
-
---0000000000004d30cc06607fd820
+X-Received: by 2002:a05:6808:5088:b0:4a4:744:a4ff with SMTP id
+ 5614622812f47-5773db24bc2mr1479483b6e.4.1794957037943; Tue, 17 Nov 2026
+ 15:10:37 -0800 (PST)
+Date: Tue, 17 Nov 2026 15:10:37 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6afcdeed.8f566acc.2517be.000e.GAE@google.com>
+Subject: [syzbot] [perf?] [arm?] BUG: workqueue lockup in wg_ratelimiter_gc_entries
+From: syzbot <syzbot+4610f17b25e845477657@syzkaller.appspotmail.com>
+To: acme@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> > Problem 2: libdw cannot unwind through lld's default segment layout
-> > ===================================================================
-> >
-> > The practical reach of this is larger than a synthetic test.  Every Android
-> > NDK build is linked with lld, and lld is the default in a growing number of
-> > clang configurations.
->
-> Did you confirm the bug was in perf or in libdw? There are fixes in
-> libdw and my experiences with newer libdw's have been more positive
-> than older ones.
+Hello,
 
-eu-stack works OK, and that uses libdw, so the bug seems to be in perf.
+syzbot found the following issue on:
 
-LLM-generated reproducer attached.
+HEAD commit:    518e5b794c06 Merge tag 'for-7.3-rc3-tag' of git://git.kern.=
+.
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=3D15dffff9580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dc3be6e434b07ebb=
+6
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D4610f17b25e845477=
+657
+compiler:       Debian clang version 22.1.8 (++20260613092233+e80beda6e255-=
+1~exp1~20260613092250.77), Debian LLD 22.1.8
 
-Rob
--- 
-Su ot deraeppa sah dna Rehtaf eht htiw saw hcihw, efil lanrete eht uoy
-ot mialcorp ew dna, ti ot yfitset dna ti nees evah ew; deraeppa efil
-eht. Efil fo Drow eht gninrecnoc mialcorp ew siht - dehcuot evah sdnah
-ruo dna ta dekool evah ew hcihw, seye ruo htiw nees evah ew hcihw,
-draeh evah ew hcihw, gninnigeb eht morf saw hcihw taht.
+Unfortunately, I don't have any reproducer for this issue yet.
 
---0000000000004d30cc06607fd820
-Content-Type: application/x-shellscript; name="repro.sh"
-Content-Disposition: attachment; filename="repro.sh"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mwl83er81>
-X-Attachment-Id: f_mwl83er81
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/8646adfc1052/disk-=
+518e5b79.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/b37f45f956ef/vmlinux-=
+518e5b79.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/20143fe230d6/bzI=
+mage-518e5b79.xz
 
-IyEvYmluL3NoCiMgcGVyZiByZWNvcmQgLS1jYWxsLWdyYXBoPWR3YXJmLCB3aXRoIHBlcmYncyBs
-aWJkdyB1bndpbmRpbmcsIGZhaWxzIG9uCiMgZXhlY3V0YWJsZXMgbGlua2VkIHdpdGggbGQubGxk
-J3MgZGVmYXVsdCBsYXlvdXQgKC0tcm9zZWdtZW50CiMgLXogbm9zZXBhcmF0ZS1jb2RlKS4gVGhl
-cmUgdGhlIFIgYW5kIFJYIFBUX0xPQURzIHNoYXJlIGZpbGUgcGFnZXMsIHNvIHRoZQojIFJYIHNl
-Z21lbnQncyBwX3ZhZGRyICE9IHBfb2Zmc2V0LiBldS1zdGFjaywgdXNpbmcgbGliZHcgZGlyZWN0
-bHksIHVud2luZHMKIyB0aGUgc2FtZSBleGVjdXRhYmxlcyBmaW5lLgojCiMgVXNhZ2U6IC4vcmVw
-cm8uc2ggW2RpcmVjdG9yeSBob2xkaW5nIGxkLmxsZCwgZm9yIGdjYyAtQl0KIyBOZWVkczogZ2Nj
-LCBHTlUgbGQsIGxkLmxsZCwgcGVyZiAod2l0aCBsaWJkdyB1bndpbmRpbmcpLCBldS1zdGFjay4K
-c2V0IC1lCmNkICIkKGRpcm5hbWUgIiQwIikiCkI9JHsxOistQiQxfQoKYnVpbGQoKSB7ICMgbmFt
-ZSwgZmxhZ3MuLi4KICAgIG5hbWU9JDEKICAgIHNoaWZ0CiAgICBnY2MgLU8yIC1nICIkQCIgLW8g
-IiRuYW1lIiBzcGluLmMKICAgIGJpbnM9IiRiaW5zICRuYW1lIgp9CmJpbnM9CmJ1aWxkIGJmZCAt
-ZnVzZS1sZD1iZmQgLW5vLXBpZQpidWlsZCBiZmQtcGllIC1mdXNlLWxkPWJmZCAtZlBJRSAtcGll
-CmJ1aWxkIGxsZCAkQiAtZnVzZS1sZD1sbGQgLW5vLXBpZQpidWlsZCBsbGQtcGllICRCIC1mdXNl
-LWxkPWxsZCAtZlBJRSAtcGllCmJ1aWxkIGxsZC1waWUtc2VwYXJhdGUgJEIgLWZ1c2UtbGQ9bGxk
-IC1mUElFIC1waWUgLVdsLC16LHNlcGFyYXRlLWxvYWRhYmxlLXNlZ21lbnRzCgplY2hvICI9PSB2
-ZXJzaW9ucyIKcGVyZiB2ZXJzaW9uCnBlcmYgdmVyc2lvbiAtLWJ1aWxkLW9wdGlvbnMgfCBncmVw
-IC1FICdsaWJkdy1kd2FyZi11bndpbmR8bGlidW53aW5kJwpldS1zdGFjayAtLXZlcnNpb24gfCBo
-ZWFkIC0xCmdjYyAtLXZlcnNpb24gfCBoZWFkIC0xCnVuYW1lIC1yCgpmb3IgYmluIGluICRiaW5z
-OyBkbwogICAgZWNobwogICAgZWNobyAiPT0gJGJpbiIKICAgIHJlYWRlbGYgLXAgLmNvbW1lbnQg
-IiRiaW4iIHwgZ3JlcCAtbyAnTGlua2VyOiBMTERbXihdKicgfHwgZWNobyAiR05VIGxkIgogICAg
-cmVhZGVsZiAtbFcgIiRiaW4iIHwgZ3JlcCAtRSAnXiArTE9BRCcKICAgIHBlcmYgcmVjb3JkIC1x
-IC1lIHRhc2stY2xvY2sgLS1jYWxsLWdyYXBoPWR3YXJmIC1vICIkYmluLnBlcmYuZGF0YSIgIi4v
-JGJpbiIgPi9kZXYvbnVsbCAyPiYxCiAgICAjIFNhbXBsZXMgYXJlIHNlcGFyYXRlZCBieSBibGFu
-ayBsaW5lczogYSBoZWFkZXIsIHRoZW4gYSBmcmFtZSBhIGxpbmUuCiAgICBwZXJmIHNjcmlwdCAt
-aSAiJGJpbi5wZXJmLmRhdGEiIDI+L2Rldi9udWxsIHwgYXdrICcKICAgICAgICBCRUdJTiB7IFJT
-ID0gIiIgfQogICAgICAgIHsgbisrIH0KICAgICAgICAvIG1haW5cKy8geyBtYWluKysgfQogICAg
-ICAgIG4gPT0gMTAwMCB7IHNhbXBsZSA9ICQwIH0KICAgICAgICBFTkQgewogICAgICAgICAgICBw
-cmludGYgInBlcmY6ICVkIG9mICVkIHNhbXBsZXMgdW53aW5kIHRvIG1haW4oKVxuIiwgbWFpbiwg
-bgogICAgICAgICAgICBwcmludCAic2FtcGxlIDEwMDA6XG4iIHNhbXBsZQogICAgICAgIH0nCiAg
-ICAiLi8kYmluIiAxMDAwMDAwMDAwID4vZGV2L251bGwgJgogICAgcGlkPSQhCiAgICBzbGVlcCAx
-CiAgICBlY2hvICJldS1zdGFjayAtcDoiCiAgICBldS1zdGFjayAtcCAkcGlkIDI+JjEgfCBncmVw
-ICdeIycgfCBoZWFkIC02CiAgICBraWxsICRwaWQKICAgIHdhaXQgJHBpZCAyPi9kZXYvbnVsbCB8
-fCB0cnVlCiAgICBybSAtZiAiJGJpbi5wZXJmLmRhdGEiCmRvbmUK
---0000000000004d30cc06607fd820
-Content-Type: text/markdown; charset="US-ASCII"; name="README.md"
-Content-Disposition: attachment; filename="README.md"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mwl83eqr0>
-X-Attachment-Id: f_mwl83eqr0
+IMPORTANT: if you fix the issue, please add the following tag to the commit=
+:
+Reported-by: syzbot+4610f17b25e845477657@syzkaller.appspotmail.com
 
-cGVyZiAtLWNhbGwtZ3JhcGg9ZHdhcmYgKGxpYmR3KSBjYW4ndCB1bndpbmQgbGQubGxkJ3MgZGVm
-YXVsdCBsYXlvdXQKPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09CgpGaWxlczogYHNwaW4uY2AgKHRoZSB0ZXN0IHByb2dy
-YW0pLCBgcmVwcm8uc2hgIChidWlsZHMgYW5kIGNoZWNrcyBpdCksCmBvdXRwdXQudHh0YCAoaXRz
-IG91dHB1dCBoZXJlKS4KCiAgICAuL3JlcHJvLnNoIFtkaXJlY3RvcnkgaG9sZGluZyBsZC5sbGQs
-IGZvciBnY2MgLUJdCgpTdW1tYXJ5Ci0tLS0tLS0KCldpdGggcGVyZidzIGxpYmR3IHVud2luZGlu
-ZyAoYXMgZGlzdHJpYnV0aW9ucyBub3cgYnVpbGQgcGVyZiwgd2l0aG91dApsaWJ1bndpbmQpLCBg
-cGVyZiByZWNvcmQgLS1jYWxsLWdyYXBoPWR3YXJmYCBnZXRzIG5vIHVzYWJsZSBjYWxsIGNoYWlu
-cyBmcm9tCmV4ZWN1dGFibGVzIGxpbmtlZCBieSBsZC5sbGQgd2l0aCBpdHMgZGVmYXVsdCBsYXlv
-dXQgKGAtLXJvc2VnbWVudAoteiBub3NlcGFyYXRlLWNvZGVgKS4gVGhhdCBsYXlvdXQgcGFja3Mg
-dGhlIFIgYW5kIFJYIFBUX0xPQURzIGludG8gdGhlIHNhbWUKZmlsZSBwYWdlcywgc28gdGhlIFJY
-IHNlZ21lbnQncyBwX3ZhZGRyICE9IHBfb2Zmc2V0IChoZXJlOiBvZmZzZXQgMHg2YTAsCnZhZGRy
-IDB4MTZhMCkuIEl0J3MgdGhlIGRlZmF1bHQgZm9yIFJ1c3QsIHdoaWNoIGxpbmtzIHdpdGggcnVz
-dC1sbGQuCgpgZXUtc3RhY2sgLXBgIHVud2luZHMgdGhlIHNhbWUgcnVubmluZyBleGVjdXRhYmxl
-cyBjb3JyZWN0bHksIHNvIGxpYmR3IGl0c2VsZgpjb3BlcyB3aXRoIHRoZSBsYXlvdXQ6IHRoZSBi
-dWcgbG9va3MgdG8gYmUgaW4gaG93IHBlcmYgc2V0cyB1cCBsaWJkdyBmb3IgdGhlCmV4ZWN1dGFi
-bGUgKGl0cyBsb2FkIGJpYXMpLCBub3QgaW4gZWxmdXRpbHMuIExpbmtpbmcgd2l0aCBsZC5sbGQK
-YC16IHNlcGFyYXRlLWxvYWRhYmxlLXNlZ21lbnRzYCAocF92YWRkciA9PSBwX29mZnNldCkgYXZv
-aWRzIGl0LgoKU2FtcGxlcywgb3V0IG9mIGFib3V0IDI4MDAsIHdob3NlIGNhbGwgY2hhaW5zIHJl
-YWNoIG1haW4oKSAoc3Bpbi5jIHNwZW5kcwpuZWFybHkgYWxsIGl0cyB0aW1lIGluIGxlYWYoKSA8
-LSBtaWQoKSA8LSBtYWluKCkpOgoKfCBleGVjdXRhYmxlICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB8IHBlcmYgIHwgZXUtc3RhY2sgfAp8LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLXwtLS0tLS0tfC0tLS0tLS0tLS18CnwgR05VIGxkLCBubyBQ
-SUUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAyODA5ICB8IG9rICAgICAgIHwKfCBH
-TlUgbGQsIFBJRSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDI4NDkgIHwgb2sg
-ICAgICAgfAp8IGxkLmxsZCwgbm8gUElFICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
-MCAobm8gZnJhbWVzIGF0IGFsbCkgfCBvayB8CnwgbGQubGxkLCBQSUUgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgfCA0ICAgICB8IG9rICAgICAgIHwKfCBsZC5sbGQsIFBJRSwgYC16
-IHNlcGFyYXRlLWxvYWRhYmxlLXNlZ21lbnRzYCB8IDI4MjggIHwgb2sgICAgICAgfAoKRm9yIHRo
-ZSBsZC5sbGQgUElFLCBhIHR5cGljYWwgY2hhaW4gc2tpcHMgc3RyYWlnaHQgZnJvbSBsZWFmKCkg
-dG8KYF9fbGliY19zdGFydF9tYWluYCwgYXMgaWYgdGhlIHdyb25nIENGSSB3ZXJlIGFwcGxpZWQs
-IHdoaWNoIGlzIGNvbnNpc3RlbnQKd2l0aCBhIHdyb25nIGxvYWQgYmlhczoKCiAgICBsZWFmKzB4
-MzAgKGxsZC1waWUpCiAgICBfX2xpYmNfc3RhcnRfbWFpbkBAR0xJQkNfMi4zNCsweDg3IChsaWJj
-LnNvLjYpCiAgICBfc3RhcnQrMHgyNCAobGxkLXBpZSkKCkZvciB0aGUgbm9uLVBJRSBsZC5sbGQg
-ZXhlY3V0YWJsZSwgc2FtcGxlcyBoYXZlIG5vIHVzZXIgZnJhbWVzIGF0IGFsbC4KClBlcmYncyBs
-aWJ1bndpbmQgcGF0aCBoYWQgdGhlIHNhbWUga2luZCBvZiBwcm9ibGVtLCBmaXhlZCBpbiAyMDIy
-IGJ5CiJwZXJmIHVud2luZDogRml4IHNlZ2Jhc2UgZm9yIGxkLmxsZCBsaW5rZWQgb2JqZWN0cyIg
-KGRjMmNmNGNhODY2Zik7IHRoZQpsaWJkdyBwYXRoIHNlZW1zIHRvIG5lZWQgdGhlIGVxdWl2YWxl
-bnQuCgpWZXJzaW9uczogcGVyZiA3LjMuNCAoRmVkb3JhIDQ0LCBsaWJkdy1kd2FyZi11bndpbmQg
-b24sIGxpYnVud2luZCBvZmYpLAplbGZ1dGlscyAwLjE5Nywga2VybmVsIDcuMy4zLCBnY2MgMTYu
-Mi4xLCBMTEQgMjMuMS41IChmcm9tIHRoZSBSdXN0IDEuMTAwCnRvb2xjaGFpbiksIHg4Nl82NC4K
-ClJlbGF0ZWQ6IGxsdm0vbGx2bS1wcm9qZWN0IzUzMTU2OyB0aGUgbGludXgtcGVyZi11c2VycyB0
-aHJlYWQgIltESVNDVVNTSU9OXQpUaHJlZSBwcm9ibGVtcyBiZWhpbmQgYnJva2VuICdwZXJmIC0t
-Y2FsbC1ncmFwaCBkd2FyZicgb24gQU1EIiAoQXVndXN0CjIwMjYpLCB3aG9zZSBwcm9ibGVtIDIg
-aXMgdGhpcy4K
---0000000000004d30cc06607fd820
-Content-Type: text/x-csrc; charset="US-ASCII"; name="spin.c"
-Content-Disposition: attachment; filename="spin.c"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mwl83erd2>
-X-Attachment-Id: f_mwl83erd2
+sched: DL replenish lagged too much
+BUG: workqueue lockup - pool cpus=3D1 node=3D0 flags=3D0x0 nice=3D0 stuck f=
+or 156s!
+Showing busy workqueues and worker pools:
+workqueue events: flags=3D0x100
+  pwq 2: cpus=3D0 node=3D0 flags=3D0x0 nice=3D0 active=3D10 refcnt=3D11
+    in-flight: 5700:request_firmware_work_func for 156s
+    pending: nsim_dev_hwstats_traffic_work, vmstat_shepherd, psi_avgs_work,=
+ 4*ovs_dp_masks_rebalance, nsim_fib_event_work, delayed_vfree_work
+  pwq 6: cpus=3D1 node=3D0 flags=3D0x0 nice=3D0 active=3D13 refcnt=3D14
+    in-flight: 5692:reg_todo for 157s
+    pending: 4*nsim_dev_hwstats_traffic_work, 3*psi_avgs_work, 2*ovs_dp_mas=
+ks_rebalance, 2*psi_avgs_work, xfrm_state_gc_task
+workqueue events_unbound: flags=3D0x2
+  pwq 8: cpus=3D0-1 flags=3D0x6 nice=3D0 active=3D21 refcnt=3D22
+    in-flight: 146:cfg80211_wiphy_work for 155s cfg80211_wiphy_work ,12:cfg=
+80211_wiphy_work for 156s cfg80211_wiphy_work
+    pending: nsim_dev_trap_report_work, flush_memcg_stats_dwork, cfg80211_w=
+iphy_work, 4*nsim_dev_trap_report_work, 7*macvlan_process_broadcast, toggle=
+_allocation_gate, crng_reseed, macvlan_process_broadcast
+  pwq 8: cpus=3D0-1 flags=3D0x6 nice=3D0 active=3D12 refcnt=3D13
+    in-flight: 1123:cfg80211_wiphy_work for 147s ,160:cfg80211_wiphy_work f=
+or 156s cfg80211_wiphy_work ,59:cfg80211_wiphy_work for 153s ,1116:cfg80211=
+_wiphy_work for 153s ,13:cfg80211_wiphy_work for 147s ,50:cfg80211_wiphy_wo=
+rk for 147s
+    pending: 5*cfg80211_wiphy_work
+workqueue events_freezable: flags=3D0x104
+  pwq 2: cpus=3D0 node=3D0 flags=3D0x0 nice=3D0 active=3D1 refcnt=3D2
+    pending: update_balloon_stats_func
+workqueue events_power_efficient: flags=3D0x180
+  pwq 2: cpus=3D0 node=3D0 flags=3D0x0 nice=3D0 active=3D3 refcnt=3D4
+    pending: do_cache_clean, 2*check_lifetime
+  pwq 6: cpus=3D1 node=3D0 flags=3D0x0 nice=3D0 active=3D12 refcnt=3D13
+    in-flight: 5730:wg_ratelimiter_gc_entries for 156s
+    pending: neigh_managed_work, neigh_periodic_work, hash_ipmac4_gc, neigh=
+_managed_work, gc_worker, neigh_periodic_work, reg_check_chans_work, 4*chec=
+k_lifetime
+workqueue events_dfl_long: flags=3D0x2
+  pwq 8: cpus=3D0-1 flags=3D0x6 nice=3D0 active=3D8 refcnt=3D9
+    pending: 8*defense_work_handler
+workqueue kvfree_rcu_reclaim: flags=3D0xa
+  pwq 8: cpus=3D0-1 flags=3D0x6 nice=3D0 active=3D2 refcnt=3D4 MAYDAY
+    pending: 2*kfree_rcu_monitor
+workqueue netns: flags=3D0x6000a
+  pwq 8: cpus=3D0-1 flags=3D0x6 nice=3D0 active=3D1 refcnt=3D4
+    in-flight: 139:cleanup_net for 159s
+workqueue mm_percpu_wq: flags=3D0x108
+  pwq 2: cpus=3D0 node=3D0 flags=3D0x0 nice=3D0 active=3D1 refcnt=3D2
+    pending: vmstat_update
+  pwq 6: cpus=3D1 node=3D0 flags=3D0x0 nice=3D0 active=3D1 refcnt=3D2
+    pending: vmstat_update
+workqueue writeback: flags=3D0x4a
+  pwq 8: cpus=3D0-1 flags=3D0x6 nice=3D0 active=3D1 refcnt=3D3 MAYDAY
+    pending: wb_workfn
+  pwq 8: cpus=3D0-1 flags=3D0x6 nice=3D0 active=3D1 refcnt=3D3 MAYDAY
+    pending: wb_update_bandwidth_workfn
+workqueue kblockd: flags=3D0x118
+  pwq 3: cpus=3D0 node=3D0 flags=3D0x0 nice=3D-20 active=3D1 refcnt=3D2
+    pending: blk_mq_timeout_work
+workqueue usb_hub_wq: flags=3D0x104
+  pwq 2: cpus=3D0 node=3D0 flags=3D0x0 nice=3D0 active=3D2 refcnt=3D3
+    in-flight: 5699:hub_event for 157s hub_event
+workqueue ksmbd-conn-release: flags=3D0xa
+  pwq 8: cpus=3D0-1 flags=3D0x6 nice=3D0 active=3D1 refcnt=3D3 MAYDAY
+    pending: ksmbd_session_expiration_worker
+workqueue ipv6_addrconf: flags=3D0x6000a
+  pwq 8: cpus=3D0-1 flags=3D0x6 nice=3D0 active=3D1 refcnt=3D11 MAYDAY
+    in-flight: 3195(RESCUER):addrconf_verify_work for 147s
+    pending: mayday_cursor_func
+    inactive: 5*addrconf_verify_work
+workqueue krxrpcd: flags=3D0x2001a
+  pwq 9: cpus=3D0-1 node=3D0 flags=3D0x4 nice=3D-20 active=3D1 refcnt=3D4
+    pending: rxrpc_peer_keepalive_worker
+workqueue bat_events: flags=3D0x6000a
+  pwq 8: cpus=3D0-1 flags=3D0x6 nice=3D0 active=3D1 refcnt=3D40 MAYDAY
+    in-flight: 3226(RESCUER):batadv_dat_purge for 2s
+    pending: mayday_cursor_func
+    inactive: batadv_bla_periodic_work, 5*batadv_mcast_mla_update, 4*batadv=
+_iv_send_outstanding_bat_ogm_packet, 3*batadv_purge_orig, 4*batadv_iv_send_=
+outstanding_bat_ogm_packet, batadv_purge_orig, batadv_iv_send_outstanding_b=
+at_ogm_packet, batadv_purge_orig, 3*batadv_iv_send_outstanding_bat_ogm_pack=
+et, 5*batadv_tt_purge, batadv_dat_purge, 2*batadv_bla_periodic_work, batadv=
+_dat_purge, batadv_bla_periodic_work, batadv_dat_purge
+workqueue wg-crypt-wg0: flags=3D0x128
+  pwq 2: cpus=3D0 node=3D0 flags=3D0x0 nice=3D0 active=3D1 refcnt=3D2
+    pending: wg_packet_encrypt_worker
+  pwq 6: cpus=3D1 node=3D0 flags=3D0x0 nice=3D0 active=3D2 refcnt=3D3
+    pending: wg_packet_tx_worker, wg_packet_encrypt_worker
+workqueue wg-crypt-wg1: flags=3D0x128
+  pwq 2: cpus=3D0 node=3D0 flags=3D0x0 nice=3D0 active=3D1 refcnt=3D2
+    pending: wg_packet_encrypt_worker
+  pwq 6: cpus=3D1 node=3D0 flags=3D0x0 nice=3D0 active=3D2 refcnt=3D3
+    pending: wg_packet_encrypt_worker, wg_packet_tx_worker
+workqueue wg-crypt-wg2: flags=3D0x128
+  pwq 2: cpus=3D0 node=3D0 flags=3D0x0 nice=3D0 active=3D1 refcnt=3D2
+    pending: wg_packet_encrypt_worker
+  pwq 6: cpus=3D1 node=3D0 flags=3D0x0 nice=3D0 active=3D2 refcnt=3D3
+    pending: wg_packet_decrypt_worker, wg_packet_encrypt_worker
+workqueue wg-crypt-wg0: flags=3D0x128
+  pwq 2: cpus=3D0 node=3D0 flags=3D0x0 nice=3D0 active=3D1 refcnt=3D2
+    pending: wg_packet_encrypt_worker
+  pwq 6: cpus=3D1 node=3D0 flags=3D0x0 nice=3D0 active=3D2 refcnt=3D3
+    pending: wg_packet_tx_worker, wg_packet_encrypt_worker
+workqueue wg-crypt-wg0: flags=3D0x128
+  pwq 2: cpus=3D0 node=3D0 flags=3D0x0 nice=3D0 active=3D1 refcnt=3D2
+    pending: wg_packet_encrypt_worker
+  pwq 6: cpus=3D1 node=3D0 flags=3D0x0 nice=3D0 active=3D2 refcnt=3D3
+    pending: wg_packet_tx_worker, wg_packet_encrypt_worker
+workqueue wg-kex-wg1: flags=3D0x6
+  pwq 8: cpus=3D0-1 flags=3D0x6 nice=3D0 active=3D1 refcnt=3D2
+    pending: wg_packet_handshake_send_worker
+workqueue wg-crypt-wg1: flags=3D0x128
+  pwq 2: cpus=3D0 node=3D0 flags=3D0x0 nice=3D0 active=3D1 refcnt=3D2
+    pending: wg_packet_encrypt_worker
+  pwq 6: cpus=3D1 node=3D0 flags=3D0x0 nice=3D0 active=3D2 refcnt=3D3
+    pending: wg_packet_encrypt_worker, wg_packet_tx_worker
+workqueue wg-kex-wg1: flags=3D0x6
+  pwq 8: cpus=3D0-1 flags=3D0x6 nice=3D0 active=3D1 refcnt=3D2
+    pending: wg_packet_handshake_send_worker
+workqueue wg-crypt-wg1: flags=3D0x128
+  pwq 6: cpus=3D1 node=3D0 flags=3D0x0 nice=3D0 active=3D1 refcnt=3D2
+    pending: wg_packet_tx_worker
+workqueue wg-crypt-wg2: flags=3D0x128
+  pwq 2: cpus=3D0 node=3D0 flags=3D0x0 nice=3D0 active=3D1 refcnt=3D2
+    pending: wg_packet_encrypt_worker
+  pwq 6: cpus=3D1 node=3D0 flags=3D0x0 nice=3D0 active=3D2 refcnt=3D3
+    pending: wg_packet_decrypt_worker, wg_packet_encrypt_worker
+workqueue wg-kex-wg2: flags=3D0x6
+  pwq 8: cpus=3D0-1 flags=3D0x6 nice=3D0 active=3D1 refcnt=3D2
+    pending: wg_packet_handshake_send_worker
+workqueue wg-crypt-wg2: flags=3D0x128
+  pwq 6: cpus=3D1 node=3D0 flags=3D0x0 nice=3D0 active=3D1 refcnt=3D2
+    pending: wg_packet_encrypt_worker
+workqueue wg-kex-wg0: flags=3D0x6
+  pwq 8: cpus=3D0-1 flags=3D0x6 nice=3D0 active=3D2 refcnt=3D3
+    pending: 2*wg_packet_handshake_send_worker
+workqueue wg-kex-wg1: flags=3D0x6
+  pwq 8: cpus=3D0-1 flags=3D0x6 nice=3D0 active=3D2 refcnt=3D3
+    pending: 2*wg_packet_handshake_send_worker
+workqueue wg-kex-wg2: flags=3D0x6
+  pwq 8: cpus=3D0-1 flags=3D0x6 nice=3D0 active=3D2 refcnt=3D3
+    pending: 2*wg_packet_handshake_send_worker
+workqueue krds_cp_wq#0/0: flags=3D0x20002
+  pwq 8: cpus=3D0-1 flags=3D0x6 nice=3D0 active=3D1 refcnt=3D5
+    in-flight: 37:rds_shutdown_worker for 85s
+    inactive: rds_shutdown_worker
+pool 2: cpus=3D0 node=3D0 flags=3D0x0 nice=3D0 hung=3D147s workers=3D9 idle=
+: 5664 1558 5701 9 5739 5749 10
+pool 6: cpus=3D1 node=3D0 flags=3D0x0 nice=3D0 hung=3D156s workers=3D9 idle=
+: 989 5672 25 5349 5671 5679 44
+pool 8: cpus=3D0-1 flags=3D0x6 nice=3D0 hung=3D2s workers=3D11 manager: 156
+Showing backtraces of busy workers in stalled worker pools:
+pool 6:
+task:kworker/1:8     state:R  running task     stack:25288 pid:5730  tgid:5=
+730  ppid:2      task_flags:0x4208060 flags:0x00080000
+Workqueue: events_power_efficient wg_ratelimiter_gc_entries
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5526 [inline]
+ __schedule+0x17db/0x58f0 kernel/sched/core.c:7277
+ preempt_schedule_irq+0x4b/0x90 kernel/sched/core.c:7599
+ irqentry_exit_to_kernel_mode include/linux/irq-entry-common.h:539 [inline]
+ irqentry_exit+0x14f/0x910 kernel/entry/common.c:167
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:=
+674
+RIP: 0010:lock_is_held_type+0x106/0x150 kernel/locking/lockdep.c:6021
+Code: 1b 00 00 b8 ff ff ff ff 65 0f c1 05 dc 9c af 07 83 f8 01 75 25 9c 58 =
+a9 00 02 00 00 75 39 41 f7 c4 00 02 00 00 74 01 fb 89 d8 <5b> 41 5c 41 5d 4=
+1 5e 41 5f 5d e9 5b 01 03 00 cc 90 0f 0b 90 48 c7
+RSP: 0018:ffffc90004ccf9f8 EFLAGS: 00000206
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000046
+RDX: 0000000000000000 RSI: ffffffff8e69d180 RDI: ffffffff8c6da780
+RBP: 00000000ffffffff R08: ffffffff8f9962e3 R09: 1ffffffff1f32c5c
+R10: dffffc0000000000 R11: fffffbfff1f32c5d R12: 0000000000000246
+R13: ffff8880328b0000 R14: ffffffff8ed5c940 R15: 0000000000000002
+ lock_is_held include/linux/lockdep.h:249 [inline]
+ __might_resched+0x37/0x4c0 kernel/sched/core.c:9219
+ wg_ratelimiter_gc_entries+0x3a4/0x450 drivers/net/wireguard/ratelimiter.c:=
+78
+ process_one_work kernel/workqueue.c:3396 [inline]
+ process_scheduled_works+0xc3d/0x1630 kernel/workqueue.c:3479
+ worker_thread+0xa47/0xfb0 kernel/workqueue.c:3560
+ kthread+0x38b/0x480 kernel/kthread.c:436
+ ret_from_fork+0x514/0xb70 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+rcu: 	Tasks blocked on level-0 rcu_node (CPUs 0-1): P6242/1:b..l
+rcu: 	(detected by 0, t=3D10621 jiffies, g=3D21385, q=3D996 ncpus=3D2)
+task:syz.2.155       state:R  running task     stack:24928 pid:6242  tgid:6=
+241  ppid:5626   task_flags:0x40054c flags:0x00080002
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5526 [inline]
+ __schedule+0x17db/0x58f0 kernel/sched/core.c:7277
+ preempt_schedule_common+0x7f/0xd0 kernel/sched/core.c:7456
+ preempt_schedule_thunk+0x16/0x40 arch/x86/entry/thunk.S:12
+ __raw_spin_unlock include/linux/spinlock_api_smp.h:201 [inline]
+ _raw_spin_unlock+0x41/0x50 kernel/locking/spinlock.c:213
+ spin_unlock include/linux/spinlock.h:401 [inline]
+ zap_pte_range mm/memory.c:2095 [inline]
+ zap_pmd_range mm/memory.c:2151 [inline]
+ zap_pud_range mm/memory.c:2179 [inline]
+ zap_p4d_range mm/memory.c:2200 [inline]
+ __zap_vma_range+0x40e1/0x4f80 mm/memory.c:2240
+ unmap_vmas+0x390/0x550 mm/memory.c:2309
+ exit_mmap+0x293/0x9f0 mm/mmap.c:1315
+ __mmput+0x118/0x420 kernel/fork.c:1193
+ exit_mm+0x221/0x2d0 kernel/exit.c:617
+ do_exit+0x6cd/0x2360 kernel/exit.c:999
+ do_group_exit+0x22d/0x2f0 kernel/exit.c:1154
+ get_signal+0x121b/0x12c0 kernel/signal.c:3051
+ arch_do_signal_or_restart+0xbb/0x860 arch/x86/kernel/signal.c:337
+ __exit_to_user_mode_loop kernel/entry/common.c:66 [inline]
+ exit_to_user_mode_loop+0x10e/0x770 kernel/entry/common.c:101
+ __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
+ syscall_exit_to_user_mode_prepare include/linux/irq-entry-common.h:230 [in=
+line]
+ syscall_exit_to_user_mode include/linux/entry-common.h:343 [inline]
+ do_syscall_64+0x328/0x520 arch/x86/entry/syscall_64.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f07d6f9e159
+RSP: 002b:00007f07d7f530e8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 00007f07d7225fa8 RCX: 00007f07d6f9e159
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00007f07d7225fa8
+RBP: 00007f07d7225fa0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f07d7226038 R14: 00007f07d734f960 R15: 00007f07d734fa48
+ </TASK>
+rcu: rcu_preempt kthread starved for 3099 jiffies! g21385 f0x0 RCU_GP_WAIT_=
+FQS(5) ->state=3DR ->cpu=3D0
+rcu: 	Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expec=
+ted behavior.
+rcu: RCU grace-period kthread stack dump:
+task:rcu_preempt     state:R  running task     stack:27496 pid:17    tgid:1=
+7    ppid:2      task_flags:0x208040 flags:0x00080000
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5526 [inline]
+ __schedule+0x17db/0x58f0 kernel/sched/core.c:7277
+ __schedule_loop kernel/sched/core.c:7354 [inline]
+ schedule+0x164/0x2b0 kernel/sched/core.c:7369
+ schedule_timeout+0x152/0x2c0 kernel/time/sleep_timeout.c:99
+ rcu_gp_fqs_loop+0x30c/0x11f0 kernel/rcu/tree.c:2122
+ rcu_gp_kthread+0x9e/0x2b0 kernel/rcu/tree.c:2330
+ kthread+0x38b/0x480 kernel/kthread.c:436
+ ret_from_fork+0x514/0xb70 arch/x86/kernel/process.c:158
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+rcu: Stack dump where RCU GP kthread last ran:
+CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Tainted: G             L      syzkalle=
+r #0 PREEMPT(full)=20
+Tainted: [L]=3DSOFTLOCKUP
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
+gle 07/24/2026
+RIP: 0010:pv_native_safe_halt+0xf/0x20 arch/x86/kernel/paravirt.c:64
+Code: bc 88 02 c3 cc cc cc cc cc cc cc 90 90 90 90 90 90 90 90 90 90 90 90 =
+90 90 90 90 f3 0f 1e fa 66 90 0f 00 2d b3 c1 23 00 fb f4 <e9> 8c 08 03 00 c=
+c cc cc cc cc cc cc cc cc cc cc cc 90 90 90 90 90
+RSP: 0018:ffffffff8ea07ca0 EFLAGS: 00000242
+RAX: 00000000001b75e9 RBX: ffffffff819bb25c RCX: 8000000000000001
+RDX: 0000000000000001 RSI: ffffffff8e414979 RDI: ffffffff8c6da780
+RBP: ffffffff8ea07d78 R08: ffff8880b8633a1b R09: 1ffff110170c6743
+R10: dffffc0000000000 R11: ffffed10170c6744 R12: 0000000000000000
+R13: 1ffffffff1d51e00 R14: 1ffffffff1d40f9c R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff888124cce000(0000) knlGS:000000000000000=
+0
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000020000020f030 CR3: 000000007f564000 CR4: 00000000003526f0
+Call Trace:
+ <TASK>
+ arch_safe_halt arch/x86/kernel/process.c:767 [inline]
+ default_idle+0x9/0x20 arch/x86/kernel/process.c:768
+ default_idle_call+0x72/0xb0 kernel/sched/idle.c:122
+ cpuidle_idle_call kernel/sched/idle.c:199 [inline]
+ do_idle+0x1cc/0x540 kernel/sched/idle.c:355
+ cpu_startup_entry+0x43/0x60 kernel/sched/idle.c:454
+ rest_init+0x378/0x3a0 init/main.c:732
+ start_kernel+0x392/0x3e0 init/main.c:1190
+ x86_64_start_reservations+0x24/0x30 arch/x86/kernel/head64.c:310
+ x86_64_start_kernel+0x137/0x1b0 arch/x86/kernel/head64.c:291
+ common_startup_64+0x13e/0x157
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	1b 00                	sbb    (%rax),%eax
+   2:	00 b8 ff ff ff ff    	add    %bh,-0x1(%rax)
+   8:	65 0f c1 05 dc 9c af 	xadd   %eax,%gs:0x7af9cdc(%rip)        # 0x7af9=
+cec
+   f:	07
+  10:	83 f8 01             	cmp    $0x1,%eax
+  13:	75 25                	jne    0x3a
+  15:	9c                   	pushf
+  16:	58                   	pop    %rax
+  17:	a9 00 02 00 00       	test   $0x200,%eax
+  1c:	75 39                	jne    0x57
+  1e:	41 f7 c4 00 02 00 00 	test   $0x200,%r12d
+  25:	74 01                	je     0x28
+  27:	fb                   	sti
+  28:	89 d8                	mov    %ebx,%eax
+* 2a:	5b                   	pop    %rbx <-- trapping instruction
+  2b:	41 5c                	pop    %r12
+  2d:	41 5d                	pop    %r13
+  2f:	41 5e                	pop    %r14
+  31:	41 5f                	pop    %r15
+  33:	5d                   	pop    %rbp
+  34:	e9 5b 01 03 00       	jmp    0x30194
+  39:	cc                   	int3
+  3a:	90                   	nop
+  3b:	0f 0b                	ud2
+  3d:	90                   	nop
+  3e:	48                   	rex.W
+  3f:	c7                   	.byte 0xc7
 
-LyogU3BlbmRzIG5lYXJseSBhbGwgaXRzIHRpbWUgaW4gbGVhZigpLCBjYWxsZWQgdmlhIG1pZCgp
-IGZyb20gbWFpbigpLCBzbwogICBldmVyeSBzYW1wbGUncyBjYWxsIGNoYWluIHNob3VsZCByZWFj
-aCBtYWluLiAqLwojaW5jbHVkZSA8c3RkaW8uaD4KI2luY2x1ZGUgPHN0ZGxpYi5oPgoKX19hdHRy
-aWJ1dGVfXygobm9pbmxpbmUpKSBsb25nIGxlYWYobG9uZyBpKSB7CiAgICBsb25nIHMgPSAwOwog
-ICAgZm9yIChsb25nIGogPSAwOyBqIDwgMTAwMDsgaisrKQogICAgICAgIHMgKz0gKGkgKiBqKSBe
-IGo7CiAgICByZXR1cm4gczsKfQoKX19hdHRyaWJ1dGVfXygobm9pbmxpbmUpKSBsb25nIG1pZChs
-b25nIGkpIHsgcmV0dXJuIGxlYWYoaSkgKyAxOyB9CgppbnQgbWFpbihpbnQgYXJnYywgY2hhciAq
-KmFyZ3YpIHsKICAgIGxvbmcgbiA9IGFyZ2MgPiAxID8gYXRvbChhcmd2WzFdKSA6IDMwMDAwMDA7
-CiAgICBsb25nIHMgPSAwOwogICAgZm9yIChsb25nIGkgPSAwOyBpIDwgbjsgaSsrKQogICAgICAg
-IHMgKz0gbWlkKGkpOwogICAgcHJpbnRmKCIlbGRcbiIsIHMpOwogICAgcmV0dXJuIDA7Cn0K
---0000000000004d30cc06607fd820--
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
