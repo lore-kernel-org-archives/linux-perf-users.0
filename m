@@ -1,56 +1,63 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=196.1.113.117
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794885710;
-	b=Zrqv+n3PkAs5qwMeCg+sLOJJB8H5TBnckCAKQXNFEv7Hv9Qcli9iasBtXmmNdEBtjnWs
-	 4Zi133qRqHNAfGm5I7r42q+qIIwyDZ8MiSc/u7UVZlIGMH5/KZkDqI9D+nmGBWtVu8FFx
-	 9/6IUv/Rvgoxmjs/shVERXW/7No/GhT1em81Ux3S6x0CgRagVTYdGOmDGaSreb5kr5pzo
-	 MVl2+9fP0vgHKvGfPIWBK6iP5K9lPqCcDy8EVbr9mXkiOEeuQ148B567onSHpUHEaahbJ
-	 XrU3162OiEqQVXTTLpNzdVdnmRXjz6Ym6ApPbqakm8lyHyd/RnPtZ2TZ0hQFeaxR5eg==
+	t=1794895618;
+	b=NbSr+Q71DUz/RfEzBZDEU9y70Ov6b5EXINUvRhZ0KwZAr8fZKqSPa4P7K94Fp82hBVHN
+	 h3FZz+lAxIQlCX42p0k7fCzTthdn3gSLFsb9m5jc1lbL47yMccoqDaQlxAFqD0lVENale
+	 AdBDG98WBj6dEcVgAyOdn4vyEFhDTOEmGB3oe+NtbzzZUUd1wdCXJ+iOT468ZozeN6X1V
+	 VTKbTSsnj9p2T3E9MPz7xrANow3CUo2jdVowWkSVIMr6VRzgtrPAkFBzfIrC6W9/GDPnS
+	 sYx7yNbNviBlcLsIyTPpQO7EbeXL4XX5VnxMC77kibLzNzW8VvsbW2AcFFyOn95uIOQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794885710;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=eOc4NMcUOu3fFFrPSh27438lMww93H4RfKB1k2FCvgE=;
-	b=E7mrzg3dj2I4AjWUdVNVTI8xLXfNAgVs4r6Ejl8qAroAp6k9sXXlgVelva31aYkDf6ZK
-	 ztXkLJ7wWcT4bYBwZr88OcqQdxd2JZeMDVlmDTlgHV0afDwZieNpLT/3Q5IA/FD/X6FQ1
-	 pHmOEFVnqNosZkarjQEyrBlPIS+GVuE1mFv84EVIztTcozIcUQSRbAydkS9D1OSD1Kwzm
-	 8Vh8ZQRtnr0y3VzP6cYTgNOzQDKqSUOSlvTQv2RxyKq5BdUOfYHyGJsY72/9xiYxxIk06
-	 HiRlQVu9OQct6BSZVXmiBPUsrl6BNrUyr1wciNLulVX4uszNLMKIbhh0CO6HP6UO+Ig==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794895618;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Received:Date:From:To:
+	 Message-ID:Subject:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-Priority:Importance:X-Mailer:
+	 X-Originating-Client:X-CDAC-PUNE-MailScanner-Information:
+	 X-CDAC-PUNE-MailScanner-ID:X-CDAC-PUNE-MailScanner:
+	 X-CDAC-PUNE-MailScanner-SpamCheck:X-CDAC-PUNE-MailScanner-From:
+	 X-Spam-Status;
+	bh=fspsaDB1VpBVWIq+Zep9LhfWmik4IX/EaBah1N/sETQ=;
+	b=PR4lSmvYdZnvHk32WueGwhHuWoZ4c7vPUbcbWNs8OQl/qYcW3ohgcVEQY9u8jqPiVebg
+	 +1mEjV0GfwkOS4hCTZRymPJ9/itYKtXu6mZDyiX0Qwiaqe0tyBzBB8fd4zUax+Ng8H3HT
+	 Ey2iEcky7DklGvXiKl1qM0U24M1FZbZU4AiEzj7OYWUghKToCNo+hMCSfWxIMkxOgSz7h
+	 RikByrxECGPyRKWqs25tKfAgui6pVI8NfDZk1PitE8fU+v+dkk5nhaEDyYhTVmsFZ4wbr
+	 NwmtpIC/30fFrk5ADLdgK1esUvM2OkOAPdLuGuWu/KDzbYhNOxXRjiWyFm5gwM/Sidw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=atRMyhCr;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=cdac.in;
+	spf=pass smtp.mailfrom=cdac.in;
+	dkim=pass header.d=cdac.in header.i=@cdac.in header.a=rsa-sha256 header.s=default header.b=mDEjtDAB;
+	arc=none smtp.remote-ip=196.1.113.117
+Received: from mailsender-core1.pune.cdac.in (mailsender.cdac.in [196.1.113.117])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5325D606A31C
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 03:21:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D88606A31C
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 06:06:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E0D88606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cdac.in
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cdac.in
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=atRMyhCr
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B69541F000C4;
-	Tue, 17 Nov 2026 03:21:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794885709;
-	bh=eOc4NMcUOu3fFFrPSh27438lMww93H4RfKB1k2FCvgE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=atRMyhCrHErvBcEOR2oToyLTyyHcSD1pwIATDXClPa/L+eg0bQVV+BV0YdT3Wh74I
-	 GTxqfZHn+61vMmCfPqI73lUeOsxN3LWHpy+xt4PGGxW4yo1PyUxJgzTyqWBOAlRDlo
-	 K6dG4mfUaQLUwAUgiaJVWy9Ko9786q3TrWA2gstsfv5RgIbATkLL3aoNKt2OxuYFp0
-	 RLtjE5EY9iWWh0zWWBwyr+NAxGnMghp0+pXLGVWuTAIy08GjgTUbA/TlOvFTROT0Ol
-	 CxLv7Af+mrSQ7SFdfeotjPFlZDf00X/9w9Qq4lbbgowkPpdEwd0T/dyS5DfPwZSRS0
-	 hMfzKSrzj452A==
-Message-ID: <sashiko-outbox-218136@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 01/12] perf scripts: Add a coverage harness for perf
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261117025305.3958882-2-acme@kernel.org>
-References: <20261117025305.3958882-1-acme@kernel.org>
- <20261117025305.3958882-2-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 17 Nov 2026 03:21:49 +0000
+	dkim=pass (1024-bit key) header.d=cdac.in header.i=@cdac.in header.a=rsa-sha256 header.s=default header.b=mDEjtDAB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=cdac.in; s=default;
+	t=1794895612; bh=zXq+V/d90zrzRSfb+HyqqUtwtLxb/aDa7XCwBI5u0Gs=;
+	h=Date:From:To:Subject:From;
+	b=mDEjtDAByhWPpT196y6SEULNVlKtL5UoVj7R+DxOhsscKB8OOdFBmPtnC9GAYTVAq
+	 PP3FdlWSdaWMIQxZZklSJc3h0z3JApRX6LdT5CbVG9o2P6QORY9ZWoeWe9zkzVqx3U
+	 +WwV0Ig499lQC7GDmM1T/gtwbjYcJm7ov+BKXE3E=
+Received: from mscr-int2.pune.cdac.in (mscr-int2.pune.cdac.in [10.208.193.12])
+	by mailsender.cdac.in (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTP id 6AH66pJ01637718
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 11:36:52 +0530
+Received: from mailgw-cip.pune.cdac.in (mscr-haproxy.pune.cdac.in [10.208.193.46])
+	by mscr-int2.pune.cdac.in (Postfix) with ESMTP id 63E601000AB3E
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 11:36:36 +0530 (IST)
+Received: from webmail2 (unknown [10.208.193.8])
+	by mailgw-cip.pune.cdac.in (Postfix) with ESMTPS id 5D80514E086F
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 11:36:36 +0530 (IST)
+Date: Tue, 17 Nov 2026 11:36:25 +0530 (IST)
+From: Rutuja Sandbhor <rutujas@cdac.in>
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Message-ID: <1662286702.77676.1794895585598@webmail2.cdac.in>
+Subject: T-Head C910 perf events: question on stall events for top-down
+ analysis
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,184 +66,41 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Normal
+X-Mailer: Open-Xchange Mailer v7.10.4-Rev30
+X-Originating-Client: open-xchange-appsuite
+X-CDAC-PUNE-MailScanner-Information: Please contact the ISP for more information
+X-CDAC-PUNE-MailScanner-ID: 63E601000AB3E.A35FA
+X-CDAC-PUNE-MailScanner: Found to be clean
+X-CDAC-PUNE-MailScanner-SpamCheck: not spam, SpamAssassin (not cached,
+	score=-1, required 6, ALL_TRUSTED -1.00)
+X-CDAC-PUNE-MailScanner-From: rutujas@cdac.in
 
-Thank you for your contribution! Sashiko AI review found 3 potential
-issues to consider:
-- [Medium] perf scripts: coverage.sh: libperf-jvmti.so linked without
-  profile runtime
-- [Low] perf scripts: coverage.sh: missing timed out test check in
-  run_tests()
-- [Low] perf scripts: coverage.sh report path regexes require
-  tools/perf/ prefix
---
+Hi Inochi,
+I am Rutuja from C-DAC, India. I am working on top-down analysis (Levels 1 to 3) for the T-Head C910 on a LicheePi 4A (TH1520), using the events from your "perf vendor events riscv: add T-HEAD C9xx JSON file" patch. Thank you for that work. It made perf usable on this board.
+My setup: custom kernel 6.6.66, perf 6.12, perf cpuid 0x5b7-0x0-0x0. perf list shows the vendor events, including the L1/LL cache and TLB events, ifu_stalled_cycle, idu_stalled_cycle, lsu_other_stall, lsu_4k_stall and sync_stall.
+The C910 has no top-down events, so I want to approximate the top-down categories from these stall and cache events. I could not answer a few questions from T-Head's documentation:
+  1. What exactly do idu_stalled_cycle, ifu_stalled_cycle and lsu_other_stall count? Are they cycles where nothing is fetched or dispatched, or something narrower? Can they overlap in the same cycle? In a latency-bound pointer-chase test I see IPC of about 0.11 and idu_stalled_cycle at about 94% of cycles, which suggests it includes cycles waiting on loads, but I would like to confirm.
+  2. In the V3 discussion you mentioned a fault in T-Head's documentation and that you would extract the events from the vendor perf driver. Did you find events, especially stall, cache or TLB events, that do not behave as the documentation says?
+  3. Do you know how large the skid is on the C910 counter-overflow interrupt, or whether any precise sampling mechanism exists on this core?
+Any pointer to documentation, the vendor driver source, or someone who knows the answers would help a lot. I am happy to share my measurements if they are useful.
+Thank you,
+Rutuja
+C-DAC, India
 
-commit 8d4f44c46af7fe536a6ca79e56ff18db52b58791
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+------------------------------------------------------------------------------------------------------------
+[ C-DAC is on Social-Media too. Kindly follow us at:
+Facebook: https://www.facebook.com/CDACINDIA & Twitter: @cdacindia ]
 
-perf scripts: Add a coverage harness for perf
+This e-mail is for the sole use of the intended recipient(s) and may
+contain confidential and privileged information. If you are not the
+intended recipient, please contact the sender by reply e-mail and destroy
+all copies and the original message. Any unauthorized review, use,
+disclosure, dissemination, forwarding, printing or copying of this email
+is strictly prohibited and appropriate legal action will be taken.
+------------------------------------------------------------------------------------------------------------
 
-This commit adds tools/perf/scripts/coverage.sh and corresponding make
-targets to build perf with clang source-based coverage, run the perf test
-suite, and generate coverage reports and tables.
-
-> diff --git a/tools/perf/scripts/coverage.sh b/tools/perf/scripts/coverage=
-.sh
-> new file mode 100755
-> index 0000000000000..aa2649cf08c4a
-> --- /dev/null
-> +++ b/tools/perf/scripts/coverage.sh
-> @@ -0,0 +1,738 @@
-
-[ ... ]
-
-> +build_perf()
-> +{
-> +	if [ "$SKIP_BUILD" =3D 1 ]; then
-> +		check_coverage_build
-> +		return
-> +	fi
-> +
-> +	say "Building perf in $BUILD_DIR"
-> +	mkdir -p "$BUILD_DIR"
-> +	local debug=3D()
-> +	[ "$DEBUG_BUILD" =3D 1 ] && debug=3D(DEBUG=3D1)
-> +
-> +	if ! make -C "$PERF_DIR" O=3D"$BUILD_DIR" CC=3Dclang \
-> +		"${debug[@]+"${debug[@]}"}" \
-> +		EXTRA_CFLAGS=3D"-fprofile-instr-generate -fcoverage-mapping -gdwarf-$D=
-WARF_VERSION" \
-> +		-j"$JOBS" > "$BUILD_LOG" 2>&1; then
-
-[Severity: Medium]
-Does passing -fprofile-instr-generate only via EXTRA_CFLAGS leave
-__llvm_profile_runtime unresolved in libperf-jvmti.so?
-
-jvmti/jvmti-in.o is compiled with EXTRA_CFLAGS, but Makefile.perf links
-libperf-jvmti.so without CFLAGS or EXTRA_CFLAGS:
-
-tools/perf/Makefile.perf:
-    $(OUTPUT)$(LIBJVMTI): $(LIBJVMTI_IN)
-    	$(QUIET_LINK)$(CC) $(LDFLAGS) -shared -Wl,-soname -Wl,$(LIBJVMTI) -o $=
-@ $<
-
-Without -fprofile-instr-generate in LDFLAGS, clang does not link the
-profiling runtime into libperf-jvmti.so.  When test_java_symbol.sh loads
-$BUILD_DIR/libperf-jvmti.so into jshell via -J-agentpath, the JVM fails to
-load the agent due to the unresolved symbol, failing the test and
-producing no coverage for libperf-jvmti.so despite llvm_cov_objects()
-passing --object=3D$BUILD_DIR/libperf-jvmti.so to llvm-cov.
-
-[ ... ]
-
-> +	# 'perf test' exits 0 even when tests fail, only the summary tells.
-> +	if [ "$test_status" =3D 0 ] && grep -qE '^Failed tests +: +[1-9]' "$TES=
-T_LOG"; then
-> +		test_status=3D1
-> +	fi
-> +
-> +	grep -E '^(Passed|Skipped|Failed) .*:' "$TEST_LOG" || true
-
-[Severity: Low]
-Does run_tests() miss tests that time out?
-
-In tools/perf/tests/builtin-test.c, print_tests_summary() tracks and
-prints "Timed out tests   : <N>" separately from "Failed tests      : <N>"
-while returning 0.  If a test times out (which is more likely under the
-default -O0 -g build) and no other test fails, run_tests() omits the timed
-out count from the summary and coverage.sh exits with status 0.
-
-[ ... ]
-
-> +file_cov()
-> +{
-> +	awk -v f=3D"$2" '
-> +		function perf_relpath(p) {
-> +			if (p ~ /(^|\/)tools\/perf\//)
-> +				sub(/^.*tools\/perf\//, "", p)
-> +			return p
-> +		}
-> +		{
-> +			g =3D f
-> +			sub(/^.*tools\/perf\//, "", g)
-> +			rel =3D perf_relpath($1)
-> +			if (rel =3D=3D f || rel =3D=3D g || $1 =3D=3D f) {
-> +				print $8, $9, $10, $7
-> +				exit
-> +			}
-> +		}' "$1"
-> +}
-
-[ ... ]
-
-> +print_worst_files()
-> +{
-> +	[ "$TOP" -gt 0 ] || return 0
-> +	local rows missed lines cover fn path
-> +	rows=3D$(awk -v min=3D"$MIN_LINES" '
-> +		$1 ~ /(^|\/)tools\/perf\// && $8 >=3D min && $9 > 0 {
-> +			path =3D $1
-> +			sub(/^.*tools\/perf\//, "", path)
-> +			printf "%s %s %s %s %s\n", $9, $8, $10, $7, path
-> +		}' "$REPORT" | sort -k1,1nr -k2,2nr | sed -n "1,${TOP}p")
-
-[ ... ]
-
-> +table_row()
-> +{
-> +	awk -v f=3D"$2" '
-> +		function perf_relpath(p) {
-> +			if (p ~ /(^|\/)tools\/perf\//)
-> +				sub(/^.*tools\/perf\//, "", p)
-> +			return p
-> +		}
-> +		{
-> +			g =3D f
-> +			sub(/^.*tools\/perf\//, "", g)
-> +			path =3D perf_relpath($1)
-> +			if (path =3D=3D f || path =3D=3D g || $1 =3D=3D f) {
-> +				printf "%s\t%s\t%d\t%d\t%.2f\t%s\t%d\t%s\n",
-> +				       path, $8, $8 - $9, $9, $10, $5, $5 - $6, $7
-> +				exit
-> +			}
-> +		}' "$1"
-> +}
-> +
-> +table_rows()
-> +{
-> +	if [ ${#FOCUS[@]} -gt 0 ]; then
-> +		local file
-> +		for file in "${FOCUS[@]}"; do
-> +			table_row "$REPORT" "$file"
-> +		done | sort -t$'\t' -k5,5gr
-> +		return
-> +	fi
-> +
-> +	awk -v min=3D"$MIN_LINES" '
-> +		$1 ~ /(^|\/)tools\/perf\// && $8 >=3D min && $9 > 0 {
-> +			path =3D $1
-> +			sub(/^.*tools\/perf\//, "", path)
-> +			printf "%s\t%s\t%d\t%d\t%.2f\t%s\t%d\t%s\n",
-> +			       path, $8, $8 - $9, $9, $10, $5, $5 - $6, $7
-> +		}' "$REPORT" |
-> +		sort -t$'\t' -k4,4nr |
-> +		if [ "$TOP" -gt 0 ]; then sed -n "1,${TOP}p"; else cat; fi |
-> +		sort -t$'\t' -k5,5gr
-> +}
-
-[Severity: Low]
-Will these tools/perf/ path checks fail to match report entries when the
-build directory is inside tools/ (for example, make -C tools/perf O=3Dbuild
-coverage)?
-
-llvm-cov report strips the longest common path prefix shared by all
-covered files.  Because all covered files in perf and its internal
-libraries live under tools/, a build directory inside tools/ causes
-llvm-cov report to strip the <srctree>/tools/ prefix and emit paths
-starting with perf/ (such as perf/util/evsel.c) instead of tools/perf/.
-As a result, print_worst_files() prints nothing, file_cov() reports
-focused files as not covered, and print_table() exits with an error that
-there is no coverage data in $REPORT.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261117025305.3958=
-882-1-acme@kernel.org?part=3D1
