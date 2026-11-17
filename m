@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794873800;
-	b=XFIg1P3Z7uPeLfDLXkGDtsagPTR0a2WwqqvaE19N1Hk+8NfQZnYEs+zetaSd4sDqnpQy
-	 YP7+xAWgDT8ey/6/474OEWxYWH2sTCZgCzXyOVCcV2mWFvauWsB698qLVd2akR4TU8bz3
-	 +VEzb0DWjPgOPv0OiFnmXcuZkjkJb187HztwtOe9vI9FMa1ocbwMI9rplZo4G+b7wt5I5
-	 It82VG4FU5m3v996S42GmAC7Crv+5qoIfXEdNpc2zohIo+GZqt2K7Uk1tFWCbvUe5N9Ar
-	 v/gaRzzs5gyJGWwY9DrlP1meJ3tINjfe3C7GX47aemhJKYICakOsbpZ2nNgwX1G0r/Q==
+	t=1794873835;
+	b=BQRj2pLettsN64YFXCSruX5Hxaxf3+5wdCaUhdop0ZEsknZuaIaco+aLZTm6qTbM1zZB
+	 y+yU4Zppi3ZOgpjLxEZOt4xZ7wyirMa18it4TR/6wB17HSylC9UL0vGq4S8ZPOy0kOOY+
+	 o+hIbn2cWTlnqT5kuS4cudWTrlEWEPIF60+ioTPBFDvFuvsFJj3ktwOSrt4pD2SPgAb38
+	 oM+rMfGZGVVr+Oq8z1jflN8RzVnuD71tg0BsMN1uMj+sC3Rm+xy/6QjK7p9+BsX654dPb
+	 WNlpbrvERP+j3iIDEzSuHr7obFv0neIoyGJ75uvFmsTZaFIA+BJjvDEfNCzpZ+6H6+w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794873800;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794873835;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=RrHr0408xauE5LeT7Tr+ZYBY9yYkiO47KhpTM+J5Y2g=;
-	b=FfEGb3tB+Q3NTXCZIdEw3FDh+DejHEzEHlkUGMEKLz+WdhDLUKTAXS1e3TY/sc1Amtz7
-	 lm5PvuSa4KvBvN+eeufaidRccZ3DnDxXrUZjz8fM7Gyz+Hbnt1Fedbe0eWeKRNHKgB89i
-	 GaEhIs+6Q9K23W7V2fnuSUGT20IMA/uPqNOXQaqmPRwdBXt8H3naQOsgvBWwvKAmUvCnf
-	 +fdycbG5Xiq6lMlgV1j5WbSdeD2gkV/QywOpbvecl4awFtEHBHY62rizVmAPmkup0nA/A
-	 g/Nftv/IyTqTojjCNXEHFwfUnZwRGJyOagj/YpGEbAVF+7uMqcSFmSASzYbGS9JYAVQ==
+	bh=WGZ8GA0J/zDFCNwg43i7cStKQvXj8elI2gFGDalsweQ=;
+	b=X+eIBX9dU+g+CE+sZc7+bTTf9wwTP3mldb35sdbm5D+mVz793iuItg6pyv5asVTgXyEF
+	 LP2nIPdt9kEkdNgrkh7hT3ci2DPxgHusopQP1cdJ8qaevOj0FTFV4llnLH6viZpQnodk3
+	 lBA4BxjqXDav0Asn/dY2WWeTxGKCkNVvPAem4IXlMuDGG3wgKIFsDhnyQDG//yVvro17L
+	 itoGeBJCSOBifwyMx+jp+V08pcbinbCfEDPsWkNgEUUaLn9g8m0Gt5DJ8ZOcGDf9XUT+f
+	 z+v87T+UNcXdC/BNx/BHm1fiBQM3jVckr4f4Tdl2LOZIw9ptmMucV5ckwqjX0XSmGeQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bxrF+PdM;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=N4ljM4O9;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F68B606A31C
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 00:03:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BD0606A332
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 00:03:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bxrF+PdM
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AF171F000C4;
-	Tue, 17 Nov 2026 00:03:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=N4ljM4O9
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44E5D1F000C4;
+	Tue, 17 Nov 2026 00:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794873799;
-	bh=RrHr0408xauE5LeT7Tr+ZYBY9yYkiO47KhpTM+J5Y2g=;
+	s=k20260515; t=1794873835;
+	bh=WGZ8GA0J/zDFCNwg43i7cStKQvXj8elI2gFGDalsweQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bxrF+PdMrsYha+1dpBA5X1zcyuigrSaQ88faXW/VgbzcUWoKpVPUIwW/QMpEdnoSI
-	 RnYTeLWiTrJ8o/7mV9LxZFluPmcChcjeLHqSDHwmoQbegZqhTDsra38vKXUgrhw/lr
-	 pHDbt7i2dD7FjMGb7sygRQH9afoc4FFQUxfvDOgjQbGa3/HcLF1PPTmL0Oid/AWuhW
-	 MmLOBzxb42Y12nzO3G1ozj+bIV+q4LPEg7XRm4rECZYkc/11Ux9LE+vbmTP3714ykw
-	 T3G5WvbbHpONUFuN6p5GmVeUHv4hw9HrH/Hy5+pQcclyR7cLnubemtJ5ZltIOckG6j
-	 2Vr72ugK9senw==
-Message-ID: <sashiko-outbox-217970@kernel.org>
+	b=N4ljM4O9STqTxBPow+EWOVoty/Vhoq9YWPFQndPtSyjCq8V6YlyQH6lqBFrXwuxQ5
+	 YRZuaUVxrCm6B+kUk8xsOk23DZBqJkwduFSCdQfvqvFlz377OecND44fGOvA0cHs9i
+	 828ghPH5rQq+jez2KJJ2t4dIr1T9rX1SsdEWsPsexBjN49SEwkEaDp2Znj0cFUhrWz
+	 lG9uFpVpsDe8rPv0oHroG70bZ+lLrKC3FDPukQemegR7sV1gy+Dik9sZstdaDPCYuT
+	 U9fvjgqLV+qpbilkZPpk0Bjj5lazoYeZ5L0PaRmlo5TOmklcQ7Nin75L6k8tMLUm3X
+	 XaZwjmMe+0eBw==
+Message-ID: <sashiko-outbox-217971@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 03/12] perf annotate-data: Resolve DW_OP_addrx global
- variables
+Subject: Re: [PATCH v4 02/12] perf annotate: Handle absolute addressing in
+ data type profiling
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261116234659.3950531-4-acme@kernel.org>
+In-Reply-To: <20261116234659.3950531-3-acme@kernel.org>
 References: <20261116234659.3950531-1-acme@kernel.org>
- <20261116234659.3950531-4-acme@kernel.org>
+ <20261116234659.3950531-3-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 17 Nov 2026 00:03:18 +0000
+Date: Tue, 17 Nov 2026 00:03:54 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,28 +63,27 @@ Precedence: list
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> clang emits DW_AT_location with DW_OP_addrx for global variables in
-> DWARF 5, gcc emits DW_OP_addr.  The address index was not resolved, so
-> those variables were not found by address; the by-name fallback also
-> missed the ones in .bss past the file backed end of the last segment.
+> 32-bit x86 accesses globals with absolute addresses, like
+> "movl %eax,0x8c73448", but the operand parser only recognized the
+> offset(reg) forms, so the operand had no memory reference, the resolver
+> saw a zero data address and resolved nothing.
 >=20
-> Resolve the index with dwarf_getlocation_attr() + dwarf_formaddr() and
-> use the resulting address in the by-address lookup and in the global
-> variable cache.  The new global_data workload keeps a zero initialized
-> struct in .bss and its test checks that the accesses are annotated: when
-> perf is built with clang and DWARF 5 it goes through DW_OP_addrx, with
-> gcc through DW_OP_addr.  The test skips on 32-bit PIE builds, which
-> load globals through the GOT, something the resolver does not follow.
+> Parse a bare number as an absolute memory operand, leaving jumps and
+> calls out, use the address in the resolver, and let the instruction
+> tracking record the type of an absolute global load in the destination
+> register.  The displacement is sign extended for 64-bit objects, as the
+> CPU does, and zero extended for 32-bit ones; a zero address is skipped
+> by both users, since it is what an unrelocated operand looks like.
 >=20
-> Fixes: d60469d7c0e5c4e8 ("perf dwarf-aux: Add die_find_variable_by_addr()=
-")
-> Fixes: d7b60803a790b716 ("perf dwarf-aux: Add die_collect_global_vars()")
-> Cc: Namhyung Kim <namhyung@kernel.org>
+> With bare numbers being memory operands, a frame base register of -1,
+> "none", would also compare equal to the -1 "no register" of an absolute
+> operand and take it for a stack access, so guard those comparisons.
+>=20
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261116234659.3950=
-531-1-acme@kernel.org?part=3D3
+531-1-acme@kernel.org?part=3D2
 
