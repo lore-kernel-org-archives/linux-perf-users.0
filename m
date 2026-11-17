@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794884492;
-	b=rrs8OVBLvkZpGWEyhRuXpBgcD6FzOHI/v9drWe/IVv54OrycAKLqvbXvI6i/z7zw7ksH
-	 /AOFQI2woqlg09W9OvMHVg7WU+O2OqxtO/g0Uk6LGohHoAfBHvdW8LSfEqW8gtZ9izPD4
-	 q+0mvLNLMCRXvI+Tm0Seb2LL2DfVjeTA0gxAXgQh/vCe/PgJWBx2YBt4Z5Nucc2G7RCc5
-	 Cv5xvaVicbgQs9DmpCuvTXdPTd1OkMDnGNEzGwCtMFO5jQKn1p34rS4n78rTt8yj3b6R4
-	 r5werucjJ8Z7PUAucfmvr6P7JtfAs97xzCLDylxBQOlo4gzdXococnXkYEs6o7CvN0A==
+	t=1794884544;
+	b=k7zzeARVLvJBw+na7XFOzSQ06X99d8y5u8Yt8BxOO58m1h/6WrgTHfmFAqWXOezV8bS2
+	 1tpD34lms7Z36zmqm7p5gJiw7beHCHvaHF5O6hT2/8cl3dVGPFdWnMBcE/adNph0zxQR4
+	 /YLzMlJev+p4yNbICoMmcrZDx+BldsKk2UYqjE48FbAPGGNIelIMwz05gid7773Pg6GHV
+	 rdxX/iR+tax5vzli297dAOvtLzI7m8mXOtwfo4KJP0hq72Jm0E0Vjup495bs7RBt8UfC9
+	 5S8rb81bkJZmj7qBRHx9RABrvRP4HZ6dSt3ciEIgenWj6nBbycVfVyQau7SSFvirK0w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794884492;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794884544;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=VzqgZNPoq/O2+CPLl0kouyVsD375ZRm1iFTGVv1gzBY=;
-	b=JbHHmgW8pw4ti2x4/rB9xmiUEtYEVvKrLGHNCJVcKfS2NTHrWLfe46SpUG8Gm0iCROkx
-	 UVbpa7gFZca5Us+kASfiub2WOcBhQmCVeg2av4rpPF5+dWWuWdTOoVRuS+uN03hj2QTdD
-	 9x8YI3ytNr248AhPtzcw3XxezPH6meu7aXn3KQqf6ZiRxibR7pcOnuoXaGyBdnIxGLmS5
-	 QPI1Ewi0j6UamBdx68dn16YL3/jTrssliOVovUxbteCpvJpgwAscTYnq5Vh48Kl/XOHsV
-	 dgM8r39VBd4FjqLo0N1TfJTJeYOiWp9ll3rxOw/OmToDbvtmZpcez3EZddiefdWm3Nw==
+	bh=hOg/JxkMVSRQN9XbJZ5sncJZJkFWQSksvWIv6908ywY=;
+	b=CfR0/u/4+AndNWoC3w2PnUhvDZDtaN864/GcP3DBHYptBN3QhIjrOGsx02ERZU3fPQwW
+	 C8t9noHcs098FXSg0YvoQHxz+9AixiStXkWhnF+x/vZdyvGhcZ4PefcQ+8dmib1tn5YAk
+	 eVNK+wWgqLG2ohoX2royDow3gvLf9n2Zv3KfmAjT63AS28AB7/UVHSSpsgzRrRlZgUBZ7
+	 A/5taoNUZw2vW9Xtau5dYlI4d7+MX0MVCrPLIM3h+gZ0gePxbpSlXzKjIUZAc7+dbSsKd
+	 y7DNqsRSc8Ss1FvzGEBytmN/csXUJKswEzI7esEVZnGtPr6quAf/G426qRqplDvMazQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HSzGxlua;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GtZkOHnZ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBBBD606A329
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 03:01:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6C1606A31C
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 03:02:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HSzGxlua
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EC081F000C4;
-	Tue, 17 Nov 2026 03:01:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GtZkOHnZ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF55A1F000C4;
+	Tue, 17 Nov 2026 03:02:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794884491;
-	bh=VzqgZNPoq/O2+CPLl0kouyVsD375ZRm1iFTGVv1gzBY=;
+	s=k20260515; t=1794884544;
+	bh=hOg/JxkMVSRQN9XbJZ5sncJZJkFWQSksvWIv6908ywY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HSzGxluarvcfmwiA56BBNRN01t1hpOZTpfFO9ZAS739gy0wNOddoiNgWANjehBzpu
-	 V/JDpKeAhKkReMtCQvaWW0PDVmRLNYw6qWw6kjUrrQbUWpV1U5oXLI06icvvbq0+u3
-	 scNT75W6xUDErFxTrmhq5gqrh9qlVEqebuLjIvULMkGZTU3lZ4YvvSsNbX34Eq/lqd
-	 cZ3Wwd/RaIBuuntlymUE6li+XYUeHHySfVMtbncJO9mxs/TaGcnCocZR1yHUs1QiHs
-	 u3NDVZ5i7bdr6W+G2qGpbL2cOOhEcnlndJunCTq7TlQdXLVxLJwe177gwYY0e4Omv3
-	 fYkeN2ZLR26TQ==
-Message-ID: <sashiko-outbox-218108@kernel.org>
+	b=GtZkOHnZ8aqJpx6vX/8KjSok+MbWtN5uN0qNlJnVFVMIWoCdboeaDY87RfZ0mPnQ0
+	 8EQZnwmyQuwDAfLMxJgBHslZphqT4EQpkh02mxxNi9rg/Xsu0TLx4AOpuOnqB1GgXa
+	 Q0zXnqf65V/5uaWas6YehgsMKZoU+LbnC3O/4KY2FkqnPoJ/x0O8UDYr5UO5Mn7yJw
+	 7UfyZW3s2SnXkVlP8b3JDydsp9VDBDhg7E+FAPSjGvTvMSY3FHWx1cKdBxXyRMXP7n
+	 i7hOEhyYhoitQfZZMLtsy7IBuav3Y9AixSjomXcKydCOoBq6S7AkjhgTNru+4MX3cH
+	 5r/oz6F53damQ==
+Message-ID: <sashiko-outbox-218112@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 07/12] perf annotate: Print the stats after the
- annotations
+Subject: Re: [PATCH v5 11/12] perf test: Drop samples without an IP in the
+ dlfilter test
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261117025305.3958882-8-acme@kernel.org>
+In-Reply-To: <20261117025305.3958882-12-acme@kernel.org>
 References: <20261117025305.3958882-1-acme@kernel.org>
- <20261117025305.3958882-8-acme@kernel.org>
+ <20261117025305.3958882-12-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 17 Nov 2026 03:01:30 +0000
+Date: Tue, 17 Nov 2026 03:02:23 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,25 +63,25 @@ Precedence: list
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> The instruction stats are printed before the loop that accounts them,
-> so 'perf annotate --code-with-type --insn-stat' always shows zeros.
-> The data type counters are updated in --code-with-type mode too, but
-> only --data-type mode accounts their total, so they are incomplete
-> there.
+> Since v7.3 the kernel zeroes PERF_SAMPLE_IP when a userspace-only event
+> skids into kernel mode, so that kernel register state is not exposed to
+> an unprivileged event (166f10836a653dfa "perf/core: Fix kernel register
+> info leak via hardware skid").
 >=20
-> Print both after the annotation loops, the data type part only with
-> --data-type.
+> The test dlfilter keeps those samples, and the check that nothing but
+> test_loop survives then trips on their lines: the comm column reads
+> "perf".  Drop them, which is what the test wants, everything except
+> test_loop must be filtered out.
 >=20
-> Fixes: 58824fa0087e1cb7 ("perf annotate: Add --insn-stat option for debug=
-ging")
-> Fixes: 61a9741e9f78c64c ("perf annotate: Add --type-stat option for debug=
-ging")
-> Cc: Namhyung Kim <namhyung@kernel.org>
+> Fixes: 199d5e872a9ce737 ("perf tests script dlfilter: Add a dlfilter test=
+")
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Cc: Ian Rogers <irogers@google.com>
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261117025305.3958=
-882-1-acme@kernel.org?part=3D7
+882-1-acme@kernel.org?part=3D11
 
