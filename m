@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.71
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.72
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794941357;
-	b=nqbo4vA69QEeD23Pp/IKGWEv4gcdqWyLGpyCIctWEtHTLEqq136PUrSf0CzF4qPJ0xg1
-	 pa2vl776LRzaRdCHgFjb7n7oafnRFAhOdL5+mjYq1nC/lhGzzZZXNmVX9BZUOgnFSZPI3
-	 R1Lq9GDKH0Sy9tVqjO2+Q4jviO/L8DC5zqoT9Jqm50JcJLgKyCv7GSsiMMkxYbBwigEKn
-	 q2pDxGwqIat3bwkyGU42WLJs389mzCWarghUcMQ0GstpljjktGTQsgsriODw/1FBnm3SD
-	 dgsnKDio2VMVnPoaXJc9AXAq1LOwBktuE8SQlNpnHW/OES4pjo1RN0UHawVhsmNmJFA==
+	t=1794941363;
+	b=kdU9NAzPbsu/WnSHwZ1k219iBgyxVUDO0tSxTS7x0ObpbEgemuqvw0woeCA0krR0jSKs
+	 v5Oc5gETOp6gkL7sTlpN6XnDt7+uKwhShnXOHZPyvywqLcMFwzUFuGkT0qzi0PZ/vZ/gp
+	 mVheNHaJN4TDlpVRpHh3G9+a4JGjuNIJH6PnXZyMDp40/BYN3nMo3lkKZZ9DJKZrKXLfn
+	 6DDoUhEQZQuT0bmCddyL38Y8IFCLO8DiU/Ei1GWAcAIxQgarhZjwp6mudDAHH5ocqPXlB
+	 SoiVAZDANmVy05A5cDSU26Uzk2f8IKL7JMV23gzc6olymvuJrMLrs9o/qnEo8yCwHsg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794941357;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794941363;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=gRNK11YgcY8cyMOB0/Yo8DNfUbiIMkO6zRKLCyKH5W0=;
-	b=4jWlZmDoeKi8Bk6D+ryHCIzFsCESjnKvBpbflAVsw/pNSbV5Zy1sLlPVEdDD6jzsytFn
-	 JrYyBgT4kdpHHEwiZVLTgTzKFjciPJo/DbmfIAyfxx3T9vO8HKiwMuspKfGKAvTeHxUSx
-	 70ENrB7L5K++yU+10EYvpxFNk14h+0Wwy1+wXz1lN77QHHwCROWHCy+PlJusLMk6k2hW2
-	 ML8buef0q/mzQdr0RIKv/+GmwrVKWtdafRoqcGArZZ27CmqewaPRw9ku+6RHUUJGIEvte
-	 EH+uD6HXJ0Zi0zcQ8WBZqqaD/AQZSBn19ouCnKK7Is1kbP9RALVzEnPPonRhJ6c5vcw==
+	bh=hgRklfDHPH2ZDGZe1scZDClSfV3P8wPVDqeqp2cvAD0=;
+	b=HczmMCM6dCmL7Xr4EEd426kkHCy1jI95fAjIz2nFrifnkQO7MGqNBBRay30eWI+ZUTgu
+	 q260tHQCR1qWMxeLJV4GqGSrpxaWOBbIzsZxPIeGP+TF3l+8c28SGkTosALP1W+9umgbU
+	 3DFpBmA8333X4c8aw2msyh8FyGiEM6asr3nrheInDg9tvBqxYVA50vK8BjrYb08XRCFkO
+	 Kdrm/zA25DerbMNKLLSbtOWQVhZTKMlpFKBGRYlN7DMzTTEk1AFu0Law939cVz4ri67lI
+	 LT4AXpH66yt8pppg8G1j2EvnMwUaNj9ExPaDRNU7yO96MgpfmFMzXzF9Ij7bN4enbnw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="h/ph+T14";
-	arc=none smtp.remote-ip=74.125.82.71
-Received: from mail-dl1-f71.google.com (mail-dl1-f71.google.com [74.125.82.71])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=jWxCBsxW;
+	arc=none smtp.remote-ip=74.125.82.72
+Received: from mail-dl1-f72.google.com (mail-dl1-f72.google.com [74.125.82.72])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CD9606A88A
-	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 18:49:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 35CD9606A88A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32B9606A893
+	for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 18:49:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D32B9606A893
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=h/ph+T14
-Received: by mail-dl1-f71.google.com with SMTP id a92af1059eb24-16bc6f3fdb1so80567c88.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 10:49:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=jWxCBsxW
+Received: by mail-dl1-f72.google.com with SMTP id a92af1059eb24-1b53bfc9534so73026c88.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 10:49:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794941356; x=1795546156; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794941362; x=1795546162; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=gRNK11YgcY8cyMOB0/Yo8DNfUbiIMkO6zRKLCyKH5W0=;
-        b=h/ph+T143MTdkEUM9+rF3Ol0mZmjixyyX8F4HbpBuYsH2n+8fwXGw2oXPufVenKweA
-         6eSythBIxd9kJMnAgEujXiOHYyJAWkBrGDyh17t873RFsLR26Dx+s4Nn6FvVwB+wEVH7
-         hrnKeuZvwh5M9S6DROCv5IH5efAx7nDQ7nllCwHvMcIuJ2TVJkVB39oM8FuruIgi2TFy
-         47atAWJBCBvjkjUWQmrck4l9UwdH6ocp1YmY5OQLjr8aJ+vnuHMhsLm+E9tQ655ktEaV
-         dVKsSbP5mF7QOYkBsQisVcg41s2Y5MXCPdRf55ZxDNBLgVfRpcUeM+GZvN3M7WU5X9sy
-         rlpA==
+        bh=hgRklfDHPH2ZDGZe1scZDClSfV3P8wPVDqeqp2cvAD0=;
+        b=jWxCBsxW5cpAbT1f0mCzC54OO1Tl64IDoCKE2J/fKRBY1bO7+fYHevS7LJWVxOLEE2
+         Ar64p6u6EwALiSF4CfgZsr7GtgtXqMT8b8OmxGC820WlaZ4YLQbWSKq7xxbxKipwXcwK
+         Cs8rmK+MxOAwEM9/fpgyxiCKD+LBg4BfJeXFd7JReNOtojONFeIUp/g9FVEkIJha8YTw
+         qEMWYJp2XabReC88LP/z0/bYIhsgaVNUCAE3BqmaaTwIFibLg9s+TisHi4wu+H34u3Ha
+         NSMAGWS07OxpA2BUAiwcNNy0nusGzMhTPLVHfVuq6h/fW3lCLVf04POiK6lNJQ0dSgVI
+         MatA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794941356; x=1795546156;
+        d=1e100.net; s=20260707; t=1794941362; x=1795546162;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=gRNK11YgcY8cyMOB0/Yo8DNfUbiIMkO6zRKLCyKH5W0=;
-        b=pZea89HHJqgxFXzqY8SQ2yBAxQzRGCbb57p9BYot3GbPU/WRZhFBODo1hWqywgBdmp
-         Xc7HFjY50gYoIkcfnqqOmtfxRRwu2pjtmpxkO0/qmkxOs4GkpJgY0XW6so+qWXAZ6bCe
-         wtlJjDxtpqMcXN6iyH+i88pnc/PGFp7vvOlupnkX11/B0SrCwD9VsjuulpxoG1cxkozS
-         al4tFH+EHh92xxqFpqVvrfFvYwuOUAVUtkXKpt2j5PQl7BCfCIjFqqZafsU8H9Ojdk9T
-         Q67X+3plckFlKdQCmJl+nhdx/03ObHXkfzf1Uo7Xmwhwk7PerlF318dnRFOa+D3EHzZa
-         CvHA==
-X-Forwarded-Encrypted: i=1; AL+hErEO27vsKGSBv3Fmd3aOBzivaAANsDfGA8iqgy9Hl1Wvqs0lz9KXn7rrAIuUf2TkDhtgc+Vtt1DnU3YNOSB8nghI@vger.kernel.org
-X-Gm-Message-State: APuU4Z8B69YbFJZtHgL3NwUuhswmBqVMknpr+VZZTQIyA7LEPKgU+Snr
-	xPb4tWgk9azyy0/ZK7KOVRUq2tcFRqwXwkcXgZMWB+c8jGlwMXGG/5xROHMGyOWVF4hgh9W0+LX
-	ImNoSxf3r8A==
-X-Received: from dlbur7-n2.prod.google.com ([2002:a05:7022:ea47:20b0:1b3:b4d2:9bba])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:f509:b0:168:3243:c91a
- with SMTP id a92af1059eb24-1b543cb5110mr354520c88.13.1794941356013; Tue, 17
- Nov 2026 10:49:16 -0800 (PST)
-Date: Tue, 17 Nov 2026 10:48:27 -0800
+        bh=hgRklfDHPH2ZDGZe1scZDClSfV3P8wPVDqeqp2cvAD0=;
+        b=iBHipUAM7XWkx0Be7s6nNMHk7s7mOBZHWyy4pSouxUBdJR4lVsySI3Jd9kEv2noHDv
+         RO1R6FHNt2JK2kdeuaDcSyqHrTMNATlDKBbQWXktl2g4AjZu6zCq5mRTJ8j39Dcu9z6e
+         qxzX5GrNRHXrXu7Sxwl2BdQyzC3si0x55ETno2IZTKQHh1DnXp45ikdfzT8AceQz3VwU
+         Xe6AFX/oxJByqpdjcx1Tn0CKQqHp7mIMPH+jHc/awwzM4kScZq8rQW6dIaWwHwurKaTj
+         y2toVa1miBsbKTj9996VVQIr/ZSfWSYAUvGtqYFkEcDUMupNrMOQSKGB/Xg8OuOuwRHN
+         0GMA==
+X-Forwarded-Encrypted: i=1; AL+hErFk6aTzIHHDbQT5LE4oeOnoxrxnpvWTwxOGwItD7D+jF1+Mm5AqjVDevBBsXGowLA40ME/ie0ARUd+djccM45cy@vger.kernel.org
+X-Gm-Message-State: APuU4Z9HLgHd1PNqgbyMuMIV8Sw562Mypf+ur1+fILlRqBoSuxII9bHH
+	c+SfDWkBhYFk38JKfPVJg7UPbMLItx+JCGRoXFHd0TNKghsuzxRCFzC4DZ0X7LAAahTWysXcFbP
+	Nmk0v5BrKVw==
+X-Received: from dlar5.prod.google.com ([2002:a05:701b:21c5:b0:195:d59a:94bc])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ea46:20b0:15e:9126:c60f
+ with SMTP id a92af1059eb24-1b543cf2943mr399741c88.29.1794941361787; Tue, 17
+ Nov 2026 10:49:21 -0800 (PST)
+Date: Tue, 17 Nov 2026 10:48:30 -0800
 In-Reply-To: <20261117184844.99889-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,8 +81,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261117184844.99889-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
-Message-ID: <20261117184844.99889-7-irogers@google.com>
-Subject: [PATCH v14 06/23] perf comm: Add __guarded_by annotations to struct comm_strs
+Message-ID: <20261117184844.99889-10-irogers@google.com>
+Subject: [PATCH v14 09/23] perf dsos: Ensure DSOs in auxtrace, machine, and
+ symbol are in dsos
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Marco Elver <elver@google.com>
@@ -93,32 +94,118 @@ Cc: Bart Van Assche <bvanassche@acm.org>, Jiri Olsa <jolsa@kernel.org>,
 	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Annotate strs, num_strs, and capacity in struct comm_strs with
-__guarded_by(&lock) and __pt_guarded_by(&lock) so Clang verifies all
-accesses hold comm_strs->lock.
+Place the DSOs created in addr_filter__resolve_syms(),
+machine__process_ksymbol_register(), and maps__split_kallsyms() into a
+dsos collection so that all DSOs that may have data fds opened or be
+referenced by maps belong to a dsos collection.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/comm.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/util/auxtrace.c | 16 +++++++++++++---
+ tools/perf/util/machine.c  |  4 ++++
+ tools/perf/util/symbol.c   |  4 ++++
+ 3 files changed, 21 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
-index 6343a3c9debe..9fc4e91a36e9 100644
---- a/tools/perf/util/comm.c
-+++ b/tools/perf/util/comm.c
-@@ -16,9 +16,9 @@ DECLARE_RC_STRUCT(comm_str) {
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index 8bb491d389a2..1451de019df0 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -29,6 +29,7 @@
+ #include "config.h"
+ #include "evlist.h"
+ #include "dso.h"
++#include "dsos.h"
+ #include "map.h"
+ #include "pmu.h"
+ #include "evsel.h"
+@@ -2684,7 +2685,7 @@ static int addr_filter__resolve_kernel_syms(struct addr_filter *filt)
+ 	return 0;
+ }
  
- static struct comm_strs {
- 	struct rw_semaphore lock;
--	struct comm_str **strs;
--	int num_strs;
--	int capacity;
-+	struct comm_str **strs __pt_guarded_by(&lock) __guarded_by(&lock);
-+	int num_strs __guarded_by(&lock);
-+	int capacity __guarded_by(&lock);
- } _comm_strs;
+-static struct dso *load_dso(const char *name)
++static struct dso *load_dso(const char *name, struct dsos *dsos)
+ {
+ 	struct map *map;
+ 	struct dso *dso;
+@@ -2693,6 +2694,11 @@ static struct dso *load_dso(const char *name)
+ 	if (!map)
+ 		return NULL;
  
- static void comm_strs__remove_if_last(struct comm_str *cs);
++	if (dsos__add(dsos, map__dso(map))) {
++		map__put(map);
++		return NULL;
++	}
++
+ 	if (map__load(map) < 0)
+ 		pr_err("File '%s' not found or has no symbols.\n", name);
+ 
+@@ -2794,6 +2800,7 @@ static int addr_filter__resolve_syms(struct addr_filter *filt)
+ {
+ 	u64 start, size;
+ 	struct dso *dso;
++	struct dsos dsos;
+ 	int err = 0;
+ 
+ 	if (!filt->sym_from && !filt->sym_to)
+@@ -2802,9 +2809,11 @@ static int addr_filter__resolve_syms(struct addr_filter *filt)
+ 	if (!filt->filename)
+ 		return addr_filter__resolve_kernel_syms(filt);
+ 
+-	dso = load_dso(filt->filename);
++	dsos__init(&dsos);
++	dso = load_dso(filt->filename, &dsos);
+ 	if (!dso) {
+ 		pr_err("Failed to load symbols from: %s\n", filt->filename);
++		dsos__exit(&dsos);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -2831,13 +2840,14 @@ static int addr_filter__resolve_syms(struct addr_filter *filt)
+ 
+ 		err = check_end_after_start(filt, start, size);
+ 		if (err)
+-			return err;
++			goto put_dso;
+ 
+ 		filt->size = start + size - filt->addr;
+ 	}
+ 
+ put_dso:
+ 	dso__put(dso);
++	dsos__exit(&dsos);
+ 
+ 	return err;
+ }
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 4a3461d79593..02711995f0b6 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -797,6 +797,10 @@ static int machine__process_ksymbol_register(struct machine *machine,
+ 			dso__set_long_name(dso, "", false);
+ 		}
+ 
++		err = dsos__add(&machine->dsos, dso);
++		if (err)
++			goto out;
++
+ 		map__set_start(map, event->ksymbol.addr);
+ 		map__set_end(map, map__start(map) + event->ksymbol.len);
+ 		err = maps__fixup_overlap_and_insert(machine__kernel_maps(machine), map);
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index dc70bbe8514f..a7079381fae1 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1090,6 +1090,10 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
+ 				dso__set_symtab_type(ndso, DSO_BINARY_TYPE__KALLSYMS);
+ 			}
+ 			dso__set_loaded(ndso);
++			if (dsos__add(&machine->dsos, ndso)) {
++				dso__put(ndso);
++				return -1;
++			}
+ 
+ 			curr_map = map__new2(pos->start, ndso);
+ 			if (curr_map == NULL) {
 -- 
 2.56.1.703.gf848ed807c-goog
 
