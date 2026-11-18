@@ -1,72 +1,55 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.197
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795032063;
-	b=gNi+dq8YKjHijCE3R77c0XXfXe89zVVxOOcI11K2eiI7hdPXfA0VLvXnWe7fl4/BRcwu
-	 AeQRseeWDv0cO08u8uzXYUx/LuViL7St6eSJGr0uSUbQvOrBS9GfxlbKwi1iN5+5abKba
-	 ZD8lfT3A4fTO5vJUa8RYsUcC9CFCyq69aZw5L3lADl/mSXPVL++4WwSm3a6wtGE2ss3dt
-	 hdWi9y1qInqhbsp9+EUBPYlhXQIySMemkS9qzOV0tplEBsUykGqI/C6tHHHhEt+WD8N+U
-	 dmm/uBGCVj9HwSsVWpbKZLPpcUX82VbtAhpCtBdItygkWZXCax7b7Mz6K11jjykIA8w==
+	t=1795032227;
+	b=t1cxPAmqCKftZ8+BY+TBt1omtHMyyomeqVsOLjbuWtyTgU3IUJFFbmWa5GXolbzA40lM
+	 E2QitQO686I1h7okzfxIugg2iFFPji8N9vWXsLOceStGmDLd/FMnInq8PSQ4u4h5IGyCV
+	 AE6YXxQ0MBJbMBEqyYBz1LJgqrJ/NE4nYQDQz9AUoK+25UeTShN/KNvQ9zZeM2Lpf/TWF
+	 r820wVGfPcd/TUgYeExbim+0LJq6RO+d2A4OjXbW6FsMO83BJ+rFnaNrjaAGxtq9AZZbg
+	 RfBoZBW/r327dihJnewfzxLMRz09Cl33GUYpdiN62NPu2GmZJW9uoRHvyrrpWo6Wtrw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795032063;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
-	 X-Mailer:Message-ID:Subject:From:To:Content-Type;
-	bh=lRI5eHw/F0qhMfZnLaSDIcM3OnDPh4RgpUpb+WjiY30=;
-	b=IpmJmVNoMWog23Khs9BsmCavPO/7vkdnnIuvmsRzpz0Tn2sj7SdhJ55r0BQbSEuL1R8Z
-	 9HV0WuSdJyso/7Ujh2DvNGHpllPXxr2RXpXrnTQRJn10PZQ8whPqZ4SLrUDfzYQ0l9gWn
-	 0KnlR468vVQCIpGaQRIkpJq7g6naicIht+rwgxUz30lYE/VCXBDbvq4Mf0EVARhbDA6hj
-	 MY9PMLgUXUD3cc0PrdA/Sxy6gt6dVLnOHu1NJ4ub9yMg2aCVa58TzvfeYIXpIjSogC79s
-	 ZXUKmMJVT+rp13AwDi1r/q5Rf6OFe6BLk2ewS6mjTExdQ7RSb/qxuIRzDy1DPEALFpQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795032227;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=/kjw+dpfV3VJrccstA6TRu+26HMO0GjnjjHonhTR8qU=;
+	b=tc+C2Oxb4e//qH6crAgtkcX1/ddnBLtG/kqWksyK/qe76YBk6s63BbzLZovd/CS33pki
+	 WupSGKfMMdVAL38XDhcwJzDAS/nXoYtBgEDoNpNhh+z/z1Vie4OH/dDgicx8Abf5NvSjt
+	 vsf+uXIaYNNRHYmfNIgEi3CenJEDAe3mT+YSsx/5hicJKDlnrfp3AR7z7+FNRsAF+4dCB
+	 frFqRBjqXlWXffQ7XV0r9EEJkcoWjY4IdVBdgMLydlB167BVvX2udgVtyHY64vKOzK7eX
+	 BwEtQYmPdBTc2XAXEDRTqlYCbJIf40zhfK0J795G4kyTzxD+2Qbuyak4TCLlM/eNZ6Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ZN7T36t6;
-	arc=none smtp.remote-ip=209.85.214.197
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gceva77F;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44C160A2601
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 20:01:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E44C160A2601
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB776606A31C
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 20:03:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ZN7T36t6
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2e9501034c4so16823435ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 12:01:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795032062; x=1795636862; darn=vger.kernel.org;
-        h=content-type:to:from:subject:message-id:mime-version:date:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=lRI5eHw/F0qhMfZnLaSDIcM3OnDPh4RgpUpb+WjiY30=;
-        b=ZN7T36t6KTGiVF1+8yLnSbOW4kfQxRunwNTXxroMjauKCZlTabfT1PSgfAMbRTkpTy
-         3FRB2ALKG+AppWEOufIW5apQGjEESUGb162KHkl0URGLpFxZeUSbLn4H97EaAENZZ+ql
-         arczDLd2AjztEkIDHfgN+vA84gZIOinFxjViOdNnQnP033pi/W4L/c8r9ngTAswgCoVI
-         innGp6LELuBmtik2KSIhuUki3NAul3YsGz+PCOG5Nygc1If3cVtvdTzcnqknGIfC8VS/
-         BVwtAo+8E6IqHLClK1/H8A/KMPc+zRgmWzNUa3ogI2eB3lkpw90zo0Fep0kjfnVXrWDh
-         YjHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795032062; x=1795636862;
-        h=content-type:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=lRI5eHw/F0qhMfZnLaSDIcM3OnDPh4RgpUpb+WjiY30=;
-        b=xNpdWgQ00IpsSm6TJSo4aCP7CZkBeAEyWZWOjJG4QknbO/6qdrV8mJOkLvlqr/dyKr
-         uDUFbKRqkf+kZcQvNdHpRFLxkz7F7JalbbyihvWKXZDdzt/TM4PmCFkfgOqnDT80Wn/W
-         FUx+mDYKxSBRuKt90Q4aLfZyrf2TNsj+UGjgoB4D9yGTKbVCGo1/1EhW1Y17v/iqcbdX
-         iFT0UONMK6fr0FQyObGmoG7migDZUqVOTzRcokrNoJn3QY+BNUImLmDu+UVwn6swJlar
-         kyr1RgJkdVpUPGB0TC9ytux924eLgiWNxKpAzJ9rS/Gr8TbprBK8hfzFc2dNlV3H7HTZ
-         agcw==
-X-Forwarded-Encrypted: i=1; AL+hErHX+KW1G5v4r1VB34TBKPAPd11nKAGklIVtmV2WyWNbWyvQgj7wEC4Uw+R2me07J98EiDwfm8HXs+NrlmKLeoBF@vger.kernel.org
-X-Gm-Message-State: APuU4Z+13+q0+gkeGRo+xn+OgBUp8uq2IUSt07lzkgs7Utqaxf0v0og/
-	lPUsZYonRk+VAWMM3bDvIcB31SApT4RjhI+rNqEdkSj8oBMcEuULAb9zrzWB2hYMoIBa/M68kYD
-	C+RQk/9CLpg==
-X-Received: from pllo10.prod.google.com ([2002:a17:902:778a:b0:2f0:2039:7919])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c409:b0:2ed:3ca1:848d
- with SMTP id d9443c01a7336-2eff7518c0bmr36394725ad.25.1795032061925; Wed, 18
- Nov 2026 12:01:01 -0800 (PST)
-Date: Wed, 18 Nov 2026 12:00:57 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gceva77F
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 536D81F000C4;
+	Wed, 18 Nov 2026 20:03:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795032227;
+	bh=/kjw+dpfV3VJrccstA6TRu+26HMO0GjnjjHonhTR8qU=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=gceva77Fp2xtFZty2H6/ooDG1JLhDV7ff+TuSsDisyR7B9H/6Pl8PM/9dRM6SnpEi
+	 xiPyjVOdB1NE4lv6kxqsflypg7RoCm3k9eHfrXN8ZLQgeB6Y24y/UGvfQezAb4xC43
+	 jGP4eRMC9M6qBbsUkykrM9DYa8b1aZVzVHjplJVDCK5PSRI+b6To7qHse1ePIuJVPl
+	 m/VNVyvZHj+o9YZDF60PvIrn64FPnLXi6qvMNEkAszK5t+dGJ3II6eFii4+dZou4ht
+	 Tli3JDSFUpWLHGLSFMyBpmpls8gutLFYgOn4io5xhfRdJAAWxWVuwYm/IR7NLJwXZu
+	 Uz6bXtELnYLPQ==
+Message-ID: <sashiko-outbox-221915@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1] libperf mmap: Arm64: fix transposed reads of
+ counters 12 and 13
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>, linux-perf-users@vger.kernel.org
+In-Reply-To: <20261118200057.2134362-1-irogers@google.com>
+References: <20261118200057.2134362-1-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 18 Nov 2026 20:03:46 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -75,43 +58,17 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.56.1.708.g77570a6a1d-goog
-Message-ID: <20261118200057.2134362-1-irogers@google.com>
-Subject: [PATCH v1] libperf mmap: Arm64: fix transposed reads of counters 12
- and 13
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Rob Herring <robh@kernel.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-Reported in Sashiko bug linux-3291a858-209c-483a-b4dc-eeb57abdaee6,
-the 2 counter read functions for counters 12 and 13 are transposed.
+> Reported in Sashiko bug linux-3291a858-209c-483a-b4dc-eeb57abdaee6,
+> the 2 counter read functions for counters 12 and 13 are transposed.
+>=20
+> Fixes: 407eb43ae87c ("libperf: Add arm64 support to perf_mmap__read_self(=
+)")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Fixes: 407eb43ae87c ("libperf: Add arm64 support to perf_mmap__read_self()")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/lib/perf/mmap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sashiko has reviewed this patch and found no issues.
 
-diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
-index ab3adf1d8baf..92acb0e911f7 100644
---- a/tools/lib/perf/mmap.c
-+++ b/tools/lib/perf/mmap.c
-@@ -376,8 +376,8 @@ static u64 read_perf_counter(unsigned int counter)
- 		read_pmevcntr_9,
- 		read_pmevcntr_10,
- 		read_pmevcntr_11,
--		read_pmevcntr_13,
- 		read_pmevcntr_12,
-+		read_pmevcntr_13,
- 		read_pmevcntr_14,
- 		read_pmevcntr_15,
- 		read_pmevcntr_16,
--- 
-2.56.1.708.g77570a6a1d-goog
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118200057.2134=
+362-1-irogers@google.com?part=3D1
 
