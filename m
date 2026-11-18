@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794974736;
-	b=2GYV0gS6uGyANpmsHPGa1rSicbvtEWBZitss+4Hj+m5D4OZNiqwFu2W6VQH4sfMzgsNG
-	 SHiwA/u+EyhgbDJPGxFqz1vkOUlsIU++xS08Wnzr1HQOZ/jK4CuebykUDjsE4HayAjYYV
-	 Kgc3ZX5eR0/zud1iPaVF+57GynGsa/c/YqoouKl8aCO8DFiAxf+wGCEPlm8oWR+/3NbwH
-	 Ae4X67MoKyB5xILKwg/q069riPY7oANoNF6HegX04NxI2+4b6v7VmHEBiC7/TcWiVaQGb
-	 Phcxaw36hEjRryPKH+wIAkIS70i5vxR33XnOMNn1ro7KzOaxCE7+HyN847AOhIKpkQA==
+	t=1794974968;
+	b=bTWSUcXT2ZK18oLiK2tR7qN63YVcjzhGXFKei5YkG3LQpJ10TSMwUvTLj7uWzaB79wcH
+	 7sYtimrAuv1zlSy6tO7ijXA0KJ4MHOrB74ziOfF6YtGp85c/BXi5S61gF18a2pVs/P/Du
+	 RPWIZrdHdz5RBIYkm/4A/mQgeBC77m+DGxAjuabu5z05jGlLR9TMlIZtEAuBrzd9qgZuA
+	 RxDsXF85vyvwjD4cDPlQKDgGv8Nh3TL/mwLnkJparRQRCy21rPeePlkTSorh3OKqTvT4w
+	 5wb9eAePkJHO35B7L0dTbHU1Ls6foS3lbRY458TsgWd4bFjHgr+CAC75P1gHhjfDhAg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794974736;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794974968;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=DVRtJABYvpyRtlRBJjH4aHa7BbfBalY3ZivQ3PNvknE=;
-	b=S5ODH77t4kW6Nu8mU5Fp7zbeZ5WiWDxtdi70xxiamlA9cUoKI8x8YpRxkh7KqPAcfMvx
-	 c0OwquHxfDtKo5rkzgiXx7/07BSyXbnQZKAvKp0NUZtby8EN9ucg0DpwGQw008MwbTagN
-	 pRhXYNiTq7bw6BMNJynSUKGy2fiikudO4pr9nkagYoREJnSslhe0xym/jbmnfd2ynkp7L
-	 UmW+SA7h3QH+IVwJiB/L2Jqirm03hRQaZQQyO8qMQ/ftYg2jsMd3mNsw/21Ja57oPxNrR
-	 9nW+gkcD7kPjyGHlpHftbT85YiUn/1OM1X1pTG8Y+zQOJpacrtb9mHtdK+eq2tF/x8A==
+	bh=VQgTVFzB/3rmeNN7Lyjee5DPPoczd01qZN0k9ut7ecc=;
+	b=sf8S94xnJVAuqS0itGrPEDWJUi7yoIIP+qECTRyJYUVdXZukxYKGtyAtTw331pypoBAC
+	 vhyQ7YLpo8UXafgWYdT0GHRCeZp2XAq/MrHV/Wz9h7u6WqXcxP6BumSshFCxaFc1xzNZm
+	 3E3ztYp78MQpk/+bRaJ3JC6EDqSqHCdrrGfNflJMCm8jKZqB7C9eJpdSI07mJ9zAyKRZX
+	 phCD/ta43GjH421cCTMX5FmHJ2RbxDpO1A8Q/ouNRy/OZruXoLUnA60idFiug1HXLuMfv
+	 ludo2Ef9Z14iiDgebDVWLKfnWHet+8ynwXsSSEaQnMidenhiBWBSDo1tPsBcu6+nACw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NJenF8xl;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Cs9BDIvq;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A086606A31C;
-	Wed, 18 Nov 2026 04:05:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351C3606A31C
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 04:09:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NJenF8xl
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DD211F000C4;
-	Wed, 18 Nov 2026 04:05:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Cs9BDIvq
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E62461F000C4;
+	Wed, 18 Nov 2026 04:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794974735;
-	bh=DVRtJABYvpyRtlRBJjH4aHa7BbfBalY3ZivQ3PNvknE=;
+	s=k20260515; t=1794974968;
+	bh=VQgTVFzB/3rmeNN7Lyjee5DPPoczd01qZN0k9ut7ecc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=NJenF8xlgOZL5EIeXwVyWi6N0pyA0Jua7tn75VwChVMgUbL3NdQNqNrStNqi24Wkh
-	 2HbrucKJKSDUynX3V6aYP9+Vgp5JC7D/W6HCqGsokR+xI05owMBU0c/zR5OzUV53Jo
-	 OBfQAvLffTqKgvU7zrtN0o1XfJao97+WOExHTOqJtEmbGlISeX+SE5GGb27ti2Y55K
-	 ZZrJpjfRC6d7aPVgIyuXbKeDISQAO8wBEAD7Vsb3scLZ4kV5GTqPOyDNsWbDdSS35E
-	 3sNBxjNzElVl1EdJZJy7ngCU1Exca2/LEyW4S3oWM0Bncwh3FTMe72eBixIEXL7YVs
-	 I2bh3AzyNPDww==
-Message-ID: <sashiko-outbox-220065@kernel.org>
+	b=Cs9BDIvqvlW82JEw7D/NTbbPg3BFMDoo0RY9fgAeDQyFl59IsvAbC1oXBOrxReA6l
+	 XpyXNl7O36D3C7/GHiPS+Ew2C0m5oA+glTR2o9plUwRdc2gc09VisZKVYOSuFPhhOI
+	 haWx2T8iKH1tLequY5BlIR6m3DVTLtUVF7t1+amoEpHeuSkPV1lzGIO7w3OoZKiTBq
+	 AiDKIvA91Qw3MBlcFUC01KyOFESCQG7juyw9xyw9lSMC0rLCHTjFrBeQJA0HwUMuHA
+	 rfDwshi6XisJTY7feVtuogaSyn/E2UCAxAKVQzSSwRQCJcuUBynNWafkjLTCPNn7W6
+	 DDo20U+sYeiOQ==
+Message-ID: <sashiko-outbox-220069@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [Patch v7 15/24] perf/x86/intel: Set PERF_EV_CAP_SIBLING for
- pure branch counter events
+Subject: Re: [Patch v7 17/24] perf/x86/intel: Refresh LBR stack for non-PEBS
+ LBR events when needed
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-In-Reply-To: <20261118031453.1353625-16-dapeng1.mi@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261118031453.1353625-18-dapeng1.mi@linux.intel.com>
 References: <20261118031453.1353625-1-dapeng1.mi@linux.intel.com>
- <20261118031453.1353625-16-dapeng1.mi@linux.intel.com>
+ <20261118031453.1353625-18-dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 18 Nov 2026 04:05:34 +0000
+Date: Wed, 18 Nov 2026 04:09:27 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,82 +61,30 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Medium] perf/x86/intel: incomplete group detach handling in
-  intel_pmu_hw_config()
---
+> PEBS and non-PEBS events share the same LBR stack in cpuc->__lbr_stack.
+> In the PMI handler, the non-PEBS path refreshes the LBR state before the
+> PEBS buffer is drained.
+>=20
+> When PEBS and non-PEBS LBR events overflow in the same PMI, draining the
+> PEBS buffer can overwrite the shared LBR stack with the PEBS snapshot.
+> This leaves stale LBR data from the PEBS record in place, so userspace
+> can see the wrong branch stack instead of the live LBR state at PMI
+> entry.
+>=20
+> Track whether the LBR stack still contains the live state from PMI entry
+> with a cpuc->lbr_stack_live flag. The flag starts out clear on each pass
+> of the PMI handler and is set once the live LBR state has been read.
+> Draining PEBS records with LBR data clears it again, so a non-PEBS LBR
+> event re-reads the stack only when it is needed. Since the LBR state is
+> frozen for the duration of PMI handling, it only needs to be read once
+> for multiple non-PEBS LBR events in the same PMI.
+>=20
+> Fixes: c22497f5838c ("perf/x86/intel: Support adaptive PEBS v4")
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-commit 2f6a2a62d0ff0bf2794f702072c776c06e629ff3
-Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
-
-perf/x86/intel: Set PERF_EV_CAP_SIBLING for pure branch counter events
-
-This commit sets PERF_EV_CAP_SIBLING on pure branch counter events in
-intel_pmu_hw_config() so that the perf core schedules them out if the
-group leader is detached.
-
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index 84b134bb91eea..fd4de141ef281 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -5130,10 +5130,17 @@ static int intel_pmu_hw_config(struct perf_event =
-*event)
->  		 * require any branch stack setup.
->  		 * Clear the bit to avoid unnecessary branch stack setup.
->  		 */
-> -		if (0 =3D=3D (event->attr.branch_sample_type &
-> -			  ~(PERF_SAMPLE_BRANCH_PLM_ALL |
-> -			    PERF_SAMPLE_BRANCH_COUNTERS)))
-> -			event->hw.flags  &=3D ~PERF_X86_EVENT_NEEDS_BRANCH_STACK;
-> +		if (!(event->attr.branch_sample_type &
-> +		      ~(PERF_SAMPLE_BRANCH_PLM_ALL | PERF_SAMPLE_BRANCH_COUNTERS))) {
-> +			event->hw.flags &=3D ~PERF_X86_EVENT_NEEDS_BRANCH_STACK;
-> +			/*
-> +			 * A pure branch counter event doesn't set up the LBR
-> +			 * itself. It must stay grouped with a normal branch
-> +			 * event which configures the LBR for it. Otherwise,
-> +			 * the LBR cannot be configured correctly.
-> +			 */
-> +			event->event_caps |=3D PERF_EV_CAP_SIBLING;
-> +		}
-> =20
->  		/*
->  		 * Force the leader to be a LBR event. So LBRs can be reset
-
-[Severity: Medium]
-What happens on group detach when a branch counter sibling has other
-branch_sample_type filter bits set alongside PERF_SAMPLE_BRANCH_COUNTERS?
-
-First, a counting sibling in PERF_SAMPLE_READ mode with a branch filter
-(such as PERF_SAMPLE_BRANCH_ANY | PERF_SAMPLE_BRANCH_COUNTERS, which
-"perf record -e '{e1,e2}:S' -j any,counter" configures) skips setting
-PERF_X86_EVENT_NEEDS_BRANCH_STACK earlier in intel_pmu_hw_config():
-
-arch/x86/events/intel/core.c:intel_pmu_hw_config() {
-	if (needs_branch_stack(event)) {
-		/* Avoid branch stack setup for counting events in SAMPLE READ */
-		if (is_sampling_event(event) ||
-		    !(event->attr.sample_type & PERF_SAMPLE_READ))
-			event->hw.flags |=3D PERF_X86_EVENT_NEEDS_BRANCH_STACK;
-	}
-}
-
-Because branch_sample_type contains PERF_SAMPLE_BRANCH_ANY, the condition
-here is false and PERF_EV_CAP_SIBLING is not set either.  If the group
-leader is closed, perf_group_detach() promotes this sibling to a
-standalone leader that stays scheduled with ARCH_PERFMON_EVENTSEL_BR_CNTR
-enabled in hardware without LBR configured.
-
-Second, for a sampling sibling that retains
-PERF_X86_EVENT_NEEDS_BRANCH_STACK and has PERF_SAMPLE_BRANCH_COUNTERS set,
-intel_pmu_hw_config() only sets PERF_X86_EVENT_BRANCH_COUNTERS on
-leader->hw.flags and not on event->hw.flags.  When the original leader is
-closed and perf_promote_sibling_to_leader() sets sibling->group_leader =3D
-sibling, is_branch_counters_group(sibling) becomes false, so
-intel_pmu_lbr_save_brstack() skips intel_pmu_lbr_counters_reorder() and
-intel_pmu_lbr_del() skips intel_pmu_lbr_reset().
+Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118031453.1353=
-625-1-dapeng1.mi@linux.intel.com?part=3D15
+625-1-dapeng1.mi@linux.intel.com?part=3D17
+
