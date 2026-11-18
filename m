@@ -1,60 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795020219;
-	b=Bp92KNNDRuh3QyRX5SYJ2Z2wwxH25bW8VxOKz+3JB6+uQL/CaBYDvfXQj0egBesvztl5
-	 /73gcBeJ931ytK1iJ2Yg8F7qH28nBrEFbIWJZ1svim7s5eOQNnqm+Czp/OdTBsHw2Cwta
-	 PKxbNJWTN7DGt3D092peLBQuvLMXZmXWf+kJlfihfx/QMxBf9d7waHOWRxGFGhUyyQ4jK
-	 vvOAfEyrCyeyhsby1axhuJ+y4WB7kv1I3aXspjhQrwKb4U+kCBi5w858wVm8ATUP15x0O
-	 DjPo+BgK4tHZ+uh3YeiaE1YFN/HLSZy4guZKeUGBXWjtr78OkxoZCAPY6P+6tffWK2g==
+	t=1795020275;
+	b=vxlq5GpKoMuCptr5vcz2lBHLYjYnLpOZ0Dx1v+l9uL3bAJdJwpaHvX8kMFshkG5ZIMmH
+	 esgEu1+IUDBSJrcIRp+tcOF1cYu2Bt40imSv3zsswyyqKdNAp+K14oEUqdyIKz6r/mBz6
+	 Nrk1tLGweqp5iu7xcyOuGJI9iG9SgyZ2aE07fRkznjIRirEfLQNC0ifV6nvCCiSfIWOau
+	 JdjRNROuNRLD4wtFrBLgMgcpKOG6uA+H/V23PZ/quROHvjdrNBhxNa3w6DvDku1uImtLv
+	 i+33MbfByZftlu0KUDz6D2D/aJaPymoV8mB6bhkSDEcS9i0GgsRFzYmYCnuYiJwj5Ug==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795020219;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=XniNYFBtJTE+9qOOq15tFLI6AKi9yaCDJXq5LBSrfl8=;
-	b=OoinuI9Ful65KhEG2RzpLE7iH0zJzkvgCbM/lMdACd6AdBY7tIE+M0JGboB1KOdkXWEp
-	 eJ1uQmVUzMeEKakzHWVdDWnie8CKM71Ry7W1KHPryYrnGo1KYEJLcnyDIVD+WNlcf5u83
-	 9XO/bKncgJx68nlduIk18gt+o5CTPsrJTkUl3cxowYyjcOmpKyjiroVQs87ndgauz1LZr
-	 spF6x9bALEa7aQeesS8cFvNa3Y1jH5FaQw/NaBGa8r3SsOx+aGiQNj4e7+vo81ed55zaV
-	 k9ljrdYQvUsSyoCWTFl2AUY/eD1heiLvFYv1vwrycU1o7beXzTrSp+niPZUgBvJkMNA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795020275;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=q3rCMAyaLi2Bm/Xzp5eR+S4xx9TcGrceJ31yIEPsUPk=;
+	b=Y6d7bpsFrOH1rAsVCy+nnIrKvQPDE9lPihYGlpAAYz0rbiPUjMeoFhQrQ7dpohY+Mins
+	 1gQd8tEPCslYgQvIVUREBBi8t5u+rfojEkzN4keIp4z33WQiB+24Ba2mSu03PzGop/bPu
+	 KoJxwD8uByXseEe/O0VtNsSVinkVc6aj8PIXp3uP9wrqnCII1k9oj59quRzqFTRi9tdCW
+	 A91JklASR0qW7Hsg9/BCj8cCO8Y6P85989CCRYnwyXes/lMEXhoHFk5VZId6Y7iwTyQ96
+	 3k2L1B6pXQsov1SzQzMY1BCgbbMDz1sKCf+0/k1bP1h01GJH5wK3A06ZFTX3onrWEWQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UeK4RMao;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kXhMEjBZ;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987B8606A31C;
-	Wed, 18 Nov 2026 16:43:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89EB606A325
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 16:44:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UeK4RMao
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F20631F000C6;
-	Wed, 18 Nov 2026 16:43:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kXhMEjBZ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ED101F000C6;
+	Wed, 18 Nov 2026 16:44:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795020219;
-	bh=XniNYFBtJTE+9qOOq15tFLI6AKi9yaCDJXq5LBSrfl8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=UeK4RMao2Z57KpmezA5xm5c1hd5E42HSrZxakKzNep/ORf8Z8fSnGTcCC+SN6um+i
-	 uFa3b6WLgX/65NuTQIOb/igzjz3qzfBS6XVvCQeFBBeKiprFAxQEr8tQ/HwoYgEbfD
-	 IduMxH3N54ovxRkudp4oRnGiH1Ez4KsyHlwtoNE8TKcsy8vsz30ID9aWqIwKrnARqa
-	 9e5FmDXwba5GAZX0TzVxX+MPUyEke2Y6CbvArb9gY3gK+3X3JryJx7P4IMCXQIXMEx
-	 fe5JyLvJUMtXJElCo/CUKnMiXzVLyJGBLuLNmF3k5pFatpN+xQXNNml9XWzhkCgthG
-	 tqir/4Q1G0kKg==
-Date: Wed, 18 Nov 2026 13:43:36 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v6 07/13] perf tests: Exercise data type resolution from
- a register
-Message-ID: <av3VuNr38Zxh0KV_@phoenix2>
-References: <20261117200433.45174-1-acme@kernel.org>
- <20261117200433.45174-8-acme@kernel.org>
- <av1QxJZA36xcbcEL@google.com>
+	s=k20260515; t=1795020275;
+	bh=q3rCMAyaLi2Bm/Xzp5eR+S4xx9TcGrceJ31yIEPsUPk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=kXhMEjBZI3DO20aph8+fRP8tJR0gcoQYtTnih9god+d3/anKfv08eN4Y8R15SMXB2
+	 LFUVd9hmoaOO/Lkfoc5XADuM2UqVMYqkj1J1ZSfSzmICDBGUiplRN0RiokEpz7UKAX
+	 zQxj3alJh9YgV0T8fdHvn7enNt/PQVU2WRgEQzdmaBgVLiKEwLnzJjxy7WY2RNj2Ak
+	 dzmq87wRA9WIiE4XHRsn8i5TgK19z9BvKYGZb0ghGn7jhXsnSHjzyTS1fVNX4k/2s9
+	 wAjV4QMpvaJMU1ENbBc966WmT3gfQk9L/VDu4s1etHokylGw9OjjD28ut27gS2GKgt
+	 lzS7V05XBi9CQ==
+Message-ID: <sashiko-outbox-221541@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 10/34] perf cs-etm: Remove old pipe mode support
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "James Clark" <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261118-james-coresight-jit-v1-10-dad4d90747f6@linaro.org>
+References: <20261118-james-coresight-jit-v1-0-dad4d90747f6@linaro.org>
+ <20261118-james-coresight-jit-v1-10-dad4d90747f6@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 18 Nov 2026 16:44:34 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,33 +59,19 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <av1QxJZA36xcbcEL@google.com>
 
-On Tue, Nov 17, 2026 at 11:16:20PM -0800, Namhyung Kim wrote:
-> On Tue, Nov 17, 2026 at 05:04:25PM -0300, Arnaldo Carvalho de Melo wrote:
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > 
-> > At -O2 a struct pointer lives in a register (with DWARF describing it with
-> > a register location on register-argument ABIs), while the unoptimized
-> > workloads the data type tests profile keep their variables on the stack.
-> > 
-> > Add a regptr workload with a noinline function that takes the pointer from
-> > a volatile global, so the compiler cannot constant-propagate the object
-> > address, and check that its three member accesses are resolved from that
-> > register.
-> 
-> Thanks for adding the workloads for data type profiling.  I was unsure
-> if it's ok to add since it'd requires many test cases to cover various
-> aspect of binary patterns or compiler/language differences.  But having
-> a seperate repo for the test programs would be cumbersome too.
+> Pipe mode hasn't been supported since we added several peeks to
+> cs_etm__process_auxtrace_info_full() that require random access. Even if
+> it was supported, we would have to buffer the whole file anyway to make
+> fully ordered decoding work. You don't know if one core stopped tracing
+> for good or whether to wait till very end of the file for the next one.
+> IntelPT has the same issue, see 'perf-intel-pt.txt#Pipe mode'.
+>=20
+> Signed-off-by: James Clark <james.clark@linaro.org>
 
-I think these are all super small samples that can get into the perf
-binary, at some point if possible we can have it in dlsym'able .so
-files. For now this way of including what is needed to fine tune/test
-important new features such as data-type profiling is worth having it
-linked in the main binary.
+Sashiko has reviewed this patch and found no issues.
 
-- Arnaldo
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118-james-core=
+sight-jit-v1-0-dad4d90747f6@linaro.org?part=3D10
+
