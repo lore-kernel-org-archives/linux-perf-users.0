@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794982369;
-	b=ch/yqKfpzSxssPsxsrWzk2O+SU6Q+bK4NOW32Dn6Aro8bVsnCytHG1OxwGkFghuoZ6V6
-	 xYs20MN+ez/wLqRYIBfLCd3T2N4WtTFK69S1fZnOmu3OBToJY9xXhNenYZK/XThaerfTL
-	 LSZOh+DAWOzsh35hTOC13y6Dm0E7v102k2p3Uf1H/cimL02mWm8zK2nl4i+KBgHKfuG5j
-	 I3d+D+nu89WG73LEewsEz4ysKJSuw5rGeU0bPNqNgPARYHkEGstw/6SUGUKfznkkpboFQ
-	 HoxLfpdQJUqH1Qxp9DIZdNzUOwXjSgtW33zSIIlSuVDOewvdbBbXEKjBY/xVLRBhY6Q==
+	t=1794983294;
+	b=d86ganZd+DiD+1hZiWbalDYWXaKcsDpGWATIUrC1pakcq6bwO7jquYiVG2tvK8UGHl3n
+	 GDBGoa+LGeCfkVP+a3nnL+mGE/Ymm8cnsbfXnJs7LNyJ5/ZJ9zAsOPlwsRZKs2wJlSEVl
+	 5TvQx2+8N1e+Y8gCgbH0EeQ+so7KvJS/uZE8FhqAGGykf2fMVLT19/SSjHEg9EStiTpah
+	 /HekFaqSUMiH69/7sEy0ueyFXRh+6bm9uy0KMYv2c0DSelwHWWhVeuysSxkIfFXUR2vy9
+	 BI07lcOsbxIxCgaJA1k3sWZ7vpu53KAiZ/lwY/2naybPsurNAymS2tD/n9uxZEdg7+Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794982369;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794983294;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=j48Wt+j2L4v8zfN59fxLCaHFN73Enw/WaZAfK43/sIo=;
-	b=xbyakJaWx5/yMzLPcbKj6G5PbpUwzroMssYgo7rY45qlbsskFeHDjo0RlUsIZLQY5lGo
-	 aKqKnqpUrRt8qndyopy850sMOsAFyrJBTvoG+543fHf8xoylTrj9pxbCcCO9J9JOLOiPC
-	 j8nrryAMFFuPtfmliTvTFv++omC/c0AeleeCMJS5FL8CexMX5SOUJTgbevim/GZVrwv+W
-	 ZExJj1wa4QlIFwNIJq+zoyXucpohzxPMGdWBgOaCcXOpIz63hM1ywsxAv4QKcfXMNgkiZ
-	 shJqPnD3lZEjnJgDGwJobIZUV8qKho5Dq6WH5hLVT1pHrUra0498VxatN7UQ4T5Xrbg==
+	bh=N9CFIJBdHwVx3xXGNsYHLdhqiQo8R0GnSgbOhcY14X4=;
+	b=Cd07bOQ4RaFrXc52wVnvpvT6xqdcsTRUYeCu0iQpleCcxCjg4Lu0pf9uYd2z6/ajdaq8
+	 UCqZOeaO99jeK9vkHMfVQ2+03q9T0jThPOfPZ8VT3j5FPSXIbXozb4BpKwZp/XZI0I7I/
+	 M5B2OEDp5Jhds5nEtXhjScNtPWgWrK2G1r5RcboVZbp+ka6/ZMjjfb8ZdA9SH0c0U7Rq6
+	 faAY6Rwz6g9K12X5QY+q8ra3WvOQdYZhydPONWbTFkmHup0eyB9KecHHN8Eb4ny0kBUOX
+	 s5n3qqHbM4z8t4LCmYGJabrRks8xmlfEHl9nsF/JRSCQQcRaJhaQLcqxDot0f9ffg6w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Y7dcj5So;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oaSixYbY;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE4F606A325;
-	Wed, 18 Nov 2026 06:12:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DAD606A335;
+	Wed, 18 Nov 2026 06:28:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Y7dcj5So
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B36C1F000C4;
-	Wed, 18 Nov 2026 06:12:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oaSixYbY
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BB4E1F000C5;
+	Wed, 18 Nov 2026 06:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794982368;
-	bh=j48Wt+j2L4v8zfN59fxLCaHFN73Enw/WaZAfK43/sIo=;
+	s=k20260515; t=1794983293;
+	bh=N9CFIJBdHwVx3xXGNsYHLdhqiQo8R0GnSgbOhcY14X4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Y7dcj5SoeyBt4mxLGeDruK0FYP9mMimfJVff1n0oOvx+Uq/xAC5LysPZlKdkCK8h/
-	 mJzqiKyqoixUuR08EishI1t9tJLgagc9+j7KMxMFIs+wNQoF2v2KDea+bnXzWl547K
-	 T4mb+jFWZ51I+dpBEZekisElXjBwoF1WS2XAyjzz8HfGEG338p4kik6ErzfqQucN8H
-	 5zoWNUyaTVrTKwgLzIKASiqu2FTVueEsxG9DVv2eS5jrMnXznBnv4/u5jbdVqWPrC9
-	 lxqNssS1jbqVOi1EplkUcbS8VT74G9lz0qkl7ULRfPSqVdhSsPxhhAshlsaXOwugLd
-	 rmZFkEBB4m13A==
-Date: Tue, 17 Nov 2026 22:12:46 -0800
+	b=oaSixYbYhgSm5KIqLAQxkrWJZTvsuF22F5YYsGv7McuJywWsx1tfKJXgyhqHl5Zju
+	 12udwtHxz3ArSVSDJhw36ai2/amIAkaRUOmIjWw8I3wfE0TU/kzo8YdH4W4O6zSgiY
+	 XF4Y+Fi4no4HSKbymIZvv0OhPAshVFhsTuL3Y+y3uRzLdZSFMj1Kz/wVX6a7eUJk1k
+	 AY2nbhd/KxNT2i241H1mdIthjZVVI9lQ93ITTxiXnJGi3lNxOMVsfezvNbrEd8L6C9
+	 c7sNi3m2oLFIbR0fjlAi3ILoj8qmYjCtlTs4Nj1bU4hGRa/PJ8i6qO9KquN7olAz7x
+	 QKuxZOr82HmFA==
+Date: Tue, 17 Nov 2026 22:28:11 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -49,11 +49,11 @@ Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 4/9] perf maps: Optimize tail insertion and
- small-append sorting
-Message-ID: <av1B3k5cWKQrFK_F@google.com>
+Subject: Re: [PATCH v6 5/9] perf symbol: Switch backing storage from rbtree
+ to struct symbols array
+Message-ID: <av1Fe0w4_oAEPDhB@google.com>
 References: <20261117185305.108003-1-irogers@google.com>
- <20261117185305.108003-5-irogers@google.com>
+ <20261117185305.108003-6-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -65,649 +65,254 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20261117185305.108003-5-irogers@google.com>
+In-Reply-To: <20261117185305.108003-6-irogers@google.com>
 
-On Tue, Nov 17, 2026 at 10:53:00AM -0800, Ian Rogers wrote:
-> User-space map insertions (from /proc/pid/maps synthesis, runtime
-> PERF_RECORD_MMAP2, and jitdump) and BPF ksymbol registrations all flow
-> through maps__fixup_overlap_and_insert() -> first_ending_after().
-> Currently first_ending_after() has a fast-path check for the first map
-> (maps_by_address[0]), but no fast-path check for the last map
-> (maps_by_address[high]). Because /proc/pid/maps entries are synthesized
-> in ascending address order, every synthesized mapping starts at or after
-> maps_by_address[high]'s end, yet currently executes the full O(log N)
-> binary search loop. Add a tail check in first_ending_after() so
-> non-overlapping ascending insertions complete in O(1).
-
-This looks good.
-
+On Tue, Nov 17, 2026 at 10:53:01AM -0800, Ian Rogers wrote:
+> Previously, DSO symbols were stored in an unprotected rb_root_cached
+> with a 24-byte struct rb_node embedded inside every struct symbol. That
+> design had three drawbacks:
+> 1. Embedding struct rb_node (3 pointers, 24 bytes on 64-bit) accounted
+>    for nearly 40% of struct symbol's fixed header size and scattered
+>    symbol lookups across non-contiguous heap nodes.
+> 2. Unlike struct dsos and struct maps, the symbol rbtree had no lock
+>    protecting concurrent lookups, sorting, and insertions.
+> 3. Deduplicating symbols, splitting kallsyms, and trimming excess symbol
+>    container capacity under memory pressure benefit from operating on a
+>    compact array under a lock.
 > 
-> Additionally, track the sorted prefix lengths (nr_addr_sorted and
-> nr_name_sorted) in struct maps:
-> - In __maps__sort_by_address() and maps__sort_by_name(), when the
->   unsorted tail is small (k <= 8) or the total map count is small
->   (n <= 64), binary-insert the newly appended maps into the sorted
->   prefix instead of re-running qsort() over the entire array. This
->   avoids O(N^2 log N) re-sorting when maps__find_by_name() is called
->   repeatedly between single-map maps__insert() calls in
->   dso__process_kernel_symbol() and dso__split_kallsyms().
-> - In maps__by_address_index() and maps__by_name_index(), binary-search
->   the known-sorted prefix before scanning only the unsorted tail.
-> - Add a unit test in tools/perf/tests/maps.c covering the tail
->   fast-path and incremental binary-insertion sort.
+> Replace struct rb_node in struct symbol with a locked, lazily-sorted
+> pointer array in struct symbols, matching the design of struct dsos and
+> struct maps:
+> 
+> - Introduce struct symbols containing a rw_semaphore lock, primary
+>   address-sorted symbols array, secondary name-sorted symbols_by_name
+>   array, counts, capacity, and sorted state flags.
+> - Lazily sort symbols by start address using qsort (symbols__sort_locked)
+>   and use binary search in symbols__find().
+> - Update symbols__fixup_duplicate(), symbols__fixup_end(),
+>   maps__split_kallsyms_for_kcore(), and maps__split_kallsyms() to
+>   operate on the sorted array and compact entries in place.
+> - Convert symbols__for_each_entry(), dso__for_each_symbol(), and
+>   map__for_each_symbol() to callback-based iteration under
+>   symbols->lock, matching dsos__for_each_dso() and maps__for_each_map().
+> - Remove the unsynchronized single-entry dso->last_find_result cache and
+>   dso__reset_find_symbol_cache() since binary search over a contiguous
+>   array is cache-friendly.
+> - Remove the direct rb_erase_cached() workaround in builtin-annotate.c's
+>   add_sample().
+> - Update the TUI map browser (ui/browsers/map.c) to snapshot the sorted
+>   symbol array into an entries array and use ui_browser__argv_refresh
+>   and ui_browser__argv_seek instead of ui_browser__rb_tree_refresh.
+> 
+> Using 'perf bench internals symbols':
+> 
+>   Before (perf binary):
+>     Average DSO load + sort: 7.041 msec (+- 0.051 msec)
+>     Average DSO memory usage: 1401 KB (+- 4 KB)
+>     Average bulk insert + lookup: 1453.950 usec (+- 10.895 usec)
+>   After (perf binary, -13.5% load, -14.6% memory, -7.7% bulk):
+>     Average DSO load + sort: 6.089 msec (+- 0.039 msec)
+>     Average DSO memory usage: 1197 KB (+- 3 KB)
+>     Average bulk insert + lookup: 1341.500 usec (+- 21.564 usec)
+> 
+>   Before (libLLVM.so.21.1):
+>     Average DSO load + sort: 78.599 msec (+- 0.857 msec)
+>     Average DSO memory usage: 9530 KB (+- 5 KB)
+>   After (libLLVM.so.21.1, -22.3% load, -8.1% memory):
+>     Average DSO load + sort: 61.074 msec (+- 0.236 msec)
+>     Average DSO memory usage: 8755 KB (+- 1 KB)
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/arch/powerpc/util/sym-handling.c |  34 +-
+>  tools/perf/builtin-annotate.c               |  11 -
+>  tools/perf/builtin-kmem.c                   |  51 +-
+>  tools/perf/tests/hists_common.c             |   5 +-
+>  tools/perf/tests/symbols.c                  |  62 +-
+>  tools/perf/tests/vmlinux-kallsyms.c         | 181 +++---
+>  tools/perf/ui/browser.c                     |   3 +
+>  tools/perf/ui/browsers/hists.c              |   3 +-
+>  tools/perf/ui/browsers/map.c                |  62 +-
+>  tools/perf/util/auxtrace.c                  | 109 ++--
+>  tools/perf/util/db-export.c                 |   4 +-
+>  tools/perf/util/dso.c                       |  50 +-
+>  tools/perf/util/dso.h                       |  68 +--
+>  tools/perf/util/intel-pt.c                  |  74 ++-
+>  tools/perf/util/libbfd.c                    |   3 +-
+>  tools/perf/util/machine.c                   |  30 +-
+>  tools/perf/util/map.c                       |  36 +-
+>  tools/perf/util/map.h                       |   8 +-
+>  tools/perf/util/probe-event.c               |  98 +--
+>  tools/perf/util/symbol-elf.c                |  12 +-
+>  tools/perf/util/symbol.c                    | 643 ++++++++++++++------
+>  tools/perf/util/symbol.h                    |  72 ++-
+>  tools/perf/util/symbol_fprintf.c            |  25 +-
+>  23 files changed, 1011 insertions(+), 633 deletions(-)
+> 
+> diff --git a/tools/perf/arch/powerpc/util/sym-handling.c b/tools/perf/arch/powerpc/util/sym-handling.c
+> index 947bfad7aa59..f87d77262c00 100644
+> --- a/tools/perf/arch/powerpc/util/sym-handling.c
+> +++ b/tools/perf/arch/powerpc/util/sym-handling.c
+> @@ -115,13 +115,27 @@ void arch__fix_tev_from_maps(struct perf_probe_event *pev,
+>  }
+>  
+>  #ifdef HAVE_LIBELF_SUPPORT
+> +struct post_process_probe_trace_events_args {
+> +	struct perf_probe_event *pev;
+> +	struct probe_trace_event *tev;
+> +	struct map *map;
+> +};
+> +
+> +static int post_process_probe_trace_events_cb(struct symbol *sym, void *data)
+> +{
+> +	struct post_process_probe_trace_events_args *args = data;
+> +
+> +	if (map__unmap_ip(args->map, sym->start) == args->tev->point.address) {
+> +		arch__fix_tev_from_maps(args->pev, args->tev, args->map, sym);
+> +		return 1;
+> +	}
+> +	return 0;
+> +}
+> +
+>  void arch__post_process_probe_trace_events(struct perf_probe_event *pev,
+>  					   int ntevs)
+>  {
+> -	struct probe_trace_event *tev;
+>  	struct map *map;
+> -	struct symbol *sym = NULL;
+> -	struct rb_node *tmp;
+>  	int i = 0;
+>  
+>  	map = get_target_map(pev->target, pev->nsi, pev->uprobes);
+> @@ -129,13 +143,13 @@ void arch__post_process_probe_trace_events(struct perf_probe_event *pev,
+>  		return;
+>  
+>  	for (i = 0; i < ntevs; i++) {
+> -		tev = &pev->tevs[i];
+> -		map__for_each_symbol(map, sym, tmp) {
+> -			if (map__unmap_ip(map, sym->start) == tev->point.address) {
+> -				arch__fix_tev_from_maps(pev, tev, map, sym);
+> -				break;
+> -			}
+> -		}
+> +		struct post_process_probe_trace_events_args args = {
+> +			.pev = pev,
+> +			.tev = &pev->tevs[i],
+> +			.map = map,
+> +		};
+> +
+> +		map__for_each_symbol(map, post_process_probe_trace_events_cb, &args);
 
-Can you split this part?  Also I'm not sure if it's worth the
-complexity.  Isn't the first change good enough?
+Please separate the map__for_each_symbol() changes as it can be
+converted independently.  New users can be separate commits too.
 
-Maybe it can defer sorting until it's really needed when N is small.
-But anyway I'd like to keep this code simple as it's already complex.
+
+>  	}
+>  }
+>  #endif /* HAVE_LIBELF_SUPPORT */
+> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+> index 7cb7e03d9a21..65846110c309 100644
+> --- a/tools/perf/builtin-annotate.c
+> +++ b/tools/perf/builtin-annotate.c
+> @@ -258,17 +258,6 @@ static int add_sample(struct perf_sample *sample,
+>  	    (al->sym == NULL ||
+>  	     strcmp(ann->sym_hist_filter, al->sym->name) != 0)) {
+>  		/* We're only interested in a symbol named sym_hist_filter */
+> -		/*
+> -		 * FIXME: why isn't this done in the symbol_filter when loading
+> -		 * the DSO?
+> -		 */
+> -		if (al->sym != NULL) {
+> -			struct dso *dso = map__dso(al->map);
+> -
+> -			rb_erase_cached(&al->sym->rb_node, dso__symbols(dso));
+> -			symbol__delete(al->sym);
+> -			dso__reset_find_symbol_cache(dso);
+> -		}
+>  		return 0;
+>  	}
+>  
+> diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+> index 8693c6b135ca..87869c717266 100644
+> --- a/tools/perf/builtin-kmem.c
+> +++ b/tools/perf/builtin-kmem.c
+> @@ -341,13 +341,33 @@ static int callcmp(const void *a, const void *b)
+>  		return -1;
+>  }
+>  
+> +static int build_alloc_func_list_cb(struct symbol *sym, void *data)
+> +{
+> +	regex_t *alloc_func_regex = data;
+> +	struct alloc_func *func;
+> +
+> +	if (regexec(alloc_func_regex, sym->name, 0, NULL, 0))
+> +		return 0;
+> +
+> +	func = realloc(alloc_func_list,
+> +		       (nr_alloc_funcs + 1) * sizeof(*func));
+> +	if (func == NULL)
+> +		return -ENOMEM;
+> +
+> +	pr_debug("alloc func: %s\n", sym->name);
+> +	func[nr_alloc_funcs].start = sym->start;
+> +	func[nr_alloc_funcs].end   = sym->end;
+> +	func[nr_alloc_funcs].name  = sym->name;
+> +
+> +	alloc_func_list = func;
+> +	nr_alloc_funcs++;
+> +	return 0;
+> +}
+> +
+>  static int build_alloc_func_list(void)
+>  {
+>  	int ret;
+>  	struct map *kernel_map;
+> -	struct symbol *sym;
+> -	struct rb_node *node;
+> -	struct alloc_func *func;
+>  	struct machine *machine = &kmem_session->machines.host;
+>  	regex_t alloc_func_regex;
+>  	static const char pattern[] = "^_?_?(alloc|get_free|get_zeroed)_pages?";
+> @@ -364,30 +384,17 @@ static int build_alloc_func_list(void)
+>  	kernel_map = machine__kernel_map(machine);
+>  	if (map__load(kernel_map) < 0) {
+>  		pr_err("cannot load kernel map\n");
+> +		regfree(&alloc_func_regex);
+
+Looks like an unrelated bug fix.
 
 Thanks,
 Namhyung
 
-> 
-> Using 'perf bench internals maps':
-> 
->   Before:
->     Average ascending insert + lookup: 63.370 usec (+- 0.476 usec)
->     Average append + lookup: 7477.450 usec (+- 20.829 usec)
->   After (-6.9% ascending, -98.7% append):
->     Average ascending insert + lookup: 58.970 usec (+- 0.609 usec)
->     Average append + lookup: 96.670 usec (+- 1.353 usec)
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/tests/maps.c |  67 ++++++++++
->  tools/perf/util/maps.c  | 276 +++++++++++++++++++++++++++++++++-------
->  2 files changed, 294 insertions(+), 49 deletions(-)
-> 
-> diff --git a/tools/perf/tests/maps.c b/tools/perf/tests/maps.c
-> index ff6d25f9c043..04ab425f4a87 100644
-> --- a/tools/perf/tests/maps.c
-> +++ b/tools/perf/tests/maps.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <inttypes.h>
->  #include <unistd.h>
-> +#include <internal/rc_check.h>
->  #include <linux/compiler.h>
->  #include <linux/kernel.h>
->  #include "debug.h"
-> @@ -253,9 +254,75 @@ static int test__maps__fixup_overlap_and_insert(struct test_suite *t __maybe_unu
->  	return TEST_OK;
->  }
->  
-> +static int test__maps__incremental_sort(struct test_suite *t __maybe_unused,
-> +					int subtest __maybe_unused)
-> +{
-> +	struct map_def ascending_maps[] = {
-> +		{ "map_c", 1000, 2000 },
-> +		{ "map_a", 2000, 3000 },
-> +		{ "map_d", 4000, 5000 },
-> +	};
-> +	struct map_def out_of_order = { "map_b", 3000, 4000 };
-> +	struct map *map, *found;
-> +	struct perf_env host_env;
-> +	struct machine *machine;
-> +	struct maps *maps;
-> +
-> +	perf_env__init(&host_env);
-> +	machine = machine__new_live(&host_env, /*kernel_maps=*/false, getpid());
-> +	maps = maps__new(machine);
-> +
-> +	TEST_ASSERT_VAL("failed to create machine", machine);
-> +	TEST_ASSERT_VAL("failed to create maps", maps);
-> +
-> +	/* Exercise tail fast-path in maps__fixup_overlap_and_insert. */
-> +	for (unsigned int i = 0; i < ARRAY_SIZE(ascending_maps); i++) {
-> +		map = dso__new_map(ascending_maps[i].name);
-> +		TEST_ASSERT_VAL("failed to create map", map);
-> +		map__set_start(map, ascending_maps[i].start);
-> +		map__set_end(map, ascending_maps[i].end);
-> +		TEST_ASSERT_VAL("failed to insert sorted map",
-> +				maps__fixup_overlap_and_insert(maps, map) == 0);
-> +		map__put(map);
-> +	}
-> +
-> +	/* Populate maps_by_name and verify lookup. */
-> +	found = maps__find_by_name(maps, "map_a");
-> +	TEST_ASSERT_VAL("failed to find map_a by name", found && map__start(found) == 2000);
-> +	map__zput(found);
-> +
-> +	/* Append out-of-order map via maps__insert and verify binary-insertion sort. */
-> +	map = dso__new_map(out_of_order.name);
-> +	TEST_ASSERT_VAL("failed to create map_b", map);
-> +	map__set_start(map, out_of_order.start);
-> +	map__set_end(map, out_of_order.end);
-> +	TEST_ASSERT_VAL("failed to insert map_b", maps__insert(maps, map) == 0);
-> +
-> +	found = maps__find(maps, 3500);
-> +	TEST_ASSERT_VAL("failed to find map_b by address", RC_CHK_EQUAL(found, map));
-> +	map__zput(found);
-> +
-> +	found = maps__find_by_name(maps, "map_b");
-> +	TEST_ASSERT_VAL("failed to find map_b by name", RC_CHK_EQUAL(found, map));
-> +	map__zput(found);
-> +
-> +	maps__remove(maps, map);
-> +	map__zput(map);
-> +
-> +	found = maps__find_by_name(maps, "map_d");
-> +	TEST_ASSERT_VAL("failed to find map_d after removal", found && map__start(found) == 4000);
-> +	map__zput(found);
-> +
-> +	maps__zput(maps);
-> +	machine__delete(machine);
-> +	perf_env__exit(&host_env);
-> +	return TEST_OK;
-> +}
-> +
->  static struct test_case tests__maps[] = {
->  	TEST_CASE("Test merge_in interface", maps__merge_in),
->  	TEST_CASE("Test fix up overlap interface", maps__fixup_overlap_and_insert),
-> +	TEST_CASE("Test incremental sort and tail insert", maps__incremental_sort),
->  	{	.name = NULL, }
->  };
->  
-> diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-> index 675fe0223faa..b420c2f2b72a 100644
-> --- a/tools/perf/util/maps.c
-> +++ b/tools/perf/util/maps.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <errno.h>
->  #include <stdlib.h>
-> +#include <linux/kernel.h>
->  #include <linux/zalloc.h>
->  #include "debug.h"
->  #include "dso.h"
-> @@ -56,6 +57,16 @@ DECLARE_RC_STRUCT(maps) {
->  	 * maps_by_name.
->  	 */
->  	unsigned int	 nr_maps_allocated;
-> +	/**
-> +	 * @nr_addr_sorted: number of leading entries in
-> +	 * maps_by_address that are known to be sorted.
-> +	 */
-> +	unsigned int	 nr_addr_sorted;
-> +	/**
-> +	 * @nr_name_sorted: number of leading entries in maps_by_name
-> +	 * that are known to be sorted.
-> +	 */
-> +	unsigned int	 nr_name_sorted;
->  	/**
->  	 * @last_search_by_name_idx: cache of last found by name entry's index
->  	 * as frequent searches for the same dso name are common.
-> @@ -72,8 +83,17 @@ DECLARE_RC_STRUCT(maps) {
->  static void check_invariants(const struct maps *maps __maybe_unused)
->  {
->  #ifndef NDEBUG
-> -	assert(RC_CHK_ACCESS(maps)->nr_maps <= RC_CHK_ACCESS(maps)->nr_maps_allocated);
-> -	for (unsigned int i = 0; i < RC_CHK_ACCESS(maps)->nr_maps; i++) {
-> +	unsigned int nr_maps = RC_CHK_ACCESS(maps)->nr_maps;
-> +	unsigned int nr_addr_sorted = RC_CHK_ACCESS(maps)->nr_addr_sorted;
-> +	unsigned int nr_name_sorted = RC_CHK_ACCESS(maps)->nr_name_sorted;
-> +
-> +	assert(nr_maps <= RC_CHK_ACCESS(maps)->nr_maps_allocated);
-> +	assert(nr_addr_sorted <= nr_maps);
-> +	assert(!RC_CHK_ACCESS(maps)->maps_by_address_sorted || nr_addr_sorted == nr_maps);
-> +	assert(nr_name_sorted <= nr_maps);
-> +	assert(!RC_CHK_ACCESS(maps)->maps_by_name_sorted || nr_name_sorted == nr_maps);
-> +
-> +	for (unsigned int i = 0; i < nr_maps; i++) {
->  		struct map *map = RC_CHK_ACCESS(maps)->maps_by_address[i];
->  
->  		/* Check map is well-formed. */
-> @@ -84,28 +104,25 @@ static void check_invariants(const struct maps *maps __maybe_unused)
->  		if (map__dso(map) && dso__kernel(map__dso(map)))
->  			assert(RC_CHK_EQUAL(map__kmap(map)->kmaps, maps));
->  
-> -		if (i > 0) {
-> +		if (i > 0 && i < nr_addr_sorted) {
->  			struct map *prev = RC_CHK_ACCESS(maps)->maps_by_address[i - 1];
->  
-> -			/* If addresses are sorted... */
-> -			if (RC_CHK_ACCESS(maps)->maps_by_address_sorted) {
-> -				/* Maps should be in start address order. */
-> -				assert(map__start(prev) <= map__start(map));
-> -				/*
-> -				 * If the ends of maps aren't broken (during
-> -				 * construction) then they should be ordered
-> -				 * too.
-> -				 */
-> -				if (!RC_CHK_ACCESS(maps)->ends_broken) {
-> -					assert(map__end(prev) <= map__end(map));
-> -					assert(map__end(prev) <= map__start(map) ||
-> -					       map__start(prev) == map__start(map));
-> -				}
-> +			/* Maps in sorted prefix should be in start address order. */
-> +			assert(map__start(prev) <= map__start(map));
-> +			/*
-> +			 * If the ends of maps aren't broken (during
-> +			 * construction) then they should be ordered
-> +			 * too.
-> +			 */
-> +			if (!RC_CHK_ACCESS(maps)->ends_broken) {
-> +				assert(map__end(prev) <= map__end(map));
-> +				assert(map__end(prev) <= map__start(map) ||
-> +				       map__start(prev) == map__start(map));
->  			}
->  		}
->  	}
->  	if (RC_CHK_ACCESS(maps)->maps_by_name) {
-> -		for (unsigned int i = 0; i < RC_CHK_ACCESS(maps)->nr_maps; i++) {
-> +		for (unsigned int i = 0; i < nr_maps; i++) {
->  			struct map *map = RC_CHK_ACCESS(maps)->maps_by_name[i];
->  
->  			/*
-> @@ -137,6 +154,14 @@ static void maps__set_nr_maps_allocated(struct maps *maps, unsigned int nr_maps_
->  static void maps__set_nr_maps(struct maps *maps, unsigned int nr_maps)
->  {
->  	RC_CHK_ACCESS(maps)->nr_maps = nr_maps;
-> +	if (RC_CHK_ACCESS(maps)->maps_by_address_sorted ||
-> +	    RC_CHK_ACCESS(maps)->nr_addr_sorted > nr_maps) {
-> +		RC_CHK_ACCESS(maps)->nr_addr_sorted = nr_maps;
-> +	}
-> +	if (RC_CHK_ACCESS(maps)->maps_by_name_sorted ||
-> +	    RC_CHK_ACCESS(maps)->nr_name_sorted > nr_maps) {
-> +		RC_CHK_ACCESS(maps)->nr_name_sorted = nr_maps;
-> +	}
->  }
->  
->  /* Not in the header, to aid reference counting. */
-> @@ -160,6 +185,8 @@ static bool maps__maps_by_address_sorted(const struct maps *maps)
->  static void maps__set_maps_by_address_sorted(struct maps *maps, bool value)
->  {
->  	RC_CHK_ACCESS(maps)->maps_by_address_sorted = value;
-> +	if (value)
-> +		RC_CHK_ACCESS(maps)->nr_addr_sorted = maps__nr_maps(maps);
->  }
->  
->  static bool maps__maps_by_name_sorted(const struct maps *maps)
-> @@ -170,6 +197,8 @@ static bool maps__maps_by_name_sorted(const struct maps *maps)
->  static void maps__set_maps_by_name_sorted(struct maps *maps, bool value)
->  {
->  	RC_CHK_ACCESS(maps)->maps_by_name_sorted = value;
-> +	if (value)
-> +		RC_CHK_ACCESS(maps)->nr_name_sorted = maps__nr_maps(maps);
->  }
->  
->  struct machine *maps__machine(const struct maps *maps)
-> @@ -241,6 +270,8 @@ static void maps__init(struct maps *maps, struct machine *machine)
->  	refcount_set(maps__refcnt(maps), 1);
->  	RC_CHK_ACCESS(maps)->nr_maps = 0;
->  	RC_CHK_ACCESS(maps)->nr_maps_allocated = 0;
-> +	RC_CHK_ACCESS(maps)->nr_addr_sorted = 0;
-> +	RC_CHK_ACCESS(maps)->nr_name_sorted = 0;
->  	RC_CHK_ACCESS(maps)->last_search_by_name_idx = 0;
->  	RC_CHK_ACCESS(maps)->maps_by_address_sorted = true;
->  	RC_CHK_ACCESS(maps)->maps_by_name_sorted = false;
-> @@ -313,6 +344,7 @@ static void __maps__free_maps_by_name(struct maps *maps)
->  	zfree(&RC_CHK_ACCESS(maps)->maps_by_name);
->  
->  	/* Consistent with maps__init(). When maps_by_name == NULL, maps_by_name_sorted == false */
-> +	RC_CHK_ACCESS(maps)->nr_name_sorted = 0;
->  	maps__set_maps_by_name_sorted(maps, false);
->  }
->  
-> @@ -339,15 +371,54 @@ static int map__start_cmp(const void *a, const void *b)
->  	return map_a_start > map_b_start ? 1 : -1;
->  }
->  
-> +static unsigned int maps__by_address_upper_bound(struct map **arr, unsigned int len,
-> +						 const struct map *map)
-> +{
-> +	unsigned int low = 0, high = len;
-> +
-> +	while (low < high) {
-> +		unsigned int mid = low + (high - low) / 2;
-> +
-> +		if (map__start_cmp(&arr[mid], &map) <= 0)
-> +			low = mid + 1;
-> +		else
-> +			high = mid;
-> +	}
-> +	return low;
-> +}
-> +
->  static void __maps__sort_by_address(struct maps *maps)
->  {
-> +	struct map **maps_by_address;
-> +	unsigned int n, m, k;
-> +
->  	if (maps__maps_by_address_sorted(maps))
->  		return;
->  
-> -	qsort(maps__maps_by_address(maps),
-> -		maps__nr_maps(maps),
-> -		sizeof(struct map *),
-> -		map__start_cmp);
-> +	maps_by_address = maps__maps_by_address(maps);
-> +	n = maps__nr_maps(maps);
-> +	m = RC_CHK_ACCESS(maps)->nr_addr_sorted;
-> +	if (m > n)
-> +		m = 0;
-> +	k = n - m;
-> +
-> +	if (k <= 8 || n <= 64) {
-> +		for (unsigned int i = max(m, 1U); i < n; i++) {
-> +			struct map *map = maps_by_address[i];
-> +
-> +			if (map__start_cmp(&maps_by_address[i - 1], &map) > 0) {
-> +				unsigned int pos =
-> +					maps__by_address_upper_bound(maps_by_address, i, map);
-> +
-> +				memmove(&maps_by_address[pos + 1],
-> +					&maps_by_address[pos],
-> +					(i - pos) * sizeof(*maps_by_address));
-> +				maps_by_address[pos] = map;
-> +			}
-> +		}
-> +	} else {
-> +		qsort(maps_by_address, n, sizeof(struct map *), map__start_cmp);
-> +	}
->  	maps__set_maps_by_address_sorted(maps, true);
->  }
->  
-> @@ -373,6 +444,22 @@ static int map__strcmp(const void *a, const void *b)
->  	return ret;
->  }
->  
-> +static unsigned int maps__by_name_upper_bound(struct map **arr, unsigned int len,
-> +					      const struct map *map)
-> +{
-> +	unsigned int low = 0, high = len;
-> +
-> +	while (low < high) {
-> +		unsigned int mid = low + (high - low) / 2;
-> +
-> +		if (map__strcmp(&arr[mid], &map) <= 0)
-> +			low = mid + 1;
-> +		else
-> +			high = mid;
-> +	}
-> +	return low;
-> +}
-> +
->  static int maps__sort_by_name(struct maps *maps)
->  {
->  	int err = 0;
-> @@ -380,6 +467,7 @@ static int maps__sort_by_name(struct maps *maps)
->  	down_write(maps__lock(maps));
->  	if (!maps__maps_by_name_sorted(maps)) {
->  		struct map **maps_by_name = maps__maps_by_name(maps);
-> +		unsigned int n = maps__nr_maps(maps);
->  
->  		if (!maps_by_name) {
->  			maps_by_name = malloc(RC_CHK_ACCESS(maps)->nr_maps_allocated *
-> @@ -388,18 +476,38 @@ static int maps__sort_by_name(struct maps *maps)
->  				err = -ENOMEM;
->  			else {
->  				struct map **maps_by_address = maps__maps_by_address(maps);
-> -				unsigned int n = maps__nr_maps(maps);
->  
->  				maps__set_maps_by_name(maps, maps_by_name);
->  				for (unsigned int i = 0; i < n; i++)
->  					maps_by_name[i] = map__get(maps_by_address[i]);
-> +				RC_CHK_ACCESS(maps)->nr_name_sorted = 0;
->  			}
->  		}
->  		if (!err) {
-> -			qsort(maps_by_name,
-> -				maps__nr_maps(maps),
-> -				sizeof(struct map *),
-> -				map__strcmp);
-> +			unsigned int m = RC_CHK_ACCESS(maps)->nr_name_sorted;
-> +			unsigned int k;
-> +
-> +			if (m > n)
-> +				m = 0;
-> +			k = n - m;
-> +			if (k <= 8 || n <= 64) {
-> +				for (unsigned int i = max(m, 1U); i < n; i++) {
-> +					struct map *map = maps_by_name[i];
-> +
-> +					if (map__strcmp(&maps_by_name[i - 1], &map) > 0) {
-> +						unsigned int pos =
-> +							maps__by_name_upper_bound(maps_by_name,
-> +										  i, map);
-> +
-> +						memmove(&maps_by_name[pos + 1],
-> +							&maps_by_name[pos],
-> +							(i - pos) * sizeof(*maps_by_name));
-> +						maps_by_name[pos] = map;
-> +					}
-> +				}
-> +			} else {
-> +				qsort(maps_by_name, n, sizeof(struct map *), map__strcmp);
-> +			}
->  			maps__set_maps_by_name_sorted(maps, true);
->  		}
->  	}
-> @@ -411,19 +519,27 @@ static int maps__sort_by_name(struct maps *maps)
->  static unsigned int maps__by_address_index(const struct maps *maps, const struct map *map)
->  {
->  	struct map **maps_by_address = maps__maps_by_address(maps);
-> +	unsigned int nr_sorted = RC_CHK_ACCESS(maps)->nr_addr_sorted;
-> +	unsigned int nr_maps = maps__nr_maps(maps);
->  
-> -	if (maps__maps_by_address_sorted(maps)) {
-> +	if (nr_sorted > nr_maps)
-> +		nr_sorted = 0;
-> +
-> +	if (nr_sorted > 0) {
->  		struct map **mapp =
-> -			bsearch(&map, maps__maps_by_address(maps), maps__nr_maps(maps),
-> +			bsearch(&map, maps_by_address, nr_sorted,
->  				sizeof(*mapp), map__start_cmp);
->  
->  		if (mapp)
->  			return mapp - maps_by_address;
-> -	} else {
-> -		for (unsigned int i = 0; i < maps__nr_maps(maps); i++) {
-> -			if (RC_CHK_ACCESS(maps_by_address[i]) == RC_CHK_ACCESS(map))
-> -				return i;
-> -		}
-> +	}
-> +	for (unsigned int i = nr_sorted; i < nr_maps; i++) {
-> +		if (RC_CHK_ACCESS(maps_by_address[i]) == RC_CHK_ACCESS(map))
-> +			return i;
-> +	}
-> +	for (unsigned int i = 0; i < nr_sorted; i++) {
-> +		if (RC_CHK_ACCESS(maps_by_address[i]) == RC_CHK_ACCESS(map))
-> +			return i;
->  	}
->  	pr_err("Map missing from maps");
->  	return -1;
-> @@ -432,19 +548,27 @@ static unsigned int maps__by_address_index(const struct maps *maps, const struct
->  static unsigned int maps__by_name_index(const struct maps *maps, const struct map *map)
->  {
->  	struct map **maps_by_name = maps__maps_by_name(maps);
-> +	unsigned int nr_sorted = RC_CHK_ACCESS(maps)->nr_name_sorted;
-> +	unsigned int nr_maps = maps__nr_maps(maps);
->  
-> -	if (maps__maps_by_name_sorted(maps)) {
-> +	if (nr_sorted > nr_maps)
-> +		nr_sorted = 0;
-> +
-> +	if (nr_sorted > 0) {
->  		struct map **mapp =
-> -			bsearch(&map, maps_by_name, maps__nr_maps(maps),
-> +			bsearch(&map, maps_by_name, nr_sorted,
->  				sizeof(*mapp), map__strcmp);
->  
->  		if (mapp)
->  			return mapp - maps_by_name;
-> -	} else {
-> -		for (unsigned int i = 0; i < maps__nr_maps(maps); i++) {
-> -			if (RC_CHK_ACCESS(maps_by_name[i]) == RC_CHK_ACCESS(map))
-> -				return i;
-> -		}
-> +	}
-> +	for (unsigned int i = nr_sorted; i < nr_maps; i++) {
-> +		if (RC_CHK_ACCESS(maps_by_name[i]) == RC_CHK_ACCESS(map))
-> +			return i;
-> +	}
-> +	for (unsigned int i = 0; i < nr_sorted; i++) {
-> +		if (RC_CHK_ACCESS(maps_by_name[i]) == RC_CHK_ACCESS(map))
-> +			return i;
->  	}
->  	pr_err("Map missing from maps");
->  	return -1;
-> @@ -521,7 +645,10 @@ static int __maps__insert(struct maps *maps, struct map *new)
->  			maps__maps_by_address_sorted(maps) &&
->  			map__end(maps_by_address[nr_maps - 2]) <= map__start(new) &&
->  			map__start_cmp(&maps_by_address[nr_maps - 2], &new) <= 0);
-> -		maps__set_maps_by_name_sorted(maps, false);
-> +		maps__set_maps_by_name_sorted(maps,
-> +			maps_by_name &&
-> +			maps__maps_by_name_sorted(maps) &&
-> +			map__strcmp(&maps_by_name[nr_maps - 2], &new) <= 0);
->  	}
->  	if (map__end(new) < map__start(new))
->  		RC_CHK_ACCESS(maps)->ends_broken = true;
-> @@ -553,6 +680,8 @@ static void __maps__remove(struct maps *maps, struct map *map)
->  	memmove(&maps_by_address[address_idx],
->  		&maps_by_address[address_idx + 1],
->  		(nr_maps - address_idx - 1) * sizeof(*maps_by_address));
-> +	if (address_idx < RC_CHK_ACCESS(maps)->nr_addr_sorted)
-> +		--RC_CHK_ACCESS(maps)->nr_addr_sorted;
->  
->  	if (maps_by_name) {
->  		unsigned int name_idx = maps__by_name_index(maps, map);
-> @@ -561,9 +690,16 @@ static void __maps__remove(struct maps *maps, struct map *map)
->  		memmove(&maps_by_name[name_idx],
->  			&maps_by_name[name_idx + 1],
->  			(nr_maps - name_idx - 1) *  sizeof(*maps_by_name));
-> +		if (name_idx < RC_CHK_ACCESS(maps)->nr_name_sorted)
-> +			--RC_CHK_ACCESS(maps)->nr_name_sorted;
+
+>  		return -ENOENT;
 >  	}
 >  
-> -	--RC_CHK_ACCESS(maps)->nr_maps;
-> +	--nr_maps;
-> +	RC_CHK_ACCESS(maps)->nr_maps = nr_maps;
-> +	if (RC_CHK_ACCESS(maps)->nr_addr_sorted == nr_maps)
-> +		RC_CHK_ACCESS(maps)->maps_by_address_sorted = true;
-> +	if (maps_by_name && RC_CHK_ACCESS(maps)->nr_name_sorted == nr_maps)
-> +		RC_CHK_ACCESS(maps)->maps_by_name_sorted = true;
+> -	map__for_each_symbol(kernel_map, sym, node) {
+> -		if (regexec(&alloc_func_regex, sym->name, 0, NULL, 0))
+> -			continue;
+> -
+> -		func = realloc(alloc_func_list,
+> -			       (nr_alloc_funcs + 1) * sizeof(*func));
+> -		if (func == NULL)
+> -			return -ENOMEM;
+> -
+> -		pr_debug("alloc func: %s\n", sym->name);
+> -		func[nr_alloc_funcs].start = sym->start;
+> -		func[nr_alloc_funcs].end   = sym->end;
+> -		func[nr_alloc_funcs].name  = sym->name;
+> -
+> -		alloc_func_list = func;
+> -		nr_alloc_funcs++;
+> -	}
+> +	ret = map__for_each_symbol(kernel_map, build_alloc_func_list_cb, &alloc_func_regex);
+> +	regfree(&alloc_func_regex);
+> +	if (ret)
+> +		return ret;
+>  
+> -	qsort(alloc_func_list, nr_alloc_funcs, sizeof(*func), funcmp);
+> +	qsort(alloc_func_list, nr_alloc_funcs, sizeof(*alloc_func_list), funcmp);
+>  
+> -	regfree(&alloc_func_regex);
+>  	return 0;
 >  }
->  
->  void maps__remove(struct maps *maps, struct map *map)
-> @@ -604,7 +740,9 @@ int maps__mutate_mapping(struct maps *maps, struct map *map,
->  
->  		err = mutate_cb(map, data);
->  
-> +		RC_CHK_ACCESS(maps)->nr_addr_sorted = 0;
->  		RC_CHK_ACCESS(maps)->maps_by_address_sorted = false;
-> +		RC_CHK_ACCESS(maps)->nr_name_sorted = 0;
->  		RC_CHK_ACCESS(maps)->maps_by_name_sorted = false;
->  
->  		up_write(maps__lock(maps));
-> @@ -858,6 +996,10 @@ static unsigned int first_ending_after(struct maps *maps, const struct map *map)
->  	assert(maps__maps_by_address_sorted(maps));
->  	if (low <= high && map__end(maps_by_address[0]) > map__start(map))
->  		return 0;
-> +	if (low <= high && !RC_CHK_ACCESS(maps)->ends_broken &&
-> +	    map__end(maps_by_address[high]) <= map__start(map)) {
-> +		return first;
-> +	}
->  
->  	while (low <= high) {
->  		int mid = (low + high) / 2;
-> @@ -925,7 +1067,17 @@ static int __maps__insert_sorted(struct maps *maps, unsigned int first_after_ind
->  			maps_by_name[nr_maps + 1] = map__get(new2);
->  	}
->  	RC_CHK_ACCESS(maps)->nr_maps = nr_maps + to_add;
-> -	maps__set_maps_by_name_sorted(maps, false);
-> +	RC_CHK_ACCESS(maps)->nr_addr_sorted = nr_maps + to_add;
-> +	if (maps_by_name) {
-> +		if (nr_maps == 0 && to_add == 1) {
-> +			maps__set_maps_by_name_sorted(maps, true);
-> +		} else {
-> +			maps__set_maps_by_name_sorted(maps,
-> +				maps__maps_by_name_sorted(maps) &&
-> +				map__strcmp(&maps_by_name[nr_maps - 1], &new1) <= 0 &&
-> +				(!new2 || map__strcmp(&new1, &new2) <= 0));
-> +		}
-> +	}
->  	map__set_kmap_maps(new1, maps);
->  	map__set_kmap_maps(new2, maps);
->  
-> @@ -1049,9 +1201,16 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
->  			map__set_kmap_maps(new, maps);
->  
->  			if (maps_by_name) {
-> +				unsigned int nr_maps = maps__nr_maps(maps);
-> +
->  				map__put(maps_by_name[ni]);
-> -				maps_by_name[ni] = map__get(new);
-> -				maps__set_maps_by_name_sorted(maps, false);
-> +				memmove(&maps_by_name[ni],
-> +					&maps_by_name[ni + 1],
-> +					(nr_maps - ni - 1) * sizeof(*maps_by_name));
-> +				maps_by_name[nr_maps - 1] = map__get(new);
-> +				if (ni < RC_CHK_ACCESS(maps)->nr_name_sorted)
-> +					--RC_CHK_ACCESS(maps)->nr_name_sorted;
-> +				maps__set_maps_by_name_sorted(maps, nr_maps <= 1);
->  			}
->  
->  			err = __maps__insert_sorted(maps, i + 1, after, NULL);
-> @@ -1077,8 +1236,13 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
->  
->  				if (maps_by_name) {
->  					map__put(maps_by_name[ni]);
-> -					maps_by_name[ni] = map__get(new);
-> -					maps__set_maps_by_name_sorted(maps, false);
-> +					memmove(&maps_by_name[ni],
-> +						&maps_by_name[ni + 1],
-> +						(nr_maps - ni - 1) * sizeof(*maps_by_name));
-> +					maps_by_name[nr_maps - 1] = map__get(new);
-> +					if (ni < RC_CHK_ACCESS(maps)->nr_name_sorted)
-> +						--RC_CHK_ACCESS(maps)->nr_name_sorted;
-> +					maps__set_maps_by_name_sorted(maps, nr_maps <= 1);
->  				}
->  
->  				check_invariants(maps);
-> @@ -1094,14 +1258,20 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
->  			memmove(&maps_by_address[i],
->  				&maps_by_address[i + 1],
->  				(nr_maps - i - 1) * sizeof(*maps_by_address));
-> +			--RC_CHK_ACCESS(maps)->nr_addr_sorted;
->  
->  			if (maps_by_name) {
->  				map__put(maps_by_name[ni]);
->  				memmove(&maps_by_name[ni],
->  					&maps_by_name[ni + 1],
->  					(nr_maps - ni - 1) *  sizeof(*maps_by_name));
-> +				if (ni < RC_CHK_ACCESS(maps)->nr_name_sorted)
-> +					--RC_CHK_ACCESS(maps)->nr_name_sorted;
->  			}
->  			--RC_CHK_ACCESS(maps)->nr_maps;
-> +			if (maps_by_name &&
-> +			    RC_CHK_ACCESS(maps)->nr_name_sorted == RC_CHK_ACCESS(maps)->nr_maps)
-> +				RC_CHK_ACCESS(maps)->maps_by_name_sorted = true;
->  			check_invariants(maps);
->  			/*
->  			 * Maps are ordered but no need to increase `i` as the
-> @@ -1181,9 +1351,17 @@ int maps__copy_from(struct maps *dest, struct maps *parent)
->  			if (err)
->  				map__put(new);
->  		}
-> -		maps__set_maps_by_address_sorted(dest, maps__maps_by_address_sorted(parent));
-> +		if (maps__maps_by_address_sorted(parent)) {
-> +			maps__set_maps_by_address_sorted(dest, true);
-> +		} else {
-> +			RC_CHK_ACCESS(dest)->nr_addr_sorted =
-> +				min(RC_CHK_ACCESS(parent)->nr_addr_sorted,
-> +				    RC_CHK_ACCESS(dest)->nr_maps);
-> +			maps__set_maps_by_address_sorted(dest, false);
-> +		}
->  		RC_CHK_ACCESS(dest)->last_search_by_name_idx = 0;
->  		/* Values were copied into the name array in address order. */
-> +		RC_CHK_ACCESS(dest)->nr_name_sorted = 0;
->  		maps__set_maps_by_name_sorted(dest, false);
->  	} else {
->  		/* Unexpected copying to a maps containing entries. */
-> -- 
-> 2.56.1.703.gf848ed807c-goog
-> 
