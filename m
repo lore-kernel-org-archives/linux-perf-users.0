@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795041724;
-	b=lc6ulzqV+jOApsizy/NmghJZqp785NuN/Z9shj0oWMpC01Ufos7HpsC6TQowYfSEqDMd
-	 pbGqdJDBmSf8Pyxd1plwBSCpgq88yXpjhov9myIsBrhlib1fqYUCSHsa5snERhXUisbjF
-	 KyslCO7+vpyhCF2yHCxeX8GRESHOoMlbwDAu8Cg5xFzlk3N55sz7lwZW8K/uxP8Eedk5X
-	 jWZh2DllITEivXG6qN5Gbw/uH6wO6xWM8eQeXLtzdg/y+LBqdtvyKNvcfy/lT1Tltq2fp
-	 dFCWfh4C+O430cfdLAjq4U8uMcJ0G1/DUfKdMOtIXKUIqYGrM6IMxIBwJlVGnpySBfw==
+	t=1795041725;
+	b=Ckan4/kOZt4Bw5m4XgKZwC1Q90Drb2IPrHjM1wLNb5xTf2EMxQ3o6z/fgdsEaHLmyk0K
+	 8vRcCCMdDBZUymPkTnvyInNpohoTTaemNPMupZtGL0MhfSGads4Lr7QS9fkAcmXtj5mhX
+	 n8gcG+GjfCrR/bCVpLnXGMvoEDC98gCvrT4mnBgU+OUJ3rrg4yyxASRAqoFZ7dxNWCYNE
+	 rcfFvPiXQedUsCzJ4/PyN5LyTob2a5k5jybDnhMv7FgIzSpdR8FEc30Rha7Or8c18wqpi
+	 ZaaAT4mLpdISMRtHb1zonPfDOI/H/Ce7PEPSzraHrhnIBO7nTmjdCtY9yGgNZvUQucA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795041724;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795041725;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=5D/n03tvNJphHizdbYOFgNrNG9S5z5EDYbsqqaqYbWA=;
-	b=i7xbNXamCkczSJEr8NiB1791PnQn4Y6++crTNwPcjw6bLqcE2csc8jGGaAt0RqjcS578
-	 VP8FsfiRsyuX+oo+pC+V8nlvoU4k6KejDQNIBChJS8Xut8f0I7Pp6aZrnPCvJVSuobebL
-	 Cf445hSF196NgHKyoh55XXMZAq72iGPi0pHNHVJ1H2L6uyhoZ1K9eZDSfauM+e6m86W/b
-	 Tst8dLS8o3imKF/QHO4TPRL3TJbhRYy3grrEKGAVTer0rsa3nki9JOFlrrM1c0getsMoQ
-	 tCJBGBNsNugdReaVuc/7NmAxKztnuTw78R/UX7ppcU5EkyElhZ1Ji0R6y4b4Zm0IXXA==
+	bh=w/adz3BXcZH6EgrtTppx9Dhn3x9r5Jk+mcEePvJJGY8=;
+	b=V5WAV03U0ByCVjVxRLSBPIEyZ/0hrqwNbZM+c2QshHAZyKHLRSUhwkOqBDgTkPkIpnLc
+	 izTWIvKcPe1CVxUYADk9zF8LlxwceUn/mWMoi/sHr+2JzA6aaccL1RW+ytj+sLcz7WcJc
+	 VYGieGqKsjhXIYDwOLig4x4UjNDRVum/32NbX0xb+xPKct4DHM4AsC3XIlSUilNpIiel3
+	 e6yLLXlqqL+YvyIpb5lVWNT1jP7ltRZQd6FwQUPh5Ga4lUTezgNMaPD7q7i7pLZcvL6TR
+	 e3louEgKfSgZ+gfjS+nnWGVP6hzLdSitBOErDQhuDvExiWuuxwZqES9sthNp8kJI2aw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VJeqdZUi;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GIlTQW7P;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C3A606A336
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 22:42:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060C6606A31C
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 22:42:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VJeqdZUi
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 150831F000C7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GIlTQW7P
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B96751F000C8;
 	Wed, 18 Nov 2026 22:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1795041724;
-	bh=5D/n03tvNJphHizdbYOFgNrNG9S5z5EDYbsqqaqYbWA=;
+	bh=w/adz3BXcZH6EgrtTppx9Dhn3x9r5Jk+mcEePvJJGY8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=VJeqdZUipIKs9IS1nATRdWK4zmsBJPiS+Sf7Z+q8tUUDQtFV+ZvUxgZLmylNmuIb6
-	 oFy9IY71pUBw9K6jyJuO5E0NEewGljQ6VXmJB5/MAyDRNWlXi/p0+HKwB/2uFi9YGu
-	 OEfVdKlMpsFWvz8jfco3U6gozyJUVUMU5Olg1CL9Kbfie2ZFdEYwAjuUe6HEhYRavF
-	 sfvP/PdhwMgNoSoSRwtJgVEQoqBKbyGi31klWL49SZuaD60E89/Q8/xjmkkY+8g/BF
-	 m9CthgS8rUkOVAGJ7AIYXwTmvuzQwSikplWx1oNYgN4cxOQUAZBkCBdB6Yj7SmX3Hc
-	 htdFLwRfNjTiw==
-Message-ID: <sashiko-outbox-222110@kernel.org>
+	b=GIlTQW7Pivt6OjHk4zmSTWKcWgIsJ1VSXXMP8uNYloQ3eEhDVIF9qc1JFU13x9HCH
+	 pppOKksimU49KPNLsCSxgWeIXDWQ8kUn9kQw1sWsrOQI4Q8xOahrUT1r4bnYgSBO7G
+	 yso7A/5gajYoOa7o4RntlOEbGNB8X19tplLUJFTahSoFER6073l1N7Ed07xX72adGw
+	 ZSZz28Lnk/EAY1pMgfze19RzZoJQ5Tbm7PTRm/qGkzp50RqDkK2Jo7ac0gJddbMFLy
+	 vOXXHlxlXCJw2WbLVCIHmftnv7CXGco+Gkq5gEFBy7ALGSFQG3/GNY3IF5hO33yvQp
+	 Acm7QgF4ZK9lA==
+Message-ID: <sashiko-outbox-222111@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 01/13] perf build: Link the jvmti agent and the GTK
- UI with EXTRA_CFLAGS
+Subject: Re: [PATCH v8 08/13] perf annotate: Print the stats after the
+ annotations
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261118223725.121500-2-acme@kernel.org>
+In-Reply-To: <20261118223725.121500-9-acme@kernel.org>
 References: <20261118223725.121500-1-acme@kernel.org>
- <20261118223725.121500-2-acme@kernel.org>
+ <20261118223725.121500-9-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 18 Nov 2026 22:42:03 +0000
+Date: Wed, 18 Nov 2026 22:42:04 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,19 +63,26 @@ Precedence: list
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> The jvmti and GTK objects are compiled with EXTRA_CFLAGS but their
-> shared objects are linked with LDFLAGS only, so flags with link-time
-> parts never reach them.  With -fprofile-instr-generate the jvmti
-> agent's __profc counters had no __llvm_profile runtime to write them,
-> and its files showed 0.00% in the coverage report.
+> With --code-with-type the instruction stats are printed from
+> hists__find_annotations() before that event is annotated: the first
+> event reports zeros and later events can report stale counts.  The data
+> type total is only counted in --data-type mode, so --type-stat without
+> it is incomplete too.
 >=20
-> Pass EXTRA_CFLAGS at link time, as the dlfilter rule already does.
+> Print the stats once after all events have been annotated, warning if
+> --type-stat is used without --data-type.  Leave the TUI's alternate
+> screen before printing, so the stats remain on the terminal.
 >=20
+> Fixes: 58824fa0087e1cb7 ("perf annotate: Add --insn-stat option for debug=
+ging")
+> Fixes: 61a9741e9f78c64c ("perf annotate: Add --type-stat option for debug=
+ging")
+> Cc: Namhyung Kim <namhyung@kernel.org>
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118223725.1215=
-00-1-acme@kernel.org?part=3D1
+00-1-acme@kernel.org?part=3D8
 
