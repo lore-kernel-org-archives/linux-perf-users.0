@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.200
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.161.69
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794988524;
-	b=zonVuwUoGVnw8DQNa/4QDPjHlG78szqYyCtT0h1G/qgyk2mnGhqB9PrW1qALkeuMkLHM
-	 Otcf9qqKPq/q+/uj8FT3OwuKMuuAEAfn7Rqu+CGbtXOuRSJJrwcJygY9deBvQu4ik4Fux
-	 7TS+su5imbrG4IGh2VgqCnhGRDcLVE/fAYu9eWt+IOkBlPYZ+I9upLek/V89d/8Gymchs
-	 YVJ+uefYPWXQxLA3xgFF4FgWutxGHoCAnMS60jQkvT9VO7zsQC1HWK2xiQ5bVb/sORVQ4
-	 gF8Mn/vR1PqRroTe5uHeqyLThR5TxTbrea+i55Y91ZQB4ZZ2kd5cSyzJKac7Vy1EAag==
+	t=1794988526;
+	b=R5yQJe7LnYXlmRR/G9GX0W8zkefG33IG+KE85Kr/F8TGMKstB7FTJp4cp4txaoEMd9Qr
+	 gu39l5QHMcAIm5UBa1xtYy3BlUvFss7dt4eQaqDb3Ap3kKcyJ+slNbBTXQfE9hN1mPQsT
+	 D1xRY3sI1hzM8kr79PuC40KZH62urIjQPg66bobiIyADx1CC4GbagrFYjywsIe/Tzq2A7
+	 Xzl8fFnYKRSkt3nikBAEFR+cDRPG97d64VlegVE4xwweZm7c3aHxj9Spqnfa/5FlDVdSO
+	 CxNBzW905GHFi0088/8yp7WjimatZDjn2hmNHpJ9+cOdKOrOdG5nP7RYznI7WpjyhtA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794988524;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794988526;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=NqBTWbYhrgJljwUx8WqJhkg4ihbk/Vv19VCK3zrjEUA=;
-	b=mF2+p+FQ4mVmrtk16foDo7U5H3/MCVA1O48wZzdhSS7Nj2bWznl5rbMf0r3rM5tR5AZx
-	 6vnL4iV0IMaCcXjpNbD7BUEHamFmne3Hwe9vKsgZSWOXyFLXqtdcKH72VRfYySZXKfKEW
-	 kzJf9FDfh7ou1MgZZbp8R1H9FT3gA+K7PnnMq0BNHY1N9nBchyLeWWwrh93ErMLP35VNp
-	 YkiiCkY/UzEALrnY6tx7hCm7ppxT7tZTK5iMU562MmZtmgtYeTJ+8kUjlOm2cBbPRlb1t
-	 vQPtSBLGIgRoHMmWZstSBlmlrSwkvaqm2XRrfcI/L84GnMbruPZUJ4krlKli3sJltEQ==
+	bh=5DboQG35Wnbme+vu2GzT8Sr2q49b+BE2rknnKDhVsEM=;
+	b=FBbaN7lXOeaRGMpAFdS0XGf8JjDZR/c/wYCB5Dcv8SY44gsQJ7q02cH56vDuvPdSuW4X
+	 XMmWdVGKHDbFY1WBKdwO2XgR88UHl6XMuCHE3O6Ka26wCBmBx53kWfCpz4xcVB+X0YBJp
+	 Xr9CvewAJUEohhdIEKNENbkMSOno+UJ7xJwc6y80TqWGsVBt5AARpsYNCrzr0x4jY07+f
+	 ixNZf8wBU481OW6swZzh8681A8itrkl0HwItkBh4Gz6qjOLA9ouMdnY9HjDbLx5FU6flr
+	 6PC8Mr4nU9QYL6AQTuKG2rap97ViX87w4Vd1lmXnEG3Bkq2F0wEgjqpCrx1Nvt62eUg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="d/7Io1VV";
-	arc=none smtp.remote-ip=74.125.82.200
-Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="AQQ/L8vO";
+	arc=none smtp.remote-ip=209.85.161.69
+Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com [209.85.161.69])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D5A606A893
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 07:55:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A6D5A606A893
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01842606A885
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 07:55:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 01842606A885
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=d/7Io1VV
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-381dc4b8f40so918747eec.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 23:55:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=AQQ/L8vO
+Received: by mail-oo1-f69.google.com with SMTP id 006d021491bc7-71adbbb6b26so865558eaf.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2026 23:55:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1794988523; x=1795593323; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1794988525; x=1795593325; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=NqBTWbYhrgJljwUx8WqJhkg4ihbk/Vv19VCK3zrjEUA=;
-        b=d/7Io1VVBbIOEreAOJxktmHodlkVrpBDoA/cprL6W1ywaKOagFc8hIDgnAXixEbFvO
-         LQ91kuOgnuSlXwuFi5EKDccqoIS2LazfKOhFsO5RpOmUMoRKDPb+wWY/b4XexsgxeqiD
-         V2H5eWb6peY5dY923yYV+grX4rPKTWOHcjIQ9IykbUCJLRvNTXOUdKOuWsuS5r6LFzZU
-         FPXN2PGmjNrFP+usqXl+K3tpita1IB7JHUFPLcPzJGJZhwxzAfmdMRFOxV0dCOPQn4+w
-         /HnqCg2MQBcChFSXxqUj0o/3R7rpfjnK5VsFWbCcQXuqXUtbfcsieVHze9NApSS5zWQX
-         eBUw==
+        bh=5DboQG35Wnbme+vu2GzT8Sr2q49b+BE2rknnKDhVsEM=;
+        b=AQQ/L8vOOgjQs8+YpYQIJxCvxusw4ebii6H3YezaRzLkwaeODjW6b/+tNgvuPwrrB2
+         USnR+i+HCZWOt9xIxM3p3070M4AmbpscZrHeIkWPa6MuK/E2L6x5ixuCDLU+/eEKdWSK
+         iE91CWSnXzxI1Adhzf8Tr/I5uiyFt/ShdYItltY2QPMMYaR8BjRcRIwAF4xLg4zJ47b1
+         87t4jpDgEVVAOctbH3lljq5q6CjCyVDU99tk4MIcsCUEgYuPoxXT/A+2Zao1w/wccQsu
+         Atpcl/Iq9kvaerq9lSu9DygMYJLuF72RLTYAQJv4IaXbV2nan/+fr+8CLK/H5ZqD1B/F
+         AgWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794988523; x=1795593323;
+        d=1e100.net; s=20260707; t=1794988525; x=1795593325;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=NqBTWbYhrgJljwUx8WqJhkg4ihbk/Vv19VCK3zrjEUA=;
-        b=c0Yy0yPlll7tZ3R+6GjMHdeFqbHnF1s7kP6Pph+2XhYdB/w6haJPDPshxsQos+a5BA
-         bqfnxa1kSXhx4xlaL+K78bxy/L55fRyXYXGxfLm8ipLHu+DlCwwchrmLNz6t2Un1qjHr
-         4hMLKJIcjeEnhbdcWVhJL1sLuDeDJhKBelCQEyK1BqbyLDmWwhA97kBpdaZj/3NPfIdJ
-         kgJbE4glTKxilU7NvWmivrmZkOxMGKGt1FtZvPf2qw6FQ/ah63FOvj+3E0zcKhDjBX4H
-         hcq0uy0bo4yQHaGKXU8NOhvCihxoirfE2P+SHz8oT3N1mXS+0P875qPA4KD3gXT6XNzV
-         lnXA==
-X-Forwarded-Encrypted: i=1; AL+hErH5j17wqxLQ7w8VnLJPltYOX3QlPnzr4+SF7My05U6U4Oqh9GJZa9bzooFUUNlW9xrED9eoTT2dGsQ+C6jDOS8q@vger.kernel.org
-X-Gm-Message-State: APuU4Z8A18v2YMaeyzcuf8e/5UhJTmcgsAC9pGSHSLxH6cRWqX3YOG0y
-	7WbJ2zw8TELv33vva/zF/OGg+J5nljtUwu1OklxQsMDmATcG/GeKxdBiWYyaYfKm+s8wMUiSNvK
-	MktiuayEkVg==
-X-Received: from dybmw7.prod.google.com ([2002:a05:7300:cd87:b0:382:7604:3dd8])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:d08c:b0:381:edba:caba
- with SMTP id 5a478bee46e88-38280a385e5mr1870465eec.17.1794988522456; Tue, 17
- Nov 2026 23:55:22 -0800 (PST)
-Date: Tue, 17 Nov 2026 23:55:12 -0800
+        bh=5DboQG35Wnbme+vu2GzT8Sr2q49b+BE2rknnKDhVsEM=;
+        b=SUnFamXJ2GW1yeshjOT3LvYSKn8zkayr/Ei5sMxvxrX4L037hIDaBEdG8Dj0+9FByd
+         gsNFarWjU0Hy1HsmkefII7RfUHXShVZMOskbEDgOofLD0RdXaxz7GJUZHd88doc4NVPO
+         +6CRhPt9gvI8pvIjiO1bBJp51R7wGnkJ/eYfsGGQaOXbIu/of7BNdY/m0zsLT38AjBII
+         5ReOYDEGCcV6FbIm2gOkj3w/uKfKefUMUwkkC23KMyhICyR+ssjlLjjD9Cw04wN71xcx
+         m3XH3CYwDkcupE19oHV2Zzn6IvODEpnDOIljxxm5ggb/D6fH47ToNn4Z63zLqIMpE7Pm
+         aBng==
+X-Forwarded-Encrypted: i=1; AL+hErF2aj6FyIvrhMp49Zgsp0C+oXPh3xVn5Y7D31azN61sHOyd6SehOamWteyAcfBRkqD9u8cojA6yFe6I1IWIMUZy@vger.kernel.org
+X-Gm-Message-State: APuU4Z93Rjj26uBh3yz37dQzu4NwzUxvinSfN2/rfs+xVstKruBIBWOP
+	j41LR15E0KGFragLb8x2YsdLlWAkhv8RknuA3o6/oE1ks2bpEe4/iDyqUVQS2qusie/J0kDmZtH
+	Orl+0A++VwA==
+X-Received: from oabmp13.prod.google.com ([2002:a05:6870:e0d:b0:4ad:bdb3:7d44])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6820:338e:10b0:71a:e62f:62ee
+ with SMTP id 006d021491bc7-71b1843fdc0mr997029eaf.23.1794988524703; Tue, 17
+ Nov 2026 23:55:24 -0800 (PST)
+Date: Tue, 17 Nov 2026 23:55:13 -0800
 In-Reply-To: <20261118075516.1278903-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,8 +81,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261118075516.1278903-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.703.gf848ed807c-goog
-Message-ID: <20261118075516.1278903-2-irogers@google.com>
-Subject: [PATCH v1 1/4] perf threads: Don't resurrect removed threads in last_match
+Message-ID: <20261118075516.1278903-3-irogers@google.com>
+Subject: [PATCH v1 2/4] perf stat: Don't corrupt zero or prev_raw_counts on
+ skipped per-pkg CPUs
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
@@ -91,73 +92,58 @@ Cc: Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-threads__find() looks up the thread under down_read(&table->lock), drops
-the read lock, and then acquires down_write(&table->lock) inside
-threads_table_entry__set_last_match() to update table->last_match.
+In process_counter_values(), when check_per_pkg() sets skip = true for a
+secondary CPU in an already-counted package/die, count was pointed at a
+local 'static struct perf_counts_values zero' before calling
+evsel__compute_deltas().
 
-If threads__remove() (or threads__remove_all_threads()) runs in the
-window between up_read(&table->lock) and down_write(&table->lock), it
-clears table->last_match and deletes the thread from table->shard, only
-for threads__find() to overwrite table->last_match with the removed
-thread. Subsequent lookups for that tid then return the removed thread
-from table->last_match, causing stale event attribution and keeping a
-cached reference until another lookup evicts it. In addition,
-threads__find() unnecessarily took down_write(&table->lock) to re-set
-table->last_match even when last_match already hit.
+evsel__compute_deltas() saves *count into evsel->prev_raw_counts and
+subtracts the previous interval's raw counts from *count in place. If a
+CPU had non-zero counts in an earlier interval and is later skipped,
+subtracting tmp from zero underflows the static zero struct in place
+(corrupting all subsequent skipped CPUs for the remainder of the perf
+stat run) and overwrites prev_raw_counts for that CPU with zeros.
 
-Only update table->last_match on a cache miss, and recheck under
-down_write(&table->lock) that tid still maps to the same struct thread
-in table->shard before updating table->last_match.
+Make zero a zero-initialized stack variable, compute interval deltas on
+the real CPU counter values first so prev_raw_counts stays accurate, and
+only substitute &zero afterwards when skipping aggregation.
 
-Fixes: d436f90a64f3 ("perf machine: Move machine's threads into its own abstraction")
+Fixes: 779d0b997e07 ("perf stat: Add support for per-pkg counters")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/threads.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ tools/perf/util/stat.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/threads.c b/tools/perf/util/threads.c
-index 5db81b9..736058e 100644
---- a/tools/perf/util/threads.c
-+++ b/tools/perf/util/threads.c
-@@ -85,10 +85,13 @@ static void __threads_table_entry__set_last_match(struct threads_table_entry *ta
- }
- 
- static void threads_table_entry__set_last_match(struct threads_table_entry *table,
--						struct thread *th)
-+						pid_t tid, struct thread *th)
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 6da3dbb..267e280 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -398,7 +398,7 @@ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
+ 		       struct perf_counts_values *count)
  {
-+	struct thread *cur;
-+
- 	down_write(&table->lock);
--	__threads_table_entry__set_last_match(table, th);
-+	if (hashmap__find(&table->shard, tid, &cur) && RC_CHK_EQUAL(cur, th))
-+		__threads_table_entry__set_last_match(table, th);
- 	up_write(&table->lock);
- }
+ 	struct perf_stat_evsel *ps = evsel->stats;
+-	static struct perf_counts_values zero;
++	struct perf_counts_values zero = {};
+ 	bool skip = false;
  
-@@ -96,16 +99,19 @@ struct thread *threads__find(struct threads *threads, pid_t tid)
- {
- 	struct threads_table_entry *table  = threads__table(threads, tid);
- 	struct thread *res;
-+	bool update_last_match = false;
- 
- 	down_read(&table->lock);
- 	res = __threads_table_entry__get_last_match(table, tid);
- 	if (!res) {
--		if (hashmap__find(&table->shard, tid, &res))
-+		if (hashmap__find(&table->shard, tid, &res)) {
- 			res = thread__get(res);
-+			update_last_match = true;
-+		}
+ 	if (check_per_pkg(evsel, count, cpu_map_idx, &skip)) {
+@@ -406,12 +406,12 @@ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
+ 		return -1;
  	}
- 	up_read(&table->lock);
--	if (res)
--		threads_table_entry__set_last_match(table, res);
-+	if (update_last_match)
-+		threads_table_entry__set_last_match(table, tid, res);
- 	return res;
- }
  
+-	if (skip)
+-		count = &zero;
+-
+ 	if (!evsel->snapshot)
+ 		evsel__compute_deltas(evsel, cpu_map_idx, thread, count);
+-	perf_counts_values__scale(count, config->scale, NULL);
++	if (skip)
++		count = &zero;
++	else
++		perf_counts_values__scale(count, config->scale, NULL);
+ 
+ 	if (config->aggr_mode == AGGR_THREAD) {
+ 		struct perf_counts_values *aggr_counts = &ps->aggr[thread].counts;
 -- 
 2.56.1.703.gf848ed807c-goog
 
