@@ -1,84 +1,84 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794989630;
-	b=zQhJ/FNuyOi9RW22AiMYLCZQstp4iuW1YPFldx+JVuJnKePBEL/1EJQhiZHRcH05pSqZ
-	 BiM7DZZ1Yk0kCiZLqu7+CjEBj1bSlwiPflTlMYuYnfrNoOLeyEuvmkmH0fTJkGjiOGclL
-	 +/zrBFGDrgM0W2Ych13/VLfSAScGKhBP74owBWoUS3ebBIrJNm3nZnILfoyUHCPKgAsG9
-	 h0TslL1yOtOV6/UCnzn1e5nKBlAuSEYHYTxlJeAk+qQrqp7r8VddIpxivoOrN0RTbovJd
-	 /CS87uot305HerI1vusCtmsQ8wMrr70/jTfhZiLNkjTkVDkIutC5nyjPJTX9VvyHJlA==
+	t=1794989638;
+	b=FMKgVdm1vQLJbC2pTTXSgqNxs6Noex8r5xJLcryhBqDVet3nezP+Cz+rM2poqYopRScN
+	 9LO0b4xmVS4AMNyCh92YhZeB8zEDgXEmlXUJ9S02rSvOWQt03ikgHbGbHbLrFhFd5mp0H
+	 +HMp2xICL4cWzvy/T+867Dq1PcZc+xHolvusC321dFAAxpvF3O6fr78PCE+B2JVC5/4Nz
+	 8uMA7sbOqeImRX/ig1KIdRKLgOU+Xl07LxqdwUdFLT2WaSCB2JegmETg6dNsxrzlICsJI
+	 hegANsr+2F7ijOFHepiDdC1eHTRn871/PUa4BIugsIq29DZ43TSfsnCAewVfffWwZHw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794989630;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794989638;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=LrvbirXIkv4em6QifUd4OnpixRUwowvXHi+8bl2oRk4=;
-	b=MZ4011ZdZogIgmZVJWwGFGirlyETeRmcj2kZBI9rrQlTNOxhCvt4HNC26UX/Jmpzt5Vn
-	 kDxMwCODEd9zFNrXuXfGgKdtEC3EF9w/cMx7s0AU1yUmesnjwUaTMMu42FPHMwglw86uc
-	 7w5NOd74fbX3bG+6sSI8n6AUCxjEKC7uJjwSeA48nKLHextFfAPHops2W2ZYCIGNVrLo6
-	 DyUDEmUxLgmGwNMMehHCNUIdkg/t06CZ2XIZeIgDzkMFqa3/TQ/N4Ysr51ORNWBWOWGqa
-	 6FK5C/m6C/NG1pIbndAcM4bWJz+QH9Ac1Q0JFAMDGquQigxZ6PMS/QU9MC/iMvtna2Q==
+	bh=XJZ+Hdtk3ZgO4GcY5jYam6jCeDolIL+Wbgosemj6TVw=;
+	b=XrNHDM0Dbm0bzSAcmdC9WimtHDzI+nDy0X+RM8kBi4e9lufnXcllQr0OFAiP2TePHXz5
+	 rdSSNGjgDNqICojNAHcZ3Pv3Wv57prydadWiw87fgNv1mMoJ5uIJZJRbvcDsRlwOtqRm4
+	 FuBbOjUIwh+vaJU21mCVnWzo8s6qkBcpRCaJOXh91ES1Dw55feMClcwcdXnoWsPkR6vlX
+	 bIUXbjB5zE9lphTevE1M1Cpb77ZBQIt0wLSaYdHLTiL3YNX4wogNWX1UBxlPkuVKcjkbv
+	 dN43KtjHCtJuJhLDkluTmS7Vj4H6bzNGBLF03IW3NC3UrufK5dXNaNuChjS1/fnhLUQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=bytedance.com;
 	spf=pass smtp.mailfrom=bytedance.com;
-	dkim=pass header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b="F16/qyxe";
-	arc=none smtp.remote-ip=209.85.216.49
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	dkim=pass header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=CIunQBLg;
+	arc=none smtp.remote-ip=209.85.215.172
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD87606A333
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 08:13:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AFD87606A333
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F41F606A325
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 08:13:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7F41F606A325
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=F16/qyxe
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3b3a914e4c8so389599a91.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 00:13:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=CIunQBLg
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-cd60c5da24cso539021a12.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 00:13:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1794989629; x=1795594429; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1794989638; x=1795594438; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=LrvbirXIkv4em6QifUd4OnpixRUwowvXHi+8bl2oRk4=;
-        b=F16/qyxeJCnpp8cEUhvsIzwqbJ3dET3mcVkZCGuvG84FDRLSUKSXvBkFC/dcL95h3O
-         nH+PR4V5h9u/CXPhFMsj2uTIAQIRtXn9Cs1Qc/obD1SHjPm/7cFXYoBKt0lWew4PsVZv
-         Nkpu6WKaEpUTkfV/bxzun+N3aGLK08cjIVlgVcr3l+1DTbZCgg/jynXsSXRv4Tb1f8Wd
-         0jYwQESDhgu9TfRoJ8wWU03yiHbjIPY74faHqETp1xJiWE+6/NB0rxJ7NGS/x48BzyGh
-         1H1KNf+bmnqCe57I/4C9YZGtKmqRqeBA9oS2Uu+UmUlnQiI0uSKN2Rv8yBHqPAacLIN0
-         yjgg==
+        bh=XJZ+Hdtk3ZgO4GcY5jYam6jCeDolIL+Wbgosemj6TVw=;
+        b=CIunQBLgc0sEPmk5ppffRBSZDZbkW76BiQOaZUO8soHExpBHJnYv8WDK4meLo+agIy
+         vzIkRO+obk6Ot1fmhUYUiuYvABmbRemfhQuQUOV2jdimXfCnYvtX0z/+0uFTcD5uBq6v
+         Zm/G0xUvKa7xXb3P6PtdF3bbeTMmH5XitnUspTjYLOWzUXJXsyh5ma7+MYGvcq/mCPES
+         6GlWX5i55NsE+df9rb6hhDEQKBzvirUY7tAzV1kj7U3hn/59uBGkFtUYz8Xe95QrQqhT
+         WySkCR11s4NpK6cZiPLtRM5nQIr9L0rcKuKwYdEvVTutvsF8xk7vB4ParRr9xy+5ClKp
+         dt3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1794989629; x=1795594429;
+        d=1e100.net; s=20260707; t=1794989638; x=1795594438;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=LrvbirXIkv4em6QifUd4OnpixRUwowvXHi+8bl2oRk4=;
-        b=HyJT2LUT4t16G5/VuzM0UjPVB7SYhBV4yTpesgalwR1/TZEwOiCwEaP+jNhTwj/QU1
-         boTZxn9cikdsGJnojqXcqZwf6oeQs2SrUaYkmo+hQ5EN+12EiMS5qe3NV5DpMCkN9X8g
-         0zaBDekLo9zQiMLVUHEd3M/QWVyEdoTG0VvrNZn5neaxOcQ+BDS92hsOqUHSIsJ1zcQU
-         1kyCrid/cL8iGD2k+Ekr7Chz33lK7FqXni7LWit1+E+gFFY1W2ynvrk9bGXc5V3lOa7W
-         /rM6bCViWZ25CmywuHODPcrZTcTXxtCyYcEYqvNVHCLe+lkB7BEtqa4+RuuSu52cmWW3
-         sa4w==
-X-Forwarded-Encrypted: i=1; AL+hErHHJMP/k9F0c1RmiyycU98N427NUFbWGX9FzDphgN0hMrIL9of8p/JMAJUWQ3RtHT/7cS72JmkF0Dqy7jG4dNfr@vger.kernel.org
-X-Gm-Message-State: APuU4Z9Nf5c1BVhkhmCi5mEFCCZoiarSll6vI3MaUkQiw2YU5al19lPd
-	Sz6QFa58o7yoraegEbn2bN8x+pW7D9g9JuBhJL02rMecafv8YNeGj3OMlIWy6phQ78c=
-X-Gm-Gg: AZFdTZdaU/T4wpyZE1hZnxJqggRKYajaYY3TJcRfgmFSwOxJ0J4oB0tPqWvnWTG1ics
-	WsUQbzSm3qwMgtTUnFM1s90tJpspQnvgIT/RCQsA+8ebJxdUWKGPNS4JGAFB6YsvanyoPEKAS5l
-	B6c/NHrSTl7Zq4KlEONEztF2zlcAR57qA+vEOCb8GEyUcxx3MEBMO/psSArXTTmrhYHCDIQ2dKL
-	e5EviWfxDlJ2sfjRuHQaf9beIREEMtnr9fKzSRxOu4rvuuR91X2VQVJN2sZKl7sjQ910ESzBQnl
-	rKjOOVehQIgMWkAUQOSEE1mhgxkxUQrPhbJqKpHT3YL5bzZPV1jbezS85kkfaTrv7VoMf5Bi1br
-	NB0/Jw7UjtedgqTihBSZ/tLPJoFNFjPsoLlP0b2rkjEoV5QBZLo4zWRNfhEXt/LUxRfoKjZF4GG
-	Bb5ZeiHw2opZg6rHTY3B7RUBgFMpCTNC+GTiy6ehyfkz+XLZBRw2fauW8+j4/grab5pVIAIuZlW
-	5cgwwUT50PIvN0yYB6nQZORphsqFgq2S/6I8addl9KawotAltv6+JUqaW6cBkJAyaJN0cb1ZP/2
-	uaBySyaBrLFB4nNZtug7qYPyoisOWHMzd+lJvjCzQYnCPYLtegfWVarv9ZIM8XlaKk6RVXKe4f7
-	nZcmaNdo=
-X-Received: by 2002:a17:90b:3943:b0:3b0:a7b5:c046 with SMTP id 98e67ed59e1d1-3b3d07e09f4mr2098689a91.54.1794989628976;
-        Wed, 18 Nov 2026 00:13:48 -0800 (PST)
+        bh=XJZ+Hdtk3ZgO4GcY5jYam6jCeDolIL+Wbgosemj6TVw=;
+        b=c+Fqx1obAVFjtR7jwg63KVG5JeZBmOHPH4pAqzvc7fP4pDpnqvI+l6wxXG4XQH+ABH
+         griMrVnk7JkELB3spqC5SKqxNX5ze19APC0BzcWIRO/+wO5vOvnYteoLjQuipI7SiiXu
+         1Q3d2NFCmoarNC2aLXAp9zfVKpss6yVtdi6UG3LXW5KaZjXBhOtQKkYVGdeJU/zdU+Kn
+         Ym9jnwfyL7/OVDWyZ/mlljy1rnBamkbTaXZ4fX4/tVMK3wL6lzXiWq9vQ1xWjRrcg2Mo
+         glV08X5UmLrYOSJDAQdPhypW6YLAxAn8UDB4aJuXpyjIzllCdnTx2KOjoq8fygr9+lfD
+         KM0Q==
+X-Forwarded-Encrypted: i=1; AL+hErFjHSW+PiS6q75HeFCfLo7ZKqhYn2ES6ldn4M1mKYdfarWjlcR46rMfKL+WnOo7rAiZc2+X7gwgkdY6kJXaStvm@vger.kernel.org
+X-Gm-Message-State: APuU4Z+OGPYG/kwXEbpmHgc9pM+B/k4jSBDB783HmyhnxPNyl2B+bBcy
+	RrMJ40giOpS+JRvSsNwXUmduttIK+HirF1QqswBrEOLG6yiLVYNhdhuLuUeQDQ3ZEUY=
+X-Gm-Gg: AZFdTZf1CZ8gbCdjGnRUXVzvahDykTmBTyVOMGRUksT2do1mK1h3xicgF2NGG5sESLm
+	nHvTFUbod1qbVi7JpKmt363qaJ4k/iM3HibMkinv/hXfDeEuOH2nPaCT2nDcGYvisZ+5LhW1Eoe
+	3QK8ZaGDDGD+qamiQFHwqqqwnp12mqM9xYnxFksxu8obdQfExBzX50eDlyJd+7v8NRs9QQZJb3i
+	V6t31AZfzCLdy5OMJemn0EY7J6rf3s9ZRAlnBtl/1pt/K2FSohh8JQdM877qnq6pJxZqWR0i1Gp
+	frBeas3/OwUriddvFRR3bn75LuBcdDRA9MnOCMRpwKtzQQGA5ONreISoon8LOMGOvD+H+/0Mn7d
+	nGHSpKz/GSFNtghAOhhZp1lgTsXoZOzPX/DvxiY7SgQB1O7CkK2emNN8Wvk8AxL+u+7ke8l4t8H
+	v2h1w9swxUor1KTtE9AAEoTPXi2irCZAC2GFoFnIoVDH0lMW/upPl0BU8b/6morSE/PksbUH8jb
+	sQGB2HjYd9jjTEt25Hf34Rs3fXQWn/c0ejlrdqtZXKBDwuwrVFVJdkJSPy/d/bluW6S2yBofvvW
+	0F0K3zRhVE+On20Eu7TEIZceF83ppRiCufT3142+xXfgVySbL8tDzmW+3g3ZfWpf0UtyXxOIXck
+	Z3OGm1jk=
+X-Received: by 2002:a17:90b:1e48:b0:3ac:9e76:aa97 with SMTP id 98e67ed59e1d1-3b3d0640e52mr1931726a91.6.1794989637815;
+        Wed, 18 Nov 2026 00:13:57 -0800 (PST)
 Received: from FJ7FR2JRQ3.bytedance.net ([186.240.245.239])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b3d1acde50sm3254680a91.14.2026.11.18.00.13.40
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b3d1acde50sm3254680a91.14.2026.11.18.00.13.49
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 18 Nov 2026 00:13:48 -0800 (PST)
+        Wed, 18 Nov 2026 00:13:57 -0800 (PST)
 From: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
 To: linux-riscv@lists.infradead.org,
 	linux-perf-users@vger.kernel.org
@@ -104,9 +104,9 @@ Cc: linux-kernel@vger.kernel.org,
 	robh@kernel.org,
 	krzk+dt@kernel.org,
 	conor+dt@kernel.org
-Subject: [RFC PATCH v1 1/5] dt-bindings: riscv: Add Smpdis and Sspdis ISA extensions
-Date: Wed, 18 Nov 2026 16:13:29 +0800
-Message-ID: <20261118081327.10684-8-zhangzhanpeng.jasper@bytedance.com>
+Subject: [RFC PATCH v1 2/5] riscv: Detect Smpdis and Sspdis ISA extensions
+Date: Wed, 18 Nov 2026 16:13:30 +0800
+Message-ID: <20261118081327.10684-9-zhangzhanpeng.jasper@bytedance.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20261118081327.10684-7-zhangzhanpeng.jasper@bytedance.com>
 References: <20261118081327.10684-7-zhangzhanpeng.jasper@bytedance.com>
@@ -121,52 +121,49 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Describe the machine and supervisor PDIS extensions using the pinned
-sampling draft. Machine support alone does not grant supervisor access.
-These are draft bindings, not ratified extension or CSR allocations.
+Register separate machine and supervisor PDIS extension bits with the
+existing ISA parser. Reuse the DT extension-list and legacy/RHCT parsing
+paths without adding userspace hwprobe bits or inferring S-mode access
+from an M-mode declaration.
 
 Signed-off-by: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
 ---
- .../devicetree/bindings/riscv/extensions.yaml | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ arch/riscv/include/asm/hwcap.h | 2 ++
+ arch/riscv/kernel/cpufeature.c | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-index 79491ef8f86a..afda76b9c7c4 100644
---- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-+++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-@@ -214,6 +214,15 @@ properties:
-             ratified at commit d70011dde6c2 ("Update to ratified state")
-             of riscv-j-extension.
+diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+index b5952db9259f..0eea8158b4af 100644
+--- a/arch/riscv/include/asm/hwcap.h
++++ b/arch/riscv/include/asm/hwcap.h
+@@ -126,6 +126,8 @@
+ #define RISCV_ISA_EXT_ZIC64B		116
+ #define RISCV_ISA_EXT_SV48		117
+ #define RISCV_ISA_EXT_SV57		118
++#define RISCV_ISA_EXT_SMPDIS		119
++#define RISCV_ISA_EXT_SSPDIS		120
  
-+        - const: smpdis
-+          description: |
-+            The draft Smpdis machine-level extension for Precise Decoded
-+            Instruction Sampling, as described at commit
-+            2de60e18118ce78e2da82ec33296345c94d8560c of the
-+            riscv-performance-event-sampling specification. It defines
-+            instruction selection, filtering and sample collection across
-+            privilege levels. This does not imply supervisor access to PDIS.
-+
-         - const: smstateen
-           description: |
-             The standard Smstateen extension for controlling access to CSRs
-@@ -269,6 +278,16 @@ properties:
-             ratified at commit d70011dde6c2 ("Update to ratified state")
-             of riscv-j-extension.
+ #define RISCV_ISA_EXT_XLINUXENVCFG	127
  
-+        - const: sspdis
-+          description: |
-+            The draft Sspdis supervisor-level extension for Precise Decoded
-+            Instruction Sampling, as described at commit
-+            2de60e18118ce78e2da82ec33296345c94d8560c of the
-+            riscv-performance-event-sampling specification. It provides the
-+            supervisor-visible PDIS registers and behavior, excluding the
-+            machine-only state. Firmware must make this state accessible to
-+            supervisor software before reporting this extension.
-+
-         - const: ssqosid
-           description: |
-             The standard Ssqosid extension for Quality of Service ID is
+diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+index 72bce616491f..982231fa290a 100644
+--- a/arch/riscv/kernel/cpufeature.c
++++ b/arch/riscv/kernel/cpufeature.c
+@@ -651,12 +651,14 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+ 	__RISCV_ISA_EXT_DATA(smcsrind, RISCV_ISA_EXT_SMCSRIND),
+ 	__RISCV_ISA_EXT_DATA(smmpm, RISCV_ISA_EXT_SMMPM),
+ 	__RISCV_ISA_EXT_SUPERSET(smnpm, RISCV_ISA_EXT_SMNPM, riscv_xlinuxenvcfg_exts),
++	__RISCV_ISA_EXT_DATA(smpdis, RISCV_ISA_EXT_SMPDIS),
+ 	__RISCV_ISA_EXT_DATA(smstateen, RISCV_ISA_EXT_SMSTATEEN),
+ 	__RISCV_ISA_EXT_DATA(ssaia, RISCV_ISA_EXT_SSAIA),
+ 	__RISCV_ISA_EXT_DATA_VALIDATE(ssccfg, RISCV_ISA_EXT_SSCCFG, riscv_ext_ssccfg_validate),
+ 	__RISCV_ISA_EXT_DATA(sscofpmf, RISCV_ISA_EXT_SSCOFPMF),
+ 	__RISCV_ISA_EXT_DATA(sscsrind, RISCV_ISA_EXT_SSCSRIND),
+ 	__RISCV_ISA_EXT_SUPERSET(ssnpm, RISCV_ISA_EXT_SSNPM, riscv_xlinuxenvcfg_exts),
++	__RISCV_ISA_EXT_DATA(sspdis, RISCV_ISA_EXT_SSPDIS),
+ 	__RISCV_ISA_EXT_DATA(ssqosid, RISCV_ISA_EXT_SSQOSID),
+ 	__RISCV_ISA_EXT_DATA(sstc, RISCV_ISA_EXT_SSTC),
+ 	__RISCV_ISA_EXT_DATA(svade, RISCV_ISA_EXT_SVADE),
 -- 
 2.50.1 (Apple Git-155)
 
