@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794973593;
-	b=QN5CHocI5/ed6UWFWFTJ3hobhy417NUjyYkDsOWS9UxxEBDvmDle14/YiIcf/vCw69FN
-	 CHsQRzWqvJpl9KZNFSPv4/W3JToxdZ66onIgr9GqRVL+gHFYtAqIGuLD3kBsQurfQq+i1
-	 P/Tn3u5uv5r46kVw2sOOZctqlMDEiF09IG0Rmo27fkshQ0jK5wkrbW1ewPBJouPv0Q6e7
-	 dw1BXKMVh5vFlZ7YS3FKS9P37UTwXrOV4DizGl01legI8cgfYwnexSeR/QcHWOmpM9kgD
-	 yTkuRGbwu1S/tknSdHLVFmXsxf6Otoekz49TaoxggjTBtqM2kwj8/ENX30XXtJZo3BQ==
+	t=1794973603;
+	b=Ev69r1g58cv2P2eoIhzzpfn9qln6EpN+qUghBH5SzqEMlf7gBTxgSD++g0bTpRwa4QeU
+	 Vb+3nhuKM6VA/MSIhVamqExRfhTf+qGkXt58sLUO7VpfYm+eIE9/r2CtyhwCDg2M+JVE4
+	 GoL1Tfk37NM9Co2otegwsypS62n8JDGo06xdh1U0XvBHmtP4vCrtKs/rXewctDQpcuMmJ
+	 MMBlnzYxU+kf+XfDwcAvFfjT5k0pAf02wiWLG+wnKFtdTWY1YPdYa355c9gIzu/kOMCud
+	 XAzKwgBdmNks/dyzzkaRuT5PTCxx/E26WNaMVSfXg3U4igk6WV2yAfCzoRrld718cTA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794973593;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794973603;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=ab9nVsltaFZp30BNEzwkA+hDy+p56zTEwMTDDMOJdFo=;
-	b=l+JlvNjSBaRZOtvcIBLGxlAOUusmHqmrl1lO3c+9g7lpkFjRnLf06Jzqbay7NxldTHEA
-	 aXRi0HrF1fIlF7lhNhJvmrXpl4j2k/I+GCw1sBvnwj9lYf/hSXzgHp68WvfvtsBHuxn07
-	 GPZ0ybbf/d9/1utsGtV7s0vzIHXol4LxD/D5diFp0sIAkLmdHWt0SHT6XEcpBCltdbLkt
-	 tRTDTp4CPZ/+aci/pI58k3TmTA9eb30Ad2bzFoozlsFqWaIIcueDgjdLcvyHrdsz1ZGzO
-	 iheTPjsNOl66A8J/X7RF3Ni7Wm01ltKBUfv3Eov2UGMWFm7tqytml1YwXmNk4vg5RiA==
+	bh=6m2ReqDc88PdJu7aa1iq3EUrG/vqMgodPh/i0szFg4w=;
+	b=K5MisPgKUKBUg/7SHiEutoOfMgCeYdSpqNeb4wsWT/4kLmaS2d8I+lS1qmAVGJONvpFF
+	 kuCCxOQeYaVyn0k6NLmJBrmNJhu5v5xTwdqDaMsdE7D/L/Xm11txeoZRJM1u9+Rw1PZSH
+	 G2D2GOt4UKEzdUUhrONlCekVCkrb71rvYlbag18ijFrbNG0+qlKKZp74iCLe91c3j1kQp
+	 DH8HQlWxnaHAzQvWy/4wvhowmo80iVIukJ5s3Yug+do12TMvsmRfurkpB0tcOchPcms2R
+	 zNtZPPsExbxR/CXfboSWcqUWvw0ncuASRDxfqDR1v8EafDQbtVuAfv+wjo7TakfdoIQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PEiR5DJ9;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QzmjpZ74;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61035606A325
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 03:46:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FF9606A31C
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 03:46:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PEiR5DJ9
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D09201F000C4;
-	Wed, 18 Nov 2026 03:46:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=QzmjpZ74
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 768A01F000C4;
+	Wed, 18 Nov 2026 03:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794973593;
-	bh=ab9nVsltaFZp30BNEzwkA+hDy+p56zTEwMTDDMOJdFo=;
+	s=k20260515; t=1794973603;
+	bh=6m2ReqDc88PdJu7aa1iq3EUrG/vqMgodPh/i0szFg4w=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=PEiR5DJ9HOfjZiGC2JoWdXtrX+SdORO6+M3nOpNgh97cmwetfESnag4oXJlh5Lz5I
-	 I3BiokJtob6JgaCigriPRcHvsNSRI0SprbpI7i0HNe+wpuFPfaWh1IytmKDgTDEbY+
-	 /xSA81ZIlslRF3WaFUtqNBcGFKlmRkqxh+/wg9NKZlraOPODGyYpqYWgXmiMKhQieT
-	 1OGfrBSqq0sGfZt65z/iHPdTJojxlfnY2CPBZUqf4+syAwF02yIB2O4xSvVr51WOpd
-	 CD62njNJgJ4wlBvMKaYN+s8uf2Ng3pzTHoHjije56a9lJ1ysjgibzl+m51oHFpdCW3
-	 lhuZ4uqWbQrgg==
-Message-ID: <sashiko-outbox-220041@kernel.org>
+	b=QzmjpZ74UxUoLZ3cJpbtRF3G9daek6rJz2xi1kbKMvOvN20yF5E+glSo1at1nOzlf
+	 k1uX/YODAM55e4siRHaEIiKgKg4c7KiOXXam+aZUVaj1FB7gPN2ZGDYHw9Dm8TGHvx
+	 PJkLM1oU2CxKAPvbaVvKmr8wLaBhMd6B/kLEz28X57NlqKGxB2IrCt81cCzvRNq4N1
+	 V82+JYDYN4KziVukzgrMcz1hmLaF6RxW/e+BLaYn/IcTjekYPQZxuOigIBzsimjQ7t
+	 BlZPkyIxdTeWsQMB0E5aWeg2mFnS5KrRC59lzcX1Owte/QAGZIZP7O2dNpc/LPj7ZP
+	 ti818SQP2+oog==
+Message-ID: <sashiko-outbox-220043@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [Patch v7 13/24] perf/x86/intel: Always snapshot live hardware
- LBR state for BPF
+Subject: Re: [Patch v7 22/24] perf/x86/intel: Pass LBR stack size into
+ intel_pmu_store_lbr()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261118031453.1353625-14-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20261118031453.1353625-23-dapeng1.mi@linux.intel.com>
 References: <20261118031453.1353625-1-dapeng1.mi@linux.intel.com>
- <20261118031453.1353625-14-dapeng1.mi@linux.intel.com>
+ <20261118031453.1353625-23-dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 18 Nov 2026 03:46:32 +0000
+Date: Wed, 18 Nov 2026 03:46:43 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,22 +61,22 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> __intel_pmu_snapshot_branch_stack() is intended to capture the current
-> live hardware LBR state for the BPF path. However, that snapshot is
-> currently skipped when all LBR users are PEBS events.
+> intel_pmu_store_lbr() assumes the LBR stack always contains
+> x86_pmu.lbr_nr entries, but arch-PEBS can use a smaller configured depth.
+> This can result in out-of-bounds reads when the stack is shallower than
+> the hardware maximum.
 >=20
-> BPF LBR snapshotting now uses its own dedicated LBR stack, so there is
-> no longer a risk of clobbering the shared default LBR stack. Move the
-> lbr_pebs_users check into the PMI handler, which is the only caller that
-> relies on it, so the BPF path always snapshots the live hardware LBR
-> state.
+> Add a lbr_nr parameter to the helper so the code only processes the
+> available entries and avoids overrunning the LBR buffer.
 >=20
-> Fixes: c22ac2a3d4bd ("perf: Enable branch record for software events")
+> Fixes: d21954c8a0ff ("perf/x86/intel: Process arch-PEBS records or record=
+ fragments")
+> Reported-by: Sashiko <sashiko-bot@kernel.org>
 > Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118031453.1353=
-625-1-dapeng1.mi@linux.intel.com?part=3D13
+625-1-dapeng1.mi@linux.intel.com?part=3D22
 
