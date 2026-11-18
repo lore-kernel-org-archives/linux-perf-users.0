@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794985722;
-	b=lkkuuBsNRUhuwmWQyCl9CoUMqH88zLzlPEt+/MW3J2r6Gk6xG5ldi9cvc1sFS1dL4yDP
-	 mbvr+KNXQ+iex6vac5eb7yJ5sDYfmOhrsQM5QFYLO4/hM0H5uHDcjO0tojqlrIu17yoXB
-	 C0ryVGt0oI+IN14e68700m0CeEF7ZlYZmKfjX8Tjb88PTBuI8y6PWSJPTvRL1bprEzZmc
-	 zWM5DGUkR7nDZFrYH3Imxe2PllA/4h63t6PBI8xFQWc9ZebzSe7/IoHrx63O1k9vtsjCY
-	 LN1n6hY/LoHD7uS+83rx3j4xBDbnSuAKwwgmHDuaVooV4GfH+Fa6mXVL5BQxL4ExAyQ==
+	t=1794986183;
+	b=Dfb+z2SUwGTDppFgzirQC7fdT/HlAkz9p6sxbyKRGcCck3zlfsLRl6rLbDkauhgwAuKB
+	 jX71uCB7wkNhBiQvHpvCWkbvRuEFaaAQ7YvHpzdLSKnujVPmcHKQnoFlM/9YUgVeRKoQP
+	 SRme5Opdxe+ry6nOvGwl8ycIEcIPdqVCuzTg4wkiswYilpjjczGC811Du27uGlzJ3q6Uy
+	 14T/lnfp2/CMYF3ZrUpcEY7V2SYHsyBTGIpQFeKos3yBS1XJHZhvs3X+8Mt9wO8E+nVVy
+	 42hkNQZMrwmpSjaCbw7JxRn8T/zl9y/CF6QULbwRVcS/ah0MKIs9KIcPAyqw1SIXvSg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794985722;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794986183;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=4HCXgstFzooPr52H0zshQHuX/gp056oPcPFeA/qx5as=;
-	b=DY7vQ/LBZqyHJoo0d5QOvxs70jTaGoTy9H3mAYocu0TWxI0IKO3T21z8MIOe4yFVmwZp
-	 gGg3NQXA2hEHaqS1Sdq4dGueqMTto0fbXgGWF9fD5PnN3ixraRXM3F/cr7eIXhf3vBkoH
-	 R/15Fp1CUQ6wMGrEq8HKwsRPsulgvFrsatHKjIXTCinjTgHPR1ylrgGHsvPeoaYr3OwVn
-	 8F8Xh5HrQobsq17q7spg8SpFJlvCk+P4TbKZl1jqM6sPIrE5g2PPatqpJ2fx5yzRI4SHX
-	 aFtAtOqrvtGXn0C3T+gj9QbYpDWTA/oLj2V777aoJtbGbiu+fdPurPsyOufcGyrajgQ==
+	bh=kaexjUtFicZ1cLfZvFYvCV6EhhBzE7PFQief6DawvLI=;
+	b=dQsB/NWNlLAlyS7fUcOu36S/KNX4XzA67ATwDtOuNICgiCYViQAcRBYNWB/JRCJj640t
+	 kkMriq+qrgQ3NUhO6lM7wFimWCrgWEPfsBTa/n0SxP5m8WMKx02Zo/N3ueuHgPUrDmDOm
+	 Q+7x9XFC2H/3RU+njaSaGoPLo8qqC4y8JkC0eaMwiEzmfpdIA49k5QUJaHtwxOyfcEywQ
+	 Rx8442neSRmGtrV1Q8lD0Ryya22GJdxDu82S3p/KRBv0NYrnHPPcuCHtAxKo9LQaJzZLi
+	 UFAtLsWbcY47r/Hrg4G2UeLI8bQ0QzQNEw5ALsCETxQkGqEFI6Dnf5hSVlyuzj/zEcw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="CUs/8Fbo";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=T8Z2dnHw;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0667606A31C;
-	Wed, 18 Nov 2026 07:08:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2781606A31C;
+	Wed, 18 Nov 2026 07:16:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CUs/8Fbo
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9F611F000C4;
-	Wed, 18 Nov 2026 07:08:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=T8Z2dnHw
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28FCC1F000C4;
+	Wed, 18 Nov 2026 07:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794985722;
-	bh=4HCXgstFzooPr52H0zshQHuX/gp056oPcPFeA/qx5as=;
+	s=k20260515; t=1794986182;
+	bh=kaexjUtFicZ1cLfZvFYvCV6EhhBzE7PFQief6DawvLI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=CUs/8Fboq/yWDbUJO2cryNCNxuaGoTOlnkv4+jB14eRlxizmnI8DJm2omMJYbTz8E
-	 HRyLPYR1SCin4+6z4dC6RA9aw7oah8GDJfq1/h2XWDZyRwQhPPSOa8SXmce/3co7+c
-	 ghkvfTf/bR1QHH0NUrI32aQnQ7RpIzhKbIyJW5m8QzJZ3EtlojX3F19k5ttP4ECIrV
-	 giq0KKy/CjLGX+zaiSVIR5xLRay3o6Wj0SOM2rtS+eygLw0w4XCrjLjOqSFCKrPFhp
-	 sEqm8GoY0MWRecTgaNxIo1jnhf518uhXusZffgbHuW2ySvb+ME9cjnQtfoUnBNfvWy
-	 ZYF+CUC+ooIXw==
-Date: Tue, 17 Nov 2026 23:08:40 -0800
+	b=T8Z2dnHwtv2C5A3iKD7OLr3STo58t9Jz/qzLWUpfFRAUB0g7c9P21KZZP0PynjDX+
+	 xYMuln3xXjpJgmVnW5YrsaodRASHPK5WiEjH3XgCzX4hwltmuBe+vjlV82bUxK/XVd
+	 GGPt4Z8buD7+Of0a4WotucsSqcr+Cnjq2dsaTEhHLCjO16kOY2atVY0G21S0d/TiUE
+	 Q2ezdhnwoWgXeGy+haqQci+z/tI73lPXnmCVsy5QqN9inaUeAKQM6/2vjIlikFGRKz
+	 MkNEHoBf0lJXz9C0X0Eteb9h3wiAQ6NqqmxsWIDXt7WMIRn7AVWvkk1NLBZBcqV15H
+	 c/35BvefB6uEA==
+Date: Tue, 17 Nov 2026 23:16:20 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
@@ -49,11 +49,11 @@ Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
 	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v6 03/13] perf annotate: Handle absolute addressing in
- data type profiling
-Message-ID: <av1O-I_uLOoY0u5r@google.com>
+Subject: Re: [PATCH v6 07/13] perf tests: Exercise data type resolution from
+ a register
+Message-ID: <av1QxJZA36xcbcEL@google.com>
 References: <20261117200433.45174-1-acme@kernel.org>
- <20261117200433.45174-4-acme@kernel.org>
+ <20261117200433.45174-8-acme@kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -65,240 +65,215 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20261117200433.45174-4-acme@kernel.org>
+In-Reply-To: <20261117200433.45174-8-acme@kernel.org>
 
-On Tue, Nov 17, 2026 at 05:04:21PM -0300, Arnaldo Carvalho de Melo wrote:
+On Tue, Nov 17, 2026 at 05:04:25PM -0300, Arnaldo Carvalho de Melo wrote:
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> 32-bit x86 accesses globals with absolute addresses, like
-> "movl %eax,0x8c73448", but the operand parser only recognized the
-> offset(reg) forms, so the operand had no memory reference, the resolver
-> saw a zero data address and resolved nothing.
+> At -O2 a struct pointer lives in a register (with DWARF describing it with
+> a register location on register-argument ABIs), while the unoptimized
+> workloads the data type tests profile keep their variables on the stack.
 > 
-> Parse a bare "0x" number as an absolute memory operand, leaving jumps,
-> calls, loop* and the 64-bit movabs* out, use the address in the resolver,
-> and let the instruction tracking record the type of an absolute global
-> load in the destination register.  The displacement is sign extended for
-> 64-bit objects, as the CPU does, and zero extended for 32-bit ones.
-> Values that do not fit the int offset, zero, and the operands of
-> relocatable objects, which are unrelocated addends, are skipped.
-> 
-> With bare numbers being memory operands, a frame base register of -1,
-> "none", would also compare equal to the -1 "no register" of an absolute
-> operand and take it for a stack access, so guard those comparisons.
-> Operands left with no register, like a user space "%gs:imm", are no
-> longer looked up as variables, which can change the data type stats of
-> those samples.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/util/annotate-arch/annotate-x86.c | 52 ++++++++++++++++++--
->  tools/perf/util/annotate.c                   | 25 +++++++++-
->  tools/perf/util/annotate.h                   |  7 +++
->  3 files changed, 79 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
-> index e38a4e7a54d5585c..adb52d148cba6001 100644
-> --- a/tools/perf/util/annotate-arch/annotate-x86.c
-> +++ b/tools/perf/util/annotate-arch/annotate-x86.c
-> @@ -230,6 +230,11 @@ static bool vtable_get_rettype(Dwarf_Die *class_die, int offset,
->  	return die_get_real_type(&func_die, type_die) != NULL;
->  }
->  
-> +static bool is_stack_or_fb_reg(struct type_state *state, int fbreg, int reg)
-> +{
-> +	return (fbreg != -1 && reg == fbreg) || reg == state->stack_reg;
-> +}
-> +
->  static void update_insn_state_x86(struct type_state *state,
->  				  struct data_loc_info *dloc, Dwarf_Die *cu_die,
->  				  struct disasm_line *dl)
-> @@ -437,7 +442,7 @@ static void update_insn_state_x86(struct type_state *state,
->  		invalidate_reg_state(tsr);
->  
->  		/* Case 1: Based on stack pointer or frame pointer */
-> -		if (sreg == fbreg || sreg == state->stack_reg) {
-> +		if (is_stack_or_fb_reg(state, fbreg, sreg)) {
->  			struct type_state_stack *stack;
->  			int offset = src->offset - fboff;
->  
-> @@ -626,7 +631,7 @@ static void update_insn_state_x86(struct type_state *state,
->  
->  retry:
->  		/* Check stack variables with offset */
-> -		if (sreg == fbreg || sreg == state->stack_reg) {
-> +		if (is_stack_or_fb_reg(state, fbreg, sreg)) {
->  			struct type_state_stack *stack;
->  			int offset = src->offset - fboff;
->  
-> @@ -741,6 +746,29 @@ static void update_insn_state_x86(struct type_state *state,
->  				     insn_offset, addr, dst->reg1);
->  			pr_debug_type_name(&type_die, tsr->kind);
->  		}
-> +		/* Or an absolute address, as used by 32-bit code */
-> +		else if (annotated_op_loc__is_abs(src, map__dso(dloc->ms->map))) {
+> Add a regptr workload with a noinline function that takes the pointer from
+> a volatile global, so the compiler cannot constant-propagate the object
+> address, and check that its three member accesses are resolved from that
+> register.
 
-Then shouldn't it check if it's actually 32-bit code?
-
-
-> +			struct map_symbol *ms = dloc->ms;
-> +			u64 ip = ms->sym->start + dl->al.offset;
-> +			u64 addr = annotated_op_loc__abs_addr(src, map__dso(ms->map));
-> +			int offset;
-> +
-> +			if (!get_global_var_type(cu_die, dloc, ip, addr, &offset,
-> +						 &type_die) ||
-> +			    !die_get_member_type(&type_die, offset, &type_die)) {
-> +				invalidate_reg_state(tsr);
-> +				return;
-> +			}
-> +
-> +			tsr->type = type_die;
-> +			tsr->kind = TSR_KIND_TYPE;
-
-I'm not sure if it's _TYPE at this point.  Probably _POINTER instead?
-
-
-> +			tsr->offset = 0;
-> +			tsr->ok = true;
-> +
-> +			pr_debug_dtp("mov [%x] global addr=%#"PRIx64" -> reg%d",
-> +				     insn_offset, addr, dst->reg1);
-> +			pr_debug_type_name(&type_die, tsr->kind);
-> +		}
->  		/* And check percpu access with base register */
->  		else if (has_reg_type(state, sreg) &&
->  			 state->regs[sreg].kind == TSR_KIND_PERCPU_BASE) {
-> @@ -827,7 +855,7 @@ static void update_insn_state_x86(struct type_state *state,
->  	/* Case 3. register to memory transfers */
->  	if (!src->mem_ref && dst->mem_ref) {
->  		/* Check stack variables with offset */
-> -		if (dst->reg1 == fbreg || dst->reg1 == state->stack_reg) {
-> +		if (is_stack_or_fb_reg(state, fbreg, dst->reg1)) {
->  			struct type_state_stack *stack;
->  			int offset = dst->offset - fboff;
->  
-> @@ -931,7 +959,7 @@ static int extract_reg_offset(const struct arch *arch, const char *str,
->  }
->  
->  static void extract_op_location_x86(const struct arch *arch,
-> -				    struct disasm_line *dl __maybe_unused,
-> +				    struct disasm_line *dl,
->  				    const char *op_str, int op_idx __maybe_unused,
->  				    struct annotated_op_loc *op_loc)
->  {
-> @@ -960,6 +988,22 @@ static void extract_op_location_x86(const struct arch *arch,
->  			op_loc->offset = strtol(s + 1, &p, 0);
->  			if (p && p != s + 1)
->  				op_loc->imm = true;
-> +		} else if (!strncmp(s, "0x", 2) && !ins__is_jump(&dl->ins) &&
-> +			   !ins__is_call(&dl->ins) &&
-> +			   strncmp(dl->ins.name, "loop", 4) &&
-> +			   strncmp(dl->ins.name, "movabs", 6)) {
-> +			u64 offset = strtoull(s, NULL, 0);
-> +
-> +			/*
-> +			 * Keep only what fits the int, as disp32 or as a u32;
-> +			 * movabs*, the 64-bit form, is left out.
-> +			 */
-> +			if (offset != 0 && (offset <= UINT_MAX ||
-> +					    (s64)(int)offset == (s64)offset)) {
-> +				/* Absolute address, as used by 32-bit code */
-> +				op_loc->mem_ref = true;
-
-I don't think it's a mem-ref.
+Thanks for adding the workloads for data type profiling.  I was unsure
+if it's ok to add since it'd requires many test cases to cover various
+aspect of binary patterns or compiler/language differences.  But having
+a seperate repo for the test programs would be cumbersome too.
 
 Thanks,
 Namhyung
 
-
-> +				op_loc->offset = offset;
-> +			}
->  		}
->  	}
->  }
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index 86a4beec6528e9bd..f33e22c20656a4f3 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -2605,6 +2605,21 @@ int arch__dwarf_regnum(const struct arch *arch, const char *str)
->  	return reg < 0 ? -1 : reg;
->  }
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/tests/builtin-test.c              |  1 +
+>  tools/perf/tests/shell/data_type_register.sh | 60 +++++++++++++++++++
+>  tools/perf/tests/tests.h                     |  1 +
+>  tools/perf/tests/workloads/Build             |  2 +
+>  tools/perf/tests/workloads/regptr.c          | 61 ++++++++++++++++++++
+>  5 files changed, 125 insertions(+)
+>  create mode 100755 tools/perf/tests/shell/data_type_register.sh
+>  create mode 100644 tools/perf/tests/workloads/regptr.c
+> 
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> index 8fc425d470c17dbf..fe4d4cd54f85d502 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -215,6 +215,7 @@ static struct test_workload *workloads[] = {
+>  	&workload__false_sharing,
+>  	&workload__global_data,
+>  	&workload__flex_array,
+> +	&workload__regptr,
 >  
-> +/* A relocatable object's operand is an unrelocated addend, not an address */
-> +bool annotated_op_loc__is_abs(const struct annotated_op_loc *op_loc,
-> +			      const struct dso *dso)
+>  #ifdef HAVE_RUST_SUPPORT
+>  	&workload__code_with_type,
+> diff --git a/tools/perf/tests/shell/data_type_register.sh b/tools/perf/tests/shell/data_type_register.sh
+> new file mode 100755
+> index 0000000000000000..0d4a420cad9475cd
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/data_type_register.sh
+> @@ -0,0 +1,60 @@
+> +#!/bin/bash
+> +# perf data type profiling tests for register variables
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +set -e
+> +
+> +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+> +perfout=$(mktemp /tmp/__perf_test.perf.out.XXXXX)
+> +
+> +cleanup()
 > +{
-> +	return !dso__rel(dso) && op_loc->mem_ref && op_loc->reg1 == -1 && op_loc->reg2 == -1 &&
-> +	       op_loc->segment == INSN_SEG_NONE && op_loc->offset != 0;
+> +	rm -f "$perfdata" "$perfout"
+> +	trap - EXIT TERM INT
 > +}
 > +
-> +/* The disp32 of a 64-bit object is sign extended, a 32-bit one is not */
-> +u64 annotated_op_loc__abs_addr(const struct annotated_op_loc *op_loc,
-> +			       const struct dso *dso)
+> +trap_cleanup()
 > +{
-> +	return dso__is_64_bit(dso) ? (u64)(s64)op_loc->offset : (u32)op_loc->offset;
+> +	echo "Unexpected signal in ${FUNCNAME[1]}"
+> +	cleanup
+> +	exit 1
+> +}
+> +trap trap_cleanup EXIT TERM INT
+> +
+> +if ! perf check feature -q dwarf; then
+> +	echo "Skip: no DWARF (libdw) support"
+> +	cleanup
+> +	exit 2
+> +fi
+> +
+> +# No point in recording if the PMU cannot do memory events.
+> +if ! perf mem record -o /dev/null -- true 2>/dev/null; then
+> +	echo "Skip: cannot record memory events on this PMU"
+> +	cleanup
+> +	exit 2
+> +fi
+> +
+> +if ! perf mem record -o "$perfdata" -- perf test -w regptr 1 > /dev/null 2>&1; then
+> +	echo "FAIL: perf mem record"
+> +	cleanup
+> +	exit 1
+> +fi
+> +
+> +if ! perf annotate --code-with-type -i "$perfdata" --stdio \
+> +		--percent-limit 1 > "$perfout"; then
+> +	echo "FAIL: perf annotate"
+> +	cleanup
+> +	exit 1
+> +fi
+> +
+> +for member in "+0 (a)" "+0x8 (b)" "+0x10 (c)"; do
+> +	if ! grep -Fq "# data-type: struct node ${member}" "$perfout"; then
+> +		echo "FAIL: member ${member} not resolved from the register"
+> +		tail -n 30 "$perfout"
+> +		cleanup
+> +		exit 1
+> +	fi
+> +done
+> +
+> +echo "register held access resolved"
+> +cleanup
+> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+> index 0cf33d91804f19c4..b03c56d5e4c98aaf 100644
+> --- a/tools/perf/tests/tests.h
+> +++ b/tools/perf/tests/tests.h
+> @@ -275,6 +275,7 @@ DECLARE_WORKLOAD(callchain);
+>  DECLARE_WORKLOAD(false_sharing);
+>  DECLARE_WORKLOAD(global_data);
+>  DECLARE_WORKLOAD(flex_array);
+> +DECLARE_WORKLOAD(regptr);
+>  
+>  #ifdef HAVE_RUST_SUPPORT
+>  DECLARE_WORKLOAD(code_with_type);
+> diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
+> index 74a0cbe49dc93533..17189458032c0a17 100644
+> --- a/tools/perf/tests/workloads/Build
+> +++ b/tools/perf/tests/workloads/Build
+> @@ -19,6 +19,7 @@ perf-test-y += callchain.o
+>  perf-test-y += false_sharing.o
+>  perf-test-y += global_data.o
+>  perf-test-y += flex_array.o
+> +perf-test-y += regptr.o
+>  
+>  ifeq ($(CONFIG_RUST_SUPPORT),y)
+>      perf-test-y += code_with_type.o
+> @@ -39,3 +40,4 @@ CFLAGS_callchain.o        = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+>  CFLAGS_false_sharing.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+>  CFLAGS_global_data.o      = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+>  CFLAGS_flex_array.o       = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+> +CFLAGS_regptr.o           = -g -O2
+> diff --git a/tools/perf/tests/workloads/regptr.c b/tools/perf/tests/workloads/regptr.c
+> new file mode 100644
+> index 0000000000000000..441202b61ae7b2e6
+> --- /dev/null
+> +++ b/tools/perf/tests/workloads/regptr.c
+> @@ -0,0 +1,61 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * A struct pointer that -O2 keeps in a register, so the member accesses
+> + * have to be resolved from the register's type state and not from a
+> + * stack slot.
+> + *
+> + * See tests/shell/data_type_register.sh.
+> + */
+> +#include <signal.h>
+> +#include <stdlib.h>
+> +#include <unistd.h>
+> +#include <linux/compiler.h>
+> +#include "../tests.h"
+> +
+> +struct node {
+> +	long long a;
+> +	long long b;
+> +	long long c;
+> +};
+> +
+> +static struct node n;
+> +static struct node *volatile vp;
+> +static volatile unsigned long long reg_sink;
+> +static volatile sig_atomic_t done;
+> +
+> +static void sighandler(int sig __maybe_unused)
+> +{
+> +	done = 1;
 > +}
 > +
->  /**
->   * annotate_get_insn_location - Get location of instruction
->   * @arch: the architecture info
-> @@ -2622,7 +2637,7 @@ int arch__dwarf_regnum(const struct arch *arch, const char *str)
->   *   mov  (%rax), %rcx   # src_reg1 = rax, src_mem = 1, src_offset = 0
->   *                       # dst_reg1 = rcx, dst_mem = 0
->   *
-> - *   mov  0x18, %r8      # src_reg1 = -1, src_mem = 0
-> + *   mov  0x18, %r8      # src_reg1 = -1, src_mem = 1, src_offset = 0x18
->   *                       # dst_reg1 = r8, dst_mem = 0
->   *
->   *   mov  %rsi, 8(%rbx,%rcx,4)  # src_reg1 = rsi, src_mem = 0, src_multi_regs = 0
-> @@ -2894,6 +2909,11 @@ __hist_entry__get_data_type(struct hist_entry *he, const struct arch *arch,
->  			dloc.var_addr = annotate_calc_pcrel(ms, dloc.ip,
->  							    op_loc->offset, dl);
->  		}
-> +		/* Absolute addressing, as used by 32-bit code */
-> +		else if (annotated_op_loc__is_abs(op_loc, map__dso(ms->map))) {
-> +			dloc.var_addr = annotated_op_loc__abs_addr(op_loc, map__dso(ms->map));
-> +			op_loc->reg1 = DWARF_REG_PC;
-> +		}
->  
->  		/* This CPU access in kernel - pretend PC-relative addressing */
->  		if (dso__kernel(map__dso(ms->map)) && arch__is_x86(arch) &&
-> @@ -2902,6 +2922,9 @@ __hist_entry__get_data_type(struct hist_entry *he, const struct arch *arch,
->  			op_loc->reg1 = DWARF_REG_PC;
->  		}
->  
-> +		if (op_loc->reg1 == -1)
-> +			continue;
+> +static noinline long long touch(struct node *p)
+> +{
+> +	long long sum = 0;
 > +
->  		mem_type = find_data_type(&dloc);
->  
->  		if (mem_type == NULL && is_stack_canary(arch, op_loc)) {
-> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-> index 1b47c1156b9a72e1..1b0991d4e98c911e 100644
-> --- a/tools/perf/util/annotate.h
-> +++ b/tools/perf/util/annotate.h
-> @@ -18,6 +18,7 @@
->  #include "branch.h"
->  #include "evsel.h"
->  
-> +struct dso;
->  struct hist_browser_timer;
->  struct hist_entry;
->  struct map;
-> @@ -638,6 +639,12 @@ struct annotated_insn_loc {
->  	     i < INSN_OP_MAX;						\
->  	     i++, op_loc++)
->  
-> +/* Bare number operand, as used by 32-bit code to access globals */
-> +bool annotated_op_loc__is_abs(const struct annotated_op_loc *op_loc,
-> +			      const struct dso *dso);
-> +u64 annotated_op_loc__abs_addr(const struct annotated_op_loc *op_loc,
-> +			       const struct dso *dso);
+> +	sum += p->a;
+> +	/* A load too, or a load-only PMU never resolves b. */
+> +	p->b += sum;
+> +	sum += p->c;
+> +	return sum;
+> +}
 > +
->  /* Get detailed location info in the instruction */
->  int annotate_get_insn_location(const struct arch *arch, struct disasm_line *dl,
->  			       struct annotated_insn_loc *loc);
+> +static int regptr(int argc, const char **argv)
+> +{
+> +	unsigned long long sum = 0;
+> +	int sec = 1;
+> +
+> +	if (argc > 0)
+> +		sec = atoi(argv[0]);
+> +
+> +	vp = &n;
+> +	signal(SIGINT, sighandler);
+> +	signal(SIGALRM, sighandler);
+> +	alarm(sec);
+> +
+> +	while (!done)
+> +		sum += touch(vp);
+> +	reg_sink = sum;
+> +	return 0;
+> +}
+> +
+> +DEFINE_WORKLOAD(regptr);
 > -- 
 > 2.56.0
 > 
