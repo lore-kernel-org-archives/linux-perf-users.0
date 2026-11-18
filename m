@@ -1,68 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794983547;
-	b=V4d85wBBh6yXQCFnDxx98Ows8q01eiMsDMu6qJjM/XBQUIi4LkoyyQQH4DVB74bGGIzH
-	 HKB6TN3t4fZwXownnXiEuH0dDerfh+m4t+6r6B+L0cFR2E9202DDrOQ8zQOlBxEYgE6zp
-	 vyS7x6rNrxa9QpTG6VFsxBIvVdKQPb/aQjbVwMmYX/1+gGV7x9Hq1u8sF7LAFxikFtLgs
-	 mdNgOcCLqmyuB8AggIGmnnCEBNrfrBmM7d20FTe98KEa6zNYV6llieZmUCn9mQqV6MkQo
-	 bJzbrRu3AGVsIT/MMZPxAQk6j7x8Gte1Xr1G4s1OIq7eaM2g65Jk2DpyXqFuCt+aMGQ==
+	t=1794983691;
+	b=z/vr1m+p/5P98uUD4sKbZvQS/1DCx1c89sf6i/sXdxtda0dtbXQnOmLs6/8YSErZ3ZT5
+	 H3f/k0TcU1cjaZ/gahsCEizGgBnmS+8Rdl00DEoNHNjXWh6pyXAjqGIAeybd0V1gg57t/
+	 p7eR9mGQvplafwupR4zbuRh2DCSgw7phDYAtA1sixvFDheR1aNz2RQKGRIRaUfPbmu28h
+	 DkbhRQPMjAiD/qOz3L3kGWHor8IuNzBjkbNzVc+YCJPN2TgNAFX9lcSlU18vqH6N6hcRs
+	 HAo6OkJznYq0ZTOdmT8OeLDCrlmUz6f+Hhbg01VBfC56XCmRWken2+HkCRY1km5Q/Sg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794983547;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=u0IreiS+YajtenfvnX3jWr9IuLswzaeTxj+RxQ8KZRA=;
-	b=D7WN9lS9x6Qg5YMwZ5fKy0PzF2hh1EARDpKBiR5Uf1Mm9ht56xEUn/CyjDTwF0UAUqKm
-	 +QnQE64caR0NQIQfB/YUuhaFvK+zmgHq9fRhW6Fs55q9L1/0R1cE29uc6Wowx662bSlDv
-	 gpzqnkMwirtKxklvE2Km0b13lpUb7DkTRPld+9gAPGCS+yuRvY1H1WV6roteMKhVFwgjZ
-	 AkXggnOVDdm24DlG76vSHC8+vawWX7vVWiKchmbzfCPmSEarydhX/bZ/DykAUInLhZ3Bp
-	 84TnvX2aq5uxEfYDVJ7LG6KX/RdpyVapRGz1H4vKDMUADxamBKIgaOv2ikELj2+Hf9A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794983691;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=fL11dDptzx2R2m7tViFYuNdvwOTBmS4zd01n8DT5KBU=;
+	b=u/NkfbAOTNpx6vxMi1XShHBkDCCI7SoHA4ySFXCHtckCZaeho7IYfBRiNz2hqhQmAUzK
+	 nNuZLbzxt17gB+m54lWg1zkxBj6OtLNQYhNauHjqJs/ZYkkKNF9okAJH66PJDkQmkDvlS
+	 eZwIHRot/mMbEZHTZjU3gl9RhOYtf+yyb+bt8VVkMHu5y2bLTP+RPlKuWm27HlVI7InLl
+	 unjwB/YS/gLeSHavpIUKenGifjRSwrF/mqsgkbdeQcpe7E1x1sOJeq8q5VGZkkbR+Qc4c
+	 eJNVyn1MPqL6UAT/RUGuS9tciqoci6Q+XkuGsT0utA9XPNbbwpHX7s/t8U1cvXpa7bA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="K1/4+19/";
-	arc=none smtp.remote-ip=192.198.163.17
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CrRP62ce;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606AB606A31C;
-	Wed, 18 Nov 2026 06:32:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 606AB606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A927606A31C;
+	Wed, 18 Nov 2026 06:34:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=K1/4+19/
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794983546; x=1826519546;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=LbP0tBKFUG3FX5KB5829kcDSLEKKVPeE/YutxeN5JQs=;
-  b=K1/4+19/ZCSFL719UaQm0mzCd+iJJkqKWptroJe12Bi7Xymf9vIRgh5J
-   r+2jU0AK9MqvvbsypKhYEWKUdPRLAE8CZGsITVtnygGlDRnzXoUNuSEAl
-   GZbFc4QFOJwglDouVi27iCbkyTCAW7I/Jo6dLOj91TiBsfWxJiLPo/rHx
-   uAfQiNrFAvCgpeo+ZG4QkaUglaViQkNsLh/YFb3Vtq3ev+GUS70v2dIjt
-   db3Q9wD2TbsohSEPzmwWXfd+NURP2f/oUuEfrOjCEfdDfxWWbNl1J5Cq6
-   ouTnmuXHnR5JCAE3Iv9k/Tl++FFTgoYj3M5mRAbOYTQgTqSrdPzI7gIeV
-   Q==;
-X-CSE-ConnectionGUID: edR55aOUTxScL5lUVYlXhA==
-X-CSE-MsgGUID: sZa2YZEMSDC+4ZGlGIuCRQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11969"; a="3771572"
-X-IronPort-AV: E=Sophos;i="6.27,219,1787036400"; 
-   d="scan'208";a="3771572"
-Received: from fmviesa011.fm.intel.com ([10.60.135.151])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 22:32:26 -0800
-X-CSE-ConnectionGUID: tsLiP/fVTtC69hQYNuN7MQ==
-X-CSE-MsgGUID: ljy5Gv+DTpaBxMMCjIv68g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,219,1787036400"; 
-   d="scan'208";a="11856171"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 22:32:25 -0800
-Message-ID: <f51611e9-692a-4a0f-a01e-084237814ece@linux.intel.com>
-Date: Wed, 18 Nov 2026 14:32:22 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=CrRP62ce
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33C2B1F000C4;
+	Wed, 18 Nov 2026 06:34:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794983690;
+	bh=fL11dDptzx2R2m7tViFYuNdvwOTBmS4zd01n8DT5KBU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=CrRP62ce5XrD8LemYlth5lpa7MpL1N/MViVIX0B5QGGECPpaRDticwfUpCyvMWYFL
+	 GRP8dbkMEgEJo/vzyTaZK38Kuk3Fs/l8nz6LUFUDEM9NqefZvSrrQnAg6itfk3Ezw5
+	 CLQuZpsJ069JISEPj++zw9oh3lP4os2FcJhyNf7P5Ya1rf/iGZvzWxKFGDOA5cZqSd
+	 vIW0xPfZsWObXUckQnRoyCoHbEdUzxQVVLoLQXOct/yntezAjn3E8C/g0fWrG3aLhf
+	 Ciu83wdO6RKx4uafUUfqMR5o8kk8ZsLDIkjj9aM0QHfp1DLqqmF0wZOIqBfC3NXsG2
+	 v7bbXZ9plIAJg==
+Date: Tue, 17 Nov 2026 22:34:48 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Alireza Haghdoost <haghdoost@uber.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 6/9] perf symbol: Optimize symbol sorting with
+ natural-run merge sort and binary insertion
+Message-ID: <av1HCI3b1fO_WT0c@google.com>
+References: <20261117185305.108003-1-irogers@google.com>
+ <20261117185305.108003-7-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -72,102 +63,666 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v7 15/24] perf/x86/intel: Set PERF_EV_CAP_SIBLING for pure
- branch counter events
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-References: <20261118031453.1353625-1-dapeng1.mi@linux.intel.com>
- <20261118031453.1353625-16-dapeng1.mi@linux.intel.com>
- <sashiko-outbox-220065@kernel.org>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <sashiko-outbox-220065@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20261117185305.108003-7-irogers@google.com>
 
+On Tue, Nov 17, 2026 at 10:53:02AM -0800, Ian Rogers wrote:
+> ELF .symtab and .dynsym sections are typically already mostly ordered by
+> address in ascending runs, and dynamic symbol resolution
+> (dso__insert_symbol()) frequently inserts one or a few symbols into an
+> already-sorted DSO symbol table. Invoking full-array qsort() on every
+> sort after incremental insertions or across pre-ordered ELF runs spends
+> avoidable CPU time in symbol comparisons.
 
-On 11/18/2026 12:05 PM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential
-> issue to consider:
-> - [Medium] perf/x86/intel: incomplete group detach handling in
->   intel_pmu_hw_config()
-> --
->
-> commit 2f6a2a62d0ff0bf2794f702072c776c06e629ff3
-> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
->
-> perf/x86/intel: Set PERF_EV_CAP_SIBLING for pure branch counter events
->
-> This commit sets PERF_EV_CAP_SIBLING on pure branch counter events in
-> intel_pmu_hw_config() so that the perf core schedules them out if the
-> group leader is detached.
->
->> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->> index 84b134bb91eea..fd4de141ef281 100644
->> --- a/arch/x86/events/intel/core.c
->> +++ b/arch/x86/events/intel/core.c
->> @@ -5130,10 +5130,17 @@ static int intel_pmu_hw_config(struct perf_event *event)
->>  		 * require any branch stack setup.
->>  		 * Clear the bit to avoid unnecessary branch stack setup.
->>  		 */
->> -		if (0 == (event->attr.branch_sample_type &
->> -			  ~(PERF_SAMPLE_BRANCH_PLM_ALL |
->> -			    PERF_SAMPLE_BRANCH_COUNTERS)))
->> -			event->hw.flags  &= ~PERF_X86_EVENT_NEEDS_BRANCH_STACK;
->> +		if (!(event->attr.branch_sample_type &
->> +		      ~(PERF_SAMPLE_BRANCH_PLM_ALL | PERF_SAMPLE_BRANCH_COUNTERS))) {
->> +			event->hw.flags &= ~PERF_X86_EVENT_NEEDS_BRANCH_STACK;
->> +			/*
->> +			 * A pure branch counter event doesn't set up the LBR
->> +			 * itself. It must stay grouped with a normal branch
->> +			 * event which configures the LBR for it. Otherwise,
->> +			 * the LBR cannot be configured correctly.
->> +			 */
->> +			event->event_caps |= PERF_EV_CAP_SIBLING;
->> +		}
->>  
->>  		/*
->>  		 * Force the leader to be a LBR event. So LBRs can be reset
-> [Severity: Medium]
-> What happens on group detach when a branch counter sibling has other
-> branch_sample_type filter bits set alongside PERF_SAMPLE_BRANCH_COUNTERS?
->
-> First, a counting sibling in PERF_SAMPLE_READ mode with a branch filter
-> (such as PERF_SAMPLE_BRANCH_ANY | PERF_SAMPLE_BRANCH_COUNTERS, which
-> "perf record -e '{e1,e2}:S' -j any,counter" configures) skips setting
-> PERF_X86_EVENT_NEEDS_BRANCH_STACK earlier in intel_pmu_hw_config():
->
-> arch/x86/events/intel/core.c:intel_pmu_hw_config() {
-> 	if (needs_branch_stack(event)) {
-> 		/* Avoid branch stack setup for counting events in SAMPLE READ */
-> 		if (is_sampling_event(event) ||
-> 		    !(event->attr.sample_type & PERF_SAMPLE_READ))
-> 			event->hw.flags |= PERF_X86_EVENT_NEEDS_BRANCH_STACK;
-> 	}
-> }
->
-> Because branch_sample_type contains PERF_SAMPLE_BRANCH_ANY, the condition
-> here is false and PERF_EV_CAP_SIBLING is not set either.  If the group
-> leader is closed, perf_group_detach() promotes this sibling to a
-> standalone leader that stays scheduled with ARCH_PERFMON_EVENTSEL_BR_CNTR
-> enabled in hardware without LBR configured.
+This makes sense.
 
-Yeah, it's an issue, but not introduced by this patchset. It needs a
-separate fix.
+> 
+> Speed up symbol array sorting and out-of-order symbol insertions:
+> 
+> - Track the sorted prefix length (@sorted_cnt) in struct symbols and
+>   replace full-array qsort() with a natural-run merge sort
+>   (symbols__sort_range_with_tmp()) and galloping binary-search merge
+>   (symbols__merge_runs()), plus an O(N) in-place binary insertion fast
+>   path when <= 8 symbols are appended.
+> - Insert directly into sorted position in dso__insert_symbol() when
+>   symbols->sorted is true so dynamic single-symbol insertions maintain
+>   the sorted invariant without triggering full re-sorts.
 
+Probably the same comment as my previous one.  Can we have the simple
+merge sort change first?
 
->
-> Second, for a sampling sibling that retains
-> PERF_X86_EVENT_NEEDS_BRANCH_STACK and has PERF_SAMPLE_BRANCH_COUNTERS set,
-> intel_pmu_hw_config() only sets PERF_X86_EVENT_BRANCH_COUNTERS on
-> leader->hw.flags and not on event->hw.flags.  When the original leader is
-> closed and perf_promote_sibling_to_leader() sets sibling->group_leader =
-> sibling, is_branch_counters_group(sibling) becomes false, so
-> intel_pmu_lbr_save_brstack() skips intel_pmu_lbr_counters_reorder() and
-> intel_pmu_lbr_del() skips intel_pmu_lbr_reset().
+Thanks,
+Namhyung
 
-Ditto. 
-
-
->
+> 
+> Using 'perf bench internals symbols':
+> 
+>   Before:
+>     Average DSO load + sort: 6.242 msec (+- 0.057 msec)
+>     Average bulk insert + lookup: 1404.150 usec (+- 18.752 usec)
+>     Average append + lookup: 40429.750 usec (+- 507.578 usec)
+>   After (-7.0% load, -13.9% bulk, -99.6% append):
+>     Average DSO load + sort: 5.808 msec (+- 0.047 msec)
+>     Average bulk insert + lookup: 1209.250 usec (+- 18.446 usec)
+>     Average append + lookup: 152.900 usec (+- 0.736 usec)
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/symbol.c | 433 +++++++++++++++++++++++++++++++++++++--
+>  tools/perf/util/symbol.h |  11 +-
+>  2 files changed, 423 insertions(+), 21 deletions(-)
+> 
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index f1e3d7af714c..84a8b3e4c528 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -219,6 +219,7 @@ void symbols__init(struct symbols *symbols)
+>  	symbols->symbols = NULL;
+>  	symbols->symbols_by_name = NULL;
+>  	symbols->cnt = 0;
+> +	symbols->sorted_cnt = 0;
+>  	symbols->allocated = 0;
+>  	symbols->num_by_name = 0;
+>  	symbols->sorted = true;
+> @@ -233,6 +234,7 @@ static void symbols__delete_locked(struct symbols *symbols)
+>  	zfree(&symbols->symbols);
+>  	zfree(&symbols->symbols_by_name);
+>  	symbols->cnt = 0;
+> +	symbols->sorted_cnt = 0;
+>  	symbols->allocated = 0;
+>  	symbols->num_by_name = 0;
+>  	symbols->sorted = true;
+> @@ -263,37 +265,311 @@ static inline bool symbol__less_or_equal(const struct symbol *a, const struct sy
+>  	return a->start <= b->start;
+>  }
+>  
+> -static int symbols__sort_cmp(const void *vlhs, const void *vrhs)
+> +static unsigned int symbols__upper_bound(struct symbol **arr, unsigned int len,
+> +					 const struct symbol *sym)
+>  {
+> -	const struct symbol *lhs = *((const struct symbol **)vlhs);
+> -	const struct symbol *rhs = *((const struct symbol **)vrhs);
+> +	unsigned int low = 0, high = len;
+>  
+> -	if (lhs->start != rhs->start)
+> -		return lhs->start < rhs->start ? -1 : 1;
+> -	return 0;
+> +	while (low < high) {
+> +		unsigned int mid = low + (high - low) / 2;
+> +
+> +		if (symbol__less_or_equal(arr[mid], sym))
+> +			low = mid + 1;
+> +		else
+> +			high = mid;
+> +	}
+> +	return low;
+> +}
+> +
+> +static unsigned int symbols__lower_bound(struct symbol **arr, unsigned int len,
+> +					 const struct symbol *sym)
+> +{
+> +	unsigned int low = 0, high = len;
+> +
+> +	while (low < high) {
+> +		unsigned int mid = low + (high - low) / 2;
+> +
+> +		if (!symbol__less_or_equal(sym, arr[mid]))
+> +			low = mid + 1;
+> +		else
+> +			high = mid;
+> +	}
+> +	return low;
+> +}
+> +
+> +static void symbols__insertion_sort_range(struct symbol **arr,
+> +					  unsigned int start,
+> +					  unsigned int end)
+> +{
+> +	for (unsigned int i = start + 1; i < end; i++) {
+> +		struct symbol *sym = arr[i];
+> +
+> +		if (!symbol__less_or_equal(arr[i - 1], sym)) {
+> +			unsigned int pos = start +
+> +				symbols__upper_bound(&arr[start], i - start, sym);
+> +
+> +			memmove(&arr[pos + 1], &arr[pos],
+> +				(i - pos) * sizeof(struct symbol *));
+> +			arr[pos] = sym;
+> +		}
+> +	}
+> +}
+> +
+> +static void symbols__merge_runs(struct symbol **arr,
+> +				unsigned int left,
+> +				unsigned int mid,
+> +				unsigned int right,
+> +				struct symbol **tmp)
+> +{
+> +	unsigned int first_left, last_left, left_len, right_len;
+> +	unsigned int i, j, dst;
+> +
+> +	if (left >= mid || mid >= right)
+> +		return;
+> +	if (symbol__less_or_equal(arr[mid - 1], arr[mid]))
+> +		return;
+> +
+> +	first_left = left + symbols__upper_bound(&arr[left], mid - left, arr[mid]);
+> +	right_len = right - mid;
+> +
+> +	if (mid - first_left <= right_len) {
+> +		left_len = mid - first_left;
+> +		memcpy(tmp, &arr[first_left], left_len * sizeof(struct symbol *));
+> +		i = 0;
+> +		j = mid;
+> +		dst = first_left;
+> +		while (i < left_len && j < right) {
+> +			if (symbol__less_or_equal(tmp[i], arr[j])) {
+> +				arr[dst++] = tmp[i++];
+> +			} else {
+> +				arr[dst++] = arr[j++];
+> +				if (right - j >= 16 &&
+> +				    (right - j) > 8 * (left_len - i) &&
+> +				    !symbol__less_or_equal(tmp[i], arr[j])) {
+> +					unsigned int step =
+> +						symbols__lower_bound(&arr[j], right - j, tmp[i]);
+> +
+> +					if (step > 0) {
+> +						memmove(&arr[dst], &arr[j],
+> +							step * sizeof(struct symbol *));
+> +						dst += step;
+> +						j += step;
+> +					}
+> +				}
+> +			}
+> +		}
+> +		if (i < left_len)
+> +			memcpy(&arr[dst], &tmp[i], (left_len - i) * sizeof(struct symbol *));
+> +		return;
+> +	}
+> +
+> +	last_left = first_left +
+> +		    symbols__upper_bound(&arr[first_left], mid - first_left, arr[right - 1]);
+> +	left_len = last_left - first_left;
+> +
+> +	memcpy(tmp, &arr[mid], right_len * sizeof(struct symbol *));
+> +	if (last_left < mid) {
+> +		memmove(&arr[last_left + right_len], &arr[last_left],
+> +			(mid - last_left) * sizeof(struct symbol *));
+> +	}
+> +
+> +	if (first_left == last_left) {
+> +		memcpy(&arr[first_left], tmp, right_len * sizeof(struct symbol *));
+> +		return;
+> +	}
+> +
+> +	i = last_left;
+> +	j = right_len;
+> +	dst = last_left + right_len;
+> +	while (i > first_left && j > 0) {
+> +		if (symbol__less_or_equal(arr[i - 1], tmp[j - 1])) {
+> +			arr[--dst] = tmp[--j];
+> +		} else {
+> +			arr[--dst] = arr[--i];
+> +			if (i - first_left >= 16 &&
+> +			    (i - first_left) > 8 * j &&
+> +			    !symbol__less_or_equal(arr[i - 1], tmp[j - 1])) {
+> +				unsigned int pos = first_left +
+> +					symbols__upper_bound(&arr[first_left],
+> +							     i - first_left,
+> +							     tmp[j - 1]);
+> +				unsigned int step = i - pos;
+> +
+> +				if (step > 0) {
+> +					dst -= step;
+> +					i = pos;
+> +					memmove(&arr[dst], &arr[pos],
+> +						step * sizeof(struct symbol *));
+> +				}
+> +			}
+> +		}
+> +	}
+> +	if (j > 0)
+> +		memcpy(&arr[first_left], tmp, j * sizeof(struct symbol *));
+> +}
+> +
+> +struct symbol_run {
+> +	unsigned int start;
+> +	unsigned int len;
+> +};
+> +
+> +static void symbols__sort_range_with_tmp(struct symbol **arr, unsigned int n,
+> +					 struct symbol **tmp)
+> +{
+> +	struct symbol_run runs[64];
+> +	unsigned int nr_runs = 0;
+> +	unsigned int i = 0;
+> +
+> +	if (n <= 32) {
+> +		symbols__insertion_sort_range(arr, 0, n);
+> +		return;
+> +	}
+> +
+> +	while (i < n) {
+> +		unsigned int start = i++;
+> +
+> +		if (i < n) {
+> +			if (symbol__less_or_equal(arr[i - 1], arr[i])) {
+> +				while (i < n && symbol__less_or_equal(arr[i - 1], arr[i]))
+> +					i++;
+> +			} else {
+> +				while (i < n && !symbol__less_or_equal(arr[i - 1], arr[i]))
+> +					i++;
+> +				for (unsigned int lo = start, hi = i - 1; lo < hi; lo++, hi--) {
+> +					struct symbol *swap = arr[lo];
+> +
+> +					arr[lo] = arr[hi];
+> +					arr[hi] = swap;
+> +				}
+> +			}
+> +		}
+> +
+> +		if (i - start < 32 && i < n) {
+> +			i = min(start + 32U, n);
+> +			symbols__insertion_sort_range(arr, start, i);
+> +		}
+> +
+> +		runs[nr_runs++] = (struct symbol_run){
+> +			.start = start,
+> +			.len = i - start,
+> +		};
+> +
+> +		while (nr_runs > 1) {
+> +			unsigned int r = nr_runs - 2;
+> +
+> +			if (nr_runs >= 3 &&
+> +			    runs[nr_runs - 3].len <=
+> +			    runs[nr_runs - 2].len + runs[nr_runs - 1].len) {
+> +				if (runs[nr_runs - 3].len < runs[nr_runs - 1].len)
+> +					r = nr_runs - 3;
+> +			} else if (runs[nr_runs - 2].len > runs[nr_runs - 1].len &&
+> +				   nr_runs < ARRAY_SIZE(runs)) {
+> +				break;
+> +			}
+> +
+> +			symbols__merge_runs(arr, runs[r].start,
+> +					    runs[r + 1].start,
+> +					    runs[r + 1].start + runs[r + 1].len,
+> +					    tmp);
+> +			runs[r].len += runs[r + 1].len;
+> +			if (r + 2 < nr_runs)
+> +				runs[r + 1] = runs[r + 2];
+> +			nr_runs--;
+> +		}
+> +	}
+> +
+> +	while (nr_runs > 1) {
+> +		unsigned int r = nr_runs - 2;
+> +
+> +		if (nr_runs >= 3 && runs[nr_runs - 3].len < runs[nr_runs - 1].len)
+> +			r = nr_runs - 3;
+> +		symbols__merge_runs(arr, runs[r].start,
+> +				    runs[r + 1].start,
+> +				    runs[r + 1].start + runs[r + 1].len,
+> +				    tmp);
+> +		runs[r].len += runs[r + 1].len;
+> +		if (r + 2 < nr_runs)
+> +			runs[r + 1] = runs[r + 2];
+> +		nr_runs--;
+> +	}
+>  }
+>  
+>  static void symbols__sort_locked(struct symbols *symbols)
+>  {
+> -	if (symbols->sorted)
+> +	unsigned int m = symbols->sorted_cnt;
+> +	unsigned int k;
+> +
+> +	if (symbols->sorted && symbols->sorted_cnt == symbols->cnt)
+>  		return;
+>  
+> -	if (symbols->cnt > 1) {
+> -		qsort(symbols->symbols, symbols->cnt, sizeof(struct symbol *),
+> -		      symbols__sort_cmp);
+> +	if (m > symbols->cnt)
+> +		m = 0;
+> +	k = symbols->cnt - m;
+> +
+> +	if (k == 0) {
+> +		symbols->sorted = true;
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * When only a few symbols have been appended since the last sort
+> +	 * (including single-symbol insertions), insert them directly at
+> +	 * their binary-searched sorted positions in O(N) without allocating.
+> +	 */
+> +	if (k <= 8 || symbols->cnt <= 64) {
+> +		symbols__insertion_sort_range(symbols->symbols, 0, symbols->cnt);
+> +		symbols->sorted_cnt = symbols->cnt;
+> +		symbols->sorted = true;
+> +		return;
+>  	}
+> +
+> +	if (symbols->sorted) {
+> +		/*
+> +		 * Both [0 .. m) and the sorted tail [m .. cnt) are already
+> +		 * sorted; merge them into a single sorted run.
+> +		 */
+> +		struct symbol **tmp = malloc(min(m, k) * sizeof(struct symbol *));
+> +
+> +		if (tmp) {
+> +			symbols__merge_runs(symbols->symbols, 0, m, symbols->cnt, tmp);
+> +			free(tmp);
+> +		} else {
+> +			symbols__insertion_sort_range(symbols->symbols, 0, symbols->cnt);
+> +		}
+> +	} else if (m <= 1) {
+> +		struct symbol **tmp = malloc(((symbols->cnt + 1) / 2) * sizeof(struct symbol *));
+> +
+> +		if (tmp) {
+> +			symbols__sort_range_with_tmp(symbols->symbols, symbols->cnt, tmp);
+> +			free(tmp);
+> +		} else {
+> +			symbols__insertion_sort_range(symbols->symbols, 0, symbols->cnt);
+> +		}
+> +	} else {
+> +		struct symbol **tmp = malloc(k * sizeof(struct symbol *));
+> +
+> +		if (tmp) {
+> +			symbols__sort_range_with_tmp(&symbols->symbols[m], k, tmp);
+> +			symbols__merge_runs(symbols->symbols, 0, m, symbols->cnt, tmp);
+> +			free(tmp);
+> +		} else {
+> +			symbols__insertion_sort_range(symbols->symbols, 0, symbols->cnt);
+> +		}
+> +	}
+> +
+> +	symbols->sorted_cnt = symbols->cnt;
+>  	symbols->sorted = true;
+>  }
+>  
+>  /*
+>   * Acquire @symbols->lock for reading after ensuring @symbols->symbols is
+> - * sorted.
+> + * fully sorted into a single contiguous run.
+>   */
+>  void symbols__sort_read_lock(struct symbols *symbols)
+>  	NO_THREAD_SAFETY_ANALYSIS
+>  {
+>  	down_read(&symbols->lock);
+> -	while (!symbols->sorted) {
+> +	while (!symbols->sorted || symbols->sorted_cnt < symbols->cnt) {
+>  		up_read(&symbols->lock);
+>  		down_write(&symbols->lock);
+>  		symbols__sort_locked(symbols);
+> @@ -342,6 +618,7 @@ void symbols__fixup_duplicate(struct symbols *symbols)
+>  		}
+>  	}
+>  	symbols->cnt = write_idx + 1;
+> +	symbols->sorted_cnt = symbols->cnt;
+>  	zfree(&symbols->symbols_by_name);
+>  	symbols->num_by_name = 0;
+>  	symbols->sorted_by_name = false;
+> @@ -517,9 +794,15 @@ static int __symbols__insert(struct symbols *symbols, struct symbol *sym)
+>  		symbols->allocated = to_allocate;
+>  	}
+>  
+> -	if (symbols->sorted && symbols->cnt > 0 &&
+> -	    !symbol__less_or_equal(symbols->symbols[symbols->cnt - 1], sym))
+> +	if (symbols->sorted && symbols->sorted_cnt == symbols->cnt) {
+> +		if (symbols->cnt == 0 ||
+> +		    symbol__less_or_equal(symbols->symbols[symbols->cnt - 1], sym))
+> +			symbols->sorted_cnt = symbols->cnt + 1;
+> +		else
+> +			symbols->sorted = false;
+> +	} else {
+>  		symbols->sorted = false;
+> +	}
+>  
+>  	symbols->symbols[symbols->cnt++] = sym;
+>  	zfree(&symbols->symbols_by_name);
+> @@ -528,6 +811,69 @@ static int __symbols__insert(struct symbols *symbols, struct symbol *sym)
+>  	return 0;
+>  }
+>  
+> +static int __symbols__insert_sorted(struct symbols *symbols, struct symbol *sym)
+> +{
+> +	unsigned int idx;
+> +
+> +	if (!symbols->sorted)
+> +		return __symbols__insert(symbols, sym);
+> +
+> +	if (symbols->cnt == symbols->allocated) {
+> +		unsigned int to_allocate = symbols->allocated ? symbols->allocated * 2 : 32;
+> +		struct symbol **temp = realloc(symbols->symbols,
+> +					       sizeof(struct symbol *) * to_allocate);
+> +
+> +		if (!temp) {
+> +			symbol__delete(sym);
+> +			return -ENOMEM;
+> +		}
+> +		symbols->symbols = temp;
+> +		symbols->allocated = to_allocate;
+> +	}
+> +
+> +	if (symbols->sorted_cnt == symbols->cnt) {
+> +		if (symbols->cnt == 0 ||
+> +		    symbol__less_or_equal(symbols->symbols[symbols->cnt - 1], sym)) {
+> +			symbols->symbols[symbols->cnt++] = sym;
+> +			symbols->sorted_cnt = symbols->cnt;
+> +		} else if (symbols->cnt < 64) {
+> +			idx = symbols__upper_bound(symbols->symbols, symbols->cnt, sym);
+> +			memmove(&symbols->symbols[idx + 1], &symbols->symbols[idx],
+> +				(symbols->cnt - idx) * sizeof(struct symbol *));
+> +			symbols->symbols[idx] = sym;
+> +			symbols->cnt++;
+> +			symbols->sorted_cnt = symbols->cnt;
+> +		} else {
+> +			/*
+> +			 * Start a sorted tail buffer at symbols[sorted_cnt .. cnt)
+> +			 * so out-of-order insertions do not memmove the entire
+> +			 * primary sorted prefix on every call.
+> +			 */
+> +			symbols->symbols[symbols->cnt++] = sym;
+> +		}
+> +	} else {
+> +		unsigned int tail_cnt = symbols->cnt - symbols->sorted_cnt;
+> +
+> +		idx = symbols->sorted_cnt +
+> +		      symbols__upper_bound(&symbols->symbols[symbols->sorted_cnt],
+> +					   tail_cnt, sym);
+> +		memmove(&symbols->symbols[idx + 1], &symbols->symbols[idx],
+> +			(symbols->cnt - idx) * sizeof(struct symbol *));
+> +		symbols->symbols[idx] = sym;
+> +		symbols->cnt++;
+> +		tail_cnt++;
+> +
+> +		if (tail_cnt >= 256 &&
+> +		    (size_t)tail_cnt * tail_cnt >= symbols->sorted_cnt)
+> +			symbols__sort_locked(symbols);
+> +	}
+> +
+> +	zfree(&symbols->symbols_by_name);
+> +	symbols->num_by_name = 0;
+> +	symbols->sorted_by_name = false;
+> +	return 0;
+> +}
+> +
+>  int symbols__insert(struct symbols *symbols, struct symbol *sym)
+>  {
+>  	int ret;
+> @@ -546,7 +892,9 @@ static inline bool symbol__covers(const struct symbol *s, u64 ip)
+>  	return ip >= start && (ip < end || (ip == end && ip == start));
+>  }
+>  
+> -static struct symbol *symbols__find_range(struct symbol **arr, unsigned int cnt, u64 ip)
+> +static struct symbol *symbols__find_range(struct symbol **arr, unsigned int cnt,
+> +					  u64 ip, bool *has_candidate,
+> +					  u64 *candidate_start)
+>  {
+>  	unsigned int low = 0, high = cnt, idx;
+>  	u64 start;
+> @@ -559,8 +907,10 @@ static struct symbol *symbols__find_range(struct symbol **arr, unsigned int cnt,
+>  		else
+>  			high = mid;
+>  	}
+> -	if (low == 0)
+> +	if (low == 0) {
+> +		*has_candidate = false;
+>  		return NULL;
+> +	}
+>  
+>  	/*
+>  	 * Rewind across any equal-start group so a trailing zero-length or
+> @@ -569,6 +919,8 @@ static struct symbol *symbols__find_range(struct symbol **arr, unsigned int cnt,
+>  	 */
+>  	idx = low - 1;
+>  	start = arr[idx]->start;
+> +	*has_candidate = true;
+> +	*candidate_start = start;
+>  	while (idx > 0 && arr[idx - 1]->start == start)
+>  		idx--;
+>  	for (; idx < low; idx++) {
+> @@ -585,12 +937,38 @@ static struct symbol *symbols__find_range(struct symbol **arr, unsigned int cnt,
+>  static struct symbol *symbols__find(struct symbols *symbols, u64 ip)
+>  {
+>  	struct symbol *res;
+> +	bool has_prefix;
+> +	u64 prefix_start = 0;
+>  
+>  	if (symbols == NULL)
+>  		return NULL;
+>  
+> -	symbols__sort_read_lock(symbols);
+> -	res = symbols__find_range(symbols->symbols, symbols->cnt, ip);
+> +	down_read(&symbols->lock);
+> +	while (!symbols->sorted) {
+> +		up_read(&symbols->lock);
+> +		down_write(&symbols->lock);
+> +		symbols__sort_locked(symbols);
+> +		up_write(&symbols->lock);
+> +		down_read(&symbols->lock);
+> +	}
+> +
+> +	res = symbols__find_range(symbols->symbols, symbols->sorted_cnt, ip,
+> +				  &has_prefix, &prefix_start);
+> +	if (symbols->sorted_cnt < symbols->cnt) {
+> +		struct symbol *tail_res;
+> +		bool has_tail;
+> +		u64 tail_start = 0;
+> +
+> +		tail_res = symbols__find_range(&symbols->symbols[symbols->sorted_cnt],
+> +					       symbols->cnt - symbols->sorted_cnt, ip,
+> +					       &has_tail, &tail_start);
+> +		if (has_tail) {
+> +			if (!has_prefix || tail_start > prefix_start)
+> +				res = tail_res;
+> +			else if (tail_start == prefix_start && !res)
+> +				res = tail_res;
+> +		}
+> +	}
+>  	up_read(&symbols->lock);
+>  
+>  	return res;
+> @@ -735,7 +1113,13 @@ static struct symbol *symbols__find_by_name(struct symbol *symbols[],
+>  
+>  int dso__insert_symbol(struct dso *dso, struct symbol *sym)
+>  {
+> -	return symbols__insert(dso__symbols(dso), sym);
+> +	struct symbols *symbols = dso__symbols(dso);
+> +	int ret;
+> +
+> +	down_write(&symbols->lock);
+> +	ret = __symbols__insert_sorted(symbols, sym);
+> +	up_write(&symbols->lock);
+> +	return ret;
+>  }
+>  
+>  void dso__delete_symbol(struct dso *dso, struct symbol *sym)
+> @@ -743,11 +1127,15 @@ void dso__delete_symbol(struct dso *dso, struct symbol *sym)
+>  	struct symbols *symbols = dso__symbols(dso);
+>  
+>  	down_write(&symbols->lock);
+> -	for (unsigned int i = 0; i < symbols->cnt; i++) {
+> +	for (unsigned int i = symbols->cnt; i-- > 0; ) {
+>  		if (symbols->symbols[i] == sym) {
+>  			memmove(&symbols->symbols[i], &symbols->symbols[i + 1],
+>  				(symbols->cnt - i - 1) * sizeof(struct symbol *));
+>  			symbols->cnt--;
+> +			if (i < symbols->sorted_cnt)
+> +				symbols->sorted_cnt--;
+> +			if (symbols->sorted_cnt == symbols->cnt)
+> +				symbols->sorted = true;
+>  			zfree(&symbols->symbols_by_name);
+>  			symbols->num_by_name = 0;
+>  			symbols->sorted_by_name = false;
+> @@ -1094,6 +1482,7 @@ static int maps__split_kallsyms_for_kcore(struct maps *kmaps, struct dso *dso)
+>  	old_cnt = root->cnt;
+>  	root->symbols = NULL;
+>  	root->cnt = 0;
+> +	root->sorted_cnt = 0;
+>  	root->allocated = 0;
+>  	root->sorted = true;
+>  	zfree(&root->symbols_by_name);
+> @@ -1168,6 +1557,7 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
+>  	old_allocated = root->allocated;
+>  	root->symbols = NULL;
+>  	root->cnt = 0;
+> +	root->sorted_cnt = 0;
+>  	root->allocated = 0;
+>  	root->sorted = true;
+>  	zfree(&root->symbols_by_name);
+> @@ -1314,6 +1704,7 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
+>  	if (root->cnt == 0) {
+>  		root->symbols = old_symbols;
+>  		root->cnt = write_idx;
+> +		root->sorted_cnt = write_idx;
+>  		root->allocated = old_allocated;
+>  		root->sorted = true;
+>  		old_symbols = NULL;
+> @@ -1343,12 +1734,14 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
+>  	if (root->cnt == 0) {
+>  		root->symbols = old_symbols;
+>  		root->cnt = write_idx;
+> +		root->sorted_cnt = (delta == 0) ? write_idx : 0;
+>  		root->allocated = old_allocated;
+>  		root->sorted = (delta == 0);
+>  		old_symbols = NULL;
+>  	} else {
+>  		for (unsigned int j = 0; j < write_idx; j++)
+>  			__symbols__insert(root, old_symbols[j]);
+> +		root->sorted_cnt = 0;
+>  		root->sorted = false;
+>  	}
+>  	zfree(&root->symbols_by_name);
+> diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+> index adfb1a3a89be..ce7be4b18a11 100644
+> --- a/tools/perf/util/symbol.h
+> +++ b/tools/perf/util/symbol.h
+> @@ -113,11 +113,20 @@ struct symbols {
+>  	struct symbol **symbols_by_name;
+>  	/** @cnt: Number of valid entries in @symbols. */
+>  	unsigned int cnt;
+> +	/**
+> +	 * @sorted_cnt: Number of leading entries in @symbols that form the
+> +	 * primary sorted prefix. When @sorted is true and @sorted_cnt < @cnt,
+> +	 * the remaining tail @symbols[@sorted_cnt .. @cnt - 1] is also sorted.
+> +	 */
+> +	unsigned int sorted_cnt;
+>  	/** @allocated: Capacity (in entries) of the @symbols allocation. */
+>  	unsigned int allocated;
+>  	/** @num_by_name: Number of valid entries in @symbols_by_name. */
+>  	unsigned int num_by_name;
+> -	/** @sorted: True when @symbols is sorted by address range. */
+> +	/**
+> +	 * @sorted: True when @symbols[0 .. @sorted_cnt - 1] and any tail
+> +	 * @symbols[@sorted_cnt .. @cnt - 1] are sorted by start address.
+> +	 */
+>  	bool sorted;
+>  	/**
+>  	 * @sorted_by_name: True when @symbols_by_name is populated and sorted
+> -- 
+> 2.56.1.703.gf848ed807c-goog
+> 
