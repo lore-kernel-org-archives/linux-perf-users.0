@@ -1,68 +1,58 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794984503;
-	b=RZ42tVfZfuz86hQ1hbMy50Qs/3XvFyNFi7P2q/Gv3OnZQWc+iEm0gVJlaO2cYYPt+nfP
-	 v4nFpi0MAY3rJ5qw+MlzeERuJS9HvnOtXgAZHJeLtQKCFPqqqBJyCpdczRg49vVcG9N1z
-	 4Z17xWRFdLufmb55/eRQxvanIYaT6RxMm6LP6BPCilJE/pc9SfdomcoUm+ySWEdLEB7dh
-	 qAztm17OC2Ej+Xe+ZHwPz9evRe82Bh741MgA3BNT1Ng46GbpM7ubmf785cvp+a9MMY/qa
-	 ++l5Gy0GE0vDO7PaI85pV/umL9HdBq2qJH3Me5sNoMgEDIaEEKnwA0EhCm5aVxm09hA==
+	t=1794985021;
+	b=l0Gd8i6yGR7KPLaQARzxsyXNIfzREJdWNQwIQNfolrQ0LLfqKRVr6Utk8Dqu1c6vVNtR
+	 otbOKfLlesLvF79GmR3W39xnNAt4ljZAc2iuLWc6+Nl3CDUgqJC5r4N0PRrZaEaqyGwuN
+	 awbHilFif+ho7NpgXdmRzNta4wtnH1wVBngdyAzLmwLlbTP2dnF99wXcobmb4/7zgZRsH
+	 TowmNvtAcuJ02phEANNzefRMUoGiuE1W07JLrPrqcuqCs1H8MKpb9e1EYqGU3jtc3lqab
+	 iimeI87u82+w7hOFrTTVMyIsP+JYo29vdM22C5Rh7h3xQo4WKcdcjg26IoVnRgMmnKw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794984503;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=vgwgCvpswtJRWR2a83jgVRcIOlLkVvQPyoIjj5/btfw=;
-	b=mDn/ocMlAYUzFN55QLTMSvSsNzApAmvL47M/K41SmmkJqCBSNu1LmUPd1harkllpkGZ8
-	 gABCaVXdXxRFCIynOddMLkDAQaEhPieVZRucRyZSAa7ssz6gnytOb68Zd3soCEUaPWRNo
-	 RRc465Y9rh71WapqRqNI3MKj5Ju0iHZXu/ILrPocJfakSocefU11CxDGTxYpVzu/NPoRW
-	 3uwDxNRujrIuvYhioONluW85Tqw32Yz8cxJgJOf3DXW09zNOix0Tnzl2ZOsgd3hui7fSP
-	 MrGxvN0mDYxHY259pX4LMqEqQj4u5MPcaai5PDZFDf3IhbjpB0ucqf6fBSnFGk3tovQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794985021;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=zZ/+BJJJJZFPHSW8x/8iINh+pWk3XdVI+bUIZ2/ivYI=;
+	b=azutUGQDw62VBEI2W7/v6ySklXI0q6ZuAIW8rzmVtJD62T/Q4WSU9d8rNDisn4dpuVqT
+	 mQWLLopLthOGPP6kXpwsztOME/laMlBKnGiiIzv7mx+moEmoUJB85LvnnEvpl5ni6kdZ0
+	 NmWhgOAjdSe+DrR//N7I5OMMk8pmaJLv8HqYxU+BDZJXT62dj+oICuDGc242SykEmXIH1
+	 EaM3Emb1ownzMevJf1MrVUF48qbFkfYCGEd6PBr/+FhNZjpZq/JRq7rTh0idFjY16cqOR
+	 GjtIR6v0SKH3zO+/e1+j/vlv9QVkk3+5H1KFHUSHbnTRP1RTGO6nJW1b/ud4LwdNTsQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b="mB/5QKel";
-	arc=none smtp.remote-ip=192.198.163.17
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dsrqAypM;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B458606A32A;
-	Wed, 18 Nov 2026 06:48:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4B458606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73703606A325;
+	Wed, 18 Nov 2026 06:57:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=mB/5QKel
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794984503; x=1826520503;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=mZA3G0uEhW7Xobr9BK0nooFcChQvCLwKszT8JnEeXW8=;
-  b=mB/5QKelnfmZjXHyxEEAy0DHU+2/FIMmWVhirZPfWFDSBb6XMcvQ16fR
-   99ai+0HTl8yozuNFboBKEV7YB/CyNcgulp/J0mrvST7b0WAFd1iYQ1t7M
-   zfKMiwimne2COGrngJlxlt0DKX96znR2STD3MQKe0nWdxBWBwBrHRx2Wc
-   a40+1Wjqqe7yUgCB0HYPHJ/hRhV+lCq7yf45cIJ7mQjsWWGNj7TjSQqyy
-   WIMnKdpzvrPZWQIsDk7je9bsT2ykUwg6fSkVrB+JCKVI3vEt5+v0xG/7S
-   d07WepQo9NdXjZoiCFLy78icCeQyzfib9+nlJfhC3dkpvRi7pNfprKWqX
-   Q==;
-X-CSE-ConnectionGUID: t7QL/xr4SOakb6j+f8OPyw==
-X-CSE-MsgGUID: OA8+tGh0QVCwZzLKH9YJHQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11969"; a="3772828"
-X-IronPort-AV: E=Sophos;i="6.27,219,1787036400"; 
-   d="scan'208";a="3772828"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 22:48:22 -0800
-X-CSE-ConnectionGUID: ZA24Y1gqSOytFHBaUOYmKw==
-X-CSE-MsgGUID: WSI4gld1RRO9UN6hj7Rmmg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,219,1787036400"; 
-   d="scan'208";a="10434622"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 22:48:14 -0800
-Message-ID: <acbc31bb-d752-4394-a0bc-5cf24ffc7300@linux.intel.com>
-Date: Wed, 18 Nov 2026 14:48:11 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dsrqAypM
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96B831F000C4;
+	Wed, 18 Nov 2026 06:57:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794985021;
+	bh=zZ/+BJJJJZFPHSW8x/8iINh+pWk3XdVI+bUIZ2/ivYI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=dsrqAypMcTAe9PJzkQ4lhw6HR030MEneoLKEUcYc7aETvBMVIGLEsLpiktLin70lC
+	 ximjJ7Cd5TMroNWcrb5znEtkHPGLq/UVnrT2cVs/o6kSKchDui2KctL3VlzFAYnSmI
+	 1vHL98aS9qMZjxH9VXslhZiv8RpFqcVFokQcKrgQN6fkgYasW7PJD5ksk+iRKYMO61
+	 KIYLNY86nu4qMP9t6wW8KxF9/OsdDnzMiPF0JWEhrbcP2QCKtGFZwQsOlv1LGqBxGu
+	 qzVFIF/193PRFTAssmVAp2xkkKRXT3Hf5TE4RXRn7Sn6/9UYtgf/U0XjJGk3fkMez7
+	 PoLd+j37un6Pg==
+Date: Tue, 17 Nov 2026 22:56:59 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v6 02/13] perf scripts: Add a coverage harness for perf
+Message-ID: <av1MO74yqgr2OJt7@google.com>
+References: <20261117200433.45174-1-acme@kernel.org>
+ <20261117200433.45174-3-acme@kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -72,94 +62,97 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v7 20/24] perf/x86/intel: Clear raw LBR counters in the
- LBR stack
-To: bot+bpf-ci@kernel.org, peterz@infradead.org, mingo@redhat.com,
- acme@kernel.org, namhyung@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
- ak@linux.intel.com, eranian@google.com, andrii@kernel.org, song@kernel.org,
- ravi.bangoria@amd.com, ananth.narayan@amd.com
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- bpf@vger.kernel.org, dapeng1.mi@intel.com, zide.chen@intel.com,
- thomas.falcon@intel.com, xudong.hao@intel.com, sashiko-bot@kernel.org,
- ast@kernel.org, daniel@iogearbox.net, martin.lau@kernel.org,
- eddyz87@gmail.com, yonghong.song@linux.dev, mason@kernel.org,
- ihor.solodrai@linux.dev
-References: <20261118031453.1353625-21-dapeng1.mi@linux.intel.com>
- <cc3a05a38e308aa20c6b9886b4cd3e5f403287627b44f30ce07cb7607329ea13@mail.kernel.org>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <cc3a05a38e308aa20c6b9886b4cd3e5f403287627b44f30ce07cb7607329ea13@mail.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20261117200433.45174-3-acme@kernel.org>
+
+Hi Arnaldo,
+
+On Tue, Nov 17, 2026 at 05:04:20PM -0300, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> Build perf with clang source based coverage, run the complete perf test
+> suite, merge the raw profiles and report line and function coverage,
+> optionally against a baseline.  This is pahole's coverage/coverage.sh +
+> coverage-diff.sh merged into one script, wired as
+> 'make -C tools/perf coverage' and listed in 'make help'.
+> 
+> Without -f the report lists the files with the most uncovered lines,
+> which is where new tests should try to get more coverage; -t narrows
+> the tests, -f focuses on specific files, --html writes a browsable
+> report and --table/-T, also available as 'make -C tools/perf
+> coverage-table', prints the last run as an ASCII table with the
+> per-file line and function coverage, like pahole's coverage_table.py.
+
+It'd be nice if you could list all options.
+
+> 
+> The build can be split from the test run: 'make -C tools/perf
+> coverage-prep' builds the instrumented perf and records the build
+> directory, and a later run as root, which needs no make, checks that
+
+Ok, so IIUC it's optional and just running 'make coverage' would all
+necessary jobs one stop, right?
 
 
-On 11/18/2026 11:54 AM, bot+bpf-ci@kernel.org wrote:
->> perf/x86/intel: Clear raw LBR counters in the LBR stack
-> TL;DR: Clearing raw LBR counters in the shared stack may zero them before a
-> later branch-counter event in the same PMI reads them, giving all-zero counter
-> samples until a later commit fixes it.
->
->> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
->> --- a/arch/x86/events/intel/lbr.c
->> +++ b/arch/x86/events/intel/lbr.c
-> [ ... ]
->
->> @@ -1001,6 +1013,7 @@ void intel_pmu_lbr_save_brstack(struct perf_sample_data *data,
->>  		return;
->>  	}
->>
->> +	intel_pmu_lbr_clear_raw_counters(cpu_lbr_stack(cpuc));
->>  	perf_sample_save_brstack(data, event, cpu_lbr_stack(cpuc), NULL);
->>  }
-> Can this clear the counters before a later event in the same PMI has
-> consumed them?
->
-> handle_pmi_common() reads the LBR stack only once per PMI and reuses it for
-> every overflowing branch event:
->
->     if (has_branch_stack(event)) {
->         if (!cpuc->lbr_stack_live) {
->             intel_pmu_lbr_read(cpu_lbr_stack(cpuc), cpuc->lbr_counters);
->             cpuc->lbr_stack_live = true;
->         }
->         intel_pmu_lbr_save_brstack(&data, cpuc, event);
->     }
->
-> Suppose event A is an ordinary LBR event on counter 0 and event B is the
-> sampling event of a branch counters group on counter 1, and both overflow in
-> the same PMI.  A is handled first, and intel_pmu_lbr_save_brstack() calls
-> intel_pmu_lbr_clear_raw_counters(), which zeroes entries[i].reserved in the
-> shared cpu_lbr_stack().
->
-> When B is handled, lbr_stack_live is still true so the stack is not re-read,
-> and intel_pmu_lbr_counters_reorder() reads reserved == 0 for every entry.
-> B's sample then reports all-zero branch counters.
->
-> Before this patch the non-counters path left reserved alone, so B got the
-> correct counters in this ordering.
->
-> The later commit 57fc5222dbd3 ("perf/x86/intel: Refresh LBR stack for LBR
-> counter events in PMI handler") addresses this case by re-reading the LBR
-> stack before a branch counters group event once an earlier LBR event has
-> cleared it.  Until that commit, a bisect landing on this patch would see
-> wrong branch counter samples in this scenario.
+> build, runs the tests and renders the report, or prints the table with
+> --table.  This is for running the tests that need root on the bare
+> metal host while the instrumented perf is built in the development
+> container.
 
-Per my understanding, we'd better keep current patch order. Without this
-patch, the LBR stack needs to be refreshed only when there are two and more
-LBR counter events, so the patch 57fc5222dbd3 needs to refresh LBR stack
-only for the cases that there are 2 and more LBR counter events, and we
-have to add a new patch to relax the condition, the LBR stack should be
-refreshed as long as there are 1 LBR counter event and other LBR events. 
+What is the table?
 
-It introduce unnecessary complexity. Thanks.
+> 
+> The report covers the whole tree, not only the paths the tests walk, so
+> the per-file table is a map of what the suite does not reach in a given
+> run.  The uncovered line list and the failures the runs exposed are what
+> drove the rest of this series.
+> 
+>   $ make -C tools/perf coverage-prep O=~/coverage-build
+>   ...
+
+What is the actual command line here?  I guess it's..
+
+    $ sudo ~/coverage-build/perf test
 
 
->
->
+>   $ sudo scripts/coverage.sh
+>   ...
+>   Total: 104787 of 205810 lines covered (50.91%)
+>     perf: 85674 of 173247 lines covered (49.45%)
+> 
+>     largest uncovered files (>= 100 lines)
+>     file                                            lines     cover    missed  fn-cover
+>     util/intel-pt.c                                  3237     0.00%      3237     0.00%
+>     util/intel-pt-decoder/intel-pt-decoder.c         3208     0.00%      3208     0.00%
+>     ui/browsers/hists.c                              2730     0.00%      2730     0.00%
+>     builtin-sched.c                                  3737    41.26%      2195    43.97%
+>     builtin-script.c                                 3212    33.50%      2136    37.90%
+>     util/auxtrace.c                                  2013     4.47%      1923    11.11%
+>     util/session.c                                   2686    41.14%      1581    48.80%
+>     ...
+>   Report:  /home/acme/coverage-build/cov/report.txt
+> 
+> The total also counts the tools/ libraries and headers linked into
+> perf, the perf line is the tools/perf/ files alone.  The numbers above
+> are from the split run: coverage-prep built the instrumented perf as the
+> developer, the tests and the report ran as root.  This machine has no
+> Intel PT, so the PT tests skip and leave intel-pt.c and
+> intel-pt-decoder.c at 0.00%; the TUI browser is in the list because the
+> suite does not drive it.
+> 
+> 'perf test' exits 0 even when tests fail or time out, so the script
+> takes its status from the "Failed tests :" and "Timed out tests :" lines
+> that perf test prints since commit 33f20342ba525ef7 ("perf test: Add
+> summary reporting").
+> 
+> 168 tests passed, 28 skipped, one failure (20.2: Tracepoint event), in
+> code this series does not change.
+
+Looks useful, thanks!
+
+Namhyung
+
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > ---
-> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
->
-> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/44231525404
