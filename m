@@ -1,56 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795021295;
-	b=b8l51tSWlKJfuZwPGZr110GHBO+pYHkbvLjfaaE4UuhvenCsMztxNhjSLuD5hh22gXhK
-	 hO5JEepQDx1K34ByoC85XJxSMOc9vz4ZC9aERBEwOs+Qy6qo3rPhcFb7R+uY+BFQKNFV9
-	 PyCcw0V7cclJe9o0R045VpQbtwTLjs1ZT86q6JAoYEpM0bF5PYB0NNGC7Iy9ykQ6+/tc4
-	 60rTG6efRSPkE8Lp+4m4Tzp7X6cPjiPN0mds3C/dgi+um55/VnVhdnHGWpABgNY/uopka
-	 OXcH/HCfsMfaRjuo7oZziB1z/2r7wff2x79yZiy8yZ3QIgW4fHv9LuIb/n0Q2NzZrxQ==
+	t=1795021433;
+	b=hUJcu0G6amAZxBGWbFxlSrvuPSOQVYPy37vjdJHOSTqOLvUpZUW2LUPT9rBWjZDzKgoW
+	 Mnpe674kttYnVvsqEw4UGzd8P2KV2hoDnrXge0fObpWN/E/+okCKjqMXPn5KGXh3JsYu3
+	 BjlxgcommDFTN1NqIOWDoERwFi7GCXf6yeWoG9a9paq26JAnuH1ohXRa1BevvYL6+uzQe
+	 vi2lskyznX+5cnT/gLoeUaLjxSi6PwE55t5QzfDETKDqBpAnHWyt7YF0Ombe7Lq8Pr82I
+	 pvFHB0emmlaMD6zf2R7RONV6bc68tpEydDf30Dg8HMr+iBHRml1vzY9GGa2hYtbLhnQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795021295;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795021433;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=LPdHXh8RpUm/k9VOOmvJhjcCl4YIqrwt7XE8L/Xf3AI=;
-	b=bRPTjx+eyiOq37oKsTTLB89wtKrZhK2vIkbo13yZ5kxamWaGLtJYS9FL0lm3Uf1e1ECD
-	 +r58B7Kthq11m8Y/U0R8OJlnfOUU0Kc41+Pb+PeuoArGcoArySKs48Cxfeqv6zF+mF8XN
-	 R/yYLxHGi3CS6WzX/DdWliahL4tdmVlGVQ7Y96LhK6U36O0xUcBEgiy1uN6mcpEDufGBj
-	 lBiwK7BPEd6AZa4s3pbO4UvrhhTM7MFqJ0CjEN5/mdm1z7PtT7TWidLbodXL7YYKfL8Im
-	 yrJbULEKX02t0inEjeWgiHZLyBk92LWQWEbEL6gS2ncDPNOYyddYdEXiFgDHbL8pVXw==
+	bh=DLjqocR7wKPP9xVmiAngUL7zXTV793qsL76qyI7Xi+U=;
+	b=ILFlHqg0f2yx5cJqxdZuuERINApiOpSolA/odf5TKOnO3HWGCLwbkuPlC/HdyXS79JEn
+	 C3ItOJHsfhJ8SvHfdasb3r4j44F6VG1xna0ML4MXuxbxvPW52fxRNztBKTmDHMT+Zs6C1
+	 Qj8MOwWyo3XEQhxcCPt8JqzbPJdsHcKkIfUH67T7m72QHsxaOzpbNTmZ+qjmNDUFRl/8C
+	 cRg1KsmmGfEkX0mee/DrwknWbqLuk8O+MkLC3hfXHBShVVKU571N7OSKtLebNiaGBpiG5
+	 DPLkEzZO7WZoEXCbEcO3dLkHsQY1XtVYqpq0L1pw0HQGwy8qI9OSW+dOzbwPeup6Xyw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WiPNqWhX;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UIO2JDdk;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E82606A330
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 17:01:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153CE60A2623
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 17:03:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=WiPNqWhX
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 128BE1F000C6;
-	Wed, 18 Nov 2026 17:01:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UIO2JDdk
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE3F01F000CB;
+	Wed, 18 Nov 2026 17:03:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795021295;
-	bh=LPdHXh8RpUm/k9VOOmvJhjcCl4YIqrwt7XE8L/Xf3AI=;
+	s=k20260515; t=1795021432;
+	bh=DLjqocR7wKPP9xVmiAngUL7zXTV793qsL76qyI7Xi+U=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=WiPNqWhXP8sp5F+yFL9PXqAXJRy+PckXP2D4GsdrMex4O+PbBeHlBjwWU8Y8K28Nz
-	 GDTJ0tFG0cRCmVhH+Y2FCHfpSdpHXGzKJzykRXE/5Rp5OovpCHW5qOWlMaZernKvvJ
-	 YN8qTNZwczquLyZwJXz7b9gi144Ys7fy0FO27vQBYxrAd+gnABG/CPJoi1U8sF8xI6
-	 MHUn36rCYF1LVoyUfnTSuVzqbxPCpk5Ow97LJHGHuBu4BRf7bN/5sYC0D4Zv1F7San
-	 irbbSqwqU6PFEOsq+oVNBGV8Kl3bBB/BqWiKmPoxDulPUB42vyWsFXCyE7QCLwaF7R
-	 03k7PsZdqBh9g==
-Message-ID: <sashiko-outbox-221574@kernel.org>
+	b=UIO2JDdktupxWm5BVNtOBojjG1sBFbX5QUNjPnIxOugydJ9oj2J/e7F7wC6e/dQ5Q
+	 ACuob9yUJyQgqnzt6sH1fVIBfc2WwaXjedZ/NEsaDzIFMYhCoGdRD70gPo07mWYeK8
+	 2Fm5QK6H3HWOxOkMsvHwXwdVoGrGea4IUJSaWYZAW65udqROMaGhIYwr6wVa5zOHKG
+	 +b24LLr5yYHJykNUcTLcKYPZgVF7ySDl38NXFguzMgtYoId05tqSmWhB7NwoqQHSXl
+	 aqpHbJNs428dC7qkCWUZkECqPdRCq/il/dU7hU78AXy1yMARUtimPN9HGEY637G1W9
+	 x2IcJMpbT83IA==
+Message-ID: <sashiko-outbox-221576@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 29/34] perf cs-etm: Find timestamps by searching ahead
+Subject: Re: [PATCH 07/34] perf build-id: Cache the vDSO in build ID mmap
+ mode
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "James Clark" <james.clark@linaro.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261118-james-coresight-jit-v1-29-dad4d90747f6@linaro.org>
+In-Reply-To: <20261118-james-coresight-jit-v1-7-dad4d90747f6@linaro.org>
 References: <20261118-james-coresight-jit-v1-0-dad4d90747f6@linaro.org>
- <20261118-james-coresight-jit-v1-29-dad4d90747f6@linaro.org>
+ <20261118-james-coresight-jit-v1-7-dad4d90747f6@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 18 Nov 2026 17:01:34 +0000
+Date: Wed, 18 Nov 2026 17:03:52 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -62,168 +63,81 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [Medium] perf cs-etm: heap stall and dropped queues in non-virtual
-  timestamp mode
+- [Medium] perf build-id: dso__cache_build_id() fails to cache vDSO for
+  synthesized mmaps
 --
 
-commit 95d787db531b56fc0f9104f4d25589c7638920b3
+commit affc6379bdb9537b483a873cee2efe3e5b3ce5dd
 Author: James Clark <james.clark@linaro.org>
 
-perf cs-etm: Find timestamps by searching ahead
+perf build-id: Cache the vDSO in build ID mmap mode
 
-This commit uses the packet-only timestamp decoder to search ahead for
-the next timestamp on context packets and trace discontinuities, and
-reorders packets so timestamps are delivered before context changes or
-after discontinuities flush earlier samples.
+This commit reads the host vDSO build ID from perf's temporary copy of the
+vDSO in dso__cache_build_id() when the DSO lacks a build ID, so that the
+vDSO can be added to the build ID cache in --buildid-mmap mode.
 
-> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf=
-/util/cs-etm-decoder/cs-etm-decoder.c
-> index 56de6c76de68b..b7ed7847f209b 100644
-> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-[ ... ]
-> @@ -869,16 +884,130 @@ int cs_etm_decoder__process_data_block(struct cs_e=
-tm_packet_decoder *decoder,
-[ ... ]
-> +static int cs_etm_decoder__reorder_packet(struct cs_etm_packet_decoder *=
-decoder,
-> +					  const struct cs_etm_buffer *buffer,
-> +					  struct cs_etm_traceid_ctxt *tidc)
-> +{
-> +	u64 timestamp;
-> +	int ret;
-> +
-> +	if (tidc->packet->sample_type !=3D CS_ETM_CONTEXT &&
-> +	    tidc->packet->sample_type !=3D CS_ETM_DISCONTINUITY)
-> +		return 0;
-> +
+> diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+> index 02233ef0eafff..cc813f421c9b2 100644
+> --- a/tools/perf/util/build-id.c
+> +++ b/tools/perf/util/build-id.c
+> @@ -886,6 +886,18 @@ static int dso__cache_build_id(struct dso *dso, stru=
+ct machine *machine,
+>  	char *allocated_name =3D NULL;
+>  	int ret =3D 0;
+> =20
 > +	/*
-> +	 * ETM always emits a timestamp after a context or trace discontinuity
-> +	 * so search for it and give it to the frontend first.
+> +	 * The kernel can't add the vDSO's build ID to mmap events because it
+> +	 * doesn't have a file, so read it from the copy that perf made. That
+> +	 * copy is of the host's vDSO, so it can't be used for guests.
 > +	 */
-> +	ret =3D cs_etm_decoder__search_timestamp(decoder, buffer, decoder->pack=
-et_index, &timestamp);
-> +	if (ret)
-> +		return ret;
+> +	if (is_vdso && machine__is_host(machine) && !dso__has_build_id(dso)) {
+> +		struct build_id bid =3D { .size =3D 0, };
 > +
-> +	decoder->pending =3D tidc;
-> +	decoder->pending_packet =3D *tidc->packet;
-> +	decoder->pending_packet.timestamp =3D max(decoder->timestamp, timestamp=
-);
-> +	if (tidc->packet->sample_type =3D=3D CS_ETM_CONTEXT) {
-> +		/* Publish the timestamp before allowing the context to be applied. */
-> +		decoder->timestamp =3D decoder->pending_packet.timestamp;
-> +		tidc->packet->sample_type =3D CS_ETM_TIMESTAMP;
-> +	} else {
-> +		/* Let the discontinuity flush preceding samples at the old time. */
-> +		decoder->pending_packet.sample_type =3D CS_ETM_TIMESTAMP;
+> +		if (filename__read_build_id(name, &bid) > 0)
+> +			dso__set_build_id(dso, &bid);
 > +	}
-> +	return 0;
-> +}
-[ ... ]
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index d275d37011659..5a704dfeebd34 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-[ ... ]
-> @@ -1215,68 +1180,74 @@ static int cs_etm__setup_queue(struct cs_etm_auxt=
-race *etm,
-[ ... ]
-> -static int cs_etm__push_queue(struct cs_etm_queue *etmq, u64 time)
-> +static int cs_etm__insert_heap_queue(struct cs_etm_queue *etmq, u64 time)
->  {
->  	int ret;
-> =20
->  	if (!etmq || etmq->on_heap)
+> +
+>  	if (!dso__has_build_id(dso) || !dso__hit(dso))
 >  		return 0;
-> =20
-> -	while (!etmq->on_heap) {
-> +	if (!etmq->buf) {
->  		ret =3D cs_etm__get_data_block(etmq);
->  		if (ret <=3D 0)
->  			return ret;
-> +	}
-> +
-> +	while (1) {
->  		if (!etmq->etm->has_virtual_ts && etmq->buffer->time > time)
->  			return 0;
-> =20
-> -		ret =3D cs_etm__add_to_heap(etmq, NULL);
-> -		if (ret)
-> +		ret =3D cs_etm__decode_packet(etmq, &etmq->tidc);
-> +		if (ret < 0)
->  			return ret;
-> +		if (etmq->tidc)
-> +			return cs_etm__add_to_heap(etmq, etmq->tidc->packet->timestamp);
-> +
-> +		/* Drain buffered decoder output before fetching another AUX buffer. */
-> +		ret =3D cs_etm__get_data_block(etmq);
-> +		if (ret <=3D 0)
-> +			break;
->  	}
-> =20
-> -	return 0;
-> +	if (!ret)
-> +		etmq->buf =3D NULL;
-> +	return ret;
->  }
-[ ... ]
-> @@ -2580,11 +2558,11 @@ static int cs_etm__process_traceid_ctxt(struct cs=
-_etm_queue *etmq,
->  static int cs_etm__pop_heap(struct cs_etm_auxtrace *etm, u64 timestamp)
->  {
-[ ... ]
->  		/* Take the entry at the top of the min heap */
-> -		cs_queue_nr =3D etm->heap.heap_array[0].queue_nr;
-> -		queue_nr =3D TO_QUEUE_NR(cs_queue_nr);
-> -		trace_chan_id =3D TO_TRACE_CHAN_ID(cs_queue_nr);
-> +		queue_nr =3D etm->heap.heap_array[0].queue_nr;
-> +		cs_timestamp =3D etm->heap.heap_array[0].ordinal;
->  		queue =3D &etm->queues.queue_array[queue_nr];
->  		etmq =3D queue->priv;
-> =20
->  		/* Don't go further than the trace timestamp or collection time */
-> -		queue_time =3D etm->has_virtual_ts ? etm->heap.heap_array[0].ordinal :
-> +		queue_time =3D etm->has_virtual_ts ? cs_timestamp :
->  						   etmq->buffer->time;
->  		if (queue_time >=3D timestamp)
->  			break;
-[ ... ]
-> -add_to_heap:
-> -		/* Schedule the next decode step after consuming the current packet. */
-> -		ret =3D cs_etm__add_to_heap(etmq, tidc);
-> +		ret =3D cs_etm__insert_heap_queue(etmq, timestamp);
->  		if (ret)
->  			goto out;
-> -		if (!etmq->on_heap)
-> -			goto get_data_block;
->  	}
->  out:
->  	return ret;
 
 [Severity: Medium]
-Does this stall earlier queues and drop queues from the min-heap when
-decoding with non-virtual hardware timestamps (etm->has_timestamps &&
-!etm->has_virtual_ts)?
+Does filename__read_build_id(name, &bid) still fail when perf record
+synthesizes mmap2 events from /proc (for example with -a or -p)?
 
-On PERF_RECORD_AUX, cs_etm__insert_heap_all() decodes each queue's initial
-CS_ETM_DISCONTINUITY packet.  In cs_etm_decoder__reorder_packet(), the
-discontinuity branch leaves decoder->timestamp at 0 and defers the
-searched-ahead timestamp to decoder->pending_packet, so every queue enters
-etm->heap with ordinal 0.  Once a queue with an earlier AUX collection time
-pops its discontinuity packet and re-enters the heap with a non-zero
-CoreSight timestamp, any unpopped queue whose etmq->buffer->time >=3D
-timestamp remains at the top of the min-heap at ordinal 0 and causes
-cs_etm__pop_heap() to break out of the loop, blocking the earlier queue
-until timestamp reaches the later queue's buffer->time.
+In --buildid-mmap mode, perf_event__synthesize_mmap_events() calls
+perf_record_mmap2__read_build_id() for the "[vdso]" mapping, which inserts
+a DSO with short_name and long_name set to "[vdso]" and no build ID:
 
-Also, cs_etm__pop_heap() passes timestamp rather than MAX_TIMESTAMP to
-cs_etm__insert_heap_queue().  When a queue advances to its next AUX buffer
-with etmq->buffer->time > timestamp in non-virtual timestamp mode,
-cs_etm__insert_heap_queue() returns 0 without re-inserting the queue into
-etm->heap, dropping it from cross-queue timestamp ordering until the next
-PERF_RECORD_AUX event.
+tools/perf/util/synthetic-events.c:perf_record_mmap2__read_build_id() {
+	...
+	dso =3D dsos__findnew_id(&machine->dsos, event->filename, &dso_id);
+	...
+	rc =3D filename__read_build_id(event->filename, &bid) > 0 ? 0 : -1;
+	...
+}
+
+When process_buildids() later processes the mmap2 event, map__new() calls
+machine__findnew_vdso(), which finds that existing "[vdso]" DSO in
+machine->dsos via machine__find_vdso() and returns early before calling
+get_file(&vdso_info->vdso) to create the temporary vDSO file:
+
+tools/perf/util/vdso.c:machine__findnew_vdso() {
+	...
+	dso =3D machine__find_vdso(machine, thread);
+	if (dso)
+		return dso;
+	...
+	file =3D get_file(&vdso_info->vdso);
+	if (!file)
+		return NULL;
+
+	return __machine__addnew_vdso(machine, DSO__NAME_VDSO, file);
+}
+
+As a result, name (dso__long_name(dso)) is still "[vdso]" when
+dso__cache_build_id() runs, so filename__read_build_id() fails and the
+vDSO remains uncached.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118-james-core=
-sight-jit-v1-0-dad4d90747f6@linaro.org?part=3D29
+sight-jit-v1-0-dad4d90747f6@linaro.org?part=3D7
