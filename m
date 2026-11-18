@@ -1,87 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.54
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795019392;
-	b=1kvQF/EGTt3gkIgoJKp1Qz6boR7rWYE4GUpAoyYwI8GHKq+w++oMEFNEobWF6/aJdUnu
-	 QZQ0O4xqq7BdT3K4eJ39LoWd6b0IlWSPKznbF7Nv9ZICSheqQmCbCCgFeXZnAXPUmJd69
-	 peUA9EZh3sPaYUOJQ2nX7+xNfk3bDQr8RSW1z49nw9YGggbJT3G9gC4G9XSpU1/F64BLq
-	 bAZLDfiJhGSWRXqd1XrFV0c03Rx20/Moe4BLAe6YpF1+pCk8IVk4Jiaepr2NqcVFL6Jex
-	 hwEDOmqgOaOqQJ35WeA4ZQCewU/JYi+EvNtXjmc7DQcv/hqMmEhWE0uwq9BYahA566g==
+	t=1795019397;
+	b=3ZrEgzQnufMXYly+zSTNE0KuJDbhLq3mA9eQxWpG/WEr3JmkJ0id7HqNRWc/wAUXRmbZ
+	 OwfXc6z/EN2cN+EWPnHXPPA2I7GRsotWN5yDG0zS7py6H3NLPJluUZZau4+3Nxv9XrYdK
+	 TqsB2UNJSEnvjzd5yUxo6/iUmeINk1PTC5ZxpKE00yzQjSqzZDoNGWA4kh7VRuOdUykuV
+	 iocqOMNs3cRCbno+ftO3lLEbZAM8PTyeNdey9NxvrUYLsY5c2FsjNKoKECA60ECzvphX/
+	 qVyVNeTNMyLM5/Kvmfy7/UcRD2YRrCUb6OvbNGxk8YHT3WGlkZEMNJpRDtVrpuMMgSQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795019392;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795019397;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:Date:Subject:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
 	 References:In-Reply-To:To:Cc:X-Mailer;
-	bh=ZoY49G9OBW2Ss+uxh9zKm04Sv5cGEWU0IEPT/pkp6FA=;
-	b=armn/9Fin9gmo2HM+y0/LjQn4YPPOKlyMGgcRNBlYdcyQyvaaeY9pxiGZ1empJZVAJxi
-	 DYzjpjz/k+oJtbRkWaY41MOfhi3So7y2WLApVsvO6m8UBjuGI7S73Ysa0b4stQosDYZqU
-	 ZZ4g5EhuT5L+pQRBkesZ4aPK5F+oByVVKHZu5vpL6vg9vDGauJYFJDo6QyhKI/eG48uwP
-	 9FOsiL6gApDl4WVkdgCZhRVq0mpf+GR0G5XIP1qLOYvYDPQqnWGNkzl8RbNtEXx2Ig4vp
-	 ZGvDS2eeTR8qhd12PFg7oo88kKRrWkjmm8qeo6tWL60Sr3iwrGNGU+lcPdnvWL38muQ==
+	bh=WRHWKRUMRo3z2ZrNBL7a1kOoOgKp/NNfuj874KBAObM=;
+	b=bAMhre1CmoXGTNrCjCSgnZl41cgJvJBMImXuOeAX8AySce1kVp8GGMryzx+c5stRFvs1
+	 VwC9FoMttC2S/YTxp475axcIIIDYZP8NMVvo7es3ccAENoncp7I2tuT8e7HZ+szqthNCm
+	 dgre8wQBMpTxpYcTOrX0SRetenouw4USk81Iw0ayDMVRiyYXtfhRce6iCWolYOkPa9nhd
+	 ZYoPVrPuBGu5bAIYDeruw8HyrWk7296dryVpRHwcBbcDd47eR5WtevJAySnUavN8U+tQ5
+	 z6N1Khcj1Ks2Pk9fAkm26eZnuUhJLrHc6iXkqcZ/Y8HFbnm0eKABhB9FPVXNhdi/ggQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linaro.org;
 	spf=pass smtp.mailfrom=linaro.org;
-	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=ItxjA1sV;
-	arc=none smtp.remote-ip=209.85.221.42
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=W0ydXO7k;
+	arc=none smtp.remote-ip=209.85.221.54
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1AA260A261B
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 16:29:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B1AA260A261B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EDE60A262C
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 16:29:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E1EDE60A262C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=ItxjA1sV
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-48dfc0421d9so1071076f8f.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 08:29:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=W0ydXO7k
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-491971ac844so1206326f8f.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 08:29:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1795019389; x=1795624189; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1795019393; x=1795624193; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=ZoY49G9OBW2Ss+uxh9zKm04Sv5cGEWU0IEPT/pkp6FA=;
-        b=ItxjA1sVIskn2bXlZ8MTSXkdRYNJRscOn99Rj9xvDeRBspcvHJp4myUSRG1aCmqm6E
-         LhPNNj9jqiVN/6CMIlYllbOqVP4DCwD7ioMPADk5wxEhjTFuu/3YmhZpPpdzMc6FlLRD
-         pRYPa14fW6iY5u+eS74t4wnyLRfXxd7j0gFDg1HDgG8BJUXIFLX1diV9WjCN5u3Uc0ka
-         54FFZ2zDykxmpIjiTs1eJI6GSXG0jQJlFA9uItihYz2rSPs5LJw2olI5hpOiiyXazoMd
-         F0E8dRo9+TqspRbRJsMExuh52UnO02AhmhSTtaRiY+FUxk813z13SuNh91xV6/5Ubbdu
-         XKBg==
+        bh=WRHWKRUMRo3z2ZrNBL7a1kOoOgKp/NNfuj874KBAObM=;
+        b=W0ydXO7kl3a5UIBTyabgYyvxKc8+c0rSj+af04j/VnnXmfDb8OLFPeQagC0aJsTyfk
+         L7tlPeHdV84Sh0ApfLJaHj0WiR4aaqshwAtTXMHrxn67VyaSWGrfUCwkwXMzU47/qsDn
+         ABJzlVho+7E6inEHIWDXr9LImysuYqh/tfiGuvwqoZOTP4KZin65HCSWM+58Y4JshxFQ
+         BoB5AytN+2p5z6QGPRPbUqa9jvrxDHgO7owNGuKLBp52e3wbVVGQUH3z26g7Sv5U8WYC
+         PJ3uBPRnZmLXpt9srBeA3QieiTM3SQ4WkSZ0Bi4ewjeHgJKKgEi2e4UlxYFS9u+REUWv
+         QY0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795019389; x=1795624189;
+        d=1e100.net; s=20260707; t=1795019393; x=1795624193;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=ZoY49G9OBW2Ss+uxh9zKm04Sv5cGEWU0IEPT/pkp6FA=;
-        b=a6bAZmfDloeG0Rwq53psp/A5PXycrRQJ6LM7ACnLE48VOlkuWQqnhPhNxPXCyAMVxU
-         caUQQbs0XFrO0jVeobHf00e6Mv+gE3j4db3FKav3mrbZVMDJtraOMGfWNxoNUii5dW4q
-         JoSEv6Qvy8mivm2cbJHBYOTTnsIskBcQz9x8zsNORUW4cTN3GzORdKlIpyMt1pOBGuZ+
-         FbHiOqe/iGHMKukBVAeLnG019U57maJPdm49WmaLBWR7wobDEvyJrFUSz3dzN3SSy11a
-         ObmmAqm5YN1Rt9yY2AvoFz4A/jXVtC1HPh43JEmkgAiliJR5qxVqy1hQOmzuDyQ7V9pQ
-         tLOg==
-X-Gm-Message-State: APuU4Z8a3wP/5z7rV6m0/1krKv8IZzKDHDvbTT3DCYSN4LVgfi6tyG3u
-	7TrP9KScyploQae6ft60bGK3vHdY7mHET7BdXrEq8hKWfUUltUfG2XhL6xKRPP4UgC8=
-X-Gm-Gg: AZFdTZdq0/lEvSEjo3zpkGV3b05I/HGJfIfb7YTTp69u0fHq3epTfRIGyUQvfHhSqi6
-	uWWoIXmtYM+sT/KZ58NcKTJvXVnZGsFnNNt/fmZNUfBHwCT5WEAeI2STiboywkGN38hHhRb9115
-	ClU7R0gYfiZ8Pl4xtAboJMD1Ee0S4eOAssy04al+u1er5BSa2J5vlTFgB1YIEiqmlTVjXCwkQfn
-	aOopjbpK+PGIFJ/SJvFfppBD02dk/3qtC8PL7j26V5NA1jywA1WFG6nr1dZkivJqFIxirc3e1yZ
-	YEvwrLY/qFeM63JXd37tvCPxG3BZ+/Yx1dvxXfe0gPLqQe6g9vwP/BxkScDuFkErwIPgrwN6a1X
-	eChEJA1DK85zMUDrz1ytTbXuUq3DKHj7QlLTFRw8XrjVmvjeEG3oOVkQiUNrZq9EYQBPSxltGrX
-	OmuG82bimSqUBbUqUXDddxtedKNbOdu7Y5ZFrZh3r1HoDPFFs31N7fNZ5NG7c08rUBwIxvT9Fae
-	hcJ7X0Efr/dj8rpt7WT/ZHOqjSo1f3Zd8PUu5j45wxI2wiVs3xFzNcCiA8NPODZorZW0nsJ4kDT
-	4iKsqIfHSsTyuyP41cdQ7jVGdPkfGMyX
-X-Received: by 2002:a05:6000:61e:b0:4a8:e472:a50 with SMTP id ffacd0b85a97d-4a8e4720c5amr42347f8f.7.1795019388940;
-        Wed, 18 Nov 2026 08:29:48 -0800 (PST)
+        bh=WRHWKRUMRo3z2ZrNBL7a1kOoOgKp/NNfuj874KBAObM=;
+        b=HbLh+9MCqiFdfVd9b0ZdyqbvBao+MBSqgeEFzD3dogvowp5UC/LPEyR8p3Lph5qwki
+         COGZ/K6h3oOJBPLUFNThW2dK5b1cdhlWtr2Rf++a7TYrTogfMQaB+fcljaZDkSuJy+7s
+         zS5uZ5lOFDXRoTM48mjP10Nf2JU+OiWnLFcePwID4xtZmbKDMQ9VxuhP7kSdz+4256pP
+         3c3qocCNh9dGxogg6CF70pXlNOce2jk5+wNCBS1zzmapMz4+HypxeNDWUdPE/9pebIcW
+         EHZq8I6rRL/xWVqUiZh6rKBiMfAY0V1sZmCXp5aAGIqW4p/EPe8KMSnPlopSy5/Kl0jQ
+         sT9w==
+X-Gm-Message-State: APuU4Z/a+hwH7I3vFbM1lpc8zG1JfVOBOw91SL1Px3+gdKuJS790OUwh
+	4zhv4XNeOn9uzlws89JkZcpqmEw5mU7svw/YJ8NWVrSdEOaRHFcUrISwvbIaJlnIXUs=
+X-Gm-Gg: AYBFou2ioawJRH8wW20s8NL0PUBaJIY1qtrHS+X7RApzRSZgK8sED3z15AlLe4e5QTb
+	sGeprcs18/gJL0icvEldVrPFzVi+t6zG/CBmo4OV2z03GXNU6VMZ8BBwWJyMnV7hJrzxG1z0bWB
+	131NLncDKpe2ldLZj/0+yrcbHm8ni/Z69nujwkEhmdGae/0vwH7lIOCqk1wgUsA/J3uzw0L9Edw
+	8JIEbZmOjrdYlhPEq9880x2R+Yk8atk7u1w4OzNkMX6LrwtFAmPX2SLhO/4/eBpSVbtYcXy/Pik
+	wqphY0PmDl6GJk+NO+EHfd8Aomk9RULY0kLbCGX6FVqyVXNJE79pwhvvo5sNj4KGgfU4c1fBM68
+	Ux0tMlDXfYtssXhxgOXvFet5yYqBsZ0YD6qUtsgb27zOXdd4HDRb4TZP4bJe1YWmMzKxTpakLur
+	SJInVcDZ4JF9p4CSb2u463xBs6B7LcPn/jszIpt+vxViXhNDC2hKH+gFTpcXcz7EoZxNzEjKsJi
+	9NsYtk4bCrHeCQActZkDNpgGK6F65nzfcX5Im0NMZs2JjqmNetHEzroNGGGKckqOHfC1/6gUSMN
+	ocY+C2jXjHmJdEciagck9Ra5ALUDenu2qHRAVg+Qk5A1isBJr8HOIQ==
+X-Received: by 2002:a05:600c:1d0f:b0:4bb:56bb:1196 with SMTP id 5b1f17b1804b1-4bb7da349e2mr62508195e9.23.1795019393189;
+        Wed, 18 Nov 2026 08:29:53 -0800 (PST)
 Received: from pop-os.local ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4a654a8c23bsm4980927f8f.12.2026.11.18.08.29.48
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4a654a8c23bsm4980927f8f.12.2026.11.18.08.29.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Nov 2026 08:29:48 -0800 (PST)
+        Wed, 18 Nov 2026 08:29:52 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
-Date: Wed, 18 Nov 2026 16:29:23 +0000
-Subject: [PATCH 01/34] perf jit: Support JITDUMP_USE_ARCH_TIMESTAMP on
- arm64
+Date: Wed, 18 Nov 2026 16:29:27 +0000
+Subject: [PATCH 05/34] perf cs-etm: Use the exception level to tell kernel
+ from user
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -93,7 +93,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261118-james-coresight-jit-v1-1-dad4d90747f6@linaro.org>
+Message-Id: <20261118-james-coresight-jit-v1-5-dad4d90747f6@linaro.org>
 References: <20261118-james-coresight-jit-v1-0-dad4d90747f6@linaro.org>
 In-Reply-To: <20261118-james-coresight-jit-v1-0-dad4d90747f6@linaro.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -107,57 +107,70 @@ Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.15.2
 
-CLOCK_MONOTONIC can't be correlated with timestamps in trace, so to
-allow the JVMTI agent to be used with SPE and Coresight, use CNTVCT_EL0
-when JITDUMP_USE_ARCH_TIMESTAMP is set.
+cs_etm__cpu_mode() decides whether an address is in the kernel by
+comparing it with the kernel start address. On arm64, modules are loaded
+below that, so module code is looked up in the thread's user maps which
+results in a decode failure.
 
+The exception level of the trace is known for ETMv4 and ETE, so use that
+instead and only fall back to the address when it's unknown. This
+enables the ability to decode trace from kernel modules.
+
+Fixes: c9a01a11dfe6 ("perf tools: Add support for decoding CoreSight trace data")
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/jvmti/jvmti_agent.c       | 5 +++++
- tools/perf/tests/workloads/jitdump.c | 7 ++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ tools/perf/util/cs-etm-decoder/cs-etm-decoder.c |  6 ++++--
+ tools/perf/util/cs-etm.c                        | 12 +++++++++++-
+ 2 files changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/jvmti/jvmti_agent.c b/tools/perf/jvmti/jvmti_agent.c
-index 526dcaf9f079..674eed455586 100644
---- a/tools/perf/jvmti/jvmti_agent.c
-+++ b/tools/perf/jvmti/jvmti_agent.c
-@@ -96,6 +96,11 @@ get_arch_timestamp(void)
- 	asm volatile("rdtsc" : "=a" (low), "=d" (high));
+diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+index b9397151748b..f133e11ccc7b 100644
+--- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
++++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+@@ -462,7 +462,8 @@ cs_etm_decoder__buffer_range(struct cs_etm_queue *etmq,
+ 	packet->last_instr_type = elem->last_i_type;
+ 	packet->last_instr_subtype = elem->last_i_subtype;
+ 	packet->last_instr_cond = elem->last_instr_cond;
+-	packet->el = elem->context.exception_level;
++	if (elem->context.el_valid)
++		packet->el = elem->context.exception_level;
  
- 	return low | ((uint64_t)high) << 32;
-+#elif defined(__aarch64__)
-+	uint64_t val;
-+
-+	asm volatile("mrs %0, cntvct_el0" : "=r" (val));
-+	return val;
- #else
- 	return 0;
- #endif
-diff --git a/tools/perf/tests/workloads/jitdump.c b/tools/perf/tests/workloads/jitdump.c
-index 01cbbbd564e8..8422b66ee600 100644
---- a/tools/perf/tests/workloads/jitdump.c
-+++ b/tools/perf/tests/workloads/jitdump.c
-@@ -34,6 +34,11 @@ static inline uint64_t get_timestamp(void)
- 	asm volatile("rdtsc" : "=a"(low), "=d"(high));
+ 	if (elem->last_i_type == OCSD_INSTR_BR || elem->last_i_type == OCSD_INSTR_BR_INDIRECT)
+ 		packet->last_instr_taken_branch = elem->last_instr_exec;
+@@ -607,7 +608,8 @@ cs_etm_decoder__set_tid(struct cs_etm_queue *etmq,
  
- 	return low | ((uint64_t)high) << 32;
-+#elif defined(__aarch64__)
-+	uint64_t val;
+ 	packet = &packet_queue->packet_buffer[packet_queue->tail];
+ 	packet->tid = tid;
+-	packet->el = elem->context.exception_level;
++	if (elem->context.el_valid)
++		packet->el = elem->context.exception_level;
+ 
+ 	/*
+ 	 * A timestamp is generated after a PE_CONTEXT element so make sure
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 51431a4d5db7..3fce3c357943 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -1134,8 +1134,18 @@ static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address,
+ 			   ocsd_ex_level el)
+ {
+ 	struct machine *machine = cs_etm__get_machine(etmq, el);
++	bool kernel;
+ 
+-	if (address >= machine__kernel_start(machine)) {
++	/*
++	 * Prefer the exception level when it's known, because arm64 modules are
++	 * below the kernel start address.
++	 */
++	if (el == ocsd_EL_unknown)
++		kernel = address >= machine__kernel_start(machine);
++	else
++		kernel = el != ocsd_EL0;
 +
-+	asm volatile("mrs %0, cntvct_el0" : "=r" (val));
-+	return val;
- #else
- 	struct timespec ts;
- 	int ret;
-@@ -55,7 +60,7 @@ static FILE *open_jitdump(void)
- 		.pid = getpid(),
- 		.timestamp = get_timestamp(),
- 		.flags =
--#if defined(__x86_64__) || defined(__i386__)
-+#if defined(__x86_64__) || defined(__i386__) || defined(__aarch64__)
- 			JITDUMP_FLAGS_ARCH_TIMESTAMP,
- #else
- 			0,
++	if (kernel) {
+ 		if (machine__is_host(machine))
+ 			return PERF_RECORD_MISC_KERNEL;
+ 		else
 
 -- 
 2.43.0
