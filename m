@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795041476;
-	b=c4t44+zQvXLS+f1b02GjiLn9ganabFrp6/UCZUW3YMz8Lue8DgBIxb3WA2q5RT498TSO
-	 aG7aSYlpaAfyp+FbK4J8f6ve+95L63CmvXp066PzQEXsdlIFJKzz1KgF3iKIv5bl0y+JM
-	 lqDIDGJKLh4KJ2pTKDFbwFN+0uhglm6kfPD7Izsi0uumLgbvylXwugYenW0HzlF6nXHc1
-	 9cLSND/NEp+MiAtRysfrMVbssN+2n0AhO5yfpBSfW28Mk+x2zjOAdWLVrwgXaYd+VwD8X
-	 LoD+vVFJS2iUVnSRQr92CQmaHFiz38P5ZSxHuLheaSa4VWhUytFXClk/nd1d7RXbxcQ==
+	t=1795041480;
+	b=0k41gx2tbN4l1chNYqmxbd8XggBZZGcTcwJCQEH3Pub13gXOK7W2WDIMiIw9VpQSIKo9
+	 ewwXdLWtw4lmXuVx9wuawvOz7wqrNlRQZRNjkDgP/fyMjIH0OrubRdE+mHlTy/TpN+mWU
+	 ORurU3xr9ButRNGdLTKAtQJ4ccKfyB4bokNnc5/DWD778YZPWiLfl6oFlBZdQcu7xSpJT
+	 OVorzZw0b3A1vHbyu17EoOMbJCF4HfhFG5ALR8bOKPk6DVhd3mAiw3+RV6bPG6wU0Egnf
+	 CDDUjghRcYpmFldlNnxSi+pXBoUVQ38VgyvLEboNksLi8du0TX3LQeThOifpNTuNmDQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795041476;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795041480;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=TUmcrWEikoX3MlUYOPP3sYIXacC4M4mzj+fDr9u6mgI=;
-	b=Mehdr9v3a/AwVOd0qsFJGc8rVejuQ1ZCVUl+9wZpOBDU+BHmTz25IitCBNwzyoAM+FNr
-	 /nIW3VUIiqKUKrx+dt2J/WDNZJ6H2KFm++YQHgT874Y9B7uErthvB+IdkLiq7a43SNf/g
-	 +HvjpVkNk1gi5hsp6YG2T4LgZXWyTQOuTPuWVoEpuDS5uYg2Y7qD5p6YVb33lqOJtDLqm
-	 eHcaA9O7qh5vrlZ+ZkLHWmq1CvbaTsMFhqPXduqBmbm7n9qUxGfNRP0Iwa2xRXnY6DNyD
-	 tmseIV2PLVv/nu9uIOhek6Af5v0bFqmWesS3EAwz5oSUrms7D49n6A/nE2bchQPzWbA==
+	bh=2khjZ2E7Xva6D8F6ans4J6jJKhtPz9tdJhHE3kq/Qz4=;
+	b=HrUUHpGcZH6ysno11Wzsc5EFLGJ9ApsymcGTarnUb48JDrvv4BJ4q2iS15nJj64sSdAN
+	 pcO3gWxUi+mltJxre0tRsjh/2hXsswt8Gl2+/s5WB5J3n5/6u/WMYkkPvCE0oV3yaSVnr
+	 d38tgnxA7jMlEYKRdOJ0SOoEKqyCsxjwi5COWAgGE4WRLGVqRQ0JiGP78LYXoekKSPs2K
+	 YfYg2bZiZhummTqDdkujIR8hk64Cfzh4mJxtpThDOAatt24RoX45wob7jEGa6XwQs/34b
+	 nGtpW9whfwDeBmGrUIhnmTvzyh1okiO3KGKgVEXgReGZP8/j1zrXtq5aW3MzuVcP2Bw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m1a+0TEP;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Tg7Akueg;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26A060A5BEA;
-	Wed, 18 Nov 2026 22:37:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA70606A6C5;
+	Wed, 18 Nov 2026 22:37:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m1a+0TEP
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A1D21F000C6;
-	Wed, 18 Nov 2026 22:37:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Tg7Akueg
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D513B1F000C4;
+	Wed, 18 Nov 2026 22:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795041476;
-	bh=TUmcrWEikoX3MlUYOPP3sYIXacC4M4mzj+fDr9u6mgI=;
+	s=k20260515; t=1795041479;
+	bh=2khjZ2E7Xva6D8F6ans4J6jJKhtPz9tdJhHE3kq/Qz4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=m1a+0TEPaZhvnLeXzuRlmXUIas8eC7xq8NJLvnjFCW/oA4u2AchlW+OPJ69iVq4jm
-	 Gi37XwO1pVeSfJzZlUMzj6DoyzYwYBaKb8K5Qk7sWqOHfbtbs+pcTeunC38rdGjkHQ
-	 zMVuLUGKWik+iCHTZSZgulmCj5vEnKuodYSzo/Kybuom3IX1P4hrUPLOqvUDxI/dBh
-	 Vy2Ci4mlObxR8uXqWrRtu0yF8ZzwYrKUn6zNKnPMPicEhkqhUW/gw0dAR8K6JG2QUJ
-	 bgjd7ezw9b1huOioYViYP1ZlBUp09iMhLvPtmG91sYtE8CbwuGJe1yFEtShv06L49I
-	 XH2IUVKm3hmLA==
+	b=Tg7AkuegZQRHz3Y8B9TFdhQxQH2NMoj+7/dBLdjFJziezKv2kJNYSWUp9bIkvNTBu
+	 MyZssuBf5UOuSzSSx2VHpKMPu40jWYQcpmWNdaWlwjjG4aJ/6eQM2dBaA+/ObvTtcA
+	 25B0J4s2OIcXYHoUj0tZo5gcnaTrDyhVQQjfqm4UFIGlCCJCYahwc84A76DSoqXT+y
+	 4UFzONLobuhkmcWMwHptn5SokjPBP6IwOrlSwC3ROsvBzwGKj2iyVEiN9vGXlyKIk9
+	 tTh0L4rnh7MdcdidXo8F9ukbuhKJ3Hbm/KGQ+KEGBLXL7oQaXIPtHfK1WQYQY+5Kcm
+	 tthnzh5vYrc7w==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v8 07/13] perf tests: Exercise data type resolution from a register
-Date: Wed, 18 Nov 2026 19:37:18 -0300
-Message-ID: <20261118223725.121500-8-acme@kernel.org>
+Subject: [PATCH v8 08/13] perf annotate: Print the stats after the annotations
+Date: Wed, 18 Nov 2026 19:37:19 -0300
+Message-ID: <20261118223725.121500-9-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261118223725.121500-1-acme@kernel.org>
 References: <20261118223725.121500-1-acme@kernel.org>
@@ -70,46 +70,92 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-At -O2 a struct pointer lives in a register (with DWARF describing it with
-a register location on register-argument ABIs), while the unoptimized
-workloads the data type tests profile keep their variables on the stack.
+With --code-with-type the instruction stats are printed from
+hists__find_annotations() before that event is annotated: the first
+event reports zeros and later events can report stale counts.  The data
+type total is only counted in --data-type mode, so --type-stat without
+it is incomplete too.
 
-Add a regptr workload with a noinline function that takes the pointer from
-a volatile global, so the compiler cannot constant-propagate the object
-address, and check that its three member accesses are resolved from that
-register.
+Print the stats once after all events have been annotated, warning if
+--type-stat is used without --data-type.  Leave the TUI's alternate
+screen before printing, so the stats remain on the terminal.
 
+Fixes: 58824fa0087e1cb7 ("perf annotate: Add --insn-stat option for debugging")
+Fixes: 61a9741e9f78c64c ("perf annotate: Add --type-stat option for debugging")
+Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/builtin-test.c              |  1 +
- tools/perf/tests/shell/data_type_register.sh | 63 ++++++++++++++++++++
- tools/perf/tests/tests.h                     |  1 +
- tools/perf/tests/workloads/Build             |  2 +
- tools/perf/tests/workloads/regptr.c          | 60 +++++++++++++++++++
- 5 files changed, 127 insertions(+)
- create mode 100755 tools/perf/tests/shell/data_type_register.sh
- create mode 100644 tools/perf/tests/workloads/regptr.c
+ tools/perf/Documentation/perf-annotate.txt |  2 +-
+ tools/perf/builtin-annotate.c              | 19 ++++--
+ tools/perf/tests/shell/annotate_stats.sh   | 69 ++++++++++++++++++++++
+ 3 files changed, 84 insertions(+), 6 deletions(-)
+ create mode 100755 tools/perf/tests/shell/annotate_stats.sh
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 8fc425d470c17dbf..fe4d4cd54f85d502 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -215,6 +215,7 @@ static struct test_workload *workloads[] = {
- 	&workload__false_sharing,
- 	&workload__global_data,
- 	&workload__flex_array,
-+	&workload__regptr,
+diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
+index 1a90b09a12d5abb1..d27eff28ba4f6af0 100644
+--- a/tools/perf/Documentation/perf-annotate.txt
++++ b/tools/perf/Documentation/perf-annotate.txt
+@@ -169,7 +169,7 @@ include::itrace.txt[]
+ 	all data types it finds.
  
- #ifdef HAVE_RUST_SUPPORT
- 	&workload__code_with_type,
-diff --git a/tools/perf/tests/shell/data_type_register.sh b/tools/perf/tests/shell/data_type_register.sh
+ --type-stat::
+-	Show stats for the data type annotation.
++	Show stats for the data type annotation (with --data-type).
+ 
+ --skip-empty::
+ 	Do not display empty (or dummy) events.
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 331adbdbd635917d..8ced8a4aebf07709 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -414,11 +414,6 @@ static void hists__find_annotations(struct hists *hists,
+ 	struct rb_node *nd = rb_first_cached(&hists->entries), *next;
+ 	int key = K_RIGHT;
+ 
+-	if (ann->type_stat)
+-		print_annotate_data_stat(&ann_data_stat);
+-	if (ann->insn_stat)
+-		print_annotate_item_stat(&ann_insn_stat, "Instruction");
+-
+ 	while (nd) {
+ 		struct hist_entry *he = rb_entry(nd, struct hist_entry, rb_node);
+ 		struct annotation *notes;
+@@ -660,6 +655,17 @@ static int __cmd_annotate(struct perf_annotate *ann)
+ 		hists__find_annotations(hists, pos, ann);
+ 	}
+ 
++	if (use_browser == 1 && (ann->insn_stat || (ann->data_type && ann->type_stat))) {
++		/* Leave the alternate screen before printing to the terminal. */
++		ui__exit(false);
++		use_browser = 0;
++	}
++
++	if (ann->data_type && ann->type_stat)
++		print_annotate_data_stat(&ann_data_stat);
++	if (ann->insn_stat)
++		print_annotate_item_stat(&ann_insn_stat, "Instruction");
++
+ 	if (use_browser == 2) {
+ 		void (*show_annotations)(void);
+ 
+@@ -865,6 +871,9 @@ int cmd_annotate(int argc, const char **argv)
+ 	if (quiet)
+ 		perf_quiet_option();
+ 
++	if (annotate.type_stat && !annotate.data_type)
++		pr_warning("Warning: --type-stat needs --data-type\n");
++
+ 	data.path = input_name;
+ 
+ 	perf_tool__init(&annotate.tool, /*ordered_events=*/true);
+diff --git a/tools/perf/tests/shell/annotate_stats.sh b/tools/perf/tests/shell/annotate_stats.sh
 new file mode 100755
-index 0000000000000000..055279bd8b0f9c25
+index 0000000000000000..5af48bf187c5e8f5
 --- /dev/null
-+++ b/tools/perf/tests/shell/data_type_register.sh
-@@ -0,0 +1,63 @@
++++ b/tools/perf/tests/shell/annotate_stats.sh
+@@ -0,0 +1,69 @@
 +#!/bin/bash
-+# perf data type profiling tests for register variables
++# perf annotate instruction stats test
 +# SPDX-License-Identifier: GPL-2.0
 +
 +set -e
@@ -145,127 +191,38 @@ index 0000000000000000..055279bd8b0f9c25
 +	exit 2
 +fi
 +
-+if ! perf mem record -o "$perfdata" -- perf test -w regptr 1 \
-+		> /dev/null 2> "$perferr"; then
++if ! perf mem record -o "$perfdata" -- perf test -w datasym > /dev/null 2>&1; then
 +	echo "FAIL: perf mem record"
-+	cat "$perferr"
 +	cleanup
 +	exit 1
 +fi
 +
-+if ! perf annotate --code-with-type -i "$perfdata" --stdio \
++if ! perf annotate --code-with-type --insn-stat -i "$perfdata" --stdio \
 +		--percent-limit 1 > "$perfout"; then
 +	echo "FAIL: perf annotate"
 +	cleanup
 +	exit 1
 +fi
 +
-+for member in "+0 (a)" "+0x8 (b)" "+0x10 (c)"; do
-+	if ! grep -Fq "# data-type: struct node ${member}" "$perfout"; then
-+		echo "FAIL: member ${member} not resolved from the register"
-+		grep 'struct node' "$perfout"
-+		cleanup
-+		exit 1
-+	fi
-+done
++# The instruction stats are accounted while the instructions are
++# displayed; printing them before the display loop shows zeros.
++if ! grep -Eq '^total [1-9][0-9]*,' "$perfout"; then
++	echo "FAIL: instruction stats not accounted"
++	tail -n 30 "$perfout"
++	cleanup
++	exit 1
++fi
 +
-+echo "register held access resolved"
++if ! perf annotate --type-stat -i "$perfdata" --stdio > /dev/null 2> "$perferr" ||
++   ! grep -Fxq "Warning: --type-stat needs --data-type" "$perferr"; then
++	echo "FAIL: missing --type-stat warning"
++	tail -n 30 "$perferr"
++	cleanup
++	exit 1
++fi
++
++echo "instruction stats accounted"
 +cleanup
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 0cf33d91804f19c4..b03c56d5e4c98aaf 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -275,6 +275,7 @@ DECLARE_WORKLOAD(callchain);
- DECLARE_WORKLOAD(false_sharing);
- DECLARE_WORKLOAD(global_data);
- DECLARE_WORKLOAD(flex_array);
-+DECLARE_WORKLOAD(regptr);
- 
- #ifdef HAVE_RUST_SUPPORT
- DECLARE_WORKLOAD(code_with_type);
-diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-index 74a0cbe49dc93533..17189458032c0a17 100644
---- a/tools/perf/tests/workloads/Build
-+++ b/tools/perf/tests/workloads/Build
-@@ -19,6 +19,7 @@ perf-test-y += callchain.o
- perf-test-y += false_sharing.o
- perf-test-y += global_data.o
- perf-test-y += flex_array.o
-+perf-test-y += regptr.o
- 
- ifeq ($(CONFIG_RUST_SUPPORT),y)
-     perf-test-y += code_with_type.o
-@@ -39,3 +40,4 @@ CFLAGS_callchain.o        = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_false_sharing.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_global_data.o      = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_flex_array.o       = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-+CFLAGS_regptr.o           = -g -O2
-diff --git a/tools/perf/tests/workloads/regptr.c b/tools/perf/tests/workloads/regptr.c
-new file mode 100644
-index 0000000000000000..00f31c16ac1e4a5a
---- /dev/null
-+++ b/tools/perf/tests/workloads/regptr.c
-@@ -0,0 +1,60 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * A struct pointer that -O2 keeps in a register, so the member accesses
-+ * have to be resolved from the register's type state and not from a
-+ * stack slot.
-+ *
-+ * See tests/shell/data_type_register.sh.
-+ */
-+#include <signal.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <linux/compiler.h>
-+#include "../tests.h"
-+
-+struct node {
-+	long long a;
-+	long long b;
-+	long long c;
-+};
-+
-+static struct node node;
-+static struct node *volatile vp;
-+static volatile unsigned long long reg_sink;
-+static volatile sig_atomic_t done;
-+
-+static void sighandler(int sig __maybe_unused)
-+{
-+	done = 1;
-+}
-+
-+static noinline long long touch(struct node *p)
-+{
-+	long long sum = 0;
-+
-+	sum += p->a;
-+	p->b += sum;
-+	sum += p->c;
-+	return sum;
-+}
-+
-+static int regptr(int argc, const char **argv)
-+{
-+	unsigned long long sum = 0;
-+	int sec = 1;
-+
-+	if (argc > 0)
-+		sec = atoi(argv[0]);
-+
-+	vp = &node;
-+	signal(SIGINT, sighandler);
-+	signal(SIGALRM, sighandler);
-+	alarm(sec);
-+
-+	while (!done)
-+		sum += touch(vp);
-+	reg_sink = sum;
-+	return 0;
-+}
-+
-+DEFINE_WORKLOAD(regptr);
 -- 
 2.56.1
 
