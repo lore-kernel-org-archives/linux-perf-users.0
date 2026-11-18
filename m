@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794990123;
-	b=uKDpJjLWYfW9yR/qeJUape5HGqMt/l8AOWMarrwpROuAWNgvZU1jhGhuCDotxHtP2G6X
-	 IDRpe/bj/nOXYvyK8EB/nL+4yBKP0xVPLhZ/2HnaE2b73RbBISo6rAmQlPcGHUaMAhCm3
-	 sk2Av1Ob79aWn67v5uRWR362RHgR3wsN5HAgHgvM/jLNy8Dsx6FRbOW9ZUG9Y0hQJ2Ggu
-	 jrRjTnKSc8IuzZkoFU2aKL8YihZXMfDFLrwxWYgo0xJnXg60c8x8Wc5zLDmynJhxfGz9M
-	 P8DSq4+vFzUpYYPmHND5YWuZQlBJDsMrCO9xy3fTfIZrvxBTI31OiL+RcuJ0m0IaPmQ==
+	t=1794990181;
+	b=pGDYj0mH6KO2V4KBPYZRdKzDYeKa8VuFG2j4qg3bCJ+1VbY6hxq7j8lcnX7S8JJx5Wq3
+	 Q4NjwJCZxNxhqoHtESWB6POdpf08cyh3GKsSSSMkEnLfL7XbCzglKhGg0s+yvfmEqJEu6
+	 PTuhdVXJkqnkpIMeYLZzH0ba63Jm6JdD2MCRdVfltx9Jv3IsVkdKhCed5Dnnt1+velD9m
+	 pei+919lkTST1onFhV9V6eh2C0iv8o4o0JqQ9wPQE1c+rXok4H2Qrp2yRJG2cdihnnMXE
+	 86+oTO4UKF0jmSiY2rYDFvmCf+9C+1DbzXF46Gy9mFY9cSFm+jHkm5Mz0tencK+3RLw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794990123;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794990181;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=DyrFx+aHriZZNFmGVyL/bUmoBEuVQZ6YrbZUub7P9K4=;
-	b=vTEi8Hb99icEpE6rBqfFaPRXISPCtgsoVZKon+JbkVvhrBlPW6BX31gRbRuR3ULsVZ/H
-	 7tOpkVHnqgAteyZDms1ORHK/E7fL4mtXqcDS0SpcemLzWLSqwAROYof/XgciwTltv2Lk/
-	 qbkf0bCsrM5PMFepK/5zPOriDu9roCdXEINI+bG8LwJ4pcayVWA5HgV3I+pzMjp/AUGca
-	 /K+ie5YVtVP05ROp3/9CFWxDzvNhkXSvDwmDmpblM/eKDXh05jCKomo1fuMaxQCJKTrZ0
-	 dqpkoCFpuYgM3L66SWh8CYxlnpHNuektoSGUUdLdRCU1p1TcR1ll3fGU9FL4A3EBzSw==
+	bh=wtjqla/Rg8Kh1FnjAcMXs52WSzkZKC8NL7c763DxBBY=;
+	b=13PFjDU3t50ozOnZXbWARh/0iChb4ymK0J+1v/ik1w98bOiGnoXaxZb8ns28fSzW0TOL
+	 k6dpsOrAQmhrsVzWHbCH7iXtPhNSlEPnyeC4YkZ2fSRdlD/dpNJDGeX2nZltgtQrYzR7h
+	 PWRpfzz2Js08i7GftJT1gWF+S2uKfLpd3CeXdoSP3CbeDuw4+0UCOc3RYlV9UlGBLuF/5
+	 rtdg9XDtZJZG6AwZEVJiPDGx3kk+CxCQjoMhYE5eusp7vdiVo2ffFvlNoHuhuAr5IGsxg
+	 VaxankBT8yQ0cIkO17z5z5GSds/S6kXgY5B6KCg36d4Gcb6AtUmX6PeA+jHVEP7yICg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="R1Y+Y0p/";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="W/4ldDsh";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85EA606A31C
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 08:22:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F153D606A330;
+	Wed, 18 Nov 2026 08:23:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R1Y+Y0p/
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D06E1F000C4;
-	Wed, 18 Nov 2026 08:22:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W/4ldDsh
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 861871F000C5;
+	Wed, 18 Nov 2026 08:23:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794990123;
-	bh=DyrFx+aHriZZNFmGVyL/bUmoBEuVQZ6YrbZUub7P9K4=;
+	s=k20260515; t=1794990180;
+	bh=wtjqla/Rg8Kh1FnjAcMXs52WSzkZKC8NL7c763DxBBY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=R1Y+Y0p/AnBLe4p8fEYTbnQ2PzSYUGYshmmcD1yqWcCvMn8wit5zqO9YnILwI9ogM
-	 blm8zu3I75bhD+fqPIcIByd6vipz3aDp1nc5sdo/WvzdeA9C+6glZpQ/38Mu8Vzumb
-	 EUMdmbKzzq5uRgSbKyVLlalmNZ7qj1/gE+jwT+EyDuBKQjIwh4ExG6M7tdFHBMRIbZ
-	 Ixr61Tu365NXZ6dJ43wuIGWAZGygbOB9mlGhL4aAh1A8xT6JFJyJowxRwAq+vdmvkW
-	 8TAgHM8m3izI/cG7pQbzK9XBe/tr0gmf68g+O+/NkpRQPjJ0WgRB9HoCeZW9GbnDuh
-	 EIALRCsEZ5Miw==
-Message-ID: <sashiko-outbox-220428@kernel.org>
+	b=W/4ldDshIdw4HvrECaCEbiEUJflVOeWMmzrZgA1AHRBjv/zZqzOwagPjdFXg/FAnQ
+	 l1mDWoCp4XPcB6dOFOoLcYZ9QHHldekOHdReQq9xWLFIw150rYYwlfI9+0OLfFEYbA
+	 nlpbi1X99zMRy7U05qVuZ9cqx9vkVqTXiHPBx2WVK6BS1QvUk5NOK/xOnOu9XR/p4K
+	 9LBzjmPKuw67AKrdx6sgbMPuPk8j55u0jXWSDqKr0Fh2F49ryB6tb7TkNBDw0+VLLn
+	 zdIkfIVyjVlCT/hf+BWW58pIlnvmL1X/ZZiAHYBc1xUvpfgZipNFGLAtYrObpnQCce
+	 KOG3q1X9iy5DA==
+Message-ID: <sashiko-outbox-220433@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 2/4] perf stat: Don't corrupt zero or prev_raw_counts
- on skipped per-pkg CPUs
+Subject: Re: [RFC PATCH v1 1/5] dt-bindings: riscv: Add Smpdis and Sspdis
+ ISA extensions
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261118075516.1278903-3-irogers@google.com>
-References: <20261118075516.1278903-1-irogers@google.com>
- <20261118075516.1278903-3-irogers@google.com>
+To: "Zhanpeng Zhang" <zhangzhanpeng.jasper@bytedance.com>, linux-perf-users@vger.kernel.org
+Cc: devicetree@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org
+In-Reply-To: <20261118081327.10684-8-zhangzhanpeng.jasper@bytedance.com>
+References: <20261118081327.10684-7-zhangzhanpeng.jasper@bytedance.com>
+ <20261118081327.10684-8-zhangzhanpeng.jasper@bytedance.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 18 Nov 2026 08:22:02 +0000
+Date: Wed, 18 Nov 2026 08:23:00 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,79 +63,71 @@ Precedence: list
 
 Thank you for your contribution! Sashiko AI review found 1 potential
 issue to consider:
-- [Medium] perf stat: zero count on skipped CPUs in
-  process_counter_values() fails aggr
+- [Medium] dt-bindings: riscv: unratified draft smpdis and sspdis
+  extensions added
 --
 
-commit 90a7348e9c069c01e179e728774f2e1d53d53fb3
-Author: Ian Rogers <irogers@google.com>
+commit 6221314245742eb097a15011dd35eda824258728
+Author: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
 
-perf stat: Don't corrupt zero or prev_raw_counts on skipped per-pkg CPUs
+dt-bindings: riscv: Add Smpdis and Sspdis ISA extensions
 
-This commit replaces the static zero perf_counts_values structure in
-process_counter_values() with a stack variable and computes interval deltas
-before substituting zero for skipped per-package CPUs.
+This commit adds devicetree binding descriptions for the draft Smpdis and
+Sspdis RISC-V Precise Decoded Instruction Sampling extensions.
 
-> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> index 6da3dbbde0e2a..267e280c5aa23 100644
-> --- a/tools/perf/util/stat.c
-> +++ b/tools/perf/util/stat.c
-> @@ -398,7 +398,7 @@ process_counter_values(struct perf_stat_config *confi=
-g, struct evsel *evsel,
->  		       struct perf_counts_values *count)
->  {
->  	struct perf_stat_evsel *ps =3D evsel->stats;
-> -	static struct perf_counts_values zero;
-> +	struct perf_counts_values zero =3D {};
->  	bool skip =3D false;
+> diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Do=
+cumentation/devicetree/bindings/riscv/extensions.yaml
+> index 79491ef8f86a8..afda76b9c7c47 100644
+> --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
+> +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+> @@ -214,6 +214,15 @@ properties:
+>              ratified at commit d70011dde6c2 ("Update to ratified state")
+>              of riscv-j-extension.
 > =20
->  	if (check_per_pkg(evsel, count, cpu_map_idx, &skip)) {
-> @@ -406,12 +406,12 @@ process_counter_values(struct perf_stat_config *con=
-fig, struct evsel *evsel,
->  		return -1;
->  	}
+> +        - const: smpdis
+> +          description: |
+> +            The draft Smpdis machine-level extension for Precise Decoded
+> +            Instruction Sampling, as described at commit
+> +            2de60e18118ce78e2da82ec33296345c94d8560c of the
+> +            riscv-performance-event-sampling specification. It defines
+> +            instruction selection, filtering and sample collection across
+> +            privilege levels. This does not imply supervisor access to P=
+DIS.
+> +
+>          - const: smstateen
+>            description: |
+>              The standard Smstateen extension for controlling access to C=
+SRs
+> @@ -269,6 +278,16 @@ properties:
+>              ratified at commit d70011dde6c2 ("Update to ratified state")
+>              of riscv-j-extension.
 > =20
-> -	if (skip)
-> -		count =3D &zero;
-> -
->  	if (!evsel->snapshot)
->  		evsel__compute_deltas(evsel, cpu_map_idx, thread, count);
-> -	perf_counts_values__scale(count, config->scale, NULL);
-> +	if (skip)
-> +		count =3D &zero;
-> +	else
-> +		perf_counts_values__scale(count, config->scale, NULL);
+> +        - const: sspdis
+> +          description: |
+> +            The draft Sspdis supervisor-level extension for Precise Deco=
+ded
+> +            Instruction Sampling, as described at commit
+> +            2de60e18118ce78e2da82ec33296345c94d8560c of the
+> +            riscv-performance-event-sampling specification. It provides =
+the
+> +            supervisor-visible PDIS registers and behavior, excluding the
+> +            machine-only state. Firmware must make this state accessible=
+ to
+> +            supervisor software before reporting this extension.
+> +
 
 [Severity: Medium]
-Should process_counter_values() return 0 when skip is true instead of
-falling through with count =3D &zero?
+Should unratified, unfrozen draft specifications claim the canonical
+smpdis and sspdis strings in riscv,isa-extensions?
 
-In non-global aggregation modes such as AGGR_SOCKET (--per-socket) or
-AGGR_DIE (--per-die), a skipped secondary CPU maps to the same ps_aggr entry
-as the first CPU in that package or die:
-
-tools/perf/util/stat.c:process_counter_values() {
-    ...
-			ps_aggr =3D &ps->aggr[i];
-			ps_aggr->nr++;
-    ...
-			if (evsel__count_has_error(evsel, count, config) && !ps_aggr->failed) {
-				ps_aggr->counts.val =3D 0;
-				ps_aggr->counts.ena =3D 0;
-				ps_aggr->counts.run =3D 0;
-				ps_aggr->failed =3D true;
-			}
-    ...
-}
-
-Because zero has ena =3D=3D 0 and run =3D=3D 0, evsel__count_has_error() re=
-turns
-true for non-cgroup events, wiping out the package count accumulated from
-the primary CPU and marking the bucket failed (<not counted>) while also
-inflating ps_aggr->nr.  In interval mode, where underflow previously gave
-the static zero structure non-zero ena and run after the first interval,
-this regression causes every subsequent interval to fail too.
+Documentation/devicetree/bindings/riscv/extensions.yaml states that
+standard extension properties map to their originally ratified states, and
+Documentation/arch/riscv/patch-acceptance.rst requires RISC-V
+specifications to be Frozen or Ratified before acceptance.  Defining
+unversioned standard extension names for a draft without final CSR
+allocations breaks devicetree ABI stability if the specification or CSRs
+change before ratification.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118075516.1278=
-903-1-irogers@google.com?part=3D2
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118081327.1068=
+4-7-zhangzhanpeng.jasper@bytedance.com?part=3D1
