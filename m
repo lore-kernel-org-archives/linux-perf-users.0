@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795039472;
-	b=bpLI/sNrmoequCfvrd153HPtCK2QfLWRgXg9uEu5W/IwerSxRGRVTcjaRLdDk8TfRFcm
-	 t8E4hWfYkEDGZznuPW0SsUVX0A3LN16o3V17uwhiXlTwui1PSdKPzvJCECpz+T4wHEVRD
-	 lFqeBeU9JzYjt4wuu4fzKNR0sy8M14zkrvnVzN/TyWnAWIIBKNyHxu8tiSY3VWV9+VabQ
-	 eOwmZvQ4rN6zXivMnQQcskfAXFLdb367p2yiaffKQP6/AB9AzwXG/9XXUuPDwcALAazgy
-	 F6ix4R/cBokhyckUjBCOKiVrp1tqJXzJcWJRKARx3jX9gQEOC/FMVygfUW7GSqILeFA==
+	t=1795039494;
+	b=L3vblRb2pgnrrl/dyFe5wFGgyRTPDtPwWxjTkb5kjJBHq7abREvSDBodhmBH1Qj9Zgf1
+	 CbJ3Sq4a3P5chU429/RnVEWe5Bnt7WbosCKtjoHOclpdqRhWTM0eiFi1wN4QzVcJciSc/
+	 TqP1QiNuWOvNl+tUts6KNoHbnI26k/8jjGs4jMW3KpRI7x4uzIaNYCOExGd+PVds+z6S2
+	 YYE1FK00114aqgyIDc+i/63qaQPA5ZjosRpU6tSfshfc87XbZIBLt9RQeBYqucbToWxR5
+	 AK8UEQAeNF3zus/XipDpCFKiSgJQSv8JAHyChbJhJZabNohu0BCqU6Zsrx8LVYy4Byw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795039472;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795039494;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=N/AdLQWcLBjhVfDr0/TANt0tYvrZ37IoEnKjPz+t4oc=;
-	b=288GSWWODbNG1EyzIZXXqoOD8XQCajgKw7lKJ5AkFydb40fcLUDTQ/dMilNHPuAR2uIV
-	 v+/CAsT9hTnm8K3AT/Yf01wgoCRD7wAqxwQ+qpDpJapVs4L0qUq4PVigy7SoyAjWS7+d0
-	 NGBqiRwbCz58DUh3/+ARv2ScqBg4WEUkBrru6lN0TrL3ORZA7Be3hGD+wiaK/1RWYdwwi
-	 UsMKC/bH/URxZuihHZ9mwxFWpeKhA+HhStiMfOSbC0q5SI0QjZ4OFQelqdAW47BSw0Xp2
-	 9b2+UhXttA0hU/6OO5nuhCgASWOZTh+LlgLgXqd3qz74zlUyfwZvzv+HUcae1KTA+/w==
+	bh=h56j91DeNtODpRx/XeX3sfOX+GjSS5BVbN4f06oxIis=;
+	b=K4U47oKLfWyjuN2VcgksFkXDnb+rHiG3SnbhTCCSpM5C1AKQZIm2oikYRNKAT53QHhbS
+	 vBn8/flB2hxfwgKNpNfOYQNOWDkm/7FqeqtJSuvIgM5V6GjWJXLVlP7rbRFa84dUaGStW
+	 PEJrbTSFxucuL/N3tj7Nv9G1w4c67WzDgFOZjOhT9g9hDrJIdKTeqT5Caxh6hHWMUx8vq
+	 +W9m4fZBrhBDDK8zxVJ7LCEdOVZgh7uLOfB7Tg2j2EeHDBSeiqQacWaDPwsFEa+XSp9pQ
+	 tM7LppoCnwEdgwSWkzTuFBcMqI9QVPZJbpfNnY2C56BFWnLGGqbzrIm8UxOfpCWNwMw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OhkLkAXA;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LxONbHaF;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EC6606A32A
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 22:04:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFDA606A31C
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 22:04:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OhkLkAXA
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 055481F000C4;
-	Wed, 18 Nov 2026 22:04:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LxONbHaF
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6913D1F000C4;
+	Wed, 18 Nov 2026 22:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795039472;
-	bh=N/AdLQWcLBjhVfDr0/TANt0tYvrZ37IoEnKjPz+t4oc=;
+	s=k20260515; t=1795039494;
+	bh=h56j91DeNtODpRx/XeX3sfOX+GjSS5BVbN4f06oxIis=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=OhkLkAXAYoPLTHw14MeccESZ9QtLr5CKg4/Iia2VVjuCYYewRUwOUfA+2twldc/3i
-	 a00LjQcjW70QuIdiS4ZT/20pBqp3+ck/ayOC99a44KG1OQ+OTQgjQYAZjmGBkOGDHR
-	 nmLei42WLoLfgaruLgQLfejI69g7VFdtOhi8DfIABQrxie9tJmtz7wWVcKvATuxiCI
-	 Bk5g6fnpJklFjRCIEekys4TeoWUUV2Ti+ZKePPpz7p/jXIJ4QaGg/3WEzOla0psmkO
-	 /fj8EdPwptT8Ih+81XgQRqFJUZgH7FYe3lTeE2zaHvk29od5Zi8zLZ36qdTxBaCVwo
-	 47F22eCDEeHig==
-Message-ID: <sashiko-outbox-222074@kernel.org>
+	b=LxONbHaFLS53jnm+VfDGbnq7qx8eSpT8D5xG+UHnpuBX3bUrrYc3Ncux5VkEUukz8
+	 MgZV2enXZvmO09Wl0Zr0L8VRS+/MwqO/9WTKCaXpUCX7tHTdyQO1VK6+Lp232YBIED
+	 c5JbykmVfJXiJfpr+OrJVvbW/imBhoudWZD7evuozpDGnNup41oJoNMWgsB6C+5ai6
+	 DwwsElzOw+zn+JdrBQ8VIf1anljvu6nhDCxaykpSIWo0No1aeGt42/IKRyYErqlexr
+	 9LY3bcBIY/gb+tmTvRbG2Nrmey8T7w7S7sYIqdYy9jf0A/RgT3rujlhyceyruHKmeB
+	 QJ3JZ+w5R0uRA==
+Message-ID: <sashiko-outbox-222075@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 13/13] perf test: Skip the LBR inline unwinding check
- when unsupported
+Subject: Re: [PATCH v7 10/13] perf build: Record the features checked
+ outside FEATURE_TESTS
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261118215716.114868-14-acme@kernel.org>
+In-Reply-To: <20261118215716.114868-11-acme@kernel.org>
 References: <20261118215716.114868-1-acme@kernel.org>
- <20261118215716.114868-14-acme@kernel.org>
+ <20261118215716.114868-11-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 18 Nov 2026 22:04:31 +0000
+Date: Wed, 18 Nov 2026 22:04:54 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,24 +63,25 @@ Precedence: list
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> The LBR check takes caps/branches as sufficient to record cycles with
-> --call-graph lbr, but the file only says the PMU has an LBR: AMD LBRv2
-> rejects the call stack mode with EOPNOTSUPP and AMD BRS, which samples
-> only its own retired branches event, rejects cycles with EINVAL, so the
-> test fails on AMD instead of skipping.
+> llvm-perf and rust are in FEATURE_DISPLAY but not in FEATURE_TESTS, and
+> jvmti and jvmti-cmlr are in neither list: they can't be part of the
+> test-all fast path, which sets every FEATURE_TESTS entry to 1 when
+> test-all.c builds.  Since FEATURE-DUMP is written from FEATURE_TESTS
+> only, a FEATURES_DUMP=3D build, as used by build-test, never sees them and
+> silently builds without libLLVM, the rust workloads and the jvmti agent.
 >=20
-> Skip when the same event records without the branch stack, so a PMU
-> without the LBR call stack skips while a perf record that fails for
-> another reason still shows its error and fails the test.
+> Record the display features and the jvmti ones that aren't in
+> FEATURE_TESTS in the dump after the regular feature checks have run.
 >=20
-> Fixes: 446c595dc0dd1759 ("perf test addr2line_inlines: Ensure inline info=
-rmation shows on LBR leaves")
-> Cc: Ian Rogers <irogers@google.com>
+> Fixes: 206dcfca1f5cfac3 ("perf build: Autodetect minimum required llvm-de=
+v version")
+> Fixes: 3f5dfa472ea6771c ("tools build: Fix rust feature detection")
+> Cc: James Clark <james.clark@linaro.org>
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118215716.1148=
-68-1-acme@kernel.org?part=3D13
+68-1-acme@kernel.org?part=3D10
 
