@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795039057;
-	b=HaarVg3tPM54eI7J6NnwK8LmEQmS3U6ZVc1kGIIAYopUz8OeIx7Gdu09TsKO/kuhG3IT
-	 tZfGduhdaxm6ORzjDZJIpE0C/RSsN2/XHB94md01SDU6kmazVw67o6IiqSd7TJ4L9FrBu
-	 +UVqHA12qvf0ZLmn2UAMlcilOCscqwd42txFJpFXdy9yYqcw1jcpMY7MsXIugY5zjgWpa
-	 zw80tERehT4X8khTNEPSpkOVPNEaC/0sH0v4xMuvowt+Qf/fTbiuOOh4+Jppqr1/rzBdB
-	 3GwFU3e+p05Q+QWFpoVO/yuL/5c7lJ4N7xWKmCbjalsDR+/o4I6gPK6OocRrm6Ea0sA==
+	t=1795039061;
+	b=pVUoNj3APOPsoq87Y2fAWs65iG9IpFWl7Xnnr2uuVwXhxHcbtgpCmx9JAeJjTvVEmkJV
+	 BUpVwRczr1rSWmsEObVNpMxvIoMAYALNGT1sqQ1/o1H1PPICUwCxXCs71lfAMqcbLODXG
+	 D1TUYZROuzBpLnama1DcYmppg3Jd0UEvuB06jdAur7rrrmLyguermA9jO9+e3kBGjk4MY
+	 0SJS74F5ULGGebEAvIgZ1TQtza/MTNlGsoAwxj7JfrDxhlXjs4TSuxjlzAGNPCCLtNN/a
+	 NQ6ACKmDbeWPuuTWWcoZkKaCBsxo5EEv/QG8QYZs4hcPyK43zxy64+xE/zQWSF5De+g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795039057;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795039061;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=dCpUFQTmfxMvrYVOEbCqJQSqnG5loUq97vjZxowCiuU=;
-	b=CdaebveWCa6q1uJmN4E+U5nyz58qjK2rOAOstqmgO2lj9thM3OaIzm7RKEnG7BKiDq7e
-	 NvxPpe98RBNPb59nRuYJZw5fB2QzGGSDxNd4tcjiGB3Qjs6RKFTZMGZxsnpBCWJKd8CF9
-	 A4JM8/6Oz7AqcI0a5UVg/WfJ6xJr5jt2dpR0dHZZ0GMrHgqC0FNI4eItlxb3l1ddoI8D5
-	 O9Vn7KFAJuUNTAjqO5xxrNJFTMaJMMZIU9Q0Qe+As3N8hJjDpZ0ftBalwOuLVpHWHWLx/
-	 lW8Aw5pwCwi9khfZpXGZyaAJiTsqbVUmY80kYyAUAEABONSqAYb0GFduFBc+i9Wdt9w==
+	bh=fq07rHoyX6fjXGy2GNf2vEoO/ezYp8ILKOq2QP3JirA=;
+	b=CWA7DXB9pycKCr7doRl6xyoc7c0hlgBW5PAZkQEMp+sgHBVr1L2DQ5Iq/0CfTNoimLBL
+	 UnGeJ2KEYRW5cUqZGMXtloChL7i/oANpq+1N/JG7tQs30I/omU6MA0HJHmcOG567fG3OT
+	 5t3mae3osSB4kiTCygrDT22RfcOnhSQKI8pBwNjwbqaHWRSzJEqN+BlEZfFyVbAOTE4pA
+	 iMU6hDoNYo3ipxqsT0FoiR01NjEl/RDWm/dzobOEVSaYrS6YqLNMv5aFF85pNmA7XyNf3
+	 r2ehCwR/yxanXxOmMmY/9CX2x0B0yk1s38IypTBQphbwQWxayavhCZ2rZ5gTAf3TnAA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KQHdF7+v;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hgEZ7XAF;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3C9606A32A;
-	Wed, 18 Nov 2026 21:57:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC00606A320;
+	Wed, 18 Nov 2026 21:57:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KQHdF7+v
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B7BB1F000C9;
-	Wed, 18 Nov 2026 21:57:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hgEZ7XAF
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFFF11F000C5;
+	Wed, 18 Nov 2026 21:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795039057;
-	bh=dCpUFQTmfxMvrYVOEbCqJQSqnG5loUq97vjZxowCiuU=;
+	s=k20260515; t=1795039060;
+	bh=fq07rHoyX6fjXGy2GNf2vEoO/ezYp8ILKOq2QP3JirA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=KQHdF7+vn+3DU6RNldsfqjbHylbrny5FRbGOv7JSdJWpD+2mGO9G/Rjfmd64D5Y1l
-	 QaEgnTPxIbpsnSeD/BvccyzGl/AImtSf9M8SwCzvzmsLet60b0MdXZpynt29Zqqax2
-	 TPIyVSzrhm6RuvEp0FxagragJnMcar+CHx8r6DiKncsPWwOwhlCOEAhvghu8iK2JVg
-	 9Kh3j9SXsKegwOUb/9ZT5/1hRtWE8M5BHo0dk4zZoZAS2XpUPGDRTlorHSUtSfZEjA
-	 xIwcukh6ceoZFsZjnVE7RbkwyXK7pZvMY0BAahaUO/LkTCuG3Y9GgBLVNQCFmVbzIc
-	 fZHE0XN1NGbhA==
+	b=hgEZ7XAF/lSRfPL/okOdQcHa9AfpRxO8q134XKNRSV0O90ko5v7j7iZ0reWGMJiAZ
+	 nTiW1uNV3Nf5mTjBi+mek24TLawOJ7xxit8UPFb3br/dvFHjtXkAQi70vkj6QHahxh
+	 v06fdeZ2xyhDx6IqVDx9KthVb1/DvB32imMmp5tWMJpKITg2ULvr6+K7zJtrknuoOA
+	 4hc1u/K7MuyRwbTz2qSmotaod/Xlon4Cpt58zTg9SooRLISMjWbn5qxq6tLkLY/9Ip
+	 dwUwEgUuMV4fTXmJa6JV8VQTsJQzF9eMefxr3npkBahlACMO3Tsf56DRl7Fz2gnH3x
+	 vDMZQ5iTFfqGA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v7 04/13] perf tests: Exercise DW_OP_addrx global variables
-Date: Wed, 18 Nov 2026 18:57:06 -0300
-Message-ID: <20261118215716.114868-5-acme@kernel.org>
+Subject: [PATCH v7 05/13] perf tests: Exercise the flexible array member path
+Date: Wed, 18 Nov 2026 18:57:07 -0300
+Message-ID: <20261118215716.114868-6-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261118215716.114868-1-acme@kernel.org>
 References: <20261118215716.114868-1-acme@kernel.org>
@@ -70,49 +70,45 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-clang emits DW_AT_location with DW_OP_addrx for globals in DWARF 5, gcc
-emits DW_OP_addr.  The global_data workload keeps a zero initialized
-struct in .bss: at run time it sits past the file backed mapping, where
-the by-name fallback through the thread maps cannot find it, so only the
-DWARF address lookup resolves it.  The test checks that its three member
-accesses are annotated, so the DW_OP_addrx path is exercised when perf
-is built with clang and DWARF 5 (e.g. coverage.sh --dwarf-version 5),
-and the DW_OP_addr one with gcc.
-
-It skips on 32-bit PIE builds, which reach static globals relative to
-the GOT base register, and the resolver does not track that.
+No test covered find_flex_array() and get_flex_array_member().  Add a
+flex_array workload that keeps a struct with a trailing data[] behind a
+global pointer, and a test that checks the accesses past the struct size
+are resolved and named after the flexible array member; find_data_type()
+folds offsets past the struct modulo the element size back to the
+member's offset (+0x4 for char data[]).  The test skips on 32-bit PIE
+builds, which reach static globals relative to the GOT base register.
 
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/builtin-test.c            |  1 +
- tools/perf/tests/shell/data_type_global.sh | 73 ++++++++++++++++++++++
- tools/perf/tests/tests.h                   |  1 +
- tools/perf/tests/workloads/Build           |  2 +
- tools/perf/tests/workloads/global_data.c   | 57 +++++++++++++++++
- 5 files changed, 134 insertions(+)
- create mode 100755 tools/perf/tests/shell/data_type_global.sh
- create mode 100644 tools/perf/tests/workloads/global_data.c
+ tools/perf/tests/builtin-test.c               |  1 +
+ .../perf/tests/shell/data_type_flex_array.sh  | 71 +++++++++++++++++++
+ tools/perf/tests/tests.h                      |  1 +
+ tools/perf/tests/workloads/Build              |  2 +
+ tools/perf/tests/workloads/flex_array.c       | 55 ++++++++++++++
+ 5 files changed, 130 insertions(+)
+ create mode 100755 tools/perf/tests/shell/data_type_flex_array.sh
+ create mode 100644 tools/perf/tests/workloads/flex_array.c
 
 diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 327483f96401b580..e056a3d3594ff8a2 100644
+index e056a3d3594ff8a2..8fc425d470c17dbf 100644
 --- a/tools/perf/tests/builtin-test.c
 +++ b/tools/perf/tests/builtin-test.c
-@@ -213,6 +213,7 @@ static struct test_workload *workloads[] = {
- 	&workload__deterministic,
+@@ -214,6 +214,7 @@ static struct test_workload *workloads[] = {
  	&workload__callchain,
  	&workload__false_sharing,
-+	&workload__global_data,
+ 	&workload__global_data,
++	&workload__flex_array,
  
  #ifdef HAVE_RUST_SUPPORT
  	&workload__code_with_type,
-diff --git a/tools/perf/tests/shell/data_type_global.sh b/tools/perf/tests/shell/data_type_global.sh
+diff --git a/tools/perf/tests/shell/data_type_flex_array.sh b/tools/perf/tests/shell/data_type_flex_array.sh
 new file mode 100755
-index 0000000000000000..11fbf852b44cfaad
+index 0000000000000000..620c28ec24059661
 --- /dev/null
-+++ b/tools/perf/tests/shell/data_type_global.sh
-@@ -0,0 +1,73 @@
++++ b/tools/perf/tests/shell/data_type_flex_array.sh
+@@ -0,0 +1,71 @@
 +#!/bin/bash
-+# perf data type profiling test for a global variable
++# perf data type profiling tests for flexible array members
 +# SPDX-License-Identifier: GPL-2.0
 +
 +set -e
@@ -158,7 +154,7 @@ index 0000000000000000..11fbf852b44cfaad
 +	exit 2
 +fi
 +
-+if ! perf mem record -o "$perfdata" -- perf test -w global_data 1 \
++if ! perf mem record -o "$perfdata" -- perf test -w flex_array 1 \
 +		> /dev/null 2> "$perferr"; then
 +	echo "FAIL: perf mem record"
 +	cat "$perferr"
@@ -173,63 +169,57 @@ index 0000000000000000..11fbf852b44cfaad
 +	exit 1
 +fi
 +
-+for member in "+0 (saddr)" "+0x4 (daddr)" "+0x8 (bytes)"; do
-+	if ! grep -Fq "# data-type: struct conn ${member}" "$perfout"; then
-+		echo "FAIL: member ${member} not resolved"
-+		grep 'struct conn' "$perfout"
-+		cleanup
-+		exit 1
-+	fi
-+done
++if ! grep -Fq "# data-type: struct flex +0x4 (data)" "$perfout"; then
++	echo "FAIL: flexible array member not resolved"
++	tail -n 30 "$perfout"
++	cleanup
++	exit 1
++fi
 +
-+echo "global variable resolved"
++echo "flexible array member resolved"
 +cleanup
 diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index af822885890dda73..049a164503166529 100644
+index 049a164503166529..0cf33d91804f19c4 100644
 --- a/tools/perf/tests/tests.h
 +++ b/tools/perf/tests/tests.h
-@@ -273,6 +273,7 @@ DECLARE_WORKLOAD(context_switch_loop);
- DECLARE_WORKLOAD(deterministic);
+@@ -274,6 +274,7 @@ DECLARE_WORKLOAD(deterministic);
  DECLARE_WORKLOAD(callchain);
  DECLARE_WORKLOAD(false_sharing);
-+DECLARE_WORKLOAD(global_data);
+ DECLARE_WORKLOAD(global_data);
++DECLARE_WORKLOAD(flex_array);
  
  #ifdef HAVE_RUST_SUPPORT
  DECLARE_WORKLOAD(code_with_type);
 diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-index 43cc4da6fb0786de..03017aaaaa0bec32 100644
+index 03017aaaaa0bec32..74a0cbe49dc93533 100644
 --- a/tools/perf/tests/workloads/Build
 +++ b/tools/perf/tests/workloads/Build
-@@ -17,6 +17,7 @@ perf-test-y += context_switch_loop.o
- perf-test-y += deterministic.o
+@@ -18,6 +18,7 @@ perf-test-y += deterministic.o
  perf-test-y += callchain.o
  perf-test-y += false_sharing.o
-+perf-test-y += global_data.o
+ perf-test-y += global_data.o
++perf-test-y += flex_array.o
  
  ifeq ($(CONFIG_RUST_SUPPORT),y)
      perf-test-y += code_with_type.o
-@@ -35,3 +36,4 @@ CFLAGS_deterministic.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_named_threads.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+@@ -37,3 +38,4 @@ CFLAGS_named_threads.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
  CFLAGS_callchain.o        = -g -O0 -fno-inline -U_FORTIFY_SOURCE
  CFLAGS_false_sharing.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-+CFLAGS_global_data.o      = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-diff --git a/tools/perf/tests/workloads/global_data.c b/tools/perf/tests/workloads/global_data.c
+ CFLAGS_global_data.o      = -g -O0 -fno-inline -U_FORTIFY_SOURCE
++CFLAGS_flex_array.o       = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+diff --git a/tools/perf/tests/workloads/flex_array.c b/tools/perf/tests/workloads/flex_array.c
 new file mode 100644
-index 0000000000000000..5973f7bb16fd007c
+index 0000000000000000..141f9d510816cb05
 --- /dev/null
-+++ b/tools/perf/tests/workloads/global_data.c
-@@ -0,0 +1,57 @@
++++ b/tools/perf/tests/workloads/flex_array.c
+@@ -0,0 +1,55 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * A zero initialized global struct, so it lands in .bss, past the file
-+ * backed end of the last segment: at run time it sits in an anonymous
-+ * mapping that the thread maps do not name, so only the DWARF address
-+ * lookup finds it.  clang describes its address with DW_OP_addrx in
-+ * DWARF 5, gcc with DW_OP_addr.
++ * Flexible array member workload for data type profiling: the accesses to
++ * the array are past the end of the struct, where the resolver has to find
++ * the flexible array member.
 + *
-+ * 'perf mem record' of this workload followed by 'perf annotate
-+ * --code-with-type' (see tests/shell/data_type_global.sh) resolves the
-+ * accesses to struct conn.
++ * See tests/shell/data_type_flex_array.sh.
 + */
 +#include <signal.h>
 +#include <stdlib.h>
@@ -237,14 +227,13 @@ index 0000000000000000..5973f7bb16fd007c
 +#include <linux/compiler.h>
 +#include "../tests.h"
 +
-+struct conn {
-+	int saddr;
-+	int daddr;
-+	long bytes;
++struct flex {
++	int len;
++	char data[];
 +};
 +
-+static volatile struct conn conn;
-+static volatile unsigned long conn_sink;
++static struct flex *gp;
++static volatile unsigned long flex_sink;
 +static volatile sig_atomic_t done;
 +
 +static void sighandler(int sig __maybe_unused)
@@ -252,30 +241,33 @@ index 0000000000000000..5973f7bb16fd007c
 +	done = 1;
 +}
 +
-+static int global_data(int argc, const char **argv)
++static int flex_array(int argc, const char **argv)
 +{
 +	unsigned long sum = 0;
-+	unsigned int i = 0;
 +	int sec = 1;
 +
 +	if (argc > 0)
 +		sec = atoi(argv[0]);
++
++	gp = calloc(1, sizeof(*gp) + 4096);
++	if (gp == NULL)
++		return 1;
++	gp->len = 4096;
 +
 +	signal(SIGINT, sighandler);
 +	signal(SIGALRM, sighandler);
 +	alarm(sec);
 +
 +	while (!done) {
-+		conn.saddr = i;
-+		conn.daddr = i + 1;
-+		sum += conn.bytes;
-+		i++;
++		sum += gp->data[3];
++		gp->data[5] = 1;
 +	}
-+	conn_sink = sum;
++	flex_sink = sum;
++	free(gp);
 +	return 0;
 +}
 +
-+DEFINE_WORKLOAD(global_data);
++DEFINE_WORKLOAD(flex_array);
 -- 
 2.56.1
 
