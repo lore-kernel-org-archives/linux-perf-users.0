@@ -1,86 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.41
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795019397;
-	b=Kt5m6fLKAALuLhWseJh60e7MoWf67fxMvrvF+tqw3hwYYvniDLwhcCnkSxVoZANK1gjy
-	 29NkE0lhSqG04KmfjjgfmQ+kOjC9e+3WgzQdCH9dtFODbJbqLqhmF5RaGpOsgPJCHQk6O
-	 IiiWFso3QbcBBLFpoPq6yYqZSDgJmdv3MmyCoQD+GGch8hIIEwoTfSjYSuKYMMGZE4p4w
-	 LZtMhDMqd8u2kw0Du5dFujdT1FCub51GabfC+pepZRG4u4UqXw5UNSnztGobfx5AstNP+
-	 4/NrKZAnGQp788fNz0Dta0J/8LJnPqDcJ4+Qwafxy3VvjRBjiWAx0q5RmOL4/Om1TJA==
+	t=1795019398;
+	b=sWfvVmY0Hbb1zZFdMwQUdHUA1A0jXz9dhNFb2pL4FoyjfsA2rldfzFyqcHCDip8ZKYvZ
+	 4QCd86y/Fcj/h/tMoN376PM/DZqAZ+8QpHxPTe4btwSfLlhYTNITbLz9wBkF0ctYe8nSD
+	 Oqm/clcF9cpr1NzqIMHULbs4usPKJpQqhwQX6JoZIQ4eX0XoQENGLigLEoz/eEH38R9Mo
+	 I23yS9HoPo1KQ3KM+Xjg7D8wo4G2RNRjPyqLKjNQR2IaAZM8coqORVdyVaC1U3eK3kYJ2
+	 fprsqDLux068MbdldqnUUUCOClA1PerqGx+HH22KKaili6fe9/dTfYLmmeOLVbMPtPQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795019397;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795019398;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:Date:Subject:
 	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
 	 References:In-Reply-To:To:Cc:X-Mailer;
-	bh=7HY3Xyy42ADU9ACuHgExJQX2qZxHihPnkeqAIQZiRGg=;
-	b=wjjIihOouEUKVlyzzn8x6gqW+Z+vtiqmEb3VUuuDaPHAXRm/2cEuXAQzcPNktUaZJpAu
-	 MUS2BVilFlZarGy+5W7kk0A3ONnrvIX5b5aTAvmyuCGV2F/NgigORlfKetqcXc4lKO86X
-	 3wzC61ilbAMzv5nUr4V6tD07F0wvbVu+BpTAYSJqSHkUOR3UUfMLKCdsuhWpcUk99LGmr
-	 nbFA8IpwPncrJwger6CtVUQ6eJA6pvj88UKDW77icEXgoilCuFR2YrrYsKNjhPAluyxjk
-	 NZnFydSJPBprppyz/dPljMhs+bBmNZ7tYFu5v0Ms0aHSJODQHePy3qPuHD1lJ9ieNmw==
+	bh=Rpi69KOE+RewZqGKWGe5fV1itNLcgLER2USO6GkvbTk=;
+	b=etI54c/Fz8bU9VVq/NVN1FBKm5dTEoh3K6m5ccmFOUPbBXvS7u44lWdokwSpPszctw0T
+	 FAuuIqKWI3sq86EuANPpxpSP9rTbKCJYtFi87rD2EPMMXBvFQRZgkWTxTbbmlI9P4hoAY
+	 2E24j1cGnUgq3hrlECs2rGuptnTZpO87sVOOfG3e3a1Z/2fR0/DJjuloGyUWaoY+miG36
+	 IYABKVaUe51IA0eyIP7nlwBo6+U2UeHFnl89Sq5Lnbq7ZtvpdSNIutv0jzYt4nKHGAEdE
+	 K2QRn7svcUDUZx5xVCHyVxMIm0TGZ1xofJQc9s4fmV0igpm23NVPEC2eFCnWG2/FaDQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linaro.org;
 	spf=pass smtp.mailfrom=linaro.org;
-	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=qAbOZoyi;
-	arc=none smtp.remote-ip=209.85.221.49
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=wkCip4Oz;
+	arc=none smtp.remote-ip=209.85.221.41
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0194860A2616
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 16:29:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0194860A2616
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD35860A2637
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 16:29:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CD35860A2637
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=qAbOZoyi
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-48b001cd92bso728581f8f.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 08:29:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=wkCip4Oz
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-4a33359c1b3so845340f8f.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 08:29:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1795019392; x=1795624192; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1795019395; x=1795624195; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=7HY3Xyy42ADU9ACuHgExJQX2qZxHihPnkeqAIQZiRGg=;
-        b=qAbOZoyijGrmkGVrE9dZMju6YUDkrGYAnVdUORu7ElyqcYvRc+hx6LZq+GuTECRIrT
-         UkV87aQABtcpAi09GnhORkpXb3z90BC3I2q6P48dYheWgyGFHLOzxTuH40boB8wGVe08
-         a8RUNF06kYthUwZ5AZv/PPQm2rZ/CyrWmedy7yGlVJ15xZlJdcP+n5momFJ1QU5RU90m
-         GbZ2Fn+Q8RuqYNGy8ZgxpRVxaoMWNTfIVnuGaOqI2tF5xxRmUW8v69Q6JZxc+4sMAbaj
-         ZTDDf1iHcE0QJlQUdPD7bqPwhvZzwtAWxcXxoBDuHCCl4Ceb4elTyQPj0cimoWlRgaU8
-         uxPw==
+        bh=Rpi69KOE+RewZqGKWGe5fV1itNLcgLER2USO6GkvbTk=;
+        b=wkCip4OzUWNZYLZ0v70NTtpvMUaclfhuWjrxWTLDEGCobEuISEM1r/1YXykE8OrNES
+         sSdavPDScTpLIcsD42OOVDB8cBA/7n3a0ejFiNtH6Ox0hcrp0r4VRC+t9RqaxxYg0Emq
+         jSqHByUX5gg+PCTLUQmXZp0Hcem1t/7WI5dAFC3KPqOUHPE6ZBUJ9AI3zLmVexSX3sYp
+         NzzpfGaM2pY6RMKpRjJAWC5d3ESM2Ozxv4Jo/p9EKA7lW81Zcu5FJDnvs2lhXYx0Bhq5
+         CLjSKrmZhexYRs8/Dk1HYu3cSv6M+uOSsWUfNMwBoOhQyE7UI0GZmke1n6O5v2HyLg5h
+         smhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795019392; x=1795624192;
+        d=1e100.net; s=20260707; t=1795019395; x=1795624195;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=7HY3Xyy42ADU9ACuHgExJQX2qZxHihPnkeqAIQZiRGg=;
-        b=dONizPB3mRSdo47Q4MbbpvWsMrpHlxnmsVA06L5gbRjhNNhKmj6jtCf57d6npZl8YP
-         mHiK2agVykYOKGMge300uAie/NgYW3VTnq8aHQlAaoYrOcj71tbmZHlGHKD68tryXVTE
-         76eqQSHGfy+jCfUq+pu53bhQ1+9vXb2LC3mTaK/h9YPZbg+LpoNToL1nY4lqexw9qqE+
-         fR3/EaxuYFMJmD940IQ/gjCkBVZ29gHbI0X7iDpYvdackhJNnfBV+AJd4BdBR3hZ/LgY
-         rrlDdwFKwDiPD7I/DdTeP3ujvPqn8+svFR4F94gKQmyW547pZso6RiBhNMFyDK15dqOj
-         hcTQ==
-X-Gm-Message-State: APuU4Z8NBfxRFmS0iw8riDV1lwddgTwwhht9D3pfBJOygzgSso/TVafh
-	TLFTiiCn0SQ045XpUfJu0prHwXgacggz0JVARWfFqIZnSZlTiIL5y+DdxeJWCqBtJrY=
-X-Gm-Gg: AZFdTZfsEELnAV3LHtTynrZqe6kGH7SFwLuWguvXGOYemxHfRbNJW2+rRecMq8N/kYw
-	b+yo6vNl34f7aloREGrsofHFiN10Xmo5UVGAxaUL5zMGl7nSWEzo/e5i+UJdbMIeygIYq0kgcgm
-	/c2psW4G4C+E9Ly0XqEF/5MxquZHZFEuaWZZcnh2jcdX+VZPF2VBySG/+eoF14KcjGmI1UuOV2k
-	gG3+boX+9nhbynioPWE5kX+x1N9bqlCskNqtDrXpUYjB95KJ4306Agph2bcJc2fJ282VNjP8yhd
-	fKhdlKBwOS6Gt1YA2WyoTMSgUO4s08en3x8tLp/7LNxCHKh/veKGiYUUnAKKgOSNPIcNTk7OpZt
-	757yGnJapWVBiQdRrC2ydanJ/rZ7GPINFanAeFueELeBJatIOVmwgo4bMJ3yXC8eTARRDXIb98+
-	dFsu1hj9nUHnvpM7EusgaAXX7hkYAF0Pz/Hy0j+ADCh0fzaSkfuqDhEA/WBZ4L3H7pbtFb/1aBR
-	Iv3aIGtoEurbLzu5NwBwLSbWL6wWkJjorAjvrtSbRvHyQ2o4kXs3SxSGeUWOfy4oIKhP0pKLqb/
-	QJtQwDTI8hZ3HZrLB3LxDvGV4kL7/s7Q
-X-Received: by 2002:a05:6000:15c8:b0:4a4:c39a:1d4d with SMTP id ffacd0b85a97d-4a63bea7683mr5023380f8f.52.1795019392133;
-        Wed, 18 Nov 2026 08:29:52 -0800 (PST)
+        bh=Rpi69KOE+RewZqGKWGe5fV1itNLcgLER2USO6GkvbTk=;
+        b=Bv36Kp3HBUYukYHUvhl/5C41aSmdx6okzqfteoPXlWBgfEDwyLog80TY7fWKmWg16e
+         dixVQqK8dy+YTEfiQ89NSDpVe3mZ9AQCYADmav+ykS/0/7ATCeWS9s+Fzanm3fYqhP09
+         OT2VsQu4keHiieLxFO3pWg6YEUaVcfeU5uME3o8PbO49j+zr6k99WyKCjEZcZ9ftXDdk
+         fy9Ow8v/uJRzrpH+4pSCPsf4QuTFjyZR37ai2bdeFfjO5ym9QiGjFqodmehrtL26Us0A
+         Yga/C5APfqc17w9N73yHFB0nbXK6i5K2sMP07KvkLqqR8JNy9P3j6vxHesdvgvQgrgln
+         Bwqw==
+X-Gm-Message-State: APuU4Z9duPOkANdC/bweaUnrl2ZH3gUrK3bX3ssVymGINn7Kr8OFz36Y
+	xVGPiyMpei0W30jH9UD9/nPFxu94uNEGuibDDa5cMFxCW5KwrmHRKv591spSpUV9y9w=
+X-Gm-Gg: AZFdTZd5CYkUp0KhW4k9lsiGieBdWx2fW9OkY13+KWwOxmTwZtKJU7VKau5vPHQLrGD
+	rXbOhYR2SKybmzYU/3rH4VTpdSphEttGM3VPlaQa6IGxkSD/20ZftSoq8af+lj6tWnMSWThcUGp
+	rgiQfKak6FbHFr5Ef7UPQUxoMuIDqF9QRpvcgWsslGwVHacazs8MlWnewu1MjbvzAlBZ81b/aN8
+	FiPPyqG26RucCxFZqn+3rqsgpy5QK2W34o1t06ale7bBQapqFeEBAWNHa6z7do/ia4V1J0jO/yk
+	A3ntnUEqjw+dHC74dXX67W9AVB+Rf3awwv2SMcYCYIRiUtTy3VjAT7hVQ1AofYD9wnxci1/DpbD
+	r5rjJIgOoLQUkobn1wUilQlMbwdzdY2pAmnYE6a1zTJq0sXzOjtpJv9W+FzH887c8SjQhuQUK8z
+	HqC7Ycyq1H+Ai4GZYEZxhphr2n7QD+GHppYZBX61bTSwWpMHXqCYdejagu5QeWnUgC2BfgHDaBp
+	IhEt7cv7jJMCE2nLAQP9zH4AxbCH++wQoCYIIJ0GYOM9m04cUZHNNVH38u2qdLWiZYL6l78hFge
+	tlumJAEub6rdFgeEE8MSoSgux33smqSfFA==
+X-Received: by 2002:a05:6000:1a8d:b0:493:c0a:507d with SMTP id ffacd0b85a97d-4a63648e24fmr6898857f8f.1.1795019395221;
+        Wed, 18 Nov 2026 08:29:55 -0800 (PST)
 Received: from pop-os.local ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4a654a8c23bsm4980927f8f.12.2026.11.18.08.29.51
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4a654a8c23bsm4980927f8f.12.2026.11.18.08.29.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Nov 2026 08:29:51 -0800 (PST)
+        Wed, 18 Nov 2026 08:29:54 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
-Date: Wed, 18 Nov 2026 16:29:26 +0000
-Subject: [PATCH 04/34] perf libdw: Don't look up the module by ELF address
+Date: Wed, 18 Nov 2026 16:29:29 +0000
+Subject: [PATCH 07/34] perf build-id: Cache the vDSO in build ID mmap mode
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -92,7 +92,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261118-james-coresight-jit-v1-4-dad4d90747f6@linaro.org>
+Message-Id: <20261118-james-coresight-jit-v1-7-dad4d90747f6@linaro.org>
 References: <20261118-james-coresight-jit-v1-0-dad4d90747f6@linaro.org>
 In-Reply-To: <20261118-james-coresight-jit-v1-0-dad4d90747f6@linaro.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -106,61 +106,51 @@ Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.15.2
 
-libdw__addr2line() finds the module with dwfl_addrmodule() using the ELF
-address. However, libdw reports modules loaded from disk at a fixed bias
-of 0x10000, so any ELF address below that isn't considered to be in the
-module. This means that source lines for very small binaries and JIT
-files can't be found by libdw.
+Since --buildid-mmap became the default, perf record doesn't add the
+vDSO to the build ID cache. Caching a DSO requires its build ID, but the
+vDSO doesn't have a file so the kernel can't add one to its mmap event.
+Build IDs that are missing from mmap events were previously read when
+writing the build ID table to the header, but the table isn't written
+in build ID mmap mode.
 
-This used to be hidden by falling back to the next addr2line style, but
-now missing information stops the fallback since commit (62d7cdc8d587
-"perf libdw: Optimize fallback logic for missing DWARF"). So perf script
-fails to show source line for these addresses.
+This breaks decoding of hardware trace through the vDSO after perf
+inject -b. Inject adds a build ID for the vDSO, so perf script looks it
+up in the build ID cache and can't find it:
 
-Perf creates a separate Dwfl session for each DSO and only loads that
-DSO's file into it, so take the session's only module instead of looking
-it up by address to fix the issue.
+  CS ETM Trace: Debug data not found for address 0xffff95edb310 in [vdso]
 
-Fixes: 88c51002d06f ("perf addr2line: Add a libdw implementation")
+Fix it by reading the vDSO's build ID from perf's copy of the vDSO
+before caching it.
+
+Fixes: 53b00ff358dc ("perf record: Make --buildid-mmap the default")
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/util/libdw.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ tools/perf/util/build-id.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/tools/perf/util/libdw.c b/tools/perf/util/libdw.c
-index 90767361f485..4f472ff9f1bf 100644
---- a/tools/perf/util/libdw.c
-+++ b/tools/perf/util/libdw.c
-@@ -164,6 +164,14 @@ static int libdw_a2l_cb(Dwarf_Die *die, void *_args)
- 	return DWARF_CB_ABORT;
- }
+diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+index 02233ef0eaff..cc813f421c9b 100644
+--- a/tools/perf/util/build-id.c
++++ b/tools/perf/util/build-id.c
+@@ -886,6 +886,18 @@ static int dso__cache_build_id(struct dso *dso, struct machine *machine,
+ 	char *allocated_name = NULL;
+ 	int ret = 0;
  
-+static int libdw__get_module(Dwfl_Module *mod, void **userdata __maybe_unused,
-+			     const char *name __maybe_unused,
-+			     Dwarf_Addr base __maybe_unused, void *arg)
-+{
-+	*(Dwfl_Module **)arg = mod;
-+	return DWARF_CB_ABORT;
-+}
-+
- int libdw__addr2line(u64 addr, char **file, unsigned int *line_nr,
- 		     struct dso *dso, bool unwind_inlines,
- 		     struct inline_node *node, struct symbol *sym)
-@@ -188,7 +196,13 @@ int libdw__addr2line(u64 addr, char **file, unsigned int *line_nr,
- 		goto out;
- 	}
- 
--	mod = dwfl_addrmodule(dwfl, addr);
 +	/*
-+	 * The session only contains this DSO, but libdw places offline modules
-+	 * away from address 0. Take the module directly rather than looking it
-+	 * up by an ELF address, which isn't a module address.
++	 * The kernel can't add the vDSO's build ID to mmap events because it
++	 * doesn't have a file, so read it from the copy that perf made. That
++	 * copy is of the host's vDSO, so it can't be used for guests.
 +	 */
-+	mod = NULL;
-+	dwfl_getmodules(dwfl, libdw__get_module, &mod, 0);
- 	if (!mod) {
- 		ret = 0;
- 		goto out;
++	if (is_vdso && machine__is_host(machine) && !dso__has_build_id(dso)) {
++		struct build_id bid = { .size = 0, };
++
++		if (filename__read_build_id(name, &bid) > 0)
++			dso__set_build_id(dso, &bid);
++	}
++
+ 	if (!dso__has_build_id(dso) || !dso__hit(dso))
+ 		return 0;
+ 
 
 -- 
 2.43.0
