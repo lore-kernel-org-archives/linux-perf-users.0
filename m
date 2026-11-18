@@ -1,71 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794998648;
-	b=MK2ss30hkzgUrp9pK1vpgR/cAUhh70s+ROBJVfTHhHfHHG3K+mUGLS+BwsmdWp9fc2De
-	 zvcdDQdiYl5VeNql5K1ZJIwJJvAt1ksH+cu4iQN7lOhoo6lnFQbhfsCq5nmD1/jrRwjCT
-	 sLWSAmEX23GHcNiAS+0OyOh3o7poYuXrH8HSBTIu1ghorlEk0/a1wyKsHYRtfcITepEN3
-	 tnJNogw3hs9aLLX4BJYi6m54G6yz0kTTywO4pRjM+6QTbfWK9wBAbPa6cFbwveqc2lj3i
-	 UiJYmsYZB83opmsquKskpz4I+k/QWbG53qb/ZMbCibfbC4tzLbveWinGomD7/DzDH+Q==
+	t=1794998697;
+	b=HzShyTiIXG7tmLpcpB/l4stfVE6Gb+YCELMGp0tMVOkLRLlcDQsKI+NhhJypSeIXez8/
+	 fz4Tr7Of+KQyFeJHAiWCWkUOI5YWqCDNUvgrvdStknHHAmGYEiNJOv0jSm638zZmaUMjH
+	 Nx4v82gmthqmuEMTT73GbMd5p9KE5xnI4pOyjGWJq9MUXjHI8hpdizTItX1hup4unDILX
+	 BaNf1/B7s/nbvJWdYSr1/5km3bf1ylyOwyllB6NhwsNcurSxL4qU5m433CH8ybIxlKtIW
+	 Ujz9JHmJSrPxqMSkEbVfeccbfjCECwJHENJA+qM3KdBhvdaj4d7/qgcZtIdwCdwLQVQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794998648;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=N4S0kgZ/NMm9yfsBMXr5qvuT3q1E7nw/7lKsTCmiCBk=;
-	b=cMAUJ+6b7ipvoa2DjR84bSAJ2ue9WM3kYfGetOdtbMYReBhMU4UnUqL8Q7F2+BiyQndb
-	 1hlMkgMx/xwtlkRywytcpbhWV8Ns8E+/U3Q3Nz2uRyAr+XvtUznrbeHGJ5D0hp/pFICjK
-	 Fkt71teyCYmTNRyj20QnMb7JK5VfHqp1DRm0lTWLQVTFbou/7ct2OF6cmD+jQepdMk/b5
-	 rszrQf43+fVj0OnptgV/L82QG4JuF2OB1x8WE1nSZAc7tz64dQWR1vAn/c9i783eVoMKb
-	 eH9Mgz4SienT3a4DNfwr1ftxsIBJ+y3OoMT6XVj0dWyvcmMO/tuowGUtLBfkgrQKVMw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1794998697;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=hbO7q0hgbcFgGqogPQxCLP68LVciV9U7EkaFcvT0Xak=;
+	b=ladcZt9Qy3ZqAMFA4Hp3j0NIz5Ryjq8Lz7qQCuhq7JKlREVKAcbZgurt+i23sIeDpykf
+	 OrbhViEBq0dn+eXby15hjPgn6FZ2WUteCsAiva0ew+gdj2oJUKqxLL+n63gKNTHePpmEt
+	 Oe/nTa7XlSIbagVHTEvpYvMZ89GkmUZO2YEqrhZIhdh6mykU6AbdqYjVIIkI0wohY1anz
+	 aksVXIndcT8XiB8yzetdnGf/1N/CevERmVEguY3OLpFQvLYrKMZyEzzWhXFBXUcST90I/
+	 jMRvwS1Lus6LazT668500v7uUhBjidMys3e7XlExfgff6Af4DnOwIOr5K7iXdKYiEXQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=JRBaxCpY;
-	arc=none smtp.remote-ip=90.155.50.34
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h+0BuO8m;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48322606A325;
-	Wed, 18 Nov 2026 10:44:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 48322606A325
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345F5606A31C;
+	Wed, 18 Nov 2026 10:44:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=JRBaxCpY
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=N4S0kgZ/NMm9yfsBMXr5qvuT3q1E7nw/7lKsTCmiCBk=; b=JRBaxCpYJ96qIq0CElGGRimB4X
-	JUtorWIygmcywk0ejcDfiOTEqYbG4ftpFkvnhWkBc0ouBNBr+1e3i9z9q9mhR9u5G2dsYbzmtn9DF
-	+/ZwK8vHiL87VprUZ2UaTUgPF/dSkAGgDlVlJCRI7AfxIZhoHAscvaUSKShiufX6tVdYM5MasjjIY
-	xgoFhfqZHmgbH5pkaNq1srRFTk3cMa+oSNvPtJAvRAln5PlNzX68L+aBaUAQKF1rJ8l8VS8MfE56P
-	soHs82/14YoQneXCaS1+ZwC10yg1M5TiJTtSx/2JB164e2zx+D+QlACC35191tc1zO/8TvY6sxtb5
-	OOORY5Wg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xTd8s-0000000COQD-2lAC;
-	Wed, 18 Nov 2026 10:43:57 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id CF54F3004C9; Wed, 18 Nov 2026 11:43:53 +0100 (CET)
-Date: Wed, 18 Nov 2026 11:43:53 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Daniel Wade <danjwade95@gmail.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Kyle Zeng <kylebot@openai.com>,
-	Aditya Chillara <aditya.chillara@oss.qualcomm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: Reject group leaders detached by CPU hot-unplug
-Message-ID: <20261118104353.GN1813469@noisy.programming.kicks-ass.net>
-References: <20261116081248.21059-1-danjwade95@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h+0BuO8m
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 494621F000C4;
+	Wed, 18 Nov 2026 10:44:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1794998696;
+	bh=hbO7q0hgbcFgGqogPQxCLP68LVciV9U7EkaFcvT0Xak=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=h+0BuO8mLm5ZaiC1+8XciUZ+u8/d8UoCvwTaUtFeO9k7SjO1IvcLA8x4dY5RRTvaB
+	 Ewj+5+7YiDqSC49Nn5GNcA1rVLm0boIS6uxyZfAMocPnsfYi3ozx8Ne5MouaKdIAOl
+	 d2yiTZUqhWg0Eb/WD0o4Zvywpe5vXczOzUbYr0woYvABbCCvVa3ZyBlMNO27W1JtN7
+	 ksZ8P6c3yXyQFV4FhC1yL5lqQXM9NvDy8SNtXbtLMjXADLzJDqc1o01IHovIS5HbpM
+	 pXzE/v1kFbpe4HK9K8Eu7buw6rwVQeD+nSbNEwjFATZQ6k/3NnRqK20Yx3j7bLAqJ2
+	 0DwRKyx5kP9Vg==
+Message-ID: <sashiko-outbox-220738@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 2/2] perf/smmuv3: Add runtime PM support
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Amita Mishra" <amitamishra@google.com>
+Cc: linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org
+In-Reply-To: <20261118101913.3135869-3-amitamishra@google.com>
+References: <20261118101913.3135869-1-amitamishra@google.com>
+ <20261118101913.3135869-3-amitamishra@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 18 Nov 2026 10:44:55 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -74,73 +59,111 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261116081248.21059-1-danjwade95@gmail.com>
 
-On Mon, Nov 16, 2026 at 06:42:48PM +1030, Daniel Wade wrote:
-> When a CPU goes offline, __perf_event_exit_context() removes every event
-> of that CPU's context with DETACH_GROUP. That clears PERF_ATTACH_GROUP and
-> PERF_ATTACH_CONTEXT and leaves the event in PERF_EVENT_STATE_OFF, or in
-> ERROR, while the file descriptor stays open and event->ctx keeps pointing
-> at the per-CPU context; nothing re-attaches it when the CPU comes back.
-> Commit fa091f46c383 ("perf: Reject exited events as group leaders")
-> fixed the same defect for remove-on-exec, by rejecting a leader in a
-> state <= PERF_EVENT_STATE_EXIT. OFF and ERROR are both above EXIT, so
-> once the CPU is online again a leader detached by hot-unplug is still
-> accepted and perf_group_attach() links the new event to it.
-> 
-> perf_group_detach() returns early when PERF_ATTACH_GROUP is already
-> clear, which is right for the double detach it was written for, where no
-> group is left to break up. With a sibling added after the hot-unplug
-> detach it skips a sibling_list which is no longer empty: the leader is
-> freed with that sibling still on it and still pointing at it through
-> ->group_leader. Closing the sibling, or a group read or ioctl on it, then
-> uses the freed event.
-> 
-> Commit 42c5ca1f0a28 ("perf/core: Fix group leader use-after-free after
-> sibling detach") fixed the mirror image, a sibling detached by hot-unplug
-> and the leader closed afterwards. It promotes the sibling from the paths
-> below that early return, so a leader detached first and given a sibling
-> afterwards still reaches the same free.
+Thank you for your contribution! Sashiko AI review found 2 potential
+issues to consider:
+- [High] perf/smmuv3: missing MSI register restore in
+  smmu_pmu_runtime_resume()
+- [High] perf/smmuv3: unpowered MMIO writes in smmu_pmu_write_msi_msg()
+--
 
-Nice
+commit 3367ecb885d7f9e9f0717d0698079ca0810697a6
+Author: Amita Mishra <amitamishra@google.com>
 
->  kernel/events/core.c |   12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index f5f2261f1fe..21c529cd7d1 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -14274,6 +14274,18 @@ SYSCALL_DEFINE5(perf_event_open,
->  			goto err_locked;
->  		}
->  
-> +		/*
-> +		 * Likewise against CPU hot-unplug, which detaches the events
-> +		 * of a CPU context and breaks up its groups without putting
-> +		 * them in a terminal state. perf_group_detach() does nothing
-> +		 * for a leader that is already detached, so a sibling added
-> +		 * to one would stay linked to it after the leader is freed.
-> +		 */
-> +		if (!(group_leader->attach_state & PERF_ATTACH_CONTEXT)) {
-> +			err = -ENODEV;
-> +			goto err_locked;
-> +		}
+perf/smmuv3: Add runtime PM support
+
+This commit adds runtime PM support for SMMUv3 PMCG devices attached to a
+power domain so that idle PMCGs can be powered off when no perf events are
+active.
+
+> diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
+> index 97440b6233c6e..e9da99b4a0866 100644
+> --- a/drivers/perf/arm_smmuv3_pmu.c
+> +++ b/drivers/perf/arm_smmuv3_pmu.c
+
+[ ... ]
+
+> @@ -975,15 +1040,45 @@ static void smmu_pmu_remove(struct platform_device=
+ *pdev)
+> =20
+>  	perf_pmu_unregister(&smmu_pmu->pmu);
+>  	cpuhp_state_remove_instance_nocalls(cpuhp_state_num, &smmu_pmu->node);
+> +	if (pdev->dev.pm_domain)
+> +		pm_runtime_disable(&pdev->dev);
+>  }
+
+[Severity: High]
+Can tearing down or retargeting the MSI while the PMCG is runtime-suspended
+write to SMMU_PMCG_IRQ_CFG0, SMMU_PMCG_IRQ_CFG1, and SMMU_PMCG_IRQ_CFG2
+while the power domain is off?
+
+When the driver is unbound with no active events, __device_release_driver()
+leaves the device runtime-suspended and smmu_pmu_remove() disables runtime
+PM.  devres_release_all() then frees the devm_request_irq() handler via
+free_irq() -> irq_domain_deactivate_irq() -> msi_domain_deactivate() ->
+smmu_pmu_write_msi_msg(), which writes to the unpowered PMCG registers and
+triggers an external abort or SError.  The same unpowered write happens if
+smmu_pmu->on_cpu is offlined while suspended and smmu_pmu_offline_cpu()
+calls irq_set_affinity() -> msi_domain_set_affinity() ->
+smmu_pmu_write_msi_msg().
+
+> =20
+>  static void smmu_pmu_shutdown(struct platform_device *pdev)
+>  {
+>  	struct smmu_pmu *smmu_pmu =3D platform_get_drvdata(pdev);
+> =20
+> -	smmu_pmu_disable(&smmu_pmu->pmu);
+> +	if (pdev->dev.pm_domain) {
+> +		if (pm_runtime_get_if_active(&pdev->dev) <=3D 0)
+> +			return;
+> +		__smmu_pmu_disable(smmu_pmu);
+> +		pm_runtime_put(&pdev->dev);
+> +		return;
+> +	}
 > +
->  		/*
->  		 * Only a group leader can be exclusive or pinned
->  		 */
+> +	__smmu_pmu_disable(smmu_pmu);
+>  }
+> =20
+> +static int smmu_pmu_runtime_suspend(struct device *dev)
+> +{
+> +	struct smmu_pmu *smmu_pmu =3D dev_get_drvdata(dev);
+> +
+> +	__smmu_pmu_disable(smmu_pmu);
+> +	return 0;
+> +}
+> =20
+> +static int smmu_pmu_runtime_resume(struct device *dev)
+> +{
+> +	struct smmu_pmu *smmu_pmu =3D dev_get_drvdata(dev);
+> +
+> +	smmu_pmu_reset(smmu_pmu);
+> +	return 0;
+> +}
 
-It occurs to me that changeing __perf_event_exit_contxt() to use
-DETACH_EXIT | DETACH_GROUP, will also fix things, right?
+[Severity: High]
+Does smmu_pmu_runtime_resume() lose the MSI configuration programmed in
+SMMU_PMCG_IRQ_CFG0, SMMU_PMCG_IRQ_CFG1, and SMMU_PMCG_IRQ_CFG2 when the
+power domain is powered off and back on?
 
-In that case the STATE_EXIT check from fa091f46c383 will catch it.
+During probe, smmu_pmu_setup_irq() clears SMMU_PMCG_IRQ_CFG0 and
+devm_request_irq() activates the MSI via smmu_pmu_write_msi_msg(), before
+pm_runtime_put_sync() at the end of smmu_pmu_probe() suspends the device
+and drops power to those registers:
 
-Doing this makes the various cases (task-exit, CPU-offline) behave
-similarly.
+drivers/perf/arm_smmuv3_pmu.c:smmu_pmu_write_msi_msg() {
+	...
+	writeq_relaxed(doorbell, pmu->reg_base + SMMU_PMCG_IRQ_CFG0);
+	writel_relaxed(msg->data, pmu->reg_base + SMMU_PMCG_IRQ_CFG1);
+	writel_relaxed(MSI_CFG2_MEMATTR_DEVICE_nGnRE,
+		       pmu->reg_base + SMMU_PMCG_IRQ_CFG2);
+}
 
-Does that work for you?
+When smmu_pmu_event_init() later resumes the device,
+smmu_pmu_runtime_resume() only calls smmu_pmu_reset(), leaving the MSI
+registers unprogrammed (or leaving SMMU_PMCG_IRQ_CFG0 at its UNKNOWN reset
+value when wired interrupts are used on an MSI-capable PMCG) so counter
+overflow interrupts do not work.
 
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118101913.3135=
+869-1-amitamishra@google.com?part=3D2
