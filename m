@@ -1,66 +1,66 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.7
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794972263;
-	b=PKAEvBDwhOmKqjfInksxi6UapodwUuADHx9uSIa7+e5pSF/Y9gR8b//lhkPsXrLaIyhS
-	 Xd7N6iqOVLtrIMwJLvxjtLsH02UfF8uhw4azP8ZwlnRmy/ccSb/utoLkrPg6IH/WTljyX
-	 uuEXLFFsqBc4QGKjwZo/DKD5DDKKCjOwCdUHJy8+CvYWzzh1lMyrNL18tMKw8S9mcRMdJ
-	 cuWwg8nHZmJlvzwHcgp3dk2gEn/DoObgnm77qnKgkISFkev1YsBDd30R1s+KcNRlLo4pz
-	 ULEvReGeyaXRf95aeFk4wSzx7JX4EXpY1WXzZod/FcSTtOZWMaHPZt7ytBWyv8w39JA==
+	t=1794972268;
+	b=Vx3z/V3bVOxaEtqe8GZuXfwIecv+NWg8x1vgPuGnJEMo6wM8NL/hhyxlVc34E/3AW45Y
+	 mMGzWtAYFKfQrN6LOPGuboF4UVX/0eKEiZmJIqLaGHNDAU7WFnv6xhdrnmg5cI/fkKgy+
+	 /GAma5zMBgSQP5ts04lB8okSoNQXo+eNN8UWbWb+oFTKTp8GGxNwTrT6mkVoHbVlmzQVi
+	 EVqlUNdiyGkhddKVfxECvj5FnN0blb5ZKUF9LZAD0cMM2wTEAItB6TYz6e8qnLq61+J6S
+	 mx2RxcfmW3jSOkax17JOMNyPjDs/s0p+VHx9dbL0VrXCYIvY8pvYjuuroe9uqkl6h/A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794972263;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794972268;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:From:To:Cc:Subject:
 	 Date:Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=hBR9Lue+7o52B0U+2i3GJS3cMPp6hJ5U1Az4Nkyh+v8=;
-	b=HCgjzn1HkTMni8zqtHeDwbsC3o7p2cpDhc6lGLqcz+1WTGOiSzMBiowSt14p/Krp+dRE
-	 CRryFT34lsHCnA+xPjcoJ8Z7A65O57HqkQDCnu8mmHdkF1DwvhWcXYVd7y4tRCllRvUcn
-	 dmjRCpAk1+/0/z44+fhEldXBNMTguhXB4UHH91tEA3sC7bw0lAqc2k5M3f3WwvKjHPjVQ
-	 8Fx37eu+MZEvoqvphn3DKoi4lLEXDpKWkd6s4JoYc7/PdLCS8LeSxCciYHJaUqXyYUUUA
-	 E7WiaiD8GViTr61QlMUXDbZ2nucaFWbC9k+k+fh9FoMHjZfeDxDdCGupIaUdg4G9jlw==
+	bh=EpHjCmtVuQPRi1F1S9LTAYhtf44z2tPz47nz4SFlWV0=;
+	b=o3FyJIH4kuINAa5mU21KZTJS86CwpYBoiIJfV8lQ9jq0MzDG06lG94l2YUawKKdVZz70
+	 neJ/3702fFBADU5g+9tO5WVfFXt1ywftZFBdRoG2PFgcN24i/aLvBrJren8FzsFD9pptT
+	 0Dor976zn7EelRe7e9yskRUqSmgauLeQEx5RDlrbtf56OhVi3ABB4cxEn01BOmyH6ruSr
+	 YTPRcDN5rrV5zNA3N/jCBRHSSx60pYTKpUfF3ttqVcbu85S20DCac8QjQykK40/FSQCni
+	 yMo9YMJj6KhPmB5BlyVbS8A3y2379BceHGj0xiPOEdamRyEo2I2PgXwNOu7mGzJEPfg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.intel.com;
 	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=U3CNOgZA;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=HvYO0NUU;
 	arc=none smtp.remote-ip=192.198.163.7
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5E2606A331;
-	Wed, 18 Nov 2026 03:24:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5F5E2606A331
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC83606A8A6;
+	Wed, 18 Nov 2026 03:24:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0DC83606A8A6
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=U3CNOgZA
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=HvYO0NUU
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1794972264; x=1826508264;
+  t=1794972269; x=1826508269;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=0ICRebQTyAY3qeOutTMwoeFncm3hOB0X9j2396Ajc/I=;
-  b=U3CNOgZAlC0+fE+73ytT8RmaZgtrRmWkUJT8RrO4hYQ6PdQ8MunKA4OV
-   mPTq26ij0fcVl9c9Tch8X5eS6YG0PficwmnQkPUHHWVEhj9at3qgsD9Mw
-   raiQjyrcxEXC5MXuRsMSeqBByRPiqsMcYozpqP+CYmBiOqwKFG3Q2j7mY
-   tu+WHuyyJW81ax0bK4Giah5g1hAknzxy+BbxDwWqacF/lkLIhw53tkPSQ
-   gf59i4LeCRq8t00uxR2XZj+V7xeaL+0Laud4xPoeQ3fZ66zSe1GJcLHi8
-   zJzonSzaUvfijiBMAiGzA+ik1gLKnlif2JEXAPoOyqnXxvRG6tDoxlXQu
-   A==;
-X-CSE-ConnectionGUID: ClXMd9qYTyuOprZGdC32Mw==
-X-CSE-MsgGUID: 5EUbn5BGTkauaJARAuJqwg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11969"; a="3630014"
+  bh=DVC7kDm+4suO6uWI6KKVmTqXSE7QAnET6vKWju4nsY4=;
+  b=HvYO0NUU5P49Kuubru9oEclEEK1Xay5n56ln8NmaPYa/tsHuJzxiPFYH
+   BNQvBykD4VgEEQ6sPPxQMsO0UB8DZxCAop/NUQ7SezHogrifogpjhtVGg
+   U3WWWku6kw3dqtq20ckLspsS50oB8zMUapT7RpXkVVH9rOgAGw4oJ8oiX
+   33iI4bSUrP4SwfDARfSJZAAAeaPaRJSsLMK6ywCGlRu5l7JMBo4QurM7P
+   0QMCT5f+FRM+4Y6kMGASOSYZXK1nZbGNrVE0U86Gh8YxiXcrs+YabyHcd
+   IzJY/iDUz4y2KVGyCIALQ6G7VFNgcF97rT2/g2Zv5a9ofmXjlG7ppQGpY
+   Q==;
+X-CSE-ConnectionGUID: lV7mEl8cSBek4PBfbn/R8g==
+X-CSE-MsgGUID: DGH5ApoEShCyEi6i3tNUMw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11969"; a="3630038"
 X-IronPort-AV: E=Sophos;i="6.27,219,1787036400"; 
-   d="scan'208";a="3630014"
+   d="scan'208";a="3630038"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 19:24:24 -0800
-X-CSE-ConnectionGUID: dDpenb1kQt2LjUzEY8+N3Q==
-X-CSE-MsgGUID: ftLVLcpKRAiJgauQ4lSvKA==
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2026 19:24:28 -0800
+X-CSE-ConnectionGUID: 6lBZ6z7TSkWJAzoOef0YTQ==
+X-CSE-MsgGUID: QV+ika2tSp2W3wXT1dTkOw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,219,1787036400"; 
-   d="scan'208";a="9894354"
+   d="scan'208";a="9894371"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa004.jf.intel.com with ESMTP; 17 Nov 2026 19:24:19 -0800
+  by orviesa004.jf.intel.com with ESMTP; 17 Nov 2026 19:24:24 -0800
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -85,9 +85,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>,
 	Sashiko <sashiko-bot@kernel.org>
-Subject: [Patch v7 20/24] perf/x86/intel: Clear raw LBR counters in the LBR stack
-Date: Wed, 18 Nov 2026 11:14:49 +0800
-Message-Id: <20261118031453.1353625-21-dapeng1.mi@linux.intel.com>
+Subject: [Patch v7 21/24] perf/x86/intel: Refresh LBR stack for LBR counter events in PMI handler
+Date: Wed, 18 Nov 2026 11:14:50 +0800
+Message-Id: <20261118031453.1353625-22-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20261118031453.1353625-1-dapeng1.mi@linux.intel.com>
 References: <20261118031453.1353625-1-dapeng1.mi@linux.intel.com>
@@ -102,78 +102,65 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The raw branch counters are stored in the reserved field of each LBR
-entry. The branch counters path clears that field after reordering
-the counters, but the BPF snapshot path and the regular branch stack
-path leave the raw values in place, so they leak to userspace.
+When handling an LBR counter event, the raw LBR counters in the reserved
+field of each LBR entry are cleared after the stack is processed and
+reported to userspace. This prevents raw counter data from leaking.
 
-Clear the raw counters on those paths too.
+However, if multiple events overflow in the same PMI, an LBR counter
+event may not be the first one processed. In that case, the raw LBR
+counters may already have been cleared by the previous LBR event, so the
+later LBR counter event cannot read the correct values.
+
+Refresh the LBR stack before processing an LBR counter event when
+multiple events are handled in a single PMI. This restores the correct
+raw LBR counter data for the event in this corner case.
+
+This situation is rare, so the extra refresh should have negligible
+performance impact.
 
 Fixes: 33744916196b ("perf/x86/intel: Support branch counters logging")
 Reported-by: Sashiko <sashiko-bot@kernel.org>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/intel/core.c |  1 +
- arch/x86/events/intel/lbr.c  | 13 +++++++++++++
- arch/x86/events/perf_event.h |  2 ++
- 3 files changed, 16 insertions(+)
+ arch/x86/events/intel/core.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index ccd2c57931b3..fc672bc69ae3 100644
+index fc672bc69ae3..b4632b791e26 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -2836,6 +2836,7 @@ __intel_pmu_snapshot_branch_stack(struct perf_branch_entry *entries,
+@@ -3906,8 +3906,9 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
+ {
+ 	struct perf_sample_data data;
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+-	int bit;
++	bool lbr_counter_cleared = false;
+ 	int handled = 0;
++	int bit;
  
- 	lbr_stack = (struct perf_branch_stack *)bpf->__lbr_stack;
- 	intel_pmu_lbr_read(lbr_stack, bpf->counters);
-+	intel_pmu_lbr_clear_raw_counters(lbr_stack);
- 	cnt = min_t(unsigned int, cnt, lbr_stack->nr);
+ 	inc_perf_irq_stat();
  
- 	memcpy(entries, lbr_stack->entries,
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 740d5a5ba4c3..4736debffb0b 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -991,6 +991,18 @@ static void intel_pmu_lbr_counters_reorder(struct cpu_hw_events *cpuc,
- 	}
- }
+@@ -4080,12 +4081,19 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
+ 		perf_sample_data_init(&data, 0, last_period);
  
-+void intel_pmu_lbr_clear_raw_counters(struct perf_branch_stack *lbr_stack)
-+{
-+	int i;
-+
-+	if (!(x86_pmu.flags & PMU_FL_BR_CNTR))
-+		return;
-+
-+	/* The reserved field holds the raw branch counters. */
-+	for (i = 0; i < lbr_stack->nr; i++)
-+		lbr_stack->entries[i].reserved = 0;
-+}
-+
- void intel_pmu_lbr_save_brstack(struct perf_sample_data *data,
- 				struct cpu_hw_events *cpuc,
- 				struct perf_event *event)
-@@ -1001,6 +1013,7 @@ void intel_pmu_lbr_save_brstack(struct perf_sample_data *data,
- 		return;
- 	}
+ 		if (has_branch_stack(event)) {
+-			if (!cpuc->lbr_stack_live) {
++			/*
++			 * Re-read the LBR stack if it no longer holds the live state,
++			 * or if an earlier LBR event already cleared the raw counters
++			 * that this event needs.
++			 */
++			if (!cpuc->lbr_stack_live ||
++			    (lbr_counter_cleared && is_branch_counters_group(event))) {
+ 				intel_pmu_lbr_read(cpu_lbr_stack(cpuc),
+ 						   cpuc->lbr_counters);
+ 				cpuc->lbr_stack_live = true;
+ 			}
+ 			intel_pmu_lbr_save_brstack(&data, cpuc, event);
++			lbr_counter_cleared = true;
+ 		}
  
-+	intel_pmu_lbr_clear_raw_counters(cpu_lbr_stack(cpuc));
- 	perf_sample_save_brstack(data, event, cpu_lbr_stack(cpuc), NULL);
- }
- 
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 4e6cf5c1e865..733123fc4ffe 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -1986,6 +1986,8 @@ void intel_pmu_store_pebs_lbrs(struct lbr_entry *lbr);
- 
- void intel_pebs_init(void);
- 
-+void intel_pmu_lbr_clear_raw_counters(struct perf_branch_stack *lbr_stack);
-+
- void intel_pmu_lbr_save_brstack(struct perf_sample_data *data,
- 				struct cpu_hw_events *cpuc,
- 				struct perf_event *event);
+ 		x86_pmu_clear_perf_regs(regs);
 -- 
 2.34.1
 
