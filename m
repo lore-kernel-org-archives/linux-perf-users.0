@@ -1,56 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795020053;
-	b=TeuzI2FnlyMHi0Hffl5778V6Mi9aFhACTxXmw7Dfww8Q9somGwRZA6XFLQkqRkULEXvu
-	 nGdMCqZjGdbaEukmooEidaq4OzlbcTKlWTXJTphmd3eNY1kO7J1TkM1FI2QQjc4n4kqoC
-	 YCjpVK9tD2rW/FJdkXv9VlVqKxBPt5UKJKfDOSsmnmBH+Oycot/TR4d7fBSkmbhdkjnkD
-	 TotpRwtqezOgMdMInoF9IIvD4EyhgQ+6X3Ikm59MRsgaRoIpZldu6tPdLNHJl3HTFBmXD
-	 70nwWH2RVihdfzX/ruUgJKeA/sOGGZR+aEc5+avosCfCukTJ2Q+T23CY3jlf2JDcwfw==
+	t=1795020131;
+	b=3gawauyV1ouLKZzrtSNVh3MgmXpBBAe2mGnotMYo+Z8H5Xjv1MB6lMf4g4C3/qa/5aXw
+	 XC7XCh2TUkJxPhvDhljroDrFzWBe3qSm7N+A0zZlSvfDN9WC3khbocT96u5Wd1UBbmU1+
+	 esZXFazN/oR8lFPmes9zLbBHa+o4Iy9lh6JFzytnbDwFIvyyB9ohHO8uxuH1RPsXzO069
+	 JRLN6bm8V0Nry9V8WmzlQAV1Cdfd2CmL83/QLaD3RO4chB3LkDz3IXN4u9lB1hhr6xIdP
+	 1oTJhAcA8PejJptb8mdw7d/19L0AHbFKKv1Xh5DKL4gEBKWwYF+Dla2UBoQlMGpDmlQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795020053;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795020131;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=u7B7CNYt7Cmq0paDpM2w6ycgZbZCfF4BHEZ2mv6RHDA=;
-	b=yFIL6GOkHPGM9oRBWnn2ZEaoN0QP42gPMGPFGkwszzIDSjT13JwBKIkcitghdDDQF9/L
-	 3hQOEbrY23dxaKtI6DbXYaE4lv/OK36RVWK9aKK0+jw74CU58oT7c2HSfGOjNwx4k8zya
-	 R/oQaj6osADfJnhz25hhTt5ge+dr0fgzSbWQeTg0zyM/lKMk+5lV/Y6z55x7g9yB/Qojz
-	 hqFR5OxsLRAmmzbbS3Cj9jvYu1hMHF6LJq2NT7KvyT56egx4HDsaaKvSJe3ruyesqr7kr
-	 s5gCKXzJ+UFp8C5ure1t+PdDgY2hy2Aqi5RY0OwBa0I1HWYMidlZzuqzTMlvTPcQFTQ==
+	bh=Wxvurcdb+lrKes9JqMX/Hn6qqRpb4e9bD2bBsxH9h88=;
+	b=QyJOz8/jaHyIAAVucwwLuRhy3Qf9oCTOYwnVEQG8spIlK6C6edcgwHFO4PJxgzz57VcH
+	 LpsGRELDRGI7oTecTu/dzMIKpxh/F5h1Hpg4qL6YyuQk3xrGdVVmT9wGUh2SJl3BkHrWF
+	 QaNgk65se1g1VFbCm+0tkxkxVe94Jxvbw1nykmLyCjXt2aCqov5p6Gfuv/oONO42zwMOb
+	 RIzwGx7uWsJULel7HRxCGQqnjgL5aNbAcf/aR95afSuDDnD8UUCvl8Qz7q6CZuVO3OeH6
+	 iRW7aRixHw3ITQgwXtEks3DfUXGDnHAFZDLtV0+U59+VXNwLucZP0r462eLNHeY9KXQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kq1MSWQK;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mu2cy4SY;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E5E606A320
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 16:40:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BFA606A337
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 16:42:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kq1MSWQK
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AD841F000C4;
-	Wed, 18 Nov 2026 16:40:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mu2cy4SY
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 609361F000C7;
+	Wed, 18 Nov 2026 16:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795020052;
-	bh=u7B7CNYt7Cmq0paDpM2w6ycgZbZCfF4BHEZ2mv6RHDA=;
+	s=k20260515; t=1795020131;
+	bh=Wxvurcdb+lrKes9JqMX/Hn6qqRpb4e9bD2bBsxH9h88=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kq1MSWQK/T4cToGONlM09NolRnUNWGtbCbPkN5kiZcDbsQdTW4ENd5J9k4pVAUpX8
-	 SsOhJeAeGCC0IFgHs8+F9C1W5vquU0jnKezRAldTIFb0ZjynUyn8/+yFfu0uv+iB0x
-	 99zHSs41WtoAPtndwd9V7rStco4Q5kWvOIVCZIy++7Ap71DrNy2yKNYf5S7ij6TAIE
-	 d8tvNnazmza3CaEboosHU3mqz5jSmlTO8fvshV7GupGskN5gK8juelyaWfzE71T7bu
-	 iNTWH5nxBNQ+qWtMKFtNB1+w1AVQzguqNwhXEdiQLn89ED7Pbn38Niygo3Hygu66zv
-	 /mubBsG4PFI0w==
-Message-ID: <sashiko-outbox-221528@kernel.org>
+	b=mu2cy4SYd9GoNj8m8/fPqBuNzFNBmNoNk1atYlQLiPi8MLy/ApMd7QuttdNoFtPt4
+	 ac1g8+7C+Of1G2+HIX5ZvbaYs5KQJHMQTtTTErvCKRVwrRI6zl7l9yWLRnyEIB2kBa
+	 8zmKjw+PvDctX82HCLBOzrr3WhIGtVQwj5k19lrpq5nAZblYer5ff2vI4EZvjNbsAh
+	 tQCBtgtaIBvcCwj41k5SAFDUUb3Wc2OczO/eH8uKsZMiXxM7piuf5F2f5vGJZ83BNA
+	 bMaPQLaZt/ZJw3AZBugOZ3DDXEeuLNiYfGcSb50YwvDXzZjj3MIYsD8J3xpYjfA11B
+	 2Nrg5cDMcUYSQ==
+Message-ID: <sashiko-outbox-221534@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 18/34] perf cs-etm: Don't special case per-thread mode
+Subject: Re: [PATCH 27/34] perf cs-etm: Add packet-only timestamp decoder
+ ops
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "James Clark" <james.clark@linaro.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261118-james-coresight-jit-v1-18-dad4d90747f6@linaro.org>
+In-Reply-To: <20261118-james-coresight-jit-v1-27-dad4d90747f6@linaro.org>
 References: <20261118-james-coresight-jit-v1-0-dad4d90747f6@linaro.org>
- <20261118-james-coresight-jit-v1-18-dad4d90747f6@linaro.org>
+ <20261118-james-coresight-jit-v1-27-dad4d90747f6@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 18 Nov 2026 16:40:52 +0000
+Date: Wed, 18 Nov 2026 16:42:11 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,12 +61,13 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> This was always an extra edge case to have to understand, and keeping it
-> would require another new special case in the following change to add a
-> timestamp decoder tree per trace ID. Removing it makes both cases
-> simpler and nothing is really lost anyway. The only change needed is to
-> seed every trace ID context with the TID from the AUX record, rather
-> than only updating the single special context.
+> Add OpenCSD packet-processing callbacks that find the next timestamp
+> without fetching instructions or producing instruction ranges. Bound the
+> search with CS_ETM_TIMESTAMP_SEARCH_MAX packets.
+>=20
+> Keep the timestamp search state in cs_etm_timestamp_decoder, separate
+> from the full packet decoder. Each source's callback context identifies
+> its protocol. The frontend continues to use the existing full decoder.
 >=20
 > Signed-off-by: James Clark <james.clark@linaro.org>
 
@@ -73,5 +75,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118-james-core=
-sight-jit-v1-0-dad4d90747f6@linaro.org?part=3D18
+sight-jit-v1-0-dad4d90747f6@linaro.org?part=3D27
 
