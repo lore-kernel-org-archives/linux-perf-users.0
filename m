@@ -1,56 +1,77 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794998697;
-	b=HzShyTiIXG7tmLpcpB/l4stfVE6Gb+YCELMGp0tMVOkLRLlcDQsKI+NhhJypSeIXez8/
-	 fz4Tr7Of+KQyFeJHAiWCWkUOI5YWqCDNUvgrvdStknHHAmGYEiNJOv0jSm638zZmaUMjH
-	 Nx4v82gmthqmuEMTT73GbMd5p9KE5xnI4pOyjGWJq9MUXjHI8hpdizTItX1hup4unDILX
-	 BaNf1/B7s/nbvJWdYSr1/5km3bf1ylyOwyllB6NhwsNcurSxL4qU5m433CH8ybIxlKtIW
-	 Ujz9JHmJSrPxqMSkEbVfeccbfjCECwJHENJA+qM3KdBhvdaj4d7/qgcZtIdwCdwLQVQ==
+	t=1795000428;
+	b=soWVzYBaGoQxudtOVPdlKSDvgtQBSPjxOLTZud9DpC3j5KZhpIa/B/i9niTHPhWh9Lxg
+	 m7WwWRNjD8BFXRlL4SS4BI5MMHG2OMRycDNspDNePk/2aiZzVAmxRob1R627iOGTO3ejY
+	 mewo7KeFAjG02+cMrkZdbnVD2GdlT+1MVMFGnchFWrWC3rfpH7N1rkwAqOFA1wYW85gES
+	 D43lmXAgtkEvE13+3i27e3n9HUyadIiecXEI7aHWQ1bJBo2gFqMXXshkYehTvLOK9Yu9M
+	 +eNrb/gYKbbb0ZqBSkoME11pJ3k+zfUh9M1vu98LGM5JLu4316lvTiy23S9CCb/2HwA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794998697;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=hbO7q0hgbcFgGqogPQxCLP68LVciV9U7EkaFcvT0Xak=;
-	b=ladcZt9Qy3ZqAMFA4Hp3j0NIz5Ryjq8Lz7qQCuhq7JKlREVKAcbZgurt+i23sIeDpykf
-	 OrbhViEBq0dn+eXby15hjPgn6FZ2WUteCsAiva0ew+gdj2oJUKqxLL+n63gKNTHePpmEt
-	 Oe/nTa7XlSIbagVHTEvpYvMZ89GkmUZO2YEqrhZIhdh6mykU6AbdqYjVIIkI0wohY1anz
-	 aksVXIndcT8XiB8yzetdnGf/1N/CevERmVEguY3OLpFQvLYrKMZyEzzWhXFBXUcST90I/
-	 jMRvwS1Lus6LazT668500v7uUhBjidMys3e7XlExfgff6Af4DnOwIOr5K7iXdKYiEXQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795000428;
+	h=Received:DKIM-Signature:Received:Date:Message-ID:From:To:Cc:Subject:
+	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
+	 X-SA-Exim-Connect-IP:X-SA-Exim-Rcpt-To:X-SA-Exim-Mail-From:
+	 X-SA-Exim-Scanned;
+	bh=Emak8Lm259YoIJ5aFedEql1wejCbZp03w6luolSmcoo=;
+	b=Ei6+1U7xXCQwJpjZWxLTJ/pLqRDdXgSNEcbHHBHPix/6Iyh3gPvCI2wREvkwpsH/wo1g
+	 b2RPTbfJ21kzYlc/iHwC5akpLmir98a2NkukMDzVA6MtPCz3nmnOu7a7geHH1l5TCSO4z
+	 B4rPEkcY/cpQsd5EoGLpP7G+mdsUrEglzVBajpXBenAkRuixmUiHDUCfHFqWnFvxsf5a8
+	 8Sl24l6NWR4T759CqzcmDez/XhFlDjNouWs97+NyDvh+AcLiJFfDwjwl6TFloBvGsqTJx
+	 qEYpYdVw41HaKI758iREmnb9zuOpldhptWdUbhPUrrozzOKaqTOtf/ZvltJB+g3/JbA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h+0BuO8m;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="jHYmmH/C";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345F5606A31C;
-	Wed, 18 Nov 2026 10:44:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8127A606A31C;
+	Wed, 18 Nov 2026 11:13:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=h+0BuO8m
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 494621F000C4;
-	Wed, 18 Nov 2026 10:44:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jHYmmH/C
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08C251F000C4;
+	Wed, 18 Nov 2026 11:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1794998696;
-	bh=hbO7q0hgbcFgGqogPQxCLP68LVciV9U7EkaFcvT0Xak=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=h+0BuO8mLm5ZaiC1+8XciUZ+u8/d8UoCvwTaUtFeO9k7SjO1IvcLA8x4dY5RRTvaB
-	 Ewj+5+7YiDqSC49Nn5GNcA1rVLm0boIS6uxyZfAMocPnsfYi3ozx8Ne5MouaKdIAOl
-	 d2yiTZUqhWg0Eb/WD0o4Zvywpe5vXczOzUbYr0woYvABbCCvVa3ZyBlMNO27W1JtN7
-	 ksZ8P6c3yXyQFV4FhC1yL5lqQXM9NvDy8SNtXbtLMjXADLzJDqc1o01IHovIS5HbpM
-	 pXzE/v1kFbpe4HK9K8Eu7buw6rwVQeD+nSbNEwjFATZQ6k/3NnRqK20Yx3j7bLAqJ2
-	 0DwRKyx5kP9Vg==
-Message-ID: <sashiko-outbox-220738@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/2] perf/smmuv3: Add runtime PM support
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Amita Mishra" <amitamishra@google.com>
-Cc: linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org
-In-Reply-To: <20261118101913.3135869-3-amitamishra@google.com>
-References: <20261118101913.3135869-1-amitamishra@google.com>
- <20261118101913.3135869-3-amitamishra@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 18 Nov 2026 10:44:55 +0000
+	s=k20260515; t=1795000428;
+	bh=Emak8Lm259YoIJ5aFedEql1wejCbZp03w6luolSmcoo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=jHYmmH/CEPhhkA1F8K8VYzo6YYE/AvQW1kkuC2JZXWBZwjm1c+nbxUS0AjGQHmPXi
+	 tu3TYIhPlm/n57dvSP9+IoyYSUsK/BKK5nzd0AROgWHBP7d8NkQoYVvKUBj4iv4lCq
+	 TZI4MkL4XlI3QhwmqmfCijlrudzXysUPPHFrwZthQzbUcrfr+1wiZw3yVbb/UHQbaA
+	 /+L/LYWBk9weInCbSqtTdVCUpSdY+bpP3VVIiyKX8Blh1ZS6M02BnRJrylWzO7yapj
+	 PE4PXTFvLmDk8C/qIMKChnU4zPK7Ki0C3gGgoFLwpkgDVx5XOyobvdnUAND90Rzp57
+	 N9mmUV5pU6W5A==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1xTdbl-0000000HUEo-2k8X;
+	Wed, 18 Nov 2026 11:13:45 +0000
+Date: Wed, 18 Nov 2026 11:13:45 +0000
+Message-ID: <865wxu1jfa.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: myrialsarvay@gmail.com
+Cc: Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sven Peter <sven@kernel.org>,
+	Janne Grunau <j@jannau.net>,
+	Neal Gompa <neal@gompa.dev>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	asahi@lists.linux.dev,
+	Yuvan Shen <yuvanshen09@gmail.com>
+Subject: Re: [PATCH v2 02/15] drivers/perf: apple_m1: Remove unused variables
+In-Reply-To: <20261107-m3-plus-pmu-events-v2-2-acf1e78da039@gmail.com>
+References: <20261107-m3-plus-pmu-events-v2-0-acf1e78da039@gmail.com>
+	<20261107-m3-plus-pmu-events-v2-2-acf1e78da039@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,111 +80,34 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: myrialsarvay@gmail.com, will@kernel.org, mark.rutland@arm.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, sven@kernel.org, j@jannau.net, neal@gompa.dev, linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, asahi@lists.linux.dev, yuvanshen09@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issues to consider:
-- [High] perf/smmuv3: missing MSI register restore in
-  smmu_pmu_runtime_resume()
-- [High] perf/smmuv3: unpowered MMIO writes in smmu_pmu_write_msi_msg()
---
+On Sat, 07 Nov 2026 10:48:49 +0000,
+Myria Sarvay via B4 Relay <devnull+myrialsarvay.gmail.com@kernel.org> wrote:
+> 
+> From: Myria Sarvay <myrialsarvay@gmail.com>
+> 
+> These variables are calculated elsewhere as well, remove the extra dead
+> code.
+> 
+> Signed-off-by: Myria Sarvay <myrialsarvay@gmail.com>
+> Fixes: a639027a1be1 ("drivers/perf: Add Apple icestorm/firestorm CPU PMU driver")
 
-commit 3367ecb885d7f9e9f0717d0698079ca0810697a6
-Author: Amita Mishra <amitamishra@google.com>
+Not quite. In this patch, the variables were very much in use. They
+became useless with 75ecffc361bbc ("drivers/perf: apple_m1: Refactor
+event select/filter configuration").
 
-perf/smmuv3: Add runtime PM support
+Please adjust the tag accordingly, or just drop it because this really
+isn't a fix, only a minor cleanup.
 
-This commit adds runtime PM support for SMMUv3 PMCG devices attached to a
-power domain so that idle PMCGs can be powered off when no perf events are
-active.
+Thanks,
 
-> diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
-> index 97440b6233c6e..e9da99b4a0866 100644
-> --- a/drivers/perf/arm_smmuv3_pmu.c
-> +++ b/drivers/perf/arm_smmuv3_pmu.c
+	M.
 
-[ ... ]
-
-> @@ -975,15 +1040,45 @@ static void smmu_pmu_remove(struct platform_device=
- *pdev)
-> =20
->  	perf_pmu_unregister(&smmu_pmu->pmu);
->  	cpuhp_state_remove_instance_nocalls(cpuhp_state_num, &smmu_pmu->node);
-> +	if (pdev->dev.pm_domain)
-> +		pm_runtime_disable(&pdev->dev);
->  }
-
-[Severity: High]
-Can tearing down or retargeting the MSI while the PMCG is runtime-suspended
-write to SMMU_PMCG_IRQ_CFG0, SMMU_PMCG_IRQ_CFG1, and SMMU_PMCG_IRQ_CFG2
-while the power domain is off?
-
-When the driver is unbound with no active events, __device_release_driver()
-leaves the device runtime-suspended and smmu_pmu_remove() disables runtime
-PM.  devres_release_all() then frees the devm_request_irq() handler via
-free_irq() -> irq_domain_deactivate_irq() -> msi_domain_deactivate() ->
-smmu_pmu_write_msi_msg(), which writes to the unpowered PMCG registers and
-triggers an external abort or SError.  The same unpowered write happens if
-smmu_pmu->on_cpu is offlined while suspended and smmu_pmu_offline_cpu()
-calls irq_set_affinity() -> msi_domain_set_affinity() ->
-smmu_pmu_write_msi_msg().
-
-> =20
->  static void smmu_pmu_shutdown(struct platform_device *pdev)
->  {
->  	struct smmu_pmu *smmu_pmu =3D platform_get_drvdata(pdev);
-> =20
-> -	smmu_pmu_disable(&smmu_pmu->pmu);
-> +	if (pdev->dev.pm_domain) {
-> +		if (pm_runtime_get_if_active(&pdev->dev) <=3D 0)
-> +			return;
-> +		__smmu_pmu_disable(smmu_pmu);
-> +		pm_runtime_put(&pdev->dev);
-> +		return;
-> +	}
-> +
-> +	__smmu_pmu_disable(smmu_pmu);
->  }
-> =20
-> +static int smmu_pmu_runtime_suspend(struct device *dev)
-> +{
-> +	struct smmu_pmu *smmu_pmu =3D dev_get_drvdata(dev);
-> +
-> +	__smmu_pmu_disable(smmu_pmu);
-> +	return 0;
-> +}
-> =20
-> +static int smmu_pmu_runtime_resume(struct device *dev)
-> +{
-> +	struct smmu_pmu *smmu_pmu =3D dev_get_drvdata(dev);
-> +
-> +	smmu_pmu_reset(smmu_pmu);
-> +	return 0;
-> +}
-
-[Severity: High]
-Does smmu_pmu_runtime_resume() lose the MSI configuration programmed in
-SMMU_PMCG_IRQ_CFG0, SMMU_PMCG_IRQ_CFG1, and SMMU_PMCG_IRQ_CFG2 when the
-power domain is powered off and back on?
-
-During probe, smmu_pmu_setup_irq() clears SMMU_PMCG_IRQ_CFG0 and
-devm_request_irq() activates the MSI via smmu_pmu_write_msi_msg(), before
-pm_runtime_put_sync() at the end of smmu_pmu_probe() suspends the device
-and drops power to those registers:
-
-drivers/perf/arm_smmuv3_pmu.c:smmu_pmu_write_msi_msg() {
-	...
-	writeq_relaxed(doorbell, pmu->reg_base + SMMU_PMCG_IRQ_CFG0);
-	writel_relaxed(msg->data, pmu->reg_base + SMMU_PMCG_IRQ_CFG1);
-	writel_relaxed(MSI_CFG2_MEMATTR_DEVICE_nGnRE,
-		       pmu->reg_base + SMMU_PMCG_IRQ_CFG2);
-}
-
-When smmu_pmu_event_init() later resumes the device,
-smmu_pmu_runtime_resume() only calls smmu_pmu_reset(), leaving the MSI
-registers unprogrammed (or leaving SMMU_PMCG_IRQ_CFG0 at its UNKNOWN reset
-value when wired interrupts are used on an MSI-capable PMCG) so counter
-overflow interrupts do not work.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118101913.3135=
-869-1-amitamishra@google.com?part=3D2
+-- 
+Without deviation from the norm, progress is not possible.
