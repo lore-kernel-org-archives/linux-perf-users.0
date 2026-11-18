@@ -1,80 +1,60 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795016153;
-	b=i5obx8YVDr1z1oseKIj6Ksi2tiSCHhJjrytnY0y2oxi4AMFApEY6kW7T19eOrkXrLJEc
-	 lHj34DNTPQZL5yZQ3jvi1eBLGdkE/T2i/6ESiDd/MEkr0vbM8tF+3kXkRsrVtA7IO3Vsa
-	 AAOlvkmlfslUL85Ev+WTbcFpT7lClHQvC+lZxOnwmflQhAyx32pkIQLCaMywJ/WWdtUXQ
-	 e/+kMtLObtkGnA7WTTkhFmMdWiTaIWqiDJBRGPhYIypisiZzfIpEKEYEHFZWco/wxzC17
-	 xMphBnWJssDdkrS93ZRdone6k+pzBjiUa7ssH1GMJfr9BhN4pGv5o7A9IkldDrm6XxA==
+	t=1795018504;
+	b=5Lz36yPC/LE4XrZB11QTh0df4c1vu5bgamECqyUvrAPtuisu6EwbL4wic9mu3dbbnhBV
+	 WcVhJWPhNakF6O29TuH7IjAw76uao0UGZY5n9WPxDAkG32qShWvn/Px4RAFVdcT6L3rmu
+	 275UCfddJ/R2KSJXKcDrVzowZgxR11Ub5P9tz9FC566C40ge80TKv/08E2OXhxT4jd3T3
+	 B7VA4ydjdZHUaCEtm9ZOzxUXomXV9GEv3FpmxV8aztYL6A6CGh0jgtnT2IJX++cnqk6cK
+	 47H9U/kmPV+t30UB7idbRu3s0pM+qJjumm/RVvr2bW2lUSkvMuJm2YIEl24+IgN4H6w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795016153;
-	h=Received:DKIM-Signature:Received:Date:Message-ID:From:To:Cc:Subject:
-	 In-Reply-To:References:User-Agent:MIME-Version:Content-Type:
-	 X-SA-Exim-Connect-IP:X-SA-Exim-Rcpt-To:X-SA-Exim-Mail-From:
-	 X-SA-Exim-Scanned;
-	bh=PhnMB43dmhhOP+uEehjfYbWyisR+iluGA4pbiWpu2q0=;
-	b=oYlkJgsDpX+kh6FGSKUYt+2vs70RaG++5xmHuIef8wjKNV1UuiqbCh1OSWfjEaMyrnLU
-	 sFr1IaWa1Ly3/TuGwz8tbUGK1juMiSp+LZJ0MPVcXbMNfZuTOVraDFhcyLDYscIubWgVl
-	 2sV5NrdLIPhJ/8eQ7u3mXUyPebOB1SSVXhKrYeKC0Hv/wkqnsuYBJsOJI4V3YrVdpAmDu
-	 /SvqJ6MpSP6v0YGxv0MEMFThpFia/tDph0BN/+TLDm7nLlggTDQCKdz8RUaaVAaB7pvq+
-	 4ovCOqv2V6HEDwvzeHJwtUsMRWMP3/vFFpKdRGzaSRhM4Rd3I7zy9MtJlEukBGuCcvQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795018504;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=8BTsj7xQZG7PduAVaPvxu5YiA218HiWcfmYrYcf3JnM=;
+	b=dRKs5R055rpb0NrMqUhqhZ6+sfpN4//LD7adDrm9J8tJnJFh2BX62d8gkeuvDyI1W3KM
+	 3B88CGV9EPZ2mQRE0B7wuXnZOtXZ2V8o+TYj/TSVxmdblddTaZbyMJnt3RQCh7LztBvdD
+	 XFia6o6kXQhwL24iPZsKVT5SUuG124c3UZtDPh6vh2ZOT5EEglKNLWu7qMgdQTRji85gN
+	 lOIRUnroIE4rRCnYZ1f92apaiU7VK3zTMNxIc9FcV86i0cIW0D16bUU3Z3L6HZnNmBdBj
+	 Y/wx3x0vrDKPgwgFmVSmEZFRWebJg3vJzljtXoio1z89f8DtvS4aEGfvbt95/R9TjTw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YEiwg4VY;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ArV1+vK0;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D72606A335;
-	Wed, 18 Nov 2026 15:35:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DBE606A32A;
+	Wed, 18 Nov 2026 16:15:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YEiwg4VY
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D4D01F000C6;
-	Wed, 18 Nov 2026 15:35:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ArV1+vK0
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BDA51F000C6;
+	Wed, 18 Nov 2026 16:15:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795016153;
-	bh=PhnMB43dmhhOP+uEehjfYbWyisR+iluGA4pbiWpu2q0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=YEiwg4VYtGuqGQJP5AIPXvqqK8mL8uNE+40MF1Ru0rtQdXp4Xd4OzqIn6c3xS/zz9
-	 Tj24RvH6VjLdr9XTcDeGOKiexcgoAP3L3NGDGjhbmlmlubZq3ytpi2LJUp6Qi8cdqX
-	 uxiMy4jgVMCaDWY5OOUDlx2vkx1rMTEt/YycTBdLzayKz/LYgULi9ApJ17qghFnQ8Q
-	 WfCBGXbeJBGzc1d9OGXfDB7+wUSZgw1ypZS+7uJPXhXLpJtmeXMqC60z7h59GKVlos
-	 W0yxzBWnuGgX7UKaWOw05nuX4ZdwPYXr/IJGp/zkHNKDAafpU4vlR799d26p8xbRup
-	 O/e8Y8TTy3IAg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1xThhP-000000000We-1Pzi;
-	Wed, 18 Nov 2026 15:35:51 +0000
-Date: Wed, 18 Nov 2026 15:35:50 +0000
-Message-ID: <8633sy17ah.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Myria Sarvay <myrialsarvay@gmail.com>
-Cc: Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sven Peter <sven@kernel.org>,
-	Janne Grunau <j@jannau.net>,
-	Neal Gompa <neal@gompa.dev>,
-	linux-arm-kernel@lists.infradead.org,
+	s=k20260515; t=1795018504;
+	bh=8BTsj7xQZG7PduAVaPvxu5YiA218HiWcfmYrYcf3JnM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ArV1+vK0hQeWyt57BCYJmQWRzFdH2n8f4JlwdFiZGs0XPrqqRrucVSpBsAi409yr0
+	 AeKYpCZYHuXBTX7GW5GQHXIfV8uKPl48x/tDqWmzYH5z/YdBeI3LUuEGq12Yt9Cxu7
+	 g1Y7esNqtwrk9t+LTfs4iFhrswaKKtS70RAwrcm6sJPfPMyXSMIy7Wop3A7AuUcODP
+	 qxdMaXhiEHSoV7ijhGgVWw60u9DSuVrzJJIcRlM5qvg4v8tMBtaIeX+/iTEnKI98G8
+	 2Y31j47XVkmtQ9D3/hQ293tzCMpCG9Bt6cgW0FND70eNxG+l97FYIFfZdh8QKXMaBg
+	 tbHej1N0yQFOw==
+Date: Wed, 18 Nov 2026 13:15:00 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	asahi@lists.linux.dev,
-	Yuvan Shen <yuvanshen09@gmail.com>,
-	Nick Chan <towinchenmi@gmail.com>
-Subject: Re: [PATCH v2 03/15] drivers/perf: apple_m1: Support per-implementation event tables
-In-Reply-To: <av2p17j8AglpTSAz@macbookair>
-References: <20261107-m3-plus-pmu-events-v2-0-acf1e78da039@gmail.com>
-	<20261107-m3-plus-pmu-events-v2-3-acf1e78da039@gmail.com>
-	<864ide1hb1.wl-maz@kernel.org>
-	<av2p17j8AglpTSAz@macbookair>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v6 03/13] perf annotate: Handle absolute addressing in
+ data type profiling
+Message-ID: <av3PBLtZQ0mYf-1V@phoenix2>
+References: <20261117200433.45174-1-acme@kernel.org>
+ <20261117200433.45174-4-acme@kernel.org>
+ <av1O-I_uLOoY0u5r@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -83,69 +63,125 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: myrialsarvay@gmail.com, will@kernel.org, mark.rutland@arm.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, sven@kernel.org, j@jannau.net, neal@gompa.dev, linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, asahi@lists.linux.dev, yuvanshen09@gmail.com, towinchenmi@gmail.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <av1O-I_uLOoY0u5r@google.com>
 
-On Wed, 18 Nov 2026 13:36:23 +0000,
-Myria Sarvay <myrialsarvay@gmail.com> wrote:
-> 
-> On Wed, Nov 18, 2026 at 11:59:30AM +0000, Marc Zyngier wrote:
-> >
-> > Looking at the following patches, I feel that this series is taking
-> > the long route to get to a relatively clear point: most of the
-> > invariant that we relied on for M1, slightly relaxed for M2 (counter
-> > width), are even more relaxed for M3+ (event width). We therefore need
-> > to indirect things. The way you do it is to mirror the current setup,
-> > with a whole set of callbacks per implementation and a bunch of
-> > additional helpers.
+On Tue, Nov 17, 2026 at 11:08:40PM -0800, Namhyung Kim wrote:
+> On Tue, Nov 17, 2026 at 05:04:21PM -0300, Arnaldo Carvalho de Melo wrote:
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 > > 
-> > But instead of having a set of helper functions, one per
-> > implementation, with an ever increasing set of parameters, it really
-> > feels like we could do with a more data-centric approach where we have
-> > a single data structure describing an implementation, containing all
-> > the relevant data (pointer to the event mapping table, flags, bit
-> > indices for the user/kernel/guest/host attributes, and so on. We could
-> > then have a single set of callbacks that work on everything.
+> > 32-bit x86 accesses globals with absolute addresses, like
+> > "movl %eax,0x8c73448", but the operand parser only recognized the
+> > offset(reg) forms, so the operand had no memory reference, the resolver
+> > saw a zero data address and resolved nothing.
 > > 
-> > You could convert M1/M2 to that, then just add the relevant
-> > descriptions for M3+, which should just add data and the init
-> > functions, nothing else.
+> > Parse a bare "0x" number as an absolute memory operand, leaving jumps,
+> > calls, loop* and the 64-bit movabs* out, use the address in the resolver,
+> > and let the instruction tracking record the type of an absolute global
+> > load in the destination register.  The displacement is sign extended for
+> > 64-bit objects, as the CPU does, and zero extended for 32-bit ones.
+> > Values that do not fit the int offset, zero, and the operands of
+> > relocatable objects, which are unrelocated addends, are skipped.
 > > 
-> > Does this make sense to you?
+> > With bare numbers being memory operands, a frame base register of -1,
+> > "none", would also compare equal to the -1 "no register" of an absolute
+> > operand and take it for a stack access, so guard those comparisons.
+> > Operands left with no register, like a user space "%gs:imm", are no
+> > longer looked up as variables, which can change the data type stats of
+> > those samples.
+> > 
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/perf/util/annotate-arch/annotate-x86.c | 52 ++++++++++++++++++--
+> >  tools/perf/util/annotate.c                   | 25 +++++++++-
+> >  tools/perf/util/annotate.h                   |  7 +++
+> >  3 files changed, 79 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
+> > index e38a4e7a54d5585c..adb52d148cba6001 100644
+> > --- a/tools/perf/util/annotate-arch/annotate-x86.c
+> > +++ b/tools/perf/util/annotate-arch/annotate-x86.c
+> > @@ -230,6 +230,11 @@ static bool vtable_get_rettype(Dwarf_Die *class_die, int offset,
+> >  	return die_get_real_type(&func_die, type_die) != NULL;
+> >  }
+> >  
+> > +static bool is_stack_or_fb_reg(struct type_state *state, int fbreg, int reg)
+> > +{
+> > +	return (fbreg != -1 && reg == fbreg) || reg == state->stack_reg;
+> > +}
+> > +
+> >  static void update_insn_state_x86(struct type_state *state,
+> >  				  struct data_loc_info *dloc, Dwarf_Die *cu_die,
+> >  				  struct disasm_line *dl)
+> > @@ -437,7 +442,7 @@ static void update_insn_state_x86(struct type_state *state,
+> >  		invalidate_reg_state(tsr);
+> >  
+> >  		/* Case 1: Based on stack pointer or frame pointer */
+> > -		if (sreg == fbreg || sreg == state->stack_reg) {
+> > +		if (is_stack_or_fb_reg(state, fbreg, sreg)) {
+> >  			struct type_state_stack *stack;
+> >  			int offset = src->offset - fboff;
+> >  
+> > @@ -626,7 +631,7 @@ static void update_insn_state_x86(struct type_state *state,
+> >  
+> >  retry:
+> >  		/* Check stack variables with offset */
+> > -		if (sreg == fbreg || sreg == state->stack_reg) {
+> > +		if (is_stack_or_fb_reg(state, fbreg, sreg)) {
+> >  			struct type_state_stack *stack;
+> >  			int offset = src->offset - fboff;
+> >  
+> > @@ -741,6 +746,29 @@ static void update_insn_state_x86(struct type_state *state,
+> >  				     insn_offset, addr, dst->reg1);
+> >  			pr_debug_type_name(&type_die, tsr->kind);
+> >  		}
+> > +		/* Or an absolute address, as used by 32-bit code */
+> > +		else if (annotated_op_loc__is_abs(src, map__dso(dloc->ms->map))) {
 > 
-> Hi Marc,
-> 
-> It does make sense, and should reduce duplicated code, I'm just not
-> confident I have the right idea as to how to implement it. I don't want
-> to duplicate a lot of the generic arm_pmu code, so it looks like it'd
-> probably have to be modified to allow passing a hardware specific detail
-> struct to all the callbacks, likely stored as a new field (void *) in
-> the arm_pmu struct itself. Does that vaguely sound right to you?
+> Then shouldn't it check if it's actually 32-bit code?
 
-I'm not sure we really need an extra field. arm_pmu already has a
-pointer to the platform device (pmu->plat_device, also as
-pmu->dev.parent). It means you can use dev_{get,set}_data() on the
-attached device. That's a bit of pointer chasing, but nothing that we
-can't easily swallow if placed behind a convenient macro.
+After some more rounds of local reviews and trying to answer your
+question:
+                        /*
+                         * Keep only what fits the int, as disp32 or as a u32;
+-                        * movabs*, the 64-bit form, is left out.
++                        * a 64-bit absolute value is left out.  The LLVM
++                        * disassembler prints a disp32 that does not fit an
++                        * int as a negative number.
+                         */
+                        if (offset != 0 && (offset <= UINT_MAX ||
+                                            (s64)(int)offset == (s64)offset)) {
+-                               /* Absolute address, as used by 32-bit code */
++                               /* An absolute address: 32-bit code, or a 64-bit disp32 */
+                                op_loc->mem_ref = true;
+                                op_loc->offset = offset;
+                        }
 
-> 
-> Also, with this rewrite, if we're going to make the code a whole lot
-> more generic, and take hardware specific data from a static struct,
-> would it make sense to rename the driver/all the callbacks while we're
-> at it, now that we're adding a lot more than just M1/M2 pmu events?
+It is not 32-bit specific, the comment was wrong.
+ 
+> > +			struct map_symbol *ms = dloc->ms;
+> > +			u64 ip = ms->sym->start + dl->al.offset;
+> > +			u64 addr = annotated_op_loc__abs_addr(src, map__dso(ms->map));
+> > +			int offset;
+> > +
+> > +			if (!get_global_var_type(cu_die, dloc, ip, addr, &offset,
+> > +						 &type_die) ||
+> > +			    !die_get_member_type(&type_die, offset, &type_die)) {
+> > +				invalidate_reg_state(tsr);
+> > +				return;
+> > +			}
+> > +
+> > +			tsr->type = type_die;
+> > +			tsr->kind = TSR_KIND_TYPE;
+ 
+> I'm not sure if it's _TYPE at this point.  Probably _POINTER instead?
 
-I don't think names matter much. If I had my way, all variables and
-functions would be called "bob". I'd suggest you look into the
-refactoring without worrying about the naming, and if that's the last
-problem we have to solve, we'll be in a remarkably good place! ;-)
+Why do you think so?
 
-Thanks,
+This is just duplicating to some degree what is right before, that uses
+a TYPE for a global, no? But please check v7, there is a change in this
+area.
 
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+- Arnaldo
