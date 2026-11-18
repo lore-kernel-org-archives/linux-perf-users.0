@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795041773;
-	b=OfIxVBs1l8+MDzo2X/q9Q9d5NxNQWgc+OO6eJGtdtJnq9yggZcJ2wOJRKGfC73JHuVjA
-	 zdHFn91zWDCF1U/wTE1xfT+eild7mhEDbkJHBfo6qD8jkXuwE9HFb58fE/mRrMBVE72ob
-	 yF8j+pVy/R0xtRag0kn3ncxQYtZKZHczMZDcBz23UeJKAOkgHmRCOsxfb4cxfoKkFEwWX
-	 BzsssX86/hnLJ3vUaWzvsRU9kzk3DXFqEUYA+E6ga14LbuC+2mdKRV+zmUAHLuSkU4NTY
-	 ZFC0BMCMPStchamgssQ361jFW4sMGbl4vxNbHzHEgFjL4O5sC1Q4/zyQ9q2c2mzMoJg==
+	t=1795041774;
+	b=VYQC4SO8avuiJIZnEPgCwP6SilNOfd4x/cH1aDuQ+6zb+ZYDmhV3T1bZceUZgZGT8BdV
+	 DtfUxH92DVrXb73ypBH/2EzpcwRoGI+gwAEe5VTY54M3XVUZZdxYptSUk/5EKMCu6OdK1
+	 p+QYX6wE1fHwdGuhlGOoXG21tcmLMJOpEPM2dvqc+5e0jQ8DhrloEWJllTUKO+3vflljm
+	 U5AnhOQy5VSHZwBom/mNsAuvgF5jrjhvoMqoV5iqln26mJN7hevOdU1q7ysGykayniuL9
+	 q3NNGHoV3iWMIbgR9wAcCeMYhdrxE3RjWKx/5sRw86fqtns5FehVlnQhls9jfqAkFXA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795041773;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795041774;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=cjlDSJZlLIk5bhSCSTYzHAcrEe8pvokPcJ/BKkj3MUc=;
-	b=JHQSJv+QPF3RAeEIAbygwfc434LlfpYnyfAqDII9r0Zuz4FeNGDJgYmAWGhi9qhfFTOP
-	 mSbY9f1ss7X1grPsGsSIQvW4N477ZRnNs1tjqqCUs8GabVxbBNR5lKnpHPbXaXiwN5sh0
-	 jsl4eTycE4DTt62BckYpWTPs30c9cW6OcN/EfqDENHsHWZEYj0ypexWyLl+2xFgnrGrCX
-	 649O7hHEEQwuea572UQomdWcSJiTwiBYnCMcM7ehTOC+sz8D/MGmZ86yWd/hLQvnG2Ont
-	 J0UFj1r28GKNLDhoP9G7US9TKi9NfZ4gC31g6QoCOttcvki10XHL7X+us3LaFuozsSg==
+	bh=CzAYV4yhNkPg6zAodvipCqW6XkRKFYzrdK0PgTCOEag=;
+	b=SNuqq/Q9k/N0Y4G4GmX2jv1Glp2pZfEELrptB3+xvZMoARI3pnsGSTtouIA0k5KXKRAn
+	 8FurmVe7cbMwAB6FNVjJw2mE9A/ixcCx1yyIwUshwAcy/AP3a67cNpv8+2OFjEGMLxkVI
+	 L6+hJsMVKsrayZUGUomVBclecEyMq17iTGle9Fshc+nuOu/azGQ8gpbTK/uIqPeIjY033
+	 hrQF/ZtFDuibwKoE/BjA8WTUqXiVuyyaf21KgYtqNf7zAjpT4+AqAXRywXAHspp0PM8V4
+	 zTlnpK0K0ZgAvWcZEGuuttJW+XZBcjhJcCblthVryNS/67scYofU7ibBBEvN2r8i0ww==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oOqskAKI;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gvtgmsFS;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A153A606A320
-	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 22:42:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCCD606A332
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 22:42:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oOqskAKI
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FCD71F000C4;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gvtgmsFS
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E022D1F000C4;
 	Wed, 18 Nov 2026 22:42:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795041773;
-	bh=cjlDSJZlLIk5bhSCSTYzHAcrEe8pvokPcJ/BKkj3MUc=;
+	s=k20260515; t=1795041774;
+	bh=CzAYV4yhNkPg6zAodvipCqW6XkRKFYzrdK0PgTCOEag=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=oOqskAKIIrO/mJwa9fpZUi2WkAuHOZzGu1uuAx2KxH/EbSJbBLQIRlb9difLb3jvh
-	 uUaHXawmvJ789eDMw6dbsqrBorYvq4Z7hSNvgOlNDxDqSz29WP47lNQFxByrzHnglV
-	 BogtPec0PHWLjz1gIGWKcNhrrGTGWW5zbS9BJd+me3e6sAOo+bWGPfxuNlBAVOjn0i
-	 LwHLcxPUzggWpsLG0dpyiFOrs/m+NWa8Xrpgd+ISXP2XHMx2od9G3LBlGEESLE+LEN
-	 Z3ub3RGFQQ56ArrdIqoflrqxoGQWtztRukp3nzdUKBhliPYw5OHSo72cyY0UTL13RK
-	 0X0FxxnglnpZA==
-Message-ID: <sashiko-outbox-222113@kernel.org>
+	b=gvtgmsFSP+p7hh7w+W+thiko00mSDJkEtp+iHsWzaad6ftWVyeUx9UdJFiyZpWngV
+	 m2DgZrycK3eBF276Dsz4foiZxhL+IfQoFt0EWHR/F0AKCop+a7v0cYgUT5hw3zym9F
+	 VCdyAiv7uepMx0+y/uTuGzyd4hG5p1WeEgUl8uf6mJrT7f0/WAxnehdla79DpJDXRQ
+	 LxOiboMF2ofPZp1M+MFZFI87F0fUSHdI6djH/avYL2Y+/mLXmQTUFo7JEBVMdLjNeZ
+	 /vJY4NTOHox1z2Q0ji+Z3Kd+T5UWDATIz0Odbn9EICpV7k0L8rVrDSEAl7jG6avFeG
+	 cXhFaNB43qyEw==
+Message-ID: <sashiko-outbox-222114@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 07/13] perf tests: Exercise data type resolution from
- a register
+Subject: Re: [PATCH v8 05/13] perf tests: Exercise the flexible array member
+ path
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261118223725.121500-8-acme@kernel.org>
+In-Reply-To: <20261118223725.121500-6-acme@kernel.org>
 References: <20261118223725.121500-1-acme@kernel.org>
- <20261118223725.121500-8-acme@kernel.org>
+ <20261118223725.121500-6-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 18 Nov 2026 22:42:52 +0000
+Date: Wed, 18 Nov 2026 22:42:53 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,14 +63,13 @@ Precedence: list
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> At -O2 a struct pointer lives in a register (with DWARF describing it with
-> a register location on register-argument ABIs), while the unoptimized
-> workloads the data type tests profile keep their variables on the stack.
->=20
-> Add a regptr workload with a noinline function that takes the pointer from
-> a volatile global, so the compiler cannot constant-propagate the object
-> address, and check that its three member accesses are resolved from that
-> register.
+> No test covered find_flex_array() and get_flex_array_member().  Add a
+> flex_array workload that keeps a struct with a trailing data[] behind a
+> global pointer, and a test that checks the accesses past the struct size
+> are resolved and named after the flexible array member; find_data_type()
+> folds offsets past the struct modulo the element size back to the
+> member's offset (+0x4 for char data[]).  The test skips on 32-bit PIE
+> builds, which reach static globals relative to the GOT base register.
 >=20
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
@@ -78,5 +77,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118223725.1215=
-00-1-acme@kernel.org?part=3D7
+00-1-acme@kernel.org?part=3D5
 
