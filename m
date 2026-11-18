@@ -1,60 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.43
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795018504;
-	b=5Lz36yPC/LE4XrZB11QTh0df4c1vu5bgamECqyUvrAPtuisu6EwbL4wic9mu3dbbnhBV
-	 WcVhJWPhNakF6O29TuH7IjAw76uao0UGZY5n9WPxDAkG32qShWvn/Px4RAFVdcT6L3rmu
-	 275UCfddJ/R2KSJXKcDrVzowZgxR11Ub5P9tz9FC566C40ge80TKv/08E2OXhxT4jd3T3
-	 B7VA4ydjdZHUaCEtm9ZOzxUXomXV9GEv3FpmxV8aztYL6A6CGh0jgtnT2IJX++cnqk6cK
-	 47H9U/kmPV+t30UB7idbRu3s0pM+qJjumm/RVvr2bW2lUSkvMuJm2YIEl24+IgN4H6w==
+	t=1795019390;
+	b=o8sckJuS/RmTmBwn40dIopTx+C1w8IoNwE2MqSDvMPx5sEBr7SsNXf5uGTzzWrs5UQrT
+	 e0chWaDbTjadIhk4VTRKCvO+4LMF17C6OC6W4UGZaKD2Szz6cjoSb7WKKFZ3tHnTlVNdZ
+	 g5t2suUc6NBTOEDzax2ZVGvEfmVeF7TMgi61+eEjOGYlsd/nDNjPXMpCRho2u775ksJBh
+	 kOtmGCtQdLq2fer4XptYsSOG2fZ80xrDTvDl828YbAB8zPEXfWoNVJh4qIMkLtYUUTXwE
+	 +Q2YwISv/EantyUbvTyx5o9ITyf7mv4MVrlmRONA1Jns6bK/iePKOxSYtpMzKs1+imA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795018504;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=8BTsj7xQZG7PduAVaPvxu5YiA218HiWcfmYrYcf3JnM=;
-	b=dRKs5R055rpb0NrMqUhqhZ6+sfpN4//LD7adDrm9J8tJnJFh2BX62d8gkeuvDyI1W3KM
-	 3B88CGV9EPZ2mQRE0B7wuXnZOtXZ2V8o+TYj/TSVxmdblddTaZbyMJnt3RQCh7LztBvdD
-	 XFia6o6kXQhwL24iPZsKVT5SUuG124c3UZtDPh6vh2ZOT5EEglKNLWu7qMgdQTRji85gN
-	 lOIRUnroIE4rRCnYZ1f92apaiU7VK3zTMNxIc9FcV86i0cIW0D16bUU3Z3L6HZnNmBdBj
-	 Y/wx3x0vrDKPgwgFmVSmEZFRWebJg3vJzljtXoio1z89f8DtvS4aEGfvbt95/R9TjTw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795019390;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:Subject:Date:
+	 Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer;
+	bh=iyz12xtbU90FsJpLymbYPQjt0B7C+A1RErrcfWx+fUo=;
+	b=nUtqYLZeVjhkdPkYierzj7y/O01pWqjYEvR1S6r/chbm7NMa+6BwMF8dENl8aA7w5hb6
+	 5sowpcczDfjJiQN9AMHBzfYbA/yJBFqoyqCwSDYyWqiz89KiYSbx6PIOw42FhqNcWbyVv
+	 Ex0MhHU2kN+A2pVkNhqWWi3q/+80mWb31nhIbnEPhjNZzSusEOWkYKLNkZyiTqSAGK9Le
+	 RCFPKg3UsObITgsgNRg6XfkDpHQcfngG++jNvP0mB4pCzSyfwefdzeytdeMxmqF8yHhmH
+	 wUWbyEwo8P/y9Ge97PZyDuGcYQ/eqNWz03IRLwlgd5hig/VqKgDUC4euAge6vsDQMKw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ArV1+vK0;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=linaro.org;
+	spf=pass smtp.mailfrom=linaro.org;
+	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=QDUAJ7wL;
+	arc=none smtp.remote-ip=209.85.221.43
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DBE606A32A;
-	Wed, 18 Nov 2026 16:15:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D7560A2604
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 16:29:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 96D7560A2604
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ArV1+vK0
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BDA51F000C6;
-	Wed, 18 Nov 2026 16:15:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795018504;
-	bh=8BTsj7xQZG7PduAVaPvxu5YiA218HiWcfmYrYcf3JnM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ArV1+vK0hQeWyt57BCYJmQWRzFdH2n8f4JlwdFiZGs0XPrqqRrucVSpBsAi409yr0
-	 AeKYpCZYHuXBTX7GW5GQHXIfV8uKPl48x/tDqWmzYH5z/YdBeI3LUuEGq12Yt9Cxu7
-	 g1Y7esNqtwrk9t+LTfs4iFhrswaKKtS70RAwrcm6sJPfPMyXSMIy7Wop3A7AuUcODP
-	 qxdMaXhiEHSoV7ijhGgVWw60u9DSuVrzJJIcRlM5qvg4v8tMBtaIeX+/iTEnKI98G8
-	 2Y31j47XVkmtQ9D3/hQ293tzCMpCG9Bt6cgW0FND70eNxG+l97FYIFfZdh8QKXMaBg
-	 tbHej1N0yQFOw==
-Date: Wed, 18 Nov 2026 13:15:00 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v6 03/13] perf annotate: Handle absolute addressing in
- data type profiling
-Message-ID: <av3PBLtZQ0mYf-1V@phoenix2>
-References: <20261117200433.45174-1-acme@kernel.org>
- <20261117200433.45174-4-acme@kernel.org>
- <av1O-I_uLOoY0u5r@google.com>
+	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=QDUAJ7wL
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-4a7b8abe209so546315f8f.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 08:29:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1795019388; x=1795624188; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=iyz12xtbU90FsJpLymbYPQjt0B7C+A1RErrcfWx+fUo=;
+        b=QDUAJ7wLTW4KcBSvxAWObf0SSkrnLIZbr6LwYdW57ldJrDoEEb7JifQeqfuz/BV+cs
+         FRdB3GwpVpc7KnfWNisU1WDTAF4+6GICgJGjTqvOF9tgqIsnzP5ClXgVAbwhOevlowK/
+         AHsQVDRu/h2kreP8obxIyUyQ5WJTltYFgzmgvTpMKiamgqfFRNkFrmZxSEQ/x3pBEUDT
+         thFoSO0Yf+sTsL12txowHffIKc7wsgMvEn5CCXdm05Vddy4TsbwXuRR3qsjcQfewTR4J
+         QJ9J47kJ2Hh2lWTw5XW4Hl0g2wFd+3CjJYOT/r/qI+oXARqToG4ej0Lp7gfJ/hSt4dpl
+         vTqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795019388; x=1795624188;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=iyz12xtbU90FsJpLymbYPQjt0B7C+A1RErrcfWx+fUo=;
+        b=B8BwtDTPnQJHcELjM8wDUBqKjOwQdSsMnu+VpUxYhkJKd08Qx5Yi+RS4G0Rx0WveYn
+         jT4rZlY1MG/p5FSaD0Rxo/LB4o1evYMckeUnp3qW/dI6PExCfwy8EG4ulr68y9Y6VI0P
+         uAlDWTXYs0TYoi8fEVps/mjCCdDS+5E5ZjJAtZU40nT/v77acTxrucXn1zZhIFw5tRNH
+         Q3UT+pfoH740pZHY7EKtmJh4QoObH1uCcQn3zLfaf0Opeq9AEd5ZuCIer2zL0SNBqIKL
+         Omu5NyCbZqmgh5Vn7Hv484RW6dLYKEfPf/IdFeLnBQSf53W9LMxg/m4aEv8XMrFeuJzC
+         UfNQ==
+X-Gm-Message-State: APuU4Z877I31MiK2w19hYO2Wp/tIcxo25uQ+LL/IXDQqa9XuWR0PdX5w
+	EkhQakxOcqOMDJ6uCOXXg499p9/NqSGmeCaO0/Bw40CAyY4eFCV+b39H1Aep46QrD/Y=
+X-Gm-Gg: AZFdTZdABNU/3sKMBSnnQHZbtTonDknFkBkgfVuU24GhyXJ/EJMiSLrd5tZRhZLvDN8
+	6mVHlpeb1IbXdKp1bxBTnHS7JuMxN1g+IP1r4Z57agO15jcHon2fQE1F6ooc5cVLvnRmkQoXcr1
+	Qzx8K8Og8AtybJfPiuKj/gg60Tfj+XAnXERMzI2mOsIZPTvrFZ+Nn3EQDf6r3iBVjtADDyUknp2
+	fkX2ev64OH9G2yA2qRRluiERTgPmaX+pYz8/fABTIG9qETLE+42H4Bm25RLThC+MWbxwZlP22ph
+	hBsPeSb5e464Nwo+vD3WDdNDPk5QK2mM5gzBWAReYrCv0QSCQvWJFJqKmNbHNkLEqJBRRWkkXAB
+	tvmW73aMHLlukC3aeCPtwpc2X3Dd9bInugu2rdrx0o+kLs6lijXd50Df6Bh7HFjCCVcMawZ0ntH
+	YowPL1aCuBzgqFGOPDbrZcJQjox2f/34YxzbzFckm5dwhaCtxJYWpinKUajQsfWNhy1NxZBaYfH
+	WxTfmImVL4wfKDgYMtsi/yZ5hx8mWCaZDT3VZuXaOBEhmnwaWTJ5yKRxd4ELZ+yzj8Ri50dZB58
+	jkOASx53pKQOoo5z1Ed9nGnC9VoKkHWB
+X-Received: by 2002:a5d:5d01:0:b0:48e:720a:ccaf with SMTP id ffacd0b85a97d-4a63658254amr7372877f8f.5.1795019387957;
+        Wed, 18 Nov 2026 08:29:47 -0800 (PST)
+Received: from pop-os.local ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4a654a8c23bsm4980927f8f.12.2026.11.18.08.29.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Nov 2026 08:29:47 -0800 (PST)
+From: James Clark <james.clark@linaro.org>
+Subject: [PATCH 00/34] perf cs-etm: JIT decoding support
+Date: Wed, 18 Nov 2026 16:29:22 +0000
+Message-Id: <20261118-james-coresight-jit-v1-0-dad4d90747f6@linaro.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -64,124 +90,149 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <av1O-I_uLOoY0u5r@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGPS/WoC/zWOQW7DIBBFr2Kx7lQDhjpYVZR7VFlgGGys2KSAo
+ 0pR7l6ctMsn/Xlv7ixTCpRZ39xZolvIIa4V+FvD7GTWkSC4ykyg+MCDkDCbhTLYmCiHcSowhwJ
+ Coee6RU2tYvXymsiHn6f16/zivA0z2bKr/haJvreaK68Zq9Zsnrm++dxrnKP6r2XYVh/TYkohB
+ 1dKUKZExkHNwE0CQtcpTWhJSKlPl7CaFN9jGo97bDCZ6sfLEkrfDJ33HAftHNmDM51qUVqJnqQ
+ ZPCeSXns0smXnx+MXuTt/sR4BAAA=
+X-Change-ID: 20260824-james-coresight-jit-250f19309e35
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@arm.com>, 
+ Leo Yan <leo.yan@arm.com>, Amir Ayupov <aaupov@fb.com>, 
+ Suyash Mahar <smahar@meta.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+ James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.15.2
 
-On Tue, Nov 17, 2026 at 11:08:40PM -0800, Namhyung Kim wrote:
-> On Tue, Nov 17, 2026 at 05:04:21PM -0300, Arnaldo Carvalho de Melo wrote:
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > 
-> > 32-bit x86 accesses globals with absolute addresses, like
-> > "movl %eax,0x8c73448", but the operand parser only recognized the
-> > offset(reg) forms, so the operand had no memory reference, the resolver
-> > saw a zero data address and resolved nothing.
-> > 
-> > Parse a bare "0x" number as an absolute memory operand, leaving jumps,
-> > calls, loop* and the 64-bit movabs* out, use the address in the resolver,
-> > and let the instruction tracking record the type of an absolute global
-> > load in the destination register.  The displacement is sign extended for
-> > 64-bit objects, as the CPU does, and zero extended for 32-bit ones.
-> > Values that do not fit the int offset, zero, and the operands of
-> > relocatable objects, which are unrelocated addends, are skipped.
-> > 
-> > With bare numbers being memory operands, a frame base register of -1,
-> > "none", would also compare equal to the -1 "no register" of an absolute
-> > operand and take it for a stack access, so guard those comparisons.
-> > Operands left with no register, like a user space "%gs:imm", are no
-> > longer looked up as variables, which can change the data type stats of
-> > those samples.
-> > 
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > ---
-> >  tools/perf/util/annotate-arch/annotate-x86.c | 52 ++++++++++++++++++--
-> >  tools/perf/util/annotate.c                   | 25 +++++++++-
-> >  tools/perf/util/annotate.h                   |  7 +++
-> >  3 files changed, 79 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
-> > index e38a4e7a54d5585c..adb52d148cba6001 100644
-> > --- a/tools/perf/util/annotate-arch/annotate-x86.c
-> > +++ b/tools/perf/util/annotate-arch/annotate-x86.c
-> > @@ -230,6 +230,11 @@ static bool vtable_get_rettype(Dwarf_Die *class_die, int offset,
-> >  	return die_get_real_type(&func_die, type_die) != NULL;
-> >  }
-> >  
-> > +static bool is_stack_or_fb_reg(struct type_state *state, int fbreg, int reg)
-> > +{
-> > +	return (fbreg != -1 && reg == fbreg) || reg == state->stack_reg;
-> > +}
-> > +
-> >  static void update_insn_state_x86(struct type_state *state,
-> >  				  struct data_loc_info *dloc, Dwarf_Die *cu_die,
-> >  				  struct disasm_line *dl)
-> > @@ -437,7 +442,7 @@ static void update_insn_state_x86(struct type_state *state,
-> >  		invalidate_reg_state(tsr);
-> >  
-> >  		/* Case 1: Based on stack pointer or frame pointer */
-> > -		if (sreg == fbreg || sreg == state->stack_reg) {
-> > +		if (is_stack_or_fb_reg(state, fbreg, sreg)) {
-> >  			struct type_state_stack *stack;
-> >  			int offset = src->offset - fboff;
-> >  
-> > @@ -626,7 +631,7 @@ static void update_insn_state_x86(struct type_state *state,
-> >  
-> >  retry:
-> >  		/* Check stack variables with offset */
-> > -		if (sreg == fbreg || sreg == state->stack_reg) {
-> > +		if (is_stack_or_fb_reg(state, fbreg, sreg)) {
-> >  			struct type_state_stack *stack;
-> >  			int offset = src->offset - fboff;
-> >  
-> > @@ -741,6 +746,29 @@ static void update_insn_state_x86(struct type_state *state,
-> >  				     insn_offset, addr, dst->reg1);
-> >  			pr_debug_type_name(&type_die, tsr->kind);
-> >  		}
-> > +		/* Or an absolute address, as used by 32-bit code */
-> > +		else if (annotated_op_loc__is_abs(src, map__dso(dloc->ms->map))) {
-> 
-> Then shouldn't it check if it's actually 32-bit code?
+Restructure the Coresight decoder to decode trace in order with the Perf
+events. This improves decoding accuracy all workloads, but particularly
+with JIT code when instructions at the same addresses are re-written.
 
-After some more rounds of local reviews and trying to answer your
-question:
-                        /*
-                         * Keep only what fits the int, as disp32 or as a u32;
--                        * movabs*, the 64-bit form, is left out.
-+                        * a 64-bit absolute value is left out.  The LLVM
-+                        * disassembler prints a disp32 that does not fit an
-+                        * int as a negative number.
-                         */
-                        if (offset != 0 && (offset <= UINT_MAX ||
-                                            (s64)(int)offset == (s64)offset)) {
--                               /* Absolute address, as used by 32-bit code */
-+                               /* An absolute address: 32-bit code, or a 64-bit disp32 */
-                                op_loc->mem_ref = true;
-                                op_loc->offset = offset;
-                        }
+The resulting decode loop structure is simplified to
+cs_etm__insert_heap() and cs_etm__pop_heap(), which work in the same way
+for all of the timeless/per-thread/per-cpu etc modes.
 
-It is not 32-bit specific, the comment was wrong.
- 
-> > +			struct map_symbol *ms = dloc->ms;
-> > +			u64 ip = ms->sym->start + dl->al.offset;
-> > +			u64 addr = annotated_op_loc__abs_addr(src, map__dso(ms->map));
-> > +			int offset;
-> > +
-> > +			if (!get_global_var_type(cu_die, dloc, ip, addr, &offset,
-> > +						 &type_die) ||
-> > +			    !die_get_member_type(&type_die, offset, &type_die)) {
-> > +				invalidate_reg_state(tsr);
-> > +				return;
-> > +			}
-> > +
-> > +			tsr->type = type_die;
-> > +			tsr->kind = TSR_KIND_TYPE;
- 
-> I'm not sure if it's _TYPE at this point.  Probably _POINTER instead?
+For every Perf event, we pop from the heap while the packet's timestamps
+are before the current Perf event. When a packet is popped, the next
+packet is decoded and re-inserted.
 
-Why do you think so?
+The same path works for timeless mode because we can just assign the
+timestamp of the AUX record to all trace from that buffer. This also
+improves timeless decoding accuracy because now we don't use the
+timestamp from the very last AUX record for all samples.
 
-This is just duplicating to some degree what is right before, that uses
-a TYPE for a global, no? But please check v7, there is a change in this
-area.
+In Coresight trace, timestamps come after their associated atoms and
+Perf uses a single decoder for both searching forwards for a timestamp
+and decoding. It does this by caching decoded packets into
+packet_buffer[] and replaying them once a timestamp is received.
+Unfortunately this does't work for strict ordering with Perf events
+because while searching for the timestamp the decoder will decode trace
+using previously seen mmap which is incorrect.
 
-- Arnaldo
+To fix this, add a "packet only" decoder for each queue. This is used
+for searching for the next timestamp after a discontinuity and not for
+decoding trace. Once it's found, the backend re-orders that timestamp
+and the previous packet before delivering them to the frontend so that
+we can be at the correct Perf event before processing context packets or
+ranges. Excluding the tests, this patchset results in similar total
+lines of code but if we updated OpenCSD to return timestamps and
+discontinuities in the correct order, then it would be a significant
+reduction in code and complexity.
+
+This series depends on https://lore.kernel.org/linux-perf-users/20261105-james-cs-unformatted-per-thread-fix-v4-0-7759e0ce2449@linaro.org/
+
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+James Clark (34):
+      perf jit: Support JITDUMP_USE_ARCH_TIMESTAMP on arm64
+      perf jit: Add name of clock in error message
+      perf jit: Add address ranges to DWARF compilation units
+      perf libdw: Don't look up the module by ELF address
+      perf cs-etm: Use the exception level to tell kernel from user
+      perf cs-etm: Don't read past the end of the map
+      perf build-id: Cache the vDSO in build ID mmap mode
+      perf cs-etm: arm-spe: Use arch timestamp in HW tracers
+      perf cs-etm: arm-spe: Report error if default clock isn't used
+      perf cs-etm: Remove old pipe mode support
+      perf cs-etm: Track threads in timeless mode
+      perf cs-etm: Track sched out events
+      perf cs-etm: Handle PERF_RECORD_SWITCH events
+      perf cs-etm: Always enable Perf event timestamps
+      perf cs-etm: Use time from Perf samples
+      perf cs-etm: Don't buffer non-timestamped packets
+      perf cs-etm: Decode in order of Perf samples
+      perf cs-etm: Don't special case per-thread mode
+      perf cs-etm: Decode one packet at a time and don't estimate timestamps
+      perf cs-etm: Remove the decoded packet ring buffer
+      perf cs-etm: Fold packet state into the trace ID queue
+      perf cs-etm: Rename trace ID queues to trace ID contexts
+      perf cs-etm: Rename tidq variables to tidc
+      perf cs-etm: Share the thread ctxt between frontend and backend
+      perf cs-etm: Consume each OpenCSD packet immediately
+      perf cs-etm: Split base and packet decoder state
+      perf cs-etm: Add packet-only timestamp decoder ops
+      perf cs-etm: Create timestamp decoders
+      perf cs-etm: Find timestamps by searching ahead
+      perf cs-etm: Invalidate OpenCSD's cache on MMAPs
+      perf test cs-etm: Add a Java JIT source-line test
+      perf test cs-etm: Test trace is ordered with context switch records
+      perf test cs-etm: Test decoding of kernel modules
+      perf test cs-etm: Add an HHVM JIT call stack test
+
+ tools/perf/Makefile.perf                           |    4 +-
+ tools/perf/arch/arm/util/cs-etm.c                  |   21 +-
+ tools/perf/arch/arm64/util/arm-spe.c               |   11 +
+ tools/perf/jvmti/jvmti_agent.c                     |    5 +
+ tools/perf/tests/genelf.c                          |   70 +-
+ .../tests/shell/coresight/context_switch_thread.sh |   20 +-
+ tools/perf/tests/shell/coresight/hhvm-jit.sh       |   89 ++
+ tools/perf/tests/shell/coresight/java-jit.sh       |   65 +
+ tools/perf/tests/shell/coresight/kernel_module.sh  |   54 +
+ tools/perf/tests/shell/coresight/lib/PerfJit.java  |   82 ++
+ tools/perf/tests/shell/coresight/per-thread.sh     |   45 +-
+ tools/perf/tests/workloads/jitdump.c               |    7 +-
+ tools/perf/util/auxtrace.h                         |    2 +
+ tools/perf/util/build-id.c                         |   12 +
+ tools/perf/util/cs-etm-decoder/cs-etm-decoder.c    |  790 ++++++----
+ tools/perf/util/cs-etm-decoder/cs-etm-decoder.h    |   28 +-
+ tools/perf/util/cs-etm.c                           | 1515 ++++++++------------
+ tools/perf/util/cs-etm.h                           |   56 +-
+ tools/perf/util/genelf.c                           |    2 +-
+ tools/perf/util/genelf.h                           |    3 +-
+ tools/perf/util/genelf_debug.c                     |   22 +-
+ tools/perf/util/jitdump.c                          |    2 +-
+ tools/perf/util/libdw.c                            |   16 +-
+ 23 files changed, 1643 insertions(+), 1278 deletions(-)
+---
+base-commit: b7ff10b9ddec8da75304c40fe4abf1ee4f9f0a43
+change-id: 20260824-james-coresight-jit-250f19309e35
+prerequisite-message-id: <20261105-james-cs-unformatted-per-thread-fix-v4-0-7759e0ce2449@linaro.org>
+prerequisite-patch-id: 9c49b9ffb75309e9187eb2e3ef84026118fcfdb5
+prerequisite-patch-id: 4ce0ba0ab1302c9043f0d0734d9cf6a35298bc47
+prerequisite-patch-id: 5e69770fbaf94296da5c474ce09539a1993bc61e
+prerequisite-patch-id: 41d797af2aba7e97ff4435ae2659629e026d36ec
+prerequisite-patch-id: d5f67b3b704f4f4b3d9e39c4299d13a086b29363
+prerequisite-patch-id: a99348cc2065af31840f652286f840f23395892f
+prerequisite-patch-id: aa90408e69dedf9e68d7158f2499bd9fbc7b0b40
+prerequisite-patch-id: cd31a650f8dd3e7a9795fa641eee2415b126ad29
+prerequisite-patch-id: 922a7fe2937a575beb8d0e7777fd869a11023eb2
+prerequisite-patch-id: b0436630e22fd92803e277cd08d782c50f135be6
+prerequisite-patch-id: e136ff402ddf5121c63c1393b7fc00a826f60a69
+prerequisite-patch-id: 8a2674fa45e40848742e8b8472003e2b9706211d
+prerequisite-patch-id: df905386a100ac4b8b047328de08da86b3adf241
+prerequisite-patch-id: 44ee88eeafd54c0148ed2332dc5e33f1ba6dfce4
+prerequisite-patch-id: b9622164f99682ca6b813b9d38ced3e95170653e
+prerequisite-patch-id: 2f22df1738caf5af3a631851d8a57fc3bfea7742
+prerequisite-patch-id: afe679ea285ddc6cd281f697ce504b7a18888999
+prerequisite-patch-id: f507254858995051e8e1b96fb9fd95506228c5e6
+prerequisite-patch-id: 6fe822580ea330633f8a23260aa7b2c7de834ab3
+
+Best regards,
+--  
+James Clark <james.clark@linaro.org>
+
