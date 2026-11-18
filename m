@@ -1,62 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795041497;
-	b=2BX3qmhH8bChe1Ezl9Fgydaz864dl3vmiafekBjWtTss5so0G6l54b0RfrpOLwOjM5u9
-	 Gkxcynec+gYzP9hI+QfiC4SQpXk1XfppY1fGP4ZRML7PqzNPxzA5OZ5u+O3+k60bs6ipH
-	 UoAX9S9GzITyt24BpTeMOVksPpiz1JuCV9HPzghVG9S27IZ9hNyJlmmHHl6Du1lkq3P+s
-	 nKG99aHrmJRgbHOAbecFqOqETgU/FDhw2tvzk0M6bGCdkBKlf21zvKf1gqKec28ywlrH+
-	 1vk5Rdy1p7vAzJ2dVFOO1zp9cVSjLsKp/j4mFao7lEgl6gUQOkVWI8olU+agZGn4jhg==
+	t=1795041678;
+	b=VJ4M+6DDfa5FdVHXry36ZVdu02jBXHNwXY2TzU0ntzajZG2uMsM5Jucezf+Rki6OZakv
+	 hBR1HWRPe5J5KtQDXLbp1AClDeSjiXeoy12c7yWoKhTa91GoTmbIuxJfZx8cArB2BJ/2R
+	 qp1/A5dWpXOO67wmdns9l1qb336wrcluwsJTgRTrTcxB4zmEcy7zhWgQG8l7AnzTDcTeR
+	 5ZprfGn8IoNX0wMoT+3wERx+AV9N3WGRgFkWR5gW2s+EOsK5dEtDownuw1PeHvaj+h4tW
+	 TQuFw6pvQB3ZvUt8ve2Ohyip0mDACcfYIjwgMuhBuuTn9rnrEv8ZnGb/1JJA6xAq/8A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795041497;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=HqdU3TKWtk+QHYDMIs0OjFQmc/8QrMHOsCdFuTPEaI4=;
-	b=Hi7+bgm8aQz76r9dfodMaDnnXTgqEsvx2te8ziNGgYs2cfinkkvxXCyTii5HJJW+GmlV
-	 1BpPTTd0EKRbmGXjKq1GqwsWlEwEyoMc7TA2ktyg8+M71OAdWMRLT4i9DxMFnLRYrUU4S
-	 BGTt5fN8KKfH4UvjnvyHUmmoatFX9fLAliaMBguakPjzyKq0THeArLi+paBIs6tp5RXLp
-	 Sg6T0aeD7U0buGjqPzw1gujqYoITZJLLmHoE9m20pjvBGfYpXIZ+ovAR/ADHkSbvef3Lv
-	 x/kgED4i5ric7DSb4b3EsUvJjZQDLpdiXxnwoSPkT4AAXkPzqEIhueqU+V6mHlLSQtQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795041678;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=U1TDsAsZ8ByuNfd3GkrIrk4zKlCFj3ydUI3s7t0qPjY=;
+	b=j6v6kj4U7FDGek0JmuCY3mOAi+bDnc1rNgnWR0r2OISRQy/RKvE1DOvHzOTSur5siiqm
+	 qHeRCsCwKtJNAOrRwtVq0AXz9rTJuWhYl4wdlL7WWmoKBVGv28vBPiMPtrbVYEQhZwLYb
+	 DcxoFj45zZAVXYmFkrz8phzKc+3f13hpOQb4ICK86dUcXV+I7UiFjaM0441l9qMGKY2tc
+	 7KfCPs2usiOdT5t6eqN5Fym1+vkxX6AzwLj7u5MGmtdYNOOBXaG8s61XmHFP2GZB7mvnm
+	 ewzgnFzQN4j4bfHPhtQoaYEtxkiaaoHen3mrlRN5h0BwqpnyZwahjmwRHVXsxTl0QMw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=j3+wml2g;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HjdX1u41;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27ADD606A982;
-	Wed, 18 Nov 2026 22:38:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10EA606A325
+	for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 22:41:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=j3+wml2g
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 170D01F000C7;
-	Wed, 18 Nov 2026 22:38:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=HjdX1u41
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5472D1F000C6;
+	Wed, 18 Nov 2026 22:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795041497;
-	bh=HqdU3TKWtk+QHYDMIs0OjFQmc/8QrMHOsCdFuTPEaI4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=j3+wml2gJ3BgGLQqgolkF6LUc4z/IJs2VsYx1toLXe4SuzsRyvd3GWG1ZkjIocaGx
-	 O/01UWhndj4ZGNm1SidLp+aZX9mCYDy10DrQ8Ol4F3PaUM0K/IKaj6eY+P0CG2+Xgj
-	 VYmPx/nDJFyrTWEa2aKNs7uk47F691kv3mkvCAJlKIQtNBI3F3Gp1tnT9//K5BJylM
-	 +epQq+TXXn5Dno9twav6p6oxxXrHrUMZY3QNuRYlRUjZj9BtVkBi7eOPnr4AbaVNKB
-	 Oy3kQFKSpWhmn0XGNCcnUAbW4EOtZ5rqdB5LdxXCPuXk/EtfSMCbexpJlM8SYSCl5Q
-	 T9TZyW0FFXccg==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v8 13/13] perf test: Skip the LBR inline unwinding check when unsupported
-Date: Wed, 18 Nov 2026 19:37:24 -0300
-Message-ID: <20261118223725.121500-14-acme@kernel.org>
-X-Mailer: git-send-email 2.56.1
-In-Reply-To: <20261118223725.121500-1-acme@kernel.org>
+	s=k20260515; t=1795041678;
+	bh=U1TDsAsZ8ByuNfd3GkrIrk4zKlCFj3ydUI3s7t0qPjY=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=HjdX1u411+dJYAetCQZHRgzXUDHFo3S/tCyBKR0QzX+bd6MTRZlUHrtVuOCgwaKKR
+	 Munmo3tRQ5x0ErhzN+0PlTsVSQIbyxYOA/W44fXbZQ71yKWupNC4vd9jNUZ9ZjMfkB
+	 T6iX79+hnkE64M/xKbfaJOtDX0KkaRBySseOqb6PLlR+qXmWPA5il0d98ErgKiC2ma
+	 u6wvATdTWRTU3iqRGfLLPgUaPQO3w2eB7crpkzL84vsMGA65jK6NRzN/J2T8zTtWHp
+	 0nTdrIks4w19c9rDMQ8NMvnbktHm88Z/Yf9c9dH68VCvbF1k+2MzO1actTI4xQhMLj
+	 TMxgOt7Wga18A==
+Message-ID: <sashiko-outbox-222109@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v8 09/13] perf tests: Silence the libbfd probe in
+ build-test
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261118223725.121500-10-acme@kernel.org>
 References: <20261118223725.121500-1-acme@kernel.org>
+ <20261118223725.121500-10-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 18 Nov 2026 22:41:17 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -65,66 +60,26 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+>=20
+> build-test evaluates the libbfd probe at parse time and the compiler's
+> stderr isn't captured by $(shell ...), so without binutils-devel it
+> prints "bfd.h: No such file or directory" once per tests/make
+> invocation, five times per run.
+>=20
+> Redirect the compiler's stderr; the empty result still skips the
+> nondistro tests as intended.
+>=20
+> Fixes: 523471c5163659c6 ("perf build: Skip nondistro build test if libbfd=
+ is old")
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Cc: James Clark <james.clark@linaro.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The LBR check takes caps/branches as sufficient to record cycles with
---call-graph lbr, but the file only says the PMU has an LBR: AMD LBRv2
-rejects the call stack mode with EOPNOTSUPP and AMD BRS, which samples
-only its own retired branches event, rejects cycles with EINVAL, so the
-test fails on AMD instead of skipping.
+Sashiko has reviewed this patch and found no issues.
 
-Skip when the same event records without the branch stack, so a PMU
-without the LBR call stack skips while a perf record that fails for
-another reason still shows its error and fails the test.
-
-Fixes: 446c595dc0dd1759 ("perf test addr2line_inlines: Ensure inline information shows on LBR leaves")
-Cc: Ian Rogers <irogers@google.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/tests/shell/addr2line_inlines.sh | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/shell/addr2line_inlines.sh b/tools/perf/tests/shell/addr2line_inlines.sh
-index e8754ef2d7f21ac2..050e95c0fea12aae 100755
---- a/tools/perf/tests/shell/addr2line_inlines.sh
-+++ b/tools/perf/tests/shell/addr2line_inlines.sh
-@@ -8,6 +8,7 @@ err=0
- test_dir=$(mktemp -d /tmp/perf-test-inline-addr2line.XXXXXXXXXX)
- perf_data="${test_dir}/perf.data"
- perf_script_txt="${test_dir}/perf_script.txt"
-+perf_record_err="${test_dir}/perf_record.err"
- 
- cleanup() {
-     rm -rf "${test_dir}"
-@@ -71,7 +72,24 @@ test_lbr() {
-     fi
- 
-     # Record data. Currently only dwarf callchains support inlined functions.
--    perf record --call-graph lbr -e cycles:u -o "${perf_data}" -- perf test -w inlineloop 1
-+    # caps/branches does not mean the LBR call stack is supported: AMD LBRv2
-+    # rejects it with EOPNOTSUPP and AMD BRS, which samples only its own
-+    # retired branches event, rejects cycles with EINVAL. Skip when the same
-+    # event records without the branch stack.
-+    if ! perf record --call-graph lbr -e cycles:u -o "${perf_data}" -- \
-+            perf test -w inlineloop 1 2> "${perf_record_err}"
-+    then
-+        if perf record -e cycles:u -o "${perf_data}" -- true 2> /dev/null
-+        then
-+            echo "Skip: LBR call stack not supported by the PMU"
-+        else
-+            cat "${perf_record_err}"
-+            echo "Inline unwinding lbr verification test [Failed to record]"
-+            err=1
-+        fi
-+        return
-+    fi
-+    cat "${perf_record_err}"
- 
-     # Check output with inline (default) and srcline
-     perf script -i "${perf_data}" --fields +srcline > "${perf_script_txt}"
--- 
-2.56.1
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261118223725.1215=
+00-1-acme@kernel.org?part=3D9
 
