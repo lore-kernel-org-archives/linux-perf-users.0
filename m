@@ -1,67 +1,67 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.168.131
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1794995519;
-	b=5A7Lohjnu/+0tYrVHyBsyWT+AGt+TS7ZBV+t+CYfgIFwydPYppBmKN6XOrS2UATZzuwH
-	 FFkCiSjbQxoSxuQHvgDVCD7ux+us527iul7wazxrUfAweZewBbhlegMZat74waajyTnph
-	 3ZgTfA/WYIVGkpkEjab+CKm5GmztpZRU9zlEscjEIIH/CTlTuBCC03c75SqH9LA/F0WHp
-	 2NICHfLQli1wvI5xv+eITWpucaaRVxhj6KnZSkeHRzoMyK6TNOD//8n1OY5Ig6eK9aofK
-	 EFtGcZOTMc0Xv/Y+X7oAu0KicCcYOGUiXLf9oyEBiNzbyQhXo/UxQCGGvcJnWhAAHZg==
+	t=1794995522;
+	b=3MAtLcryHig8PwIrWB3eYJnaErPkKY1XgMwDbnLE71nMeVs3+5nCa0dVswBaJLXBbHpM
+	 v7MGULnVmPrNjwMiZEt3HyXGE9kehfVYYRQ7pDprH99Zi/bRgXRFgigm5pavz4QlEqiwc
+	 xZ0w0Fvqu9JTelv+z/ufiQ7qDlFTsqPAkJHcIbzRHpl9EL71K9lauAM/g/kJfJgcEk9v3
+	 cmHyajsL9zqAiGbjF4GpY3agFoU7YaI0lT7OgVRRrW6GNW8uq2iogI5c4zPwQz4aaItLB
+	 65m5UcKT121XnNM299UAGmi+KjDNF2+Ejl0K6Bl0IYmhyTuusvKuBuvK4Un0E0fHPEQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1794995519;
+	a=rsa-sha256; c=relaxed/relaxed; t=1794995522;
 	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
 	 Received:From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:
-	 X-Proofpoint-Reinject:X-QCInternal:X-QCInternal:
-	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-GUID:
-	 X-Proofpoint-Spam-Info:X-Authority-Analysis:X-Proofpoint-ORIG-GUID:
+	 X-Proofpoint-Reinject:X-QCInternal:X-QCInternal:X-Proofpoint-GUID:
+	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-ORIG-GUID:
+	 X-Authority-Analysis:X-Proofpoint-Spam-Info:
 	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details;
-	bh=DuF9idljbakunDp8MtPAS3OYXlXCB/782WNJLWPk9dw=;
-	b=Pz70TORmdGk1z6rzN/Z5XfELcN0vzmTH588BBns6DkA05SmiQ5AeDrVG4JigjS2bvArV
-	 6qXr3apAfrJIkvQ8H3ZvPgJH9vKY91FjRM6YfyDzs1djXsRsqD37Nw9yTZS3Dt9okXgPj
-	 z3k6wSsBtxav1bHy4VkoSjHtG7M5G5NtcmLP2GOaVfAGhQpc9wNTSmAynorPyXGwwL9Xy
-	 ymQKH0hA0i+ppABIePmgow4BdxwowAKTOhKEufb3cUCxSGcDOIDTBjtJQUrXMQe9EOKMN
-	 tw0R1FZRIBNvtDTvgMTp8w9XLRQtGb5aKj18sjvcIZye4RmD31EXGkV8xAF2lQNvktQ==
+	bh=Ui7XMRu1eCK/S/p5ooPjZ5tVl6e4CsIVwRS7ksMmBH4=;
+	b=VpqGn/rD9m4b0OK4o4gTBIiRIHmdmqSb9/0pbwTSk2OBOUvwQHJjLWUmnR3/tksv3lhy
+	 BUG6RMcuMTUThuZmnMRQDkoEcdouzGXyJRrWrOL1VO07Trc8ebTwakhDCCC2yXBBzAKas
+	 FZWCV8iWTbIJOVaIHOGldU3tS28zpWHfrFjz0NgG7VNwjQqPwi4Gga9UL0uZDjwkdOHsn
+	 pN+yPraykmuTZXZJKsIoeFVIwKEr17xwj3EdnjMhPJCcvKoW7swCdU9QqmlOHXvscg3sg
+	 7QgvP2kOvrNHIWufaZCC5bmT7sKgEbMqc5HLfPx16oAo5iatfI8A4nZciHrF1hcx6gg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=oss.qualcomm.com;
 	spf=pass smtp.mailfrom=qualcomm.com;
-	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=A8BrR7jG;
+	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=laVN3zJs;
 	arc=none smtp.remote-ip=205.220.168.131
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A06606A333;
-	Wed, 18 Nov 2026 09:51:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 82A06606A333
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9089606A32C;
+	Wed, 18 Nov 2026 09:52:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D9089606A32C
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=A8BrR7jG
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AI9k8Oe2398687;
-	Wed, 18 Nov 2026 09:51:20 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=laVN3zJs
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AI9k5xQ3578089;
+	Wed, 18 Nov 2026 09:51:17 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=DuF9idljbak
-	unDp8MtPAS3OYXlXCB/782WNJLWPk9dw=; b=A8BrR7jGvP6OxWZFGY+837aueNj
-	/VPM61wf7nMyx4GX2bvKGHZFwWiEKGgJrbgwo+L+AqhNpLvgI1zVrPrvNnK3zkxi
-	346XpilNomsIpOovI1h4gLDHLxlRDTTgUPEuxrPIG7oC4hhpiNkNyM11UA7vbOmZ
-	PIRLslBgPTc5wbtBtV9eFBDTNTx8hWSJ9bhWxC+ChaX9SVv0LCAZ+xqgzfQpXSgu
-	wnaM/Zt6axCVLa85sFVenKfGQvEjfmJSv/H9XyKoDbCsY+KN2zkirX/wJPevAUbW
-	/W4P/VEoU1tmtAUzdEhR0Z9qpSPSAfF9XZkPXRGlP9d+UhvjnzqHVT698qw==
+	:mime-version:references:subject:to; s=qcppdkim1; bh=Ui7XMRu1eCK
+	/S/p5ooPjZ5tVl6e4CsIVwRS7ksMmBH4=; b=laVN3zJskZLszkuKyiDbKPql+yY
+	vyu0NRTWKWhhyzv7G0XyTm1wQ9tMmcDSJF3UoEW6p8p1Tq+9OowMK1DeZhREAymO
+	n91tiVXDg5l5XZ5vH/cgpvjBN7wMjWX5TIFL9WEtDeRFg3YVBzIbn760RR/jFP+7
+	XEek5itD5w6LDpQa0vzyZOm65SmxV8QS3haGmdPSBqJb48otgknSA36cbey3kg2j
+	8Ug29u2oA+An7Z3pE7xj7FQnlGOo1eTIHxrGO1nQE1ZGlvW8BrP14Eo2LtlCBWA3
+	RrymG3vezqm/+lWtMrw9/j9Zz/s+yOYhXvt0A3Zyy4o93no+GldnKeWozDQ==
 Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4j0yv92dtu-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4j0yv72fc8-1
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Wed, 18 Nov 2026 09:51:19 +0000 (GMT)
+	Wed, 18 Nov 2026 09:51:17 +0000 (GMT)
 Received: from pps.filterd (apblrppmta02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.11/8.18.1.11) with ESMTP id 6AI9pHJV376022;
-	Wed, 18 Nov 2026 09:51:17 GMT
+	by APBLRPPMTA02.qualcomm.com (8.18.1.11/8.18.1.11) with ESMTP id 6AI9pE00375990;
+	Wed, 18 Nov 2026 09:51:14 GMT
 Received: from hu-devc-blr-u24-a.qualcomm.com (hu-vikrsi-blr.qualcomm.com [10.190.111.249])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 6AI9pG1w376017
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 6AI9pEMM375980
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Wed, 18 Nov 2026 09:51:16 +0000 (GMT)
+	Wed, 18 Nov 2026 09:51:14 +0000 (GMT)
 Received: by hu-devc-blr-u24-a.qualcomm.com (Postfix, from userid 4853235)
-	id 359B124881; Wed, 18 Nov 2026 15:21:16 +0530 (+0530)
+	id E9D5C24881; Wed, 18 Nov 2026 15:21:13 +0530 (+0530)
 From: Vikram Singh <vikram.singh3@oss.qualcomm.com>
 To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         namhyung@kernel.org, mark.rutland@arm.com,
@@ -77,9 +77,9 @@ Cc: Vikram Singh <vikram.singh3@oss.qualcomm.com>,
         Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org,
         Rajnesh Kanwal <rajnesh.kanwal49@gmail.com>,
         Anup Patel <anup@brainfault.org>
-Subject: [PATCH v5 5/7] riscv: pmu: Add driver for Control Transfer Records Ext
-Date: Wed, 18 Nov 2026 15:20:51 +0530
-Message-ID: <20261118095053.3871267-6-vikram.singh3@oss.qualcomm.com>
+Subject: [PATCH v5 3/7] riscv: Add Control Transfer Records extension parsing
+Date: Wed, 18 Nov 2026 15:20:49 +0530
+Message-ID: <20261118095053.3871267-4-vikram.singh3@oss.qualcomm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20261118095053.3871267-1-vikram.singh3@oss.qualcomm.com>
 References: <20261118095053.3871267-1-vikram.singh3@oss.qualcomm.com>
@@ -96,793 +96,94 @@ Content-Transfer-Encoding: 8bit
 X-Proofpoint-Reinject: loops=2 maxloops=12
 X-QCInternal: smtphost
 X-QCInternal: smtphost
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTE4MDAzOSBTYWx0ZWRfXxb8AqNC2v6I7
- lg9XV03zWu+8qKB7+suwvjYjt7RFGyODVzDzI9LDhwiokZSdVZgEniYmLDssOUWrs4aGnPoYmOl
- wwZcO+JkQzzdEE0poE89BYaTT9HsToFoYRhRNqYGo3RibS7o5x4mLIIuBM8KfgcBZ+9TnhUVbBJ
- 80nKf+a29rFtAL/6ikiOjk2JALP8S7Ackb81fcldq6FXt241qFHNvGL5hQyqu699DJaUXJPvP4S
- aarCO2notFBtwuVXd1nk8eVN3qW4MpeL3NSNqZXnRfcDK5tr63CKDRlfmuhscCmymVvM2+Np3YV
- s/oDs3c2TYAaa4/YQb9Xc1f8SHgeE/W6jphTB9h/nJAxzJl/T81DTdZGVd0fb1nu2BnYaAKispx
- do8PlbxzmmhLqPfCvERZA8tFflqiwqJYtdqvV4MKCKuyriPCNJyTlBxN9L3SKZJyaE7MZoNz/3w
- 9Co02vmbmVmgfGlnzKw==
-X-Proofpoint-GUID: D4Spy2nU3-JpSz7e34SPxPWElXpzHdpU
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMTE4MDAzOSBTYWx0ZWRfX+X6oRmgF1NNa
- b0PysnrZGLQnsbDjLHjBfhBCAI+pc0aRfX9YdbWPVK5eVgNktTreowe5zzEQMZiST7rlw7LyS/u
- B9gwO5iMJegUXh+n9TyP9CrHp+lSbhk=
-X-Authority-Analysis: v=2.4 cv=LuQHWXdc c=1 sm=1 tr=0 ts=6afd7518 cx=c_pps
+X-Proofpoint-GUID: L9bidKamvHgPUBbJBmzyqHE8pf1tSJEv
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTE4MDAzOSBTYWx0ZWRfX9ad3WICbwmLb
+ rxe4MEp6TfcWBAaDMRqHyRJHlmjLU5K8s3u2x/yo8v0T6p68uW/LOq8f8iQz7bs/E3n1B40jaKY
+ 0hp6mYBTd7ufOSVfqkeFNANvYZdIqyvQVq8sx3nF4irKs7yVhs5ZTN5kZUVx3UzQuAqi+ATsMqX
+ VNeqcXS7TE2c7WyK9ewuToqlc+aydNayRcojKoH8O8wQx0bvg8fK3AwOY6OONGbslni7U0NibQw
+ 2ttgUqzwFBl27bdgwyDZw5PjU9GanXogAvIYVxBsGhtxV/yabwTNTpWAISGqum5Ktw4/dX5m8wO
+ lld4PFlBHQKeTIG1U2+mdjWbufd2XrALqegqNRCfB4aEGSLG0Mnk9l3lQQCZCKiwh1V6valnn94
+ MW/rK1d5WqOTClcfZXt5r3t/U2t7HnipW9Z9tAQBBx1wK/V96oxELPgRkLzUC9aBqiXBA/h1At5
+ dsJpJ2N5Im59MXsc9Rg==
+X-Proofpoint-ORIG-GUID: L9bidKamvHgPUBbJBmzyqHE8pf1tSJEv
+X-Authority-Analysis: v=2.4 cv=H8xOUOYi c=1 sm=1 tr=0 ts=6afd7515 cx=c_pps
  a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
  a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
- a=YMgV9FUhrdKAYTUUvYB2:22 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=pGLkceISAAAA:8
- a=W-_n0kkjAAAA:8 a=JfrnYn6hAAAA:8 a=h0uksLzaAAAA:8 a=sBn2mVFWlJtzMMHZUc8A:9
- a=qeNa2pbTr82C0GpJEZFS:22 a=1CNFftbPRP8L7MoqJWF3:22 a=MSi_79tMYmZZG2gvAgS0:22
-X-Proofpoint-ORIG-GUID: D4Spy2nU3-JpSz7e34SPxPWElXpzHdpU
+ a=Um2Pa8k9VHT-vaBCBUpS:22 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=pGLkceISAAAA:8
+ a=W-_n0kkjAAAA:8 a=tUtPt1BIteo8AfM-IXUA:9 a=qeNa2pbTr82C0GpJEZFS:22
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTE4MDAzOSBTYWx0ZWRfX36oC45Vhgxq/
+ NACFVaO13C6vc7YewqPAtJEXEvHS0KuvHlfrE2rqPHaRAfGxpyqPvYBW+lcsB55y2NLYdqyGh+o
+ X3xMdC2e2SdEXOY/0sw5rSqT+vGDDeQ=
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
  definitions=2026-11-18_02,2026-11-16_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 impostorscore=0 malwarescore=0 suspectscore=0 clxscore=1015
- adultscore=0 lowpriorityscore=0 spamscore=0 priorityscore=1501 bulkscore=0
+ priorityscore=1501 phishscore=0 suspectscore=0 impostorscore=0 spamscore=0
+ bulkscore=0 clxscore=1015 adultscore=0 lowpriorityscore=0 malwarescore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2611040001 definitions=main-2611180039
 
-This adds support for CTR Ext defined in [0]. The extension
-allows to records a maximum for 256 last branch records.
-
-CTR extension depends on s[m|s]csrind and Sscofpmf extensions.
+Adding CTR extension in ISA extension map to lookup for extension
+availability.
 
 Co-developed-by: Rajnesh Kanwal <rajnesh.kanwal49@gmail.com>
 Signed-off-by: Rajnesh Kanwal <rajnesh.kanwal49@gmail.com>
 Signed-off-by: Vikram Singh <vikram.singh3@oss.qualcomm.com>
-Link: https://lore.kernel.org/r/20261106173942.3175069-6-vikram.singh3@oss.qualcomm.com
+Link: https://lore.kernel.org/r/20261106173942.3175069-4-vikram.singh3@oss.qualcomm.com
 Signed-off-by: Anup Patel <anup@brainfault.org>
 ---
- MAINTAINERS                    |   3 +
- drivers/perf/Kconfig           |  16 +
- drivers/perf/Makefile          |   1 +
- drivers/perf/riscv_ctr.c       | 609 +++++++++++++++++++++++++++++++++
- include/linux/perf/riscv_pmu.h |  44 ++-
- 5 files changed, 669 insertions(+), 4 deletions(-)
- create mode 100644 drivers/perf/riscv_ctr.c
+ arch/riscv/include/asm/hwcap.h | 6 ++++++
+ arch/riscv/kernel/cpufeature.c | 2 ++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ccbcdc0799b9..87bba12adc7f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -24225,8 +24225,11 @@ F:	arch/riscv/boot/dts/sifive/
- RISC-V PMU DRIVERS
- M:	Atish Patra <atish.patra@linux.dev>
- R:	Anup Patel <anup@brainfault.org>
-+R:	Vikram Singh <vikram.singh3@oss.qualcomm.com>
- L:	linux-riscv@lists.infradead.org
- S:	Supported
-+F:	Documentation/arch/riscv/pmu-sse.rst
-+F:	drivers/perf/riscv_ctr.c
- F:	drivers/perf/riscv_pmu.c
- F:	drivers/perf/riscv_pmu_legacy.c
- F:	drivers/perf/riscv_pmu_sbi.c
-diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
-index 245e7bb763b9..0b4c04c50c22 100644
---- a/drivers/perf/Kconfig
-+++ b/drivers/perf/Kconfig
-@@ -129,6 +129,22 @@ config ANDES_CUSTOM_PMU
+diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+index b5952db9259f..ee200d8cfccb 100644
+--- a/arch/riscv/include/asm/hwcap.h
++++ b/arch/riscv/include/asm/hwcap.h
+@@ -126,6 +126,10 @@
+ #define RISCV_ISA_EXT_ZIC64B		116
+ #define RISCV_ISA_EXT_SV48		117
+ #define RISCV_ISA_EXT_SV57		118
++#define RISCV_ISA_EXT_SSPESA		119
++#define RISCV_ISA_EXT_SSPLCOFI		120
++#define RISCV_ISA_EXT_SMCTR		121
++#define RISCV_ISA_EXT_SSCTR		122
  
- 	  If you don't know what to do here, say "Y".
+ #define RISCV_ISA_EXT_XLINUXENVCFG	127
  
-+config RISCV_CTR
-+	bool "Enable support for Control Transfer Records (CTR)"
-+	depends on PERF_EVENTS && RISCV_PMU
-+	default y
-+	help
-+	  Enable support for Control Transfer Records (CTR) which
-+	  allows recording branches, Jumps, Calls, returns etc taken in an
-+	  execution path. This also supports privilege based filtering. It
-+	  captures additional relevant information such as cycle count,
-+	  branch misprediction etc.
-+
-+config RISCV_M_MODE
-+		bool "Enable M Mode"
-+		depends on RISCV_CTR
-+		default n
-+
- config ARM_PMU_ACPI
- 	depends on ARM_PMU && ACPI
- 	def_bool y
-diff --git a/drivers/perf/Makefile b/drivers/perf/Makefile
-index eb8a022dad9a..02cba90afb54 100644
---- a/drivers/perf/Makefile
-+++ b/drivers/perf/Makefile
-@@ -21,6 +21,7 @@ obj-$(CONFIG_RISCV_PMU) += riscv_pmu.o
- obj-$(CONFIG_RISCV_PMU_LEGACY) += riscv_pmu_legacy.o
- obj-$(CONFIG_RISCV_PMU_SBI) += riscv_pmu_sbi.o
- obj-$(CONFIG_STARFIVE_STARLINK_PMU) += starfive_starlink_pmu.o
-+obj-$(CONFIG_RISCV_CTR) += riscv_ctr.o
- obj-$(CONFIG_THUNDERX2_PMU) += thunderx2_pmu.o
- obj-$(CONFIG_XGENE_PMU) += xgene_pmu.o
- obj-$(CONFIG_ARM_SPE_PMU) += arm_spe_pmu.o
-diff --git a/drivers/perf/riscv_ctr.c b/drivers/perf/riscv_ctr.c
-new file mode 100644
-index 000000000000..1af8a304dd69
---- /dev/null
-+++ b/drivers/perf/riscv_ctr.c
-@@ -0,0 +1,609 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Control transfer records extension Helpers.
-+ *
-+ * Copyright (C) 2024 Rivos Inc.
-+ *
-+ * Author: Rajnesh Kanwal <rkanwal@rivosinc.com>
-+ */
-+
-+#define pr_fmt(fmt) "CTR: " fmt
-+
-+#include <linux/bitfield.h>
-+#include <linux/printk.h>
-+#include <linux/types.h>
-+#include <linux/perf_event.h>
-+#include <linux/perf/riscv_pmu.h>
-+#include <linux/cpufeature.h>
-+#include <asm/hwcap.h>
-+#include <asm/csr_indirect.h>
-+#include <asm/csr.h>
-+
-+#define CTR_BRANCH_FILTERS_INH  (CTRCTL_EXCINH       | \
-+				 CTRCTL_INTRINH      | \
-+				 CTRCTL_TRETINH      | \
-+				 CTRCTL_TKBRINH      | \
-+				 CTRCTL_INDCALL_INH  | \
-+				 CTRCTL_DIRCALL_INH  | \
-+				 CTRCTL_INDJUMP_INH  | \
-+				 CTRCTL_DIRJUMP_INH  | \
-+				 CTRCTL_CORSWAP_INH  | \
-+				 CTRCTL_RET_INH      | \
-+				 CTRCTL_INDOJUMP_INH | \
-+				 CTRCTL_DIROJUMP_INH)
-+
-+#define CTR_BRANCH_ENABLE_BITS (CTRCTL_KERNEL_ENABLE | CTRCTL_U_ENABLE)
-+
-+/* Branch filters not-supported by CTR extension. */
-+#define CTR_EXCLUDE_BRANCH_FILTERS (PERF_SAMPLE_BRANCH_ABORT_TX	        | \
-+				    PERF_SAMPLE_BRANCH_IN_TX		| \
-+				    PERF_SAMPLE_BRANCH_PRIV_SAVE        | \
-+				    PERF_SAMPLE_BRANCH_NO_TX            | \
-+				    PERF_SAMPLE_BRANCH_COUNTERS)
-+
-+/* Branch filters supported by CTR extension. */
-+#define CTR_ALLOWED_BRANCH_FILTERS (PERF_SAMPLE_BRANCH_USER		| \
-+				    PERF_SAMPLE_BRANCH_KERNEL		| \
-+				    PERF_SAMPLE_BRANCH_HV		| \
-+				    PERF_SAMPLE_BRANCH_ANY		| \
-+				    PERF_SAMPLE_BRANCH_ANY_CALL	        | \
-+				    PERF_SAMPLE_BRANCH_ANY_RETURN	| \
-+				    PERF_SAMPLE_BRANCH_IND_CALL	        | \
-+				    PERF_SAMPLE_BRANCH_COND		| \
-+				    PERF_SAMPLE_BRANCH_IND_JUMP	        | \
-+				    PERF_SAMPLE_BRANCH_HW_INDEX	        | \
-+				    PERF_SAMPLE_BRANCH_NO_FLAGS	        | \
-+				    PERF_SAMPLE_BRANCH_NO_CYCLES	| \
-+				    PERF_SAMPLE_BRANCH_CALL_STACK       | \
-+				    PERF_SAMPLE_BRANCH_CALL		| \
-+				    PERF_SAMPLE_BRANCH_TYPE_SAVE)
-+
-+#define CTR_PERF_BRANCH_FILTERS    (CTR_ALLOWED_BRANCH_FILTERS	        | \
-+				    CTR_EXCLUDE_BRANCH_FILTERS)
-+
-+static u64 allowed_filters __read_mostly;
-+
-+struct ctr_regset {
-+	unsigned long src;
-+	unsigned long target;
-+	unsigned long ctr_data;
-+};
-+
-+enum {
-+	CTR_STATE_NONE,
-+	CTR_STATE_VALID,
-+};
-+
-+/* Head is the idx of the next available slot. The slot may be already populated
-+ * by an old entry which will be lost on new writes.
-+ */
-+struct riscv_perf_task_context {
-+	int callstack_users;
-+	int stack_state;
-+	unsigned int num_entries;
-+	u32 ctr_status;
-+	u64 ctr_control;
-+	struct ctr_regset store[MAX_BRANCH_RECORDS];
-+};
-+
-+static inline u64 get_ctr_src_reg(unsigned int ctr_idx)
-+{
-+	return csr_indirect_read(CSR_SIREG, CTR_ENTRIES_FIRST, ctr_idx);
-+}
-+
-+static inline void set_ctr_src_reg(unsigned int ctr_idx, u64 value)
-+{
-+	return csr_indirect_write(CSR_SIREG, CTR_ENTRIES_FIRST, ctr_idx, value);
-+}
-+
-+static inline u64 get_ctr_tgt_reg(unsigned int ctr_idx)
-+{
-+	return csr_indirect_read(CSR_SIREG2, CTR_ENTRIES_FIRST, ctr_idx);
-+}
-+
-+static inline void set_ctr_tgt_reg(unsigned int ctr_idx, u64 value)
-+{
-+	return csr_indirect_write(CSR_SIREG2, CTR_ENTRIES_FIRST, ctr_idx, value);
-+}
-+
-+static inline u64 get_ctr_data_reg(unsigned int ctr_idx)
-+{
-+	return csr_indirect_read(CSR_SIREG3, CTR_ENTRIES_FIRST, ctr_idx);
-+}
-+
-+static inline void set_ctr_data_reg(unsigned int ctr_idx, u64 value)
-+{
-+	return csr_indirect_write(CSR_SIREG3, CTR_ENTRIES_FIRST, ctr_idx, value);
-+}
-+
-+static inline bool ctr_record_valid(u64 ctr_src)
-+{
-+	return !!FIELD_GET(CTRSOURCE_VALID, ctr_src);
-+}
-+
-+static inline int ctr_get_mispredict(u64 ctr_target)
-+{
-+	return FIELD_GET(CTRTARGET_MISP, ctr_target);
-+}
-+
-+static inline unsigned int ctr_get_cycles(u64 ctr_data)
-+{
-+	const unsigned int cce = FIELD_GET(CTRDATA_CCE_MASK, ctr_data);
-+	const unsigned int ccm = FIELD_GET(CTRDATA_CCM_MASK, ctr_data);
-+
-+	if (ctr_data & CTRDATA_CCV)
-+		return 0;
-+
-+	/* Formula to calculate cycles from spec: (2^12 + CCM) << CCE-1 */
-+	if (cce > 0)
-+		return (4096 + ccm) << (cce - 1);
-+
-+	return FIELD_GET(CTRDATA_CCM_MASK, ctr_data);
-+}
-+
-+static inline unsigned int ctr_get_type(u64 ctr_data)
-+{
-+	return FIELD_GET(CTRDATA_TYPE_MASK, ctr_data);
-+}
-+
-+static inline unsigned int ctr_get_depth(u64 ctr_depth)
-+{
-+	/* Depth table from CTR Spec: 2.4 sctrdepth.
-+	 *
-+	 * sctrdepth.depth       Depth
-+	 * 000			- 16
-+	 * 001			- 32
-+	 * 010			- 64
-+	 * 011			- 128
-+	 * 100			- 256
-+	 *
-+	 * Depth = 16 * 2 ^ (ctrdepth.depth)
-+	 * or
-+	 * Depth = 16 << ctrdepth.depth.
-+	 */
-+	return 16 << FIELD_GET(SCTRDEPTH_MASK, ctr_depth);
-+}
-+
-+static inline struct riscv_perf_task_context *task_context(void *ctx)
-+{
-+	return (struct riscv_perf_task_context *)ctx;
-+}
-+
-+/* Reads CTR entry at idx and stores it in entry struct. */
-+static bool get_ctr_regset(struct ctr_regset *entry, unsigned int idx)
-+{
-+	entry->src = get_ctr_src_reg(idx);
-+
-+	if (!ctr_record_valid(entry->src))
-+		return false;
-+
-+	entry->src = entry->src;
-+	entry->target = get_ctr_tgt_reg(idx);
-+	entry->ctr_data = get_ctr_data_reg(idx);
-+
-+	return true;
-+}
-+
-+static void set_ctr_regset(struct ctr_regset *entry, unsigned int idx)
-+{
-+	set_ctr_src_reg(idx, entry->src);
-+	set_ctr_tgt_reg(idx, entry->target);
-+	set_ctr_data_reg(idx, entry->ctr_data);
-+}
-+
-+static u64 branch_type_to_ctr(int branch_type)
-+{
-+	u64 config = CTR_BRANCH_FILTERS_INH | CTRCTL_LCOFIFRZ;
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_USER)
-+		config |= CTRCTL_U_ENABLE;
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_KERNEL)
-+		config |= CTRCTL_KERNEL_ENABLE;
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_HV) {
-+		if (riscv_isa_extension_available(NULL, H))
-+			config |= CTRCTL_KERNEL_ENABLE;
-+	}
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_ANY) {
-+		config &= ~CTR_BRANCH_FILTERS_INH;
-+		return config;
-+	}
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_ANY_CALL) {
-+		config &= ~CTRCTL_INDCALL_INH;
-+		config &= ~CTRCTL_DIRCALL_INH;
-+		config &= ~CTRCTL_EXCINH;
-+		config &= ~CTRCTL_INTRINH;
-+	}
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_ANY_RETURN)
-+		config &= ~(CTRCTL_RET_INH | CTRCTL_TRETINH);
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_IND_CALL)
-+		config &= ~CTRCTL_INDCALL_INH;
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_COND)
-+		config &= ~CTRCTL_TKBRINH;
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_CALL_STACK)
-+		config |= CTRCTL_RASEMU;
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_IND_JUMP) {
-+		config &= ~CTRCTL_INDJUMP_INH;
-+		config &= ~CTRCTL_INDOJUMP_INH;
-+	}
-+
-+	if (branch_type & PERF_SAMPLE_BRANCH_CALL)
-+		config &= ~CTRCTL_DIRCALL_INH;
-+
-+	return config;
-+}
-+
-+static const int ctr_perf_map[] = {
-+	[CTRDATA_TYPE_NONE]			= PERF_BR_UNKNOWN,
-+	[CTRDATA_TYPE_EXCEPTION]		= PERF_BR_SYSCALL,
-+	[CTRDATA_TYPE_INTERRUPT]		= PERF_BR_IRQ,
-+	[CTRDATA_TYPE_TRAP_RET]			= PERF_BR_ERET,
-+	[CTRDATA_TYPE_NONTAKEN_BRANCH]		= PERF_BR_COND,
-+	[CTRDATA_TYPE_TAKEN_BRANCH]		= PERF_BR_COND,
-+	[CTRDATA_TYPE_RESERVED_6]		= PERF_BR_UNKNOWN,
-+	[CTRDATA_TYPE_RESERVED_7]		= PERF_BR_UNKNOWN,
-+	[CTRDATA_TYPE_INDIRECT_CALL]		= PERF_BR_IND_CALL,
-+	[CTRDATA_TYPE_DIRECT_CALL]		= PERF_BR_CALL,
-+	[CTRDATA_TYPE_INDIRECT_JUMP]		= PERF_BR_IND,
-+	[CTRDATA_TYPE_DIRECT_JUMP]		= PERF_BR_UNCOND,
-+	[CTRDATA_TYPE_CO_ROUTINE_SWAP]		= PERF_BR_UNKNOWN,
-+	[CTRDATA_TYPE_RETURN]			= PERF_BR_RET,
-+	[CTRDATA_TYPE_OTHER_INDIRECT_JUMP]	= PERF_BR_IND,
-+	[CTRDATA_TYPE_OTHER_DIRECT_JUMP]	= PERF_BR_UNCOND,
-+};
-+
-+static void ctr_set_perf_entry_type(struct perf_branch_entry *entry,
-+				    u64 ctr_data)
-+{
-+	int ctr_type = ctr_get_type(ctr_data);
-+
-+	entry->type = ctr_perf_map[ctr_type];
-+	if (entry->type == PERF_BR_UNKNOWN)
-+		pr_warn("%d - unknown branch type captured\n", ctr_type);
-+}
-+
-+static void capture_ctr_flags(struct perf_branch_entry *entry,
-+			      struct perf_event *event, u64 ctr_data,
-+			      u64 ctr_target)
-+{
-+	if (branch_sample_type(event))
-+		ctr_set_perf_entry_type(entry, ctr_data);
-+
-+	if (!branch_sample_no_cycles(event))
-+		entry->cycles = ctr_get_cycles(ctr_data);
-+
-+	if (!branch_sample_no_flags(event)) {
-+		entry->abort = 0;
-+		entry->mispred = ctr_get_mispredict(ctr_target);
-+		entry->predicted = !entry->mispred;
-+	}
-+
-+	if (branch_sample_priv(event))
-+		entry->priv = PERF_BR_PRIV_UNKNOWN;
-+}
-+
-+static void ctr_regset_to_branch_entry(struct cpu_hw_events *cpuc,
-+				       struct perf_event *event,
-+				       struct ctr_regset *regset,
-+				       unsigned int idx)
-+{
-+	struct perf_branch_entry *entry = &cpuc->branches->branch_entries[idx];
-+
-+	*entry = (struct perf_branch_entry){ };
-+	entry->from = regset->src & (~CTRSOURCE_VALID);
-+	entry->to = regset->target & (~CTRTARGET_MISP);
-+	capture_ctr_flags(entry, event, regset->ctr_data, regset->target);
-+}
-+
-+static void ctr_read_entries(struct cpu_hw_events *cpuc,
-+			     struct perf_event *event,
-+			     unsigned int depth)
-+{
-+	struct ctr_regset entry = {};
-+	u64 ctr_ctl;
-+	int i;
-+
-+	ctr_ctl = csr_read_clear(CSR_CTRCTL, CTR_BRANCH_ENABLE_BITS);
-+
-+	for (i = 0; i < depth; i++) {
-+		if (!get_ctr_regset(&entry, i))
-+			break;
-+
-+		ctr_regset_to_branch_entry(cpuc, event, &entry, i);
-+	}
-+
-+	csr_set(CSR_CTRCTL, ctr_ctl & CTR_BRANCH_ENABLE_BITS);
-+
-+	cpuc->branches->branch_stack.nr = i;
-+	cpuc->branches->branch_stack.hw_idx = 0;
-+}
-+
-+bool riscv_pmu_ctr_valid(struct perf_event *event)
-+{
-+	u64 branch_type = event->attr.branch_sample_type;
-+
-+	if (branch_type & ~allowed_filters) {
-+		pr_debug_once("Requested branch filters not supported 0x%llx\n",
-+			      branch_type & ~allowed_filters);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+void riscv_pmu_ctr_consume(struct cpu_hw_events *cpuc, struct perf_event *event)
-+{
-+	unsigned int depth = to_riscv_pmu(event->pmu)->ctr_depth;
-+
-+	ctr_read_entries(cpuc, event, depth);
-+
-+	/* Clear frozen bit. */
-+	csr_clear(CSR_SCTRSTATUS, SCTRSTATUS_FROZEN);
-+}
-+
-+static void riscv_pmu_ctr_reset(void)
-+{
-+	/* FIXME: Replace with sctrclr instruction once support is merged
-+	 * into toolchain.
-+	 */
-+	asm volatile(".4byte 0x10400073\n" ::: "memory");
-+	csr_write(CSR_SCTRSTATUS, 0);
-+}
-+
-+static void __riscv_pmu_ctr_restore(void *ctx)
-+{
-+	struct riscv_perf_task_context *task_ctx = ctx;
-+	unsigned int i;
-+
-+	csr_write(CSR_SCTRSTATUS, task_ctx->ctr_status);
-+
-+	for (i = 0; i < task_ctx->num_entries; i++)
-+		set_ctr_regset(&task_ctx->store[i], i);
-+}
-+
-+static void riscv_pmu_ctr_restore(void *ctx)
-+{
-+	if (task_context(ctx)->stack_state == CTR_STATE_NONE ||
-+	    task_context(ctx)->callstack_users == 0) {
-+		return;
-+	}
-+
-+	riscv_pmu_ctr_reset();
-+	__riscv_pmu_ctr_restore(ctx);
-+
-+	task_context(ctx)->stack_state = CTR_STATE_NONE;
-+}
-+
-+static void __riscv_pmu_ctr_save(void *ctx, unsigned int depth)
-+{
-+	struct riscv_perf_task_context *task_ctx = ctx;
-+	struct ctr_regset *dst;
-+	unsigned int i;
-+
-+	for (i = 0; i < depth; i++) {
-+		dst = &task_ctx->store[i];
-+		if (!get_ctr_regset(dst, i))
-+			break;
-+	}
-+
-+	task_ctx->num_entries = i;
-+
-+	task_ctx->ctr_status = csr_read(CSR_SCTRSTATUS);
-+}
-+
-+static void riscv_pmu_ctr_save(void *ctx, unsigned int depth)
-+{
-+	if (task_context(ctx)->stack_state == CTR_STATE_VALID)
-+		return;
-+
-+	if (task_context(ctx)->callstack_users == 0) {
-+		task_context(ctx)->stack_state = CTR_STATE_NONE;
-+		return;
-+	}
-+
-+	__riscv_pmu_ctr_save(ctx, depth);
-+
-+	task_context(ctx)->stack_state = CTR_STATE_VALID;
-+}
-+
-+/*
-+ * On context switch in, we need to make sure no samples from previous tasks
-+ * are left in the CTR.
-+ *
-+ * On ctxswin, sched_in = true, called after the PMU has started
-+ * On ctxswout, sched_in = false, called before the PMU is stopped
-+ */
-+void riscv_pmu_ctr_sched_task(struct perf_event_pmu_context *pmu_ctx, struct task_struct *task,
-+			      bool sched_in)
-+{
-+	struct riscv_pmu *rvpmu = to_riscv_pmu(pmu_ctx->pmu);
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(rvpmu->hw_events);
-+	void *task_ctx;
-+
-+	if (!cpuc->ctr_users)
-+		return;
-+
-+	/* Save branch records in task_ctx on sched out */
-+	task_ctx = pmu_ctx ? task->perf_ctx_data : NULL;
-+	if (task_ctx) {
-+		if (sched_in)
-+			riscv_pmu_ctr_restore(task_ctx);
-+		else
-+			riscv_pmu_ctr_save(task_ctx, rvpmu->ctr_depth);
-+		return;
-+	}
-+
-+	/* Reset branch records on sched in */
-+	if (sched_in)
-+		riscv_pmu_ctr_reset();
-+}
-+
-+static inline bool branch_user_callstack(unsigned int br_type)
-+{
-+	return (br_type & PERF_SAMPLE_BRANCH_USER) &&
-+		(br_type & PERF_SAMPLE_BRANCH_CALL_STACK);
-+}
-+
-+void riscv_pmu_ctr_add(struct perf_event *event)
-+{
-+	struct riscv_pmu *rvpmu = to_riscv_pmu(event->pmu);
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(rvpmu->hw_events);
-+
-+	if (branch_user_callstack(event->attr.branch_sample_type) &&
-+	    event->ctx->task->perf_ctx_data)
-+		task_context(event->ctx->task->perf_ctx_data)->callstack_users++;
-+
-+	perf_sched_cb_inc(event->pmu);
-+
-+	if (!cpuc->ctr_users++)
-+		riscv_pmu_ctr_reset();
-+}
-+
-+void riscv_pmu_ctr_del(struct perf_event *event)
-+{
-+	struct riscv_pmu *rvpmu = to_riscv_pmu(event->pmu);
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(rvpmu->hw_events);
-+
-+	if (branch_user_callstack(event->attr.branch_sample_type) &&
-+	    event->ctx->task->perf_ctx_data)
-+		task_context(event->ctx->task->perf_ctx_data)->callstack_users--;
-+
-+	perf_sched_cb_dec(event->pmu);
-+	cpuc->ctr_users--;
-+	WARN_ON_ONCE(cpuc->ctr_users < 0);
-+}
-+
-+void riscv_pmu_ctr_enable(struct perf_event *event)
-+{
-+	u64 branch_type = event->attr.branch_sample_type;
-+	u64 ctr;
-+
-+	ctr = branch_type_to_ctr(branch_type);
-+	csr_write(CSR_CTRCTL, ctr);
-+}
-+
-+void riscv_pmu_ctr_disable(struct perf_event *event)
-+{
-+	/* Clear CTRCTL to disable the recording. */
-+	csr_write(CSR_CTRCTL, 0);
-+}
-+
-+/*
-+ * Check for hardware supported perf filters here. To avoid missing
-+ * any new added filter in perf, we do a BUILD_BUG_ON check, so make sure
-+ * to update CTR_ALLOWED_BRANCH_FILTERS or CTR_EXCLUDE_BRANCH_FILTERS
-+ * defines when adding support for it in below function.
-+ */
-+static void __init check_available_filters(void)
-+{
-+	u64 ctr_ctl;
-+
-+	/*
-+	 * Ensure both perf branch filter allowed and exclude
-+	 * masks are always in sync with the generic perf ABI.
-+	 */
-+	BUILD_BUG_ON(CTR_PERF_BRANCH_FILTERS != (PERF_SAMPLE_BRANCH_MAX - 1));
-+
-+	allowed_filters = PERF_SAMPLE_BRANCH_USER      |
-+			  PERF_SAMPLE_BRANCH_KERNEL    |
-+			  PERF_SAMPLE_BRANCH_ANY       |
-+			  PERF_SAMPLE_BRANCH_HW_INDEX  |
-+			  PERF_SAMPLE_BRANCH_NO_FLAGS  |
-+			  PERF_SAMPLE_BRANCH_NO_CYCLES |
-+			  PERF_SAMPLE_BRANCH_TYPE_SAVE;
-+
-+	csr_write(CSR_CTRCTL, ~0);
-+	ctr_ctl = csr_read(CSR_CTRCTL);
-+	csr_write(CSR_CTRCTL, 0);
-+
-+	if (riscv_isa_extension_available(NULL, H))
-+		allowed_filters |= PERF_SAMPLE_BRANCH_HV;
-+
-+	if (ctr_ctl & (CTRCTL_INDCALL_INH | CTRCTL_DIRCALL_INH))
-+		allowed_filters |= PERF_SAMPLE_BRANCH_ANY_CALL;
-+
-+	if (ctr_ctl & (CTRCTL_RET_INH | CTRCTL_TRETINH))
-+		allowed_filters |= PERF_SAMPLE_BRANCH_ANY_RETURN;
-+
-+	if (ctr_ctl & CTRCTL_INDCALL_INH)
-+		allowed_filters |= PERF_SAMPLE_BRANCH_IND_CALL;
-+
-+	if (ctr_ctl & CTRCTL_TKBRINH)
-+		allowed_filters |= PERF_SAMPLE_BRANCH_COND;
-+
-+	if (ctr_ctl & CTRCTL_RASEMU)
-+		allowed_filters |= PERF_SAMPLE_BRANCH_CALL_STACK;
-+
-+	if (ctr_ctl & (CTRCTL_INDOJUMP_INH | CTRCTL_INDJUMP_INH))
-+		allowed_filters |= PERF_SAMPLE_BRANCH_IND_JUMP;
-+
-+	if (ctr_ctl & CTRCTL_DIRCALL_INH)
-+		allowed_filters |= PERF_SAMPLE_BRANCH_CALL;
-+}
-+
-+void riscv_pmu_ctr_starting_cpu(void)
-+{
-+	if (!riscv_isa_extension_available(NULL, SxCTR) ||
-+	    !riscv_isa_extension_available(NULL, SSCOFPMF))
-+		return;
-+
-+	/* Set depth to maximum. */
-+	csr_write(CSR_SCTRDEPTH, SCTRDEPTH_MASK);
-+}
-+
-+void riscv_pmu_ctr_dying_cpu(void)
-+{
-+	if (!riscv_isa_extension_available(NULL, SxCTR) ||
-+	    !riscv_isa_extension_available(NULL, SSCOFPMF))
-+		return;
-+
-+	/* Clear and reset CTR CSRs. */
-+	csr_write(CSR_SCTRDEPTH, 0);
-+	csr_write(CSR_CTRCTL, 0);
-+	riscv_pmu_ctr_reset();
-+}
-+
-+int riscv_pmu_ctr_init(struct riscv_pmu *riscv_pmu)
-+{
-+	size_t size = sizeof(struct riscv_perf_task_context);
-+
-+	if (!riscv_isa_extension_available(NULL, SxCTR) ||
-+	    !riscv_isa_extension_available(NULL, SSCOFPMF))
-+		return 0;
-+
-+	riscv_pmu->pmu.task_ctx_cache =
-+		kmem_cache_create("ctr_task_ctx", size, sizeof(u64), 0, NULL);
-+	if (!riscv_pmu->pmu.task_ctx_cache)
-+		return -ENOMEM;
-+
-+	check_available_filters();
-+
-+	/* Set depth to maximum. */
-+	csr_write(CSR_SCTRDEPTH, SCTRDEPTH_MASK);
-+	riscv_pmu->ctr_depth = ctr_get_depth(csr_read(CSR_SCTRDEPTH));
-+
-+	pr_info("Perf CTR available, with %d depth\n", riscv_pmu->ctr_depth);
-+
-+	return 0;
-+}
-+
-+void riscv_pmu_ctr_finish(struct riscv_pmu *riscv_pmu)
-+{
-+	if (!riscv_pmu_ctr_supported(riscv_pmu))
-+		return;
-+
-+	riscv_pmu->ctr_depth = 0;
-+	csr_write(CSR_SCTRDEPTH, 0);
-+	csr_write(CSR_CTRCTL, 0);
-+	riscv_pmu_ctr_reset();
-+
-+	kmem_cache_destroy(riscv_pmu->pmu.task_ctx_cache);
-+}
-diff --git a/include/linux/perf/riscv_pmu.h b/include/linux/perf/riscv_pmu.h
-index c748a06ad751..848977ecf319 100644
---- a/include/linux/perf/riscv_pmu.h
-+++ b/include/linux/perf/riscv_pmu.h
-@@ -56,9 +56,8 @@ struct cpu_hw_events {
- 	bool snapshot_set_done;
- 	/* A shadow copy of the counter values to avoid clobbering during multiple SBI calls */
- 	u64 snapshot_cval_shcopy[RISCV_MAX_COUNTERS];
--	/* Saved branch records. */
-+	/* Saved branch records */
- 	struct branch_records *branches;
--
- 	/* Active events requesting branch records */
- 	int ctr_users;
- };
-@@ -88,8 +87,7 @@ struct riscv_pmu {
- 	struct cpu_hw_events	__percpu *hw_events;
- 	struct hlist_node	node;
- 	struct notifier_block   riscv_pm_nb;
--
--	unsigned int	ctr_depth;
-+	unsigned int ctr_depth;
- };
- 
- #define to_riscv_pmu(p) (container_of(p, struct riscv_pmu, pmu))
-@@ -111,6 +109,44 @@ int riscv_pmu_get_hpm_info(u32 *hw_ctr_width, u32 *num_hw_ctr);
- int riscv_pmu_get_event_info(u32 type, u64 config, u64 *econfig);
+@@ -136,10 +140,12 @@
+ #define RISCV_ISA_EXT_SxAIA		RISCV_ISA_EXT_SMAIA
+ #define RISCV_ISA_EXT_SUPM		RISCV_ISA_EXT_SMNPM
+ #define RISCV_ISA_EXT_SxCSRIND		RISCV_ISA_EXT_SMCSRIND
++#define RISCV_ISA_EXT_SxCTR		RISCV_ISA_EXT_SMCTR
+ #else
+ #define RISCV_ISA_EXT_SxAIA		RISCV_ISA_EXT_SSAIA
+ #define RISCV_ISA_EXT_SUPM		RISCV_ISA_EXT_SSNPM
+ #define RISCV_ISA_EXT_SxCSRIND		RISCV_ISA_EXT_SSCSRIND
++#define RISCV_ISA_EXT_SxCTR		RISCV_ISA_EXT_SSCTR
  #endif
  
-+static inline bool riscv_pmu_ctr_supported(struct riscv_pmu *pmu)
-+{
-+	return !!pmu->ctr_depth;
-+}
-+
- #endif /* CONFIG_RISCV_PMU */
- 
-+#ifdef CONFIG_RISCV_CTR
-+
-+bool riscv_pmu_ctr_valid(struct perf_event *event);
-+void riscv_pmu_ctr_consume(struct cpu_hw_events *cpuc, struct perf_event *event);
-+void riscv_pmu_ctr_sched_task(struct perf_event_pmu_context *pmu_ctx, struct task_struct *task,
-+			      bool sched_in);
-+void riscv_pmu_ctr_add(struct perf_event *event);
-+void riscv_pmu_ctr_del(struct perf_event *event);
-+void riscv_pmu_ctr_enable(struct perf_event *event);
-+void riscv_pmu_ctr_disable(struct perf_event *event);
-+void riscv_pmu_ctr_dying_cpu(void);
-+void riscv_pmu_ctr_starting_cpu(void);
-+int  riscv_pmu_ctr_init(struct riscv_pmu *riscv_pmu);
-+void riscv_pmu_ctr_finish(struct riscv_pmu *riscv_pmu);
-+
-+#else
-+
-+static inline bool riscv_pmu_ctr_valid(struct perf_event *event) { return false; }
-+static inline void riscv_pmu_ctr_consume(struct cpu_hw_events *cpuc,
-+					 struct perf_event *event) { }
-+static inline void riscv_pmu_ctr_sched_task(struct perf_event_pmu_context *,
-+					    struct task_struct *task, bool sched_in) { }
-+static void riscv_pmu_ctr_add(struct perf_event *event) { }
-+static void riscv_pmu_ctr_del(struct perf_event *event) { }
-+static inline void riscv_pmu_ctr_enable(struct perf_event *event) { }
-+static inline void riscv_pmu_ctr_disable(struct perf_event *event) { }
-+static inline void riscv_pmu_ctr_dying_cpu(void) { }
-+static inline void riscv_pmu_ctr_starting_cpu(void) { }
-+static inline int riscv_pmu_ctr_init(struct riscv_pmu *riscv_pmu) { return 0; }
-+static inline void riscv_pmu_ctr_finish(struct riscv_pmu *riscv_pmu) { }
-+
-+#endif /* CONFIG_RISCV_CTR */
-+
- #endif /* _RISCV_PMU_H */
+ #endif /* _ASM_RISCV_HWCAP_H */
+diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+index 72bce616491f..b3e3c30f4c8b 100644
+--- a/arch/riscv/kernel/cpufeature.c
++++ b/arch/riscv/kernel/cpufeature.c
+@@ -652,6 +652,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+ 	__RISCV_ISA_EXT_DATA(smmpm, RISCV_ISA_EXT_SMMPM),
+ 	__RISCV_ISA_EXT_SUPERSET(smnpm, RISCV_ISA_EXT_SMNPM, riscv_xlinuxenvcfg_exts),
+ 	__RISCV_ISA_EXT_DATA(smstateen, RISCV_ISA_EXT_SMSTATEEN),
++	__RISCV_ISA_EXT_DATA(smctr, RISCV_ISA_EXT_SMCTR),
+ 	__RISCV_ISA_EXT_DATA(ssaia, RISCV_ISA_EXT_SSAIA),
+ 	__RISCV_ISA_EXT_DATA_VALIDATE(ssccfg, RISCV_ISA_EXT_SSCCFG, riscv_ext_ssccfg_validate),
+ 	__RISCV_ISA_EXT_DATA(sscofpmf, RISCV_ISA_EXT_SSCOFPMF),
+@@ -659,6 +660,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+ 	__RISCV_ISA_EXT_SUPERSET(ssnpm, RISCV_ISA_EXT_SSNPM, riscv_xlinuxenvcfg_exts),
+ 	__RISCV_ISA_EXT_DATA(ssqosid, RISCV_ISA_EXT_SSQOSID),
+ 	__RISCV_ISA_EXT_DATA(sstc, RISCV_ISA_EXT_SSTC),
++	__RISCV_ISA_EXT_DATA(ssctr, RISCV_ISA_EXT_SSCTR),
+ 	__RISCV_ISA_EXT_DATA(svade, RISCV_ISA_EXT_SVADE),
+ 	__RISCV_ISA_EXT_DATA_VALIDATE(svadu, RISCV_ISA_EXT_SVADU, riscv_ext_svadu_validate),
+ 	__RISCV_ISA_EXT_DATA(svinval, RISCV_ISA_EXT_SVINVAL),
 -- 
 2.43.0
 
