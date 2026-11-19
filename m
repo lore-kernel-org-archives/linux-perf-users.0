@@ -1,72 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.167.200
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.167.199
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795114338;
-	b=1jlAP/oipxH0rGn6gRxBlJAkH/r/eD3bLy9UnU8mYXzX/tOZXLd/nkdEIaBNmw7gOq40
-	 JmbSC8GvS8QuGnoctlnjvuZMeGJ+8fZfnSv6C4PejkMoR40zHDGFmodN8EURHl7RXC6at
-	 pZkpWigWGhgj75O5g0ND3EvaT3JzTHDjIlhwmAXCwgt86bvV2KdNXTe90OtgXNwK5AthA
-	 bptx5AF3lXrR497KBVIjfQCNszrfRw0d0ZG9pqTajf7Kv4bdS8dX1JnufKKzbcSLQSQ6a
-	 uZJqtxZ7e/TENSsKZ0gUffSoruZCQwYpw/Dyw9O4pKeenVCM8S5+NSaKedyLYDKsz1w==
+	t=1795114339;
+	b=LV0a3o5iDNKIpUvZEdvDMbxjUlcbwQZh2xiopMTl3+TnewbfdMB5FPZZFUAfRFVTx404
+	 qJBIYPgjzm8cl6Zk2bHhK/zcmv7kjHJ8ILM4bp3ELRRSXzLVF5kX5XpcjNIMZ1JGBE1Uc
+	 Kje55gzbn+hgtoHIJAvy4Q72/l/J4BldQWumnQKsIdNKj9Plj9UpUblZvxA8tgSiZS3MG
+	 IotiIqEqg7sBq3R2boOM/PXzYmFAjf7nZuXubcZkVOLAHA/ytb3OMeSXWwcOP788EqvgX
+	 eKEKBqgUs+8ezFKSeC3pG6ovKzadWQ4KvPkIPGcxksBpa3eRoDVPcc4qL50ow2uq7AQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795114338;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795114339;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
-	 X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=VoOEHP3goHz64oiB5iH1uFdwHtOTQlZ8ZXdEISYRevU=;
-	b=2mKaLaZazkLmzJV7YbLxi+qOo0QeYZxeq0CifrpX/cM7rGpmesbhn20CEneLebUWgGXP
-	 8EDz250r4ApJumWD70oSS1nMz28AOE89G2pKZ8KHD/gXExeoThlI0I4252oVkuOQGC83i
-	 w1w0Ncv2g99sauyh1J2dkzRkBwWCiKp1QRv8Dhu7DebOhQ+PabMXsSCwdWz7wFrCOfuhc
-	 Z24oTQwapYcsW3aFLGjRe17XKaqZBuns/++3kRJR+43cZe7Du0U4H3Sa0X6nBfOvO1bq0
-	 cil5KIX7fv5fvhieqjd0BJlKeeZWMfTCNquF/BOVUXeftMxlLAR48C0J+PBFcvZbqDg==
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
+	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
+	 Content-Type;
+	bh=JnPyo9Uuk9yDsv0rmtMWzSN2FAMU1ZcFas4I3l5JKQU=;
+	b=H7bls58Dgqeoj3mK/QT58ZpsQNBb5DASpG2YLTTeTES/AlYE733+lz9lz3IW0di4DiVL
+	 NVgPtoNB205pLWYxyeDrdpeOJqj0h6p3m30fSDE+UYVSx/iMgMAFRzqsn7P5vfOPdkQKK
+	 7lzNjYp3tjwtP5xUF3X6lSOVM3yNjPt9zpPCBVKulVBN8SUDQUSDNYU1GKgIcOmLn8NCt
+	 k8ZW9YiEVoTCb057o6oWYY4MeaIqCaiFqqK/jocN1AnFiyuRf/H4tH+xi4Rx88Hc/gW30
+	 jr7LaSJ3rHTVy3Odo5DsG+O0qxzpP+95Ay6fBuI2Q1jXjb8hiMsqVTo88Wi1Fa49waA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=DMFZEDeW;
-	arc=none smtp.remote-ip=209.85.167.200
-Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com [209.85.167.200])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=NDuUiAWT;
+	arc=none smtp.remote-ip=209.85.167.199
+Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com [209.85.167.199])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3DF606A324
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 18:52:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8B3DF606A324
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A26F606A33A
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 18:52:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7A26F606A33A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=DMFZEDeW
-Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-4a41f46d629so199497b6e.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 10:52:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=NDuUiAWT
+Received: by mail-oi1-f199.google.com with SMTP id 5614622812f47-547ae874949so209451b6e.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 10:52:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795114336; x=1795719136; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=VoOEHP3goHz64oiB5iH1uFdwHtOTQlZ8ZXdEISYRevU=;
-        b=DMFZEDeWbQ0lOmroyi5NHWByqIQW3/o0rgrZHLEMwtTAXw/KLqWuel1LiniH1CoQGV
-         b9WQN/tUWSNU71TXxByDB3obwicb+yNIU16AajVKkwcvV9lC3GUd9a/5Rrnp8nlQ8Nk3
-         ZtC3oeZraFg6xbyDfZvo9zrnqyU6EqNs0hEFny9YoWVP5txRV3e4igyhgWzjJxq/tJkS
-         vUk1AjynZEdSXjn6GrJilP9AFGeU3y2xgZyeWKzV1Gwr6HyDkoCZ15Ng7mu7shIAyfIt
-         UvuBCK0aTg0wv/mCfjK8IUZnPjzDTaalyPOZmcAGOiL93iRAdfoonj6VGlB9AWOP++Rh
-         SUYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795114336; x=1795719136;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20260707; t=1795114337; x=1795719137; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=VoOEHP3goHz64oiB5iH1uFdwHtOTQlZ8ZXdEISYRevU=;
-        b=tNnvGTVJbjFggkpcQjXHy1n+GJN3oc5Lea+2oWh6fPx8YuBJzGpow4tRlAUNsHK2cw
-         h63S9Pn9lO7OcNUbPPOm5CaMDrCPAyZJDbptf2pFUlKANcIQDAxhMjqhg9JbLpS+bgbI
-         7weghfXrf0f0pZxVtnUW/Ecbnih0lSJN5j3v4ZAMXI1BVkFz7V4T964ZMCpHx6UCyBWc
-         qFH9CHcxezFdDLbAyMglTWJwhsUKR/5ryNVdRPRYu8lk0u6A82JM0eSu5vyWpVgbn+AJ
-         WY7k3JZTjW2JFLxmbMttRFkiSW/uNjCNBZHJltPiwJFYue0Ig6mos+dfR4mTGUofys59
-         Logw==
-X-Forwarded-Encrypted: i=1; AL+hErGcN5mriwnLER6BJL7kW1+JG0AFF/VLV+Y2zWv24apHnHuJSf7nj0rznUhsMoRHEdaWptrBtG/6XH02N7MHXgP8@vger.kernel.org
-X-Gm-Message-State: APuU4Z8vCCaapK7xSJc73VJemOT6LKfV1kEVuFoPb+AIE5WOACEMhh8a
-	5jbZg/FyVnvn69eo/d2mggsmxBGYxpHN3Q14MKV65Zi7ths+8gFWuBn936VO0vUdqD5rOP2MHzZ
-	6JEWBdjiqlyQq8yRcBi8HTgsfBg==
-X-Received: from iodz8.prod.google.com ([2002:a05:6602:6f48:b0:9c7:a5de:745e])
+        bh=JnPyo9Uuk9yDsv0rmtMWzSN2FAMU1ZcFas4I3l5JKQU=;
+        b=NDuUiAWT9m/Y4X19rNLr0nz/0UpRH7ZGRaLVNJYZAvxS+/6c5AJvHdtvnFsR5FI8jz
+         BStrIGf7dy3qQxCg10sphhy3FCEOVhsAdzskadPNBG+kHR9UwXt2jyJy50nzD9vKz6Uc
+         VrUe1FpLxxfyw9bymPVlBZ5S45flUex1i/S3l9hISl7IasJDuavS39eiWJuDAYC5ZV1d
+         53PcsHNSukSfdQwWFRHTo4OK9yM+UIW4a+O2XA9mJJ9Ht9j3lnXRftP5yTJfdciAoBhr
+         JcH0bumPuXEkEkASId4VOMlQgzABKJgJZOTDXhy0jSLDYu0HPiDng/GKp1y/iYPuD3oW
+         p8Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795114337; x=1795719137;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=JnPyo9Uuk9yDsv0rmtMWzSN2FAMU1ZcFas4I3l5JKQU=;
+        b=bjBAGx75O7T9Iqd4mOWcsftn4vM5xCnurKVFiJ/O/tgq12334EkVvkTQvCLJJhDT32
+         UvUXQ7Mf4PL0jJ0hTQyjEO1Ce+yDYDADZckU2MiMZTSmUMuubb0F8JET7aeCQoCFJKRe
+         N2/W9YoNXsqBvad4dobDmPSGX2LaTWpI004qRYrLyAXqtnI8fvyN1kffAOk9GpivJnQU
+         OAxYbZMdBMylR8JtfUi3wCOG5M7r1Bggstc7WLEXKJMJocT+MOa/PPdO8R0b7KFoV8F/
+         YYwLWjVkGh2bjnmHfHFV49TsfBfFLPBfWvSnVxlFWmz0Zb+bNSAApCmCnLcLTjWkHV9w
+         OQCQ==
+X-Forwarded-Encrypted: i=1; AL+hErENBJK5YkPQx15p6QBs76/8Slzxx3E1k+ortbOmJFtb0oc9m7PV7WuRyS9PYFBKPQ/p7jvfdXMfcyqzFholZFs3@vger.kernel.org
+X-Gm-Message-State: APuU4Z8ED0iznKeqeUS8XIBizch3MgMRa0UpoV5mimJE9sSQK2vMHiXl
+	CU/FTgYsl0s3fN8Zaa9WdIGW1PSEYLk657TTj10cyAy9IsHrADzRCHLPAxAQvz2ubpNGH2o1jl9
+	sUID+0hzKANhhaz95B7FDRcJH0g==
+X-Received: from iok14-n2.prod.google.com ([2002:a05:6602:c60e:20b0:9b4:c92a:b174])
  (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6808:150b:b0:55b:f88d:919f with SMTP id 5614622812f47-57a0a5067f7mr836911b6e.53.1795114336141;
- Thu, 19 Nov 2026 10:52:16 -0800 (PST)
-Date: Thu, 19 Nov 2026 18:51:42 +0000
+ 2002:a05:6808:308b:b0:4f1:6c9c:78d3 with SMTP id 5614622812f47-57a0a92272dmr980283b6e.26.1795114337076;
+ Thu, 19 Nov 2026 10:52:17 -0800 (PST)
+Date: Thu, 19 Nov 2026 18:51:43 +0000
+In-Reply-To: <20261119185215.632334-1-coltonlewis@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -76,9 +79,10 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 Mime-Version: 1.0
+References: <20261119185215.632334-1-coltonlewis@google.com>
 X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
-Message-ID: <20261119185215.632334-1-coltonlewis@google.com>
-Subject: [PATCH v10 00/33] ARM64 PMU Partitioning
+Message-ID: <20261119185215.632334-2-coltonlewis@google.com>
+Subject: [PATCH v10 01/33] arm64: cpufeature: Add cpucap for HPMN0
 From: Colton Lewis <coltonlewis@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
@@ -95,290 +99,119 @@ Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
 	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-This series creates a new PMU scheme on ARM, a partitioned PMU that
-allows reserving a subset of counters for more direct guest access,
-significantly reducing overhead. More details, including performance
-benchmarks, can be read in the v1 cover letter linked below.
+Add a capability for FEAT_HPMN0, whether MDCR_EL2.HPMN can specify 0
+counters reserved for the guest.
 
-PMU partitioning is controlled via the KVM API using
-`KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION` and
-`KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS` vCPU device attributes. When
-partitioning is enabled for a VM, userspace must explicitly configure a
-guest event counter count strictly less than the maximum general-purpose
-counters implemented by the PMU (leaving at least one general-purpose
-counter for the host) prior to calling `KVM_ARM_VCPU_PMU_V3_INIT`. The
-number of general-purpose counters implemented by each host PMU is
-exposed in sysfs at
-`/sys/bus/event_source/devices/<pmu>/caps/num_counters`. A QEMU patch
-demonstrating how to use the uAPI is sent separately.
+This required changing HPMN0 to an UnsignedEnum in tools/sysreg
+because otherwise not all the appropriate macros are generated to add
+it to arm64_cpu_capabilities_arm64_features.
 
-An overview of what this series accomplishes was presented at KVM
-Forum 2025. Slides [1] and video [2] are linked below.
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Tested-by: James Clark <james.clark@linaro.org>
+Signed-off-by: Colton Lewis <coltonlewis@google.com>
+---
+ arch/arm64/kernel/cpufeature.c | 11 ++++++++++-
+ arch/arm64/kvm/sys_regs.c      |  5 ++++-
+ arch/arm64/tools/cpucaps       |  1 +
+ arch/arm64/tools/sysreg        |  6 +++---
+ 4 files changed, 18 insertions(+), 5 deletions(-)
 
-v10:
-
-* Rebase on top of v7.4-rc3.
-
-* Add nested virtualization (`FEAT_NV` / `FEAT_NV2`) support covering
-  both an Emulated L2 PMU (`vHPMN == N_L1`, `TPM == 1`, where L1 keeps
-  all `N_L1` counters and emulates L2 via L1 `perf` events) and a
-  Sub-partitioned L2 PMU (`vHPMN < N_L1`, `TPM == 0`, creating a
-  three-way split across `0..vHPMN-1` for L2, `vHPMN..N_L1-1` for L1,
-  and `N_L1..N_phys-1` for L0) (Oliver Upton). Because ARM64 provides
-  only a single physical `MDCR_EL2.HPMN` field, hardware can split the
-  PMU into two counter ranges at a time rather than three. Key design
-  decisions and supporting changes:
-
-  - Keep physical `MDCR_EL2.HPMN = N_L1` at all times (`vHPMN` boundary
-    and event filtering): Lowering physical `HPMN` to `vHPMN` while
-    running L2 was considered and rejected because it would move L1's
-    hypervisor counters (`vHPMN..N_L1-1`) into the same physical
-    `>= HPMN` range as L0's host counters (`N_L1..N_phys-1`), where a
-    single set of physical `MDCR_EL2.{HPME,HPMD,HLP}` bits governs both
-    and breaks host/guest isolation; it would also fail for
-    `vHPMN == 0` on hardware without `FEAT_HPMN0`. Instead, when
-    `vHPMN < N_L1`, L0 keeps physical `HPMN = N_L1` and sets
-    `MDCR_EL2.{TPM,TPMCR}` in L2, forwarding `vHPMN..N_L1-1` traps to
-    L1 and handling `0..vHPMN-1` plus `PMCCNTR_EL0` in L0 directly
-    against physical registers. This preserves L0 isolation and
-    supports `vHPMN == 0` on all hardware; L2 events still count
-    directly in hardware without L0 `perf_event` scheduling, at the
-    cost of trapping L2 PMU accesses to L0 and rewriting per-counter
-    filter registers on `L1 <-> L2` transitions. In L1
-    (`is_hyp_ctxt()`), L0 emulates `vHPMN`, `vMDCR_EL2.HPMD`, and
-    `vMDCR_EL2.HCCD` via `PMEVTYPER<n>_EL0` and `PMCCFILTR_EL0`.
-
-  - Dynamically multiplex `vPMCR_EL0.E` and `vMDCR_EL2.HPME`: Because
-    both `0..vHPMN-1` and `vHPMN..N_L1-1` sit below physical
-    `HPMN = N_L1`, hardware gates both with physical `PMCR_EL0.E`.
-    Rather than unconditionally trapping `PMCR_EL0` and `PMCNTEN*` for
-    all `FEAT_NV` VMs (which would penalize Emulated L2 PMU where
-    `vHPMN == N_L1`), L0 dynamically enables `MDCR_EL2.TPMCR` and
-    `HDFG{R,W}TR_EL2.PMCNTEN` only when `vHPMN < N_L1`. L0 keeps
-    architectural `PMCR_EL0` and `PMCNTENSET_EL0` in memory, sets
-    physical `PMCR_EL0.E` to `vPMCR_EL0.E || vMDCR_EL2.HPME`, masks
-    disabled sub-ranges out of physical `PMCNTENSET_EL0`, and gates
-    overflow delivery per domain. Trapped `PMSWINC_EL0` writes (also
-    enabled via `HDFGWTR_EL2` when `vHPMN < N_L1`) flush live registers
-    and reuse `kvm_pmu_software_increment()` to prevent cross-partition
-    chaining.
-
-  - Bias 32-bit counters on mismatched `vPMCR_EL0.LP != vMDCR_EL2.HLP`
-    (`FEAT_PMUv3p5`): When `LP == HLP`, physical `PMCR_EL0.LP` matches
-    both domains directly and `PMEVCNTR<n>_EL0` stays untrapped in L1.
-    When `vHPMN < N_L1` and `LP != HLP`, rather than ignoring the
-    mismatch (breaking 32-bit overflow interrupts) or falling back to
-    `perf_event` emulation mid-flight (requiring reservation teardown),
-    L0 forces physical `PMCR_EL0.LP = 1` (64-bit overflow), dynamically
-    traps `HDFG{R,W}TR_EL2.PMEVCNTRn_EL0`, and biases counters in the
-    32-bit sub-range `2^32` events below 64-bit overflow
-    (`0xffffffff00000000 | low32`) while tracking their upper-32-bit
-    offsets and re-biasing outside interrupt/NMI context. Because
-    `HDFG{R,W}TR_EL2.PMEVCNTRn_EL0` is a single trap bit covering all
-    event counters (`0..30`), L1 counter reads/writes trap across both
-    sub-ranges while `LP != HLP`, with zero overhead when `LP == HLP`.
-
-  - Baseline nested support (both Emulated and Sub-partitioned L2):
-    separate implemented and accessible counter masks by using
-    `nr_pmu_counters` directly in `kvm_pmu_implemented_counter_mask()`,
-    masking trapped guest reads of `PMCNTEN*`, `PMINTEN*`, and `PMOVS*`
-    with `kvm_pmu_accessible_counter_mask()`, and ignoring
-    `MDCR_EL2.HPMN` in userspace `KVM_GET_ONE_REG` / `KVM_SET_ONE_REG`
-    (`set_pmreg()`, `get_pmreg()`, `get_pmcr()`) so saving/restoring a
-    nested vCPU paused below EL2 preserves all VM-implemented counters
-    and true `PMCR_EL0.N`; preserve host counter reservations across
-    `IN_NESTED_ERET` / `IN_NESTED_EXCEPTION` transitions to avoid host
-    `perf` reschedules on emulated L2 traps; read live hardware
-    `PMSELR_EL0` in `check_mdcr_hpmn()` when untrapped; and forward
-    fine-grained traps for selector-indexed `PMXEVTYPER_EL0` and
-    `PMXEVCNTR_EL0` to L1.
-
-* Expose the number of general-purpose counters implemented by the PMU
-  in sysfs under `/sys/bus/event_source/devices/<pmu>/caps/num_counters`
-  so userspace VMMs can query host PMU counter capacity when configuring
-  a partitioned PMU (James Clark).
-
-* Make `__vcpu_rmw_sys_reg()` atomic on the local CPU using
-  `try_cmpxchg_local()` to prevent read-modify-write races with GICv3
-  pseudo-NMI PMU interrupt handlers (`kvm_pmu_handle_guest_irq()`),
-  which are not masked by `local_irq_save()` (Sashiko AI Review).
-
-* Construct `mdcr_el2` in a local variable before assigning
-  `vcpu->arch.mdcr_el2` once in `kvm_arm_setup_mdcr_el2()`, and mask
-  GICv3 pseudo-NMIs (`local_daif_save()`) across hardware PMU context
-  switches and `MDCR_EL2` updates (Sashiko AI Review).
-
-* Prioritize kernel-owned pinned event groups (`is_kernel_event()`)
-  ahead of userspace pinned events in `perf_event_groups_cmp()` /
-  `perf_less_group_idx()` so kernel-owned per-CPU pinned events (such as
-  the hardlockup NMI watchdog if toggled at runtime) are scheduled before
-  userspace pinned events when `perf_pmu_resched_update()` reschedules
-  events out of guest-reserved counters (James Clark, Sashiko AI Review).
-
-* Move `kvm_vcpu_reload_pmu()` from `arch/arm64/kvm/pmu-emul.c` to
-  `arch/arm64/kvm/pmu.c` in `KVM: arm64: Reorganize PMU functions`.
-
-* Add `kvm_pmu_is_partitioned()`, `kvm_pmu_guest_counter_mask()`,
-  `kvm_pmu_handle_guest_irq()`, `kvm_pmu_host_start()`, and
-  `kvm_pmu_host_stop()` stubs to `arch/arm/include/asm/arm_pmuv3.h` to
-  fix 32-bit `ARCH=arm` builds (kernel test robot).
-
-* Allow identical VM-wide PMU device attributes
-  (`KVM_ARM_VCPU_PMU_V3_SET_PMU`, `KVM_ARM_VCPU_PMU_V3_SET_NR_COUNTERS`,
-  and `KVM_ARM_VCPU_PMU_V3_ENABLE_PARTITION`) to be applied across all
-  vCPUs when userspace initializes vCPUs sequentially (`CPU_FOREACH`),
-  validate `kvm_arm_pmu_part_hpmn(n) < max_counters` (requiring
-  `max_counters >= 2` for `n == 0` without `FEAT_HPMN0`), and restrict
-  `kvm->arch.supported_cpus` to `arm_pmu->supported_cpus` when
-  partitioning is enabled.
-
-* Centralize partitioned PMU hardware register dispatch under
-  `kvm_pmu_direct_reg_read()` / `kvm_pmu_direct_reg_write()` with
-  preemption disabled (`kvm_pmu_part_on_cpu()`), guard lazy ownership
-  transitions in `kvm_pmu_part_overflow_status()` with
-  `scoped_guard(preempt)`, avoid matching `reset_unknown()` poison bits on
-  `PMCNTENSET_EL0` / `PMINTENSET_EL1` during `KVM_REQ_RELOAD_PMU`, and
-  schedule `KVM_REQ_RELOAD_PMU` on `KVM_SET_ONE_REG` writes so
-  `vcpu_put()` does not overwrite userspace register writes (Sashiko AI
-  Review).
-
-* Support configuring 0 guest event counters (cycle counter only) on
-  Partitioned PMU hosts without `FEAT_HPMN0` whenever `max_counters >= 2`.
-  Writing `MDCR_EL2.HPMN = 0` without `FEAT_HPMN0` is architecturally
-  `CONSTRAINED UNPREDICTABLE`, which would otherwise prevent userspace
-  from creating a cycle-counter-only partitioned guest on CPUs lacking
-  `FEAT_HPMN0`. Instead, KVM programs physical `MDCR_EL2.HPMN = 1` via
-  `kvm_arm_pmu_part_hpmn()`, reserves and quiesces physical counter 0
-  alongside `PMCCNTR_EL0` so host perf continues using counters `1..N-1`,
-  keeps `MDCR_EL2.TPMCR = 1` so trapped `PMCR_EL0` reads report `N == 0`,
-  and enables fine-grained traps on `PMEVCNTRn_EL0`, `PMCNTEN`,
-  `PMINTEN`, and `PMSWINC_EL0` so counter 0 stays completely hidden
-  (`UNDEFINED` / RAZ / WI) while `PMCCNTR_EL0` remains untrapped on
-  `FEAT_FGT` hosts. Also clamp `MDCR_EL2.HPMN` against `nr_pmu_counters`
-  in `kvm_vcpu_read_pmcr()` and `kvm_pmu_direct_pmcr_read()`, and extend
-  `vpmu_counter_access` to verify `PMCCFILTR_EL0`, live `PMCCNTR_EL0`
-  counting, and trapped `UNDEFINED` / RAZ / WI behavior on counter 0 when
-  `n == 0`.
-
-Tool-assisted development note (generated-content.rst):
-Several v10 additions (nested virtualization sub-partitioning,
-cycle-counter-only support without `FEAT_HPMN0`, the userspace `HPMN`
-masking fix, and cover letter text) were drafted and verified with AI
-coding assistance (Gemini) and pre-reviewed with Sashiko AI Review. All
-patches were reviewed, built (`arm64`, `CONFIG_ARM_PMU=n`, 32-bit `arm`),
-and tested on bare-metal Neoverse V2 and AmpereOne hosts (and under QEMU
-TCG for the userspace `HPMN` fix).
-
-v9:
-https://lore.kernel.org/kvmarm/20260924172928.2110956-1-coltonlewis@google.com/
-
-v8:
-https://lore.kernel.org/kvmarm/20260612192909.1153907-1-coltonlewis@google.com/
-
-v7:
-https://lore.kernel.org/kvmarm/20260504211813.1804997-1-coltonlewis@google.com/
-
-v6:
-https://lore.kernel.org/kvmarm/20260209221414.2169465-1-coltonlewis@google.com/
-
-v5:
-https://lore.kernel.org/kvmarm/20251209205121.1871534-1-coltonlewis@google.com/
-
-v4:
-https://lore.kernel.org/kvmarm/20250714225917.1396543-1-coltonlewis@google.com/
-
-v3:
-https://lore.kernel.org/kvm/20250626200459.1153955-1-coltonlewis@google.com/
-
-v2:
-https://lore.kernel.org/kvm/20250620221326.1261128-1-coltonlewis@google.com/
-
-v1:
-https://lore.kernel.org/kvm/20250602192702.2125115-1-coltonlewis@google.com/
-
-[1] https://gitlab.com/qemu-project/kvm-forum/-/raw/main/_attachments/2025/Optimizing__itvHkhc.pdf
-[2] https://www.youtube.com/watch?v=YRzZ8jMIA6M&list=PLW3ep1uCIRfxwmllXTOA2txfDWN6vUOHp&index=9
-
-Colton Lewis (32):
-  arm64: cpufeature: Add cpucap for HPMN0
-  KVM: arm64: Reorganize PMU functions
-  KVM: arm64: Use nr_pmu_counters in kvm_pmu_implemented_counter_mask()
-  KVM: arm64: Ignore HPMN for userspace PMU register access
-  perf: arm_pmuv3: Generalize counter bitmasks
-  perf: arm_pmuv3: Move counter allocation mask to per-CPU struct
-    pmu_hw_events
-  perf: arm_pmuv3: Check cntr_mask before using pmccntr
-  perf: arm_pmuv3: Allocate counter indices from high to low
-  perf: arm_pmuv3: Expose number of general-purpose counters in sysfs
-  KVM: arm64: Add initial scaffolding for Partitioned PMU
-  KVM: arm64: Set up FGT for Partitioned PMU
-  KVM: arm64: Make __vcpu_rmw_sys_reg() atomic
-  KVM: arm64: Add Partitioned PMU register trap handlers
-  KVM: arm64: Construct mdcr_el2 in a local variable in
-    kvm_arm_setup_mdcr_el2()
-  KVM: arm64: Set up MDCR_EL2 to handle a Partitioned PMU
-  KVM: arm64: Context swap Partitioned PMU guest registers
-  KVM: arm64: Enforce PMU event filter at vcpu_load()
-  perf: Add perf_pmu_resched_update()
-  perf/core: Prioritize kernel-owned pinned events when scheduling
-    groups
-  KVM: arm64: Allow kvm_vcpu_pmu_resync_el0() to resync filters in
-    process context
-  KVM: arm64: Apply dynamic guest counter reservations
-  KVM: arm64: Implement lazy PMU context swaps
-  perf: arm_pmuv3: Handle IRQs for Partitioned PMU guest counters
-  KVM: arm64: Detect overflows for the Partitioned PMU
-  KVM: arm64: Multiplex PMCR_EL0.E and MDCR_EL2.HPME for sub-partitioned
-    L1
-  KVM: arm64: Emulate mismatched LP and HLP overflow widths for
-    sub-partitioned L1
-  KVM: arm64: Emulate trapped PMSWINC_EL0 writes for Partitioned PMU
-  KVM: arm64: Forward FGT traps for PMXEVTYPER_EL0 and PMXEVCNTR_EL0
-  KVM: arm64: Support zero event counters on Partitioned PMU without
-    HPMN0
-  KVM: arm64: Add vCPU device attr to partition the PMU
-  KVM: selftests: Add find_bit to KVM library
-  KVM: arm64: selftests: Add test case for Partitioned PMU
-
-Marc Zyngier (1):
-  KVM: arm64: Reorganize PMU includes
-
- Documentation/virt/kvm/devices/vcpu.rst       |   57 +-
- arch/arm/include/asm/arm_pmuv3.h              |   12 +
- arch/arm64/include/asm/arm_pmuv3.h            |    7 +-
- arch/arm64/include/asm/kvm_host.h             |   32 +-
- arch/arm64/include/asm/kvm_nested.h           |    2 +-
- arch/arm64/include/asm/kvm_types.h            |    6 +-
- arch/arm64/include/uapi/asm/kvm.h             |    2 +
- arch/arm64/kernel/cpufeature.c                |   11 +-
- arch/arm64/kvm/Makefile                       |    2 +-
- arch/arm64/kvm/arm.c                          |    4 +-
- arch/arm64/kvm/config.c                       |   76 +-
- arch/arm64/kvm/debug.c                        |   76 +-
- arch/arm64/kvm/emulate-nested.c               |   25 +-
- arch/arm64/kvm/nested.c                       |   39 +-
- arch/arm64/kvm/pmu-direct.c                   | 1230 +++++++++++++++++
- arch/arm64/kvm/pmu-emul.c                     |  846 ++----------
- arch/arm64/kvm/pmu.c                          |  831 ++++++++++-
- arch/arm64/kvm/sys_regs.c                     |  199 ++-
- arch/arm64/tools/cpucaps                      |    1 +
- arch/arm64/tools/sysreg                       |    6 +-
- drivers/perf/arm_pmu.c                        |   18 +-
- drivers/perf/arm_pmuv3.c                      |  121 +-
- include/kvm/arm_pmu.h                         |  117 ++
- include/linux/perf/arm_pmu.h                  |    2 +
- include/linux/perf/arm_pmuv3.h                |   14 +-
- include/linux/perf_event.h                    |    3 +
- kernel/events/core.c                          |   61 +-
- tools/include/perf/arm_pmuv3.h                |   12 +-
- tools/testing/selftests/kvm/Makefile.kvm      |    1 +
- .../selftests/kvm/arm64/vpmu_counter_access.c |  217 ++-
- tools/testing/selftests/kvm/lib/find_bit.c    |    2 +
- 31 files changed, 3032 insertions(+), 1000 deletions(-)
- create mode 100644 arch/arm64/kvm/pmu-direct.c
- create mode 100644 tools/testing/selftests/kvm/lib/find_bit.c
-
-
-base-commit: aebb7274476403040d582c61478df8f4a7bf9cd3
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index c9c9a6889455c..023b98e6be2d1 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -77,7 +77,7 @@
+ #include <linux/percpu.h>
+ #include <linux/sched/isolation.h>
+ 
+-#include <asm/arm_pmuv3.h>
++#include <linux/perf/arm_pmuv3.h>
+ #include <asm/cpu.h>
+ #include <asm/cpufeature.h>
+ #include <asm/cpu_ops.h>
+@@ -566,6 +566,7 @@ static const struct arm64_ftr_bits ftr_id_mmfr0[] = {
+ };
+ 
+ static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_HPMN0_SHIFT, 4, 0),
+ 	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_DoubleLock_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_PMSVer_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_CTX_CMPs_SHIFT, 4, 0),
+@@ -730,6 +731,7 @@ static const struct arm64_ftr_bits ftr_id_dfr0[] = {
+ };
+ 
+ static const struct arm64_ftr_bits ftr_id_dfr1[] = {
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_DFR1_EL1_HPMN0_SHIFT, 4, 0),
+ 	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_DFR1_EL1_MTPMU_SHIFT, 4, 0),
+ 	ARM64_FTR_END,
+ };
+@@ -2863,6 +2865,13 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+ 		.matches = has_cpuid_feature,
+ 		ARM64_CPUID_FIELDS(ID_AA64MMFR0_EL1, FGT, FGT2)
+ 	},
++	{
++		.desc = "HPMN0",
++		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
++		.capability = ARM64_HAS_HPMN0,
++		.matches = has_cpuid_feature,
++		ARM64_CPUID_FIELDS(ID_AA64DFR0_EL1, HPMN0, IMP)
++	},
+ #ifdef CONFIG_ARM64_SME
+ 	{
+ 		.desc = "Scalable Matrix Extension",
+diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+index c7d91138a6d49..04947bfbd0ee5 100644
+--- a/arch/arm64/kvm/sys_regs.c
++++ b/arch/arm64/kvm/sys_regs.c
+@@ -2218,6 +2218,8 @@ static u64 sanitise_id_aa64dfr0_el1(const struct kvm_vcpu *vcpu, u64 val)
+ 	if (kvm_vcpu_has_pmu(vcpu))
+ 		val |= SYS_FIELD_PREP(ID_AA64DFR0_EL1, PMUVer,
+ 				      kvm_arm_pmu_get_pmuver_limit());
++	else
++		val &= ~ID_AA64DFR0_EL1_HPMN0_MASK;
+ 
+ 	/* Hide SPE from guests */
+ 	val &= ~ID_AA64DFR0_EL1_PMSVer_MASK;
+@@ -3417,7 +3419,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+ 		    ID_AA64DFR0_EL1_DoubleLock_MASK |
+ 		    ID_AA64DFR0_EL1_WRPs_MASK |
+ 		    ID_AA64DFR0_EL1_PMUVer_MASK |
+-		    ID_AA64DFR0_EL1_DebugVer_MASK),
++		    ID_AA64DFR0_EL1_DebugVer_MASK |
++		    ID_AA64DFR0_EL1_HPMN0_MASK),
+ 	ID_SANITISED(ID_AA64DFR1_EL1),
+ 	ID_UNALLOCATED(5,2),
+ 	ID_UNALLOCATED(5,3),
+diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
+index 3125695122a0a..1603a0dd19764 100644
+--- a/arch/arm64/tools/cpucaps
++++ b/arch/arm64/tools/cpucaps
+@@ -43,6 +43,7 @@ HAS_GIC_PRIO_MASKING
+ HAS_GIC_PRIO_RELAXED_SYNC
+ HAS_ICH_HCR_EL2_TDIR
+ HAS_HCR_NV1
++HAS_HPMN0
+ HAS_HCX
+ HAS_LDAPR
+ HAS_LPA2
+diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
+index 997c62ab72e68..7230a9cd46e53 100644
+--- a/arch/arm64/tools/sysreg
++++ b/arch/arm64/tools/sysreg
+@@ -1726,9 +1726,9 @@ EndEnum
+ EndSysreg
+ 
+ Sysreg	ID_AA64DFR0_EL1	3	0	0	5	0
+-Enum	63:60	HPMN0
+-	0b0000	UNPREDICTABLE
+-	0b0001	DEF
++UnsignedEnum	63:60	HPMN0
++	0b0000	NI
++	0b0001	IMP
+ EndEnum
+ UnsignedEnum	59:56	ExtTrcBuff
+ 	0b0000	NI
 -- 
 2.56.1.708.g77570a6a1d-goog
+
