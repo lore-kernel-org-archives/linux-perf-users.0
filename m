@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795115866;
-	b=PRMY7APk/O+bnCpQZ+FuKuTq/fVXxf4fxOY32FvtaT20Vg0Bm1aH5V/T8ZIRW4QyEBhv
-	 XwFWLI8IMTJwKHenFldioihab8tyzh0oEKw5SF6rVcTv8kFJoNsxZhM3JHru88VeTSMAx
-	 Qk8CjgMaVA8MWSgRUT7kCnyWQxlSMy5ijJMyfolk/AFP28UQitSlcDY19Grrhcminw41e
-	 mJaCBFWoifVNWXZBI+rk0GDd9D431AD9sRCWssg0n7ANVvX6ZKMIuzBz5w8CR0pcG1bnv
-	 9PSybsTTSggHhoQmDb7Q/mDkgV8hebWApdYhGAdxMOeNYGnvqrODl8oIIJIQdtRwuyQ==
+	t=1795116031;
+	b=5RbTMk/yHc0RNfQpI+eupdWVTwZs5pdv7y+97nDAhAFy8L3SE7MAd+Raji2LAaPbF9fc
+	 YGXew0kjRIBiRGCcIv6FzUQ/ANgAs7A5njRXQq1X/81d5BCNFU+QQJ4LYqs5Y54T27VK4
+	 Re9AreFHUxEvF8hb92VbntKPsKOV0yAZslcNseH05VNuQE16XxCzjgMKOjbvFdiITyi8+
+	 7JyXHf5X/EGf1To/Kg4vbcEZd+FF3x3vfHk6Yx5ZCxroRbJB4pIvEOrwuvt/i081MRyf8
+	 OfaUZUiyg7KKcaMudXD7PVJh2GVmdq+8tyqCjyxIRmnMHNTQcxgj1ryiyhKjaylwBcA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795115866;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795116031;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=2kBlU6u4cnRa0ckri0+d58nSankr6UolyJ+8O2wWMHU=;
-	b=qcv8Rig1CVNbBSxdO7Ufjbz8lVm/v2tO8bE7CDDPV4DtgHp2lBGikxyeKbAa/q/AsPr7
-	 AMOIlN/WhRfe89/DL5PfQJeOMRpEKetxZBVRqbs2Ypax8NDYGkWB5fwshsGxnIXB10gjl
-	 y3rR939VoUZAqJ+9kmzBOtetMCSkxu0ZFYHRHik7hvgaWrZSQW9Y2fOqGQD0NYk6s5qm9
-	 KSHsb/z8jw+X9pnVqZMZ1bVpp0SH0CjR088KTQXfG4NbzpW5RGd4jPffgGrGO1fw4VKDF
-	 sV3avfCizkzoSwowO+yJiEIMq7vHldRYOX8DsJ/vKAHIpVBRFlyN/dMMQRPz0Y/U5lg==
+	bh=foL5VVINGoDH8RgFZjqi2MTbR23q811vLACKLlS/tvY=;
+	b=fmyhR6pF0RLso6JhiTyv8gkIWrwTpXPBAjLtFNA+BkU9DOwFLQ7q4Z0bV3aVUHoMR957
+	 xCR3C1SxFnyprqsrwCE6pj3xqq8OVj8/WsKFKh44rkkRK/T8sP0rQevMBrmq7ojotcGU2
+	 k5Qe2rdDG4XKzbuH4u1Pe+ib5RHTqsmYbMqGXEBlVmexu2873Wd8hB9lEkFDwyaJYIpJa
+	 Wmfldm7amuq3MygFgdArkbZooZdfW/iiV3qULm/k+lGZ50KPepWDPkL+l+3l6OvOPpLPK
+	 FH5z/9kTcTurdeGO9UBUJRuGHU0lENJaxYzsfq+hmM9RTwRcF9EThpl5zvfNXiS+b3g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Pcr7b6/z";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Mny5l1X9;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6949460A260A
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 19:17:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44BA3606A32C
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 19:20:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Pcr7b6/z
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E40301F000C4;
-	Thu, 19 Nov 2026 19:17:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Mny5l1X9
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 054E51F000C7;
+	Thu, 19 Nov 2026 19:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795115866;
-	bh=2kBlU6u4cnRa0ckri0+d58nSankr6UolyJ+8O2wWMHU=;
+	s=k20260515; t=1795116031;
+	bh=foL5VVINGoDH8RgFZjqi2MTbR23q811vLACKLlS/tvY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Pcr7b6/zF9oxMxhHJoNmVAXKpLFNu0vJPXMdLoFvNy4wB9BAz8YtspyPCTJhj0uII
-	 wdm1FdcRrbsAeq6Z9TW6SoLTz7bMExK1GussJxG0lkLKXakvR5XG2Q2t4VA1mIO5vW
-	 au/T2qzxpS+z2Jkh0mwQA6wvheP20bueOuFTNqRiue7Be6ZfNz/iLI/j+330G4iJaM
-	 t53oXjAFJr1QN8g8MXVigmbd0jI++ptynIOTyh/KcZatUjzoYKO04FVnEyeyFI+U7i
-	 2U4rhMcbTAYvDa3Qsq3AN3rbUowesGy81pzDlwq+XN3xMGiIJul4AI5kBrkXgvOQQp
-	 +qHkKZ/3NTxUQ==
-Message-ID: <sashiko-outbox-223861@kernel.org>
+	b=Mny5l1X9tT9m5QVdrKRjcXTMmq15xbVhf0rYCTOeJ2VIommHHLCXELjPiPGR7OJiE
+	 SL0KWv6az1ZAYiIZetPhimfb4J980VIAfrmIwCSb0Cc1VwiBKM+l4rcyHMNRN40QTE
+	 sVcs969pFhDmK22/b8nIXaJfjEH/71d7PaK5OoxbqLZ+XpQtcyeIbA9kZ92hC8fUzN
+	 LDSG03+q+L1xR/YNVs7yHWTeF3lO+kMxemj2cwMv7T5NOEXjFGh+paSXX2j7Zy/GC9
+	 jXmJQdTxJw3sJfQAXUPlgV+y/ktkaMIzxoWHVz5ba+NMneYh7tlivApy6S+4DcTiZt
+	 C2lsPYvih6TCw==
+Message-ID: <sashiko-outbox-223863@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 17/33] KVM: arm64: Context swap Partitioned PMU
- guest registers
+Subject: Re: [PATCH v10 30/33] KVM: arm64: Support zero event counters on
+ Partitioned PMU without HPMN0
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Colton Lewis" <coltonlewis@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261119185215.632334-18-coltonlewis@google.com>
+In-Reply-To: <20261119185215.632334-31-coltonlewis@google.com>
 References: <20261119185215.632334-1-coltonlewis@google.com>
- <20261119185215.632334-18-coltonlewis@google.com>
+ <20261119185215.632334-31-coltonlewis@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 19:17:45 +0000
+Date: Thu, 19 Nov 2026 19:20:30 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,26 +61,22 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Save and restore the guest PMU registers that are untrapped when the PMU
-> is partitioned:
-> - PMEVCNTRn_EL0
-> - PMCCNTR_EL0
-> - PMSELR_EL0 (when MDCR_EL2.TPM is clear)
-> - PMUSERENR_EL0 (when MDCR_EL2.TPM is clear)
-> - PMCR_EL0
-> - PMCNTENSET_EL0 / PMCNTENCLR_EL0
-> - PMINTENSET_EL1 / PMINTENCLR_EL1
+> Programming MDCR_EL2.HPMN to 0 is CONSTRAINED UNPREDICTABLE on CPUs that
+> do not implement FEAT_HPMN0, preventing userspace from configuring a
+> cycle-counter-only Partitioned PMU guest (nr_pmu_counters =3D=3D 0) on th=
+ose
+> platforms if HPMN is set directly from nr_pmu_counters.
 >=20
-> Mask counter bitmaps to guest-reserved counters so host-owned counters
-> in HPMN..N-1 are left untouched. Clear hardware guest overflow flags on
-> load before enabling PMINTENSET_EL1 to avoid spurious interrupts, flush
-> pending hardware guest overflow flags into shadow PMOVSSET_EL0 on put,
-> and restore physical PMCR_EL0.E from MDCR_EL2.HPME on put so active host
-> perf events continue counting.
->=20
-> PMEVTYPER<n>_EL0 and PMCCFILTR_EL0 are loaded in the next patch after
-> applying the KVM PMU event filter. A subsequent patch makes these swaps
-> lazy until the guest enables the PMU.
+> Support nr_pmu_counters =3D=3D 0 without FEAT_HPMN0 whenever the PMU has =
+at
+> least two general-purpose counters by setting physical MDCR_EL2.HPMN =3D 1
+> (via kvm_arm_pmu_part_hpmn()), reserving and quiescing physical counter 0
+> alongside PMCCNTR_EL0 on vCPU load so host perf uses counters 1..N-1,
+> keeping MDCR_EL2.TPMCR set so trapped PMCR_EL0 reads report N =3D=3D 0, a=
+nd
+> enabling fine-grained traps on PMEVCNTRn_EL0, PMCNTEN, PMINTEN, and
+> PMSWINC_EL0 so counter 0 remains completely hidden from the guest while
+> PMCCNTR_EL0 accesses stay untrapped on FEAT_FGT hosts.
 >=20
 > Signed-off-by: Colton Lewis <coltonlewis@google.com>
 
@@ -88,5 +84,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119185215.6323=
-34-1-coltonlewis@google.com?part=3D17
+34-1-coltonlewis@google.com?part=3D30
 
