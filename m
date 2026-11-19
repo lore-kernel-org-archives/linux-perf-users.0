@@ -1,63 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.94.104
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795081882;
-	b=ZHCeE28mYa9S8QKMuVg6DWBgJYBxij5BwxSpEjCe9te03kxhD3jUXS/wkUewCYVAGjUu
-	 uOxAoQDko5Osorg7FMLkAzEqSlM3Wv7xN1RSdRC8784tbzQyQWzITyXNn55GI7R71me7K
-	 z9qZnx2Ova/28gdgGn2lilUfFlMWPjalNUmwyvDWwENAHQu0854PpsXyuxiQlJDXe9xpy
-	 ZG+PML3+Yv0mP4jk+nenAveM8XXM9gTmj78XqrW0Kz8wT96QgFBhoi3Sr3Z+RiIW/T7zt
-	 oKDdLEuJeEpnD1UH96x3ZJF7/M2EFWksmUkRJPyUcuy+BxdnAEuWeDT/FRnTBSUk71w==
+	t=1795082383;
+	b=iS3R/soXdbmt0ZxqlNwPVq7Ws5NwtIivI+9ZUMAWL3dW8n2/VYGeNQI4GVx6YxmPQGnu
+	 M/y12EWZZPLRhKA+te1C7rRXs+EK8FM75YeYiqJgMJOzV3m+qqpLpPsHt7d2h8Za0EDLB
+	 qRZuItjaLnVtiZJ1u8yvy9A4oMP7OMJ11hCZY5hPQXdYQWPQhHZyAx7sSsZnahgF+CLbZ
+	 Nl711zbZGs/+md3+c6xvtvc7Fghq/4bIbCoaCuL8h3tzgSK5hLsrP47+7FAwJgSQoQifu
+	 T8Qcx9tPrO/3Xn626xDSKU1p/WKwN0UXmpEdxWQ1kPIb5OxY9zSESs4S2Wv0lV2tsRA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795081882;
-	h=DMARC-Filter:Received:Received:Received:From:To:Cc:Subject:Date:
-	 Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding:
-	 X-CM-TRANSID:X-Coremail-Antispam:X-CM-SenderInfo;
-	bh=vKT/Z3z5pHTz1FUzBFVmBK+qZqGsEwiPHCP6bly7ASY=;
-	b=m1ysz9vDEEQzJhVMAQNpmhN0ZNsOfbVeizHL5WZwdZQl62BLiV5wUd+qtGH3GNkImPZj
-	 vVnPfC/wlwXGrGmNG9akyYywJE/ZpydNpMVIt7R/WzRU+qyD9mhc/nZwzqNRkpJl6tn9Y
-	 SZXvo6U9rMVYeFOvfM0TueaHa4yAwYHFxAlw6Vg31z1QxdmPhIGS0nutkUK1/GugZmUgZ
-	 mKd5d+JU0x2fyhj22qVmp3wq08XTqdOpbxoMT6PuyII3n5r08A8kta9bwZZrmjXMT9IR4
-	 oolEys2tH2iR833AqV8qtIBy6DaClMCS5/WYGD/EOVyCvjf0L2ppAVUvK+M1PdriklQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795082383;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=cT2Qv9DPWT5bQZ+xZq3W18Gh4sejSkbZH/xOOuhQ/DE=;
+	b=NL8D0B3u3Q/VcTQjtLeEO1O20hiDPl3mbSnLODpDW0vJXZ0F6/n15zi80AZ9EajscRdM
+	 A6gpNr1ljKWbrwdkfXCi4ZA3ns7XBa5ybcMia8ZyaL075FMpqpeMIs6ua5jlN5PBt9yuM
+	 otthDz+iDX7pOMS82DSDfpCopyW927rpYs1tMLiKzCKSKnNpr7XKrrqoXrsT7jnOwberb
+	 btPDazI5IWETDMF9oCz5/7Bw+bPiBi4CFkSDDjhyrC5fzio7EhxBPLsMnSqn+svDCqEYb
+	 eiiPREwBTscAwDWUz2k/LFO5YdOFRWhQP4rGi6YitrvurNlGgzzO8HrYTEMQhjvQpaA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=none header.from=huaweicloud.com;
-	spf=none smtp.mailfrom=huaweicloud.com;
-	arc=none smtp.remote-ip=124.71.94.104
-Received: from dggmsgout13.his.huawei.com (dggmsgout13.his.huawei.com [124.71.94.104])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nMEyUeGU;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF759606A324;
-	Thu, 19 Nov 2026 09:51:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org BF759606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggmsgout13.his.huawei.com (SkyGuard) with ESMTP id 4jVYcB540pz1rrtd;
-	Thu, 19 Nov 2026 17:50:18 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id AA5A740D80;
-	Thu, 19 Nov 2026 17:51:12 +0800 (CST)
-Received: from huawei.com (unknown [10.67.174.45])
-	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgDn7QCHxv5qwsKLEw--.20837S2;
-	Thu, 19 Nov 2026 17:51:12 +0800 (CST)
-From: Tengda Wu <wutengda@huaweicloud.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH v5 0/2] perf/core: Fix sigtrap task_work races
-Date: Thu, 19 Nov 2026 09:50:59 +0000
-Message-Id: <cover.1795053619.git.wutengda@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7FB606A325
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 09:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nMEyUeGU
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E41181F000CB;
+	Thu, 19 Nov 2026 09:59:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795082383;
+	bh=cT2Qv9DPWT5bQZ+xZq3W18Gh4sejSkbZH/xOOuhQ/DE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=nMEyUeGU0kwFVSxaWfIwUcpC1HUkZZ9Ng4TuOZKVcBquhmLErBd96bVIaOsenXSYN
+	 ZVpX8mNAjSNzGxrlgBoPr17FehUYXmZyMJ+7BsOnryUEbMIlf0qxtceK+t/j4qiIwO
+	 BJ9gUItn6ixK/YsOZmgL83IguFaj+frI2pcz4M+c2VWuFey+m9CGj0ckUjVIV+xfWv
+	 Ex4sLp39uCizn2cfHsgx1/3dWzEBeg2yz8LC0UJCOwp8TagC8kZb2SKAAQOJ5RHjxv
+	 h442HFjLhmd7FXAYnT/FJLg9atNDzvKRSIuwEQcrFG53QXDypqj3PdbEP0pmjYcei8
+	 oeJvkGX9zV6uw==
+Message-ID: <sashiko-outbox-222893@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v5 1/2] perf/core: Prevent duplicate sigtrap task work
+ enqueue
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Tengda Wu" <wutengda@huaweicloud.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <45bd71c976aea1a0e8bf5762dd6b6552e6009439.1795053619.git.wutengda@huaweicloud.com>
+References: <cover.1795053619.git.wutengda@huaweicloud.com>
+ <45bd71c976aea1a0e8bf5762dd6b6552e6009439.1795053619.git.wutengda@huaweicloud.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 19 Nov 2026 09:59:42 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -66,73 +60,32 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgDn7QCHxv5qwsKLEw--.20837S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ary5Kw1xZr45ur47XrykuFg_yoW8trWxpF
-	s5Zr1Skw1jgr1Iyw43Jw18ua4Fgw4rXF43Grs7tw1fAF4YvFn8AFWxWr4YvFy7Ar97JFyr
-	tws2qF4kurWj9FDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUB214x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCY1x0264kExVAvwVAq07x20xyl42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU8c_-DUUUU
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-Two fixes for sigtrap task_work handling since the switch to always
-enqueue SIGTRAP via task_work.
+> The sigtrap handling in __perf_event_overflow() checks
+> event->pending_work before calling task_work_add(), but only sets
+> pending_work after the task work has been queued.
+>=20
+> This leaves a window where an NMI can interrupt task_work_add()
+> and re-enter __perf_event_overflow() for the same event. Since
+> pending_work is still zero, the nested invocation can enqueue
+> the same pending_task again.
+>=20
+> The re-entrant call path looks like this:
+>=20
+>   __perf_event_overflow()
+>     task_work_add()
+>       kasan_record_aux_stack()
+>         <NMI>
+> [ ... ]
+> the exclude_kernel warning path to ensure the read is properly
+> ordered.
+>=20
+> Fixes: c5d93d23a260 ("perf: Enqueue SIGTRAP always via task_work.")
+> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 
-The warning splats and PoCs for both patches are too long to inline
-in the commit messages, so they are provided as separate replies at
-the following links:
+Sashiko has reviewed this patch and found no issues.
 
-Patch 1: https://lore.kernel.org/all/29aa123c-36a2-460f-b76b-a8dfe1eb542f@huaweicloud.com/
-Patch 2: https://lore.kernel.org/all/d1b24bbf-9111-4766-87c8-ff97adcac727@huaweicloud.com/
-
-Patch 1 fixes a re-entrancy race in __perf_event_overflow(): pending_work
-was set only after task_work_add(), so an NMI could re-enter and enqueue
-the same pending_task twice, creating a cycle in the task work list and
-unbalancing the event refcount. Claim pending_work before enqueuing, and
-clear it if the enqueue fails.
-
-Patch 2 fixes a WARN_ON_ONCE() in perf_sigtrap() triggered by the context
-fast-swap path swapping ctx->task while a sigtrap event has pending task
-work. SIGTRAP is targeted at ctx->task, so exclude sigtrap events from
-fast-swap alongside inherit+sample-read events.
-
-Changelog
-=========
-v4 -> v5:
-  - v4: https://lore.kernel.org/all/cover.1794914794.git.wutengda@huaweicloud.com/
-  - Roll back patch 2 to v3 to avoid the fast swap isolation omission in
-    the nr_no_switch_fast 1->0 scenario. (Shashiko)
-v3 -> v4:
-  - v3: https://lore.kernel.org/all/cover.1793870900.git.wutengda@huaweicloud.com/
-  - Patch 1: Use acquire/release pairs for pending_work updates (Sebastian)
-  - Patch 2: Remove redundant nr_no_switch_fast updates (Sebastian)
-v2 -> v3:
-  - v2: https://lore.kernel.org/all/20261102021355.650671-1-wutengda@huaweicloud.com/
-  - Added Patch 2 to fix WARN_ON_ONCE() in perf_sigtrap()
-v1 -> v2:
-  - v1: https://lore.kernel.org/all/20261031114520.642476-1-wutengda@huaweicloud.com/
-  - Drop the redundant event->pending_work assignment. (Sashiko)
-
-Tengda Wu (2):
-  perf/core: Prevent duplicate sigtrap task work enqueue
-  perf/core: Disable context fast-swap for sigtrap events
-
- include/linux/perf_event.h |  6 ++---
- kernel/events/core.c       | 48 ++++++++++++++++++++++++++------------
- 2 files changed, 35 insertions(+), 19 deletions(-)
-
--- 
-2.34.1
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1795053619.gi=
+t.wutengda@huaweicloud.com?part=3D1
 
