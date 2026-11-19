@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795115237;
-	b=Q8PKklxOG6MukFSHkDulxZcfP411TnzUKFRMnX9mRYdWS9f1nHp9Wb0GpT/r3pKOwHBg
-	 DCFq7RBPKV6W8epE/yWGM6OOnG7RzQufi1o211nB303F/x1Q9VEvNYtDuFXBasRAnv84N
-	 fvFrnLyS2DexZ/knjJ/Dzkh67MT1e9ZzzBu/TLnwH7G8s3/SSC+gUCrVjSZlJAxx750MH
-	 Y9DPA3XUveJI50atC/79WgOiDezUs32fH0DE+qdxgdMXO7ecHTIlBNRgB2hX5nxAVD6to
-	 IMXuDN6Li6lZ9q6ZNl9ZxNEqhSJWbLB88f1cPGVpqflFNyV/N8IEhkJCP7OH3oA+SwA==
+	t=1795115329;
+	b=ezexsZMdXEDD626VZ1MtOc+G6KX4Eec1LIbo4KRtkj2LUNY7km0UwDI8BDCTUM9Qgn6g
+	 udGpNyP2NqK2FICuIjhnI8xWH7/kQ9BwJJzJj4sMoT8aIy1deXKa0CQOZr/cq7IYFnbC2
+	 pyqsFA80vKckA5BrqoYwDO5+nmTfgIDc4chS3Y29k5usE+LwCcC7Joy/QG9NHFVSWTEaI
+	 UPJlzBqq87BIhlan8vFzXj3NFLfRMVBqQpQOdO2wt8qBn/zjJw8s30k/cNVJk/aL7wP/x
+	 FZma782m0qQ65QfFW73peqXWz1ceuLOdNY9TX9MOHRNSTUJnzC6Rs1uPnRM6zNCNPcQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795115237;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795115329;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=n4Wz95ig6cqnc3lhOLvGE6QBjp8DPs0FbOXnXTCLQRQ=;
-	b=G5aTjb72dLT9PX8GE46TfUDbMfRvdID7naECFTksqotORU7xlj2fYOZjBC6ARwTIHMVP
-	 tuTbTal7PY3uAxam/zmrG9iiQ2NF1yKsj28m+3A18z6zIqND/7lJKjwHzB+JlhYwj57L+
-	 H4QZteFhESQfObsg6PhVw7/UK8zVGxVlRwL2Zmc+uJXXvxfmMxD8PxmJhU8IYRcQJi78K
-	 nLeWgu3zrDhz5OWNmiwG5DeG8odrKxi/zQfQwd4saiyc3+PYEqvmNoUDbUsD8BgtUa62m
-	 EcoxlOdSiG/haCFPHYxFS2nct7MXXRvJcI2mCGH5TT3CSu1bHR/BnvV35N1jipVd2iw==
+	bh=Yqic0xo07fY3akncSDuHvv5cuWbhn4WbbviNr/TM5AA=;
+	b=hOe2wu+fmiMo3YflX/8ou/fIM5PvcgOtSKBimBcS86dJpuJV5uhfQkFFtMhEpgwvRpbV
+	 GLOGX5QVrgvm2yPv7h5aUul7MbdB/SSFunVbXTjb1VB4mgg5wCfXB3SbXSZx9Gg86/rVv
+	 LV3yzbOFOMjOXyojFHbbNROvoZZNRwc+4cGlF8YHnYOefpq5FYboxhqG+5ARMga40vGAg
+	 ZY2FK/AdL424QttV9XWRX5pGEZg6h+fbJbl3rNqgod8VSu739Gr/sYniWgIU2+hgUjaw6
+	 wpIWIGctJlXBWz9WmVfiHr6VAUSg+WiQlVxRDrQd90ABjF1JM2ibxE2/T7AaoM6fhbw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fuE49k3O;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bUXDOt1q;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC60606A320
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 19:07:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B302606A320
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 19:08:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fuE49k3O
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 946A31F000C4;
-	Thu, 19 Nov 2026 19:07:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bUXDOt1q
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF9941F000C4;
+	Thu, 19 Nov 2026 19:08:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795115237;
-	bh=n4Wz95ig6cqnc3lhOLvGE6QBjp8DPs0FbOXnXTCLQRQ=;
+	s=k20260515; t=1795115329;
+	bh=Yqic0xo07fY3akncSDuHvv5cuWbhn4WbbviNr/TM5AA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fuE49k3OC671xBG2btCPz20zsflqGT16ykKQU/+FGYYVkBxIjgCPl2lBm6Xr7V6j3
-	 4jVWJ2iIC4LTfPvIlebGy/1ivGJiRMTAivOOtaiXCW0XE1tbnH7++lUApkxj7crFtr
-	 3t1ApqUJlmVkoNEyo04UrWiFbaDJzO6JA2Me+Ml1aWPU2Zbo+kQU69CQ2NkiKvcNYT
-	 LLo4rDYVghQDc29RFtFlcab0F9BGnNEWWhiLaI6llJM6qltjwWRX8k7wilsSzOJD2c
-	 0bIo/XSemXu509f6Ko1cGSieh1XyTWXyuJZ6/RTlQrB9OntN+dei7PnmjRx14iUgyC
-	 y9MnDgMbefz9Q==
-Message-ID: <sashiko-outbox-223831@kernel.org>
+	b=bUXDOt1q4X3it7/yHOFr5F7ibVxj1OTSC58RTrSfQrGeeCsLy8YHXoBFSABHH7eXz
+	 xq2um7UCLXPRIpzz67lXUFSyQLhNlfMzSkBWFN3WogDa47h/dwjZ5x6Gc8ynbcpqC0
+	 KA5NIW87sBLq3MG7CsS45zS7A1G4RLBZ7wBpgnGZa44rr87/wJjaZIhoGY+Akf7kUW
+	 ZtTLs0iQpy1/DXJRCbf7D46AVp2Ps0LOqRW3KF5yvZ+4YVjTnfq9phWrf3fTqQI4VZ
+	 D/GaXkjbq51TzLYzXuwmlsdfVTiym6PpFs+K8wHmbypZMCASJj0wSWKbm7nn67849R
+	 DVBW7OoJ1wm4Q==
+Message-ID: <sashiko-outbox-223832@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 32/33] KVM: selftests: Add find_bit to KVM library
+Subject: Re: [PATCH v10 01/33] arm64: cpufeature: Add cpucap for HPMN0
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Colton Lewis" <coltonlewis@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261119185215.632334-33-coltonlewis@google.com>
+In-Reply-To: <20261119185215.632334-2-coltonlewis@google.com>
 References: <20261119185215.632334-1-coltonlewis@google.com>
- <20261119185215.632334-33-coltonlewis@google.com>
+ <20261119185215.632334-2-coltonlewis@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 19:07:17 +0000
+Date: Thu, 19 Nov 2026 19:08:48 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,10 +60,15 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Add lib/find_bit.c to the KVM selftests build using the same wrapper
-> pattern as lib/rbtree.c so selftests that depend on find_bit helpers
-> link cleanly when built standalone.
+> Add a capability for FEAT_HPMN0, whether MDCR_EL2.HPMN can specify 0
+> counters reserved for the guest.
 >=20
+> This required changing HPMN0 to an UnsignedEnum in tools/sysreg
+> because otherwise not all the appropriate macros are generated to add
+> it to arm64_cpu_capabilities_arm64_features.
+>=20
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 > Tested-by: James Clark <james.clark@linaro.org>
 > Signed-off-by: Colton Lewis <coltonlewis@google.com>
 
@@ -71,5 +76,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119185215.6323=
-34-1-coltonlewis@google.com?part=3D32
+34-1-coltonlewis@google.com?part=3D1
 
