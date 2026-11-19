@@ -1,54 +1,82 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.100
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795096006;
-	b=obA6jjrzz2SYdvoFgoWJrD7F0+re1v0qVF/7cXj8GOzrFxiw/+PPc+XqaR7OEbhu1CNv
-	 rmg8JhcMQb8727OaijvGvk+X7qwrl0SPX4wVZSrK/itqoQqgGobRgZ4b68go/O/ibmbc9
-	 imSaA8VD/UA4TRYrYow5/hkIhr9m1qfZYga/fWIP9AfEEIdrV77dRN5rnz/qCTZsEyeD5
-	 144EHGX0Ma/uV8eko+0NTWkXn2emWaQ2eJ3onHVXZR5vK+muggMdArNmpZqCYiVnP+aw+
-	 TPp56kTZSMIWApEuA47a8Ym9Blpczp715wfijR4Q5xgHdyAvjkRHwsaSLCckI0+xUfg==
+	t=1795096107;
+	b=gr9wNtRpynmGQfQDSDXRFm4SWNLfRRrMeIyQYtz0zq2geRgvbPldVNSEukp5vFjmPNHM
+	 5s2b5/ZKObVoUs+nllQwgIkevvWB3pkZEW12FaEoA42BvygLbRbOkQpMwRX8Hy0HwTdko
+	 mocx7+5TfF7QtmF5kqLSmBW/R3U8ysBQAiYM2XBSstSBV19u9tmalvRADWlx2/OUdAIeH
+	 A2rjex035eNk+bNUBFrtadOWMt0c/wwzomdOx6ei5Imvhz6AP/GhFXNZOrvT1X0Ei+mCM
+	 bCQ0SfsUbgiWlLM/lHKi901rYTjxksWJqRhWOE0zgWa2CxBuCgOSYP3o0EcAQSr/9Jw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795096006;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=aFjgMZT4ij3QgwOV3LfQIHaT7HzWZzkda031aoTFEzs=;
-	b=g6HD1bX1EOwZ+zLaRehgf5kwmaFJUXAXmmggQK/g3MRpe6UyCOMTHX1QMRc71fpj4Z1o
-	 QJo0K0wjF/lW+l0zm8aoQMYbvBM4VfeR5OloZX1q+LH2hVS8GYLkXemX1CKOeVqd3sPiQ
-	 62PbrKQaprKSGB6sYhgXl9IgS3OvXerqrXz4wFVQTwCwrmosIMAsJ4eknEGkRBqXc4BJK
-	 Q17RTroKiJNsT8s0Wv5Qze+paz7IDQsKN0NKbA8ktFiII7pNRE11KAPDuCp4d3RXjT92h
-	 laQH2dzTEWyIPrdDUMTCgWtBH+RyIKpDW7cai/GHhirZCx7+NjfR3+pR5edomji0aRg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795096107;
+	h=DMARC-Filter:Date:DKIM-Signature:DKIM-Signature:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=cFsSr4rFLD0sZgWO3UICEWG59/9WjZ3zDUquQvzWPo8=;
+	b=KlqUx2p8B0p8xWUffL4u5YW/ETRQhLYaWZdacJe/yo2S8Yj4IchNXGn6p9iqfaS+rpGw
+	 AcWUg9VuknDjjvaF760+oYR2HRy5R5ec+9t2AJruZrDpSpSwZstGrvSr6Zw/ZN1t3QVnJ
+	 VfpaodqfRfLdfQRNeFY79ZzovXdl+prwzPIKNcYPdXvS6RAVK3iEkOYCLfJztY0bAP6uK
+	 QISk3yZCtzFr3mr4SzX3mrAcpBgB+AdhNUF8NCuNsOUysfEvlZeLaYb6uu9v8R0Kw0as2
+	 aPehfwbW9KS15A1IBoANTSvHtC1FMGoSpqVbUPS+S4j9IymATgGSlDaSUM8jMq4diyw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=BFFu1MCk;
-	arc=none smtp.remote-ip=95.215.58.100
-Received: from mta1.migadu.com (out-100.mta1.migadu.com [95.215.58.100])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=pass header.from=linutronix.de;
+	spf=pass smtp.mailfrom=linutronix.de;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=WGCEgd8y;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=tjanXcst;
+	arc=none smtp.remote-ip=193.142.43.55
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABB460A2600
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 13:46:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4ABB460A2600
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C737606A325;
+	Thu, 19 Nov 2026 13:48:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4C737606A325
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=BFFu1MCk
-X-Envelope-To: linux-perf-users@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=++jxRWVPeWHHNOse9hUX9VVHA8pC7zSS/WWi8a/OqNw=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795096004; v=1; x=1795700804;
- b=BFFu1MCkYDNvS1QBOd5lfM7XsW1mMv06+SULHYpVMq7qtH+10lOdRlpTXISGV6TiSnMuBcFc
- skn6vs9IegdwLkYMZuuYzEpnRnLF9NLyjRQnhIp78mxyGtNgCkxdl38pbXyb4fbcbk6/wca4zUS
- e9MVHuQ3frEjO2yzdIuht1cM=
-X-Envelope-To: linux-perf-users@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 799fbb2e29e87772;
-	Thu, 19 Nov 2026 13:46:44 +0000
-X-Mizu-Trace-ID: 799fbb2e29e87772
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <69a099c3-082e-43b8-82f5-122d32df5eff@linux.dev>
-Date: Thu, 19 Nov 2026 14:46:39 +0100
+	dkim=pass (2048-bit key, unprotected) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=WGCEgd8y;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=tjanXcst
+Date: Thu, 19 Nov 2026 14:48:24 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1795096105;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cFsSr4rFLD0sZgWO3UICEWG59/9WjZ3zDUquQvzWPo8=;
+	b=WGCEgd8y32aniz5UgOEt8zIgfc6raHwXSRhbOwOIT7NBEvPBXuJScS4nii8dKUCldsdna+
+	dPmLGetDhjvt4L7Cm2QIPJQW4EtVT83PCKXTPtgw3yH9dqKRdCpR0AdsTTc3nY6/VngH0o
+	Mu1WzLoBLzhqJOhg9O2g1VipnQ0HFXx+L9tuIieGO0d1XQXWieeMsSspN9qpAihl3+h5Lq
+	lIYIZF+oj2Y8ocvUJTKYDOzV3pgPSzXz8zKoDPgUVAIx3k+ml7ULt/R0xBkrp2wbD2Ahio
+	41LgrwT0XegaYl1vmMzT02lSe1vkZMqa2hCn7rjvnX7TBHjVoIMDt3L0yFurQw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1795096105;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cFsSr4rFLD0sZgWO3UICEWG59/9WjZ3zDUquQvzWPo8=;
+	b=tjanXcstGZ9CVzp4RvSx3wr4tqD8vrHFqhaAhAcaMyYUUruS+FXey6bgYFszGmrlItUH1V
+	oEo3YqKMhwMLbYBw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Tengda Wu <wutengda@huaweicloud.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] perf/core: Disable context fast-swap for sigtrap
+ events
+Message-ID: <20261119134824.oCI80nCj@linutronix.de>
+References: <cover.1795053619.git.wutengda@huaweicloud.com>
+ <55b1a2845b0ad34a874a7653644e34af9eb068d3.1795053619.git.wutengda@huaweicloud.com>
+ <20261119121143.pJrJE7qs@linutronix.de>
+ <cc76ea5a-545a-4560-a039-ceed1de7ff3e@huaweicloud.com>
+ <20261119130704.A5iZtay-@linutronix.de>
+ <0aa4bf03-57a8-48d8-b8db-4246716c48fc@huaweicloud.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -58,103 +86,24 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 06/11] riscv: enable NMI-safe lockdep irqflags
- tracking
-To: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>, pjw@kernel.org,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- himanshu.chauhan@oss.qualcomm.com, conor@kernel.org,
- anup.patel@oss.qualcomm.com
-Cc: cuiyunhui@bytedance.com, atish.patra@linux.dev, peterz@infradead.org,
- mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org,
- will@kernel.org, tglx@kernel.org, corbet@lwn.net, rdunlap@infradead.org,
- shuah@kernel.org, yuanzhu@bytedance.com, yang.susheng@zte.com.cn,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <20261119120824.13969-13-zhangzhanpeng.jasper@bytedance.com>
- <20261119120824.13969-19-zhangzhanpeng.jasper@bytedance.com>
-Content-Language: en-US
-From: Clement Leger <clement.leger@linux.dev>
-In-Reply-To: <20261119120824.13969-19-zhangzhanpeng.jasper@bytedance.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <0aa4bf03-57a8-48d8-b8db-4246716c48fc@huaweicloud.com>
 
+On 2026-11-19 21:19:59 [+0800], Tengda Wu wrote:
+> Well, because the trigger window is very short, it is not easy to reprodu=
+ce.
+> The test case I provided above must be stress-tested through multiple
+> rounds of a while loop. Is it inappropriate to put this kind of test,
+> which requires a while loop and has a certain degree of randomness, into
+> deterministic test cases like sigtrap_threads.c?
 
+Then maybe not. I would have to run it myself to be able to judge it.
+However this thread has a reference to the test case should someone need
+it in a few years=E2=80=A6
 
-On 11/19/26 13:08, Zhanpeng Zhang wrote:
-> An SSE handler runs with interrupts masked, but can interrupt code whose
-> lockdep hardirq state is enabled. Bare nmi_enter()/nmi_exit() do not
-> update that state. Consequently, lockdep_assert_irqs_disabled() in the
-> perf overflow path can report a warning despite interrupts being masked.
-> 
-> Select TRACE_IRQFLAGS_NMI_SUPPORT so lockdep can update its hardirq state
-> inside an NMI. Pair this with irqentry_nmi_enter()/irqentry_nmi_exit() in
-> the SSE wrapper: these helpers save the previous tracked state, mark
-> interrupts disabled on entry and restore the tracked state on exit.
-> Selecting the configuration option alone does not perform those updates.
-> This follows the entry helpers used by the other RISC-V NMI-like traps.
-> 
-> Signed-off-by: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
-> ---
->   arch/riscv/Kconfig          | 1 +
->   arch/riscv/kernel/sbi_sse.c | 7 ++++---
->   2 files changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index d2db8f40c616..5501c02a07eb 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -225,6 +225,7 @@ config RISCV
->   	select SYSCTL_EXCEPTION_TRACE
->   	select THREAD_INFO_IN_TASK
->   	select TRACE_IRQFLAGS_SUPPORT
-> +	select TRACE_IRQFLAGS_NMI_SUPPORT
->   	select UACCESS_MEMCPY if !MMU
->   	select VDSO_DATASTORE if MMU
->   	select VDSO_GETRANDOM if MMU && 64BIT
-> diff --git a/arch/riscv/kernel/sbi_sse.c b/arch/riscv/kernel/sbi_sse.c
-> index 032fcc07abcf..59e47a39589d 100644
-> --- a/arch/riscv/kernel/sbi_sse.c
-> +++ b/arch/riscv/kernel/sbi_sse.c
-> @@ -2,7 +2,7 @@
->   /*
->    * Copyright (C) 2025 Rivos Inc.
->    */
-> -#include <linux/nmi.h>
-> +#include <linux/entry-common.h>
->   #include <linux/sched.h>
->   #include <linux/scs.h>
->   #include <linux/bitfield.h>
-> @@ -36,9 +36,10 @@ void noinstr do_sse(struct sse_event_arch_data *arch_evt,
->   {
->   	struct riscv_sse_interrupted_context context = { regs, hstatus };
->   	struct riscv_sse_interrupted_context *previous;
-> +	irqentry_state_t state;
->   	struct sbiret sret;
->   
-> -	nmi_enter();
-> +	state = irqentry_nmi_enter(regs);
->   	instrumentation_begin();
->   
->   	/* Retrieve missing GPRs from SBI */
-> @@ -84,7 +85,7 @@ void noinstr do_sse(struct sse_event_arch_data *arch_evt,
->   
->   out:
->   	instrumentation_end();
-> -	nmi_exit();
-> +	irqentry_nmi_exit(regs, state);
->   }
->   
->   static void *alloc_to_stack_pointer(void *alloc)
+> Thanks,
+> Tengda
 
-Hi Zhanpeng,
-
-Not sure if it was already suggested but I would fold that in the commit 
-adding SSE itself.
-
-Thanks,
-
-Clément
+Sebastian
