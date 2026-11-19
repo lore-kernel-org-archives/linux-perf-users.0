@@ -1,58 +1,66 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.93.112
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795080625;
-	b=VkNhCFUaE/VNjRRSs86XqbVI+eGt1ZbTakrcYf/B9R3tsDwMY+69cxylZJTrGT1gFNUL
-	 cdPKcU1CfV2q4uwzp4Aq/oqctcsFHqadHOM7+k33pnr1eUFnsTCo7O52nIMPaGVAt7qFi
-	 6iqICdHkDGLO7LTkkEbws6ZiRFKJvdvKGgrexmx2vV2QNiclCoFhQs8nc54py6oV37x6G
-	 G0CXs0M1t3WL4G+UFb9HZFN8gEbHYdGbK4PQ/LlrOicH6RZPvtBS6l7DdmbLhjG3E87m0
-	 ioe4KqIQn5/BDIhxAIfLwPjQnaskJ04Qzz607XsIa07+f/WcZqfvhmHRGXd9yEnbK1A==
+	t=1795081882;
+	b=1PrBlKjWWZjsxuD4MDI1zphLP0Q8/ghE92r68os9VRDl3j3tANy8wjIzv7bi/qQh2df6
+	 5mq+v3ZayLaFWSd8mP05SEOPZpk6gmNVeSTZxILpmdycPzqW64suu4kYRSMf9Xv253xeC
+	 ceEj6iCeQrdPWnAxwQy7F1gBB6A5+Y1erPYxjvCOyzGsPyeRSDrDN4yjelNoCZtHmUWgQ
+	 e6Com2FlZw+fvDliWAPWRe+GIbCAI5BJjgd2HQPilaXWXXxx3n4ZsT1zHM2zhDZhUzJ5s
+	 YrP8WIt97n4JYj0V4mifRiWOuiBuu3BeUmuxZTOeaT7Ou+Tq4nmvhTRqSXozFl0AZwQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795080625;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=Sh9sgfMT4KaJYws8o3fTy/YeNndwD4UKnNx2fS4QIfw=;
-	b=vMpwtdAc2gD6RR35urLWj4rJqaD36LAe+jFyrTWOJyTu7yGScz1dwZdpDRkf2Wg7G/9C
-	 AQu3GS+tBtt6jOi/9DaTd08YAuYELfVaJ3dmAqAAnTq0WwQfsWbh7pfwY8BowSjhMMckx
-	 pINqOalObUWPrcFZnj0/RCHBG+zjmyT7qtJuhbP7DBTvMJxo1ZagLILvmrfW+bWre/xU3
-	 HItC5PgZrrcXgnAqFdoqg1I4aAM1HI4GGXsYcpGbAmKwiKh83E6YnW8LTgKDOHuhUfAT9
-	 A2fdZqbyuPzoUu6Or5y/yHgthpAyQxrby1uUvNLbPzTS70CfVV97uvvGUqoaUckOJcw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795081882;
+	h=DMARC-Filter:Received:Received:Received:From:To:Cc:Subject:Date:
+	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:X-CM-TRANSID:X-Coremail-Antispam:
+	 X-CM-SenderInfo;
+	bh=MXOCB2uKjKaor2OrklW8VqDy4yR8s1PFFph39t/ACkc=;
+	b=RCQC2U5uKH0iQmDdqS9wDBRfBBDnbDBulUqw/8/27KTcNM4ygjHN8Gy99BkARw3cufBo
+	 dlLD27P62od6oyRzUUBhaw9acSCl7p2WKx/o4Rry887rBk4Jft6dLq579OxIhyOKzoDwo
+	 rF5Iawfh5BI4iA3puBfLlyU60txYL3RWLlW/s8vaIlu2vsh5W3CBoQe9cS3PVKaVzTfBY
+	 t1t5eHGmYg/eOTnS9eSu3FHeQxfBcUqgnAE2TWhoaeqdY9LEabX5OfLUiULWLJoXgwNpO
+	 oy5V90L3sBJm5zNDYiy7bcwP/pJtzH3QxGPAzemFtqYtuWtr736F1HbPDE/vmGxlyvQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SItWVVXi;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=none header.from=huaweicloud.com;
+	spf=none smtp.mailfrom=huaweicloud.com;
+	arc=none smtp.remote-ip=124.71.93.112
+Received: from dggmsgout12.his.huawei.com (dggmsgout12.his.huawei.com [124.71.93.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDACC606A32C;
-	Thu, 19 Nov 2026 09:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SItWVVXi
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D4F41F000C5;
-	Thu, 19 Nov 2026 09:30:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795080625;
-	bh=Sh9sgfMT4KaJYws8o3fTy/YeNndwD4UKnNx2fS4QIfw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=SItWVVXieInsqkKlXXJ3hmGH+1WTB8Ez5xtrnlOUvZaOg2OvB67KhCSc7xaPkQuCQ
-	 jhyyZFxWee4+bEiRjpaROJbuNPUVV+mShqi9D9S7WtsW9qFyo6xZSwj3v5fQyDwu5B
-	 TUs6NLyxFTAgyuoyi5eGJ5n7+V1MtOHV0lS3op8LqTVQ7ec+xvgRjCH4IZNhVGFVby
-	 dt35BkEXtk/vAteTLZA4/BMjr1T9ZwnWxh1KzwduslvsJ6t2SVrBM578ReVAuFp2P4
-	 ud8RpLTQsGsA8bgNHIy2tlgRubad0ehcqey+J5qrTvahYqik1jynxRIECUpP7Gu4d/
-	 SlVJxszObgsnw==
-Message-ID: <sashiko-outbox-222837@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 2/5] arm64: tlb: Add tlbi workaround for
- FUJITSU-MONAKA Erratum E#030001
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Tomohiro Misono" <misono.tomohiro@fujitsu.com>
-Cc: linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev, "Oliver Upton" <oupton@kernel.org>, "Marc
- Zyngier" <maz@kernel.org>
-In-Reply-To: <20261119-monaka-fix-for-upstream-v3-2-057df4d2ca3c@fujitsu.com>
-References: <20261119-monaka-fix-for-upstream-v3-0-057df4d2ca3c@fujitsu.com>
- <20261119-monaka-fix-for-upstream-v3-2-057df4d2ca3c@fujitsu.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 09:30:24 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577AB606A320;
+	Thu, 19 Nov 2026 09:51:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 577AB606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggmsgout12.his.huawei.com (SkyGuard) with ESMTP id 4jVYcC5R1Fz20Sn;
+	Thu, 19 Nov 2026 17:50:19 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id C145440D87;
+	Thu, 19 Nov 2026 17:51:12 +0800 (CST)
+Received: from huawei.com (unknown [10.67.174.45])
+	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgDn7QCHxv5qwsKLEw--.20837S3;
+	Thu, 19 Nov 2026 17:51:12 +0800 (CST)
+From: Tengda Wu <wutengda@huaweicloud.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tengda Wu <wutengda@huaweicloud.com>
+Subject: [PATCH v5 1/2] perf/core: Prevent duplicate sigtrap task work enqueue
+Date: Thu, 19 Nov 2026 09:51:00 +0000
+Message-Id: <45bd71c976aea1a0e8bf5762dd6b6552e6009439.1795053619.git.wutengda@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1795053619.git.wutengda@huaweicloud.com>
+References: <cover.1795053619.git.wutengda@huaweicloud.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,72 +69,143 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgDn7QCHxv5qwsKLEw--.20837S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxWr15JFy8AF48GF18GFyUKFg_yoWrCF15pr
+	43tws0ya1UXFnFqry5tw1kAr1rWw4FqFZ8ArWvk34fAF1YqF17Xay7G3WYvFWrArn7Aa43
+	Xw40kFW7C34UXFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUQF14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
+	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
+	v7MxkF7I0En4kS14v26r1q6r43MxkF7I0Ew4C26cxK6c8Ij28IcwCF04k20xvY0x0EwIxG
+	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRpuWdUUUUU=
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issues to consider:
-- [Medium] KVM: arm64: pvm_calc_id_reg() exposes FEAT_TLBIRANGE on
-  FUJITSU-MONAKA
-- [Low] KVM: arm64: __kvm_read_sanitised_id_reg() elevates
-  ID_AA64ISAR0_EL1.TLB to OS
---
+The sigtrap handling in __perf_event_overflow() checks
+event->pending_work before calling task_work_add(), but only sets
+pending_work after the task work has been queued.
 
-commit 913abeb45fc613951715127a954e31a80a0e00cf
-Author: Tomohiro Misono <misono.tomohiro@fujitsu.com>
+This leaves a window where an NMI can interrupt task_work_add()
+and re-enter __perf_event_overflow() for the same event. Since
+pending_work is still zero, the nested invocation can enqueue
+the same pending_task again.
 
-arm64: tlb: Add tlbi workaround for FUJITSU-MONAKA Erratum E#030001
+The re-entrant call path looks like this:
 
-This commit adds a workaround for FUJITSU-MONAKA Erratum E#030001 by
-disabling ARM64_HAS_TLB_RANGE on the host and downgrading
-ID_AA64ISAR0_EL1.TLB to OS for KVM guests.
+  __perf_event_overflow()
+    task_work_add()
+      kasan_record_aux_stack()
+        <NMI>
+          __perf_event_overflow()
+            task_work_add()
 
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index c7d91138a6d49..2e8965b7702e1 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -1949,6 +1949,14 @@ static u64 __kvm_read_sanitised_id_reg(const struc=
-t kvm_vcpu *vcpu,
->  	case SYS_ID_AA64PFR2_EL1:
->  		val =3D sanitise_id_aa64pfr2_el1(vcpu, val);
->  		break;
-> +	case SYS_ID_AA64ISAR0_EL1:
-> +		if (cpus_have_final_cap(ARM64_WORKAROUND_FUJITSU_030001)) {
-> +			/* disable TLBI range operatoins on guest */
-> +			val &=3D ~ID_AA64ISAR0_EL1_TLB_MASK;
-> +			val |=3D SYS_FIELD_PREP(ID_AA64ISAR0_EL1, TLB,
-> +				ID_AA64ISAR0_EL1_TLB_OS);
-> +		}
-> +		break;
->  	case SYS_ID_AA64ISAR1_EL1:
->  		if (!vcpu_has_ptrauth(vcpu))
->  			val &=3D ~(ID_AA64ISAR1_EL1_APA |
+The nested invocation may enqueue pending_task before the
+outer invocation does. When the outer invocation resumes, it
+inserts the same task work entry again, potentially creating
+a cycle in the task work list.
 
-[Severity: Medium]
-Does this leave FEAT_TLBIRANGE exposed to protected VMs under pKVM?
+As a result, perf_pending_task() may be executed repeatedly,
+leading to unbalanced event reference counting.
 
-has_tlb_range() disables ARM64_HAS_TLB_RANGE on the host without modifying
-the sanitised feature register value returned by
-read_sanitised_ftr_reg(SYS_ID_AA64ISAR0_EL1).  For protected VMs
-(kvm_arm.mode=3Dprotected), guest ID registers do not go through
-__kvm_read_sanitised_id_reg(): kvm_hyp_init_symbols() copies
-read_sanitised_ftr_reg(SYS_ID_AA64ISAR0_EL1) into id_aa64isar0_el1_sys_val,
-and kvm_init_pvm_id_regs() -> pvm_calc_id_reg() returns
-id_aa64isar0_el1_sys_val unchanged for SYS_ID_AA64ISAR0_EL1.  A protected
-guest on FUJITSU-MONAKA will still observe ID_AA64ISAR0_EL1.TLB =3D=3D RANG=
-E and
-issue the affected RVA[L]E1* and RVAA[L]E1* instructions, leaving stale TLB
-entries when invalidating an affected 512MB mapping.
+Fix this by atomically claiming pending_work with
+cmpxchg_acquire() before calling task_work_add(). This ensures
+that only one invocation can enqueue the task work, even when
+another overflow occurs re-entrantly from an NMI.
 
-[Severity: Low]
-Can overwriting ID_AA64ISAR0_EL1.TLB with ID_AA64ISAR0_EL1_TLB_OS elevate
-the field from NI (0) to OS (1)?
+If task_work_add() fails, clear the claim with
+smp_store_release() to allow a subsequent overflow to retry.
 
-If an L1 KVM host on FUJITSU-MONAKA had ID_AA64ISAR0_EL1.TLB downgraded to
-NI by its L0 VMM, setting ID_AA64ISAR0_EL1_TLB_OS unconditionally advertises
-FEAT_TLBIOS to L2 guests when the host does not have it, causing L0 to
-inject an UNDEFINED exception on outer-shareable TLBI instructions.  Using
-ID_REG_LIMIT_FIELD_ENUM(val, ID_AA64ISAR0_EL1, TLB, OS) would clamp the
-field with min() instead of elevating it.
+In perf_pending_task(), defer clearing pending_work until
+after perf_sigtrap() has completed. Use smp_store_release()
+to ensure that a subsequent overflow cannot re-queue the task
+work before the previous invocation has finished handling it.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119-monaka-fix=
--for-upstream-v3-0-057df4d2ca3c@fujitsu.com?part=3D2
+Also use smp_load_acquire() when checking pending_work in
+the exclude_kernel warning path to ensure the read is properly
+ordered.
+
+Fixes: c5d93d23a260 ("perf: Enqueue SIGTRAP always via task_work.")
+Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+---
+ kernel/events/core.c | 39 ++++++++++++++++++++++++++-------------
+ 1 file changed, 26 insertions(+), 13 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 614f9f0e6500..857230b023ae 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7775,10 +7775,14 @@ static void perf_pending_task(struct callback_head *head)
+ 	 */
+ 	rctx = perf_swevent_get_recursion_context();
+ 
+-	if (event->pending_work) {
+-		event->pending_work = 0;
++	if (smp_load_acquire(&event->pending_work)) {
+ 		perf_sigtrap(event);
+ 		local_dec(&event->ctx->nr_no_switch_fast);
++		/*
++		 * Ensure the pending work is fully handled before allowing
++		 * another overflow to queue it. See __perf_event_overflow().
++		 */
++		smp_store_release(&event->pending_work, 0);
+ 	}
+ 	put_event(event);
+ 
+@@ -10950,16 +10954,25 @@ static int __perf_event_overflow(struct perf_event *event,
+ 
+ 		notify_mode = in_nmi() ? TWA_NMI_CURRENT : TWA_RESUME;
+ 
+-		if (!event->pending_work &&
+-		    !task_work_add(current, &event->pending_task, notify_mode)) {
+-			event->pending_work = pending_id;
+-			local_inc(&event->ctx->nr_no_switch_fast);
+-			WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
+-
+-			event->pending_addr = 0;
+-			if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
+-				event->pending_addr = data->addr;
+-
++		/*
++		 * Claim pending_work before queueing the task work to prevent
++		 * another overflow from queueing it concurrently.
++		 */
++		if (cmpxchg_acquire(&event->pending_work, 0, pending_id) == 0) {
++			if (!task_work_add(current, &event->pending_task, notify_mode)) {
++				local_inc(&event->ctx->nr_no_switch_fast);
++				WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
++
++				event->pending_addr = 0;
++				if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
++					event->pending_addr = data->addr;
++			} else {
++				/*
++				 * Publish the failed queueing attempt so
++				 * a subsequent overflow can retry.
++				 */
++				smp_store_release(&event->pending_work, 0);
++			}
+ 		} else if (event->attr.exclude_kernel && valid_sample) {
+ 			/*
+ 			 * Should not be able to return to user space without
+@@ -10973,7 +10986,7 @@ static int __perf_event_overflow(struct perf_event *event,
+ 			 *     To approximate progress (with false negatives),
+ 			 *     check 32-bit hash of the current IP.
+ 			 */
+-			WARN_ON_ONCE(event->pending_work != pending_id);
++			WARN_ON_ONCE(smp_load_acquire(&event->pending_work) != pending_id);
+ 		}
+ 	}
+ 
+-- 
+2.34.1
+
