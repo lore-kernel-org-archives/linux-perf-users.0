@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795091666;
-	b=E5u9k8nO9Y8QanX63XZYkK/CPwic+jGW4/MX3oipiokgXxDQ/WuYUqehghVX4qsUg6DO
-	 vFJFRI2k7cX4NhTQMCMGcmQ6V4IOwNzuyJCmksOSBXxVyWQBEuYdWmhBTJpU7osBJ8Q7c
-	 ri5xdFa6XJAg0hSIgStP5YifsOS102noPPxjyHDNU4w7mTKxXKx2z04s5VG9qIBiKb8ML
-	 xborYSMu1DrXEjsf8yPcJbi9OiFR+oUNO4GljbPuBU8hi1U3aJBJC0se6jgrePG3mMQnQ
-	 tkvYeflgo+QH2qVAhgpC+cVh8B/fBSBHmr6kHuJHGnkmVTp5UGm/qlqKBHXuyQRqlEg==
+	t=1795091814;
+	b=xyryiApMQcwNZSXtuYaXuIuKtHAJ9wt6iHlp0XtIifZlWPv9/qHcyiKqXDwtluYcKTLy
+	 8zjDAnp03AOo4X7MjtTYaS0NhVJ69HB4pO3Wtm+YWnDIJUTGHCHd9huVblqOuRZObKylk
+	 JA3bMfQDHO7WXVrGRfN6hJdc+bZkaFD148rjUW9Xx0WxDpKBXCvPMlk7HL3ZxmfB1YNV1
+	 deb212uyHwyIYZF6x1Edq/V2+i/d0+2w4pt7j5CyhHmtNgLhgt+hZWFu8qgiV/KivuaT+
+	 URC9iKsNUliB8dRVY8gy5UNYGFXu8MbPZyXQrIS/OWIv4bZfu465gCjg/kBwdeNH05w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795091666;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795091814;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=CWILZy6gDdiem30jdcBC1mwcOrKK3ipboWnqap4Kgsc=;
-	b=0If5X5G0bgSyhi7982Er/h4nmtqU4kGekeLH/WBO8awBZ7jZJfV9pKmMotuv0Zp+XjFS
-	 YoF3/EByglTi1Db/I9yEgCa9DjxBHUVXnlVlv3XpjLsrRJfHkjkR6leGyn1goy3woT1ns
-	 gTIRabpdZg6MTrVwKDIx5lg+X6L6lfTUaxfks0sOalS7DXwvivUaB5Rm4MlvTIIzlvQbL
-	 Uu/RbjI76QyQxWTJ4449RjzDcFih0TS9sk10w/1h/triio/dNyLsuL1vGm/yzZNFC/LyA
-	 aOO38mpvhFwwzP0WjKXqERl8NUH3KArHNG/18iWgM2cNbUhIFMFo9n94p4sVFxTEkxA==
+	bh=RflxcL1xPTpAJ4CvFjnM565PtkrLnSCfF1K40R/4AoQ=;
+	b=Pqf/Eg5V62ACLWJ07R1EyZuWuICv0FJ2d+7ypkHJsywJ3ZP+UE+z5qRHBix5tJedKjVP
+	 JwvCPRkz5GQeesAqA+SvdJ3L4jCc2SOsJvvaXjkQkEU1khHxMHAvx73n5F/FfEPaWv/hh
+	 VKh6Ed0MtU+JXYDhdDIaHkqj9/OTfIWU5w9CjpZACUOPBwicXUf+zUARpvEpAZlwD7snI
+	 MMJi5V7Ckf2q1ACKgIRuYIMm7GqRkKRrX1o757FW6nxuV8KTDn79Z9noWZ3UhwIUnrNbB
+	 ZpK0/KWH7JMOtIdDBNQkxut/KJ7/vh0QLrMiBxKuyphd7DCh0gg+2Rb+T6AklVgufNw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="hAUaA4Q/";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oo1Rn8oe;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B03606A337
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 12:34:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29433606A335
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 12:36:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hAUaA4Q/
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D37A31F000C4;
-	Thu, 19 Nov 2026 12:34:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oo1Rn8oe
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CAB81F000D0;
+	Thu, 19 Nov 2026 12:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795091666;
-	bh=CWILZy6gDdiem30jdcBC1mwcOrKK3ipboWnqap4Kgsc=;
+	s=k20260515; t=1795091813;
+	bh=RflxcL1xPTpAJ4CvFjnM565PtkrLnSCfF1K40R/4AoQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=hAUaA4Q/AU2nRP3JC9syiTniSDlLDx6F/zAvHE1ImiN+M68tKGqNwY1w6gLGNPXxB
-	 iFsVBiRAIpwYJBqrA2frtzB59BCoDt0YSoXIBcTukvr1iZOxjvj/VB2VPpS9ef5ikA
-	 dkgZNoZ+PYCrttOEJ0d6PxiznwHDuFeC6YMWGldZnWaBSn5CNSHMosh9oUTA4MsafS
-	 UjdfdxWNfzb++UnjPCELv16VcHtNXmEC2W3WtdSwo+9/5SM+0OptfXU3gqGJpDGy2J
-	 MvTA6cwucQRYtVBS9lJKALFfNUiwLrG+sXE52g3mARkT2L5nHy0bY2b3h62V5ACSsj
-	 7AW2dthxf2Djw==
-Message-ID: <sashiko-outbox-223093@kernel.org>
+	b=oo1Rn8oex2EJNOv3c1AxteGs1gE5+NjofIf1Blf3qYxt7qy56G9mRxvTV8waVVOgP
+	 vLBep7jQ/vw9stw73RtsJZ66mYCtvFmbzJIDCStuB9if+rRiWUWQRUv20CiZfCJ/c9
+	 7CLbYhsKrrMbcboiJVGBpO9eFeOiJVZPFFMl4vH2gmcXKfwknrh2jY2wOhG2+MYEHu
+	 rLJnLfhOvV8BripbUjx71gA7B1KG7tREJTQ1tL+SHSl3wH60IiXEWbARf6/w9tA37r
+	 pKeMNTacWVh/JVyZT9/kmH+H0Plvst37Vk/2p+QMxIqF9E+9eS8mdqrFOH8JQ2ZV8Q
+	 9ouX1tBDwNtkw==
+Message-ID: <sashiko-outbox-223096@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v13 11/11] selftests/riscv: add perf user-stack SSE copy
- regression test
+Subject: Re: [PATCH v13 02/11] riscv: add support for SBI Supervisor
+ Software Events extension
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Zhanpeng Zhang" <zhangzhanpeng.jasper@bytedance.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261119120824.13969-24-zhangzhanpeng.jasper@bytedance.com>
+In-Reply-To: <20261119120824.13969-15-zhangzhanpeng.jasper@bytedance.com>
 References: <20261119120824.13969-13-zhangzhanpeng.jasper@bytedance.com>
- <20261119120824.13969-24-zhangzhanpeng.jasper@bytedance.com>
+ <20261119120824.13969-15-zhangzhanpeng.jasper@bytedance.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 12:34:25 +0000
+Date: Thu, 19 Nov 2026 12:36:53 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,197 +61,141 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 5 potential
+Thank you for your contribution! Sashiko AI review found 2 potential
 issues to consider:
-- [Medium] selftests/riscv: perf_event_open() EINVAL fails instead of
-  skipping
-- [Medium] selftests/riscv: test_ustack_records_wellformed() accepts
-  0-byte copy
-- [Medium] selftests/riscv: burn_stack() overflows default musl pthread
-  stack
-- [Low] selftests/riscv: false skip on setup failure in
-  test_sse_stress_no_crash()
-- [Low] selftests/riscv: unused stress_thread fields and missing
-  .gitignore entry
+- [High] riscv: sbi_sse: field-spanning memcpy() on regs->a6 in do_sse()
+- [High] riscv: sse: NULL tp dereference in handle_sse() during
+  __switch_to()
 --
 
-commit e1bf6fbd4261f2eb37c1aa64007c8a76c7256f6e
-Author: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
+commit 498ea890d0b707a9ef408aa0d005f9d3ac0e2ea3
+Author: Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>
 
-selftests/riscv: add perf user-stack SSE copy regression test
+riscv: add support for SBI Supervisor Software Events extension
 
-This commit adds a userspace kselftest under tools/testing/selftests/riscv/=
-sse
-to exercise PERF_SAMPLE_STACK_USER user-stack copying from RISC-V SBI
-Supervisor Software Events (SSE) context across a guard-page boundary and
-under multi-CPU stress.
+This commit adds architectural support for the RISC-V SBI Supervisor
+Software Events (SSE) extension, including dedicated per-event stacks,
+entry/exit assembly, and context preservation across SSE handlers.
 
-> diff --git a/tools/testing/selftests/riscv/sse/sse_perf_ustack.c b/tools/=
-testing/selftests/riscv/sse/sse_perf_ustack.c
+Link: https://lore.kernel.org/r/as79MHtNYd-VbUug@hu-himchau-blr.qualcomm.co=
+m/
+
+> diff --git a/arch/riscv/kernel/sbi_sse.c b/arch/riscv/kernel/sbi_sse.c
 > new file mode 100644
-> index 0000000000000..9535b6d7ba4c1
+> index 0000000000000..032fcc07abcf7
 > --- /dev/null
-> +++ b/tools/testing/selftests/riscv/sse/sse_perf_ustack.c
-> @@ -0,0 +1,564 @@
+> +++ b/arch/riscv/kernel/sbi_sse.c
+> @@ -0,0 +1,251 @@
 
 [ ... ]
 
-> +static struct perf_event_attr sampling_attr(unsigned long freq)
+> +void noinstr do_sse(struct sse_event_arch_data *arch_evt,
+> +		    struct pt_regs *regs, unsigned long hstatus)
 > +{
-> +	struct perf_event_attr attr =3D {
-> +		.type		=3D PERF_TYPE_HARDWARE,
-> +		.size		=3D sizeof(attr),
-> +		.config		=3D PERF_COUNT_HW_INSTRUCTIONS,
-> +		.sample_type	=3D PERF_SAMPLE_STACK_USER,
-> +		.sample_stack_user =3D STACK_DUMP_SIZE,
-> +		.freq		=3D 1,
-> +		.sample_freq	=3D freq,
-> +		.disabled	=3D 1,
-> +		.exclude_kernel	=3D 1,
-> +		.exclude_hv	=3D 1,
-> +	};
+> +	struct riscv_sse_interrupted_context context =3D { regs, hstatus };
+> +	struct riscv_sse_interrupted_context *previous;
+> +	struct sbiret sret;
 > +
-> +	return attr;
-> +}
+> +	nmi_enter();
+> +	instrumentation_begin();
 > +
-> +static bool open_skip_reason(int err, const char **why)
-> +{
-> +	switch (err) {
-> +	case EACCES:
-> +	case EPERM:
-> +		*why =3D "insufficient privilege for PMU sampling (perf_event_paranoid=
-)";
-> +		return true;
-> +	case ENOENT:
-> +	case ENODEV:
-> +	case EOPNOTSUPP:
-> +		*why =3D "hardware PMU sampling event not available";
-> +		return true;
-> +	default:
-> +		return false;
+> +	/* Retrieve missing GPRs from SBI */
+> +	sret =3D sbi_ecall(SBI_EXT_SSE, SBI_SSE_EVENT_ATTR_READ, arch_evt->evt_=
+id,
+> +			 SBI_SSE_ATTR_INTERRUPTED_A6,
+> +			 (SBI_SSE_ATTR_INTERRUPTED_A7 -
+> +			  SBI_SSE_ATTR_INTERRUPTED_A6) + 1,
+> +			 (unsigned long)arch_evt->interrupted_phys, 0, 0);
+> +	if (sret.error) {
+> +		pr_warn("Failed to read interrupted registers for event %x: %ld\n",
+> +			arch_evt->evt_id, sret.error);
+> +		/* Let the client quiesce its source without using incomplete regs. */
+> +		sse_handle_event(arch_evt, NULL);
+> +		goto out;
 > +	}
-> +}
-
-[Severity: Medium]
-Does perf_event_open() fail with EINVAL instead of skipping on RISC-V
-systems without PMU overflow support?
-
-When neither SBI SSE nor Sscofpmf IRQ overflow delivery is available,
-pmu_sbi_device_probe() and riscv_pmu_legacy set both
-PERF_PMU_CAP_NO_INTERRUPT and PERF_PMU_CAP_NO_EXCLUDE without registering a
-riscv-pmu entry in /proc/interrupts.  Because sampling_attr() sets
-exclude_kernel and exclude_hv, perf_try_init_event() rejects the event with
--EINVAL on PERF_PMU_CAP_NO_EXCLUDE before perf_event_open() reaches the
-PERF_PMU_CAP_NO_INTERRUPT check that returns -EOPNOTSUPP, causing
-test_ustack_records_wellformed() to report FAIL instead of SKIP.
-
-[ ... ]
-
-> +static int truncation_child(void *arg)
-> +{
-> +	int ready_fd =3D (intptr_t)arg;
-> +	char ready =3D 1;
 > +
-> +	if (write(ready_fd, &ready, sizeof(ready)) !=3D 1)
-> +		return 1;
+> +	memcpy(&regs->a6, arch_evt->interrupted,
+> +	       sizeof(*arch_evt->interrupted));
 > +
-> +	for (;;)
-> +		__asm__ __volatile__("" : : : "memory");
-> +}
+> +	/* Make the interrupted frame visible while clients handle this event. =
+*/
+> +	previous =3D this_cpu_read(riscv_sse_interrupted_context);
+> +	this_cpu_write(riscv_sse_interrupted_context, &context);
+> +	sse_handle_event(arch_evt, regs);
+> +	this_cpu_write(riscv_sse_interrupted_context, previous);
+> +
+> +	if (memcmp(&regs->a6, arch_evt->interrupted,
+> +		   sizeof(*arch_evt->interrupted))) {
+> +		memcpy(arch_evt->interrupted, &regs->a6,
+> +		       sizeof(*arch_evt->interrupted));
+
+[Severity: High]
+Does copying sizeof(*arch_evt->interrupted) bytes across &regs->a6 trip
+CONFIG_FORTIFY_SOURCE?
+
+In struct pt_regs, a6 and a7 are individual unsigned long fields rather
+than a 2-register struct_group, so __builtin_object_size(&regs->a6, 1) is
+sizeof(unsigned long) while sizeof(*arch_evt->interrupted) is
+2 * sizeof(unsigned long).  With CONFIG_FORTIFY_SOURCE=3Dy, the first
+memcpy() fails the build with __write_overflow_field() under
+CONFIG_WERROR=3Dy (and the second triggers __read_overflow2_field() under
+W=3D1), or triggers a runtime fortify WARN_ONCE() inside NMI context when
+an SSE event arrives.  Copying and comparing a6 and a7 directly by field
+avoids the field-spanning memcpy().
+
+> diff --git a/arch/riscv/kernel/sbi_sse_entry.S b/arch/riscv/kernel/sbi_ss=
+e_entry.S
+> new file mode 100644
+> index 0000000000000..1e38fbb1c2a42
+> --- /dev/null
+> +++ b/arch/riscv/kernel/sbi_sse_entry.S
+> @@ -0,0 +1,237 @@
 
 [ ... ]
 
-> +					if (dyn_size > dump_size) {
-> +						ok =3D false;
-> +						break;
-> +					}
-> +					if (dyn_size < dump_size)
-> +						truncated++;
+> +	asm_per_cpu_with_cpu t2 __sbi_sse_entry_task t1 t3
+> +	REG_L tp, 0(t2)
+> +	bnez tp, .Lcurrent_task_found
+> +
+> +	/* __switch_to() marks its transition window with a NULL entry task. */
+> +	REG_L tp, PT_TP(sp)
+> +
+> +.Lcurrent_task_found:
+> +	/* Nested exceptions temporarily replace these with the SSE stack. */
+> +	REG_L s6, TASK_TI_KERNEL_SP(tp)
 
-[Severity: Medium]
-Does test_ustack_records_wellformed() copy 0 bytes on every sample and count
-dyn_size =3D=3D 0 as a valid guard-page truncation?
+[Severity: High]
+Can a nested higher-priority SSE event see tp =3D=3D NULL here when an SSE
+interrupts __switch_to()?
 
-start_truncation_child() passes stack + page_size (immediately below the
-PROT_NONE page) to clone(), and truncation_child() only allocates ready_fd
-and ready before spinning, leaving sp within 16 to 48 bytes of the guard
-page.  On RV64, __copy_from_user_inatomic() enters .Lword_copy in
-arch/riscv/lib/uaccess.S and issues eight unrolled REG_L loads (64 bytes)
-before storing anything or advancing the destination pointer, so the copy
-faults during the first burst and returns a remaining count equal to
-dump_size (dyn_size =3D=3D 0).  Since any sample with dyn_size < dump_size
-increments truncated, the subtest passes without verifying that a non-zero
-partial stack copy occurred across the boundary.
+__switch_to() zeroes __sbi_sse_entry_task while switching from prev to
+next, relying on handle_sse() recovering current from the interrupted tp
+register saved in PT_TP(sp).  However, REG_L tp, 0(t2) loads NULL directly
+into the live tp register before falling back to PT_TP(sp), and leaves
+__sbi_sse_entry_task NULL while do_sse() runs:
 
-Giving truncation_child() a live stack frame larger than 64 bytes and
-requiring 0 < dyn_size && dyn_size < dump_size would ensure a partial copy
-is actually tested.
+__switch_to()
+  __sbi_sse_entry_task =3D NULL
+  <low-priority SSE>
+    handle_sse()
+      REG_S tp, PT_TP(sp)
+      REG_L tp, 0(t2)            # tp becomes 0
+      <high-priority SSE>
+        handle_sse()
+          REG_S tp, PT_TP(sp)    # saves 0
+          REG_L tp, 0(t2)        # still 0
+          REG_L tp, PT_TP(sp)    # reloads 0
+          REG_L s6, TASK_TI_KERNEL_SP(tp)  <-- NULL pointer dereference
 
-[ ... ]
+The same NULL tp window also occurs if do_sse() takes a nested synchronous
+exception while __sbi_sse_entry_task is still NULL, because
+handle_exception() swaps tp with CSR_SCRATCH (which handle_sse() cleared
+to 0) for a few instructions before restoring tp.
 
-> +struct stress_thread {
-> +	pthread_t tid;
-> +	int cpu;
-> +	int *stop;
-> +	int fd;
-> +	void *rb;
-> +	size_t rb_bytes;
-> +};
-
-[ ... ]
-
-> +		st->fd =3D -1;
-> +		st->cpu =3D cpu;
-> +		st->stop =3D &stop;
-> +		st->rb_bytes =3D rb_bytes;
-
-[Severity: Low]
-This isn't a bug, but stress_thread::cpu and stress_thread::rb_bytes are
-written here and never read anywhere.  Also, tools/testing/selftests/riscv/=
-sse
-is missing a .gitignore entry for the new sse_perf_ustack binary added to
-TEST_GEN_PROGS.
-
-[ ... ]
-
-> +		CPU_ZERO(&set);
-> +		CPU_SET(cpu, &set);
-> +		pthread_attr_init(&thread_attr);
-> +		ret =3D pthread_attr_setaffinity_np(&thread_attr, sizeof(set), &set);
-> +		if (!ret)
-> +			ret =3D pthread_create(&st->tid, &thread_attr,
-> +					     stress_worker, st);
-> +		pthread_attr_destroy(&thread_attr);
-
-[Severity: Medium]
-Can stress_worker() overflow the default pthread stack on musl libc?
-
-burn_stack() is noinline and keeps unsigned long frame[32] (256 bytes on
-64-bit RISC-V) live across RECURSE_DEPTH (512) recursive calls, consuming
-about 145 KiB of stack.  Because thread_attr uses the default stack size
- without pthread_attr_setstacksize(), this exceeds musl's 128 KiB default
-pthread stack and crashes the test with SIGSEGV.
-
-[ ... ]
-
-> +	if (started =3D=3D 0) {
-> +		free(threads);
-> +		if (why)
-> +			ksft_test_result_skip("sse stress: %s\n", why);
-> +		else
-> +			ksft_test_result_skip("sse stress: could not start any sampler\n");
-> +		return;
-> +	}
-
-[Severity: Low]
-Should the else branch report a failure or error rather than
-ksft_test_result_skip() when started =3D=3D 0 and why is NULL?
-
-open_skip_reason() sets why when perf_event_open() fails due to missing
-privileges or unavailable PMU support, so reaching started =3D=3D 0 with
-why =3D=3D NULL means every sampler failed due to an unexpected
-perf_event_open(), mmap(), or pthread creation error.
+Loading __sbi_sse_entry_task into a temporary register before overwriting
+tp, or updating __sbi_sse_entry_task in lockstep with move tp, a1 in
+__switch_to(), avoids exposing a NULL tp to nested SSE events.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119120824.1396=
-9-13-zhangzhanpeng.jasper@bytedance.com?part=3D11
+9-13-zhangzhanpeng.jasper@bytedance.com?part=3D2
