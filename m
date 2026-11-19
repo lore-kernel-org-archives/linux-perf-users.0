@@ -1,61 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.90.104.144
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795110706;
-	b=UCv4PHfHGe/TpPx8zpH5bzhShmvPqolLwSXIu+V+caKY0hn4P/sFI5jOojNpO86B286H
-	 V9XL3xX0uRPsuFtaBxi/ovD9AZTEmcvzcnVYzUC6jBTdq8ZKIHd8WZgZ/HOWUTGwQtRUx
-	 gdE6vHgzJvV/fjyRFdc8K67BzSa3aafK9W1C+/wM/b12rUh1AXmsDFa9hwdx+ifR36mHY
-	 IzY51NqzgRvaxAcnTWRkTmUCcLEEAM7tbItcezhZCroJNUGJSRW/9zkNKxoB17MtIofON
-	 q2QoHiFF2qQSZNN3le+oDNF4PFv4jDNkczqj/3ixh2TXAxvlWXd1yRmBdhmv1kIUPdA==
+	t=1795110836;
+	b=mqDyLRybrXaZsnQYh42d22A45F/a1ECjQoTbs4dhurlcsKHxfFxtWVjyvKca0jTRI7ez
+	 360rje89IkZPUl3y+80NVPRao3fEcLQuLg5gOeWcDoGFuANe3YgUWtWJsbZIFKjUx2vWH
+	 RW4fL+dQDPGK5dnxZ0FomAYPoHBMduD47/uaXejZv6kP321m0lm/cxPCz0dTk3y6iRJ7I
+	 sgQRsm71bCQp75DM/rY4WdN5Ttnyh3OmUgubICC8i1SnFQQUBf6evMbmjShvQwxK1iqoW
+	 98JKiyZoSD6Pn2yzjmRU0Ln7BcnJM2lkQwU/O1lIamHYPJZ/nIBAj83qvA/yqnoDoaQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795110706;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-Amp-Result:X-Amp-File-Uploaded:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:Received:Received:From:Date:Subject:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
-	 In-Reply-To:To:Cc:X-Mailer;
-	bh=E3uK4ToIL2mUz3Svln8sWa7foOIYRKuRK6T5m3vJSVY=;
-	b=tDnAtn5S8kQcX7+tiCj4YFf0Qn2iriLsUOQ1s5JVbFkDStGNTonrdVuRkM6advpMx9zT
-	 aHqbc2sAwQEfAC2zYMZ8YqX/DGRlSxzvV1GarTOq+k3fEZM5P1IL3H+I27UKhkq63EHGn
-	 X0ray31ExShBWLPb01db9vHtpGU+hCr2NNL9YQPNw06/g7JaB83s8FyJXZNg9OfSIW/8C
-	 5qJcuMQpgbI45mKuqFeJlbNxWfl3aiEYYOcRN1y3/zm6qjs8siyEScWKz3/cOOsL1eony
-	 JejTEtEmETSKqz2mUe9VUOkxchTx89oKmjOKotHTf+RD9mBcYNiQYmUtxnb6Sjyt/0w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795110836;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=mfCMSJSVryWRe0whbPHJF3ua1Yw0G2hC0KARhHp4cDE=;
+	b=HOqAeGqszz9WrcbnaOcUHy78SjlrHq6b5OMtNG4Rh9jPDvzV4e3ypvWERnM0k1iJjaHi
+	 KdG6Cyh7S6ynfOzYnUD2qfaSWTbOjXana4HoG9uh1M1zztmo7l6nTbOu+J2wYxkobC/sZ
+	 wkXsTcxWXlhzfntzcGIKftYYeZxB/nqn22koAdog1XCLurEjxDrQ3oiVnv9dvxfBTSNAo
+	 Gh5pSolj+/TaF9wuGaT5d5eEEsxHJHBsWNMWQ69TDSeS6oA6jozGtQEXLFU/bzRbqBUKL
+	 OlnePv86iCu+mroK5ffprnfYjChUSe8thgUNcCgO+Ihj6856NgAJ+48avx5f9yG3UMg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mobileye.com;
-	spf=pass smtp.mailfrom=mobileye.com;
-	arc=none smtp.remote-ip=23.90.104.144
-Received: from esa1.hc555-34.eu.iphmx.com (esa1.hc555-34.eu.iphmx.com [23.90.104.144])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDAF460A262F;
-	Thu, 19 Nov 2026 17:51:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DDAF460A262F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1795110705; x=1826646705;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=CVPab+eqiu3Puch8ckhPaA7dUxIgv7j+PTZCvvIA2cs=;
-  b=LxESDmXc93fjTNdXjVGI9EoYSPtsT1OB9SFDTkbomebI9EVFRJ8QiqXU
-   K6tf+UaJuj0I3qFeITgHPubCQ7MW091m09Ornfg6EaHNsyYhHD3BGIPwk
-   +qYf9zmAoTYl49DAJKGZwgCE1CXzqSMpItR8aU7X73ew6Ie3RIJYMh5Sn
-   KUVF+diclJz52zQJhIq//qijIuMocwKUck9Tlgdz4NZgVoZ2rfgcmqmqW
-   Ev6zBzEbPPAFa0w1FBPAcuh4T8dCuxSoyJ0Ei5+B/J1YQitl5B4r1Uq+u
-   LhyUZXRih1Cjqou756P44SnT/2qgv3DdqSSpCDHYa6bTkueqDS3PYTqL7
-   A==;
-X-CSE-ConnectionGUID: bck4BxQFSmuiqAdu90FOmw==
-X-CSE-MsgGUID: Ry9wiaoDRWCGHz/HQ5231Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from unknown (HELO ces02_data.me-corp.lan) ([146.255.191.134])
-  by esa1.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 19:51:37 +0200
-X-CSE-ConnectionGUID: Mn6EQc6oTx6e+bnAzNenoA==
-X-CSE-MsgGUID: UiO8b7LPScOtinUiOEegyg==
-Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.2])
-  by ces02_data.me-corp.lan with SMTP; 19 Nov 2026 19:59:53 +0200
-Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Thu, 19 Nov 2026 19:51:36 +0200
-From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-Date: Thu, 19 Nov 2026 19:51:32 +0200
-Subject: [PATCH v3 6/7] MIPS: eyeq6_defconfig: enable the CM3 PMU
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="B8/2A/v5";
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66601606A324
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 17:53:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=B8/2A/v5
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D51B01F000C5;
+	Thu, 19 Nov 2026 17:53:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795110836;
+	bh=mfCMSJSVryWRe0whbPHJF3ua1Yw0G2hC0KARhHp4cDE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=B8/2A/v5va/vSqPHxrssCyCzPJlp9BzRwCDIKLG+9mCKoSGe4g8UGjIbo9OIIzMn6
+	 PgCA5PC8r8ys22k7fRMdVESM9rcH5fMhTQsJKR+5K5ihWYkM92CQj8cYZ6+HvwN+5S
+	 YoCYnM22ue+Bt0cWPbq2PT6tPWCCetx/Fc98EQcBAA2dh/ue8GuftrFP6+4zcMB/d7
+	 WyPnNcysyPzer9s4Xr+T4P6M0E6AX9nIHa5aWXePa3TTEioz41KfVuhZMMyDPpKy+v
+	 uqRQ6Am8sO0m9lRVY1l/gbOhG397uapd6gII4NiiFR0Fnk1b7WpU3h5XIwz/lzkNot
+	 MriouQwCOPmaw==
+Message-ID: <sashiko-outbox-223730@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 4/7] dt-bindings: mips: mti,mips-cm: add performance
+ counter interrupt
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261119-i6500-cm3-pmu-v3-4-c86410934b51@mobileye.com>
+References: <20261119-i6500-cm3-pmu-v3-0-c86410934b51@mobileye.com>
+ <20261119-i6500-cm3-pmu-v3-4-c86410934b51@mobileye.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 19 Nov 2026 17:53:55 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -64,61 +60,19 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261119-i6500-cm3-pmu-v3-6-c86410934b51@mobileye.com>
-References: <20261119-i6500-cm3-pmu-v3-0-c86410934b51@mobileye.com>
-In-Reply-To: <20261119-i6500-cm3-pmu-v3-0-c86410934b51@mobileye.com>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
- Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
- Randy Dunlap <rdunlap@infradead.org>, Will Deacon <will@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- =?utf-8?q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>, 
- Gregory CLEMENT <gregory.clement@bootlin.com>, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
- Fu Chao-Ying <chao-ying.fu@globalfoundries.com>
-Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-rt-devel@lists.linux.dev, devicetree@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-perf-users@vger.kernel.org, linux-hardening@vger.kernel.org
-X-Mailer: b4 0.16.0
 
-Enable perf events and build the Coherence Manager 3 PMU driver as a
-module.
+> The CM3 asserts so_cm_perf_cnt_int when one of its performance counters
+> overflows. Whether that output is connected to an interrupt controller
+> input is up to the SoC integrator, so describe it as an optional
+> 'interrupts' property of the coherency-manager node. When absent, the
+> counters have to be polled by software.
+>=20
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+> Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 
-Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
----
- arch/mips/configs/eyeq6_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+Sashiko has reviewed this patch and found no issues.
 
-diff --git a/arch/mips/configs/eyeq6_defconfig b/arch/mips/configs/eyeq6_defconfig
-index 0a00a201937b..2d06d9ed6526 100644
---- a/arch/mips/configs/eyeq6_defconfig
-+++ b/arch/mips/configs/eyeq6_defconfig
-@@ -19,6 +19,7 @@ CONFIG_USER_NS=y
- CONFIG_SCHED_AUTOGROUP=y
- CONFIG_BLK_DEV_INITRD=y
- CONFIG_EXPERT=y
-+CONFIG_PERF_EVENTS=y
- CONFIG_EYEQ=y
- CONFIG_MACH_EYEQ6H=y
- CONFIG_MIPS_CPS=y
-@@ -86,6 +87,7 @@ CONFIG_MMC_SDHCI_PLTFM=y
- CONFIG_MMC_SDHCI_CADENCE=y
- # CONFIG_IOMMU_SUPPORT is not set
- CONFIG_RESET_CONTROLLER=y
-+CONFIG_MIPS_CM3_PMU=m
- # CONFIG_NVMEM is not set
- CONFIG_EXT4_FS=y
- CONFIG_EXT4_FS_POSIX_ACL=y
-
--- 
-2.43.0
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119-i6500-cm3-=
+pmu-v3-0-c86410934b51@mobileye.com?part=3D4
 
