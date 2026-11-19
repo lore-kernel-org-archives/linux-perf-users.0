@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795091814;
-	b=xyryiApMQcwNZSXtuYaXuIuKtHAJ9wt6iHlp0XtIifZlWPv9/qHcyiKqXDwtluYcKTLy
-	 8zjDAnp03AOo4X7MjtTYaS0NhVJ69HB4pO3Wtm+YWnDIJUTGHCHd9huVblqOuRZObKylk
-	 JA3bMfQDHO7WXVrGRfN6hJdc+bZkaFD148rjUW9Xx0WxDpKBXCvPMlk7HL3ZxmfB1YNV1
-	 deb212uyHwyIYZF6x1Edq/V2+i/d0+2w4pt7j5CyhHmtNgLhgt+hZWFu8qgiV/KivuaT+
-	 URC9iKsNUliB8dRVY8gy5UNYGFXu8MbPZyXQrIS/OWIv4bZfu465gCjg/kBwdeNH05w==
+	t=1795091835;
+	b=x/KNx+5xzSPKQfWtfZAwWFMt2gTr9VaQNUiiWvT91lb2DNgBTl+OQ1EgkDyry0lXgVnW
+	 YjOQWt3gcT4sDoHAvUTcdj61nCln+nX3ElcMLDzZDi4HXUxp582W8yrFSXzUHcc+EFyoe
+	 nDpqQK6doagv1R/TeISasXsvH0dR0FLHoXT0+wNPGX/nMqfM5oAF6fIpU3YqR6syAU7o1
+	 egE6TXk6ZWjC9afmgZvue0EUq0qAHPgaYtwL5RDVTZOUgsFP3fJO1P9mVgM7hk9jTCjXH
+	 T23oCJQvQ8hUn9bA2dvJQY/GIONGcO0afuxZThG98EA6wCIXf8GfDjx1HTjJfCvrsKA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795091814;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795091835;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=RflxcL1xPTpAJ4CvFjnM565PtkrLnSCfF1K40R/4AoQ=;
-	b=Pqf/Eg5V62ACLWJ07R1EyZuWuICv0FJ2d+7ypkHJsywJ3ZP+UE+z5qRHBix5tJedKjVP
-	 JwvCPRkz5GQeesAqA+SvdJ3L4jCc2SOsJvvaXjkQkEU1khHxMHAvx73n5F/FfEPaWv/hh
-	 VKh6Ed0MtU+JXYDhdDIaHkqj9/OTfIWU5w9CjpZACUOPBwicXUf+zUARpvEpAZlwD7snI
-	 MMJi5V7Ckf2q1ACKgIRuYIMm7GqRkKRrX1o757FW6nxuV8KTDn79Z9noWZ3UhwIUnrNbB
-	 ZpK0/KWH7JMOtIdDBNQkxut/KJ7/vh0QLrMiBxKuyphd7DCh0gg+2Rb+T6AklVgufNw==
+	bh=/AoMC/1cb5tMqw0OE5DyqvSftJxPvWsVp36Na7nehD0=;
+	b=Novt5hrxTImu3mvEwXILDOp1m8eJhwJHL24ZgCJErOwLqPFB05fqnqU4lYO87CZ7T60M
+	 yROdDZZiTkxzzNgaVK0P1nDxxXsubp7wM5H2OWOGtmSouHZyeLqn/GmOurMff53GRU6X0
+	 p2I+s+Hm8nwXf+lKA+J4JG1w6wNw47sf1NZPKNxFlb/lA6nSku0O/XRTxRxH0oLv91TVk
+	 0gduYbwUD+qad8Ri8OeNvSbWjJJ76PTnoHAzIDaGSo/W+t0HoqnAH3ZIFMTfwB3kBltA7
+	 PU/G38Ydx3iaR49P5WyHF8pCXRK/DIeti3ScmjlNWVzrnDKNfzVQ8YIJAuY88RDVBHQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oo1Rn8oe;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n4O1aMA6;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29433606A335
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 12:36:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAF7606A325
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 12:37:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oo1Rn8oe
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CAB81F000D0;
-	Thu, 19 Nov 2026 12:36:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n4O1aMA6
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 573C01F000C5;
+	Thu, 19 Nov 2026 12:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795091813;
-	bh=RflxcL1xPTpAJ4CvFjnM565PtkrLnSCfF1K40R/4AoQ=;
+	s=k20260515; t=1795091834;
+	bh=/AoMC/1cb5tMqw0OE5DyqvSftJxPvWsVp36Na7nehD0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=oo1Rn8oex2EJNOv3c1AxteGs1gE5+NjofIf1Blf3qYxt7qy56G9mRxvTV8waVVOgP
-	 vLBep7jQ/vw9stw73RtsJZ66mYCtvFmbzJIDCStuB9if+rRiWUWQRUv20CiZfCJ/c9
-	 7CLbYhsKrrMbcboiJVGBpO9eFeOiJVZPFFMl4vH2gmcXKfwknrh2jY2wOhG2+MYEHu
-	 rLJnLfhOvV8BripbUjx71gA7B1KG7tREJTQ1tL+SHSl3wH60IiXEWbARf6/w9tA37r
-	 pKeMNTacWVh/JVyZT9/kmH+H0Plvst37Vk/2p+QMxIqF9E+9eS8mdqrFOH8JQ2ZV8Q
-	 9ouX1tBDwNtkw==
-Message-ID: <sashiko-outbox-223096@kernel.org>
+	b=n4O1aMA6vKv9+nsoIGjpwzQm9HyVectkN6yDzqMNXzHbxBM1JYUQnCh8lZpVYyYRS
+	 wM6wzlWEqJx7FCQvygo9xYEMNT118YIJ69bOYzs6QWBkGDD6vAcaP8vzN5Z2sSUgNb
+	 nJy4BLb/742ahPQIlViEctlyJWSpww/dOFTYxkQh1k22gYjONSkh7jN6eiY45Kx8qz
+	 7eSUHnz6sczLaBJC4dKaBiQRAUPeZbzmItswdIEkdXlqHBXTHbtlMbE6zP1Xw3DCja
+	 sCLAwqZGJwobDxz0e/miis4dknrp+dM4izEHzXEe90qC4G6J0RlWqgnair2mJsr1H+
+	 8u/CbBxn+blow==
+Message-ID: <sashiko-outbox-223098@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v13 02/11] riscv: add support for SBI Supervisor
- Software Events extension
+Subject: Re: [PATCH v13 10/11] selftests/riscv: add SSE test module
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Zhanpeng Zhang" <zhangzhanpeng.jasper@bytedance.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261119120824.13969-15-zhangzhanpeng.jasper@bytedance.com>
+In-Reply-To: <20261119120824.13969-23-zhangzhanpeng.jasper@bytedance.com>
 References: <20261119120824.13969-13-zhangzhanpeng.jasper@bytedance.com>
- <20261119120824.13969-15-zhangzhanpeng.jasper@bytedance.com>
+ <20261119120824.13969-23-zhangzhanpeng.jasper@bytedance.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 12:36:53 +0000
+Date: Thu, 19 Nov 2026 12:37:13 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,141 +60,364 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 2 potential
+Thank you for your contribution! Sashiko AI review found 7 potential
 issues to consider:
-- [High] riscv: sbi_sse: field-spanning memcpy() on regs->a6 in do_sse()
-- [High] riscv: sse: NULL tp dereference in handle_sse() during
-  __switch_to()
+- [Medium] selftests/riscv: sse: deadlock between migrate_disable() and
+  cpus_read_lock()
+- [Medium] selftests/riscv: sse: fast test ignores errors and races on
+  1-jiffy timeout
+- [Medium] selftests/riscv: sse: stress test treats -EEXIST as failure
+  instead of skip
+- [Medium] selftests/riscv: sse module Makefile defaults KDIR to host
+  /lib/modules
+- [Low] selftests/riscv: sse: stale pointers left in priority_test_arg
+  on teardown
+- [Low] selftests/riscv: sse: swapped log args in sse_test_handler() and
+  dead field
+- [Low] selftests/riscv: run_sse_test.sh added with non-executable mode
+  0644
 --
 
-commit 498ea890d0b707a9ef408aa0d005f9d3ac0e2ea3
+commit e938d689e90e8ec77bc093b9edf15fcf64552952
 Author: Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>
 
-riscv: add support for SBI Supervisor Software Events extension
+selftests/riscv: add SSE test module
 
-This commit adds architectural support for the RISC-V SBI Supervisor
-Software Events (SSE) extension, including dedicated per-event stacks,
-entry/exit assembly, and context preservation across SSE handlers.
+This commit adds a kernel module and kselftest runner script to test the
+RISC-V SBI Supervisor Software Events (SSE) framework, including fast
+injection, event priority chaining, and stress modes.
 
-Link: https://lore.kernel.org/r/as79MHtNYd-VbUug@hu-himchau-blr.qualcomm.co=
-m/
-
-> diff --git a/arch/riscv/kernel/sbi_sse.c b/arch/riscv/kernel/sbi_sse.c
+> diff --git a/tools/testing/selftests/riscv/sse/module/Makefile b/tools/te=
+sting/selftests/riscv/sse/module/Makefile
 > new file mode 100644
-> index 0000000000000..032fcc07abcf7
+> index 0000000000000..eac4b1c6228bb
 > --- /dev/null
-> +++ b/arch/riscv/kernel/sbi_sse.c
-> @@ -0,0 +1,251 @@
+> +++ b/tools/testing/selftests/riscv/sse/module/Makefile
+> @@ -0,0 +1,22 @@
+> +ifneq ($(CONFIG_RISCV_SBI_SSE),)
+> +obj-m +=3D riscv_sse_test.o
+> +endif
+> +
+> +ifndef KERNELRELEASE
+> +
+> +TESTMODS_DIR :=3D $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST)=
+))))
+> +KDIR ?=3D /lib/modules/$(shell uname -r)/build
+> +
+> +# Ensure that KDIR exists, otherwise skip the compilation
+> +modules:
+> +ifneq ("$(wildcard $(KDIR))", "")
+> +	$(Q)$(MAKE) -C $(KDIR) modules KBUILD_EXTMOD=3D$(TESTMODS_DIR)
+> +endif
 
+[Severity: Medium]
+Does defaulting KDIR to /lib/modules/$(shell uname -r)/build break
+cross-compilation and in-tree or O=3D builds?
+
+When cross-compiling with ARCH=3Driscv on a non-RISC-V host where
+/lib/modules/$(uname -r)/build exists, Kbuild runs against the host kernel
+headers with ARCH=3Driscv and fails.  When /lib/modules/$(uname -r)/build is
+absent or points to a running kernel without CONFIG_RISCV_SBI_SSE,
+riscv_sse_test.ko is silently skipped instead of building against the
+target kernel tree.  Other selftest modules (such as
+tools/testing/selftests/mm/page_frag/Makefile) resolve KDIR from O,
+KBUILD_OUTPUT, or $(abs_srctree).
+
+> diff --git a/tools/testing/selftests/riscv/sse/module/riscv_sse_test.c b/=
+tools/testing/selftests/riscv/sse/module/riscv_sse_test.c
+> new file mode 100644
+> index 0000000000000..cc5c2e46f2fdb
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/sse/module/riscv_sse_test.c
 [ ... ]
-
-> +void noinstr do_sse(struct sse_event_arch_data *arch_evt,
-> +		    struct pt_regs *regs, unsigned long hstatus)
+> +static int sse_test_handler(u32 evt, void *arg, struct pt_regs *regs)
 > +{
-> +	struct riscv_sse_interrupted_context context =3D { regs, hstatus };
-> +	struct riscv_sse_interrupted_context *previous;
-> +	struct sbiret sret;
+> +	int ret =3D 0;
+> +	struct fast_test_arg *targ =3D arg;
+> +	u32 test_evt;
+> +	int cpu;
 > +
-> +	nmi_enter();
-> +	instrumentation_begin();
+> +	atomic_inc(&sse_test_handler_count);
 > +
-> +	/* Retrieve missing GPRs from SBI */
-> +	sret =3D sbi_ecall(SBI_EXT_SSE, SBI_SSE_EVENT_ATTR_READ, arch_evt->evt_=
-id,
-> +			 SBI_SSE_ATTR_INTERRUPTED_A6,
-> +			 (SBI_SSE_ATTR_INTERRUPTED_A7 -
-> +			  SBI_SSE_ATTR_INTERRUPTED_A6) + 1,
-> +			 (unsigned long)arch_evt->interrupted_phys, 0, 0);
-> +	if (sret.error) {
-> +		pr_warn("Failed to read interrupted registers for event %x: %ld\n",
-> +			arch_evt->evt_id, sret.error);
-> +		/* Let the client quiesce its source without using incomplete regs. */
-> +		sse_handle_event(arch_evt, NULL);
-> +		goto out;
+> +	/* Pairs with the argument publication in sse_run_fast_test_cpu(). */
+> +	if (!smp_load_acquire(&targ->args_ready)) {
+> +		sse_err("Received SSE event %x before its test arguments were publishe=
+d\n",
+> +			evt);
+> +		ret =3D -EINVAL;
+> +		goto complete;
 > +	}
 > +
-> +	memcpy(&regs->a6, arch_evt->interrupted,
-> +	       sizeof(*arch_evt->interrupted));
+> +	test_evt =3D READ_ONCE(targ->evt);
+> +	cpu =3D READ_ONCE(targ->cpu);
 > +
-> +	/* Make the interrupted frame visible while clients handle this event. =
-*/
-> +	previous =3D this_cpu_read(riscv_sse_interrupted_context);
-> +	this_cpu_write(riscv_sse_interrupted_context, &context);
-> +	sse_handle_event(arch_evt, regs);
-> +	this_cpu_write(riscv_sse_interrupted_context, previous);
-> +
-> +	if (memcmp(&regs->a6, arch_evt->interrupted,
-> +		   sizeof(*arch_evt->interrupted))) {
-> +		memcpy(arch_evt->interrupted, &regs->a6,
-> +		       sizeof(*arch_evt->interrupted));
+> +	if (evt !=3D test_evt) {
+> +		sse_err("Received SSE event id %x instead of %x\n", test_evt, evt);
+> +		ret =3D -EINVAL;
+> +	}
 
-[Severity: High]
-Does copying sizeof(*arch_evt->interrupted) bytes across &regs->a6 trip
-CONFIG_FORTIFY_SOURCE?
+[Severity: Low]
+Are test_evt and evt swapped in this sse_err() call?  evt is the received
+event ID and test_evt is the expected one.
 
-In struct pt_regs, a6 and a7 are individual unsigned long fields rather
-than a 2-register struct_group, so __builtin_object_size(&regs->a6, 1) is
-sizeof(unsigned long) while sizeof(*arch_evt->interrupted) is
-2 * sizeof(unsigned long).  With CONFIG_FORTIFY_SOURCE=3Dy, the first
-memcpy() fails the build with __write_overflow_field() under
-CONFIG_WERROR=3Dy (and the second triggers __read_overflow2_field() under
-W=3D1), or triggers a runtime fortify WARN_ONCE() inside NMI context when
-an SSE event arrives.  Copying and comparing a6 and a7 directly by field
-avoids the field-spanning memcpy().
-
-> diff --git a/arch/riscv/kernel/sbi_sse_entry.S b/arch/riscv/kernel/sbi_ss=
-e_entry.S
-> new file mode 100644
-> index 0000000000000..1e38fbb1c2a42
-> --- /dev/null
-> +++ b/arch/riscv/kernel/sbi_sse_entry.S
-> @@ -0,0 +1,237 @@
+Also, struct priority_test_arg below defines an unused check_func member.
 
 [ ... ]
 
-> +	asm_per_cpu_with_cpu t2 __sbi_sse_entry_task t1 t3
-> +	REG_L tp, 0(t2)
-> +	bnez tp, .Lcurrent_task_found
+> +static int sse_run_fast_test_cpu(struct fast_test_arg *test_arg,
+> +				 struct sse_event *event, u32 evt, int cpu)
+> +{
+> +	unsigned long timeout;
+> +	int ret;
 > +
-> +	/* __switch_to() marks its transition window with a NULL entry task. */
-> +	REG_L tp, PT_TP(sp)
+> +	WRITE_ONCE(test_arg->completion, false);
+> +	WRITE_ONCE(test_arg->args_ready, false);
+> +	WRITE_ONCE(test_arg->evt, evt);
+> +	WRITE_ONCE(test_arg->cpu, cpu);
+> +	/* Publish all arguments before firmware can inject on another hart. */
+> +	smp_store_release(&test_arg->args_ready, true);
 > +
-> +.Lcurrent_task_found:
-> +	/* Nested exceptions temporarily replace these with the SSE stack. */
-> +	REG_L s6, TASK_TI_KERNEL_SP(tp)
+> +	ret =3D sse_test_inject_event(event, evt, cpu);
+> +	if (ret) {
+> +		sse_err("event %s injection failed, err %d\n",
+> +			sse_evt_name(evt), ret);
+> +		return ret;
+> +	}
+> +
+> +	timeout =3D jiffies + HZ / 100;
+> +	/* We can not use <linux/completion.h> since they are not NMI safe */
+> +	/* Pairs with the handler's completion publication. */
+> +	while (!smp_load_acquire(&test_arg->completion) &&
+> +	       time_before(jiffies, timeout))
+> +		cpu_relax();
+> +	/* Acquire the handler's checks even if the loop observed a timeout. */
+> +	if (!smp_load_acquire(&test_arg->completion)) {
+> +		sse_err("Failed to wait for event %s completion on CPU %d\n",
+> +			sse_evt_name(evt), cpu);
+> +		return -ETIMEDOUT;
+> +	}
+> +
+> +	return sse_test_wait_not_running_on_cpu(evt, cpu);
+> +}
+> +
+> +static void sse_run_fast_test(struct fast_test_arg *test_arg,
+> +			      struct sse_event *event, u32 evt)
+> +{
+> +	int cpu;
+> +
+> +	if (sse_event_is_global(evt)) {
+> +		/* Keep the selected target online through injection and completion. */
+> +		cpu_hotplug_disable();
+> +		for_each_online_cpu(cpu) {
+> +			if (sse_run_fast_test_cpu(test_arg, event, evt, cpu))
+> +				break;
+> +		}
+> +		cpu_hotplug_enable();
+> +		return;
+> +	}
+> +
+> +	guard(cpus_read_lock)();
+> +	for_each_online_cpu(cpu) {
+> +		if (sse_run_fast_test_cpu(test_arg, event, evt, cpu))
+> +			return;
+> +	}
+> +}
+> +
+> +static void sse_test_injection_fast(void)
+> +{
+[ ... ]
+> +		for (j =3D 0; j < RUN_LOOP_COUNT; j++)
+> +			sse_run_fast_test(&fast_test_arg, event, evt);
 
-[Severity: High]
-Can a nested higher-priority SSE event see tp =3D=3D NULL here when an SSE
-interrupts __switch_to()?
+[Severity: Medium]
+Can a timeout in sse_run_fast_test_cpu() race with an in-flight handler on
+fast_test_arg across the remaining RUN_LOOP_COUNT iterations?
 
-__switch_to() zeroes __sbi_sse_entry_task while switching from prev to
-next, relying on handle_sse() recovering current from the interrupted tp
-register saved in PT_TP(sp).  However, REG_L tp, 0(t2) loads NULL directly
-into the live tp register before falling back to PT_TP(sp), and leaves
-__sbi_sse_entry_task NULL while do_sse() runs:
+With CONFIG_HZ=3D100, HZ / 100 is 1 jiffy, which can expire on the next
+timer tick while waiting for a remote CPU.  On timeout,
+sse_run_fast_test_cpu() returns without calling
+sse_test_wait_not_running_on_cpu(), and sse_run_fast_test() discards the
+error so sse_test_injection_fast() immediately starts the next iteration
+and overwrites the shared static fast_test_arg while the delayed handler
+may still be running (or stalls module load if all 1,000 iterations time
+out).  In addition, non-timeout errors in
+sse_test_wait_not_running_on_cpu() (-ENOMEM or smp_call_function_single()
+and sse_event_attr_read() failures) return without logging sse_err(), so
+run_sse_test.sh will not detect them.
 
-__switch_to()
-  __sbi_sse_entry_task =3D NULL
-  <low-priority SSE>
-    handle_sse()
-      REG_S tp, PT_TP(sp)
-      REG_L tp, 0(t2)            # tp becomes 0
-      <high-priority SSE>
-        handle_sse()
-          REG_S tp, PT_TP(sp)    # saves 0
-          REG_L tp, 0(t2)        # still 0
-          REG_L tp, PT_TP(sp)    # reloads 0
-          REG_L s6, TASK_TI_KERNEL_SP(tp)  <-- NULL pointer dereference
+[ ... ]
 
-The same NULL tp window also occurs if do_sse() takes a nested synchronous
-exception while __sbi_sse_entry_task is still NULL, because
-handle_exception() swaps tp with CSR_SCRATCH (which handle_sse() cleared
-to 0) for a few instructions before restoring tp.
+> +static void sse_test_injection_priority_arg(struct priority_test_arg *ar=
+gs, unsigned int args_size,
+> +					    sse_event_handler_fn handler, const char *test_name)
+> +{
+> +	unsigned int i;
+> +	unsigned long timeout;
+> +	int ret;
+> +	int target_cpu;
+> +	struct sse_event *event;
+> +	struct priority_test_arg *arg, *first_arg =3D NULL, *prev_arg =3D NULL;
+> +
+> +	pr_info("Starting SSE priority test (%s)\n", test_name);
+> +	/* Keep the complete priority chain on one CPU. */
+> +	migrate_disable();
+> +	target_cpu =3D smp_processor_id();
+> +
+> +	for (i =3D 0; i < args_size; i++) {
+> +		arg =3D &args[i];
+> +
+> +		if (!sse_test_can_inject_event(arg->evt))
+> +			continue;
+> +
+> +		WRITE_ONCE(arg->called, false);
+> +		WRITE_ONCE(arg->next_evt_arg, NULL);
+> +		WRITE_ONCE(arg->event, NULL);
+> +		WRITE_ONCE(arg->enable_attempted, false);
+> +
+> +		event =3D sse_test_event_register(arg->evt, arg->prio, handler,
+> +						(void *)arg);
 
-Loading __sbi_sse_entry_task into a temporary register before overwriting
-tp, or updating __sbi_sse_entry_task in lockstep with move tp, a1 in
-__switch_to(), avoids exposing a NULL tp to nested SSE events.
+[Severity: Medium]
+Can calling sse_test_event_register() and the other SSE helpers inside
+migrate_disable() deadlock with CPU hotplug?
+
+migrate_disable() pins the task to target_cpu without blocking CPU
+hotplug, while sse_event_register(), sse_event_set_target_cpu(),
+sse_event_enable(), sse_event_disable(), and sse_event_unregister() each
+acquire cpus_read_lock() internally:
+
+CPU0 (target_cpu)                 CPU1
+-----------------                 ----
+sse_test_injection_priority_arg()
+  migrate_disable()
+                                  _cpu_down(target_cpu)
+                                    cpus_write_lock()
+                                    ...
+                                    sched_cpu_wait_empty()
+                                      balance_hotplug_wait()
+  sse_test_event_register()
+    sse_event_register()
+      mutex_lock(&sse_mutex)
+      cpus_read_lock()
+
+ *** DEADLOCK ***
+
+CPU1 holds cpus_write_lock() and waits in balance_hotplug_wait() for
+pinned tasks on target_cpu to call migrate_enable(), while CPU0 is pinned
+to target_cpu and blocks in cpus_read_lock() (also holding sse_mutex).
+Surrounding the migrate_disable() section with cpu_hotplug_disable() and
+cpu_hotplug_enable() avoids the lock inversion and prevents
+sse_cpu_teardown() from tearing down SSE on target_cpu mid-test.
+
+[ ... ]
+
+> +release_events:
+> +
+> +	for (i =3D 0; i < args_size; i++) {
+> +		arg =3D &args[i];
+> +		event =3D arg->event;
+> +		if (!event)
+> +			continue;
+> +
+> +		ret =3D sse_test_wait_not_running_on_cpu(arg->evt, target_cpu);
+> +		if (ret)
+> +			sse_err("Event %s did not complete, err %d\n",
+> +				sse_evt_name(arg->evt), ret);
+> +
+> +		if (arg->enable_attempted) {
+> +			ret =3D sse_event_disable(event);
+> +			if (ret) {
+> +				sse_err("Failed to disable event %s, err %d\n",
+> +					sse_evt_name(arg->evt), ret);
+> +				sse_test_queue_cleanup(event);
+> +				WRITE_ONCE(arg->event, NULL);
+> +				WRITE_ONCE(arg->enable_attempted, false);
+> +				continue;
+> +			}
+> +		}
+> +
+> +		ret =3D sse_test_event_unregister(event);
+> +		if (ret) {
+> +			sse_err("Failed to unregister event %s, err %d\n",
+> +				sse_evt_name(arg->evt), ret);
+> +			continue;
+> +		}
+> +
+> +		WRITE_ONCE(arg->event, NULL);
+> +		WRITE_ONCE(arg->enable_attempted, false);
+> +	}
+
+[Severity: Low]
+Does release_events leave stale pointers in priority_test_arg when disable
+or unregister fails?
+
+When sse_test_event_unregister() fails, it queues event for deferred
+freeing via sse_test_queue_cleanup(), but the error branch jumps to the
+next iteration before clearing arg->event and arg->enable_attempted.
+Also, release_events never clears arg->next_evt_arg, so if an event fails
+to disable or unregister and fires late after its successor in args[] has
+been unregistered, the handler will read a non-NULL targ->next_evt_arg and
+signal the unregistered successor event.
+
+[ ... ]
+
+> +static int sse_stress_test_layer(int layer)
+> +{
+[ ... ]
+> +	event =3D sse_test_event_register(stress_ctx.evt_id, 0,
+> +					stress_handlers[layer], &stress_ctx);
+> +	if (IS_ERR(event)) {
+> +		sse_err("Failed to register stress event, err %ld\n",
+> +			PTR_ERR(event));
+> +		return PTR_ERR(event);
+> +	}
+[ ... ]
+> +static void sse_stress_test_all_layers(void)
+> +{
+> +	int i, ret;
+> +
+> +	pr_info("Starting SSE stress tests: duration=3D%d ms, interval=3D%d ns\=
+n",
+> +		STRESS_DURATION_MS, STRESS_INJECT_NS);
+> +
+> +	for (i =3D 0; i < ARRAY_SIZE(stress_handlers); i++) {
+> +		ret =3D sse_stress_test_layer(i);
+> +		if (ret) {
+> +			sse_err("Stress layer %d failed, err %d\n", i, ret);
+> +			break;
+> +		}
+
+[Severity: Medium]
+Should sse_stress_test_layer() skip rather than fail when
+sse_test_event_register() returns -EEXIST?
+
+Unlike sse_test_injection_fast() and sse_test_injection_priority_arg(),
+sse_stress_test_layer() and sse_stress_test_all_layers() log sse_err() on
+-EEXIST.  Because run_sse_test.sh checks for FAILED: before SKIP:,
+running with stress=3D1 or stress=3D2 when
+SBI_SSE_EVENT_LOCAL_SOFTWARE_INJECTED is already registered exits with
+failure (1) instead of ksft_skip (4).
+
+> diff --git a/tools/testing/selftests/riscv/sse/run_sse_test.sh b/tools/te=
+sting/selftests/riscv/sse/run_sse_test.sh
+> new file mode 100644
+> index 0000000000000..e70a2fd14b05e
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/sse/run_sse_test.sh
+> @@ -0,0 +1,59 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0
+
+[Severity: Low]
+Should run_sse_test.sh have mode 0755 instead of 0644?
+
+Because the script is not executable, invoking ./run_sse_test.sh directly
+fails with permission denied, and tools/testing/selftests/kselftest/runner.=
+sh
+logs a warning and takes its non-executable fallback path, which drops
+kselftest_cmd_args instead of forwarding module arguments such as stress=3D1
+to insmod.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119120824.1396=
-9-13-zhangzhanpeng.jasper@bytedance.com?part=3D2
+9-13-zhangzhanpeng.jasper@bytedance.com?part=3D10
