@@ -1,68 +1,99 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.215.177
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795050744;
-	b=r3lidVNKuqf7Jb3U++MvaUxnoRwQvnRIjfO4julFTyHwz3nFS677pFnQvEgxcfhysqux
-	 EYKSlWVSJRsysMdqMa5hyoCVfl3ioi2AVg3U6JQht0vKe3utTj/es1Cu82qizB1XKi3ep
-	 oM4fhI/So3Rg3q4KVChNRlkIYsfECCYg0yVT9PSdBUfRbJbpXCowoEGaPwkQgixeNOFsJ
-	 QrvVnUvZLFiukR/VFxwOXpS4kr1++BEQd1dhEKqi8Y6F4MQXv4jWX7P9gupK07fhHJvNC
-	 nxPpg8OTySj4rRkrfJPms56Mz4VEfCqusGHmtKs1GL3lgnYwz9MKED4tVz3zvTyljww==
+	t=1795052304;
+	b=njezX2kN29Lf4ZftnTW12nEUEHEzTWOuey2FCqOwqVikKtRhnrf+7g4P9QpDEh9w23t4
+	 BbqyKa5VVH5pvNLClpq4GP+2v4UMeJbzy+vF8zd78dtN/omIkuoFHuAeMeKVp+LKzFC2K
+	 MGb/EB5X1KOq9j3okwbdxV87MoPa9ypoqWJzwKfIdterCDDNoiYxZ4WrXWq/dzAI9/nam
+	 2XmZBhcl9CIgZ8D98rRx1seqHh7Htrg0jcd5IpcDjSIGlck4O5LM2TGAFaM5tm50vyh/f
+	 UlwuvUMjOhbtB+0yjiWXV/LlxjVLhRvPmf9R1ZWAKP8cwYDDN1HPan1mIl+ZQlxkX2g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795050744;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=FK6VzBl+ofQOPWwLENQ50MyqjZEFYFuge0LYPKK/944=;
-	b=OrkkPfe8Bfe7qKsbWUzjx47wg4RIzhGK3bvJq7QKzIsAhDbG7aWDzkR5ZuMHD60qxRfh
-	 IRedLBhiRH0QXVhHWafx/l+uVVNxhnwAnhv6d3PH9cZfQSOQB0ilXZabla+cqNzypkZb4
-	 oe2YHsJMr9vPISGghYrC4jm6oAOAiyN1QWmG3GlAE9utfbnzShYIg5rxwhqoYOG0dk8mj
-	 bTaJ0g1ReYB3LQoX6kyhXImadJ2Ant3fwfWqxaDsTwm0A+31DTHisPIoUe6sWfVH81Fi+
-	 Dt+nOatCvAQEaBMGgEhTBKWU44tDFtzirOcHLL+A7DT3vtdsSda2es/GriYBgba8utA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795052304;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Content-Type:Date:Message-Id:From:To:Cc:Subject:In-Reply-To:
+	 References:Content-Transfer-Encoding:MIME-Version;
+	bh=EISx+aUN2h8+Y5wGuLkSbChaUhZOj0j975QB4nl6i2Q=;
+	b=OLSUlKPPI1QiwSha61ceYVh1lHkl3bhuxeeYJwV64O6vw5HvbaQtFkpxo0k7TYwTepx9
+	 M0uW4vUjB4bddTcbYfaofVIC6D3un8ymoMQSgHWDBBIU/OVs3BmkKZBpwYDbekltEUEiv
+	 j8ErwD5i5QPY7YRDD4zcZFDzewp/9W7p87wzi0kNEQesoOx4/6j9pb4paNc1YEm2DauP+
+	 1avaSKi6HWlZ/aE1Z57Q1ZSAxm2qZtALea785qvPYrqWw7megzu5r3i807Z8wKgJgVZRx
+	 trkA/8jwaVj60UgF4xF5elmlhulRGNrXDzTDfWGFt3beUlF7bkCgI+S5UcXlLz/OGvw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=PSAqgZ4H;
-	arc=none smtp.remote-ip=198.175.65.10
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=hYxbWfXv;
+	arc=none smtp.remote-ip=209.85.215.177
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F96606A332;
-	Thu, 19 Nov 2026 01:12:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B6F96606A332
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63F7606A331
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 01:38:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C63F7606A331
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=PSAqgZ4H
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795050744; x=1826586744;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=RkDE5FYk3ckqdSoyce7QuO2GOcWUtpi9cUB3Rd1PPzE=;
-  b=PSAqgZ4HdyDqPtUtqIcH4bgvkNdCU3hbp1H7drY3Cc6r6YlfkTPdlpzE
-   eizPT811T+0/9BBOfoOrTsrtuf6TuK5IPfcd6zDjyyS4UWo7+lrVwASJT
-   24uGwQfOK4LV0fnJZsK5RC0WaSaxCi7pA/wRJsA0cg6zFD3bsNRVd+bWo
-   i5BTW1sG3JqMcDHjTZKlgmLXqODchAJw1DTxDRxkbfC57RpVoGa1/dZfs
-   G8IFIkbFGCGVg5enPvHnRVIq99IyHSCzTr6UvEKO6BPTHQh94oVNiQrUj
-   A31ha61StS6uwyBEoGQSMqcVw8JsIlMeNcua9d9rbEMwNpRQwoMRop1ut
-   Q==;
-X-CSE-ConnectionGUID: hk/GMG17SN+cxVUAQRlvrQ==
-X-CSE-MsgGUID: NmQ/YiIoS3mYKl0QsoTfxQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11970"; a="3804885"
-X-IronPort-AV: E=Sophos;i="6.27,220,1787036400"; 
-   d="scan'208";a="3804885"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2026 17:12:23 -0800
-X-CSE-ConnectionGUID: xhjgn3mtR46lVeV16Y1Ltw==
-X-CSE-MsgGUID: M6ytwln9SJyGPeuTUXwSyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,220,1787036400"; 
-   d="scan'208";a="10388910"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2026 17:12:20 -0800
-Message-ID: <02c0499a-c3a0-41e2-a79f-630afe888dc4@linux.intel.com>
-Date: Thu, 19 Nov 2026 09:12:17 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=hYxbWfXv
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-cdb15cd8558so1042601a12.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 Nov 2026 17:38:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795052303; x=1795657103; darn=vger.kernel.org;
+        h=mime-version:content-transfer-encoding:references:in-reply-to
+         :subject:cc:to:from:message-id:date:content-type:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=EISx+aUN2h8+Y5wGuLkSbChaUhZOj0j975QB4nl6i2Q=;
+        b=hYxbWfXvJ6ud+jAQmE7BAwtWAQsm0YQ5MB/3jHgNtwVyCeGJaHuRdKjKEpkEDf+4Vy
+         2wOvLl91USwMMQ3ILsmBrnBPXmCqDdApOFUKhuGcNAdkNhC7DvOLDdZNbZULuJsEVYc2
+         lDNdOPFKUmTvLw8DrN2WD7B0N36RY4LW6Q3tQ+EZBFBDuvG1ZHBKHXbSSE7SMZA5abjr
+         Qein5V9+Gx3pyZ3TMjPuz/gNXAFFJOlrzfmBm8r+iplCQXpg2VY32j2u179MXh3DPOqz
+         JLKwJkhuetD8OOcyHmotTHfgrH9Ebx7IdqimtrSQFNNyq0KgjbM9T4LefnnjxUC61zsm
+         Q6Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795052303; x=1795657103;
+        h=mime-version:content-transfer-encoding:references:in-reply-to
+         :subject:cc:to:from:message-id:date:content-type:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=EISx+aUN2h8+Y5wGuLkSbChaUhZOj0j975QB4nl6i2Q=;
+        b=1ILsgifjgEdYFehIafdvgaIetDPxvhNq3QwWvTk3TlmFye3kxqhvYyGlLkXydUO/sh
+         D8xVbmWmV+3/aDclXzBRokIBTVpzUdojuQrhNDDaJYTPZ1XoRACpy0Gc4gzs0rjaQc/P
+         /y9fi/hm908DSD4gitUiMIHW0CJSH3R/Oc7MxmNT863tOwG9FkXQJYrQ28UCgHPB/Vma
+         NUw+jW7zVoMuk8HAp2B/i6OMPJ3JS62otah13dTmIjgWTuiD9G0kY8Byv8R1mUw9z8F6
+         ckEVaPgUrFW3q8k8OQd08IXkImLc4qouIx1upovvlWeIvrJRmJ68JPnfYe8OTH5h/w9l
+         NuhA==
+X-Forwarded-Encrypted: i=1; AL+hErGRMIcN+LWo+eJ104Zl3Kc4TjtvaQOcb8K7naplLHvHKV3YrCv8X7giiTiaTJKhET8L/eKCvqJC/vc3i27htTU4@vger.kernel.org
+X-Gm-Message-State: APuU4Z9m79w36hD1W/c+erbQ6XaS744xuGCaQfq88QFPNkTWIUieDvvB
+	SHJiH8oC51KuQS8rznYgr0FGd0LpyJpd0HL1JFaaL8v0drf42E2+I+LE
+X-Gm-Gg: AZFdTZccUz2hYcQNZUZ2qqdsk+Mv2cNi0QvFGLZap3Zp5FzfEL0ASXpFcIdtfp0905p
+	uTKemu1aszqinZHJfYnzI+z77k7hLKpy3MPL8HLNdMzPT5V7QDhNzx86soc6zPnpaVAp76l4Q9a
+	ttqsHmppelu6hDyeFsTUtBh3U5V1VpexsloQU/1wJFiGtiN0x1C34YiupAIrOxMtmtTocXm6vBm
+	n28gFfUP3gunaD9xSvolWgjlXa9bvmLFtesaXlBZBJbdN8EVRsxfD185NgWSqugKbRCt7QnEYOl
+	Tl2feXsf+SkTTFKia+grneEhMdV3MV02Q+7DtY8MaN+4fSZmL/vRMS1u2FFSHBPV2kyLcYPvQ9M
+	F9apcaqJfadWqEqGrAAyDFINmIQcIMs6DvI1vCu79xj+9WG/u3A662t0weXjyCPXZGWMdbEU3ng
+	iHCe2acUL/7wdigG1qk4TgX7Qfe8b1+dMzflyFy26dzVcn5C3NE5WfKxrkh4cEA5oCuuLJv6etq
+	pGnuEzZRPWgRUiU2vLUZjBbpbjrirIf0YMYRWYsqLU96uGiIlX3FCxiNtbJDqZ/BZ9BcHubKw7u
+	J8wkezeB9jxZ+dj5W/FrrbBw7QBnwyaEz9nrVmE6uBrIU+Qiq74spVQM67fH3N5aQ7gEAQI67gy
+	RGpUkp40I6Hd0KALIH0hCbJ1sGnPkuuQh9Q==
+X-Received: by 2002:a17:90b:2890:b0:3ab:5832:72af with SMTP id 98e67ed59e1d1-3b3d07b99a8mr3639797a91.32.1795052302815;
+        Wed, 18 Nov 2026 17:38:22 -0800 (PST)
+Received: from localhost ([153.61.198.246])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b3fe0b62e7sm685981a91.11.2026.11.18.17.38.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Nov 2026 17:38:22 -0800 (PST)
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 19 Nov 2026 01:38:22 +0000
+Message-Id: <DMYSXNCMOF26.38XGLPOW4K29X@gmail.com>
+From: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>
+To: "Andrii Nakryiko" <andrii@kernel.org>, <bpf@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>
+Cc: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
+ <linux-perf-users@vger.kernel.org>, <peterz@infradead.org>,
+ <jolsa@kernel.org>, <rostedt@goodmis.org>
+Subject: Re: [PATCH bpf-next v2 1/3] arm64: perf: Don't report the caller
+ twice in caller-regs callchains
+In-Reply-To: <20261119000112.2377949-2-andrii@kernel.org>
+References: <20261119000112.2377949-1-andrii@kernel.org> <20261119000112.2377949-2-andrii@kernel.org>
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -72,77 +103,50 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/3] perf vendor events intel: update
-To: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org,
- mingo@redhat.com, acme@kernel.org, namhyung@kernel.org
-Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
- jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
- james.clark@linaro.org, thomas.falcon@intel.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20261118212655.2262601-1-ctshao@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20261118212655.2262601-1-ctshao@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Tested on DMR, no issue is found. Thanks.
+On Wed, Nov 18, 2026 at 04:01 PM Andrii Nakryiko <andrii@kernel.org> wrote:
+> Do the same on arm64. Set pstate to PSR_MODE_EL1t, which exceptions
+> taken from the kernel never have (the kernel runs in EL1h, or EL2h
+> with VHE), and skip the leaf regs->pc in perf_callchain_kernel() for
+> regs with that mode. The unwind still starts from regs, with the frame
+> record at x29 walked by the unwinder.
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+my bot thinks the following will be a more accurate fix...
 
-Tested-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+diff --git a/arch/arm64/include/asm/perf_event.h b/arch/arm64/include/asm/perf_event.h
+index ee45b4e..7c5ab65 100644
+--- a/arch/arm64/include/asm/perf_event.h
++++ b/arch/arm64/include/asm/perf_event.h
+@@ -13,11 +13,12 @@
+ #define perf_arch_bpf_user_pt_regs(regs) &regs->user_regs
+ #endif
+ 
++/* PSR_MODE_EL1t marks these regs for kunwind_stack_walk() */
+ #define perf_arch_fetch_caller_regs(regs, __ip) { \
+ 	(regs)->pc = (__ip);    \
+ 	(regs)->regs[29] = (unsigned long) __builtin_frame_address(0); \
+ 	(regs)->sp = current_stack_pointer; \
+-	(regs)->pstate = PSR_MODE_EL1h;	\
++	(regs)->pstate = PSR_MODE_EL1t;	\
+ }
+ 
+ #endif
+diff --git a/arch/arm64/kernel/stacktrace.c b/arch/arm64/kernel/stacktrace.c
+index 3ebcf8c..de394ff 100644
+--- a/arch/arm64/kernel/stacktrace.c
++++ b/arch/arm64/kernel/stacktrace.c
+@@ -357,6 +357,13 @@ kunwind_stack_walk(kunwind_consume_fn consume_state,
+ 		if (task != current)
+ 			return -EINVAL;
+ 		kunwind_init_from_regs(&state, regs);
++		/*
++		 * With perf_arch_fetch_caller_regs() the PC is a copy of the
++		 * LR in the frame record at FP. Start from that record.
++		 */
++		if (processor_mode(regs) == PSR_MODE_EL1t &&
++		    kunwind_next(&state))
++			return -EINVAL;
+ 	} else if (task == current) {
+ 		kunwind_init_from_caller(&state);
+ 	} else {
 
-On 11/19/2026 5:26 AM, Chun-Tse Shao wrote:
-> Sync Intel PMU JSON event files with the latest Intel perfmon repository
-> (https://github.com/intel/perfmon/commit/1e224c0fd9d9):
-> - Add Diamond Rapids (DMR) v1.00 events
-> - Update Lunar Lake (LNL) events from v1.26 to v1.27
-> - Update Nova Lake (NVL) events from v1.04 to v1.05
->
-> Chun-Tse Shao (3):
->   perf vendor events intel: Add diamondrapids v1.00 events
->   perf vendor events intel: Update lunarlake events from 1.26 to 1.27
->   perf vendor events intel: Update novalake events from 1.04 to 1.05
->
->  .../arch/x86/diamondrapids/cache.json         |  952 +++++++++++
->  .../arch/x86/diamondrapids/counter.json       |   52 +
->  .../x86/diamondrapids/floating-point.json     |  419 +++++
->  .../arch/x86/diamondrapids/frontend.json      |  458 ++++++
->  .../arch/x86/diamondrapids/memory.json        |  295 ++++
->  .../arch/x86/diamondrapids/other.json         |  777 +++++++++
->  .../arch/x86/diamondrapids/pipeline.json      | 1423 +++++++++++++++++
->  .../arch/x86/diamondrapids/uncore-cache.json  |  292 ++++
->  .../arch/x86/diamondrapids/uncore-cxl.json    |   22 +
->  .../diamondrapids/uncore-interconnect.json    |  218 +++
->  .../arch/x86/diamondrapids/uncore-io.json     |  386 +++++
->  .../arch/x86/diamondrapids/uncore-memory.json |  939 +++++++++++
->  .../x86/diamondrapids/virtual-memory.json     |  266 +++
->  .../pmu-events/arch/x86/lunarlake/cache.json  |    2 +-
->  .../pmu-events/arch/x86/lunarlake/memory.json |   27 +-
->  .../pmu-events/arch/x86/lunarlake/other.json  |   19 +
->  .../arch/x86/lunarlake/pipeline.json          |   44 +-
->  tools/perf/pmu-events/arch/x86/mapfile.csv    |    5 +-
->  .../pmu-events/arch/x86/novalake/cache.json   |   13 +-
->  .../pmu-events/arch/x86/novalake/counter.json |    5 +
->  .../arch/x86/novalake/floating-point.json     |    4 +-
->  .../pmu-events/arch/x86/novalake/memory.json  |   39 +-
->  .../pmu-events/arch/x86/novalake/other.json   |   84 +
->  .../arch/x86/novalake/pipeline.json           |   75 +
->  .../arch/x86/novalake/uncore-cache.json       |   11 +
->  25 files changed, 6814 insertions(+), 13 deletions(-)
->  create mode 100644 tools/perf/pmu-events/arch/x86/diamondrapids/cache.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/diamondrapids/counter.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/diamondrapids/floating-point.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/diamondrapids/frontend.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/diamondrapids/memory.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/diamondrapids/other.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/diamondrapids/pipeline.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/diamondrapids/uncore-cache.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/diamondrapids/uncore-cxl.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/diamondrapids/uncore-interconnect.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/diamondrapids/uncore-io.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/diamondrapids/uncore-memory.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/diamondrapids/virtual-memory.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/novalake/uncore-cache.json
->
