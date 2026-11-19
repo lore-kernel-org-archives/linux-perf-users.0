@@ -1,105 +1,78 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.41
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795092419;
-	b=cyFxXARqHZuwsGOLEuhK9F2sVg2psm3aw4MoJhC3tH1REjSat7ylDIrhjsW2bOmdu8y3
-	 kJMo/qREJlJcyULBOjtHFehArgMx+LOFyv2jivF4NxXNTeN0JYVgmbcoqOXUJ5VlWWBRU
-	 4DH1rpHGGe1ZmwpmMI5fAaJ70tlN/x4HKY2EWTroBceLXaYqFP09vxsFhwnDdavkVqEC6
-	 E7Z1XAaGsRDyLayJeTTYFfMC6YVhdwMvSpwjujwKy8jhQWtj2VH4fQlXLVP2MGJO5pGHy
-	 ZheZWF0PymNVmEc19VBRTeiUgae5Qoqs/ELhxIKfpcVzaki5XRj+XGF5QTk/yWHat+A==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795092419;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 In-Reply-To:References:X-Original-From:From:Mime-Version:User-Agent:
-	 Date:X-Gm-Features:Message-ID:Subject:To:Cc:Content-Type;
-	bh=DQI1OZNYohFiuung2XmK2sEz1Uw+tUzC41KeP4vlNw8=;
-	b=EVMzGgR/wsPc7+vDYzaTkTC/zj5MKHvmjUwN5TyZoI7SfjqrvzNdlBYIHDmTShDNAIei
-	 Npq9tFTsC2Tgo+SSXNSBn5uWMh7aECUOeSQ3WEkJNc1oGqiKbQz7z4JE+iKwRC8BCAiWI
-	 b49fdVC/q9U6mi1FeUXcxiX3nVxizx32/vSZIFBXrmMULfTEarF6rDoheebiAghTP/rdl
-	 BzfEQg54uy6J0catMUc/TaJYiF2gw3EqiyKMae2gh+fNKfkDoXeRiPKeri4AfhV6mL7kK
-	 6J+Ob6N5W45BSjav94lyarHadT3DlNMolmeLgPLHJ4KT9ciqTPhfj9p9ie8JfEYcg6w==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=bytedance.com;
-	spf=pass smtp.mailfrom=bytedance.com;
-	dkim=pass header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=PVBcFpas;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.41
-Received: from mail-yx1-f41.google.com (mail-yx1-f41.google.com [74.125.224.41])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795093629;
+	b=Iz221sl8NuzHKkGPhfsYCZxwpmfecln4++ruYW5NF1FP7e+YEukZzO+8R+NQ9Xkle8kk
+	 Xcx8OdEKPTt5nHN7cjsCjnktLaumNEgdORjO4pykBTGpRZOUyFGi9iuC+Zwn4rX/Xa2pv
+	 SFvCs7Ks1DCQISJz5+3+MuL0d7dbE+q+k+V9YMaxt3QoDvXNYs5/bFVtW2/+PLGRUTrP+
+	 VPCgSGYX9gnqO5PcpFpcLo46IfXhwEjtkPozOYXHTHerI7L0m+etMjDxQt/Dj6WX/5RXW
+	 R6A2e4yzgt8wWMVbl6lVolb7FyvLHbS9T4OrOGnT8+btAyFPD7EwgW8L7WpzKTZDz3w==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795093629;
+	h=DMARC-Filter:Date:DKIM-Signature:DKIM-Signature:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To;
+	bh=gEaTen27ph55nBTeO68F2SWgSFJkMvItpOwkdYmik9w=;
+	b=aZ0YzsxBAGLbUUuMg2WkYiWAJ/pnphSZqWTNyRxQq96pd/ULkn42sfUKL3qY2L9rFzR2
+	 yp++eJ/S2hJx3rtHYfY75IghU4m5o6a6nlT8txm8nFyCjCFtKUUdmU0xJbyfL1lhfz5Tl
+	 OUfMWbpkfwf3E1X9+Vwr6S5OnNy2Kw2ggJdD/Q8A2urwxT1H59fNFD3SzTWXTPN1Hn5XH
+	 7+GRRiJvnpgPh70fn6wj1Wq4eSezNx3fXgwRCzx1npg7MxGmfiUSlqaEUUVPUrhnLVDpU
+	 MOP5S658x8Fq14EEGGtdDQOSQXcZM9DoloDexb0/x46TM1zYVcqNtmWB74tPYmTq44w==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linutronix.de;
+	spf=pass smtp.mailfrom=linutronix.de;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=MubOrsr6;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=H1lmNkTP;
+	arc=none smtp.remote-ip=193.142.43.55
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E228C606A326
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 12:46:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E228C606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7487606A324;
+	Thu, 19 Nov 2026 13:07:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E7487606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=PVBcFpas
-Received: by mail-yx1-f41.google.com with SMTP id 956f58d0204a3-67db5e13b0cso2050900d50.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 04:46:58 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795092418; cv=none;
-        d=google.com; s=arc-20260327;
-        b=GolMbdSGqOvn2Lk5WSz/kSjtJE3yiSxOJZWjkaWEyy921V5V37PKPXT3xyRcdp24Ix
-         qR3/elGSblebos2DXe1qH0KBUQ4WZilqkdSxxCFzdpRI92ebtl63JAiqXyzAt73cOU+0
-         T2X2RSrIKGDCAooTnqq/pRtXizmDPDpaT0c+eXt5FaR2/tA/nAWWYzXbXqrMqAEiTuuf
-         kmxQcUtr6x0xQhDd5vcfB83CMt3A9aFKyFtU69jAu23ibuEt+nl0HLWgm7GU9MFuMtQ8
-         liZsyrccRwWV5cgHYyIB/gHZ0eqdZAR4i6e15Hw8VXwX8zf5hMwj2OvYDvWuqvO6tYnY
-         9+wQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:user-agent:mime-version:from
-         :references:in-reply-to:dkim-signature;
-        bh=DQI1OZNYohFiuung2XmK2sEz1Uw+tUzC41KeP4vlNw8=;
-        fh=rO+xIEFQleNqBzD714XLiz2l03tZKvKXWRldG3/wOyg=;
-        b=NR6c/qJc1mdZ0u8z5vtddiyOqZV1ExG5lnpv1cBJBn0ODCBfhoBYmwVdoD9DjhqJxk
-         sCUuvbPbZmT9w7shVmpStmVW0RF+SzBU+gT1Dsdv8ZTvuwcxlxSsFGpz3jP12NsA6gZC
-         WFvIRfGzH26I74R/ZtBuV7YaYTBDGfCrwQVFgOByv13FDvig06BmqRsNW/fh22iKQGPU
-         u6Cx0OJ/rAxhOVd0tKzCA2D2Yv3dvARgs5/gNVKX1wCejNAAaWhG0EerMx66RZ7rE/Wy
-         ivR68uL15kOC3kxyBFiiwrzdUFbhoK6minr4gGFfw7X28DNRHpxWI2Qq+t97WMOKZwZS
-         ZLKQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1795092418; x=1795697218; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:user-agent:mime-version
-         :from:references:in-reply-to:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=DQI1OZNYohFiuung2XmK2sEz1Uw+tUzC41KeP4vlNw8=;
-        b=PVBcFpas1O8smDHU+vAfrzG+rYFHrAQDcyNbr5hyCzToAVKVsl0IlJXf1fAxNIbcMS
-         fFaMWPOIOO67Ge+lHCBqORfslCkWcgsu2TU0CDhp0qWnbg6+8wd7eFEzAt8d9VaDLdM2
-         pIjVG+zDtEvZo9sQ2wU79yJo/+foxmdaxtCiOxYBKT/lgB6jYwTQteAv7sk54loaJZia
-         mX5J+YP3UglKO1N9wQZ9BdscQDjZ++aBfNEbhKM2S5kXHY6gfg9HbHNxGiT/9zxGPwAu
-         Yem+qoolbm7IdPNK2zTIsK6XZBZs0XnAfsi3gMxB3mjZAeIml7J0XqLZc4D9Hma1qGqM
-         px/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795092418; x=1795697218;
-        h=content-type:cc:to:subject:message-id:date:user-agent:mime-version
-         :from:references:in-reply-to:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=DQI1OZNYohFiuung2XmK2sEz1Uw+tUzC41KeP4vlNw8=;
-        b=HlCzgYHHX+zYWvqz6zFjz2Rkc8ABVXBneYmiQMnt7m9zoJ2b6QvnigNLmKrv0NCI4f
-         kD/2nkop7rDeDQScu/lMg3ZQ/0xIJNaTEMKVBKIMbmq1aQXJ45cpRNvL53mu0ukLLZ+E
-         zvEnFkfgFQ2aO7egarHTGBqyPBpDFQzAdJ8B8g45kjdJFrgu5pCufkklQKf4Yx4zqEMd
-         NBUM9jydonkzHWOIxwAh+Pw7qw6K0YgDVh2+R/v8NMWBBCQkbNS5/q2IodRZaulsCx1z
-         Rmt8/99noyIzIFjJnQ1FRNMHWztcaMBu/ezy0Zfrs+BYynjjMnAdI4Yh+Iq+HQ7dtAyD
-         I/Qw==
-X-Forwarded-Encrypted: i=1; AL+hErGVog4eJBMCgL/OXungnZhr8y44wtjEt/B+TujVzshnDqsQwGwCzei2dVYXVHyJ4bCjSVJXJ3ijQN2TfgordjCH@vger.kernel.org
-X-Gm-Message-State: APuU4Z/zvHzWcpCUxrKXKk/+yeYwfkva+qFbWkhziDKD3Q3Su3pE4dPb
-	F9Se/mjbqxu163TeE5Z6cvO5TIWNe7FrzkMi1TfV/KyJ31LY4EbtioEdew2EIyeIHOQ1SiWh0A5
-	g+hXyeaJGYVyeR5+HRThY/RND3wKqo85XVi+1NduNcw==
-X-Gm-Gg: AZFdTZf/8yrKiryaix4rZDXLbC/vHpIApBSdYJZmyAVsnKZq2X1RhFWKa9+4kccBbR/
-	TIBl3UHoFC3A1HVQ/0qSoqJuE7njF/G6VYvwUoZlb1dcarQTmGjAAK+Z7r99rQnMVjolDIEEEzq
-	YqZVz1/TtxZa4oDZlo0M906JsqrGGQz9X4Jj1VcgsJBhgqSIjTVrepFwAS76BTLJDKfkeWJISMi
-	25xOl1NNwcSrI2FpztIPY4YUoXgxsYHxGayrif2JMJuYFc3k/ubLg0Cfy+xpRv6+0L7rOdCDQ9X
-	SbPMXFUZsc7p1Bql8cJR01GSmfmqfg/VqNqlt95/OeLlKuOoIzhzxq9labWnNdwa+LOFcuHGTL0
-	QCSqVBw31+UwfdY5UgRjb+eOQCAMhOxqj/fwRZg==
-X-Received: by 2002:a05:690c:7405:b0:8b3:3fe5:f6ab with SMTP id
- 00721157ae682-8b4fecfa349mr19565437b3.24.1795092417770; Thu, 19 Nov 2026
- 04:46:57 -0800 (PST)
-Received: from 44278815321 named unknown by gmailapi.google.com with HTTPREST;
- Thu, 19 Nov 2026 04:46:57 -0800
-In-Reply-To: <29e631f0-c135-bea4-0a3b-81dd715cef54@kernel.org>
-References: <20260911121456.33223-1-zhangzhanpeng.jasper@bytedance.com> <29e631f0-c135-bea4-0a3b-81dd715cef54@kernel.org>
-X-Original-From: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
-From: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=MubOrsr6;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=H1lmNkTP
+Date: Thu, 19 Nov 2026 14:07:04 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1795093626;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gEaTen27ph55nBTeO68F2SWgSFJkMvItpOwkdYmik9w=;
+	b=MubOrsr6ULHvBTDL73wqsbymWvymwp4iF458yUK/D8EINQArUJ7YolMrtuaLMfSMkDel1S
+	ry9uV/1svF9tBFXtAvmaGdwU8HOQnYvQ+nHFLTZ/UF1bjbTXZ/q2ZJM8gVXbXvJriNnwZM
+	44UZ1AyLKlthHKTO6Ac71KXNyglQWCSqDtouJDpRz6bOtH/uZBcaIA+3L1B47ng8gZ3y6s
+	pXWl1EoAxHu3Sh3lNojgigmKP2E1wxP9UlBUgl2Dn36GL1fClzn8KDO1ycVOZfgdLpnKq4
+	Czd3DDQXsOaWNLnfcAK0771ccU2IqlaTocKMcY313/2LaTedHofpMNxBGxz83A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1795093626;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gEaTen27ph55nBTeO68F2SWgSFJkMvItpOwkdYmik9w=;
+	b=H1lmNkTPqFTDA3QzqZtmZ8PGFQUI+leEEty9xlYitIWg5hmOVZsSuNHVWpWfm+sk9H+EJL
+	93vWq2Egv/RjpbAw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Tengda Wu <wutengda@huaweicloud.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] perf/core: Disable context fast-swap for sigtrap
+ events
+Message-ID: <20261119130704.A5iZtay-@linutronix.de>
+References: <cover.1795053619.git.wutengda@huaweicloud.com>
+ <55b1a2845b0ad34a874a7653644e34af9eb068d3.1795053619.git.wutengda@huaweicloud.com>
+ <20261119121143.pJrJE7qs@linutronix.de>
+ <cc76ea5a-545a-4560-a039-ceed1de7ff3e@huaweicloud.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -108,60 +81,21 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Date: Thu, 19 Nov 2026 04:46:57 -0800
-X-Gm-Features: AclHuK_VCp2Kj6TuYw_2lEwgIiu0LS1C49sX3AV2M1eYDrqr2PQ_yG1as_cK4Hg
-Message-ID: <CACnXVne49x1JEPZhCaQzofGDuZa65F6cRpE5Pzj=3s0rzpHUcg@mail.gmail.com>
-Subject: Re: [PATCH v10 0/9] riscv: add SBI Supervisor Software Events support
-To: Paul Walmsley <pjw@kernel.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Himanshu Chauhan <himanshu.chauhan@oss.qualcomm.com>, 
-	Conor Dooley <conor@kernel.org>, Anup Patel <anup@brainfault.org>, 
-	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
-	Yunhui Cui <cuiyunhui@bytedance.com>, Atish Patra <atish.patra@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Will Deacon <will@kernel.org>, 
-	Thomas Gleixner <tglx@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Shuah Khan <shuah@kernel.org>, 
-	Yuanzhu <yuanzhu@bytedance.com>, Yicong Yang <yang.yicong@picoheart.com>, 
-	Susheng Yang <yang.susheng@zte.com.cn>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <cc76ea5a-545a-4560-a039-ceed1de7ff3e@huaweicloud.com>
 
-Hi Paul,
+On 2026-11-19 20:17:20 [+0800], Tengda Wu wrote:
+> There is a test case, see this:
+> https://lore.kernel.org/all/d1b24bbf-9111-4766-87c8-ff97adcac727@huaweicloud.com/
 
-On 10/6/26 6:21 PM, Paul Walmsley wrote:
-> Hi Zhanpeng Zhang,
->
-> On Fri, 11 Sep 2026, Zhanpeng Zhang wrote:
->
->> [...]
->
-> Thanks for taking this series forward.  Could you please rebase this
-> series against the current riscv/for-next branch and repost?  I tried
-> pulling the series in, but it needs quite a few updates since we've
-> queued up quite a few patches that touch SBI.
->
+Now I remember. Would it make sense to include it to
+	tools/testing/selftests/perf_events/sigtrap_threads.c
 
-I've posted v13 [1], rebased onto riscv/for-next at 642fb67393c1. Could
-you pick it up for the next merge window?
+?
 
-I'll address the crash-kernel kexec restriction in a separate follow-up.
+> Thanks,
+> Tengda
 
-Thanks,
-Zhanpeng
-
-[1]
-https://lore.kernel.org/r/20261119120824.13969-13-zhangzhanpeng.jasper@bytedance.com/
-
-> thanks,
->
->
-> - Paul
+Sebastian
