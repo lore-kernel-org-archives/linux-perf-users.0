@@ -1,57 +1,92 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.44
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795082634;
-	b=JL9KZHhkmG1CyxbadHSYS5DXwKlz22peJ4IO4Ds3RrFbILKz81fnUqPQiVjzhM6CSlpg
-	 mMvnCdN3xeznbQ2RWSmTNvBT0jCJL55JwhmcnqpMS20kX9ktKgmJ+XoAlMwuq8cLqAc5A
-	 jkcoEubZ1ZCTkAP9E2p6YP0GyVpyyqRFnTqpD5qCv8FIn7JE/hYLUoftNrF13SBPArqwU
-	 wvFVEcB1yKNp/HaGbVT8SbJbmSmYpOV5uYGnIAkaj3yoNdttdm1XX7j5VJCQPg94Q3CJ4
-	 izbzSyXVzSABzs2SOVGDYhBn8OoQkxJZKm4or/hUDFAAgzOxuKd+V+VQRAjnHjRFoEQ==
+	t=1795082922;
+	b=E/AB8CU5e1/M1Mwtnur8ufIcXkg9Vdyv98flNUrxl4ZzAvlpUryLDaU/K/2JCn27ih8P
+	 ZWUyss4dEvC4f9TySsXqfNtzSNuT5KfAYb/KAlAxupb6UP6YpYbbOM6Ki7xg0lYyEoqiP
+	 rCWDr6G9egy5mx2rBz1LjExsSgKocjXh6ToO9t1c0oumewpH44aDeTbL5cPZe1Vjxf/F7
+	 8eCaCwPm86I/2+fFYteeDsKocqQaWnMfc5sF5EhhEvLTEh8p3+q5nw4jAVnIUt2FFtgXZ
+	 7c1f++ZzTlcQH0fEPPZkn+RWQ59hC6ewJwqJjLazLugDO+xkFILLaSQn8o1j0f5UY2w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795082634;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=X/dmOT4zwkRbuBf3ax8KoOD3ZjGSqz7a7crNo1/Ow+Y=;
-	b=TDf+vsxwvXUne7Uk1XA0fHimBkoTI/rSi2uEtGhOMOovyrL7wgDifOrTiBzqVjyuYhAg
-	 SYT5vn66zaoWHDgMVKXnEh0qHYClZqmcMktSg28mF4vldoxz2Ev2gWOhA6+0CeILZS6+o
-	 A0z+EiN+vFzeb6I8XRUGyXrkTcQFJVeaq2FrXK47CyCEqANI8/BAmekN8Uv7nP7W8Nl8S
-	 EFkB3QggEJ5rmnb8m5d6zFStPN6KSwItS4tEWdOGsrYQDoAYE2nZul9k/sGrEls5Nt9TI
-	 +nGLCR/T4xzmcfcrUhz/Wfz/RZEgio18wS7wA+/XUGi4djl2uwbDI0ab3VVQCFArw1w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795082922;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-Mailer;
+	bh=43hk92dqRNgt3cJF1KJekR7Qr7mj7rm5DTPnHeQ1LlA=;
+	b=vVno6MxQUKcSie2R49cshf4I/AUj+mV0NPFevtYM4wGQbB2ljeZcHKFDgIPg7e7eZ8Pa
+	 iLVCbOvjGLtxEp99+2lL1/Fv1V1AGhuCvKZWrLtV7WfY+qdsWeiJIRQroQx2GM//3pM9L
+	 O3iXhyvsYBiTknFZmxD2HLmuJbg0S3JcMfPg79ZsKox3ErFrI6wf31X+QJqFuy3C7FX1k
+	 ZERHcnEOGtviBlH6z6NXNKPysecDfUM1Zk52+aZ8BqN2KqlAPzZ3LRgGS2pKSY18Q62Wy
+	 vyOsNNNpzZwUMhdaa9s88XPL/k7mIonAO5hN6l9SiMpGZfKZ/Dg/JN5pzmP9cFlmWZQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DJXiA9Zl;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=C+2ToTwP;
+	arc=none smtp.remote-ip=74.125.82.44
+Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18330606A320
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 10:03:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06032606A324
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 10:08:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 06032606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DJXiA9Zl
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F1641F000C5;
-	Thu, 19 Nov 2026 10:03:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795082633;
-	bh=X/dmOT4zwkRbuBf3ax8KoOD3ZjGSqz7a7crNo1/Ow+Y=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DJXiA9ZlU/2dXyEFpGpAuyuFy5yukiyrs16ETkXdrpz5ZVB74sqPjI4jWEvO8UR4G
-	 tKytBcvZUOi5VIxu3aqpOIwIwXJZsnDrcSD75QGbKF1Ge0Icv8xLOjOz8q4Ca8+y3l
-	 a8qVnkfOv38CnM6TaIIFE2aGyGgK5s4HC5g4+0gz+/Wvtvf0xbmfjI6gHpr8E4vLTo
-	 45mVgXCFf99jVbpeC/skBPNQOEE6yK6uSJtvP9cC8BKEf29YMmYSThp5YB6kyIp8P+
-	 fW7u7uMDu6P0y9QWIwEvA1K4wwCLpEXB/JP0M9cV8HAIkSCZGUusIqJMC1iyp5F89P
-	 gEGnCQkUAFN+Q==
-Message-ID: <sashiko-outbox-222905@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 2/2] perf/core: Disable context fast-swap for sigtrap
- events
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Tengda Wu" <wutengda@huaweicloud.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <55b1a2845b0ad34a874a7653644e34af9eb068d3.1795053619.git.wutengda@huaweicloud.com>
-References: <cover.1795053619.git.wutengda@huaweicloud.com>
- <55b1a2845b0ad34a874a7653644e34af9eb068d3.1795053619.git.wutengda@huaweicloud.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 10:03:53 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=C+2ToTwP
+Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-1a2af4c8d00so4170252c88.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 02:08:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795082921; x=1795687721; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=43hk92dqRNgt3cJF1KJekR7Qr7mj7rm5DTPnHeQ1LlA=;
+        b=C+2ToTwPlQU8PBN5Znee5RrKShji/ugJOPeVoPukgf5SnMN/CEMGTnGy9uBYVOmo2e
+         LKWwgqQW8Wy7a9zvKqY0AOayH3bM9ZkYAx6sdWFKHmngT2z8vLNlYkuFUAUlDSUOwEW1
+         qsSkB5ki0ufjSY9dp6IHtP2LT77JDA5/+srurvQAvCrZz4UkzbrYh//TvjPYyrjJNgzZ
+         Z9JomJ/NwgtvOhD0BDGVEbM1xHCIskI9TeLJmWFtNDwjy022SLg2XkbW/nFe8H2Uvr6Q
+         EyTHaJAMCZ876Pwysvf7v9MEsspHPryj04BPurtfZc/AxrNj7Ccj6JR6cZM20P1/yRLQ
+         wd/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795082921; x=1795687721;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=43hk92dqRNgt3cJF1KJekR7Qr7mj7rm5DTPnHeQ1LlA=;
+        b=RQ5J787QOUa3oBdv7tB8YK6/f20eyJmBgTYyhQUFgQlswr/ZvreA7K1m960RP+6z3/
+         Slkb8B1QyzMe158ZgCzOIYdO3/K9Ss9iuHQtqkYqIaiJ50x/J1LzwVw3wrS6KP0qXYps
+         Vwju+nxwnUUJhHa/mS2+mJBP/6aORHLcriH2QqK08nbDZ4ShAsrhxon4hwqtfkxru+29
+         AMUpiHppjCLwXtZi3nwZLN5bajNh9TBxUkUVotKJrFI/1i59iHmk86P0RYkvk95VDHOk
+         9WxIcjJPGzqDAlg5mhHunhlXcamzWy37amqFGsfNLV8L/MVCEvCU8qSRzvZbYTV4GGyP
+         BO7w==
+X-Forwarded-Encrypted: i=1; AL+hErH1JU5a6iTbUIWqSszSQief/EkgehPBgi8MyfczJy+PszGoFtXME1C7H+ZZVErJ14g22eSMJjVSFXtLebUbrl3f@vger.kernel.org
+X-Gm-Message-State: APuU4Z/8BSEjTUAUN6V1UTIAibk3V3WqiUxHZJspJ7LM0UQmrED9ZnGi
+	TnjXl0N9xHYFjqw/dPfCNl1PP3dWlh5FX4xnVVmdCn32X3lX/DErCy61
+X-Gm-Gg: AYBFou3se7Tv/2uo90cHdoTyI6JLumcmzSTkIENdGAf+iZuA740d+nIEZ57Boqz45iR
+	XRZlela7tP+qCyTqHvzXATEqqVejfUYGVXBZBY8XNRLDGlNgoHsApDhqDSXNDGXD64PP6nUTcSj
+	W/ikFLGiv/IxXV8034EuPyWOJa3koEGredWHoAYb8Rq085lhzmDS2ObaCmBdwa/1ilO0l/gRl7x
+	6657qFJvFgXpDmmaExJcdFUtyJbZ9WWeH8i3XqpkFlvRt3+hq4ttY5IYevQTRr77S5wdjIb1e5k
+	svniRRNx2xMMuaX0ohSRWSzbp5wykQobK2mVetffed4W1CqgwZWh9WSDLS/jaPc+Tw0nPLlAbl1
+	+IRmRDAZekqX+aWlrhJwO88thA5XamLf0d2JuAGhjpQcp5O/ZanX1xJ/AKrs3kkAcWDdh5v1YK/
+	PfZpG9IGHk0u/UgUVSI60xxp0Wt/TZTq+s7CAGztT3+y+F1s6JdbJQHUxtorW9KxXuhPYU/+UGH
+	O47q0Szp/8MicRfZPo55ld6h6iiVFSpmPlH/1oQZQZV0udlzE392r5ZdpVroUrncZKFI27ISP2J
+	OUpVNGCLX4YOZYEFhD42fbrKNw==
+X-Received: by 2002:a05:7022:e801:b0:1b2:4e2e:d95a with SMTP id a92af1059eb24-1b543c36946mr5087931c88.2.1795082920981;
+        Thu, 19 Nov 2026 02:08:40 -0800 (PST)
+Received: from [127.0.1.1] ([161.33.196.121])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b5447f4eafsm12843401c88.14.2026.11.19.02.08.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Nov 2026 02:08:40 -0800 (PST)
+From: TAKANO Mitsuhiro <takano32@gmail.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Hang Zhengyang <hang.zhengyang1010@gmail.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, TAKANO Mitsuhiro <takano32@gmail.com>
+Subject: Re: [PATCH v3] perf stat: Count kernel events in a group led by a tool event
+Date: Thu, 19 Nov 2026 10:08:38 +0000
+Message-ID: <179508291800.2785063.13205692423397372334@gmail.com>
+In-Reply-To: <av6t6M0fUYdtXDEu@google.com>
+References: <20261111-tool-pmu-leader-v2-1-3faa0fb98c51@gmail.com> <20261111110616.2249764-1-takano32@gmail.com> <av6t6M0fUYdtXDEu@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,77 +95,54 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: kpatch-send.py
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Medium] perf/core: non-SMP-atomic local_t race on
-  ctx->nr_no_switch_fast
---
+Hi Namhyung,
 
-commit 5e829db733e2fe49cdac7cb99bb9428db1c83359
-Author: Tengda Wu <wutengda@huaweicloud.com>
+> I think it's better to make the first non-tool event as a leader
 
-perf/core: Disable context fast-swap for sigtrap events
+I agree, and I think that is where this ends up.  What stops me from
+doing it in this patch is the group read: with a kernel event as the
+leader, evsel__group_read_nr_members() still counts a tool event member,
+while the kernel knows nothing about it (a tool event is not opened
+through perf_event_open, it reads /proc/stat) and returns one entry
+fewer.  evsel__process_group_data() then rejects the read with -EINVAL
+and the kernel events of that group come out as <not counted> as well.
+The smallest version of that is a few lines, but it changes what every
+group with a tool event member prints, so it wants its own test and its
+own commit rather than riding along with the EBADF fix.
 
-This commit excludes sigtrap events from the context fast-swap path by
-incrementing and decrementing ctx->nr_no_switch_fast when adding and
-removing events with attr.sigtrap set.
+> but I'm afraid it'd make evlist management complex
 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index da86bc6e8be94..483ba8704d418 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -1999,7 +1999,7 @@ list_add_event(struct perf_event *event, struct per=
-f_event_context *ctx)
->  		ctx->nr_user++;
->  	if (event->attr.inherit_stat)
->  		ctx->nr_stat++;
-> -	if (has_inherit_and_sample_read(&event->attr))
-> +	if (has_inherit_and_sample_read(&event->attr) || event->attr.sigtrap)
->  		local_inc(&ctx->nr_no_switch_fast);
-> =20
->  	if (event->state > PERF_EVENT_STATE_OFF)
-> @@ -2225,7 +2225,7 @@ list_del_event(struct perf_event *event, struct per=
-f_event_context *ctx)
->  		ctx->nr_user--;
->  	if (event->attr.inherit_stat)
->  		ctx->nr_stat--;
-> -	if (has_inherit_and_sample_read(&event->attr))
-> +	if (has_inherit_and_sample_read(&event->attr) || event->attr.sigtrap)
->  		local_dec(&ctx->nr_no_switch_fast);
+v3 leaves the group structure alone: no new evlist entry, nr_members
+unchanged, and evsel->leader stays whoever it already was.  What changes
+is how the members are opened:
 
-[Severity: Medium]
-Can concurrent local_inc() and local_dec() calls on ctx->nr_no_switch_fast
-from different CPUs race and lose updates?
+  - get_group_fd(): with group_fd = -1 instead of the tool event's
+    /proc/stat fd, or -2 when the leader failed to open, the same -2 the
+    skipped-leader case already returns for a broken group;
+  - create_perf_stat_counter(): a kernel event member is opened disabled,
+    as a leader is, so that it starts with the workload, and
+    PERF_FORMAT_GROUP is not requested for the members - read_format is
+    per fd, and GROUP is what would send each member's read down the
+    group path that only a leader can take.  PERF_FORMAT_ID goes with it:
+    without a group read nothing demuxes ids.
 
-ctx->nr_no_switch_fast is a local_t, so local_inc() and local_dec() are
-only atomic on a single CPU (for example, unlocked inc/dec on x86).  When
-installing a disabled sigtrap event into a non-empty task context,
-perf_install_in_context() runs add_event_to_ctx() directly on the
-installer CPU under ctx->lock without an IPI, while an already-active
-sigtrap event in that context can update ctx->nr_no_switch_fast on the
-target task's CPU without holding ctx->lock:
+The cost is real and the changelog states it: in -e '{user_time,a,b}',
+a and b no longer share an on/off window.
 
-CPU0                              CPU1 (running ctx->task)
-perf_install_in_context()
-  raw_spin_lock(&ctx->lock)
-  add_event_to_ctx()
-    list_add_event()
-      local_inc(&ctx->nr_no_switch_fast)
-                                  __perf_event_overflow()
-                                    local_inc(&ctx->nr_no_switch_fast)
-                                      <-- non-SMP-atomic RMW race
-                                  ...
-                                  perf_pending_task()
-                                    local_dec(&ctx->nr_no_switch_fast)
+Two things this does not change, both of which happen without the patch:
+a tool event member still counts through a -D / --control window, and a
+tool event leader under enable_on_exec is still not started by anything -
+that is what "perf stat: Start tool events when enable_on_exec is used"
+is for.
 
-A similar cross-CPU race is possible between list_del_event() in
-perf_remove_from_context() (when !ctx->is_active) and perf_pending_task().
-A lost increment allows ctx->nr_no_switch_fast to drop to 0 while a
-sigtrap event or pending task_work is still present, re-enabling the
-context fast-swap path and hitting WARN_ON_ONCE(event->ctx->task !=3D
-current) in perf_sigtrap().
+Either way the leader move is a separate series; I can post it once the
+direction is settled.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1795053619.gi=
-t.wutengda@huaweicloud.com?part=3D2
+Thanks,
+TAKANO
+
