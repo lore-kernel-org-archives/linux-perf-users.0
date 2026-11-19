@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795114735;
-	b=rkJkbqCHpn09lCs+pKJoyj59NbifIrWf3ctwQf+4ejm9Dx3VzalBe/Gqo4XNjftM3OUt
-	 0nktq4uw5Xnu1Zw0ZkpBl0iO7ZVpn9oZ4CXefa/j/JlzwJVROHZywo5EG6r0Bo4NvRbxq
-	 XkXDQdNWAeaF8gwHoLoyIlcKsU8wrOEdB2jgordziUZcKzkgmfWTrK9L3MMBbxykGaBG7
-	 dG3T/hHX/crm26FwDtfm6IJ6DIHnElaxHILA2ILjj8XOUyt8/bULt25tVEG8DLklawNo5
-	 NgS8mSDrdEcV4tc/bIbsaZ/gFfsUwVQsGe4hiynlJcUez3nwaxqLlXz2rv09amDsG3A==
+	t=1795114806;
+	b=nkuSTTBn5wdpAt45IsjotGRNFYdBqSlzVnwWWairn/29PvoTOUAt9eGzdHFCFNx0aHD4
+	 cGvaMhXrf0tgbuD/mMpBoI6ESWVRNve+dTlO6Ln0xrFVEgPy+6AczaxLXjqyH35li3Y8E
+	 M7sWSNqxfjuxVtTMzjejqNrrSMOFQ8ZBQBfl+8Dr4xu0BM4xS2akFFigs+8iDTYwf0Xp+
+	 eMEB6W4Gf0GB45KyMBFvknydVoQVxaWyHN/AJoOvPhCcRGkoOimUGsmerj4MryZBYTt0+
+	 judx7oR1QA28YtbmC50iYEU5qY5NfG8OvEfyEeH6jFb6vd0fUm/JI+NiUZygga7brRA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795114735;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795114806;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=MVFHfskGiLvQom8v/ZmvM9apoJzLIU+NWv9yaMWX4k8=;
-	b=VzxEmdIQuNPsJPlBEpBdSRTypDw9RUw3r8Pzp6iWA+IQz1bwIkDP+twpdKJ7O56sgB88
-	 I00eb2RI40VmKKZcopPgVhHcD3lc6lQlPRK6s+m0ItfYkcWm9kwkQYhUApjTT2adY6v5g
-	 +zzL+k38vd9ml+e1ku8nkg/A3n5YzFua5CzsmhB/7bXgnX11CCXsfKPkPTNJzM1nPSSeN
-	 TFs4cF4CyoRFmKW9jr9XHV4BUHB24N3BDShFynJn8GKkIPLwYAnCh6l0MyudeUXwqf1GP
-	 Gk/S7aTQMzBvtR1rYaXbko/CZpYq3J8FmacOy+w3kDRpLAYsBo11GLcxZaOG3BRj3ow==
+	bh=VF7DjTZKGUrELAzhKL2OvVafbTJaYXApPiQdi91yWz8=;
+	b=vxIM41NVx6G84+R4720O0JjXVsTUh2I6GEz8uF6uqk8AI1Mvm0SC9TpuzAb4Bl0gMXHi
+	 um3gGXCM4OzyCmJUmhi6CPavurJF6XKlceFhDyn3Uxi19ULX9WjseE1mvOq+DSQIh/R/l
+	 tCR2ztXEr5++fol1Nj6XvLEEkAS7e+aokjng0sJIE3ALF8LusevRhrSQ2b+zw1PGYxZ6p
+	 pQ07X8wwKJXQzVY2cHmxFCBgV/NzcOgcExKwCPN+D9j1h1lojTbUYTvwJPor8t3ngIbUf
+	 jgdw0qY411FvDh/TyEVvWuH9MqfE6LwHJFeG+/OBZeaMA8Vc2LvXy671CpJZFjhxB1w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=amwIHebM;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nLQdpnB9;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21385606A336
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 18:58:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F376660A2608
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 19:00:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=amwIHebM
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 959691F000C4;
-	Thu, 19 Nov 2026 18:58:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nLQdpnB9
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FFFA1F000C8;
+	Thu, 19 Nov 2026 19:00:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795114734;
-	bh=MVFHfskGiLvQom8v/ZmvM9apoJzLIU+NWv9yaMWX4k8=;
+	s=k20260515; t=1795114805;
+	bh=VF7DjTZKGUrELAzhKL2OvVafbTJaYXApPiQdi91yWz8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=amwIHebMoxm9dXNzaYcvmskASUDaophTnJl2gq1VpB8PU8dG5+Z8+EazstsMb4uCc
-	 39fSg9WILAuwvAPedF98rtDLpgV7sKonmtaG0I5G+SOzbjB9nqw/TijFPzgOuLantN
-	 am//PkxLOi8xg/a+8FpbeqSj95On6egVwP8t0FlNzQ3TEvJeYEUJiDBGtjn54FBJ9K
-	 olUbdTMEhJCUFLd/p9N/JTAjLRsaHkbm04xZrmZD9b/jSTXl8Ai7niijqg+7b0+1+4
-	 dI6Ag1ScJeUEf9rfvLDh1lflvLPNmL7/hVXSliCYz7vLqyEyOb5OBVVa7hQFvKXj+P
-	 QuEqaDErRMPVw==
-Message-ID: <sashiko-outbox-223817@kernel.org>
+	b=nLQdpnB9o3KFYxCD7ndM+Px4qu+pNCOaMBpYXwUQelIVi0qEWNCz/wBuEdtjq6QWb
+	 Kf0OW6vhTIejTH4NjdfJsJlfapbErSJLxxEChrYyiKTlHwYrAxstsTyzUv38XKanOX
+	 iOPQUV0hWEDFr332Oh3eO+Atxp0jv+D3YXxrzDHuXiPPIyCkuC/OkH07eClEyXnnBH
+	 /sKxNVbbr8c3nd8eV/8pGEe+Fih4MiIkWmpZNz3P3q+8jZOPLMh3SMYLR1m/UHsDT/
+	 HZnvs7niZtLJxDZMHGLN3rOkAlHLpsFO0sPCbpc5SNWJLbIV6x2mZ0/mCHM3dw1Itl
+	 EidoZKJzCQBqQ==
+Message-ID: <sashiko-outbox-223819@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 05/33] KVM: arm64: Ignore HPMN for userspace PMU
- register access
+Subject: Re: [PATCH v10 02/33] KVM: arm64: Reorganize PMU includes
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Colton Lewis" <coltonlewis@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261119185215.632334-6-coltonlewis@google.com>
+In-Reply-To: <20261119185215.632334-3-coltonlewis@google.com>
 References: <20261119185215.632334-1-coltonlewis@google.com>
- <20261119185215.632334-6-coltonlewis@google.com>
+ <20261119185215.632334-3-coltonlewis@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 18:58:54 +0000
+Date: Thu, 19 Nov 2026 19:00:04 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,39 +60,34 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Userspace save and restore (KVM_GET_ONE_REG / KVM_SET_ONE_REG) must
-> observe and preserve all VM-implemented PMU counters
-> ([0..nr_pmu_counters-1] plus PMCCNTR_EL0), independent of the vCPU's
-> current exception level or MDCR_EL2.HPMN.
+> From: Marc Zyngier <maz@kernel.org>
 >=20
-> Currently, two UAPI callbacks still depend on guest execution context
-> when a nested vCPU (KVM_ARM_VCPU_HAS_EL2) is paused below EL2
-> (!vcpu_is_el2(vcpu)) with MDCR_EL2.HPMN < nr_pmu_counters:
+> Including *all* of asm/kvm_host.h in asm/arm_pmuv3.h is a bad idea
+> because that is much more than arm_pmuv3.h logically needs and creates
+> a circular dependency that makes it easy to introduce compiler errors
+> when editing this code.
 >=20
-> - set_pmreg() and get_pmreg() (backing PMINTEN{SET,CLR}_EL1,
->   PMCNTEN{SET,CLR}_EL0, and PMOVS{SET,CLR}_EL0) mask register values
->   with kvm_pmu_accessible_counter_mask(), which strips L1 hypervisor
->   counter bits [HPMN..N-1]. Saving a vCPU paused in L2 hides those bits,
->   and restoring them while paused in L2 permanently clears them.
-> - get_pmcr() calls kvm_vcpu_read_pmcr(), which substitutes
->   MDCR_EL2.HPMN for PMCR_EL0.N below EL2, corrupting the saved
->   PMCR_EL0.N value.
+> asm/kvm_host.h includes kvm/arm_pmu.h includes perf/arm_pmuv3.h
+> includes asm/arm_pmuv3.h includes asm/kvm_host.h
 >=20
-> Switch set_pmreg() and get_pmreg() back to
-> kvm_pmu_implemented_counter_mask(), and have get_pmcr() populate
-> PMCR_EL0.N directly from vcpu->kvm->arch.nr_pmu_counters using
-> u64_replace_bits(). Keep kvm_vcpu_read_pmcr() and
-> kvm_pmu_accessible_counter_mask() for guest trap paths.
+> Reorganize the PMU includes to be more sane. In particular:
 >=20
-> Fixes: 9a1c58cfefb0 ("KVM: arm64: nv: Adjust range of accessible PMCs acc=
-ording to HPMN")
-> Fixes: 600f6fa5c90c ("KVM: arm64: Let kvm_vcpu_read_pmcr() return an EL-d=
-ependent value for PMCR_EL0.N")
+> - Remove the circular dependency by removing the kvm_host.h include
+>   from asm/arm_pmuv3.h since 99% of it isn't needed.
+>=20
+> - Move the remaining tiny bit of KVM/PMU interface from kvm_host.h
+>   into arm_pmu.h
+>=20
+> - Conditionally on ARM64, include the more targeted arm_pmu.h directly
+>   in the arm_pmuv3.c driver.
+>=20
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> Tested-by: James Clark <james.clark@linaro.org>
 > Signed-off-by: Colton Lewis <coltonlewis@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119185215.6323=
-34-1-coltonlewis@google.com?part=3D5
+34-1-coltonlewis@google.com?part=3D2
 
