@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795115747;
-	b=rGc/IpNzxPtfw2JbM+BJyiRQqgDdK1jzK20ZH5w1NAMIsszm3uX53kg8McSHgMyTf+T1
-	 oGCJsq6RZ/vbMMhBQEEjjQVVphqbPM6feTfgFbX0P46zgsGuygh8izGrTUDLPcoLiv4fg
-	 4fQQ17dqQue8evlR7KvTjWRtl3WY75v9ytzcmXGw1TBLCsKoUjI42T/eDd9LzXsrlagpz
-	 cTSSTmVnsSPOqcQxMlMNBcKS93TRsPFqWRIAJ69hEXvUXPSlrihEKmsT2EbAPJYfW4eDX
-	 de3eEtSkATpPPjDVyFY1q4yr4KtCy8JA/qgFbulox34/SfQut2aZ/gpbNv91r4HqMJA==
+	t=1795115763;
+	b=FFevxteINX8bc9D73iOFKv3+Moqf0LCyqZqvodDYE3NWtyIOlO/+92SIVTpIu9lc34cN
+	 7gCm/JEgwSjG8hoYSxWgazB5EBvbdpZNeCFX0vFTBHzdkNR5KFHq+ZHfgqJjso447U+cj
+	 Usp0klB6urmAdFzA8UnEZzFp38m5oYA8STwMzXhH2DnFjOEx5+EnhByyHKQ1mHN3rkWHB
+	 ZUuN8T0TP5gR+fOhk4wk/xzj09fAsSacBKPjg8UbDc5W8FCKVHJC2Vy/KcX+T5cdUBRaL
+	 SDZtPYJPw0lDoJvh80bIchrMfnYGmnECe3ofO3ozG7d6V17kWPrNNd1KOEu9X7Zjydg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795115747;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795115763;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=3ezIyzByGOdQHHCe8Y5rK0Al++jgHvaIGBWlLLRunGE=;
-	b=VF3b+AGPSNWzZZz3KMbk51YoRv6GCURrhGQOdSp0NhKnWSDR1V2Qp8KLnp8gTi8ZLiOX
-	 tDOMxzEv5eEMRd4/iIRYtBSO8bIGYzBu9Bs02TfFOxZO96roUX4ZL+4y5+WOi3BtIvyvf
-	 K+ebo6PgTltOSWZcrxn8SiTRj3Y32dQKMhdzuEP093+rqnvAzwlsIm9wXD3VSskKr2vwp
-	 bdMNUoH2Jb5A9jNrfhBqU3qedzs0VkkziqPxe2u851qtaet8zGtR319Vftk4y5WX9jvJk
-	 +2PK1BobF8R3/eslnUMqaBKeMEOGJCmakA7NKys3js1gbVeFqsKCxeri7pkGmNKam7w==
+	bh=gOP48GUrURTd0keWpKOJJ3D6MGqveudihU20qlRsT1M=;
+	b=5QquTW9nKZ8RoQCCqbcL8q6jFZNEU1gerCiaS/O2xhb0EKcB1jr2WCILUGK6M+rgIoH0
+	 wKnDiyjoQtf35TWFTcxFOIMr8AjzwnilfcHDkGyZV8WPe2LndcoE60LQuj3v/nlQzHEVT
+	 sK1oX7ZFgm5WGJdsAuBc7yhoEEDuvFUQCYfr3D2Sf0lQ1IvVqnAbnM8gowQMrTGfrwRIP
+	 5SKyydiUtzJ3/Up38vLK3HyKpv/tVq0F1JjzCLWBACL2a9KjDal7fT7S1Rw4jr49kWjjp
+	 Uh/9rdPgRH9JdOJglgsJXK1yhfo+A24XjUP+WxE4sT/VPJyekmiHto3YIfB5gOI7/ug==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Hod1gXHp;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BwGJbxXl;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB41606A32A
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 19:15:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC86606A324
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 19:16:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Hod1gXHp
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A78751F000C4;
-	Thu, 19 Nov 2026 19:15:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BwGJbxXl
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DE6F1F000C4;
+	Thu, 19 Nov 2026 19:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795115746;
-	bh=3ezIyzByGOdQHHCe8Y5rK0Al++jgHvaIGBWlLLRunGE=;
+	s=k20260515; t=1795115763;
+	bh=gOP48GUrURTd0keWpKOJJ3D6MGqveudihU20qlRsT1M=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Hod1gXHpzGUU+y2LMOCF3Yd4q3asKF2erqMjotCPwI12OUbkMc9D8oKLdIqda0ejh
-	 o9hgS03ygV85dh1o2vawDmm8c0fUObZrRVwFJp4twiG1c6m+EIVjYXuQ3A5SF4hs9n
-	 BDd8hmF1GJjV9OIo6K7J6I6+QpM5kpWTqPdTxvTW1HELQ2e+bj0SaYtIJhaPHkBrtU
-	 1/6+x81Sp6rxrri8bh3NDhp6AozfL1ggqDMOyuqMCChCBxEJ85ANry1GlAWf0T07Nf
-	 p1tQMQde+/4lLWk7AZku7AgT4coX6TNY8wZqJ25QSvYcpvRHz4yTgILImebZaCpvev
-	 MBlp5RwC6wIYA==
-Message-ID: <sashiko-outbox-223855@kernel.org>
+	b=BwGJbxXlffRHlBPFAvS8jKC+Ctj0zgsqDFXIriyEM6MsADNjJYPNQkQRHZ4RIHfSR
+	 okcVTOpCfiBq7baFXYsh8HkgcmRFYH58IxzZ684bz6XISgj3QqqUI8wh70bAJaa3He
+	 NiZAWgW7OWousQTtS8hmvnWEg4Y/0OXbZNAnUWWfcRlr9ZOy91rUZ3bxrP/aR8v/RE
+	 71me43vJpMzHR/+ecyo/VzYMBVHXuqdfUxlWTtE1M4Q3nMU0E22sCvzqb614L1Fkhq
+	 pKQjHq7rCfwUvqy51kTfcBavATbc3PnLyXQBr5f6VJCYWqSvfCRTOAW3EYyOg5aVpD
+	 HttdnpbormxUw==
+Message-ID: <sashiko-outbox-223857@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 29/33] KVM: arm64: Forward FGT traps for
- PMXEVTYPER_EL0 and PMXEVCNTR_EL0
+Subject: Re: [PATCH v10 26/33] KVM: arm64: Multiplex PMCR_EL0.E and
+ MDCR_EL2.HPME for sub-partitioned L1
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Colton Lewis" <coltonlewis@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261119185215.632334-30-coltonlewis@google.com>
+In-Reply-To: <20261119185215.632334-27-coltonlewis@google.com>
 References: <20261119185215.632334-1-coltonlewis@google.com>
- <20261119185215.632334-30-coltonlewis@google.com>
+ <20261119185215.632334-27-coltonlewis@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 19:15:46 +0000
+Date: Thu, 19 Nov 2026 19:16:03 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,17 +61,22 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> When an L1 hypervisor runs a nested L2 guest with a Partitioned PMU
-> (vMDCR_EL2.TPM =3D=3D 0), L1 relies on fine-grained traps in HDFGRTR_EL2 =
-and
-> HDFGWTR_EL2 (PMEVTYPERn_EL0, PMCCFILTR_EL0, and PMEVCNTRn_EL0) rather
-> than coarse-grained MDCR_EL2.TPM traps.
+> When an L1 hypervisor sub-partitions its counters (vHPMN < N_L1, so
+> kvm_pmu_hyp_counter_mask(vcpu) is non-zero), all N_L1 guest counters lie
+> below physical MDCR_EL2.HPMN =3D=3D N_L1 and are gated in hardware by
+> physical PMCR_EL0.E. Architecturally, however, counters 0..vHPMN-1 and
+> PMCCNTR_EL0 are gated by vPMCR_EL0.E while L1's hypervisor counters
+> vHPMN..N_L1-1 are gated independently by vMDCR_EL2.HPME.
 >=20
-> Add SYS_PMXEVTYPER_EL0 and SYS_PMXEVCNTR_EL0 to encoding_to_fgt[] in
-> arch/arm64/kvm/emulate-nested.c so L0 forwards fine-grained traps on
-> selector-indexed PMU accesses to L1, using PMSELR_SEL to check
-> HDFG{R,W}TR_EL2.PMCCFILTR_EL0 when PMSELR_EL0.SEL =3D=3D 31 and
-> HDFG{R,W}TR_EL2.PMEVTYPERn_EL0 otherwise.
+> Multiplex both domain enables onto physical PMCNTENSET_EL0 and
+> PMCR_EL0.E whenever L1 sub-partitions its counters (leaving
+> non-sub-partitioned guests completely untrapped):
+> - Keep MDCR_EL2.TPMCR and HDFG{R,W}TR_EL2.PMCNTEN enabled when
+>   kvm_pmu_hyp_counter_mask(vcpu) is non-zero.
+> - Maintain architectural guest PMCR_EL0 and PMCNTENSET_EL0 values in
+>   sys_regs[], set physical PMCR_EL0.E when either vPMCR_EL0.E or
+>   vMDCR_EL2.HPME is set, and program physical PMCNTENSET_EL0 with only
+>   those guest-enabled counters whose domain enable is active.
 >=20
 > Signed-off-by: Colton Lewis <coltonlewis@google.com>
 
@@ -79,5 +84,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119185215.6323=
-34-1-coltonlewis@google.com?part=3D29
+34-1-coltonlewis@google.com?part=3D26
 
