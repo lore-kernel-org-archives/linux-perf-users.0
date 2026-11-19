@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795079814;
-	b=3d35wnIeMzyNWnNJHLLnqbpA/lYMmHl2cFtnM0E3KIBVTDCZKY42aHJp3TBqeuBUdg9w
-	 xsKiTlendzyaOKmmnJ8yN/R1p4mqTV8k3Pwuw0S6wooj6UnjKGzEjR0nrUJ7WROy9C1Y2
-	 DRHNOgT05gtuRNUBX7pp6GJoL7gFyyD62HJJKodccl6GqdlWOOH504o3i1d94Yp32LWdZ
-	 iN6fUFcR9QPIw9IrOd7KXZJynZbldEDMN4GIR739eBH68k4AuD7mKpJEOhmbckiJd7c+x
-	 Zra5FYq76KUbFSk8Yp/o6NYMICDHC8MLMOQaQo6slmISPDTV6qUZQ8AgZbjnyyQfCzQ==
+	t=1795079965;
+	b=dmkFK1vP8O56U1tiYGSKLYwyttjLG1jnM8BEEOxWc/oQxEz/4SycDC5lKP/W4XtWCZ81
+	 oNJPU/WWSWM8Rs0nEeGdiJ8zKeQ72d4PCFbDiwFAJOJS/a1oLwz6X+1wh5dXCecsGWjcL
+	 RLLh9WrUx578x+4hGE6qeZhmUDfNiaTXAu3L1/UjwPKlf43RBtqB77JrcbTyskgHGBEUE
+	 7+zrn9DpwO/xz58ZRIjCqa+I43jyCmGfbyVuy2//065Sx209lrMCf53zZikRYpQqLSzZs
+	 9546lpv73JwMUEI5HyZ/8aMyTm1Wq8aOt8rE0HSL3kGsgg1XxmBam7EmHtSVeetBCTA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795079814;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795079965;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=NFrMxTDi09PxgPkwTYo98qIfNK/dJUFJcQg4/8Ze1yU=;
-	b=rTkRb3SQzfHQ/lIUyafeVH1qxhd4kEmheJrrFXfg5RYnc48Jcqwqxw3yWLl+va9gcPG5
-	 APDAD1gRmJJM20feP8udaHh/dI5ywYgbdAV18laCRg0NB/MxwW5SrqZRm/dSs6nIib06G
-	 Cj/B6pQof7qeBBc6vGkWduJFQPFVsJBWvBq+qZCMHHOdSqhy0jrU7iOOA+oeKqTN3dN3P
-	 Js4yWvRKy/G1oYjrGK/ZBPIiSHOIOYQAYCjhbQVLmJiiUV6QEsjLGClhdbLW3eK0VvGXP
-	 JmCz9NLXsMvRqQn0uBd/ESY8geKJtHqS9zaFbkNNjeqJlMuKiomEuWxwTZChYTYeFdw==
+	bh=0xxzhaK2Vge0cdA9RNzWEaysvueFJEZenKcwYQ04Pnc=;
+	b=LwhXjBar85ccrEPCrOfsRifuJwmbsjfQxXFp2af+1+fXvzLnzwRsx7+5xR+GbFdiHzUO
+	 vtE/SbMY7EH5zaHPGLjHW2FibfAvFfsUSTPRd4fucsoqE769EfcDEDK4Mms17aTVQnM/R
+	 8gY6sEFArGij0q+wfu5MeYgDR3vBJzO4XH44hZGZzHsP5AdhbnhXwDOcJ9rxM8S6NM6Ca
+	 yOLXsI7WuDdjp/j7Jz44nLSCVMlqhhe3B+1THcMKIMGfyekDL6AiQHoaYTGgB5qJA+xKX
+	 Ntaz656hML4KejkufiIxEWN3H9W0QNxf8dujEd17kxWewkdXQ+ucrZUkr+ii4uHjW2A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="YG/q72PR";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DFYZuVbC;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D3A3606A324
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 09:16:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E128606A335
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 09:19:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YG/q72PR
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE21A1F000C4;
-	Thu, 19 Nov 2026 09:16:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DFYZuVbC
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D17EB1F000C7;
+	Thu, 19 Nov 2026 09:19:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795079814;
-	bh=NFrMxTDi09PxgPkwTYo98qIfNK/dJUFJcQg4/8Ze1yU=;
+	s=k20260515; t=1795079965;
+	bh=0xxzhaK2Vge0cdA9RNzWEaysvueFJEZenKcwYQ04Pnc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YG/q72PR+ChiuUDOh06nxzlena0ROhgfOHXUr0Du2Mo3xGo3FdZESbzTZ/MC27aQM
-	 AyMHeO8zj0ejHYm46E3Va9VwyTtK1ry60SfKm6Us4DwFaS6E1C128SvFrjzzs2QU7n
-	 sw0LLuKOkBhXOdJ58jZiAMyvIJhx8lirngN0E2Oxkmg0HkZOlf7oPaec378UlBc761
-	 DKch3kmMZM/Cdb4GpIu3aD4ii8kTCKNr6rQMhP9WBfpAHQAzj2aC048nGA/w7KBvL8
-	 e1FkRxlgGAdr5vtA/U0ofEBVlpgdTw7cUQkoSVZTt4jQwHY7gG6NECZbHTVekwBO2s
-	 SaDjhTMgjZJRw==
-Message-ID: <sashiko-outbox-222806@kernel.org>
+	b=DFYZuVbCmvuaXQP/DI4j/dHhUdy0aeMVSYLfK+59FBzp5p9wYTsDh2R9zcCxXn86q
+	 2YqFlaWcyj+1Me0E0v5/f3CB3Nad+5e7W53F7cih5T8Br7nWxTsNrkcl5LzeCN+3ZC
+	 6cEhiyzNQqDQ5LPEll31auxIc/8QuD+92VfXK13cXGGF/GlYB7YdEVvX5kYgndWHJr
+	 rk8riCQzvEAaBxMc3LdixW9Tgl4KyPGaPIHz7iExFeIWaIQqMwqRER9vjTBLY9qNUk
+	 XybANbM5H1Vn7sNw98s7A/q9yxdqMHqqWgNc9FS4xxfP9mrXdpbwes/UO1TAsy+zn/
+	 48tbNklCuwF0w==
+Message-ID: <sashiko-outbox-222811@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 3/5] perf: arm_pmu: Add workaround for FUJITSU-MONAKA
- Erratum E#030002
+Subject: Re: [PATCH v3 5/5] arm64: Add workaround to replace WFE with NOP
+ for FUJITSU-MONAKA Erratum E#030004
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tomohiro Misono" <misono.tomohiro@fujitsu.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261119-monaka-fix-for-upstream-v3-3-057df4d2ca3c@fujitsu.com>
+In-Reply-To: <20261119-monaka-fix-for-upstream-v3-5-057df4d2ca3c@fujitsu.com>
 References: <20261119-monaka-fix-for-upstream-v3-0-057df4d2ca3c@fujitsu.com>
- <20261119-monaka-fix-for-upstream-v3-3-057df4d2ca3c@fujitsu.com>
+ <20261119-monaka-fix-for-upstream-v3-5-057df4d2ca3c@fujitsu.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 09:16:53 +0000
+Date: Thu, 19 Nov 2026 09:19:24 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,34 +61,40 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> FUJITSU-MONAKA Erratum E#030002 affects FUJITSU-MONAKA CPU.
+> This option adds a workaround for FUJITSU-MONAKA erratum E#030004.
 >=20
-> On affected FUJITSU-MONAKA CPUs, after a PMU event counter is
-> stopped at a value just before overflow, an overflow might still
-> be incorrectly detected, resulting interrupt storm in some case.
+> On affected CPUs, if a wake-up event generated by clearing the
+> global exclusive monitor or by a SEV instruction arrives in the
+> same cycle as a WFE instruction commits, the CPU may fail to
+> advance the program counter and re-execute the same WFE
+> instruction. If no further wake-up event occurs, the CPU may
+> remain waiting indefinitely (for example, in spinlock code).
+> This may cause a system hang before the generic timer event stream
+> is enabled. WFI, WFIT, and WFET instructions are not affected.
 >=20
-> For example, if the following conditions are met:
->   1) Running perf to count an event in user space only
->   2) The event can also occur in kernel space
->   3) The counter value is set just before the overflow
->      (when using the -F option, initial counter value is -1)
+> After the event stream is enabled (shortly after the secondary CPU
+> bring-up), event stream could wake up affected cores.
+> However, in order to prevent the condition during secondary CPU
+> bring-up, the workaround replaces all WFE instructions in host kernel
+> code with NOP using the boot alternative framework before the secondary
+> CPU bring-up on the MONAKA CPU.
 >=20
-> when the kernel is about to return to user space after enabling
-> the count, an overflow interrupt is incorrectly triggered by an
-> event that occurred in kernel space. Since the counter value is
-> not updated (correctly), the interrupt handler does nothing and
-> returns with the same condition. This leads to another wrong interrupt
-> and results in an interrupt storm and eventually a softlockup.
+> Note that there is no need to take care of WFE usage in Host EL0 and
+> VHE Guest since if event stream is enabled in Host EL2, the event
+> reaches to every ELx & world. This effectively means FUJITSU-MONAKA
+> does not guarantee disabling event stream
+> (clocksource.arm_arch_timer.evtstrm=3D0) nor running nVHE guests
+> (kvm-arm.mode=3Dnvhe/protected), although these configurations
+> are not rejected by this patch.
 >=20
-> Work around the erratum by avoiding programming PMU event counters
-> with values within 7 counts of overflow because the counter
-> can increase up to 7 at a time.
+> This only affects FUJITSU-MONAKA CPUs.
 >=20
+> Assisted-by: LLM
 > Signed-off-by: Tomohiro Misono <misono.tomohiro@fujitsu.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119-monaka-fix=
--for-upstream-v3-0-057df4d2ca3c@fujitsu.com?part=3D3
+-for-upstream-v3-0-057df4d2ca3c@fujitsu.com?part=3D5
 
