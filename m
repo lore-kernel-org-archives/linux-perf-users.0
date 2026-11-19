@@ -1,56 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.94.104
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795090485;
-	b=uPBul9/z9330WtG4g9ByR1myIPw8OFP7QRsdMIhI95E92eO8ql8OdNBTKbW1wytgCY9p
-	 /CYoVAgZ2LextUaIFfKoZFnU76yNj+/bZrvoW3MFADEIHQ3UpcMlQs0odVpSkjKicwknv
-	 CjkjShucPHf7JMyloIGGFUwxgcxIPpBcSo1jx+PSgPMvlYWnyEfPFpZRDGkZZE0lwx14A
-	 BEixwEQW66dRHp6FrbNLfrNHHNu1/vm9fOzCRCG5AhfVFRJegpQopwfOkugMTMS9o6XQC
-	 JP4gZK/lfWk9yIyQp98U4IBq87AGzFzVWvlsKHxilGZcUe3ohTuEWF4agMYvaq1YaIg==
+	t=1795090645;
+	b=jKooAO5jZDJUVCX780VocgwvpVaSi/2A+udr+K0pUwhuem1PEG3M75Ui3r5nrHT2i2yI
+	 VMhp+1mZ5YFbxx8ZiDisv5xX/uQi8ixEcvrYNa98Mi3cyCFyWciSKH43ql4/frMARw6Qk
+	 SQ4xo/UtxTEj8OGa7gj63SVON0KLsEkGb/B4JW0u6mopWiKIGU6JQuZ24C8BPjuwAd0T/
+	 mmEtAOzlJLTIK3pMevbjdMKcp9upoEqT5LBXLjQEVS2XRCWDU3miluxRajNBxq+8YvFje
+	 1NflJMLMymVTjMyATaZPNDyfHXVkAwbato+Advuy8wBXJrWIC3fKM8xR2B/yGhu/fMA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795090485;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=4xoNPNQqc1B1A6xzu4SQ7ag1X5QPYk2t73GVJamXLtY=;
-	b=gImNFdfHF8uWjSbMo4xWhkQtGvM5KDYHg0yRS9jMUEaoLwMQ6TaBU+OxgTlUilJwLQBT
-	 oRKn5R5/X8i98JOzGoY2sVlGUzmi9W8LyrXrt/BraiKcLAh1DCAYo+Ny6+2aOMrlOYS3K
-	 ITwJQf7Ed3xSPpb9injXXh4lAiu4Pj67yVejaTTy0cKYFQo0uUdUgaeTth4y46nGoW+kY
-	 JZ2raU7/rOKBXYsPeFsCXRtbSPbLWS9vcxtyLlEJXXNTKxjp3eXZtBotNIrxlJC4jiM/U
-	 eu6JOP43N2/ttMYqTitaDITwmCRAueg0U1Wi4ueMuQ/SL8hBrcY4gI+re7Y8b6J23bw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795090645;
+	h=DMARC-Filter:Received:Received:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-Coremail-Antispam:X-CM-SenderInfo;
+	bh=BTmz+FTp8wqy5OGJyxvto8ewr04uLiQF8Av6XXkH6lU=;
+	b=hh6kTILTqAZ52AhZmWTEVJQwXAFVEmH45IGwc9C+fHljOc42tBMmr+4P9WrCYpOm58Qu
+	 jgVUmiA+Jre/jazoEvNxua/t7NxtVq1RfZtahqfmr1DpFKhyPCax+JvnaYAIYlah0YxRx
+	 DXnSsW5VkweTPb1Gv1300NwHD1ydXMnymK2GTJLYL90uA5AwUv7FMjEJoFwxFcAB4dDfl
+	 /FBdFy3l6gwc5yZjWJgbwE0KCm8Bdd2HaXtGH9e2/zMBKBObrtUKXSvC1zXveYIIEIxyA
+	 dAMNGijWx4/hwQ65R/5cKQzacRYfOt8lUzhTm9igukJSjYbgPZDZHosszpQr2DXe2pA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TG8x7+A6;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=none header.from=huaweicloud.com;
+	spf=pass smtp.mailfrom=huaweicloud.com;
+	arc=none smtp.remote-ip=124.71.94.104
+Received: from dggmsgout13.his.huawei.com (dggmsgout13.his.huawei.com [124.71.94.104])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426D1606A320
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 12:14:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TG8x7+A6
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B52201F000C4;
-	Thu, 19 Nov 2026 12:14:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795090484;
-	bh=4xoNPNQqc1B1A6xzu4SQ7ag1X5QPYk2t73GVJamXLtY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TG8x7+A6jgCbnIONHyKPWb4MtDUywZKTGfUo9EvuAffbjwn0Vur7JAVu5uR1dF7TE
-	 1Ss+DBPjgrqqkUhmhYs5z2zPtpeyHwk/pASjgpcEY2Jg7HYSviZEtmuI5w0Kc/Juqs
-	 bPskG5wxFMHoRspKvR7Zvgv/6Oa7xvldtDUr+0fjkejCeuV4w52P6GkKF8MVVmmlKk
-	 cpwsQbOKnPmxcOO2oesgMmhKdQZEFdTU50vHD5q+lq3VBoTxVQPP/2XNWTR41zOp2S
-	 hZrQtEysCgMUptbkYKdjW6r0aa/PFgueKqZNTjxKt3qAzX2desshiJ6CuG9vD6OMdt
-	 ynQcW1LXPq55A==
-Message-ID: <sashiko-outbox-223077@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v13 01/11] riscv: add SBI SSE extension definitions
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Zhanpeng Zhang" <zhangzhanpeng.jasper@bytedance.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261119120824.13969-14-zhangzhanpeng.jasper@bytedance.com>
-References: <20261119120824.13969-13-zhangzhanpeng.jasper@bytedance.com>
- <20261119120824.13969-14-zhangzhanpeng.jasper@bytedance.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 12:14:44 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B43A606A320;
+	Thu, 19 Nov 2026 12:17:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8B43A606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.198])
+	by dggmsgout13.his.huawei.com (SkyGuard) with ESMTP id 4jVcrp5QyXz1rr5l;
+	Thu, 19 Nov 2026 20:16:26 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id E67D340574;
+	Thu, 19 Nov 2026 20:17:20 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP1 (Coremail) with UTF8SMTPA id cCh0CgDnN83Q6P5qv3uVEw--.57931S2;
+	Thu, 19 Nov 2026 20:17:20 +0800 (CST)
+Message-ID: <cc76ea5a-545a-4560-a039-ceed1de7ff3e@huaweicloud.com>
+Date: Thu, 19 Nov 2026 20:17:20 +0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,24 +50,98 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/2] perf/core: Disable context fast-swap for sigtrap
+ events
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1795053619.git.wutengda@huaweicloud.com>
+ <55b1a2845b0ad34a874a7653644e34af9eb068d3.1795053619.git.wutengda@huaweicloud.com>
+ <20261119121143.pJrJE7qs@linutronix.de>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <20261119121143.pJrJE7qs@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:cCh0CgDnN83Q6P5qv3uVEw--.57931S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7WrW7JFWkAr47XF47Kr18uFg_yoW8uF1Upr
+	Z3A3WrtrZ5Xr1ay3Z8Kw4qg34fGws5tr4Ygrs8XFWaya1DX3ZaqFW7t3Wj9F1DCrs7Xa4F
+	y3yqqrZ7ury5Ga7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2
+	j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7x
+	kEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY1x0262kKe7AK
+	xVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
+	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
+	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UQ6p
+	9UUUUU=
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-> From: Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>
->=20
-> Add definitions for the SBI Supervisor Software Events extension [1].
-> This extension enables the SBI to inject events into supervisor software
-> much like ARM SDEI.
->=20
-> [1] https://lists.riscv.org/g/tech-prs/message/515
->=20
-> Signed-off-by: Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>
-> Co-developed-by: Himanshu Chauhan <himanshu.chauhan@oss.qualcomm.com>
-> Signed-off-by: Himanshu Chauhan <himanshu.chauhan@oss.qualcomm.com>
-> Co-developed-by: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
-> Signed-off-by: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
 
-Sashiko has reviewed this patch and found no issues.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119120824.1396=
-9-13-zhangzhanpeng.jasper@bytedance.com?part=3D1
+On 2026/11/19 20:11, Sebastian Andrzej Siewior wrote:
+> On 2026-11-19 09:51:01 [+0000], Tengda Wu wrote:
+>> perf_sigtrap() contains:
+>>
+>> 	WARN_ON_ONCE(event->ctx->task != current)
+>>
+>> The warning assumes that an event's ctx->task always matches the task
+>> that ends up running the pending task_work. That assumption can be
+>> broken by the context fast-swap path.
+>>
+>> The failure sequence is:
+>>
+>>   1. A -> B switch, perf_event_context_sched_out() takes the fast path
+>>      and does WRITE_ONCE(ctx->task, next) / WRITE_ONCE(next_ctx->task, task).
+>>      An NMI then hits while the context is swapped, and
+>>      __perf_event_overflow() queues pending task_work on the *current*
+>>      task (A), even though the event now belongs to B's swapped-in
+>>      context view.
+>>
+>>   2. B -> A switch. Because A now has pending task_work,
+>>      nr_no_switch_fast is non-zero, so the slow path is taken and
+>>      ctx->task is *not* swapped back.
+>>
+>>   3. A returns to user mode, task_work runs perf_pending_task() ->
+>>      perf_sigtrap(), and event->ctx->task no longer equals current,
+>>      tripping the WARN_ON_ONCE().
+>>
+>> The context fast-swap path was already excluded for events that need
+>> stable task association (inherit + sample read). sigtrap events have
+>> the same requirement: the SIGTRAP is targeted at ctx->task and must not
+>> be delivered after ctx->task has been swapped to another task.
+>>
+>> Fix this by also excluding events with attr->sigtrap from the fast-swap
+>> path, i.e. bump nr_no_switch_fast for sigtrap events in
+>> list_add_event()/list_del_event(), and update the comment describing
+>> the invariant accordingly.
+>>
+>> Fixes: c5d93d23a260 ("perf: Enqueue SIGTRAP always via task_work.")
+>> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+> 
+> This makes sense. How did you run into this? Is it possible to make a
+> testcase out of it?
+> 
+> Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> 
+> Sebastian
+
+There is a test case, see this:
+https://lore.kernel.org/all/d1b24bbf-9111-4766-87c8-ff97adcac727@huaweicloud.com/
+
+Thanks,
+Tengda
 
