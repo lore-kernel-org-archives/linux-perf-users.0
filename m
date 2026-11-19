@@ -1,54 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.69
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.94.104
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795085678;
-	b=c0ilR4jaJWrZjJycdbEkQI8+c/PduiOI2rUKFf9Jv+onf1F/U3KIIo5ttU5KrMrow8IO
-	 3TkELMNSj6oqYCtsSMAt1jFCamekTN0A9KT5/MncjuyKP51/yvknKtPf4zE+ChmDYk646
-	 SBsAFue2jcGmVCzW1iLn03DAWGi+65aFlhePF/tBQvZj/kCSwchT00NB/6efUcjDaTddm
-	 KRATHLR8myOQWJ0Ma5JZCXS5ovBAQ3HbC/sFkNjBDNgVcZ1RIdnx45RFccK1h4KzY84HJ
-	 H+ulUiYKrIA4FNDMVg+sN4URpXDi/9yGSJhaRzMOSflNeIHbDwMU/ZaBlpGEJoXrLYQ==
+	t=1795088402;
+	b=stjEISBVmImF8HUNSXQBB8dyLwLf8zaJgG7A2aDReimuLKlEAxAA0r48fUmZJDZcUdqs
+	 nwLB9s+uzJ8BymerQOTGp8YnKswjp9Gjj8ilE4Wq+4wUPtCUBP91lqzxVGkuzwf36oCPN
+	 vN65Q4oBc7rwGSMwatReQGjCgy9VRmZXXFrnn2w171hdLLbtjYETvl48K61f0uBMHKCGO
+	 Y0/rSV+hvj0nC3hMXw4KXL4TSJF/+y/GJUf6nODyPh5KAVrgSgmWkHcyQ5/IHDBrT6DfI
+	 iLLYMESMCY9Y1MkCPefiU/VGDCp4G9DM0pJlk7DnU4Spo+x15Mm2l7KzVWDq6CeHOqg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795085678;
-	h=DMARC-Filter:Received:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
-	 X-Gm-Message-State:MIME-Version:X-Received:Date:
-	 X-Google-Appengine-App-Id:X-Google-Appengine-App-Id-Alias:Message-ID:
-	 Subject:From:To:Content-Type;
-	bh=MkA6JRnq7TUj0+O96I1vYHcMozmgpupu4tJZmg3q1dM=;
-	b=FDGrtn9nMuiohc+AfQdnL4TaVfFMYTVWhF+tvB1mjkDvsdmjH2iUIO8zy2/kwsLByG/R
-	 HZmhlY/tO+yxUts3g/UC8MGV/rSO1/3hPvdmhVdwEK1CXv1jP5INp+rsnODP8PSdSguy3
-	 EeEyIKZpqUPeg8IyLnEG3oUJwnhWYDhOWlSwPH+FFMyESJSMsPC+SBxATiDGVFcwiTMI4
-	 WsFE1ZyrqbIkOvPqHExQwP3vXCIlVx6MT4GUSet6TwM12US/bNtEffLg+DyQBx+D3NLi6
-	 5rquhADI3kypKMZA6SzhrcxuzC68t/h9i39eSQ56UW3MhOcjJXgE5m5nS5l4ruwDw1w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795088402;
+	h=DMARC-Filter:Received:Received:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-Coremail-Antispam:X-CM-SenderInfo;
+	bh=nQChFNEB15AD4YGjkZsxF9JynHwfzvCzK6Q2wqWZFUI=;
+	b=cQxgvu+cXpUc9n1NiQ1Pn2tF4O2SCj7rXEbS9hnVwAiJB2qSm78gf6/WeIi05BoWtV4e
+	 7AqfG6sn9lW80ghqX+OanbV/MFGE6yCr9xM3TFcX87VsNn7OBDjKkKpXC3/yAAnVnRAOa
+	 iYQNuRRK4qPamyjveIAY3VyzzV7fWFOWi3VrAYqSJZY/25Eex5ZkBReyJtlcjVY1J47Bt
+	 grH00TBnIfbft0r/WVenGhjPnoAJa4T5/8Rfxq46blaCDHr5gSMNjFiMNALchuJydaCRu
+	 d3VpSaht4kDwRmPDpEu8mzET34CAzW8HHoEqtauOYUBbQUycVYTmb9aF+qZUWD9wYTQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=fail header.from=syzkaller.appspotmail.com;
-	spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com;
-	arc=none smtp.remote-ip=209.85.210.69
-Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com [209.85.210.69])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=none header.from=huaweicloud.com;
+	spf=pass smtp.mailfrom=huaweicloud.com;
+	arc=none smtp.remote-ip=124.71.94.104
+Received: from dggmsgout13.his.huawei.com (dggmsgout13.his.huawei.com [124.71.94.104])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4707606A32A
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 10:54:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A4707606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-ot1-f69.google.com with SMTP id 46e09a7af769-8520e83f715so2137526a34.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 02:54:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795085676; x=1795690476;
-        h=content-type:to:from:subject:message-id:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=MkA6JRnq7TUj0+O96I1vYHcMozmgpupu4tJZmg3q1dM=;
-        b=wz9jLmuagBtry8qrWOiygkmNilYHilUxXvBMQx5DVCWhcxWnfxMmPQiN5oSNBUwBkV
-         k2okI3aMfe8CqoWbp9pxFWZHQVyS3aCaylqGKPUClq4N33v/EbfhHApb/4HXOAI1xFNI
-         9alxsFX7OgUW4K7MaDvzJeGZ2K5NhTww+mbocKTJlr2RUDW8AoB1vFFTiYPPXeEPr77v
-         x7aCAFtPWYiPL/78pDh0fbjLnhewJo8HSuhGGzCmW7OYLekWI9hjB0eswf/pHQMd2TmZ
-         qA+lwZ+Odva/yph/gyPYwUZr7e95wRAADXjXaml9d5Oid3/ohqCBq6KdkYzlc776zBFt
-         eLQw==
-X-Forwarded-Encrypted: i=1; AL+hErGxJGqKj90ol2+NVXRx1HTP+Y5TG9dHKejeUdIjafdaTlQjetaUp1RNdoMsPdkHgOxKqQjc0RGrRzdq3sm6Rd4W@vger.kernel.org
-X-Gm-Message-State: APuU4Z+5D1xE6Q/gWEY6RHzC0tFgsmTJGaCteOnls/AfC3g5NpFl2yjO
-	wwu1TkNycMHgvHMvhiHJ6hzkh4El34HRqvdMV2QwQx/ozHZqS6cnfuKDm1Dm5jPdDscHiBJloPh
-	mkbbtXwCSwZkf7fxjzM+YpTbVNYfzLuPnKkkVd5L3dE/1jfvkF6VIJzE2ZUM=
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D52C606A320
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 11:40:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1D52C606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggmsgout13.his.huawei.com (SkyGuard) with ESMTP id 4jVc1g6fctz1rqZM
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 19:39:03 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 116F0405CC
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 19:39:58 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgCHi_4M4P5qF6+VEw--.8133S2;
+	Thu, 19 Nov 2026 19:39:58 +0800 (CST)
+Message-ID: <7ad8221e-f451-4b97-bdf5-c953c0b9ac4e@huaweicloud.com>
+Date: Thu, 19 Nov 2026 19:39:56 +0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -58,124 +51,116 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-Received: by 2002:a05:6808:238b:b0:4b9:e6ab:d07b with SMTP id
- 5614622812f47-5773d52f18fmr5676083b6e.27.1795085676602; Thu, 19 Nov 2026
- 02:54:36 -0800 (PST)
-Date: Thu, 19 Nov 2026 02:54:36 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6afed56c.c909bf2b.1e1a73.0000.GAE@google.com>
-Subject: [syzbot] [perf?] KCSAN: data-race in __perf_event_overflow / perf_pending_task
-From: syzbot <syzbot+a480b581a0bf5f5e8b0d@syzkaller.appspotmail.com>
-To: acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, irogers@google.com, 
-	james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
-	namhyung@kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    666539eecdf4 Merge tag 'assoc-array-fixes-v2'
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12c9e5c3580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b949a9d3c1d44ceb
-dashboard link: https://syzkaller.appspot.com/bug?extid=a480b581a0bf5f5e8b0d
-compiler:       Debian clang version 22.1.8 (1~deb13u4), Debian LLD 22.1.8
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/a943b9915869/disk-666539ee.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/9bfd839d7ea5/vmlinux-666539ee.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/0f20b9720a71/bzImage-666539ee.xz
-
-AI-generated root cause summary:
-In kernel/events/core.c, perf_pending_task() clears event->pending_work to 0
-before calling perf_sigtrap(), which reads event->pending_addr. Because
-perf_pending_task() runs in task context with interrupts enabled, a concurrent
-interrupt (such as an hrtimer interrupt calling __perf_event_overflow()) on the
-same CPU observes event->pending_work == 0, considers the pending slot
-available, re-enqueues event->pending_task via task_work_add(), and overwrites
-event->pending_addr while perf_sigtrap() is concurrently reading it.
-
-full analysis:  https://syzkaller.appspot.com/x/ai_root_cause?x=a480b581a0bf5f5e8b0d
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a480b581a0bf5f5e8b0d@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KCSAN: data-race in __perf_event_overflow / perf_pending_task
-
-write to 0xffff88811b623050 of 8 bytes by interrupt on cpu 1:
- __perf_event_overflow+0x7f1/0x950 kernel/events/core.c:10959
- perf_event_overflow kernel/events/core.c:11004 [inline]
- perf_swevent_hrtimer+0x293/0x320 kernel/events/core.c:12424
- __run_hrtimer kernel/time/hrtimer.c:2079 [inline]
- __hrtimer_run_queues+0x1f8/0x540 kernel/time/hrtimer.c:2136
- hrtimer_interrupt+0x27b/0x870 kernel/time/hrtimer.c:2255
- local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1051 [inline]
- __sysvec_apic_timer_interrupt+0x5f/0x1f0 arch/x86/kernel/apic/apic.c:1068
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1062 [inline]
- sysvec_apic_timer_interrupt+0x6f/0x80 arch/x86/kernel/apic/apic.c:1062
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:674
- native_pause arch/x86/include/asm/vdso/processor.h:13 [inline]
- delay_tsc+0x43/0xa0 arch/x86/lib/delay.c:76
- udelay include/asm-generic/delay.h:64 [inline]
- delay_access kernel/kcsan/core.c:332 [inline]
- kcsan_setup_watchpoint+0x255/0x3f0 kernel/kcsan/core.c:622
- perf_sigtrap kernel/events/core.c:7676 [inline]
- perf_pending_task+0x16a/0x220 kernel/events/core.c:7780
- task_work_run+0x145/0x1a0 kernel/task_work.c:233
- resume_user_mode_work+0x85/0xa0 include/linux/resume_user_mode.h:50
- __exit_to_user_mode_loop kernel/entry/common.c:70 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:101 [inline]
- __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
- irqentry_exit_to_user_mode_prepare include/linux/irq-entry-common.h:244 [inline]
- irqentry_exit_to_user_mode include/linux/irq-entry-common.h:315 [inline]
- irqentry_exit+0x170/0x640 kernel/entry/common.c:152
- sysvec_apic_timer_interrupt+0x44/0x80 arch/x86/kernel/apic/apic.c:1062
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:674
-
-read to 0xffff88811b623050 of 8 bytes by task 4399 on cpu 1:
- perf_sigtrap kernel/events/core.c:7676 [inline]
- perf_pending_task+0x16a/0x220 kernel/events/core.c:7780
- task_work_run+0x145/0x1a0 kernel/task_work.c:233
- resume_user_mode_work+0x85/0xa0 include/linux/resume_user_mode.h:50
- __exit_to_user_mode_loop kernel/entry/common.c:70 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:101 [inline]
- __exit_to_user_mode_prepare include/linux/irq-entry-common.h:207 [inline]
- irqentry_exit_to_user_mode_prepare include/linux/irq-entry-common.h:244 [inline]
- irqentry_exit_to_user_mode include/linux/irq-entry-common.h:315 [inline]
- irqentry_exit+0x170/0x640 kernel/entry/common.c:152
- sysvec_apic_timer_interrupt+0x44/0x80 arch/x86/kernel/apic/apic.c:1062
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:674
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 UID: 0 PID: 4399 Comm: syz.0.427 Not tainted syzkaller #0 PREEMPT(lazy) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/06/2026
-==================================================================
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/2] perf/core: Disable context fast-swap for sigtrap
+ events
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+References: <cover.1795053619.git.wutengda@huaweicloud.com>
+ <55b1a2845b0ad34a874a7653644e34af9eb068d3.1795053619.git.wutengda@huaweicloud.com>
+ <sashiko-outbox-222905@kernel.org>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <sashiko-outbox-222905@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_Ch0CgCHi_4M4P5qF6+VEw--.8133S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxuryDurW7JFWUWr43trWDArb_yoW5ZFyUpr
+	W8ur1Skry5XF10qa15Ka1Uuw1xZw4rKFWDGw4DtFW3Ar4Y9wnxWFy7Gw45ZFs8Xr12yFy8
+	K3yqvryDu34UAFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUgqb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2
+	j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7x
+	kEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
+	6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
+	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
+	vjDU0xZFpf9x07UE-erUUUUU=
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+On 2026/11/19 18:03, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential
+> issue to consider:
+> - [Medium] perf/core: non-SMP-atomic local_t race on
+>   ctx->nr_no_switch_fast
+> --
+> 
+> commit 5e829db733e2fe49cdac7cb99bb9428db1c83359
+> Author: Tengda Wu <wutengda@huaweicloud.com>
+> 
+> perf/core: Disable context fast-swap for sigtrap events
+> 
+> This commit excludes sigtrap events from the context fast-swap path by
+> incrementing and decrementing ctx->nr_no_switch_fast when adding and
+> removing events with attr.sigtrap set.
+> 
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index da86bc6e8be94..483ba8704d418 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -1999,7 +1999,7 @@ list_add_event(struct perf_event *event, struct perf_event_context *ctx)
+>>  		ctx->nr_user++;
+>>  	if (event->attr.inherit_stat)
+>>  		ctx->nr_stat++;
+>> -	if (has_inherit_and_sample_read(&event->attr))
+>> +	if (has_inherit_and_sample_read(&event->attr) || event->attr.sigtrap)
+>>  		local_inc(&ctx->nr_no_switch_fast);
+>>  
+>>  	if (event->state > PERF_EVENT_STATE_OFF)
+>> @@ -2225,7 +2225,7 @@ list_del_event(struct perf_event *event, struct perf_event_context *ctx)
+>>  		ctx->nr_user--;
+>>  	if (event->attr.inherit_stat)
+>>  		ctx->nr_stat--;
+>> -	if (has_inherit_and_sample_read(&event->attr))
+>> +	if (has_inherit_and_sample_read(&event->attr) || event->attr.sigtrap)
+>>  		local_dec(&ctx->nr_no_switch_fast);
+> 
+> [Severity: Medium]
+> Can concurrent local_inc() and local_dec() calls on ctx->nr_no_switch_fast
+> from different CPUs race and lose updates?
+> 
+> ctx->nr_no_switch_fast is a local_t, so local_inc() and local_dec() are
+> only atomic on a single CPU (for example, unlocked inc/dec on x86).  When
+> installing a disabled sigtrap event into a non-empty task context,
+> perf_install_in_context() runs add_event_to_ctx() directly on the
+> installer CPU under ctx->lock without an IPI, while an already-active
+> sigtrap event in that context can update ctx->nr_no_switch_fast on the
+> target task's CPU without holding ctx->lock:
+> 
+> CPU0                              CPU1 (running ctx->task)
+> perf_install_in_context()
+>   raw_spin_lock(&ctx->lock)
+>   add_event_to_ctx()
+>     list_add_event()
+>       local_inc(&ctx->nr_no_switch_fast)
+>                                   __perf_event_overflow()
+>                                     local_inc(&ctx->nr_no_switch_fast)
+>                                       <-- non-SMP-atomic RMW race
+>                                   ...
+>                                   perf_pending_task()
+>                                     local_dec(&ctx->nr_no_switch_fast)
+> 
+> A similar cross-CPU race is possible between list_del_event() in
+> perf_remove_from_context() (when !ctx->is_active) and perf_pending_task().
+> A lost increment allows ctx->nr_no_switch_fast to drop to 0 while a
+> sigtrap event or pending task_work is still present, re-enabling the
+> context fast-swap path and hitting WARN_ON_ONCE(event->ctx->task !=
+> current) in perf_sigtrap().
+> 
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+Same as this:
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+  https://lore.kernel.org/all/b5d10cd7-e3af-4e07-a19b-44544077db59@huaweicloud.com/
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+It is a pre-existing issue, so a separate patch will be submitted and it will not
+be fixed within this patch series.
 
-If you want to undo deduplication, reply with:
-#syz undup
+Thanks,
+Tengda
+
