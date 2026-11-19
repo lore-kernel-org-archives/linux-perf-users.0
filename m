@@ -1,56 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795114806;
-	b=nkuSTTBn5wdpAt45IsjotGRNFYdBqSlzVnwWWairn/29PvoTOUAt9eGzdHFCFNx0aHD4
-	 cGvaMhXrf0tgbuD/mMpBoI6ESWVRNve+dTlO6Ln0xrFVEgPy+6AczaxLXjqyH35li3Y8E
-	 M7sWSNqxfjuxVtTMzjejqNrrSMOFQ8ZBQBfl+8Dr4xu0BM4xS2akFFigs+8iDTYwf0Xp+
-	 eMEB6W4Gf0GB45KyMBFvknydVoQVxaWyHN/AJoOvPhCcRGkoOimUGsmerj4MryZBYTt0+
-	 judx7oR1QA28YtbmC50iYEU5qY5NfG8OvEfyEeH6jFb6vd0fUm/JI+NiUZygga7brRA==
+	t=1795114883;
+	b=FE4ifyVZkYb06B9n/MlefBGE1jdYq1wizX65As+MRy6L2xdLMhnPDTrYu3+W+1wJhK63
+	 sUlaCWj9GQeYsSOPmCPWabADlHIujwYYohaEhz9u8iP+p7840cnzFdF7Ukginagy2Zcfy
+	 zrG0/yWU1WPkhb72K8ZewLYDJGxh2Kvit6LEeYx9VMYRhuU9nkO8MrlwCKcTK4Ag6nEA/
+	 +Gu4BVjLpMcI+UOpUiswWs06OLjsZlN7SxrEmi2xHkS3FxjHSZWLMjRO2Tp346ALIcslK
+	 +Ag5qnH1Ki8XgCVFdBl7cpoty27Lf63KUhbrod5S407xUZrC5Tncz0aPooCMricJNQw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795114806;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795114883;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=VF7DjTZKGUrELAzhKL2OvVafbTJaYXApPiQdi91yWz8=;
-	b=vxIM41NVx6G84+R4720O0JjXVsTUh2I6GEz8uF6uqk8AI1Mvm0SC9TpuzAb4Bl0gMXHi
-	 um3gGXCM4OzyCmJUmhi6CPavurJF6XKlceFhDyn3Uxi19ULX9WjseE1mvOq+DSQIh/R/l
-	 tCR2ztXEr5++fol1Nj6XvLEEkAS7e+aokjng0sJIE3ALF8LusevRhrSQ2b+zw1PGYxZ6p
-	 pQ07X8wwKJXQzVY2cHmxFCBgV/NzcOgcExKwCPN+D9j1h1lojTbUYTvwJPor8t3ngIbUf
-	 jgdw0qY411FvDh/TyEVvWuH9MqfE6LwHJFeG+/OBZeaMA8Vc2LvXy671CpJZFjhxB1w==
+	bh=ui7rPI+BH1aw4gJ9ptg7rdxc8eksPe0uivlyfl+Dgp0=;
+	b=DPMjyzX1Sit/0ML3AR6jh0wj8WCbMa3tqHEhLrytqs7q1biAZOA8CBMXmN+Ped4drOo9
+	 Br9+HJ89iYPyQgYLNydop3RN+ETnJ2kNdqv1088PS280n++U3ITeznY1sK62B5OxCAbch
+	 PzkmyFe5aKqvU8gtQ+8BWTYmAAnialzXx2hsCxxFD2K8BraIAwRT646lAeXNOmw4+WsEf
+	 CVCjUWCHoCfKMHdBrgUI5GWpVBvAMmWr72fdRR6uSlmpsuDZQhUcAmpnxDNFQF7GwHrHb
+	 YxQkAQB7I759G64JWcUO7QqwOXepbxDPcs19fk00DOuQfdtbQBV2cllIYagcEYqqj9A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nLQdpnB9;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OPQFKdR8;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F376660A2608
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 19:00:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73610606A332
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 19:01:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nLQdpnB9
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FFFA1F000C8;
-	Thu, 19 Nov 2026 19:00:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=OPQFKdR8
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 089571F000CA;
+	Thu, 19 Nov 2026 19:01:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795114805;
-	bh=VF7DjTZKGUrELAzhKL2OvVafbTJaYXApPiQdi91yWz8=;
+	s=k20260515; t=1795114883;
+	bh=ui7rPI+BH1aw4gJ9ptg7rdxc8eksPe0uivlyfl+Dgp0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nLQdpnB9o3KFYxCD7ndM+Px4qu+pNCOaMBpYXwUQelIVi0qEWNCz/wBuEdtjq6QWb
-	 Kf0OW6vhTIejTH4NjdfJsJlfapbErSJLxxEChrYyiKTlHwYrAxstsTyzUv38XKanOX
-	 iOPQUV0hWEDFr332Oh3eO+Atxp0jv+D3YXxrzDHuXiPPIyCkuC/OkH07eClEyXnnBH
-	 /sKxNVbbr8c3nd8eV/8pGEe+Fih4MiIkWmpZNz3P3q+8jZOPLMh3SMYLR1m/UHsDT/
-	 HZnvs7niZtLJxDZMHGLN3rOkAlHLpsFO0sPCbpc5SNWJLbIV6x2mZ0/mCHM3dw1Itl
-	 EidoZKJzCQBqQ==
-Message-ID: <sashiko-outbox-223819@kernel.org>
+	b=OPQFKdR8ZYzhKGCtPLB3EhShIrhdV94IFnxH1diKlrEl0dVdRd+NnA5GlD3OrVlAX
+	 hV/C7a3GdvpwpZ4DCY8TlqByS0ElS1NNQyqDp/cT6YSWfBjjbdmWT57XMZExN5V/9f
+	 dA0/fBkQdyG0bl686C22ClaWoY+Pson/xNIEHNVnhLDrsPC51QTY7f4rAgapawWWiO
+	 XPF8k8/LiJbUKs0tADG3OZi/EOA5FLBmxFBZWb2LkrpCdcNOP0haftS85V5r7R5Zs9
+	 ozL3UoQqnoHGn0GJAJ5L/MFkstx1yLMG9cEjg+FLwVwuBjn1eG29IDLicc9KJEE9E/
+	 MKa27OLHgydOw==
+Message-ID: <sashiko-outbox-223820@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 02/33] KVM: arm64: Reorganize PMU includes
+Subject: Re: [PATCH v10 20/33] perf/core: Prioritize kernel-owned pinned
+ events when scheduling groups
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Colton Lewis" <coltonlewis@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261119185215.632334-3-coltonlewis@google.com>
+In-Reply-To: <20261119185215.632334-21-coltonlewis@google.com>
 References: <20261119185215.632334-1-coltonlewis@google.com>
- <20261119185215.632334-3-coltonlewis@google.com>
+ <20261119185215.632334-21-coltonlewis@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 19:00:04 +0000
+Date: Thu, 19 Nov 2026 19:01:22 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,34 +61,32 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> From: Marc Zyngier <maz@kernel.org>
+> When scheduling event groups in visit_groups_merge(), pinned and
+> flexible groups are ordered by group_index (creation order). Normally,
+> kernel-owned pinned events such as the hardlockup NMI watchdog are
+> created at boot with group_index 0 and are scheduled ahead of userspace
+> events.
 >=20
-> Including *all* of asm/kvm_host.h in asm/arm_pmuv3.h is a bad idea
-> because that is much more than arm_pmuv3.h logically needs and creates
-> a circular dependency that makes it easy to introduce compiler errors
-> when editing this code.
+> However, if the NMI watchdog is disabled and re-enabled at runtime
+> after a userspace pinned per-CPU event is already active, the
+> watchdog's group_index is larger than the userspace event's
+> group_index. When hardware counters are constrained (for example, when
+> PMU partitioning reserves counters for a guest and leaves only one
+> general-purpose counter for the host), the userspace pinned event
+> claims the remaining counter first and merge_sched_in() transitions the
+> kernel watchdog event into PERF_EVENT_STATE_ERROR.
 >=20
-> asm/kvm_host.h includes kvm/arm_pmu.h includes perf/arm_pmuv3.h
-> includes asm/arm_pmuv3.h includes asm/kvm_host.h
+> Order pinned kernel-owned events (is_pinned_kernel_event()) ahead of
+> userspace pinned events in perf_event_groups_cmp() and
+> perf_less_group_idx() while leaving flexible groups ordered by
+> group_index for normal round-robin rotation.
 >=20
-> Reorganize the PMU includes to be more sane. In particular:
->=20
-> - Remove the circular dependency by removing the kvm_host.h include
->   from asm/arm_pmuv3.h since 99% of it isn't needed.
->=20
-> - Move the remaining tiny bit of KVM/PMU interface from kvm_host.h
->   into arm_pmu.h
->=20
-> - Conditionally on ARM64, include the more targeted arm_pmu.h directly
->   in the arm_pmuv3.c driver.
->=20
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> Tested-by: James Clark <james.clark@linaro.org>
+> Suggested-by: James Clark <james.clark@linaro.org>
 > Signed-off-by: Colton Lewis <coltonlewis@google.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119185215.6323=
-34-1-coltonlewis@google.com?part=3D2
+34-1-coltonlewis@google.com?part=3D20
 
