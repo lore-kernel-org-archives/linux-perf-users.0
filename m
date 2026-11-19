@@ -1,55 +1,52 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795075784;
-	b=N9DTzVYRDjOVp453o8v7D66cZkNEG580Heu53AIoh/HiwYgEsOYeLCXfS7OFS5SZKmQP
-	 OLJAtmjnjsJGfAaieUawO9oK/U3YBGiWdp+jLf9Aomjr7uKBuVA4M0lGF5gPgNKo795Rq
-	 bsibrbA0UTco4arunXOWnIpzy/4uGyrVvY433txd+hgIHdGZRwQ+uSCMONIBFOUfe7tij
-	 tGtZQrpclmolbEl5zBsZod+o4phCvgz4Y6JAXa0Kmt5jnrosf4fNtmdXdg9TEsw9sa3oq
-	 IH1KR3SqLDNJ0I3DsaOSR27/ylx0z0HHtowHtl2oAvvFUbfBGNwLIPRHs+MtZA1aG+Q==
+	t=1795076337;
+	b=HKK1ujSyQ7bBs+h0nkO1xZQVJI45T0eZECHFZ8r8/WY7EiznGz29XeCGNuVkF5bh21v0
+	 e6yMRaNS9cyo1OtO4BWFz3S43jyEtd9jipkYKyo63h36kAh5AYiLgcKzGZfIwYUMxz73L
+	 6ptCnwKkOM0D6Mgkd4zwRahIF4a5yuUilmmRUKNXRwnS3PMH1zF/0Df2+dzFwmkiNL0+q
+	 yHyZClByR8yDaoyeck83M0qcjbLkv6GrDjUaNrM28eWd/ij7YIlvnTCjXqeExzB8lVtQe
+	 uHRanjktw+7LWxuzb2hYsFBgELWFBliaNMAxB0/rzY8fT87TRmRqqtSwrwJ2rwRB11Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795075784;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795076337;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=dQlgFf4t/hUAlsRbzT8JuKis1TFbZr9UMi09698M+9k=;
-	b=itl4DdWbZjjW4s29YlaRjuo93w4TtnAJVb/KroFVKHTnfenfJgGOHc2YjJ4mvvJtqQeW
-	 GLI9Kkz/0gGxKNM+qS8ZaAqnydGQFZzuv5/BUxicJqxff6LxX7ziU49cituXrNp/FRjgn
-	 TWCKZ40JmhVhefnijlFzt5HgMM+KZshdoeEOO3rRaxvqWebL0Zw90N/uslbl+OjGcLyHn
-	 JXmAcHS+YhnfGkfeUHSkbKsQ14t+Awd21HBmWeCqNx6rJ8iZRI2/L/QapBVuuZebrrRDA
-	 HgdwHAq/W2oyEeNy06GJ+sNnhbRU7n1KvapwIUAAcsZ/EvkttF+FE7p9NvnszJmgOgg==
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=4cXxTBE1n6aLX5qjX8/TE1/ng5L5mp36kcbFtMPayoM=;
+	b=l/LDqJ3mYfJBLVvYdKjIpH6zGyv21wTeCawTWJf/N9WwvTNdq1xngwBAZhBBRBJ+9aJK
+	 ldPjn55X9u2U6ViwzYC9InDSjNKM8slYD4jFUrTVF3ZyEwF0qMsec4RIQBXt++dAaQbQC
+	 kxJv1OfjdqUoCJQ9hIgppahY+6t6D9BWtTbJ+rrIMjgE3cQO+mymRoqxEunNIE2YLDI1W
+	 PijnN9d1ORFNRvxnKQUAmOCXvq9X2qFkCWKEeMeRdSejjLP/cHAMtn6nBGiLIu0BCz9a7
+	 aoyoDKX7VZMcoryWGbf0TL5yr0u3JO5RGRpitbeuAsY2WDkpPhcCo0E0WoOsIPiBi8A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X75dVxjd;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Mccz34nn;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD00606A320;
-	Thu, 19 Nov 2026 08:09:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A39606A320
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 08:18:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=X75dVxjd
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16EEA1F000C4;
-	Thu, 19 Nov 2026 08:09:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Mccz34nn
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A83261F000C4;
+	Thu, 19 Nov 2026 08:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795075784;
-	bh=dQlgFf4t/hUAlsRbzT8JuKis1TFbZr9UMi09698M+9k=;
+	s=k20260515; t=1795076336;
+	bh=4cXxTBE1n6aLX5qjX8/TE1/ng5L5mp36kcbFtMPayoM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=X75dVxjdJYKkI2ps1jyseWaiwD09If8e5GGie5ldAvjD+ayrNh8J00HEQe2k3AdJw
-	 uQpCvzhlNRuwTlvuh9EoPYnRY6GCsyvyo4i8mlzMc2t7S6MYULdvFeT/Ete7gs7iRk
-	 HXcrHhhYpgx1+9C+xCixdqynJhaa1wdiXWQvYU3hllYRKFw43DamvuN6WmgtBQ11s0
-	 GJWX2ABxXKA+X4f/r+J+8Z11EYKy47nYTmOp4G6hH0amTdvj8itEoS/EP7TlMSV9Tg
-	 TI0K6TuYyAFg9Id+uA3kBWBjabJ557Xm6tNCHuJNmgTstBBEXo6J5jQ6oV+iC5MrpL
-	 aCN9gqP9BAbIA==
-Date: Thu, 19 Nov 2026 00:09:42 -0800
+	b=Mccz34nnhQwlMaHHkWpn2WzXWNnDF7jMTAh8z9T8AzpItD9ow/G/poX5/RGD2SgH3
+	 C/a/8qD8fP5nVZByaf9s5fguPhxLv0+OaU0M5Vk043kp/CeicyZ1Xg2Xdkwbz9O+YL
+	 B060p/crukfh5SC1/xrUtmi26zp+icO1v6EZ0CG1EHV8LEb4Aq2Hsy9NYc6THnZnHd
+	 /w+nY9y5sPwtkA7lgK4nJH4iCNSiQrzmjCt5hqcLaK+2FOAOTE8/pasr/hxafO6ylX
+	 EFQdYFoZGUasVGvPbH9ZWdRZ4GMYHkSB20TOASP5JQNUlt0CYMMfak/6GcUOxyOvLE
+	 gRXA8YNzL+CjA==
+Date: Thu, 19 Nov 2026 00:18:55 -0800
 From: Namhyung Kim <namhyung@kernel.org>
-To: Gu Bin <gubin@cmss.chinamobile.com>
-Cc: acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@redhat.com, irogers@google.com, adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf trace: propagate evsel__set_filter() error in
- trace__expand_filter()
-Message-ID: <av6uxj_pkVK27sCO@google.com>
-References: <20261112080924.2082-1-gubin@cmss.chinamobile.com>
+To: ORTOLA =?utf-8?Q?Rapha=C3=ABl?= <raphael.ortola@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH RFC] perf docs: build only the declared manual section
+Message-ID: <av6w7-WZbFp444bR@google.com>
+References: <CACzNvX6qkkd-QgJzcQquHS6XiKacMqb85JeLC8LmfLTeWqu4EQ@mail.gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,26 +58,86 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20261112080924.2082-1-gubin@cmss.chinamobile.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACzNvX6qkkd-QgJzcQquHS6XiKacMqb85JeLC8LmfLTeWqu4EQ@mail.gmail.com>
 
-On Thu, Nov 12, 2026 at 04:09:21PM +0800, Gu Bin wrote:
-> At the end of trace__expand_filter(), the return value of
-> evsel__set_filter() is ignored. When the strdup() inside fails with
-> -ENOMEM, the function returns 0 anyway, leaving evsel->filter holding
-> the unexpanded filter, which still contains the symbolic constants the
-> loop meant to resolve. The failure then surfaces later and indirectly:
-> evlist__apply_filters() passes the unexpanded string to the tracepoint
-> filter parser, which rejects the symbolic name, so perf trace fails to
-> start with a filter syntax error whose real cause is the missed
-> allocation.
-> 
-> Propagate the error so the -ENOMEM is reported at the source and the
-> caller fails immediately.
-> 
-> Fixes: 90df0249c2ea ("perf trace: Expand strings in filters to integers")
-> Signed-off-by: Gu Bin <gubin@cmss.chinamobile.com>
+Hello,
 
-Oh, you already sent out the fix. :)
+On Thu, Nov 12, 2026 at 02:24:29PM -0600, ORTOLA Raphaël wrote:
+> Hello,
+> 
+> While building Ubuntu linux 7.3.0-9.9, GNU make 4.4.1 reports that the
+> perf manual rules do not update their .5 and .7 peer targets. The
+> implicit multi-target rules promise all three sections for each input,
+> whereas XMLto and Asciidoctor emit the section declared by that input.
+> 
+> The proposed change uses the existing DOC_MAN1/DOC_MAN5/DOC_MAN7 lists
+> with static pattern prerequisites and one recipe per backend. The
+> shared asciidoc.conf prerequisite is moved after those rules so that
+> $< remains the manual input rather than the configuration file.
+> USE_ASCIIDOCTOR selects the two alternative backends.
+> 
+> Checks on this downstream source:
+> - Before: the native XMLto build reports missing .5/.7 peer targets.
+> - After: all 41 native XMLto manuals build without warnings.
+> - Additional section 5 and 7 fixture manuals build with XMLto.
+> - Asciidoctor 2.0.26 with Ruby 3.3.8 generates section 1, 5 and 7
+> fixture manuals without warnings, using explicit ASCIIDOC_EXTRA
+> backend flags.
+> 
+> This is an RFC for the documentation rules; it is not a claim of a
+> completed kernel build or testing on current upstream master. Please
+> review the proposed fix below.
+
+Thanks for the patch.  I'm not familiar with this area but I guess it
+removes some unnecessary steps during the manual build?  Should be ok
+unless it changes any outputs.
+
+Can you please send a formal patch with your Sign off?
 
 Thanks,
 Namhyung
+
+
+> 
+> --- a/tools/perf/Documentation/Makefile
+> +++ b/tools/perf/Documentation/Makefile
+> @@ -174,7 +174,6 @@
+> 
+>  html: $(DOC_HTML)
+> 
+> -$(DOC_HTML) $(DOC_MAN1) $(DOC_MAN5) $(DOC_MAN7): asciidoc.conf
+> 
+>  man: man1 man5 man7
+>  man1: $(DOC_MAN1)
+> @@ -259,17 +258,26 @@
+>                      --date=short --no-show-signature $<)))
+> 
+>  ifdef USE_ASCIIDOCTOR
+> -$(OUTPUT)%.1 $(OUTPUT)%.5 $(OUTPUT)%.7 : %.txt
+> +$(DOC_MAN1): $(OUTPUT)%.1: %.txt
+> +$(DOC_MAN5): $(OUTPUT)%.5: %.txt
+> +$(DOC_MAN7): $(OUTPUT)%.7: %.txt
+> +$(DOC_MAN1) $(DOC_MAN5) $(DOC_MAN7):
+>  	$(QUIET_ASCIIDOC)$(RM) $@+ $@ && \
+>  	$(ASCIIDOC) -b manpage -d manpage \
+>  		$(ASCIIDOC_EXTRA) -aperf_version=$(PERF_VERSION) \
+>  		-adocdate=$(PERF_DATE) -o $@+ $< && \
+>  	mv $@+ $@
+> -endif
+> -
+> -$(OUTPUT)%.1 $(OUTPUT)%.5 $(OUTPUT)%.7 : $(OUTPUT)%.xml
+> +else
+> +
+> +$(DOC_MAN1): $(OUTPUT)%.1: $(OUTPUT)%.xml
+> +$(DOC_MAN5): $(OUTPUT)%.5: $(OUTPUT)%.xml
+> +$(DOC_MAN7): $(OUTPUT)%.7: $(OUTPUT)%.xml
+> +$(DOC_MAN1) $(DOC_MAN5) $(DOC_MAN7):
+>  	$(QUIET_XMLTO)$(RM) $@ && \
+>  	$(XMLTO) -o $(OUTPUT). -m $(MANPAGE_XSL) $(XMLTO_EXTRA) man $<
+> +endif
+> +
+> +$(DOC_HTML) $(DOC_MAN1) $(DOC_MAN5) $(DOC_MAN7): asciidoc.conf
+> 
+>  $(OUTPUT)%.xml : %.txt
+>  	$(QUIET_ASCIIDOC)$(RM) $@+ $@ && \
