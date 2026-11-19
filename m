@@ -1,57 +1,71 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795079965;
-	b=dmkFK1vP8O56U1tiYGSKLYwyttjLG1jnM8BEEOxWc/oQxEz/4SycDC5lKP/W4XtWCZ81
-	 oNJPU/WWSWM8Rs0nEeGdiJ8zKeQ72d4PCFbDiwFAJOJS/a1oLwz6X+1wh5dXCecsGWjcL
-	 RLLh9WrUx578x+4hGE6qeZhmUDfNiaTXAu3L1/UjwPKlf43RBtqB77JrcbTyskgHGBEUE
-	 7+zrn9DpwO/xz58ZRIjCqa+I43jyCmGfbyVuy2//065Sx209lrMCf53zZikRYpQqLSzZs
-	 9546lpv73JwMUEI5HyZ/8aMyTm1Wq8aOt8rE0HSL3kGsgg1XxmBam7EmHtSVeetBCTA==
+	t=1795080002;
+	b=kwz6DQdHbibxAkNLMRCkn60cklUtCau0NShuOjESr9PrylWDxb+pjxZFSzLd+yf5ymjd
+	 bRSjSN0AzlxqckUstkxNCEGwTsDOANSA94ax4H5NEclyx34LqUKQZd4AumOPQHx896L5u
+	 afwhqMp3KKvymqGi97CV9gEE6R4LPCqRiS6iFiNV8gIHpnBB8vPgZDCeJVhJ5b4M3awXL
+	 QNsbXHimdgUi2ApOEurt+QZEyzzSY3fpr9Nz9lsO119inmN5Iru7JZp/lKBt2iGDPSS/E
+	 t9lfQbL8gl1bLgGfgANK6vTTgJRjhll6RF48ANZR4qq7TeHJAlPRQH1JVR8uwfRKKuA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795079965;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=0xxzhaK2Vge0cdA9RNzWEaysvueFJEZenKcwYQ04Pnc=;
-	b=LwhXjBar85ccrEPCrOfsRifuJwmbsjfQxXFp2af+1+fXvzLnzwRsx7+5xR+GbFdiHzUO
-	 vtE/SbMY7EH5zaHPGLjHW2FibfAvFfsUSTPRd4fucsoqE769EfcDEDK4Mms17aTVQnM/R
-	 8gY6sEFArGij0q+wfu5MeYgDR3vBJzO4XH44hZGZzHsP5AdhbnhXwDOcJ9rxM8S6NM6Ca
-	 yOLXsI7WuDdjp/j7Jz44nLSCVMlqhhe3B+1THcMKIMGfyekDL6AiQHoaYTGgB5qJA+xKX
-	 Ntaz656hML4KejkufiIxEWN3H9W0QNxf8dujEd17kxWewkdXQ+ucrZUkr+ii4uHjW2A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795080002;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=92SCv6E05mY9m+J+ZgiCJ1m1WUCj4u+zBtG/e2wkxTA=;
+	b=1uU8d/5yu3Hv6cXKSpf2C1y+pRaeKHPM349UkIq239N6f865dubKfeE7H1f3dsX/bhAW
+	 VpL4tbOhsm2dfL6XKWDPMFO4B1jCz3ooNeDLDqACGbbCzcrke/TUzDEIVJ8MDGwlWyWpX
+	 b/t7X640yNyu2gKWt3APHC0ipJQq7VT0nSnPqwXdY1+d4brNjH9mtKGKZUWjMwB53E/rz
+	 n5capOhWAUciNjwKNBr6csLYhDLfYVVLZ9eG8em2oByThoOTGw/afrdGawr6mZ3qXhrf+
+	 C8rGXXUpyaZyCxWiLT9r8hhZ9RbGm+aBP1tFDxq/WeiC49wPxY88/f38CuHRc9JPkHw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DFYZuVbC;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=infradead.org;
+	spf=pass smtp.mailfrom=infradead.org;
+	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=N5jamnPP;
+	arc=none smtp.remote-ip=90.155.50.34
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E128606A335
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 09:19:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E428A606A33B;
+	Thu, 19 Nov 2026 09:20:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E428A606A33B
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DFYZuVbC
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D17EB1F000C7;
-	Thu, 19 Nov 2026 09:19:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795079965;
-	bh=0xxzhaK2Vge0cdA9RNzWEaysvueFJEZenKcwYQ04Pnc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DFYZuVbCmvuaXQP/DI4j/dHhUdy0aeMVSYLfK+59FBzp5p9wYTsDh2R9zcCxXn86q
-	 2YqFlaWcyj+1Me0E0v5/f3CB3Nad+5e7W53F7cih5T8Br7nWxTsNrkcl5LzeCN+3ZC
-	 6cEhiyzNQqDQ5LPEll31auxIc/8QuD+92VfXK13cXGGF/GlYB7YdEVvX5kYgndWHJr
-	 rk8riCQzvEAaBxMc3LdixW9Tgl4KyPGaPIHz7iExFeIWaIQqMwqRER9vjTBLY9qNUk
-	 XybANbM5H1Vn7sNw98s7A/q9yxdqMHqqWgNc9FS4xxfP9mrXdpbwes/UO1TAsy+zn/
-	 48tbNklCuwF0w==
-Message-ID: <sashiko-outbox-222811@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 5/5] arm64: Add workaround to replace WFE with NOP
- for FUJITSU-MONAKA Erratum E#030004
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Tomohiro Misono" <misono.tomohiro@fujitsu.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261119-monaka-fix-for-upstream-v3-5-057df4d2ca3c@fujitsu.com>
-References: <20261119-monaka-fix-for-upstream-v3-0-057df4d2ca3c@fujitsu.com>
- <20261119-monaka-fix-for-upstream-v3-5-057df4d2ca3c@fujitsu.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 09:19:24 +0000
+	dkim=pass (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=N5jamnPP
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=92SCv6E05mY9m+J+ZgiCJ1m1WUCj4u+zBtG/e2wkxTA=; b=N5jamnPP/DSJzvrKZbo8gy+UW2
+	SYft1vmQqkBEzJhyHypbc2T5OWbsUxvz2K3M+AVFPcwNj1BUelonPPtRLz1e3L3h5YKjNB0/591TS
+	OXwqRkZI8bJeTqPA55pQ5GA16YCeIKDPeMkZk2DUSD3oUxbP6dKA9G7LKiUvUhbTOg639n5CWMOaz
+	ggdgd9doAzfOSN7vCMt5hvt3xxstb19yTtg1D+rO1AmdDynF+jAMcnAC+DNGYbLiIgFsO3dx54mPZ
+	8ibbCJ1e1FXrg+vHbD9iwL0aCucvas7+TPzBl105dFqfTuqw+sxuxQkXafZewpYQ375xLZeGgdrJI
+	R9UZ/81A==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xTyIx-00000004q86-0TM5;
+	Thu, 19 Nov 2026 09:19:43 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 35FA630072F; Thu, 19 Nov 2026 10:19:42 +0100 (CET)
+Date: Thu, 19 Nov 2026 10:19:42 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Aditya Chillara <aditya.chillara@oss.qualcomm.com>
+Cc: Daniel Wade <danjwade95@gmail.com>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Kyle Zeng <kylebot@openai.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf: Reject group leaders detached by CPU hot-unplug
+Message-ID: <20261119091942.GP2668804@noisy.programming.kicks-ass.net>
+References: <20261119014730.2074-1-danjwade95@gmail.com>
+ <06758809-6748-4f7b-b7e6-c862936a961c@oss.qualcomm.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,41 +74,38 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <06758809-6748-4f7b-b7e6-c862936a961c@oss.qualcomm.com>
 
-> This option adds a workaround for FUJITSU-MONAKA erratum E#030004.
->=20
-> On affected CPUs, if a wake-up event generated by clearing the
-> global exclusive monitor or by a SEV instruction arrives in the
-> same cycle as a WFE instruction commits, the CPU may fail to
-> advance the program counter and re-execute the same WFE
-> instruction. If no further wake-up event occurs, the CPU may
-> remain waiting indefinitely (for example, in spinlock code).
-> This may cause a system hang before the generic timer event stream
-> is enabled. WFI, WFIT, and WFET instructions are not affected.
->=20
-> After the event stream is enabled (shortly after the secondary CPU
-> bring-up), event stream could wake up affected cores.
-> However, in order to prevent the condition during secondary CPU
-> bring-up, the workaround replaces all WFE instructions in host kernel
-> code with NOP using the boot alternative framework before the secondary
-> CPU bring-up on the MONAKA CPU.
->=20
-> Note that there is no need to take care of WFE usage in Host EL0 and
-> VHE Guest since if event stream is enabled in Host EL2, the event
-> reaches to every ELx & world. This effectively means FUJITSU-MONAKA
-> does not guarantee disabling event stream
-> (clocksource.arm_arch_timer.evtstrm=3D0) nor running nVHE guests
-> (kvm-arm.mode=3Dnvhe/protected), although these configurations
-> are not rejected by this patch.
->=20
-> This only affects FUJITSU-MONAKA CPUs.
->=20
-> Assisted-by: LLM
-> Signed-off-by: Tomohiro Misono <misono.tomohiro@fujitsu.com>
+On Thu, Nov 19, 2026 at 02:24:19PM +0530, Aditya Chillara wrote:
 
-Sashiko has reviewed this patch and found no issues.
+>                           task already asleep in poll()   a fresh poll()
+>   before your patch       stays asleep                    no data
+>   your patch              stays asleep                    EPOLLHUP
+>   your patch + wakeup     woken, sees EPOLLHUP            EPOLLHUP
+> 
+> perf_event_exit_event() kicks perf_poll() with perf_event_wakeup() after
+> moving events to EXIT, but this path doesn't, so a task already sleeping
+> in poll() is not woken and only sees EPOLLHUP when its timeout runs out.
+> 
+> Deferring the wakeup to the event's irq_work, as merge_sched_in() does,
+> seems enough. Something like this, on top of your patch:
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index c1f3e1f013ec..885b6594139a 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -15350,6 +15350,9 @@ static void __perf_event_exit_context(void *__info)
+>  	list_for_each_entry(event, &ctx->event_list, event_entry) {
+>  		__perf_remove_from_context(event, cpuctx, ctx,
+>  					   (void *)(DETACH_EXIT | DETACH_GROUP));
+> +		/* Kick perf_poll() for is_event_hup(). */
+> +		event->pending_wakeup = 1;
+> +		irq_work_queue(&event->pending_irq);
+>  	}
+>  	raw_spin_unlock(&ctx->lock);
+>  }
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119-monaka-fix=
--for-upstream-v3-0-057df4d2ca3c@fujitsu.com?part=3D5
-
+Yeah, I suppose that makes sense.
