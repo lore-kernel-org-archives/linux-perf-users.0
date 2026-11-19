@@ -1,92 +1,87 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.44
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.51
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795082922;
-	b=E/AB8CU5e1/M1Mwtnur8ufIcXkg9Vdyv98flNUrxl4ZzAvlpUryLDaU/K/2JCn27ih8P
-	 ZWUyss4dEvC4f9TySsXqfNtzSNuT5KfAYb/KAlAxupb6UP6YpYbbOM6Ki7xg0lYyEoqiP
-	 rCWDr6G9egy5mx2rBz1LjExsSgKocjXh6ToO9t1c0oumewpH44aDeTbL5cPZe1Vjxf/F7
-	 8eCaCwPm86I/2+fFYteeDsKocqQaWnMfc5sF5EhhEvLTEh8p3+q5nw4jAVnIUt2FFtgXZ
-	 7c1f++ZzTlcQH0fEPPZkn+RWQ59hC6ewJwqJjLazLugDO+xkFILLaSQn8o1j0f5UY2w==
+	t=1795084925;
+	b=RanZnxOkVnEXxu42cNdmz8lNd/aaMOe5EW51ulfjoT0y19dA/WdJ1JkxaFyDgKDnRyns
+	 iRM7HeBMnWdrFM5ZT/XA9houB/5TyNxJye255ka8FXbEGD4TcNcNgu7IkAlEN4J6WOK7p
+	 ZNHBueJ+AFfIjNzcxARnRPAuvwUi+wqK2hRwklVDVZRt+UOXdwzLoDXoqONOwK2zXWYSC
+	 ZYyHzd1QKHowbSdD7x1EK37eQVjQJtD1rL5ahUyeSNsx04sAjVAleC34ROGiv8gQEBhNk
+	 biF7aF7kVHbBKeaL0la3HjlLz2Ix4ugBVLPR8Z0aIYGZXcYAcKmcQAvFDZc/2PGv9mQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795082922;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795084925;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:X-Mailer;
-	bh=43hk92dqRNgt3cJF1KJekR7Qr7mj7rm5DTPnHeQ1LlA=;
-	b=vVno6MxQUKcSie2R49cshf4I/AUj+mV0NPFevtYM4wGQbB2ljeZcHKFDgIPg7e7eZ8Pa
-	 iLVCbOvjGLtxEp99+2lL1/Fv1V1AGhuCvKZWrLtV7WfY+qdsWeiJIRQroQx2GM//3pM9L
-	 O3iXhyvsYBiTknFZmxD2HLmuJbg0S3JcMfPg79ZsKox3ErFrI6wf31X+QJqFuy3C7FX1k
-	 ZERHcnEOGtviBlH6z6NXNKPysecDfUM1Zk52+aZ8BqN2KqlAPzZ3LRgGS2pKSY18Q62Wy
-	 vyOsNNNpzZwUMhdaa9s88XPL/k7mIonAO5hN6l9SiMpGZfKZ/Dg/JN5pzmP9cFlmWZQ==
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:References:
+	 Content-Language:Cc:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=0A8q/L3CmrGgEk1a8NfJ1t9SknZ8U8Gii/mxNtOtl+c=;
+	b=BOeeAKgA+A8DBl/dNYLqLQ5zW5e+SNebseVrFtCOIRoxM6Y1tjGhbWsTOXiLkm0e4pFr
+	 esmtDHctEG7qZAc20MtmlsKpR+l8+aiRpGTkGY+KOQtTMwS6qEDkKdKaNiQr0Ys+mr4K8
+	 kWMjcumm57IzDtwwjAqds+WyKx3c1vO2X8HPxixVjjtVfNHUPCpaepwkXVWetlOPVztU0
+	 ba2ul0+moFEe0wJWvCdscMiI0u+CtPdhUY+Q/d/vKuPHRqwxtyDnZMXbMkgblfQzIjE6G
+	 /APosvhRotXiSjMv2WSmmT/BisKOVXbg5x/oU8hdJmfqXAMeXBLZ9DMiV+L9KyQAHkg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=gmail.com;
-	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=C+2ToTwP;
-	arc=none smtp.remote-ip=74.125.82.44
-Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
+	dmarc=pass header.from=linaro.org;
+	spf=pass smtp.mailfrom=linaro.org;
+	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b="ch/kaiTt";
+	arc=none smtp.remote-ip=209.85.128.51
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06032606A324
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 10:08:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 06032606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4821C606A33D
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 10:42:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4821C606A33D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=C+2ToTwP
-Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-1a2af4c8d00so4170252c88.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 02:08:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=ch/kaiTt
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4ac95761c85so16058935e9.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 02:42:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795082921; x=1795687721; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=43hk92dqRNgt3cJF1KJekR7Qr7mj7rm5DTPnHeQ1LlA=;
-        b=C+2ToTwPlQU8PBN5Znee5RrKShji/ugJOPeVoPukgf5SnMN/CEMGTnGy9uBYVOmo2e
-         LKWwgqQW8Wy7a9zvKqY0AOayH3bM9ZkYAx6sdWFKHmngT2z8vLNlYkuFUAUlDSUOwEW1
-         qsSkB5ki0ufjSY9dp6IHtP2LT77JDA5/+srurvQAvCrZz4UkzbrYh//TvjPYyrjJNgzZ
-         Z9JomJ/NwgtvOhD0BDGVEbM1xHCIskI9TeLJmWFtNDwjy022SLg2XkbW/nFe8H2Uvr6Q
-         EyTHaJAMCZ876Pwysvf7v9MEsspHPryj04BPurtfZc/AxrNj7Ccj6JR6cZM20P1/yRLQ
-         wd/w==
+        d=linaro.org; s=google; t=1795084921; x=1795689721; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from:cc
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=0A8q/L3CmrGgEk1a8NfJ1t9SknZ8U8Gii/mxNtOtl+c=;
+        b=ch/kaiTtpwL/+LkhPiSBPfToMQlHCXea3CpZL1gXLWCh4nnTJIlioTkaIIrSetrUcP
+         yIghQ8TZWyeEufK9m1U84tP7KfCyGo63q4/hTRa4mXJ6F9gvczi6BYx5W+Ai2in0yoeh
+         5BBRCRMiooaSjh+pu7JuuLxXVQidQYpsAA61aWpLaFFkuaWpWrCRE+TWEmOQcw2C4gpe
+         fLKT38jHavOU80P1E/tPRYj22SZwMbu3WNG5l5U1OmhebatIgc6KpiS/eERdwpOQoKG3
+         s8iZ82HjHRgfkczSzn0IENe/YHGSjSnuK0ChwCOGi0lboYM8CmXKIxskJQjAIpD8KQG/
+         zb4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795082921; x=1795687721;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=43hk92dqRNgt3cJF1KJekR7Qr7mj7rm5DTPnHeQ1LlA=;
-        b=RQ5J787QOUa3oBdv7tB8YK6/f20eyJmBgTYyhQUFgQlswr/ZvreA7K1m960RP+6z3/
-         Slkb8B1QyzMe158ZgCzOIYdO3/K9Ss9iuHQtqkYqIaiJ50x/J1LzwVw3wrS6KP0qXYps
-         Vwju+nxwnUUJhHa/mS2+mJBP/6aORHLcriH2QqK08nbDZ4ShAsrhxon4hwqtfkxru+29
-         AMUpiHppjCLwXtZi3nwZLN5bajNh9TBxUkUVotKJrFI/1i59iHmk86P0RYkvk95VDHOk
-         9WxIcjJPGzqDAlg5mhHunhlXcamzWy37amqFGsfNLV8L/MVCEvCU8qSRzvZbYTV4GGyP
-         BO7w==
-X-Forwarded-Encrypted: i=1; AL+hErH1JU5a6iTbUIWqSszSQief/EkgehPBgi8MyfczJy+PszGoFtXME1C7H+ZZVErJ14g22eSMJjVSFXtLebUbrl3f@vger.kernel.org
-X-Gm-Message-State: APuU4Z/8BSEjTUAUN6V1UTIAibk3V3WqiUxHZJspJ7LM0UQmrED9ZnGi
-	TnjXl0N9xHYFjqw/dPfCNl1PP3dWlh5FX4xnVVmdCn32X3lX/DErCy61
-X-Gm-Gg: AYBFou3se7Tv/2uo90cHdoTyI6JLumcmzSTkIENdGAf+iZuA740d+nIEZ57Boqz45iR
-	XRZlela7tP+qCyTqHvzXATEqqVejfUYGVXBZBY8XNRLDGlNgoHsApDhqDSXNDGXD64PP6nUTcSj
-	W/ikFLGiv/IxXV8034EuPyWOJa3koEGredWHoAYb8Rq085lhzmDS2ObaCmBdwa/1ilO0l/gRl7x
-	6657qFJvFgXpDmmaExJcdFUtyJbZ9WWeH8i3XqpkFlvRt3+hq4ttY5IYevQTRr77S5wdjIb1e5k
-	svniRRNx2xMMuaX0ohSRWSzbp5wykQobK2mVetffed4W1CqgwZWh9WSDLS/jaPc+Tw0nPLlAbl1
-	+IRmRDAZekqX+aWlrhJwO88thA5XamLf0d2JuAGhjpQcp5O/ZanX1xJ/AKrs3kkAcWDdh5v1YK/
-	PfZpG9IGHk0u/UgUVSI60xxp0Wt/TZTq+s7CAGztT3+y+F1s6JdbJQHUxtorW9KxXuhPYU/+UGH
-	O47q0Szp/8MicRfZPo55ld6h6iiVFSpmPlH/1oQZQZV0udlzE392r5ZdpVroUrncZKFI27ISP2J
-	OUpVNGCLX4YOZYEFhD42fbrKNw==
-X-Received: by 2002:a05:7022:e801:b0:1b2:4e2e:d95a with SMTP id a92af1059eb24-1b543c36946mr5087931c88.2.1795082920981;
-        Thu, 19 Nov 2026 02:08:40 -0800 (PST)
-Received: from [127.0.1.1] ([161.33.196.121])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b5447f4eafsm12843401c88.14.2026.11.19.02.08.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Nov 2026 02:08:40 -0800 (PST)
-From: TAKANO Mitsuhiro <takano32@gmail.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Hang Zhengyang <hang.zhengyang1010@gmail.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, TAKANO Mitsuhiro <takano32@gmail.com>
-Subject: Re: [PATCH v3] perf stat: Count kernel events in a group led by a tool event
-Date: Thu, 19 Nov 2026 10:08:38 +0000
-Message-ID: <179508291800.2785063.13205692423397372334@gmail.com>
-In-Reply-To: <av6t6M0fUYdtXDEu@google.com>
-References: <20261111-tool-pmu-leader-v2-1-3faa0fb98c51@gmail.com> <20261111110616.2249764-1-takano32@gmail.com> <av6t6M0fUYdtXDEu@google.com>
+        d=1e100.net; s=20260707; t=1795084921; x=1795689721;
+        h=content-transfer-encoding:content-type:in-reply-to:from:cc
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=0A8q/L3CmrGgEk1a8NfJ1t9SknZ8U8Gii/mxNtOtl+c=;
+        b=hAEDAhgLQKI0TlNP/+cRbQAAzB4Xm2ocL/ooBrWxH87t+E05L66o9k885BdWyXMG7Y
+         LrxoZbRyy2qro/ZU0USftQq0W0QIl3Ui5QXtdJgyj5kBww7J/B8xVo3Rr8O1E9gdVP2C
+         PdjxLIAnIHutU4PnLxijSLeD7nCjurmPsZa2cLHktLjwU8XHfLJT+4vfwsyO8ZpO7fca
+         rslbHBV8sjJUvOa/VaKJ+/onnBfxOOdKa21Fx8KFde0G2Vin6GdvKRqj2e3lnXnQ+dwC
+         Xooal3BpqB+bXzhlj73QARyVwUGp0XkUa6lD8kQ7F9qvdgMpJczSLzRKy0T03xNtioYf
+         /Igw==
+X-Forwarded-Encrypted: i=1; AL+hErF0adi3BnuuEk7ZBbJXGsOlCsCkZ/ril9KRy7O/4qOBs84tqe6EaGxx6nj49pNZ50PIbsCAXfY2Yml77KwSlnWY@vger.kernel.org
+X-Gm-Message-State: APuU4Z9nJiKPCh5Adqm0cgrLmhf2WImeu30irZ3DVff0KPR3KBVSPCXW
+	5KDjztRUF+JeegPyrJFrnhbJnaMk+R2k4LpC64uWAby7VXuDDxbw+WoPKs6sJ12NQVc=
+X-Gm-Gg: AYBFou0giU9pdDcd093lkDM2C2HIkMvFydXVmQ8SOLElVxXpL32GOmqKBfaf02DnK90
+	feMTMNQxD5TRFWnANCGgJbmjF00SVR9xChW8Fweh/fl8iUxIwVlySRHwMDSduZ/GvYG02Ex0GfJ
+	hr9JjX3N/iWdfwvKUpgVw/VYhGvUWhYekzHSZLPAIKSGoBUStG+2eC50j/Qqa7jwoDTASo3rKRO
+	Fbv2Qg5lVLcjHcLLtYX/a7m1P474FR+99RjLvKqMwDFuz//v0OcmpPYXCZZQSzJEGudDuKlynDf
+	RlgR++CXdaOHtPanDPbdtE42fXcXgj+lDeSKr+2VF1U772bxE4CZS5rVPPJOeErL43pflBnuxdd
+	yDEs4kDaAV/twfnIOnMgmLeua3PcJPkisVOaPR8ZoMk2PwyhoTJZRx+gNcWpJNtP0xAKHB8CyWK
+	9braJdcQqCI2Ub+DGramsovl2ziyfBq9iWu/fCSqrMU9d3u4E2TmZOvXG9jeT7lGiP9kkZTV19K
+	fzNLSo6cWL1qKIfomlHdOrJGEbOQ/mozBGsRyNJbA1RJiv1xfAjFk0aX+YjPR/CJcsBq+t1X2W/
+	o8UcQR8BpET122tEPHVJJecw95hepbKkpg==
+X-Received: by 2002:a05:600c:6708:b0:4a3:59c9:a744 with SMTP id 5b1f17b1804b1-4bb7d9fd2f6mr104170865e9.7.1795084921602;
+        Thu, 19 Nov 2026 02:42:01 -0800 (PST)
+Received: from [192.168.1.3] ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb8538b2c5sm26726305e9.5.2026.11.19.02.42.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Nov 2026 02:42:01 -0800 (PST)
+Message-ID: <56700f45-9cd1-4375-947a-d59f9aeead0d@linaro.org>
+Date: Thu, 19 Nov 2026 10:42:00 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -96,53 +91,52 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: kpatch-send.py
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] libperf mmap: Arm64: fix transposed reads of counters
+ 12 and 13
+To: Ian Rogers <irogers@google.com>
+References: <20261118200057.2134362-1-irogers@google.com>
+Content-Language: en-US
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Rob Herring <robh@kernel.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20261118200057.2134362-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Namhyung,
 
-> I think it's better to make the first non-tool event as a leader
 
-I agree, and I think that is where this ends up.  What stops me from
-doing it in this patch is the group read: with a kernel event as the
-leader, evsel__group_read_nr_members() still counts a tool event member,
-while the kernel knows nothing about it (a tool event is not opened
-through perf_event_open, it reads /proc/stat) and returns one entry
-fewer.  evsel__process_group_data() then rejects the read with -EINVAL
-and the kernel events of that group come out as <not counted> as well.
-The smallest version of that is a few lines, but it changes what every
-group with a tool event member prints, so it wants its own test and its
-own commit rather than riding along with the EBADF fix.
+On 18/11/2026 20:00, Ian Rogers wrote:
+> Reported in Sashiko bug linux-3291a858-209c-483a-b4dc-eeb57abdaee6,
+> the 2 counter read functions for counters 12 and 13 are transposed.
+> 
+> Fixes: 407eb43ae87c ("libperf: Add arm64 support to perf_mmap__read_self()")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>   tools/lib/perf/mmap.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
+> index ab3adf1d8baf..92acb0e911f7 100644
+> --- a/tools/lib/perf/mmap.c
+> +++ b/tools/lib/perf/mmap.c
+> @@ -376,8 +376,8 @@ static u64 read_perf_counter(unsigned int counter)
+>   		read_pmevcntr_9,
+>   		read_pmevcntr_10,
+>   		read_pmevcntr_11,
+> -		read_pmevcntr_13,
+>   		read_pmevcntr_12,
+> +		read_pmevcntr_13,
+>   		read_pmevcntr_14,
+>   		read_pmevcntr_15,
+>   		read_pmevcntr_16,
 
-> but I'm afraid it'd make evlist management complex
+Reviewed-by: James Clark <james.clark@linaro.org>
 
-v3 leaves the group structure alone: no new evlist entry, nr_members
-unchanged, and evsel->leader stays whoever it already was.  What changes
-is how the members are opened:
-
-  - get_group_fd(): with group_fd = -1 instead of the tool event's
-    /proc/stat fd, or -2 when the leader failed to open, the same -2 the
-    skipped-leader case already returns for a broken group;
-  - create_perf_stat_counter(): a kernel event member is opened disabled,
-    as a leader is, so that it starts with the workload, and
-    PERF_FORMAT_GROUP is not requested for the members - read_format is
-    per fd, and GROUP is what would send each member's read down the
-    group path that only a leader can take.  PERF_FORMAT_ID goes with it:
-    without a group read nothing demuxes ids.
-
-The cost is real and the changelog states it: in -e '{user_time,a,b}',
-a and b no longer share an on/off window.
-
-Two things this does not change, both of which happen without the patch:
-a tool event member still counts through a -D / --control window, and a
-tool event leader under enable_on_exec is still not started by anything -
-that is what "perf stat: Start tool events when enable_on_exec is used"
-is for.
-
-Either way the leader move is a separate series; I can post it once the
-direction is settled.
-
-Thanks,
-TAKANO
+Interesting mistake. Doesn't seem to have been copied from any of the 
+other enumerations of PMEVCNTR either.
 
