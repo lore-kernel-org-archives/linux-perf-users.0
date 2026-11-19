@@ -1,79 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=95.215.58.151
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795122778;
-	b=bDV1FvqrSkha9VuLNltEsLpTZoOlJKmgBcz6ozFL72RvsCWUNlobAt6L2J49mMBD+G5X
-	 6qBNfhrbwsgMKvbyuv8wyUir3eg32ETsGCvsouVyiBXZpvyn2Z07UpAJLH08Zj+Dr+jRR
-	 QXfxXtl8NeH+BnL2MFgRaLLPU0zYZspC1L0tDd6ZXylz8iSFuDfeJ9qtFIW4Jfah05mPM
-	 R9OupUEUn/qO4pOzjDwsyvnFa3NhssrDGB64uyz8ccrSOxn3eC//le/keXL29P8DnrkGI
-	 OgFhfaX0MGAgqVkdx8EYtGAwntl9jAJ3+gnnr4QlZet8+jb1ssrrbQQ4VChl4KTEb9Q==
+	t=1795122985;
+	b=PjZXV0N27bYElqNR5zVtWEes3WpCHu9hWBDhusrw+2OqiQnLezq9ylXfqLJtW6sV1a2J
+	 O0+8oYAP8RGmrdHXPaSMMPOGzvFG8qjkyn5njBhOst7RIf6RGTvN5tAY7ETUOJO6z/4zd
+	 aRtS/3kKzw9mL1vKzJ2jHtrUw7TS1rMUwVHqElfmTP0MzjbCncEN2zQ/9qFhyyFcnzzY0
+	 DonAXxiIExaDXqwz25Xiqaioe+LKoTTWxJIaRYuOc9c9CwHFMGdM3dGsIsoA7TVl2VuOX
+	 5FlIhQYSzL5atq0wOiGvXGAAXYPJG5uHMp5w/I/xbUnY1s/u8TeY7W/6zQcbhMfKBxA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795122778;
-	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
-	 X-Mizu-Trace-ID:X-Migadu-Flow:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=6eJYPTNK4h5PA9/a9GLQNb62PN8Jc9jx3Vl4D1FCI68=;
-	b=AiiFri1Ok38NndGEJdhMmstzq5sfF0bwI0NLbc2p/YO7xsNWFFX+u8HIR/zCCNGiylkZ
-	 EfyUTRZqGyDlvNe0cs7UQAwJQk5RFMEkvGjO8nHfI4vGpjP4/en2Pj8Y1llBoU6mfkuqB
-	 7aP6Y1e/xFX3Xa/XS0L75pneSHHYqKXoHEzYt7bAQIdbZjO2DObvwfmetuL3c651qaZQz
-	 ZZa+N3Q+TYbmEQQysPJb/KF8zQL+ShSeEJch4bfblioi+SHx0Z9OjUzmgVg98fJKwI8re
-	 ApSHbUJ88jjCATQLqbuXMpJrND19ZESYPIHTuRtbB5OqYX1Voq4Xms0ZV2juABbZctg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795122985;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=WDRlDxJjQHkVu2PHgk64ZWW2ZSAZW86T1/O0yHx0njc=;
+	b=KOTl7luR+3dj0CWverNhBA0MXzBFAMDw8q3v3nQhwgj4B9u7nPphjvBse8lJWAxelBfJ
+	 sy0vJB5BCWXcmt2mDQBXGOztan2pyxgwxSicg5iw7u1A/dV5bUVs/Iw/lKBeQGpj6tjUJ
+	 d/c5MapURhy45PTnHDMErg4aF5kLGDIzkFf08r97r+HEUCOM3suprXRkkdaVuBgwqNNn1
+	 xCUnIgusoi6AmITJIMjJ+43zq3/oYCVXeyIeG5w8Qa2Z981mJehwnVKiA+/0Hc6SXJK/J
+	 l1f308HFioDDM+l9/GyKtcFkMtnOudIzg1xXExu7qOCRWlXWs3vgyt/V2GG0yFAWvUQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.dev;
-	spf=pass smtp.mailfrom=linux.dev;
-	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=KvLCeue5;
-	arc=none smtp.remote-ip=95.215.58.151
-Received: from mta1.migadu.com (out-151.mta1.migadu.com [95.215.58.151])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Fu8tyQHg;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC87606A324
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 21:12:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DDC87606A324
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B7B60A2619
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 21:16:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=KvLCeue5
-X-Envelope-To: linux-perf-users@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=dwmocW0kYWF41nXHjEQPL6lIY+43EL+KJRdJH5ylj60=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1795122776; v=1; x=1795727576;
- b=KvLCeue5aQE9K2TXZYzGUcG4gAh8KvmI+KvaYVGGUO+MiInUZe9tBmlERZkMwOQtJBoklJQP
- p6QGKxmae/4LAg4UJdd4rAwtZo9WSmfiU1+wJm8bbfdqFCszdl6KecRLlkPCNVy+fZpN0lVmJtd
- 56aFvHAqVoImjtLrbIMEpXh0=
-X-Envelope-To: linux-perf-users@vger.kernel.org
-Received: by mta12.migadu.com with ESMTPS id 7548e2b2e281646e;
-	Thu, 19 Nov 2026 21:12:55 +0000
-X-Mizu-Trace-ID: 7548e2b2e281646e
-X-Migadu-Flow: FLOW_OUT
-From: Usama Arif <usama.arif@linux.dev>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	rkeilty@meta.com,
-	atish.patra@linux.dev,
-	dgreid@meta.com,
-	riel@surriel.com,
-	shakeel.butt@linux.dev,
-	kernel-team@meta.com
-Cc: Usama Arif <usama.arif@linux.dev>
-Subject: [PATCH 3/3] perf/core: Don't zero perf_sample_data in do_perf_sw_event()
-Date: Thu, 19 Nov 2026 13:10:46 -0800
-Message-ID: <20261119211235.99805-4-usama.arif@linux.dev>
-X-Mailer: git-send-email 2.53.1
-In-Reply-To: <20261119211235.99805-1-usama.arif@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Fu8tyQHg
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A0D21F000EC;
+	Thu, 19 Nov 2026 21:16:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795122984;
+	bh=WDRlDxJjQHkVu2PHgk64ZWW2ZSAZW86T1/O0yHx0njc=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=Fu8tyQHgblINjhiA/lMtV3iKqLdat1BR2Xy+mLZihdd2x7yZe/LWcKSKvqgtOKll/
+	 EDvz0wpwhRVRlY8XJJ/7f48ruZKqFQTKQqttVxoCC7dBMI7IcmQrEZdZn4RnsSASf9
+	 4kli9Qzo4c7JDnY3uPqjyNBC48uxwoyolXDJqRqZV9yZxM4fBDzps/sluEN1Cd5HUJ
+	 rhz6pf5tkEQNYCyQEwAiFd3k7ylfsgVzpq/jVbUOwmIeyAxmE49Qz8F9eDW6/Q+ac8
+	 kav8teQMJBN1aJ0nvURVEdROE5Q+fgGQYDCsGAk4TW3XpKaBgq+wJPoygA6q7SxvgM
+	 inLW8bfeyEhLQ==
+Message-ID: <sashiko-outbox-224086@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 1/3] perf/core: Fix perf_sample_data reuse across
+ software events
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Usama Arif" <usama.arif@linux.dev>, linux-perf-users@vger.kernel.org
+In-Reply-To: <20261119211235.99805-2-usama.arif@linux.dev>
 References: <20261119211235.99805-1-usama.arif@linux.dev>
+ <20261119211235.99805-2-usama.arif@linux.dev>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 19 Nov 2026 21:16:24 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -82,58 +59,36 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Kernels built with CONFIG_INIT_STACK_ALL_ZERO, the default when the
-compiler supports it, clear every local variable on function entry. For
-the 256-byte struct perf_sample_data in do_perf_sw_event() that is a
-memset, and it runs on every entry, before the list of events is even
-looked up.
+> do_perf_sw_event() passes one on-stack struct perf_sample_data to every
+> matching event. perf_prepare_sample() fills in the fields an event
+> samples, marks them in data->sample_flags and skips fields that are
+> already marked, and those marks survive from one event to the next.
+>=20
+> So a sampling event later in the list emits the sample ID, timestamp,
+> pid/tid and callchain prepared for an earlier one. Its record size is
+> computed from the earlier event's dynamic fields as well and can come
+> out smaller than what is written, in which case the kernel writes past
+> its ring-buffer reservation over the records that follow.
+>=20
+> Two "perf record -e page-faults,context-switches -c 1 -a" sessions
+> running at the same time hit this: the one started first gets the
+> other's sample IDs and fails with "Bad address".
+>=20
+> Commit 1d1bfe30dad5 ("perf/core: Fix perf_sample_data not properly
+> initialized for different swevents in perf_tp_event()") fixed the same
+> problem for tracepoints. Do the same here: initialize the struct for
+> each matching event. While at it, drop the unused data argument of
+> perf_swevent_match().
+>=20
+> Fixes: bb447c27a467 ("perf/core: Set data->sample_flags in perf_prepare_s=
+ample()")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Usama Arif <usama.arif@linux.dev>
 
-do_perf_sw_event() is entered for a software event, e.g. a context
-switch, as soon as one event of that kind is open anywhere in the
-system. Counting events add to event->count and never read the struct.
-For every matching event, perf_sample_data_init() resets sample_flags,
-period and dyn_size and stores the address if there is one; for a
-sampling event, perf_prepare_sample() then fills in what its
-sample_type asks for.
+Sashiko has reviewed this patch and found no issues.
 
-A single context-switch counter, e.g. one kept open by a monitoring
-daemon, is enough for every context switch on the machine to pay for
-the clearing. On hosts running many small VMs, ___perf_sw_event() is
-0.3% of all kernel cycles, and the memset about a seventh of that.
-
-Mark the struct __uninitialized, which is what kernels without stack
-auto-initialization get anyway. Because its contents are copied into a
-ring buffer that userspace maps, every field that is read must have
-been written first. That holds for perf_output_sample(), and with the
-previous patch also for what a BPF program can read through
-bpf_perf_event_data.
-
-In a KVM guest on AMD Zen 5 with software counters open on every CPU,
-this cuts the time they add to a context switch from 54 ns to 44 ns
-(sched_yield() between two threads on one CPU, with
-spec_rstack_overflow=off).
-
-Signed-off-by: Usama Arif <usama.arif@linux.dev>
----
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 57ea7e3c01a025..fa10ad7cfd99af 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11212,7 +11212,7 @@ static void do_perf_sw_event(enum perf_type_id type, u32 event_id,
- 				    u64 nr, struct pt_regs *regs, u64 addr)
- {
- 	struct swevent_htable *swhash = this_cpu_ptr(&swevent_htable);
--	struct perf_sample_data data;
-+	struct perf_sample_data data __uninitialized;
- 	struct perf_event *event;
- 	struct hlist_head *head;
- 
--- 
-2.53.1-Meta
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119211235.9980=
+5-1-usama.arif@linux.dev?part=3D1
 
