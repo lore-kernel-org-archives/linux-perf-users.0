@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795091835;
-	b=x/KNx+5xzSPKQfWtfZAwWFMt2gTr9VaQNUiiWvT91lb2DNgBTl+OQ1EgkDyry0lXgVnW
-	 YjOQWt3gcT4sDoHAvUTcdj61nCln+nX3ElcMLDzZDi4HXUxp582W8yrFSXzUHcc+EFyoe
-	 nDpqQK6doagv1R/TeISasXsvH0dR0FLHoXT0+wNPGX/nMqfM5oAF6fIpU3YqR6syAU7o1
-	 egE6TXk6ZWjC9afmgZvue0EUq0qAHPgaYtwL5RDVTZOUgsFP3fJO1P9mVgM7hk9jTCjXH
-	 T23oCJQvQ8hUn9bA2dvJQY/GIONGcO0afuxZThG98EA6wCIXf8GfDjx1HTjJfCvrsKA==
+	t=1795091920;
+	b=AlyVHe4C0XUojFikuPCk0m0I3+hVQWxKHG7D4/L8o3bS1pJA1e0FFQiXFed7YCszOS9W
+	 tCYeWa1U7b8/WfZE1eRWkTmzBRJ1EsAMGqZzaECC1h1xv5bVa4B4DTw8brK32KSeNOzH6
+	 owGS7TyYGf+3NfMdUzvisqwT37dq9yPm5wXjQ00c1XybzviezSy6hl8yIUjnLPb8FxawL
+	 WCWrvIvf3rPCV7q5FaHnXAW25Mz35YE5brrgqwyn9tkOmGDs9YpHgX+OX6vqHHdrrn28k
+	 C9LiFLVqsO8jjYTej+ISHhRUWiBl/kcg8PMARahrHhAITF94RfSzOivQqvugPOWcCkQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795091835;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795091920;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=/AoMC/1cb5tMqw0OE5DyqvSftJxPvWsVp36Na7nehD0=;
-	b=Novt5hrxTImu3mvEwXILDOp1m8eJhwJHL24ZgCJErOwLqPFB05fqnqU4lYO87CZ7T60M
-	 yROdDZZiTkxzzNgaVK0P1nDxxXsubp7wM5H2OWOGtmSouHZyeLqn/GmOurMff53GRU6X0
-	 p2I+s+Hm8nwXf+lKA+J4JG1w6wNw47sf1NZPKNxFlb/lA6nSku0O/XRTxRxH0oLv91TVk
-	 0gduYbwUD+qad8Ri8OeNvSbWjJJ76PTnoHAzIDaGSo/W+t0HoqnAH3ZIFMTfwB3kBltA7
-	 PU/G38Ydx3iaR49P5WyHF8pCXRK/DIeti3ScmjlNWVzrnDKNfzVQ8YIJAuY88RDVBHQ==
+	bh=3vQ9QKeYxKjkC4yLhi9kn1a/pVZvnd3GNok3QMGXXL8=;
+	b=RinSJXvAd7kf9oGpE2HTojcljoqgc27ZpFO1NHsS7slOmN625rKCsyLPU/nBubMGCFVA
+	 uu31ckK7QhSbN7dZgwzzyJWgp+3O0A5XH3gNVFx3Ja/ZoLf5CbyqCL23BiBFlGghgOhqK
+	 L2FlFqMpERBkavlVDeP21oO5vnxRDCxYKEV4MA18b5nTvTtp7JoMTRkuOqYrpgQMOQ7qJ
+	 k2vZTQqUYHLxqH2II+IRgUjDZAQRFBGR4hCp+xKS1p8UW9V+mL+EhMpH8ohDNjTs+fb4J
+	 Q01zovtGalVwvVJvJPrfz7INr/PeD+3C21jsAby0b/b7LCVoMbAP4bwP7CK6tbNepZQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n4O1aMA6;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=St3QCvvI;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAF7606A325
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 12:37:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FA0606A320
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 12:38:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=n4O1aMA6
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 573C01F000C5;
-	Thu, 19 Nov 2026 12:37:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=St3QCvvI
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D98F1F000C4;
+	Thu, 19 Nov 2026 12:38:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795091834;
-	bh=/AoMC/1cb5tMqw0OE5DyqvSftJxPvWsVp36Na7nehD0=;
+	s=k20260515; t=1795091920;
+	bh=3vQ9QKeYxKjkC4yLhi9kn1a/pVZvnd3GNok3QMGXXL8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=n4O1aMA6vKv9+nsoIGjpwzQm9HyVectkN6yDzqMNXzHbxBM1JYUQnCh8lZpVYyYRS
-	 wM6wzlWEqJx7FCQvygo9xYEMNT118YIJ69bOYzs6QWBkGDD6vAcaP8vzN5Z2sSUgNb
-	 nJy4BLb/742ahPQIlViEctlyJWSpww/dOFTYxkQh1k22gYjONSkh7jN6eiY45Kx8qz
-	 7eSUHnz6sczLaBJC4dKaBiQRAUPeZbzmItswdIEkdXlqHBXTHbtlMbE6zP1Xw3DCja
-	 sCLAwqZGJwobDxz0e/miis4dknrp+dM4izEHzXEe90qC4G6J0RlWqgnair2mJsr1H+
-	 8u/CbBxn+blow==
-Message-ID: <sashiko-outbox-223098@kernel.org>
+	b=St3QCvvIzBszj26Cwhd6jxTzL8xtlpMLNdQ4GvXi9XtT69WoJRZ7u7GZz15OW2TUd
+	 imIyeqlXluf3RLsQViEQkDDV0+Oh2AvDBzi9WQtDvu78qArd3c0VZfB+Wr37okbove
+	 xzXQQPy0Yb9iFeUcD8jp+Q9zuxPUMIa4M86epKC1ZNm1sdl4IdtjhNkmV4ItXjRIcZ
+	 yFPB20l1uesZl+Y6vQZ3djBZ1xdxQrHEfHTUPLRPdg/ng8hArP3rYEuKcPusrbiP0W
+	 LY58v8kyyij8n/f5yTNmX6wynQqXq7r+Y7JIcamgCJzkmCHxAlGOr/4UnliDqACvj9
+	 zXFsRar/kK1TA==
+Message-ID: <sashiko-outbox-223100@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v13 10/11] selftests/riscv: add SSE test module
+Subject: Re: [PATCH v13 04/11] drivers: firmware: add riscv SSE support
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Zhanpeng Zhang" <zhangzhanpeng.jasper@bytedance.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261119120824.13969-23-zhangzhanpeng.jasper@bytedance.com>
+In-Reply-To: <20261119120824.13969-17-zhangzhanpeng.jasper@bytedance.com>
 References: <20261119120824.13969-13-zhangzhanpeng.jasper@bytedance.com>
- <20261119120824.13969-23-zhangzhanpeng.jasper@bytedance.com>
+ <20261119120824.13969-17-zhangzhanpeng.jasper@bytedance.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 12:37:13 +0000
+Date: Thu, 19 Nov 2026 12:38:39 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,364 +60,614 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 7 potential
+Thank you for your contribution! Sashiko AI review found 8 potential
 issues to consider:
-- [Medium] selftests/riscv: sse: deadlock between migrate_disable() and
-  cpus_read_lock()
-- [Medium] selftests/riscv: sse: fast test ignores errors and races on
-  1-jiffy timeout
-- [Medium] selftests/riscv: sse: stress test treats -EEXIST as failure
-  instead of skip
-- [Medium] selftests/riscv: sse module Makefile defaults KDIR to host
-  /lib/modules
-- [Low] selftests/riscv: sse: stale pointers left in priority_test_arg
-  on teardown
-- [Low] selftests/riscv: sse: swapped log args in sse_test_handler() and
-  dead field
-- [Low] selftests/riscv: run_sse_test.sh added with non-executable mode
-  0644
+- [High] firmware: riscv_sbi_sse: sse_pm_notifier() unmasks SSE on
+  unready or offlining CPUs
+- [High] firmware: riscv_sbi_sse: sse_event_cleanup() leaks retained SSE
+  events
+- [High] firmware: riscv_sbi_sse: missing IRQ and teardown sync in
+  sse_event_*_local()
+- [High] firmware: riscv_sbi_sse: sse_cpu_teardown() mishandles CPU-up
+  rollback
+- [Medium] firmware: riscv_sbi_sse: missing hart and CPU bounds check in
+  sse_event_register()
+- [Medium] firmware: riscv_sbi_sse: sse_event_setup_all_cpus() can
+  return -EOPNOTSUPP with enabled state
+- [Medium] firmware: riscv_sbi_sse: sse_reboot_notifier() races with CPU
+  hotplug callbacks
+- [Medium] firmware: riscv_sbi_sse: broken rollback in
+  sse_event_set_target_cpu_nolock()
 --
 
-commit e938d689e90e8ec77bc093b9edf15fcf64552952
+commit 62013a3fca4c71adabe66ac29e99aa0bab92f5a1
 Author: Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>
 
-selftests/riscv: add SSE test module
+drivers: firmware: add riscv SSE support
 
-This commit adds a kernel module and kselftest runner script to test the
-RISC-V SBI Supervisor Software Events (SSE) framework, including fast
-injection, event priority chaining, and stress modes.
+This commit adds a driver-level interface for RISC-V Supervisor Software
+Events (SSE) to manage global and per-CPU event registration, enabling,
+disabling, and CPU hotplug and reboot teardown.
 
-> diff --git a/tools/testing/selftests/riscv/sse/module/Makefile b/tools/te=
-sting/selftests/riscv/sse/module/Makefile
+> diff --git a/drivers/firmware/riscv/riscv_sbi_sse.c b/drivers/firmware/ri=
+scv/riscv_sbi_sse.c
 > new file mode 100644
-> index 0000000000000..eac4b1c6228bb
+> index 0000000000000..0cb738bab6c39
 > --- /dev/null
-> +++ b/tools/testing/selftests/riscv/sse/module/Makefile
-> @@ -0,0 +1,22 @@
-> +ifneq ($(CONFIG_RISCV_SBI_SSE),)
-> +obj-m +=3D riscv_sse_test.o
-> +endif
-> +
-> +ifndef KERNELRELEASE
-> +
-> +TESTMODS_DIR :=3D $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST)=
-))))
-> +KDIR ?=3D /lib/modules/$(shell uname -r)/build
-> +
-> +# Ensure that KDIR exists, otherwise skip the compilation
-> +modules:
-> +ifneq ("$(wildcard $(KDIR))", "")
-> +	$(Q)$(MAKE) -C $(KDIR) modules KBUILD_EXTMOD=3D$(TESTMODS_DIR)
-> +endif
-
-[Severity: Medium]
-Does defaulting KDIR to /lib/modules/$(shell uname -r)/build break
-cross-compilation and in-tree or O=3D builds?
-
-When cross-compiling with ARCH=3Driscv on a non-RISC-V host where
-/lib/modules/$(uname -r)/build exists, Kbuild runs against the host kernel
-headers with ARCH=3Driscv and fails.  When /lib/modules/$(uname -r)/build is
-absent or points to a running kernel without CONFIG_RISCV_SBI_SSE,
-riscv_sse_test.ko is silently skipped instead of building against the
-target kernel tree.  Other selftest modules (such as
-tools/testing/selftests/mm/page_frag/Makefile) resolve KDIR from O,
-KBUILD_OUTPUT, or $(abs_srctree).
-
-> diff --git a/tools/testing/selftests/riscv/sse/module/riscv_sse_test.c b/=
-tools/testing/selftests/riscv/sse/module/riscv_sse_test.c
-> new file mode 100644
-> index 0000000000000..cc5c2e46f2fdb
-> --- /dev/null
-> +++ b/tools/testing/selftests/riscv/sse/module/riscv_sse_test.c
-[ ... ]
-> +static int sse_test_handler(u32 evt, void *arg, struct pt_regs *regs)
-> +{
-> +	int ret =3D 0;
-> +	struct fast_test_arg *targ =3D arg;
-> +	u32 test_evt;
-> +	int cpu;
-> +
-> +	atomic_inc(&sse_test_handler_count);
-> +
-> +	/* Pairs with the argument publication in sse_run_fast_test_cpu(). */
-> +	if (!smp_load_acquire(&targ->args_ready)) {
-> +		sse_err("Received SSE event %x before its test arguments were publishe=
-d\n",
-> +			evt);
-> +		ret =3D -EINVAL;
-> +		goto complete;
-> +	}
-> +
-> +	test_evt =3D READ_ONCE(targ->evt);
-> +	cpu =3D READ_ONCE(targ->cpu);
-> +
-> +	if (evt !=3D test_evt) {
-> +		sse_err("Received SSE event id %x instead of %x\n", test_evt, evt);
-> +		ret =3D -EINVAL;
-> +	}
-
-[Severity: Low]
-Are test_evt and evt swapped in this sse_err() call?  evt is the received
-event ID and test_evt is the expected one.
-
-Also, struct priority_test_arg below defines an unused check_func member.
+> +++ b/drivers/firmware/riscv/riscv_sbi_sse.c
+> @@ -0,0 +1,1219 @@
 
 [ ... ]
 
-> +static int sse_run_fast_test_cpu(struct fast_test_arg *test_arg,
-> +				 struct sse_event *event, u32 evt, int cpu)
+> +static int sse_sbi_event_func(struct sse_event *event, unsigned long fun=
+c)
 > +{
-> +	unsigned long timeout;
-> +	int ret;
+> +	struct sbiret ret;
+> +	u32 evt =3D event->evt_id;
+> +	struct sse_registered_event *reg_evt =3D sse_get_reg_evt(event);
 > +
-> +	WRITE_ONCE(test_arg->completion, false);
-> +	WRITE_ONCE(test_arg->args_ready, false);
-> +	WRITE_ONCE(test_arg->evt, evt);
-> +	WRITE_ONCE(test_arg->cpu, cpu);
-> +	/* Publish all arguments before firmware can inject on another hart. */
-> +	smp_store_release(&test_arg->args_ready, true);
-> +
-> +	ret =3D sse_test_inject_event(event, evt, cpu);
-> +	if (ret) {
-> +		sse_err("event %s injection failed, err %d\n",
-> +			sse_evt_name(evt), ret);
-> +		return ret;
+> +	ret =3D sbi_ecall(SBI_EXT_SSE, func, evt, 0, 0, 0, 0, 0);
+> +	if (ret.error) {
+> +		pr_warn("Failed to execute func %lx, event %x, error %ld\n",
+> +			func, evt, ret.error);
+> +		return sse_err_map_linux_errno(ret.error);
 > +	}
 > +
-> +	timeout =3D jiffies + HZ / 100;
-> +	/* We can not use <linux/completion.h> since they are not NMI safe */
-> +	/* Pairs with the handler's completion publication. */
-> +	while (!smp_load_acquire(&test_arg->completion) &&
-> +	       time_before(jiffies, timeout))
-> +		cpu_relax();
-> +	/* Acquire the handler's checks even if the loop observed a timeout. */
-> +	if (!smp_load_acquire(&test_arg->completion)) {
-> +		sse_err("Failed to wait for event %s completion on CPU %d\n",
-> +			sse_evt_name(evt), cpu);
-> +		return -ETIMEDOUT;
-> +	}
+> +	if (func =3D=3D SBI_SSE_EVENT_DISABLE)
+> +		reg_evt->is_enabled =3D false;
+> +	else if (func =3D=3D SBI_SSE_EVENT_ENABLE)
+> +		reg_evt->is_enabled =3D true;
 > +
-> +	return sse_test_wait_not_running_on_cpu(evt, cpu);
+> +	return 0;
 > +}
 > +
-> +static void sse_run_fast_test(struct fast_test_arg *test_arg,
-> +			      struct sse_event *event, u32 evt)
+> +int sse_event_disable_local(struct sse_event *event)
 > +{
-> +	int cpu;
+> +	if (!sse_event_is_global(event->evt_id))
+> +		lockdep_assert_preemption_disabled();
 > +
-> +	if (sse_event_is_global(evt)) {
-> +		/* Keep the selected target online through injection and completion. */
-> +		cpu_hotplug_disable();
-> +		for_each_online_cpu(cpu) {
-> +			if (sse_run_fast_test_cpu(test_arg, event, evt, cpu))
-> +				break;
-> +		}
-> +		cpu_hotplug_enable();
-> +		return;
-> +	}
+> +	if (!sse_get_reg_evt(event)->is_enabled)
+> +		return 0;
 > +
-> +	guard(cpus_read_lock)();
-> +	for_each_online_cpu(cpu) {
-> +		if (sse_run_fast_test_cpu(test_arg, event, evt, cpu))
-> +			return;
-> +	}
+> +	return sse_sbi_event_func(event, SBI_SSE_EVENT_DISABLE);
 > +}
+> +EXPORT_SYMBOL_GPL(sse_event_disable_local);
 > +
-> +static void sse_test_injection_fast(void)
+> +int sse_event_enable_local(struct sse_event *event)
 > +{
-[ ... ]
-> +		for (j =3D 0; j < RUN_LOOP_COUNT; j++)
-> +			sse_run_fast_test(&fast_test_arg, event, evt);
-
-[Severity: Medium]
-Can a timeout in sse_run_fast_test_cpu() race with an in-flight handler on
-fast_test_arg across the remaining RUN_LOOP_COUNT iterations?
-
-With CONFIG_HZ=3D100, HZ / 100 is 1 jiffy, which can expire on the next
-timer tick while waiting for a remote CPU.  On timeout,
-sse_run_fast_test_cpu() returns without calling
-sse_test_wait_not_running_on_cpu(), and sse_run_fast_test() discards the
-error so sse_test_injection_fast() immediately starts the next iteration
-and overwrites the shared static fast_test_arg while the delayed handler
-may still be running (or stalls module load if all 1,000 iterations time
-out).  In addition, non-timeout errors in
-sse_test_wait_not_running_on_cpu() (-ENOMEM or smp_call_function_single()
-and sse_event_attr_read() failures) return without logging sse_err(), so
-run_sse_test.sh will not detect them.
-
-[ ... ]
-
-> +static void sse_test_injection_priority_arg(struct priority_test_arg *ar=
-gs, unsigned int args_size,
-> +					    sse_event_handler_fn handler, const char *test_name)
-> +{
-> +	unsigned int i;
-> +	unsigned long timeout;
+> +	struct sse_registered_event *reg_evt =3D sse_get_reg_evt(event);
 > +	int ret;
-> +	int target_cpu;
-> +	struct sse_event *event;
-> +	struct priority_test_arg *arg, *first_arg =3D NULL, *prev_arg =3D NULL;
 > +
-> +	pr_info("Starting SSE priority test (%s)\n", test_name);
-> +	/* Keep the complete priority chain on one CPU. */
-> +	migrate_disable();
-> +	target_cpu =3D smp_processor_id();
+> +	if (!sse_event_is_global(event->evt_id))
+> +		lockdep_assert_preemption_disabled();
 > +
-> +	for (i =3D 0; i < args_size; i++) {
-> +		arg =3D &args[i];
+> +	rcu_read_lock();
+> +	if (READ_ONCE(sse_shutting_down)) {
+> +		ret =3D -ESHUTDOWN;
+> +		goto out;
+> +	}
 > +
-> +		if (!sse_test_can_inject_event(arg->evt))
-> +			continue;
+> +	if (!reg_evt->is_registered) {
+> +		ret =3D -EINVAL;
+> +		goto out;
+> +	}
 > +
-> +		WRITE_ONCE(arg->called, false);
-> +		WRITE_ONCE(arg->next_evt_arg, NULL);
-> +		WRITE_ONCE(arg->event, NULL);
-> +		WRITE_ONCE(arg->enable_attempted, false);
+> +	if (reg_evt->is_enabled) {
+> +		ret =3D 0;
+> +		goto out;
+> +	}
 > +
-> +		event =3D sse_test_event_register(arg->evt, arg->prio, handler,
-> +						(void *)arg);
+> +	ret =3D sse_sbi_event_func(event, SBI_SSE_EVENT_ENABLE);
+> +out:
+> +	rcu_read_unlock();
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(sse_event_enable_local);
 
-[Severity: Medium]
-Can calling sse_test_event_register() and the other SSE helpers inside
-migrate_disable() deadlock with CPU hotplug?
+[Severity: High]
+Can a hardirq interrupting sse_event_disable_local(),
+sse_event_enable_local(), or sse_teardown_event() observe stale
+reg_evt->is_enabled state and issue conflicting SBI calls?
 
-migrate_disable() pins the task to target_cpu without blocking CPU
-hotplug, while sse_event_register(), sse_event_set_target_cpu(),
-sse_event_enable(), sse_event_disable(), and sse_event_unregister() each
-acquire cpus_read_lock() internally:
+sse_event_disable_local(), sse_event_enable_local(), and
+sse_cpu_teardown() run with local interrupts enabled, and
+sse_sbi_event_func() updates reg_evt->is_enabled only after sbi_ecall()
+returns:
 
-CPU0 (target_cpu)                 CPU1
------------------                 ----
-sse_test_injection_priority_arg()
-  migrate_disable()
-                                  _cpu_down(target_cpu)
-                                    cpus_write_lock()
-                                    ...
-                                    sched_cpu_wait_empty()
-                                      balance_hotplug_wait()
-  sse_test_event_register()
-    sse_event_register()
-      mutex_lock(&sse_mutex)
-      cpus_read_lock()
+sse_cpu_teardown()
+  sse_teardown_event()
+    if (reg_evt->is_enabled)
+      sse_event_disable_local()
+        <hardirq>
+          perf_mux_hrtimer_handler()
+            ...
+              sse_event_disable_local()
+                sbi_ecall(..., SBI_SSE_EVENT_DISABLE, ...)
+                reg_evt->is_enabled =3D false;
+        sse_sbi_event_func(..., SBI_SSE_EVENT_DISABLE)
+          sbi_ecall(..., SBI_SSE_EVENT_DISABLE, ...)  <-- returns -EINVAL
 
- *** DEADLOCK ***
+During reboot or kexec, sse_reboot_nb runs at default priority 0 while
+CPUHP_AP_PERF_ONLINE and perf timer interrupts are still active.  When the
+second SBI_SSE_EVENT_DISABLE fails with -EINVAL, sse_teardown_event()
+aborts before unregistering the event and sets sse_teardown_failed,
+causing sse_reboot_notifier() to panic on kexec.
 
-CPU1 holds cpus_write_lock() and waits in balance_hotplug_wait() for
-pinned tasks on target_cpu to call migrate_enable(), while CPU0 is pinned
-to target_cpu and blocks in cpus_read_lock() (also holding sse_mutex).
-Surrounding the migrate_disable() section with cpu_hotplug_disable() and
-cpu_hotplug_enable() avoids the lock inversion and prevents
-sse_cpu_teardown() from tearing down SSE on target_cpu mid-test.
+The same window exists when an interrupt nests inside normal
+sse_event_disable_local() or sse_event_enable_local() calls, or when an
+interrupt calls sse_event_enable_local() after sse_teardown_event() (on
+normal CPU offline where sse_shutting_down is false) or
+sse_event_set_target_cpu_nolock() disables an event while
+reg_evt->is_registered is still true.
+
+Also, sse_event_enable_local() calls sse_get_reg_evt(event) (which calls
+smp_processor_id() for local events) before
+lockdep_assert_preemption_disabled(), and sse_restore_local_events()
+restores local events from event->enable_requested rather than the
+per-CPU reg_evt->is_enabled state that was active before
+sse_cpu_teardown() began.
 
 [ ... ]
 
-> +release_events:
+> +static int sse_event_set_target_cpu_nolock(struct sse_event *event,
+> +					   unsigned int cpu)
+> +{
+> +	unsigned long hart_id, old_hart_id;
+> +	struct sse_registered_event *reg_evt =3D event->global;
+> +	u32 evt =3D event->evt_id;
+> +	unsigned int old_cpu;
+> +	bool was_enabled;
+> +	int ret;
 > +
-> +	for (i =3D 0; i < args_size; i++) {
-> +		arg =3D &args[i];
-> +		event =3D arg->event;
-> +		if (!event)
-> +			continue;
+> +	if (!sse_event_is_global(evt))
+> +		return -EINVAL;
 > +
-> +		ret =3D sse_test_wait_not_running_on_cpu(arg->evt, target_cpu);
+> +	if (cpu >=3D nr_cpu_ids || !cpu_online(cpu))
+> +		return -EINVAL;
+> +	hart_id =3D cpuid_to_hartid_map(cpu);
+> +	old_cpu =3D event->cpu;
+> +	old_hart_id =3D cpuid_to_hartid_map(old_cpu);
+> +
+> +	was_enabled =3D reg_evt->is_enabled;
+> +	if (was_enabled) {
+> +		ret =3D sse_event_disable_local(event);
 > +		if (ret)
-> +			sse_err("Event %s did not complete, err %d\n",
-> +				sse_evt_name(arg->evt), ret);
+> +			return ret;
+> +	}
 > +
-> +		if (arg->enable_attempted) {
-> +			ret =3D sse_event_disable(event);
-> +			if (ret) {
-> +				sse_err("Failed to disable event %s, err %d\n",
-> +					sse_evt_name(arg->evt), ret);
-> +				sse_test_queue_cleanup(event);
-> +				WRITE_ONCE(arg->event, NULL);
-> +				WRITE_ONCE(arg->enable_attempted, false);
-> +				continue;
+> +	ret =3D sse_event_attr_set_nolock(reg_evt, SBI_SSE_ATTR_PREFERRED_HART,
+> +					hart_id);
+> +	if (ret =3D=3D 0)
+> +		sse_global_event_update_cpu(event, cpu);
+> +
+> +	if (was_enabled) {
+> +		int enable_ret;
+> +
+> +		enable_ret =3D sse_event_enable_local(event);
+> +		if (enable_ret) {
+> +			int rollback_ret;
+> +
+> +			/*
+> +			 * The preferred hart was already changed. Restore both the
+> +			 * firmware attribute and Linux's cached target before reporting
+> +			 * the failed migration.
+> +			 */
+> +			rollback_ret =3D sse_event_attr_set_nolock(reg_evt,
+> +								 SBI_SSE_ATTR_PREFERRED_HART,
+> +								 old_hart_id);
+> +			if (!rollback_ret) {
+> +				sse_global_event_update_cpu(event, old_cpu);
+> +				rollback_ret =3D sse_event_enable_local(event);
+> +			}
+> +			if (!rollback_ret)
+> +				return enable_ret;
+> +
+> +			pr_warn("Failed to restore global event %x to CPU %u: %d\n",
+> +				evt, old_cpu, rollback_ret);
+> +			event->enable_requested =3D false;
+> +			return enable_ret;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+
+[Severity: Medium]
+Does the rollback in sse_event_set_target_cpu_nolock() misbehave when
+setting SBI_SSE_ATTR_PREFERRED_HART or rolling it back fails?
+
+If sse_event_attr_set_nolock() fails (ret !=3D 0) on an enabled event and
+re-enabling the event also fails (enable_ret !=3D 0), the code enters the
+rollback block even though the preferred hart was never changed,
+redundantly writing old_hart_id and returning enable_ret instead of ret.
+
+Conversely, if setting the new preferred hart succeeds (ret =3D=3D 0),
+sse_global_event_update_cpu(event, cpu) updates event->cpu to the new
+CPU.  If both sse_event_enable_local() and the rollback
+sse_event_attr_set_nolock(..., old_hart_id) then fail, event->cpu remains
+set to the new CPU while the function returns enable_ret, causing
+sse_cpu_teardown() to abort the CPU offline even though the event has
+already been moved to next_cpu and disabled.
+
+[ ... ]
+
+> +void sse_event_cleanup(struct sse_event *event)
+> +{
+> +	guard(mutex)(&sse_mutex);
+> +	guard(cpus_read_lock)();
+> +
+> +	if (event->cleanup_pending)
+> +		return;
+> +
+> +	/*
+> +	 * Firmware may still enter the old callback after disable or unregister
+> +	 * fails. Publish a core-owned callback, then wait before the client fr=
+ees
+> +	 * its callback data.
+> +	 */
+> +	event->cleanup_pending =3D true;
+> +	rcu_assign_pointer(event->handler, sse_cleanup_event_handler);
+> +	synchronize_rcu();
+> +}
+> +EXPORT_SYMBOL_GPL(sse_event_cleanup);
+> +
+> +static void sse_release_cleanup_event(struct sse_event *event)
+> +{
+> +	if (!event->cleanup_pending || sse_event_is_registered(event))
+> +		return;
+> +
+> +	list_del(&event->list);
+> +	sse_event_free(event);
+> +}
+> +
+> +static int sse_event_setup_all_cpus(struct sse_event *event,
+> +				    unsigned long func,
+> +				    unsigned long rollback_func)
+> +{
+> +	struct sse_per_cpu_evt cpu_evt;
+> +	int rollback_ret;
+> +	int ret;
+> +
+> +	cpu_evt.event =3D event;
+> +	atomic_set(&cpu_evt.first_error, 0);
+> +	atomic_set(&cpu_evt.nonfallback_error, 0);
+> +	cpumask_clear(&cpu_evt.changed);
+> +	cpu_evt.func =3D func;
+> +	on_each_cpu(sse_event_per_cpu_func, &cpu_evt, 1);
+> +	/* IRQ fallback is safe only if every failing CPU reports unsupported. =
+*/
+> +	ret =3D atomic_read(&cpu_evt.nonfallback_error);
+> +	if (!ret)
+> +		ret =3D atomic_read(&cpu_evt.first_error);
+> +	/*
+> +	 * A previous attempt may already have changed some CPUs. Roll back only
+> +	 * instances changed by this invocation.
+> +	 */
+> +	if (ret) {
+> +		cpu_evt.func =3D rollback_func;
+> +		atomic_set(&cpu_evt.first_error, 0);
+> +		atomic_set(&cpu_evt.nonfallback_error, 0);
+> +		on_each_cpu_mask(&cpu_evt.changed, sse_event_per_cpu_func, &cpu_evt, 1=
+);
+> +
+> +		rollback_ret =3D atomic_read(&cpu_evt.nonfallback_error);
+> +		if (!rollback_ret)
+> +			rollback_ret =3D atomic_read(&cpu_evt.first_error);
+> +
+> +		/* A rollback failure leaves the firmware state uncertain. */
+> +		return rollback_ret ?: ret;
+> +	}
+> +
+> +	return 0;
+> +}
+
+[Severity: High]
+Does sse_event_cleanup() leak struct sse_event and leave its evt_id
+permanently blocked on the events list?
+
+sse_event_cleanup() sets event->cleanup_pending =3D true and swaps the
+handler, but never tears down remaining registrations or calls
+sse_release_cleanup_event(event).
+
+If all registrations were already removed before cleanup_pending was set
+(for example, when sse_reboot_notifier() tore down all events and a
+client's later sse_event_unregister() returned -ESHUTDOWN, or when the
+failing CPU went offline in the window between sse_event_unregister()
+dropping sse_mutex and sse_event_cleanup() acquiring it),
+sse_release_cleanup_event() during sse_cpu_teardown() saw
+!event->cleanup_pending and did nothing.  Once sse_event_cleanup() sets
+cleanup_pending =3D true, nothing calls sse_release_cleanup_event(event)
+again, leaking event and causing future sse_event_register() calls for
+that evt_id to fail with -EEXIST.
+
+Similarly, if a client calls sse_event_cleanup(event) directly after
+sse_event_disable(event) fails on one CPU without calling
+sse_event_unregister(event), sse_event_cleanup() neither clears
+event->enable_requested nor unregisters the event on the online CPUs
+where disabling succeeded, leaving those CPUs registered and preventing
+sse_release_cleanup_event() from ever freeing the event.
+
+[Severity: Medium]
+Can sse_event_setup_all_cpus() return -EOPNOTSUPP to sse_event_enable()
+while leaving the event enabled on some CPUs?
+
+If the forward enable pass fails with a non-fallback error (such as -EIO)
+after enabling the event on CPUs in cpu_evt.changed, and the rollback
+disable pass fails with -EOPNOTSUPP, "return rollback_ret ?: ret;"
+overwrites ret with -EOPNOTSUPP.  Likewise, if any CPU was already
+enabled before sse_event_enable() ran (so changed was false on that CPU)
+and another CPU fails with -EOPNOTSUPP, only cpu_evt.changed is rolled
+back.  Unlike sse_event_register(), sse_event_enable() does not check
+sse_event_is_enabled(event), so it returns -EOPNOTSUPP and allows the
+client to select an IRQ fallback while firmware still has SSE enabled.
+
+[ ... ]
+
+> +	if (sse_event_is_global(evt)) {
+> +		unsigned long preferred_hart;
+> +
+> +		ret =3D sse_event_attr_get_no_lock(event->global,
+> +						 SBI_SSE_ATTR_PREFERRED_HART,
+> +						 &preferred_hart);
+> +		if (ret)
+> +			return sse_register_failed(event, ret);
+> +
+> +		cpu =3D riscv_hartid_to_cpuid(preferred_hart);
+> +		if (cpu < 0 || !cpu_online(cpu)) {
+> +			cpu =3D cpumask_first(cpu_online_mask);
+
+[Severity: Medium]
+Can cpu_online(cpu) read past nr_cpu_ids when firmware reports an invalid
+or unpopulated preferred_hart?
+
+In arch/riscv/kernel/smp.c, __cpuid_to_hartid_map[NR_CPUS] initializes
+all NR_CPUS slots to INVALID_HARTID, and riscv_hartid_to_cpuid() scans up
+to NR_CPUS:
+
+arch/riscv/kernel/smp.c:riscv_hartid_to_cpuid() {
+	for (i =3D 0; i < NR_CPUS; i++)
+		if (cpuid_to_hartid_map(i) =3D=3D hartid)
+			return i;
+}
+
+When nr_cpu_ids < NR_CPUS and firmware returns preferred_hart =3D=3D
+INVALID_HARTID (or a hart mapped at index >=3D nr_cpu_ids),
+riscv_hartid_to_cpuid() returns an index >=3D nr_cpu_ids.  Passing that cpu
+to cpu_online(cpu) without checking preferred_hart =3D=3D INVALID_HARTID or
+cpu >=3D nr_cpu_ids (unlike sse_event_set_target_cpu_nolock()) reads past
+nr_cpu_ids in cpu_online_mask and triggers the WARN_ON_ONCE() in
+cpumask_check() when CONFIG_DEBUG_PER_CPU_MAPS is enabled.
+
+[ ... ]
+
+> +static int sse_cpu_teardown(unsigned int cpu)
+> +{
+> +	/* Only a regular CPU-offline callback may abort the CPUHP operation. */
+> +	bool regular_offline =3D READ_ONCE(sse_available) &&
+> +			       !READ_ONCE(sse_shutting_down);
+> +	unsigned int next_cpu;
+> +	struct sse_event *event, *tmp;
+> +	int first_error =3D 0;
+> +	int ret;
+> +
+> +	/* Do not dismantle CPU state while firmware can still deliver SSE. */
+> +	ret =3D sse_events_mask();
+> +	if (ret) {
+> +		pr_warn("Failed to mask SSE on CPU %u during teardown: %d\n",
+> +			cpu, ret);
+> +		if (READ_ONCE(sse_shutting_down))
+> +			atomic_set(&sse_teardown_failed, 1);
+> +		/* CPUHP installation rollback and state removal cannot fail. */
+> +		return regular_offline ? ret : 0;
+> +	}
+> +
+> +	list_for_each_entry_safe(event, tmp, &events, list) {
+> +		if (sse_event_is_global(event->evt_id))
+> +			continue;
+> +
+> +		scoped_guard(preempt)
+> +			ret =3D sse_teardown_event(event, cpu);
+> +		if (ret && !first_error)
+> +			first_error =3D ret;
+> +		sse_release_cleanup_event(event);
+> +		if (ret && regular_offline)
+> +			goto restore_cpu;
+> +	}
+> +
+> +	list_for_each_entry_safe(event, tmp, &events, list) {
+> +		if (!sse_event_is_global(event->evt_id) || event->cpu !=3D cpu)
+> +			continue;
+> +
+> +		/*
+> +		 * cpuhp_remove_state() invokes teardown while every CPU remains
+> +		 * online. Do not migrate to a CPU whose callback may have run.
+> +		 */
+> +		if (READ_ONCE(sse_shutting_down) || event->cleanup_pending) {
+> +			ret =3D sse_teardown_event(event, cpu);
+> +		} else {
+> +			next_cpu =3D cpumask_any_but(cpu_online_mask, cpu);
+> +			if (next_cpu >=3D nr_cpu_ids) {
+> +				ret =3D sse_teardown_event(event, cpu);
+> +			} else {
+> +				ret =3D sse_event_set_target_cpu_nolock(event, next_cpu);
+> +				if (ret)
+> +					pr_warn("Failed to migrate global event %x from CPU %u: %d\n",
+> +						event->evt_id, cpu, ret);
 > +			}
 > +		}
 > +
-> +		ret =3D sse_test_event_unregister(event);
-> +		if (ret) {
-> +			sse_err("Failed to unregister event %s, err %d\n",
-> +				sse_evt_name(arg->evt), ret);
-> +			continue;
-> +		}
-> +
-> +		WRITE_ONCE(arg->event, NULL);
-> +		WRITE_ONCE(arg->enable_attempted, false);
+> +		if (ret && !first_error)
+> +			first_error =3D ret;
+> +		sse_release_cleanup_event(event);
+> +		if (ret && regular_offline)
+> +			goto restore_cpu;
 > +	}
-
-[Severity: Low]
-Does release_events leave stale pointers in priority_test_arg when disable
-or unregister fails?
-
-When sse_test_event_unregister() fails, it queues event for deferred
-freeing via sse_test_queue_cleanup(), but the error branch jumps to the
-next iteration before clearing arg->event and arg->enable_attempted.
-Also, release_events never clears arg->next_evt_arg, so if an event fails
-to disable or unregister and fires late after its successor in args[] has
-been unregistered, the handler will read a non-NULL targ->next_evt_arg and
-signal the unregistered successor event.
-
-[ ... ]
-
-> +static int sse_stress_test_layer(int layer)
-> +{
-[ ... ]
-> +	event =3D sse_test_event_register(stress_ctx.evt_id, 0,
-> +					stress_handlers[layer], &stress_ctx);
-> +	if (IS_ERR(event)) {
-> +		sse_err("Failed to register stress event, err %ld\n",
-> +			PTR_ERR(event));
-> +		return PTR_ERR(event);
+> +
+> +	if (first_error) {
+> +		/* An offline CPU is not revisited when this CPUHP state is removed. */
+> +		atomic_set(&sse_teardown_failed, 1);
 > +	}
-[ ... ]
-> +static void sse_stress_test_all_layers(void)
+> +
+> +	return 0;
+> +
+> +restore_cpu:
+> +	/*
+> +	 * CPUHP leaves this CPU online when teardown returns an error. Restore
+> +	 * every client-owned local event before making SSE delivery visible ag=
+ain.
+> +	 */
+> +	ret =3D sse_restore_local_events(cpu);
+> +	if (!ret)
+> +		ret =3D sse_events_unmask();
+> +	if (ret) {
+> +		atomic_set(&sse_teardown_failed, 1);
+> +		pr_warn("Failed to restore SSE after aborting CPU %u offline: %d\n",
+> +			cpu, ret);
+> +	} else {
+> +		pr_warn("Aborted CPU %u offline after SSE teardown failed: %d\n",
+> +			cpu, first_error);
+> +	}
+> +
+> +	return first_error;
+> +}
+
+[Severity: High]
+What happens if sse_cpu_teardown() is invoked during a post-boot
+_cpu_up() rollback after a later CPUHP state fails?
+
+Because sse_available is true and sse_shutting_down is false after boot,
+regular_offline evaluates to true even when sse_cpu_teardown() is rolling
+back a failed CPU bringup.  If sse_teardown_event() or migration fails,
+sse_cpu_teardown() jumps to restore_cpu, re-registers and re-enables
+local events, unmasks SSE on the hart, leaves sse_teardown_failed unset
+when restore succeeds, and returns first_error (triggering
+WARN_ON_ONCE(st->rollback) in cpuhp_thread_fun()), while
+cpuhp_up_callbacks() proceeds to take the CPU down via takedown_cpu()
+with SSE still unmasked and events active in firmware.  Likewise, if
+sse_events_mask() fails during a _cpu_up() rollback, sse_cpu_teardown()
+returns a non-zero error without setting sse_teardown_failed.
+
+> +
+> +static int sse_pm_notifier(struct notifier_block *nb, unsigned long acti=
+on,
+> +			   void *data)
 > +{
-> +	int i, ret;
+> +	int ret;
 > +
-> +	pr_info("Starting SSE stress tests: duration=3D%d ms, interval=3D%d ns\=
-n",
-> +		STRESS_DURATION_MS, STRESS_INJECT_NS);
+> +	WARN_ON_ONCE(preemptible());
 > +
-> +	for (i =3D 0; i < ARRAY_SIZE(stress_handlers); i++) {
-> +		ret =3D sse_stress_test_layer(i);
-> +		if (ret) {
-> +			sse_err("Stress layer %d failed, err %d\n", i, ret);
-> +			break;
+> +	switch (action) {
+> +	case CPU_PM_ENTER:
+> +		ret =3D sse_events_mask();
+> +		break;
+> +	case CPU_PM_EXIT:
+> +	case CPU_PM_ENTER_FAILED:
+> +		if (READ_ONCE(sse_shutting_down))
+> +			return NOTIFY_OK;
+> +		ret =3D sse_events_unmask();
+> +		break;
+> +	default:
+> +		return NOTIFY_DONE;
+> +	}
+> +
+> +	if (ret)
+> +		return notifier_from_errno(ret);
+> +
+> +	return NOTIFY_OK;
+> +}
+
+[Severity: High]
+Can sse_pm_notifier() unmask SSE on a CPU where SSE has already been torn
+down, has not been initialized yet, or was intentionally left masked?
+
+CPU_PM_EXIT and CPU_PM_ENTER_FAILED only check sse_shutting_down before
+calling sse_events_unmask(), without tracking whether SSE is currently
+online and unmasked on this CPU.
+
+During normal CPU hot-unplug, sse_cpu_teardown() masks SSE and tears down
+events at CPUHP_AP_RISCV_SSE_ONLINE, after which the cpuhp thread parks
+at CPUHP_AP_ONLINE_IDLE and the offlining CPU enters do_idle() ->
+cpuidle_idle_call() while waiting for takedown_cpu() at
+CPUHP_TEARDOWN_CPU.  Exiting a CPU_PM idle state in that window calls
+sse_events_unmask(), re-enabling SSE delivery on the dying hart after its
+events have been torn down.
+
+The same unconditional unmask can happen on a CPU exiting a CPU_PM idle
+state before CPUHP_AP_RISCV_SSE_ONLINE has run arch_sse_init_cpu() (during
+sse_init() where cpu_pm_register_notifier() runs before
+cpuhp_setup_state(), or during _cpu_up()), or after restore_cpu in
+sse_cpu_teardown() intentionally left SSE masked because
+sse_restore_local_events() failed.
+
+[ ... ]
+
+> +static int sse_reboot_notifier(struct notifier_block *nb, unsigned long =
+action,
+> +			       void *data)
+> +{
+> +	int ret;
+> +
+> +	scoped_guard(mutex, &sse_mutex) {
+> +		if (!sse_shutting_down) {
+> +			WRITE_ONCE(sse_shutting_down, true);
+> +			ret =3D cpu_pm_unregister_notifier(&sse_pm_nb);
+> +			if (ret) {
+> +				pr_warn("Failed to unregister CPU PM notifier: %d\n",
+> +					ret);
+> +				atomic_set(&sse_teardown_failed, 1);
+> +			}
+> +			/* Drain CPU PM callbacks and client enables before teardown. */
+> +			synchronize_rcu();
+> +			cpuhp_remove_state(CPUHP_AP_RISCV_SSE_ONLINE);
 > +		}
+> +	}
+> +
+> +	/* Normal kexec preserves firmware state but discards old kernel memory=
+. */
+> +	if (kexec_in_progress && atomic_read(&sse_teardown_failed))
+> +		panic("SSE teardown failed; refusing unsafe kexec");
+> +
+> +	return NOTIFY_OK;
+> +}
 
 [Severity: Medium]
-Should sse_stress_test_layer() skip rather than fail when
-sse_test_event_register() returns -EEXIST?
+Can sse_reboot_notifier() setting sse_shutting_down without
+cpus_read_lock() race with an in-progress sse_cpu_teardown() and trigger
+the kexec panic?
 
-Unlike sse_test_injection_fast() and sse_test_injection_priority_arg(),
-sse_stress_test_layer() and sse_stress_test_all_layers() log sse_err() on
--EEXIST.  Because run_sse_test.sh checks for FAILED: before SKIP:,
-running with stress=3D1 or stress=3D2 when
-SBI_SSE_EVENT_LOCAL_SOFTWARE_INJECTED is already registered exits with
-failure (1) instead of ksft_skip (4).
+Normal CPU hotplug callbacks run under cpus_write_lock() without holding
+sse_mutex, while reboot notifiers run before migrate_to_reboot_cpu()
+disables CPU hotplug:
 
-> diff --git a/tools/testing/selftests/riscv/sse/run_sse_test.sh b/tools/te=
-sting/selftests/riscv/sse/run_sse_test.sh
-> new file mode 100644
-> index 0000000000000..e70a2fd14b05e
-> --- /dev/null
-> +++ b/tools/testing/selftests/riscv/sse/run_sse_test.sh
-> @@ -0,0 +1,59 @@
-> +#!/bin/bash
-> +# SPDX-License-Identifier: GPL-2.0
+CPU0                                     CPU1
+_cpu_down()
+  sse_cpu_teardown()
+    regular_offline =3D true;
+                                         sse_reboot_notifier()
+                                           mutex_lock(&sse_mutex)
+                                           WRITE_ONCE(sse_shutting_down, tr=
+ue)
+    sse_event_set_target_cpu_nolock()
+      sse_event_enable_local()
+        if (READ_ONCE(sse_shutting_down))
+          return -ESHUTDOWN;
+    goto restore_cpu;
+    sse_restore_local_events()
+      sse_event_enable_local()
+        return -ESHUTDOWN;
+    atomic_set(&sse_teardown_failed, 1)
+                                           cpuhp_remove_state(...)
+                                           if (kexec_in_progress &&
+                                               atomic_read(&sse_teardown_fa=
+iled))
+                                             panic(...)  <-- false-positive=
+ panic
 
-[Severity: Low]
-Should run_sse_test.sh have mode 0755 instead of 0644?
-
-Because the script is not executable, invoking ./run_sse_test.sh directly
-fails with permission denied, and tools/testing/selftests/kselftest/runner.=
-sh
-logs a warning and takes its non-executable fallback path, which drops
-kselftest_cmd_args instead of forwarding module arguments such as stress=3D1
-to insmod.
+Holding cpus_read_lock() across the sse_shutting_down transition (or
+using __cpuhp_remove_state_cpuslocked() under cpus_read_lock()) would
+serialize sse_reboot_notifier() against active CPU hotplug callbacks.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119120824.1396=
-9-13-zhangzhanpeng.jasper@bytedance.com?part=3D10
+9-13-zhangzhanpeng.jasper@bytedance.com?part=3D4
