@@ -1,81 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.90.104.144
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795107247;
-	b=pMu6Q/H+ldxD8S+sRq1SZII0EC6Gh1R0jHJL2WRAS+BZr3C58fxYKPv6uSzecm+nYHVw
-	 OjQNBzWfswn1heWl7M3M+znFhZnjohs22dsNzwtzEYC6WPotGl1fZtc//ecXUNdj6Yu4Y
-	 TEQHNblTfhlF32KXp1/hxw9enPnNrBPO4szaQL6KZNEg7U7KAl/p8EjYaS0oGGKiC41vm
-	 QB+w+yxrSLTBQjU7z6C8o9kODnHX0MEF1cC07b7HgBwWArLrBbqm1hAuMT/4HhB3O3gxe
-	 ORtFVMA9Cyb5IL7fn72pmVOG32FjaJAQ5gsA4ACBwQDCrITpU3K0OWXyEhMt9e5Ac1w==
+	t=1795110703;
+	b=btpNFGDPn6xgpaPdbgRBT96EViyxwCV0GA4gicfFwA/eJdIG6cYWwqh8l7PhOTEFJ4Ew
+	 5OSIl6Pxcdl46WFWBzxOHWbOtIQ7VJLFvxlrBFHykEDDILhubNGmyChD3G3ycKjOri6C2
+	 eLDV/wAGMHHqw/ByW+jqQwa+DBHSrllRDwbSOpL66ZMcYCrv6xYk/+z55ewjX3hRjo08e
+	 bRBp2JARUVXopRAevKWPGussUbzl6W6MecAKdUNOHmmk0W9RAJONuViUzh1h8HFIgRbTQ
+	 91FKVKi6NhsdH6+Yxot+S6cBcWamaG/GQbvl0mFZBLq0xnX2OAkIFM0N1M6pkDs3vAw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795107247;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=FpRAw10TJh8yb7R34VwZYYTrEJ2MgNuHTOaOU0kAmbg=;
-	b=A87CmkBW2fVSqpWraEl7LzWsErxpKLKyZAruy0kl+NOjrXYZJS12x+WiPXR5nwRbhbm4
-	 CQZCxn4/UT7RadJKRhYY/kRlTel42ZnEfysm4i5dIjrPpSVtHMUX+v5YX9vvbYuBATfPb
-	 iqbOsZ8jPrEyJjNE8zwlyyCUteAv4hytruVe761THNQeDWzizMhk7jQQ/1+cwP5wU5ZlJ
-	 zZfIAzSyQ4jjYMA+dxjIJLuY+FIb9KFa2wVk9tmz6Tdu/IJJzaFB6VboVNhqAA+vLbgsD
-	 gUuHsrHF/dr1x/rD+s/OACMGvkkxXIpFGp9COQCke9nE04IorXtoDjMOR8jadhR5dxQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795110703;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-Amp-Result:X-Amp-File-Uploaded:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:Received:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
+	 In-Reply-To:To:Cc:X-Mailer;
+	bh=OKPZQyJsCxKmvcu3evgCAn8bCU003kDuUuvj5pSvgRY=;
+	b=IUGCsQ/bsXlD98w2v4IQ8GyYdpjKfqLC4lgixKnYWoenVLNq/704zpE5u2iwmOc9mTZ1
+	 Kr8Nlk9W4T5Z/zNqAOMkACWLVMk/AEgXkzU6xTWqcXOXQMJ7CD8MrSygNH4z40LdS7MoK
+	 Kb0YDXZc4eupmLqvCyiG9Sl0RQqZaWewWkCLTrAFkQDgJWzKvOvu0ISai+/WYJAUOptoc
+	 w8zj2eY93H1fbqCvBqLFe1mFSgZyEe4vQc4FKULuiD+MC01QeXp40UmYxx3hBE+M3qyCV
+	 y8mQbxUdPp8JAfHkcmGe6k7miITKekk0bZspfV19gfTodgy6UckZcmWU7o1hKtlSAaw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=arm.com;
-	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=UdcRID8K;
-	arc=none smtp.remote-ip=217.140.110.172
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C057606A338;
-	Thu, 19 Nov 2026 16:54:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6C057606A338
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=UdcRID8K
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8A901575;
-	Thu, 19 Nov 2026 08:54:03 -0800 (PST)
-Received: from localhost (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 360A43F673;
-	Thu, 19 Nov 2026 08:54:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1795107246; bh=UH4KDSFam0LfRKFnI3gJVWSsyCyljyOGfCQ7wrragEk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UdcRID8Kz4lZK/h1ThJUkIPZuCu8llRVTIWUol7CEgsEAJDWIJ0dMrQdRTWZMoOz2
-	 XP992aMvTFRo5UvN7IMTff5COtXdHBV8kWVELcF8QaQZkmk72M2pRJtv6Ua4OgHRjd
-	 /qd3KyGzwJg18bFRXM4FHYSooM96/pJ6aeSI40CE=
-Date: Thu, 19 Nov 2026 16:54:04 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Sudeep Holla <sudeep.holla@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Al Grant <al.grant@arm.com>, "Johnny.Fan" <johnny.fan@cixtech.com>,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	driver-core@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/8] device property: Add software-node IRQ affinity masks
-Message-ID: <20261119165404.GA9176@e132581.arm.com>
-References: <20261116-acpi_arm_pmu_registration_hmp-v1-0-0371d4eca626@arm.com>
- <20261116-acpi_arm_pmu_registration_hmp-v1-2-0371d4eca626@arm.com>
- <avwHQXJxOir8XXxX@ashevche-desk.local>
+	dmarc=pass header.from=mobileye.com;
+	spf=pass smtp.mailfrom=mobileye.com;
+	arc=none smtp.remote-ip=23.90.104.144
+Received: from esa1.hc555-34.eu.iphmx.com (esa1.hc555-34.eu.iphmx.com [23.90.104.144])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92ACE606A324;
+	Thu, 19 Nov 2026 17:51:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 92ACE606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
+  t=1795110702; x=1826646702;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=4V18Tfg9Ly6MPWUMnLZiqruGXQUpnrBi9GEGXYzKK7I=;
+  b=TQi8rvKHeCWk7ottKTZIqJSvWBhS887/V8U3XhzavbuzJ1a4B9gxneal
+   06k9t4y2SGdjgmMKuBs0kTrEXQvQqIwW0QC6hXMakiwclP6toz0EJ2j0U
+   lGgyeMlD7776V/rgKRlvRF6TfFmcAKB7idVZkcfHE3qHHcBcn/cKJzQ5A
+   AuQN6lrlPablmZ2LojVB5QC+hTZQ0q+mkaZQyyiQs+drv0Htc9EgfdZsm
+   tb6dvvMBbPFDjXpPXlckv2DFevBwVxs4HiLfLPWD+gLD43f+xemG1XtLp
+   kRVQpeRTJyz80tehi46V7utsawhYJhXyKiqdq5u/FpttTOWg947lK1wdL
+   A==;
+X-CSE-ConnectionGUID: bck4BxQFSmuiqAdu90FOmw==
+X-CSE-MsgGUID: NuCP7ZcRRJWiXbhWt+3dyA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from unknown (HELO ces02_data.me-corp.lan) ([146.255.191.134])
+  by esa1.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2026 19:51:33 +0200
+X-CSE-ConnectionGUID: tengInJhRCa+VsqTvox6mw==
+X-CSE-MsgGUID: klkWn2aISdGzaE5U/QgFbw==
+Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.3])
+  by ces02_data.me-corp.lan with SMTP; 19 Nov 2026 19:59:49 +0200
+Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Thu, 19 Nov 2026 19:51:32 +0200
+From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+Date: Thu, 19 Nov 2026 19:51:28 +0200
+Subject: [PATCH v3 2/7] MIPS: CM: add CM3 performance counter GCR
+ definitions
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -85,74 +66,128 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <avwHQXJxOir8XXxX@ashevche-desk.local>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261119-i6500-cm3-pmu-v3-2-c86410934b51@mobileye.com>
+References: <20261119-i6500-cm3-pmu-v3-0-c86410934b51@mobileye.com>
+In-Reply-To: <20261119-i6500-cm3-pmu-v3-0-c86410934b51@mobileye.com>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+ Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Randy Dunlap <rdunlap@infradead.org>, Will Deacon <will@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ =?utf-8?q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>, 
+ Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
+ Fu Chao-Ying <chao-ying.fu@globalfoundries.com>
+Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-rt-devel@lists.linux.dev, devicetree@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-perf-users@vger.kernel.org, linux-hardening@vger.kernel.org
+X-Mailer: b4 0.16.0
 
-On Tue, Nov 17, 2026 at 09:50:25AM +0200, Andy Shevchenko wrote:
-> On Mon, Nov 16, 2026 at 06:21:29PM +0000, Leo Yan wrote:
-> > Devices created from firmware tables may need CPU affinity information
-> > without a corresponding firmware node. Allow software nodes to supply
-> > this information through the common firmware node IRQ affinity API.
-> > 
-> > Add software_node_add_irq_affinity() to copy a CPU mask for an IRQ index,
-> > and implement the software node irq_get_affinity callback. Keep each mask
-> > until the node is released and reject replacement so borrowed masks remain
-> > valid for the node's lifetime.
-> 
-> 
-> This is definitely not a place where to put that. Are you stating that any
-> software node might find the IRQ affinity information useful? I don't think
-> so. With that in mind this approach looks like a layering violation.
+The CM3 implements two programmable 32-bit performance counters and a
+32-bit cycle counter, controlled through registers in the GCR global
+debug block (GCR_DB_PC_*, offset 0x6100..0x61a8 from GCR_BASE).
 
-My intent is to expose optional affinity information through the
-common platform_get_irq_affinity() interface.
+Add GCR_DB_ACCESSOR_{RO,RW} helpers for the debug block and define the
+control, overflow status, event select, cycle counter, qualifier and
+counter registers along with their fields, as described in the I6500
+register reference (MD01189).
 
-As an alternative, could we represent the masks in an "irq-affinity"
-property, with one CPU mask per IRQ index? The swnode .irq_get_affinity
-callback would read it, using the existing property storage.
+Each accessor comes in two flavours, as the CPC ones do: db_<reg> for
+the local cluster and redir_db_<reg> for the debug block of another
+cluster through the redirect block. GCR_Cx_OTHER.BLOCK value 2 selects
+the debug block in the GCR, where the existing _BLOCK_USER name only
+describes its GIC meaning; add CM_GCR_Cx_OTHER_BLOCK_DEBUG for it.
 
-Would interpreting this property in swnode still be a layering
-violation? See the sample code below.
+Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+---
+ arch/mips/include/asm/mips-cm.h | 51 ++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 50 insertions(+), 1 deletion(-)
 
----8<---
-
-+static const struct cpumask *
-+software_node_irq_get_affinity(const struct fwnode_handle *fwnode,
-+			       unsigned int index)
-+{
-+	const struct property_entry *prop;
-+	const void *masks;
-+	size_t size = cpumask_size();
+diff --git a/arch/mips/include/asm/mips-cm.h b/arch/mips/include/asm/mips-cm.h
+index 407f253bb4a1..390d06a8f1d1 100644
+--- a/arch/mips/include/asm/mips-cm.h
++++ b/arch/mips/include/asm/mips-cm.h
+@@ -161,6 +161,20 @@ static inline bool mips_cm_has_l2sync(void)
+ 	CPS_ACCESSOR_RW(gcr, sz, MIPS_CM_CLCB_OFS + off, cl_##name)	\
+ 	CPS_ACCESSOR_RW(gcr, sz, MIPS_CM_COCB_OFS + off, co_##name)
+ 
++/*
++ * Global debug block registers. The redir_db_* accessors reach the debug
++ * block of another cluster through the redirect block, which must have been
++ * pointed at it with mips_cm_lock_other(cluster, 0, 0,
++ * CM_GCR_Cx_OTHER_BLOCK_DEBUG).
++ */
++#define GCR_DB_ACCESSOR_RO(sz, off, name)				\
++	CPS_ACCESSOR_RO(gcr, sz, MIPS_CM_GDB_OFS + off, db_##name)	\
++	CPS_ACCESSOR_RO(gcr, sz, MIPS_CM_COCB_OFS + off, redir_db_##name)
 +
-+	prop = property_entry_get(to_swnode(fwnode)->node->properties, "irq-affinity");
-+	if (!prop || index >= prop->length / size)
-+		return NULL;
++#define GCR_DB_ACCESSOR_RW(sz, off, name)				\
++	CPS_ACCESSOR_RW(gcr, sz, MIPS_CM_GDB_OFS + off, db_##name)	\
++	CPS_ACCESSOR_RW(gcr, sz, MIPS_CM_COCB_OFS + off, redir_db_##name)
 +
-+	masks = property_get_pointer(prop);
-+	return masks ? masks + index * size : NULL;
-+}
+ /* GCR_CONFIG - Information about the system */
+ GCR_ACCESSOR_RO(64, 0x000, config)
+ #define CM_GCR_CONFIG_CLUSTER_COH_CAPABLE	BIT_ULL(43)
+@@ -357,7 +371,8 @@ GCR_CX_ACCESSOR_RW(32, 0x018, other)
+ #define CM_GCR_Cx_OTHER_BLOCK			GENMASK(25, 24)	/* CM >= 3.5 */
+ #define  CM_GCR_Cx_OTHER_BLOCK_LOCAL		0
+ #define  CM_GCR_Cx_OTHER_BLOCK_GLOBAL		1
+-#define  CM_GCR_Cx_OTHER_BLOCK_USER		2
++#define  CM_GCR_Cx_OTHER_BLOCK_USER		2	/* GIC */
++#define  CM_GCR_Cx_OTHER_BLOCK_DEBUG		2	/* GCR */
+ #define  CM_GCR_Cx_OTHER_BLOCK_GLOBAL_HIGH	3
+ #define CM_GCR_Cx_OTHER_CLUSTER			GENMASK(21, 16)	/* CM >= 3.5 */
+ #define CM3_GCR_Cx_OTHER_CORE			GENMASK(13, 8)	/* CM >= 3 */
+@@ -384,6 +399,40 @@ GCR_CX_ACCESSOR_RW(32, 0x030, reset_ext_base)
+ #define CM_GCR_Cx_RESET_EXT_BASE_BEVEXCPA	GENMASK(7, 1)
+ #define CM_GCR_Cx_RESET_EXT_BASE_PRESENT	BIT(0)
+ 
++/* GCR_DB_PC_CTL - Control of the CM3 performance counters */
++GCR_DB_ACCESSOR_RW(32, 0x100, pc_ctl)
++#define CM_GCR_DB_PC_CTL_PERF_INT_EN		BIT(30)
++#define CM_GCR_DB_PC_CTL_PERF_OVF_STOP		BIT(29)
++#define CM_GCR_DB_PC_CTL_P1_RESET		BIT(9)
++#define CM_GCR_DB_PC_CTL_P1_COUNTON		BIT(8)
++#define CM_GCR_DB_PC_CTL_P0_RESET		BIT(7)
++#define CM_GCR_DB_PC_CTL_P0_COUNTON		BIT(6)
++#define CM_GCR_DB_PC_CTL_CYCL_CNT_RESET		BIT(5)
++#define CM_GCR_DB_PC_CTL_CYCL_CNT_COUNTON	BIT(4)
++#define CM_GCR_DB_PC_CTL_PERF_NUM_CNT		GENMASK(3, 0)
 +
- static const struct fwnode_operations software_node_ops = {
- 	.get = software_node_get,
- 	.put = software_node_put,
-@@ -774,6 +796,7 @@ static const struct fwnode_operations software_node_ops = {
- 	.graph_get_port_parent = software_node_graph_get_port_parent,
- 	.graph_parse_endpoint = software_node_graph_parse_endpoint,
- 	.add_links = software_node_add_links,
-+	.irq_get_affinity = software_node_irq_get_affinity,
- };
++/* GCR_DB_PC_OV - CM3 performance counter overflow status (write 1 to clear) */
++GCR_DB_ACCESSOR_RW(32, 0x120, pc_ov)
++#define CM_GCR_DB_PC_OV_P1_OF			BIT(2)
++#define CM_GCR_DB_PC_OV_P0_OF			BIT(1)
++#define CM_GCR_DB_PC_OV_CYCL_CNT_OF		BIT(0)
++
++/* GCR_DB_PC_EVENT - CM3 performance counter event selection */
++GCR_DB_ACCESSOR_RW(32, 0x130, pc_event)
++#define CM_GCR_DB_PC_EVENT_P1_EVENT		GENMASK(15, 8)
++#define CM_GCR_DB_PC_EVENT_P0_EVENT		GENMASK(7, 0)
++
++/* GCR_DB_PC_CYCL - CM3 performance cycle counter */
++GCR_DB_ACCESSOR_RW(32, 0x180, pc_cycl)
++
++/* GCR_DB_PC_QUALn - CM3 performance counter n event qualifier */
++GCR_DB_ACCESSOR_RW(64, 0x190, pc_qual0)
++GCR_DB_ACCESSOR_RW(64, 0x1a0, pc_qual1)
++
++/* GCR_DB_PC_CNTn - CM3 performance counter n value */
++GCR_DB_ACCESSOR_RW(32, 0x198, pc_cnt0)
++GCR_DB_ACCESSOR_RW(32, 0x1a8, pc_cnt1)
++
+ /**
+  * mips_cm_l2sync - perform an L2-only sync operation
+  *
 
-> ...
-> 
-> And overall, the domain specific (IRQ, DMA, et cetera) topics feels a bit
-> misplaced when one can find that in the generic properties. We also have
-> that PHY thingy, which is complete alien to word 'generic'.
+-- 
+2.43.0
 
-Since software nodes have no standard property specification of their
-own, would this be an appropriate way to define "irq-affinity" as a
-generic swnode property?
-
-Thanks for the review!
-
-Leo
