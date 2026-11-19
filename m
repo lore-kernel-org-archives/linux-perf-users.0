@@ -1,58 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795116400;
-	b=RFV1KzbtVsYKNPDTuxEnKFEQFZX1cHZVuMIcxIpZmYfAn2zuGTcrc1iQR6D1BWLkkh+F
-	 G2IkVXHYuzBuILhNGv2ZVkqJN/vgJzfpNG2dUA9ekd5U8ceJuRKJ23dXM+NCtOM4kYCzp
-	 ih6Yo8H0IXwOIYToxgULxOgfzutbhb6WZVg3Ia3/qDpu6neQikTvkcoDggnXCYDqnBUkN
-	 ZL1gGEbvYADZHtrEW+6Cxr1AM4KjK4XdUOc77khBw6r5/YOlBAlhEp2YG+a/Kxs06o6Ut
-	 Wn5KlwmwMnGnGmtr6BMS95JfolM2oCP3gF5ZH0oqgY97qse0JU7on2mIG7/Prq+Hs4A==
+	t=1795116673;
+	b=OC48JIZyVJOmw14gHj9bQ98/irhuUiLQEixbXaN46CCFmIasX6YbiNf3LYjomXODi7wF
+	 R2HZ664ZHIUwE9RFuFYunXhlH9Rj3rPsN4bxT2fiYDup/+Pm8FUD/0v7FtwOmj1kKTE1H
+	 +1xTuz8hOw0O08VRZ2h2fiJBaM6tNUiS0XRi3yy96IDKzuKe898H6BmsIRI8kANDboxYN
+	 sy7SKqrwawW4AkEKlcb77G/A/n+oHuiy6YngKgZVJBeasyJgOiWeWLD+bkdry+VtC7pVz
+	 cxP9WyMbFORaUoYkZRZkxK5/uW6FH+umVbz3kerpA/9uW17BfZbAxyMw9TUs7IGAL1g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795116400;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795116673;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=bGM09ejDI5kGHlif/2JC4UNWlr5V6vigz3EsNtX81Lc=;
-	b=dROKmyaCxwA4TwyepTPb+H229Zb6uRbky/N94jvzXoz+uoZL4CkxPMLR1nXncqWef2NC
-	 iN8lk3yzN4x4zhCy12r5WFsTCZzYOo2bOvoCw+sZdsf9gGBkWwmZi7hVdsNLdb51062qg
-	 XUovDXw0F5IqlxY36i/3vnfWrixibsJ56Cd0vgxbtDNtZhfXDk0pTncrrKZqeN1Loczv0
-	 jTpiYk4D5KHczgiKraPykXWTC5yacKKKg3ygsN+wBofS67hM8+VmgJB+MdZLFW2SaFEeB
-	 4pVkQ4WOg4KUe0SKPBVHMziggWiY7/3e/hHf1NibemXUguOfyRo6Kt6XlSwViDFxE5g==
+	bh=RnVPUiQvSLVhCURQzAmQH1nX0+fRatV7NXGZR9mSOiQ=;
+	b=lqHmo5qOve2mTSlsZjWGI4aeeZ7IJFujFEM4fmX5p2w1NDGlJoPI+E5f3Auo/KAQwCqP
+	 IjveFEGm6TgtDWvEoEttiq8eazaqBzUS9aLQMxxSH0EO1w4e7sMf+mKDTJ3XJvfq2xAXN
+	 uzJRR2vwqJXsfUCGhfylXgdlj6OgsDtp+/AYqnFu6rTgTZ4CWISSZ13Xr6+M8DMxgpTH9
+	 tYZUNIsdoIinVvSvviRIkL5wNiRU/G9y0zbEMqNqbpfV4Jo55CEUgFHET9ddVGOWN7Mld
+	 wIr/zVa+17DXTagfGW3fbs13BMDRZqMiW3IFgD/jBQMUAcNrIiwjZY3Zw4/a2WuD+Og==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LHY4oZiz;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TDQNyPAr;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C0A606A331;
-	Thu, 19 Nov 2026 19:26:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1E9606A324
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 19:31:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LHY4oZiz
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D6CB1F000C6;
-	Thu, 19 Nov 2026 19:26:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TDQNyPAr
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 039861F000C7;
+	Thu, 19 Nov 2026 19:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795116400;
-	bh=bGM09ejDI5kGHlif/2JC4UNWlr5V6vigz3EsNtX81Lc=;
+	s=k20260515; t=1795116673;
+	bh=RnVPUiQvSLVhCURQzAmQH1nX0+fRatV7NXGZR9mSOiQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=LHY4oZiz2Qdqur9bcmXsQwZPWuhhGPQn7JBmPD2C+7yXjb+UYeUfveGn3O0K1zNnR
-	 BvNTbPD9IfYeYtcjLz0MzBTUCXrGhiLa+2V6ohSpYsEBpHi8zaegFXRwsJgANF5UqA
-	 3hA963mL4a3vObpG+dhJM6oY3tZgG2YkySubUXWJ3AMMLwY1E/c1wMEK5ZfgH2okl9
-	 a6j9HmKIsEeiNPOM98SZ7K2E2U7vXUOcNGRyxoT4YU0mlNYzzSs7d+YOvx766pWYVz
-	 1Hhjni+F3Om94zyjOfsNgfB9ejZnWQo7qA9C2a8Kw3LoINRqXM1DVP2D0vPZdCJVdP
-	 knm61M6aPaz5Q==
-Message-ID: <sashiko-outbox-223880@kernel.org>
+	b=TDQNyPArkBdMiugdUbrOnZI28j9TExx2bp7fQ5A95w6UlWT0IAXyiIUTBDcCGI2oJ
+	 +ihzYtxx228cQfRDkCEjevPFRhA+dlQX1iDp1jgJfNfzVhpPJrx9MoQ71rqvcluJ5Q
+	 isFhEl0GP4ikRh1Dg/lklaTbhXOzwGvys5nw8gtjXcByaI/RiH0yAZOeFlPa5/iv8W
+	 7iNbUV7jVlCk5vGoZIrFXJh4DbZJvHxT3Ywmk5WPg4LTHilHdFDCRcChGwD+dokxu6
+	 ByrSdPs+yvGWfG13AtZMHsC4hX7TLK5qvPArjF3jiIESamAGBfdXG1VQ1NtRWALYEA
+	 mpUOt1n2chXOQ==
+Message-ID: <sashiko-outbox-223927@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 27/33] KVM: arm64: Emulate mismatched LP and HLP
- overflow widths for sub-partitioned L1
+Subject: Re: [PATCH] perf/hw_breakpoint: fix ctx->mutex vs perf_event_mutex
+ inversion on attr modify
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Colton Lewis" <coltonlewis@google.com>
-Cc: kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, "Oliver
- Upton" <oupton@kernel.org>, "Marc Zyngier" <maz@kernel.org>
-In-Reply-To: <20261119185215.632334-28-coltonlewis@google.com>
-References: <20261119185215.632334-1-coltonlewis@google.com>
- <20261119185215.632334-28-coltonlewis@google.com>
+To: "Dominik Maier" <dmnk@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261119192228.2661266-1-dmnk@google.com>
+References: <20261119192228.2661266-1-dmnk@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 19:26:39 +0000
+Date: Thu, 19 Nov 2026 19:31:12 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -62,59 +60,33 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Medium] KVM: arm64: broken PMU counter chaining for ovf32_mask
-  counters
---
+> The perf events lock hierarchy documented in kernel/events/core.c orders
+> task_struct::perf_event_mutex outside perf_event_context::mutex, which
+> perf_event_open() and prctl(PR_TASK_PERF_EVENTS_ENABLE) follow.
+>=20
+> However, perf_ioctl(PERF_EVENT_IOC_MODIFY_ATTRIBUTES) acquires
+> ctx->mutex first via perf_event_ctx_lock() and then calls
+> perf_event_modify_attr() -> modify_user_hw_breakpoint_check() ->
+> modify_bp_slot() -> bp_constraints_lock(), which locks
+> bp->hw.target->perf_event_mutex when bp_type changes. If one thread in a
+> process calls prctl(PR_TASK_PERF_EVENTS_ENABLE) while another calls
+> ioctl(PERF_EVENT_IOC_MODIFY_ATTRIBUTES) with an alternating bp_type on a
+> self-targeted breakpoint, the two threads deadlock against each other in
+> TASK_UNINTERRUPTIBLE state.
+>=20
+> Decouple bp_constraints_lock() from task_struct::perf_event_mutex by
+> [ ... ]
+>=20
+> Fixes: 0912037fec11 ("perf/hw_breakpoint: Reduce contention with large nu=
+mber of tasks")
+> Fixes: 32ff77e8cc9e ("perf/core: Implement fast breakpoint modification v=
+ia _IOC_MODIFY_ATTRIBUTES")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Dominik Maier <dmnk@google.com>
 
-commit 210ea84a824c63596df96f6f9ef557724dabffcb
-Author: Colton Lewis <coltonlewis@google.com>
-
-KVM: arm64: Emulate mismatched LP and HLP overflow widths for sub-partition=
-ed L1
-
-This commit emulates mismatched 32-bit and 64-bit counter overflow widths
-(vPMCR_EL0.LP !=3D vMDCR_EL2.HLP) when an L1 guest sub-partitions a
-Partitioned PMU by forcing physical PMCR_EL0.LP to 1, biasing the 32-bit
-counter sub-range by 2^32 events below 64-bit overflow, and trapping
-PMEVCNTR<n>_EL0 accesses to translate counter values.
-
-> diff --git a/arch/arm64/kvm/pmu-direct.c b/arch/arm64/kvm/pmu-direct.c
-> index 725b5fc17533e..b7bec06b36b0a 100644
-> --- a/arch/arm64/kvm/pmu-direct.c
-> +++ b/arch/arm64/kvm/pmu-direct.c
-[ ... ]
-> @@ -123,12 +160,109 @@ static void kvm_pmu_part_sync_hw_enables(struct kv=
-m_vcpu *vcpu)
->  	pmcr &=3D pmcr_mask;
->  	if (mdcr & MDCR_EL2_HPME)
->  		pmcr |=3D ARMV8_PMU_PMCR_E;
-> +	if (kvm_has_feat(vcpu->kvm, ID_AA64DFR0_EL1, PMUVer, V3P5)) {
-> +		if (ev_mask && !(ev_mask & ~hyp_mask)) {
-> +			if (mdcr & MDCR_EL2_HLP)
-> +				pmcr |=3D ARMV8_PMU_PMCR_LP;
-> +			else
-> +				pmcr &=3D ~ARMV8_PMU_PMCR_LP;
-> +		} else if (vcpu->arch.pmu.ovf32_mask) {
-> +			pmcr |=3D ARMV8_PMU_PMCR_LP;
-> +		}
-> +	}
-
-[Severity: Medium]
-Does forcing physical PMCR_EL0.LP to 1 break counter chaining for counters
-in ovf32_mask?
-
-Counters in ovf32_mask are architecturally configured for 32-bit overflow,
-where an even counter overflowing at 32 bits increments an adjacent odd
-counter programmed with ARMV8_PMUV3_PERFCTR_CHAIN (compare
-kvm_pmu_counter_can_chain() in arch/arm64/kvm/pmu-emul.c).  Because all
-guest counters sit below physical MDCR_EL2.HPMN, setting physical
-PMCR_EL0.LP to 1 puts the 32-bit sub-range into 64-bit overflow mode in
-hardware, which disables hardware chaining, and
-kvm_pmu_part_rebias_single() does not propagate the 32-bit overflow to a
-chained odd counter in software.
+Sashiko has reviewed this patch and found no issues.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119185215.6323=
-34-1-coltonlewis@google.com?part=3D27
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119192228.2661=
+266-1-dmnk@google.com?part=3D1
+
