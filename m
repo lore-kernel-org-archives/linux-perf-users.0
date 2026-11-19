@@ -1,176 +1,112 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.228.59
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795077340;
-	b=EBoRx4yjhSfR4sdazXcaTQHjonUVwGTFmgXfA2i8h7mGPCLoBdi0bOFqdL30zNWF5lv3
-	 KEAYM3nt8hl+h5YskuMexHUuTtk32LWIWxk/0a7jNKN29LldtBPWJwF2aVmF5JYbJV1t1
-	 E0aRZ66aj4eYBRJZk2wVCDAc53KsLspqIdYXtRP7l8A5QGpi+iMXYOGlmlucCd9Kn80b3
-	 /zESHhGhosjR7q17Te9jwW5aaF1qkL2eayALTmlwb9/dzCNffwdtUo5jb+6VeTHEgbWeh
-	 NdFLtN1HlinpLO6S51l6Dz6PcqUUNIXmIoOS+v33fUivN/T0T1L6R616r2orQLtu15g==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795077340;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:From:To:CC:Subject:
-	 Thread-Topic:Thread-Index:Date:Deferred-Delivery:Message-ID:
-	 References:In-Reply-To:Accept-Language:Content-Language:
-	 X-MS-Has-Attach:X-MS-TNEF-Correlator:msip_labels:
-	 x-ms-publictraffictype:x-ms-traffictypediagnostic:
-	 x-ms-office365-filtering-correlation-id:x-ms-exchange-senderadcheck:
-	 x-ms-exchange-antispam-relay:x-microsoft-antispam:
-	 x-microsoft-antispam-message-info:x-forefront-antispam-report:
-	 x-ms-exchange-antispam-messagedata-chunkcount:
-	 x-ms-exchange-antispam-messagedata-0:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version:
-	 X-Exchange-RoutingPolicyChecked:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-AuthAs:X-MS-Exchange-CrossTenant-AuthSource:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-originalarrivaltime:
-	 X-MS-Exchange-CrossTenant-fromentityheader:
-	 X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-	 X-MS-Exchange-CrossTenant-userprincipalname:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=SaYdoqg7mvgHERujdOBkXYQm33qbLayzE7KGVUUNiuw=;
-	b=lj4YHIctO3J1LUAem4Pd8E3IJdRTCXvjIXqmFjWbFMRN/0GnTqu+MTzYdEDqlH72cx6m
-	 6zcK0zekUWEBc7WxlS3E4Eo/UcHP6NEL8aNeCd0CklEwJYnDP+H7rtXSd1TF+4N1RI4lC
-	 nnfaOlIu5uQRz/GbKAPc5JsZWuOlc2vz7GxenjPwDqIeH6iZ8s21bVvBcuEXv4uixBjHR
-	 JOvj2gG2W5lFOblbS+jT97f9kfIfHVmsWyjo4PjRD5HniWEMERhhSoKDQzZ6qt9AhyU34
-	 Hxb7RVLwfr0aDEdV1kyt1lLKT3ggfsSZmqkZP+RxzdOFeThhJIhsjxEZ2IMremtyJyw==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=fujitsu.com;
-	spf=pass smtp.mailfrom=fujitsu.com;
-	dkim=pass header.d=fujitsu.com header.i=@fujitsu.com header.a=rsa-sha256 header.s=selector1 header.b=B5uc7Yan;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.228.59
-Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010059.outbound.protection.outlook.com [52.101.228.59])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=205.220.168.131
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795078468;
+	b=txoRn/EHGQ4pBgI7lsvauPV9A39JZ3W5hJzDMfkiqAFeWv5vIsT1l/WStONymVBGVTF7
+	 b+nZlz1GwY1R94hhSufBKIEqCZrr6h6edaCWjZksBLqh4M5ru7BPW/cV4p33q2bR7GokC
+	 OI0FBYNXxSLa9NYH7HnTnp5OjVtR/1uckrwsv3bSYdXf7aSVfYAMUoPjLaT77IYDPVQJY
+	 Kf7CaFsjfcgAG4SxeW9y9SuUukSw5tBYNrRBoPrHdwEVHL1zzSQXYe3qBmB2Dx4of4oZu
+	 U1C6U95SMV9RBQo/zaLTsGLLDvMy8m2jBsspKS5DvWqhc6R4MUCmmGoRfAazS4jmIGQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795078468;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:
+	 DKIM-Signature:X-Google-DKIM-Signature:X-Forwarded-Encrypted:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:X-Received:Received:Message-ID:
+	 Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-Authority-Analysis:
+	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-ORIG-GUID:
+	 X-Proofpoint-GUID:X-Proofpoint-Spam-Info:X-Proofpoint-Virus-Version:
+	 X-Proofpoint-Spam-Details;
+	bh=loH97Efk9dLDDTkm9svLgLvPkthPGP0mGuzEjGhs0Rc=;
+	b=zl432BCoPXYwSDsJdTx9MDL79tGYRNQgUI7f/zPTZNZnZKlwmtyujYKysi5pZgVdHfTl
+	 ND6X5g34h3EcRQVbZLuc/B0evCHsgwaQhYiIF2coXf2YzR+eNtnGxBOg0CtQ10hN7/LUi
+	 3GiUvjhopVG+J9Wlfr6OPxXO0Z/D9y7zOdUZvpCuuqJ3wnNTNamNgP+gIrP5w/WDXTaTj
+	 a4SMfZ/jyWhfzOmUL6c2qXNHrKnkIxa+tLQgRO2mbAMroLEqa4hlyuQzt5pq3uKbGEU7E
+	 rTkMI5AediimzIOLvqsAjxgDRAeqeCHHJkL3MDdZMR3/6RR1VPthFWJkv9nv9vpYuwQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=oss.qualcomm.com;
+	spf=pass smtp.mailfrom=oss.qualcomm.com;
+	dkim=pass header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=DHwqRmdc;
+	dkim=pass header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=Mc8zwV1E;
+	arc=none smtp.remote-ip=205.220.168.131
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F61606A320;
-	Thu, 19 Nov 2026 08:35:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 88F61606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B73606A324
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 08:54:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 15B73606A324
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=fujitsu.com header.i=@fujitsu.com header.a=rsa-sha256 header.s=selector1 header.b=B5uc7Yan
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FF92CD0kS/1gI7QeMD4pmgRzw8umTV0Hk2kf3p9lWM0gl3yyTkbOJnATn25gFevtvvqjmUC1ULzzdAJfL0p+waXZNK1WTIrxRrvHGvcvG23UWr5RtgFoIOQVWok0LRnEVkiTuXzPQLolQ6wrAbK313tW5U4V9oPUFGuHHIe0v+s7neO338FWX/T2ZRY07KQ9rG/TqkaAozs8k252+yNZCTMEvtMPgbfQk5Nlz0Qbb8gwSr7nYFg44BHLvhNrm2qNXM6dQUbGkjElRgWywhtGkw8IGZuNWOyDlQ7ERRZsnEE5/0LaSUahExihA6B4nSGbVqUqbWU/VRT0Xf488kVn6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SaYdoqg7mvgHERujdOBkXYQm33qbLayzE7KGVUUNiuw=;
- b=LveaRtgaFP01XqkHCGfaDwHPrB53/CQraPGyKejfEVzGQHLC5me5pwNm4k34nbNJBCeYbQIgAHjnAqJdaMv8XRBO7EBns5DY7lqtB0uTZeWhPxHobsfOZWwsseaV4rhGyIoNHOC1O6D8aB8+/KzXlP0zypNxQNmsGmXD2QCTFw8pdRpU85UtYK22IvKamkQBIJoKOp3OOwASs8MZXgKYBOnjgnEX4WtY/nmRP9wborduc9fTQEujOXxC0wM5HLGl0d6bX5ajSlG7sZxlJvUFsKQIh81zZaIhFVMi3xMgQoIdrFEpTsWH9RXtuHzOjAM19t9nRAn98ITbWhtPJ7VLFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SaYdoqg7mvgHERujdOBkXYQm33qbLayzE7KGVUUNiuw=;
- b=B5uc7Yan+xQrBQi+ik4lbtekPQnfB0Zbpopd1YDI3/nZ/UBFb6VhgXALSINWYhAYH1PHrUcrdw4EUipU4XPkclorAi5Yfo5B+SWktX7Vo8ouz6ogUi7kwO43ZBQBr5zJdsu6gzoi/aZqKLz/3H05xytHMejZYA+YvWrO8CG4WlOmDL7R2Fy9cztDlVoVC83lpBLY54vy98StxoqrJ+AP/95pM9ljALX8Uxlj8/dO3MVMGgQbvehGAcpg6lPXcCoGniygCjpg2drAQeYdkoqNKGWgRmziKdNPvfMEuumggPnMCjABLknkTbxtDYJOFCrX2E75si0wT2XRnfaSPoqv3A==
-Received: from TY7PR01MB15746.jpnprd01.prod.outlook.com (2603:1096:405:290::6)
- by TY3PR01MB11383.jpnprd01.prod.outlook.com (2603:1096:400:375::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.10; Thu, 19 Nov
- 2026 08:35:36 +0000
-Received: from TY7PR01MB15746.jpnprd01.prod.outlook.com
- ([fe80::bc79:d427:b0a9:a793]) by TY7PR01MB15746.jpnprd01.prod.outlook.com
- ([fe80::bc79:d427:b0a9:a793%5]) with mapi id 15.21.0639.010; Thu, 19 Nov 2026
- 08:35:36 +0000
-From: "Tomohiro Misono (Fujitsu)" <misono.tomohiro@fujitsu.com>
-To: 'Mark Rutland' <mark.rutland@arm.com>
-CC: 'Catalin Marinas' <catalin.marinas@arm.com>, 'Will Deacon'
-	<will@kernel.org>, 'Jonathan Corbet' <corbet@lwn.net>, 'Shuah Khan'
-	<skhan@linuxfoundation.org>, 'Randy Dunlap' <rdunlap@infradead.org>, 'Marc
- Zyngier' <maz@kernel.org>, 'Thomas Gleixner' <tglx@kernel.org>, 'Radu Rendec'
-	<radu@rendec.net>, 'Oliver Upton' <oupton@kernel.org>, 'Fuad Tabba'
-	<fuad.tabba@linux.dev>, 'Joey Gouly' <joey.gouly@arm.com>, 'Steffen Eiden'
-	<seiden@linux.ibm.com>, 'Suzuki K Poulose' <suzuki.poulose@arm.com>, 'Zenghui
- Yu' <yuzenghui@huawei.com>, "Kohei Enju (Fujitsu)" <enju.kohei@fujitsu.com>,
-	"'linux-arm-kernel@lists.infradead.org'"
-	<linux-arm-kernel@lists.infradead.org>, "'linux-kernel@vger.kernel.org'"
-	<linux-kernel@vger.kernel.org>, "'linux-doc@vger.kernel.org'"
-	<linux-doc@vger.kernel.org>, "'linux-perf-users@vger.kernel.org'"
-	<linux-perf-users@vger.kernel.org>, "'kvmarm@lists.linux.dev'"
-	<kvmarm@lists.linux.dev>
-Subject: RE: [PATCH v2 3/4] perf: arm_pmu: Add workaround for FUJITSU-MONAKA
- Erratum E#030002
-Thread-Topic: [PATCH v2 3/4] perf: arm_pmu: Add workaround for FUJITSU-MONAKA
- Erratum E#030002
-Thread-Index: AQHdXVVbzJOi/425oUyzsr9T2p9p/LcAE4mAgAADN9CAABKyAIA1E50g
-Date: Thu, 19 Nov 2026 08:35:18 +0000
-Deferred-Delivery: Thu, 19 Nov 2026 08:35:18 +0000
-Message-ID:
- <TY7PR01MB157464850021326AF18C13C5DE5792@TY7PR01MB15746.jpnprd01.prod.outlook.com>
-References: <20261016-monaka-fix-for-upstream-v2-0-fc7ede7f9f48@fujitsu.com>
- <20261016-monaka-fix-for-upstream-v2-3-fc7ede7f9f48@fujitsu.com>
- <atIT0dmeqAXLoThW@J2N7QTR9R3.cambridge.arm.com>
- <OSCPR01MB1573944ED57DC682897594F06E59B2@OSCPR01MB15739.jpnprd01.prod.outlook.com>
- <atImMmlBmOYlY5T2@J2N7QTR9R3.cambridge.arm.com>
-In-Reply-To: <atImMmlBmOYlY5T2@J2N7QTR9R3.cambridge.arm.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ActionId=2c15a8f2-253b-4374-986c-294c68c2040b;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ContentBits=0;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Enabled=true;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Method=Privileged;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Name=FUJITSU-PUBLIC?;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SetDate=2026-11-19T07:59:21Z;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Tag=10,
- 0, 1, 1;
-authentication-results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fujitsu.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY7PR01MB15746:EE_|TY3PR01MB11383:EE_
-x-ms-office365-filtering-correlation-id: a4417432-3efd-4d0a-db05-08df4618154c
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|23010399003|7416014|376014|1800799024|366016|22082099003|18002099003|6133799003|1580799027|11063799006|4143699003|5023799004|56012099006|10067099003|261026140227099003|261026121527099003|261028144727099003|261021123027099003|261022105027099003|261021121427099003|261022075727099003|261102123227099003|38070700021;
-x-microsoft-antispam-message-info:
- +ssU2MuIkDt7ZF/Dpoi3KaNg2W9H5wIfQaWfeltxGPxnux1Keb1NcQbGAIDUD+jln/k/FU1iD2Mylr1eMbJQHe/1Eixqv4bSQCG6mlC4Bpu7TlSPS18TS7HBVprXsADkN7LI5408fu3udq+qiMnhT3rP8UyKMrK00Iw071cVbgjp8spQJqlnqbXCYzOkNoE12ia3dH1cUbT3thkDLFzpJMKna0Pl3dqae8Tsp2ig4V8BPcvl/zR7DGHnhh3yct5H9xQk5nrpkjpSXuR72frCG9AA0qZbXtXyw7OS/2wrbl9xTOo7yEufUECNw8GmSFjkf7v2KXWZ1RTBwtY84TYWMttGrq75C7ybCTrbWzOv9F37yqaWKV6aiX27T1/o3PCeBn+ox8Gew96ApK9kI/fRFH1yfAaJcaE9IpKPoXTfC8C1VREFYFZl4Jd8Y3IaUcxqOQ92btPnFDvGn26ZTEWc6EvrohbUXPrtbaKuiskAuAyBUZb5WtIatTnjfuFbcr/ZU+b/7fDuUjt0sdRLhxVyamrOM+cmKnwkDwH+MBFqHddoOlWPWjeYR2lG4UL+c2uytl1yfyNVstI2YmXNnOTVp4UInFJB6+5gb3rAjWizU4vhdAJY+ChHhhSYcWGCphp7YanqwaE0Le547c2LWV77E9ROkaqVktHndjdZsgsLl926wHJgGcaP4CNIdPTz3bboimnVDrqNe+as9zUWPNOp3HfWpBpOsxi+IDJyLrMORzOHKpN9qL1MpxpGH0BJU6MS
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7PR01MB15746.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(376014)(1800799024)(366016)(22082099003)(18002099003)(6133799003)(1580799027)(11063799006)(4143699003)(5023799004)(56012099006)(10067099003)(261026140227099003)(261026121527099003)(261028144727099003)(261021123027099003)(261022105027099003)(261021121427099003)(261022075727099003)(261102123227099003)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-2022-jp?B?NTEzT3g4bHh0M0JsOWVIWWZROTd6dU93YlVOa1J6Vlo0U2R4a2FzM2Jj?=
- =?iso-2022-jp?B?NVdMcGlqMjdwN09Ydmt0bFV1bHlsblEva3MvUTZyQmhEaGhQRWJIS21E?=
- =?iso-2022-jp?B?Q2V4cG9xbFE5UlFFa0tRODJYVXBpSjdORTUvdElpMm42RGwzQk9yQlFs?=
- =?iso-2022-jp?B?STZLOVhWb2ZlTzFDYzJ1KzZOMlRJNUg4VDAvTmdGWUhnVVlLVklMakkz?=
- =?iso-2022-jp?B?bDRDU0pWMmNLOUgvZk9rVXdkTjdxNEFHVWQ3YkQ4N1BrT2FYVW9HdlEv?=
- =?iso-2022-jp?B?UHRZYUUwb2RTd3ZYUUJkY3dpcWhNZzNYRmt2eENGKy9mVWp1ZlJybXBa?=
- =?iso-2022-jp?B?UGZVY25QMGxpNHJsOWtZa1BZUEJwZjBMNEdaNVM1cnIvejFJZEQrdFdk?=
- =?iso-2022-jp?B?eitESXoyOFhFaEl6cnJjY2s3a1BRaFpVNkFKMmlQZ29xK084OGFBMEpp?=
- =?iso-2022-jp?B?dHFhc0xTT1ptcy9zb2xQNXhPYkZFY0U5L2t6UEVTalYrMXl5NWxUN2tu?=
- =?iso-2022-jp?B?NXA3bW1ndVBkR1lzSVBZWkRMMWJrZzZQeFhRR3RFT3NIbk9ZdXJpZU5a?=
- =?iso-2022-jp?B?Q2JMWnd4YUpVTEc3TlFGSXBxeWh3ZnM5Sm9VaEV2Tm5QV2lCQXBwbnA1?=
- =?iso-2022-jp?B?RDZLak1uTnR2YW54LzVlS2lMeTl5d0VRNnJ0QXBTSFdZUkliQUQvejRp?=
- =?iso-2022-jp?B?RWRhaHNhQjRBUGZZMTdqN0lRR2hvVUxsNVo4Y3pHL0l1ZUEzcm9aelhl?=
- =?iso-2022-jp?B?eVc3amxTN2tVR0R3S2s4OU56VGNQNTVyZVltK0RoVWswQndPUkd6YVc1?=
- =?iso-2022-jp?B?UFV6QTdjTmtMUFZzQStjS1IyUXd2OGR0VDBSRDNhOTJpbURGbjVINFMr?=
- =?iso-2022-jp?B?UmNUMllOOTBZNVJMS2JkUUliUHRYOTlhMHpsUzZJVmdvcExRTlNsY1V3?=
- =?iso-2022-jp?B?Mk5rQi9ET3BYZTRqYXcvMWw4VmF6TXpsN3hPWmRqV3c5WjRnREhLanBJ?=
- =?iso-2022-jp?B?bHVxK25VenRlL1E5aVk5UERnWGg5L21KQWxRUkxxNDNjZHhWblIwUW5U?=
- =?iso-2022-jp?B?MkVOYmV1dUJBY1c3Y2hSTDF1SlIvTGZzNlRGeTVVbmE1NFZpVmtkN1Bq?=
- =?iso-2022-jp?B?SXhyd1hUTzBjNWNwemptNCtGUDgvN3lDa0Y3SDVSck1DVERNdzkrS1hJ?=
- =?iso-2022-jp?B?bVhiY05nVW81V0R4eDNua25lak9OcmQ5UDlOUTJxeDZsL3JNZ0JvVHZ5?=
- =?iso-2022-jp?B?RjhwZktraDF0L1BFNk9HSEk0ZEl2NkdwQm9WeTlDd0VJK0lnOHU0ejUy?=
- =?iso-2022-jp?B?SUYzWTdMdldsdCtkdkRTS2tkWUQ0U0h6WGtKWjRLcml4VWp3YlpkeTQx?=
- =?iso-2022-jp?B?UHVoMDNvemkrUzBJSVhsUXoxRy9FV3pXV2hiY2ZzZ3MvYmpjdlBmQlBq?=
- =?iso-2022-jp?B?amZ1NlRtc0VKSHdzOElnRlE3MDJ1cVhtTURRd2NwKzFKOVltZXVuSFpW?=
- =?iso-2022-jp?B?OWkrUlcrRkJNUXF6Q1NUREVXMWY1YlNpZEV2UXpHdGRXaDRMRnBIUlBn?=
- =?iso-2022-jp?B?Q0tkUVV3anoxQU8rUlpzblc4SmFxWW9PKzF5UzVsdU82UW9ZQWFzMXRt?=
- =?iso-2022-jp?B?aCtzRCtsTGp5WmVxbUp2dDRjSW5TOGJZOFJsV2N5TUwrUllMWUN3S3hM?=
- =?iso-2022-jp?B?MGNMUnBBNnZWSmlzVWdUTWxYbWhCS0JUNzRiQ3czZTdBSHBlSTdhL3Bm?=
- =?iso-2022-jp?B?ZitEQm1mUkFDckYxNWdnOGdGdkVCVkF0clNYWXNPQVBuZGo2NEFqVGZJ?=
- =?iso-2022-jp?B?UjMzZmE3RDFYeWt2cXRzdTRjVEZpNVFrMjlseEpEdnZ3aUR6a3ZaNXNH?=
- =?iso-2022-jp?B?S0tWU25qc2VzRlNsNDBLSDlyZ0FZM2RaQlNpOXFQN0pOQ1Z0VURsTXFi?=
- =?iso-2022-jp?B?SnBLeVQvaG1oZnVVZWhVTWFWK09kdE4wanFxYkF3ZHRwTk9sODk5aTR3?=
- =?iso-2022-jp?B?SXpnRGsrREFUbzRBN0hUR1RkYm1NT2pROHhPdjByaEpiVndwZDdTL2N1?=
- =?iso-2022-jp?B?TkQ3L0kwWStTU2Z2Vk9ZbStJNzdkWFRmS01kWHZ2QTRnK3VKRlB5T2NZ?=
- =?iso-2022-jp?B?Y2pRM3J5bDAxUmsxRGhKM1ZCZDd6cXdPbS9HL0ttc2txaC9zMTFFNEtK?=
- =?iso-2022-jp?B?cmRTZCttQnlqYW1yQk91MG1kRGVFTlRUaWRjWnFLZzZCVlcvNmtLbjk4?=
- =?iso-2022-jp?B?K2IzL0MyeXNaaEN0bEdpRk5vbDhMcnN5SjhrQThYU0dZTUJsMEZBTURi?=
- =?iso-2022-jp?B?cUYyZXdBWDB0UUxvY21Ha3hYSWlkK1ZrTVlRKzVTcmRJRUxpUG43c1Nh?=
- =?iso-2022-jp?B?VmlGd0hCdEZoOEpVZStFZEplZlJ5RGNnT3BhWmVudFJLQ2kza21lbHZq?=
- =?iso-2022-jp?B?NWhzVGtMejJJL3ZacllxMWhia1FQY3lKY3IrQW1FODNoaURveDJFenNC?=
- =?iso-2022-jp?B?OUtMZ1kwR0V0Y2NtYm5MWEh0b2NhdGsxL2dnUDZmV0ZtMUdqQjdxaHN5?=
- =?iso-2022-jp?B?Nm13UXNXWT0=?=
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=DHwqRmdc;
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.a=rsa-sha256 header.s=google header.b=Mc8zwV1E
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AJ6wI6O1534962
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 08:54:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	loH97Efk9dLDDTkm9svLgLvPkthPGP0mGuzEjGhs0Rc=; b=DHwqRmdc4bLCjK4Q
+	a8KDPCDbypmuJqtrITZ3djK1j2aCrAKdbMm5pmQEbwlizFGsSy6fROjERKzWLgcL
+	K2yKeQmIM/AkZ3KXFb9FMVDdIJOece2QgoPTWjpRB3VUh67OuAGIFWAkglZWHAfZ
+	6wlFGKI4hDz4seFFYAwznJpE5TlDlqc3+fJCBcfCSbxMmPLQhuKBbVpkLcdviBEt
+	Ior7yYgdfYtiXcEoXSUX7bwo3mZv1cPPN8zPul1WAeR6o8HYaOC/D9Q1LBI+7dwa
+	tsFTaDTZb+su+2jiRV9aqwSeksvi9E44y6fAsm7wVU4lDPG55sA5WNunWtW9rn4r
+	5/ahIA==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4j1dpcc9uq-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 08:54:26 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-3b3c459a35eso2085072a91.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 00:54:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1795078466; x=1795683266; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=loH97Efk9dLDDTkm9svLgLvPkthPGP0mGuzEjGhs0Rc=;
+        b=Mc8zwV1E8hc5CQkn6eKo+4uwj546X1llsvhnsASADAPGk5JXPDMS33Pu9rGHaFV4o2
+         q0FDiF9FwWlVj7TBUKvKXFFdEnVNpMuvgxuUfY+3USM7es659aTxG4Ty6W2brUy7BZxL
+         7exQx23N0HQrruME/wxeVWgx+IPsp0JB7cn7eM6NqpfirWiMdszsRYvqx+HfoWz7dn8a
+         gNd2pUbg35orNVQasj5L1MQUSRne702d8T5tWbyGS4/6v6JDluEoT5tGJmCZVKEFo4PJ
+         K3SR30+2vnQlXZmTGBzpsNCQKwRCaVhG75LAFRNSgGcFFXxCkJX0vM+OiFuFPVtKYBiT
+         Q3zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795078466; x=1795683266;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=loH97Efk9dLDDTkm9svLgLvPkthPGP0mGuzEjGhs0Rc=;
+        b=sC/9sxkjxdZA5UM9S07PdksHWz3QThIPFIgVOrciHt8cWlo8wl50q8FmijXiUSmp5I
+         /o6Pt/Oo7Tp/W+UHwtxMQIFBTxtAoUYx5d/leOUkokx4Z+gRbdsnrbEgn3kpPEnyVq3Q
+         aSXE4OxLndLX9VhW8ikvwXeWli/RwsyeLD4PD592sUmQIyNdyhIaWJ8jL/RzCdAEa36B
+         VdNQVtvIvhU+o4SgQufc+4YTXhcWfzLMcveFOFLO3gNsiN65NmVVPY5Nb4Q2jKAlWeUg
+         6DW+espl8wPNcXnaeQ6V8eyoUOojOWO4FHxdjt73b1GnlEHpFZlwrRKIizef3w+SlMkL
+         Wmng==
+X-Forwarded-Encrypted: i=1; AL+hErFCWlqusBP0K1E4hYrNowhsMk9ir5DeZ8L3aV0znkJie1Z56zFRqeLFs6hEaUuDGeMvooK1hVg/Qi6tkpiTe3RH@vger.kernel.org
+X-Gm-Message-State: APuU4Z/M/FhFk8Te9/P+WlrsDsHtphZCT0qOgqZ5hCRsIAcgBwFehiv5
+	VjKOf0nlaMi/bhe9F49/0vyaUAcJfTiNsJEOSAGogNdQdVYg7KUktmA1F5mDNr5PtJ2vHhd8zpM
+	Zz08khPI4KtVLzJg+H+24jNR24uwRwg4WUoptcDD7QNT8qIbAmwNZV2GBYBnKNc1WJ3zFOwh6
+X-Gm-Gg: AZFdTZf/5jRMDc504u+e5IQE8PQ0FI2HroJI7AwuI2y7kCPT5/dJHxJlrbwelmbbZDr
+	vUge6kcI6AJQzQdMLm5l4qb5kbsde9TkCe5kROA5cnI5fOMyReQ2xgZitEgm2HgrsSJmV0NrhsZ
+	g+jhvgptSU2pB7tSdDAZNCYR/NVTlnV1qyq7T3X3gtQtMnPR6lS4duLyYn/6tYtowXIbkE81rH9
+	LZk5I/wV0J1wN497fjd5WItdm82DLXYuc59nzIJ3KN7p9H8THEG+K6rBPUmIjFrBY23iJ+u10oW
+	yqqVu3heRN36ld9Kg8RfUjflrsylrz0ec4O7PXU18hrVMxgwm62ehubAp4Hr0Y9IGp5uOzv80lv
+	oCNHwxD72LnJpt1tvb3YZr+ECPHejKnzxLX6GYEkzzAWVBlSqceug5a+B8J+DQ4aSP5qds4zVIt
+	GjRnRCNw==
+X-Received: by 2002:a17:90b:3d8f:b0:3ac:8897:7baa with SMTP id 98e67ed59e1d1-3b3d07c687emr4589757a91.40.1795078465874;
+        Thu, 19 Nov 2026 00:54:25 -0800 (PST)
+X-Received: by 2002:a17:90b:3d8f:b0:3ac:8897:7baa with SMTP id 98e67ed59e1d1-3b3d07c687emr4589724a91.40.1795078465152;
+        Thu, 19 Nov 2026 00:54:25 -0800 (PST)
+Received: from [10.218.24.187] ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3b405ecb486sm1656162a91.16.2026.11.19.00.54.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Nov 2026 00:54:24 -0800 (PST)
+Message-ID: <06758809-6748-4f7b-b7e6-c862936a961c@oss.qualcomm.com>
+Date: Thu, 19 Nov 2026 14:24:19 +0530
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -180,114 +116,192 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-Exchange-RoutingPolicyChecked:
-	mrVISuhmmveSPcAtmcaCMf7LkqFl2QCVwTHleBAkU9mmomTmZWSa2bEvMKPERmy2GiQURmtpIL1n5phP/kmB1u/6hJeBo5RZbAJja6py0hjnzcacnv2lyifdnWjUNoChDaJIA2o+MWrlOg0Aasj6g+tY5YljELMQL4O6gB0Ve2Ag9uT6r8PN+KMA69OBrmwy4yioI4Wi6zytO/ia3+pg4QuvymBKNkb2QcLzAxERVknhah675mkFckQqBwikujHabOOG5QZBAaI4nyju9m9WBnUWwC+bMPQvIt8oEoUlX6NKInxTa6Z5TvxJOfPmbP81qvHSX8s35/cd8BWW7lgemQ==
-X-OriginatorOrg: fujitsu.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY7PR01MB15746.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4417432-3efd-4d0a-db05-08df4618154c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2026 08:35:36.0288
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MWiTR0ZhX6uy4GKKbL1Yn8nSJAbKw1zZJn7f0gnUCfIj/dUNQtll2f4HZCfaHILXjAFGXFibnhOHp300tOz1FCxcLC1g63UnemtefFqI2fk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY3PR01MB11383
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf: Reject group leaders detached by CPU hot-unplug
+To: Daniel Wade <danjwade95@gmail.com>, Peter Zijlstra
+ <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark
+ <james.clark@linaro.org>, Kyle Zeng <kylebot@openai.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20261119014730.2074-1-danjwade95@gmail.com>
+Content-Language: en-US
+From: Aditya Chillara <aditya.chillara@oss.qualcomm.com>
+In-Reply-To: <20261119014730.2074-1-danjwade95@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=YJ0KWhGx c=1 sm=1 tr=0 ts=6afeb942 cx=c_pps
+ a=0uOsjrqzRL749jD1oC5vDA==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+ a=IkcTkHD0fZMA:10 a=zJRp6_cAMcgA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=_K5XuSEh1TEqbUxoQ0s3:22
+ a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=JfrnYn6hAAAA:8 a=EUspDBNiAAAA:8
+ a=yrwFlzbl_MS6vLvGJOEA:9 a=QEXdDO2ut3YA:10 a=mQ_c8vxmzFEMiUWkPHU9:22
+ a=1CNFftbPRP8L7MoqJWF3:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTE5MDAzNSBTYWx0ZWRfX7zD0X+0ZGrAZ
+ NYy31uKXwmPnPdT7Wm+4LV53ZE4VmR39jeRv2AJLP0gUxSraTEO6HVFyeiKVZC0IO505UvgI1c/
+ jq1mUGUS4x3DYJHHSJynpeSAt+N1jkvhDTXxbAiNDCwDiAlOibEPtX53ecRQ19/I2ZwTIQnBOZ3
+ fEPwkYJO40/T/gsWL5Y2DoFDgPgnBEVakFZj07AmP9bRRJrn7/vzRDjTzBnte4JZ9NAUJTJO4C8
+ Pk5H2FtobtrJbFD8LByl/6nBQeSK+9Ync5uG6m2+Bvl3fLIPW5RafvdwlhyiKVWF65jE6S4ovQ/
+ kfEZG2d1IprP6AiGxslLvGXWcVlGns97IGPlEBOw85+wOV5/V5xWjB6Fd1/8mnSdK2Bwb9o0QNn
+ 9nb9B7GiiztnmExvi9yp+/SLa310mN2F5G1taAaYcu+XzJFnoBkc7P9D4aKRnBkf1sbR0LCVVZt
+ H5TDTTx4C2V14dDGclg==
+X-Proofpoint-ORIG-GUID: sxIH43xNN21UD-FaCwGxof8F7JM887r0
+X-Proofpoint-GUID: sxIH43xNN21UD-FaCwGxof8F7JM887r0
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTE5MDAzNSBTYWx0ZWRfX8MxiJVbdoRzw
+ hxnNtUJ5sJj58sLWS1fA9iLiTV9Iyaq3begKFLKiFMKQf3XS+tAvu+giy3O+p/Sp20loVOxr6Ri
+ 5hfDy022rJt/lQeP1zGcA4ZL7SK8F30=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-11-19_02,2026-11-16_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 bulkscore=0 malwarescore=0 priorityscore=1501
+ lowpriorityscore=0 suspectscore=0 phishscore=0 spamscore=0 adultscore=0
+ clxscore=1015 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2611040001
+ definitions=main-2611190035
 
-> Subject: Re: [PATCH v2 3/4] perf: arm_pmu: Add workaround for FUJITSU-MON=
-AKA Erratum E#030002
->=20
-> On Fri, Oct 16, 2026 at 01:00:13PM +0000, Tomohiro Misono (Fujitsu) wrote=
-:
-> > > Subject: Re: [PATCH v2 3/4] perf: arm_pmu: Add workaround for FUJITSU=
--MONAKA Erratum E#030002
-> > >
-> > > On Fri, Oct 16, 2026 at 07:00:47PM +0900, Tomohiro Misono wrote:
-> > > > FUJITSU-MONAKA Erratum E#030002 affects FUJITSU-MONAKA CPU.
-> > > >
-> > > > On affected FUJITSU-MONAKA CPUs, after a PMU event counter is
-> > > > stopped at a value just before overflow, an overflow might still
-> > > > be incorrectly detected, resulting interrupt storm in some case.
-> > > >
-> > > > For example, if the following conditions are met:
-> > > >   1) Running perf to count an event in user space only
-> > > >   2) The event can also occur in kernel space
-> > > >   3) The counter value is set just before the overflow
-> > > >      (when using the -F option, initial counter value is -1)
-> > > >
-> > > > when the kernel is about to return to user space after enabling
-> > > > the count, an overflow interrupt is incorrectly triggered by an
-> > > > event that occurred in kernel space. Since the counter value is
-> > > > not updated (correctly), the interrupt handler does nothing and
-> > > > returns with the same condition. This leads to another wrong interr=
-upt
-> > > > and results in an interrupt storm and eventually a softlockup.
-> > >
-> > > I don't fully understand this.
-> > >
-> > > Surely the relevant PMOVS{CLR,SET}[n] bit set as if the counter n
-> > > overflowed?
-> > >
-> > > If that bit is set, the handler will certainly do *something*.
-> > >
-> > > If that bit is not set, the interrupt shouldn't be asserted at all. W=
-hen
-> > > does it get de-asserted?
-> >
-> > Sorry, my explanation wasn't clear. The interrupt will be de-asserted
-> > as usual.
->=20
-> I'm trying to work out which of the following happens due to the
-> erratum:
->=20
-> (a) When the erratum occurs, the HW sets a bit in PMOVS*. An overflow
->     interrupt is asserted because PMOVS* is non-zero. The overflow
->     handler will see that bit was set in PMOVS*. Clearing PMOVS*
->     de-asserts the interrupt as usual.
->=20
-> (b) When the erratum occurs, the HW does not set a bit in PMOVS*, and
->     asserts an overflow interrupt even if PMOVS* is clear.  The overflow
->     handler might not see a bit set in PMOVS*.
->=20
-> (c) Something else.
->=20
-> Can you pleaes confirm what HW does with PMOVS* when the erratum occurs?
-> I assume (a), but you haven't explicitly stated that so far.
->=20
-> > The problem is that armpmu_event_set_period() will not update the count=
-er
-> > value if, for example, the counter is -1. Therefore, false overflow det=
-ection will continue.
-> > With this patch, armpmu_event_set_period() will force the counter to -6=
- so that
-> > false overflow detection won't occur in the kernel, since the maximum e=
-vent
-> > count at a time is 5.
->=20
-> I expected that were this to occur a number of times in quick
-> succession, the core perf code would throttle the event, and adjust the
-> period.
+On 11/19/2026 7:17 AM, Daniel Wade wrote:
+> CPU hot-unplug detaches the events of a CPU context but leaves them in
+> OFF or ERROR, so once the CPU is back a detached leader is still accepted
+> as group_fd. perf_group_detach() does nothing for a leader that is
+> already detached, so closing it frees it with the new sibling still
+> linked, and closing the sibling is a use-after-free.
+> 
+> Detach them with DETACH_EXIT as well, so that they end up in
+> PERF_EVENT_STATE_EXIT and are rejected by the check from
+> commit fa091f46c383 ("perf: Reject exited events as group leaders").
+> 
+> Side effect: poll() on a hot-unplugged event now reports EPOLLHUP, and it
+> is refused as group_fd even with PERF_FLAG_FD_NO_GROUP.
+> 
+> Fixes: 226424eee809 ("perf: Fix corruption of sibling list with hotplug")
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Daniel Wade <danjwade95@gmail.com>
+> Cc: stable@vger.kernel.org
+> ---
+> v2: use DETACH_EXIT at hot-unplug instead of a new check, as Peter
+> suggested.
+> v1: https://lore.kernel.org/all/20261116081248.21059-1-danjwade95@gmail.com/
+> 
+> Tested on mainline b3dfbde62cf1, x86-64 with KASAN and PROVE_LOCKING,
+> 2 vCPUs under KVM. Without the patch a sibling is accepted on a
+> hot-unplugged leader and the close gives 15 KASAN reports. With it the
+> open fails with ENODEV and no report appears.
+> 
+>  kernel/events/core.c |    6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index f5f2261f1fe6..2de4c3cc37ac 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -15342,8 +15342,10 @@ static void __perf_event_exit_context(void *__info)
+>  
+>  	raw_spin_lock(&ctx->lock);
+>  	ctx_sched_out(ctx, NULL, EVENT_TIME);
+> -	list_for_each_entry(event, &ctx->event_list, event_entry)
+> -		__perf_remove_from_context(event, cpuctx, ctx, (void *)DETACH_GROUP);
+> +	list_for_each_entry(event, &ctx->event_list, event_entry) {
+> +		__perf_remove_from_context(event, cpuctx, ctx,
+> +					   (void *)(DETACH_EXIT | DETACH_GROUP));
+> +	}
+>  	raw_spin_unlock(&ctx->lock);
+>  }
 
-I think what you mean here is throttling in perf_event_overflow(), but this=
- will
-not be called in this case.
+The patch itself LGTM.
 
-In armv8pmu_handle_irq():
-```
-        if (!armpmu_event_set_period(event))
-                continue;
-        ...
-        perf_event_overflow(event, &data, regs);
-```
-perf_event_overflow() will be called only when armpmu_event_set_period() re=
-turns non-0,=20
-which means delta between the previous counter value and reading counter va=
-lue indicates
-an overflow (and therefore new sample should be created).
-With this errata, the counter value is not updated, so armpmu_event_set_per=
-iod() returns 0.
+Reviewed-by: Aditya Chillara <aditya.chillara@oss.qualcomm.com>
 
-I will send a v3 shortly. Please let me know if anything is wrong.
+PatchWise AI code review (gpt-6-astra) flagged the following though:
 
-Regards,
-Tomohiro Misono
+[medium] Adding DETACH_EXIT makes is_event_hup() true, but this path never
+wakes event->waitq. __perf_remove_from_context() changes the state and
+detaches the event without calling perf_event_wakeup(), unlike
+perf_event_exit_event(). A thread blocked in poll/epoll on a disabled,
+mmap-backed CPU event can remain asleep indefinitely after CPU unplug,
+even though a fresh poll reports EPOLLHUP. Arrange a wakeup in an
+appropriate context after publishing the terminal state so existing
+waiters receive the hangup indication.
+
+--
+
+To be clear, this is not a regression: before your patch these events went
+to OFF and poll() never reported a hangup at all, so a waiter slept just
+the same. But the EPOLLHUP the patch advertises does not reach tasks that
+are already waiting:
+
+                          task already asleep in poll()   a fresh poll()
+  before your patch       stays asleep                    no data
+  your patch              stays asleep                    EPOLLHUP
+  your patch + wakeup     woken, sees EPOLLHUP            EPOLLHUP
+
+perf_event_exit_event() kicks perf_poll() with perf_event_wakeup() after
+moving events to EXIT, but this path doesn't, so a task already sleeping
+in poll() is not woken and only sees EPOLLHUP when its timeout runs out.
+
+Deferring the wakeup to the event's irq_work, as merge_sched_in() does,
+seems enough. Something like this, on top of your patch:
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index c1f3e1f013ec..885b6594139a 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -15350,6 +15350,9 @@ static void __perf_event_exit_context(void *__info)
+ 	list_for_each_entry(event, &ctx->event_list, event_entry) {
+ 		__perf_remove_from_context(event, cpuctx, ctx,
+ 					   (void *)(DETACH_EXIT | DETACH_GROUP));
++		/* Kick perf_poll() for is_event_hup(). */
++		event->pending_wakeup = 1;
++		irq_work_queue(&event->pending_irq);
+ 	}
+ 	raw_spin_unlock(&ctx->lock);
+ }
+
+Tested in a 4-CPU x86_64 QEMU/KVM guest (virtme-ng), 7.4.0-rc3+ with
+lockdep enabled, using perf record -C 1 and then taking CPU 1 offline:
+
+  perf record -C 1 -e cpu-clock -o /tmp/hp.data &
+  echo 0 > /sys/devices/system/cpu/cpu1/online
+  jobs
+  perf report -i /tmp/hp.data --stdio | head
+
+A) Your patch only. perf keeps running after the unplug and needs Ctrl-C:
+
+  # perf record -C 1 -e cpu-clock -o /tmp/hp.data &
+  [1] 149
+  # echo 0 > /sys/devices/system/cpu/cpu1/online
+  # jobs
+  [1]+  Running                 perf record -C 1 -e cpu-clock -o /tmp/hp.data &
+  # fg
+  perf record -C 1 -e cpu-clock -o /tmp/hp.data
+  ^C[ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.040 MB /tmp/hp.data (283 samples) ]
+  # perf report -i /tmp/hp.data --stdio | head
+  ...
+  # Samples: 283  of event 'cpu-clock'
+  # Event count (approx.): 70750000
+
+B) Your patch plus the wakeup above. perf gets EPOLLHUP at once, flushes
+   and exits by itself:
+
+  # perf record -C 1 -e cpu-clock -o /tmp/hp.data &
+  [1] 151
+  # echo 0 > /sys/devices/system/cpu/cpu1/online
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.065 MB /tmp/hp.data (737 samples) ]
+
+  [1]+  Done                    perf record -C 1 -e cpu-clock -o /tmp/hp.data
+  # perf report -i /tmp/hp.data --stdio | head
+  ...
+  # Samples: 737  of event 'cpu-clock'
+  # Event count (approx.): 184250000
+
+Thank you,
+Aditya
+
