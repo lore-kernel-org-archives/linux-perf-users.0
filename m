@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795115074;
-	b=m8r7zDkquH2fNH0HeSzEU978Hfg1hzOE2wNl6yymGzfdKXCAIocFtSfEei/nD316biot
-	 dUUBYW2o+ZzQ6X6wZtAnA9N/q10rNNZyaJ1Mw43i4m4RdubZwrzyofuAmaUKsohB8Ycb7
-	 Dl3qk2my8k9Yy+lOxsGt6ZSI2L+CwRzK1cms6HxAUY2zmntzWmlkTBeVpJ/Q2pi9Bwbnv
-	 yFw2gjqWDklO3F+by4OPzPkD+7W+dgHxEuj6iSPW9tGmXKelelApqw7W4PVk6PW53srcg
-	 9gK3wLlso7phlchNa+25cVj7V7BPgSgRuxSJSIe42lV51QwcX9UZ4K9S+fdKFJ4rHYg==
+	t=1795115227;
+	b=QTruWAWhP1jaIAqBk95hED8PDsuJW3ns9ZO5qszGxOYo69iMHC+YJrfFOvTV5szzuRGm
+	 bime7/4x80MiGgyBGqJDfAki3cO1IIH8Lc/AHdrp50ENHxoOvR/kOTKMX+0mHhDLg+/me
+	 3sOeTbHxcseVJQLAbud5ZXXZSH/Ng5p99IftsPrGk2HKd346KVjx9/oBXf9HuYam1Dma3
+	 PkLK4AzK0dhdlVLjUliVXb9b8B4yfDLyIbJAZLgJC/nNbirUtHELLydqxL0vymCO7E4QC
+	 5MXd3HmIN5nXrbkGTVmzF41JOcDXci8MXBJQQfKBgtQ9QMIZoRjf32OLcriRG4e/2jw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795115074;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795115227;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=Sl/FhyoebQ2OZ2t1K1u3k1u0jmSBeN6ihBUZntpRJq4=;
-	b=QK0RkTOJOOv+ADacdtyckd7VJ1gw7IqfBd8N9UfF3rbpUUCujpZdVEpk42F9vTdRHlAC
-	 qhYIlkCXikXJW6LdcSI7yq98d4a4Ag9DFhVbChidcMMtlb/hHF/u+aRLYaT9VeW1IWCiJ
-	 tYk9Vkfm57lmd6IqrbErF894eer46XZN6UQXhSQBk0QxUpHM8tLd6iWywxZJKDZNETaFU
-	 7CQePvkkB1vVm1TGYhhj5wm5uekt7ftfqH43xLzv1rw0UP66ek9VXkzR/UIHoMecJAmrf
-	 Cd5umIu0TYAKMk9Uzr6zY046dgY3T6/XxZDp9icDN4eHU5xJaPMml75Qy5xvYBdJQzA==
+	bh=spVXShDIIPjIvY5MQvCQWYl359TqE6AkBJZukPWORfc=;
+	b=cIo/RHYznMHr4fbLZBj4etWhr9p2Uovm19k6/blbYzKH1BUhIy7JVzApnYnLpYjhOgLB
+	 1dg0iEInsgqtb2SB0BYpGXWxlfifKZdo74V3KvglU8b3fgMOHoGXduAWM+4VYPHt6gw4j
+	 AoZgTox3oE8A++9l+N+rMo1Vu0uSZLmQVtFliIH94L0rQZqK5CXHvfFd8BKeGd++WQgIk
+	 Z4HX6HQALcBvWfGLkQOUA5G36Sst7cs9+8RVqWCd1cSEL0wn19vD4gw+D3Q/IuTHzVajL
+	 vtjtSkSsg4RHHZFAYTyIzssqPTu9PkfBWxQtSBdITkyvI9mhTDK+6otEbFh9nOHMJGg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GYBiIR7V;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LHGROPCt;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1C060A2630
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 19:04:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E781606A320
+	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 19:07:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GYBiIR7V
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1A271F000C8;
-	Thu, 19 Nov 2026 19:04:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=LHGROPCt
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1F721F000C9;
+	Thu, 19 Nov 2026 19:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795115073;
-	bh=Sl/FhyoebQ2OZ2t1K1u3k1u0jmSBeN6ihBUZntpRJq4=;
+	s=k20260515; t=1795115227;
+	bh=spVXShDIIPjIvY5MQvCQWYl359TqE6AkBJZukPWORfc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=GYBiIR7VSFfVeIY1aVBiAT+7Gan+Qj7zBJh0LnC22VswSCkDLko54b+EFuexTOGtw
-	 cQO1G7Y2qr/dHYfb77rWKSIgCcV4AGo3UukJ+l91eYP+0TRx5Pb2G3NiunJO2pV1XJ
-	 8r7h6MR6B/XxxJe4P52eUqh+Q2nCrL24AYquF+brW4b5KoCucVYYtEiXEdk2d79b+E
-	 pUEn8aEKiEK/wubR7GCBv3zoej9CGJ0I8c1cu/cLBCKlzcPFgyMHhYTILuBHEPDIOj
-	 h16WZ0FLanSlzlIJ8n3t7ik4a7BU9EIGUsgAp0OqNVmxUP5mgiZ1kebfDfzAYVrIpP
-	 6dHIFDlEvfAXg==
-Message-ID: <sashiko-outbox-223828@kernel.org>
+	b=LHGROPCtEAGjkgz7bTpEStQuXJdeN9hwqHPDmm5wPbuzDiN4gdEnJO/AFlMqoGWW5
+	 T/akGdNrxTCVnyaFb2ja15Bj2VL7bLbhnDY1bw3g9VSzJC0R8FrhGkXM5BH5PpoTVo
+	 TkNVS2QGWBBiAEwSd7HtbNUsGxg6Yn8xcsHk9jTW/KWzCGmr8mKaJulQggh0MrGXql
+	 smKr3rPWd0syOtjtUnfk/KqGw+adN8R/KicFijTStKVMXnN6LUyHceXq9morYioEBI
+	 2j+x41gbAfBIr3htDzFhGMcCzPWCAVC6+b0gXH7nr0qSWwbOwImtrlaU16cFxI8B5A
+	 ZO1YcmvopybVQ==
+Message-ID: <sashiko-outbox-223830@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 07/33] perf: arm_pmuv3: Move counter allocation mask
- to per-CPU struct pmu_hw_events
+Subject: Re: [PATCH v10 21/33] KVM: arm64: Allow kvm_vcpu_pmu_resync_el0()
+ to resync filters in process context
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Colton Lewis" <coltonlewis@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261119185215.632334-8-coltonlewis@google.com>
+In-Reply-To: <20261119185215.632334-22-coltonlewis@google.com>
 References: <20261119185215.632334-1-coltonlewis@google.com>
- <20261119185215.632334-8-coltonlewis@google.com>
+ <20261119185215.632334-22-coltonlewis@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 19:04:33 +0000
+Date: Thu, 19 Nov 2026 19:07:06 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,14 +61,17 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> In preparation for dynamic per-CPU PMU counter reservations when running
-> KVM guests with a partitioned PMU, move the counter allocation mask from
-> the global struct arm_pmu to per-CPU struct pmu_hw_events.
+> Previously, kvm_vcpu_pmu_resync_el0() only scheduled
+> KVM_REQ_RESYNC_PMU_EL0 when called from interrupt context (such as an
+> IPI reprogramming host perf events). When perf_pmu_resched_update() is
+> invoked synchronously from process context during vCPU load/put to
+> reschedule host events around guest-reserved counters,
+> armv8pmu_enable_event() calls kvm_set_pmu_events() and
+> kvm_vcpu_pmu_resync_el0() in process context.
 >=20
-> Initialize cpuc->cntr_mask from the static cpu_pmu->cntr_mask during PMU
-> probe and CPU hotplug startup, and update event counter allocation
-> helpers (armv8pmu_get_single_idx(), armv8pmu_get_chain_idx(), and
-> armv8pmu_get_event_idx()) to query the per-CPU mask.
+> Update kvm_vcpu_pmu_resync_el0() to call kvm_vcpu_pmu_restore_guest()
+> directly when not in interrupt context so that newly rescheduled host
+> perf events have their EL0 exclusion filters applied immediately.
 >=20
 > Tested-by: James Clark <james.clark@linaro.org>
 > Signed-off-by: Colton Lewis <coltonlewis@google.com>
@@ -77,5 +80,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119185215.6323=
-34-1-coltonlewis@google.com?part=3D7
+34-1-coltonlewis@google.com?part=3D21
 
