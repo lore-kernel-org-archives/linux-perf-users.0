@@ -1,59 +1,63 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795189504;
-	b=EbhBlmPqvIdYwYj6C+6Ii/07MUGAU/rTKmupdiYKX4iMF/yw0zhr/JqHMccOTSE23wTg
-	 8IvxxUStBKAjGqo9Ya8xozAUo3rSwpCodgws2lM+EVBTnOFiKHWpm6A5Wpt7N+kCNWid1
-	 1XxtbfJDtTVQK4TkL64epnvVXThhfC1qelMosEmpVaNoj27LgtELi/2qKMglbrBa6VSY0
-	 8TyiCrXpDq82GZ3jV0K9CPvwFPzu9cNQjthJy+gwzDynenrZRBdUBpb2DomSgW9Kavu3v
-	 im8o2zAq2+yIsgU7cNP49CQH3pUAGstnE1uM8h+MZQDjMRIBsZKS3Ak3PBt9c7Z395Q==
+	t=1795189803;
+	b=gaPx+f5uEnhv1zogSHcPNLjb/MvAeClzime/g8acM6wVvudmigLJ8L/PPKOdiMDTOvS7
+	 sjZI8wmdRGY+e0gHa36eQJU9eu8or+9yBH3U2yohmmZbA0h9SDJLHOYSEjNCfAkV+iwF5
+	 Q/hZ+hWSRV21DSSmVGV3IJcUl783EjQGyv2w7xZZDDEFSgO/WvjPvkM07NnSGTSvBNRck
+	 wP8ohiwTd6EcPVPRuZ3PDMV6O1BsF32bCETqDdJQFv/sH7h9g4BVjbZr0VFwsM/8E23cN
+	 vi9VSfV0e2jmErexaeA7iC2cU4BU/jBxIOsAWOcYUU7ZlRXsMHTC/t3AmYHQU41v0jg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795189504;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=6QLG5/YNSyunp66wi2G54jlWRh4d2MdsiZoJ8fG1Qag=;
-	b=FVQZD3mZYvKApoLxuTSq5UQ8o50xKmfxlGBG3Guljg+cxYhmCmbYqUaK2r5xypv0rQ9J
-	 A0r+e1QsHMKw7PqR4Sk0pemv68MIMJtYOcYjsBUm+sWM6v214FcZ3TIHY08NNBlQrtRiI
-	 ESDmFHraPt2E8ffrYIkr8Wa3jkgmwdxOXrZGegEWVPfqzlvLSkA2MI7sjBELk1KHQd6Xl
-	 +DQkgSU5DQFQxm8OmmhJ1XsJb4OAApXLpp0HVhU9qNMWKYua/RMk/3jN+g1PhTsqN2OFm
-	 t8ZG/X8hqU6EotqoARCMOSwhFZ1keNw4ub+NiOn4yh1RIRbRvPaXpiRTGqgY3ICn78g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795189803;
+	h=DMARC-Filter:Date:DKIM-Signature:DKIM-Signature:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To;
+	bh=yExTCY6nHkC6ZYDgvaCfKm5pebEaEPCvwgabu3jSyPM=;
+	b=o0dCNTAbghZyGHMvvtaJRg9HGnDeMaOhu1s0qKzYhaUTtBaE/VESb0S40QIfcNrqiCg6
+	 wJH90iC5uaDe3PaitYHFeLE1RbtFWmnBy/+D3v2jbQw/eHZ6dx9P98PW4Iqzizb/DzWsj
+	 DchGvT0S7XYmXOm31XAATgQhzp6tj8dkR2uv04udDe41YeE7RobO/52ddWK5evPVH4Gv0
+	 wIukHiw/Kznj+JL9gNVzIf4Rbd0DOD/2wFECgabDXEr+BZCyn4hkdNJchYqYNiRfq/yhn
+	 FosT+z1ZeliErld+dLm3wwkK8TbrfUjPAWxMNRMpIQVHdgr85+xobIRfQZAq/5yOgxQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=F6Af7a+B;
-	arc=none smtp.remote-ip=90.155.50.34
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	dmarc=pass header.from=linutronix.de;
+	spf=pass smtp.mailfrom=linutronix.de;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=h6S++WXU;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=ICx2TOCl;
+	arc=none smtp.remote-ip=193.142.43.55
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF1B606A32C;
-	Fri, 20 Nov 2026 15:45:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CEF1B606A32C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5668D60A2602;
+	Fri, 20 Nov 2026 15:50:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5668D60A2602
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=F6Af7a+B
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=6QLG5/YNSyunp66wi2G54jlWRh4d2MdsiZoJ8fG1Qag=; b=F6Af7a+BYs0BDmmODuoYtBR346
-	yNguJtJ3FNvUxAMSuQsz4UxvtwlzqbSiXQ2ZgO00CyBHD+Yo+pBk5LkMsFn9m+Je/boSHzF/ZIORM
-	VVoorovm+UbGa46YQYE/KGudPyp6GtJkS7rd/IUqrbSHNdzD5BdK2llbMcSvydLpyQI+oUy6GUJEx
-	zODNr4VTXVDMSQTpl4Tfz+G395R972l3N7vIX5KRFCdcuqTLRgZc7XPImItDrsyj04msNAMzxopYC
-	mmheqGmKe5ov3+LQzba3KcDrDK5TqV8wC1Y3OY2FjHvTTd06NMA5F28nubs1cnqkHeVsD5HqoD8V+
-	WCB6N9YQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUQnK-00000007Bhw-1oBi;
-	Fri, 20 Nov 2026 15:44:58 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 74CEC3008D6; Fri, 20 Nov 2026 16:44:57 +0100 (CET)
-Date: Fri, 20 Nov 2026 16:44:57 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Tengda Wu <wutengda@huaweicloud.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=h6S++WXU;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=ICx2TOCl
+Date: Fri, 20 Nov 2026 16:49:59 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1795189801;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yExTCY6nHkC6ZYDgvaCfKm5pebEaEPCvwgabu3jSyPM=;
+	b=h6S++WXUUgycPePW+aJ3mGkxe/lu6GvcPHrKOQTTlipC8cuNJm/xWTzj97s9wODlhVEaXs
+	3e2MuH1jwvoAwPEsxslWGGGhb+CmPH704PL/VphTJqda2ClZfOl3U+hdc/Nrzi6cEcDZ7b
+	hvR2zsLWXA7dCoExYqElbrCXRqlvm38xv40NktzvlfXGeO9UoBt/zh22D+zPbLu3sblC3s
+	4Xs0xSC2C+ZjsMY4Lg1ksp+k0vL2SZzOrs43pX/rEeqXRTKK3MAM7039zRxTGMBjtwDid/
+	LvqfwfqrHKUPs5OQwXdx3UjJNPpipILx9e5MmbGg4q62Xm99iz7hd9yy1KvQww==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1795189801;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yExTCY6nHkC6ZYDgvaCfKm5pebEaEPCvwgabu3jSyPM=;
+	b=ICx2TOClGAyAITrXs9i6wBvgj6s6eicLIEixw1nxc3qJofR6xQFB/F9GJ40NEud8mF6m1E
+	tLwK0ADdjpQfwYAw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Tengda Wu <wutengda@huaweicloud.com>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
@@ -64,9 +68,10 @@ Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v5 1/2] perf/core: Prevent duplicate sigtrap task work
  enqueue
-Message-ID: <20261120154457.GZ2668564@noisy.programming.kicks-ass.net>
+Message-ID: <20261120154959.zw08JC0V@linutronix.de>
 References: <cover.1795053619.git.wutengda@huaweicloud.com>
  <45bd71c976aea1a0e8bf5762dd6b6552e6009439.1795053619.git.wutengda@huaweicloud.com>
+ <20261120154457.GZ2668564@noisy.programming.kicks-ass.net>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -76,33 +81,15 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <45bd71c976aea1a0e8bf5762dd6b6552e6009439.1795053619.git.wutengda@huaweicloud.com>
+In-Reply-To: <20261120154457.GZ2668564@noisy.programming.kicks-ass.net>
 
-On Thu, Nov 19, 2026 at 09:51:00AM +0000, Tengda Wu wrote:
-> The sigtrap handling in __perf_event_overflow() checks
-> event->pending_work before calling task_work_add(), but only sets
-> pending_work after the task work has been queued.
-> 
-> This leaves a window where an NMI can interrupt task_work_add()
-> and re-enter __perf_event_overflow() for the same event. Since
-> pending_work is still zero, the nested invocation can enqueue
-> the same pending_task again.
-> 
-> The re-entrant call path looks like this:
-> 
->   __perf_event_overflow()
->     task_work_add()
->       kasan_record_aux_stack()
->         <NMI>
->           __perf_event_overflow()
->             task_work_add()
+On 2026-11-20 16:44:57 [+0100], Peter Zijlstra wrote:
+> Some key ingredient is missing here. Is this some software event that is
+> missing recursion checks?
+If you navigate to
+	https://lore.kernel.org/all/29aa123c-36a2-460f-b76b-a8dfe1eb542f@huaweicloud.com/
+and /PoC then you find what I used for testing.
 
-How? If an event is NMI driven, it will only ever cause an overflow from
-NMI context.
-
-If it is not, then the same event will not trigger from NMI.
-
-Some key ingredient is missing here. Is this some software event that is
-missing recursion checks?
+Sebastian
