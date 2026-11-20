@@ -1,73 +1,71 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.72
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1795212827;
-	b=d+e8XJlWARdGeEKF3F1OnOWbSuaoUavpGi6sfJmbVe/3auAwErgosE7BwzYEJ4CXwCt1
-	 X8mWwzcxtTJHNfwtXCFquowSBJ/+WlA98mikVleK9ziWgre2pzajEVDjat87Kvs0FjoBp
-	 +DzptYNDst9Ds6xIjOUJTJJ3uzvkydR3cyGm7uAoqPOIFrLQttQ25tAsBqi44DLzJqT/p
-	 uHXm9kH9NJzK2L/AXEcwS5tusjsTT/BBRA4RYLxq7T7BriQ43mmVRKABf48biHKcc9bkI
-	 IBk50WYc905Xnpd0lmxpvQkcXZZDhVunhOA6BEa1ttGaEztfU9+lqRg75H610TlftGg==
+	b=KEr/GbsS2EbFF6XWAtfGfnBzqk4VAnmgnq//csUE9e3cDN/XsI/27uE7XczbDF8+mQCq
+	 y5Fj0/LrTm69Bp/KdCkfDf281lTA5PvcUalXXWflAM50a2bYfbJ+o71aFk8lKIsQ2qsng
+	 gLIxdT3R2c/Snk1IT/mMhM+cgr0q12LbiMczD6BkhH+E2CdbD2fbm09aYCO8szPE9resg
+	 JSljdaKUkS4AyNQlacOmVebO+Xu55N2RjS/GCbMzDmfSKYGnwrRClw8OS4H/jSQaMk6Mi
+	 cod9anhmIsf3DyCF3E+UInxYVTSmIFbQHalbw2A+9X9BRdRj2vhgvQgUVBjN78iQl0Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1795212827;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Received:Date:In-Reply-To:Mime-Version:
-	 References:X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=/iqd1s6yIkM3QgjlFuj6dLBfLTgftpemZYmyudK9OX0=;
-	b=quUOGVg/+tZ2OEPLu/WQKGCkTcbjxXxGYV/RtKORzi4qSImYGn3vYfzcFmdGvsN+81oS
-	 l8QGo9wcxJ8Hj5MKyjmtLDcvPIPvCsWx9QjVjJWwjMUxnrIXlyw90tQ2qCeWitaPp6aMi
-	 fi7K2lrS09ZXcDeoEJVn01I+adbdrRfzmx0ur9PMzbfaGh6j2AeCxvV2wBak0PVzlI1uR
-	 X2OfglGSB7oQOSg7OE6gRe0R5gcT7DI8vIuqnBuVs7P0wU9Vrua1cU9GZp15V8oXmknnm
-	 Q+FRioZD2babQeHvSd0MkH4trqM5eQCHjpUyU/hij8iAgFFRtt/9x6rkpKyHgksQxBw==
+	 X-Gm-Message-State:X-Received:Date:Mime-Version:X-Mailer:Message-ID:
+	 Subject:From:To:Cc:Content-Type;
+	bh=QqgFdpd7OQfjEJxbZM6noQOiuvDyjBGgxWWQEZRsDFM=;
+	b=4Bi2h+oUezlxt10/Njjw/AxpMgvZhv+Amfb+j42QuUj6RcrUvfapLHSrFgzgcEtKU+XL
+	 GMrQuJF5m1tgBlXAaTpm+ABO564lIpcd5MfQINh/uGi/wZ9EoDFyfFjg53vjmHMQjYTSq
+	 mWZ5pYTBCvmaJlD9UZ7lcoonba9bzgO8BRgWG+k2r+6dBe3/qtN2BIBIrmc7lQPQNOhXS
+	 d7c1aNEkL+KkumUxVhjC8m5Fsk1hXDF1uH43pI8PE3mAB5Cf0AuYA+TT11f3pkdZbONsk
+	 ZfRq3Fg/44VGU3oV0iw1LRsqgI1VFpQoH5hu83nSlvkoKmcvtxD/nOnIywjv9GSnq6A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=h8xCOweh;
-	arc=none smtp.remote-ip=74.125.82.198
-Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=l0OrfMOH;
+	arc=none smtp.remote-ip=74.125.82.72
+Received: from mail-dl1-f72.google.com (mail-dl1-f72.google.com [74.125.82.72])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DE8606A6B0
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 22:13:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 60DE8606A6B0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9019D606A6B2
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 22:13:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9019D606A6B2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=h8xCOweh
-Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-370230d93efso4226692eec.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 14:13:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=l0OrfMOH
+Received: by mail-dl1-f72.google.com with SMTP id a92af1059eb24-154e9d2d94fso3148169c88.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 14:13:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795212825; x=1795817625; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=/iqd1s6yIkM3QgjlFuj6dLBfLTgftpemZYmyudK9OX0=;
-        b=h8xCOwehtj+kfV7SY8E7fMyWYaLTjBfcFyMDlOoSRuK0P83xLZTMDfK/frahTNL7Hw
-         Z6PM5dfmNvqVL8qWfBcfhQK8Mc+KLAwYD+HVdMFLeckznFlPaKHAiHhQeUZHegTFW+wB
-         l+1C2jinEvjTt0wISFoUusWNKIlDzngyCv5Jo+mcIPoim2Hsg+vEtEsbIC6J69ueXlGk
-         /rk2IDZNA08nHgpeAwuDgPTRDups4rv7qiSS7VBR60+au2FSJ9kmA5P4zu8LrE5eaHut
-         ZsLI2EhsENoV8L5vB43ghsExLZHG94gEH5/26WsX2DfDEON6874e8hip/+mwgpizu7Sv
-         e7/Q==
+        d=google.com; s=20260707; t=1795212815; x=1795817615; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=QqgFdpd7OQfjEJxbZM6noQOiuvDyjBGgxWWQEZRsDFM=;
+        b=l0OrfMOHfB8CHIVVuXRVmO2rYHIlTjblwrhOg94wqWBtEfxM5cEklV49Rx/HAWb58X
+         dTiRFgluJSvmN2XkURTkJkMVonWSUweqMnPfaIS8X918x2HxF/06qS8dz5xL+y68ryH1
+         pYRDr+estxUQqY+nJrneqSwFBYGJH9p6uQNJddYLt2vUA1kIRX0s7gsIUo5tBY/c9o99
+         O4M0ca+VUoJpJf8Lhk/cVAf+4m5DFNGrjbdkC7jv1wonl23F9ZPmPr+0dAQLyJHL5/4m
+         0rln0XKr71W8FSD2/pHM/DZC7E61LquwL7PaIqp/smzI8AZBkYR3i1B8swDGdzRidXD0
+         SsMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795212825; x=1795817625;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=/iqd1s6yIkM3QgjlFuj6dLBfLTgftpemZYmyudK9OX0=;
-        b=kqL20KYOzBDcGXeMf7vHlKl2CJM8yIxmFDCE0/7cFmzR9wfVWXOWSPmfx3Dbif2Jhj
-         kgGx32JL3Vc8qGJNW5oqfPvEX5kHtPTg8hCt6DfLzrYMagzeRxjqj8RnD906UQ+5MBIv
-         7n483gabgvfrdJ6/X5G9++gHg3JoqC3uDwfBnMV8AZ8W3t7AVrpABBVF4wqLn1q3JbtP
-         Or8xXEhPS+Whbr3oLxx0BIj2iRQ+hipHu+99yvs+uUiwfUzS6lW8UTJh4q0/9Bz75hhN
-         JhUGWcHotlSPx/reyYZVkgSbPe72aiwvvnAx19Pjk7YhUmUzPmkQpupm+egmZJu+ffpc
-         tIEg==
-X-Gm-Message-State: APuU4Z9RzJJM8a1JqzwzEnhFRO5jSmCRutKrWxQWUVDqino+jt2oy7r7
-	w4QRhYe1aD5AW2hkWBFI9yuwdMJU/FRpLZAf7TYvezWXe0ZFWZnFNSEpY+OpmcXkuiAnEEQeBKM
-	Z33/WGSC4Qg==
-X-Received: from dyev10.prod.google.com ([2002:a05:7300:430a:b0:343:520f:7a80])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:d090:b0:386:8bd2:da2c
- with SMTP id 5a478bee46e88-3868bd2db9amr1848412eec.2.1795212824252; Fri, 20
- Nov 2026 14:13:44 -0800 (PST)
-Date: Fri, 20 Nov 2026 14:13:03 -0800
-In-Reply-To: <20261120221332.2245191-1-irogers@google.com>
+        d=1e100.net; s=20260707; t=1795212815; x=1795817615;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=QqgFdpd7OQfjEJxbZM6noQOiuvDyjBGgxWWQEZRsDFM=;
+        b=Fyo9zzIE/zgYikHkiYJYZG4lseKGyU6GmmIkWt+1/F9n9yE7nu8O6j0JZsoxpBkN+l
+         TD8yng72ruoF4LgIleTFhojWmY91eMwNBgRQ7Zwl23Xoxol9Q3skp7nyEgtijmVDPt1T
+         PO75Zqv1vQdJP0ikNWyvPydlWL55fZUp9iM1oIShqFwBQZ9tnKB19FLke+W+hMvLJtSL
+         kYMccdNVIYyWnY0pq9MmFET6kEjJwF/AJBYhl2QGJ8jMDKc2CKC/sYGcA2+fLark0wuL
+         6+wCv0vZ42G9xlS18ZBQ8w6vBSHI8eWaVByqHae5aKgOhao+ERXgiil2bWI1ABjsmnNM
+         RILQ==
+X-Gm-Message-State: APuU4Z+Mveagcn/BwIpKjIjqITeY0rtb1Re3aX8ZM4v7wciFajNmM37D
+	9jIEQ7iEVWlXH6N1jiI7/7Sg/PoUv/VKxlOiotIEyoz9gxmPbud3gSzAcXZwbWnvwoegBRbS9au
+	JpwQlr81Odw==
+X-Received: from dlbsi11.prod.google.com ([2002:a05:7022:b88b:b0:1a7:2bf1:46cc])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2202:b0:1b2:6a01:f55e
+ with SMTP id a92af1059eb24-1b5568fde72mr3640602c88.34.1795212814149; Fri, 20
+ Nov 2026 14:13:34 -0800 (PST)
+Date: Fri, 20 Nov 2026 14:13:01 -0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -77,10 +75,10 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 Mime-Version: 1.0
-References: <20261120221332.2245191-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.750.gf70dc682cf-goog
-Message-ID: <20261120221332.2245191-3-irogers@google.com>
-Subject: [PATCH v3 02/30] perf script: Fix metrics computed from samples
+Message-ID: <20261120221332.2245191-1-irogers@google.com>
+Subject: [PATCH v3 00/30] perf: Per-env PMUs, metric event sharing, and
+ recorded event metrics
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -89,134 +87,345 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-perf script -F metric computes metrics from the sum of sample periods of
-the events, but the computed values were wrong and the output was
-garbled:
+This series fixes some PMU and metric bugs, refactors PMU state
+management into struct perf_env, makes 'perf stat' share metric events
+by what they count, and computes and displays metrics from recorded
+perf.data files in 'perf stat report' and 'perf script'.
 
- - perf_stat_process_counter() replaces each count with its delta from
-   the previous raw count. As counts were left as deltas, the next sample
-   computed negative deltas for the counts of all CPUs and threads other
-   than the sample's. Restore the counts to the running totals after
-   processing.
+The 'perf sysinfo' subcommand is sent as a second series that depends on
+this one.
 
- - Metrics for all events were displayed after every sample. Only display
-   the metrics associated with the sampled event.
+Prior versions:
+  v2: https://lore.kernel.org/all/20261113195335.2865725-1-irogers@google.com/
+  v1: https://lore.kernel.org/all/20261103234502.1008382-1-irogers@google.com/
 
- - The new_line callback started a metric line that the next metric
-   started again. Each metric starts its own line, so make it a no-op.
+The series is ordered as: independent fixes (Patches 1-4), clean ups
+(Patches 5-22), 'perf stat' metric event sharing (Patches 23-24) and
+perf.data metric support (Patches 25-30).
 
- - The metric value was written to stdout rather than the event's output
-   file.
+1. Independent fixes (Patches 1-4)
+==================================
 
-For example, with whitespace reduced:
+These fix existing bugs and apply independently of the rest of the
+series:
 
-  $ perf record -e '{cpu_core/instructions/,cpu_core/cycles/}:S' -a sleep 1
-  $ perf script -F comm,cpu,event,period,metric
+  - Patch 1 stops 'perf list' treating core PMUs whose names differ by
+    a suffix, such as armv8_pmuv3_0 and armv8_pmuv3_1, as duplicates
+    and so hiding the events of all but the first core PMU.
+  - Patch 2 fixes 'perf script -F +metric' sample-based metric
+    calculation, the counts of other CPUs were left as deltas giving
+    wrong (negative) values, metrics of unrelated events were shown and
+    the output was garbled.
+  - Patch 3 stops 'perf script -F metric' dropping samples whose CPU
+    isn't in the evsel's CPU map, which for perf record data is the
+    host's online CPUs.
+  - Patch 4 stops 'perf stat' displaying a metric alongside a tool
+    event, such as duration_time, when a non-tool event is available.
 
-Before:
+2. Clean ups (Patches 5-22)
+===========================
 
-  perf [001]  2206 cpu_core/cycles/:
-  perf [001] metric: 42972.00 tma_info_inst_mix_instructions
-  perf [001] metric: perf [001] metric: 1.20 tma_info_thread_cpi
-  perf [001] metric: perf [001] metric: 0.83 tma_info_thread_ipc
-  perf [001] metric: 51762.00 tma_info_thread_clks
-  perf [001]   804 cpu_core/instructions/:
-  perf [001] metric: 18446744073709549568.00 tma_info_inst_mix_instructions
+Previously, core_pmus, other_pmus, and sysfs scanning state were global
+variables in tools/perf/util/pmus.c, preventing perf from maintaining
+both the live host's PMUs and a recorded perf.data session's PMUs
+simultaneously.
 
-After:
+   - Patch 5 makes lazy perf_env initialization thread-safe using
+     env->env_sem.
+   - Patch 6 introduces the host_env() singleton to represent the live
+     host environment explicitly, replacing the global perf_env variable
+     and session->header.env fallbacks.
+   - Patch 7 adds a from_env parameter to perf_pmu__init() to
+     distinguish PMUs reconstructed from perf_env headers from live host
+     PMUs so they never query host sysfs or get cast via container_of()
+     to struct hwmon_pmu or struct drm_pmu.
+   - Patches 8-10 introduce struct perf_pmus embedded in struct perf_env
+     (accessed via perf_env__pmus()) and pass struct perf_pmus to the
+     PMU find and scan helpers.
+   - Patches 11-13 record the ELF machine (e_machine) of each pmu-events
+     table's CPUIDs in struct pmu_events_map, so host lookups only
+     consider the host architecture's tables, find the core events and
+     metrics tables by e_machine rather than an architecture name, and
+     pass the e_machine of the CPUIDs to strcmp_cpuid_str().
+   - Patch 14 moves the architecture-specific strcmp_cpuid_str()
+     implementations from arch/{x86,arm64}/util/header.c into common
+     tools/perf/util/header.c, selecting the comparison by e_machine, so
+     CPUID matching works across architectures when analyzing cross-arch
+     perf.data files.
+   - Patches 15-16 move the arm64 CPUID matching test to
+     tools/perf/tests so it runs on all architectures, and add CPUID
+     matching tests for exact (test/common), x86, PowerPC, RISC-V and
+     s390 CPUIDs.
+   - Patch 17 adds e_machine__same_arch() to compare ELF machines
+     ignoring word size differences, such as EM_386 and EM_X86_64.
+   - Patch 18 passes struct perf_pmus to metricgroup__for_each_metric()
+     and pmu_metrics_table__find().
+   - Patch 19 moves the matching of metrics to recorded events
+     (metricgroup__add_matching_metrics()) from builtin-script.c into
+     util/metricgroup.c.
+   - Patch 20 moves the encoding and decoding of metric-id term values
+     into parse-events.c so the metric-id is decoded when the evsel is
+     created, rather than metricgroup rewriting each evsel's metric-id
+     after parsing.
+   - Patch 21 generalizes evsel::metric_id to a set of unique
+     evsel::metric_ids, so that an evsel shared by metrics, or matched
+     by metrics to a recorded event, has the identifiers of all of them.
+     The set's representation is private to evsel.c and accessed through
+     evsel__add_metric_id(), evsel__copy_metric_ids(),
+     evsel__has_metric_id(), evsel__shares_metric_id() and the
+     evsel__for_each_metric_id() callback iterator.
+   - Patch 22 adds perf_pmu__for_each_name_from_config() to find the event
+     names of a PMU for an encoding, including legacy hardware and cache
+     event names from the legacy event tables, and uses it for
+     perf_pmu__name_from_config().
 
-  perf [001]  2206 cpu_core/cycles/:
-  perf [001] metric: 67668.00 tma_info_thread_clks
-  perf [001]   804 cpu_core/instructions/:
-  perf [001] metric: 46758.00 tma_info_inst_mix_instructions
-  perf [001] metric:     1.45 tma_info_thread_cpi
-  perf [001] metric:     0.69 tma_info_thread_ipc
+3. 'perf stat' metric event sharing (Patches 23-24)
+===================================================
 
-Before, the cpu_core/cycles/ sample is followed by the metrics of both
-events, such as tma_info_inst_mix_instructions that only uses the
-instructions event, rather than just tma_info_thread_clks. The CPI and
-IPC lines repeat the "perf [001] metric:" prefix as script_new_line()
-started a line that script_print_metric() started again. The following
-cpu_core/instructions/ sample shows tma_info_inst_mix_instructions as
-18446744073709549568, a negative delta, as the counts of the other CPUs
-were left as deltas by the previous sample. The same deltas made the
-before tma_info_thread_clks value of 51762 too small.
+Metrics shared events by the names of the identifiers in their
+expressions, so events spelled differently but counting the same thing
+weren't shared, and events were only shared within one metric group
+parsing call.
 
-After, each sample is followed only by the metrics of the sampled event,
-one per line, and the metric values are computed from the running totals
-of the sample periods of all CPUs.
+   - Patch 23 adds an evsel matcher comparing a key of the PMU, the
+     perf_event_attr encoding (with legacy hardware events converted to
+     the equivalent sysfs/json encoding), modifiers, CPUs and cgroup, and
+     uses it to share events between metrics, earlier metric groups and
+     the command line without splitting a metric's events across
+     different groups, while preserving multi-PMU metric leadership and
+     merging forced architecture groups such as x86 topdown events.
+   - Patch 24 makes the -T, --smi-cost, --topdown and Default metrics
+     share events with the command line events and each other.
 
-Fixes: 4bd1bef8bba2 ("perf script: Allow computing 'perf stat' style metrics")
-Fixes: 3622990efaab ("perf script: Change metric format to use json metrics")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-script.c | 32 ++++++++++++++++++--------------
- 1 file changed, 18 insertions(+), 14 deletions(-)
+4. perf.data metric support (Patches 25-30)
+===========================================
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index b6691ebb1b4e..c5a9651a197c 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2340,18 +2340,14 @@ static void script_print_metric(struct perf_stat_config *config __maybe_unused,
- 	if (color)
- 		color_fprintf(mctx->fp, color, fmt, val);
- 	else
--		printf(fmt, val);
-+		fprintf(mctx->fp, fmt, val);
- 	fprintf(mctx->fp, " %s\n", unit);
- }
- 
- static void script_new_line(struct perf_stat_config *config __maybe_unused,
--			    void *ctx)
-+			    void *ctx __maybe_unused)
- {
--	struct metric_ctx *mctx = ctx;
--
--	perf_sample__fprintf_start(NULL, mctx->sample, mctx->thread, mctx->evsel,
--				   PERF_RECORD_SAMPLE, mctx->fp);
--	fputs("\tmetric: ", mctx->fp);
-+	/* Each metric is printed on its own line by script_print_metric(). */
- }
- 
- struct script_find_metrics_args {
-@@ -2524,7 +2520,6 @@ static void perf_sample__fprint_metric(struct thread *thread,
- 	};
- 	struct perf_counts_values *count, *old_count;
- 	int cpu_map_idx, thread_map_idx, aggr_idx;
--	struct evsel *pos;
- 
- 	if (!init_metrics) {
- 		/* One time initialization of stat_config and metric data. */
-@@ -2593,14 +2588,23 @@ static void perf_sample__fprint_metric(struct thread *thread,
- 	/* Update the aggregated stats. */
- 	perf_stat_process_counter(&stat_config, evsel);
- 
--	/* Display all metrics. */
--	evlist__for_each_entry(evsel->evlist, pos) {
--		cpu_aggr_map__for_each_idx(aggr_idx, stat_config.aggr_map) {
--			perf_stat__print_shadow_stats(&stat_config, pos,
--						aggr_idx,
--						&ctx);
-+	/*
-+	 * Processing the counter replaced the counts with deltas from the
-+	 * previous raw counts. Restore the running totals so that only the
-+	 * next sample's period is added to the aggregated stats.
-+	 */
-+	for (unsigned int cpu_idx = 0; cpu_idx < perf_cpu_map__nr(evsel->core.cpus); cpu_idx++) {
-+		for (int thread_idx = 0;
-+		     thread_idx < perf_thread_map__nr(evsel->core.threads);
-+		     thread_idx++) {
-+			*perf_counts(evsel->counts, cpu_idx, thread_idx) =
-+				*perf_counts(evsel->prev_raw_counts, cpu_idx, thread_idx);
- 		}
- 	}
-+
-+	/* Display the metrics associated with the sampled event. */
-+	cpu_aggr_map__for_each_idx(aggr_idx, stat_config.aggr_map)
-+		perf_stat__print_shadow_stats(&stat_config, evsel, aggr_idx, &ctx);
- }
- 
- static bool show_event(struct perf_sample *sample,
+With per-perf_env PMUs reconstructed from perf.data headers, perf can
+resolve the recorded machine's PMUs and JSON metric tables offline and
+match metrics against recorded evsels.
+
+   - Patch 25 adds perf_pmus__read_from_env() and perf_pmu__add_cap() to
+     reconstruct a perf_env's core_pmus and other_pmus lists,
+     capabilities, CPU maps, and JSON event/metric tables from perf.data
+     headers.
+   - Patch 26 improves metricgroup__add_matching_metrics() to match
+     each candidate metric's events to recorded evlist entries with the
+     evsel matcher, in a mode tolerating evsel__fallback() exclusion
+     changes and preferring events with counts, attaching copies of the
+     metric to each PMU's events, supporting uncore PMU instance fan-out
+     and hybrid PMUs.
+   - Patch 27 adds metricgroup__add_recorded_metrics() and
+     metricgroup__add_matching_metric_groups() to reconstruct the
+     metrics requested on a recorded 'perf stat record' command line
+     from perf_env (including -M, --transaction, --smi-cost, --topdown,
+     -d, or the Default metricgroups when no events or metrics were
+     specified), or optionally add all matching JSON metrics when
+     --all-metrics is enabled.
+   - Patch 28 enables displaying metrics for recorded events in
+     'perf stat report' (and adds --all-metrics and stat.all-metrics).
+   - Patch 29 enables displaying metrics for 'perf stat record'
+     PERF_RECORD_STAT data in 'perf script' (and adds --all-metrics).
+   - Patch 30 adds a shell test verifying metric reporting across
+     'perf stat record', 'perf stat report', and 'perf script'.
+
+Changes since v2
+================
+- Rebased onto the latest perf-tools-next (updating bench/maps.c in
+  Patch 6).
+- Addressed Sashiko review feedback:
+  - Patch 6: route the direct 'trace' alias in main() through
+    handle_internal_command() so run_builtin() populates and cleans up
+    host_env(), and always write HEADER_CMDLINE from host_env() so
+    commands such as 'perf inject' record their own invocation rather
+    than duplicating perf_exe() onto an input file's command line.
+  - Patch 16: fix the RISC-V CPUID regular expression test to match 3
+    hyphens (mvendorid-marchid-mimpid).
+  - Patch 22: free help_msg in pmu_config_term() when formatting error
+    help without a caller parse_events_error.
+  - Patches 23, 26, 27: compare CPU maps in struct counter_key
+    (computing the propagated CPU map when perf_evlist's
+    needs_map_propagation is set, recovering explicit cpu= terms from
+    recorded event names, and copying has_user_cpus in evsel__clone()) so
+    per-PMU events such as msr/tsc,cpu=cpu_core/ and
+    msr/tsc,cpu=cpu_atom/ remain distinct and pre-propagated evlists
+    share events; allow single-event grouped and forced-group metrics to
+    share events with existing groups; balance counter_key__exit() across
+    all evsel_matcher__key() callers.
+  - Patch 25: guard perf_pmu__for_each_name_from_config() and
+    perf_pmu_alias__check_deprecated() on formatless from_env PMUs, add a
+    fallback "cpu" core PMU when perf.data lacks PMU header features, and
+    only fall back to host->pmus in perf_env__pmus() when
+    read_pmu_types == 0.
+
+Changes since v1
+================
+- Split the series into two, this series and a 'perf sysinfo' series.
+- Reordered the series as independent fixes, clean ups, 'perf stat'
+  metric event sharing and perf.data metric support, so the fixes
+  (Patches 1-4) can be applied independently.
+- New patch 1: don't skip core PMUs as duplicates, affecting both
+  'perf list' and 'perf sysinfo'.
+- New patch 4: don't prefer tool events for displaying a metric.
+- New patch 17: add e_machine__same_arch() so that comparing a
+  perf_env's architecture with the host's ignores word size differences
+  (EM_386 vs EM_X86_64) without string comparisons, and use it for
+  pmu-events table matching, is_pmu_core_len() and env_is_pmu_core().
+- New patches 23-24: share metric events in 'perf stat' using the same
+  evsel matcher as used for matching metrics to perf.data events, so
+  there is one implementation of deciding whether two events count the
+  same thing (Patch 26 now builds on it). Previously metrics shared
+  events by the names in their expressions.
+- Rebased onto perf-tools-next and addressed v1 Sashiko review feedback.
+
+This patch series was generated with the assistance of antigravity and
+Gemini 4.0.
+
+Ian Rogers (30):
+  perf pmus: Don't skip core PMUs as duplicates
+  perf script: Fix metrics computed from samples
+  perf script: Don't drop metric samples for CPUs missing from the evsel
+  perf metricgroup: Don't prefer tool events for displaying a metric
+  perf env: Make lazy perf_env initialization thread-safe
+  perf env: Add host_env() singleton
+  perf pmu: Add from_env parameter to perf_pmu__init()
+  perf pmus: Introduce struct perf_pmus and perf_env__pmus()
+  perf pmus: Pass struct perf_pmus to find helpers
+  perf pmus: Pass struct perf_pmus to scan helpers
+  perf pmu-events: Add e_machine to struct pmu_events_map
+  perf pmu-events: Pass e_machine to find_core_*_table()
+  perf header: Pass e_machine to strcmp_cpuid_str()
+  perf header: Support CPUID matching across all architectures
+  perf test: Make the CPUID matching test architecture independent
+  perf test: Add CPUID matching tests for other architectures
+  perf dwarf-regs: Add e_machine__same_arch()
+  perf metricgroup: Pass struct perf_pmus to
+    metricgroup__for_each_metric()
+  perf metricgroup: Move matching of metrics to recorded events from
+    perf script
+  perf parse-events: Decode metric-id terms when adding events
+  perf evsel: Generalize metric_id to a set of metric_ids
+  perf pmu: Add perf_pmu__for_each_name_from_config()
+  perf metricgroup: Share metric events by their counter encoding
+  perf stat: Share events between metrics and command line events
+  perf pmus: Add perf_pmus__read_from_env()
+  perf metricgroup: Improve matching of metrics to recorded events
+  perf metricgroup: Add metricgroup__add_recorded_metrics()
+  perf stat report: Display metrics for recorded events
+  perf script: Display metrics for perf stat record data
+  perf test: Add stat record metrics test
+
+ tools/perf/Documentation/perf-config.txt      |    7 +
+ tools/perf/Documentation/perf-script.txt      |    6 +
+ tools/perf/Documentation/perf-stat.txt        |    5 +
+ tools/perf/arch/arm/util/auxtrace.c           |    9 +-
+ tools/perf/arch/arm/util/cs-etm.c             |    3 +-
+ tools/perf/arch/arm64/include/arch-tests.h    |    1 -
+ tools/perf/arch/arm64/tests/Build             |    1 -
+ tools/perf/arch/arm64/tests/arch-tests.c      |    4 -
+ tools/perf/arch/arm64/tests/cpuid-match.c     |   37 -
+ tools/perf/arch/arm64/util/header.c           |   48 -
+ tools/perf/arch/arm64/util/pmu.c              |    3 +-
+ tools/perf/arch/x86/tests/amd-ibs-period.c    |    5 +-
+ .../arch/x86/tests/amd-ibs-via-core-pmu.c     |    3 +-
+ tools/perf/arch/x86/tests/hybrid.c            |    6 +-
+ tools/perf/arch/x86/tests/topdown.c           |    6 +-
+ tools/perf/arch/x86/util/auxtrace.c           |    9 +-
+ tools/perf/arch/x86/util/evsel.c              |    6 +-
+ tools/perf/arch/x86/util/header.c             |   64 -
+ tools/perf/arch/x86/util/intel-bts.c          |    4 +-
+ tools/perf/arch/x86/util/intel-pt.c           |    4 +-
+ tools/perf/arch/x86/util/pmu.c                |   10 +-
+ tools/perf/arch/x86/util/topdown.c            |    3 +-
+ tools/perf/bench/maps.c                       |   11 +-
+ tools/perf/bench/pmu-scan.c                   |   16 +-
+ tools/perf/bench/synthesize.c                 |   13 +-
+ tools/perf/builtin-buildid-list.c             |    5 +-
+ tools/perf/builtin-inject.c                   |    3 +-
+ tools/perf/builtin-kallsyms.c                 |   12 +-
+ tools/perf/builtin-list.c                     |   19 +-
+ tools/perf/builtin-lock.c                     |    6 +-
+ tools/perf/builtin-record.c                   |    2 +-
+ tools/perf/builtin-script.c                   |  310 +--
+ tools/perf/builtin-stat.c                     |  136 +-
+ tools/perf/builtin-top.c                      |   17 +-
+ tools/perf/builtin-trace.c                    |   18 +-
+ tools/perf/perf.c                             |    6 +-
+ tools/perf/pmu-events/empty-pmu-events.c      |   30 +-
+ tools/perf/pmu-events/jevents.py              |   41 +-
+ tools/perf/pmu-events/pmu-events.h            |    9 +-
+ tools/perf/tests/Build                        |    1 +
+ tools/perf/tests/builtin-test.c               |    1 +
+ tools/perf/tests/code-reading.c               |    5 +-
+ tools/perf/tests/cpuid-match.c                |  128 +
+ tools/perf/tests/dlfilter-test.c              |    5 +-
+ tools/perf/tests/dwarf-unwind.c               |    5 +-
+ tools/perf/tests/event_groups.c               |    4 +-
+ tools/perf/tests/expand-cgroup.c              |    3 +-
+ tools/perf/tests/hwmon_pmu.c                  |    4 +-
+ tools/perf/tests/maps.c                       |   11 +-
+ tools/perf/tests/mmap-basic.c                 |    6 +-
+ tools/perf/tests/mmap-thread-lookup.c         |    5 +-
+ tools/perf/tests/parse-events.c               |   38 +-
+ tools/perf/tests/parse-metric.c               |    3 +-
+ tools/perf/tests/pmu-events.c                 |   15 +-
+ tools/perf/tests/pmu.c                        |    3 +-
+ tools/perf/tests/shell/stat.sh                |  133 +
+ tools/perf/tests/symbols.c                    |    7 +-
+ tools/perf/tests/tests.h                      |    1 +
+ tools/perf/tests/uncore-event-sorting.c       |    6 +-
+ tools/perf/trace/beauty/perf_event_open.c     |    4 +-
+ tools/perf/util/aslr.c                        |    7 +-
+ tools/perf/util/config.c                      |    3 +
+ tools/perf/util/cputopo.c                     |    5 +-
+ tools/perf/util/debug.c                       |    6 +-
+ tools/perf/util/drm_pmu.c                     |   16 +-
+ tools/perf/util/env.c                         |  263 +-
+ tools/perf/util/env.h                         |   25 +
+ tools/perf/util/evlist.c                      |   16 +-
+ tools/perf/util/evlist.h                      |    2 +
+ tools/perf/util/evsel.c                       |  193 +-
+ tools/perf/util/evsel.h                       |   11 +-
+ tools/perf/util/evsel_fprintf.c               |    6 +-
+ tools/perf/util/evsel_fprintf.h               |    4 +-
+ tools/perf/util/expr.c                        |   18 +-
+ tools/perf/util/expr.h                        |    2 -
+ tools/perf/util/header.c                      |  203 +-
+ tools/perf/util/header.h                      |    6 +-
+ tools/perf/util/hwmon_pmu.c                   |   16 +-
+ tools/perf/util/include/dwarf-regs.h          |   37 +
+ .../util/kvm-stat-arch/kvm-stat-powerpc.c     |    3 +-
+ tools/perf/util/machine.c                     |   16 +-
+ tools/perf/util/machine.h                     |   28 +-
+ tools/perf/util/mem-events.c                  |    5 +-
+ tools/perf/util/metricgroup.c                 | 2342 ++++++++++++++---
+ tools/perf/util/metricgroup.h                 |   95 +-
+ tools/perf/util/parse-events.c                |  186 +-
+ tools/perf/util/parse-events.h                |    4 +
+ .../perf/util/perf-regs-arch/perf_regs_x86.c  |   11 +-
+ tools/perf/util/perf_api_probe.c              |    3 +-
+ tools/perf/util/perf_event_attr_fprintf.c     |    7 +-
+ tools/perf/util/pfm.c                         |    6 +-
+ tools/perf/util/pmu.c                         |  221 +-
+ tools/perf/util/pmu.h                         |   28 +-
+ tools/perf/util/pmus.c                        |  586 ++++-
+ tools/perf/util/pmus.h                        |  264 +-
+ tools/perf/util/print-events.c                |   10 +-
+ tools/perf/util/probe-event.c                 |    5 +-
+ tools/perf/util/python.c                      |   38 +-
+ tools/perf/util/rwsem.h                       |    6 +
+ tools/perf/util/s390-sample-raw.c             |   16 +-
+ tools/perf/util/session.c                     |   32 +-
+ tools/perf/util/session.h                     |   22 +-
+ tools/perf/util/stat-display.c                |    4 +-
+ tools/perf/util/stat-shadow.c                 |   40 +-
+ tools/perf/util/stat.h                        |    1 +
+ tools/perf/util/tool_pmu.c                    |    5 +-
+ 106 files changed, 4780 insertions(+), 1329 deletions(-)
+ delete mode 100644 tools/perf/arch/arm64/tests/cpuid-match.c
+ create mode 100644 tools/perf/tests/cpuid-match.c
+
+
+base-commit: bb27ddbaee56536fb8df0a24f07b526766dfe131
 -- 
 2.56.1.750.gf70dc682cf-goog
 
