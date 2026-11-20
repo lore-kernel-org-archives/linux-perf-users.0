@@ -1,72 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.198
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.199
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795213652;
-	b=UdX331TG8X25a8mf53Qm9FWcf7K3aGA/SMC8w6v/L6aT7ARt1QbAJU5+pmnFFMVCLp2W
-	 aBO6eYWJsp3HWvoCN4mMgNMSCdQyIatfpx8Qvl8rpSjeQoYTvcV49Q5LWx4AQzSkIyeRx
-	 XAPZeI7g0dJhmdBlIkGTi2HfmRfdcV86dBIJ/45d20gF5zRRHc6LaHQu/uzTsChCctEA1
-	 +Sq2xTZJvUGmW1hqzWd5AAdpT3hgijaTznb+lVNwrBvYHj+Ep1cCHrYD0Q6nLF8cBnthg
-	 gCmrWjT/9nIBNM6zNG5jqzjOzXVDrlqsU8ttqMQS1KsImq9pvga4gWOHtKSMOfh6QVw==
+	t=1795213655;
+	b=jfSAWikiVn8QmlSFx+Q01bN/3K2fMvaNZfoTm4ATyq+XUnIpEBgHeHCIU4rHypZHMvCs
+	 mzjbpmZI1Wt4OrLywKdUl73KYLmJiPJhApTfVplkWTHKq8QgWLCmRT2hOJWcYpPIGUZT8
+	 34Qy0yjXa6mkI3CHTTS0GL2spg4hkAIONbz7TSpg+RBNWvuvrzr4htDDsjl6sipgdqHa9
+	 CYWTkiUlzFLwJgAAPm5ULtaCKxgzD5JiEMIZJq8gQxOhILKUx9bJGpIsgHBEL5y2yO5Ld
+	 32CRB7lAQg3p0pjiN0Jh7xobwjJkFQMvrAxZe/bP8yKMk2RyEdf1ya4Qkxaj/9lLEpg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795213652;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795213655;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Received:Date:In-Reply-To:Mime-Version:
 	 References:X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=osNQvC8QiSJ/mamOIrIcj3vuWvYLpacDjmXwlnwYJNM=;
-	b=YVMtOcEuMdIBabd3dILJfLypjag3IdpVk0RuvftRodK9CF3sfDYHfIdtLDQs72uCNlWM
-	 2d21IBB1s8KxVG3et2kzwJ29iXS92sgj8V/7CdXPf6UFlyfIuCwI9fIZC6NE8lpDOL+dX
-	 n3sTcQO3p90zOhfmHCpqWBxx3Ty91ZIwZptuHN7wGJv+eAxuRO5z44/JDbdgUi3dG0/rt
-	 s9KUyR9LkqpS5MOern1li8VN1mf6iD8Rl563H28CmhspJSdSjoUK/h/jgceOCYtAzmtbW
-	 pWROLgDcQUgzK6TzzgWxL9lzQw3JOvNcHHzi5xVH0nzZQs8ICgGU12ekf54HU7U2O7A==
+	bh=0c2OsM1aEUajt4eDbo5+GwXP7vk+Skx97fbhfEI2OuY=;
+	b=GDhnZpspR9fIF42hBRvTC5bRW2hc+9kF+rlqI05q9mXPAu/DabfaX8pkxH/D7togfy5I
+	 oKoa9LF4jhnlWN+KKJhdTYuK3W0sg26uuB/qg3rKbkkOfC1eLoz0KuF0KNe26ml+vPPjr
+	 JfSdqOFqucwp99gKk5AQ3vakZn8Jq8fPBk2EwbK/cB+KW/uSZ6qR0VsfwL6t7cEhAkXm2
+	 0DkzRDKgiHzTMaNxLI3GFILoTx3ztOGiQJlWnchPlqmSSfY34mDptO9sxjlXagLucksRa
+	 WAxf97d6OsqjrwpnkYpMQFUH8K4kukzf+zTbpdhGVDpGEHkFy4GvXgnfuw13FRVa6nQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=eVs0LVw2;
-	arc=none smtp.remote-ip=74.125.82.198
-Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Z3zsf8Tn;
+	arc=none smtp.remote-ip=74.125.82.199
+Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46CB60A2610
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 22:27:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D46CB60A2610
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81F9606A686
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 22:27:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E81F9606A686
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=eVs0LVw2
-Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-383435e46f9so1169264eec.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 14:27:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Z3zsf8Tn
+Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-386177b0516so3058826eec.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 14:27:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795213645; x=1795818445; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1795213650; x=1795818450; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=osNQvC8QiSJ/mamOIrIcj3vuWvYLpacDjmXwlnwYJNM=;
-        b=eVs0LVw2n9/cuKe8WkdUryI7q4tOUDkwVsBI1GYUQvP8DSyMGWAK8B+wL3AEEHIXHS
-         8DP5z3B3Hs0ocbBXhmMsULuzx0nz9IXEhjGyuuBMM4jG6alXKEnbi8fLnP0I5fvAL3UL
-         TfTdas2Y88aXBzLWDWZcRAzwp4lXHJzmdTfXrm+1GrNIB6f0eBKnNoG1m0bgU/705QRP
-         MiT6EJXHLcWswv34DFFjNCy/msvgBG6Xown9grMDW4GZ0QH9d6Zw1EfGh0HrgeUFpeCY
-         fDjYrrhXFs6D6wk2OubMbmg3IOnRJioL7r+OV1EF0V88iJNO5IKzIoGm9a/92jFG5L4y
-         AqwQ==
+        bh=0c2OsM1aEUajt4eDbo5+GwXP7vk+Skx97fbhfEI2OuY=;
+        b=Z3zsf8Tnaw0HEEdRHak+skHDrTMnQCNrmB8D5qC17KJyBYjNkiErdKr3EN+Eob08d5
+         8A8Pve1MCh5Lo2ZLFfpOa87xuiFpfxvSZROW1lwWPoosy+CeI6x0KnZNRs6XFkQDXDgQ
+         LWgK1bS4puLVamg8OtnsHBHXnKYYIGBXw3XFIoBvWdnlXB6gR9XWknuWOeHuCdnFmKnq
+         oLi/tWRE2+sEkcyC3ggvCmT8Tf9zQO+JhKfVBLt7oaT1/alcgzRVGD/wQMX41GQivnYQ
+         0DaqQBh9a37gq5/nW7aTcnJNRYZHfewqVi4JWTerxVyeCZRfVqChYIJktsE55PIiwm86
+         PKdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795213645; x=1795818445;
+        d=1e100.net; s=20260707; t=1795213650; x=1795818450;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=osNQvC8QiSJ/mamOIrIcj3vuWvYLpacDjmXwlnwYJNM=;
-        b=U36D0VcjELXbR47JxY687S67NFwAS+JuiA75y0uwJ7LeZf/ytVd6L1F6c29+1+a61V
-         zj3LXUu2kJ4d45W/rX7YPyLLhkrXryVwsrwmLdZK7i/7x/5d6xX3m/IOECqy9JwYjFed
-         0IxYojHARDlJZ2Ey4Av55GKPpnTNvGjYtf4GHG2xbLZW5tuS1GQzjE9lkXtq2fOL4iR0
-         wVkso7oNXeVOhvG7WgzkhU2BnkaAGnU4Jj2miLTEJ0/v15vMsCJOd3kDo5rQba9KAIF3
-         EeUbnxOeeBaaPlYSUoFWSltPr+o7J9iWx89hVWNIyqFWX7oG/okyb9mjOppsSNWgqxfr
-         V7Bw==
-X-Gm-Message-State: APuU4Z/AnDAGpcwUMpk2hxk79UjvAbVDImAKdImgPnkFaWyEGcGQ1c1C
-	VPcwkTJukWV5k1Nz19P8FiEn8sisLigLrxvoqDU9r9FVo13B9XZQn6Z4z4Uw5P3cOdRBNBfy9bj
-	g78ASUyfsZQ==
-X-Received: from dyp9.prod.google.com ([2002:a05:693c:65c9:b0:384:337f:4cb1])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:6aa1:b0:36a:1cbc:1093
- with SMTP id 5a478bee46e88-3857025b56bmr3894681eec.30.1795213644543; Fri, 20
- Nov 2026 14:27:24 -0800 (PST)
-Date: Fri, 20 Nov 2026 14:26:14 -0800
+        bh=0c2OsM1aEUajt4eDbo5+GwXP7vk+Skx97fbhfEI2OuY=;
+        b=F3w7L1eA8lIS5KTf74bb5rnRo/BpoSf1FibK4uz7Tmvog/lVwvZrOwvmQiUqD8iYYl
+         Xo+y6RcT1IXqHHjry/hbRQBtUNgY1z5UlCKjWDfXPAfYnKs73QQm5tIBbgV51BLv0brf
+         JZmKg7rNLwz2G3TxiXyiPh8wsXF0bh6pOHvXjM9btZA7e0x5ffaN3Wr3T+7oKJT/C8PF
+         f9kPMbb636JptZJj2oU4l5c+pWqiPVLdxArnCoxQ2k5VA4F2J8cHg58BumfeET+Dyvdb
+         vi1BYD4lI4HuDfurHXMQeGqzb2sjUvILaBO8ER/0+gPVL1vVpw/yKx8GZ7LhwrCVO7rM
+         Qbeg==
+X-Gm-Message-State: APuU4Z+jA076at55ABkJl/tm4cDg84A+zYKGI5JWrhId2lpbuyh9sTOC
+	5UMrXEJ13tsC17BrFn4/m2B2v/MFzeDzdwsbkkDd+tooxQe3X9iUGsprZRayrl8evIBH/sp1FLY
+	jtqDHEzbYiQ==
+X-Received: from dyr14.prod.google.com ([2002:a05:693c:400e:b0:385:7971:db60])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:8955:10b0:36a:79e7:2fd
+ with SMTP id 5a478bee46e88-3856fb699d6mr4368636eec.40.1795213649873; Fri, 20
+ Nov 2026 14:27:29 -0800 (PST)
+Date: Fri, 20 Nov 2026 14:26:15 -0800
 In-Reply-To: <20261120222615.2291168-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -79,8 +79,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261120222615.2291168-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.750.gf70dc682cf-goog
-Message-ID: <20261120222615.2291168-16-irogers@google.com>
-Subject: [PATCH v3 15/16] perf docs: Add perf-sysinfo man page
+Message-ID: <20261120222615.2291168-17-irogers@google.com>
+Subject: [PATCH v3 16/16] perf test: Add perf sysinfo shell test
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -89,146 +89,110 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Document the 'perf sysinfo' subcommand and its options in
-Documentation/perf-sysinfo.txt and link it from Documentation/perf.txt.
+Add a shell test exercising default 'perf sysinfo' summary output,
+'--pmus' per-PMU output, '-j' JSON validation, PMU glob filtering, and
+'-i perf.data' inspection.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Documentation/perf-sysinfo.txt | 113 ++++++++++++++++++++++
- tools/perf/Documentation/perf.txt         |   2 +-
- 2 files changed, 114 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/Documentation/perf-sysinfo.txt
+ tools/perf/tests/shell/sysinfo.sh | 88 +++++++++++++++++++++++++++++++
+ 1 file changed, 88 insertions(+)
+ create mode 100755 tools/perf/tests/shell/sysinfo.sh
 
-diff --git a/tools/perf/Documentation/perf-sysinfo.txt b/tools/perf/Documentation/perf-sysinfo.txt
-new file mode 100644
-index 000000000000..c72ac6d51551
+diff --git a/tools/perf/tests/shell/sysinfo.sh b/tools/perf/tests/shell/sysinfo.sh
+new file mode 100755
+index 000000000000..c8619b2463f2
 --- /dev/null
-+++ b/tools/perf/Documentation/perf-sysinfo.txt
-@@ -0,0 +1,113 @@
-+perf-sysinfo(1)
-+===============
++++ b/tools/perf/tests/shell/sysinfo.sh
+@@ -0,0 +1,88 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# perf sysinfo tests (exclusive)
 +
-+NAME
-+----
-+perf-sysinfo - Display and probe PMU and system performance monitoring information
++set -e
 +
-+SYNOPSIS
-+--------
-+[verse]
-+'perf sysinfo' [<options>] [pmu_glob ...]
++shelldir=$(dirname "$0")
++. "${shelldir}"/lib/setup_python.sh
 +
-+DESCRIPTION
-+-----------
-+This command displays a summary of the performance monitoring capabilities of
-+the current system or a perf.data file, including core PMU features (precise
-+sampling, branch stack sampling, user-space counter reading, memory profiling,
-+and hardware AUX trace PMUs), memory and PCIe/IO interconnect bus bandwidth
-+monitoring support, total events and metrics, pipeline metric drill-down levels
-+discovered via '<metric>_group' hierarchies, and an overall system rating.
++sysinfo_output=""
++perf_data=""
 +
-+When '-p'/'--pmus' is specified (or when PMU filter globs, '-v'/'--verbose',
-+'-a'/'--all', or '-j'/'--json' are given), it also displays detailed
-+information for each PMU, including its perf_event_attr type, kind (core,
-+uncore, software, auxtrace, tool, hwmon, drm), CPUs/cpumask, capabilities,
-+sysfs format bitfields, event counts, and memory profiling events.
++cleanup() {
++  rm -f "${sysinfo_output}" "${perf_data}" ${perf_data:+"${perf_data}.old"}
++  trap - EXIT TERM INT
++}
 +
-+When run on a live system (without '-i'/'--input' and with probing enabled),
-+it also actively probes the kernel via 'perf_event_open' to determine:
-+- Supported modes (counting, interrupt-based sampling, branch_stack sampling)
-+- Supported precise sampling levels, skid semantics, and empirically measured
-+  branch instruction skid (minimum, maximum, average instructions from the
-+  branch and 'PERF_RECORD_MISC_EXACT_IP' ratio) at each supported precision
-+  level:
-+  0 ('SAMPLE_IP' can have arbitrary skid), ':p' / 1 ('SAMPLE_IP' must have
-+  constant skid), ':pp' / 2 ('SAMPLE_IP' requested to have 0 skid), and
-+  ':ppp' / 3 ('SAMPLE_IP' must have 0 skid, or uses randomization to avoid
-+  sample shadowing effects)
-+- Supported 'perf_event_sample_format' sample types ('ip', 'tid', 'time',
-+  'addr', 'read', 'callchain', 'id', 'cpu', 'period', 'stream_id', 'raw',
-+  'branch_stack', 'regs_user', 'stack_user', 'weight', 'data_src',
-+  'identifier', 'transaction', 'regs_intr', 'phys_addr', 'aux', 'cgroup',
-+  'data_page_size', 'code_page_size', 'weight_struct')
-+- Supported user and interrupt registers for 'PERF_SAMPLE_REGS_USER' and
-+  'PERF_SAMPLE_REGS_INTR', listing separately the interrupt registers that
-+  can only be sampled with precise sampling (e.g. x86 XMM registers captured
-+  by PEBS)
-+- Supported memory profiling events ('ldlat-loads', 'ldlat-stores', 'mem-ldst')
-+  and their supported memory sample types ('data_src', 'addr', 'weight', etc.)
-+- Supported privilege/exclusion modifiers ('exclude_user', 'exclude_kernel',
-+  'exclude_hv', 'exclude_idle', 'exclude_host', 'exclude_guest')
-+- Supported execution features ('leader_sampling', 'sw_grouping', 'inherit',
-+  'sample_freq', 'write_backward', 'callchain', 'data_src', 'weight',
-+  'pinned', 'exclusive', 'format_lost', 'auto_counter_reload',
-+  'aux_start_paused', 'aux_pause', 'aux_resume', 'aux_sample', 'user_rdpmc',
-+  'user_time', 'user_time_zero', 'user_time_short') and hardware counter
-+  bit-width ('pmc_width') when user-space counter reading is supported
-+- Maximum number of events in a group counted simultaneously, without
-+  multiplexing, and for core PMUs the maximum number of general-purpose
-+  counter events. Groups larger than this may be accepted by
-+  'perf_event_open' but can't be counted together
++trap_cleanup() {
++  cleanup
++  exit 1
++}
++trap trap_cleanup EXIT TERM INT
 +
-+At the end of the text output, a summary section reports overall core PMU
-+capabilities (including hardware AUX trace PMUs), memory and PCIe/IO
-+interconnect bus bandwidth monitoring support, total events and metrics, and
-+pipeline metric drill-down levels discovered via '<metric>_group' hierarchies.
++sysinfo_output=$(mktemp /tmp/__perf_test.sysinfo_output.XXXXX)
++perf_data=$(mktemp /tmp/__perf_test.sysinfo.perf.data.XXXXX)
 +
-+By default, numbered uncore PMU instances sharing a common prefix are collapsed
-+into a single entry showing the instance count, unless '-v'/'--verbose' is
-+specified.
++test_sysinfo_default() {
++  echo "Default perf sysinfo output test"
++  perf sysinfo -o "${sysinfo_output}"
++  grep -q "^Summary:" "${sysinfo_output}"
++  grep -q "System rating:" "${sysinfo_output}"
++  perf sysinfo --pmus -o "${sysinfo_output}"
++  grep -q "^software (" "${sysinfo_output}"
++  grep -q "^Summary:" "${sysinfo_output}"
++  echo "Default perf sysinfo output test [Success]"
++}
 +
-+OPTIONS
-+-------
-+-i::
-+--input=::
-+	Input file name to read PMU information from (e.g. perf.data).
++test_sysinfo_json() {
++  echo "Json perf sysinfo output test"
++  perf sysinfo -j -o "${sysinfo_output}"
++  $PYTHON -m json.tool "${sysinfo_output}" /dev/null
++  echo "Json perf sysinfo output test [Success]"
++}
 +
-+-f::
-+--force::
-+	Don't complain, do it (when reading input perf.data file).
++test_sysinfo_filter() {
++  echo "Filtered perf sysinfo output test"
++  perf sysinfo -o "${sysinfo_output}" software
++  grep -q "^software (" "${sysinfo_output}"
++  if grep -q "Modes:.*sampling" "${sysinfo_output}"; then
++    grep -q "Sample types:.*ip" "${sysinfo_output}"
++    # Register names are only known on some architectures.
++    case "$(uname -m)" in
++    x86_64|aarch64)
++      if grep -q "Sample types:.*regs_user" "${sysinfo_output}"; then
++        grep -q "User registers:" "${sysinfo_output}"
++      fi
++      if grep -q "Sample types:.*regs_intr" "${sysinfo_output}"; then
++        grep -q "Intr registers:" "${sysinfo_output}"
++      fi
++      ;;
++    esac
++    grep -q "Features:.*leader_sampling" "${sysinfo_output}"
++    grep -q "Features:.*sw_grouping" "${sysinfo_output}"
++  fi
++  echo "Filtered perf sysinfo output test [Success]"
++}
 +
-+-o::
-+--output=::
-+	Output file name.
++test_sysinfo_perf_data() {
++  echo "perf.data perf sysinfo test"
++  if ! perf record -e software/cpu-clock/u -o "${perf_data}" -- true 2>/dev/null; then
++    echo "perf.data perf sysinfo test [Skipped: perf record failed]"
++    return
++  fi
++  perf sysinfo -i "${perf_data}" -o "${sysinfo_output}"
++  grep -q "^Summary:" "${sysinfo_output}"
++  perf sysinfo --pmus -i "${perf_data}" -o "${sysinfo_output}"
++  grep -q "software" "${sysinfo_output}"
++  perf sysinfo -i "${perf_data}" -j -o "${sysinfo_output}"
++  $PYTHON -m json.tool "${sysinfo_output}" /dev/null
++  echo "perf.data perf sysinfo test [Success]"
++}
 +
-+-p::
-+--pmus::
-+	Display detailed information for each PMU in addition to the system
-+	summary.
-+
-+-j::
-+--json::
-+	Encode PMU information as JSON.
-+
-+-a::
-+--all::
-+-v::
-+--verbose::
-+	Display all PMUs including all similar PMUs with alphanumeric suffixes
-+	instead of collapsing numbered uncore PMU instances.
-+
-+--probe::
-+--no-probe::
-+	Enable or disable active kernel probing of PMU capabilities on the live
-+	system (default: enabled).
-+
-+--debug::
-+	Enable debugging output.
-+
-+SEE ALSO
-+--------
-+linkperf:perf-list[1], linkperf:perf-evlist[1], linkperf:perf-stat[1],
-+linkperf:perf-record[1]
-diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
-index cbcc2e4d557e..0890dd5a1794 100644
---- a/tools/perf/Documentation/perf.txt
-+++ b/tools/perf/Documentation/perf.txt
-@@ -92,5 +92,5 @@ linkperf:perf-help[1], linkperf:perf-inject[1],
- linkperf:perf-intel-pt[1], linkperf:perf-iostat[1], linkperf:perf-kallsyms[1],
- linkperf:perf-kmem[1], linkperf:perf-kvm[1], linkperf:perf-lock[1],
- linkperf:perf-mem[1], linkperf:perf-probe[1], linkperf:perf-sched[1],
--linkperf:perf-script[1], linkperf:perf-test[1],
-+linkperf:perf-script[1], linkperf:perf-sysinfo[1], linkperf:perf-test[1],
- linkperf:perf-trace[1], linkperf:perf-version[1]
++test_sysinfo_default
++test_sysinfo_json
++test_sysinfo_filter
++test_sysinfo_perf_data
++cleanup
++exit 0
 -- 
 2.56.1.750.gf70dc682cf-goog
 
