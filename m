@@ -1,56 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.93.112
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795123172;
-	b=H4eT2suaDeKbnrEpAsOP3m1U4R0gJw2/IhkHpW5McfX7AF/rMadIt2vv9+aBVnzJcDk9
-	 /oTPIN9xkO2y7lLzY5+QhkzUBFN2dgKA0A2Nur5AE+KY+NILmpGo+MTdzP2biFno82tAu
-	 2D/VJgsmwrjOgcXA4s7Lgm3Wq+o6CRMvT70oQstJI8q2wYtZPzr+B4fRljlk/ypSjSRBW
-	 R1OYV53uSTllcDuOhfMk6w8WrZVUpxLaZhbpI1gDBbu5FMZ/F2ABCw4praCWWmDPHLybu
-	 pLwWy9ZjQfnBalY84JA5nNmzD+mmr/WBDwXjg8hJEXPkfaViVIO0dUnktrgZa28aFFw==
+	t=1795136143;
+	b=qHwmJAKj3p+9TRhOXe+bLqmpwVtPGLhqFRZmnJjTNlnzfyi3+dCFbdJyOe88rn0qYHe3
+	 uPX68HeTE3btECTM+FrUa6RU7et1M4MlACiK9L8eaVGbhNaMWzNURFv2gKn65WwO0ZSd/
+	 v6ASSTLgwhMgBc2o9rQw+rePP1d2CVZMCclD2Vy/i1S6f7fINQpeEMNYxRG1oTyorsXqN
+	 xqW6F7Wmb+cSNwEB9hIPjvqnKNBqsk9FJsvsb6wnEamOEMxl6FMd4UK3YlIg9cLNZfy9S
+	 iqZ+B14qupjUBXvrz1e5T9SPqp3PkYwSPQsQrFk7zKfMa0nsjnWukgyhLXEIyBHFptw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795123172;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=Ur5WdyBa7Nsynadk8aM3gSMjN1x718Lr6MFypWK9iks=;
-	b=sxJF/CXLiq+89lAZLlfXCyGAzcE6CHEtnJgRISwKt3lnNP/OquEhsM28NCLxU1DRBsjF
-	 VFn7jqwHqwetE0ic+kmiF1wNjOezStrdTeVdJbFwVT8IgBscf9P8sX2zapRjpPDOpxtLs
-	 4TRmY2BQskPhxKpxAqfHlOotqEPrCIrQXIS7yWDB2F9PLcvw2GJL5ZaNTw//R/h6ZzaXi
-	 QOM39rj2aoKYdYBmLP4IxvWzp9un5+MvFjmlEUfTZrl+fK9opN04NUi2xPv9upCCiGrUm
-	 d7gmS5ynhSwns/wt0WdMZO9zuUB/ZXE0BMpotCp9vy17WMzv0WInUIqwr4N8FVeKyuw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795136143;
+	h=DMARC-Filter:Received:Received:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-Coremail-Antispam:X-CM-SenderInfo;
+	bh=cOmNtCyywSYPb3pjKVlgzTU/s/3EYhuhoHpMV/mNAB8=;
+	b=KUJPep76v7UMK6hRNzmPRqKfVQDKr3bF73WnHzKQ3263q0IhkoLTczvoJbiewtoeALFT
+	 Gl8DE0g41eDWPGwRLekB31uX3eeUegUOJIyumchKa3jn/VKQLQ57hC9u4bkqcxvFMydkF
+	 AgApfSzQEiaaSc/aTjdNOzOrIOtHcfdGoIdufra1tFJOoWMOU45BMCZOOcOn+zgKSLhYF
+	 6z+NNMDMw9qX7JVmbIikeJ55V85FEv5NYVpMOZHnfUE8nbZMaO3WL0V74RHfU9ogy/9Ej
+	 aDIAyb5lcIi9vaCN11fhEwdyR8vUTn63+i35SuFBhDUUHndwwtlJxR8eZMO7VazrTwg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oaKAswNj;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=none header.from=huaweicloud.com;
+	spf=pass smtp.mailfrom=huaweicloud.com;
+	arc=none smtp.remote-ip=124.71.93.112
+Received: from dggmsgout12.his.huawei.com (dggmsgout12.his.huawei.com [124.71.93.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB864606A32A
-	for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 21:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oaKAswNj
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37C691F000CA;
-	Thu, 19 Nov 2026 21:19:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795123172;
-	bh=Ur5WdyBa7Nsynadk8aM3gSMjN1x718Lr6MFypWK9iks=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=oaKAswNjL/b96iWWDQZwXGJJpHqD4TXfQCENbkjapiY/nVBGqCBEXwBp1xayMxk1E
-	 vggLiMj5no0KHq/uLX1vb06UJAREZHHhsrrt8bz65VMYMCc4wIfBKqABnNCxSWD9Zs
-	 eQxpb+eyoFSE5k2mXhzjsv2w44PBHshepHOmGFDxao1yCJE9xK+e5dLRx6a6O3/WZK
-	 Y6hHMJhfU6+NHLZjFiL2Erl4gCgrdKeAJIXzABs15cJoniQuulSlDXNLd78ivRmLld
-	 9lh8eideelk9RH+iczBs5obbZ6Q0CaVVdMJ4idMMcX28wPhFPvwSbmJUiSsrwEZMks
-	 W99W7GkPH9T4A==
-Message-ID: <sashiko-outbox-224088@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/3] perf/core: Don't zero perf_sample_data in
- do_perf_sw_event()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Usama Arif" <usama.arif@linux.dev>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20261119211235.99805-4-usama.arif@linux.dev>
-References: <20261119211235.99805-1-usama.arif@linux.dev>
- <20261119211235.99805-4-usama.arif@linux.dev>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 19 Nov 2026 21:19:31 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B31606A325;
+	Fri, 20 Nov 2026 00:55:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 86B31606A325
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.198])
+	by dggmsgout12.his.huawei.com (SkyGuard) with ESMTP id 4jVxgm42ywz1yJT;
+	Fri, 20 Nov 2026 08:54:44 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id B078A40573;
+	Fri, 20 Nov 2026 08:55:38 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgCXnP+Jmv9qaE_eEw--.5251S2;
+	Fri, 20 Nov 2026 08:55:38 +0800 (CST)
+Message-ID: <c741b3bd-b8fc-44d8-b7c4-adf73af379b1@huaweicloud.com>
+Date: Fri, 20 Nov 2026 08:55:37 +0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,32 +50,71 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/2] perf/core: Disable context fast-swap for sigtrap
+ events
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1795053619.git.wutengda@huaweicloud.com>
+ <55b1a2845b0ad34a874a7653644e34af9eb068d3.1795053619.git.wutengda@huaweicloud.com>
+ <20261119121143.pJrJE7qs@linutronix.de>
+ <cc76ea5a-545a-4560-a039-ceed1de7ff3e@huaweicloud.com>
+ <20261119130704.A5iZtay-@linutronix.de>
+ <0aa4bf03-57a8-48d8-b8db-4246716c48fc@huaweicloud.com>
+ <20261119134824.oCI80nCj@linutronix.de>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <20261119134824.oCI80nCj@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgCXnP+Jmv9qaE_eEw--.5251S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZry5XFW8JFWDWrW7JFykuFg_yoW3GFc_XF
+	4DKF9xXws3Aw1UAr42yr1S9r4DKayxJr18X397tr4YyrWxtrZ5ZF1j9wn5Zw4fZF4SqrnF
+	gr15Kr4Sg343ujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbxkYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
+	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
+	7KsUUUUUU==
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-> Kernels built with CONFIG_INIT_STACK_ALL_ZERO, the default when the
-> compiler supports it, clear every local variable on function entry. For
-> the 256-byte struct perf_sample_data in do_perf_sw_event() that is a
-> memset, and it runs on every entry, before the list of events is even
-> looked up.
->=20
-> do_perf_sw_event() is entered for a software event, e.g. a context
-> switch, as soon as one event of that kind is open anywhere in the
-> system. Counting events add to event->count and never read the struct.
-> For every matching event, perf_sample_data_init() resets sample_flags,
-> period and dyn_size and stores the address if there is one; for a
-> sampling event, perf_prepare_sample() then fills in what its
-> sample_type asks for.
->=20
-> A single context-switch counter, e.g. one kept open by a monitoring
-> [ ... ]
-> this cuts the time they add to a context switch from 54 ns to 44 ns
-> (sched_yield() between two threads on one CPU, with
-> spec_rstack_overflow=3Doff).
->=20
-> Signed-off-by: Usama Arif <usama.arif@linux.dev>
 
-Sashiko has reviewed this patch and found no issues.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261119211235.9980=
-5-1-usama.arif@linux.dev?part=3D3
+On 2026/11/19 21:48, Sebastian Andrzej Siewior wrote:
+> On 2026-11-19 21:19:59 [+0800], Tengda Wu wrote:
+>> Well, because the trigger window is very short, it is not easy to reproduce.
+>> The test case I provided above must be stress-tested through multiple
+>> rounds of a while loop. Is it inappropriate to put this kind of test,
+>> which requires a while loop and has a certain degree of randomness, into
+>> deterministic test cases like sigtrap_threads.c?
+> 
+> Then maybe not. I would have to run it myself to be able to judge it.
+> However this thread has a reference to the test case should someone need
+> it in a few years…
+> 
+>> Thanks,
+>> Tengda
+> 
+> Sebastian
+
+Yeah, thanks for the clarification. I'll leave it as-is then.
+
+Best regards,
+Tengda
 
