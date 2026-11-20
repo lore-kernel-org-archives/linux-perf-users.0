@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795197667;
-	b=CgsUbWOnBK4lDjDhEDnV1AGKP2V59s8dC9CVxCGiFx/cCZOSm98TS+pircZaQrnevFy8
-	 gxYVlOktI0RPahyILuXvlV7HkcKRPUcITpDdcZ2L4MVSq1K5/Z1fjWh0qKKYw+Mf/HlC2
-	 38XkgII2NHxW5Pcj2vAYHbjuYb61n0LP62/Svv85Ot7Aw5+J5ihB2sLqeZ6YGzLYxUZAG
-	 CZWdqIoJD5QyM1TVCaJitVGyrUpgM3GBEVXbAMromxyQJ+I+Ze3LHDx7JFyUT2L+TgSpY
-	 Qpzdz1J0DddWbPu11gojyxVVScnwWL/Mu9pxzWLwP+DGqt5CCkuetdA8Bd0O7Yvt58A==
+	t=1795197672;
+	b=WeAWTGlqaeVO62//VhLJXJdrayT/+66G6S9oP/t3V3hZbWJjkIrX4tSBWnWeEI85NpLu
+	 Z5uFSUMBdq4Qfi2+oGQ1HQWDXuqQVA2ydxF4Uw8Eh4x9Tj12x7ZoPVDRoFw/oVQjk8Agd
+	 7vDDleJh/h+04nYfQ0kpV212e10jG11petsbDNg4fDi3i6bC0dvh7DDxsSBVcI2g0AyZD
+	 y+Q6Pvl7nL/Yz/HoXEmJMWctOTVLh+8JBEw3tshTF8GfNWOd8ocE3zMOgpUG5x09Whzu1
+	 0oygKAeMoO7gXlCEXijwLxzXJuXhcbPiEHg/g3TNJ0BIwPFXHv0ZiVmsVlCvmxZ75Xw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795197667;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795197672;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=l9zGVRW2xZE0wnP0YGoIqhMVE+yn/pAq9FV1mta/UVk=;
-	b=kM/NU3LJUdUJrWMcE5+l7jyrNf1Afbw+cXyK2mXH877HO4tPCcJZbd1yivhE8x3M6pk4
-	 PWbFAzFIc5GKb8LZi6QXfhruYHQbqd0uVwJg85GvZMrd/HFtoZfGmdv0yccAE0xjDSDlb
-	 XySct2kYtbcTeD/y7/89rmdDjcNofyAbOXpJ16KmLMDJ+J0htmILr/aqauSgw1lPxhquT
-	 ptcM6Zi4JqAJ/mR8l6NkCwUoWfyTwgS2fB9L67iB9i/u2mYf5elAr4YnKAmV5WxI5udfH
-	 S1U8/s9VLOILPBz98PaFhO4j720WNf2MzW+Jd5VVSAYGxmPz2iBzJ0tZJPUqAMU5aPw==
+	bh=8k/seoYkbDkZyB6ZpvsoQ3zobdGpks0aF1xm5aQy82c=;
+	b=Tk5p2cPH3o2D0paJwY6VUzKawgoa4IvxGTtv/iI91U5hjB7SoJ3nWFDK/fOVZ8Y0kQMr
+	 hpBFUFVbC00c1xz6HXnEPIEfK3tY1PCcsWnCaOhlMhyGkEfmD0QMa3NMzJ8EwfjvfTi3w
+	 o17gW+El18dGdHp/6IEo52ZMu8iDL/Qif9ljrzeiaPcVccB3TVdEhTFsCXGXR9dJgb5QB
+	 mVC5yQTCaCbTWcByXCGzdVKDBce7GTGT+qBB6hE+mJQuKt9mZNOXZXdim71roAl/WjYKO
+	 qdRRvlRjiPdG7z89Wdgf9vQIDbq+mHzoTEUoEhYUCsMzrilCZhSmPWUDEoB1I1PdUDw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="NlOIX/bG";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="b/Cm1h84";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49AC060A2610
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 18:01:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B7260A2603
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 18:01:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=NlOIX/bG
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61A4B1F000D2;
-	Fri, 20 Nov 2026 18:01:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=b/Cm1h84
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54D0F1F000C6;
+	Fri, 20 Nov 2026 18:01:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795197666;
-	bh=l9zGVRW2xZE0wnP0YGoIqhMVE+yn/pAq9FV1mta/UVk=;
+	s=k20260515; t=1795197672;
+	bh=8k/seoYkbDkZyB6ZpvsoQ3zobdGpks0aF1xm5aQy82c=;
 	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=NlOIX/bGlP4MFLpfjImzCt3Z5igGHhSk26pa94/55NifVCVTE7nN1G+IkJ4S0ErPZ
-	 E3WLKOw0SD/YAImHrv41sd+J1eHjEFqvdfX3yvJOWbj+3ZpHxKBFhal16CcMx4vlvn
-	 y+mwzqVw0rQlS3w6ZNSMFLIFmSe+Q60XKgEWA4ppcm90hz6xZA7nfuB61aNCP4dtt1
-	 MDIDlQTBHgXrmXGcSmHalGtsurmPE2kR40wHNV7G6GOefRzgkWwCgoLVQkwVR7oj9L
-	 zKLdxFP4Vd8wNzcAry9bdB5/7lgHlEqaxMtREw5AT8nqhkVDSYUPGve0qr/af4xW9B
-	 pYUvo6LMnCLAw==
-Message-ID: <sashiko-outbox-225777@kernel.org>
+	b=b/Cm1h84w7xAriBrWZv24syxrXBWxw7G3zalEomnMeOTuGx7WqkW9GzLfuheu13MQ
+	 wMwpmxQqhmaMU1e7ApJgyT4XUCGm77SHct+dxzZDfe796VGXA4dmYcswAQZvt1JTbh
+	 T9itELnHxNw8bCBN3acMZOkk6oeIehvjeOOJGGLi5Cab/rgV6gVKhG+jK7jORznrhy
+	 BPE5c8GQZcIfBRJ6oDz661PpTwGyPzKP2zdjC/tllpxLfq/URUxjX8X++F9DUpfAWS
+	 NitQo0xjtY8x5rDtd1c95W4nzgu7SM7WkQhch7c1iQpUkjZVmUsVz5uJDQMznBbGEH
+	 TKx/qRhjopaCA==
+Message-ID: <sashiko-outbox-225778@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/3] perf vendor events intel: Fix misspellings in the
- Intel model tables
+Subject: Re: [PATCH 1/3] perf vendor events powerpc: Fix misspellings in the
+ power tables
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "TAKANO Mitsuhiro" <takano32@gmail.com>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20261120175840.1274637-3-takano32@gmail.com>
+In-Reply-To: <20261120175840.1274637-2-takano32@gmail.com>
 References: <20261120175840.1274637-1-takano32@gmail.com>
- <20261120175840.1274637-3-takano32@gmail.com>
+ <20261120175840.1274637-2-takano32@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 20 Nov 2026 18:01:05 +0000
+Date: Fri, 20 Nov 2026 18:01:11 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,21 +60,25 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> Five descriptions are misspelled: "Prediciton" instead of "Prediction"
-> four times (the BPU_CLEARS.EARLY event in the westmereep-dp,
-> westmereep-sp, nehalemep and nehalemex pipeline tables), and "contoller"
-> instead of "controller" in the sierraforest srf-metrics table.  Four of
-> the five are event descriptions, which `perf list` prints as they are; the
-> fifth is a metric description, printed by `perf list metric`.
+> Thirty-two different words are wrong, 69 times in all, in 54 descriptions
+> of the power8, power9 and power10 tables.  Fifteen of them appear more
+> than once: "than than" and "thee" eight times each, "exceed" five times,
+> "cyles", "finshed" and "cant" four times each, "software.Fuzzy" three
+> times, and "coverted", "repoted", "Fetchs", "whtver", "Micrpartition",
+> "dmand", "invalidat" and "tread" twice each; the other seventeen appear
+> once.
 >=20
-> Only the descriptions change.  Regenerating the tables with
+> 62 of the 69 are in BriefDescription fields and seven in PublicDescription
+> fields, so `perf list` prints those 62 and `perf list -v` prints those
+> seven.  Eleven of the 62 are metric descriptions, printed by `perf list
+> metric`.
 >=20
->   jevents.py x86 all tools/perf/pmu-events/arch out.c out-str.c
->=20
-> leaves every event name and event code untouched, and the generated
-> out-str.c shrinks by 477 bytes, because the corrected text becomes
-> identical to descriptions that were already stored for other models and
-> the duplicates are dropped.
+> Sixteen of the 69 are not misspellings: eight are a doubled "than", four
+> are missing spaces ("touchto" in "touch to L3", and "software.Fuzzy" in
+> [ ... ]
+> gone from the generated out-str.c, which shrinks by 393 bytes as some
+> corrected descriptions become identical to ones already stored for other
+> models.
 >=20
 > Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
 
@@ -82,5 +86,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261120175840.1274=
-637-1-takano32@gmail.com?part=3D2
+637-1-takano32@gmail.com?part=3D1
 
