@@ -1,72 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.197
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.71
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795213636;
-	b=2AsprazZ1t+Iy+QNjAiuAMKUzuqMirSCrTeO8gl3MjW1qmOZZq1ELP1CuE3Nb8+wI5Wr
-	 bGg3oSsF5+kRwzzbl30TwCmt8W3PERtJxuPXI/nM9GdS5lYG35zma84MaoO7ss9LtPuTo
-	 7+TbNh5OxNTFMwuz3csgJCmMwl/15hGBgY867apdJs7zdRj+2P4Xop66JpvsDbnXFAymN
-	 LMuja+Bi84QIxRkF7JfAnklH1GwdWx9l4w/GpTqGAU5YPxUzFHT/H9AmoIJSGI31sbp8L
-	 DGgIuo2Lgp8LPV/Usk1h1BBBuwh//ctuDwYhJqkmOFau0L2HSYdxH20DaOkufs3dUhA==
+	t=1795213640;
+	b=PDH1b3J/DpU/mc6QCTF9w0WALcgtYY52SsfUcdJJMmoI2fxDJCHl1Scsi+cILEIkN6KM
+	 he2hgLaBtAy0kmd1Rk2KqJ2Gndb3hKzBgGLShVgu54ZfvAPsFWcig0RZQWFMkhUJMs8o0
+	 4TceN5x9dBkztyiPeNqj/Ng+bu03MGaWZ7dbB3Vrb+CMppgzFqRqXQLi7ENfG8W8fExzA
+	 S1IGOLkQbKC12jMwE8hV1uTlACzIlu573YeN7MXptZdWABAHdJ8x3hdLcya/xxhONhDbZ
+	 Rd1UNQxZjGeia8/YtCU/kQxhB2GDOKyy4sd48lU3zFj05gNnarNze3wh+ZxH4tfmGGg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795213636;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795213640;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Received:Date:In-Reply-To:Mime-Version:
 	 References:X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=Qcg04C8qsI3OGDOQ0NxaMC9O3ul3JNPfCcyuGFzwX28=;
-	b=craiFnhV+rw5AMd7xCUaWyj9cjrH/8zr7fzj8dtYliHKucHidDFEieMsKBI/8sBbcNGj
-	 v1tOEMSXunSLSsOl9tFYvpAgN1IZdG+sUIT1++rVp9geKqvJuzjHy/8T8Fd4y8u2oGToY
-	 Z1CQXbPOCOSqksxmFwMAnvgkNpxpjoWSgTXk6GbLWDIeqM4UtOaDwSg0JF1haXNugl7SP
-	 7cssH59xJKfwAguLjJZ2MwxSu2hdHp4keBzzFfSBCimapKB+7Ud7ltz3Mu+oZKYUgCOLU
-	 gtNKR1j88L1W8cIVMa6gUfn5N24UvKgB/kU8/UGH7pNwPV4KqiLlqN96IbXzfZycMTQ==
+	bh=DhRVWbT6TcadzJqDGHH7XP3gxHS8pIibm5/i/AQztRw=;
+	b=bHbeqtdNzaICuqLCKf60jBuZ3HASdDAoOy5/cL+DB2wKj/x6LCbiP+Cy+Q5Q8fyogtHl
+	 6Oy2ecumkLybtThuAqkIJq+s2wmJb8IWciCAZh4Spoh0HZkjzX2MO0pucQHsuLfFsNyCX
+	 M8WmQZwmzGSOOk5FZtUvuGvrosfHMzPUhYhcFSNr/jBjPeDS8iQx8t+2swsKNhLTBHHMZ
+	 aFyrnxSX0FAdeuOHsUVq+EonbS+eewXFPre9ekV1RXkWg8Zv+UvjYhRxQORN9Fy3UYIWD
+	 VzC7O6BL8XAsP1mVy/5OvUZbvO/25xcGDHb5PiU0OzVw8LyPbVEcimaoirfiNFaDaNg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=JsBIkNHA;
-	arc=none smtp.remote-ip=74.125.82.197
-Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=eLVXITf3;
+	arc=none smtp.remote-ip=74.125.82.71
+Received: from mail-dl1-f71.google.com (mail-dl1-f71.google.com [74.125.82.71])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39115606A6B6
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 22:27:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 39115606A6B6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E58F606A6A9
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 22:27:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7E58F606A6A9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=JsBIkNHA
-Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-38531c1a566so3280314eec.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 14:27:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=eLVXITf3
+Received: by mail-dl1-f71.google.com with SMTP id a92af1059eb24-1af203073e0so1533495c88.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 14:27:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795213633; x=1795818433; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1795213636; x=1795818436; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Qcg04C8qsI3OGDOQ0NxaMC9O3ul3JNPfCcyuGFzwX28=;
-        b=JsBIkNHAFaP1FKgZ7caicTplf2oCUERtJJSOR/FkVPaNczjeAnuZjQi3GlZd3ghyLX
-         AY1VWM/PiinVY7AXLObNAos3oMxVQ0MLI9XVSb6SXF0itNfS6U9nsEYCk2HgrgPbgJKf
-         REilBxXPiWDWoy6kS3n/hpiP9uvg7kUHVTbO6TtqeUEAB/4+UCUCYgETjbR+1w0lunWb
-         jZPVVVqJvM4JOzvQWGzObW1oniHcjMOMlddwL7HXa+y8ssSEnVN8/KMMBA4OJ0KaXHTg
-         Hd6SjA42ZDr+xcyJ2HspN7K4+QJV67tF5U7YKJa/k2piqT34+gTJfcrEAUIufooDPxte
-         Djvw==
+        bh=DhRVWbT6TcadzJqDGHH7XP3gxHS8pIibm5/i/AQztRw=;
+        b=eLVXITf3jlGz8aHd4ajrEE9upSvTnqaC3jzDf1rQSxF/BXK/luwLKUpTCcGT7TPXSY
+         OPIgQndTe9CIFn0VcC/gbFu9UGHFnYVJqqwHikYT82zmOVI9uzgVQAluo//0iDrlwE5Y
+         udmswSPDdhVTtxWxN2E2T7ugGzv+GJmuVxCwW3DTr4w5GIIcw1jvJTEQ2KXVGSoFG7FT
+         jfkqwcymQ5ZseiToCdAPAWuDgLSTVP1p+MR0+X1gqIxxg+JLxgUXSdWr7Ny+MYpwy1Tc
+         vsoq1ZkSenjCDyAZG4O5aQ4+X1zweVI7uWaPwDNnwVg2dkNcSLHZdSIDB8odKPzY5NOD
+         Lb9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795213633; x=1795818433;
+        d=1e100.net; s=20260707; t=1795213636; x=1795818436;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Qcg04C8qsI3OGDOQ0NxaMC9O3ul3JNPfCcyuGFzwX28=;
-        b=foQYurZl3OWRjBA2YZMmXR3fEnOUi3/hCzWc4j3xdjKets0t0H4EXtHGnfZcIK0rzd
-         gUa/T0NNB8kQmqGZr1ikfU3jzBf2DMDEtLxmPmSajjUVvu2MUajn3KC9Exoz94LDXQga
-         U4xeq5y+z+iSA0ur2RdnJN3VIoYBR1PaowfVb4TcopHloIhPiMLepUCNlDd+gAXMtWgr
-         HXnTn3ejPMNm+ExRAZVOTlIjRBsBT9fFClAHmCbpqy/YwRGKxH1qyonG+Sb3rV22Ec2a
-         58e/6pSid1nSlrBrl7Sx0NoKFKvvcjuxcoDMvOT2DAiouGEbEfqhjUghb4U+toBRQoQq
-         tf1g==
-X-Gm-Message-State: APuU4Z9Igxz4Hpt1oG4nBfNlLlm8GUz06YzxuojLgc1yho4UEVIYXmgP
-	7saZmmVo9I+wgJXKvuztDFB97iXV9Ir5axhggTRO4L9vCTf73Bx1m9xkiii7Q2iQPxn4hKOibIu
-	meu0b4d5q/g==
-X-Received: from dybme41.prod.google.com ([2002:a05:7301:18a9:b0:383:7f56:69a1])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:2583:b0:381:ccd2:f6ad
- with SMTP id 5a478bee46e88-38570b336ccmr4092691eec.18.1795213632741; Fri, 20
- Nov 2026 14:27:12 -0800 (PST)
-Date: Fri, 20 Nov 2026 14:26:10 -0800
+        bh=DhRVWbT6TcadzJqDGHH7XP3gxHS8pIibm5/i/AQztRw=;
+        b=eJGpislTI9qfKd0dbi8XwmbsNf+wdm2KGOkaPMPRUBWL75mPOkdUhhcjjW66jkBQtv
+         90tAf2dFkbVj6F78uJ0rujIVEAt6qCx5xqfnP96gihsERbY3JJPrGIG/ryvvxrlv5Oxd
+         X56GhbE/nhaRZxWhQCBAlVtopZLyrkb0ZxsJef5yahpPsdGWZnruKFV9tDOspPYZbjv9
+         AftZk+IwVeoiaG/tFBdtVGj4Ay5M7Ri+fJBXEcDXSSXd1+WhUUpDOJjjpTyNF7Y8abLg
+         YIMqWqYyf5P85R5IbBuxbJvt9fzIWbcRLKCPsF3gh3t9GdIs6j7Iq1kqKlpafRB/ycXe
+         UQFw==
+X-Gm-Message-State: APuU4Z+cZkP13PRJJX7T0ab3oWo4dcz4OOv+W40jrTS7Jf13KC9+NbTE
+	XNUXGyFhebIvrdNoXDcnu7tMS4Syzta20GYsfNcfL6Fz5JJ/NSVQTXT29TQWTFHK3uL6U57wvVD
+	o9/sgPgnDYw==
+X-Received: from dlbur23.prod.google.com ([2002:a05:7022:ea57:b0:1a2:e6ba:5856])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2815:b0:1b5:2746:8cee
+ with SMTP id a92af1059eb24-1b5568c342dmr4025938c88.18.1795213635250; Fri, 20
+ Nov 2026 14:27:15 -0800 (PST)
+Date: Fri, 20 Nov 2026 14:26:11 -0800
 In-Reply-To: <20261120222615.2291168-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -79,8 +79,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261120222615.2291168-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.750.gf70dc682cf-goog
-Message-ID: <20261120222615.2291168-12-irogers@google.com>
-Subject: [PATCH v3 11/16] perf pmu: Probe memory profiling events and sample formats
+Message-ID: <20261120222615.2291168-13-irogers@google.com>
+Subject: [PATCH v3 12/16] perf pmu: Probe user-space mmap capabilities
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -89,200 +89,196 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Extend perf_pmu__probe() with try_open_mem_evlist() and
-probe_mem_events() to test which perf_mem_events types (such as
-ldlat-loads and ldlat-stores) can be opened on the PMU and which
-additional memory sample formats (PERF_SAMPLE_WEIGHT,
-PERF_SAMPLE_WEIGHT_STRUCT, PERF_SAMPLE_PHYS_ADDR,
-PERF_SAMPLE_DATA_PAGE_SIZE, PERF_SAMPLE_TRANSACTION) are supported with
-them.
+Extend perf_pmu__probe() with probe_mmap_caps() to inspect the
+perf_event_mmap_page of an opened event on the PMU.
+
+Record whether user-space counter reading (rdpmc on x86, mrs on arm64
+with format/rdpmc=1) is available in sysfs/sysctl and enabled in
+cap_user_rdpmc, verify whether executing a self-read via
+perf_mmap__read_self() produces non-zero advancing counts
+(rdpmc_works), and record pmc_width and cap_user_time /
+cap_user_time_zero / cap_user_time_short support.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/pmu.c | 139 ++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/pmu.h |   7 +++
- 2 files changed, 146 insertions(+)
+ tools/perf/util/pmu.c | 111 ++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/pmu.h |  25 ++++++++++
+ 2 files changed, 136 insertions(+)
 
 diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 3f6c1d8bdf6e..2e099e97ba03 100644
+index 2e099e97ba03..0a7bb0a215f0 100644
 --- a/tools/perf/util/pmu.c
 +++ b/tools/perf/util/pmu.c
-@@ -3662,6 +3662,142 @@ static void probe_pmu_regs_one(const struct perf_pmu *pmu,
- 		*out_pred_precise_mask = pred_precise_mask;
+@@ -3836,6 +3836,114 @@ static bool probe_format_pack(const struct perf_pmu *pmu, struct perf_event_attr
+ 	return true;
  }
  
-+static bool try_open_mem_evlist(struct evlist *evlist,
-+				const struct perf_event_attr *base_attr,
-+				pid_t pid, int cpu, unsigned long flags,
-+				int precise_ip, u64 sample_type)
-+{
-+	int fds[16];
-+	size_t nr_fds = 0;
-+	int leader_fd = -1;
-+	struct evsel *evsel;
-+	bool ok = true;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		struct perf_event_attr attr = evsel->core.attr;
-+		int fd;
-+
-+		if (nr_fds >= ARRAY_SIZE(fds)) {
-+			ok = false;
-+			break;
-+		}
-+
-+		attr.disabled = (leader_fd < 0) ? 1 : 0;
-+		attr.sample_period = attr.sample_period ?: 10000;
-+		attr.sample_type = sample_type;
-+		attr.exclude_user = base_attr->exclude_user;
-+		attr.exclude_kernel = base_attr->exclude_kernel;
-+		attr.exclude_hv = base_attr->exclude_hv;
-+		attr.exclude_idle = base_attr->exclude_idle;
-+		attr.exclude_host = base_attr->exclude_host;
-+		attr.exclude_guest = base_attr->exclude_guest;
-+		if (evsel->precise_max || precise_ip > 0)
-+			attr.precise_ip = precise_ip;
-+
-+		fd = sys_perf_event_open(&attr, pid, cpu, leader_fd, flags);
-+		if (fd < 0) {
-+			ok = false;
-+			break;
-+		}
-+		if (leader_fd < 0)
-+			leader_fd = fd;
-+		fds[nr_fds++] = fd;
-+	}
-+
-+	for (size_t i = nr_fds; i > 0; i--)
-+		close(fds[i - 1]);
-+
-+	return ok && nr_fds > 0;
-+}
-+
 +/*
-+ * Probe which perf_mem_events types (e.g. ldlat-loads, ldlat-stores) and
-+ * additional memory sample formats can be opened on @pmu.
++ * Probe user-space perf_event_mmap_page capabilities, including user-space
++ * counter reading (rdpmc/mrs/csrr), counter bit-width, and user time fields.
 + */
-+static void probe_mem_events(struct perf_pmu *pmu,
-+			     const struct perf_event_attr *base_attr,
-+			     pid_t pid, int cpu, unsigned long flags)
++static void probe_mmap_caps(struct perf_pmu *pmu,
++			    const struct perf_event_attr *base_attr,
++			    pid_t pid, int cpu, unsigned long flags)
 +{
-+	static const u64 extra_mem_stypes[] = {
-+		PERF_SAMPLE_WEIGHT,
-+		PERF_SAMPLE_WEIGHT_STRUCT,
-+		PERF_SAMPLE_PHYS_ADDR,
-+		PERF_SAMPLE_DATA_PAGE_SIZE,
-+		PERF_SAMPLE_TRANSACTION,
-+	};
++	struct perf_event_attr attr = *base_attr;
++	struct perf_event_mmap_page *pc;
++	long page_sz = sysconf(_SC_PAGESIZE);
++	bool has_rdpmc_cap = false;
++	int events_fd;
++	int fd = -1;
 +
-+	if (!pmu->mem_events)
-+		return;
++	pmu->probed.rdpmc_sysfs = -1;
 +
-+	perf_pmu__mem_events_init_pmu(pmu);
++	if (page_sz <= 0)
++		page_sz = 4096;
 +
-+	for (int j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
-+		struct perf_mem_event *e = perf_pmu__mem_events_ptr(pmu, j);
-+		const char *s;
-+		char buf[256];
-+		struct evlist *evlist;
-+		struct parse_events_error err;
-+		struct evsel *first;
-+		int max_p, min_p, working_p = -1;
-+		u64 base_stype = PERF_SAMPLE_IP | PERF_SAMPLE_ADDR | PERF_SAMPLE_DATA_SRC;
-+		int ret;
++	events_fd = perf_pmu__event_source_devices_fd();
++	if (events_fd >= 0) {
++		int pmu_dirfd = openat(events_fd, pmu->name, O_DIRECTORY | O_RDONLY | O_CLOEXEC);
 +
-+		if (!e || !e->tag || !e->supported)
-+			continue;
++		if (pmu_dirfd >= 0) {
++			if (faccessat(pmu_dirfd, "rdpmc", F_OK, 0) == 0) {
++				int rfd;
 +
-+		s = perf_pmu__mem_events_name(pmu, j, buf, sizeof(buf));
-+		if (!s)
-+			continue;
++				has_rdpmc_cap = true;
++				rfd = openat(pmu_dirfd, "rdpmc", O_RDONLY | O_CLOEXEC);
++				if (rfd >= 0) {
++					char rbuf[16];
++					ssize_t n = read(rfd, rbuf, sizeof(rbuf) - 1);
 +
-+		evlist = evlist__new();
-+		if (!evlist)
-+			continue;
-+
-+		parse_events_error__init(&err);
-+		ret = __parse_events(evlist, s, /*pmu_filter=*/NULL,
-+				     /*cputype_filter=*/false, &err, /*fake_pmu=*/false,
-+				     /*warn_if_reordered=*/false, /*fake_tp=*/false);
-+		parse_events_error__exit(&err);
-+		if (ret || evlist__empty(evlist)) {
-+			evlist__put(evlist);
-+			continue;
-+		}
-+
-+		first = evlist__first(evlist);
-+		if (first->precise_max) {
-+			max_p = pmu->probed.max_precise > 0 ? pmu->probed.max_precise : 3;
-+			min_p = 1;
-+		} else {
-+			max_p = first->core.attr.precise_ip;
-+			min_p = first->core.attr.precise_ip;
-+		}
-+
-+		for (int p = max_p; p >= min_p; p--) {
-+			if (try_open_mem_evlist(evlist, base_attr, pid, cpu,
-+						flags, p, base_stype)) {
-+				working_p = p;
-+				break;
-+			}
-+		}
-+
-+		if (working_p >= 0) {
-+			pmu->probed.mem_events_mask |= (1u << j);
-+			pmu->probed.mem_sample_types |= PERF_SAMPLE_ADDR | PERF_SAMPLE_DATA_SRC;
-+
-+			for (size_t k = 0; k < ARRAY_SIZE(extra_mem_stypes); k++) {
-+				u64 st = base_stype | extra_mem_stypes[k];
-+
-+				if (try_open_mem_evlist(evlist, base_attr, pid, cpu,
-+							flags, working_p, st)) {
-+					pmu->probed.mem_sample_types |= extra_mem_stypes[k];
++					if (n > 0) {
++						rbuf[n] = '\0';
++						pmu->probed.rdpmc_sysfs = atoi(rbuf);
++					}
++					close(rfd);
 +				}
 +			}
++			close(pmu_dirfd);
 +		}
++		close(events_fd);
++	}
 +
-+		evlist__put(evlist);
++	attr.disabled = 0;
++
++	/*
++	 * Architectures such as arm64 and RISC-V control user-space counter
++	 * reading for core PMUs with a sysctl rather than a sysfs rdpmc file.
++	 */
++	if (pmu->is_core && pmu->probed.rdpmc_sysfs < 0) {
++		int uval;
++
++		if (sysctl__read_int("kernel/perf_user_access", &uval) == 0) {
++			has_rdpmc_cap = true;
++			pmu->probed.rdpmc_sysfs = uval;
++		}
++	}
++
++	/*
++	 * On architectures such as arm64, user-space counter reading must be
++	 * explicitly requested via format/rdpmc (e.g. config1:1).
++	 */
++	if (perf_pmu__has_format(pmu, "rdpmc")) {
++		struct perf_event_attr r_attr = attr;
++
++		has_rdpmc_cap = true;
++		if (probe_format_pack(pmu, &r_attr, "rdpmc", 1))
++			fd = sys_perf_event_open(&r_attr, 0, -1, -1, flags);
++	}
++
++	if (fd < 0 && !pmu->is_uncore)
++		fd = sys_perf_event_open(&attr, 0, -1, -1, flags);
++	if (fd < 0)
++		fd = sys_perf_event_open(&attr, pid, cpu, -1, flags);
++
++	if (fd >= 0) {
++		pc = mmap(NULL, page_sz, PROT_READ, MAP_SHARED, fd, 0);
++		if (pc != MAP_FAILED) {
++			if (has_rdpmc_cap || pc->cap_user_rdpmc) {
++				pmu->probed.rdpmc_available = true;
++				pmu->probed.pmc_width = pc->pmc_width;
++			}
++			if (pc->cap_user_rdpmc && pc->index != 0) {
++				struct perf_mmap map = { .base = pc };
++				struct perf_counts_values start = { .val = 0 };
++				struct perf_counts_values end = { .val = 0 };
++
++				pmu->probed.can_user_rdpmc = true;
++				if (perf_mmap__read_self(&map, &start) == 0) {
++					for (int spin = 0; spin < 10000; spin++)
++						barrier();
++					if (perf_mmap__read_self(&map, &end) == 0 &&
++					    end.val > start.val)
++						pmu->probed.rdpmc_works = true;
++				}
++			}
++			pmu->probed.can_user_time = !!pc->cap_user_time;
++			pmu->probed.can_user_time_zero = !!pc->cap_user_time_zero;
++			pmu->probed.can_user_time_short = !!pc->cap_user_time_short;
++			munmap(pc, page_sz);
++		}
++		close(fd);
 +	}
 +}
 +
- /*
-  * Pack @value into the perf_event_attr config field named by the sysfs format
-  * @name of @pmu, e.g. "rdpmc" defined as "config1:1". Returns false if the
-@@ -4083,6 +4219,9 @@ static void __perf_pmu__probe(struct perf_pmu *pmu, int pmu_cpu)
- 				   &pmu->probed.intr_pred_precise_mask);
+ static void __perf_pmu__probe(struct perf_pmu *pmu, int pmu_cpu)
+ {
+ 	struct probe_candidates cands = { .nr = 0 };
+@@ -4390,6 +4498,9 @@ static void __perf_pmu__probe(struct perf_pmu *pmu, int pmu_cpu)
+ 		}
  	}
  
-+	/* 3c. Memory event types and memory sample formats */
-+	probe_mem_events(pmu, &base_attr, pid, cpu, flags);
++	/* 5b. User-space mmap capabilities (rdpmc, user_time, pmc_width) */
++	probe_mmap_caps(pmu, &base_attr, pid, cpu, flags);
 +
- 	/* 4. Privilege / exclusion modifiers */
- 	pmu->probed.exclude_user =
- 		test_exclude_flag(&base_attr, pid, cpu, flags, PROBE_EXCLUDE_USER);
+ 	/* 5c. Auto-counter reload (acr_mask / ratio-to-prev) */
+ 	if (pmu->probed.can_sample && perf_pmu__has_format(pmu, "acr_mask")) {
+ 		struct perf_event_attr l_attr = base_attr;
 diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 21c4b1a4b608..ee56570cac00 100644
+index ee56570cac00..bb21e910da90 100644
 --- a/tools/perf/util/pmu.h
 +++ b/tools/perf/util/pmu.h
-@@ -304,11 +304,18 @@ struct perf_pmu {
+@@ -266,6 +266,24 @@ struct perf_pmu {
+ 		bool can_aux_resume;
+ 		/** @probed.can_aux_sample: Supports AUX area snapshot sampling. */
+ 		bool can_aux_sample;
++		/**
++		 * @probed.rdpmc_available: PMU supports user-space counter
++		 * reading (rdpmc/mrs/csrr).
++		 */
++		bool rdpmc_available;
++		/**
++		 * @probed.can_user_rdpmc: User-space counter reading enabled
++		 * (cap_user_rdpmc & index).
++		 */
++		bool can_user_rdpmc;
++		/** @probed.rdpmc_works: User-space counter read instruction executed and worked. */
++		bool rdpmc_works;
++		/** @probed.can_user_time: Supports user-space time conversion (cap_user_time). */
++		bool can_user_time;
++		/** @probed.can_user_time_zero: Supports cap_user_time_zero in mmap page. */
++		bool can_user_time_zero;
++		/** @probed.can_user_time_short: Supports cap_user_time_short in mmap page. */
++		bool can_user_time_short;
+ 		/** @probed.exclude_user: Supports perf_event_attr::exclude_user. */
+ 		bool exclude_user;
+ 		/** @probed.exclude_kernel: Supports perf_event_attr::exclude_kernel. */
+@@ -304,8 +322,15 @@ struct perf_pmu {
  		int user_regs_abi;
  		/** @probed.intr_regs_abi: ABI flags for intr_regs_mask. */
  		int intr_regs_abi;
-+		/** @probed.mem_events_mask: Bitmask of memory event types verified by probing. */
-+		unsigned int mem_events_mask;
++		/**
++		 * @probed.rdpmc_sysfs: Value from sysfs rdpmc or perf_user_access
++		 * (-1 if unknown).
++		 */
++		int rdpmc_sysfs;
+ 		/** @probed.mem_events_mask: Bitmask of memory event types verified by probing. */
+ 		unsigned int mem_events_mask;
++		/** @probed.pmc_width: Bit-width of hardware counter for user-space rdpmc. */
++		u16 pmc_width;
  		/**
  		 * @probed.sample_types: Bitmask of supported
  		 * enum perf_event_sample_format flags.
- 		 */
- 		u64 sample_types;
-+		/**
-+		 * @probed.mem_sample_types: Bitmask of memory sample formats
-+		 * verified on mem_events.
-+		 */
-+		u64 mem_sample_types;
- 		/** @probed.user_regs_mask: Bitmask of supported sample_regs_user registers. */
- 		u64 user_regs_mask;
- 		/** @probed.intr_regs_mask: Bitmask of supported sample_regs_intr registers. */
 -- 
 2.56.1.750.gf70dc682cf-goog
 
