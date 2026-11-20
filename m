@@ -1,56 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795138762;
-	b=38TZpJGOPiPSeTDGxcQzVKE6uU8xKDqkMqcwN4u27fTp3f33iXzymbawPuP2eIRQHg78
-	 UtfpS5vYRq7sUlKh1CPBMP/eA+tjcK48QCM2pqefPXIjtd0w4I6tZ2eMxr56c5e/SDJY+
-	 OJz4DTHIChjlPC6v7sJjuDCZFRPp2sif0LU5X1Bvm0BR40V44l1fjgjSz0hZWcUD2SPfj
-	 5WEtRqWselbBCo5RjM62x/UXJ2PuTqeDTDNGUDRasKkPf0GUOmc1SHmUruHC74bRlBDAX
-	 eY3kRJXs0xP2AP3/1KulD6WaXyiHY/rHvI0m11i4Q6qY0fFe0gsTLhjMOiWke9HJvHg==
+	t=1795138783;
+	b=zZ+zSHYdV1rRTiVFdBPAODdQp7AWz+8wAspbvoc/Y/tcVSac6YW235Y1Ian48XCrXXhi
+	 z/GkpeZ4CmXlqc039zgfH/qr51MgAsNtgwkn1KpjJd6FryQA0DQQqdmOa2nH0JydASVLj
+	 8129nolFnqGyyaxRw7NeRKSxK+SZB2QK2IvqnC4mjfMjVoBAiYBFESDdVz2HRLWT7yM8a
+	 hfhwQqFEv2TLQVzdbHu2La8MFEXciA+14XWXyM0F8wZ+08ZH6nsz6dF6QXHEiDJ94sg8L
+	 Bi4PnAeLqBms59PrJ+efacqqC/wrcQojH5dosB2bMH+oFFw+rKsaI0r2x1YMhy5N2kw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795138762;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795138783;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=ZknI2jppZlaa18vYyP+vZNhL+uOA0qZYDqV6QZ8t5FU=;
-	b=FW67Gq2HXu9NRhBpfo0rVdxK8GPSqqV2aWOFwzSi356I0+8RHFsq1NtJUatg897ttAgt
-	 0cU5ufW5mI1BAXpRrVkYr21H7QtMLBVqF9ihu0+4Cc8D+KUdn0mRNlR+Zu50z9zHmpJyS
-	 Qwdxl14615IfG//quAcvhDx2U0qMQstnlXlK1iKbVyH2javTjhjk9ihKQksBfJC00ZDL/
-	 KACw/YkzA8llt3YK+Or9J8S1lns6eLUEQXDeose8HnPS6xtrFJRW0xiUrFdKkfqq20oGe
-	 5JR1dwiIWxTtcJdkUbhtU+AFHH8fFK2m/Yl6GuKq/+HBAGHBKDxOwGqReNMojJBqAJg==
+	bh=kr5ySmJxt5smMLoFpAMJ2lqK/VouMtnAaYleuC8/GQc=;
+	b=C5hX2nQu5WfLoK2KKvFrKo22bHvAjr80Dv+boc7uSydz/CdzQAJvtjOkUKqZWHjWmy6k
+	 fU3BC9JvjyGWNrp6OAXqqnArOxyyeetPY38f+imnI4zv0HPXGRMTXY7i+L4pRvu6iFwJu
+	 X7tq8lhmy6HOHHDPNPlh/vzLwB/Xa1Hc6NhWvydHrpRKNQTij5zs5v8EdkxmRWw379viK
+	 wJuQdT+UWvKzsPgW2uWRU7SN6t999hZpEIqCyKvUTetnmXdkggKAgdUhbQEDHdEklzzJT
+	 EAz9esfkgtQV495y+RNK1hSaUNv8axijdFb6wOE44VAZ4r4CYhxcttGzpyBZ7AxlBZw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IVB3CVYB;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dYPzmV3K;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802B6606A320
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 01:39:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0360B606A320
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 01:39:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IVB3CVYB
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15CF01F000C4;
-	Fri, 20 Nov 2026 01:39:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dYPzmV3K
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B369B1F000C4;
+	Fri, 20 Nov 2026 01:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795138762;
-	bh=ZknI2jppZlaa18vYyP+vZNhL+uOA0qZYDqV6QZ8t5FU=;
+	s=k20260515; t=1795138782;
+	bh=kr5ySmJxt5smMLoFpAMJ2lqK/VouMtnAaYleuC8/GQc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=IVB3CVYBmg0goa4XX3E+nwkshS37icoGLrh9jbM8UclvX9It9RHSxQN8GAJ7FRHb6
-	 wfDWr8PWnT4Mk5U55njMX5yE2FfNbsPJ0+vV6puyuFelTNRPAPZRLJVtrh4p61Syro
-	 et2NET9J1X6F8+PvemHXLr8kESbg/Vd5zrONC+qa/ghdR7Tko+47s0em9k7rYC+uxj
-	 8N8CFupefCB0Xafha8h/HIWtERvg7m8GyE8OrPCB0s5Zw/q1E3UJSCT089i5lftTVp
-	 FpMBZF//1YZZaJHZtoDvklJx4kSx2yDVQZ/b8hNFQiSV6vjL+2v2bHmOoWzexH2r2e
-	 iO6hIuaiwJf9Q==
-Message-ID: <sashiko-outbox-224330@kernel.org>
+	b=dYPzmV3KEQq0EXenTzUnOzY3u0b6PRi/rs3qZHpfApO5RiQqcMkk2KlyF9Q1q4JnY
+	 X+WbiCtKsiypsAf0/bPXVu38latBr8jQg7aV2UlQ9x829WDcxbKMbqxBJK0QdhLhgt
+	 RtD7ceQQlo6FU0uR0sIET9o0bNgo2+gw0QNvuR42lP9WY+mXCls5zUZg+avE80ORkB
+	 luNr4LEMw9+fy8F0uxZlRaYgvoJus8JYhVz/cD1hPTJFqRMaBsCwwy9N3kZrq/Ga9i
+	 wuR14hoDLyTvbeedeuMFbbxm58a/uKotb8BF6N9j8kiFGLZAXR9hjvv6q95BClU47k
+	 BWfac0kUjR/bA==
+Message-ID: <sashiko-outbox-224332@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 11/13] perf tests: Fix the Intel PT virtual LBR check
+Subject: Re: [PATCH v9 13/13] perf test: Skip the LBR inline unwinding check
+ when unsupported
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261120013211.1510-12-acme@kernel.org>
+In-Reply-To: <20261120013211.1510-14-acme@kernel.org>
 References: <20261120013211.1510-1-acme@kernel.org>
- <20261120013211.1510-12-acme@kernel.org>
+ <20261120013211.1510-14-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 20 Nov 2026 01:39:21 +0000
+Date: Fri, 20 Nov 2026 01:39:42 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -62,24 +63,18 @@ Precedence: list
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> On an Intel host the virtual LBR check failed with:
+> The LBR check takes caps/branches as sufficient to record cycles with
+> --call-graph lbr, but the file only says the PMU has an LBR: AMD LBRv2
+> rejects the call stack mode with EOPNOTSUPP and AMD BRS, which samples
+> only its own retired branches event, rejects cycles with EINVAL, so the
+> test fails on AMD instead of skipping.
 >=20
->   Warning: Processed 29 samples and lost 100.00%
+> Skip when the same event records without the branch stack, so a PMU
+> without the LBR call stack skips while a perf record that fails for
+> another reason still shows its error and fails the test.
 >=20
-> The record leaves the buffer sizes to the tool defaults: the data ring
-> follows perf_event_mlock_kb, and the runner's small value left a single
-> page, too small for the AUX samples.  Pin 4 data and 64 AUX pages, so
-> the test does not depend on the host sysctl, and give the AUX ring room
-> instead of the single page the tool sizes to the 4 KiB snapshot.  Both
-> fit in the default mlock allowance regardless of the CPU count.
->=20
-> Also require the Python perf module to export session: a perf module
-> without it, like the distro's python3-perf, made the check fail instead
-> of skipping.
->=20
-> Fixes: 915d6b14dc0c8971 ("perf test: Migrate Intel PT virtual LBR test to=
- Python API")
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Fixes: 446c595dc0dd1759 ("perf test addr2line_inlines: Ensure inline info=
+rmation shows on LBR leaves")
 > Cc: Ian Rogers <irogers@google.com>
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
@@ -87,5 +82,5 @@ Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261120013211.1510=
--1-acme@kernel.org?part=3D11
+-1-acme@kernel.org?part=3D13
 
