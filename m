@@ -1,79 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795187421;
-	b=3FmVB/LoPcfBE0qHS2vCExDInz96LqeaVUiFX6LyVhMcY2r8d1b0UMMamALoPiHHFx0g
-	 x1yAk6ReCAGnXIOWJYMtAWfTqbvAJvoN6XpIDvfxktitvVLiUDRXOzy0CXayVNY9jzAwt
-	 gUBVdF7kXLfpTZgb3jz2SRwjQIGI/2U9h6KRhnJyFPhqvnAK12IviuPR2ITSWfpLE+qJ8
-	 C9WDc9z+mjsujl5ED9RUfxGvVkCIHKsm+jbque+bX/UiVZxc6+jOeaOVni7En5IwhuDYv
-	 RGUQwBOh3gLUjfvHF5rpjtwpSZ0dCqlzVMVlmLzN+H5eXSukh1hf1rY9Zi1hsFmaTZw==
+	t=1795187745;
+	b=PqYTvSbWS7T+LmX6f8LYcRiA5Ashp1GSFzwCDpaq6uCFreBQS2i0aA/BcbZAll432WOq
+	 f97nGA+CRMHuidOUQIx/+TBQgJ5nInEpJ7E2FeIXaM96Q2dhV5hFvZN3/P7eZWX9Ax8Gu
+	 ANO1s4ASuDqeWg4TNzyXe1B1Qm13LtKgXiFZBZVV94I5yfs58G07ht6am/zXnpsYzyqmG
+	 sYEhkhhVVjedIGeK6LJFd8djWvPnL20euYyDEg+jGdP+xPGS0fziIdRWKXMUTqNPjAqkx
+	 c0aSMbcwpskcgtmP3+V889vy/h9szgrD0OgKQo2kOuj2hoM2TpYmaUYnZzQVrNUMpKA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795187421;
-	h=DMARC-Filter:Date:DKIM-Signature:DKIM-Signature:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To;
-	bh=1Uf2w3C6VLG0GW6+V2bXKgNIiaxX6Iz2cPxMgQETrHM=;
-	b=m6FPNs1rVQlih5rI87SmBHf04eNhqxrVjcNLhKlhX0jRdeYg+zRaBV+0T94Iliiap0ch
-	 InLLKGbMiX39JfUKzsdlQnxIUIcFjyY6tqgp26J6oN3kQrVh9rPr0MK5myX6kaBOQx1FZ
-	 KyEte8U8HPlo3JqvkomHtAO4AHVa7r9y+fTywbOZjGHTO1TPwexAwrrl6XdXhWZcpAeo1
-	 glppQ/rwiD2Jp3US/K8CLEQrOnM0j0yZ9OhGTCG/vFxnoSnJHJEADi1ieRJoUU4zLZCku
-	 aymJftGAi9yg97OeRz3aHHFTvocdMLaTwt6ISB7jM2hPjTd1+PekgxCa8QAe49ddu7A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795187745;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=5PvVbdw1H4TaeeEEy3gzS8gsdBLbvbj7MYrxcM3C5gE=;
+	b=Da/QyhTdWwDw0w3fxqN3ijiV6zoOde9JCGtaN7yeMlBfb73QIVHCWKKGl9GSn9QRcJ7l
+	 sUm1f1vIS+8Fe0dnF5iO13oMvwX8+5P/DCUr9oJvYUeMyKbzfEEuSE90/DBrgmyrTqtV3
+	 ekZCJlmYBN1xK44KkY8CNrQR3NLZgERcFyeIb7pYmkuVlf333NrQny/7hyfQX3IDTJsqb
+	 l4/VNsouuRmY57YutmAxmCNZKoQNmmO+059EqlgGAXYlPxzlXiyCDfIBtdIVtN3hcktrm
+	 sl+WIOkyfBVjdT8Hg5bFrDjhHI5+AklOFGhBlFZLtU3RaNZuIVQx0g5T3u2kebxcMwQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linutronix.de;
-	spf=pass smtp.mailfrom=linutronix.de;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b="OUX/lrvJ";
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=IAoGx9P4;
-	arc=none smtp.remote-ip=193.142.43.55
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MNPz6git;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15449606A338;
-	Fri, 20 Nov 2026 15:10:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 15449606A338
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0F7606A32A;
+	Fri, 20 Nov 2026 15:15:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=OUX/lrvJ;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=IAoGx9P4
-Date: Fri, 20 Nov 2026 16:10:17 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1795187419;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1Uf2w3C6VLG0GW6+V2bXKgNIiaxX6Iz2cPxMgQETrHM=;
-	b=OUX/lrvJURJO8B/bRcp1KZOhz1W0eXw6NIP2IBMY8qkuYXGlUs6iMbipujxmPkzsIOFQ3W
-	3VBh7otPD7vX1rf7drGmNjmvpndwa//iyUGtx46uMCgy3LVI/2BsUndZqchz+25I36nAcK
-	DKlnshuEHGOVFdnQxChEOlf+gKCLGz9RlFOHxcI0C+OwPTiVnjbGwmYTBeYC1PEbBEUjtq
-	J9M1bw3ECuKpYBN+NA7VgWHPuvAonecMFp26Mxf3sucAxDJSkTGzBAgd9mcozfau4MjJXU
-	FSODWpAWAtny0C/gsBZ8PrSOOVeLk0DxTOwOdiK8TV9/jNApOidq6NuSryhPZA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1795187419;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1Uf2w3C6VLG0GW6+V2bXKgNIiaxX6Iz2cPxMgQETrHM=;
-	b=IAoGx9P4ncOm9hSQfXJorUUR2w+oqVmjqkKbhoJG+hMFDa45LVImFg3VwXkZh0xQYaL2jJ
-	pH4W6J/Uvnz8v3Dg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Tengda Wu <wutengda@huaweicloud.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] perf/core: Prevent duplicate sigtrap task work
- enqueue
-Message-ID: <20261120151017.mKJ_Y_u0@linutronix.de>
-References: <cover.1795053619.git.wutengda@huaweicloud.com>
- <45bd71c976aea1a0e8bf5762dd6b6552e6009439.1795053619.git.wutengda@huaweicloud.com>
- <20261120121436.GT2668564@noisy.programming.kicks-ass.net>
- <20261120141606.zcwyHZ3P@linutronix.de>
- <20261120150452.GU2668564@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=MNPz6git
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 010C01F000C0;
+	Fri, 20 Nov 2026 15:15:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795187745;
+	bh=5PvVbdw1H4TaeeEEy3gzS8gsdBLbvbj7MYrxcM3C5gE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=MNPz6gitvITlFlI/IrUP0B85yEFWhKJAQbcUfuOqS+hoeqD3PQUgEum1j2RzFD66r
+	 +EJEqSk5fXaiXFwqNXfQEfiYm40Efp3iofToYc7VKbTbrNeDnkJBhG6vd58pHyNwiz
+	 d/2d0nQ20nfQwOnAE4acaJHXaAkplcRGuHhjw6jSnw2eOSiIyARNjcImOavyoKL5re
+	 M9BBY1ymEmMNN4bOPLb8lpdswRp8A34lZYJsjBxxoRXD+mGx39JTPJK0RKnEsuIjT+
+	 /Zyia5oFWZVJRY7fi04TiSvQxCyEMJQ0XtIDQir7WBWFX/HRdDZVnfJpUTp1IsYq0N
+	 YG5hUARYDorEw==
+Message-ID: <sashiko-outbox-225444@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v5] ARM, ARM64, LONGARCH, XTENSA: Delay HW BP
+ notification to task_work()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Sebastian Andrzej Siewior" <bigeasy@linutronix.de>, linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+In-Reply-To: <20261120144553.TjgAd_G6@linutronix.de>
+References: <20261120144553.TjgAd_G6@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 20 Nov 2026 15:15:44 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -82,46 +59,87 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20261120150452.GU2668564@noisy.programming.kicks-ass.net>
 
-On 2026-11-20 16:04:52 [+0100], Peter Zijlstra wrote:
-> On Fri, Nov 20, 2026 at 03:16:06PM +0100, Sebastian Andrzej Siewior wrote:
-> > On 2026-11-20 13:14:36 [+0100], Peter Zijlstra wrote:
-> > > > Also use smp_load_acquire() when checking pending_work in
-> > > > the exclude_kernel warning path to ensure the read is properly
-> > > > ordered.
-> > > 
-> > > I am confused by the use of smp_*() and cmpxchg() here. Where is the
-> > > multi-cpu scenario?
-> > 
-> > The same event is used in process context and NMI
-> > |        perf-tc1-7647    [001] d..6.   114.513688: __perf_event_overflow: ffff888100d68540
-> > |        perf-tc1-7647    [001] d.Z2.   114.513703: __perf_event_overflow: ffff888100d68540
-> > 
-> > I don't see how to deal with this without cmpxchg. And the same event is
-> > also used by other task
-> 
-> You can do CMPXCHG (without the LOCK) prefix; the helper is called
-> cmpxchg_local().
-> 
-> > |        perf-tc1-7657    [001] d.Z2.   114.598356: __perf_event_overflow: ffff888100d68540
-> > 
-> > which makes me thing that it could be pinned to another CPU (unless
-> > there is something that impossible and it is strictly per-CPU).
-> > 
-> > The smp load/store macros is my fault as it looked better to do this
-> > than plain stores (given that we have the cmpxchg already).
-> 
-> It is confusing as all heck. This is all task-local, and a task can only
-> ever run on one CPU at the time.
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [High] loongarch: ptrace: do_watch() forces SIGTRAP before
+  perf_arch_hwbp_send_sig()
+--
 
-Given the two pids I was assuming (!knowing) that two CPUs could be
-involved.
+commit e42e3194215f3def1d0ba2e055fc294e66e5d8ac
+Author: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-So you are saying cmpxchg_local() and a plain assign/WRITE_ONCE rather
-than the smp.* given that this is all task local.
+ARM, ARM64, LONGARCH, XTENSA: Delay HW BP notification to task_work()
 
-Sebastian
+This commit defers ptrace hardware breakpoint signal notifications on ARM,
+ARM64, LoongArch, and Xtensa to task_work via perf_hwbp_notify() so that
+sighand->siglock is not acquired with interrupts disabled on PREEMPT_RT.
+
+> diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrac=
+e.c
+> index be38430f7e280..27e7e64591592 100644
+> --- a/arch/loongarch/kernel/ptrace.c
+> +++ b/arch/loongarch/kernel/ptrace.c
+> @@ -384,9 +384,7 @@ static int lbt_set(struct task_struct *target,
+>  /*
+>   * Handle hitting a HW-breakpoint.
+>   */
+> -static void ptrace_hbptriggered(struct perf_event *bp,
+> -				struct perf_sample_data *data,
+> -				struct pt_regs *regs)
+> +void perf_arch_hwbp_send_sig(struct perf_event *bp)
+>  {
+>  	int i;
+>  	struct arch_hw_breakpoint *bkpt =3D counter_arch_bp(bp);
+> @@ -479,7 +477,7 @@ static struct perf_event *ptrace_hbp_create(unsigned =
+int note_type,
+>  	attr.bp_type	=3D type;
+>  	attr.disabled	=3D 1;
+> =20
+> -	bp =3D register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL, ts=
+k);
+> +	bp =3D register_user_hw_breakpoint(&attr, perf_hwbp_notify, NULL, tsk);
+>  	if (IS_ERR(bp))
+>  		return bp;
+
+[Severity: High]
+Does deferring force_sig_ptrace_errno_trap() to task_work cause do_watch()
+to queue a generic SI_KERNEL SIGTRAP first and drop the TRAP_HWBKPT
+siginfo?
+
+On LoongArch, do_watch() runs with interrupts disabled and forces SIGTRAP
+before returning through irqentry_exit():
+
+arch/loongarch/kernel/traps.c:do_watch() {
+	...
+	bool need_sigtrap =3D !!current->ptrace;
+	...
+	if (test_tsk_thread_flag(current, TIF_SINGLESTEP)) {
+		...
+	} else {
+		need_sigtrap |=3D breakpoint_handler(regs);
+		need_sigtrap |=3D watchpoint_handler(regs);
+	}
+
+	if (need_sigtrap)
+		force_sig(SIGTRAP);
+out:
+#endif
+	irqentry_exit(regs, state);
+}
+
+Previously, breakpoint_handler() and watchpoint_handler() ran
+ptrace_hbptriggered() synchronously, queueing SIGTRAP with TRAP_HWBKPT, the
+slot index in si_errno, and the breakpoint address in si_addr before
+do_watch() reached force_sig(SIGTRAP), which __send_signal_locked() then
+ignored via legacy_queue().
+
+With perf_arch_hwbp_send_sig() deferred to TWA_RESUME, force_sig(SIGTRAP)
+in do_watch() now runs first while interrupts are still disabled.  That
+queues a generic SI_KERNEL SIGTRAP, causing __send_signal_locked() to drop
+the subsequent TRAP_HWBKPT siginfo from perf_arch_hwbp_send_sig(), and
+still acquires sighand->siglock in atomic context on PREEMPT_RT.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261120144553.TjgA=
+d_G6@linutronix.de?part=3D1
