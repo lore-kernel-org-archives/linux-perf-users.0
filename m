@@ -1,62 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=67.231.145.42
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795201095;
-	b=pEauwqrXqIB38V75NC03z7mKsC9X2M80d+w5AmPUX4wIFMobCiedJHnou9uL+YqwEmt7
-	 S+Shf2ZrinBmTNdjFEub3VDjJQXZPbDh0/uZQpphTRq7z7mtNjQg+MZbtHSZCFrI50nzt
-	 IMSyuDPRbz9dIzaOFXrdegg0rWtsQh7vntDaMUYtUT9C4A0w3D/pBEysjGkYc/mt+rXHB
-	 Omwp6QVWDPrOQq1Gbk9iKkCJRwLxSX39SwLcXr6mkw9wioe/nly+XkiyNjke2UHYMB0rq
-	 XfxEpgaWEy2YlsvXAesxSzor608nBFWPUCn4Lfmm6rVaJ/ZyDKg/sfK2Pwa3G2mVCHw==
+	t=1795201109;
+	b=fKyYSpX2R2tPtWDruKIIVYtOi3ZWfnI4NMkEFz36IcFw0GGu9M8lzEHxYHhNcwORosMN
+	 iArMhruB71u53MvwAtc2Ai2pAGlb3VQdD9Kh0NRACkr265JzKnmxl8Vp6LEMC8EZk3VKp
+	 hSA9bXPpHCl9wvMpGnOS1CjAVixxkwHn1SVfe6Bcrzux2Q0ccT7Y6LArv82DvkeLci7X6
+	 hsPNJHEQTrnq6OkTtcML/e7aPA9gJPqZ8v/kMKhGx/ImQPF2jlEF6j3Ap3hEJ8/QmmC43
+	 6dnAvDxfFDiUuh4TteOHUFgx7WOGYTUfMx1EvzWGFsprOcwPMnBxkz7UCtoSvHbBYRg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795201095;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795201109;
 	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:From:To:CC:
 	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-Authority-Analysis:X-Proofpoint-ORIG-GUID:
+	 X-Proofpoint-GUID:X-Proofpoint-ORIG-GUID:X-Authority-Analysis:
 	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-Spam-Info:
-	 X-Proofpoint-GUID:X-Proofpoint-Virus-Version;
-	bh=h7926tjNaBzEKmN+2n0WSpOiLds05PYiq+BYnAZbPcM=;
-	b=pOYEOmDdeK5rYYQi9DlBO80cqHdgWQOjCfiaVbWNPFmpten2NjnMJqa4PWynBqxU6Xn7
-	 ed+y52zQD3DEdCIHnBwdgUi0Sl6Za5FO4DHm7BGpiMrLt26uAbpkP3ALmcW/HSAhZaKy7
-	 1pR02XnwX8af8ugvcwCIFUUC+quwJb+Uomr6eyrqB3nMO1W4zHX0XlVUIuzu8YE0Hfs80
-	 zialT83RHbmjlpDvXNTa67eNZCNkl3gAYp+Zx4hIhzu1+VR2PVXeyyJsD9BCfN/A4+7Sr
-	 jskrLcI6UL8908rytqTg9f+KZCS4Sp+2XXx6Leq7HxVuvoAUoN21MCPZnDmGePgiyrg==
+	 X-Proofpoint-Virus-Version;
+	bh=c4cJuGRDPq2SRF+Xb4HVkJbkljyXZ7Jcu3TG0wY9/iI=;
+	b=2LrY+ucMkHXwxSOe+wmb16C5tb5IglruQLmHrKKsj1TWaJVxRJ4ROu0lTzC+HLNi13dv
+	 EdTr9rUKmYtrWL3r5LC5Q1qyxKC3WuV//aFUD+M3RXtGLvkE7AwTwSidZss0SaeOCIRiQ
+	 Y3PxjttekS51EFAVq0XD2mNI678LvN9AZ3OjsC1gN+pcqNTgO4yKyFFqFq4uvwhajWkRd
+	 koCb7G8mQNJIGx3p4b4czhL5nWmIa+Lawrko0pMzNsuvAJm3OXb8zCpqboiBxJIekVmUe
+	 dq9OeEeQpKmpmawir0eWYDx19VAyGUPCLZBXgdgr32AKni6cDl3pa0h+rOUBz0aa5Yw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=fb.com;
 	spf=pass smtp.mailfrom=meta.com;
-	dkim=pass header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=rRMx4XDW;
-	arc=none smtp.remote-ip=67.231.153.30
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+	dkim=pass header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=EeGeZHtZ;
+	arc=none smtp.remote-ip=67.231.145.42
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9223660A2600;
-	Fri, 20 Nov 2026 18:58:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9223660A2600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8D760A262B;
+	Fri, 20 Nov 2026 18:58:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1B8D760A262B
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=rRMx4XDW
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AKH3dMK2027799;
-	Fri, 20 Nov 2026 10:57:39 -0800
+	dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=EeGeZHtZ
+Received: from pps.filterd (m0528009.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AKHAfjg2337709;
+	Fri, 20 Nov 2026 10:57:43 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	pps82601-s2048-2026-q3; bh=h7926tjNaBzEKmN+2n0WSpOiLds05PYiq+BYn
-	AZbPcM=; b=rRMx4XDWXaiqjhY6GFvQvVY4lCMI6yz9d5r9gYiupbG0U2JveFm16
-	rOfL3L8aY8j2khQNOaJRNZS8IYqgj+y8f5BBMBa0v7Q6LhRzB2VK+YW+ViQ8ozp5
-	seGFB95SZRpEnKNIvw1Jar0x8g+GJp0+KAhilCz4FOK3C3QcjttgBdGkiHNNe1sc
-	LZmrZRSgy7CQlORdEzhhJ9JljNTCvxW7SmEdMr4LOnYEz+h3s8BDwQ/8FnCzitFh
-	4d7oLYLXw/Pm92e8ttCMdetGrnbCS5lEP071c+KYOXrZ4w0rFEFp5KB5qO1A0m91
-	HKdfRUCrr6pxJ3U/Yfe8lU5CrkiJS7RUQ==
+	pps82601-s2048-2026-q3; bh=c4cJuGRDPq2SRF+Xb4HVkJbkljyXZ7Jcu3TG0
+	wY9/iI=; b=EeGeZHtZ6aEAPC9hr0nkUvcnsYAlk9+a1sf0qToMp1AorIRoYVz9E
+	W6/tCeWVSbpvUMjOr/hMgjEV3o8S+jex3JqceqtpuH5yJkh6TaAXCHxY6FcDWnne
+	+9wvAHrDCBgPruwyNHx2gbNnSGuM6DqzEtoA1aTwa7AY/ABAg1zdNE1voSfaQJOU
+	fAVaWC83Wu0e6o/JYRioEHS8+zWK9qPX2B89TWJNqrsycwI/mj8WynAAz3EDA4DS
+	/NFjr1kUNsyDcTCdv5z2CWOVW1ebHmjzyzBzCF1ghei9vukFMVhnoz5Odt3jPX43
+	vSK++qJlM265nI0s6DxPO+4r3Glb6xHeQ==
 Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4j2t99ryh3-1
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4j2tcjrwe1-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 20 Nov 2026 10:57:39 -0800 (PST)
-Received: from localhost (2620:10d:c085:208::f) by mail.thefacebook.com
- (2620:10d:c08b:78::c78f) with Microsoft SMTP Server (version=TLS1_2,
+	Fri, 20 Nov 2026 10:57:43 -0800 (PST)
+Received: from localhost (2620:10d:c085:208::7cb7) by mail.thefacebook.com
+ (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.56; Fri, 20 Nov
- 2026 18:57:38 +0000
+ 2026 18:57:42 +0000
 From: Amir Ayupov <aaupov@fb.com>
 To: James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
         Suzuki K
@@ -77,9 +77,9 @@ CC: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
         <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
         <linux-perf-users@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 1/4] coresight: etm4x: Fix event count decoding
-Date: Fri, 20 Nov 2026 10:54:31 -0800
-Message-ID: <7dbbb1306371bed56e3af4dabf88d3c18f471dd8.1795196854.git.aaupov@fb.com>
+Subject: [PATCH v6 2/4] coresight: etm4x: Skip features requiring unavailable events
+Date: Fri, 20 Nov 2026 10:54:32 -0800
+Message-ID: <af7838ccf521e6317dbc3ef706dd4b8c979740fa.1795196854.git.aaupov@fb.com>
 X-Mailer: git-send-email 2.52.1
 In-Reply-To: <cover.1795196854.git.aaupov@fb.com>
 References: <cover.1795196854.git.aaupov@fb.com>
@@ -94,152 +94,162 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=LvQHWXdc c=1 sm=1 tr=0 ts=6b009823 cx=c_pps
+X-Proofpoint-GUID: Nck0hWUczks0x0kzFsGH5VrlgIVXcof-
+X-Proofpoint-ORIG-GUID: Nck0hWUczks0x0kzFsGH5VrlgIVXcof-
+X-Authority-Analysis: v=2.4 cv=JYcpPkKV c=1 sm=1 tr=0 ts=6b009827 cx=c_pps
  a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
  a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=7x6HtfJdh03M6CCDgxCd:22
- a=xtH7KyWI9dI7BmFOsl-x:22 a=7CQSdrXTAAAA:8 a=KKAkSRfTAAAA:8 a=FOH2dFAWAAAA:8
- a=nO7UQp2L8s1CClaFxKwA:9 a=a-qgeE7W1pNrGK8U0ZQC:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: pkagRf47_O5J1yTQE88O4qQ0dMsMkujU
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTIwMDA3NSBTYWx0ZWRfX7Le/D8bVFi9j
- rmyhMtbgf449VUDpSe+GaSxjcstEEOBeXPtURh3mqjoSvNxNQl/LIoGFt33ccrz/Ofgm3mBvN/K
- NnGA7OYKpXG7biJ61ELT2QgxX5Cxec9bO/hazDstKYtW54vF6nChlid+0IQFylG3RhKf0NukCY1
- aeHNJ4oLovkodTzDR6qKNKrEb1weqLMcUe5v0Hz362x4R0tT+6alwL2PZ1QkO5gadmPidaBz1Tb
- sZVZ9oB504WaUZGnI7JxLlx66W6kQbqXUuP70oWpQ4M2Pwo5JDvmTaT7V0DvoMq9LjAGZDdJq3b
- fxlBqqVRcYi7nqjJPka0FBNCb0KP5D0rZWO9C8zRnq0cIt+Flu4J1WvXLLbSN2gm6MV+zhsTbPl
- KHNKfp8OCVDixFsWKLpEiBW5UzC7CvrB9F/91v2CvZz/WVErG4sv5neZixb88E3leLMC+HhHMeD
- QPwmXj/fMs23ZlkXUVQ==
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMTIwMDA3NSBTYWx0ZWRfX8JEW35zy4lpC
- P0fTTbLJCK7dUMxT3X9rLwiA+KsImFBLaNayvUtXlngST/yE7IVmXdpGo6D/ZVcPCtX6ziVplRO
- 35SyWhP+M3lTZCQKh90Qma+jhc17Ui8=
-X-Proofpoint-GUID: pkagRf47_O5J1yTQE88O4qQ0dMsMkujU
+ a=U_y8lYiYyhHBU5rMqhb2:22 a=7CQSdrXTAAAA:8 a=FOH2dFAWAAAA:8
+ a=FuLfpA1pA47yQFY1QDEA:9 a=a-qgeE7W1pNrGK8U0ZQC:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTIwMDA3NSBTYWx0ZWRfX4cI5gNdLllqk
+ +yZFbSkZbTpF5c8tHXpmN3pvcqz3ZUyvtsSvKTTR6MbsNXeQgtPyxv1JTBuSTKJtiDRbrJns2wA
+ EitbTzbJFa6kmDtv0OijN4VEyemqtIY7LTIbmc622gUuchW42e0vU+1y6jrCZgZC6U0ur2E0v0H
+ hOv9Q/QwmBn6Dme2DHeQQyptCtRi3KjTWF+3flsCXVd8Zut4YlZ7alvsOGHWbaRMJBxqYDsieji
+ MOQ+5qgnZtkOjFUoerwxqJcoCUFM9s80pWsLjS3TU+Q2fWSKUyh5g+tdcKT3jlU2k6wKrSfvpMO
+ EFcuzxtGX3wlXwfsGR9NBdijiecNRUN3ct+5skT4NeO/xis0UXFrLzrvAHEjbArPCOKHgmPOosy
+ JkAeb/IF03f0nNhJmZKzXjePMFuulia8G+1K63oXT7NMYQqOCIN06xHc51jvNROw1P+JVZvgWc/
+ YNdSldmBDIpGRdxF0tQ==
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTIwMDA3NSBTYWx0ZWRfX0wEHBkSvwZiD
+ +NcoM6ZOM38cB6trtXbWK67oQ+CDjYBEfzfThweUeFHz0rqjV/ZtPODgkNv3orXJkEAEN+RGBAC
+ wYnLHf1g54nyAV3TH3RRFNxF/ftUCrU=
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
  definitions=2026-11-20_05,2026-11-19_01,2025-10-01_01
 
-From: Leo Yan <leo.yan@arm.com>
+Feature register mappings accept TRCEVENTCTL0R without checking which
+event fields the trace unit implements. A feature that drives EVENT1 can
+therefore load on a trace unit with only EVENT0 and silently produce no
+pulses.
 
-TRCIDR0.NUMEVENT normally encodes the number of events minus one.
-From ETMv4.3 onwards, including ETE, a zero TRCIDR4.NUMRSPAIR instead
-means that no events are implemented and NUMEVENT is zero. The sysfs
-event controls currently interpret this combination as one event and
-allow writes to unsupported event fields.
+Validate the descriptors before checking their requested EVENT fields
+against the decoded event count. Parameterized writes are checked against
+every writable field because parameter values may change after loading.
+Let the configuration manager treat -EOPNOTSUPP as a per-device skip and
+release the unlinked feature instance, while malformed descriptions and
+other errors still abort loading.
 
-Decode NUMEVENT after NUMRSPAIR and store the actual number of events
-in nr_event. Use the decoded resource count so that older ETM versions,
-where a zero NUMRSPAIR represents one resource pair, still report at
-least one event. Update both sysfs event controls to use the actual
-count and clear their event fields when no events are implemented.
-
-Also correct the instruction event enable mask for the single-event
-case to use INSTEN[0]. The existing mask uses INSTEN[1], preventing
-event 0 from being enabled.
-
-This change depends on the recent driver refactoring. With no reported
-failures, it is not intended for stable backporting.
-
-Signed-off-by: Leo Yan <leo.yan@arm.com>
-Reviewed-by: James Clark <james.clark@linaro.org>
-Tested-by: Leo Yan <leo.yan@arm.com>
+Suggested-by: Mike Leach <mike.leach@arm.com>
+Assisted-by: Devmate:GPT-6.1-Sol
 Signed-off-by: Amir Ayupov <aaupov@fb.com>
 ---
- .../coresight/coresight-etm4x-core.c          | 13 +++++++--
- .../coresight/coresight-etm4x-sysfs.c         | 29 ++++++++++---------
- 2 files changed, 27 insertions(+), 15 deletions(-)
+ .../hwtracing/coresight/coresight-config.h    |  3 ++
+ .../hwtracing/coresight/coresight-etm4x-cfg.c | 47 +++++++++++++++++--
+ .../hwtracing/coresight/coresight-syscfg.c    |  7 +++
+ 3 files changed, 53 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-index e21be6468e9544..af017bd8a54773 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-@@ -1451,8 +1451,6 @@ static void etm4_init_arch_data(void *info)
- 	caps->trccci = !!(etmidr0 & TRCIDR0_TRCCCI);
- 	/* RETSTACK, bit[9] Return stack bit */
- 	caps->retstack = !!(etmidr0 & TRCIDR0_RETSTACK);
--	/* NUMEVENT, bits[11:10] Number of events field */
--	caps->nr_event = FIELD_GET(TRCIDR0_NUMEVENT_MASK, etmidr0);
- 	/* QSUPP, bits[16:15] Q element support field */
- 	caps->q_support = FIELD_GET(TRCIDR0_QSUPP_MASK, etmidr0);
- 	if (caps->q_support)
-@@ -1519,6 +1517,17 @@ static void etm4_init_arch_data(void *info)
- 	caps->nr_resource = FIELD_GET(TRCIDR4_NUMRSPAIR_MASK, etmidr4);
- 	if ((drvdata->arch < ETM_ARCH_V4_3) || (caps->nr_resource > 0))
- 		caps->nr_resource += 1;
-+
-+	/*
-+	 * NUMEVENT encodes the number of events minus one. From ETMv4.3,
-+	 * including ETE, NUMRSPAIR == 0 means no events are implemented.
-+	 * nr_resource already accounts for the pre-ETMv4.3 encoding.
-+	 */
-+	if (caps->nr_resource)
-+		caps->nr_event = FIELD_GET(TRCIDR0_NUMEVENT_MASK, etmidr0) + 1;
-+	else
-+		caps->nr_event = 0;
-+
- 	/*
- 	 * NUMSSCC, bits[23:20] the number of single-shot
- 	 * comparator control for tracing. Read any status regs as these
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
-index db9e603f97ba82..fb38f0102290a5 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
-@@ -513,19 +513,22 @@ static ssize_t event_store(struct device *dev,
+diff --git a/drivers/hwtracing/coresight/coresight-config.h b/drivers/hwtracing/coresight/coresight-config.h
+index ae6295e3081319..8f3c37b0421e24 100644
+--- a/drivers/hwtracing/coresight/coresight-config.h
++++ b/drivers/hwtracing/coresight/coresight-config.h
+@@ -245,6 +245,9 @@ struct cscfg_config_csdev {
+  *
+  * @load_feat:	Pass a feature descriptor into the device and create the
+  *		loaded feature instance (struct cscfg_feature_csdev).
++ *		Return -EOPNOTSUPP if the device lacks required resources; the
++ *		manager skips that device. Other errors abort loading. An
++ *		unsupported feature must leave device state unchanged.
+  */
+ struct cscfg_csdev_feat_ops {
+ 	int (*load_feat)(struct coresight_device *csdev,
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x-cfg.c b/drivers/hwtracing/coresight/coresight-etm4x-cfg.c
+index 52cb036bb04b96..278329075f380d 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x-cfg.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x-cfg.c
+@@ -127,6 +127,28 @@ static int etm4_cfg_map_reg_offset(struct etmv4_drvdata *drvdata,
+ 	return err;
+ }
  
- 	raw_spin_lock(&drvdata->spinlock);
- 	switch (caps->nr_event) {
--	case 0x0:
-+	case 0:
-+		sysfs_config->eventctrl0 = 0;
-+		break;
-+	case 1:
- 		/* EVENT0, bits[7:0] */
- 		sysfs_config->eventctrl0 = val & 0xFF;
- 		break;
--	case 0x1:
--		 /* EVENT1, bits[15:8] */
-+	case 2:
-+		/* EVENT1, bits[15:8] */
- 		sysfs_config->eventctrl0 = val & 0xFFFF;
- 		break;
--	case 0x2:
-+	case 3:
- 		/* EVENT2, bits[23:16] */
- 		sysfs_config->eventctrl0 = val & 0xFFFFFF;
- 		break;
--	case 0x3:
-+	case 4:
- 		/* EVENT3, bits[31:24] */
- 		sysfs_config->eventctrl0 = val;
- 		break;
-@@ -565,22 +568,22 @@ static ssize_t event_instren_store(struct device *dev,
- 	/* start by clearing all instruction event enable bits */
- 	sysfs_config->eventctrl1 &= ~TRCEVENTCTL1R_INSTEN_MASK;
- 	switch (caps->nr_event) {
--	case 0x0:
--		/* generate Event element for event 1 */
--		sysfs_config->eventctrl1 |= val & TRCEVENTCTL1R_INSTEN_1;
-+	case 1:
-+		/* generate Event element for event 0 */
-+		sysfs_config->eventctrl1 |= val & TRCEVENTCTL1R_INSTEN_0;
- 		break;
--	case 0x1:
--		/* generate Event element for event 1 and 2 */
-+	case 2:
-+		/* generate Event element for events 0 and 1 */
- 		sysfs_config->eventctrl1 |= val & (TRCEVENTCTL1R_INSTEN_0 |
- 						   TRCEVENTCTL1R_INSTEN_1);
- 		break;
--	case 0x2:
--		/* generate Event element for event 1, 2 and 3 */
-+	case 3:
-+		/* generate Event element for events 0, 1 and 2 */
- 		sysfs_config->eventctrl1 |= val & (TRCEVENTCTL1R_INSTEN_0 |
- 					     TRCEVENTCTL1R_INSTEN_1 |
- 					     TRCEVENTCTL1R_INSTEN_2);
- 		break;
--	case 0x3:
-+	case 4:
- 		/* generate Event element for all 4 events */
- 		sysfs_config->eventctrl1 |= val & (TRCEVENTCTL1R_INSTEN_0 |
- 					     TRCEVENTCTL1R_INSTEN_1 |
++static int etm4_cfg_check_eventctl0_support(const struct cscfg_regval_desc *reg_desc,
++					    unsigned int nr_event)
++{
++	u32 requested;
++
++	if (reg_desc->offset != TRCEVENTCTL0R)
++		return 0;
++
++	/* Parameters can change after loading, so check all writable fields. */
++	if (reg_desc->type & CS_CFG_REG_TYPE_VAL_PARAM)
++		requested = reg_desc->type & CS_CFG_REG_TYPE_VAL_MASK ?
++			    reg_desc->mask32 : U32_MAX;
++	else
++		requested = reg_desc->type & CS_CFG_REG_TYPE_VAL_MASK ?
++			    reg_desc->val32 & reg_desc->mask32 : reg_desc->val32;
++
++	/* Four events use the full register: do not shift a u32 by 32. */
++	if (nr_event < 4 && (requested >> (8 * nr_event)))
++		return -EOPNOTSUPP;
++	return 0;
++}
++
+ /**
+  * etm4_cfg_load_feature - load a feature into a device instance.
+  *
+@@ -149,6 +171,7 @@ static int etm4_cfg_load_feature(struct coresight_device *csdev,
+ 	struct device *dev = csdev->dev.parent;
+ 	struct etmv4_drvdata *drvdata = dev_get_drvdata(dev);
+ 	const struct cscfg_feature_desc *feat_desc = feat_csdev->feat_desc;
++	const struct cscfg_regval_desc *reg_desc;
+ 	u32 offset;
+ 	int i = 0, err = 0;
+ 
+@@ -162,12 +185,28 @@ static int etm4_cfg_load_feature(struct coresight_device *csdev,
+ 	 */
+ 	feat_csdev->drv_spinlock = NULL;
+ 
+-	/* process the register descriptions */
+-	for (i = 0; i < feat_csdev->nr_regs && !err; i++) {
+-		offset = feat_desc->regs_desc[i].offset;
++	/* Validate every description before deciding whether to skip a device. */
++	for (i = 0; i < feat_csdev->nr_regs; i++) {
++		reg_desc = &feat_desc->regs_desc[i];
++		offset = reg_desc->offset;
++		if ((reg_desc->type & CS_CFG_REG_TYPE_VAL_PARAM) &&
++		    reg_desc->param_idx >= (u32)feat_csdev->nr_params)
++			return -EINVAL;
++		if (offset == TRCEVENTCTL0R &&
++		    (reg_desc->type & CS_CFG_REG_TYPE_VAL_64BIT))
++			return -EINVAL;
+ 		err = etm4_cfg_map_reg_offset(drvdata, &feat_csdev->regs_csdev[i], offset);
++		if (err)
++			return err;
+ 	}
+-	return err;
++
++	for (i = 0; i < feat_csdev->nr_regs; i++) {
++		err = etm4_cfg_check_eventctl0_support(&feat_desc->regs_desc[i],
++						       drvdata->caps.nr_event);
++		if (err)
++			return err;
++	}
++	return 0;
+ }
+ 
+ /* match information when loading configurations */
+diff --git a/drivers/hwtracing/coresight/coresight-syscfg.c b/drivers/hwtracing/coresight/coresight-syscfg.c
+index 2bfdd7b45e49c8..11946e5718fc5e 100644
+--- a/drivers/hwtracing/coresight/coresight-syscfg.c
++++ b/drivers/hwtracing/coresight/coresight-syscfg.c
+@@ -176,6 +176,7 @@ static int cscfg_load_feat_csdev(struct coresight_device *csdev,
+ 				 struct cscfg_feature_desc *feat_desc,
+ 				 struct cscfg_csdev_feat_ops *ops)
+ {
++	struct device *dev = csdev->dev.parent;
+ 	struct cscfg_feature_csdev *feat_csdev;
+ 	unsigned long flags;
+ 	int err;
+@@ -189,6 +190,12 @@ static int cscfg_load_feat_csdev(struct coresight_device *csdev,
+ 
+ 	/* load the feature into the device */
+ 	err = ops->load_feat(csdev, feat_csdev);
++	if (err == -EOPNOTSUPP) {
++		devm_kfree(dev, feat_csdev->regs_csdev);
++		devm_kfree(dev, feat_csdev->params_csdev);
++		devm_kfree(dev, feat_csdev);
++		return 0;
++	}
+ 	if (err)
+ 		return err;
+ 
 -- 
 2.52.1
 
