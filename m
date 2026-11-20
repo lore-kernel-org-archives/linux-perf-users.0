@@ -1,73 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795213655;
-	b=jfSAWikiVn8QmlSFx+Q01bN/3K2fMvaNZfoTm4ATyq+XUnIpEBgHeHCIU4rHypZHMvCs
-	 mzjbpmZI1Wt4OrLywKdUl73KYLmJiPJhApTfVplkWTHKq8QgWLCmRT2hOJWcYpPIGUZT8
-	 34Qy0yjXa6mkI3CHTTS0GL2spg4hkAIONbz7TSpg+RBNWvuvrzr4htDDsjl6sipgdqHa9
-	 CYWTkiUlzFLwJgAAPm5ULtaCKxgzD5JiEMIZJq8gQxOhILKUx9bJGpIsgHBEL5y2yO5Ld
-	 32CRB7lAQg3p0pjiN0Jh7xobwjJkFQMvrAxZe/bP8yKMk2RyEdf1ya4Qkxaj/9lLEpg==
+	t=1795214366;
+	b=a0E/SgK4JcCi9ucu9WscDAC57fhLtUkbSMSIvBVv04GT7ZHD0Dsf34MYvF5Spo3yJkoV
+	 29jHdtm77WKRXUb6I9RWlZxcFj1+UQ2NvPOfXln/CCaPsGCqK2RKmAyKazQ1K0W5g2Au+
+	 iKmtq4M7VkeDgaODyqE9nUG8gQr59XCIUmBg4h7t2qko6FL37kLVb2OUJuxOwyrulYJ9W
+	 752CIRRWrlzlEcvZspIOFEnpBVERSzQsf0M3bzUU56au06fCyk5vGW9SD+TDQOGGSKSXt
+	 HxBHGjn9zGm1yrxsmehYq0jHe4HbNqsiusSP5WiZ4IVgi3M1g1I3FcHWlpbL5dm3o6Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795213655;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Received:Date:In-Reply-To:Mime-Version:
-	 References:X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=0c2OsM1aEUajt4eDbo5+GwXP7vk+Skx97fbhfEI2OuY=;
-	b=GDhnZpspR9fIF42hBRvTC5bRW2hc+9kF+rlqI05q9mXPAu/DabfaX8pkxH/D7togfy5I
-	 oKoa9LF4jhnlWN+KKJhdTYuK3W0sg26uuB/qg3rKbkkOfC1eLoz0KuF0KNe26ml+vPPjr
-	 JfSdqOFqucwp99gKk5AQ3vakZn8Jq8fPBk2EwbK/cB+KW/uSZ6qR0VsfwL6t7cEhAkXm2
-	 0DkzRDKgiHzTMaNxLI3GFILoTx3ztOGiQJlWnchPlqmSSfY34mDptO9sxjlXagLucksRa
-	 WAxf97d6OsqjrwpnkYpMQFUH8K4kukzf+zTbpdhGVDpGEHkFy4GvXgnfuw13FRVa6nQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795214366;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=w/uMI4T+wwViauszfHI5D/Ee66ZRFHydRgmnkAovies=;
+	b=zXV0D8L940M7GIIvcc8EN3xAlYknRVfNC/O94S8oeO9MOAvlCZ9gDH8eURjAnq1wcipz
+	 xj1cjrFAKacrc/EX8aGVgA0b4cpcm9RKiRmY+H59w12Xn86My9tL1w1RWFpJkYvlVY3yH
+	 BbJ3t0M7dW/+28XCUgyiT50oEPTdOZbpjpOBqvgtgDPrJkJ/qgSZb3LrvKJT5VQX4W7Zw
+	 O8fYIGhYgDKJBv2ak2ayvJgR2yf1QLVN/rb2luUR8Fpdd3VHCDtPGJtr7RszhUxWU+j4R
+	 i8k/980g6AkszdlcmtOCDcld1Pz98u5y6rGKHeEvS+6HAnN4IXBHvy1kcIgmIDfiHbw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Z3zsf8Tn;
-	arc=none smtp.remote-ip=74.125.82.199
-Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iIdxMqMw;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81F9606A686
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 22:27:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E81F9606A686
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8B1606A6AA
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 22:39:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Z3zsf8Tn
-Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-386177b0516so3058826eec.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 14:27:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795213650; x=1795818450; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=0c2OsM1aEUajt4eDbo5+GwXP7vk+Skx97fbhfEI2OuY=;
-        b=Z3zsf8Tnaw0HEEdRHak+skHDrTMnQCNrmB8D5qC17KJyBYjNkiErdKr3EN+Eob08d5
-         8A8Pve1MCh5Lo2ZLFfpOa87xuiFpfxvSZROW1lwWPoosy+CeI6x0KnZNRs6XFkQDXDgQ
-         LWgK1bS4puLVamg8OtnsHBHXnKYYIGBXw3XFIoBvWdnlXB6gR9XWknuWOeHuCdnFmKnq
-         oLi/tWRE2+sEkcyC3ggvCmT8Tf9zQO+JhKfVBLt7oaT1/alcgzRVGD/wQMX41GQivnYQ
-         0DaqQBh9a37gq5/nW7aTcnJNRYZHfewqVi4JWTerxVyeCZRfVqChYIJktsE55PIiwm86
-         PKdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795213650; x=1795818450;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=0c2OsM1aEUajt4eDbo5+GwXP7vk+Skx97fbhfEI2OuY=;
-        b=F3w7L1eA8lIS5KTf74bb5rnRo/BpoSf1FibK4uz7Tmvog/lVwvZrOwvmQiUqD8iYYl
-         Xo+y6RcT1IXqHHjry/hbRQBtUNgY1z5UlCKjWDfXPAfYnKs73QQm5tIBbgV51BLv0brf
-         JZmKg7rNLwz2G3TxiXyiPh8wsXF0bh6pOHvXjM9btZA7e0x5ffaN3Wr3T+7oKJT/C8PF
-         f9kPMbb636JptZJj2oU4l5c+pWqiPVLdxArnCoxQ2k5VA4F2J8cHg58BumfeET+Dyvdb
-         vi1BYD4lI4HuDfurHXMQeGqzb2sjUvILaBO8ER/0+gPVL1vVpw/yKx8GZ7LhwrCVO7rM
-         Qbeg==
-X-Gm-Message-State: APuU4Z+jA076at55ABkJl/tm4cDg84A+zYKGI5JWrhId2lpbuyh9sTOC
-	5UMrXEJ13tsC17BrFn4/m2B2v/MFzeDzdwsbkkDd+tooxQe3X9iUGsprZRayrl8evIBH/sp1FLY
-	jtqDHEzbYiQ==
-X-Received: from dyr14.prod.google.com ([2002:a05:693c:400e:b0:385:7971:db60])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:8955:10b0:36a:79e7:2fd
- with SMTP id 5a478bee46e88-3856fb699d6mr4368636eec.40.1795213649873; Fri, 20
- Nov 2026 14:27:29 -0800 (PST)
-Date: Fri, 20 Nov 2026 14:26:15 -0800
-In-Reply-To: <20261120222615.2291168-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iIdxMqMw
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B672E1F000C4;
+	Fri, 20 Nov 2026 22:39:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795214365;
+	bh=w/uMI4T+wwViauszfHI5D/Ee66ZRFHydRgmnkAovies=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=iIdxMqMwKOfaCa77kaJFXqo4h+qORvm+6P2mG3U2Q9STxTD+qYOGndES/IZX1Z8wi
+	 fIP9h3SD4ERYkeisvN9DIa6PeckWIFpyOM3ad0N4cNea2qg1erevno8c82tZ+EvYQa
+	 WyjndhKlmITn5y1OXs7su50S64QTrZjlzxRfiyaTVv6YyAuZ+A6X5vXJTyQWggYrGS
+	 WsfH0ngpUg5fWOhwwsRrqXGs16Twesao887/4YIuCd97U8k6vsRc9AZwU8gL7tI9m6
+	 1eow5Dh4WZVJqsrtxz4XcjVuv2YTPQEKr7WR2HR/PF7h+/s/JMM7gdylX8vyWvUd/C
+	 5gEmq14i51W4g==
+Message-ID: <sashiko-outbox-226286@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 03/16] perf pmu: Add perf_pmu__probe() for basic
+ open, counting, and sampling
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261120222615.2291168-4-irogers@google.com>
+References: <20261120222615.2291168-1-irogers@google.com>
+ <20261120222615.2291168-4-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 20 Nov 2026 22:39:25 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -76,123 +60,75 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-Mime-Version: 1.0
-References: <20261120222615.2291168-1-irogers@google.com>
-X-Mailer: git-send-email 2.56.1.750.gf70dc682cf-goog
-Message-ID: <20261120222615.2291168-17-irogers@google.com>
-Subject: [PATCH v3 16/16] perf test: Add perf sysinfo shell test
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-Add a shell test exercising default 'perf sysinfo' summary output,
-'--pmus' per-PMU output, '-j' JSON validation, PMU glob filtering, and
-'-i perf.data' inspection.
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Low] perf pmu: try_open_attr_variants() closes tracepoint fd before
+  keepalive
+--
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/shell/sysinfo.sh | 88 +++++++++++++++++++++++++++++++
- 1 file changed, 88 insertions(+)
- create mode 100755 tools/perf/tests/shell/sysinfo.sh
+commit 000f6d2820c05383b074beef8f5d9879e6d9d78a
+Author: Ian Rogers <irogers@google.com>
 
-diff --git a/tools/perf/tests/shell/sysinfo.sh b/tools/perf/tests/shell/sysinfo.sh
-new file mode 100755
-index 000000000000..c8619b2463f2
---- /dev/null
-+++ b/tools/perf/tests/shell/sysinfo.sh
-@@ -0,0 +1,88 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# perf sysinfo tests (exclusive)
-+
-+set -e
-+
-+shelldir=$(dirname "$0")
-+. "${shelldir}"/lib/setup_python.sh
-+
-+sysinfo_output=""
-+perf_data=""
-+
-+cleanup() {
-+  rm -f "${sysinfo_output}" "${perf_data}" ${perf_data:+"${perf_data}.old"}
-+  trap - EXIT TERM INT
-+}
-+
-+trap_cleanup() {
-+  cleanup
-+  exit 1
-+}
-+trap trap_cleanup EXIT TERM INT
-+
-+sysinfo_output=$(mktemp /tmp/__perf_test.sysinfo_output.XXXXX)
-+perf_data=$(mktemp /tmp/__perf_test.sysinfo.perf.data.XXXXX)
-+
-+test_sysinfo_default() {
-+  echo "Default perf sysinfo output test"
-+  perf sysinfo -o "${sysinfo_output}"
-+  grep -q "^Summary:" "${sysinfo_output}"
-+  grep -q "System rating:" "${sysinfo_output}"
-+  perf sysinfo --pmus -o "${sysinfo_output}"
-+  grep -q "^software (" "${sysinfo_output}"
-+  grep -q "^Summary:" "${sysinfo_output}"
-+  echo "Default perf sysinfo output test [Success]"
-+}
-+
-+test_sysinfo_json() {
-+  echo "Json perf sysinfo output test"
-+  perf sysinfo -j -o "${sysinfo_output}"
-+  $PYTHON -m json.tool "${sysinfo_output}" /dev/null
-+  echo "Json perf sysinfo output test [Success]"
-+}
-+
-+test_sysinfo_filter() {
-+  echo "Filtered perf sysinfo output test"
-+  perf sysinfo -o "${sysinfo_output}" software
-+  grep -q "^software (" "${sysinfo_output}"
-+  if grep -q "Modes:.*sampling" "${sysinfo_output}"; then
-+    grep -q "Sample types:.*ip" "${sysinfo_output}"
-+    # Register names are only known on some architectures.
-+    case "$(uname -m)" in
-+    x86_64|aarch64)
-+      if grep -q "Sample types:.*regs_user" "${sysinfo_output}"; then
-+        grep -q "User registers:" "${sysinfo_output}"
-+      fi
-+      if grep -q "Sample types:.*regs_intr" "${sysinfo_output}"; then
-+        grep -q "Intr registers:" "${sysinfo_output}"
-+      fi
-+      ;;
-+    esac
-+    grep -q "Features:.*leader_sampling" "${sysinfo_output}"
-+    grep -q "Features:.*sw_grouping" "${sysinfo_output}"
-+  fi
-+  echo "Filtered perf sysinfo output test [Success]"
-+}
-+
-+test_sysinfo_perf_data() {
-+  echo "perf.data perf sysinfo test"
-+  if ! perf record -e software/cpu-clock/u -o "${perf_data}" -- true 2>/dev/null; then
-+    echo "perf.data perf sysinfo test [Skipped: perf record failed]"
-+    return
-+  fi
-+  perf sysinfo -i "${perf_data}" -o "${sysinfo_output}"
-+  grep -q "^Summary:" "${sysinfo_output}"
-+  perf sysinfo --pmus -i "${perf_data}" -o "${sysinfo_output}"
-+  grep -q "software" "${sysinfo_output}"
-+  perf sysinfo -i "${perf_data}" -j -o "${sysinfo_output}"
-+  $PYTHON -m json.tool "${sysinfo_output}" /dev/null
-+  echo "perf.data perf sysinfo test [Success]"
-+}
-+
-+test_sysinfo_default
-+test_sysinfo_json
-+test_sysinfo_filter
-+test_sysinfo_perf_data
-+cleanup
-+exit 0
--- 
-2.56.1.750.gf70dc682cf-goog
+perf pmu: Add perf_pmu__probe() for basic open, counting, and sampling
 
+This commit adds perf_pmu__probe() and struct perf_pmu::probed to probe a
+live PMU via perf_event_open() and record whether opening, counting, and
+sampling are supported.
+
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 1d3cfa0823475..b43afb8b155b3 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+[ ... ]
+> @@ -2850,9 +2866,570 @@ void perf_pmu__delete(struct perf_pmu *pmu)
+[ ... ]
+> +static bool try_open_attr_variants(struct perf_event_attr *attr,
+> +				   bool is_uncore, int pmu_cpu,
+> +				   unsigned long flags,
+> +				   pid_t *out_pid, int *out_cpu,
+> +				   int *last_err)
+> +{
+[ ... ]
+> +				fd =3D sys_perf_event_open(&try_attr, pid, pmu_cpu, -1, flags);
+> +				if (fd >=3D 0) {
+> +					close(fd);
+> +					*attr =3D try_attr;
+> +					*out_pid =3D pid;
+> +					*out_cpu =3D pmu_cpu;
+> +					return true;
+> +				}
+[ ... ]
+> +static void __perf_pmu__probe(struct perf_pmu *pmu, int pmu_cpu)
+> +{
+[ ... ]
+> +	/*
+> +	 * For tracepoint events, closing the last fd for a tracepoint triggers
+> +	 * tracepoint_synchronize_unregister() (an RCU grace period) in the
+> +	 * kernel. Hold one disabled fd open across the probe sequence so
+> +	 * tp_event->perf_refcount stays >=3D 1 and each probe open/close is
+> +	 * instantaneous.
+> +	 */
+> +	if (pmu->type =3D=3D PERF_TYPE_TRACEPOINT) {
+> +		struct perf_event_attr ka_attr =3D base_attr;
+> +
+> +		ka_attr.disabled =3D 1;
+> +		keepalive_fd =3D sys_perf_event_open(&ka_attr, pid, cpu, -1, flags);
+> +	}
+
+[Severity: Low]
+Does closing fd inside try_open_attr_variants() defeat the tracepoint
+keepalive optimization?
+
+When try_open_attr_variants() closes the initial tracepoint fd before
+keepalive_fd is opened, tp_event->perf_refcount drops to 0 in
+perf_trace_event_unreg(), paying the tracepoint_synchronize_unregister()
+RCU grace period and freeing the per-CPU tracepoint buffers before
+__perf_pmu__probe() re-opens the same disabled attr as keepalive_fd.
+Returning the open fd from try_open_attr_variants() to use as
+keepalive_fd (or closing it when pmu->type !=3D PERF_TYPE_TRACEPOINT) would
+avoid the extra RCU grace period and redundant perf_event_open() call.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261120222615.2291=
+168-1-irogers@google.com?part=3D3
