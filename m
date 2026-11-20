@@ -1,60 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.70
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795211116;
-	b=RBJGptihh6yLJ4DG/rvkYEYPBkArsd+RErBhIHDRiUXp4Ed4k35INYiTvF/uQNgLAQAr
-	 DfIZYxBk/37zSbVCoYRw8km/uxUjgTNLPpqczZwE83GzUEbvnLTNIsH0II27zl9mb47Ch
-	 yjzN9BLzIRdA3YY8W0fzMnStttVhgXPeQujHfOrytwYhM7lQzbg7HIk6jj+EEgcvK67xQ
-	 2Jo7kN9t0DHiq2+aVFFovuBtjzbaExdNfTvj4v9ZIA6bcGiLsnFKAoKWf/W4TkWfFscBL
-	 oQoa4BBzWrGB7kebJR3w6J46PuZjWmg0Za68KtSez+aZ0dhbOeC/IOWGLVpvjwdP2pQ==
+	t=1795212824;
+	b=0N68li/XudpLs5SLnL7/wV+IKCHQNGe1TOjzaLjK/BLZ98FH10xfrZkL6xJX4QXWQ0ZJ
+	 wa0N0wRLsSdVTwIfeu36LBFqsN/NcoVjOWlppA+JQ2NAR/rhGoJSzBcxuRd72uwbswWu3
+	 b3rsnGmHcArdFkWpiIk7NQ5ystnTeRQeudAEwSZr+H5GwEeMDcXXrcktrbMAVxoNDAVs6
+	 Ihp9RDSs7ZDraIo0H1Ylw/SEkkH2Y61mKiOOreidUFv1/CEqD8dcN+IK1PCHTBfm8w5xx
+	 pMhE8uFh9EFFCDU4zBZWPZO0W/RvSvvq1u2s4R9FFTpDZn6gGA9T6my5eU76C9zRHuA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795211116;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=/ZRwqCDLdZQ8QCM8R16NcamQ4q02zizRwtZL0rTHdAQ=;
-	b=hMB2cjkJZ8FDDuHbxjqgOJdq97AGMbYa8A2Jj0JAl2rgkTQZq68o59wMwwnKREjmBKkV
-	 hjmsSVSiX7L/047kTgEvuT5WflWK9wG1IuBfNtwLN6d2UqhITcXPpL4Wsn6aUVo6HFCeV
-	 QFh2igpq/3DpHBAluy47QDPAvOhwv3DgML1JF8AeWWleWH252zNY/FY3WOOM5iEiWUEP3
-	 77IV4hU180Z1ef4VZ0EMzOS0EtgiXg1aoudf6JA2IVymzW2yP6A6KbV5jFoTz7Jox1WDa
-	 uo4rqXjF0Ep1PnBA6bN1x3HRmftemtcdKa/AVZsCxbV5oz02JovNDJiK0Xw69TCyQBg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795212824;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Received:Date:In-Reply-To:Mime-Version:
+	 References:X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
+	bh=fdTVu9ac2YLECwcoGWeJTi+3MACuUXbIR+eJpbYlxEk=;
+	b=uexI3iwykCwMNKuyZBf4d1KO2C3YvoWe92U7FUZnRBuEawm7TqBFhoysbV6i+AOyaB2Y
+	 Fn4VytkE+YjOXcSeqPFHm3QM6DyEQ88p6z5iIgvgdCuuWOJcpBvG+nhWCuAhs5Af2t7qh
+	 xUbymk+7DKSzujcB+blfX/nHFW1yqeIKfMBE89bxOCpVtlt4F3ovIpgkHrBJRdWBekotU
+	 SRnkqXPj6qHHopXodZJqLfyu6Eto7n8NUkc9KIhgCTBOjpajx2karZyWTxoRJ2BFoa01B
+	 lJ0ksGnL1qh9WXE236OpnAugGk+Ev3xjz50k+gagMopXORUQDD/NcWxjwIHUybcC+0w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iY4CPDrL;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=JFpASQic;
+	arc=none smtp.remote-ip=74.125.82.70
+Received: from mail-dl1-f70.google.com (mail-dl1-f70.google.com [74.125.82.70])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8A9606A685;
-	Fri, 20 Nov 2026 21:45:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36DB660A2604
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 22:13:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 36DB660A2604
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iY4CPDrL
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 985651F000CF;
-	Fri, 20 Nov 2026 21:45:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795211115;
-	bh=/ZRwqCDLdZQ8QCM8R16NcamQ4q02zizRwtZL0rTHdAQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=iY4CPDrL5PEo1XiP3HTPGikDnff5U9d9v2kGgHWr1qNF//2wyjdUuuNQqazGNIoO1
-	 mr6+G/t18WAasGNwBlb67wQQ6raYQHEZOhS85+3n5MmeFzgqNrTtqHRwqSGTZc/GU2
-	 i6Hp2Sn6ei5MAB16G2El3w7T1gIpUKWsmRBjRv2h+MJQElG3z8h9xLpw7x1ayCRclF
-	 Jsd7bGZDCXYPIWTxIVmTGkOAXh06Q2yIZ/IU/q+Sx4x3ikDW2nWmlIS4LbCpmZ+eFM
-	 Xpoo0iHLpfxuwDqu/mMft5eGMYW/EtCjDqcMeiIipgxFB4vC/WQOBqjmXTyLB7FXAA
-	 wCQ2gwu0nJTXw==
-Date: Fri, 20 Nov 2026 13:45:13 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: TAKANO Mitsuhiro <takano32@gmail.com>
-Cc: Ian Rogers <irogers@google.com>,
-	Hang Zhengyang <hang.zhengyang1010@gmail.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] perf stat: Count kernel events in a group led by a
- tool event
-Message-ID: <awC_aZXD5FBGu4mO@google.com>
-References: <20261111-tool-pmu-leader-v2-1-3faa0fb98c51@gmail.com>
- <20261111110616.2249764-1-takano32@gmail.com>
- <av6t6M0fUYdtXDEu@google.com>
- <179508291800.2785063.13205692423397372334@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=JFpASQic
+Received: by mail-dl1-f70.google.com with SMTP id a92af1059eb24-1af203073e0so1523030c88.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 14:13:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1795212819; x=1795817619; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=fdTVu9ac2YLECwcoGWeJTi+3MACuUXbIR+eJpbYlxEk=;
+        b=JFpASQicDGpQu9Wjo+7e0MRRG/c6JZD3XKzAGRnD7fUKbN67dE/kwUdHfALquOVo9j
+         f94S5KhYSjIZF3FaGTdxa1a5WQ6fagZZEqGKP4xvUw1qBol/7f+0wSdFimCfVcENqLbU
+         PrztFv8aGjdS4zvVNCdrkl09PSoGQ32VBezfKR/fKSC/T/wTNNpx1Rhy4iJi33WTZA/S
+         gUceMdKfYauuumnLXnaPsUcfpQj4g1GvXFEFM+JcPka251JR0ssZ3wvXEox4OosN8F9V
+         jmRsTXwIf2BRRn1X+z1SSiKhdPZ8tQPou86lJn13om1rkKgk9iEsszt/zMEDQ3u5XP6F
+         Vr/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795212819; x=1795817619;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=fdTVu9ac2YLECwcoGWeJTi+3MACuUXbIR+eJpbYlxEk=;
+        b=letVn6duvAhmqvEPxzqVRwtB5in4yhf9kCULHgpn7s9pJhF5fQOh4CtyMiraAs0pqN
+         yCchWPz2pMi4B7xPheoEEYeD9eyxztsGuqAiDHn8Zry76gHcgD+xsrAD6UgUIiX672w9
+         pboljRDYFKvBjx6ZwLv6uw+DctDbTR0P+Mw8oLQDDNMJxNX3gfWdaRwhs/ygM3cpheHI
+         923MhP4TWNT62JyGeQmx1YevW6E73kzQ0gZT9FZX0oG6VsU4ZLs5uL0dhVMGPAXohtrF
+         KHJYr0XnOMxon0IM1SRSVi+BafMlMGehUPwr82NSouxszETpXwLOtt+pfV9jFWxzqf82
+         MsRg==
+X-Gm-Message-State: APuU4Z/tdt/LFQs8AUkM/mg9mk6vyP7JMOitnPG/bQ4cZNsUQqkuYKX7
+	q6Jv79YsKFLHD0t61tAcOVPVjozghWp6zlIYbP+yXgeE0tg4vCuOdEKOltsyoErYh2E1KnyGxDL
+	mtj1eum0Cog==
+X-Received: from dlbuy9.prod.google.com ([2002:a05:7022:1e09:b0:18c:3061:3bca])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:f109:b0:1b3:8814:8383
+ with SMTP id a92af1059eb24-1b55689fca6mr3255964c88.9.1795212818746; Fri, 20
+ Nov 2026 14:13:38 -0800 (PST)
+Date: Fri, 20 Nov 2026 14:13:02 -0800
+In-Reply-To: <20261120221332.2245191-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,58 +76,84 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <179508291800.2785063.13205692423397372334@gmail.com>
+Mime-Version: 1.0
+References: <20261120221332.2245191-1-irogers@google.com>
+X-Mailer: git-send-email 2.56.1.750.gf70dc682cf-goog
+Message-ID: <20261120221332.2245191-2-irogers@google.com>
+Subject: [PATCH v3 01/30] perf pmus: Don't skip core PMUs as duplicates
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Nov 19, 2026 at 10:08:38AM +0000, TAKANO Mitsuhiro wrote:
-> Hi Namhyung,
-> 
-> > I think it's better to make the first non-tool event as a leader
-> 
-> I agree, and I think that is where this ends up.  What stops me from
-> doing it in this patch is the group read: with a kernel event as the
-> leader, evsel__group_read_nr_members() still counts a tool event member,
-> while the kernel knows nothing about it (a tool event is not opened
-> through perf_event_open, it reads /proc/stat) and returns one entry
-> fewer.  evsel__process_group_data() then rejects the read with -EINVAL
-> and the kernel events of that group come out as <not counted> as well.
-> The smallest version of that is a few lines, but it changes what every
-> group with a tool event member prints, so it wants its own test and its
-> own commit rather than riding along with the EBADF fix.
-> 
-> > but I'm afraid it'd make evlist management complex
-> 
-> v3 leaves the group structure alone: no new evlist entry, nr_members
-> unchanged, and evsel->leader stays whoever it already was.  What changes
-> is how the members are opened:
-> 
->   - get_group_fd(): with group_fd = -1 instead of the tool event's
->     /proc/stat fd, or -2 when the leader failed to open, the same -2 the
->     skipped-leader case already returns for a broken group;
->   - create_perf_stat_counter(): a kernel event member is opened disabled,
->     as a leader is, so that it starts with the workload, and
->     PERF_FORMAT_GROUP is not requested for the members - read_format is
->     per fd, and GROUP is what would send each member's read down the
->     group path that only a leader can take.  PERF_FORMAT_ID goes with it:
->     without a group read nothing demuxes ids.
-> 
-> The cost is real and the changelog states it: in -e '{user_time,a,b}',
-> a and b no longer share an on/off window.
-> 
-> Two things this does not change, both of which happen without the patch:
-> a tool event member still counts through a -D / --control window, and a
-> tool event leader under enable_on_exec is still not started by anything -
-> that is what "perf stat: Start tool events when enable_on_exec is used"
-> is for.
-> 
-> Either way the leader move is a separate series; I can post it once the
-> direction is settled.
+perf_pmus__scan_skip_duplicates() skips a PMU whose name, without a
+numeric suffix, matches the previous PMU's. This is intended for uncore
+PMUs, such as uncore_cha_0 and uncore_cha_1, that have the same events.
+The check was also applied to core PMUs, but core PMUs of heterogeneous
+systems may differ only by such a suffix while having different events.
+For example, ARM ACPI systems with two kinds of core name their PMUs
+armv8_pmuv3_0 and armv8_pmuv3_1, and devicetree systems may name them
+armv8_cortex_a53 and armv8_cortex_a57 where "a53" and "a57" are hex
+suffixes. Only the first core PMU was listed by "perf list" and the
+events of the other core PMUs were missing.
 
-I think grouping with tool events would cause more headaches.  Probably
-the simplest fix is to prohibit grouping.
+Before, on such a system, "perf list" and "perf list --unit=<pmu>" only
+showed the events of the first core PMU, the scan having skipped the
+others. After, the events of every core PMU are shown, as on Intel
+hybrid systems with cpu_core and cpu_atom PMUs. Uncore PMU deduplication
+is unchanged and pmu_deduped_name_len() already avoided removing the
+suffix of core PMU names when printing events. Similarly avoid removing
+the suffix of core PMU names in the raw event encodings that "perf list"
+shows for each PMU, so that each core PMU's encoding is shown with its
+own name.
 
-Thanks,
-Namhyung
+Fixes: cd4e1efbbc40 ("perf pmus: Skip duplicate PMUs and don't print list suffix by default")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/pmus.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
+
+diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+index 8d3238fd23f1..03d79ec5037f 100644
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -488,15 +488,14 @@ static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
+ 		last_pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "");
+ 
+ 	if (use_core_pmus) {
+-		list_for_each_entry_continue(pmu, &core_pmus, list) {
+-			int pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "");
+-
+-			if (last_pmu_name_len == pmu_name_len &&
+-			    !strncmp(last_pmu_name, pmu->name ?: "", pmu_name_len))
+-				continue;
+-
++		/*
++		 * Core PMUs, such as armv8_cortex_a53 and armv8_cortex_a57,
++		 * may differ only by a suffix but have different events, so
++		 * they are never duplicates.
++		 */
++		list_for_each_entry_continue(pmu, &core_pmus, list)
+ 			return pmu;
+-		}
++
+ 		pmu = NULL;
+ 		pmu = list_prepare_entry(pmu, &other_pmus, list);
+ 	}
+@@ -785,7 +784,9 @@ void perf_pmus__print_raw_pmu_events(const struct print_callbacks *print_cb, voi
+ 			.long_string = STRBUF_INIT,
+ 			.num_formats = 0,
+ 		};
+-		int len = pmu_name_len_no_suffix(pmu->name);
++		/* Core PMUs aren't duplicates so keep their suffix. */
++		int len = pmu->is_core ? (int)strlen(pmu->name)
++				       : (int)pmu_name_len_no_suffix(pmu->name);
+ 		const char *desc = "(see 'man perf-list' or 'man perf-record' on how to encode it)";
+ 
+ 		if (!pmu->is_core)
+-- 
+2.56.1.750.gf70dc682cf-goog
 
