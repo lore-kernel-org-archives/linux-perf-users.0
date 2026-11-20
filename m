@@ -1,72 +1,109 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.43
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795176886;
-	b=MA+GyVshtPFwQwStnoTscDUQacVBwACSW92qp6ipoAlOdEGcGbIAx3r9P6WTmLfRrpK+
-	 CNH1cKFSZbBHoHFymHtRL7ZhrV6WNT9dq41Ab4LrQi3OmrY0lxKdlxUARU8Q590/HJNBg
-	 0LCrO+6AODAnnvxGv84O8YPegS4EeVap7Prqxy+zzA7xa/aeR5y7XIRsHUWE3Ls2Qashy
-	 ki/djZOKocxgJ+MljAYpJ3LmNcDx8IrY2oaCZxS0loMe4fZixtq8ZyX81hO9gw68ovYDs
-	 xp9M+9MQYc0qDH/0nm33a0aSEgJM+l6p7RdkCva16CtIPS5GxvL8JH8QBX6jbg4tXCw==
+	t=1795179999;
+	b=B5brIC/zLbKoBUQndbtQovzcYudqTZTDKVsnfNoX9DNIuaXKZUkh9HFJGpdFDT0CF2gU
+	 7D3l9w2ApLib6WjpURcR26M/crY98+UkwMzGfIhyHpA3t0MaBTNqaH/uqtifZmMjqYXZQ
+	 BGxW5zMVpTA+39o7uj73cwBal+Kmc4PXGJ+0DwZuAufong1/Q5284BjIm2+Yg5i5xiOGl
+	 o6VLF74reCv4LKaH8/h5OfazHJ9Iz7zJWBRONBL4v6mhR7jJ60eV6R++uVqWXBlC6ISrz
+	 aRxNqQsoc5w7SpNPk7OuOJ1ZKmUN5shlKF7agBxyti1PJ97i59dlQd5ctalGc6Y53PQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795176886;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=ks69R9NPZfJ4GC/YK4A/goNrzJgpxmPlFkxdUltPR50=;
-	b=RdweMeRQx5kfrfRQTIvbGFLq8XEMFvZdFphLcBmWx9UzdmP9D0ZV7tOfeNxUoafbunPM
-	 uQhHOPeehU70AhABnPu1PrgJ80X0Ru35R9nua8O6koTOOuWbRXPa/KIGHlgMFHlT86pul
-	 K1u8F3cgLg8ky91h1r2T0+RSWK6KLDuyb1Nfp9SAeQ7FUQWTGWHhroDgr3GcJ2m1AfGqI
-	 Qsm6XWVnoaWFt7O+8kLbZHxIjqEl76R7ZH6NB1Poo+wlD3fkyngQ56h5IcjRvpAyMm0aE
-	 pJm1XTyrafro1t6nAFQevizRl3tq6wWvFA9M+DPZjleSyCKY2+KcRiZDTCbTqwnbPvw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795179999;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=aN9l8CDwOvjtRjMobYbC9T4AAnLVgaW+5jZeY6o9Xhs=;
+	b=UMG6nJ4y7A+i9hwVxyZ3/gbQdpuYQpM7V94f6Hzhm0+0M2IzdwBCP1TFqgZmLH/mXUAd
+	 4kuNZgqtbh0WYu056zat5dX+etNHHN86vAhUchW1Te1UlAg9v3R3MMJUAP03RwiOXezzz
+	 O1yIsOzLTu14YIaIQ7CAHjdXR+Q93Mty02vpYVpEIq/yXCQEFj+iW/p+IFnIt+W/5URfO
+	 ks3W3GEUO+jWK2EtXcDCRJFU3NMZXLE2XA4ZoTaXg25Orsbi+ctgJ3aB8vsWKq+cD7inn
+	 B3LZroG/txxVRHi0Jb2wZUFIzosdXSvpNtvL5kDQQ0FQxtLzyIKCF4J7ansXZ3XrKhQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b="LG4/zxRq";
-	arc=none smtp.remote-ip=90.155.92.199
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=tvTC3UWm;
+	arc=none smtp.remote-ip=209.85.128.43
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F2A606A33E;
-	Fri, 20 Nov 2026 12:14:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 32F2A606A33E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD12606A326
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 13:06:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1CD12606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=LG4/zxRq
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ks69R9NPZfJ4GC/YK4A/goNrzJgpxmPlFkxdUltPR50=; b=LG4/zxRql26TO0jcV2kfpawi3e
-	qtsAW5G8w8A8JevFOo0siJFdOlmvQEO5sf/hlMkbve1bLeEFG2eR108UotgdW8zj60yvoYmt0iuCW
-	XcfhYYaxAbwgEf6n6CspTRRn217eZEDw1T5wvCZM+rbwe4IdvRag9VP/kL6LNZbZ+JVVledlBF6d9
-	dqtODRV46QoK/5PbQZCnxVv3w7Ki+yAECBr7BgoCV3rZkVoZSZPfyk0Wu7Q1DgZ1wg09m5CwYQS2g
-	XXpIkr+fPpbO/WYBP0MT3+z1a5dRYdK+bfx5G/6maCEdncR1+0ty+hzCAoBi0ecxlxsAqf68o0EHW
-	bqB10JCA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUNVl-00000000kCY-2zbE;
-	Fri, 20 Nov 2026 12:14:37 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 91BE33008D6; Fri, 20 Nov 2026 13:14:36 +0100 (CET)
-Date: Fri, 20 Nov 2026 13:14:36 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Tengda Wu <wutengda@huaweicloud.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] perf/core: Prevent duplicate sigtrap task work
- enqueue
-Message-ID: <20261120121436.GT2668564@noisy.programming.kicks-ass.net>
-References: <cover.1795053619.git.wutengda@huaweicloud.com>
- <45bd71c976aea1a0e8bf5762dd6b6552e6009439.1795053619.git.wutengda@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=tvTC3UWm
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4a214c5c4c0so7775655e9.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 05:06:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795179997; x=1795784797; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=aN9l8CDwOvjtRjMobYbC9T4AAnLVgaW+5jZeY6o9Xhs=;
+        b=tvTC3UWmisWdUSymmpATqFWpFz0OJyrOUWNGm6TBa1nwW+7YrCpulfv3UsMXJUSMJR
+         FeB7jMc6J+kTNoXVesQNAldCxnQi8kdK+ZaN5Mx5QWOevM9xrRb4hqkD/xjgcCCQoPvy
+         OQby+O/fPsqDUrWqGaLaD1pwZi2J+tzxhFFhn6F1FHpJansAs9Ltyg9htJqpl1gpkoS3
+         D+7f8lP4Kv3T4bkgIrdlvAsEXbYF0L0BBktabQ/c7R5Etqv5lPQ8bznCTbM05xww9bRU
+         +9rjZPf4Nyffh9azDCNgN8C9/4ZVWysYDqolHHq7nOlV35Bq5qm/k3C91Gxo8pxoi87E
+         tw+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795179997; x=1795784797;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=aN9l8CDwOvjtRjMobYbC9T4AAnLVgaW+5jZeY6o9Xhs=;
+        b=eZHdV0l+KHPTTBcEtF3nkoygYbjgXs0iOGDI4lpCaFD012+u/OlKTUaRCE8xiPmDZf
+         QGtdxlz3FfXQ8mWwGcetbPZZeVVeFmvMsYXHpZ9kAE/uF5gstgveKFcDoHCN03XZbFuw
+         xYQw9cL4hXDjiauEYQyNrf4KfF6GJDy9NqZBdKd9OK1LjtizP7NcC6YuvnwquDhailfJ
+         X4onQ25DQA848yQdI0rCz+Hw0X7vuFIUK++Rd0TrKZbB8idkNdBSR93/lqc6/dRXeZtp
+         WTxc7FyxGDmTJKd6bODWSOGK7fuAugVmHnowW52qzRsjDBe4jfvKQ65k+tbxiKUQTywG
+         uvEA==
+X-Forwarded-Encrypted: i=1; AL+hErE54qgAGdH8ka2foRasuZwDuL/13bRZ110gzIidSgGSwK9A3EcTQEwdzLojcE79SHXTRuh77lELj/QZTNKg9bO1@vger.kernel.org
+X-Gm-Message-State: APuU4Z8qzCjYznQ91JH8YPkDdxreJatFQtPY7gpfnil/spQq1OKhKyaA
+	XC3CeVZbsGRTmMNC/oLg4ElQAdNI/xo6zZQ2TEOPrrVWsrrOxtELmqUW
+X-Gm-Gg: AYBFou3EjFALetibcouePEOtjCWHnxndFgt3QNOLhxrJzrV2aiuf+6VaJjZ2ef+56ka
+	YuYRBpLESNkoldmooxgpyavbOSkVyzQ2RIpSz/HpjVY3acEHSwDY0PiQ+1UZ8MnIMgAMfJtpsI0
+	vlBIEqVe1IYJx6bYoiwOnsFn9tVc79foaIjo/BpxsnAoazDinc77DpyA0CQiVABDdibreQl8neX
+	OnhMT8dToBacWPBa+TVxo5aMtj4Ka77XHyMxsQfOvGcPMEfn6rGQbOWnEysBCHmfpIlKXbpFgne
+	+STukBOwFi/NnMGB9IskEuJopbdDSuAZ9Scik9ma8Gj8GlJYBa4RD7oXinrmeaxlAUT+6RHzuyP
+	6fm4bleh2aVNcpTRwc0JmjnFSaz6Hj0JiYg+GiULzyTnXtAa5vX72KCwi5Jju0XaFpB6ukIk7WR
+	DjCxgRGexWBUx7w/9ZlSsA9vlW09dy5Gq0ML3Ds981gNGF1Yy1d15oVMjXOjtfLGmsYbJ0DbzeC
+	iWTc7aSWijq9pWm0icnCPM4fZzEdGN8JQTtwKhDIzLQn1wt02qlhyG8ikg1YdeNQY23epeAS7N1
+	s5cVFe1o0CfCcwIXlzLlXhnAd9I32k65zM5HtgTgceGajeXOk8cGauJHglhRvbCGOo33OG+vQjF
+	7
+X-Received: by 2002:a05:600c:4e0e:b0:4a1:da58:1ee with SMTP id 5b1f17b1804b1-4bb88938dc9mr73795085e9.31.1795179996992;
+        Fri, 20 Nov 2026 05:06:36 -0800 (PST)
+Received: from ubuntu-nuremberg ([2a01:4f8:1c1b:70eb::1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb853a9846sm133317135e9.11.2026.11.20.05.06.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Nov 2026 05:06:36 -0800 (PST)
+From: Reza Ghanbari <ghanbari.reza94@gmail.com>
+To: Keenan Dong <keenanat2000@gmail.com>
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mhiramat@kernel.org,
+	oleg@redhat.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	andrii@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	ming.jvle@gmail.com
+Subject: Re: [PATCH] uprobes: clear extra_consumers before pooling return instances
+Date: Fri, 20 Nov 2026 13:06:19 +0000
+Message-ID: <20261120130619.738336-1-ghanbari.reza94@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260408100247.2065245-1-keenanat2000@gmail.com>
+References: <20260408100247.2065245-1-keenanat2000@gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -76,54 +113,34 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <45bd71c976aea1a0e8bf5762dd6b6552e6009439.1795053619.git.wutengda@huaweicloud.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Nov 19, 2026 at 09:51:00AM +0000, Tengda Wu wrote:
-> The sigtrap handling in __perf_event_overflow() checks
-> event->pending_work before calling task_work_add(), but only sets
-> pending_work after the task work has been queued.
-> 
-> This leaves a window where an NMI can interrupt task_work_add()
-> and re-enter __perf_event_overflow() for the same event. Since
-> pending_work is still zero, the nested invocation can enqueue
-> the same pending_task again.
-> 
-> The re-entrant call path looks like this:
-> 
->   __perf_event_overflow()
->     task_work_add()
->       kasan_record_aux_stack()
->         <NMI>
->           __perf_event_overflow()
->             task_work_add()
-> 
-> The nested invocation may enqueue pending_task before the
-> outer invocation does. When the outer invocation resumes, it
-> inserts the same task work entry again, potentially creating
-> a cycle in the task work list.
-> 
-> As a result, perf_pending_task() may be executed repeatedly,
-> leading to unbalanced event reference counting.
-> 
-> Fix this by atomically claiming pending_work with
-> cmpxchg_acquire() before calling task_work_add(). This ensures
-> that only one invocation can enqueue the task work, even when
-> another overflow occurs re-entrantly from an NMI.
-> 
-> If task_work_add() fails, clear the claim with
-> smp_store_release() to allow a subsequent overflow to retry.
-> 
-> In perf_pending_task(), defer clearing pending_work until
-> after perf_sigtrap() has completed. Use smp_store_release()
-> to ensure that a subsequent overflow cannot re-queue the task
-> work before the previous invocation has finished handling it.
-> 
-> Also use smp_load_acquire() when checking pending_work in
-> the exclude_kernel warning path to ensure the read is properly
-> ordered.
+Hi Keenan, all,
 
-I am confused by the use of smp_*() and cmpxchg() here. Where is the
-multi-cpu scenario?
+I ran into this crash on my own and can confirm your patch fixes it, so
+here is a Tested-by.
 
+I was seeing it on an unpatched 6.18.63 (kernel.org source, built with a
+Debian 13 config). With libfakechroot in /etc/ld.so.preload and a couple
+of "setarch -R ls" loops running, I attach entry and return uprobes with
+bpftrace to libfakechroot and to the same functions in libc, detaching
+and reattaching every few seconds. The kernel oopses in handler_chain()
+under krealloc() within a minute or so, which is the extra_consumers
+path your patch is about. I haven't pinned down exactly which probes end
+up sharing an address in this setup.
+
+With only your patch on top of 6.18.63, the same probes ran 20
+attach/detach cycles with no oops, and a fork-heavy variant ran 40 more,
+also clean. 6.12.117 doesn't crash, which fits the Fixes: tag.
+
+One more thing: Keke Ming's v2 for dup_return_instance() has a hunk that
+clears extra_consumers when cons_cnt <= 1. With only your patch applied
+the fork-heavy runs were clean, so I haven't seen a need for that hunk
+for this crash.
+
+I can send the reproducer and a full splat if that would help.
+
+Tested-by: Reza Ghanbari <ghanbari.reza94@gmail.com>
+
+Thanks,
+Reza
