@@ -1,57 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795146845;
-	b=KkfIuUa8VZk+YomkHKYh/v0HdAMR0OxKVLUk2dsgk7XemII+2KB8iySJFGaHgG3PKT8U
-	 QGONrbUq5S70g92pdgvBxk9T986Ukja4/+Sma66wLgL5evMOI7cQHsA07xQt96gspHKWi
-	 HssxNmV5dCzupZHgJWCiKnwgcwIVpzeof9n4YPy6+lanY75Y47Dx9XMHmFBT9+izmOP6Z
-	 E4QvsfIJmdErHoABelrCGHpFlVVnps/vYRHb7chqwp9aVzuLRQDs0okUw4rnLOalhxtg/
-	 AtOevac+XHfsf7qVsqqa6SWwUPviGXyBh6CbTwkCZf0do160rEp2pJa7OwoaJdttgEg==
+	t=1795146846;
+	b=uADRnbr+JtsFrPqm7mt+bdadNka3P64dm5Nphxq53igFK3dY15mN07ZNTRQ97iEWmJmy
+	 fq/692RaemwPlnTUW0BV8wIvcAAnMhuTbrCqUBxTVIa3PWSqbF4Ylf/ecmQS2cgGgwQs0
+	 LmuLKggZPilc8AchgBL/prEZ2jm8dAkOK5esrz2i64Y56Q9lvzWyRPzVxjsmKyNlXeA+5
+	 S+CEGVY48HvntTnS5mLtV7EwG45VJn7/KOjyDvxs+L/0GPn2PIOCLfT5DC14P73b+CfTB
+	 sLrmEJZpMy3b8Pn6c0JmXqC6yyzQBNI/ESzfTHKuWXx9IL8VyDxvlMRMGBzA743B/kg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795146845;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795146846;
 	h=Received:DKIM-Signature:From:To:Cc:In-Reply-To:References:Subject:
 	 Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 X-Mailer;
-	bh=wp7H0qwktQKIubHbagjHBZr6/G8XhijmuXZeStGP5Ec=;
-	b=drgF4M4jcQjavSXMWZAvWB6/JtCGF649x9ISccC/cmr+IZji6sO0NN1EHVKuSZ3i6QNW
-	 7pxwYBCY6t2c/6SYNKnuoRbWyY4Rb4CAGgUQhL33B4uGumIBe6uhEdt0uMq7RUOUitmhr
-	 B91fV3WH726Po05RogX8fxiiFICZhJqCstMvdBe2qNx0Z/Hj7NcPkXWBIu342O9NxH1mm
-	 H2YVXrhuBMSMtbRQ/eO2F54tE2OcDzU14ncZLBAnNMK2V9sglc4TpPyEpvkUjt9W2Qge3
-	 QcL0yRK1ZK2Tz0jwdL/GjgbXSHDvD5Dj+mbxp6t04cXMxBT0P3Q0/AocU/QUzRKdooA==
+	bh=o+VkAivF/sHJR8B1grpHPODBgXDhwTafCbQ4YmeMSR0=;
+	b=u7ObEQDBK0nPn39fMGAsE1lWJXtE0upkY6cBIo6znCMG49EvpKAY45UHhlYIeQl+GTVQ
+	 Zk6AeSPhPztsxQsVnTaGH70eUDY5PNX4waFszjOSt8byi2w9gRR9Li4LeTMHwI3MroP0q
+	 v81bLR88Zd6KTlFo53W9gsKsBwX9i/MM7rcmtlvNXr0IwZaXtr7FUNgEAiReQRB6aDdZe
+	 69lzNEyIU8ZwlmoMC/KNUkf+8MgXAN78PCDIUYepUrXn82l9wY8MjhdTRLwAsbVAL8c4l
+	 OWMyzXRuzP+LrkIbnMVCKwsBDnoZ9GgEZ9xgrM5JP5+M78mvselCZ22HOY0Z3i6nstw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ealWSAx8;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YVC4zJFE;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01A1606A33A;
-	Fri, 20 Nov 2026 03:54:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C050E60A2606;
+	Fri, 20 Nov 2026 03:54:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ealWSAx8
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E5211F000C4;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YVC4zJFE
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEAB41F000E0;
 	Fri, 20 Nov 2026 03:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795146845;
-	bh=wp7H0qwktQKIubHbagjHBZr6/G8XhijmuXZeStGP5Ec=;
+	s=k20260515; t=1795146846;
+	bh=o+VkAivF/sHJR8B1grpHPODBgXDhwTafCbQ4YmeMSR0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=ealWSAx8Yh0AmxVLJakJviPQZra82kSdiWOt+WN37PIaokoMXkGaDjdMNaUY0CENn
-	 2IaxGvF46dIRvvEtWpD7j1+Pzka/7ahZB6gSiwCuNaJRtAHmhixIiWak380cLm7Csd
-	 ozIRZhDqXG5g3Dks2katSigwdvx1YsO+566XlXGdmiJ2UtvdrByoDErv3SXe3AoDJo
-	 TUtKgTKmh99SnmzeU4hbTgky44w2XevfwUJeAwsTP8fkRr++Apk9AiiA9bluurYd32
-	 lZAwLmPvqiN/78seGTCjYH6rKT8ZvA8fTtYlw1Cs6RZwgXUVlnR2o/eRCiwVKRJE9g
-	 m+Cbtfcp3vEzQ==
+	b=YVC4zJFEjFRMG29J0yM2u0OUqA4Eb3XasNLCBNpy71rTVZ8h1U/PIJh+jkFVoOHG8
+	 OYpabZ9C7OoM7TMi81lEpbnem8OlutGki0nduhvfxlqpY2th+XtLgBJYx09DAjF8GJ
+	 7frcvpAnPn++1flJaWh85+jc6uWuhx/PNLb/HH8B3iulwuOt3oGTvN3anIea5k12e7
+	 ZMHpcoLZFUSf/L1DLfwZkDeVxfS5G3s233AyHnnroOJhxDUsIuATqZi0wWKEoXouh6
+	 YolX+7tOPQeQDRHHOzb/Y7SVaaamTy96BHrVxOkbTjjOBMoerzH2x01ySPq/NkqPVy
+	 l8X5ZC4LAvpBg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: linux-perf-users@vger.kernel.org, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- TAKANO Mitsuhiro <takano32@gmail.com>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
- stable@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20261111101625.2204836-1-takano32@gmail.com>
-References: <20261111101625.2204836-1-takano32@gmail.com>
-Subject: Re: [PATCH v2] libperf: Handle an evsel without an fd array in
- enable/disable
-Message-Id: <179514684440.638421.13429530060315684654.b4-ty@b4>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Casey Chen <cachen@purestorage.com>
+Cc: Ian Rogers <irogers@google.com>, Matt Fleming <matt@readmodwrite.com>, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20261111234156.2276500-1-cachen@purestorage.com>
+References: <20261111234156.2276500-1-cachen@purestorage.com>
+Subject: Re: [PATCH] perf hist: Don't update the map of a hist entry to a
+ NULL map
+Message-Id: <179514684487.638421.5854699398034944356.b4-ty@b4>
 Date: Thu, 19 Nov 2026 19:54:04 -0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -66,18 +64,20 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Wed, 11 Nov 2026 10:16:24 +0000, TAKANO Mitsuhiro wrote:
-> A group led by a tool PMU event is opened with the members' group_fd set
-> to the leader's file descriptor.  For a tool event that descriptor comes
-> from open("/proc/stat"), not from perf_event_open(), so a member the
-> kernel refuses is marked unsupported; perf stat then releases the fd
-> array of that member while the evsel stays in the group.
+On Wed, 11 Nov 2026 16:41:56 -0700, Casey Chen wrote:
+> perf c2c report, including --stats, segfaults on c2c data recorded on
+> a loaded system:
 > 
-> Enabling the group goes through evsel__enable_cpu(), which enables the
-> members of a mixed PMU group from userspace because the kernel does not
-> do it along with the leader.  The member has no fd array left, so
-> perf_evsel__run_ioctl() reads its loop bound through xyarray__max_y()
-> and dereferences a NULL pointer:
+>   map__find_symbol
+>   hists__findnew_entry
+>   __hists__add_entry
+>   process_sample_event      (builtin-c2c.c)
+>   perf_session__deliver_event
+>   ordered_events__deliver_event
+>   __ordered_events__flush
+>   perf_session__process_user_event
+>   perf_session__process_events
+>   perf_c2c__report
 > 
 > [...]
 
