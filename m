@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795214543;
-	b=j7F3LCarJ7I8DkNAD6QkNutnZYc72az2Rgn0teLSs7ADtrlEygQ3DhiIy3NPJhJYpJyB
-	 sGglqBO2VjUF7dPLJ5EoPFEqxHX1ur+YZh+EhNJYXhA7lKeYE8H6mwkX7rOsL6sN+OOIJ
-	 avLGmdmblkuqvglJq0dAaABZaiO2XNuntX2kqarWYLcyqGarYmwl0EB/ybS6jiW9xk7dC
-	 lzcH446NBgp0zEbRKlgtpOtoT/DLOZDSwXMPKtJXoee1wi2t2tRDAiGusIaD/RZH2UhSD
-	 smEzpFSWcTFZTZB3dCahLNSiqgN3/UwTb0+53RJYxE12a2FwoNiWjahwpfe0IBh1zDQ==
+	t=1795214741;
+	b=ViREitifRAlnaBjUxy40CwqKR1b6wQM1eTKYjH+csK/3WSAYC67k0IQCg83DkVNjzIYL
+	 sS/4HJ6j3AEf2arZq+yZ1UPNMFdidGSiNgIHrXry5MkI47qnxCiZFJAhbRY31MEzWjjkW
+	 Nfdbma0GCui7g9oNbeBpBtQqprF0eU7x/8FK1s+cMTqhnNpY3o3TnhStuoisY8TkKHmFE
+	 ZjVXxAmJs+ReocMik6taIbUmVhN0k3rYKkQNfHJZ29OHzU35tZggKhhCCm2iLE9JKiv3Y
+	 DIITqTNaMAnCdzgyTogeuyHj0LcBrfzswt4w+w8nQ5GzJepUiiazLZ4YmiZqi6XHuxg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795214543;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795214741;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=b8ZSUjebnsYW+mq6GsBp0aB0DJ6DQHjfNC7UH5hTClQ=;
-	b=5NrNo5kicK347Xn10iPCyxrm/6MmVcBVB5nymgNkmM45BgmOzOGu1KJ2uehDLiwCtNdZ
-	 fmvKNgZs2BrClaeExfGRKiwXIIA1gVd75iiJ9IFSYx0dtc1azux76n0plInJTSbBjW6TM
-	 0HpShvl6eGmLOd9EV+OVtwi31Skh/UZbVtrjnF4K8B8J283aXq74w1lW2prji6FaroEgo
-	 0dQvmPQ/IlUZ/hbMRP394upanx3Q+bNz3M7BJ2ak+0dhnDn04u/Mr6vlNV64v48DlAbix
-	 GXgCsEn5xtVxABxiLfY/kcKXmNCTCjdS7TrVx3YZwtcPfy9IAdv6h3LgAhslPnsHmwg==
+	bh=LQlyb23uvi+Nkt5ZowS5IDLpp8yCUUG6EZjggSv6PK0=;
+	b=lG2amTRVGVxXq9TlHvxP6RNUbrG8nQvuU1UjYz/kwdlezE3H6+a081lKZDuwxRAVLWkr
+	 l1XK/2r6+MQVOLgnaVy8gybNGrYxuBaosSoheyxyH7bf8w/hWihxv2xr6osG6X6BMKH8+
+	 Gg1gjclVfBZh28Csjk0Qxn3SsJLoTwsR17b6cJYYHGVDEZ6zKuTxgElIhL3Ndueb3fT2r
+	 Ze3ZpxVtbaCew1sxTghSfm8U3ONiXcT+RlG3Pba4e3AEedJNlokib+KMk9LK3JK2ES1OS
+	 1o73AqGMOkyqWnLn0F1POTm/BW5FNKtZ2KhKCHx/zOABdd/VnW7vZnu8myugI1QkoyA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nsbNes7l;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W3kKNZHl;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FDA606A6A6
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 22:42:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E053606A68E
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 22:45:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nsbNes7l
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC7051F000C0;
-	Fri, 20 Nov 2026 22:42:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=W3kKNZHl
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC4C31F000CA;
+	Fri, 20 Nov 2026 22:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795214543;
-	bh=b8ZSUjebnsYW+mq6GsBp0aB0DJ6DQHjfNC7UH5hTClQ=;
+	s=k20260515; t=1795214740;
+	bh=LQlyb23uvi+Nkt5ZowS5IDLpp8yCUUG6EZjggSv6PK0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nsbNes7loeYvRKy2z37fAXiJlAlpSNsiywfsrl2h0VEyq7S212FEjRh9XgwKAn/eg
-	 IOdWEHfdFVs7qcrqmI/40WiQMXltH73aZo32GXHfbBLNHUff4VDcFHEb9rRxhGj0wD
-	 V0nsjy1H6YvKd8vM6Ib9NZbTOxfYf1AaNf3eKTSeLIItAzdJG05Bih80vErnx2f4DW
-	 kX+5zHQkuMZHzSKY76xiKXNJPuZ8caKXJ6ihc+bD9ffZnQ2AmCeFB+OcuSprC+9DB9
-	 s+8Crc+Z7N37twqEhj3qpgu0QVplOrcp3r/o5RNjOsMLFagMtPfSc/77hpTc656aGm
-	 d3oREzHdo2i9w==
-Message-ID: <sashiko-outbox-226292@kernel.org>
+	b=W3kKNZHlEO7SZS/RUylAT+olpM0dLCpEzzRPOxSakX7uXgRNAGukkb4WDr9iQpXrq
+	 87YM8D/LUY8zbWbSDTy26CKpZizQ0NXrixuc53KvrVov8aZVj+pzCmey7qWeR/dkmZ
+	 CkbtqEH99wJQOJ/M7Lr1B/SPIfYmw/W3wm1NiMJ+XyoLrUEJFqyJEugXYLP9O7VUPD
+	 FteNG2ksdC8JFICC82v9vqZPG99Mqmv+lyp1grvdTaI9AJuWKTTM04sRABTiSGaoP3
+	 eOdCWrd3/aNl6SuoL2bcWW6CsLrlb8AdflkEniC4on5yTMpxoO8GVXplYtSOxprhz0
+	 eceSL0KXzAumA==
+Message-ID: <sashiko-outbox-226308@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 00/30] perf: Per-env PMUs, metric event sharing, and
- recorded event metrics
+Subject: Re: [PATCH v3 00/16] perf sysinfo: Add subcommand to probe and
+ summarize PMU capabilities
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261120221332.2245191-1-irogers@google.com>
-References: <20261120221332.2245191-1-irogers@google.com>
+In-Reply-To: <20261120222615.2291168-1-irogers@google.com>
+References: <20261120222615.2291168-1-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 20 Nov 2026 22:42:22 +0000
+Date: Fri, 20 Nov 2026 22:45:40 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,14 +60,14 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Sashiko has finished reviewing this 30-patch series:
+Sashiko has finished reviewing this 16-patch series:
 
-- Patches 1-24 and 26-30: no issues found.
-- Patch 25 ("perf pmus: Add perf_pmus__read_from_env()"): 1 potential
-  issue (1 Medium)
+- Patches 1, 2, and 4-16: no issues found.
+- Patch 3 ("perf pmu: Add perf_pmu__probe() for basic open, coun..."): 1
+  potential issue (1 Low)
 
-A detailed review has been sent as a separate reply to patch 25.
+A detailed review has been sent as a separate reply to patch 3.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261120221332.2245=
-191-1-irogers@google.com
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261120222615.2291=
+168-1-irogers@google.com
