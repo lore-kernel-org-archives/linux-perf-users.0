@@ -1,75 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=67.231.153.30
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795188303;
-	b=KTC0gl4jiOWouEaB2DwYNU3NhTYHkuainGlufHK8BFKM+MqijksTkD31WIyAu0eSTSvA
-	 fQnr9jUYgBzyzAfblcadaRa9BWKWH9y0+iyNn/plG464USi6ab5K3OxRsU5jMASm5q7bO
-	 +vVtRe915FE2t7G0a1Bx8aFkkQwmtHs5ZND89poNgWWzEQO2+Qjbc9PO2rl3ypeAX+R43
-	 ttmVV/WM92k102n51qwGyDA3LGEsGtvYASHs+QJ8Guzz853Su5Cd8ds9qcdJW7E4odkIH
-	 zhNhQ0uxPbjXnnYP0k8C8PoC3ES7Dvk5fAP6BmrWYudBT65RjHVq5pofG2y4tqjLIIA==
+	t=1795188324;
+	b=wuLBXAhq7HN8yX87lJnOebRlo9hVbklsRA5YbB7Vr/WZz8PrNJIcO3FyZW0xOVPn6VEl
+	 cfJfZY3dss//yWB+SNr7eMWdn0ME9RnRUt9R4zrfM7E9vn8v45/pfEqTU/LKZMkPvLD+C
+	 2Ky6mXMbyEvaGXNNsGkIRETCEMpJvf/KEGgQBljQcRT4MFDfZOapvYIGhBdAMwTgG/6p/
+	 T5vlVtFargb8rh9uMJxoPGVAg8lkwLnEPkQ9uAO51IBk5uJsvGMOGVIVnH0Pren/l6sZa
+	 avRDcv5RrW1KF0wzP+2dihNswEbnUrDSdy05queOaPszLnocXBBbc/Kr3t8rGCoAQeA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795188303;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=+RAiifQP1e5nLcxfyf/nJlEgVnCv8MvUh0IXv0jqyag=;
-	b=OPxC4RS49kk6VyMRttucptMvbGb7TAheXLJ311Rw/lgxSZJhQau0yciqRoSm5LI6TUDa
-	 TzKHphGqN/LlF6tR7T64dAG76KYUyByp7v8cc1suQnBggye8KW5gFsnVqsWxb3EX4DAxI
-	 bOtSiV+ukvMSzTcZoWYzd+oRv6KWwqUgXnkL2Aw4pD4ydBG7VrHmYQHlOMhMBzyuUvSvq
-	 NfJm5bWWCYt9c8Z8pga+qYT2ZED4+UC50jLbg7txnfNnbsViZs9u1VuI0sNVu9VlUAITR
-	 RT9nrXUx2reqBshDPhtZOAYloDXtDXSlWIWj7dqPaBVqt6B2OXyLAMjcFodzuvJtX7A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795188324;
+	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:From:To:CC:
+	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
+	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-Spam-Info:
+	 X-Proofpoint-GUID:X-Authority-Analysis:X-Proofpoint-ORIG-GUID:
+	 X-Proofpoint-Virus-Version;
+	bh=aYcXr29ZY8+NqUOdQLPvNghpVC/hBxmFhnakvhMIR/w=;
+	b=W8CQ3Uss+cvTGPVlryS4/3lfIZsz94p/92vvh7yodkebe+MzdUwuIEXiMfPnLXzb70vk
+	 b9NUq/vsdvpCuHwCo8tcLDJEGUpao3Te9rehi9w72BWcpWtOnvQMl0rLnNyaJMP+FgmhT
+	 +pOxI7NlhQt97L1rmW+ZLg0WPCyzAawQboq0B4NylcczznTiYFskumFtMtq3PRT0VNzIM
+	 LYDOoeaU2e8Yp4CXb1dmhLgikVG6kDPwVdWI2trUwS4DMccdtje9ExqmBEXZsBHXwSKrc
+	 baukRCAfOfPpZQ4u24mWuZNeZjSc5yGGH/EsUy+eXNXVS8isy6o5WWpOrzOqC283JRQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=SgJ8gPFe;
-	arc=none smtp.remote-ip=90.155.50.34
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	dmarc=pass header.from=fb.com;
+	spf=pass smtp.mailfrom=meta.com;
+	dkim=pass header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=pBjzt0ci;
+	arc=none smtp.remote-ip=67.231.153.30
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16172606A326;
-	Fri, 20 Nov 2026 15:25:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 16172606A326
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1262606A331;
+	Fri, 20 Nov 2026 15:25:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D1262606A331
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=SgJ8gPFe
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=+RAiifQP1e5nLcxfyf/nJlEgVnCv8MvUh0IXv0jqyag=; b=SgJ8gPFeNaP3DSN7NtmlqLi/iN
-	iV9r/oQSlpXbAF34ej4NQK2Fo5NSbvBNdCmCqIlbVmfxeGbaqXrWus3M7g3qBNCok+Quqn8AffD2u
-	XBGgr8Shholi2aNldd0PEF/KScopR86DXpqUzpKctgoJZzEej/t3EftyB3705sAgqYc05GEtwpA+U
-	6wspwqR14TZmWuowNPZFBulZa3wjPX3h8F2mZtwfsoscCOtOMVwFBvMFL27YOn/kx7xUzgPUiHpwH
-	HDMAUUYI7v1Ws9dZf+pmm6JA9DrFId9d7frQP4ho+gM5hU75ufHF6TwzyNHH61GZDPG4lOq33adXo
-	tWlgSySQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUQTw-00000006tZA-0jgH;
-	Fri, 20 Nov 2026 15:24:56 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 855EA301185; Fri, 20 Nov 2026 16:24:55 +0100 (CET)
-Date: Fri, 20 Nov 2026 16:24:55 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Tengda Wu <wutengda@huaweicloud.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] perf/core: Prevent duplicate sigtrap task work
- enqueue
-Message-ID: <20261120152455.GV2668564@noisy.programming.kicks-ass.net>
-References: <cover.1795053619.git.wutengda@huaweicloud.com>
- <45bd71c976aea1a0e8bf5762dd6b6552e6009439.1795053619.git.wutengda@huaweicloud.com>
- <20261120121436.GT2668564@noisy.programming.kicks-ass.net>
- <20261120141606.zcwyHZ3P@linutronix.de>
- <20261120150452.GU2668564@noisy.programming.kicks-ass.net>
- <20261120151017.mKJ_Y_u0@linutronix.de>
+	dkim=pass (2048-bit key, unprotected) header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=pBjzt0ci
+Received: from pps.filterd (m0528004.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AKEfS0p1873902;
+	Fri, 20 Nov 2026 07:24:59 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	pps82601-s2048-2026-q3; bh=aYcXr29ZY8+NqUOdQLPvNghpVC/hBxmFhnakv
+	hMIR/w=; b=pBjzt0cia/3xeaNZgZ/YyNI+HecdEZ7sQm/m41c5xo5l0TgGE0Z0Z
+	q+cbESnvpzZqJxJ2h360QqjJjFv5LykldupI8uKOIkR0F44Jhk2sYTvv3iu3M+JL
+	ZRnaaQtSVif1JZRqCGGcAp8JDnmewtw05+4UcEqr11g1XmisTfAWoggVbtc5Buzi
+	pKi4jtYxCJJD+rsv9ZGDTJLMfTKz6o1JM4uxK6UuBTm+X4ihQ9qlNAfVSIVFuPCT
+	BFm42X6w7OuDxVQYcB2Yr4MdG6PPnAjAgQ5YMh6tZ3EWUnZorgpu7ei7fCJAR5bY
+	GqFDJKHgxLi5TutyoyAmiGPNklqh5p20g==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4j1yjp2hw0-6
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Fri, 20 Nov 2026 07:24:58 -0800 (PST)
+Received: from localhost (2620:10d:c085:108::150d) by mail.thefacebook.com
+ (2620:10d:c08b:78::c78f) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.56; Fri, 20 Nov
+ 2026 15:24:56 +0000
+From: Amir Ayupov <aaupov@fb.com>
+To: James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
+        Suzuki K
+ Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@arm.com>,
+        Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>
+CC: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Randy Dunlap
+	<rdunlap@infradead.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Daniel
+ Pereira <danielmaraboo@gmail.com>,
+        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5 2/7] coresight: syscfg: Fail to enable a configuration not loaded on the device
+Date: Fri, 20 Nov 2026 07:21:15 -0800
+Message-ID: <699bb518b0f92c57227d4c73e21c58d8aadcc5a2.1795182850.git.aaupov@fb.com>
+X-Mailer: git-send-email 2.52.1
+In-Reply-To: <cover.1795182850.git.aaupov@fb.com>
+References: <cover.1795182850.git.aaupov@fb.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -79,53 +92,118 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261120151017.mKJ_Y_u0@linutronix.de>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTIwMDA2MSBTYWx0ZWRfX+f1pqSfc15Yj
+ 5FbV62ndl+ZKG73W8OMkFpIZvSM2z/bKZvhF82WWSDQUNhwJX9cRFQD/XUJn94JWazTKVqkacJ1
+ lMK70bay08XTfo5MzZLVpGTzvP/uFYW/Nwu3FhFSOrJzOeIQ7gEYG1wi3sPSl8tOOQGEtlsUB65
+ ow+YoNoXZ3CVrQxNITU1zbLAvYHrZUF3F+YuiqeGQ3ktwEhHk5MTqzMvEMMELhh27/AxR9/3CaJ
+ YLAgB0xLUoAjZ9bms1QO2OP4hyt6BBb0bqcjoB4VxhbiPKEF1vGZDdKMloGzS00FAA+mvZYyFwu
+ 0lWOicSdyMxq32OktDwf48bHOU4p0oWK0UKEmqCT4UVPYm7d2qLObrsrcCdBKrSvFq18iK8bOYX
+ 6b65ETs2kpFq/a+kTP8PG5Xl3Vc/2PXvLsQVKNVFrN+cOJQsxKJxwT5COE4m4Yf1Wfo49Nh/d+K
+ itpBBEvDeuTYQi0HhcQ==
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTIwMDA2MSBTYWx0ZWRfXx5f4nw8DdEr7
+ fci9nOJO/rdfzkuy9BOdaM7CDb8/aDymv2PpUJxWle1/T/BU5FMm/aGYXD8kQoEUrONrJ0OHTUk
+ YhvnNP5xXk+MZUFIKEuJ1hCVtA/b6Ck=
+X-Proofpoint-GUID: S8PRQsjlb_TnuaQsvmjkWViFZ_3Sksa6
+X-Authority-Analysis: v=2.4 cv=aPtlOr9m c=1 sm=1 tr=0 ts=6b00664a cx=c_pps
+ a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
+ a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=7x6HtfJdh03M6CCDgxCd:22
+ a=GbPsI2Ihf5RTnMjR_gZv:22 a=7CQSdrXTAAAA:8 a=FOH2dFAWAAAA:8
+ a=HF-2DHWplcuDzBJEMXoA:9 a=a-qgeE7W1pNrGK8U0ZQC:22
+X-Proofpoint-ORIG-GUID: S8PRQsjlb_TnuaQsvmjkWViFZ_3Sksa6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
+ definitions=2026-11-20_05,2026-11-19_01,2025-10-01_01
 
-On Fri, Nov 20, 2026 at 04:10:17PM +0100, Sebastian Andrzej Siewior wrote:
-> On 2026-11-20 16:04:52 [+0100], Peter Zijlstra wrote:
-> > On Fri, Nov 20, 2026 at 03:16:06PM +0100, Sebastian Andrzej Siewior wrote:
-> > > On 2026-11-20 13:14:36 [+0100], Peter Zijlstra wrote:
-> > > > > Also use smp_load_acquire() when checking pending_work in
-> > > > > the exclude_kernel warning path to ensure the read is properly
-> > > > > ordered.
-> > > > 
-> > > > I am confused by the use of smp_*() and cmpxchg() here. Where is the
-> > > > multi-cpu scenario?
-> > > 
-> > > The same event is used in process context and NMI
-> > > |        perf-tc1-7647    [001] d..6.   114.513688: __perf_event_overflow: ffff888100d68540
-> > > |        perf-tc1-7647    [001] d.Z2.   114.513703: __perf_event_overflow: ffff888100d68540
-> > > 
-> > > I don't see how to deal with this without cmpxchg. And the same event is
-> > > also used by other task
-> > 
-> > You can do CMPXCHG (without the LOCK) prefix; the helper is called
-> > cmpxchg_local().
-> > 
-> > > |        perf-tc1-7657    [001] d.Z2.   114.598356: __perf_event_overflow: ffff888100d68540
-> > > 
-> > > which makes me thing that it could be pinned to another CPU (unless
-> > > there is something that impossible and it is strictly per-CPU).
-> > > 
-> > > The smp load/store macros is my fault as it looked better to do this
-> > > than plain stores (given that we have the cmpxchg already).
-> > 
-> > It is confusing as all heck. This is all task-local, and a task can only
-> > ever run on one CPU at the time.
-> 
-> Given the two pids I was assuming (!knowing) that two CPUs could be
-> involved.
-> 
-> So you are saying cmpxchg_local() and a plain assign/WRITE_ONCE rather
-> than the smp.* given that this is all task local.
+cscfg_csdev_enable_active_config() looks up the selected configuration in
+the device's loaded configurations, and returns success when it is not
+there. A configuration is only loaded on devices that match at least one
+of its features, so a perf session or sysfs enable that selects it on any
+other device runs without the configuration, with no error.
 
-Well, from what I can remember, only task bound self-monitoring events
-can signal, and the whole task_work is per necessity task local. Which
-makes it all local.
+Return -EINVAL instead, so enabling the source fails on that device. The
+function is only called with a non-zero configuration hash, so sources
+enabled without a configuration are unaffected.
 
-It is indeed {READ,WRITE}_ONCE() combined with barrier() if you really
-need to beat the compiler into submission.
+Fixes: f8cce2ff3c04 ("coresight: syscfg: Add API to activate and enable configurations")
+Assisted-by: Devmate:Opus-5.5
+Tested-by: Leo Yan <leo.yan@arm.com>
+Reviewed-by: Leo Yan <leo.yan@arm.com>
+Signed-off-by: Amir Ayupov <aaupov@fb.com>
+---
+ .../hwtracing/coresight/coresight-syscfg.c    | 53 ++++++++++---------
+ 1 file changed, 28 insertions(+), 25 deletions(-)
 
-But let me go try and read this Changelog in more detail.
+diff --git a/drivers/hwtracing/coresight/coresight-syscfg.c b/drivers/hwtracing/coresight/coresight-syscfg.c
+index 2bfdd7b45e49c8..a816c22c87bc87 100644
+--- a/drivers/hwtracing/coresight/coresight-syscfg.c
++++ b/drivers/hwtracing/coresight/coresight-syscfg.c
+@@ -1088,36 +1088,39 @@ int cscfg_csdev_enable_active_config(struct coresight_device *csdev,
+ 	raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
+ 
+ 	/*
+-	 * If found, attempt to enable
++	 * The configuration is active but not loaded on this device, because
++	 * none of its features match the device. Fail rather than trace
++	 * without it.
+ 	 */
+-	if (config_csdev_active) {
++	if (!config_csdev_active)
++		return -EINVAL;
++
++	/*
++	 * Call the generic routine that will program up the internal
++	 * driver structures prior to programming up the hardware.
++	 * This routine takes the driver spinlock saved in the configs.
++	 */
++	err = cscfg_csdev_enable_config(config_csdev_active, preset);
++	if (!err) {
+ 		/*
+-		 * Call the generic routine that will program up the internal
+-		 * driver structures prior to programming up the hardware.
+-		 * This routine takes the driver spinlock saved in the configs.
++		 * Successful programming. Check the active_cscfg_ctxt
++		 * pointer to ensure no pre-emption disabled it via
++		 * cscfg_csdev_disable_active_config() before
++		 * we could start.
++		 *
++		 * Set enabled if OK, err if not.
+ 		 */
+-		err = cscfg_csdev_enable_config(config_csdev_active, preset);
+-		if (!err) {
+-			/*
+-			 * Successful programming. Check the active_cscfg_ctxt
+-			 * pointer to ensure no pre-emption disabled it via
+-			 * cscfg_csdev_disable_active_config() before
+-			 * we could start.
+-			 *
+-			 * Set enabled if OK, err if not.
+-			 */
+-			raw_spin_lock_irqsave(&csdev->cscfg_csdev_lock, flags);
+-			if (csdev->active_cscfg_ctxt)
+-				config_csdev_active->enabled = true;
+-			else
+-				err = -EBUSY;
+-			raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
+-		}
+-
+-		if (err)
+-			cscfg_config_desc_put(config_desc);
++		raw_spin_lock_irqsave(&csdev->cscfg_csdev_lock, flags);
++		if (csdev->active_cscfg_ctxt)
++			config_csdev_active->enabled = true;
++		else
++			err = -EBUSY;
++		raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
+ 	}
+ 
++	if (err)
++		cscfg_config_desc_put(config_desc);
++
+ 	return err;
+ }
+ EXPORT_SYMBOL_GPL(cscfg_csdev_enable_active_config);
+-- 
+2.52.1
+
