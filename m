@@ -1,62 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=67.231.145.42
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795188324;
-	b=wuLBXAhq7HN8yX87lJnOebRlo9hVbklsRA5YbB7Vr/WZz8PrNJIcO3FyZW0xOVPn6VEl
-	 cfJfZY3dss//yWB+SNr7eMWdn0ME9RnRUt9R4zrfM7E9vn8v45/pfEqTU/LKZMkPvLD+C
-	 2Ky6mXMbyEvaGXNNsGkIRETCEMpJvf/KEGgQBljQcRT4MFDfZOapvYIGhBdAMwTgG/6p/
-	 T5vlVtFargb8rh9uMJxoPGVAg8lkwLnEPkQ9uAO51IBk5uJsvGMOGVIVnH0Pren/l6sZa
-	 avRDcv5RrW1KF0wzP+2dihNswEbnUrDSdy05queOaPszLnocXBBbc/Kr3t8rGCoAQeA==
+	t=1795188331;
+	b=Ss9lcagdTJGSoo7U65YWIDx+jDsIGY5desslCeDAADt7CCELnUabFrFzGSFnC8mHKCcq
+	 yfFA8XmBXToVWIm1fITeG9Dy1kSb7V+1tWawKf1Hpsvxw7JTqWyVi8qoubInFlvyRhjNp
+	 C2XqmSUeq/8aAIZdz2+pZn/V5lMHpzUd8y3HIsvFa/acu/BDZcvPZHwPIJjTjzPXdyb9z
+	 M/78W+q9GSGZCEKKzuXTbYCLxoELmQkldE8ARFXM5Ff1PpqbCTwc5zteif/A9ABzOsuK8
+	 vMzNv4W3VrQGBj7CM+HF0UNVkLOG8A5q4iDSkK5cXwbZL3rZtJ7D+F5PU1RzAHYECTA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795188324;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795188331;
 	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:From:To:CC:
 	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-Spam-Info:
-	 X-Proofpoint-GUID:X-Authority-Analysis:X-Proofpoint-ORIG-GUID:
-	 X-Proofpoint-Virus-Version;
-	bh=aYcXr29ZY8+NqUOdQLPvNghpVC/hBxmFhnakvhMIR/w=;
-	b=W8CQ3Uss+cvTGPVlryS4/3lfIZsz94p/92vvh7yodkebe+MzdUwuIEXiMfPnLXzb70vk
-	 b9NUq/vsdvpCuHwCo8tcLDJEGUpao3Te9rehi9w72BWcpWtOnvQMl0rLnNyaJMP+FgmhT
-	 +pOxI7NlhQt97L1rmW+ZLg0WPCyzAawQboq0B4NylcczznTiYFskumFtMtq3PRT0VNzIM
-	 LYDOoeaU2e8Yp4CXb1dmhLgikVG6kDPwVdWI2trUwS4DMccdtje9ExqmBEXZsBHXwSKrc
-	 baukRCAfOfPpZQ4u24mWuZNeZjSc5yGGH/EsUy+eXNXVS8isy6o5WWpOrzOqC283JRQ==
+	 X-Proofpoint-GUID:X-Proofpoint-Spam-Info:
+	 X-Proofpoint-Spam-Details-Enc:X-Authority-Analysis:
+	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Virus-Version;
+	bh=6b5r3SQs6YNo/jt7qQ43w5y89sS6coVBUb3UfE12SIU=;
+	b=Twp79tAIZTy9ZFD1IgUBp797mToj50aAu573T/andy7l6AJoTFokLteSVbdzI/e/Asz3
+	 HTvvmqXedgM3R0BgtH49l4FqUH3bfxb99hNQT3jH3PvvhBVFj4ru0KgpyCME1xQR0y6sK
+	 7xCQME6rzo6TR4GLbIGPX68OR6TkyoG+Oxjfy8UQ9fzjv89IXVlSbEtC5FRkxTasS/tJS
+	 Lde3nxuECrFLqZFe2voQTz0zOJCd7X7hxuwB0DlPPRGuvgvqhleezJgx8eI1wmM0+nvZa
+	 bopKT1f6RCrbWcXX7EpETnyycsVR1gUL/DhbN2sXxnJ4yWJvpyZepvPK8xYfw0WL0eQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=fb.com;
 	spf=pass smtp.mailfrom=meta.com;
-	dkim=pass header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=pBjzt0ci;
-	arc=none smtp.remote-ip=67.231.153.30
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+	dkim=pass header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=M6inLg0B;
+	arc=none smtp.remote-ip=67.231.145.42
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1262606A331;
-	Fri, 20 Nov 2026 15:25:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D1262606A331
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D4160A2603;
+	Fri, 20 Nov 2026 15:25:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 37D4160A2603
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=pBjzt0ci
-Received: from pps.filterd (m0528004.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AKEfS0p1873902;
+	dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=M6inLg0B
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AKEfWKA372201;
 	Fri, 20 Nov 2026 07:24:59 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	pps82601-s2048-2026-q3; bh=aYcXr29ZY8+NqUOdQLPvNghpVC/hBxmFhnakv
-	hMIR/w=; b=pBjzt0cia/3xeaNZgZ/YyNI+HecdEZ7sQm/m41c5xo5l0TgGE0Z0Z
-	q+cbESnvpzZqJxJ2h360QqjJjFv5LykldupI8uKOIkR0F44Jhk2sYTvv3iu3M+JL
-	ZRnaaQtSVif1JZRqCGGcAp8JDnmewtw05+4UcEqr11g1XmisTfAWoggVbtc5Buzi
-	pKi4jtYxCJJD+rsv9ZGDTJLMfTKz6o1JM4uxK6UuBTm+X4ihQ9qlNAfVSIVFuPCT
-	BFm42X6w7OuDxVQYcB2Yr4MdG6PPnAjAgQ5YMh6tZ3EWUnZorgpu7ei7fCJAR5bY
-	GqFDJKHgxLi5TutyoyAmiGPNklqh5p20g==
-Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4j1yjp2hw0-6
+	pps82601-s2048-2026-q3; bh=6b5r3SQs6YNo/jt7qQ43w5y89sS6coVBUb3Uf
+	E12SIU=; b=M6inLg0B5B1Y5QhepHuYF+1qcX4j/mHrG1iwToTmS5ttRJ1nZxAEz
+	3lNqI8njCXjeqVxvJgAx+A3FelEB5+DlFipEIZrm9uhS5V7/+dPID/Y+n4tW7loC
+	EajCQb2WCfqRyTw+IeZebzU8dQgGZrV5RXYaOTfPpEjy+i8ucrc0bIyICgyq6m04
+	JkKNLB0OjwjPtc4/n0EDLFIyAARBv41qDUKoC5iZLqvq/IbocX6l+BgeQNn0gPem
+	gfSwnBeB/5DRZSdIf6GecX1gbRFZQbmE/KX5GfLNuoqHVtj73FW0H11qz7JM3fT/
+	tjQcE7DZxEGRl5MSWs0MyPNE+SW9nzXRg==
+Received: from maileast.thefacebook.com ([163.114.135.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4j1y8capaa-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 20 Nov 2026 07:24:58 -0800 (PST)
-Received: from localhost (2620:10d:c085:108::150d) by mail.thefacebook.com
- (2620:10d:c08b:78::c78f) with Microsoft SMTP Server (version=TLS1_2,
+	Fri, 20 Nov 2026 07:24:59 -0800 (PST)
+Received: from localhost (2620:10d:c0a8:1c::1b) by mail.thefacebook.com
+ (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.56; Fri, 20 Nov
- 2026 15:24:56 +0000
+ 2026 15:24:58 +0000
 From: Amir Ayupov <aaupov@fb.com>
 To: James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
         Suzuki K
@@ -77,9 +77,9 @@ CC: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
         <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
         <linux-perf-users@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 2/7] coresight: syscfg: Fail to enable a configuration not loaded on the device
-Date: Fri, 20 Nov 2026 07:21:15 -0800
-Message-ID: <699bb518b0f92c57227d4c73e21c58d8aadcc5a2.1795182850.git.aaupov@fb.com>
+Subject: [PATCH v5 3/7] coresight: syscfg: Match feature capabilities separately from device class
+Date: Fri, 20 Nov 2026 07:21:16 -0800
+Message-ID: <a78b8ca4ea1cd447b5ca3736d5e94b81c8273364.1795182850.git.aaupov@fb.com>
 X-Mailer: git-send-email 2.52.1
 In-Reply-To: <cover.1795182850.git.aaupov@fb.com>
 References: <cover.1795182850.git.aaupov@fb.com>
@@ -94,116 +94,156 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTIwMDA2MSBTYWx0ZWRfX+f1pqSfc15Yj
- 5FbV62ndl+ZKG73W8OMkFpIZvSM2z/bKZvhF82WWSDQUNhwJX9cRFQD/XUJn94JWazTKVqkacJ1
- lMK70bay08XTfo5MzZLVpGTzvP/uFYW/Nwu3FhFSOrJzOeIQ7gEYG1wi3sPSl8tOOQGEtlsUB65
- ow+YoNoXZ3CVrQxNITU1zbLAvYHrZUF3F+YuiqeGQ3ktwEhHk5MTqzMvEMMELhh27/AxR9/3CaJ
- YLAgB0xLUoAjZ9bms1QO2OP4hyt6BBb0bqcjoB4VxhbiPKEF1vGZDdKMloGzS00FAA+mvZYyFwu
- 0lWOicSdyMxq32OktDwf48bHOU4p0oWK0UKEmqCT4UVPYm7d2qLObrsrcCdBKrSvFq18iK8bOYX
- 6b65ETs2kpFq/a+kTP8PG5Xl3Vc/2PXvLsQVKNVFrN+cOJQsxKJxwT5COE4m4Yf1Wfo49Nh/d+K
- itpBBEvDeuTYQi0HhcQ==
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMTIwMDA2MSBTYWx0ZWRfXx5f4nw8DdEr7
- fci9nOJO/rdfzkuy9BOdaM7CDb8/aDymv2PpUJxWle1/T/BU5FMm/aGYXD8kQoEUrONrJ0OHTUk
- YhvnNP5xXk+MZUFIKEuJ1hCVtA/b6Ck=
-X-Proofpoint-GUID: S8PRQsjlb_TnuaQsvmjkWViFZ_3Sksa6
-X-Authority-Analysis: v=2.4 cv=aPtlOr9m c=1 sm=1 tr=0 ts=6b00664a cx=c_pps
- a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
+X-Proofpoint-GUID: 4NvreVDamEYyN1v7_v63eSi_gwWWez28
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTIwMDA2MSBTYWx0ZWRfX6GukGpEjPU+L
+ PH0auYE0v7l5DL3i0t2AJsHyPShJtZTcT6TZjtrt6N+D0/i79vbmS7g7qmPFe7gspZa3LpEPGVh
+ pxUYUcUuQWGorZeQB1nPNnKRnEh69uQ=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTIwMDA2MSBTYWx0ZWRfXwpLp7Wucqu2L
+ kK82WDN/gv1eIjazp/r+5OeriTrNZrfpwvMtr8YkaEAEumAT/mCXG72cOEF/lMgDlzjZkCSDdbn
+ i2BD9E7RQMwo5QNss4ZcNqpEsZ2kewadiwO8etx5oYy0aCHd0EKtTz9MRpqSnYeavatb91wvgtC
+ YXG7CWMistEKbW/0+nbH3oWZb+c8i8//tBjOD+lB9H7Ggz69CYrIBEWErWi5Rl6IOV5bvm6wlHw
+ cVDwnVBjxDB0m4ydoi03K7Lrg8YYlasnaQa7LDTB2We65oAeQGfGmEw57B+xBpt00iwSNqHxHnG
+ +1TAYMsEvdClLOaFB/26d+TrF4RU8IbisGhrBqdZekZx4WeTbQn7YlSQF4g4ng1imm+hbquP0tn
+ xK9uIolRCsckOzHIP97AxC2a8N/I1TIn0wAbVWMx8S0ZP0eaFE2qWNpNTGNbSNGwl8HgRAu4oQV
+ 9GmBVwVNarF/HY98kog==
+X-Authority-Analysis: v=2.4 cv=Pr0G/AM3 c=1 sm=1 tr=0 ts=6b00664b cx=c_pps
+ a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17
  a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=7x6HtfJdh03M6CCDgxCd:22
- a=GbPsI2Ihf5RTnMjR_gZv:22 a=7CQSdrXTAAAA:8 a=FOH2dFAWAAAA:8
- a=HF-2DHWplcuDzBJEMXoA:9 a=a-qgeE7W1pNrGK8U0ZQC:22
-X-Proofpoint-ORIG-GUID: S8PRQsjlb_TnuaQsvmjkWViFZ_3Sksa6
+ a=8elwO82fXORLTBIkMd32:22 a=KKAkSRfTAAAA:8 a=7CQSdrXTAAAA:8 a=FOH2dFAWAAAA:8
+ a=mif2P4nyd6mfzKxTjdEA:9 a=cvBusfyB2V15izCimMoJ:22 a=a-qgeE7W1pNrGK8U0ZQC:22
+X-Proofpoint-ORIG-GUID: 4NvreVDamEYyN1v7_v63eSi_gwWWez28
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
  definitions=2026-11-20_05,2026-11-19_01,2025-10-01_01
 
-cscfg_csdev_enable_active_config() looks up the selected configuration in
-the device's loaded configurations, and returns success when it is not
-there. A configuration is only loaded on devices that match at least one
-of its features, so a perf session or sysfs enable that selects it on any
-other device runs without the configuration, with no error.
+A feature loads on a device when the two share any match flag. That works
+for device classes, where a feature wants any one of them, but not for
+capabilities a device may or may not have: a feature that sets a class
+and a capability would still load on a device of that class without the
+capability.
 
-Return -EINVAL instead, so enabling the source fails on that device. The
-function is only called with a non-zero configuration hash, so sources
-enabled without a configuration are unaffected.
+Split the match flags into CS_CFG_MATCH_CLASS_MASK for device classes and
+CS_CFG_MATCH_CAP_MASK for capabilities. A feature now loads on a device
+that shares one of its classes and has all of its capabilities. Check
+this once in cscfg_load_feat_csdev(), which both the feature and the
+device registration paths call. No capability flags are defined yet, so
+matching is unchanged.
 
-Fixes: f8cce2ff3c04 ("coresight: syscfg: Add API to activate and enable configurations")
 Assisted-by: Devmate:Opus-5.5
+Reviewed-by: James Clark <james.clark@linaro.org>
 Tested-by: Leo Yan <leo.yan@arm.com>
-Reviewed-by: Leo Yan <leo.yan@arm.com>
 Signed-off-by: Amir Ayupov <aaupov@fb.com>
 ---
- .../hwtracing/coresight/coresight-syscfg.c    | 53 ++++++++++---------
- 1 file changed, 28 insertions(+), 25 deletions(-)
+ .../hwtracing/coresight/coresight-config.h    |  8 ++++
+ .../hwtracing/coresight/coresight-syscfg.c    | 40 ++++++++++++++-----
+ 2 files changed, 37 insertions(+), 11 deletions(-)
 
+diff --git a/drivers/hwtracing/coresight/coresight-config.h b/drivers/hwtracing/coresight/coresight-config.h
+index ae6295e3081319..f04e73b91d9a63 100644
+--- a/drivers/hwtracing/coresight/coresight-config.h
++++ b/drivers/hwtracing/coresight/coresight-config.h
+@@ -7,6 +7,7 @@
+ #ifndef _CORESIGHT_CORESIGHT_CONFIG_H
+ #define _CORESIGHT_CORESIGHT_CONFIG_H
+ 
++#include <linux/bits.h>
+ #include <linux/cleanup.h>
+ #include <linux/coresight.h>
+ #include <linux/types.h>
+@@ -30,6 +31,13 @@
+  */
+ #define CS_CFG_MATCH_CLASS_SRC_ALL	0x0001	/* match any source */
+ #define CS_CFG_MATCH_CLASS_SRC_ETM4	0x0002	/* match any ETMv4 device */
++#define CS_CFG_MATCH_CLASS_MASK		GENMASK_U32(7, 0)
++
++/*
++ * flags defining device capabilities a feature can require. A feature loads on
++ * a device that matches one of its classes and has all of its capabilities.
++ */
++#define CS_CFG_MATCH_CAP_MASK		GENMASK_U32(15, 8)
+ 
+ /* flags defining device instance matching - used in config match desc data. */
+ #define CS_CFG_MATCH_INST_ANY		0x80000000 /* any instance of a class */
 diff --git a/drivers/hwtracing/coresight/coresight-syscfg.c b/drivers/hwtracing/coresight/coresight-syscfg.c
-index 2bfdd7b45e49c8..a816c22c87bc87 100644
+index a816c22c87bc87..65116b09cbc96c 100644
 --- a/drivers/hwtracing/coresight/coresight-syscfg.c
 +++ b/drivers/hwtracing/coresight/coresight-syscfg.c
-@@ -1088,36 +1088,39 @@ int cscfg_csdev_enable_active_config(struct coresight_device *csdev,
- 	raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
+@@ -4,6 +4,7 @@
+  * Author: Mike Leach <mike.leach@linaro.org>
+  */
  
- 	/*
--	 * If found, attempt to enable
-+	 * The configuration is active but not loaded on this device, because
-+	 * none of its features match the device. Fail rather than trace
-+	 * without it.
- 	 */
--	if (config_csdev_active) {
-+	if (!config_csdev_active)
-+		return -EINVAL;
++#include <linux/bitfield.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ 
+@@ -171,8 +172,24 @@ cscfg_alloc_csdev_feat(struct coresight_device *csdev, struct cscfg_feature_desc
+ 	return feat_csdev;
+ }
+ 
+-/* load one feature into one coresight device */
++static bool cscfg_match_feat_csdev(u32 feat_flags, u32 csdev_flags)
++{
++	/* The device must be in one of the feature's classes */
++	if (!(FIELD_GET(CS_CFG_MATCH_CLASS_MASK, feat_flags) &
++	      FIELD_GET(CS_CFG_MATCH_CLASS_MASK, csdev_flags)))
++		return false;
 +
-+	/*
-+	 * Call the generic routine that will program up the internal
-+	 * driver structures prior to programming up the hardware.
-+	 * This routine takes the driver spinlock saved in the configs.
-+	 */
-+	err = cscfg_csdev_enable_config(config_csdev_active, preset);
-+	if (!err) {
- 		/*
--		 * Call the generic routine that will program up the internal
--		 * driver structures prior to programming up the hardware.
--		 * This routine takes the driver spinlock saved in the configs.
-+		 * Successful programming. Check the active_cscfg_ctxt
-+		 * pointer to ensure no pre-emption disabled it via
-+		 * cscfg_csdev_disable_active_config() before
-+		 * we could start.
-+		 *
-+		 * Set enabled if OK, err if not.
- 		 */
--		err = cscfg_csdev_enable_config(config_csdev_active, preset);
--		if (!err) {
--			/*
--			 * Successful programming. Check the active_cscfg_ctxt
--			 * pointer to ensure no pre-emption disabled it via
--			 * cscfg_csdev_disable_active_config() before
--			 * we could start.
--			 *
--			 * Set enabled if OK, err if not.
--			 */
--			raw_spin_lock_irqsave(&csdev->cscfg_csdev_lock, flags);
--			if (csdev->active_cscfg_ctxt)
--				config_csdev_active->enabled = true;
--			else
--				err = -EBUSY;
--			raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
++	/* The device must have every capability the feature requires */
++	if (FIELD_GET(CS_CFG_MATCH_CAP_MASK, feat_flags) &
++	    ~FIELD_GET(CS_CFG_MATCH_CAP_MASK, csdev_flags))
++		return false;
++
++	return true;
++}
++
++/* Load the feature into the device if it matches, otherwise skip it. */
+ static int cscfg_load_feat_csdev(struct coresight_device *csdev,
++				 u32 match_flags,
+ 				 struct cscfg_feature_desc *feat_desc,
+ 				 struct cscfg_csdev_feat_ops *ops)
+ {
+@@ -183,6 +200,9 @@ static int cscfg_load_feat_csdev(struct coresight_device *csdev,
+ 	if (!ops->load_feat)
+ 		return -EINVAL;
+ 
++	if (!cscfg_match_feat_csdev(feat_desc->match_flags, match_flags))
++		return 0;
++
+ 	feat_csdev = cscfg_alloc_csdev_feat(csdev, feat_desc);
+ 	if (!feat_csdev)
+ 		return -ENOMEM;
+@@ -212,11 +232,11 @@ static int cscfg_add_feat_to_csdevs(struct cscfg_feature_desc *feat_desc)
+ 	int err;
+ 
+ 	list_for_each_entry(csdev_item, &cscfg_mgr->csdev_desc_list, item) {
+-		if (csdev_item->match_flags & feat_desc->match_flags) {
+-			err = cscfg_load_feat_csdev(csdev_item->csdev, feat_desc, &csdev_item->ops);
+-			if (err)
+-				return err;
 -		}
--
--		if (err)
--			cscfg_config_desc_put(config_desc);
-+		raw_spin_lock_irqsave(&csdev->cscfg_csdev_lock, flags);
-+		if (csdev->active_cscfg_ctxt)
-+			config_csdev_active->enabled = true;
-+		else
-+			err = -EBUSY;
-+		raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
++		err = cscfg_load_feat_csdev(csdev_item->csdev,
++					    csdev_item->match_flags, feat_desc,
++					    &csdev_item->ops);
++		if (err)
++			return err;
  	}
+ 	return 0;
+ }
+@@ -739,11 +759,9 @@ static int cscfg_add_feats_csdev(struct coresight_device *csdev,
+ 		return -EINVAL;
  
-+	if (err)
-+		cscfg_config_desc_put(config_desc);
-+
+ 	list_for_each_entry(feat_desc, &cscfg_mgr->feat_desc_list, item) {
+-		if (feat_desc->match_flags & match_flags) {
+-			err = cscfg_load_feat_csdev(csdev, feat_desc, ops);
+-			if (err)
+-				break;
+-		}
++		err = cscfg_load_feat_csdev(csdev, match_flags, feat_desc, ops);
++		if (err)
++			break;
+ 	}
  	return err;
  }
- EXPORT_SYMBOL_GPL(cscfg_csdev_enable_active_config);
 -- 
 2.52.1
 
