@@ -1,76 +1,98 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.46
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795196988;
-	b=oO1OQQHZo8SLRTcL7AQ+jGa2Ej+nt4IytkEg/FXgz6aDdf/h3Kxdjoch0laVfL10i3o0
-	 WTkmxgN7iXiqnQqjGcXwDY/CRMvqNy9ULTy95asQ+1fgF/7e90UyscJgma7ZVvcCcJ5s7
-	 YMtYqLRgAEVn/Wzi42H6eL+bdEoE1JGa+HUPce302AmwiwLNxgOi563ww5+Xtss0lnzFj
-	 TmWFFBwz8lVuEuY/NkodtgN6S+GXYuxsHzokAAby4TgLVlG+ZbbCM5vZGAjf1HHTDGXyP
-	 SQtF9EuprDRLjfA6VsPcKUx/e+XcV2c8ZSD7wb+Np80/GTzzuFt5KYWExI+xzV6kOKA==
+	t=1795197526;
+	b=YvFMgOtbW6bbdHv4K5/Hp2GBQADQZIbSCv+Ycw3lZQ0xKJEgvZ7T/LdQYW43MJ6PkMsP
+	 xJFlvLGGUf5V1BHU/gbz0EZwhB+7ZOJQivZSrQg3GdGC8A/7qCSoLTnYkkz5TTHkeV2Bl
+	 d0QuKIPUPy19WHdSvE8vdiRUAk53biinh6uTyFneD64OxrxK3Ogx3So0frSj1YANavdrK
+	 IAvU4kV7FP0OEtludZ2Pwfobwt3v4KffVrSGAM70U8wH5K1mYGhz9iRkUQ749uNm5il0i
+	 KNN8bAJ2WFOwnfTsESAOIj6k/eYZef0ya/3EWoCbyda0v/tGX4VOoRwCth6rSjQpGAw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795196988;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=X9sTiAwexVAObjjO0yopQUmoE9pS2g/a0zw7hrGwxqQ=;
-	b=lKgFnMKqCc6zFTEsBuP3+Ti6aE7wrVxy2wd3bgXi23Q70luR1TNNtSrbGp8AInpRDiQr
-	 KuBBNaCv2vi+ZuIjEhfDw7PVvRK8Fddfn7BFFwv8t8yig+lO5hxVh8DCNJjC0m5aaxE4G
-	 js+3DfzecKJ1pbmzc6BPEYeyDFg5WxqaOArcm7Wi51b3EelrKG7M9wjRQ3vjLb08TBpzA
-	 M5GmxJO4QiE4d0QnLWlUApxGcYpfid+vw06ldO95Qj1929rnx8XLluKmPkz0QrMOq6j5t
-	 8UIZo1fmCqEYy9xzNWsv0wZXXJ8CGMC8t27yWBcUm/GN5a8XDM6REhPxE+sbMk3EIeQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795197526;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:MIME-Version:Content-Transfer-Encoding;
+	bh=T30OloEed+5ksnOk+6k3bS3hGIzHHhaTnjHcUwk/mxY=;
+	b=IVf6ul2kXZNEp1WGg/xCJNJQOcQp5rjSuC11yny9Hbih5Sr+SCqih2DciBCXB5kveDF+
+	 beD5YHAVemGy03TgKGwhVR+pZl/e4ItApNOODu0urbYTfXxjSU63EpAO0jGvUW93YugMM
+	 jmtGUma3YvTxi27vJYNjKhwVgQvLfS09OQ240gtZ8zJ14LcF2wrCWTUf6wvpWSeiV87uw
+	 atYJ/mxdUUaHKZ9g0mmsJKs8G/i/vGkoughnXw0jybzN++ERjmVOPyqFMj7JJOaKAc8ql
+	 6sGglaqtPeIqpDWv0FU+0qbGuW5+WgkU88znafcNFWuYMg0dvk2hhr6gmx7TnrET+iA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=fBrceXMZ;
-	arc=none smtp.remote-ip=90.155.50.34
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=F6u2fa1l;
+	arc=none smtp.remote-ip=74.125.82.46
+Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40B860A2602;
-	Fri, 20 Nov 2026 17:49:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A40B860A2602
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF88606A338
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 17:58:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5FF88606A338
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=fBrceXMZ
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=X9sTiAwexVAObjjO0yopQUmoE9pS2g/a0zw7hrGwxqQ=; b=fBrceXMZxLu9dkavRu91bKqobn
-	c4SljQl4pMq13dyCPr9lx7lxXwJm/QXcSoOKnzElYV9n6QSbxnbtOGlnm6sWhbOaUNGpFYk6ZoezL
-	2Xaz6drKtpYt7jZwTcMekvYp9TSyGVxtvH1zZmtm7cXe6bKWvmuZ/IO/N6YbhLbWv9Kt3lSc54MRG
-	MCr9JDpBJ5et6AuT2sS/IXj4JnhDzBJsOPApp2VImVdRyDiXAQD+5uHGLGTcATvIM6laMevevRAOD
-	GNMb3IXTv55HWVqpnSslFr3E5TffDwsRjaH6aStkcOTopQ6CUc+MRMHeUdYbM1CJxoGdgr5kf1gT3
-	Ic3/M85g==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUSk3-00000009AP0-0w0l;
-	Fri, 20 Nov 2026 17:49:43 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id BAC36301185; Fri, 20 Nov 2026 18:49:42 +0100 (CET)
-Date: Fri, 20 Nov 2026 18:49:42 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Tengda Wu <wutengda@huaweicloud.com>, Ingo Molnar <mingo@redhat.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=F6u2fa1l
+Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-1b3beeaf6f9so1406055c88.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 09:58:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795197524; x=1795802324; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=T30OloEed+5ksnOk+6k3bS3hGIzHHhaTnjHcUwk/mxY=;
+        b=F6u2fa1lyX9Lc7JQd3SjTC4E0Jyzu6C8Ybwf/0KzsAf50nLmj1A32kaiCOdyEKjNO+
+         vl8KEhw7bmKTvKk7o2fJ0qphLf6Cw2MNccrIlc9CPXQPxrskn3R+N76kmjO9KMFPJw2P
+         L6whiXA3C7LMYbN7mfyAGsDFQO3Bi//KQWn4ZcLK91hFjq0j4Vxx0G8MKCkPzoxsNs9r
+         qnh47Tvdv2tpqvIqoF5r9SxbvKdxdPHTemkQLhpMyUpgZuRxsd0CrNMyy3ZRctBrDGMa
+         CxHYUBgjnYnhyFQXVWw1/D9pVQ0ApQBAjcj88SrhBmJRJhjm4Csh/Qk5aDM9BYmh6PR3
+         OQgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795197524; x=1795802324;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=T30OloEed+5ksnOk+6k3bS3hGIzHHhaTnjHcUwk/mxY=;
+        b=SA+pwZqoQ8jT3mWM5oHrXW8cKyQ+CjbA+f7vuFNjTySFhTJJoi1xmZXBcv2IR6Y4uj
+         83jebKO5mCGtNj1cQHoR5VgkGPaOO+I5lrceRJGQdnlmIeh5ETlPUPuKeSUbWGiCJjHn
+         WeDLlRnZ9qu+du+4plFC0F1xCtx1Lm2JL8fj8JO84Z06ORgfumuWcYFSFAF3FqzrS54B
+         bi0VmFf08DkNBAyvQFUTKIDkeAISw4cE1NO9h54XIW8WahpHWoGoTeSMzxElzAv6kDMk
+         sxmVaCl9gkqCU903Y2QOzq8z882i7CSP3ApYMPc+oJU5LWPFAk4tmKp/FIuls78wcudQ
+         Wmzw==
+X-Gm-Message-State: APuU4Z9FaKOTG6TFYBsu0sI8PQ6SM8erzDn4fCEZHJ9hIEdw4KTBxZOd
+	iOpGYRG7BQVOo8Pn2Iem/OV7TZO/xVsSbBvAKiCHpWqG8kizvYSQ3UhlN9UjQa6T
+X-Gm-Gg: AYBFou2NmzEZpHEgEz7DSxuozINtYGY9ac2LLgE73NGkVFuHb4FJ0dPRjsYDMT00euz
+	EDlSluH9GXLgz5e4a7upgGhhplTuEGCI4y0IHKBgXvx5Kcwd0BU3BJYv94Cys9LDgsCkbK9xGPc
+	OPgeJBDd7I0Ms4J8VMxZhCGpBw6TXRQf5ZALA2g7iUfD8Ixtsag8WR0k8mUXWcdiUBBGQtjKSd1
+	rZAlV/F5sTNfVSulO+Cj5D2vATVZ5jJse8Vbo84AkPRp5nvLs694L6YbgubJHZRb3y4ej+fh022
+	dZOHAeMZJ+v26PrJb684eixWZvvtAbuf3BRco8OGmo+ltOClAf1tlWHdPFA0JdONWqsfvpcVff6
+	Ars4DLqHc0MSoMKnfNEwBQLkyMLmS38JTFn5GZma7ceaIihIiaYociLnAqFIdiuZv9g3y8M6Uma
+	brUDZerXytqaofYnBwEC7AkaG9A6t0tOEyZJpL+Rs9Feg9ikJ3e7Lriuhjh0isaCMTP3VA1zxfA
+	sDQIb5JxWKpF+g0p1tjuyIjvo0xWVqwHpeXK0JK4yoWOy87iyM2y7Jinw+qL6jUIDBxgikqDtf9
+	H9Il+MpktGZKy0MkMaGXc+H5x4yTk3/urPks/Z06TA==
+X-Received: by 2002:a05:7022:b909:b0:1b4:f3af:355e with SMTP id a92af1059eb24-1b5568a660emr3282155c88.13.1795197524183;
+        Fri, 20 Nov 2026 09:58:44 -0800 (PST)
+Received: from a1-free ([161.33.196.121])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1b562a82b3fsm681084c88.5.2026.11.20.09.58.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Nov 2026 09:58:43 -0800 (PST)
+From: TAKANO Mitsuhiro <takano32@gmail.com>
+To: linux-perf-users@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] perf/core: Prevent duplicate sigtrap task work
- enqueue
-Message-ID: <20261120174942.GU2668804@noisy.programming.kicks-ass.net>
-References: <cover.1795053619.git.wutengda@huaweicloud.com>
- <45bd71c976aea1a0e8bf5762dd6b6552e6009439.1795053619.git.wutengda@huaweicloud.com>
- <20261120154457.GZ2668564@noisy.programming.kicks-ass.net>
- <20261120154959.zw08JC0V@linutronix.de>
- <20261120160140.GR2668804@noisy.programming.kicks-ass.net>
- <20261120162604.GL2669272@noisy.programming.kicks-ass.net>
- <20261120172831.5XwELZY5@linutronix.de>
+	linux-kernel@vger.kernel.org,
+	TAKANO Mitsuhiro <takano32@gmail.com>
+Subject: [PATCH 0/3] perf vendor events: Fix misspellings in event and metric descriptions
+Date: Fri, 20 Nov 2026 17:58:37 +0000
+Message-ID: <20261120175840.1274637-1-takano32@gmail.com>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -80,109 +102,87 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261120172831.5XwELZY5@linutronix.de>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 20, 2026 at 06:28:31PM +0100, Sebastian Andrzej Siewior wrote:
-> On 2026-11-20 17:26:04 [+0100], Peter Zijlstra wrote:
-> > Also, sending signals on software events seems utterly insane. But I
-> > don't support we can go limit that now :-(
-> 
-> Tengda: Is this an actual valid use case that you have here or did an AI
-> figured out that this broken?
+The PMU event descriptions shipped in the JSON tables under
+tools/perf/pmu-events/arch/ are printed by `perf list` (BriefDescription)
+and `perf list -v` (PublicDescription) as they are written, and the metric
+descriptions in the metrics JSON files are printed by `perf list metric`.
+A number of them carry misspelled words, so the misspellings reach the
+user.  This series fixes the first batch of them, which a spell-check pass
+over the power8, power9 and power10 tables and over the Intel and AMD
+tables turned up.
 
-I *think* the below is sufficient.
+The three patches are split by vendor because that is the convention for
+the subject prefix in this tree.  Of the 989 commits that touch
+tools/perf/pmu-events/arch/ as of 65e4fd942f72, `perf vendor events
+intel:` has 391, `amd:` 37, `powerpc:` 8, `arm64:` 83, `s390:` 18 and
+`riscv:` 13.  No commit with a vendor prefix touches another vendor's
+tables.
 
- - sigtrap implies a per-task event; task_work is local to the current
-   task (+- the context switch thing from 2/2).
+The arm64 tables have misspellings of the same kind ("misprediciton" in
+the ampere tables, "executed.This" in the cortex-a55 tables); the s390
+and riscv tables contain none of the words fixed here.  More remain in the
+tables this series swept and in others -- "conjection" and "banwidth" in
+the Intel uncore tables, "pumpfor" in power8, to name a few -- and those
+are left for follow-up patches.
 
- - task_work_run() is written such that the work handler can do
-   task_work_add(), therefore the early clear in the handler doesn't
-   matter.
+Each patch touches description strings only, and each was checked by
+regenerating the tables with
 
-And while recursive software events are tedious, I think the below fix
-is simple enough to not worry about too much.
+  jevents.py <arch> all tools/perf/pmu-events/arch out.c out-str.c
 
----
-Subject: perf/core: Prevent duplicate sigtrap task work enqueue
-From: Tengda Wu <wutengda@huaweicloud.com>
-Date: Thu, 19 Nov 2026 09:51:00 +0000
+and diffing the result against the one generated from the parent commit:
+every event name and event code is unchanged, and the misspellings are
+gone from the generated string table.  out-str.c shrinks or stays the same
+size, because some corrected descriptions become identical to descriptions
+already stored for other models, and the amd fix swaps a word for another
+of the same length:
 
-From: Tengda Wu <wutengda@huaweicloud.com>
+  powerpc  13 files, 55 lines changed   out-str.c -393 bytes
+  intel     5 files,  5 lines changed   out-str.c -477 bytes
+  amd       1 file,   1 line changed    out-str.c size unchanged
 
-The sigtrap handling in __perf_event_overflow() checks
-event->pending_work before calling task_work_add(), but only sets
-pending_work after the task work has been queued.
+65 PublicDescription values in power8/other.json end in "42"; the trailing
+"42" is not a misspelling, so it is left alone.  The word "ibufffully"
+in that file is left unchanged as well: the BriefDescription of the same
+event ends with "ibuff", so the boundary is clear, but whether a space or
+a full stop belongs after it is not.
 
-This leaves a window where an NMI can interrupt task_work_add() and
-re-enter __perf_event_overflow() for the same (software/tracepoint)
-event. Since pending_work is still zero, the nested invocation can
-enqueue the same pending_task again.
+Written with Hermes Agent, an LLM assistant: it found the words and wrote
+these changelogs and this cover note; the author reviewed every change and
+ran the generator as described above.
 
-The re-entrant call path looks like this:
+Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
 
-  __perf_event_overflow()
-    task_work_add()
-      <NMI>
-        __perf_event_overflow()
-          task_work_add()
+TAKANO Mitsuhiro (3):
+  perf vendor events powerpc: Fix misspellings in the power tables
+  perf vendor events intel: Fix misspellings in the Intel model tables
+  perf vendor events amd: Fix a misspelling in the amdzen3 table
 
-The nested invocation may enqueue pending_task before the outer
-invocation does. When the outer invocation resumes, it inserts the
-same task work entry again, potentially creating a cycle in the task
-work list.
+ .../arch/powerpc/power10/metrics.json         |  8 ++--
+ .../pmu-events/arch/powerpc/power8/cache.json |  2 +-
+ .../arch/powerpc/power8/memory.json           |  2 +-
+ .../arch/powerpc/power8/metrics.json          |  8 ++--
+ .../pmu-events/arch/powerpc/power8/other.json | 38 +++++++++----------
+ .../arch/powerpc/power8/pipeline.json         |  4 +-
+ .../pmu-events/arch/powerpc/power8/pmc.json   |  4 +-
+ .../pmu-events/arch/powerpc/power9/cache.json |  2 +-
+ .../arch/powerpc/power9/frontend.json         |  2 +-
+ .../arch/powerpc/power9/marked.json           |  4 +-
+ .../arch/powerpc/power9/metrics.json          |  6 +--
+ .../pmu-events/arch/powerpc/power9/other.json | 28 +++++++-------
+ .../arch/powerpc/power9/translation.json      |  2 +-
+ .../pmu-events/arch/x86/amdzen3/branch.json   |  2 +-
+ .../arch/x86/nehalemep/pipeline.json          |  2 +-
+ .../arch/x86/nehalemex/pipeline.json          |  2 +-
+ .../arch/x86/sierraforest/srf-metrics.json    |  2 +-
+ .../arch/x86/westmereep-dp/pipeline.json      |  2 +-
+ .../arch/x86/westmereep-sp/pipeline.json      |  2 +-
+ 19 files changed, 61 insertions(+), 61 deletions(-)
 
-As a result, perf_pending_task() may be executed repeatedly, leading
-to unbalanced event reference counting.
 
-Fix this by atomically claiming pending_work with cmpxchg_local()
-before calling task_work_add(). This ensures that only one invocation
-can enqueue the task work, even when another overflow occurs
-re-entrantly from an NMI.
+base-commit: 65e4fd942f72a9dba0e4e257290c4fa1aa756854
+-- 
+2.53.0
 
-Notably: sigtrap events must be per-task, meaning that the there is no
-concurrency, only re-entrancy.
-
-[peterz: clarify and rewrite]
-Fixes: c5d93d23a260 ("perf: Enqueue SIGTRAP always via task_work.")
-Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/events/core.c |   24 +++++++++++++++---------
- 1 file changed, 15 insertions(+), 9 deletions(-)
-
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10950,16 +10950,22 @@ static int __perf_event_overflow(struct
- 
- 		notify_mode = in_nmi() ? TWA_NMI_CURRENT : TWA_RESUME;
- 
--		if (!event->pending_work &&
--		    !task_work_add(current, &event->pending_task, notify_mode)) {
--			event->pending_work = pending_id;
--			local_inc(&event->ctx->nr_no_switch_fast);
--			WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
--
--			event->pending_addr = 0;
--			if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
--				event->pending_addr = data->addr;
-+		/*
-+		 * Software events can nest and attempt this recursively;
-+		 * claim the pending_work before task_work_add() recurses.
-+		 */
-+		if (cmpxchg_local(&event->pending_work, 0, 1) == 0) {
-+			if (!task_work_add(current, &event->pending_task, notify_mode)) {
-+				event->pending_work = pending_id;
-+				local_inc(&event->ctx->nr_no_switch_fast);
-+				WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
- 
-+				event->pending_addr = 0;
-+				if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
-+					event->pending_addr = data->addr;
-+			} else {
-+				event->pending_work = 0;
-+			}
- 		} else if (event->attr.exclude_kernel && valid_sample) {
- 			/*
- 			 * Should not be able to return to user space without
