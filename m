@@ -1,72 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.197
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.199
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795212876;
-	b=ZHryD1pNQS8PdRJPXY3BOYOMaSzZlUT9OsRVkxlqjRkOQCORRaNghh/i8z3sDCrgCuHu
-	 OmHykOAfj1n8KzUpoWNZsJOIFmggRKE4nwJ4YCJoUNogF7p0FZncMI+K367sQ2Mz4XODs
-	 LhCE4tqiuFJXojrkxb59F2e05kVhgWT0CchmvYyMjvcZgA6f05CPsomVgipWF5X/Dfcqe
-	 jkQe3xSkGbzJ1TNTpQPc6Zv27l73ZZ6HaPeY8usiR7GdXEhsFLG6enwIQMoaSEXbVhsL2
-	 BJYmx+72ea+vfhG1Ag7LZMWLYxb/XBkDaAUh0AO/A+EHIoRi2AeW8yegbF+kvIdcR0g==
+	t=1795212877;
+	b=E2+dh1q0WfIE8NYS2ZsAc+zIYWr1g15XQHnu5Y1iC2fhKoFg4dML7R8n+UK5ntSD51bv
+	 60CmOghCysX80sctZZ4A8aDhy4cpfe6GXs77kTpTzMCfyZLJHEVcd07heIFEBvTNokxu3
+	 Q8ley59/TTlYXpOkhBTo0ydK052p01abOAq7rhkHZWnCDtY/nDWC/vai/5eOAHVbzZ6H4
+	 YoJGM4ajtBzk3VnrGQz4yE1a/a74KMlf2Flo9RQJY24eYojbNCoRqXjfoEbvmPxRA2lL4
+	 5ShAK3Vz1zy/ITNyy857FH4T6L+i+u0HFYodL/ePQ7FX6YI/BvWMxJLzIq8YWAd5e2Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795212876;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795212877;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Received:Date:In-Reply-To:Mime-Version:
 	 References:X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=DmNQK/ZGXBH6FTbGznjl+6RV6y+HJEOJ4H7TW0t9NaA=;
-	b=e1SeSkuNQutS43tbBcl/sgKLa2hdJtsheTio0t1aWKn8pb8F3e6HxpYRpzHJ5vGiiTkT
-	 vgwX2hVqsJvwwZD/LmcnQZTShgQMu4qnU8dQjaexFdDCApsgr0jDG/hd6k0g3H5xZr5Sk
-	 ya9QRqcEZUR910Uuvauyx8/J6hMvRFR7mTii3G5lVRu2GKFmt/pcn+wkl3JgDPT3VoTim
-	 QDdvc4R3sNQGZ6n/Js4Svvcmt8XylofPiNglcEfpbjCisCRn0AVj7HixaaJ5AcXohYlP0
-	 cNSBxaIhM+GHnZiKkAlSPxVHlDp+4BVMyY+Y2sshBFg/DNbkq5QFxEuMox2/PxhzZdA==
+	bh=id0a/mzGN50ic2k00/n8hpihWo/9QDdq+HMV733fdTc=;
+	b=IKVR6mzCC+NkBgXs8W9X+2FkzN6wNVTsj4co6bFXgbqe95sy9AXXuEILdbBaWhztkToz
+	 uBxirUnnDLbuelNlQknM+6BmIQsCeBxxIZfaXIstpmUPp40Fv78sKfwKYbo7ZrIu0UwCw
+	 3CBWCwtxcdEO8Se3hYJ0ebRHDqvbIOf/iWBA9jw8ecknt0rJEHhoKssw4WKGJf1umfD+2
+	 zzhSky8IMqjfYIYpREA0oRhkXyqdwYFWQgJQRgSSX18J7RFgDtHN1lB0xsZY+8gMkFFLM
+	 wnp7d2uL2k0ZDWsE3SBoi8olh7ORj9FeRiiSI96IVA9m45aNgkyeU6I9pbRpJVRMXdg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ZxJtqre0;
-	arc=none smtp.remote-ip=209.85.214.197
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=NCE5mPUm;
+	arc=none smtp.remote-ip=74.125.82.199
+Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7305606A6AD
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 22:14:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B7305606A6AD
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD04606A6AC
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 22:14:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4BD04606A6AC
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ZxJtqre0
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2f02c63901aso13867035ad.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 14:14:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=NCE5mPUm
+Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-383ec96a7deso1544200eec.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 14:14:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795212857; x=1795817657; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1795212872; x=1795817672; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=DmNQK/ZGXBH6FTbGznjl+6RV6y+HJEOJ4H7TW0t9NaA=;
-        b=ZxJtqre0jUIxhFt76bzAOeqLn0aVIte294kLS00LWzY1sjZauXMvHBhKuFUpjN+L6T
-         5EOQV2VefhGLJPtRP9SbAX4l0KmI+GlLeRkOFcF8eTcFGmP+gFyd+gFzbmK848KltIlY
-         IWd5Nz4SARUCA9YMNofjKygZB/9GRfBYsghZWThMKsiYr8K3BW6AW4UWRREQkdNutKIk
-         UJvMNwVpSyxb6a5ZpqE6RV+NhWCt8eO4Q/vr/KZKf864IUs/pbehp8nVE/9GVc6Mh55d
-         BY+bfiHCxC1r8gZ9XYfP8g8F0WQ0y2w73byI8kaT6cB+BXdRFiqq31jI+2BH1QiBUtDj
-         Gv7A==
+        bh=id0a/mzGN50ic2k00/n8hpihWo/9QDdq+HMV733fdTc=;
+        b=NCE5mPUmYAlTk2Y3M+ju45dppk9LrZGfIbDJG3J0yTc+ZoXV15FqdhLChIOTGI3Cqa
+         86v1Wbaj8EVTsjkFkzcQ1/ax3cLaCUJUcWyP6vbhPjouTEnArXGXYB4oTH34sIx5HkNq
+         77vC9+ephkh3cdZkdtNYYP/R6a2O1+aQbA445p9dVRVYhInTvZbcW8Zps53BE8YIlmOD
+         MNHxwzFVcPTjzuSqSQSMJKM4mZAM/CDMBd1dF6Y30Mp6f6459ybabB2cG2LQaoNYeB+w
+         buLaZHMMarE6hSCDbVwxUN09CL7GWEnRbFvxUHPWo/10Vop4ZopJIkhQQwSxkr4L6keH
+         919Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795212857; x=1795817657;
+        d=1e100.net; s=20260707; t=1795212872; x=1795817672;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=DmNQK/ZGXBH6FTbGznjl+6RV6y+HJEOJ4H7TW0t9NaA=;
-        b=fQZWXZy+L7CuQ4yNoIjoqlMLF8XA3fqMbM5wZWR5W6UB8HdkiiGuVdymDzYj7fWgjV
-         XrbbKMSXSMYoZr/F6cPN8PVIfcQg2rtdaub6eiDdTtnE0d8KtXoa/n50+WxbXwKFLYfD
-         yy9VMr577gkYDYj4JWfBTrs5nnoea1/mSywmJ2K3l4IyYJUgjnXjqknByUZP4fc315Us
-         pismKGt3EOYyxdDHfgEtCz9qMWD9VevtXRQWRmXDMgYK0nQ/FC7fI5JvtTimzpG/cptb
-         BcXkDOokTgFlYIAfPC5H0II2BzjBtLhDxjZCQX1Ue8WKtzMJa1o+eOZtc8rQ0Z/wZ2W8
-         BcNA==
-X-Gm-Message-State: APuU4Z8jguOgtZBhgy3g5WYfYKOnjQxQSY3THDoustRndSq9jKaeRp09
-	+EgCTeE8TftjoBi8zoEa1HfVZhdf+kwO4uXGmdSPsCreXKMtvpp833hcVzvK0UhADRCVXU7eQLR
-	GsSFOUYTmtQ==
-X-Received: from plbmo12.prod.google.com ([2002:a17:903:a8c:b0:2ed:1d20:a33a])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1ce:b0:2ef:d157:e128
- with SMTP id d9443c01a7336-2f03f1e8493mr47150315ad.52.1795212856444; Fri, 20
- Nov 2026 14:14:16 -0800 (PST)
-Date: Fri, 20 Nov 2026 14:13:09 -0800
+        bh=id0a/mzGN50ic2k00/n8hpihWo/9QDdq+HMV733fdTc=;
+        b=jhXw7dVaLWhzkes7TuE5qMaqerRkpeQuayujkRyXniWxlDxG+zcX1doWax27D1bSjV
+         nbYflhuR9YNhBClTFXkHfYlokqegpu1aZnWFv78FYjmmtceVgOATwtPFn5P4H9ZtvDWJ
+         z0vmMkpBsDUpenh+wMb8GTwbCh2db5SWRvpG7OwWT7WobNT2ezbZD1p3yQXIXwAIk0C/
+         9+a8VirLSwuWk3rv3aXSSKXNpTUWaLQU18f574dIGuIs+ZYv98K07abHRQWF8kiV4R6J
+         /bzdfuJ0Pl16BDJ13gBLWsfvFquWcwsmKHWbjLqGEhPL5XSHrbA+QkfWggFFK6CHX3FU
+         CLPA==
+X-Gm-Message-State: APuU4Z9R2ILpJGhareWcDg9jJK4BJpcpzRdxERtGGHVIaZJ29ubb6EFz
+	Zm+vX8l02wy+0x0XHTYhh344EqHyuFx1WoRRJ2tPv7Lmbju41sdmZ2PLX921zqk9lp6AlIaiZcA
+	cWe6VeylcQw==
+X-Received: from dyee6.prod.google.com ([2002:a05:693c:6286:b0:386:6850:930a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:50fa:b0:384:6487:b155
+ with SMTP id 5a478bee46e88-38570c359d3mr4897009eec.29.1795212872032; Fri, 20
+ Nov 2026 14:14:32 -0800 (PST)
+Date: Fri, 20 Nov 2026 14:13:12 -0800
 In-Reply-To: <20261120221332.2245191-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -79,8 +79,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261120221332.2245191-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.750.gf70dc682cf-goog
-Message-ID: <20261120221332.2245191-9-irogers@google.com>
-Subject: [PATCH v3 08/30] perf pmus: Introduce struct perf_pmus and perf_env__pmus()
+Message-ID: <20261120221332.2245191-12-irogers@google.com>
+Subject: [PATCH v3 11/30] perf pmu-events: Add e_machine to struct pmu_events_map
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -89,1985 +89,210 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Move the static global core_pmus, other_pmus, read_pmu_types,
-num_core_pmus, and extended_type state from pmus.c into a new
-struct perf_pmus embedded in struct perf_env and accessed via
-perf_env__pmus().
+The CPUID strings in the pmu-events mapfile.csv files have an
+architecture specific format, such as "GenuineIntel-6-55-[56789ABCDEF]"
+on x86 or a MIDR value like "0x00000000410fd0c0" on arm64. When perf is
+built with JEVENTS_ARCH=all the tables of every architecture are
+present and map_for_cpu() compared the host's CPUID against all of
+them, even though only the host architecture's tables can match.
 
-Rename perf_pmus__destroy() to perf_pmus__exit() to match the
-perf_env__init()/perf_env__exit() naming convention, and update it
-along with perf_pmus__find_by_attr(), perf_pmus__scan_for_event(),
-perf_pmus__scan_matching_wildcard(), perf_pmus__scan_for_uncore_id(),
-perf_pmus__pmu_for_pmu_filter(), perf_pmus__print_pmu_events(),
-perf_pmus__print_raw_pmu_events(), perf_pmus__have_event(),
-perf_pmus__num_core_pmus(), perf_pmus__supports_extended_type(),
-perf_pmus__add_test_pmu(), and perf_pmus__add_test_hwmon_pmu() to take
-struct perf_pmus *.
-
-To keep this commit reviewable, the high-fanout perf_pmus__find(),
-perf_pmus__find_by_type(), perf_pmus__find_core_pmu(),
-perf_pmus__scan(), and perf_pmus__scan_core() helpers are updated to
-take struct perf_pmus * in the next two commits.
+Record the ELF machine of each architecture's CPUIDs in struct
+pmu_events_map, EM_NONE for the test and common tables, and have
+map_for_cpu() only consider tables for the host's ELF machine. The 32
+and 64-bit variants of x86 and PowerPC share tables.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/x86/tests/hybrid.c            |   3 +-
- tools/perf/bench/pmu-scan.c                   |   7 +-
- tools/perf/builtin-list.c                     |  19 +-
- tools/perf/builtin-record.c                   |   2 +-
- tools/perf/builtin-stat.c                     |   2 +-
- tools/perf/tests/hwmon_pmu.c                  |   4 +-
- tools/perf/tests/mmap-basic.c                 |   4 +-
- tools/perf/tests/parse-events.c               |  15 +-
- tools/perf/tests/pmu.c                        |   3 +-
- tools/perf/util/cputopo.c                     |   3 +-
- tools/perf/util/env.c                         |  12 +-
- tools/perf/util/env.h                         |  10 +
- tools/perf/util/evlist.c                      |  13 +-
- tools/perf/util/evlist.h                      |   2 +
- tools/perf/util/evsel.c                       |  14 +-
- .../util/kvm-stat-arch/kvm-stat-powerpc.c     |   3 +-
- tools/perf/util/metricgroup.c                 |   6 +-
- tools/perf/util/parse-events.c                |  44 ++-
- tools/perf/util/parse-events.h                |   3 +
- .../perf/util/perf-regs-arch/perf_regs_x86.c  |   7 +-
- tools/perf/util/pmu.c                         |   9 +-
- tools/perf/util/pmu.h                         |   3 +
- tools/perf/util/pmus.c                        | 343 +++++++++++-------
- tools/perf/util/pmus.h                        | 205 ++++++++++-
- tools/perf/util/print-events.c                |   7 +-
- tools/perf/util/session.c                     |  11 +
- tools/perf/util/stat-display.c                |   4 +-
- tools/perf/util/stat-shadow.c                 |   3 +-
- 28 files changed, 560 insertions(+), 201 deletions(-)
+ tools/perf/pmu-events/empty-pmu-events.c | 24 +++++++++++++++-
+ tools/perf/pmu-events/jevents.py         | 35 +++++++++++++++++++++++-
+ 2 files changed, 57 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/arch/x86/tests/hybrid.c b/tools/perf/arch/x86/tests/hybrid.c
-index 0477e17b8e53..011217998a3e 100644
---- a/tools/perf/arch/x86/tests/hybrid.c
-+++ b/tools/perf/arch/x86/tests/hybrid.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "arch-tests.h"
- #include "debug.h"
-+#include "env.h"
- #include "evlist.h"
- #include "evsel.h"
- #include "pmu.h"
-@@ -303,7 +304,7 @@ static int test_events(const struct evlist_test *events, int cnt)
- 
- int test__hybrid(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
- {
--	if (perf_pmus__num_core_pmus() == 1)
-+	if (perf_pmus__num_core_pmus(perf_env__pmus(host_env())) == 1)
- 		return TEST_SKIP;
- 
- 	return test_events(test__hybrid_events, ARRAY_SIZE(test__hybrid_events));
-diff --git a/tools/perf/bench/pmu-scan.c b/tools/perf/bench/pmu-scan.c
-index 14a464ad8cea..1d7dd4b203e0 100644
---- a/tools/perf/bench/pmu-scan.c
-+++ b/tools/perf/bench/pmu-scan.c
-@@ -8,6 +8,7 @@
- #include <stdio.h>
- #include "bench.h"
- #include "util/debug.h"
-+#include "util/env.h"
+diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
+index 7df1552403e7..7428ffd4d70c 100644
+--- a/tools/perf/pmu-events/empty-pmu-events.c
++++ b/tools/perf/pmu-events/empty-pmu-events.c
+@@ -4,6 +4,8 @@
+ #include <pmu-events/pmu-events.h>
+ #include "util/header.h"
  #include "util/pmu.h"
- #include "util/pmus.h"
- #include "util/stat.h"
-@@ -42,6 +43,7 @@ static struct pmu_scan_result *results;
++#include <dwarf-regs.h>
++#include <elf.h>
+ #include <string.h>
+ #include <stddef.h>
  
- static int save_result(void)
+@@ -5419,6 +5421,8 @@ struct pmu_metrics_table {
+ struct pmu_events_map {
+ 	const char *arch;
+ 	const char *cpuid;
++	/* The ELF machine of the architecture's CPUIDs, EM_NONE for test and common. */
++	uint16_t e_machine;
+ 	struct pmu_events_table event_table;
+ 	struct pmu_metrics_table metric_table;
+ };
+@@ -5431,6 +5435,7 @@ static const struct pmu_events_map pmu_events_map[] = {
  {
-+	struct perf_pmus *pmus = perf_env__pmus(host_env());
- 	struct perf_pmu *pmu = NULL;
- 	struct list_head *list;
- 	struct pmu_scan_result *r;
-@@ -69,7 +71,7 @@ static int save_result(void)
- 		nr_pmus++;
- 	}
- 
--	perf_pmus__destroy();
-+	perf_pmus__exit(pmus);
- 	return 0;
+ 	.arch = "common",
+ 	.cpuid = "common",
++	.e_machine = EM_NONE,
+ 	.event_table = {
+ 		.pmus = pmu_events__common,
+ 		.num_pmus = ARRAY_SIZE(pmu_events__common),
+@@ -5444,6 +5449,7 @@ static const struct pmu_events_map pmu_events_map[] = {
+ {
+ 	.arch = "testarch",
+ 	.cpuid = "testcpu",
++	.e_machine = EM_NONE,
+ 	.event_table = {
+ 		.pmus = pmu_events__test_soc_cpu,
+ 		.num_pmus = ARRAY_SIZE(pmu_events__test_soc_cpu),
+@@ -5457,6 +5463,7 @@ static const struct pmu_events_map pmu_events_map[] = {
+ {
+ 	.arch = 0,
+ 	.cpuid = 0,
++	.e_machine = EM_NONE,
+ 	.event_table = { 0, 0 },
+ 	.metric_table = { 0 },
+ }
+@@ -5769,6 +5776,20 @@ int pmu_metrics_table__find_metric(const struct pmu_metrics_table *table,
+ 	return PMU_METRICS__NOT_FOUND;
  }
  
-@@ -128,6 +130,7 @@ static void delete_result(void)
- 
- static int run_pmu_scan(void)
++/*
++ * Is the map for the architecture of @e_machine? The 32 and 64-bit variants of
++ * an architecture share tables.
++ */
++static bool pmu_events_map__e_machine_matches(const struct pmu_events_map *map,
++					      uint16_t e_machine)
++{
++	if (e_machine == EM_386)
++		e_machine = EM_X86_64;
++	else if (e_machine == EM_PPC)
++		e_machine = EM_PPC64;
++	return map->e_machine == e_machine;
++}
++
+ static const struct pmu_events_map *map_for_cpu(struct perf_cpu cpu)
  {
-+	struct perf_pmus *pmus = perf_env__pmus(host_env());
- 	struct stats stats;
- 	struct timeval start, end, diff;
- 	double time_average, time_stddev;
-@@ -158,7 +161,7 @@ static int run_pmu_scan(void)
- 			update_stats(&stats, runtime_us);
+ 	static struct {
+@@ -5809,7 +5830,8 @@ static const struct pmu_events_map *map_for_cpu(struct perf_cpu cpu)
+ 				break;
+ 			}
  
- 			ret = check_result(core_only);
--			perf_pmus__destroy();
-+			perf_pmus__exit(pmus);
- 			if (ret < 0)
+-			if (!strcmp_cpuid_str(map->cpuid, cpuid))
++			if (pmu_events_map__e_machine_matches(map, EM_HOST) &&
++			    !strcmp_cpuid_str(map->cpuid, cpuid))
  				break;
  		}
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 47668d66c395..573d13baa7fd 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -11,6 +11,7 @@
- #include "builtin.h"
+ 		free(last_map_search.cpuid);
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 080e04b51b8c..db1b4749aec3 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -26,6 +26,15 @@ _sys_event_table_to_metric_table_mapping: Dict[str, str] = {}
+ # JsonEvent. Architecture standard events are in json files in the top
+ # f'{_args.starting_dir}/{_args.arch}' directory.
+ _arch_std_events: Dict[str, "JsonEvent"] = {}
++# The ELF machine of the CPUIDs in each architecture's mapfile.csv.
++_arch_e_machine: Dict[str, str] = {
++    'arm64': 'EM_AARCH64',
++    'nds32': 'EM_NDS32',
++    'powerpc': 'EM_PPC64',
++    'riscv': 'EM_RISCV',
++    's390': 'EM_S390',
++    'x86': 'EM_X86_64',
++}
+ # Events to write out when the table is closed
+ _pending_events: list["JsonEvent"] = []
+ # Name of events table to be written out
+@@ -730,6 +739,8 @@ struct pmu_metrics_table {
+ struct pmu_events_map {
+ \tconst char *arch;
+ \tconst char *cpuid;
++\t/* The ELF machine of the architecture's CPUIDs, EM_NONE for test and common. */
++\tuint16_t e_machine;
+ \tstruct pmu_events_table event_table;
+ \tstruct pmu_metrics_table metric_table;
+ };
+@@ -745,6 +756,7 @@ static const struct pmu_events_map pmu_events_map[] = {
+       _args.output_file.write("""{
+ \t.arch = "testarch",
+ \t.cpuid = "testcpu",
++\t.e_machine = EM_NONE,
+ \t.event_table = {
+ \t\t.pmus = pmu_events__test_soc_cpu,
+ \t\t.num_pmus = ARRAY_SIZE(pmu_events__test_soc_cpu),
+@@ -760,6 +772,7 @@ static const struct pmu_events_map pmu_events_map[] = {
+       _args.output_file.write("""{
+ \t.arch = "common",
+ \t.cpuid = "common",
++\t.e_machine = EM_NONE,
+ \t.event_table = {
+ \t\t.pmus = pmu_events__common,
+ \t\t.num_pmus = ARRAY_SIZE(pmu_events__common),
+@@ -772,6 +785,7 @@ static const struct pmu_events_map pmu_events_map[] = {
+ },
+ """)
+     else:
++      e_machine = _arch_e_machine[arch]
+       with open(f'{_args.starting_dir}/{arch}/mapfile.csv', encoding='utf-8') as csvfile:
+         table = csv.reader(csvfile)
+         first = True
+@@ -798,6 +812,7 @@ static const struct pmu_events_map pmu_events_map[] = {
+             _args.output_file.write(f"""{{
+ \t.arch = "{arch}",
+ \t.cpuid = "{cpuid}",
++\t.e_machine = {e_machine},
+ \t.event_table = {{
+ \t\t.pmus = {event_tblname},
+ \t\t.num_pmus = {event_size}
+@@ -814,6 +829,7 @@ static const struct pmu_events_map pmu_events_map[] = {
+   _args.output_file.write("""{
+ \t.arch = 0,
+ \t.cpuid = 0,
++\t.e_machine = EM_NONE,
+ \t.event_table = { 0, 0 },
+ \t.metric_table = { 0 },
+ }
+@@ -1178,6 +1194,20 @@ int pmu_metrics_table__find_metric(const struct pmu_metrics_table *table,
+ \treturn PMU_METRICS__NOT_FOUND;
+ }
  
- #include "util/print-events.h"
-+#include "util/env.h"
- #include "util/pmus.h"
++/*
++ * Is the map for the architecture of @e_machine? The 32 and 64-bit variants of
++ * an architecture share tables.
++ */
++static bool pmu_events_map__e_machine_matches(const struct pmu_events_map *map,
++\t\t\t\t\t      uint16_t e_machine)
++{
++\tif (e_machine == EM_386)
++\t\te_machine = EM_X86_64;
++\telse if (e_machine == EM_PPC)
++\t\te_machine = EM_PPC64;
++\treturn map->e_machine == e_machine;
++}
++
+ static const struct pmu_events_map *map_for_cpu(struct perf_cpu cpu)
+ {
+ \tstatic struct {
+@@ -1218,7 +1248,8 @@ static const struct pmu_events_map *map_for_cpu(struct perf_cpu cpu)
+ \t\t\t\tbreak;
+ \t\t\t}
+ 
+-\t\t\tif (!strcmp_cpuid_str(map->cpuid, cpuid))
++\t\t\tif (pmu_events_map__e_machine_matches(map, EM_HOST) &&
++\t\t\t    !strcmp_cpuid_str(map->cpuid, cpuid))
+ \t\t\t\tbreak;
+ \t\t}
+ \t\tfree(last_map_search.cpuid);
+@@ -1503,6 +1534,8 @@ such as "arm/cortex-a34".''',
+ #include <pmu-events/pmu-events.h>
+ #include "util/header.h"
  #include "util/pmu.h"
- #include "util/debug.h"
-@@ -567,6 +568,7 @@ static int list__tui(int argc, const char **argv)
- 
- int cmd_list(int argc, const char **argv)
- {
-+	struct perf_pmus *pmus = perf_env__pmus(host_env());
- 	int i, ret = 0;
- 	struct print_state default_ps = {
- 		.fp = stdout,
-@@ -660,7 +662,8 @@ int cmd_list(int argc, const char **argv)
- 		if (unit_name)
- 			ps->pmu_glob = strdup(unit_name);
- 		else if (cputype) {
--			const struct perf_pmu *pmu = perf_pmus__pmu_for_pmu_filter(cputype);
-+			const struct perf_pmu *pmu =
-+				perf_pmus__pmu_for_pmu_filter(pmus, cputype);
- 
- 			if (!pmu) {
- 				pr_err("ERROR: cputype is not supported!\n");
-@@ -692,7 +695,7 @@ int cmd_list(int argc, const char **argv)
- 				ret = -1;
- 				goto out;
- 			}
--			perf_pmus__print_pmu_events(&print_cb, ps);
-+			perf_pmus__print_pmu_events(pmus, &print_cb, ps);
- 			zfree(&default_ps.pmu_glob);
- 			default_ps.pmu_glob = old_pmu_glob;
- 		} else if (strcmp(argv[i], "hw") == 0 ||
-@@ -704,7 +707,7 @@ int cmd_list(int argc, const char **argv)
- 				ret = -1;
- 				goto out;
- 			}
--			perf_pmus__print_pmu_events(&print_cb, ps);
-+			perf_pmus__print_pmu_events(pmus, &print_cb, ps);
- 			zfree(&ps->event_glob);
- 			ps->event_glob = old_event_glob;
- 		} else if (strcmp(argv[i], "sw") == 0 ||
-@@ -718,7 +721,7 @@ int cmd_list(int argc, const char **argv)
- 					ret = -1;
- 					goto out;
- 				}
--				perf_pmus__print_pmu_events(&print_cb, ps);
-+				perf_pmus__print_pmu_events(pmus, &print_cb, ps);
- 				zfree(&ps->pmu_glob);
- 			}
- 			ps->pmu_glob = old_pmu_glob;
-@@ -731,12 +734,12 @@ int cmd_list(int argc, const char **argv)
- 				ret = -1;
- 				goto out;
- 			}
--			perf_pmus__print_pmu_events(&print_cb, ps);
-+			perf_pmus__print_pmu_events(pmus, &print_cb, ps);
- 			zfree(&ps->event_glob);
- 			ps->event_glob = old_event_glob;
- 		} else if (strcmp(argv[i], "pmu") == 0) {
- 			ps->exclude_abi = true;
--			perf_pmus__print_pmu_events(&print_cb, ps);
-+			perf_pmus__print_pmu_events(pmus, &print_cb, ps);
- 			ps->exclude_abi = false;
- 		} else if (strcmp(argv[i], "sdt") == 0)
- 			print_sdt_events(&print_cb, ps);
-@@ -770,7 +773,7 @@ int cmd_list(int argc, const char **argv)
- 				ret = -1;
- 				goto out;
- 			}
--			perf_pmus__print_pmu_events(&print_cb, ps);
-+			perf_pmus__print_pmu_events(pmus, &print_cb, ps);
- 			zfree(&ps->pmu_glob);
- 			ps->pmu_glob = old_pmu_glob;
- 			print_sdt_events(&print_cb, ps);
-@@ -785,7 +788,7 @@ int cmd_list(int argc, const char **argv)
- 				continue;
- 			}
- 			ps->event_glob = s;
--			perf_pmus__print_pmu_events(&print_cb, ps);
-+			perf_pmus__print_pmu_events(pmus, &print_cb, ps);
- 			print_sdt_events(&print_cb, ps);
- 			ps->metrics = true;
- 			ps->metricgroups = true;
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index ad81458989b5..7de04919d194 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -936,7 +936,7 @@ static int record__config_tracking_events(struct record *rec)
- 	 * delay of waiting or event synthesis.
- 	 */
- 	if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
--	    perf_pmus__num_core_pmus() > 1) {
-+	    perf_pmus__num_core_pmus(perf_env__pmus(host_env())) > 1) {
- 		/*
- 		 * User space tasks can migrate between CPUs, so when tracing
- 		 * selected CPUs, sideband for all CPUs is still needed.
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 37752d6bfef4..8706798290eb 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1209,7 +1209,7 @@ static int parse_cputype(const struct option *opt,
- 		return -1;
- 	}
- 
--	pmu = perf_pmus__pmu_for_pmu_filter(str);
-+	pmu = perf_pmus__pmu_for_pmu_filter(perf_env__pmus(host_env()), str);
- 	if (!pmu) {
- 		fprintf(stderr, "--cputype %s is not supported!\n", str);
- 		return -1;
-diff --git a/tools/perf/tests/hwmon_pmu.c b/tools/perf/tests/hwmon_pmu.c
-index e26b3fe3fab1..8f3d09d3f2a1 100644
---- a/tools/perf/tests/hwmon_pmu.c
-+++ b/tools/perf/tests/hwmon_pmu.c
-@@ -11,6 +11,7 @@
- #include <sys/stat.h>
- 
- #include "debug.h"
-+#include "env.h"
- #include "evlist.h"
- #include "parse-events.h"
- #include "pmus.h"
-@@ -137,7 +138,8 @@ static struct perf_pmu *test_pmu_get(char *dir, size_t sz)
- 	}
- 
- 	/* Make the PMU reading the files created above. */
--	hwm = perf_pmus__add_test_hwmon_pmu(dir, "hwmon1234", test_hwmon_name);
-+	hwm = perf_pmus__add_test_hwmon_pmu(perf_env__pmus(host_env()),
-+					    dir, "hwmon1234", test_hwmon_name);
- 	if (!hwm)
- 		pr_err("Test hwmon creation failed\n");
- 
-diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
-index 602a78d48b10..dada4af5fb68 100644
---- a/tools/perf/tests/mmap-basic.c
-+++ b/tools/perf/tests/mmap-basic.c
-@@ -17,6 +17,7 @@
- 
- #include "cpumap.h"
- #include "debug.h"
-+#include "env.h"
- #include "event.h"
- #include "evlist.h"
- #include "evsel.h"
-@@ -264,6 +265,7 @@ static enum user_read_state set_user_read(struct perf_pmu *pmu,
- 
- static int test_stat_user_read(u64 event, enum user_read_state enabled)
- {
-+	struct perf_pmus *pmus = perf_env__pmus(host_env());
- 	struct perf_pmu *pmu = NULL;
- 	struct perf_thread_map *threads = perf_thread_map__new_dummy();
- 	int ret = TEST_OK;
-@@ -279,7 +281,7 @@ static int test_stat_user_read(u64 event, enum user_read_state enabled)
- 		enum user_read_state saved_user_read_state = set_user_read(pmu, enabled);
- 		struct perf_event_attr attr = {
- 			.type	= PERF_TYPE_HARDWARE,
--			.config	= perf_pmus__supports_extended_type()
-+			.config	= perf_pmus__supports_extended_type(pmus)
- 			? event | ((u64)pmu->type << PERF_PMU_TYPE_SHIFT)
- 				: event,
- 		};
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index d5f0f4ca7ccd..45c83d7d01d6 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "parse-events.h"
-+#include "env.h"
- #include "evsel.h"
- #include "evsel_fprintf.h"
- #include "evlist.h"
-@@ -68,7 +69,7 @@ static int num_core_entries(struct evlist *evlist)
- 		if (!evsel->pmu->is_core)
- 			continue;
- 		if (core_pmu != evsel->pmu && core_pmu != NULL)
--			return perf_pmus__num_core_pmus();
-+			return perf_pmus__num_core_pmus(perf_env__pmus(host_env()));
- 		core_pmu = evsel->pmu;
- 	}
- 	return 1;
-@@ -1030,7 +1031,8 @@ static int test__group3(struct evlist *evlist __maybe_unused)
- 	struct evsel *evsel, *group1_leader = NULL, *group2_leader = NULL;
- 
- 	TEST_ASSERT_EVLIST("wrong number of entries",
--			   evlist__nr_entries(evlist) == (3 * perf_pmus__num_core_pmus() + 2),
-+			   evlist__nr_entries(evlist) ==
-+			   (3 * perf_pmus__num_core_pmus(perf_env__pmus(host_env())) + 2),
- 			   evlist);
- 	/*
- 	 * Currently the software event won't be grouped with the hardware event
-@@ -1590,6 +1592,7 @@ static int test__checkevent_pinned_modifier(struct evlist *evlist)
- 
- static int test__pinned_group(struct evlist *evlist)
- {
-+	struct perf_pmus *pmus = perf_env__pmus(host_env());
- 	struct evsel *evsel = NULL, *leader;
- 
- 	TEST_ASSERT_EVLIST("wrong number of entries",
-@@ -1605,7 +1608,7 @@ static int test__pinned_group(struct evlist *evlist)
- 		TEST_ASSERT_EVSEL("wrong group name", !evsel->group_name, evsel);
- 		TEST_ASSERT_EVSEL("wrong leader", evsel__has_leader(evsel, leader), evsel);
- 		/* TODO: The group modifier is not copied to the split group leader. */
--		if (perf_pmus__num_core_pmus() == 1)
-+		if (perf_pmus__num_core_pmus(pmus) == 1)
- 			TEST_ASSERT_EVSEL("wrong pinned", evsel->core.attr.pinned, evsel);
- 
- 		/* cache-misses - can not be pinned, but will go on with the leader */
-@@ -1643,6 +1646,7 @@ static int test__checkevent_exclusive_modifier(struct evlist *evlist)
- 
- static int test__exclusive_group(struct evlist *evlist)
- {
-+	struct perf_pmus *pmus = perf_env__pmus(host_env());
- 	struct evsel *evsel = NULL, *leader;
- 
- 	TEST_ASSERT_EVLIST("wrong number of entries",
-@@ -1658,7 +1662,7 @@ static int test__exclusive_group(struct evlist *evlist)
- 		TEST_ASSERT_EVSEL("wrong group name", !evsel->group_name, evsel);
- 		TEST_ASSERT_EVSEL("wrong leader", evsel__has_leader(evsel, leader), evsel);
- 		/* TODO: The group modifier is not copied to the split group leader. */
--		if (perf_pmus__num_core_pmus() == 1)
-+		if (perf_pmus__num_core_pmus(pmus) == 1)
- 			TEST_ASSERT_EVSEL("wrong exclusive", evsel->core.attr.exclusive, evsel);
- 
- 		/* cache-misses - can not be pinned, but will go on with the leader */
-@@ -1811,7 +1815,8 @@ static int test__ratio_to_prev(struct evlist *evlist)
- 	struct evsel *evsel, *leader;
- 
- 	TEST_ASSERT_VAL("wrong number of entries",
--			2 * perf_pmus__num_core_pmus() == evlist__nr_entries(evlist));
-+			2 * perf_pmus__num_core_pmus(perf_env__pmus(host_env())) ==
-+			evlist__nr_entries(evlist));
- 
- 	evlist__for_each_entry(evlist, evsel) {
- 		if (evsel != evsel__leader(evsel) ||
-diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
-index f208932590df..fc731857ec71 100644
---- a/tools/perf/tests/pmu.c
-+++ b/tools/perf/tests/pmu.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "evlist.h"
-+#include "env.h"
- #include "evsel.h"
- #include "parse-events.h"
- #include "pmu.h"
-@@ -143,7 +144,7 @@ static struct perf_pmu *test_pmu_get(char *dir, size_t sz)
- 	close(file);
- 
- 	/* Make the PMU reading the files created above. */
--	pmu = perf_pmus__add_test_pmu(dirfd, "perf-pmu-test");
-+	pmu = perf_pmus__add_test_pmu(perf_env__pmus(host_env()), dirfd, "perf-pmu-test");
- 	if (!pmu)
- 		pr_err("Test PMU creation failed\n");
- 
-diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
-index e0091804fe98..04ab4d010149 100644
---- a/tools/perf/util/cputopo.c
-+++ b/tools/perf/util/cputopo.c
-@@ -470,9 +470,10 @@ static int load_hybrid_node(struct hybrid_topology_node *node,
- 
- struct hybrid_topology *hybrid_topology__new(void)
- {
-+	struct perf_pmus *pmus = perf_env__pmus(host_env());
- 	struct perf_pmu *pmu = NULL;
- 	struct hybrid_topology *tp = NULL;
--	int nr = perf_pmus__num_core_pmus(), i = 0;
-+	int nr = perf_pmus__num_core_pmus(pmus), i = 0;
- 
- 	if (nr <= 1)
- 		return NULL;
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 1fe6ce84e607..5f16920f0a89 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -261,6 +261,7 @@ static struct perf_env __host_env = {
- 	},
- 	.kernel_is_64_bit = -1,
- 	.lock = { .lock = __PERF_MUTEX_INITIALIZER },
-+	.pmus = PERF_PMUS_INIT(__host_env.pmus),
- };
- 
- void perf_env__exit(struct perf_env *env)
-@@ -316,6 +317,8 @@ void perf_env__exit(struct perf_env *env)
- 	zfree(&env->pmu_caps);
- 	zfree(&env->memory_ranges);
- 	free_cpu_domain_info(env->cpu_domain, env->schedstat_version, env->nr_cpus_avail);
-+	perf_pmus__exit(&env->pmus);
-+	mutex_destroy(&env->pmus.lock);
- }
- 
- void perf_env__init(struct perf_env *env)
-@@ -328,6 +331,7 @@ void perf_env__init(struct perf_env *env)
- #endif
- 	env->kernel_is_64_bit = -1;
- 	mutex_init(&env->lock);
-+	perf_pmus__init(&env->pmus);
- }
- 
- struct perf_env *host_env(void)
-@@ -335,6 +339,11 @@ struct perf_env *host_env(void)
- 	return &__host_env;
- }
- 
-+struct perf_pmus *perf_env__pmus(struct perf_env *env)
-+{
-+	return &env->pmus;
-+}
-+
- static const char *uts_machine(void)
- {
- 	static struct utsname uts;
-@@ -595,12 +604,13 @@ static int __perf_env__read_core_pmu_caps(const struct perf_pmu *pmu,
- 
- int perf_env__read_core_pmu_caps(struct perf_env *env)
- {
-+	struct perf_pmus *pmus = perf_env__pmus(host_env());
- 	struct pmu_caps *pmu_caps;
- 	struct perf_pmu *pmu = NULL;
- 	int nr_pmu, i = 0, j;
- 	int ret;
- 
--	nr_pmu = perf_pmus__num_core_pmus();
-+	nr_pmu = perf_pmus__num_core_pmus(pmus);
- 
- 	if (!nr_pmu)
- 		return -ENODEV;
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index 134102148a5c..e38e953060c9 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -5,6 +5,7 @@
- #include <linux/types.h>
- #include <linux/rbtree.h>
- #include "cpumap.h"
-+#include "pmus.h"
- #include "rwsem.h"
- #include "mutex.h"
- 
-@@ -169,6 +170,7 @@ struct perf_env {
- 	} clock;
- 	/* Protects lazy environment initialization (e.g. os_release, e_machine). */
- 	struct mutex		lock;
-+	struct perf_pmus	pmus;
- };
- 
- enum perf_compress_type {
-@@ -231,6 +233,14 @@ void perf_env__init(struct perf_env *env);
-  * Return: Pointer to the live host's struct perf_env.
-  */
- struct perf_env *host_env(void);
-+
-+/**
-+ * perf_env__pmus() - Return the struct perf_pmus associated with @env.
-+ * @env: Environment whose PMU collection to retrieve.
-+ *
-+ * Return: Pointer to the struct perf_pmus for @env.
-+ */
-+struct perf_pmus *perf_env__pmus(struct perf_env *env);
- #ifdef HAVE_LIBBPF_SUPPORT
- bool __perf_env__insert_bpf_prog_info(struct perf_env *env,
- 				      struct bpf_prog_info_node *info_node);
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index c2402e4791b6..4e641ccc176f 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -64,6 +64,7 @@
- #include "pmus.h"
- #include "record.h"
- #include "sample.h"
-+#include "session.h"
- #include "stat.h"
- #include "strbuf.h"
- #include "string2.h"
-@@ -2941,11 +2942,14 @@ static bool evlist__disable_uniquify(struct evlist *evlist)
- 			return false;
- 		first = false;
- 		if (counter->pmu) {
-+			struct perf_pmus *pmus =
-+				counter->pmu->pmus ?: perf_env__pmus(host_env());
-+
- 			/* Allow uniquify for uncore PMUs. */
- 			if (!counter->pmu->is_core)
- 				return false;
- 			/* Keep hybrid event names uniquified for clarity. */
--			if (perf_pmus__num_core_pmus() > 1)
-+			if (perf_pmus__num_core_pmus(pmus) > 1)
- 				return false;
- 		}
- 		last_pmu = counter->pmu;
-@@ -3006,3 +3010,10 @@ bool evlist__needs_bpf_sb_event(struct evlist *evlist)
- 
- 	return false;
- }
-+
-+struct perf_env *evlist__env(struct evlist *evlist)
-+{
-+	struct perf_session *session = evlist ? evlist__session(evlist) : NULL;
-+
-+	return session ? perf_session__env(session) : NULL;
-+}
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 0f380421e03d..fc32979e08b8 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -23,6 +23,7 @@
- #include "rblist.h"
- 
- struct perf_cpu_map;
-+struct perf_env;
- struct perf_stat_config;
- struct pollfd;
- struct record_opts;
-@@ -684,5 +685,6 @@ void evlist__warn_user_requested_cpus(struct evlist *evlist, const char *cpu_lis
- void evlist__uniquify_evsel_names(struct evlist *evlist, const struct perf_stat_config *config);
- bool evlist__has_bpf_output(struct evlist *evlist);
- bool evlist__needs_bpf_sb_event(struct evlist *evlist);
-+struct perf_env *evlist__env(struct evlist *evlist);
- 
- #endif /* __PERF_EVLIST_H */
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 737a8680aaae..5949636dbf3d 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2290,9 +2290,12 @@ bool __evsel__match(const struct evsel *evsel, u32 type, u64 config)
- 		return true;
- 	if (type != PERF_TYPE_HARDWARE && type != PERF_TYPE_HW_CACHE)
- 		return false;
--	if ((e_type == PERF_TYPE_HARDWARE || e_type == PERF_TYPE_HW_CACHE) &&
--		perf_pmus__supports_extended_type())
--		e_config &= PERF_HW_EVENT_MASK;
-+	if (e_type == PERF_TYPE_HARDWARE || e_type == PERF_TYPE_HW_CACHE) {
-+		struct perf_env *env = evsel__env((struct evsel *)evsel) ?: host_env();
-+
-+		if (perf_pmus__supports_extended_type(perf_env__pmus(env)))
-+			e_config &= PERF_HW_EVENT_MASK;
-+	}
- 	if (e_type == type && e_config == config)
- 		return true;
- 	if (type == PERF_TYPE_HARDWARE && evsel->pmu && evsel->pmu->is_core &&
-@@ -4782,10 +4785,13 @@ void evsel__zero_per_pkg(struct evsel *evsel)
-  */
- bool evsel__is_hybrid(const struct evsel *evsel)
- {
-+	struct perf_env *env;
-+
- 	if (!evsel->core.is_pmu_core)
- 		return false;
- 
--	return perf_pmus__num_core_pmus() > 1;
-+	env = evsel__env((struct evsel *)evsel) ?: host_env();
-+	return perf_pmus__num_core_pmus(perf_env__pmus(env)) > 1;
- }
- 
- struct evsel *evsel__leader(const struct evsel *evsel)
-diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c b/tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c
-index 315b24f9a592..d3435174106b 100644
---- a/tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c
-+++ b/tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c
-@@ -3,6 +3,7 @@
- #include "../kvm-stat.h"
- #include "../parse-events.h"
- #include "../debug.h"
-+#include "../env.h"
- #include "../evsel.h"
- #include "../evlist.h"
- #include "../pmus.h"
-@@ -178,7 +179,7 @@ int __kvm_add_default_arch_event_powerpc(int *argc, const char **argv)
- {
- 	int j = *argc;
- 
--	if (!perf_pmus__have_event("trace_imc", "trace_cycles"))
-+	if (!perf_pmus__have_event(perf_env__pmus(host_env()), "trace_imc", "trace_cycles"))
- 		return -EINVAL;
- 
- 	argv[j++] = "-e";
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 98f3ba8f9533..63aa326944d7 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -297,8 +297,10 @@ static int setup_metric_events(const char *pmu, struct hashmap *ids,
- 	const char *metric_id;
- 	struct evsel *ev;
- 	size_t ids_size, matched_events, i;
-+	struct perf_pmus *pmus = perf_env__pmus(evlist__env(metric_evlist) ?: host_env());
- 	bool all_pmus = !strcmp(pmu, "all") || !strcmp(pmu, "default_core") ||
--			perf_pmus__num_core_pmus() == 1 || !is_pmu_core(pmu);
-+			perf_pmus__num_core_pmus(pmus) == 1 ||
-+			!is_pmu_core(pmu);
- 
- 	*out_metric_events = NULL;
- 	ids_size = hashmap__size(ids);
-@@ -419,7 +421,7 @@ static int metricgroup__sys_event_iter(const struct pmu_metric *pm,
- 		return 0;
- 
- 	/* Only process with the iterator if there is a a PMU that matches the ID. */
--	pmu = perf_pmus__scan_for_uncore_id(pmu, pm->compat);
-+	pmu = perf_pmus__scan_for_uncore_id(perf_env__pmus(host_env()), pmu, pm->compat);
- 	return pmu ? d->fn(pm, table, d->data) : 0;
- }
- 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index ad2999cb5371..a70bccbf51dc 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -174,7 +174,8 @@ static struct evsel *
- __add_event(struct list_head *list, int *idx,
- 	    struct perf_event_attr *attr,
- 	    bool init_attr,
--	    const char *name, const char *metric_id, struct perf_pmu *pmu,
-+	    const char *name, const char *metric_id,
-+	    struct perf_pmus *pmus, struct perf_pmu *pmu,
- 	    struct list_head *config_terms, struct evsel *first_wildcard_match,
- 	    struct perf_cpu_map *user_cpus, u64 alternate_hw_config)
- {
-@@ -224,7 +225,7 @@ __add_event(struct list_head *list, int *idx,
- 	 * warnings won't be generated.
- 	 */
- 	if (!pmu)
--		pmu = perf_pmus__find_by_attr(attr);
-+		pmu = perf_pmus__find_by_attr(pmus, attr);
- 
- 	if (pmu) {
- 		is_pmu_core = pmu->is_core;
-@@ -298,19 +299,21 @@ struct evsel *parse_events__add_event(int idx, struct perf_event_attr *attr,
- 				      const char *name, const char *metric_id,
- 				      struct perf_pmu *pmu)
- {
-+	struct perf_pmus *pmus = pmu && pmu->pmus ? pmu->pmus : perf_env__pmus(host_env());
-+
- 	return __add_event(/*list=*/NULL, &idx, attr, /*init_attr=*/false, name,
--			   metric_id, pmu, /*config_terms=*/NULL,
-+			   metric_id, pmus, pmu, /*config_terms=*/NULL,
- 			   /*first_wildcard_match=*/NULL, /*cpu_list=*/NULL,
- 			   /*alternate_hw_config=*/PERF_COUNT_HW_MAX);
- }
- 
--static int add_event(struct list_head *list, int *idx,
-+static int add_event(struct list_head *list, struct parse_events_state *parse_state,
- 		     struct perf_event_attr *attr, const char *name,
- 		     const char *metric_id, struct list_head *config_terms,
- 		     u64 alternate_hw_config)
- {
--	return __add_event(list, idx, attr, /*init_attr*/true, name, metric_id,
--			   /*pmu=*/NULL, config_terms,
-+	return __add_event(list, &parse_state->idx, attr, /*init_attr*/true, name, metric_id,
-+			   parse_state->pmus, /*pmu=*/NULL, config_terms,
- 			   /*first_wildcard_match=*/NULL, /*cpu_list=*/NULL,
- 			   alternate_hw_config) ? 0 : -ENOMEM;
- }
-@@ -415,7 +418,7 @@ int parse_events__decode_legacy_cache(const char *name, int extended_pmu_type, _
- 		cache_result = PERF_COUNT_HW_CACHE_RESULT_ACCESS;
- 
- 	*config = cache_type | (cache_op << 8) | (cache_result << 16);
--	if (perf_pmus__supports_extended_type())
-+	if (perf_pmus__host_supports_extended_type())
- 		*config |= (__u64)extended_pmu_type << PERF_PMU_TYPE_SHIFT;
- 	return 0;
- }
-@@ -694,7 +697,7 @@ int parse_events_add_breakpoint(struct parse_events_state *parse_state,
- 
- 	name = get_config_name(head_config);
- 
--	return add_event(list, &parse_state->idx, &attr, name, /*mertic_id=*/NULL,
-+	return add_event(list, parse_state, &attr, name, /*mertic_id=*/NULL,
- 			&config_terms, /*alternate_hw_config=*/PERF_COUNT_HW_MAX);
- }
- 
-@@ -1035,7 +1038,7 @@ static int config_term_pmu(struct perf_event_attr *attr,
- 		if (!check_pmu_is_core(attr->type, term, parse_state->error))
- 			return -EINVAL;
- 		attr->config = term->val.num;
--		if (perf_pmus__supports_extended_type())
-+		if (perf_pmus__supports_extended_type(parse_state->pmus))
- 			attr->config |= (__u64)attr->type << PERF_PMU_TYPE_SHIFT;
- 		attr->type = PERF_TYPE_HARDWARE;
- 		return 0;
-@@ -1060,7 +1063,7 @@ static int config_term_pmu(struct perf_event_attr *attr,
- 		if (!check_pmu_is_core(attr->type, term, parse_state->error))
- 			return -EINVAL;
- 		attr->config = term->val.num;
--		if (perf_pmus__supports_extended_type())
-+		if (perf_pmus__supports_extended_type(parse_state->pmus))
- 			attr->config |= (__u64)attr->type << PERF_PMU_TYPE_SHIFT;
- 		attr->type = PERF_TYPE_HW_CACHE;
- 		return 0;
-@@ -1435,7 +1438,7 @@ static int __parse_events_add_numeric(struct parse_events_state *parse_state,
- 	attr.type = type;
- 	attr.config = config;
- 	if (extended_type && (type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE)) {
--		assert(perf_pmus__supports_extended_type());
-+		assert(perf_pmus__supports_extended_type(parse_state->pmus));
- 		attr.config |= (u64)extended_type << PERF_PMU_TYPE_SHIFT;
- 	}
- 
-@@ -1451,8 +1454,9 @@ static int __parse_events_add_numeric(struct parse_events_state *parse_state,
- 	metric_id = get_config_metric_id(head_config);
- 	cpus = get_config_cpu(head_config, parse_state->fake_pmu);
- 	ret = __add_event(list, &parse_state->idx, &attr, /*init_attr*/true, name,
--			metric_id, pmu, &config_terms, first_wildcard_match,
--			cpus, /*alternate_hw_config=*/PERF_COUNT_HW_MAX) ? 0 : -ENOMEM;
-+			metric_id, parse_state->pmus, pmu, &config_terms,
-+			first_wildcard_match, cpus,
-+			/*alternate_hw_config=*/PERF_COUNT_HW_MAX) ? 0 : -ENOMEM;
- 	perf_cpu_map__put(cpus);
- 	free_config_terms(&config_terms);
- 	return ret;
-@@ -1468,7 +1472,7 @@ int parse_events_add_numeric(struct parse_events_state *parse_state,
- 	bool found_supported = false;
- 
- 	/* Wildcards on numeric values are only supported by core PMUs. */
--	if (wildcard && perf_pmus__supports_extended_type()) {
-+	if (wildcard && perf_pmus__supports_extended_type(parse_state->pmus)) {
- 		struct evsel *first_wildcard_match = NULL;
- 		while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
- 			int ret;
-@@ -1547,7 +1551,7 @@ static int parse_events_add_pmu(struct parse_events_state *parse_state,
- 	if (!const_parsed_terms || list_empty(&const_parsed_terms->terms)) {
- 		evsel = __add_event(list, &parse_state->idx, &attr,
- 				    /*init_attr=*/true, /*name=*/NULL,
--				    /*metric_id=*/NULL, pmu,
-+				    /*metric_id=*/NULL, parse_state->pmus, pmu,
- 				    /*config_terms=*/NULL, first_wildcard_match,
- 				    /*cpu_list=*/NULL, alternate_hw_config);
- 		return evsel ? 0 : -ENOMEM;
-@@ -1614,7 +1618,7 @@ static int parse_events_add_pmu(struct parse_events_state *parse_state,
- 	term_cpu = get_config_cpu(&parsed_terms, parse_state->fake_pmu);
- 	evsel = __add_event(list, &parse_state->idx, &attr, /*init_attr=*/true,
- 			    get_config_name(&parsed_terms),
--			    get_config_metric_id(&parsed_terms), pmu,
-+			    get_config_metric_id(&parsed_terms), parse_state->pmus, pmu,
- 			    &config_terms, first_wildcard_match, term_cpu, alternate_hw_config);
- 	perf_cpu_map__put(term_cpu);
- 	if (!evsel) {
-@@ -1684,7 +1688,8 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 
- 	INIT_LIST_HEAD(list);
- 
--	while ((pmu = perf_pmus__scan_for_event(pmu, event_name)) != NULL) {
-+	while ((pmu = perf_pmus__scan_for_event(parse_state->pmus,
-+						pmu, event_name)) != NULL) {
- 
- 		if (parse_events__filter_pmu(parse_state, pmu))
- 			continue;
-@@ -1762,7 +1767,8 @@ int parse_events_multi_pmu_add_or_add_pmu(struct parse_events_state *parse_state
- 
- 	pmu = NULL;
- 	/* Failed to add, try wildcard expansion of event_or_pmu as a PMU name. */
--	while ((pmu = perf_pmus__scan_matching_wildcard(pmu, event_or_pmu)) != NULL) {
-+	while ((pmu = perf_pmus__scan_matching_wildcard(parse_state->pmus,
-+							pmu, event_or_pmu)) != NULL) {
- 
- 		if (parse_events__filter_pmu(parse_state, pmu))
- 			continue;
-@@ -1987,6 +1993,7 @@ int parse_events_terms(struct parse_events_terms *terms, const char *str)
- {
- 	struct parse_events_state parse_state = {
- 		.terms  = NULL,
-+		.pmus   = perf_env__pmus(host_env()),
- 		.stoken = PE_START_TERMS,
- 	};
- 	int ret;
-@@ -2319,6 +2326,7 @@ int __parse_events(struct evlist *evlist, const char *str,
- 		.list			= LIST_HEAD_INIT(parse_state.list),
- 		.idx			= evlist__nr_entries(evlist),
- 		.error			= err,
-+		.pmus			= perf_env__pmus(evlist__env(evlist) ?: host_env()),
- 		.stoken			= PE_START_EVENTS,
- 		.fake_pmu		= fake_pmu,
- 		.fake_tp		= fake_tp,
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index e8f8cdfd1052..8df8e3cb69fe 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -18,6 +18,7 @@ struct parse_events_error;
- 
- struct option;
- struct perf_pmu;
-+struct perf_pmus;
- struct strbuf;
- 
- const char *event_type(size_t type);
-@@ -156,6 +157,8 @@ struct parse_events_state {
- 	struct parse_events_error *error;
- 	/* Holds returned terms for term parsing. */
- 	struct parse_events_terms *terms;
-+	/* The PMUs to search during parsing. */
-+	struct perf_pmus	  *pmus;
- 	/* Start token. */
- 	int			   stoken;
- 	/* Use the fake PMU marker for testing. */
-diff --git a/tools/perf/util/perf-regs-arch/perf_regs_x86.c b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
-index ea1d402b0893..2d80f119629a 100644
---- a/tools/perf/util/perf-regs-arch/perf_regs_x86.c
-+++ b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
-@@ -9,6 +9,7 @@
- #include <linux/zalloc.h>
- 
- #include "../debug.h"
-+#include "../env.h"
- #include "../event.h"
- #include "../pmu.h"
- #include "../pmus.h"
-@@ -248,6 +249,7 @@ static uint64_t __arch__reg_mask(u64 sample_type, u64 mask, bool has_simd_regs)
- 		.exclude_kernel			= 1,
- 		.sample_simd_regs_enabled	= has_simd_regs,
- 	};
-+	struct perf_pmus *pmus = perf_env__pmus(host_env());
- 	int fd;
- 	/*
- 	 * In an unnamed union, init it here to build on older gcc versions
-@@ -258,7 +260,7 @@ static uint64_t __arch__reg_mask(u64 sample_type, u64 mask, bool has_simd_regs)
- 	else
- 		attr.sample_regs_user = mask;
- 
--	if (perf_pmus__num_core_pmus() > 1) {
-+	if (perf_pmus__num_core_pmus(pmus) > 1) {
- 		struct perf_pmu *pmu = NULL;
- 		__u64 type = PERF_TYPE_RAW;
- 
-@@ -512,6 +514,7 @@ __support_simd_reg_class(uint64_t sample_type, uint16_t qwords,
- 		.exclude_kernel			= 1,
- 		.sample_simd_regs_enabled	= 1,
- 	};
-+	struct perf_pmus *pmus = perf_env__pmus(host_env());
- 	int fd;
- 
- 	attr.sample_period = 1;
-@@ -530,7 +533,7 @@ __support_simd_reg_class(uint64_t sample_type, uint16_t qwords,
- 			attr.sample_simd_pred_reg_user = PERF_X86_SIMD_PRED_MASK;
- 	}
- 
--	if (perf_pmus__num_core_pmus() > 1) {
-+	if (perf_pmus__num_core_pmus(pmus) > 1) {
- 		__u64 type = perf_pmus__find_core_pmu()->type;
- 
- 		attr.config |= type << PERF_PMU_TYPE_SHIFT;
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 665f4b9bcf44..388070e670b6 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1561,7 +1561,8 @@ static int pmu_config_term(const struct perf_pmu *pmu,
- 			assert(term->val.num < PERF_COUNT_HW_MAX);
- 			assert(pmu->is_core);
- 			attr->config = term->val.num;
--			if (perf_pmus__supports_extended_type())
-+			if (pmu->pmus ? perf_pmus__supports_extended_type(pmu->pmus)
-+				      : perf_pmus__host_supports_extended_type())
- 				attr->config |= (__u64)pmu->type << PERF_PMU_TYPE_SHIFT;
- 			attr->type = PERF_TYPE_HARDWARE;
- 			break;
-@@ -1579,7 +1580,8 @@ static int pmu_config_term(const struct perf_pmu *pmu,
- 			assert((term->val.num & ~0xFFFFFF) == 0);
- 			assert(pmu->is_core);
- 			attr->config = term->val.num;
--			if (perf_pmus__supports_extended_type())
-+			if (pmu->pmus ? perf_pmus__supports_extended_type(pmu->pmus)
-+				      : perf_pmus__host_supports_extended_type())
- 				attr->config |= (__u64)pmu->type << PERF_PMU_TYPE_SHIFT;
- 			attr->type = PERF_TYPE_HW_CACHE;
- 			break;
-@@ -2118,7 +2120,8 @@ bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu)
- 
- bool perf_pmu__auto_merge_stats(const struct perf_pmu *pmu)
- {
--	return !pmu->is_core || perf_pmus__num_core_pmus() == 1;
-+	return !pmu->is_core ||
-+	       perf_pmus__num_core_pmus(pmu->pmus ?: perf_env__pmus(host_env())) == 1;
- }
- 
- bool perf_pmu__have_event(struct perf_pmu *pmu, const char *name)
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index ea55882ce670..7605c3859337 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -17,6 +17,7 @@ struct evsel_config_term;
- struct hashmap;
- struct perf_cpu_map;
- struct perf_env;
-+struct perf_pmus;
- struct print_callbacks;
- 
- enum {
-@@ -163,6 +164,8 @@ struct perf_pmu {
- 	bool sysfs_aliases_loaded;
- 	/** @from_env: Was the PMU reconstructed from a perf_env header? */
- 	bool from_env;
-+	/** @pmus: The PMU collection this PMU belongs to. */
-+	struct perf_pmus *pmus;
- 	/**
- 	 * @cpu_aliases_added: Have all json events table entries for the PMU
- 	 * been added?
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index 03d79ec5037f..cf2255e2a8b7 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -14,6 +14,7 @@
- #include "cpumap.h"
- #include "debug.h"
- #include "drm_pmu.h"
-+#include "env.h"
- #include "evsel.h"
- #include "pmus.h"
- #include "pmu.h"
-@@ -38,8 +39,6 @@
-  *             are captured under other_pmus. PMUs belonging to other_pmus
-  *             must have pmu->is_core=0 but pmu->is_uncore could be 0 or 1.
-  */
--static LIST_HEAD(core_pmus);
--static LIST_HEAD(other_pmus);
- enum perf_tool_pmu_type {
- 	PERF_TOOL_PMU_TYPE_PE_CORE,
- 	PERF_TOOL_PMU_TYPE_PE_OTHER,
-@@ -59,9 +58,8 @@ enum perf_tool_pmu_type {
- 					PERF_TOOL_PMU_TYPE_HWMON_MASK | \
- 					PERF_TOOL_PMU_TYPE_DRM_MASK)
- };
--static unsigned int read_pmu_types;
- 
--static void pmu_read_sysfs(unsigned int to_read_pmus);
-+static void pmu_read_sysfs(struct perf_pmus *pmus, unsigned int to_read_pmus);
- 
- size_t pmu_name_len_no_suffix(const char *str)
- {
-@@ -132,33 +130,50 @@ int pmu_name_cmp(const char *lhs_pmu_name, const char *rhs_pmu_name)
- 	return lhs_num < rhs_num ? -1 : (lhs_num > rhs_num ? 1 : 0);
- }
- 
--void perf_pmus__destroy(void)
-+void perf_pmus__init(struct perf_pmus *pmus)
-+{
-+	INIT_LIST_HEAD(&pmus->core_pmus);
-+	INIT_LIST_HEAD(&pmus->other_pmus);
-+	pmus->read_pmu_types = 0;
-+	pmus->num_core_pmus = 0;
-+	pmus->extended_type = PERF_PMUS_EXTENDED_TYPE_UNKNOWN;
-+	mutex_init(&pmus->lock);
-+}
-+
-+void perf_pmus__exit(struct perf_pmus *pmus)
- {
- 	struct perf_pmu *pmu, *tmp;
- 
--	list_for_each_entry_safe(pmu, tmp, &core_pmus, list) {
-+	if (!pmus->core_pmus.next || !pmus->other_pmus.next) {
-+		perf_pmus__init(pmus);
-+		return;
-+	}
-+
-+	list_for_each_entry_safe(pmu, tmp, &pmus->core_pmus, list) {
- 		list_del(&pmu->list);
- 
- 		perf_pmu__delete(pmu);
- 	}
--	list_for_each_entry_safe(pmu, tmp, &other_pmus, list) {
-+	list_for_each_entry_safe(pmu, tmp, &pmus->other_pmus, list) {
- 		list_del(&pmu->list);
- 
- 		perf_pmu__delete(pmu);
- 	}
--	read_pmu_types = 0;
-+	pmus->read_pmu_types = 0;
-+	pmus->num_core_pmus = 0;
-+	pmus->extended_type = PERF_PMUS_EXTENDED_TYPE_UNKNOWN;
- }
- 
--static struct perf_pmu *pmu_find(const char *name)
-+static struct perf_pmu *pmu_find(struct perf_pmus *pmus, const char *name)
- {
- 	struct perf_pmu *pmu;
- 
--	list_for_each_entry(pmu, &core_pmus, list) {
-+	list_for_each_entry(pmu, &pmus->core_pmus, list) {
- 		if (!strcmp(pmu->name, name) ||
- 		    (pmu->alias_name && !strcmp(pmu->alias_name, name)))
- 			return pmu;
- 	}
--	list_for_each_entry(pmu, &other_pmus, list) {
-+	list_for_each_entry(pmu, &pmus->other_pmus, list) {
- 		if (!strcmp(pmu->name, name) ||
- 		    (pmu->alias_name && !strcmp(pmu->alias_name, name)))
- 			return pmu;
-@@ -167,7 +182,7 @@ static struct perf_pmu *pmu_find(const char *name)
- 	return NULL;
- }
- 
--struct perf_pmu *perf_pmus__find(const char *name)
-+static struct perf_pmu *__perf_pmus__find(struct perf_pmus *pmus, const char *name)
- {
- 	struct perf_pmu *pmu;
- 	int dirfd;
-@@ -181,24 +196,26 @@ struct perf_pmu *perf_pmus__find(const char *name)
- 	 * so we keep us from multiple reading/parsing
- 	 * the pmu format definitions.
- 	 */
--	pmu = pmu_find(name);
-+	pmu = pmu_find(pmus, name);
- 	if (pmu)
- 		return pmu;
- 
--	if (read_pmu_types == PERF_TOOL_PMU_TYPE_ALL_MASK)
-+	if (pmus->read_pmu_types == PERF_TOOL_PMU_TYPE_ALL_MASK)
- 		return NULL;
- 
- 	core_pmu = is_pmu_core(name);
--	if (core_pmu && (read_pmu_types & PERF_TOOL_PMU_TYPE_PE_CORE_MASK))
-+	if (core_pmu && (pmus->read_pmu_types & PERF_TOOL_PMU_TYPE_PE_CORE_MASK))
- 		return NULL;
- 
- 	dirfd = perf_pmu__event_source_devices_fd();
--	pmu = perf_pmu__lookup(core_pmu ? &core_pmus : &other_pmus, dirfd, name,
-+	pmu = perf_pmu__lookup(core_pmu ? &pmus->core_pmus : &pmus->other_pmus, dirfd, name,
- 			       /*eager_load=*/false);
- 	close(dirfd);
- 
--	if (pmu)
-+	if (pmu) {
-+		pmu->pmus = pmus;
- 		return pmu;
-+	}
- 
- 	/* Looking up an individual perf event PMU failed, check if a tool PMU should be read. */
- 	if (!strncmp(name, "hwmon_", 6))
-@@ -209,8 +226,8 @@ struct perf_pmu *perf_pmus__find(const char *name)
- 		to_read_pmus |= PERF_TOOL_PMU_TYPE_TOOL_MASK;
- 
- 	if (to_read_pmus) {
--		pmu_read_sysfs(to_read_pmus);
--		pmu = pmu_find(name);
-+		pmu_read_sysfs(pmus, to_read_pmus);
-+		pmu = pmu_find(pmus, name);
- 		if (pmu)
- 			return pmu;
- 	}
-@@ -218,11 +235,16 @@ struct perf_pmu *perf_pmus__find(const char *name)
- 	to_read_pmus = PERF_TOOL_PMU_TYPE_PE_CORE_MASK;
- 	if (!core_pmu)
- 		to_read_pmus |= PERF_TOOL_PMU_TYPE_PE_OTHER_MASK;
--	pmu_read_sysfs(to_read_pmus);
--	return pmu_find(name);
-+	pmu_read_sysfs(pmus, to_read_pmus);
-+	return pmu_find(pmus, name);
-+}
-+
-+struct perf_pmu *perf_pmus__find(const char *name)
-+{
-+	return __perf_pmus__find(perf_env__pmus(host_env()), name);
- }
- 
--static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name)
-+static struct perf_pmu *perf_pmu__find2(struct perf_pmus *pmus, int dirfd, const char *name)
- {
- 	struct perf_pmu *pmu;
- 	bool core_pmu;
-@@ -232,19 +254,22 @@ static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name)
- 	 * so we keep us from multiple reading/parsing
- 	 * the pmu format definitions.
- 	 */
--	pmu = pmu_find(name);
-+	pmu = pmu_find(pmus, name);
- 	if (pmu)
- 		return pmu;
- 
--	if (read_pmu_types == PERF_TOOL_PMU_TYPE_ALL_MASK)
-+	if (pmus->read_pmu_types == PERF_TOOL_PMU_TYPE_ALL_MASK)
- 		return NULL;
- 
- 	core_pmu = is_pmu_core(name);
--	if (core_pmu && (read_pmu_types & PERF_TOOL_PMU_TYPE_PE_CORE_MASK))
-+	if (core_pmu && (pmus->read_pmu_types & PERF_TOOL_PMU_TYPE_PE_CORE_MASK))
- 		return NULL;
- 
--	return perf_pmu__lookup(core_pmu ? &core_pmus : &other_pmus, dirfd, name,
--				/*eager_load=*/false);
-+	pmu = perf_pmu__lookup(core_pmu ? &pmus->core_pmus : &pmus->other_pmus, dirfd, name,
-+			       /*eager_load=*/false);
-+	if (pmu)
-+		pmu->pmus = pmus;
-+	return pmu;
- }
- 
- static int pmus_cmp(void *priv __maybe_unused,
-@@ -257,11 +282,11 @@ static int pmus_cmp(void *priv __maybe_unused,
- }
- 
- /* Add all pmus in sysfs to pmu list: */
--static void pmu_read_sysfs(unsigned int to_read_types)
-+static void pmu_read_sysfs(struct perf_pmus *pmus, unsigned int to_read_types)
- {
--	struct perf_pmu *tool_pmu;
-+	struct perf_pmu *pmu, *tool_pmu;
- 
--	if ((read_pmu_types & to_read_types) == to_read_types) {
-+	if ((pmus->read_pmu_types & to_read_types) == to_read_types) {
- 		/* All requested PMU types have been read. */
- 		return;
- 	}
-@@ -282,60 +307,68 @@ static void pmu_read_sysfs(unsigned int to_read_types)
- 				continue;
- 			if (core_only && !is_pmu_core(dent->d_name))
- 				continue;
--			/* add to static LIST_HEAD(core_pmus) or LIST_HEAD(other_pmus): */
--			perf_pmu__find2(fd, dent->d_name);
-+			/* add to core_pmus or other_pmus: */
-+			perf_pmu__find2(pmus, fd, dent->d_name);
- 		}
- 
- 		close(fd);
- 	}
- skip_pe_pmus:
--	if ((to_read_types & PERF_TOOL_PMU_TYPE_PE_CORE_MASK) && list_empty(&core_pmus)) {
--		if (!perf_pmu__create_placeholder_core_pmu(&core_pmus))
-+	if ((to_read_types & PERF_TOOL_PMU_TYPE_PE_CORE_MASK) && list_empty(&pmus->core_pmus)) {
-+		pmu = perf_pmu__create_placeholder_core_pmu(&pmus->core_pmus);
-+		if (!pmu)
- 			pr_err("Failure to set up any core PMUs\n");
-+		else
-+			pmu->pmus = pmus;
- 	}
--	list_sort(NULL, &core_pmus, pmus_cmp);
-+	list_sort(NULL, &pmus->core_pmus, pmus_cmp);
- 
- 	if ((to_read_types & PERF_TOOL_PMU_TYPE_TOOL_MASK) != 0 &&
--	    (read_pmu_types & PERF_TOOL_PMU_TYPE_TOOL_MASK) == 0) {
-+	    (pmus->read_pmu_types & PERF_TOOL_PMU_TYPE_TOOL_MASK) == 0) {
- 		tool_pmu = tool_pmu__new();
--		if (tool_pmu)
--			list_add_tail(&tool_pmu->list, &other_pmus);
-+		if (tool_pmu) {
-+			tool_pmu->pmus = pmus;
-+			list_add_tail(&tool_pmu->list, &pmus->other_pmus);
-+		}
- 	}
- 	if ((to_read_types & PERF_TOOL_PMU_TYPE_HWMON_MASK) != 0 &&
--	    (read_pmu_types & PERF_TOOL_PMU_TYPE_HWMON_MASK) == 0)
--		perf_pmus__read_hwmon_pmus(&other_pmus);
-+	    (pmus->read_pmu_types & PERF_TOOL_PMU_TYPE_HWMON_MASK) == 0)
-+		perf_pmus__read_hwmon_pmus(&pmus->other_pmus);
- 
- 	if ((to_read_types & PERF_TOOL_PMU_TYPE_DRM_MASK) != 0 &&
--	    (read_pmu_types & PERF_TOOL_PMU_TYPE_DRM_MASK) == 0)
--		perf_pmus__read_drm_pmus(&other_pmus);
-+	    (pmus->read_pmu_types & PERF_TOOL_PMU_TYPE_DRM_MASK) == 0)
-+		perf_pmus__read_drm_pmus(&pmus->other_pmus);
-+
-+	list_for_each_entry(pmu, &pmus->other_pmus, list)
-+		pmu->pmus = pmus;
- 
--	list_sort(NULL, &other_pmus, pmus_cmp);
-+	list_sort(NULL, &pmus->other_pmus, pmus_cmp);
- 
--	read_pmu_types |= to_read_types;
-+	pmus->read_pmu_types |= to_read_types;
- }
- 
--static struct perf_pmu *__perf_pmus__find_by_type(unsigned int type)
-+static struct perf_pmu *__perf_pmus__find_by_type(struct perf_pmus *pmus, unsigned int type)
- {
- 	struct perf_pmu *pmu;
- 
--	list_for_each_entry(pmu, &core_pmus, list) {
-+	list_for_each_entry(pmu, &pmus->core_pmus, list) {
- 		if (pmu->type == type)
- 			return pmu;
- 	}
- 
--	list_for_each_entry(pmu, &other_pmus, list) {
-+	list_for_each_entry(pmu, &pmus->other_pmus, list) {
- 		if (pmu->type == type)
- 			return pmu;
- 	}
- 	return NULL;
- }
- 
--struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
-+static struct perf_pmu *pmu_find_by_type(struct perf_pmus *pmus, unsigned int type)
- {
- 	unsigned int to_read_pmus;
--	struct perf_pmu *pmu = __perf_pmus__find_by_type(type);
-+	struct perf_pmu *pmu = __perf_pmus__find_by_type(pmus, type);
- 
--	if (pmu || (read_pmu_types == PERF_TOOL_PMU_TYPE_ALL_MASK))
-+	if (pmu || (pmus->read_pmu_types == PERF_TOOL_PMU_TYPE_ALL_MASK))
- 		return pmu;
- 
- 	if (type >= PERF_PMU_TYPE_PE_START && type <= PERF_PMU_TYPE_PE_END) {
-@@ -348,48 +381,64 @@ struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
- 	} else {
- 		to_read_pmus = PERF_TOOL_PMU_TYPE_TOOL_MASK;
- 	}
--	pmu_read_sysfs(to_read_pmus);
--	pmu = __perf_pmus__find_by_type(type);
-+	pmu_read_sysfs(pmus, to_read_pmus);
-+	pmu = __perf_pmus__find_by_type(pmus, type);
- 	return pmu;
- }
- 
-+struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
-+{
-+	return pmu_find_by_type(perf_env__pmus(host_env()), type);
-+}
-+
- /*
-  * pmu iterator: If pmu is NULL, we start at the begin, otherwise return the
-  * next pmu. Returns NULL on end.
-  */
--struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu)
-+static struct perf_pmu *pmu_scan(struct perf_pmus *pmus, struct perf_pmu *pmu)
- {
- 	bool use_core_pmus = !pmu || pmu->is_core;
- 
- 	if (!pmu) {
--		pmu_read_sysfs(PERF_TOOL_PMU_TYPE_ALL_MASK);
--		pmu = list_prepare_entry(pmu, &core_pmus, list);
-+		pmu_read_sysfs(pmus, PERF_TOOL_PMU_TYPE_ALL_MASK);
-+		pmu = list_prepare_entry(pmu, &pmus->core_pmus, list);
- 	}
- 	if (use_core_pmus) {
--		list_for_each_entry_continue(pmu, &core_pmus, list)
-+		list_for_each_entry_continue(pmu, &pmus->core_pmus, list)
- 			return pmu;
- 
- 		pmu = NULL;
--		pmu = list_prepare_entry(pmu, &other_pmus, list);
-+		pmu = list_prepare_entry(pmu, &pmus->other_pmus, list);
- 	}
--	list_for_each_entry_continue(pmu, &other_pmus, list)
-+	list_for_each_entry_continue(pmu, &pmus->other_pmus, list)
- 		return pmu;
- 	return NULL;
- }
- 
--struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu)
-+struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu)
-+{
-+	return pmu_scan(perf_env__pmus(host_env()), pmu);
-+}
-+
-+static struct perf_pmu *pmu_scan_core(struct perf_pmus *pmus, struct perf_pmu *pmu)
- {
- 	if (!pmu) {
--		pmu_read_sysfs(PERF_TOOL_PMU_TYPE_PE_CORE_MASK);
--		return list_first_entry_or_null(&core_pmus, typeof(*pmu), list);
-+		pmu_read_sysfs(pmus, PERF_TOOL_PMU_TYPE_PE_CORE_MASK);
-+		return list_first_entry_or_null(&pmus->core_pmus, typeof(*pmu), list);
- 	}
--	list_for_each_entry_continue(pmu, &core_pmus, list)
-+	list_for_each_entry_continue(pmu, &pmus->core_pmus, list)
- 		return pmu;
- 
- 	return NULL;
- }
- 
--struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmu *pmu, const char *event)
-+struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu)
-+{
-+	return pmu_scan_core(perf_env__pmus(host_env()), pmu);
-+}
-+
-+struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmus *pmus,
-+					   struct perf_pmu *pmu, const char *event)
- {
- 	bool use_core_pmus = !pmu || pmu->is_core;
- 
-@@ -413,22 +462,23 @@ struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmu *pmu, const char *eve
- 		if (strlen(event) > 4 && strncmp("drm-", event, 4) == 0)
- 			to_read_pmus |= PERF_TOOL_PMU_TYPE_DRM_MASK;
- 
--		pmu_read_sysfs(to_read_pmus);
--		pmu = list_prepare_entry(pmu, &core_pmus, list);
-+		pmu_read_sysfs(pmus, to_read_pmus);
-+		pmu = list_prepare_entry(pmu, &pmus->core_pmus, list);
- 	}
- 	if (use_core_pmus) {
--		list_for_each_entry_continue(pmu, &core_pmus, list)
-+		list_for_each_entry_continue(pmu, &pmus->core_pmus, list)
- 			return pmu;
- 
- 		pmu = NULL;
--		pmu = list_prepare_entry(pmu, &other_pmus, list);
-+		pmu = list_prepare_entry(pmu, &pmus->other_pmus, list);
- 	}
--	list_for_each_entry_continue(pmu, &other_pmus, list)
-+	list_for_each_entry_continue(pmu, &pmus->other_pmus, list)
- 		return pmu;
- 	return NULL;
- }
- 
--struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu, const char *wildcard)
-+struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmus *pmus,
-+						   struct perf_pmu *pmu, const char *wildcard)
- {
- 	bool use_core_pmus = !pmu || pmu->is_core;
- 
-@@ -457,33 +507,33 @@ struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu, const c
- 			to_read_pmus |= PERF_TOOL_PMU_TYPE_HWMON_MASK;
- 		}
- 
--		pmu_read_sysfs(to_read_pmus);
--		pmu = list_prepare_entry(pmu, &core_pmus, list);
-+		pmu_read_sysfs(pmus, to_read_pmus);
-+		pmu = list_prepare_entry(pmu, &pmus->core_pmus, list);
- 	}
- 	if (use_core_pmus) {
--		list_for_each_entry_continue(pmu, &core_pmus, list) {
-+		list_for_each_entry_continue(pmu, &pmus->core_pmus, list) {
- 			if (perf_pmu__wildcard_match(pmu, wildcard))
- 				return pmu;
- 		}
- 		pmu = NULL;
--		pmu = list_prepare_entry(pmu, &other_pmus, list);
-+		pmu = list_prepare_entry(pmu, &pmus->other_pmus, list);
- 	}
--	list_for_each_entry_continue(pmu, &other_pmus, list) {
-+	list_for_each_entry_continue(pmu, &pmus->other_pmus, list) {
- 		if (perf_pmu__wildcard_match(pmu, wildcard))
- 			return pmu;
- 	}
- 	return NULL;
- }
- 
--static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
-+static struct perf_pmu *pmu_scan_skip_duplicates(struct perf_pmus *pmus, struct perf_pmu *pmu)
- {
- 	bool use_core_pmus = !pmu || pmu->is_core;
- 	int last_pmu_name_len = 0;
- 	const char *last_pmu_name = (pmu && pmu->name) ? pmu->name : "";
- 
- 	if (!pmu) {
--		pmu_read_sysfs(PERF_TOOL_PMU_TYPE_ALL_MASK);
--		pmu = list_prepare_entry(pmu, &core_pmus, list);
-+		pmu_read_sysfs(pmus, PERF_TOOL_PMU_TYPE_ALL_MASK);
-+		pmu = list_prepare_entry(pmu, &pmus->core_pmus, list);
- 	} else
- 		last_pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "");
- 
-@@ -493,13 +543,13 @@ static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
- 		 * may differ only by a suffix but have different events, so
- 		 * they are never duplicates.
- 		 */
--		list_for_each_entry_continue(pmu, &core_pmus, list)
-+		list_for_each_entry_continue(pmu, &pmus->core_pmus, list)
- 			return pmu;
- 
- 		pmu = NULL;
--		pmu = list_prepare_entry(pmu, &other_pmus, list);
-+		pmu = list_prepare_entry(pmu, &pmus->other_pmus, list);
- 	}
--	list_for_each_entry_continue(pmu, &other_pmus, list) {
-+	list_for_each_entry_continue(pmu, &pmus->other_pmus, list) {
- 		int pmu_name_len = pmu_name_len_no_suffix(pmu->name ?: "");
- 
- 		if (last_pmu_name_len == pmu_name_len &&
-@@ -511,27 +561,28 @@ static struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmu *pmu)
- 	return NULL;
- }
- 
--struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmu *pmu, const char *compat)
-+struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmus *pmus,
-+					       struct perf_pmu *pmu, const char *compat)
- {
- 	if (!pmu) {
- 		/* Only uncore PMUs can have identifiers. */
- 		unsigned int to_read_pmus = PERF_TOOL_PMU_TYPE_PE_OTHER_MASK;
- 
--		pmu_read_sysfs(to_read_pmus);
--		pmu = list_prepare_entry(pmu, &other_pmus, list);
-+		pmu_read_sysfs(pmus, to_read_pmus);
-+		pmu = list_prepare_entry(pmu, &pmus->other_pmus, list);
- 	}
--	list_for_each_entry_continue(pmu, &other_pmus, list) {
-+	list_for_each_entry_continue(pmu, &pmus->other_pmus, list) {
- 		if (pmu->id && pmu_uncore_identifier_match(compat, pmu->id))
- 			return pmu;
- 	}
- 	return NULL;
- }
- 
--const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
-+const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(struct perf_pmus *pmus, const char *str)
- {
- 	struct perf_pmu *pmu = NULL;
- 
--	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
-+	while ((pmu = pmu_scan(pmus, pmu)) != NULL) {
- 		if (!strcmp(pmu->name, str))
- 			return pmu;
- 		/* Ignore "uncore_" prefix. */
-@@ -652,7 +703,8 @@ static int perf_pmus__print_pmu_events__callback(void *vstate,
- 	return 0;
- }
- 
--void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *print_state)
-+void perf_pmus__print_pmu_events(struct perf_pmus *pmus,
-+				 const struct print_callbacks *print_cb, void *print_state)
- {
- 	struct perf_pmu *pmu;
- 	int printed = 0;
-@@ -660,16 +712,16 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
- 	struct sevent *aliases;
- 	struct events_callback_state state;
- 	bool skip_duplicate_pmus = print_cb->skip_duplicate_pmus(print_state);
--	struct perf_pmu *(*scan_fn)(struct perf_pmu *);
-+	struct perf_pmu *(*scan_fn)(struct perf_pmus *p, struct perf_pmu *cur);
- 
- 	if (skip_duplicate_pmus)
--		scan_fn = perf_pmus__scan_skip_duplicates;
-+		scan_fn = pmu_scan_skip_duplicates;
- 	else
--		scan_fn = perf_pmus__scan;
-+		scan_fn = pmu_scan;
- 
- 	pmu = NULL;
- 	len = 0;
--	while ((pmu = scan_fn(pmu)) != NULL)
-+	while ((pmu = scan_fn(pmus, pmu)) != NULL)
- 		len += perf_pmu__num_events(pmu);
- 
- 	aliases = calloc(len, sizeof(struct sevent));
-@@ -683,7 +735,7 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
- 		.aliases_len = len,
- 		.index = 0,
- 	};
--	while ((pmu = scan_fn(pmu)) != NULL) {
-+	while ((pmu = scan_fn(pmus, pmu)) != NULL) {
- 		perf_pmu__for_each_event(pmu, skip_duplicate_pmus, &state,
- 					 perf_pmus__print_pmu_events__callback);
- 	}
-@@ -767,18 +819,19 @@ static int build_format_string(void *state, const char *name, int config,
- 	return ret1 < 0 ? ret1 : (ret2 < 0 ? ret2 : 0);
- }
- 
--void perf_pmus__print_raw_pmu_events(const struct print_callbacks *print_cb, void *print_state)
-+void perf_pmus__print_raw_pmu_events(struct perf_pmus *pmus,
-+				     const struct print_callbacks *print_cb, void *print_state)
- {
- 	bool skip_duplicate_pmus = print_cb->skip_duplicate_pmus(print_state);
--	struct perf_pmu *(*scan_fn)(struct perf_pmu *);
-+	struct perf_pmu *(*scan_fn)(struct perf_pmus *p, struct perf_pmu *cur);
- 	struct perf_pmu *pmu = NULL;
- 
- 	if (skip_duplicate_pmus)
--		scan_fn = perf_pmus__scan_skip_duplicates;
-+		scan_fn = pmu_scan_skip_duplicates;
- 	else
--		scan_fn = perf_pmus__scan;
-+		scan_fn = pmu_scan;
- 
--	while ((pmu = scan_fn(pmu)) != NULL) {
-+	while ((pmu = scan_fn(pmus, pmu)) != NULL) {
- 		struct build_format_string_args format_args = {
- 			.short_string = STRBUF_INIT,
- 			.long_string = STRBUF_INIT,
-@@ -820,67 +873,79 @@ void perf_pmus__print_raw_pmu_events(const struct print_callbacks *print_cb, voi
- 	}
- }
- 
--bool perf_pmus__have_event(const char *pname, const char *name)
-+bool perf_pmus__have_event(struct perf_pmus *pmus, const char *pname, const char *name)
- {
--	struct perf_pmu *pmu = perf_pmus__find(pname);
-+	struct perf_pmu *pmu = __perf_pmus__find(pmus, pname);
- 
- 	return pmu && perf_pmu__have_event(pmu, name);
- }
- 
--int perf_pmus__num_core_pmus(void)
-+int perf_pmus__num_core_pmus(struct perf_pmus *pmus)
- {
--	static int count;
--
--	if (!count) {
-+	if (!pmus->num_core_pmus) {
- 		struct perf_pmu *pmu = NULL;
- 
--		while ((pmu = perf_pmus__scan_core(pmu)) != NULL)
--			count++;
-+		while ((pmu = pmu_scan_core(pmus, pmu)) != NULL)
-+			pmus->num_core_pmus++;
- 	}
--	return count;
-+	return pmus->num_core_pmus;
- }
- 
--static bool __perf_pmus__supports_extended_type(void)
-+static bool __perf_pmus__supports_extended_type(struct perf_pmus *pmus)
- {
- 	struct perf_pmu *pmu = NULL;
- 
--	if (perf_pmus__num_core_pmus() <= 1)
-+	if (perf_pmus__num_core_pmus(pmus) <= 1)
- 		return false;
- 
--	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
--		if (!is_event_supported(PERF_TYPE_HARDWARE, PERF_COUNT_HW_CPU_CYCLES | ((__u64)pmu->type << PERF_PMU_TYPE_SHIFT)))
-+	while ((pmu = pmu_scan_core(pmus, pmu)) != NULL) {
-+		if (!pmu->from_env &&
-+		    !is_event_supported(PERF_TYPE_HARDWARE,
-+					PERF_COUNT_HW_CPU_CYCLES |
-+					((__u64)pmu->type << PERF_PMU_TYPE_SHIFT)))
- 			return false;
- 	}
- 
- 	return true;
- }
- 
--static bool perf_pmus__do_support_extended_type;
--
--static void perf_pmus__init_supports_extended_type(void)
-+bool perf_pmus__supports_extended_type(struct perf_pmus *pmus)
- {
--	perf_pmus__do_support_extended_type = __perf_pmus__supports_extended_type();
-+	enum perf_pmus_extended_type extended_type =
-+		__atomic_load_n(&pmus->extended_type, __ATOMIC_ACQUIRE);
-+
-+	if (extended_type == PERF_PMUS_EXTENDED_TYPE_UNKNOWN) {
-+		mutex_lock(&pmus->lock);
-+		extended_type = pmus->extended_type;
-+		if (extended_type == PERF_PMUS_EXTENDED_TYPE_UNKNOWN) {
-+			extended_type = __perf_pmus__supports_extended_type(pmus)
-+				? PERF_PMUS_EXTENDED_TYPE_SUPPORTED
-+				: PERF_PMUS_EXTENDED_TYPE_NOT_SUPPORTED;
-+			__atomic_store_n(&pmus->extended_type, extended_type,
-+					 __ATOMIC_RELEASE);
-+		}
-+		mutex_unlock(&pmus->lock);
-+	}
-+
-+	return extended_type == PERF_PMUS_EXTENDED_TYPE_SUPPORTED;
- }
- 
--bool perf_pmus__supports_extended_type(void)
-+bool perf_pmus__host_supports_extended_type(void)
- {
--	static pthread_once_t extended_type_once = PTHREAD_ONCE_INIT;
--
--	pthread_once(&extended_type_once, perf_pmus__init_supports_extended_type);
--
--	return perf_pmus__do_support_extended_type;
-+	return perf_pmus__supports_extended_type(perf_env__pmus(host_env()));
- }
- 
--struct perf_pmu *perf_pmus__find_by_attr(const struct perf_event_attr *attr)
-+struct perf_pmu *perf_pmus__find_by_attr(struct perf_pmus *pmus,
-+					 const struct perf_event_attr *attr)
- {
--	struct perf_pmu *pmu = perf_pmus__find_by_type(attr->type);
-+	struct perf_pmu *pmu = pmu_find_by_type(pmus, attr->type);
- 	u32 type = attr->type;
- 	bool legacy_core_type = type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE;
- 
--	if (!pmu && legacy_core_type && perf_pmus__supports_extended_type()) {
-+	if (!pmu && legacy_core_type && perf_pmus__supports_extended_type(pmus)) {
- 		type = attr->config >> PERF_PMU_TYPE_SHIFT;
- 
--		pmu = perf_pmus__find_by_type(type);
-+		pmu = pmu_find_by_type(pmus, type);
- 	}
- 	if (!pmu && (legacy_core_type || type == PERF_TYPE_RAW)) {
- 		/*
-@@ -891,7 +956,7 @@ struct perf_pmu *perf_pmus__find_by_attr(const struct perf_event_attr *attr)
- 		 * PERF_TYPE_RAW, assume the RAW events are going to be handled
- 		 * by the first core PMU.
- 		 */
--		pmu = perf_pmus__find_core_pmu();
-+		pmu = pmu_scan_core(pmus, NULL);
- 	}
- 	return pmu;
- }
-@@ -899,11 +964,13 @@ struct perf_pmu *perf_pmus__find_by_attr(const struct perf_event_attr *attr)
- struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
- {
- 	struct perf_pmu *pmu = evsel->pmu;
-+	struct perf_env *env;
- 
- 	if (pmu)
- 		return pmu;
- 
--	pmu = perf_pmus__find_by_attr(&evsel->core.attr);
-+	env = evsel__env((struct evsel *)evsel) ?: host_env();
-+	pmu = perf_pmus__find_by_attr(perf_env__pmus(env), &evsel->core.attr);
- 	((struct evsel *)evsel)->pmu = pmu;
- 	return pmu;
- }
-@@ -913,21 +980,37 @@ struct perf_pmu *perf_pmus__find_core_pmu(void)
- 	return perf_pmus__scan_core(NULL);
- }
- 
--struct perf_pmu *perf_pmus__add_test_pmu(int test_sysfs_dirfd, const char *name)
-+struct perf_pmu *perf_pmus__add_test_pmu(struct perf_pmus *pmus,
-+					 int test_sysfs_dirfd, const char *name)
- {
-+	struct perf_pmu *pmu;
-+
-+	if (!pmus->core_pmus.next || !pmus->other_pmus.next)
-+		perf_pmus__init(pmus);
- 	/*
- 	 * Some PMU functions read from the sysfs mount point, so care is
- 	 * needed, hence passing the eager_load flag to load things like the
- 	 * format files.
- 	 */
--	return perf_pmu__lookup(&other_pmus, test_sysfs_dirfd, name, /*eager_load=*/true);
-+	pmu = perf_pmu__lookup(&pmus->other_pmus, test_sysfs_dirfd, name, /*eager_load=*/true);
-+	if (pmu)
-+		pmu->pmus = pmus;
-+	return pmu;
- }
- 
--struct perf_pmu *perf_pmus__add_test_hwmon_pmu(const char *hwmon_dir,
-+struct perf_pmu *perf_pmus__add_test_hwmon_pmu(struct perf_pmus *pmus,
-+					       const char *hwmon_dir,
- 					       const char *sysfs_name,
- 					       const char *name)
- {
--	return hwmon_pmu__new(&other_pmus, hwmon_dir, sysfs_name, name);
-+	struct perf_pmu *pmu;
-+
-+	if (!pmus->core_pmus.next || !pmus->other_pmus.next)
-+		perf_pmus__init(pmus);
-+	pmu = hwmon_pmu__new(&pmus->other_pmus, hwmon_dir, sysfs_name, name);
-+	if (pmu)
-+		pmu->pmus = pmus;
-+	return pmu;
- }
- 
- struct perf_pmu *perf_pmus__fake_pmu(void)
-diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-index 0d55edb3f2fc..45f4bd8b6aa6 100644
---- a/tools/perf/util/pmus.h
-+++ b/tools/perf/util/pmus.h
-@@ -2,41 +2,220 @@
- #ifndef __PMUS_H
- #define __PMUS_H
- 
-+#include <linux/list.h>
- #include <stdbool.h>
++#include <dwarf-regs.h>
++#include <elf.h>
+ #include <string.h>
  #include <stddef.h>
-+#include "mutex.h"
  
- struct perf_event_attr;
- struct perf_pmu;
- struct print_callbacks;
- 
-+/**
-+ * enum perf_pmus_extended_type - Tri-state cache for extended PMU type support.
-+ * @PERF_PMUS_EXTENDED_TYPE_UNKNOWN: Support has not been checked yet.
-+ * @PERF_PMUS_EXTENDED_TYPE_SUPPORTED: Multiple core PMUs / extended type supported.
-+ * @PERF_PMUS_EXTENDED_TYPE_NOT_SUPPORTED: Extended type not supported.
-+ */
-+enum perf_pmus_extended_type {
-+	PERF_PMUS_EXTENDED_TYPE_UNKNOWN = 0,
-+	PERF_PMUS_EXTENDED_TYPE_SUPPORTED,
-+	PERF_PMUS_EXTENDED_TYPE_NOT_SUPPORTED,
-+};
-+
-+/**
-+ * struct perf_pmus - Collection of core and non-core PMUs for an environment.
-+ */
-+struct perf_pmus {
-+	/**
-+	 * @core_pmus: In-order list of core PMUs (e.g. "cpu", "cpu_core",
-+	 * "cpu_atom").
-+	 */
-+	struct list_head core_pmus;
-+	/**
-+	 * @other_pmus: In-order list of non-core PMUs (uncore, software,
-+	 * tracepoint, tool, hwmon, drm, etc.).
-+	 */
-+	struct list_head other_pmus;
-+	/**
-+	 * @read_pmu_types: Bitmask of enum perf_tool_pmu_type values whose PMU
-+	 * lists have been populated.
-+	 */
-+	unsigned int read_pmu_types;
-+	/** @num_core_pmus: Cached count of entries in @core_pmus. */
-+	int num_core_pmus;
-+	/**
-+	 * @extended_type: Cached result of checking whether extended PMU type
-+	 * encoding in perf_event_attr::config is supported.
-+	 */
-+	enum perf_pmus_extended_type extended_type;
-+	/** @lock: Protects lazy initialization of @extended_type. */
-+	struct mutex lock;
-+};
-+
-+#define PERF_PMUS_INIT(name) {					\
-+	.core_pmus = LIST_HEAD_INIT((name).core_pmus),		\
-+	.other_pmus = LIST_HEAD_INIT((name).other_pmus),	\
-+	.lock = { .lock = __PERF_MUTEX_INITIALIZER },		\
-+}
-+
- size_t pmu_name_len_no_suffix(const char *str);
- /* Exposed for testing only. */
- int pmu_name_cmp(const char *lhs_pmu_name, const char *rhs_pmu_name);
- 
--void perf_pmus__destroy(void);
-+/**
-+ * perf_pmus__init() - Initialize an empty struct perf_pmus.
-+ * @pmus: The PMU collection to initialize.
-+ */
-+void perf_pmus__init(struct perf_pmus *pmus);
-+
-+/**
-+ * perf_pmus__exit() - Free all PMUs in @pmus and reset its state.
-+ * @pmus: The PMU collection to clean up.
-+ */
-+void perf_pmus__exit(struct perf_pmus *pmus);
- 
- struct perf_pmu *perf_pmus__find(const char *name);
- struct perf_pmu *perf_pmus__find_by_type(unsigned int type);
--struct perf_pmu *perf_pmus__find_by_attr(const struct perf_event_attr *attr);
-+
-+/**
-+ * perf_pmus__find_by_attr() - Find the PMU corresponding to @attr.
-+ * @pmus: The PMU collection to search.
-+ * @attr: The perf_event_attr whose type/config identifies the PMU.
-+ *
-+ * Return: Pointer to the matching struct perf_pmu, or NULL if not found.
-+ */
-+struct perf_pmu *perf_pmus__find_by_attr(struct perf_pmus *pmus,
-+					 const struct perf_event_attr *attr);
- 
- struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu);
- struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu);
--struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmu *pmu, const char *event);
--struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu, const char *wildcard);
--struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmu *pmu, const char *compat);
- 
--const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str);
-+/**
-+ * perf_pmus__scan_for_event() - Iterate over PMUs in @pmus that have @event.
-+ * @pmus: The PMU collection to scan.
-+ * @pmu: Previous matching PMU returned, or NULL to start.
-+ * @event: Event name to search for.
-+ *
-+ * Return: Next struct perf_pmu supporting @event, or NULL when done.
-+ */
-+struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmus *pmus,
-+					   struct perf_pmu *pmu, const char *event);
-+
-+/**
-+ * perf_pmus__scan_matching_wildcard() - Iterate over PMUs matching @wildcard.
-+ * @pmus: The PMU collection to scan.
-+ * @pmu: Previous matching PMU returned, or NULL to start.
-+ * @wildcard: Wildcard/prefix pattern to match against PMU names.
-+ *
-+ * Return: Next matching struct perf_pmu, or NULL when done.
-+ */
-+struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmus *pmus,
-+						   struct perf_pmu *pmu, const char *wildcard);
-+
-+/**
-+ * perf_pmus__scan_for_uncore_id() - Iterate over uncore PMUs matching @compat.
-+ * @pmus: The PMU collection to scan.
-+ * @pmu: Previous matching PMU returned, or NULL to start.
-+ * @compat: Uncore identifier string to match.
-+ *
-+ * Return: Next matching uncore struct perf_pmu, or NULL when done.
-+ */
-+struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmus *pmus,
-+					       struct perf_pmu *pmu, const char *compat);
-+
-+/**
-+ * perf_pmus__pmu_for_pmu_filter() - Find PMU matching a pmu_filter string.
-+ * @pmus: The PMU collection to search.
-+ * @str: Filter string to match against PMU names.
-+ *
-+ * Return: Matching struct perf_pmu, or NULL if none matches.
-+ */
-+const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(struct perf_pmus *pmus, const char *str);
- 
--void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *print_state);
--void perf_pmus__print_raw_pmu_events(const struct print_callbacks *print_cb, void *print_state);
--bool perf_pmus__have_event(const char *pname, const char *name);
--int perf_pmus__num_core_pmus(void);
--bool perf_pmus__supports_extended_type(void);
-+/**
-+ * perf_pmus__print_pmu_events() - Print formatted PMU events via @print_cb.
-+ * @pmus: The PMU collection whose events to print.
-+ * @print_cb: Callbacks for printing event entries.
-+ * @print_state: Caller state passed to @print_cb.
-+ */
-+void perf_pmus__print_pmu_events(struct perf_pmus *pmus,
-+				 const struct print_callbacks *print_cb, void *print_state);
- 
--struct perf_pmu *perf_pmus__add_test_pmu(int test_sysfs_dirfd, const char *name);
--struct perf_pmu *perf_pmus__add_test_hwmon_pmu(const char *hwmon_dir,
-+/**
-+ * perf_pmus__print_raw_pmu_events() - Print raw PMU event descriptors.
-+ * @pmus: The PMU collection whose raw events to print.
-+ * @print_cb: Callbacks for printing event entries.
-+ * @print_state: Caller state passed to @print_cb.
-+ */
-+void perf_pmus__print_raw_pmu_events(struct perf_pmus *pmus,
-+				     const struct print_callbacks *print_cb, void *print_state);
-+
-+/**
-+ * perf_pmus__have_event() - Check whether @pname in @pmus has event @name.
-+ * @pmus: The PMU collection to search.
-+ * @pname: PMU name.
-+ * @name: Event name.
-+ *
-+ * Return: true if the PMU exists and has @name, false otherwise.
-+ */
-+bool perf_pmus__have_event(struct perf_pmus *pmus, const char *pname, const char *name);
-+
-+/**
-+ * perf_pmus__num_core_pmus() - Return the number of core PMUs in @pmus.
-+ * @pmus: The PMU collection to query.
-+ *
-+ * Return: Number of core PMUs.
-+ */
-+int perf_pmus__num_core_pmus(struct perf_pmus *pmus);
-+
-+/**
-+ * perf_pmus__supports_extended_type() - Check whether extended PMU type
-+ *                                       encoding is supported in @pmus.
-+ * @pmus: The PMU collection to query.
-+ *
-+ * Return: true if extended type encoding is supported, false otherwise.
-+ */
-+bool perf_pmus__supports_extended_type(struct perf_pmus *pmus);
-+
-+/**
-+ * perf_pmus__host_supports_extended_type() - Check whether extended PMU type
-+ *                                            encoding is supported on the host.
-+ *
-+ * Return: true if extended type encoding is supported on the live host.
-+ */
-+bool perf_pmus__host_supports_extended_type(void);
-+
-+/**
-+ * perf_pmus__add_test_pmu() - Add a sysfs-backed test PMU to @pmus.
-+ * @pmus: The PMU collection to add the test PMU to.
-+ * @test_sysfs_dirfd: Directory fd of the synthetic sysfs root.
-+ * @name: Name of the test PMU.
-+ *
-+ * Return: Pointer to the created struct perf_pmu, or NULL on failure.
-+ */
-+struct perf_pmu *perf_pmus__add_test_pmu(struct perf_pmus *pmus,
-+					 int test_sysfs_dirfd, const char *name);
-+
-+/**
-+ * perf_pmus__add_test_hwmon_pmu() - Add a synthetic hwmon test PMU to @pmus.
-+ * @pmus: The PMU collection to add the test hwmon PMU to.
-+ * @hwmon_dir: Path to the synthetic hwmon directory.
-+ * @sysfs_name: Directory entry name (e.g. "hwmon0").
-+ * @name: Logical name of the hwmon device.
-+ *
-+ * Return: Pointer to the created struct perf_pmu, or NULL on failure.
-+ */
-+struct perf_pmu *perf_pmus__add_test_hwmon_pmu(struct perf_pmus *pmus,
-+					       const char *hwmon_dir,
- 					       const char *sysfs_name,
- 					       const char *name);
-+
-+/**
-+ * perf_pmus__fake_pmu() - Return the singleton fake PMU used for metric tests.
-+ *
-+ * Return: Pointer to the fake struct perf_pmu.
-+ */
- struct perf_pmu *perf_pmus__fake_pmu(void);
- struct perf_pmu *perf_pmus__find_core_pmu(void);
- 
-diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-index 77428d9e73c4..fe48efe9aefb 100644
---- a/tools/perf/util/print-events.c
-+++ b/tools/perf/util/print-events.c
-@@ -17,6 +17,7 @@
- 
- #include "build-id.h"
- #include "debug.h"
-+#include "env.h"
- #include "evsel.h"
- #include "metricgroup.h"
- #include "parse-events.h"
-@@ -320,7 +321,9 @@ void metricgroup__print(const struct print_callbacks *print_cb, void *print_stat
-  */
- void print_events(const struct print_callbacks *print_cb, void *print_state)
- {
--	perf_pmus__print_pmu_events(print_cb, print_state);
-+	struct perf_pmus *pmus = perf_env__pmus(host_env());
-+
-+	perf_pmus__print_pmu_events(pmus, print_cb, print_state);
- 
- 	print_cb->print_event(print_state,
- 			/*topic=*/NULL,
-@@ -335,7 +338,7 @@ void print_events(const struct print_callbacks *print_cb, void *print_state)
- 			/*long_desc=*/NULL,
- 			/*encoding_desc=*/NULL);
- 
--	perf_pmus__print_raw_pmu_events(print_cb, print_state);
-+	perf_pmus__print_raw_pmu_events(pmus, print_cb, print_state);
- 
- 	print_cb->print_event(print_state,
- 			/*topic=*/NULL,
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index c75646a49ca7..cbdecfe30edd 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -26,6 +26,7 @@
- #include "env.h"
- #include "evlist.h"
- #include "evsel.h"
-+#include "pmu.h"
- #include "memswap.h"
- #include "map.h"
- #include "symbol.h"
-@@ -264,6 +265,16 @@ void perf_session__delete(struct perf_session *session)
- 	debuginfo_cache__delete();
- 	perf_session__destroy_kernel_maps(session);
- 	perf_decomp__release_events(session->decomp_data.decomp);
-+	if (session->data && perf_data__is_read(session->data) && session->evlist) {
-+		struct evsel *evsel;
-+
-+		evlist__for_each_entry(session->evlist, evsel) {
-+			if (evsel->pmu && evsel->pmu->pmus == &session->header.env.pmus)
-+				evsel->pmu = NULL;
-+		}
-+		if (evlist__session(session->evlist) == session)
-+			evlist__set_session(session->evlist, NULL);
-+	}
- 	perf_env__exit(&session->header.env);
- 	machines__exit(&session->machines);
- 	if (session->data) {
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 493ed6c88685..8d2b9ab70580 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -770,7 +770,9 @@ static bool evlist__has_hybrid_pmus(struct evlist *evlist)
- 	struct evsel *evsel;
- 	struct perf_pmu *last_core_pmu = NULL;
- 
--	if (perf_pmus__num_core_pmus() == 1)
-+	struct perf_pmus *pmus = perf_env__pmus(evlist__env(evlist) ?: host_env());
-+
-+	if (perf_pmus__num_core_pmus(pmus) == 1)
- 		return false;
- 
- 	evlist__for_each_entry(evlist, evsel) {
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 525a3fe4a46e..f5ae399bf336 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -236,7 +236,8 @@ static void perf_stat__print_metricgroup_header(struct perf_stat_config *config,
- 						const char *name,
- 						struct perf_stat_output_ctx *out)
- {
--	bool need_full_name = perf_pmus__num_core_pmus() > 1;
-+	bool need_full_name =
-+		perf_pmus__num_core_pmus(perf_env__pmus(evsel__env(evsel) ?: host_env())) > 1;
- 	static const char *last_name;
- 	static const struct perf_pmu *last_pmu;
- 	char full_name[64];
 -- 
 2.56.1.750.gf70dc682cf-goog
 
