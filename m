@@ -1,56 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795189200;
-	b=MWey0p1+XaZYh/RLIccgtV+PQ5C9M2K86jj2hyfRuZNO+UgiutM3IP7yIUHAtl+9tJ2g
-	 WWB2X/aCKC8xwbwE53B+cUuso83EXi035JHV9cKadm60v2dXaTf4SWJZ5g9HRcFWZrlTL
-	 fhHQtI18D5waVkEnnqJ2Bx/5yKXU9JEvcWegy+ijZ30RIh1QZU1wLwWQbX/WmIJW1jhoD
-	 2YHESdTJWltJh+iaTEorSNaWh2EKt+woRTz7QKk40YwGT3TQAvB1cqasokxt3v+Xfke4J
-	 9o4PC94AybC5mpQ8Vj3D1OH7CmHBlg3JxhXyDGsjnO+b9CM5LBQbhKcCHugiBlG7kaQ==
+	t=1795189281;
+	b=tDlSnki2pWLAe6x7mKfJLkgseXIV7TqmJvJMVQHPQoK3pnZHxiIUDAI8nPwxoCEG4nM2
+	 GkDyewZ9I2kkB0uKsP60TuzUjoWpjZGcxsBp0McjuxfwC7w1l7FVGJ1hcDNF7GaMhLJh6
+	 ybklFu1cklRM/pN8CNN4895fzHT5xQJrFQazDXO0Fe92to3NU/sTtyg9MPAqjgH/dvaBl
+	 8K2+/ZcW6epkrAxiYPQkwKGyvbBTlHoc39pmO8dmWiD9btIJuRDdLiT0qlJJ6l2LJcCWK
+	 VHo/7mzJq4uFmLyR3/EkuvI00YEy5SK6cCxJfox2oLJ4CVrT57zrdDDiMGHkPm5/ePQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795189200;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795189281;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=CQ0g026N9ZPkaY5Axpduk2TzNRPTugPqZkjevKiFSbw=;
-	b=Rh9ofgMS+ozLD0k2OB11lZWMlNh3tFCp077o5hMD216VHyJ9ugHHOmKdsXusxqPG6YW5
-	 aelPfQISk6adJO9q3bSeEZl4pBdEO/pvwSVk2RZnxOV0ykyL2YH93opgAFIc1TlkU0ZBW
-	 sZ0Hae87o8oYz5l83gs5gZWOkoOk3mRdkuTt7zj6d7B2ir9XyjexRcW6aVneTBH+4Fh8u
-	 Fcx4/ltHAmRZ9NnLP7OmzY2yl0FXIm1lP0HQSunBZYX5aw9wtFOcQv1fVbtxSBcenBZW0
-	 mf3SBR9WN0drJpU42PsEpRqq9F0pPzibs9mgwa36Iscr23VKid6U9/O+EpnuiR/vGxA==
+	bh=jnP4nWESdgFPDNI/fng5Ab9alHxVJjZ+Y/o4fMDRmHQ=;
+	b=NdSPHnZBog5JUA5rZcGe/YXtMhVlYikNJQxExKpDE06zrFkSECtmwz6iwUX9vwLZZLd1
+	 H8lU/azM43PqE/6iHgMMdP3jPeW2f4yebaCzH473UGxL31R7eZ/TJ7IBtY/T9OAktf8e5
+	 QixaokMh7dp4BUt+Vo9tMFMz7JWjy4TSJLpg1P2dlXuIqrSx8lHLnGe2IJgLfTzKTfHck
+	 mSUXcPWmxZ5ng+CEqCbK/mGp/DofQJ8Tr+7WPayLcFd01ht3cHZqYxJxeLgeoPP9PMW/w
+	 ja1YNHnudoVOr98hDJzhndtwXS5k+7qjt4C+mxYfxFAIDeaB+W3Tr8Nr9Ets0nBExDg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DHShIpBD;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XZTXNptc;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52734606A320
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 15:40:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0C9606A320
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 15:41:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DHShIpBD
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 862771F000E1;
-	Fri, 20 Nov 2026 15:39:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XZTXNptc
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 821C41F000EB;
+	Fri, 20 Nov 2026 15:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795189199;
-	bh=CQ0g026N9ZPkaY5Axpduk2TzNRPTugPqZkjevKiFSbw=;
+	s=k20260515; t=1795189280;
+	bh=jnP4nWESdgFPDNI/fng5Ab9alHxVJjZ+Y/o4fMDRmHQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DHShIpBDZfW0CS72OqSDWt6sFiDJKWJ0N2JqyVty1Et6fC29E8xxkfsJFlfiy/X5d
-	 maAzlYZFXmXbQmZN+m4K1o5TFb41iHiWl5MG5f8NxhwokQEHb+cCBlUcAquxb0dqsg
-	 7JB3PI38V5GecNs4JrrxhG9G37uV09iac+y7FZ2Mm1aMTlh1HEc3rnj9bu0zw0aGxV
-	 ZIxzRRsaCFxavmiV5oPUumL4a1YX8koqGgI2vBqo3jUQPf8X1Qt68WBEA19QOM56aA
-	 c2voCQfYcdI7viVryKFFpI7hjyAqms8Wa9+rCCcgCD3vaYFrRV1wsZIoO1MB7+01ko
-	 CnL8ke8Z3TIQg==
-Message-ID: <sashiko-outbox-225474@kernel.org>
+	b=XZTXNptc42/MRzfOZlsSpx+mMDyiuOBdshxSW1cSumjBucHDQgvgHcf9mHxIVzU/G
+	 dqWUr2uOZcC5j2uW8rTSSEHhzFDUymogbGlamYfNmtQ/vqqWTRVGXUytJhSbzNQxOv
+	 JYJ9Dtnpj5xxmxXj3B5N8AEQ/laLhy4EyoLMNGxloGaXHXbcVWPJkjvVdWMPM5V4sr
+	 f6y1FYI/uUbWh92L4opCxnZ6eeFXfdk8Wr1YVJkHHYhwTGQhtBBOWpCxvehiXSKC8z
+	 etxmnSCH0rR0dKknc9+5agEu6iRyyOf6xt8y4M5CLWh1ZnYcOiaEBVMSMui/Ovdwq6
+	 86migqkkYBBJQ==
+Message-ID: <sashiko-outbox-225475@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 5/7] perf: arm_pmuv3: Add pmuv3_event_implemented()
+Subject: Re: [PATCH v5 7/7] coresight: Add pmu_pulse/extout_pulse
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Amir Ayupov" <aaupov@fb.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <a0472c58f855a9bd358f7faf8e88e44207c90fc4.1795182850.git.aaupov@fb.com>
+In-Reply-To: <c43cc5feecb253821499be80d43f1e71ccb32193.1795182850.git.aaupov@fb.com>
 References: <cover.1795182850.git.aaupov@fb.com>
- <a0472c58f855a9bd358f7faf8e88e44207c90fc4.1795182850.git.aaupov@fb.com>
+ <c43cc5feecb253821499be80d43f1e71ccb32193.1795182850.git.aaupov@fb.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 20 Nov 2026 15:39:59 +0000
+Date: Fri, 20 Nov 2026 15:41:20 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,67 +60,111 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Medium] perf: arm_pmu: build failure on 32-bit ARM without
-  CONFIG_CPU_CP15
+Thank you for your contribution! Sashiko AI review found 2 potential
+issues to consider:
+- [Medium] coresight: extout_pulse loads on 1-event ETE lacking EVENT1
+  and TRCEXTOUT1
+- [Low] coresight: missing coresight-cfg-preload.h include in
+  coresight-cfg-pmu-pulse.c
 --
 
-commit 35316b1d7277cb0d1201241837c2de25d95ad9c1
+commit e489c2f2f5183f248bad3a743fec51069d6bccc4
 Author: Amir Ayupov <aaupov@fb.com>
 
-perf: arm_pmuv3: Add pmuv3_event_implemented()
+coresight: Add pmu_pulse/extout_pulse
 
-This commit adds pmuv3_event_implemented() to arch/arm64/include/asm/arm_pm=
-uv3.h
-to query whether the local CPU's PMU implements a common event via PMCEID0/=
-1,
-and moves ARMV8_PMUV3_MAX_COMMON_EVENTS and ARMV8_PMUV3_EXT_COMMON_EVENT_BA=
-SE
-from include/linux/perf/arm_pmu.h to include/linux/perf/arm_pmuv3.h.
+This commit adds a built-in pmu_pulse configuration and extout_pulse
+feature for ETMv4/ETE to pulse external output 1 on every traced cycle for
+counting via the TRCEXTOUT1 PMU event.
 
-> diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-> index 02d2c7f45b527..a90867c9774c7 100644
-> --- a/include/linux/perf/arm_pmu.h
-> +++ b/include/linux/perf/arm_pmu.h
-> @@ -10,6 +10,7 @@
-> =20
->  #include <linux/interrupt.h>
->  #include <linux/perf_event.h>
-> +#include <linux/perf/arm_pmuv3.h>
->  #include <linux/platform_device.h>
->  #include <linux/sysfs.h>
->  #include <asm/cputype.h>
+> diff --git a/drivers/hwtracing/coresight/coresight-cfg-pmu-pulse.c b/driv=
+ers/hwtracing/coresight/coresight-cfg-pmu-pulse.c
+> new file mode 100644
+> index 0000000000000..76e8e6b5da0e9
+> --- /dev/null
+> +++ b/drivers/hwtracing/coresight/coresight-cfg-pmu-pulse.c
+> @@ -0,0 +1,55 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Pulse ETM external output 1 on every traced cycle for a PMU event to =
+count.
+> + * Based on coresight-cfg-afdo.c
+> + */
+> +
+> +#include "coresight-config.h"
+> +
+> +/* ETMv4 includes and features */
+> +#if IS_ENABLED(CONFIG_CORESIGHT_SOURCE_ETM4X)
+> +#include "coresight-etm4x-cfg.h"
+
+[Severity: Low]
+Should this file also include coresight-cfg-preload.h for the extern
+declarations of extout_pulse_etm4x and pmu_pulse_etm4x?  Without it, C=3D1
+sparse builds warn that both symbols are undeclared, as fixed for
+coresight-cfg-afdo.c in commit a7195f3f9383 ("coresight: Fix undeclared
+variable warnings from sparse checker").
+
+> +
+> +/*
+> + * extout_pulse feature: event 1 selects the always-true resource, so ETM
+> + * external output 1 pulses on every cycle while the trace unit is enabl=
+ed. A
+> + * PMU event counting that output (TRCEXTOUT1), for example with
+> + * aux-action=3Dpause, then fires after as many traced cycles as its sam=
+ple
+> + * period. Event 0 is avoided because it is the trace unit trigger, and =
+the
+> + * TRBE driver treats a detected trigger as fatal.
+> + */
+> +static struct cscfg_regval_desc extout_pulse_regs[] =3D {
+> +	/* event 1: resource selector 1 (always true), drives external output 1=
+ */
+> +	{
+> +		.type =3D CS_CFG_REG_TYPE_STD | CS_CFG_REG_TYPE_VAL_MASK,
+> +		.offset =3D TRCEVENTCTL0R,
+> +		.val32 =3D 0x0100,
+> +		.mask32 =3D 0xff00,
+> +	},
+> +	/* end of regs */
+> +};
+> +
+> +struct cscfg_feature_desc extout_pulse_etm4x =3D {
+> +	.name =3D "extout_pulse",
+> +	.description =3D "Pulse external output 1 on every traced cycle.\n",
+> +	.match_flags =3D CS_CFG_MATCH_CLASS_SRC_ETM4 | CS_CFG_MATCH_CAP_ETE_TRC=
+EXTOUT,
+> +	.nr_regs =3D ARRAY_SIZE(extout_pulse_regs),
+> +	.regs_desc =3D extout_pulse_regs,
+> +};
 
 [Severity: Medium]
-Does unconditionally including linux/perf/arm_pmuv3.h here break 32-bit
-ARM builds when CONFIG_CPU_CP15 is disabled (for example on
-CONFIG_CPU_V7M) and CONFIG_ARM_PMU is enabled?
+Can extout_pulse_etm4x match and load on an ETE that only implements a
+single event (caps.nr_event =3D=3D 1), where EVENT1 and TRCEXTOUT1 do not
+exist?
 
-linux/perf/arm_pmuv3.h includes asm/arm_pmuv3.h, and on 32-bit ARM the
-static inline helpers in arch/arm/include/asm/arm_pmuv3.h expand
-read_sysreg(), write_sysreg(), __ACCESS_CP15(), and __ACCESS_CP15_64():
+CS_CFG_MATCH_CAP_ETE_TRCEXTOUT is set by etm4_pmu_counts_extout(), which
+only checks up to drvdata->caps.nr_event:
 
-arch/arm/include/asm/arm_pmuv3.h:read_pmevcntrn() {
-    ...
-#define RETURN_READ_PMEVCNTRN(n) \
-	return read_sysreg(PMEVCNTR##n)
-static inline unsigned long read_pmevcntrn(int n)
-{
-	PMEVN_SWITCH(n, RETURN_READ_PMEVCNTRN);
-	return 0;
+drivers/hwtracing/coresight/coresight-etm4x-core.c:etm4_pmu_counts_extout()=
+ {
+	if (!etm4x_is_ete(drvdata) || !drvdata->caps.nr_event)
+		return false;
+
+	for (n =3D 0; n < drvdata->caps.nr_event; n++) {
+		if (!pmuv3_event_implemented(ARMV8_PMUV3_PERFCTR_TRCEXTOUT0 + n))
+			return false;
+	}
+
+	return true;
 }
-    ...
-}
 
-In arch/arm/include/asm/cp15.h and arch/arm/include/asm/vdso/cp15.h,
-those macros are defined only under #ifdef CONFIG_CPU_CP15.  Previously
-linux/perf/arm_pmuv3.h was only compiled on 32-bit ARM under
-CONFIG_ARM_PMUV3 (which depends on CPU_V7 and thus CPU_CP15), whereas
-CONFIG_ARM_PMU depends only on ARM || ARM64, so compiling
-drivers/perf/arm_pmu.c without CONFIG_CPU_CP15 fails with undeclared
-CP15 macros and helpers.
+When TRCIDR0.NUMEVENT is 0 (so caps.nr_event =3D=3D 1) and TRCEXTOUT0 is
+implemented, etm4_pmu_counts_extout() returns true and
+etm4_cfg_map_reg_offset() accepts TRCEVENTCTL0R without checking
+caps.nr_event >=3D 2.  Enabling pmu_pulse on such a device succeeds instead
+of returning -EINVAL, writing 0x0100 to the unimplemented
+TRCEVENTCTL0R.EVENT1 (bits [15:8]) field with no external output pulses.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1795182850.gi=
-t.aaupov@fb.com?part=3D5
+t.aaupov@fb.com?part=3D7
