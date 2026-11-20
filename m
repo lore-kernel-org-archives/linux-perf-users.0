@@ -1,57 +1,77 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795182426;
-	b=3znnTvdyFUxlbGsi4dI5k3v3Fglfv3fuyaCrFRJWl0vWGYqIrq19yG/NrsL+YLXow4ks
-	 IfgSc2JMhDK17ho3SCLvlQ3P7yVjwEGKSt3bC5k/ibm/xzTUQ9UUpvN3mmLvFFK9PyGzs
-	 Aw+IHQuzLan0W4TUk2Aw8CLnUyVug99NIWl/1AM59Yjuho24hHCv9MAfnKniuZeHafcn3
-	 FE6AJmn6G5obURutcQroP5GQ0/e2mtvH7Jk90AMBObzzA5C4ejgG4ZcX7i2MpYaSLAld4
-	 /x6hjfgSs+w3pXzpSqGBuQEcjMrqpD33tkbKcr8mKRLUjFl5nxjj6FPT00L6hzz0BFQ==
+	t=1795184170;
+	b=YViu4RociDF9rwvxBotPVGT2zrolwNkweANJ6+U0Le5SxkOYgvtYRNPx8z57wG3MSm5W
+	 JEN1/AZgFS6fTOBlI9w+HK8HmnHewHFhbwm3PWgWhuOijcWLQ2m+YrMzb8nNyDVUT0Py4
+	 BMdvc5AKp00quHQfEV78IRA6SoSsx1U3hiHh1vS1JBR3YvKwB9kcJpuYjmoWspT4RzOmj
+	 JwLq4YB3eTk5bE+XSUGgiPlvTXh5lkxM+i/kSS4rnVzUIjIBCt6byfHmdmgcLSLIHm8NN
+	 u7HqedLNSsoTcXxrNLQ4xt+Ihp8Ltj/LjVhCjo+HrRPck+On9zw6TtVP8x7Opmg6UvQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795182426;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=nvlL8d4osN4enrfNRZbYaNjHbLDQo00XIwjkskr6Bqo=;
-	b=nOaaRzw01+YUh/aAbWm81pOabBBbYOAFA/4/iYWk1pDuAYiviN3AtaTLCOQrm3yULNZl
-	 wVEKB6FgepY+NyIS6ukIVo1gu7JuEj+AdM0RLQjU9QHABe+Iy78KwaeWySOG+/nba6R6m
-	 0GSfA5PpdeFE0AbkbLwu+qY8hOuGbn/2ScgOTjGwOv0K1jm7Yz2gTOxD+Ln1AgMsu/6eY
-	 ZlBP747AwTz2O8TB3OAeChVGQlt2Jcf0YkfHM+y+vp880aR/Lmlm377slETNV9+soqck0
-	 txXoFP9CUKeobCPUco/pOllUewflXH109N7YZ2AevzDWUWhp8SQIG5xnQkYdz96md6Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795184170;
+	h=DMARC-Filter:Date:DKIM-Signature:DKIM-Signature:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To;
+	bh=RS6E0aCrGfHttoJoLg3wAvtdViYdywflW1zClO3xhHU=;
+	b=Pl6DXjDINbuAGtClmj9TVkRdbWaYA1idBEphpuukwV5GL5pjdkVobVOI3kAvy7xdmRuB
+	 m2ZSYnpR4LnuXJrjBCFLmmiZSdXv/0rrQpyPPn/LDMSxeraQIUEDIDHtEQK0yh3sRvf0L
+	 1ruAFZEO1sac0kKorLEry31Aag8OrEeNNwQSoHWDRUWxsy5/XfEeaqwdSBHIEQ1ZcYdsO
+	 zRBI3n/bwp3tmtcoTdRNrxgwm1TdTzMIW8yIo03KedWOdWVLYLELh4jrtMj7YnB0rqXSu
+	 gTRt9ARYaV/sHGq0ZNn2tnLc6kBOW0CMCmHXqGJHuC/xAUsSVUXCuzaM6x3bEnN67qg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Wf3jI3B5;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=linutronix.de;
+	spf=pass smtp.mailfrom=linutronix.de;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=vqY2SizF;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=+Dq8tZ5d;
+	arc=none smtp.remote-ip=193.142.43.55
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBFF606A320
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 13:47:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2B3606A33D;
+	Fri, 20 Nov 2026 14:16:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4E2B3606A33D
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Wf3jI3B5
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E69441F000C4;
-	Fri, 20 Nov 2026 13:47:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795182426;
-	bh=nvlL8d4osN4enrfNRZbYaNjHbLDQo00XIwjkskr6Bqo=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=Wf3jI3B5VQvJsZY4ILyeAUelJY6RYet9N+CjXuIaMM38BKc2ZYHH3riapMsbYroto
-	 8Qky+qOc1Uo2WP62UdXcpTZV7dGkec97SpWvyCbuiSzesWhJidxnkYgpQ2Y76uwrNr
-	 JGXdYlHq9QQsZk6+IZtORQgcxUvcJBpm9uClogRHNnDMADVvaV6KnADZKud7ysfh6O
-	 7LTFO3IumDpidkLRkUPu9Ny3AbNY74ihf7J/g1p7V4YrQSzP2sGCsQHdbCgLWh2Y83
-	 5lJokSHthgwc/DR0AhRpIVxGwyhnqfrf1ts/+JPAJXdLz3qSPdIxjAVFMNcsMHBx/X
-	 0OWyiGgt4QhUw==
-Message-ID: <sashiko-outbox-225268@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v12 2/2] perf jevents: Fail the build on a key the
- tables may not carry
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "TAKANO Mitsuhiro" <takano32@gmail.com>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20261120134252.1036963-3-takano32@gmail.com>
-References: <20261120060931.711483-1-takano32@gmail.com>
- <20261120134252.1036963-1-takano32@gmail.com>
- <20261120134252.1036963-3-takano32@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 20 Nov 2026 13:47:05 +0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=vqY2SizF;
+	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=+Dq8tZ5d
+Date: Fri, 20 Nov 2026 15:16:06 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1795184168;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RS6E0aCrGfHttoJoLg3wAvtdViYdywflW1zClO3xhHU=;
+	b=vqY2SizFoIEUCCa098XYAAv3YNeSt4AZm705itlAKiagcD1S6b3ONMTnJbV2n+YhTcfkm1
+	GGgjjYxmKAcGT618g1YJJCD71cKiTVak5mvkWhzyfcRpuHEKbVHy9luJTRtOjJecBfqWQq
+	JuLw6Dzi31l0v1cOIv0Cuemc25HmkAxw/BO/LTlkOV2ojeMvvnDWDQ5o1D2WJ8rI2JTOlV
+	Aj+HwFMGbuDcjhgD9DAgHZ7dHYizz0QbZj/klDqC2rzzWm7Nuho34dg9u9Sj7hc7qefbqD
+	6JX56FTzG6Q0tf/spltrwHDPSgSzj3gl4KL3lVF2RiAAKJ9JClZ6cFd//9Yjzg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1795184168;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RS6E0aCrGfHttoJoLg3wAvtdViYdywflW1zClO3xhHU=;
+	b=+Dq8tZ5dyt4Wnm5ctlcJpvCmR5gW0XTGHXCOpzBJ5weC1A76NpVe1BaEFM8d53sSSUIg6n
+	bu1Btrf06Y4xxACA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Tengda Wu <wutengda@huaweicloud.com>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] perf/core: Prevent duplicate sigtrap task work
+ enqueue
+Message-ID: <20261120141606.zcwyHZ3P@linutronix.de>
+References: <cover.1795053619.git.wutengda@huaweicloud.com>
+ <45bd71c976aea1a0e8bf5762dd6b6552e6009439.1795053619.git.wutengda@huaweicloud.com>
+ <20261120121436.GT2668564@noisy.programming.kicks-ass.net>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,25 +80,32 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20261120121436.GT2668564@noisy.programming.kicks-ass.net>
 
-> jevents.py takes the fields it wants out of each JSON object by name and
-> ignores the rest, so a key that is spelled differently is dropped without
-> a word and the object is built without whatever that field held.
->=20
-> Compare the keys of each object with _valid_keys, the keys a table may
-> carry, and fail on anything else.  The generator already names the file it
-> was reading and the exception names the keys it did not expect, so the
-> build stops with a message that says where to look.
->=20
-> Written with Hermes Agent, an LLM assistant; the author reviewed it and
-> ran the generator on every arch directory, with and without a key the
-> tables may not carry.
->=20
-> Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
+On 2026-11-20 13:14:36 [+0100], Peter Zijlstra wrote:
+> > Also use smp_load_acquire() when checking pending_work in
+> > the exclude_kernel warning path to ensure the read is properly
+> > ordered.
+> 
+> I am confused by the use of smp_*() and cmpxchg() here. Where is the
+> multi-cpu scenario?
 
-Sashiko has reviewed this patch and found no issues.
+The same event is used in process context and NMI
+|        perf-tc1-7647    [001] d..6.   114.513688: __perf_event_overflow: ffff888100d68540
+|        perf-tc1-7647    [001] d.Z2.   114.513703: __perf_event_overflow: ffff888100d68540
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261120134252.1036=
-963-1-takano32@gmail.com?part=3D2
+I don't see how to deal with this without cmpxchg. And the same event is
+also used by other task
 
+|        perf-tc1-7657    [001] d.Z2.   114.598356: __perf_event_overflow: ffff888100d68540
+
+which makes me thing that it could be pinned to another CPU (unless
+there is something that impossible and it is strictly per-CPU).
+
+The smp load/store macros is my fault as it looked better to do this
+than plain stores (given that we have the cmpxchg already).
+
+Sebastian
