@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795138746;
-	b=aVI18WIsLK3XLPnHyRwF/8IQRhfnX1r/43bDI9Mqa5uVUxus9sc+iw+bx6siOFHPSIxS
-	 eDoKR5sQmw18PY3SOjakb+RKraqc4/+kN8fC7Mp19TW0X35qzRpz/0qeGBGMN7w+18xtd
-	 /ovh0DBQerjnMyntWodnE2UuS9yOteT5DWDkMwWm/+srDIdzIQ91IRyZYXqGWsE+aeKPb
-	 TLnx9o/Vndpw09T2fzybOJ6gs9/yQpFuRtB6mMED2/iMnwdQHe3SdmDpfNj4x+3pFmip2
-	 o9WMR2X8oGm4xLh+k0uuFfTr9tMCbWmJRWA88QVLUXdgCLB8pBPl4YAoqB2ZIWGgL2g==
+	t=1795138762;
+	b=38TZpJGOPiPSeTDGxcQzVKE6uU8xKDqkMqcwN4u27fTp3f33iXzymbawPuP2eIRQHg78
+	 UtfpS5vYRq7sUlKh1CPBMP/eA+tjcK48QCM2pqefPXIjtd0w4I6tZ2eMxr56c5e/SDJY+
+	 OJz4DTHIChjlPC6v7sJjuDCZFRPp2sif0LU5X1Bvm0BR40V44l1fjgjSz0hZWcUD2SPfj
+	 5WEtRqWselbBCo5RjM62x/UXJ2PuTqeDTDNGUDRasKkPf0GUOmc1SHmUruHC74bRlBDAX
+	 eY3kRJXs0xP2AP3/1KulD6WaXyiHY/rHvI0m11i4Q6qY0fFe0gsTLhjMOiWke9HJvHg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795138746;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795138762;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=87MO32GZsbGu/gvVdfTnJjgqtaV4h5XBwjTP5PL39p4=;
-	b=ei87I+cmOXDQ2aCefcFEM5wNseJrFOCPuY8U3mdt4MNBmJW81uIFtNoSKC1ZeIbthk2C
-	 b8FA7IpcNeeWXWI3J+Knc4IYariMrszj1pBhQbBhXylbQNGtQX2rLrP2TGDtylvWITu+S
-	 2ORP3opq9S8IeXfw+Q2/9vdK39msmytNn5cpBOcY2ZzqaWzMD86xd7P+76aW7GyYyfp5b
-	 rCHDN5EoGfrbeHP5tm9o3cmU90IdEINXXX47e4X7hcf4FD3wpNNhNhSoNOeudB2ibjJXy
-	 YsqSnz6q9rj2VZpT6i+IZGUhvTVd3o4b+LvTQdSmZkxCKYVNEGWyZsTpYCad/cGTGBw==
+	bh=ZknI2jppZlaa18vYyP+vZNhL+uOA0qZYDqV6QZ8t5FU=;
+	b=FW67Gq2HXu9NRhBpfo0rVdxK8GPSqqV2aWOFwzSi356I0+8RHFsq1NtJUatg897ttAgt
+	 0cU5ufW5mI1BAXpRrVkYr21H7QtMLBVqF9ihu0+4Cc8D+KUdn0mRNlR+Zu50z9zHmpJyS
+	 Qwdxl14615IfG//quAcvhDx2U0qMQstnlXlK1iKbVyH2javTjhjk9ihKQksBfJC00ZDL/
+	 KACw/YkzA8llt3YK+Or9J8S1lns6eLUEQXDeose8HnPS6xtrFJRW0xiUrFdKkfqq20oGe
+	 5JR1dwiIWxTtcJdkUbhtU+AFHH8fFK2m/Yl6GuKq/+HBAGHBKDxOwGqReNMojJBqAJg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Htc0yxZ5;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IVB3CVYB;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DEE606A325
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 01:39:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802B6606A320
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 01:39:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Htc0yxZ5
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C2521F000C6;
-	Fri, 20 Nov 2026 01:39:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IVB3CVYB
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15CF01F000C4;
+	Fri, 20 Nov 2026 01:39:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795138746;
-	bh=87MO32GZsbGu/gvVdfTnJjgqtaV4h5XBwjTP5PL39p4=;
+	s=k20260515; t=1795138762;
+	bh=ZknI2jppZlaa18vYyP+vZNhL+uOA0qZYDqV6QZ8t5FU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Htc0yxZ5VaqFjc5IsZeyMU9oAodQzp5HuUc8X8e42rYEDd2ncNS45IHyt/eQAtyyS
-	 FX6Ipaz4rYjVecw69i4XYq45n38RIJJ30Qj2GFueTsDdwxH+puo3YzXqR2lSXjxxI/
-	 eHR1f04ZxVn7uETttR8JPKuHLZn6xFI/qBtfV462E8M9BVdRYoIF7z7sFGo+WO0J6u
-	 piJPJHf0u0Lpi4K6GSLCYNhT6gb4w+Dgyb0UXDydHrUoda4ebP8LAM0l07KfZrgXP6
-	 MALPASxDPLhavf5eBrU0jSJh6Nk6/pesq+aPqhNgxhunwm+6IiQjJ+wrsunXCiXqFd
-	 POt33tp2O606A==
-Message-ID: <sashiko-outbox-224329@kernel.org>
+	b=IVB3CVYBmg0goa4XX3E+nwkshS37icoGLrh9jbM8UclvX9It9RHSxQN8GAJ7FRHb6
+	 wfDWr8PWnT4Mk5U55njMX5yE2FfNbsPJ0+vV6puyuFelTNRPAPZRLJVtrh4p61Syro
+	 et2NET9J1X6F8+PvemHXLr8kESbg/Vd5zrONC+qa/ghdR7Tko+47s0em9k7rYC+uxj
+	 8N8CFupefCB0Xafha8h/HIWtERvg7m8GyE8OrPCB0s5Zw/q1E3UJSCT089i5lftTVp
+	 FpMBZF//1YZZaJHZtoDvklJx4kSx2yDVQZ/b8hNFQiSV6vjL+2v2bHmOoWzexH2r2e
+	 iO6hIuaiwJf9Q==
+Message-ID: <sashiko-outbox-224330@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 07/13] perf tests: Exercise data type resolution from
- a register
+Subject: Re: [PATCH v9 11/13] perf tests: Fix the Intel PT virtual LBR check
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261120013211.1510-8-acme@kernel.org>
+In-Reply-To: <20261120013211.1510-12-acme@kernel.org>
 References: <20261120013211.1510-1-acme@kernel.org>
- <20261120013211.1510-8-acme@kernel.org>
+ <20261120013211.1510-12-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 20 Nov 2026 01:39:06 +0000
+Date: Fri, 20 Nov 2026 01:39:21 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -63,20 +62,30 @@ Precedence: list
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> At -O2 a struct pointer lives in a register (with DWARF describing it with
-> a register location on register-argument ABIs), while the unoptimized
-> workloads the data type tests profile keep their variables on the stack.
+> On an Intel host the virtual LBR check failed with:
 >=20
-> Add a regptr workload with a noinline function that takes the pointer from
-> a volatile global, so the compiler cannot constant-propagate the object
-> address, and check that its three member accesses are resolved from that
-> register.
+>   Warning: Processed 29 samples and lost 100.00%
 >=20
+> The record leaves the buffer sizes to the tool defaults: the data ring
+> follows perf_event_mlock_kb, and the runner's small value left a single
+> page, too small for the AUX samples.  Pin 4 data and 64 AUX pages, so
+> the test does not depend on the host sysctl, and give the AUX ring room
+> instead of the single page the tool sizes to the 4 KiB snapshot.  Both
+> fit in the default mlock allowance regardless of the CPU count.
+>=20
+> Also require the Python perf module to export session: a perf module
+> without it, like the distro's python3-perf, made the check fail instead
+> of skipping.
+>=20
+> Fixes: 915d6b14dc0c8971 ("perf test: Migrate Intel PT virtual LBR test to=
+ Python API")
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Ian Rogers <irogers@google.com>
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 Sashiko has reviewed this patch and found no issues.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261120013211.1510=
--1-acme@kernel.org?part=3D7
+-1-acme@kernel.org?part=3D11
 
