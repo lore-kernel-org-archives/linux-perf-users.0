@@ -1,70 +1,94 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.20
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795165989;
-	b=G3332ERgkeDlR2o7EBlwpN/rOTgJaT4ym7v8cL7i/7NZNFCZReYbr5kXEErpjbl4lDi7
-	 tmyDCtxU4ZdZECtzrt0Hs/3zIgZ8qxzHcH8tb3FF314VWlkRCznV5Bg+vdYC4/d9OGUqK
-	 qzmf+iTsg7jzu6iIUNq9eq629nceh7FyUP8ntvbtQJMbMeCRyqA7nESLv8cKjdidOjGE9
-	 +m4mEHhl8RiIYdCetVRM9HkhOvGUPiKVtxpV9rdeeBOS2bMXwI0iXPLzmab//O83SVecQ
-	 ZEXMyEBCyx9Yiu1IbpcbYI912flSFNDBW5eSbrV3QDz9fosQmcOIr43er9c9G7JJvrg==
+	t=1795168460;
+	b=AIxD4pmv5YJO+QgvIrw3b8aNtElDPaE0kp+WOv/KiX49VmvCzOXxxk4bSLqjJ9K3sVpw
+	 yAQwuUlfqWJVuEg/AvANsUwrNdLny6p+8gPsH9J6H118bU0Avgpkr0ZHpiH/sNRmFTXCe
+	 i93nxxdqKci0qxZvcJovT0sdoXtgCCat/r43GP8evAQkn1o+oA2zW0bB8z0V2OBz8lkYQ
+	 6TW8T1TAQ/uckQ5Mwt6YqrA1wVlw5YuhOcsFZH2shlKpIeCU8LdnYx7k7lplfGRMP90xo
+	 XbD2fqUfo9//Y2rpRqf3x8KtUt7RJbgdqHYIPICjSv2CJbDzcTJKsiXACGgk3zd60Jg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795165989;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	a=rsa-sha256; c=relaxed/relaxed; t=1795168460;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Received:Date:From:To:
+	 Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
 	 Content-Disposition:In-Reply-To;
-	bh=kMfrK4uJJ3SyP08/jJGJsJf6bTnM2XRLHwgjTFafnPI=;
-	b=dU8fGHt9pb+he9u0wsYMyYTlPXZpZs0jgyaRQvkHPbU4jlVb06fnU0H8Wi0O2gVaXKFf
-	 X4tmj3AqbQ3UczulCkR0lXb17x9/Yp+mgjTwYZeOizQJuAo+QtK1nNA9+iWLQYLoweJpv
-	 yJw2gccjqht1ES5BLCEkFfYGXsUeGDliXhuNQiEWcJppnrSW0nBRAGCMozmefOMtP3jwz
-	 dsrFqTtucUb9FdXQqJCZh3mzbT+YbnD4F925C+EHuSibvF7Lhg+HONsRfUETtj073rk8s
-	 WqG23dU7VIbwTjK4xLtHNgTI8GMLAdRirCn6AFyHwSV18i0PUaON5ZHiuW3ASAaKv4Q==
+	bh=toC7g/mQwam01PNWnVEE4EXGk05THrMqM14HugAXhgw=;
+	b=o865YzZaSoMq7YnACIH20rnPy8CZzymYxQCFgx/PsTc3wc3Aok12T6F7jLzabnYHHRtY
+	 oRITixRSYANDgJVOf1SE/nI4F2XTc7wQaJ6WSy4ouKS//7WXYPJea5OCeziKANuc/WQMN
+	 EtNgBohAhEYX4R2AKU6y/snInH50kDrbuz7YJIMqN/2F/rPs8PvOoD2a1p/Yb7gtLp68s
+	 8/ZQ98F/vh6v4iE9HaeV8FQV3TCBKlgHrUboIWM+OEKixrokpM0GjcLJ4krzSokYpOSiW
+	 bcRfr/2Mf8ucrBCVx7s2HVlst+oBUQW9QET5QmzuDApMzsvgeleI9aS32R3gWUOnbXQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=tSL3DFqG;
-	arc=none smtp.remote-ip=90.155.50.34
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=d5uKR4ys;
+	arc=none smtp.remote-ip=198.175.65.20
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C4A606A320;
-	Fri, 20 Nov 2026 09:13:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 82C4A606A320
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2160260A261C;
+	Fri, 20 Nov 2026 09:54:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2160260A261C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=tSL3DFqG
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=kMfrK4uJJ3SyP08/jJGJsJf6bTnM2XRLHwgjTFafnPI=; b=tSL3DFqGGMBffymevBIBD14598
-	JWD1FNgjRcUinkF2E4igyPbKdmvK/09p6OZB9Lwmw/vMAOoDjdEI8jny0LihN5nmLOBzJzqoa7lcq
-	3ASVI1ggxavKpkX2hk1NCQZDIfzgyzS+1YoRRJSBKBYEHl4TXrewQkEI9aKmmwCkLUgK5xB+ECFMQ
-	ucljUffeP3gs5yIHoflXYqkg87wJpK+qRlZzTkZYq6496/Ww8GeY/jMhmBXgBWaW6kBbh1OdGa5aO
-	/+hOvMCRSdVCVfA9gH0zpVtuPl6uUrz2lPalPyikSmfETMrhoe/7K45h44ARziFc76hRsFKBYQnlc
-	2LfVsGbA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUKfz-00000001jrJ-1JhM;
-	Fri, 20 Nov 2026 09:12:59 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 40F2E300708; Fri, 20 Nov 2026 10:12:58 +0100 (CET)
-Date: Fri, 20 Nov 2026 10:12:58 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Usama Arif <usama.arif@linux.dev>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	james.clark@linaro.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, rkeilty@meta.com,
-	atish.patra@linux.dev, dgreid@meta.com, riel@surriel.com,
-	shakeel.butt@linux.dev, kernel-team@meta.com
-Subject: Re: [PATCH 3/3] perf/core: Don't zero perf_sample_data in
- do_perf_sw_event()
-Message-ID: <20261120091258.GH2669272@noisy.programming.kicks-ass.net>
-References: <20261119211235.99805-1-usama.arif@linux.dev>
- <20261119211235.99805-4-usama.arif@linux.dev>
- <20261120091150.GN2668564@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=d5uKR4ys
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795168461; x=1826704461;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2IgmBcIuK8iKdSO/EWf2izgDQSehVeqYibGtFqL+DMg=;
+  b=d5uKR4ys9sPMhqillYSYfjaPgSl5pJy/++stb93cvLtIvyGlrPE+88DY
+   HYS1TbaBpocwC9XiGq5pUqHYmYmYIFIVrEb6EfX0YKSPp9u7OZRU6M8kA
+   sBJhdAfYmqE3oAHGtq1cx5N16H0vHQ3WSLhCwNw40npDPnCTPoMFt0sRr
+   Efj+bEJrWtDip8yLtbs+vkR7fpYJvy3stAHyWj63Ka8V1kIcpZlMD1pcw
+   qfblMvJnzl0qK4Jla5e7zRAXzIzIcM4hKeeeOmnrHYy9cd+4WboWW8TH2
+   ub43RI9IEL5yGeVK1iWVmEjyHt0H6+7oXGmpJhCGx4OTjQWuEnAbkDRrj
+   w==;
+X-CSE-ConnectionGUID: yCLG/wgkRg+/K+nGHp2xhg==
+X-CSE-MsgGUID: UXy5b2zrS1esK5GgqmNM9A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11971"; a="4085326"
+X-IronPort-AV: E=Sophos;i="6.27,222,1787036400"; 
+   d="scan'208";a="4085326"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 01:54:20 -0800
+X-CSE-ConnectionGUID: fZlQO3tfSKq+pWuRGHALcA==
+X-CSE-MsgGUID: yBxFOHSZQdaGaldQSiVmTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,222,1787036400"; 
+   d="scan'208";a="10802136"
+Received: from lkp-server01.sh.intel.com (HELO 0caa9d2d175c) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 20 Nov 2026 01:54:14 -0800
+Received: from kbuild by 0caa9d2d175c with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1xULJq-00000001HWp-2jPC;
+	Fri, 20 Nov 2026 09:54:10 +0000
+Date: Fri, 20 Nov 2026 17:53:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tomohiro Misono <misono.tomohiro@fujitsu.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>, Marc Zyngier <maz@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>, Radu Rendec <radu@rendec.net>,
+	Oliver Upton <oupton@kernel.org>, Fuad Tabba <fuad.tabba@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Steffen Eiden <seiden@linux.ibm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Vladimir Murzin <vladimir.murzin@arm.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Kohei Enju <enju.kohei@fujitsu.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH v3 4/5] irqchip/gicv3: Add workaround for FUJITSU-MONAKA
+ Erratum E#030003
+Message-ID: <202611201734.HqRvXW7Q-lkp@intel.com>
+References: <20261119-monaka-fix-for-upstream-v3-4-057df4d2ca3c@fujitsu.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -76,151 +100,41 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261120091150.GN2668564@noisy.programming.kicks-ass.net>
+In-Reply-To: <20261119-monaka-fix-for-upstream-v3-4-057df4d2ca3c@fujitsu.com>
 
-On Fri, Nov 20, 2026 at 10:11:51AM +0100, Peter Zijlstra wrote:
-> On Thu, Nov 19, 2026 at 01:10:46PM -0800, Usama Arif wrote:
-> 
-> >  kernel/events/core.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 57ea7e3c01a025..fa10ad7cfd99af 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -11212,7 +11212,7 @@ static void do_perf_sw_event(enum perf_type_id type, u32 event_id,
-> >  				    u64 nr, struct pt_regs *regs, u64 addr)
-> >  {
-> >  	struct swevent_htable *swhash = this_cpu_ptr(&swevent_htable);
-> > -	struct perf_sample_data data;
-> > +	struct perf_sample_data data __uninitialized;
-> >  	struct perf_event *event;
-> >  	struct hlist_head *head;
-> >  
-> 
-> I like this one, didn't know about the __uninitialized thing. But I
-> think we wants to be more consistent with this.
-> 
-> A little git-grep seems to suggest we ought to do the same elsewhere.
-> Shall I fold the little something below in this patch?
-> 
+Hi Tomohiro,
 
-And this should be a separate patch again I think.
+kernel test robot noticed the following build warnings:
 
----
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 49b6b8fce566..db6c87552594 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -958,7 +958,7 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	static atomic64_t status_warned = ATOMIC64_INIT(0);
- 	u64 reserved, status, mask, new_bits, prev_bits;
--	struct perf_sample_data data;
-+	struct perf_sample_data data __uninitialized;
- 	struct hw_perf_event *hwc;
- 	struct perf_event *event;
- 	int handled = 0, idx;
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 96c96369480a..cf0eafd67430 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -1483,7 +1483,7 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
- 	struct cpu_perf_ibs *pcpu = this_cpu_ptr(perf_ibs->pcpu);
- 	struct perf_event *event = pcpu->event;
- 	struct hw_perf_event *hwc;
--	struct perf_sample_data data;
-+	struct perf_sample_data data __uninitialized;
- 	struct perf_raw_record raw;
- 	struct pt_regs regs;
- 	struct perf_ibs_data ibs_data;
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 4e344fb1ae3e..5f8bfc65b256 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2157,7 +2157,7 @@ void x86_pmu_update_perf_regs(struct perf_event *event,
- 
- int x86_pmu_handle_irq(struct pt_regs *regs)
- {
--	struct perf_sample_data data;
-+	struct perf_sample_data data __uninitialized;
- 	struct cpu_hw_events *cpuc;
- 	struct perf_event *event;
- 	int idx, handled = 0;
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 0a34d674df59..5d84c18096a9 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3819,7 +3819,7 @@ static int x86_pmu_handle_guest_pebs(struct pt_regs *regs,
- 
- static int handle_pmi_common(struct pt_regs *regs, u64 status)
- {
--	struct perf_sample_data data;
-+	struct perf_sample_data data __uninitialized;
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	int bit;
- 	int handled = 0;
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 8444670cee4a..73f6fd66856f 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1184,7 +1184,7 @@ int intel_pmu_drain_bts_buffer(void)
- 	struct bts_record *at, *base, *top;
- 	struct perf_output_handle handle;
- 	struct perf_event_header header;
--	struct perf_sample_data data;
-+	struct perf_sample_data data __uninitialized;
- 	unsigned long skip = 0;
- 	struct pt_regs regs;
- 
-@@ -1265,7 +1265,7 @@ int intel_pmu_drain_bts_buffer(void)
- void intel_pmu_drain_pebs_buffer(void)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
--	struct perf_sample_data data;
-+	struct perf_sample_data data __uninitialized;
- 
- 	WARN_ON_ONCE(cpuc->enabled);
- 
-diff --git a/arch/x86/events/intel/knc.c b/arch/x86/events/intel/knc.c
-index e887adc108ac..aa38b0ac3c7b 100644
---- a/arch/x86/events/intel/knc.c
-+++ b/arch/x86/events/intel/knc.c
-@@ -213,7 +213,7 @@ static inline void knc_pmu_ack_status(u64 ack)
- 
- static int knc_pmu_handle_irq(struct pt_regs *regs)
- {
--	struct perf_sample_data data;
-+	struct perf_sample_data data __uninitialized;
- 	struct cpu_hw_events *cpuc;
- 	int handled = 0;
- 	int bit, loops;
-diff --git a/arch/x86/events/intel/p4.c b/arch/x86/events/intel/p4.c
-index 5368dc31787c..4ac429e55935 100644
---- a/arch/x86/events/intel/p4.c
-+++ b/arch/x86/events/intel/p4.c
-@@ -1033,7 +1033,7 @@ static int p4_pmu_set_period(struct perf_event *event)
- 
- static int p4_pmu_handle_irq(struct pt_regs *regs)
- {
--	struct perf_sample_data data;
-+	struct perf_sample_data data __uninitialized;
- 	struct cpu_hw_events *cpuc;
- 	struct perf_event *event;
- 	struct hw_perf_event *hwc;
-diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/core.c
-index e506f677db57..fc98a7fdd3bc 100644
---- a/arch/x86/events/zhaoxin/core.c
-+++ b/arch/x86/events/zhaoxin/core.c
-@@ -355,7 +355,7 @@ static void zhaoxin_pmu_enable_event(struct perf_event *event)
-  */
- static int zhaoxin_pmu_handle_irq(struct pt_regs *regs)
- {
--	struct perf_sample_data data;
-+	struct perf_sample_data data __uninitialized;
- 	struct cpu_hw_events *cpuc;
- 	int handled = 0;
- 	u64 status;
-diff --git a/arch/x86/include/asm/stop_machine.h b/arch/x86/include/asm/stop_machine.h
-deleted file mode 100644
-index e69de29bb2d1..000000000000
+[auto build test WARNING on aebb7274476403040d582c61478df8f4a7bf9cd3]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Tomohiro-Misono/arm64-cputype-Add-FUJITSU-MONAKA-definition/20261119-180433
+base:   aebb7274476403040d582c61478df8f4a7bf9cd3
+patch link:    https://lore.kernel.org/r/20261119-monaka-fix-for-upstream-v3-4-057df4d2ca3c%40fujitsu.com
+patch subject: [PATCH v3 4/5] irqchip/gicv3: Add workaround for FUJITSU-MONAKA Erratum E#030003
+config: arm-randconfig-1003-20261120 (https://download.01.org/0day-ci/archive/20261120/202611201734.HqRvXW7Q-lkp@intel.com/config)
+compiler: clang version 24.0.0git (https://github.com/llvm/llvm-project 3b14d7c370558b46e5f0c6494a05c492e59bf32c)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20261120/202611201734.HqRvXW7Q-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202611201734.HqRvXW7Q-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/irqchip/irq-gic-v3.c:83:32: warning: unused variable 'gic_fujitsu_030003_erratum' [-Wunused-variable]
+      83 | static DEFINE_STATIC_KEY_FALSE(gic_fujitsu_030003_erratum);
+         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 warning generated.
+
+
+vim +/gic_fujitsu_030003_erratum +83 drivers/irqchip/irq-gic-v3.c
+
+    82	
+  > 83	static DEFINE_STATIC_KEY_FALSE(gic_fujitsu_030003_erratum);
+    84	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
