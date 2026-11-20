@@ -1,87 +1,67 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.92.199
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795175208;
-	b=JFyYbyFQ6j91+9/UbBSXXkAextTEXJpDWf814VlyxnHHf9khCnJ2EnJ6hdCIjRXBaY5J
-	 1Lw2jqw/B3qah8t3tPFJ8WUi95ZtUaIzLX5Ijnh+mYk7ccsYtJI7EKZS3DbuamGV/iY3x
-	 cx+d/zcmtuoVZUP4eMJ4EMeedwVHutPVce6uixpqHAcs2Bm44zCBpPcH0FBk5lK4B9Wcm
-	 M0fMf0KiGBiYlipooHVaCchyseOd+hsgbekKEh/R5eGcyjQX0AGFnS350F2E7tROuoHSS
-	 IEu1Bs2y/0N9rxZdF7lFRnQQzuGvHNnRPPY2ZV1Gwn/vCADCtSkXNF/Ouli/cIipL0A==
+	t=1795175768;
+	b=GIkWUd9Ieo3eLbfDU7GAatnrlMVMFrhuaE6OAPNrQ8jTt7Yh5IGetZ4h69Vz95jFf96y
+	 M6Vn1ok1/N1O2hI4+tiC8lPmTCYou26bA71pFvKIVry7e4dJBREPvsYVMxKIo+JR2OCQB
+	 10hxz+9A9g1CD58uRxKihRpa+peBqPWbIKKe4zVMQCw3Hz/WkSHgQnYtG6YjpavX4OmU6
+	 q6EChpu3RXwkSfQhuz8JSgfUv1m/mfIcRYv6zst5KBex47EB2wH9eFp8b1CKRFqRDrb2s
+	 wsWRIH/31R7j1UAhF3nK06ZqSom41A62Nb+TrtIO314Mx46P1d6OyDb+jpCKLaNm3Yg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795175208;
-	h=DMARC-Filter:Date:DKIM-Signature:DKIM-Signature:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To;
-	bh=RGVl29uymQl+NYGzhhAdRoCGDhPq1p2bxTDg+kAVmWM=;
-	b=emTQm2yh3UzFqBlEVdR+GKFsXzGJgowkyxWy/qXL9z5l40swj7ceyahDCQiPZ34SUenP
-	 dtUVY8eMM0p53Gp/GC0B33xpnmztinQRbuZEUHDfW8apW/TwBpCsgCb3/089cRr5+WzsZ
-	 CUTODLzJPXWbjlzChKrK/QcMnyudzINgb1hFYHFWlON7xujkJk8TlyJHTskDH+QQ7PhHR
-	 +rDBNeVIYJQpJHZxK1gxidjiozdMyFohjUxLjyDrbOiAwnSXiWOEXHayAxhnjbVxp/Tt9
-	 OVxD4RbfIXiK0k+JsvyzSQ0OAvk2s3D5k57A9UFxuH5q2H389YHatWs/vA9velgc5qg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795175768;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=PXRVRPdOar/2qEkh1nAT5/sKJn9vJaTashrDQ/K8vps=;
+	b=zkeSd/JFf+GhVNXkk7b7kIWMAsNoaZmOIDEIjB1HZjdV0dLaC18VbqwERiIKoAhdtcfs
+	 AIsoESh0SQa/9O5gmBygwOnW2juMHWIFhZISoPior3Q5xpy4nSDEdqGwq4xP2cLVXrd0M
+	 +SZiIEobzMe3XELx55vxXom4WHSbu2Y8iSlCCJIJuUvLu3D6L/pRYVlAbxeunFVFHUSlD
+	 guF0HJpu2RmULjqFKmVyGAMQY2KNW8DlRZTnQ2EkbGDrzelKiFJJ/lbtr6Ui02UZFA39h
+	 o2GqhnsR5TXc8GR0SxF0tJiN5V7VDewXVYvatSHD9rIpC13B8kEEk87FwTaCHgOmOIQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linutronix.de;
-	spf=pass smtp.mailfrom=linutronix.de;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b="rHhy/kRK";
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=cAQGnN0T;
-	arc=none smtp.remote-ip=193.142.43.55
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	dmarc=pass header.from=infradead.org;
+	spf=pass smtp.mailfrom=infradead.org;
+	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=N1S78QAL;
+	arc=none smtp.remote-ip=90.155.92.199
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A44606A32A;
-	Fri, 20 Nov 2026 11:46:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 70A44606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C36606A326
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 11:56:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C7C36606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=rHhy/kRK;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=cAQGnN0T
-Date: Fri, 20 Nov 2026 12:46:44 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1795175205;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RGVl29uymQl+NYGzhhAdRoCGDhPq1p2bxTDg+kAVmWM=;
-	b=rHhy/kRKnxoBZ3C1Vy5q3goQ0Sa9M+bemSoPX9upOJRj6LOKbB5S5lqUKtRlJuckMTEl+B
-	rXQRrvPp00nOlR6J9GoMM3MvV4VW8KeHR0SJMOpDOIwSdcKSug7p4acBgevoe3/D64rlFE
-	apjWVP22W6DHaL1QyJu1leNaCknMy0tmqTOk9kvmWblgYuapxOSTYUsjK3XmnokDG3X5uk
-	pjuEVB/l57RTLbOD696RcHYP7ttuoVeaEPF+e3QwGYYqT+FCh1o7NQsAC1ycHkeVEOP60A
-	0mDji8l9oiJ9am784yJ5nJPNYB9RaJ2I0NTU8F7VDtGiezMJOgJeeMNwHuBUuA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1795175205;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RGVl29uymQl+NYGzhhAdRoCGDhPq1p2bxTDg+kAVmWM=;
-	b=cAQGnN0TqodF+ppjAKq8R2iG0HYEJu6K7ZLFa9loTjpPu89w7sQzBwgYjZCrtscRZJ5w1q
-	PWb+YPfS5gtQmLBA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>, Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	=?utf-8?Q?Beno=C3=AEt?= Monin <benoit.monin@bootlin.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	=?utf-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>,
-	Fu Chao-Ying <chao-ying.fu@globalfoundries.com>,
-	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Paul Burton <paulburton@kernel.org>
-Subject: Re: [PATCH v3 1/7] mips: {cm,cpc}: Make cm_core_lock, cpc_core_lock
- raw spinlocks
-Message-ID: <20261120114644.VM_HFf9o@linutronix.de>
-References: <20261119-i6500-cm3-pmu-v3-0-c86410934b51@mobileye.com>
- <20261119-i6500-cm3-pmu-v3-1-c86410934b51@mobileye.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=N1S78QAL
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=PXRVRPdOar/2qEkh1nAT5/sKJn9vJaTashrDQ/K8vps=; b=N1S78QAL05nIyTn4M2vL8YOoy5
+	c00+DFAh8DyIM4ZCDlcaVytoaDD7uNAyu9KkGlCZ4IW21cbefgjf7/71P4kZWoYP950Deu5x8I5Ii
+	XcWBW4y/sHyCeLnFQuooQYXnfePTt5EzZ95mVGJghzLl0Hwm9xi9//KVTArWgUV8nwvd7VXRp6Ojs
+	KTi7koTRPcLX5WoXU099QY7ulILm5rOQTcFl4fnczz6f6GevQKnxT09Eyou467P6gdb1LXRxKNwre
+	y9tIRwH622YZgTN+PNGjtO0Sj9k4Ity18MH/1NFzTM7qjxE9BliXo7EQ4JS20F0Sy/jjZsi+P4wge
+	OLFQgalA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xUNDn-00000000jRi-27Pp;
+	Fri, 20 Nov 2026 11:56:04 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 085AD301185; Fri, 20 Nov 2026 12:56:02 +0100 (CET)
+Date: Fri, 20 Nov 2026 12:56:01 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dominik Maier <dmnk@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Marco Elver <elver@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
+	dmnk+artist@google.com
+Subject: Re: [PATCH] perf/hw_breakpoint: fix ctx->mutex vs perf_event_mutex
+ inversion on attr modify
+Message-ID: <20261120115601.GQ2668564@noisy.programming.kicks-ass.net>
+References: <20261119192228.2661266-1-dmnk@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -91,31 +71,59 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261119-i6500-cm3-pmu-v3-1-c86410934b51@mobileye.com>
+In-Reply-To: <20261119192228.2661266-1-dmnk@google.com>
 
-On 2026-11-19 19:51:27 [+0200], Vladimir Kondratiev wrote:
-> From: Paul Burton <paul.burton@mips.com>
+On Thu, Nov 19, 2026 at 08:22:28PM +0100, Dominik Maier wrote:
+> The perf events lock hierarchy documented in kernel/events/core.c orders
+> task_struct::perf_event_mutex outside perf_event_context::mutex, which
+> perf_event_open() and prctl(PR_TASK_PERF_EVENTS_ENABLE) follow.
 > 
-> cm_core_lock and cpc_core_lock are used to protect access to a CPU's
-> core-other/redirect CM and CPC register blocks. Since each CPU sees
-> its own copy of this block, we need to ensure that critical sections
-> holding a cm_core_lock run on one CPU - ie. we need to disable
-> preemption.
+> However, perf_ioctl(PERF_EVENT_IOC_MODIFY_ATTRIBUTES) acquires
+> ctx->mutex first via perf_event_ctx_lock() and then calls
+> perf_event_modify_attr() -> modify_user_hw_breakpoint_check() ->
+> modify_bp_slot() -> bp_constraints_lock(), which locks
+> bp->hw.target->perf_event_mutex when bp_type changes.
+
+  perf_ioctl()
+    perf_event_ctx_lock()                     // perf_event_context::mutex
+    _perf_ioctl()
+      MODIFY_ATTR:
+        perf_event_modify_attr()
+          mutex_lock(event->child_mutex)      // perf_event::child_mutex
+          perf_event_modify_breakpoint()
+            modify_user_hw_breakpoint_check()
+              if (bp->attr.bp_type != attr->bp_type)
+                modify_bp_slot()
+                  bp_constraints_lock()       // task_struct::perf_event_mutex
+
+> If one thread in a
+> process calls prctl(PR_TASK_PERF_EVENTS_ENABLE) while another calls
+> ioctl(PERF_EVENT_IOC_MODIFY_ATTRIBUTES) with an alternating bp_type on a
+> self-targeted breakpoint, the two threads deadlock against each other in
+> TASK_UNINTERRUPTIBLE state.
 > 
-> Use raw_spinlock_t to implement cm_core_lock and cpc_core_lock in
-> order to provide the guarantees we need on PREEMPT_RT systems.
-> 
-> Signed-off-by: Paul Burton <paul.burton@mips.com>
-> [added CPC part]
-> Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+> Decouple bp_constraints_lock() from task_struct::perf_event_mutex by
+> using a small static array of dedicated mutexes indexed by
+> hash_ptr(tsk, BP_TASK_MUTEX_BITS). At most one bp_task_mutexes[] entry
+> is ever held at a time, and ordering becomes strictly
+> perf_event_mutex -> ctx->mutex -> bp_task_mutexes[] -> bp_cpuinfo_sem
+> without extending task_struct.
 
-The perf interrupts should be per-CPU and not threaded so this is the
-right to do. However mips does not have ARCH_SUPPORTS_RT set. Is this a
-longterm goal? Otherwise it doesn't matter since without it set even
-lockdep dose not complain where it would otherwise.
+How long until someone reports this as a scalability problem.. :/
 
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Fixes: 0912037fec11 ("perf/hw_breakpoint: Reduce contention with large number of tasks")
+> Fixes: 32ff77e8cc9e ("perf/core: Implement fast breakpoint modification via _IOC_MODIFY_ATTRIBUTES")
 
-Sebastian
+I'm not sure about this second commit; that does introduce the
+MODIFY_ATTR stuff, but things weren't broken back then.
+
+If you really want a second commit, then 82aad7ff7ac2 seems like a fine
+enough candidate, since I annotated that warning away without noticing
+the inversion through modify_bp_slot().
+
+The reason modify_bp_slot() exists is for switching between data and
+code breakpoints; which I recon isn't something we can take away either.
+
+Bah.
