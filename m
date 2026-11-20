@@ -1,57 +1,61 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795139366;
-	b=eb7Z+Xs2vSx4MaY0fW8o24jdZXVD2gjxGnAHjpSUykzL0BQfl4HXbrySOVLt5CdRGBMP
-	 jkoi9suXI3YicolMc5yBFbFGw3hZrdYmFxH4DJxwvruD4yUsXhKjmjQjro52INbBklTH4
-	 M0knxUo4IW6suQq83SQDObeI+l8sadAvhaDsKRp6MpLbqAIvv9tWKT9o4Tu5dBHaAIhgW
-	 18FU6ozFQStwctwIEz8NcKBXL2DZTD1PJsYWc2gtr5ftR8Twlh/+Jdp2L5t4Vq5d7OHOb
-	 bADGkMTUU8Lnasl79C1tscT4mvbCFr7uCJwWW2iYxHmZqWK2ToaGky9XhLelDi5/TJA==
+	t=1795146845;
+	b=3vi7QYGBrvf35xw3EUlEoASJaS9jHXilzAwPEs5qohIRPhSZ8BcA7eK104kjgAZsuVMa
+	 ZmOoVj5sqaWa5BKHHdJ76TRPZEjIdulJe7fFwG++R4p3ksHgE/pouvjaFtuKbnw9zYxUt
+	 ZhTF2nCmaIxT06QMlk33uoYVk96t/7Cay1f2OEdaW+zTf/czRVNn1un927Pph6MqEvstj
+	 Sf1bupSyRCzv2+TcsDLbWS6/T1EHh5+PtobxJf/wJCFgeDctx91ccK6bCeukhHlWp6QuL
+	 BSbBCpqZN3+doyuf3/r2q5sfnaPfcwRnCgx0dLz6ySGpugnBT1cC74GlYMVQolbxwtA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795139366;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=mG1Or10kuLcHyDKfTSfnb+fZBwMfOtPEugqenjzXUT8=;
-	b=DDV4sKB/1WrSWuEzTXATllGbV+9Sdwdez6E0afpDLOIJkqwP4/CX1BOLSYi7iVLnQ8GJ
-	 UeBw7/K5532rVXI05TafqarW+uskdptcpOK51kaSoBBOGFzTLu48ccc7IlaLRWJk1Ydh2
-	 61Ab9bETrk35Xr4UUsghfFYxt/TuBijYsLH6KEiOKOUvBXYvAEArxOYiETp3TDVs8py0s
-	 iutADUUkE9cT19ERU3Bz9tvT6isokSgl1K8deCkybg8KNbqKIucraT7HJyQ9YSWxJvZUS
-	 CW75FcQhSpa4BDr4eKf70Isxwt6PQxOWiv4o6fSvSe0aZs3fTdMRsNWRRL+hGd1/lMQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795146845;
+	h=Received:DKIM-Signature:From:To:Cc:In-Reply-To:References:Subject:
+	 Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 X-Mailer;
+	bh=yLh1qpirJEH9JAr3Gu9ETGq55dcbgI7wdDSoOW7XajA=;
+	b=ImhuxsfmTc7WhSypmfxp7o3Y6BuOrPH/TJ9bwvIwOBQZ+YieRhNdHzNAYbES2X+TbLDT
+	 BFTJj/OHp/lK2sCkDmmY2pXgEVgDqZEldVtftqT9F9Ugiw10wwdvL6Wi9b0HtllB6QZM8
+	 RVGLZWe4O549IT8slLwk2ufuLJQSQ5F1IS7um5mbVgq+r2Ugrqopdxgq+cE5gGmhPP31i
+	 uIANiByNj4wtyL3y2/qGcpbymkA/YAKC4c7K7pyBUYlDpbdxmGZmMFKtxPWMpCiPcAclA
+	 HW7cONmnPTL4GEpKlQFTPrMfgoqhtClviPCLY9ROFjgAMJb9bps4AuiywjOm2r02YSQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FRYthxCP;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KroRQOmg;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F98F606A320
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 01:49:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4BF606A320;
+	Fri, 20 Nov 2026 03:54:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FRYthxCP
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33ED01F000C4;
-	Fri, 20 Nov 2026 01:49:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KroRQOmg
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C7B21F000CA;
+	Fri, 20 Nov 2026 03:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795139366;
-	bh=mG1Or10kuLcHyDKfTSfnb+fZBwMfOtPEugqenjzXUT8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FRYthxCPn6Fi6+sGrGwCDZl9sCI5ZqOpDhUM328rPhnmUfsFj2qk5txuXSfFKwDz4
-	 6mKUOVD51xm1i5M/Tdp44aWR5oyGl4ZyPVS/9pktSCIe/2VdH6n+jCQh1WUGDVXQsJ
-	 j2F2G/KhSh45Rj8DH8ZMlCyPTVmzyTSNGJ72jJr70L0TveEl0Pd+mrBrq9lE/9VF+o
-	 XG3YJlzdt79olgW7Fw/5O2VFpBt+mxjfF1ZJJpBCTylDY9L2xOJjZRPoIl94clv8nW
-	 d+AaIyF8T4+TcXJ4pWJpeuEVmMPJF+LcdWlRxQg9WPgcsnlAh/Ufp6JrOPDXTSi3me
-	 XvwmC46KfAhDQ==
-Message-ID: <sashiko-outbox-224340@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 03/13] perf annotate: Handle absolute addressing in
- data type profiling
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261120013211.1510-4-acme@kernel.org>
-References: <20261120013211.1510-1-acme@kernel.org>
- <20261120013211.1510-4-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 20 Nov 2026 01:49:25 +0000
+	s=k20260515; t=1795146844;
+	bh=yLh1qpirJEH9JAr3Gu9ETGq55dcbgI7wdDSoOW7XajA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=KroRQOmgch4TTDvUmHjnyxBg3GWS89v43pWDscHsrFN7OatiF9yHupLTL/msWLZ2a
+	 NvOHh2GoTS5itJ2hG7LDa0zzMfRmXZFdmvMGqP85py24jQ5znxfrYmYsVA/4m6ulRJ
+	 VSlFKM7R49l+iSD/Oa05XXdinpsN8LAu5rQvGGtIEk7Cm/7kWO67jdl34yDaKeoG2C
+	 fl7uUUaW8UQwg4BR+rtJibZXkWAZfKvH0oB6zM08MQsvAcUBvYva5/y/9b2OasbIlp
+	 735ZrTHqGNYtYqdwjsQZ/OUHccmGlS2xWprUSFM7egQ/epHwO6t+fnfEkmOQVkDqxy
+	 5VyE5M+lhlxQQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, 
+ Hang Zhengyang <hang.zhengyang1010@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20261111-tp-glob-errno-v2-1-ca45efb07d31@gmail.com>
+References: <20261111-tp-glob-errno-v2-1-ca45efb07d31@gmail.com>
+Subject: Re: [PATCH v2] perf parse-events: Don't report unreadable
+ tracepoint globs as unknown
+Message-Id: <179514684340.638421.18332137800214715331.b4-ty@b4>
+Date: Thu, 19 Nov 2026 19:54:03 -0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,75 +64,26 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15.2
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Medium] perf annotate: missing movabs entry in x86__instructions
-  leaves it unparsed
---
+On Wed, 11 Nov 2026 09:48:50 +0800, Hang Zhengyang wrote:
+> As a normal user, a tracepoint glob gets the wrong error:
+> 
+>   $ perf stat -e 'syscalls:*' true
+>   event syntax error: 'syscalls:*'
+>                        \___ unknown tracepoint
+> 
+>   Error:  File /sys/kernel/tracing//events/syscalls/* not found.
+>   Hint:   Perhaps this kernel misses some CONFIG_ setting to enable this feature?.
+> 
+> [...]
 
-commit 1846110498ff835d20605b89dd376d9b33a97c53
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Applied to perf-tools-next, thanks!
 
-perf annotate: Handle absolute addressing in data type profiling
+Best regards
+Namhyung
 
-This commit parses bare hex displacements as absolute memory operands on x86
-and resolves their global variable types during instruction state tracking
-and data type profiling.
 
-> diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/ut=
-il/annotate-arch/annotate-x86.c
-> index e38a4e7a54d55..03c32032cde0c 100644
-> --- a/tools/perf/util/annotate-arch/annotate-x86.c
-> +++ b/tools/perf/util/annotate-arch/annotate-x86.c
-
-[ ... ]
-
-> @@ -960,6 +970,30 @@ static void extract_op_location_x86(const struct arc=
-h *arch,
->  			op_loc->offset =3D strtol(s + 1, &p, 0);
->  			if (p && p !=3D s + 1)
->  				op_loc->imm =3D true;
-> +		} else if ((*s =3D=3D '-' || strstarts(s, "0x")) &&
-> +			   !ins__is_call(&dl->ins) && !ins__is_jump(&dl->ins) &&
-> +			   strncmp(dl->ins.name, "loop", 4)) {
-> +			bool neg =3D *s =3D=3D '-';
-> +			bool movabs =3D !strncmp(dl->ins.name, "movabs", 6);
-> +			u64 offset =3D strtoull(s + neg, NULL, 0);
-> +			bool exact;
-> +
-> +			if (neg)
-> +				offset =3D -offset;
-> +			/*
-> +			 * The offset is an int: a disp32 fits it as a u32 or,
-> +			 * sign extended, as an int, which is how the LLVM
-> +			 * disassembler prints one that does not fit an int.
-> +			 * A movabs takes a full 64-bit address, keep only the
-> +			 * values the sign extension gives back exactly.
-> +			 */
-> +			exact =3D (s64)(int)offset =3D=3D (s64)offset;
-> +			if (offset !=3D 0 && (movabs ? exact :
-> +					    (offset <=3D UINT_MAX || exact))) {
-> +				/* An absolute address: 32-bit code, or a 64-bit disp32 */
-> +				op_loc->mem_ref =3D true;
-> +				op_loc->offset =3D offset;
-> +			}
->  		}
->  	}
->  }
-
-[Severity: Medium]
-Can extract_op_location_x86() ever reach this movabs check on real
-disassembly when x86__instructions[] has no entry for "movabs"?
-
-Because ins__find() fails to match "movabs" or "movabsq",
-disasm_line__init_ins() never runs mov__parse() to split dl->ops.raw into
-dl->ops.source.raw and dl->ops.target.raw.  annotate_get_insn_location()
-then passes a NULL op_str to extract_op_location_x86(), which returns early
-without resolving the operand.  The new test in annotate-ops.c passes only
-because check_operand() populates dl.ops.source.raw directly instead of
-going through disasm_line__init_ins().
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261120013211.1510=
--1-acme@kernel.org?part=3D3
