@@ -1,57 +1,58 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795146848;
-	b=Cr0IZ3gyJJXkQyANE1FfOkM8JRCdq4Y55EIh+1ucK1YDpzNibox9iOl8YYElGN2X3c+C
-	 zDhvEpGqtaEVhOMxLSWVm+1R9HFnmkBRR9zILMusd7Pdnant91IjHjwtcIg5S5pG74/FO
-	 R/egrHLE/QNReFEiNaYjJv1Lj0/cSUOd+Jav4h3xbDSuaf8mCDASse+P55ic++7egOT5o
-	 l0KCEqFNUaqxiZ+yl4f3KOd0K0W9EoUeULBxQDnDRRPvpF6JvMxefWO4ETIk4hg7nCLrt
-	 Nij/RXYoHkxp2NSmQG3B1vt23vCVaHtTMa0XZOfOZbixlywNmmeyapezLoHJHrWD9RA==
+	t=1795146846;
+	b=s0+PHtx1ZckAoMinT0OxNiEwhvy1u3jPWH1dx/AWZ5e/nUgW73fSxc8w+wgu/dBZ1dYu
+	 zVn0mg8Tj0IgZ4RlPhAN6PDReFJuoLefufgmbjDIiwa5W6e2zYm5wxl/if7QrWeydytaU
+	 AAOui95eCIK4FnlU4RgWsHZu9o5UxU6FxgqkZ4kv+DUl1eH2i1nAdiVH48YrFn2/B9Fqa
+	 tNuFyDQLFLM/u7Hfr2L0bf51ZQqVlvR1UcUygKdpe1PIqmGx6b+RCyUiY/tPGA1NgbKoo
+	 C42IJWJkQSOWYbL4Im4fhudy+9h41cdYRLWnDHjtoQfxP5aU1e+0iIULtznIh3pb6NA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795146848;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795146846;
 	h=Received:DKIM-Signature:From:To:Cc:In-Reply-To:References:Subject:
 	 Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 X-Mailer;
-	bh=iTp8Z0DYDzZW9afegIwbqdFGF61y/6+TmOsS06iOSoo=;
-	b=c1Kx1Hfo/QRrpk1ciUkU3qusFXRaLc7Vf6E+XNe9UM3NTunbZ+Q9SCj1Ir938hfbLLuE
-	 vVinMWTUvP53KFG+lAdSl/AFDUSyS7KCGULXIhoub4GTpSeAJPh45zI1+Qj04K9hxGUU4
-	 UCa73MTAZBrDZqrWvzRpCSwCGUDnnWDUzcBzqt0vmv8gkIsP0l0d7COjmFec1paEg8RoY
-	 cRFeid/2ilhE8Q4uWE/08kmtoVegPEAvx2905DaQWyyoCiIwXB4Hdf8MPUlmFOB4bJIaF
-	 gVejbXQNWM143Odj5nxH2Y+n/D+bYWCN20htqJYciXrZJ3y31aB6A7mnKEDQsQ8PW3A==
+	bh=lgAB8SjZZEqhOPAKYyNHUQllC83UAzbAxpLqaoWk02k=;
+	b=16MvBCAj4eaGm05EsLA4Zq7FPsW9HAH5wDta4EQBpCmGtKcUQcaTmJ2rfOsSyeAlLxYm
+	 TO0dKbxmHx6JZInHNSj6P1t4xby7kRTIwhCv3cdsAh1I3FVadPQRQ/zPLTuRMGBhV1Wd2
+	 6DQzInluJaLIUWzujORgvFRFQkNskhVaLQZRGeUwY6gCnKKqlSj0NYHhuvs5LaB5wJ+Qj
+	 mBZNee7QbGDo435vfjLnn8IquflfForIEoQQWFSY7P7eHLy4e0GhMumLvk5SErEMeK4Ry
+	 aBR8tSRhzz8uZ6ZZphZ+/wrMS4m5KuZLCHPlSGpnAyhsScZNNwX37EzavmlZ04R/VXA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ni4deC1G;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=D4AddT4F;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10B660A2603;
-	Fri, 20 Nov 2026 03:54:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B9F60A260F;
+	Fri, 20 Nov 2026 03:54:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ni4deC1G
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62A771F000CF;
-	Fri, 20 Nov 2026 03:54:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=D4AddT4F
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 373521F000ED;
+	Fri, 20 Nov 2026 03:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795146847;
-	bh=iTp8Z0DYDzZW9afegIwbqdFGF61y/6+TmOsS06iOSoo=;
+	s=k20260515; t=1795146846;
+	bh=lgAB8SjZZEqhOPAKYyNHUQllC83UAzbAxpLqaoWk02k=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=ni4deC1GizhRbzM98GdofcfV54MhH6NLR08NyBnf8oBGpwxma/FjyAa/vehJMcfYx
-	 Gus2XTQnoIzeL3mPaF+gEwZ09xwpJulHFoibSPCY5HXw0ooi1n7TJYyFg83FpiuSk7
-	 pzbGoi3F0aqjBDrCUOslgqf37c/83dQxADFkOVNYQefBQdbbkLSyY9oqWHzFqyxOrv
-	 Yw5bz1JnKLXiBYT+r23KVk5uGhHpaZkc3niciNGX77/ArEv7DrQ6ee1pZ0t/kqbsY9
-	 g+kT1kR9bOLPUKajS3uen0yEedVR8CKkBTqLJpoYJ0z4OSlr04oPK09C7TtpDMlH0+
-	 OV1R3c8UbnsQw==
+	b=D4AddT4FNg4pRtDo6mXTaGziUye2s/aOk9J+wzyh+xejBQ/FJsU4EGwwhIqMhCveB
+	 zQzonYyFEi7LMELnD7ZcbpcJH/tr4I2DS55l+rO7PxjsWCoo+vN0qK28gGhFEwOd5q
+	 QPSq/LliwXWhliaSUA+d2uAutIQnRWWx1btywhr/LYa8//+PErEROofRMUNLxc9lfp
+	 dryqRoh0GnC0tKhf32f47I4DbA3r9zuB1/3lxVISjdrgS1u5cXQRprgjsnHUXI6GQB
+	 BbIdlAC/YdBhksdb4ScXxmY62MjTiAiKuuU964DTUScXl4DVsWqepAvZwUGVqhxHoc
+	 RbapD+zZ0hoRg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: acme@kernel.org, Gu Bin <gubin@cmss.chinamobile.com>
-Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, 
- alexander.shishkin@linux.intel.com, jolsa@redhat.com, irogers@google.com, 
- adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20261112080924.2082-1-gubin@cmss.chinamobile.com>
-References: <20261112080924.2082-1-gubin@cmss.chinamobile.com>
-Subject: Re: [PATCH] perf trace: propagate evsel__set_filter() error in
- trace__expand_filter()
-Message-Id: <179514684642.638421.13798397954169665034.b4-ty@b4>
-Date: Thu, 19 Nov 2026 19:54:06 -0800
+To: acme@kernel.org, Ian Rogers <irogers@google.com>
+Cc: adrian.hunter@intel.com, andrii@kernel.org, 
+ cupertino.miranda@oracle.com, eddyz87@gmail.com, james.clark@linaro.org, 
+ jolsa@kernel.org, jose.marchesi@oracle.com, linux-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
+ yonghong.song@linux.dev
+In-Reply-To: <20261112011514.4032822-1-irogers@google.com>
+References: <20261112011514.4032822-1-irogers@google.com>
+Subject: Re: [PATCH v4 0/5] perf build: Support building BPF skeletons with
+ bpf-gcc
+Message-Id: <179514684525.638421.6265284837594211702.b4-ty@b4>
+Date: Thu, 19 Nov 2026 19:54:05 -0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -65,16 +66,32 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Thu, 12 Nov 2026 16:09:21 +0800, Gu Bin wrote:
-> At the end of trace__expand_filter(), the return value of
-> evsel__set_filter() is ignored. When the strdup() inside fails with
-> -ENOMEM, the function returns 0 anyway, leaving evsel->filter holding
-> the unexpanded filter, which still contains the symbolic constants the
-> loop meant to resolve. The failure then surfaces later and indirectly:
-> evlist__apply_filters() passes the unexpanded string to the tracepoint
-> filter parser, which rejects the symbolic name, so perf trace fails to
-> start with a filter syntax error whose real cause is the missed
-> allocation.
+On Wed, 11 Nov 2026 17:15:09 -0800, Ian Rogers wrote:
+> Currently the perf build requires clang (>= 12.0.1) to compile BPF
+> skeleton programs (.bpf.c -> .bpf.o). bpf-gcc (>= 14.0.0) also supports
+> BPF CO-RE and BTF generation and is already supported in
+> tools/testing/selftests/bpf/Makefile.
+> 
+> This series updates the perf build to support both clang and bpf-gcc,
+> broken into small bisectable commits:
+> - Patch 1 fixes version-ge3 and version-lt3 in tools/scripts/utilities.mak
+>   so empty or fewer-than-3-component version strings do not shift awk
+>   fields across arguments.
+> - Patch 2 syncs bpf_skel.mak's get_sys_includes with
+>   tools/testing/selftests/bpf/Makefile for LoongArch and MIPS.
+> - Patch 3 updates Makefile.config, Makefile.perf, and bpf_skel.mak to
+>   prefer bpf-gcc when building perf with GCC (CC_NO_CLANG=1) and clang
+>   when building with Clang/LLVM (CC_NO_CLANG=0), while respecting
+>   explicit BPF_GCC=... or CLANG=... command-line overrides and falling
+>   back to whichever compiler is available.
+> - Patch 4 introduces tools/build/Makefile.feature in
+>   tools/perf/tests/make and switches the existing libbfd and llvm probes
+>   to reuse libbfd-threadsafe and llvm-perf.
+> - Patch 5 adds make_bpf_skel_clang and make_bpf_skel_bpf_gcc build-test
+>   targets to tools/perf/tests/make and verifies with
+>   'perf check -q feature bpf_skeletons' that BPF skeleton support is
+>   enabled (or disabled with exit code 1 for make_no_bpf_skel) as
+>   expected.
 > 
 > [...]
 
