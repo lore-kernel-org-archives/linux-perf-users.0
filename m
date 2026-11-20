@@ -1,72 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.69
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.200
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795213592;
-	b=XFDaFJS5eoC/RSNi2Z1PDJYxQamr+fJGRTTTso6eewSgmOX0a7pZvvKpPlKvqVpH7xeK
-	 aJocp6x7X9j6CTGMEesQI6iwXONBg+xGt6Fbqsw34nKLhP23qOvFV0Jxbj6H6Gq60b5Ew
-	 61VKSqp50tBxVzrq/FdPVEGaGzhVQgW+JiKfHcogKaoXx1xgxrw760KSTlThdYY8wU6es
-	 qIMU0bCWDiNoBB93C7q2QxHVc3D9H85KpcBbUT9sTplekF7qLUuzmRFZyPfDdqmfcAtVG
-	 bLPbh7lddr9XpMaWKu7pnAtx34nqXiMHk/9RjXGWKtT4j9XdbLxaZVFKcyU+KWrygJA==
+	t=1795213595;
+	b=HovbUxR/RuqDgI90S74lSWzh+4exoDX4putiMgZOlwVGG1hmJG7t6DfR8b5GhwBANnEk
+	 /lqLR0KBA9YnclC0psFkHQRcE0L35LWgop6Q5iR572uwPU/5IEA+0twGZnWiOxXR6HDhG
+	 spvpUVry7DYGXcU28zbDtUZc/HzvVpHbzxoiZtGkQFBA/+gRubtaNEFflYB2pBFDdoWR6
+	 zfZwdEEYa5qu6TpzOH1zdmJHNrKpgYDOi/ycDfTOg/WyDCxAcL5/tkcvvVb7glA08lCmn
+	 yFWbNszWtfQ3qtvRgalaHhdxVuVq1OMmnRpua045FvWgJ+p2Br4PXf9SxhnAxfcLgeg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795213592;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795213595;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Received:Date:In-Reply-To:Mime-Version:
 	 References:X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=GPF4x0oxyi0FzbmxY2Z7wtQBPD7a4tTfLQmJ4F4D3Rk=;
-	b=CBrWEP+DUBeH00HAvQ37GuCNGs5og2gdYcWGBt/Hec00YyCbNjGdkevatxlN2537bJ+n
-	 qrnzp6dVsrQR38yR4oVxWEIxLk0HDQEvFBNsrjxDwM28JBIbUvtnqJEr1eVbHzzuMgQue
-	 iQx2KA8Fw6L8ATRt/eblwwYsnXHXcwZS+UAMM4NFTCftvmasGWJkC2vGgKi7ElG07Frsb
-	 HN/OneHIjrT/mKChoqv1A43ldfr2ddA90H+RZX9Y1BeZfebgGspDdjq4NenqrwVyQ8a2j
-	 BpVLoLhnBJ3vIhvNxHp0hm8fjyIS1WVfqCWVmmfkOtu72IQbLjJp5y+J2FxSLphGbKQ==
+	bh=gq2GtuVmj8tWuvXFLIVErpiJbK5W42TtjRID8lqFNZs=;
+	b=lrfI3VYQ/chA406nVXA5sBuTk1u62qrUHqthnsgO9hXYvPWcgiv4NXYjwfWROexXD4xI
+	 8FPrjJ+y7c/fh2ysV4e/MtmlTjhwrakg6gU4Geqr5f27o471cClvCSl74xiQpLyOjZV8R
+	 RH6w7J9XZlFm6Z0u9EN5RAZ+VwRmVaFuNmhh/L4b3jT3lmWxQ88jb7gbqtSHdTVNvJKeN
+	 XR9r5amcR8+DNKRkFXuvAdOyBU7QNijlBuVvVop686zgg9W6TEayP2Fl1Unjpjxdq1pbT
+	 kFFP6/QJ/ubbrGr72rH2tBYaa3ktmTd9Wcx+QXR9S85VmBC2vGxhjlP+6OG4FFEVhCQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b="Z8h/IfLj";
-	arc=none smtp.remote-ip=74.125.82.69
-Received: from mail-dl1-f69.google.com (mail-dl1-f69.google.com [74.125.82.69])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Pbfx2LsA;
+	arc=none smtp.remote-ip=74.125.82.200
+Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94AC4606A69F
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 22:26:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 94AC4606A69F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41004606A686
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 22:26:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 41004606A686
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Z8h/IfLj
-Received: by mail-dl1-f69.google.com with SMTP id a92af1059eb24-139b62317d0so3638409c88.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 14:26:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Pbfx2LsA
+Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-3869accaac2so113502eec.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 14:26:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795213590; x=1795818390; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1795213592; x=1795818392; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=GPF4x0oxyi0FzbmxY2Z7wtQBPD7a4tTfLQmJ4F4D3Rk=;
-        b=Z8h/IfLjq0j6Zelu8ZSjSiwq2kNSjFqOpK5r+cpdHK5yRGQZcYBciehNgImNkAdsvv
-         UMH9YsbaSLjhLRng/iXNjmp+Iv80YqIaJlWpniouKAEpoQrr7An1tKTde0Q89hnBvqNF
-         y75tM5uCv03ZSpIsqw3bO9OjYgslDH9j7pZT7EupRGzNrUFQRZaenlM8kZj5aR6wdvIs
-         gQK9DlOxab+rKSE5dR3ffuC4OpyYscMDbnVyFrt3QDfCu5fmbmx8CZ2Uo5QcnR6rFBZV
-         DWXo8AdN20390HZ1tRG9fvmM6ECPnAg0aLR/o4e5bwKei7Pmri91JlAP78P+isNQI2Kl
-         StWg==
+        bh=gq2GtuVmj8tWuvXFLIVErpiJbK5W42TtjRID8lqFNZs=;
+        b=Pbfx2LsAcWutv+mDVtNZSiACKHJRFIvioDJB3I+gvOMaHfJHGzmH5K8hawX50X6NbL
+         +wfNNsxeCyAp5ltXJKMty8+rNfwU50eLGQMleeN/TCOVAH3yNADMC9qA23h09LOl6n2X
+         wphZ1wSszrtTrZftu+Cvry2IwNub1c9aVEhEIdYm7v8qg4jRoTbGuRAzdNr1SW8dVlUh
+         8Nt3kAMHpIFDxrrpTzNDMbqknb3f1FH/Llv8BsLI/PNk2q7dujT6FQ/vGbYruHQPwxWS
+         zVE7nBa/gPkSp3y/EBvB8TngfWVva7GDUEyYqcr9TXkKYr9rlOMOQfC2fmBuCpHElLe8
+         AHNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795213590; x=1795818390;
+        d=1e100.net; s=20260707; t=1795213592; x=1795818392;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=GPF4x0oxyi0FzbmxY2Z7wtQBPD7a4tTfLQmJ4F4D3Rk=;
-        b=s2labwu4zllVtsN6f5Ri55tLxB3IadjSh1NRCZ49S04aWrUXIZ3NQSDBl1TzIuZTU4
-         xerSKq4quY6EME/asPsWOBvSdS9bxN1QFgnc2UTO4e1rsYFvueRkImZYPyxCaqGP+Yqj
-         L28CpeKgvX8egr80ZRe6LKj/vuZwGZHsimUuLfOHHNrmsAeHrYKlEyFO7Bx84RG92nGG
-         Sr2tbpfpQ+JkgzjPmtrILFobcCcvl3g1ap+wIP6H1aBfmTG99n2TieDtbFdjP/impTdJ
-         LdvJSSD4AtpJpuR9BBV0j/PzgFURpFH5hF8qJoiccM8Pv3KSB3Ec+EtqWm08dvEgfqom
-         mcnw==
-X-Gm-Message-State: APuU4Z83beih3ERn2+rPqZIhcLQgDJlqabBg1qkVXz6VCmcgu3Ri9zo/
-	NdsVQ+6nFMz0hTqmgUaAnSL64tYQ1aqn5C1uybBL9v/873KUP38HfF0GX0QRcW0EmFL/diaA6kv
-	YVa7v1czD9Q==
-X-Received: from dlaj4.prod.google.com ([2002:a05:701b:2804:b0:1a1:3ce6:560b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7023:a8b:b0:1b3:af3a:e784
- with SMTP id a92af1059eb24-1b5568fe775mr4701267c88.32.1795213588718; Fri, 20
- Nov 2026 14:26:28 -0800 (PST)
-Date: Fri, 20 Nov 2026 14:26:00 -0800
+        bh=gq2GtuVmj8tWuvXFLIVErpiJbK5W42TtjRID8lqFNZs=;
+        b=ap83zdfZxWv5zd9p3nn98yOCZ2748KNGIbJ/irRBb7S3Wxdb8GM0AMjKRkY+vGInk+
+         HLptTCfpy4pXHC0vgxT8x2I8hIEA/5u7hWP5YHpPd0ETuk9PMzZZSZP7SCZhyoF3KtNH
+         8+tQ+tNQo5b9nY7xEqg7fRhKjpoPebw95Szztv8NvUjy3FGO6sMuMJfRJAuOuAE+X8Ol
+         DRX9J+4fIw3yvFJvbfvQtkIILE1PjX9vh4RjylEZ1TCmESDbUdOnc9C3m1yp+4EABk5U
+         /1i8OmfZXd++Ynf7B4dQ0WRFarheOQ2OK0Mh79Oynjn8pa7fWC0M+P0TEWQPJ17vHh2R
+         LMWg==
+X-Gm-Message-State: APuU4Z+aVArjRUcgC5XOuhlAYQkjlIjMkV6K7RgyP5RFOxNtiT64lzOm
+	ToON75PreicqsrK8D+bjox4ne8oEki12120zW5ZShRluzkrymB48oyy7id8bK5r39DolQoGvwjO
+	6C5WuRbFeWA==
+X-Received: from dybsy10.prod.google.com ([2002:a05:7301:700a:b0:36a:17c6:6824])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:894c:20b0:377:3984:5cb
+ with SMTP id 5a478bee46e88-384b446b404mr6006434eec.17.1795213591764; Fri, 20
+ Nov 2026 14:26:31 -0800 (PST)
+Date: Fri, 20 Nov 2026 14:26:01 -0800
 In-Reply-To: <20261120222615.2291168-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -79,8 +79,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261120222615.2291168-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.750.gf70dc682cf-goog
-Message-ID: <20261120222615.2291168-2-irogers@google.com>
-Subject: [PATCH v3 01/16] perf pmus: Expose duplicate uncore PMU scanning helpers
+Message-ID: <20261120222615.2291168-3-irogers@google.com>
+Subject: [PATCH v3 02/16] perf mem-events: Expose PMU init and name formatting helpers
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -89,101 +89,93 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Export perf_pmus__scan_skip_duplicates() and add
-perf_pmu__num_duplicates() to count numbered PMU instances sharing a
-common prefix (such as uncore_imc_0..uncore_imc_7) so subcommands like
-'perf sysinfo' can collapse duplicate uncore PMUs by default and report
-their instance count.
+Export perf_pmu__mem_events_init_pmu() and perf_pmu__mem_events_name()
+so callers can initialize and format per-PMU memory profiling events.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/pmus.c | 26 +++++++++++++++++++++++++-
- tools/perf/util/pmus.h | 21 +++++++++++++++++++++
- 2 files changed, 46 insertions(+), 1 deletion(-)
+ tools/perf/util/mem-events.c | 12 ++++++------
+ tools/perf/util/mem-events.h | 20 ++++++++++++++++++++
+ 2 files changed, 26 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index c5ef22ef00dc..96c96211f577 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -508,7 +508,7 @@ struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmus *pmus,
- 	return NULL;
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index 62543df0dca1..932efcfd82f7 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -82,12 +82,12 @@ int perf_pmu__mem_events_num_mem_pmus(struct perf_pmu *pmu)
+ 	return num;
  }
  
--static struct perf_pmu *
-+struct perf_pmu *
- perf_pmus__scan_skip_duplicates(struct perf_pmus *pmus, struct perf_pmu *pmu)
+-static const char *perf_pmu__mem_events_name(struct perf_pmu *pmu, int i,
+-					     char *buf, size_t buf_size)
++const char *perf_pmu__mem_events_name(struct perf_pmu *pmu, int i,
++				      char *buf, size_t buf_size)
  {
- 	bool use_core_pmus = !pmu || pmu->is_core;
-@@ -545,6 +545,30 @@ perf_pmus__scan_skip_duplicates(struct perf_pmus *pmus, struct perf_pmu *pmu)
- 	return NULL;
+ 	struct perf_mem_event *e;
+ 
+-	if (i >= PERF_MEM_EVENTS__MAX || !pmu)
++	if (i >= PERF_MEM_EVENTS__MAX || !pmu || !pmu->mem_events)
+ 		return NULL;
+ 
+ 	e = &pmu->mem_events[i];
+@@ -196,13 +196,13 @@ static bool perf_pmu__mem_events_supported(const char *mnt, struct perf_pmu *pmu
+ 	return !stat(path, &st);
  }
  
-+size_t perf_pmu__num_duplicates(const struct perf_pmu *pmu)
-+{
-+	const struct list_head *head;
-+	const struct perf_pmu *pos = pmu;
-+	size_t base_len;
-+	size_t count = 1;
-+
-+	/* Core PMUs are never duplicates, see perf_pmus__scan_skip_duplicates(). */
-+	if (!pmu || !pmu->pmus || pmu->is_core)
-+		return 1;
-+
-+	head = &pmu->pmus->other_pmus;
-+	base_len = pmu_name_len_no_suffix(pmu->name ?: "");
-+	list_for_each_entry_continue(pos, head, list) {
-+		size_t pos_len = pmu_name_len_no_suffix(pos->name ?: "");
-+
-+		if (pos_len != base_len ||
-+		    strncmp(pmu->name ?: "", pos->name ?: "", base_len))
-+			break;
-+		count++;
-+	}
-+	return count;
-+}
-+
- struct perf_pmu *perf_pmus__scan_for_uncore_id(struct perf_pmus *pmus,
- 					       struct perf_pmu *pmu, const char *compat)
+-static int __perf_pmu__mem_events_init(struct perf_pmu *pmu)
++int perf_pmu__mem_events_init_pmu(struct perf_pmu *pmu)
  {
-diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-index 2b784cf648f3..44b5dc2fd36c 100644
---- a/tools/perf/util/pmus.h
-+++ b/tools/perf/util/pmus.h
-@@ -134,6 +134,26 @@ struct perf_pmu *perf_pmus__scan(struct perf_pmus *pmus, struct perf_pmu *pmu);
-  */
- struct perf_pmu *perf_pmus__scan_core(struct perf_pmus *pmus, struct perf_pmu *pmu);
+ 	const char *mnt = sysfs__mount();
+ 	bool found = false;
+ 	int j;
+ 
+-	if (!mnt)
++	if (!mnt || !pmu || pmu->from_env || !pmu->mem_events)
+ 		return -ENOENT;
+ 
+ 	for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
+@@ -228,7 +228,7 @@ int perf_pmu__mem_events_init(void)
+ 	struct perf_pmu *pmu = NULL;
+ 
+ 	while ((pmu = perf_pmus__scan_mem(pmu)) != NULL) {
+-		if (__perf_pmu__mem_events_init(pmu))
++		if (perf_pmu__mem_events_init_pmu(pmu))
+ 			return -ENOENT;
+ 	}
+ 
+diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
+index 38b14c03392c..f2e622a048c8 100644
+--- a/tools/perf/util/mem-events.h
++++ b/tools/perf/util/mem-events.h
+@@ -31,8 +31,28 @@ extern struct perf_mem_event perf_mem_events[PERF_MEM_EVENTS__MAX];
+ extern bool perf_mem_record[PERF_MEM_EVENTS__MAX];
+ 
+ int perf_pmu__mem_events_parse(struct perf_pmu *pmu, const char *str);
++
++/**
++ * perf_pmu__mem_events_init_pmu() - Initialize memory event table for @pmu.
++ * @pmu: The PMU to check for memory event support.
++ *
++ * Return: 0 on success, negative error code on failure.
++ */
++int perf_pmu__mem_events_init_pmu(struct perf_pmu *pmu);
+ int perf_pmu__mem_events_init(void);
  
 +/**
-+ * perf_pmus__scan_skip_duplicates() - Iterate over PMUs in @pmus, skipping
-+ *                                     numbered duplicate instances of
-+ *                                     non-core PMUs.
-+ * @pmus: The PMU collection to scan.
-+ * @pmu: Previous PMU returned, or NULL to start from the first PMU.
++ * perf_pmu__mem_events_name() - Format the event string for a memory event.
++ * @pmu: The PMU providing the memory event.
++ * @i: Memory event index (PERF_MEM_EVENTS__LOAD, etc.).
++ * @buf: Output buffer to format the event string into.
++ * @buf_size: Size of @buf in bytes.
 + *
-+ * Return: Next distinct prefix struct perf_pmu, or NULL when done.
++ * Return: Pointer to @buf on success, or NULL if invalid/unsupported.
 + */
-+struct perf_pmu *perf_pmus__scan_skip_duplicates(struct perf_pmus *pmus, struct perf_pmu *pmu);
++const char *perf_pmu__mem_events_name(struct perf_pmu *pmu, int i,
++				      char *buf, size_t buf_size);
 +
-+/**
-+ * perf_pmu__num_duplicates() - Count consecutive PMUs sharing @pmu's prefix.
-+ * @pmu: Representative PMU returned by perf_pmus__scan_skip_duplicates().
-+ *
-+ * Return: Number of PMU instances (including @pmu) sharing its base name,
-+ * always 1 for core PMUs.
-+ */
-+size_t perf_pmu__num_duplicates(const struct perf_pmu *pmu);
-+
- /**
-  * perf_pmus__scan_for_event() - Iterate over PMUs in @pmus that have @event.
-  * @pmus: The PMU collection to scan.
-@@ -260,6 +280,7 @@ struct perf_pmu *perf_pmus__add_test_hwmon_pmu(struct perf_pmus *pmus,
-  * Return: Pointer to the fake struct perf_pmu.
-  */
- struct perf_pmu *perf_pmus__fake_pmu(void);
-+
- /**
-  * perf_pmus__find_core_pmu() - Return the first core PMU in @pmus.
-  * @pmus: The PMU collection to search.
+ struct perf_mem_event *perf_pmu__mem_events_ptr(struct perf_pmu *pmu, int i);
+ struct perf_pmu *perf_mem_events_find_pmu(void);
+ int perf_pmu__mem_events_num_mem_pmus(struct perf_pmu *pmu);
 -- 
 2.56.1.750.gf70dc682cf-goog
 
