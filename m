@@ -1,58 +1,108 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.174
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795152830;
-	b=H5ncAR+1aSvEd3qI76Km/aarNM5wIa1p4lC2EJInK1FvAbRAywEyWW/wBAJgPZkQYOqn
-	 lsqaDiM+B2xXYBm3a0rlOEHzgEdvaKavthTdaarXeeXWdsT4q75/UfRPT26AfcLhtyz67
-	 O/xrYKIcSdJPRSi4ZkuRu+bnl8l5Y8KEnNqV3ENNBekNC/0BdinKtUV86yFQwORv44KoM
-	 DDIwbHDUqQ9wpuhy4WKgfOphPNRMpQsBe5nfvibvLlQQ/W+oFvH8YEu5iTp84xtE0KUBr
-	 tYb894TRqLxxh/ZRGovVvgmAGcG6hGDVQUCtj0G9pkYUvj5uSUcouHSQybxl5UQMVzg==
+	t=1795154979;
+	b=Rn3YJ2rsn/WgM7U3Ni1csoA5RRAxm4RqY/n5fksQ/sXL4buflXuUQilJupylZJ0POyR1
+	 QYW4wAH75eoqTm86QriQh3gYrl77gLwHA5RKj2+FEqujGzozoDmRRIHkPGdZM4lj60q+D
+	 Z15AwoGC8Mcqo58SkuzrW2N0j8KqJMxXswYsCwLmBIKTCHXNse5nBy9YcwoXUHwnfg4Sg
+	 KC79eJulKOTv6zcYEN292yoGrKTnqBZnTaLhwLqRjnJYsMNTudPPXOIwLbxNdBV67akzM
+	 /67woM0evwAOR7EbdAWJDNSvYl3SmbWNPOby0P5X9ibQycULt3VvJowwRMtYp/3M7Sw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795152830;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=NLrjRZFiatRFJw6E5ayxBxyGTvhj7Htf/txtOkoq6d8=;
-	b=JoBnT5RZc4Xw5konjSLJPCwbqmx7I4B7QtTeoNqHzfwZyCfeJpMEJsIjvqObuHtnAnGl
-	 OvkqpLU1LEk5Spnvrr6atFEoz2/7L1CSAsc/gbH+wFQTLkxfkZKvt0ANB8X7ohU0Ff6qF
-	 O4CfLmcNewzrQtzmRrYwGfQSD2ZixsnkuxugWtzKDgfuQm1Uq7Gvz5rp47t4aBzcoV/Ja
-	 26saoZ2fkPesnFUqc5oOX7zs73mESBrfr6QDimVUXRsNPSWLc9HMvgIMPZYP04+UaeCiv
-	 HHehxmw5j7jJJNwdABXbaxXfo7wAK9liH0CPxI/QSbUD/uAlXx+ILq42ZYOxcptFFXg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795154979;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=pazKh6DOiqyGRyM8W6LynGdwm0L0tbIyWQaJbyYaTnU=;
+	b=VwO6WmtTSx8gTarF/Aj4OuXcd0cj+RZId4r70+lI7U7V7XcQ5sKBkiefsef3/YXlWlv3
+	 hH4ueMEaNpCbl5mJlVS1vg0UCi6phow9oF6RzcVuIhD4rxTmd8pZs+DrMRN7SJMqVnaFZ
+	 Vod/D38ReKEOXsiepC/PrHNRNTfBxCD7Ioa1svV7ESVbP0oflLEnbc/v3afrFao8LcCso
+	 gnjrWsTyNLRlJC7xvD+nVWv+0CK+Cr05HbAl3QBgoBqunNMsUtYPs2UtqAYhIjv15IvHn
+	 8Rg+JE7cIUMLic8u58AExFlD8cXirNFZQzvWORXWtxdRnD80t75L+Hf8/CS18/cFiQw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=S3U87XZ1;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=T6iJuHPR;
+	arc=none smtp.remote-ip=74.125.82.174
+Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC968606A320;
-	Fri, 20 Nov 2026 05:33:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B421606A524
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 06:09:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7B421606A524
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=S3U87XZ1
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D67EA1F000CA;
-	Fri, 20 Nov 2026 05:33:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795152830;
-	bh=NLrjRZFiatRFJw6E5ayxBxyGTvhj7Htf/txtOkoq6d8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=S3U87XZ1xO4brFPEo+Mj6QDGEzt165nI+u6cSkoQccbZd2SvbwuazUjsS33M/8STJ
-	 D1dOX1nfL81c+Fc1eTe2hGysFiN2a+GpAFThI9ESIEGCPSGuya5YTwUngbWGgVtvmI
-	 Fy2BfSZG0X+gq0UoeBuFn6vza3rXC8HKcizeTPmNBMIrT+xh8ExqaBpz6BxT2Nl7lk
-	 vfjrA95p8xCmVh92MrwlVw67CB9jhSZV8z0xx+hkUERUkq1ttOgWVY3ds60Qd+Mi6a
-	 kuXNhISKw5U1Y2M/B+p2LvXp8c83KQaH977xNNlBpmvCmlD3XkwUJcb1FaC0EzbWJ9
-	 gD5RBL6toYAhA==
-Date: Thu, 19 Nov 2026 21:33:48 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, adrian.hunter@intel.com, bvanassche@acm.org,
-	elver@google.com, james.clark@linaro.org, jolsa@kernel.org,
-	justinstitt@google.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev,
-	mingo@redhat.com, morbo@google.com, nathan@kernel.org,
-	ndesaulniers@google.com, peterz@infradead.org
-Subject: Re: [PATCH v13 19/21] perf maps: Fix lock inversion in
- maps__load_first()
-Message-ID: <av_bvJpYwwMWNfDt@google.com>
-References: <20261113164152.2095566-1-irogers@google.com>
- <20261113164152.2095566-20-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=T6iJuHPR
+Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-38587f3de36so572476eec.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Nov 2026 22:09:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1795154976; x=1795759776; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=pazKh6DOiqyGRyM8W6LynGdwm0L0tbIyWQaJbyYaTnU=;
+        b=T6iJuHPR/Sng6NdMz5T8pKivDBJYsFFYVpBjArLgNAckPgMMnHKhx40t2YMTRhEYtx
+         5rVoDcRcWwvo0B8fDLqdGO6nQgM2DAdXnHsWbSUVv6Hi+r0KJqoCdiAv8uujCBqr1x6f
+         dX2E9ErPPMxyKkpu4R4FLnrDK3ZFd1sQxHw70gsxT74MrwkDOgalG8+eK7qWKElhaFV4
+         Gst1n0+toVruNTU9zNlJmY6VprlDqC64zEOy/69EeSk51M/N5cc7rl9WygeOVqUJUpUl
+         r/NcRf2nZVDOmK2iMi3erHREloz+1oLgTOn4KU75TxLxsXB27eR3xpJawbhbyGE7H2bu
+         3LNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795154976; x=1795759776;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=pazKh6DOiqyGRyM8W6LynGdwm0L0tbIyWQaJbyYaTnU=;
+        b=t8hyHY3QnwPaCzt/aWZ3TXbeXe/GTO8iW8uIT3Dddv7eUNdrz544vM36MLQKbTvmDL
+         ub4an0IJL+NAB6Dm2CWuGLg8YnRCYJs4o6Fa8ivKOwXgTQCBnwbUrJeQWLGM/7ZgvCgM
+         +NVxPB/v8fPNZcCk9CEBlzMzuw2fm74a7rvgiNV0Axuy38CwcOt0zfVi22fHDaJYuesP
+         bR6W4nPZ5P9g8fEuJBvMUHK31fEnHl3uAM7cCZy67MwgrFX0sEJi6StCDSwTDuuGxLof
+         1Q3fc06jEa0P47stUBgAx+CQY0SVeDc4vg46Fk+EQQT82+eQnPngz32Y3dGHAESyY0qe
+         c2yQ==
+X-Gm-Message-State: APuU4Z/4Z39dAg19Z88oa0mwjL+V2EIXMtlXHGffqyyfgPSZDhT6nit9
+	VTFP/vKDy84OT7QQNgI31m3PEF9XtoMkQ4WXnxmnbuKCVSTuuCT4l/4SM6riWvOE
+X-Gm-Gg: AZFdTZdhBNJHCARNsCgb9L9nzUJb3ejUusZOAOL9nsX5nGLICZnjLVvt5Uwx3+i+jU+
+	W36FlBg0XLvoKeqUAjl6cVw2YvzgpaRcu26uu3eJs7I0gpLJA2S4nyVrM0q8essGsqrbVOq/2Cs
+	QgcmWVaWLHxGvIHRJh31ZYqylSrV1MgRCjs7NW25/tfMDbkRU1YmhY62WfU+H3oEqRRlInTfyP/
+	Nl6sYPvEtAmujCGSYzNNTUx/QFGJKAkoVdNXP05vVatpFDDj753AQImS19UagjyuVon9phOIcan
+	SeAcbs4g+eobHmGmo9esn1JzfXSPwk2WrHu+vqpqtgXZUmM/3zFk+0hWA+8zk0Cddq93ZduhJlp
+	J8JL6K8lA2Ne+Yr+74g6ScqpjBDkFWn6IHUGdoNcC3daTOBTtetQAwa2sBFRhFWtneclPKOPurl
+	LRYCnkhIj12K7W5E0l1D7OoDA7GT9rhBdmeSZXJfn3x4e0YksOt/Wg4bHqLUZIKhJxgh19MbWDK
+	eM2dvHSYUPJk6armdCSQs+5ny+8Mu0hxr3nKwYPT86HigKBsIcOeu3Cpk4BjzaWwUcnYcJUnEuI
+	G+ErO64a1/R08uhupMGc
+X-Received: by 2002:a05:7300:ce11:b0:381:6b5:56e6 with SMTP id 5a478bee46e88-3856f65aed4mr1730052eec.16.1795154975566;
+        Thu, 19 Nov 2026 22:09:35 -0800 (PST)
+Received: from a1-free ([161.33.196.121])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-385677c0c1dsm4609725eec.21.2026.11.19.22.09.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Nov 2026 22:09:35 -0800 (PST)
+From: TAKANO Mitsuhiro <takano32@gmail.com>
+To: linux-perf-users@vger.kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>,
+	John Garry <john.garry@linux.dev>,
+	linux-arm-kernel@lists.infradead.org,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	linux-kernel@vger.kernel.org,
+	TAKANO Mitsuhiro <takano32@gmail.com>,
+	Will Deacon <will@kernel.org>,
+	Mike Leach <mike.leach@arm.com>,
+	Leo Yan <leo.yan@linux.dev>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH v11 0/2] perf jevents: Fail the build on a key the tables may not carry
+Date: Fri, 20 Nov 2026 06:09:29 +0000
+Message-ID: <20261120060931.711483-1-takano32@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20261113032927.634183-1-takano32@gmail.com>
+References: <20261113032927.634183-1-takano32@gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -62,50 +112,46 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20261113164152.2095566-20-irogers@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 13, 2026 at 08:41:50AM -0800, Ian Rogers wrote:
-> In maps__load_first(), take a reference to the first map and drop
-> maps__lock(maps) before calling map__load() to avoid a read-to-write
-> self-deadlock when loading kernel maps inserts extra trampoline maps.
+v11.  The shape is James's: the check is not an option any more, so a
+typo in a key stops the build instead of being dropped without a word.
 
-It seems this function is not used anymore.
+--check is gone.  Every event and metric table goes through
+JsonEvent.__init__, so the keys of each object are compared there with
+_valid_keys.  No new option, no second walk over the directory, and no way
+to run the generator without the check.  (metricgroups.json is a plain
+dictionary of group names and is not checked.)  The test is
+jevents_bad_key.sh and checks the failing case only.
 
-Thanks,
-Namhyung
+1/2 is the prerequisite James asked for: the tree carries 19 objects with a
+key the tables may not carry, so 2/2 cannot land on an unfixed tree.  It is
+the two fixes posted on their own, squashed.  The AMD one went into
+perf-tools-next on 11 November and the arm64 v2 has Ilkka's Acked-by, so if
+both are in your tree, 2/2 is all that is left; if the AMD one is in but
+the arm64 one is not, 1/2 will need -3 or its AMD hunks dropped.
 
-> 
-> Fixes: e77b0236cd0c ("perf maps: Add maps__load_first()")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/maps.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-> index f808df2fe77b..7ca33e5218e7 100644
-> --- a/tools/perf/util/maps.c
-> +++ b/tools/perf/util/maps.c
-> @@ -1459,10 +1459,15 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
->  
->  void maps__load_first(struct maps *maps)
->  {
-> -	down_read(maps__lock(maps));
-> +	struct map *first = NULL;
->  
-> +	down_read(maps__lock(maps));
->  	if (maps__nr_maps(maps) > 0)
-> -		map__load(maps__maps_by_address(maps)[0]);
-> -
-> +		first = map__get(maps__maps_by_address(maps)[0]);
->  	up_read(maps__lock(maps));
-> +
-> +	if (first) {
-> +		map__load(first);
-> +		map__put(first);
-> +	}
->  }
-> -- 
-> 2.56.1.703.gf848ed807c-goog
-> 
+Measured: on 1/2 + 2/2, the generator run over all architectures, over
+x86 alone and over arm64 alone exits 0.  Putting BriefDescript6ion back
+into one AMD table makes the x86 run exit 1 with "jevents.py: <path>:
+unknown key(s): ['BriefDescript6ion']"; the arm64 run does not read the
+x86 tables and still exits 0.
+
+TAKANO Mitsuhiro (2):
+  perf vendor events: Fix misspelled keys in the event tables
+  perf jevents: Fail the build on a key the tables may not carry
+
+ .../arch/arm64/ampere/ampereonex/mmu.json     | 32 ++++-----
+ .../pmu-events/arch/x86/amdzen4/cache.json    |  2 +-
+ .../arch/x86/amdzen5/load-store.json          |  2 +-
+ .../arch/x86/amdzen6/load-store.json          |  2 +-
+ tools/perf/pmu-events/jevents.py              | 70 +++++++++++++++----
+ tools/perf/tests/shell/jevents_bad_key.sh     | 43 ++++++++++++
+ 6 files changed, 117 insertions(+), 34 deletions(-)
+ create mode 100755 tools/perf/tests/shell/jevents_bad_key.sh
+
+
+base-commit: 7475ea8b58616b33c04afb976cf0fbaad9dd63fb
+-- 
+2.53.0
+
