@@ -1,81 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.92.199
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795187010;
-	b=vFwYlobBranvoZAWEj9t/kATwPDUuVO0dSM+HAoQIKCYs7/HiiDFmB3b5n4mIegfWgfn
-	 /LW5UolzDw1oOWi2ybYGSKLCYXDgNDvm7loY36GkuGsgTcO9J1LT8BTmRGbCPbjlXr+uy
-	 bguOns984OBt1FJDXsqBzxCTEJarB6NpXLsW+59Ev1z2f2nOpt7/7H/f4GvxuzwAu1uwm
-	 cGomuwTzvWDWeEDf9rRQhOtVboWWFRlFF2D/5ZNw/qMjjKJyRcjUokgi4niybkkzZC6to
-	 OtUn93geDYn63IC/TIFjoNOaTXLbQRNkHjeBJfP+KjM4oySWpEbE0eGPWFCsijXhgEw==
+	t=1795187102;
+	b=bwHeNpmK2+QMjrAv6vPTCj/fbz6LyT97hTblw8Y331zEHruzZEYQ4q6m56iz4iAIH2pr
+	 i3DXdZG4ovgJsQQBTHmBoqcIr7LlIap2ffGa451V3JhAhfLbCi3PVCOqUYMbpviXAcw+2
+	 prwgqsVuktLe9w7Skz+ky4msa5mmNCYOsefT69pNOZXjHFUr+k4ybU+hTJiO/tY5suiNi
+	 gyIYk8shFIguVm4AGah0j3HDEvknVPU+P8+oWepfJjBuUi3PhGCoTsr7sR4ODf/SqUPIn
+	 dPckb4J6aMGTkn/Kwk/aXl/GoNMDqH20M3SZAHPRBwa0T4+bTV23CjNLu+EnpONdjYw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795187010;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795187102;
 	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
 	 Subject:Message-ID:References:MIME-Version:Content-Type:
 	 Content-Disposition:In-Reply-To;
-	bh=fvkyUjxL9ZoCNsldL2/7evVfO66l1h2mjXG4ejQxtI8=;
-	b=UK0dSprv/qUCY5NyuZG3N2qqyiv/rWvLt8MwJDM7L03GDtwgVa50Isuj1QYZXTjbrboH
-	 1wZWxh0uxEcnoT5mQgr6bdFdPg//qk9raVaZ3TC+dyCySUStatkblJAXLDv4uM1W8y07x
-	 205dfyCzjOL3yJjKgkK9uuEhmPjisdY7lhtBoaC1EsLoI8bG6moHuxuIE1Lqngc8rPLuZ
-	 spoSTMolUCzApAUpBqliydoYrVivm5vMtpb5pmvLbu4CGz4GtD4LG9ZyxLPU9sczaKyou
-	 MQ5BdvumFsZ8ndk9VeRyn+WjIqOTXojICEbXlKUfPZ4wMJQo7c6xA2sTmzPSqo66Ggg==
+	bh=l7uEAm+QOmGAfuAmZyD3+ggDCi5vQfxbP4w0OjIGnQY=;
+	b=e0c5Iyf+8TiOGibE/8hYnFZHae4W2o1L9vc4VOkctLGRfGlUwdUyATlP1aEqAET/WaOz
+	 xOTJOk/4UH61GEUYK8I0o/3QWhuByr5yvppGCaJ5Q3Ix6j6fXLZ0/eLJG3B1Qv4sj9QPy
+	 4BcCAFceBXNqQi/WoU5FGHxtABhqFRQOm4yxGBcG1RmxM+kR6x39lZKVi6bLlHRjPBZzQ
+	 ncxi8GM2w/CA5VHZ52pJ/+LTNnX/Iw/LFhHT9eH6hyNZqUOxGXX85ikLYisN3dNBRw8Cq
+	 j8mYVnYMxYGqVtbQZdwHU1xiX7U9S/+FEI6D0rnXrf/op+ocCMO8uOf4iAVPNWdeCVw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=infradead.org;
 	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=kFjPXEtn;
-	arc=none smtp.remote-ip=90.155.50.34
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=TSGKfYVU;
+	arc=none smtp.remote-ip=90.155.92.199
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDBBD606A33B;
-	Fri, 20 Nov 2026 15:03:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DDBBD606A33B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9524606A326;
+	Fri, 20 Nov 2026 15:05:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A9524606A326
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=kFjPXEtn
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=TSGKfYVU
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=fvkyUjxL9ZoCNsldL2/7evVfO66l1h2mjXG4ejQxtI8=; b=kFjPXEtnZGIo+ELMkIM96umTyQ
-	AtWq/NBU5bdY2S1cjluBF8GEEThJZG0qXbe+0rTZ6ZcFmAKXQ/l7i0ajRxsxEO8ukpvINOIGsrg7l
-	quWBEeIAaIG47ukuV3WGqFMWBTml4iudQWwab+JPrCEMc/GC/VS7cwkKGdcAaUIjwJhyzPy5uKfjk
-	cf4RADxdnEM93KsBah86iIIjc66SGwPN3NyrUjjBFFaFddPIk/JpheE0dwGzG/kK09ItS8lmE9OjF
-	p004VUBNaapZlsA7dhGfmZsNFnA6cBVWeXv+W5GK3TpW0vAxf1sfL2Vf04ByWe/Yd+AX5wMbsHsq8
-	VVujwunA==;
+	bh=l7uEAm+QOmGAfuAmZyD3+ggDCi5vQfxbP4w0OjIGnQY=; b=TSGKfYVUvkSowdMgG2pwQ267dm
+	BV2HE7ZqiJD48z762M1YfRl300gHELBGgNfKnxZ4QTCEEXUmfM/aOXKIMsReY1UfR2imWAS7qIblj
+	u0E0XONWxwVLhGP3Amtki4TCFnYI8yjcpSKYO8y2E48U65m0eIvL2OSeKPLdXoLLT5ZS2JPOLkGDU
+	tSU6x5cIDfeA4rT5wyr5Nmm3W2Bg5tv02sgjqP7pi+wFiVm0o8CnVWTCaYx7M+dsogEnCvB0fBS7W
+	FSOfPJBk9F1WZZLF9Sn3FL8ZG06xYOkjMVzl2Z7TdcqfBuv6tWaMX24HCuG2ny+ZNolNm0xVO0rkl
+	Yn7UsWng==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xUQ93-00000006X6N-3zaP;
-	Fri, 20 Nov 2026 15:03:22 +0000
+	by desiato.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
+	id 1xUQAY-00000000t7a-06W1;
+	Fri, 20 Nov 2026 15:04:53 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E5BA13008D6; Fri, 20 Nov 2026 16:03:20 +0100 (CET)
-Date: Fri, 20 Nov 2026 16:03:20 +0100
+	id 2F4BD3008D6; Fri, 20 Nov 2026 16:04:52 +0100 (CET)
+Date: Fri, 20 Nov 2026 16:04:52 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
-	loongarch@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>,
-	Ian Rogers <irogers@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Oleg Nesterov <oleg@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>, Waiman Long <longman@redhat.com>,
-	Clark Williams <clrkwllms@kernel.org>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-	James Clark <james.clark@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
+Cc: Tengda Wu <wutengda@huaweicloud.com>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Chris Zankel <chris@zankel.net>,
-	Max Filippov <jcmvbkbc@gmail.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ada Couprie Diaz <ada.coupriediaz@arm.com>
-Subject: Re: [PATCH v5] ARM, ARM64, LONGARCH, XTENSA: Delay HW BP
- notification to task_work()
-Message-ID: <20261120150320.GQ2668804@noisy.programming.kicks-ass.net>
-References: <20261120144553.TjgAd_G6@linutronix.de>
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] perf/core: Prevent duplicate sigtrap task work
+ enqueue
+Message-ID: <20261120150452.GU2668564@noisy.programming.kicks-ass.net>
+References: <cover.1795053619.git.wutengda@huaweicloud.com>
+ <45bd71c976aea1a0e8bf5762dd6b6552e6009439.1795053619.git.wutengda@huaweicloud.com>
+ <20261120121436.GT2668564@noisy.programming.kicks-ass.net>
+ <20261120141606.zcwyHZ3P@linutronix.de>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -87,40 +79,34 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20261120144553.TjgAd_G6@linutronix.de>
+In-Reply-To: <20261120141606.zcwyHZ3P@linutronix.de>
 
-On Fri, Nov 20, 2026 at 03:45:53PM +0100, Sebastian Andrzej Siewior wrote:
-> Waiman, Luis, Ada reported that HW breakpoints on ARM64 trigger
-> "sleeping while atomic" warnings on PREEMPT_RT. The hardware event is
-> delivered with disabled interrupts and perf intrastrucure expects
-> disabled interrupts while the overflow callback is invoked.
+On Fri, Nov 20, 2026 at 03:16:06PM +0100, Sebastian Andrzej Siewior wrote:
+> On 2026-11-20 13:14:36 [+0100], Peter Zijlstra wrote:
+> > > Also use smp_load_acquire() when checking pending_work in
+> > > the exclude_kernel warning path to ensure the read is properly
+> > > ordered.
+> > 
+> > I am confused by the use of smp_*() and cmpxchg() here. Where is the
+> > multi-cpu scenario?
 > 
-> The callback then sends a SIGTRAP signal for which it acquires
-> sighand_struct::siglock, a spinlock_t which becomes a sleeping lock and
-> must not be acquired in atomic context.
+> The same event is used in process context and NMI
+> |        perf-tc1-7647    [001] d..6.   114.513688: __perf_event_overflow: ffff888100d68540
+> |        perf-tc1-7647    [001] d.Z2.   114.513703: __perf_event_overflow: ffff888100d68540
 > 
-> Delay the event callback until the return to userland.
-> Add perf_hwbp_notify(), a generic perf callback which delayes the
-> actual callback invocation to task_work_add() callback. This callback
-> invokes the architecture defined callback perf_arch_hwbp_send_sig().
-> This requires struct callback_head and the functions require
-> ARCH_NEED_PERF_HW_NOTIFY to be defined.
-> 
-> This was reported against ARM64. ARM, LongARCH and Xtensa follow the
-> same pattern are also converted. Xtensa is the only not supporting
-> PREEMPT_RT but now we have all architectures using the same pattern.
-> 
-> Fixes: d8fccd9ca5f90 ("arm64: Allow to enable PREEMPT_RT.")
-> Reported-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-> Reported-by: Waiman Long <longman@redhat.com>
-> Closes: https://lore.kernel.org/all/aho0eqjMESuHxECr@redhat.com/
-> Reviewed-by: Ada Couprie Diaz <ada.coupriediaz@arm.com>
-> Tested-by: Ada Couprie Diaz <ada.coupriediaz@arm.com>
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
+> I don't see how to deal with this without cmpxchg. And the same event is
+> also used by other task
 
-Mark; you was going to stare at this :-)
+You can do CMPXCHG (without the LOCK) prefix; the helper is called
+cmpxchg_local().
 
-I'm thinking the archs are doing it wrong and should be sending the
-signal elsewhere.
+> |        perf-tc1-7657    [001] d.Z2.   114.598356: __perf_event_overflow: ffff888100d68540
+> 
+> which makes me thing that it could be pinned to another CPU (unless
+> there is something that impossible and it is strictly per-CPU).
+> 
+> The smp load/store macros is my fault as it looked better to do this
+> than plain stores (given that we have the cmpxchg already).
+
+It is confusing as all heck. This is all task-local, and a task can only
+ever run on one CPU at the time.
