@@ -1,85 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.51
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795185958;
-	b=ah6d11xrR3lQVB57cdyRJ+Mj3rVn5Cf/OTivi0OphQJVXmwzG/qPUtv57cS6np/cEgs6
-	 /UDybetT7wnWUQkwwFz+ZWWreMqfGboOZ4Peaa+1P3qzi9mWEIGij2w9oCpTK6+d/vZ8u
-	 FPTqgtZWH5dNlpyhb4Z0R8jn2L8Uwg+nLAt5u6eAH+FQ38NnWQzth1KXo/8NGKT00ufF+
-	 WPb8sG1dr7QKJeHsOuyI+FvXUjPnn9JS/BKSTm/lWxCSCmat64InWXzvoOxjvlC34d3X3
-	 glvUBOfrtI6Hf64F5JFa2VDtlhFvQvRsHBM31phktU+DVGyY8Y/Mw8eyYDcTLKcHLTg==
+	t=1795186731;
+	b=sbIdYbA9ZI5rkxCLoAvJFOyR/9TzSloG0SSerBU8OLLf7lPd/AUr+Q3nASC7fgVNhq7c
+	 +yU98wugM4bGqUAFGcEETbUTlpBupHg918wmlwVVjKvMfhXvX7Gz/65hlQ698LpMf19Ju
+	 t8G+RnerMt1fpGbDH+xfeO6Z+rHK3lO0Eyi3qQPefEJdchGOT3Ka+9Vn8PnG5DSLynZjF
+	 YqW2Y8tXDR55Oy0dWs9uJppmHRTjJjnHEl+/gaES8jcxf2ooo/Nh3T5F2dI3cx84rU/R2
+	 AgJyysof+zNJYmHtbtOTTe2Vc0WmBvf6Klt+u6/WsrpufytsQOeBSVOhGXpDl3gP4VA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795185958;
-	h=DMARC-Filter:Date:DKIM-Signature:DKIM-Signature:From:To:Cc:Subject:
-	 Message-ID:MIME-Version:Content-Type:Content-Disposition:
+	a=rsa-sha256; c=relaxed/relaxed; t=1795186731;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding;
-	bh=Gh3ixmiPQNPp1esXRHwOBpKQe5cykMvnhUE8gAYZowo=;
-	b=HgLTHwBPypmyoxjGHvNbhWBxTORZv75MIkQWpy5Qs619t18wpTwMnLQxYuRouSZkmgFX
-	 RbfNO4MBtuL/Nz2r8C7NCS+K22wFGo7aS07y1E+EZHNCaLveHsUpYQhz33gbFJtdjbOXz
-	 R7SJ8PZuxG+Dj+Vet00iAk5zEOiTe48TEc/Vh/oUnPDnLiHS9AKsX6zf6xX4IK3JunZtm
-	 9+uxrAQMqmb/1ytJjCYD+5WC/rrDZoYVkGBUyKkL44+PXx+rpMLONUrd2ST/6iFz1cTJt
-	 UpAMkypfZzjaX3t6c81RdZdC5qXsS4WhZ5w2Vv1T/8YkLBn8vJeNLOpRpG0QlGfOOYg==
+	bh=emRRxOo38GGoG0OqsYCSeZjP1qZaERfoyqyxbY6jVHU=;
+	b=WpFhDy7+FHerRvzWPULhvQJwLi6cjozCQMDRQ7ot5jepwsGhCTvTAMIhqL/S6Fz1ifZS
+	 mR0RnGap3NLchtssgyFv6e/xUCkZqI8Xr7iKmwG89erUr02oGJn8DflManVJfOWr/MI5r
+	 CUSB5B455Iknlf1OuSQfxulV/f13Lsux/4lpRwR3srq5bbHs8k1+rPobjn6z6VEHKUeRS
+	 CXO9AA1vfv9yjmglcN0hm8OdfHssvbagypqqNBVTJrYxqernY6fnBqD9eERjpbAfSYFao
+	 YlxN/J1eBLcwivl6JY5Dxc3QG27RzQhSuKvEePmO2K6GNBqyXtXrnLU3LPqXox2U6Aw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linutronix.de;
-	spf=pass smtp.mailfrom=linutronix.de;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=oXhPUQe3;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=5R+RdIYB;
-	arc=none smtp.remote-ip=193.142.43.55
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dmarc=pass header.from=linaro.org;
+	spf=pass smtp.mailfrom=linaro.org;
+	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=wVe5RQcL;
+	arc=none smtp.remote-ip=209.85.128.51
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12741606A32A;
-	Fri, 20 Nov 2026 14:45:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 12741606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37FD760A3813
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 14:58:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 37FD760A3813
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.a=rsa-sha256 header.s=2020 header.b=oXhPUQe3;
-	dkim=pass header.d=linutronix.de header.i=@linutronix.de header.a=ed25519-sha256 header.s=2020e header.b=5R+RdIYB
-Date: Fri, 20 Nov 2026 15:45:53 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1795185956;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Gh3ixmiPQNPp1esXRHwOBpKQe5cykMvnhUE8gAYZowo=;
-	b=oXhPUQe3T1dGGsfU9rAuF1GCe3ZQLlP8XaoGaqH6q2Fsz6vEWKNm9ywdmtFOvU7oGeWobI
-	/0YtLcxHFr2OpC+lkmczrDAj7E7vO0PCkbAxFOex2Z4uq2HX+JKplB1OwNJLsYrDzJEJ8R
-	yRjMdrX61hVzPYfiWefECbuYGTgMJ9Fh5OgSiJrrdSCQEiPcu2alXwRuEpxNAMnQ/XYIwP
-	GjpKgUNfdL/Vu5MNmNgwF6pmgtsxGZ2d1NLATZN0vT5UIa7R5iNRM1XGLIhprpSvrph6GE
-	b6biG0d8YYUvrB2sOfoH2aQMvu+8esPcB42ofDalkvHpL74LJhUYcZh5wDY8+Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1795185956;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Gh3ixmiPQNPp1esXRHwOBpKQe5cykMvnhUE8gAYZowo=;
-	b=5R+RdIYBQrowxG/4Mka5zLrqD8PW25TYeKNtp07wo/hd2ep7H2V3CCVKJEe67RBVbz/p2A
-	SHJkpcnfqa3Ub+DA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
-	loongarch@lists.linux.dev
-Cc: Mark Rutland <mark.rutland@arm.com>, Ian Rogers <irogers@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Oleg Nesterov <oleg@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>, Waiman Long <longman@redhat.com>,
-	Clark Williams <clrkwllms@kernel.org>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-	James Clark <james.clark@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Chris Zankel <chris@zankel.net>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ada Couprie Diaz <ada.coupriediaz@arm.com>
-Subject: [PATCH v5] ARM, ARM64, LONGARCH, XTENSA: Delay HW BP notification to
- task_work()
-Message-ID: <20261120144553.TjgAd_G6@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=wVe5RQcL
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4a210470b49so8751955e9.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 06:58:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1795186729; x=1795791529; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=emRRxOo38GGoG0OqsYCSeZjP1qZaERfoyqyxbY6jVHU=;
+        b=wVe5RQcLmFXzY9rW2IB9oCDZE5MeZRDz3CICNse/KrxYd9jlEfbH2foeoINglAnu1f
+         ZqGMJTwZJO7ZCCXQh/DlW4dJYsip0kcCpNE5BtydGs0/jJ17KNxLOgB2IA/kQ9nFN9Zu
+         MUgY/JiIssnAi3XYi0LEk0ameOJI84yzv0t8Nr6KwjIpI6TiSRiDoU9Ms0tQK428935d
+         e1/AuEtRimD5e9AeM61r/LFRgBp8Eid7EnUzzzKXXDQqU0X4TBQ2o5XIMOrlFGHsOOYY
+         +428/eCMDmUqDX1KuLkV58wBhc4V2W6A7mbUNafcyI8A2DQAdl2ch1aDYuP6TaYIJB7h
+         9Xww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795186729; x=1795791529;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=emRRxOo38GGoG0OqsYCSeZjP1qZaERfoyqyxbY6jVHU=;
+        b=AOVsIsrKWhVEPk+pvm8HWetRuEtSGIIRHenZ7CvTykUOq4qFTMdDlndxTsinnHw9X1
+         Y5TEwfRJaKv6gAt8oCgRCYEFqZ6S3Q988jGX2+HVrU+gVXZTPkrHDBm1LNUQG9ca0aTR
+         FD617wg/fr7dV7HQMvmb4mr71iyAQqLq02dAhUIRDQMb7IeAoGyMc+oeaYP5mrY6WdL9
+         NVhOuihmEdX5jvDw1gLlSa25HcMtRVHZ3TUwMIlnltG7Y7HvpLsC/9tZ5aj2hYtoCU1W
+         byUBBjzZq5ecPka/s4Yy7u81wh5ue9f9+zTilzE+Yv/7wqVo4VPVQ6riKBQva8kdDbzm
+         lHuA==
+X-Forwarded-Encrypted: i=1; AL+hErFJNyAv7+GPKYBYzHu1b86ikV5FWrK0anGZqr8ITLWI+e6BC5GawMWgTNHMJ4uph6a/cF6JdKOIKfiI3WBCYvnN@vger.kernel.org
+X-Gm-Message-State: APuU4Z/3dxu1w6GbOVaJo2FJXrjn5Hkl2RVI8nfbynjNlWefxpJeK5lQ
+	CaB4Ssq7j0QpsA4S4llfGAlnTmHqyjFvjFhoi+VfStAqsibQ2ykK4LUws7xJ4dFJd6U=
+X-Gm-Gg: AYBFou0rwgnnBdgh3k5lZRUDwfh3TV2T1kn0xAb8zSq/lVi66/UhPLG+E3cBbOtIHKE
+	eSpIwJh+GR0taCf989M6x0oZFu+AvtgHXC048gmlhvfj6G03+SkNzrzpzt/EFV9665Y9Cl/ESM7
+	9WREbg0dh7Vn9Uh9OoZ2uM8OO1vtI2huA9knZpMuUrEW1dQh3AX6o/Up4joGLWL7Xkpxwus3Zg/
+	0EPVDUyahYoh2lwO/9ahYWRGPXHkfBvmcCVVtf0wgT8L1Ror9z1a+W1u6fobKFUUdT8Zp4kkcZr
+	sjsDy9FfsOOfIyUSrnjdNOrHGsZ3iARDbJ79tKO/aj4VCQSlSJVr/6YOaFEvXvLuSEjFFK59wKb
+	LzwGKXCQE706MVih6mruEu8PeyyC+5wGlzj1HJ6eNscvJ9cRSm3W+j47UGqQ+vlLPKUqxx7Q7BH
+	RpLuXiVM/EuO92lj1feRXq9hIEqXjBRrYtzD12jL4XOyRNhXdnBKmCHcZDwvd0ZWWy24/dDBKfQ
+	B3lLbNPVQk6MFkP75c9xkBKrij7MzzNhY8fpcr9zfqsrSutGKDwbdCK1dbDWzSyMrfSXiLWeclK
+	6Ru1k5BcQAzmjkNAb+pRHvBkoIbitMtTag==
+X-Received: by 2002:a05:600c:670b:b0:4a6:30c3:1114 with SMTP id 5b1f17b1804b1-4bb88922df3mr71132445e9.12.1795186729437;
+        Fri, 20 Nov 2026 06:58:49 -0800 (PST)
+Received: from [192.168.1.3] ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb8538b2c5sm120356755e9.5.2026.11.20.06.58.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Nov 2026 06:58:48 -0800 (PST)
+Message-ID: <9366b008-37e3-483d-b85f-a850bad4253b@linaro.org>
+Date: Fri, 20 Nov 2026 14:58:47 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -89,328 +92,153 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 2/2] perf jevents: Fail the build on a key the tables
+ may not carry
+To: TAKANO Mitsuhiro <takano32@gmail.com>
+Cc: Ian Rogers <irogers@google.com>, John Garry <john.garry@linux.dev>,
+ linux-arm-kernel@lists.infradead.org,
+ Ilkka Koskinen <ilkka@os.amperecomputing.com>, linux-kernel@vger.kernel.org,
+ Will Deacon <will@kernel.org>, Mike Leach <mike.leach@arm.com>,
+ Leo Yan <leo.yan@linux.dev>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>
+References: <20261120060931.711483-1-takano32@gmail.com>
+ <20261120134252.1036963-1-takano32@gmail.com>
+ <20261120134252.1036963-3-takano32@gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20261120134252.1036963-3-takano32@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Waiman, Luis, Ada reported that HW breakpoints on ARM64 trigger
-"sleeping while atomic" warnings on PREEMPT_RT. The hardware event is
-delivered with disabled interrupts and perf intrastrucure expects
-disabled interrupts while the overflow callback is invoked.
 
-The callback then sends a SIGTRAP signal for which it acquires
-sighand_struct::siglock, a spinlock_t which becomes a sleeping lock and
-must not be acquired in atomic context.
 
-Delay the event callback until the return to userland.
-Add perf_hwbp_notify(), a generic perf callback which delayes the
-actual callback invocation to task_work_add() callback. This callback
-invokes the architecture defined callback perf_arch_hwbp_send_sig().
-This requires struct callback_head and the functions require
-ARCH_NEED_PERF_HW_NOTIFY to be defined.
+On 20/11/2026 13:42, TAKANO Mitsuhiro wrote:
+> jevents.py takes the fields it wants out of each JSON object by name and
+> ignores the rest, so a key that is spelled differently is dropped without
+> a word and the object is built without whatever that field held.
+> 
+> Compare the keys of each object with _valid_keys, the keys a table may
+> carry, and fail on anything else.  The generator already names the file it
+> was reading and the exception names the keys it did not expect, so the
+> build stops with a message that says where to look.
+> 
+> Written with Hermes Agent, an LLM assistant; the author reviewed it and
+> ran the generator on every arch directory, with and without a key the
+> tables may not carry.
+> 
+> Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
+> ---
+>   tools/perf/pmu-events/jevents.py          | 24 +++++++++++
+>   tools/perf/tests/shell/jevents_bad_key.sh | 52 +++++++++++++++++++++++
+>   2 files changed, 76 insertions(+)
+>   create mode 100755 tools/perf/tests/shell/jevents_bad_key.sh
+> 
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+> index 080e04b51b8c..1baeae76349f 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+> @@ -63,6 +63,27 @@ _json_metric_attributes = [
+>   # Attributes that are bools or enum int values, encoded as '0', '1',...
+>   _json_enum_attributes = ['aggr_mode', 'deprecated', 'event_grouping', 'perpkg',
+>                            'default_show_events']
+> +# Keys a table under arch/ may carry.  jevents.py takes the fields it wants by
+> +# name and drops the rest without a word, so a key that is spelled differently
+> +# is only visible as a field that went missing; a table carrying anything else
+> +# is an error.  The list holds the keys jevents.py reads, plus the ones the
+> +# tables carry and it does not read: Counter, CountersNumFixed and
+> +# CountersNumGeneric (read by nothing) and Experimental (read by metric.py).
+> +_valid_keys: Set[str] = {
+> +    'AggregationMode', 'AnyThread', 'ArchStdEvent', 'BriefDescription',
+> +    'Compat', 'ConfigCode', 'Counter', 'CounterMask',
+> +    'CountersNumFixed', 'CountersNumGeneric', 'Data_LA', 'DefaultMetricgroupName',
+> +    'DefaultShowEvents', 'Deprecated', 'EdgeDetect', 'EnAllCores',
+> +    'EnAllSlices', 'Errata', 'EventCode', 'EventidCode',
+> +    'EventName', 'Experimental', 'ExtSel', 'FCMask',
+> +    'Filter', 'Invert', 'LegacyCacheCode', 'LegacyConfigCode',
+> +    'MetricConstraint', 'MetricExpr', 'MetricGroup', 'MetricgroupNoGroup',
+> +    'MetricName', 'MetricThreshold', 'MSRIndex', 'MSRValue',
+> +    'NodeType', 'PEBS', 'PerPkg', 'PortMask',
+> +    'PublicDescription', 'RdWrMask', 'RetirementLatencyMax', 'RetirementLatencyMean',
+> +    'RetirementLatencyMin', 'SampleAfterValue', 'ScaleUnit', 'SliceId',
+> +    'ThreadMask', 'UMask', 'Unit',
+> +}
+>   
+>   def file_name_to_table_name(prefix: str, parents: Sequence[str],
+>                               dirname: str) -> str:
+> @@ -196,6 +217,9 @@ class JsonEvent:
+>     def __init__(self, jd: dict):
+>       """Constructor passed the dictionary of parsed json values."""
+>   
+> +    if extra := set(jd) - _valid_keys:
+> +      raise ValueError(f'Unknown keys: {sorted(extra)}')
+> +
+>       def llx(x: int) -> str:
+>         """Convert an int to a string similar to a printf modifier of %#llx."""
+>         return str(x) if x >= 0 and x < 10 else hex(x)
+> diff --git a/tools/perf/tests/shell/jevents_bad_key.sh b/tools/perf/tests/shell/jevents_bad_key.sh
+> new file mode 100755
+> index 000000000000..6084205b5f4d
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/jevents_bad_key.sh
+> @@ -0,0 +1,52 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Check jevents.py reports unknown keys as errors (no_mlock)
+> +#
+> +# A key that is spelled differently is dropped without a word, so jevents.py
+> +# compares the keys of each object in a table against the keys a table may
+> +# carry and fails on anything else.
+> +
+> +jevents=$(dirname "$0")/../../pmu-events/jevents.py
+> +python=${PYTHON:-python3}
+> +
+> +# An installed perf has the test but not the generator, and a python that is
+> +# not there or too old to run it is a skip, not a failure of the check.
+> +[ -r "${jevents}" ] || exit 2
+> +[ "$("${python}" -c 'import sys; print(sys.version_info >= (3, 9))' 2>/dev/null)" = True ] \
+> +  || exit 2
+> +
+> +tmp=$(mktemp -d) || exit 2
+> +trap 'rm -rf "${tmp}"' EXIT HUP INT TERM
+> +tables="${tmp}/arch/x86/model"
+> +mkdir -p "${tables}" "${tmp}/arch/common"
+> +printf '[]\n' > "${tmp}/arch/common/empty.json"
+> +printf 'Family-model,Version,Filename,EventType\nGenuineIntel-6-97,v1.0,model,core\n' \
+> +  > "${tmp}/arch/x86/mapfile.csv"
+> +printf '[{"EventName": "a", "NotAKey": "x"}]\n' > "${tables}/events.json"
+> +
+> +if "${python}" -B "${jevents}" x86 all "${tmp}/arch" \
+> +    "${tmp}/pmu-events.c" "${tmp}/pmu-events-string.c" \
+> +    > "${tmp}/out" 2> "${tmp}/err"; then
+> +  echo "jevents.py accepted a key it does not read" >&2
+> +  exit 1
+> +fi
+> +
+> +# The generator says which file it was reading, and the exception says which
+> +# key it did not expect.
+> +grep -qF -- "Exception processing" "${tmp}/out" || {
+> +  echo "jevents.py failed without naming the file" >&2
+> +  cat "${tmp}/out" "${tmp}/err" >&2
+> +  exit 1
+> +}
+> +grep -qF -- "${tables}/events.json" "${tmp}/out" || {
+> +  echo "jevents.py failed without naming the path" >&2
+> +  cat "${tmp}/out" "${tmp}/err" >&2
+> +  exit 1
+> +}
+> +grep -qF -- "NotAKey" "${tmp}/err" || {
+> +  echo "jevents.py failed without naming the key" >&2
+> +  cat "${tmp}/out" "${tmp}/err" >&2
+> +  exit 1
+> +}
+> +
+> +exit 0
 
-This was reported against ARM64. ARM, LongARCH and Xtensa follow the
-same pattern are also converted. Xtensa is the only not supporting
-PREEMPT_RT but now we have all architectures using the same pattern.
-
-Fixes: d8fccd9ca5f90 ("arm64: Allow to enable PREEMPT_RT.")
-Reported-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-Reported-by: Waiman Long <longman@redhat.com>
-Closes: https://lore.kernel.org/all/aho0eqjMESuHxECr@redhat.com/
-Reviewed-by: Ada Couprie Diaz <ada.coupriediaz@arm.com>
-Tested-by: Ada Couprie Diaz <ada.coupriediaz@arm.com>
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
-v4=E2=80=A6v5: https://lore.kernel.org/all/20261012090431.TF3iVDsk@linutron=
-ix.de/
- - Collect tags
-
-v3=E2=80=A6v4: https://lore.kernel.org/all/20261001143516.Ew8C97WS@linutron=
-ix.de/
- - Add fixes tag
- - Rename the functions as suggested by Ada to use the pattern that perf
-   uses in other places:
-   - perf_arch_hwbp_notify() -> perf_hwbp_notify() (generic)
-   - arch_hwbp_send_sig() -> perf_arch_hwbp_send_sig() (arch specific)
-   - perf_arch_hwbp_send_sig() -> perf_hwbp_send_sig() (generic)
- - Rename ARCH_NEED_PERF_HW_NOTIF -> ARCH_NEED_PERF_HW_NOTIFY
-
-v2=E2=80=A6v3: https://lore.kernel.org/all/20260814085118.OPEA_Ssn@linutron=
-ix.de/
- - Add Xtensa for completion
- - sashiko complains and wants TWA_SIGNAL instead TWA_RESUME. His
-   argument is that a syscall will trap via get_user() and loop forever
-   instead making progress. This is wrong IMHO. ARM64 will single step
-   over the watchpoint and continue execution. The only downside is that
-   userland will get notified after the syscall completed. So my theory.
-   Using TWA_SIGNAL is worse: Assume we have a watchpoint on UADDR and
-   are in a futex() syscall. The get_user() invocation will trigger the
-   exception, the debug handler will step over and queue a signal. The
-   futex code will notice this and return ERESTARTNOINTR. A signal will
-   be sent, the syscall restarts, traps onto UADDR again, the loop
-   continues. But this should be case now, too=E2=80=A6
-   Now that I look into arch_build_bp_info() and do actual testing I must
-   say arm64 does not support mixed breakpoints. This means there is no
-   breakpoint in kernel on a userland address. \o/
-
-v1=E2=80=A6v2: https://lore.kernel.org/all/20260713144939.FuCj9yvZ@linutron=
-ix.de/
- - sashiko complained that a memory breakpoint might trigger several
-   times before a signal is sent if the syscall touches the memory (via
-   get_user()) more than once before returning back. This would lead to
-   list corruption in task_work_add(). To handle this, there is now a
-   variable which is set via xchg before task_work_add() and cleared
-   after the signal has been sent.
-
- arch/arm/include/asm/hw_breakpoint.h       |  1 +
- arch/arm/kernel/ptrace.c                   |  7 ++----
- arch/arm64/include/asm/hw_breakpoint.h     |  1 +
- arch/arm64/kernel/ptrace.c                 |  6 ++---
- arch/loongarch/include/asm/hw_breakpoint.h |  1 +
- arch/loongarch/kernel/ptrace.c             |  6 ++---
- arch/xtensa/include/asm/hw_breakpoint.h    |  1 +
- arch/xtensa/kernel/ptrace.c                |  7 ++----
- include/linux/hw_breakpoint.h              |  3 +++
- include/linux/perf_event.h                 |  4 ++++
- kernel/events/core.c                       | 26 ++++++++++++++++++++++
- 11 files changed, 45 insertions(+), 18 deletions(-)
-
-diff --git a/arch/arm/include/asm/hw_breakpoint.h b/arch/arm/include/asm/hw=
-_breakpoint.h
-index e7f9961c53b2d..fa7fb2b2a392a 100644
---- a/arch/arm/include/asm/hw_breakpoint.h
-+++ b/arch/arm/include/asm/hw_breakpoint.h
-@@ -7,6 +7,7 @@
- struct task_struct;
-=20
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
-+#define ARCH_NEED_PERF_HW_NOTIFY
-=20
- struct arch_hw_breakpoint_ctrl {
- 		u32 __reserved	: 9,
-diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
-index ed7a2a87a6707..db4b28c6e15a4 100644
---- a/arch/arm/kernel/ptrace.c
-+++ b/arch/arm/kernel/ptrace.c
-@@ -347,9 +347,7 @@ static long ptrace_hbp_idx_to_num(int idx)
- /*
-  * Handle hitting a HW-breakpoint.
-  */
--static void ptrace_hbptriggered(struct perf_event *bp,
--				     struct perf_sample_data *data,
--				     struct pt_regs *regs)
-+void perf_arch_hwbp_send_sig(struct perf_event *bp)
- {
- 	struct arch_hw_breakpoint *bkpt =3D counter_arch_bp(bp);
- 	long num;
-@@ -424,8 +422,7 @@ static struct perf_event *ptrace_hbp_create(struct task=
-_struct *tsk, int type)
- 	attr.bp_type	=3D type;
- 	attr.disabled	=3D 1;
-=20
--	return register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL,
--					   tsk);
-+	return register_user_hw_breakpoint(&attr, perf_hwbp_notify, NULL, tsk);
- }
-=20
- static int ptrace_gethbpregs(struct task_struct *tsk, long num,
-diff --git a/arch/arm64/include/asm/hw_breakpoint.h b/arch/arm64/include/as=
-m/hw_breakpoint.h
-index bd81cf17744af..0bc75f42b0da6 100644
---- a/arch/arm64/include/asm/hw_breakpoint.h
-+++ b/arch/arm64/include/asm/hw_breakpoint.h
-@@ -124,6 +124,7 @@ extern void hw_breakpoint_pmu_read(struct perf_event *b=
-p);
- extern int hw_breakpoint_slots(int type);
-=20
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
-+#define ARCH_NEED_PERF_HW_NOTIFY
- extern void hw_breakpoint_thread_switch(struct task_struct *next);
- extern void ptrace_hw_copy_thread(struct task_struct *task);
- #else
-diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-index 6a0b3a9b6125e..7c3df2007c108 100644
---- a/arch/arm64/kernel/ptrace.c
-+++ b/arch/arm64/kernel/ptrace.c
-@@ -168,9 +168,7 @@ void ptrace_disable(struct task_struct *child)
- /*
-  * Handle hitting a HW-breakpoint.
-  */
--static void ptrace_hbptriggered(struct perf_event *bp,
--				struct perf_sample_data *data,
--				struct pt_regs *regs)
-+void perf_arch_hwbp_send_sig(struct perf_event *bp)
- {
- 	struct arch_hw_breakpoint *bkpt =3D counter_arch_bp(bp);
- 	const char *desc =3D "Hardware breakpoint trap (ptrace)";
-@@ -312,7 +310,7 @@ static struct perf_event *ptrace_hbp_create(unsigned in=
-t note_type,
- 	attr.bp_type	=3D type;
- 	attr.disabled	=3D 1;
-=20
--	bp =3D register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL, tsk);
-+	bp =3D register_user_hw_breakpoint(&attr, perf_hwbp_notify, NULL, tsk);
- 	if (IS_ERR(bp))
- 		return bp;
-=20
-diff --git a/arch/loongarch/include/asm/hw_breakpoint.h b/arch/loongarch/in=
-clude/asm/hw_breakpoint.h
-index f4478936787d6..3921c461dc2d9 100644
---- a/arch/loongarch/include/asm/hw_breakpoint.h
-+++ b/arch/loongarch/include/asm/hw_breakpoint.h
-@@ -120,6 +120,7 @@ bool breakpoint_handler(struct pt_regs *regs);
- bool watchpoint_handler(struct pt_regs *regs);
-=20
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
-+#define ARCH_NEED_PERF_HW_NOTIFY
- extern void ptrace_hw_copy_thread(struct task_struct *task);
- extern void hw_breakpoint_thread_switch(struct task_struct *prev, struct t=
-ask_struct *next);
- #else
-diff --git a/arch/loongarch/kernel/ptrace.c b/arch/loongarch/kernel/ptrace.c
-index be38430f7e280..27e7e64591592 100644
---- a/arch/loongarch/kernel/ptrace.c
-+++ b/arch/loongarch/kernel/ptrace.c
-@@ -384,9 +384,7 @@ static int lbt_set(struct task_struct *target,
- /*
-  * Handle hitting a HW-breakpoint.
-  */
--static void ptrace_hbptriggered(struct perf_event *bp,
--				struct perf_sample_data *data,
--				struct pt_regs *regs)
-+void perf_arch_hwbp_send_sig(struct perf_event *bp)
- {
- 	int i;
- 	struct arch_hw_breakpoint *bkpt =3D counter_arch_bp(bp);
-@@ -479,7 +477,7 @@ static struct perf_event *ptrace_hbp_create(unsigned in=
-t note_type,
- 	attr.bp_type	=3D type;
- 	attr.disabled	=3D 1;
-=20
--	bp =3D register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL, tsk);
-+	bp =3D register_user_hw_breakpoint(&attr, perf_hwbp_notify, NULL, tsk);
- 	if (IS_ERR(bp))
- 		return bp;
-=20
-diff --git a/arch/xtensa/include/asm/hw_breakpoint.h b/arch/xtensa/include/=
-asm/hw_breakpoint.h
-index 9ec86f440a48e..44ea340c88742 100644
---- a/arch/xtensa/include/asm/hw_breakpoint.h
-+++ b/arch/xtensa/include/asm/hw_breakpoint.h
-@@ -12,6 +12,7 @@
- #define __ASM_XTENSA_HW_BREAKPOINT_H
-=20
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
-+#define ARCH_NEED_PERF_HW_NOTIFY
-=20
- #include <linux/kdebug.h>
- #include <linux/types.h>
-diff --git a/arch/xtensa/kernel/ptrace.c b/arch/xtensa/kernel/ptrace.c
-index 364e4fdabb00d..c9f583d650de2 100644
---- a/arch/xtensa/kernel/ptrace.c
-+++ b/arch/xtensa/kernel/ptrace.c
-@@ -361,9 +361,7 @@ static int ptrace_pokeusr(struct task_struct *child, lo=
-ng regno, long val)
- }
-=20
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
--static void ptrace_hbptriggered(struct perf_event *bp,
--				struct perf_sample_data *data,
--				struct pt_regs *regs)
-+void perf_arch_hwbp_send_sig(struct perf_event *bp)
- {
- 	int i;
- 	struct arch_hw_breakpoint *bkpt =3D counter_arch_bp(bp);
-@@ -395,8 +393,7 @@ static struct perf_event *ptrace_hbp_create(struct task=
-_struct *tsk, int type)
- 	attr.bp_type	=3D type;
- 	attr.disabled	=3D 1;
-=20
--	return register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL,
--					   tsk);
-+	return register_user_hw_breakpoint(&attr, perf_hwbp_notify, NULL, tsk);
- }
-=20
- /*
-diff --git a/include/linux/hw_breakpoint.h b/include/linux/hw_breakpoint.h
-index db199d653dd1a..91e8d80220c54 100644
---- a/include/linux/hw_breakpoint.h
-+++ b/include/linux/hw_breakpoint.h
-@@ -85,6 +85,9 @@ extern int register_perf_hw_breakpoint(struct perf_event =
-*bp);
- extern void unregister_hw_breakpoint(struct perf_event *bp);
- extern void unregister_wide_hw_breakpoint(struct perf_event * __percpu *cp=
-u_events);
- extern bool hw_breakpoint_is_used(void);
-+extern void perf_arch_hwbp_send_sig(struct perf_event *bp);
-+extern void perf_hwbp_notify(struct perf_event *bp, struct perf_sample_dat=
-a *data,
-+			     struct pt_regs *regs);
-=20
- extern int dbg_reserve_bp_slot(struct perf_event *bp);
- extern int dbg_release_bp_slot(struct perf_event *bp);
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index e1e11500df097..f4f88e3ce586a 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -215,6 +215,10 @@ struct hw_perf_event {
-=20
- 	/* Last sync'ed generation of filters */
- 	unsigned long			addr_filters_gen;
-+#ifdef ARCH_NEED_PERF_HW_NOTIFY
-+	struct callback_head		arch_hw_notif;
-+	int				arch_hw_notif_busy;
-+#endif
-=20
- /*
-  * hw_perf_event::state flags; used to track the PERF_EF_* state.
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index e870f12c3ad81..ee6a5ec48e7c4 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -13485,6 +13485,28 @@ static void account_event(struct perf_event *event)
- 	account_pmu_sb_event(event);
- }
-=20
-+#ifdef ARCH_NEED_PERF_HW_NOTIFY
-+static void perf_hwbp_send_sig(struct callback_head *head)
-+{
-+	struct perf_event *bp;
-+
-+	bp =3D container_of(head, struct perf_event, hw.arch_hw_notif);
-+	perf_arch_hwbp_send_sig(bp);
-+	xchg_relaxed(&bp->hw.arch_hw_notif_busy, 0);
-+	put_event(bp);
-+}
-+
-+void perf_hwbp_notify(struct perf_event *bp, struct perf_sample_data *data,
-+		      struct pt_regs *regs)
-+{
-+	if (WARN_ON_ONCE(!atomic_long_inc_not_zero(&bp->refcount)))
-+		return;
-+	if (xchg_relaxed(&bp->hw.arch_hw_notif_busy, 1) ||
-+	    WARN_ON_ONCE(task_work_add(current, &bp->hw.arch_hw_notif, TWA_RESUME=
-)))
-+		put_event(bp);
-+}
-+#endif
-+
- /*
-  * Allocate and initialize an event structure
-  */
-@@ -13590,6 +13612,10 @@ perf_event_alloc(struct perf_event_attr *attr, int=
- cpu,
- 	}
-=20
- 	if (overflow_handler) {
-+#ifdef ARCH_NEED_PERF_HW_NOTIFY
-+		if (overflow_handler =3D=3D perf_hwbp_notify)
-+			init_task_work(&event->hw.arch_hw_notif, perf_hwbp_send_sig);
-+#endif
- 		event->overflow_handler	=3D overflow_handler;
- 		event->overflow_handler_context =3D context;
- 	} else if (is_write_backward(event)){
---=20
-2.55.0
+Reviewed-by: James Clark <james.clark@linaro.org>
 
