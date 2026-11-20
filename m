@@ -1,82 +1,82 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.177
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.182
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795182178;
-	b=Ue+YkWItm+yHxvi/3VY2IAZn7l3gwIeBfX7HPAYhsHZUGzpQur07F/2n/NIa6d/3Zros
-	 lMj+F/XSAXCtiBh/LW32i5Fa3GSNaAH6ALe+mQOe8mdY/KygktSRtKpfXftJ7nvL377PJ
-	 vso+XCTgx7TvaYU+zr9xdNQwQk+xx4/7/PDUZWbTMpD5FjqmfXircvyWJIbZtdeor79zB
-	 brIOOqHl9dvU/V93abPwoblLRBA+I2+jc7b7fNupnPJV74Drq5/C+ndKJgAYkTvc0CA7W
-	 eVFI+wrQZ7sFzeP6BDfck1XdJEORC0WZDyH6mzJVDFDdNkDABW/ri6Zmky/ata1BpRQ==
+	t=1795182185;
+	b=oH4+IncRXobbywJKufsBU62PxLxYRFJqX4BYJ7g/BjXvwnka9XmWMys62GULMP9kAJST
+	 ya485qBD9D8D/gV+H5ODDyz8DAdZKaWSs5R3GMSVZGz9fZ06/EG1EYQhtmA11PjHBV08d
+	 FF+jT65Efu3dE9ruc+3GKT3ldGE+LaxHmfoXpA/rBU3V13ChnJhBNPh88HLGVOHqeKOZ8
+	 UPEMHIYIpntLSHjSXtOQQw2DHIuymUepQmkcG8SaYGHXIOp79V/zpkqtPReK2CXYDV3NZ
+	 UDYAqjzRB18uOenaL3MCflW56Nt4me5OsJPGW4DLgSu2bi1UlP32rv/hrgwe5/KuKLQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795182178;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795182185;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
 	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding;
-	bh=Y8Ts16+pEgKO3za6EY6j5FLRvh5fbwbzMTmSXwpDQqU=;
-	b=dl2QfW6Wk/UaUNF6UIFlcKP02KXnyrX+cQnWP364CCgXChLFCd0GD1fzXfUQr8xVKvSD
-	 Vg0p0uFPpuJlUE+pfRlvta6wrzK60gRw21tfBf/VFvAzsw7tNb4NXEPyoCKqT4M6u74Sx
-	 /EtonVPQXwXvBNE5k1SXLJqcYk+B3hRFJQBGoNnsbKIsPz6vPEsClZcP5+swjiNvtgg+q
-	 P/pPJHlaipbDcfWBK2BMKZpHUFKFYheSq7wfNccAVxQH0grO2FEvDYGuWsb1JsiMw+Fo4
-	 Z6QTY5QWs6Ge4Otoh+3XIX9seDTuYgUsQM3H/khLj32xuN217CuCDLIdrT718LtE7lw==
+	bh=cYXD2FWmrnnRZk6eOj0Jj2xBjZH/opG+pmsIgNjn1qM=;
+	b=nYprgwW2oZZgl0VaUaf9shJvGh2RamX2UwTCkjsQ/jCs+2T5lGMq9cHRAL0ICYi2Qi43
+	 DV0DAO7HD/YZPxFmhP+USp5mUUYvNThcijv1oaN6Joz+RFpYswugoRdUvYaF9ZxqEk8Ai
+	 HqqFUKL8M1E57XfKpQRS8OzMarrQSH4YSLientHupp46Cl2oznT0On/23PVzNXWj9Oaxv
+	 FYMcp0CBCGEOne9ie4umIUwF7tPbUGHbAPQH2sDUK46vc45CAEB5gXKinLeiubrUHBh1c
+	 EL2C+9f6VZku4yydxIzeXLcN0I86Ah8y4FLUwEc0Qy4w9S8ovqSPuCc+9w0Q0hyDexQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=XuxFIVtT;
-	arc=none smtp.remote-ip=74.125.82.177
-Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=fWMOhzPc;
+	arc=none smtp.remote-ip=74.125.82.182
+Received: from mail-dy1-f182.google.com (mail-dy1-f182.google.com [74.125.82.182])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3C760A2600
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 13:42:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1E3C760A2600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F281F60A2600
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 13:43:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F281F60A2600
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=XuxFIVtT
-Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-380c28f9e35so1879975eec.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 05:42:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=fWMOhzPc
+Received: by mail-dy1-f182.google.com with SMTP id 5a478bee46e88-3282db206d3so2397838eec.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 05:43:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795182177; x=1795786977; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1795182183; x=1795786983; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Y8Ts16+pEgKO3za6EY6j5FLRvh5fbwbzMTmSXwpDQqU=;
-        b=XuxFIVtTWzsZyWpiewZ01Z8a05VnZBztKpAKQwWQvIS5TtcKHvnFpw1C6t72RbgHQj
-         qbJ8i6UsUYOc6ccJcT8p5zfVUIU62k3+/f6mUmK1vnDyX4iccXdgWeXj4dFzJm9G4Uqk
-         2gDZA9IBYVFoWoCdE3S7aQQadJRVEgNrNKFMKHFXaVb8E/rX5oAfxCLq0BUbw+lkgeiN
-         A1O4JjEOskVV9y2igd1bNjIoTThdfVEiouA5ssykR0JxG+27FeAF3FtvsBsgWNQv+ojy
-         DdWZ9rTIhZfD5yQGHGEfo7mGWN6rvEMm89Sx6ZKCCDSRo/2THCGplRwh89NtoGY2NSaT
-         qnWw==
+        bh=cYXD2FWmrnnRZk6eOj0Jj2xBjZH/opG+pmsIgNjn1qM=;
+        b=fWMOhzPcYN0UpLMPegxJSOPZR1y33brbSICxb79t0XSxcz7Rn1I5DvxrS9W4GL0dxf
+         LPbq+RyVjBQfn23lJYx3GGBzPzvnhyhm7aC9I8Om9vT/WUIRjw/Ejb3GWBLorimx9Zzf
+         A8d4qbyGn9SnNJEuONtuC9+S9qwhH7irx7W0ECh8ANXEcJxxHvtRbUwU2Lr7TLRTuHd1
+         rYDx+qJzHnRR6j6J1l6tvRkGEZfnVHv0uw31frMqGDQDstwqa97L2OFv1BZD+xJf2BdI
+         XaYSZxw5IHaS70Hs8hZq9EjmCPT/iDPMf5UP6XrHDRzyL43+zy0ZtiOAsEvPr3dsIO2h
+         hCdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795182177; x=1795786977;
+        d=1e100.net; s=20260707; t=1795182183; x=1795786983;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Y8Ts16+pEgKO3za6EY6j5FLRvh5fbwbzMTmSXwpDQqU=;
-        b=ezdCwrp3JjBj+bqvSxcXrrp6xEIE8Da0o5kKKqRq6NXn8liWxYL8LXL1M2V+rEIJKe
-         WVi4x05yC4PuW684MA7ztKzxY7qeNAp6gmcP64T+9xRcKB+AFapX5JDJoIGv8v1AA2lP
-         KsArq5Roi3vB4Y628vx2lSIfutf6x0X6PIWh6RE00ikcDXMBgyriWn+ABmJznPQO0He1
-         yWg79H4uFBL6bCN+rlcbp3UceB5nf4GtZNCou3p54B8PtXvJPjOZVfuCT2cf+BK0wt2r
-         +gViV0nRmQ9A4PkuikdjbWJR/WG+YFSiUebPE8rXBQUO92ufT6tyx+PRmCFr0N3ZLkkR
-         Humg==
-X-Gm-Message-State: APuU4Z/oQzulQSqcHdjdDKIPP21BxptZEV0Bx7rwpWdfevNe8z7hEwA/
-	X4GkypWSHsADNIXoRrISPYrF3EBGV+1EA658a+AbzdhLk7c+Gui+6yeKiYZ/uzcq
-X-Gm-Gg: AYBFou1tXG6cXhkIHYASeGbd/RoEDsaF012cAOo/MpDXRVFnOZHQCbtQc017F0fOFfo
-	fb3Qt5GkVxe2FU6fv6hhhj+fMMs93wtPCNLJaMIjPd1dXa7NycRudnb0vuuBy5I7wIGlXz6iL1S
-	yrAz9hl35xTrK6twQ6pB6MmDLZdGkN3aWR3oIAN4DZKVaQa62q4Itu0TQtwkHZV3X9MJqObQ/Z6
-	1m84RtL9jxD89BhhDRt1z7vTeAG+8mZ0nSv74jJU3QOCjgUpKlYklIBu5mUpe+x6ZBIFDQUybZS
-	f7I8fWLWOeCga5DkmYrmjsMZc61leIOPRjRmwqaLWYk3Ggclc+rkgGwi4MHB/D/pzqIF/vJuRe3
-	UnZZANLWtiaGdc/dqa5f7wpvc84pHm9Aj5GzLYWGAP11l/moFInp89pf6uRdYe7PcGaUfaQggMx
-	/Yy+/fjAUrtcW/U+f6pU4X15/Cla/dYyEtBU87QcMIYwEBwgEh/eLH+/NHHF5x/dKXerHVlG1Va
-	2czrsCtOYXRKHyEHK44DVCMMDwY/JouRCJ3Zs/C10dtwtgbiVUKRvwRYPMgHHLWBdIh9V4H4Q5q
-	vABsTpmwXbXc7XPUh7e2
-X-Received: by 2002:a05:7300:51d4:b0:384:fef7:5876 with SMTP id 5a478bee46e88-384fef75c78mr3949500eec.24.1795182176981;
-        Fri, 20 Nov 2026 05:42:56 -0800 (PST)
+        bh=cYXD2FWmrnnRZk6eOj0Jj2xBjZH/opG+pmsIgNjn1qM=;
+        b=T2rM41auoDLt/an/1KwzZeZWBWRAJvLEq7G0BFKm+c3WGnPiPcpmVgGfq3d0lOH6F7
+         +UeRJY0OC9LzVbbkjLIGFYqi3nfZ5l8MrWkxB53Io2mvmnn+EZgyLn4vCiq0dF00//ol
+         7hn/K7G9lRR16zjDR/zu6FDMHTwhkPMuBMg3T8TbYV7ojQcVCXuRDrYtBTy2pa4e23yV
+         rzenU+t/YOhZWVDkre/WAoP+Gp2rwrAJqsnVYrXappt6F0/lvUoGMjEciQXpUATIfi+R
+         ZLuFpCfQhGx8QskkFNguG8TaIM6Df1ouCXQ+yY2XYeiF2FJvWIKvfhHG682TOF0K3LI5
+         Esag==
+X-Gm-Message-State: APuU4Z+kRKULx+HQV2dzQtJCFu98nfl9CnbI0RjTS8LGSvH2tn1H/AIP
+	expFqWNeG6woa2OR7iie8wIlsFL/wJrB3QwiZ+ZtmUoaDTl9R5gIatJutXDd+PB1
+X-Gm-Gg: AYBFou0erbM3znCsagVncADEIdM3rrzeNYhFyDGE/hxJMaJhW9NYoY2TjSVbXJ7wrtI
+	ws70Ogp6VUofT+DvQmRwBBZ9+PFllJgyqsPZW836wmeXuJsq2jYC1KsxzNy8uZ/8lBfgZM8PU9V
+	bac5Wtehnsqo/Mc1/Yc3o44WroD/cbVAgF6j8FSIAViLM9mCmCSVi/BVLhfHPfx8JxsAm2VOrIg
+	WkLPa88sKXtD//j8NKS4eney+o0lMocaAr2ZChz8IFsY35F5OYw0oCpBJs/jVBzaWf+19qpuQ0X
+	JyWZ8tfVZLT7c/bpRiP6vr8Du4NCkobIm76H/JATCt0q1oqtdaGyS+jvrJrL1O7Yckb4qqSz3SE
+	o95FZ6+rr2KuVYaJUMn5yFc1Mvrf5PuErrSEXAa6SM5JjBuf+K8LW1NcF6/JxxfErq7ozkefT0y
+	Ln+0nzCqyNQoh9izdkzpbvGaP9pzM4DjUFpUfZ+woupuSE1ccPx5QcW5gXSTnCgePqfr4qWpU1H
+	M6wmLz61hN4qOaEBBh9gmSUvoQXbDCSg9gpx1S2K7QmyirSslAhC+OLgcDYyFaNmkDcosZZk8Rn
+	sRZE5mV0KIjry+IUklQC
+X-Received: by 2002:a05:7301:d805:b0:385:ce95:2e14 with SMTP id 5a478bee46e88-385ce953221mr2127751eec.30.1795182182938;
+        Fri, 20 Nov 2026 05:43:02 -0800 (PST)
 Received: from a1-free ([161.33.196.121])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-38567daaf70sm9590857eec.28.2026.11.20.05.42.54
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-38567daaf70sm9590857eec.28.2026.11.20.05.43.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Nov 2026 05:42:56 -0800 (PST)
+        Fri, 20 Nov 2026 05:43:02 -0800 (PST)
 From: TAKANO Mitsuhiro <takano32@gmail.com>
 To: linux-perf-users@vger.kernel.org,
 	Ingo Molnar <mingo@redhat.com>,
@@ -97,12 +97,13 @@ Cc: Ian Rogers <irogers@google.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH v12 0/2] perf jevents: Fail the build on a key the tables may not carry
-Date: Fri, 20 Nov 2026 13:42:50 +0000
-Message-ID: <20261120134252.1036963-1-takano32@gmail.com>
+Subject: [PATCH v12 2/2] perf jevents: Fail the build on a key the tables may not carry
+Date: Fri, 20 Nov 2026 13:42:52 +0000
+Message-ID: <20261120134252.1036963-3-takano32@gmail.com>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261120060931.711483-1-takano32@gmail.com>
+In-Reply-To: <20261120134252.1036963-1-takano32@gmail.com>
 References: <20261120060931.711483-1-takano32@gmail.com>
+ <20261120134252.1036963-1-takano32@gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -114,49 +115,126 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-v12.  James asked for the raise and nothing else, so the try/except
-plumbing v11 carried is gone: the generator already names the file it was
-reading and the exception names the keys it did not expect.
+jevents.py takes the fields it wants out of each JSON object by name and
+ignores the rest, so a key that is spelled differently is dropped without
+a word and the object is built without whatever that field held.
 
-What is left is two hunks in jevents.py: _valid_keys, and the check in
-JsonEvent.__init__ that every event and metric table goes through.
-(metricgroups.json is a plain dictionary of group names and is not
-checked.)  The test is jevents_bad_key.sh and checks the failing case only.
+Compare the keys of each object with _valid_keys, the keys a table may
+carry, and fail on anything else.  The generator already names the file it
+was reading and the exception names the keys it did not expect, so the
+build stops with a message that says where to look.
 
-1/2 is the prerequisite James asked for: the mainline tree carries 19
-objects with a key the tables may not carry, so 2/2 cannot land on an
-unfixed tree.  It is the two fixes posted on their own, squashed, so the
-series stands by itself.  The AMD half went into perf-tools-next on
-11 November; the arm64 half is acked by Ilkka but not applied.  If your
-tree has both, 2/2 is all that is left; if it has the AMD half only,
-apply 1/2 with -3 (its AMD hunks are already there) and then 2/2.
+Written with Hermes Agent, an LLM assistant; the author reviewed it and
+ran the generator on every arch directory, with and without a key the
+tables may not carry.
 
-Measured on 1/2 + 2/2: the generator run over all architectures, over x86
-alone and over arm64 alone exits 0.  Putting EvendtName into one AMD table
-makes the x86 run exit 1, with "Exception processing <path>" on stdout and
-a traceback ending in "ValueError: Unknown keys: ['EvendtName']".
-
-Changes since v11:
-
-  - the try/except changes and the sys.exit() are dropped (James)
-  - the message reads "Unknown keys: [...]"; the test comment says the keys
-    a table may carry, not the keys the generator reads
-
-TAKANO Mitsuhiro (2):
-  perf vendor events: Fix misspelled keys in the event tables
-  perf jevents: Fail the build on a key the tables may not carry
-
- .../arch/arm64/ampere/ampereonex/mmu.json     | 32 ++++++------
- .../pmu-events/arch/x86/amdzen4/cache.json    |  2 +-
- .../arch/x86/amdzen5/load-store.json          |  2 +-
- .../arch/x86/amdzen6/load-store.json          |  2 +-
- tools/perf/pmu-events/jevents.py              | 24 +++++++++
- tools/perf/tests/shell/jevents_bad_key.sh     | 52 +++++++++++++++++++
- 6 files changed, 95 insertions(+), 19 deletions(-)
+Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
+---
+ tools/perf/pmu-events/jevents.py          | 24 +++++++++++
+ tools/perf/tests/shell/jevents_bad_key.sh | 52 +++++++++++++++++++++++
+ 2 files changed, 76 insertions(+)
  create mode 100755 tools/perf/tests/shell/jevents_bad_key.sh
 
-
-base-commit: 7475ea8b58616b33c04afb976cf0fbaad9dd63fb
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 080e04b51b8c..1baeae76349f 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -63,6 +63,27 @@ _json_metric_attributes = [
+ # Attributes that are bools or enum int values, encoded as '0', '1',...
+ _json_enum_attributes = ['aggr_mode', 'deprecated', 'event_grouping', 'perpkg',
+                          'default_show_events']
++# Keys a table under arch/ may carry.  jevents.py takes the fields it wants by
++# name and drops the rest without a word, so a key that is spelled differently
++# is only visible as a field that went missing; a table carrying anything else
++# is an error.  The list holds the keys jevents.py reads, plus the ones the
++# tables carry and it does not read: Counter, CountersNumFixed and
++# CountersNumGeneric (read by nothing) and Experimental (read by metric.py).
++_valid_keys: Set[str] = {
++    'AggregationMode', 'AnyThread', 'ArchStdEvent', 'BriefDescription',
++    'Compat', 'ConfigCode', 'Counter', 'CounterMask',
++    'CountersNumFixed', 'CountersNumGeneric', 'Data_LA', 'DefaultMetricgroupName',
++    'DefaultShowEvents', 'Deprecated', 'EdgeDetect', 'EnAllCores',
++    'EnAllSlices', 'Errata', 'EventCode', 'EventidCode',
++    'EventName', 'Experimental', 'ExtSel', 'FCMask',
++    'Filter', 'Invert', 'LegacyCacheCode', 'LegacyConfigCode',
++    'MetricConstraint', 'MetricExpr', 'MetricGroup', 'MetricgroupNoGroup',
++    'MetricName', 'MetricThreshold', 'MSRIndex', 'MSRValue',
++    'NodeType', 'PEBS', 'PerPkg', 'PortMask',
++    'PublicDescription', 'RdWrMask', 'RetirementLatencyMax', 'RetirementLatencyMean',
++    'RetirementLatencyMin', 'SampleAfterValue', 'ScaleUnit', 'SliceId',
++    'ThreadMask', 'UMask', 'Unit',
++}
+ 
+ def file_name_to_table_name(prefix: str, parents: Sequence[str],
+                             dirname: str) -> str:
+@@ -196,6 +217,9 @@ class JsonEvent:
+   def __init__(self, jd: dict):
+     """Constructor passed the dictionary of parsed json values."""
+ 
++    if extra := set(jd) - _valid_keys:
++      raise ValueError(f'Unknown keys: {sorted(extra)}')
++
+     def llx(x: int) -> str:
+       """Convert an int to a string similar to a printf modifier of %#llx."""
+       return str(x) if x >= 0 and x < 10 else hex(x)
+diff --git a/tools/perf/tests/shell/jevents_bad_key.sh b/tools/perf/tests/shell/jevents_bad_key.sh
+new file mode 100755
+index 000000000000..6084205b5f4d
+--- /dev/null
++++ b/tools/perf/tests/shell/jevents_bad_key.sh
+@@ -0,0 +1,52 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# Check jevents.py reports unknown keys as errors (no_mlock)
++#
++# A key that is spelled differently is dropped without a word, so jevents.py
++# compares the keys of each object in a table against the keys a table may
++# carry and fails on anything else.
++
++jevents=$(dirname "$0")/../../pmu-events/jevents.py
++python=${PYTHON:-python3}
++
++# An installed perf has the test but not the generator, and a python that is
++# not there or too old to run it is a skip, not a failure of the check.
++[ -r "${jevents}" ] || exit 2
++[ "$("${python}" -c 'import sys; print(sys.version_info >= (3, 9))' 2>/dev/null)" = True ] \
++  || exit 2
++
++tmp=$(mktemp -d) || exit 2
++trap 'rm -rf "${tmp}"' EXIT HUP INT TERM
++tables="${tmp}/arch/x86/model"
++mkdir -p "${tables}" "${tmp}/arch/common"
++printf '[]\n' > "${tmp}/arch/common/empty.json"
++printf 'Family-model,Version,Filename,EventType\nGenuineIntel-6-97,v1.0,model,core\n' \
++  > "${tmp}/arch/x86/mapfile.csv"
++printf '[{"EventName": "a", "NotAKey": "x"}]\n' > "${tables}/events.json"
++
++if "${python}" -B "${jevents}" x86 all "${tmp}/arch" \
++    "${tmp}/pmu-events.c" "${tmp}/pmu-events-string.c" \
++    > "${tmp}/out" 2> "${tmp}/err"; then
++  echo "jevents.py accepted a key it does not read" >&2
++  exit 1
++fi
++
++# The generator says which file it was reading, and the exception says which
++# key it did not expect.
++grep -qF -- "Exception processing" "${tmp}/out" || {
++  echo "jevents.py failed without naming the file" >&2
++  cat "${tmp}/out" "${tmp}/err" >&2
++  exit 1
++}
++grep -qF -- "${tables}/events.json" "${tmp}/out" || {
++  echo "jevents.py failed without naming the path" >&2
++  cat "${tmp}/out" "${tmp}/err" >&2
++  exit 1
++}
++grep -qF -- "NotAKey" "${tmp}/err" || {
++  echo "jevents.py failed without naming the key" >&2
++  cat "${tmp}/out" "${tmp}/err" >&2
++  exit 1
++}
++
++exit 0
 -- 
 2.53.0
 
