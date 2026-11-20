@@ -1,57 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795138818;
-	b=KnmTyL9CTRIFAQIqGFAgwvQtwGLd0IQD7jqN45RE7CdLELkAUmpnhpeUh6JWTehZNLsp
-	 bpwhT8vdP21cN/HI3tcrvUVDh00s8Ih5FKfqdgYfrxYAJvBeDPy/7DLJ2k4VqrivyGBXM
-	 baR2qM5ESGpYsdPv8eFN98jpEFShIraSwLVI+Xnfe+5vkR8F6h7v0qQcxvE2Hr3lgUvb7
-	 /XCsRZukiF7E+Vz8Ed0uiny4yxTzgSqNM30ufrEQkbsFwKlzZULHArcgS5pMJQAqhtj2A
-	 tFeeQhkkpFJxUfINqvbusrqSRqQvtxhVrS3RsEL8KK9ykTymMKZ1jcHvPT+8Okrg1mw==
+	t=1795138829;
+	b=p5nAuCQfeAYju+pyACWj97v2TVTV0MPQw5RW8ltza/U6SU3oNG9rWFcRZNlqRxH7n/Gy
+	 54o+mPycA+gZ0KoCTszs+cWdQhhS64USZrifE0nDGSBExRfy4SU6ngWxJr+Qr4Ssq96t9
+	 CFN8v6L+/XV93n3p/6jbAMXZLOQRRimy5eLYvTDnBAKS2iFV4GlhtM0iDDQIO97+EXuD4
+	 PDWb0MMcnkeSmGQ9Q//1sy0T/dIq0eSq05tmW9MBDuJDPN9RSdoINWnlfGQy5rU0wfYKx
+	 +Us9MN0tCq+JT2ikXz5B33ywX1LT+pwBT4fwdMJuMUX9rLhbXFHoVerJxHGgWUdopiw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795138818;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795138829;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=VK7EGTw+IutSPQYKJJIAxDbnwSyO2OK6NljNOA/BSO0=;
-	b=uF5P26ra9degptyIkJC5Kf4ohmqlboEbAJyH/pzq9ZvfBo91S+xJre8rN4uv3JFrrz3v
-	 pctJCY/HDz5DqBZ1D4LppuQcJpA3vr0Ran/tofuV1mjC69rwarX5kmvC3l+xDo/jd+TXP
-	 AR5JCWPDGU0GooTSx1xHvn0bAWIs+BzKZvHRxXuZeDBl/QBe1Pp36dRD33Zmnod/7r0bl
-	 PhAi2K358GydR2L+xRSkdr9ARwSDgMpr/9o6rnXs9aSQMrpcEzR9W6Ps6RVIT+5eo9hgb
-	 QE1+WNptgPbCG6JCLb5eVKjWksdosGGkaVCBLnjbsctBCrPJ5Nvv2vluZjdF7BIHZJA==
+	bh=SBaqe1bKliiT540/DmKe2YUbjLcUBAGOXICka7u+D/k=;
+	b=owJxwVVJTACHeFQhMDi67+IVXcbsxEXhEeLpl9/d9h2u6nhMv03oUbX7JGQyzz+GtKDg
+	 cfD5g0bD0SqtgNw9uiZOh0JTKfPi01IBC+I+wnawryeGZlIs8BfyLDUwP01G62eBqMuSo
+	 smiJj8xYgddJHhSHs0mwfjJ5ZhYxld+eJ0fvCe3UPwt4ksTd5yk9VvoY5eh1uAgulwmrp
+	 +tevJdZvhb2b7Bl94AC0A6cW4Qy/b4irXgxQ+sfL4j8/fNc0htNBQJSnae1LUbad0KTCC
+	 A9omfxuDbtBExyNQ2rZ+fveN6lp6NbfC/h/+ioaRLlFBWw3rlQ3DZXnpxreQsdGtWKg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bq3kZsUJ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="F/lCTcsq";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C89606A320
-	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 01:40:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B8F2606A325
+	for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 01:40:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bq3kZsUJ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 767681F000C4;
-	Fri, 20 Nov 2026 01:40:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=F/lCTcsq
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AB201F000C4;
+	Fri, 20 Nov 2026 01:40:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795138818;
-	bh=VK7EGTw+IutSPQYKJJIAxDbnwSyO2OK6NljNOA/BSO0=;
+	s=k20260515; t=1795138829;
+	bh=SBaqe1bKliiT540/DmKe2YUbjLcUBAGOXICka7u+D/k=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bq3kZsUJ0ESjQAhCSKApkSqrO/mqYk6FD/6C3hlcFN7dx7uwGgJx+Bw6Wn3/pOPM0
-	 0LHMmLxV0gqcd1OXmkgKwgq/RB2kvvBNB4dngn1GzqBAGXUOZdhSPbKxzbACXmW4Qk
-	 mau4z8vPYBBxQ7WaW5cTyru469hT88IfxnpxzTGRkMEvESTmFsqCaNPl+u4cWoXOZ6
-	 y/8PWt2UVwfCym6z2uLxF7vKCJJKJRdjGOXLonXsFjXQtTgXDTYH1SyBZjff/p2lE8
-	 CPHf9TZTiwYD/dYXzgmCte0BQ7aM+JdH0mkobeVRkCCkfl1bjT0Zaktro5kTkLhp7H
-	 HbdpL72tgPmNQ==
-Message-ID: <sashiko-outbox-224333@kernel.org>
+	b=F/lCTcsqHpXTAPZsQhnjsUpjFW0Tsntzkd/PI3GzIxdxccMQ6KDyj9VNbm9IWhcnf
+	 EC2aMGDmaeVq/Zl5+n/V/iSj88QlhQjrU2CJb2BGEsFznEU/GLvcj51ogoA34LFJaB
+	 CNgLT2MPftFapbpmMSSKsl5996rwmmVMMyJsKH0gLE9xrcOCF+41fNybIvXM1Eqgln
+	 owAIVNL4kJG+3TiEnVo7TDMGqWfexyqzMchrhxa1BFVq5+kJ+lGnJG12lOcTRgBE0r
+	 6TePMqEedXwqpsoES7wfBgS2avj1WvxiD8reS0ikV/4CupY99CxIoDC5cOqWXTZKBb
+	 zCKxKCkm6sgxQ==
+Message-ID: <sashiko-outbox-224334@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 10/13] perf build: Record the features checked
- outside FEATURE_TESTS
+Subject: Re: [PATCH v9 02/13] perf scripts: Add a coverage harness for perf
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261120013211.1510-11-acme@kernel.org>
+In-Reply-To: <20261120013211.1510-3-acme@kernel.org>
 References: <20261120013211.1510-1-acme@kernel.org>
- <20261120013211.1510-11-acme@kernel.org>
+ <20261120013211.1510-3-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 20 Nov 2026 01:40:18 +0000
+Date: Fri, 20 Nov 2026 01:40:28 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,27 +60,67 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->=20
-> llvm-perf and rust are in FEATURE_DISPLAY but not in FEATURE_TESTS, and
-> jvmti and jvmti-cmlr are in neither list: they can't be part of the
-> test-all fast path, which sets every FEATURE_TESTS entry to 1 when
-> test-all.c builds.  Since FEATURE-DUMP is written from FEATURE_TESTS
-> only, a FEATURES_DUMP=3D build, as used by build-test, never sees them and
-> silently builds without libLLVM, the rust workloads and the jvmti agent.
->=20
-> Record the display features and the jvmti ones that aren't in
-> FEATURE_TESTS in the dump after the regular feature checks have run.
->=20
-> Fixes: 206dcfca1f5cfac3 ("perf build: Autodetect minimum required llvm-de=
-v version")
-> Fixes: 3f5dfa472ea6771c ("tools build: Fix rust feature detection")
-> Cc: James Clark <james.clark@linaro.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Low] perf scripts: focus_path() fails to strip leading perf/ prefix
+  for -f paths
+--
 
-Sashiko has reviewed this patch and found no issues.
+commit 5debccd739d02a3ebc2b5b2486b3cc102c514507
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+perf scripts: Add a coverage harness for perf
+
+This commit adds a clang source-based coverage script for perf along with
+Makefile targets to build an instrumented perf, run the test suite, and
+report line and function coverage.
+
+> diff --git a/tools/perf/scripts/coverage.sh b/tools/perf/scripts/coverage=
+.sh
+> new file mode 100755
+> index 0000000000000..bfaaa9a00e248
+> --- /dev/null
+> +++ b/tools/perf/scripts/coverage.sh
+> @@ -0,0 +1,1153 @@
+
+[ ... ]
+
+> +AWK_PERF=3D'
+> +function perf_relpath(p) {
+> +	sub(/^.*tools\/perf\//, "", p)
+> +	sub(/^perf\//, "", p)
+> +	return p
+> +}
+> +function generated(p) {
+> +	return build !=3D "" && index(perf_relpath(p), build "/") =3D=3D 1
+> +}
+> +'
+> +
+> +# Line coverage of a full report for one file: "lines missed cover fn%".
+> +# Match the requested path as a suffix: a build outside the source tree
+> +# gives ".../tools/perf/...", one inside it "tools/perf/...", and one
+> +# inside tools/ makes llvm-cov strip the "<srctree>/tools/" prefix shared
+> +# by every reported file, giving "perf/...".
+> +#
+> +# -f takes the path as it shows in the report, or a tools/perf/ relative=
+ one.
+> +focus_path()
+> +{
+> +	case "$1" in
+> +	*tools/perf/*) printf '%s\n' "${1#*tools/perf/}" ;;
+> +	*) printf '%s\n' "$1" ;;
+> +	esac
+> +}
+
+[Severity: Low]
+Should focus_path() also strip a leading perf/ prefix, like perf_relpath()
+does?
+
+When -f is passed a perf/... path from a report built under tools/,
+focus_path() leaves the leading perf/ intact, causing print_uncovered() to
+check for $PERF_DIR/perf/<file>, warn that the file was not found, and skip
+printing its uncovered lines.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261120013211.1510=
--1-acme@kernel.org?part=3D10
-
+-1-acme@kernel.org?part=3D2
