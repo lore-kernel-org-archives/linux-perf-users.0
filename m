@@ -1,73 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=67.231.153.30
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795188340;
-	b=47s+NqXTn20680q0m6fvJIfXahsTIHfKeGbOAdByWOGx0ndHXh2v/bAk1HVA7bdXfJ1K
-	 tjxU1cI8fA1eekL9RZn5UzFJVVI2eJReWBad5ChG2rXBpQKfdJJ1adGKlz48Bb3oDelkB
-	 GW0uYxIX+/WX4VmoU8mA6dPmCdIw0WeAlu6AjUnhku3fhOmhBfJxX9znwrmLMK6ig0ANc
-	 j7UFM0K9mKtQjokJ3U1qwB0Nz/PUf7TfP6QFFqhEx0ulCU92jqsXmq9SvyPpfweet6nPd
-	 7GoNZPrs/5RxU+B6ximzdakKQ5Pci/XoxvmcYRIsHutxGkjCpBdf0Oyh/Y32ihx0Pbw==
+	t=1795188341;
+	b=dxsvwKzMy5vhevPOmphZW52ND2fwM/e3HqMIWe8W+mE2g2CfeSPHWTpIOOjc0WDORGXI
+	 CqUObVJkiI91rznUnmRIX1SEheV8GU2/eiyh0f2kpq2FqJS7heDDnt77X8s5eLCnxitXw
+	 K20dzkeJxi0/bf/n4pox3SbhEOY/jMPWWN8YCBzxCZqHBDo4szD2ZAioHok7qbQK2mI0y
+	 Lg74HbPh5srrTSlgFghYy3uf4vQeSG20k5es0TjfwmzwI6nOob2wfobj/K5TpZud0FNii
+	 Km/oUVBJNrdY/ksDAP6dUkB57BQW+v9bdVWI1c8kJ3ScdS5LQXknl17t6eVZIeOESKA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795188340;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795188341;
 	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:From:To:CC:
 	 Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding:Content-Type:X-Originating-IP:
-	 X-Proofpoint-Spam-Details-Enc:X-Authority-Analysis:
-	 X-Proofpoint-ORIG-GUID:X-Proofpoint-GUID:X-Proofpoint-Spam-Info:
+	 X-Authority-Analysis:X-Proofpoint-ORIG-GUID:X-Proofpoint-Spam-Info:
+	 X-Proofpoint-GUID:X-Proofpoint-Spam-Details-Enc:
 	 X-Proofpoint-Virus-Version;
-	bh=hDMUNYtZZSz36tLGhs2JB76kqUKcN4b9qdZyDnXlQfk=;
-	b=qBO18VZr0WDEl1F7J76Rk+Xnq0gDM1+jAr2Rc+I1pXp8M3UrkRrDfFcT8eOQHN/CCBV/
-	 TBjz3pJiy8ZJDjPniVB1EcmmR73xQNEwKRKTjfrPx1P0EEBzNfjHcFdSYFQqOnHxwP0En
-	 6b8nFh8JNm/Ttd+SW0kFBLtpeDb4phvLf+fUxYux14jzRpA6AsJ0sJ2k6c3gzuDxj6pW5
-	 CFpeBe3m9IMjk33Bt5j5gBBmd34vF+6WuayEWDh+fPBb8hoD6zPIsKtznbMzRV1RdXerD
-	 tFf5SZlFo/hHRZMGIwlS0+M34ZbRKNTMhXU0HCL2J6yXXFImUhydCzzVake3c3qkfoQ==
+	bh=tvO1v00MKFZbgF6KSCFJYyOa1CwNkFl6XFGg7HJK/+I=;
+	b=3yaphO99HBRv+6KsJmkbtakcWvTKXxDYJMzvqXF2dZSa4GqdTQ2Q8gLuD9vI5Odgqqhz
+	 R+VFU9PhpnHsKWcH5Sh9UqnM90G9dGn+VX5pCNREY8fnyWZlCRdtOSkiRlXk5kNhXffI9
+	 J7a7Npg+YGYGScfysqG3231RL+tSUDKCdplHxUoNlTUhW7UDPQVcIMrdcKR36nnbFa1DU
+	 cb8JNIASuDwwaUD0bmA5WdF7ZsztA8HDkGnF9biCRJB214q20AR4H+wyrCEZK4+ikx39A
+	 fTFCaF4FXHtPuTt6NmOYlFc+0E7FbfQceji+KK+YvODXriUzLVeqkJmajtsxUahKZGw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=fb.com;
 	spf=pass smtp.mailfrom=meta.com;
-	dkim=pass header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b="F/2d7ZUt";
-	arc=none smtp.remote-ip=67.231.145.42
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+	dkim=pass header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=SlLn7HHW;
+	arc=none smtp.remote-ip=67.231.153.30
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CED860A263A;
-	Fri, 20 Nov 2026 15:25:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0CED860A263A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1CCF60A3806;
+	Fri, 20 Nov 2026 15:25:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C1CCF60A3806
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=F/2d7ZUt
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AKEfIjD1986994;
-	Fri, 20 Nov 2026 07:25:14 -0800
+	dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.a=rsa-sha256 header.s=pps82601-s2048-2026-q3 header.b=SlLn7HHW
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AKEfgql1560959;
+	Fri, 20 Nov 2026 07:25:13 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	pps82601-s2048-2026-q3; bh=hDMUNYtZZSz36tLGhs2JB76kqUKcN4b9qdZyD
-	nXlQfk=; b=F/2d7ZUtVUttYlQlruzhAQkoGVHtRdBEEK0LjT9YmwCDC6SyYv73U
-	P6XPr1hPpprj3yu8W+JQUqOzRXYQkHXmuBZsN5dEgdN0fDbvDm8BFbmx+gDiipwl
-	wo3aHvynFvqsGZSwJZvNDYiZ5m45wqV5TbyUPQ7iryin+OaF2FHH8FdL7hLCCgAm
-	gSXHSq1H/884sCr3D/dd/me7S8I1RrVVbRFPEEWFlpMeq80Ub5Tq7JOeT0694L9E
-	KrfVDXGSYLYdgJi7DXFTvvCzvQU87BSPYB31LhJLLyEnPWeN74ZErQhtLWsyVQTi
-	o/T0UqWPKvZ/xgWMK7VOut/T2h5yvX6IQ==
-Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4j20a5a9fr-1
+	pps82601-s2048-2026-q3; bh=tvO1v00MKFZbgF6KSCFJYyOa1CwNkFl6XFGg7
+	HJK/+I=; b=SlLn7HHWMtXIhoWFM6wT8gbl4fLmGsBQE7gjKjvsKG8HR/Vyo8Wlv
+	Nm7mKmuZhS3Ibuh5unsTkYpBA3uBWMoFNL/Qkm3nGWYFXSFdkDvBleDiEKu6Dqde
+	cFjdf21Vzrf3wbb3FBtg4K/oaNgBWiNGsCZubEUpUPX6qt8nBmYFEs+GiseOjT7o
+	zltbitq/bx0XD4SVmaaOS62ywmTa36LwMhMTjEZ+83mjS955Izp/OlKhtO4Rlo4K
+	ZeAN4zdqYrigjzHvs6mYcKYTQihVrNGoqvwbS9N4a8pDMMZhMQdc4ddzWM15kw9B
+	DK+RyQuToMtWwVorpdfd2wI2MNzdHxtzw==
+Received: from maileast.thefacebook.com ([163.114.135.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4j22w7965j-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 20 Nov 2026 07:25:14 -0800 (PST)
-Received: from localhost (2620:10d:c085:108::4) by mail.thefacebook.com
- (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server (version=TLS1_2,
+	Fri, 20 Nov 2026 07:25:12 -0800 (PST)
+Received: from localhost (2620:10d:c0a8:fe::f072) by mail.thefacebook.com
+ (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.56; Fri, 20 Nov
- 2026 15:25:13 +0000
+ 2026 15:25:12 +0000
 From: Amir Ayupov <aaupov@fb.com>
 To: James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
         Suzuki K
  Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@arm.com>,
         Alexander
- Shishkin <alexander.shishkin@linux.intel.com>
-CC: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
+ Shishkin <alexander.shishkin@linux.intel.com>,
+        Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet
+	<corbet@lwn.net>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Randy Dunlap
 	<rdunlap@infradead.org>,
@@ -77,9 +77,9 @@ CC: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
         <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
         <linux-perf-users@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 6/7] coresight: etm4x: Report whether the PMU counts the external outputs
-Date: Fri, 20 Nov 2026 07:21:19 -0800
-Message-ID: <d9c953867b9ff40c20c8ddd52771bada2fa8a4b9.1795182850.git.aaupov@fb.com>
+Subject: [PATCH v5 5/7] perf: arm_pmuv3: Add pmuv3_event_implemented()
+Date: Fri, 20 Nov 2026 07:21:18 -0800
+Message-ID: <a0472c58f855a9bd358f7faf8e88e44207c90fc4.1795182850.git.aaupov@fb.com>
 X-Mailer: git-send-email 2.52.1
 In-Reply-To: <cover.1795182850.git.aaupov@fb.com>
 References: <cover.1795182850.git.aaupov@fb.com>
@@ -94,187 +94,130 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTIwMDA2MSBTYWx0ZWRfX82kDwl832sLs
- 0Oo137UTYhaEPEpfAbDK1XwqePeLl114wt5yPLfZLpfhGxWHoZ92kbnhFBplMaVyHkssNns5xd5
- 3Q73iZmoqBmuBWiUfXRe8o+yYOepoFNwtW8sBe54YJcozNpArxT38grNuKg9LZLAeMW4dnNGRqh
- /VX+LNEReEJQlqHBAgTxh2PiGrUjf/4eYrDApz85VNmNOjzvuGIG25gKODBI6otqzLYdfU98QzD
- I8rfJp4CpwixuHaEy9ZzNnG0xjMpe+gy3TPR8oRy1bIrwnflGTw4bzp806Ys/HvZ5g7v/QfqY4O
- wZW5hkizosqkv0bizU7O/mv2VCriEPiDzSaR5nO5FAn94OkDhXmjogxMjEUta6PReWlXUs/+e64
- QmLJzNzImZn+GOv9ZbiwST686inqNbFrVlRcOujHBjqFDRzGoYITYcGq9l9r5LR7wLPzSWynaDa
- 8kCwegBbKSk+0bvQGQQ==
-X-Authority-Analysis: v=2.4 cv=KrHYSmWN c=1 sm=1 tr=0 ts=6b00665a cx=c_pps
- a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
+X-Authority-Analysis: v=2.4 cv=Ia0Symqa c=1 sm=1 tr=0 ts=6b006659 cx=c_pps
+ a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17
  a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=7x6HtfJdh03M6CCDgxCd:22
- a=03ozwUkBphtHgyqjj1sw:22 a=KKAkSRfTAAAA:8 a=7CQSdrXTAAAA:8 a=FOH2dFAWAAAA:8
- a=6X7xUW0UlnGFPlmw15gA:9 a=cvBusfyB2V15izCimMoJ:22 a=a-qgeE7W1pNrGK8U0ZQC:22
-X-Proofpoint-ORIG-GUID: -wmNZRbrr96V6wnLupaB94uVEZDjyILf
-X-Proofpoint-GUID: -wmNZRbrr96V6wnLupaB94uVEZDjyILf
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMTIwMDA2MSBTYWx0ZWRfX2SFcvobG/VT3
- GfiwSJ6JTvEeq02ZUCwJejVggBC6d++xczgPnmLn3Ze5bggKWmgoQ7fz/NnQog6jNXnb9S3NQAE
- MMPypoNLhfL87FB02YIX5dT6mSvNfPI=
+ a=JnKecZnUtZousrUlYMGU:22 a=KKAkSRfTAAAA:8 a=7CQSdrXTAAAA:8 a=FOH2dFAWAAAA:8
+ a=Jk1ypKxpNml08E-81-wA:9 a=cvBusfyB2V15izCimMoJ:22 a=a-qgeE7W1pNrGK8U0ZQC:22
+X-Proofpoint-ORIG-GUID: SH3OuBtvwXKBoztDjcU-AJwErOhn10y2
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTIwMDA2MSBTYWx0ZWRfX8+Ep96mHTmeu
+ 4kRwJdQtHEie2zmmoIQabNPXprSoFeCT/woN2pfvfkQNXSMHMEhd8iGSeJDWYaJixMontDbtKQ6
+ fqwFzmQdEJj847m26HAJDjwHaXBwKp8=
+X-Proofpoint-GUID: SH3OuBtvwXKBoztDjcU-AJwErOhn10y2
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTIwMDA2MSBTYWx0ZWRfX5yFIGHXnKmkd
+ LCGntlyjQFJcovzfEu5Vk1DYx1GG0S9u81maPNt6I4GtdlP1wdYLycb/v+KL3MBn4esCgUTuU8z
+ ThAHrq4QDQDvViCdXrz6wMNH64Irpybm+/EWfc5AYCBnQ3NyPJq7KEiVccMOY5koic30XSP/NUA
+ ZfUqou9K8EAd12W4PyYlR7/cGcHdlR9bqBNJWx1Eu8PbxTnGF7Ho1clwJhS/x8S0yb7H93KCcuQ
+ wwXuSX6NaHQNEW9rfyjLZMFpfC1wi0vZBXGOf3Wudyh5MCmEbRUtiUIVFISLazJg4+FR1GEwWCg
+ txTzugATzfV58DM7trVXNHezourwS/LePg5Q/Lym0tQc8+UlwIGap8qk9BzRzXcy6T5gEIMbqcm
+ z6Re0ztWwMpnoL0BVlZgRHoq/CH9L4GT4TumXwwKpKbCaiIh3+r60A4E+/y+Pqo02QHMhuvgcst
+ XWqS9Y0DtmF6Hmw0alw==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
  definitions=2026-11-20_05,2026-11-19_01,2025-10-01_01
 
-Some CPUs count the trace unit's external outputs as the PMU common
-events TRCEXTOUT0-3 (0x4010-0x4013), which lets a configuration drive a
-PMU event from trace unit events. Other CPUs, Neoverse N1 for example,
-have no such events, and a feature relying on them would silently do
-nothing there.
+Drivers outside the PMU driver may need to know whether the local CPU's
+PMU implements a common event before relying on it, for example a trace
+unit driver checking that the PMU counts its external outputs as
+TRCEXTOUTn.
 
-Detect at probe, on the trace unit's CPU, whether the PMU counts every
-external output: the trace unit has an external output for each of its
-events (caps.nr_event), and pmuv3_event_implemented() reports whether
-the PMU implements TRCEXTOUTn. Only check ETE: per its specification, an
-implemented TRCEXTOUTn event counts external output n, while whether that
-output is also an external input is IMPLEMENTATION DEFINED.
+Add pmuv3_event_implemented() to the arm64 asm/arm_pmuv3.h, next to
+read_pmceid0() and read_pmceid1(). It reads PMCEID0/1 on the calling CPU:
+the first ARMV8_PMUV3_MAX_COMMON_EVENTS events are reported in bits
+[31:0], and as many from ARMV8_PMUV3_EXT_COMMON_EVENT_BASE in bits
+[63:32] from PMUv3p1.
 
-Add a CS_CFG_MATCH_CAP_ETE_TRCEXTOUT capability match flag, set it on
-those trace units when registering them with the configuration manager,
-and show it in the feature's configfs 'matches' attribute. With
-capabilities matched separately from the device class, a feature that
-requires it only loads on those trace units.
+Move ARMV8_PMUV3_MAX_COMMON_EVENTS and ARMV8_PMUV3_EXT_COMMON_EVENT_BASE
+next to the event numbers in linux/perf/arm_pmuv3.h, so that both are
+available without CONFIG_ARM_PMU, and include it from
+linux/perf/arm_pmu.h, which sizes the PMCEID bitmaps with the former.
 
+Suggested-by: James Clark <james.clark@linaro.org>
 Assisted-by: Devmate:Opus-5.5
 Reviewed-by: James Clark <james.clark@linaro.org>
 Tested-by: Leo Yan <leo.yan@arm.com>
 Signed-off-by: Amir Ayupov <aaupov@fb.com>
 ---
- .../hwtracing/coresight/coresight-config.h    |  2 ++
- .../hwtracing/coresight/coresight-etm4x-cfg.c |  7 +++--
- .../hwtracing/coresight/coresight-etm4x-cfg.h |  2 +-
- .../coresight/coresight-etm4x-core.c          | 29 ++++++++++++++++++-
- .../coresight/coresight-syscfg-configfs.c     |  3 ++
- 5 files changed, 39 insertions(+), 4 deletions(-)
+Will, Mark: could you Ack this so Suzuki can take it through the
+CoreSight tree with the rest of the series?
 
-diff --git a/drivers/hwtracing/coresight/coresight-config.h b/drivers/hwtracing/coresight/coresight-config.h
-index 220bc54f8e5e1b..e18143fca90f85 100644
---- a/drivers/hwtracing/coresight/coresight-config.h
-+++ b/drivers/hwtracing/coresight/coresight-config.h
-@@ -38,6 +38,8 @@
-  * a device that matches one of its classes and has all of its capabilities.
-  */
- #define CS_CFG_MATCH_CAP_MASK		GENMASK_U32(15, 8)
-+/* an ETE whose PMU counts its external outputs as TRCEXTOUTn */
-+#define CS_CFG_MATCH_CAP_ETE_TRCEXTOUT	BIT(8)
- 
- /*
-  * Limit number of presets in a configuration
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x-cfg.c b/drivers/hwtracing/coresight/coresight-etm4x-cfg.c
-index 52cb036bb04b96..fea003e49c262a 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x-cfg.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x-cfg.c
-@@ -174,11 +174,14 @@ static int etm4_cfg_load_feature(struct coresight_device *csdev,
- #define CS_CFG_ETM4_MATCH_FLAGS	(CS_CFG_MATCH_CLASS_SRC_ALL | \
- 				 CS_CFG_MATCH_CLASS_SRC_ETM4)
- 
--int etm4_cscfg_register(struct coresight_device *csdev)
-+int etm4_cscfg_register(struct coresight_device *csdev, bool ete_trcextout)
- {
- 	struct cscfg_csdev_feat_ops ops;
-+	u32 match_flags = CS_CFG_ETM4_MATCH_FLAGS;
- 
- 	ops.load_feat = &etm4_cfg_load_feature;
-+	if (ete_trcextout)
-+		match_flags |= CS_CFG_MATCH_CAP_ETE_TRCEXTOUT;
- 
--	return cscfg_register_csdev(csdev, CS_CFG_ETM4_MATCH_FLAGS, &ops);
-+	return cscfg_register_csdev(csdev, match_flags, &ops);
- }
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x-cfg.h b/drivers/hwtracing/coresight/coresight-etm4x-cfg.h
-index 32dab34c1dace0..d87bcc83e12491 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x-cfg.h
-+++ b/drivers/hwtracing/coresight/coresight-etm4x-cfg.h
-@@ -25,6 +25,6 @@
- #define ETM4_CFG_RES_MASK	0x00F
- 
- /* ETMv4 specific config functions */
--int etm4_cscfg_register(struct coresight_device *csdev);
-+int etm4_cscfg_register(struct coresight_device *csdev, bool ete_trcextout);
- 
- #endif /* CORESIGHT_ETM4X_CFG_H */
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-index af017bd8a54773..ecf2a6c945cf05 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-@@ -30,6 +30,7 @@
- #include <linux/uaccess.h>
- #include <linux/perf_event.h>
- #include <linux/perf/arm_pmu.h>
-+#include <linux/perf/arm_pmuv3.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/property.h>
-@@ -78,6 +79,7 @@ static enum cpuhp_state hp_online;
- struct etm4_init_arg {
- 	struct device		*dev;
- 	struct csdev_access	*csa;
-+	bool			ete_trcextout;
- };
- 
- static DEFINE_PER_CPU(struct etm4_init_arg *, delayed_probe);
-@@ -1399,6 +1401,29 @@ static void etm4_fixup_wrong_ccitmin(struct etmv4_caps *caps)
- 	}
+ arch/arm64/include/asm/arm_pmuv3.h | 20 ++++++++++++++++++++
+ include/linux/perf/arm_pmu.h       |  3 +--
+ include/linux/perf/arm_pmuv3.h     |  8 ++++++++
+ 3 files changed, 29 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/include/asm/arm_pmuv3.h b/arch/arm64/include/asm/arm_pmuv3.h
+index 8a777dec8d88ab..f6882771ec7970 100644
+--- a/arch/arm64/include/asm/arm_pmuv3.h
++++ b/arch/arm64/include/asm/arm_pmuv3.h
+@@ -173,6 +173,26 @@ static inline bool pmuv3_implemented(int pmuver)
+ 		 pmuver == ID_AA64DFR0_EL1_PMUVer_NI);
  }
  
 +/*
-+ * Whether the PMU counts each external output of this trace unit as
-+ * TRCEXTOUTn. The trace unit has an external output for each of its events.
-+ * Only ETE is checked: per its specification, an implemented TRCEXTOUTn event
-+ * counts external output n.
-+ *
-+ * Must run on the CPU that owns the trace unit.
++ * Whether this CPU's PMU implements a common event, as reported by
++ * PMCEID{0,1}: events 0x0000-0x003f in bits [31:0], and from PMUv3p1 events
++ * 0x4000-0x403f in bits [63:32], which read as zero before PMUv3p1.
++ * Must run on the CPU whose PMU is queried.
 + */
-+static bool etm4_pmu_counts_extout(struct etmv4_drvdata *drvdata)
++static inline bool pmuv3_event_implemented(u16 event)
 +{
-+	int n;
++	bool ext = event >= ARMV8_PMUV3_EXT_COMMON_EVENT_BASE;
++	u16 id = ext ? event - ARMV8_PMUV3_EXT_COMMON_EVENT_BASE : event;
++	u64 pmceid;
 +
-+	if (!etm4x_is_ete(drvdata) || !drvdata->caps.nr_event)
++	if (id >= ARMV8_PMUV3_MAX_COMMON_EVENTS ||
++	    !pmuv3_implemented(read_pmuver()))
 +		return false;
 +
-+	for (n = 0; n < drvdata->caps.nr_event; n++) {
-+		if (!pmuv3_event_implemented(ARMV8_PMUV3_PERFCTR_TRCEXTOUT0 + n))
-+			return false;
-+	}
-+
-+	return true;
++	pmceid = id < 32 ? read_pmceid0() : read_pmceid1();
++	return pmceid & BIT_ULL(id % 32 + (ext ? 32 : 0));
 +}
 +
- static void etm4_init_arch_data(void *info)
+ static inline bool is_pmuv3p4(int pmuver)
  {
- 	u32 etmidr0;
-@@ -1562,6 +1587,8 @@ static void etm4_init_arch_data(void *info)
- 	/* NUMCNTR, bits[30:28] number of counters available for tracing */
- 	caps->nr_cntr = FIELD_GET(TRCIDR5_NUMCNTR_MASK, etmidr5);
+ 	return pmuver >= ID_AA64DFR0_EL1_PMUVer_V3P4;
+diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
+index 02d2c7f45b527d..a90867c9774c74 100644
+--- a/include/linux/perf/arm_pmu.h
++++ b/include/linux/perf/arm_pmu.h
+@@ -10,6 +10,7 @@
  
-+	init_arg->ete_trcextout = etm4_pmu_counts_extout(drvdata);
+ #include <linux/interrupt.h>
+ #include <linux/perf_event.h>
++#include <linux/perf/arm_pmuv3.h>
+ #include <linux/platform_device.h>
+ #include <linux/sysfs.h>
+ #include <asm/cputype.h>
+@@ -122,9 +123,7 @@ struct arm_pmu {
+ 	bool		avoid_pmccntr;
+ 	u64		reg_pmmir;
+ 	u64		reg_brbidr;
+-#define ARMV8_PMUV3_MAX_COMMON_EVENTS		0x40
+ 	DECLARE_BITMAP(pmceid_bitmap, ARMV8_PMUV3_MAX_COMMON_EVENTS);
+-#define ARMV8_PMUV3_EXT_COMMON_EVENT_BASE	0x4000
+ 	DECLARE_BITMAP(pmceid_ext_bitmap, ARMV8_PMUV3_MAX_COMMON_EVENTS);
+ 
+ 	/* Only to be used by ACPI probing code */
+diff --git a/include/linux/perf/arm_pmuv3.h b/include/linux/perf/arm_pmuv3.h
+index d698efba28a276..5bab0f952fd59c 100644
+--- a/include/linux/perf/arm_pmuv3.h
++++ b/include/linux/perf/arm_pmuv3.h
+@@ -78,6 +78,14 @@
+ #define ARMV8_PMUV3_PERFCTR_STALL_SLOT_FRONTEND			0x003E
+ #define ARMV8_PMUV3_PERFCTR_STALL_SLOT				0x003F
+ 
++/*
++ * PMCEID{0,1} report ARMV8_PMUV3_MAX_COMMON_EVENTS common events from 0 in
++ * bits [31:0], and as many from ARMV8_PMUV3_EXT_COMMON_EVENT_BASE in bits
++ * [63:32] from PMUv3p1.
++ */
++#define ARMV8_PMUV3_MAX_COMMON_EVENTS				0x40
++#define ARMV8_PMUV3_EXT_COMMON_EVENT_BASE			0x4000
 +
- 	coresight_clear_self_claim_tag_unlocked(csa);
- 	etm4_cs_lock(drvdata, csa);
- 	cpu_detect_trace_filtering(drvdata);
-@@ -2265,7 +2292,7 @@ static int etm4_add_coresight_dev(struct etm4_init_arg *init_arg)
- 	}
- 
- 	/* register with config infrastructure & load any current features */
--	ret = etm4_cscfg_register(drvdata->csdev);
-+	ret = etm4_cscfg_register(drvdata->csdev, init_arg->ete_trcextout);
- 	if (ret) {
- 		coresight_unregister(drvdata->csdev);
- 		return ret;
-diff --git a/drivers/hwtracing/coresight/coresight-syscfg-configfs.c b/drivers/hwtracing/coresight/coresight-syscfg-configfs.c
-index 2b40e556be872f..6577a5085a634d 100644
---- a/drivers/hwtracing/coresight/coresight-syscfg-configfs.c
-+++ b/drivers/hwtracing/coresight/coresight-syscfg-configfs.c
-@@ -250,6 +250,9 @@ static ssize_t cscfg_feat_matches_show(struct config_item *item, char *page)
- 	if (match_flags & CS_CFG_MATCH_CLASS_SRC_ETM4)
- 		used += scnprintf(page + used, PAGE_SIZE - used, "SRC_ETMV4 ");
- 
-+	if (match_flags & CS_CFG_MATCH_CAP_ETE_TRCEXTOUT)
-+		used += scnprintf(page + used, PAGE_SIZE - used, "ETE_TRCEXTOUT ");
-+
- 	used += scnprintf(page + used, PAGE_SIZE - used, "\n");
- 	return used;
- }
+ /* Statistical profiling extension microarchitectural events */
+ #define ARMV8_SPE_PERFCTR_SAMPLE_POP				0x4000
+ #define ARMV8_SPE_PERFCTR_SAMPLE_FEED				0x4001
 -- 
 2.52.1
 
