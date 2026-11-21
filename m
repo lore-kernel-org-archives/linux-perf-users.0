@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795231287;
-	b=u8ogtaVgwwGzDTm/8dAqHG3NZc0l+ZgvvbkoJN+OjeX2PiNnRDuphIr/ECdH1kTw2WKz
-	 yif4E/VSXZZYg6uoDkTPI8EqJu6FSu/xNAGfcJGf7nhuX1LrEx78PSDqXLnqWgAiA+mFm
-	 MYogUzi9vWn1rMLQC8mZTGImfYkEmxTZuHutHZRPzq/jvLf3xPAW/teBalG9x7yMhXu3U
-	 8V03F1Ww5IcGBOKVcy0L54DsDmgcpASQVBVcXIpG8OGvef+6PIlMskMN6GlYgWC9OXg+S
-	 IIFeWmLOu+Jpj1K2tWjMU9HB/T3JM3ZuXZ5PfFk65RPwMtQ3BqZSF/9J/10lN5i4jGw==
+	t=1795231293;
+	b=AfvVe8Wq6LzRWTr6lZT1DKm4KGwdINjUxqwlmczrMDDldtZSl9lNkbhNaln/lllKiST/
+	 1iEMb3IT0oiq4cjvOzZ8b4g0OGmXduDvw5195/v5VUbRIJZ+Eb8Mxcinpw0LUHNYKvqmd
+	 bnIXbqev+zUxK3UBadpARWFw07D1mFIkFDJUIgXLkWPzp0ZdbfZfKsYX9Xy0ihjipkEuG
+	 GDc9h64o6AlIlK+zsh1X5BunbwuO0MeCDeIsxMgyz/zQPk4kpM0Gnw+St0Kh9FDBCKfGY
+	 4bBHN3MH9Zy4PDxt5N5K3TP/gt315PHDb5d58OGlnq/uEEAdmjKGisNa01tHNdoX2xg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795231287;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795231293;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=SAptmRo7VFZs3YBboXIuiBByYjCRlZPrUdwklrfyjD0=;
-	b=KsHunOGWyp1bUbr0VUDst21dCckG2/FXw9r0IqtqQ9PVUxc5FgVNBi/SA5xuYhw3EV4a
-	 y+jkV2bEZWuCIXKwMP4e9euv8EYKQa+qFL0eoXU3QseLfDNXk69JLL+EW3jHW5PTYbwWU
-	 Fa6oK/HZW2MkMKVpeu4qNHXM4ET4d3YL33HqfSW1gjEFWVdmMFYl8Q6MWjYkJKqVRwm6S
-	 WQUIIhJCwRAwgcyuGAvoQ4KUG6EmHAsMidfADLUOS94W6H4NBMPGGL5KrBCLkFY//tKif
-	 Aof9hFEHISVMGk/X4eu6TzfmaYUksMsD/kxJgh+d3z5Xdp9OHQV+tyINKuk7kWMsldQ==
+	bh=IJ3dKtTXaXR8qmVVr/7r0ctqZYq0ENuDtrmMrR4xv1A=;
+	b=XSgsspKGKQQPvZ/TbYT0jFAFReGwKY47hq0R7dS4YsTRL9mAo/xt7rA1BFtxjsRQ40Zu
+	 wXGKE7jJjRtFDjhYc6Ywku1WJP09YHK12mIW/KKbWB/ka36KC1Rx24dTBFKX0RL/th0kf
+	 HMr9SCT7c7SIZXx+NPqiKOHhOpe6mSySt9HZxgwieJOftNvvdafIfELOXu3NySwV9NEQW
+	 1l7VFrV3LW445HsiaXk1+a2SWEs1I2upxyHvJZZkA7PW5Ulfptx95N9LaAG9lXq3WjH9Y
+	 SAAEiyiXR7UdshNVJj8xCA2qDMIWN+JBWuhjI9amCfMwSQcv93OGBdgF2lUHcwAtROA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ac2OIyu3;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eXmb0twb;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06156606A33C;
-	Sat, 21 Nov 2026 03:21:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADC2606A6AC;
+	Sat, 21 Nov 2026 03:21:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ac2OIyu3
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 403FB1F000C4;
-	Sat, 21 Nov 2026 03:21:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eXmb0twb
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 749841F000C4;
+	Sat, 21 Nov 2026 03:21:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795231286;
-	bh=SAptmRo7VFZs3YBboXIuiBByYjCRlZPrUdwklrfyjD0=;
+	s=k20260515; t=1795231293;
+	bh=IJ3dKtTXaXR8qmVVr/7r0ctqZYq0ENuDtrmMrR4xv1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Ac2OIyu3RUecgRvFqDyiAvOn7z/9fXFPAj3U4gMr/LvAaWKCvLUEghV0RotFfsALv
-	 Bx3qqo3IE738efIlinLA8u0xr0gRqGnTT7EoRivzFt2gAj0aySnLsMmjMSY7RQ9S/v
-	 dDsmw3wl9Pm4XfAtH45Hjxq5guJZwTy9O2zY3Dzng7X42p99j1v/FYZyka8smxTfvJ
-	 A7VtIV3+uAfivv55FsIL93zvpbt7np7V90XYHPTWFSVGLYh+i7WoE31Qh/u5vQBXcC
-	 gdtPvQlvlA/NGVqFzANfqNWBZ2D5PjTrPpch8yQJltml1STc3IqGuOJ5ix5nyft7F6
-	 c5r1Ar9V0MeBQ==
+	b=eXmb0twbiDEysMK7oaSAL/HEyL+a7oWEnJqJHjbj0lT8ZEjWOvjjiGhElcZLNmbPk
+	 u7z1IruvyjsnInmnH9FezitvWtjGIkkgi2nXHdXGueVHHG8BH7gm119jSLH06bs+nQ
+	 qxQ0q8MPzg5t8mJqgeoPGcnY17VpHkuRgNmBQCYdm7CDifU6twB+jXWRh/pZRcFVPd
+	 J354Cw9DlgO0v5Tt9m/Q67TeA6/2DkUTFOuiVAntKXRL6OjBLjGIvWKSfdOFWEh+E8
+	 OfhPaNZXX1T/N3Z5neiM93qAncNSzGtKIdf82Nxtoj3KiZZ2vwGEm5VtsjP57cTgp3
+	 drMxI1xBImfaA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v10 08/16] perf tests: Exercise DW_OP_addrx global variables
-Date: Sat, 21 Nov 2026 00:20:44 -0300
-Message-ID: <20261121032052.1392234-9-acme@kernel.org>
+Subject: [PATCH v10 10/16] perf tests: Exercise data type resolution from a register
+Date: Sat, 21 Nov 2026 00:20:46 -0300
+Message-ID: <20261121032052.1392234-11-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261121032052.1392234-1-acme@kernel.org>
 References: <20261121032052.1392234-1-acme@kernel.org>
@@ -70,49 +70,46 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-clang emits DW_AT_location with DW_OP_addrx for globals in DWARF 5, gcc
-emits DW_OP_addr.  The global_data workload keeps a zero initialized
-struct in .bss: at run time it sits past the file backed mapping, where
-the by-name fallback through the thread maps cannot find it, so only the
-DWARF address lookup resolves it.  The test checks that its three member
-accesses are annotated, so the DW_OP_addrx path is exercised when perf
-is built with clang and DWARF 5 (e.g. scripts/coverage.sh with
-DWARF_VERSION=5), and the DW_OP_addr one with gcc.
+At -O2 a struct pointer lives in a register (with DWARF describing it with
+a register location on register-argument ABIs), while the unoptimized
+workloads the data type tests profile keep their variables on the stack.
 
-It skips on 32-bit PIE builds, which reach static globals relative to
-the GOT base register, and the resolver does not track that.
+Add a regptr workload with a noinline function that takes the pointer from
+a volatile global, so the compiler cannot constant-propagate the object
+address, and check that its three member accesses are resolved from that
+register.
 
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/builtin-test.c            |  1 +
- tools/perf/tests/shell/data_type_global.sh | 73 ++++++++++++++++++++++
- tools/perf/tests/tests.h                   |  1 +
- tools/perf/tests/workloads/Build           |  2 +
- tools/perf/tests/workloads/global_data.c   | 57 +++++++++++++++++
- 5 files changed, 134 insertions(+)
- create mode 100755 tools/perf/tests/shell/data_type_global.sh
- create mode 100644 tools/perf/tests/workloads/global_data.c
+ tools/perf/tests/builtin-test.c              |  1 +
+ tools/perf/tests/shell/data_type_register.sh | 63 ++++++++++++++++++++
+ tools/perf/tests/tests.h                     |  1 +
+ tools/perf/tests/workloads/Build             |  2 +
+ tools/perf/tests/workloads/regptr.c          | 60 +++++++++++++++++++
+ 5 files changed, 127 insertions(+)
+ create mode 100755 tools/perf/tests/shell/data_type_register.sh
+ create mode 100644 tools/perf/tests/workloads/regptr.c
 
 diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index a27baf3a819ccf36..42e85d1b1420f0a7 100644
+index d761758201a4b2f2..29068963b9d5bae0 100644
 --- a/tools/perf/tests/builtin-test.c
 +++ b/tools/perf/tests/builtin-test.c
-@@ -214,6 +214,7 @@ static struct test_workload *workloads[] = {
- 	&workload__deterministic,
- 	&workload__callchain,
+@@ -216,6 +216,7 @@ static struct test_workload *workloads[] = {
  	&workload__false_sharing,
-+	&workload__global_data,
+ 	&workload__global_data,
+ 	&workload__flex_array,
++	&workload__regptr,
  
  #ifdef HAVE_RUST_SUPPORT
  	&workload__code_with_type,
-diff --git a/tools/perf/tests/shell/data_type_global.sh b/tools/perf/tests/shell/data_type_global.sh
+diff --git a/tools/perf/tests/shell/data_type_register.sh b/tools/perf/tests/shell/data_type_register.sh
 new file mode 100755
-index 0000000000000000..14f57d5a1b26a5ea
+index 0000000000000000..a80ac72c9022ece7
 --- /dev/null
-+++ b/tools/perf/tests/shell/data_type_global.sh
-@@ -0,0 +1,73 @@
++++ b/tools/perf/tests/shell/data_type_register.sh
+@@ -0,0 +1,63 @@
 +#!/bin/bash
-+# perf data type profiling test for a global variable
++# perf data type profiling tests for register variables
 +# SPDX-License-Identifier: GPL-2.0
 +
 +set -e
@@ -141,16 +138,6 @@ index 0000000000000000..14f57d5a1b26a5ea
 +	exit 2
 +fi
 +
-+# 32-bit x86 PIE reaches static globals relative to the GOT base register,
-+# which the resolver does not track; e_type's low byte is at 16 on LE x86.
-+perf_bin=$(command -v perf)
-+if [ "$(od -An -tx1 -j4 -N1 "$perf_bin" | tr -d ' ')" = 01 ] &&
-+   [ "$(od -An -tx1 -j16 -N1 "$perf_bin" | tr -d ' ')" = 03 ]; then
-+	echo "Skip: 32-bit PIE uses GOT-relative global accesses"
-+	cleanup
-+	exit 2
-+fi
-+
 +# No point in recording if the PMU cannot do memory events.
 +if ! perf mem record -o /dev/null -- true 2>/dev/null; then
 +	echo "Skip: cannot record memory events on this PMU"
@@ -158,7 +145,7 @@ index 0000000000000000..14f57d5a1b26a5ea
 +	exit 2
 +fi
 +
-+if ! perf mem record -o "$perfdata" -- perf test -w global_data 1 \
++if ! perf mem record -o "$perfdata" -- perf test -w regptr 1 \
 +		> /dev/null 2> "$perferr"; then
 +	echo "FAIL: perf mem record"
 +	cat "$perferr"
@@ -173,63 +160,59 @@ index 0000000000000000..14f57d5a1b26a5ea
 +	exit 1
 +fi
 +
-+for member in "+0 (saddr)" "+0x4 (daddr)" "+0x8 (bytes)"; do
-+	if ! grep -Fq "# data-type: struct conn ${member}" "$perfout"; then
-+		echo "FAIL: member ${member} not resolved"
-+		grep 'struct conn' "$perfout" || true
++for member in "+0 (a)" "+0x8 (b)" "+0x10 (c)"; do
++	if ! grep -Fq "# data-type: struct node ${member}" "$perfout"; then
++		echo "FAIL: member ${member} not resolved from the register"
++		grep 'struct node' "$perfout" || true
 +		cleanup
 +		exit 1
 +	fi
 +done
 +
-+echo "global variable resolved"
++echo "register held access resolved"
 +cleanup
 diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 963cb34acd345153..63d49a960eab8f3c 100644
+index 8621ea345b5f06ff..6bfb30687e12eeb7 100644
 --- a/tools/perf/tests/tests.h
 +++ b/tools/perf/tests/tests.h
-@@ -274,6 +274,7 @@ DECLARE_WORKLOAD(context_switch_loop);
- DECLARE_WORKLOAD(deterministic);
- DECLARE_WORKLOAD(callchain);
+@@ -276,6 +276,7 @@ DECLARE_WORKLOAD(callchain);
  DECLARE_WORKLOAD(false_sharing);
-+DECLARE_WORKLOAD(global_data);
+ DECLARE_WORKLOAD(global_data);
+ DECLARE_WORKLOAD(flex_array);
++DECLARE_WORKLOAD(regptr);
  
  #ifdef HAVE_RUST_SUPPORT
  DECLARE_WORKLOAD(code_with_type);
 diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-index 43cc4da6fb0786de..03017aaaaa0bec32 100644
+index 74a0cbe49dc93533..17189458032c0a17 100644
 --- a/tools/perf/tests/workloads/Build
 +++ b/tools/perf/tests/workloads/Build
-@@ -17,6 +17,7 @@ perf-test-y += context_switch_loop.o
- perf-test-y += deterministic.o
- perf-test-y += callchain.o
+@@ -19,6 +19,7 @@ perf-test-y += callchain.o
  perf-test-y += false_sharing.o
-+perf-test-y += global_data.o
+ perf-test-y += global_data.o
+ perf-test-y += flex_array.o
++perf-test-y += regptr.o
  
  ifeq ($(CONFIG_RUST_SUPPORT),y)
      perf-test-y += code_with_type.o
-@@ -35,3 +36,4 @@ CFLAGS_deterministic.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_named_threads.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_callchain.o        = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+@@ -39,3 +40,4 @@ CFLAGS_callchain.o        = -g -O0 -fno-inline -U_FORTIFY_SOURCE
  CFLAGS_false_sharing.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-+CFLAGS_global_data.o      = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-diff --git a/tools/perf/tests/workloads/global_data.c b/tools/perf/tests/workloads/global_data.c
+ CFLAGS_global_data.o      = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+ CFLAGS_flex_array.o       = -g -O0 -fno-inline -U_FORTIFY_SOURCE
++CFLAGS_regptr.o           = -g -O2
+diff --git a/tools/perf/tests/workloads/regptr.c b/tools/perf/tests/workloads/regptr.c
 new file mode 100644
-index 0000000000000000..5973f7bb16fd007c
+index 0000000000000000..00f31c16ac1e4a5a
 --- /dev/null
-+++ b/tools/perf/tests/workloads/global_data.c
-@@ -0,0 +1,57 @@
++++ b/tools/perf/tests/workloads/regptr.c
+@@ -0,0 +1,60 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * A zero initialized global struct, so it lands in .bss, past the file
-+ * backed end of the last segment: at run time it sits in an anonymous
-+ * mapping that the thread maps do not name, so only the DWARF address
-+ * lookup finds it.  clang describes its address with DW_OP_addrx in
-+ * DWARF 5, gcc with DW_OP_addr.
++ * A struct pointer that -O2 keeps in a register, so the member accesses
++ * have to be resolved from the register's type state and not from a
++ * stack slot.
 + *
-+ * 'perf mem record' of this workload followed by 'perf annotate
-+ * --code-with-type' (see tests/shell/data_type_global.sh) resolves the
-+ * accesses to struct conn.
++ * See tests/shell/data_type_register.sh.
 + */
 +#include <signal.h>
 +#include <stdlib.h>
@@ -237,14 +220,15 @@ index 0000000000000000..5973f7bb16fd007c
 +#include <linux/compiler.h>
 +#include "../tests.h"
 +
-+struct conn {
-+	int saddr;
-+	int daddr;
-+	long bytes;
++struct node {
++	long long a;
++	long long b;
++	long long c;
 +};
 +
-+static volatile struct conn conn;
-+static volatile unsigned long conn_sink;
++static struct node node;
++static struct node *volatile vp;
++static volatile unsigned long long reg_sink;
 +static volatile sig_atomic_t done;
 +
 +static void sighandler(int sig __maybe_unused)
@@ -252,30 +236,36 @@ index 0000000000000000..5973f7bb16fd007c
 +	done = 1;
 +}
 +
-+static int global_data(int argc, const char **argv)
++static noinline long long touch(struct node *p)
 +{
-+	unsigned long sum = 0;
-+	unsigned int i = 0;
++	long long sum = 0;
++
++	sum += p->a;
++	p->b += sum;
++	sum += p->c;
++	return sum;
++}
++
++static int regptr(int argc, const char **argv)
++{
++	unsigned long long sum = 0;
 +	int sec = 1;
 +
 +	if (argc > 0)
 +		sec = atoi(argv[0]);
 +
++	vp = &node;
 +	signal(SIGINT, sighandler);
 +	signal(SIGALRM, sighandler);
 +	alarm(sec);
 +
-+	while (!done) {
-+		conn.saddr = i;
-+		conn.daddr = i + 1;
-+		sum += conn.bytes;
-+		i++;
-+	}
-+	conn_sink = sum;
++	while (!done)
++		sum += touch(vp);
++	reg_sink = sum;
 +	return 0;
 +}
 +
-+DEFINE_WORKLOAD(global_data);
++DEFINE_WORKLOAD(regptr);
 -- 
 2.56.0
 
