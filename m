@@ -1,100 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.179
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795243547;
-	b=3IBq9sXw+rGROwEfOdrDoyM3JwFlZv+D20fJ4wn4kbX/fVunBPmSiq8G+j4R/q5CPnjL
-	 UOwxXToWM0MG5kNiAaxq2m6196QpP2AcO9adJ+xu+eicgR5nxzYTB0Wzw0NcN+oaHTzMJ
-	 Gb40nf+QaJPpIrjLTVqnewBhTAfzNWzib06Uz0x13Sr77OA1JzO9PxrerAJUC5GiKmk6m
-	 olz6aYpD7ubl9icqTmp/dI3Y1GYIdBkIbnDkXQ/6Z7E2SfqsJeJowj7+T1WYkgWS5XY+W
-	 fubh//o4w2KY7vsPzS3k8D1wfzXC2n12j6d5NAFEgfPYnvA0ujZu4U/pQ41t8u4tHtA==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795243547;
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.167.197
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795244316;
+	b=vnC6tFXNcIzcWvFyrznxna1BEWAA3Y0y+mxRV6HCbJ+dFCNFsWKJN6l4rtK3Z+93XswK
+	 oaOtLvvRKtlE/OgUBZ7FF/ChdFi0vQRwreokOsrp9ySzlLqTfSyDhP76ia2FaTjuQznsi
+	 80xk2StBX5xza99PXcRwgztVtW3VFYeSfjYgit9lHxq/UolvCxc/wrkgu6PysdeXlSjsu
+	 BKB4clYtvY62aAjxWJh7Uz/pInvCK/BvCb++ro9FlcARcytfqLoeiIgJ0ei/355w7Wr7q
+	 dGlTo71k7D8d4AQIvx+ghNhsnyVVE/GgYgzW4uQaq6xgCbmCzzTsLuqBa9wYpDdFuVQ==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795244316;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=iyUW/gQgK6sLuAw1qsqOpPSq/qowOpiEcwfea2zJOWY=;
-	b=GOXYrGWnN4BcEZlNiuzXPh2nx+qFUvlurAl4MMx3PXi/oPSwmrJ91Z/dtz1SYcBWsCo4
-	 XLEb2xxHdYKc0Lzr/Y3GePW0XQkXX0RW5ox/9NjEz7JxLIe3RVrvrgzMjoIA+yB9Q9YoC
-	 Sy9JB1zcQoX53J8g0UCGH5+27su/QR8uJqO95Xv84bmsztj2emo+XABTW849H19TeebS6
-	 vMTWTtvTL5tThTgQmufytWTqHgPoRNCYpTloB4xmD+K4KFJe129NHHTDjQGWStupQtslO
-	 pAizbHWaV71FNnBOylPdtiWpTtC+EH0PmB4qdeoCEtmby+1rJuX/UjTglLeA03pIfbQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
+	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
+	 Content-Type;
+	bh=WFQYbBMhFIDNWh8RpPfdlWzTylnEhajA5E05wFXNi1k=;
+	b=Hwco8VrcWPQyYAI9BZAlR2HU3Rat3RLwNK2ajAzGgzfBz3Ihb4pAHtNLjmUDUJfxKPJ/
+	 WrxmH4b2P50EPG1DUkIMGfpVuuMbMqs/LRTIeXYHLtuf8vGWCvI1iqe0Ne7oNI5rI/Kaf
+	 X+cksL5RQY6IXGoIPUh/9bCaVZmm5AsYwf6kb+AerelF0ijSZCDG+IenlYB5DnOy2EAgp
+	 JSDmgIDaXMBLMX8p0+9dkxVT8DnUeWfjF0lGmtrai4Jcv5c9DeBPcPT5LJYP8PKzIL8/Y
+	 WQ41b6mUS0wKzDhnjD9fGJ4VSY5sBHr0cFGKpFxqaEpZ8ZMGBdmmhl1AqBSp9SXpO+g==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Scq+rGqM;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.179
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=JFYp3AiY;
+	arc=none smtp.remote-ip=209.85.167.197
+Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com [209.85.167.197])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2DF606A320
-	for <linux-perf-users@vger.kernel.org>; Sat, 21 Nov 2026 06:45:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CE2DF606A320
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F879606A32A
+	for <linux-perf-users@vger.kernel.org>; Sat, 21 Nov 2026 06:58:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1F879606A32A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Scq+rGqM
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-55be673e029so80311cf.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 22:45:44 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795243544; cv=none;
-        d=google.com; s=arc-20260327;
-        b=MAm5KByX4ItyEuGxk9lTQDqeJnrU/MsMBycUwkd5qbMRVVsOUmh+NBtrYRtodepr74
-         KtlcWDm2vTGsM4gfAH0rqwgRNLOmoOuLKfqR3XI9YrKB8q0nvLuflWKI8v5M898nVZLG
-         ub/zqJA3aCUWtG6PgGkhMDZk/g8iiJtqHqcwdAcWGA4oKPmbQU2UxXYMorl6HWatdndA
-         YX3rApdFFSloIQJnLX9M+dNfj9Pj/n73K0ZnjgEC/vd7QNBLJ+0UA+Ekt16Q+yg5yAWg
-         ViCid6FXQzVxlaIVBrpr0Crk7gLiC1/xirWhsWqL7Y58jWJ8QISErsM+xpvF1fyPKP2C
-         ftKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=iyUW/gQgK6sLuAw1qsqOpPSq/qowOpiEcwfea2zJOWY=;
-        fh=lT95JiwO97YZ/a0rca4XXJk+SZaDA18kUnyd5GYYLME=;
-        b=LWrSW86kk9waXwt2EXKeno2tlc2bvfzj3xnWWtQsGBfW/oRhs5VpqnM/HaPKLulurn
-         Tn41rxh7HX0jZRSZDVzq2Rct1WZo69T8hWj73CyL6A5sIr3bH/P5Nt7+bRWwvdEHRYT6
-         ODCmc+qgJS8jmaKCQ5ARM8JDF89Zl6dOCQ9LWTWvDqHZv1iwqYd469jLjsYpwg26/QHf
-         NOg58jMF8TLNoJZqPfohDfdKjpT+BH/T8AARDXq86mr/SDXf3mTb3409XwrUNVJnY1jj
-         PI29qpAhism0E/UPHOX/kScLE5Cg5lVQ5jEKKlLasQCtM+WC6hNiMSWnFUtRQ/+7upbP
-         G6+Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=JFYp3AiY
+Received: by mail-oi1-f197.google.com with SMTP id 5614622812f47-547ae874949so2783636b6e.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 22:58:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795243544; x=1795848344; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=iyUW/gQgK6sLuAw1qsqOpPSq/qowOpiEcwfea2zJOWY=;
-        b=Scq+rGqMgjH5HvW1o8QNBcQd8ROgCAPIjtciEEDHUXKDU6H//hWWcDXXVa3kFxUNAW
-         KRdLlMav5f6WM4wWJFB6MZgmNhHvEFzZ4t3BdyD38HoUapC+T2O+YNfydNfPNhNejIbI
-         iUnMn6wecMomnkQ5uhrzmii0UJW9BOq2nAtPFnEqTLnBr4MGNb3Btkns2hpHvazS6Nan
-         aFmw6Mt2+srHc3wdcg5x/g9zzz7bBOjP/RHsgcsFSI4pC0OPQl2wZQFWxrvKegG24hdm
-         ZISGveilcdcJ0SEzDr5Yv1WiSBeDhdIzgmMarnooUL39nIwXpER1uol+ej8mkrl86J7Z
-         sWcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795243544; x=1795848344;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20260707; t=1795244315; x=1795849115; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=iyUW/gQgK6sLuAw1qsqOpPSq/qowOpiEcwfea2zJOWY=;
-        b=hQ6aF/+bKAs8W18dEdIQQx0J9EKLGAwXlskf5i+KyZDHhXlIILr4HhaI6grH4xCbNa
-         1pqR4C78WN8W5vAnYhBO7gTrwdfbEGAG1uZtYVsksSwNCq25jyTw0uBatMhQOc2JSQzA
-         XxYITImkXMFlsEfyyLC6A3BGIakw2sqbb1I6QLLqT6Zc1m3VWgY9cAvPbci7skO6ug0g
-         pwHUDCi8Rb7DUlaxUJQZOGnTLujnRXgi8/qcp2eifXUT3TsmW6KZ7o+r4dXpYJYXVd44
-         8fhpV2yUKgHZW40gLJyud1YwVAO9c2vRbW5xZbW4JovKFu8U+mZTGRp2qSebwuqwMtqI
-         POUg==
-X-Forwarded-Encrypted: i=1; AL+hErG8NDkNsIlf+nirzncqT4BuILRanhlfSNEvS71vfE7oPZERkqGB7kyltp9Nkt9JAQTgxiofRCIzDsX7cXmQd8TJ@vger.kernel.org
-X-Gm-Message-State: APuU4Z8pe4f/v3i3JSa9ltrTgivdebeW8E+7dqSXHsaOEi9Jm2vbiudV
-	NZyOxdHoCBiAToGWvbYhaHTF5DxTzY+FgTEZDDfcH9QBSJSpzjqpcEzk40XnOpJXXtpFVN3S8T/
-	omDe8thbFYyLOtSC9QDMsF5ue2BoRN92e73If/jNw
-X-Gm-Gg: AZFdTZfuhEiAF1/mslv04h96ERjgtovTY/bDU7EsVxfj9T+Kp0sFYalGCKVJM9IAGa/
-	UCvnrNNO6x+C5ijiWbX/wjLNpHkyRccbQ/ai0MF8TcHbhNMP9EceLrBoYW4Pgn9UplZKDL+K4k6
-	trTTwqeJj1UM2DWrOZxitHHucV4/qikdadrgQpwvUhuWj7VAEEwJGRUq0qfbHpPlgCrNukbEUBl
-	IjBZHMmT1EsgcnNFSUGHnQa/9O9WFhF3qTGy/fMKsnBqhfobgH1GrbKfU3mTpcEW1dZnHABwtO1
-	o3umFmN1yaYU1HIICqq0HI8Mo4yFPYM9vmZJai2dWGWSJthKQ3yyldxwcIiTJ6KmP+hzLtnPOGB
-	stEaW3AiRinlP2VvT+YT4B5xHnyfUIWJR4etMa5sb28nuknPpYuV5PYKyKw==
-X-Received: by 2002:a05:622a:2598:b0:533:9731:f0f1 with SMTP id
- d75a77b69052e-55d890363c8mr7906391cf.10.1795243543244; Fri, 20 Nov 2026
- 22:45:43 -0800 (PST)
+        bh=WFQYbBMhFIDNWh8RpPfdlWzTylnEhajA5E05wFXNi1k=;
+        b=JFYp3AiYr2KxTluRFn6uMY7+yBx6+T7HVipHkYOk9Cez6+9NOVHCYf/1XHQvoqqhYi
+         kuTEGw27MbAqIiq9lj62ufeFNKUuGJe9LTgTPBqISdFmvpdyCYf1ZAkZ3wSvKYDUGwfz
+         T+faDkqA8yLt73wfcrpmH/5y3MaQEyarDdetrktLzodFY9LHSMFzHw5R/yS9BmRmMg7S
+         uXkMMv9p17DA1Js2E/yz9a/fq7GysX9eBK/9QV9SPjOwWi/umVw02v5pq9Dcv9kkPXbt
+         I9+q2Fo1vzetwxkYzcNdAx9xWCerlftk2PrWgUOXvpHSo9CFZb+KFYCOfwN5aS3vKaCG
+         9pJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795244315; x=1795849115;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=WFQYbBMhFIDNWh8RpPfdlWzTylnEhajA5E05wFXNi1k=;
+        b=pAS7vWCsHp8sBrUiLqlF3UhQwgsEDIthIWsUmJi2rD3+kZX/QqJ0uSmPT1Mqi7AK/E
+         CQ52mUEFk32aQURN3FUlx/liaumWr5jKWcHnjib6lGVEZfgjM/MDTpjNjxNLOOGwWzlp
+         4tTRraYVKng1n1yV7SI34ukpf+8ijMgMDALqr5VxmYV+XrOIEm5VjZ9EORpuhwW+qBFS
+         u2x+hoa7pzsSVmWFLet6A6Qej48IB/PfOa/nkJzHZ+4RqSThGeDegRz29FA95buubWkC
+         FwwG5W4qpNiIBauMBqkcE4fCfwvymjDdcYIIMQnX4Q9E8LcAZY/di8Rel4VZWFadU5G9
+         +0Og==
+X-Forwarded-Encrypted: i=1; AL+hErHSEnCn4FDWD+p0ox5hI8ggbZr80zFwQoqrwdbmIhKKl6v6xnpVLBO58hOL62LupgMe0SMwIhBvRI+UIh5HxoRx@vger.kernel.org
+X-Gm-Message-State: APuU4Z+jZCbWQctLQ3CeCFcv0aSL6V2q7HrlxPvAGlkGRC0SGTXpRKUN
+	3Msqqza3EkDsS4ezU3RaWt9pYTm4vrNwzKcyMVdm3RcBbsOkDXgyU3jT/NsaiDKx/v1AzexLgsW
+	mYJau+b2EzA==
+X-Received: from oibmo2-n1.prod.google.com ([2002:a05:6809:702:10b0:579:7e19:d2e])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6808:1314:b0:572:75e6:1cf3
+ with SMTP id 5614622812f47-57a0b3464fcmr6263252b6e.35.1795244314813; Fri, 20
+ Nov 2026 22:58:34 -0800 (PST)
+Date: Fri, 20 Nov 2026 22:57:50 -0800
+In-Reply-To: <20261121065813.4143649-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -103,77 +78,49 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-References: <20261113164152.2095566-1-irogers@google.com> <20261113164152.2095566-20-irogers@google.com>
- <av_bvJpYwwMWNfDt@google.com>
-In-Reply-To: <av_bvJpYwwMWNfDt@google.com>
+Mime-Version: 1.0
+References: <20261121065813.4143649-1-irogers@google.com>
+X-Mailer: git-send-email 2.56.1.750.gf70dc682cf-goog
+Message-ID: <20261121065813.4143649-2-irogers@google.com>
+Subject: [PATCH v15 01/23] compiler-context-analysis: Avoid unused parameter
+ warning in _context_unsafe_alias()
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 20 Nov 2026 22:45:32 -0800
-X-Gm-Features: Aa3M54qyHKFYs0sdnXs9w20kZO_6DKZ1sbg-cIz7ng-wQJ7TMSYuLzSPX_ox-F0
-Message-ID: <CAP-5=fV=DxVPn_wQGuFD8FEmz0n4kXQLyYV7aTc53-HoUp=NeA@mail.gmail.com>
-Subject: Re: [PATCH v13 19/21] perf maps: Fix lock inversion in maps__load_first()
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: acme@kernel.org, adrian.hunter@intel.com, bvanassche@acm.org, 
-	elver@google.com, james.clark@linaro.org, jolsa@kernel.org, 
-	justinstitt@google.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev, mingo@redhat.com, 
-	morbo@google.com, nathan@kernel.org, ndesaulniers@google.com, 
-	peterz@infradead.org
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Marco Elver <elver@google.com>
+Cc: Bart Van Assche <bvanassche@acm.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Weilin Wang <weilin.wang@intel.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linux-perf-users@vger.kernel.org, 
+	llvm@lists.linux.dev, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 19, 2026 at 9:33=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Fri, Nov 13, 2026 at 08:41:50AM -0800, Ian Rogers wrote:
-> > In maps__load_first(), take a reference to the first map and drop
-> > maps__lock(maps) before calling map__load() to avoid a read-to-write
-> > self-deadlock when loading kernel maps inserts extra trampoline maps.
->
-> It seems this function is not used anymore.
+_context_unsafe_alias() does not use its parameter 'p', which triggers
+-Wunused-parameter when building code that enables -Wextra (such as
+tools/perf, tools/lib/perf, tools/lib/subcmd, and tools/lib/symbol).
+Explicitly cast 'p' to void to silence the warning, matching
+__assume_ctx_lock() and __assume_shared_ctx_lock().
 
-Good catch! Commit 553d18c98a89 ("perf lock contention: Load kernel map
-before lookup") removed the last caller. I'll replace this patch with
-one removing maps__load_first() in v15.
+Reviewed-by: Marco Elver <elver@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ include/linux/compiler-context-analysis.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Ian
+diff --git a/include/linux/compiler-context-analysis.h b/include/linux/compiler-context-analysis.h
+index 8302ebc2ea8c..024e303188ad 100644
+--- a/include/linux/compiler-context-analysis.h
++++ b/include/linux/compiler-context-analysis.h
+@@ -243,7 +243,7 @@
+  * alias as a function argument).
+  */
+ #define context_unsafe_alias(p) _context_unsafe_alias((void **)&(p))
+-static inline void _context_unsafe_alias(void **p) { }
++static inline void _context_unsafe_alias(void **p) { (void)p; }
+ 
+ /**
+  * token_context_lock() - declare an abstract global context lock instance
+-- 
+2.56.1.750.gf70dc682cf-goog
 
-> Thanks,
-> Namhyung
->
-> >
-> > Fixes: e77b0236cd0c ("perf maps: Add maps__load_first()")
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/maps.c | 11 ++++++++---
-> >  1 file changed, 8 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-> > index f808df2fe77b..7ca33e5218e7 100644
-> > --- a/tools/perf/util/maps.c
-> > +++ b/tools/perf/util/maps.c
-> > @@ -1459,10 +1459,15 @@ int maps__merge_in(struct maps *kmaps, struct m=
-ap *new_map)
-> >
-> >  void maps__load_first(struct maps *maps)
-> >  {
-> > -     down_read(maps__lock(maps));
-> > +     struct map *first =3D NULL;
-> >
-> > +     down_read(maps__lock(maps));
-> >       if (maps__nr_maps(maps) > 0)
-> > -             map__load(maps__maps_by_address(maps)[0]);
-> > -
-> > +             first =3D map__get(maps__maps_by_address(maps)[0]);
-> >       up_read(maps__lock(maps));
-> > +
-> > +     if (first) {
-> > +             map__load(first);
-> > +             map__put(first);
-> > +     }
-> >  }
-> > --
-> > 2.56.1.703.gf848ed807c-goog
-> >
->
