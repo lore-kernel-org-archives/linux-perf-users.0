@@ -1,79 +1,79 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795279283;
-	b=ZVjMxan+yWcOtiu2VJYXyUhIGHOCjrG+BG4MiK6d93qxd1Ri3MLHzsxqHQdtt4pbRVCO
-	 myOt6zx8p1mkJYnjYRYuyB2bKBjR+8jd8ZNNq9vSJwgLCfASY8OcxoyIl6v8Gkyk4DVvM
-	 nBuBn7+f7aKIaTSZBSOqSMPlDlHiWbSx+vA1DOtugGsGDd8v0nPAur79F9lfjOPbflhuc
-	 uFWHfR3QbsQPxv/j27nYQfsBkA1Jevu6pqvex/fRN5P/whYdYNjlfqi6P6x7EVmYsCwLm
-	 5Cp8gqyoLCA/3CnCVWiReedkbdWyKF/fPILSs/kolwyZy6a8YAX31XT4w3fYyzXie4w==
+	t=1795279285;
+	b=1I2mPRQgrUSOC1eejF7GKimmmJW4HZft+4qH6YNjiax1oVpT4Cz4kilknC6IAGMSDBS1
+	 zVERPVGDYkyQ6PaxXJSrgvceHsVcuHgt+RVmyen0lPNRxBvtjM/HYVDGcEy867Pad+VSM
+	 Hd9h9TvHCMDuUTNXxROenkSQGmSVGa7Hqu5nlB9C4+cgYyIKhgewZ9RtdYawkyBIOubI/
+	 eeBhrjECOznPVll5aI1j2d2RebhhrnGW6pH67RWEMyNzsp1nKNQIpDKzBUFxUcd8jUNEA
+	 bmOAxpVZj5uPEBUUkiukCB6wcjulz98Dms3haEjDu25h0qa3c4dxPIKzMWVYNrj34Pg==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795279283;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795279285;
 	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=X7jOf2bHUIQ1znpCVryw+UrUbONt2NMOHYuwQfxmifo=;
-	b=ThBJlkPM1i6LbVIPHOpM8N7YUMz3V66gConpJ0RE1ikViJRQcuMlXRlyH/1+EYDhC0YI
-	 PxwiOnf9MO46soRcdEK7mdDDtgz9bV67t/4CNCwK1Hy7PrvArH7kzRKksLzjj+JwzWMHA
-	 5svJFvZrNe5g4ooJWU5nfEaJBm43mf9PhMXq6bU246LQdDeFbHiC/h/LL1AGarCjCyxoN
-	 jhN4Pw2mxmkgXXFThD5QP3VgQJRnXS8nAPsIV9fTyGnU/9PjrL3cfVA5/d8hrIZ+7S+GR
-	 RCn/htzNQFDTkKWCs+k/PUkc5vckSJ7OB0QZzG/Ge2wJX7s+teYahh+h9E4paVJ/ZlA==
+	bh=99IGoOsc3fVVnP6B1c4yXg8h/i+kVoRrQ4w3qo/x0KE=;
+	b=rySOqmEhCiXdwIcNarIeO3NhFfHpOAtgBQjPV41noaQXFMzGjxEVDTYT5HtqmvJSiqpB
+	 nLJbtn8+15C6tB54XrfswQ4+m2NjnnI7Hp2a4r9AEFDqNm4xJ5gb9G4n8n7i/7DiRte4e
+	 NQojni6oSuVnEqbXq4D9nt3tr0+6TTinUMPTZPw6eI/WJef8R37A5IdUWOlz+hdkYy49z
+	 lfZbcV1qXcduz7vO0ANs3D7J0ZhQ61WK5x2KNG3L89X+YgJ6v02CN7swQtPaZ6T6z1VIs
+	 YnB8UWFGFK+j2faWJ82MO0ITVE6OfjDJ01fiMJc/sQZb4dwQlnGo7+vgQla40sMzecw==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IH22OBsN;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=J5Bg5ecl;
 	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C361606A338;
-	Sat, 21 Nov 2026 16:41:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E4E606A33C;
+	Sat, 21 Nov 2026 16:41:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=IH22OBsN
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=J5Bg5ecl
 Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
 ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1795279282;
-	b=pfffIZ7WdMddK4a6VJFrJzoWMvYG1fP7KbN4sZIzicsTS4PWfMheltTQyDdY9GBn4NT4
-	 dPDvNRGO7OvRcFio8FiLTmw36L6Z1NDsNMKHkdfIDiYW5X9ecshaFNfvEUt14bs2DAKcS
-	 AarmxJpCCPO9o6j9EE4NzkSid6w4UyZ7PA1V36EhrR35vMVnyCE73RoNfIH3AEJXcXIXe
-	 yMJ0N3ACz9SBZ3ELsu9g7Ad9bksSiavGh8jJ4gPvoHKHqnG89IepkKTRrHLYLI3USYi5h
-	 gNLvqLLoUCOFYvcsPkYnxxxHwxrenDRDZ1OUWf84FVezqt9hGLIK9FTS9CVRCxhod7w==
+	t=1795279284;
+	b=bNejFjEx46imduWM2/0czG0kpJc0ghqhI1qQC0ykq4URVXfa75H3Ufzk1w6DG/ZS+4uq
+	 /v2+4Lb2cvW8HM3fXQO8hJ6oAjl/WdkFhc0Y/fI5EcZYrNJdB1Q8UAkDna/z5RYBCYmyS
+	 UEfvGUEuReWbfhn4rnvTjPnnBKm1Nu1YJD+NY8hyJ3H1+ZJPFNotDGheLfB8++e0F4933
+	 pkloXv25vI580xaV/95MgNfg2QQahvm+rqtd/M8xpqvbC2B35hyManyu8ITlY6gF7jV+2
+	 nX8dUgj6SRNYrMGW5+FArSPWgschoqVfDlLM6fPkIuHcxwSsdE5WdjxsKYGw9SUzhPA==
 ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1795279282;
+	c=relaxed/relaxed; t=1795279284;
 	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=X7jOf2bHUIQ1znpCVryw+UrUbONt2NMOHYuwQfxmifo=;
-	b=0nExutdnmWUlDlKLT4V6Tn5Ssqs2mETwsz31cqcWbQWKijYZXwya5wBXIDRdafsdxmep
-	 /rQAyolVzpKJhHUvsRNDK+UOZL87L87rBejNxYRM1PhMLESI5eGlFCvuTXYDkyq+I4Fm0
-	 p1cDfm2qkBXTfuc86FkVX1ctb69FBGjlewFNu6hLCjLsKLzyGkzas3QEqFuv82B6Rw6+F
-	 PBMM5/Wkwwk21K03oxtyjWAtwiPDoko7Y1PkOKMHoa6BUN9MelFXQsUtIDYuFbPgO+BFV
-	 DIcNQsKDXFxqREcskxjgppozzLiZ1mQTY2oKhvXWBFjK1X4BooJPX5duC7oaVxSEoxA==
+	bh=99IGoOsc3fVVnP6B1c4yXg8h/i+kVoRrQ4w3qo/x0KE=;
+	b=C9Z/j+xUQSfQsVqFL2veuyITCdxVTt2d0v1eRJSAB9qj/aQ0nt3IBPHmfUKbLfpCZ2hM
+	 KXM0U3GeDAkw2e0lrI4AsoazhdD5iZrmIDTwObvysrkM/XJD/bIsUvt+NkHBbTkW6M1Ai
+	 oFaqJ5t8DPbDC7BI9IPvpSploOYaCz3DX3lM8KAie2X3yZGw6tjuh8Zot8iwULvAWx8fE
+	 1BIGhBvLzbU60kKkUmgJ1OCH1UT+cMwPLrZKxi1vRs2/nMUF2K5M+N9e1nk+r9agXQJXl
+	 RIHBb5Kg24gvwOjVFS9Lgp4N2VbnhUW5XFAcxk75dv9AowaIwMTqx4iH5n4z39V2HBA==
 ARC-Authentication-Results: i=1; smtp.kernel.org; 
 	arc=none smtp.remote-ip=100.80.115.77
 Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 778431F000C4;
+	by smtp.kernel.org (Postfix) with ESMTPS id BF7B21F000D0;
 	Sat, 21 Nov 2026 16:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795279282;
-	bh=X7jOf2bHUIQ1znpCVryw+UrUbONt2NMOHYuwQfxmifo=;
+	s=k20260515; t=1795279284;
+	bh=99IGoOsc3fVVnP6B1c4yXg8h/i+kVoRrQ4w3qo/x0KE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
-	b=IH22OBsNRMQPqU7E9AUdm6aNO9kQns+TURqi6rSlTYrRigW8j6xL4TGpIIQPkPMjW
-	 +pfP8Z8YVAMazDSRBmXDb2xweE9Qwm94aoNNPCqOixcnNnf4xHKY+0DBF5Yupadn2X
-	 qChKKw2JSDwN6DK2J5CBUUdjgQYI9A1a/GnS8QHXt2fXIeE7nCvHktBFSwKvYYLL2y
-	 9FQ206xfhU2wBAEz/j6zuTfk/Aq7enWSFgPOp9xi/AD04sYjzmvsinzfEneERn4bMn
-	 pCvPy+t6ZvXgBhGVesFnBU3lZXbA0grVY8wCavKcoUotmFb9qr6m2V0FcKLOTUOou+
-	 l3691Ay3F4aMw==
+	b=J5Bg5eclJlbt6BvK2EeNolJnMN9AgOXqPD8HRi4gVg15R7SXTllhtUY/Eg2hYKW7v
+	 lJVnJpcZMdEYWeAk0xZ1u+p9TuRXPYeXBt2LQUcBjw6SC65IDPEYFHEAwI/9FON+hA
+	 6seeHum5R3z4Sllze3Y9Os0zzW5y1+jF4+pTOL7r1fXbHSpGyb0kg1OuOGtymuX6ab
+	 BicUgUoSvRTd35KLwK2CXaVHW68ZZUh35W80UClp88ESkQ4aACUIl0+VocVKOExhu/
+	 /KczpQtcoRpkGNzpGn66qLv3YsKZPrKj1cJJw36lh+nbiNVAS6kv/fU28dhWVi469L
+	 YRfotk0o4zrmw==
 Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id F075C4BD00;
-	Sat, 21 Nov 2026 16:41:20 +0000 (UTC)
+	by lkml.kernel.org (Postfix) with ESMTP id 49B794BD10;
+	Sat, 21 Nov 2026 16:41:21 +0000 (UTC)
 From: Alireza Haghdoost via B4 Relay <devnull+haghdoost.uber.com@kernel.org>
-Date: Sat, 21 Nov 2026 08:41:01 -0800
-Subject: [PATCH v8 1/7] perf symbols: Split out name-independent duplicate
- symbol selection
+Date: Sat, 21 Nov 2026 08:41:04 -0800
+Subject: [PATCH v8 4/7] perf symbols: Check the file before reading lazy
+ symbol names
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -84,7 +84,7 @@ List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261121-perf-symbol-memory-send-v8-1-370561cbb5a7@uber.com>
+Message-Id: <20261121-perf-symbol-memory-send-v8-4-370561cbb5a7@uber.com>
 References: <20261121-perf-symbol-memory-send-v8-0-370561cbb5a7@uber.com>
 In-Reply-To: <20261121-perf-symbol-memory-send-v8-0-370561cbb5a7@uber.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -97,21 +97,21 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Alireza Haghdoost <haghdoost@uber.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3028; i=haghdoost@uber.com;
- h=from:subject:message-id;
- bh=VGrhvbBMlOezaIej0nQ/zA/IXFiLbKzeTc7elGOodLk=;
- b=owEBiQJ2/ZANAwAIAVNlBDxl2ALYAcsmYgBrAcmt0Xkby2keCpXtfE7nzOqOHFa1/SpVOjDrh
- H5FxvVNhb6JAk8EAAEIADkWIQS5+sFL3gX/8PrA0S1TZQQ8ZdgC2AUCawHJrRsUgAAAAAAEAA5t
- YW51MiwyLjUrMS4xMiwwLDMACgkQU2UEPGXYAthd2w/8DvPTWAN9EW/zSErnaq9QLh0x8joZdMi
- ikZEQLuy8GsPxKefPLCwKSeoVDsTW7BDbLvBg4aqucPvdL5DImryrOk7t2wbaF1kSKhSHPL1oFN
- +8BlQ+6fEdJVnQfSSesn5pZ1HDzk1LV6OANDKoeCebJEmjhAMyV9ctgspCD8jNRNXJyibtzVlB6
- hIVxSK1TShS60jdgpRWxy+hgCHjR1CVFjx8/NkKnv8mruLz9DIdAvfAvN8UyLrGNsRA8GsR653K
- th8OQEo/saW1oIRuZJas8+KjmnJXd1UKku/7GPqEz/NTVsKre7WjBKJA+2ymkpPUEa+vytUI5ut
- 4Ee5agEsaczzEJH3oszq2eEFCd8OgB35NxFUiCJ/VQbCbOyTvDREvYmYBd6N1PPwuO4WbTFD35J
- kpcCfzYMnjeEXshsA4WyY+uYrn9oZ3CErd3n9qI+ccJvezuuKlR9sQz6YboajScXhNVugY4UsxY
- m896Qbh9NZ+nu/BDQDQofpsxtYPCvREiujFLmfPV27TMVtEXGpFH2sg+9HdaMgvmeDsjmxvsFhr
- ynbJ7XtsBbYiBgufqqo/jTvpNda72/T1ddvSBNSsqhyNmEj2gVCJSZ4A+m9dfBqk0tzWGr/XPi1
- tn4Nzt/+kjkPNK3zUXRXuddw2pb9Ddt2r6JBoKc2k0f66cMEHY/c=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=11684;
+ i=haghdoost@uber.com; h=from:subject:message-id;
+ bh=JS869OEz8dw6yAAshowhllrx/6Wt2PsY8FPNOz6dads=;
+ b=owEBiQJ2/ZANAwAIAVNlBDxl2ALYAcsmYgBrAcmuJDqeGN+xO3e1hxHFJKhVylmZQDUDR6GPo
+ WidU9B8bUqJAk8EAAEIADkWIQS5+sFL3gX/8PrA0S1TZQQ8ZdgC2AUCawHJrhsUgAAAAAAEAA5t
+ YW51MiwyLjUrMS4xMiwwLDMACgkQU2UEPGXYAthjEg//U+toREe+iYYI5YeLYuqojeS2mtV7pYY
+ VAVlyDt84cwWVk4qhv18AvNiGpzRinz9d1JLCOmfwJVcTn91gay1EDjEVNATCIq9/ORg9YTBvRJ
+ IWWmI9AQHunx1a1D7KWplTl/fOHpCab9sreAGEuSmRHExZpaBbLWmnClxke/VmZX8oZF3wWBdEZ
+ NIi7PV3EMnokPsdagL8HW7SfmoIoVSiWt6XjHryq7OmyWuGeqmHqZpdqkMDgbzX3HeXs3e9JvQe
+ q6pHgTTKiebmBTq7zZc9cC397Ge3GcUXHtvJoCwgQpK4KCbXfuCUpDkyPoPWth6arviT7jv8Xwz
+ Sx7GGIvdMBwDuXeSCtu3/wmFdtPL7D7hqmKeNRG/AnmgDZO5MNCMnhZ8qngTLpOTuAROYbuNQcn
+ tqNBb+C3BYzGyEryPxDtOkCVHZM5eh2e5Ht5gX834XYA2hoeH5ysZUohh5O509AybWFPv62kPiQ
+ ZLUd0h50X0O59LlfGGAsMCMXth6Gw/mkET0Vb5/2s0MamKY0LP3a4HWBp5U4KbYAhBFC26tJzYA
+ potVZQAlpnGHbtDpX9Zn42n/ov5e5g80ekcobsGVhUTzQj5+/5TuBUorN6tL2py96EArXvXI4R7
+ HMHjoYhcQHxR9Uh21owFX1kX0jG5YsbmL9FPB8yJ3OW2OXXj6yHc=
 X-Developer-Key: i=haghdoost@uber.com; a=openpgp;
  fpr=B9FAC14BDE05FFF0FAC0D12D5365043C65D802D8
 X-Endpoint-Received: by B4 Relay for haghdoost@uber.com/default with
@@ -122,87 +122,326 @@ Content-Transfer-Encoding: 7bit
 
 From: Alireza Haghdoost <haghdoost@uber.com>
 
-This patch is a refactoring and does not change behavior. It moves the
-size, type and binding checks from choose_best_symbol() to
-choose_best_symbol_by_attrs(), and adds symbol__choice_needs_names() to
-tell whether choosing between two symbols needs their names.
+This patch makes perf check that a file is still the one it loaded
+before it reads lazy symbol names from it. A lazy name is read later
+from a file that perf opens again by path, at the offset that its
+string table had at load time. If the file was replaced in between,
+for example by a deploy, perf would read names from the wrong file and
+print wrong names without a warning. Eager loading rejects such a
+file, since symsrc__init() checks its build ID.
 
-symbols__fixup_duplicate() keeps one of the symbols that share a start
-address. It compares size, type and binding first. If those are equal,
-it compares leading underscores, name lengths and the result of
-arch__choose_best_symbol().
+perf checks the file each time it opens it again. dso__set_lazy_file()
+records the file at load time. Nothing calls it yet: the next patch
+makes the ELF loader call it when it creates lazy symbols.
 
-An unresolved lazy symbol stores a file offset instead of a name
-pointer, so the lazy loader cannot call choose_best_symbol() before it
-has read both names. The new helper lets it leave the names unread when
-the attributes already pick one of the symbols.
+If the DSO has a build ID, symsrc__init() matched the file with it at
+load time, so accept a file with that build ID, such as a copy of the
+same build. The build ID alone is not enough, since the offsets are
+only valid if the string tables did not move: objcopy
+--add-gnu-debuglink keeps the build ID but moves .strtab, and strip
+--strip-debug removes sections. So perf also records the index, offset
+and size of the .symtab and .dynsym string tables, and compares them.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Reading the build ID each time is slow when most lookups load a name:
+the parity test on a 524 MiB binary, which loads 260k names one at a
+time, takes 9.3 seconds instead of 3.9. So perf also records the
+device, inode, size, mtime and ctime of the file, and reads the build
+ID only if they changed. The ctime changes when another file is copied
+over this one in place, even if its size and mtime are kept, as with
+cp -p. Then perf keeps the identity of the accepted file for later
+reads. With this, the test takes 4.1 seconds. A DSO without a build ID
+must keep the same identity.
+
+If the file is not the one perf loaded, perf warns and shows the
+remaining lazy symbols of that DSO as "[unknown]" rather than print
+wrong names, without opening the file again. If the file cannot be
+opened or checked, for example because perf ran out of file descriptors
+or fstat() or a read of its ELF headers failed, perf warns once and
+shows the symbols it was reading the names of as "[unknown]", but tries
+again for later names, since the failure can be temporary. A file whose
+build ID cannot be read counts as not checked, since perf cannot tell a
+failed read from a missing build ID note; perf reads no names from it
+either.
+
+Like symsrc__init(), the check trusts the build ID: a file edited after
+linking without a new build ID, and with its string tables in place,
+gives the edited names.
+
+The unit tests later in this series cover these cases.
+
+No functional change, since no symbol has a lazy name yet.
+
 Signed-off-by: Alireza Haghdoost <haghdoost@uber.com>
 ---
- tools/perf/util/symbol.c | 26 ++++++++++++++++++++++++--
- tools/perf/util/symbol.h |  1 +
- 2 files changed, 25 insertions(+), 2 deletions(-)
+ tools/perf/util/dso.h        |  33 +++++++++
+ tools/perf/util/symbol-elf.c | 156 ++++++++++++++++++++++++++++++++++++++++++-
+ tools/perf/util/symbol.h     |   3 +
+ 3 files changed, 189 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index a1ac1cd1d2e7..a5ed8a65986b 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -157,11 +157,15 @@ int __weak arch__choose_best_symbol(struct symbol *syma,
- 	return SYMBOL_A;
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index 10eac0b31b7d..216a9bc9366b 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -282,6 +282,33 @@ struct dso_bpf_prog {
+ 	struct perf_env	*env;
+ };
+ 
++/* A string table that lazy symbol names point into. */
++struct dso_lazy_strtab {
++	u64		shndx;
++	u64		off;
++	u64		size;
++};
++
++/* The file that lazy symbol names are read from, as it was at load time. */
++struct dso_lazy_file {
++	u64		dev;
++	u64		ino;
++	u64		size;
++	u64		mtime_sec;
++	u64		mtime_nsec;
++	/* Copying over the file in place, keeping its size and mtime, changes it. */
++	u64		ctime_sec;
++	u64		ctime_nsec;
++	/* The string tables of .symtab and .dynsym. */
++	struct dso_lazy_strtab strtab[2];
++	/* symsrc__init() matched the file with the build ID of the DSO. */
++	bool		check_build_id;
++	/* The file changed after the names were loaded. */
++	bool		rejected;
++	/* perf warned that the file could not be opened or checked again. */
++	bool		retry_warned;
++};
++
+ struct auxtrace_cache;
+ 
+ DECLARE_RC_STRUCT(dso) {
+@@ -321,6 +348,7 @@ DECLARE_RC_STRUCT(dso) {
+ 	struct dso_bpf_prog bpf_prog;
+ 	/* dso data file */
+ 	struct dso_data	 data;
++	struct dso_lazy_file lazy_file;
+ 	struct dso_id	 id;
+ 	unsigned int	 a2l_fails;
+ 	int		 comp;
+@@ -503,6 +531,11 @@ static inline struct dso_data *dso__data(struct dso *dso)
+ 	return &RC_CHK_ACCESS(dso)->data;
  }
  
--static int choose_best_symbol(struct symbol *syma, struct symbol *symb)
-+/*
-+ * Choose between two symbols at the same address by size, type and binding.
-+ * Returns SYMBOL_A or SYMBOL_B, or -1 if only their names can decide.
-+ */
-+static int choose_best_symbol_by_attrs(const struct symbol *syma,
-+				       const struct symbol *symb)
++static inline struct dso_lazy_file *dso__lazy_file(struct dso *dso)
++{
++	return &RC_CHK_ACCESS(dso)->lazy_file;
++}
++
+ static inline u64 dso__db_id(const struct dso *dso)
  {
- 	s64 a;
- 	s64 b;
--	size_t na, nb;
+ 	return RC_CHK_ACCESS(dso)->db_id;
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 82d6a76176d2..468a0695809e 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -6,6 +6,7 @@
+ #include <string.h>
+ #include <unistd.h>
+ #include <inttypes.h>
++#include <sys/stat.h>
  
- 	/* Prefer a symbol with non zero length */
- 	a = syma->end - syma->start;
-@@ -194,6 +198,24 @@ static int choose_best_symbol(struct symbol *syma, struct symbol *symb)
- 	if (b && !a)
- 		return SYMBOL_B;
+ #include "compress.h"
+ #include "dso.h"
+@@ -1678,6 +1679,148 @@ static int read_symbol_names(struct dso *dso, int fd, struct symbol **syms, size
+ 	return err;
+ }
  
-+	return -1;
++static int lazy_file__stat(struct dso_lazy_file *lf, int fd)
++{
++	struct stat st;
++
++	if (fstat(fd, &st))
++		return -1;
++	lf->dev = st.st_dev;
++	lf->ino = st.st_ino;
++	lf->size = st.st_size;
++	lf->mtime_sec = st.st_mtim.tv_sec;
++	lf->mtime_nsec = st.st_mtim.tv_nsec;
++	lf->ctime_sec = st.st_ctim.tv_sec;
++	lf->ctime_nsec = st.st_ctim.tv_nsec;
++	return 0;
 +}
 +
-+bool symbol__choice_needs_names(const struct symbol *syma, const struct symbol *symb)
++/*
++ * Record that lazy names of @dso point into @strtab of the file of @fd, the
++ * string table of .dynsym if @dynsym, else of .symtab. The caller holds the
++ * DSO lock, as dso__load() does.
++ */
++int dso__set_lazy_file(struct dso *dso, int fd, int dynsym,
++		       const struct dso_lazy_strtab *strtab)
 +{
-+	return choose_best_symbol_by_attrs(syma, symb) < 0;
++	struct dso_lazy_file *lf = dso__lazy_file(dso);
++
++	if (lazy_file__stat(lf, fd))
++		return -1;
++	lf->strtab[dynsym] = *strtab;
++	lf->check_build_id = dso__has_build_id(dso) && !symbol_conf.ignore_vmlinux_buildid;
++	lf->rejected = false;
++	lf->retry_warned = false;
++	return 0;
 +}
 +
-+static int choose_best_symbol(struct symbol *syma, struct symbol *symb)
++enum lazy_file_check {
++	LAZY_FILE_MATCH,
++	LAZY_FILE_MISMATCH,
++	/* The file cannot be read, which can be temporary. */
++	LAZY_FILE_ERROR,
++};
++
++/* Check that the file of @fd has the identity in @lf. */
++static enum lazy_file_check lazy_file__check_stat(const struct dso_lazy_file *lf, int fd)
 +{
-+	int ret = choose_best_symbol_by_attrs(syma, symb);
-+	s64 a;
-+	s64 b;
-+	size_t na, nb;
++	struct dso_lazy_file now;
 +
-+	if (ret >= 0)
-+		return ret;
++	if (lazy_file__stat(&now, fd))
++		return LAZY_FILE_ERROR;
++	if (now.dev == lf->dev && now.ino == lf->ino && now.size == lf->size &&
++	    now.mtime_sec == lf->mtime_sec && now.mtime_nsec == lf->mtime_nsec &&
++	    now.ctime_sec == lf->ctime_sec && now.ctime_nsec == lf->ctime_nsec)
++		return LAZY_FILE_MATCH;
++	return LAZY_FILE_MISMATCH;
++}
 +
- 	/* Prefer a symbol with less underscores */
- 	a = prefix_underscores_count(syma->name);
- 	b = prefix_underscores_count(symb->name);
++/*
++ * Check that the file of @fd has the build ID of @dso and the string tables
++ * where @lf has them. A copy with an added section, such as a
++ * .gnu_debuglink, keeps the build ID but can move the tables.
++ */
++static enum lazy_file_check lazy_file__check_build(const struct dso_lazy_file *lf,
++						   struct dso *dso, int fd)
++{
++	enum lazy_file_check ret = LAZY_FILE_ERROR;
++	u8 build_id[BUILD_ID_SIZE];
++	struct build_id bid;
++	GElf_Shdr shdr;
++	size_t shnum;
++	Elf *elf;
++	int size;
++
++	elf = elf_begin(fd, PERF_ELF_C_READ_MMAP, NULL);
++	if (!elf)
++		return LAZY_FILE_ERROR;
++	/* A failed read cannot be told from a missing build ID note. */
++	size = elf_read_build_id(elf, build_id, sizeof(build_id));
++	if (size <= 0)
++		goto out;
++	build_id__init(&bid, build_id, size);
++	if (!dso__build_id_equal(dso, &bid)) {
++		ret = LAZY_FILE_MISMATCH;
++		goto out;
++	}
++	if (elf_getshdrnum(elf, &shnum))
++		goto out;
++	ret = LAZY_FILE_MATCH;
++	for (size_t i = 0; ret == LAZY_FILE_MATCH && i < ARRAY_SIZE(lf->strtab); i++) {
++		const struct dso_lazy_strtab *st = &lf->strtab[i];
++
++		if (!st->size)
++			continue;
++		/* A stripped copy can have fewer sections. */
++		if (st->shndx >= shnum)
++			ret = LAZY_FILE_MISMATCH;
++		else if (!gelf_getshdr(elf_getscn(elf, st->shndx), &shdr))
++			ret = LAZY_FILE_ERROR;
++		else if (shdr.sh_type != SHT_STRTAB || (shdr.sh_flags & SHF_COMPRESSED) ||
++			 shdr.sh_offset != st->off || shdr.sh_size != st->size)
++			ret = LAZY_FILE_MISMATCH;
++	}
++out:
++	elf_end(elf);
++	return ret;
++}
++
++/*
++ * The name offsets are only valid in the file that dso__load() read. Accept
++ * @fd if it is that file, or another file with the build ID of @dso and the
++ * same string tables, such as a copy, and keep its identity for later reads.
++ * If it is not, for example after the binary was replaced, reject it and
++ * every later read for @dso. If it cannot be checked, do not read from it,
++ * but let later reads try again.
++ */
++static bool dso__lazy_file_ok(struct dso *dso, int fd, const char *name)
++{
++	struct dso_lazy_file *lf = dso__lazy_file(dso);
++	/* Reading the build ID at every lookup that loads a name is slow. */
++	enum lazy_file_check status = lazy_file__check_stat(lf, fd);
++
++	if (status == LAZY_FILE_MATCH)
++		return true;
++	if (lf->check_build_id) {
++		status = lazy_file__check_build(lf, dso, fd);
++		if (status == LAZY_FILE_MATCH) {
++			lazy_file__stat(lf, fd);
++			return true;
++		}
++	}
++	if (status == LAZY_FILE_ERROR) {
++		if (!lf->retry_warned)
++			pr_warning("%s cannot be checked after its symbols were loaded, some of its symbol names are not shown\n",
++				   name);
++		lf->retry_warned = true;
++		return false;
++	}
++	pr_warning("%s changed after its symbols were loaded, its symbol names are not shown\n",
++		   name);
++	lf->rejected = true;
++	return false;
++}
++
+ /*
+  * A name that cannot be read becomes "[unknown]". The caller holds the
+  * DSO lock.
+@@ -1699,6 +1842,8 @@ void dso__load_symbol_names(struct dso *dso, struct symbol **syms, size_t nr)
+ 		;
+ 	if (i == nr)
+ 		return;
++	if (dso__lazy_file(dso)->rejected)
++		goto out_unknown;
+ 	if (!own_ns)
+ 		nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+ 	name = dso__get_filename(dso, "", &decomp, type);
+@@ -1708,13 +1853,18 @@ void dso__load_symbol_names(struct dso *dso, struct symbol **syms, size_t nr)
+ 		nsinfo__mountns_exit(&nsc);
+ 
+ 	if (fd >= 0) {
+-		read_symbol_names(dso, fd, syms, nr);
++		if (dso__lazy_file_ok(dso, fd, name))
++			read_symbol_names(dso, fd, syms, nr);
+ 		close(fd);
+-	} else {
+-		pr_debug("%s: cannot open the symbol table file\n", dso__long_name(dso));
++	} else if (!dso__lazy_file(dso)->retry_warned) {
++		/* The failure can be temporary, so later reads try again. */
++		pr_warning("%s cannot be opened after its symbols were loaded, some of its symbol names are not shown\n",
++			   name ?: dso__long_name(dso));
++		dso__lazy_file(dso)->retry_warned = true;
+ 	}
+ 	if (name)
+ 		dso__put_filename(dso, name, decomp);
++out_unknown:
+ 	for (i = 0; i < nr; i++) {
+ 		if (symbol__needs_lazy_name(syms[i]))
+ 			symbol__set_unknown_name(syms[i]);
 diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index a6a2ab200f98..fc98fab1c8d0 100644
+index d690cb1d021c..27def18f0f5c 100644
 --- a/tools/perf/util/symbol.h
 +++ b/tools/perf/util/symbol.h
-@@ -295,6 +295,7 @@ int arch__compare_symbol_names(const char *namea, const char *nameb);
- int arch__compare_symbol_names_n(const char *namea, const char *nameb,
- 				 unsigned int n);
- int arch__choose_best_symbol(struct symbol *syma, struct symbol *symb);
-+bool symbol__choice_needs_names(const struct symbol *syma, const struct symbol *symb);
+@@ -271,6 +271,9 @@ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 		  struct symsrc *runtime_ss, int kmodule);
+ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss);
+ void dso__load_symbol_names(struct dso *dso, struct symbol **syms, size_t nr);
++struct dso_lazy_strtab;
++int dso__set_lazy_file(struct dso *dso, int fd, int dynsym,
++		       const struct dso_lazy_strtab *strtab);
  
- enum symbol_tag_include {
- 	SYMBOL_TAG_INCLUDE__NONE = 0,
+ char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name);
+ 
 
 -- 
 Git-157)
