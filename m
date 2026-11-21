@@ -1,68 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.14
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795239372;
-	b=3lamGFVn3gQAuBY1+VCAYRdLD/JfhTQ7JYHtOu3+OkWSskysVooahei5kt9pkROfS8Vj
-	 1EbwmR8aEWZ8Dd66UqlE5kC8HVGE6u6j0RN9tyI045obKHyYQCqYPcajaZJ65LV8bwL/+
-	 owYJh4uMDwRRD0pDZHrdoVqBumO9B+g4PlneCbhF63rPRd+tdIKaoloo1P0PS3n6mE6dp
-	 K4XqhC+lheSYA4jqu1dKNbTCOC0roCRHfeYWS1pXJvxZTQ4VRF+iMTNb2PEE98HxZn+0B
-	 gyWQOQgjqn2KW5FWJWB8Jn9O3oyKnXqcnW2vGfc7Bank4uoj4ZIEtN4AcmK4Sxpa7tw==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795239372;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=0o3FRnQiKkoscsEUT3YbtKJLx8HWGG44j8iwYcNZKHw=;
-	b=JbaM2jSWZbc03N4IXdvitbuSEpFQcz6Xp8ROf4/zDzzZGwf6xQdg1R070zAQE2KO48/3
-	 zAKWQ7nm1J4TEZRxIeEK7crjg/+6p3ZTXcYDqJ3z4CKBw3HTnH9HlqW1BzOyh32YE4WmV
-	 vXPCmfG6OuraJNgvJpctA+K+6ZSD0vvIk6dBwnmk9+zCaBdPC9bZbiVr557qRtVVqnYWa
-	 DHn83FU8hNs0NXH0w8uK45sa4LmpFyvGlVTDOPpMZC13BFE8k/8eEHM8De2jejEGRLAZy
-	 aCjnkYLuMAhMJKtfrAXrtXglPSog0UxqVwfaVIk5j6wVI6fK/3bYK8HTIXK1kBQ6K4Q==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=j8EeED3Q;
-	arc=none smtp.remote-ip=198.175.65.14
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.171
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795243491;
+	b=m5ab5f4eomjtNeyJTig4WAscba8XjhKT+4Q9fn+LqU+IuQ4ma114rwdATZZeMEgTvYu7
+	 B5Fp7Jvz9GDxQ1dOY2hyBjapfNdzZA/eDGLGBbd3SP2kSXUxNNjqlvvX6NExJASfW5pEy
+	 ImsGqfsE498KFuQd++UuYNkKqbFGWQqDZeFDjzD2Q0Jm1ZCVqNxrHN7JrqZN4wP8kSLLe
+	 UNKHB4lWopmNBiKtzo2ez2CZ8A/7kmXQRb8oOmjufifSYIZVQyCQYCv3sZ1ZuraJJLjYp
+	 JGBcf46M5i0GGKN9qXPKL/YhmANKYuSWR/46LYzU1zbtKimcAbCnZ8e0s2kdlMYadww==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795243491;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=rJGaXCKWewK0o1WODe/ahcxjTKhVHE+pDRivB69i4vo=;
+	b=JbZNu/aRyPHJi6tVASLfYXGCW5Zwyb1rnZnmV8RZWtwBtUQ1tqkevz6UTz7Z1JT+IxXy
+	 JUYB2ZxHvwziQX6M1c/fy8B2inIIMktknbV5/DHq9r85xgJx41w/MGpheUbPWrgUe3AEV
+	 f5wh1dn0WNWfKMQuIOO0F+i941RDt8jJRmnDTOyiYJ51uk75uC/gZeWdPFcd3fHyRXnQB
+	 P6J+83OI51HCj0uYKAD5YDxnzb/JgCLPhzZJ81M55U/GaUqmvv4DsZQpOtL4vQ7oRfbMf
+	 BDeBdQsbtkiT69/UQBcG7vif3VSIuUoAASbFJLNcZu5j1HNqBWPJfZhaB2FqsRdXpeQ==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=PZkMDnkV;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.171
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA6A606A32C;
-	Sat, 21 Nov 2026 05:36:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AFA6A606A32C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB76F606A684
+	for <linux-perf-users@vger.kernel.org>; Sat, 21 Nov 2026 06:44:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CB76F606A684
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=j8EeED3Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795239371; x=1826775371;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=oGHFSLX2ZWq3/D9o1TXL/H7n6lw7cEG3lMvkKg7Zizo=;
-  b=j8EeED3QWCCNwjg98IqjrnK2iY8nL5pHtNP/SwyW8YJPGXzsxZPh1j9Y
-   w5lSEWZn3rEvjkqataVAbY3mPmBAZmlBdB5SwnU1LKBBF+woMmoM4t+jf
-   TIVJ5P0jpjOSceLig4M8hfwCC74HMsBBkkOdkKK4iwDFy0uLa4NgekNL2
-   XrWWH+toUdMiV+R5lB9DAi6sVUcjx/O+lrOVageJ+LSFUvD86ve/1RO9w
-   3XE6cQXZb55xZBwR5J94XrIznSiFqSzZLWHidI3U/kl6Wi+qed2YWyHS5
-   nJnqm2+jvCsEDqnCkPzEvHtblU/FnP7z2k3sZuCjV887JtWuqd19eCEKO
-   g==;
-X-CSE-ConnectionGUID: gC5T/XHvRSaCxSY7PbHGgQ==
-X-CSE-MsgGUID: w9bM5KuzQK6ydOdTdKRCWQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11972"; a="4011810"
-X-IronPort-AV: E=Sophos;i="6.27,224,1787036400"; 
-   d="scan'208";a="4011810"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 21:36:10 -0800
-X-CSE-ConnectionGUID: YrtsrEmMQhGUdJckcrBI6Q==
-X-CSE-MsgGUID: JtL1kT7bS4W4ro3XpJvdjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,224,1787036400"; 
-   d="scan'208";a="11068491"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2026 21:36:05 -0800
-Message-ID: <e8e95f5f-973c-4b81-944b-46d7ce683042@linux.intel.com>
-Date: Sat, 21 Nov 2026 13:36:00 +0800
+	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=PZkMDnkV
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-55be673e029so80171cf.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Nov 2026 22:44:48 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795243488; cv=none;
+        d=google.com; s=arc-20260327;
+        b=LJls8aUft4BJWlPOQzMnnbmV0rfbsQ/iFzpAIVr0u3MOUyoIdaMSLWZ2u8jp8dnvEX
+         FZxDfPMiQuJfeAektKfbAnyYA7gGMNCmf0H76RyCP7EjjcaLONDwFtGR0I9Zr2GwwFSn
+         gNjpQDxJKu8zJ8m9MEiz73sFfzthcaKOlOutuxBu1drZTZNoWGy3bI10nl9th+YoFWM3
+         0CVOMYr+kmfwVLXF3+DD8oaPj1UcBviISrvmF1KYGlw6CIEYq9Tt3aFv+9hUOiAft1K4
+         /TjMTyClmHB5hyMXmnJMVlIRd640tzjIHvguF4qTQOXxOYCo2bQntwGnh+1iJb9x37Ol
+         +GvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=rJGaXCKWewK0o1WODe/ahcxjTKhVHE+pDRivB69i4vo=;
+        fh=wizw7xMR9csjNbqkBaMTHvv1IRAN5DvjkjxGrls8FXc=;
+        b=AMApJHlwGsv0rLqZmryzBVNoxgWJBGPSL6YlbqGR3DTQFjvAz/+DWC2rw6CyNQJ8tI
+         hhaugV6WCd+BPYUurHWH4MOFsFQddcpnWQcAEEVPJWqJJnxgx2v4LRYjy6AMIW02E2HO
+         ZljQPkh+yoMsLxUstdHKjwQLSsNME+12gGAzivLPcYZKrCAzx7s1c1sSxWTPRTBlkPBK
+         eY4WQEJ7gs7yt9xCspRdIftzR2HEesdR76qG7VWzp3fLbw6HVkYvsL2RgLa5E6n1rRiG
+         FqI9yB/iEbr6jWeCR+KU2+wGy+MeUfMS2VGWpzKzhhFaWTT5j36Vzr4qqOvoeq42eWW1
+         //LQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1795243488; x=1795848288; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=rJGaXCKWewK0o1WODe/ahcxjTKhVHE+pDRivB69i4vo=;
+        b=PZkMDnkVarcdoXoURc6+S4eAc9MUQqoG7OCt8F3EMhWrOQFPuQxNuNs4DH2eXKxc7O
+         LE6Q5/ntHK1Z6yBp4O/dGez7oJyO0WvTq2NlwoYT6kjtMuDdZCedU/RNHWWBvzKhmDXq
+         OtYPM5ImVNUkkiSL1ndqP4q/4J/hMa5ohNlcadghVe0VVEW1s2tnGs071E2W3GVU/FPF
+         Q4eie//Q6cHXcPtbablirHfizCXdy5EK8PEcnlLUvBDoy1qTwLcYMh68n1wFEH2uvmRG
+         CFyMMSw8cOL/6WaFXNp+kOnPFQEwDHZz6GKshw0hIEkbV/ZlzKXa5sUd6pp7tw7Bh0IE
+         D6Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795243488; x=1795848288;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=rJGaXCKWewK0o1WODe/ahcxjTKhVHE+pDRivB69i4vo=;
+        b=Ar67UX+YWc7q9n96rKxtxcyM5/mIqMrYrK+pGLSKjrRt07pi0crKvP1W/+6N7HPC3s
+         TCfTx+8nNBpv1xk6xID61qxzG65O8dmaaPBYegs+xfB6ydTppi2hL4QtCtNctAj747qb
+         a9fVe9qPylWbXLw3o0DNc4ypT5eGFPHK7lSlYYmoO2GfVU30TkY8NpVwWcMkB42wbQxd
+         twzGTbpgOupX0S1HQn7tbJAVqGT/0hn2LQpF0MtTCpLLn4aU8M+s2h1Zdh5+SDrl/M8Q
+         lS2OPWN02DEYBwdKnkhBMRqk5/6mLPtja5xWaYLVkL9i2PMS0aKrhSHbVDMV94mfjzJ7
+         3lQQ==
+X-Forwarded-Encrypted: i=1; AL+hErGA88locjjglO3K6PQxseiHO4Ixk+9MJvHKsyFNlxbDQQNQnS58dwiqdbjLBtz2m5fmQgnuf7ZxJi0Wbp6svxm5@vger.kernel.org
+X-Gm-Message-State: APuU4Z/AT4iiV8KpSJrpNxp0P8RaFeu8Fi8biC2goijjPCztvtcsjkvm
+	gsCjnxXLhhf4EgvSel1KpW/2RLQ0Ay2wbe9UKPqpODfrH3HMKq0oslRgV6fCbaYrm+rxkmheaso
+	zTxtc1vGU4p8WNsPc7fyF8XQ5utp7TqqoDa2HSrkx
+X-Gm-Gg: AZFdTZcltbwO50uEZAvtZONl9f+6MCEO5RvsFULO5udu7CyF/xKNB3ihe4ixoDZZtg6
+	zgmtlpAqk6okvDK/P3nJxZa+HNVatDl5e+M5sF8QoGS66g8WGy7yLJAXKkZCBg0BxBeHYa3tgd0
+	fu6cJ/0gAI0PlNqphLKAq6QQ9WgLThHnpYxKJJWFLa9uO3I67E2o9Mxha5gp5Ck0yqP5FXbKryW
+	fX27TnmLljx7KVP2lqkTNtQ+VmdZQDw8eA7RfWbxRhrkKpMM479eBlydYaQI9cyqaiWhFBZ3soN
+	kaLW2b9Xi26/tgsLJL/Y5r0Ucj/RNRIIHEDIaNwu+3ZuelImtpjEp9v6uW1CVbj2CDxx5MYSDP8
+	cPv69Qy5Kt2ExslVGY2223Fc4RKgI2GMiFD0B
+X-Received: by 2002:a05:622a:2b44:b0:536:934f:7da2 with SMTP id
+ d75a77b69052e-55d88013e93mr11498761cf.2.1795243487193; Fri, 20 Nov 2026
+ 22:44:47 -0800 (PST)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -72,100 +104,81 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/intel/ds: don't WARN when the BTS buffer can't
- be allocated
-To: Yuehong Wu <wuyuehong@cmss.chinamobile.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- x86@kernel.org
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Kan Liang <kan.liang@linux.intel.com>,
- David Rientjes <rientjes@google.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20261105-perf-ds-bts-warn-1-yuehongwu@cmss.chinamobile.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20261105-perf-ds-bts-warn-1-yuehongwu@cmss.chinamobile.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20261113164152.2095566-1-irogers@google.com> <20261113164152.2095566-6-irogers@google.com>
+ <av_aLv6EpM9Umko3@google.com>
+In-Reply-To: <av_aLv6EpM9Umko3@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 20 Nov 2026 22:44:36 -0800
+X-Gm-Features: Aa3M54o_O14Zh_JgQcHXrC4CBU15axyWAwszYpzIdNObSrbntvtFzWqzUehOzsM
+Message-ID: <CAP-5=fXj-43JCDZVhY_E=hEQ=x18aN1TwsE4rKXFX7tfZdzCZg@mail.gmail.com>
+Subject: Re: [PATCH v13 05/21] perf build: Enable additional Clang
+ thread-safety flags
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, adrian.hunter@intel.com, bvanassche@acm.org, 
+	elver@google.com, james.clark@linaro.org, jolsa@kernel.org, 
+	justinstitt@google.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev, mingo@redhat.com, 
+	morbo@google.com, nathan@kernel.org, ndesaulniers@google.com, 
+	peterz@infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 11/6/2026 11:06 AM, Yuehong Wu wrote:
-> alloc_bts_buffer() asks for the buffer with __GFP_NOWARN and then WARNs
-> if the allocation failed anyway.  The failure is already handled: the
-> caller disables BTS for the event and releases what was set up, and
-> perf_event_open() returns -ENOMEM.
+On Thu, Nov 19, 2026 at 9:27=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> The WARN_ONCE() came with commit 4485154138f6 ("perf/x86/intel: Avoid
-> spamming kernel log for BTS buffer failure"), which added __GFP_NOWARN to
-> stop the log spam of the failing per-CPU allocation but kept one warning
-> as a hint.  That hint is fatal under panic_on_warn: on a machine with
-> BTS, the 64 KiB buffer allocation can fail on a memory-constrained
-> system and a plain perf_event_open() then panics the kernel.  Since the
-> allocation explicitly asked not to warn and the error path is fine, drop
-> the WARN_ONCE().
+> On Fri, Nov 13, 2026 at 08:41:36AM -0800, Ian Rogers wrote:
+> > Align tools/perf's Clang thread-safety flags with the kernel's
+> > scripts/Makefile.context-analysis by adding -Wthread-safety-pointer,
+> > -Wthread-safety-beta, and (when supported by the compiler)
+> > -fexperimental-late-parse-attributes.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/Makefile.config | 8 +++++++-
+> >  1 file changed, 7 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > index 3eb8d095cda0..b50702bac53c 100644
+> > --- a/tools/perf/Makefile.config
+> > +++ b/tools/perf/Makefile.config
+> > @@ -64,7 +64,13 @@ ifeq ($(CC_NO_CLANG), 0)
+> >    endif
+> >
+> >    # Enabled Wthread-safety analysis for clang builds.
+> > -  CFLAGS +=3D -Wthread-safety -DWARN_CONTEXT_ANALYSIS
+> > +  CFLAGS +=3D -DWARN_CONTEXT_ANALYSIS -Wthread-safety
+> > +  ifeq ($(shell $(CC) -Werror -Wthread-safety-pointer -Wthread-safety-=
+beta -c -x c /dev/null -o /dev/null >/dev/null 2>&1 && echo 1), 1)
 >
-> Reproduced on 7.3.0-next-20261027 by making the page allocator fail the
-> order-4 BTS buffer allocation (fail_page_alloc: min-order=4,
-> ignore-gfp-wait=0).  Without this change the first perf_event_open() of
-> a hardware event hits the warning and, with panic_on_warn=1, panics.
-> With this change the same allocation failure is silent: BTS is disabled
-> and a following branches/period=1 event returns -EOPNOTSUPP, while the
-> kernel keeps running.  The buffer is allocated per possible CPU,
-> independently of any specific BTS event, so the failure path is
-> exercised without BTS tracing.
+> Is there a better way to do this?  I think there's something like
+> cc_has_option but I cannot find it.
+
+Good point - tools/build/Build.include defines `cc-option` (via
+`try-run`), which wasn't included in Makefile.config yet. In v15 I'll
+include tools/build/Build.include (updating TMPOUT to use $(OUTPUT) when
+set) so this becomes:
+
+  CFLAGS +=3D -DWARN_CONTEXT_ANALYSIS -Wthread-safety
+  CFLAGS +=3D $(call cc-option,-Wthread-safety-pointer -Wthread-safety-beta=
+)
+  CFLAGS +=3D $(call cc-option,-fexperimental-late-parse-attributes)
+
+Thanks,
+Ian
+
+> Thanks,
+> Namhyung
 >
-> Fixes: 4485154138f6 ("perf/x86/intel: Avoid spamming kernel log for BTS buffer failure")
-> Signed-off-by: Yuehong Wu <wuyuehong@cmss.chinamobile.com>
-> ---
->  arch/x86/events/intel/ds.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
 >
-> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-> index 8444670..27e4115 100644
-> --- a/arch/x86/events/intel/ds.c
-> +++ b/arch/x86/events/intel/ds.c
-> @@ -939,10 +939,8 @@ static int alloc_bts_buffer(int cpu)
->  		return 0;
->  
->  	buffer = dsalloc_pages(BTS_BUFFER_SIZE, GFP_KERNEL | __GFP_NOWARN, cpu);
-> -	if (unlikely(!buffer)) {
-> -		WARN_ONCE(1, "%s: BTS buffer allocation failure\n", __func__);
-
-It's meaningful to keep the WARN_ONCE() here since __GFP_NOWARN is set and
-the memory allocator won't print the warning message when allocation fails.
-
-About the panic_on_warn worries , as the
-"Documentation/process/coding-style.rst" said, it's the users'
-responsibility to deal with the possible crash if user enables the
-"panic_on_warn" option.
-
-"
-
-Do not worry about panic_on_warn users
-**************************************
-
-A few more words about panic_on_warn: Remember that ``panic_on_warn`` is an
-available kernel option, and that many users set this option. This is why
-there is a "Do not WARN lightly" writeup, above. However, the existence of
-panic_on_warn users is not a valid reason to avoid the judicious use
-WARN*(). That is because, whoever enables panic_on_warn has explicitly
-asked the kernel to crash if a WARN*() fires, and such users must be
-prepared to deal with the consequences of a system that is somewhat more
-likely to crash.
-
-"
-
-
-> +	if (unlikely(!buffer))
->  		return -ENOMEM;
-> -	}
->  	hwev->ds_bts_vaddr = buffer;
->  	/* Update the fixmap */
->  	cea = &get_cpu_entry_area(cpu)->cpu_debug_buffers.bts_buffer;
+> > +    CFLAGS +=3D -Wthread-safety-pointer -Wthread-safety-beta
+> > +  endif
+> > +  ifeq ($(shell $(CC) -Werror -fexperimental-late-parse-attributes -c =
+-x c /dev/null -o /dev/null >/dev/null 2>&1 && echo 1), 1)
+> > +    CFLAGS +=3D -fexperimental-late-parse-attributes
+> > +  endif
+> >  endif
+> >
+> >  include $(srctree)/tools/scripts/Makefile.arch
+> > --
+> > 2.56.1.703.gf848ed807c-goog
+> >
