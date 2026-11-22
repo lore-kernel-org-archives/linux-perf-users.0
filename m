@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795383682;
-	b=oeH5I7DcDSg4gKj3+6KQGHE2rPcB1QbCyLrTpQin/7jVVRzr7nJIOVf/wNX0krczlRAg
-	 nk2vPLLGvtze5eHWJwWSFImKekrQ7Ai6nkD+sCGMuqyYEUxzuhOGeUeOufZwrd27HfY6g
-	 iuzrECIj2Wr8QTT14k474CIlvpjPCYhA8oQEmW2Zo9KHiSagx7wy6o93GPx5jStTGa67f
-	 c3YGNo7YDmAfMhppLPyKMEL2BPBPXy0gBzmLqlqhWmW4Hh6KsI4JTH1Evd4QkV9YbjLwE
-	 9HYVIqPYMN1wTQz1QyePoJcQtdFwaRsQBShXzeHfNrWcaoy6J4eGn6Kpzq8yGUgS5aA==
+	t=1795383689;
+	b=BR04OY2m/342zsRMwIfDlY1QHKhHIhtin5w1eUPQS+cpVbQu/yGh/bpJqRxW9tVxLN2k
+	 k1lwPANk6eykoRSTuhBFfjhNfUl7ZLqPSSqNamfGpoacyOkk3KJnREe1crTgO86e2onn5
+	 drNP9J071QXkM5+Fx68PJknMhtoSKFACPJImPaKg5KNey0obDKF0NC03NstRjS9y+U2bg
+	 GESQxWG3NzjGcc/hiYA72Wf8EWSW2z1juEPg0fl6KGHYNPTWeEgArvj7tGgSi8gx5r2qK
+	 MhhNuefUtVz90h93elKL1oMrgQNCRvKFDwAvHk9Ec+8y9DF6fU+SqLMoLrOzfdAJJuA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795383682;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795383689;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=lcjtcwl0f/VjQ5MXMPxqJNyppae5RyWWs0S0BDnyFb0=;
-	b=V01zljPMD0xsV6Nmz/rLLIiQ2A/lLXarKXtxfSdK97GyemLw93TRVjUoCPql5n3Pg5BS
-	 Br8mfdxXssoEvKkMdVAv4AzDJA8HvHjsdIrrz/rtO5FX0KKR1n7/L9uvcn+wM0Sv4oTwN
-	 W8fJFKi3Wc1bimd308G2KVUcsTARJbCj5e77QUa5x44iEiSXOqz5OkREzBUkj0VsPAjCC
-	 zdz5qJ7XLix3treVHY4SFI2RYlz/G4FBKyxbRrqMgaPtfrsaR89kn42iFJ01u1Lt0mf+d
-	 m67WlI2X0DQInN6xTkQ5DDxWksCnS9BnT8C9kG06BCt4s/0fYO7tjur6ni+t7eG2NdQ==
+	bh=NpIDyUQRBSope1I9jsX63rj+ZdZarurWt83uR7hSslo=;
+	b=wfiWBqneK73DjA/9vh/EturwdvKAZEAOqhyGwTxYnL/JfeDF4WRiM/Pg4YW7f+4kVgow
+	 oZzVfDCLIvjb6JxPa4WWiHdIjuiBHO5W6UMXkVpd+Dqi5QUtoeliLdF4/Wh1TpQ2TJvjM
+	 aBO4kNQzladoMkyBbPfVet5L8VxJ1XJgY/QKqigw+4HY1gFyKhmyrmTTkvy86CMcKONSp
+	 faccI7GHZJ2o7ABaf4DIb3dWMAsPIq9dmqDefK2oWseA4ZLY4T5oWG8xd/+KZgBpcdyWt
+	 ET2tmI0Dfvcxi5RQqclxi1sw2ADbqJ2TGMCZhRqz0OeOWR9UEeEGxdaDNuNEfZrpmcQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UnAfleLm;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TmAE1rue;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DA0606A33E;
-	Sun, 22 Nov 2026 21:41:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24779606A31A;
+	Sun, 22 Nov 2026 21:41:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=UnAfleLm
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D05441F000F2;
-	Sun, 22 Nov 2026 21:41:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TmAE1rue
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25C291F000D2;
+	Sun, 22 Nov 2026 21:41:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795383681;
-	bh=lcjtcwl0f/VjQ5MXMPxqJNyppae5RyWWs0S0BDnyFb0=;
+	s=k20260515; t=1795383688;
+	bh=NpIDyUQRBSope1I9jsX63rj+ZdZarurWt83uR7hSslo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=UnAfleLmJuTtSytWKBEyrnyJtYp19BB6Akh6YeIZFuS5QkaWZteJiGfI8ejRR9hmG
-	 taUGRhtDV3ECjEYyLgENJZdasnanuW2pbQOQR2awRNfph9kVXgWoS1b4kA48RhLasH
-	 Y7f0F/dNYn7hHroIF95ZyNdQlq1S+ZtnpUI6F4Wdg2Sbvkr+355jp9ejB9/1CBIzAY
-	 AbCMw9Gn24NoFnWtCz7GgjAejRATkXe9Lpnymy5qQt+0yaT36Ynn8oow5DNFtiSxGp
-	 n49mSvdfl9Ut+IvD3yFZ7Ahh132I2fHWNbzG1jCvg+XHJu1UpQqdeA4TeUhD/wSaeH
-	 iIi6HeXYbHg+w==
+	b=TmAE1rueBk3scdbSwYDalEI8z69TuuBlKH6IzCFLJtAreTBUr5lbE/vgp/XDx8Ukc
+	 Mv6tUTn+HXgG07sESzfaG5Krky6kxI3ImspqvM2bPUGSfNVBDrU9Z0GzOvvm5E6mNN
+	 MYLy+WAqM+eTdjZLMnYeglYk78cFiA9QNXpa93nHklgTBTVw/xfSt3zOozNO+zX6yG
+	 WfGrQ+TAymUAUqEAXEr3n3C7eb7uR0ns6CGYfzlinrGJF7uUGE7BLG9BdyG1ZPrNe8
+	 zZOXZX2OIsg8JTRkg+MtMcT/AgTTbujdNlyM8n9mB32J9rVwddn1eOCY2B2OsY/1aC
+	 Dq26UeC0KR1hg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v11 14/19] perf test: Drop samples without an IP in the dlfilter test
-Date: Sun, 22 Nov 2026 18:40:20 -0300
-Message-ID: <20261122214025.16769-15-acme@kernel.org>
+Subject: [PATCH v11 16/19] perf test: Skip the trace summary BPF tests without kernel BTF
+Date: Sun, 22 Nov 2026 18:40:22 -0300
+Message-ID: <20261122214025.16769-17-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261122214025.16769-1-acme@kernel.org>
 References: <20261122214025.16769-1-acme@kernel.org>
@@ -70,38 +70,43 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Since v7.3 the kernel zeroes PERF_SAMPLE_IP when a user-only event skids
-into kernel mode, so that kernel register state is not exposed to user
-space: commit 166f10836a653dfa ("perf/core: Fix kernel register info
-leak via hardware skid").
+The --bpf-summary tests need BTF in the running kernel; perf check
+feature bpf only tells whether perf was built with libbpf.  Without
+CONFIG_DEBUG_INFO_BTF the skeleton fails to load and the test fails
+instead of skipping.
 
-The test records without an event modifier, which is user-only only when
-perf falls back to cycles:u for an unprivileged user, which is why root
-runs never saw it.  The dlfilter keeps those ip 0 samples, and the check
-that nothing but test_loop survives then trips on their lines: the comm
-column reads "perf".  Drop them, as everything except test_loop must be
-filtered out.
+The /sys/kernel/btf/vmlinux file indicates that the running kernel has
+BTF available for the tp_btf programs.  Do not use an on-disk vmlinux
+image for this check: it can be readable even when the running kernel
+has no BTF loaded.
 
-Fixes: 199d5e872a9ce737 ("perf tests script dlfilter: Add a dlfilter test")
-Reviewed-by: Ian Rogers <irogers@google.com>
+Fixes: 2d099ccaadf623d3 ("perf test: Add perf trace summary test")
+Cc: Ian Rogers <irogers@google.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/script_dlfilter.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/tests/shell/trace_summary.sh | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/tools/perf/tests/shell/script_dlfilter.sh b/tools/perf/tests/shell/script_dlfilter.sh
-index 88222280f6094fd0..797cd9ae84141f64 100755
---- a/tools/perf/tests/shell/script_dlfilter.sh
-+++ b/tools/perf/tests/shell/script_dlfilter.sh
-@@ -46,7 +46,7 @@ int filter_event(void *data, const struct perf_dlfilter_sample *sample, void *ct
- 	const struct perf_dlfilter_al *al;
+diff --git a/tools/perf/tests/shell/trace_summary.sh b/tools/perf/tests/shell/trace_summary.sh
+index 0e603addb2a99d4d..154f85f16e6528f9 100755
+--- a/tools/perf/tests/shell/trace_summary.sh
++++ b/tools/perf/tests/shell/trace_summary.sh
+@@ -63,6 +63,15 @@ if ! perf check feature -q bpf; then
+     exit 2
+ fi
  
- 	if (!sample->ip)
--		return 0;
-+		return 1;
++# The tp_btf programs need BTF in the running kernel.  A vmlinux image
++# on disk is not sufficient: it can be readable even when the kernel has
++# no BTF loaded.
++if [ ! -r /sys/kernel/btf/vmlinux ]; then
++    echo "Skip --bpf-summary tests as kernel BTF is missing"
++    rm -f ${OUTPUT}
++    exit 2
++fi
++
+ # summary only for system wide - per-thread summary with BPF
+ test_perf_trace "-as --summary-mode=thread --bpf-summary"
  
- 	al = perf_dlfilter_fns.resolve_ip(ctx);
- 	if (!al || !al->sym || strcmp(al->sym, "test_loop"))
 -- 
 2.56.1
 
