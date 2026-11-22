@@ -1,96 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.48
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795305986;
-	b=N0xUp4DYoI/Mv7K4Jqn4RI1BRD+uDqpeFXJzk8E60tMD8sHtZ49eY74pa86Y05RpyAIK
-	 mVfg6zmx6sIYmrfFOsiUlo/qUgB1aOM1B6Ep/8F43NWAbTzzHiP2Mz90/nqUcSeL77Ulc
-	 cG5uahgesqH5DI9A3JW1nDjT5056x+TsxvLBZN3MsoTbA9w5PHiyzq6IGmj1++suoa84G
-	 78XR/3oHArpCvjw1/XHs53TVbDOm4XFOln0Twwkgb/+8Z5GpUVlsmfDkFALvpGGuaI9rR
-	 PHpwdndTRvCjnOaP71tMB52Iu2cUyn0R6raAz3DgAoHCNASr2ZM+kU8xorenxXV1rKg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795305986;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type;
-	bh=43XSm/5Oye+v81W5sTWVY2MRJ2snpM9u71zn2mup/WM=;
-	b=zNW7jHVwqi+kwuVxR8cy5ZvPtkUZO46yN+1bb9/bcSnE4TBnWY6KltDgI6dXI3o9LbaU
-	 ZDnd0PO8tWbqxC/8jSAFfZC0MzLF2zduvHOyqzdt3KVG/wS6wyTQNu45XViPO7QJT0xLC
-	 dtdJea0hcgK8PvAIYI6zyyjAy5obMjfG+an/fcbTcoudoBmdgXTHtY1czSzP/xRdp26Ds
-	 insUr6LisJdX1PKLANP/rDEqn9Y1nzBP6q0X4h9NX3CF6XO0ghhcZEI1tDCmxTyw83AEz
-	 GFv1Kg7+7oI9wjJi4vjxxICvlwLAi4W18u3L5EHVXVUlZkMZMm0JoFxdPv9XMq1dWGQ==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=uber.com;
-	spf=fail smtp.mailfrom=uber.com;
-	dkim=pass header.d=uber.com header.i=@uber.com header.a=rsa-sha256 header.s=google header.b=566LQgT7;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=74.125.224.48
-Received: from mail-yx1-f48.google.com (mail-yx1-f48.google.com [74.125.224.48])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=91.218.175.230
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795313014;
+	b=lm0JBwrIfiEEeK8OoSPG21Y7RpR3TAAubBV9w/t78DxMERHl12mHBw5YmebukrH+V7X3
+	 13EVYEXSPJ5ijkRv3ZeQfPlgAmbXV1+MD3QvbsclnxU0xVWoPxf/UVCfbP2/bdlk/bxjx
+	 cTOG4lfOpH2RgIGp2UVyAHL5V0oTJGXQ0thO5CxOmEyUpZO6DnW6fLo0Byxhef0pqUQi6
+	 EtfKXQEObUNdereNcUt5PDuoVwZLQeRXRYEjw/WGLdd9XN/5cDb5IDO3Ma4mJAW8rAvTf
+	 SR1U+XJMaFC+SiagiMoaodS2QB7tKUZxdXbfuZf80O9IOktvjimfpRoEJiGOMGXjjEg==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795313014;
+	h=DMARC-Filter:X-Envelope-To:DKIM-Signature:X-Envelope-To:Received:
+	 X-Mizu-Trace-ID:X-Migadu-Flow:From:Date:Subject:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:Message-Id:X-B4-Tracking:To:Cc:
+	 X-Mailer;
+	bh=JmQdp4UGb+4XNZjBkF8MFhkAgJLRWXap7M+W5jPNqT8=;
+	b=wg/cxsAhC5itjSPPVdBDaMKAKL99LD42t8qv4PBLhUv5SZVHr4Nh9/3gJfMAAkutTycN
+	 01ZnKlDmyZ73fuaXWvb0quEwEIonBBYRm3fGHtEh/hQtb0EedKvzvSJuO3HbcXZ8PghA6
+	 qb1e/BPETAsvvbRkQJN3NJclehkLDPRSqvOMJbm5VplB8H2nxE3ZLHNsiO+03LG+PEzmN
+	 1vuUN6aGKmd9eNCHRfU5csrCucmQ2ajTBgL38x3166aIUuxKIhosOMl3r5jo39IZ19mfp
+	 Zxev0iZKH1qTSCtPNGv+5VdsYFliNYD0u7jjy7GfLwOhHZdKaV+N/hLTvEM+7+FIYjg==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=linux.dev;
+	spf=pass smtp.mailfrom=linux.dev;
+	dkim=pass header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=RQ0ccTkP;
+	arc=none smtp.remote-ip=91.218.175.230
+Received: from mta0.migadu.com (out-230.mta0.migadu.com [91.218.175.230])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7340E606A32C
-	for <linux-perf-users@vger.kernel.org>; Sun, 22 Nov 2026 00:06:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 7340E606A32C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=uber.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 591E2606A320
+	for <linux-perf-users@vger.kernel.org>; Sun, 22 Nov 2026 02:03:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 591E2606A320
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=uber.com header.i=@uber.com header.a=rsa-sha256 header.s=google header.b=566LQgT7
-Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-67da3d03263so2223718d50.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 21 Nov 2026 16:06:25 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795305984; cv=none;
-        d=google.com; s=arc-20260327;
-        b=X4V2HIU8c9moBVNthere/WekTMXb07Q9JkBRAYisn/Z8USjJf/5rZTk6gSO9rag8U/
-         TDMz5uNJYE9ffYkFeuCN7KV99hS18YvLHmHr2AJzCuH38T3CkskxU7T++69xBRsZ274/
-         qkYww3C6ViNHjIoLoamvGViz3reZRKWgBnQEpIpswSbqnZRJIe12387TGsBFddL1j6Dn
-         kfuYpNApKvwWyUZiinEbZ5G+ijQHPY9HB0TThZOdsWXA4T7Ccueh9gng5MDKSUrg0tBv
-         rJ6q5N3M6erDPIO0807T6G8lZgG/jGgzqYo38cxoeaHKIoAGXEhWBEPo6YcJLcpmtQGG
-         6aGw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=43XSm/5Oye+v81W5sTWVY2MRJ2snpM9u71zn2mup/WM=;
-        fh=NPT58Ir7YjRkaN9Rr6t4PuZf/E5jGJ9WzzeCmIYDhVk=;
-        b=lc7h4ZUskkqcF94QhBoKIgw7jDOdG/fXBHLQDIo8k6k8GB5MyLVPKA7OzcU0V+jWFe
-         nfDZSBmtBf7EsoLMNv9iX4R5O1UmGS1VWsKoQY1neznlDdyUT9WTlG3oXg+UA/CbB//S
-         5Lw1K6au8s8abc2O44FvwCzc6OnEkh7/ikIFQwF/uATdFLxPiwFZQzEbsXMyoJCuO66N
-         k6/AqwD/3X1dkPo7yreMjjuOVOHxXEVG4zs+mbibdyf5Giag38qeqiVrZOcd3bOXYe0m
-         a+uXoDXAHqF/bwQTqnUTJNEWaikF4EJBKe8PjIlsDqj167MBOZhNA6nvOByHwaqPzJKq
-         lhGA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=uber.com; s=google; t=1795305984; x=1795910784; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=43XSm/5Oye+v81W5sTWVY2MRJ2snpM9u71zn2mup/WM=;
-        b=566LQgT7esq2VEf3NoVa7rCAvQ8TecHs/i7tv9HbFirGVyPs2RBtUUUqmI12VYGptA
-         ah6D10dKs8SXFrmuKX3qKhw3YW0Xwa/+vYB8dN9K+ipJCyRuFbtTIcyDMXAx3hN6nxcF
-         +Xwy3CDZQUgHCj9WLDbpQnD8tGb2Nn9WSkZ48=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795305984; x=1795910784;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=43XSm/5Oye+v81W5sTWVY2MRJ2snpM9u71zn2mup/WM=;
-        b=o0lGM/sFZ3XFPrxBiSCco5/AssCCW/MkW4g8HEf183EdZm3NkY7hDgdHVGapaI+XF7
-         A9nM30mJxYIFpaybXpOiZ1PjNOprJiom+2SRQDvkJ0kV2DS1TY8G68xIA34qVI5NUNlj
-         OzZ2afmEoV7ucCkDtVWXRNlfgh4RUWWn2BzzTCy4q3axSJd1+cSqYsp31UUW/82sP/4w
-         q8HWskixEn7qaq+NtI5e41iDhQFWnR8GvLYl/krNKAyoDulSF2g3UGXai5n9gMSScn3w
-         EhQquMaLVu/9cKm1bfYFTbZ6tK5btYaWr3ojMwF0h+o0P2ouOTehmE1MNnwt0fXuGy+y
-         z4Sw==
-X-Forwarded-Encrypted: i=1; AL+hErGnnQPe5pTfs8PvNJH4pjIOECIJcHfWjNLWnjXUmjRkFNSpokY0BxxDlTsuGTgEImynSxoKBdaRzEBS04rWEZe+@vger.kernel.org
-X-Gm-Message-State: APuU4Z+VxPem81KUgdLpXAOyf9ZrTbUtQ0OzE7JVfK5xWDtKKSFpxGrn
-	eZuioFPS4G4QY4zQ8BulLMQsuWe2HjnrZSYtTG/4ODyqlROPwrOOYCoCpiNnX1octkHxYrarz1+
-	2+STlcyvHmxggqUuye9LcFb6MleTNhArYdG7SfULN4A==
-X-Gm-Gg: AZFdTZfkHXE8ytH91TAOWLWDQKJ1CDssZ7XgnmHuHXQrWZypUkU5WomBqCOxQcTNlno
-	f+w2fDp7A4Wsozcz5Et7zKsyMqit/PArQE+aIRH5GzBjF5OQ1o5Z98TW9LQDcxblAOr2F4au6Y9
-	8574MhMLuxlwtIe0cKtpoQsIa5eRJh9sxul9sKEeU7aXsQJGmez5Q4RcOV8PXTllP4ZYLK49FXz
-	HbVPj7My1WSt18UEGAmgK3SAUEzjEVZoYsjJv8CmVn9lN7M2PiqHKElM22Yp2l5KVDZNs7NM0jt
-	XrpJC754XntzFCyVowwr50W+NaGw+tULEPUlfNQpH3wzC5s5IYvuQK9Bh+t3BkxujbUhqqdQAdf
-	ny9bybTtK1hnDVVMEcf7IFYH9Zz9HwEoovkEU+091pbtikxAuvf9BJ8XboqkTpoXktLBSBQ==
-X-Received: by 2002:a05:690e:400b:b0:679:c17e:407f with SMTP id
- 956f58d0204a3-67df42b59e6mr2399497d50.10.1795305984101; Sat, 21 Nov 2026
- 16:06:24 -0800 (PST)
+	dkim=pass (1024-bit key, unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=RQ0ccTkP
+X-Envelope-To: linux-perf-users@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=QHMV94eY1Lw126QXv9qve/RmD9iTfi2UbMdXPwF6mRY=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1795313011; v=1; x=1795917811;
+ b=RQ0ccTkPmPlzWaaDJexHzOjTps52REn53hrZn7YZ2FbgDinXIxkQFhzppU+BtsWf9nP8Y0J6
+ LyyYWtKTR3pnBLkOjIOLVnid550tY9j3Ll/D6wAaeXESMK6S+JpKM9LmBsPzymw7oYw570lHB7a
+ bF/NXk3kuQjerLgrNBB2v/7k=
+X-Envelope-To: linux-perf-users@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 55510332c1b80ae4;
+	Sun, 22 Nov 2026 02:03:31 +0000
+X-Mizu-Trace-ID: 55510332c1b80ae4
+X-Migadu-Flow: FLOW_OUT
+From: Qiliang Yuan <qiliang.yuan@linux.dev>
+Date: Sat, 21 Nov 2026 21:03:24 -0500
+Subject: [PATCH] perf/core: Skip cgroup attach IPIs while perf_sched_events
+ is disabled
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -100,58 +60,95 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261005-perf-symbol-memory-send-v5-0-165dceb2b049@uber.com>
- <20261005-perf-symbol-memory-send-v5-2-165dceb2b049@uber.com>
- <asbDJrY97tRqoPaR@google.com> <CA+w=M=TtAfiHVQqiwmchtsWwNeN5So5MxWW=82RRAUXHhg8D+A@mail.gmail.com>
- <atTzPJJvR2-sqtJn@google.com>
-In-Reply-To: <atTzPJJvR2-sqtJn@google.com>
-From: Alireza Haghdoost <haghdoost@uber.com>
-Date: Sat, 21 Nov 2026 16:06:08 -0800
-X-Gm-Features: Aa3M54pmvrE4E58Pk7_kkWcO1hx7Txyg9UmbRekqT_g6DcaxVJXnk_2vAMUNgOU
-Message-ID: <CA+w=M=SOVcLiy3Bs8CKpHmKYMzyN3BOBjV+8wFWH6xoo-DrE5A@mail.gmail.com>
-Subject: Re: [PATCH v5 2/5] perf dso: Allow reading DSO data from an explicit file
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Andrii Nakryiko <andriin@fb.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20261121-feat-perf-cgroup-attach-ipi-v1-1-a0e6d3cce8d1@linux.dev>
+X-B4-Tracking: v=1; b=H4sIAGtNAmsC/x3MSwqEMAwA0KtI1gZs/M14FXFR2lSz0ZJ2BkG8u
+ 8Xl27wLEqtwgqm6QPkvSY69wNQVuM3uK6P4YqCGBmOowcA2Y2QN6FY9fhFtztZtKFGQPtS1Y+8
+ 7/22hDFE5yPnu83LfD5HJGQVtAAAA
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>
+Cc: Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Qiliang Yuan <qiliang.yuan@linux.dev>
+X-Mailer: b4 0.13.0
 
-Hi Namhyung,
+The perf_event controller is implicitly enabled on cgroup v2, so moving
+tasks to another cgroup calls perf_cgroup_attach(). For every migrated
+thread, it calls task_function_call(), which sends a synchronous IPI to
+the CPU the thread last ran on, so that a CPU counting cgroup events
+switches to the new cgroup if the thread is running there.
 
-On Sun, Oct 18, 2026 at 9:26 AM Namhyung Kim
-<namhyung@kernel.org> wrote:
-> On Sun, Oct 18, 2026 at 08:09:41AM -0700, Alireza Haghdoost wrote:
-> > Unless you are already working on this part, I can send a separate
-> > series to make the data cache type-aware. The series will add a type
-> > argument to the read API and keep separate cache state for each backing
-> > file. I can then change the lazy loader to use the data cache again.
->
-> Sounds good.  Please go ahead!
+Without cgroup events, no CPU tracks a cgroup and perf_cgroup_switch()
+returns right away, yet every thread still costs an IPI. Moving a
+process with hundreds of threads, such as an inference server, then
+takes milliseconds, all with cgroup_threadgroup_rwsem held for writing,
+which blocks fork() and exit() on the whole system.
 
-I looked into this again after lazy loader v8  series [1] and built a
-prototype before changing the DSO data cache.
+Return early when perf_sched_events is disabled. A cgroup event enables
+it and waits for a grace period before it is installed. With a full
+barrier before the key check, the grace period orders the cgroup changes
+of the migrated tasks before the installation, so the event picks up the
+new cgroup of the task running on its CPU.
 
-v8 checks the file before each lazy-name lookup because the saved name
-offsets are valid only for the file used to load the symbols. If that
-file is replaced or overwritten, the same offsets can point to
-different bytes and produce wrong names.
+Moving a process with sleeping threads between two cgroups 100 times,
+20 ms apart, while another process forks and reaps children in a loop,
+base and patched kernels alternating over 2 rounds of 3 runs, median of
+the 6 runs and range in parentheses. Each move also waits about 7 ms for
+a grace period to take cgroup_threadgroup_rwsem. Median time per move:
 
-A type-aware cache would therefore need separate file and block state
-for each binary type, validation before using cached blocks, and
-invalidation when the file changes. It would also require changing the
-lock order between the DSO lock and the data-cache open lock.
+  threads        before (ms)       after (ms)   change
+        1      7.8 (7.3-7.9)    7.9 (7.8-7.9)      +1%
+       16      8.8 (8.6-9.1)    7.9 (7.8-7.9)     -11%
+      128   14.0 (13.7-14.7)    7.9 (7.8-8.0)     -44%
+      512   25.1 (24.5-26.1)   9.9 (9.8-10.0)     -61%
 
-I measured a behavioral prototype on six workloads. Keeping cached
-blocks for later name lookups did not give a measurable speedup. In
-the many-DSO test it removed 64% of the pread() calls, but the run
-time was unchanged because the file open and check still happen for
-each lookup.
+99th percentile of fork() and waitpid() in the other process:
 
-[1] https://lore.kernel.org/all/20261121-perf-symbol-memory-send-v8-0-370561cbb5a7@uber.com/
+  threads        before (ms)      after (ms)   change
+        1      3.8 (3.5-5.3)   3.6 (3.5-3.7)      -5%
+       16      4.1 (3.8-5.0)   3.7 (3.6-3.8)     -11%
+      128     9.8 (9.5-10.1)   3.7 (3.6-3.8)     -63%
+      512   21.6 (20.8-22.7)   4.8 (4.7-4.9)     -78%
 
-Thanks,
-Alireza
+Signed-off-by: Qiliang Yuan <qiliang.yuan@linux.dev>
+---
+ kernel/events/core.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index e870f12c3ad81..a5a9161bab31c 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -15617,6 +15617,17 @@ static void perf_cgroup_attach(struct cgroup_taskset *tset)
+ 	struct task_struct *task;
+ 	struct cgroup_subsys_state *css;
+ 
++	/*
++	 * A cgroup event enables perf_sched_events and waits for a grace
++	 * period in account_event() before it is installed, so with the key
++	 * disabled no CPU tracks a cgroup yet. Order the cgroup changes of the
++	 * migrated tasks before the key check, pairing with that grace period,
++	 * so that the event picks up the new cgroup of the running task.
++	 */
++	smp_mb();
++	if (!static_branch_unlikely(&perf_sched_events))
++		return;
++
+ 	cgroup_taskset_for_each(task, css, tset)
+ 		task_function_call(task, __perf_cgroup_move, task);
+ }
+
+---
+base-commit: 5f22fb20497f4983094131f00a734362300d22d2
+change-id: 20261120-feat-perf-cgroup-attach-ipi-2824375d4d93
+
+Best regards,
+-- 
+Qiliang Yuan <qiliang.yuan@linux.dev>
+
