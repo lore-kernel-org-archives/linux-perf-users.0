@@ -1,67 +1,59 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795381900;
-	b=JCfsIJyvuwaxBspoRr7B7/yHoDKJafIr3m7rrJOY8bpPImDeQ8xnK0fGhQGl5RpTpvTr
-	 QBZFTpkwNsjk7qVr6D1trGGMgazbGDUq63Pe5yOSHxymtetH+xgGilkodySb5Djd6CPMO
-	 q36K1M6zxg6pHnXPoLOS5wtdz6B/LN1mNHbDucTc32cU9N87ROMH/qhIsh1Cus1ADy55O
-	 1NFhjPX+iK+8CPdU1nna77hW7ikpVPFIrbyqtQ8cBU0t/zFqQ3kXp6Ci77OMNBVamHys9
-	 o5ft8SE+YowSoB4KegW8dofqTYFOlUkaQICM3okmrmqU8SnJ6ln9AqbClIO1Y67lIkw==
+	t=1795383634;
+	b=vcB9FFAl+oX78raPhLf3AmF3l6bW2lbtb0WLFmnW1buQH+zbNNV1fXHlCK9cQnjhzG3S
+	 zUUrwx+4CA4igNLfGe5ZLAF3PtEBckq/sL3ng50Qp9k/F3RzRtICrcLVTdtcBDfRbowKF
+	 kEH7cCnAJi/1is222VvZ1KtPPk32D0EgvjSQFERs8LxMzS4tWIGv411uDFP9pVJRzpAa1
+	 Ms6aMii0rryPBHqyy/TbdCRAZ764dUyRnUaxcCwTlTqeTIB/5o+rDUURVmba2JvqrPinh
+	 j3t7yiS/8w+MJKRUg2OXNme+wH+mPOr2DkIfblzrlOswfafmXKCsnXCCfF0d8ClhsUQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795381900;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795383634;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=7DGS+aSj3MfbwNJQG55DXM8DL4mRFc1N+IMzJ1ybSnU=;
-	b=dGNnEGwSU23SRxsl8nWXoVPcdZUM17/GGlAgK9lpLIfOZbzjR3+/EWdaPysSV7LTBWVJ
-	 XawGJ1qHcXaRgLnL5LZ4pcHvhJkmUyaqWbFPKfdyCuXhduaunz/y3eAzp4WUsUCTdJ9YE
-	 mKspBi0SoYHyfnMNYmZg9T+3/KyqxHDuLWDrM3amTSj03/byjzUN0QPhSst9Bqf4Znbsa
-	 PrsntGd4ZN6JYWTNR2fTCFkpbM4YrESRn3brg63kirfTZZ7RuNlvHrrtRkIA38oygii+p
-	 8mNQd4H0FKmCdLXfkJYJtYkxwgJqgHfS5Az6e0xSskQiPlxPo2K2kmbKyRZLguqj2Eg==
+	 MIME-Version:Content-Type:Content-Transfer-Encoding;
+	bh=lQrOZ8WPZFOgczjW/yoz1Tftzms0DQJCnOt+PGo8RC8=;
+	b=XWrjgS7Ovu4PMbzYU/kYIzON0epUnTOcJlB+QRU6jx1t1vY5K/RYGBQLQJiBgKq8AmwP
+	 Kpg2uDrDc865zYohwzV60i+KGBfOvSwnhH43/2qhISjk9/oARjpgkiGgEf7hGWASSD6+D
+	 z52GOXONm8VTko9vwiS/+NnJfDuwIigODLqZpAzLBEmmE2pjC+Bshe7YFdBucAhsZ73sg
+	 0A3z3ItAiHMIxJmDNwsQn1UYJguOpQfedgPCk/cKsc+D7CAUbiosrYLY3GpsHvttxnPfd
+	 /bfdbM1Y+RrmQmJF+pM0WI9IcklfStVdBZX2E1HXFf8eMjzKLLkuXD71c1aDvyIbyQA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Vw6zNiz5;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Kw9VdFA7;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169B6606A31D;
-	Sun, 22 Nov 2026 21:11:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15E0606A31E;
+	Sun, 22 Nov 2026 21:40:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Vw6zNiz5
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCC091F000D4;
-	Sun, 22 Nov 2026 21:11:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Kw9VdFA7
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89A8A1F000CA;
+	Sun, 22 Nov 2026 21:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795381899;
-	bh=7DGS+aSj3MfbwNJQG55DXM8DL4mRFc1N+IMzJ1ybSnU=;
+	s=k20260515; t=1795383634;
+	bh=lQrOZ8WPZFOgczjW/yoz1Tftzms0DQJCnOt+PGo8RC8=;
 	h=From:To:Cc:Subject:Date;
-	b=Vw6zNiz5HuVYs+r57N6ZyQkwapSmkIYkCqgpvs/lIHpq4xgGRS43P916PkKbWWqdB
-	 ZLmcf7VbuEKrP/cW8/f+wavP+GwEOmfReb/tQRn2BEvPMFop+6Yheb0QMxCNdJitIL
-	 dw6eccYrPXsH9n6WO1rjF2KofU0gq730/0t9MdxuHKzuW+TkJ8oZ/Ba6AMGz9nitUE
-	 pGAJWHGIPORM0u9OBzonPiKJOA8VZBAheZyg4MKW71ZfVArNvXtnSfw9bHZp+R8Oxa
-	 e9rqjYZhOxgHP1tFwjtYI4XdFIKneiwmeJCXKvmNbwxiyWBNUx+6cpBcNj3oLrije6
-	 S6v4eGnGejNgg==
+	b=Kw9VdFA7z5Z5RS/j8NouVRY5fXO7OJWRaLObSRtAf7tiVQFSBAWpuzZP2hODAhgmr
+	 3tMkyB1K/DX7X79Q2hTWPjOfemAUItX1v9qZ4j6F1CsWj+ed+OFMAnC0zgx04FwKEH
+	 MH2jTZhyU14aVAtl+xoCh+87Yfh47KWGB0+eNPXQ6E8osaU2xFW23uTXow/Wf9quHf
+	 mFS9GZk5/k8Vq1YAHV+FiOqRibR2iUf7cBe249J6HPdMQx6KVQ8YMMrYGV61+QncKL
+	 BIbOJQlXYfKckgzbF4Zk9vYamB/oy6DQga4+ccKmnlEDmEtRJUv+STkuINgs42DvAs
+	 Br5mYSqOz4Miw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
+To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
 	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Dmitry Safonov <dima@arista.com>,
-	Gu Bin <gubin@cmss.chinamobile.com>,
-	Leo Yan <leo.yan@arm.com>,
-	Li RongQing <lirongqing@baidu.com>,
-	Paul Moses <p@1g4.org>,
-	TAKANO Mitsuhiro <takano32@gmail.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [GIT PULL] perf tools fixes for v7.4
-Date: Sun, 22 Nov 2026 18:11:28 -0300
-Message-ID: <20261122211128.12684-1-acme@kernel.org>
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCH v11 00/19] perf coverage: A harness for perf, and the fixes it found
+Date: Sun, 22 Nov 2026 18:40:06 -0300
+Message-ID: <20261122214025.16769-1-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -72,141 +64,172 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Linus,
+Hi,
 
-	I signed this with a new key, that is already in the kernel.org
-pgpkeys git repo.
+Nothing measured how much of perf the test suite reaches.  Patches 18-19
+add coverage.sh, which builds perf with clang source based coverage, runs
+the full test suite and reports line and function coverage, and
+coverage-table.sh, which renders the biggest uncovered gaps over the
+whole tree, not only the files the tests already touch.
 
-	Please consider pulling.
+Patches 1-7 are the fixes the first runs found, 8-17 their tests and the
+test fixes.  1 is a build fix for the GTK UI, which the coverage build
+needs; 5 and 6 are parser changes, not regression fixes.
+
+  - The GTK UI was not linked with EXTRA_CFLAGS, so the coverage build
+    never saw its counters (1).
+
+  - Absolute addressing was missing from the data type resolver (2);
+    movabs was not parsed (6).
+
+  - --insn-stat was printed before the samples were accounted (3).
+
+  - FEATURE-DUMP did not record features checked outside FEATURE_TESTS
+    (4).
+
+  - The flexible array member row showed 0.00% while the member said
+    100.00% (7).
+
+  - Tests cover the x86 operand parser (8), DW_OP_addrx globals (9, test
+    only: fixed upstream by c3991e42f58a3650), the flexible array path
+    (10), a struct pointer kept in a register at -O2 (11) and annotate
+    stats (12).
+  - Intel PT virtual LBR, dlfilter zeroed IP and LBR inline unwinding
+    test fixes (13-15).
+
+The full root run used for this series, with clang DWARF 4 on this AMD
+host, measured 112185 of 236044 lines (47.53%), 86374 of 174097 in
+tools/perf/ (49.61%), 170 passed, 160 subtests, 27 skipped and one
+failure (21.2, the known Tracepoint event kernel regression).  The total
+includes libbpf and the dlfilters; the Rust workload is built and run but
+is not instrumented.
+
+That one failure makes the coverage target exit 1 after writing the
+report and the baseline; the data above is from that completed run.
+
+On aarch64 (Raspberry Pi 4, Cortex-A72, clang 19), the full suite as
+root, run sequentially, measured 101119 of 232961 lines (43.41%), 75800
+of 171070 in tools/perf/ (44.31%), 142 passed, 133 subtests, 47 skipped,
+two timed out and one failed (130, the stat test; 17 now selects an
+absent CPU instead of an online one).  The parallel test mode starts
+every test at once and times out on the four cores, hence --sequential
+and --timeout (18).
+
+The harness, the tests and the review fixes were developed with an AI
+coding assistant (OpenCode): it drafted the scripts and tests, ran the
+coverage probes, and proposed the fixes for the review findings.  The
+latest edits were built and checked with the operand test and test-list
+matching on toolbx.
+
+What changed from v10:
+
+  - 2: recognize absolute addressing in both 32- and 64-bit objects,
+    while keeping the %gs:40 stack canary handling.
+
+  - 4: record late feature probes independently of FEATURE_DISPLAY.
+
+  - 5, 6: parse movabs and record x86 immediates in a 64-bit field, so
+    GNU and LLVM spellings of the KASAN shadow offset track the same
+    value.
+
+  - 7: count flexible-array accesses at the struct boundary, including
+    tail padding.
+
+  - 8: exercise both absolute-address conversions and reject invalid
+    operands; drop the call case the data type resolver does not follow.
+
+  - 10: test a flexible array after struct tail padding in all output modes.
+
+  - 11: restrict the annotation to touch and verify the register path is
+    not resolved by instruction tracking.
+
+  - 12: run instruction statistics without requiring memory events and
+    check the totals against the rows.
+
+  - 15: skip the LBR test only on the unsupported branch-stack error.
+
+  - 16: skip trace-summary BPF tests unless the running kernel exposes BTF.
+
+  - 17: avoid online CPUs in the offline stat test, while retaining
+    the check for an absent CPU.
+
+  - 18: preserve inherited CXXFLAGS, build with clang, rebuild dlfilters,
+    trim -t fragments, and support sequential and timed runs.
+
+  - 19: keep the coverage-table filtering and end-of-run table output
+    checks, including decimal --min-lines values.
 
 Best regards,
 
 - Arnaldo
 
-The following changes since commit 05441d697f7f9a927264f4058cbbc6a03dfcac9d:
+Arnaldo Carvalho de Melo (19):
+  perf build: Link the GTK UI with EXTRA_CFLAGS
+  perf annotate: Handle absolute addressing in data type profiling
+  perf annotate: Print the stats after the annotations
+  perf build: Record the features checked outside FEATURE_TESTS
+  perf annotate-x86: Record immediates in a 64-bit field
+  perf annotate-x86: Parse movabs like a mov
+  perf annotate-data: Count flexible array accesses for the whole struct
+  perf test: Exercise the x86 operand parser
+  perf test: Exercise DW_OP_addrx global variables
+  perf test: Exercise the flexible array member path
+  perf test: Exercise data type resolution from a register
+  perf test: Exercise the annotate stats output
+  perf test: Fix the Intel PT virtual LBR check
+  perf test: Drop samples without an IP in the dlfilter test
+  perf test: Skip the LBR inline unwinding check when unsupported
+  perf test: Skip the trace summary BPF tests without kernel BTF
+  perf test: Avoid online CPUs in the offline stat test
+  perf scripts: Add a coverage harness for perf
+  perf scripts: Add a coverage table
 
-  Merge tag 'cocci-7.4-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/jlawall/linux (2026-11-03 08:36:32 -0800)
+ tools/perf/.gitignore                         |   1 +
+ tools/perf/Documentation/perf-annotate.txt    |   2 +-
+ tools/perf/Makefile                           |  15 +-
+ tools/perf/Makefile.config                    |   8 +
+ tools/perf/Makefile.perf                      |  12 +-
+ tools/perf/builtin-annotate.c                 |  20 +-
+ tools/perf/scripts/coverage-table.sh          | 337 ++++++++++++
+ tools/perf/scripts/coverage.sh                | 493 ++++++++++++++++++
+ tools/perf/tests/Build                        |   1 +
+ tools/perf/tests/annotate-ops.c               | 172 ++++++
+ tools/perf/tests/builtin-test.c               |   4 +
+ tools/perf/tests/shell/addr2line_inlines.sh   |  19 +-
+ tools/perf/tests/shell/annotate_stats.sh      | 172 ++++++
+ .../perf/tests/shell/data_type_flex_array.sh  | 135 +++++
+ tools/perf/tests/shell/data_type_global.sh    |  73 +++
+ tools/perf/tests/shell/data_type_register.sh  |  86 +++
+ tools/perf/tests/shell/script_dlfilter.sh     |   2 +-
+ tools/perf/tests/shell/stat.sh                |  21 +-
+ tools/perf/tests/shell/test_intel_pt.sh       |  10 +-
+ tools/perf/tests/shell/trace_summary.sh       |   9 +
+ tools/perf/tests/tests.h                      |   4 +
+ tools/perf/tests/workloads/Build              |   6 +
+ tools/perf/tests/workloads/flex_array.c       |  71 +++
+ tools/perf/tests/workloads/global_data.c      |  57 ++
+ tools/perf/tests/workloads/regptr.c           |  60 +++
+ tools/perf/ui/browsers/annotate-data.c        |   7 +-
+ tools/perf/util/annotate-arch/annotate-x86.c  |  51 +-
+ tools/perf/util/annotate-data.c               |  27 +-
+ tools/perf/util/annotate-data.h               |   8 +
+ tools/perf/util/annotate.c                    |  31 +-
+ tools/perf/util/annotate.h                    |  13 +-
+ 31 files changed, 1881 insertions(+), 46 deletions(-)
+ create mode 100755 tools/perf/scripts/coverage-table.sh
+ create mode 100755 tools/perf/scripts/coverage.sh
+ create mode 100644 tools/perf/tests/annotate-ops.c
+ create mode 100755 tools/perf/tests/shell/annotate_stats.sh
+ create mode 100755 tools/perf/tests/shell/data_type_flex_array.sh
+ create mode 100755 tools/perf/tests/shell/data_type_global.sh
+ create mode 100755 tools/perf/tests/shell/data_type_register.sh
+ create mode 100644 tools/perf/tests/workloads/flex_array.c
+ create mode 100644 tools/perf/tests/workloads/global_data.c
+ create mode 100644 tools/perf/tests/workloads/regptr.c
 
-are available in the Git repository at:
+-- 
+2.56.1
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v7.4-1-2026-11-22
-
-for you to fetch changes up to 82838789646f9f5881dd1c8b3a3c960ee2a28772:
-
-  perf record: Skip affinity for per-thread mmap buffers (2026-11-09 18:19:20 -0300)
-
-----------------------------------------------------------------
-perf tools fixes for v7.4
-
-- perf record: skip affinity for per-thread mmap buffers and reject CPU
-  indices at the mask size, avoiding out-of-bounds bitmap accesses.
-
-- perf test: use software events for system-wide tests, mark the LBR test
-  exclusive, and fix probe_vfs_getname debuginfo detection via a dry run.
-
-- perf build: add -lzstd to the libbfd feature fallback for static
-  binutils, and pass OUTPUT explicitly when building internal libraries.
-
-- perf trace beauty: split the KVM ioctl table by direction so read and
-  write ioctls sharing a number no longer conflict at build time.
-
-- perf kvm: fix arm64 VM-exit duration accounting by pairing kvm_exit
-  with the following kvm_entry as the end event.
-
-- perf hist: use each branch's own cycle count for the sample weight
-  instead of the first branch's, fixing multi-entry branch stacks.
-
-- perf jevents: don't encode MSRs with no value, avoiding unset ldlat
-  values in the affected Intel latency events.
-
-- perf vendor events arm64 AmpereOneX: deprecate the old event name so
-  scripts using it keep working while the renamed event is listed.
-
-- perf intel-bts and intel-pt: free the old snapshot reference array when
-  it grows past sixteen mappings, avoiding a leak.
-
-- perf timechart and treport: initialize inherited attributes in their
-  constructors, avoiding pylint warnings without Textual.
-
-- perf tools: fix sync-headers generated commit messages to use longer
-  SHAs and drop hunk headers that checkpatch mistakes for diff content.
-
-- Sync the tools/ copies of gfp_types.h, gfp.h, KVM, sound/asound.h,
-  msr-index.h, cpufeatures.h and if_addr.h with the kernel sources.
-
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-----------------------------------------------------------------
-Arnaldo Carvalho de Melo (8):
-      tools headers UAPI: Sync linux/if_addr.h with the kernel sources
-      tools arch x86: Sync the cpufeatures.h copy with the kernel sources
-      tools arch x86: Sync the msr-index.h copy with the kernel sources
-      tools headers: Sync UAPI sound/asound.h with the kernel sources
-      perf trace beauty: Split the KVM ioctl table by direction
-      tools headers: Sync KVM headers with the kernel sources
-      tools headers: Sync linux/gfp_types.h with the kernel sources
-      perf tools: Fix the sync-headers generated commit messages
-
-Dmitry Safonov (1):
-      perf build: Override OUTPUT when building internal libraries
-
-Gu Bin (1):
-      perf hist: Fix branch_info index for sample weight
-
-Ian Rogers (3):
-      tools build: Add explicitly sequenced -lzstd to libbfd feature fallback
-      perf build: Add explicitly sequenced -lzstd to libbfd feature fallback
-      perf jevents: Don't encode MSRs with no value
-
-James Clark (2):
-      perf test probe_vfs_getname: Fix missing debuginfo detection
-      perf test: Don't starve per-process tests with system-wide events
-
-Leo Yan (2):
-      perf treport: Initialize the subtitle in the constructor
-      perf timechart: Initialize Textual attributes in constructors
-
-Li RongQing (3):
-      perf kvm: Fix arm64 VM-exit duration accounting
-      perf intel-pt: Free the old snapshot reference array after growing it
-      perf intel-bts: Free the old snapshot reference array after growing it
-
-Paul Moses (2):
-      perf record: Reject CPU indices equal to the mask size
-      perf record: Skip affinity for per-thread mmap buffers
-
-TAKANO Mitsuhiro (1):
-      perf vendor events arm64 AmpereOneX: Deprecate BPU_FLUSH_MEM_FAULT
-
- tools/arch/x86/include/asm/cpufeatures.h              |  6 +++++-
- tools/arch/x86/include/asm/msr-index.h                |  7 +++++++
- tools/arch/x86/include/uapi/asm/svm.h                 |  2 ++
- tools/build/Makefile.feature                          |  3 ++-
- tools/build/feature/Makefile                          | 19 +++++++++++++------
- tools/include/linux/gfp.h                             |  4 ----
- tools/include/linux/gfp_types.h                       | 11 ++++++++---
- tools/include/uapi/linux/if_addr.h                    |  1 +
- tools/include/uapi/linux/kvm.h                        | 16 ++++++++++++++++
- tools/perf/Makefile.config                            |  3 +++
- tools/perf/Makefile.perf                              |  8 ++++----
- tools/perf/arch/x86/util/intel-bts.c                  |  1 +
- tools/perf/arch/x86/util/intel-pt.c                   |  1 +
- tools/perf/builtin-record.c                           |  6 +++---
- .../arch/arm64/ampere/ampereonex/memory.json          |  5 +++--
- tools/perf/pmu-events/jevents.py                      |  2 +-
- tools/perf/python/treport.py                          |  2 +-
- tools/perf/python/ttimechart.py                       |  2 ++
- tools/perf/scripts/sync-headers.sh                    | 18 +++++++++---------
- tools/perf/tests/shell/lib/probe_vfs_getname.sh       |  7 ++++++-
- tools/perf/tests/shell/record.sh                      |  6 +++---
- tools/perf/tests/shell/record_lbr.sh                  |  2 +-
- tools/perf/tests/shell/record_sideband.sh             |  4 ++--
- tools/perf/trace/beauty/include/uapi/sound/asound.h   |  3 ++-
- tools/perf/trace/beauty/ioctl.c                       |  6 ++++--
- tools/perf/trace/beauty/kvm_ioctl.sh                  |  9 +++++++++
- tools/perf/util/hist.c                                |  2 +-
- tools/perf/util/kvm-stat-arch/kvm-stat-arm64.c        | 14 +++++++-------
- tools/perf/util/mmap.c                                |  4 ++--
- 29 files changed, 119 insertions(+), 55 deletions(-)
