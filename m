@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.72
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.210.197
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795323867;
-	b=CgZP+SFyovWEzMNK6vQASj503KfEF5m0uz7KGMUUEEjeMoGIJd03GwTfAiy9v+2IRxU+
-	 ME131xuz0nim4HpuzNGypSTf45L9mOAdTyX3hl5b8Shy/qXyD90QvUqSQCyvOChIPxbxG
-	 sAHc+KSMK/QKNKRPY3cV40mac72Y9e/gpFhlvMn8JauXnxyqn/y8zlELzSkdjT3cBLMQk
-	 tzvl3pODs68PnbfAGq67tkJUcMSI0mHmA73CtaWG8dLhrT9AhuNc+H7/qjxnMF30Z6zx1
-	 owpuvi8cSd1Ykb01SkhtFHAM4uH9wN/uqG/L+UW9zu+vOvAJLfHmskeOadiNGFE0Dog==
+	t=1795323874;
+	b=OW3cWtfrNxtcHmcrROX4r7JnjeBbxHKYIKeNpJABjS14QgPnpjesO1O3UotIXQVBMMZV
+	 rxLn9Q5INzC0HkMls3TIGatmi6aBXTmYgrv3bybDn7DszSPQYclTyMLpvfEVconhiWkkn
+	 k6FkpM1yQnClqa/DCvFEk+eqfDRIu6l2S3e5FvkOYXIjzZF4s3tyH2BR9Fy8M0opVd3/n
+	 xcW4cM/1Pj+EFJNmIjrCdw7DjVn2KhzPPLs6fRH7+R6+l2tiC1UGhF08+gP3j6uQ4r2Sl
+	 dS/sJI7We3gH05GSvKpSRq/QmfaqmKJvLfgrT7sNNZm9Tk3tcRs8nCiXYsdTKBct0pg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795323867;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795323874;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=MpPxIDsgRyyQm9jNwFMpA3OG+xyCq5lkVmLNHfH4dVs=;
-	b=BhEx74e+LcJnpFvkB+w/v82fxwpQESR5lLmxUVL8BY/3Pvb78q9z5icsfGNp3JYc/Uvq
-	 eWtBybt+EUAvO0Ipp0GvvZYlUl0B6mtMmx0iD6JQyzRJe2/YW5e5CnWWw5qL4jUOTM1tt
-	 24GJ1nQV3I8/aPDIulPxQ6bIGi8zf/nE5ifO1ivKQmKy+s9a+eyzifcTmW98nW9pDmKzv
-	 qJhhzQTO72AjCv4SdCCZjoVi/WKa9Y9UTfTl4t2H0aI4Cfi5HCRSyDwanvBFs38N/rlfg
-	 CG9nQCYKizKU8KJL06FcMuig/RvNoKRmlF7sVRy86jUQDedfmjQC54puEAlut10DgVg==
+	bh=Np5KXfe3NBZd587exl6mjQGpa7okg5fzQbM6YlrNB2w=;
+	b=M4KlKDZ7yjyvwCNLtmp6YpNx4OuKgNqf9s5K4o8Lq/obkUuot1l7YInPT0229f4nkaxt
+	 IxXYHWbcuvO/LhxjWwkOGvR+VNVEOhm85W0TjDRfv+4qNa7rpCM64UZbhwFqoDARUfRoP
+	 axOdOaZ6ZU4s7rksykWz+tioMjNULY/IrywWaKSox/7DWwDzKF2WdWE1u/2T2SOEGB+WE
+	 v+hqX/3/L0E6OQwwohZxlx10tec/p1/33E4Q9jI1fOn68ketjgRGJy8f+LyTywpMAh+/A
+	 YIIRBhHPuOs4v5dfnIWXnssk1BRdHi/IF4DFDAa2USQ37x7Dn0jmSEDXmnEevM1LiXw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=HEakuNrY;
-	arc=none smtp.remote-ip=74.125.82.72
-Received: from mail-dl1-f72.google.com (mail-dl1-f72.google.com [74.125.82.72])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Dmkg0lmL;
+	arc=none smtp.remote-ip=209.85.210.197
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1789B606A320
-	for <linux-perf-users@vger.kernel.org>; Sun, 22 Nov 2026 05:04:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1789B606A320
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A427D606A32A
+	for <linux-perf-users@vger.kernel.org>; Sun, 22 Nov 2026 05:04:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A427D606A32A
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=HEakuNrY
-Received: by mail-dl1-f72.google.com with SMTP id a92af1059eb24-154e9d2d94fso1456595c88.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 21 Nov 2026 21:04:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Dmkg0lmL
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-89f84753b43so1760359b3a.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 21 Nov 2026 21:04:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795323866; x=1795928666; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1795323873; x=1795928673; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=MpPxIDsgRyyQm9jNwFMpA3OG+xyCq5lkVmLNHfH4dVs=;
-        b=HEakuNrYo7Vd1ywlkiTsOKgOw+7NU4AOTtBhPfYvQJUYvk3f1hiGtHi08cW4NQu2cc
-         uidWmQlsVmr5R0KtOgsmnHqPUKt7fRIkSKt5h6u00sc0pvizdfTXOq7c9c28jzpSd/O8
-         G1KOJMI66Hyu93hfR9MyJweWSGpvnVXSQUnLp7OflAg9obo3FBZuLJ3j7NIpi1Owh/jV
-         IS3zGSUB2f5yailkCMEGh6fr0TYnDEMsT+YdGAeZ1iFDLZ2WpwJZ9z3RdhTILBAHEdo+
-         dgh6x+yNQebMbFDRN8hg2I91Op/gRQx3u5INdsYWw0nafhXjTfDsbnQHdv9iNU9xJF3R
-         +a1Q==
+        bh=Np5KXfe3NBZd587exl6mjQGpa7okg5fzQbM6YlrNB2w=;
+        b=Dmkg0lmLygDOqx1Q0mwH1MhUWa55rNbFiK+dWtFNWNsStkGMiUjHBk0OlGiZDIrGWg
+         BB3rZakYEXR+iKO43FRqEraXbcPdESq61bcO9PtHD0nvFjJLYQts6chOx3buMb5FTxPE
+         1SRhjV5Ybhq3WjN8yp1Q2cTSUHqCeSW1DKsS0a6h3822eHuCYrCGCiNFSR2QvFHDn0sg
+         7K3A5mXBRiJrHw+uUyp0yFS3GWZoSvJBqHo1Ojls2qVKV0PDAwE+BrnTSjSSwQqr/6Y+
+         CUPPOQu6wv1Gx7RjZdYdy0BYI2oCCKoaBMQ5BapsWIVZ0MDUAQ6jjgZp32EHRSjmPhdY
+         gS6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795323866; x=1795928666;
+        d=1e100.net; s=20260707; t=1795323873; x=1795928673;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=MpPxIDsgRyyQm9jNwFMpA3OG+xyCq5lkVmLNHfH4dVs=;
-        b=erTHjIGmTPSSLOrT7MJWHb8CoeZcxfdubR2kB8Y1+QoNDQpJd572cL1MlifZs9OxNy
-         GFzahYd9mPIaxVsGBgX1USQEBWSV9ZT8myTIEFzYpQM6uHzZRCsxDdy3hY+ZomGQNGVL
-         idRVyvf2Ivm4OvY6lKdOf/7JpiTMQyilnatgdEHA33Ku7Nc3uc2OsBsaWAHChscno1DH
-         qRK5/aStCloPW7/oL6NZf08wRq17kkE3dfF0/ae1Y71rlXowEnrhB7EgSHl3b4qTrsIz
-         3WgsrHxXt0h+57Vs/9lKEY8E7jAy1XyL7dsL0/UFpl1k4prKcUpIM0jxBFC+TJsjdzV8
-         l1YA==
-X-Forwarded-Encrypted: i=1; AL+hErEO8QMa9OiTvx8UAB4lEEfAOlUlIUBt8PiTdAaRUmiBk+1fqxDE7pi5xq5vOm7Y2rhk9YmWHGUmM4jqfatlv/Xu@vger.kernel.org
-X-Gm-Message-State: APuU4Z+da27i5lXvBtLdA95iwiBfLB9kvKI+8vgnx5lU2kuIZSr+xUni
-	1fX7DxoC/L6Ir4EpV8QJgFJwVbk6hwEcE6dsSEdSdCZmFGuUzN2vvGWj5zdQnPPNdXk26ksYPTi
-	Tm2fqTaUf6w==
-X-Received: from dlbuu1.prod.google.com ([2002:a05:7022:7e81:b0:1b3:ba1e:2c7])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:1583:b0:1b3:a9c6:b293
- with SMTP id a92af1059eb24-1b5568c0198mr8592915c88.25.1795323865533; Sat, 21
- Nov 2026 21:04:25 -0800 (PST)
-Date: Sat, 21 Nov 2026 21:03:58 -0800
+        bh=Np5KXfe3NBZd587exl6mjQGpa7okg5fzQbM6YlrNB2w=;
+        b=i2i4/7N6HguJvVqDQlEMjq3HOX35zVJBn+0GvOXZ3hZFpnzO0q1e4kq9nxCJcQHfPh
+         MgE3O+MJrK9dpFnMnSHdQq9YLF26/4eI4IVncwwYxjraoHnpK+nNBwMibpWw++iVIcUp
+         vkwV+k6Ys6StDfd8SNoNCdzTrBSdBw3yRRCLSd3t3+7BGJrRdTaS/2/Suuc9ZgRBbCuL
+         0ZhrLGNYj4kNQSariXI+ubEfiLIFHrjJOFPR1sNIWLPwfDbNCMxoALpvyBRqJ4772Fkv
+         ClUs2Xe0VQsZqgong9ebKZoWTFcnkmPdgTYtC1+emXsOp9c6dOhiXa16JkUZSYAEMgUS
+         oF0g==
+X-Forwarded-Encrypted: i=1; AL+hErEnbvtdiCfiOHcDirQagaKYs+/RZ516yVAq1kFZsx9QLciWHeNm4S9ZjgpyETzV+7QGFvgNMlRXD1/cvNDlypqH@vger.kernel.org
+X-Gm-Message-State: APuU4Z83ycF+LVLsHbe78Zrl/SoDi40h542idtyWPHxcO2FC/ZWSdwEj
+	BxpXIpsxNVwyE8qaM/nSCmrpU9BSt5jiBWRf60+X6CoL8ElWJ+zv8ufWXE8BM4KT86xn9a5NPpI
+	s7UeGY0/3Wg==
+X-Received: from pgcv7.prod.google.com ([2002:a05:6a02:5307:b0:cdb:225e:d520])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6300:670e:b0:3f9:9114:8038
+ with SMTP id adf61e73a8af0-4014d25fa0dmr6984533637.45.1795323872767; Sat, 21
+ Nov 2026 21:04:32 -0800 (PST)
+Date: Sat, 21 Nov 2026 21:03:59 -0800
 In-Reply-To: <20261122050405.80335-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,9 +81,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261122050405.80335-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.750.gf70dc682cf-goog
-Message-ID: <20261122050405.80335-4-irogers@google.com>
-Subject: [PATCH v8 03/10] perf symbol: Convert map__for_each_symbol() to
- callback-based iteration
+Message-ID: <20261122050405.80335-5-irogers@google.com>
+Subject: [PATCH v8 04/10] perf symbol: Use callback iteration instead of
+ open-coded symbol loops
 From: Ian Rogers <irogers@google.com>
 To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
 	Alireza Haghdoost <haghdoost@uber.com>, Ian Rogers <irogers@google.com>
@@ -92,589 +92,625 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Jiri 
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Currently symbols__for_each_entry(), dso__for_each_symbol(), and
-map__for_each_symbol() are macros that expose struct rb_node * cursors to
-callers and perform unlocked rb_first_cached() / rb_next() walks.
+Convert open-coded dso__first_symbol() / dso__next_symbol(),
+rb_first_cached() / rb_next(), and dso__symbol_names() loops across
+auxtrace, intel-pt, machine, dso, probe-event, symbol_fprintf, and
+tests/symbols.c to use dso__for_each_symbol(), map__for_each_symbol(),
+and a new dso__for_each_symbol_by_name() callback helper.
 
-To prepare for replacing the unprotected symbol rbtree with a locked
-symbol array, replace symbols__for_each_entry() with a callback-based
-symbols__visit() helper and convert dso__for_each_symbol() and
-map__for_each_symbol() to callback-based iteration matching
-dsos__for_each_dso() and maps__for_each_map(), updating the existing
-map__for_each_symbol() callers.
+With no remaining callers, remove dso__first_symbol(), dso__last_symbol(),
+and dso__next_symbol().
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/powerpc/util/sym-handling.c |  34 ++--
- tools/perf/builtin-kmem.c                   |  52 +++---
- tools/perf/tests/vmlinux-kallsyms.c         | 181 ++++++++++----------
- tools/perf/util/dso.h                       |   8 +-
- tools/perf/util/map.h                       |   8 +-
- tools/perf/util/probe-event.c               |  82 +++++----
- tools/perf/util/symbol.c                    |  19 ++
- tools/perf/util/symbol.h                    |  16 +-
- 8 files changed, 228 insertions(+), 172 deletions(-)
+ tools/perf/tests/symbols.c       |  61 ++++++++++-------
+ tools/perf/util/auxtrace.c       | 109 ++++++++++++++++++++-----------
+ tools/perf/util/dso.c            |  34 ++++++----
+ tools/perf/util/dso.h            |   3 +
+ tools/perf/util/intel-pt.c       |  74 +++++++++++++--------
+ tools/perf/util/machine.c        |  28 ++++----
+ tools/perf/util/probe-event.c    |  16 +++--
+ tools/perf/util/symbol.c         |  52 ++++-----------
+ tools/perf/util/symbol.h         |   7 +-
+ tools/perf/util/symbol_fprintf.c |  25 +++++--
+ 10 files changed, 239 insertions(+), 170 deletions(-)
 
-diff --git a/tools/perf/arch/powerpc/util/sym-handling.c b/tools/perf/arch/powerpc/util/sym-handling.c
-index 947bfad7aa59..f87d77262c00 100644
---- a/tools/perf/arch/powerpc/util/sym-handling.c
-+++ b/tools/perf/arch/powerpc/util/sym-handling.c
-@@ -115,13 +115,27 @@ void arch__fix_tev_from_maps(struct perf_probe_event *pev,
+diff --git a/tools/perf/tests/symbols.c b/tools/perf/tests/symbols.c
+index d3180db45ee6..b73da581f895 100644
+--- a/tools/perf/tests/symbols.c
++++ b/tools/perf/tests/symbols.c
+@@ -116,39 +116,50 @@ static int create_map(struct test_info *ti, char *filename, struct map **map_p)
+ 	return TEST_OK;
  }
  
- #ifdef HAVE_LIBELF_SUPPORT
-+struct post_process_probe_trace_events_args {
-+	struct perf_probe_event *pev;
-+	struct probe_trace_event *tev;
-+	struct map *map;
++struct test_dso_args {
++	struct symbol *last_sym;
++	int ret;
 +};
 +
-+static int post_process_probe_trace_events_cb(struct symbol *sym, void *data)
++static int test_dso_cb(struct symbol *sym, void *data)
 +{
-+	struct post_process_probe_trace_events_args *args = data;
++	struct test_dso_args *args = data;
++	struct symbol *last_sym = args->last_sym;
 +
-+	if (map__unmap_ip(args->map, sym->start) == args->tev->point.address) {
-+		arch__fix_tev_from_maps(args->pev, args->tev, args->map, sym);
-+		return 1;
++	if (symbol__type(sym) != STT_FUNC && symbol__type(sym) != STT_GNU_IFUNC)
++		return 0;
++
++	/* Check for overlapping function symbols */
++	if (last_sym && sym->start < last_sym->end) {
++		pr_debug("Overlapping symbols:\n");
++		symbol__fprintf(last_sym, stderr);
++		symbol__fprintf(sym, stderr);
++		args->ret = TEST_FAIL;
++	}
++	/* Check for zero-length function symbol */
++	if (sym->start == sym->end) {
++		pr_debug("Zero-length symbol:\n");
++		symbol__fprintf(sym, stderr);
++		args->ret = TEST_FAIL;
++	}
++	args->last_sym = sym;
++	return 0;
++}
++
+ static int test_dso(struct dso *dso)
+ {
+-	struct symbol *last_sym = NULL;
+-	struct rb_node *nd;
+-	int ret = TEST_OK;
++	struct test_dso_args args = {
++		.last_sym = NULL,
++		.ret = TEST_OK,
++	};
+ 
+ 	/* dso__fprintf() prints all the symbols */
+ 	if (verbose > 1)
+ 		dso__fprintf(dso, stderr);
+ 
+-	for (nd = rb_first_cached(dso__symbols(dso)); nd; nd = rb_next(nd)) {
+-		struct symbol *sym = rb_entry(nd, struct symbol, rb_node);
++	dso__for_each_symbol(dso, test_dso_cb, &args);
+ 
+-		if (symbol__type(sym) != STT_FUNC && symbol__type(sym) != STT_GNU_IFUNC)
+-			continue;
+-
+-		/* Check for overlapping function symbols */
+-		if (last_sym && sym->start < last_sym->end) {
+-			pr_debug("Overlapping symbols:\n");
+-			symbol__fprintf(last_sym, stderr);
+-			symbol__fprintf(sym, stderr);
+-			ret = TEST_FAIL;
+-		}
+-		/* Check for zero-length function symbol */
+-		if (sym->start == sym->end) {
+-			pr_debug("Zero-length symbol:\n");
+-			symbol__fprintf(sym, stderr);
+-			ret = TEST_FAIL;
+-		}
+-		last_sym = sym;
+-	}
+-
+-	return ret;
++	return args.ret;
+ }
+ 
+ static int subdivided_dso_cb(struct dso *dso, struct machine *machine __maybe_unused, void *d)
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index 1451de019df0..e6916c2044c5 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -2719,61 +2719,96 @@ static bool dso_sym_match(struct symbol *sym, const char *name, int *cnt,
+ 		idx < 0);
+ }
+ 
++struct print_duplicate_syms_args {
++	const char *sym_name;
++	bool near;
++	int cnt;
++};
++
++static int print_duplicate_syms_cb(struct symbol *sym, void *data)
++{
++	struct print_duplicate_syms_args *args = data;
++
++	if (dso_sym_match(sym, args->sym_name, &args->cnt, -1)) {
++		pr_err("#%d\t0x%"PRIx64"\t%c\t%s\n",
++		       ++args->cnt, sym->start,
++		       symbol__binding(sym) == STB_GLOBAL ? 'g' :
++		       symbol__binding(sym) == STB_LOCAL  ? 'l' : 'w',
++		       sym->name);
++		args->near = true;
++	} else if (args->near) {
++		args->near = false;
++		pr_err("\t\twhich is near\t\t%s\n", sym->name);
 +	}
 +	return 0;
 +}
 +
- void arch__post_process_probe_trace_events(struct perf_probe_event *pev,
- 					   int ntevs)
+ static void print_duplicate_syms(struct dso *dso, const char *sym_name)
  {
--	struct probe_trace_event *tev;
+-	struct symbol *sym;
+-	bool near = false;
+-	int cnt = 0;
++	struct print_duplicate_syms_args args = {
++		.sym_name = sym_name,
++		.near = false,
++		.cnt = 0,
++	};
+ 
+ 	pr_err("Multiple symbols with name '%s'\n", sym_name);
+ 
+-	sym = dso__first_symbol(dso);
+-	while (sym) {
+-		if (dso_sym_match(sym, sym_name, &cnt, -1)) {
+-			pr_err("#%d\t0x%"PRIx64"\t%c\t%s\n",
+-			       ++cnt, sym->start,
+-			       symbol__binding(sym) == STB_GLOBAL ? 'g' :
+-			       symbol__binding(sym) == STB_LOCAL  ? 'l' : 'w',
+-			       sym->name);
+-			near = true;
+-		} else if (near) {
+-			near = false;
+-			pr_err("\t\twhich is near\t\t%s\n", sym->name);
+-		}
+-		sym = dso__next_symbol(sym);
+-	}
++	dso__for_each_symbol(dso, print_duplicate_syms_cb, &args);
+ 
+ 	pr_err("Disambiguate symbol name by inserting #n after the name e.g. %s #2\n",
+ 	       sym_name);
+ 	pr_err("Or select a global symbol by inserting #0 or #g or #G\n");
+ }
+ 
++struct find_dso_sym_args {
++	const char *sym_name;
++	u64 *start;
++	u64 *size;
++	int idx;
++	int cnt;
++	bool duplicate;
++};
++
++static int find_dso_sym_cb(struct symbol *sym, void *data)
++{
++	struct find_dso_sym_args *args = data;
++
++	if (*args->start) {
++		if (!*args->size)
++			*args->size = sym->start - *args->start;
++		if (args->idx > 0) {
++			if (*args->size)
++				return 1;
++		} else if (dso_sym_match(sym, args->sym_name, &args->cnt, args->idx)) {
++			args->duplicate = true;
++			return 1;
++		}
++	} else if (dso_sym_match(sym, args->sym_name, &args->cnt, args->idx)) {
++		*args->start = sym->start;
++		*args->size = sym->end - sym->start;
++	}
++	return 0;
++}
++
+ static int find_dso_sym(struct dso *dso, const char *sym_name, u64 *start,
+ 			u64 *size, int idx)
+ {
+-	struct symbol *sym;
+-	int cnt = 0;
++	struct find_dso_sym_args args = {
++		.sym_name = sym_name,
++		.start = start,
++		.size = size,
++		.idx = idx,
++		.cnt = 0,
++		.duplicate = false,
++	};
+ 
+ 	*start = 0;
+ 	*size = 0;
+ 
+-	sym = dso__first_symbol(dso);
+-	while (sym) {
+-		if (*start) {
+-			if (!*size)
+-				*size = sym->start - *start;
+-			if (idx > 0) {
+-				if (*size)
+-					return 0;
+-			} else if (dso_sym_match(sym, sym_name, &cnt, idx)) {
+-				print_duplicate_syms(dso, sym_name);
+-				return -EINVAL;
+-			}
+-		} else if (dso_sym_match(sym, sym_name, &cnt, idx)) {
+-			*start = sym->start;
+-			*size = sym->end - sym->start;
+-		}
+-		sym = dso__next_symbol(sym);
++	dso__for_each_symbol(dso, find_dso_sym_cb, &args);
++	if (args.duplicate) {
++		print_duplicate_syms(dso, sym_name);
++		return -EINVAL;
+ 	}
+ 
+ 	if (!*start)
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 49813424e4ee..e090a5bd12b6 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -1998,22 +1998,34 @@ static size_t dso__fprintf_buildid(struct dso *dso, FILE *fp)
+ 	return fprintf(fp, "%s", sbuild_id);
+ }
+ 
++struct dso__fprintf_cb_args {
++	FILE *fp;
++	size_t ret;
++};
++
++static int dso__fprintf_cb(struct symbol *pos, void *data)
++{
++	struct dso__fprintf_cb_args *args = data;
++
++	args->ret += symbol__fprintf(pos, args->fp);
++	return 0;
++}
++
+ size_t dso__fprintf(struct dso *dso, FILE *fp)
+ {
+-	struct rb_node *nd;
+-	size_t ret = fprintf(fp, "dso: %s (", dso__short_name(dso));
++	struct dso__fprintf_cb_args args = {
++		.fp = fp,
++		.ret = fprintf(fp, "dso: %s (", dso__short_name(dso)),
++	};
+ 
+ 	if (dso__short_name(dso) != dso__long_name(dso))
+-		ret += fprintf(fp, "%s, ", dso__long_name(dso));
+-	ret += fprintf(fp, "%sloaded, ", dso__loaded(dso) ? "" : "NOT ");
+-	ret += dso__fprintf_buildid(dso, fp);
+-	ret += fprintf(fp, ")\n");
+-	for (nd = rb_first_cached(dso__symbols(dso)); nd; nd = rb_next(nd)) {
+-		struct symbol *pos = rb_entry(nd, struct symbol, rb_node);
+-		ret += symbol__fprintf(pos, fp);
+-	}
++		args.ret += fprintf(fp, "%s, ", dso__long_name(dso));
++	args.ret += fprintf(fp, "%sloaded, ", dso__loaded(dso) ? "" : "NOT ");
++	args.ret += dso__fprintf_buildid(dso, fp);
++	args.ret += fprintf(fp, ")\n");
++	dso__for_each_symbol(dso, dso__fprintf_cb, &args);
+ 
+-	return ret;
++	return args.ret;
+ }
+ 
+ enum dso_type dso__type(struct dso *dso, struct machine *machine)
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index dd859356ecd9..dddfcd3db0aa 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -368,6 +368,9 @@ int dso_id__cmp(const struct dso_id *a, const struct dso_id *b);
+ #define dso__for_each_symbol(dso, cb, data)	\
+ 	symbols__visit(dso__symbols(dso), cb, data)
+ 
++#define dso__for_each_symbol_by_name(dso, cb, data)	\
++	dso__visit_symbols_by_name(dso, cb, data)
++
+ static inline void *dso__a2l(const struct dso *dso)
+ {
+ 	return RC_CHK_ACCESS(dso)->a2l;
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index e8b9c8a67b0a..9b7d315ca391 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -2988,13 +2988,37 @@ static int intel_pt_sample(struct intel_pt_queue *ptq)
+ 	return 0;
+ }
+ 
++struct intel_pt_switch_ip_args {
++	struct map *map;
++	const char *name;
++	bool check_global;
++	u64 ip;
++};
++
++static int intel_pt_switch_ip_cb(struct symbol *sym, void *data)
++{
++	struct intel_pt_switch_ip_args *args = data;
++	u64 ip;
++
++	if (args->check_global && symbol__binding(sym) != STB_GLOBAL)
++		return 0;
++
++	if (!strcmp(sym->name, args->name)) {
++		ip = map__unmap_ip(args->map, sym->start);
++		if (ip >= map__start(args->map) && ip < map__end(args->map)) {
++			args->ip = ip;
++			return 1;
++		}
++	}
++	return 0;
++}
++
+ static u64 intel_pt_switch_ip(struct intel_pt *pt, u64 *ptss_ip)
+ {
+ 	struct machine *machine = pt->machine;
  	struct map *map;
--	struct symbol *sym = NULL;
--	struct rb_node *tmp;
- 	int i = 0;
+-	struct symbol *sym, *start;
+-	u64 ip, switch_ip = 0;
+-	const char *ptss;
++	struct intel_pt_switch_ip_args args;
++	u64 switch_ip = 0;
  
- 	map = get_target_map(pev->target, pev->nsi, pev->uprobes);
-@@ -129,13 +143,13 @@ void arch__post_process_probe_trace_events(struct perf_probe_event *pev,
- 		return;
+ 	if (ptss_ip)
+ 		*ptss_ip = 0;
+@@ -3006,36 +3030,28 @@ static u64 intel_pt_switch_ip(struct intel_pt *pt, u64 *ptss_ip)
+ 	if (map__load(map))
+ 		return 0;
  
- 	for (i = 0; i < ntevs; i++) {
--		tev = &pev->tevs[i];
--		map__for_each_symbol(map, sym, tmp) {
--			if (map__unmap_ip(map, sym->start) == tev->point.address) {
--				arch__fix_tev_from_maps(pev, tev, map, sym);
+-	start = dso__first_symbol(map__dso(map));
+-
+-	for (sym = start; sym; sym = dso__next_symbol(sym)) {
+-		if (symbol__binding(sym) == STB_GLOBAL &&
+-		    !strcmp(sym->name, "__switch_to")) {
+-			ip = map__unmap_ip(map, sym->start);
+-			if (ip >= map__start(map) && ip < map__end(map)) {
+-				switch_ip = ip;
 -				break;
 -			}
 -		}
-+		struct post_process_probe_trace_events_args args = {
-+			.pev = pev,
-+			.tev = &pev->tevs[i],
-+			.map = map,
-+		};
-+
-+		map__for_each_symbol(map, post_process_probe_trace_events_cb, &args);
- 	}
- }
- #endif /* HAVE_LIBELF_SUPPORT */
-diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-index 1404b523a785..87869c717266 100644
---- a/tools/perf/builtin-kmem.c
-+++ b/tools/perf/builtin-kmem.c
-@@ -341,13 +341,33 @@ static int callcmp(const void *a, const void *b)
- 		return -1;
- }
- 
-+static int build_alloc_func_list_cb(struct symbol *sym, void *data)
-+{
-+	regex_t *alloc_func_regex = data;
-+	struct alloc_func *func;
-+
-+	if (regexec(alloc_func_regex, sym->name, 0, NULL, 0))
-+		return 0;
-+
-+	func = realloc(alloc_func_list,
-+		       (nr_alloc_funcs + 1) * sizeof(*func));
-+	if (func == NULL)
-+		return -ENOMEM;
-+
-+	pr_debug("alloc func: %s\n", sym->name);
-+	func[nr_alloc_funcs].start = sym->start;
-+	func[nr_alloc_funcs].end   = sym->end;
-+	func[nr_alloc_funcs].name  = sym->name;
-+
-+	alloc_func_list = func;
-+	nr_alloc_funcs++;
-+	return 0;
-+}
-+
- static int build_alloc_func_list(void)
- {
- 	int ret;
- 	struct map *kernel_map;
--	struct symbol *sym;
--	struct rb_node *node;
--	struct alloc_func *func;
- 	struct machine *machine = &kmem_session->machines.host;
- 	regex_t alloc_func_regex;
- 	static const char pattern[] = "^_?_?(alloc|get_free|get_zeroed)_pages?";
-@@ -368,29 +388,13 @@ static int build_alloc_func_list(void)
- 		return -ENOENT;
- 	}
- 
--	map__for_each_symbol(kernel_map, sym, node) {
--		if (regexec(&alloc_func_regex, sym->name, 0, NULL, 0))
--			continue;
--
--		func = realloc(alloc_func_list,
--			       (nr_alloc_funcs + 1) * sizeof(*func));
--		if (func == NULL) {
--			regfree(&alloc_func_regex);
--			return -ENOMEM;
--		}
--
--		pr_debug("alloc func: %s\n", sym->name);
--		func[nr_alloc_funcs].start = sym->start;
--		func[nr_alloc_funcs].end   = sym->end;
--		func[nr_alloc_funcs].name  = sym->name;
--
--		alloc_func_list = func;
--		nr_alloc_funcs++;
 -	}
-+	ret = map__for_each_symbol(kernel_map, build_alloc_func_list_cb, &alloc_func_regex);
-+	regfree(&alloc_func_regex);
-+	if (ret)
-+		return ret;
++	args = (struct intel_pt_switch_ip_args) {
++		.map = map,
++		.name = "__switch_to",
++		.check_global = true,
++		.ip = 0,
++	};
++	map__for_each_symbol(map, intel_pt_switch_ip_cb, &args);
++	switch_ip = args.ip;
  
--	qsort(alloc_func_list, nr_alloc_funcs, sizeof(*func), funcmp);
-+	qsort(alloc_func_list, nr_alloc_funcs, sizeof(*alloc_func_list), funcmp);
+ 	if (!switch_ip || !ptss_ip)
+ 		return 0;
  
--	regfree(&alloc_func_regex);
- 	return 0;
- }
- 
-diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
-index 9396c8a77c86..38f5c9584e15 100644
---- a/tools/perf/tests/vmlinux-kallsyms.c
-+++ b/tools/perf/tests/vmlinux-kallsyms.c
-@@ -113,6 +113,7 @@ static bool is_ignored_symbol(const char *name, char type)
- struct test__vmlinux_matches_kallsyms_cb_args {
- 	struct machine kallsyms;
- 	struct map *vmlinux_map;
-+	int err;
- 	bool header_printed;
- };
- 
-@@ -185,16 +186,101 @@ static int test__vmlinux_matches_kallsyms_cb3(struct map *map, void *data)
- 	return 0;
- }
- 
-+static int test__vmlinux_matches_kallsyms_sym_cb(struct symbol *sym, void *data)
-+{
-+	struct test__vmlinux_matches_kallsyms_cb_args *args = data;
-+	/*
-+	 * Step 4:
-+	 *
-+	 * kallsyms will be internally on demand sorted by name so that we can
-+	 * find the reference relocation * symbol, i.e. the symbol we will use
-+	 * to see if the running kernel was relocated by checking if it has the
-+	 * same value in the vmlinux file we load.
-+	 */
-+	struct map *kallsyms_map = machine__kernel_map(&args->kallsyms);
-+	struct symbol *pair, *first_pair;
-+	u64 mem_start, mem_end;
-+
-+	if (sym->start == sym->end)
-+		return 0;
-+
-+	mem_start = map__unmap_ip(args->vmlinux_map, sym->start);
-+	mem_end = map__unmap_ip(args->vmlinux_map, sym->end);
-+
-+	first_pair = machine__find_kernel_symbol(&args->kallsyms, mem_start, NULL);
-+	pair = first_pair;
-+
-+	if (pair && UM(pair->start) == mem_start) {
-+next_pair:
-+		if (arch__compare_symbol_names(sym->name, pair->name) == 0) {
-+			/*
-+			 * kallsyms don't have the symbol end, so we
-+			 * set that by using the next symbol start - 1,
-+			 * in some cases we get this up to a page
-+			 * wrong, trace_kmalloc when I was developing
-+			 * this code was one such example, 2106 bytes
-+			 * off the real size. More than that and we
-+			 * _really_ have a problem.
-+			 */
-+			s64 skew = mem_end - UM(pair->end);
-+
-+			if (llabs(skew) >= page_size) {
-+				pr_debug("WARN: %#" PRIx64 ": diff end addr for %s v: %#"
-+					 PRIx64 " k: %#" PRIx64 "\n",
-+					 mem_start, sym->name, mem_end,
-+					 UM(pair->end));
-+			}
-+
-+			/*
-+			 * Do not count this as a failure, because we
-+			 * could really find a case where it's not
-+			 * possible to get proper function end from
-+			 * kallsyms.
-+			 */
-+			return 0;
-+		}
-+		pair = machine__find_kernel_symbol_by_name(&args->kallsyms,
-+							   sym->name, NULL);
-+		if (pair) {
-+			if (UM(pair->start) == mem_start)
-+				goto next_pair;
-+
-+			pr_debug("WARN: %#" PRIx64 ": diff name v: %s k: %s\n",
-+				 mem_start, sym->name, pair->name);
-+		} else {
-+			pr_debug("WARN: %#" PRIx64 ": diff name v: %s k: %s\n",
-+				 mem_start, sym->name, first_pair->name);
-+		}
-+
-+		return 0;
-+	}
-+
-+	if (mem_start == map__end(args->kallsyms.vmlinux_map)) {
-+		/*
-+		 * Ignore aliases to _etext, i.e. to the end of the kernel text area,
-+		 * such as __indirect_thunk_end.
-+		 */
-+		return 0;
-+	}
-+	if (is_ignored_symbol(sym->name, symbol__type(sym))) {
-+		/*
-+		 * Ignore hidden symbols, see scripts/kallsyms.c for the details
-+		 */
-+		return 0;
-+	}
-+	pr_debug("ERR : %#" PRIx64 ": %s not on kallsyms\n",
-+		 mem_start, sym->name);
-+
-+	args->err = -1;
-+	return 0;
-+}
-+
- static int test__vmlinux_matches_kallsyms(struct test_suite *test __maybe_unused,
- 					int subtest __maybe_unused)
- {
- 	int err = TEST_FAIL;
--	struct rb_node *nd;
--	struct symbol *sym;
--	struct map *kallsyms_map;
- 	struct machine vmlinux = { 0 };
- 	struct maps *maps;
--	u64 mem_start, mem_end;
- 	struct test__vmlinux_matches_kallsyms_cb_args args;
- 
- 	/*
-@@ -240,16 +326,6 @@ static int test__vmlinux_matches_kallsyms(struct test_suite *test __maybe_unused
- 		goto out;
- 	}
- 
--	/*
--	 * Step 4:
--	 *
--	 * kallsyms will be internally on demand sorted by name so that we can
--	 * find the reference relocation * symbol, i.e. the symbol we will use
--	 * to see if the running kernel was relocated by checking if it has the
--	 * same value in the vmlinux file we load.
--	 */
--	kallsyms_map = machine__kernel_map(&args.kallsyms);
+-	if (pt->have_sched_switch == 1)
+-		ptss = "perf_trace_sched_switch";
+-	else
+-		ptss = "__perf_event_task_sched_out";
 -
- 	/*
- 	 * Step 5:
- 	 *
-@@ -279,7 +355,7 @@ static int test__vmlinux_matches_kallsyms(struct test_suite *test __maybe_unused
- 		goto out;
- 	}
- 
--	err = 0;
-+	args.err = 0;
- 	/*
- 	 * Step 7:
- 	 *
-@@ -287,79 +363,8 @@ static int test__vmlinux_matches_kallsyms(struct test_suite *test __maybe_unused
- 	 * in the kallsyms dso. For the ones that are in both, check its names and
- 	 * end addresses too.
- 	 */
--	map__for_each_symbol(args.vmlinux_map, sym, nd) {
--		struct symbol *pair, *first_pair;
--
--		sym  = rb_entry(nd, struct symbol, rb_node);
--
--		if (sym->start == sym->end)
--			continue;
--
--		mem_start = map__unmap_ip(args.vmlinux_map, sym->start);
--		mem_end = map__unmap_ip(args.vmlinux_map, sym->end);
--
--		first_pair = machine__find_kernel_symbol(&args.kallsyms, mem_start, NULL);
--		pair = first_pair;
--
--		if (pair && UM(pair->start) == mem_start) {
--next_pair:
--			if (arch__compare_symbol_names(sym->name, pair->name) == 0) {
--				/*
--				 * kallsyms don't have the symbol end, so we
--				 * set that by using the next symbol start - 1,
--				 * in some cases we get this up to a page
--				 * wrong, trace_kmalloc when I was developing
--				 * this code was one such example, 2106 bytes
--				 * off the real size. More than that and we
--				 * _really_ have a problem.
--				 */
--				s64 skew = mem_end - UM(pair->end);
--				if (llabs(skew) >= page_size)
--					pr_debug("WARN: %#" PRIx64 ": diff end addr for %s v: %#" PRIx64 " k: %#" PRIx64 "\n",
--						 mem_start, sym->name, mem_end,
--						 UM(pair->end));
--
--				/*
--				 * Do not count this as a failure, because we
--				 * could really find a case where it's not
--				 * possible to get proper function end from
--				 * kallsyms.
--				 */
--				continue;
--			} else {
--				pair = machine__find_kernel_symbol_by_name(&args.kallsyms,
--									   sym->name, NULL);
--				if (pair) {
--					if (UM(pair->start) == mem_start)
--						goto next_pair;
--
--					pr_debug("WARN: %#" PRIx64 ": diff name v: %s k: %s\n",
--						 mem_start, sym->name, pair->name);
--				} else {
--					pr_debug("WARN: %#" PRIx64 ": diff name v: %s k: %s\n",
--						 mem_start, sym->name, first_pair->name);
--				}
--
--				continue;
+-	for (sym = start; sym; sym = dso__next_symbol(sym)) {
+-		if (!strcmp(sym->name, ptss)) {
+-			ip = map__unmap_ip(map, sym->start);
+-			if (ip >= map__start(map) && ip < map__end(map)) {
+-				*ptss_ip = ip;
+-				break;
 -			}
--		} else if (mem_start == map__end(args.kallsyms.vmlinux_map)) {
--			/*
--			 * Ignore aliases to _etext, i.e. to the end of the kernel text area,
--			 * such as __indirect_thunk_end.
--			 */
--			continue;
--		} else if (is_ignored_symbol(sym->name, symbol__type(sym))) {
--			/*
--			 * Ignore hidden symbols, see scripts/kallsyms.c for the details
--			 */
--			continue;
--		} else {
--			pr_debug("ERR : %#" PRIx64 ": %s not on kallsyms\n",
--				 mem_start, sym->name);
 -		}
--
--		err = -1;
 -	}
-+	map__for_each_symbol(args.vmlinux_map, test__vmlinux_matches_kallsyms_sym_cb, &args);
-+	err = args.err;
++	args = (struct intel_pt_switch_ip_args) {
++		.map = map,
++		.name = pt->have_sched_switch == 1 ?
++			"perf_trace_sched_switch" :
++			"__perf_event_task_sched_out",
++		.check_global = false,
++		.ip = 0,
++	};
++	map__for_each_symbol(map, intel_pt_switch_ip_cb, &args);
++	*ptss_ip = args.ip;
  
- 	if (verbose <= 0)
- 		goto out;
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index bb887d10a9ee..dd859356ecd9 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -362,11 +362,11 @@ int dso_id__cmp(const struct dso_id *a, const struct dso_id *b);
- /* dso__for_each_symbol - iterate over the symbols of given type
-  *
-  * @dso: the 'struct dso *' in which symbols are iterated
-- * @pos: the 'struct symbol *' to use as a loop cursor
-- * @n: the 'struct rb_node *' to use as a temporary storage
-+ * @cb: callback function invoked for each symbol
-+ * @data: opaque data pointer passed to @cb
-  */
--#define dso__for_each_symbol(dso, pos, n)	\
--	symbols__for_each_entry(dso__symbols(dso), pos, n)
-+#define dso__for_each_symbol(dso, cb, data)	\
-+	symbols__visit(dso__symbols(dso), cb, data)
+ 	return switch_ip;
+ }
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 70870baa157e..6dd05ec1bbaf 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1125,29 +1125,35 @@ int machine__create_extra_kernel_map(struct machine *machine,
+ 	return err;
+ }
  
- static inline void *dso__a2l(const struct dso *dso)
+-static u64 find_entry_trampoline(struct dso *dso)
++static int find_entry_trampoline_cb(struct symbol *sym, void *data)
  {
-diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-index c2e31be232c8..32f1fd9a7404 100644
---- a/tools/perf/util/map.h
-+++ b/tools/perf/util/map.h
-@@ -146,12 +146,12 @@ struct thread;
- /* map__for_each_symbol - iterate over the symbols in the given map
-  *
-  * @map: the 'struct map *' in which symbols are iterated
-- * @pos: the 'struct symbol *' to use as a loop cursor
-- * @n: the 'struct rb_node *' to use as a temporary storage
-+ * @cb: callback function invoked for each symbol
-+ * @data: opaque data pointer passed to @cb
-  * Note: caller must ensure map->dso is not NULL (map is loaded).
-  */
--#define map__for_each_symbol(map, pos, n)	\
--	dso__for_each_symbol(map__dso(map), pos, n)
-+#define map__for_each_symbol(map, cb, data)	\
-+	dso__for_each_symbol(map__dso(map), cb, data)
+ 	/* Duplicates are removed so lookup all aliases */
+-	const char *syms[] = {
++	static const char * const syms[] = {
+ 		"_entry_trampoline",
+ 		"__entry_trampoline_start",
+ 		"entry_SYSCALL_64_trampoline",
+ 	};
+-	struct symbol *sym = dso__first_symbol(dso);
+-	unsigned int i;
++	u64 *addr = data;
  
- /* map__for_each_symbol_with_name - iterate over the symbols in the given map
-  *                                  that have the given name
+-	for (; sym; sym = dso__next_symbol(sym)) {
+-		if (symbol__binding(sym) != STB_GLOBAL)
+-			continue;
+-		for (i = 0; i < ARRAY_SIZE(syms); i++) {
+-			if (!strcmp(sym->name, syms[i]))
+-				return sym->start;
++	if (symbol__binding(sym) != STB_GLOBAL)
++		return 0;
++	for (unsigned int i = 0; i < ARRAY_SIZE(syms); i++) {
++		if (!strcmp(sym->name, syms[i])) {
++			*addr = sym->start;
++			return 1;
+ 		}
+ 	}
+-
+ 	return 0;
+ }
+ 
++static u64 find_entry_trampoline(struct dso *dso)
++{
++	u64 addr = 0;
++
++	dso__for_each_symbol(dso, find_entry_trampoline_cb, &addr);
++	return addr;
++}
++
+ /*
+  * These values can be used for kernels that do not have symbols for the entry
+  * trampolines in kallsyms.
 diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 1534280c0c1d..3d506c09b749 100644
+index 3d506c09b749..e3f8e3cd68c0 100644
 --- a/tools/perf/util/probe-event.c
 +++ b/tools/perf/util/probe-event.c
-@@ -3047,49 +3047,63 @@ static int __add_probe_trace_events(struct perf_probe_event *pev,
- 	return ret;
+@@ -3788,6 +3788,15 @@ void cleanup_perf_probe_events(struct perf_probe_event *pevs, int npevs)
+ 	}
  }
  
--static int find_probe_functions(struct map *map, char *name,
--				struct symbol **syms)
-+struct find_probe_functions_args {
-+	const char *name;
-+	struct symbol **syms;
-+	int found;
-+	bool cut_version;
-+};
++static int show_available_funcs_cb(struct symbol *pos, void *data)
++{
++	struct strfilter *_filter = data;
 +
-+static int find_probe_functions_cb(struct symbol *sym, void *data)
- {
--	int found = 0;
--	struct symbol *sym;
--	struct rb_node *tmp;
-+	struct find_probe_functions_args *args = data;
- 	const char *norm, *ver;
- 	char *buf = NULL;
--	bool cut_version = true;
--
--	if (map__load(map) < 0)
--		return -EACCES;	/* Possible permission error to load symbols */
- 
--	/* If user gives a version, don't cut off the version from symbols */
--	if (strchr(name, '@'))
--		cut_version = false;
--
--	map__for_each_symbol(map, sym, tmp) {
--		norm = arch__normalize_symbol_name(sym->name);
--		if (!norm)
--			continue;
-+	norm = arch__normalize_symbol_name(sym->name);
-+	if (!norm)
-+		return 0;
- 
--		if (cut_version) {
--			/* We don't care about default symbol or not */
--			ver = strchr(norm, '@');
--			if (ver) {
--				buf = strndup(norm, ver - norm);
--				if (!buf)
--					return -ENOMEM;
--				norm = buf;
--			}
-+	if (args->cut_version) {
-+		/* We don't care about default symbol or not */
-+		ver = strchr(norm, '@');
-+		if (ver) {
-+			buf = strndup(norm, ver - norm);
-+			if (!buf)
-+				return -ENOMEM;
-+			norm = buf;
- 		}
-+	}
- 
--		if (strglobmatch(norm, name)) {
--			found++;
--			if (syms && found < probe_conf.max_probes)
--				syms[found - 1] = sym;
--		}
--		if (buf)
--			zfree(&buf);
-+	if (strglobmatch(norm, args->name)) {
-+		args->found++;
-+		if (args->syms && args->found < probe_conf.max_probes)
-+			args->syms[args->found - 1] = sym;
- 	}
-+	free(buf);
++	if (strfilter__compare(_filter, pos->name))
++		printf("%s\n", pos->name);
 +	return 0;
 +}
 +
-+static int find_probe_functions(struct map *map, char *name,
-+				struct symbol **syms)
-+{
-+	struct find_probe_functions_args args = {
-+		.name = name,
-+		.syms = syms,
-+		/* If user gives a version, don't cut off the version from symbols */
-+		.cut_version = strchr(name, '@') == NULL,
-+		.found = 0,
-+	};
-+	int ret;
-+
-+	if (map__load(map) < 0)
-+		return -EACCES;	/* Possible permission error to load symbols */
-+
-+	ret = map__for_each_symbol(map, find_probe_functions_cb, &args);
-+	if (ret < 0)
-+		return ret;
+ int show_available_funcs(const char *target, struct nsinfo *nsi,
+ 			 struct strfilter *_filter, bool user)
+ {
+@@ -3824,12 +3833,7 @@ int show_available_funcs(const char *target, struct nsinfo *nsi,
+ 	/* Show all (filtered) symbols */
+ 	setup_pager();
  
--	return found;
-+	return args.found;
- }
- 
- void __weak arch__fix_tev_from_maps(struct perf_probe_event *pev __maybe_unused,
+-	for (size_t i = 0; i < dso__symbol_names_len(dso); i++) {
+-		struct symbol *pos = dso__symbol_names(dso)[i];
+-
+-		if (strfilter__compare(_filter, pos->name))
+-			printf("%s\n", pos->name);
+-	}
++	dso__for_each_symbol_by_name(dso, show_available_funcs_cb, _filter);
+ end:
+ 	map__put(map);
+ 	exit_probe_symbol_maps();
 diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 8dded88c9763..2977457bfb48 100644
+index 2977457bfb48..710b80d86d07 100644
 --- a/tools/perf/util/symbol.c
 +++ b/tools/perf/util/symbol.c
-@@ -613,6 +613,25 @@ struct symbol *dso__find_symbol(struct dso *dso, u64 addr)
- 	return dso__last_find_result_symbol(dso);
+@@ -451,36 +451,6 @@ static struct symbol *symbols__find(struct rb_root_cached *symbols, u64 ip)
+ 	return NULL;
  }
  
-+int symbols__visit(struct rb_root_cached *symbols,
-+		   int (*cb)(struct symbol *sym, void *data),
-+		   void *data)
-+{
-+	struct rb_node *nd;
-+
-+	if (!symbols)
+-static struct symbol *symbols__first(struct rb_root_cached *symbols)
+-{
+-	struct rb_node *n = rb_first_cached(symbols);
+-
+-	if (n)
+-		return rb_entry(n, struct symbol, rb_node);
+-
+-	return NULL;
+-}
+-
+-static struct symbol *symbols__last(struct rb_root_cached *symbols)
+-{
+-	struct rb_node *n = rb_last(&symbols->rb_root);
+-
+-	if (n)
+-		return rb_entry(n, struct symbol, rb_node);
+-
+-	return NULL;
+-}
+-
+-static struct symbol *symbols__next(struct symbol *sym)
+-{
+-	struct rb_node *n = rb_next(&sym->rb_node);
+-
+-	if (n)
+-		return rb_entry(n, struct symbol, rb_node);
+-
+-	return NULL;
+-}
+-
+ static int symbols__sort_name_cmp(const void *vlhs, const void *vrhs)
+ {
+ 	const struct symbol *lhs = *((const struct symbol **)vlhs);
+@@ -637,19 +607,21 @@ struct symbol *dso__find_symbol_nocache(struct dso *dso, u64 addr)
+ 	return symbols__find(dso__symbols(dso), addr);
+ }
+ 
+-struct symbol *dso__first_symbol(struct dso *dso)
++int dso__visit_symbols_by_name(struct dso *dso,
++			       int (*cb)(struct symbol *sym, void *data),
++			       void *data)
+ {
+-	return symbols__first(dso__symbols(dso));
+-}
++	if (!dso)
 +		return 0;
-+
-+	for (nd = rb_first_cached(symbols); nd; nd = rb_next(nd)) {
-+		struct symbol *sym = rb_entry(nd, struct symbol, rb_node);
-+		int ret = cb(sym, data);
-+
+ 
+-struct symbol *dso__last_symbol(struct dso *dso)
+-{
+-	return symbols__last(dso__symbols(dso));
+-}
++	dso__sort_by_name(dso);
++	for (size_t i = 0; i < dso__symbol_names_len(dso); i++) {
++		int ret = cb(dso__symbol_names(dso)[i], data);
+ 
+-struct symbol *dso__next_symbol(struct symbol *sym)
+-{
+-	return symbols__next(sym);
 +		if (ret)
 +			return ret;
 +	}
 +	return 0;
-+}
-+
- struct symbol *dso__find_symbol_nocache(struct dso *dso, u64 addr)
- {
- 	return symbols__find(dso__symbols(dso), addr);
+ }
+ 
+ struct symbol *dso__next_symbol_by_name(struct dso *dso, size_t *idx)
 diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index a6a2ab200f98..5a105b10a089 100644
+index 5a105b10a089..784c87b72f38 100644
 --- a/tools/perf/util/symbol.h
 +++ b/tools/perf/util/symbol.h
-@@ -141,16 +141,16 @@ void symbol__set_annotate2(struct symbol *sym, bool annotate2);
- void symbol__set_inlined(struct symbol *sym, bool inlined);
- void symbol__set_ifunc_alias(struct symbol *sym, bool ifunc_alias);
+@@ -197,10 +197,9 @@ struct symbol *dso__find_symbol_nocache(struct dso *dso, u64 addr);
  
--/* symbols__for_each_entry - iterate over symbols (rb_root)
-+/*
-+ * symbols__visit - iterate over symbols calling @cb for each entry
-  *
-- * @symbols: the rb_root of symbols
-- * @pos: the 'struct symbol *' to use as a loop cursor
-- * @nd: the 'struct rb_node *' to use as a temporary storage
-+ * @symbols: the rb_root_cached of symbols
-+ * @cb: callback function invoked for each symbol
-+ * @data: opaque data pointer passed to @cb
-  */
--#define symbols__for_each_entry(symbols, pos, nd)			\
--	for (nd = rb_first_cached(symbols);					\
--	     nd && (pos = rb_entry(nd, struct symbol, rb_node));	\
--	     nd = rb_next(nd))
-+int symbols__visit(struct rb_root_cached *symbols,
-+		   int (*cb)(struct symbol *sym, void *data),
-+		   void *data);
+ struct symbol *dso__next_symbol_by_name(struct dso *dso, size_t *idx);
+ struct symbol *dso__find_symbol_by_name(struct dso *dso, const char *name, size_t *idx);
+-
+-struct symbol *dso__first_symbol(struct dso *dso);
+-struct symbol *dso__last_symbol(struct dso *dso);
+-struct symbol *dso__next_symbol(struct symbol *sym);
++int dso__visit_symbols_by_name(struct dso *dso,
++			       int (*cb)(struct symbol *sym, void *data),
++			       void *data);
  
- static inline size_t symbol__size(const struct symbol *sym)
+ enum dso_type dso__type_fd(int fd);
+ 
+diff --git a/tools/perf/util/symbol_fprintf.c b/tools/perf/util/symbol_fprintf.c
+index 4dc8d5761f52..f818e7ad1519 100644
+--- a/tools/perf/util/symbol_fprintf.c
++++ b/tools/perf/util/symbol_fprintf.c
+@@ -59,15 +59,26 @@ size_t symbol__fprintf_symname(const struct symbol *sym, FILE *fp)
+ 	return __symbol__fprintf_symname_offs(sym, NULL, false, false, fp);
+ }
+ 
++struct fprintf_symbols_by_name_args {
++	FILE *fp;
++	size_t ret;
++};
++
++static int fprintf_symbols_by_name_cb(struct symbol *pos, void *data)
++{
++	struct fprintf_symbols_by_name_args *args = data;
++
++	args->ret += fprintf(args->fp, "%s\n", pos->name);
++	return 0;
++}
++
+ size_t dso__fprintf_symbols_by_name(struct dso *dso,
+ 				    FILE *fp)
  {
+-	size_t ret = 0;
+-
+-	for (size_t i = 0; i < dso__symbol_names_len(dso); i++) {
+-		struct symbol *pos = dso__symbol_names(dso)[i];
++	struct fprintf_symbols_by_name_args args = {
++		.fp = fp,
++	};
+ 
+-		ret += fprintf(fp, "%s\n", pos->name);
+-	}
+-	return ret;
++	dso__for_each_symbol_by_name(dso, fprintf_symbols_by_name_cb, &args);
++	return args.ret;
+ }
 -- 
 2.56.1.750.gf70dc682cf-goog
 
