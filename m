@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795383671;
-	b=xF6u1mMZzU9BRvMu9mxebNPvw2PIoqix4t1mmMcWFPW6qRPHFDdFUl9W/d1qcxsuOlRv
-	 psXf5/BTHPXzCE9pfXuHkmvJlakpZuZk2oO8igYzKwEjnlYG5WdAChodwbXTVPEzTxfI+
-	 COCWlZoXeU5HsF/3hPp6cw9RqT9ZqPNaI4/GMR1IuPBgF6V3XweOFoVR0AQqCdlR1KW1Y
-	 B6b0FrzUKtvNdPgsnLe48jkcOkSPzdV1E5YeDCilMg7qG0ok3SbknsJIh45NZWESzl9Xw
-	 8Chyj0GmiAe14F9Y66T+aIVlKsQaPO5zNrEjmzOwN6E1CGIoRBZQIa0vo8WGMS/KAkw==
+	t=1795383675;
+	b=IenTScaGjxMtdDMwZZHj8zskdfiVu28DXOJt/IVelpiruhUeFeZVUC9sy+476W15SClF
+	 +SsLQu1a/FDR89fxTVl2OTZ0Q3493QOQhxEMRosICnc1KrIvXfkUZZtpX5HCnuFicLWfb
+	 mXWYpP5OzDp/o3p6J/w0SvPzPg+H9RVwbwZ4FmVK2pQmr46lXMPf6RKn+1u4OiZOTeSwo
+	 S/UYRSiPTrm4VOBFVQcJaO3UgbkJ2uOH2xPvO+j+jCZCw2eZItkKdaumS0denAW22YF+D
+	 6Q0mPyAqb9DQC5JBqCmC1koUR1adyBcpZp/UH+M+f1xbsPPiJrqNlDHq+EbanPDiwrw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795383671;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795383675;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=71xaoVlhVXg7beDBFPcx2JdUcf/z17CoEfLOYXg9ao4=;
-	b=UQtHyvPyVC25y9AG326QYCaG0xSanT8d67WHvH9+vF87cJsrZ8ImrGbvwvBoS5yPe8IB
-	 2+BPuDqNwkpiYmvUsST4Ck1SuxlepXdL/G/3H4rkdSjuQBPncBdw2fqxc9Y2hdtgL6ug4
-	 9IFIfPNl/5IM4+tiDUoKRbHyGL3e0YXlqk6WUXZKj0Of44M8Js6vVIwRQTmPsyaN9onmm
-	 jhOeH7ztcKwwpCem+9zDKCL45YkOgqTb7d3udJJd1otNsrae8pEoikSSguCyS7V7esJK/
-	 EMIglMjsVBvflhH+KngpcMXKIgkTFgTyELwocdPJw94CMHRTPVssGOM8y+7UbE5yfrQ==
+	bh=L7LgMWelgSFCPRdJlOZBg8BypfgyuGdT7FTtHF4eyf0=;
+	b=MXrhbbYa7IWk+O0U4OaBzJcGlZ+IXlzk0WK1+dp96KphhvL3/J1KKSUXwPFP6ZMUdAaS
+	 2D/tiT9rh6iuFVLLax5XHOuuU2BfNn1sAQiPaYZW7RV9I+GQUG4Yvddj2NCfLkPVopVCD
+	 cgnfXR/PZr5BtT4g3wRtXyp/eTu6aHTZB4HMbwG+rSd4zCqa//O4DYB4uDonWRtHy9x1L
+	 gSKnmLlDdvN93Or7gBt2gcH2ecl8wLqAyaUPK0vwprCFGY7Wv0UEyJrEVjwvoL+iyk4l8
+	 qTpMhtjgwQlCHJQl09jXlJWqP6h8VbRE1ky/oMDOmQqaid/1Pv6g256FDd0Xc4PA6Ww==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TqjDS5pT;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SSeDmni3;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62B3606A33A;
-	Sun, 22 Nov 2026 21:41:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8515606A32C;
+	Sun, 22 Nov 2026 21:41:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TqjDS5pT
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BA851F000C6;
-	Sun, 22 Nov 2026 21:41:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SSeDmni3
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4644C1F000D1;
+	Sun, 22 Nov 2026 21:41:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795383671;
-	bh=71xaoVlhVXg7beDBFPcx2JdUcf/z17CoEfLOYXg9ao4=;
+	s=k20260515; t=1795383674;
+	bh=L7LgMWelgSFCPRdJlOZBg8BypfgyuGdT7FTtHF4eyf0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=TqjDS5pTKYpDsFiTiA5mHZauiCq6TaUIoJyHpK0LqtijbTfGwLmh6lw2wXso6w83d
-	 /kQoVxD+Nt6x523rRXDKwUkTba+uawsKHDCqJghmN4DZBN1O2vvQLNg8PkFOv5+Ima
-	 lJBeSkb0t5DCi9ZF8zAf2BqIMts9RtSoIy1dbOu62xgaMzhA/fTEMWkhE8FsAw6Urk
-	 nV1gGdRlrIMO7w765txngDYhtvr26jOCCoV/j15I4FITQwvnX/w002uM0riqIx8/BD
-	 SC0rXmDs3JxMy5EFpBHHzt0w83HnxLOdb/iGJOI1IXcl8lkcsCEOGUFyPo3w+w5iDQ
-	 E98dgfOzgnGow==
+	b=SSeDmni3QcJ6EEVq5O9CPGRltPe+DNllZnUe+xBamDsp4sTzsFBpMCMs08sLYueP6
+	 C+ECWLFhMeWESrdcL3Al+GIQo5P4sJPl5hjcKDrXu+dyxLsbxwf0NajBj24Rhm6JWB
+	 6C38I+b4RPaEUZgrpCJ2ft/lhIUF6xzLjohBomkEVjf2cLJAzjNkIGCDZ6jxcg0m+k
+	 /ui5DEK1PT185BvIGnw+l2rHeSiyQAk0/gowGJkWFzEbY8LE1BsDMCmJsqcaW+GQre
+	 BvGTAUxIaTwniDQJeuf01r3PnL4ZWuOaBkkhtvkbW3JXzElwotlhWe3annstIvHuLn
+	 JrfTRTDJ1nYDw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v11 11/19] perf test: Exercise data type resolution from a register
-Date: Sun, 22 Nov 2026 18:40:17 -0300
-Message-ID: <20261122214025.16769-12-acme@kernel.org>
+Subject: [PATCH v11 12/19] perf test: Exercise the annotate stats output
+Date: Sun, 22 Nov 2026 18:40:18 -0300
+Message-ID: <20261122214025.16769-13-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261122214025.16769-1-acme@kernel.org>
 References: <20261122214025.16769-1-acme@kernel.org>
@@ -70,59 +70,47 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-At -O2 a struct pointer lives in a register (with DWARF describing it with
-a register location on register-argument ABIs), while the unoptimized
-workloads the data type tests profile keep their variables on the stack.
-
-Add a regptr workload with a noinline function that takes the pointer from
-a volatile global, so the compiler cannot constant-propagate the object
-address, and check that its three member accesses are resolved from that
-register.  The type statistics also verify that the instruction-tracking
-fallback did not resolve them.  The test skips 32-bit x86, which has no
-register-argument ABI.
+Add a shell test for the --insn-stat and --type-stat output printed
+once, after the annotations, and for the warning when --type-stat is
+used without --data-type.  The instruction stats run with one and with
+two events and are checked against the per-instruction rows, so a total
+that counts only the first event, or does not match the rows, fails; the
+data type total is checked against its counters.  A repeated section
+also fails.
 
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/builtin-test.c              |  1 +
- tools/perf/tests/shell/data_type_register.sh | 86 ++++++++++++++++++++
- tools/perf/tests/tests.h                     |  1 +
- tools/perf/tests/workloads/Build             |  2 +
- tools/perf/tests/workloads/regptr.c          | 60 ++++++++++++++
- 5 files changed, 150 insertions(+)
- create mode 100755 tools/perf/tests/shell/data_type_register.sh
- create mode 100644 tools/perf/tests/workloads/regptr.c
+ tools/perf/tests/shell/annotate_stats.sh | 172 +++++++++++++++++++++++
+ 1 file changed, 172 insertions(+)
+ create mode 100755 tools/perf/tests/shell/annotate_stats.sh
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index d761758201a4b2f2..29068963b9d5bae0 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -216,6 +216,7 @@ static struct test_workload *workloads[] = {
- 	&workload__false_sharing,
- 	&workload__global_data,
- 	&workload__flex_array,
-+	&workload__regptr,
- 
- #ifdef HAVE_RUST_SUPPORT
- 	&workload__code_with_type,
-diff --git a/tools/perf/tests/shell/data_type_register.sh b/tools/perf/tests/shell/data_type_register.sh
+diff --git a/tools/perf/tests/shell/annotate_stats.sh b/tools/perf/tests/shell/annotate_stats.sh
 new file mode 100755
-index 0000000000000000..a36e4ce8f37d3982
+index 0000000000000000..5d8a687e85ecb526
 --- /dev/null
-+++ b/tools/perf/tests/shell/data_type_register.sh
-@@ -0,0 +1,86 @@
++++ b/tools/perf/tests/shell/annotate_stats.sh
+@@ -0,0 +1,172 @@
 +#!/bin/bash
-+# perf data type profiling tests for register variables
++# perf annotate instruction stats test
 +# SPDX-License-Identifier: GPL-2.0
 +
 +set -e
 +
++shelldir=$(dirname "$0")
++. "${shelldir}"/lib/perf_has_symbol.sh
++
++skip_test_missing_symbol datasym
++
 +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++perfone=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++perftwo=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
 +perfout=$(mktemp /tmp/__perf_test.perf.out.XXXXX)
++perfout2=$(mktemp /tmp/__perf_test.perf.out.XXXXX)
 +perferr=$(mktemp /tmp/__perf_test.perf.err.XXXXX)
 +
 +cleanup()
 +{
-+	rm -f "$perfdata" "$perfout" "$perferr"
++	rm -f "$perfdata" "$perfone" "$perftwo" "$perfout" "$perfout2" "$perferr"
 +	trap - EXIT TERM INT
 +}
 +
@@ -140,157 +128,140 @@ index 0000000000000000..a36e4ce8f37d3982
 +	exit 2
 +fi
 +
-+# 32-bit x86 passes the struct pointer in a stack slot, so nothing is
-+# resolved from a register; e_machine's low byte is at 18 on LE x86.
-+perf_bin=$(command -v perf)
-+if [ "$(od -An -tx1 -j18 -N1 "$perf_bin" | tr -d ' ')" = 03 ]; then
-+	echo "Skip: 32-bit x86 keeps the argument in a stack slot"
++if ! perf record -o "$perfone" -e cpu-clock -- perf test -w datasym \
++		> /dev/null 2>&1 ||
++   ! perf record -o "$perftwo" -e cpu-clock -e task-clock -- \
++		perf test -w datasym > /dev/null 2>&1; then
++	echo "FAIL: perf record"
 +	cleanup
-+	exit 2
++	exit 1
 +fi
 +
-+# No point in recording if the PMU cannot do memory events.
++if ! perf annotate --code-with-type --insn-stat -i "$perfone" --stdio \
++		--percent-limit 1 datasym > "$perfout"; then
++	echo "FAIL: perf annotate"
++	cleanup
++	exit 1
++fi
++
++if ! perf annotate --code-with-type --insn-stat -i "$perftwo" --stdio \
++		--percent-limit 1 datasym > "$perfout2"; then
++	echo "FAIL: perf annotate"
++	cleanup
++	exit 1
++fi
++
++# The instruction stats are accounted while the instructions are
++# displayed; printing them before the display loop shows zeros.  A single
++# positive total would also accept a stale first event's total, so check
++# that the section is printed once, after the annotations.
++if ! awk '
++	/^Annotate Instruction stats/ { sections++ }
++	sections && /^[[:space:]]*[0-9]+\.[0-9]+ : / { late = 1 }
++	END { exit !(sections == 1 && !late) }
++' "$perfout2"; then
++	echo "FAIL: instruction stats not printed once after the annotations"
++	tail -n 30 "$perfout2"
++	cleanup
++	exit 1
++fi
++
++# Each event annotates the same instructions, so the two-event total is
++# twice the one-event total.
++one_total=$(awk '/^total / { t = $2; sub(/,/, "", t); print t; exit }' \
++	    "$perfout")
++two_total=$(awk '/^total / { t = $2; sub(/,/, "", t); print t; exit }' \
++	    "$perfout2")
++if [ -z "$one_total" ] || [ -z "$two_total" ] ||
++   [ "$two_total" -le 0 ] || [ "$two_total" -ne $((2 * one_total)) ]; then
++	echo "FAIL: instruction stats do not count every event" \
++	     "(one event: ${one_total:-none}, two events: ${two_total:-none})"
++	tail -n 30 "$perfout2"
++	cleanup
++	exit 1
++fi
++
++# The totals are the sums of the per-instruction rows.
++if ! awk '
++	/^total / {
++		t = $2; o = $4; b = $7
++		sub(/,/, "", t); sub(/,/, "", o); sub(/,/, "", b)
++		total = t; ok = o; bad = b; next
++	}
++	/^  .*: +[0-9]+ +[0-9]+$/ { good += $(NF - 1); bads += $NF }
++	END {
++		exit !(total > 0 && total == good + bads &&
++		       ok == good && bad == bads)
++	}
++' "$perfout2"; then
++	echo "FAIL: instruction stats do not add up"
++	tail -n 30 "$perfout2"
++	cleanup
++	exit 1
++fi
++
++# No point in recording the data type samples if the PMU cannot do memory
++# events.
 +if ! perf mem record -o /dev/null -- true 2>/dev/null; then
 +	echo "Skip: cannot record memory events on this PMU"
 +	cleanup
 +	exit 2
 +fi
 +
-+if ! perf mem record -o "$perfdata" -- perf test -w regptr 1 \
-+		> /dev/null 2> "$perferr"; then
++if ! perf mem record -o "$perfdata" -- perf test -w datasym > /dev/null 2>&1; then
 +	echo "FAIL: perf mem record"
-+	cat "$perferr"
 +	cleanup
 +	exit 1
 +fi
 +
-+if ! perf annotate --code-with-type -i "$perfdata" --stdio \
-+		--percent-limit 1 touch > "$perfout"; then
-+	echo "FAIL: perf annotate"
-+	cleanup
-+	exit 1
-+fi
-+
-+for member in "+0 (a)" "+0x8 (b)" "+0x10 (c)"; do
-+	if ! grep -Fq "# data-type: struct node ${member}" "$perfout"; then
-+		echo "FAIL: member ${member} not resolved from the register"
-+		grep 'struct node' "$perfout" || true
-+		cleanup
-+		exit 1
-+	fi
-+done
-+
++# The data type stats are only printed with --data-type, and must be
++# accounted like the instruction stats above.
 +if ! perf annotate --data-type --type-stat -i "$perfdata" --stdio \
-+		touch > "$perfout"; then
++		> "$perfout"; then
 +	echo "FAIL: perf annotate --data-type --type-stat"
 +	cleanup
 +	exit 1
 +fi
 +
-+if grep -Eq '^[[:space:]]*[0-9]+ : insn_track$' "$perfout"; then
-+	echo "FAIL: data type resolved by instruction tracking"
++if ! awk '
++	/^Annotate data type stats:/ { sections++ }
++	sections && /^Annotate type: / { late = 1 }
++	END { exit !(sections == 1 && !late) }
++' "$perfout"; then
++	echo "FAIL: data type stats not printed once after the annotations"
 +	tail -n 30 "$perfout"
 +	cleanup
 +	exit 1
 +fi
 +
-+echo "register held access resolved"
++# The total is the sum of the bad counters and of the good ones.
++if ! awk '
++	/^Annotate data type stats:/ { stats = 1; next }
++	!stats { next }
++	/^total / {
++		t = $2; o = $4; b = $7
++		sub(/,/, "", t); sub(/,/, "", o); sub(/,/, "", b)
++		total = t; ok = o; bad = b; next
++	}
++	/^[[:space:]]*[0-9]+ : / && $3 != "insn_track" { fields += $1 }
++	END { exit !(total > 0 && total == ok + bad && bad == fields) }
++' "$perfout"; then
++	echo "FAIL: data type stats do not add up"
++	tail -n 30 "$perfout"
++	cleanup
++	exit 1
++fi
++
++if ! perf annotate --type-stat -i "$perfdata" --stdio > /dev/null 2> "$perferr" ||
++   ! grep -Fxq "Warning: --type-stat needs --data-type" "$perferr"; then
++	echo "FAIL: missing --type-stat warning"
++	tail -n 30 "$perferr"
++	cleanup
++	exit 1
++fi
++
++echo "instruction stats accounted"
 +cleanup
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 8621ea345b5f06ff..6bfb30687e12eeb7 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -276,6 +276,7 @@ DECLARE_WORKLOAD(callchain);
- DECLARE_WORKLOAD(false_sharing);
- DECLARE_WORKLOAD(global_data);
- DECLARE_WORKLOAD(flex_array);
-+DECLARE_WORKLOAD(regptr);
- 
- #ifdef HAVE_RUST_SUPPORT
- DECLARE_WORKLOAD(code_with_type);
-diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-index 74a0cbe49dc93533..17189458032c0a17 100644
---- a/tools/perf/tests/workloads/Build
-+++ b/tools/perf/tests/workloads/Build
-@@ -19,6 +19,7 @@ perf-test-y += callchain.o
- perf-test-y += false_sharing.o
- perf-test-y += global_data.o
- perf-test-y += flex_array.o
-+perf-test-y += regptr.o
- 
- ifeq ($(CONFIG_RUST_SUPPORT),y)
-     perf-test-y += code_with_type.o
-@@ -39,3 +40,4 @@ CFLAGS_callchain.o        = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_false_sharing.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_global_data.o      = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_flex_array.o       = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-+CFLAGS_regptr.o           = -g -O2
-diff --git a/tools/perf/tests/workloads/regptr.c b/tools/perf/tests/workloads/regptr.c
-new file mode 100644
-index 0000000000000000..8c3ab7d316870a3b
---- /dev/null
-+++ b/tools/perf/tests/workloads/regptr.c
-@@ -0,0 +1,60 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * A struct pointer that -O2 keeps in a register, so the member accesses
-+ * have to be resolved from its DWARF register location and not from a
-+ * stack slot.
-+ *
-+ * See tests/shell/data_type_register.sh.
-+ */
-+#include <signal.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <linux/compiler.h>
-+#include "../tests.h"
-+
-+struct node {
-+	long long a;
-+	long long b;
-+	long long c;
-+};
-+
-+static struct node node;
-+static struct node *volatile vp;
-+static volatile unsigned long long reg_sink;
-+static volatile sig_atomic_t done;
-+
-+static void sighandler(int sig __maybe_unused)
-+{
-+	done = 1;
-+}
-+
-+static noinline long long touch(struct node *p)
-+{
-+	long long sum = 0;
-+
-+	sum += p->a;
-+	p->b += sum;
-+	sum += p->c;
-+	return sum;
-+}
-+
-+static int regptr(int argc, const char **argv)
-+{
-+	unsigned long long sum = 0;
-+	int sec = 1;
-+
-+	if (argc > 0)
-+		sec = atoi(argv[0]);
-+
-+	vp = &node;
-+	signal(SIGINT, sighandler);
-+	signal(SIGALRM, sighandler);
-+	alarm(sec);
-+
-+	while (!done)
-+		sum += touch(vp);
-+	reg_sink = sum;
-+	return 0;
-+}
-+
-+DEFINE_WORKLOAD(regptr);
 -- 
 2.56.1
 
