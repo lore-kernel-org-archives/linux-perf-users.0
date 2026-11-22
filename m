@@ -1,87 +1,100 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.208.45
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795348582;
-	b=tfUyCLcu9XrPoPrk/M7Q0ywF3jfJXZb/Q7kz8kSu5FPDp38NMEVFHNUC/r4UmYnNig6O
-	 dozyjQXj8poF93FES8LGVIG6j7m1iQDn5GXp/t38hc7Fo36+YBO27jHBieqebsZQX6o/e
-	 VU0VbkH1nzc5tXx/vqVWZ5Owu5N5SN3KryQ2iOqepvFvPDwF0zKGzNkPUuwtFOE7zKeQI
-	 eG85rbpvZrR2Ty8FTz+rZnr3iiVwQXHt1l2c8Nnx0Omz6rmYBK50ZUsE3hlTmk1sQ4ffU
-	 yjmCW5bVvc659XgarF5pehRqT2kS+r0+bqU7e88mZR5oTFo1+cGNtbWXlUvq04Xk18g==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795348582;
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.169
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795366877;
+	b=YN2eTpvmcEO+PB8wOrJhR/1QxWxNatijaUHsUMY7N2KBphEM2uRklm4e9bNxORcMm8gN
+	 jLAJYwRNSqbno6sJueoWzjmvzoF9G2xw2X7VqC7zNZZR0MeTQWb14YNWwpAMibEUSjdjM
+	 T6H8Br0xeENLpzolTQKKj9sTtntQ0KF7xrRqzlC1QXQG6SvRYW0bGrgi4TFZQafJ4DvZ7
+	 jrK+5HbvsuIC8squJa6hbYrjfjmlpnjgt14dvcoQpWmyW7geoJVTqCHIZ7trtpEeOCMbY
+	 0Qfk73r0dPBuS33Mk+0bGFALojDjWhmcQNK4CnHokQiAeyp0ZsChKiz13IK5FPKFehg==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795366877;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:Autocrypt:In-Reply-To:Content-Type;
-	bh=ukt8Gk4DLOLYIyt4G+IT9Thvj+8TqIkl+QNbsvaRca4=;
-	b=cHyhpDNxExNCvrPttHjrjLDye4rXrYTTFyk48SyCKYi9nxWV9ZMMzedsx/g0HYpc3klb
-	 zy5fAs2qAE4XJ2bJedLEUBs2JVCpAeMnecazKlvBBAiAk623waB6GUjKakxluXfE4V1Iw
-	 5AyuPW0N//s8Q6mbBrL3HhwcJuF4QRqmgY70u6P4H8wha+wEDwdJ3ynUNNxYVG92P/JWF
-	 LMixiTyYDN7z1B5fDb+9BPsmA3wr1yjituZxsTnoYcPiduf2MwjBg0qLKtFhh0Gu6l2KT
-	 FEt+C960iCbAp+i75VZWmDuJDfkF7UUpw/VGPmnDoXEgBDH0jRc0X33ZNIW41lK5U4w==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=suse.com;
-	spf=pass smtp.mailfrom=suse.com;
-	dkim=pass header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=google header.b=f+VRP2Wm;
-	arc=none smtp.remote-ip=209.85.208.45
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+	bh=DrzgiFmBm4hYbypPeeTGjMwfD3uI6h49BzMOnPTdENE=;
+	b=enszb2w1E/3Sit1pK13+ac0w7gl7+TzuNon2C+LMZinHDYhMJFqGpxcZiyKXmN+Vn1DZ
+	 I3+plfb/U+fSx31ZZPCbWH5uqnWAhQkmCjfPp6hxToLdgEYioVDpbXQ9+YK/ZP7IbaqjI
+	 LpIbfKqpI3uRtSwblY3oCTIi5jtMkIUJY25w+abBP4XQR2vUnzjLp26Bm1zaASlXcKjb1
+	 4DRF68iAR2hGrtidHY9AhqJTYQOt273dKS3iX6El2kYoPBLQYskexqGKWCHQw5L3Vzpbl
+	 mRmxUhTKYfUafi4SmYUT3QGyHN1pKAzYfx8DIhDuz3hiqpL8SZpgbZGOt4dnVMtjCDg==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=a3HCuWTl;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.169
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B55606A32A
-	for <linux-perf-users@vger.kernel.org>; Sun, 22 Nov 2026 11:56:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 07B55606A32A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0B2606A682
+	for <linux-perf-users@vger.kernel.org>; Sun, 22 Nov 2026 17:01:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1E0B2606A682
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=google header.b=f+VRP2Wm
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6a642495d81so3768583a12.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 22 Nov 2026 03:56:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=a3HCuWTl
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-533202fe429so252811cf.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 22 Nov 2026 09:01:14 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795366874; cv=none;
+        d=google.com; s=arc-20260327;
+        b=YP9BGIYyEf5VHcDVbwuXdnqnZdh+DQHwxDweK5o3g9iToHNymLOoAV8xF9bPokCyVs
+         aFlWWt6ECdBznpBqxj4Y9Ukz6JJieVghMPNJSnR/cjlRWoHG7ttERk50FULl5zdQhFsR
+         VdzFI0G4KfMAI41NqCUTuZJdovhjJ/1cQaStYp2rINPYGbH5wOfKGQL8ENo94AEv8sUh
+         Fscmut1U/xioqAFk/WvgGCSOd1Gd2RTUb4Ex6JEAxR70OAIAZAiDANvvZ5BpEnYsWNwI
+         ZZqQ/r5e6UaV01BqwmDMJNAH/0dUJ1IjMfOg0O3UdVa1uWnYTdCER/e9A1vKHGQK+rZq
+         CLPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=DrzgiFmBm4hYbypPeeTGjMwfD3uI6h49BzMOnPTdENE=;
+        fh=hTcHHCYEbzzQQ1rLTqK+NfvcWTgzPWid88LxKgdr6io=;
+        b=E43aJglLZZHWPdZPMeG6XDrubN3w86cI6UoApU7Y5mfrYdKKtNPB+sWai/e0ndcfSa
+         TX5GfHtojE02RRPHPsMo+oxMTF8tiOBX81q37/qOoYCnDbzcSTxzNdZpig9Giv2PoDwK
+         tbgJakSpRHa1z3pbRKox4GPSYlVvBzbD6x887DFoTrKkc/apEsIkz6XEAgRaq2xrLcFs
+         x5owKcsc9OcGwwkrY1g2tMxqsmkxPapCE3ghkR3UngPHx5QSghf/46k4LuV18KkS4eXv
+         0tCndkVBW4Q+/ehRVG5v0uvuXI2A3IxX4ivwxoypVzsJyl/Ky4gKIfb2rAdcIdtx2rWa
+         Asbw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1795348580; x=1795953380; darn=vger.kernel.org;
-        h=content-type:in-reply-to:autocrypt:from:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=ukt8Gk4DLOLYIyt4G+IT9Thvj+8TqIkl+QNbsvaRca4=;
-        b=f+VRP2Wm7iSaE3D4Pz4X34YYrxV8EkxwbUe2DZQe5XRn9j4lYGNPJxLK7VL3JkPzOF
-         zthR+ALThzhE+LTzEYXpeiZGIqjm50XYF4C3xqOMwFuNrK73e3LAp+npA2Nqq24CS1sl
-         v+pFV3zOmozO3a+XHumB3THeH8p2e5DHgeGgWdJn+LDLpHl1EGTfBc/bkAmsvTRYvkZU
-         ahR0YT6tE+VhlmcJmReDk/tRyERrxz0QYQCiSpytgvTwgP4FSKQSP1fqdnAkH5D6O0ei
-         OdsR4XhniYb4fR7i4PVJ+k/n1z3f7ZEnN7bcRbT7ZNmB1UqkxHdFkx4WqKpdjEyVLBlw
-         sspw==
+        d=google.com; s=20260707; t=1795366874; x=1795971674; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=DrzgiFmBm4hYbypPeeTGjMwfD3uI6h49BzMOnPTdENE=;
+        b=a3HCuWTlj1VBbi4XxQexwtbCwJ2kVwkydMmHosKYha/JK0KEVYCM+u30WmzqU7kle/
+         lqYkAszPMiIAIRLzL7afmK3l+ROxvNS4LZf7kC/NHi17qoETdopNXCFmDq8KKnxoJcDK
+         Me2BlxT9S8oWjWvqjb2vc+gLFE+gJSO0AL5MVxYgEnayqiPLWVLnxWTuw/ADAlekBtU3
+         /qkAD0YECiL5771X9+efacFLuXrWRm/Gzi0z70uBGyr/DwHevsHS8wv4LBkq6w3IrnAH
+         vw+hif20G3cK053ik9yYtkbNz2bdrJPo7EICh+0LWYpyQVRA3ilGumPC+bcsBCuDJU7/
+         kN+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795348580; x=1795953380;
-        h=content-type:in-reply-to:autocrypt:from:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:x-gm-gg
+        d=1e100.net; s=20260707; t=1795366874; x=1795971674;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=ukt8Gk4DLOLYIyt4G+IT9Thvj+8TqIkl+QNbsvaRca4=;
-        b=a3xAMMAoBC2kIP7UWaTZg8dMobMLCVmxe5TlUoOEZZpW2Z1Ve9YyIlqT2IaaNz2xd+
-         uKrFTcWPbxVe0E1R4C8LIMfuM1BgpV9bjktD0o95XVb3Ec0q3Wj8HoGRx8VGT9I2j8SH
-         f/oijesJFpzhzb1tYw9vFwkzrXY2dGMDkDpg8aflvNOWkhX+DrWI8/xfjY3Ziu/aNH7Q
-         PHFCABMkQcj65GB56fs1AEYXoZo6A7t0P12P00nZYlqlK2zkLp9DKmalClGzQdEMH7BI
-         aDTLN1qLUAUHE0vhi2cXZ7EJMc/cUOFDFD4VSxfCEQKzBgx8qwpMAmU40+afjMEPnanP
-         8w2A==
-X-Forwarded-Encrypted: i=1; AL+hErG1oCRTuQBO8eQG3SmHfR4SytG6ID+SRmuwiIl2WE/9ZiIE3QlATWZXlwIg00dYWnpE/bVKDXeVsH9Gd3YChrS0@vger.kernel.org
-X-Gm-Message-State: APuU4Z9ikE4Y65717LUKM0LUXa23Zll0JEZJkNl2LS50qe5Z9d4QrO7D
-	ENfy57GIKeztfhPGNVjujYv6Sa6O2FKdXVBH34h7xkyd2HwoC16ReWZk6vUqb3Fs5zo=
-X-Gm-Gg: AZFdTZcGdYOknJTOUG3W+o8v7Ce/FtgrMBatrdcdkIA1dJxLcGQ27CkAeO6+fbb67Q9
-	w2bBB/fn0sr5iW2Ds9zAQ2D7RUe0mH3W01SB0iHxgQtGbBc8nhUA9WTEFLHkgmKv+CL/0BcNXQb
-	g8lOJgOUDGRj3SiZ/b0mv7AfM0O4SrG4UM6nZ1EUe1rk/Xj0vZ5US6a1D54zs7ggArzAVyeyHG/
-	cJvP4A+sJv9vmGoW8V0JYbTL62ZLs6YK4aAgT7OABPIaGjqhJvak1zLqf3NkWhLt7+66PSbVtkc
-	hUBiYdyBqdKtnq+sj5Wf0cdmE6sOX3ydH7tRujhseCeIADJUTMNUSt0fOr4R2aDblaCXXMMec8l
-	c85XtfWECRGWhV+KH6Kmf34hKbWTbO+GWAL5R4Cm6NeCVTRw2dZ82GMHKSlWWP/RQHxOMigKom2
-	cvVRW1vfADziyST+92jTm+sIW7LcDqL0e9NGYGkKNmgMqIMgHqpqlftOTTM/aFiKOwmnsBJyglY
-	lVhp0309wKJHjEfy6epHp8KU6H985tkXR5zibjQTrFgNDlvMXTNpGs6C9Yhv9LIjUbv0tf+paag
-	PE/OVXMlGWAWfrshPisUnt4tAULd5ppILhNKB7TTKMXgNKNV7Sw45e38VA6B21ksw9yFfC7w74o
-	S5jCZGCoMIEM9X0gQEqNO+YiPZuRzhevVa82HPUH8HOTmQiSAwUg=
-X-Received: by 2002:a05:6402:51d4:b0:6b5:8cb3:5e19 with SMTP id 4fb4d7f45d1cf-6ba37e8826emr6733045a12.38.1795348580410;
-        Sun, 22 Nov 2026 03:56:20 -0800 (PST)
-Received: from ?IPV6:2a00:12d0:afa3:c01:92cc:e257:77ba:97a1? (2a00-12d0-afa3-c01-92cc-e257-77ba-97a1.ip.tng.de. [2a00:12d0:afa3:c01:92cc:e257:77ba:97a1])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6ba370fc020sm3845321a12.25.2026.11.22.03.56.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Nov 2026 03:56:19 -0800 (PST)
-Message-ID: <9f0278ed-70d2-44e6-b897-dc7a968782ed@suse.com>
-Date: Sun, 22 Nov 2026 12:56:18 +0100
+        bh=DrzgiFmBm4hYbypPeeTGjMwfD3uI6h49BzMOnPTdENE=;
+        b=Np4VJoYM1cBs/fVlQHYL7g0qxiySC24KzdohjaoSltgvqAwcZzqtxVXIt+xEYOdMSY
+         0vJ8ZrL2z8Up92WyrgEmC6ka50zkbWfyYZO5b1trHF/nzwWcrFepGX79ND9DBKpBoMSe
+         3Htnc20s7SNRFJNHBqpo+WvyGsMON+HasB/rFNv8aSPAa9gE95VEBAwtEZVa/C0WN05v
+         M3niZAuQ4+0+981RRXFEiNIIGzZqQYVA4o+ceMfz9hvXPLoOVWfDRHQ5krzknbrsAvrJ
+         hxAA5PjpIMYpYy+U/ML2eKhV/+JFE+qe8k0HC3CsNso6P6wnmsHVC+Fesvyo2xEjHjcf
+         V7cA==
+X-Forwarded-Encrypted: i=1; AL+hErGswpNFxVt4rD/WHdeOilebddc7HQI7xw+nTRm6HYXtpxO1FKpzvb9YB7iJSaQ85auiQkKSYztrKAmzepOt7nr2@vger.kernel.org
+X-Gm-Message-State: APuU4Z/89t8noxwhJyj7scgeWDHQDjOeY3CiLToz0jnpRMqQlPiVO/hX
+	D6rCkAgdQQU29/+jIGjphRp7YhJK0FRDGVGEj06IafgRPJaH0j0aZdi2vOP7nqBUVGPEihK40k/
+	XPymJ7IuGuhlY2kcnxtS9j/BNeokmQotqSe6pTBLX
+X-Gm-Gg: AZFdTZft8LYLHOXCqG8pa4JArKOdA5BdL+NzbHFL9hrKAQxINPv/CmzgSUEhiJLN0xy
+	vPIB0WSBN6TZUxa9WPpDGnx4WhWkT50Y0JEQGya7erVnW/iVWI2WIPVEP33scs8w0yt/PeUGp6g
+	Hbib8W9jC0vvySgry0d4TCQd0C+L5VaVhX8mBnYZRq/YogNRbAbzA5oF0Nk9qn1qfOm2CTl46UT
+	d+eJbJXCAoBTSE4eBBSiEXkUQXAAf7+xVSo4ddv+8kGM8/FLGI0HF89a/AG5K+yLh2G895yf8Gm
+	/T0luM8p5ZAxruf6KwWzXIkayrctODKQD5pfYQLX9oHdUH3xXqA40vHUPJeV28Gj2qCV0vS3jth
+	ybUWsxGKft1PPtl0AhvW8yyXkCW9Z4lzHwvO8
+X-Received: by 2002:ac8:5cd5:0:b0:55b:d494:187f with SMTP id
+ d75a77b69052e-55d881708admr22080771cf.5.1795366873162; Sun, 22 Nov 2026
+ 09:01:13 -0800 (PST)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -91,238 +104,182 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: treewide: Re: [PATCH v6 00/12] msr: Drop 32-bit MSR interfaces
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-ide@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
- linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
- kvm@vger.kernel.org, linux-edac@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-coco@lists.linux.dev,
- linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.makhalov@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Damien Le Moal
- <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
- David Airlie <airlied@redhat.com>, Helge Deller <deller@gmx.de>,
- linux-geode@lists.infradead.org, Olivia Mackall <olivia@selenic.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, Linus Walleij <linusw@kernel.org>,
- Bartosz Golaszewski <brgl@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Haiyang Zhang <haiyangz@microsoft.com>,
- Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Pu Wen <puwen@hygon.cn>,
- Tony Luck <tony.luck@intel.com>, Reinette Chatre
- <reinette.chatre@intel.com>, Ben Horgan <ben.horgan@arm.com>,
- Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
- Babu Moger <babu.moger@amd.com>, Drew Fustini <fustini@kernel.org>,
- Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
- Vitaly Kuznetsov <vkuznets@redhat.com>, Andy Lutomirski <luto@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Pavel Machek <pavel@kernel.org>,
- Kiryl Shutsemau <kas@kernel.org>, Rick Edgecombe
- <rick.p.edgecombe@intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- Len Brown <lenb@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
- Huang Rui <ray.huang@amd.com>, Mario Limonciello
- <mario.limonciello@amd.com>, Perry Yuan <perry.yuan@amd.com>,
- K Prateek Nayak <kprateek.nayak@amd.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Guenter Roeck <linux@roeck-us.net>,
- Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
- Artem Bityutskiy <dedekind1@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Ashok Raj <ashok.raj.linux@gmail.com>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- Xi Pardee <xi.pardee@linux.intel.com>,
- Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, xen-devel@lists.xenproject.org,
- Linus Torvalds <torvalds@linux-foundation.org>
-References: <20261116150208.1572254-1-jgross@suse.com>
- <awLVzKJWWfC3eJsH@gmail.com>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <awLVzKJWWfC3eJsH@gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------AaknyoBFimMKchSGvZQ4WGjM"
+References: <20261113055926.1159033-1-irogers@google.com> <20261113152622.1991001-1-irogers@google.com>
+In-Reply-To: <20261113152622.1991001-1-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Sun, 22 Nov 2026 09:01:01 -0800
+X-Gm-Features: Aa3M54r5y9zALy56FUMMZIGiaMMrZkldEYrkffk8BjbH0vBHaQ1b36eXP6PTRU4
+Message-ID: <CAP-5=fUFYGsixZCAT9dWi0oHj546oLS4YN=R3Zc9-+7JPzXdsg@mail.gmail.com>
+Subject: Re: [PATCH v8 0/2] perf timechart: Add --live mode to the TUI and test
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org, 
+	alice.mei.rogers@gmail.com
+Cc: adrian.hunter@intel.com, atrajeev@linux.ibm.com, changbin.du@huawei.com, 
+	dapeng1.mi@linux.intel.com, james.clark@linaro.org, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org, tanze@kylinos.cn, 
+	thomas.falcon@intel.com, wutengda@huaweicloud.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------AaknyoBFimMKchSGvZQ4WGjM
-Content-Type: multipart/mixed; boundary="------------hSBst9k3JSozt0eq4tpFbjs8";
- protected-headers="v1"; hp="clear"
-Message-ID: <9f0278ed-70d2-44e6-b897-dc7a968782ed@suse.com>
-Date: Sun, 22 Nov 2026 12:56:18 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: treewide: Re: [PATCH v6 00/12] msr: Drop 32-bit MSR interfaces
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- virtualization@lists.linux.dev, linux-ide@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
- linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
- kvm@vger.kernel.org, linux-edac@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-coco@lists.linux.dev,
- linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
- Alexey Makhalov <alexey.makhalov@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Damien Le Moal
- <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
- David Airlie <airlied@redhat.com>, Helge Deller <deller@gmx.de>,
- linux-geode@lists.infradead.org, Olivia Mackall <olivia@selenic.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, Linus Walleij <linusw@kernel.org>,
- Bartosz Golaszewski <brgl@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Haiyang Zhang <haiyangz@microsoft.com>,
- Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Pu Wen <puwen@hygon.cn>,
- Tony Luck <tony.luck@intel.com>, Reinette Chatre
- <reinette.chatre@intel.com>, Ben Horgan <ben.horgan@arm.com>,
- Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
- Babu Moger <babu.moger@amd.com>, Drew Fustini <fustini@kernel.org>,
- Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
- Vitaly Kuznetsov <vkuznets@redhat.com>, Andy Lutomirski <luto@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Pavel Machek <pavel@kernel.org>,
- Kiryl Shutsemau <kas@kernel.org>, Rick Edgecombe
- <rick.p.edgecombe@intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- Len Brown <lenb@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
- Huang Rui <ray.huang@amd.com>, Mario Limonciello
- <mario.limonciello@amd.com>, Perry Yuan <perry.yuan@amd.com>,
- K Prateek Nayak <kprateek.nayak@amd.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Guenter Roeck <linux@roeck-us.net>,
- Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
- Artem Bityutskiy <dedekind1@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Ashok Raj <ashok.raj.linux@gmail.com>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- Xi Pardee <xi.pardee@linux.intel.com>,
- Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, xen-devel@lists.xenproject.org,
- Linus Torvalds <torvalds@linux-foundation.org>
-References: <20261116150208.1572254-1-jgross@suse.com>
- <awLVzKJWWfC3eJsH@gmail.com>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <awLVzKJWWfC3eJsH@gmail.com>
+On Fri, Nov 13, 2026 at 7:26=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> Add a '--live' option to 'perf timechart' and 'ttimechart.py' that stream=
+s
+> live scheduler, power, or I/O (-I/--io-only) events from a 'perf record'
+> subprocess over a pipe and displays them in the Textual TUI with a rollin=
+g
+> time window (--window, default 10s), pause/resume via the control pipe, a=
+n
+> optional workload after '--' that stops recording when it exits, and
+> optional output recording (-o), along with headless shell tests in
+> test_ttimechart_python.sh.
+>
+> Assisted-by: Antigravity:gemini-3.1-pro
+>
+> v8: Address Sashiko review feedback:
+>     - Patch 1: Track switch-out timestamps explicitly on Task rather than
+>       inferring switch counts from pruned STATE_RUNNING segments, and
+>       accumulate Task.totals from the actual clipped duration returned by
+>       SegmentList.add() while keeping Task.since monotonic.
+>     - Patch 1: Keep each I/O syscall as its own unmerged segment and avoi=
+d
+>       same-timestamp clipping so Task.io_bytes and syscall counts never
+>       drift across pruning.
+>     - Patch 1: Extend open STATE_WAITING and STATE_BLOCKED task states in
+>       checkpoint(), preserve non-sleeping states across prune(), and clam=
+p
+>       live_prune() to last_time - 1 so open or finished states at last_ti=
+me
+>       are not deleted when idle past --window.
+>     - Patch 1: Refresh comm names from perf.session on syscall lookups an=
+d
+>       periodic live intervals (ignoring perf's unset ':tid' placeholders)=
+ so
+>       pre-exec names update after execve(), and ignore scheduler-only tas=
+ks
+>       in dump() and the UI when -I is set.
+>     - Patch 1: Snapshot flush_round_target with a sequence counter before
+>       draining perf record's pipe so concurrent or split-record flushes a=
+re
+>       not dropped, and synchronize LiveRecorder.backlog() with
+>       close_data_fds() under fd_lock.
+>     - Patch 2: Add synthetic regression tests for all cases.
+>
+> v7: Address Sashiko review feedback:
+>     - Patch 1: Pass the comm/PID filter expression as a positional
+>       argument to /bin/sh so the shell preserves the quotes around comm i=
+n
+>       --live -I mode instead of stripping them before execing perf record=
+.
+>     - Patch 1: Clear LiveRecorder.control_thread if starting it raises so
+>       stop() does not call join() on an unstarted thread and skip FD/comm
+>       cleanup, and ignore OSError if perf record exits concurrently durin=
+g
+>       stop().
+>     - Patch 2: Test the /bin/sh --filter quoting and control_thread
+>       startup failure cleanup in the synthetic live test, and add a live
+>       -I workload recording subtest when syscall tracepoints are permitte=
+d.
+>     v6: https://lore.kernel.org/lkml/20261112233738.699031-1-irogers@goog=
+le.com/
+>
+> v6: Rebase onto perf-tools-next and address Sashiko review feedback:
+>     - Patch 1: Queue pause/resume gap timestamps in a deque so rapid
+>       pause/resume cycles before buffered events arrive still close
+>       pre-pause open task and CPU states at each gap.
+>     - Patch 1: Increment nr_samples inside TimechartData.lock and check/u=
+pdate
+>       refreshed_samples in the same lock acquisition as checkpoint() in
+>       live_refresh() so final buffered events aren't missed when paused.
+>     - Patch 1: Keep cursor following in sync when zooming in/out, resetti=
+ng
+>       zoom with '0' after moving the cursor, or jumping to a waker ('w').
+>     - Patch 1: Filter out all threads of ttimechart.py (via comm) and the
+>       child perf record process (via $$) on syscall tracepoints in --live=
+ -I
+>       mode, and ignore filtered I/O events before counting nr_samples.
+>     - Patch 1: Track record boundaries in LiveRecorder's pipe pump and em=
+it a
+>       synthetic PERF_RECORD_FINISHED_ROUND when perf record goes idle or
+>       pauses so ordered_events does not hold back the latest round.
+>     - Patch 1: Always drain perf record's stdout on stop so perf record c=
+an
+>       flush and terminate its workload cleanly without blocking on pipe w=
+rites,
+>       and kill its process group if wait times out.
+>     - Patch 2: Gate the LiveRecorder task-clock subtest on system-wide
+>       task-clock permissions so unprivileged runs under perf_event_parano=
+id > 0
+>       skip cleanly, and add synthetic tests for multiple pause gaps, roun=
+d
+>       tracking, and cursor following.
+>     v5: https://lore.kernel.org/linux-perf-users/20261023054952.2503540-1=
+-irogers@google.com/
+>
+> v5: Address Sashiko review feedback:
+>     - Patch 1: Always record system wide, as 'perf timechart record'
+>       does, as switches into a task and idle states aren't seen by
+>       per-task events when only a workload was recorded.
+>     - Patch 1: Don't move a task's state start back before its recorded
+>       history when its switch out and back in were lost, which inflated
+>       its running time.
+>     - Patch 1: Serialize LiveRecorder.stop() calls from the UI thread and
+>       the thread processing events.
+>     - Patch 2: Only run the live recording test when scheduler events can
+>       be recorded system wide.
+>     v4: https://lore.kernel.org/linux-perf-users/20261023050207.2449976-1=
+-irogers@google.com/
+>
+> v4: Address Sashiko review feedback on patch 1:
+>     - Don't prune live history past the last event, so open states aren't
+>       lost when no events arrive for a window, and don't count a still
+>       running task's open segment as a switch.
+>     - Keep showing the window at the end of recording, rather than jumpin=
+g
+>       back to already pruned history, and prune events flushed as perf
+>       record exits.
+>     - Close open task, CPU and I/O states when resuming after a pause,
+>       rather than extending them across the unrecorded gap, and close the
+>       running task when a switch away from it was lost.
+>     - Stop perf record and close the files and pipes if
+>       LiveRecorder.start() fails after starting it, and close the data pi=
+pe
+>       read ends in LiveRecorder.stop().
+>     v3: https://lore.kernel.org/linux-perf-users/20261023041819.2361900-1=
+-irogers@google.com/
+>
+> v3: Address Sashiko review feedback:
+>     - Patch 1: Explicitly include <string.h> in builtin-timechart.c.
+>     - Patch 1: Reject non-finite --window values (e.g. 'inf') that
+>       overflowed converting to nanoseconds.
+>     - Patch 2: Stop the fake recorder in a try/finally in the synthetic
+>       live UI test so a failed check can't leave its background thread
+>       running and hang the test.
+>     Rebase onto the latest perf-tools-next.
+>     v2: https://lore.kernel.org/linux-perf-users/20261014042249.2379829-1=
+-irogers@google.com/
+>
+> v2: Rebase the remaining 2 patches onto perf-tools-next after patches 1-1=
+1
+>     of v1 were merged.
+>
+> Alice Rogers (2):
+>   perf timechart: Add a --live mode to the TUI
+>   perf test: Test perf timechart --live
 
---------------hSBst9k3JSozt0eq4tpFbjs8
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Ping. The Sashiko feedback is now clean on these final 2 remaining patches:
+https://sashiko.dev/#/patchset/20261113152622.1991001-1-irogers@google.com
 
-T24gMjIuMTEuMjYgMTI6NDUsIEluZ28gTW9sbmFyIHdyb3RlOg0KPiANCj4gKiBKdWVyZ2Vu
-IEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+IHdyb3RlOg0KPiANCj4+IEZvciBhY2Nlc3Npbmcg
-dGhlIE1TUiByZWdpc3RlcnMgb24gdGhlIGxvY2FsIENQVSwgdGhlcmUgYXJlIDIgdHlwZXMg
-b2YNCj4+IGludGVyZmFjZXM6IHRoZSAibW9kZXJuIiA2NC1iaXQgb25lcyAocmRtc3JxKCkg
-ZXRjLikgYW5kIHRoZSAzMi1iaXQNCj4+IG9uZXMgKHJkbXNyKCkgZXRjLikgd2hpY2ggYXJl
-IHVzaW5nIHRoZSB1cHBlciBhbmQgbG93ZXIgMzItYml0IGhhbHZlcw0KPj4gb2YgdGhlIDY0
-LWJpdCB3aWRlIE1TUiByZWdpc3RlciB2YWx1ZXMuDQo+IA0KPj4gICAxNDAgZmlsZXMgY2hh
-bmdlZCwgNTcyIGluc2VydGlvbnMoKyksIDY5MCBkZWxldGlvbnMoLSkNCj4gDQo+IFNvIEkn
-dmUgYXBwbGllZCB0aGlzIHRvIGEgc2VwYXJhdGUgYnJhbmNoL3RyZWUgdW5kZXIgdGlwOmNv
-cmUvbXNyLA0KPiBiZWNhdXNlIEkgdGhpbmsgdGhpcyBzZXJpZXMgaXMgbWF0dXJlIGVub3Vn
-aCBhbmQgYWZ0ZXIgYWJvdXQgYSB5ZWFyDQo+IHdvcnRoIG9mICh2ZXJ5IHBhdGllbnQpIGl0
-ZXJhdGlvbnMgYnkgeW91IHdlJ3ZlIHJlYWNoZWQgdGhlIGxpbWl0IG9mDQo+IHdoYXQgd2ls
-bCBiZSBwaWNrZWQgdXAgYnkgbWFpbnRhaW5lcnMuDQo+IA0KPiBUaGUgY29tbWl0IHdpdGgg
-dGhlIHdpZGVzdCBpbXBhY3QgaXMgYXV0b21hdGljYWxseSBnZW5lcmF0ZWQNCj4gdmlhIGEg
-c2VtYW50aWMgcGF0Y2g6DQo+IA0KPiAgICB0cmVld2lkZTogQ29udmVydCByZG1zcnEoKSBm
-cm9tIGEgbWFjcm8gdG8gYW4gaW5saW5lIGZ1bmN0aW9uDQo+IA0KPiAgICAxMzkgZmlsZXMg
-Y2hhbmdlZCwgNDkzIGluc2VydGlvbnMoKyksIDQ5NSBkZWxldGlvbnMoLSkNCj4gDQo+IGFu
-ZCBJJ20gcmVhc29uYWJseSBjZXJ0YWluIHRoYXQgd2hhdGV2ZXIgbWVyZ2UgaW1wYWN0IHRo
-aXMgbWF5IGhhdmUNCj4gb24gLW5leHQgY2FuIGJlIGFkZHJlc3NlZCBxdWlja2x5IGFuZCBp
-biBhIHNpbXBsZSBmYXNoaW9uLiBMZXQncyBzZWUNCj4gaG93IHRoaXMgZ29lcy4NCllheSEN
-Cg0KVGhhbmtzLA0KDQoNCkp1ZXJnZW4NCg==
+Thanks,
+Ian
 
---------------hSBst9k3JSozt0eq4tpFbjs8--
-
---------------AaknyoBFimMKchSGvZQ4WGjM
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmsC2GIFAwAAAAAACgkQsN6d1ii/Ey+U
-/Qf/V7wsSss4hIhzlYSEbAn3m9hHxZeeL5FKmbgPgVrLfYK4nlHwa3EJ6R8VEbsBCrSAEDukOo+1
-y+40nF5zk5Cd2x6ZzPoqHY51FPya4j+4EVDSl5V+nbl4SIiJvGDLi4ihESYNx1mvWW5gH6+Vuufs
-OnzP6T4CmZFJXVONAuCrvQmcpuKCQ2grE/lndqutElRto4ptfTedEbY9e75ofBpzPdznr2II1ouD
-tHveoDTySHC4GW3oe56/QxE/nsNs4UzA7yTyiXJKF8L7waOzxaNxh/HChdvWlA5MFcc8008Gc5fJ
-dVj2v83uXCziMzSDhFA+P0ilK02fXgpsKkJqlb/r1A==
-=ZBGv
------END PGP SIGNATURE-----
-
---------------AaknyoBFimMKchSGvZQ4WGjM--
+>  tools/perf/Documentation/perf-timechart.txt   |   20 +-
+>  tools/perf/builtin-timechart.c                |   80 +-
+>  tools/perf/python/ttimechart.py               | 1334 +++++++++++++++--
+>  .../tests/shell/test_ttimechart_python.sh     |  591 ++++++++
+>  4 files changed, 1899 insertions(+), 126 deletions(-)
+>
+> --
+> 2.56.1.703.gf848ed807c-goog
+>
