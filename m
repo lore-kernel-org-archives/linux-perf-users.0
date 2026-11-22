@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795383648;
-	b=zLdOBaLREgVk4GFWYy5Vw6pv3HeYTuf7TErwRY/VCL1yY9CG+VjB0UuAsMuwIXEJKFyP
-	 wTQFZG6s/yfUlfT4yN5EMkXTKsWRWxQ+LI6WF7A+H4EzEcV8mlhpAa5ZrMH/f0O1V5llb
-	 UScfMNiuEBLrY093BW5Oj9yMgkywDciy5y2z4axXAGw/e6F2TQOgmW/zg5s8806mbLqGQ
-	 HfMUI2u73y6RZDXpuFPGt3RIsjRQ94bYdWe6SGzeS0dgQN+9lB0SMR6UpWREygMp+TRkF
-	 8CQW5dFku4+T8/JjdnnNSnfUE4XIx8pc09GiCS96PSIq5dfkUNwqfk5qOMk1wnxQuTA==
+	t=1795383654;
+	b=cr9N+rCYpojMpeoVs6nZhSLiWMHMuBiIDgfqNjEERInyyxhYau1YOQD1vd9+T3ibAIux
+	 M6WCzbHO1tM6TEusd/V9/4UuvliD7/Uvn7HVdvZtohDXcTxlP5HtoDp+QuDBrgMQk/ki4
+	 Yz+GKKZJhgHKqpXo3BTRL5vTcXMPe+7ZM1z0oCR/W4GH6cLdwPqBoYX8rSe0UTdzSBdQv
+	 70YDuwl//oknHJ9ULR5y2KiwX5OtP70fR0+0bl8F1VJXXvS7Ig+9dSMT5m+yQ3SDJpoas
+	 VLcZdvm73w7JfMTEnjHHy6uccZD7ndbL1c7PbOAWUug34r3/k9M2hHWzh1BV8U0hhGA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795383648;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795383654;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=X/jHvMBwgAGpnXcOJInZTL+cGAdtBlhHHRa06zuZiIQ=;
-	b=PcBRY+xK3vtSNGnmwac93B6DB0e859gjaXoREK4N55kltJb2FsVQHocptjySEcECZ1Xa
-	 9zwhbP/mmXHgKlLLpqEtIq8fbo91kuA84j7N8Fo0EzooWxjcbRQmZzfmaKBdW8xLwhMPE
-	 w1XNZ+APAo/GxJSNmsFP5pb8qzXtUuPXtHs14AEYUT4qAA3LaYyHiQtDW9oNu+i32vQlw
-	 5Gd/U21PepL3Uaz+30AYgqn8wgv1TZHb3KIkJwUMu4Jn+rqe54HKp1EeSUdheUvEtq1fE
-	 SN9VgIXVESLJrRZ3ZsWIxlktm8jeLqXGw2TQU0tyfO7/S0DJm9u60/vB+HLhhOs41EQ==
+	bh=BuOQpxxnJrgdxoRaqUkxeQM/mke/RW5jA38iKyRzh9g=;
+	b=wEZbLZikF6kbk1zezVB06Kyin75jry65blgXIDlUqNqim6lHbekxI7t2R0sVVH3RQSDY
+	 r2NnUpxRtas/gS/eDscHQQGr3qvTpUYc7R1g009XgkgcyRetQIQdypgkKNuGufZMvAY6N
+	 PgUgQYjAsEcPJiLXEKKtdJonMvdpGlBV1oJEbO186qnNc/tJBisTR0booX1mLlLdECxSo
+	 lJwBePqiv7G00oDw1m3m3sjH701Lsx9N+BKoPxEdQetaIfCWYKYZQ4EvzyvybvdoZ3cYv
+	 fUqEqV1cXlfj6Ntft0DqZO0aJ0Hkiv7dD1t1u3DW59Le9D1nLqaaIOfTcFTgVGv31zw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KyG6x7ho;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="RuHWYDs/";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71FEC606A327;
-	Sun, 22 Nov 2026 21:40:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C248C606A327;
+	Sun, 22 Nov 2026 21:40:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KyG6x7ho
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62EE61F000C0;
-	Sun, 22 Nov 2026 21:40:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RuHWYDs/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA4D51F000C4;
+	Sun, 22 Nov 2026 21:40:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795383648;
-	bh=X/jHvMBwgAGpnXcOJInZTL+cGAdtBlhHHRa06zuZiIQ=;
+	s=k20260515; t=1795383654;
+	bh=BuOQpxxnJrgdxoRaqUkxeQM/mke/RW5jA38iKyRzh9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=KyG6x7hopOQ/aPFT5V5NWEIsrhOYX5G90Kfb+0MwuHPZFVfF1S+NwHqlmlhP2170X
-	 FrGUOafy3f0sFayf20Ft77bgMSlcN/MNCzXoZ9jR7IsM0IqCsat2r7uZ3YN+Imjx9i
-	 zVlab/LpF091qL+tPfZnhAgDE+mVILG3PoMp+iYgjUBO2HGFo61+l3Fa89r8kpKpei
-	 UYho3/xc7bafRDSfM2lCwb682OW9M0n2SBWZislpKt+HwS28RfpidQbhah5X+y0kEm
-	 cyLiehAwVcmjipC7mCOy2h6U9r9RxiYBLplo5Mkncf7c0yjGb0rFbTv9CiPHQtZyjc
-	 SVRUoIz8LOdVQ==
+	b=RuHWYDs/8fHTRnIMWCn+N53iW9jCoMp58ZyCPyiYBL7i68m+33pItCcef+ESUMOc9
+	 ixeiOKvFzTOWBgAtfRhP23xDW5xfb7JDwOASEikuX10jLDovUSeQ2st4lm0W7Vnvt3
+	 tQqjKjqNEnLcgxBhko/lo2Xg9O3rEGsBBLjLcYYbT8IHPphaWQY7XvonNKPmJyfFyL
+	 rT0D3pN1z3bwwRN4c9zmvqJl1vi681sS2VyQB5EaBzWn92v9iMAhqD0BJfNTaTRmgU
+	 OSfHTfddEzGBiQvvn+RslwmLQvz/Cij7pdXXujR7NXMUIqZWHWHgKeyqa0IJhK6Uh8
+	 C/BIhgZfZD7GQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v11 04/19] perf build: Record the features checked outside FEATURE_TESTS
-Date: Sun, 22 Nov 2026 18:40:10 -0300
-Message-ID: <20261122214025.16769-5-acme@kernel.org>
+Subject: [PATCH v11 06/19] perf annotate-x86: Parse movabs like a mov
+Date: Sun, 22 Nov 2026 18:40:12 -0300
+Message-ID: <20261122214025.16769-7-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261122214025.16769-1-acme@kernel.org>
 References: <20261122214025.16769-1-acme@kernel.org>
@@ -70,42 +70,41 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-llvm-perf and rust are in FEATURE_DISPLAY but not in FEATURE_TESTS, and
-jvmti and jvmti-cmlr are in neither list: they can't be part of the
-test-all fast path, which sets every FEATURE_TESTS entry to 1 when
-test-all.c builds.  Since FEATURE-DUMP is written from FEATURE_TESTS
-only, a FEATURES_DUMP= build, as used by build-test, never sees them and
-silently builds without libLLVM, the rust workloads and the jvmti agent.
+x86__instructions[] has no movabs: ins__find() strips the size suffix
+of "movabsq" and still finds nothing, so mov__parse() never runs and
+the source and target operands of the instruction are not split.  The
+data type tracking then sees nothing, where the same instruction as a
+plain mov sets the destination register.
 
-Record these four in the dump after the regular feature checks have
-run, from a list of their own, so that customizing FEATURE_DISPLAY does
-not change what the dump carries.
+The clang allmodconfig build has plenty, 282558 in vmlinux, all with an
+immediate, the KASAN shadow offset:
 
-Fixes: 206dcfca1f5cfac3 ("perf build: Autodetect minimum required llvm-dev version")
-Fixes: 3f5dfa472ea6771c ("tools build: Fix rust feature detection")
-Fixes: d4dfdf00d43e017d ("perf jvmti: Plug compilation into perf build")
-Fixes: dd1d0044dd1c1bf8 ("perf jvmti: Separate jvmti cmlr check")
-Cc: James Clark <james.clark@linaro.org>
+  ffffffff81271e2b:	movabsq	$-0x2000040000000000, %r15
+
+No movabs with a memory operand shows up in vmlinux or in any object of
+that build.
+
+Add it as a mov; with the previous patch recording the immediate in 64
+bits, both objdump spellings of the KASAN shadow offset track the same
+constant.
+
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.config | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/perf/util/annotate-arch/annotate-x86.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 1cee80c531abf434..cb3bdd134f42592f 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -1364,3 +1364,10 @@ endif
- # tests.
- $(shell rm -f $(FEATURE_DUMP_FILENAME))
- $(foreach feat,$(FEATURE_TESTS),$(shell echo "$(call feature_assign,$(feat))" >> $(FEATURE_DUMP_FILENAME)))
-+# Features checked outside FEATURE_TESTS aren't part of the test-all fast
-+# path, so they have to be checked explicitly and recorded here too,
-+# otherwise a FEATURES_DUMP= build silently disables them.
-+FEATURE_DUMP_EXTRA := llvm-perf rust jvmti jvmti-cmlr
-+ifeq ($(FEATURES_DUMP),)
-+$(foreach feat,$(FEATURE_DUMP_EXTRA),$(shell echo "$(call feature_assign,$(feat))" >> $(FEATURE_DUMP_FILENAME)))
-+endif
+diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
+index 94c45806029ee670..0c74266cd4b99925 100644
+--- a/tools/perf/util/annotate-arch/annotate-x86.c
++++ b/tools/perf/util/annotate-arch/annotate-x86.c
+@@ -85,6 +85,7 @@ static const struct ins x86__instructions[] = {
+ 	{ .name = "lea",	.ops = &mov_ops,  },
+ 	{ .name = "lock",	.ops = &lock_ops, },
+ 	{ .name = "mov",	.ops = &mov_ops,  },
++	{ .name = "movabs",	.ops = &mov_ops,  },
+ 	{ .name = "movapd",	.ops = &mov_ops,  },
+ 	{ .name = "movaps",	.ops = &mov_ops,  },
+ 	{ .name = "movdqa",	.ops = &mov_ops,  },
 -- 
 2.56.1
 
