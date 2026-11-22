@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795383651;
-	b=TnsaXlaFFOsaNVTjBZZ5s43hxONQO+ISVeXvNEItloVbkbNrrzCZoGZ523x6j6b14qxl
-	 36K8pYIRhnqPqSYVuZn3dH1OjOlf20B/FRcp2NYaAgoGjmt2DcU9h+D33gTDhUooKiOnG
-	 WxdVfX0cRMVogqIuNuvGdZFaHwSYdSephmoopxe6QWeQ8adQiwwscQrDJ+laN+4UlMR5a
-	 TjxMFZJAqKeenoz3zAmgfKU26NAXPekKX85Vo7QyeicRC3KaqfuuGhvG/ddgsWBVA14LN
-	 7pLzGpo+pUT8F2Aj2NFJRNlx4eg97DnmzA+NPQR3hYperbZVxxLaqoKm04rTiWmlV9Q==
+	t=1795383648;
+	b=zLdOBaLREgVk4GFWYy5Vw6pv3HeYTuf7TErwRY/VCL1yY9CG+VjB0UuAsMuwIXEJKFyP
+	 wTQFZG6s/yfUlfT4yN5EMkXTKsWRWxQ+LI6WF7A+H4EzEcV8mlhpAa5ZrMH/f0O1V5llb
+	 UScfMNiuEBLrY093BW5Oj9yMgkywDciy5y2z4axXAGw/e6F2TQOgmW/zg5s8806mbLqGQ
+	 HfMUI2u73y6RZDXpuFPGt3RIsjRQ94bYdWe6SGzeS0dgQN+9lB0SMR6UpWREygMp+TRkF
+	 8CQW5dFku4+T8/JjdnnNSnfUE4XIx8pc09GiCS96PSIq5dfkUNwqfk5qOMk1wnxQuTA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795383651;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795383648;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=PKYLmHPn96TWds9ALdJsGGUruv58A496zNmgt2Inywo=;
-	b=xNfpR2aaanTLTmdalFK5UHULovhAV7DqYGb0Uj95KIA2I8xKGScvAkxJcJmOz8e+Njbt
-	 ZhFn3QcnBv2o41DjtxOWpLW3Sj2MY0aNkxnH0d+0TDniq6lizHuRW3zuM8S5+FsUiujdp
-	 0TmRczQg/ZcETkCDp0fL7ZgCXClFho+/h6DvX2kKD9vkQAMivafEys2PaKz5gqdU8aw+f
-	 F3Rf1o2ObChmsFxWJNAamtjZOoIg+eOqau06jX31+uPLMzU9tQZHaWe2586R5tBx/cNaa
-	 SafjTfTzpjGgNFUetK1D71zXenRupPW/gd1ecW+5OCKquWWaUBU5mCxoGjPPsnEemng==
+	bh=X/jHvMBwgAGpnXcOJInZTL+cGAdtBlhHHRa06zuZiIQ=;
+	b=PcBRY+xK3vtSNGnmwac93B6DB0e859gjaXoREK4N55kltJb2FsVQHocptjySEcECZ1Xa
+	 9zwhbP/mmXHgKlLLpqEtIq8fbo91kuA84j7N8Fo0EzooWxjcbRQmZzfmaKBdW8xLwhMPE
+	 w1XNZ+APAo/GxJSNmsFP5pb8qzXtUuPXtHs14AEYUT4qAA3LaYyHiQtDW9oNu+i32vQlw
+	 5Gd/U21PepL3Uaz+30AYgqn8wgv1TZHb3KIkJwUMu4Jn+rqe54HKp1EeSUdheUvEtq1fE
+	 SN9VgIXVESLJrRZ3ZsWIxlktm8jeLqXGw2TQU0tyfO7/S0DJm9u60/vB+HLhhOs41EQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DZH3U+Pn;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KyG6x7ho;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88907606A330;
-	Sun, 22 Nov 2026 21:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DZH3U+Pn
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DA871F000C4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71FEC606A327;
 	Sun, 22 Nov 2026 21:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KyG6x7ho
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62EE61F000C0;
+	Sun, 22 Nov 2026 21:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795383651;
-	bh=PKYLmHPn96TWds9ALdJsGGUruv58A496zNmgt2Inywo=;
+	s=k20260515; t=1795383648;
+	bh=X/jHvMBwgAGpnXcOJInZTL+cGAdtBlhHHRa06zuZiIQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=DZH3U+Pn9/oDH5xFif+XIqnni42OSgTnGE37XhugWSKX6DQYUM3vlifna2QQQAppP
-	 m5PMb03XC0jvXaG/qAqTSJf863CdKGs72+WEXAXP0eDbAm/U93el+ZEZO4H85l1pUz
-	 5pAISJIh7hYgkxXKeHdDl+pYQDwOIpKC6ROAfTHar25dKjmDliyNkAm0myFNm6UhWq
-	 StRjd9exlfaa+dYMQCWuOX7YCnx7p03KRBPeocvwqdgNEsl1pwmHLzVTlwEsdx3L71
-	 4K23rwrgF37peyLGl3lgZ7qeHoYqWeSltBUF+EAbw3CPKECZ1JDxNSCyVwppyHHOcp
-	 jKKtHMlG4dr0w==
+	b=KyG6x7hopOQ/aPFT5V5NWEIsrhOYX5G90Kfb+0MwuHPZFVfF1S+NwHqlmlhP2170X
+	 FrGUOafy3f0sFayf20Ft77bgMSlcN/MNCzXoZ9jR7IsM0IqCsat2r7uZ3YN+Imjx9i
+	 zVlab/LpF091qL+tPfZnhAgDE+mVILG3PoMp+iYgjUBO2HGFo61+l3Fa89r8kpKpei
+	 UYho3/xc7bafRDSfM2lCwb682OW9M0n2SBWZislpKt+HwS28RfpidQbhah5X+y0kEm
+	 cyLiehAwVcmjipC7mCOy2h6U9r9RxiYBLplo5Mkncf7c0yjGb0rFbTv9CiPHQtZyjc
+	 SVRUoIz8LOdVQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v11 05/19] perf annotate-x86: Record immediates in a 64-bit field
-Date: Sun, 22 Nov 2026 18:40:11 -0300
-Message-ID: <20261122214025.16769-6-acme@kernel.org>
+Subject: [PATCH v11 04/19] perf build: Record the features checked outside FEATURE_TESTS
+Date: Sun, 22 Nov 2026 18:40:10 -0300
+Message-ID: <20261122214025.16769-5-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261122214025.16769-1-acme@kernel.org>
 References: <20261122214025.16769-1-acme@kernel.org>
@@ -70,95 +70,42 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-An x86 immediate is parsed into the int offset shared with
-displacements, so a constant wider than 32 bits is truncated to garbage
-that the register tracking then records as its value.
+llvm-perf and rust are in FEATURE_DISPLAY but not in FEATURE_TESTS, and
+jvmti and jvmti-cmlr are in neither list: they can't be part of the
+test-all fast path, which sets every FEATURE_TESTS entry to 1 when
+test-all.c builds.  Since FEATURE-DUMP is written from FEATURE_TESTS
+only, a FEATURES_DUMP= build, as used by build-test, never sees them and
+silently builds without libLLVM, the rust workloads and the jvmti agent.
 
-Add a s64 imm_value to struct annotated_op_loc, fill it in
-extract_op_location_x86() with strtoull() and read it in the three
-places of update_insn_state_x86() that take an immediate as a constant.
-The displacement and the ARM64 and x86 %gs: immediates, which fit in
-32 bits, stay in offset, and pointer offset tracking is unchanged.
+Record these four in the dump after the regular feature checks have
+run, from a list of their own, so that customizing FEATURE_DISPLAY does
+not change what the dump carries.
 
+Fixes: 206dcfca1f5cfac3 ("perf build: Autodetect minimum required llvm-dev version")
+Fixes: 3f5dfa472ea6771c ("tools build: Fix rust feature detection")
+Fixes: d4dfdf00d43e017d ("perf jvmti: Plug compilation into perf build")
+Fixes: dd1d0044dd1c1bf8 ("perf jvmti: Separate jvmti cmlr check")
+Cc: James Clark <james.clark@linaro.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate-arch/annotate-x86.c | 13 ++++++++-----
- tools/perf/util/annotate.h                   |  6 ++++--
- 2 files changed, 12 insertions(+), 7 deletions(-)
+ tools/perf/Makefile.config | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
-index a975c39c3d6ce008..94c45806029ee670 100644
---- a/tools/perf/util/annotate-arch/annotate-x86.c
-+++ b/tools/perf/util/annotate-arch/annotate-x86.c
-@@ -341,7 +341,7 @@ static void update_insn_state_x86(struct type_state *state,
- 		tsr->lifetime_end = 0;
- 
- 		if (src->imm)
--			imm_value = src->offset;
-+			imm_value = src->imm_value;
- 		else if (has_reg_type(state, src->reg1) &&
- 			 state->regs[src->reg1].kind == TSR_KIND_CONST)
- 			imm_value = state->regs[src->reg1].imm_value;
-@@ -408,7 +408,7 @@ static void update_insn_state_x86(struct type_state *state,
- 		tsr->lifetime_end = 0;
- 
- 		if (src->imm)
--			imm_value = src->offset;
-+			imm_value = src->imm_value;
- 		else if (has_reg_type(state, src->reg1) &&
- 			 state->regs[src->reg1].kind == TSR_KIND_CONST)
- 			imm_value = state->regs[src->reg1].imm_value;
-@@ -589,7 +589,7 @@ static void update_insn_state_x86(struct type_state *state,
- 
- 		if (src->imm) {
- 			tsr->kind = TSR_KIND_CONST;
--			tsr->imm_value = (s64)src->offset;
-+			tsr->imm_value = src->imm_value;
- 			tsr->offset = 0;
- 			tsr->ok = true;
- 
-@@ -967,8 +967,11 @@ static void extract_op_location_x86(const struct arch *arch,
- 		if (*s == arch->objdump.register_char) {
- 			op_loc->reg1 = arch__dwarf_regnum(arch, s);
- 		} else if (*s == arch->objdump.imm_char) {
--			op_loc->offset = strtol(s + 1, &p, 0);
--			if (p && p != s + 1)
-+			const char *start = s + 1;
-+			u64 imm = strtoull(start, &p, 0);
-+
-+			op_loc->imm_value = imm;
-+			if (p && p != start)
- 				op_loc->imm = true;
- 		} else if (*s == '-' || strstarts(s, "0x")) {
- 			u64 offset = strtoull(s, NULL, 0);
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index dc4fc8b1b320c1fb..2dc3fac81593a686 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -530,7 +530,8 @@ int arch__dwarf_regnum(const struct arch *arch, const char *str);
-  * struct annotated_op_loc - Location info of instruction operand
-  * @reg1: First register in the operand
-  * @reg2: Second register in the operand
-- * @offset: Memory access offset in the operand
-+ * @imm_value: Immediate value of an x86 operand
-+ * @offset: Memory access offset, or an ARM64 or x86 %gs: immediate
-  * @segment: Segment selector register
-  * @addr_mode: Addressing mode, only valid if @mem_ref is true
-  * @extend_type: Operand extension type (enum annotated_ext_type)
-@@ -538,11 +539,12 @@ int arch__dwarf_regnum(const struct arch *arch, const char *str);
-  * @amount: Number of bits to shift
-  * @mem_ref: Whether the operand accesses memory
-  * @multi_regs: Whether the second register is used
-- * @imm: Whether the operand is an immediate value (in offset)
-+ * @imm: Whether the operand is an immediate value
-  */
- struct annotated_op_loc {
- 	int reg1;
- 	int reg2;
-+	s64 imm_value;
- 	int offset;
- 	u8 segment;
- 	u8 addr_mode;
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 1cee80c531abf434..cb3bdd134f42592f 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -1364,3 +1364,10 @@ endif
+ # tests.
+ $(shell rm -f $(FEATURE_DUMP_FILENAME))
+ $(foreach feat,$(FEATURE_TESTS),$(shell echo "$(call feature_assign,$(feat))" >> $(FEATURE_DUMP_FILENAME)))
++# Features checked outside FEATURE_TESTS aren't part of the test-all fast
++# path, so they have to be checked explicitly and recorded here too,
++# otherwise a FEATURES_DUMP= build silently disables them.
++FEATURE_DUMP_EXTRA := llvm-perf rust jvmti jvmti-cmlr
++ifeq ($(FEATURES_DUMP),)
++$(foreach feat,$(FEATURE_DUMP_EXTRA),$(shell echo "$(call feature_assign,$(feat))" >> $(FEATURE_DUMP_FILENAME)))
++endif
 -- 
 2.56.1
 
