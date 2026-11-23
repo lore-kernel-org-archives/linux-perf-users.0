@@ -1,66 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=180.76.5.236
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.41
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795424159;
-	b=KBznP5zAQ8MhONnVkLxismBNMWJM9CHITQBovGlbmQCQNVQqrYAUwNtpSPENPEy4W8yu
-	 ItotI2dZo4nkRYqwmqDfgHCJ5cKeins5sXeci7/ESjfu3pLwqPakKZH5PKtuEUHFLgPG0
-	 pQ1nPRViMySftoslTMbfVktX+98zU/JxkbD2gsrkWnXiFiSU7Er51dfpx8Q0oHXGrMeE8
-	 swj+1mPiggm6S2J+jeoL78XrH3wYUZzDCxrRqpO+pwc0a1V23jiweb3anLIZGSRucBDLk
-	 B1ejmA8aP3hENFeglALbJLtBZqkrWZ4NH3kEnw/FD0+QJ/J+MJcU4EUx2pNfWt8gxWg==
+	t=1795425552;
+	b=vDjXj8vbe219YZw1ugBVZJJPMeKSjnRKeaIV2rMzqIAz+dgBXnzmd2VwgJtOSBOo48qi
+	 eu3q2s9ZC8n+ofjMJEzwPC0yHJc9ffpbgIKBiERIx9AsB1HEUdj0HRHEANdGmVl2ZdBX7
+	 DTrws+pIy6fDAEw30tcT0PimsFNYuE/kNdtnHxkur1Ct67ZInyj5TkH/DjA6l8doCXxCL
+	 UlvieG3N9hXAUZgdZGtFBJOrFPREJtQOAHPnBnp48KIwSV309kH+YKgeHsAx+NSqkhz8w
+	 lGy2JzFsk+qaR3djUTeYmVkunyB+3eQMuRuZe/GsNBgPn2xUT3n3Bir5OcOfo106Slg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795424159;
-	h=DMARC-Filter:X-MD-Sfrom:X-MD-SrcIP:From:To:Subject:Thread-Topic:
-	 Thread-Index:Date:Message-ID:References:In-Reply-To:Accept-Language:
-	 Content-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
-	 x-originating-ip:Content-Type:Content-Transfer-Encoding:MIME-Version:
-	 DKIM-Signature;
-	bh=pdCSnO3vFDLEtKHfqKwTbrDh775Mc8mkkHWJ0WsIDsg=;
-	b=V9q0zztOAptkKtKvbxlOewS+EObeiQrta4YxOuBmq2hghrZ/UVaD/SvD9l53F3aKL4gS
-	 /wiPTkTSoO8r8eByiCZjt6jqMkrG55gxlzZJG9MXQRILrOmHQLNGNkbrDq9fMCPoo74J/
-	 GLMNLbVuv3s5aC0+Jn15GCFe9wpR2ByNkhBYwe9g2LBv88KJc6OI2DnO5Y0tpks6LSUZC
-	 pRNdddIdtRF4bSWqoQkNBHjVlrP/VY1F+c7CdjQu85rreAyhzwcrtwif7L8gP412t1fIE
-	 onS43lckd5SuckS6fpXT/yvqv/WyfRDuw4TUsDzXCYXxjGfkv8BTqZaQxcFdhk78EfQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795425552;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
+	 Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=sAmqFpYWgjvb8G8xwJ3EyQTOMxtxvWPqiczFCJd978E=;
+	b=cLzy4N4RZQnDYokEnC2T4dl6VFPL401cZl7UrZANqbPUKhZ5P5kvJlK7qpc8XAPgWgbG
+	 42n6Ub7+SeB6+RDItJPD3+e8/2NEmA0KvZW4AIE0adyTM3BIqM0FQORz8HBdYAWYVhcvi
+	 8BWUqF+F2dwQVkAPn0+gsMWzBHKiXXfjICtcPySKWCsBLVO7YwAOq/K8lDGzpemcIE8I3
+	 LX5bmlJnpcOTBhHw/2nv3RKxIuTrEfrTktYdmXAnn0trtjn5NJ9IheizXzKppWxhSZJK0
+	 Pqrxa2vF/GzHTxN/Ty09r+JUPxYbKCU4s1SLHATTclIOiVEXd+kPtIHPY5LsrlgOMog==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=baidu.com;
-	spf=pass smtp.mailfrom=baidu.com;
-	dkim=pass header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=Tqs2eo2c;
-	arc=none smtp.remote-ip=180.76.5.236
-Received: from outbound.baidu.com (outbound.baidu.com [180.76.5.236])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 38E78606A31A;
-	Mon, 23 Nov 2026 08:55:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 38E78606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
+	dmarc=pass header.from=linaro.org;
+	spf=pass smtp.mailfrom=linaro.org;
+	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=aLYgqIqO;
+	arc=none smtp.remote-ip=209.85.221.41
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35BCA606A31E
+	for <linux-perf-users@vger.kernel.org>; Mon, 23 Nov 2026 09:19:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 35BCA606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=baidu.com header.i=@baidu.com header.a=rsa-sha256 header.s=selector1 header.b=Tqs2eo2c
-X-MD-Sfrom: lirongqing@baidu.com
-X-MD-SrcIP: 172.31.3.11
-From: "Li,Rongqing" <lirongqing@baidu.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
-	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, Paul Walmsley <pjw@kernel.org>, "Palmer
- Dabbelt" <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, "Alexandre
- Ghiti" <alex@ghiti.fr>, Atish Patra <atishp@rivosinc.com>, Anup Patel
-	<anup@brainfault.org>, Shenlin Liang <liangshenlin@eswincomputing.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIXSBwZXJmIGt2bTogRml4IFJJU0MtViBWTS1leGl0IGR1?=
- =?gb2312?Q?ration_accounting?=
-Thread-Topic: [PATCH] perf kvm: Fix RISC-V VM-exit duration accounting
-Thread-Index: AQHdaqsYju6/93onaUCoF9GUXgxXLbc7e2zQ
-Date: Mon, 23 Nov 2026 08:55:43 +0000
-Message-ID: <10d466045b764b7590abaef251df06c1@baidu.com>
-References: <20261102091809.2215-1-lirongqing@baidu.com>
-In-Reply-To: <20261102091809.2215-1-lirongqing@baidu.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=aLYgqIqO
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-4a7b8abe209so2295416f8f.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Nov 2026 01:19:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1795425550; x=1796030350; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=sAmqFpYWgjvb8G8xwJ3EyQTOMxtxvWPqiczFCJd978E=;
+        b=aLYgqIqOlheI21nSFruPrybRyAxWQK7ED+fJlrli6T/LVj62UMse1MLF6+11EUrM/A
+         5eDVZ6996LDJVUWN8t8/Dm2q0KTYUDv16Ej22VzeYkii835IVy5u8MPxw3I4LKz7BuVJ
+         ZZTLl6CPuD3myzniwZ8AEPTvDe3gTHA1i9OCDKbi44OhiQK76Y7cgVfRHIyWV976Rsbu
+         N99bZGzRPBKvh0ov7g50xkvhi108IuPeJp7XmScSqEZWB1GSxMqfZCDAt0Uryel+LpZh
+         j+l+zxahWhmRp4+Q3wx7CgNawnVC4lfTxRdbSPm41nsN0m2BTT69RXGjns16maQDvpXJ
+         uZ6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795425550; x=1796030350;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=sAmqFpYWgjvb8G8xwJ3EyQTOMxtxvWPqiczFCJd978E=;
+        b=RnrJQAfw9QtXr90zWvGRnj++oQmT4564NWqZKSmwz/CpfEYeifwcBzma9rV555909F
+         s3AXCYXYafSYJ8lfvxdC1rp2ia4djo+pgYDeVw+n8sAO4KFSvasEAFUJkkXu81mtWF3J
+         5bdDDvViVUeybaf9edCJUBpOB5D/Ce0YxL+Y4Wz7zosr9kfo8tSP7Z11nuBLqjPY9+uf
+         IkX0La/R0D18Rr+o0SnmBc3BcvP9xD3YK9pazT6YtVfPXE1H9RKVt2BksnUFanJaLTN8
+         GCTTcPQr/LRp6MmZmN2ww/9f28EkjvU0Bra8q3hdw47Osm4m6CsqOhPJVBpQpfq5+dIa
+         463w==
+X-Forwarded-Encrypted: i=1; AL+hErHNwf/U9i6gdroolRUmYZylcC2okTH5NvB1L9wO0IG042kcM93mURuWT6hBWfHrg/z2yPKqLoWKRAnY0RR3hmEE@vger.kernel.org
+X-Gm-Message-State: APuU4Z/eZjflotgDeAvIskDo7PG8kdk/4RKXTvw+tFb3o1Gd6GD65sm2
+	qzJJXQpGNVllAw+Cj/imB8VSjnzvDg6l8Dpf4NH1oe6uwG90x2CPOq+ikC3kGFGm/YY=
+X-Gm-Gg: AZFdTZcYYHBT3CnZZ2xQi5ePWBko4F4P6DdC9jiQ9fll5YJTAXcI6ZPp/k+P6PuE5GV
+	E2O1mBPJ6SVXQpAVTDKUcTPDwZVDo5xu5cctlGwfgR6cP4e9kwJr5Dw7D4jBDqrrRyccdvOdacG
+	Gz7x499E9C/uJxPVAC8/33FsfHCPi4u7FqAbFsE6dqVu1Z+5Z/fKkhkvL6RYaBRfkwtq6DxI986
+	Png5HE0I7sSGC8+0YUbfCGoBaj3AgkbccuRcWpV60nYfmNSuTYbPUJRJYtT3S2+Py3nG4MGYJGE
+	k2fzBKYU5zhDdosgQjbfUrwlYtJ2OOYDIKsjlaLDOVuZHtj0Q5Rz6b5IJAJBZL++YE+QechgEU8
+	fzm1wEwBa6Vj5GxeG7GAq5pw3diiqoksn2DIDwdUqlNxFzlf01wbAx9//ESoExg7WxNS3BFfunw
+	64+8drCBMXBca5RoLBz33roZ59SZwgu9Hbpr8a+eBBKn0I6vjC2SkJQyFer3QDNsuZcrNdCTc4c
+	zzxt8Ohvd59k4BZOIA0dz/MRl4pJOKzx2NaUk1iRYSpJO+su4s/D6sQUuzNqTIaCE6hLMmwYWy1
+	dMoSlPRGkvf2dBq9zFrs62rKv338gps23w==
+X-Received: by 2002:a5d:4452:0:b0:48e:3767:d885 with SMTP id ffacd0b85a97d-4abb5bcd524mr16582999f8f.53.1795425550512;
+        Mon, 23 Nov 2026 01:19:10 -0800 (PST)
+Received: from [192.168.1.3] ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab69bf680fsm23805806f8f.14.2026.11.23.01.19.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Nov 2026 01:19:10 -0800 (PST)
+Message-ID: <31480f0d-112e-40c0-91fd-8f9c998651f5@linaro.org>
+Date: Mon, 23 Nov 2026 09:19:08 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -70,45 +92,106 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=baidu.com;
-	s=selector1; t=1795424150;
-	bh=pdCSnO3vFDLEtKHfqKwTbrDh775Mc8mkkHWJ0WsIDsg=;
-	h=From:To:Subject:Date:Message-ID:Content-Type;
-	b=Tqs2eo2cJ2gC0XqUpwyJOq2mvUT1Cw5+v3HAQtFQr4y2GS0FL9s8vGvMfovqaQPIE
-	 fpEFdvaeQLe4Xc+xNNq03CJUt/nqDB7RctPshWzgtUmawnb4rLi2G4ZDCdKYBYEO7t
-	 3sxUiIcs4ErMJFU6y2HbzyctchFaibvysDAUKpExcPsEZWcYV4PDeGV4+dkHN/3L+6
-	 ywpnoVUd3CvV5rk8/x4H+YiE4qkEV1SC1K83XM/aXaJSeHIA8+jT4TILecNTDAH5eK
-	 DQvlWgIh4+6TA3mwFa11CB7sbpg8T1vmIUG6cRumpMALlsKYHAkwNHbeTKBsRPsyx1
-	 IboryRSl74vZw==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] perf vendor events: Fix misspellings in event and
+ metric descriptions
+To: TAKANO Mitsuhiro <takano32@gmail.com>
+Cc: Ian Rogers <irogers@google.com>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>
+References: <20261120175840.1274637-1-takano32@gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20261120175840.1274637-1-takano32@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-PiANCj4gRnJvbTogTGkgUm9uZ1FpbmcgPGxpcm9uZ3FpbmdAYmFpZHUuY29tPg0KPiANCj4gVXNl
-IGt2bV9leGl0IGFzIHRoZSBzdGFydCBldmVudCBhbmQgdGhlIGZvbGxvd2luZyBrdm1fZW50cnkg
-YXMgdGhlIGVuZA0KPiBldmVudCBmb3IgUklTQy1WIFZNLWV4aXQgc3RhdGlzdGljcy4gS2VlcCBk
-ZWNvZGluZyBzY2F1c2UgZnJvbSB0aGUgZXhpdA0KPiBzYW1wbGUuDQo+IA0KPiBCZWZvcmUgdGhp
-cyBjaGFuZ2UsIFJJU0MtViBtZWFzdXJlZCBndWVzdCBydW50aW1lIGFzIFZNLWV4aXQgdGltZS4N
-Cj4gDQo+IEZpeGVzOiBkYTdiMWI1MjVlOTcgKCJwZXJmIGt2bS9yaXNjdjogUG9ydCBwZXJmIGt2
-bSBzdGF0IHRvIFJJU0MtViIpDQo+IFNpZ25lZC1vZmYtYnk6IExpIFJvbmdRaW5nIDxsaXJvbmdx
-aW5nQGJhaWR1LmNvbT4NCg0KcGluZyANCg0KW0xpLFJvbmdxaW5nXSANCg0KDQo+IC0tLQ0KPiAg
-dG9vbHMvcGVyZi91dGlsL2t2bS1zdGF0LWFyY2gva3ZtLXN0YXQtcmlzY3YuYyB8IDE0ICsrKysr
-KystLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9u
-cygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvdXRpbC9rdm0tc3RhdC1hcmNoL2t2
-bS1zdGF0LXJpc2N2LmMNCj4gYi90b29scy9wZXJmL3V0aWwva3ZtLXN0YXQtYXJjaC9rdm0tc3Rh
-dC1yaXNjdi5jDQo+IGluZGV4IDk2N2JiYTIuLjA5YzljN2QgMTAwNjQ0DQo+IC0tLSBhL3Rvb2xz
-L3BlcmYvdXRpbC9rdm0tc3RhdC1hcmNoL2t2bS1zdGF0LXJpc2N2LmMNCj4gKysrIGIvdG9vbHMv
-cGVyZi91dGlsL2t2bS1zdGF0LWFyY2gva3ZtLXN0YXQtcmlzY3YuYw0KPiBAQCAtMzEsMTMgKzMx
-LDcgQEAgc3RhdGljIHZvaWQgZXZlbnRfZ2V0X2tleShzdHJ1Y3QgcGVyZl9zYW1wbGUNCj4gKnNh
-bXBsZSwgIH0NCj4gDQo+ICBzdGF0aWMgYm9vbCBldmVudF9iZWdpbihzdHJ1Y3QgcGVyZl9zYW1w
-bGUgKnNhbXBsZSwNCj4gLQkJCXN0cnVjdCBldmVudF9rZXkgKmtleSBfX21heWJlX3VudXNlZCkN
-Cj4gLXsNCj4gLQlyZXR1cm4gZXZzZWxfX25hbWVfaXMoc2FtcGxlLT5ldnNlbCwga3ZtX2VudHJ5
-X3RyYWNlKEVNX1JJU0NWKSk7DQo+IC19DQo+IC0NCj4gLXN0YXRpYyBib29sIGV2ZW50X2VuZChz
-dHJ1Y3QgcGVyZl9zYW1wbGUgKnNhbXBsZSwNCj4gLQkJICAgICAgc3RydWN0IGV2ZW50X2tleSAq
-a2V5KQ0KPiArCQkJc3RydWN0IGV2ZW50X2tleSAqa2V5KQ0KPiAgew0KPiAgCWlmIChldnNlbF9f
-bmFtZV9pcyhzYW1wbGUtPmV2c2VsLCBrdm1fZXhpdF90cmFjZShFTV9SSVNDVikpKSB7DQo+ICAJ
-CWV2ZW50X2dldF9rZXkoc2FtcGxlLCBrZXkpOw0KPiBAQCAtNDYsNiArNDAsMTIgQEAgc3RhdGlj
-IGJvb2wgZXZlbnRfZW5kKHN0cnVjdCBwZXJmX3NhbXBsZSAqc2FtcGxlLA0KPiAgCXJldHVybiBm
-YWxzZTsNCj4gIH0NCj4gDQo+ICtzdGF0aWMgYm9vbCBldmVudF9lbmQoc3RydWN0IHBlcmZfc2Ft
-cGxlICpzYW1wbGUsDQo+ICsJCSAgICAgIHN0cnVjdCBldmVudF9rZXkgKmtleSBfX21heWJlX3Vu
-dXNlZCkgew0KPiArCXJldHVybiBldnNlbF9fbmFtZV9pcyhzYW1wbGUtPmV2c2VsLCBrdm1fZW50
-cnlfdHJhY2UoRU1fUklTQ1YpKTsgfQ0KPiArDQo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IGt2bV9l
-dmVudHNfb3BzIGV4aXRfZXZlbnRzID0gew0KPiAgCS5pc19iZWdpbl9ldmVudCA9IGV2ZW50X2Jl
-Z2luLA0KPiAgCS5pc19lbmRfZXZlbnQJPSBldmVudF9lbmQsDQo+IC0tDQo+IDIuOS40DQoNCg==
+
+
+On 20/11/2026 17:58, TAKANO Mitsuhiro wrote:
+> The PMU event descriptions shipped in the JSON tables under
+> tools/perf/pmu-events/arch/ are printed by `perf list` (BriefDescription)
+> and `perf list -v` (PublicDescription) as they are written, and the metric
+> descriptions in the metrics JSON files are printed by `perf list metric`.
+> A number of them carry misspelled words, so the misspellings reach the
+> user.  This series fixes the first batch of them, which a spell-check pass
+> over the power8, power9 and power10 tables and over the Intel and AMD
+> tables turned up.
+> 
+> The three patches are split by vendor because that is the convention for
+> the subject prefix in this tree.  Of the 989 commits that touch
+> tools/perf/pmu-events/arch/ as of 65e4fd942f72, `perf vendor events
+> intel:` has 391, `amd:` 37, `powerpc:` 8, `arm64:` 83, `s390:` 18 and
+> `riscv:` 13.  No commit with a vendor prefix touches another vendor's
+> tables.
+> 
+> The arm64 tables have misspellings of the same kind ("misprediciton" in
+> the ampere tables, "executed.This" in the cortex-a55 tables); the s390
+> and riscv tables contain none of the words fixed here.  More remain in the
+> tables this series swept and in others -- "conjection" and "banwidth" in
+> the Intel uncore tables, "pumpfor" in power8, to name a few -- and those
+> are left for follow-up patches.
+> 
+> Each patch touches description strings only, and each was checked by
+> regenerating the tables with
+> 
+>    jevents.py <arch> all tools/perf/pmu-events/arch out.c out-str.c
+> 
+> and diffing the result against the one generated from the parent commit:
+> every event name and event code is unchanged, and the misspellings are
+> gone from the generated string table.  out-str.c shrinks or stays the same
+> size, because some corrected descriptions become identical to descriptions
+> already stored for other models, and the amd fix swaps a word for another
+> of the same length:
+> 
+>    powerpc  13 files, 55 lines changed   out-str.c -393 bytes
+>    intel     5 files,  5 lines changed   out-str.c -477 bytes
+>    amd       1 file,   1 line changed    out-str.c size unchanged
+> 
+> 65 PublicDescription values in power8/other.json end in "42"; the trailing
+> "42" is not a misspelling, so it is left alone.  The word "ibufffully"
+> in that file is left unchanged as well: the BriefDescription of the same
+> event ends with "ibuff", so the boundary is clear, but whether a space or
+> a full stop belongs after it is not.
+> 
+> Written with Hermes Agent, an LLM assistant: it found the words and wrote
+> these changelogs and this cover note; the author reviewed every change and
+> ran the generator as described above.
+> 
+> Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
+> 
+> TAKANO Mitsuhiro (3):
+>    perf vendor events powerpc: Fix misspellings in the power tables
+>    perf vendor events intel: Fix misspellings in the Intel model tables
+>    perf vendor events amd: Fix a misspelling in the amdzen3 table
+> 
+>   .../arch/powerpc/power10/metrics.json         |  8 ++--
+>   .../pmu-events/arch/powerpc/power8/cache.json |  2 +-
+>   .../arch/powerpc/power8/memory.json           |  2 +-
+>   .../arch/powerpc/power8/metrics.json          |  8 ++--
+>   .../pmu-events/arch/powerpc/power8/other.json | 38 +++++++++----------
+>   .../arch/powerpc/power8/pipeline.json         |  4 +-
+>   .../pmu-events/arch/powerpc/power8/pmc.json   |  4 +-
+>   .../pmu-events/arch/powerpc/power9/cache.json |  2 +-
+>   .../arch/powerpc/power9/frontend.json         |  2 +-
+>   .../arch/powerpc/power9/marked.json           |  4 +-
+>   .../arch/powerpc/power9/metrics.json          |  6 +--
+>   .../pmu-events/arch/powerpc/power9/other.json | 28 +++++++-------
+>   .../arch/powerpc/power9/translation.json      |  2 +-
+>   .../pmu-events/arch/x86/amdzen3/branch.json   |  2 +-
+>   .../arch/x86/nehalemep/pipeline.json          |  2 +-
+>   .../arch/x86/nehalemex/pipeline.json          |  2 +-
+>   .../arch/x86/sierraforest/srf-metrics.json    |  2 +-
+>   .../arch/x86/westmereep-dp/pipeline.json      |  2 +-
+>   .../arch/x86/westmereep-sp/pipeline.json      |  2 +-
+>   19 files changed, 61 insertions(+), 61 deletions(-)
+> 
+> 
+> base-commit: 65e4fd942f72a9dba0e4e257290c4fa1aa756854
+
+Reviewed-by: James Clark <james.clark@linaro.org>
+
