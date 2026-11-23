@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.71
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795418372;
-	b=BgOHbCV0AtFxAk7wWh/3e7zMvxTWWDs+TUq23oSMEbDujSAVeCBw76TGzwfqsBaNsW7u
-	 c799cU7sMp+nlp9tAy0xe0cVDm8xIaOuQZt/vAuadGPWSYbeTvpCCdTGcK5T57Eepli89
-	 Mp8lIWLGQYH1k+xO6oXZAwAwJ7neO9+94HlJClqMtRL997U681NLb06GdwjdbFl9AtIyT
-	 RJQOmZgX6ler79KwfRZWasTwdYs99cp0auJ7r5846qaSJo4oWbNueFHD7880HNDF7piCC
-	 sEYDPF8Nf07dlH0V6bWy9nh+T97enF8kk1zaRx/ntSljDUfivHpqBKD8mQHX1289AdA==
+	t=1795418377;
+	b=0VvSnQU6ekkl5dFpErpZjoTr2VJRxdhvhh7K+IANBmB/5P3LDT3xz44xydroX/jpErHa
+	 P8iZXcdYsE1M4Jo7Xez86CoOynb7uBmjkTK4Tlo8FDHcKpvq6x1sg4xCmjyiRHRtEvTYv
+	 YOjK/3M7C8lMurKRuzbijeX9dXzYybifWgJQKQIZltRpEOZnAyATlccXtsaTUcomTglOI
+	 8v7uWhKfI8Odr7EOkj4MBbbQFh+XqmoeTJOXZVE6bwajjER6ibDiZp11G0pjMEL4TVRsz
+	 A1G47NABKaE9QkBKa5ekPjqPy6Gc2tepdrhl3vquqiCIqYUvPWxHAh7ueYmtpFGkyMg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795418372;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795418377;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=qPfESMdrKb/MeidmJhok80X0fJ4udHOxnwEwH0xvgI8=;
-	b=Jtdh560zFzeYDV5tTiabodRFTR6IRqSzWhf7UFYYEZkVIOf2Qq9BUV2Urgic6B3Mv1Vg
-	 yRN7G8506u9f4J65GzaO9867FEF4Se8j5d8QDG0JfBdgDPZmBIiElWnoSpO6vHNzKysf+
-	 mrmklx++NYfoPasX21bU9tlk7fz2K42jdwYLTe+wh42pwGDdwgo4FwJ9jkum585+86Les
-	 1ELq7Ee94tWQJtcoTNfLYfbas1eyOjfsfI7kYPstZ67tLt2VtKIBwQFwvWMkwOhV/Msyw
-	 VaU6zKins/KjPAqZM36T6qOKdreVuo9S8hVfqQcfljzRbwS2tIvgFDnSmYmOwNPwllw==
+	bh=IMd33jYcNZqKzcubrxm3ZjVIehLYL/REobXhw2TBdkc=;
+	b=HI3pS4SjxnrXQ5CqcPYSc0eNL/AFAUYGIcNUrPA8T7T+lfIg9sGBu8Sy8ZK2Bycg6Xx3
+	 1/T9zgogZqwMgTXFbvQv0HMeWrcxcavFu6oGeYnxYHVIjjs/okmtaK/9aXdFZPLQZGrI9
+	 njY720LC71y8eVvFARFe4ps7eXzC33IxPfXL7Q2VWhqE3wNb6hlvhrAylqHjuFQq2L1jF
+	 AnPv7BcaFGsbBH16dtqu87bxuP9JUNvNZG//ETBhfKhwsMG8Q7ZTJPtCa5sJogyzZu3ic
+	 sz8c0uLOoXve81w7q+1xu0UaUd2HipkbwhBMso38m/kRS+AbZkB+lbv/sLkKj13nZ4g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ceGSKPT6;
-	arc=none smtp.remote-ip=74.125.82.199
-Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=EHNqtqVX;
+	arc=none smtp.remote-ip=209.85.216.71
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37BB606A31F
-	for <linux-perf-users@vger.kernel.org>; Mon, 23 Nov 2026 07:19:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A37BB606A31F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EC2606A31F
+	for <linux-perf-users@vger.kernel.org>; Mon, 23 Nov 2026 07:19:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D3EC2606A31F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=ceGSKPT6
-Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-375bac6bd21so3438235eec.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 22 Nov 2026 23:19:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=EHNqtqVX
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-3b421417c3cso2486118a91.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 22 Nov 2026 23:19:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795418371; x=1796023171; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1795418376; x=1796023176; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=qPfESMdrKb/MeidmJhok80X0fJ4udHOxnwEwH0xvgI8=;
-        b=ceGSKPT6Ue64iZGfrcLoQAQP9W9jwLkrL8EjeWSuWGCZ4pdN5LJPLjWF5o7BqzLPjc
-         WQftEtSuUhXBZuseZ1rRJgozYSSWVIFf2uUBU2C9O2QCSquu6RzForlIZCV6lTGfMerY
-         qEE736z0hQTTCkXE7VHHQWLP7qVTrpy4U0BisfiB5DyIRYOnGdhHUVZ2+AI8Y8QwVfQx
-         xRR9sXkN3FV5euFUnliXFOk25Am7Y6FgbPCPjgjXcgU/cIW+nDJFM4M9mc4BQTyN8bVX
-         pJf1UkQMbq0l0k9pWEc3hRqM4nCm6QnDgVHpUXg9cHzVwcIeyDIOZGQk8HWOZc/4gE/U
-         y1CQ==
+        bh=IMd33jYcNZqKzcubrxm3ZjVIehLYL/REobXhw2TBdkc=;
+        b=EHNqtqVX924a3sJc8UV+EMhdnAvjiJWuS4zowCnFH2JyG4pP/ljl47bjKQjpo7rOUT
+         ZFQomX+RGXRmx0QtaKPIrvQgYHfIObJ/kxbLRkHJTBAGc/8qLzqe9V603QoLvU9eDAB/
+         32maiYjrS0skMqmHVIQInu5+ZfhVVpaKJEFnFyljW0muVsuEyfsYKs9rDhw77bAOIqiZ
+         tGaTVx/stPgcb82KxkuSKRQLPp8fT82n+8/fYqcjshDIlYm0ARx1ndc3RmaFgX2AVv3r
+         lMIlt3BiSzao7BVlpt309ZGu/fPye67XZV3unWw9FSJY+rHuAjUKLjNKVYRAVSsFDwd8
+         V0fA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795418371; x=1796023171;
+        d=1e100.net; s=20260707; t=1795418376; x=1796023176;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=qPfESMdrKb/MeidmJhok80X0fJ4udHOxnwEwH0xvgI8=;
-        b=kSN6aj8iQFN+w04E7Ku8nslvX8FJkVZjkQt2qP7Lzp93NyJsDq8RYJTBIVfuVOqa4t
-         BNjFRxOAzRV3sYHP/4t6lWsnZjcpmQLGSAkvccL8ejj/lD2o4DbGeanwtaHY5XbCUcVF
-         KTEVoRLVxXD1bPwb32CrszLNrUOs8HcR1MbqRZxMGfklpmdaVHwKF+4ZqxVx1zzNZLuU
-         GYn/OffxRbmejjpPEwMHxKJnPFBidnM54lAGoF3cHxkNYd7l7sv8yir3LHtsIofg9yaw
-         zPUmE93JSMO6UN1khiu3u0BNZL5pNl+DitR0Xnfod7A4ZfXcXhVZ4Q/UgTXohiIveqsv
-         OhrQ==
-X-Forwarded-Encrypted: i=1; AL+hErHZOZDRre9va+dSH2Gt5wySCOPm/xTOK1t3xrs7jEQgRXJ4VQ524bvfghzhHR7w+FLmTHnzxfsMbW/RA80BsTHR@vger.kernel.org
-X-Gm-Message-State: APuU4Z/oChCU2l3zSU39iXL2eygaQx6w8rv4IjhygdPpZeY0g6WgZeIL
-	sY5C2ZWVcwj6G93xnyuyxnEl/+E1GEFAIl120VBKJMgUTw4iT9Lye7pZXPUucjF+wwDGGmY27jj
-	aFQElR3RkJw==
-X-Received: from dyls11.prod.google.com ([2002:a05:7300:6a8b:b0:386:af9c:96b6])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:51f8:b0:375:85ac:d14f
- with SMTP id 5a478bee46e88-384b3e786bdmr14639447eec.14.1795418370446; Sun, 22
- Nov 2026 23:19:30 -0800 (PST)
-Date: Sun, 22 Nov 2026 23:19:02 -0800
+        bh=IMd33jYcNZqKzcubrxm3ZjVIehLYL/REobXhw2TBdkc=;
+        b=h7rH5QKZMLZ1GHWmFTenrb3RbbWxLG+MJTd5U0d4q93JpP16VcXvS+wKs7quCmWJUH
+         xY9Czw+d4t9YxzsKqkyB1WoTkogTaElVqtnHP8oCiRL+KqtyFXrDAWjVLhwojDPcbhF0
+         39Rj2B1/r3Aedk48ef9ycah1kT8zHOBCyWtGPKvc4FT0YcKi9Rhr/i4TFok4PtXV90xz
+         /zKjwVIBx7TEd6OZ2369oSkbcRiRzwgkvIQMGkLLp+ouWRg1hxvmxmVZL9GJJmMU2F7n
+         RTDucYkPRYk4M+IK/GPn8H0s8fcYPGPZPfF+1JvUO0+6Ov7qtNKzYFL+msPkSWyHB4n2
+         tqgA==
+X-Forwarded-Encrypted: i=1; AL+hErF4idM6PGbf8FndgEJnilWdbFuOxQHY4m8mahnaMfzZGTi2TedmpsHAUABxdLd+ZP5LSzJxwAz7DetttoIbmf0B@vger.kernel.org
+X-Gm-Message-State: APuU4Z86LtyjfNRRLCvNOXpilUU4btFOwnaDn7xI8xm9G65JrNt1OVdN
+	TmejVse8rTCbqWoMmhLykjlnSJ965hXHL5PszpmaULYPis3FzUo3hfVhTSdmVdhM37vfQas8sFU
+	DL6A5PTAQgA==
+X-Received: from pjbiz18.prod.google.com ([2002:a17:90a:e792:b0:3b4:23bc:9fe5])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:442c:b0:3ac:a203:e0a1
+ with SMTP id 98e67ed59e1d1-3b41c92a902mr9665930a91.37.1795418376056; Sun, 22
+ Nov 2026 23:19:36 -0800 (PST)
+Date: Sun, 22 Nov 2026 23:19:03 -0800
 In-Reply-To: <20261123071913.653315-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,9 +81,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261123071913.653315-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.750.gf70dc682cf-goog
-Message-ID: <20261123071913.653315-3-irogers@google.com>
-Subject: [PATCH v1 02/13] perf off-cpu: Fix swapped PID and TID in direct
- off_cpu_dump() samples
+Message-ID: <20261123071913.653315-4-irogers@google.com>
+Subject: [PATCH v1 03/13] libperf evlist: Recompute CPU map when an evsel goes
+ system wide
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -94,34 +94,50 @@ Cc: Howard Chu <howardchu95@gmail.com>, Thomas Falcon <thomas.falcon@intel.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-__set_offcpu_sample() unpacks the first u64 of an off-cpu raw sample as
-p32[0] = data->pid (process TGID) and p32[1] = data->tid (thread PID),
-matching off_cpu_write() which packs (u64)key.pid << 32 | key.tgid on
-little-endian hosts (and kernel BPF matches host endianness). However,
-off_cpu_dump() packed (u64)key->tgid << 32 | key->pid, swapping PID and
-TID for multi-threaded direct off-cpu samples exceeding the threshold.
-Pack (u64)key->pid << 32 | key->tgid to match off_cpu_write() and
-__set_offcpu_sample().
+perf_evlist__go_system_wide() marks the evsel as system wide and then
+propagates the evlist's maps to it. __perf_evlist__propagate_maps()
+only assigns the PMU CPUs to evsel->cpus if the map is empty, but an
+evsel added after the evlist's maps were created already has the user
+requested CPUs propagated (e.g. the "any CPU" map of -1 in per-thread
+or workload mode). Going system wide then leaves the evsel opened on
+the wrong CPUs.
 
-Fixes: d6948f2af24e ("perf record --off-cpu: Dump off-cpu samples in BPF")
+Drop the existing CPU map before propagating so the evsel is given all
+of its PMU's CPUs, as is expected for a system wide event. Propagate the
+maps of all evsels, rather than just the one going system wide, so that
+evlist->all_cpus is rebuilt. Otherwise the evsel's previous CPUs, such
+as the "any CPU" -1, remain in evlist->all_cpus and may cause per-thread
+rather than per-CPU mmaps to be used.
+
+Fixes: 811082e4b668 ("perf parse-events: Support user CPUs mixed with threads/processes")
+Reviewed-by: James Clark <james.clark@linaro.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/bpf_skel/off_cpu.bpf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/lib/perf/evlist.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-index 72763bb8d1de..eeb2cb8ac0d8 100644
---- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
-+++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-@@ -236,7 +236,7 @@ static int off_cpu_dump(void *ctx, struct offcpu_data *data, struct offcpu_key *
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index c1c5b0684eed..c6ce56b46ac1 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -835,7 +835,15 @@ void perf_evlist__go_system_wide(struct perf_evlist *evlist, struct perf_evsel *
  {
- 	int n = 0, len = 0;
- 
--	data->array[n++] = (u64)key->tgid << 32 | key->pid;
-+	data->array[n++] = (u64)key->pid << 32 | key->tgid;
- 	data->array[n++] = delta;
- 
- 	/* data->array[n] is callchain->nr (updated later) */
+ 	if (!evsel->system_wide) {
+ 		evsel->system_wide = true;
+-		if (evlist->needs_map_propagation)
+-			__perf_evlist__propagate_maps(evlist, evsel);
++		if (evlist->needs_map_propagation) {
++			perf_cpu_map__put(evsel->cpus);
++			evsel->cpus = NULL;
++			/*
++			 * Propagate the maps of all evsels, rather than just
++			 * this one, so that evlist->all_cpus is rebuilt and
++			 * doesn't retain this evsel's previous CPUs.
++			 */
++			perf_evlist__propagate_maps(evlist);
++		}
+ 	}
+ }
 -- 
 2.56.1.750.gf70dc682cf-goog
 
