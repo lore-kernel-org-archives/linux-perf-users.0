@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795471258;
-	b=45HvCfEj+xn0jMJJi10irE0GOhn5opzMqR2eWZWwzIZg9+sEv/+QPqKWPQX/A1QI1TNK
-	 B26ikC8Xl+vRbYO4uhBcwbg3F+mW0gFsypk4/1jpmw7iv3xcpnDSLBwlI3XU6VFUwCIqi
-	 SjyVlJVJa0Yz6YgK/iWGJXCdVK6c6duhz8bBlw+mgMneVUUuj8BtQ0YQPskmaoGgB1fQ2
-	 Y7jNqzdq5t6c5cllqkiUn95HRtHs+9dzIL/HFnwOYZek4nEcTYfKKSNZkjz1K57JkiNKR
-	 BIhzVVyYjlTiP2Fa0vaiswPv/E4rmYn13UW6P0tfZnQdz7YOi1WVsD5DsY5ovttP8qQ==
+	t=1795471265;
+	b=UEB+QmFNaw0nuSGxSBJs+SXypdicgQeH2jRs30S0zUgv26mV9Pl9M0Zul3szGYe0iUz9
+	 u6sRPEfcAQTCGH56z6JgVXcaGRg4RtQxAc5lbuXwPuDk48RfCfsfTMHA9hnsfDiFT811p
+	 PpObxGWclUqUSqKb2n8NfywP7V5A54Fe/n02juUtcB/EWlwbD1/NvhHAJwggFa5VwXAQS
+	 5C76WyxGwY3E++dd//hEA6F8sCZdNbRs7PB2/0bV8mOdGEGdRLXC6jnPMFNV+IpkMQUzR
+	 /8DqFw+ldL+FLUZENBWohnLytFxTRqZW7tnrhvoftQADoDiCpsj7z21bk0bRhdy7rlg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795471258;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795471265;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=qH7xXsAwU9CECAgj7c7iuRWnGoutWALTqN+OXYtTjXc=;
-	b=gIHdRDj+M91zw8egqPSkbUJgHwvrg97sd7wqDJvs032sN4nCUczDCY3EjZkyg5uoFaci
-	 ZqylY2IT7rWif/3E7jNcKTyFbiFb5ODnBcduJFxJdM4NbepQdH4k4pYuUQtoPA/wXgjAw
-	 DWEDrhuTU0Rvnj6PcTqiNEU/g2L5BRloW+bTS/6NehtKn92HZ59H/WBDoYy+Q8kndVgcM
-	 3BlgLGmux77ySWl6YXtWrZgr3ujlaMDpukNQ71bgkMPPGzLaxMgSO+j3pHYnoOd0I7hRe
-	 dG+GLR+/AQwgJm5L4y+K43Z9AvMGeiprE76uZtGZpQjodLOoI5uWf2/W0xxjaV609jA==
+	bh=87H2n7vnNz1VvHwbmKk8yzjCiBhIlsUzmV0ldIMU8As=;
+	b=jznqiX6q2a3Eiu+V4/Z11KnyV0SVFXvqtLgq2oMM+zMyqjoIJVBx/IuJerk7SoKCu4/d
+	 CalHY5O4iVXfH5qlwlWcfI0xXRdMe/YEvreS1NVAFymATohHTF1P2lSHfQgu1atJQ57CT
+	 f6BQLHZn+wyIZgm2sJWZ3J9T9ulfTlm7OZuH/UROsEJgwX2cs379T+ueyiVLKTfqWgTTL
+	 ZMNBeTqnGQDLI2LXjh97Pfq4THf/UflirdkwLxT5ix776s57RjFgHOpY2CyYXoIy8ebae
+	 7vcpwTkhRV0vbW5l9Go8+HTgM5O7zrEIFOoIjKzOWtkdd0PuEYol9OXMSkNZnXjvu0g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oThvgs2E;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eLZ9Wesz;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28B8606A332;
-	Mon, 23 Nov 2026 22:00:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5548E606A321;
+	Mon, 23 Nov 2026 22:01:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oThvgs2E
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C43231F000CA;
-	Mon, 23 Nov 2026 22:00:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eLZ9Wesz
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30F051F000C4;
+	Mon, 23 Nov 2026 22:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795471258;
-	bh=qH7xXsAwU9CECAgj7c7iuRWnGoutWALTqN+OXYtTjXc=;
+	s=k20260515; t=1795471264;
+	bh=87H2n7vnNz1VvHwbmKk8yzjCiBhIlsUzmV0ldIMU8As=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=oThvgs2EZgV9vQN72S0Y5HNeH0n3rWDWN8sufuLtKQWm0KUWzCBwiyaYNstoWy24U
-	 yOQYSF6cnL006rr6NzWXJYPdAanwvxkurGzAoNVrOpzJ7nWSHaI3QQZrIbT+YawQHo
-	 wo2JHzhsqZDCLcBHV+UIyvg35qNrJgIfYPE+nb3JtnzfzQtgPkhO7UvhpYLUaDNXdq
-	 WAlGXSWM+UCqxSO2jaZYWETB/8+tcX+1EtjG3Ol2P0MuRrEV4EFbBmzLpqcJPvRcsV
-	 e7TNWPZkoqgfsvNF9+ihq8tcDCKmQ+YN6A+wDNn/D38syO/tFZvDuZqgFE2+BW0EG4
-	 JuaD02xMy3A8Q==
+	b=eLZ9WeszAR/JX5IQGZPS7Ol1nEXLXfguKtjBmqwzOoNabGENqaN1mc1RaZ2ps8LPv
+	 Z30nYOzCOC4hLzhKSsAp/i/DA46+qIN+oBr1ofNblgk65LGJlSjF/uZcWdqcrAXVMG
+	 5BHAKp9iw+rwN6t4TAh00UhEDDWcktfNxpUUZkf0Dupyjy2GdxJ5gXtfaanF3bh/Sq
+	 V/TKsru7doSLLdbBnRhiID5Oi7h2LtXwss18S9E5lL0KLVrCVFkTC+dLQyCKnpE38O
+	 bbuEdBSpkm7p6ajx/iSDTeEzdghQ9evGhVt2NsTSBymvumnd3Vm7XpFkTaMTIsvz4y
+	 VYF/IFviJCYSg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v12 08/19] perf test: Exercise the x86 operand parser
-Date: Mon, 23 Nov 2026 19:00:13 -0300
-Message-ID: <20261123220024.14891-9-acme@kernel.org>
+Subject: [PATCH v12 10/19] perf test: Exercise the flexible array member path
+Date: Mon, 23 Nov 2026 19:00:15 -0300
+Message-ID: <20261123220024.14891-11-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261123220024.14891-1-acme@kernel.org>
 References: <20261123220024.14891-1-acme@kernel.org>
@@ -70,235 +70,287 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Add a unit test for x86 operand parsing.  The 64-bit absolute disp32
-and movabs cases are from the allmodconfig clang build in the preceding
-changes.  Also check a 32-bit absolute address, an immediate, and
-values that should not become absolute addresses.  Both objdump
-spellings of the movabs instruction must yield the KASAN shadow offset.
+No test covered find_flex_array() and get_flex_array_member().  Add a
+flex_array workload that keeps structs with trailing data[] members
+behind global pointers, and a test that checks accesses at and past the
+struct size are resolved and named after the flexible array member;
+find_data_type() folds offsets past the struct modulo the element size
+back to the member's offset (+0x4 for char data[] and +0xc for the
+padded int data[]).  The test also checks that the
+accesses count for the struct in the percent, samples and period columns.
+It skips on 32-bit PIE builds, which reach static globals relative to the
+GOT base register.
 
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/Build          |   1 +
- tools/perf/tests/annotate-ops.c | 172 ++++++++++++++++++++++++++++++++
- tools/perf/tests/builtin-test.c |   1 +
- tools/perf/tests/tests.h        |   1 +
- 4 files changed, 175 insertions(+)
- create mode 100644 tools/perf/tests/annotate-ops.c
+ tools/perf/tests/builtin-test.c               |   1 +
+ .../perf/tests/shell/data_type_flex_array.sh  | 135 ++++++++++++++++++
+ tools/perf/tests/tests.h                      |   1 +
+ tools/perf/tests/workloads/Build              |   2 +
+ tools/perf/tests/workloads/flex_array.c       |  71 +++++++++
+ 5 files changed, 210 insertions(+)
+ create mode 100755 tools/perf/tests/shell/data_type_flex_array.sh
+ create mode 100644 tools/perf/tests/workloads/flex_array.c
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index 5eebb2ec5ddefcfd..c7edd8569bbccb06 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -2,6 +2,7 @@
- 
- perf-test-y += builtin-test.o
- perf-test-y += tests-scripts.o
-+perf-test-y += annotate-ops.o
- perf-test-y += parse-events.o
- perf-test-y += uncore-event-sorting.o
- perf-test-y += dso-data.o
-diff --git a/tools/perf/tests/annotate-ops.c b/tools/perf/tests/annotate-ops.c
-new file mode 100644
-index 0000000000000000..766126fc2e2f5e98
---- /dev/null
-+++ b/tools/perf/tests/annotate-ops.c
-@@ -0,0 +1,172 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * The x86 operand parser: what is a memory reference and where it points.
-+ *
-+ * The data type resolver follows absolute memory operands; an immediate
-+ * is not a memory reference.
-+ */
-+#include <elf.h>
-+#include <linux/compiler.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include "annotate.h"
-+#include "debug.h"
-+#include "dso.h"
-+#include "disasm.h"
-+#include "tests.h"
-+
-+struct op_case {
-+	const char		*insn;
-+	const struct ins_ops	*ops;
-+	const char		*operand;
-+	bool			mem_ref;
-+	int			offset;
-+};
-+
-+static struct op_case op_cases[] = {
-+	/* 32-bit absolute, and the 64-bit sign extended disp32 both ways */
-+	{ "mov",    &mov_ops,  "0x8c73448",		true,  0x8c73448 },
-+	{ "mov",    &mov_ops,  "0xffffffffff5fc300",	true,  -0xa03d00 },
-+	{ "mov",    &mov_ops,  "-0xa03d00",		true,  -0xa03d00 },
-+	/* An immediate is not a memory reference */
-+	{ "mov",    &mov_ops,  "$0x10",			false, 0 },
-+	/* Zero and values wider than a disp32 are not absolute addresses. */
-+	{ "mov",    &mov_ops,  "0x0",			false, 0 },
-+	{ "mov",    &mov_ops,  "0x100000000",		false, 0 },
-+};
-+
-+static int check_operand(const struct arch *arch, const struct op_case *c,
-+			 struct dso *dso64, struct dso *dso32, struct dso *dsorel)
-+{
-+	struct disasm_line dl = {
-+		.ins = { .name = c->insn, .ops = c->ops },
-+	};
-+	struct annotated_insn_loc loc;
-+	struct annotated_op_loc *op;
-+	int ret = 0;
-+
-+	dl.ops.source.raw = (char *)c->operand;
-+
-+	if (annotate_get_insn_location(arch, &dl, &loc) < 0)
-+		return TEST_FAIL;
-+
-+	op = &loc.ops[INSN_OP_SOURCE];
-+	if (op->mem_ref != c->mem_ref) {
-+		pr_debug("'%s %s': mem_ref %d, expected %d\n", c->insn,
-+			 c->operand, op->mem_ref, c->mem_ref);
-+		ret = TEST_FAIL;
-+	}
-+	if (op->mem_ref && op->offset != c->offset) {
-+		pr_debug("'%s %s': offset %#x, expected %#x\n", c->insn,
-+			 c->operand, op->offset, c->offset);
-+		ret = TEST_FAIL;
-+	}
-+	if (c->mem_ref &&
-+	    (!annotated_op_loc__is_abs(op, dso64) ||
-+	     !annotated_op_loc__is_abs(op, dso32) ||
-+	     annotated_op_loc__abs_addr(op, dso64) != (u64)(s64)c->offset ||
-+	     annotated_op_loc__abs_addr(op, dso32) != (u32)c->offset)) {
-+		pr_debug("'%s %s': wrong absolute address\n", c->insn, c->operand);
-+		ret = TEST_FAIL;
-+	}
-+	/* The same operand in a relocatable object is an addend, not an address */
-+	if (c->mem_ref && annotated_op_loc__is_abs(op, dsorel)) {
-+		pr_debug("'%s %s': absolute address in a relocatable object\n",
-+			 c->insn, c->operand);
-+		ret = TEST_FAIL;
-+	}
-+
-+	return ret;
-+}
-+
-+struct movabs_case {
-+	const char	*name;
-+	const char	*operand;
-+	s64		imm;
-+};
-+
-+/* The KASAN shadow offset movabs, as both disassemblers print it */
-+static const struct movabs_case movabs_cases[] = {
-+	{ "movabsq", "$-0x2000040000000000, %r15 # imm = 0xDFFFFC0000000000",
-+	  -0x2000040000000000LL },
-+	{ "movabs",  "$0xdffffc0000000000,%r15", -0x2000040000000000LL },
-+};
-+
-+static int check_movabs(const struct arch *arch, const struct movabs_case *c)
-+{
-+	struct disasm_line dl = { .ins = { .name = c->name } };
-+	struct annotated_insn_loc loc;
-+	int ret = TEST_FAIL;
-+
-+	dl.ops.raw = strdup(c->operand);
-+	if (dl.ops.raw == NULL)
-+		return TEST_FAIL;
-+
-+	dl.ins.ops = ins__find(arch, c->name, &dl);
-+	if (dl.ins.ops != &mov_ops || dl.ins.ops->parse(arch, &dl.ops, NULL, &dl) < 0) {
-+		pr_debug("'%s %s': not parsed as a mov\n", c->name, c->operand);
-+		goto out;
-+	}
-+
-+	/*
-+	 * get_dwarf_regnum() is a stub returning -1 when perf is built
-+	 * without libdw, the target register cannot be resolved then.
-+	 */
-+#ifdef HAVE_LIBDW_SUPPORT
-+	if (annotate_get_insn_location(arch, &dl, &loc) == 0 &&
-+	    !loc.ops[INSN_OP_SOURCE].mem_ref && loc.ops[INSN_OP_SOURCE].imm &&
-+	    loc.ops[INSN_OP_SOURCE].imm_value == c->imm &&
-+	    loc.ops[INSN_OP_TARGET].reg1 != -1)
-+#else
-+	if (annotate_get_insn_location(arch, &dl, &loc) == 0 &&
-+	    !loc.ops[INSN_OP_SOURCE].mem_ref && loc.ops[INSN_OP_SOURCE].imm &&
-+	    loc.ops[INSN_OP_SOURCE].imm_value == c->imm)
-+#endif
-+		ret = TEST_OK;
-+	else
-+		pr_debug("'%s %s': not an immediate to a register\n",
-+			 c->name, c->operand);
-+out:
-+	free(dl.ops.source.raw);
-+	free(dl.ops.target.raw);
-+	free(dl.ops.raw);
-+	return ret;
-+}
-+
-+static int test__annotate_ops(struct test_suite *test __maybe_unused,
-+			      int subtest __maybe_unused)
-+{
-+	struct e_machine_and_e_flags id = { .e_machine = EM_X86_64, };
-+	const struct arch *arch = arch__new_x86(&id, NULL);
-+	struct dso *dso64 = dso__new("annotate-ops-64");
-+	struct dso *dso32 = dso__new("annotate-ops-32");
-+	struct dso *dsorel = dso__new("annotate-ops-rel");
-+	size_t i;
-+	int ret = 0;
-+
-+	if (arch == NULL || dso64 == NULL || dso32 == NULL || dsorel == NULL) {
-+		dso__put(dso64);
-+		dso__put(dso32);
-+		dso__put(dsorel);
-+		free((void *)arch);
-+		return TEST_FAIL;
-+	}
-+
-+	dso__set_is_64_bit(dso64, true);
-+	dso__set_is_64_bit(dso32, false);
-+	dso__set_rel(dsorel, ET_REL);
-+
-+	for (i = 0; i < ARRAY_SIZE(op_cases); i++)
-+		ret |= check_operand(arch, &op_cases[i], dso64, dso32, dsorel);
-+
-+	for (i = 0; i < ARRAY_SIZE(movabs_cases); i++)
-+		ret |= check_movabs(arch, &movabs_cases[i]);
-+
-+	dso__put(dso64);
-+	dso__put(dso32);
-+	dso__put(dsorel);
-+	free((void *)arch);
-+	return ret;
-+}
-+
-+DEFINE_SUITE("Annotate operand parsing", annotate_ops);
 diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 01c78ef20b97dec9..a27baf3a819ccf36 100644
+index 42e85d1b1420f0a7..d761758201a4b2f2 100644
 --- a/tools/perf/tests/builtin-test.c
 +++ b/tools/perf/tests/builtin-test.c
-@@ -117,6 +117,7 @@ static struct test_suite *generic_tests[] = {
- 	&suite__openat_syscall_event_on_all_cpus,
- 	&suite__basic_mmap,
- 	&suite__mem,
-+	&suite__annotate_ops,
- 	&suite__parse_events,
- 	&suite__uncore_event_sorting,
- 	&suite__expr,
+@@ -215,6 +215,7 @@ static struct test_workload *workloads[] = {
+ 	&workload__callchain,
+ 	&workload__false_sharing,
+ 	&workload__global_data,
++	&workload__flex_array,
+ 
+ #ifdef HAVE_RUST_SUPPORT
+ 	&workload__code_with_type,
+diff --git a/tools/perf/tests/shell/data_type_flex_array.sh b/tools/perf/tests/shell/data_type_flex_array.sh
+new file mode 100755
+index 0000000000000000..0fb82618dc00f854
+--- /dev/null
++++ b/tools/perf/tests/shell/data_type_flex_array.sh
+@@ -0,0 +1,135 @@
++#!/bin/bash
++# perf data type profiling tests for flexible array members
++# SPDX-License-Identifier: GPL-2.0
++
++set -e
++
++perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++perfout=$(mktemp /tmp/__perf_test.perf.out.XXXXX)
++perferr=$(mktemp /tmp/__perf_test.perf.err.XXXXX)
++
++cleanup()
++{
++	rm -f "$perfdata" "$perfout" "$perferr"
++	trap - EXIT TERM INT
++}
++
++trap_cleanup()
++{
++	echo "Unexpected signal in ${FUNCNAME[1]}"
++	cleanup
++	exit 1
++}
++trap trap_cleanup EXIT TERM INT
++
++if ! perf check feature -q dwarf; then
++	echo "Skip: no DWARF (libdw) support"
++	cleanup
++	exit 2
++fi
++
++# 32-bit x86 PIE reaches static globals relative to the GOT base register,
++# which the resolver does not track; e_type's low byte is at 16 on LE x86.
++perf_bin=$(command -v perf)
++if [ "$(od -An -tx1 -j4 -N1 "$perf_bin" | tr -d ' ')" = 01 ] &&
++   [ "$(od -An -tx1 -j16 -N1 "$perf_bin" | tr -d ' ')" = 03 ]; then
++	echo "Skip: 32-bit PIE uses GOT-relative global accesses"
++	cleanup
++	exit 2
++fi
++
++# No point in recording if the PMU cannot do memory events.
++if ! perf mem record -o /dev/null -- true 2>/dev/null; then
++	echo "Skip: cannot record memory events on this PMU"
++	cleanup
++	exit 2
++fi
++
++if ! perf mem record -o "$perfdata" -- perf test -w flex_array 1 \
++		> /dev/null 2> "$perferr"; then
++	echo "FAIL: perf mem record"
++	cat "$perferr"
++	cleanup
++	exit 1
++fi
++
++if ! perf annotate --code-with-type -i "$perfdata" --stdio \
++		--percent-limit 1 > "$perfout"; then
++	echo "FAIL: perf annotate"
++	cleanup
++	exit 1
++fi
++
++if ! grep -Fq "# data-type: struct flex +0x4 (data)" "$perfout"; then
++	echo "FAIL: flexible array member not resolved"
++	tail -n 30 "$perfout"
++	cleanup
++	exit 1
++fi
++
++# The accesses to the flexible arrays are resolved at or past the end of
++# the struct: they must count for the struct, not only for the member.
++if ! perf annotate --data-type -i "$perfdata" --stdio > "$perfout"; then
++	echo "FAIL: perf annotate --data-type"
++	cleanup
++	exit 1
++fi
++
++if ! awk '
++	$1 + 0 == 100.00 && /struct flex/ { struct_ok = 1 }
++	$1 + 0 > 0 && /char\[\]/ && /data;/ { data_ok = 1 }
++	END { exit !(struct_ok && data_ok) }
++' <(sed -n "/^Annotate type: 'struct flex' in/,/^Annotate type: /p" "$perfout"); then
++	echo "FAIL: --data-type does not count the flexible array accesses"
++	tail -n 30 "$perfout"
++	cleanup
++	exit 1
++fi
++
++if ! awk '
++	$1 + 0 == 100.00 && /struct flex_pad/ { struct_ok = 1 }
++	$1 + 0 > 0 && /int\[\]/ && /data;/ { data_ok = 1 }
++	END { exit !(struct_ok && data_ok) }
++' <(sed -n "/^Annotate type: 'struct flex_pad' in/,/^Annotate type: /p" "$perfout"); then
++	echo "FAIL: --data-type does not count the padded flexible array accesses"
++	tail -n 30 "$perfout"
++	cleanup
++	exit 1
++fi
++
++# Same with the samples and period columns, the other two display modes.
++for mode in --show-nr-samples --show-total-period; do
++	if ! perf annotate --data-type -i "$perfdata" --stdio "$mode" > "$perfout"; then
++		echo "FAIL: perf annotate --data-type $mode"
++		cleanup
++		exit 1
++	fi
++
++	if ! awk '
++		$1 + 0 > 0 && /struct flex/ { total = $1 + 0 }
++		/int/ && /len;/ { len = $1 + 0 }
++		/char\[\]/ && /data;/ { data = $1 + 0 }
++		END { exit !(total > 0 && data > 0 && total == data + len) }
++	' <(sed -n "/^Annotate type: 'struct flex' in/,/^Annotate type: /p" "$perfout"); then
++		echo "FAIL: --data-type $mode does not count the flexible array accesses"
++		tail -n 30 "$perfout"
++		cleanup
++		exit 1
++	fi
++
++	if ! awk '
++		$1 + 0 > 0 && /struct flex_pad/ { total = $1 + 0 }
++		/long/ && /x;/ { x = $1 + 0 }
++		/int/ && /len;/ { len = $1 + 0 }
++		/int\[\]/ && /data;/ { data = $1 + 0 }
++		END { exit !(total > 0 && data > 0 && total == data + len + x) }
++	' <(sed -n "/^Annotate type: 'struct flex_pad' in/,/^Annotate type: /p" "$perfout"); then
++		echo "FAIL: --data-type $mode does not count the padded flexible array accesses"
++		tail -n 30 "$perfout"
++		cleanup
++		exit 1
++	fi
++done
++
++echo "flexible array member resolved and counted"
++cleanup
 diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index af822885890dda73..963cb34acd345153 100644
+index 63d49a960eab8f3c..8621ea345b5f06ff 100644
 --- a/tools/perf/tests/tests.h
 +++ b/tools/perf/tests/tests.h
-@@ -153,6 +153,7 @@ DECLARE_SUITE(sample_parsing);
- DECLARE_SUITE(keep_tracking);
- DECLARE_SUITE(parse_no_sample_id_all);
- DECLARE_SUITE(dwarf_unwind);
-+DECLARE_SUITE(annotate_ops);
- DECLARE_SUITE(expr);
- DECLARE_SUITE(hists_filter);
- DECLARE_SUITE(mmap_thread_lookup);
+@@ -275,6 +275,7 @@ DECLARE_WORKLOAD(deterministic);
+ DECLARE_WORKLOAD(callchain);
+ DECLARE_WORKLOAD(false_sharing);
+ DECLARE_WORKLOAD(global_data);
++DECLARE_WORKLOAD(flex_array);
+ 
+ #ifdef HAVE_RUST_SUPPORT
+ DECLARE_WORKLOAD(code_with_type);
+diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
+index 03017aaaaa0bec32..74a0cbe49dc93533 100644
+--- a/tools/perf/tests/workloads/Build
++++ b/tools/perf/tests/workloads/Build
+@@ -18,6 +18,7 @@ perf-test-y += deterministic.o
+ perf-test-y += callchain.o
+ perf-test-y += false_sharing.o
+ perf-test-y += global_data.o
++perf-test-y += flex_array.o
+ 
+ ifeq ($(CONFIG_RUST_SUPPORT),y)
+     perf-test-y += code_with_type.o
+@@ -37,3 +38,4 @@ CFLAGS_named_threads.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+ CFLAGS_callchain.o        = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+ CFLAGS_false_sharing.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+ CFLAGS_global_data.o      = -g -O0 -fno-inline -U_FORTIFY_SOURCE
++CFLAGS_flex_array.o       = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+diff --git a/tools/perf/tests/workloads/flex_array.c b/tools/perf/tests/workloads/flex_array.c
+new file mode 100644
+index 0000000000000000..cc15e8cac157c337
+--- /dev/null
++++ b/tools/perf/tests/workloads/flex_array.c
+@@ -0,0 +1,71 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Flexible array member workload for data type profiling: the accesses to
++ * the arrays are at or past the end of their structs, where the resolver
++ * has to find the flexible array members.
++ *
++ * See tests/shell/data_type_flex_array.sh.
++ */
++#include <signal.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <linux/compiler.h>
++#include "../tests.h"
++
++struct flex {
++	int len;
++	char data[];
++};
++
++struct flex_pad {
++	long x;
++	int len;
++	int data[];
++};
++
++static struct flex *gp;
++static struct flex_pad *gpp;
++static volatile unsigned long flex_sink;
++static volatile sig_atomic_t done;
++
++static void sighandler(int sig __maybe_unused)
++{
++	done = 1;
++}
++
++static int flex_array(int argc, const char **argv)
++{
++	unsigned long sum = 0;
++	int sec = 1;
++
++	if (argc > 0)
++		sec = atoi(argv[0]);
++
++	gp = calloc(1, sizeof(*gp) + 4096);
++	gpp = calloc(1, sizeof(*gpp) + 4096);
++	if (gp == NULL || gpp == NULL) {
++		free(gp);
++		free(gpp);
++		return 1;
++	}
++	gp->len = 4096;
++	gpp->x = 1;
++	gpp->len = 4096;
++
++	signal(SIGINT, sighandler);
++	signal(SIGALRM, sighandler);
++	alarm(sec);
++
++	while (!done) {
++		sum += gp->data[3];
++		gp->data[5] = 1;
++		sum += gpp->data[1];
++		gpp->data[2] = 1;
++	}
++	flex_sink = sum;
++	free(gp);
++	free(gpp);
++	return 0;
++}
++
++DEFINE_WORKLOAD(flex_array);
 -- 
 2.56.0
 
