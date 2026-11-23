@@ -1,80 +1,81 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795445140;
-	b=x3lDzXdifu6AOjipWfIVmDciH1p8VtkdX/cET7+TK0bCM97+uMREEEFMDZ7MTHj7BjZz
-	 HeW9qyLZ1fDsCLJVu+FvV1sqnZf8FvkBgAF//wZlKIEr/lhgu/IiQSqSRhpOpEGPQSReS
-	 7wEiFlyj1DNpCGY9HEFC8EqNpB3WlERRxgPguAg9A/QY4QRtanMipXeD+KhlF7JOmunBj
-	 E/Z6hKzjZTWBQZlpHeKI7GpnbTeIlrM0iiuoM4zYEsLlxIfRrgRgMBCHmkqH6h4aEtw/x
-	 pfqMwPDCP8DH9yyGG426e3e/pVY8qRUsV78XYwhfIV6PPzmPTggo3Zj2e0dLDiT4H3Q==
+	t=1795447302;
+	b=WPTYYgmP788ARrsHH1HOMExltSvy8u0aaxbSDLK40G8fZLA2flf+kNGfafdqXqjD3W5M
+	 v0SNZX+Z1H8XnismF7bKIiQexZuW1Ip8+tWBrmE+G3L4GGZN/Ti2waFf6sNfxf4pMd/uw
+	 whqx6elLewZLvDmudRiz+WMmhOuJRHx86suzJsL10D/PhrzH0bDw2dcCl7ER5NKjxFaKI
+	 zpMnSctGUquFM13MKSt7eRxtE3moJ6MiqiJTttciP0804XU1ELSjsQ6LlluCiQShPFoIE
+	 HAyDrwbpdUj8gX3CvgT2tf2OzETMkBKBZ59PiMqBmnqz6KQ8RpaQz4u1c/NVmaLZ5MQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795445140;
-	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
-	 X-Mimecast-MFC-AGG-ID:Received:Received:Received:Date:From:To:Cc:
+	a=rsa-sha256; c=relaxed/relaxed; t=1795447302;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
 	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:X-Scanned-By;
-	bh=EJQxp1b8WsNMfoVFurNpPhpxRv6/KYmR7xfHGB3nybg=;
-	b=zBn3JBux8Oo9T1u5zYAIBwVRmUJrjOP9LJK2roalRdmsVivx0UIoFRUMBwKh2iZC+Uz7
-	 XPEdlzlaveNANr8wVzQnxqScXjhmiDrOLgzCEw4MJHoO8sfjZMWYP0d1tCb02L24RR4ys
-	 OcFy564DtxwP/S1tqH/GLapCdBwyy1MLWVqSM0iXHlNbIZ0Dcp+Aw3AzsrercJteJASPs
-	 c4n6o6V21qt4RZnpjgo3dsW5JZtCPpi0HrCF2upuUJOAv170rnh/fPOLXIeZDl+ePz89I
-	 05gP1LiqudubjSxH55cci7uZObv4TPRhiZGsMBYoWoyXxjj5K5neRV4S4/fUUiPVTuQ==
+	 Content-Disposition:In-Reply-To;
+	bh=9R9+S3mSuWLZBPvNUC6+4d4WMHKTLlAs7ugZ9p09fy4=;
+	b=0mEmkZ7HxgIpbHGQfkpdxxrP/D8YNWcN6sY8g0S34BBHMp0mUnDU9JGSU1FlTgS+NmsD
+	 xUH2AGpgYJ3EtbZOsxFcFmHHfVZ97dPQwOFFSOK/GojuchEObLDtaDGRcBnQYvQVHF1Xt
+	 UVj2MF0lU+MXTectNaYuDtognUo02gimJLSf5aONgIArF2NtMhPzb33LLMcH06QM19wUq
+	 A6lzCojFfXRz+j6X+MIgBu78mUEcEFUpPHLB9a22rQDDDwM1RhBf7IWEmua4/EDvtziP+
+	 KW2IPkdJeIx7FHy6vjS23QMdMzaWrDbiS/Hxb7KKFmiZiaedhqPfjDasw6bnhWAeusg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=redhat.com;
-	spf=pass smtp.mailfrom=redhat.com;
-	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=QUBxf1Tm;
-	arc=none smtp.remote-ip=170.10.133.124
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFE8606A330
-	for <linux-perf-users@vger.kernel.org>; Mon, 23 Nov 2026 14:45:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org ACFE8606A330
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	dmarc=pass header.from=arm.com;
+	spf=pass smtp.mailfrom=arm.com;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=oRhiKpFz;
+	arc=none smtp.remote-ip=217.140.110.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D6EE60A2621;
+	Mon, 23 Nov 2026 15:21:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8D6EE60A2621
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=QUBxf1Tm
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1795445138;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EJQxp1b8WsNMfoVFurNpPhpxRv6/KYmR7xfHGB3nybg=;
-	b=QUBxf1Tmg/Oe80eNJNvVD1W88h5mt2iMos1O6hKD5IKtuvywHQwVbHyq8Y63XaWq5bA510
-	d1c4p5b46dD6kxJojt4drlaNcf3fkY4vvUxU+5eHPtNXZyS4KuC9jEUOL0M7zpO/elBHQ7
-	TDPqgoGFSHODDvIGQX3t/OJSbYU8Gok=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-274-j0KvJMa_O22XrITh9ygvgw-1; Mon,
- 23 Nov 2026 14:45:32 +0000
-X-MC-Unique: j0KvJMa_O22XrITh9ygvgw-1
-X-Mimecast-MFC-AGG-ID: j0KvJMa_O22XrITh9ygvgw_1795445129
-Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 622581955D7C;
-	Mon, 23 Nov 2026 14:45:28 +0000 (UTC)
-Received: from onestero-thinkpadp1gen7.tpbc.csb (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
-	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 12FE1345;
-	Mon, 23 Nov 2026 14:45:23 +0000 (UTC)
-Received: by onestero-thinkpadp1gen7.tpbc.csb (nbSMTP-1.00) for uid 13628
-	oleg@redhat.com; Mon, 23 Nov 2026 15:45:28 +0100 (CET)
-Date: Mon, 23 Nov 2026 15:45:22 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Keenan Dong <keenanat2000@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, mhiramat@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: clear extra_consumers before pooling return
- instances
-Message-ID: <awRRgnRmeMDUvUWz@redhat.com>
-References: <20260408100247.2065245-1-keenanat2000@gmail.com>
+	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=oRhiKpFz
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ADCF7143D;
+	Mon, 23 Nov 2026 07:21:37 -0800 (PST)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2972B3F632;
+	Mon, 23 Nov 2026 07:21:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1795447300; bh=fpRq0XHe3KXaJk7U24ztuGm8cRIyiBoN98OpPRJxQVI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oRhiKpFzp3maAFyufuRgNdMWX7MnGYvG95nb2qZeu1KKbv2Prt2yC4yCyizqHQoi3
+	 HdX3NOcnZ2OX45WSw7uiWaFpjrc7HY+ficNi3i15HO33UbOgM5wODU9AcywxKDLiV9
+	 lrzUr+R5+0fMp9hTq17+Hld1pS6GcDbBDGiTSDdY=
+Date: Mon, 23 Nov 2026 15:21:38 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Yabin Cui <yabinc@google.com>
+Cc: Dev Jain <dev.jain@arm.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@arm.com>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Tamas Petz <tamas.petz@arm.com>,
+	Tamas Zsoldos <tamas.zsoldos@arm.com>,
+	Michiel van Tol <michiel.vantol@arm.com>,
+	coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Revert "perf/aux: Allocate non-contiguous AUX pages by
+ default"
+Message-ID: <20261123152138.GD9176@e132581.arm.com>
+References: <20261025-perf_revert_prefer_large_alloc-v1-1-5fb431bbd624@arm.com>
+ <57c34e26-3048-474d-8e74-f65799e32ff4@arm.com>
+ <CALJ9ZPNWcDtajO+Luhxe1K3af64mPRFQSjvfvNornyFFkam-+g@mail.gmail.com>
+ <CALJ9ZPO9XxF-kz5K67Jg8RtpiEmK7XFU3e+xDak6LyV_We7yBQ@mail.gmail.com>
+ <307b4d48-00f2-40dc-bf3f-ffa0f2f58d33@arm.com>
+ <20261118165702.GX9176@e132581.arm.com>
+ <5909a504-0534-4f6a-8925-bb18f24eca0e@arm.com>
+ <CALJ9ZPObeFj0mm8ahwCa-ePYHXU2nE=hvPW97bStH2mX7RvqnA@mail.gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -86,53 +87,70 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260408100247.2065245-1-keenanat2000@gmail.com>
-X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
+In-Reply-To: <CALJ9ZPObeFj0mm8ahwCa-ePYHXU2nE=hvPW97bStH2mX7RvqnA@mail.gmail.com>
 
-Andrii, can you take a look? I never understood this code in details,
-and today I forgot everything...
+On Thu, Nov 19, 2026 at 01:00:03PM -0800, Yabin Cui wrote:
 
-On 04/08, Keenan Dong wrote:
->
-> ri_pool_push() returns a return_instance to the per-task pool for
-> later reuse. The pool reset clears cons_cnt, but it leaves
-> extra_consumers behind.
+[...]
 
-So at first glance this doesn't look right no matter what...
-
-> A reused return_instance can later grow a fresh extra_consumers
-> array and then reach the cleanup path with a stale pointer from its
-> previous lifetime, leading to a double free of the recycled object.
-
-Can you add more details to explain the possible double free?
-This is not immediately obvious, at least not to me.
-
-Oleg.
-
-> Free and clear extra_consumers before putting the instance back into
-> the pool so every reused entry starts from a clean state.
+> Hi Leo, Dev,
 > 
-> Fixes: 8622e45b5da1 ("uprobes: Reuse return_instances between multiple uretprobes within task")
-> Reported-by: Keenan Dong <keenanat2000@gmail.com>
-> Signed-off-by: Keenan Dong <keenanat2000@gmail.com>
-> ---
->  kernel/events/uprobes.c | 2 ++
->  1 file changed, 2 insertions(+)
+> I tested on an arm64 Android Pixel device (4 KiB pages, 12 GiB RAM +
+> 6 GiB zram, TRBE & SPE) using an Android kernel patched locally to match
+> v7.4-rc3's rb_alloc_aux() / __alloc_pages_slowpath() behavior
+> (526d945ad9c0, 669872181549, 53a9b4646f67, 0e05a469c294).
 > 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 923b24b321cc..24b9884a2667 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1945,6 +1945,8 @@ unsigned long uprobe_get_trap_addr(struct pt_regs *regs)
->  
->  static void ri_pool_push(struct uprobe_task *utask, struct return_instance *ri)
->  {
-> +	kfree(ri->extra_consumers);
-> +	ri->extra_consumers = NULL;
->  	ri->cons_cnt = 0;
->  	ri->next = utask->ri_pool;
->  	utask->ri_pool = ri;
-> -- 
-> 2.43.0
+> v7.4-rc3 alone still causes heavy PSI and compaction/reclaim stalls on
+> Android, while patch [1] keeping __GFP_NORETRY fixes it completely.
 > 
+> compact-bench (90/95/99%, 10 runs each = 30 runs, 4 MiB/CPU TRBE AUX,
+> 0 allocation failures; system-wide PSI since Android sets
+> cgroup_disable=pressure):
+> 
+>   Config             PSI some(ms)  cmp_stall  allocstall  daemon_wake  sp_kswapd_wk
+>   order-0                  297.76          0           0            0             0
+>   revert                 2,578.00      3,957       1,984           17            28
+>   v7.4-rc3-sim           1,840.29        522         161           14            21
+>   rc3 + [1]                270.77          0           0            0             0
+>   rc3 + [1]-noretry         41.78          0           0            0             1
 
+It's good to see no allocation failures and much lower PSI with
+rc3 + [1]-noretry.
+
+> Even when order-3 pages are still plentiful (e.g. 95%, where order-3
+> never failed and cmp_stall/allocstall were 0), v7.4-rc3-sim still
+> woke kswapd/kcompactd for failed orders 4..9 on 10/10 runs (7
+> kcompactd wakes), producing 895.48 ms PSI vs. 2.87 ms with
+> [1]-noretry.
+> 
+> When order-3 does run out (99% Run 1), v7.4-rc3-sim bypasses
+> 0e05a469c294 and hits 521 direct compactions / 161 direct reclaims
+> (Runs 2..10 dropped to 1/0 by reusing freed AUX pages; that only
+> helps when traces run back-to-back in a short window, which doesn't
+> match our use case on Android).
+
+I see that v7.4-rc3-sim (or with equivalent mainline kernel) can still
+show increased PSI.
+
+> Under a realistic Android fragmentation test (incompressible zram
+> pages, unmovable pages, re-fragmented between runs), v7.4-rc3-sim also
+> triggered an lmkd kill (TRBE) and direct compaction/reclaim stalls
+> (SPE), all 0 with [1]-noretry.
+> 
+> When unfragmented, [1]-noretry still allocates 100% order-9 (2 MiB)
+> chunks for both TRBE and SPE.
+> 
+> So I agree with Dev to drop __GFP_RETRY_MAYFAIL and keep __GFP_NORETRY
+>   (0 allocation failures and lower PSI). Please proceed with v2 of [1]
+> keeping __GFP_NORETRY (and avoid backporting 526d945ad9c0 to
+> stable without it).
+
+I don't expect 526d945ad9c0 to be backported to stable kernels, as it
+has no Fixes tag. We just need to ensure that mainline and future LTS
+kernels (and ACK) avoid PSI regressions..
+
+I'll send v2 with keeping __GFP_NORETRY as you and Dev suggested.
+
+Thanks a lot, Yabin and Dev!
+
+Leo
