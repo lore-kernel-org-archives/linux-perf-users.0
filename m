@@ -1,58 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.93.99
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795399460;
-	b=JhVcXtV32Raf1p+HZRnB13WJf7DS4GgpwVtNRPBhaw8350F/bmU1wjHGaCBuc45KHwDY
-	 yRe6bxbS5VazfqO82PFZ9KzGAtO6qYYur/OdtIAbABhz4n9Rg1QCwFut/ws4E5V/D/5xR
-	 i+DLCXAhITfIS/JLL2w0Q7nXezO9DJ0kA6xh6eFTrFg99swJ4FEBlz48njbbIkP431T0q
-	 yNvQY2gUTpMWb4vOhcxqGQN52oo7mTqqwEg4b7QbHG4/EEu+nZIYrMrtC0fVPbsvlbcfX
-	 CVq4kL0mi10KjxAMqIgSN5o7u4g4gR74iYcq8d01ZuW4d6a3bgluXWraPBhRU22oTLQ==
+	t=1795399860;
+	b=CzdkKq9sBOq15e1jErnk4yKShXgpJcCvvZv02z2DwLaZzEX/hqv6kEP2dYuK1PDU9ccm
+	 jy5/Q6V+Kc/2+OQW/wNDrYFRllUDhSw904ouxEt1FkZeT8BWqlzCVlZRrBLdV7szvsuAR
+	 qSvTPy3HbB8JET9MnjlgGxZBTD4luuMEAFeGGQKCEQXN7XbHFVf/nckqhErNJ/YdcFXfX
+	 t9Qh811/JPtE540H85Q+nob/sjKxxb+SNOgCmFXnG8dEUZgLag3Ge51bRXqJ+OXfhHOlZ
+	 b3/J7VJkhoFfEkVZnsVfVqOT7SP/+8Jqw9JyZWekHG0lUYDvbuEJAy2BiXAJPgI344A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795399460;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=PG7NbfVZS95X4OeWZBdwOuqcV1WLko1jrGjZoh7koWc=;
-	b=efvLDEvLIvOIqkikDB+z0dKppOqC+w+StErjFAW6K4fqXLjH5u1OD/5oGlQ2tPYhfT9o
-	 sbEkqYS6joC3A8Iu/WT5RWhp9gQaIIj2iBfnEUA2WnCoSqCXW6xSawZbRR6yt6hpFkMyg
-	 cBG2XwwQrz/SLRawjJtJluDAh+wIzeq3qksIkFRG4Sd2rQrz38RNzCSHLblXfYhzL8wvh
-	 BonZkCrFDFJLE6dqYkXbNOQjDi9oKuf/8wVliyUT8PqgUZiMPGnxqs8+VaZADGgUDVksG
-	 eV6YyOWDUmc1WZEvchSLXS1rjzoL/H+zU5dQndDnK+TWhNL/A7a/hC+4Ww0joWZsWlA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795399860;
+	h=DMARC-Filter:Received:Received:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-Coremail-Antispam:X-CM-SenderInfo;
+	bh=C4d4/ZZI2QavfeDE1+YXdE9XsQGasUBBMAoeix++LBY=;
+	b=VrMiZHq+eB2cEeLfqNV1fe3eGC+2sogf4Z+5FcEmX2AUL4PKvSxD/r6+4wbRkxBd6egH
+	 r7/d9OODn6ei0Sfs9zZpnQpC7AdXh3kCVhtlXUv8NXNiljylTqE6IEXKPMfZ/6VK9/Dr9
+	 k8BXQNBooZEk+Ajazj8kNr7bjaqi0R6FvT0Mz/Ga7ifbiISHxxJzjtXJ3hBgDNeXZJRi1
+	 hBA/CAn+nPAVUXwQt+Fwjv9cieEEqq/cPuT7XjiRzaERFDtmgskp4Am5yg7CjDR2rYq5N
+	 l+xtIrGkRDkFKkzjwqDGId+ZcZcsl94dlGQWH+LrGKxWjwVsztRvfBpiA3PVXAdT5uA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lldiyV6s;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=none header.from=huaweicloud.com;
+	spf=pass smtp.mailfrom=huaweicloud.com;
+	arc=none smtp.remote-ip=124.71.93.99
+Received: from dggmsgout11.his.huawei.com (dggmsgout11.his.huawei.com [124.71.93.99])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B89606A31A;
-	Mon, 23 Nov 2026 02:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lldiyV6s
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DA4C1F000C0;
-	Mon, 23 Nov 2026 02:04:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795399460;
-	bh=PG7NbfVZS95X4OeWZBdwOuqcV1WLko1jrGjZoh7koWc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=lldiyV6sFlKm5Vn0TclvkXCY+LbOaZqfv9QS0PHA/2jE95tU/+G30wZ5EZtqP1ruK
-	 3rGIxw1NsNZbcG9/6qfj13c/mJmGG2VoMOIig0xwzNinwdxUsm1Cfi/C0UgiU8oPsO
-	 40qdqIJ4Gjx7E8Xr3w2PvpMRPARDoQigWZNE3KWT+RV8GcB3xwVdDbbeZO/qo9NgVz
-	 N93wFS/zSNwif4ewDCEfCW3Ut4JJT/BSWeiEbDKSLje/CSpmV7QKe3YtKhBZjz7H/u
-	 7uLtIJmIhavhaL63RWI33DGkd7PQXcJCKuhwPgtDgi8h0Dp5Jc2AwHzsnumtqf+egI
-	 E7v3+TPoRJtJg==
-Date: Sun, 22 Nov 2026 18:04:18 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: haghdoost@uber.com
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 0/7] perf script: Lazy symbol loading
-Message-ID: <awOfIqFfrbwmnwRP@google.com>
-References: <20261121-perf-symbol-memory-send-v8-0-370561cbb5a7@uber.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30079606A31A;
+	Mon, 23 Nov 2026 02:10:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 30079606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.170])
+	by dggmsgout11.his.huawei.com (SkyGuard) with ESMTP id 4jXqD853Nkz1c18B;
+	Mon, 23 Nov 2026 10:10:48 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 65A1D4056D;
+	Mon, 23 Nov 2026 10:10:49 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP2 (Coremail) with UTF8SMTPA id Syh0CgD3e_GnoANrSTGAFQ--.62995S2;
+	Mon, 23 Nov 2026 10:10:49 +0800 (CST)
+Message-ID: <42094cd9-6b18-4877-b99d-9e72c8e6e613@huaweicloud.com>
+Date: Mon, 23 Nov 2026 10:10:47 +0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -62,158 +51,160 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20261121-perf-symbol-memory-send-v8-0-370561cbb5a7@uber.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/2] perf/core: Prevent duplicate sigtrap task work
+ enqueue
+To: Peter Zijlstra <peterz@infradead.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1795053619.git.wutengda@huaweicloud.com>
+ <45bd71c976aea1a0e8bf5762dd6b6552e6009439.1795053619.git.wutengda@huaweicloud.com>
+ <20261120154457.GZ2668564@noisy.programming.kicks-ass.net>
+ <20261120154959.zw08JC0V@linutronix.de>
+ <20261120160140.GR2668804@noisy.programming.kicks-ass.net>
+ <20261120162604.GL2669272@noisy.programming.kicks-ass.net>
+ <20261120172831.5XwELZY5@linutronix.de>
+ <20261120174942.GU2668804@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <20261120174942.GU2668804@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:Syh0CgD3e_GnoANrSTGAFQ--.62995S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxurWrWw17KrWDJr4rCr13CFg_yoWrAr4xpr
+	W3Xrn0kay8XFnFqr13tw4DZr1rWw4vqws8Crs5A34SyF4Yvr92qa17K3WYva1rCrnrJay3
+	Z3yjkrW7C34UZFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
+	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
+	7KsUUUUUU==
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-On Sat, Nov 21, 2026 at 08:41:00AM -0800, Alireza Haghdoost via B4 Relay wrote:
-> perf script loads the entire ELF symbol table of every DSO that appears
-> in a sample, and keeps each symbol, with its demangled name, until
-> process exit. Most of those symbols are never sampled. On a large
-> profile this turns symbol loading into the main memory cost of perf
-> script, and in a memory-constrained cgroup into an OOM kill.
-> 
-> With this series, perf script --lazy-load-symbols reads a symbol name
-> only when a sample needs it. On a perf script run over a 45,073-sample
-> callchain profile of a large C++ service (about 1M symbols), the output
-> is identical in all three cases (medians of eleven runs):
-> 
->                                       time    max RSS
->   perf-tools-next                     3.70 s  319 MiB
->   v8                                  3.75 s  327 MiB
->   v8 --lazy-load-symbols              3.56 s  174 MiB
-> 
-> Eager loading remains the default, and costs 8 more bytes per symbol for
-> the name pointer. Lazy loading covers userspace ELF .symtab and .dynsym.
-> The kernel, modules, PPC64 .opd and .gnu_debugdata still load names
-> eagerly.
-> 
-> The patches:
-> 
->   [1/7] Split the size, type and binding checks out of
->         choose_best_symbol(), so that the loader can tell which aliases
->         need their names. No functional change. Unchanged from v7,
->         reviewed by Ian.
-> 
->   [2/7] Make the symbol name a pointer instead of a flexible array, so
->         that a name can be set after the symbol is in the rb-tree.
->         Unchanged from v7, reviewed by Ian.
-> 
->   [3/7] Add lazy symbol names to the symbol code: the DSO lookups read
->         the name of the symbol they return. Nothing creates such
->         symbols yet.
-> 
->   [4/7] Check that the symbol table file is still the one perf loaded
->         before reading names from it. Nothing records a file yet.
-> 
->   [5/7] Add --lazy-load-symbols, which makes the ELF loader create
->         symbols with lazy names and record the file for the check.
-> 
->   [6/7] Unit tests for lazy names and for the file check.
-> 
->   [7/7] Shell tests, including parity with eager loading.
-> 
-> perf-tools-next now has the first three patches of Ian's series [1].
-> Its later patches replace the symbol rb-tree with an array, which would
-> shrink each symbol further. They conflict with this series, since the
-> name loading in 3/7 and the alias name loading in 5/7 walk that
-> rb-tree. This series does not depend on them, and I'll rebase on them
-> if they land first.
 
-I'm about to merge Ian's series first.  Please rebase accordingly after
-it's landed.  I hope it'll make your change a bit easier.
 
-Also please add the option to the perf report and perf top too.
+On 2026/11/21 1:49, Peter Zijlstra wrote:
+> On Fri, Nov 20, 2026 at 06:28:31PM +0100, Sebastian Andrzej Siewior wrote:
+>> On 2026-11-20 17:26:04 [+0100], Peter Zijlstra wrote:
+>>> Also, sending signals on software events seems utterly insane. But I
+>>> don't support we can go limit that now :-(
+>>
+>> Tengda: Is this an actual valid use case that you have here or did an AI
+>> figured out that this broken?
+> 
+> I *think* the below is sufficient.
+> 
+>  - sigtrap implies a per-task event; task_work is local to the current
+>    task (+- the context switch thing from 2/2).
+> 
+>  - task_work_run() is written such that the work handler can do
+>    task_work_add(), therefore the early clear in the handler doesn't
+>    matter.
+> 
+> And while recursive software events are tedious, I think the below fix
+> is simple enough to not worry about too much.
+> 
+> ---
+> Subject: perf/core: Prevent duplicate sigtrap task work enqueue
+> From: Tengda Wu <wutengda@huaweicloud.com>
+> Date: Thu, 19 Nov 2026 09:51:00 +0000
+> 
+> From: Tengda Wu <wutengda@huaweicloud.com>
+> 
+> The sigtrap handling in __perf_event_overflow() checks
+> event->pending_work before calling task_work_add(), but only sets
+> pending_work after the task work has been queued.
+> 
+> This leaves a window where an NMI can interrupt task_work_add() and
+> re-enter __perf_event_overflow() for the same (software/tracepoint)
+> event. Since pending_work is still zero, the nested invocation can
+> enqueue the same pending_task again.
+> 
+> The re-entrant call path looks like this:
+> 
+>   __perf_event_overflow()
+>     task_work_add()
+>       <NMI>
+>         __perf_event_overflow()
+>           task_work_add()
+> 
+> The nested invocation may enqueue pending_task before the outer
+> invocation does. When the outer invocation resumes, it inserts the
+> same task work entry again, potentially creating a cycle in the task
+> work list.
+> 
+> As a result, perf_pending_task() may be executed repeatedly, leading
+> to unbalanced event reference counting.
+> 
+> Fix this by atomically claiming pending_work with cmpxchg_local()
+> before calling task_work_add(). This ensures that only one invocation
+> can enqueue the task work, even when another overflow occurs
+> re-entrantly from an NMI.
+> 
+> Notably: sigtrap events must be per-task, meaning that the there is no
+> concurrency, only re-entrancy.
+> 
+> [peterz: clarify and rewrite]
+> Fixes: c5d93d23a260 ("perf: Enqueue SIGTRAP always via task_work.")
+> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  kernel/events/core.c |   24 +++++++++++++++---------
+>  1 file changed, 15 insertions(+), 9 deletions(-)
+> 
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -10950,16 +10950,22 @@ static int __perf_event_overflow(struct
+>  
+>  		notify_mode = in_nmi() ? TWA_NMI_CURRENT : TWA_RESUME;
+>  
+> -		if (!event->pending_work &&
+> -		    !task_work_add(current, &event->pending_task, notify_mode)) {
+> -			event->pending_work = pending_id;
+> -			local_inc(&event->ctx->nr_no_switch_fast);
+> -			WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
+> -
+> -			event->pending_addr = 0;
+> -			if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
+> -				event->pending_addr = data->addr;
+> +		/*
+> +		 * Software events can nest and attempt this recursively;
+> +		 * claim the pending_work before task_work_add() recurses.
+> +		 */
+> +		if (cmpxchg_local(&event->pending_work, 0, 1) == 0) {
+> +			if (!task_work_add(current, &event->pending_task, notify_mode)) {
+> +				event->pending_work = pending_id;
+> +				local_inc(&event->ctx->nr_no_switch_fast);
+> +				WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
+>  
+> +				event->pending_addr = 0;
+> +				if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
+> +					event->pending_addr = data->addr;
+> +			} else {
+> +				event->pending_work = 0;
+> +			}
+>  		} else if (event->attr.exclude_kernel && valid_sample) {
+>  			/*
+>  			 * Should not be able to return to user space without
+
+Hmm, this is basically similar to my original version, and I re-tested with this
+and it's fine. LGTM.
 
 Thanks,
-Namhyung
+Tengda
 
-> 
-> [1] https://lore.kernel.org/all/20261117185305.108003-1-irogers@google.com/
-> 
-> Changes in v8:
-> 
-> - Rebase onto current perf-tools-next, which has Ian's annotation and
->   ELF loader changes.
-> - Split v7 3/4 for review (Namhyung): 3/7 adds lazy names to the symbol
->   code, 4/7 adds the check of the symbol table file, and 5/7 adds the
->   option and makes the ELF loader create lazy names. The tests are in
->   6/7 (unit) and 7/7 (shell).
-> - 4/7: Also accept a file whose device, inode, size, mtime or ctime
->   changed if it has the build ID of the DSO and its .strtab and .dynstr
->   did not move, such as a copy of the same build (Namhyung). The
->   identity is still checked first, since reading the build ID at each
->   reopen more than doubles the time of the worst case.
-> - 4/7: Compare the ctime too, so a file copied over in place with its
->   size and mtime kept (cp -p) is not taken for the same file. Treat a
->   string table section that no longer exists or is compressed as
->   another file.
-> - 4/7: Warn once when the file cannot be opened or checked, rather than
->   only in debug output, and try again for later names, since the
->   failure can be temporary.
-> - 5/7: Do not skip the .dynsym copies of lazy .symtab symbols. Skipping
->   them changed the shape of the rb-tree, which broke lookups past a
->   nested entry point and the PLT name of an exported IFUNC. This
->   replaces the v7 fix for a zero-size symbol before a copy (Sashiko).
->   Duplicate selection now reads the names of each copy, so on the
->   profile above, where one binary exports most of its symbols, lazy
->   loading keeps its memory saving but loses most of the run time it
->   saved in v7. Most of that time goes to reading each name with its own
->   pread(). As discussed with Namhyung, a later series will let the DSO
->   data cache read the symbol table file, and names will be read through
->   it. A prototype with a small read cache gets back about two thirds of
->   the v7 speedup for about 1.5 MiB more RSS.
-> - 6/7: Add tests for a file overwritten in place, for a copy with the
->   same build, with moved or missing string tables, and of another build,
->   for a failed open, and for a copy whose build ID cannot be read.
-> - 7/7: Add parity cases for a zero-size symbol before a copy, nested
->   entry points, and an exported IFUNC with aliases.
-> 
-> Previous versions:
-> 
-> v7: https://lore.kernel.org/all/20261113-perf-symbol-memory-send-v7-0-d992eced9f9c@uber.com/
-> v6: https://lore.kernel.org/all/20261028-perf-symbol-memory-send-v6-0-7e90415f0101@uber.com/
-> v5: https://lore.kernel.org/all/20261005-perf-symbol-memory-send-v5-0-165dceb2b049@uber.com/
-> v4: https://lore.kernel.org/all/20261002-perf-symbol-memory-send-v4-0-0a592bb2539e@uber.com/
-> v3: https://lore.kernel.org/all/20260925-perf-symbol-memory-send-v3-0-3e4e234c363b@uber.com/
-> v2: https://lore.kernel.org/all/20260919-perf-symbol-memory-send-v2-0-495b8f00ad7c@uber.com/
-> v1: https://lore.kernel.org/all/20260915-perf-symbol-memory-send-v1-0-1d3360e21f07@uber.com/
-> 
-> ---
-> Alireza Haghdoost (7):
->       perf symbols: Split out name-independent duplicate symbol selection
->       perf symbols: Point to the symbol name instead of embedding it
->       perf symbols: Add lazy symbol names
->       perf symbols: Check the file before reading lazy symbol names
->       perf script: Add --lazy-load-symbols to load symbol names lazily
->       perf test: Add lazy symbol loading unit tests
->       perf test: Add lazy symbol loading shell tests
-> 
->  tools/perf/Documentation/perf-script.txt           |  11 +
->  tools/perf/builtin-script.c                        |   2 +
->  tools/perf/tests/Build                             |   1 +
->  tools/perf/tests/builtin-test.c                    |   1 +
->  tools/perf/tests/shell/lazy_load_symbols_parity.sh | 447 ++++++++++
->  tools/perf/tests/shell/lib/lazy_names.sh           |  20 +
->  tools/perf/tests/shell/script_lazy_load_symbols.sh | 190 ++++
->  tools/perf/tests/symbol-lazy.c                     | 963 +++++++++++++++++++++
->  tools/perf/tests/tests.h                           |   1 +
->  tools/perf/ui/browsers/map.c                       |   2 +-
->  tools/perf/ui/stdio/hist.c                         |   1 +
->  tools/perf/util/dso.c                              |   2 +-
->  tools/perf/util/dso.h                              |  36 +-
->  tools/perf/util/symbol-elf.c                       | 355 +++++++-
->  tools/perf/util/symbol-minimal.c                   |   6 +
->  tools/perf/util/symbol.c                           | 141 ++-
->  tools/perf/util/symbol.h                           |  31 +-
->  tools/perf/util/symbol_conf.h                      |   1 +
->  18 files changed, 2183 insertions(+), 28 deletions(-)
-> ---
-> base-commit: bb27ddbaee56536fb8df0a24f07b526766dfe131
-> change-id: 20260915-perf-symbol-memory-send-e7cfca1ac3d9
-> 
-> Best regards,
-> --  
-> Alireza Haghdoost <haghdoost@uber.com>
-> 
-> 
