@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795471252;
-	b=3L6rdDWtBnmVJBeIsebeQAegokGIIQGbXdNpxOCkvkVtrxbhrrojQQxFNzYhck8eTnMu
-	 ziyAiz8HuI9F55beIm/8f0y0merhFMFdNEz2/SIqhRro229o7tP0nFVtNiiGlxuNZqi1i
-	 3pxCi/H2gnuO64PrMEltkiMCm9QnClq6xnpP8IBXO7/LIAcxUaG3QwGo6Y8Wf59YZD9Xf
-	 VTTebZWPfksha/xeX5aABWA81nWHitmp37Umf3AVyMHXuDvjv+RZhlSzC11nMXRE88rYY
-	 Ze0u8DOeWoT2QprZM4Z62a4O8bP03ucnu+e3xSSEVuLrtHNN4nsbNLQ3WDpc8Gg+L2g==
+	t=1795471249;
+	b=uki+TzwXU8mKRzDnywPXltiYajutvMWcSBQe6vkWVv0HBJ2Wbr2ZN/IU5xksITyL7e1E
+	 jiX7beWBTlhfPKC35v1lG8+neksSHqRgxfHDKRnUkMmVotbJKEYrOhJxsuI6HLyS8l8xs
+	 PrRK/GWo6RYRSHU9TcGFFkWFTkOcfjrq+PqHJB0icsgjIoaWiV/JAZ5lOA/vcMxYmECPI
+	 sh4lg7f1M7H39JRluQlxZZllRgS8FXKtNTpAV/7zWyAtEdMpqsJcC4gL/VhjJzw85ib3E
+	 d+DjnC9LME1lN9wHMFna9xFZk/IjEW7RnZDMK+9xUzGTdMCgFhfBKmMCtPZXVD4Ld5g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795471252;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795471249;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=BAilv4VoXsQ9+WVNQ6tURkpXxWXhgKWKJX5ZMQISyiE=;
-	b=WTRTgBpZPwoA7atW4rCzEVbNZyKqpFMJRgKnM/UkwMSg5NJreWCRXbXnigq5KQ5eFfN+
-	 h44jNJEDV3Z2oimsDmytzRD2GCu1CqifVcMshF2bflKMa9tkpOZKYg/vl8Q5I4oPkcrWq
-	 AGPC2Ob1aZ/8CKZl4WyM7hZJD49n0pJFMVudix9X/YfmoEyR+w/sNSygqQq/EhRfj88DP
-	 kgG8Df3mJ+CVq6AfwggxPP2nSCyTNodpmcoXjR1TiDD6iN/DjjYRzjkkx3V2d2DAMnkyr
-	 yccEhev1L6+fi4FXS90F+Dei3FG6qIjIdq/hmgz8M999HOwuHBdqhAezvpk/cZIZ4Hw==
+	bh=Azkx36zjbxqJYLpSaoVLe2nz1AlSWqVWOKME4todCY0=;
+	b=D6qlb53NC7ZlYqMd9FcjySykOymPmEOcxSKaDo5pjzzpTutt5BjYy50h3tfc3OO0Z6i4
+	 CTttVJoJT6LMRnvbNA60iu24lhCPOwZfNVYRnBeS1r5Xi65U999TyCbo4QH3Jmq226hm0
+	 rphJMGX5ygre2hqmGL+4jA4/HK2jKHE2UknG8m5xWf1rtoluTbTxPHzH4fWJ2iDBCZsEc
+	 e6Go/J+BrKnnwqpDtSblaBgwq/03c44r2bY0CuD1zUaefXUq41+pmJmhC0W9YqPKSgM/O
+	 aG96Dz8ZcU7lC5trS7vsUlQjL8F3N8w5hBRX6BQqe/1Le/JHtVuzBJHsCEm/sDtFviA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kBb8nUCy;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AjIBHUrx;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A797606A31E;
-	Mon, 23 Nov 2026 22:00:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=kBb8nUCy
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6592C1F000C0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6357F606A321;
 	Mon, 23 Nov 2026 22:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AjIBHUrx
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 353DA1F000CA;
+	Mon, 23 Nov 2026 22:00:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795471252;
-	bh=BAilv4VoXsQ9+WVNQ6tURkpXxWXhgKWKJX5ZMQISyiE=;
+	s=k20260515; t=1795471248;
+	bh=Azkx36zjbxqJYLpSaoVLe2nz1AlSWqVWOKME4todCY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=kBb8nUCyzRVdbwB8HX5SdoiLQnFJEUlWuCz8zYwpDfgevQrmODokwFmf8UcAegqHX
-	 2MuDv+WEpsAzVQ2+Mw343agvPssXdih/jC59D0LDVVvnvH2nC3kLSdfcN4Oai2eUB9
-	 /PT0YwbIz0Xe0tGEVyTjYPnzqMB5+1Fl92KucO9/JDyyb8VA4vKNXBxIKQnrGK8tVr
-	 524xAejs75q5kc5ztslNjp9CLPR3tV/Dlo5QsNUkn6Jjn9DLuRF/K8Dt6hoR7bqyUm
-	 EfRrlWNtFtNyVT+R2IOsIRbhiYn+Q5PPGXzAHzKwx8Zq1Cobm6h/uIaoptVJFJC+x5
-	 9q0YMBPPQSKSw==
+	b=AjIBHUrxGKcooL2En/XoFmXkrTBcvf6UXw8UNJSwgGiin4ujbZ0ctbUrzptu9Zaqj
+	 cLKxZZyNpFJSaM7vIjVW6HAIONFbp79WGdHxWmvpMvam+RvwaaP4MHG9n7mhsKYZBC
+	 bWRrmzemiobHlgPiNqBbq1EvT8ZLV8ewLKjI6dXa2PhMCGyetjqSJLT15e2abza9E1
+	 llwnJf7bXaiEmnNhmvYz34mIsPIs1N5jDLqT4F+putAnJYwEa9WdbSv0tIsb3T9FOo
+	 ppKZKVETTdQt6V18RqJiYr33mLdYpNxBeYK8l8vRJeSh8xbYWVls9MI67ZSzro9CBC
+	 +Dem97TlqlB9g==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v12 06/19] perf annotate-x86: Parse movabs like a mov
-Date: Mon, 23 Nov 2026 19:00:11 -0300
-Message-ID: <20261123220024.14891-7-acme@kernel.org>
+Subject: [PATCH v12 05/19] perf annotate-x86: Record immediates in a 64-bit field
+Date: Mon, 23 Nov 2026 19:00:10 -0300
+Message-ID: <20261123220024.14891-6-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261123220024.14891-1-acme@kernel.org>
 References: <20261123220024.14891-1-acme@kernel.org>
@@ -70,41 +70,95 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-x86__instructions[] has no movabs: ins__find() strips the size suffix
-of "movabsq" and still finds nothing, so mov__parse() never runs and
-the source and target operands of the instruction are not split.  The
-data type tracking then sees nothing, where the same instruction as a
-plain mov sets the destination register.
+An x86 immediate is parsed into the int offset shared with
+displacements, so a constant wider than 32 bits is truncated to garbage
+that the register tracking then records as its value.
 
-The clang allmodconfig build has plenty, 282558 in vmlinux, all with an
-immediate, the KASAN shadow offset:
-
-  ffffffff81271e2b:	movabsq	$-0x2000040000000000, %r15
-
-No movabs with a memory operand shows up in vmlinux or in any object of
-that build.
-
-Add it as a mov; with the previous patch recording the immediate in 64
-bits, both objdump spellings of the KASAN shadow offset track the same
-constant.
+Add a s64 imm_value to struct annotated_op_loc, fill it in
+extract_op_location_x86() with strtoull() and read it in the three
+places of update_insn_state_x86() that take an immediate as a constant.
+The displacement and the ARM64 and x86 %gs: immediates, which fit in
+32 bits, stay in offset, and pointer offset tracking is unchanged.
 
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate-arch/annotate-x86.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/annotate-arch/annotate-x86.c | 13 ++++++++-----
+ tools/perf/util/annotate.h                   |  6 ++++--
+ 2 files changed, 12 insertions(+), 7 deletions(-)
 
 diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
-index 94c45806029ee670..0c74266cd4b99925 100644
+index a975c39c3d6ce008..94c45806029ee670 100644
 --- a/tools/perf/util/annotate-arch/annotate-x86.c
 +++ b/tools/perf/util/annotate-arch/annotate-x86.c
-@@ -85,6 +85,7 @@ static const struct ins x86__instructions[] = {
- 	{ .name = "lea",	.ops = &mov_ops,  },
- 	{ .name = "lock",	.ops = &lock_ops, },
- 	{ .name = "mov",	.ops = &mov_ops,  },
-+	{ .name = "movabs",	.ops = &mov_ops,  },
- 	{ .name = "movapd",	.ops = &mov_ops,  },
- 	{ .name = "movaps",	.ops = &mov_ops,  },
- 	{ .name = "movdqa",	.ops = &mov_ops,  },
+@@ -341,7 +341,7 @@ static void update_insn_state_x86(struct type_state *state,
+ 		tsr->lifetime_end = 0;
+ 
+ 		if (src->imm)
+-			imm_value = src->offset;
++			imm_value = src->imm_value;
+ 		else if (has_reg_type(state, src->reg1) &&
+ 			 state->regs[src->reg1].kind == TSR_KIND_CONST)
+ 			imm_value = state->regs[src->reg1].imm_value;
+@@ -408,7 +408,7 @@ static void update_insn_state_x86(struct type_state *state,
+ 		tsr->lifetime_end = 0;
+ 
+ 		if (src->imm)
+-			imm_value = src->offset;
++			imm_value = src->imm_value;
+ 		else if (has_reg_type(state, src->reg1) &&
+ 			 state->regs[src->reg1].kind == TSR_KIND_CONST)
+ 			imm_value = state->regs[src->reg1].imm_value;
+@@ -589,7 +589,7 @@ static void update_insn_state_x86(struct type_state *state,
+ 
+ 		if (src->imm) {
+ 			tsr->kind = TSR_KIND_CONST;
+-			tsr->imm_value = (s64)src->offset;
++			tsr->imm_value = src->imm_value;
+ 			tsr->offset = 0;
+ 			tsr->ok = true;
+ 
+@@ -967,8 +967,11 @@ static void extract_op_location_x86(const struct arch *arch,
+ 		if (*s == arch->objdump.register_char) {
+ 			op_loc->reg1 = arch__dwarf_regnum(arch, s);
+ 		} else if (*s == arch->objdump.imm_char) {
+-			op_loc->offset = strtol(s + 1, &p, 0);
+-			if (p && p != s + 1)
++			const char *start = s + 1;
++			u64 imm = strtoull(start, &p, 0);
++
++			op_loc->imm_value = imm;
++			if (p && p != start)
+ 				op_loc->imm = true;
+ 		} else if (*s == '-' || strstarts(s, "0x")) {
+ 			u64 offset = strtoull(s, NULL, 0);
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index 58adf7f84146be5f..71a616b5ed1e1358 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -530,7 +530,8 @@ int arch__dwarf_regnum(const struct arch *arch, const char *str);
+  * struct annotated_op_loc - Location info of instruction operand
+  * @reg1: First register in the operand
+  * @reg2: Second register in the operand
+- * @offset: Memory access offset in the operand
++ * @imm_value: Immediate value of an x86 operand
++ * @offset: Memory access offset, or an ARM64 or x86 %gs: immediate
+  * @segment: Segment selector register
+  * @addr_mode: Addressing mode, only valid if @mem_ref is true
+  * @extend_type: Operand extension type (enum annotated_ext_type)
+@@ -538,11 +539,12 @@ int arch__dwarf_regnum(const struct arch *arch, const char *str);
+  * @amount: Number of bits to shift
+  * @mem_ref: Whether the operand accesses memory
+  * @multi_regs: Whether the second register is used
+- * @imm: Whether the operand is an immediate value (in offset)
++ * @imm: Whether the operand is an immediate value
+  */
+ struct annotated_op_loc {
+ 	int reg1;
+ 	int reg2;
++	s64 imm_value;
+ 	int offset;
+ 	u8 segment;
+ 	u8 addr_mode;
 -- 
 2.56.0
 
