@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795471261;
-	b=zThDMAtLtVuiIj8wquRn/MEe++09I+kYQ3h2xOaMLikJ4xKbundKewQvHLyNf8UPsZCJ
-	 moT8bjbPB8qQonqHjb5p7bXTS1kQjj8mv3RNmYVjlog1rcNNZKvnO1JfvRhB2O9D5Kuhq
-	 wDD6OpObGfTRiMckwnlaR/Hj/NfcppUbp2X7JVjs9n7L3LRvWLSl8qf7VQAYargViNDiC
-	 BlwbhBZxzdWd+8k8w5U0ozso+35L4gnbhW9aG6ZXdRdqsyE835Km7Jw5Dw2JEQcc2/xBl
-	 U9A8Cl2ZUJqx33d3Dk7wbuBw9HjnZzwuxSDjVFsA8Rkw63hh1LRhwYkvblbu8de0NyA==
+	t=1795471271;
+	b=qpCMWwmh+xUKMs8AsRK58F+Ib6hgeNt6lIK2nemWjE08sFmjU1HwnvdnnhW7QEjJqDWh
+	 QvCHOrngmqePkOh++CXOk02E0QAncVnRFJLm2eTDwoNNHR7uAJNdV5mrJKBqn7HUkOoRR
+	 VsLAGyd/LzLU592BmgPgylWP5SYIk9vThhs/dPeTbAYEM9dUUnl3t84+3UfuZyR5jHsBf
+	 yXcaZTGbkKctmw3oNKvrAvJTa7zy8wz5yB0Goa6CK+P5hoTXYq7FSQlfLBFUJBIDrieVX
+	 EI16zvhTRCktsnyqyaR7p0J14oydfDKh2Z+bUpvimWm+KyKD7iwMDu9uBcumFYhbHyA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795471261;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795471271;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=SAptmRo7VFZs3YBboXIuiBByYjCRlZPrUdwklrfyjD0=;
-	b=zsW7R0CeMs8RRBD75zDhFjvnYh0aM7izLUkeligpBjLmqjcvckMQQlFFi08vObakdI6t
-	 macJYAGr/HKH1m/ciH7eAzeu5qIepkh9joYCZKd38niemyVkI0tecAuaUj6EMRZrVNbBW
-	 1BoKvu6sLNpWpAp891ynhZZvKNEi1Rc1itb4cyvTrOFbGRCNWrIc3C+4YqSpNWrkj5pze
-	 QiBd/parW5syLTZsCtM9EPTXK2fA0sU6hRmmFBibfGme02rpFDGOr5NgVANos8rBftF8/
-	 hjoc53vKsgxJI3Ely4tMsER7O89cbfUTcGAXScHhpXTyeHs9+6fimZH1N2Jc71GGX4g==
+	bh=1j8VXhTVKIF04Lq/RG5Pb16hiru/FP0yKgb9wxd0Glg=;
+	b=TlmBHrp5a/BDQZbxhJjwdwgQ34HixXhI41SoFMWTKmwiK1etDN9NOAXfY6VrQiElG5G0
+	 9RQa+2PPJpiEdBVvzDYOzjKagl9ZjpyqR0Ic6SvDsY7CtUTB2sraLDs4uSJxp6FoxIA28
+	 +zQQ4xgGwdCWLK9keSk/jq0r+2Pw2sbNEi50ONzvs7d8qIiMVgdMPxX+GFNxZFr5ulFfn
+	 Y8rNRBkXtYOz4/H99rgK1lcZuumpIuH3MoqXNjpIZVp8bBVhG4E37Dd2lxcDATKykXqlz
+	 ZKioguVT2NSh/m6cJCE3M1IYfM1up1ORc0gIZUb+Mzjya0UVrIrHm+fCitz24Lrdpzw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hf5QoDnF;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KjfpFLv4;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC1B606A31E;
-	Mon, 23 Nov 2026 22:01:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8264D606A327;
+	Mon, 23 Nov 2026 22:01:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=hf5QoDnF
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F34021F000C4;
-	Mon, 23 Nov 2026 22:00:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KjfpFLv4
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91E0E1F000CF;
+	Mon, 23 Nov 2026 22:01:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795471261;
-	bh=SAptmRo7VFZs3YBboXIuiBByYjCRlZPrUdwklrfyjD0=;
+	s=k20260515; t=1795471271;
+	bh=1j8VXhTVKIF04Lq/RG5Pb16hiru/FP0yKgb9wxd0Glg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=hf5QoDnFHatZHi92Wvu33sdDkJhxBHIHZUQMWmhDPImgULFPV6Pj+N9x67rGF6sk/
-	 P0jdQupCMTWIP2jLp/bwM0fKdxQHWTRCNUc2doizP9kIGseWzoynbxT0Qousl3Aqx4
-	 HNAZdMnzYfq3GmEUQ+q85dJOYmtww8ei5b3aHRstDPYoDj6hGrcz/6BulPrJyiLCjG
-	 xM+48Bnq0P6NN6AQ5VACAhyp/nQpuPXHZcKMM8d2OBLVDnJTMp6ViIhkj49aMUxEJm
-	 coh+60Q+mBQNsaYgDzBzAUJ17F7GAtabt976g8Ghn3pfBzoKED4bKz3Sykh4cJP6CO
-	 m+u9/HQ14nc7w==
+	b=KjfpFLv402VtFNT81MNjRYjMu+DLccbsyF1GEjRMbSFHUaE0mD0uJF7ZVaKoOSY3z
+	 2aKfdHrpL665ht9SAovrPCEj5Dy8ACHgT+gqyu9ABIIbNnG/zkTTfJmUdDoL+k1HmC
+	 oeYfc852cxz4IZgA7tUMOvi+g76cIyZ1ge4NxdnJQtGT0Pu1auKSBCzzNqMNXpzU/h
+	 6ayvvccbYgFRfHfehtRCVtuAITMGlSjliuvC/6wnoZDoSX9TrxmTng7OprslqbCRXG
+	 jl5yPNevC9+i5HQ4+9HO4TCPGl3YZJ40kL1q2KYp4W5bsIl+74XSX6TbtKEuzBHKRi
+	 iTPRbxcA0kpNw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v12 09/19] perf test: Exercise DW_OP_addrx global variables
-Date: Mon, 23 Nov 2026 19:00:14 -0300
-Message-ID: <20261123220024.14891-10-acme@kernel.org>
+Subject: [PATCH v12 12/19] perf test: Exercise the annotate stats output
+Date: Mon, 23 Nov 2026 19:00:17 -0300
+Message-ID: <20261123220024.14891-13-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261123220024.14891-1-acme@kernel.org>
 References: <20261123220024.14891-1-acme@kernel.org>
@@ -70,60 +70,53 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-clang emits DW_AT_location with DW_OP_addrx for globals in DWARF 5, gcc
-emits DW_OP_addr.  The global_data workload keeps a zero initialized
-struct in .bss: at run time it sits past the file backed mapping, where
-the by-name fallback through the thread maps cannot find it, so only the
-DWARF address lookup resolves it.  The test checks that its three member
-accesses are annotated, so the DW_OP_addrx path is exercised when perf
-is built with clang and DWARF 5 (e.g. scripts/coverage.sh with
-DWARF_VERSION=5), and the DW_OP_addr one with gcc.
+Add a shell test for the --insn-stat and --type-stat output printed
+once, after the annotations, and for the warning when --type-stat is
+used without --data-type.  The instruction stats run with one and with
+two events and are checked against the per-instruction rows, so a total
+that counts only the first event, or does not match the rows, fails; the
+data type total is checked against its counters.  A repeated section
+also fails.
 
-It skips on 32-bit PIE builds, which reach static globals relative to
-the GOT base register, and the resolver does not track that.
+Operand extraction is implemented only for x86, arm64 and powerpc, so
+other architectures skip rather than fail on the zero totals it would
+leave.  The bad counters check compares numerically: when every access
+resolves no counter line is printed, and awks that follow POSIX would
+then compare "0" to the unset sum as strings.
 
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/builtin-test.c            |  1 +
- tools/perf/tests/shell/data_type_global.sh | 73 ++++++++++++++++++++++
- tools/perf/tests/tests.h                   |  1 +
- tools/perf/tests/workloads/Build           |  2 +
- tools/perf/tests/workloads/global_data.c   | 57 +++++++++++++++++
- 5 files changed, 134 insertions(+)
- create mode 100755 tools/perf/tests/shell/data_type_global.sh
- create mode 100644 tools/perf/tests/workloads/global_data.c
+ tools/perf/tests/shell/annotate_stats.sh | 184 +++++++++++++++++++++++
+ 1 file changed, 184 insertions(+)
+ create mode 100755 tools/perf/tests/shell/annotate_stats.sh
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index a27baf3a819ccf36..42e85d1b1420f0a7 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -214,6 +214,7 @@ static struct test_workload *workloads[] = {
- 	&workload__deterministic,
- 	&workload__callchain,
- 	&workload__false_sharing,
-+	&workload__global_data,
- 
- #ifdef HAVE_RUST_SUPPORT
- 	&workload__code_with_type,
-diff --git a/tools/perf/tests/shell/data_type_global.sh b/tools/perf/tests/shell/data_type_global.sh
+diff --git a/tools/perf/tests/shell/annotate_stats.sh b/tools/perf/tests/shell/annotate_stats.sh
 new file mode 100755
-index 0000000000000000..14f57d5a1b26a5ea
+index 0000000000000000..656a4c510a8d890f
 --- /dev/null
-+++ b/tools/perf/tests/shell/data_type_global.sh
-@@ -0,0 +1,73 @@
++++ b/tools/perf/tests/shell/annotate_stats.sh
+@@ -0,0 +1,184 @@
 +#!/bin/bash
-+# perf data type profiling test for a global variable
++# perf annotate instruction stats test
 +# SPDX-License-Identifier: GPL-2.0
 +
 +set -e
 +
++shelldir=$(dirname "$0")
++. "${shelldir}"/lib/perf_has_symbol.sh
++
++skip_test_missing_symbol datasym
++
 +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++perfone=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++perftwo=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
 +perfout=$(mktemp /tmp/__perf_test.perf.out.XXXXX)
++perfout2=$(mktemp /tmp/__perf_test.perf.out.XXXXX)
 +perferr=$(mktemp /tmp/__perf_test.perf.err.XXXXX)
 +
 +cleanup()
 +{
-+	rm -f "$perfdata" "$perfout" "$perferr"
++	rm -f "$perfdata" "$perfone" "$perftwo" "$perfout" "$perfout2" "$perferr"
 +	trap - EXIT TERM INT
 +}
 +
@@ -141,141 +134,152 @@ index 0000000000000000..14f57d5a1b26a5ea
 +	exit 2
 +fi
 +
-+# 32-bit x86 PIE reaches static globals relative to the GOT base register,
-+# which the resolver does not track; e_type's low byte is at 16 on LE x86.
-+perf_bin=$(command -v perf)
-+if [ "$(od -An -tx1 -j4 -N1 "$perf_bin" | tr -d ' ')" = 01 ] &&
-+   [ "$(od -An -tx1 -j16 -N1 "$perf_bin" | tr -d ' ')" = 03 ]; then
-+	echo "Skip: 32-bit PIE uses GOT-relative global accesses"
++# The instruction stats are counted by the data type resolver, whose
++# operand extraction is implemented only for x86, arm64 and powerpc;
++# elsewhere the totals are zero by design, not because of a bug.
++case "$(uname -m)" in
++	x86_64 | i[3456]86 | aarch64 | ppc64 | ppc64le) ;;
++	*)
++		echo "Skip: no instruction operand extraction for $(uname -m)"
++		cleanup
++		exit 2
++		;;
++esac
++
++if ! perf record -o "$perfone" -e cpu-clock -- perf test -w datasym \
++		> /dev/null 2>&1 ||
++   ! perf record -o "$perftwo" -e cpu-clock -e task-clock -- \
++		perf test -w datasym > /dev/null 2>&1; then
++	echo "FAIL: perf record"
 +	cleanup
-+	exit 2
++	exit 1
 +fi
 +
-+# No point in recording if the PMU cannot do memory events.
++if ! perf annotate --code-with-type --insn-stat -i "$perfone" --stdio \
++		--percent-limit 1 datasym > "$perfout"; then
++	echo "FAIL: perf annotate"
++	cleanup
++	exit 1
++fi
++
++if ! perf annotate --code-with-type --insn-stat -i "$perftwo" --stdio \
++		--percent-limit 1 datasym > "$perfout2"; then
++	echo "FAIL: perf annotate"
++	cleanup
++	exit 1
++fi
++
++# The instruction stats are accounted while the instructions are
++# displayed; printing them before the display loop shows zeros.  A single
++# positive total would also accept a stale first event's total, so check
++# that the section is printed once, after the annotations.
++if ! awk '
++	/^Annotate Instruction stats/ { sections++ }
++	sections && /^[[:space:]]*[0-9]+\.[0-9]+ : / { late = 1 }
++	END { exit !(sections == 1 && !late) }
++' "$perfout2"; then
++	echo "FAIL: instruction stats not printed once after the annotations"
++	tail -n 30 "$perfout2"
++	cleanup
++	exit 1
++fi
++
++# Each event annotates the same instructions, so the two-event total is
++# twice the one-event total.
++one_total=$(awk '/^total / { t = $2; sub(/,/, "", t); print t; exit }' \
++	    "$perfout")
++two_total=$(awk '/^total / { t = $2; sub(/,/, "", t); print t; exit }' \
++	    "$perfout2")
++if [ -z "$one_total" ] || [ -z "$two_total" ] ||
++   [ "$two_total" -le 0 ] || [ "$two_total" -ne $((2 * one_total)) ]; then
++	echo "FAIL: instruction stats do not count every event" \
++	     "(one event: ${one_total:-none}, two events: ${two_total:-none})"
++	tail -n 30 "$perfout2"
++	cleanup
++	exit 1
++fi
++
++# The totals are the sums of the per-instruction rows.
++if ! awk '
++	/^total / {
++		t = $2; o = $4; b = $7
++		sub(/,/, "", t); sub(/,/, "", o); sub(/,/, "", b)
++		total = t; ok = o; bad = b; next
++	}
++	/^  .*: +[0-9]+ +[0-9]+$/ { good += $(NF - 1); bads += $NF }
++	END {
++		exit !(total > 0 && total == good + bads &&
++		       ok == good && bad == bads)
++	}
++' "$perfout2"; then
++	echo "FAIL: instruction stats do not add up"
++	tail -n 30 "$perfout2"
++	cleanup
++	exit 1
++fi
++
++# No point in recording the data type samples if the PMU cannot do memory
++# events.
 +if ! perf mem record -o /dev/null -- true 2>/dev/null; then
 +	echo "Skip: cannot record memory events on this PMU"
 +	cleanup
 +	exit 2
 +fi
 +
-+if ! perf mem record -o "$perfdata" -- perf test -w global_data 1 \
-+		> /dev/null 2> "$perferr"; then
++if ! perf mem record -o "$perfdata" -- perf test -w datasym > /dev/null 2>&1; then
 +	echo "FAIL: perf mem record"
-+	cat "$perferr"
 +	cleanup
 +	exit 1
 +fi
 +
-+if ! perf annotate --code-with-type -i "$perfdata" --stdio \
-+		--percent-limit 1 > "$perfout"; then
-+	echo "FAIL: perf annotate"
++# The data type stats are only printed with --data-type, and must be
++# accounted like the instruction stats above.
++if ! perf annotate --data-type --type-stat -i "$perfdata" --stdio \
++		> "$perfout"; then
++	echo "FAIL: perf annotate --data-type --type-stat"
 +	cleanup
 +	exit 1
 +fi
 +
-+for member in "+0 (saddr)" "+0x4 (daddr)" "+0x8 (bytes)"; do
-+	if ! grep -Fq "# data-type: struct conn ${member}" "$perfout"; then
-+		echo "FAIL: member ${member} not resolved"
-+		grep 'struct conn' "$perfout" || true
-+		cleanup
-+		exit 1
-+	fi
-+done
++if ! awk '
++	/^Annotate data type stats:/ { sections++ }
++	sections && /^Annotate type: / { late = 1 }
++	END { exit !(sections == 1 && !late) }
++' "$perfout"; then
++	echo "FAIL: data type stats not printed once after the annotations"
++	tail -n 30 "$perfout"
++	cleanup
++	exit 1
++fi
 +
-+echo "global variable resolved"
-+cleanup
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 963cb34acd345153..63d49a960eab8f3c 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -274,6 +274,7 @@ DECLARE_WORKLOAD(context_switch_loop);
- DECLARE_WORKLOAD(deterministic);
- DECLARE_WORKLOAD(callchain);
- DECLARE_WORKLOAD(false_sharing);
-+DECLARE_WORKLOAD(global_data);
- 
- #ifdef HAVE_RUST_SUPPORT
- DECLARE_WORKLOAD(code_with_type);
-diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-index 43cc4da6fb0786de..03017aaaaa0bec32 100644
---- a/tools/perf/tests/workloads/Build
-+++ b/tools/perf/tests/workloads/Build
-@@ -17,6 +17,7 @@ perf-test-y += context_switch_loop.o
- perf-test-y += deterministic.o
- perf-test-y += callchain.o
- perf-test-y += false_sharing.o
-+perf-test-y += global_data.o
- 
- ifeq ($(CONFIG_RUST_SUPPORT),y)
-     perf-test-y += code_with_type.o
-@@ -35,3 +36,4 @@ CFLAGS_deterministic.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_named_threads.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_callchain.o        = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_false_sharing.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-+CFLAGS_global_data.o      = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-diff --git a/tools/perf/tests/workloads/global_data.c b/tools/perf/tests/workloads/global_data.c
-new file mode 100644
-index 0000000000000000..5973f7bb16fd007c
---- /dev/null
-+++ b/tools/perf/tests/workloads/global_data.c
-@@ -0,0 +1,57 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * A zero initialized global struct, so it lands in .bss, past the file
-+ * backed end of the last segment: at run time it sits in an anonymous
-+ * mapping that the thread maps do not name, so only the DWARF address
-+ * lookup finds it.  clang describes its address with DW_OP_addrx in
-+ * DWARF 5, gcc with DW_OP_addr.
-+ *
-+ * 'perf mem record' of this workload followed by 'perf annotate
-+ * --code-with-type' (see tests/shell/data_type_global.sh) resolves the
-+ * accesses to struct conn.
-+ */
-+#include <signal.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <linux/compiler.h>
-+#include "../tests.h"
-+
-+struct conn {
-+	int saddr;
-+	int daddr;
-+	long bytes;
-+};
-+
-+static volatile struct conn conn;
-+static volatile unsigned long conn_sink;
-+static volatile sig_atomic_t done;
-+
-+static void sighandler(int sig __maybe_unused)
-+{
-+	done = 1;
-+}
-+
-+static int global_data(int argc, const char **argv)
-+{
-+	unsigned long sum = 0;
-+	unsigned int i = 0;
-+	int sec = 1;
-+
-+	if (argc > 0)
-+		sec = atoi(argv[0]);
-+
-+	signal(SIGINT, sighandler);
-+	signal(SIGALRM, sighandler);
-+	alarm(sec);
-+
-+	while (!done) {
-+		conn.saddr = i;
-+		conn.daddr = i + 1;
-+		sum += conn.bytes;
-+		i++;
++# The total is the sum of the bad counters and of the good ones.
++if ! awk '
++	/^Annotate data type stats:/ { stats = 1; next }
++	!stats { next }
++	/^total / {
++		t = $2; o = $4; b = $7
++		sub(/,/, "", t); sub(/,/, "", o); sub(/,/, "", b)
++		total = t; ok = o; bad = b; next
 +	}
-+	conn_sink = sum;
-+	return 0;
-+}
++	/^[[:space:]]*[0-9]+ : / && $3 != "insn_track" { fields += $1 }
++	END { exit !(total > 0 && total == ok + bad && bad + 0 == fields + 0) }
++' "$perfout"; then
++	echo "FAIL: data type stats do not add up"
++	tail -n 30 "$perfout"
++	cleanup
++	exit 1
++fi
 +
-+DEFINE_WORKLOAD(global_data);
++if ! perf annotate --type-stat -i "$perfdata" --stdio > /dev/null 2> "$perferr" ||
++   ! grep -Fxq "Warning: --type-stat needs --data-type" "$perferr"; then
++	echo "FAIL: missing --type-stat warning"
++	tail -n 30 "$perferr"
++	cleanup
++	exit 1
++fi
++
++echo "instruction stats accounted"
++cleanup
 -- 
 2.56.0
 
