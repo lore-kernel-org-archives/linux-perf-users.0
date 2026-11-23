@@ -1,45 +1,60 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795395418;
-	b=MjdS9M9d+mR3aFIyKGnmAnquUgQxocTrEiiz9KhL1Wkij3jyaKBIW6+iqTpLDFFHnthG
-	 A27mDAJLdXC2KNQLEHuGbQMHrP8HN3HZiCM7+38dKCpJS2XN4iEE7jKJWR2io/ogD7zol
-	 kzttsHV0TPk46jBshZVrKJIT4hCA/o83ARqS2Kkkgt0ITKwwppF1Goh/DNHaOXvOhhxDs
-	 T/OoNiPtU/5xuLpiX4QzSPyA7XMLwoQddMVtOr8a2M1QkqvrObbF3khCYHiUm0zsIOTbR
-	 H4Tf9VH79GwBtDLfhPk0ItiR/PWJTwzF3QnYvO/BVE9XIz0bgb42tfAcT7pkZMOpz4w==
+	t=1795395833;
+	b=ZqZ8pBUv8DqE9uT/TEW16E5O5ZdKYBcPFn+KWi+yP2HLg8I9yoX8CXKhHAy3VXv0xyBJ
+	 8Fu5WC1boUDpcF+Rj7QNYchqgZOz3V2DcYgCB0JCTd38Ct6yhV7aZoSCzx6DGomTpUZL+
+	 P7JbebNghFopmWBgNzwzu36QuRlrhM5hiQjcpxmDMSLWh64VwKAmuE62ZYU5hTduor7e2
+	 om1tmwdg+vuys7wSApPwZH2UM1N8rUrJsvkurJLdgxXMe8as9yxeYAOVbXDUQeKmchqfm
+	 4JvhbeoqxV4sjg+VY1azJ0n/moYXDP2zKlNqS74REpKoQeHpcQ1fIMoRFBisK2tG4jQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795395418;
-	h=Received:DKIM-Signature:Content-Type:MIME-Version:Message-Id:
-	 In-Reply-To:References:Subject:From:To:Cc:Date;
-	bh=KA+34nbUB7XMJi78mwUnZXOmvWf/xqj1Zhx5rlyn5JE=;
-	b=l+hBIR5RMDqVq/0jYfzhfkbQLXiymteT22e65PI+3XxmQ6J9nYJO5wTpVHo9mannWkAe
-	 WWcMeWN0O+aF/Eyg3AO++joRuBrgi/VWXX+yhz6QVX//8KRtYQhFCPylhMiYfUFAPEsaL
-	 XpaztUNKuSViTmIYFjYSwhNEmFFkcN0TItHYsu8A31pX3LCK1Jez9/eNZV1tqJUCoVDu9
-	 X9Ow8Y1Bz7d4JAcSW4h0RJ7t7lyROtrYqz8PdlrSx6h3GANorStWHMOl6Ue8O9LOEoSIy
-	 wrgWganVsp0hZXLOBs9mNwgqav9+ZckA86H4+KjdHV79Z2rXPJsMsgZag2mPt9kQgdw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795395833;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=QRWNLAhSEzQ2ghJ+cYfCgpoK47yFn5MZzdy8l+IAuj4=;
+	b=xqVWY1isEdNUjnmVjCGPo2uiiyJJFraSE6qhVs2p9zcZKsHg1f6gkGK3usy2CvZ7X2Li
+	 giNASfzs5Yqv9cE3bMoWuVnmYFVtkQknYqwLFFdHc88I0acfEUHCRzBzk43twXJfSXFVS
+	 WJZnsVQdu87G2FvcDkz/Ai7dHxZfzUqFFisqAtw7KqdLogXBIf69sYub8KOeC3CpuhzvF
+	 150SIrL8CPNl1mQBmE+e0ga+6nUue/cRG3q5o1SRXOYJENeVBOnA/hChkRZVByisAKNVQ
+	 tglElyQ2M/zaAx8VHXVpkHA68Jg6QV9xL+VMy/F32LHil9OdoBItmSrurtnU3Rgn1Wg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=fail reason="signature verification failed" header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Wwd4xK3u;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PuB5Knwe;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BAD5606A31A;
-	Mon, 23 Nov 2026 00:56:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A1D606A31A;
+	Mon, 23 Nov 2026 01:03:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Wwd4xK3u
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2317B1F000D0;
-	Mon, 23 Nov 2026 00:56:54 +0000 (UTC)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PuB5Knwe
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA3CF1F000C4;
+	Mon, 23 Nov 2026 01:03:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795395418;
-	bh=KA+34nbUB7XMJi78mwUnZXOmvWf/xqj1Zhx5rlyn5JE=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=Wwd4xK3ubjWx19oPCMp9zWlFrE8juKoWZFCxK/5NkekvdxK/qa51b1bI863dR+Jr0
-	 hNY6ijfHa2GZJbWR8L8ohbm82ZIb9vGJLPfnKs0uxlhMz89ds16bo4bjfo7nZzZIvm
-	 CqZ9VBAyrw25Uq0Hnrd96UoU6t7L6WYhpxkClU+iV+3FdDtheHJs0/CcfA5ywqMRip
-	 JknvBJjAGgj29NOZsa/IIqFVqtnBbpCQEJpo98T/sTgLbY88wLRq256Er7gXFaEoa0
-	 3RryNB9N+JudV0I8P2nR949MUFqU+sE/kBpxBYOfmJkfdc0PIREHhrXnQ3vPafsL9R
-	 16I8CrkXe55Eg==
-Content-Type: multipart/mixed; boundary="===============3299975069991723205=="
+	s=k20260515; t=1795395833;
+	bh=QRWNLAhSEzQ2ghJ+cYfCgpoK47yFn5MZzdy8l+IAuj4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=PuB5Knwe9aGW2QR7iMktNczzY8pkJpJT2Abl+hvyV5SVSoK2b4GZRxLDOTfthB0n/
+	 uC+SWECHZne9iyzcifSUCyPGvj+wbrAdKBirinJ+E2lHaEvd/CS9PnVbkQGkhlvwxb
+	 HXM4tpJJB90rLJPOXkOdKbODBAEpsrhgYfKRAwi3uUidyIfwh0JM6Wp13IFlakTQer
+	 ZHbQuh1IvRkVdZ0s/OA2R55yGFp15pGmZ3mMSDdDhRzJcpaSKNLCoDYrJRUQs0N3ML
+	 TnPzD5QKwdRWU36CzZLxMbpZozYwbdn7FvSUdaicHDSxnKORuvFYmIYTFEDcLLN/XR
+	 MGQtn0XuzNVHQ==
+Date: Sun, 22 Nov 2026 17:03:51 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Alireza Haghdoost <haghdoost@uber.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 5/7] perf script: Add --lazy-load-symbols to load
+ symbol names lazily
+Message-ID: <awOQ90bOx9fbW8vo@google.com>
+References: <20261121-perf-symbol-memory-send-v8-0-370561cbb5a7@uber.com>
+ <20261121-perf-symbol-memory-send-v8-5-370561cbb5a7@uber.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -49,208 +64,270 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Message-Id: <446a1b870b63e07c6456e140f4fc260d09bd33cbc94fe9dbed4126be9c1e9844@mail.kernel.org>
-In-Reply-To: <20261122235757.3456048-10-irogers@google.com>
-References: <20261122235757.3456048-10-irogers@google.com>
-Subject: Re: [RFC PATCH v1 09/11] riscv/unwind: Add Minimal DWARF CFI kernel unwinder
-From: bot+bpf-ci@kernel.org
-To: irogers@google.com,linux-kernel@vger.kernel.org,linux-trace-kernel@vger.kernel.org,linux-arch@vger.kernel.org
-Cc: jpoimboe@kernel.org,rostedt@goodmis.org,peterz@infradead.org,mingo@redhat.com,tglx@kernel.org,bp@alien8.de,dave.hansen@linux.intel.com,x86@kernel.org,catalin.marinas@arm.com,will@kernel.org,mark.rutland@arm.com,linux-arm-kernel@lists.infradead.org,pjw@kernel.org,palmer@dabbelt.com,aou@eecs.berkeley.edu,alex@ghiti.fr,linux-riscv@lists.infradead.org,acme@kernel.org,namhyung@kernel.org,linux-perf-users@vger.kernel.org,mhiramat@kernel.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,bpf@vger.kernel.org,nathan@kernel.org,nsc@kernel.org,linux-kbuild@vger.kernel.org,ojeda@kernel.org,rust-for-linux@vger.kernel.org,ardb@kernel.org,linux-efi@vger.kernel.org,maz@kernel.org,oupton@kernel.org,kvmarm@lists.linux.dev,shuah@kernel.org,linux-kselftest@vger.kernel.org,indu.bhagat@oracle.com,jremus@linux.ibm.com,wnliu@google.com,dylanbhatch@google.com,irogers@google.com,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mas
- on@kernel.org,ihor.solodrai@linux.dev
-Date: Mon, 23 Nov 2026 00:56:54 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20261121-perf-symbol-memory-send-v8-5-370561cbb5a7@uber.com>
 
---===============3299975069991723205==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+On Sat, Nov 21, 2026 at 08:41:05AM -0800, Alireza Haghdoost wrote:
+> This patch adds a --lazy-load-symbols option to perf script. With it,
+> the ELF loader creates userspace .symtab and .dynsym symbols with lazy
+> names, and perf reads a name only when a lookup returns that symbol.
+> Eager loading stays the default.
+> 
+> perf script loads the whole ELF symbol table of every DSO that appears
+> in a sample and keeps every symbol, with its demangled name, until exit.
+> Most of those symbols are never sampled, and their names take most of
+> the memory. On a large profile this is the main memory cost of perf
+> script, and in a memory-limited cgroup it gets perf OOM-killed.
+> 
+> The loader still creates every symbol, so end fixup, duplicate
+> selection, PLT synthesis and IFUNC marking do not change. It uses lazy
+> names only if the string table is stored as is in the symbol table file,
+> since names are read from it with pread().
+> 
+> A few names are still read at load time: aliases that duplicate
+> selection can tell apart only by name, such as the .dynsym copies of
+> .symtab symbols, and IFUNC symbols, whose names PLT synthesis uses.
+> 
+> The offsets are only valid in the file that perf loaded, so the loader
+> records the file and its string tables with dso__set_lazy_file(), and
+> perf checks the file, as the previous patch describes, before it reads
+> names from it.
+> 
+> The kernel, modules, PPC64 .opd and .gnu_debugdata still load names
+> eagerly.
+> 
+> On a 45,073-sample callchain profile of a large C++ service (about 1M
+> symbols), lazy loading cuts max RSS from 327 MiB to 174 MiB, with
+> identical output. It saves little run time, 3.56 seconds against 3.75,
+> because one of the binaries exports most of its symbols, and duplicate
+> selection reads the names of each .dynsym copy and of the .symtab
+> symbol that it copies.
+> 
+> Signed-off-by: Alireza Haghdoost <haghdoost@uber.com>
+> ---
 
-> riscv/unwind: Add Minimal DWARF CFI kernel unwinder
+Only a few nitpicks.
 
-TL;DR:
-- struct mod_arch_specific may be redefined (build error) with
-  CONFIG_MODULES=n
-- Stack walk may stop at IRQ stack top, losing frames
-- return_address(n) may be off by one frame (unverified)
-- fprobe comment nit
 
-> diff --git a/arch/riscv/include/asm/module.h b/arch/riscv/include/asm/module.h
-> --- a/arch/riscv/include/asm/module.h
-> +++ b/arch/riscv/include/asm/module.h
-
-[ ... ]
-
-> +#if defined(CONFIG_MODULE_SECTIONS) || defined(CONFIG_UNWINDER_DWARF_CFI)
->  struct mod_arch_specific {
-> +#ifdef CONFIG_MODULE_SECTIONS
->  	struct mod_section got;
->  	struct mod_section plt;
->  	struct mod_section got_plt;
-> +#endif
-> +#ifdef CONFIG_UNWINDER_DWARF_CFI
-> +	struct mod_dwarf_cfi_index __rcu *dwarf_cfi_index;
-> +#endif
->  };
-> +#endif
-
-Can this define struct mod_arch_specific twice when CONFIG_MODULES=n?
-
-UNWINDER_DWARF_CFI only does 'select HAVE_MOD_ARCH_SPECIFIC if MODULES', and
-MODULE_SECTIONS is selected by RELOCATABLE only 'if MODULES'.  With
-CONFIG_MODULES=n and CONFIG_UNWINDER_DWARF_CFI=y, CONFIG_HAVE_MOD_ARCH_SPECIFIC
-is unset, so include/asm-generic/module.h (included first) already provides:
-
-	#ifndef CONFIG_HAVE_MOD_ARCH_SPECIFIC
-	struct mod_arch_specific
-	{
-	};
-	#endif
-
-include/linux/module.h includes <asm/module.h> even with CONFIG_MODULES=n, so
-the block above would then fail with a redefinition of struct
-mod_arch_specific.
-
-Before this patch, MODULE_SECTIONS guarded the struct and also selected
-HAVE_MOD_ARCH_SPECIFIC, so the two always agreed.
-
-Would guarding the struct with CONFIG_HAVE_MOD_ARCH_SPECIFIC, adding
-'&& defined(CONFIG_MODULES)' to the UNWINDER_DWARF_CFI half of the condition,
-or selecting HAVE_MOD_ARCH_SPECIFIC unconditionally from UNWINDER_DWARF_CFI
-be better?
-
-> diff --git a/arch/riscv/kernel/probes/rethook_trampoline.S b/arch/riscv/kernel/probes/rethook_trampoline.S
-> --- a/arch/riscv/kernel/probes/rethook_trampoline.S
-> +++ b/arch/riscv/kernel/probes/rethook_trampoline.S
-
-[ ... ]
-
+>  tools/perf/Documentation/perf-script.txt |  11 ++++
+>  tools/perf/builtin-script.c              |   2 +
+>  tools/perf/util/symbol-elf.c             | 108 +++++++++++++++++++++++++++----
+>  3 files changed, 110 insertions(+), 11 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+> index f0228e784ced..4d04f5ecae8a 100644
+> --- a/tools/perf/Documentation/perf-script.txt
+> +++ b/tools/perf/Documentation/perf-script.txt
+> @@ -343,6 +343,17 @@ include::itrace.txt[]
+>  
+>          Default: 127
+>  
+> +--lazy-load-symbols::
+> +	Read and demangle userspace ELF symbol names only when perf needs
+> +	them. By default, perf reads every symbol name from each binary
+> +	referenced by a sample. This option reduces memory use when samples
+> +	reference only a small fraction of a large binary's symbols. The
+> +	names are read while perf script runs. If a binary cannot be opened
+> +	then, or no longer matches the one perf loaded, perf warns and shows
+> +	the symbols whose names it cannot read as unknown. A binary matches
+> +	if it has the same build ID and string table layout or, without a
+> +	build ID, if it is the same unchanged file.
+> +
+>  --ns::
+>  	Use 9 decimal places when displaying time (i.e. show the nanoseconds)
+>  
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index b6691ebb1b4e..88aaf9cfd132 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -4287,6 +4287,8 @@ int cmd_script(int argc, const char **argv)
+>  		     "Set the maximum stack depth when parsing the callchain, "
+>  		     "anything beyond the specified depth will be ignored. "
+>  		     "Default: kernel.perf_event_max_stack or " __stringify(PERF_MAX_STACK_DEPTH)),
+> +	OPT_BOOLEAN(0, "lazy-load-symbols", &symbol_conf.lazy_load_symbols,
+> +		    "Read symbol names only when they are needed"),
+>  	OPT_BOOLEAN(0, "reltime", &reltime, "Show time stamps relative to start"),
+>  	OPT_BOOLEAN(0, "deltatime", &deltatime, "Show time stamps relative to previous event"),
+>  	OPT_BOOLEAN('I', "show-info", &show_full_info,
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index 468a0695809e..76f4aecb8632 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+> @@ -1871,6 +1871,52 @@ void dso__load_symbol_names(struct dso *dso, struct symbol **syms, size_t nr)
+>  	}
+>  }
+>  
 > +/*
-> + * Under CONFIG_UNWINDER_DWARF_CFI, PT_EPC(sp) is seeded with
-> + * &arch_rethook_trampoline before rethook_trampoline_handler() overwrites
-> + * regs->epc with the restored caller PC prior to running rethook handlers,
-> + * enabling reliable CFI unwinding across kretprobe and fprobe return hooks.
+> + * symbols__fixup_duplicate() compares the names of symbols at the same
+> + * address only when their size, type and binding tie. Load those names.
 > + */
->  SYM_CODE_START(arch_rethook_trampoline)
-
-This isn't a bug, but does fprobe use rethook in this tree?
-
-FPROBE selects FUNCTION_GRAPH_TRACER and kernel/trace/fprobe.c has no rethook
-references; the only rethook_hook() caller is pre_handler_kretprobe() in
-kernel/kprobes.c.  So fprobe exits run through return_to_handler() in
-mcount.S rather than arch_rethook_trampoline().
-
-Should the comment mention only kretprobes, or point fprobe readers at
-return_to_handler?
-
-> diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
-> --- a/arch/riscv/kernel/stacktrace.c
-> +++ b/arch/riscv/kernel/stacktrace.c
-
-[ ... ]
-
-> +		if ((sp & (sizeof(long) - 1)) ||
-> +		    !riscv_stack_bounds(task, sp, /*size=*/0, &cur_low,
-> +					&cur_high))
-> +			return -EINVAL;
-
-Can this reject a valid sp at the top of the IRQ stack?
-
-The CFA check only rejects values above the top:
-
-	if ((cfa & (sizeof(long) - 1)) || cfa < cur_low || cfa > cur_high)
-
-and the call_on_irq_stack() transition accepts the top:
-
-	sp <= irq_low + IRQ_STACK_SIZE &&
-
-but riscv_stack_bounds(task, sp, /*size=*/0, ...) only matches when
-'addr < high'.
-
-When the walker reaches the function that call_on_irq_stack() called while it
-is still at its entry, sp is irq_stack_ptr + IRQ_STACK_SIZE, and the walk
-returns -EINVAL before it can use the entry row.
-
-One way to reach it:
-
-local_bh_enable()
-  do_softirq()
-    do_softirq_own_stack()
-      call_on_irq_stack(NULL, ___do_softirq)
-
-If an ftrace callback on ___do_softirq takes a stack trace (func_stack_trace,
-or an fprobe event with a stacktrace trigger), the ftrace_caller branch sets
-sp to the IRQ stack top, and riscv_stack_bounds() then matches none of the
-task, IRQ or overflow stacks.  The same happens for walks starting from
-ftrace_partial_regs() pt_regs where regs->sp is the top, for example
-fprobe/kprobe_multi BPF programs calling bpf_get_stackid()
--> perf_callchain_kernel() -> walk_stackframe(NULL, regs).  It also happens to
-__do_softirq() when ___do_softirq() tail-calls it.
-
-The trace then stops at ___do_softirq and loses call_on_irq_stack(),
-do_softirq_own_stack() and every frame on the task stack.  There is no
-memory-safety impact, and the old frame-pointer unwinder could not cross the
-IRQ stack either, but this defeats the call_on_irq_stack() transition support
-the commit message describes.
-
-Should riscv_stack_bounds() accept addr == high when size == 0, or should the
-IRQ stack top be special-cased here?
-
-[ ... ]
-
-> +noinline void notrace walk_stackframe(struct task_struct *task,
-> +				      struct pt_regs *regs,
-> +				      bool (*fn)(void *, unsigned long),
-> +				      void *arg)
+> +static int dso__load_alias_names(struct dso *dso, int fd)
 > +{
-> +	walk_stackframe_cfi(task, regs, fn, arg, /*require_reliable=*/false);
+> +	struct rb_node *nd = rb_first_cached(dso__symbols(dso));
+> +
+> +	while (nd) {
+> +		struct symbol *first = rb_entry(nd, struct symbol, rb_node);
+> +		struct rb_node *end = rb_next(nd), *a, *b;
+> +
+> +		while (end && rb_entry(end, struct symbol, rb_node)->start == first->start)
+> +			end = rb_next(end);
+> +
+> +		for (a = nd; a != end; a = rb_next(a)) {
+> +			for (b = rb_next(a); b != end; b = rb_next(b)) {
+> +				struct symbol *pair[2] = {
+> +					rb_entry(a, struct symbol, rb_node),
+> +					rb_entry(b, struct symbol, rb_node),
+> +				};
+> +
+> +				if (symbol__choice_needs_names(pair[0], pair[1]) &&
+> +				    read_symbol_names(dso, fd, pair, 2))
+> +					return -1;
+> +			}
+> +		}
+> +		nd = end;
+> +	}
+> +	return 0;
 > +}
+> +
+> +/* PLT synthesis names IRELATIVE slots after IFUNC symbols. Load those names. */
+> +static int dso__load_ifunc_names(struct dso *dso, int fd)
+> +{
+> +	struct symbol *pos;
+> +	struct rb_node *nd;
+> +
+> +	symbols__for_each_entry(dso__symbols(dso), pos, nd) {
+> +		if ((symbol__type(pos) == STT_GNU_IFUNC || symbol__ifunc_alias(pos)) &&
+> +		    read_symbol_names(dso, fd, &pos, 1))
+> +			return -1;
+> +	}
+> +	return 0;
+> +}
+> +
+>  static int
+>  dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+>  		       struct symsrc *runtime_ss, int kmodule, int dynsym)
+> @@ -1888,11 +1934,21 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+>  	GElf_Sym sym;
+>  	Elf_Scn *sec, *sec_strndx;
+>  	Elf *elf;
+> -	int nr = 0;
+> +	int nr = 0, nr_lazy = 0;
+>  	bool remap_kernel = false, adjust_kernel_syms = false;
+>  	u64 max_text_sh_offset = 0;
+>  	struct elf_phdr_cache phdr_cache = {};
+>  	struct elf_sec_cache_entry sec_cache[ELF_SEC_CACHE_SIZE];
+> +	/*
+> +	 * Names are read later from the file of dso__symtab_type(). The
+> +	 * .gnu_debugdata symbol table is a temporary file.
+> +	 */
+> +	bool lazy_allowed = symbol_conf.lazy_load_symbols && !dso__kernel(dso) &&
+> +			  !kmodule && syms_ss->type == dso__symtab_type(dso) &&
 
-Does return_address(n) now return an address one frame too far up with
-CONFIG_UNWINDER_DWARF_CFI=y?
-
-return_address() in arch/riscv/kernel/return_address.c does:
-
-	data.level = level + 3;
-	...
-	arch_stack_walk(save_return_addr, &data, current, NULL);
-
-The three skipped entries are arch_stack_walk, return_address and the caller
-of return_address, which assumes arch_stack_walk() has its own frame.  That
-held because CONFIG_FRAME_POINTER builds pass -fno-optimize-sibling-calls
-(top-level Makefile).  This patch makes FRAME_POINTER unavailable under
-UNWINDER_DWARF_CFI and adds -fomit-frame-pointer, so sibling-call
-optimisation is back on at -O2.
-
-arch_stack_walk() is a single forwarding call:
-
-	noinline noinstr void arch_stack_walk(stack_trace_consume_fn consume_entry,
-					      void *cookie,
-					      struct task_struct *task,
-					      struct pt_regs *regs)
-	{
-		walk_stackframe(task, regs, consume_entry, cookie);
-	}
-
-which is a candidate for 'tail walk_stackframe', leaving no frame of its own.
-The walk would then report return_address, F, G, H instead of arch_stack_walk,
-return_address, F, G, so return_address(n) yields __builtin_return_address(n+1)
-of F.
-
-That affects get_lock_parent_ip() (current->preempt_disable_ip, shown as
-"Preemption disabled at:") and the preemptirq tracepoints and the
-irqsoff/preemptoff tracers that use CALLER_ADDR1.  s390, which also unwinds
-without frame pointers, adds CFLAGS_stacktrace.o += -fno-optimize-sibling-calls
-in arch/s390/kernel/Makefile for this reason.
-
-I haven't verified this by compiling for RISC-V, so it is inferred from the
-compiler rules and the s390 precedent.  Would adding -fno-optimize-sibling-calls
-for stacktrace.o under UNWINDER_DWARF_CFI, having arch_stack_walk() call an
-always-inline walker directly, or adjusting the skip count in return_address()
-be appropriate?
+I think kmodule has DSO_SPACE__KERNEL so it's enough to check only
+dso__kernel().
 
 
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+> +			  syms_ss->type != DSO_BINARY_TYPE__GNU_DEBUGDATA &&
+> +			  !runtime_ss->opdsec;
+> +	bool lazy_names = false;
+> +	GElf_Shdr strshdr;
+>  
+>  	if (kmap && !kmaps)
+>  		return -1;
+> @@ -1928,6 +1984,17 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+>  	if (symstrs == NULL)
+>  		goto out_elf_end;
+>  
+> +	/*
+> +	 * Names are read with pread(), so the string table must be stored as
+> +	 * is, and later reads must find it in the same place.
+> +	 */
+> +	if (lazy_allowed && gelf_getshdr(sec, &strshdr) &&
+> +	    strshdr.sh_type == SHT_STRTAB && !(strshdr.sh_flags & SHF_COMPRESSED) &&
+> +	    !dso__set_lazy_file(dso, syms_ss->fd, dynsym,
+> +				&(struct dso_lazy_strtab){ shdr.sh_link, strshdr.sh_offset,
+> +							   strshdr.sh_size }))
+> +		lazy_names = true;
+> +
+>  	sec_strndx = elf_getscn(runtime_ss->elf, runtime_ss->ehdr.e_shstrndx);
+>  	if (sec_strndx == NULL)
+>  		goto out_elf_end;
+> @@ -2166,16 +2233,24 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+>  			}
+>  		}
+>  
+> -		if (!elf_name)
+> -			elf_name = elf_sym__name(&sym, symstrs);
+> -		demangled = dso__demangle_sym(dso, kmodule, elf_name);
+> -		if (demangled != NULL)
+> -			elf_name = demangled;
+> -
+> -		f = symbol__new(sym.st_value, sym.st_size,
+> -				GELF_ST_BIND(sym.st_info),
+> -				GELF_ST_TYPE(sym.st_info), elf_name);
+> -		free(demangled);
+> +		if (lazy_names && sym.st_name < strshdr.sh_size) {
+> +			f = symbol__new_lazy(sym.st_value, sym.st_size,
+> +					     GELF_ST_BIND(sym.st_info),
+> +					     GELF_ST_TYPE(sym.st_info),
+> +					     strshdr.sh_offset + sym.st_name);
+> +			nr_lazy++;
+> +		} else {
+> +			if (!elf_name)
+> +				elf_name = elf_sym__name(&sym, symstrs);
+> +			demangled = dso__demangle_sym(dso, kmodule, elf_name);
+> +			if (demangled != NULL)
+> +				elf_name = demangled;
+> +
+> +			f = symbol__new(sym.st_value, sym.st_size,
+> +					GELF_ST_BIND(sym.st_info),
+> +					GELF_ST_TYPE(sym.st_info), elf_name);
+> +			free(demangled);
+> +		}
+>  		if (!f)
+>  			goto out_elf_end;
+>  
+> @@ -2186,6 +2261,10 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+>  	}
+>  	dso__put(curr_dso);
+>  	elf_phdr_cache__exit(&phdr_cache);
+> +
+> +	if (lazy_names)
+> +		pr_debug("%s: %d %s symbols with lazy names\n", dso__long_name(dso),
+> +			 nr_lazy, dynsym ? ".dynsym" : ".symtab");
 
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/45087188604
---===============3299975069991723205==--
+I'm afraid it'd add many debug messages for -v which is often used for
+quick debugging.  Maybe pr_debug2() would be better.
+
+Also please put parenthesis for multi-line expressions even if it's in a
+statement.
+
+Thanks,
+Namhyung
+
+
+>  	return nr;
+>  out_elf_end:
+>  	dso__put(curr_dso);
+> @@ -2256,9 +2335,16 @@ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+>  	if (nr > 0) {
+>  		struct kmap *kmap = dso__kernel(dso) ? map__kmap(map) : NULL;
+>  		struct maps *kmaps = kmap ? map__kmaps(map) : NULL;
+> +		/* Lazy names are only in syms_ss, never in the kernel or modules. */
+> +		bool lazy = symbol_conf.lazy_load_symbols && !dso__kernel(dso) && !kmodule;
+>  
+>  		symbols__fixup_end(dso__symbols(dso), false);
+> +		if (lazy && !symbol_conf.allow_aliases &&
+> +		    dso__load_alias_names(dso, syms_ss->fd))
+> +			return -1;
+>  		symbols__fixup_duplicate(dso__symbols(dso));
+> +		if (lazy && dso__load_ifunc_names(dso, syms_ss->fd))
+> +			return -1;
+>  		if (kmap) {
+>  			/*
+>  			 * We need to fixup this here too because we create new
+> 
+> -- 
+> Git-157)
+> 
