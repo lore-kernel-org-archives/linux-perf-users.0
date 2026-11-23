@@ -1,110 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.83.45
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795416524;
-	b=Kh+YUgV+VeoqLLBTflW6R9mV0UrXLEee6Qj9g1fH0K9GPaqOGvju403HBYZEZLwPS79b
-	 oZHq8mxktSDc9frC/lic88EbLRsQzUdLNwa6+nERifbvVS7AA5tcJjK71v201lvDHB9y4
-	 xlSD/L22rVngf8WhrmydypVLOD+nga2yue9iA9IUjCMspZNSli9P19QvX/sal1GMtnPyY
-	 n7BdOZlAgAYFMC3pM+NRqUzydEB1kkTwWCsH0HOZy09gM2T2YSF+PEF+MyT1jtzatHAwh
-	 6CJG3GI7Kk0yA/RPgeA7red3m7kSABjWkQb9kUedQtBljcu9nk2qcnTaSplblmq7Efw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795416524;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Message-ID:Date:
-	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:X-ClientProxiedBy:MIME-Version:
-	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
-	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
-	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
-	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-	 X-MS-Exchange-CrossTenant-UserPrincipalName:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=PkirmmGBrHXOzWH/Xd1T0m9vDbCZfqu1QYXH+9sGfFk=;
-	b=VcIoAsgMECJ3KMOAiWS0010tFLgyyq6CZEys6/4ywJ+lFRn0xG2TqkQYB4juvHALc0rQ
-	 VEKDNRAcucfCLcsobfC8K/eluJWHmg3ue4/tII0slXR1pZoQO/S4U7zJq1YOIKdC2FM72
-	 D+Oc9mnH6w6lXs142Hb8SL/o4fj+cShK53cDdnKsxv1QGe2vrjAfS6jUnyIoGgeCKg6ta
-	 /V8779i1ifZ9fTSgeFUH+3gWpqDA/z7w7kFsMWEsA4S3fv0cUy11QwsvH6eu50J3b2RU3
-	 GDLlHn/G9t8vqfSEUtPKPr1llCmQ+2Um4PhSJTBihoJLobMsyPa+1E3bfYS0kozwZKg==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=mobileye.com;
-	spf=pass smtp.mailfrom=mobileye.com;
-	dkim=pass header.d=mobileye.com header.i=@mobileye.com header.a=rsa-sha256 header.s=selector1 header.b=aCVqtJKm;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.83.45
-Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013045.outbound.protection.outlook.com [52.101.83.45])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.167.198
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795418364;
+	b=ont5fifYKJ/PFg/1inJb2rloAcAT2bxibKZsCACuC5H7jZasxqM9XA34XQQpRQdq20WO
+	 oiGPpW80OoxXFetKBDRWg/TLt1NHVQmaHUknLSKHogtVe6miVFJJUVTM0gzfdOMgLd8g8
+	 c7Hno41pl9/+vhLNL5X6gwlI7hpS3lPI4otpgCjQjb2q8kGCAf/TX5FMltRHwegiqdGys
+	 vyVmByoMUYbqjNTUdBPMRbjnivAGquvWgqitYU3YsvkRLTssO+s4JEIJzS5awIMJzNVqt
+	 uM8JIec4aHAq3oO/VtzSrb6TRT+sWH6zInkkXxjXRcGYFd2BF7JdKIUR3ouvcqUYTJw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795418364;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
+	 X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
+	bh=InT91oisEFmdndrqcS8mrchaCKx4oa3ZvByTCs2ke2Y=;
+	b=bx4kf4b12/Mm1JPT2Ku1sqV7ImQ0LO58m4DDMPEp06aeKeh+A1X9dbRIQGq5WQRHKAjA
+	 62fZcok63DcpBENMP+0P/ySoxlAE9Xr9NKJixJHqFfk+gDWIkvK3QFh0CmRFA5H3Wlwun
+	 Tr/NyoujGUP46wWNvy+5RTM4guBTyeQftT57OhWx8BKakAD1lgsFHIu8stYfTlbqXpZpE
+	 fcBlV0GX3jIqcjfdPb9ov81csJmLCmWyS6kp5XQMxNo6pPgygMD4E2ueBpj7N6zb9DA/k
+	 wJ7MOIEyGGSVfiKjn7vgtQogXajHBWnG5aVg22dXGrCZ37d3dNoVbVWkmFjS5uNctuw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=google.com;
+	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=O6m2OMtp;
+	arc=none smtp.remote-ip=209.85.167.198
+Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com [209.85.167.198])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E0F606A31A;
-	Mon, 23 Nov 2026 06:48:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 26E0F606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D679606A31E
+	for <linux-perf-users@vger.kernel.org>; Mon, 23 Nov 2026 07:19:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3D679606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=mobileye.com header.i=@mobileye.com header.a=rsa-sha256 header.s=selector1 header.b=aCVqtJKm
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IjFOC77VBZeD4bO/hf/zS33JycAWWpkAH9Yv2WQ4ObNx1tSJh22Z5VtT5y5wuGxURtn2mYWYbgEW6cZ5ClasdUNFm0euwyE5R430ElH+AAXdLhY2L2LIaTTkt+WV+hzhuMx2tLGHnDzfNk7utyF+vzGhzX12l5kPcmpy/bwS6vijoHgRGou6QY+0RLUvcsU8kYL03R69B7HM0HXdbMO1DPoAKVcDyLBJ31yT1UZROkJXm4tYITlXSo6iHMAGH/vnGc25FRiOKFd0w24kgoeFr1fCXJ2vI5e3btG574CbXXh8QFmhw9Fxm90HrvkFsWVisCRJ/VOPom/U3CopuTbTFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PkirmmGBrHXOzWH/Xd1T0m9vDbCZfqu1QYXH+9sGfFk=;
- b=kp1yireH3KqD1MHdsj2TmECQgOpMOCnJ8bs6PE/Q8o+un2O817cqlow4q41lvt5lL3ewuJ/2hjQnl4P4QLbWuyOSYvMYPsfYN7Yi56kTZa8iKKE5XSCIaCH9Tzyri3s9TqJCECtezEMQ4DuIdJckDf4uTxpVh7hd5M5mJ0/1rz1VT5yUwT/B2LiWEGc6oUIQqPInDkVL0670kIuW4dzEmAx/69oeHc85CQzPKuD3ntfNhtRQlsxBJ0BfWzu4skr6eZOMqKNdEWpwDFZnQXfAM7Xv/WRCe6b6K/kd1qLvarCu8S6qNtQsc98VmHktLhBHBHXlonNLea1nwjPj1aQoSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mobileye.com; dmarc=pass action=none header.from=mobileye.com;
- dkim=pass header.d=mobileye.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mobileye.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PkirmmGBrHXOzWH/Xd1T0m9vDbCZfqu1QYXH+9sGfFk=;
- b=aCVqtJKmUy0SXnLcCUBvY9FI6dX8Ql/gWdQtNXWimuLrGqUm1H5+KIr0lBTFajYUh78d1pIN2WnU4NIyFswcHbubV+8AXF2X+vKUdq4eENpZnzLmxL/71jifOJ/fgvLOuL0h6aw0FIaIlP4nr4KbMJ8SdFvgzYZLyvQF/hhZie4=
-Authentication-Results: mx.microsoft.com 1; dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mobileye.com;
-Received: from ZR6PR09MB889505.eurprd09.prod.outlook.com
- (2603:10a6:910:e0::22) by BR0PR09MB492176.eurprd09.prod.outlook.com
- (2603:10a6:2c8:42::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.639.14; Mon, 23 Nov
- 2026 06:48:40 +0000
-Received: from ZR6PR09MB889505.eurprd09.prod.outlook.com
- ([fe80::9006:1164:b51f:23a2]) by ZR6PR09MB889505.eurprd09.prod.outlook.com
- ([fe80::9006:1164:b51f:23a2%4]) with mapi id 15.21.0639.010; Mon, 23 Nov 2026
- 06:48:39 +0000
-Message-ID: <d7665267-bcf0-4449-b036-cd168c1fce3c@mobileye.com>
-Date: Mon, 23 Nov 2026 08:48:35 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/7] mips: {cm,cpc}: Make cm_core_lock, cpc_core_lock
- raw spinlocks
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Randy Dunlap <rdunlap@infradead.org>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Kees Cook <kees@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- =?UTF-8?Q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>,
- Gregory CLEMENT <gregory.clement@bootlin.com>,
- =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
- Fu Chao-Ying <chao-ying.fu@globalfoundries.com>, linux-mips@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
- devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-hardening@vger.kernel.org, Paul Burton <paulburton@kernel.org>
-References: <20261119-i6500-cm3-pmu-v3-0-c86410934b51@mobileye.com>
- <20261119-i6500-cm3-pmu-v3-1-c86410934b51@mobileye.com>
- <20261120114644.VM_HFf9o@linutronix.de>
-Content-Language: en-US
-From: Vladimir Kondratiev <Vladimir.Kondratiev@mobileye.com>
-In-Reply-To: <20261120114644.VM_HFf9o@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TLZP290CA0011.ISRP290.PROD.OUTLOOK.COM
- (2603:1096:950:9::19) To ZR6PR09MB889505.eurprd09.prod.outlook.com
- (2603:10a6:910:e0::22)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=O6m2OMtp
+Received: by mail-oi1-f198.google.com with SMTP id 5614622812f47-4cbf700ddccso2212349b6e.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 22 Nov 2026 23:19:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20260707; t=1795418363; x=1796023163; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=InT91oisEFmdndrqcS8mrchaCKx4oa3ZvByTCs2ke2Y=;
+        b=O6m2OMtpz7fQsxr4ivwMxIwnMaMjXc3+cgVm7Kr5GhOSUlPIg8EfxlAxO67Ar4sqtn
+         tMemnwowyVy2m1+6yaETzMXk18BMvEYnF8GnsuDtElGc95dirPeB9GgmUHBV1Jf27II+
+         s1+/XkNUeoqWz31JDImy29hYQomOdptctCfzgxEiOLPkCpYDTYeDbz2BbOQuFMqPvSh7
+         cY/04Rw96I7SUWfI04yE20lnfHQ690xntjfAfK9Cre9Jf58hKLYscUgxBght6K1Xd9Iy
+         wiUxU1XhIq9PNzyWAqt7sUwP8qBtl8cns4ZFi5o/2F5CuTI2nEwY1vM6wRjoKUjRg8AC
+         cb9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795418363; x=1796023163;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=InT91oisEFmdndrqcS8mrchaCKx4oa3ZvByTCs2ke2Y=;
+        b=nobmX+dbEZhkfolABvtlHGZd5CG8luClvUHwtpeY+K2IeOcX4mQ9KkSuMjy+CBxAyu
+         1EBbKMxOMHP4WuchcSnhLHtJm12ZsMK5c/wGDRcQBkt855NsJiZ8zkXbiG2MPzj1JSP/
+         z1ZS75qXC8MZYUBwwWe1fd/rJ8XFZ+JCq6OYlE5xzQucQpcSaBR6cP4fyvSPNeNi4A37
+         QB6pHusofQAK69isePtKrmzYmDQzi3xlzK/gCBu9A3eWN0ggHYeib8tyngFULVraOp7+
+         CvttUUjuX+n2JyDvM94c+c2XNX829nr3JQm8YA32UqibiYzgfIdSdIB2FOCp77sYk6D5
+         ztbA==
+X-Forwarded-Encrypted: i=1; AL+hErGbfYVwLrtjB8G5RJ5g0epVDl+4oP7pj4SPNQUwZnOeJ3gpAyrIfK0IMgMq4F2BkMjcAPJl1S2IRrozmpI9HZCh@vger.kernel.org
+X-Gm-Message-State: APuU4Z9dbMIi/MbzhD2OG6Sty9x2IQ5L4P/MTYNkOYbomkJsfXE9shuS
+	fLYJ2DmGRghEusBVhgES/VqCL1vQgbaOKiZ+ovOwtqW4cSFEnpmDZg+/F9eEr6+3Etv2P0F/cpP
+	+VMpVF2oy2g==
+X-Received: from oapa41.prod.google.com ([2002:a05:6870:46a9:b0:494:a4d4:8e0b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6808:1384:b0:4ce:a4fc:a848
+ with SMTP id 5614622812f47-57a06a0da3amr13118058b6e.6.1795418362986; Sun, 22
+ Nov 2026 23:19:22 -0800 (PST)
+Date: Sun, 22 Nov 2026 23:19:00 -0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -113,77 +75,126 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ZR6PR09MB889505:EE_|BR0PR09MB492176:EE_
-X-MS-Office365-Filtering-Correlation-Id: d0bf4bfb-5503-449e-95b3-08df492dce88
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|23010399003|22082099003|18002099003|11063799006|56012099006|4143699003|261028144727099003|261026140227099003|261026121527099003|261022105027099003|10067099003;
-X-Microsoft-Antispam-Message-Info:
-	OZFz8YdxUj88dvSo/pGZ3EMyCoEg9T8EfV6gmMAaHnPB5YsMdYtaRlk1keziUxVYwKcGRnTyW/Ze3rANUfz4BEoyDtYTaWThSqRx5WqNP8/et+sYDNes8v/6n+EuxcqaNlPsJTQXWhgIwXOZ8x08+vppXc1zBKq6pP0GqIxwk7PupkBY/L+cymGEyNUzGAZk4O8FBfZXu9uLIU+fjqJuUE9iUtPqirrFD8PtRbz1i801GtugSUcA6HYJS4nEcWTpQ71ZvSpAxzEbW42vmXs584bKZlfg9JYhQbsf8lFIKa4JR/xVtz1ciGq40uCxRp4G9dzAIyDLLwL8gwLJHilEH9KgpLPz76OmNWx3vvW1oa87eAXP/FO1kQMvkgRytd37LhwBsFnljvcWRSLHMccokl51gZlXU29WNOnZ/CV1O4erZ3AP932yiYApEw4qq3UAPkn36WFRPdkXkcWvUcrGT35tsts1dVEfe7THVj7S0ihrD31dXGCp7s9FvKdrvjLkL+9KHQKaBWXd7ZSMC95zuXsuIjnOdjyOacafnCNi9ylRYSiodgNZRIHmDr3xo9b2uuQDEg5a/JaZ4+WIfjxaSLgBNnE5f/PFwogxGueP+on+ZLqHqD6l0pcaoZLgV+Ec+djLmevvnXqFRDp1DYdszjcw9VJN3sEXKvSOLbS9D4A=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZR6PR09MB889505.eurprd09.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(23010399003)(22082099003)(18002099003)(11063799006)(56012099006)(4143699003)(261028144727099003)(261026140227099003)(261026121527099003)(261022105027099003)(10067099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dDdCQVFPZjZRbVdicXNEdGFjNTNxUWxmeTZpODg4Zk5taUw3REczci9QS2Mz?=
- =?utf-8?B?bTIyZmVhRTlHbis0NlU5a3BFclgwVjVTMnFMdWdJRno2QW9vNE4ybW5QWWF0?=
- =?utf-8?B?SldlZVgrN2VQTVdSdTVuK3c1RUdXZFJTekJBWWtCTnE4a1Uzb3VlMkNua0JX?=
- =?utf-8?B?ZWpPZmVYeUpOS1ZQM3ZGekRYVFI2MkVnK1l0LzdXZExOTmJSVkdMUWlMa2xq?=
- =?utf-8?B?NFYrU1JGcTJRWC9iZlRpbVRNRkQ0ZjJOUExEZUEyT1dkUDJUeVQxMnhvYkFO?=
- =?utf-8?B?RFBhd2hDb2RQdFM0Z1AybmEwM3NWbWlCMDRESE5JNnRwMk1TMFJUVzRGbVQ4?=
- =?utf-8?B?V1h1N2h4N0FOU0JGYy90VVFjWlBlTWJWcm9adktXZmc0Qjl4REN5TGhpcTIw?=
- =?utf-8?B?cWgwLy9tRWRJSTQ0QUdJTjFFSkJUR1p5ZFFJeUtKRit6S1A2VmI1dmF5REdX?=
- =?utf-8?B?eTZldFJoV2ZJeFBYWnVxWHdMSmlIc3lURTJRVS9WQlNVeDQzNXpYVU1QbXV5?=
- =?utf-8?B?VisrNjZxa3p4ekJWYmpZSlpsODllS3l4Y3JjVXE1RmkvNTlDUFd5SVlzSnN2?=
- =?utf-8?B?QjJnNlAza2FxUWN3NEFaVjExUmxBejlTS2Q3SURXNHFMSXkwZzZ3RmF2TEkv?=
- =?utf-8?B?NUZBRkJ0NUlxTGpVL1FlaEtsYnIyTEthdkhNOHptZHlBYWlPU2RXRTB2eXEz?=
- =?utf-8?B?VDdtQjhnTjdqSG1ZM3h2cEZXN1pHajgzQnJXdkpPUWVDbUwxcjAxM2REUUk3?=
- =?utf-8?B?OUpscWNEUUdBS1IxREJVWm83aUh0dzAwUXQ4QUVMY05hTm8zQzFjelhDUFpV?=
- =?utf-8?B?SE5qcVViTkNPd2xCd3U1RnZaajAvYldsOFRXMjU0R0JmaUlNQy80d05DZDA3?=
- =?utf-8?B?ZStKYUNjV3VOVUhMV2JLSzZPV2paN0xrUTBaTU9DZjBrV1YrMWRxWTJhYUZ0?=
- =?utf-8?B?bW9BSkEwY0xOdE5zTHhPdnRXdGFHQm9KeTJGVmxjUmVtQ0tRamF3VjZ0WkFl?=
- =?utf-8?B?a1hKMDlGaUo3cUF4V29hclI5bWl4bDdsZ3k0VEhhT2xBZWY2V0cvVkhSaUlX?=
- =?utf-8?B?YnRPT2dwNnNNVWlqd1lTMTJvcDdIcnY2dkNnWjBqNGFEQkpRVzhXQlFWcUk1?=
- =?utf-8?B?aklYSXFaMVAzVC9IMERSWVFCRmZYY3lYTzhjMm5KSkZZSkxvL2FHOEdxS2cx?=
- =?utf-8?B?OU1EOWxPZGduQnBuTFFxaWlnMmlleXFKV0dnVWtONGNIU01pMUlpREg0K1Rw?=
- =?utf-8?B?SFA1ZmZRMkttOU5iTU5Qd3M3amNhbGIwV1RZNU8rU1JlZllRMklrR0NabDVa?=
- =?utf-8?B?eFFOek9rZkVXQWpkclUwRTZKb3RvM1hmMEt4aklYWndPWk13VVExdkVvbFoy?=
- =?utf-8?B?c0FMc0Qzb2ZjdzhyVk8venFlYXpHZ3NWSkN3czJxdWxPZ2d6WHdkQUo5VnMv?=
- =?utf-8?B?dkRBZE5teXcyakEzM2NGc3Z3dWNiRlpSeDRPRHN1dEdjb2xMalRpV2VNSGZi?=
- =?utf-8?B?NVF4Yyt5N043bnhZd1I5cXRBQ2NFODlCaGlQRkQ4VkVtT3lSRlZJZVMrY1F3?=
- =?utf-8?B?cUZEVzBiNkE1S0hvaE1oSStrWTBjcHRNZkNJQVp3ZmZqUUE2SWsrVzBKMkZ5?=
- =?utf-8?B?b2dRaFdVY1I4azBGU21GMWNrOHg4cXpnc0N0bmJuYlNUM2NRZHgrUUxGNGoz?=
- =?utf-8?B?UmdOZ1dUeXloRFhGeHJyT0hHL0ZZOFFiQ3JqQnZVQU1HMXhTNllGelJ1QzlG?=
- =?utf-8?B?QVBzeWxSam1FVGxlT05MYnJaR2luanRLb3BuTEx6cVlWQm1UL3pQMnVMb01j?=
- =?utf-8?B?SVNTa3l3UVVWVU9iTHlxM0ozMTRtR1JveWJHR3lqcDVKaFBsY1NpeFYyVndO?=
- =?utf-8?B?MkpEMlBUM0RuQVg1RTlLRWFFV2ptWThMMWxwNyt6bGJjYTdCMnJKYW1ZelU5?=
- =?utf-8?B?dmxQUm1EL1RZZWdKWjQ2ckhxUXY3ajNBcURNeERJMjl5VlFTSi9nemtORlF1?=
- =?utf-8?B?YUhrM3c3TEZFMDNudFVacCtxby90bjFkK3N4MlF5c1pXUFBYcHVFTWJKcTFv?=
- =?utf-8?B?dVpIQmlJWXlwYXprZFNJc3lHOTY2OTgwTDJMUHZqbVQvZjF4ZUN6dTI4VDEw?=
- =?utf-8?B?Mk1FUXBoakRvemF4MlM0b3FibjkweCtyMTVEZTVaeEFtcnIzOVVjNnBlK3hB?=
- =?utf-8?B?cE1Bd09yOUdqS2NPd3NNdy8yL0M5cXB1SDI1WUlRL0Q0WktjVk5GejlaVFUz?=
- =?utf-8?B?cGI2VkhrbCtVRW5HRm5uU3B1UXdmMVFzV1VJVlF3c0pSR1JWc2RPV3FRekFy?=
- =?utf-8?B?VXBadXg3bzZDQlVRM3FvUUxyY0FOSXNhQ2ZramtvOEs1T3RPcjFkUT09?=
-X-OriginatorOrg: mobileye.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d0bf4bfb-5503-449e-95b3-08df492dce88
-X-MS-Exchange-CrossTenant-AuthSource: ZR6PR09MB889505.eurprd09.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Nov 2026 06:48:39.8268
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f85ba13-6953-46a6-9c5b-7599fd80e9aa
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YEg1SsN2F8wk/E8E0mp3lTwmW00Jd/h/CLLwrBc2i68eHVM6Um8GVXOr+YVmOaTXc3bvHo5+IhVwwG60JsCYYw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BR0PR09MB492176
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.56.1.750.gf70dc682cf-goog
+Message-ID: <20261123071913.653315-1-irogers@google.com>
+Subject: [PATCH v1 00/13] perf fixes: off-cpu, stat, tool PMU, bperf, and
+ bpf-filter fixes
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>
+Cc: Howard Chu <howardchu95@gmail.com>, Thomas Falcon <thomas.falcon@intel.com>, 
+	Song Liu <songliubraving@fb.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 11/20/26 13:46, Sebastian Andrzej Siewior wrote:
-> The perf interrupts should be per-CPU and not threaded so this is the
-> right to do. However mips does not have ARCH_SUPPORTS_RT set. Is this a
-> longterm goal? Otherwise it doesn't matter since without it set even
-> lockdep dose not complain where it would otherwise.
+This series collects standalone bug fixes across perf off-cpu, libperf
+evlist, perf stat, the tool PMU, bperf (--bpf-counters), and perf
+bpf-filter:
 
-Yes, very long term goal. Clearing parts that should be cleared
+1. 'perf off-cpu' fixes (patches 1-2):
+   - Zero the stack trace buffer before lookup and bound callchain
+     length by MAX_STACKS in off_cpu_write() so full 32-frame stacks do
+     not read and write past off_cpu_raw.
+   - Fix swapped PID and TID packing in direct off_cpu_dump() BPF
+     samples so multi-threaded direct off-CPU samples match
+     off_cpu_write() and __set_offcpu_sample().
 
-Thanks, Vladimir
+2. 'libperf', 'perf stat', 'tool' PMU, and '--bpf-counters' fixes
+   (patches 3-9):
+   - Drop any existing per-evsel CPU map and re-propagate all evsels in
+     perf_evlist__go_system_wide() so evlist->all_cpus is rebuilt
+     without retaining the "any CPU" (-1) placeholder.
+   - Assign unique synthetic IDs to non-perf_event_open events (tool,
+     hwmon, drm, retire_lat) for 'perf stat record' so counts are not
+     all attributed to ID 0.
+   - Serialize and restore per-evsel 'cpus' (rather than 'pmu_cpus')
+     across 'perf stat record' and 'perf stat report', retaining
+     backward compatibility for older perf.data files.
+   - Return false for PERF_PMU_TYPE_TOOL in perf_pmu__is_software() and
+     guard group leader handling so grouping tool PMU events with kernel
+     PMU events does not hit BUG_ON() in get_group_fd() or fail in
+     evsel__read_group().
+   - Enable enable_on_exec tool PMU events in evlist__start_workload()
+     so workload runs do not report 0 for duration_time, user_time, or
+     system_time.
+   - Compute enabled time in the wait4 rusage fallback for exited
+     user_time and system_time events (e.g. with -D delay).
+   - Restrict bperf (--bpf-counters / :b) to compatible counters and fix
+     mixed, hybrid, cgroup, and repeat (-r) counter lifecycle bugs.
+
+3. 'perf bpf-filter' and tracepoint filter fixes (patches 10-13):
+   - Attach unpinned BPF sample filters via PERF_EVENT_IOC_SET_BPF
+     instead of bpf_program__attach_perf_event_opts() to fix the
+     bpf_link memory/FD leak reported by LeakSanitizer.
+   - Deep-copy evsel->bpf_filters in evsel__clone() (fixing
+     --for-each-cgroup) and release runtime BPF filter state in
+     evsel__close() (fixing 'perf stat -r' repeat runs).
+   - Add SEC("tracepoint") perf_tp_sample_filter for
+     PERF_TYPE_TRACEPOINT events (with !CONFIG_CGROUPS CO-RE guards and
+     selective pinning) so context-independent BPF filter terms (uid,
+     gid, tid, pid, cpu, time, cgroup) do not fail with -EINVAL.
+   - Route tracepoint --filter strings to BPF filters only when
+     referencing non-field BPF terms (with tracefs format fallback when
+     built with NO_LIBTRACEEVENT=1) and reject ambiguous mixed filters.
+
+Notes on prior postings:
+- Patch 3 was previously posted unchanged as patch 4/4 in
+  https://lore.kernel.org/linux-perf-users/20261027170415.2815859-4-irogers@google.com/
+  (patches 1-3 of that series were applied to perf-tools-next).
+- Patches 10, 12, and 13 are extracted from the front of the earlier
+  lock_held() v7 series, with patch 12/13 split into two commits and
+  updated with !CONFIG_CGROUPS CO-RE guards and NO_LIBTRACEEVENT=1
+  support.
+
+Ian Rogers (13):
+  perf off-cpu: Bound callchain length in off_cpu_write()
+  perf off-cpu: Fix swapped PID and TID in direct off_cpu_dump() samples
+  libperf evlist: Recompute CPU map when an evsel goes system wide
+  perf stat: Give non-perf_event_open events unique IDs for stat record
+  perf stat: Preserve per-evsel CPU maps across stat record and report
+  perf pmu: Don't treat tool PMU as a kernel software PMU for event
+    grouping
+  perf evlist: Enable tool PMU events when starting a workload
+  perf stat: Respect the enabled time of exited user_time/system_time
+    events
+  perf stat: Fix --bpf-counters with non-bperf, hybrid, and mixed events
+  perf bpf-filter: Fix bpf_link leak by using PERF_EVENT_IOC_SET_BPF
+  perf bpf-filter: Copy bpf_filters in evsel__clone() and close on
+    evsel__close()
+  perf bpf-filter: Support BPF sample filters on tracepoint events
+  perf parse-events: Route non-field tracepoint filter terms to BPF
+    filter
+
+ tools/lib/perf/evlist.c                      |  12 +-
+ tools/perf/Documentation/perf-record.txt     |  14 +-
+ tools/perf/builtin-stat.c                    |  37 ++-
+ tools/perf/tests/event_update.c              |  43 +++-
+ tools/perf/tests/shell/stat.sh               |  16 ++
+ tools/perf/util/bpf-filter.c                 | 225 ++++++++++++++++---
+ tools/perf/util/bpf-filter.h                 |  10 +
+ tools/perf/util/bpf_counter.c                | 115 +++++++---
+ tools/perf/util/bpf_counter.h                |  14 ++
+ tools/perf/util/bpf_counter_cgroup.c         | 145 ++++++++----
+ tools/perf/util/bpf_off_cpu.c                |   4 +-
+ tools/perf/util/bpf_skel/off_cpu.bpf.c       |   2 +-
+ tools/perf/util/bpf_skel/sample_filter.bpf.c | 101 +++++++++
+ tools/perf/util/evlist.c                     |  34 ++-
+ tools/perf/util/evsel.c                      | 150 ++++++++++---
+ tools/perf/util/evsel.h                      |   2 +-
+ tools/perf/util/header.c                     |   5 +
+ tools/perf/util/parse-events.c               | 179 +++++++++++++--
+ tools/perf/util/pmu.c                        |   2 +-
+ tools/perf/util/stat.c                       |  18 ++
+ tools/perf/util/synthetic-events.c           |   7 +-
+ tools/perf/util/tool_pmu.c                   |  30 ++-
+ tools/perf/util/tool_pmu.h                   |   2 +
+ tools/perf/util/tp_pmu.c                     |  55 +++++
+ tools/perf/util/tp_pmu.h                     |   1 +
+ 25 files changed, 1057 insertions(+), 166 deletions(-)
+
+-- 
+2.56.1.750.gf70dc682cf-goog
+
