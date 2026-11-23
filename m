@@ -1,62 +1,62 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.90.104.147
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795433860;
-	b=2UW6ylgfPZj4+ZelN6DP2qXDNxsyHgjqcNruUbZPRQbwZHana/hwjXX7LvJpm/80QMxo
-	 tV2c/GPC90AUntA4S//MLxPx82/7Vwf8lDDMB0XyI1YumTyaKuU8Hr06MW+zIl69wakFU
-	 Vr5YksmWYyaXKkudiTbteUiW9+ssLTlpd1EyN5KSDzj5hQcguHyDqp2ZC3C4ZNIuzKDuo
-	 mN1ehmmKn32/Y0tsWIPOFrepGdR4Tfy6/ymRWSdDrRZiT/Ij9TZEnbcUhq8e+houAFMcF
-	 GOgzuMuzeW4bCB5f3VN5+wJbWL5uLsidHuvjFeHYsmdixTjV+Qh9A9YryzbmGlGzVwQ==
+	t=1795433861;
+	b=2Dy/3BwleWy47iQG0OTt4LTNnuhneMenNnTP9HG3/suotoH8rL+X4jk5RFV0dLw3WauM
+	 1oBZ95ztIEOFWVsKWpV0Osc74yQ8L1zEXiFYv5PQgYrdS9s9u3k8ODEwK6hfo2C5+KRUG
+	 MRc3qOdF6dynqHQWJF4Z6C/6WjCH8dRLGnPMI1HmIJhdRh5FVe901ZtcjKQkP+N6q91da
+	 tisWl9vlB9qJ2LefBl+HmUAA7eWmSIW2+O7Sw6QPO2ESMQ/v9D66HW2ria8poBZi8uDog
+	 bvu571+tVqMiQG21u1FYNsximLaQDrRuzbfAIBQLQg+rrN+LjEv56BeiIXlf+Fd/iww==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795433860;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795433861;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-Amp-Result:X-Amp-File-Uploaded:Received:X-CSE-ConnectionGUID:
 	 X-CSE-MsgGUID:Received:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
 	 In-Reply-To:To:Cc:X-Mailer;
-	bh=OKPZQyJsCxKmvcu3evgCAn8bCU003kDuUuvj5pSvgRY=;
-	b=V+3wgowSnxl2/TAy+SyKmMjkkPtYdSfttrsfCK4aV3Uk9E1Hdieo4q/sMIOqpw0OTh8c
-	 hphU+rJP2uhKOf7wQUZ3OyzPbSPeKzhK1IWwMiZv9NkR7obiFoIOuino0clBo51WSfYT3
-	 EfSA20jeej5gEDwFPWahb7eoaWHCrMuHaHfTxKcid6ildD2iP7hgRzr7RbZcHon9YTT2A
-	 lJUs8NIgu81l1dnhhoZODQUWCuDj0nkUwR/7uH4o/V8+7VZCZsuXZUJngvIA/shg8UW8P
-	 6pELHRJQ+xDkesIzwzTrV0GhY+uHm8lFzkL/euwfGqbfuoUNli9zHcDl/l3j9Warcmg==
+	bh=HkwgrMMAxh/Pa+gTNOwIrDS+SnvfT/r5RJMCGUHHVyI=;
+	b=DLlfMSG5JM1H8diUFGRIPoWvvmqSjXxapeI/2VD6SWHlbY4cFkGW7zQSqP5YVy3rk9Ru
+	 w+BUJEAdHDt8AY0fQfHHWLw2A1yD+5WzURoJpCQrYKCe8opoW/M/yYCoQST9bdHrNtNgO
+	 sXU4t9iTKvC2Benh+hjQOKaTnxuidukhkHvGOTH9Yx4bbqUtykP5FsrV1jjC3fo02IQ0V
+	 D4x/82F/MtU34iRqlorE13+E0oOqptjRvh+1ccyRKRCv+bOr5nz6oGlxIJwwyq7ThjrbM
+	 oyaAU+N/BFqo52nX/hghmtvdKh/2Y1XKYplVy+WHQW9uMY6CvaqpOc7BRL5BmaaoSpQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=mobileye.com;
 	spf=pass smtp.mailfrom=mobileye.com;
 	arc=none smtp.remote-ip=23.90.104.147
 Received: from esa2.hc555-34.eu.iphmx.com (esa2.hc555-34.eu.iphmx.com [23.90.104.147])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D02D0606A31A;
-	Mon, 23 Nov 2026 11:37:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D02D0606A31A
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70349606A682;
+	Mon, 23 Nov 2026 11:37:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 70349606A682
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1795433859; x=1826969859;
+  t=1795433861; x=1826969861;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=4V18Tfg9Ly6MPWUMnLZiqruGXQUpnrBi9GEGXYzKK7I=;
-  b=p9hZwMTyJij9UiiAoCPFmx0duUsCJdl04CRXngv0pFim7DrxAcP2l5+4
-   VH5/jhQa1ign9Ozyub/CPSEiH5HV+Tqryhs9qfoDDvtPMqJ4jLeCXD/Cz
-   EHTdeZMXXZJSPRMmGZK38os/bQFTiekTxcXjcFuLraOxiOBFiW/fhHi2s
-   6Oq8TQRWIKGo94tqjiwlQw4Yv7Ik1VSmoEfotJAmLIzWlFRyjhDVxyaeb
-   gh7C5G8EEgK4y3dYbL44msYgBsnMYuaU+Q2ZvEnyFPZtLnrqdRwF8QPK0
-   3lrca+y9BEkUE8JSC/auh6OroEbzTqMdawWjeEG7HxbzsL78FmbNEr5+i
-   w==;
+  bh=IPMwiZyW2lp+dYhB4kV60JlONdGVqmGhSYHG6tuUBlI=;
+  b=QTh7Z6OvVxZEkAKxLwzf++DnQuckcYPBe6wcwbcQE7seN82leYQGCDBb
+   TKPrCimmjMQEjzcjCE4iKM33N5fuy6uy32TIXQtU5qZ9C78NnMuTCSiF6
+   7fOQNH21Ko7az5DgAQtiGu5q3IlNF9g+Kruk7xpX2shWcZ5gxPUVzbG1Y
+   UIGBJtXOe5AiApOmFYoGiUh5+nrsOXC+EWThKD0mLW45ikmQ25IdyaFAA
+   gBKP4AP0ahsRr2qL8TeS5vaVqqnq+m5PK4Qkjtg21DT0qE728VvU02qfL
+   S15VlMCAyrqiJ5oZKX7OoKb+wpYtEmg4srpbNH0rcPxaAuSr5lkZrpofz
+   g==;
 X-CSE-ConnectionGUID: zqschISKQgqNy5/VgtTxQw==
-X-CSE-MsgGUID: M28rkNfTRaCj59bRceLRhg==
+X-CSE-MsgGUID: 8Y7kqSuEQJiOB8nEvaOMwg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from unknown (HELO ces01_data.me-corp.lan) ([146.255.191.134])
-  by esa2.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 13:37:31 +0200
-X-CSE-ConnectionGUID: qZJxtW2yTseV96LosV/AHg==
-X-CSE-MsgGUID: yOytxXA3SDmIRqsH5JK2/w==
+  by esa2.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 13:37:32 +0200
+X-CSE-ConnectionGUID: Vhq26FS/TdiUFJJs3EbqDg==
+X-CSE-MsgGUID: NZDwNoOGR5utMAr3dMf9dA==
 Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.2])
-  by ces01_data.me-corp.lan with SMTP; 23 Nov 2026 13:45:57 +0200
-Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Mon, 23 Nov 2026 13:37:29 +0200
+  by ces01_data.me-corp.lan with SMTP; 23 Nov 2026 13:45:58 +0200
+Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Mon, 23 Nov 2026 13:37:30 +0200
 From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-Date: Mon, 23 Nov 2026 13:37:12 +0200
-Subject: [PATCH v4 2/6] MIPS: CM: add CM3 performance counter GCR
- definitions
+Date: Mon, 23 Nov 2026 13:37:13 +0200
+Subject: [PATCH v4 3/6] MIPS: CM: export the symbols needed to access the
+ GCRs from a module
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -68,7 +68,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261123-i6500-cm3-pmu-v4-2-5a9f5351688f@mobileye.com>
+Message-Id: <20261123-i6500-cm3-pmu-v4-3-5a9f5351688f@mobileye.com>
 References: <20261123-i6500-cm3-pmu-v4-0-5a9f5351688f@mobileye.com>
 In-Reply-To: <20261123-i6500-cm3-pmu-v4-0-5a9f5351688f@mobileye.com>
 To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
@@ -89,102 +89,82 @@ Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
  linux-hardening@vger.kernel.org
 X-Mailer: b4 0.16.0
 
-The CM3 implements two programmable 32-bit performance counters and a
-32-bit cycle counter, controlled through registers in the GCR global
-debug block (GCR_DB_PC_*, offset 0x6100..0x61a8 from GCR_BASE).
+Allow modules to use the GCR and CPC accessors from asm/mips-cm.h and
+asm/mips-cpc.h:
 
-Add GCR_DB_ACCESSOR_{RO,RW} helpers for the debug block and define the
-control, overflow status, event select, cycle counter, qualifier and
-counter registers along with their fields, as described in the I6500
-register reference (MD01189).
+- mips_gcr_base and mips_cpc_base are the mapped register blocks;
+- the CPS_ACCESSOR macros consult mips_cm_is64 on every 64-bit register
+  access;
+- mips_cm_lock_other() / mips_cm_unlock_other() are the only way to
+  reach the registers of another cluster through the redirect block.
 
-Each accessor comes in two flavours, as the CPC ones do: db_<reg> for
-the local cluster and redir_db_<reg> for the debug block of another
-cluster through the redirect block. GCR_Cx_OTHER.BLOCK value 2 selects
-the debug block in the GCR, where the existing _BLOCK_USER name only
-describes its GIC meaning; add CM_GCR_Cx_OTHER_BLOCK_DEBUG for it.
+This is a prerequisite for building the CM3 PMU driver as a module.
 
 Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 ---
- arch/mips/include/asm/mips-cm.h | 51 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 50 insertions(+), 1 deletion(-)
+ arch/mips/kernel/mips-cm.c  | 5 +++++
+ arch/mips/kernel/mips-cpc.c | 2 ++
+ 2 files changed, 7 insertions(+)
 
-diff --git a/arch/mips/include/asm/mips-cm.h b/arch/mips/include/asm/mips-cm.h
-index 407f253bb4a1..390d06a8f1d1 100644
---- a/arch/mips/include/asm/mips-cm.h
-+++ b/arch/mips/include/asm/mips-cm.h
-@@ -161,6 +161,20 @@ static inline bool mips_cm_has_l2sync(void)
- 	CPS_ACCESSOR_RW(gcr, sz, MIPS_CM_CLCB_OFS + off, cl_##name)	\
- 	CPS_ACCESSOR_RW(gcr, sz, MIPS_CM_COCB_OFS + off, co_##name)
+diff --git a/arch/mips/kernel/mips-cm.c b/arch/mips/kernel/mips-cm.c
+index 3bfe85e86a9a..ed98021418b5 100644
+--- a/arch/mips/kernel/mips-cm.c
++++ b/arch/mips/kernel/mips-cm.c
+@@ -5,6 +5,7 @@
+  */
  
-+/*
-+ * Global debug block registers. The redir_db_* accessors reach the debug
-+ * block of another cluster through the redirect block, which must have been
-+ * pointed at it with mips_cm_lock_other(cluster, 0, 0,
-+ * CM_GCR_Cx_OTHER_BLOCK_DEBUG).
-+ */
-+#define GCR_DB_ACCESSOR_RO(sz, off, name)				\
-+	CPS_ACCESSOR_RO(gcr, sz, MIPS_CM_GDB_OFS + off, db_##name)	\
-+	CPS_ACCESSOR_RO(gcr, sz, MIPS_CM_COCB_OFS + off, redir_db_##name)
-+
-+#define GCR_DB_ACCESSOR_RW(sz, off, name)				\
-+	CPS_ACCESSOR_RW(gcr, sz, MIPS_CM_GDB_OFS + off, db_##name)	\
-+	CPS_ACCESSOR_RW(gcr, sz, MIPS_CM_COCB_OFS + off, redir_db_##name)
-+
- /* GCR_CONFIG - Information about the system */
- GCR_ACCESSOR_RO(64, 0x000, config)
- #define CM_GCR_CONFIG_CLUSTER_COH_CAPABLE	BIT_ULL(43)
-@@ -357,7 +371,8 @@ GCR_CX_ACCESSOR_RW(32, 0x018, other)
- #define CM_GCR_Cx_OTHER_BLOCK			GENMASK(25, 24)	/* CM >= 3.5 */
- #define  CM_GCR_Cx_OTHER_BLOCK_LOCAL		0
- #define  CM_GCR_Cx_OTHER_BLOCK_GLOBAL		1
--#define  CM_GCR_Cx_OTHER_BLOCK_USER		2
-+#define  CM_GCR_Cx_OTHER_BLOCK_USER		2	/* GIC */
-+#define  CM_GCR_Cx_OTHER_BLOCK_DEBUG		2	/* GCR */
- #define  CM_GCR_Cx_OTHER_BLOCK_GLOBAL_HIGH	3
- #define CM_GCR_Cx_OTHER_CLUSTER			GENMASK(21, 16)	/* CM >= 3.5 */
- #define CM3_GCR_Cx_OTHER_CORE			GENMASK(13, 8)	/* CM >= 3 */
-@@ -384,6 +399,40 @@ GCR_CX_ACCESSOR_RW(32, 0x030, reset_ext_base)
- #define CM_GCR_Cx_RESET_EXT_BASE_BEVEXCPA	GENMASK(7, 1)
- #define CM_GCR_Cx_RESET_EXT_BASE_PRESENT	BIT(0)
+ #include <linux/errno.h>
++#include <linux/export.h>
+ #include <linux/of.h>
+ #include <linux/percpu.h>
+ #include <linux/spinlock.h>
+@@ -14,8 +15,10 @@
+ #include <asm/mipsregs.h>
  
-+/* GCR_DB_PC_CTL - Control of the CM3 performance counters */
-+GCR_DB_ACCESSOR_RW(32, 0x100, pc_ctl)
-+#define CM_GCR_DB_PC_CTL_PERF_INT_EN		BIT(30)
-+#define CM_GCR_DB_PC_CTL_PERF_OVF_STOP		BIT(29)
-+#define CM_GCR_DB_PC_CTL_P1_RESET		BIT(9)
-+#define CM_GCR_DB_PC_CTL_P1_COUNTON		BIT(8)
-+#define CM_GCR_DB_PC_CTL_P0_RESET		BIT(7)
-+#define CM_GCR_DB_PC_CTL_P0_COUNTON		BIT(6)
-+#define CM_GCR_DB_PC_CTL_CYCL_CNT_RESET		BIT(5)
-+#define CM_GCR_DB_PC_CTL_CYCL_CNT_COUNTON	BIT(4)
-+#define CM_GCR_DB_PC_CTL_PERF_NUM_CNT		GENMASK(3, 0)
-+
-+/* GCR_DB_PC_OV - CM3 performance counter overflow status (write 1 to clear) */
-+GCR_DB_ACCESSOR_RW(32, 0x120, pc_ov)
-+#define CM_GCR_DB_PC_OV_P1_OF			BIT(2)
-+#define CM_GCR_DB_PC_OV_P0_OF			BIT(1)
-+#define CM_GCR_DB_PC_OV_CYCL_CNT_OF		BIT(0)
-+
-+/* GCR_DB_PC_EVENT - CM3 performance counter event selection */
-+GCR_DB_ACCESSOR_RW(32, 0x130, pc_event)
-+#define CM_GCR_DB_PC_EVENT_P1_EVENT		GENMASK(15, 8)
-+#define CM_GCR_DB_PC_EVENT_P0_EVENT		GENMASK(7, 0)
-+
-+/* GCR_DB_PC_CYCL - CM3 performance cycle counter */
-+GCR_DB_ACCESSOR_RW(32, 0x180, pc_cycl)
-+
-+/* GCR_DB_PC_QUALn - CM3 performance counter n event qualifier */
-+GCR_DB_ACCESSOR_RW(64, 0x190, pc_qual0)
-+GCR_DB_ACCESSOR_RW(64, 0x1a0, pc_qual1)
-+
-+/* GCR_DB_PC_CNTn - CM3 performance counter n value */
-+GCR_DB_ACCESSOR_RW(32, 0x198, pc_cnt0)
-+GCR_DB_ACCESSOR_RW(32, 0x1a8, pc_cnt1)
-+
- /**
-  * mips_cm_l2sync - perform an L2-only sync operation
-  *
+ void __iomem *mips_gcr_base;
++EXPORT_SYMBOL_GPL(mips_gcr_base);
+ void __iomem *mips_cm_l2sync_base;
+ int mips_cm_is64;
++EXPORT_SYMBOL_GPL(mips_cm_is64);
+ bool mips_cm_is_l2_hci_broken;
+ 
+ static char *cm2_tr[8] = {
+@@ -373,6 +376,7 @@ void mips_cm_lock_other(unsigned int cluster, unsigned int core,
+ 	 */
+ 	mb();
+ }
++EXPORT_SYMBOL_GPL(mips_cm_lock_other);
+ 
+ void mips_cm_unlock_other(void)
+ {
+@@ -389,6 +393,7 @@ void mips_cm_unlock_other(void)
+ 
+ 	preempt_enable();
+ }
++EXPORT_SYMBOL_GPL(mips_cm_unlock_other);
+ 
+ void mips_cm_error_report(void)
+ {
+diff --git a/arch/mips/kernel/mips-cpc.c b/arch/mips/kernel/mips-cpc.c
+index 4b50c58628dc..b948a1c96e1e 100644
+--- a/arch/mips/kernel/mips-cpc.c
++++ b/arch/mips/kernel/mips-cpc.c
+@@ -6,6 +6,7 @@
+ 
+ #include <linux/bitfield.h>
+ #include <linux/errno.h>
++#include <linux/export.h>
+ #include <linux/percpu.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+@@ -14,6 +15,7 @@
+ #include <asm/mips-cps.h>
+ 
+ void __iomem *mips_cpc_base;
++EXPORT_SYMBOL_GPL(mips_cpc_base);
+ 
+ static DEFINE_PER_CPU_ALIGNED(raw_spinlock_t, cpc_core_lock);
+ 
 
 -- 
 2.43.0
