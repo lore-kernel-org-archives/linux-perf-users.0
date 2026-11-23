@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795471255;
-	b=T2o7G7YLI8q/BbrHBVqNgvbG7EG6tptrh6Pj+PyewTwyx79Ej3JJw59UnMDySTxOLYrl
-	 LiEzSNoRLaRJ098gzKjCoxWl7649NRZB81q5Stvg72PGibxUgvHIwrQt1JDlvBVIV2wRp
-	 PmMzJmqH7GbPHF4twAxfXhJ0nv85CxMUBZaNxrYqAGOE9cQNq35VjCWNQt6C2iN9I2IWp
-	 hRb6fi4LjQI474PmwCbr7j9bRDkxkt363A7etKgNb+ky/HueNyN5KvxRSo9+TPyPQyguZ
-	 6ZsIWXMUq8OgQD8DzlJndY+AEJ6dOM6ss1iiVnVIoC6Qb7h4YA1VpGF9uoCIpDnXLnA==
+	t=1795471258;
+	b=45HvCfEj+xn0jMJJi10irE0GOhn5opzMqR2eWZWwzIZg9+sEv/+QPqKWPQX/A1QI1TNK
+	 B26ikC8Xl+vRbYO4uhBcwbg3F+mW0gFsypk4/1jpmw7iv3xcpnDSLBwlI3XU6VFUwCIqi
+	 SjyVlJVJa0Yz6YgK/iWGJXCdVK6c6duhz8bBlw+mgMneVUUuj8BtQ0YQPskmaoGgB1fQ2
+	 Y7jNqzdq5t6c5cllqkiUn95HRtHs+9dzIL/HFnwOYZek4nEcTYfKKSNZkjz1K57JkiNKR
+	 BIhzVVyYjlTiP2Fa0vaiswPv/E4rmYn13UW6P0tfZnQdz7YOi1WVsD5DsY5ovttP8qQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795471255;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795471258;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=5e5v7gpNkFC6ASicQajgFI5QGmumCqEa2vHlP77bnj0=;
-	b=eyiI2zFkSCMRO5jNYBI+xNET2OoGks6vDI3g67HKtkyqyUZghMNkQlJ3WXqh6tlzhYN7
-	 VxbNb8zgfZ+M56Ceo11PdngIGjogbQD1W9RqVeJ2hUSq4ThWT1HahEfKd0AXDGngPIA4r
-	 Bb0AuKumcOFLOKI+99g6tuV6ocSK74t1jvPgSq8TvjcSKjExrH47+5ldNYN1Mp/zZn4VS
-	 PMWYD2E3/bP1fxhq/ml5U1fKp0pzcyf7PiA7oxyWRbFdr0Wtat7UqUoICI3NSqZPQHXEq
-	 B6k838Xe97c9oHBOv6TyNL1idVKOUGi0jfCxAzbbjbVuhwKVAfYcdmDO83bDeHVdfZA==
+	bh=qH7xXsAwU9CECAgj7c7iuRWnGoutWALTqN+OXYtTjXc=;
+	b=gIHdRDj+M91zw8egqPSkbUJgHwvrg97sd7wqDJvs032sN4nCUczDCY3EjZkyg5uoFaci
+	 ZqylY2IT7rWif/3E7jNcKTyFbiFb5ODnBcduJFxJdM4NbepQdH4k4pYuUQtoPA/wXgjAw
+	 DWEDrhuTU0Rvnj6PcTqiNEU/g2L5BRloW+bTS/6NehtKn92HZ59H/WBDoYy+Q8kndVgcM
+	 3BlgLGmux77ySWl6YXtWrZgr3ujlaMDpukNQ71bgkMPPGzLaxMgSO+j3pHYnoOd0I7hRe
+	 dG+GLR+/AQwgJm5L4y+K43Z9AvMGeiprE76uZtGZpQjodLOoI5uWf2/W0xxjaV609jA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Dn07hJNO;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oThvgs2E;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71991606A327;
-	Mon, 23 Nov 2026 22:00:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28B8606A332;
+	Mon, 23 Nov 2026 22:00:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Dn07hJNO
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9573E1F000CA;
-	Mon, 23 Nov 2026 22:00:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oThvgs2E
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C43231F000CA;
+	Mon, 23 Nov 2026 22:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795471255;
-	bh=5e5v7gpNkFC6ASicQajgFI5QGmumCqEa2vHlP77bnj0=;
+	s=k20260515; t=1795471258;
+	bh=qH7xXsAwU9CECAgj7c7iuRWnGoutWALTqN+OXYtTjXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Dn07hJNO60QrSey/3qaGmK1PILM3vJlhpfK6GLBw7QQMaBwv9zoeSR3R7eQNw6xyW
-	 lh0VolE3GRLIVJJINimGMbxJhl2x+Tw1CRGD9iDeBB3WmHZ3LHQbOoZow+A3j+twSC
-	 kHxhqU4HQ0Lp2TS2l8oM5irBOmWLfl5OggZVrnqz878tGdJc35MeDCdtRisZdmmMaz
-	 7ywOA/YCoUIZGTr+NB5WsP3kyXRPgeQhkFZWXfV2z8+DZ6iJE+YiMS21J7VDfgV+uC
-	 txUKf4+N8rhCh2RkMrI78xISg5wbSWo/VOjcsSGxLGMJ7uyQYeln4eMDRx7mT0QghD
-	 Bg7KcG4MXRZzw==
+	b=oThvgs2EZgV9vQN72S0Y5HNeH0n3rWDWN8sufuLtKQWm0KUWzCBwiyaYNstoWy24U
+	 yOQYSF6cnL006rr6NzWXJYPdAanwvxkurGzAoNVrOpzJ7nWSHaI3QQZrIbT+YawQHo
+	 wo2JHzhsqZDCLcBHV+UIyvg35qNrJgIfYPE+nb3JtnzfzQtgPkhO7UvhpYLUaDNXdq
+	 WAlGXSWM+UCqxSO2jaZYWETB/8+tcX+1EtjG3Ol2P0MuRrEV4EFbBmzLpqcJPvRcsV
+	 e7TNWPZkoqgfsvNF9+ihq8tcDCKmQ+YN6A+wDNn/D38syO/tFZvDuZqgFE2+BW0EG4
+	 JuaD02xMy3A8Q==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v12 07/19] perf annotate-data: Count flexible array accesses for the whole struct
-Date: Mon, 23 Nov 2026 19:00:12 -0300
-Message-ID: <20261123220024.14891-8-acme@kernel.org>
+Subject: [PATCH v12 08/19] perf test: Exercise the x86 operand parser
+Date: Mon, 23 Nov 2026 19:00:13 -0300
+Message-ID: <20261123220024.14891-9-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261123220024.14891-1-acme@kernel.org>
 References: <20261123220024.14891-1-acme@kernel.org>
@@ -70,143 +70,235 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The per-member percentage sums the histogram entries in the member's
-own [offset, offset + size) range.  A flexible array member is resolved
-at or past the end of its struct, so the struct row only covered its
-declared size and showed 0.00% while the member row showed 100.00% and
-the header said N samples.
+Add a unit test for x86 operand parsing.  The 64-bit absolute disp32
+and movabs cases are from the allmodconfig clang build in the preceding
+changes.  Also check a 32-bit absolute address, an immediate, and
+values that should not become absolute addresses.  Both objdump
+spellings of the movabs instruction must yield the KASAN shadow offset.
 
-Take a member's extent as the end of its furthest child as well, so the
-struct counts what was resolved past it.  Union members all start at
-offset 0, so a plain union keeps its size; a member that is itself a
-struct with a flexible array extends the union too.  The TUI browser
-accounts the members the same way, use the extent there as well.
-
-Fixes: aaca646915a1bb53 ("perf annotate-data: Adjust type offset for flex-array")
-Reviewed-by: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/annotate-data.c |  7 +++----
- tools/perf/util/annotate-data.c        | 27 +++++++++++++++++++++++---
- tools/perf/util/annotate-data.h        |  8 ++++++++
- 3 files changed, 35 insertions(+), 7 deletions(-)
+ tools/perf/tests/Build          |   1 +
+ tools/perf/tests/annotate-ops.c | 172 ++++++++++++++++++++++++++++++++
+ tools/perf/tests/builtin-test.c |   1 +
+ tools/perf/tests/tests.h        |   1 +
+ 4 files changed, 175 insertions(+)
+ create mode 100644 tools/perf/tests/annotate-ops.c
 
-diff --git a/tools/perf/ui/browsers/annotate-data.c b/tools/perf/ui/browsers/annotate-data.c
-index 0f778788df4a934b..e4047e97e8a943a4 100644
---- a/tools/perf/ui/browsers/annotate-data.c
-+++ b/tools/perf/ui/browsers/annotate-data.c
-@@ -53,12 +53,11 @@ static int get_member_overhead(struct annotated_data_type *adt,
- 			       struct evsel *leader)
- {
- 	struct annotated_member *member = entry->data;
--	int i, k;
-+	int i, k, end = annotated_member__extent(member);
+diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+index 5eebb2ec5ddefcfd..c7edd8569bbccb06 100644
+--- a/tools/perf/tests/Build
++++ b/tools/perf/tests/Build
+@@ -2,6 +2,7 @@
  
--	for (i = 0; i < member->size; i++) {
-+	for (i = member->offset; i < end; i++) {
- 		struct type_hist *h;
- 		struct evsel *evsel;
--		int offset = member->offset + i;
- 
- 		k = 0;
- 		for_each_group_evsel(evsel, leader) {
-@@ -69,7 +68,7 @@ static int get_member_overhead(struct annotated_data_type *adt,
- 				continue;
- 
- 			h = &adt->histograms[evsel->core.idx];
--			if (hashmap__find(&h->samples, offset, &hist))
-+			if (hashmap__find(&h->samples, i, &hist))
- 				update_hist_entry(&entry->hists[k], hist);
- 			k++;
- 		}
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index 2332d465f9751ef3..c22fec349c47c495 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -2011,7 +2011,7 @@ struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
- 	if (result == NULL)
- 		return NULL;
- 
--	if (result->flex_array && dloc->type_offset > result->self.size) {
-+	if (result->flex_array && dloc->type_offset >= result->self.size) {
- 		struct annotated_member *flex_array = get_flex_array_member(result);
- 
- 		if (flex_array && flex_array->size > 0) {
-@@ -2208,6 +2208,26 @@ static void print_annotated_data_value(struct type_hist *h, u64 period, int nr_s
- 		color_fprintf(stdout, color, " %7.2f", percent);
- }
- 
+ perf-test-y += builtin-test.o
+ perf-test-y += tests-scripts.o
++perf-test-y += annotate-ops.o
+ perf-test-y += parse-events.o
+ perf-test-y += uncore-event-sorting.o
+ perf-test-y += dso-data.o
+diff --git a/tools/perf/tests/annotate-ops.c b/tools/perf/tests/annotate-ops.c
+new file mode 100644
+index 0000000000000000..766126fc2e2f5e98
+--- /dev/null
++++ b/tools/perf/tests/annotate-ops.c
+@@ -0,0 +1,172 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * A flexible array member is resolved past the end of its parent, so the
-+ * parent's samples are not bounded by its size.  A GNU extension non-last
-+ * member with a flexible array can overlap the next member and double-count.
++ * The x86 operand parser: what is a memory reference and where it points.
++ *
++ * The data type resolver follows absolute memory operands; an immediate
++ * is not a memory reference.
 + */
-+int annotated_member__extent(struct annotated_member *member)
++#include <elf.h>
++#include <linux/compiler.h>
++#include <stdlib.h>
++#include <string.h>
++#include "annotate.h"
++#include "debug.h"
++#include "dso.h"
++#include "disasm.h"
++#include "tests.h"
++
++struct op_case {
++	const char		*insn;
++	const struct ins_ops	*ops;
++	const char		*operand;
++	bool			mem_ref;
++	int			offset;
++};
++
++static struct op_case op_cases[] = {
++	/* 32-bit absolute, and the 64-bit sign extended disp32 both ways */
++	{ "mov",    &mov_ops,  "0x8c73448",		true,  0x8c73448 },
++	{ "mov",    &mov_ops,  "0xffffffffff5fc300",	true,  -0xa03d00 },
++	{ "mov",    &mov_ops,  "-0xa03d00",		true,  -0xa03d00 },
++	/* An immediate is not a memory reference */
++	{ "mov",    &mov_ops,  "$0x10",			false, 0 },
++	/* Zero and values wider than a disp32 are not absolute addresses. */
++	{ "mov",    &mov_ops,  "0x0",			false, 0 },
++	{ "mov",    &mov_ops,  "0x100000000",		false, 0 },
++};
++
++static int check_operand(const struct arch *arch, const struct op_case *c,
++			 struct dso *dso64, struct dso *dso32, struct dso *dsorel)
 +{
-+	struct annotated_member *child;
-+	int end = member->offset + member->size;
++	struct disasm_line dl = {
++		.ins = { .name = c->insn, .ops = c->ops },
++	};
++	struct annotated_insn_loc loc;
++	struct annotated_op_loc *op;
++	int ret = 0;
 +
-+	list_for_each_entry(child, &member->children, node) {
-+		int child_end = annotated_member__extent(child);
++	dl.ops.source.raw = (char *)c->operand;
 +
-+		if (child_end > end)
-+			end = child_end;
++	if (annotate_get_insn_location(arch, &dl, &loc) < 0)
++		return TEST_FAIL;
++
++	op = &loc.ops[INSN_OP_SOURCE];
++	if (op->mem_ref != c->mem_ref) {
++		pr_debug("'%s %s': mem_ref %d, expected %d\n", c->insn,
++			 c->operand, op->mem_ref, c->mem_ref);
++		ret = TEST_FAIL;
++	}
++	if (op->mem_ref && op->offset != c->offset) {
++		pr_debug("'%s %s': offset %#x, expected %#x\n", c->insn,
++			 c->operand, op->offset, c->offset);
++		ret = TEST_FAIL;
++	}
++	if (c->mem_ref &&
++	    (!annotated_op_loc__is_abs(op, dso64) ||
++	     !annotated_op_loc__is_abs(op, dso32) ||
++	     annotated_op_loc__abs_addr(op, dso64) != (u64)(s64)c->offset ||
++	     annotated_op_loc__abs_addr(op, dso32) != (u32)c->offset)) {
++		pr_debug("'%s %s': wrong absolute address\n", c->insn, c->operand);
++		ret = TEST_FAIL;
++	}
++	/* The same operand in a relocatable object is an addend, not an address */
++	if (c->mem_ref && annotated_op_loc__is_abs(op, dsorel)) {
++		pr_debug("'%s %s': absolute address in a relocatable object\n",
++			 c->insn, c->operand);
++		ret = TEST_FAIL;
 +	}
 +
-+	return end;
++	return ret;
 +}
 +
- static void print_annotated_data_type(struct annotated_data_type *mem_type,
- 				      struct annotated_member *member,
- 				      struct evsel *evsel, int indent)
-@@ -2215,6 +2235,7 @@ static void print_annotated_data_type(struct annotated_data_type *mem_type,
- 	struct annotated_member *child;
- 	struct type_hist *h;
- 	int i, nr_events = 0, samples = 0;
-+	int end = annotated_member__extent(member);
- 	u64 period = 0;
- 	int width = symbol_conf.show_total_period ? 11 : 7;
- 	struct evsel *pos;
-@@ -2228,10 +2249,10 @@ static void print_annotated_data_type(struct annotated_data_type *mem_type,
- 
- 		samples = 0;
- 		period = 0;
--		for (i = 0; i < member->size; i++) {
-+		for (i = member->offset; i < end; i++) {
- 			struct type_hist_entry *entry;
- 
--			if (!hashmap__find(&h->samples, member->offset + i, &entry))
-+			if (!hashmap__find(&h->samples, i, &entry))
- 				continue;
- 
- 			samples += entry->nr_samples;
-diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-index 184262c7356213fa..6e0d410929651426 100644
---- a/tools/perf/util/annotate-data.h
-+++ b/tools/perf/util/annotate-data.h
-@@ -260,6 +260,9 @@ void global_var_type__tree_delete(struct rb_root *root);
- /* Print data type annotation (including members) on stdout */
- int hist_entry__annotate_data_tty(struct hist_entry *he, struct evsel *evsel);
- 
-+/* End offset of a member, including a flexible array's children */
-+int annotated_member__extent(struct annotated_member *member);
++struct movabs_case {
++	const char	*name;
++	const char	*operand;
++	s64		imm;
++};
 +
- /* Get name of member field at the given offset in the data type */
- int annotated_data_type__get_member_name(struct annotated_data_type *adt,
- 					 char *buf, size_t sz, int member_offset);
-@@ -316,6 +319,11 @@ static inline int hist_entry__annotate_data_tty(struct hist_entry *he __maybe_un
- 	return -1;
- }
- 
-+static inline int annotated_member__extent(struct annotated_member *member)
++/* The KASAN shadow offset movabs, as both disassemblers print it */
++static const struct movabs_case movabs_cases[] = {
++	{ "movabsq", "$-0x2000040000000000, %r15 # imm = 0xDFFFFC0000000000",
++	  -0x2000040000000000LL },
++	{ "movabs",  "$0xdffffc0000000000,%r15", -0x2000040000000000LL },
++};
++
++static int check_movabs(const struct arch *arch, const struct movabs_case *c)
 +{
-+	return member->offset + member->size;
++	struct disasm_line dl = { .ins = { .name = c->name } };
++	struct annotated_insn_loc loc;
++	int ret = TEST_FAIL;
++
++	dl.ops.raw = strdup(c->operand);
++	if (dl.ops.raw == NULL)
++		return TEST_FAIL;
++
++	dl.ins.ops = ins__find(arch, c->name, &dl);
++	if (dl.ins.ops != &mov_ops || dl.ins.ops->parse(arch, &dl.ops, NULL, &dl) < 0) {
++		pr_debug("'%s %s': not parsed as a mov\n", c->name, c->operand);
++		goto out;
++	}
++
++	/*
++	 * get_dwarf_regnum() is a stub returning -1 when perf is built
++	 * without libdw, the target register cannot be resolved then.
++	 */
++#ifdef HAVE_LIBDW_SUPPORT
++	if (annotate_get_insn_location(arch, &dl, &loc) == 0 &&
++	    !loc.ops[INSN_OP_SOURCE].mem_ref && loc.ops[INSN_OP_SOURCE].imm &&
++	    loc.ops[INSN_OP_SOURCE].imm_value == c->imm &&
++	    loc.ops[INSN_OP_TARGET].reg1 != -1)
++#else
++	if (annotate_get_insn_location(arch, &dl, &loc) == 0 &&
++	    !loc.ops[INSN_OP_SOURCE].mem_ref && loc.ops[INSN_OP_SOURCE].imm &&
++	    loc.ops[INSN_OP_SOURCE].imm_value == c->imm)
++#endif
++		ret = TEST_OK;
++	else
++		pr_debug("'%s %s': not an immediate to a register\n",
++			 c->name, c->operand);
++out:
++	free(dl.ops.source.raw);
++	free(dl.ops.target.raw);
++	free(dl.ops.raw);
++	return ret;
 +}
 +
- static inline int annotated_data_type__get_member_name(struct annotated_data_type *adt __maybe_unused,
- 						       char *buf __maybe_unused,
- 						       size_t sz __maybe_unused,
++static int test__annotate_ops(struct test_suite *test __maybe_unused,
++			      int subtest __maybe_unused)
++{
++	struct e_machine_and_e_flags id = { .e_machine = EM_X86_64, };
++	const struct arch *arch = arch__new_x86(&id, NULL);
++	struct dso *dso64 = dso__new("annotate-ops-64");
++	struct dso *dso32 = dso__new("annotate-ops-32");
++	struct dso *dsorel = dso__new("annotate-ops-rel");
++	size_t i;
++	int ret = 0;
++
++	if (arch == NULL || dso64 == NULL || dso32 == NULL || dsorel == NULL) {
++		dso__put(dso64);
++		dso__put(dso32);
++		dso__put(dsorel);
++		free((void *)arch);
++		return TEST_FAIL;
++	}
++
++	dso__set_is_64_bit(dso64, true);
++	dso__set_is_64_bit(dso32, false);
++	dso__set_rel(dsorel, ET_REL);
++
++	for (i = 0; i < ARRAY_SIZE(op_cases); i++)
++		ret |= check_operand(arch, &op_cases[i], dso64, dso32, dsorel);
++
++	for (i = 0; i < ARRAY_SIZE(movabs_cases); i++)
++		ret |= check_movabs(arch, &movabs_cases[i]);
++
++	dso__put(dso64);
++	dso__put(dso32);
++	dso__put(dsorel);
++	free((void *)arch);
++	return ret;
++}
++
++DEFINE_SUITE("Annotate operand parsing", annotate_ops);
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 01c78ef20b97dec9..a27baf3a819ccf36 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -117,6 +117,7 @@ static struct test_suite *generic_tests[] = {
+ 	&suite__openat_syscall_event_on_all_cpus,
+ 	&suite__basic_mmap,
+ 	&suite__mem,
++	&suite__annotate_ops,
+ 	&suite__parse_events,
+ 	&suite__uncore_event_sorting,
+ 	&suite__expr,
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index af822885890dda73..963cb34acd345153 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -153,6 +153,7 @@ DECLARE_SUITE(sample_parsing);
+ DECLARE_SUITE(keep_tracking);
+ DECLARE_SUITE(parse_no_sample_id_all);
+ DECLARE_SUITE(dwarf_unwind);
++DECLARE_SUITE(annotate_ops);
+ DECLARE_SUITE(expr);
+ DECLARE_SUITE(hists_filter);
+ DECLARE_SUITE(mmap_thread_lookup);
 -- 
 2.56.0
 
