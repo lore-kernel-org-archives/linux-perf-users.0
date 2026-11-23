@@ -1,44 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795471290;
-	b=xWDTneeSwbm+MpEafwXKKGO3e4VEjfntJXlXssZt0Tcm+C46pXrAU2n427pXdb23bBAD
-	 BohRA1iLyF/jrE1kMM0MsKXCHNEXXqz1LEw0EOkrw5rjdskG6yvFOP9ykquk3Hh2nMwEw
-	 gEfySEBJufZBrUk35siyr2y/PnfGRujbqPT8ZaI4D3VPAAaszOeGvlJyouwjgFf+X/iCf
-	 i1R4Oy9zeA1MkRQX/rJrO6JRXeXW6FdtTpKrg79qsUHL9wfkLUpmzSFJKFlZiDur1LLbE
-	 iGyUj/x1E+6OLNEnERMH2roudzsl1/plmotTJnx6ybl0xAIhkNnNVcCeNOtrqRIL4iQ==
+	t=1795471294;
+	b=pnSqi3Dybji2Acw5jYiaaYveDfumaMSv4VoimliYMG0PMC1nRAONWTVdJLxA2zl3rVQs
+	 Jfpi30EL3Mq6gnW+4uw7lGjIS4DUxnfvGqzejrJSCrw0nMoeJAEcQ8Knq5fztMfdtkhK5
+	 kulMn/nvTZxqsR6TJGWH6yrDdJLJsT72G54ZCyKg+w+n0l5H4KZuchYvIQBOdgHraEeYS
+	 0x0bECchiLCKm5f+Grq6+U+PvmBayHjrU2WxMt8KciDIBaF+c5a88iIfKnFy3OzT41WF7
+	 /IOLuTmY4Fc351sKiE0D9cuFhnySMSDeQ58akpr8HS1enoqzcWt8t2BISOPPqxFi7ww==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795471290;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795471294;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=/SyCbfKWp/zQ9Io6eDaSQnODKI6Nsw3B363EDeWdg+M=;
-	b=4cXDpNhxSjMmaWtNO6RfCQ1i6P1mgA/4LCzQmJDa37hibyrV07ZI+SuPOfztv8wZBWla
-	 ExjhhWgfZJpQdy/UKR9RJDMitbr9yQmNvyTFidxtW0Pjw6Akngs7FqrgImwKM43Bjxl/o
-	 ptwnojqmq2ZhugRtFpPnMYJkh4e4HCn8K7qCmntGaYILnCbPhr3Dot4vHUM5jDQTUCdUL
-	 EfIZbEz+i/EfBBfGS2XdqNsm6JTGY27lUjD0TnT61D1N/RFfzbKXKL4eN65Ss/rpNdmoc
-	 Uu5J2XWzMq5Kone+HGZX+BGo4kPiOy1Xz9vryWa9EIKq+pDs/HtycvDRfnHfVdq6krQ==
+	 In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=pt8iyayXPUi49O4SY1n2UqqeQ4eSVUj6JDIm+hhFJQM=;
+	b=D4SuU6Ov1j/AqeF3ihuLlMVY4Zr8ZwhS9LRpTEQ/cR9zEXya3pTveV6H+emecQkupTn2
+	 JWbJDpf8r5Bqok7iF+pxW6hE1zs/mWjQdD4UZueZDYyYyrUtCF3G03s0hzlHrvys+bB5m
+	 MdlX6jV7230JtTX4VBwgh3aom9O2B/lawcAsJ+Y/8dKhomU/qqUaYoCPW0oql0o/efi9N
+	 0B5MK0izgr0ZS71Au3kCn7pfsUnrip1icoKnA9dGRGAiqjL+PH5u7IPxTGUMqoPW5urTU
+	 qAhYF8NCteN4IS77ymXuNyw6El/Saz4635DhbwrVeLL46u8Xchvxa53ovKqjjmdvDHA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=V87asJ9n;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jUbJcu1g;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D681B606A321;
-	Mon, 23 Nov 2026 22:01:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023B8606A32C;
+	Mon, 23 Nov 2026 22:01:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=V87asJ9n
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAD5A1F000CA;
-	Mon, 23 Nov 2026 22:01:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jUbJcu1g
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 271F31F000C0;
+	Mon, 23 Nov 2026 22:01:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795471290;
-	bh=/SyCbfKWp/zQ9Io6eDaSQnODKI6Nsw3B363EDeWdg+M=;
+	s=k20260515; t=1795471293;
+	bh=pt8iyayXPUi49O4SY1n2UqqeQ4eSVUj6JDIm+hhFJQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=V87asJ9nJA4KnrzegxriJAkYqzVcfxf2hUisMzqh6gHeE7hiykL0+MPwbDbfUXmtA
-	 amjFltWyw0kc+yml2UePJGMty3mtMRWQ2yzYdxcoToJYhBggpHuyHme62XpOGCL0/4
-	 6wsCTemj1uhbNrrNRstH1LU8xTk2cYGwu4aPDzUqfVOsnHC5/8uUF73TO3lS21Vh6n
-	 bXg+Q3tg87wwO/O6gLzBUQm3DtsojwizaVntMOdJTaUfax+xWda8uvhXJdjQrAw6PA
-	 HPvTAxL3tR1RfvaukKeuXLraC3IY8A79+upwkz5xCe41utruH+oYg0rCCuNIhN2yhX
-	 9URN8cadIOieA==
+	b=jUbJcu1gX1weoIs0AZmfNce/JA7ZLE4xAqnKkvBmdht66czeAsxAGDn71kCA2pYSk
+	 dc8z6jOfbvLHz+lYDQUkHDrpToDDQ/L69tCs0c/omdZ2AUwnXEgW7JUE7wXQhCDOw4
+	 FSkpi4Dp1c3rXGy/9qYB1+UNR1lglyb9SEou/+UqcOH+LY0H46NryX6eS279ozxWbA
+	 zUkDaey9i74MX7VLufl+gkq86me0rMWBuru20DMrFemSf7dFQjLk94KvPUernBChvw
+	 Mwt50W15zdYjt9iywmG28ucWN7axYf15q0+g6+EiVqKgn7B+ehbD+NmpYgNmTiEi+1
+	 mzVNvzJzJbMmg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +52,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v12 18/19] perf scripts: Add a coverage harness for perf
-Date: Mon, 23 Nov 2026 19:00:23 -0300
-Message-ID: <20261123220024.14891-19-acme@kernel.org>
+Subject: [PATCH v12 19/19] perf scripts: Add a coverage table
+Date: Mon, 23 Nov 2026 19:00:24 -0300
+Message-ID: <20261123220024.14891-20-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261123220024.14891-1-acme@kernel.org>
 References: <20261123220024.14891-1-acme@kernel.org>
@@ -66,256 +67,180 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Build perf with clang source based coverage, run the complete perf test
-suite, merge the raw profiles and report line and function coverage,
-optionally against a baseline.  Wired as 'make -C tools/perf coverage'
-and 'coverage-prep'; coverage-prep builds the instrumented perf apart
-from the test run, for the root tests on the bare metal host while
-building in the development container.
+Render the report of the last coverage run as a table of the files with
+the most uncovered lines, biggest gap first; --all lists every file and
+-f picks files explicitly, failing when a requested file has no coverage
+data.  coverage.sh prints the table when a run finishes; it is also wired
+as 'make -C tools/perf coverage-table', to print just the table.  It only
+reads coverage.sh's report.txt, so the measurement and the table are
+reviewed and changed separately.
 
-The report covers every instrumented C and C++ source, not only the paths
-the tests walk; the Rust workload is built and exercised, but rustc does
-not get coverage flags.  The static libbpf build inherits EXTRA_CFLAGS,
-the C++ sources get the same coverage flags through EXTRA_CXXFLAGS
-without dropping a CXXFLAGS from the environment, and the dlopened UI,
-jvmti, Python and dlfilter libraries are passed to llvm-cov as separate
-objects.  The host tools are built with clang too, so the build does
-not need gcc.  The test suite runs in parallel by default; --sequential
-runs one test at a time, and --timeout SECS raises the per-test timeout,
-for machines with few CPUs or slow storage.  'perf test' exits 0 even
-when tests fail and when the test filter matches nothing, so the status
-comes from its "Failed tests :" and "Timed out tests :" lines and a run
-with every count zero is an error.  The dlfilter objects and shared
-libraries are rebuilt on each perf build, the python extension is
-dropped before a build and its setuptools object cache after it, as
-that cache keys on timestamps only.  The built extension then stays in
-the build dir, so a second root run of the prepared build keeps passing
-the python tests.
+For example, with --top 4 on a full test suite run:
+
+    $ make -C tools/perf coverage-table O=/tmp/build/coverage \
+          COVERAGE_ARGS="--top 4"
+    tools/perf (no tests/ or bench/), 100+ executable lines:
+    the 4 biggest uncovered gaps, start here when adding coverage tests.
+    --all for every file: make -C tools/perf coverage-table O=/tmp/build/coverage COVERAGE_ARGS="--all"
+
+    ┌──────────────────────────────────────────┬────────┬────────┬────────┬─────────────────────────────┬─────────────┬──────────┐
+    │ File                                     │  Lines │    Hit │   Miss │        Line Coverage        │       Funcs │  FuncCov │
+    ├──────────────────────────────────────────┼────────┼────────┼────────┼─────────────────────────────┼─────────────┼──────────┤
+    │ util/intel-pt.c                          │   3237 │      0 │   3237 │ ░░░░░░░░░░░░░░░░░░░░   0.0% │     0/142   │    0.00% │
+    │ util/intel-pt-decoder/intel-pt-decoder.c │   3208 │      0 │   3208 │ ░░░░░░░░░░░░░░░░░░░░   0.0% │     0/119   │    0.00% │
+    │ ui/browsers/hists.c                      │   2742 │      0 │   2742 │ ░░░░░░░░░░░░░░░░░░░░   0.0% │     0/124   │    0.00% │
+    │ builtin-sched.c                          │   3737 │   1543 │   2194 │ ████████░░░░░░░░░░░░  41.3% │    62/141   │   43.97% │
+    ├──────────────────────────────────────────┼────────┼────────┼────────┼─────────────────────────────┼─────────────┼──────────┤
+    │ TOTAL (perf)                             │ 174097 │  86374 │  87723 │ █████████░░░░░░░░░░░  49.6% │  5650/9358  │   60.38% │
+    └──────────────────────────────────────────┴────────┴────────┴────────┴─────────────────────────────┴─────────────┴──────────┘
 
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/.gitignore          |   1 +
- tools/perf/Makefile            |  12 +-
- tools/perf/Makefile.config     |   1 +
- tools/perf/Makefile.perf       |   9 +-
- tools/perf/scripts/coverage.sh | 486 +++++++++++++++++++++++++++++++++
- 5 files changed, 505 insertions(+), 4 deletions(-)
- create mode 100755 tools/perf/scripts/coverage.sh
+ tools/perf/Makefile                  |   5 +-
+ tools/perf/Makefile.perf             |   3 +-
+ tools/perf/scripts/coverage-table.sh | 337 +++++++++++++++++++++++++++
+ tools/perf/scripts/coverage.sh       |  14 +-
+ 4 files changed, 354 insertions(+), 5 deletions(-)
+ create mode 100755 tools/perf/scripts/coverage-table.sh
 
-diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
-index 3b968c5158b822ce..d263877366ca1440 100644
---- a/tools/perf/.gitignore
-+++ b/tools/perf/.gitignore
-@@ -27,6 +27,7 @@ stats-*.csv
- cscope*
- config.mak
- config.mak.autogen
-+/cov/
- *-bison.*
- *-flex.*
- *.pyc
 diff --git a/tools/perf/Makefile b/tools/perf/Makefile
-index 00baf90e5bda7123..d9ad8c0d796c2852 100644
+index d9ad8c0d796c2852..5da13faa1c18b510 100644
 --- a/tools/perf/Makefile
 +++ b/tools/perf/Makefile
-@@ -140,6 +140,16 @@ check-headers:
- sync-headers:
- 	@./scripts/sync-headers.sh $(SYNC_HEADERS_ARGS)
+@@ -150,6 +150,9 @@ coverage-prep:
+ coverage:
+ 	@./scripts/coverage.sh $(coverage_o) $(COVERAGE_ARGS)
  
-+coverage_o = $(if $(O),\
-+$(if $(shell cd $(PWD); test -d $(O) || echo $(O)),\
-+$(error O=$(O) does not exist),--build-dir=$(FULL_O)))
-+
-+coverage-prep:
-+	@./scripts/coverage.sh --prep $(coverage_o) $(COVERAGE_ARGS)
-+
-+coverage:
-+	@./scripts/coverage.sh $(coverage_o) $(COVERAGE_ARGS)
++coverage-table:
++	@./scripts/coverage-table.sh $(coverage_o) $(COVERAGE_ARGS)
 +
  #
  # All other targets get passed through:
  #
-@@ -147,4 +157,4 @@ sync-headers:
+@@ -157,4 +160,4 @@ coverage:
  	$(print_msg)
  	$(make)
  
--.PHONY: all clean tags TAGS FORCE Makefile build-test build-test-tarball check-headers sync-headers
-+.PHONY: all clean tags TAGS FORCE Makefile build-test build-test-tarball check-headers sync-headers coverage coverage-prep
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 88b8bc13a578a24f..11043520675d2c6a 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -19,6 +19,7 @@ detected     = $(shell echo "$(1)=y"       >> $(OUTPUT).config-detected)
- detected_var = $(shell echo "$(1)=$($(1))" >> $(OUTPUT).config-detected)
- 
- CFLAGS := $(EXTRA_CFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
-+CXXFLAGS := $(CXXFLAGS) $(EXTRA_CXXFLAGS)
- HOSTCFLAGS := $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
- 
- # This is required because the kernel is built with this and some of the code
+-.PHONY: all clean tags TAGS FORCE Makefile build-test build-test-tarball check-headers sync-headers coverage coverage-prep
++.PHONY: all clean tags TAGS FORCE Makefile build-test build-test-tarball check-headers sync-headers coverage coverage-prep coverage-table
 diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index d4b641925ab296db..1b4efe6254fa0370 100644
+index 1b4efe6254fa0370..6427d3a012c465d1 100644
 --- a/tools/perf/Makefile.perf
 +++ b/tools/perf/Makefile.perf
-@@ -779,13 +779,13 @@ $(OUTPUT)perf-read-vdsox32: perf-read-vdso.c util/find-map.c
- 	$(QUIET_CC)$(CC) -mx32 $(filter -static,$(LDFLAGS)) -Wall -Werror -o $@ perf-read-vdso.c
- endif
- 
--$(OUTPUT)dlfilters/%.o: dlfilters/%.c include/perf/perf_dlfilter.h
-+$(OUTPUT)dlfilters/%.o: dlfilters/%.c include/perf/perf_dlfilter.h FORCE
- 	$(Q)$(MKDIR) -p $(OUTPUT)dlfilters
- 	$(QUIET_CC)$(CC) -c -Iinclude $(EXTRA_CFLAGS) -o $@ -fpic $<
- 
- .SECONDARY: $(DLFILTERS:.so=.o)
- 
--$(OUTPUT)dlfilters/%.so: $(OUTPUT)dlfilters/%.o
-+$(OUTPUT)dlfilters/%.so: $(OUTPUT)dlfilters/%.o FORCE
- 	$(QUIET_LINK)$(CC) $(filter-out -static,$(LDFLAGS)) $(EXTRA_CFLAGS) -shared -o $@ $<
- 
- ifndef NO_JVMTI
-@@ -812,7 +812,7 @@ $(LIBAPI)-clean:
- $(LIBBPF): FORCE | $(LIBBPF_OUTPUT)
- 	$(Q)$(MAKE) -C $(LIBBPF_DIR) FEATURES_DUMP=$(FEATURE_DUMP_EXPORT) \
- 		O= OUTPUT=$(LIBBPF_OUTPUT)/ DESTDIR=$(LIBBPF_DESTDIR) prefix= subdir= \
--		EXTRA_CFLAGS="-fPIC" $@ install_headers
-+		EXTRA_CFLAGS="-fPIC $(EXTRA_CFLAGS)" $@ install_headers
- 
- $(LIBBPF)-clean:
- 	$(call QUIET_CLEAN, libbpf)
-@@ -877,6 +877,9 @@ help:
- 	@echo '  check-headers		- check which header copies are out of sync with the kernel'
+@@ -878,7 +878,8 @@ help:
  	@echo '  sync-headers		- sync those header copies with the kernel, creating commits'
  	@echo '			  (SYNC_HEADERS_ARGS="..." passes options to the script)'
-+	@echo '  coverage-prep		- build perf with clang coverage, ready for a root test run'
-+	@echo '  coverage		- build perf with clang coverage, run the tests and report'
-+	@echo '			  (O=DIR uses an existing build dir; COVERAGE_ARGS="..." passes options)'
+ 	@echo '  coverage-prep		- build perf with clang coverage, ready for a root test run'
+-	@echo '  coverage		- build perf with clang coverage, run the tests and report'
++	@echo '  coverage		- build perf with clang coverage, run the tests, report and show the table'
++	@echo '  coverage-table	- print a text table of the last coverage run'
+ 	@echo '			  (O=DIR uses an existing build dir; COVERAGE_ARGS="..." passes options)'
  
  
- DOC_TARGETS := doc man html info pdf
-diff --git a/tools/perf/scripts/coverage.sh b/tools/perf/scripts/coverage.sh
+diff --git a/tools/perf/scripts/coverage-table.sh b/tools/perf/scripts/coverage-table.sh
 new file mode 100755
-index 0000000000000000..e9a4cf807850e1c7
+index 0000000000000000..31d23b33b8720c33
 --- /dev/null
-+++ b/tools/perf/scripts/coverage.sh
-@@ -0,0 +1,486 @@
++++ b/tools/perf/scripts/coverage-table.sh
+@@ -0,0 +1,337 @@
 +#!/bin/bash
 +# SPDX-License-Identifier: GPL-2.0
 +#
 +# Copyright (C) 2026, Red Hat Inc, Arnaldo Carvalho de Melo <acme@redhat.com>
 +#
-+# Build perf with clang source based coverage, run the perf test suite and
-+# report line coverage.
-+# The build goes into tools/perf and the profiles and report into
-+# tools/perf/cov; -b and -c override them, following perf's O= layout.
-+# --prep stops after the instrumented build, for running the tests later as
-+# root with the same build directory.
++# Render the report of the last coverage run as a text table, like pahole's
++# coverage_table.py.  Without -f the default is the tool's files, not its
++# tests and benches, with the most uncovered lines, biggest gap first;
++# --all lists every tools/perf file, most covered first.  The total is the
++# tools/perf subtotal, the run summary has the whole report.
 +
 +set -euo pipefail
 +
 +PERF_DIR=$(cd "$(dirname "$0")/.." && pwd -P)
 +TOOLS_DIR=$(cd "$PERF_DIR/.." && pwd -P)
-+SRC_DIR=$(cd "$TOOLS_DIR/.." && pwd -P)
 +
 +BUILD_DIR=${BUILD_DIR:-}
 +COV_DIR=${COV_DIR:-}
-+JOBS=${JOBS:-$(nproc 2>/dev/null || echo 1)}
-+LLVM_PROFDATA=${LLVM_PROFDATA:-llvm-profdata}
-+LLVM_COV=${LLVM_COV:-llvm-cov}
-+DWARF_VERSION=${DWARF_VERSION:-4}
-+COVERAGE_CFLAGS="-fprofile-instr-generate -fcoverage-mapping -gdwarf-$DWARF_VERSION"
++TOP=${TOP:-20}
++MIN_LINES=${MIN_LINES:-100}
++TABLE_ALL=0
++FOCUS=()
 +
-+PREP=0
-+SKIP_BUILD=0
-+SEQUENTIAL=0
-+TEST_TIMEOUT=
-+USE_BASELINE=1
-+TESTS=()
-+
-+ROOT=0
-+[ "$(id -u)" = 0 ] && ROOT=1
-+
-+say()  { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
-+warn() { printf '\033[0;33mwarning:\033[0m %s\n' "$*" >&2; }
 +die()  { printf '\033[0;31merror:\033[0m %s\n' "$*" >&2; exit 1; }
 +
 +usage()
 +{
 +	cat <<EOF
-+Usage: scripts/coverage.sh [options] [test name fragment...]
++Usage: scripts/coverage-table.sh [options]
 +
-+Builds perf with clang source based coverage, runs the complete perf test
-+suite and reports line coverage.  Use -t to run a subset.
++Render the report of the last coverage run as a text table.  Run
++scripts/coverage.sh first to produce the report.
 +
 +Options:
-+  -b, --build-dir DIR    existing perf build directory (default: $PERF_DIR)
-+  -c, --cov-dir DIR      profiles and report (default: BUILD_DIR/cov)
-+  -j, --jobs N           parallel build jobs (default: $JOBS)
-+  -t, --tests "A;B"      test name fragments, ';' separated (default: all)
-+      --no-baseline      do not compare against or update the baseline
-+      --prep             build the instrumented perf and stop
-+      --sequential       run the tests one at a time, not in parallel
-+      --timeout SECS     timeout per test in seconds (default: 120)
++  -b, --build-dir DIR    build directory of the run (default: $PERF_DIR)
++  -c, --cov-dir DIR      directory with report.txt (default: BUILD_DIR/cov)
++  -f, --focus FILE       add a file to the table (repeatable)
++      --top N            default view: the N files with the most uncovered
++                         lines (default: $TOP, 0 to disable)
++      --all              list every tools/perf file, most covered first
++      --min-lines N      default view: only files with N+ executable
++                         lines (default: $MIN_LINES)
 +  -h, --help             show this help
 +
-+Environment: BUILD_DIR, COV_DIR, JOBS, LLVM_COV, LLVM_PROFDATA,
-+DWARF_VERSION
-+
-+Through make:
-+  make -C tools/perf coverage
-+  make -C tools/perf coverage-prep O=/tmp/build/perf-coverage
-+  sudo make -C tools/perf coverage O=/tmp/build/perf-coverage
++Environment: BUILD_DIR, COV_DIR, TOP, MIN_LINES
 +EOF
 +}
 +
-+add_tests()
-+{
-+	local -a parts=()
-+	local test
-+
-+	[ -n "$1" ] || die "--tests needs a test name"
-+	IFS=';' read -r -a parts <<< "$1"
-+	for test in "${parts[@]}"; do
-+		# Keep spaces within names, not around the separators.
-+		test="${test#"${test%%[![:space:]]*}"}"
-+		test="${test%"${test##*[![:space:]]}"}"
-+		[ -n "$test" ] || die "--tests needs a test name"
-+		TESTS+=("$test")
-+	done
-+}
-+
 +while [ $# -gt 0 ]; do
-+	case "$1" in
-+	--build-dir=*) BUILD_DIR=${1#*=} ;;
-+	--cov-dir=*)   COV_DIR=${1#*=} ;;
-+	--jobs=*)      JOBS=${1#*=} ;;
-+	--tests=*)     add_tests "${1#*=}" ;;
-+	-b|--build-dir) BUILD_DIR=${2:?$1 needs a value}; shift ;;
-+	-c|--cov-dir)   COV_DIR=${2:?$1 needs a value}; shift ;;
-+	-j|--jobs)      JOBS=${2:?$1 needs a value}; shift ;;
-+	-t|--tests)     add_tests "${2:?$1 needs a value}"; shift ;;
-+	--no-baseline)  USE_BASELINE=0 ;;
-+	--prep)         PREP=1 ;;
-+	--sequential)   SEQUENTIAL=1 ;;
-+	--timeout=*)    TEST_TIMEOUT=${1#*=} ;;
-+	--timeout)      TEST_TIMEOUT=${2:?$1 needs a value}; shift ;;
++	arg=$1
++	optval=
++	case "$arg" in
++	--*=*) optval=${arg#*=}; arg=${arg%%=*}
++	       [ -n "$optval" ] || die "$arg needs a value" ;;
++	esac
++
++	case "$arg" in
++	--all|-h|--help)
++		[ -z "$optval" ] || die "$arg takes no value" ;;
++	esac
++
++	case "$arg" in
++	-b|--build-dir) BUILD_DIR=${optval:-${2:?$arg needs a value}}
++	                [ -z "$optval" ] && shift ;;
++	-c|--cov-dir)   COV_DIR=${optval:-${2:?$arg needs a value}}
++	                [ -z "$optval" ] && shift ;;
++	-f|--focus)     FOCUS+=("${optval:-${2:?$arg needs a value}}")
++	                [ -z "$optval" ] && shift ;;
++	--top)          TOP=${optval:-${2:?$arg needs a value}}
++	                [ -z "$optval" ] && shift ;;
++	--min-lines)    MIN_LINES=${optval:-${2:?$arg needs a value}}
++	                [ -z "$optval" ] && shift ;;
++	--all)          TABLE_ALL=1 ;;
 +	-h|--help)      usage; exit 0 ;;
-+	-*)             die "unknown option: $1 (see --help)" ;;
-+	*)              TESTS+=("$1") ;;
++	-*)             die "unknown option: $arg (see --help)" ;;
++	*)              die "unexpected argument: $arg (see --help)" ;;
 +	esac
 +	shift
 +done
 +
 +[ -n "$BUILD_DIR" ] || BUILD_DIR=$PERF_DIR
 +BUILD_DIR=$(realpath -m "$BUILD_DIR")
-+[ -d "$BUILD_DIR" ] ||
-+	die "$BUILD_DIR does not exist; create it first, as with 'make O=DIR'"
-+
 +[ -n "$COV_DIR" ] || COV_DIR=$BUILD_DIR/cov
 +COV_DIR=$(realpath -m "$COV_DIR")
++REPORT=$COV_DIR/report.txt
++
++[ -f "$REPORT" ] || die "no $REPORT, run coverage first"
++[[ $TOP =~ ^[0-9]+$ ]] || die "--top wants a number, not '$TOP'"
++[[ $MIN_LINES =~ ^[0-9]+$ ]] ||
++	die "--min-lines wants a number, not '$MIN_LINES'"
++# awk reads 08 as eight, printf as an invalid octal number; use decimal.
++TOP=$((10#$TOP))
++MIN_LINES=$((10#$MIN_LINES))
 +
 +# An in-tree build has the sources below BUILD_DIR, so only a separate
 +# build directory can tell generated files apart from the tree's sources.
@@ -335,214 +260,6 @@ index 0000000000000000..e9a4cf807850e1c7
 +		print out
 +	}')
 +fi
-+
-+[[ $JOBS =~ ^[0-9]+$ ]] || die "--jobs wants a number, not '$JOBS'"
-+[[ $DWARF_VERSION =~ ^[0-9]+$ ]] ||
-+	die "DWARF_VERSION wants a number, not '$DWARF_VERSION'"
-+[ -z "$TEST_TIMEOUT" ] || [[ $TEST_TIMEOUT =~ ^[0-9]+$ ]] ||
-+	die "--timeout wants a number, not '$TEST_TIMEOUT'"
-+
-+#
-+# The tests execute $BUILD_DIR/perf, root included: refuse a directory
-+# owned by somebody else or writable by another user.
-+#
-+TRUST_UID=$(id -u)
-+if [ "$ROOT" = 1 ]; then
-+	if [ -n "${SUDO_UID:-}" ]; then
-+		TRUST_UID=$SUDO_UID
-+	else
-+		TRUST_UID=$(stat -c %u "$PERF_DIR" 2>/dev/null) ||
-+			die "could not stat $PERF_DIR"
-+	fi
-+fi
-+TRUST_GID=$(id -g "$TRUST_UID") ||
-+	die "could not find the group of uid $TRUST_UID"
-+
-+check_owner()
-+{
-+	local path=$1 uid gid mode
-+
-+	[ -e "$path" ] || return 0
-+	read -r uid gid mode < <(stat -c '%u %g %a' "$path" 2>/dev/null) ||
-+		die "could not stat $path"
-+	[ "$uid" = 0 ] || [ "$uid" = "$TRUST_UID" ] ||
-+		die "$path is owned by uid $uid, not by root or uid $TRUST_UID"
-+	[ $(( 8#$mode & 8#002 )) = 0 ] ||
-+		die "$path is writable by another user"
-+	# User private groups are the norm: umask 002 gives 775, where
-+	# only the developer's own group can write.
-+	if [ $(( 8#$mode & 8#020 )) != 0 ] &&
-+	   [ "$gid" != "$TRUST_GID" ]; then
-+		die "$path is writable by group $gid"
-+	fi
-+}
-+
-+check_owner "$BUILD_DIR"
-+check_owner "$BUILD_DIR/perf"
-+
-+(umask 077 && mkdir -p "$COV_DIR") || die "could not create $COV_DIR"
-+check_owner "$COV_DIR"
-+
-+# A sudo run leaves the profiles and report owned by root; give them back
-+# to the developer so the next run can replace them.
-+if [ "$ROOT" = 1 ] && [ -n "${SUDO_UID:-}" ]; then
-+	trap 'chown -R "$SUDO_UID:${SUDO_GID:-$SUDO_UID}" "$COV_DIR" 2>/dev/null || true' EXIT
-+fi
-+
-+BUILD_LOG=$COV_DIR/build.log
-+TEST_LOG=$COV_DIR/tests.log
-+REPORT=$COV_DIR/report.txt
-+PROFDATA=$COV_DIR/perf.profdata
-+BASELINE=$COV_DIR/baseline.txt
-+
-+#
-+# Build: clang, DEBUG=1 gives -O0 -g, which keeps the line mapping honest
-+# at the cost of slower test runs.
-+#
-+build_perf()
-+{
-+	local make_args=()
-+
-+	if [ "$SKIP_BUILD" = 1 ]; then
-+		[ -x "$BUILD_DIR/perf" ] ||
-+			die "no $BUILD_DIR/perf, run coverage-prep first"
-+		if command -v nm > /dev/null; then
-+			# No -q: grep reads all of nm's output, so pipefail
-+			# does not see a SIGPIPE from an early exit.
-+			nm "$BUILD_DIR/perf" 2>/dev/null |
-+				grep '__llvm_profile' > /dev/null ||
-+				die "$BUILD_DIR/perf was not built for coverage," \
-+				    "run coverage-prep first"
-+		else
-+			warn "nm not found, cannot verify that $BUILD_DIR/perf is instrumented"
-+		fi
-+		return
-+	fi
-+
-+	say "Building perf in $BUILD_DIR"
-+	# The dlfilter and GTK link rules don't track compiler flags, and
-+	# setuptools caches util/python.c by timestamp only, so a previous
-+	# non-coverage build would leave them out of the profile.
-+	rm -f "$BUILD_DIR"/dlfilters/*.o "$BUILD_DIR"/dlfilters/*.so \
-+	      "$BUILD_DIR"/libperf-gtk.so "$BUILD_DIR"/python/perf*.so
-+	rm -rf "$BUILD_DIR"/python_ext_build
-+	[ "$BUILD_DIR" = "$PERF_DIR" ] || make_args+=(O="$BUILD_DIR")
-+	if ! make -C "$PERF_DIR" "${make_args[@]+"${make_args[@]}"}" \
-+		CC=clang CXX=clang++ HOSTCC=clang DEBUG=1 \
-+		EXTRA_CFLAGS="$COVERAGE_CFLAGS" \
-+		EXTRA_CXXFLAGS="$COVERAGE_CFLAGS" \
-+		-j"$JOBS" > "$BUILD_LOG" 2>&1; then
-+		tail -20 "$BUILD_LOG" >&2
-+		die "build failed, full log in $BUILD_LOG"
-+	fi
-+	tail -1 "$BUILD_LOG"
-+	# The extension just built is instrumented and stays in BUILD_DIR
-+	# for the root runs on a prepared build; the setuptools object
-+	# cache is dropped, as it keys on timestamps only and the next
-+	# build, coverage or not, would reuse util/python.o as built here.
-+	rm -rf "$BUILD_DIR"/python_ext_build
-+}
-+
-+run_tests()
-+{
-+	if [ ${#TESTS[@]} -eq 0 ]; then
-+		say "Running the complete perf test suite"
-+	else
-+		say "Running perf tests: ${TESTS[*]}"
-+	fi
-+	rm -rf "$COV_DIR/raw"
-+	mkdir -p "$COV_DIR/raw"
-+
-+	local test_args=(-v)
-+	[ "$SEQUENTIAL" = 0 ] || test_args+=(-S)
-+	[ -z "$TEST_TIMEOUT" ] || test_args+=(-t "$TEST_TIMEOUT")
-+
-+	set +e
-+	# The shell tests are found from the kernel tree root.
-+	(cd "$SRC_DIR" &&
-+		PATH="$BUILD_DIR:$PATH" \
-+		LLVM_PROFILE_FILE="$COV_DIR/raw/perf-%p-%m.profraw" \
-+			"$BUILD_DIR/perf" test "${test_args[@]}" \
-+				"${TESTS[@]+"${TESTS[@]}"}") 2>&1 | tee "$TEST_LOG"
-+	pipe_status=("${PIPESTATUS[@]}")
-+	set -e
-+	test_status=${pipe_status[0]}
-+	[ "${pipe_status[1]}" = 0 ] ||
-+		die "could not write $TEST_LOG"
-+
-+	# 'perf test' exits 0 even when tests fail or time out, only the
-+	# summary tells.
-+	if [ "$test_status" = 0 ] &&
-+	   grep -qE '^(Failed|Timed out) tests +: +[1-9]' "$TEST_LOG"; then
-+		test_status=1
-+	fi
-+
-+	# It also exits 0 when the filter matches no test: every summary
-+	# count is zero then.
-+	if ! grep -qE '^(Passed main tests|Passed subtests|Skipped tests|Failed tests|Timed out tests) +: +[1-9]' "$TEST_LOG"; then
-+		grep -E '^(Passed|Skipped|Failed|Timed out) .*:' "$TEST_LOG" || true
-+		die "no perf test ran, check the test filter"
-+	fi
-+
-+	grep -E '^(Passed|Skipped|Failed|Timed out) .*:' "$TEST_LOG" || true
-+	[ "$test_status" = 0 ] ||
-+		warn "some tests failed, coverage is still collected"
-+}
-+
-+merge_profiles()
-+{
-+	local count size
-+
-+	# llvm-profdata reads the list from a file: a full run leaves
-+	# thousands of profiles, too many for the command line.
-+	find "$COV_DIR/raw" -name '*.profraw' | sort > "$COV_DIR/profiles.txt"
-+	count=$(wc -l < "$COV_DIR/profiles.txt")
-+	size=$(du -sh "$COV_DIR/raw" 2>/dev/null | cut -f1)
-+	[ "$count" -gt 0 ] ||
-+		die "no .profraw files, was perf rebuilt with -fprofile-instr-generate?"
-+
-+	say "Merging $count profile files ($size)"
-+	if ! "$LLVM_PROFDATA" merge -sparse \
-+			--input-files="$COV_DIR/profiles.txt" \
-+			-o "$PROFDATA" 2> "$COV_DIR/merge.log"; then
-+		# A profile left half written, by a perf killed at exit or by
-+		# a full tmpfs, makes llvm-profdata drop the whole merge:
-+		# retry without the invalid ones.
-+		warn "some profile files are unusable, merging the rest"
-+		"$LLVM_PROFDATA" merge -sparse --failure-mode=all \
-+			--input-files="$COV_DIR/profiles.txt" -o "$PROFDATA" \
-+			2> "$COV_DIR/merge.log" ||
-+			die "llvm-profdata merge failed, see $COV_DIR/merge.log"
-+	fi
-+}
-+
-+llvm_cov_objects()
-+{
-+	echo "$BUILD_DIR/perf"
-+	local so
-+
-+	# These are dlopened by perf and have to be profiled separately;
-+	# libperf is linked into perf as a static library.
-+	for so in libperf-gtk.so libperf-jvmti.so; do
-+		[ -f "$BUILD_DIR/$so" ] && echo "--object=$BUILD_DIR/$so"
-+	done
-+	for so in "$BUILD_DIR"/dlfilters/*.so; do
-+		[ -f "$so" ] && echo "--object=$so"
-+	done
-+	for so in "$BUILD_DIR"/python/perf*.so; do
-+		[ -f "$so" ] && echo "--object=$so"
-+	done
-+}
-+
-+render_report()
-+{
-+	local objects
-+
-+	mapfile -t objects < <(llvm_cov_objects)
-+	say "Generating report"
-+	"$LLVM_COV" report "${objects[@]}" --instr-profile="$PROFDATA" \
-+		> "$REPORT" || die "llvm-cov report failed"
-+}
 +
 +# llvm-cov strips the prefix every reported file has in common, so a
 +# tools/perf source can read as perf/util/evsel.c.
@@ -573,121 +290,246 @@ index 0000000000000000..e9a4cf807850e1c7
 +}
 +'
 +
-+total_cov()
++bar()
 +{
-+	awk '$1 == "TOTAL" { print $8, $9, $10 }' "$1"
++	local pct=$1 width=$2 filled i out=
++	filled=$(awk -v p="$pct" -v w="$width" 'BEGIN { printf "%d", p * w / 100 }')
++	for ((i = 0; i < filled; i++)); do out+=█; done
++	for ((i = filled; i < width; i++)); do out+=░; done
++	printf '%s' "$out"
 +}
 +
-+total_cov_perf()
++center()
 +{
-+	awk -v build="$BUILD_AWK_DIR" "$AWK_PERF"'
-+		generated($1) { next }
-+		$1 != "TOTAL" &&
-+		($1 ~ /(^|\/)tools\/perf\// || $1 ~ /^perf\//) {
-+			lines += $8
-+			missed += $9
-+		}
-+		END {
-+			if (lines)
-+				printf "%d %d %.2f%%\n", lines, missed,
-+					100 * (lines - missed) / lines
++	local left=$(( ($2 - ${#1}) / 2 ))
++	printf '%*s%s%*s' "$left" '' "$1" "$(( $2 - ${#1} - left ))" ''
++}
++
++dashes()
++{
++	local s
++	printf -v s '%*s' "$1" ''
++	printf '%s' "${s// /─}"
++}
++
++table_row()
++{
++	awk -v f="$2" "$AWK_PERF"'
++		{
++			g = perf_relpath(f)
++			path = perf_relpath($1)
++			if ($1 != "TOTAL" &&
++			    (path == f || path == g || $1 == f)) {
++				printf "%s\t%s\t%d\t%d\t%.2f\t%s\t%d\t%s\n",
++				       path, $8, $8 - $9, $9, $10, $5, $5 - $6, $7
++				exit
++			}
 +		}' "$1"
 +}
 +
-+since_baseline()
++table_rows()
 +{
-+	local old cur
++	local file
 +
-+	[ "$USE_BASELINE" = 1 ] && [ -f "$BASELINE" ] &&
-+		! cmp -s "$BASELINE" "$REPORT" || return 0
-+	old=$(awk '$1 == "TOTAL" { print $10 }' "$BASELINE")
-+	cur=$(awk '$1 == "TOTAL" { print $10 }' "$REPORT")
-+	[ -n "$old" ] && [ -n "$cur" ] || return 0
-+	awk -v old="$old" -v cur="$cur" 'BEGIN {
-+		sub(/%$/, "", cur)
-+		printf "  (previous %s, %+.2f%%)", old, cur - old }'
-+}
++	if [ ${#FOCUS[@]} -gt 0 ]; then
++		local row rows= missing=()
 +
-+print_summary()
-+{
-+	local lines missed cover p_lines p_missed p_cover
-+
-+	read -r lines missed cover < <(total_cov "$REPORT") ||
-+		die "no TOTAL row in $REPORT"
-+	printf "\n\033[1mTotal:\033[0m %s of %s lines covered (%s)" \
-+		"$((lines - missed))" "$lines" "$cover"
-+	since_baseline
-+	printf "\n"
-+
-+	read -r p_lines p_missed p_cover < <(total_cov_perf "$REPORT") || true
-+	if [ -n "$p_lines" ]; then
-+		printf "  perf: %s of %s lines covered (%s)\n" \
-+			"$((p_lines - p_missed))" "$p_lines" "$p_cover"
++		for file in "${FOCUS[@]}"; do
++			row=$(table_row "$REPORT" "$file")
++			if [ -z "$row" ]; then
++				missing+=("$file")
++				continue
++			fi
++			rows+=$row$'\n'
++		done
++		if [ ${#missing[@]} -gt 0 ]; then
++			printf 'error: no coverage data in %s for:\n' "$REPORT" >&2
++			printf '  %s\n' "${missing[@]}" >&2
++			exit 1
++		fi
++		printf '%s' "$rows" | sort -t$'\t' -k5,5gr
++		return
 +	fi
-+}
 +
-+update_baseline()
-+{
-+	[ "$USE_BASELINE" = 1 ] || return 0
-+	# A -t run covers a subset, saving it would poison the next run.
-+	if [ ${#TESTS[@]} -gt 0 ]; then
-+		printf "\nBaseline not updated, this was a subset run\n"
-+		return 0
++	if [ "$TABLE_ALL" = 1 ]; then
++		awk -v build="$BUILD_AWK_DIR" "$AWK_PERF"'
++			($1 ~ /(^|\/)tools\/perf\// || $1 ~ /^perf\//) &&
++			!generated($1) && $8 > 0 {
++				printf "%s\t%s\t%d\t%d\t%.2f\t%s\t%d\t%s\n",
++				       perf_relpath($1), $8, $8 - $9, $9, $10,
++				       $5, $5 - $6, $7
++			}' "$REPORT" |
++			sort -t$'\t' -k5,5gr
++		return
 +	fi
-+	[ -f "$BASELINE" ] && mv "$BASELINE" "$BASELINE.prev"
-+	cp "$REPORT" "$BASELINE"
-+	printf "\nBaseline saved: %s\n" "$BASELINE"
++
++	awk -v min="$MIN_LINES" -v build="$BUILD_AWK_DIR" "$AWK_PERF"'
++		($1 ~ /(^|\/)tools\/perf\// || $1 ~ /^perf\//) &&
++		!generated($1) && $8 >= min && $9 > 0 &&
++		perf_relpath($1) !~ /^(tests|bench)\// {
++			printf "%s\t%s\t%d\t%d\t%.2f\t%s\t%d\t%s\n",
++			       perf_relpath($1), $8, $8 - $9, $9, $10,
++			       $5, $5 - $6, $7
++		}' "$REPORT" |
++		sort -t$'\t' -k4,4nr |
++		if [ "$TOP" -gt 0 ]; then
++			sed -n "1,${TOP}p"
++		else
++			cat
++		fi
 +}
 +
-+if [ "$PREP" = 0 ]; then
-+	command -v "$LLVM_COV" > /dev/null ||
-+		die "$LLVM_COV not found (set LLVM_COV)"
-+	command -v "$LLVM_PROFDATA" > /dev/null ||
-+		die "$LLVM_PROFDATA not found (set LLVM_PROFDATA)"
-+fi
++# The table is about tools/perf, so its total is the tools/perf subtotal;
++# the run summary prints the whole report, generated files included.
++table_total()
++{
++	awk -v build="$BUILD_AWK_DIR" "$AWK_PERF"'
++		$1 != "TOTAL" && !generated($1) &&
++		($1 ~ /(^|\/)tools\/perf\// || $1 ~ /^perf\//) {
++			lines += $8
++			missed += $9
++			funcs += $5
++			funcs_missed += $6
++		}
++		END {
++			printf "%d\t%d\t%d\t%.2f\t%d\t%d\t%.2f%%\n",
++			       lines, lines - missed, missed,
++			       lines ? 100 * (lines - missed) / lines : 0,
++			       funcs, funcs - funcs_missed,
++			       funcs ? 100 * (funcs - funcs_missed) / funcs : 0
++		}' "$REPORT"
++}
 +
-+# Root does not rebuild a prepared build: use the perf already in
-+# BUILD_DIR, or build when there is none.
-+if [ "$ROOT" = 1 ] && [ "$PREP" = 0 ]; then
-+	if [ -x "$BUILD_DIR/perf" ]; then
-+		SKIP_BUILD=1
-+		say "Running as root, using the coverage build in $BUILD_DIR"
++# At most three lines: what the table shows and how to see every file.
++table_caption()
++{
++	if [ ${#FOCUS[@]} -gt 0 ]; then
++		echo "files requested with -f."
++	elif [ "$TABLE_ALL" = 1 ]; then
++		echo "every tools/perf file, tests and benches included, most covered first."
++		return
++	elif [ "$TOP" -gt 0 ] && [ "$MIN_LINES" -gt 0 ]; then
++		printf "tools/perf (no tests/ or bench/), %d+ executable lines:\n" "$MIN_LINES"
++		echo "the $TOP biggest uncovered gaps, start here when adding coverage tests."
++	elif [ "$TOP" -gt 0 ]; then
++		printf "tools/perf (no tests/ or bench/): the %d files with the\n" "$TOP"
++		echo "biggest uncovered gaps, start here when adding coverage tests."
++	elif [ "$MIN_LINES" -gt 0 ]; then
++		printf "tools/perf (no tests/ or bench/), %d+ executable lines:\n" "$MIN_LINES"
++		echo "start here when adding coverage tests, biggest gaps first."
 +	else
-+		say "Running as root, building perf in $BUILD_DIR"
++		echo "tools/perf (no tests/ or bench/), biggest gaps first."
 +	fi
-+fi
++	local cmd='make -C tools/perf coverage-table'
++	local cov_args='--all'
++	[ "$BUILD_DIR" = "$PERF_DIR" ] || cmd+=" O=$BUILD_DIR"
++	[ "$COV_DIR" = "$BUILD_DIR/cov" ] ||
++		cov_args="--cov-dir $COV_DIR --all"
++	printf '%s %s COVERAGE_ARGS="%s"\n' '--all for every file:' "$cmd" "$cov_args"
++}
 +
-+if [ "$SKIP_BUILD" = 0 ]; then
-+	command -v clang > /dev/null ||
-+		die "clang not found, it is the only compiler with -fcoverage-mapping"
-+	command -v clang++ > /dev/null ||
-+		die "clang++ not found, it instruments the C++ sources"
-+fi
++print_table()
++{
++	local rows total path lines hit missed pct funcs funcs_hit func_cov
++	local row_fmt w d_file d29 d13 d10 d8
 +
-+test_status=0
++	rows=$(table_rows)
++	[ -n "$rows" ] ||
++		die "no coverage data in $REPORT for the requested files"
++	total=$(table_total)
++	[ -n "$total" ] || die "no coverage data in $REPORT"
 +
-+if [ "$PREP" = 1 ]; then
-+	build_perf
-+	say "Coverage build ready: $BUILD_DIR/perf"
-+	make_hint="make -C $PERF_DIR coverage"
-+	[ "$BUILD_DIR" = "$PERF_DIR" ] || make_hint+=" O=$BUILD_DIR"
-+	printf "As root: %s\n" "$make_hint"
-+	exit 0
-+fi
++	table_caption
++	printf '\n'
 +
-+build_perf
-+run_tests
-+merge_profiles
++	w=12	# "TOTAL (perf)"
++	while IFS=$'\t' read -r path _; do
++		if [ ${#path} -gt "$w" ]; then
++			w=${#path}
++		fi
++	done <<< "$rows"
 +
-+[ -f "$PROFDATA" ] || die "no $PROFDATA, the merge did not run"
++	d8=$(dashes 8)
++	d10=$(dashes 10)
++	d13=$(dashes 13)
++	d29=$(dashes 29)
++	d_file=$(dashes $((w + 2)))
 +
++	printf '┌%s┬%s┬%s┬%s┬%s┬%s┬%s┐\n' \
++		"$d_file" "$d8" "$d8" "$d8" "$d29" "$d13" "$d10"
++	printf '│ %-*s │ %6s │ %6s │ %6s │ %s │ %11s │ %8s │\n' \
++		"$w" "File" "Lines" "Hit" "Miss" \
++		"$(center 'Line Coverage' 27)" "Funcs" "FuncCov"
++	printf '├%s┼%s┼%s┼%s┼%s┼%s┼%s┤\n' \
++		"$d_file" "$d8" "$d8" "$d8" "$d29" "$d13" "$d10"
++
++	row_fmt=$(printf '│ %%-%ds │ %%6s │ %%6s │ %%6s │ %%s %%5.1f%%%%' "$w")
++	row_fmt+=' │ %5s/%-5s │ %8s │\n'
++
++	while IFS=$'\t' read -r path lines hit missed pct funcs funcs_hit func_cov; do
++		printf "$row_fmt" "$path" "$lines" "$hit" "$missed" \
++			"$(bar "$pct" 20)" "$pct" "$funcs_hit" "$funcs" "$func_cov"
++	done <<< "$rows"
++
++	printf '├%s┼%s┼%s┼%s┼%s┼%s┼%s┤\n' \
++		"$d_file" "$d8" "$d8" "$d8" "$d29" "$d13" "$d10"
++	while IFS=$'\t' read -r lines hit missed pct funcs funcs_hit func_cov; do
++		printf "$row_fmt" "TOTAL (perf)" "$lines" "$hit" "$missed" \
++			"$(bar "$pct" 20)" "$pct" "$funcs_hit" "$funcs" "$func_cov"
++	done <<< "$total"
++	printf '└%s┴%s┴%s┴%s┴%s┴%s┴%s┘\n' \
++		"$d_file" "$d8" "$d8" "$d8" "$d29" "$d13" "$d10"
++}
++
++# The table code parses llvm-cov's decimal points; keep the numeric locale
++# fixed.
 +export LC_ALL=C
-+render_report
-+print_summary
-+update_baseline
++print_table
+diff --git a/tools/perf/scripts/coverage.sh b/tools/perf/scripts/coverage.sh
+index e9a4cf807850e1c7..bb075c9a54e820cd 100755
+--- a/tools/perf/scripts/coverage.sh
++++ b/tools/perf/scripts/coverage.sh
+@@ -3,8 +3,9 @@
+ #
+ # Copyright (C) 2026, Red Hat Inc, Arnaldo Carvalho de Melo <acme@redhat.com>
+ #
+-# Build perf with clang source based coverage, run the perf test suite and
+-# report line coverage.
++# Build perf with clang source based coverage, run the perf test suite,
++# report line coverage and the table of the files with the most uncovered
++# lines.  coverage-table.sh renders that table from the last report alone.
+ # The build goes into tools/perf and the profiles and report into
+ # tools/perf/cov; -b and -c override them, following perf's O= layout.
+ # --prep stops after the instrumented build, for running the tests later as
+@@ -44,7 +45,9 @@ usage()
+ Usage: scripts/coverage.sh [options] [test name fragment...]
+ 
+ Builds perf with clang source based coverage, runs the complete perf test
+-suite and reports line coverage.  Use -t to run a subset.
++suite, reports line coverage and the files with the most uncovered lines.
++Use -t to run a subset; scripts/coverage-table.sh renders the table again
++with other options.
+ 
+ Options:
+   -b, --build-dir DIR    existing perf build directory (default: $PERF_DIR)
+@@ -64,6 +67,7 @@ Through make:
+   make -C tools/perf coverage
+   make -C tools/perf coverage-prep O=/tmp/build/perf-coverage
+   sudo make -C tools/perf coverage O=/tmp/build/perf-coverage
++  make -C tools/perf coverage-table O=/tmp/build/perf-coverage
+ EOF
+ }
+ 
+@@ -482,5 +486,9 @@ render_report
+ print_summary
+ update_baseline
+ 
++printf "\n"
++"$PERF_DIR/scripts/coverage-table.sh" --build-dir "$BUILD_DIR" \
++	--cov-dir "$COV_DIR" || warn "could not render the coverage table"
 +
-+printf "\nReport:  %s\n" "$REPORT"
-+exit "$test_status"
+ printf "\nReport:  %s\n" "$REPORT"
+ exit "$test_status"
 -- 
 2.56.0
 
