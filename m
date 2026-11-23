@@ -1,49 +1,62 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=23.90.104.147
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795431670;
-	b=ELHMd732ICRd6YKGiVHrnmdO/xk6Gi5TryxgnUWA7l/pWGs+MIy+DEr3gxsZSp/HVrNW
-	 S7+zoSYIjB50bhda4w0i53BfZhIVXuSaKfOjilflyrefqYCFZp4owWxlacjfecCXkvPuf
-	 1+npGi9C/dMu/kR8FW4EPFXyqR+y/IetYapm12ryk6m6YqT++nXZjutPRJoNxfSQrVxjY
-	 vH8qgZNmfOlEHnCsB94XaJIkNj2aLHyLowLu05vw0KlpOnggszX/bR6XlFKlS0PkL/giS
-	 9Y6n1NM4EPvhvqusp5giO734/liZJBAbxKu8kudVVkEbLv4VtUGpVQaR21k9bSzSGfA==
+	t=1795433860;
+	b=2UW6ylgfPZj4+ZelN6DP2qXDNxsyHgjqcNruUbZPRQbwZHana/hwjXX7LvJpm/80QMxo
+	 tV2c/GPC90AUntA4S//MLxPx82/7Vwf8lDDMB0XyI1YumTyaKuU8Hr06MW+zIl69wakFU
+	 Vr5YksmWYyaXKkudiTbteUiW9+ssLTlpd1EyN5KSDzj5hQcguHyDqp2ZC3C4ZNIuzKDuo
+	 mN1ehmmKn32/Y0tsWIPOFrepGdR4Tfy6/ymRWSdDrRZiT/Ij9TZEnbcUhq8e+houAFMcF
+	 GOgzuMuzeW4bCB5f3VN5+wJbWL5uLsidHuvjFeHYsmdixTjV+Qh9A9YryzbmGlGzVwQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795431670;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:Content-Language:To:Cc:References:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=v1EPDBfCUXLkCMUnKA+ddnw+k7IZSD+WYZvJNgZjYWw=;
-	b=QDMBqyyEr8PXQHkYzv3wflEeSqItpln/ekElL+MRpmB31Pthjw/tJYG6ATLKjaSPh3YX
-	 AuYLYoIwQQDMA/tVbQqFJvedk7Jl7VKD2ICxNUSU9E0RpShVAGEZ7isGpIRhM5rMu3zfv
-	 meP0cMjY229OzKy9s572UZ0ed5lqEqQ2NVE4o2crd8einPM6RZnuuLIoaGwHBV1iHSuGa
-	 AIgu9uPpwGaVBJ/Q67nxmVSms5VWhs+n0Qgib+VsO4XUS52DcTX0UKuf2C0AIt0dfg1Wp
-	 zZAkCZL4/3D2o1xjaEvlubwzWJQdrsG3WG5jC9B0EQz2AmMBB4WyL3vNrKmnbwUocPw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795433860;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-Amp-Result:X-Amp-File-Uploaded:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:Received:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:Message-Id:References:
+	 In-Reply-To:To:Cc:X-Mailer;
+	bh=OKPZQyJsCxKmvcu3evgCAn8bCU003kDuUuvj5pSvgRY=;
+	b=V+3wgowSnxl2/TAy+SyKmMjkkPtYdSfttrsfCK4aV3Uk9E1Hdieo4q/sMIOqpw0OTh8c
+	 hphU+rJP2uhKOf7wQUZ3OyzPbSPeKzhK1IWwMiZv9NkR7obiFoIOuino0clBo51WSfYT3
+	 EfSA20jeej5gEDwFPWahb7eoaWHCrMuHaHfTxKcid6ildD2iP7hgRzr7RbZcHon9YTT2A
+	 lJUs8NIgu81l1dnhhoZODQUWCuDj0nkUwR/7uH4o/V8+7VZCZsuXZUJngvIA/shg8UW8P
+	 6pELHRJQ+xDkesIzwzTrV0GhY+uHm8lFzkL/euwfGqbfuoUNli9zHcDl/l3j9Warcmg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=arm.com;
-	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=VfxyN8YL;
-	arc=none smtp.remote-ip=217.140.110.172
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6EB7606A31A;
-	Mon, 23 Nov 2026 11:01:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A6EB7606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=VfxyN8YL
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B38C8143D;
-	Mon, 23 Nov 2026 03:01:05 -0800 (PST)
-Received: from [10.0.129.12] (Suzukis-MBP.cambridge.arm.com [10.0.129.12])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A27B53F632;
-	Mon, 23 Nov 2026 03:01:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1795431668; bh=yH94hp9pyvROLIBHpnJ0R79MNc8SMsVjXE5MaCpB5tg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VfxyN8YLNEYDqO9z4WwzX85gI/FItsDFLkbwmnuvfa7/o97r++NRfEe11vq6ymZrg
-	 3Pvbba3y2TdV/GLDmvT1sW2vVHZMGYH12b92p+SgP7y8nx2XlLvC/IGD9NbeBvjWiZ
-	 PtUmtTar5kCdNQnCErtakhXVBF2c7IodMInz3aG0=
-Message-ID: <5b94b79b-8c4c-433d-8c9c-d92b4a8399c5@arm.com>
-Date: Mon, 23 Nov 2026 11:01:04 +0000
+	dmarc=pass header.from=mobileye.com;
+	spf=pass smtp.mailfrom=mobileye.com;
+	arc=none smtp.remote-ip=23.90.104.147
+Received: from esa2.hc555-34.eu.iphmx.com (esa2.hc555-34.eu.iphmx.com [23.90.104.147])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D02D0606A31A;
+	Mon, 23 Nov 2026 11:37:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org D02D0606A31A
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mobileye.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mobileye.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
+  t=1795433859; x=1826969859;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=4V18Tfg9Ly6MPWUMnLZiqruGXQUpnrBi9GEGXYzKK7I=;
+  b=p9hZwMTyJij9UiiAoCPFmx0duUsCJdl04CRXngv0pFim7DrxAcP2l5+4
+   VH5/jhQa1ign9Ozyub/CPSEiH5HV+Tqryhs9qfoDDvtPMqJ4jLeCXD/Cz
+   EHTdeZMXXZJSPRMmGZK38os/bQFTiekTxcXjcFuLraOxiOBFiW/fhHi2s
+   6Oq8TQRWIKGo94tqjiwlQw4Yv7Ik1VSmoEfotJAmLIzWlFRyjhDVxyaeb
+   gh7C5G8EEgK4y3dYbL44msYgBsnMYuaU+Q2ZvEnyFPZtLnrqdRwF8QPK0
+   3lrca+y9BEkUE8JSC/auh6OroEbzTqMdawWjeEG7HxbzsL78FmbNEr5+i
+   w==;
+X-CSE-ConnectionGUID: zqschISKQgqNy5/VgtTxQw==
+X-CSE-MsgGUID: M28rkNfTRaCj59bRceLRhg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from unknown (HELO ces01_data.me-corp.lan) ([146.255.191.134])
+  by esa2.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2026 13:37:31 +0200
+X-CSE-ConnectionGUID: qZJxtW2yTseV96LosV/AHg==
+X-CSE-MsgGUID: yOytxXA3SDmIRqsH5JK2/w==
+Received: from unknown (HELO epgd071.me-corp.lan) ([10.154.54.2])
+  by ces01_data.me-corp.lan with SMTP; 23 Nov 2026 13:45:57 +0200
+Received: by epgd071.me-corp.lan (sSMTP sendmail emulation); Mon, 23 Nov 2026 13:37:29 +0200
+From: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+Date: Mon, 23 Nov 2026 13:37:12 +0200
+Subject: [PATCH v4 2/6] MIPS: CM: add CM3 performance counter GCR
+ definitions
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -53,133 +66,126 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/25] coresight: perf: End AUX output when an event is
- throttled
-Content-Language: en-GB
-To: Leo Yan <leo.yan@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Mike Leach <mike.leach@arm.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Yeoreum Yun <yeoreum.yun@arm.com>, Jonathan Corbet <corbet@lwn.net>,
- Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
-References: <20260915-arm_cs_support_aux_sample-v1-0-35cf6f297d20@arm.com>
- <20260915-arm_cs_support_aux_sample-v1-4-35cf6f297d20@arm.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20260915-arm_cs_support_aux_sample-v1-4-35cf6f297d20@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20261123-i6500-cm3-pmu-v4-2-5a9f5351688f@mobileye.com>
+References: <20261123-i6500-cm3-pmu-v4-0-5a9f5351688f@mobileye.com>
+In-Reply-To: <20261123-i6500-cm3-pmu-v4-0-5a9f5351688f@mobileye.com>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+ Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Randy Dunlap <rdunlap@infradead.org>, Will Deacon <will@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ =?utf-8?q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>, 
+ Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
+ Fu Chao-Ying <chao-ying.fu@globalfoundries.com>
+Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-rt-devel@lists.linux.dev, linux-doc@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ linux-hardening@vger.kernel.org
+X-Mailer: b4 0.16.0
 
-On 15/09/2026 16:48, Leo Yan wrote:
-> Since commit 9734e25fbf5a ("perf: Fix the throttle logic for a
-> group"), the perf core stops every event in a throttled group by calling
-> the PMU stop callback with flags set to zero:
-> 
->    perf_event_throttle()
->      `> event->pmu->stop(event, 0)
-> 
-> The ETM perf stop callback only ends the AUX output handle when
-> PERF_EF_UPDATE was set. For throttling with mode is zero, it skips to
-> end the AUX handle. When the event is later unthrottled and ETM tracing
-> is started again, perf_aux_output_begin() sees the perf handle is nest
-> enabled and triggers a warning:
-> 
->    [  181.161897] ------------[ cut here ]------------
->    [  181.161906] WARNING: kernel/events/ring_buffer.c:415 at perf_aux_output_begin+0x1dc/0x1f0, CPU#0:2
->    [  181.234120] arm-scmi arm-scmi.1.auto: timed out in resp(caller: do_xfer+0x1a0/0x558)
->    [  181.234223] cpufreq: __target_index: Failed to change cpu frequency: -110
->    [  181.286675] Modules linked in: panfrost tda9950 hdlcd tda998x drm_shmem_helper drm_client_lib cect
->    [  181.314139] CPU: 0 UID: 0 PID: 352 Comm: perf Not tainted 7.1.0-rc1-00058-gdca922e019dd-dirty #11
->    [  181.323915] Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, B5
->    [  181.334732] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
->    [  181.341721] pc : perf_aux_output_begin+0x1dc/0x1f0
->    [  181.346547] lr : perf_aux_output_begin+0x9c/0x1f0
->    [  181.351280] sp : ffff800080003be0
->    [  181.354606] x29: ffff800080003be0 x28: ffff0008023fc000 x27: ffff4b45d287f000
->    [  181.361789] x26: ffff0009764787a8 x25: 0000000000000000 x24: ffff00080dc99710
->    [  181.368970] x23: ffffb4c334553000 x22: 0000000000000001 x21: ffff00080dc99710
->    [  181.376151] x20: ffff0009764787a8 x19: ffff000801cc6000 x18: 00000000ffffffff
->    [  181.383332] x17: 0000000000000000 x16: ffffb4c3a118c998 x15: 0000000000000000
->    [  181.390512] x14: 00003d0900000000 x13: 00000001ffff006e x12: 696765625f747570
->    [  181.397692] x11: ffffb4c3a52758d8 x10: 0000000000000108 x9 : ffffb4c3a117f620
->    [  181.404873] x8 : ffff800080003a58 x7 : ffff000808de4000 x6 : 00000000000fffff
->    [  181.412053] x5 : 0000000000000000 x4 : 0000000000000000 x3 : 0000000000000000
->    [  181.419232] x2 : 0000000000000007 x1 : 0000000000000000 x0 : 0000000000000007
->    [  181.426411] Call trace:
->    [  181.428868]  perf_aux_output_begin+0x1dc/0x1f0 (P)
->    [  181.433692]  etm_event_start+0xdc/0x290 [coresight]
->    [  181.438665]  perf_event_unthrottle+0x70/0xa8
->    [  181.442964]  perf_event_unthrottle_group+0x40/0x170
->    [  181.447871]  perf_adjust_freq_unthr_events+0x178/0x1a8
->    [  181.453038]  perf_adjust_freq_unthr_context+0x74/0xf8
->    [  181.458120]  perf_event_task_tick+0xa8/0x290
->    [  181.462418]  sched_tick+0x144/0x2c8
->    [  181.465937]  update_process_times+0xc0/0x198
-> 
-> Reproduce this with the command:
-> 
->    perf record -a -e cs_etm/aux-action=start-paused/k \
-> 	-e cycles/aux-action=pause,period=3000/ \
-> 	-e cycles/aux-action=resume,period=1500/ -- sleep 10
-> 
-> An update of the sink buffer is unnecessary when PERF_EF_UPDATE is not
-> set, but the AUX output operation must still be terminated. End it with
-> a size of zero so that a later restart can acquire a new handle.
-> 
-> Fixes: 9734e25fbf5a ("perf: Fix the throttle logic for a group")
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->   drivers/hwtracing/coresight/coresight-etm-perf.c | 12 +++++++++---
->   1 file changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> index 09b21a711a8764ea429d712890265c84648e889e..a45f69f39f175f3044322b25fe5413fb97154496 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> @@ -748,13 +748,16 @@ static void etm_event_stop(struct perf_event *event, int mode)
->   	 * handle due to lack of buffer space), we don't
->   	 * have to do anything here.
->   	 */
-> -	if (handle->event && (mode & PERF_EF_UPDATE)) {
-> +	if (!handle->event)
-> +		goto out;
-> +
-> +	if (mode & PERF_EF_UPDATE) {
->   		if (WARN_ON_ONCE(handle->event != event))
-> -			return;
-> +			goto out;
+The CM3 implements two programmable 32-bit performance counters and a
+32-bit cycle counter, controlled through registers in the GCR global
+debug block (GCR_DB_PC_*, offset 0x6100..0x61a8 from GCR_BASE).
 
-We seem to be disabling the path in this case, which is a new side
-effect ? Do we want this ? Also, could we not move this out of the
-if condition ?
+Add GCR_DB_ACCESSOR_{RO,RW} helpers for the debug block and define the
+control, overflow status, event select, cycle counter, qualifier and
+counter registers along with their fields, as described in the I6500
+register reference (MD01189).
 
-Cheers
-Suzuki
+Each accessor comes in two flavours, as the CPC ones do: db_<reg> for
+the local cluster and redir_db_<reg> for the debug block of another
+cluster through the redirect block. GCR_Cx_OTHER.BLOCK value 2 selects
+the debug block in the GCR, where the existing _BLOCK_USER name only
+describes its GIC meaning; add CM_GCR_Cx_OTHER_BLOCK_DEBUG for it.
 
->   
->   		/* update trace information */
->   		if (!sink_ops(sink)->update_buffer)
-> -			return;
-> +			goto out;
->   
->   		size = sink_ops(sink)->update_buffer(sink, handle,
->   					      event_data->snk_config);
-> @@ -773,8 +776,11 @@ static void etm_event_stop(struct perf_event *event, int mode)
->   			perf_aux_output_end(handle, size);
->   		else
->   			WARN_ON(size);
-> +	} else {
-> +		perf_aux_output_end(handle, 0);
->   	}
->   
-> +out:
->   	/* Disabling the path make its elements available to other sessions */
->   	coresight_disable_path(path);
->   }
-> 
+Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+---
+ arch/mips/include/asm/mips-cm.h | 51 ++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 50 insertions(+), 1 deletion(-)
+
+diff --git a/arch/mips/include/asm/mips-cm.h b/arch/mips/include/asm/mips-cm.h
+index 407f253bb4a1..390d06a8f1d1 100644
+--- a/arch/mips/include/asm/mips-cm.h
++++ b/arch/mips/include/asm/mips-cm.h
+@@ -161,6 +161,20 @@ static inline bool mips_cm_has_l2sync(void)
+ 	CPS_ACCESSOR_RW(gcr, sz, MIPS_CM_CLCB_OFS + off, cl_##name)	\
+ 	CPS_ACCESSOR_RW(gcr, sz, MIPS_CM_COCB_OFS + off, co_##name)
+ 
++/*
++ * Global debug block registers. The redir_db_* accessors reach the debug
++ * block of another cluster through the redirect block, which must have been
++ * pointed at it with mips_cm_lock_other(cluster, 0, 0,
++ * CM_GCR_Cx_OTHER_BLOCK_DEBUG).
++ */
++#define GCR_DB_ACCESSOR_RO(sz, off, name)				\
++	CPS_ACCESSOR_RO(gcr, sz, MIPS_CM_GDB_OFS + off, db_##name)	\
++	CPS_ACCESSOR_RO(gcr, sz, MIPS_CM_COCB_OFS + off, redir_db_##name)
++
++#define GCR_DB_ACCESSOR_RW(sz, off, name)				\
++	CPS_ACCESSOR_RW(gcr, sz, MIPS_CM_GDB_OFS + off, db_##name)	\
++	CPS_ACCESSOR_RW(gcr, sz, MIPS_CM_COCB_OFS + off, redir_db_##name)
++
+ /* GCR_CONFIG - Information about the system */
+ GCR_ACCESSOR_RO(64, 0x000, config)
+ #define CM_GCR_CONFIG_CLUSTER_COH_CAPABLE	BIT_ULL(43)
+@@ -357,7 +371,8 @@ GCR_CX_ACCESSOR_RW(32, 0x018, other)
+ #define CM_GCR_Cx_OTHER_BLOCK			GENMASK(25, 24)	/* CM >= 3.5 */
+ #define  CM_GCR_Cx_OTHER_BLOCK_LOCAL		0
+ #define  CM_GCR_Cx_OTHER_BLOCK_GLOBAL		1
+-#define  CM_GCR_Cx_OTHER_BLOCK_USER		2
++#define  CM_GCR_Cx_OTHER_BLOCK_USER		2	/* GIC */
++#define  CM_GCR_Cx_OTHER_BLOCK_DEBUG		2	/* GCR */
+ #define  CM_GCR_Cx_OTHER_BLOCK_GLOBAL_HIGH	3
+ #define CM_GCR_Cx_OTHER_CLUSTER			GENMASK(21, 16)	/* CM >= 3.5 */
+ #define CM3_GCR_Cx_OTHER_CORE			GENMASK(13, 8)	/* CM >= 3 */
+@@ -384,6 +399,40 @@ GCR_CX_ACCESSOR_RW(32, 0x030, reset_ext_base)
+ #define CM_GCR_Cx_RESET_EXT_BASE_BEVEXCPA	GENMASK(7, 1)
+ #define CM_GCR_Cx_RESET_EXT_BASE_PRESENT	BIT(0)
+ 
++/* GCR_DB_PC_CTL - Control of the CM3 performance counters */
++GCR_DB_ACCESSOR_RW(32, 0x100, pc_ctl)
++#define CM_GCR_DB_PC_CTL_PERF_INT_EN		BIT(30)
++#define CM_GCR_DB_PC_CTL_PERF_OVF_STOP		BIT(29)
++#define CM_GCR_DB_PC_CTL_P1_RESET		BIT(9)
++#define CM_GCR_DB_PC_CTL_P1_COUNTON		BIT(8)
++#define CM_GCR_DB_PC_CTL_P0_RESET		BIT(7)
++#define CM_GCR_DB_PC_CTL_P0_COUNTON		BIT(6)
++#define CM_GCR_DB_PC_CTL_CYCL_CNT_RESET		BIT(5)
++#define CM_GCR_DB_PC_CTL_CYCL_CNT_COUNTON	BIT(4)
++#define CM_GCR_DB_PC_CTL_PERF_NUM_CNT		GENMASK(3, 0)
++
++/* GCR_DB_PC_OV - CM3 performance counter overflow status (write 1 to clear) */
++GCR_DB_ACCESSOR_RW(32, 0x120, pc_ov)
++#define CM_GCR_DB_PC_OV_P1_OF			BIT(2)
++#define CM_GCR_DB_PC_OV_P0_OF			BIT(1)
++#define CM_GCR_DB_PC_OV_CYCL_CNT_OF		BIT(0)
++
++/* GCR_DB_PC_EVENT - CM3 performance counter event selection */
++GCR_DB_ACCESSOR_RW(32, 0x130, pc_event)
++#define CM_GCR_DB_PC_EVENT_P1_EVENT		GENMASK(15, 8)
++#define CM_GCR_DB_PC_EVENT_P0_EVENT		GENMASK(7, 0)
++
++/* GCR_DB_PC_CYCL - CM3 performance cycle counter */
++GCR_DB_ACCESSOR_RW(32, 0x180, pc_cycl)
++
++/* GCR_DB_PC_QUALn - CM3 performance counter n event qualifier */
++GCR_DB_ACCESSOR_RW(64, 0x190, pc_qual0)
++GCR_DB_ACCESSOR_RW(64, 0x1a0, pc_qual1)
++
++/* GCR_DB_PC_CNTn - CM3 performance counter n value */
++GCR_DB_ACCESSOR_RW(32, 0x198, pc_cnt0)
++GCR_DB_ACCESSOR_RW(32, 0x1a8, pc_cnt1)
++
+ /**
+  * mips_cm_l2sync - perform an L2-only sync operation
+  *
+
+-- 
+2.43.0
 
