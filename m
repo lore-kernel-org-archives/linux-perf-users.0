@@ -1,68 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795434806;
-	b=YIHC0x311PrfBTrEAGLmcFYUxauRfcY0fBSOE4RkNofX1tYLQr6XxKxqtUlOOBzvpAnB
-	 FDLUk8I7QS47cN/ArD4b6PFPdmv+jwurtrq1R4dnDuLJ3W0zZWlVvgZW3LVUUyEIiejLz
-	 hHG9LkUPXeVrJihd/fZVqNfsJGAmvHomos52hFksDu1oUnNiLgQI9QnduQyt1hD4hrCv0
-	 z3tG8jCfpdx6v3obkhPVUsRGOK1eun6DEgenMVwJPQrZ6oigBnB2R7wq9AANNVA5Tisgl
-	 4013wycmrsWwS7AiAEnResvoERGkmGMk6gSHrPazR9r0GdWQdYM0xmRBC0OK/y8MYbA==
+	t=1795435542;
+	b=jrqv0ofmDMMgT1aekt2PxMHL9Xo5GLoxQyyAU+Rmqsx7yP9xShghERIgYVPjxT/nsnhL
+	 8uWDI2otmEWcYg4owGU7eJlWm+ul8TC2ZGc3+tLs0hNSSvTX5yaCZUDzYsNQOMtR/9Wr6
+	 sDNrYm5wR2/7lEZdpb5VnkyeFbiJvT9kY/9RF/i53tzlMgxqbGeDHBl/wj9woe0vrM00J
+	 nUUaZog0cLD2npiz6TumgwvZNeNMYKvTPysXfcTsDAd8QVqGMXQNddowmnI+xt22ifkCg
+	 iglM6dgYJMrWtXiyR0WCVg3SfnpH4IFkm6QlRkfbZHUWzEaqw8wq/1qSqdUvbyyltIQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795434806;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=XvzEmeTIxXyutq1PXClFF3+A3A4QaLFL8E1yjF/uOVM=;
-	b=KmccM61sJy3sNTjW8NKuhKcjFslikC7cg0RFuUdwCE/xUUYdp9aGxi2CwfZ0vq1yGgXB
-	 K8wQ7iw7uiUoIHTft+cw+yGWmklSYUhEx+YA7d6NbAlwnAcQ4jPc2DblZN/OLwWoK2bUl
-	 KKYLqNP1sXEwy+oScFMqQqB1c/6KRBKFSeTIscT+o3o1A03AbvwsIA28Q5VZysH4/gWRG
-	 w+POUTzPOQ0P9EJnkgKp1dTduC4255IHEW9mhVKiuJo0EvN33/VeqmBTvGSMQaI5Y/iGZ
-	 UoYfs5ESBJF5c2Rix5ajGKrWrWGhAxy7WDGODClukRKZOVorQnpQ3IDeQWMD2/Li3fw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795435542;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=imkExJEfnTtYQk0sm5yTDzBU5TLRZtJFfxOOrK/w7IQ=;
+	b=jSnRoGxZDrukkF9pEWQQB2CDT55n/FL+cpNb1qB+cVvpjMFhFTyuZdLlcV/r0y4Ei5TV
+	 ZiGHcUOqubkk+vJMNm24jg9dBko44+wbWHaGSkaAycrGef1/uv1YZmogHTkMKE2Agpsmc
+	 Y/FDUNiyWbVDTKcmbuK0smJxttIPTDPUCaK/ounxs1NudJs8lWEuszecOmZmDFPZc/cLm
+	 XwLJ0YmHRu9Bv1igkjOIV3ZqbqguSIxGIMYE2ZQ/iVdaolXHqXtYQh61V4RWzkzMRs98V
+	 /u0cj9LW0PGycMGn0OaWfS2E7rSNPRSIpW8sjqcy0a8wz6rjLd8X43692FMrIKNRVqw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=arm.com;
-	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=Qt75YU3b;
-	arc=none smtp.remote-ip=217.140.110.172
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D0F2606A31A;
-	Mon, 23 Nov 2026 11:53:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0D0F2606A31A
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=H5ykWG9z;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE36606A31E
+	for <linux-perf-users@vger.kernel.org>; Mon, 23 Nov 2026 12:05:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=Qt75YU3b
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32098143D;
-	Mon, 23 Nov 2026 03:53:22 -0800 (PST)
-Received: from localhost (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B0AEC3F882;
-	Mon, 23 Nov 2026 03:53:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1795434805; bh=RYiIfxkDaSmX84xLMRyq6/NcK2Xs3/5CbbES0suYhVc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Qt75YU3b9IX1teTA93OzvDq6X7Oe3ZnyDyVLUjwaAHC4X7Nb36+f9OfXtVZiu6E8N
-	 QyrHjBzaMwPjmpSIc+kKHmbJ7YcOKGgyW8B0UiNQRSz6JKof8vAkU+dwT7fr04Xi78
-	 Q8GmkPvA7o5KPkoovCNy2agd85FsSuoCiSVEi2Vo=
-Date: Mon, 23 Nov 2026 11:53:22 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@arm.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Yeoreum Yun <yeoreum.yun@arm.com>, Jonathan Corbet <corbet@lwn.net>,
-	Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>,
-	Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH 04/25] coresight: perf: End AUX output when an event is
- throttled
-Message-ID: <20261123115322.GC9176@e132581.arm.com>
-References: <20260915-arm_cs_support_aux_sample-v1-0-35cf6f297d20@arm.com>
- <20260915-arm_cs_support_aux_sample-v1-4-35cf6f297d20@arm.com>
- <5b94b79b-8c4c-433d-8c9c-d92b4a8399c5@arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=H5ykWG9z
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F408A1F000D4;
+	Mon, 23 Nov 2026 12:05:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795435542;
+	bh=imkExJEfnTtYQk0sm5yTDzBU5TLRZtJFfxOOrK/w7IQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=H5ykWG9z0twL7APaeeffiZbWC9NAET4U0YGk1ewr3o60gwv/a6ZKpo7LJi6aDdJ4T
+	 RRZcMILwXGBqNlx/yyLNef7yk3ial4/7dOtAIrAPM0XIFr+ADFWffvO34QT7xXnrMy
+	 SgPxcrv3YUCqr3ZaB7aAq1JCE9Ctn0MfUZJqQprnTiECRAGfEmp3sRgSv2Echpvfc8
+	 LTaia9cuYhn3MBeGIRLgbfClYYvh0I9AEqm2nMCKkmdlTlBW8RvmDncKIrA/GoynU0
+	 lYWvm5HYXANCpCH4YQtaxrpGEGWj0VWRsmMHGnFASHa2nrZxAWXbcIQGo/55w4L5Ck
+	 gnqht/Oibzgow==
+Message-ID: <sashiko-outbox-229183@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4 0/6] perf: add PMU driver for the MIPS Coherence
+ Manager 3 performance counters
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261123-i6500-cm3-pmu-v4-0-5a9f5351688f@mobileye.com>
+References: <20261123-i6500-cm3-pmu-v4-0-5a9f5351688f@mobileye.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 23 Nov 2026 12:05:41 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -71,47 +59,12 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5b94b79b-8c4c-433d-8c9c-d92b4a8399c5@arm.com>
 
-On Mon, Nov 23, 2026 at 11:01:04AM +0000, Suzuki K Poulose wrote:
+Sashiko has finished reviewing this 6-patch series:
 
-[...]
+- Patches 1-5: no issues found.
+- Patch 6: skipped (not reviewed).
 
-> > @@ -748,13 +748,16 @@ static void etm_event_stop(struct perf_event *event, int mode)
-> >   	 * handle due to lack of buffer space), we don't
-> >   	 * have to do anything here.
-> >   	 */
-> > -	if (handle->event && (mode & PERF_EF_UPDATE)) {
-> > +	if (!handle->event)
-> > +		goto out;
-> > +
-> > +	if (mode & PERF_EF_UPDATE) {
-> >   		if (WARN_ON_ONCE(handle->event != event))
-> > -			return;
-> > +			goto out;
-> 
-> We seem to be disabling the path in this case, which is a new side
-> effect ? Do we want this ?
-
-Yes, it is intentional to disable path for this case. By this point,
-the source has already been disabled and the event marked stopped,
-so I intend to complete teardown of the whole path.
-
-> Also, could we not move this out of the if condition ?
-
-I initially left the check in its existing position to keep the
-validation changes together in patch 05, which reworks the AUX-state
-checks with perf_get_aux().
-
-I can update condition check like:
-
-  if (!handle->event || WARN_ON_ONCE(handle->event != event))
-      goto out;
-
-If this is okay for you, I will update patch and send out.
-
-Thanks,
-Leo
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261123-i6500-cm3-=
+pmu-v4-0-5a9f5351688f@mobileye.com
