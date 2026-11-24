@@ -1,62 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795554189;
-	b=GDWr8j1fSWx2VPN+q7Onlz2Tgnt8J0fVatVOJ913z8CtMzvukMdv3MiTlP818rENOiM9
-	 r8lLmdjw4RwXMEcc/ImZ/WFN+m+vJ1HwiUqMGzQjwRrpjrC+53LebI/XOAD4xLieylOX9
-	 dpchq4yPrXUzDbFdfc/Uq1Lh13yHCTHz54bYHmSSP/z6cN3kUlkxM1yNp7etbWb/vkcd7
-	 MPydSw+6DrsQwzj77j2R5zMbh8F49PQ2YWkzTVkqMr5t/w1aS9MD8Yo1SHDLGi7baO8ke
-	 FBb1zn99G6HWW2+DvJ9Kjv810a+7A2jgOqnf+JxOW/jKgrN92Wl5ralOFZQw+TJKz8g==
+	t=1795554254;
+	b=leRDc5iwGO87xO5ry/Vnfh1HJpdGeSSKOqVToQqcu5kBu+YAmBctEl4jTzKPc9enGQgn
+	 UT3hbksqme9X+Hh+gtoeqFEPlOnf5iU9bInLgMbBh1Tb2dmF+n6KWB9O289VNIXWhw0yN
+	 Ywg4Tba5X/nOXQ74eJSw8pFseATPLQNBBbq4k1YqG1s0sm3ycCwIZ4gvfwi4iTiDX4V4Y
+	 MU6+PwrwEbiIt+y2mwOQLpkeW3uxwEcH6zMN6FKDVyzk0NuP/Fxzsuqx8xdp9551XpSIu
+	 v5OOkZttL1e0B/uNgSytcoSFO/5zHNhx3VyiYHDrZxtm4sgrO17P6MBNvLXQKBUWHMQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795554189;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795554254;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=ftZV1FGzI6Rq/bD5tKIyrVuBA66/zH6lfQJBVPZqDy8=;
-	b=fzhv2UxNrrqOmPtoUai4URvRGvOCRCL3NMmvK1/5g8Nh4jcQ//kdP+LzFUoeE5fpAPF3
-	 p2MaXdQ2FUOCB7Y9Pm0bX6iBbdh6DwfVcf7SW+tKEFo6FXaHAqROtCaGsjCktWaN1EyWb
-	 gR3k2m2bl+/O3o2p5SLf1iF3HZGU/vCoofWHRygxWEuHcuse42kZIj16oSfS4IF9f20FW
-	 al//7w1uSBqXXFg2TB8+A/EjvGcPCCSXmG8hKB1n+di2K8QKisVnnOntZoy6pU2SnIxGG
-	 uVxMYq7EoHxJNU2FaIVXJz4uGGpuoujSde0Bx663HtCB/3PuDTrI55RclOAcDZbNpag==
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To;
+	bh=6dubRZ+psZ8Qs4E+TpOMXYLhcvIEPixdHXGPYBCuxJw=;
+	b=4wm66iAYJYUJGI3AtPmh8KLTerIZapr42hFB/HifOSpTmGle2XCPXzRX7tTDtUARCW2X
+	 cSdFNVczIQuFu+l4OOHEWnOwypiZNKmTHizAOaIhna7765OhfAaAv902/rDQU/ogul08P
+	 03UROVk2Nx3YCR10DXlv48luuB3ymOb23ZC7FvMzOnWD5TDFYsJO/BT2k5Vjre4PUfMEL
+	 M4L0Ui4FjB61nOqRI7jEWY7k1RI8KSTh5nJYYmpK6dpLOJELVSXb4pTvfM8jLpWWknEPU
+	 U0J4CHx3rQAq/71ZkzQgAoy8hUEDuST1JNVocOnsSidZBJ7Q6W9ggowK68xnZMZr/NQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aeIcMqZn;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=E31yohwI;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AEB606A31E;
-	Tue, 24 Nov 2026 21:03:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36980606A31E;
+	Tue, 24 Nov 2026 21:04:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aeIcMqZn
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 225E31F000C6;
-	Tue, 24 Nov 2026 21:03:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=E31yohwI
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 578041F000C0;
+	Tue, 24 Nov 2026 21:04:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795554189;
-	bh=ftZV1FGzI6Rq/bD5tKIyrVuBA66/zH6lfQJBVPZqDy8=;
+	s=k20260515; t=1795554253;
+	bh=6dubRZ+psZ8Qs4E+TpOMXYLhcvIEPixdHXGPYBCuxJw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=aeIcMqZnVRcPW7B8Ciq1HD6e62S8VDEs4RiM+PfLpr265eDow7z+F1S0Z2FnjFgV9
-	 zo+Oz3HokP7cN1TCVzBOU2XZ6qjpZh9+Wp7AWHuqu6x1pRQoSI7O/86pRIHy7J47f7
-	 rQdJ1fz7lmrgpDoHJWrjlJurkEFs6z7X0Ed4UFwCQkLGP1+MEiNe/ykYW4hqdb7cqj
-	 kf/WzF0PvKHM8bCoX4WowVfr/Xy+F7W+5W0ienlj89iQqDkczUQImePdFa5cpoF/Ud
-	 5alD7/VHxnSa1ITuxVmOVoUjezCApcE3/1ayhHGsWJd/IgZCFuA3EvARbtb2ZlZQ3x
-	 1Q9zQg62E/3iw==
-Date: Tue, 24 Nov 2026 13:03:07 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Yao Zhao <dragonlinux@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Jin Yao <yao.jin@linux.intel.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 RESEND] perf annotate: fix annotate crash for fused
- instructions
-Message-ID: <awX7ix4V3NZocdTp@google.com>
-References: <sashiko-outbox-214904@kernel.org>
- <20261116165438.694835-1-dragonlinux@gmail.com>
+	b=E31yohwI1HSD6GQXv6X2jlRti1B+6XAuLacDTcUp71pnPeSyB3rHv0h3Sz+t+U7z4
+	 e1ViJZRgt1kSdq4XtWboFqBeycB7kD/VYCwz81seJ5vxt0i1WeFeoKRmdPibS1d1Sn
+	 IwX2xtpFAOmrk8egAeGmTsKRz5MpidV0FPuf2+Bbb6t7i/9WLjlrzUlvZv0l9CQBni
+	 3r9FU+7bw2O1l3RmptjURBc6s7cVTAShql3HGZ7oKlM6ZNa+hxGQsrXU/Zq7hvTQr2
+	 zoKdED3wnBYy4m1QJSfqIgVF3JgvY/lz6u74EQQXUXKWaawhq8SjCCugXC6iHoeEI4
+	 RU8XqmEnCz4lA==
+Date: Tue, 24 Nov 2026 21:04:12 +0000
+From: Yosry Ahmed <yosry@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [RFC PATCH 22/26] KVM: x86/pmu: Put the mediated PMU context
+ lazily on slowpath VM-Exits
+Message-ID: <awX4ejrfT_zdZ3vS@google.com>
+References: <20261124002303.1785363-1-yosry@kernel.org>
+ <20261124002303.1785363-23-yosry@kernel.org>
+ <sashiko-outbox-230319@kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -68,45 +61,137 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20261116165438.694835-1-dragonlinux@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <sashiko-outbox-230319@kernel.org>
 
-On Mon, Nov 16, 2026 at 11:54:36AM -0500, Yao Zhao wrote:
-> Function is_fused tries to find the previous fused instruction with the
-> current conditional jump instruction in the annotate_line list.
-> disasm_line is the container of annotate_line.
-> The annotate_line list uses list_head and the head is in annotated_source:
-> notes->src which is not an annotate_line, so it couldn't walk without
-> checking the list_head. If so it will read annoted_source neighbour memory
-> mistakenly and most likely cause crash.
+On Tue, Nov 24, 2026 at 12:52:05AM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential
+> issue to consider:
+> - [Medium] KVM: x86/pmu: cgroup guest time corruption in
+>   kvm_arch_vcpu_put() on sched-out
+> --
 > 
-> Fix the case where current instruction is a conditional jump and it is
-> the first instruction in the disassembled list, the original code will
-> walk to the head and treats it as disasm_line which is not.
+> commit 17f48d0588e7da0bb43ece63664106faa2d5150c
+> Author: Yosry Ahmed <yosry@kernel.org>
 > 
->     -------- backtrace --------
->     #0 0x564dd8d5d5cd in ui__signal_backtrace setup.c:0
->     #1 0x7f1737e3e6f0 libc.so.6[3e6f0]
->     #2 0x7f1737ec10b1 strstr-sse2-unaligned.S:41
->     #3 0x564dd8d625ef in intel__ins_is_fused annotate-x86.c:0
->     #4 0x564dd8d4bcde in annotate_browser__refresh annotate.c:0
->     #5 0x564dd8d49bd6 in __ui_browser__refresh.isra.0 browser.c:0
->     #6 0x564dd8d4a960 in ui_browser__run ??:0
->     #7 0x564dd8d4cbcf in __hist_entry__tui_annotate ??:0
->     #8 0x564dd8d50a91 in do_annotate hists.c:0
->     #9 0x564dd8d58bb1 in evsel__hists_browse hists.c:0
->     #10 0x564dd8d5a7fa in evlist__tui_browse_hists ??:0
->     #11 0x564dd8bf7a98 in cmd_report help.c:109
->     #12 0x564dd8c713e4 in handle_internal_command help.c:109
->     #13 0x564dd8bd6ac2 in main ??:0
->     #14 0x7f1737e27781 libc_start_call_main.h:83
->     #15 0x7f1737e278b9 in __libc_start_main libc-start.c:127
->     #16 0x564dd8bd7095 in _start help.c:109
+> KVM: x86/pmu: Put the mediated PMU context lazily on slowpath VM-Exits
 > 
-> Fixes: 7efbcc8c075c ("perf annotate: Fix fused instr logic for assembly functions")
+> This commit keeps the guest mediated PMU context loaded across slowpath
+> VM-Exits when there are no conflicting host perf events, deferring the put
+> until vcpu_put() or when perf reclaims the mediated PMU.
 > 
-> Signed-off-by: Yao Zhao <dragonlinux@gmail.com>
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index 8370ccceadb82..7fb954ed8e84b 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -2708,6 +2708,11 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
+> >  		srcu_read_unlock(&vcpu->kvm->srcu, idx);
+> >  	}
+> >  
+> > +	if (kvm_vcpu_has_mediated_pmu(vcpu)) {
+> > +		scoped_guard(irqsave)
+> > +			kvm_mediated_pmu_put(vcpu);
+> > +	}
+> > +
+> >  	kvm_x86_call(vcpu_put)(vcpu);
+> >  	vcpu->arch.last_host_tsc = rdtsc();
+> >  }
+> 
+> [Severity: Medium]
+> Can calling kvm_mediated_pmu_put() from kvm_arch_vcpu_put() during a task
+> switch corrupt cgroup guest time accounting (info->timeguest.time) for the
+> incoming task's cgroup?
+> 
+> When a vCPU takes a slowpath VM-Exit while a non-conflicting cgroup perf
+> event (such as a software or uncore event) is active on the CPU,
+> perf_has_mediated_pmu_conflicts() is false, so the guest mediated PMU
+> context stays loaded with preemption enabled.  If the vCPU task is then
+> scheduled out to a task in another cgroup, prepare_task_switch() runs
+> perf_event_task_sched_out() before fire_sched_out_preempt_notifiers():
+> 
+> kernel/sched/core.c:prepare_task_switch() {
+>     ...
+> 	perf_event_task_sched_out(prev, next);
+> 	fire_sched_out_preempt_notifiers(prev, next);
+>     ...
+> }
+> 
+> During the switch:
+> 
+>   prepare_task_switch(prev, next)
+>     perf_event_task_sched_out(prev, next)
+>       ...
+>         perf_cgroup_switch(next)
+>           cpuctx->cgrp = cgrp;  /* switched to next's cgroup */
+>           ctx_sched_in(..., EVENT_ALL|EVENT_CGROUP)
+>             perf_cgroup_set_timestamp(cpuctx, false)
+>               /* sets info->time.stamp, leaves info->timeguest.stamp
+>                * uninitialized or stale on next's cgroup */
+>     fire_sched_out_preempt_notifiers(prev, next)
+>       kvm_sched_out()
+>         ...
+>           kvm_arch_vcpu_put()
+>             kvm_mediated_pmu_put()
+>               perf_put_guest_context()
+>                 perf_event_sched_in(..., EVENT_GUEST)
+>                   ctx_sched_in(..., EVENT_PINNED | EVENT_GUEST)
+>                     update_cgrp_time_from_cpuctx(cpuctx, false)
+>                       __update_cgrp_guest_time(info, now, true)
+>                         info->timeguest.time += now - info->timeguest.stamp;
+> 
+> Because perf_guest_ctx_loaded is not cleared until the end of
+> perf_put_guest_context(), update_cgrp_time_from_cpuctx() sees
+> is_guest_mediated_pmu_loaded() == true and adds now - info->timeguest.stamp
+> to next's cgroup using an uninitialized (0) or stale timestamp.  This adds
+> up to the full perf_clock() uptime to next's cgroup guest time and causes
+> 64-bit unsigned underflow when computing enabled/running time for
+> exclude_guest mediated PMU events in that cgroup.
 
-Applied to perf-tools-next, thanks!
+I don't think this causes a problem in practice. The cgroup guest time
+is only consumed by events in a mediated-capable PMU's context. Such an
+event would be a conflicting event. So KVM will put the guest context
+when exiting to the slowpath, or the IPI installing it will reclaim the
+PMU.  But it may be fragile, and having silently broken (yet unused)
+accounting is not ideal.
 
-Best regards
-Namhyung
+An earlier version I had just reclaimed the PMU on context switch. I had
+convinced myself that it's not needed because KVM's preempt notifier
+(vcpu_put()) does so anyway. I missed the cgroup scheduling code. I
+think it's probably safer to just reclaim on context switch.
+
+One slightly annoying (but minor) problem is stats. Currently the
+reclaim stat counts instances where perf reclaims the PMU because host
+perf needs it (i.e. it conflicts with the mediated PMU). The vCPU put
+path is not counted, as it's technically an implementation detail. The
+context switch path would be counted as a reclaim, when it technically
+isn't. Not a big deal, and I am not sure if Sean will want to keep the
+stats anyway, we can discuss it separately.
+
+I think it would basically be a new patch calling
+perf_reclaim_mediated_pmu() at the beginning of
+__perf_event_task_sched_out(), something like this on top of the
+series:
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index d3e1b33c97716..0cdaaf9bbfb13 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -4019,6 +4019,15 @@ static void perf_event_switch(struct task_struct *task,
+ void __perf_event_task_sched_out(struct task_struct *task,
+                                 struct task_struct *next)
+ {
++       /*
++        * The guest's mediated PMU context may still be loaded, e.g. if KVM
++        * left it loaded across slowpath VM-Exits, and KVM only puts it from
++        * its preempt notifier after this.  Reclaim the PMU first, as perf's
++        * sched-out (e.g. switching cgroups) must not run with a guest context
++        * loaded.
++        */
++       perf_reclaim_mediated_pmu();
++
+        if (__this_cpu_read(perf_sched_cb_usages))
+                perf_pmu_sched_task(task, next, false);
+
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20261124002303.1785363-1-yosry@kernel.org?part=22
