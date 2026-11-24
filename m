@@ -1,87 +1,97 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.180
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795525526;
-	b=DiKUj4h+2VpLJiqZ+yK7/1YUq5rnv4PKzN5gwUwdkMMS9gziehJurgYcWSyIArWHT4OV
-	 4cbnfluP31Vu+c4guyG5Bwp99x8wPi1FtVT59MavF0F9Y3WC3gScMBjC+MDmzu1bHeQNQ
-	 5bBxst6bZfUxakMSUxL13x4BJ9ybQDHYyY1nHW9tpmR5lNBiw0gB+SnmD5dTf0Y9rmIVM
-	 3l23VEQrt3R1jwQdV8HK05ty8JReW4hRDfQlPcSWc/SEfpR3D1sXN4gmHFXrar2vsI/mu
-	 afqfmbt65Ng+TpvqxtwTYL899lVJAgwhC6r+XwlotmrjPLBkB8JvtYcvPaPREmcv24Q==
+	t=1795525723;
+	b=SQgNaV88+v9nCBv9zg1qP0RF12U/gki57WUuUgff9PK7nuUXncYcw0+diW2lWZVeHmtb
+	 WvKaQ8gsOLCnyavXjPX9ZMkA9fJNE9D5a8dYrkCs73orqwm2WyfhGHMqqZ8GtTIMxh4Hn
+	 UCKcHJo5+cfD8yEQhu04ErgsHGkRJO1j3MtPxcg2Zk701K0gAIxC2XEbxpn7ChOLc3ngn
+	 aBmVxLnbNIYesUPJxZQEeODcqkL3pErS4VLGQG3ZXe8tpgbzh5WyKHEKpfjSbVh+N5jhL
+	 zqZGrZxc/vhOChDQ+X0AJntyt9srABeOoFJCAEIIIf9UqaGEa1Ac64eE6DFo4LnGLRg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795525526;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795525723;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:Autocrypt:In-Reply-To:Content-Type;
-	bh=1fSkvm5OP0PEIuFbARo1EL9pn1CvUDlyi1JdnlX4EPM=;
-	b=tFDg9HjaRbbwlIpzWOuNB0KhWnedo8h0fSMYWBbv5DwAlpvt4pgXWG4fsrFm+UUcwLoh
-	 xfQe92rxmluKV1S5Ye31LTna6ZrQydS0p4hiScUzfthDdIg38fCP9nhOPdnWlZgTKVUCo
-	 VNypCUts/Nte0zcZsGlwPbktiTUnPYNUsmQxtf8IwHZkY8d3d1u39f4g5r/83/vzo5RW0
-	 VZsRyCmxY6PFa1kSJ7i2Le2jUECjWWctcnZs2FWhv8qfObrG6pR0D8lffsCn5fUWVjv/1
-	 15nLUtn6Z37kPpAVqJMqtOMAWhpFsAt+1UtloYVByEESfQhe+8HOI25Rl0tsV2PDMDg==
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Date:From:To:CC:
+	 Subject:User-Agent:In-Reply-To:References:Message-ID:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding;
+	bh=XbztJIKjfD6YyhkVTo/7hoojOtoaJPqi9RVN75qyzg4=;
+	b=uh6o711DvnaEEWF39OkPFKOBhwqdqhLN1RCNLRvf8Ku/TxCW1Q49JI+CMNIi2LF1Q7K7
+	 EUk43VxIGAbjLtSSj5k7rUKltzYt3vExgQ1QvlcCyR36Qbe6QC9DuGlphqPx19V6O/Fdm
+	 sXcLIijgd++TExjLnohcep7UNpzEpKXYUmmD1IXTpNlWAizeh8sA2Ah0ep3miru+xhYCb
+	 7cSYNl1uIgrQAzei7SPLjzcwMdrq+VexioPcXUSuGIiFrcCx0pn0ZajAGi+l0xMKeezZ3
+	 x5czdZRWD4N52yLWJrM5sqmIZ0JIsQH9ZJiMxCyjPhxXL7nRxiPuOlxndnHDY0y7fvA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=suse.com;
-	spf=pass smtp.mailfrom=suse.com;
-	dkim=pass header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=google header.b=Q5I09lLB;
-	arc=none smtp.remote-ip=209.85.208.43
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	dmarc=pass header.from=gmail.com;
+	spf=pass smtp.mailfrom=gmail.com;
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=EjjR24l8;
+	arc=none smtp.remote-ip=209.85.221.180
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF701606A327
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 13:05:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CF701606A327
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4C6606A321
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 13:08:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 0E4C6606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=google header.b=Q5I09lLB
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6ba38c41804so5115981a12.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 05:05:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=EjjR24l8
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-5ed2f163a2fso1446476e0c.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 05:08:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1795525524; x=1796130324; darn=vger.kernel.org;
-        h=content-type:in-reply-to:autocrypt:from:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=1fSkvm5OP0PEIuFbARo1EL9pn1CvUDlyi1JdnlX4EPM=;
-        b=Q5I09lLByp8GrAga+z61+5M+gvAlJ4pVvlpe2jvfzdMI2JQJMoATfFS5LS9ZPidGNG
-         jvWAweA+jd8KhbSMzj8JNgWmrPoQ5lrScSGaamKRZp2hJQCxvHllSSzIfxwEsbWPVFXU
-         lmdK2+4F6qqkNeLXGkpDfOmSbd4o5l5NC2wcTUepdRIAry9l+Jx1W7DtlRdDsFcSG20I
-         pU/Q0/zdgU1SWjHx38yKkYYDu1dKBwlnJjXRgbPkOvFy9W13kzHN9N3zrAUpbCkJi0oX
-         ivNHAKp2pnuBYc11PL+TcwnZiPE4MJ3KJxnnf11wUXRLGKg3/O7crwPnWEW6JTakoUTj
-         1MTg==
+        d=gmail.com; s=20260707; t=1795525722; x=1796130522; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id
+         :references:in-reply-to:user-agent:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=XbztJIKjfD6YyhkVTo/7hoojOtoaJPqi9RVN75qyzg4=;
+        b=EjjR24l8tyjGxfcccZbqX7quytW7SFdJYQyO6rZONUcSUO9C4k+jCQjSusu6M9VipL
+         G3hbrmZKHckR2eMy4VqKEs6M5xr6ATRVK8mY0bnAAapB97kmTZvZPJGRmKWbp6ytHXbV
+         kb0SmVRaxtvh0IRiKCx2zk1nY+7KSaITTsANXIvkB/HkIt28ogg7MY4WwNzkhoiksR0w
+         hYjoHxPAs1mBxOiwjzNPidp+JWyYC8nMzVV9GlyF4Lu7nSUBc25kRnk/gaDRQav1l1ZK
+         epZdP5XBVFFBiJrkEgvRd39vLMGSfMPXBx8ibPijE/rMhUS0qhPCIePYcVgSr8MFl45x
+         yB0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795525524; x=1796130324;
-        h=content-type:in-reply-to:autocrypt:from:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:x-gm-gg
+        d=1e100.net; s=20260707; t=1795525722; x=1796130522;
+        h=content-transfer-encoding:content-type:mime-version:message-id
+         :references:in-reply-to:user-agent:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=1fSkvm5OP0PEIuFbARo1EL9pn1CvUDlyi1JdnlX4EPM=;
-        b=Dx5OWvzaQTWuuy33TRoFLvfno7lqFh5SiFsO/S+5l4TcKjG2S/Kxqz5CjGSqQg+B16
-         SLZzQYq6vlcG1wWvH4Whhqn0DL+Y1cjVMAzcheAxSNcBn2m81IfTjZVXtxSm3rpUMjnA
-         UcHkZTnSw7nJ6k5UIMhOROMza/ZHjS/a7rSaVsmrb+Sit2qBiq0sjMQxsdLRLurP3VGW
-         rExaMRbztjL4MiGlQ3i3+ZxbNO9WBdPlRQuS/OAjH6UkFYKsOpr8zb6DIzwGYuyMWCpW
-         wsIPwWVd4hzljjllp6zlUbyYgF7zdsp6yotLovi8DcSnri+RXDes2HrhOugj7vBO4aj8
-         C8ew==
-X-Forwarded-Encrypted: i=1; AL+hErEVCouDWRZ3X8rWciBfLdfur1GPQAIMNI5wRlY8KZGsYpEf4ptOQndaHIOLbBzLjG1fKZMG4FgGMszV1be9n2dx@vger.kernel.org
-X-Gm-Message-State: APuU4Z97dsIzarjubncChvkHZfNWwWPtCGJbL4wkatNcyiA8oa4asXhB
-	YNvzu5oUzrE1Q1usOz2h4xvEz3KAMxy8qHem8+kskxQUXqUp4AZB8b9ti7gJMuYO7yM=
-X-Gm-Gg: AZFdTZfAmkXs63kdxNUgy0Jb+TqIz89FJug1lBqXcQgOSuHQuhjMji9Qc3CB/tlM8c2
-	143y+ARXfOLK5aHktZmhfPwPh0nwOvSFRC+lRKawUfHb5v0bi6+ruR56i9LfXWOLP1OJya6mJMz
-	laHLT7mfSe8JQB2CpPjWTN9Z9yLJp9Ulp8Kl93kOudYLl13lXRSlBF087CTQ0C9RRB++xlOjzsF
-	8yl79f5XQCkrYIFNaaEzK0RpXdgw6OvBhKJVftiEaJALHUcqBLLCT9G+YgDNZS0VFFQZ4C9gnMk
-	Zk5aRPFojz2MtzFvKalwGVYfPXPD8N1KnPYHcwW5ODTbTYH1dJ/GVGLnUH1Z8vwpgwBlMULnINg
-	rmdY8fziTUJViCRz9uI3w9dHYyQaJIox0UK+clvjzT9bsscsW72GLztpucfkR4VzeZPFcEbzuNw
-	Mci2su7eL2TIXPpKGG7rXOFwbWtOefE2PI6ah0ufFB9pZ7ZekjYr0P2ezFk76WGr5En3hRXd/CF
-	H1oIK8kreqlGpUgcC8cHDerHdMYf2bT/0CcBwyBpXlHJQthLgdP8c3rMtHFFvUNFTaoluWgvGQn
-	NoIUK/SFrp8Qr9MRhXPQe75bBrl3DpxETeWjAocFym0fMFzAoDdMWZdlDQxVq+EQP2PHv3HlQ/i
-	BrjiHuOlx2MS74eNw8W+ZJhhjGkTtQBWeLJzLvsHmqx+XmweToEE=
-X-Received: by 2002:a05:6402:3645:b0:6ba:c85e:c0e0 with SMTP id 4fb4d7f45d1cf-6bac85ec268mr3910962a12.28.1795525524131;
-        Tue, 24 Nov 2026 05:05:24 -0800 (PST)
-Received: from ?IPV6:2a00:12d0:afa3:c01:92cc:e257:77ba:97a1? (2a00-12d0-afa3-c01-92cc-e257-77ba-97a1.ip.tng.de. [2a00:12d0:afa3:c01:92cc:e257:77ba:97a1])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6ba370cbb80sm6784029a12.9.2026.11.24.05.05.23
+        bh=XbztJIKjfD6YyhkVTo/7hoojOtoaJPqi9RVN75qyzg4=;
+        b=aYXh/xhXqT3WGhNVr7EErav5eJITo/smHoj9ENB0Vw8Zaehz/CfpS3JJIIdhWf8oK7
+         C0hJ+SEKYjpS87ZqQ/ilu+9IO1mAVVlF6VZCH4wQ3GhQVlzJFbdlYCAPnFFYhwEGN//W
+         8BoA7Dt1M0TQtyydUftAHC0UkcxQoBCveeaN+oWwWtscvgP9MO/5G3fkNK5rGElRL4Ov
+         vJztfqBbIXNCfIigWrhTgYPnVD+ArYwo5e3dFBQ9/uTidCnL+KBpk+yzujZWYanUTJ/s
+         KH0RHFgEWim1SyhNcGW1bdyHzsWQXgio0qChcs6OjSb3L2fd5IUIlYKfmtedQN71PREP
+         Ousg==
+X-Gm-Message-State: APuU4Z+gVsWGdf8n40LrlmKyE7P5v+bsiHxbsSXpXM6ZkmvuZKgOHUrj
+	eagFnxyBfAzh6aDhWPXxD8E0czM0lzXe5wnsla53FFG6zGBPLe0TMv5RiWSWeA==
+X-Gm-Gg: AZFdTZda+ThOuRIhnk9jMTmMizzxUSdJ2XTFTeWiie1ZvN+umraK8zdkrEsginszPxp
+	h4FysMzpSqMSB+F/7CXxaaHBKLcTyu3d2zLMoLFkg/dJJo5SbZNE/Sv2pZxxMt+CFINYKpb4J9m
+	v6PQd47hDbIn+CZt2Ut4paRB9ynoHeiYfe3qvu9G7bqOFfKnImB6Lsi7fS+h4ikov2fC68nXeEY
+	lmTlr3s/FJPIM5ekdYbiJM3UTqORCYMInXTXdaoVMY2uKXoVJRsAP12EknDAY/x/0BQQp2tG4k3
+	Ozfo4yNzDmJtnSLF+SkWpElhBzR0tGiSoq/1sebB88fBYumjLB4pirm35avfqxkIxu4gSUGxc+F
+	FinGY+hFYRRGlL8zfGJCDU9bmN55VVh6rfa5BQveYs04aEe7x7e9Vjs6lOKv/oKHEj4VQoqLhcS
+	Bx1C0WVjF76TzTGqAHj2jy3NC37V/3na90ZQRnH99rQxtsQM/K4FSnfR2KD7uhpQfiZKyEBkn/J
+	eTsQ1xh5+uBkytBjyjciwKJ1ydYytGT+HKvMxp9rztP0GENhn6Zx8QV6oruCYmjcCyavMssAnws
+	64owc5DU19DmxwB9rtkr/Wtoz/KgpYGPdhXezZvTgFf70A==
+X-Received: by 2002:a05:6122:208f:b0:5ec:c3ed:7d99 with SMTP id 71dfb90a1353d-5ee8aea67b8mr6786741e0c.6.1795525721797;
+        Tue, 24 Nov 2026 05:08:41 -0800 (PST)
+Received: from ehlo.thunderbird.net ([2804:2bf0:60e7:ae00:4750:f903:b503:f985])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-99e6e033aafsm14849601241.7.2026.11.24.05.08.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Nov 2026 05:05:23 -0800 (PST)
-Message-ID: <59d4ee28-0605-4e93-8ac1-19c8d0272bee@suse.com>
-Date: Tue, 24 Nov 2026 14:05:22 +0100
+        Tue, 24 Nov 2026 05:08:40 -0800 (PST)
+Date: Tue, 24 Nov 2026 10:08:31 -0300
+From: Arnaldo Melo <arnaldo.melo@gmail.com>
+To: James Clark <james.clark@linaro.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>
+CC: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_perf_build=3A_Only_enable_c?=
+ =?US-ASCII?Q?ontext_analysis_with_Clang_23_or_later?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <46a896ba-cd45-4747-837d-50ea4b4dbed9@linaro.org>
+References: <20261123-james-perf-late-parse-attr-v1-1-cfebcd81a962@linaro.org> <CAP-5=fXuQWTt1F6BvKSXqgSkEtBQPKvKg6gmAe-ngyr4VGyGig@mail.gmail.com> <EC27692D-9692-4976-B7EA-4C3A91173CE3@gmail.com> <awSu48pUIh942Zm4@google.com> <46a896ba-cd45-4747-837d-50ea4b4dbed9@linaro.org>
+Message-ID: <0E9F372C-C100-41EC-B5B3-46FEDC813E01@gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -91,158 +101,93 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] msr: replace rdmsr()/wrmsr() in comments
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-doc@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-hwmon@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Randy Dunlap <rdunlap@infradead.org>, Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Guenter Roeck <linux@roeck-us.net>,
- Tony Luck <tony.luck@intel.com>, Ashok Raj <ashok.raj.linux@gmail.com>,
- Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-References: <20261124064108.2440277-1-jgross@suse.com>
- <awWHd9ygPFipisb3@gmail.com>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <awWHd9ygPFipisb3@gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------fzIBNZKANk2e40IQjwqLyzcB"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------fzIBNZKANk2e40IQjwqLyzcB
-Content-Type: multipart/mixed; boundary="------------eO6WT9kL6g4GOfnRabTN4O78";
- protected-headers="v1"; hp="clear"
-Message-ID: <59d4ee28-0605-4e93-8ac1-19c8d0272bee@suse.com>
-Date: Tue, 24 Nov 2026 14:05:22 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] msr: replace rdmsr()/wrmsr() in comments
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-doc@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-hwmon@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Randy Dunlap <rdunlap@infradead.org>, Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Guenter Roeck <linux@roeck-us.net>,
- Tony Luck <tony.luck@intel.com>, Ashok Raj <ashok.raj.linux@gmail.com>,
- Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-References: <20261124064108.2440277-1-jgross@suse.com>
- <awWHd9ygPFipisb3@gmail.com>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <awWHd9ygPFipisb3@gmail.com>
 
---------------eO6WT9kL6g4GOfnRabTN4O78
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
 
-T24gMjQuMTEuMjYgMTM6NDcsIEluZ28gTW9sbmFyIHdyb3RlOg0KPiANCj4gKiBKdWVyZ2Vu
-IEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+IHdyb3RlOg0KPiANCj4+IFJlcGxhY2UgYWxsIG1l
-bnRpb25pbmcgb2YgcmRtc3IoKSBhbmQgd3Jtc3IoKSBpbiBjb21tZW50cyB3aXRoDQo+PiBy
-ZG1zcnEoKSBhbmQgd3Jtc3JxKCksIGFzIHRoZSBmb3JtZXIgZnVuY3Rpb25zIGFyZSBubyBs
-b25nZXINCj4+IGV4aXN0aW5nLg0KPj4NCj4+IEluIGRyaXZlcnMvaHdtb24vY29yZXRlbXAu
-YyBkcm9wIG1lbnRpb25pbmcgcmRtc3Ivd3Jtc3IsIGFzIHRoZQ0KPj4gY29tbWVudCB3YXMg
-aW5jb3JyZWN0IGluIHRoaXMgcmVnYXJkLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IEp1ZXJn
-ZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT4NCj4+IC0tLQ0KPj4gVG8gYmUgYXBwbGllZCBv
-biB0b3Agb2YgY3VycmVudCBjb3JlL21zciBicmFuY2ggb2YgdGhlIHRpcCB0cmVlLg0KPj4g
-VjI6DQo+PiAtIGRyb3AgY29tbWVudCBpbiBkcml2ZXJzL2h3bW9uL2NvcmV0ZW1wLmMgKEFz
-YWYgTnVyaSBCZXJ0aXpsaW9nbHUpDQo+PiAtLS0NCj4+ICAgRG9jdW1lbnRhdGlvbi9hcmNo
-L3g4Ni9taWNyb2NvZGUucnN0ICB8IDIgKy0NCj4+ICAgYXJjaC94ODYvZXZlbnRzL2FtZC9p
-YnMuYyAgICAgICAgICAgICB8IDIgKy0NCj4+ICAgYXJjaC94ODYvZXZlbnRzL2ludGVsL2Nv
-cmUuYyAgICAgICAgICB8IDIgKy0NCj4+ICAgYXJjaC94ODYvZXZlbnRzL2ludGVsL2xici5j
-ICAgICAgICAgICB8IDYgKysrLS0tDQo+PiAgIGFyY2gveDg2L2luY2x1ZGUvYXNtL3NoYXJl
-ZC9tc3IuaCAgICAgfCAyICstDQo+PiAgIGFyY2gveDg2L2tlcm5lbC9jcHUvZmVhdF9jdGwu
-YyAgICAgICAgfCAyICstDQo+PiAgIGRyaXZlcnMvaHdtb24vY29yZXRlbXAuYyAgICAgICAg
-ICAgICAgfCAzICstLQ0KPj4gICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC9pZnMvbG9h
-ZC5jIHwgNSArKystLQ0KPj4gICA4IGZpbGVzIGNoYW5nZWQsIDEyIGluc2VydGlvbnMoKyks
-IDEyIGRlbGV0aW9ucygtKQ0KPiANCj4gWWVhaCwgc28gSSd2ZSBhbHJlYWR5IGFwcGxpZWQg
-LXYxIHdpdGhvdXQgdGhlIGNvcmV0ZW1wLmMgYml0cywNCj4gaWUuIGp1c3QgdGhlIG1lY2hh
-bmljYWwgcmVuYW1lcy4NCj4gDQo+IE1pbmQgc2VuZGluZyB0aGUgY29yZXRlbXAuYyBwYXJ0
-IGFzIGEgc3RhbmRhbG9uZSBwYXRjaCwgd2l0aA0KPiBBc2FmIE51cmkgQmVydGl6bGlvxJ9s
-dSdzIChwcmVzdW1lZCkgQWNrZWQtYnk/DQo+IA0KDQpJJ2xsIGp1c3QgZ28gd2l0aCBoaXMg
-IlN1Z2dlc3RlZC1ieToiDQoNCg0KSnVlcmdlbg0KDQo=
+On November 24, 2026 8:24:37 AM GMT-03:00, James Clark <james=2Eclark@lina=
+ro=2Eorg> wrote:
 
---------------eO6WT9kL6g4GOfnRabTN4O78--
+>Looks like __guarded_by() has also been around since at least clang 18, s=
+o that wasn't the issue=2E The problem is that it's not supported on struct=
+ _members_ specifically until clang 19=2E
 
---------------fzIBNZKANk2e40IQjwqLyzcB
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+>I sent another version that stubs it out for < 19 which works=2E The comm=
+it summary changed to "perf build: Stub out __guarded_by() on older Clang v=
+ersions"=2E
 
------BEGIN PGP SIGNATURE-----
+>The header diverges from the kernel one which isn't great, but I suppose =
+that's better
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmsFi5MFAwAAAAAACgkQsN6d1ii/Ey/z
-ZAgAisD+DZAdNXgjnVdM3s2bM/G2CpMIMc5aSo46KHC0SSFWxqgAn0uhLwg6oV0HfEM4WXejTWZ4
-EPP6mOPAZTe1Y4she3H0RVq9qe7OAi2Rn3YM5XbKYmsxBf1dLD+xOmgZtSrVKA53/tvzcF6CriaX
-w/KdLsxB0ASxzQIvaBez16RFmGVZ+veCA7XSqlfjCSvT7Ir6NTNPfbt/MixiHLfp+RMEBYG+gHzg
-SSvjqAx7UG7fvGOt1cA1zW8ETewsqo+MpGIDVocuH5M5pF/kk0470EkP7An2N/FRvf296caLYPpy
-LI550rDXjx1h/XL2gRPjKEKSJ4WJ4qz032FTkhwbDA==
-=wTmJ
------END PGP SIGNATURE-----
+Right, but you changed how check-headers=2Esh treats it to cope with the d=
+ifference and I'll make sure that tools/perf/scripts/sync-headers=2Esh hand=
+les this case as well, namely if check-headers=2Esh detects drift, sync-hea=
+ders=2Esh will update the tools copy while keeping the tools specific parts=
+=2E=20
 
---------------fzIBNZKANk2e40IQjwqLyzcB--
+acme@number:~/git/perf-tools-next$ make -C tools/perf help | grep headers
+  check-headers         - check which header copies are out of sync with t=
+he kernel
+  sync-headers          - sync those header copies with the kernel, creati=
+ng commits
+acme@number:~/git/perf-tools-next$ tools/perf/scripts/sync-headers=2Esh --=
+helpUsage: sync-headers=2Esh [OPTIONS]
+
+Sync tools/ header copies with the kernel sources and create commits=2E
+
+Options:
+  -n, --dry-run       Show what would be done without making changes
+  -N, --no-build      Skip the perf build verification step
+  -C, --no-commit     Copy files but do not create git commits
+  -f, --filter PAT    Only process headers matching PAT (substring match
+                      against the kernel-side path)
+  -F, --force         Sync also when both copies have content the other
+                      lacks, after manual investigation; tools/ additions
+                      dropped are recorded in the commit
+  -o, --output DIR    Build output directory (default: /tmp/build/perf-too=
+ls-1000)
+  -v, --verbose       Show more details
+  -h, --help          Show this help
+
+Environment:
+  SIGN_OFF_NAME       Override git user=2Ename for Signed-off-by
+  SIGN_OFF_EMAIL      Override git user=2Eemail for Signed-off-by
+  OUTPUT_DIR          Build output directory
+
+Through make:
+  SYNC_HEADERS_ARGS   Options to pass to this script, e=2Eg=2E:
+                      make -C tools/perf sync-headers SYNC_HEADERS_ARGS=3D=
+'-n'
+
+The script:
+  1=2E Runs 'make -C tools/perf check-headers' to find stale copies=2E
+  2=2E For each stale header, identifies the kernel commits that changed i=
+t,
+     including the merges that brought content of their own=2E
+  3=2E Copies the kernel header into the tools/ tree, skipping it when onl=
+y
+     the tools/ copy changed (it is ahead) or when it carries intentional
+     edits, and stopping for manual investigation when both sides have
+     content the other lacks=2E
+  4=2E For beauty headers, runs the relevant beauty script(s) before and
+     after, showing new/changed string table entries=2E
+  5=2E Builds perf and the other consumers of the header to verify nothing
+     breaks=2E
+  6=2E Creates a git commit per header (or group) with the standard commit
+     message format=2E
+
+acme@number:~/git/perf-tools-next$
+
+I=2Ee=2E the limitation in point number three, about intentional edits, ne=
+eds to be lifted=2E
+
+- Arnaldo
+
+> than someone on clang 17 or 18 missing out on all of the lock analysis=
+=2E
+
+Right=2E=20
+
+- Arnaldo 
