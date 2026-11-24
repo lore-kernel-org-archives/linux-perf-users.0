@@ -1,86 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.179
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795521931;
-	b=iAm8z1+vVWum+j+XtZTNC/dz3V9JzBvdH/ReX3g1+b9pJe+F2L1Udx+EsWROOLRPU0zH
-	 4H2YevSnLmDN65jdZQT6+OQ4HQyAn4ujUixKAcY/bZRgYJ3EDFwNFCHvENZB32UoYKQQf
-	 eGaeFlesHpcIEiVE1UK7yFOCzoO00S4YkdrvTqU+K+2Gw7xaOvm/Y1RHYa6w2QRz1/xZy
-	 F5xXZOJlT+o03dNo6Yc42ZHHoiuNJvZPRg9z7+YOHfQJg23nh5KYGF2/LegY3T/1u1ap/
-	 5pc63eCQ8IeJt5D7FgojcdY1dxX+rLZnhyQkSlhFf09o9lRhYUjqBcweAD34rIqxWQg==
+	t=1795521937;
+	b=ZO7LphhD+JB0KVqbaz3rUIulwVTnQD4dnJwntkGtlf1WmzAsj1CpWuO+cjoQwEn7VuLS
+	 usenZeobFA2UHsUsTC6Jq1xgtRkN0wkEJiGHDUXTelxvd3G6/8kODasodbPCSn5rXT2v4
+	 q0yuFBax5clzZk687Z2fSbLrFHFGDUKzv5nVws8/pjWHAfOGMcJZ4yngPIXPlQ/8j/H0v
+	 WIXv2c6KH8vzAR2VFKdBXzOoJib4hkJtmIIFLzdS4HTY7xeqzSruOH53SH0BG1zbwLYDO
+	 PSskqJM5pmeB1dp0CkfNBXBWj1vDkHIFAsBMZq5DgY+mA4+lP7dnGhKLfZIHbo5UYzA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795521931;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795521937;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:In-Reply-To:References:
 	 MIME-Version:Content-Transfer-Encoding;
-	bh=t5DAWPIQJxmMOKP/hqm8wEkBGU/+0/HwxtbEt17HY6k=;
-	b=4SmjPlpcbo4l5W68Rn8u7cJ6qJf/SnDeF/0HJwZNsJ4t2AT4Ad51uCMS6Vn78XxXSq6+
-	 wuD1ZHfPyFd+7VUZo59sQLDF4MhP0NJMyq+sJCuNLx3+xhKo1TqzOlm94OP9UFvNitdBp
-	 5WasUc3raSObVbvjagp7ozObYUY2BXnerBW9tEQR9kMst/JRDLCs4XX5VHAKnrt27vXNz
-	 dJm1oJ4hJl8dZFy+8Q1ZV6wKbpj+u7MxECmoxw3ZWP/QwE4v8ItIwMg97JFuaortx4l0D
-	 zjam973pzHcuPqObmXe3/Dur/xxOM2iznhsLXHhCgk/RyXm5X5PWjHErB7cNOU9iVBQ==
+	bh=5IernkkwA+DoP/JgvUM6f7W9BvN1ADy096tR+AYqelk=;
+	b=q++3lmjaqo8BMMsdqmCgGWaZsGT6i6KCmD89mVGGzJdJt/6z3OQ6nQH5WTXz91EKX5j9
+	 c6FQob/fi7JZeeI2d1tgD3NbCA3ES4/N6SsmckKdt6RKR96snRg5bb7BkM/+nnX45p5Fn
+	 nP4kPcA5IaX1AOS6viyxN2FhYtrhHJ92CnAoQjgo8w0UTY21o060Ilx5YMdJi9nQmJxpt
+	 nlZvujRY1ctoDJGEb8xob/9F9lakU7Dzi5YxQ7wI0m9ljJs3C0ZrOf3lGnalqo93W5Mhd
+	 YCJ9Z/h/mvIN40pllohpZvmAa1EiLea5F9NzPbcizDHI/0f+9QCB/n0BrZWVbcsfdPg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b="VR0E6/eJ";
-	arc=none smtp.remote-ip=209.85.214.178
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Jo8RUMQZ;
+	arc=none smtp.remote-ip=209.85.214.179
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6C9606A31E
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 12:05:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6F6C9606A31E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3C1606A322
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 12:05:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4C3C1606A322
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=VR0E6/eJ
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2f0458cc9easo33224185ad.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 04:05:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=Jo8RUMQZ
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2f07a960666so24085085ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 04:05:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795521931; x=1796126731; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1795521937; x=1796126737; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=t5DAWPIQJxmMOKP/hqm8wEkBGU/+0/HwxtbEt17HY6k=;
-        b=VR0E6/eJynbXo7eq0j9UewlBP/PeW2gHmZsgZ6eFtRxlOOQNxuDjm1JQjcj2xFcVFY
-         0HjK545rm7jLRYrlQ0J6WvjZF0j33RKlxRkZXhUHHWbfrcf1bxoHvmBk/L4RcZLG5sQi
-         1i0nMZ1IA1KHsiXVj29BbLOtvtDiIEsA3ZT5uInpvtShc12HPyr2yZRr1We0qdbcwyq3
-         Vkzn7ncvugd3GRxl6zjW1WQwvlpn7cs9arRwuHyNLmw8XiLBcD8BFs0FhkvNRqLf9Vc9
-         Rz/VHiXBSGzuo93VBX7elVS8hZRhibFzrdDukcEaOuO6AgbWAdXSweP7hLCiozygufms
-         Jqsg==
+        bh=5IernkkwA+DoP/JgvUM6f7W9BvN1ADy096tR+AYqelk=;
+        b=Jo8RUMQZgn4cqGAq/vlqdQ95A0r8L14yCvkuzGm7is2hPSuCO+yRyUSqmQFvcNL/20
+         D6tehF9nWi2kzHPw8dc+hRSiiBMLaP1fWS/C4sbeXkyOtOM0jAHkdNt7jsIcqyEFIDcO
+         KE5/ZcjyPvUsU0JANb/HXWcn0NV3wdANyTjoFiRuXM/GnBqxdS6i3qbRtPqfCNqQcLkI
+         gRZG92HTbuloPRK20VkbVywmH7jhDXdvDtkmrKkTHJjEP53mhU2xrzlFwlWxzlKo2Exu
+         BWfKPnVeW4vVw2QyZlpWNx8ceDXStxajzesj5LkmVmaziUyJirHykcGNgKW3DBKdAHLt
+         Idtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795521931; x=1796126731;
+        d=1e100.net; s=20260707; t=1795521937; x=1796126737;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=t5DAWPIQJxmMOKP/hqm8wEkBGU/+0/HwxtbEt17HY6k=;
-        b=ZTwhKNk6W7X/BPefrNDXX2oBZ9LXzFXEDidW+BmNBN3PQL93t0tIXa5dq1SfbY8vCF
-         /VG2iA4C2YUqj+lZKXBDFWsDvBLtkOJdX/NkkpLfovMnmrONCtEC9jVRho/dOE7+ZBxv
-         SvDtjFPwasMv/UavNdnMNKTWqZpu9YV/NGjcBrW5ylYW34lYD8cjaCASGbQy8FVW7/pQ
-         46pEVvUn2KfuytK7ALrk997LKO9CgykxJBv4vyUcLluh7cB60Fbl2/f+1ZNrBZ23L5HN
-         k/VLR19XhUdD47qk5wk4AsnqEcU5Z+1hvu6gwE1cU5RUcDcCpTVMI816MHqI4dTUq1DC
-         GpKg==
-X-Forwarded-Encrypted: i=1; AL+hErFKPQCRi/3poSuO/rQ5hiS2XzC+3P36luiDNBLTLqRC6OEHmYyXipVwNhext26JWschU1k4g/zDLBcJTcFyR5/2@vger.kernel.org
-X-Gm-Message-State: APuU4Z8MDeez3XmvX1/XTX/rHtGZfAKyC2TaFmTl8i5HBmRO15xDQswG
-	QaBvpfSTHCxzw5ByyM5/leh71keM5WE+L5te2vreiSk57XlcjUeZXFfL
-X-Gm-Gg: AZFdTZeHruFDuBow9ORECsKT9X6MpGasCdFZXzS7vhfZ/xG2BVwHup0Hjol81GpqiFT
-	IiaskB61aYEYM8NcAj3eyEKHOksndlz0pDwsoezFQ6n9Y7KJtYQtXUbRoKIq4v8vTb2hkJtPbjd
-	8QnMpnH/H0hWU1r/NGQv1xCjpZUHtxAnsehzyiaEItL3vShO9jyHhlp5XrM/M2zrY7PEmH78uxs
-	ZJNT5tsWXXQqLrF27CZp3+xx/j37wZC4kJVeLLhWlBwYdwSGau+VZlgTxT2NzcuNkShp0EHTP1I
-	w8CuXg36QeunDMGuFM0B5ZCNy9kCHIxTh1+09WDa8haCFkj3b4ppFoRnq7DaWrDWkVbhnOSYV8a
-	fPX3CxhnsN30nseMxbs3/ADI83Q4gftUvdw2n0VfpR3XWJ4yU+FZNJBbqDPngFrh3Ge1TporkkY
-	qUBkvNQOHY2BCi085gOulyz2IaNubQezJoi+viyPW3mOgVt+Y2M1DcZVe9tA6UDzyf/fg56H5vh
-	SyhFz0adcvAChsp2x+jNv4WJa8UfWoS1QIIu3BXbiOjYJloG2L+Z4swG/61RuCuC1KDbTz2t1gq
-	ESIjv98RjG+ACqf3TyBMUmBNvx3vnJeByXzVswCdGkrFUo8w4EyBxERxdxRflGHop4GSB/imCBh
-	GDfoQGRn2MEns5a2YIC0IAZVMyA2tFXciAkyGXpzuDYQe9e5vR9QwXOvYrhTAI27QO+N/Wiaq37
-	nLM2FHOC6Fhp3oKIt7fel8M9Pwxdh+Tl/DOKokRc3nCPsmtJK5LzT1k+gqTmRZkM9bGyStvkFHP
-	g/RHCZN/NFgk+haVeAr276DRhoQ29pcZmyRbVlgvCGd8wqFMfoimx0zNmri/zNf
-X-Received: by 2002:a17:903:94b:b0:2e8:93b1:49cc with SMTP id d9443c01a7336-2f03f1bf19amr157803285ad.35.1795521930686;
-        Tue, 24 Nov 2026 04:05:30 -0800 (PST)
+        bh=5IernkkwA+DoP/JgvUM6f7W9BvN1ADy096tR+AYqelk=;
+        b=dTSJ+8lLLuAg0KWCXdGNnu0UtFQOIb5qRcfnQhLQmZlRDgZswToFFtJ221B/kZncpx
+         UPstp0rFGguCIQV/ijVxEEwQjKCQoN2LglHNwa0P1kkADcRyzZEEISaZ+S39xMyeWayg
+         xYYSQPDnB5vIOj/WSLRlKmJ/TnEtP4XMY45jjGlQp2dTw4a2KVD+ksgLuumge5QYmD1P
+         +LlH+RY8ZFqIvi9aznYc3NjW2dqJKupkTu6u5pltgd2p3v863nrGNXIqSs+7FgzRpV/k
+         2D6ClsXesn6pvpKXyV3/A1pKCoWGLoxqngdY5RgLg8OkT8FvBgjD1UUg4QX7zV4j2REB
+         pi5g==
+X-Forwarded-Encrypted: i=1; AL+hErGAQmhRVYhssk13Vtxl9iocTJyquuEyCFZe6LPoCZxDr20tdfq7AWiVHSn5yc5teW180mvnFOCA9Z0oBxqaSoQI@vger.kernel.org
+X-Gm-Message-State: APuU4Z8tKCJK13ww4BWepLeHT22a1Fs0PWy01661HnQuQfWEfLFAmW4M
+	JoNRERfL1ltsV3gqHSzzLUBgqPUNXMZzxzzvx6Yiy580YiT3qDms9yQj
+X-Gm-Gg: AZFdTZfObMN0Cl8yPpWmBU7FkyPKzFNueHnANaX32vaUUU0aZBgyfwRrPcati3nPseC
+	25Esn5zHHPC9fjrUPNmrJM/jC6aet+uHP8zskFaCmqnTM+sjLmoP2/B9S0IpQwzS6tAujb3VvAX
+	rhbxoazZqkzffD74hxoER1Fqq7t1+yFluOmyCykN3ZjkYnLfthv9BLhKQDvHXLbOBVnqtBHhHwz
+	9Axzjq/oZCtWHulTkxB0XAewJZ6eu7gW+T1cc5N8JZPfBGoL1eiLjKsp/wFZAQI4sXDqZ0T7z5W
+	fXKeNX1rrd8s+IVmOje027MpAyCgRGejoUnoLZcC5B10dWO4rS5Nri8OK3D4ZqOvKbcbO7VTf4u
+	eTMo7/BGfqE6hMc20dDthk0zbb+BzFiarjAbwpW2/3ZRvxsIaqkjMgcHl/nzecR9hs+4qv0Jm+s
+	Ons3PcYvWuab7zGZ5Dom5Yb7hcyq6P2UBP8PGNtWzenwbIwc8b4B6Xo0ud1D+h2oA+Qj/2kQiEG
+	EDuTvLZIp6nR54cRlSzX8LKOyBJ+7xODjzOYjiWygy0jMgDqbK+PLIJyuuHv2sIEPeP9nxP01TZ
+	ScIiCHbwTqvM4T9oHhXNGlVlXhGxuT0mSFPZFUHLnOdsVgilSP7xi9iDWHj6oA9Mkebikwgcf72
+	Ez4iBl/JK9AVPOurFuHq06jkYVgahVeTyjPDocFdsVgNRAnpxo26vNME1peC5JZhsasQ+gNoTof
+	a5610rYjq7WmRZELRgYqhzhW8zMlm/3PAgUTe/3Ee7pICjBM9MZHfSBrh9AQh7NaeNCNtVHXrkL
+	QNYXN47vFen2oqxKHMKwNF9ra8dv91iOUDfDnaUiMQ1LVYf+EAR/k98H/wEgFOq
+X-Received: by 2002:a17:902:eccf:b0:2e9:77c0:c7ab with SMTP id d9443c01a7336-2f03f1277f8mr140248475ad.29.1795521936572;
+        Tue, 24 Nov 2026 04:05:36 -0800 (PST)
 Received: from localhost.localdomain (27-32-254-230.static.tpgi.com.au. [27.32.254.230])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2f07d6d4bddsm39621705ad.62.2026.11.24.04.05.25
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2f07d6d4bddsm39621705ad.62.2026.11.24.04.05.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Nov 2026 04:05:30 -0800 (PST)
+        Tue, 24 Nov 2026 04:05:36 -0800 (PST)
 From: Daniel Wade <danjwade95@gmail.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -96,9 +96,9 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Aditya Chillara <aditya.chillara@oss.qualcomm.com>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/2] perf: Reject group leaders detached by CPU hot-unplug
-Date: Tue, 24 Nov 2026 22:35:02 +1030
-Message-Id: <20261124120503.334-2-danjwade95@gmail.com>
+Subject: [PATCH v3 2/2] perf: Wake pollers when CPU hot-unplug detaches an event
+Date: Tue, 24 Nov 2026 22:35:03 +1030
+Message-Id: <20261124120503.334-3-danjwade95@gmail.com>
 X-Mailer: git-send-email 2.39.0.windows.2
 In-Reply-To: <20261124120503.334-1-danjwade95@gmail.com>
 References: <20261124120503.334-1-danjwade95@gmail.com>
@@ -113,49 +113,34 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-CPU hot-unplug detaches the events of a CPU context but leaves them in
-OFF or ERROR, so once the CPU is back a detached leader is still accepted
-as group_fd. perf_group_detach() does nothing for a leader that is
-already detached, so closing it frees it with the new sibling still
-linked, and closing the sibling is a use-after-free.
+CPU hot-unplug now detaches events with DETACH_EXIT, so is_event_hup()
+is true for them and a fresh poll() returns EPOLLHUP. A task already
+sleeping in poll() is not woken, because __perf_remove_from_context()
+does not call perf_event_wakeup() the way perf_event_exit_event() does
+on the task-exit path. It sleeps on until its own timeout.
 
-Detach them with DETACH_EXIT as well, so that they end up in
-PERF_EVENT_STATE_EXIT and are rejected by the check from
-commit fa091f46c383 ("perf: Reject exited events as group leaders").
+Queue the event's irq_work, as merge_sched_in() does when it puts an
+event into ERROR.
 
-Side effect: poll() on a hot-unplugged event now reports EPOLLHUP, and it
-is refused as group_fd even with PERF_FLAG_FD_NO_GROUP.
-
-Fixes: 226424eee809 ("perf: Fix corruption of sibling list with hotplug")
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Suggested-by: Aditya Chillara <aditya.chillara@oss.qualcomm.com>
 Signed-off-by: Daniel Wade <danjwade95@gmail.com>
-Reviewed-by: Aditya Chillara <aditya.chillara@oss.qualcomm.com>
-Cc: stable@vger.kernel.org
 ---
-Unchanged from v2.
+New in v3.
 
-Tested on mainline b3dfbde62cf1, x86-64 with KASAN and PROVE_LOCKING,
-2 vCPUs under KVM. Without the patch a sibling is accepted on a
-hot-unplugged leader and the close gives 15 KASAN reports. With it the
-open fails with ENODEV and no report appears.
-
- kernel/events/core.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ kernel/events/core.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f5f2261f1fe6..2de4c3cc37ac 100644
+index 2de4c3cc37ac..bccf16beb325 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -15342,8 +15342,10 @@ static void __perf_event_exit_context(void *__info)
- 
- 	raw_spin_lock(&ctx->lock);
- 	ctx_sched_out(ctx, NULL, EVENT_TIME);
--	list_for_each_entry(event, &ctx->event_list, event_entry)
--		__perf_remove_from_context(event, cpuctx, ctx, (void *)DETACH_GROUP);
-+	list_for_each_entry(event, &ctx->event_list, event_entry) {
-+		__perf_remove_from_context(event, cpuctx, ctx,
-+					   (void *)(DETACH_EXIT | DETACH_GROUP));
-+	}
+@@ -15345,6 +15345,9 @@ static void __perf_event_exit_context(void *__info)
+ 	list_for_each_entry(event, &ctx->event_list, event_entry) {
+ 		__perf_remove_from_context(event, cpuctx, ctx,
+ 					   (void *)(DETACH_EXIT | DETACH_GROUP));
++		/* Kick perf_poll() for is_event_hup(). */
++		event->pending_wakeup = 1;
++		irq_work_queue(&event->pending_irq);
+ 	}
  	raw_spin_unlock(&ctx->lock);
  }
- 
