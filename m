@@ -1,79 +1,78 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795548563;
-	b=uO/+t3MeJtWpukTRiiEINfSncOUyFFG5CSNMyd5oNCIRbzUmssR7Pb1n+LF8s7OzzP0B
-	 JoWzixClAXPfXhpwyBBdYGvW4Dzh3bgraq8qQzC9jrOcbUzTvGeKb3B8+yTnA7YaXSz1d
-	 Q8A5EzRpX5glPPS0zHDB+R6C9pjX80/4JXP8a6m8hfDAkjf/ZkVBM7rgToTI6LVXphUYE
-	 eSY0j4gcFivAfoAQPx7roBkp7i/sknb29iqiVle5IcWm51YZA891KzegPxJ36RT4n3lFw
-	 xk1ONaWKpObCzHSWB0jW1M8DZ5y9F0fYuAo6jFDA45O9d+Wn0HVED7RZKcuZr8sa5tg==
+	t=1795548568;
+	b=KhH5/xdsGxKCACxf61cRx7X+I6yhFQGIncArmcWqRl0pVyfTXtbObbiDGFLreHNMyDC2
+	 loRhptgnRRLSlaZwIskgMvomE4l2dUWg/wPn7ctJ1O0a03nZ93AXmeWfyRLwmS5e6E0a0
+	 mV1CHxe92RMHScct6JFCkiyF3HR17sbgyvahzfst8Hr8dLdGx68Ks1+a6Ari3i0zAQi4u
+	 OFvYlfkYPmH5Ko3+Inkgdg0XQlCxG1MkGtjfoAadwkvdHolLOX345YSZfXmgpVE+uVCgj
+	 lB1wA40D+zpt3UwAj6+J6xxfU126F1GErRuP0HOk/GXyOfLUlj/vVlCWbKH70wnWiyQ==
 ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795548563;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795548568;
 	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
 	 Content-Type:Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=h+rrny5OBus9/cvOtjxl4whOeX2bBelq9yxd+2tysUM=;
-	b=b1gxiCY/Fk6lWLSb1Yz2yDJna5rIBCxocjIIhVsHL4KXR/SDh560UFNd1HIRRCdAGbyh
-	 c5/a+GZlhxFWyNV/bfSmmQFDyh0n3S3AP9UyyEhQhbEMdEhE0JIFlEnXJOBMf9aLEJXi7
-	 rYgnvokTjwlItXVhMaHX/WjwB5LJMKzD7zWl8ZmRpudAu2bUNbco/Oj/BKp+QOKODFBFo
-	 +xSnLOBhfA8RePiI+VErOgHc7iVKYjdOXNR64i6euVBlra+qyxRVjj19Ec1aV3MBWen+N
-	 +S7rOyH5H/Y+sUhyvi/VO4R5X2dhUqufWfai9u0nRbzOYiO02Ah1Gwfgz3YqKbcGd+w==
+	bh=Jy1neylt+cp4YTrEG01gzCHBY/dd4h8FGy6qmg6zPOA=;
+	b=T5RS8/MFIXti7vnoYUExJo8Rotxl/qn5hhP083EnzabkHtCcRNW39opPBg8MnXZ8bK1R
+	 /opjmjICHLimJePECfvhWWO8ZyhfbFoapZw3oea4vw4d+/OU0bKgAE/WN6MST4w1t/55r
+	 Jae2VQTn6OgA7fNgXYNKpQXStRLYFXnBJum7+qdXKCzhBUbW0sA1e6EAXWW/hcSqksSz6
+	 LZfNBBd+mSZcC7eEOSZszUUGYMW/vCt6eEhX4DovzkGsDJBZ6JTJB9MBD4F3eGQ38+R3o
+	 EwvEPHuCr1Wb9rRrkrR40ZF472NvcztI1Oc8dZsNIkQgUY2d9dpd6N71S1Lej3M0V6A==
 ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mRWBBjny;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=l2VknBrI;
 	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C987606A321;
-	Tue, 24 Nov 2026 19:29:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9169D606A68C;
+	Tue, 24 Nov 2026 19:29:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=mRWBBjny
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=l2VknBrI
 Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
 ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
-	t=1795548562;
-	b=x7A7uAwKrsYNVx415E9FdYcDy1Qg+XKODEubI1x2KiS3abRRyNA1FJApRg9h8Rvcrb8O
-	 RpCEJixsseEi/AMy6NcjpNHvsqNE6CKJnOKdz3MQz1o4qam0ieDl4xVgnWfksNbP05niX
-	 bVYfeaH/0jiGrlSq3hi1QxOvEz8ppqZgazZoOyZ77HjkHsdjYNsmE9MeFTdrEOanUq2eO
-	 B5NQMp3asD4za6dRpV5+k26P2b6e688fPD/Z+7u6Nu2mAGjS5ZoFfFAfIomJInf2j7k5d
-	 +TQv6bODot1DA7iQVfyqpUVkjq8R1uUoI8dvkiogo3sDmJ6yo3eXNxglgBjzGWsQ7dw==
+	t=1795548568;
+	b=0/WrPEbjEw5zxBVpAlT+KAIww+D0ovH7SzbXEs2hJ48XgxSh+ZARidwBnfKpO6m1guod
+	 agOXRV0QTnSmtOBFiOkbV4LoM7KdkGDdtgO56+8UiG2mWkfwBQS9L80orlPO4WuthVGTD
+	 F9g7aeFrZk9VNGqxzZ3WyWVC9/Srmp771ABc6zf4iQxdaIi2YvRw15fQq4HTDN5/HnGK0
+	 eDZ0M1ZoVUSBXKt8tU3HsTWJ3LxTmHFll9iGc7Bp1sFtR6RPn+kyS8DqYQzbOQortz9e5
+	 fCHRpxxner1fF0hRzF0a3ng3VqkjSc3P7WBOO9HRt4GzVor16YVZZGZ6yoJmQ+TArfA==
 ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
-	c=relaxed/relaxed; t=1795548562;
+	c=relaxed/relaxed; t=1795548568;
 	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
 	 X-Original-From:Reply-To:Content-Transfer-Encoding;
-	bh=h+rrny5OBus9/cvOtjxl4whOeX2bBelq9yxd+2tysUM=;
-	b=lCZdFm0IirMKAlBjhDn3hXDsCfSn0J5O8gjZZYkyzwnjj6bMAjKaxqj6XytRqOu387df
-	 XiFP0qvHJwFubOvHb5bhUQ/gZ1q5vR4h5hWMBdMq6AGn1XnVf2LtvX8Z0UHxba7c67LCQ
-	 LZ5el9lh24ZQ1OUoYs1bZeBdqsQht65GuRYg912pQkwun0f7kvTYN8LkBQ36NE0n7RwNH
-	 nWs2rDwP3l2BrJaKOXepqLLk5qz4sFYd6KwxTe3bIZw02ZQwMOnGGDht6p49iOKq6pRCL
-	 /9M1nFp2kIJs4mVCr+pb8SXikAQTWfwr/OG4hS3YIPpT5kaq3aRSJhVwD/J3kG00rDQ==
+	bh=Jy1neylt+cp4YTrEG01gzCHBY/dd4h8FGy6qmg6zPOA=;
+	b=ICbIhuas9H5LfRenyczPeUFprJ43m/dyowdD0ZXf2dtMenzmQRTH/Zj1uVwjHwpMANWS
+	 85MqW8zql2MJuBXCB+ViIAOJWXQj81bIL2rZ+KJbC/aBb+QHJ6gSXvUnfF9HCLIqR8A2S
+	 8YwWN8q0+81YmLuIXSyc0PvJxSLmA0AkDyKaTAiCKyC4sB1cjhPju64uxbhGDYgUzdDfn
+	 ipaOIeESF+bwAyWWMbh7TR1vVdM0Dtx7Qg99lTLb4iARWV3F4xRB7NormY9UKFJSBidgz
+	 AeGgUTnx7zrXQyqWCmO24DrWrzmIayKDchXIxQM7kthT4Js3o++J8rUnOA8HtoszkLA==
 ARC-Authentication-Results: i=1; smtp.kernel.org; 
 	arc=none smtp.remote-ip=100.80.115.77
 Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.kernel.org (Postfix) with ESMTPS id 597531F000E1;
-	Tue, 24 Nov 2026 19:29:12 +0000 (UTC)
+	by smtp.kernel.org (Postfix) with ESMTPS id D07841F000D0;
+	Tue, 24 Nov 2026 19:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795548562;
-	bh=h+rrny5OBus9/cvOtjxl4whOeX2bBelq9yxd+2tysUM=;
+	s=k20260515; t=1795548568;
+	bh=Jy1neylt+cp4YTrEG01gzCHBY/dd4h8FGy6qmg6zPOA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To;
-	b=mRWBBjny2q35tjFIfHdjEWVRQlnLjChMY78PXywvYWvvL25B50Ax+dOqrxXFRgeGC
-	 nXANt+bdlF1GJg0o8/S1BEWdHHJ1iGCvhUfdKlpWZMT1of1mnWkK/XbVGoxRSJbkap
-	 MvPZgvqa7ye34NgLBb33QtE9shfPSOAy2dyOtrHZS+ve+9dIp+nAvY8DaCCxjqfnen
-	 xrchTI9VWZzAtgY7IQXsVQL565ddYCLPmzdQuHlTlszXF0ec7e+2IcgeWcXKroRT7l
-	 fRQtLoWJgcTNu6pfj+soksHiEGXPoqFISfvECiTfIi5tUOvtx3t7OWF2Z0658r1o7V
-	 cvIRtmZM7aceg==
+	b=l2VknBrIyjMYwzc1m+reNohre/dhdv37RbXywO3vqwUoZM6fiK3NktRUU1gee8EWQ
+	 tJhg4WH8CW4eh1/yIt7ewnlbQeYIBoV3wH34s4qn1/y3LI3XgRBZzFeiKZKnB9AM5n
+	 As1AfkJV2Ki62cygSsQZP57tT/SjOVlQmFUahp52hHp6mPVW3lgGs+TybZ2UzKRG96
+	 rGwLrHqdP88gLlc19Qs3fDT9FuMtCHUaImyISxAxTN9dv7asaV2Wo+qqF5ScqM2lZe
+	 Hhym8s2+/+gdhTIxa5cOw6OjjN27xjYGanZRjM3G/2rV53Cz8pF6+j+pSU1nLlY/Ex
+	 LBsI3qhpdWPbA==
 Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
-	by lkml.kernel.org (Postfix) with ESMTP id DADB34CB64;
-	Tue, 24 Nov 2026 19:29:11 +0000 (UTC)
+	by lkml.kernel.org (Postfix) with ESMTP id 54E8E4CB75;
+	Tue, 24 Nov 2026 19:29:12 +0000 (UTC)
 From: Alireza Haghdoost via B4 Relay <devnull+haghdoost.uber.com@kernel.org>
-Date: Tue, 24 Nov 2026 11:28:24 -0800
-Subject: [PATCH v9 1/7] perf symbols: Split out name-independent duplicate
- symbol selection
+Date: Tue, 24 Nov 2026 11:28:28 -0800
+Subject: [PATCH v9 5/7] perf report/top: Add --lazy-load-symbols
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -84,7 +83,7 @@ List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Message-Id: <20261124-perf-symbol-memory-send-v9-1-56f298185eae@uber.com>
+Message-Id: <20261124-perf-symbol-memory-send-v9-5-56f298185eae@uber.com>
 References: <20261124-perf-symbol-memory-send-v9-0-56f298185eae@uber.com>
 In-Reply-To: <20261124-perf-symbol-memory-send-v9-0-56f298185eae@uber.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -97,21 +96,21 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Alireza Haghdoost <haghdoost@uber.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3028; i=haghdoost@uber.com;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4380; i=haghdoost@uber.com;
  h=from:subject:message-id;
- bh=UqrMhQWdcnzp2DKimaobLxyHYzeN04T9j5HC1/5V6JI=;
- b=owEBiQJ2/ZANAwAIAVNlBDxl2ALYAcsmYgBrBeWEQCyb7BsUQ9ebI4IynMv9LLGJjODXVVulV
- kTyFiqg0JSJAk8EAAEIADkWIQS5+sFL3gX/8PrA0S1TZQQ8ZdgC2AUCawXlhBsUgAAAAAAEAA5t
- YW51MiwyLjUrMS4xMiwwLDMACgkQU2UEPGXYAtjjDQ/9ERnMqlEpX//dRSQy6XdQ2nj8jubWWsA
- QvQ/yTDZxB6OTqfuLj+6ubsnCQ1zh8xOKkhyZniufCKbk8WrQswyrfT9DaTyjA1rGQo+sM0Uk9P
- TZ0CwDATMyVhhjoXdZNT3+lSSLMoqX5llzsNykHxGiH1eSV6FQbJXxx4JgbSY5b9U38oxQN/wyP
- UsOz7/gqZWcqIGN8QG9M5ILgfv0SDMC0Z2G/0tg/VApLnhZyEAnoBQFTuwZdGbsOBMdddIbrs46
- MJNz80tiiRgmOUa0nIlJCDrbAPo21c3TjnPNbBchalWv0ek8hr/JqZbDl8fyBojfpZVaDyUzTtR
- gT0LGHjVKND6cRiirUqzOPKwtXp29nsWGNAQGvjdXzA2UvhmkfKkPgKjjZm93LfHSUPrf+f2mab
- LMp1WaQTggeyPr11ADIPL3niyiZduAwhSxVjj5xnsoqiFQI8piRPwtAIHzZ0fk32ZKAROIAjOEO
- lAhkCHeHrB3QDbvJR/ldn4GRY77K3zckz6teoms67tZXw98unjnbeSx72DKSrAnzu/Y3ZCFZ9mG
- T2A/QPWV0aFkPiHKdz/E0/wtVGUxxlqVFzn+GXLikY3FA5/phf8L6m7MEIgknp02srxX9rboVGE
- G2UuQEIUfhbD9bV6SZHfHtWIC0kvGbzdFFd4QDG2mo+hDX41WhRs=
+ bh=ppNlZ3VOcLClwa+EW9IutebfWNly9+u9DmMSRGXy758=;
+ b=owEBiQJ2/ZANAwAIAVNlBDxl2ALYAcsmYgBrBeWGZh4iQF23SP/Y42mypuFVMFz9EAybh/V5y
+ hjctM41xl6JAk8EAAEIADkWIQS5+sFL3gX/8PrA0S1TZQQ8ZdgC2AUCawXlhhsUgAAAAAAEAA5t
+ YW51MiwyLjUrMS4xMiwwLDMACgkQU2UEPGXYAtizlw/+O2YceLqSGMpr4EXoCF1/P86+mBZY3AE
+ 4c7ar5wUoEjUVE6ghOGrlA+GIEZWtixn6jYxnWVKEIBq+6sB/V9WonqZ0G3O90SMKCKF3PJkG5b
+ 8mJSS6m9AyqN48PPeQyGyZsUs/FzpH9FQDiDCBCkpPEPvT/8aE6Fv1lhWBB+AYT/53u/53b3nRD
+ jFYr+YILHh/EQu/bfUcKLqA8zS/XzE8yClE/0dvX/aUqh0v8hJubeaJl+Ku25GP+99fYi5hSIMB
+ MeNFEXdbidsYmbBg1HYmnTB/F2qd2mM4eWSsOaratdB42RmXRBDxySF6Jy/idO6803UXd3U9SDx
+ jlQbJTte8r03r3IsBfvFhRw3DnwYkn2KWGnZTvKBN8TlTrxKi6ZOXJkRq2Ixv35rxBFWtF85nz2
+ V4TSyegQqUIQzfQvw3Rxilol7g+xS5UHYVcchF5vLaziGpewi2OYLP8zZ4mS1+jfyNh2ZzmkK/0
+ Bs8t6AokLhZAL9vlzVqXvcOidEhfe0EhXemVa9tDtppc2HK6l9GKGMpB9rt/atlkXgLXWTfzl7y
+ xluLmf7lnp+krOYS+Z2PWKcEFjtNKtpCnJDBWGbr/3DFhjOjJV+L6TKSNppULp1bQeAVN93+MlW
+ yb8UIBeE3ek+pcSIEleyVUaVymzz3MF6vHWl634IalBc35mjdz+o=
 X-Developer-Key: i=haghdoost@uber.com; a=openpgp;
  fpr=B9FAC14BDE05FFF0FAC0D12D5365043C65D802D8
 X-Endpoint-Received: by B4 Relay for haghdoost@uber.com/default with
@@ -122,87 +121,95 @@ Content-Transfer-Encoding: 7bit
 
 From: Alireza Haghdoost <haghdoost@uber.com>
 
-This patch is a refactoring and does not change behavior. It moves the
-size, type and binding checks from choose_best_symbol() to
-choose_best_symbol_by_attrs(), and adds symbol__choice_needs_names() to
-tell whether choosing between two symbols needs their names.
+This patch adds the --lazy-load-symbols option of perf script to perf
+report and perf top. Like perf script, they load the whole symbol table
+of every DSO that appears in a sample and keep every name until exit.
 
-symbols__fixup_duplicate() keeps one of the symbols that share a start
-address. It compares size, type and binding first. If those are equal,
-it compares leading underscores, name lengths and the result of
-arch__choose_best_symbol().
+The symbol code already handles both tools. The address lookups that
+build the histogram entries and call chains load the names of the
+symbols they return, and the TUI map browser gets all names from
+dso__named_symbols().
 
-An unresolved lazy symbol stores a file offset instead of a name
-pointer, so the lazy loader cannot call choose_best_symbol() before it
-has read both names. The new helper lets it leave the names unread when
-the attributes already pick one of the symbols.
+perf top reads the names while it runs, which can be long, so a binary
+that is updated in the meantime can show wrong names. The documentation
+of perf top says so.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Alireza Haghdoost <haghdoost@uber.com>
 ---
- tools/perf/util/symbol.c | 26 ++++++++++++++++++++++++--
- tools/perf/util/symbol.h |  1 +
- 2 files changed, 25 insertions(+), 2 deletions(-)
+ tools/perf/Documentation/perf-report.txt |  9 +++++++++
+ tools/perf/Documentation/perf-top.txt    | 10 ++++++++++
+ tools/perf/builtin-report.c              |  2 ++
+ tools/perf/builtin-top.c                 |  2 ++
+ 4 files changed, 23 insertions(+)
 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 35b08c05a2fd..d9866916fe9a 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -157,11 +157,15 @@ int __weak arch__choose_best_symbol(struct symbol *syma,
- 	return SYMBOL_A;
- }
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index e145124d6c9a..b8c34bb4cd74 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -347,6 +347,15 @@ OPTIONS
  
--static int choose_best_symbol(struct symbol *syma, struct symbol *symb)
-+/*
-+ * Choose between two symbols at the same address by size, type and binding.
-+ * Returns SYMBOL_A or SYMBOL_B, or -1 if only their names can decide.
-+ */
-+static int choose_best_symbol_by_attrs(const struct symbol *syma,
-+				       const struct symbol *symb)
- {
- 	s64 a;
- 	s64 b;
--	size_t na, nb;
+ 	Default: 127
  
- 	/* Prefer a symbol with non zero length */
- 	a = syma->end - syma->start;
-@@ -194,6 +198,24 @@ static int choose_best_symbol(struct symbol *syma, struct symbol *symb)
- 	if (b && !a)
- 		return SYMBOL_B;
++--lazy-load-symbols::
++	Read and demangle userspace ELF symbol names only when perf needs
++	them. By default, perf reads every symbol name from each binary
++	referenced by a sample. This option reduces memory use when samples
++	reference only a small fraction of a large binary's symbols. The
++	names are read from the binaries while perf report runs, so the
++	binaries must not change in the meantime. If a binary cannot be
++	opened when a name is needed, perf shows that symbol as unknown.
++
+ -G::
+ --inverted::
+         alias for inverted caller based call graph.
+diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+index c5e96da6ed82..9ec039c8e0b9 100644
+--- a/tools/perf/Documentation/perf-top.txt
++++ b/tools/perf/Documentation/perf-top.txt
+@@ -218,6 +218,16 @@ Default is to monitor all CPUS.
  
-+	return -1;
-+}
-+
-+bool symbol__choice_needs_names(const struct symbol *syma, const struct symbol *symb)
-+{
-+	return choose_best_symbol_by_attrs(syma, symb) < 0;
-+}
-+
-+static int choose_best_symbol(struct symbol *syma, struct symbol *symb)
-+{
-+	int ret = choose_best_symbol_by_attrs(syma, symb);
-+	s64 a;
-+	s64 b;
-+	size_t na, nb;
-+
-+	if (ret >= 0)
-+		return ret;
-+
- 	/* Prefer a symbol with less underscores */
- 	a = prefix_underscores_count(syma->name);
- 	b = prefix_underscores_count(symb->name);
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 8b8ab7e1e148..41417bc85bb9 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -327,6 +327,7 @@ int arch__compare_symbol_names(const char *namea, const char *nameb);
- int arch__compare_symbol_names_n(const char *namea, const char *nameb,
- 				 unsigned int n);
- int arch__choose_best_symbol(struct symbol *syma, struct symbol *symb);
-+bool symbol__choice_needs_names(const struct symbol *syma, const struct symbol *symb);
+ 	Default: /proc/sys/kernel/perf_event_max_stack when present, 127 otherwise.
  
- enum symbol_tag_include {
- 	SYMBOL_TAG_INCLUDE__NONE = 0,
++--lazy-load-symbols::
++	Read and demangle userspace ELF symbol names only when perf needs
++	them. By default, perf reads every symbol name from each binary
++	referenced by a sample. This option reduces memory use when samples
++	reference only a small fraction of a large binary's symbols. The
++	names are read from the binaries while perf top runs, so a binary
++	that is updated in the meantime can show wrong names. If a binary
++	cannot be opened when a name is needed, perf shows that symbol as
++	unknown.
++
+ --ignore-callees=<regex>::
+         Ignore callees of the function(s) matching the given regex.
+         This has the effect of collecting the callers of each such
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 6672a4d16529..8ca54463a84b 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1414,6 +1414,8 @@ int cmd_report(int argc, const char **argv)
+ 		    "Set the maximum stack depth when parsing the callchain, "
+ 		    "anything beyond the specified depth will be ignored. "
+ 		    "Default: kernel.perf_event_max_stack or " __stringify(PERF_MAX_STACK_DEPTH)),
++	OPT_BOOLEAN(0, "lazy-load-symbols", &symbol_conf.lazy_load_symbols,
++		    "Read symbol names only when they are needed"),
+ 	OPT_BOOLEAN('G', "inverted", &report.inverted_callchain,
+ 		    "alias for inverted call graph"),
+ 	OPT_CALLBACK(0, "ignore-callees", NULL, "regex",
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index a79230b81300..02363e5c6460 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1589,6 +1589,8 @@ int cmd_top(int argc, const char **argv)
+ 	OPT_INTEGER(0, "max-stack", &top.max_stack,
+ 		    "Set the maximum stack depth when parsing the callchain. "
+ 		    "Default: kernel.perf_event_max_stack or " __stringify(PERF_MAX_STACK_DEPTH)),
++	OPT_BOOLEAN(0, "lazy-load-symbols", &symbol_conf.lazy_load_symbols,
++		    "Read symbol names only when they are needed"),
+ 	OPT_CALLBACK(0, "ignore-callees", NULL, "regex",
+ 		   "ignore callees of these functions in call graphs",
+ 		   report_parse_ignore_callees_opt),
 
 -- 
 Git-157)
