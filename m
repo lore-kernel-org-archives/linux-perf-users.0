@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795479794;
-	b=1Lk+yHLdah1HlF8XDwTu6SGVRl4RIU1OmU+0lNXoGhnEh4miij/WlKUseh0/+NcLmx7f
-	 MOp5wF1Ia3hX/j1ukQreqvWD7pgWBpgf2yNYZvqBxAVlnnzyA2PUxlDAu8zWwrbkLW1nL
-	 MoF6MUjUpo+LpQcVH/wu0DZhMFigR+a0qEP9avo0JWaUfLuVhnmDnJB7I9/B0nKnfsmN/
-	 0745Q2YV84GXbRhBJWh1ioJFNeqpyDOpUM/U6Kwpp3iR+Bwte/XlezqDw6P4yG2ipuxH4
-	 GVCMTPnmARI6MdULJL4dkFNQKpfgT4zHr4+RCk6Lx1iZveFhqRhIqKhxWMbaB/AoG6g==
+	t=1795479790;
+	b=bM7FbW5JencZ/0BpPyMu4lCscXAppExIq1fQFKByNbV2iqJHYd7ffqwACmQSwUG5GSjb
+	 HtTSGQ/FgcJjCBQcxLDeGQwCup2LasCq3bGQ6wO4rtjCzFIGebxZbJn0S0/sgfUA4tNuu
+	 SPbRaOTg5qQMOt/KnRDBvo1V0Bf7EVt6T/snWYuyeaMlx/L58bKZ+uLTaIfbgf22xCZJT
+	 RLcZF4O+/D7cTRRqNpZuZ9EdNI03n5rCn3Nn+dBF47A2WhlDEnbH0IMm1I5aI3BogpZyW
+	 1Z5SxpgTk9jvDDHSUgEuu3/uBy2fL34fpLICO+GnXhp2vJfx1Azy7Cjx40K06vqCPQg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795479794;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795479790;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=Nd4DPU5GUnoPk5SX46wEPjH4KNWe5Ep973OTAijr8W8=;
-	b=Avh6SRF3MSFZYBnSHlt+St2UiWdkEI75jNy1MNiloEf7Cp7ROzUiAWnc44llTYOw4RdN
-	 7FGye9T+SAO0F4ZNKTlQ0sU5e9yGAaKcj0pYX5WnqVMrt/2Tr32DwYCUJQ/+Y/r3uNTXA
-	 lkwgn5NF+fkIFaQSPMYtJGKbPvWv7qx8XWf/aJZwZaW09tX1mXRYnAO+CyBCz6mSRzWW5
-	 nmSZON3ZVvV+FoFB3cJ/OegiSOjIUVlTM/E732avI6wJQhptFAZ5KE3HX0NNMPOMYJpqh
-	 GYWGztB4vgp48+YQKTg5N8kD55scIyK+MxxOl9fuIrMUWb5XUSfakW67FboU/JhmOdQ==
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=kbmkzmWDCU5SUQXyQI5NqKhx27N0STwtCeoqyUH/E0k=;
+	b=rbhbcd3hp/5D4lGzcxETfq1oAEqEDzl+GAgbVgkuhGdGdYKPKqs0YGOZxkPZHfYb68xR
+	 eq4nqJPMVIskHHhNT0rWwrgFP59VGYtSSY4ykWrE9qOOzPPkh8hEv4G6WyMiKhPoxLCKG
+	 9WFKzKLQIpID23XAftt60U/67FguJDgABFdxsbwTlKi1ItzdwgRU15sL/2gh/it9nZk5B
+	 COqwwXpRV5U/OQ0lK0CckMRj0xZ9DDgQD2kW7DEyZ5QktGql+NAqcHdWsoZw8GCnmRNK1
+	 DiC0/zEQeanccA0lpwWOKdOhMnI9m9/pF/J8MIJfx4uVkin9mIfowHYXmevnaPuTCYg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eYsWkrK9;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ipgs6Nyg;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA94606A682;
-	Tue, 24 Nov 2026 00:23:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1ECA606A31E;
+	Tue, 24 Nov 2026 00:23:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eYsWkrK9
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55DED1F000EC;
-	Tue, 24 Nov 2026 00:23:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Ipgs6Nyg
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5FA61F000CA;
+	Tue, 24 Nov 2026 00:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795479794;
-	bh=Nd4DPU5GUnoPk5SX46wEPjH4KNWe5Ep973OTAijr8W8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=eYsWkrK93A2RQitVtAPAn9WIr4GiENuqanvZZcB9O5YQufIX41DoUuX+rEDthQ6Mn
-	 96VV5dtGZ/CMnOtK/QF3NMxOYS2SRoRxm3debxxAEwIhsyrgMa9jTZ8peicE6F0D+s
-	 mibEvcw4uZsCFLb7JPh/R5skFg7aEXXB4RMYYEji169Ybpm95H6QkZOVvuk1ZHmdHh
-	 D5Riz6x2j0vm0Lq2w5XGpihQsAUx/MXzZ8/OTHV34Jazl1JsxTOwCDKjvLfwkdVA54
-	 SfNvjQYswZJ5VV6wX9adyo84LiSSnSVuhWf5DrPYUPqFICrfXnzhCB+IefXpy8kCWn
-	 2a2BML1tY3JyQ==
+	s=k20260515; t=1795479790;
+	bh=kbmkzmWDCU5SUQXyQI5NqKhx27N0STwtCeoqyUH/E0k=;
+	h=From:To:Cc:Subject:Date;
+	b=Ipgs6NyguWEdAXgnx4sDcc/C+k+AD9R27G6JWb5kMoT+mU4zPaF1FN7+hg1+R1sex
+	 OdBNZdYGjuiRKP3/CdPTTwd0w16bHC3Kf7u3GMKL0Inv9zTUtz+uyNWvepc4lMoyzz
+	 AOAIYBddX9Rqgo6Vk6fLr/Ztz6eW/61nfYdLfWLXqE7EArjfLBsFDNWUgzfc0/xfeB
+	 Ay9tHvqPIdwV4LyuYcZOJkjRz6KYDF2oQPWoF+0FKWad/LnCmQwllyTSghysFFEi50
+	 oWPNDbvYaMlWC7kjC7ZzoB4w6Xl0cXKlBodxXUTzPG6QcUkcVLncI5c8vAXFpPo8PM
+	 2y1nCW/MFSJDg==
 From: Yosry Ahmed <yosry@kernel.org>
 To: Sean Christopherson <seanjc@google.com>,
 	Peter Zijlstra <peterz@infradead.org>
@@ -61,12 +61,10 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Yosry Ahmed <yosry@kernel.org>
-Subject: [RFC PATCH 03/26] perf/core: Move is_guest_mediated_pmu_loaded() to the header
-Date: Tue, 24 Nov 2026 00:22:40 +0000
-Message-ID: <20261124002303.1785363-4-yosry@kernel.org>
+Subject: [RFC PATCH 00/26] KVM: x86/pmu: Dynamic mediated PMU context switching
+Date: Tue, 24 Nov 2026 00:22:37 +0000
+Message-ID: <20261124002303.1785363-1-yosry@kernel.org>
 X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
-In-Reply-To: <20261124002303.1785363-1-yosry@kernel.org>
-References: <20261124002303.1785363-1-yosry@kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -78,114 +76,158 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In preparation for using is_guest_mediated_pmu_loaded() in x86 perf code
-and in KVM, move it to perf_event.h. Make the per-CPU flag it reads
-global, renaming it to perf_guest_ctx_loaded to avoid polluting the
-global namespace, and export it to KVM.
+When KVM uses the mediated PMU, it loads the guest context and puts it around
+the inner fastpath loop, causing an expensive switch on every slowpath VM-Exit.
+On microbenchmarks like CPUID, this can result in up to 3x drop in throughput
+even when the host is not using the core PMU. On more realistic benchmarks like
+netperf TCP_RR, it results in up to ~15% regression (at least in some setups).
 
-No functional change intended.
+This series uses a dynamic scheme for PMU context switching instead. On
+slowpath VM-Exit, KVM only puts the guest context if host perf has events
+conflicting with the mediated PMU. Otherwise, the guest context remains loaded
+until either the vCPU is put (e.g. on context switch or return to userspace),
+or perf "reclaims" it. This recovers most/all performance (at least on CPUID
+and netperf) with a mediated PMU in the absence of host events. See "KVM:
+x86/pmu: Put the mediated PMU context lazily on slowpath VM-Exits" for exact
+numbers.
 
-Signed-off-by: Yosry Ahmed <yosry@kernel.org>
----
- include/linux/perf_event.h | 13 +++++++++++++
- kernel/events/core.c       | 25 +++++++------------------
- 2 files changed, 20 insertions(+), 18 deletions(-)
+The Perf Side
+-------------
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index e1e11500df097..5ecd477bd6969 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1933,6 +1933,19 @@ int perf_create_mediated_pmu(void);
- void perf_release_mediated_pmu(void);
- void perf_load_guest_context(void);
- void perf_put_guest_context(void);
-+
-+DECLARE_PER_CPU(bool, perf_guest_ctx_loaded);
-+
-+static __always_inline bool is_guest_mediated_pmu_loaded(void)
-+{
-+	return __this_cpu_read(perf_guest_ctx_loaded);
-+}
-+
-+#else /* !CONFIG_PERF_GUEST_MEDIATED_PMU */
-+static __always_inline bool is_guest_mediated_pmu_loaded(void)
-+{
-+	return false;
-+}
- #endif
- 
- #else /* !CONFIG_PERF_EVENTS: */
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 5a3e40155ce70..8fd1e19cf5ab9 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -473,20 +473,6 @@ static cpumask_var_t perf_online_pkg_mask;
- static cpumask_var_t perf_online_sys_mask;
- static struct kmem_cache *perf_event_cache;
- 
--#ifdef CONFIG_PERF_GUEST_MEDIATED_PMU
--static DEFINE_PER_CPU(bool, guest_ctx_loaded);
--
--static __always_inline bool is_guest_mediated_pmu_loaded(void)
--{
--	return __this_cpu_read(guest_ctx_loaded);
--}
--#else
--static __always_inline bool is_guest_mediated_pmu_loaded(void)
--{
--	return false;
--}
--#endif
--
- /*
-  * perf event paranoia level:
-  *  -1 - not paranoid at all
-@@ -6377,6 +6363,9 @@ u64 perf_event_pause(struct perf_event *event, bool reset)
- EXPORT_SYMBOL_GPL(perf_event_pause);
- 
- #ifdef CONFIG_PERF_GUEST_MEDIATED_PMU
-+DEFINE_PER_CPU(bool, perf_guest_ctx_loaded);
-+EXPORT_SYMBOL_FOR_KVM(perf_guest_ctx_loaded);
-+
- static atomic_t nr_include_guest_events __read_mostly;
- 
- static atomic_t nr_mediated_pmu_vms __read_mostly;
-@@ -6464,7 +6453,7 @@ void perf_load_guest_context(void)
- 
- 	guard(perf_ctx_lock)(cpuctx, cpuctx->task_ctx);
- 
--	if (WARN_ON_ONCE(__this_cpu_read(guest_ctx_loaded)))
-+	if (WARN_ON_ONCE(__this_cpu_read(perf_guest_ctx_loaded)))
- 		return;
- 
- 	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
-@@ -6478,7 +6467,7 @@ void perf_load_guest_context(void)
- 	if (cpuctx->task_ctx)
- 		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
- 
--	__this_cpu_write(guest_ctx_loaded, true);
-+	__this_cpu_write(perf_guest_ctx_loaded, true);
- }
- EXPORT_SYMBOL_GPL(perf_load_guest_context);
- 
-@@ -6490,7 +6479,7 @@ void perf_put_guest_context(void)
- 
- 	guard(perf_ctx_lock)(cpuctx, cpuctx->task_ctx);
- 
--	if (WARN_ON_ONCE(!__this_cpu_read(guest_ctx_loaded)))
-+	if (WARN_ON_ONCE(!__this_cpu_read(perf_guest_ctx_loaded)))
- 		return;
- 
- 	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
-@@ -6503,7 +6492,7 @@ void perf_put_guest_context(void)
- 		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
- 	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
- 
--	__this_cpu_write(guest_ctx_loaded, false);
-+	__this_cpu_write(perf_guest_ctx_loaded, false);
- }
- EXPORT_SYMBOL_GPL(perf_put_guest_context);
- #else
+Perf reclaims the PMU before executing any remote call on a CPU if the guest
+context is loaded, including installing events, enabling events, etc. This is
+too conservative, as perf really only needs to reclaim the PMU before an event
+is both installed and enabled, but it results in a simpler and more
+future-proof implementation.
+
+There are a couple of other hiccups that perf needs to deal with outside of
+reclaiming on remote calls, namely:
+
+1. Intel PT/BTS. These PMUs are not mediated, but they use the same PMI
+delivery mechanism as the mediated core PMU (i.e. LVTPC). Since they are not
+mediated, they are not scheduled out while the guest context is loaded, and
+their PMIs can be delivered into the guest instead of the host. Today, BTS is
+never active while the guest runs (KVM doesn't allow the guest to enable it,
+and VM-Exit clears DEBUGCTL), so this is limited to short windows around
+VM-Entry/VM-Exit. Intel PT (in system mode) keeps tracing while the guest runs,
+so its PMIs raised while the guest is running are delivered to the guest.
+
+Lazily putting the guest context would make this worse for both, as host code
+with tracing enabled could run with the guest context loaded for much longer,
+most notably for BTS, which would go from short windows around VM-Entry/VM-Exit
+to all of slowpath VM-Exit handling. To avoid that, this series tracks PMUs
+that share the same PMI mechanism, and having events on any of them prompts KVM
+to give up the PMU on slowpath VM-Exits, keeping the status quo.
+
+Long-term, perhaps it would be better to schedule out Intel PT events while
+the guest context is loaded, or somehow demux the PMIs?
+
+2. Handling bpf_get_branch_snapshot() while the guest context is loaded (a
+pre-existing bug that is more exposed by this series).
+
+3. Clearing dirty counters when events are mmap()'d or the rdpmc attribute is
+updated, which needs to reclaim the PMU first if the guest context is loaded.
+
+NOTE: The first 5 patches fix pre-existing problems (or prepare for those
+fixes) that are relevant to the series (or the dynamic switch makes them worse),
+but they can be merged independently.
+
+The KVM Side
+------------
+
+The main change is needing to access guest PMU registers in hardware while the
+guest context is loaded. More specifically, the currently virtualized registers
+fall into one of two categories:
+
+1. Registers that can be read from software but must be written to hardware
+(i.e. are always up-to-date in software). This includes registers that are
+always intercepted or sync'd on every VM-exit, namely control registers:
+eventsel, fixed_ctr_ctrl, and GLOBAL_CTRL.
+
+2. Registers that must be read and written from hardware (i.e. software can
+always be stale). This includes registers that can be updated by the guest or
+hardware while the guest runs, namely counters and GLOBAL_STATUS.
+
+Additionally, KVM needs to keep the physical and virtual LVTPC in sync while
+the guest context is loaded.
+
+KVM accessing registers in hardware as needed allows it to handle fastpath
+instruction emulation with a mediated PMU, so this restriction is dropped.
+
+Testing
+-------
+
+This was tested by new (AI-generated) extensions to PMU selftests that mostly
+act as regression tests for the existing PMU, a selftest-style stress test, and
+stressing perf with a real Linux VM. The selftests will be cleaned up and sent
+out separately.
+
+The full KVM x86 selftests and kvm-unit-tests were also run on Intel and AMD,
+with no new failures compared to the base kernel.
+
+Testing was done with Zide's "KVM: SVM: Drop counter MSR checks in
+amd_is_valid_msr()" [1] applied, as without it saving vCPU state on AMD fails
+when the guest has fewer counters than the host (KVM_GET_MSRS fails on the
+unexposed counter MSRs).
+
+[1] https://lore.kernel.org/r/20261112203227.289379-2-zide.chen@intel.com
+
+Yosry Ahmed (26):
+  perf/core: Fix lockless time read for exclude_guest events
+  perf/core: Don't subtract guest time for events that keep counting
+  perf/core: Move is_guest_mediated_pmu_loaded() to the header
+  perf/x86: Use irqsave guard in branch stack snapshotting callbacks
+  perf/x86: Don't snapshot the branch stack while a guest PMU is loaded
+  perf/core: Guard against accessing guest mediated vPMU state
+  perf: Add a guest callback to reclaim the mediated PMU
+  perf/core: Reclaim the mediated PMU before executing remote calls
+  perf/x86: Reclaim the mediated PMU before clearing dirty counters
+  perf: Track mediated PMU conflicts
+  KVM: x86/pmu: Move PMC MSR and type helpers earlier
+  KVM: x86/pmu: Access PMCs in hardware if the mediated PMU context is
+    loaded
+  KVM: x86/pmu: Compute eventsel_hw from eventsel when reprogramming
+  KVM: x86/pmu: Zero eventsel_hw for counters that can't count
+  KVM: x86/pmu: Write PMU controls to hardware on reprogram if loaded
+  KVM: x86/pmu: Write GLOBAL_CTRL to hardware if the guest context is
+    loaded
+  KVM: x86/pmu: Ignore reserved bits on writes to GLOBAL_STATUS_CLR
+  KVM: x86/pmu: Access GLOBAL_STATUS in hardware if the guest context is
+    loaded
+  KVM: x86/pmu: Sync the guest's LVTPC to hardware if the guest context
+    is loaded
+  KVM: x86/pmu: Check for a mediated PMU before loading/putting its
+    context
+  KVM: x86/pmu: Make loading/putting the mediated PMU context idempotent
+  KVM: x86/pmu: Put the mediated PMU context lazily on slowpath VM-Exits
+  KVM: x86/pmu: Add stats for mediated PMU context switches
+  KVM: VMX: WARN if the Intel PT PMI handler runs for a mediated PMU
+  KVM: x86/pmu: WARN if a mediated PMI arrives outside of guest IRQ
+    handling
+  KVM: x86/pmu: Allow emulation in the fastpath with a mediated PMU
+
+ arch/x86/events/amd/core.c      |  12 ++-
+ arch/x86/events/core.c          |   8 ++
+ arch/x86/events/intel/bts.c     |   3 +-
+ arch/x86/events/intel/core.c    |  31 ++++--
+ arch/x86/events/intel/pt.c      |   3 +-
+ arch/x86/include/asm/kvm_host.h |   3 +
+ arch/x86/kvm/lapic.c            |   4 +
+ arch/x86/kvm/msrs.c             |   3 -
+ arch/x86/kvm/pmu.c              | 180 ++++++++++++++++++++++++--------
+ arch/x86/kvm/pmu.h              |  78 ++++++++++----
+ arch/x86/kvm/svm/pmu.c          |  13 ++-
+ arch/x86/kvm/vmx/pmu_intel.c    |  15 +--
+ arch/x86/kvm/vmx/vmx.c          |  10 ++
+ arch/x86/kvm/x86.c              |  25 +++--
+ include/linux/kvm_host.h        |   5 +-
+ include/linux/perf_event.h      |  34 ++++++
+ kernel/events/core.c            | 168 +++++++++++++++++++++++------
+ virt/kvm/kvm_main.c             |   5 +-
+ 18 files changed, 464 insertions(+), 136 deletions(-)
+
+
+base-commit: cbe54fc3462b3949ab27b9ae81fb9ddb509040c7
 -- 
 2.56.1.809.ga0b61035b5-goog
 
