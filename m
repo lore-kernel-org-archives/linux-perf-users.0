@@ -1,72 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.216.69
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.199
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795490947;
-	b=Ysl494IHfQiZSxlnK4XAQKBQ/UMIq31SGUsY6clwyDavS+FyIPnKlWO+ZQiAKaYsc67k
-	 htjeA3YvejYLZ7I/9NGhTmGE07Yd02B51+c65C4VD5hIb2SEnFtHs/mUSb4BYh1gek2wR
-	 qnii31Hg/KrXWqsUagkS/Hh9AbwBRJYMqaLIr9xy7NszMlzYKrj0YsqfA3E+Ge9jbBtxg
-	 e7SNzGouPo6N+aFAeDbzk9Bt6matPHMTG7qIgtDjirDQPyo/bmE3QTEhwz8yNU+cpgMqU
-	 ZCHRFZblX0QNqjviR0HR466Ljo9/Pd5B/MaVEsacwsww2m2Aj0sZrskgEWYlXfTDf4g==
+	t=1795490953;
+	b=at3rnwXcoL1jQx6LG+NVnK/6hekJBW6GY55waZh3DDGM8jtv2fqpHVwscQDbFI8w25Cf
+	 G34GkjWDvISRuDDhH9QaKib+bFBS3OEgmxa/K9kOFqkRyxHQMGc47D6TBHkbPxgam+rwC
+	 21lwwV6BC5KKFXHc8sTivUHNpAfCVjbL2tokOpTw/1a67dbmvbDen2vSkxSC7N7T+D5Df
+	 BN73kvIV37poOqqBl0nhX6WjdI0hiAsQVAAh3sOWD+jb0KTCmZD9UFu6YeqkokC/tm8Gh
+	 HUri8BdkMOGje+2PJsD4KsG/Xrs5hsBjfK7AMAtpGB02VzAFL14tqvHa9zCqbI0n+Hw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795490947;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795490953;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
-	 X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=cpuKopDovXVOk9uj05vpNBdTWvqtu2b9B4Udf5NRqPQ=;
-	b=eUUUUt7hxUtKECO57kwc1VEgKSLiebzSJ+kiuhzrB3pwJvw6FJnObFnPAD+B+c586DDR
-	 tYqv9uivdGElJL3IP8hxQ5PCV1tf2b/fz+/OS9qmtddddKvQ9HasyzK60i0TMNihIe+kT
-	 mxQIjP/Bz0nCnDGLFXFm+qEtoJ6kE6xvLjRt475KmapC8gHpRM1nm/VP+ieYdNSBiG/IW
-	 jg3gHMHv0FN3hn6llfT0L0UZrUE9kM1xqKkKteHZA6ZYQhaDNympYsgpBcr0EcjutRRkW
-	 36+CvTBgLNjXT5NJ9ZmIACEdU4P7IeLlQHHKE9h7M5LLOjcp2gHfK09UDAbHw3vUzcg==
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
+	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
+	 Content-Type;
+	bh=U9cYIgW40qLTz/HmhCp052WSiMk+4bttOQHPeIyLy1s=;
+	b=Qs9SlsgSJqdgS9LqH6rWt2AaoCHMetTQq/NMuDH83eGVG49vGCTnUvzSLgZetO+vqP9K
+	 0zPDy8yJud4+Odd6f1aOkBFCCGj0DN+1GGKCKIwAbLrMKsSh3vllOH+k+ORzgnhEk87sN
+	 26doG6+KhBlDWPeE2IrQJaSpeuAS6eMWqLSgWkYVSlwQ3pjCqhXAk2eC2X1yKUzMHcynN
+	 L10/QMxDl9Chvkk6DCh3BiA6UlEdBk8umTMYL020n2EMLNnaUl465zH4fgZzseu/O8TXp
+	 rJh7HXV2azG7Hyig2ppa/31F1vHRaD+o843WFPH6kkMEBeAK+xF/gYYl1IihnHLd3SA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=RA6uzKdv;
-	arc=none smtp.remote-ip=209.85.216.69
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=e4fXjzrL;
+	arc=none smtp.remote-ip=74.125.82.199
+Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2BE606A322
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 03:29:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9F2BE606A322
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCACA606A322
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 03:29:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CCACA606A322
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=RA6uzKdv
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-3acc98e3b3cso3006931a91.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Nov 2026 19:29:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=e4fXjzrL
+Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-386a65fca25so2714729eec.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Nov 2026 19:29:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795490946; x=1796095746; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=cpuKopDovXVOk9uj05vpNBdTWvqtu2b9B4Udf5NRqPQ=;
-        b=RA6uzKdvWblRRP8gx/O0RjDKU0lmdYzOQjYDQ5ue3DXAGxKypLu4bEz8CD0MXL7ZHd
-         iOKt4w6gVe40ts78lvoB5K768WVSmhzCfahDTDzrMx+lKJxHdmaFjBKGL/XaiscCqf5/
-         bJK9E/mpBoxLDjSg6cc0Qf6E0yNyGYAhT2t8cm1l+pq3EkDeWtm6FA2W4fmv5DYPsQLA
-         AYYsngkXuNbX2dNUwqrHn0QIm9hCSxGTL8kZfz40VP2NgWXku+wfoF4h2iQf4MLTOU9k
-         v2vVTRpFI53j6k9m9Z2xVmk32a8ieWc5dlCmuOQjpWfXZOTcA1lmYaEwvUuyK6qetYsn
-         V+zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795490946; x=1796095746;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20260707; t=1795490951; x=1796095751; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=cpuKopDovXVOk9uj05vpNBdTWvqtu2b9B4Udf5NRqPQ=;
-        b=Zy+yC+IeiyL1//y3M/ZDIdaH7L2CH2q/lkMpBfVv+zV4mnOcfgEdtBAuiAbFryrnob
-         lrd+ugihyTQ+XaaNQ1ILepXC3zrtMr/c0T/D779D902KqffFeQzx3rQVOzT6BYWRCGSl
-         M6rV2025ZMlzjPLoit+T2rVhKc57vZ6mqDIeAifS29wOCXCPIXnmXpwLB3N0WdQ/chTQ
-         tkilVEv4k5S9T5hLXAM7qBudIu1sJ6ir3U4vKzK2tTMieU7aPeVB4IbvrVW4K35tC2dR
-         hrzix4ejg/ofXMc5pIl8A1K/af7/Sx8t7UqMEpN2najbfg6M4yIJYbeciZdF40w6nJKD
-         V0/w==
-X-Forwarded-Encrypted: i=1; AL+hErHM4xjPm9fZzwRihpM4GPprBRlp3a4vsxP8qUGcp61h2w21mGKYWFB6a7d00Zx9z2R8mZLNKCf4kAxeC7Wnwioi@vger.kernel.org
-X-Gm-Message-State: APuU4Z+btltamiRAlM9wzh8iVEPhbr7F1x8JUJHULa5OqbywRNh1WkYo
-	fFmTlUHXxO5swUWsXq+RtgrLMtYiLXzRG+fHKoIfxXVLvHObKhC5lwqMP02X5Ii3JYqj9USTvyR
-	cR3W60h7saQ==
-X-Received: from pjpx21.prod.google.com ([2002:a17:90a:a395:b0:3b1:1328:f835])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4483:b0:3ac:bc3d:6fe8
- with SMTP id 98e67ed59e1d1-3b41c92f8f9mr11623484a91.34.1795490945643; Mon, 23
- Nov 2026 19:29:05 -0800 (PST)
-Date: Mon, 23 Nov 2026 19:28:51 -0800
+        bh=U9cYIgW40qLTz/HmhCp052WSiMk+4bttOQHPeIyLy1s=;
+        b=e4fXjzrL0y2Cwq64upGE3M5CNd99+OqcGOCpr9DYg37bR1t69DCVJplbt9tde8d6oV
+         PomdbB/MP88x165lnzThHiHV8sfnbyVY/wfjfR7e338R6MNzmMfAgjaeSCcOdYtiUZsN
+         aV5aq0G15BylCM0aiscHWD1gIq2sA+77oQhGKMt97D1sV3FT9mG8f9Cfs083IPxrsCcG
+         sX/gfkyTGzuTMkciZcLWvzww2csnqxcbz8IcRiFt5RbqovzStisrE9Ah8d5xMEy/OGnH
+         22xC2x18us3A/KjXAs1EUBqlIy/JzsC4UxHwe3t3X7r69JbogOa0enW+7JGIYSfVkBIq
+         RUNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795490951; x=1796095751;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=U9cYIgW40qLTz/HmhCp052WSiMk+4bttOQHPeIyLy1s=;
+        b=ElzQ+GVDeeUCUUdMpMfv0vDwD/otWlQaNsqKdxkq60gnpPI9d3gvsVXMsHQqJPgPHu
+         4xVXDc7xL3wAGdss4TQJq5pheX1F4z9xt7UbKDC3Tk2i35iYimwLF5KTIyIdJeqTKTr7
+         yLjMlN6QspQ17Kbm2hCCi5NmltodjiyyE1GyPiikbr0BWYXzjOaf/MG9EsVpdZ1ssu3f
+         2eT73ATnrY3Vc0VZlAKr4Hua4KNg9uLlUwhcIFeBxsfhhD/YAUn+CpQaTFqoB0BU8w/S
+         LiDW+f2ndiSqW9z4IwqrZHItQ+Fgq7/7zAG+CcPeMrLTMYXEJpjtwxXMdegUp4MYMnkL
+         QFKQ==
+X-Forwarded-Encrypted: i=1; AL+hErH+eA5GXt7oaO7/eEDpqtstcOPXJIY3F/Jxo1+de4ITZbXXyg0LIoBls+vQQQvlk3xFws+yadJsRnWgwibnoXtd@vger.kernel.org
+X-Gm-Message-State: APuU4Z/NYhaI/YjNWYBYAOzohW30h+hLbXwFCmQKMMQfnpLqgc71QQsK
+	yJ35cPzjVRXCuyBu18iFpSD8EIfOtoHA+el2rYs46TKikr/FJ+IJttz6UN8pbHvl2Ye7YPCqEmM
+	GnUhBjGeefg==
+X-Received: from dyba9.prod.google.com ([2002:a05:693c:63c9:b0:386:a06c:3241])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:87d6:20b0:386:bc19:6a30
+ with SMTP id 5a478bee46e88-386bc196d10mr2276891eec.20.1795490951181; Mon, 23
+ Nov 2026 19:29:11 -0800 (PST)
+Date: Mon, 23 Nov 2026 19:28:52 -0800
+In-Reply-To: <20261124032902.3859564-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -76,9 +79,11 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 Mime-Version: 1.0
+References: <20261124032902.3859564-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
-Message-ID: <20261124032902.3859564-1-irogers@google.com>
-Subject: [PATCH v9 00/11] perf symbol: Sorted array optimizations and memory shrinking
+Message-ID: <20261124032902.3859564-2-irogers@google.com>
+Subject: [PATCH v9 01/11] perf symbol: Drop num_by_name and sorted_by_name
+ from struct symbols
 From: Ian Rogers <irogers@google.com>
 To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
 	Alireza Haghdoost <haghdoost@uber.com>, Ian Rogers <irogers@google.com>
@@ -87,160 +92,249 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Jiri 
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Patches 1-6 of v8 (reference counting struct dso in struct dso_symbol,
-converting struct symbols from an rb_tree to a sorted pointer array,
-adding rw_semaphore locking, and natural-run merge sort) were applied to
-perf-tools-next.
+Every mutation to symbols->symbols frees symbols->symbols_by_name, and
+symbols__sort_by_name_locked() copies all symbols->cnt pointers verbatim
+before sorting by name. As a result:
+- symbols->num_by_name always equals symbols->cnt whenever
+  symbols->symbols_by_name is non-NULL (and 0 otherwise).
+- symbols->sorted_by_name is equivalent to
+  (symbols->symbols_by_name != NULL || symbols->cnt == 0). Treating
+  cnt == 0 as trivially sorted by name also avoids an unnecessary
+  read-to-write lock upgrade on empty DSOs in
+  symbols__sort_by_name_read_lock() and dso__sort_by_name().
 
-Following Namhyung's feedback on v8 patch 7/10, this v9 series splits
-the remaining four patches from v8 (patches 7/10 through 10/10) into
-smaller, self-contained patches while cleaning up redundant state in
-struct symbols, improving the struct symbols kernel-doc, and keeping
-both sorting/insertion optimizations and session-scoped memory shrinking:
+Remove num_by_name and sorted_by_name from struct symbols and clarify
+the @symbols_by_name kernel-doc.
 
-  1. Remove redundant num_by_name and sorted_by_name fields from struct
-     symbols (replaced by @cnt and @symbols_by_name != NULL || @cnt == 0).
-  2. Replace the @sorted boolean in struct symbols with @sorted_cnt
-     prefix length tracking so post-sort appends only sort and merge the
-     newly appended tail (or binary-insert in place for small appends),
-     reducing 'perf bench internals symbols' append + lookup time by
-     90.3% (1551.533 usec -> 150.333 usec).
-  3. Add @sorted_tail_cnt tracking an optional secondary sorted run for
-     out-of-order dso__insert_symbol() insertions with an amortized
-     sqrt(N) merge threshold (keeping sizeof(struct symbols) unchanged
-     at 88 bytes), further reducing append + lookup time by 71.4%
-     (150.333 usec -> 43.000 usec; 3315.200 usec -> 294.000 usec at
-     100,000 symbols).
-  4. Unit tests for sorted insertion, unmerged-vs-merged two-run
-     lookups, and equal-start symbol aliases.
-  5. Synchronize dso_cache access under dso__lock(dso) and make
-     dso->loaded atomic in preparation for concurrent shrinking.
-  6. Add symbols__shrink() and symbols__try_delete_unannotated().
-  7. Add dso__shrink() and dso__try_evict() to reclaim cached DSO data,
-     debuginfo, unannotated symbol tables on unreferenced DSOs (reloaded
-     transparently on demand), and unreferenced user DSOs without
-     blocking on contended locks.
-  8. Add dsos__shrink(), machine__shrink(), machines__shrink(), and
-     perf_session__shrink().
-  9. Unit tests for symbol and DSO shrinking, dso_symbol pinning, inline
-     and srcline cleanup, and transparent DSO reload.
- 10. Plumb dso__session() and add perf_session__malloc/zalloc/calloc/
-     realloc/strdup() wrappers that invoke perf_session__shrink() and
-     retry once on allocation failure.
- 11. Unit tests for machine__session()/dso__session(), session-scoped
-     allocation wrappers, and multithreaded lock contention.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/dso.c    |  2 +-
+ tools/perf/util/symbol.c | 44 ++++++++--------------------------------
+ tools/perf/util/symbol.h | 16 +++++----------
+ 3 files changed, 14 insertions(+), 48 deletions(-)
 
-Dynamic Insertion Complexity & Trade-offs (Patch 3):
-  With a primary sorted run of N = sorted_cnt entries and a secondary
-  sorted run buffered up to B entries before merging:
-  - Shifting pointers inside the secondary run costs sum_{t=0..B-1} O(t)
-    = O(B^2) over B out-of-order inserts, or O(B) per insert.
-  - Merging the secondary run into the primary run costs O(N + B) once
-    every B inserts, or O(N / B) per insert.
-  Minimizing O(B + N / B) balances the two terms at B^2 = N (B = sqrt(N),
-  checked in integer arithmetic via sorted_tail_cnt^2 >= sorted_cnt with
-  a 256-entry / 2 KB L1d-sized floor), giving:
-  - Ascending insert: O(1) amortized (appends and advances sorted_cnt).
-  - Out-of-order dynamic insert: O(sqrt(N)) amortized, O(N) on merge.
-  - Bulk symbols__insert() + first lookup: O(1) per append + O(N) on
-    natural runs (or O(K log K + N) for K unsorted appends).
-  - Address lookup: O(log N) across at most two sorted runs.
-
-  Alternative flat-array structures were also considered:
-  - Implicit array BST (2i + 1, 2i + 2): Zero pointer overhead, but
-    unbalanced sorted inserts blow up array capacity as O(2^k), and
-    in-place rotations move O(subtree) = O(N) entries.
-  - Index-based balanced BST (left/right indices): O(log N) worst-case
-    even on sorted inputs, but adds 8-12 bytes per symbol (giving back
-    up to half of the 24-byte rb_node savings) and loses contiguous
-    binary-search cache locality.
-  - Bentley-Saxe logarithmic runs (<= log2(N) power-of-2 sorted runs):
-    Reduces out-of-order dynamic insert to O(log N) amortized with 0
-    bytes/symbol and O(1) sorted append, but degrades unmerged lookups
-    from 2 binary searches to up to log2(N) binary searches (O(log^2 N)).
-  - Packed Memory Array (gapped sorted array): O(log^2 N) insert and
-    O(log N) lookup, but 2-4x pointer-array memory overhead, O(log^2 N)
-    density rebalances even on sorted appends, and NULL-gap skipping in
-    every linear pass.
-
-  Because perf workloads are overwhelmingly lookup-heavy, bulk loads go
-  through symbols__insert(), and upward-growing JIT/BPF allocations hit
-  the O(1) ascending fast path (while even at N = 1,000,000 symbols an
-  average sqrt(N)/2 tail shift moves 4 KB in L1d cache), two sorted runs
-  keep lookups at O(log N) with zero per-symbol space overhead and
-  minimal code complexity.
-
-v9:
- - Drop patches 1-6 from v8 (merged into perf-tools-next) and rebase
-   onto perf-tools-next (964e8b1c9c79).
- - Remove redundant num_by_name, sorted_by_name, and sorted booleans
-   from struct symbols in favor of (cnt, sorted_cnt, sorted_tail_cnt)
-   and expand the struct symbols kernel-doc.
- - Split v8 patch 7/10 into patches 2-4 (sorted prefix tracking,
-   secondary sorted run for dso__insert_symbol(), and unit tests) with
-   fresh -O2 'perf bench internals symbols' measurements.
- - Split v8 patch 8/10 into patches 5-8 (dso_cache locking and atomic
-   dso->loaded, struct symbols shrinking, per-DSO shrinking/eviction,
-   and dsos/machine/perf_session shrinking).
- - Split v8 patch 10/10 into patches 9 and 11 matching the code they
-   exercise.
-v8: https://lore.kernel.org/linux-perf-users/20261122050405.80335-1-irogers@google.com/
- - Rebase onto perf-tools-next (eb79d2fbc230).
- - Fix checkpatch.pl false-positive typo error in struct symbols field
-   ordering and context_unsafe test helper warnings.
-v7: https://lore.kernel.org/linux-perf-users/20261121071651.67118-1-irogers@google.com/
- - Rebase onto perf-tools-next (017fcfa4a4ab), adding Clang
-   -Wthread-safety context analysis annotations (__guarded_by,
-   __acquires, __releases, __must_hold) across struct symbols, dso,
-   dsos, and session helpers.
- - Fix threads__for_each_thread() self-deadlock on shard lock and
-   dso__data_open_lock vs dso__lock(dso) lock-ordering race during
-   shrinking.
-v6: https://lore.kernel.org/linux-perf-users/20261117185305.108003-1-irogers@google.com/
- - Split the monolithic symbols rb_tree-to-array conversion into smaller
-   patches for reviewability (requested by Namhyung).
-v5: https://lore.kernel.org/linux-perf-users/20261116063435.2817923-1-irogers@google.com/
- - Replace heuristic periodic shrinking with explicit perf_session__*
-   allocation wrappers that shrink on allocation failure.
-v4: https://lore.kernel.org/linux-perf-users/20261113171734.2188066-1-irogers@google.com/
- - Address review feedback on symbol sorting, alias handling, and
-   shrinking safety.
-v3: https://lore.kernel.org/linux-perf-users/20261110220803.2503416-1-irogers@google.com/
- - Add symbol table array conversion and DSO/symbol shrinking.
-v2: https://lore.kernel.org/linux-perf-users/20261027231513.816148-1-irogers@google.com/
- - Reference count DSOs in dso_symbol and fix map_symbol lifecycles.
-v1: https://lore.kernel.org/lkml/20260928075237.3055101-1-irogers@google.com/
- - Initial RFC.
-
-Ian Rogers (11):
-  perf symbol: Drop num_by_name and sorted_by_name from struct symbols
-  perf symbol: Replace sorted boolean with sorted_cnt prefix length
-  perf symbol: Add secondary sorted run for dso__insert_symbol()
-  perf test symbols: Add sorted insertion and equal-start alias tests
-  perf dso: Synchronize dso_cache access and make dso->loaded atomic
-  perf symbol: Add symbols__shrink() and
-    symbols__try_delete_unannotated()
-  perf dso: Add dso__shrink() and dso__try_evict()
-  perf session: Add dsos, machine, and perf_session shrinking
-  perf test symbols: Add symbol and DSO shrinking tests
-  perf session: Add dso__session() and session-scoped allocation
-    wrappers
-  perf test symbols: Add session allocation wrapper and lock contention
-    tests
-
- tools/perf/tests/symbols.c | 791 ++++++++++++++++++++++++++++++++++++-
- tools/perf/util/dso.c      | 272 ++++++++++++-
- tools/perf/util/dso.h      |  16 +-
- tools/perf/util/dsos.c     |  51 +++
- tools/perf/util/dsos.h     |   3 +
- tools/perf/util/machine.c  |  30 ++
- tools/perf/util/machine.h  |   8 +
- tools/perf/util/session.c  |  78 ++++
- tools/perf/util/session.h  |   8 +
- tools/perf/util/symbol.c   | 332 +++++++++++++---
- tools/perf/util/symbol.h   |  58 ++-
- 11 files changed, 1532 insertions(+), 115 deletions(-)
-
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 287f6812139c..ab0c87d0595e 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -1809,7 +1809,7 @@ bool dso__sorted_by_name(const struct dso *dso)
+ 	bool res;
+ 
+ 	down_read(&symbols->lock);
+-	res = symbols->sorted_by_name;
++	res = symbols->symbols_by_name != NULL || symbols->cnt == 0;
+ 	up_read(&symbols->lock);
+ 	return res;
+ }
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 35b08c05a2fd..03c4314935a5 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -221,9 +221,7 @@ void symbols__init(struct symbols *symbols)
+ 	symbols->symbols_by_name = NULL;
+ 	symbols->cnt = 0;
+ 	symbols->allocated = 0;
+-	symbols->num_by_name = 0;
+ 	symbols->sorted = true;
+-	symbols->sorted_by_name = false;
+ }
+ 
+ static void symbols__delete_locked(struct symbols *symbols)
+@@ -236,9 +234,7 @@ static void symbols__delete_locked(struct symbols *symbols)
+ 	zfree(&symbols->symbols_by_name);
+ 	symbols->cnt = 0;
+ 	symbols->allocated = 0;
+-	symbols->num_by_name = 0;
+ 	symbols->sorted = true;
+-	symbols->sorted_by_name = false;
+ }
+ 
+ void symbols__delete(struct symbols *symbols)
+@@ -510,8 +506,6 @@ void symbols__fixup_duplicate(struct symbols *symbols)
+ 	}
+ 	symbols->cnt = write_idx + 1;
+ 	zfree(&symbols->symbols_by_name);
+-	symbols->num_by_name = 0;
+-	symbols->sorted_by_name = false;
+ 	up_write(&symbols->lock);
+ }
+ 
+@@ -691,8 +685,6 @@ static int __symbols__insert(struct symbols *symbols, struct symbol *sym)
+ 
+ 	symbols->symbols[symbols->cnt++] = sym;
+ 	zfree(&symbols->symbols_by_name);
+-	symbols->num_by_name = 0;
+-	symbols->sorted_by_name = false;
+ 	return 0;
+ }
+ 
+@@ -795,17 +787,9 @@ static int symbols__sort_by_name_locked(struct symbols *symbols)
+ 	struct symbol **result;
+ 	unsigned int size = symbols->cnt;
+ 
+-	if (symbols->sorted_by_name)
++	if (symbols->symbols_by_name || size == 0)
+ 		return 0;
+ 
+-	zfree(&symbols->symbols_by_name);
+-	symbols->num_by_name = 0;
+-
+-	if (size == 0) {
+-		symbols->sorted_by_name = true;
+-		return 0;
+-	}
+-
+ 	result = malloc(sizeof(*result) * size);
+ 	if (!result)
+ 		return -ENOMEM;
+@@ -813,8 +797,6 @@ static int symbols__sort_by_name_locked(struct symbols *symbols)
+ 	memcpy(result, symbols->symbols, sizeof(*result) * size);
+ 	qsort(result, size, sizeof(*result), symbols__sort_name_cmp);
+ 	symbols->symbols_by_name = result;
+-	symbols->num_by_name = size;
+-	symbols->sorted_by_name = true;
+ 	return 0;
+ }
+ 
+@@ -824,7 +806,7 @@ static int symbols__sort_by_name_read_lock(struct symbols *symbols)
+ 	int err = 0;
+ 
+ 	down_read(&symbols->lock);
+-	while (!symbols->sorted_by_name) {
++	while (!symbols->symbols_by_name && symbols->cnt > 0) {
+ 		up_read(&symbols->lock);
+ 		down_write(&symbols->lock);
+ 		err = symbols__sort_by_name_locked(symbols);
+@@ -833,7 +815,7 @@ static int symbols__sort_by_name_read_lock(struct symbols *symbols)
+ 		if (err)
+ 			break;
+ 	}
+-	return symbols->sorted_by_name ? 0 : err;
++	return (symbols->symbols_by_name || symbols->cnt == 0) ? 0 : err;
+ }
+ 
+ int symbol__match_symbol_name(const char *name, const char *str,
+@@ -918,8 +900,6 @@ void dso__delete_symbol(struct dso *dso, struct symbol *sym)
+ 				(symbols->cnt - i - 1) * sizeof(struct symbol *));
+ 			symbols->cnt--;
+ 			zfree(&symbols->symbols_by_name);
+-			symbols->num_by_name = 0;
+-			symbols->sorted_by_name = false;
+ 			symbol__delete(sym);
+ 			break;
+ 		}
+@@ -947,7 +927,7 @@ struct symbol *dso__next_symbol_by_name(struct dso *dso, size_t *idx)
+ 
+ 	symbols = dso__symbols(dso);
+ 	if (!symbols__sort_by_name_read_lock(symbols) &&
+-	    *idx + 1 < symbols->num_by_name) {
++	    *idx + 1 < symbols->cnt) {
+ 		++*idx;
+ 		res = symbols->symbols_by_name[*idx];
+ 	}
+@@ -971,10 +951,10 @@ struct symbol *dso__find_symbol_by_name(struct dso *dso, const char *name, size_
+ 	symbols = dso__symbols(dso);
+ 	if (!symbols__sort_by_name_read_lock(symbols)) {
+ 		s = symbols__find_by_name(symbols->symbols_by_name,
+-					  symbols->num_by_name,
++					  symbols->cnt,
+ 					  name, SYMBOL_TAG_INCLUDE__NONE, idx);
+ 		if (!s) {
+-			s = symbols__find_by_name(symbols->symbols_by_name, symbols->num_by_name,
++			s = symbols__find_by_name(symbols->symbols_by_name, symbols->cnt,
+ 						  name, SYMBOL_TAG_INCLUDE__DEFAULT_ONLY, idx);
+ 		}
+ 	}
+@@ -987,7 +967,7 @@ void dso__sort_by_name(struct dso *dso)
+ 	struct symbols *symbols = dso__symbols(dso);
+ 
+ 	down_read(&symbols->lock);
+-	if (!symbols->sorted_by_name) {
++	if (!symbols->symbols_by_name && symbols->cnt > 0) {
+ 		up_read(&symbols->lock);
+ 		down_write(&symbols->lock);
+ 		symbols__sort_by_name_locked(symbols);
+@@ -1004,7 +984,7 @@ int symbols__visit_by_name(struct symbols *symbols,
+ 	int err = symbols__sort_by_name_read_lock(symbols);
+ 
+ 	if (!err) {
+-		for (size_t i = 0; i < symbols->num_by_name; i++) {
++		for (size_t i = 0; i < symbols->cnt; i++) {
+ 			err = cb(symbols->symbols_by_name[i], data);
+ 			if (err)
+ 				break;
+@@ -1266,8 +1246,6 @@ static int maps__split_kallsyms_for_kcore(struct maps *kmaps, struct dso *dso)
+ 	root->allocated = 0;
+ 	root->sorted = true;
+ 	zfree(&root->symbols_by_name);
+-	root->num_by_name = 0;
+-	root->sorted_by_name = false;
+ 	up_write(&root->lock);
+ 
+ 	for (unsigned int i = 0; i < old_cnt; i++) {
+@@ -1340,8 +1318,6 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
+ 	root->allocated = 0;
+ 	root->sorted = true;
+ 	zfree(&root->symbols_by_name);
+-	root->num_by_name = 0;
+-	root->sorted_by_name = false;
+ 	up_write(&root->lock);
+ 
+ 	for (i = 0; i < old_cnt; i++) {
+@@ -1495,8 +1471,6 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
+ 			__symbols__insert(root, old_symbols[j]);
+ 	}
+ 	zfree(&root->symbols_by_name);
+-	root->num_by_name = 0;
+-	root->sorted_by_name = false;
+ 	up_write(&root->lock);
+ 	free(old_symbols);
+ 
+@@ -1525,8 +1499,6 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
+ 		root->sorted = false;
+ 	}
+ 	zfree(&root->symbols_by_name);
+-	root->num_by_name = 0;
+-	root->sorted_by_name = false;
+ 	up_write(&root->lock);
+ 	free(old_symbols);
+ 	return -1;
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index 8b8ab7e1e148..629f6b2fcd0a 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -102,26 +102,20 @@ struct symbols {
+ 	/** @lock: Read/write semaphore synchronizing access to the arrays. */
+ 	struct rw_semaphore lock;
+ 	/**
+-	 * @symbols: Dynamically allocated array of symbol pointers, sorted by
+-	 * address range [start, end) when @sorted is true.
++	 * @symbols: Dynamically allocated array of @allocated symbol pointers,
++	 * sorted by start address when @sorted is true.
+ 	 */
+ 	struct symbol **symbols __guarded_by(&lock);
+ 	/**
+-	 * @symbols_by_name: Optional dynamically allocated array of symbol
+-	 * pointers sorted lexicographically by sym->name.
++	 * @symbols_by_name: Optional lazily built array of @cnt symbol pointers
++	 * sorted lexicographically by sym->name; NULL when unbuilt, when @cnt
++	 * is 0, or when invalidated by a symbol-table mutation.
+ 	 */
+ 	struct symbol **symbols_by_name __guarded_by(&lock);
+ 	/** @cnt: Number of valid entries in @symbols. */
+ 	unsigned int cnt __guarded_by(&lock);
+ 	/** @allocated: Capacity (in entries) of the @symbols allocation. */
+ 	unsigned int allocated __guarded_by(&lock);
+-	/** @num_by_name: Number of valid entries in @symbols_by_name. */
+-	unsigned int num_by_name __guarded_by(&lock);
+-	/**
+-	 * @sorted_by_name: True when @symbols_by_name is populated and sorted
+-	 * by name.
+-	 */
+-	bool sorted_by_name __guarded_by(&lock);
+ 	/** @sorted: True when @symbols is sorted by address range. */
+ 	bool sorted __guarded_by(&lock);
+ };
 
 base-commit: 964e8b1c9c795982886a6778cb0cd73c901ca4ca
 -- 
