@@ -1,86 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795519481;
-	b=Y5bwnNyOsPt3lAUwyEIXeTkvtE+Qz8rt7op30l4uQxArSwWvtM44wx1vrf6assUyoXt6
-	 qcsWRIq1Bi0xULtX2Y6kvdILK/tErZBJtwjLcCxGth5l3VL728G+oR3OXmqvWgyf1Cgqa
-	 mm6sTZVeww+HVkx+VIyCE8m9/cGOepI0pXIVzaUYvD64xgHmBjdF3Ec4SXaJMjubEJb1o
-	 C9wV+Kg07NoeNvxtgL1pydQSEPpADzwagp5kjmZBOWjJ3ybo5ZlF3n3r6MqyYEqVyJvDN
-	 PQPeUg2ATOwyuMZdeRg/zNXa42BW3SDrtFx+EPqYeH8fdqVpmuUkCcXchEIt1jkjsqA==
+	t=1795519609;
+	b=MSneHqnrXS9KKMsqR3uUQ8GlPyx7hMLTmHXRK7eJmWQwVtBTKbdf7Vfjdqz6YB+p2GHD
+	 /PRFNDCftxaOZt+wQ3M53nTPw3FPSnVZzMKhEwI7wag2Wwm48u3C37UN9tDS6ImSWFZl5
+	 sRr5V9m9u2ADWM2NzrpXWlF8yP0S/EsY8Ev/5ZWc0ILnXxIipMAsOEp434bg8kSoZiVHK
+	 KJcyOSMm6AMXa59jHhARDe/1LWneMuMikxySCQkYj3C6OdagT3QMMn3d9yYbM4uydZK4C
+	 zVzQjzB/uwX8MqJiDNf3htc47Eq3Np8Xh5Nex8nZ1/7jKNY4ElDRUgai9JZONa+pU5Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795519481;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=RzFMb3TtzuucWHVLWCFL8thSDn33UJo8KWwaTHZ5em4=;
-	b=rarWtT6Bak3fOoyL9Vkl9PS1T7jffUNV47xKeEAIxjrZex21vo3R6ZeK4E0huZ+W3aLJ
-	 9nmoRxvdDa2sErYzLDGbOWU6rIJuwLsg6S7QLPo35U2Zvof2KKlxvuNli7llkI7VgZtcc
-	 j/wZ46dPzr6hjdz2+NMhG2yYgjIL+BsPh6sW01bicTfEx7TBZ52N+lTQ5t9+4QpFCyptN
-	 CTAd/mdnbectpcF23YBCJAsGxgKpruFPMMUB28Unc198fMFthqd2aBoFcz+kk0812ho9l
-	 XGIn8yf16tCJ1LWJsqk8GOLgxCcTgiylmjf3bEH75cs8E6BtxRJHuwiD8XofksNJZ9g==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795519609;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=QX+bil2iOPbw8yZ3QOT5MEDkdPOtPBgyiXG/0MXCS4s=;
+	b=aya3vStC0P7nGVbe1zhQbMmBpNrRljlHhmFbvOgSrlGmgt3H7n2OrQMA1peVIsIEaaIi
+	 idbTKNxffdYYNYDjOhdBJWHbnDWOBRXVSMLxxR5ypHOTIhBdUjalnceoUdWXQZ9bx9R7b
+	 Ob4tbcQqci8ztMM2bWIx8/AvhRKeO+It9ZaxhB1TaQdAiduWl8i8lo5txiJFoQfIPTsaa
+	 Lkt3P8P35iUEo/RGQzyaS6rbPv6x9XQ4G89dq5Onv+COC2NVzqJYqypvFeQuHkzKUVuoa
+	 BM32EXGLlmtD5f3/RmGPK7NGNDzH2o59fkC9jQx8xLjWwJRFOH7lrP67+3W42gT/0EQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linaro.org;
-	spf=pass smtp.mailfrom=linaro.org;
-	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=G859brBp;
-	arc=none smtp.remote-ip=209.85.221.47
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BJhp0SWC;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3372606A322
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 11:24:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B3372606A322
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019A5606A31E
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 11:26:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=G859brBp
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-490d59c3edaso2952862f8f.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 03:24:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1795519479; x=1796124279; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=RzFMb3TtzuucWHVLWCFL8thSDn33UJo8KWwaTHZ5em4=;
-        b=G859brBp3PRE9sKtnIOu+PiddHE693uDbFkFcyk61iNPdCgzB5fRX7Z0xSh+Ehz9QH
-         jnr2NJxcJyyEamvREUpvoTjvvYevuMuRAQmCM4ecpupnJb3514160g5Zh+uEUIbd4mqM
-         ktxy2mixDWYnycwuMhm7jiONKjuvObrXipDiOcRA1RrSudSI7WZ12nTVFFz5oRmX2HaF
-         RHBy859GtqyGXZPqhSoejfjnPhk5H6OZtCfm33mHNgNI6MENB3xjCxaLdLedLqc3uxb3
-         FZgSV3jY/+6gQCplX6mtf38JhQy67GjS4Fu3PTpXFAiE4IWQjnZD4JNLMYcdtI7Qs2W0
-         HyNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795519479; x=1796124279;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=RzFMb3TtzuucWHVLWCFL8thSDn33UJo8KWwaTHZ5em4=;
-        b=fJxetZoNV5cZ1GwtLbU++UEDumSS/88lLwonW7k0gNU/h6Xyx6qWlgHzfgDVhHv9uD
-         V87eEYEUvkeSUz38pzLVbo523AdP7PKexwOppUxKclFU3v9o/t3dS8YlnUGGXEX5hOIb
-         5U6vTOni4VXWutY4j2hFbKlV7SiU8/XHbznA87uBiIJGIANO4fN3s1+5w8KgiY8ufbXh
-         CZ8cp1qYMjEyMCjG7tGwBChKR2bHqvIxSSvmR0wcbcz1pLxCph7FSasdhuM3R6wX97pD
-         x1jUorFGwZciY4ExorHz6VjZlyGnVyK+MAa29PD1xhnPIZC0UgrCiGSU3A3Cb5DWlg0P
-         AzTQ==
-X-Gm-Message-State: APuU4Z+LJpP9ckVgaJdUgnYRGi2kOGv/IVC/KSONhcWLrN8Hg18EPXTL
-	0pP2BG/o2xekM20AOgbzD3Y9rPZtrYfMlLhtwP55nf7ER5inK/xVU90uo9Ue0l35/1U=
-X-Gm-Gg: AZFdTZfC+3HV/p9AMCfwp+//mEzFNpjRfc5rVHAvNnvoglGQfFSK7Ahs6aD/xgt1em8
-	oldhqrgf2sT4xWnfEdK5dOoa7MnKR0uKFsun4Ih9AoM338qRJ1GCZweAZXZgx/tXmv6c6jMxo5u
-	eSaCbytlPzPYh2tUs0ZY2E6VPiE5L/kwxlWL0sCG8tWTMgWIey7A4d/1p7bNwosBSrlcpDEgDxZ
-	SRsh2SLR224nmOUCaJuWL/GrMiSlXLcB0nz7HgFLA6hZybuGpt42s741CZE1bwhg3jWdVPkazmn
-	RWdXAaKgQRyvQ2zGlL8ILUPTDsDohNATr0kZ3/KJPb6tQrl4wJixjdgo8Wq7yIkvtsFYA5RG8CQ
-	6iWjgOqyrQ+kWFXxffvnHN15FpYOhSbUA6yzzUrnKDIzhjC6Q7WR6SAawWi7XU6A2gWG3j9CDo4
-	K1K1baCDfGC7htcNGrJXVJyvfHNotMuWseT/HDiRTDEIE7jjAEfuYoR1tkkJs2TTHRJcabRluON
-	QhuvbtpDytIqURMGJn52wiJ3ESAFKWlrCf176Fo/DltK/tB0DAKr7AlY7eGJEC+C94PEspusCjw
-	UgEZxCnm2Z0t7ym7VVTDRAPphUVIoVDhSw==
-X-Received: by 2002:a05:6000:184b:b0:4a7:9630:7b36 with SMTP id ffacd0b85a97d-4abb3f15ddbmr29862376f8f.21.1795519479042;
-        Tue, 24 Nov 2026 03:24:39 -0800 (PST)
-Received: from [192.168.1.3] ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6b205443sm28811395f8f.39.2026.11.24.03.24.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Nov 2026 03:24:38 -0800 (PST)
-Message-ID: <46a896ba-cd45-4747-837d-50ea4b4dbed9@linaro.org>
-Date: Tue, 24 Nov 2026 11:24:37 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BJhp0SWC
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AFD11F000D1;
+	Tue, 24 Nov 2026 11:26:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795519608;
+	bh=QX+bil2iOPbw8yZ3QOT5MEDkdPOtPBgyiXG/0MXCS4s=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=BJhp0SWCa5w1sgm5siHVaRO6BBCCkppKUQVV6sI9it3rg5IxEf99WZ/Ts/1rp9tNN
+	 LoJpaTVya0pJ8tZCEksaRS5cbFjByO3YD++cGsfq+facEWmUpewaXL93DEB6MG5qep
+	 7ZGcyEUBk8+3XFS4QZqgL19rA7jztw8FDW0tj9dLETtPv42nWvYHRTsPJMVbS3jBmC
+	 x007OD3IYuP9NEKnnvRbY8GVcRST31dqHWSU0MkkAax8kN8+ZZUY8jxP5wEJiiILXD
+	 8HbS2S1UoweIcwuNfx3/gKgK9C/wNmdrfZk2LYd46hWYbWnU0sL/TzKY9xSjR3bKHL
+	 c3xrbIVdKDERg==
+Message-ID: <sashiko-outbox-231049@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2] perf build: Stub out __guarded_by() on older Clang
+ versions
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "James Clark" <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261124-james-perf-late-parse-attr-v2-1-cb8b00d904a7@linaro.org>
+References: <20261124-james-perf-late-parse-attr-v2-1-cb8b00d904a7@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 24 Nov 2026 11:26:46 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -89,73 +59,87 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf build: Only enable context analysis with Clang 23 or
- later
-To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Melo
- <arnaldo.melo@gmail.com>, Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-kernel@vger.kernel.org
-References: <20261123-james-perf-late-parse-attr-v1-1-cfebcd81a962@linaro.org>
- <CAP-5=fXuQWTt1F6BvKSXqgSkEtBQPKvKg6gmAe-ngyr4VGyGig@mail.gmail.com>
- <EC27692D-9692-4976-B7EA-4C3A91173CE3@gmail.com>
- <awSu48pUIh942Zm4@google.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <awSu48pUIh942Zm4@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Low] perf build: check-headers.sh ignore regex misses #else lines
+--
 
+commit 0ea3202ffc7513d3010799640980ebb7d00cf374
+Author: James Clark <james.clark@linaro.org>
 
-On 23/11/2026 21:23, Namhyung Kim wrote:
-> Hello,
-> 
-> On Mon, Nov 23, 2026 at 04:55:16PM -0300, Arnaldo Melo wrote:
->>
->>
->> On November 23, 2026 3:44:12 PM GMT-03:00, Ian Rogers <irogers@google.com> wrote:
->>> On Mon, Nov 23, 2026 at 8:46 AM James Clark <james.clark@linaro.org> wrote:
->>>>
->>>> Context analysis requires Clang 23 or later (see
->>>> Documentation/dev-tools/context-analysis.rst), otherwise the build fails
->>>> on older versions, e.g. Clang 18:
->>>>
->>>>    util/env.h:142:39: error: use of undeclared identifier 'lock'
->>>>      142 |    struct rb_root          infos __guarded_by(&lock);
->>>>
->>>> Only enable it when the Clang version is supported. Leave the other
->>>> thread safety options enabled if they exist because they don't cause
->>>> build failures at the moment, and might provide benefits even without
->>>> -DWARN_CONTEXT_ANALYSIS.
->>>
->>> So we've had -Wthread-safety for a long time in the perf tree, I'm
->>> guessing __guarded_by is missing on older clang versions. Can we just
->>> stub out the __guarded_by for these old clang versions and keep the
->>> lock checking?
->>
->> Looks way more reasonable, and no need for a feature test since we know
->> the compiler version when __guarded_by was introduced, right?
-> 
-> Sorry for the trouble.  I checked with clang 21 and it didn't have a
-> problem.
-> 
-> Thanks,
-> Namhyung
-> 
+perf build: Stub out __guarded_by() on older Clang versions
 
-Looks like __guarded_by() has also been around since at least clang 18, 
-so that wasn't the issue. The problem is that it's not supported on 
-struct _members_ specifically until clang 19.
+This commit stubs out __guarded_by() and __pt_guarded_by() in
+tools/include/linux/compiler-context-analysis.h on Clang versions older
+than 19, and updates tools/perf/check-headers.sh to ignore the difference
+from the kernel header.
 
-I sent another version that stubs it out for < 19 which works. The 
-commit summary changed to "perf build: Stub out __guarded_by() on older 
-Clang versions".
+> diff --git a/tools/include/linux/compiler-context-analysis.h b/tools/incl=
+ude/linux/compiler-context-analysis.h
+> index 024e303188ad3..2806fb5f79d3a 100644
+> --- a/tools/include/linux/compiler-context-analysis.h
+> +++ b/tools/include/linux/compiler-context-analysis.h
+> @@ -60,7 +60,11 @@
+>   *		long counter __guarded_by(&lock1, &lock2);
+>   *	};
+>   */
+> +#if defined(__clang__) && __clang_major__ < 19
+> +# define __guarded_by(...)
+> +#else
+>  # define __guarded_by(...)		__attribute__((guarded_by(__VA_ARGS__)))
+> +#endif /* __clang_major__ < 19 */
+> =20
+>  /**
+>   * __pt_guarded_by() - struct member and globals attribute, declares poi=
+nted-to
+> @@ -85,7 +89,11 @@
+>   *		long *counter __pt_guarded_by(&lock1, &lock2);
+>   *	};
+>   */
+> +#if defined(__clang__) && __clang_major__ < 19
+> +# define __pt_guarded_by(...)
+> +#else
+>  # define __pt_guarded_by(...)		__attribute__((pt_guarded_by(__VA_ARGS__)=
+))
+> +#endif /* __clang_major__ < 19 */
+> =20
+>  /**
+>   * context_lock_struct() - declare or define a context lock struct
+> diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+> index c6b2ecadf9b12..caa7ab26968ce 100755
+> --- a/tools/perf/check-headers.sh
+> +++ b/tools/perf/check-headers.sh
+> @@ -23,7 +23,6 @@ declare -a FILES=3D(
+>    "include/linux/bits.h"
+>    "include/vdso/bits.h"
+>    "include/linux/cfi_types.h"
+> -  "include/linux/compiler-context-analysis.h"
+>    "include/linux/const.h"
+>    "include/vdso/const.h"
+>    "include/vdso/unaligned.h"
+> @@ -193,6 +192,7 @@ check include/uapi/asm-generic/mman.h '-I "^#include =
+<\(uapi/\)*asm-generic/mman
+>  check include/uapi/linux/mman.h       '-I "^#include <\(uapi/\)*asm/mman=
+.h>"'
+>  check include/linux/build_bug.h       '-I "^#\(ifndef\|endif\)\( \/\/\)*=
+ static_assert$"'
+>  check include/linux/ctype.h	      '-I "isdigit("'
+> +check include/linux/compiler-context-analysis.h '-I "__clang_major__ < 1=
+9" -I "^# define __\(pt_\)*guarded_by(...)$"'
 
-The header diverges from the kernel one which isn't great, but I suppose 
-that's better than someone on clang 17 or 18 missing out on all of the 
-lock analysis.
+[Severity: Low]
+Does this diff -I filter miss the bare #else lines added in
+tools/include/linux/compiler-context-analysis.h?
 
+diff -I only ignores a difference hunk when every changed line in that
+hunk matches an -I pattern.  Because the #else lines are part of the
+3-line insertion hunks with #if and # define but match neither regex,
+tools/perf/check-headers.sh still reports a header difference warning for
+compiler-context-analysis.h.  Adding the /* __clang_major__ < 19 */
+comment to the two #else lines (or matching #else in the -I filter) lets
+diff ignore the hunks.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261124-james-perf=
+-late-parse-attr-v2-1-cb8b00d904a7@linaro.org?part=3D1
