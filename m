@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795546007;
-	b=a1YPCguOkYMxY1SweSfnSd+s8QgBFkN7xUoA3Rw0Zdt0sMbN9bI8fsfiQO5Wms7OG9fc
-	 JStqpin5OMl0tFramuVbF1znzSxQf1oACwWYgG6Gn1LXfrt1FzpI5IObmT2Cau8ta7PEp
-	 6B6bQBe8f6lzO9llpwFEhFi79TQ59mRQJamqXKz5YX948+EcpUPAafAEzLS0ww+3N5ve3
-	 LeCAfk+TGc2/4p9m/YE17pMx8VobcaLcaMVgqNJ8RSuW0luj87bTm/02K8Wnpv6i6nqI+
-	 OvNSAv9SKuvbQV7IyTcpnLwx4eZeUfJ3qnCddKySkQrcV3p7cP9+WqsQvV6JOaMydPg==
+	t=1795546011;
+	b=yFTgB1pwU93upwyL3EndGHVnu35f+q5ffkWfGfEtCs5waDGhCsX4gw26/wwMjkN4I9r+
+	 gGPQTV2cWErVUtqscyqgkm4mfDCWttq25pFfR/QvGdLH11eTrEbNYHFV3xck715jmlwwZ
+	 LXUdTJZGlqvQoo6UnnSup+gWqiwqBAO8eV6tUQ7hiivLDKR7W1oXBXHiYTKXP9Qhmw3QW
+	 T/2rrQg7Z0NUm7fCQtyFaxCTs3vnWSM/8ovKD25NFrOo13XBGoKd9gYznN+ofeM4LEPn7
+	 ZWrJeIrNxPN/dFHqsoG6uLyhRyuIGj+0kt3K815MY7QmbDn8DtfGYbk32Z0it+sVwGw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795546007;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795546011;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=Y07rvnXpl5j3vciZDLLjUOj8Z9XllNvNVJk0T21hQrs=;
-	b=vrcpHYiqNndB+XQcOcsG0CtkznGKFCiiFCFkbSJGdfzX8oZYg8g+7MhhSUcTK7OXx+lz
-	 DAn0XW1aJzyTaK4CcqDSRmxJG85DpFr0/nyp9K74spxdHwW/mafqWTIC/pKQqIYxO2Jpa
-	 eIk1NIvPOMJm1OkKflTuPveB50mT7VlsMByIakRCurkvMuergGQP8+Z3U2hMm1uarG0x/
-	 P4J+mg71n7ZknUxjiRjW5hcBFbKMbvsUIBj5KZ+KsoAymRT0huYxEzi7ybWhOenKm4jvc
-	 /yO4X69ZY8EYI8B0FWXd7V4wG6RKa5Lv679/qWEb9crRtIoILP1Ne2xwuTN7N67vU4A==
+	bh=XTukCFqoz3XUndLnYT955iLc7efqig7bApIyB0oL9yE=;
+	b=yOFFeagaQwgI+b9/R28vRFvVioAQtb18XkYWshNKzmfeEeI/V4nJhpF0qvhUlbZH/uYR
+	 Hm6Pb6IAMe1vhY65Nx+ebgbFPuwEZb8et6v+GjlurDHKDkaQ1lGe8teZwTA4WzwL0ZRqM
+	 5mVMHTxCzTIYkM5j891BybIaMNfS0MW0Whg4+wu4h4HSluLorrWtRhqbzXOfkktqAw4EM
+	 e5NSdu7nfECrECZZMtBlTiugQln1m764moBJUS7VJenaKwU6wJkf+Wn77ULKKmepzaa3C
+	 7K2VgAzCMBB6bSAmbrvBjDObpTGOJeF7XnnpGA1KyRBScQKR984PEPyh5zqZLl1jiGw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lUHgi3hv;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="KwS/t4wM";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E973606A31E;
-	Tue, 24 Nov 2026 18:46:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7FE606A323;
+	Tue, 24 Nov 2026 18:46:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=lUHgi3hv
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 490841F000C0;
-	Tue, 24 Nov 2026 18:46:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=KwS/t4wM
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B64F1F000C0;
+	Tue, 24 Nov 2026 18:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795546006;
-	bh=Y07rvnXpl5j3vciZDLLjUOj8Z9XllNvNVJk0T21hQrs=;
+	s=k20260515; t=1795546010;
+	bh=XTukCFqoz3XUndLnYT955iLc7efqig7bApIyB0oL9yE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=lUHgi3hvcPe5B8uyleVxJ0w4R+b1jWIM9tecVkqPSrBAicgyEn1m7CTH/N12QfCdX
-	 8btDasuBCEmcWwGDsJsG2GOPio0BbV6Y1dSoFmWz3GAKTSOI4ulCXZhN4+z0qwb+1T
-	 6toNgaLWMY0PRpkrOfoweLNz4qFXRIkjjKnK3dqZqHvY5efB5+smKm2VxkQluggBnG
-	 x5r9jm5AaIaghDhNg3EnXceZL7cdkfPcIJLNwWe1hdHIG3MBRZBxBgX1SIbMmRtoHJ
-	 uPQTnxC1TNqWSuAHk9M/mM6zznCDawGzgX/kCutKGKh9A7/v+XbJF8255ivZ9yFN9X
-	 vfhoO22dT1j9w==
+	b=KwS/t4wMfu5RHRhIUms6hfdLUEj525uLZ0ywe1/t/Hnqc0EWlVNaz2EpeEtBWXpnP
+	 +bTU2XwqHScZIKT36Cp0SK/Ed1m1yOmLDUDEMJYA45tHdd4lxXoHs7f4FCUahL1/ka
+	 JDu02quCOGCiaQ345l6JJA03SYPGXy0d2orXlbvMyDn4904LKQqkS+/CAUfVr8G21j
+	 NBC5MkPu1oZMroO7xwGo3U2846JxTD9GOhRZW5/o0lWMdzTvOXsJRa6zULDvyk/dvg
+	 oWKnZOjR3G+21D4MF3GsKu5FyNlIsg7+lpWcZw63j3QaAcPv+t9m2vYr2k54e/rLGq
+	 /CUMhdUbn1v2A==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v1 10/17] perf tests record: Exercise more record options
-Date: Tue, 24 Nov 2026 15:45:57 -0300
-Message-ID: <20261124184604.24983-11-acme@kernel.org>
+Subject: [PATCH v1 11/17] perf tests trace: Exercise the tracing options
+Date: Tue, 24 Nov 2026 15:45:58 -0300
+Message-ID: <20261124184604.24983-12-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261124184604.24983-1-acme@kernel.org>
 References: <20261124184604.24983-1-acme@kernel.org>
@@ -70,33 +70,43 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Add the dry-run, no samples, buildid, synthesis, sampling, buffering,
-aio, affinity, delay, overwrite, callchain, mmap pages and clockid
-variants.
+Cover page faults, scheduler stats, syscall and failure summaries,
+event limits, callchains, target filters and the remaining tracing
+options.  Like the summary test it needs root.
 
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/record_options.sh | 173 +++++++++++++++++++++++
- 1 file changed, 173 insertions(+)
- create mode 100755 tools/perf/tests/shell/record_options.sh
+ tools/perf/tests/shell/trace_options.sh | 97 +++++++++++++++++++++++++
+ 1 file changed, 97 insertions(+)
+ create mode 100755 tools/perf/tests/shell/trace_options.sh
 
-diff --git a/tools/perf/tests/shell/record_options.sh b/tools/perf/tests/shell/record_options.sh
+diff --git a/tools/perf/tests/shell/trace_options.sh b/tools/perf/tests/shell/trace_options.sh
 new file mode 100755
-index 0000000000000000..b2bf51b5dc44c189
+index 0000000000000000..3f686a293bb9d557
 --- /dev/null
-+++ b/tools/perf/tests/shell/record_options.sh
-@@ -0,0 +1,173 @@
++++ b/tools/perf/tests/shell/trace_options.sh
+@@ -0,0 +1,97 @@
 +#!/bin/bash
-+# perf record option tests
++# perf trace option tests
 +# SPDX-License-Identifier: GPL-2.0
 +
 +set -e
 +
-+temp_dir=$(mktemp -d /tmp/__perf_test_record_opts.XXXXXX)
++. "$(dirname $0)"/lib/probe.sh
++
++skip_if_no_perf_trace || exit 2
++
++# The syscall tracepoints need root to open.
++if [ "$(id -u)" != 0 ]; then
++	echo "[Skip] No root permission"
++	exit 2
++fi
++
 +err=0
++out=$(mktemp /tmp/__perf_test_trace_opts.out.XXXXX)
 +
 +cleanup() {
-+	rm -rf "${temp_dir}"
++	rm -f "${out}"
 +
 +	trap - EXIT TERM INT
 +}
@@ -108,154 +118,68 @@ index 0000000000000000..b2bf51b5dc44c189
 +}
 +trap trap_cleanup EXIT TERM INT
 +
-+test_record() {
-+	local desc="$1" out="$2"
++run_trace() {
++	local desc="$1" expect="$2"
 +
 +	shift 2
-+	echo "Record ${desc}"
-+	if ! perf record -q -e cpu-clock -c 1 "$@" -o "${temp_dir}/${out}" -- sleep 0.1
-+	then
-+		echo "Record ${desc} [Failed: perf record failed]"
++	echo "Trace ${desc}"
++	if ! perf trace "$@" > "${out}" 2>&1; then
++		echo "Trace ${desc} [Failed: perf trace failed]"
++		cat "${out}"
 +		err=1
 +		return
 +	fi
-+	if ! perf report -i "${temp_dir}/${out}" -q 2> /dev/null | grep -q sleep
-+	then
-+		echo "Record ${desc} [Failed: no samples]"
++	if [ -n "${expect}" ] && ! grep -qE "${expect}" "${out}"; then
++		echo "Trace ${desc} [Failed: missing '${expect}']"
++		cat "${out}"
 +		err=1
 +		return
 +	fi
-+	echo "Record ${desc} [Success]"
++	echo "Trace ${desc} [Success]"
 +}
 +
-+test_timestamp_filename() {
-+	echo "Record timestamp filename"
-+	if ! perf record -q -e cpu-clock -c 1 --timestamp-filename \
-+			-o "${temp_dir}/tsfn" -- sleep 0.1
-+	then
-+		echo "Record timestamp filename [Failed: perf record failed]"
-+		err=1
-+		return
-+	fi
-+	if ! ls "${temp_dir}/tsfn".* > /dev/null 2>&1
-+	then
-+		echo "Record timestamp filename [Failed: no timestamped file]"
-+		err=1
-+		return
-+	fi
-+	echo "Record timestamp filename [Success]"
-+}
++# Page faults are software events, not syscalls, and exercise the
++# separate page fault printing path.
++run_trace "pagefaults" "fault \[" -F all -- perf test -w noploop 1
++run_trace "minor pagefaults" "fault \[" -F min -- perf test -w noploop 1
++run_trace "major pagefaults" "" -F maj -- sleep 0.1
 +
-+test_switch_output() {
-+	echo "Record switch output"
-+	if ! perf record -q -e cpu-clock -c 1 --switch-output=size=64K \
-+			-o "${temp_dir}/sw" -- sleep 0.2
-+	then
-+		echo "Record switch output [Failed: perf record failed]"
-+		err=1
-+		return
-+	fi
-+	if ! ls "${temp_dir}/sw".* > /dev/null 2>&1
-+	then
-+		echo "Record switch output [Failed: no switched files]"
-+		err=1
-+		return
-+	fi
-+	echo "Record switch output [Success]"
-+}
++# sched_stat_runtime feeds the "sched" summary counters.
++run_trace "sched" "" --sched -s -- sleep 0.1
 +
-+test_clockid() {
-+	echo "Record clockid"
-+	if ! perf record -q -e cpu-clock -c 1 -k CLOCK_MONOTONIC \
-+			-o "${temp_dir}/clock" -- sleep 0.1
-+	then
-+		echo "Record clockid [Failed: perf record failed]"
-+		err=1
-+		return
-+	fi
-+	if ! perf script -i "${temp_dir}/clock" -F tod 2> /dev/null | \
-+			grep -qE '^[0-9]{4}-[0-9]{2}-[0-9]{2}'
-+	then
-+		echo "Record clockid [Failed: no wall clock timestamps]"
-+		err=1
-+		return
-+	fi
-+	echo "Record clockid [Success]"
-+}
++run_trace "syscalls" "" --syscalls -- true
++run_trace "events" "openat" -e openat -e read -e write -- cat /dev/null
++run_trace "failure" "" --failure -- false
++run_trace "errno summary" "" --errno-summary -s -- cat /dev/null
++run_trace "summary" "" -S --summary-mode=total -- cat /dev/null
++run_trace "summary thread" "" -s --summary-mode=thread -- cat /dev/null
++run_trace "duration filter" "" --duration 0.01 -- cat /dev/null
++run_trace "max events" "" --max-events 5 -e write -- seq 1 100
++run_trace "sort events" "" --sort-events -e write -- echo hello
++run_trace "call graph" "" --call-graph fp --max-stack 5 --min-stack 1 \
++	-e write -- echo hello
++run_trace "kernel syscall graph" "" --kernel-syscall-graph \
++	--call-graph fp -e write -- echo hello
++run_trace "libtraceevent print" "" --libtraceevent_print \
++	-e kmem:kmalloc -- true
++run_trace "filter pids" "" --filter-pids 1 -- cat /dev/null
++run_trace "proc map timeout" "" --proc-map-timeout 100 -- cat /dev/null
++run_trace "mmap pages" "" -m 8 -- sleep 0.1
++run_trace "delay" "" -D 10 -- sleep 0.1
++run_trace "no inherit" "" --no-inherit -- sleep 0.1
++run_trace "uid" "" -u "$(id -un)" -- true
++run_trace "cpu" "" -C 0 -- sleep 0.1
++run_trace "pid" "" -p $$ -- sleep 0.1
++run_trace "tid" "" -t $$ -- sleep 0.1
++run_trace "verbose" "" -v -e write -- echo hello
++run_trace "bitmask list" "" --bitmask-list -e openat -- cat /dev/null
++run_trace "print sample" "" --print-sample -e write -- echo hello
 +
-+test_record_option() {
-+	local desc="$1"
-+
-+	shift 1
-+	echo "Record option ${desc}"
-+	rm -f "${temp_dir}/${desc}.data"
-+	if ! perf record -q -e cpu-clock -c 1 "$@" -o "${temp_dir}/${desc}.data" -- sleep 0.1
-+	then
-+		echo "Record option ${desc} [Failed: perf record failed]"
-+		err=1
-+		return
-+	fi
-+	if [ ! -s "${temp_dir}/${desc}.data" ]
-+	then
-+		echo "Record option ${desc} [Failed: no data recorded]"
-+		err=1
-+		return
-+	fi
-+	echo "Record option ${desc} [Success]"
-+}
-+
-+test_dry_run() {
-+	echo "Record option dry run"
-+	if ! perf record -q -e cpu-clock -c 1 --dry-run \
-+			-o "${temp_dir}/dry-run.data" -- sleep 0.1
-+	then
-+		echo "Record option dry run [Failed: perf record failed]"
-+		err=1
-+		return
-+	fi
-+	if [ -e "${temp_dir}/dry-run.data" ]
-+	then
-+		echo "Record option dry run [Failed: recorded data]"
-+		err=1
-+		return
-+	fi
-+	echo "Record option dry run [Success]"
-+}
-+
-+test_record "aio" "aio" --aio=2
-+test_record "threads core" "threads-core" --threads=core
-+test_record "threads package" "threads-package" --threads=package
-+test_record "threads numa" "threads-numa" --threads=numa
-+test_record "affinity" "affinity" --affinity=cpu
-+test_record "mmap flush" "mmap-flush" --mmap-flush=1
-+test_record "max size" "max-size" --max-size=1M
-+test_record "timestamp boundary" "ts-boundary" --timestamp-boundary
-+test_record "user callchains" "callchains" --user-callchains --call-graph fp
-+test_timestamp_filename
-+test_switch_output
-+test_clockid
-+test_dry_run
-+test_record_option no-samples -n
-+test_record_option buildid-all --buildid-all
-+test_record_option buildid-mmap --buildid-mmap
-+test_record_option synth-no --synth no
-+test_record_option synth-task --synth task
-+test_record_option synth-mmap --synth mmap
-+test_record_option sample-cpu --sample-cpu
-+test_record_option weight -W
-+test_record_option raw-samples -R
-+test_record_option no-buffering --no-buffering
-+test_record_option no-bpf-event --no-bpf-event
-+test_record_option proc-map-timeout --proc-map-timeout 100
-+test_record_option num-thread-synthesize --num-thread-synthesize 1
-+test_record_option aio-one --aio=1
-+test_record_option affinity-node --affinity=node
-+test_record_option delay -D 10
-+test_record_option tail-synthesize --tail-synthesize
-+test_record_option overwrite --overwrite
-+test_record_option data -d
-+test_record_option mmap-pages -m 4,8
-+test_record_option clockid-monotonic-raw -k CLOCK_MONOTONIC_RAW
++echo "Trace invalid pagefault type"
++if perf trace -F bogus -- true > "${out}" 2>&1; then
++	echo "Trace invalid pagefault type [Failed: accepted invalid value]"
++	err=1
++fi
 +
 +cleanup
 +exit $err
