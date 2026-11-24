@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795479806;
-	b=dlYdPimhqEQ4/w7u3gyEyrvuhPMX5Ys97hbAJfIoAQ1RtlTrsdnTR9QBNyjnYzTgLKvB
-	 bQpx25hlsJrPDwKllM3OGWWL6otFeE73ntV8KOPze5AUaBAgsBSknZFS5qW3xMuV8Inwb
-	 g1lDIpXBHY7e1mPdrqke/VJHlOFwD7zQVspErN/INHzLfEwCjFDWtQrVW7E8WSfKjsOuz
-	 FbBOK8z0hYJm6whJG+4xGWcNPpZRrMooAWZjQDac4U7Hidspz2iCmskOp9poYpTTnM3JV
-	 WR65u22nobOfWSa8CSCKFAHm3KuJFZQ1QbSLFyuXVIldIhi+2OqfS1n6y1B2f+Em+Hg==
+	t=1795479802;
+	b=sY0LQLHNgEUmuJ8llUgYgJmElzAVQKLN/uYFL0cXq86O0nsC9kVfowo1t5qKGBRcAxLC
+	 Oed93Op/bQttUCYAi/V2H16R2MZSwQcdU58tHhWRAtGN8pTgzy3q1fuIajJO+LKFNnjpI
+	 V1JktGsPI8KPn+UFE548tNXmOx6079sTuxvSujGQRd+X5iSRo1hSgpNt3AQ4gbpKiyQ8E
+	 /hhPwFvYfZLRoGPAQTNGHdIf6vRu09pDz/ueiy2RO1Xsf7gz/OF09wcZXF4FGjZrYGWZ7
+	 3UN8iNMELAmFLbS8plqLdHcPLXpnHZzlwp+isy8WN2HiXHDobHO4h9KYXjoseZE7uxA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795479806;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795479802;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=LrQSSv4UaljibsoNuEGR6quCOuk0TOdoW5f/RFygqrs=;
-	b=h/s40bg3kBevSAJF5YoSiP3clmXMlIgTK2qy18ig6avGEGf8h6ioWTivUZsuao9vkRMR
-	 NSlwERFNeP53nIiQoMc7OQ6ODZ/K4tvS8/ynfmkgIQop6B8+m07bdfoOza/96FeN4qb0l
-	 XY6A9jbgztkJiuShsvawZCYpxgw4N8kcNCyLY0Stw+3SK2Q5B2C9QxeO9AIsnvWEurFuB
-	 W1VjQvWDgqXHxJFjJLvgQfK4mt/w7LXCWNUZq5bE47IWequBZ94kPRC7ekXfvkiL/5tWt
-	 AkWk4X6IoSaEOGjntx3vXFOxEV5XpR47sCidiMsbX10zdetzKy4nME36D/MWGATtrWA==
+	bh=qtib51ffHxqRQT/emHOSN0KnkH+oE4jKOtAC4nasmyo=;
+	b=CuhowIqEfRPAj54ChmSatCxXQpYJa32aO7XNNnO2QNkpN2ijxoYPZ3BM8bVhIsUrceiI
+	 YG5x5IxbXC/MSUhvPic33UXSePE9wlzTyKC2e8pzSiy/AEkJ4dYk+fpiuxACFJD6bGymV
+	 LmNJgoFGcoHUKK1aIC0BCCz3c2i569J7HGEc0riCqYJXXQUQvXNI2n1zOWNQF+06zMM71
+	 n5oLUIfE1iW2zUdaQObgLU7s274P75eOWlRJyVqWqayHuZc+RE3HUqfhCxmrBXxov8DTZ
+	 wxCTJic/x69QkOT1FIF99PRs1v3KYuZVnR8ELVQjph+xkzOZq9OIMs0vCuT2LcXzWOw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="a1//mvyQ";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="H/ywA3VI";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4028A606A688;
-	Tue, 24 Nov 2026 00:23:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF3760A381D;
+	Tue, 24 Nov 2026 00:23:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a1//mvyQ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 011A41F01577;
-	Tue, 24 Nov 2026 00:23:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=H/ywA3VI
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CB711F000C0;
+	Tue, 24 Nov 2026 00:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795479805;
-	bh=LrQSSv4UaljibsoNuEGR6quCOuk0TOdoW5f/RFygqrs=;
+	s=k20260515; t=1795479801;
+	bh=qtib51ffHxqRQT/emHOSN0KnkH+oE4jKOtAC4nasmyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=a1//mvyQhA2n0YIHCQQhup52+H5eekJiOsMc0VWOSNb/pCbaECUPV6+DGQuB1VavG
-	 wkh+UmjgdDFo7qwb07EDVMWlOovlnssqpDItI7h0tELnoGwvDBiJefRY3gP0BKfb6Y
-	 5/RClCUoXXwEgWCDmnCNQjfKnpU5hPagE/nuWEO3GvEsd0W9PkSorjtYFwp7OMpKOT
-	 hMozJXPCyMzw03nReVoGD5N7wsXh66qiK1hFI4Utiz68yovJ/O43aaPk5h5VIciRdz
-	 y0wBQk7VYqQKvvkBn2YQ9HdUY+4o/HrnyF49ZggbvOlj/uAu3OwSeYnhpAy4yRoYzS
-	 7TEsleTIbBMNA==
+	b=H/ywA3VIWXboWCAZ0+iXfwcCUtrzEMI4VWBeSCsBlENCxoAv60SuDF3wkNVU+ofQA
+	 W+vJaSC+yRnLtunpi+vLtQXv8mTtvp7dexkJYfdRoRRWF67UGUXlFe+pfLeiKHXIG9
+	 KJDLHr1vWxeBLIKeXiNziCiK6wCT2V0ZjXnO/kKnL+9M2Gz/xkiASQJXFBcFUs3YGD
+	 vRrrxkxG2DrLMvvJME5zdZVJmbPP8ul8tqoNY0jLjjocCV1zL7xjhFVJ5CbPlpvpcO
+	 2sHtpSSd+B+P+YkubX4p6W4M85DxZf82/soul9e41gmhSlizC1DFbArTIp7VBYSRZJ
+	 NzAdhivfVdZgA==
 From: Yosry Ahmed <yosry@kernel.org>
 To: Sean Christopherson <seanjc@google.com>,
 	Peter Zijlstra <peterz@infradead.org>
@@ -61,9 +61,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Yosry Ahmed <yosry@kernel.org>
-Subject: [RFC PATCH 12/26] KVM: x86/pmu: Access PMCs in hardware if the mediated PMU context is loaded
-Date: Tue, 24 Nov 2026 00:22:49 +0000
-Message-ID: <20261124002303.1785363-13-yosry@kernel.org>
+Subject: [RFC PATCH 09/26] perf/x86: Reclaim the mediated PMU before clearing dirty counters
+Date: Tue, 24 Nov 2026 00:22:46 +0000
+Message-ID: <20261124002303.1785363-10-yosry@kernel.org>
 X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
 In-Reply-To: <20261124002303.1785363-1-yosry@kernel.org>
 References: <20261124002303.1785363-1-yosry@kernel.org>
@@ -78,142 +78,45 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In preparation for leaving the guest's mediated PMU context loaded
-during slowpath VM-Exit handling, read and write the guest's counters in
-hardware if the guest context is loaded.  While the guest context is
-loaded, the guest's counter values live in hardware, and KVM's software
-copies in pmc->counter may be stale, as they are only synced from
-hardware when the context is put.
+perf_clear_dirty_counters() zeroes PMCs that aren't assigned to host
+events before enabling RDPMC for a task, so that it can't read stale
+values. It doesn't go through remote_function(), so it doesn't reclaim
+the PMU, and if a guest's mediated PMU context is loaded, the "dirty"
+counters hold guest state that clearing would clobber.
 
-Read counters with RDPMC, refreshing the software copy, and write them
-through to hardware in addition to updating the software copy.  Use the
-accessors when incrementing counters for emulated instructions too,
-instead of updating pmc->counter directly.  Updating the software copy
-while the guest context is loaded isn't strictly necessary, as it's
-synced from hardware when the context is put.  This could be optimized
-by tracking whether the software copy is up-to-date.
+In preparation for KVM leaving the guest context loaded with IRQs
+enabled, reclaim the PMU before clearing dirty counters. Do so before
+filtering out the counters assigned to host events, as host events are
+scheduled out while the guest context is loaded, and putting the guest
+context schedules them back in, assigning counters to them.
 
-Add kvm_pmu_guest_context_wrmsr() to write a guest PMU MSR only if the
-guest context is loaded, as it will be reused for other guest PMU
-registers, and document there which guest PMU state lives in hardware
-while the guest context is loaded.
-
-Disable IRQs across checking whether the guest context is loaded and
-accessing the counter, as perf may reclaim the PMU via IPI and put the
-guest context.
+No functional change intended, as the guest context is currently only
+loaded with IRQs disabled, where perf_clear_dirty_counters() never runs
 
 Signed-off-by: Yosry Ahmed <yosry@kernel.org>
 ---
- arch/x86/kvm/pmu.c | 21 ++++++++++++++++-----
- arch/x86/kvm/pmu.h | 32 +++++++++++++++++++++++++++++++-
- 2 files changed, 47 insertions(+), 6 deletions(-)
+ arch/x86/events/core.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index 4d170abb2b384..6f82213058f14 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -419,10 +419,19 @@ static __always_inline u32 gp_eventsel_msr(u32 idx)
- 	return kvm_pmu_ops.GP_EVENTSEL_BASE + idx * kvm_pmu_ops.MSR_STRIDE;
- }
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 4e344fb1ae3ed..95ebdec4d5f5d 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -3026,6 +3026,14 @@ void perf_clear_dirty_counters(void)
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	int i;
  
-+static u32 pmc_counter_msr(struct kvm_pmc *pmc)
-+{
-+	return pmc_is_fixed(pmc) ?
-+	       fixed_counter_msr(pmc->idx - KVM_FIXED_PMC_BASE_IDX) :
-+	       gp_counter_msr(pmc->idx);
-+}
++	/*
++	 * Reclaim the mediated vPMU from any loaded guest context before
++	 * accessing counters to avoid clobbering guest state.  Do so before
++	 * filtering out assigned counters, as putting the guest context can
++	 * schedule in host events.
++	 */
++	perf_reclaim_mediated_pmu();
 +
- void pmc_write_counter(struct kvm_pmc *pmc, u64 val)
- {
- 	if (kvm_vcpu_has_mediated_pmu(pmc->vcpu)) {
-+		guard(irqsave)();
- 		pmc->counter = val & pmc_bitmask(pmc);
-+		kvm_pmu_guest_context_wrmsr(pmc_counter_msr(pmc), pmc->counter);
- 		return;
- 	}
- 
-@@ -1082,6 +1091,7 @@ static bool pmc_is_pmi_enabled(struct kvm_pmc *pmc)
- static void kvm_pmu_incr_counter(struct kvm_pmc *pmc)
- {
- 	struct kvm_vcpu *vcpu = pmc->vcpu;
-+	u64 counter;
- 
- 	/*
- 	 * For perf-based PMUs, accumulate software-emulated events separately
-@@ -1096,12 +1106,13 @@ static void kvm_pmu_incr_counter(struct kvm_pmc *pmc)
- 	}
- 
- 	/*
--	 * For mediated PMUs, pmc->counter is updated when the vCPU's PMU is
--	 * put, and will be loaded into hardware when the PMU is loaded. Simply
--	 * increment the counter and signal overflow if it wraps to zero.
-+	 * For mediated PMUs, the counter may be live in hardware or in
-+	 * pmc->counter; the helpers will access it as needed. Signal overflow
-+	 * if the counter wraps to zero after the increment.
- 	 */
--	pmc->counter = (pmc->counter + 1) & pmc_bitmask(pmc);
--	if (!pmc->counter) {
-+	counter = (pmc_read_counter(pmc) + 1) & pmc_bitmask(pmc);
-+	pmc_write_counter(pmc, counter);
-+	if (!counter) {
- 		pmc_to_pmu(pmc)->global_status |= BIT_ULL(pmc->idx);
- 		if (pmc_is_pmi_enabled(pmc))
- 			kvm_make_request(KVM_REQ_PMI, vcpu);
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index ff4b6f15b915c..fe1baa50ebceb 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -137,12 +137,24 @@ static inline bool pmc_is_fixed(struct kvm_pmc *pmc)
- 	return pmc->type == KVM_PMC_FIXED;
- }
- 
-+static inline u64 pmc_rdpmc(struct kvm_pmc *pmc)
-+{
-+	if (pmc_is_fixed(pmc))
-+		return rdpmc(INTEL_PMC_FIXED_RDPMC_BASE | (pmc->idx - KVM_FIXED_PMC_BASE_IDX));
-+
-+	return rdpmc(pmc->idx);
-+}
-+
- static inline u64 pmc_read_counter(struct kvm_pmc *pmc)
- {
- 	u64 counter, enabled, running;
- 
--	if (kvm_vcpu_has_mediated_pmu(pmc->vcpu))
-+	if (kvm_vcpu_has_mediated_pmu(pmc->vcpu)) {
-+		guard(irqsave)();
-+		if (is_guest_mediated_pmu_loaded())
-+			pmc->counter = pmc_rdpmc(pmc);
- 		return pmc->counter & pmc_bitmask(pmc);
-+	}
- 
- 	counter = pmc->counter + pmc->emulated_counter;
- 
-@@ -153,6 +165,24 @@ static inline u64 pmc_read_counter(struct kvm_pmc *pmc)
- 	return counter & pmc_bitmask(pmc);
- }
- 
-+/*
-+ * While the guest's mediated PMU context is loaded, the guest's PMU state
-+ * lives in hardware.  State that changes while the guest runs and is only
-+ * saved when the guest context is put (counters) must be read from
-+ * hardware, and written to both hardware and the software copy.
-+ *
-+ * Write a guest PMU MSR, but only if the guest context is loaded on this
-+ * CPU.  Callers must keep IRQs disabled across updating KVM's software copy
-+ * and calling this, so that the two are atomic with respect to perf
-+ * reclaiming the mediated PMU (via IPI) and putting the guest context.
-+ */
-+static inline void kvm_pmu_guest_context_wrmsr(u32 msr, u64 val)
-+{
-+	lockdep_assert_irqs_disabled();
-+	if (is_guest_mediated_pmu_loaded())
-+		wrmsrq(msr, val);
-+}
-+
- void pmc_write_counter(struct kvm_pmc *pmc, u64 val);
- 
- static inline bool kvm_valid_perf_global_ctrl(struct kvm_pmu *pmu,
+ 	 /* Don't need to clear the assigned counter. */
+ 	for (i = 0; i < cpuc->n_events; i++)
+ 		__clear_bit(cpuc->assign[i], cpuc->dirty);
 -- 
 2.56.1.809.ga0b61035b5-goog
 
