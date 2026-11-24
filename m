@@ -1,74 +1,74 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.197
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795490978;
-	b=gsKWzjiVSfXzgutdSIs9AjCOckaisc1DV1NIXOpOIxIZMoGhZjhEfr7VMs92hjWnm9J2
-	 paE9cBypuxWOmeqIa5VInWsJZhNgpK1ncl2OkVKYEMCRL5SiOSEcfWIu6JmAYV3fk0ShK
-	 ozulsuFbmMHU7eDLp8PF70CU8C8/I8sK3v7TZZmp0TgYFlGs8U9l7fn4d7pCLET42bM6X
-	 MQB7eK5uPs9x1izORGoVyUJyXoacfvDO4cVplyXWcxzsh7FVhmJXmLx8S3YkSU2G6LSwO
-	 uPiUBCrB5qHnBMla5X0FOG1ik2qcwmRmHvt58sbG0NyMfqZ+c+UAahYz/FJOMePOOBA==
+	t=1795490983;
+	b=gxrnEc4uTpzG/nZf7jZKHzBA7XVQHHjRS2LHO/Xk/u0kOjhAGrgJZRE+ypDoY2y6fsAO
+	 OsmUplXAonHylDL/zkG1OFVW5qG2PgxFyG3IR4IGZ2kXZCw4GWlkuD8mzoDzq8WagnQGR
+	 OJ7jNhWYIrJzp+42D4c69bPFOdrPkPaO7ph4faGomhmmpsfzoNGyQzP3Dj0P8hftnGkmf
+	 SAfql+D2AroDPY3JAU0yUj3dFqqETrpSnOi4FE6JO3UIVZziVAhZiTTUB/FXf6MwNz4Qi
+	 k3N/BpPwcQEv/kugdO3EUjHd6ixnHO7Yk9Q7u1c/ATTHCUofrJaSeEa4P1By3Mkn5qg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795490978;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795490983;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=HcjBsddpqd/V5XcUMYQq5yvXHNPx3bXbpQNp1l6u9Yk=;
-	b=MBCFbQPhf1twOrHSe5qMpqHrDije2zz+0EjBiSd+Vdcukb0k8pGzBe/XT/LcDrpRqsOy
-	 WP4i75xFMfY+/LswHeYAa6WCapEpzXdqVuc6vESh9hJIUh81rNCRCEh7R9/azgO0rWAAl
-	 Oe9xctQud8wVA0p1B+eNNeaEkc+pHe+vszy5pKO171sk6VkjCouE9ugtXVF+IzKx1+V7L
-	 bqCdbrk2oNNT3Z2jAN+x+NJuyzA3KSxY0deAqpCEgdsrdmJpjOTibgY4kyGqnCrUEbFvh
-	 EDGC1vSEEmSzsbKAzF+irwkhf6Ib8oYooHGi4X4WWjnKVG962zuUyqBTs8H8Z1prDgQ==
+	bh=RC+AB1O9VAsGYWgvn7uFvsnrABTphbVpW5Y+d70Dgm0=;
+	b=FNZBELVNUHBD54US8AnVqMe0K/w4f+e+p98uPemq3upobXRMqIlHH8Rg3ZhWld7y68gy
+	 lxdrkon9+tceA3mXjvA7JHUO51E5s1uDO2fG7hG5sWsU2hLMJ9NJYhRZITDXxqo3KQdIz
+	 ZhM8iNKbJxu7i5kM2HdFCWJ4YX6z/FNz2ZetmiUj4qjrrRpPo2H0HYisKgwPE/ppJVD5F
+	 ZA8ijcNvypKeZnee5vRzgvIq+49Srbk3ERo+xlOlZur3VRKjZ5PpmdV1b37YC30qw/xZa
+	 Kyo6dVIPOc27T1HCuuMOyV2hMnLtB0mPdSXrlXvfagae3kjtSz8LYLaNCAg76AppEkQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=KDR8PLyD;
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Crcl1aDR;
 	arc=none smtp.remote-ip=74.125.82.197
 Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16375606A322
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 03:29:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 16375606A322
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF4B606A321
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 03:29:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 4CF4B606A321
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=KDR8PLyD
-Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-386177b0516so10788688eec.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Nov 2026 19:29:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Crcl1aDR
+Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-383ec96a7deso4580666eec.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Nov 2026 19:29:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795490977; x=1796095777; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1795490982; x=1796095782; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=HcjBsddpqd/V5XcUMYQq5yvXHNPx3bXbpQNp1l6u9Yk=;
-        b=KDR8PLyD4WaWpooJbg8Gdfw4g6IH/BtHoRSKltWovSiAf3b5IfwJM1ju2FeEXbUH/j
-         /A4NdOt7edjZlchI9vVK0GalNKhm+k4QOYG3nVCTAf1xaJQ2VZLV/+dTW92LhQLLBEYE
-         TwPNMFCiS0wyJrdsi0Rib4BNlTi8nfymIRHCMD00vTHSD4KBxaPahAd+wh5UmtXYnPKT
-         gspATMMop+E9zYb92dJx9wqa792Fpni0fWgETo4IsTN11AaPOl8AU+jjtaOUWlNwwNmA
-         fBdLzSf3r80FrKDFXP+LOW8qfL93m6rFxThgYiwytrte4TdWlVTBPJrgR5CEIruEgpvd
-         N2Ag==
+        bh=RC+AB1O9VAsGYWgvn7uFvsnrABTphbVpW5Y+d70Dgm0=;
+        b=Crcl1aDR9pSf1cGXXszRl1+K00LhwKmkzhpxiGsLjo4LqmarP7RmJlUNh2epO1ip+b
+         VVPxVmYx2HFGSGux2+YX14zevdxjVefedB3ladQPJ+0piaF9rgj3vnYhN29WZ2sOC+zh
+         UeEbJfGisgjXICCLCqMO2MJFuDIMuPtTwlg+BwjCuEwby2PPDmuJI4D5ORqtx+MIEYhH
+         hrjyabUYJt+iufpQ1jk4/cjJbxImGFRBAsICnFDmMt0zdlguK5+6bfjwuZqdBQNF2Oez
+         I+0RxDoAaC7FA5DCjO9yOju7C1XC/3lOaC61GSeVwauEr9GgyGs1o+Gjd2GuA21lsh7Y
+         9nVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795490977; x=1796095777;
+        d=1e100.net; s=20260707; t=1795490982; x=1796095782;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=HcjBsddpqd/V5XcUMYQq5yvXHNPx3bXbpQNp1l6u9Yk=;
-        b=H5hax7jm8xO1JSB3zmzQy+KdgjKiO1LHLoV2zm376L9fH5v16GStlXj+6Wvx3HG9m9
-         w+/nlZfNBUwtXx6GFpiBBENa0CyXp0coMOq6ZbQPqjpaeaPlJUzhlCX41ILpLnqSBL/B
-         AMbubd9vX/woyPFH5U3YmQxadhTySzuGKeWPS35Y2oIK5pH5nNLgy8Ee8cYB6gSBn+EV
-         cNpFqr7X6PcSnPuOggfPOWW4mGZ7Ew/KQ4hdkiHoOXZTUXSNsiuUueWB9aNiL8oKBbeM
-         vudjSAWM8Lz+c8eIc1RRoiYea+1dpnH6eMJDeqO281GHv2L+JpefmSr2ZgWLpmEgbSWQ
-         xoPw==
-X-Forwarded-Encrypted: i=1; AL+hErFKUxcu7luFdzbC4hT4lMonRqdX6ADBvLV1XrjmMPMVE6X6Y/lbl/E2QmroZlZGpA+jffxD8IKfO0WbXvYYL6AW@vger.kernel.org
-X-Gm-Message-State: APuU4Z/SBXzuEg7QEjxPxtA19YEFpprQZ3jLlxOk48W8uE3BWaerzY+R
-	H90qdffBlyZZOgPl98BtNXBIbZ2AloRoavfR2zAe0YKf+ENvLOIGm9Sf871ibBVBgw9xKb8ghA3
-	BSlAuHLVUpA==
-X-Received: from dlgx14-n2.prod.google.com ([2002:a05:701a:ccce:20b0:184:6cc9:b13c])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ea21:b0:1b3:b6d3:b91c
- with SMTP id a92af1059eb24-1b5568b3149mr16361629c88.7.1795490976837; Mon, 23
- Nov 2026 19:29:36 -0800 (PST)
-Date: Mon, 23 Nov 2026 19:28:58 -0800
+        bh=RC+AB1O9VAsGYWgvn7uFvsnrABTphbVpW5Y+d70Dgm0=;
+        b=zkULCqA4k3AvybMZRkyFmqwnGzWhQBWYHzwnr60ySkYmmSLHCJTfcyl2ZdzGnTdAxB
+         hVTDlLQ2w9AXA8xqWprmzskBLvQH+FUIieT3RF83KfA4VHfRsW/NYVGTTJj1p0qpzhj0
+         J9eAIWzdCwY+2ZvqSFd2Ep6ckZ2fQjRUKzeoUkzAWGDdJRu4Q+Za/N12vHlgALOsiZdN
+         GAeQCAcWoDAInwEYNf9FzxABTjYZo4d829I4nwCOIZabNGW/ovNHBl1g2AKF6YLzz3p9
+         Q87BZhPaMXP3RQqAaoC3XD9fkKzL1Y4bNwOZz3olq5aQCsQONR1zFzCxKHdvIglvqTQE
+         +3iQ==
+X-Forwarded-Encrypted: i=1; AL+hErEscGSxEuX1sjSO21oD+80PJ9sB6RLBVUkYThYR1vhkR+nmBdZ7yrBDJ6nXZ1DLJsxXntoDIi8Sr1eY4sWQcNLj@vger.kernel.org
+X-Gm-Message-State: APuU4Z+5o56e+7ej2xvMf8eFX0VuA/8ZN7K9DNFTrbPd4fkwXtbzjnbB
+	1LDNHS3VTrfQYF1EiMehgx54oce2c7t9xyKR3Olx3/+ecJucFwGM8ch0IVtSR1VXrPG43Z97/H9
+	LeQ0OfsCNiw==
+X-Received: from dybgk2.prod.google.com ([2002:a05:7301:182:b0:385:e49a:dd09])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:4301:b0:386:548e:e533
+ with SMTP id 5a478bee46e88-386548ee6c3mr12731053eec.18.1795490981904; Mon, 23
+ Nov 2026 19:29:41 -0800 (PST)
+Date: Mon, 23 Nov 2026 19:28:59 -0800
 In-Reply-To: <20261124032902.3859564-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,8 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261124032902.3859564-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
-Message-ID: <20261124032902.3859564-8-irogers@google.com>
-Subject: [PATCH v9 07/11] perf dso: Add dso__shrink() and dso__try_evict()
+Message-ID: <20261124032902.3859564-9-irogers@google.com>
+Subject: [PATCH v9 08/11] perf session: Add dsos, machine, and perf_session shrinking
 From: Ian Rogers <irogers@google.com>
 To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
 	Alireza Haghdoost <haghdoost@uber.com>, Ian Rogers <irogers@google.com>
@@ -91,291 +91,176 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Jiri 
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add per-DSO memory shrinking and unreferenced DSO eviction helpers:
-- dso__shrink(): Without blocking on contended locks, closes cached DSO
-  data file descriptors, frees cached 4KB data pages, addr2line handles,
-  and libdw DWARF contexts. When a reloadable user DSO in a dsos
-  collection has no external references (refcnt == 1) and no annotated
-  symbols or inlines, evicts its symbol table via
-  symbols__try_delete_unannotated() and marks dso->loaded false so it
-  reloads on demand; otherwise calls symbols__shrink().
-- dso__try_evict(): Evicts an unreferenced user DSO (refcnt == 1, no
-  symbols, not kernel/vDSO/hit/header_build_id, and not on
-  dso__data_open) without blocking on locks.
+Add container-level shrinking helpers walking DSOs across a session's host
+and guest machines:
+- dsos__shrink(): Calls dso__shrink() and dso__try_evict() across all DSOs
+  under dsos->lock, compacts the array when unreferenced DSOs are evicted,
+  and calls malloc_trim(0) on glibc when memory was reclaimed.
+- machine__shrink(), machines__shrink(), and perf_session__shrink():
+  Shrink host and guest machine DSO collections.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/dso.c | 215 +++++++++++++++++++++++++++++++++++++++++-
- tools/perf/util/dso.h |   9 ++
- 2 files changed, 222 insertions(+), 2 deletions(-)
+ tools/perf/util/dsos.c    | 50 +++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/dsos.h    |  2 ++
+ tools/perf/util/machine.c | 29 +++++++++++++++++++++++
+ tools/perf/util/machine.h |  3 +++
+ tools/perf/util/session.c |  8 +++++++
+ tools/perf/util/session.h |  2 ++
+ 6 files changed, 94 insertions(+)
 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 83611d7ccaff..b6217c49dd14 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -17,6 +17,7 @@
- #include <sys/types.h>
- #include <unistd.h>
- 
-+#include "annotate.h"
- #include "annotate-data.h"
- #include "auxtrace.h"
- #include "compress.h"
-@@ -1874,7 +1875,7 @@ struct dso *dso__new(const char *name)
- 	return dso__new_id(name, NULL);
+diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
+index 7a56577f4ec8..77f668d7557c 100644
+--- a/tools/perf/util/dsos.c
++++ b/tools/perf/util/dsos.c
+@@ -6,6 +6,9 @@
+ #include "vdso.h"
+ #include "namespaces.h"
+ #include <errno.h>
++#ifdef __GLIBC__
++#include <malloc.h>
++#endif
+ #include <stdlib.h>
+ #include <string.h>
+ #include <symbol.h> // filename__read_build_id
+@@ -517,3 +520,50 @@ int dsos__for_each_dso(struct dsos *dsos, int (*cb)(struct dso *dso, void *data)
+ 	up_read(&dsos->lock);
+ 	return err;
  }
- 
--void dso__delete(struct dso *dso)
-+static void __dso__delete(struct dso *dso, bool close_data)
- {
- 	if (dso__dsos(dso))
- 		pr_err("DSO %s is still in rbtree when being deleted!\n", dso__long_name(dso));
-@@ -1896,7 +1897,8 @@ void dso__delete(struct dso *dso)
- 		RC_CHK_ACCESS(dso)->long_name_allocated = false;
- 	}
- 
--	dso__data_close(dso);
-+	if (close_data)
-+		dso__data_close(dso);
- 	auxtrace_cache__free(RC_CHK_ACCESS(dso)->auxtrace_cache);
- 	dso_cache__free(dso);
- 	dso__free_a2l(dso);
-@@ -1908,6 +1910,215 @@ void dso__delete(struct dso *dso)
- 	RC_CHK_FREE(dso);
- }
- 
-+void dso__delete(struct dso *dso)
++
++size_t dsos__shrink(struct dsos *dsos)
 +{
-+	__dso__delete(dso, /*close_data=*/true);
-+}
-+
-+bool dso__can_shrink_symbols(const struct dso *dso)
-+{
-+	const char *name;
-+
-+	if (!dso || !dso__loaded(dso))
-+		return false;
-+
-+	if (dso__kernel(dso) || dso__is_kmod(dso))
-+		return false;
-+
-+	if (dso__is_vdso(dso))
-+		return false;
-+
-+	switch (dso__binary_type(dso)) {
-+	case DSO_BINARY_TYPE__KALLSYMS:
-+	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
-+	case DSO_BINARY_TYPE__VMLINUX:
-+	case DSO_BINARY_TYPE__GUEST_VMLINUX:
-+	case DSO_BINARY_TYPE__KCORE:
-+	case DSO_BINARY_TYPE__GUEST_KCORE:
-+	case DSO_BINARY_TYPE__BPF_PROG_INFO:
-+	case DSO_BINARY_TYPE__BPF_IMAGE:
-+	case DSO_BINARY_TYPE__OOL:
-+	case DSO_BINARY_TYPE__JAVA_JIT:
-+	case DSO_BINARY_TYPE__GUEST_KMODULE:
-+	case DSO_BINARY_TYPE__GUEST_KMODULE_COMP:
-+	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE:
-+	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP:
-+		return false;
-+	case DSO_BINARY_TYPE__DEBUGLINK:
-+	case DSO_BINARY_TYPE__BUILD_ID_CACHE:
-+	case DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
-+	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
-+	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
-+	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
-+	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
-+	case DSO_BINARY_TYPE__GNU_DEBUGDATA:
-+	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
-+	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
-+	case DSO_BINARY_TYPE__NOT_FOUND:
-+	default:
-+		break;
-+	}
-+
-+	switch (dso__symtab_type(dso)) {
-+	case DSO_BINARY_TYPE__KALLSYMS:
-+	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
-+	case DSO_BINARY_TYPE__VMLINUX:
-+	case DSO_BINARY_TYPE__GUEST_VMLINUX:
-+	case DSO_BINARY_TYPE__KCORE:
-+	case DSO_BINARY_TYPE__GUEST_KCORE:
-+	case DSO_BINARY_TYPE__BPF_PROG_INFO:
-+	case DSO_BINARY_TYPE__BPF_IMAGE:
-+	case DSO_BINARY_TYPE__OOL:
-+	case DSO_BINARY_TYPE__JAVA_JIT:
-+	case DSO_BINARY_TYPE__GUEST_KMODULE:
-+	case DSO_BINARY_TYPE__GUEST_KMODULE_COMP:
-+	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE:
-+	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP:
-+	case DSO_BINARY_TYPE__NOT_FOUND:
-+		return false;
-+	case DSO_BINARY_TYPE__DEBUGLINK:
-+	case DSO_BINARY_TYPE__BUILD_ID_CACHE:
-+	case DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
-+	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
-+	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
-+	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
-+	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
-+	case DSO_BINARY_TYPE__GNU_DEBUGDATA:
-+	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
-+	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
-+	default:
-+		break;
-+	}
-+
-+	name = dso__long_name(dso);
-+	if (!name || name[0] == '[' || is_perf_pid_map_name(name) ||
-+	    strstr(name, " (deleted)") != NULL)
-+		return false;
-+
-+	return true;
-+}
-+
-+static bool dso__has_annotated_inlines(struct dso *dso)
-+{
-+	struct rb_root_cached *tree = dso__inlined_nodes(dso);
-+	struct rb_node *nd;
-+
-+	for (nd = rb_first_cached(tree); nd; nd = rb_next(nd)) {
-+		struct inline_node *node = rb_entry(nd, struct inline_node, rb_node);
-+		struct inline_list *ilist;
-+
-+		list_for_each_entry(ilist, &node->val, list) {
-+			if (ilist->symbol && symbol__annotated(ilist->symbol))
-+				return true;
-+		}
-+	}
-+	return false;
-+}
-+
-+static void dso__delete_inlines_and_srclines(void *ctx)
-+{
-+	struct dso *dso = ctx;
-+
-+	/* Free inlines before symbols, as inline frames reference symbols. */
-+	inlines__tree_delete(dso__inlined_nodes(dso));
-+	srcline__tree_delete(dso__srclines(dso));
-+}
-+
-+size_t dso__shrink(struct dso *dso)
-+{
++	unsigned int write_idx = 0;
 +	size_t freed = 0;
++	bool any_removed = false;
 +
-+	if (!dso)
-+		return 0;
++	down_write(&dsos->lock);
 +
-+	if (mutex_trylock(&dso__data_open_lock)) {
-+		if (dso__data(dso)->fd >= 0) {
-+			close_dso(dso);
++	for (unsigned int read_idx = 0; read_idx < dsos->cnt; read_idx++) {
++		struct dso *dso = dsos->dsos[read_idx];
++
++		freed += dso__shrink(dso);
++
++		if (dso__try_evict(dso)) {
++			any_removed = true;
 +			freed++;
++			continue;
 +		}
-+		mutex_unlock(&dso__data_open_lock);
++		dsos->dsos[write_idx++] = dso;
 +	}
 +
-+	if (!mutex_trylock(dso__lock(dso)))
-+		return freed;
++	dsos->cnt = write_idx;
++	if (any_removed) {
++		if (write_idx == 0) {
++			zfree(&dsos->dsos);
++			dsos->allocated = 0;
++			dsos->sorted = true;
++		} else if (write_idx < dsos->allocated / 2) {
++			struct dso **shrunk = realloc(dsos->dsos,
++						      write_idx * sizeof(struct dso *));
++			if (shrunk) {
++				dsos->dsos = shrunk;
++				dsos->allocated = write_idx;
++			}
++		}
++	}
 +
-+	if (!dso__kernel(dso) && dso__binary_type(dso) != DSO_BINARY_TYPE__OOL &&
-+	    !RB_EMPTY_ROOT(&dso__data(dso)->cache)) {
-+		__dso_cache__free(dso);
-+		freed++;
-+	}
-+	if (dso__a2l(dso)) {
-+		dso__free_a2l(dso);
-+		freed++;
-+	}
-+#ifdef HAVE_LIBBFD_SUPPORT
-+	if (dso__a2l_libbfd(dso)) {
-+		dso__free_a2l_libbfd(dso);
-+		freed++;
-+	}
-+#endif
-+#ifdef HAVE_LIBDW_SUPPORT
-+	if (dso__libdw(dso)) {
-+		dso__free_libdw(dso);
-+		freed++;
-+	}
++	up_write(&dsos->lock);
++
++#ifdef __GLIBC__
++	if (freed > 0)
++		malloc_trim(0);
 +#endif
 +
-+	if (dso__dsos(dso) && refcount_read(dso__refcnt(dso)) == 1 &&
-+	    dso__can_shrink_symbols(dso) && dso__has_symbols(dso) &&
-+	    !dso__has_annotated_inlines(dso) &&
-+	    symbols__try_delete_unannotated(dso__symbols(dso),
-+					    dso__delete_inlines_and_srclines, dso)) {
-+		atomic_store_explicit(&RC_CHK_ACCESS(dso)->loaded, false,
-+				      memory_order_release);
-+		freed++;
-+	} else {
-+		freed += symbols__shrink(dso__symbols(dso));
-+	}
-+
-+	mutex_unlock(dso__lock(dso));
 +	return freed;
 +}
+diff --git a/tools/perf/util/dsos.h b/tools/perf/util/dsos.h
+index cc7e3a42f9cb..de10a10de777 100644
+--- a/tools/perf/util/dsos.h
++++ b/tools/perf/util/dsos.h
+@@ -51,4 +51,6 @@ struct dso *dsos__find_kernel_dso(struct dsos *dsos);
+ 
+ int dsos__for_each_dso(struct dsos *dsos, int (*cb)(struct dso *dso, void *data), void *data);
+ 
++size_t dsos__shrink(struct dsos *dsos);
 +
-+/*
-+ * Try to evict an unreferenced @dso from its owning struct dsos (whose write
-+ * lock must be held by the caller) without blocking on any lock.
-+ */
-+bool dso__try_evict(struct dso *dso)
-+{
-+	bool can_evict = false;
-+
-+	if (!dso ||
-+	    dso__has_symbols(dso) ||
-+	    dso__header_build_id(dso) ||
-+	    dso__hit(dso) ||
-+	    dso__kernel(dso) ||
-+	    dso__is_vdso(dso) ||
-+	    refcount_read(dso__refcnt(dso)) != 1)
-+		return false;
-+
-+	if (!mutex_trylock(&dso__data_open_lock))
-+		return false;
-+
-+	if (dso__data(dso)->fd < 0 &&
-+	    list_empty(&dso__data(dso)->open_entry) &&
-+	    refcount_read(dso__refcnt(dso)) == 1 &&
-+	    mutex_trylock(dso__lock(dso))) {
-+		can_evict = !dso__has_symbols(dso) && !dso__has_annotated_inlines(dso);
-+		mutex_unlock(dso__lock(dso));
-+	}
-+	mutex_unlock(&dso__data_open_lock);
-+	if (!can_evict)
-+		return false;
-+
-+	dso__set_dsos(dso, NULL);
-+	if (refcount_dec_and_test(&RC_CHK_ACCESS(dso)->refcnt))
-+		__dso__delete(dso, /*close_data=*/false);
-+	else
-+		RC_CHK_PUT(dso);
-+	return true;
-+}
-+
- struct dso *dso__get(struct dso *dso)
+ #endif /* __PERF_DSOS */
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 3c206c26bd62..f4108cc725fc 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -3438,3 +3438,32 @@ int machine__hit_all_dsos(struct machine *machine)
  {
- 	struct dso *result;
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index 70a121fd7ecd..b0ee45a53f40 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -789,6 +789,15 @@ static inline bool dso__has_symbols(const struct dso *dso)
- 	return res;
+ 	return dsos__hit_all(&machine->dsos);
  }
- 
-+static inline refcount_t *dso__refcnt(struct dso *dso)
++
++size_t machine__shrink(struct machine *machine)
 +{
-+	return &RC_CHK_ACCESS(dso)->refcnt;
++	if (!machine)
++		return 0;
++
++	return dsos__shrink(&machine->dsos);
 +}
 +
-+bool dso__can_shrink_symbols(const struct dso *dso);
-+bool dso__try_evict(struct dso *dso);
-+size_t dso__shrink(struct dso *dso);
++size_t machines__shrink(struct machines *machines)
++{
++	struct rb_node *nd;
++	size_t freed;
 +
- char *dso__filename_with_chroot(const struct dso *dso, const char *filename);
++	if (!machines)
++		return 0;
++
++	freed = machine__shrink(&machines->host);
++
++	down_read(&machines->lock);
++	for (nd = rb_first_cached(&machines->guests); nd; nd = rb_next(nd)) {
++		struct machine *pos = rb_entry(nd, struct machine, rb_node);
++
++		freed += machine__shrink(pos);
++	}
++	up_read(&machines->lock);
++
++	return freed;
++}
+diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+index 67d517742fb6..b42c363723c9 100644
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -339,4 +339,7 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
  
- bool dso__sorted_by_name(const struct dso *dso);
+ int machine__hit_all_dsos(struct machine *machine);
+ 
++size_t machine__shrink(struct machine *machine);
++size_t machines__shrink(struct machines *machines);
++
+ #endif /* __PERF_MACHINE_H */
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 4e11eabbbe6f..9f16bff1b72f 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -4270,3 +4270,11 @@ uint16_t perf_session__e_machine(struct perf_session *session, uint32_t *e_flags
+ 	 */
+ 	return perf_env__e_machine_nocache(env, e_flags);
+ }
++
++size_t perf_session__shrink(struct perf_session *session)
++{
++	if (!session)
++		return 0;
++
++	return machines__shrink(&session->machines);
++}
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index 05ea2c1ee8c9..cbea6792a008 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -211,4 +211,6 @@ int perf_event__process_finished_round(const struct perf_tool *tool,
+ struct perf_env *perf_session__env(struct perf_session *session);
+ uint16_t perf_session__e_machine(struct perf_session *session, uint32_t *e_flags);
+ 
++size_t perf_session__shrink(struct perf_session *session);
++
+ #endif /* __PERF_SESSION_H */
 -- 
 2.56.1.809.ga0b61035b5-goog
 
