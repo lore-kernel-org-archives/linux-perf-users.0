@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1795479794;
-	b=qNixIrtfiqSdBOFuAbq1rp6owUzNgvk6XkMZgAqyhvZYnViNJ3pfPNAvpN0fo+nSHpXp
-	 njJQEctekivNQJNmPD0SZ2CQOkpifwwg1dOnychWvD8x66xQvEnQsfYDXmxlg46Tc3yz8
-	 vOtgKlp6JwvrUd5pl/deKklCxMW4cr4yLOFqAaCbadbFWanzHiaAKZUUoFoze22PxIQm5
-	 HE26CZ3Us1Lq1aWusyfZ7MtKXZCeWeqqFPUMsanQx9/hy0MdVjE9TK/bT9sorOCJ1yZBO
-	 v3f3MEo6p7lRvFK9u5wzPCO1N9LpsOLTqXBirUh3G8Xfp8SxdP91Q94cLyYR26oU1xQ==
+	b=1Lk+yHLdah1HlF8XDwTu6SGVRl4RIU1OmU+0lNXoGhnEh4miij/WlKUseh0/+NcLmx7f
+	 MOp5wF1Ia3hX/j1ukQreqvWD7pgWBpgf2yNYZvqBxAVlnnzyA2PUxlDAu8zWwrbkLW1nL
+	 MoF6MUjUpo+LpQcVH/wu0DZhMFigR+a0qEP9avo0JWaUfLuVhnmDnJB7I9/B0nKnfsmN/
+	 0745Q2YV84GXbRhBJWh1ioJFNeqpyDOpUM/U6Kwpp3iR+Bwte/XlezqDw6P4yG2ipuxH4
+	 GVCMTPnmARI6MdULJL4dkFNQKpfgT4zHr4+RCk6Lx1iZveFhqRhIqKhxWMbaB/AoG6g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1795479794;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=fI8ghVWbQeoE8EoWyYFaP5jeWl+2kB1c5wsHFSF1Dj8=;
-	b=VHjCuPc6dyHB2RwwUBIvjZriqwwFMF5co/lzitktLvvzw1U3m6nzeScDgT8+lGl/OIE9
-	 yrzvwm1TfHIpMoJAaccR3hZAQmb+wjo/RzblYoGAiljukS8bN++2LI/S79p7cC5xQBJq3
-	 ST1ubemFTdT/OHc3t6mQouucdzh2Ck63hVpQeiAv9IBp8EjMJJeCX0fPq2SxXE0EDb59h
-	 uFkdZJi0mFRmuu3JfpqJxk1pzZdgzs7xf4BMmgpVejlYjfkHM0DEydzim2Cws/kIwEqR6
-	 oVgPhzhaOgeXzO1JdU0XgJ1x9NnJITfS4XJkx5d8UvgoyNAeciiN5xnh3FFFc/62Wcg==
+	bh=Nd4DPU5GUnoPk5SX46wEPjH4KNWe5Ep973OTAijr8W8=;
+	b=Avh6SRF3MSFZYBnSHlt+St2UiWdkEI75jNy1MNiloEf7Cp7ROzUiAWnc44llTYOw4RdN
+	 7FGye9T+SAO0F4ZNKTlQ0sU5e9yGAaKcj0pYX5WnqVMrt/2Tr32DwYCUJQ/+Y/r3uNTXA
+	 lkwgn5NF+fkIFaQSPMYtJGKbPvWv7qx8XWf/aJZwZaW09tX1mXRYnAO+CyBCz6mSRzWW5
+	 nmSZON3ZVvV+FoFB3cJ/OegiSOjIUVlTM/E732avI6wJQhptFAZ5KE3HX0NNMPOMYJpqh
+	 GYWGztB4vgp48+YQKTg5N8kD55scIyK+MxxOl9fuIrMUWb5XUSfakW67FboU/JhmOdQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=i8JPIHEX;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eYsWkrK9;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2126F606A322;
-	Tue, 24 Nov 2026 00:23:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA94606A682;
+	Tue, 24 Nov 2026 00:23:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=i8JPIHEX
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D62BB1F000D1;
-	Tue, 24 Nov 2026 00:23:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eYsWkrK9
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55DED1F000EC;
+	Tue, 24 Nov 2026 00:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795479792;
-	bh=fI8ghVWbQeoE8EoWyYFaP5jeWl+2kB1c5wsHFSF1Dj8=;
+	s=k20260515; t=1795479794;
+	bh=Nd4DPU5GUnoPk5SX46wEPjH4KNWe5Ep973OTAijr8W8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=i8JPIHEXKR9OSltbS0TydhN2ZJ9oYmo2uicDXwaRyavJLE0w6QUQA0BS7sY/Veh9h
-	 N1yC0xZomH7h/TRu6h2E/Sp1rWyrk9t/gWY1IN9e4dv03fvOfW9ysvhs+tfQQ0kxZz
-	 son6B/wZqFhaCBy1o3iSg7nJClC8CrE0tUBbTXYWrldphA+GF5xRuf9uIy5M6JyG6H
-	 iGNGdEyDKBwK63nD68UWl5I0i1JLbytoJnBx8Ur8VHgrMqjTSPWykHvfW6EzjKEbKI
-	 DIj61ngkWwKuOIVN2YuPSdlDWkEX9zs6hwIxskdXFNH8l+hMeUyNi8qQGqlaNfXK3q
-	 Gqyg8Uyx7woCg==
+	b=eYsWkrK93A2RQitVtAPAn9WIr4GiENuqanvZZcB9O5YQufIX41DoUuX+rEDthQ6Mn
+	 96VV5dtGZ/CMnOtK/QF3NMxOYS2SRoRxm3debxxAEwIhsyrgMa9jTZ8peicE6F0D+s
+	 mibEvcw4uZsCFLb7JPh/R5skFg7aEXXB4RMYYEji169Ybpm95H6QkZOVvuk1ZHmdHh
+	 D5Riz6x2j0vm0Lq2w5XGpihQsAUx/MXzZ8/OTHV34Jazl1JsxTOwCDKjvLfwkdVA54
+	 SfNvjQYswZJ5VV6wX9adyo84LiSSnSVuhWf5DrPYUPqFICrfXnzhCB+IefXpy8kCWn
+	 2a2BML1tY3JyQ==
 From: Yosry Ahmed <yosry@kernel.org>
 To: Sean Christopherson <seanjc@google.com>,
 	Peter Zijlstra <peterz@infradead.org>
@@ -61,9 +61,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Yosry Ahmed <yosry@kernel.org>
-Subject: [RFC PATCH 02/26] perf/core: Don't subtract guest time for events that keep counting
-Date: Tue, 24 Nov 2026 00:22:39 +0000
-Message-ID: <20261124002303.1785363-3-yosry@kernel.org>
+Subject: [RFC PATCH 03/26] perf/core: Move is_guest_mediated_pmu_loaded() to the header
+Date: Tue, 24 Nov 2026 00:22:40 +0000
+Message-ID: <20261124002303.1785363-4-yosry@kernel.org>
 X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
 In-Reply-To: <20261124002303.1785363-1-yosry@kernel.org>
 References: <20261124002303.1785363-1-yosry@kernel.org>
@@ -78,76 +78,114 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently, events with exclude_guest=1 in a non-mediated PMU context
-(e.g. software events) are not scheduled out while the guest context is
-loaded and keep counting, yet the guest time is subtracted from their
-time_running/time_enabled. This discrepancy grows if the guest context
-remains loaded beyond the KVM inner run loop (i.e. with dynamic PMU
-context switching).
+In preparation for using is_guest_mediated_pmu_loaded() in x86 perf code
+and in KVM, move it to perf_event.h. Make the per-CPU flag it reads
+global, renaming it to perf_guest_ctx_loaded to avoid polluting the
+global namespace, and export it to KVM.
 
-Only subtract guest time for events that are actually scheduled out
-while the guest context is loaded (i.e. host-only events in a
-mediated-capable PMU context).
+No functional change intended.
 
-Software events with exclude_guest=0 grouped under a leader in a
-mediated PMU share the leader's PMU context, and are scheduled out while
-the guest context is loaded. Keep counting guest time as enabled for
-those, as they miss guest time they asked to count, similar to being
-multiplexed.
-
-Fixes: 4593b4b6e218 ("perf: Add a EVENT_GUEST flag")
 Signed-off-by: Yosry Ahmed <yosry@kernel.org>
 ---
- kernel/events/core.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ include/linux/perf_event.h | 13 +++++++++++++
+ kernel/events/core.c       | 25 +++++++------------------
+ 2 files changed, 20 insertions(+), 18 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 6f076e5483cb7..5a3e40155ce70 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -176,7 +176,8 @@ enum event_type_t {
- 	 * - In for_each_epc() to skip PMUs that don't support events in a
- 	 *   MEDIATED_VPMU guest, i.e. don't need to be context switched.
- 	 * - To indicate the start/end point of the events in a guest.  Guest
--	 *   running time is deducted for host-only (exclude_guest) events.
-+	 *   running time is deducted for host-only (exclude_guest) events of
-+	 *   MEDIATED_VPMU PMUs, which are scheduled out while the guest runs.
- 	 */
- 	EVENT_GUEST	= 0x40,
- 	EVENT_FLAGS	= EVENT_CGROUP | EVENT_GUEST,
-@@ -872,12 +873,22 @@ static_assert(offsetof(struct perf_event_context, timeguest) -
- #define T_TOTAL		0
- #define T_GUEST		1
- 
-+/*
-+ * Exclude guest time only for host-only events in a mediated PMU context, as
-+ * those are scheduled out while a guest with a mediated vPMU runs.
-+ */
-+static inline bool perf_event_exclude_guest_time(struct perf_event *event)
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index e1e11500df097..5ecd477bd6969 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1933,6 +1933,19 @@ int perf_create_mediated_pmu(void);
+ void perf_release_mediated_pmu(void);
+ void perf_load_guest_context(void);
+ void perf_put_guest_context(void);
++
++DECLARE_PER_CPU(bool, perf_guest_ctx_loaded);
++
++static __always_inline bool is_guest_mediated_pmu_loaded(void)
 +{
-+	return event->attr.exclude_guest &&
-+	       (event->pmu_ctx->pmu->capabilities & PERF_PMU_CAP_MEDIATED_VPMU);
++	return __this_cpu_read(perf_guest_ctx_loaded);
 +}
 +
- static inline u64 __perf_event_time_ctx(struct perf_event *event,
- 					struct perf_time_ctx *times)
- {
- 	u64 time = times[T_TOTAL].time;
++#else /* !CONFIG_PERF_GUEST_MEDIATED_PMU */
++static __always_inline bool is_guest_mediated_pmu_loaded(void)
++{
++	return false;
++}
+ #endif
  
--	if (event->attr.exclude_guest)
-+	if (perf_event_exclude_guest_time(event))
- 		time -= times[T_GUEST].time;
+ #else /* !CONFIG_PERF_EVENTS: */
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 5a3e40155ce70..8fd1e19cf5ab9 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -473,20 +473,6 @@ static cpumask_var_t perf_online_pkg_mask;
+ static cpumask_var_t perf_online_sys_mask;
+ static struct kmem_cache *perf_event_cache;
  
- 	return time;
-@@ -890,7 +901,7 @@ static inline u64 __perf_event_time_ctx_now(struct perf_event *event,
- 	u64 time = now + READ_ONCE(times[T_TOTAL].offset);
- 	u64 guest_time;
+-#ifdef CONFIG_PERF_GUEST_MEDIATED_PMU
+-static DEFINE_PER_CPU(bool, guest_ctx_loaded);
+-
+-static __always_inline bool is_guest_mediated_pmu_loaded(void)
+-{
+-	return __this_cpu_read(guest_ctx_loaded);
+-}
+-#else
+-static __always_inline bool is_guest_mediated_pmu_loaded(void)
+-{
+-	return false;
+-}
+-#endif
+-
+ /*
+  * perf event paranoia level:
+  *  -1 - not paranoid at all
+@@ -6377,6 +6363,9 @@ u64 perf_event_pause(struct perf_event *event, bool reset)
+ EXPORT_SYMBOL_GPL(perf_event_pause);
  
--	if (event->attr.exclude_guest) {
-+	if (perf_event_exclude_guest_time(event)) {
- 		if (is_guest_mediated_pmu_loaded())
- 			guest_time = now + READ_ONCE(times[T_GUEST].offset);
- 		else
+ #ifdef CONFIG_PERF_GUEST_MEDIATED_PMU
++DEFINE_PER_CPU(bool, perf_guest_ctx_loaded);
++EXPORT_SYMBOL_FOR_KVM(perf_guest_ctx_loaded);
++
+ static atomic_t nr_include_guest_events __read_mostly;
+ 
+ static atomic_t nr_mediated_pmu_vms __read_mostly;
+@@ -6464,7 +6453,7 @@ void perf_load_guest_context(void)
+ 
+ 	guard(perf_ctx_lock)(cpuctx, cpuctx->task_ctx);
+ 
+-	if (WARN_ON_ONCE(__this_cpu_read(guest_ctx_loaded)))
++	if (WARN_ON_ONCE(__this_cpu_read(perf_guest_ctx_loaded)))
+ 		return;
+ 
+ 	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
+@@ -6478,7 +6467,7 @@ void perf_load_guest_context(void)
+ 	if (cpuctx->task_ctx)
+ 		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
+ 
+-	__this_cpu_write(guest_ctx_loaded, true);
++	__this_cpu_write(perf_guest_ctx_loaded, true);
+ }
+ EXPORT_SYMBOL_GPL(perf_load_guest_context);
+ 
+@@ -6490,7 +6479,7 @@ void perf_put_guest_context(void)
+ 
+ 	guard(perf_ctx_lock)(cpuctx, cpuctx->task_ctx);
+ 
+-	if (WARN_ON_ONCE(!__this_cpu_read(guest_ctx_loaded)))
++	if (WARN_ON_ONCE(!__this_cpu_read(perf_guest_ctx_loaded)))
+ 		return;
+ 
+ 	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
+@@ -6503,7 +6492,7 @@ void perf_put_guest_context(void)
+ 		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
+ 	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
+ 
+-	__this_cpu_write(guest_ctx_loaded, false);
++	__this_cpu_write(perf_guest_ctx_loaded, false);
+ }
+ EXPORT_SYMBOL_GPL(perf_put_guest_context);
+ #else
 -- 
 2.56.1.809.ga0b61035b5-goog
 
