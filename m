@@ -1,56 +1,69 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795512048;
-	b=dEHZu/wR3KIhuzieRBMSinvPl2dZcVZbFXDFAZdjP9XAUCSlTJTLWHQ3oS/PIWXx1gZ3
-	 AiXYn0fthtSXw6f4qlulkhP+L2PJTLjBDtBJ9Fk+MP3PPNBGTpYIaSzibIh6Y7MyspcZV
-	 tR3ke+fFf6hfE1/pLWiinGjQYp+5mQ4UypjkjrMsGxPjGrzpCw0NPpdZZeWD2Ei337kQh
-	 uygO9iXUa9lV4IhfQW0WnHgQ2NeWD2lUkiEUJPTHMDEVOGPMB8kddiYBXc5Js3rwgevVI
-	 t7QjAP7Gvn/sXAbKIfzy5BnX9NF8gJOIgm9RVN+YxSTEOC2Klwscw2FM7bISujx3ZAQ==
+	t=1795512539;
+	b=a3nNn/UCoOF75ULlVla1QGveOMJzo2c0d+XZLLGkXIkUhGfJ4UHb5HQ72CHFZgidgea4
+	 WD7wQREO6TOPgy7BDvu43gaycK+kHOGj5QmxpqThkmtklW+ArGL/xKn7Z0Muz2HKIJX5T
+	 5PZXbQRQ2j3w9gFDhQiZ2VCm9mHiMve0Kh9IneEJ7lYAMp1Vx57gUTh4nQArvMb6c9J09
+	 3CvdpMmNlf2g+biI22KzDxMAMB+6Li5TCU/UPdP8bIS2XPFObzUFuwezbj6XFGsRY01mz
+	 wKViba6n2juzZTQdVk5//+CiVgoh+IAn7VEese5fPyC+WQoghC/svZfn8qLIN7+l9Ug==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795512048;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=l3RRdVYtAKNKRJCh1MckF45lYtvj8EL2shZGea1sytE=;
-	b=2DwDTTNvPE2zpplhL3vBYr0+RyBU/Q9HNPKgVTHkerYd+tUtySP+2Paa97s3eBQAZdHf
-	 uz0FCsHsSXkXR+DiyRf8fi+z8ZE7ROPDNXQ6l5tM3V3Z0mf8Nu+iq75mpN39SNb/WX4qd
-	 NGshDbhEF3Zt5UmpSggtQcyvWkbXjIwKGJkLSPJuS46bTWppZAcfNmVBW3xUqYPPNuCsM
-	 9IJTb/Yz4GNFw7Dgqsu7v7Lfxn1jwgANJxqPk+x3MswITV2UxbWltpoeIU2wEe47Cyc6y
-	 XMspUZto9JXiqS04VHI83Ua2bhzYmnmBVagE5BdfAwzRZOlejvvtbwD2rWKwQJMLuNQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795512539;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To;
+	bh=68s8dF643W4r8o01kq7u0OHFeheAszVMDFW0VzZCIP8=;
+	b=CLxum4lIrFUYKXWBTAxUYEG8wQv6SHucqXbZPPtOw9PCj3O5fcDUrgwNx9SF0jYf4bAC
+	 uVEgrDTU3hfbHF6GzI0zaOhrV7aJeedJCs5UW+J+UQpJcLXK8oGr08tIKbLv+E9FWri9F
+	 KMp3mO+UXWDXH8AAW9Wfqi+wCELgIoV/tp8dym9uFkt5dv5h7MlqiciQZj0OwUt+uelUq
+	 V2IAmwb78XoNRBg9eUZDwI9uE6AcBM7bIWr9dqS/6VEkPDI2CBX8I9exDQtqr21LDnc3/
+	 6A0NnTaw/EDmUVCTof6NZH9QMfq/8rn1f0oB0/G008170uE3UoekXex0OijHS3tULRA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="ENFnLn2/";
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E513606A336
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 09:20:48 +0000 (UTC)
+	dmarc=pass header.from=arm.com;
+	spf=pass smtp.mailfrom=arm.com;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=KEWXWVbH;
+	arc=none smtp.remote-ip=217.140.110.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFEBB606A31E;
+	Tue, 24 Nov 2026 09:28:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AFEBB606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ENFnLn2/
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F095A1F000D1;
-	Tue, 24 Nov 2026 09:20:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795512048;
-	bh=l3RRdVYtAKNKRJCh1MckF45lYtvj8EL2shZGea1sytE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ENFnLn2/rYZVShrR1TzxQoZNI0iFEqntDJTTsyzEhnVwcK3jNNpi6ZlreLOjuFpZO
-	 iUYUiuY16ZayUw42sG77Gg4xXKMTM+zdB5/xHyD+C0q4+NUTfWvXhz9J1JgsE0tiC9
-	 Yx/oidvrqSZ89klWAdskSpSJhFe6Y2eGXkEYR2hTq4iJ7wit6kibAKof3qfK8NoEg1
-	 sT+PnbgB99JA8dQYmwYGXJFJ+kKN6mDoEJhjYuc4+5n9lOSEFdGbr2fXWeC8ilvYTy
-	 RumSkf7oovV171xCIBbk8Jip3s4Pd/Wlvsaki+UX3VXnulFpqVrajrNmQYwL+toBgN
-	 LkoF8uPviVmtA==
-Message-ID: <sashiko-outbox-230823@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] uprobes: avoid postponing return-probe SRCU lease
- expiration
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Avi Weiss" <thnkslprpt@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261124091252.567037-1-thnkslprpt@gmail.com>
-References: <20261124091252.567037-1-thnkslprpt@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 24 Nov 2026 09:20:47 +0000
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=KEWXWVbH
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E497339;
+	Tue, 24 Nov 2026 01:28:49 -0800 (PST)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9EFEC3F86F;
+	Tue, 24 Nov 2026 01:28:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1795512532; bh=KmBsWytUnf1WwuD/N2D/GAHKXq3lrlOH7DiAXeXeCh8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KEWXWVbHbe0tVeC51l5S9VkRC0+G0K1LrphX3FMsAM814zGsbdqxxB1dU4m0il041
+	 slx0SH1YsTfybof/RafJh9woWYh3Ra21MGy6RmlW8U7zrm6i1uxjUb/N39NAtNyd4L
+	 TiXF5VROsnlj+e9jMVIeU5Xp6ibj5EgjIv5km+E8=
+Date: Tue, 24 Nov 2026 09:28:49 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Song Liu <song@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@arm.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Yeoreum Yun <yeoreum.yun@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+	Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>,
+	Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 04/25] coresight: perf: End AUX output when an event is
+ throttled
+Message-ID: <20261124092849.GF9176@e132581.arm.com>
+References: <20260915-arm_cs_support_aux_sample-v1-0-35cf6f297d20@arm.com>
+ <20260915-arm_cs_support_aux_sample-v1-4-35cf6f297d20@arm.com>
+ <CAPhsuW665wcpXxE8pfzRMfdxZwh9ogGsvd1aEBFREq61cz4Y5w@mail.gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,28 +72,53 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPhsuW665wcpXxE8pfzRMfdxZwh9ogGsvd1aEBFREq61cz4Y5w@mail.gmail.com>
 
-> prepare_uretprobe() reprograms the per-task return-instance timer on every
-> successfully installed return probe. If a traced outer function remains
-> active while nested traced calls arrive more frequently than the timeout,
-> the shared timer keeps moving forward and the outer instance can hold its
-> SRCU read-side lease indefinitely. This delays unrelated synchronous upro=
-be
-> unregister operations that wait for the same SRCU grace period.
->=20
-> Keep the first pending expiry by arming the per-task timer only when it is
-> not pending. prepare_uretprobe() is the only rearming producer for the
-> current task's timer. Order return-instance publication before the pending
-> check, and order the timer core's detach before the callback reads the
-> return-instance list. These full barriers prevent both sides from missing
-> an instance at the expiry boundary.
->=20
-> Fixes: dd1a7567784e ("uprobes: SRCU-protect uretprobe lifetime (with time=
-out)")
-> Signed-off-by: Avi Weiss <thnkslprpt@gmail.com>
+Hi Song,
 
-Sashiko has reviewed this patch and found no issues.
+On Mon, Nov 23, 2026 at 11:07:37AM -0800, Song Liu wrote:
+> Hi Leo,
+> 
+> On Tue, Sep 15, 2026 at 8:49 AM Leo Yan <leo.yan@arm.com> wrote:
+> >
+> > Since commit 9734e25fbf5a ("perf: Fix the throttle logic for a
+> > group"), the perf core stops every event in a throttled group by calling
+> > the PMU stop callback with flags set to zero:
+> >
+> >   perf_event_throttle()
+> >     `> event->pmu->stop(event, 0)
+> >
+> > The ETM perf stop callback only ends the AUX output handle when
+> > PERF_EF_UPDATE was set. For throttling with mode is zero, it skips to
+> > end the AUX handle. When the event is later unthrottled and ETM tracing
+> > is started again, perf_aux_output_begin() sees the perf handle is nest
+> > enabled and triggers a warning:
+> 
+> While testing this patch, we found a crash:
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261124091252.5670=
-37-1-thnkslprpt@gmail.com?part=3D1
+> [20123.449766] Call trace:
+> [20123.454671]  arm_trbe_irq_handler+0x58/0x4d8 [coresight_trbe] (P)
+> [20123.466920]  handle_percpu_devid_irq+0x80/0x1b0
+> [20123.476029]  generic_handle_domain_irq+0x3c/0x80
+> [20123.485308]  gic_handle_irq+0x174/0x328
+
+...
+
+> LLM suggests the following change should fix it. Does this make
+> sense to you?
+
+Yes, the change below looks reasonable to me overall. I have a patch
+series to refactor the TRBE driver [1], and patches 05 and 09 make
+similar changes.
+
+Do you mind to test the series (or apply patches 01 ~ 09) to check
+if issue can be fixed?
+
+Thanks,
+Leo
+
+[1] https://lore.kernel.org/linux-arm-kernel/20261016-trbe_enable_disable_irq_handle_refactor-v2-0-3f57cf3199b1@arm.com/
