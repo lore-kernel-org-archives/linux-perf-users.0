@@ -1,86 +1,86 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.47
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795519223;
-	b=3Cf+yAjxMeSjfxQGznVd5iLD2LlVdih0S0gXFBhplDxdIL3gx8iI6cdzi3XTmbZ0zrqb
-	 a1bhJjhLgmfAC/3M0T6oh/TK6nhaRLjXhsuOxNAqhM55YPIvicZ++/FgQ0Bwm6HAo125H
-	 /rj1vb6qplqXlsWg3rlo+GHYI+MIO/+qc6+Zci4arUTad3yE8jYd2DH4WKCja8X5YIYIO
-	 ASqQ/nPkhmvVQOKgjgO+jo7ttfL/rldiOQaaGSIjX6peOsDt0LByhQO1m1wJ5etpc0a35
-	 IAXA5o/ZnRH3sQxO0pUYRqTpdHcTKv2WXfo+N9OO5zG4vCystbe+nIMyDHBJiLzMXhA==
+	t=1795519481;
+	b=Y5bwnNyOsPt3lAUwyEIXeTkvtE+Qz8rt7op30l4uQxArSwWvtM44wx1vrf6assUyoXt6
+	 qcsWRIq1Bi0xULtX2Y6kvdILK/tErZBJtwjLcCxGth5l3VL728G+oR3OXmqvWgyf1Cgqa
+	 mm6sTZVeww+HVkx+VIyCE8m9/cGOepI0pXIVzaUYvD64xgHmBjdF3Ec4SXaJMjubEJb1o
+	 C9wV+Kg07NoeNvxtgL1pydQSEPpADzwagp5kjmZBOWjJ3ybo5ZlF3n3r6MqyYEqVyJvDN
+	 PQPeUg2ATOwyuMZdeRg/zNXa42BW3SDrtFx+EPqYeH8fdqVpmuUkCcXchEIt1jkjsqA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795519223;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795519481;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:Date:Subject:
-	 MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:
-	 X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer;
-	bh=3e7U36tgKq4gEQ+90CgTo1iDnNbphPgZ7xu5pUJFaCM=;
-	b=PWaE9MtKejATLjMTqz5B/QWCMhiodOUIGjy3gaTpJ+F4Oz0avMZc/82uE6LGDsmm7aHk
-	 UF/r4gqZaXM/Vb6UgiJ+xVFFVNs7pvFgRgO7Z4OelNUnHtgStQ45cH3e6MNckFHbceJi8
-	 FdeFv+2nR8SChyWxPkSGFX3x5ceN36UP3k3qjGOyhZruUCXQAQ9H9LMARsQkUWeROIkqJ
-	 0RfNUJ2C1JXQarNiX8nsWBgjyrnlVBgKetvRNDHikf2bm2ux8a8/7PI9nLye7cEX0wLI0
-	 2h4jVdKBCU09YwnC9TABCQcRhUOCaG1miBhqUEvr7GpaY1jZICqwniXhGy14ZRY2N3w==
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
+	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	bh=RzFMb3TtzuucWHVLWCFL8thSDn33UJo8KWwaTHZ5em4=;
+	b=rarWtT6Bak3fOoyL9Vkl9PS1T7jffUNV47xKeEAIxjrZex21vo3R6ZeK4E0huZ+W3aLJ
+	 9nmoRxvdDa2sErYzLDGbOWU6rIJuwLsg6S7QLPo35U2Zvof2KKlxvuNli7llkI7VgZtcc
+	 j/wZ46dPzr6hjdz2+NMhG2yYgjIL+BsPh6sW01bicTfEx7TBZ52N+lTQ5t9+4QpFCyptN
+	 CTAd/mdnbectpcF23YBCJAsGxgKpruFPMMUB28Unc198fMFthqd2aBoFcz+kk0812ho9l
+	 XGIn8yf16tCJ1LWJsqk8GOLgxCcTgiylmjf3bEH75cs8E6BtxRJHuwiD8XofksNJZ9g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linaro.org;
 	spf=pass smtp.mailfrom=linaro.org;
-	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=p5dQEcvj;
-	arc=none smtp.remote-ip=209.85.128.49
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=G859brBp;
+	arc=none smtp.remote-ip=209.85.221.47
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3285606A321
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 11:20:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org F3285606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3372606A322
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 11:24:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B3372606A322
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=p5dQEcvj
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4bb6886d30aso42048165e9.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 03:20:22 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=G859brBp
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-490d59c3edaso2952862f8f.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 03:24:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1795519221; x=1796124021; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:content-type
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=3e7U36tgKq4gEQ+90CgTo1iDnNbphPgZ7xu5pUJFaCM=;
-        b=p5dQEcvjGV+RRmM1EKsSu7B533etbNSD96+oX4JpX/464/PTJTdYKGGAeq4fLrYKXy
-         U+syPxC9c/s0xRoWcW/VhTmvO/MM84LmWOK7NzNEd4DriFtr1MDUBweXI4d0sNoXbCnU
-         DvMoyCEwTz4b1i6h7Pm+cav4VtKADY+b55EyWK9zY+aaYnRj2vUaw1eGEH3HNLWe5ktQ
-         ifh6O4H+cN2CLGRNT8ZyHcFyNH9MASmTwMLbiXuszOwIVsANJ+q13hxLgab+r4igvjT/
-         cSyrCk8GzLKNA/vag9ZcrA53JVqA0+iaYdmiBeeozUk1SZ5n6n2OKFECZJ9EVSu1sG3i
-         qjlQ==
+        d=linaro.org; s=google; t=1795519479; x=1796124279; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=RzFMb3TtzuucWHVLWCFL8thSDn33UJo8KWwaTHZ5em4=;
+        b=G859brBp3PRE9sKtnIOu+PiddHE693uDbFkFcyk61iNPdCgzB5fRX7Z0xSh+Ehz9QH
+         jnr2NJxcJyyEamvREUpvoTjvvYevuMuRAQmCM4ecpupnJb3514160g5Zh+uEUIbd4mqM
+         ktxy2mixDWYnycwuMhm7jiONKjuvObrXipDiOcRA1RrSudSI7WZ12nTVFFz5oRmX2HaF
+         RHBy859GtqyGXZPqhSoejfjnPhk5H6OZtCfm33mHNgNI6MENB3xjCxaLdLedLqc3uxb3
+         FZgSV3jY/+6gQCplX6mtf38JhQy67GjS4Fu3PTpXFAiE4IWQjnZD4JNLMYcdtI7Qs2W0
+         HyNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795519221; x=1796124021;
-        h=cc:to:message-id:content-transfer-encoding:content-type
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=3e7U36tgKq4gEQ+90CgTo1iDnNbphPgZ7xu5pUJFaCM=;
-        b=N0Q4AC6ACw6SiDdB7BY3NY37j2t5zd+pcMjaZee2HO/9l5mpFBfAUC7ITF+NRXo3za
-         tJPIFB27hoDKrakKd3dSMD9xBcq+Y3qp4xxejJjm8tGhmQwHNa7W48ILeHoiVIhTUAAq
-         aI5A07uZCDTIGz5o2nyfkITT93Jk0wPh0s5ekKpxgFwqDAMocH8wIyI+9D7YaAQBFmUI
-         vV4OXyzykg4lJ58/45cE0dCkx0A3iOvlkjiWu2wNpnjP9kmD24gJqzQm4MleSmq2ubaU
-         XxJ1xteWFVusTzQnidgZdEyNC2/mIbGk0J5xNybEJgLz3WOHnesE1fGILzuxw2a2S/8B
-         2IqA==
-X-Gm-Message-State: APuU4Z/tt/tkc2Yy8DuEBN999tRUU9QrHG+TDDCB4+srAguYflta9KVt
-	34ps0rFYLyw3H1vWS/ckKubEm3KH4YJXTi7ls4pN5rBd0HIGodZkfdAOJ+FIFHvobKA=
-X-Gm-Gg: AZFdTZeWsj0l6M1E98PBhtLyuf1/PJUu8V+2p2RFdNcWa4RrsoMZkH7C2Spfw0px6zh
-	o9fK+EJ7b8ofdFN0c/fMUqB165wx7Go8REVceVyBJ13PUGOmkwPuKoGhF4aZBYd6qv/qo20Jt6Z
-	YVHJ+jGbTfRVXRZCxgMYWJDw87VJHIOJLX2lapMq9uGvXd4u3EUxnWDtEi2ZCoR39PBhoCIFrOu
-	spWNND/4oa7L5jg28c+C6OI8LCO46YuMD92tm4YBDl0OTQlQ9UzoxQZeZ0rXCFaONYDrXqlHGse
-	fMnidhtOXOcOauysJipnmIrX5UHdqj13xpTONM/vFXzRIV/WA00E+HfN7ZmyGniluhZh860KlU1
-	FPDZGhT5JufHJmN68ln5dv3tzSWhvNJIsnQi/O1+SshEqfhH8WbZq+BSqOZjgqsxt5UTs8cfXOX
-	lWj7PhWvjPHSnnXIUo9K7BNqIjT5fDFSqJC7qN+yrYmztm1DXFyG19U+En2t2Pxh1KKZ2J/Ekm+
-	fr2Tsdr1i52oIuplJTRLwyyIpoBbpsOVvAqAHt9s9ccPqIqiq80KbV1uaga04eGARxNHpseqwhp
-	J6Ucr27E9I6uqzxESruCrajRAu2KL90d
-X-Received: by 2002:a05:600c:820e:b0:4ac:da92:2bd4 with SMTP id 5b1f17b1804b1-4bb887c9936mr288699765e9.1.1795519221332;
-        Tue, 24 Nov 2026 03:20:21 -0800 (PST)
-Received: from pop-os.local ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4bb853a9846sm504908295e9.11.2026.11.24.03.20.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Nov 2026 03:20:20 -0800 (PST)
-From: James Clark <james.clark@linaro.org>
-Date: Tue, 24 Nov 2026 11:20:08 +0000
-Subject: [PATCH v2] perf build: Stub out __guarded_by() on older Clang
- versions
+        d=1e100.net; s=20260707; t=1795519479; x=1796124279;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=RzFMb3TtzuucWHVLWCFL8thSDn33UJo8KWwaTHZ5em4=;
+        b=fJxetZoNV5cZ1GwtLbU++UEDumSS/88lLwonW7k0gNU/h6Xyx6qWlgHzfgDVhHv9uD
+         V87eEYEUvkeSUz38pzLVbo523AdP7PKexwOppUxKclFU3v9o/t3dS8YlnUGGXEX5hOIb
+         5U6vTOni4VXWutY4j2hFbKlV7SiU8/XHbznA87uBiIJGIANO4fN3s1+5w8KgiY8ufbXh
+         CZ8cp1qYMjEyMCjG7tGwBChKR2bHqvIxSSvmR0wcbcz1pLxCph7FSasdhuM3R6wX97pD
+         x1jUorFGwZciY4ExorHz6VjZlyGnVyK+MAa29PD1xhnPIZC0UgrCiGSU3A3Cb5DWlg0P
+         AzTQ==
+X-Gm-Message-State: APuU4Z+LJpP9ckVgaJdUgnYRGi2kOGv/IVC/KSONhcWLrN8Hg18EPXTL
+	0pP2BG/o2xekM20AOgbzD3Y9rPZtrYfMlLhtwP55nf7ER5inK/xVU90uo9Ue0l35/1U=
+X-Gm-Gg: AZFdTZfC+3HV/p9AMCfwp+//mEzFNpjRfc5rVHAvNnvoglGQfFSK7Ahs6aD/xgt1em8
+	oldhqrgf2sT4xWnfEdK5dOoa7MnKR0uKFsun4Ih9AoM338qRJ1GCZweAZXZgx/tXmv6c6jMxo5u
+	eSaCbytlPzPYh2tUs0ZY2E6VPiE5L/kwxlWL0sCG8tWTMgWIey7A4d/1p7bNwosBSrlcpDEgDxZ
+	SRsh2SLR224nmOUCaJuWL/GrMiSlXLcB0nz7HgFLA6hZybuGpt42s741CZE1bwhg3jWdVPkazmn
+	RWdXAaKgQRyvQ2zGlL8ILUPTDsDohNATr0kZ3/KJPb6tQrl4wJixjdgo8Wq7yIkvtsFYA5RG8CQ
+	6iWjgOqyrQ+kWFXxffvnHN15FpYOhSbUA6yzzUrnKDIzhjC6Q7WR6SAawWi7XU6A2gWG3j9CDo4
+	K1K1baCDfGC7htcNGrJXVJyvfHNotMuWseT/HDiRTDEIE7jjAEfuYoR1tkkJs2TTHRJcabRluON
+	QhuvbtpDytIqURMGJn52wiJ3ESAFKWlrCf176Fo/DltK/tB0DAKr7AlY7eGJEC+C94PEspusCjw
+	UgEZxCnm2Z0t7ym7VVTDRAPphUVIoVDhSw==
+X-Received: by 2002:a05:6000:184b:b0:4a7:9630:7b36 with SMTP id ffacd0b85a97d-4abb3f15ddbmr29862376f8f.21.1795519479042;
+        Tue, 24 Nov 2026 03:24:39 -0800 (PST)
+Received: from [192.168.1.3] ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6b205443sm28811395f8f.39.2026.11.24.03.24.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Nov 2026 03:24:38 -0800 (PST)
+Message-ID: <46a896ba-cd45-4747-837d-50ea4b4dbed9@linaro.org>
+Date: Tue, 24 Nov 2026 11:24:37 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -90,104 +90,72 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20261124-james-perf-late-parse-attr-v2-1-cb8b00d904a7@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAOdyBWsC/42NQQ6CMBAAv2J6do0tSqgn/2E4lLKFJUjJbiUaw
- t8F/IDHSSYzsxJkQlG3w6wYJxKKwwrmeFC+dUODQPXKypxNrrXJoHNPFBiRA/QuIYyOBcGlxHB
- Ba/Os0MXVBrUGRsZA7z3+KH8sr6pDn7biZrQkKfJnv0968/4aTRo0+ICVrwvtbG7uPQ2O4ylyo
- 8plWb4IK7op1wAAAA==
-X-Change-ID: 20261123-james-perf-late-parse-attr-4e996381859f
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.15.2
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf build: Only enable context analysis with Clang 23 or
+ later
+To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Melo
+ <arnaldo.melo@gmail.com>, Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-kernel@vger.kernel.org
+References: <20261123-james-perf-late-parse-attr-v1-1-cfebcd81a962@linaro.org>
+ <CAP-5=fXuQWTt1F6BvKSXqgSkEtBQPKvKg6gmAe-ngyr4VGyGig@mail.gmail.com>
+ <EC27692D-9692-4976-B7EA-4C3A91173CE3@gmail.com>
+ <awSu48pUIh942Zm4@google.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <awSu48pUIh942Zm4@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-__guarded_by() annotations that reference struct members require Clang
-19 or later [1], otherwise the build fails on older versions, e.g. Clang
-18:
 
-  util/env.h:142:39: error: use of undeclared identifier 'lock'
-    142 |    struct rb_root          infos __guarded_by(&lock);
 
-Stub out __guarded_by() and __pt_guarded_by() on older versions, but
-keep the rest of the context analysis enabled. Add an exception to
-check-headers.sh for the tools only change.
+On 23/11/2026 21:23, Namhyung Kim wrote:
+> Hello,
+> 
+> On Mon, Nov 23, 2026 at 04:55:16PM -0300, Arnaldo Melo wrote:
+>>
+>>
+>> On November 23, 2026 3:44:12 PM GMT-03:00, Ian Rogers <irogers@google.com> wrote:
+>>> On Mon, Nov 23, 2026 at 8:46 AM James Clark <james.clark@linaro.org> wrote:
+>>>>
+>>>> Context analysis requires Clang 23 or later (see
+>>>> Documentation/dev-tools/context-analysis.rst), otherwise the build fails
+>>>> on older versions, e.g. Clang 18:
+>>>>
+>>>>    util/env.h:142:39: error: use of undeclared identifier 'lock'
+>>>>      142 |    struct rb_root          infos __guarded_by(&lock);
+>>>>
+>>>> Only enable it when the Clang version is supported. Leave the other
+>>>> thread safety options enabled if they exist because they don't cause
+>>>> build failures at the moment, and might provide benefits even without
+>>>> -DWARN_CONTEXT_ANALYSIS.
+>>>
+>>> So we've had -Wthread-safety for a long time in the perf tree, I'm
+>>> guessing __guarded_by is missing on older clang versions. Can we just
+>>> stub out the __guarded_by for these old clang versions and keep the
+>>> lock checking?
+>>
+>> Looks way more reasonable, and no need for a feature test since we know
+>> the compiler version when __guarded_by was introduced, right?
+> 
+> Sorry for the trouble.  I checked with clang 21 and it didn't have a
+> problem.
+> 
+> Thanks,
+> Namhyung
+> 
 
-[1]: https://github.com/llvm/llvm-project/pull/95455
+Looks like __guarded_by() has also been around since at least clang 18, 
+so that wasn't the issue. The problem is that it's not supported on 
+struct _members_ specifically until clang 19.
 
-Fixes: 321967859933 ("perf build: Enable context analysis and Clang thread-safety flags")
-Signed-off-by: James Clark <james.clark@linaro.org>
----
-Assisted by Claude Opus 5.5
----
-Changes in v2:
-- Only stub out __guarded_by() on < Clang 19 so all the other working
-  checks remain on all other compiler versions.
-- Change summary from "perf build: Only enable context analysis with Clang 23 or later"
-- Link to v1: https://patch.msgid.link/20261123-james-perf-late-parse-attr-v1-1-cfebcd81a962@linaro.org
----
- tools/include/linux/compiler-context-analysis.h | 8 ++++++++
- tools/perf/check-headers.sh                     | 2 +-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+I sent another version that stubs it out for < 19 which works. The 
+commit summary changed to "perf build: Stub out __guarded_by() on older 
+Clang versions".
 
-diff --git a/tools/include/linux/compiler-context-analysis.h b/tools/include/linux/compiler-context-analysis.h
-index 024e303188ad..2806fb5f79d3 100644
---- a/tools/include/linux/compiler-context-analysis.h
-+++ b/tools/include/linux/compiler-context-analysis.h
-@@ -60,7 +60,11 @@
-  *		long counter __guarded_by(&lock1, &lock2);
-  *	};
-  */
-+#if defined(__clang__) && __clang_major__ < 19
-+# define __guarded_by(...)
-+#else
- # define __guarded_by(...)		__attribute__((guarded_by(__VA_ARGS__)))
-+#endif /* __clang_major__ < 19 */
- 
- /**
-  * __pt_guarded_by() - struct member and globals attribute, declares pointed-to
-@@ -85,7 +89,11 @@
-  *		long *counter __pt_guarded_by(&lock1, &lock2);
-  *	};
-  */
-+#if defined(__clang__) && __clang_major__ < 19
-+# define __pt_guarded_by(...)
-+#else
- # define __pt_guarded_by(...)		__attribute__((pt_guarded_by(__VA_ARGS__)))
-+#endif /* __clang_major__ < 19 */
- 
- /**
-  * context_lock_struct() - declare or define a context lock struct
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index c6b2ecadf9b1..caa7ab26968c 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -23,7 +23,6 @@ declare -a FILES=(
-   "include/linux/bits.h"
-   "include/vdso/bits.h"
-   "include/linux/cfi_types.h"
--  "include/linux/compiler-context-analysis.h"
-   "include/linux/const.h"
-   "include/vdso/const.h"
-   "include/vdso/unaligned.h"
-@@ -193,6 +192,7 @@ check include/uapi/asm-generic/mman.h '-I "^#include <\(uapi/\)*asm-generic/mman
- check include/uapi/linux/mman.h       '-I "^#include <\(uapi/\)*asm/mman.h>"'
- check include/linux/build_bug.h       '-I "^#\(ifndef\|endif\)\( \/\/\)* static_assert$"'
- check include/linux/ctype.h	      '-I "isdigit("'
-+check include/linux/compiler-context-analysis.h '-I "__clang_major__ < 19" -I "^# define __\(pt_\)*guarded_by(...)$"'
- check lib/ctype.c		      '-I "^EXPORT_SYMBOL" -I "^#include <linux/export.h>" -B'
- 
- # diff non-symmetric files
-
----
-base-commit: eb79d2fbc230d41b009e49f20671303c6efbd946
-change-id: 20261123-james-perf-late-parse-attr-4e996381859f
-
-Best regards,
---  
-James Clark <james.clark@linaro.org>
+The header diverges from the kernel one which isn't great, but I suppose 
+that's better than someone on clang 17 or 18 missing out on all of the 
+lock analysis.
 
