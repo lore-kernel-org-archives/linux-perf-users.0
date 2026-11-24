@@ -1,54 +1,53 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795547009;
-	b=5P567qbGrwrvtb/Gb1nwZ86lPlbkZ7kIV4kt/PYqP+OSHeX/BzsRmMjQ1ynBkHCXIuV+
-	 OJqjL0XVTiB87XoFG+XIi9sHIhUqaYQ3OyZq7bMDCegNcCRKH05jL7VSau1qZtRLhXs+o
-	 9ijtrO3J0qjJ6u5qxDOznYpYh/pEkavLMAed5qU2ttQDDENYHBLXAiMdMNlcuD2tmK0Jv
-	 cbPKOxpzfYav5zITzx2aUiyx5tzgBsSGbeIVRbckaomFBMKOjHjyIIQvbS0GkAcjWl/ff
-	 haPXZ6v6QCaY2s0Gs+2/AKpZNBYqKsvRQN7eROc2O6nNwaQHRq7mbSZSTxE0wWN6o5Q==
+	t=1795547010;
+	b=2SU5bc1yRiYQ9ImTlAEvA/J7fAn+h0+KmR6UpLnU0U3CSXcyQdlQdiG6z2cBepncoKdE
+	 a1Ido43LoRKYQRSOjX4A/TdhyEnXh2uSrR5hYqirS89EWH3TL26ptb6BbtfT4KDlJiQnV
+	 fK8befp1B34liH+ZUgzUrCkYgH/TzP4AyFCSvEooNws0QDreaZtJYq8bpKyBd6j8U13k8
+	 T1dpSpoPLQZZ6wFMMrp9TdlAzXeskZuz+DB5v3Dlr3mvRGxEGO6mLLGmtdXFDaNHOdETK
+	 qfzIyNuy+tYXAw+PFIB3eXm5/S7fr3rH+dr6NjTGm3C390mr44Awdew4D3bCBOB+MUQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795547009;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795547010;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=hnJQ3SAGbAenoJqr6pKm7sS8tAraWbdlvOd3SGc6cO4=;
-	b=X51GIbfNpp5qvG/jipi1jlUvIRYDx/NfqaI5FuygvGheK4ti/ebzWO3RbOr0supakCcT
-	 BLHNNOu7kmFhNWJBamJpsQG4e8JB3pAyKPzRMG/R8mTfnp0UbMSGT4w5J+MoHxqegIQsI
-	 zt/jPs66ir9SS6/1HRCgN3SW+Q6RoKw6KKtrK6vOFvatuLBgUTdRE7NbGLze6Mou9c1/+
-	 XOm0pgYm3Hz1yHyuj0PPIaizTEs4+pgEjrIwvSzYlvM4VVyrUTPYPDJNy+IpfhYj7FWN/
-	 MAEKNgRyW9U1UM3ibV3hetrqrpiNKLUCO6NHp1ryjSRtPx1SHnllnpLggWunJoTcmZQ==
+	bh=DEZLHLMFaIZZh6sop25oiq6fyvwG5qZr2DfGtG3xDWI=;
+	b=mkZOWA3aIbsa6npBOh7dubc82vsuQObpXnrbZAfvb2kej4fb1EHv21y8F2fFiuC0uxW2
+	 BGPtPS7Jx2hRS1bFSHK/LnWL7GxHuuk9Pud2emexEZhY2up7BkK9CVkTzv8S4gls30V4D
+	 hIPt7W+XSSBygCx8FOpfH/QsOOj76TzQOfjbL7Q8Z6PLG6+qnExM4qkAPaAWZ86gnD4VW
+	 t6qiQbjNLgM46hXeJlhtrF6UTSGzPLF5U3/KwhYUyMABtxsS7XUvVYN8O2+LIdjAiqYAW
+	 uu2tCD9kRHHy4777SHGqFdPIoNNQhhfik/tHXN6eqDCFntzcZo6PoaUt242nxLJfA8g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M9TXrRK8;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fYHxQFVr;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D9A606A321
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 19:03:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56C1606A31E
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 19:03:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M9TXrRK8
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62BA81F000D0;
-	Tue, 24 Nov 2026 19:03:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fYHxQFVr
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 566341F000D2;
+	Tue, 24 Nov 2026 19:03:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795547009;
-	bh=hnJQ3SAGbAenoJqr6pKm7sS8tAraWbdlvOd3SGc6cO4=;
+	s=k20260515; t=1795547010;
+	bh=DEZLHLMFaIZZh6sop25oiq6fyvwG5qZr2DfGtG3xDWI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=M9TXrRK8sSaaJJSRGTjav7iseBmQU4MZozmGIw0LL4v480hoMTotWzqyXsE/3YEd/
-	 Ga1Uci7jsPln2avO64/LqaRCeryC9xsZRPM/9gN0t/AD42YIqE5UfwM8HY1UvPq3LK
-	 vETvWiRPEU0Tun6BSR6D951piCRMhbCXciXVvW1SVSifLUR3eqtE/kAHGh8GMqVDhy
-	 9bzwUojIRa05fBRLnPAtXJCXjiOMQSQN8PXF9Gji+eGujot4xGHUP/lHqmeXQ+CqKD
-	 0fQRG3hzuoAamjGEWm/6/AaW8KEH8qyTS3y2XhMOoA5b1ZkE9nmppuMByonv3PZTIi
-	 yUx28s4oaT71g==
-Message-ID: <sashiko-outbox-231875@kernel.org>
+	b=fYHxQFVrZgXz934zvBwD7ffnqrgHSVoKgYWdSxJ5Jd8r9wDABRU32ehhATRYEUaS0
+	 eDmbwVntXMs01sCECV8pIT8PyYa/cdV1uHBNhE4cHhULirb4Ni7fsLDYUYrc+Dvvpy
+	 1ahfD7WiJn3rf8TMp1RjZe6jZCX4gs4rYGudR71kHXcf5yvIjFP1O03veBXGEilRC0
+	 LfYvhbTqs4e04yh32+2QvB907x5WyONxAt4oZoNftX6MYvl8SE+b6omu8P6hq7uJJ4
+	 XPeSFED+XUFhu9pfkJRnpwq0EGPFK0gf0j7zKwr/sj0iT64yRk0O4isHgRlI2A4Udw
+	 Wmn95jXrzMvOw==
+Message-ID: <sashiko-outbox-231876@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 10/17] perf tests record: Exercise more record
- options
+Subject: Re: [PATCH v1 00/17] perf tests: Add coverage for the untested perf
+ subcommands
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261124184604.24983-11-acme@kernel.org>
+In-Reply-To: <20261124184604.24983-1-acme@kernel.org>
 References: <20261124184604.24983-1-acme@kernel.org>
- <20261124184604.24983-11-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Date: Tue, 24 Nov 2026 19:03:29 +0000
@@ -61,105 +60,35 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 4 potential
-issues to consider:
-- [Medium] perf tests record: invalid --switch-output=3Dsize=3D64K in
-  test_switch_output()
-- [Medium] perf tests record: unguarded --aio options fail when
-  HAVE_AIO_SUPPORT=3Dn
-- [Medium] perf tests record: unguarded --threads=3Dnuma fails without
-  NUMA or node CPUs
-- [Medium] perf tests record: --threads tests do not raise soft
-  RLIMIT_NOFILE ulimit
---
+Sashiko has finished reviewing this 17-patch series:
 
-commit effd3981a11a3f57fa8f8fe4b22989f457d3f787
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+- Patches 3, 4, 8, 9, 12, and 15: no issues found.
+- Patch 1 ("perf tests top: Pin the ring buffer size"): 2 potential
+  issues (2 Medium)
+- Patch 2 ("perf tests sched: Exercise the sched views and options"): 2
+  potential issues (2 Medium)
+- Patch 5 ("perf tests script: Exercise the list, fields and dum..."): 1
+  potential issue (1 Medium)
+- Patch 6 ("perf tests sort: Exercise the report and diff sort keys"): 1
+  potential issue (1 Medium)
+- Patch 7 ("perf tests diff: Exercise the output options"): 3 potential
+  issues (1 Medium, 2 Low)
+- Patch 10 ("perf tests record: Exercise more record options"): 4
+  potential issues (4 Medium)
+- Patch 11 ("perf tests trace: Exercise the tracing options"): 2
+  potential issues (1 Medium, 1 Low)
+- Patch 13 ("perf tests kmem: Add a basic perf kmem test"): 1 potential
+  issue (1 Low)
+- Patch 14 ("perf tests bench: Add smoke tests for perf bench"): 4
+  potential issues (2 Medium, 2 Low)
+- Patch 16 ("perf tests probe: Exercise the variable and line lis..."):
+  1 potential issue (1 Low)
+- Patch 17 ("perf tests report: Exercise the TUI browsers"): 2 potential
+  issues (2 Medium)
 
-perf tests record: Exercise more record options
-
-This commit adds a new shell test script, record_options.sh, to exercise
-various perf record command-line options.
-
-> diff --git a/tools/perf/tests/shell/record_options.sh b/tools/perf/tests/=
-shell/record_options.sh
-> new file mode 100755
-> index 0000000000000..b2bf51b5dc44c
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/record_options.sh
-> @@ -0,0 +1,173 @@
-
-[ ... ]
-
-> +test_switch_output() {
-> +	echo "Record switch output"
-> +	if ! perf record -q -e cpu-clock -c 1 --switch-output=3Dsize=3D64K \
-> +			-o "${temp_dir}/sw" -- sleep 0.2
-> +	then
-> +		echo "Record switch output [Failed: perf record failed]"
-> +		err=3D1
-> +		return
-> +	fi
-> +	if ! ls "${temp_dir}/sw".* > /dev/null 2>&1
-> +	then
-> +		echo "Record switch output [Failed: no switched files]"
-> +		err=3D1
-> +		return
-> +	fi
-> +	echo "Record switch output [Success]"
-> +}
-
-[Severity: Medium]
-Does --switch-output=3Dsize=3D64K actually enable size-based output switchi=
-ng
-in switch_output_setup()?
-
-switch_output_setup() expects a bare size or time value such as
---switch-output=3D64K without a "size=3D" prefix.  With "size=3D64K",
-parse_tag_value(s->str, tags_size) fails because strtoul() stops at the
-leading 's', and parse_tag_value(s->str, tags_time) then matches the
-leading 's' as a 0-second time tag, leaving both s->size and s->time as 0.
-Because switch_output_setup() still sets rec->timestamp_filename =3D true,
-perf record renames the single output file to sw.<timestamp> at exit and
-the ls check passes without any output switch occurring.
-
-[ ... ]
-
-> +test_record "aio" "aio" --aio=3D2
-
-[Severity: Medium]
-Will this test and the "test_record_option aio-one --aio=3D1" test below
-fail on builds without HAVE_AIO_SUPPORT?
-
-In tools/perf/builtin-record.c, the --aio option is only compiled in when
-HAVE_AIO_SUPPORT is defined, so passing --aio unconditionally fails with
-an unknown option error when perf is built with NO_AIO=3D1 or against a
-libc without POSIX AIO.  Guarding both subtests with
-"perf check feature -q aio" would avoid this failure.
-
-> +test_record "threads core" "threads-core" --threads=3Dcore
-> +test_record "threads package" "threads-package" --threads=3Dpackage
-
-[Severity: Medium]
-Can the --threads subtests fail with EMFILE on high-core-count systems?
-
-Each --threads run opens per-CPU event descriptors, per-CPU directory data
-files, and control pipes per worker thread across all online CPUs, which
-exceeds the default soft RLIMIT_NOFILE limit of 1024 on systems with 128
-or more CPUs unless ulimit -Sn is raised (as record.sh does with
-16 * nr_cpus).
-
-> +test_record "threads numa" "threads-numa" --threads=3Dnuma
-
-[Severity: Medium]
-Can --threads=3Dnuma fail on kernels built without CONFIG_NUMA or on systems
-with CPU-less NUMA nodes?
-
-record__init_thread_numa_masks() calls numa_topology__new(), which fails
-when /sys/devices/system/node/online is absent, and then passes each
-online node's cpulist to record__init_thread_masks_spec(), which rejects
-empty cpulists on memory-only NUMA nodes with -EINVAL.
+Detailed reviews have been sent as separate replies to patches 1, 2,
+5-7, 10, 11, 13, 14, 16, and 17.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261124184604.2498=
-3-1-acme@kernel.org?part=3D10
+3-1-acme@kernel.org
