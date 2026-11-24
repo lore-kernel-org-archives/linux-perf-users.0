@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795546000;
-	b=GUYXWrJWeEQ3jRKqa3PIQXmvlcM52nFGvUFkeA6JI8L5OHMYgQ8+U/d8L4Q1PxAaRIFs
-	 F1hL6+44Le4y00AVLR/p00CufKERDbuxp5fNeregj7hOvjdSQJi8XMU1OFYfNgnw38aFn
-	 YvKYjGZ2U7ONqSKItyZyxAmPj1X7ubRgigLjgHC7RaOCi3Q6GAkSWhTz8EidcgnEayT2S
-	 fmrxs/Fv1V1B2JMNIaoSo1DO7zzZyWvxLQVSodOCkVRRmv38xu6V9gpTjsR6q4r5RtNyN
-	 tNM2XeW5I2NEG75Ru8kjt7V6B0vDf9S+0Yn+KiYoOMadlqzL2+Ui/oj9AKYBbgXPtIw==
+	t=1795546004;
+	b=PUJOu9e8CsJmMduMYi7KlPrCGzQvoROvM32K0G0zpSR8wD/Ab7Cg8pt9eLzWrklFiJOO
+	 lYvBipSzlrvWH3wrEVBCxpQKN2A1AP7VIIhJR8ZY0lLd1fMaqhGuO12JVkrvVNmEtBeGK
+	 G/casCwVZsjJe9x17tSkpFSepFyCJ4bz5Qx43hn0gkIn6SDlOOC0VLs3BMxF/oFlQBQNi
+	 ioVpViA0m9zT0IQBRAEf3+D1O5xaik3qCOq/u5tAt0ImzZTuJymihGgsqfNTTyy05Z8Rn
+	 8XP1ZjiS5SXQNvH8xUSPSVrHRXEL63nKa+BBbcCyGX8n1Qtd/Aok8nz1Txqi5HGPdPQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795546000;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795546004;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=TMiRfIRA0Tu1oy6Htb3mclDEbrrcXq0iN4bugKXLH94=;
-	b=GBMct+CAR08apFg34lR4Cc0p7lAI4C+fs1t1hFs1fQ/MphYcRaNDclpGprTjFv/afpE9
-	 MRGlpTrkHjqQlzfuhcSnvg/x/j8bj/qh8ekC887f4gFuJ4XN6iaJs8wX7wlzbHdge7cG0
-	 IqRjj1atN+rkoS76B104RN4grhxtqqomuBxw4p7Eg2hO3QIymiOsM7aziH4s2rQ/hXDXq
-	 JxndifUQHlVzvc0/zzGC0EnMhwNbSLlCR1mTxaUJ1DHmlKoFese2AYFEM8wuYl41wY9S4
-	 X0Qg7fnvG5z29BWOWGfKyHL3HZ43SJNCCQZxtwRfLgPN/n5bw7NXJ1SWgBwF0MLh/WA==
+	bh=HKtUl8lQS/u5o1CBDlfjhiQeXLYe80v0D+KP8U4X184=;
+	b=G+M9wHrlq48A0k2BcMDkdpFNSP+i7aUGEdvHiiEq5l6m6G1S9GWJVN7FdAFF0uZxTRux
+	 F2OCBuk7vGyazMLt7gQVTLV771ZIaXIP3abJGWe4bKIPp+YeCzhgiA9XT41mpwL4FnWQe
+	 B4nAbHXTVOc+EprGXBPIGWJ8k8qhJcvY+eec5fzUg2fT2UqiEFuOYOmx3MdNeGUx/IJQb
+	 X5Y3bky3eKireKAOt3MyHFlFsamIs1XLwdGNBzswTdPvPlO5aCsTSm3NEGwgwN3jYCn6K
+	 2/KNe4qpa5sWd7C6XjUkppIQDT7oRz0/lCYvOIHENxOUVpP3IanD8dj0Hp0mMfGaluQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oPjZ5wit;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TAxkNGxb;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9975606A31E;
-	Tue, 24 Nov 2026 18:46:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C526606A31E;
+	Tue, 24 Nov 2026 18:46:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oPjZ5wit
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FE5C1F000E6;
-	Tue, 24 Nov 2026 18:46:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=TAxkNGxb
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DF0C1F000D0;
+	Tue, 24 Nov 2026 18:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795546000;
-	bh=TMiRfIRA0Tu1oy6Htb3mclDEbrrcXq0iN4bugKXLH94=;
+	s=k20260515; t=1795546003;
+	bh=HKtUl8lQS/u5o1CBDlfjhiQeXLYe80v0D+KP8U4X184=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=oPjZ5witn57YmGK1M3joexTw+O1+ta9k6gpKwUjnz4zaSP6S/OQyA0Xqb9FOjtYYb
-	 RDWfvJu2e5e01qU6exEVrMfVyPpiZWQ7FAjwQG9sciAr5zYfP1wEa2swEWXMIEQtqg
-	 buDfHWaWdhIzVvNF8+F0U91jb7SwfiCHC24Z2uuMY7Mrn0pwnCJvGhb2UqM8vpOMYj
-	 IjJjtsoO5YHlxxGuUZfSz34H0p4PDT5u/FAewAGOcoEQ/q3yzyqaedLOYNoYhZW6dL
-	 Jivhyo1zbF/TJi4iyFzX/PvnBlbwsSq9oBPyKoYHsIsAMWvlo7+PqzGqkXCI32IReS
-	 Mb1JRxTr8sPdg==
+	b=TAxkNGxbAVb1rLJG3d8QifAv720z8JZLuzI4SFfN7lDTHAgi87vOei6L4tAuCf2Dl
+	 TBtSivqF8vhjWD5Gy7GfMrIf2UEN5pi0zZv21AbIirN3me7Sh4a5//hMB+OAyQRvhj
+	 urplnt4+vbZ3hDZNWjTZuTofjAZMf3wFSIKPVYIxnCxqs6e8kqkVONk+r2YIm44U7S
+	 44wItduMIKhR7Cw8bZ1OdK6NiWZylQ1E+7ez1hHohWKxIRJIh1ILFq3OSRI+GAYAvg
+	 pC5tQLsq7uqcyky7+DTgFwKtEX3moL5iRy3mp7fhdtlJUxUZsY5mLGIcHFT4E2bkuG
+	 c/r98gDuTspkg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v1 08/17] perf tests annotate: Exercise the output and filter options
-Date: Tue, 24 Nov 2026 15:45:55 -0300
-Message-ID: <20261124184604.24983-9-acme@kernel.org>
+Subject: [PATCH v1 09/17] perf tests report: Exercise the output and format options
+Date: Tue, 24 Nov 2026 15:45:56 -0300
+Message-ID: <20261124184604.24983-10-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261124184604.24983-1-acme@kernel.org>
 References: <20261124184604.24983-1-acme@kernel.org>
@@ -70,93 +70,149 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The annotate test covers the stdio and pipe modes.  Add the --stdio2
-output, --print-line, --asm-raw with --show-total-period,
---show-nr-samples, --percent-type and the DSO filter, the last one
-checked by also annotating through a DSO that is not in the data.
+Cover the Samples column -n adds, the field list, the field separator
+and the fixed column widths, each checked in the header it prints, and
+--no-children, checked against a file recorded with call graphs, where
+the Children column it removes is visible.  --disable-order is checked
+by the rejection it triggers together with a latency field.  The
+options that change nothing in this output, -U, --percentage, --inline
+and --full-source-path, run as a check that perf takes them and still
+prints the table.
 
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/annotate.sh | 64 ++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
+ tools/perf/tests/shell/report_options.sh | 122 +++++++++++++++++++++++
+ 1 file changed, 122 insertions(+)
+ create mode 100755 tools/perf/tests/shell/report_options.sh
 
-diff --git a/tools/perf/tests/shell/annotate.sh b/tools/perf/tests/shell/annotate.sh
-index 26411edf5cb4ece1..d799414690402fc0 100755
---- a/tools/perf/tests/shell/annotate.sh
-+++ b/tools/perf/tests/shell/annotate.sh
-@@ -105,8 +105,72 @@ test_basic() {
-   echo "${mode} annotate test [Success]"
- }
- 
-+test_options() {
-+  echo "Options annotate test"
-+  perf record -o "${perfdata}" ${testprog} 2> /dev/null
+diff --git a/tools/perf/tests/shell/report_options.sh b/tools/perf/tests/shell/report_options.sh
+new file mode 100755
+index 0000000000000000..7e2bdaca656ce5b2
+--- /dev/null
++++ b/tools/perf/tests/shell/report_options.sh
+@@ -0,0 +1,122 @@
++#!/bin/bash
++# perf report option tests
++# SPDX-License-Identifier: GPL-2.0
 +
-+  # --stdio2 prints each instruction with the symbol header
-+  if ! perf annotate -i "${perfdata}" --stdio2 -s "${testsym}" 2> /dev/null | grep -q "${testsym}()"
-+  then
-+    echo "Options annotate [Failed: missing --stdio2 output]"
-+    err=1
-+    return
-+  fi
++set -e
 +
-+  # -l/--print-line prints a summary of the annotated file with source lines
-+  if ! perf annotate -i "${perfdata}" --stdio --print-line -s "${testsym}" 2> /dev/null | grep -q "Sorted summary for file"
-+  then
-+    echo "Options annotate [Failed: missing --print-line output]"
-+    err=1
-+    return
-+  fi
++shelldir=$(dirname "$0")
++# shellcheck source=lib/perf_has_symbol.sh
++. "${shelldir}"/lib/perf_has_symbol.sh
 +
-+  # --show-total-period adds a period column; --asm-raw is the default
-+  if ! perf annotate -i "${perfdata}" --stdio --asm-raw --show-total-period -s "${testsym}" 2> /dev/null | grep -q "Period"
-+  then
-+    echo "Options annotate [Failed: missing --show-total-period output]"
-+    err=1
-+    return
-+  fi
++testprog="perf test -w thloop"
++testsym="test_loop"
 +
-+  # --show-nr-samples adds a samples column
-+  if ! perf annotate -i "${perfdata}" --stdio -n -s "${testsym}" 2> /dev/null | grep -q "Samples"
-+  then
-+    echo "Options annotate [Failed: missing --show-nr-samples output]"
-+    err=1
-+    return
-+  fi
++skip_test_missing_symbol "${testsym}"
 +
-+  # --percent-type selects the percentage type shown in the header
-+  if ! perf annotate -i "${perfdata}" --stdio --percent-type global-period -s "${testsym}" 2> /dev/null | grep -q "percent: global period"
-+  then
-+    echo "Options annotate [Failed: missing --percent-type output]"
-+    err=1
-+    return
-+  fi
++perfdata=$(mktemp /tmp/__perf_test_report_opts.perf.data.XXXXX)
++cgdata=$(mktemp /tmp/__perf_test_report_opts.cg.data.XXXXX)
++perfout=$(mktemp /tmp/__perf_test_report_opts.perf.out.XXXXX)
++err=0
 +
-+  # -d limits the annotation to the given DSO: perf has the symbol, a
-+  # DSO absent from the data produces no annotation
-+  if ! perf annotate -i "${perfdata}" --stdio -s "${testsym}" -d perf 2> /dev/null | grep -q "Disassembly of"
-+  then
-+    echo "Options annotate [Failed: missing -d output]"
-+    err=1
-+    return
-+  fi
++cleanup() {
++	rm -f "${perfdata}" "${perfdata}".old
++	rm -f "${cgdata}" "${cgdata}".old
++	rm -f "${perfout}"
 +
-+  if perf annotate -i "${perfdata}" --stdio -s "${testsym}" -d nonexistent-dso 2> /dev/null | grep -q "Disassembly of"
-+  then
-+    echo "Options annotate [Failed: -d did not filter the DSO]"
-+    err=1
-+    return
-+  fi
-+
-+  echo "Options annotate test [Success]"
++	trap - EXIT TERM INT
 +}
 +
- test_basic Basic
- test_basic Pipe
-+test_options
- 
- cleanup
- exit $err
++trap_cleanup() {
++	echo "Unexpected signal in ${FUNCNAME[1]}"
++	cleanup
++	exit 1
++}
++trap trap_cleanup EXIT TERM INT
++
++check_report() {
++	local desc="$1" expect="$2"
++
++	shift 2
++	echo "Report ${desc}"
++	if ! perf report -i "${perfdata}" --stdio "$@" > "${perfout}" 2>&1
++	then
++		echo "Report ${desc} [Failed: perf report failed]"
++		err=1
++		return
++	fi
++	if ! grep -qE "${expect}" "${perfout}"
++	then
++		echo "Report ${desc} [Failed: missing '${expect}']"
++		cat "${perfout}"
++		err=1
++		return
++	fi
++	echo "Report ${desc} [Success]"
++}
++
++# The call graph data, for --no-children: 'absent', when set, must not
++# be found in the output
++check_cg_report() {
++	local desc="$1" expect="$2" absent="$3"
++
++	shift 3
++	echo "Report ${desc}"
++	if ! perf report -i "${cgdata}" --stdio "$@" > "${perfout}" 2>&1
++	then
++		echo "Report ${desc} [Failed: perf report failed]"
++		err=1
++		return
++	fi
++	if [ -n "${absent}" ] && grep -qE "${absent}" "${perfout}"
++	then
++		echo "Report ${desc} [Failed: still has '${absent}']"
++		err=1
++		return
++	fi
++	if ! grep -qE "${expect}" "${perfout}"
++	then
++		echo "Report ${desc} [Failed: missing '${expect}']"
++		cat "${perfout}"
++		err=1
++		return
++	fi
++	echo "Report ${desc} [Success]"
++}
++
++perf record -q -e cpu-clock --sample-cpu -o "${perfdata}" ${testprog}
++
++# -n adds a Samples column, -t, joins the header fields with commas,
++# -w pads them to the given width.  -U, --percentage, --inline and
++# --full-source-path change nothing in this output: every entry
++# resolves to a symbol, nothing is filtered and no source lines are
++# printed, so they run to check that perf takes them and still prints
++# the table.
++check_report "nr samples" "Overhead[[:space:]]+Samples" -n
++check_report "hide unresolved" "^# Overhead" -U
++check_report "fields" "^ *perf " -F comm,dso,symbol,period
++check_report "percentage" "^# Overhead" --percentage absolute
++check_report "field separator" "^# Overhead," -t,
++check_report "inline" "^# Overhead" --inline
++check_report "full source path" "^# Overhead" --full-source-path
++check_report "column widths" "^# {2,}Overhead" -w 20,20,20,20,20,20
++
++# --disable-order is rejected together with a latency field, which
++# tells that the option reached the event ordering code
++echo "Report disable order"
++if ! perf report -i "${perfdata}" --stdio -F latency --disable-order 2>&1 | \
++	grep -q "incompatible with --disable-order"
++then
++	echo "Report disable order [Failed: missing the rejection]"
++	err=1
++else
++	echo "Report disable order [Success]"
++fi
++
++# Recording call graphs adds a Children column, --no-children must
++# remove it while keeping the entries
++perf record -q --call-graph fp -e cpu-clock --sample-cpu -o "${cgdata}" ${testprog}
++check_cg_report "children column" "Children" ""
++check_cg_report "no children" "${testsym}" "Children" --no-children
++
++cleanup
++exit $err
 -- 
 2.56.0
 
