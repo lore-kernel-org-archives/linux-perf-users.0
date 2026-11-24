@@ -1,72 +1,96 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795479822;
-	b=EXKkAWn4SadelNW1XpiG2o91M/5Si+FIsO9OCwF7rdBxt/Xo9Giq/GY8VlFuHQDSP3+s
-	 nEpzszecgLBEBStqo3Hv/niU5ho/H+4nwudPtS0nSAFmtOFAOTBz9+yk/RCmQGDTvni0w
-	 +0n0RvBp9vZQMNIQju/BZ9YngT1KH+ZtdY62MZKzrtT3K6laFDeaOE7k41Qr1RRyrwxOP
-	 vt/lJGTtFloK7zkqsyJ6GcPbXx1+FnhcjUhTZQu4PjILvATTFKOllU3i14RJFCwGB2E/B
-	 0p6kmmYcT8c/uOJ1guKXTta/Ql7zDx83m86EB/fFyYXhQLj1mT7jLvwLpLUeCB9G6lA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795479822;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=vA83aK0bo+4iPUtHM3M9jZpAf9DRYazZdjOdW51gUGI=;
-	b=5LvVtiJNBfFoKdE0u9oxEJ9VuXMgzrKOaRTcpKFM9kXzgnuzEAfanqznUAwFtTgYO+RW
-	 vl8nnIQErt3PlfhjANXW17sdlW0YQTPkYrOJ/tbaMMRfGqgqOnLhg4r65Lr7pkmX1QH6y
-	 v/ZA53gyby2B4j1XuIJ4uBoSzpsTeF96lDUPxUA4QtECOS3pnSXiG/XPNLykpfxdzw6Iz
-	 BLSc1UqZgSM9uGm7F+e8BdHeFNMBmeR2IMmBuRkNyNEoXIlOoT2R6lAjUPLkHK70gYMPp
-	 nxC26WQsJTOVnmj812KJH1JCYLAVGc0w14fDC+TaEduazpUplq5V3uKDKntd9/ec2MA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fKDdPSap;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.176
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795480279;
+	b=B4ZeuC7LudjfL8ITXAozdg9x4HkhHuz0KnG3E89NErXCfD4hJohRNiueFQMZMppGvXgD
+	 oaV3Af8GIwOK4GTeJwrMADJqQHK3WHt35FB/ediIbMEvKGtiPAfMsU4fzekS/8iZ3syKG
+	 05M3+FSlhtr5J+swfJR6XKo9d1nyinxbvQS3pWnkNUUPGPtbojuZriQsgpS3s5q5Mf9e6
+	 AwwEGdc5FAbh/udSN1vjdyqBU14h+lcFfZeoQoxwSJnn/BvqPaq/PAfnDgWkA2bn1I8UA
+	 ElzZwfBvEF6C4P2vKk1uScEUs+sX8XawzV2oZcoicgal1D4bIMtNkSkGZPPmfbkcO5Q==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795480279;
+	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
+	 Message-ID:Subject:To:Cc:Content-Type;
+	bh=XBBRJhlZK91IRv9lRpTyJCctT8RJXhFRC51jo1VlnUo=;
+	b=oVnHbxt+xU8YkALV7N5rQ6yJvODoArZLaP4iuR7IrcWOie5+qlAe7hygMqL7cAJOvxQX
+	 E3h8mqOyiSYao1Ka2wUS2usKvFV7Hy09kd+6hEj81oVk7VswABtCWmAXknmER5N8LtRgt
+	 6oWeFEjUScKGaEwPmAbCviMpIVHdMlcBwomsWoIBqfbRn58MOIP7r7GNaAdjgurUfyb2y
+	 E9/j0OhzjzkdJO1/HYw2zmPe60bFUtLOLwO+WOD8mvkUJotI9SoKWlHgH20nH7vncNzQi
+	 kT0nCOjgg661UXDYB43FLHojdyuzLYDmw8UHjfM+ZBxJHdU7gxJXXs+h+A2ICDzaO2A==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=uber.com;
+	spf=fail smtp.mailfrom=uber.com;
+	dkim=pass header.d=uber.com header.i=@uber.com header.a=rsa-sha256 header.s=google header.b=LBFiC2j+;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.128.176
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7809160A2625;
-	Tue, 24 Nov 2026 00:23:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF40606A322
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 00:31:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org CCF40606A322
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=uber.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=fKDdPSap
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 485561F01572;
-	Tue, 24 Nov 2026 00:23:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795479822;
-	bh=vA83aK0bo+4iPUtHM3M9jZpAf9DRYazZdjOdW51gUGI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=fKDdPSapkPMKNlZi6pPUo1Zbk1AyUdSKn+12j/GTl2yRhKxkjk32NJe+Z5+l4VsX9
-	 xgh64yDMqKjMzs3rncd3C5gYJDUBTMWYxXKFZK3SV3TieSI6EP6Hx1nfIYyAzv05PY
-	 8uXOySSikTGNFK9uVjR1aX2WY1cLN7ox39+PzgWsNLGOh92AjfWH5lrZTOryT5oka+
-	 Cmds5NXsRjFvBkV6rKIATq+KTzu7wXCsIdhiBICbcOBHHMSFdBPhbmBmGAolviP2l8
-	 lhdtpeat6qYbXc9/1RoWCgxb2aPB1uPLf7hLdoKHo5yDnDx4xD8eybeiQ32a0P3NMq
-	 /dLQWWk11EBpg==
-From: Yosry Ahmed <yosry@kernel.org>
-To: Sean Christopherson <seanjc@google.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Jim Mattson <jmattson@google.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	linux-perf-users@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yosry Ahmed <yosry@kernel.org>
-Subject: [RFC PATCH 23/26] KVM: x86/pmu: Add stats for mediated PMU context switches
-Date: Tue, 24 Nov 2026 00:23:00 +0000
-Message-ID: <20261124002303.1785363-24-yosry@kernel.org>
-X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
-In-Reply-To: <20261124002303.1785363-1-yosry@kernel.org>
-References: <20261124002303.1785363-1-yosry@kernel.org>
+	dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.a=rsa-sha256 header.s=google header.b=LBFiC2j+
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-8b4dd5cb4f6so25876907b3.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Nov 2026 16:31:18 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1795480278; cv=none;
+        d=google.com; s=arc-20260327;
+        b=ODOgJPwbiRbhhSsm0tUpGt93nMq+6kcO7NFwVb4sAdXnKEVw5pa22OhgaRv1IdwLqK
+         XiP4J5w2a5H9gr3yl/0z2Nokwbnfxa3OLyNZhsraE2YUmnWxK8fs1LAm6azRI9zfbrZ1
+         ejrUoOHH6PalUDp409H/oAjm7TWhjsKArd1/l32xbtuKW6Fd8jxjE2szxI31AqGuxXWn
+         d0+/blGfpzQsiVKQGSPN/Uyl74s9WYa32Js9SkVnsE0IUJsJlHRFHL0lc/LK+0nN2JzG
+         ePN7APSYVhOxjwJhxuJo2DQvZVfk951i17EXfk5N0/cV4jb618dmC0XPmPxDGPufOM32
+         KZDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=XBBRJhlZK91IRv9lRpTyJCctT8RJXhFRC51jo1VlnUo=;
+        fh=7iI9HBBcwvbduiiajYVXWYqOZ34TRyoN9XyC+M1RlX8=;
+        b=FchwdyMGcdxg7bdNa4ztPd+XC6zIipCShS/Uv2csjNkgq3XUwAFWaeaKXfzSXYVnf9
+         Qzs9HaCdAMRqMXXe4nplHBPjedfBf9Do/i76f0ccn+2/nBI1g0etbyn7yeuCKr7AqnFS
+         ktFCWE1xf7h8TgWQpcZbw1cMz8xG49KBl2tK6Ih5lG13v+ZWlxzFGFXp/PvI7ov0sSju
+         kHpaJLyrt3ZJmuQEGCzwflYIdKOjwhTTus8TFUVK9YAbCJVx+mJC8bTq8LnJJsNHy5B7
+         jYokTofA83zUpivOBCiHMUZn8GQyWH4I2ODLgPQUpE50j2xYnrAvsH/zV7TR70JIRcRP
+         jALA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=uber.com; s=google; t=1795480278; x=1796085078; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=XBBRJhlZK91IRv9lRpTyJCctT8RJXhFRC51jo1VlnUo=;
+        b=LBFiC2j+bNqRr3AUvQgWzHe6jh7NRWpzgANTRV07wFyXobIXgKJT1JpIDGXsR7QRxX
+         VE1zxJGgxZCSIv2v94gOuosdIk8+h8j4wA1bPDY9Ch4uq0GUd8u6Yd6qCzO61Bw6+7PQ
+         s1AUw2pli8iaYqsrheSREKpuPrGMY2Ewek/bY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795480278; x=1796085078;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=XBBRJhlZK91IRv9lRpTyJCctT8RJXhFRC51jo1VlnUo=;
+        b=WCTluOIzHbY44zLhPZTHMBA3hzdke4+V8j+fJv81pH83Z+VcijrSnNUvp9CDy3dUSu
+         OjhUCiNnnbqyCrVAn95f33w7T+HnznFfGWaUE7XpcHik+a6z7eXH12uMmEbPcE/f94WJ
+         HJifnYRpD9j1MXPIR0DiidoRXE4zPRv4y4inqk1b2+OkJolmu9FekZ+KlADferCdtjPx
+         NtEB59UXwVY5b9ouMhO2QUD5KBJ1uQUfviY8/5YUlOBD9m5IJfMp7K7VlZ68+C9MGJ00
+         bDs7ykqB8hP3yPbtNnCSbjCGdlcc30XztpCA/Vo9W3YOpW68MCmvUSi0d0IA0YigExGr
+         uscg==
+X-Forwarded-Encrypted: i=1; AL+hErFNqTwIckrH5tuxPPAzbnHmuOs89SO5LTkOuF8/Y5snQZayFeOu/aL0uBTlEEZ6qjOaXcMsc6NpBxz4hkVdiGl0@vger.kernel.org
+X-Gm-Message-State: APuU4Z9SUh83/K5i1fo6dRAMAORYl8zWKOulG6m8QAbe5WBt9lhn4TVd
+	0BUOUVa7Orcocbk3EOxKqG2BtIFdJgXlP6zTtmIKEjUqx7HtODasSB2xqbONvqgG94RRaWbb+qz
+	ymOxvY7pR78PR1ABHjOQMyD27fSOXdR6b7byPFsk89w==
+X-Gm-Gg: AZFdTZc2GPOLqGht0rW4SsblCDrytL8Mf5obzSb8xkErKFVF8N5UFphg7YwwxwhK0P5
+	tU+Z08IsP9xYlofTMSv/gIBU8/AH2ukduIn9kWWHysOmFTiguGDz1t88f4ks0DEDxfshDewloqr
+	pWHTqLR3Z3vcnKXc/0PsJS9tkJZDmUnLKARgiu5odWWco1cCRIXC/eWC6oeghGNQfAFDdEMaOeh
+	7AVsmpX1+yEX8zRcP4cAVZjeBa1Vs8WHyiNF3Dpphh+v7Kjez5bEaxyse08bxBNapV6CLgX/OkU
+	a+/vaqmLo2TumJrC2ZOggPFq0gVumfl3QhUKLN94lowGP6qe0d/v4j/+F/tffqp1Af4bKsgzMS1
+	bAMOLu5HtyF/SUYbJufztihjGqZz1rNAn7hS5wTFubWC01pNTgYct03fVDpxubPwoBzhjmQ==
+X-Received: by 2002:a05:690c:6a86:b0:87e:2404:6b45 with SMTP id
+ 00721157ae682-8b5204ecb30mr59678307b3.53.1795480277123; Mon, 23 Nov 2026
+ 16:31:17 -0800 (PST)
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -76,135 +100,50 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20261122050405.80335-1-irogers@google.com> <awS0QkL6JuMfC7Z0@google.com>
+ <CAP-5=fX4-HqRbB8zWNSUFyCc4Lzz44iNmok5HJVj5O1+oqoWOA@mail.gmail.com>
+In-Reply-To: <CAP-5=fX4-HqRbB8zWNSUFyCc4Lzz44iNmok5HJVj5O1+oqoWOA@mail.gmail.com>
+From: Alireza Haghdoost <haghdoost@uber.com>
+Date: Mon, 23 Nov 2026 16:31:01 -0800
+X-Gm-Features: Aa3M54qz5MWiuh12iW5spvHAu_-ZVuYeTacDOMGL10nwbT3pFevtztiRCbhiN5M
+Message-ID: <CA+w=M=TtEOjHR83QWYknCdSxAPxMNSmQ8yHdVJOXcecRgNEJNA@mail.gmail.com>
+Subject: Re: [PATCH v8 00/10] perf symbol: Sorted arrays, DSO-owned lifetimes,
+ and memory shrinking
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Add per-vCPU stats counting how many times the guest's mediated PMU
-context is put, and why, mainly to help debug performance problems
-caused by frequent guest context switches, e.g. due to host perf events
-conflicting with the mediated PMU.  The stats are also useful for
-testing. Add:
+Hi Ian, Namhyung,
 
-- pmu_ctx_switches: all puts of the guest context.
+> >
+> > I've applied the first 6 patches to perf-tools-next.
+> >
+> > The patch 7 was bigger than I expected.  Can you simplify it more?
+> >
+> > Also I don't plan to merge the rest patches as of now.  Let's wait for
+> > the lazy loading and try that for a while.
+>
+> Thanks for merging those ones. I will split patch 7 and rebase. Patch
+> 8, shrinking DSOs, etc. is kind of the whole point of the series.
+>
+> Thanks,
+> Ian
+>
 
-- pmu_ctx_switches_vmexit: puts on VM-Exits, because perf has events
-  conflicting with the mediated PMU.  Note, the guest context is only
-  put on slowpath VM-Exits, not on every VM-Exit.
+The lazy loading v9 is rebased onto perf-tools-next with the first six
+patches, so it now works on the sorted symbol array instead of the
+rb-tree. I'm going through review fixes and should post it later this
+week.
 
-- pmu_ctx_switches_reclaim: puts because perf reclaimed the mediated
-  PMU.
+Ian, it uses symbols__visit(), symbols__sort_read_lock() and the
+symbols array directly, so if the split of patch 7 changes those, I'll
+rebase on whichever lands first. I'm also happy to run your remaining
+patches on top of v9 against the same profile as in the cover letter
+and send the numbers, since the two should save memory in different
+places.
 
-Don't add a stat for puts when the vCPU is put, e.g. when the vCPU task
-is scheduled out or KVM_RUN returns to userspace, as it can be derived
-from the other stats, and when exactly the vCPU is put is an
-implementation detail.
-
-Return whether the guest context was actually put from
-kvm_mediated_pmu_put(), as it may already be put when perf reclaims the
-mediated PMU.  The guest context is always loaded on slowpath VM-Exits
-for vCPUs with a mediated PMU, so WARN if it wasn't put there, and count
-the put unconditionally.
-
-Signed-off-by: Yosry Ahmed <yosry@kernel.org>
----
- arch/x86/include/asm/kvm_host.h |  3 +++
- arch/x86/kvm/pmu.c              | 11 ++++++++---
- arch/x86/kvm/pmu.h              |  2 +-
- arch/x86/kvm/x86.c              |  9 +++++++--
- 4 files changed, 19 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 3efef3415f8e8..366b00ffa37f4 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1477,6 +1477,9 @@ struct kvm_vcpu_stat {
- 	u64 preemption_other;
- 	u64 guest_mode;
- 	u64 notify_window_exits;
-+	u64 pmu_ctx_switches;
-+	u64 pmu_ctx_switches_vmexit;
-+	u64 pmu_ctx_switches_reclaim;
- };
- 
- struct x86_instruction_info;
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index 4879578c7d579..80229f3d477fb 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -230,7 +230,8 @@ void kvm_handle_mediated_pmu_reclaim(void)
- 	if (WARN_ON_ONCE(!vcpu || !kvm_vcpu_has_mediated_pmu(vcpu)))
- 		return;
- 
--	kvm_mediated_pmu_put(vcpu);
-+	if (kvm_mediated_pmu_put(vcpu))
-+		++vcpu->stat.pmu_ctx_switches_reclaim;
- }
- 
- static inline void __kvm_perf_overflow(struct kvm_pmc *pmc, bool in_pmi)
-@@ -1489,13 +1490,14 @@ static void kvm_pmu_put_guest_pmcs(struct kvm_vcpu *vcpu)
- 	}
- }
- 
--void kvm_mediated_pmu_put(struct kvm_vcpu *vcpu)
-+/* Returns true if the guest context was loaded and is now put. */
-+bool kvm_mediated_pmu_put(struct kvm_vcpu *vcpu)
- {
- 	lockdep_assert_irqs_disabled();
- 
- 	if (!is_guest_mediated_pmu_loaded() ||
- 	    KVM_BUG_ON(!lapic_in_kernel(vcpu), vcpu->kvm))
--		return;
-+		return false;
- 
- 	/*
- 	 * Defer handling of PERF_GLOBAL_CTRL to vendor code.  On Intel, it's
-@@ -1508,4 +1510,7 @@ void kvm_mediated_pmu_put(struct kvm_vcpu *vcpu)
- 	perf_put_guest_lvtpc();
- 
- 	perf_put_guest_context();
-+
-+	++vcpu->stat.pmu_ctx_switches;
-+	return true;
- }
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index 89807e7a3c771..565e09b23c498 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -333,7 +333,7 @@ void kvm_pmu_instruction_retired(struct kvm_vcpu *vcpu);
- void kvm_pmu_branch_retired(struct kvm_vcpu *vcpu);
- void kvm_pmu_sync_lvtpc(struct kvm_vcpu *vcpu, u32 lvtpc);
- void kvm_mediated_pmu_load(struct kvm_vcpu *vcpu);
--void kvm_mediated_pmu_put(struct kvm_vcpu *vcpu);
-+bool kvm_mediated_pmu_put(struct kvm_vcpu *vcpu);
- 
- bool is_vmware_backdoor_pmc(u32 pmc_idx);
- bool kvm_need_perf_global_ctrl_intercept(struct kvm_vcpu *vcpu);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 7fb954ed8e84b..ca2a58079b019 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -299,6 +299,9 @@ const struct kvm_stats_desc kvm_vcpu_stats_desc[] = {
- 	STATS_DESC_COUNTER(VCPU, preemption_other),
- 	STATS_DESC_IBOOLEAN(VCPU, guest_mode),
- 	STATS_DESC_COUNTER(VCPU, notify_window_exits),
-+	STATS_DESC_COUNTER(VCPU, pmu_ctx_switches),
-+	STATS_DESC_COUNTER(VCPU, pmu_ctx_switches_vmexit),
-+	STATS_DESC_COUNTER(VCPU, pmu_ctx_switches_reclaim),
- };
- 
- const struct kvm_stats_header kvm_vcpu_stats_header = {
-@@ -8439,8 +8442,10 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 
- 	kvm_load_host_pkru(vcpu);
- 
--	if (kvm_vcpu_has_mediated_pmu(vcpu) && perf_has_mediated_pmu_conflicts())
--		kvm_mediated_pmu_put(vcpu);
-+	if (kvm_vcpu_has_mediated_pmu(vcpu) && perf_has_mediated_pmu_conflicts()) {
-+		WARN_ON_ONCE(!kvm_mediated_pmu_put(vcpu));
-+		++vcpu->stat.pmu_ctx_switches_vmexit;
-+	}
- 
- 	/*
- 	 * Do this here before restoring debug registers on the host.  And
--- 
-2.56.1.809.ga0b61035b5-goog
-
+Thanks,
+Alireza
