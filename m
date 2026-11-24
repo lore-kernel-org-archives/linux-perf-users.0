@@ -1,100 +1,111 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.169
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795557161;
-	b=Qn7cRv2mFHVsFo2vo4Ve+4KoulyVThiJcnNJH//L1Awv8iNWxdTsEHidFpyBxZCvl2/k
-	 Llor2bV2m032CHSmXcUAhsuFdBufE6iHWfMq8n0sRWR7rNmD40ZW+e7TiQJKKz3E5J1l3
-	 cp4T4n4NT6i1wW05vTkcSnrV1noovY8ioOuUcQFoYA7RyF6PZCWdU8FzaHZHFb36VWuXm
-	 qF6zASvor7LdWybIQeEyq0qyOQ7ULUB7TVqZ/6skJgM877s99opwVqXZNQZiEP0g7brOs
-	 m+ms36Nzk3wECOK4E+ZiZaomOmYxTYJl41fWzat2nYUyx0PUoLt3TwmBHzu+9+0d9gg==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795557161;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:X-Gm-Features:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=JpyjFKSMwkjcx41RVuzlrbKMavoMvN+HJXNIGpdwKzQ=;
-	b=TNQVKUYaTfQ9hQtW0RGql9056syoHANgkCf6iTJtu2xLnQupeizFvGCeAIPtk0kOuPuK
-	 RPpwyekv6WkXmI5YsevIIygVZwQMdQ5zuJx+WqJSABm/dGmWS2EtWOuHn/jKTBrIsoS3G
-	 mvRuXkC6w6GrPGjwMHo0onVT3tk04tjVUVzsKJuECdhIZVKvML8UXKLSb6vp3BbVPfvq6
-	 7qu7Tmp37hDhOw0VBz0LDwHaWAJpPh/v0WDZfDg87eaGbkOZADW/FnwDYZT7Bi3QvZRDQ
-	 zhw+H/o1AQvBCn1XQCWddDaIb98m+pjm8nmtaHO48vorJQYmWFkQcxktMZTg9lnX/RA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Lezf0COD;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.169
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.137
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795557762;
+	b=AbJNNGbF7XZ6FLuAGisbDySPDYr2VSPWStIvMvT0kdqlYtYOXof3ny+4NYcvYdsM0ibR
+	 C0x+Gg6wo1znv2ESbpLewE0ndOeHfEyD5Sc57vPqED/teH5969m/aC54Ov8p9AfQWIzbu
+	 eNmw3MS9Ibf0pdprlcF4n1n5ps/fBk6ipWzquKzSWHAFjo5vbpq2Gphc0z8gvQxNOumfH
+	 /BS4DgQmGNFZYj69Yx1tUELrx+1cu4D9EwADyPWcuQVCYxHOis5GKGeEqIN1DMFy94Rk7
+	 uLuH1tpfr/gTaDimAVXQq6N21vzdg9aG5TUf/bTroK5vAyTFfvqo1qx/lcYCQJ1mvfw==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795557762;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
+	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
+	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
+	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
+	 References:Subject:Content-Type:Content-Transfer-Encoding;
+	bh=xqSGxC68OuGq0f3lY+sfYUCqjXoRvtvCw0BSPI+8ZKw=;
+	b=XBAk1usTY6XTkaKfF3n9p6EXtuUHRwzhkzwnf1XdkcHrqAE9iRVP64UvlIhP1FAfjq10
+	 ZkSWSjr0Qt9N/NmRTRm661uEsYhB101T1uHsw+feprW9ZGnufOL8QDDWyp4fEEPcVgpD8
+	 92XCTZXTHpz5yjLZrpZBT/3uoma3pxoynySvkTSGc0C3u3hisvze3Juh1/89Dwwf+3wfX
+	 HVI/Xc/8s5fKHnze0AVuZAK53KHHZ5aS7rjVW+W/f2isZVUbF8h5SZx+xD2oZ6fGZWlQj
+	 /dB05IkdrzD+H2Nxr6coLs9QKyaYYPd6vJyw9SVr9gvxAqgRr4xjltfV6NESa4zOQlA==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=arndb.de;
+	spf=pass smtp.mailfrom=arndb.de;
+	dkim=pass header.d=arndb.de header.i=@arndb.de header.a=rsa-sha256 header.s=fm2 header.b=mfnJGR8Z;
+	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=wbnBnHyI;
+	arc=none smtp.remote-ip=103.168.172.137
+Received: from flow-a2-smtp.messagingengine.com (flow-a2-smtp.messagingengine.com [103.168.172.137])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6626606A69F
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 21:52:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C6626606A69F
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5178E606A688
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 22:02:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5178E606A688
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Lezf0COD
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-533202fe429so1070471cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 13:52:40 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795557160; cv=none;
-        d=google.com; s=arc-20260327;
-        b=MicC8DQ9pOTx9akSeWZJHP1VYwT0LcXuQFEf3Z30Kag9tcYAc6H2IuBdsdeHC3olRH
-         imZJY3QFeW6loWxGOk84MUj+m2EIaOHFFgaA0c13xaDGjq6q7127FieTJbk6tJkuy+RX
-         TB4Lxb0/MqFMjVe6OciJckg536gwsVBVez5F+vkHH4SzGXLJIm0efaIPj1mjy3vwyI8V
-         Gfp3CkYnB+GXCfY8O+wsSsJ1nXXF0tA/lHB79S0hCexpyjsiMqGdFRtMfejxtH/wahjA
-         maLmiA1qwnf40vWy301MMTK+yhXbhOw7ddtnMdF9sKxeBkwe80x5oilcuwAftIPxd7CH
-         V0uw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=JpyjFKSMwkjcx41RVuzlrbKMavoMvN+HJXNIGpdwKzQ=;
-        fh=9BrXyip7DwNN7/gk04kcsZxD3MjHmmebB0zp971BzWM=;
-        b=BNDMtrFMjCwuFdqZqDPhOauHYjVQuk4FMEnmd8RASCT1WLpA7Mst/q0xoW83COfyYx
-         eCwG2pJD+kwgvn9X7cJHBp6xHPTuao0xk5bxFRctwc0z9M9FwqNu0kM8z0tEJ9uRaFza
-         ovpkKE7EaHD4yOo3+1JSWQnWKBbt1BYNkAXjbeq0QRsnUkjIZopgCAI4DRFIeNpoHdQ9
-         5kUy3P7cnqAhMGpv2ju1vH+VzrvB7yhpZnQgEcQBqVfwgU4zU4ZIG6LmdqpXvs8bG2Js
-         mDWIHdyyOkhbL4rhTgq5whCn9/rM4lRVlLB/g4CBYs3sCoEgwMHsViRbnczaPXxek+Kn
-         SWxg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795557160; x=1796161960; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=JpyjFKSMwkjcx41RVuzlrbKMavoMvN+HJXNIGpdwKzQ=;
-        b=Lezf0CODIa1dN25ZggrWjCbhYVBJMXsZu5R7WATeS4xcozO2zog/Z3H/fjWE867ZyY
-         h0Nn93XA0VnwoTc4VOOBbYVpywSyvoGHKiLGAquIhYxb/dNogFxHCP90/NXbmLOFIbs3
-         U0pTjrFo5ZRfevn0rlfUC3CAYkftLtUKKscRsyklU4nd6Y2nMUyQOqmP3EoRkEQmjpqK
-         cJZg0HWuZILjJHIVLVjRLRP9Z8/3ttP3OcO7CuflsYklPdIG8ldebae40P/ptj7ysOn2
-         malZGHsiitpstbF6dJd0+4Z5W3tcW192RCgaSn8n+d0E90vdHdhRR/nfqWrEhmWr2tVE
-         d8aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795557160; x=1796161960;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=JpyjFKSMwkjcx41RVuzlrbKMavoMvN+HJXNIGpdwKzQ=;
-        b=Wwh71nkoWHj4NzTbT1M5Ny2Zi4qJZsnGGi3UyF5Bh61DjZ+FSPCyd6DyOXquKg2dzK
-         apmOIz8MEcdK8Pw87OWmSLbg+1aTjSbRq3SbINp5Z5crl7rK1QGtn7m05LIsVyIfvrjI
-         Q84bHS4rQtvLeWHYFZbwU7MtVdmwDH37xBlJ9G5icJNrRyNIMEatRo1cY+t100FYTqyd
-         ZwviMFI9RYfLAyvNAjTNuTXqEEtLpqo86Psh2jL39up+leEnWGaKpqpWoZpp9Y7Cyt8P
-         Uk5EodR9aOS2++8UEtu4HD/fPlqxALF+34pQzuJraKhrf9XFgAX1wmg6DULWB2xSy5aw
-         joJg==
-X-Forwarded-Encrypted: i=1; AL+hErFLH3jp9h7u5xT3sQNLQAgcBLHl+eaSndXXFe8fPxu9NCbjW2OKMAcOLTf9wPVpPeplo9x4PlHz3ywq5mvZV2xt@vger.kernel.org
-X-Gm-Message-State: APuU4Z9PAr89DCyQvQYFR0uYoUo96/b7+kt6MmTLZFJTk4YyXUXcl9eB
-	0nCtdKgqdQHz3/hgT7giu7u7M6IIwBRcMH4SBVmAfplX6VO5e+U77+s4G/qfmTFuN2YbcFm9rTT
-	pTucqOl9MiZY697+Wq6p1XJCGJDPcZwc2r1dtikDF
-X-Gm-Gg: AZFdTZf7cwojyp48/ywTyXJF05qVJ77cATJJhj8FLEghlOBLuHi5mLLtaSwnwuZT1mb
-	OKRpDrFbCROvP2kO4FXW3kwk5Ltspg6dyeR3czQB/5OmX96R3AQzjQLL64MghukZOEPrzxldBCC
-	5vkedED09mIfQQVxrym4V591kHnDBTm9EVBhlawEoVjRwaM+mfaKfo6OI5sY3wfOmCKtuwoziYU
-	i6CLNZ/G7eNhUwDYlccqEgHPfxTGF1ctmwsxskhRMLeuF5rmGXYFYzRCsijG/9cMC5qAsA9lGXl
-	pXbPvhgYjtnrkgRoyX5cJI11d/FoZ/DSkKjgbUxEVNRLfUD3dGB1ILE2B/T46ZAKufMXkJtOEFW
-	q3w/neDoADMnguKpWu/n3iAmjkwGu5HVq9nZrcxj7ZQ0fAUOvbPpNtXtXRzhW/BYYIMcB
-X-Received: by 2002:a05:622a:124a:b0:535:bb33:6351 with SMTP id
- d75a77b69052e-55d87fcff29mr71826261cf.1.1795557159257; Tue, 24 Nov 2026
- 13:52:39 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=arndb.de header.i=@arndb.de header.a=rsa-sha256 header.s=fm2 header.b=mfnJGR8Z;
+	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=wbnBnHyI
+Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
+	by mailflow.phl.internal (Postfix) with ESMTP id 47DE0138031F
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 17:02:41 -0500 (EST)
+Received: from ams-imap-03 ([10.64.2.23])
+  by ams-compute-02.internal (MEProxy); Tue, 24 Nov 2026 17:02:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1795557742;
+	 x=1795564942; bh=xqSGxC68OuGq0f3lY+sfYUCqjXoRvtvCw0BSPI+8ZKw=; b=
+	mfnJGR8ZvkU0LMsvLhbkB2aWWyYvVftk34Igv9f+VSyWFZL75F98YRJInsubsg5N
+	ErWkbpwwYR8PYwwytDXrBO4Zv5tmqL7Kcd99KBzFrH3plirHNa3BF91ghYHg1G2X
+	OmIzUeu9alCUMqYdLPe3t6xGqQDeBJFNzjBkCZdXLIRdfSfdGAENAvBoCa2Hd/va
+	6GViewBlkNAzICD3R2R+FvuW+BnNIr3jT+Fl9ot6DTCUyPwgXgiOAE7gr65RUlWF
+	zTV1eaMMqoKhfcdTawq7FOwHVOJ7hDxNDHC9/0HIOAI9uDObbhkabN2JM4I0uCwd
+	iklYqFK06JlPTifavsWnwQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1795557742; x=
+	1795564942; bh=xqSGxC68OuGq0f3lY+sfYUCqjXoRvtvCw0BSPI+8ZKw=; b=w
+	bnBnHyIX27rhdSGfAc5H4g5+m7drm11Zac2njlCmzN4mbo2YQ6EhH6D3pD/8PeWY
+	8GHoNQCNetXraVudoAhL0qYFTYu9qtXjJhzOx0LKjAdkofjkzwVdOhVC1J2hwfwt
+	VGDOiyN7FwH93as5zO5o+8QJnGBEUiUslUd724GRZXy/EKfZPjLZu/8oWwovMRB0
+	gqyKbJtAxmz5Ye7KI5rrGabmlFjzzdpLjwI7iCre5OXCavuM7GUe/YusH3YuhrsM
+	tEnsRe06oXURbQM9aMsO08wVojk5ODAx8uWqDju1VwkBgXeAY+UL/ydC1j0YZtCu
+	KfHp2BvZEv/a3sOge7mDw==
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+	action=sign d=arndb.de a=rsa-sha256;
+DKIM2-Signature: i=1; m=1; t=1795557742; d=arndb.de;
+	mf=PGFybmRAYXJuZGIuZGU+;
+	rt=PGxpbnV4LXBlcmYtdXNlcnNAdmdlci5rZXJuZWwub3JnPg==;
+	s=fm2:rsa-sha256:bEe+WAyZmyWr+TqnV+i6eBBz06Psvu1Gz3ObjvbszzcN+n3
+	B84m5h7SYlKuaGN77jm6qtNCEewuHfV4T/9Lw8Z7KxrVpa4z+3caOzPbAbjmzUg3
+	LKnt0UQhfNmnDjF3Dlquoy91ksOpcxWG7wFpesSCHkUcX0eCkoyNo6WroCb/4h7y
+	+ZIgXEIeMN6GH2THMUrARaKmpwJFjBlLAWKJNGf908tuw5RNrDc5Uy4aQZjBWOfO
+	AxRetYSdQZ1zjoj+OCu/AJ31hu/FxjM3QpUol67edTZOd2dVQ4ly70WutIU4OMt5
+	L+TrJ9nw6qHZ5YssxWmdg93scNpsTNC+XFbq0EA==;
+X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
+	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
+	action=mi-m=1; hc=12;
+	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
+	from,in-reply-to,message-id,mime-version,references,subject,to;
+Message-Instance: m=1; h=sha256:Y1L9ZRjDVf0ae1O5OLJmIEMJoJINj3g0qWcfqpumaM8=:uV7HNzlAfzr4LTvQgcdWBWGhD8P70PVpTMD/LBLagBw=;
+X-ME-Sender: <xms:ZAkGa2S1qU5q8Tt4P59rLUZLMDcdcz9MhGSLBcV29aA_t5jwHSVpFQ>
+    <xme:ZAkGa2nn-MLHHH5bsIrtUn53Bm6dbM7HMZKuIRmjk9pvX9DAb9jnrJeBrNTX2ODRl
+    wAAtRHYTqQ6S0lkRVQTlORopD_RQ-qt5BuiOtcQDZFWBrRtGC248laJ>
+X-ME-Proxy-Cause: dmFkZTFRHh3IY7AQpE2sOB2PLJi3AuimKZDL9H1tXPiO9loafbcw/DGlO/Xoejw+8P82CU
+    LZtGPx5Dw2fehVmppW39nh7aiKQqHD4K4dz4hhwMbfJ/rvud1uNRBqKqwpOM3ItmC7aGg2
+    A+GKbJZ0q/HAUhCKq8KTriq2kSTLiR4BY395K6QXzmGZqOgGBQCeI+/qZ5DjTPzrKb+KCk
+    fWxNoXXTvO6/Q9umpMuH+R2tl9qmfexdyWMyjNVwhUtZI0siPxAVzMuaiN62cXkT1LxPsl
+    ivdDM2jUMgnHoUAdJkJTv2Cd0wNryoNWCgNqfkM9sF+PCCJ+n2SVasPPSYcFY35/BtjUi/
+    TlJok52x6K/qFFOH5y2f4B3BhSmPbdoGhxzStq5W26pndjLaCuALLGrZUSxDowPZL8Uxm9
+    tq8OcCqqLGoNK4Gz1S9oU6o18yltNNQA8ylIOP1GM8y9zFzH4ACeaKMpbIKk59CrU6mG5p
+    r7Vqugsc+zPL78L05eqJ+Dv566UPYEBjuKKkv+Kuz7Ek+Vcjrk5P3BBEWeI5xh7lI87c+k
+    EGduRPaTIxc7VwNPWY7uJsLAvKDYRTBcjLlbz5kr2cdl14XqqH/o219lKVdPi2m4ANFlMt
+    HKT2MGXWfnbkl4Zcq1AAqLM5PN7cFVRnArfJggG7bcTT8iycB6wsrFxURFsA
+X-ME-Proxy: <xmx:aQkGa5ADK0kQBKydW-jsYQL2owm6ypApuRcgesYyb9gfGqwkudPKNw>
+    <xmx:aQkGawu6ACeRQkfy1MUQnkSHymWoFOBsVAuxGxAvsiDY-MRkdjhslw>
+    <xmx:aQkGa41LhutcH3hl071xdqmfJ1-SyaJRtJWCEsdFZTLgpNQKlsyu9g>
+    <xmx:aQkGa5jbcusQENaD1VV6mJUEOIOUF73AiAns-Bfib3Jpb0Xg437OxQ>
+    <xmx:bgkGa4awIhQYBbKzBAjp50sAI32cG5KibTRETI3OZH4oHKFRGLB2KqwC>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.ams.internal (Postfix, from userid 501)
+	id EEB3B32A009C; Tue, 24 Nov 2026 17:02:11 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -104,111 +115,109 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20261116070038.2968725-1-irogers@google.com>
-In-Reply-To: <20261116070038.2968725-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 24 Nov 2026 13:52:27 -0800
-X-Gm-Features: Aa3M54rYRZBKT1foMXt2hASolNTM_CvbdeVAXxgHLAXXAYapg70_UNTO0Lvi-AE
-Message-ID: <CAP-5=fU9C5BTqgHXLvXMzo90a2+LA6PmXbvUkXsrjJ2A_mMyWg@mail.gmail.com>
-Subject: Re: [PATCH v2 00/10] perf jevents: Block-indexed string compression
- and default JEVENTS_ARCH=all
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-ThreadId: AUJ1OXWu3nCJ
+Date: Tue, 24 Nov 2026 23:01:51 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "James Houghton" <jthoughton@google.com>
+Cc: "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Pavel Begunkov" <asml.silence@gmail.com>,
+ "Alexei Starovoitov" <ast@kernel.org>, "Jens Axboe" <axboe@kernel.dk>,
+ bpf@vger.kernel.org, "Daniel Borkmann" <daniel@iogearbox.net>,
+ "David Hildenbrand (Red Hat)" <david@kernel.org>,
+ "David Sterba" <dsterba@suse.com>, io-uring@vger.kernel.org,
+ "Jim Mattson" <jmattson@google.com>,
+ "John Fastabend" <john.fastabend@gmail.com>,
+ "Josh Poimboeuf" <jpoimboe@kernel.org>, "Kees Cook" <kees@kernel.org>,
+ kvm@vger.kernel.org, "Liam R. Howlett" <liam@infradead.org>,
+ linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-perf-users@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, "Lorenzo Stoakes" <ljs@kernel.org>,
+ "Chris Mason" <mason@kernel.org>,
+ "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>, "Michal Hocko" <mhocko@suse.com>,
+ "Ingo Molnar" <mingo@redhat.com>, "Martin K. Petersen" <mkp@kernel.org>,
+ "Namhyung Kim" <namhyung@kernel.org>, "Paolo Bonzini" <pbonzini@redhat.com>,
+ "Peter Zijlstra" <peterz@infradead.org>,
+ "Steven Rostedt" <rostedt@goodmis.org>, "Mike Rapoport" <rppt@kernel.org>,
+ "Sean Christopherson" <seanjc@google.com>,
+ "Suren Baghdasaryan" <surenb@google.com>,
+ "Thomas Gleixner" <tglx@kernel.org>,
+ "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>
+Message-Id: <1a99e5fc-129e-41e3-8420-101bcf04b366@app.fastmail.com>
+In-Reply-To: 
+ <CADrL8HX5vb1PGDpWzp-eR0rNfsMCVUhFa9vp_WZZx2eJZ+dfXQ@mail.gmail.com>
+References: <ac22215d-3e58-4aab-851e-47c30836e058@app.fastmail.com>
+ <20261027231728.1466446-1-jthoughton@google.com>
+ <32fad21b-5bad-4640-97df-ef0f638cd9e9@app.fastmail.com>
+ <CADrL8HX5vb1PGDpWzp-eR0rNfsMCVUhFa9vp_WZZx2eJZ+dfXQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/10] uaccess: Refuse and warn on user accesses when
+ current->mm is NULL
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Nov 15, 2026 at 11:00=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> Compiled-in PMU event and metric tables (pmu-events-in.o) currently
-> store ~6.9 MiB of uncompressed string data in .rodata on x86 alone,
-> causing JEVENTS_ARCH to default to $(SRCARCH) rather than all and
-> preventing out-of-the-box cross-architecture perf.data event/metric
-> resolution unless explicitly built with JEVENTS_ARCH=3Dall.
->
-> Compressing big_c_string as a single whole-table stream would force perf
-> to allocate and decompress megabytes of unused CPU models' strings on
-> startup just to resolve a single event, whereas compressing individual
-> short strings suffers from poor compression ratios and per-string
-> framing overhead.
->
-> Instead, this series introduces "block-indexed string compression":
-> sorted, suffix-folded event and metric byte records are packed into
-> ~8 KiB blocks without splitting records across block boundaries, each
-> block is compressed independently (sharing a single preset or trained
-> dictionary across blocks so ~8 KiB blocks retain high compression
-> ratios), and every uint32_t string offset is encoded as
-> (block_id << 16) | sub_offset. An ~8 KiB target block size sits at the
-> knee of the compression vs. random-access curve (smaller 1-4 KiB blocks
-> pay 22-128% more .rodata for per-block entropy headers and index
-> entries, while larger 16-64 KiB blocks yield <15% extra savings at 2-8x
-> higher decompression and page-fault cost per binary-search probe). At
-> runtime, pmu_events__get_string() uses a lock-free atomic block pointer
-> cache to decompress only the touched ~8 KiB blocks on demand, leaving
-> untouched CPU models' and non-host architectures' blocks compressed in
-> .rodata at zero runtime CPU or heap cost.
->
-> The series starts with a standalone BigCString raw-byte fix for
-> describe_metricgroup() binary-search ordering, prepares the string and
-> PMU table layout, adds the zlib, lzma, and zstd block compression
-> backends, and switches the default JEVENTS_ARCH to all:
->
-> - Bug fix, string layout, and hot-path isolation (Patches 1-4):
->   - Patch 1 stores raw NUL-delimited UTF-8 bytes in BigCString instead
->     of C-escaped strings, fixing suffix folding and describe_metricgroup(=
-)
->     binary-search ordering on prefix-overlapping names (such as "Bad" vs
->     "BadSpec"; Fixes: 66c6e0c10027) without changing empty-pmu-events.c
->     so it can be cherry-picked standalone.
->   - Patch 2 partitions non-folded BigCString event strings before metric
->     strings and sorts entries lexicographically by their raw UTF-8 byte
->     sequence within each partition so identically prefixed event names,
->     encodings, descriptions, and metric expressions cluster into
->     adjacent ~8 KiB blocks, improving block compression ratios by
->     ~20-23%.
->   - Patch 3 stores PMU names directly as const char *pmu_name string
->     literals in struct pmu_table_entry (only 68 unique PMU names / 536 B
->     across ~443 rows across all architectures, already in .data.rel.ro)
->     so the compiler/linker merge them in .rodata.str1.1 and hot PMU
->     wildcard scans never touch big_c_string or trigger block
->     decompression.
->   - Patch 4 encapsulates big_c_string offset lookups behind
->     pmu_events__get_string(uint32_t offset) across pmu-events.c and
->     pmu-events-string.c.
-> - On-demand block decompression backends (Patches 5-8):
->   - Patch 5 packs big_c_string into ~8 KiB record-aligned blocks indexed
->     by (block_id << 16) | sub_offset, adds lock-free thread-safe atomic
->     per-block decompression on demand, and adds --compress=3Dzlib using
->     raw Deflate with a <=3D 32 KiB preset dictionary.
->   - Patch 6 adds --compress=3Dlzma using raw LZMA2 per block with a 64 Ki=
-B
->     dictionary window.
->   - Patch 7 adds --compress=3Dzstd using ZSTD_decompress_usingDDict() per
->     block with a once-digested shared 64 KiB ZSTD_DDict (~26% smaller
->     .rodata than dictionary-free ~8 KiB zstd blocks).
->   - Patch 8 wires JEVENTS_COMPRESS into Makefile.perf and
->     pmu-events/Build, preferring zstd, then zlib, then lzma, and falling
->     back to none.
-> - Testing and JEVENTS_ARCH=3Dall default (Patches 9-10):
->   - Patch 9 adds prefix-overlapping metricgroups.json test coverage and
->     an 8-thread concurrent event/metric/metricgroup stress test in
->     perf test pmu-events.
->   - Patch 10 switches the default JEVENTS_ARCH to all. Bundling all
->     architectures (x86, arm64, powerpc, riscv, s390, nds32) with zstd
->     shrinks pmu-events-in.o from 7.16 MiB (x86 + none) to 1.11 MiB
->     (all + zstd, -84.5%) and cuts the stripped perf binary from
->     13.32 MiB to 7.28 MiB (-45.4%), with ~3 ms median wall-clock
->     overhead on 'perf stat true'.
+On Tue, Nov 24, 2026, at 22:10, James Houghton wrote:
+> On Wed, Oct 28, 2026 at 7:14=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> =
+wrote:
+>> On Wed, Oct 28, 2026, at 00:17, James Houghton wrote:
 
-Ping. Sashiko reviewed the patches, and they are clean:
-https://sashiko.dev/#/patchset/20261116070038.2968725-1-irogers%40google.co=
-m
-The series adds a small decompression cost but yields much smaller
-binaries and cross-architecture JSON event/metric support (still
-optional but defaulted on given the cost is now minimal).
+> So now in v2, the _nofault() helpers themselves do not check current->=
+mm.
+>
+> I've uploaded a draft version of v2 here, in case you want to take a l=
+ook:
+>   https://github.com/48ca/linux uaccess-v2-wip
 
-Thanks,
-Ian
+I read through this now and it all looks good to me so far.
+
+>> Since in principle every user access should go through both
+>> access_ok/mask_user_address and current->mm check at some point,
+>> so combining the two as much as possible should help long-term
+>> maintainability.
+>
+> You're right, and v2 has been restructured like this.
+>
+> - The check is in access_ok() itself: the generic version, plus the
+> arm64 and riscv versions. __access_ok() remains a plain range check.
+> - The callers of mask_user_address()/masked_user_*_access_begin()
+> check current->mm explicitly. There are about a dozen such callers.
+> - The unchecked accessors, __copy_{from,to}_user()
+> and__copy_{from,to}_user_inatomic() (and arm64's
+> copy_from_user_flushcache(), which also relies on an earlier
+> access_ok()), keep an explicit check for now. Once their users are
+> converted to the checked versions, those checks can be dropped.
+
+Ok, sounds all good. If we get more than handful of mask_user_address()
+and masked_user_*_access_begin(), we can always revisit that interface
+to make sure the check can't be skipped, but for now this seems
+like a good tradeoff.
+
+> Compared to v1, this also covers get_user()/put_user()/clear_user() on
+> arm64, powerpc, riscv and the asm-generic architectures, and arch code
+> like signal frame setup that uses access_ok() followed by __put_user()
+> or unsafe_*(). user_access_begin() no longer needs its own check.
+>
+> What's still not covered: x86's get_user()/put_user(), which do their
+> own range check in asm, a few architecture-specific paths that call
+> __access_ok() directly (e.g. on alpha and sparc32), and arch code that
+> calls __get_user()/__put_user() without access_ok(), mostly trap
+> handlers for user-mode faults. Probably best tackled later.
+
+ok
+
+>> There are probably few enough of these that we could address them
+>> by either adding current->mm checks or converting them to use
+>> the full versions instead where that is an obvious change like
+>> that usb gadget driver.
+>
+> Sounds good. I'll send a separate series converting the obvious ones,
+> starting with the usb gadget driver. I think that will be useful.
+> Let's see how far I can get; hopefully I can drop
+> __copy_{from,to}_user() completely.
+
+Ok, perfect!
+
+      Arnd
