@@ -1,111 +1,59 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=103.168.172.137
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795557762;
-	b=AbJNNGbF7XZ6FLuAGisbDySPDYr2VSPWStIvMvT0kdqlYtYOXof3ny+4NYcvYdsM0ibR
-	 C0x+Gg6wo1znv2ESbpLewE0ndOeHfEyD5Sc57vPqED/teH5969m/aC54Ov8p9AfQWIzbu
-	 eNmw3MS9Ibf0pdprlcF4n1n5ps/fBk6ipWzquKzSWHAFjo5vbpq2Gphc0z8gvQxNOumfH
-	 /BS4DgQmGNFZYj69Yx1tUELrx+1cu4D9EwADyPWcuQVCYxHOis5GKGeEqIN1DMFy94Rk7
-	 uLuH1tpfr/gTaDimAVXQq6N21vzdg9aG5TUf/bTroK5vAyTFfvqo1qx/lcYCQJ1mvfw==
+	t=1795558636;
+	b=cFauwGZc32iQkKM3OM54N2ZajmYZtg+G3fxTOP8idHTDOuNo7w1NY1MWVOr92cNs1w9K
+	 7ZKQ6pEcssB9WC04CyrpV9irUnJkR1pDXt5rA9AzEjnteEPrbQ/Op4yTcB6gBpGPRRWhI
+	 Y6a/12sBLanNJ+5FY1aDWtpTOTuk3jLQYc1g9kQZzaMEC2NVdXPa8r5TTK7KiLB9fhKgv
+	 a57mhRBmT4hr+Gm7On3P9xIj2Tt9f7tZG219FpBu/IaK2bh2KgCbX9NsX5DsWYSMCzEJS
+	 wtFiRW9HCk8QYY3w8jl+rUHNkbAg2F94tjuBKNCXQh5SpJVkndvWU16ubvpeFjsGj5Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795557762;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:DKIM-Signature:
-	 X-DKIM2-Info:DKIM2-Signature:X-DKIM2-Info:Message-Instance:
-	 X-ME-Sender:X-ME-Proxy-Cause:X-ME-Proxy:Feedback-ID:Received:X-Mailer:
-	 MIME-Version:X-ThreadId:Date:From:To:Cc:Message-Id:In-Reply-To:
-	 References:Subject:Content-Type:Content-Transfer-Encoding;
-	bh=xqSGxC68OuGq0f3lY+sfYUCqjXoRvtvCw0BSPI+8ZKw=;
-	b=XBAk1usTY6XTkaKfF3n9p6EXtuUHRwzhkzwnf1XdkcHrqAE9iRVP64UvlIhP1FAfjq10
-	 ZkSWSjr0Qt9N/NmRTRm661uEsYhB101T1uHsw+feprW9ZGnufOL8QDDWyp4fEEPcVgpD8
-	 92XCTZXTHpz5yjLZrpZBT/3uoma3pxoynySvkTSGc0C3u3hisvze3Juh1/89Dwwf+3wfX
-	 HVI/Xc/8s5fKHnze0AVuZAK53KHHZ5aS7rjVW+W/f2isZVUbF8h5SZx+xD2oZ6fGZWlQj
-	 /dB05IkdrzD+H2Nxr6coLs9QKyaYYPd6vJyw9SVr9gvxAqgRr4xjltfV6NESa4zOQlA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795558636;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=klSfsLSz5NIgMwd5IHd9TtnefgBKo+/yIqGfA7PQvyo=;
+	b=PXcEO+QRQuktRbPNVnnlta+2zkStT7L6RN52k14rew7TK9b66T4ROlACazk7bvtC/StZ
+	 GjHpfBSHAbek13HPY+yk5OJm2cyQrdBIercII7ar/Kpi2UzsrEr8qbuIyhTGybvAgL3N5
+	 QFu+1f+UObf2X04mb/JIgxJvV99zyi+NopBdopXTXZ4Rb4y1vGEAWitLKE0Q4qa0LbSgR
+	 VyexJWCaocPQTHzwwlObZowiVBI3a5mRgA84wP4sxycVyorgS9Qkzao0wZeXMTRFHNDJ9
+	 c4nX6nxrRwGti3EDPC5M7pAl2pdTIZRwLoLnW1xRUKH+BAEs0+fssqAPRfStYAtXHLg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=arndb.de;
-	spf=pass smtp.mailfrom=arndb.de;
-	dkim=pass header.d=arndb.de header.i=@arndb.de header.a=rsa-sha256 header.s=fm2 header.b=mfnJGR8Z;
-	dkim=pass header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=wbnBnHyI;
-	arc=none smtp.remote-ip=103.168.172.137
-Received: from flow-a2-smtp.messagingengine.com (flow-a2-smtp.messagingengine.com [103.168.172.137])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="btl4NEd/";
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5178E606A688
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 22:02:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5178E606A688
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BC1606A31E;
+	Tue, 24 Nov 2026 22:17:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=arndb.de header.i=@arndb.de header.a=rsa-sha256 header.s=fm2 header.b=mfnJGR8Z;
-	dkim=pass (2048-bit key, unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=wbnBnHyI
-Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
-	by mailflow.phl.internal (Postfix) with ESMTP id 47DE0138031F
-	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 17:02:41 -0500 (EST)
-Received: from ams-imap-03 ([10.64.2.23])
-  by ams-compute-02.internal (MEProxy); Tue, 24 Nov 2026 17:02:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1795557742;
-	 x=1795564942; bh=xqSGxC68OuGq0f3lY+sfYUCqjXoRvtvCw0BSPI+8ZKw=; b=
-	mfnJGR8ZvkU0LMsvLhbkB2aWWyYvVftk34Igv9f+VSyWFZL75F98YRJInsubsg5N
-	ErWkbpwwYR8PYwwytDXrBO4Zv5tmqL7Kcd99KBzFrH3plirHNa3BF91ghYHg1G2X
-	OmIzUeu9alCUMqYdLPe3t6xGqQDeBJFNzjBkCZdXLIRdfSfdGAENAvBoCa2Hd/va
-	6GViewBlkNAzICD3R2R+FvuW+BnNIr3jT+Fl9ot6DTCUyPwgXgiOAE7gr65RUlWF
-	zTV1eaMMqoKhfcdTawq7FOwHVOJ7hDxNDHC9/0HIOAI9uDObbhkabN2JM4I0uCwd
-	iklYqFK06JlPTifavsWnwQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1795557742; x=
-	1795564942; bh=xqSGxC68OuGq0f3lY+sfYUCqjXoRvtvCw0BSPI+8ZKw=; b=w
-	bnBnHyIX27rhdSGfAc5H4g5+m7drm11Zac2njlCmzN4mbo2YQ6EhH6D3pD/8PeWY
-	8GHoNQCNetXraVudoAhL0qYFTYu9qtXjJhzOx0LKjAdkofjkzwVdOhVC1J2hwfwt
-	VGDOiyN7FwH93as5zO5o+8QJnGBEUiUslUd724GRZXy/EKfZPjLZu/8oWwovMRB0
-	gqyKbJtAxmz5Ye7KI5rrGabmlFjzzdpLjwI7iCre5OXCavuM7GUe/YusH3YuhrsM
-	tEnsRe06oXURbQM9aMsO08wVojk5ODAx8uWqDju1VwkBgXeAY+UL/ydC1j0YZtCu
-	KfHp2BvZEv/a3sOge7mDw==
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=sign d=arndb.de a=rsa-sha256;
-DKIM2-Signature: i=1; m=1; t=1795557742; d=arndb.de;
-	mf=PGFybmRAYXJuZGIuZGU+;
-	rt=PGxpbnV4LXBlcmYtdXNlcnNAdmdlci5rZXJuZWwub3JnPg==;
-	s=fm2:rsa-sha256:bEe+WAyZmyWr+TqnV+i6eBBz06Psvu1Gz3ObjvbszzcN+n3
-	B84m5h7SYlKuaGN77jm6qtNCEewuHfV4T/9Lw8Z7KxrVpa4z+3caOzPbAbjmzUg3
-	LKnt0UQhfNmnDjF3Dlquoy91ksOpcxWG7wFpesSCHkUcX0eCkoyNo6WroCb/4h7y
-	+ZIgXEIeMN6GH2THMUrARaKmpwJFjBlLAWKJNGf908tuw5RNrDc5Uy4aQZjBWOfO
-	AxRetYSdQZ1zjoj+OCu/AJ31hu/FxjM3QpUol67edTZOd2dVQ4ly70WutIU4OMt5
-	L+TrJ9nw6qHZ5YssxWmdg93scNpsTNC+XFbq0EA==;
-X-DKIM2-Info: draft=ietf-dkim-dkim2-spec-09;
-	repo=github.com/dkim2wg/interop; date=2026-11-03; sw=lmtpprox;
-	action=mi-m=1; hc=12;
-	hn=cc,content-transfer-encoding,content-type,date,feedback-id,
-	from,in-reply-to,message-id,mime-version,references,subject,to;
-Message-Instance: m=1; h=sha256:Y1L9ZRjDVf0ae1O5OLJmIEMJoJINj3g0qWcfqpumaM8=:uV7HNzlAfzr4LTvQgcdWBWGhD8P70PVpTMD/LBLagBw=;
-X-ME-Sender: <xms:ZAkGa2S1qU5q8Tt4P59rLUZLMDcdcz9MhGSLBcV29aA_t5jwHSVpFQ>
-    <xme:ZAkGa2nn-MLHHH5bsIrtUn53Bm6dbM7HMZKuIRmjk9pvX9DAb9jnrJeBrNTX2ODRl
-    wAAtRHYTqQ6S0lkRVQTlORopD_RQ-qt5BuiOtcQDZFWBrRtGC248laJ>
-X-ME-Proxy-Cause: dmFkZTFRHh3IY7AQpE2sOB2PLJi3AuimKZDL9H1tXPiO9loafbcw/DGlO/Xoejw+8P82CU
-    LZtGPx5Dw2fehVmppW39nh7aiKQqHD4K4dz4hhwMbfJ/rvud1uNRBqKqwpOM3ItmC7aGg2
-    A+GKbJZ0q/HAUhCKq8KTriq2kSTLiR4BY395K6QXzmGZqOgGBQCeI+/qZ5DjTPzrKb+KCk
-    fWxNoXXTvO6/Q9umpMuH+R2tl9qmfexdyWMyjNVwhUtZI0siPxAVzMuaiN62cXkT1LxPsl
-    ivdDM2jUMgnHoUAdJkJTv2Cd0wNryoNWCgNqfkM9sF+PCCJ+n2SVasPPSYcFY35/BtjUi/
-    TlJok52x6K/qFFOH5y2f4B3BhSmPbdoGhxzStq5W26pndjLaCuALLGrZUSxDowPZL8Uxm9
-    tq8OcCqqLGoNK4Gz1S9oU6o18yltNNQA8ylIOP1GM8y9zFzH4ACeaKMpbIKk59CrU6mG5p
-    r7Vqugsc+zPL78L05eqJ+Dv566UPYEBjuKKkv+Kuz7Ek+Vcjrk5P3BBEWeI5xh7lI87c+k
-    EGduRPaTIxc7VwNPWY7uJsLAvKDYRTBcjLlbz5kr2cdl14XqqH/o219lKVdPi2m4ANFlMt
-    HKT2MGXWfnbkl4Zcq1AAqLM5PN7cFVRnArfJggG7bcTT8iycB6wsrFxURFsA
-X-ME-Proxy: <xmx:aQkGa5ADK0kQBKydW-jsYQL2owm6ypApuRcgesYyb9gfGqwkudPKNw>
-    <xmx:aQkGawu6ACeRQkfy1MUQnkSHymWoFOBsVAuxGxAvsiDY-MRkdjhslw>
-    <xmx:aQkGa41LhutcH3hl071xdqmfJ1-SyaJRtJWCEsdFZTLgpNQKlsyu9g>
-    <xmx:aQkGa5jbcusQENaD1VV6mJUEOIOUF73AiAns-Bfib3Jpb0Xg437OxQ>
-    <xmx:bgkGa4awIhQYBbKzBAjp50sAI32cG5KibTRETI3OZH4oHKFRGLB2KqwC>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.ams.internal (Postfix, from userid 501)
-	id EEB3B32A009C; Tue, 24 Nov 2026 17:02:11 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=btl4NEd/
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 411771F000C4;
+	Tue, 24 Nov 2026 22:17:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795558635;
+	bh=klSfsLSz5NIgMwd5IHd9TtnefgBKo+/yIqGfA7PQvyo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=btl4NEd/7TbW+GSJFBt7dFxKRG+1ptSSnAB76AFASJ6Q6l9O9mH6I1AJooBckm/Q7
+	 0pWRbSOWvBtnUmxxJ60VV3Aqcw2SKBPkTIos4eNCNZfHYrBeX/U6GtGTt7GpqVBH82
+	 /F6SWvs9N+jVkTZqTQtvrXP1CAOplwyWVW2lp9kKLBd0YUvErZmG1kdXCvTx+zUrF0
+	 FliMXlOCgU+YBnxkgq1ksJLddfytDDj1e6o4Gye8n5WV5yh6u9XJOa9aZ7QSc4rP0d
+	 qi8jE0C+2LgFlhSm/Vk3bebdcIwedqqlp+6BqDVWsubo+7bY6PQh9zhZRTFi8aGJ9T
+	 LBzipoY6eqqYg==
+Date: Tue, 24 Nov 2026 14:17:13 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v12 02/19] perf annotate: Handle absolute addressing in
+ data type profiling
+Message-ID: <awYM6TM47djixK5N@google.com>
+References: <20261123220024.14891-1-acme@kernel.org>
+ <20261123220024.14891-3-acme@kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -115,109 +63,255 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-X-ThreadId: AUJ1OXWu3nCJ
-Date: Tue, 24 Nov 2026 23:01:51 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "James Houghton" <jthoughton@google.com>
-Cc: "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
- "Arnaldo Carvalho de Melo" <acme@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Pavel Begunkov" <asml.silence@gmail.com>,
- "Alexei Starovoitov" <ast@kernel.org>, "Jens Axboe" <axboe@kernel.dk>,
- bpf@vger.kernel.org, "Daniel Borkmann" <daniel@iogearbox.net>,
- "David Hildenbrand (Red Hat)" <david@kernel.org>,
- "David Sterba" <dsterba@suse.com>, io-uring@vger.kernel.org,
- "Jim Mattson" <jmattson@google.com>,
- "John Fastabend" <john.fastabend@gmail.com>,
- "Josh Poimboeuf" <jpoimboe@kernel.org>, "Kees Cook" <kees@kernel.org>,
- kvm@vger.kernel.org, "Liam R. Howlett" <liam@infradead.org>,
- linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-perf-users@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, "Lorenzo Stoakes" <ljs@kernel.org>,
- "Chris Mason" <mason@kernel.org>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
- "Masami Hiramatsu" <mhiramat@kernel.org>, "Michal Hocko" <mhocko@suse.com>,
- "Ingo Molnar" <mingo@redhat.com>, "Martin K. Petersen" <mkp@kernel.org>,
- "Namhyung Kim" <namhyung@kernel.org>, "Paolo Bonzini" <pbonzini@redhat.com>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Steven Rostedt" <rostedt@goodmis.org>, "Mike Rapoport" <rppt@kernel.org>,
- "Sean Christopherson" <seanjc@google.com>,
- "Suren Baghdasaryan" <surenb@google.com>,
- "Thomas Gleixner" <tglx@kernel.org>,
- "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>
-Message-Id: <1a99e5fc-129e-41e3-8420-101bcf04b366@app.fastmail.com>
-In-Reply-To: 
- <CADrL8HX5vb1PGDpWzp-eR0rNfsMCVUhFa9vp_WZZx2eJZ+dfXQ@mail.gmail.com>
-References: <ac22215d-3e58-4aab-851e-47c30836e058@app.fastmail.com>
- <20261027231728.1466446-1-jthoughton@google.com>
- <32fad21b-5bad-4640-97df-ef0f638cd9e9@app.fastmail.com>
- <CADrL8HX5vb1PGDpWzp-eR0rNfsMCVUhFa9vp_WZZx2eJZ+dfXQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/10] uaccess: Refuse and warn on user accesses when
- current->mm is NULL
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+In-Reply-To: <20261123220024.14891-3-acme@kernel.org>
 
-On Tue, Nov 24, 2026, at 22:10, James Houghton wrote:
-> On Wed, Oct 28, 2026 at 7:14=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> =
-wrote:
->> On Wed, Oct 28, 2026, at 00:17, James Houghton wrote:
+On Mon, Nov 23, 2026 at 07:00:07PM -0300, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> x86 code accesses globals with absolute addresses, and 64-bit code also
+> uses the same encoding for MMIO: the 64-bit kernel's
+> __default_send_IPI_dest_field uses a disp32 the CPU sign extends, an
+> absolute SIB with no base and no index.  From an allmodconfig clang build,
+> arch/x86/kernel/ipi.o:
+> 
+>   890:  8b 04 25 00 c3 5f ff    mov    0xffffffffff5fc300,%eax
+>   8b1:  89 3c 25 10 c3 5f ff    mov    %edi,0xffffffffff5fc310
 
-> So now in v2, the _nofault() helpers themselves do not check current->=
-mm.
->
-> I've uploaded a draft version of v2 here, in case you want to take a l=
-ook:
->   https://github.com/48ca/linux uaccess-v2-wip
+Oh, is it reading and writing to the address 0xffffffffff5fc300?  That's
+unfortunate and probably it needs to parse the encoding then.  IIUC we
+cannot distinguish it from "mov 0x1, %eax" and treat it as memory access.
 
-I read through this now and it all looks good to me so far.
+Thanks,
+Namhyung
 
->> Since in principle every user access should go through both
->> access_ok/mask_user_address and current->mm check at some point,
->> so combining the two as much as possible should help long-term
->> maintainability.
->
-> You're right, and v2 has been restructured like this.
->
-> - The check is in access_ok() itself: the generic version, plus the
-> arm64 and riscv versions. __access_ok() remains a plain range check.
-> - The callers of mask_user_address()/masked_user_*_access_begin()
-> check current->mm explicitly. There are about a dozen such callers.
-> - The unchecked accessors, __copy_{from,to}_user()
-> and__copy_{from,to}_user_inatomic() (and arm64's
-> copy_from_user_flushcache(), which also relies on an earlier
-> access_ok()), keep an explicit check for now. Once their users are
-> converted to the checked versions, those checks can be dropped.
-
-Ok, sounds all good. If we get more than handful of mask_user_address()
-and masked_user_*_access_begin(), we can always revisit that interface
-to make sure the check can't be skipped, but for now this seems
-like a good tradeoff.
-
-> Compared to v1, this also covers get_user()/put_user()/clear_user() on
-> arm64, powerpc, riscv and the asm-generic architectures, and arch code
-> like signal frame setup that uses access_ok() followed by __put_user()
-> or unsafe_*(). user_access_begin() no longer needs its own check.
->
-> What's still not covered: x86's get_user()/put_user(), which do their
-> own range check in asm, a few architecture-specific paths that call
-> __access_ok() directly (e.g. on alpha and sparc32), and arch code that
-> calls __get_user()/__put_user() without access_ok(), mostly trap
-> handlers for user-mode faults. Probably best tackled later.
-
-ok
-
->> There are probably few enough of these that we could address them
->> by either adding current->mm checks or converting them to use
->> the full versions instead where that is an obvious change like
->> that usb gadget driver.
->
-> Sounds good. I'll send a separate series converting the obvious ones,
-> starting with the usb gadget driver. I think that will be useful.
-> Let's see how far I can get; hopefully I can drop
-> __copy_{from,to}_user() completely.
-
-Ok, perfect!
-
-      Arnd
+> 
+> These accesses are local APIC MMIO, but demonstrate the absolute SIB
+> encoding.  Absolute global accesses in 32-bit code can be resolved to
+> types as well.
+> 
+> llvm-objdump prints the same displacements as -0xa03d00 and -0xa03cf0.
+> The operand parser only recognized offset(reg), so the resolver skipped
+> the access as not a memory reference.
+> 
+> Parse a bare hex number as an absolute memory operand, including the
+> negative disp32 llvm-objdump prints, and use the address in the resolver.
+> The displacement is sign extended for 64-bit objects and zero extended
+> for 32-bit ones; values that do not fit, zero and relocatable addends are
+> skipped.
+> 
+> An absolute global load records the type in the destination register, so
+> the state is TSR_KIND_TYPE; a POINTER state records the address itself.
+> Guard the comparisons that made a -1 frame base equal the -1 "no
+> register" of an absolute operand.  A no-register operand is not looked up
+> as a variable, but the %gs:40 kernel stack canary is still recognized;
+> other segment-relative operands are skipped.
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/util/annotate-arch/annotate-x86.c | 37 ++++++++++++++++----
+>  tools/perf/util/annotate.c                   | 31 ++++++++++++++--
+>  tools/perf/util/annotate.h                   |  7 ++++
+>  3 files changed, 67 insertions(+), 8 deletions(-)
+> 
+> diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
+> index e38a4e7a54d5585c..a975c39c3d6ce008 100644
+> --- a/tools/perf/util/annotate-arch/annotate-x86.c
+> +++ b/tools/perf/util/annotate-arch/annotate-x86.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <string.h>
+>  #include <stdlib.h>
+> +#include <limits.h>
+>  #include <linux/compiler.h>
+>  #include <linux/ctype.h>
+>  #include <linux/zalloc.h>
+> @@ -230,6 +231,11 @@ static bool vtable_get_rettype(Dwarf_Die *class_die, int offset,
+>  	return die_get_real_type(&func_die, type_die) != NULL;
+>  }
+>  
+> +static bool is_stack_or_fb_reg(struct type_state *state, int fbreg, int reg)
+> +{
+> +	return (fbreg != -1 && reg == fbreg) || reg == state->stack_reg;
+> +}
+> +
+>  static void update_insn_state_x86(struct type_state *state,
+>  				  struct data_loc_info *dloc, Dwarf_Die *cu_die,
+>  				  struct disasm_line *dl)
+> @@ -437,7 +443,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  		invalidate_reg_state(tsr);
+>  
+>  		/* Case 1: Based on stack pointer or frame pointer */
+> -		if (sreg == fbreg || sreg == state->stack_reg) {
+> +		if (is_stack_or_fb_reg(state, fbreg, sreg)) {
+>  			struct type_state_stack *stack;
+>  			int offset = src->offset - fboff;
+>  
+> @@ -626,7 +632,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  
+>  retry:
+>  		/* Check stack variables with offset */
+> -		if (sreg == fbreg || sreg == state->stack_reg) {
+> +		if (is_stack_or_fb_reg(state, fbreg, sreg)) {
+>  			struct type_state_stack *stack;
+>  			int offset = src->offset - fboff;
+>  
+> @@ -717,13 +723,17 @@ static void update_insn_state_x86(struct type_state *state,
+>  			pr_debug_type_name(&tsr->type, tsr->kind);
+>  		}
+>  		/* Or check if it's a global variable */
+> -		else if (sreg == DWARF_REG_PC) {
+> +		else if (sreg == DWARF_REG_PC ||
+> +			 annotated_op_loc__is_abs(src, map__dso(dloc->ms->map))) {
+>  			struct map_symbol *ms = dloc->ms;
+>  			u64 ip = ms->sym->start + dl->al.offset;
+>  			u64 addr;
+>  			int offset;
+>  
+> -			addr = annotate_calc_pcrel(ms, ip, src->offset, dl);
+> +			if (sreg == DWARF_REG_PC)
+> +				addr = annotate_calc_pcrel(ms, ip, src->offset, dl);
+> +			else
+> +				addr = annotated_op_loc__abs_addr(src, map__dso(ms->map));
+>  
+>  			if (!get_global_var_type(cu_die, dloc, ip, addr, &offset,
+>  						 &type_die) ||
+> @@ -737,7 +747,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  			tsr->offset = 0;
+>  			tsr->ok = true;
+>  
+> -			pr_debug_dtp("mov [%x] global addr=%"PRIx64" -> reg%d",
+> +			pr_debug_dtp("mov [%x] global addr=%#"PRIx64" -> reg%d",
+>  				     insn_offset, addr, dst->reg1);
+>  			pr_debug_type_name(&type_die, tsr->kind);
+>  		}
+> @@ -827,7 +837,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  	/* Case 3. register to memory transfers */
+>  	if (!src->mem_ref && dst->mem_ref) {
+>  		/* Check stack variables with offset */
+> -		if (dst->reg1 == fbreg || dst->reg1 == state->stack_reg) {
+> +		if (is_stack_or_fb_reg(state, fbreg, dst->reg1)) {
+>  			struct type_state_stack *stack;
+>  			int offset = dst->offset - fboff;
+>  
+> @@ -960,6 +970,21 @@ static void extract_op_location_x86(const struct arch *arch,
+>  			op_loc->offset = strtol(s + 1, &p, 0);
+>  			if (p && p != s + 1)
+>  				op_loc->imm = true;
+> +		} else if (*s == '-' || strstarts(s, "0x")) {
+> +			u64 offset = strtoull(s, NULL, 0);
+> +			bool exact;
+> +
+> +			/*
+> +			 * The offset is an int: a disp32 fits it as a u32 or,
+> +			 * sign extended, as an int, which is how the LLVM
+> +			 * disassembler prints one that does not fit an int.
+> +			 */
+> +			exact = (s64)(int)offset == (s64)offset;
+> +			if (offset != 0 && (offset <= UINT_MAX || exact)) {
+> +				/* An absolute address: 32-bit code, or a 64-bit disp32 */
+> +				op_loc->mem_ref = true;
+> +				op_loc->offset = offset;
+> +			}
+>  		}
+>  	}
+>  }
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index e270d16ce1778487..c41d23d97c005abc 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -2755,6 +2755,21 @@ int arch__dwarf_regnum(const struct arch *arch, const char *str)
+>  	return reg < 0 ? -1 : reg;
+>  }
+>  
+> +/* A relocatable object's operand is an unrelocated addend, not an address */
+> +bool annotated_op_loc__is_abs(const struct annotated_op_loc *op_loc,
+> +			      const struct dso *dso)
+> +{
+> +	return !dso__rel(dso) && op_loc->mem_ref && op_loc->reg1 == -1 && op_loc->reg2 == -1 &&
+> +	       op_loc->segment == INSN_SEG_NONE && op_loc->offset != 0;
+> +}
+> +
+> +/* The disp32 of a 64-bit object is sign extended, a 32-bit one is not */
+> +u64 annotated_op_loc__abs_addr(const struct annotated_op_loc *op_loc,
+> +			       const struct dso *dso)
+> +{
+> +	return dso__is_64_bit(dso) ? (u64)(s64)op_loc->offset : (u32)op_loc->offset;
+> +}
+> +
+>  /**
+>   * annotate_get_insn_location - Get location of instruction
+>   * @arch: the architecture info
+> @@ -2772,7 +2787,7 @@ int arch__dwarf_regnum(const struct arch *arch, const char *str)
+>   *   mov  (%rax), %rcx   # src_reg1 = rax, src_mem = 1, src_offset = 0
+>   *                       # dst_reg1 = rcx, dst_mem = 0
+>   *
+> - *   mov  0x18, %r8      # src_reg1 = -1, src_mem = 0
+> + *   mov  0x18, %r8      # src_reg1 = -1, src_mem = 1, src_offset = 0x18
+>   *                       # dst_reg1 = r8, dst_mem = 0
+>   *
+>   *   mov  %rsi, 8(%rbx,%rcx,4)  # src_reg1 = rsi, src_mem = 0, src_multi_regs = 0
+> @@ -3046,6 +3061,13 @@ __hist_entry__get_data_type(struct hist_entry *he, const struct arch *arch,
+>  			dloc.var_addr = annotate_calc_pcrel(ms, dloc.ip,
+>  							    op_loc->offset, dl);
+>  		}
+> +		/* An absolute address: 32-bit code, or a 64-bit disp32 */
+> +		else if (annotated_op_loc__is_abs(op_loc, map__dso(ms->map))) {
+> +			struct dso *dso = map__dso(ms->map);
+> +
+> +			dloc.var_addr = annotated_op_loc__abs_addr(op_loc, dso);
+> +			op_loc->reg1 = DWARF_REG_PC;
+> +		}
+>  
+>  		/* This CPU access in kernel - pretend PC-relative addressing */
+>  		if (dso__kernel(map__dso(ms->map)) && arch__is_x86(arch) &&
+> @@ -3054,7 +3076,9 @@ __hist_entry__get_data_type(struct hist_entry *he, const struct arch *arch,
+>  			op_loc->reg1 = DWARF_REG_PC;
+>  		}
+>  
+> -		mem_type = find_data_type(&dloc);
+> +		mem_type = NULL;
+> +		if (op_loc->reg1 != -1)
+> +			mem_type = find_data_type(&dloc);
+>  
+>  		if (mem_type == NULL && is_stack_canary(arch, op_loc)) {
+>  			istat->good++;
+> @@ -3062,6 +3086,9 @@ __hist_entry__get_data_type(struct hist_entry *he, const struct arch *arch,
+>  			return &canary_type;
+>  		}
+>  
+> +		if (op_loc->reg1 == -1)
+> +			continue;
+> +
+>  		if (mem_type)
+>  			istat->good++;
+>  		else
+> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+> index e0fc48ec561225d9..58adf7f84146be5f 100644
+> --- a/tools/perf/util/annotate.h
+> +++ b/tools/perf/util/annotate.h
+> @@ -18,6 +18,7 @@
+>  #include "branch.h"
+>  #include "evsel.h"
+>  
+> +struct dso;
+>  struct hist_browser_timer;
+>  struct hist_entry;
+>  struct map;
+> @@ -637,6 +638,12 @@ struct annotated_insn_loc {
+>  	     i < INSN_OP_MAX;						\
+>  	     i++, op_loc++)
+>  
+> +/* Bare number operand: an absolute address, as 32-bit code and the kernel use */
+> +bool annotated_op_loc__is_abs(const struct annotated_op_loc *op_loc,
+> +			      const struct dso *dso);
+> +u64 annotated_op_loc__abs_addr(const struct annotated_op_loc *op_loc,
+> +			       const struct dso *dso);
+> +
+>  /* Get detailed location info in the instruction */
+>  int annotate_get_insn_location(const struct arch *arch, struct disasm_line *dl,
+>  			       struct annotated_insn_loc *loc);
+> -- 
+> 2.56.0
+> 
