@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795479802;
-	b=sY0LQLHNgEUmuJ8llUgYgJmElzAVQKLN/uYFL0cXq86O0nsC9kVfowo1t5qKGBRcAxLC
-	 Oed93Op/bQttUCYAi/V2H16R2MZSwQcdU58tHhWRAtGN8pTgzy3q1fuIajJO+LKFNnjpI
-	 V1JktGsPI8KPn+UFE548tNXmOx6079sTuxvSujGQRd+X5iSRo1hSgpNt3AQ4gbpKiyQ8E
-	 /hhPwFvYfZLRoGPAQTNGHdIf6vRu09pDz/ueiy2RO1Xsf7gz/OF09wcZXF4FGjZrYGWZ7
-	 3UN8iNMELAmFLbS8plqLdHcPLXpnHZzlwp+isy8WN2HiXHDobHO4h9KYXjoseZE7uxA==
+	t=1795479807;
+	b=XA5yaW5DYnIpBKGscG6xlHmi+lntTzBzX8szedLyLOWkEvIlj/x6nEAI/OZBPi2SrChH
+	 Hkn00TxWkLT4xyhmFlFNvVUUQ+nm5zSWObXJzaJ/xprAkKFw9MenEoFWP3mKYCYskY9E8
+	 CtzcV9VX7u4cr+D2A9JlIAE+/HOoMZrFaJa9tST+ZMA/Sn9SfNKeMrb1yYzx/B+IMax91
+	 o2m46Z9p8EWadcIJyGAFug2GFtMg4UKs4/6XR6UqIZh+rP133RB7Gj+oFJ8azcedVlHNp
+	 7WkVZQOjGHOVupGLivY+s46CZ+PB5fMpy6vYe6Em0n2iwor9pXfsNlgXK5GSEDMAdhA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795479802;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795479807;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=qtib51ffHxqRQT/emHOSN0KnkH+oE4jKOtAC4nasmyo=;
-	b=CuhowIqEfRPAj54ChmSatCxXQpYJa32aO7XNNnO2QNkpN2ijxoYPZ3BM8bVhIsUrceiI
-	 YG5x5IxbXC/MSUhvPic33UXSePE9wlzTyKC2e8pzSiy/AEkJ4dYk+fpiuxACFJD6bGymV
-	 LmNJgoFGcoHUKK1aIC0BCCz3c2i569J7HGEc0riCqYJXXQUQvXNI2n1zOWNQF+06zMM71
-	 n5oLUIfE1iW2zUdaQObgLU7s274P75eOWlRJyVqWqayHuZc+RE3HUqfhCxmrBXxov8DTZ
-	 wxCTJic/x69QkOT1FIF99PRs1v3KYuZVnR8ELVQjph+xkzOZq9OIMs0vCuT2LcXzWOw==
+	bh=/Q08YDoQbOfOm+qoyKhtZdI+17Mqu5hb8hqerCG3tsc=;
+	b=XhXnw1NrlkT+GtQLsa2n/601BHROmGZoOzsD0UU1Bw6omVbQbJHY0/96WWNFMkiYlNNu
+	 26DsP3wNq3gzCvqF5bvGiqRVK0tdOVjjon/EB5PIav44qHmviup0Sqw09FtA5T485hq4U
+	 s7mf6eit4jml9qnJCcwtu0AZlV4J4qZ1Si4Frg0PmqSsgP52DP5+SaLYLi0fwcAPfBU5f
+	 CqTw/+/43JGvj4yXFIuHsknhjfEXOLRP6GXM98cddBGLRjPHJcHGhefMV4GYRcPJVBfzg
+	 aYGu4tFKaw0Mi3dn3pPCYXt265LMJIh0gBeC2GG7mGXY1HHCBLgSXCkdHOrJCU3Oe8w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="H/ywA3VI";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dEph31NC;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF3760A381D;
-	Tue, 24 Nov 2026 00:23:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA2D60A5BE7;
+	Tue, 24 Nov 2026 00:23:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=H/ywA3VI
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CB711F000C0;
-	Tue, 24 Nov 2026 00:23:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dEph31NC
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D7021F01576;
+	Tue, 24 Nov 2026 00:23:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795479801;
-	bh=qtib51ffHxqRQT/emHOSN0KnkH+oE4jKOtAC4nasmyo=;
+	s=k20260515; t=1795479807;
+	bh=/Q08YDoQbOfOm+qoyKhtZdI+17Mqu5hb8hqerCG3tsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=H/ywA3VIWXboWCAZ0+iXfwcCUtrzEMI4VWBeSCsBlENCxoAv60SuDF3wkNVU+ofQA
-	 W+vJaSC+yRnLtunpi+vLtQXv8mTtvp7dexkJYfdRoRRWF67UGUXlFe+pfLeiKHXIG9
-	 KJDLHr1vWxeBLIKeXiNziCiK6wCT2V0ZjXnO/kKnL+9M2Gz/xkiASQJXFBcFUs3YGD
-	 vRrrxkxG2DrLMvvJME5zdZVJmbPP8ul8tqoNY0jLjjocCV1zL7xjhFVJ5CbPlpvpcO
-	 2sHtpSSd+B+P+YkubX4p6W4M85DxZf82/soul9e41gmhSlizC1DFbArTIp7VBYSRZJ
-	 NzAdhivfVdZgA==
+	b=dEph31NC1icNqhy33KolhrxluSuaht2nfLoDFTap6z6aMmzAMkRA8sve2a3icXFbr
+	 TMxX2eWEbXILDjp0gPAZuFdZD9gIXbsRp841f2DxWjlC9w2h/B8L7K/d8OIE3UDkMg
+	 O+ykItxRgAio1QlD8gxh+8aT/8V4iTjsRHPxEFaanVpsiJqqchgAdWqn5vj42n5Mjp
+	 YMLKNlxEooUC3I+evl/KQs30p+laE6wo3F/1yBojd2MqI+KEdLRhiykK3RjXuBQANL
+	 zELBjk5mQ0AlcpERFPy0hHUOSd3spzLrvQT3Cr9sqNg3ZXluNtyFtJk7WySsEd2CeS
+	 4R8TYwoWsfWdQ==
 From: Yosry Ahmed <yosry@kernel.org>
 To: Sean Christopherson <seanjc@google.com>,
 	Peter Zijlstra <peterz@infradead.org>
@@ -61,9 +61,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Yosry Ahmed <yosry@kernel.org>
-Subject: [RFC PATCH 09/26] perf/x86: Reclaim the mediated PMU before clearing dirty counters
-Date: Tue, 24 Nov 2026 00:22:46 +0000
-Message-ID: <20261124002303.1785363-10-yosry@kernel.org>
+Subject: [RFC PATCH 13/26] KVM: x86/pmu: Compute eventsel_hw from eventsel when reprogramming
+Date: Tue, 24 Nov 2026 00:22:50 +0000
+Message-ID: <20261124002303.1785363-14-yosry@kernel.org>
 X-Mailer: git-send-email 2.56.1.809.ga0b61035b5-goog
 In-Reply-To: <20261124002303.1785363-1-yosry@kernel.org>
 References: <20261124002303.1785363-1-yosry@kernel.org>
@@ -78,45 +78,101 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-perf_clear_dirty_counters() zeroes PMCs that aren't assigned to host
-events before enabling RDPMC for a task, so that it can't read stale
-values. It doesn't go through remote_function(), so it doesn't reclaim
-the PMU, and if a guest's mediated PMU context is loaded, the "dirty"
-counters hold guest state that clearing would clobber.
+Instead of only setting the enable bit in eventsel_hw when refreshing
+the event filter, compute the entire eventsel_hw from eventsel when
+reprogramming a counter that's allowed to count, and rename
+kvm_mediated_pmu_refresh_event_filter() to
+kvm_mediated_pmu_reprogram_counter() accordingly. As counters are only
+allowed to count if the enable bit is set in eventsel, copying eventsel
+also sets the enable bit.
 
-In preparation for KVM leaving the guest context loaded with IRQs
-enabled, reclaim the PMU before clearing dirty counters. Do so before
-filtering out the counters assigned to host events, as host events are
-scheduled out while the guest context is loaded, and putting the guest
-context schedules them back in, assigning counters to them.
+Move forcing GUESTONLY and clearing HOSTONLY on AMD from
+amd_pmu_set_msr() to the reprogramming path, using vendor-provided bits
+to set and clear, and have amd_pmu_set_msr() record the guest's value
+as-is like Intel. Writing an event selector always requests a reprogram,
+which is handled before the guest context is loaded, so the value is
+fixed up before it's written to hardware.
 
-No functional change intended, as the guest context is currently only
-loaded with IRQs disabled, where perf_clear_dirty_counters() never runs
+For counters that can't count, the event selector in hardware may now
+differ in the GUESTONLY and HOSTONLY bits, which is benign as the enable
+bit is cleared.
 
 Signed-off-by: Yosry Ahmed <yosry@kernel.org>
 ---
- arch/x86/events/core.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/kvm/pmu.c     | 8 ++++----
+ arch/x86/kvm/pmu.h     | 2 ++
+ arch/x86/kvm/svm/pmu.c | 5 +++--
+ 3 files changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 4e344fb1ae3ed..95ebdec4d5f5d 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -3026,6 +3026,14 @@ void perf_clear_dirty_counters(void)
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	int i;
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index 6f82213058f14..0a5299532c086 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -570,7 +570,7 @@ static bool pmc_is_event_allowed(struct kvm_pmc *pmc)
+ 	return is_fixed_event_allowed(filter, pmc->idx);
+ }
  
-+	/*
-+	 * Reclaim the mediated vPMU from any loaded guest context before
-+	 * accessing counters to avoid clobbering guest state.  Do so before
-+	 * filtering out assigned counters, as putting the guest context can
-+	 * schedule in host events.
-+	 */
-+	perf_reclaim_mediated_pmu();
-+
- 	 /* Don't need to clear the assigned counter. */
- 	for (i = 0; i < cpuc->n_events; i++)
- 		__clear_bit(cpuc->assign[i], cpuc->dirty);
+-static void kvm_mediated_pmu_refresh_event_filter(struct kvm_pmc *pmc)
++static void kvm_mediated_pmu_reprogram_counter(struct kvm_pmc *pmc)
+ {
+ 	bool allowed = pmc_is_locally_enabled(pmc) && pmc_is_event_allowed(pmc);
+ 	struct kvm_pmu *pmu = pmc_to_pmu(pmc);
+@@ -578,8 +578,8 @@ static void kvm_mediated_pmu_refresh_event_filter(struct kvm_pmc *pmc)
+ 	if (pmc_is_gp(pmc)) {
+ 		pmc->eventsel_hw &= ~ARCH_PERFMON_EVENTSEL_ENABLE;
+ 		if (allowed)
+-			pmc->eventsel_hw |= pmc->eventsel &
+-					    ARCH_PERFMON_EVENTSEL_ENABLE;
++			pmc->eventsel_hw = (pmc->eventsel | kvm_pmu_ops.EVENTSEL_HW_SET) &
++					   ~kvm_pmu_ops.EVENTSEL_HW_CLR;
+ 	} else {
+ 		u64 mask = intel_fixed_bits_by_idx(pmc->idx - KVM_FIXED_PMC_BASE_IDX, 0xf);
+ 
+@@ -598,7 +598,7 @@ static int reprogram_counter(struct kvm_pmc *pmc)
+ 	u8 fixed_ctr_ctrl;
+ 
+ 	if (kvm_vcpu_has_mediated_pmu(pmu_to_vcpu(pmu))) {
+-		kvm_mediated_pmu_refresh_event_filter(pmc);
++		kvm_mediated_pmu_reprogram_counter(pmc);
+ 		return 0;
+ 	}
+ 
+diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+index fe1baa50ebceb..462df3a9de491 100644
+--- a/arch/x86/kvm/pmu.h
++++ b/arch/x86/kvm/pmu.h
+@@ -44,6 +44,8 @@ struct kvm_pmu_ops {
+ 	void (*write_global_ctrl)(u64 global_ctrl);
+ 
+ 	const u64 EVENTSEL_EVENT;
++	const u64 EVENTSEL_HW_SET;
++	const u64 EVENTSEL_HW_CLR;
+ 	const int MAX_NR_GP_COUNTERS;
+ 	const int MIN_NR_GP_COUNTERS;
+ 
+diff --git a/arch/x86/kvm/svm/pmu.c b/arch/x86/kvm/svm/pmu.c
+index c18286545a7ac..232c4779e5a32 100644
+--- a/arch/x86/kvm/svm/pmu.c
++++ b/arch/x86/kvm/svm/pmu.c
+@@ -166,8 +166,7 @@ static int amd_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		data &= ~pmu->reserved_bits;
+ 		if (data != pmc->eventsel) {
+ 			pmc->eventsel = data;
+-			pmc->eventsel_hw = (data & ~AMD64_EVENTSEL_HOSTONLY) |
+-					   AMD64_EVENTSEL_GUESTONLY;
++			pmc->eventsel_hw = data;
+ 
+ 			if (data & AMD64_EVENTSEL_HOST_GUEST_MASK)
+ 				__set_bit(pmc->idx, pmu->pmc_has_mode_specific_enables);
+@@ -317,6 +316,8 @@ struct kvm_pmu_ops amd_pmu_ops __initdata = {
+ 	.mediated_put = amd_mediated_pmu_put,
+ 
+ 	.EVENTSEL_EVENT = AMD64_EVENTSEL_EVENT,
++	.EVENTSEL_HW_SET = AMD64_EVENTSEL_GUESTONLY,
++	.EVENTSEL_HW_CLR = AMD64_EVENTSEL_HOSTONLY,
+ 	.MAX_NR_GP_COUNTERS = KVM_MAX_NR_AMD_GP_COUNTERS,
+ 	.MIN_NR_GP_COUNTERS = AMD64_NUM_COUNTERS,
+ 
 -- 
 2.56.1.809.ga0b61035b5-goog
 
