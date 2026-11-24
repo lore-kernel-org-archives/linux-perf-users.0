@@ -1,62 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795546032;
-	b=FXJmM4iRr5+SqFqeStFgzTbmL4rQ+kH8LNlDjBcqBuXIC5xDg/Sp42zLnCfw17ETDNK6
-	 a+aA61grn/KahyRY9mCBr3KtPSgpl37hV0uprCKWZKFczPnN3MDMVkhrAviXyARjxCH8l
-	 CppDOVpR2rnwI11b8acS1m3s1ipvelPqaFLFeAB6iiZC7RzqtbM+mxy/JoCJ1G/aHdsfp
-	 7ILnlBh2jfvC/aimX8/cdbj5YeALxgll8593R7pKdAtL4VBQh3pxZyUnOwzXs0/d2HW1Z
-	 pdzY4Q6B0dLhTaa+HQb62BBWxbYfbGZS25ZfJYsdnWwNUavy9PQlOmxX0Irq+UUcVfQ==
+	t=1795546442;
+	b=3CzK9H8zym3n+gD2F3vPx+reKvk3HBCJWicWa3DpLmPlMHWcYeVnkzy1EnuPR9dSkS8c
+	 lKPdBL784hT/3m3Lh5yMDFcqHY5uVI7OEtMsPJX7gfkVrV8ptBe9xzY8otK0Nk3Lm8WGS
+	 7VzdGYZQcu6COH9qSFGBxG85bWkOauAfbaw5QaBzF7v7OvaNH7i5koIBUp3kjroFKB8AO
+	 hQyj9leTyNrFI/pSxbuqI74LVE0aiSRhzO+AIUpUQhds7Q7lrO3Fz5EPXFs9xC6TWy6/O
+	 HNa/qARZoH2buRsEOZpEST3ivP/zhphHbM+7zxgHSGA/FeLNernGMIDidIFZ3QoFa0g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795546032;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=6xTTBhS+4bcTEIFO7M0OnF7MPPzj3Z/Kwl7dMn2zlIA=;
-	b=HYBSRrjmbIJAk5NY5fMUOTdnacCqy1/Qh7rU6gmOl4D0qmnGLPZR1XzaRWIVL2ubR/Zh
-	 FpovTjG+OzZ56xq6uP/jxtv8Ft9zFtEmrhdm7drJXKbH7D9UORMEVOolvs8zvLq8S2vVF
-	 UDM+TMirr7aSwZ+bDiGS6+mIKdRzhnFfwXBpwzA9WTAVMxj0JeOAkgkmjWbtvQkYJcKTS
-	 CBygbudDewnb7LlhMw6NbKz/VCbt8KDhoXaXZquehOLr1QhAjkyC+NYymanu8dMkmpDW3
-	 l7Re2mAwaurYMN6j7jaBYnCzmTIUJC8/lgpBV7jJp+M7rswC3KWbgaN0WpW2tU5GkBg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795546442;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=6dOlIFyIREpYmlEbD+Zu74jIiaQeq22rCtJOqQModUg=;
+	b=Cd/gB7/463/Y+4DZ7PpRMKfWmXWlQQboVsytPyxsjnMKzGmA05FNvcl+RUO6gyXPGaKn
+	 huA05QUcY6R8VBlULZVlBxIRv1DQVhX8l7jWeJSmRV7AH5/crQVbFUdiBmu5TN9aA/vWV
+	 z+LOhpQGA8U2Zhu5FwqNo4a1KcDT5EQUgGLrdVu9RyE02g/KZT5cGldRZgsT1hAv+0r7M
+	 tPV7mmUMoTfTDpAh58sniZhhKpOfwELxV6dYdkDKfbSJipPqNe4BCNxOiRUmbJ8KPGbt1
+	 lr+fnd+g/Zr1FHMK3yws5B4UqlUwHMDFApV2haphONPcf2gqiB4JN4a/xJE4vs0ynsg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AEO5dd1U;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BjRfFW17;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D182606A323;
-	Tue, 24 Nov 2026 18:47:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4AEE606A31E
+	for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 18:54:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=AEO5dd1U
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CEE31F000C0;
-	Tue, 24 Nov 2026 18:47:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=BjRfFW17
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44F2B1F000C0;
+	Tue, 24 Nov 2026 18:54:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795546031;
-	bh=6xTTBhS+4bcTEIFO7M0OnF7MPPzj3Z/Kwl7dMn2zlIA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=AEO5dd1Uc1eahD9g9MUNfcXNbA0V1xM48EsJGWhrykz6D26hc5zusM9nBFk7B3L4A
-	 c385WjdSaNVYTC17PgYHxoQCdfdHMpRbuvbZHzuZgVOxAfCSBO0VBZ6W6iLWyfNxHR
-	 08YRFFsiUnCFK/nNJ57R/r8v+fr2d8HtaxENr1z3LZM2HYHfEYH9wOHHY/vq37iRl5
-	 l1oSeN2vcxsyqe7o9IWscBENzr28/2IRLcV72NXOdCbeW+pae4/9eh8QC4u4G5TN2e
-	 KhMD2kXnf2il0dCoP8YQaqCZxA2101BZl/NNZyQvLDTxYs0w8yoSEZqKcelHPPko6I
-	 uA8YD/w5LrS3w==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v1 17/17] perf tests report: Exercise the TUI browsers
-Date: Tue, 24 Nov 2026 15:46:04 -0300
-Message-ID: <20261124184604.24983-18-acme@kernel.org>
-X-Mailer: git-send-email 2.56.1
-In-Reply-To: <20261124184604.24983-1-acme@kernel.org>
+	s=k20260515; t=1795546442;
+	bh=6dOlIFyIREpYmlEbD+Zu74jIiaQeq22rCtJOqQModUg=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=BjRfFW17U+6528A/uG52nOPGX+XAN3B0m2iI9pfj19/41leBnc5lfnfnrdfmz/G3D
+	 +IJnN04kdMIKmtRSd42opFfW/uC6rD1yZHgmOr5hrJPFzmx7QMQ4wZ4kbJY5adG9zl
+	 Vv06yEc+hkWDOENnICfAa9iiauf6c1vE8lq+wKlQi/52+P+WsPpqOy9ay6AtYR/OPU
+	 bTEjn/r5YXsrHjLp0uju6mf4BvD2SYUsP1klPaB3rfOQL7TMmK0q2kcpIWli++RL5U
+	 hWvQ9fSVvZJlPIQDVPnKOPF80TwAFzRtxP7NcTSUoHj33ODDoocp6E98I0SBoHnpm3
+	 AajjvGMvcj3/w==
+Message-ID: <sashiko-outbox-231861@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1 05/17] perf tests script: Exercise the list, fields
+ and dump options
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261124184604.24983-6-acme@kernel.org>
 References: <20261124184604.24983-1-acme@kernel.org>
+ <20261124184604.24983-6-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 24 Nov 2026 18:54:01 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -65,139 +60,62 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Medium] perf tests script: disasm in test_script_fields() fails
+  without libcapstone
+--
 
-Run report and annotate on a pty and press the help, zoom and source
-keys, then check that the screens were drawn.  Needs python and
-libslang.
+commit 11f72d07cda14b3cc3bb37ec5610a17a52bfd7b5
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/tests/shell/report_tui.sh | 112 +++++++++++++++++++++++++++
- 1 file changed, 112 insertions(+)
- create mode 100755 tools/perf/tests/shell/report_tui.sh
+perf tests script: Exercise the list, fields and dump options
 
-diff --git a/tools/perf/tests/shell/report_tui.sh b/tools/perf/tests/shell/report_tui.sh
-new file mode 100755
-index 0000000000000000..bf5ff1c4c3f6ff7f
---- /dev/null
-+++ b/tools/perf/tests/shell/report_tui.sh
-@@ -0,0 +1,112 @@
-+#!/bin/bash
-+# perf report and annotate TUI tests
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+# shellcheck source=lib/setup_python.sh
-+. "$(dirname "$0")/lib/setup_python.sh"
-+
-+if ! perf check feature -q libslang; then
-+	echo "[Skip] No libslang support"
-+	exit 2
-+fi
-+
-+err=0
-+tmpdir=$(mktemp -d /tmp/__perf_test_tui.XXXXXX)
-+perfdata="${tmpdir}/perf.data"
-+tui_keys="${tmpdir}/tui_keys.py"
-+
-+cleanup() {
-+	rm -rf "${tmpdir}"
-+
-+	trap - EXIT TERM INT
-+}
-+
-+trap_cleanup() {
-+	echo "Unexpected signal in ${FUNCNAME[1]}"
-+	cleanup
-+	exit 1
-+}
-+trap trap_cleanup EXIT TERM INT
-+
-+# The TUI needs a terminal, so run it on a pty and feed it the keys a
-+# user would press.
-+cat > "${tui_keys}" <<'PY'
-+import fcntl, os, pty, select, struct, sys, termios, time
-+
-+outfile = sys.argv[1]
-+keys = sys.argv[2].encode()
-+cmd = sys.argv[3:]
-+
-+pid, fd = pty.fork()
-+if pid == 0:
-+	os.environ["TERM"] = "xterm"
-+	os.execvp(cmd[0], cmd)
-+
-+fcntl.ioctl(fd, termios.TIOCSWINSZ, struct.pack("HHHH", 40, 120, 0, 0))
-+
-+start = time.time()
-+next_key = start + 1.5
-+deadline = start + 20
-+with open(outfile, "wb") as out:
-+	while True:
-+		now = time.time()
-+		if now > deadline:
-+			os.kill(pid, 9)
-+			sys.exit(2)
-+		if keys and now >= next_key:
-+			os.write(fd, keys[:1])
-+			keys = keys[1:]
-+			next_key = now + 0.7
-+		r, _, _ = select.select([fd], [], [], 0.1)
-+		if r:
-+			try:
-+				chunk = os.read(fd, 65536)
-+			except OSError:
-+				break
-+			if not chunk:
-+				break
-+			out.write(chunk)
-+			out.flush()
-+
-+_, status = os.waitpid(pid, 0)
-+sys.exit(os.waitstatus_to_exitcode(status))
-+PY
-+
-+run_tui() {
-+	local desc="$1" keys="$2" expect="$3"
-+
-+	shift 3
-+	echo "TUI ${desc}"
-+	if ! "${PYTHON}" "${tui_keys}" "${tmpdir}/${desc}.out" "${keys}" "$@"; then
-+		echo "TUI ${desc} [Failed: TUI exited with an error]"
-+		err=1
-+		return
-+	fi
-+	if ! grep -qa "${expect}" "${tmpdir}/${desc}.out"; then
-+		echo "TUI ${desc} [Failed: missing '${expect}']"
-+		err=1
-+		return
-+	fi
-+	echo "TUI ${desc} [Success]"
-+}
-+
-+echo "TUI record"
-+if ! perf record -q -o "${perfdata}" -- perf test -w noploop 1; then
-+	echo "TUI record [Failed: perf record failed]"
-+	cleanup
-+	exit 1
-+fi
-+
-+run_tui "report" "q" "Overhead" perf report --tui -i "${perfdata}"
-+run_tui "report help" "?qq" "Help" perf report --tui -i "${perfdata}"
-+run_tui "report dso zoom" "dq" "Overhead" perf report --tui -i "${perfdata}"
-+run_tui "report thread zoom" "tq" "Overhead" perf report --tui -i "${perfdata}"
-+run_tui "annotate" "q" "Percent" perf annotate --tui -i "${perfdata}"
-+# noploop is built without debug info, so 's' opens the "no source code"
-+# warning and the first 'q' only dismisses it; the second one quits.
-+run_tui "annotate source" "sqq" "Percent" perf annotate --tui -i "${perfdata}"
-+
-+cleanup
-+exit $err
--- 
-2.56.0
+This commit expands the perf script shell test to exercise script listing,
+output field selection, per-event dumps, header output, task and mmap
+events, and miscellaneous display options.
 
+> diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/sc=
+ript.sh
+> index af687c7cfe44c..a74d45d51ae47 100755
+> --- a/tools/perf/tests/shell/script.sh
+> +++ b/tools/perf/tests/shell/script.sh
+
+[ ... ]
+
+> @@ -27,18 +43,123 @@ trap_cleanup()
+> =20
+>  trap trap_cleanup EXIT TERM INT
+> =20
+> +script_data=3D"${temp_dir}/script-perf.data"
+
+[ ... ]
+
+> +test_script_fields()
+> +{
+> +	echo "perf script fields test"
+> +	perf record -o "${script_data}" -e cpu-clock --sample-cpu ${testprog}
+> +	if ! perf script -i "${script_data}" -F comm,tid,pid,time,cpu,event,ip,=
+sym,dso,dsoff,symoff,period,machine_pid,vcpu,ipc,insn,insnlen,disasm,misc,m=
+etric,synth,callindent,flags | grep -q "${testsym}"
+> +	then
+> +		echo "perf script fields test [Failed missing ${testsym}]"
+> +		err=3D1
+> +		return
+> +	fi
+
+[Severity: Medium]
+Does test_script_fields() fail when perf is built without libcapstone
+support?
+
+In tools/perf/builtin-script.c, parse_output_fields() rejects -F disasm
+with -EINVAL unless HAVE_LIBCAPSTONE_SUPPORT is defined, which causes
+perf script to exit without output, sets err=3D1, and returns early before
+the +cpu and -comm checks run.  Guarding the disasm field with
+"perf check feature -q libcapstone" would avoid failing on builds
+without capstone.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261124184604.2498=
+3-1-acme@kernel.org?part=3D5
