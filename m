@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795642132;
-	b=c0sNxm2AeuMt1TewiRUdYh7XyYLmBqdakBt43FQrD/UdTk3YNH7kgdeeSbhNDCNb4Jtd
-	 F1zvbpLKXX4wwvl/AoPWXto/K1xYwH2d0ev4KZysGWOWvZinu5oLdyI7dwFWbmL5F7MLf
-	 MCM8UL06BgGh2QlNm78Fa4OHJRNoiPkxhyrsBDIMaTwbDXSHNlTgskOg+Qylp39LzAXFQ
-	 voRUuZ91DypuOyFLEK64AKq6aZJQtUYIKLdzsc2kAToN6aSqo/Is7zUKGBr3oR5keNyNQ
-	 X+5E13P/bqIvj1vSPuHzsLCL4KWIXNE0VxWg6NZkvtBh+efqd5BTw7MsCDyLTG7aaYQ==
+	t=1795642134;
+	b=2p7Vq53fI745Hq3GkDvJfq2E/C96zqX/UeFQ7S76B/FBuR3HBu27HxEIC8LSXDyx3rLz
+	 ihlySOjRGwjM3FNOFknZDQbW/WxcnftjQA0yR/YmKlok/xA1Ig2zIcmL8jefR5vn+hB7t
+	 29zmpaIVj7ZuBQMgwDYPOI5MVfQdJ1XR21rSPN83anh/fL0KpToUyhXOun8aHcdcCfZsM
+	 ufol3YFnMm1l+yn2ZuPSX6WcAg+4xbftM2F7ogcSfhTmsz4lXTZduUxI3SakOFkgu/Dde
+	 fFZQ9h5dDFBoh60S1iGxF9VkxLy3YbZ8ktrDQkp23dE6h8kPzzSpiYpSFbfn9zLWVBg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795642132;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795642134;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=7Hmz5vySOboqHrESZPY+xq7qDyDg7gktFhkojo13Pz0=;
-	b=47K6ilzPN47yY8K8y1qBoJipAjw2ylcmE8evJHBX3wTDuGR+mCGgklSRPl1OPt2te7Bt
-	 5X9gNaQSv7tN4D8sdLN3wr7yD9rbN6yz96PyJpKGxPKfEWM+vjg6U3JHI4QqAxa2AyYO3
-	 ptUbz7TX4fOMP2IySdYL779k+CYAfhuSXcVKrrdMiB+BvX0y++BgL8HtDJFaHHI8Igbkg
-	 ue5CdQrc1KYRLtFVm9A+1GFtX8d/x5uxYOp6EgqPbbrxZohb5wdir3W3OWkcJboTbs4mq
-	 itajpaTA4TEzpgF7o7o1rLRP0lfnrv9Gju8GAXAcyfSohwG6KCLhgSYlDHZo9d4hBtg==
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=ZYldd7cRX0WnF2H6fDrzryz0L00o7JUFVM370Uxi0dc=;
+	b=itkBkCdHYY5EwHwd7vAZVM12YprjpjXeM0WkATPLd7jyy5uO7CWVMDHaWT8u1YPEb4EE
+	 oXaV5/gZn0OrZV+V7iH3HRVk0L+OeQ4xQLxt+ffTFa22k9voRAXvDZjzUrXMCdq0qjyTJ
+	 mZCqvRtPiTEi1Z+b0pJHGQNeGzhs/zyCAJkRdoOw6KF13tHalVoQ6gIW9SwLJ4zDcUhJh
+	 kko5DFRmkX+AaSnRz2lDqKYWI72B8d4nFdyRnpMKMs78Rs6DGsF2hGENMVPS6fkOMljd9
+	 OCb/fte4O95Ci7jRK6q50Dt35VEIVDWaw4YY3PD8eYtc+lQr2ALcoW/m9pAlL7qJyaw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gdxN4x4l;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XGECsxZi;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6798606A327;
-	Wed, 25 Nov 2026 21:28:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0EE606A688;
+	Wed, 25 Nov 2026 21:28:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gdxN4x4l
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11A321F0093C;
-	Wed, 25 Nov 2026 21:28:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XGECsxZi
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C2351F000CA;
+	Wed, 25 Nov 2026 21:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795642132;
-	bh=7Hmz5vySOboqHrESZPY+xq7qDyDg7gktFhkojo13Pz0=;
-	h=From:To:Cc:Subject:Date;
-	b=gdxN4x4ltjSLrRUiu7ZX5bYI8i3yfR/GkYqDQns38mwjLhgtdajRjfrLxdixVYh87
-	 AdW/qQWMdkFd4bPupR2tpC86m7TQZtbGYNZzeHbZQa1KogsSj0ms0eHkWrotKk9qtz
-	 iFsir8l2hOhVIuQyJwFclbOPgEQR5+S/2bE56BMCxbjcFmNiZDI85FGpOwnf5NluIr
-	 dVCKZh2+7SOoyK2pw3TAP7y5YxWhLJEmoqcIsSjZ6xntdc14JoubLrJS1TjKbr+8AL
-	 wfzqhmMyW32F1xouP8KTH8keCLsxTrr00J6/8NAw8wFJV5dNsvp0kazea1RmYxOSXq
-	 wOXRV161DizCg==
+	s=k20260515; t=1795642134;
+	bh=ZYldd7cRX0WnF2H6fDrzryz0L00o7JUFVM370Uxi0dc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=XGECsxZiN4+k5GO0O5/h204LC7vbshX52vbzqriOp5xrD1fcWZrFGvIJ2DxvLDddw
+	 NswUe+3pLvpdJZG31GYvmeKUXwwAY22MmD4k40RwETkA3iOl9isN6Suw9x0VkozKNM
+	 Z9vHEdtCXAhxJnuOBEAZjJpSINBfZGojB+hhFPb7pX6tI5wMCMiZKh3RXc7MCIx/kS
+	 ioXKJF36od1zdQ4W+hs15SvPHOTna9ZiVulZFPJK3xdC1e8AUTZq5Fa2T6USj2J36F
+	 w9utIGadXJPxvoz0IbwOvl9FFUH8u4Ifehm7X2UZuyDK07wSvxwqOfi6oM35jtNqKT
+	 2vqLAxni/u8Nw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -49,10 +49,12 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v4 00/11] perf tools: Enhance namespace and chroot handling
-Date: Wed, 25 Nov 2026 13:28:40 -0800
-Message-ID: <20261125212851.1792988-1-namhyung@kernel.org>
+Subject: [PATCH v4 03/11] perf tools: Add nsinfo__new_thread() to track tid
+Date: Wed, 25 Nov 2026 13:28:43 -0800
+Message-ID: <20261125212851.1792988-4-namhyung@kernel.org>
 X-Mailer: git-send-email 2.56.1.839.g22a8290db9-goog
+In-Reply-To: <20261125212851.1792988-1-namhyung@kernel.org>
+References: <20261125212851.1792988-1-namhyung@kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -64,111 +66,159 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello,
+Record the thread ID (tid) in struct nsinfo via nsinfo__new_thread() and
+access /proc/<pid>/task/<tid>/ status and ns/mnt paths instead of only
+/proc/<pid>/.  Also recreate thread->nsinfo when the pid of the thread
+is updated.
 
-This series improves namespace and chroot handling when perf accesses
-files from /proc.  It defers reading /proc until namespace info is
-actually needed, verifies thread liveness, matching boot IDs, and
-mount namespace inodes against PID/TID recycling, and avoids entering
-target mount namespaces for host-side files such as the build-id cache.
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/machine.c    |  3 +++
+ tools/perf/util/namespaces.c | 22 ++++++++++++++++++----
+ tools/perf/util/namespaces.h |  3 +++
+ tools/perf/util/thread.c     |  2 +-
+ 4 files changed, 25 insertions(+), 5 deletions(-)
 
-It's assisted by LLM.
-
-v4 changes:
-
- * Fix a potential struct thread reference leak on failure in
-   test__nsinfo_thread_liveness().
- * Rebase onto the latest tmp.perf-tools-next (preserving chroot
-   tracking for --lazy-load-symbols in dso__load()).
-
-v3: https://lore.kernel.org/r/20261123232025.1406560-1-namhyung@kernel.org
-
- * Guard evlist before calling evlist__session() in write_boot_id().
- * Repipe PERF_RECORD_HEADER_FEATURE events in perf-inject pipe mode
-   and add a boot ID pipe-injection shell test and unit test.
- * Pin a reference-counted host /proc descriptor across
-   nsinfo__mountns_enter()/exit(), access relative /proc paths via
-   stack-buffered nsinfo__proc_{open,stat,readlink}() helpers instead of
-   heap-allocating mntns_path, and handle ENOENT/ESRCH on ns/mnt stat.
- * Skip filename_with_chroot() chroot resolution when
-   nsinfo__need_setns() is set.
- * Add compiler context-analysis lock annotations (__guarded_by,
-   __must_hold, __returns_ctx_lock) for struct nsinfo, host_proc_lock,
-   thread->nsinfo, and __thread__reset_nsinfo(), plus locked accessors.
- * Expand mount namespace tests to verify overmounted /proc during
-   nsinfo__mountns_enter() and own a private mount namespace in
-   enter_private_userns() for clean nsinfo__mountns_exit() restoration.
-
-v2: https://lore.kernel.org/r/20261116055731.707164-1-namhyung@kernel.org
-
- * Keep dso__filename_with_chroot() (guarded by nsinfo__check_proc())
-   instead of calling chroot() inside nsinfo__mountns_enter().
- * Add a mutex lock to struct nsinfo and replace thread->nsinfo safely on
-   exec/namespace events rather than mutating shared instances in place.
- * Mark offline sessions explicitly, propagate exit on fork replacement
-   and perf_event__exit_del_thread(), and guard sub-thread fallback in
-   thread__e_machine_endian().
- * Gate mount namespace entry for debuginfo/binary probing callers,
-   include distro debuginfo types, and handle build-id lookups in
-   symbol-minimal's dso__load_sym().
- * Add unit and shell tests for namespace, nsinfo, chroot, and boot ID
-   handling.
-
-v1: https://lore.kernel.org/r/20261023071141.134149-1-namhyung@kernel.org
-
-Thanks,
-Namhyung
-
-
-Namhyung Kim (11):
-  perf tools: Add HEADER_BOOT_ID feature
-  perf tools: Add perf_env__is_same_boot()
-  perf tools: Add nsinfo__new_thread() to track tid
-  perf tools: Add lock to struct nsinfo
-  perf tools: Defer /proc lookup until nsinfo is used
-  perf tools: Verify thread status and mount namespace inode
-  perf tools: Check thread liveness when accessing /proc
-  perf tools: Export filename__read_build_id_ns()
-  perf tools: Only enter mount namespace if necessary
-  perf tools: Scope mount namespace entry in dso__load()
-  perf tests: Add namespace, nsinfo, and boot ID tests
-
- .../Documentation/perf.data-file-format.txt   |    5 +
- tools/perf/builtin-inject.c                   |   29 +-
- tools/perf/builtin-trace.c                    |    2 +-
- tools/perf/tests/Build                        |    1 +
- tools/perf/tests/builtin-test.c               |    1 +
- tools/perf/tests/namespaces.c                 | 1189 +++++++++++++++++
- tools/perf/tests/shell/header.sh              |    9 +
- tools/perf/tests/shell/pipe_test.sh           |   21 +
- tools/perf/tests/tests.h                      |    1 +
- tools/perf/util/build-id.c                    |   15 +-
- tools/perf/util/capstone.c                    |    8 +-
- tools/perf/util/debuginfo.c                   |   19 +-
- tools/perf/util/disasm.c                      |    8 +-
- tools/perf/util/dso.c                         |   58 +-
- tools/perf/util/dso.h                         |   34 +
- tools/perf/util/dsos.c                        |   17 +-
- tools/perf/util/env.c                         |   69 +
- tools/perf/util/env.h                         |    4 +
- tools/perf/util/event.c                       |    1 +
- tools/perf/util/header.c                      |   28 +
- tools/perf/util/header.h                      |    1 +
- tools/perf/util/jitdump.c                     |    2 +-
- tools/perf/util/machine.c                     |   16 +-
- tools/perf/util/map.c                         |    2 +-
- tools/perf/util/namespaces.c                  |  439 +++++-
- tools/perf/util/namespaces.h                  |   23 +-
- tools/perf/util/session.c                     |    1 +
- tools/perf/util/symbol-minimal.c              |    4 +-
- tools/perf/util/symbol.c                      |   45 +-
- tools/perf/util/symbol.h                      |    3 +
- tools/perf/util/thread.c                      |   97 +-
- tools/perf/util/thread.h                      |   15 +-
- tools/perf/util/util.c                        |    7 +-
- 33 files changed, 1999 insertions(+), 175 deletions(-)
- create mode 100644 tools/perf/tests/namespaces.c
-
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 3c206c26bd62163e..62f3ee8488548ef6 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -19,6 +19,7 @@
+ #include "branch.h"
+ #include "mem-events.h"
+ #include "mem-info.h"
++#include "namespaces.h"
+ #include "path.h"
+ #include "srcline.h"
+ #include "symbol.h"
+@@ -517,6 +518,8 @@ static void machine__update_thread_pid(struct machine *machine,
+ 		return;
+ 
+ 	thread__set_pid(th, pid);
++	nsinfo__zput(RC_CHK_ACCESS(th)->nsinfo);
++	RC_CHK_ACCESS(th)->nsinfo = nsinfo__new_thread(pid, thread__tid(th));
+ 
+ 	if (thread__pid(th) == thread__tid(th))
+ 		return;
+diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
+index 01502570b32d02ab..f426eba04d6ef449 100644
+--- a/tools/perf/util/namespaces.c
++++ b/tools/perf/util/namespaces.c
+@@ -106,7 +106,8 @@ int nsinfo__init(struct nsinfo *nsi)
+ 	if (snprintf(oldns, PATH_MAX, "/proc/self/ns/mnt") >= PATH_MAX)
+ 		return rv;
+ 
+-	if (asprintf(&newns, "/proc/%d/ns/mnt", nsinfo__pid(nsi)) == -1)
++	if (asprintf(&newns, "/proc/%d/task/%d/ns/mnt",
++		     nsinfo__pid(nsi), nsinfo__tid(nsi)) == -1)
+ 		return rv;
+ 
+ 	if (stat(oldns, &old_stat) < 0)
+@@ -127,7 +128,8 @@ int nsinfo__init(struct nsinfo *nsi)
+ 	/* If we're dealing with a process that is in a different PID namespace,
+ 	 * attempt to work out the innermost tgid for the process.
+ 	 */
+-	if (snprintf(spath, PATH_MAX, "/proc/%d/status", nsinfo__pid(nsi)) >= PATH_MAX)
++	if (snprintf(spath, PATH_MAX, "/proc/%d/task/%d/status",
++		     nsinfo__pid(nsi), nsinfo__tid(nsi)) >= PATH_MAX)
+ 		goto out;
+ 
+ 	rv = nsinfo__get_nspid(&RC_CHK_ACCESS(nsi)->tgid, &RC_CHK_ACCESS(nsi)->nstgid,
+@@ -150,11 +152,11 @@ static struct nsinfo *nsinfo__alloc(void)
+ 	return res;
+ }
+ 
+-struct nsinfo *nsinfo__new(pid_t pid)
++struct nsinfo *nsinfo__new_thread(pid_t pid, pid_t tid)
+ {
+ 	struct nsinfo *nsi;
+ 
+-	if (pid == 0)
++	if (pid <= 0 || tid <= 0)
+ 		return NULL;
+ 
+ 	nsi = nsinfo__alloc();
+@@ -162,6 +164,7 @@ struct nsinfo *nsinfo__new(pid_t pid)
+ 		return NULL;
+ 
+ 	RC_CHK_ACCESS(nsi)->pid = pid;
++	RC_CHK_ACCESS(nsi)->tid = tid;
+ 	RC_CHK_ACCESS(nsi)->tgid = pid;
+ 	RC_CHK_ACCESS(nsi)->nstgid = pid;
+ 	nsinfo__clear_need_setns(nsi);
+@@ -176,6 +179,11 @@ struct nsinfo *nsinfo__new(pid_t pid)
+ 	return nsi;
+ }
+ 
++struct nsinfo *nsinfo__new(pid_t pid)
++{
++	return nsinfo__new_thread(pid, pid);
++}
++
+ static const char *nsinfo__mntns_path(const struct nsinfo *nsi)
+ {
+ 	return RC_CHK_ACCESS(nsi)->mntns_path;
+@@ -193,6 +201,7 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
+ 		return NULL;
+ 
+ 	RC_CHK_ACCESS(nnsi)->pid = nsinfo__pid(nsi);
++	RC_CHK_ACCESS(nnsi)->tid = nsinfo__tid(nsi);
+ 	RC_CHK_ACCESS(nnsi)->tgid = nsinfo__tgid(nsi);
+ 	RC_CHK_ACCESS(nnsi)->nstgid = nsinfo__nstgid(nsi);
+ 	RC_CHK_ACCESS(nnsi)->need_setns = nsinfo__need_setns(nsi);
+@@ -265,6 +274,11 @@ pid_t nsinfo__pid(const struct nsinfo  *nsi)
+ 	return RC_CHK_ACCESS(nsi)->pid;
+ }
+ 
++pid_t nsinfo__tid(const struct nsinfo  *nsi)
++{
++	return RC_CHK_ACCESS(nsi)->tid;
++}
++
+ bool nsinfo__in_pidns(const struct nsinfo *nsi)
+ {
+ 	return RC_CHK_ACCESS(nsi)->in_pidns;
+diff --git a/tools/perf/util/namespaces.h b/tools/perf/util/namespaces.h
+index e95c79b80e27c8fc..ea645954944de4be 100644
+--- a/tools/perf/util/namespaces.h
++++ b/tools/perf/util/namespaces.h
+@@ -32,6 +32,7 @@ void namespaces__free(struct namespaces *namespaces);
+ 
+ DECLARE_RC_STRUCT(nsinfo) {
+ 	pid_t			pid;
++	pid_t			tid;
+ 	pid_t			tgid;
+ 	pid_t			nstgid;
+ 	bool			need_setns;
+@@ -48,6 +49,7 @@ struct nscookie {
+ 
+ int nsinfo__init(struct nsinfo *nsi);
+ struct nsinfo *nsinfo__new(pid_t pid);
++struct nsinfo *nsinfo__new_thread(pid_t pid, pid_t tid);
+ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi);
+ 
+ struct nsinfo *nsinfo__get(struct nsinfo *nsi);
+@@ -58,6 +60,7 @@ void nsinfo__clear_need_setns(struct nsinfo *nsi);
+ pid_t nsinfo__tgid(const struct nsinfo  *nsi);
+ pid_t nsinfo__nstgid(const struct nsinfo  *nsi);
+ pid_t nsinfo__pid(const struct nsinfo  *nsi);
++pid_t nsinfo__tid(const struct nsinfo  *nsi);
+ bool nsinfo__in_pidns(const struct nsinfo  *nsi);
+ void nsinfo__set_in_pidns(struct nsinfo *nsi);
+ 
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index af761b1fc5d57649..8d8427b561ddde11 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -71,7 +71,7 @@ struct thread *thread__new(pid_t pid, pid_t tid)
+ 		list_add(&comm->list, thread__comm_list(thread));
+ 		refcount_set(thread__refcnt(thread), 1);
+ 		/* Thread holds first ref to nsdata. */
+-		RC_CHK_ACCESS(thread)->nsinfo = nsinfo__new(pid);
++		RC_CHK_ACCESS(thread)->nsinfo = nsinfo__new_thread(pid, tid);
+ 		srccode_state_init(thread__srccode_state(thread));
+ 	}
+ 
 -- 
 2.56.1.831.g720f3f5937-goog
 
