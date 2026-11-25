@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.70
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.200
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795567920;
-	b=MYffLFrqdoVep8x09PlBXqRzqTI/7O2b6xVSRwsevQ1bmBO2qSj/NE3OEyNNR0TzqmJU
-	 YzT6i1EhBkEwJUljFwX+WhOOBxfa6YNjd/BVPqotMEW++Fq8Ad3PcvuB4JSzRIwP1qEPf
-	 f8D9XRc0V0mcj6xWca2N5bP0YSHZQQd/QVTSYPnkDu9Wz4wqhr0UXP79aVoec3tL64TiW
-	 IzgSz4qbeO68Pcw2i3fWvcnEElj8RzSIhQmccEmhRG+OCkj38nW2ba/iR5DTQNUjT495f
-	 n1olpd3TF6CrC9cS2seNfMZ3Xt6Cf9nF2CMRNI/gMTyyN1SFLPTA7SNFbZKNuHtWf0A==
+	t=1795567921;
+	b=wIsTsGo9Ho+Ozj6SnXCexz29C6dxE6zO1nct1i0FM7ESpVzGAdIkVh2BwBMku3QxBS2G
+	 I1m3OYHkg4+akOsW6HjSYFVJlGNlzsIGvJpNpn43D2xz+sQwSGhDKsc1SBHGlnOkGzLUh
+	 Ja7+oPEwkYhZUtPjXB0/Fn2c+/LIB0/wPebQuUor/EcyHo0ozaMfJCYYbez3AGjjn8vKE
+	 Lr7g6xmZin18eUfpLEqXnPyhOT0KwWH/ks8XACVQw5bldRe3CsA8Fkm324mZMsTCDlBCa
+	 cts8BkspO5sXGQtjwItjHPo1UsS5pWEHq/bfwG7HyPTvEdTDr2g9EulBo7uwab4YWuQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795567920;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795567921;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=QndkiIz5ZF/DqfpSqKPFQigqx23qy3mxXJ1/LTwGGQo=;
-	b=01oWQ6/6XWIk6TuGQKF8IukIi4uVnHCfyFpf8w6ZuoIcRfZ9UrJqvyXv08PPgFgapNsJ
-	 6z/xqvDQWHNTTx8ZYJSdxy+vmQh/5Zf2UPg+JbruZA5Rib8dZxxU9n9p4hWjGDh+FIzj3
-	 41lSQAJuCaVKKlu1RZ8XCLq8dfAzfSUIGPU/T+SEFeyeSeHD7u9HWtYq5T3Pvpq/v7gvR
-	 9B+q0lJ9Mf30ntyt8MspX9+D6xLf5qw36Ux1ZwAj4dseNi6elHHwJQcMOaa487yAPFgFR
-	 BX3+Y/x6Lk6IyM+xisnyZ1ma4DKIFkIpUnfHJKQ4pHTjH/L6h/2BZ367zJQBRpfBD1A==
+	bh=reO/0evIiDzpyVPcrOkTNkcSvkNXLH6JHyvO2OKvF+E=;
+	b=Z2gwartBTaZ25LwKylYrfdgKeZ0KMRr3dozBeIM0c2yVqvtTxvvMuwgZHAK7aibB2Gd/
+	 RLr3K/yKz2IWRXePYNcpRskLaDMszB5KAdGFDvGJipGT/T0MGsV6zcinjMCs4t/sYjBD/
+	 WAxaxUpcKr1xyLfU7EkYj27Uj+9xfSTytvz3ZsUUl3Inby5SXB5DI/aC7XgoWYKUMghoh
+	 HFqa9rfycNDL2FOyP9hPjDf6UONhnSVZvXo05ZtM/K6kiL1T4+UPKe+9pwZHOpYzcifge
+	 RW1UUa+vYzbqoYLY0SzHC412aZ+h5ycIxqi2NNrLdQ4m5Z9WU+iGGuuYbcEmWSvj3lA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=KNdnbE1E;
-	arc=none smtp.remote-ip=74.125.82.70
-Received: from mail-dl1-f70.google.com (mail-dl1-f70.google.com [74.125.82.70])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=aQx7jrkG;
+	arc=none smtp.remote-ip=74.125.82.200
+Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD9C60A5BCD
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 00:51:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1BD9C60A5BCD
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC49606A680
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 00:52:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org EAC49606A680
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=KNdnbE1E
-Received: by mail-dl1-f70.google.com with SMTP id a92af1059eb24-1b56c696405so5394931c88.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 16:51:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=aQx7jrkG
+Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-38355b03cb8so5056012eec.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 16:52:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795567918; x=1796172718; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1795567920; x=1796172720; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=QndkiIz5ZF/DqfpSqKPFQigqx23qy3mxXJ1/LTwGGQo=;
-        b=KNdnbE1ExdySZuGqrwqe2FC3574CWxy9MJ5xNym9RKykz4xYefLApvWpMwq30e9Obt
-         JubsrcEOfqIF9YndR6+HhnzA3fYPyWUpfDmdiM1RTsjr2HJPi+Axg0QtEVKqiYMnaHbK
-         AFekKJBSDhkwR+E/jOqbfG7PdPGHScobcUnT/i3E7fQTCBdlposd0rUt8aMor7b7ljYN
-         Dez5/VkOx8W8oNAxfdrQxPnGFuJEFBCIN7FyoQNJ73iPKzOt999cVtPyTWn5Ok36i1Dd
-         W41A0BlPcCTRL8stZMuBy4WrHDwUmdhuIvk0Sp2yVwWVx2M+O7Ctu1HreeHBwEdWk/3l
-         iuZQ==
+        bh=reO/0evIiDzpyVPcrOkTNkcSvkNXLH6JHyvO2OKvF+E=;
+        b=aQx7jrkGVcH19bCY5rgJwvjq+KiJAhEf52+OiAcrQMBE4qbRpoylCJVZjNbGF4On9h
+         73a5XuKQB+1Gpedqcept51JcxhgCx+mF0LZeqcE3qjVdrORfSEy3Wrv0gRbbTm4QNqoD
+         9yaygDQRn5TEnBZmRxBCynGeWbLj22d0REsMg0ZzkxO7ClYsJJ5XXLq6790Dzwlr3MoQ
+         ApWG537I0pcXGzeDSyQyomZJ57SaqsysxDHnit36NauM8FgoJJ85jNMKEqrM/nL9rqvf
+         1yFGBSjWJ3a4JAxsP+dnGMrIJrnU79JbjKFYam8F2y2v7mqI6/aqEUpycjB0VDWP3D3Y
+         f3hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795567918; x=1796172718;
+        d=1e100.net; s=20260707; t=1795567920; x=1796172720;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=QndkiIz5ZF/DqfpSqKPFQigqx23qy3mxXJ1/LTwGGQo=;
-        b=e3WXMLuvMXlbGef9c8U8q+D7nG5cPcTX4vbc1g/UiCAPDpoPz4+S0/ukb0uP7VG1/0
-         bYN8ddR/FZM2zMhs9iyl6wdH8wCWbQTZFlGpA51IlGb0+YzbGIBSjGmBVsxOYsT8dd4k
-         94/wwhAkze4Dro4UHyag4IS4T6uKiOENjg6UkbXcKouQhDbjNXRMXqthngK3zijmALgr
-         gizUfMsaie9mYxXTxrLj2bfbjf/kGVReMZgRfjj6tT6e9ZzXU+tn+ihXCtaFfaFMQUxz
-         8kc6KywjavHn4EcbPpAQv2lvbdRgIiposVJlsjAkgG3086Yf6Yhe+R3dQhZTZ1EAW6+4
-         RVLA==
-X-Forwarded-Encrypted: i=1; AL+hErFd4SidhEVwI99H8JXHjDLnha5pJzY5tORoEdr7S02OIMrCySraLOG5IfNncI8lQji8LE15M12Xt9+1i07hNmO0@vger.kernel.org
-X-Gm-Message-State: APuU4Z9J6BsGPD9ZeJcY+wEpBM5FP3THl5Lo0ThIqGPiujD7/bFBMZXi
-	zzucUFf38Q1OKtL5JU95icP9lvYhzhX0qxyUWt4Z+ULe06HA6Hi1CRJPAXK5ZM+xmS1LDz4D2ua
-	aP5pzvtWbEw==
-X-Received: from dlgj1-n1.prod.google.com ([2002:a05:7023:e41:10b0:1a7:2bf1:46cc])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:b0c8:b0:1b2:6855:998a
- with SMTP id a92af1059eb24-1b556911007mr14552250c88.34.1795567917876; Tue, 24
- Nov 2026 16:51:57 -0800 (PST)
-Date: Tue, 24 Nov 2026 16:51:07 -0800
+        bh=reO/0evIiDzpyVPcrOkTNkcSvkNXLH6JHyvO2OKvF+E=;
+        b=vzqfP7lp84zIBwv9ziiV7g674hwYfSpnUam39I8NkORFoQ6PynV4SoabMsifbralrU
+         hkVNMZ+L20R13H5e7SV7yMNsoGkdBi3Wk8l+zGP6sQd2fZdsc0+m9dHAcfpTwh6zlaSM
+         ntFihV+CxAipg3bUmKKjfnG9urXQI4p5zThCKmH90R9ha7Rnbuki2xffUx/0rsvcQrxL
+         d2wJXDl+CMm1bXaAA9IPab098W724eoqCbUjdusRJXmnRAlPAwuvi8cheCvN8zfzfZk2
+         LfLWb4Yri7JM8j4YJmCP1CRGNVpqev//Aj4jYe4mp8Iw5jnslYvwqJTH4bpmllf0FeIg
+         JMfg==
+X-Forwarded-Encrypted: i=1; AL+hErHRUwKru30KyaGs5RAKvcmYRlqge1LyUqiVPQZ8LjYoruzx4MbJ2u8SjdtxFAnFoA8qj3VVlnxsDcw52H5KUefr@vger.kernel.org
+X-Gm-Message-State: APuU4Z9hMBpkbIwkEDQGnfPKqOn/Ni2Ou+k5vQNHgs4LqLZ3cIlLKsfr
+	bvzgTQzTbrGbMWj3DhcBVH6dr+daugf6FB1KLaFePpcTMn+/9NeTexdDsgXhPlG6NSuzxDVQxIr
+	3qncsKQDUvA==
+X-Received: from dycnr5-n1.prod.google.com ([2002:a05:7300:e9c5:10b0:369:fbca:f649])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:6191:20b0:375:e4de:96d3
+ with SMTP id 5a478bee46e88-3869e61da0fmr12560688eec.31.1795567919715; Tue, 24
+ Nov 2026 16:51:59 -0800 (PST)
+Date: Tue, 24 Nov 2026 16:51:08 -0800
 In-Reply-To: <20261125005108.1020003-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,8 +81,9 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261125005108.1020003-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.831.g720f3f5937-goog
-Message-ID: <20261125005108.1020003-19-irogers@google.com>
-Subject: [PATCH v4 18/19] perf test: Add BUILD_ID_OFFSET C unit tests
+Message-ID: <20261125005108.1020003-20-irogers@google.com>
+Subject: [PATCH v4 19/19] perf test: Add inject --sample-buildids and record
+ --buildid-offset shell tests
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -100,302 +101,295 @@ Cc: Athira Rajeev <atrajeev@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>,
 	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add C unit test coverage for PERF_SAMPLE_BUILD_ID_OFFSET and
-PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET:
-- sample-parsing: round-trip synthesis and parsing
-- mmap-thread-lookup: map lookup by build ID and DSO file offset
-- bid-offset: sys_perf_event_open() attribute probing
+Add shell tests verifying perf inject --sample-buildids (with basic
+samples, callchains, pipe mode, and kernel samples) and perf record
+--buildid-offset across per-thread, system-wide, workload, and callgraph
+modes.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/Build                |  1 +
- tools/perf/tests/bid-offset.c         | 61 +++++++++++++++++++++++++++
- tools/perf/tests/builtin-test.c       |  1 +
- tools/perf/tests/mmap-thread-lookup.c | 49 ++++++++++++++++++++-
- tools/perf/tests/sample-parsing.c     | 60 +++++++++++++++++++++++++-
- tools/perf/tests/tests.h              |  1 +
- 6 files changed, 170 insertions(+), 3 deletions(-)
- create mode 100644 tools/perf/tests/bid-offset.c
+ tools/perf/tests/shell/inject_bid_offset.sh | 179 ++++++++++++++++++++
+ tools/perf/tests/shell/record.sh            |  74 ++++++++
+ 2 files changed, 253 insertions(+)
+ create mode 100755 tools/perf/tests/shell/inject_bid_offset.sh
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index 5eebb2ec5dde..d6fe1ba57a79 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -66,6 +66,7 @@ perf-test-y += expand-cgroup.o
- perf-test-y += perf-time-to-tsc.o
- perf-test-y += dlfilter-test.o
- perf-test-y += sigtrap.o
-+perf-test-y += bid-offset.o
- perf-test-y += event_groups.o
- perf-test-y += hybrid-merge.o
- perf-test-y += symbols.o
-diff --git a/tools/perf/tests/bid-offset.c b/tools/perf/tests/bid-offset.c
-new file mode 100644
-index 000000000000..0cf52caae047
+diff --git a/tools/perf/tests/shell/inject_bid_offset.sh b/tools/perf/tests/shell/inject_bid_offset.sh
+new file mode 100755
+index 000000000000..9be2e3323558
 --- /dev/null
-+++ b/tools/perf/tests/bid-offset.c
-@@ -0,0 +1,61 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "tests.h"
-+#include "debug.h"
-+#include "evlist.h"
-+#include "evsel.h"
-+#include <linux/hw_breakpoint.h>
-+#include <linux/perf_event.h>
-+#include <sys/syscall.h>
-+#include <unistd.h>
-+#include <errno.h>
-+#include "../perf-sys.h"
++++ b/tools/perf/tests/shell/inject_bid_offset.sh
+@@ -0,0 +1,179 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# perf inject --sample-buildids test
 +
-+static int test__bid_offset(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-+{
-+	struct perf_event_attr attr = {
-+		.type		= PERF_TYPE_SOFTWARE,
-+		.config		= PERF_COUNT_SW_DUMMY,
-+		.size		= sizeof(attr),
-+		.sample_type	= PERF_SAMPLE_BUILD_ID_OFFSET,
-+		.exclude_kernel = 1,
-+		.exclude_hv     = 1,
-+	};
-+	int fd;
++set -e
++set -o pipefail
 +
-+	fd = sys_perf_event_open(&attr, /*pid=*/0, /*cpu=*/-1, /*group_fd=*/-1, /*flags=*/0);
-+	if (fd < 0) {
-+		pr_debug("sys_perf_event_open failed with %d\n", errno);
-+		if (errno == EINVAL || errno == EACCES || errno == EPERM) {
-+			pr_debug("Kernel does not support or permit PERF_SAMPLE_BUILD_ID_OFFSET\n");
-+			return TEST_SKIP;
-+		}
-+		return TEST_FAIL;
-+	}
-+	close(fd);
++shelldir=$(dirname "$0")
++# shellcheck source=lib/perf_has_symbol.sh
++. "${shelldir}"/lib/perf_has_symbol.sh
 +
-+	attr.sample_type = PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET;
-+	attr.exclude_callchain_kernel = 1;
-+	fd = sys_perf_event_open(&attr, /*pid=*/0, /*cpu=*/-1, /*group_fd=*/-1, /*flags=*/0);
-+	if (fd < 0) {
-+		pr_debug("sys_perf_event_open with callchain failed with %d\n", errno);
-+		if (errno == EINVAL || errno == EACCES || errno == EPERM) {
-+			pr_debug("Kernel does not support or permit PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET\n");
-+			return TEST_SKIP;
-+		}
-+		return TEST_FAIL;
-+	}
-+	close(fd);
++sym="noploop"
 +
-+	return TEST_OK;
++skip_test_missing_symbol ${sym}
++
++temp_dir=$(mktemp -d /tmp/perf-test-bid-offset.XXXXXXXXXX)
++
++prog="perf test -w noploop"
++[ "$(uname -m)" = "s390x" ] && prog="$prog 3"
++err=0
++
++cleanup() {
++	local exit_code=${1:-$?}
++	trap - EXIT TERM INT
++	if [ "${exit_code}" -ne 0 ] || [ "${err}" -ne 0 ]; then
++		echo "Test failed! Preserving temp directory: ${temp_dir}"
++		exit 1
++	fi
++	if [[ "${temp_dir}" =~ ^/tmp/perf-test-bid-offset\. ]]; then
++		rm -rf "${temp_dir}"
++	fi
++	exit 0
 +}
 +
-+static struct test_case bid_offset_tests[] = {
-+	TEST_CASE_REASON("Test PERF_SAMPLE_BUILD_ID_OFFSET", bid_offset,
-+			 "not supported by kernel"),
-+	{ .name = NULL, }
-+};
++trap_cleanup() {
++	local exit_code=$?
++	echo "Unexpected signal in ${FUNCNAME[1]}"
++	cleanup ${exit_code}
++}
++trap trap_cleanup EXIT TERM INT
 +
-+struct test_suite suite__bid_offset = {
-+	.desc = "Test PERF_SAMPLE_BUILD_ID_OFFSET",
-+	.test_cases = bid_offset_tests,
-+};
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 01c78ef20b97..b880ed7aa37f 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -186,6 +186,7 @@ static struct test_suite *generic_tests[] = {
- 	&suite__perf_time_to_tsc,
- 	&suite__dlfilter,
- 	&suite__sigtrap,
-+	&suite__bid_offset,
- 	&suite__event_groups,
- 	&suite__hybrid_merge,
- 	&suite__symbols,
-diff --git a/tools/perf/tests/mmap-thread-lookup.c b/tools/perf/tests/mmap-thread-lookup.c
-index dca8bbfe780a..7e312d5a1ba3 100644
---- a/tools/perf/tests/mmap-thread-lookup.c
-+++ b/tools/perf/tests/mmap-thread-lookup.c
-@@ -7,6 +7,7 @@
- #include <pthread.h>
- #include <stdlib.h>
- #include <stdio.h>
-+#include <string.h>
- #include "debug.h"
- #include "env.h"
- #include "event.h"
-@@ -17,7 +18,10 @@
- #include "symbol.h"
- #include "util/synthetic-events.h"
- #include "thread.h"
-+#include "dso.h"
-+#include "build-id.h"
- #include <internal/lib.h> // page_size
-+#include <internal/rc_check.h>
++compare_script() {
++	local orig=$1
++	local bid=$2
++	local msg=$3
++
++	perf script -F -ip -i "${orig}" > "${temp_dir}/script_orig.txt"
++	perf script -F -ip -i "${bid}" > "${temp_dir}/script_bid.txt"
++
++	if [ ! -s "${temp_dir}/script_orig.txt" ]; then
++		echo "${msg} [Failed - empty perf script output]"
++		err=1
++	elif ! diff -q "${temp_dir}/script_orig.txt" "${temp_dir}/script_bid.txt"; then
++		echo "${msg} [Failed - perf script output differs]"
++		err=1
++	else
++		echo "${msg} [Success]"
++	fi
++}
++
++compare_report() {
++	local orig=$1
++	local bid=$2
++	local msg=$3
++
++	perf report -i "${orig}" --stdio | grep -v '^#' > "${temp_dir}/report_orig.txt"
++	perf report -i "${bid}" --stdio | grep -v '^#' > "${temp_dir}/report_bid.txt"
++
++	if ! diff -q "${temp_dir}/report_orig.txt" "${temp_dir}/report_bid.txt"; then
++		echo "${msg} [Failed - perf report output differs]"
++		err=1
++	else
++		echo "${msg} [Success]"
++	fi
++}
++
++test_basic() {
++	echo "Test basic build id offset injection"
++	local data="${temp_dir}/perf.data.basic"
++	local data2="${temp_dir}/perf.data2.basic"
++
++	perf record -e task-clock:u -o "${data}" ${prog} >/dev/null 2>&1
++	perf inject --sample-buildids -i "${data}" -o "${data2}" >/dev/null 2>&1
++
++	compare_script "${data}" "${data2}" "Basic injection"
++}
++
++test_callchain() {
++	echo "Test Callchain build id offset injection"
++	local data="${temp_dir}/perf.data.callchain"
++	local data2="${temp_dir}/perf.data2.callchain"
++
++	perf record --call-graph fp -e task-clock:u -o "${data}" ${prog} >/dev/null 2>&1
++	perf inject --sample-buildids -i "${data}" -o "${data2}" >/dev/null 2>&1
++
++	compare_script "${data}" "${data2}" "Callchain injection"
++}
++
++test_pipe() {
++	echo "Test pipe mode build id offset injection"
++	local data="${temp_dir}/perf.data.pipe"
++	local data2="${temp_dir}/perf.data2.pipe"
++
++	perf record -e task-clock:u -o - ${prog} 2>/dev/null | tee "${data}" | \
++		perf inject --sample-buildids -o "${data2}" >/dev/null 2>&1
++
++	compare_script "${data}" "${data2}" "Pipe mode injection"
++}
++
++test_report() {
++	echo "Test perf report consistency"
++	local data="${temp_dir}/perf.data.report"
++	local data2="${temp_dir}/perf.data2.report"
++
++	perf record -e task-clock:u -o "${data}" ${prog} >/dev/null 2>&1
++	perf inject --sample-buildids -i "${data}" -o "${data2}" >/dev/null 2>&1
++
++	compare_report "${data}" "${data2}" "Report consistency"
++}
++
++test_pipe_report() {
++	echo "Test pipe mode perf report consistency"
++	local data="${temp_dir}/perf.data.pipe_report"
++	local data2="${temp_dir}/perf.data2.pipe_report"
++
++	perf record -e task-clock:u -o - ${prog} 2>/dev/null | tee "${data}" | \
++		perf inject --sample-buildids -o "${data2}" >/dev/null 2>&1
++
++	compare_report "${data}" "${data2}" "Pipe Report consistency"
++}
++
++test_kernel() {
++	echo "Test kernel build id offset injection"
++	local data="${temp_dir}/perf.data.kernel"
++	local data2="${temp_dir}/perf.data2.kernel"
++	local kprog="dd if=/dev/urandom of=/dev/null bs=1M count=50"
++
++	# Not all systems allow kernel profiling, so we check if it succeeds first
++	if ! perf record -e task-clock:k -o "${data}" ${kprog} >/dev/null 2>&1; then
++		echo "Kernel injection [Skipped - permissions or support missing]"
++		return
++	fi
++	perf inject --sample-buildids -i "${data}" -o "${data2}" >/dev/null 2>&1
++
++	compare_script "${data}" "${data2}" "Kernel injection"
++}
++
++test_record_buildid_offset() {
++	echo "Test perf record --buildid-offset consistency"
++	local data="${temp_dir}/perf.data.record_orig"
++	local data2="${temp_dir}/perf.data2.record_bid"
++
++	perf record -e task-clock:u -o "${data}" ${prog} >/dev/null 2>&1
++	# We must have the binaries in .build-id cache, which the first record does natively.
++	# Now record with --buildid-offset.
++	if ! perf record --buildid-offset -e task-clock:u -o "${data2}" \
++	    ${prog} >/dev/null 2>&1; then
++		echo "Record --buildid-offset consistency [Skipped - not supported by kernel]"
++		return
++	fi
++
++	# Verify symbolization resolves the workload symbol
++	if ! perf report -i "${data2}" --stdio | grep -q "${sym}"; then
++		echo "Record --buildid-offset consistency [Failed - missing ${sym} in perf report]"
++		err=1
++	else
++		echo "Record --buildid-offset consistency [Success]"
++	fi
++}
++
++test_basic
++test_callchain
++test_pipe
++test_report
++test_pipe_report
++test_kernel
++test_record_buildid_offset
++
++cleanup ${err}
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index e4789e2bcf43..80cee3eedcc3 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -740,6 +740,79 @@ test_ratio_to_prev() {
+   echo "Basic ratio-to-prev record test [Success]"
+ }
  
- #define THREADS 4
++check_buildid_offset() {
++  perf report --header -D -i "${perfdata}" 2>/dev/null | grep -q "BUILD_ID_OFFSET"
++}
++
++test_buildid_offset() {
++  echo "buildid-offset test"
++  local ret=0
++  perf_record_with_retry "${perfdata}" "check_buildid_offset" "perf test -w thloop" \
++    --buildid-offset || ret=$?
++  if [ $ret -eq 2 ]; then
++    echo "buildid-offset test [Skipped not supported]"
++    return
++  elif [ $ret -eq 1 ]; then
++    echo "buildid-offset test [Failed missing output]"
++    err=1
++    return
++  fi
++
++  # Expand test coverage
++  ret=0
++  perf_record_with_retry "${perfdata}" "check_per_thread" "perf test -w thloop" \
++    --buildid-offset --per-thread || ret=$?
++  if [ $ret -ne 0 ]; then
++    echo "buildid-offset test [Failed per-thread]"
++    err=1
++    return
++  fi
++
++  ret=0
++  perf_record_with_retry "${perfdata}" "check_system_wide" "perf test -w thloop" \
++    --buildid-offset -aB --synth=no || ret=$?
++  if [ $ret -eq 2 ]; then
++    echo "buildid-offset system-wide [Skipped not supported]"
++  elif [ $ret -ne 0 ]; then
++    echo "buildid-offset test [Failed system-wide]"
++    err=1
++    return
++  fi
++
++  ret=0
++  perf_record_with_retry "${perfdata}" "check_workload" "perf test -w thloop" \
++    --buildid-offset || ret=$?
++  if [ $ret -ne 0 ]; then
++    echo "buildid-offset test [Failed workload]"
++    err=1
++    return
++  fi
++
++  case $(uname -m)
++  in s390x)
++       cmd_flags="--call-graph dwarf -e cpu-clock";;
++     *)
++       cmd_flags="-g";;
++  esac
++
++  if ! perf record --buildid-offset -o "${perfdata}" $cmd_flags \
++    perf test -w brstack > /dev/null 2>&1
++  then
++    echo "buildid-offset test [Failed callgraph record]"
++    err=1
++    return
++  fi
++
++  if ! perf report -i "${perfdata}" 2>&1 | grep -q "${testsym2}"
++  then
++    echo "buildid-offset test [Failed callgraph missing symbol]"
++    err=1
++    return
++  fi
++
++  echo "buildid-offset test [Success]"
++}
++
+ # raise the limit of file descriptors to minimum
+ if [[ $default_fd_limit -lt $min_fd_limit ]]; then
+        ulimit -Sn $min_fd_limit
+@@ -760,6 +833,7 @@ test_precise_max
+ test_callgraph
+ test_acr_sampling
+ test_ratio_to_prev
++test_buildid_offset
  
-@@ -200,17 +204,58 @@ static int mmap_events(synth_cb synth)
- 					.ip = (unsigned long) (td->map + 1),
- 				 }, &al);
- 
--		thread__put(thread);
--
- 		if (!al.map) {
- 			pr_debug("failed, couldn't find map\n");
- 			err = -1;
-+			thread__put(thread);
- 			addr_location__exit(&al);
- 			break;
- 		}
- 
- 		pr_debug("map %p, addr %" PRIx64 "\n", al.map, map__start(al.map));
- 
-+		/* Verify lookup by build ID and offset */
-+		{
-+			struct build_id test_bid = {
-+				.data = { [0] = i + 1 },
-+				.size = BUILD_ID_SIZE,
-+			};
-+			struct dso *dso = dso__new("test_dso");
-+			struct addr_location al2;
-+			struct perf_build_id pbid = { .size = test_bid.size };
-+			u64 offset = map__dso_map_ip(al.map,
-+						     (unsigned long)(td->map + 1));
-+
-+			if (!dso) {
-+				pr_debug("failed to create test dso\n");
-+				err = -1;
-+				thread__put(thread);
-+				addr_location__exit(&al);
-+				break;
-+			}
-+			dso__set_build_id(dso, &test_bid);
-+			dso__put(map__dso(al.map));
-+			map__set_dso(al.map, dso);
-+
-+			memcpy(pbid.data, test_bid.data, test_bid.size);
-+			addr_location__init(&al2);
-+			thread__find_map(thread, &(struct perf_sample){
-+						.cpumode = PERF_RECORD_MISC_USER,
-+						.ip = 0,
-+						.bid = {
-+							.bid = &pbid,
-+							.offset = offset,
-+						},
-+					 }, &al2);
-+
-+			if (!RC_CHK_EQUAL(al2.map, al.map) || al2.addr != offset) {
-+				pr_debug("failed, couldn't find map by build id and offset\n");
-+				err = -1;
-+			}
-+			addr_location__exit(&al2);
-+		}
-+
-+		thread__put(thread);
- 		addr_location__exit(&al);
- 		if (err)
- 			break;
-diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-parsing.c
-index bd30f6d4c31b..40945e499c83 100644
---- a/tools/perf/tests/sample-parsing.c
-+++ b/tools/perf/tests/sample-parsing.c
-@@ -209,6 +209,33 @@ static bool samples_same(struct perf_sample *s1,
- 	if (type & PERF_SAMPLE_CODE_PAGE_SIZE)
- 		COMP(code_page_size);
- 
-+	if (type & PERF_SAMPLE_BUILD_ID_OFFSET) {
-+		if (!s1->bid.bid || !s2->bid.bid ||
-+		    memcmp(s1->bid.bid, s2->bid.bid, sizeof(*s1->bid.bid))) {
-+			pr_debug("Samples differ at 'bid.bid'\n");
-+			return false;
-+		}
-+		COMP(bid.offset);
-+	}
-+
-+	if (type & PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET) {
-+		COMP(callchain_bid.nr_build_ids);
-+		COMP(callchain_bid.nr_offsets);
-+		COMP(callchain_bid.build_ids_len);
-+		if (!s1->callchain_bid.build_ids || !s2->callchain_bid.build_ids ||
-+		    memcmp(s1->callchain_bid.build_ids, s2->callchain_bid.build_ids,
-+			   s1->callchain_bid.build_ids_len)) {
-+			pr_debug("Samples differ at 'callchain_bid.build_ids'\n");
-+			return false;
-+		}
-+		if (!s1->callchain_bid.offsets || !s2->callchain_bid.offsets ||
-+		    memcmp(s1->callchain_bid.offsets, s2->callchain_bid.offsets,
-+			   s1->callchain_bid.nr_offsets * sizeof(u64))) {
-+			pr_debug("Samples differ at 'callchain_bid.offsets'\n");
-+			return false;
-+		}
-+	}
-+
- 	if (type & PERF_SAMPLE_AUX) {
- 		COMP(aux_sample.size);
- 		if (memcmp(s1->aux_sample.data, s2->aux_sample.data,
-@@ -247,6 +274,26 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
- 	const u32 raw_data[] = {0x12345678, 0x0a0b0c0d, 0x11020304, 0x05060708, 0 };
- 	const u64 data[] = {0x2211443366558877ULL, 0, 0xaabbccddeeff4321ULL};
- 	const u64 aux_data[] = {0xa55a, 0, 0xeeddee, 0x0282028202820282};
-+	const struct perf_build_id bid = {
-+		.size = 20,
-+		.data = {
-+			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-+			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-+		}
-+	};
-+	const u8 callchain_build_ids[48] = {
-+		20,
-+		'9', '8', '7', '6', '5', '4', '3', '2', '1', '0',
-+		'9', '8', '7', '6', '5', '4', '3', '2', '1', '0',
-+		20,
-+		'a', 'b', 'c', 'd', 'e', 'f', 'a', 'b', 'c', 'd',
-+		'e', 'f', 'a', 'b', 'c', 'd', 'e', 'f', 'a', 'b',
-+	};
-+	const u64 callchain_offsets[] = {
-+		(1ULL << 56) | 201,
-+		(2ULL << 56) | 202,
-+		(1ULL << 56) | 203,
-+	};
- 	struct regs_dump user_regs = {
- 		.abi	= PERF_SAMPLE_REGS_ABI_64,
- 		.mask	= sample_regs,
-@@ -291,6 +338,17 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
- 		.code_page_size = 116,
- 		.ins_lat	= 117,
- 		.weight3	= 118,
-+		.bid		= {
-+			.bid = (struct perf_build_id *)&bid,
-+			.offset = 119,
-+		},
-+		.callchain_bid	= {
-+			.nr_build_ids = 2,
-+			.nr_offsets = ARRAY_SIZE(callchain_offsets),
-+			.build_ids_len = sizeof(callchain_build_ids),
-+			.build_ids = (u8 *)callchain_build_ids,
-+			.offsets = (u64 *)callchain_offsets,
-+		},
- 		.aux_sample	= {
- 			.size	= sizeof(aux_data),
- 			.data	= (void *)aux_data,
-@@ -547,7 +605,7 @@ static int test__sample_parsing(struct test_suite *test __maybe_unused, int subt
- 	 * were added.  Please actually update the test rather than just change
- 	 * the condition below.
- 	 */
--	if (PERF_SAMPLE_MAX > PERF_SAMPLE_WEIGHT_STRUCT << 1) {
-+	if (PERF_SAMPLE_WEIGHT_STRUCT << 3 < PERF_SAMPLE_MAX) {
- 		pr_debug("sample format has changed, some new PERF_SAMPLE_ bit was introduced - test needs updating\n");
- 		return -1;
- 	}
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index af822885890d..a65d209b649f 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -196,6 +196,7 @@ DECLARE_SUITE(expand_cgroup_events);
- DECLARE_SUITE(perf_time_to_tsc);
- DECLARE_SUITE(dlfilter);
- DECLARE_SUITE(sigtrap);
-+DECLARE_SUITE(bid_offset);
- DECLARE_SUITE(event_groups);
- DECLARE_SUITE(hybrid_merge);
- DECLARE_SUITE(symbols);
+ # restore the default value
+ ulimit -Sn $default_fd_limit
 -- 
 2.56.1.831.g720f3f5937-goog
 
