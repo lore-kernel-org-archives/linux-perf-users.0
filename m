@@ -1,72 +1,75 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.197
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.199
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795582845;
-	b=ros/uYoGtC5VkeVKeo9i/L90vOQmSCDvFmPlls6bkK46twW5eA28S5OAvifHqntCYj5t
-	 J8YF6vt2VTm2C1JgZ10a41p+Deca+dzrkgRrNgkcg88S6/D9tzAdxMyg3e8FBxfFaqWC8
-	 Iz2PnPpUn72MjfUcHG+wz+xwg2jnm0xxXHKRbmg1UvixQ83mx4/wjR7g4l5bgVzyXKv9k
-	 Chutz3ODVrBnO6OZMuQpsQE0dIxmgsCi/GjbEdWtr5D4AzHecUY8D/5AJhBIClPps+CGb
-	 wLuu6qqsIxgitvfV3vA/WjnzJV7l/zkOmNi9owVPRbAKHsCvpRm6rH82GTSdpN9SNCQ==
+	t=1795582847;
+	b=0mihs6JaoHqVPelchY56wL2hZFBgBxAOGuU/xfFj4GRIOF8H5wVaf4GGKH0lQaVag4bP
+	 wkwbrg1GWj1BgyPtYGNg00qvGOQvaerpDgX8I7xCICMNVkBGvKUXjEm3Vkm1CAgct7HCC
+	 OHXOxYsRkV8YNek/YceNyqSkWaNCEAFLQxzCbaZw1AGpP24V8ZuZEHuF8MGirlhQpv8JW
+	 oTsqrdspXEhCjSL1jJ7/Scyp+aDk4UsyGA25W5uJS7MFBjvWJ97s22cZyGvDODlA1MVlK
+	 LkxCCKDFGqqb7nLCutXDzfWSJzo5g0WzTNMCzoogBETcXLyEJWwLEVe4TTDGpbACPCQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795582845;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795582847;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:Mime-Version:
-	 X-Mailer:Message-ID:Subject:From:To:Cc:Content-Type;
-	bh=oodsmLZsOb8DWnDpRbfxQq6nNahrCBIUV5LClRaFCg4=;
-	b=QXacVBAmmLivUocKLZ33Z4TvdY4mpyCj8c0TRZtJoDdZl6T+DgVNO7tvnFqi6wf10GPZ
-	 cwaGnDhgjyAf2Po4veDVpslflQeNbTgRenCWCcfbPRjHmNC18y2R5qStyv6RMR8EQKiaf
-	 Ml3ynLe+wkIwO/QubsdgJeV88pF7TvywtcBRzL9vNr6/rFzgFXDfcPO+INC9lfTWpf2hJ
-	 Z+vV+N6ss7yHRWCRyCYpQopc14UTeKiHRIOKtltq3sW3Ye7BHVC2vkUhN+GK/Y00QhY++
-	 wifbgkltzgehrUgOw99w5/qWXm9utR8965SYymxSI2tH516sT9hTc1WEPzx2XiJ2L9g==
+	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
+	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
+	 Content-Type;
+	bh=o2n9zXpemfaapcRpR3NS7kpIdbxR/8EYIps0VmkExD4=;
+	b=5jvoW3izfX/VHHdWq5JeUwzLux82pgrMWMAdsTpOgxY/M4VL1fqC9l8YdvWNO+xCDvLk
+	 hoeGS/CY4c1tlKtCQPekdthOYYsfq4tGZefm3sgJtmus4onLS2kHycmrnF+vu7lk+HiNU
+	 JAjmVgJVos+1WcHI9lf0Ps2Gu2/sEJC8cZqb25q07NpVcmIRjaDFBpQdIP9CPVb6/jGLd
+	 i0T3MAGHy/5bHCnBOsPt4a1QYw9Lxsg31pvA16r4qHuPK14HO9n7FxvuQ06GRq8J+esdr
+	 mCRSs7FP1NYAcn8/73XYnu+fujAHv7wJujpF/v+tivE2uQzpunPCddKy+YBDOEVJFQg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=DwuWuLd5;
-	arc=none smtp.remote-ip=74.125.82.197
-Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com [74.125.82.197])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Kj8rGICG;
+	arc=none smtp.remote-ip=74.125.82.199
+Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5DF5606A31E
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 05:00:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org E5DF5606A31E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB714606A32D
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 05:00:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AB714606A32D
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=DwuWuLd5
-Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-3854627c1c8so7571558eec.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 21:00:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=Kj8rGICG
+Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-341eff9e381so8323978eec.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 21:00:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795582844; x=1796187644; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=oodsmLZsOb8DWnDpRbfxQq6nNahrCBIUV5LClRaFCg4=;
-        b=DwuWuLd5I5k33CHs7266kbN6Qms/0ZoRllEm6W1imW+/RFa1O7J7ng8A9x4QBbxQbw
-         EQSHZFV5ugnw+8zErQ4L39PsXzCCvfPKflkqVnFELv132XwFMfUDPlaoMRdmZdcNBYEX
-         hdbMlue9eMoQuuiIuy97NQ9B1d++SpcNSyoUSfESPEZEUowaf+5mgNsff7DRgL1Xs4va
-         KpOXYb6CVJzcNLi9dQQy+fPLion+iR0YW97W6BPoqVmBa7CgcobX6vb1lqIcLY28GsX4
-         Ar6tfBmT7f2xEdoJglrCWhWGfjmqaMqKzi16OMA3EDq40di4ltJ/gbnm+6NMfF7EK0pr
-         eh9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795582844; x=1796187644;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20260707; t=1795582846; x=1796187646; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=oodsmLZsOb8DWnDpRbfxQq6nNahrCBIUV5LClRaFCg4=;
-        b=RW9JO4HTefn/rsCmU5k6DfE6ZZKwqfRpk982HHzScaH6Ipr/YXxXnCUBKIRwBIEtZu
-         X54Cltakg6usm5X1aKSUlseHJqIOOZfmiFigXrBlLU3rfPJua23MO1GJru9vwsl9nQgM
-         AXGS+/0JJnACOHpmQcn3qYreU7pFJhFJWBxOsDEgQ5UDZBs5/CKwfRXi3ypupjf6J1Ws
-         g5M1kwXQHR/igheUqZKXiHZIH6YstjFqaxUetVY80H3+qQmnVWhnq1C90yNT7oShKq5L
-         ZO9SaCLAheCDQyAVbbM7/szlEMAdxjWuYqgg4k5KrIdrn+vgQAEEhwu/DnYTPRenFSB5
-         NsSQ==
-X-Forwarded-Encrypted: i=1; AL+hErETzveMwoFBzow6irLrihnuFQocBi+hD7sOerOJ2AzLefKUQbeA7UUlul4UwQeicQeP95r5DNaKtqCMPaXhVDhW@vger.kernel.org
-X-Gm-Message-State: APuU4Z/2wKWRtTXvHWQGeC31LP5gAgufC0cmqi8m7UUQFwzsHD1lxUST
-	ZDNTbL/27LkrGxPRRpVwI6IE4ySxQoJctOweNVfU4Cp18YVGo4VqgaryLYC/ioWdp3Lpe4Rxkl6
-	Stkrw8l1hag==
-X-Received: from dyz18.prod.google.com ([2002:a05:693c:4092:b0:386:aa47:53f])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:37c8:b0:386:a0d1:1b41
- with SMTP id 5a478bee46e88-386a0d136aemr17859351eec.34.1795582843377; Tue, 24
- Nov 2026 21:00:43 -0800 (PST)
-Date: Tue, 24 Nov 2026 21:00:39 -0800
+        bh=o2n9zXpemfaapcRpR3NS7kpIdbxR/8EYIps0VmkExD4=;
+        b=Kj8rGICGMCYtUqY6VO/vZhHB9PHGm3p/3FG/kFNXN6v4uziuJ0ZyXiStvM7kVBlsuR
+         WGoQb4r5HG5JddBUeSxSHSeN06g0TOH8+fTT+Am76O/G7HKz+quILgtLvc3ufXmeSRxq
+         kW/T6BzFDRyWd1a60PL1q4CgeTDRbxHVaRZuZ6VIR91bKQbxH/Ohklw7xcQDNrkNrqGK
+         BbMhBcQ0kvsSwE394jAfO4FVEetDNh7EQngF999B+dS0g95VKb3v8/MczYOqp3gD8Rcz
+         sby2X00YDf1Kuf7Vi/K0x8YeKNqS9MTYF/2Wp4xL5gdLDUUvHkXj8Za242rm0HwgIk6S
+         w0IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795582846; x=1796187646;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=o2n9zXpemfaapcRpR3NS7kpIdbxR/8EYIps0VmkExD4=;
+        b=m7wjV6hbULv8PDbXErpfTyBBdMFWeLkt5VCiV3900X2pNVE4FDgFIFsx5MOKCj7/ET
+         pM9ZFtiO0XiUE7iwIqp3Haxfnw5sFNQ0B2kTkXQzmA0ukvr/GlwrYwhcQzHzmUS4YanY
+         mo9LtHqkzQPJkZ8sX6xZrEW2OhVn+s9iet8ES0LxspKEcpWQkkgrLn5XS+8Paej+th2m
+         UHcmyp3OUBhftZRlMd7PEAaKgGiaufjnL6N+bVCfwJiNEYv6O/eCGDLFcjsq5Yg83YyT
+         ogJs/ox3a8m6fcqhJXf538xXJWkpTleoLlJsfwScuF0l3OT9oQk7uixfK3MK0VqpFCnN
+         pmBw==
+X-Forwarded-Encrypted: i=1; AL+hErFUWW4YlABzBdHx4+k/ne4K5MbuVJa6MnWQ+GSIxVL6cLTAdfnEwZQIlPZCUk3sJX391rYMXIHy9Hwjx519yah7@vger.kernel.org
+X-Gm-Message-State: APuU4Z8E3MMcbA1iUiS0qNP8BBfVgvgPtX/WEXJIHvvgaPmC5Dy74f2W
+	TBrWlgvK0NaOeYzl4oBEIkTr13TYfZhtyaaFnap46L1wkoOpUpTYPE/n4/kZ6bcXCsGSlibVRyT
+	GlvPSE+VeYA==
+X-Received: from dycnm7.prod.google.com ([2002:a05:7300:d187:b0:383:6d6a:6b7a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:1505:b0:384:df31:6a07
+ with SMTP id 5a478bee46e88-386a87efea0mr9725433eec.30.1795582845289; Tue, 24
+ Nov 2026 21:00:45 -0800 (PST)
+Date: Tue, 24 Nov 2026 21:00:40 -0800
+In-Reply-To: <80d983c5713537f5743b69e9b35ced1177e4732e.1795582691.git.irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -76,10 +79,10 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 Mime-Version: 1.0
+References: <80d983c5713537f5743b69e9b35ced1177e4732e.1795582691.git.irogers@google.com>
 X-Mailer: git-send-email 2.56.1.831.g720f3f5937-goog
-Message-ID: <80d983c5713537f5743b69e9b35ced1177e4732e.1795582691.git.irogers@google.com>
-Subject: [PATCH v2 1/2] perf/core: Add PERF_EVENT_STATE_ON to fix filtered
- event enabled time
+Message-ID: <c41f98313862f6545863598dcde871cfb80aba59.1795582691.git.irogers@google.com>
+Subject: [PATCH v2 2/2] perf test: Add filtered event enabled time tests to event-times
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
@@ -92,450 +95,742 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Perf events that are filtered out during sched_in (via pmu->filter() on
-hybrid/heterogeneous systems, or event_filter_match() for task+CPU and
-cgroup events) remain unscheduled while the context is active. Because
-enabled events previously rested in PERF_EVENT_STATE_INACTIVE, context
-time accrued into total_time_enabled even when the event could not be
-scheduled on the current CPU or PMU, while total_time_running did not
-increase. Tools assume total_time_enabled > total_time_running implies
-counter multiplexing and scale counts by enabled / running, producing
-severely inaccurate counts:
-https://lore.kernel.org/lkml/20250627192417.1157736-13-irogers@google.com/
+Extend the "Event times" test suite (tools/perf/tests/event-times.c)
+with subtests verifying that filtered-out events stay in
+PERF_EVENT_STATE_ON and do not accrue bogus total_time_enabled:
 
-For example:
-- A task+CPU event opened on 1 CPU of a 128-CPU system accrues enabled
-  time whenever the task runs on the other 127 CPUs, potentially scaling
-  the count 128x.
-- On hybrid systems, unpinned task events accrue enabled time while the
-  task runs on a different core type, causing bogus multiplexing scaling
-  (such as the 28.05% / 96.79% scaling on cpu_atom and cpu_core seen in
-  commit d9db9c8db56c ("perf test: Fix perf stat --bpf-counters on
-  hybrid machines"), which caused count mismatches until
-  commit b02027776ac5 ("perf tests: Fix flakiness in BPF counters test
-  on hybrid systems") pinned the workload to a single CPU) and
-  preventing perf stat from accurately merging common hybrid events
-  across core types.
+- Task and CPU filtered event times: open a cpu-clock event targeting
+  both the current thread and one CPU, verifying zero enabled/running
+  time when enabled on a non-matching CPU (including the mmap userpage),
+  matching enabled and running times on the target CPU, zero time
+  accrued after migrating away, and matching times across fork()
+  inheritance.
+- Hybrid PMU filtered event times: on systems with multiple core PMUs,
+  verify per-task core PMU events accrue zero enabled time while running
+  on CPUs belonging to another core PMU.
+- Multiplexed and group filtered event times: verify flexible events and
+  groups in PERF_EVENT_STATE_INACTIVE (including siblings promoted to
+  group leader on leader close) transition back to PERF_EVENT_STATE_ON
+  on context switch and accrue zero enabled time after migrating to a
+  filtered-out CPU.
 
-Introduce PERF_EVENT_STATE_ON (0) for events that are enabled and not
-scheduled, reserving PERF_EVENT_STATE_INACTIVE (1) for flexible events
-that matched filters during merge_sched_in() but failed to go onto the
-PMU due to insufficient counters or exclusivity constraints:
+Reuse struct affinity from tools/perf/util/affinity.{c,h}, hardening
+affinity__setup() to retry on EINVAL for large kernel cpumasks, adding
+affinity__has_cpu(), and returning an error status from affinity__set().
 
-- total_time_enabled only accrues in PERF_EVENT_STATE_INACTIVE and
-  PERF_EVENT_STATE_ACTIVE; filtered-out events stay in
-  PERF_EVENT_STATE_ON and accrue neither enabled nor running time.
-- Track INACTIVE flexible group leaders on epc->flexible_inactive (via
-  event->active_list) so __pmu_ctx_sched_out() transitions them and
-  their siblings back to PERF_EVENT_STATE_ON without touching filtered
-  ON events, preserving the context-switch scalability of state-based
-  timekeeping.
-- Handle PERF_EVENT_STATE_INACTIVE in event_sched_out() without calling
-  pmu->del() or decrementing active_oncpu, and serialize perf_event_read()
-  on ctx->lock for both ON and INACTIVE events.
-
-Fixes: 0d3d73aac2ff ("perf/core: Rewrite event timekeeping")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-Resending as a non-RFC v2 following Namhyung Kim's agreement on adding a
-separate state for filtered events and Ingo Molnar's suggestion to
-re-send:
-https://lore.kernel.org/lkml/CAP-5=fV5gtSQOPkOLaAauBcwjgs1ohADs5O3GF+bJOx2tSynwQ@mail.gmail.com/
-https://lore.kernel.org/lkml/aS3WXn4nz9GE87bM@gmail.com/
+ tools/perf/tests/event-times.c | 485 ++++++++++++++++++++++++++++++++-
+ tools/perf/util/affinity.c     | 100 ++++---
+ tools/perf/util/affinity.h     |   5 +-
+ 3 files changed, 555 insertions(+), 35 deletions(-)
 
-v2: Make the untested RFC v1 functional, tested, and handle all state
-    transitions:
-    https://lore.kernel.org/lkml/20250716223924.825772-1-irogers@google.com/
-  - Add epc->flexible_inactive (and handle sibling promotion on group
-    detach) so __pmu_ctx_sched_out() resets INACTIVE flexible groups
-    back to PERF_EVENT_STATE_ON on context switch / rotation.
-  - Transition flexible groups that fail to schedule in merge_sched_in()
-    (including after can_add_hw == 0 or partial group rollback) to
-    PERF_EVENT_STATE_INACTIVE, while pinned groups still enter
-    PERF_EVENT_STATE_ERROR.
-  - Handle PERF_EVENT_STATE_INACTIVE in event_sched_out() without
-    calling pmu->del() or decrementing active_oncpu/nr_freq, and update
-    the userpage.
-  - Drop premature PERF_EVENT_STATE_ACTIVE in __perf_event_enable(),
-    match INACTIVE leader state when enabling a sibling, serialize
-    perf_event_read() on ctx->lock for both ON and INACTIVE, and drop
-    invalid ERROR -> OFF disable() edge from the state diagram comment.
----
- include/linux/perf_event.h | 60 ++++++++++++++++----------
- kernel/events/core.c       | 86 +++++++++++++++++++++++++++-----------
- 2 files changed, 101 insertions(+), 45 deletions(-)
-
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index e1e11500df09..715f564a3f96 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -639,28 +639,44 @@ struct perf_addr_filter_range {
- /*
-  * The normal states are:
-  *
-- *            ACTIVE    --.
-- *               ^        |
-- *               |        |
-- *       sched_{in,out}() |
-- *               |        |
-- *               v        |
-- *      ,---> INACTIVE  --+ <-.
-- *      |                 |   |
-- *      |                {dis,en}able()
-- *   sched_in()           |   |
-- *      |       OFF    <--' --+
-- *      |                     |
-- *      `--->  ERROR    ------'
-+ *                         OFF <----disable()-------.
-+ *                          |         ^             |
-+ *    .-----------------> enable()    |             |
-+ *    |                     |  .------'             |
-+ *    |                     v /                     |
-+ *  ERROR      .---------> ON <-----------.         |
-+ *    ^        |            |             |         |
-+ *    |      filter <-- sched_in()  sched_out()     |
-+ *    |                     |             |         |
-+ *    +-(lack of counters)--+             |         |
-+ *    v                     v             |         |
-+ *  INACTIVE              ACTIVE          |         |
-+ *    |                     |             |         |
-+ *    '---------------------+-------------+---------'
-  *
-  * That is:
-  *
-- * sched_in:       INACTIVE          -> {ACTIVE,ERROR}
-- * sched_out:      ACTIVE            -> INACTIVE
-- * disable:        {ACTIVE,INACTIVE} -> OFF
-- * enable:         {OFF,ERROR}       -> INACTIVE
-+ * sched_in:       ON                   -> {ON,ERROR,INACTIVE,ACTIVE}
-+ * sched_out:      {INACTIVE,ACTIVE}    -> ON
-+ * disable:        {ON,INACTIVE,ACTIVE} -> OFF
-+ * enable:         {OFF,ERROR}          -> ON
-  *
-- * Where {OFF,ERROR} are disabled states.
-+ * Where {ON,INACTIVE,ACTIVE} are enabled states and {OFF,ERROR} are disabled
-+ * states.
-+ *
-+ * ON differs from INACTIVE as enabled time only increases for INACTIVE and
-+ * ACTIVE events, running time only increases for ACTIVE events. A filter, such
-+ * as the task, cgroup, CPU, or PMU an event should be scheduled on, can cause
-+ * an event during sched_in to remain in the ON state, while lack of counters
-+ * or exclusivity constraints move pinned events to ERROR and flexible events
-+ * to INACTIVE.
-+ *
-+ * Additional special-case transitions not shown above:
-+ *  - enable() on a sibling of an INACTIVE group leader moves directly from ON
-+ *    to INACTIVE when the context is active and filters match;
-+ *  - sched_out() with pending_disable moves {INACTIVE,ACTIVE} directly to OFF;
-+ *  - detaching a group sibling that requires a group leader (such as
-+ *    aux_output or PERF_EV_CAP_SIBLING) disables it into ERROR.
-  *
-  * Then we have the {EXIT,REVOKED,DEAD} states which are various shades of
-  * defunct events:
-@@ -682,9 +698,10 @@ enum perf_event_state {
- 	PERF_EVENT_STATE_REVOKED	= -4, /* pmu gone, must not touch */
- 	PERF_EVENT_STATE_EXIT		= -3, /* task died, still inherit */
- 	PERF_EVENT_STATE_ERROR		= -2, /* scheduling error, can enable */
--	PERF_EVENT_STATE_OFF		= -1,
--	PERF_EVENT_STATE_INACTIVE	=  0,
--	PERF_EVENT_STATE_ACTIVE		=  1,
-+	PERF_EVENT_STATE_OFF		= -1, /* regular disabled event */
-+	PERF_EVENT_STATE_ON		=  0, /* enabled but not scheduled */
-+	PERF_EVENT_STATE_INACTIVE	=  1, /* not scheduled due to lack of counters */
-+	PERF_EVENT_STATE_ACTIVE		=  2, /* scheduled and counting */
- };
+diff --git a/tools/perf/tests/event-times.c b/tools/perf/tests/event-times.c
+index 56dd37ca760e..4c265f791852 100644
+--- a/tools/perf/tests/event-times.c
++++ b/tools/perf/tests/event-times.c
+@@ -1,18 +1,30 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include <linux/bitmap.h>
+ #include <linux/compiler.h>
++#include <linux/perf_event.h>
+ #include <linux/string.h>
+ #include <errno.h>
+ #include <inttypes.h>
+ #include <string.h>
++#include <sys/ioctl.h>
++#include <sys/mman.h>
+ #include <sys/wait.h>
++#include <time.h>
++#include <unistd.h>
++#include <internal/lib.h>
+ #include <perf/cpumap.h>
++#include "cloexec.h"
+ #include "tests.h"
+ #include "evlist.h"
+ #include "evsel.h"
+ #include "debug.h"
+ #include "parse-events.h"
++#include "pmu.h"
++#include "pmus.h"
+ #include "thread_map.h"
+ #include "target.h"
++#include "util/affinity.h"
++#include "../perf-sys.h"
  
- struct file;
-@@ -969,6 +986,7 @@ struct perf_event_pmu_context {
- 
- 	struct list_head		pinned_active;
- 	struct list_head		flexible_active;
-+	struct list_head		flexible_inactive;
- 
- 	/* Used to identify the per-cpu perf_event_pmu_context */
- 	unsigned int			embedded : 1;
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 366fca000ff0..cf76e9290cc5 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2023,7 +2023,7 @@ list_add_event(struct perf_event *event, struct perf_event_context *ctx)
- static inline void perf_event__state_init(struct perf_event *event)
+ static int attach__enable_on_exec(struct evlist *evlist)
  {
- 	event->state = event->attr.disabled ? PERF_EVENT_STATE_OFF :
--					      PERF_EVENT_STATE_INACTIVE;
-+					      PERF_EVENT_STATE_ON;
+@@ -239,4 +251,475 @@ static int test__event_times(struct test_suite *test __maybe_unused, int subtest
+ 	return ret;
  }
  
- static int __perf_event_read_size(u64 read_format, int nr_siblings)
-@@ -2374,6 +2374,8 @@ static void perf_promote_sibling_to_leader(struct perf_event *sibling,
- 
- 		if (sibling->state == PERF_EVENT_STATE_ACTIVE)
- 			list_add_tail(&sibling->active_list, get_event_list(sibling));
-+		else if (sibling->state == PERF_EVENT_STATE_INACTIVE)
-+			list_add_tail(&sibling->active_list, &sibling->pmu_ctx->flexible_inactive);
- 	}
- 
- 	perf_event__header_size(sibling);
-@@ -2473,14 +2475,14 @@ event_sched_out(struct perf_event *event, struct perf_event_context *ctx)
- {
- 	struct perf_event_pmu_context *epc = event->pmu_ctx;
- 	struct perf_cpu_pmu_context *cpc = this_cpc(epc->pmu);
--	enum perf_event_state state = PERF_EVENT_STATE_INACTIVE;
-+	enum perf_event_state state = PERF_EVENT_STATE_ON;
- 
- 	// XXX cpc serialization, probably per-cpu IRQ disabled
- 
- 	WARN_ON_ONCE(event->ctx != ctx);
- 	lockdep_assert_held(&ctx->lock);
- 
--	if (event->state != PERF_EVENT_STATE_ACTIVE)
-+	if (event->state < PERF_EVENT_STATE_INACTIVE)
- 		return;
- 
- 	/*
-@@ -2490,6 +2492,17 @@ event_sched_out(struct perf_event *event, struct perf_event_context *ctx)
- 	 */
- 	list_del_init(&event->active_list);
- 
-+	if (event->state == PERF_EVENT_STATE_INACTIVE) {
-+		if (event->pending_disable) {
-+			event->pending_disable = 0;
-+			perf_cgroup_event_disable(event, ctx);
-+			state = PERF_EVENT_STATE_OFF;
-+		}
-+		perf_event_set_state(event, state);
-+		perf_event_update_userpage(event);
-+		return;
-+	}
-+
- 	perf_pmu_disable(event->pmu);
- 
- 	event->pmu->del(event, 0);
-@@ -2520,7 +2533,7 @@ group_sched_out(struct perf_event *group_event, struct perf_event_context *ctx)
- {
- 	struct perf_event *event;
- 
--	if (group_event->state != PERF_EVENT_STATE_ACTIVE)
-+	if (group_event->state < PERF_EVENT_STATE_INACTIVE)
- 		return;
- 
- 	perf_assert_pmu_disabled(group_event->pmu_ctx->pmu);
-@@ -2702,7 +2715,7 @@ static void __perf_event_disable(struct perf_event *event,
- 				 struct perf_event_context *ctx,
- 				 void *info)
- {
--	if (event->state < PERF_EVENT_STATE_INACTIVE)
-+	if (event->state < PERF_EVENT_STATE_ON)
- 		return;
- 
- 	perf_pmu_disable(event->pmu_ctx->pmu);
-@@ -2717,7 +2730,7 @@ static void __perf_event_disable(struct perf_event *event,
- 
- 	/*
- 	 * But only mark the leader OFF; the siblings will remain
--	 * INACTIVE.
-+	 * ON.
- 	 */
- 	__event_disable(event, ctx, PERF_EVENT_STATE_OFF);
- 
-@@ -2859,7 +2872,7 @@ event_sched_in(struct perf_event *event, struct perf_event_context *ctx)
- 	perf_log_itrace_start(event);
- 
- 	if (event->pmu->add(event, PERF_EF_START)) {
--		perf_event_set_state(event, PERF_EVENT_STATE_INACTIVE);
-+		perf_event_set_state(event, PERF_EVENT_STATE_ON);
- 		event->oncpu = -1;
- 		ret = -EAGAIN;
- 		goto out;
-@@ -2886,7 +2899,7 @@ group_sched_in(struct perf_event *group_event, struct perf_event_context *ctx)
- 	struct perf_event *event, *partial_group = NULL;
- 	struct pmu *pmu = group_event->pmu_ctx->pmu;
- 
--	if (group_event->state == PERF_EVENT_STATE_OFF)
-+	if (group_event->state <= PERF_EVENT_STATE_OFF)
- 		return 0;
- 
- 	pmu->start_txn(pmu, PERF_PMU_TXN_ADD);
-@@ -3261,13 +3274,13 @@ static void __perf_event_enable(struct perf_event *event,
- 	struct perf_event *leader = event->group_leader;
- 	struct perf_event_context *task_ctx;
- 
--	if (event->state >= PERF_EVENT_STATE_INACTIVE ||
-+	if (event->state >= PERF_EVENT_STATE_ON ||
- 	    event->state <= PERF_EVENT_STATE_ERROR)
- 		return;
- 
- 	ctx_time_freeze(cpuctx, ctx);
- 
--	perf_event_set_state(event, PERF_EVENT_STATE_INACTIVE);
-+	perf_event_set_state(event, PERF_EVENT_STATE_ON);
- 	perf_cgroup_event_enable(event, ctx);
- 
- 	if (!ctx->is_active)
-@@ -3280,8 +3293,11 @@ static void __perf_event_enable(struct perf_event *event,
- 	 * If the event is in a group and isn't the group leader,
- 	 * then don't put it on unless the group is on.
- 	 */
--	if (leader != event && leader->state != PERF_EVENT_STATE_ACTIVE)
-+	if (leader != event && leader->state != PERF_EVENT_STATE_ACTIVE) {
-+		if (leader->state == PERF_EVENT_STATE_INACTIVE)
-+			perf_event_set_state(event, PERF_EVENT_STATE_INACTIVE);
- 		return;
-+	}
- 
- 	task_ctx = cpuctx->task_ctx;
- 	if (ctx->task)
-@@ -3304,7 +3320,7 @@ static void _perf_event_enable(struct perf_event *event)
- 	struct perf_event_context *ctx = event->ctx;
- 
- 	raw_spin_lock_irq(&ctx->lock);
--	if (event->state >= PERF_EVENT_STATE_INACTIVE ||
-+	if (event->state >= PERF_EVENT_STATE_ON ||
- 	    event->state <  PERF_EVENT_STATE_ERROR) {
- out:
- 		raw_spin_unlock_irq(&ctx->lock);
-@@ -3578,6 +3594,10 @@ static void __pmu_ctx_sched_out(struct perf_event_pmu_context *pmu_ctx,
- 					 &pmu_ctx->flexible_active,
- 					 active_list)
- 			group_sched_out(event, ctx);
-+		list_for_each_entry_safe(event, tmp,
-+					 &pmu_ctx->flexible_inactive,
-+					 active_list)
-+			group_sched_out(event, ctx);
- 		/*
- 		 * Since we cleared EVENT_FLEXIBLE, also clear
- 		 * rotate_necessary, is will be reset by
-@@ -4134,6 +4154,21 @@ struct merge_sched_data {
- 	enum event_type_t event_type;
- };
- 
-+static void group_set_inactive(struct perf_event *group_event)
+-DEFINE_SUITE("Event times", event_times);
++static int find_two_allowed_cpus(const struct affinity *aff, int *cpu0, int *cpu1)
 +{
-+	struct perf_event *sibling;
++	unsigned long c0, c1;
 +
-+	perf_event_set_state(group_event, PERF_EVENT_STATE_INACTIVE);
++	c0 = find_first_bit(aff->orig_cpus, aff->cpu_set_bits);
++	if (c0 >= aff->cpu_set_bits)
++		return -1;
 +
-+	for_each_sibling_event(sibling, group_event) {
-+		if (sibling->state == PERF_EVENT_STATE_ON)
-+			perf_event_set_state(sibling, PERF_EVENT_STATE_INACTIVE);
-+	}
++	c1 = find_next_bit(aff->orig_cpus, aff->cpu_set_bits, c0 + 1);
++	if (c1 >= aff->cpu_set_bits)
++		return -1;
 +
-+	list_add_tail(&group_event->active_list,
-+		      &group_event->pmu_ctx->flexible_inactive);
++	*cpu0 = (int)c0;
++	*cpu1 = (int)c1;
++	return 0;
 +}
 +
- static int merge_sched_in(struct perf_event *event, void *data)
++static int first_allowed_pmu_cpu(const struct affinity *aff,
++				 const struct perf_pmu *pmu)
++{
++	struct perf_cpu cpu;
++	unsigned int idx;
++
++	if (!pmu || !pmu->cpus || perf_cpu_map__is_empty(pmu->cpus)) {
++		unsigned long c = find_first_bit(aff->orig_cpus, aff->cpu_set_bits);
++
++		return c < aff->cpu_set_bits ? (int)c : -1;
++	}
++
++	perf_cpu_map__for_each_cpu(cpu, idx, pmu->cpus) {
++		if (affinity__has_cpu(aff, cpu.cpu))
++			return cpu.cpu;
++	}
++	return -1;
++}
++
++static uint64_t mono_ns(void)
++{
++	struct timespec ts;
++
++	clock_gettime(CLOCK_MONOTONIC, &ts);
++	return (uint64_t)ts.tv_sec * 1000000000ULL + (uint64_t)ts.tv_nsec;
++}
++
++static void burn_user_ms(unsigned int ms)
++{
++	uint64_t end = mono_ns() + (uint64_t)ms * 1000000ULL;
++
++	while (mono_ns() < end) {
++		for (int i = 0; i < 10000; i++)
++			asm volatile("" : "+r"(i) :: "memory");
++	}
++}
++
++struct read_times {
++	uint64_t val;
++	uint64_t ena;
++	uint64_t run;
++};
++
++static int read_times(int fd, struct read_times *rt)
++{
++	return read(fd, rt, sizeof(*rt)) == (ssize_t)sizeof(*rt) ? 0 : -1;
++}
++
++static int open_core_pmu_event(const struct perf_pmu *pmu, pid_t pid, int cpu,
++			       int group_fd, bool disabled)
++{
++	struct perf_event_attr attr = {
++		.size = sizeof(attr),
++		.read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
++			       PERF_FORMAT_TOTAL_TIME_RUNNING,
++		.disabled = disabled ? 1 : 0,
++		.exclude_kernel = 1,
++		.exclude_hv = 1,
++	};
++	unsigned long flags = perf_event_open_cloexec_flag();
++	int fd;
++
++	if (!pmu) {
++		attr.type = PERF_TYPE_HARDWARE;
++		attr.config = PERF_COUNT_HW_CPU_CYCLES;
++		return sys_perf_event_open(&attr, pid, cpu, group_fd, flags);
++	}
++
++	if (perf_pmus__supports_extended_type()) {
++		attr.type = PERF_TYPE_HARDWARE;
++		attr.config = ((__u64)pmu->type << PERF_PMU_TYPE_SHIFT) |
++			      PERF_COUNT_HW_CPU_CYCLES;
++		fd = sys_perf_event_open(&attr, pid, cpu, group_fd, flags);
++		if (fd >= 0)
++			return fd;
++	}
++
++	attr.type = pmu->type;
++	attr.config = 0x3c;
++	fd = sys_perf_event_open(&attr, pid, cpu, group_fd, flags);
++	if (fd >= 0)
++		return fd;
++
++	attr.config = 0;
++	return sys_perf_event_open(&attr, pid, cpu, group_fd, flags);
++}
++
++/*
++ * Verify that an event opened on both a task and a specific CPU remains in
++ * PERF_EVENT_STATE_ON (accruing neither enabled nor running time) when enabled
++ * or scheduled on other CPUs, including across fork() inheritance.
++ */
++static int test__event_times_task_and_cpu(struct test_suite *test __maybe_unused,
++					  int subtest __maybe_unused)
++{
++	struct perf_event_attr attr = {
++		.type = PERF_TYPE_SOFTWARE,
++		.size = sizeof(attr),
++		.config = PERF_COUNT_SW_CPU_CLOCK,
++		.read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
++			       PERF_FORMAT_TOTAL_TIME_RUNNING,
++		.disabled = 1,
++		.inherit = 1,
++		.exclude_kernel = 1,
++		.exclude_hv = 1,
++	};
++	struct perf_event_mmap_page *up = MAP_FAILED;
++	struct read_times rt0, rt_before, rt_after, rt_child;
++	struct affinity aff = {};
++	int cpu0, cpu1, fd = -1, status = 0;
++	int ret = TEST_FAIL;
++	pid_t pid;
++
++	if (affinity__setup(&aff) < 0)
++		return TEST_SKIP;
++
++	if (find_two_allowed_cpus(&aff, &cpu0, &cpu1) < 0 ||
++	    affinity__set(&aff, cpu1) < 0) {
++		ret = TEST_SKIP;
++		goto out;
++	}
++
++	fd = sys_perf_event_open(&attr, 0, cpu0, -1, perf_event_open_cloexec_flag());
++	if (fd < 0) {
++		ret = (errno == EACCES || errno == EPERM) ? TEST_SKIP : TEST_FAIL;
++		goto out;
++	}
++
++	up = mmap(NULL, page_size, PROT_READ, MAP_SHARED, fd, 0);
++
++	/* Enable while running on non-matching cpu1: must stay in ON state. */
++	if (ioctl(fd, PERF_EVENT_IOC_ENABLE, 0) < 0)
++		goto out;
++
++	burn_user_ms(25);
++	if (read_times(fd, &rt0) < 0)
++		goto out;
++	if (rt0.ena != 0 || rt0.run != 0) {
++		pr_debug("FAILED: filtered CPU %d: ena=%" PRIu64 " run=%" PRIu64 "\n",
++			 cpu1, rt0.ena, rt0.run);
++		goto out;
++	}
++	if (up != MAP_FAILED && (up->time_enabled != 0 || up->time_running != 0)) {
++		pr_debug("FAILED: userpage accrued time while ON: ena=%llu run=%llu\n",
++			 (unsigned long long)up->time_enabled,
++			 (unsigned long long)up->time_running);
++		goto out;
++	}
++
++	/* Run on matching cpu0: enabled and running time must match. */
++	if (affinity__set(&aff, cpu0) < 0)
++		goto out;
++	burn_user_ms(25);
++	if (read_times(fd, &rt0) < 0 || rt0.run == 0 || rt0.ena != rt0.run) {
++		pr_debug("FAILED: mismatch on matching CPU %d: ena=%" PRIu64 " run=%" PRIu64 "\n",
++			 cpu0, rt0.ena, rt0.run);
++		goto out;
++	}
++
++	/* Migrate back to cpu1: neither enabled nor running time may advance. */
++	if (affinity__set(&aff, cpu1) < 0 || read_times(fd, &rt_before) < 0)
++		goto out;
++	burn_user_ms(25);
++	if (read_times(fd, &rt_after) < 0)
++		goto out;
++	if (rt_after.ena != rt_before.ena || rt_after.run != rt_before.run ||
++	    rt_after.ena != rt_after.run) {
++		pr_debug("FAILED: CPU %d: %" PRIu64 "/%" PRIu64 " -> %" PRIu64 "/%" PRIu64 "\n",
++			 cpu1, rt_before.ena, rt_before.run, rt_after.ena, rt_after.run);
++		goto out;
++	}
++
++	/* Verify inherited child event also stays in ON state on cpu1. */
++	pid = fork();
++	if (pid < 0)
++		goto out;
++	if (pid == 0) {
++		if (affinity__set(&aff, cpu0) < 0)
++			_exit(1);
++		burn_user_ms(20);
++		if (affinity__set(&aff, cpu1) < 0)
++			_exit(1);
++		burn_user_ms(20);
++		_exit(0);
++	}
++	if (waitpid(pid, &status, 0) != pid || !WIFEXITED(status) || WEXITSTATUS(status) != 0)
++		goto out;
++
++	if (read_times(fd, &rt_child) < 0 ||
++	    rt_child.run <= rt_after.run || rt_child.ena != rt_child.run) {
++		pr_debug("FAILED: inherited task+CPU mismatch: ena=%" PRIu64 " run=%" PRIu64 "\n",
++			 rt_child.ena, rt_child.run);
++		goto out;
++	}
++
++	ret = TEST_OK;
++out:
++	if (up != MAP_FAILED)
++		munmap(up, page_size);
++	if (fd >= 0)
++		close(fd);
++	affinity__cleanup(&aff);
++	return ret;
++}
++
++/*
++ * On hybrid / heterogeneous systems (>1 core PMU), verify per-task events on
++ * one core PMU do not accrue enabled time while the task executes on CPUs
++ * belonging to a different core PMU.
++ */
++static int test__event_times_hybrid(struct test_suite *test __maybe_unused,
++				    int subtest __maybe_unused)
++{
++	const struct perf_pmu *pmu = NULL, *pmu0 = NULL, *pmu1 = NULL;
++	struct read_times rt0, rt1, rt0_before, rt0_after;
++	struct affinity aff = {};
++	int cpu0 = -1, cpu1 = -1, fd0 = -1, fd1 = -1;
++	int ret = TEST_FAIL;
++
++	if (perf_pmus__num_core_pmus() <= 1)
++		return TEST_SKIP;
++
++	if (affinity__setup(&aff) < 0)
++		return TEST_SKIP;
++
++	while ((pmu = perf_pmus__scan_core((struct perf_pmu *)pmu)) != NULL) {
++		int c = first_allowed_pmu_cpu(&aff, pmu);
++		struct perf_cpu pc, pc0;
++
++		if (c < 0)
++			continue;
++		if (!pmu0) {
++			pmu0 = pmu;
++			cpu0 = c;
++			continue;
++		}
++		pc.cpu = c;
++		pc0.cpu = cpu0;
++		if (!perf_cpu_map__has(pmu0->cpus, pc) &&
++		    !perf_cpu_map__has(pmu->cpus, pc0)) {
++			pmu1 = pmu;
++			cpu1 = c;
++			break;
++		}
++	}
++
++	if (!pmu0 || !pmu1 || affinity__set(&aff, cpu0) < 0) {
++		ret = TEST_SKIP;
++		goto out;
++	}
++
++	fd0 = open_core_pmu_event(pmu0, 0, -1, -1, true);
++	fd1 = open_core_pmu_event(pmu1, 0, -1, -1, true);
++	if (fd0 < 0 || fd1 < 0) {
++		ret = TEST_SKIP;
++		goto out;
++	}
++
++	if (ioctl(fd0, PERF_EVENT_IOC_ENABLE, 0) < 0 ||
++	    ioctl(fd1, PERF_EVENT_IOC_ENABLE, 0) < 0)
++		goto out;
++
++	burn_user_ms(30);
++	if (read_times(fd0, &rt0) < 0 || read_times(fd1, &rt1) < 0)
++		goto out;
++
++	if (rt0.ena == 0 || rt1.ena != 0 || rt1.run != 0) {
++		pr_debug("FAILED: on %s CPU %d: %s ena=%" PRIu64 " run=%" PRIu64
++			 ", %s ena=%" PRIu64 " run=%" PRIu64 "\n",
++			 pmu0->name, cpu0, pmu0->name, rt0.ena, rt0.run,
++			 pmu1->name, rt1.ena, rt1.run);
++		goto out;
++	}
++
++	if (affinity__set(&aff, cpu1) < 0 || read_times(fd0, &rt0_before) < 0)
++		goto out;
++
++	burn_user_ms(30);
++	if (read_times(fd0, &rt0_after) < 0 || read_times(fd1, &rt1) < 0)
++		goto out;
++
++	if (rt0_after.ena != rt0_before.ena || rt0_after.run != rt0_before.run ||
++	    rt1.ena == 0) {
++		pr_debug("FAILED: on %s CPU %d: %s ena %" PRIu64 "->%" PRIu64
++			 ", %s ena=%" PRIu64 "\n",
++			 pmu1->name, cpu1, pmu0->name, rt0_before.ena, rt0_after.ena,
++			 pmu1->name, rt1.ena);
++		goto out;
++	}
++
++	ret = TEST_OK;
++out:
++	if (fd0 >= 0)
++		close(fd0);
++	if (fd1 >= 0)
++		close(fd1);
++	affinity__cleanup(&aff);
++	return ret;
++}
++
++/*
++ * Verify that flexible events and groups in PERF_EVENT_STATE_INACTIVE (on
++ * epc->flexible_inactive), including promoted group siblings after leader
++ * close, transition back to PERF_EVENT_STATE_ON on sched_out and do not accrue
++ * enabled time after migrating to a filtered-out CPU.
++ */
++static int test__event_times_mux_migration(struct test_suite *test __maybe_unused,
++					   int subtest __maybe_unused)
++{
++	enum { NR_FLEX = 12, NR_CHECK = 14 };
++	const struct perf_pmu *pmu0 = perf_pmus__scan_core(NULL);
++	struct read_times before[NR_CHECK], after[NR_CHECK];
++	struct affinity aff = {};
++	int flex_fds[NR_FLEX];
++	int leader_fd = -1, sib_fd = -1, dis_sib_fd = -1;
++	int cpu0 = -1, cpu1 = -1, ev_cpu = -1;
++	unsigned long c;
++	int ret = TEST_FAIL;
++
++	for (int i = 0; i < NR_FLEX; i++)
++		flex_fds[i] = -1;
++
++	if (!pmu0 || affinity__setup(&aff) < 0)
++		return TEST_SKIP;
++
++	cpu0 = first_allowed_pmu_cpu(&aff, pmu0);
++	if (cpu0 < 0) {
++		ret = TEST_SKIP;
++		goto out;
++	}
++
++	if (perf_pmus__num_core_pmus() > 1 && pmu0->cpus &&
++	    !perf_cpu_map__is_empty(pmu0->cpus)) {
++		for_each_set_bit(c, aff.orig_cpus, aff.cpu_set_bits) {
++			struct perf_cpu pc = { .cpu = (int)c };
++
++			if (!perf_cpu_map__has(pmu0->cpus, pc)) {
++				cpu1 = (int)c;
++				break;
++			}
++		}
++		ev_cpu = -1;
++	} else {
++		for_each_set_bit(c, aff.orig_cpus, aff.cpu_set_bits) {
++			if ((int)c != cpu0) {
++				cpu1 = (int)c;
++				break;
++			}
++		}
++		ev_cpu = cpu0;
++	}
++
++	if (cpu1 < 0 || affinity__set(&aff, cpu0) < 0) {
++		ret = TEST_SKIP;
++		goto out;
++	}
++
++	for (int i = 0; i < NR_FLEX; i++) {
++		flex_fds[i] = open_core_pmu_event(pmu0, 0, ev_cpu, -1, false);
++		if (flex_fds[i] < 0) {
++			ret = TEST_SKIP;
++			goto out;
++		}
++	}
++
++	leader_fd = open_core_pmu_event(pmu0, 0, ev_cpu, -1, false);
++	if (leader_fd < 0) {
++		ret = TEST_SKIP;
++		goto out;
++	}
++	sib_fd = open_core_pmu_event(pmu0, 0, ev_cpu, leader_fd, false);
++	dis_sib_fd = open_core_pmu_event(pmu0, 0, ev_cpu, leader_fd, true);
++	if (sib_fd < 0 || dis_sib_fd < 0) {
++		ret = TEST_SKIP;
++		goto out;
++	}
++
++	if (ioctl(dis_sib_fd, PERF_EVENT_IOC_ENABLE, 0) < 0)
++		goto out;
++
++	burn_user_ms(50);
++
++	/* Detach leader while group may be INACTIVE to exercise sibling promotion. */
++	close(leader_fd);
++	leader_fd = -1;
++	burn_user_ms(10);
++
++	if (affinity__set(&aff, cpu1) < 0)
++		goto out;
++
++	for (int i = 0; i < NR_FLEX; i++) {
++		if (read_times(flex_fds[i], &before[i]) < 0)
++			goto out;
++	}
++	if (read_times(sib_fd, &before[NR_FLEX]) < 0 ||
++	    read_times(dis_sib_fd, &before[NR_FLEX + 1]) < 0)
++		goto out;
++
++	burn_user_ms(30);
++
++	for (int i = 0; i < NR_FLEX; i++) {
++		if (read_times(flex_fds[i], &after[i]) < 0)
++			goto out;
++	}
++	if (read_times(sib_fd, &after[NR_FLEX]) < 0 ||
++	    read_times(dis_sib_fd, &after[NR_FLEX + 1]) < 0)
++		goto out;
++
++	for (int i = 0; i < NR_CHECK; i++) {
++		if (before[i].ena == 0) {
++			pr_debug("FAILED: event %d accrued 0 enabled time on matching CPU %d\n",
++				 i, cpu0);
++			goto out;
++		}
++		if (after[i].ena != before[i].ena || after[i].run != before[i].run) {
++			pr_debug("FAILED: event %d filtered CPU %d: %" PRIu64 " -> %" PRIu64 "\n",
++				 i, cpu1, before[i].ena, after[i].ena);
++			goto out;
++		}
++	}
++
++	ret = TEST_OK;
++out:
++	for (int i = 0; i < NR_FLEX; i++) {
++		if (flex_fds[i] >= 0)
++			close(flex_fds[i]);
++	}
++	if (leader_fd >= 0)
++		close(leader_fd);
++	if (sib_fd >= 0)
++		close(sib_fd);
++	if (dis_sib_fd >= 0)
++		close(dis_sib_fd);
++	affinity__cleanup(&aff);
++	return ret;
++}
++
++static struct test_case tests__event_times[] = {
++	TEST_CASE("Basic event times", event_times),
++	TEST_CASE_REASON("Task and CPU filtered event times",
++			 event_times_task_and_cpu,
++			 "permissions or <2 allowed CPUs"),
++	TEST_CASE_REASON("Hybrid PMU filtered event times",
++			 event_times_hybrid,
++			 "not hybrid or permissions"),
++	TEST_CASE_REASON("Multiplexed and group filtered event times",
++			 event_times_mux_migration,
++			 "no hardware PMU or <2 allowed CPUs"),
++	{	.name = NULL, }
++};
++
++struct test_suite suite__event_times = {
++	.desc = "Event times",
++	.test_cases = tests__event_times,
++};
+diff --git a/tools/perf/util/affinity.c b/tools/perf/util/affinity.c
+index 6c64b5f69a4e..e610eb959347 100644
+--- a/tools/perf/util/affinity.c
++++ b/tools/perf/util/affinity.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Manage affinity to optimize IPIs inside the kernel perf API. */
+ #define _GNU_SOURCE 1
++#include <errno.h>
+ #include <sched.h>
+ #include <stdlib.h>
+ #include <linux/bitmap.h>
+@@ -10,73 +11,98 @@
+ #include "cpumap.h"
+ #include "affinity.h"
+ 
+-static int get_cpu_set_size(void)
++static size_t get_cpu_set_bits(void)
  {
- 	struct perf_event_context *ctx = event->ctx;
-@@ -4159,7 +4194,7 @@ static int merge_sched_in(struct perf_event *event, void *data)
- 			list_add_tail(&event->active_list, get_event_list(event));
+-	int sz = cpu__max_cpu().cpu + 8 - 1;
++	int max_cpu = cpu__max_cpu().cpu;
++	size_t bits = max_cpu > 0 ? (size_t)max_cpu : 0;
++
+ 	/*
+ 	 * sched_getaffinity doesn't like masks smaller than the kernel.
+-	 * Hopefully that's big enough.
++	 * Start at >= 4096 bits, aligned to BITS_PER_LONG so bitmap_zalloc()
++	 * matches the exact byte size passed to sched_{get,set}affinity().
+ 	 */
+-	if (sz < 4096)
+-		sz = 4096;
+-	return sz / 8;
++	if (bits < 4096)
++		bits = 4096;
++	return BITS_TO_LONGS(bits) * BITS_PER_LONG;
+ }
+ 
+ int affinity__setup(struct affinity *a)
+ {
+-	int cpu_set_size = get_cpu_set_size();
++	size_t bits = get_cpu_set_bits();
+ 
+-	a->orig_cpus = bitmap_zalloc(cpu_set_size * 8);
+-	if (!a->orig_cpus)
+-		return -1;
+-	sched_getaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
+-	a->sched_cpus = bitmap_zalloc(cpu_set_size * 8);
++	*a = (struct affinity){};
++	for (;;) {
++		unsigned long *orig = bitmap_zalloc(bits);
++
++		if (!orig)
++			return -1;
++		if (sched_getaffinity(0, bits / 8, (cpu_set_t *)orig) == 0) {
++			a->orig_cpus = orig;
++			break;
++		}
++		zfree(&orig);
++		if (errno != EINVAL || bits >= (1U << 20))
++			return -1;
++		bits <<= 1;
++	}
++
++	a->sched_cpus = bitmap_zalloc(bits);
+ 	if (!a->sched_cpus) {
+ 		zfree(&a->orig_cpus);
+ 		return -1;
  	}
- 
--	if (event->state == PERF_EVENT_STATE_INACTIVE) {
-+	if (event->state == PERF_EVENT_STATE_ON) {
- 		msd->can_add_hw = 0;
- 		if (event->attr.pinned) {
- 			perf_cgroup_event_disable(event, ctx);
-@@ -4173,6 +4208,7 @@ static int merge_sched_in(struct perf_event *event, void *data)
- 		} else {
- 			struct perf_cpu_pmu_context *cpc = this_cpc(event->pmu_ctx->pmu);
- 
-+			group_set_inactive(event);
- 			event->pmu_ctx->rotate_necessary = 1;
- 			perf_mux_hrtimer_restart(cpc);
- 			group_update_userpage(event);
-@@ -4702,10 +4738,10 @@ static int event_enable_on_exec(struct perf_event *event,
- 		return 0;
- 
- 	event->attr.enable_on_exec = 0;
--	if (event->state >= PERF_EVENT_STATE_INACTIVE)
-+	if (event->state >= PERF_EVENT_STATE_ON)
- 		return 0;
- 
--	perf_event_set_state(event, PERF_EVENT_STATE_INACTIVE);
-+	perf_event_set_state(event, PERF_EVENT_STATE_ON);
- 
- 	return 1;
- }
-@@ -5032,13 +5068,13 @@ static int perf_event_read(struct perf_event *event, bool group)
- 		preempt_enable();
- 		ret = data.ret;
- 
--	} else if (state == PERF_EVENT_STATE_INACTIVE) {
-+	} else if (state >= PERF_EVENT_STATE_ON) {
- 		struct perf_event_context *ctx = event->ctx;
- 		unsigned long flags;
- 
- 		raw_spin_lock_irqsave(&ctx->lock, flags);
--		state = event->state;
--		if (state != PERF_EVENT_STATE_INACTIVE) {
-+		if (event->state != state) {
-+			state = event->state;
- 			raw_spin_unlock_irqrestore(&ctx->lock, flags);
- 			goto again;
- 		}
-@@ -5079,6 +5115,7 @@ __perf_init_event_pmu_context(struct perf_event_pmu_context *epc, struct pmu *pm
- 	INIT_LIST_HEAD(&epc->pmu_ctx_entry);
- 	INIT_LIST_HEAD(&epc->pinned_active);
- 	INIT_LIST_HEAD(&epc->flexible_active);
-+	INIT_LIST_HEAD(&epc->flexible_inactive);
- 	atomic_set(&epc->refcount, 1);
+-	bitmap_zero((unsigned long *)a->sched_cpus, cpu_set_size);
+-	a->changed = false;
++	a->cpu_set_bits = bits;
+ 	return 0;
  }
  
-@@ -5314,6 +5351,7 @@ static void put_pmu_ctx(struct perf_event_pmu_context *epc)
- 
- 	WARN_ON_ONCE(!list_empty(&epc->pinned_active));
- 	WARN_ON_ONCE(!list_empty(&epc->flexible_active));
-+	WARN_ON_ONCE(!list_empty(&epc->flexible_inactive));
- 
- 	raw_spin_unlock_irqrestore(&ctx->lock, flags);
- 
-@@ -9155,7 +9193,7 @@ perf_iterate_ctx(struct perf_event_context *ctx,
- 
- 	list_for_each_entry_rcu(event, &ctx->event_list, event_entry) {
- 		if (!all) {
--			if (event->state < PERF_EVENT_STATE_INACTIVE)
-+			if (event->state < PERF_EVENT_STATE_ON)
- 				continue;
- 			if (!event_filter_match(event))
- 				continue;
-@@ -9179,7 +9217,7 @@ static void perf_iterate_sb_cpu(perf_iterate_f output, void *data)
- 		if (!smp_load_acquire(&event->ctx))
- 			continue;
- 
--		if (event->state < PERF_EVENT_STATE_INACTIVE)
-+		if (event->state < PERF_EVENT_STATE_ON)
- 			continue;
- 		if (!event_filter_match(event))
- 			continue;
-@@ -13554,7 +13592,7 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 	event->ns		= get_pid_ns(task_active_pid_ns(current));
- 	event->id		= atomic64_inc_return(&perf_event_id);
- 
--	event->state		= PERF_EVENT_STATE_INACTIVE;
-+	event->state		= PERF_EVENT_STATE_ON;
- 
- 	if (parent_event)
- 		event->event_caps = parent_event->event_caps;
-@@ -14600,7 +14638,7 @@ static void __perf_pmu_install_event(struct pmu *pmu,
- 	event->pmu_ctx = epc;
- 
- 	if (event->state >= PERF_EVENT_STATE_OFF)
--		event->state = PERF_EVENT_STATE_INACTIVE;
-+		event->state = PERF_EVENT_STATE_ON;
- 	perf_install_in_context(ctx, event, cpu);
++bool affinity__has_cpu(const struct affinity *a, int cpu)
++{
++	return a && a->orig_cpus && cpu >= 0 &&
++	       (size_t)cpu < a->cpu_set_bits && test_bit(cpu, a->orig_cpus);
++}
++
+ /*
+  * perf_event_open does an IPI internally to the target CPU.
+  * It is more efficient to change perf's affinity to the target
+  * CPU and then set up all events on that CPU, so we amortize
+  * CPU communication.
+  */
+-void affinity__set(struct affinity *a, int cpu)
++int affinity__set(struct affinity *a, int cpu)
+ {
+-	int cpu_set_size = get_cpu_set_size();
++	int err;
  
  	/*
-@@ -15038,8 +15076,8 @@ inherit_event(struct perf_event *parent_event,
- 	 * not its attr.disabled bit.  We hold the parent's mutex,
- 	 * so we won't race with perf_event_{en, dis}able_family.
+ 	 * Return:
+-	 * - if cpu is -1
++	 * - if cpu is < 0 (e.g. -1)
+ 	 * - restrict out of bound access to sched_cpus
  	 */
--	if (parent_state >= PERF_EVENT_STATE_INACTIVE)
--		child_event->state = PERF_EVENT_STATE_INACTIVE;
-+	if (parent_state >= PERF_EVENT_STATE_ON)
-+		child_event->state = PERF_EVENT_STATE_ON;
- 	else
- 		child_event->state = PERF_EVENT_STATE_OFF;
+-	if (cpu == -1 || ((cpu >= (cpu_set_size * 8))))
+-		return;
++	if (!a || !a->sched_cpus || cpu < 0 || (size_t)cpu >= a->cpu_set_bits)
++		return -1;
+ 
+-	a->changed = true;
+ 	__set_bit(cpu, a->sched_cpus);
+ 	/*
+-	 * We ignore errors because affinity is just an optimization.
+-	 * This could happen for example with isolated CPUs or cpusets.
+-	 * In this case the IPIs inside the kernel's perf API still work.
++	 * Callers such as evlist ignore errors because affinity is just an
++	 * optimization (for example with isolated CPUs or cpusets, where IPIs
++	 * inside the kernel's perf API still work), while tests may check the
++	 * return value.
+ 	 */
+-	sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->sched_cpus);
++	err = sched_setaffinity(0, a->cpu_set_bits / 8, (cpu_set_t *)a->sched_cpus);
+ 	__clear_bit(cpu, a->sched_cpus);
++	if (err)
++		return -1;
++
++	a->changed = true;
++	return 0;
+ }
+ 
+ static void __affinity__cleanup(struct affinity *a)
+ {
+-	int cpu_set_size = get_cpu_set_size();
+-
+-	if (a->changed)
+-		sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
++	if (a->changed && a->orig_cpus)
++		sched_setaffinity(0, a->cpu_set_bits / 8, (cpu_set_t *)a->orig_cpus);
+ 	zfree(&a->sched_cpus);
+ 	zfree(&a->orig_cpus);
++	a->cpu_set_bits = 0;
++	a->changed = false;
+ }
+ 
+ void affinity__cleanup(struct affinity *a)
+@@ -87,17 +113,25 @@ void affinity__cleanup(struct affinity *a)
+ 
+ void cpu_map__set_affinity(const struct perf_cpu_map *cpumap)
+ {
+-	int cpu_set_size = get_cpu_set_size();
+-	unsigned long *cpuset = bitmap_zalloc(cpu_set_size * 8);
++	size_t bits = get_cpu_set_bits();
++	unsigned long *cpuset;
+ 	struct perf_cpu cpu;
+ 	unsigned int idx;
+ 
++	perf_cpu_map__for_each_cpu_skip_any(cpu, idx, cpumap) {
++		if (cpu.cpu >= 0 && (size_t)cpu.cpu >= bits)
++			bits = BITS_TO_LONGS((size_t)cpu.cpu + 1) * BITS_PER_LONG;
++	}
++
++	cpuset = bitmap_zalloc(bits);
+ 	if (!cpuset)
+ 		return;
+ 
+-	perf_cpu_map__for_each_cpu_skip_any(cpu, idx, cpumap)
+-		__set_bit(cpu.cpu, cpuset);
++	perf_cpu_map__for_each_cpu_skip_any(cpu, idx, cpumap) {
++		if (cpu.cpu >= 0)
++			__set_bit(cpu.cpu, cpuset);
++	}
+ 
+-	sched_setaffinity(0, cpu_set_size, (cpu_set_t *)cpuset);
++	sched_setaffinity(0, bits / 8, (cpu_set_t *)cpuset);
+ 	zfree(&cpuset);
+ }
+diff --git a/tools/perf/util/affinity.h b/tools/perf/util/affinity.h
+index 7341194b2298..d21028e2465f 100644
+--- a/tools/perf/util/affinity.h
++++ b/tools/perf/util/affinity.h
+@@ -3,16 +3,19 @@
+ #define PERF_AFFINITY_H 1
+ 
+ #include <stdbool.h>
++#include <stddef.h>
+ 
+ struct perf_cpu_map;
+ struct affinity {
+ 	unsigned long *orig_cpus;
+ 	unsigned long *sched_cpus;
++	size_t cpu_set_bits;
+ 	bool changed;
+ };
+ 
+ void affinity__cleanup(struct affinity *a);
+-void affinity__set(struct affinity *a, int cpu);
++bool affinity__has_cpu(const struct affinity *a, int cpu);
++int affinity__set(struct affinity *a, int cpu);
+ int affinity__setup(struct affinity *a);
+ void cpu_map__set_affinity(const struct perf_cpu_map *cpumap);
  
 -- 
 2.56.1.831.g720f3f5937-goog
