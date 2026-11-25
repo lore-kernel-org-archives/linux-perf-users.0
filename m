@@ -1,44 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795634654;
-	b=POSj5uVfVnQUMMrHWMz9gbV1dY9wz/Gr2A4vx5JfwMTTgDQkgxVJvgY0Tq9NMS2BeXCC
-	 LyXgNywIs2oWtGnOTOYcbd61J5Yb7A8jzw/KDmGIkDczJeIsC2zF5ExQ5HhBtl8tR0iRz
-	 BJckdc767l5x5Zlm5qB9rRlLlw75LDMfa+SPFxl724hdu2LDwPMiQx6+5K0A5U29kTjUf
-	 dcg8tfONxHzX9VtmipEpT8pT2anaagPrqwzqJ+KtT45rXghlQMT7/9qo2M3OF9RzVn6iJ
-	 o1vgbqFDYMcxCbhvgkKeQOo8nLgWC99yv1Dsx6T8rcJgks2B3+L/o1SkSWePr95zuJw==
+	t=1795634665;
+	b=16cWbNeESjsoOsd+n7ZqmmKraBzTyZsE7eYxgJLxhQb9qhMvK950eVfGU/Demm5bz8YX
+	 WHJo61iB81wigfZEh0Ntk1tZggPeamFJOaa6z7QS7JGQVeS4bBAKUQkyWhTwTG8aPUNId
+	 2H+rF9UA6CCKFyuTTUi8+fNsndpVbnoHqVVp2iB9Sc1tqtERMrwVpMIVZp7HyQrmll5jU
+	 hHh12q3bYw658qQBPzEHSaFahRxsniw/Qj7MT43f3mU4SoZTnRY/8uYjNc4GY2jwHehzu
+	 xH4SCDZ74vg6stkPcW/GgnOo0eWbk3wERTkQ8VyKQKSQp6p02spy5LtAv2khuLXvw5Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795634654;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795634665;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=KZmqBNdphekKEEgxVAXsrHFlb1ohSo5eKZeuG1YGIXE=;
-	b=0z+cpwb83tPsm8NcygBKaRWCnPgJassZTlnIBNdOBTCSOGi4AZY3agxC4gulaq7MviDa
-	 ju6ztP0qrdRoi8xgVgLYrARWxV3fskEuHjm4X1aVpREg/oup1yHTAd+l7JTVVMpzgUiH2
-	 YMDwiZmkvQo2Or1saw6p1i4LwnsvINa6nqESDcKqCpADBBvuTjNbNrm2KcL5VbLep6rbn
-	 xfKSbUbZZm+Sri0KjMp4+xhK+8bka0u98RQCmfil5VYX6xDut13KmXvETcDvTca4XMBFC
-	 KlhCQyIwm4XrX0NuQGYaKIYLSPj4VlByt3IY17ApgzAEltI8FWSCAyAOxKTsmS9wVhw==
+	 In-Reply-To:References:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	bh=KhTN5DwTEuHP0LJt6CxqEOr/MSwp+5y/47uYA/rgoQY=;
+	b=lhk2js6tgvgwdFTgzcr6sRyF3Sd+ObiZtqHLV2rkp6hlZS4AP+4kHnu6sGmj3npUCrnc
+	 VLMa1IDj3CJ8+BD+NP5gRHrrr5Tk3ysoX5t0jJVZwvR6IiFxcWo/clN6BO+c3Rlc4edqR
+	 EP0eLHaMxtxqi8AZdQIsxrt7QFhwQpXF3uo42+RyzNf3rxWUKjt1RK/+PDrTq7EPGGMp/
+	 OL/dZXS7oVxs14yqkiks23ZzoZ4W0ec8Rl3tFyV0wXrhCCzeHfl0TXftfZGdVrMmnlyLI
+	 /iP1XWhuJEfEeP4JaYwRQPyo1yiVBWZ93jL3fraJ7VQfemeClodkIL5g9M3jd9hS12w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SAHf0NCQ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Kk9JA/jQ";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B3A606A330;
-	Wed, 25 Nov 2026 19:24:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F62A606A6B6;
+	Wed, 25 Nov 2026 19:24:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=SAHf0NCQ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22AD91F0093C;
-	Wed, 25 Nov 2026 19:24:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Kk9JA/jQ
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22B871F000F4;
+	Wed, 25 Nov 2026 19:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795634653;
-	bh=KZmqBNdphekKEEgxVAXsrHFlb1ohSo5eKZeuG1YGIXE=;
+	s=k20260515; t=1795634664;
+	bh=KhTN5DwTEuHP0LJt6CxqEOr/MSwp+5y/47uYA/rgoQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=SAHf0NCQaMRCCnJpRU/tjozNNSp7qVTzD+C2spbozKqnjeHN6BXfcZ2ujhURJKPf5
-	 ixAlvMb0VZorLF2Z6SLIfnj16Vo2+MJFrZ3Bpo6Z4lRgjtRUyQSEKEZbfTYDHKE1rt
-	 7SnsZKltDdl8SlC1VqYnE/jlMyzouL/LOF2iTy/+s9JMhsS3anDqCzN4AYc3K2flOa
-	 1rGZRe5lWO/eI2JJo+eLZMnQibBFoP5wkGr7QSsvJqUz9J8O6DRRfvTIijH0/M+5Eg
-	 KJ1s5tYtyyk6N2uEsXAnBHagyeFgxDZlWjbXPt7DVQRuS0G7+WVKKohU3sN/65uAtQ
-	 t9ChndnV7etrw==
+	b=Kk9JA/jQ9St3ErgFiymrnnCNn4Vr3sZBz2QciAcVeqmbkKSV5tFE65VXcAfzcp+P7
+	 +/0wUcEbVwL8ILuYZMbVGT6Gi135eekEZ+jYLExat2Aiw7R0rCOXTO/dRQI+mts6GN
+	 SIpFBoLCdu4oO6nKwORe1hzit3O9OGF9lPnoYHRbO8VzyqBqawCa1ePyd29RUWzmi+
+	 R3IgN3ZfssqrWGfe7qxDeOfgdfYX2LL57vfV38yNNtiMJPYaeHWRsvdlIZENr9HAYq
+	 0MzZq3qmkwc1TDwClUQjmiljnmrS6MAZVFXJMArZ511CQTDlpYw19rSqTVdJM2dYdA
+	 Wg2n3WwMPwe+A==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +52,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v13 16/19] perf test: Skip the trace summary BPF tests without kernel BTF
-Date: Wed, 25 Nov 2026 16:23:09 -0300
-Message-ID: <20261125192312.34134-17-acme@kernel.org>
+Subject: [PATCH v13 19/19] perf scripts: Add a coverage table
+Date: Wed, 25 Nov 2026 16:23:12 -0300
+Message-ID: <20261125192312.34134-20-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261125192312.34134-1-acme@kernel.org>
 References: <20261125192312.34134-1-acme@kernel.org>
@@ -66,47 +67,475 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The --bpf-summary tests need BTF in the running kernel; perf check
-feature bpf only tells whether perf was built with libbpf.  Without
-CONFIG_DEBUG_INFO_BTF the skeleton fails to load and the test fails
-instead of skipping.
+Render the report of the last coverage run as a table of the files with
+the most uncovered lines, biggest gap first; --all lists every file and
+-f picks files explicitly, failing when a requested file has no coverage
+data.
 
-The /sys/kernel/btf/vmlinux file indicates that the running kernel has
-BTF available for the tp_btf programs.  Do not use an on-disk vmlinux
-image for this check: it can be readable even when the running kernel
-has no BTF loaded.
+Lines and funcs are printed as executed over total, each followed by a
+coverage bar, both metrics in the same format.  coverage.sh prints the
+table when a run finishes; it is also wired as 'make -C tools/perf
+coverage-table', to print just the table.  It only reads coverage.sh's
+report.txt, so the measurement and the table are reviewed and changed
+separately.
 
-Fixes: 2d099ccaadf623d3 ("perf test: Add perf trace summary test")
-Cc: Ian Rogers <irogers@google.com>
+For example, with --top 4 on a test suite run:
+
+    $ bash tools/perf/scripts/coverage-table.sh --cov-dir=/tmp/opencode/cov-more-cov --top 4
+
+    tools/perf (no tests/ or bench/), 100+ executable lines:
+    the 4 biggest uncovered gaps, start here when adding coverage tests.
+    --all for every file: make -C tools/perf coverage-table COVERAGE_ARGS="--cov-dir /tmp/opencode/cov-more-cov --all"
+
+    ┌──────────────────────────────────────────┬───────────────┬───────────────────────────┬───────────────┬───────────────────────────┐
+    │ File                                     │         Lines │         Coverage          │         Funcs │         Coverage          │
+    ├──────────────────────────────────────────┼───────────────┼───────────────────────────┼───────────────┼───────────────────────────┤
+    │ builtin-trace.c                          │      155/3661 │ ░░░░░░░░░░░░░░░░░░   4.2% │         1/198 │ ░░░░░░░░░░░░░░░░░░   0.5% │
+    │ util/intel-pt.c                          │        0/3237 │ ░░░░░░░░░░░░░░░░░░   0.0% │         0/142 │ ░░░░░░░░░░░░░░░░░░   0.0% │
+    │ util/intel-pt-decoder/intel-pt-decoder.c │        0/3208 │ ░░░░░░░░░░░░░░░░░░   0.0% │         0/119 │ ░░░░░░░░░░░░░░░░░░   0.0% │
+    │ builtin-sched.c                          │      737/3737 │ ███░░░░░░░░░░░░░░░  19.7% │        16/141 │ ██░░░░░░░░░░░░░░░░  11.4% │
+    ├──────────────────────────────────────────┼───────────────┼───────────────────────────┼───────────────┼───────────────────────────┤
+    │ TOTAL (perf)                             │  75546/174407 │ ███████░░░░░░░░░░░  43.3% │     5044/9362 │ █████████░░░░░░░░░  53.9% │
+    └──────────────────────────────────────────┴───────────────┴───────────────────────────┴───────────────┴───────────────────────────┘
+
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/trace_summary.sh | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ tools/perf/Makefile                  |   5 +-
+ tools/perf/Makefile.perf             |   3 +-
+ tools/perf/scripts/coverage-table.sh | 339 +++++++++++++++++++++++++++
+ tools/perf/scripts/coverage.sh       |  14 +-
+ 4 files changed, 356 insertions(+), 5 deletions(-)
+ create mode 100755 tools/perf/scripts/coverage-table.sh
 
-diff --git a/tools/perf/tests/shell/trace_summary.sh b/tools/perf/tests/shell/trace_summary.sh
-index 0e603addb2a99d4d..154f85f16e6528f9 100755
---- a/tools/perf/tests/shell/trace_summary.sh
-+++ b/tools/perf/tests/shell/trace_summary.sh
-@@ -63,6 +63,15 @@ if ! perf check feature -q bpf; then
-     exit 2
- fi
+diff --git a/tools/perf/Makefile b/tools/perf/Makefile
+index d9ad8c0d796c2852..5da13faa1c18b510 100644
+--- a/tools/perf/Makefile
++++ b/tools/perf/Makefile
+@@ -150,6 +150,9 @@ coverage-prep:
+ coverage:
+ 	@./scripts/coverage.sh $(coverage_o) $(COVERAGE_ARGS)
  
-+# The tp_btf programs need BTF in the running kernel.  A vmlinux image
-+# on disk is not sufficient: it can be readable even when the kernel has
-+# no BTF loaded.
-+if [ ! -r /sys/kernel/btf/vmlinux ]; then
-+    echo "Skip --bpf-summary tests as kernel BTF is missing"
-+    rm -f ${OUTPUT}
-+    exit 2
++coverage-table:
++	@./scripts/coverage-table.sh $(coverage_o) $(COVERAGE_ARGS)
++
+ #
+ # All other targets get passed through:
+ #
+@@ -157,4 +160,4 @@ coverage:
+ 	$(print_msg)
+ 	$(make)
+ 
+-.PHONY: all clean tags TAGS FORCE Makefile build-test build-test-tarball check-headers sync-headers coverage coverage-prep
++.PHONY: all clean tags TAGS FORCE Makefile build-test build-test-tarball check-headers sync-headers coverage coverage-prep coverage-table
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 1b4efe6254fa0370..6427d3a012c465d1 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -878,7 +878,8 @@ help:
+ 	@echo '  sync-headers		- sync those header copies with the kernel, creating commits'
+ 	@echo '			  (SYNC_HEADERS_ARGS="..." passes options to the script)'
+ 	@echo '  coverage-prep		- build perf with clang coverage, ready for a root test run'
+-	@echo '  coverage		- build perf with clang coverage, run the tests and report'
++	@echo '  coverage		- build perf with clang coverage, run the tests, report and show the table'
++	@echo '  coverage-table	- print a text table of the last coverage run'
+ 	@echo '			  (O=DIR uses an existing build dir; COVERAGE_ARGS="..." passes options)'
+ 
+ 
+diff --git a/tools/perf/scripts/coverage-table.sh b/tools/perf/scripts/coverage-table.sh
+new file mode 100755
+index 0000000000000000..e382307a447657f2
+--- /dev/null
++++ b/tools/perf/scripts/coverage-table.sh
+@@ -0,0 +1,339 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++#
++# Copyright (C) 2026, Red Hat Inc, Arnaldo Carvalho de Melo <acme@redhat.com>
++#
++# Render the report of the last coverage run as a text table, like pahole's
++# coverage_table.py.  Without -f the default is the tool's files, not its
++# tests and benches, with the most uncovered lines, biggest gap first;
++# --all lists every tools/perf file, most covered first.  The total is the
++# tools/perf subtotal, the run summary has the whole report.
++
++set -euo pipefail
++
++PERF_DIR=$(cd "$(dirname "$0")/.." && pwd -P)
++TOOLS_DIR=$(cd "$PERF_DIR/.." && pwd -P)
++
++BUILD_DIR=${BUILD_DIR:-}
++COV_DIR=${COV_DIR:-}
++TOP=${TOP:-20}
++MIN_LINES=${MIN_LINES:-100}
++TABLE_ALL=0
++FOCUS=()
++
++die()  { printf '\033[0;31merror:\033[0m %s\n' "$*" >&2; exit 1; }
++
++usage()
++{
++	cat <<EOF
++Usage: scripts/coverage-table.sh [options]
++
++Render the report of the last coverage run as a text table.  Run
++scripts/coverage.sh first to produce the report.
++
++Options:
++  -b, --build-dir DIR    build directory of the run (default: $PERF_DIR)
++  -c, --cov-dir DIR      directory with report.txt (default: BUILD_DIR/cov)
++  -f, --focus FILE       add a file to the table (repeatable)
++      --top N            default view: the N files with the most uncovered
++                         lines (default: $TOP, 0 to disable)
++      --all              list every tools/perf file, most covered first
++      --min-lines N      default view: only files with N+ executable
++                         lines (default: $MIN_LINES)
++  -h, --help             show this help
++
++Environment: BUILD_DIR, COV_DIR, TOP, MIN_LINES
++EOF
++}
++
++while [ $# -gt 0 ]; do
++	arg=$1
++	optval=
++	case "$arg" in
++	--*=*) optval=${arg#*=}; arg=${arg%%=*}
++	       [ -n "$optval" ] || die "$arg needs a value" ;;
++	esac
++
++	case "$arg" in
++	--all|-h|--help)
++		[ -z "$optval" ] || die "$arg takes no value" ;;
++	esac
++
++	case "$arg" in
++	-b|--build-dir) BUILD_DIR=${optval:-${2:?$arg needs a value}}
++	                [ -z "$optval" ] && shift ;;
++	-c|--cov-dir)   COV_DIR=${optval:-${2:?$arg needs a value}}
++	                [ -z "$optval" ] && shift ;;
++	-f|--focus)     FOCUS+=("${optval:-${2:?$arg needs a value}}")
++	                [ -z "$optval" ] && shift ;;
++	--top)          TOP=${optval:-${2:?$arg needs a value}}
++	                [ -z "$optval" ] && shift ;;
++	--min-lines)    MIN_LINES=${optval:-${2:?$arg needs a value}}
++	                [ -z "$optval" ] && shift ;;
++	--all)          TABLE_ALL=1 ;;
++	-h|--help)      usage; exit 0 ;;
++	-*)             die "unknown option: $arg (see --help)" ;;
++	*)              die "unexpected argument: $arg (see --help)" ;;
++	esac
++	shift
++done
++
++[ -n "$BUILD_DIR" ] || BUILD_DIR=$PERF_DIR
++BUILD_DIR=$(realpath -m "$BUILD_DIR")
++[ -n "$COV_DIR" ] || COV_DIR=$BUILD_DIR/cov
++COV_DIR=$(realpath -m "$COV_DIR")
++REPORT=$COV_DIR/report.txt
++
++[ -f "$REPORT" ] || die "no $REPORT, run coverage first"
++[[ $TOP =~ ^[0-9]+$ ]] || die "--top wants a number, not '$TOP'"
++[[ $MIN_LINES =~ ^[0-9]+$ ]] ||
++	die "--min-lines wants a number, not '$MIN_LINES'"
++# awk reads 08 as eight, printf as an invalid octal number; use decimal.
++TOP=$((10#$TOP))
++MIN_LINES=$((10#$MIN_LINES))
++
++# An in-tree build has the sources below BUILD_DIR, so only a separate
++# build directory can tell generated files apart from the tree's sources.
++# llvm-cov strips the prefix the reported files have in common: strip the
++# one BUILD_DIR shares with the sources, as a suffix match would also
++# catch sources when BUILD_DIR ends in perf, as with O=~/build/perf.
++BUILD_AWK_DIR=
++if [ "$BUILD_DIR" != "$PERF_DIR" ]; then
++	BUILD_AWK_DIR=$(awk -v b="$BUILD_DIR" -v t="$TOOLS_DIR" 'BEGIN {
++		nb = split(b, B, "/")
++		nt = split(t, T, "/")
++		i = 1
++		while (i <= nb && i <= nt && B[i] == T[i])
++			i++
++		for (; i <= nb; i++)
++			out = out (out == "" ? "" : "/") B[i]
++		print out
++	}')
 +fi
 +
- # summary only for system wide - per-thread summary with BPF
- test_perf_trace "-as --summary-mode=thread --bpf-summary"
++# llvm-cov strips the prefix every reported file has in common, so a
++# tools/perf source can read as perf/util/evsel.c.
++AWK_PERF='
++function perf_relpath(p) {
++	sub(/^.*tools\/perf\//, "", p)
++	sub(/^perf\//, "", p)
++	return p
++}
++function under_build(p,    n) {
++	if (build == "")
++		return 0
++	n = length(build)
++	return substr(p, 1, n + 1) == build "/" ||
++	       substr(p, 1, n + 2) == "/" build "/"
++}
++function generated(p,    r) {
++	r = perf_relpath(p)
++	if (under_build(p))
++		return 1
++	return r ~ /^(lib(api|bpf|perf|subcmd|symbol)|trace\/beauty\/generated)\// ||
++	       r ~ /^arch\/[^\/]+\/include\/generated\// ||
++	       r ~ /^pmu-events\/(pmu-events(-string)?|test-empty-pmu-events)\.c$/ ||
++	       r ~ /^util\/(intel-pt-decoder\/inat-tables\.c|.*-(bison|flex)\.[ch])$/ ||
++	       r ~ /^util\/bpf_skel\/(\.tmp\/|vmlinux\.h$)/ ||
++	       r ~ /\.skel\.h$/ ||
++	       r == "common-cmds.h"
++}
++'
++
++bar()
++{
++	local pct=$1 width=$2 filled i out=
++	filled=$(awk -v p="$pct" -v w="$width" 'BEGIN { printf "%d", p * w / 100 }')
++	for ((i = 0; i < filled; i++)); do out+=█; done
++	for ((i = filled; i < width; i++)); do out+=░; done
++	printf '%s' "$out"
++}
++
++center()
++{
++	local left=$(( ($2 - ${#1}) / 2 ))
++	printf '%*s%s%*s' "$left" '' "$1" "$(( $2 - ${#1} - left ))" ''
++}
++
++dashes()
++{
++	local s
++	printf -v s '%*s' "$1" ''
++	printf '%s' "${s// /─}"
++}
++
++table_row()
++{
++	awk -v f="$2" "$AWK_PERF"'
++		{
++			g = perf_relpath(f)
++			path = perf_relpath($1)
++			if ($1 != "TOTAL" && $8 > 0 &&
++			    (path == f || path == g || $1 == f)) {
++				printf "%s\t%s\t%d\t%d\t%.2f\t%s\t%d\t%s\n",
++				       path, $8, $8 - $9, $9, $10, $5, $5 - $6, $7
++				exit
++			}
++		}' "$1"
++}
++
++table_rows()
++{
++	local file
++
++	if [ ${#FOCUS[@]} -gt 0 ]; then
++		local row rows= missing=()
++
++		for file in "${FOCUS[@]}"; do
++			row=$(table_row "$REPORT" "$file")
++			if [ -z "$row" ]; then
++				missing+=("$file")
++				continue
++			fi
++			rows+=$row$'\n'
++		done
++		if [ ${#missing[@]} -gt 0 ]; then
++			printf 'error: no coverage data in %s for:\n' "$REPORT" >&2
++			printf '  %s\n' "${missing[@]}" >&2
++			exit 1
++		fi
++		printf '%s' "$rows" | sort -t$'\t' -k5,5gr
++		return
++	fi
++
++	if [ "$TABLE_ALL" = 1 ]; then
++		awk -v build="$BUILD_AWK_DIR" "$AWK_PERF"'
++			($1 ~ /(^|\/)tools\/perf\// || $1 ~ /^perf\//) &&
++			!generated($1) && $8 > 0 {
++				printf "%s\t%s\t%d\t%d\t%.2f\t%s\t%d\t%s\n",
++				       perf_relpath($1), $8, $8 - $9, $9, $10,
++				       $5, $5 - $6, $7
++			}' "$REPORT" |
++			sort -t$'\t' -k5,5gr
++		return
++	fi
++
++	awk -v min="$MIN_LINES" -v build="$BUILD_AWK_DIR" "$AWK_PERF"'
++		($1 ~ /(^|\/)tools\/perf\// || $1 ~ /^perf\//) &&
++		!generated($1) && $8 >= min && $9 > 0 &&
++		perf_relpath($1) !~ /^(tests|bench)\// {
++			printf "%s\t%s\t%d\t%d\t%.2f\t%s\t%d\t%s\n",
++			       perf_relpath($1), $8, $8 - $9, $9, $10,
++			       $5, $5 - $6, $7
++		}' "$REPORT" |
++		sort -t$'\t' -k4,4nr |
++		if [ "$TOP" -gt 0 ]; then
++			sed -n "1,${TOP}p"
++		else
++			cat
++		fi
++}
++
++# The table is about tools/perf, so its total is the tools/perf subtotal;
++# the run summary prints the whole report, generated files included.
++table_total()
++{
++	awk -v build="$BUILD_AWK_DIR" "$AWK_PERF"'
++		$1 != "TOTAL" && !generated($1) &&
++		($1 ~ /(^|\/)tools\/perf\// || $1 ~ /^perf\//) {
++			lines += $8
++			missed += $9
++			funcs += $5
++			funcs_missed += $6
++		}
++		END {
++			printf "%d\t%d\t%d\t%.2f\t%d\t%d\t%.2f%%\n",
++			       lines, lines - missed, missed,
++			       lines ? 100 * (lines - missed) / lines : 0,
++			       funcs, funcs - funcs_missed,
++			       funcs ? 100 * (funcs - funcs_missed) / funcs : 0
++		}' "$REPORT"
++}
++
++# At most three lines: what the table shows and how to see every file.
++table_caption()
++{
++	if [ ${#FOCUS[@]} -gt 0 ]; then
++		echo "files requested with -f."
++	elif [ "$TABLE_ALL" = 1 ]; then
++		echo "every tools/perf file, tests and benches included, most covered first."
++		return
++	elif [ "$TOP" -gt 0 ] && [ "$MIN_LINES" -gt 0 ]; then
++		printf "tools/perf (no tests/ or bench/), %d+ executable lines:\n" "$MIN_LINES"
++		echo "the $TOP biggest uncovered gaps, start here when adding coverage tests."
++	elif [ "$TOP" -gt 0 ]; then
++		printf "tools/perf (no tests/ or bench/): the %d files with the\n" "$TOP"
++		echo "biggest uncovered gaps, start here when adding coverage tests."
++	elif [ "$MIN_LINES" -gt 0 ]; then
++		printf "tools/perf (no tests/ or bench/), %d+ executable lines:\n" "$MIN_LINES"
++		echo "start here when adding coverage tests, biggest gaps first."
++	else
++		echo "tools/perf (no tests/ or bench/), biggest gaps first."
++	fi
++	local cmd='make -C tools/perf coverage-table'
++	local cov_args='--all'
++	[ "$BUILD_DIR" = "$PERF_DIR" ] || cmd+=" O=$BUILD_DIR"
++	[ "$COV_DIR" = "$BUILD_DIR/cov" ] ||
++		cov_args="--cov-dir $COV_DIR --all"
++	printf '%s %s COVERAGE_ARGS="%s"\n' '--all for every file:' "$cmd" "$cov_args"
++}
++
++print_table()
++{
++	local rows total path lines hit missed pct funcs funcs_hit func_cov func_pct
++	local row_fmt w d15 d27 d_file
++
++	rows=$(table_rows)
++	[ -n "$rows" ] ||
++		die "no coverage data in $REPORT for the requested files"
++	total=$(table_total)
++	[ -n "$total" ] || die "no coverage data in $REPORT"
++
++	table_caption
++	printf '\n'
++
++	w=12	# "TOTAL (perf)"
++	while IFS=$'\t' read -r path _; do
++		if [ ${#path} -gt "$w" ]; then
++			w=${#path}
++		fi
++	done <<< "$rows"
++
++	d15=$(dashes 15)
++	d27=$(dashes 27)
++	d_file=$(dashes $((w + 2)))
++
++	# Lines and Funcs print the executed over the total, each with a
++	# coverage bar of its own, both in the same format.  The bar cell
++	# holds 18 blocks, a space, the %5.1f value and the sign, one
++	# space of padding on each side: 27 columns.
++	printf '┌%s┬%s┬%s┬%s┬%s┐\n' "$d_file" "$d15" "$d27" "$d15" "$d27"
++	printf '│ %-*s │ %13s │ %s │ %13s │ %s │\n' \
++		"$w" "File" "Lines" "$(center Coverage 25)" \
++		"Funcs" "$(center Coverage 25)"
++	printf '├%s┼%s┼%s┼%s┼%s┤\n' "$d_file" "$d15" "$d27" "$d15" "$d27"
++
++	row_fmt=$(printf '│ %%-%ds │ %%13s │ %%s %%5.1f%%%% │ %%13s │' "$w")
++	row_fmt+=' %s %5.1f%% │\n'
++
++	while IFS=$'\t' read -r path lines hit missed pct funcs funcs_hit func_cov; do
++		func_pct=${func_cov%\%}
++		printf "$row_fmt" "$path" "$hit/$lines" \
++			"$(bar "$pct" 18)" "$pct" \
++			"$funcs_hit/$funcs" "$(bar "$func_pct" 18)" "$func_pct"
++	done <<< "$rows"
++
++	printf '├%s┼%s┼%s┼%s┼%s┤\n' "$d_file" "$d15" "$d27" "$d15" "$d27"
++	while IFS=$'\t' read -r lines hit missed pct funcs funcs_hit func_cov; do
++		func_pct=${func_cov%\%}
++		printf "$row_fmt" "TOTAL (perf)" "$hit/$lines" \
++			"$(bar "$pct" 18)" "$pct" \
++			"$funcs_hit/$funcs" "$(bar "$func_pct" 18)" "$func_pct"
++	done <<< "$total"
++	printf '└%s┴%s┴%s┴%s┴%s┘\n' "$d_file" "$d15" "$d27" "$d15" "$d27"
++}
++
++# The table code parses llvm-cov's decimal points; keep the numeric locale
++# fixed.
++export LC_ALL=C
++print_table
+diff --git a/tools/perf/scripts/coverage.sh b/tools/perf/scripts/coverage.sh
+index e9a4cf807850e1c7..bb075c9a54e820cd 100755
+--- a/tools/perf/scripts/coverage.sh
++++ b/tools/perf/scripts/coverage.sh
+@@ -3,8 +3,9 @@
+ #
+ # Copyright (C) 2026, Red Hat Inc, Arnaldo Carvalho de Melo <acme@redhat.com>
+ #
+-# Build perf with clang source based coverage, run the perf test suite and
+-# report line coverage.
++# Build perf with clang source based coverage, run the perf test suite,
++# report line coverage and the table of the files with the most uncovered
++# lines.  coverage-table.sh renders that table from the last report alone.
+ # The build goes into tools/perf and the profiles and report into
+ # tools/perf/cov; -b and -c override them, following perf's O= layout.
+ # --prep stops after the instrumented build, for running the tests later as
+@@ -44,7 +45,9 @@ usage()
+ Usage: scripts/coverage.sh [options] [test name fragment...]
  
+ Builds perf with clang source based coverage, runs the complete perf test
+-suite and reports line coverage.  Use -t to run a subset.
++suite, reports line coverage and the files with the most uncovered lines.
++Use -t to run a subset; scripts/coverage-table.sh renders the table again
++with other options.
+ 
+ Options:
+   -b, --build-dir DIR    existing perf build directory (default: $PERF_DIR)
+@@ -64,6 +67,7 @@ Through make:
+   make -C tools/perf coverage
+   make -C tools/perf coverage-prep O=/tmp/build/perf-coverage
+   sudo make -C tools/perf coverage O=/tmp/build/perf-coverage
++  make -C tools/perf coverage-table O=/tmp/build/perf-coverage
+ EOF
+ }
+ 
+@@ -482,5 +486,9 @@ render_report
+ print_summary
+ update_baseline
+ 
++printf "\n"
++"$PERF_DIR/scripts/coverage-table.sh" --build-dir "$BUILD_DIR" \
++	--cov-dir "$COV_DIR" || warn "could not render the coverage table"
++
+ printf "\nReport:  %s\n" "$REPORT"
+ exit "$test_status"
 -- 
 2.56.0
 
