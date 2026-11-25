@@ -1,88 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.94.104
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795600678;
-	b=kHTMeJlV7eb4cpVT72lx2J/bFLeCfCO4KdUidcmyUpx7YT7FDgNlSxM78n0b4YMQjkl/
-	 AsLy6OfvCf0gwyBZCOhp8SHAxVz0OyfHkXjat3diQUfwVXCvyp2Gh7zOJe6oOaBYxJBcM
-	 H1fLlx6W881w7JoHM++V9xahcD60Oldn11XZsnc2F2ZiFztjqM6gJRbH5jefga8A0c6cB
-	 IRaRF8s5eafVuytAd/hG0HbUC4LpHvG0vUdaCy+Bn7fgMQ62A1HCaqwIs4fx2GrWh7Czy
-	 5we6X7hG/ctMKddsSabApxpj9vEcGOB6J3urICYm9G0fjM2mhCbmq9dVbOHDmvhQ0ZA==
+	t=1795601041;
+	b=dX6AnEYt9wHu+hRBfyMexCpBQ1wvzEXRJRRe7QD6f2/Jx1x7V/C++2ij2/3YZ5eOhSzu
+	 qKrvCu/0VE0QDLaAjAfrNn5ZdCw8w3d/QBQFV59szyCVc908S6OTdmhr9vDEk95qLklkt
+	 M+BC2OTtT2l+AtfUV1GlkKfd1PL92tP6tjGKsWiDbPKu/v4pvLU2n9AHg6dmWyZWkuZ2t
+	 K7NBrLyFIN3T/VAFI6QMnhBwKTNx77dE7Q5RyqFn3LoZYRq4LhVOqvQ48BDLuZlm/4MXs
+	 bAO0iGz6BIx9qOuTKSJCah4X0X8ty0vzs3XH1Q+VvdXI5iX3oBgrJP2xTENj+3Pr4oQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795600678;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	 Content-Language:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding;
-	bh=k6KEcTl/pyiQsKyyg/2eQ+l+POB59ejsRYmW+NNyeA8=;
-	b=UNabEY+UtnVSN1eRKW2q31+/oZaPw4u4/k8bAEQeU3wn4C/+awi/lSmqtsssYrBdH1ot
-	 TR7LYY4nXBQjvoeZ9uV2S3YSL4mWqQTN3SDWChTPtDbcEx5Rn377RMLQsi3+ezHG1Hb0x
-	 +LZojlceipHyUr8XWiVus9j/Dn3VwTQzN/Wi9gl6w42XptdCiNVOJtpIOuNXr1jevjgKY
-	 f6jqAHrIExeqxGVEa4PO94RRUI4fMuCGFd0ZQdEV9eJP2A3moRzIwYX3Q+/CT9A7ngkfN
-	 4LPQejpV4hSSXPPe4Dy/CoLDu2lMD8JpiPF8iDOq2J39P8UTQ+m+3Epnh+qh+N0leAA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795601041;
+	h=DMARC-Filter:Received:Received:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-Coremail-Antispam:X-CM-SenderInfo;
+	bh=aKp9ulANN8ZsCem3hOzSiHB1VBEpB1+IrEIaum/OfA4=;
+	b=AkqHrymB5T5tsuGrmwhtkYSyXCZQdN2ZLtXT9zsKVy6XlM7RTUzh/gyBJh+2QJpalcgN
+	 1T7gpjUX1ictJ7zBa/EsKsgt9n6tdVIg/cEL3U9mU5NkuuKj4VF2U4c1DHWDu6fSUnDhW
+	 mRbUU23UApIwNM6T7DxuIpHxwex+Do+/02Usji9CLWygqnFFIQGYedOpzDiActHy4ar+c
+	 JgqKY64lXmILJnehquxbo1CS+visjWPaawWR8y6/f0twu/0K893BFDv3oWFyuojy7AvJ5
+	 9TmPvdcjmj/hIh8t2HIlmFi/Vxlz7DTI2SGbVnSlY+gr4uqbuKq245uY6Yk/lNKbgPw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linaro.org;
-	spf=pass smtp.mailfrom=linaro.org;
-	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=U4ho5SIW;
-	arc=none smtp.remote-ip=209.85.221.49
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dmarc=none header.from=huaweicloud.com;
+	spf=pass smtp.mailfrom=huaweicloud.com;
+	arc=none smtp.remote-ip=124.71.94.104
+Received: from dggmsgout13.his.huawei.com (dggmsgout13.his.huawei.com [124.71.94.104])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F18D606A31E
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 09:57:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5F18D606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=U4ho5SIW
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-48e09aa5264so3174771f8f.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 01:57:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1795600676; x=1796205476; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=k6KEcTl/pyiQsKyyg/2eQ+l+POB59ejsRYmW+NNyeA8=;
-        b=U4ho5SIWBLfAJh6L5LxddeznA40KG8rNkgKkmJbUOGnKML97JS7z0daSK34Zyvnr9Z
-         emW4BnhTJPTGzn7MDO/XQ6XFuGAkn8PqfR9lmVM0j/npQJm39KhqnCc5mQozsg9zFA+k
-         nTSmV7GBL+NT8vrX+Pa7YX6Ru7xTGU3qM4CTFBA8YOieDt6N4g/1BiI6yxOrWS2aEow8
-         FD4gXsInN6ZPK2FqjU/gAVh5kZCCcJGd27RWkC3rnlR+1ThU7hUb+s02kJRgG7hQmeZ7
-         re6IrPGN9TT1ywerZEdUzP/LM47cfXwtQjFH72RWIUB23Wx/B17BIfb9f+7Dj7GSHpJO
-         SiKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795600676; x=1796205476;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=k6KEcTl/pyiQsKyyg/2eQ+l+POB59ejsRYmW+NNyeA8=;
-        b=vaH2L+qDp28tXyiSiy1DKr4O1vJyz2/PYv0K5W9gyzQqsZV8x4ToJvmHtRRQBZCg5z
-         4+jpFfeUD4W7D3mVVrBM0XQtGUvEVK01YKMxUvTXyhi8tSVrSHaF37Z1VTNgrTo5/Piq
-         OrrFUMoTl7GxoFm96J/H2LJpGTCxt97zvC8qioSL3iKPhSt24MA3HWmB4em3jtXTeOBI
-         7u25ZERDhgwlKbZWySiIkm06j7g8rcjopGZEMMsFRXXtSyghedUPN6x+rMbramMARBJN
-         8DnMKqCyY560NKl0SttUqrW+k1rWc9EWxC4M3zRnuAPJv/0oEvQdJ/BustLZ7k2jGGBe
-         Sesg==
-X-Forwarded-Encrypted: i=1; AL+hErE5ux3LY2Ks7dSPhs4vu0hHjCAD6Uqe8WNeNNe/qr5Bei1DslIXoH5lCUIejP5hZFZ0F3/qaJtrwmxdsZpsA2pe@vger.kernel.org
-X-Gm-Message-State: APuU4Z8YVrk2GiG09mHfnLs9Lw7PX3pz6qEMlj/aVu9+TGLKVk+gzT+A
-	Oelz2ccAS2vuwIAZ+NHsFriBI263S1JcZQTBzKCveD8nbUmBSrjhcELmQQ1masSTTDg=
-X-Gm-Gg: AZFdTZfZtMD3dy4Zw5BoNXQsf6BKkQOSy8lPR1yzRuGwx6mznkcXDC5USEVZzYdXcBI
-	OSm4iO9GMYyR/qtXVrDofrxWnAJQW+oN+BmwWeAZjk0ndbVEc11Vzlad2lojPcoPDEnmN+kAmHH
-	1j+MxdWuk/ewRy1i/xeqDxC4FacwWN+0GC3RC/W7wXKXwvXdsxd+0KVe6T/Iu9frEPrXvEAFHLk
-	vevsL0o7t4BMtRgRK0/5vgluAhlNv0t/SzeiGRDS7kAmpdPde+IdZbXi7A+Pnon2wpsuY+ocQyI
-	d0nKDjGxeILQeVGuXmwfUTXYbJCeoly5JfgrXwtrGgLGpVeemZ+AO9hbqKVjA7B3tQPgPZio1H8
-	UNNdxG41FhRBTIWOEHCd0WwgdcMX5NliGkvPHyY2pJx34k5PUB+NR1TNMDFaCYsaJThshqDLuc4
-	qUB/PF/sKKl4DqYtegJ7kQZ4NLMlYAlA84MmgHbj+SAGSE71WOrfZVyyo+37yoH4V8tEPwWZ7Kx
-	FvHOh7ekZVzQu6jDJd+lvoIQzu2XQirtFgZXsUL9Um2tX4uaYOWz8+YnCre2KC/J72jA0VsK/RW
-	Zz1EJ5zQJXCUOOaf1sIxYdy1kq2TZi8RcA==
-X-Received: by 2002:a5d:64c9:0:b0:488:88ec:59c3 with SMTP id ffacd0b85a97d-4abb0f3c071mr35368426f8f.14.1795600675654;
-        Wed, 25 Nov 2026 01:57:55 -0800 (PST)
-Received: from [192.168.1.3] ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab69bf6804sm32730070f8f.10.2026.11.25.01.57.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Nov 2026 01:57:55 -0800 (PST)
-Message-ID: <d2ae7970-63cb-4c8a-8c04-483d88fcbffb@linaro.org>
-Date: Wed, 25 Nov 2026 09:57:53 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07814606A321;
+	Wed, 25 Nov 2026 10:03:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 07814606A321
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.170])
+	by dggmsgout13.his.huawei.com (SkyGuard) with ESMTP id 4jZFcz3sfkz1rr0b;
+	Wed, 25 Nov 2026 18:03:47 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 9E9E640561;
+	Wed, 25 Nov 2026 18:03:50 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP1 (Coremail) with UTF8SMTPA id cCh0CgDnOtCFsgZr_eaeFg--.57557S2;
+	Wed, 25 Nov 2026 18:03:50 +0800 (CST)
+Message-ID: <c9c2c4df-a748-4787-b686-1fe6bc6564db@huaweicloud.com>
+Date: Wed, 25 Nov 2026 18:03:49 +0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -93,70 +52,118 @@ List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 15/19] perf auxtrace: cs-etm: Capture wrapped snapshots
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@arm.com>, Leo Yan <leo.yan@arm.com>,
- Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+Subject: Re: [PATCH v5 2/2] perf/core: Disable context fast-swap for sigtrap
+ events
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
  Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
  Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
  Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>,
- linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Arnaldo Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org,
- John Garry <john.garry@linux.dev>, Leo Yan <leo.yan@linux.dev>
-References: <20261105-james-cs-unformatted-per-thread-fix-v4-0-7759e0ce2449@linaro.org>
- <20261105-james-cs-unformatted-per-thread-fix-v4-15-7759e0ce2449@linaro.org>
- <8b37f5ea-9427-43f6-8abf-07a36a9bbb72@intel.com>
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1795053619.git.wutengda@huaweicloud.com>
+ <55b1a2845b0ad34a874a7653644e34af9eb068d3.1795053619.git.wutengda@huaweicloud.com>
+ <20261120173706.GC2668564@noisy.programming.kicks-ass.net>
+ <20261120174606.GM2669272@noisy.programming.kicks-ass.net>
+ <5507e48c-4e98-4e76-8d3f-4630a2655085@huaweicloud.com>
+ <c9ff579b-a7eb-481f-bb8d-489a4469c397@huaweicloud.com>
+ <20261125090809.GW2668804@noisy.programming.kicks-ass.net>
+ <4d17dd3b-df73-45c0-8113-f4ca259d549b@huaweicloud.com>
+ <20261125093836.GX2668804@noisy.programming.kicks-ass.net>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <8b37f5ea-9427-43f6-8abf-07a36a9bbb72@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <20261125093836.GX2668804@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:cCh0CgDnOtCFsgZr_eaeFg--.57557S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr4UAw1fZFWDGF4kWrW7Arb_yoW5JF4Dpr
+	Z3CF45trWDtrW7Wwsxt3WDZFy5trW7trs8Wr1kGayxArn0vry7XF48JrW5CF9Ivw18JFW3
+	tr4jga47W34jva7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
+	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUF1
+	v3UUUUU
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
 
 
-On 24/11/2026 20:41, Adrian Hunter wrote:
-> On 05/11/2026 13:45, James Clark wrote:
->> find_snapshot() isn't implemented for Coresight, so when a wrap occurs
->> we only save from offset 0 to current head, modulo buffer size, rather
->> than capturing the whole buffer. Coresight drivers currently use a
->> monotonic head pointer even in snapshot mode, which gives a lot more
->> information for taking snapshots than a wrapped pointer. It means we
->> don't need to search for data at the end of the buffer to guess if a
->> wrap has occurred, and we can go back to saving partial buffers after a
->> wrap by checking if the next size to take is less than the buffer
->> size.
+On 2026/11/25 17:38, Peter Zijlstra wrote:
+> On Wed, Nov 25, 2026 at 05:29:38PM +0800, Tengda Wu wrote:
 >>
->> The drivers will always be able to generate a monotonic head because
->> TRBE has a bytes written counter, so even if we stop generating an AUX
->> record on every overflow, we can check if the counter indicated an
->> overwrite and offset head by a whole buffer size if it wrapped. This
->> forces userspace to read the whole buffer rather than between last and
->> current head. ETR and other sinks use software double buffering, so can
->> continue as they are.
 >>
->> Add auxtrace_record__monotonic_find_snapshot() and use it for Coresight.
->> A monotonic head can't be auto-detected in the default find_snapshot()
->> by checking if head > buffer size, because before the first wrap a
->> monotonic head looks the same as a wrapped one. The search would then
->> falsely detect a wrap when head is near the end of the buffer, and the
->> wrapped pointer fixup moves 'old' and 'head' a whole buffer ahead of the
->> driver's head. With a wrapped head that doesn't matter because only the
->> offset within the buffer is used, but with a monotonic head the next
->> snapshot would either save already saved data again or drop up to a
->> buffer's worth of new data.
+>> On 2026/11/25 17:08, Peter Zijlstra wrote:
+>>> On Tue, Nov 24, 2026 at 04:42:34PM +0800, Tengda Wu wrote:
+>>>
+>>>> From the stack, we can see:
+>>>>
+>>>> perf_event_context_sched_out
+>>>>         // fast path
+>>>>         perf_ctx_enable(ctx, 0);
+>>>>                 perf_pmu_enable
+>>>>                         if (!--(*count))  // equals 0
+>>>>                                 pmu->pmu_enable(pmu);
+>>>>                                         __intel_pmu_enable_all.constprop
+>>>>                                                 do_trace_write_msr
+>>>>                                                         perf_tp_event
+>>>>
+>>>> In perf_tp_event():
+>>>>         if (perf_tp_event_match(event, &raw, regs)) {
+>>>>                 if (!perf_pmu_enabled(event->pmu)) return 0; // not satisfied, continue downward
+>>>>                 perf_swevent_event
+>>>>                         __perf_event_overflow
+>>>>                                 task_work_add  // event->ctx->task mismatches 'current'
+>>>>         }
+>>>>
+>>>> Because pmu_disable_count is already 0, the subsequent perf_tp_event_match()
+>>>> cannot block it via perf_pmu_enabled(), so the problem can be reproduced.
+>>>
+>>> Right, but at this point there isn't really a problem, all the pointers
+>>> have been swapped already and state should be consistent again.
+>>>
+>>> I *think* the problem is that task_work_add() is using current while it
+>>> should be using ctx->task. In that case the above will enqueue on the
+>>> next task, which is correct.
+>>>
 >>
->> Reviewed-by: Leo Yan <leo.yan@arm.com>
->> Tested-by: Leo Yan <leo.yan@arm.com>
->> Signed-off-by: James Clark <james.clark@linaro.org>
+>> I considered this before, but it involves the issue of whether the count
+>> overflow in the sched_out stage should be attributed to the current or next
+>> task, and I wasn't very confident about it, so I didn't adopt it.
 > 
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+> All of switch_fast suffers that problem. Mostly we've ignored it since
+> kernel events around a context switch are hard to attribute to any one
+> particular task, so a little fuzz left or right of the switch doesn't
+> matter too much, as long as its consistent.
 > 
 
-Thanks!
+Thanks for the clarification.
+
+>>> Disabling switch_fast really hurts performance; doing that should be a
+>>> last resort. I think I can fix this. Let me try and see if the
+>>> reproducer works for me so I can more easily poke at this.
+>>>
+>>
+>> OK. Just a reminder that the PoC I provided needs to be run in an Intel
+>> environment, so that the tracepoint can be hit when pmu_enable is executed.
+> 
+> Ah, I'm currently running it on an SPR Xeon; do I need to use
+> non-default arguments or just run the thing in a loop and drink tea
+> until it goes pop?
+
+No need to pass any other arguments; running it as follows should be enough:
+
+  for i {1..100}; do ./fast_swap ; done
+
+Thanks,
+Tengda
 
