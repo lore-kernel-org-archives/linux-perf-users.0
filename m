@@ -1,55 +1,62 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795634626;
-	b=QBK6xrmMtq02+DjPlOp9IB7NyouGwaxISU85tb/H6Z+aDKAqKhy+FaH0soaG5mpKdguP
-	 J5NRSLsGXHZkHx+gnPSBvE00syBCNk0ZqQQz4Lom1CfYINvEVd0p3sdgxVjod540Fr9Au
-	 fc5y4a97ESK+DtiOLsjOdO6/mY//hLrlbbT89flrp50ckD9DLDr7R3m9qXC+2mFnm3CBZ
-	 xCMTn4b6CsBirycxCVwARKMAsRI5J0PYTAJ+kJKYHbTT/cxUp/sqgLgCCZ3jdEHCj1LJp
-	 MHmf/TJH3t8MgKJcihf/bHfr0VNbs5BUIUlZ8rZLsjKYnDN/rr9iiBquXwOQulRZlvQ==
+	t=1795634629;
+	b=L06i26kCOxlW8bTYzYjTxxi6w7ifpz7eOouuMXEA+tK2ac7s742MnKHFz/F+eD+P1fx0
+	 UDCxroxuL/4QbHAvraM4dtYehhGbPBeP0PBsUdNvLZK9Bm8E0mV18Ja74cJDziiuws62G
+	 Bxg28sl/Xwf4a08bEuwrELVAL0eVYbRzbV4qLLZHweEjRye6zbZf2FFIfZ9o9urTpdemY
+	 VTi2pLxyL2eNuIlJbHF2u8HBy0NxYHYo7CKbG2xQjhXcNkSFFIash0dEsiiLfvgQRxm+S
+	 5NX7UH05C6uWZYCOO+v3VtQZZqcPB3KZmJtJKz/5MvGRy6YQXhMScY5zltLzqMpDbcA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795634626;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=sEtj+eS2/dUQTYhD2EVQry2utSvTjCQEZTPYKN95msI=;
-	b=cuDc0KzeuB+aL10tNXSH2kV2PuFLUJ5gVSOe9WN5diP6EhQw2yASF1Apn9Pm4h+Z7ZiU
-	 9OoziVjGCSu9HTmXW6YkzqkK8r/eYlQxWoimUmNblRL0mwxut3MfnWyshUG64xEa22uUk
-	 +mqB63gp32/FsiS8QLhsAW3ajKg14dlH9/jSYHcMaHnGJImq0HIYRbj8UivAUmWGv3zkM
-	 mWU/VenUGGN4MKeBqwcU63AeJnmD29IpWmL/qtx3GjGacfA+nOF2GSBQ6vCaOmuSAaJ9+
-	 LRkcaXNdtFud8ZLSPrOPRvLi5nteqHMbWjZovAMgtgFK39bZeSGufEcHrqrTsa6CqDg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795634629;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=SAptmRo7VFZs3YBboXIuiBByYjCRlZPrUdwklrfyjD0=;
+	b=xjNfGuxzOOTIpD8sIQWaHDRHcGtxuO5kUpdfrCcWjAuw9QA9JX1Ak6Fq/bAwpLcDuw6C
+	 grcxK/IG8g4avV0V7C12dF5rW8cjrrdPxMGVF1tIZdwm3E/PjaDUozD7csj5UvxeZaZpC
+	 Em0etnS68aTtp6a9AyNgc/A0l8JDK55zBl4I6o9XvvnzNU4m4VI2ltATQW5hWLbtexbP1
+	 eVqaOQAlEp8Gtdj7V3BifNcm9lN93U0xJonpFSrrYarQljxKce/V5asb6NL4LIfh8ZsNm
+	 RHnp5+mih7+qiUpDOk1r8axO2t1dcBOA6/Y8CCh+NBzgjdwhRw5K90zFIX92EH110Vw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aM+IK10N;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bsaaFMK8;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64632606A32A;
-	Wed, 25 Nov 2026 19:23:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC54606A33C;
+	Wed, 25 Nov 2026 19:23:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aM+IK10N
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD4351F000E0;
-	Wed, 25 Nov 2026 19:23:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bsaaFMK8
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30CE71F0093C;
+	Wed, 25 Nov 2026 19:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795634626;
-	bh=sEtj+eS2/dUQTYhD2EVQry2utSvTjCQEZTPYKN95msI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=aM+IK10N8nWbIisPPLsZI/fIhSwmNJGRQq4uZTSWRKfq4rBeIldG4krMhZly5iSHR
-	 VCBo7/N3LCvPaE6904G0rRL+RTr8n5CClnoFPhMAV4fIvFHvLAa3UNiJPqkQi92RcV
-	 ESYEBo+27uj2Nma2Arw5OuuvWAnfoGVZG1nPKfa6/u0v628e6gP1Z31zBDvjH07WAq
-	 xLydK3s14PRkVa7+gsQyz0hBqu9k5TupQ3Ump2q+XsHsrQmdsyzICRnJc4yZZu1X9e
-	 pRe5hD2UTpumKU/9IMwrCTYDBjtjivxs2TzQINaXksTYZhkWzfYQPB8DBGmrSXK89B
-	 iWgrcfQ1W3ryQ==
-Date: Wed, 25 Nov 2026 11:23:44 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: TAKANO Mitsuhiro <takano32@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	s=k20260515; t=1795634628;
+	bh=SAptmRo7VFZs3YBboXIuiBByYjCRlZPrUdwklrfyjD0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=bsaaFMK8e0+Zp6C4kwDQUvYkFkpJ8/aYitSXMljrKR8t+YHbDpCzKXkdCJFUwHSbE
+	 nll/ReqcDjAMO4VoXoGVmYf3zudpRAkai9vYYMC0tCs3Lcw28fETIODK6vZSsB1hci
+	 nlVwz25RkY0y+Huit2zSJWL3wmcy6nd6+TGra8M3gpWf0cFQXD8TKmLXVoka7832SO
+	 G1XIzyauab8c6rQDHOJQSXoOwg87jiG3rB/b7+lmlp+fzbqlQwx4F6VrhlGucKRnCv
+	 dcmdFWgvUnQ7xtbHvdLJAEKRO0iWHZm4FWY969iDTkc0rVOg6u7QwOcn2GxxDWg3sv
+	 16IVrLUuzA3EQ==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Ian Rogers <irogers@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf build: Replace the deprecated FileType with a helper
-Message-ID: <awc1wOQYO14k1R6j@google.com>
-References: <20261125173315.2359128-1-takano32@gmail.com>
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH v13 09/19] perf test: Exercise DW_OP_addrx global variables
+Date: Wed, 25 Nov 2026 16:23:02 -0300
+Message-ID: <20261125192312.34134-10-acme@kernel.org>
+X-Mailer: git-send-email 2.56.1
+In-Reply-To: <20261125192312.34134-1-acme@kernel.org>
+References: <20261125192312.34134-1-acme@kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,41 +66,216 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20261125173315.2359128-1-takano32@gmail.com>
+Content-Transfer-Encoding: 8bit
 
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-On Wed, Nov 25, 2026 at 05:33:15PM +0000, TAKANO Mitsuhiro wrote:
-> pylint-tests and pylint-pmu-events hang off `all`, so with a pylint that
-> reports W4904 the build fails on a tree nobody has changed.  Measured on
-> 7.4-rc4 with Python 3.14.9 and pylint 4.0.5, both targets exit 2 and
-> pylint reports:
-> 
->   - W4904 deprecated-class, argparse.FileType: pmu-events/jevents.py:1494
->     and :1496, tests/shell/lib/perf_json_output_lint.py:23
-> 
-> FileType is deprecated in the class's own terms - the docstring in 3.14
-> reads "Deprecated factory for creating file object types" - so the two
-> jevents call sites and the one in the JSON output linter are replaced by
-> a helper that opens the file, or hands back stdout or stdin for '-',
-> which is what FileType did.  The reader names its encoding, as the rest
-> of the Python in perf does.
-> 
-> Verification: pylint-tests and pylint-pmu-events exit 2 and 2 before this
-> change and 0 and 0 after it.  The generated pmu-events tables are byte
-> identical either side of the change, checked by running jevents.py for
-> arm64 and x86 over the same input tree and comparing pmu-events.c and
-> pmu-events-string.c.
-> 
-> Written with Hermes Agent, an LLM assistant; the author reviewed it and
-> ran the build and the generator as described.
-> 
+clang emits DW_AT_location with DW_OP_addrx for globals in DWARF 5, gcc
+emits DW_OP_addr.  The global_data workload keeps a zero initialized
+struct in .bss: at run time it sits past the file backed mapping, where
+the by-name fallback through the thread maps cannot find it, so only the
+DWARF address lookup resolves it.  The test checks that its three member
+accesses are annotated, so the DW_OP_addrx path is exercised when perf
+is built with clang and DWARF 5 (e.g. scripts/coverage.sh with
+DWARF_VERSION=5), and the DW_OP_addr one with gcc.
 
-I think we have a pending patch already.
+It skips on 32-bit PIE builds, which reach static globals relative to
+the GOT base register, and the resolver does not track that.
 
-https://lore.kernel.org/r/20261115003507.1872482-1-lalitmaganti@gmail.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/tests/builtin-test.c            |  1 +
+ tools/perf/tests/shell/data_type_global.sh | 73 ++++++++++++++++++++++
+ tools/perf/tests/tests.h                   |  1 +
+ tools/perf/tests/workloads/Build           |  2 +
+ tools/perf/tests/workloads/global_data.c   | 57 +++++++++++++++++
+ 5 files changed, 134 insertions(+)
+ create mode 100755 tools/perf/tests/shell/data_type_global.sh
+ create mode 100644 tools/perf/tests/workloads/global_data.c
 
-Thanks,
-Namhyung
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index a27baf3a819ccf36..42e85d1b1420f0a7 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -214,6 +214,7 @@ static struct test_workload *workloads[] = {
+ 	&workload__deterministic,
+ 	&workload__callchain,
+ 	&workload__false_sharing,
++	&workload__global_data,
+ 
+ #ifdef HAVE_RUST_SUPPORT
+ 	&workload__code_with_type,
+diff --git a/tools/perf/tests/shell/data_type_global.sh b/tools/perf/tests/shell/data_type_global.sh
+new file mode 100755
+index 0000000000000000..14f57d5a1b26a5ea
+--- /dev/null
++++ b/tools/perf/tests/shell/data_type_global.sh
+@@ -0,0 +1,73 @@
++#!/bin/bash
++# perf data type profiling test for a global variable
++# SPDX-License-Identifier: GPL-2.0
++
++set -e
++
++perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++perfout=$(mktemp /tmp/__perf_test.perf.out.XXXXX)
++perferr=$(mktemp /tmp/__perf_test.perf.err.XXXXX)
++
++cleanup()
++{
++	rm -f "$perfdata" "$perfout" "$perferr"
++	trap - EXIT TERM INT
++}
++
++trap_cleanup()
++{
++	echo "Unexpected signal in ${FUNCNAME[1]}"
++	cleanup
++	exit 1
++}
++trap trap_cleanup EXIT TERM INT
++
++if ! perf check feature -q dwarf; then
++	echo "Skip: no DWARF (libdw) support"
++	cleanup
++	exit 2
++fi
++
++# 32-bit x86 PIE reaches static globals relative to the GOT base register,
++# which the resolver does not track; e_type's low byte is at 16 on LE x86.
++perf_bin=$(command -v perf)
++if [ "$(od -An -tx1 -j4 -N1 "$perf_bin" | tr -d ' ')" = 01 ] &&
++   [ "$(od -An -tx1 -j16 -N1 "$perf_bin" | tr -d ' ')" = 03 ]; then
++	echo "Skip: 32-bit PIE uses GOT-relative global accesses"
++	cleanup
++	exit 2
++fi
++
++# No point in recording if the PMU cannot do memory events.
++if ! perf mem record -o /dev/null -- true 2>/dev/null; then
++	echo "Skip: cannot record memory events on this PMU"
++	cleanup
++	exit 2
++fi
++
++if ! perf mem record -o "$perfdata" -- perf test -w global_data 1 \
++		> /dev/null 2> "$perferr"; then
++	echo "FAIL: perf mem record"
++	cat "$perferr"
++	cleanup
++	exit 1
++fi
++
++if ! perf annotate --code-with-type -i "$perfdata" --stdio \
++		--percent-limit 1 > "$perfout"; then
++	echo "FAIL: perf annotate"
++	cleanup
++	exit 1
++fi
++
++for member in "+0 (saddr)" "+0x4 (daddr)" "+0x8 (bytes)"; do
++	if ! grep -Fq "# data-type: struct conn ${member}" "$perfout"; then
++		echo "FAIL: member ${member} not resolved"
++		grep 'struct conn' "$perfout" || true
++		cleanup
++		exit 1
++	fi
++done
++
++echo "global variable resolved"
++cleanup
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index 963cb34acd345153..63d49a960eab8f3c 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -274,6 +274,7 @@ DECLARE_WORKLOAD(context_switch_loop);
+ DECLARE_WORKLOAD(deterministic);
+ DECLARE_WORKLOAD(callchain);
+ DECLARE_WORKLOAD(false_sharing);
++DECLARE_WORKLOAD(global_data);
+ 
+ #ifdef HAVE_RUST_SUPPORT
+ DECLARE_WORKLOAD(code_with_type);
+diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
+index 43cc4da6fb0786de..03017aaaaa0bec32 100644
+--- a/tools/perf/tests/workloads/Build
++++ b/tools/perf/tests/workloads/Build
+@@ -17,6 +17,7 @@ perf-test-y += context_switch_loop.o
+ perf-test-y += deterministic.o
+ perf-test-y += callchain.o
+ perf-test-y += false_sharing.o
++perf-test-y += global_data.o
+ 
+ ifeq ($(CONFIG_RUST_SUPPORT),y)
+     perf-test-y += code_with_type.o
+@@ -35,3 +36,4 @@ CFLAGS_deterministic.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+ CFLAGS_named_threads.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+ CFLAGS_callchain.o        = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+ CFLAGS_false_sharing.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
++CFLAGS_global_data.o      = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+diff --git a/tools/perf/tests/workloads/global_data.c b/tools/perf/tests/workloads/global_data.c
+new file mode 100644
+index 0000000000000000..5973f7bb16fd007c
+--- /dev/null
++++ b/tools/perf/tests/workloads/global_data.c
+@@ -0,0 +1,57 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * A zero initialized global struct, so it lands in .bss, past the file
++ * backed end of the last segment: at run time it sits in an anonymous
++ * mapping that the thread maps do not name, so only the DWARF address
++ * lookup finds it.  clang describes its address with DW_OP_addrx in
++ * DWARF 5, gcc with DW_OP_addr.
++ *
++ * 'perf mem record' of this workload followed by 'perf annotate
++ * --code-with-type' (see tests/shell/data_type_global.sh) resolves the
++ * accesses to struct conn.
++ */
++#include <signal.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <linux/compiler.h>
++#include "../tests.h"
++
++struct conn {
++	int saddr;
++	int daddr;
++	long bytes;
++};
++
++static volatile struct conn conn;
++static volatile unsigned long conn_sink;
++static volatile sig_atomic_t done;
++
++static void sighandler(int sig __maybe_unused)
++{
++	done = 1;
++}
++
++static int global_data(int argc, const char **argv)
++{
++	unsigned long sum = 0;
++	unsigned int i = 0;
++	int sec = 1;
++
++	if (argc > 0)
++		sec = atoi(argv[0]);
++
++	signal(SIGINT, sighandler);
++	signal(SIGALRM, sighandler);
++	alarm(sec);
++
++	while (!done) {
++		conn.saddr = i;
++		conn.daddr = i + 1;
++		sum += conn.bytes;
++		i++;
++	}
++	conn_sink = sum;
++	return 0;
++}
++
++DEFINE_WORKLOAD(global_data);
+-- 
+2.56.0
 
