@@ -1,49 +1,65 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795625902;
-	b=auOpG2R93SyW4A9XecNvXQyNXNXyTMf9ej2LYHwBk7QDs9jaoveA9mJcOrcPRJcXJ2aq
-	 PwCFztUcwhfC3Q7Zk0Laidf4nfoMnwxNOVWNCAM2a/E8dJ8K8rnSw8Qpc0/2XCFRXHHHt
-	 BXu1NV+HRzhOvv9cp2ZIW2pSi19Uh6wWekvsgi5qXva/+wgPGsoOmJbsPv+xcanVmR46X
-	 QVfwSCTlNu/yeW0OS+xqZL9FVavgWk5vVFDM9vrkEAyxTmnt7EIos8RbDdHTnvhpjR95S
-	 FWWXDc2buHhOByXCesKbcxq3ch/ReWWBXt1QfKhLB+AMHHUN6mOTSXWxi9r08fv0V3A==
+	t=1795627620;
+	b=Q/npZB3s5WXO3gNe++zvUCiS4K5WwUfImux/WDemHuiGkJso3x4m3eqghW+wbnUh/r+I
+	 k/YXd7RpAmyuGFn7nGywB5VEHWsVxTYoBMx57JpRoRtHtq7GE7lv5rQpuC36p1M7W1fe8
+	 PycNSEDsUSUVjKnhHWNNhRSmDFM9tFl/kXchvf0rglBuhJ75Isgq9iUx/KP6jUPABotd8
+	 kTQQzs9vY1pJJwK1SYYcqjiCP2yEzY4gZqUHQk1aWR0g1Wojxo4mHMKd5Isrm//eZONyZ
+	 E+OhWxvW3IgNz6o4CkSsAgjz1KabXa4pPenNWhe4xNrvatS3D2/YFbr2pqEc/F+Ad4A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795625902;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:From:
-	 Content-Language:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=VeaRMJr5MeN6pZeuCdvkhBSCAsTmvP8phUZZr3zTlcE=;
-	b=ms7YeVJNgnLao9FeUng//8QZZ7Tpp6L+4L6ww6raFV/PkaUE46cfpfbhgrMOneoXAfJQ
-	 Yj8vHl1M1srZRxoloawBA3bMU7nfuBCYnKAZQMmOBfj05NHJ7gbrsfvpX5gREMlRr9N9D
-	 IRdT6h5a2NI47oTH9xk4u3lcfpeJRzcdo+3GdP/jzGO0ezW544smGisr5nseUQhO0m7PE
-	 MiGKqy6PFEe007+kv4LbC8jyAR+dSBjqvsV31mLyAp8WICXvQ9O1LEmtZ0pqWfQtWjZ7q
-	 I9MB9BVLgBQgmBx+eThmzTgJEheGnNC1cDyI9PKpgUVFjSxTb2OaiLBt+9IjXDD+4tA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795627620;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=KEusKZgs4I1FiIlMpmR/n6ZbwE2/VKSPmeBC68K0sDM=;
+	b=FoFb5x0jgWq1JATg63FBWehPUdqWqEYhXf/a8rQ94y/XNwdmbv8DwIPbnYLziK0P8S16
+	 oTHsovB/DOh+BBB/1FLeDN8jKQYcQ49keHWhmWfPDz6SlIcFdq/Pe27gdC4uA9BhfnBQ6
+	 Aajplc8OmyO/HrKFlmeGzZ8YE4kKLB33Rj2gciNywunSylgsA0v7o1TzJX4h6qyoL4Fsd
+	 NRLOgbXPOmioBMhEfpZNwx91uhhsm5cSHXrlX2n6BfrxN0qwMENYQmC38mEw5OPZAw7DK
+	 1/QJjYSZztsXmo00qPB3oX53GaRDuQMEgcBqeUmR/N/DXc6qaQfqSOwH8/KLY/ShlQw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=arm.com;
-	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=U9s78iQ4;
-	arc=none smtp.remote-ip=217.140.110.172
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B167B606A33C;
-	Wed, 25 Nov 2026 16:58:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B167B606A33C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="Zlb1/owS";
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA76606A321;
+	Wed, 25 Nov 2026 17:27:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=U9s78iQ4
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 072B62F;
-	Wed, 25 Nov 2026 08:58:18 -0800 (PST)
-Received: from [10.2.212.23] (e121345-lin.cambridge.arm.com [10.2.212.23])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 214143F632;
-	Wed, 25 Nov 2026 08:58:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1795625900; bh=Szbs47AGBw7DAENnZv9Xsgc+H6POhcnLH+71i5NxoB8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=U9s78iQ4n5uVP9leVJ/aLlJnv5O67E7SgX8wHk7l9krSm6na71RnT7vG/K4WebKA/
-	 cUdz6A3SDQ/wGcSetyhDMobLFDeJtJPuTeUurN9+hdufIk56Ghfs1isogtR2R6zI8X
-	 h16BVxJAFr0x8yRI1VaxGhezjyX0wO2QT8rktMcs=
-Message-ID: <9ca5ad64-f884-4741-adbc-a54677fb426f@arm.com>
-Date: Wed, 25 Nov 2026 16:58:18 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Zlb1/owS
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53EAA1F000C4;
+	Wed, 25 Nov 2026 17:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795627619;
+	bh=KEusKZgs4I1FiIlMpmR/n6ZbwE2/VKSPmeBC68K0sDM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Zlb1/owSKLzii+qMfzcGINpVNJRIQZZ4ZP/rHSvXt6fyAzHeAkwAfE/NHuokKkuhz
+	 ivy8GrkCw7WkneMfeWyPBgFt8ErT0MSd91wak9rtOkD2AnTkswnOuAwYHDjNmN/M2z
+	 htOv32BnO5002YVHi7Kk8itswiTaxREDc+GlI5UqTMhtBcgfZQA0s7Mhah81E9apLW
+	 CADawnd5myEn/rlh4QWN/cMscO+IWNYSxJudTivn091P9zB7hfVmumr8jmp027F4Jd
+	 4fSmGjTl8v78ypkwzPIQ+V60Ls8wb8a4ctmxKPidBifkiokpTLu35VetMtuAd1WNbc
+	 p50iO0+na2fpA==
+Date: Wed, 25 Nov 2026 14:26:56 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: James Clark <james.clark@linaro.org>
+Cc: Arnaldo Melo <arnaldo.melo@gmail.com>, linux-perf-users@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-kernel@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH] perf build: Only enable context analysis with Clang 23
+ or later
+Message-ID: <awcaYIe2dmLDb6T_@phoenix2>
+References: <20261123-james-perf-late-parse-attr-v1-1-cfebcd81a962@linaro.org>
+ <CAP-5=fXuQWTt1F6BvKSXqgSkEtBQPKvKg6gmAe-ngyr4VGyGig@mail.gmail.com>
+ <EC27692D-9692-4976-B7EA-4C3A91173CE3@gmail.com>
+ <awSu48pUIh942Zm4@google.com>
+ <46a896ba-cd45-4747-837d-50ea4b4dbed9@linaro.org>
+ <0E9F372C-C100-41EC-B5B3-46FEDC813E01@gmail.com>
+ <ceaea0f9-6f17-4626-bd55-fbc7366905ce@linaro.org>
+ <awXewmptfc1za12c@phoenix2>
+ <79ec2b9d-ee11-45df-b579-2d9aca5031d0@linaro.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -53,84 +69,75 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/arm-cmn: Use at least 2 bits per XP coordinate in
- node IDs
-To: schouleur@snap.com, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- stable@vger.kernel.org
-References: <20261125-arm-cmn-xyidbits-v1-1-6f7bee891859@snap.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20261125-arm-cmn-xyidbits-v1-1-6f7bee891859@snap.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <79ec2b9d-ee11-45df-b579-2d9aca5031d0@linaro.org>
 
-On 25/11/2026 4:15 pm, Sylvain Chouleur via B4 Relay wrote:
-> From: Sylvain Chouleur <schouleur@snap.com>
-> 
-> The X and Y coordinates in a CMN/CI-700 node ID are encoded in 2 bits
-> each for any mesh up to 4x4 (7-bit node IDs), and in 3 bits each for
-> larger meshes (9-bit node IDs). The width does not shrink for smaller
-> meshes: a 2x2 mesh still uses 2 bits per coordinate.
-> 
-> arm_cmn_xyidbits() derives the width from the actual mesh dimensions,
-> which yields 1 bit for a mesh with both dimensions <= 2. On such a
-> mesh arm_cmn_node_to_xp() then decodes every device on the X=1 column
-> into the wrong XP: X=1,Y=0 devices are attributed to XP (0,1), and
-> X=1,Y=1 devices to an index past the end of the XP array. Their PMU
-> events end up programmed into another XP's DTM, with the port/device
-> select of the intended XP, so the counters silently read zero while
-> the rest of the mesh works.
-> 
-> Observed on a CI-700 r3 with a 2x2 mesh (part 0x43a), where the SBSX
-> and HN-D nodes on the X=1 column never counted although the XP flit
-> counters showed the traffic. Forcing a minimum of 2 coordinate bits
-> matches the documented node ID format and makes all nodes count;
-> the minimum had been there until the node ID refactor dropped it.
+On Wed, Nov 25, 2026 at 10:18:20AM +0000, James Clark wrote:
+> On 24/11/2026 19:00, Arnaldo Carvalho de Melo wrote:
+> > > > The script:
+> > > >     3. Copies the kernel header into the tools/ tree, skipping it when only
+> > > >        the tools/ copy changed (it is ahead) or when it carries intentional
+> > > >        edits, and stopping for manual investigation when both sides have
+> > > >        content the other lacks.
 
-Oof, I guess it had slipped my mind that 2x2 configs are legal, but then 
-come to think of it, for CI-700 I think 2x1 and 1x2 aren't illegal 
-either. As far as I can remember there wasn't any reason for dropping 
-the "| 2" term other than thinking it was a simplification we could get 
-away with. Oops :(
+> > > > acme@number:~/git/perf-tools-next$
 
-FWIW I also can't see that it matters to go back to reporting 2 bits 
-instead of 1 for 1x1 configs, where the "correct" value is arguably 0 
-anyway.
+> > > > I.e. the limitation in point number three, about intentional edits, needs to be lifted.
+> > > Oh nice I hadn't noticed sync-headers.sh. What's the plan to support tools
+> > > side edits? Something like exporting the kernel change as a patch and trying
+> > > to apply it on top of the tools copy? Or I suppose you could do it the other
+> > > way around and try to apply the tools diff on top of a new clean kernel
+> > > copy.
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+> > I think the script should diff the current state, save that, copy the
+> > new header, apply the patch to get the perf tools changes, then ask
+> > opencode (or the coding agent used most frequently by the developer) to
+ 
+> Interesting, didn't think about having an agent invoked from the script.
+> Despite what people say about them being unreliable, for things like
+> resolving conflicts and digging out commit messages to add context to the
+> resolutions, I find them much more reliable than myself. And faster as well.
 
-> Fixes: e79634b53e39 ("perf/arm-cmn: Refactor node ID handling. Again.")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Sylvain Chouleur <schouleur@snap.com>
-> ---
->   drivers/perf/arm-cmn.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-> index 68a096c1fe6b..5f369c7a7a35 100644
-> --- a/drivers/perf/arm-cmn.c
-> +++ b/drivers/perf/arm-cmn.c
-> @@ -406,7 +406,8 @@ struct arm_cmn_nodeid {
->   
->   static int arm_cmn_xyidbits(const struct arm_cmn *cmn)
->   {
-> -	return fls((cmn->mesh_x - 1) | (cmn->mesh_y - 1));
-> +	/* Node IDs never use fewer than 2 bits per XP coordinate */
-> +	return fls((cmn->mesh_x - 1) | (cmn->mesh_y - 1) | 2);
->   }
->   
->   static struct arm_cmn_nodeid arm_cmn_nid(const struct arm_cmn_node *dn)
-> 
-> ---
-> base-commit: 4dce97c6c265544342e716e62fd24bbb232590c5
-> change-id: 20261125-arm-cmn-xyidbits-16076edf28a2
-> 
-> Best regards,
-> --
-> Sylvain Chouleur <schouleur@snap.com>
-> 
-> 
+Well, the script will produce a draft, leave it at that for the
+maintainer to decide what to change, if anything, and then do the usual
+steps, so it is just automating boring parts. Finding a new maintainer
+becomes easier, probably ;-)
+ 
+> > check if what was done is sensible, then ask the developer to do a last
+> > check and amends, sign off and commit.
 
+See?
+
+> > My plan is to have this in tools/perf/scripts/ so that whoever comes
+> > after me and Namhyung, if this ends up being needed, don't have to go
+> > thru such boring processes that were not automated due to lack of time
+> > even being in my mind since forever as tech debt :-\ :-)
+ 
+> This feels like its turning email into an API that you can attach any front
+> end to. I wonder if it would give websites like github any ideas to add a
+> "send as a signed linux PR" button :D
+
+Well, e-mail is what we've been using since forever, but having some
+button that would essentially do the same via a TUI, GUI, github or
+voice interface/whatnot, would end up being equivalent, we still need to
+look at what was done by contributors, make sure it was tested
+extensively in as many distros and architectures as possible, that
+reviewers had enough time to say something if they so think it is in
+order do do so, and then send it upstream.
+
+Whatever we can do to make this painless and effective, I'm interested
+in.
+
+I did lots of these things manually trying to adhere to what Ingo and
+Linus expected from me, there are plenty of examples of me doing so for
+these LLMs to have been trained on, now I just want to reap the benefits
+and have more time to do interesting things :-)
+ 
+> It's a great documentation of the actual process which despite all the
+> documentation is not always that obvious how to do in practice.
+
+Yeah, that too, that is a very effective, I'd say, way to document what
+we've been doing.
+
+- Arnaldo
