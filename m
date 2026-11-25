@@ -1,87 +1,88 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.54
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795619554;
-	b=Dry6r2HPPyb0mfSUQeFSNjtwSnee+XpLGsewsry99hdc5UNeAsEOlUamr7N/e0F7usLL
-	 VWVXq/Wak6w1mdw1/HqxxAz59tfrS2DDEEIRNW5aDmcXrVowyNhSC92zJl/pazgfv0uZD
-	 kZS/0E0x2VU7kAr5i2PBoJw7IGbNKHUUhvV9ieYCQPRsljtE1jXzb2IebHme3jIyq0f6U
-	 mn0lVTp/5A948pavGuWuyUjkrVZNYrXldDNX1m6ojM2dUtDhvnyNaRV6iVa3L7xllzpas
-	 soXg57wblBxcPhIE2laRLfe98DUhicE1YxQuMRTPo2gwYLNP3piIXrDpiYYHDjuBXDg==
+	t=1795619555;
+	b=rMzVq7gVK9leD3i0Pcpj2z2uDlSIebB3rJFKJS+Ty7p8OEXmwFbFvnNhtsc8KSmki3pG
+	 UppQwIPxl4pZ1r0nMqgmE/MOzKcCqd+a2X3zyKp8mu6DvhQKXIe+EAjtw3kiVFrVnMwCm
+	 SZOiODrro2KsOIPrcf24m4InZQ8XL4a8pnswU0Fp/1cbfiUmxDYhwbqa3YVhPFe/GyI5T
+	 6RcnJgvd65q+EXfb2WiEjF+TiiGzLqQavv1D2I/GZgjEAFJ8yLTKiOCgsWcDxV/bLyMBF
+	 bMpx6rDVaUczoDF3okVLFtAvCbY8y/ItfaRop8Ly/WLd3i6ghNbxHQ8EjHB+OL3Xfrw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795619554;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795619555;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer;
-	bh=xF4JRWH1q9UqaShKbo4Aa+Vb+tQRrPw7UDPaEFuk3BE=;
-	b=aAwPYWZ+pcAhkZ0OCCwpC65sz6XAPsqwoCrz0Az5jauwM7R85okwRK1PJo8LC8nrkHOn
-	 3XhpVvZXM723G0NdpqoO/cvnZmt1MJVvIZYWtA9OZhznt79ri6E5KLUa2XLvdVmaCZxM+
-	 +4BMiL3HosIv6lQyWUHLdpJEXURW5ngwKEiSwdFwnZaygxrb0RgDvkNeHiFCBSTF+owWq
-	 DIG5bAM3/g0syuL+Ds+2MSOX8i/XAGn3e0u2Ks+UonhmwCnCPtJGe2rwmTcFcGTdrj0MU
-	 8qqjD9jawFyQgG/2fDGF6tpfBEzLGWeZMcslu9tkNXsxR2GO3pvPBfPNu6ozrSZBHWw==
+	 From:Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer;
+	bh=xo7WrNxk6dDX7UKfTjZ4Wt8i+/bBKGXUCuSojJqGcJo=;
+	b=CERd1D+5Xx5CXFVKtCoEB9v9Ee6UdMkGgNuGqfHOlpvNCA1bJ2jb0I6vyb90H8GYslMW
+	 EZXwBkKDnDFzCMZJXMJ+N387BN7VUeJ/HdS/h83tgkofgrbguZBvD4BdQqduCn6vJSG9g
+	 ruUMSH/KEEQJ5mT9UhXUvuo/hEjgkSK02Vsb7UyJIww5LCLBfy5z9iBbnCDw5lPHPRY87
+	 Oi5MXv28X+r15zwY+xFfVUVLexubWQsiWhsJ0XKqX3XJipqhZ4ZNL630xs2BrpALb0z9h
+	 G/GUnQ6plwo32eoXZ+OFvxws90FYJdPFpYfGWSVaStj+Qh3m2lQdPwTYFwtpRl1czmw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linaro.org;
 	spf=pass smtp.mailfrom=linaro.org;
-	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=Arf2l48y;
-	arc=none smtp.remote-ip=209.85.128.46
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	dkim=pass header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=QATYt15W;
+	arc=none smtp.remote-ip=209.85.128.54
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C1A606A321
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 15:12:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 04C1A606A321
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184E7606A32E
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 15:12:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 184E7606A32E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=Arf2l48y
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4a1fbd52ab6so40145175e9.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 07:12:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.a=rsa-sha256 header.s=google header.b=QATYt15W
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4bb70074ab2so63530405e9.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 07:12:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1795619552; x=1796224352; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:content-type:mime-version
-         :message-id:date:subject:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=xF4JRWH1q9UqaShKbo4Aa+Vb+tQRrPw7UDPaEFuk3BE=;
-        b=Arf2l48yzE8BzILRqcU8Fya/JC8Vr1z6S6mDLKIAzxvHt9eahVd1LawKL1vtXXMMzz
-         nyjU/LoSm3Vg/cBn6hd4Vpas9zXqLjI5XR76Y1TzRjuVmr9YTBdDFdbCqEUzX8BFsaEY
-         BBHAW+akFqnceZ2nNy7iiu8wFD0al0mgnIne3odTnTpymm2+nQ90cXfvUqRmp7ihhu+7
-         2SyOzAinT/RiOBPSaY/FzV2If0xhWMMzsXMhDVFP2SX+FFV22D1utEa96CymSaSZM1xe
-         WPFFdu7vcLyIH1NbKaTHTibdT906Wp9FuxjO/Cee5lRSEAnM3jysduTtTY7XHjbvmLnS
-         pv+Q==
+        d=linaro.org; s=google; t=1795619553; x=1796224353; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=xo7WrNxk6dDX7UKfTjZ4Wt8i+/bBKGXUCuSojJqGcJo=;
+        b=QATYt15Wc2i9zQCF4Mx/YgQf4+CuE7f1zDfg6RnQkma8WXyUsfpY+83jhy/dnVXOW3
+         oMFMgGozeiesmo6n49VGOqCfg7utivB12q1lOCQjjbkrpAt7QYhAi7HEuJnTgE3gMlwE
+         dFWqMaxhebp10aUyvV6TjN/RlpTrEHvWWpqEuRGy6pmVI7/q3EaWlmIJt9XnqKvlyawy
+         xCHBz8toWYSo0tn95hHMrhx2BYq44rEXmXldrdrKKYIArA8RJoOtABmRkaEPEO9BoNnX
+         A2JFUjyrR62DK2RIqKNfSbNO1MPENqaku/wCsFVyL3FitRqjm8yjZJOXj7Rv9VwIHkq3
+         uuOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795619552; x=1796224352;
-        h=cc:to:content-transfer-encoding:content-type:mime-version
-         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=xF4JRWH1q9UqaShKbo4Aa+Vb+tQRrPw7UDPaEFuk3BE=;
-        b=VaveZZmyyZLqELtZ97SPbOi02gi+WpFGrS86jxN61Q8LrrFAkc3XuFs/IBbbLQhbhl
-         JR0qgVCg6QueVFX8QAz0jri8GJfL5j99NN6ysA/6t/WldVHN6Ibcv6gBkCDTMPjVakvg
-         xn+u+l6nqP5w/lNAetPDQ24K/s9XdaqnjpIaImQzOd1d/xTJwhEyThr1y6U/LZRJprwS
-         h8277/3GRkt1iwTg//AF2TRSIyHESSc+ffTnDTClWLPSj5V01KEkvGxwtKe+RoITVdyu
-         vmqOD657SiVjUfGPy6dtrMz0DVecdPyfeV85RgpcVsdNQP/1gfD9nqphuykrWpmOZYvW
-         Qv0g==
-X-Forwarded-Encrypted: i=1; AL+hErEGsziaFXHY9+/9Fo120Gknhw9JRCUSEnsdQyo0tbhv+ciserD/KTUk+OXeuCeXH/oXMoFDsPJn3NXaGdnzbp36@vger.kernel.org
-X-Gm-Message-State: APuU4Z9Ts/qIogHuTGIXhr2uW/9WVBk36Q0Tm3W/Q2IjKMMmwvxF5s7X
-	9PdW8MnkB7aBuwZy694LK0sJoN4hYWKGlW2Q8newpXeg+LMrwTPA/b9rnNKmwHFkA4k=
-X-Gm-Gg: AZFdTZcnlDax4d+CtbClACo5IbdwXcFNDTMPjbldnVxb3xhr6KqXtTuCugACClNCqGO
-	FDNtkYPGeiTaGD1ynTxwcbcP77Gv5VEC2aQVYKUi1rRmwUqZEWx1IOBGZpYgNCkcxzIz/P2BaRC
-	3pC23YFKbXZhvfive3g2X9MwCcmqrokXIrHtxx7cF5v5EfudVLidv3i/OqnYN9wrDX3V37o/IBb
-	q8VLVD19THnaaUsCi9IO05jzbx6VoMBVwszE4mvgOx/Ju06KxARmXQPafBCzJl0tI5zoFpIc50J
-	kpsJ4W+dtdZLdTDlDcCHxgqStW1mZyknQVCnd0uU2f6yR9mkp882HX7WX0D+laXIYQIuk4YXCiB
-	F++uvslIAU/se0sf7eBjnFh9TsDI1J5wE4UlhQThD4hT0OlZZgR8hVU7jDxrIYHoUWA5XJ9tsP4
-	7TdnrTk7dHWWbZRrEOgxgVOXSoHlSKMg2UnHW4PL0zC1BH/+Bu05G5W6UZzsD2i9Pa+zxrd22x6
-	Vhk17pnmdRYovDiv5073X4lJFlZGcdcb373+OnF2kS7XmxGJOec5tSQq75HdX29lJGg4jibqFtL
-	K5V5VDPLiUd6n8eUbsSVza5DHRNOuBLTXUjf3LCZCTDYXZL7Dj+f7Q==
-X-Received: by 2002:a05:600c:5307:b0:4a7:9025:5c3b with SMTP id 5b1f17b1804b1-4bb88921468mr352479355e9.19.1795619552272;
-        Wed, 25 Nov 2026 07:12:32 -0800 (PST)
+        d=1e100.net; s=20260707; t=1795619553; x=1796224353;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=xo7WrNxk6dDX7UKfTjZ4Wt8i+/bBKGXUCuSojJqGcJo=;
+        b=JIYhHFJLa58Ul9dyZ05oJ8FswII6RuFcRZhhstJXIcWnHajt2TpswuU/4zWLti6UWs
+         e7RwMEJ0Assn+BUerxtLdCUrr4J8MYx1o8Gx8qiR6CSDtpOHOsS/Z/nM+gVq+z802xjh
+         iZIusWuFSL9keeWRoMq5w94+3AlEA7+wNKswe7hcYHsEe/PPsryjjF8GNWQ3EtY8sX4Q
+         HCqd3kDeBLBN06F2JQctaS6LRLZhruykTt5M+v1VvwBnlCTyIsaIW3dpuyqetF1+UB/s
+         eUJIOO9gTVxJMkCFDo7/zqWlPT4FgjFYBoArKz2pPx6RQbXi4fjab9U5WFYVq2OjkaXH
+         D6uA==
+X-Forwarded-Encrypted: i=1; AL+hErFlHHSeGw/jDr0Hwp1y3sXOHrcFXfPY4dfG/ryDhhFBc8MFkbBx+lBmZag0xcjoTzMy7LiaM2YtK+OYlNHHMz3k@vger.kernel.org
+X-Gm-Message-State: APuU4Z+/KmX6doXcOeqQnyRJDGsS2zg03YRsWN5DuoSoo4bZ9b9JAMWR
+	1TSDsx1ftUIzLWN2b5SOHY57CKJnkR1KmVWpf6EJMDCbDklazXjPWxJaE+5qNptAn+o=
+X-Gm-Gg: AZFdTZeGrPSZNy4141XR5jwLrUluGp11dljth/jKwbni3qAYcKFcP08O3rxAarZifBV
+	fPuoB8oOaVu71gxFykEyDDxXMrVgqY+W1f9IO1xXOiU5pmkgeT9nWiSFHloHq5ibWdoDLYJ4QYL
+	wPWGNebkPLkM6UAd71G3YI32R0JIf7CFuDnzCPq46PE+RaTJ26iooVlKNPJ5X8Fp/aSubC/SPll
+	1zRfC70g1/lBszahBfQoxswveJnwyHHMGkl4eD7pDfJ8Y+6iX3iiQftu37T1UXBYdpyk1QkzGBE
+	0xpoZlsbj3HVBN9Rx2AoQ5mPTJnpRbCxYBfJjeKS52pUNs/+q2iE01qd0lHmpQYe5az7ItI25T+
+	+WFgIyirSyHVQvhZiNvvPq/AGvrk8+RrlxjO9tG6aeyLeRQFxGnKxj8bp20D60RhfcBwz6NIykb
+	LY2vgC7CjOM427GugBsFgHjJTeUsd5BIdELSH71tPuZPhS8/TLeB9Eq2ORdS0XAFf82sEbY/ncn
+	ZGfwwGmyrnpmVZobPY1lUEEIzyqizQ8vBKfNomiPmBE5Z/mZDQ3LAgbs9/V9UOa3ZNdI6I6z9Dt
+	5Y+jumsy31ncdY6UzD/Pg0pntj90bxfR
+X-Received: by 2002:a05:600c:638e:b0:4bb:6c5e:b006 with SMTP id 5b1f17b1804b1-4bb887e265fmr343043815e9.3.1795619553431;
+        Wed, 25 Nov 2026 07:12:33 -0800 (PST)
 Received: from pop-os.local ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6a67fe75sm39845282f8f.24.2026.11.25.07.12.31
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4ab6a67fe75sm39845282f8f.24.2026.11.25.07.12.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Nov 2026 07:12:31 -0800 (PST)
+        Wed, 25 Nov 2026 07:12:33 -0800 (PST)
 From: James Clark <james.clark@linaro.org>
-Subject: [PATCH 0/2] perf kvm: Don't create an empty perf.data in live mode
-Date: Wed, 25 Nov 2026 15:12:13 +0000
-Message-Id: <20261125-james-perf-kvm-live-file-v1-0-946f478ce2a1@linaro.org>
+Date: Wed, 25 Nov 2026 15:12:14 +0000
+Subject: [PATCH 1/2] perf kvm: Don't pass an ERR_PTR to
+ perf_session__delete()
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -93,10 +94,9 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAM36BmsC/yXMQQ6CMBBG4auQWTsJraCJVzEuKPyjg4Ckgw0J4
- e5WXX6L9zYyRIXRpdgoIqnpa8pwh4LaRzPdwdplky/9yTlfc9+MMJ4RhZ9p5EETWHQA177sgsj
- xHCqhnM8Routvfb39be/Qo12+P9r3D3gdzQp8AAAA
-X-Change-ID: 20261125-james-perf-kvm-live-file-520dbff37b4f
+Message-Id: <20261125-james-perf-kvm-live-file-v1-1-946f478ce2a1@linaro.org>
+References: <20261125-james-perf-kvm-live-file-v1-0-946f478ce2a1@linaro.org>
+In-Reply-To: <20261125-james-perf-kvm-live-file-v1-0-946f478ce2a1@linaro.org>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
  Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -111,27 +111,33 @@ Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
  James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.15.2
 
-Running the perf tests drops an empty perf.data file in the cwd which
-gets in the way sometimes, especially when the tests are run as root.
+If perf_session__new() fails, kvm->session is left holding the ERR_PTR
+value when jumping to the out label. The cleanup then calls
+perf_session__delete() on it, which only checks for NULL and goes on to
+dereference the error pointer.
 
-Fix an existing error path bug to appease Sashiko, then fix the empty
-data file.
+Fix it by clearing kvm->session before the goto. builtin-top.c and
+builtin-lock.c already follow the exact same pattern.
 
-Assisted by Claude Opus 5.5.
-
+Fixes: 6ef81c55a2b6 ("perf session: Return error code for perf_session__new() function on failure")
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
-James Clark (2):
-      perf kvm: Don't pass an ERR_PTR to perf_session__delete()
-      perf kvm: Don't create an empty perf.data in live mode
+ tools/perf/builtin-kvm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- tools/perf/builtin-kvm.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
----
-base-commit: 148690b95cc425950dbba79d73eb4f7938347fce
-change-id: 20261125-james-perf-kvm-live-file-520dbff37b4f
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index 67eb3f667c99..785b761fb951 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -1926,6 +1926,7 @@ static int kvm_events_live(struct perf_kvm_stat *kvm,
+ 	kvm->session = perf_session__new(&data, &kvm->tool);
+ 	if (IS_ERR(kvm->session)) {
+ 		err = PTR_ERR(kvm->session);
++		kvm->session = NULL;
+ 		goto out;
+ 	}
+ 	kvm->session->evlist = kvm->evlist;
 
-Best regards,
---  
-James Clark <james.clark@linaro.org>
+-- 
+2.43.0
 
