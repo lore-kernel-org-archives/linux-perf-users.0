@@ -1,80 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795623236;
-	b=BU5eLgrKY9C17Wl/w+qUHpX74yMSG4Jttay3Op73cHimyjj31/Y3a7k+RADLkMIP50T+
-	 +s47E9SRwr07xQiAlAa3zb4TknnaDDEXa7Y52p8pHFvjY2TUzVqSN2BZc5cQeQLngeu5o
-	 MZjqX5/hURp4zgOqlFvyAFrFsLzSPIxPKffIfl4qkdknIJwc6uE6DLiUAXw4TtoeaqNq5
-	 fYPPODn4Dp+nEs5laRU8RLcc6xUyMzD6wTOFRwUVA60WSY0r9Ykmxo01S+HRqMby+8GaH
-	 JEYkn94j8oOpj1mBphDlaM6vDmeIZj1d5y8KB70HAhwrx1iepuC0/VhdjOxecyWzxWA==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795623236;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=5qOmkXmsHsTBu6Rq8XKMQEDqKT3TuEpd8aaHF0KI42Y=;
-	b=owO/pnSjVWuyD6SUL5TIMFEk8thrnxQxNNTm3m3+XOHRX7IbTvoszg10nQAFut+uz9rL
-	 gYXOnZlIAvVxDrwySbRHtKG31yB8zqACb1oO8UyHtnXYK7hI+Fk1Pt5YbqRr1rE5jLoY6
-	 PPrxk1/gZuny9/tielkcyjnPn49TLVERHud+cnwxeed8W4b1J6aCJWFOm/8bt0M5YL+C7
-	 /3VH1fpW0V6XJ7jXulEBgbN+hHCr27HZFnK/Ru78FvxVsmabqmDMAdWIF5B48a0DyEd3/
-	 lRnQy42N9FemGXxHZpyHlIijeaJsKLkCeQLEl5KL1b777KVGrufxetCY/AOFVmYA7uA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=JC03b3+N;
-	arc=none smtp.remote-ip=90.155.50.34
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795623378;
+	b=F83gQHabltIv/0tEbwR3CunYwb5LSWHFAZAjCQNO4pnp/UBqD8yI4VJPZe8Irce1C9g5
+	 khPlT1JTcsY/IyDlXWJBnA02nzl2Kvh8YYWbSMJgGVgZKkWxc8hNpO31ECldKEE73wpJt
+	 +WF42INGe/l3dulxgYQXEN0Frn3U5BEaLTokd/RLeXeJtxFmajvxJIMiwW32wpiNrUmSa
+	 AbRwjJ23ckUFEl4P2zNIqaFhv6zRnOPA+YmgxF1BZBXCAXdeIpFzyYli0O9dRtPGpkvbG
+	 XGXLIxJgL9uSFN+l+PsN+IstUsTK1X0H9pmcbkSVytXgbbNcRK2dlMwqOnFvK8ZPg1g==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795623378;
+	h=Received:DKIM-Signature:Received:From:Date:Subject:MIME-Version:
+	 Content-Type:Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=IwYR7jxyy0oU38HwdJ0V2hMTdj58xBYLEDilB4VyrlY=;
+	b=zQ9rM+jWytUoQ58cvhF1Bc/rwgLb6KNwga1321zWVAWhu4gWXAcETqzcFy1KAbvcSo4U
+	 GfyAQgb3qQbq5LCQSs3uIA6eGCApKainTzb47E2nADbeUsC23Dge0MsHap8BI/O5GtXnY
+	 anQ5hRa6sTwbfvxDQMzvBmg0Og1keBk0h/6XPBqrSpGHARPHrk46IWdKUZOBOABUbTDuz
+	 M1NJXoa6rYrCa//HOs93//oXm7ydP5QxAkewvSerbk24YK3BlDy7S+cWWunH3R4EIVDeA
+	 RSXVBuzYWUvTU5P5WFCmVPqXEztwEEKsxJ8xgOl4NhN0HUzxC1B7W7vm6eOWoB904FA==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nawmy5R3;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9909F606A31E;
+	Wed, 25 Nov 2026 16:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=nawmy5R3
+Authentication-Results: smtp.kernel.org; arc=none smtp.remote-ip=100.80.115.77
+ARC-Seal: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256; cv=none;
+	t=1795623378;
+	b=HGWNJwKbsV7dLaY7pYib+NIJBTepEjLBWEBgY0ttxl3t8xU+YgAk+I3SikcUnclUgI5n
+	 is4qcBzUwq2BMHyM3QPOjtvQCs05j4kTe6sLlClQKWifrbaoEGwKkMpccIi9VHEwxPSVT
+	 MS+U/QhpFOzyk4UqqzXcRE0hOTceHTAZ7AO8RNnawmgrLprcYZ6O4xFTyi48W9Eo24iHc
+	 0vg8Nc+4Lug2SjkkNmEZpd8WUlkO7byI8NVs70o4NGFYi4TfO8B9JJVxyesstsN4rNeGr
+	 1TjigJimRFjE0CTYYLGEemNv1LJIINtSHzVJOKfWDn6bS+rqWr2Koi3YpuGqqD5Yt6A==
+ARC-Message-Signature: i=1; d=kernel.org; s=arc20260519; a=rsa-sha256;
+	c=relaxed/relaxed; t=1795623378;
+	h=DKIM-Signature:Received:From:Date:Subject:MIME-Version:Content-Type:
+	 Message-Id:X-B4-Tracking:X-Change-ID:To:Cc:X-Mailer:
+	 X-Developer-Signature:X-Developer-Key:X-Endpoint-Received:
+	 X-Original-From:Reply-To:Content-Transfer-Encoding;
+	bh=IwYR7jxyy0oU38HwdJ0V2hMTdj58xBYLEDilB4VyrlY=;
+	b=uuedYbhRy+alekMV9l+Gf7IfIaADthkGdthFV3WcCwlikbZwUWobQivHvdrqGsUQFCU/
+	 evjAM7oygvcoZREUTl6npxPX6/TTFxrm9SA4V0kDmvvZ+71lS880qnpU01bT1MhncnMH8
+	 n9vbJ1pQr9Y37Yv6oj/Om9LAtwUgzJXheENvwDF+EJpoyV2UFZEBqYhqc4A8kTLPjAhoT
+	 A2Bq3M4Mlyk8ShgWnxZLvPSA1+BHp2aPBnG02pAed2EjhzCz3mYroEGY/IEQsB1icvZ9R
+	 702V8wqxSTVzJj5hWAFitGa4MAzAKy3iuWqA67HPfzyxseM/T6PAH6ppBsgg9NK+BzQ==
+ARC-Authentication-Results: i=1; smtp.kernel.org; 
+	arc=none smtp.remote-ip=100.80.115.77
+Received: from lkml.kernel.org (nexus.subspace.kernel.org [100.80.115.77])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61244606A329;
-	Wed, 25 Nov 2026 16:13:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 61244606A329
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=JC03b3+N
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=5qOmkXmsHsTBu6Rq8XKMQEDqKT3TuEpd8aaHF0KI42Y=; b=JC03b3+NYzhOLtIaTA9GOklkcg
-	Qoq0pn9cihDklRrvmEjX0QRSnF9tZUYTJx58/jCUhDQudUrm2HR6KeRQAfxDujjrtqQ7JOg7APY2o
-	d/bFWWPGapcoFeq6PqvrIhT2c5Qcuwn4ASrWN6ygn5kFTCLjcGuj+6sRCWV6zk9ISw2l6BTHbNFL+
-	gD8eZJzUKlj6mydW+2HDk4oZUndmm+euCDrW+R9+mD/CBFsU0rQ/yHt5MkuCQI04lRfMEimQBp7Lv
-	oYEpiuwrLwHvB9F1d6uHX1BC3rG888KeBveTjEf7CYKRENfbKlvKs++ith0+qwR0F31LEkJgl29Or
-	umb2jZHA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xWFct-00000000EHg-2q1m;
-	Wed, 25 Nov 2026 16:13:44 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 72DCB302186; Wed, 25 Nov 2026 17:13:42 +0100 (CET)
-Date: Wed, 25 Nov 2026 17:13:42 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Tengda Wu <wutengda@huaweicloud.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] perf/core: Disable context fast-swap for sigtrap
- events
-Message-ID: <20261125161342.GP2669272@noisy.programming.kicks-ass.net>
-References: <20261120173706.GC2668564@noisy.programming.kicks-ass.net>
- <20261120174606.GM2669272@noisy.programming.kicks-ass.net>
- <5507e48c-4e98-4e76-8d3f-4630a2655085@huaweicloud.com>
- <c9ff579b-a7eb-481f-bb8d-489a4469c397@huaweicloud.com>
- <20261125090809.GW2668804@noisy.programming.kicks-ass.net>
- <4d17dd3b-df73-45c0-8113-f4ca259d549b@huaweicloud.com>
- <20261125093836.GX2668804@noisy.programming.kicks-ass.net>
- <c9c2c4df-a748-4787-b686-1fe6bc6564db@huaweicloud.com>
- <6493eae2-9b36-4574-83ca-a139f4fbfb25@huaweicloud.com>
- <20261125133601.GC2668804@noisy.programming.kicks-ass.net>
+	by smtp.kernel.org (Postfix) with ESMTPS id 1B51D1F000C4;
+	Wed, 25 Nov 2026 16:16:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795623378;
+	bh=IwYR7jxyy0oU38HwdJ0V2hMTdj58xBYLEDilB4VyrlY=;
+	h=From:Date:Subject:To:Cc:Reply-To;
+	b=nawmy5R3E9sNrpBwSBLZ+SSd1Pj+dCjEnG9Sk4mzO/diiZiMEJhAKYqrmPigCEbbw
+	 F5ncib03aObHeK9/3OQAvMfpKSFHC+MXxw+YshSbAxgB7TPbYi9yZ25+a+A/Iu6xdG
+	 RbLte12ZKCoz/t35g4YXjoB5zAWIGGENd+NZDy4VFos3hfp3+PKu+QCAQ3gLYX6zjU
+	 WvrGT9Xbqv/TGv8zX0Cz9zhfN+EORkwa9SJuyz6UBZDz6YfwllDKJVMPbR3ACTGzSF
+	 ZMlBS96pj79whmW8cEDvCgHmABC3fl3beI0AL56mKEf13jGgFSZe3cTSZjyLrknFDM
+	 NGKOclEcT+n9Q==
+Received: from nexus.subspace.kernel.org (localhost [IPv6:::1])
+	by lkml.kernel.org (Postfix) with ESMTP id 73DCB4CF5B;
+	Wed, 25 Nov 2026 16:16:14 +0000 (UTC)
+From: Sylvain Chouleur via B4 Relay <devnull+schouleur.snap.com@kernel.org>
+Date: Wed, 25 Nov 2026 17:15:53 +0100
+Subject: [PATCH] perf/arm-cmn: Use at least 2 bits per XP coordinate in
+ node IDs
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -84,94 +83,80 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261125133601.GC2668804@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <20261125-arm-cmn-xyidbits-v1-1-6f7bee891859@snap.com>
+X-B4-Tracking: v=1; b=H4sIALgJB2sC/yXMQQqDMBBA0avIrB0wA0bxKqWLmIx1BGPJaLGId
+ zety7f4/wDlJKzQFQck/ojKEjNMWYAfXXwxSsgGqsgaQzW6NKOfI+5fCb2sisZWjeUwUOsIcvZ
+ OPMj+Xz6et3XrJ/br7wPneQGnp47/dAAAAA==
+X-Change-ID: 20261125-arm-cmn-xyidbits-16076edf28a2
+To: Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ stable@vger.kernel.org, Sylvain Chouleur <schouleur@snap.com>
+X-Mailer: b4 0.16.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1795623374; l=2076;
+ i=schouleur@snap.com; s=20261125; h=from:subject:message-id;
+ bh=sa9PZCg2nW0vzlkWYPAJtFCSQhJMIg5Z6aFqeJbc3f0=;
+ b=v8agyqySqDUxULbbTkNaysEzgYXGF2W7BwMxU/Z+NgcPXhzJMgZl8a//oBEcG1GqcKYbqI8kz
+ 7drwmw6dVbvAOmVnsA5sFaXDQwNFBEmM+zMoEN6tmjRLvhpuZbWVJFD
+X-Developer-Key: i=schouleur@snap.com; a=ed25519;
+ pk=T9TO/S3sm76Hkq5JdP/4AATQ2J2jGtskIHx0NY9lD4I=
+X-Endpoint-Received: by B4 Relay for schouleur@snap.com/20261125 with
+ auth_id=1639
+X-Original-From: Sylvain Chouleur <schouleur@snap.com>
+Reply-To: schouleur@snap.com
+Content-Transfer-Encoding: 7bit
 
-On Wed, Nov 25, 2026 at 02:36:01PM +0100, Peter Zijlstra wrote:
-> On Wed, Nov 25, 2026 at 06:09:04PM +0800, Tengda Wu wrote:
-> 
-> > >> Ah, I'm currently running it on an SPR Xeon; do I need to use
-> > >> non-default arguments or just run the thing in a loop and drink tea
-> > >> until it goes pop?
-> > > 
-> > > No need to pass any other arguments; running it as follows should be enough:
-> > > 
-> > >   for i {1..100}; do ./fast_swap ; done
-> > > 
-> > 
-> > Correction: for i in {1..100}
-> 
-> I used: while :; do ./perf-sigtrap-switch-poc; done
-> 
-> > One more detail: I also specified a boot parameter (which might make it
-> > easier to reproduce?):
-> >   
-> >   preempt=none
-> 
-> That option is no longer available.
-> 
-> Anyway, I've had it running for a few hours now; but no joy :-( -- this
-> is an unmodified tip/master kernel since I wanted to make sure I could
-> reproduce before trying to fix.
-> 
-> I'll just leave it running ...
+From: Sylvain Chouleur <schouleur@snap.com>
 
-7 hours and nothing :-(
+The X and Y coordinates in a CMN/CI-700 node ID are encoded in 2 bits
+each for any mesh up to 4x4 (7-bit node IDs), and in 3 bits each for
+larger meshes (9-bit node IDs). The width does not shrink for smaller
+meshes: a 2x2 mesh still uses 2 bits per coordinate.
 
-I'm going to have to ask you to try and reproduce I'm afraid. 
+arm_cmn_xyidbits() derives the width from the actual mesh dimensions,
+which yields 1 bit for a mesh with both dimensions <= 2. On such a
+mesh arm_cmn_node_to_xp() then decodes every device on the X=1 column
+into the wrong XP: X=1,Y=0 devices are attributed to XP (0,1), and
+X=1,Y=1 devices to an index past the end of the XP array. Their PMU
+events end up programmed into another XP's DTM, with the port/device
+select of the intended XP, so the counters silently read zero while
+the rest of the mesh works.
 
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1236,6 +1236,7 @@ extern const struct perf_event_attr *per
- extern void perf_event_print_debug(void);
- extern void perf_pmu_disable(struct pmu *pmu);
- extern void perf_pmu_enable(struct pmu *pmu);
-+extern bool perf_pmu_enabled(struct pmu *pmu);
- extern void perf_sched_cb_dec(struct pmu *pmu);
- extern void perf_sched_cb_inc(struct pmu *pmu);
- extern int perf_event_task_disable(void);
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1366,6 +1366,12 @@ void perf_pmu_enable(struct pmu *pmu)
- 		pmu->pmu_enable(pmu);
+Observed on a CI-700 r3 with a 2x2 mesh (part 0x43a), where the SBSX
+and HN-D nodes on the X=1 column never counted although the XP flit
+counters showed the traffic. Forcing a minimum of 2 coordinate bits
+matches the documented node ID format and makes all nodes count;
+the minimum had been there until the node ID refactor dropped it.
+
+Fixes: e79634b53e39 ("perf/arm-cmn: Refactor node ID handling. Again.")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sylvain Chouleur <schouleur@snap.com>
+---
+ drivers/perf/arm-cmn.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+index 68a096c1fe6b..5f369c7a7a35 100644
+--- a/drivers/perf/arm-cmn.c
++++ b/drivers/perf/arm-cmn.c
+@@ -406,7 +406,8 @@ struct arm_cmn_nodeid {
+ 
+ static int arm_cmn_xyidbits(const struct arm_cmn *cmn)
+ {
+-	return fls((cmn->mesh_x - 1) | (cmn->mesh_y - 1));
++	/* Node IDs never use fewer than 2 bits per XP coordinate */
++	return fls((cmn->mesh_x - 1) | (cmn->mesh_y - 1) | 2);
  }
  
-+bool perf_pmu_enabled(struct pmu *pmu)
-+{
-+	int *count = &this_cpc(pmu)->pmu_disable_count;
-+	return *count == 0;
-+}
-+
- static void perf_assert_pmu_disabled(struct pmu *pmu)
- {
- 	int *count = &this_cpc(pmu)->pmu_disable_count;
-@@ -10955,7 +10961,7 @@ static int __perf_event_overflow(struct
- 		 * claim the pending_work before task_work_add() recurses.
- 		 */
- 		if (cmpxchg_local(&event->pending_work, 0, 1) == 0) {
--			if (!task_work_add(current, &event->pending_task, notify_mode)) {
-+			if (!task_work_add(event->ctx->task, &event->pending_task, notify_mode)) {
- 				event->pending_work = pending_id;
- 				local_inc(&event->ctx->nr_no_switch_fast);
- 				WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
-@@ -11151,6 +11157,9 @@ static int perf_swevent_match(struct per
- 				struct perf_sample_data *data,
- 				struct pt_regs *regs)
- {
-+	if (!perf_pmu_enabled(event->pmu))
-+		return 0;
-+
- 	if (event->attr.type != type)
- 		return 0;
- 
-@@ -11531,6 +11540,9 @@ static int perf_tp_event_match(struct pe
- 				struct perf_raw_record *raw,
- 				struct pt_regs *regs)
- {
-+	if (!perf_pmu_enabled(event->pmu))
-+		return 0;
-+
- 	if (event->hw.state & PERF_HES_STOPPED)
- 		return 0;
- 	/*
+ static struct arm_cmn_nodeid arm_cmn_nid(const struct arm_cmn_node *dn)
+
+---
+base-commit: 4dce97c6c265544342e716e62fd24bbb232590c5
+change-id: 20261125-arm-cmn-xyidbits-16076edf28a2
+
+Best regards,
+--  
+Sylvain Chouleur <schouleur@snap.com>
+
+
