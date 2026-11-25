@@ -1,72 +1,56 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795630965;
-	b=ddAP9G2DTFT4ePILKeH+LEAoOqwxf9JjTOt7ccoygxO7mnXRHMs+8N4v2bhuV54wzR22
-	 u3G/3ooVWThboMEwxHjLwW5YMEBWw5q8fpE1nT2ISbhgpauQFEnIfcWE6LSTSyXBQJC4P
-	 RTuHhnTMybE8LPEJU6xVYWrHmEjAwA9X78gbPxgOLmLeJyYR/o729hVFeL1Ymt+dGWqfT
-	 a9bsuK+7GGeBW/Zdessn1byWi8Lv3pWA8ikR9rwnlMgsIIMtNIWXnJiz8yuxlB4tbf1pO
-	 Q0P5YR4WUrkvcIYhfNO91kmj0PeMUhqVDfntKosJRUcyTn58xD7emwmv7LukYYbjB+g==
+	t=1795630969;
+	b=4/PYz1ioHxgydsCaUKxD0JzVb+FiUL4C+GDDkr854sfHLhd+Ol9ZARmalro1vK1DBBhf
+	 JFo97m8xL3mHy7BTiJum5Rg5qh1zbf4fX8CageI6tStkisjF+dxyV2WeVyrCgmsJGH/JS
+	 5lWG56UHYr8y7qyvdl052e0jcbggF/+dN82T2LInGuMUu98HfM8UQ6hHiVslJ6VyiUzga
+	 Gd15N5JSOhWMePDjZhwi9KXf6ksMN4NycZRgDAa778AuNL8kP8znWuwR12U8M9aLMLHHt
+	 WnW3zA4ZAlrjLxPI9PDmw8n3gjHL4BIPajNNcGAZbtaYoJXCZUnNcHH0pLXVUbJGpYg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795630965;
-	h=DMARC-Filter:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 In-Reply-To:References:X-Mailer:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-Rspamd-Server:X-Rspamd-Queue-Id:
-	 X-Stat-Signature:X-Spam-Status:X-Session-Marker:X-Session-ID:
-	 DKIM-Signature:X-HE-Tag:X-HE-Meta;
-	bh=6qR++cFUSbUPUEmO+yBbsbTsqe4WGzx7vfqPrLzKD+Y=;
-	b=3ZKVcBTpNC6/JCS6uJ032o5JNcQV8NVAJio/uXSh5uFmmtIo/5fXFpfWAGpBy/sQUZIB
-	 +X9ycRAob22E+JGQMyJq+My+kAj773MQmwh47aihpPB8izt7ZXwRCTPAjbGcf+qg5tbnL
-	 jOf5jn70aEaWpHiiwbB6K1k6TcW8cHNug8MrurE1+xIm+Zy53kkMhd+Rdwk7ookJ7mH6D
-	 86WaXlJ+8IctuWDdwV0v5OoxTYwdWEMaY4uqv8V+UMqCmkdDJDKM0XvVtMFJWkAeIuysu
-	 xaAYiljwddDJasrjNLxMPEYqcn6mfIt09CmbK0puRUAz7ogOJ0Vo0Jci9tLc52oLi7Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795630969;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=2J1VQzsB87BW8DLXcmbw0G/9bucBGY1jjkX13LRsTHU=;
+	b=s9QXVI4IOZ5rIBLDep4j+Ul3gR6QGD/z1YIJJECcwxG+GtkC1MdtkOPMOM6MBri2G2ZA
+	 P3CSEU5cIBuSaNiw8bzlVdexQDRXT8QYk0KEOAj9NjOL/BhsSqgwFfh0GN/zZfrD7LAYM
+	 g6RhlZXu+tVj+MAlEoMdWSAPLQsJiCWDj6jx8E59ZbeIk5RyAhfhcTG7z32pVyJCXIIl9
+	 54b2yhkDlwSYu11yI06/gV1DWETAQGmZ/mABP5sStIzfFZIN1gau1KGxoTgeytJXZdOVW
+	 UdfJxTXhXl157rEnMHSbyl5Xjs60qLvQQWC6d2C7s04ZIkAOdDLIFlSRSCE8VuuKWsg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=goodmis.org;
-	spf=pass smtp.mailfrom=goodmis.org;
-	dkim=pass header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=dhj3qKPr;
-	arc=none smtp.remote-ip=216.40.44.11
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JONH7iEe;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3541D606A33C;
-	Wed, 25 Nov 2026 18:22:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 3541D606A33C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2068606A323
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 18:22:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=goodmis.org header.i=@goodmis.org header.a=rsa-sha256 header.s=dkim1 header.b=dhj3qKPr
-Received: from omf19.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id C90DE120F71;
-	Wed, 25 Nov 2026 18:22:38 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 2158E20028;
-	Wed, 25 Nov 2026 18:22:27 +0000 (UTC)
-Date: Wed, 25 Nov 2026 13:22:25 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Gary Guo" <gary@garyguo.net>
-Cc: "Ian Rogers" <irogers@google.com>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
- <jpoimboe@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
- <tglx@kernel.org>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
- <x86@kernel.org>, <catalin.marinas@arm.com>, <will@kernel.org>,
- <mark.rutland@arm.com>, <linux-arm-kernel@lists.infradead.org>,
- <pjw@kernel.org>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
- <alex@ghiti.fr>, <linux-riscv@lists.infradead.org>, <acme@kernel.org>,
- <namhyung@kernel.org>, <linux-perf-users@vger.kernel.org>,
- <mhiramat@kernel.org>, <ast@kernel.org>, <daniel@iogearbox.net>,
- <andrii@kernel.org>, <bpf@vger.kernel.org>, <nathan@kernel.org>,
- <llvm@lists.linux.dev>, <nsc@kernel.org>, <linux-kbuild@vger.kernel.org>,
- <ojeda@kernel.org>, <rust-for-linux@vger.kernel.org>, <ardb@kernel.org>,
- <linux-efi@vger.kernel.org>, <maz@kernel.org>, <oupton@kernel.org>,
- <kvmarm@lists.linux.dev>, <shuah@kernel.org>,
- <linux-kselftest@vger.kernel.org>, <indu.bhagat@oracle.com>,
- <jremus@linux.ibm.com>, <wnliu@google.com>, <dylanbhatch@google.com>
-Subject: Re: [RFC PATCH v2 00/30] unwind: Minimal DWARF CFI unwinding for
- user and kernel space
-Message-ID: <20261125132225.00254c37@gandalf.local.home>
-In-Reply-To: <DN4FM3TBOJ9T.2QOOL77P5HETO@garyguo.net>
-References: <20261125061523.1540234-1-irogers@google.com>
-	<DN4FM3TBOJ9T.2QOOL77P5HETO@garyguo.net>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JONH7iEe
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 006021F000D0;
+	Wed, 25 Nov 2026 18:22:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795630969;
+	bh=2J1VQzsB87BW8DLXcmbw0G/9bucBGY1jjkX13LRsTHU=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=JONH7iEelmvcb500DjzyMO0PaaMdwPHBBMa2gB/sU/yBc1EDv8gdCjbdWCiVzsm6t
+	 mkMB3YAmTUcXT7Az+LLuanq70qNylBi3N2P58ygHxbdoX5/8u10kNkb3rfE2xoF7Md
+	 AZs2bi6paee+bUPa7tXNb3IbTvFfz0HF1ybznmelsJlcPiUqahAAkFFG6aRq56oiTT
+	 uLZYs/LgPTLmM313u941zUzZTJKO5NyZm5e7wm41zcYg9t+DAUc3R6YvD5HppeE/ng
+	 8Ri1QrCUcXdWIGUh1JByPDGrMfta1xbT8r9R6fjXPtyz3r3PEbPTNO42IvDWe7S7rD
+	 sIYNQKvA4HpWw==
+Message-ID: <sashiko-outbox-233976@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v8] perf stat: Refuse a group mixing tool and kernel
+ events
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "TAKANO Mitsuhiro" <takano32@gmail.com>, linux-perf-users@vger.kernel.org
+In-Reply-To: <20261125175450.2373258-1-takano32@gmail.com>
+References: <20261125133854.2180695-1-takano32@gmail.com>
+ <20261125175450.2373258-1-takano32@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 25 Nov 2026 18:22:48 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -75,25 +59,84 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: 2158E20028
-X-Stat-Signature: bmxmyx7zbff3tj5wzgboeoe9y8ngdg7c
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/Cm47ggEMe5tkUQwuPIv9j4yoOc3+2FwI=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=goodmis.org; h=date:from:to:cc:subject:message-id:in-reply-to:references:mime-version:content-type:content-transfer-encoding; s=dkim1; bh=6qR++cFUSbUPUEmO+yBbsbTsqe4WGzx7vfqPrLzKD+Y=; b=dhj3qKPrnd5Ol5oStgJ72xjormeA1wf1DO/RZc9kjGarZplof6LxOCEYEKKVU+6U05bo+jnrn30dh3AQ2S2utOXzBrNDvJP6ChCp0OiNHXA0Mz5Qca51KujLnC0+gny5rgFtqYDHuEEGrRoB4ayAc52wJ7NqKJRyFXoq+87Y6Bg=
-X-HE-Tag: 1795630947-362156
-X-HE-Meta: U2FsdGVkX18ShW9pI+/3LezhiP+sfLyAz5bbFmDR0Cg79ArNrSxS4kGp2fzzjf2A8iMOExZ79Wjpfg5dnD2BuvcnWnPjmIUJbGqbBkLfSiaYUFYSqR7ZAyP5O5UzEvRDCN589rXn1aP6/jRut7zfB+DDsEhPmN5DqCQvkQ7ZfZK1DiZPYS6+dvk+POli+n6GtTpGQ+j2vtl3LmQVHr+SzbA0nhYCBgifjijh6DwBsiIDVGFv0Nn3Ybo7aD+vHLlpczM4CVbNSwTPAeoiNfZ1pIRQfuRQQygtba8VmRY7xWxfdUk9RhDQhUICoUNpPyMEpj3E7lFTHILx587J1If+CzVdP12M+SkIwx9akUq8SAeuSlUzaZ2IKhNYhFH5nvIw0f5ED6Ry586F6FXLp5r+/Q==
 
-On Wed, 25 Nov 2026 16:28:02 +0000
-"Gary Guo" <gary@garyguo.net> wrote:
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Medium] perf tests stat+tool_group.sh: broken hwmon PMU discovery and
+  event group test
+--
 
-> A quick question: how do you plan to get this working on 32-bit ARM which has
-> its own EHABI?
+commit de61381e655671f0d4ffde4221e3cc5db6ec0e53
+Author: TAKANO Mitsuhiro <takano32@gmail.com>
 
-Do we care? Isn't ARM 32 mostly deprecated at this moment? Or at least not
-adding new features.
+perf stat: Refuse a group mixing tool and kernel events
 
--- Steve
+This commit refuses event groups that mix kernel events with events not
+opened via perf_event_open() (such as tool, hwmon, and drm events), guards
+against NULL file descriptor arrays when enabling or disabling group
+members or looking up group fds, and adds a shell test covering tool event
+groups.
+
+Link: https://lore.kernel.org/all/sashiko-outbox-227849@kernel.org/
+Link: https://lore.kernel.org/all/sashiko-outbox-231330@kernel.org/
+Link: https://lore.kernel.org/all/sashiko-outbox-232396@kernel.org/
+Link: https://lore.kernel.org/all/20261111-tool-pmu-leader-v2-1-3faa0fb98c5=
+1@gmail.com/
+Link: https://lore.kernel.org/all/awC_aZXD5FBGu4mO@google.com/
+Link: https://lore.kernel.org/all/awTXdgY38s2bijW5@google.com/
+Link: https://lore.kernel.org/all/20261123071913.653315-7-irogers@google.co=
+m/
+
+> diff --git a/tools/perf/tests/shell/stat+tool_group.sh b/tools/perf/tests=
+/shell/stat+tool_group.sh
+> new file mode 100755
+> index 0000000000000..93860252593c6
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/stat+tool_group.sh
+> @@ -0,0 +1,326 @@
+[ ... ]
+> +# An hwmon event is read by perf from a sysfs file rather than opened wi=
+th
+> +# perf_event_open(), so it is in the same position as a tool event in a
+> +# group.  Not every system has an hwmon PMU, and the name differs per ch=
+ip.
+> +hwmon=3D
+> +for dir in /sys/bus/event_source/devices/hwmon_*; do
+> +  if [ -e "${dir}" ]; then
+> +    hwmon=3D$(basename "${dir}")
+> +    break
+> +  fi
+> +done
+[ ... ]
+> +# An hwmon event reads a sysfs file, so the group is refused the same wa=
+y.
+> +# The message differs from the tool one, and the PMU has to be there to
+> +# exercise it.
+> +if [ -n "${hwmon}" ]; then
+> +  refused "{cycles,${hwmon}}" "${hwmon}"
+> +else
+> +  echo "Testing that perf stat refuses a group of an hwmon event and cyc=
+les  [Skipped]"
+> +  skipped=3D$((skipped + 1))
+> +fi
+
+[Severity: Medium]
+Can this hwmon test case ever run or pass?
+
+perf synthesizes hwmon PMUs in userspace from /sys/class/hwmon/ in
+perf_pmus__read_hwmon_pmus(), so /sys/bus/event_source/devices/hwmon_*
+does not exist and the test is always skipped.
+
+Even if an hwmon PMU is discovered, hwmon_pmu__new() leaves pmu.selectable
+false, so passing a bare PMU name in "{cycles,${hwmon}}" fails in the
+event parser with a syntax error (exit 129) rather than an event term such
+as hwmon_<name>/<event>/.  In addition, pairing an hwmon event with cycles
+is split into two ungrouped events by
+parse_events__sort_events_and_fix_groups() because perf_pmu__is_software()
+is false for both PMUs; keeping the group intact past the parser so it
+reaches check_unopened_in_group() requires pairing the hwmon event with a
+software PMU event such as cpu-clock.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261125175450.2373=
+258-1-takano32@gmail.com?part=3D1
