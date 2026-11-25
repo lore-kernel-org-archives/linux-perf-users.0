@@ -1,99 +1,57 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.174
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795583573;
-	b=S5TCbz8fefkqcQq0Skb/M2vO95Z3493JqDBMxwNcwyltZqyYWK/nXVaAEOVAXcV+LDsU
-	 bGE2m/r7MTPbsJWp1HbxXDwqVXt8z5AptzG4izpKbAJvPVVjrM8LyuUqg2sQAxoCHdSF6
-	 wGDZU2RePjTYP7qhcF3jjZCBMY/XlfpVJUXbjltY0U8LY4nH5A3DGlccWg4yqC/MWDY0Y
-	 QWU7adPw/BBIOid2VDLY5Apzj0mRkOanMe0g4m9UsKFauVK2LAEn7AZ9MXpDUSRttJ3Zf
-	 P4I6OT0fbLyQUn3zekXeiSpeHttsBct7pEGQSdK5eqR6LEE5C3+zDgFuAzK8wZ3WFag==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795583573;
-	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Gm-Gg:X-Received:MIME-Version:References:
-	 In-Reply-To:From:Date:X-Gm-Features:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding;
-	bh=rfwf34HIxiOtN9LZiUCjhKlH6eVj1PwaBvuDGB/T58o=;
-	b=csz8hMvx/w2tMVLKX4equT2gfwHw7PpseMvN4KBL1kberjxSYljslXjD9vu2jIpJPogg
-	 0wNrYSPgks1BQz25QSGiS2nsDyIfZzZpVXWj842JCzCc+Up3EyYHAwz9VA9tQuXIwbCyU
-	 WAenHTnK2jY2sljcveiJRW6GN2JEzXf8+xSzt2ai4prsjKGr2F6cMWqDox/y74Nyl6Dfn
-	 d9PtAxGgOU+shZ1cPAvFybk3LqONkaViTLJclsRbQYaBVrMGE5KIrzFWbjrrUOeHLigGq
-	 25FrIrk6IpTj6MOAwyR58U/QMu+5dSejhpK6hSOvm1zD1VecOkAmss80F2aU+8qXM4g==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=google.com;
-	spf=pass smtp.mailfrom=google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=p+tx0w77;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=209.85.160.174
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795583643;
+	b=DqEPsxTYdxdgsAUuN9PEppmNtmoxpp9e1w5uH/1bX8y5ZDwSu909fc536l90L5oxXJmx
+	 4BtSQ9t3bU7wncc+IbJ726a47Ibix4DT8EyalmGwfF0qzhSDz+sEzKNOn+JKmjaxB/eNg
+	 QQkqORFy0er7dNxPf9y7VYCxKYND2zUi1SERR2+c+KMNLtQk7LEsNA0mCSnIhXwEOEoiU
+	 mmyslYuMauhy0nMkJGzKx+RiLEeWVBoKTot8hHrPJUtP/u/BIz32mVV6d4+19dgUDgRrX
+	 cNEMLjEsEEodTvANANs3kz08t0s+R4XhT1Myu5lPwTeAAnYOJQCNqBiiA9Hsl6MQl+g==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795583643;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=a0ke4/yCSekayQ9aFSftUzOA7Z2UTXxkzb0Rxz5BVnc=;
+	b=r2tD43Jsr/NXf4rXP+0PGPwdyonEGJY3y4Zm9P6bv7n3edWXYA2lAG+BVoIUX1bTsJ7I
+	 3OtXWAShfkuoI0wE+SZm2XX6QKDAEhJacyoQBndwGiCZHIwKWcideP82FWCfFwUmGm+XA
+	 DiLuJOALnbuJhdn+SP4mWGWo3K68C21VEx67Ey/OazvGPsMm1ChElyKq8x17I59jbvkIG
+	 WM/SkL0GnQay49duQdJMGFbYxOb2e0ZP8AQN+CzclR/vbCasNg+3eQcXhhjPqGksE9ZdX
+	 bEdb7jc8ktToN3cHZXCLhjMV1KEqmfY1DbcCJ6xKn6qnX8HHosMRs9ZO1Ae9FfmJ4kQ==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=L4YX0ufU;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D53606A31E
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 05:12:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 94D53606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E9F606A31E
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 05:14:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=p+tx0w77
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-55c7445cf85so1053311cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 21:12:52 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1795583571; cv=none;
-        d=google.com; s=arc-20260327;
-        b=CXhXTyM+QtzrHjQgh8qiXSqtIWgs7UzwYXZD/wNpm3+IQk98mqVWRwLu+Sw0GCcxLv
-         pSp0NY/E02vpDX6ma7i0NUQZxQ0X7bYJELXwV86zmX5Di4W1JH6n9ngL2ZcnOaaKRI5Q
-         MFqQ/4SopJ5RPoaghPao7jln4SqEAkHz0qZTCYo6uX0pEdnpema3kAso5uEJ67xPWCgf
-         11BGIaQDHVfF0z/wnw5Mb01OJB1TUSiugrnDtpg/dCpDyPDB8AIPetFXLPmLzKTAOqcN
-         DslgzyOc1XSlS+nD69fYFK/EqUwteyWDiMCsBxTXu9FVZgrqTCEIQ+W4RNQ/RODZv3BI
-         7yYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=rfwf34HIxiOtN9LZiUCjhKlH6eVj1PwaBvuDGB/T58o=;
-        fh=nqATmclcuKAo6itQ7W6adKkfqXKLVeFXJjB774JASKo=;
-        b=ZkpT0uw98/al8cNujBfPdnT0r5Lwbmbu7PiXNBAxg9XAp6GMTSsmB7ozmmC7D77/Hq
-         PnyGiIZe+MHu1OE858XR6AfO1lGQkIDr201iPPnlIwDMcz6GFXIPrdFNKe+dJyHCrKZD
-         XO7W6fv6KtAGGFfD98zpfftvyXZQgib/7cDxmPAI+V6lADceae9/56m51CSO8/PdIYzG
-         Vz4N1mKGewaU4TS1a248L1mAWsyvFHmGkUI81nuxU6niY+fPeYUM9U0YHkkVeKchQesl
-         1qHcqKXrsPZ2FNlzX9R1CN1PcV5L1UHDvPZdxvv4zAUML/Re9erfXgx/aucmjcws42an
-         MnVQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795583571; x=1796188371; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=rfwf34HIxiOtN9LZiUCjhKlH6eVj1PwaBvuDGB/T58o=;
-        b=p+tx0w77Inb4Rk5FkuItfpJFsURCDdOL35a1RN3fkbesELLiT9IKdOCQn3uVWoadPt
-         hl37uqIlzid/VsAFyPrd5vHft9Jbzg97dUQ1TUPVWEmrg5kZmsxDT5sMod+v+X7BXxvp
-         ZszXOqYIhR5zKIeEXeWOnQPbiHxiLnc+13TesfY8ULjdzTHtJsE0Gpni0VTr8CMLZbvC
-         GVmOSmLOhcLIW70b55dlBD+1jHyZCxU4PrMCeNnV+Mi86yS5eReMz9xmddipwu+uO5cT
-         KZJ8FbrglbdAmO/9xyBqU3lE09iyN8SfcHz6UeV0is1l1aqaDPM7VLRAepg3M2ssSX7d
-         GpCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795583571; x=1796188371;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=rfwf34HIxiOtN9LZiUCjhKlH6eVj1PwaBvuDGB/T58o=;
-        b=T9NksyUqzSXs22tkBUwanYQL7I4V/BNXgeN6z9Mqim1+ZAD5j4rB1Hucih3tU6Wvtw
-         eBJpxORK5P8nAzSMEG6OKuy98XNOc3uiR1Ow1FLwHdURyIoU0/G+TCQ6+b4MWE+cuyln
-         Lnckff3Vs3uVewV+EbppJD/rNaFy70gCWkM8uzjAgUwTvIAxd6WH9gjnWUAeRCf907Pl
-         pA9kZ4DySVO+DTkadQwlJ7PUAKUjyY4AeFBa9l8ZomTc5StVz8gBEorcq9x6G0o4wtCz
-         zrYSsqXpNm+skFOxtEdY07f0sN10KOJoWyC7+WLzf5RL7yjk5efb3bMxYTmTVHyo399z
-         hljw==
-X-Gm-Message-State: APuU4Z+njSw4D/fmyzCRP5+nuv3BAAILSh/jCzbO0W2toLVL63K6Kz5p
-	4ABmeyWYCiXrSHJFsmyhbm/nxTQnxHgQHsDx6rFZb3qCAm9aXYuainrR/l6JjvzgsWNXaM4HkJR
-	hAeXnxIj3FZu+XjvJDk/sjnyplmwFnUWMwHOFizFc
-X-Gm-Gg: AZFdTZe25b6jjfdd4g9mfHNexHYcBtlh2g0YLaXiRueAgKCVJ0RCSVuKCR4vtJGTrNR
-	DwHuvwYgVtrvThg+1pUBrBK6oX+EooFV4yJnKUXbRHkG1/6PdmWjPRZYMyaGUiVvNGHMhWaLqyt
-	aRl8gef+F4ji+WnUuzvbEvf17OKva7s0CGWo4DKfPmcjnRpguUO7XVAvZOQ9wBWMaKf99EiaaER
-	MXGDqC3rrIz0ldpDo4xgJxW/SFuQn+1xRiNvrhPs2uHdgDu9sPD0KiouwMEE7pvsrI2QTooNkwV
-	9/+iUY0BoXstHu1rARTgl6DhY5UMH1g5gx7K7feiZCQag9XBzONFKplAbz7a6reAC4zhlkyUD37
-	hIaA2lGQKpXa1XOSJK+M+SFW+uH9hzq0MBgsT
-X-Received: by 2002:a05:622a:4d0a:b0:535:9aa3:5ebb with SMTP id
- d75a77b69052e-55d88ff9c21mr70231651cf.8.1795583570833; Tue, 24 Nov 2026
- 21:12:50 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=L4YX0ufU
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DA8B1F000CF;
+	Wed, 25 Nov 2026 05:14:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795583642;
+	bh=a0ke4/yCSekayQ9aFSftUzOA7Z2UTXxkzb0Rxz5BVnc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=L4YX0ufUuVgDfYxPxxkA3bLj666xhPc73qkr68CmSt7gtuFvf4GPvizi74gjID66g
+	 l/aa147nLychw1MaspxNQvCpg72VFUPhzg9aNoARMtaaM2VYIEicoYH4k0jY8PiH/e
+	 fcY3sNORDBqu6cK09GtUYTdCG27y1Af1ZAXTMn87ZvhxP45j/vKVBmsB39kGn2Zy73
+	 /S5oaELTbDX53i4JHjMgM+knhND35f7CfHDa9inZRs0QxbG1Fk+XaSQMa9pMdBgGga
+	 xp+szvUDx1ThJ1XQ71q1CkrB9H7Ezrgn/Fw+5MJVIvCIJJQtW7dWi/5i2jU/9mtq+J
+	 grH7Nfb+OjhKg==
+Message-ID: <sashiko-outbox-232604@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 2/2] perf test: Add filtered event enabled time tests
+ to event-times
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <c41f98313862f6545863598dcde871cfb80aba59.1795582691.git.irogers@google.com>
+References: <80d983c5713537f5743b69e9b35ced1177e4732e.1795582691.git.irogers@google.com>
+ <c41f98313862f6545863598dcde871cfb80aba59.1795582691.git.irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 25 Nov 2026 05:14:01 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -102,177 +60,95 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-References: <aSwt7yzFjVJCEmVp@gmail.com> <CAP-5=fXK8HORZaFUxydEatLV1xXQTcLLBnEMeveJYDHDQPkf_w@mail.gmail.com>
- <aS3WXn4nz9GE87bM@gmail.com> <CAP-5=fX6NFb_n8i5Pj5Dk2u+PGuHwxsoo4B7UbkPH_1+MhEYLg@mail.gmail.com>
-In-Reply-To: <CAP-5=fX6NFb_n8i5Pj5Dk2u+PGuHwxsoo4B7UbkPH_1+MhEYLg@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 24 Nov 2026 21:12:39 -0800
-X-Gm-Features: Aa3M54pMXwQWSACcK0YCwSgF8YXTiL1oMUPyf1A4vPk30_Tkt_1wYXetrMjmTLE
-Message-ID: <CAP-5=fUMR_jbxYCLFy81OfttXMASOP-TMp+hd7S3KThVLK8-GA@mail.gmail.com>
-Subject: Re: [PATCH] Fix (well, work around) perf stat --null segfault
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 1, 2025 at 3:33=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> On Mon, Dec 1, 2025 at 9:54=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wro=
-te:
-> >
-> >
-> > * Ian Rogers <irogers@google.com> wrote:
-> >
-> > > Agreed on the trainwreck :-) So NULL is a valid CPU map value. It
-> > > means no CPUs, but magically no CPUs can also be converted in the cod=
-e
-> > > to become the "any" CPU value of -1. So iterating the perf_cpu_map of
-> > > NULL will yield a single CPU of -1 :-( This behavior existed before m=
-y
-> > > time working on the code, I've tried to make the expectation in the
-> > > using code clearer, does the user want the magic "any" CPU behavior?
-> > > "any" CPU is distinct from every/all CPUs which would be something
-> > > like CPUs 0-127, and then does "all" include online and offline CPUs?
-> > > This is something that's been discussed and I think things can be
-> > > better, I'd rather the code was explicit whenever terms like "all",
-> > > "online" and "any" were being used - it is very easy to confuse "all"
-> > > and "any". I've been trying to adjust the code and make it more
-> > > sensible with changes like:
-> > > https://lore.kernel.org/all/20240202234057.2085863-1-irogers@google.c=
-om/
-> > > but I agree with you that things are a mess here. At least we
-> > > shouldn't be leaking memory (due to the reference count checking) and
-> > > we shouldn't confuse indices and CPU numbers (due to the introduction
-> > > of a wrapper type), problems that were pervasive and broke things lik=
-e
-> > > uncore counters frequently before.
-> > >
-> > > Fwiw, part of me thinks we should change the perf_cpu_map to be a
-> > > cpu_set_t, the "any" case could be an additional boolean in the
-> > > struct. Perhaps we can just auto change "all" to "any" as is somewhat
-> > > done here:
-> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-n=
-ext.git/tree/tools/lib/perf/evlist.c?h=3Dperf-tools-next#n92
-> > > Then perf_cpu_map can be a cpu_set_t and I think life will be clearer=
-.
-> >
-> > Yeah, so when I looked at the data structure a few
-> > minutes ago:
-> >
-> >         /**
-> >          * A sized, reference counted, sorted array of integers represe=
-nting CPU
-> >          * numbers. This is commonly used to capture which CPUs a PMU i=
-s associated
-> >          * with. The indices into the cpumap are frequently used as the=
-y avoid having
-> >          * gaps if CPU numbers were used. For events associated with a =
-pid, rather than
-> >          * a CPU, a single dummy map with an entry of -1 is used.
-> >          */
-> >         DECLARE_RC_STRUCT(perf_cpu_map) {
-> >                 refcount_t      refcnt;
-> >                 /** Length of the map array. */
-> >                 int             nr;
-> >                 /** The CPU values. */
-> >                 struct perf_cpu map[];
-> >         };
-> >
-> >
-> > My first thought was "Why isn't this a bitmask?". :-)
-> >
-> > The thing is, even with 8192 CPUs, the mask size is 1K.
-> > That's still not catastrophic compared to the nightmare
-> > of managing a [8192] array...
-> >
-> > And I would keep such core data structures as simple as
-> > possible: a single continuous bitmask. No sparse
-> > support, no NULL tricks. Just an always-present
-> > bitmask, and maybe an any/all modifier flag if the ABIs
-> > strongly suggest so.
-> >
-> > The closer a data structure is to the core concepts of
-> > a tool, the more important its robust KISS properties
-> > are - at almost any runtime cost. </handwaving> :)
->
-> Agreed. Some more things I can think of:
->
-> - the perf vs libperf separation is kind of redundant. The API of
-> libperf isn't good enough (no event parsing), nor stable and because
-> the license is GPLv2 doesn't benefit external users. It is a chore
-> making changes in two places and I think we should just focus on
-> making the python API the extension point.
->
-> - the /sys/bus/event_source/devices/<pmu>/cpumask aren't consistent in
-> whether there are hot plugged CPUs in there. Kan cleaned this up but
-> only as far as Intel PMUs:
-> https://lore.kernel.org/all/20240802151643.1691631-1-kan.liang@linux.inte=
-l.com/
->
-> - ARM PMUs ignore hot plugging leading to a scary intersect:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
-git/tree/tools/perf/arch/arm/util/pmu.c?h=3Dperf-tools-next#n42
->
-> But we did manage to make event encoding/displaying consistent with:
-> https://lore.kernel.org/lkml/20251005182430.2791371-1-irogers@google.com/
-> something I will no doubt get emails about in this v6.19 merge window :-)
->
-> > > Fwiw, even on the kernel side this is borked as I tried to explain in
-> > > this RFC with 0 follow ups:
-> > > https://lore.kernel.org/lkml/20250716223924.825772-1-irogers@google.c=
-om/
-> >
-> > So that's a neat patch and kudos on the ASCII graphics. :-)
-> >
-> > I'd suggest a re-send.
->
-> Agreed. I think it needs a refresh, I'll try to find the time.
+Thank you for your contribution! Sashiko AI review found 1 potential
+issue to consider:
+- [Low] perf test: open_core_pmu_event() skips PERF_TYPE_HARDWARE on
+  non-hybrid PMUs
+--
 
-Following up here: I've refreshed, tested, and sent out a non-RFC v2
-along with `perf test` coverage in:
-https://lore.kernel.org/linux-perf-users/80d983c5713537f5743b69e9b35ced1177=
-e4732e.1795582691.git.irogers@google.com/
+commit fe121646fb71356672075f12505ef2224215b814
+Author: Ian Rogers <irogers@google.com>
 
-Thanks,
-Ian
+perf test: Add filtered event enabled time tests to event-times
 
-> > > Imagine the case of an event opened with 1 CPU and a TID. The filter
-> > > will mean the counter only counts on the 1 CPU but the enabled and
-> > > running time will mean the counter will be scaled (on your system) 12=
-8
-> > > times!
-> > > All of this matters when you consider different events opened in the
-> > > same evlist and there being combined perf_cpu_maps like the evlist's
-> > > all_cpus value.
-> >
-> > > > -       nr =3D perf_cpu_map__max(evsel_list->core.all_cpus).cpu + 1=
-;
-> > > > +       if (evsel_list->core.all_cpus)
-> > > > +               nr =3D perf_cpu_map__max(evsel_list->core.all_cpus)=
-.cpu + 1;
-> > > > +       else
-> > > > +               nr =3D 0;
-> > >
-> > > So I think the better fix is to make max handle a NULL perf_cpu_map.
-> > > That will yield "any" CPU of -1 ( :-( ) and then the -1 + 1 will give
-> > > an empty aggregation map.
-> > >
-> > > I'll write this up, add the test and see if I can spot similar issues
-> > > wrt NULL in the vicinity in the perf_cpu_map code.
-> >
-> > Thank you! In the short run I'd prefer whichever fix
-> > can restore perf stat --null functionality the fastest. ;-)
->
-> Done in the series:
-> https://lore.kernel.org/lkml/20251201230904.290733-1-irogers@google.com/
->
-> Thanks,
-> Ian
->
-> > Thanks,
-> >
-> >         Ingo
+This commit extends the event-times perf test suite with subtests for task
+and CPU filtered events, hybrid PMU filtered events, and multiplexed or
+grouped filtered events, while updating the CPU affinity helpers.
+
+> diff --git a/tools/perf/tests/event-times.c b/tools/perf/tests/event-time=
+s.c
+> index 56dd37ca760ec..4c265f7918525 100644
+> --- a/tools/perf/tests/event-times.c
+> +++ b/tools/perf/tests/event-times.c
+[ ... ]
+> @@ -239,4 +251,475 @@ static int test__event_times(struct test_suite *tes=
+t __maybe_unused, int subtest
+>  	return ret;
+>  }
+> =20
+> -DEFINE_SUITE("Event times", event_times);
+[ ... ]
+> +static int open_core_pmu_event(const struct perf_pmu *pmu, pid_t pid, in=
+t cpu,
+> +			       int group_fd, bool disabled)
+> +{
+> +	struct perf_event_attr attr =3D {
+> +		.size =3D sizeof(attr),
+> +		.read_format =3D PERF_FORMAT_TOTAL_TIME_ENABLED |
+> +			       PERF_FORMAT_TOTAL_TIME_RUNNING,
+> +		.disabled =3D disabled ? 1 : 0,
+> +		.exclude_kernel =3D 1,
+> +		.exclude_hv =3D 1,
+> +	};
+> +	unsigned long flags =3D perf_event_open_cloexec_flag();
+> +	int fd;
+> +
+> +	if (!pmu) {
+> +		attr.type =3D PERF_TYPE_HARDWARE;
+> +		attr.config =3D PERF_COUNT_HW_CPU_CYCLES;
+> +		return sys_perf_event_open(&attr, pid, cpu, group_fd, flags);
+> +	}
+> +
+> +	if (perf_pmus__supports_extended_type()) {
+> +		attr.type =3D PERF_TYPE_HARDWARE;
+> +		attr.config =3D ((__u64)pmu->type << PERF_PMU_TYPE_SHIFT) |
+> +			      PERF_COUNT_HW_CPU_CYCLES;
+> +		fd =3D sys_perf_event_open(&attr, pid, cpu, group_fd, flags);
+> +		if (fd >=3D 0)
+> +			return fd;
+> +	}
+> +
+> +	attr.type =3D pmu->type;
+> +	attr.config =3D 0x3c;
+> +	fd =3D sys_perf_event_open(&attr, pid, cpu, group_fd, flags);
+> +	if (fd >=3D 0)
+> +		return fd;
+> +
+> +	attr.config =3D 0;
+> +	return sys_perf_event_open(&attr, pid, cpu, group_fd, flags);
+> +}
+
+[Severity: Low]
+Does open_core_pmu_event() ever try PERF_TYPE_HARDWARE on non-hybrid
+systems?
+
+Both callers check that pmu is non-NULL before calling
+open_core_pmu_event(), and perf_pmus__supports_extended_type() returns
+false when perf_pmus__num_core_pmus() <=3D 1.  As a result, non-hybrid
+systems skip PERF_TYPE_HARDWARE and fall through to attr.type =3D pmu->type
+(PERF_TYPE_RAW) with raw configs 0x3c and 0.  On architectures where those
+raw events are unsupported or rejected (for example, s390 rejects
+PERF_TYPE_RAW when exclude_kernel or exclude_hv is set),
+test__event_times_mux_migration() skips even though standard
+PERF_COUNT_HW_CPU_CYCLES is available.
+
+Trying PERF_TYPE_HARDWARE with PERF_COUNT_HW_CPU_CYCLES unconditionally
+(and only ORing in pmu->type << PERF_PMU_TYPE_SHIFT when
+perf_pmus__supports_extended_type() is true) would allow non-hybrid
+systems to use the generic hardware cycles event before falling back to
+raw configs.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/80d983c5713537f5743=
+b69e9b35ced1177e4732e.1795582691.git.irogers@google.com?part=3D2
