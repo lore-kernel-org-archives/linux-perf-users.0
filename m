@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795634650;
-	b=zZD826GyKHJREEWBysM4LLkDxXbAJQD2NytqgpEijh49hOxrfLGMmz8Y1DzyLl6PIGAd
-	 jByqrYBSKHmPBWRf1Qim3zruHTSmgAuBIdGk3uNrch4sz5IpZDNZvfgMYEMjkWUgRUkOG
-	 Kb8vfptNWBILwERbLZrzf6Wt+NU3Ni986vdtJfyrqf/yAF2Zvll0un+VT0IhwNMX1SZ88
-	 BtPf7xlR6PRnzHrsUo7xRrZ12CIb95IqWPQ6WUzO6StbS/JZvyT1RJgdB8U1kR02GyhJt
-	 OK/LIOoTazV7Tugf5nKDJD7kkj2kUNfnCf5Apz3PLRJXAvPKVblA1Mp4is2T5K6aICw==
+	t=1795634657;
+	b=2vsifDoBrpN8hz3etgtcnLxSb8D2NC2h8BngR1444EvnLwwiFb2qWdf/KWmbC1sOh5AM
+	 iLX+vZKwL41FoI0kWxiXaVeT1ajDWydtc/zSFbwounsTfOcUbqVF/KYOgWk72Ev4TnmhF
+	 Xr3QosGTr3Ew3y2RXEKGnRiOZ8arAMhmH/07E0E724OP/ERhj9xhGKkW/u5O8IFXdJXDi
+	 R4msg0FoE+sSuQo7gfHTq6vL4ZfvXCs8tR6w7f2Zkeg+J4sekWpqsu78kAqN3ZWINjUgz
+	 UvlmV3vZQEon+tncpvP2tQpUxjuydTS8qArA/LJTOrpCfaSnRANgzAKe/u85HXBJmUA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795634650;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795634657;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=salfeQFlmGPsAyKGQjgwjrheD0amYhnaDYI9pSIJYKw=;
-	b=UUWPfhT7lQY3zIWg1t1lb4gOwefX6Bv9cHVZEUnjHCK/SV7JcqQBiW7i2umsC4OTVvJc
-	 zd2P2ziY9/lO5T7bxC/kw8gk5IP3buE74zvpJmrBO78Sbf9cPR86kKLynsWkv3+4qADx9
-	 QnYluFE5HL7Ac+wjpLcQXnPTpsubfgsD4ohiAjjCZ7jsIUdrih5jQNm1gVp7dmiV+LCKc
-	 7l78FYeYZN4T943yA7ydBn8MirdXO+qAXBChiPfaMAaAxghraeckJlsIPRkV7lXc8oiOX
-	 OpfycKrMjRQ3IYm0S1Qm6yF6DkMRUauM6J0tS1PvHDhHEF4adf8c/D8l6aGIb70bqkQ==
+	bh=szWoBBkaaybqAV8yTP+DE9/CHBddLTwI9vS5xMrLr9o=;
+	b=n0V15FRK+ERCQyf6Ky+tPWwJgE+UxM8ltJEdebutJCtzlddQ/WHLZhu8ZAyk828V0JuC
+	 QP/Gd48hdAR+VBT9b9gGg5dWdhJ3yO0XuJv1m9GFqr5wunW4S4UFgimtklExHmcK8vKGY
+	 aRV18q+AiuJ92+m7aTkJ8yDNU7LhDfJteM4Kn69CFqpzPanOWFzhrmgPw7lRrjWulnsR6
+	 4OXey62sxIieb+krWrkSzTw1G1gWnvAmuVNcIDV8EgX/pmUdmIgC0MLasS7Hy4NVK8HRI
+	 FHzUIw0IP8oc4OSki1WrGjmUzas6BblMmC9zCFrQjtBH4Zm6n7sIb5ZMPKco3LiN9CQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VgUjby6z;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bQlaZdrW;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616ED606A32A;
-	Wed, 25 Nov 2026 19:24:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D154A606A6A9;
+	Wed, 25 Nov 2026 19:24:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=VgUjby6z
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 394951F000D0;
-	Wed, 25 Nov 2026 19:24:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bQlaZdrW
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC9B41F000F2;
+	Wed, 25 Nov 2026 19:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795634649;
-	bh=salfeQFlmGPsAyKGQjgwjrheD0amYhnaDYI9pSIJYKw=;
+	s=k20260515; t=1795634657;
+	bh=szWoBBkaaybqAV8yTP+DE9/CHBddLTwI9vS5xMrLr9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=VgUjby6zHrQ7TtwMFo19LED1Cmz0Z/OLRXO1W6wBOxa2EiPqCyo7MTylbh9NiFg6Z
-	 bhWrUxQn0fyMBX9cAZR+FWq75QRmO4VKb/ZCMi9EYOCpOdt0x+qeJyXde3+99aVdW7
-	 mpOc4vO4Heqd9W9fEN4yckd0kqIVjYT+oKevJvEJu74JSY3zI0x2bd+Ji/E8CmKWFG
-	 Y2QCGxdiRf7cB7TCXORFNm81JwIEwrOWZ8wzh5qzLO9BOUgmgajxtdAEsIFrKG7QAU
-	 GWz1fXRueYmATSuoPYGI07L6ldSRKU8FxjA8CF400NadH4r8dnCqjqwMCv+ZDLGqBW
-	 DyBe1qSHRjdHA==
+	b=bQlaZdrWnmSW/O87CWfBhfs62CFL7m11e3/EyUsP6VNdwGs01zvnsJbe8XsLFyOV+
+	 XslxUv2nHUzJgZRVHoUbfNfmLaW42+6GLDNftgL/PqOlSmvKx1Zlu1dQ1JduK/NMBY
+	 i1L8SD/u+R5S624aJ1ERaUPWsYd0Cy/qmoTKFvSGGGd2MiUozIUQunqwtrilf6addG
+	 cbzqnpcT6iM7uyyKwTg7SKzh4Bal2sWPDeagAAWRZWqHuf/+0Nt2xi57Z2g2Vjrv4i
+	 RBy7l02Kvw6scO9b+FbPKgZj+coEiUTO04nQaLBakYDg8huieshAMdtGXpVYxXO97k
+	 q67YwOBnhsS2w==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v13 15/19] perf test: Skip the LBR inline unwinding check when unsupported
-Date: Wed, 25 Nov 2026 16:23:08 -0300
-Message-ID: <20261125192312.34134-16-acme@kernel.org>
+Subject: [PATCH v13 17/19] perf test: Avoid online CPUs in the offline stat test
+Date: Wed, 25 Nov 2026 16:23:10 -0300
+Message-ID: <20261125192312.34134-18-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261125192312.34134-1-acme@kernel.org>
 References: <20261125192312.34134-1-acme@kernel.org>
@@ -70,58 +70,61 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The LBR check takes caps/branches as sufficient to record cycles with
---call-graph lbr, but the file only says the PMU has an LBR: AMD LBRv2
-rejects the call stack mode with EOPNOTSUPP, so the test fails on AMD
-instead of skipping.
+find_offline_cpu() treats a missing cpuN/online file as an offline CPU,
+but kernels without CPU hotplug also lack it for online CPUs.  The test
+then expects "No supported events found." from a working CPU.
 
-Skip when perf says the branch stack mode is unsupported, so a record
-that fails for another reason still shows its error and fails the test.
+Treat a present CPU as offline only if its online file reads 0.  Keep
+the absent cpuN case to exercise an invalid CPU, and skip if neither
+exists.
 
-Fixes: 446c595dc0dd1759 ("perf test addr2line_inlines: Ensure inline information shows on LBR leaves")
+Fixes: 5123509628e1ebe7 ("perf tests stat: Add test for error for an offline CPU")
 Cc: Ian Rogers <irogers@google.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/addr2line_inlines.sh | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ tools/perf/tests/shell/stat.sh | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/tests/shell/addr2line_inlines.sh b/tools/perf/tests/shell/addr2line_inlines.sh
-index e8754ef2d7f21ac2..02a896c9d99cb2ac 100755
---- a/tools/perf/tests/shell/addr2line_inlines.sh
-+++ b/tools/perf/tests/shell/addr2line_inlines.sh
-@@ -8,6 +8,7 @@ err=0
- test_dir=$(mktemp -d /tmp/perf-test-inline-addr2line.XXXXXXXXXX)
- perf_data="${test_dir}/perf.data"
- perf_script_txt="${test_dir}/perf_script.txt"
-+perf_record_err="${test_dir}/perf_record.err"
+diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
+index ac9e031831daca9c..7cd9999fd526bbd6 100755
+--- a/tools/perf/tests/shell/stat.sh
++++ b/tools/perf/tests/shell/stat.sh
+@@ -43,21 +43,28 @@ test_null_stat() {
+ }
  
- cleanup() {
-     rm -rf "${test_dir}"
-@@ -71,7 +72,23 @@ test_lbr() {
-     fi
- 
-     # Record data. Currently only dwarf callchains support inlined functions.
--    perf record --call-graph lbr -e cycles:u -o "${perf_data}" -- perf test -w inlineloop 1
-+    # caps/branches does not mean the LBR call stack is supported: AMD LBRv2
-+    # rejects it with EOPNOTSUPP.  Skip only when perf says the branch stack
-+    # mode is unsupported, other record failures still fail the test.
-+    if ! perf record --call-graph lbr -e cycles:u -o "${perf_data}" -- \
-+            perf test -w inlineloop 1 2> "${perf_record_err}"
+ find_offline_cpu() {
+-  for i in $(seq 1 4096)
++  for i in $(seq 0 4096)
+   do
+-    if [[ ! -f /sys/devices/system/cpu/cpu$i/online || \
+-          $(cat /sys/devices/system/cpu/cpu$i/online) == "0" ]]
++    if [[ ! -d /sys/devices/system/cpu/cpu$i ]]
+     then
+       echo $i
+-      return
++      return 0
++    elif [[ -f /sys/devices/system/cpu/cpu$i/online && \
++            $(cat /sys/devices/system/cpu/cpu$i/online) == "0" ]]
 +    then
-+        if grep -q "doesn't support branch stack sampling" "${perf_record_err}"
-+        then
-+            echo "Skip: LBR call stack not supported by the PMU"
-+        else
-+            cat "${perf_record_err}"
-+            echo "Inline unwinding lbr verification test [Failed to record]"
-+            err=1
-+        fi
-+        return
-+    fi
-+    cat "${perf_record_err}"
++      echo $i
++      return 0
+     fi
+   done
+-  echo "Failed to find offline CPU"
+-  exit 1
++  return 1
+ }
  
-     # Check output with inline (default) and srcline
-     perf script -i "${perf_data}" --fields +srcline > "${perf_script_txt}"
+ test_offline_cpu_stat() {
+-  cpu=$(find_offline_cpu)
++  if ! cpu=$(find_offline_cpu)
++  then
++    echo "Offline CPU stat command test [Skipped - no offline CPU]"
++    return
++  fi
+   echo "Offline CPU stat command test (cpu $cpu)"
+   if ! perf stat "-C$cpu" -e cycles true 2>&1 | grep -E -q "No supported events found."
+   then
 -- 
 2.56.0
 
