@@ -1,56 +1,77 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=170.10.129.124
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795630969;
-	b=4/PYz1ioHxgydsCaUKxD0JzVb+FiUL4C+GDDkr854sfHLhd+Ol9ZARmalro1vK1DBBhf
-	 JFo97m8xL3mHy7BTiJum5Rg5qh1zbf4fX8CageI6tStkisjF+dxyV2WeVyrCgmsJGH/JS
-	 5lWG56UHYr8y7qyvdl052e0jcbggF/+dN82T2LInGuMUu98HfM8UQ6hHiVslJ6VyiUzga
-	 Gd15N5JSOhWMePDjZhwi9KXf6ksMN4NycZRgDAa778AuNL8kP8znWuwR12U8M9aLMLHHt
-	 WnW3zA4ZAlrjLxPI9PDmw8n3gjHL4BIPajNNcGAZbtaYoJXCZUnNcHH0pLXVUbJGpYg==
+	t=1795631244;
+	b=TYmmD1QgH7L4nnPdkSICn4Ok0JRHdri5N0/5atKXF+40LQFDnu3zoCDb8XO6o6cpMEcU
+	 L6T1mZ3Uy7ooGAYhOdtMUdbxWHz9AdvqVqLq3hKJE1+kton9ZCpR1M1fPGvnK6wMTHDxf
+	 kRQVqwiFdGseviC0S57vGXJhlV6FD0KMeJBKL5d/mZkyRZI1d8N4eFW0O3X2D60tDYcmF
+	 ch9fowyTjrKG4e284bJ8p8aXSaXUAVFpDKxYprWapukygxJ9Fi4HAn84vPkVj1DHQJEua
+	 QL5ppi1sRj8eMj6Bc5Ruci/Z99MVO081hf8MN1oxIJrIPx2WM8REwEB4ok+0SA18lhw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795630969;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=2J1VQzsB87BW8DLXcmbw0G/9bucBGY1jjkX13LRsTHU=;
-	b=s9QXVI4IOZ5rIBLDep4j+Ul3gR6QGD/z1YIJJECcwxG+GtkC1MdtkOPMOM6MBri2G2ZA
-	 P3CSEU5cIBuSaNiw8bzlVdexQDRXT8QYk0KEOAj9NjOL/BhsSqgwFfh0GN/zZfrD7LAYM
-	 g6RhlZXu+tVj+MAlEoMdWSAPLQsJiCWDj6jx8E59ZbeIk5RyAhfhcTG7z32pVyJCXIIl9
-	 54b2yhkDlwSYu11yI06/gV1DWETAQGmZ/mABP5sStIzfFZIN1gau1KGxoTgeytJXZdOVW
-	 UdfJxTXhXl157rEnMHSbyl5Xjs60qLvQQWC6d2C7s04ZIkAOdDLIFlSRSCE8VuuKWsg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795631244;
+	h=DMARC-Filter:DKIM-Signature:Received:X-MC-Unique:
+	 X-Mimecast-MFC-AGG-ID:Received:Received:Received:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:X-Scanned-By;
+	bh=AdJ2OcPY7PZL5nLS/dMp3rb5ggUheY55JCQ/vRYqFRQ=;
+	b=UyP7qNjZdzyK3FdszovtGidHOCTqpId91e3u+3oMWlFylNi4WgRcuPlmwV+A2WBaL8qR
+	 b7nkJ/Mtqr3UhA7r01qCxBjI9ZK/U+2YvyWaR2XjDegifYR8E1ih08A52QRu0KsgdNRV7
+	 cZHm5JsQE7QTt3D4Hw2AEWkJwo0yDX65CGGK56ksLcyQVlCX8as0um3L13EzEzxDLSvmF
+	 hUF0Ie63HSdurcyCFrEmA0AzSkvt+Fti6CEt7dedNlThc08Qfo/PNb5kJb4AzhxtfBj7F
+	 F7ZypixMlznFUOMcKKVTUg1Obv1UgFCWmDClLKdCNmwLznnSkCd/oPFXgthPgu+h3JQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JONH7iEe;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	dmarc=pass header.from=redhat.com;
+	spf=pass smtp.mailfrom=redhat.com;
+	dkim=pass header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=I9KrzvMb;
+	arc=none smtp.remote-ip=170.10.129.124
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2068606A323
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 18:22:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F88606A32C
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 18:27:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 56F88606A32C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=JONH7iEe
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 006021F000D0;
-	Wed, 25 Nov 2026 18:22:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795630969;
-	bh=2J1VQzsB87BW8DLXcmbw0G/9bucBGY1jjkX13LRsTHU=;
-	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
-	b=JONH7iEelmvcb500DjzyMO0PaaMdwPHBBMa2gB/sU/yBc1EDv8gdCjbdWCiVzsm6t
-	 mkMB3YAmTUcXT7Az+LLuanq70qNylBi3N2P58ygHxbdoX5/8u10kNkb3rfE2xoF7Md
-	 AZs2bi6paee+bUPa7tXNb3IbTvFfz0HF1ybznmelsJlcPiUqahAAkFFG6aRq56oiTT
-	 uLZYs/LgPTLmM313u941zUzZTJKO5NyZm5e7wm41zcYg9t+DAUc3R6YvD5HppeE/ng
-	 8Ri1QrCUcXdWIGUh1JByPDGrMfta1xbT8r9R6fjXPtyz3r3PEbPTNO42IvDWe7S7rD
-	 sIYNQKvA4HpWw==
-Message-ID: <sashiko-outbox-233976@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8] perf stat: Refuse a group mixing tool and kernel
- events
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "TAKANO Mitsuhiro" <takano32@gmail.com>, linux-perf-users@vger.kernel.org
-In-Reply-To: <20261125175450.2373258-1-takano32@gmail.com>
-References: <20261125133854.2180695-1-takano32@gmail.com>
- <20261125175450.2373258-1-takano32@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 25 Nov 2026 18:22:48 +0000
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=I9KrzvMb
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1795631243;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AdJ2OcPY7PZL5nLS/dMp3rb5ggUheY55JCQ/vRYqFRQ=;
+	b=I9KrzvMbUn/ZM0UErAh6Fi1NR1rre9/AoWLneOEFnCgLGsiYhtXpa8i/Y1tUJwt4vK3KQO
+	jkbdP0wSt5v7ZBe6KoBd8H6XOX5mBSBqBqHOE124FlcWJH1UBfW0C+/H+4LoixFga0a4NB
+	RBLUyPmeQ9vcLabXrl7h/uYGVpwQ4l8=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-321-SVBYfSOMM1O8gH4B10pXrA-1; Wed,
+ 25 Nov 2026 18:27:19 +0000
+X-MC-Unique: SVBYfSOMM1O8gH4B10pXrA-1
+X-Mimecast-MFC-AGG-ID: SVBYfSOMM1O8gH4B10pXrA_1795631237
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 790AF18002A1;
+	Wed, 25 Nov 2026 18:27:17 +0000 (UTC)
+Received: from onestero-thinkpadp1gen7.tpbc.csb (headnet04.pony-001.prod.iad2.dc.redhat.com [10.2.32.116])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id E25AE195608C;
+	Wed, 25 Nov 2026 18:27:14 +0000 (UTC)
+Received: by onestero-thinkpadp1gen7.tpbc.csb (nbSMTP-1.00) for uid 13628
+	oleg@redhat.com; Wed, 25 Nov 2026 19:27:17 +0100 (CET)
+Date: Wed, 25 Nov 2026 19:27:13 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Avi Weiss <thnkslprpt@gmail.com>
+Cc: mhiramat@kernel.org, peterz@infradead.org, andrii@kernel.org,
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] uprobes: avoid postponing return-probe SRCU lease
+ expiration
+Message-ID: <awcogTgVYXBEDD-2@redhat.com>
+References: <20261124091252.567037-1-thnkslprpt@gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -59,84 +80,52 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261124091252.567037-1-thnkslprpt@gmail.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Thank you for your contribution! Sashiko AI review found 1 potential
-issue to consider:
-- [Medium] perf tests stat+tool_group.sh: broken hwmon PMU discovery and
-  event group test
---
+On 11/24, Avi Weiss wrote:
+>
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -2052,6 +2052,13 @@ static void ri_timer(struct timer_list *timer)
+>  	 */
+>  	raw_write_seqcount_begin(&utask->ri_seqcount);
+>  
+> +	/*
+> +	 * expire_timers() calls detach_timer() before invoking us.
+> +	 * Order its pending-state store before loading return_instances.
+> +	 * A publisher that saw the timer pending must be visible here.
+> +	 */
+> +	smp_mb();
+> +
+>  	for_each_ret_instance_rcu(ri, utask->return_instances)
+>  		hprobe_expire(&ri->hprobe, false);
+>  
+> @@ -2304,7 +2311,16 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs,
+>  	ri->next = utask->return_instances;
+>  	rcu_assign_pointer(utask->return_instances, ri);
+>  
+> -	mod_timer(&utask->ri_timer, jiffies + RI_TIMER_PERIOD);
+> +	/*
+> +	 * Order the return-instance store before timer_pending() loads
+> +	 * the pending state. Either the callback sees this instance or
+> +	 * we rearm the timer.
+> +	 */
+> +	smp_mb();
+> +	if (!timer_pending(&utask->ri_timer)) {
+> +		utask->ri_timer.expires = jiffies + RI_TIMER_PERIOD;
+> +		add_timer(&utask->ri_timer);
+> +	}
 
-commit de61381e655671f0d4ffde4221e3cc5db6ec0e53
-Author: TAKANO Mitsuhiro <takano32@gmail.com>
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 
-perf stat: Refuse a group mixing tool and kernel events
 
-This commit refuses event groups that mix kernel events with events not
-opened via perf_event_open() (such as tool, hwmon, and drm events), guards
-against NULL file descriptor arrays when enabling or disabling group
-members or looking up group fds, and adds a shell test covering tool event
-groups.
+But... If you ever send V3 for any reason, please also add the
+"pairs with ..." comments back. At the start of the new (and imo good)
+comments which explain why is this barrier needed.
 
-Link: https://lore.kernel.org/all/sashiko-outbox-227849@kernel.org/
-Link: https://lore.kernel.org/all/sashiko-outbox-231330@kernel.org/
-Link: https://lore.kernel.org/all/sashiko-outbox-232396@kernel.org/
-Link: https://lore.kernel.org/all/20261111-tool-pmu-leader-v2-1-3faa0fb98c5=
-1@gmail.com/
-Link: https://lore.kernel.org/all/awC_aZXD5FBGu4mO@google.com/
-Link: https://lore.kernel.org/all/awTXdgY38s2bijW5@google.com/
-Link: https://lore.kernel.org/all/20261123071913.653315-7-irogers@google.co=
-m/
+Oleg.
 
-> diff --git a/tools/perf/tests/shell/stat+tool_group.sh b/tools/perf/tests=
-/shell/stat+tool_group.sh
-> new file mode 100755
-> index 0000000000000..93860252593c6
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/stat+tool_group.sh
-> @@ -0,0 +1,326 @@
-[ ... ]
-> +# An hwmon event is read by perf from a sysfs file rather than opened wi=
-th
-> +# perf_event_open(), so it is in the same position as a tool event in a
-> +# group.  Not every system has an hwmon PMU, and the name differs per ch=
-ip.
-> +hwmon=3D
-> +for dir in /sys/bus/event_source/devices/hwmon_*; do
-> +  if [ -e "${dir}" ]; then
-> +    hwmon=3D$(basename "${dir}")
-> +    break
-> +  fi
-> +done
-[ ... ]
-> +# An hwmon event reads a sysfs file, so the group is refused the same wa=
-y.
-> +# The message differs from the tool one, and the PMU has to be there to
-> +# exercise it.
-> +if [ -n "${hwmon}" ]; then
-> +  refused "{cycles,${hwmon}}" "${hwmon}"
-> +else
-> +  echo "Testing that perf stat refuses a group of an hwmon event and cyc=
-les  [Skipped]"
-> +  skipped=3D$((skipped + 1))
-> +fi
-
-[Severity: Medium]
-Can this hwmon test case ever run or pass?
-
-perf synthesizes hwmon PMUs in userspace from /sys/class/hwmon/ in
-perf_pmus__read_hwmon_pmus(), so /sys/bus/event_source/devices/hwmon_*
-does not exist and the test is always skipped.
-
-Even if an hwmon PMU is discovered, hwmon_pmu__new() leaves pmu.selectable
-false, so passing a bare PMU name in "{cycles,${hwmon}}" fails in the
-event parser with a syntax error (exit 129) rather than an event term such
-as hwmon_<name>/<event>/.  In addition, pairing an hwmon event with cycles
-is split into two ungrouped events by
-parse_events__sort_events_and_fix_groups() because perf_pmu__is_software()
-is false for both PMUs; keeping the group intact past the parser so it
-reaches check_unopened_in_group() requires pairing the hwmon event with a
-software PMU event such as cpu-clock.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261125175450.2373=
-258-1-takano32@gmail.com?part=3D1
