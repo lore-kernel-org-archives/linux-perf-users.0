@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795642135;
-	b=0VFaIbuk8lDIvzPrb7liHgjzcvew1E152NmOt8ww4tBt595Lv2VSJfjQozCRF+VZwdCP
-	 LHSN5RQ6xOe/g1pHcpAXtJdoE02wxzFbDb0O2LqRlcsoSx9mVM099k/qAJ97WFM1qXpx3
-	 zF6UVKffIg6KnEwmUf02I8l8rbrSpRZ/HXZaJFTUTdhIStPYdEsmIWYZa3frZ1jFczqtF
-	 0MMH/yvvYaANQCKviPqd38hi0Vls7IEcvMFdly5ma4scjA5cRYxxwBMshDHDSxIL/ZB2b
-	 FIEiAvElYW1G5E312gwHwL1JL/k9HYpjT2wc3LPOwEL7DD2G4Q6FQKF+GuTH51R+DIQ==
+	t=1795642140;
+	b=pSzj4SZdRk6rPmb54tr3ZbJ+5r7lRMe+Jny4KqFQgJwA7baNz5H5G5iXJScUjAehhetv
+	 HE1dobGPP8ixw4JD6Svxm3EniRk0DGg0R+O7JzqVipSKlqsPPcVy9LHMHgOEceJ33PJDV
+	 tEL4eJkFi7xEwiIKTYZXMoX1LPr9BjjfDVqlrcOi9uLeWj4KITNF7l/8viUBg2yeIyrII
+	 9jkCt2DH7RKB0oGMFrYoGJzmGv15mCSZ9ynE+wJhvvcAptJyubsWEcpfSH9ufMveZJdOV
+	 NZOCCqWCYSQmFe7COgDo+TVwlQJrhl89xDYoC2S8qX89DM6MOPuJcEw+sXYVS5oja0w==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795642135;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795642140;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=CPnqyeWweMWgBRs3z1xR7isp6gBCLKx+85iucAJauFc=;
-	b=dhGhLmtKUXwP6FCR7o868q0xpio7mMHtL0qMw4mAiRNhw9Gv4u3qI4KnLvtCF/mNsbia
-	 bHazlNcSDEUP2/w8iVfLOzXMlUs37u515gqJBlx6VnA5P80YBpVnI4LSypA5WyQz4olHv
-	 sQvXmSgriL+Og5USrflXT136VlZsWHrsG0CYkU20oZmKnfqZpUZymowJ83dFgPS2J6/wV
-	 5UzBlhbjgsZyw9dCWoy8iwjbdLvHIDXv5g/uOCI9xcyFdcYTp08m4oCN5yZpRCuR5JCll
-	 1ePbYSmssaNuT5cZIKzXuNoAeZOlC0MaNXZQYw2SruOSC8pYK+XCq6H7KsuvboDnLKw==
+	bh=QVIaNqvm6C/yHL90s4yhpWa9CT2zuw5OCjmLKtDNIDI=;
+	b=n+bvo4XL/X07QCSwu1GIAoxaV95ylYu9nyPwv1AJMM4x6hXfJpOpQZrvAFH1iaXtfS9M
+	 YDJmDE3iUWzblQTRo0zBqEzWykzufG9/jD30wIVP1GiFrxbF1pWGCAU3AAORM5WHa1ifR
+	 /IwhPwXSDmPPVAizI0p9JiGmVXJam2HjWg8YWyaZVyvqYk8vbUPnCtZK84hHMOXto/OTd
+	 AaHNILfFyp9b+fNa5Z5qVtPS7W5VISIZAATDqWrt5gZfO02xNkgIUHTwYAKEB6t0eMyk9
+	 v3XqgHRBUu8O3Ya5my3V7CLCvc5N+3gQUbofpZ7mvVHl5tC0Csv1PnNhfC4OP/c2+tA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XWZX4WfW;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Y3ra7kDB;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CA0606A333;
-	Wed, 25 Nov 2026 21:28:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8951606A6A0;
+	Wed, 25 Nov 2026 21:29:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XWZX4WfW
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 052031F000D0;
-	Wed, 25 Nov 2026 21:28:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Y3ra7kDB
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B96D01F0156A;
+	Wed, 25 Nov 2026 21:28:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795642135;
-	bh=CPnqyeWweMWgBRs3z1xR7isp6gBCLKx+85iucAJauFc=;
+	s=k20260515; t=1795642140;
+	bh=QVIaNqvm6C/yHL90s4yhpWa9CT2zuw5OCjmLKtDNIDI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=XWZX4WfWhBqIEDQ7w3XiDk0XVn70F2Vy3MsbnNsqu0vvvsu7ln399l5ZfcceK9wAb
-	 STMbhffVOvDrruWzeZjWq5KfMmlx30+8jSh8JDJwX29nR47rlX0Nfj9uTQk894NVwE
-	 MXCbAu3Nr+kRhZ0ZNm+yk7hUBKQmeL4OBJHQB7f7AKmRcwJLi4Fq3EOJGpA5f6w8aK
-	 HFZEBk4all1ipJMJZKKP2vtTkujd9FOW6FhsaKsbI0wyWFs7Lw3hOSrce3ODfG/Vvr
-	 Gl08O0mQ/by1tGYlp1AGRXXbzz1ye5mnnVU3EGdWF4cnPSOwWSCNtG0SX+bVs0DI8J
-	 Wst3VTsy/9FUQ==
+	b=Y3ra7kDB+eStAci+grVW4c8w5L04DFotwHqUAhkPdKeV7jS3cYo+yj/n1zNFIGWAP
+	 ATfQYwzN7+Lck1+mWQRYxnYqpTG36LqlKxpOszIMNeaaZ3P+miDOn7BX5y6dP3vjwJ
+	 9Vph4cxJqcnpzgNNg54piLddUCJ9LgiveDTvRrexS3FkNAPWt9yqSdK18TQPh6jwkC
+	 7P+dLGeZboEmDzGPr3TfdC+OpO9LQz6a7u+RGCusIMci+bnvxeP4bA4+JZtrqZz0Wf
+	 rS3JNLjoDldGIkAWzCYTSXN8NJm8vet80bBtBwh/YqXYui9vPQoe1elHsqn7JPTzAr
+	 3V/bJcaAIxRnA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -49,9 +49,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v4 04/11] perf tools: Add lock to struct nsinfo
-Date: Wed, 25 Nov 2026 13:28:44 -0800
-Message-ID: <20261125212851.1792988-5-namhyung@kernel.org>
+Subject: [PATCH v4 09/11] perf tools: Only enter mount namespace if necessary
+Date: Wed, 25 Nov 2026 13:28:49 -0800
+Message-ID: <20261125212851.1792988-10-namhyung@kernel.org>
 X-Mailer: git-send-email 2.56.1.839.g22a8290db9-goog
 In-Reply-To: <20261125212851.1792988-1-namhyung@kernel.org>
 References: <20261125212851.1792988-1-namhyung@kernel.org>
@@ -66,315 +66,290 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A struct nsinfo instance can be shared across threads via
-thread->nsinfo and dso->nsinfo.  Add a mutex lock inside struct nsinfo
-to synchronize access to its fields, initialization, copying, and mount
-namespace path duplication in nsinfo__mountns_enter().
+Add dso_binary_type__needs_ns() to distinguish DSO binary and debuginfo
+types that reside inside the target process's mount namespace from
+host-side paths.
+
+Gate mount namespace entry in open_dso(), dso__find_binary_type_locked(),
+dso__find_dbginfo_type(), __dso__read_symbol(), debuginfo__new(),
+symbol__disassemble(), and symbol__disassemble_capstone_powerpc() using
+dso_binary_type__needs_ns().
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/namespaces.c | 135 ++++++++++++++++++++++++++++-------
- tools/perf/util/namespaces.h |  12 ++--
- 2 files changed, 115 insertions(+), 32 deletions(-)
+ tools/perf/util/capstone.c  |  8 ++++--
+ tools/perf/util/debuginfo.c | 19 +++++++++-----
+ tools/perf/util/disasm.c    |  8 +++++-
+ tools/perf/util/dso.c       | 51 +++++++++++++++++++++++++++++--------
+ tools/perf/util/dso.h       | 34 +++++++++++++++++++++++++
+ 5 files changed, 100 insertions(+), 20 deletions(-)
 
-diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
-index f426eba04d6ef449..75c2b0ec778ab25b 100644
---- a/tools/perf/util/namespaces.c
-+++ b/tools/perf/util/namespaces.c
-@@ -94,7 +94,14 @@ static int nsinfo__get_nspid(pid_t *tgid, pid_t *nstgid, bool *in_pidns, const c
- 	return 0;
- }
+diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
+index 95881f15324aa614..e1de77879c5e5f97 100644
+--- a/tools/perf/util/capstone.c
++++ b/tools/perf/util/capstone.c
+@@ -649,13 +649,17 @@ int symbol__disassemble_capstone_powerpc(const char *filename __maybe_unused,
+ 	bool disassembler_style = false;
+ 	uint16_t e_machine = EM_NONE;
+ 	bool is_big_endian = false;
++	bool nsenter;
  
--int nsinfo__init(struct nsinfo *nsi)
-+static struct mutex *nsinfo__lock(const struct nsinfo *nsi)
-+	__returns_ctx_lock(&RC_CHK_ACCESS(nsi)->lock)
-+{
-+	return (struct mutex *)&RC_CHK_ACCESS(nsi)->lock;
-+}
-+
-+static int nsinfo__init_locked(struct nsinfo *nsi)
-+	__must_hold(nsinfo__lock(nsi))
+ 	if (args->options->objdump_path)
+ 		return -1;
+ 
+-	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
++	nsenter = dso_binary_type__needs_ns(dso__binary_type(dso));
++	if (nsenter)
++		nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+ 	fd = open(filename, O_RDONLY);
+-	nsinfo__mountns_exit(&nsc);
++	if (nsenter)
++		nsinfo__mountns_exit(&nsc);
+ 	if (fd < 0)
+ 		return -1;
+ 
+diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
+index db188c397d63880c..d339906c28b41425 100644
+--- a/tools/perf/util/debuginfo.c
++++ b/tools/perf/util/debuginfo.c
+@@ -17,6 +17,7 @@
+ #include "dso.h"
+ #include "debug.h"
+ #include "debuginfo.h"
++#include "namespaces.h"
+ #include "symbol.h"
+ 
+ #ifdef HAVE_DEBUGINFOD_SUPPORT
+@@ -93,17 +94,23 @@ static struct debuginfo *__debuginfo__new(const char *path)
+ 
+ struct debuginfo *debuginfo__new(struct dso *dso)
  {
- 	char oldns[PATH_MAX];
- 	char spath[PATH_MAX];
-@@ -140,14 +147,29 @@ int nsinfo__init(struct nsinfo *nsi)
- 	return rv;
- }
+-	struct debuginfo *dinfo;
++	struct debuginfo *dinfo = NULL;
++	struct nscookie nsc;
+ 	char *path;
+ 	bool decomp = false;
++	bool nsenter;
  
-+int nsinfo__init(struct nsinfo *nsi)
-+{
-+	int rv;
-+
-+	if (!nsi)
-+		return -1;
-+
-+	mutex_lock(nsinfo__lock(nsi));
-+	rv = nsinfo__init_locked(nsi);
-+	mutex_unlock(nsinfo__lock(nsi));
-+	return rv;
-+}
-+
- static struct nsinfo *nsinfo__alloc(void)
- {
- 	struct nsinfo *res;
- 	RC_STRUCT(nsinfo) *nsi;
- 
- 	nsi = calloc(1, sizeof(*nsi));
--	if (ADD_RC_CHK(res, nsi))
-+	if (ADD_RC_CHK(res, nsi)) {
- 		refcount_set(&nsi->refcnt, 1);
-+		mutex_init(&nsi->lock);
-+	}
- 
- 	return res;
- }
-@@ -165,10 +187,12 @@ struct nsinfo *nsinfo__new_thread(pid_t pid, pid_t tid)
- 
- 	RC_CHK_ACCESS(nsi)->pid = pid;
- 	RC_CHK_ACCESS(nsi)->tid = tid;
-+	mutex_lock(nsinfo__lock(nsi));
- 	RC_CHK_ACCESS(nsi)->tgid = pid;
- 	RC_CHK_ACCESS(nsi)->nstgid = pid;
--	nsinfo__clear_need_setns(nsi);
- 	RC_CHK_ACCESS(nsi)->in_pidns = false;
-+	mutex_unlock(nsinfo__lock(nsi));
-+	nsinfo__clear_need_setns(nsi);
- 	/* Init may fail if the process exits while we're trying to look at its
- 	 * proc information. In that case, save the pid but don't try to enter
- 	 * the namespace.
-@@ -184,14 +208,12 @@ struct nsinfo *nsinfo__new(pid_t pid)
- 	return nsinfo__new_thread(pid, pid);
- }
- 
--static const char *nsinfo__mntns_path(const struct nsinfo *nsi)
--{
--	return RC_CHK_ACCESS(nsi)->mntns_path;
--}
+ 	dso__find_dbginfo_type(dso);
++	nsenter = dso_binary_type__needs_ns(dso__dbginfo_type(dso));
++	if (nsenter)
++		nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+ 	path = dso__get_filename(dso, "", &decomp, dso__dbginfo_type(dso));
+-	if (path == NULL)
+-		return NULL;
 -
- struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
+-	dinfo = __debuginfo__new(path);
+-	dso__put_filename(dso, path, decomp);
++	if (path != NULL) {
++		dinfo = __debuginfo__new(path);
++		dso__put_filename(dso, path, decomp);
++	}
++	if (nsenter)
++		nsinfo__mountns_exit(&nsc);
+ 	return dinfo;
+ }
+ 
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index ca478191813cf46f..5b9bc94be55ef088 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -1499,7 +1499,8 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 	bool delete_extract = false;
+ 	struct kcore_extract kce;
+ 	enum dso_binary_type dbt;
+-	bool decomp = false;
++	struct nscookie nsc;
++	bool decomp = false, nsenter;
+ 	int err;
+ 
+ 	dbt = dso__find_binary_type(dso);
+@@ -1507,8 +1508,13 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 	if (dbt == DSO_BINARY_TYPE__KALLSYMS)
+ 		return SYMBOL_ANNOTATE_ERRNO__NO_VMLINUX;
+ 
++	nsenter = dso_binary_type__needs_ns(dbt);
+ 	mutex_lock(dso__lock(dso));
++	if (nsenter)
++		nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+ 	symfs_filename = dso__get_filename(dso, "", &decomp, dbt);
++	if (nsenter)
++		nsinfo__mountns_exit(&nsc);
+ 	mutex_unlock(dso__lock(dso));
+ 
+ 	if (symfs_filename == NULL) {
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index dafd5acd6be41908..fdade14520d869bd 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -692,9 +692,7 @@ static int open_dso(struct dso *dso, struct machine *machine)
  {
- 	struct nsinfo *nnsi;
-+	pid_t pid, tid, tgid, nstgid;
-+	bool need_setns, in_pidns;
-+	char *mntns_path = NULL;
+ 	int fd;
+ 	struct nscookie nsc;
+-	enum dso_binary_type bt = dso__binary_type(dso);
+-	bool nsenter = bt != DSO_BINARY_TYPE__BUILD_ID_CACHE &&
+-		       bt != DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO;
++	bool nsenter = dso_binary_type__needs_ns(dso__binary_type(dso));
  
- 	if (nsi == NULL)
- 		return NULL;
-@@ -200,19 +222,32 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
- 	if (!nnsi)
- 		return NULL;
+ 	if (nsenter) {
+ 		mutex_lock(dso__lock(dso));
+@@ -875,12 +873,22 @@ static int dso__find_binary_type_locked(struct dso *dso)
+ 	}
  
--	RC_CHK_ACCESS(nnsi)->pid = nsinfo__pid(nsi);
--	RC_CHK_ACCESS(nnsi)->tid = nsinfo__tid(nsi);
--	RC_CHK_ACCESS(nnsi)->tgid = nsinfo__tgid(nsi);
--	RC_CHK_ACCESS(nnsi)->nstgid = nsinfo__nstgid(nsi);
--	RC_CHK_ACCESS(nnsi)->need_setns = nsinfo__need_setns(nsi);
--	RC_CHK_ACCESS(nnsi)->in_pidns = nsinfo__in_pidns(nsi);
--	if (nsinfo__mntns_path(nsi)) {
--		RC_CHK_ACCESS(nnsi)->mntns_path = strdup(nsinfo__mntns_path(nsi));
--		if (!RC_CHK_ACCESS(nnsi)->mntns_path) {
-+	mutex_lock(nsinfo__lock(nsi));
-+	pid = RC_CHK_ACCESS(nsi)->pid;
-+	tid = RC_CHK_ACCESS(nsi)->tid;
-+	tgid = RC_CHK_ACCESS(nsi)->tgid;
-+	nstgid = RC_CHK_ACCESS(nsi)->nstgid;
-+	need_setns = RC_CHK_ACCESS(nsi)->need_setns;
-+	in_pidns = RC_CHK_ACCESS(nsi)->in_pidns;
-+	if (RC_CHK_ACCESS(nsi)->mntns_path) {
-+		mntns_path = strdup(RC_CHK_ACCESS(nsi)->mntns_path);
-+		if (!mntns_path) {
-+			mutex_unlock(nsinfo__lock(nsi));
- 			nsinfo__put(nnsi);
- 			return NULL;
+ 	do {
+-		dso__set_binary_type(dso, binary_type_data[i++]);
++		struct nscookie nsc;
++		enum dso_binary_type type = binary_type_data[i++];
++		bool nsenter = dso_binary_type__needs_ns(type);
++
++		dso__set_binary_type(dso, type);
++
++		if (nsenter)
++			nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+ 
+ 		errno = 0;
+-		path = dso__get_filename(dso, "", &decomp, dso__binary_type(dso));
++		path = dso__get_filename(dso, "", &decomp, type);
+ 		if (path == NULL) {
+-			if (errno == EMFILE)
++			saved_errno = errno;
++			if (nsenter)
++				nsinfo__mountns_exit(&nsc);
++			if (saved_errno == EMFILE)
+ 				goto open_err;
+ 			continue;
  		}
- 	}
-+	mutex_unlock(nsinfo__lock(nsi));
-+
-+	RC_CHK_ACCESS(nnsi)->pid = pid;
-+	RC_CHK_ACCESS(nnsi)->tid = tid;
-+	mutex_lock(nsinfo__lock(nnsi));
-+	RC_CHK_ACCESS(nnsi)->tgid = tgid;
-+	RC_CHK_ACCESS(nnsi)->nstgid = nstgid;
-+	RC_CHK_ACCESS(nnsi)->need_setns = need_setns;
-+	RC_CHK_ACCESS(nnsi)->in_pidns = in_pidns;
-+	RC_CHK_ACCESS(nnsi)->mntns_path = mntns_path;
-+	mutex_unlock(nsinfo__lock(nnsi));
+@@ -890,9 +898,11 @@ static int dso__find_binary_type_locked(struct dso *dso)
+ 		if (!found)
+ 			saved_errno = errno;
+ 		dso__put_filename(dso, path, decomp);
++		if (nsenter)
++			nsinfo__mountns_exit(&nsc);
  
- 	return nnsi;
- }
-@@ -226,7 +261,10 @@ static void nsinfo__delete(struct nsinfo *nsi)
- {
- 	if (nsi) {
- 		WARN_ONCE(refcount_read(nsinfo__refcnt(nsi)) != 0, "nsinfo refcnt unbalanced\n");
-+		mutex_lock(nsinfo__lock(nsi));
- 		zfree(&RC_CHK_ACCESS(nsi)->mntns_path);
-+		mutex_unlock(nsinfo__lock(nsi));
-+		mutex_destroy(&RC_CHK_ACCESS(nsi)->lock);
- 		RC_CHK_FREE(nsi);
- 	}
- }
-@@ -251,22 +289,46 @@ void nsinfo__put(struct nsinfo *nsi)
+ 		if (found)
+-			return dso__binary_type(dso);
++			return type;
+ 		else if (saved_errno == EMFILE)
+ 			goto open_err;
  
- bool nsinfo__need_setns(const struct nsinfo *nsi)
- {
--	return RC_CHK_ACCESS(nsi)->need_setns;
-+	bool ret;
-+
-+	if (!nsi)
-+		return false;
-+
-+	mutex_lock(nsinfo__lock(nsi));
-+	ret = RC_CHK_ACCESS(nsi)->need_setns;
-+	mutex_unlock(nsinfo__lock(nsi));
-+	return ret;
- }
+@@ -2117,11 +2127,14 @@ static const u8 *__dso__read_symbol(struct dso *dso, const char *symfs_filename,
+ 	};
+ 	u8 *code_buf = NULL;
+ 	int saved_errno;
++	bool nsenter = dso_binary_type__needs_ns(dso__binary_type(dso));
  
- void nsinfo__clear_need_setns(struct nsinfo *nsi)
- {
-+	if (!nsi)
-+		return;
-+
-+	mutex_lock(nsinfo__lock(nsi));
- 	RC_CHK_ACCESS(nsi)->need_setns = false;
-+	zfree(&RC_CHK_ACCESS(nsi)->mntns_path);
-+	mutex_unlock(nsinfo__lock(nsi));
- }
+-	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
++	if (nsenter)
++		nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+ 	fd = open(symfs_filename, O_RDONLY | O_CLOEXEC);
+ 	saved_errno = errno;
+-	nsinfo__mountns_exit(&nsc);
++	if (nsenter)
++		nsinfo__mountns_exit(&nsc);
+ 	if (fd < 0) {
+ 		errno = saved_errno;
+ 		return NULL;
+@@ -2242,8 +2255,9 @@ void dso__find_dbginfo_type(struct dso *dso)
+ 		DSO_BINARY_TYPE__NOT_FOUND,
+ 	};
+ 	const enum dso_binary_type *type;
++	struct nscookie nsc;
+ 	char *path;
+-	bool found, decomp = false;
++	bool found, decomp = false, nsenter;
  
--pid_t nsinfo__tgid(const struct nsinfo  *nsi)
-+pid_t nsinfo__tgid(const struct nsinfo *nsi)
- {
--	return RC_CHK_ACCESS(nsi)->tgid;
-+	pid_t ret;
-+
-+	mutex_lock(nsinfo__lock(nsi));
-+	ret = RC_CHK_ACCESS(nsi)->tgid;
-+	mutex_unlock(nsinfo__lock(nsi));
-+	return ret;
- }
- 
--pid_t nsinfo__nstgid(const struct nsinfo  *nsi)
-+pid_t nsinfo__nstgid(const struct nsinfo *nsi)
- {
--	return RC_CHK_ACCESS(nsi)->nstgid;
-+	pid_t ret;
-+
-+	mutex_lock(nsinfo__lock(nsi));
-+	ret = RC_CHK_ACCESS(nsi)->nstgid;
-+	mutex_unlock(nsinfo__lock(nsi));
-+	return ret;
- }
- 
- pid_t nsinfo__pid(const struct nsinfo  *nsi)
-@@ -281,18 +343,26 @@ pid_t nsinfo__tid(const struct nsinfo  *nsi)
- 
- bool nsinfo__in_pidns(const struct nsinfo *nsi)
- {
--	return RC_CHK_ACCESS(nsi)->in_pidns;
-+	bool ret;
-+
-+	mutex_lock(nsinfo__lock(nsi));
-+	ret = RC_CHK_ACCESS(nsi)->in_pidns;
-+	mutex_unlock(nsinfo__lock(nsi));
-+	return ret;
- }
- 
- void nsinfo__set_in_pidns(struct nsinfo *nsi)
- {
-+	mutex_lock(nsinfo__lock(nsi));
- 	RC_CHK_ACCESS(nsi)->in_pidns = true;
-+	mutex_unlock(nsinfo__lock(nsi));
- }
- 
- void nsinfo__mountns_enter(struct nsinfo *nsi,
- 				  struct nscookie *nc)
- {
- 	char curpath[PATH_MAX];
-+	char *mntns_path = NULL;
- 	int oldns = -1;
- 	int newns = -1;
- 	char *oldcwd = NULL;
-@@ -303,27 +373,36 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
- 	nc->oldns = -1;
- 	nc->newns = -1;
- 
--	if (!nsi || !nsinfo__need_setns(nsi))
-+	if (!nsi)
+ 	if (dso__dbginfo_type(dso) != DSO_BINARY_TYPE__NOT_FOUND)
  		return;
+@@ -2253,28 +2267,43 @@ void dso__find_dbginfo_type(struct dso *dso)
+ 	dso__set_debuginfo_searched(dso);
  
--	if (!getcwd(curpath, sizeof(curpath)))
-+	mutex_lock(nsinfo__lock(nsi));
-+	if (RC_CHK_ACCESS(nsi)->need_setns && RC_CHK_ACCESS(nsi)->mntns_path)
-+		mntns_path = strdup(RC_CHK_ACCESS(nsi)->mntns_path);
-+	mutex_unlock(nsinfo__lock(nsi));
-+
-+	if (!mntns_path)
- 		return;
+ 	/* Maybe debug info is in the same file with the symbol table */
++	nsenter = dso_binary_type__needs_ns(dso__symtab_type(dso));
++	if (nsenter)
++		nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+ 	path = dso__get_filename(dso, "", &decomp, dso__symtab_type(dso));
+ 	if (path) {
+ 		found = filename__has_section(path, ".debug_info") ||
+ 			filename__has_section(path, ".zdebug_info");
  
-+	if (!getcwd(curpath, sizeof(curpath)))
-+		goto out;
-+
- 	oldcwd = strdup(curpath);
- 	if (!oldcwd)
--		return;
-+		goto out;
+ 		dso__put_filename(dso, path, decomp);
++		if (nsenter)
++			nsinfo__mountns_exit(&nsc);
+ 		if (found) {
+ 			dso__set_dbginfo_type(dso, dso__symtab_type(dso));
+ 			return;
+ 		}
++	} else if (nsenter) {
++		nsinfo__mountns_exit(&nsc);
+ 	}
  
- 	oldns = open("/proc/self/ns/mnt", O_RDONLY);
- 	if (oldns < 0)
- 		goto errout;
+ 	/* Otherwise check distro debug locations */
+ 	for (type = dbginfo_types; *type != DSO_BINARY_TYPE__NOT_FOUND; type++) {
++		nsenter = dso_binary_type__needs_ns(*type);
++		if (nsenter)
++			nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+ 		path = dso__get_filename(dso, "", &decomp, *type);
+-		if (path == NULL)
++		if (path == NULL) {
++			if (nsenter)
++				nsinfo__mountns_exit(&nsc);
+ 			continue;
++		}
  
--	newns = open(nsinfo__mntns_path(nsi), O_RDONLY);
-+	newns = open(mntns_path, O_RDONLY);
- 	if (newns < 0)
- 		goto errout;
+ 		found = filename__has_section(path, ".debug_info") ||
+ 			filename__has_section(path, ".zdebug_info");
  
- 	if (setns(newns, CLONE_NEWNS) < 0)
- 		goto errout;
- 
-+	free(mntns_path);
- 	nc->oldcwd = oldcwd;
- 	nc->oldns = oldns;
- 	nc->newns = newns;
-@@ -335,6 +414,8 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
- 		close(oldns);
- 	if (newns > -1)
- 		close(newns);
-+out:
-+	free(mntns_path);
- }
- 
- void nsinfo__mountns_exit(struct nscookie *nc)
-diff --git a/tools/perf/util/namespaces.h b/tools/perf/util/namespaces.h
-index ea645954944de4be..c76090f54a819284 100644
---- a/tools/perf/util/namespaces.h
-+++ b/tools/perf/util/namespaces.h
-@@ -14,6 +14,7 @@
- #include <linux/refcount.h>
- #include <linux/types.h>
- #include <internal/rc_check.h>
-+#include "mutex.h"
- 
- #ifndef HAVE_SETNS_SUPPORT
- int setns(int fd, int nstype);
-@@ -31,13 +32,14 @@ struct namespaces *namespaces__new(struct perf_record_namespaces *event);
- void namespaces__free(struct namespaces *namespaces);
- 
- DECLARE_RC_STRUCT(nsinfo) {
-+	struct mutex		lock;
- 	pid_t			pid;
- 	pid_t			tid;
--	pid_t			tgid;
--	pid_t			nstgid;
--	bool			need_setns;
--	bool			in_pidns;
--	char			*mntns_path;
-+	pid_t			tgid __guarded_by(&lock);
-+	pid_t			nstgid __guarded_by(&lock);
-+	bool			need_setns __guarded_by(&lock);
-+	bool			in_pidns __guarded_by(&lock);
-+	char			*mntns_path __guarded_by(&lock);
- 	refcount_t		refcnt;
+ 		dso__put_filename(dso, path, decomp);
++		if (nsenter)
++			nsinfo__mountns_exit(&nsc);
+ 		if (found)
+ 			break;
+ 	}
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index ebd8230b9895dcf1..75483598e093fb1b 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -142,6 +142,40 @@ enum dso_binary_type {
+ 	DSO_BINARY_TYPE__NOT_FOUND,
  };
  
++static inline bool dso_binary_type__needs_ns(enum dso_binary_type type)
++{
++	switch (type) {
++	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
++	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE:
++	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP:
++	case DSO_BINARY_TYPE__DEBUGLINK:
++	case DSO_BINARY_TYPE__GNU_DEBUGDATA:
++	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
++	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
++	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
++	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
++	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
++		return true;
++	case DSO_BINARY_TYPE__KALLSYMS:
++	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
++	case DSO_BINARY_TYPE__VMLINUX:
++	case DSO_BINARY_TYPE__GUEST_VMLINUX:
++	case DSO_BINARY_TYPE__JAVA_JIT:
++	case DSO_BINARY_TYPE__BUILD_ID_CACHE:
++	case DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
++	case DSO_BINARY_TYPE__GUEST_KMODULE:
++	case DSO_BINARY_TYPE__GUEST_KMODULE_COMP:
++	case DSO_BINARY_TYPE__KCORE:
++	case DSO_BINARY_TYPE__GUEST_KCORE:
++	case DSO_BINARY_TYPE__BPF_PROG_INFO:
++	case DSO_BINARY_TYPE__BPF_IMAGE:
++	case DSO_BINARY_TYPE__OOL:
++	case DSO_BINARY_TYPE__NOT_FOUND:
++	default:
++		return false;
++	}
++}
++
+ enum dso_space_type {
+ 	DSO_SPACE__USER = 0,
+ 	DSO_SPACE__KERNEL,
 -- 
 2.56.1.831.g720f3f5937-goog
 
