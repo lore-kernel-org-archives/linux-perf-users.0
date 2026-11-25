@@ -1,74 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.70
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795567917;
-	b=yVxTuou/QLh9Mj2ny7P0qJYF3ww+sdmO7U3GMVbfdfiaCsVHRVcwn+50VrmZ5skS5bNJ
-	 uvnCCSqkNZpaa+/iDIiEWjnfPmr4z4alYmDxLojpW78Sl67RrxrQxNlbgNYxvIUzz8RXk
-	 PMSioMpGp5O3omSdKHH5UfKClarwhpSO6ZDLQN0d/bd0nGZ3O7ng8QaEdKWVjjJf3pZSP
-	 4WvzbKk7AupyhXZt7fX6FpywdnA4NQJlWYFIvupXNOU2+znnlDgyL+tYFXCwkwXsdvqnt
-	 pKTMFeHqx0AUxyUiFEFfvDu7x56NBGA0Ov3piaEeLS4h8VJNePQqwk0axM2mbMEiRYw==
+	t=1795567920;
+	b=MYffLFrqdoVep8x09PlBXqRzqTI/7O2b6xVSRwsevQ1bmBO2qSj/NE3OEyNNR0TzqmJU
+	 YzT6i1EhBkEwJUljFwX+WhOOBxfa6YNjd/BVPqotMEW++Fq8Ad3PcvuB4JSzRIwP1qEPf
+	 f8D9XRc0V0mcj6xWca2N5bP0YSHZQQd/QVTSYPnkDu9Wz4wqhr0UXP79aVoec3tL64TiW
+	 IzgSz4qbeO68Pcw2i3fWvcnEElj8RzSIhQmccEmhRG+OCkj38nW2ba/iR5DTQNUjT495f
+	 n1olpd3TF6CrC9cS2seNfMZ3Xt6Cf9nF2CMRNI/gMTyyN1SFLPTA7SNFbZKNuHtWf0A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795567917;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795567920;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Received:Date:In-Reply-To:
 	 Mime-Version:References:X-Mailer:Message-ID:Subject:From:To:Cc:
 	 Content-Type;
-	bh=gKi/h6FXem9B7oE2V26QtBZc7ZsOCscf8la+gKh9y0U=;
-	b=rkgNrNN8kE4QGjb+x3LDkgRqCkCuAbXTfN/rNdrTXCWz7bb/BDXntLOMbCYF27bKUfG+
-	 lGSZjiybaWjDsd8QdZOsXjpDUjINWqBIEsrg5k5dEheYJaamqOWZe+ILizhib6Ux/ZN9i
-	 Z8ZzwQxNm+3RJBar40c8mUmQqGqS/mwi7Re6aC5CPaspEp1d+IW7Tym0eFOtfqFl4BYv3
-	 jts7nYf98L3rlB152JZuVWj2zVZYADmgyfwFxL06zJ8JZmANejRujhfh7ghYjgtwE6RNv
-	 t8L+vVI6Wnh+vGAV3ekuXNz0CQOKONThMYU+G+moKae+31tZMc8QUAgxl9IaUhi1I6Q==
+	bh=QndkiIz5ZF/DqfpSqKPFQigqx23qy3mxXJ1/LTwGGQo=;
+	b=01oWQ6/6XWIk6TuGQKF8IukIi4uVnHCfyFpf8w6ZuoIcRfZ9UrJqvyXv08PPgFgapNsJ
+	 6z/xqvDQWHNTTx8ZYJSdxy+vmQh/5Zf2UPg+JbruZA5Rib8dZxxU9n9p4hWjGDh+FIzj3
+	 41lSQAJuCaVKKlu1RZ8XCLq8dfAzfSUIGPU/T+SEFeyeSeHD7u9HWtYq5T3Pvpq/v7gvR
+	 9B+q0lJ9Mf30ntyt8MspX9+D6xLf5qw36Ux1ZwAj4dseNi6elHHwJQcMOaa487yAPFgFR
+	 BX3+Y/x6Lk6IyM+xisnyZ1ma4DKIFkIpUnfHJKQ4pHTjH/L6h/2BZ367zJQBRpfBD1A==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=google.com;
 	spf=pass smtp.mailfrom=flex--irogers.bounces.google.com;
-	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=fx3zsleA;
-	arc=none smtp.remote-ip=74.125.82.199
-Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
+	dkim=pass header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=KNdnbE1E;
+	arc=none smtp.remote-ip=74.125.82.70
+Received: from mail-dl1-f70.google.com (mail-dl1-f70.google.com [74.125.82.70])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27DF460A3839
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 00:51:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 27DF460A3839
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD9C60A5BCD
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 00:51:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1BD9C60A5BCD
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=fx3zsleA
-Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-33713e5e6daso8845173eec.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 16:51:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20260707 header.b=KNdnbE1E
+Received: by mail-dl1-f70.google.com with SMTP id a92af1059eb24-1b56c696405so5394931c88.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 16:51:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20260707; t=1795567916; x=1796172716; darn=vger.kernel.org;
+        d=google.com; s=20260707; t=1795567918; x=1796172718; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=gKi/h6FXem9B7oE2V26QtBZc7ZsOCscf8la+gKh9y0U=;
-        b=fx3zsleAnWfPaEDLhfNsNhBBC6N6iaB5fY16p53HLaZODE8uwWu0Un9A+VqxOMfCdR
-         NR40HE2LVpQHxfl5KMRyhjNEQU92cBKUWwuPr+KuEqAYezoqQbku2w6e7/GLlfOSvI8X
-         tyjFh+EnbzB/EM/hDcCYsNPbZsxa1T+d/SN74SMaY1pMcCeejlijE7uD83vndUbwPsj5
-         CzkvxO+xTL3d1ZYveEjQNzM0sQk4OQrBdx4GeTlNBnH840SigoStGIvHi+5CsPdVK8zW
-         gLPmW2a9ajySSx7rZCXlMpwb8hPx3UoNzRsi+cryKn5V/uKw/I1w1jXEOxGFIjDEUYBc
-         sFOQ==
+        bh=QndkiIz5ZF/DqfpSqKPFQigqx23qy3mxXJ1/LTwGGQo=;
+        b=KNdnbE1ExdySZuGqrwqe2FC3574CWxy9MJ5xNym9RKykz4xYefLApvWpMwq30e9Obt
+         JubsrcEOfqIF9YndR6+HhnzA3fYPyWUpfDmdiM1RTsjr2HJPi+Axg0QtEVKqiYMnaHbK
+         AFekKJBSDhkwR+E/jOqbfG7PdPGHScobcUnT/i3E7fQTCBdlposd0rUt8aMor7b7ljYN
+         Dez5/VkOx8W8oNAxfdrQxPnGFuJEFBCIN7FyoQNJ73iPKzOt999cVtPyTWn5Ok36i1Dd
+         W41A0BlPcCTRL8stZMuBy4WrHDwUmdhuIvk0Sp2yVwWVx2M+O7Ctu1HreeHBwEdWk/3l
+         iuZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795567916; x=1796172716;
+        d=1e100.net; s=20260707; t=1795567918; x=1796172718;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=gKi/h6FXem9B7oE2V26QtBZc7ZsOCscf8la+gKh9y0U=;
-        b=hF32C57n5MnOIqbZSv1DahNiAudvTHM/OCgiXDhMlQOuXPIpG5mlMufA7+7Ru+U9Kk
-         91WYwwQxAYLW/VPpK3o1YsUHgkqDajGJXlf98y/gzWygUEbEVKs3yv5RVZD8Jv+XLCt/
-         DDkiIQiJLC3mC4gDi9KrBgKKSUtVglpRkVF5fGyMybhMc2MEXv8jldIfBzu5eLlcTEIO
-         +nS/aDNOrWH8enFOqqCz+B/euw5cUUDT6rFgkNZofWJASrlYLTk0zdCQ19c3y4PF5+/9
-         dFUASA26vhjzW0nlWWnkRtkMO4pyGEkmwl8RNVNQNM5r69slWmqvfmTEBSh7nq8lb69j
-         pueg==
-X-Forwarded-Encrypted: i=1; AL+hErGvAr45t+9A6x7YOV2cUxlSQH5VPOERwI2HKE7AMmjQ9sTf9iKUb3VVHHsJIVI995Bd3bhcOogc0GzmcbQdHW3+@vger.kernel.org
-X-Gm-Message-State: APuU4Z9HYXBiXsOM9ORCi80hQ6tC+gAaY2G7x9WRuSnuuxggknvtLvwQ
-	4zwo768mr2sQ0agPqNQxHWe1SPY/0bmTyurR1OH6BDTjRnQ+EtSjVFvLyczu8cE0pnjFxQT8U3W
-	17+CznCleBg==
-X-Received: from dycmv2.prod.google.com ([2002:a05:693c:2802:b0:386:b5d2:c426])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:8803:20b0:386:9b9c:ef1b
- with SMTP id 5a478bee46e88-3869b9cf99amr11788653eec.3.1795567916077; Tue, 24
- Nov 2026 16:51:56 -0800 (PST)
-Date: Tue, 24 Nov 2026 16:51:06 -0800
+        bh=QndkiIz5ZF/DqfpSqKPFQigqx23qy3mxXJ1/LTwGGQo=;
+        b=e3WXMLuvMXlbGef9c8U8q+D7nG5cPcTX4vbc1g/UiCAPDpoPz4+S0/ukb0uP7VG1/0
+         bYN8ddR/FZM2zMhs9iyl6wdH8wCWbQTZFlGpA51IlGb0+YzbGIBSjGmBVsxOYsT8dd4k
+         94/wwhAkze4Dro4UHyag4IS4T6uKiOENjg6UkbXcKouQhDbjNXRMXqthngK3zijmALgr
+         gizUfMsaie9mYxXTxrLj2bfbjf/kGVReMZgRfjj6tT6e9ZzXU+tn+ihXCtaFfaFMQUxz
+         8kc6KywjavHn4EcbPpAQv2lvbdRgIiposVJlsjAkgG3086Yf6Yhe+R3dQhZTZ1EAW6+4
+         RVLA==
+X-Forwarded-Encrypted: i=1; AL+hErFd4SidhEVwI99H8JXHjDLnha5pJzY5tORoEdr7S02OIMrCySraLOG5IfNncI8lQji8LE15M12Xt9+1i07hNmO0@vger.kernel.org
+X-Gm-Message-State: APuU4Z9J6BsGPD9ZeJcY+wEpBM5FP3THl5Lo0ThIqGPiujD7/bFBMZXi
+	zzucUFf38Q1OKtL5JU95icP9lvYhzhX0qxyUWt4Z+ULe06HA6Hi1CRJPAXK5ZM+xmS1LDz4D2ua
+	aP5pzvtWbEw==
+X-Received: from dlgj1-n1.prod.google.com ([2002:a05:7023:e41:10b0:1a7:2bf1:46cc])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:b0c8:b0:1b2:6855:998a
+ with SMTP id a92af1059eb24-1b556911007mr14552250c88.34.1795567917876; Tue, 24
+ Nov 2026 16:51:57 -0800 (PST)
+Date: Tue, 24 Nov 2026 16:51:07 -0800
 In-Reply-To: <20261125005108.1020003-1-irogers@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,8 +81,8 @@ Precedence: list
 Mime-Version: 1.0
 References: <20261125005108.1020003-1-irogers@google.com>
 X-Mailer: git-send-email 2.56.1.831.g720f3f5937-goog
-Message-ID: <20261125005108.1020003-18-irogers@google.com>
-Subject: [PATCH v4 17/19] perf record: Add --buildid-offset option
+Message-ID: <20261125005108.1020003-19-irogers@google.com>
+Subject: [PATCH v4 18/19] perf test: Add BUILD_ID_OFFSET C unit tests
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -100,171 +100,302 @@ Cc: Athira Rajeev <atrajeev@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>,
 	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add the --buildid-offset flag to perf record to natively request
-PERF_SAMPLE_BUILD_ID_OFFSET and PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET
-from the kernel. This configures the evsel attributes by replacing
-the standard IP and CALLCHAIN bits with the build ID offset equivalents.
+Add C unit test coverage for PERF_SAMPLE_BUILD_ID_OFFSET and
+PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET:
+- sample-parsing: round-trip synthesis and parsing
+- mmap-thread-lookup: map lookup by build ID and DSO file offset
+- bid-offset: sys_perf_event_open() attribute probing
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Documentation/perf-record.txt |  6 ++++++
- tools/perf/builtin-record.c              | 22 ++++++++++++++++++++--
- tools/perf/util/evsel.c                  | 17 ++++++++++++++++-
- tools/perf/util/record.c                 | 22 ++++++++++++++++++++++
- tools/perf/util/record.h                 |  1 +
- 5 files changed, 65 insertions(+), 3 deletions(-)
+ tools/perf/tests/Build                |  1 +
+ tools/perf/tests/bid-offset.c         | 61 +++++++++++++++++++++++++++
+ tools/perf/tests/builtin-test.c       |  1 +
+ tools/perf/tests/mmap-thread-lookup.c | 49 ++++++++++++++++++++-
+ tools/perf/tests/sample-parsing.c     | 60 +++++++++++++++++++++++++-
+ tools/perf/tests/tests.h              |  1 +
+ 6 files changed, 170 insertions(+), 3 deletions(-)
+ create mode 100644 tools/perf/tests/bid-offset.c
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 2351f7b4f5fc..d821303c923c 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -578,6 +578,12 @@ Specify vmlinux path which has debuginfo.
- --buildid-all::
- Record build-id of all DSOs regardless whether it's actually hit or not.
- 
-+--buildid-offset::
-+Record build-id and DSO file offset instead of virtual instruction pointer
-+addresses in samples and callchains (using PERF_SAMPLE_BUILD_ID_OFFSET and
-+PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET). Implies --buildid-mmap and cannot be
-+used with --no-buildid-mmap.
+diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+index 5eebb2ec5dde..d6fe1ba57a79 100644
+--- a/tools/perf/tests/Build
++++ b/tools/perf/tests/Build
+@@ -66,6 +66,7 @@ perf-test-y += expand-cgroup.o
+ perf-test-y += perf-time-to-tsc.o
+ perf-test-y += dlfilter-test.o
+ perf-test-y += sigtrap.o
++perf-test-y += bid-offset.o
+ perf-test-y += event_groups.o
+ perf-test-y += hybrid-merge.o
+ perf-test-y += symbols.o
+diff --git a/tools/perf/tests/bid-offset.c b/tools/perf/tests/bid-offset.c
+new file mode 100644
+index 000000000000..0cf52caae047
+--- /dev/null
++++ b/tools/perf/tests/bid-offset.c
+@@ -0,0 +1,61 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "tests.h"
++#include "debug.h"
++#include "evlist.h"
++#include "evsel.h"
++#include <linux/hw_breakpoint.h>
++#include <linux/perf_event.h>
++#include <sys/syscall.h>
++#include <unistd.h>
++#include <errno.h>
++#include "../perf-sys.h"
 +
- --buildid-mmap::
- Legacy record build-id in map events option which is now the
- default. Behaves indentically to --no-buildid. Disable with
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 085d3648a30a..5796f13ffe8c 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -936,7 +936,8 @@ static int record__config_tracking_events(struct record *rec)
- 	 * delay of waiting or event synthesis.
- 	 */
- 	if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
--	    perf_pmus__num_core_pmus() > 1) {
-+	    perf_pmus__num_core_pmus() > 1 ||
-+	    (opts->buildid_offset && evlist__nr_entries(evlist) > 1)) {
- 		/*
- 		 * User space tasks can migrate between CPUs, so when tracing
- 		 * selected CPUs, sideband for all CPUs is still needed.
-@@ -3625,6 +3626,8 @@ static struct option __record_options[] = {
- 		   "file", "vmlinux pathname"),
- 	OPT_BOOLEAN(0, "buildid-all", &record.buildid_all,
- 		    "Record build-id of all DSOs regardless of hits"),
-+	OPT_BOOLEAN(0, "buildid-offset", &record.opts.buildid_offset,
-+		    "Record build id offset instead of IP"),
- 	OPT_BOOLEAN_SET(0, "buildid-mmap", &record.buildid_mmap, &record.buildid_mmap_set,
- 			"Record build-id in mmap events and skip build-id processing."),
- 	OPT_BOOLEAN(0, "timestamp-filename", &record.timestamp_filename,
-@@ -4162,6 +4165,20 @@ int cmd_record(int argc, const char **argv)
- 		record.opts.record_switch_events = true;
- 	}
- 
-+	if (rec->opts.buildid_offset) {
-+		if (rec->buildid_mmap_set && !rec->buildid_mmap) {
-+			pr_err("--buildid-offset cannot be used with --no-buildid-mmap.\n");
-+			err = -EINVAL;
-+			goto out_opts;
++static int test__bid_offset(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
++{
++	struct perf_event_attr attr = {
++		.type		= PERF_TYPE_SOFTWARE,
++		.config		= PERF_COUNT_SW_DUMMY,
++		.size		= sizeof(attr),
++		.sample_type	= PERF_SAMPLE_BUILD_ID_OFFSET,
++		.exclude_kernel = 1,
++		.exclude_hv     = 1,
++	};
++	int fd;
++
++	fd = sys_perf_event_open(&attr, /*pid=*/0, /*cpu=*/-1, /*group_fd=*/-1, /*flags=*/0);
++	if (fd < 0) {
++		pr_debug("sys_perf_event_open failed with %d\n", errno);
++		if (errno == EINVAL || errno == EACCES || errno == EPERM) {
++			pr_debug("Kernel does not support or permit PERF_SAMPLE_BUILD_ID_OFFSET\n");
++			return TEST_SKIP;
 +		}
-+		if (!perf_can_record_build_id()) {
-+			pr_err("Missing support for build id in kernel mmap events required by --buildid-offset.\n");
-+			err = -EINVAL;
-+			goto out_opts;
-+		}
-+		rec->buildid_mmap = true;
++		return TEST_FAIL;
 +	}
++	close(fd);
 +
- 	if (rec->buildid_mmap && !perf_can_record_build_id()) {
- 		pr_warning("Missing support for build id in kernel mmap events.\n"
- 			   "Disable this warning with --no-buildid-mmap\n");
-@@ -4352,7 +4369,8 @@ int cmd_record(int argc, const char **argv)
- 
- 	evlist__warn_user_requested_cpus(rec->evlist, rec->opts.target.cpu_list);
- 
--	if (callchain_param.enabled && callchain_param.record_mode == CALLCHAIN_FP) {
-+	if (callchain_param.enabled && callchain_param.record_mode == CALLCHAIN_FP &&
-+	    !rec->opts.buildid_offset) {
- 		if (EM_HOST == EM_AARCH64)
- 			add_leaf_frame_caller_opts_aarch64(&rec->opts);
- 	}
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 9fa77e76aecb..d22dd91a1585 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1745,7 +1745,7 @@ void evsel__config(struct evsel *evsel, const struct record_opts *opts,
- 	attr->mmap2    = track && !perf_missing_features.mmap2;
- 	attr->comm     = track;
- 	attr->build_id = track && opts->build_id;
--	attr->defer_output = track && callchain && callchain->defer;
-+	attr->defer_output = track && ((callchain && callchain->defer) || opts->buildid_offset);
- 
- 	/*
- 	 * ksymbol is tracked separately with text poke because it needs to be
-@@ -1831,6 +1831,21 @@ void evsel__config(struct evsel *evsel, const struct record_opts *opts,
- 	 */
- 	evsel__apply_config_terms(evsel, opts, track);
- 
-+	if (opts->buildid_offset && !evsel__is_offcpu_event(evsel)) {
-+		if ((evsel->core.attr.sample_type & PERF_SAMPLE_IP) || track) {
-+			evsel__reset_sample_bit(evsel, IP);
-+			evsel__set_sample_bit(evsel, BUILD_ID_OFFSET);
-+			if (!evsel->no_aux_samples && !attr->exclude_user)
-+				attr->defer_callchain = 1;
++	attr.sample_type = PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET;
++	attr.exclude_callchain_kernel = 1;
++	fd = sys_perf_event_open(&attr, /*pid=*/0, /*cpu=*/-1, /*group_fd=*/-1, /*flags=*/0);
++	if (fd < 0) {
++		pr_debug("sys_perf_event_open with callchain failed with %d\n", errno);
++		if (errno == EINVAL || errno == EACCES || errno == EPERM) {
++			pr_debug("Kernel does not support or permit PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET\n");
++			return TEST_SKIP;
 +		}
-+		if ((evsel->core.attr.sample_type & PERF_SAMPLE_CALLCHAIN) &&
-+		    !attr->exclude_callchain_user) {
-+			evsel__reset_sample_bit(evsel, CALLCHAIN);
-+			evsel__set_sample_bit(evsel, CALLCHAIN_BUILD_ID_OFFSET);
-+			attr->defer_callchain = 1;
-+		}
++		return TEST_FAIL;
 +	}
++	close(fd);
 +
- 	evsel->ignore_missing_thread = opts->ignore_missing_thread;
- 
- 	/* The --period option takes the precedence. */
-diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
-index 38e8aee3106b..77337e1318ab 100644
---- a/tools/perf/util/record.c
-+++ b/tools/perf/util/record.c
-@@ -110,6 +110,28 @@ void evlist__config(struct evlist *evlist, struct record_opts *opts, struct call
- 			evsel->core.attr.comm_exec = 1;
- 	}
- 
-+	if (opts->buildid_offset) {
-+		bool has_callchain_bid = false;
++	return TEST_OK;
++}
 +
-+		evlist__for_each_entry(evlist, evsel) {
-+			if ((evsel->core.attr.sample_type &
-+			     PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET) &&
-+			    !evsel->core.attr.exclude_callchain_user) {
-+				has_callchain_bid = true;
++static struct test_case bid_offset_tests[] = {
++	TEST_CASE_REASON("Test PERF_SAMPLE_BUILD_ID_OFFSET", bid_offset,
++			 "not supported by kernel"),
++	{ .name = NULL, }
++};
++
++struct test_suite suite__bid_offset = {
++	.desc = "Test PERF_SAMPLE_BUILD_ID_OFFSET",
++	.test_cases = bid_offset_tests,
++};
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 01c78ef20b97..b880ed7aa37f 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -186,6 +186,7 @@ static struct test_suite *generic_tests[] = {
+ 	&suite__perf_time_to_tsc,
+ 	&suite__dlfilter,
+ 	&suite__sigtrap,
++	&suite__bid_offset,
+ 	&suite__event_groups,
+ 	&suite__hybrid_merge,
+ 	&suite__symbols,
+diff --git a/tools/perf/tests/mmap-thread-lookup.c b/tools/perf/tests/mmap-thread-lookup.c
+index dca8bbfe780a..7e312d5a1ba3 100644
+--- a/tools/perf/tests/mmap-thread-lookup.c
++++ b/tools/perf/tests/mmap-thread-lookup.c
+@@ -7,6 +7,7 @@
+ #include <pthread.h>
+ #include <stdlib.h>
+ #include <stdio.h>
++#include <string.h>
+ #include "debug.h"
+ #include "env.h"
+ #include "event.h"
+@@ -17,7 +18,10 @@
+ #include "symbol.h"
+ #include "util/synthetic-events.h"
+ #include "thread.h"
++#include "dso.h"
++#include "build-id.h"
+ #include <internal/lib.h> // page_size
++#include <internal/rc_check.h>
+ 
+ #define THREADS 4
+ 
+@@ -200,17 +204,58 @@ static int mmap_events(synth_cb synth)
+ 					.ip = (unsigned long) (td->map + 1),
+ 				 }, &al);
+ 
+-		thread__put(thread);
+-
+ 		if (!al.map) {
+ 			pr_debug("failed, couldn't find map\n");
+ 			err = -1;
++			thread__put(thread);
+ 			addr_location__exit(&al);
+ 			break;
+ 		}
+ 
+ 		pr_debug("map %p, addr %" PRIx64 "\n", al.map, map__start(al.map));
+ 
++		/* Verify lookup by build ID and offset */
++		{
++			struct build_id test_bid = {
++				.data = { [0] = i + 1 },
++				.size = BUILD_ID_SIZE,
++			};
++			struct dso *dso = dso__new("test_dso");
++			struct addr_location al2;
++			struct perf_build_id pbid = { .size = test_bid.size };
++			u64 offset = map__dso_map_ip(al.map,
++						     (unsigned long)(td->map + 1));
++
++			if (!dso) {
++				pr_debug("failed to create test dso\n");
++				err = -1;
++				thread__put(thread);
++				addr_location__exit(&al);
 +				break;
 +			}
-+		}
-+		if (has_callchain_bid) {
-+			evlist__for_each_entry(evlist, evsel) {
-+				if (evsel->core.attr.defer_output &&
-+				    evsel__is_dummy_event(evsel)) {
-+					evsel__set_sample_bit(evsel, CALLCHAIN_BUILD_ID_OFFSET);
-+					evsel->core.attr.exclude_callchain_kernel = 1;
-+				}
++			dso__set_build_id(dso, &test_bid);
++			dso__put(map__dso(al.map));
++			map__set_dso(al.map, dso);
++
++			memcpy(pbid.data, test_bid.data, test_bid.size);
++			addr_location__init(&al2);
++			thread__find_map(thread, &(struct perf_sample){
++						.cpumode = PERF_RECORD_MISC_USER,
++						.ip = 0,
++						.bid = {
++							.bid = &pbid,
++							.offset = offset,
++						},
++					 }, &al2);
++
++			if (!RC_CHK_EQUAL(al2.map, al.map) || al2.addr != offset) {
++				pr_debug("failed, couldn't find map by build id and offset\n");
++				err = -1;
 +			}
++			addr_location__exit(&al2);
++		}
++
++		thread__put(thread);
+ 		addr_location__exit(&al);
+ 		if (err)
+ 			break;
+diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-parsing.c
+index bd30f6d4c31b..40945e499c83 100644
+--- a/tools/perf/tests/sample-parsing.c
++++ b/tools/perf/tests/sample-parsing.c
+@@ -209,6 +209,33 @@ static bool samples_same(struct perf_sample *s1,
+ 	if (type & PERF_SAMPLE_CODE_PAGE_SIZE)
+ 		COMP(code_page_size);
+ 
++	if (type & PERF_SAMPLE_BUILD_ID_OFFSET) {
++		if (!s1->bid.bid || !s2->bid.bid ||
++		    memcmp(s1->bid.bid, s2->bid.bid, sizeof(*s1->bid.bid))) {
++			pr_debug("Samples differ at 'bid.bid'\n");
++			return false;
++		}
++		COMP(bid.offset);
++	}
++
++	if (type & PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET) {
++		COMP(callchain_bid.nr_build_ids);
++		COMP(callchain_bid.nr_offsets);
++		COMP(callchain_bid.build_ids_len);
++		if (!s1->callchain_bid.build_ids || !s2->callchain_bid.build_ids ||
++		    memcmp(s1->callchain_bid.build_ids, s2->callchain_bid.build_ids,
++			   s1->callchain_bid.build_ids_len)) {
++			pr_debug("Samples differ at 'callchain_bid.build_ids'\n");
++			return false;
++		}
++		if (!s1->callchain_bid.offsets || !s2->callchain_bid.offsets ||
++		    memcmp(s1->callchain_bid.offsets, s2->callchain_bid.offsets,
++			   s1->callchain_bid.nr_offsets * sizeof(u64))) {
++			pr_debug("Samples differ at 'callchain_bid.offsets'\n");
++			return false;
 +		}
 +	}
 +
- 	/* Configure leader sampling here now that the sample type is known */
- 	evlist__for_each_entry(evlist, evsel)
- 		evsel__config_leader_sampling(evsel, evlist);
-diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
-index 411bb7276ad7..6c9568616177 100644
---- a/tools/perf/util/record.h
-+++ b/tools/perf/util/record.h
-@@ -55,6 +55,7 @@ struct record_opts {
- 	bool	      kcore;
- 	bool	      text_poke;
- 	bool	      build_id;
-+	bool	      buildid_offset;
- 	unsigned int  freq;
- 	unsigned int  mmap_pages;
- 	unsigned int  auxtrace_mmap_pages;
+ 	if (type & PERF_SAMPLE_AUX) {
+ 		COMP(aux_sample.size);
+ 		if (memcmp(s1->aux_sample.data, s2->aux_sample.data,
+@@ -247,6 +274,26 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
+ 	const u32 raw_data[] = {0x12345678, 0x0a0b0c0d, 0x11020304, 0x05060708, 0 };
+ 	const u64 data[] = {0x2211443366558877ULL, 0, 0xaabbccddeeff4321ULL};
+ 	const u64 aux_data[] = {0xa55a, 0, 0xeeddee, 0x0282028202820282};
++	const struct perf_build_id bid = {
++		.size = 20,
++		.data = {
++			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
++			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
++		}
++	};
++	const u8 callchain_build_ids[48] = {
++		20,
++		'9', '8', '7', '6', '5', '4', '3', '2', '1', '0',
++		'9', '8', '7', '6', '5', '4', '3', '2', '1', '0',
++		20,
++		'a', 'b', 'c', 'd', 'e', 'f', 'a', 'b', 'c', 'd',
++		'e', 'f', 'a', 'b', 'c', 'd', 'e', 'f', 'a', 'b',
++	};
++	const u64 callchain_offsets[] = {
++		(1ULL << 56) | 201,
++		(2ULL << 56) | 202,
++		(1ULL << 56) | 203,
++	};
+ 	struct regs_dump user_regs = {
+ 		.abi	= PERF_SAMPLE_REGS_ABI_64,
+ 		.mask	= sample_regs,
+@@ -291,6 +338,17 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
+ 		.code_page_size = 116,
+ 		.ins_lat	= 117,
+ 		.weight3	= 118,
++		.bid		= {
++			.bid = (struct perf_build_id *)&bid,
++			.offset = 119,
++		},
++		.callchain_bid	= {
++			.nr_build_ids = 2,
++			.nr_offsets = ARRAY_SIZE(callchain_offsets),
++			.build_ids_len = sizeof(callchain_build_ids),
++			.build_ids = (u8 *)callchain_build_ids,
++			.offsets = (u64 *)callchain_offsets,
++		},
+ 		.aux_sample	= {
+ 			.size	= sizeof(aux_data),
+ 			.data	= (void *)aux_data,
+@@ -547,7 +605,7 @@ static int test__sample_parsing(struct test_suite *test __maybe_unused, int subt
+ 	 * were added.  Please actually update the test rather than just change
+ 	 * the condition below.
+ 	 */
+-	if (PERF_SAMPLE_MAX > PERF_SAMPLE_WEIGHT_STRUCT << 1) {
++	if (PERF_SAMPLE_WEIGHT_STRUCT << 3 < PERF_SAMPLE_MAX) {
+ 		pr_debug("sample format has changed, some new PERF_SAMPLE_ bit was introduced - test needs updating\n");
+ 		return -1;
+ 	}
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index af822885890d..a65d209b649f 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -196,6 +196,7 @@ DECLARE_SUITE(expand_cgroup_events);
+ DECLARE_SUITE(perf_time_to_tsc);
+ DECLARE_SUITE(dlfilter);
+ DECLARE_SUITE(sigtrap);
++DECLARE_SUITE(bid_offset);
+ DECLARE_SUITE(event_groups);
+ DECLARE_SUITE(hybrid_merge);
+ DECLARE_SUITE(symbols);
 -- 
 2.56.1.831.g720f3f5937-goog
 
