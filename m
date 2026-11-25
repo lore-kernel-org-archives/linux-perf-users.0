@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795642139;
-	b=BIlEpLFqyUNkldZfyn9aMQ2oh+2s11o7ZTyLyG/cnV4wHPjfoCFPlsDrrDHQAeYAeuVc
-	 nHapl4qHOoNaavA2+0teL/pupRFQ2FKvCAM+RCAnY9+DP1pw+23VHtKUjxoKm/xeicD4Y
-	 QYgM1EnY5rfBAS6YgmXlB2EyaC5qeaQYVl3cPl3odhtlAKU13smcHvtm3gozqh5M4RHNC
-	 HZJTdhtqOAOTQOUNR17Ap50/FvGM8OauBhVSVDrXEGsU1vpfUsiklBIymkYJ0RHGs4tPi
-	 hsQlnFJOLjmPVv004ixCXx35qa1gD6ltVjPh83Jj+i6yhxi3tepFZPgg3alnMhXu0Wg==
+	t=1795642134;
+	b=K17LFX1ND3d1sAd96DhA5yYKCIB9pR+eF6AYG+NzW+TYbb7+2TmtHg6jF6lHfi+mEBIO
+	 01TwHZPGQTTpwXzJXg4WCfOnQT8mclQnfxOvdHF5fxERTIJ5EVWBQ4Cwn/u/GiBSNnw0n
+	 btn4VEr8BUTD+JDsgck6IQ7G5bREzfnTM7CvTOXR549cO50kmCPdCXGgtApQQMUzNB5eX
+	 j6+rJv3Bpd5nm2aIcFYacPr5K2nVZ19xtViSUcTFQyufVDaqL/zer2/jB8vgIfdCrjwl3
+	 0I2urQpSLrMhW9D2rwzAOyQZ135oGZVuSMcwTy7F01lmAaNQuMvmu6zXThLB3oYmKtw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795642139;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795642134;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=3npt5MeJdSF1ykF66UEZxvSrY3CnqI6gcPOmbzhGxJo=;
-	b=p5t55edn4qMG3NkKG90zgxc69d3VlCjiaLIZtTTqv8/S1zhhcsR5uKdvuCmZyaemjsKx
-	 BfLSTWYbFwBz7ZOFa+QZmYztaYyqi1Vd4w/ylIfwceQGT08NYgOEMvtM4Fd760rS8SMnW
-	 mscjoUPii0JZ6clbn+6uLBd5uYDUltvyiZD1HosWCyC8l1fIpMYdXm14uO9ZPXjN5g9Iy
-	 cSjadmQDlyHpBODg9YB1Ar1/zX2UqA5+fDzvMjw/cA0XeY4AM7wbF6LbkDww6YzwFyC54
-	 oyRBo7nYWxoXC8gRcXtwbeP5Dl7DmGIszEXegLhsqZXN/CLzWASAoRLBZqEbjzm18sw==
+	bh=7uO9CSS53SjJtcEDs5Drh76EXuohXBT2i84Rzw+3Dz0=;
+	b=SYCZbrBp6pTnRhZ9dvbCnSj6Ry936Dq3LtK2TgWk2b2eZnjSIZdCyayprxdAkQmsZW4g
+	 HhUIgUxvkSPxOy+AOlGNMY7ZRGJcLW2QgzyjuNFz5a0Wyc9uKin61sTEqj8FODLX+Soh7
+	 adpOVRbj4/1L8hKnyZiJLDSaVf9WAbQEGBPCTZ+840JF7b1mA1nXJgpwNESYmZoIW67pL
+	 gDd+DUrHOm8U1h9b5nh1zScSP2UURg3gsAd8ws+KgGBSfojUGd7vPk1Yr0Ujh1ChXGmwV
+	 +EUoCHmoVGBavQDcNTw2MvchoKOAauZruMyd5FRoOLJsGOKnrLQn9GYSt9mZBKvTSmQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Z4EL9Dbt;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bTojB9CF;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522CD60A2630;
-	Wed, 25 Nov 2026 21:28:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B95E606A686;
+	Wed, 25 Nov 2026 21:28:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Z4EL9Dbt
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96C6D1F01565;
-	Wed, 25 Nov 2026 21:28:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bTojB9CF
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE5E31F000C6;
+	Wed, 25 Nov 2026 21:28:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795642138;
-	bh=3npt5MeJdSF1ykF66UEZxvSrY3CnqI6gcPOmbzhGxJo=;
+	s=k20260515; t=1795642134;
+	bh=7uO9CSS53SjJtcEDs5Drh76EXuohXBT2i84Rzw+3Dz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Z4EL9Dbtk8NAuiRophRxk486yMvYMEny671Aa1wEyqAtQ9y4jcqcomSOVE5hbZRH8
-	 k5fbiBvtMbG0WO4unfp/1j1PF8573dZrlxYfgF5cHuQmKN6HLp9H9ZWhr/4aL2+OcK
-	 0aPX7r5TKpS7sYUVkJxM/6eWfvsLIftqeoLV0E23Jnu01yEdkiYnZ0/IJFXAF6L6oH
-	 XvYPLNsBnAD56OidEWy0tJzpqynHjOMN40yJaDp7zoEhBWNKDS7veJG9cegLF0xSUS
-	 6zQq+/71+oBplXa2Bvksx/cPfRPixkT9w9LwEm3rMBxU3aRxkpy4XavJqLrpMrzlZR
-	 BTzFYB/vIVCHA==
+	b=bTojB9CFYg0p+Iqk1k97e21OL5PQugpLX6zGz41K1Qw6yKmVzxDSQzFmWQdmCpbbg
+	 rm829PR8Un9kj68WjFe0iZJZezajLY+KgQU3pgLeImdKF8DR7Fw9glCoZb6rcwlhQr
+	 yHaHtgXyDw63qiA/t71pkG14b9EaJUI1wU6rjEljW0he5AhM6r5eEVQmT42Jkp4Ih8
+	 cL+Wf/h0AQT3IWI37ApjAqmS9+XyJH5BSANrfs2k1GJt7XuNKDsXK0kzoaewe/DriF
+	 a2Ivd+6cW2/8NLLrshoQ0NtxM9Fvq1JXL8LT798VPoFMBgtaHON989dsdJnPJZl7/j
+	 70GQaY1Ls8wSw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -49,9 +49,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v4 08/11] perf tools: Export filename__read_build_id_ns()
-Date: Wed, 25 Nov 2026 13:28:48 -0800
-Message-ID: <20261125212851.1792988-9-namhyung@kernel.org>
+Subject: [PATCH v4 02/11] perf tools: Add perf_env__is_same_boot()
+Date: Wed, 25 Nov 2026 13:28:42 -0800
+Message-ID: <20261125212851.1792988-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.56.1.839.g22a8290db9-goog
 In-Reply-To: <20261125212851.1792988-1-namhyung@kernel.org>
 References: <20261125212851.1792988-1-namhyung@kernel.org>
@@ -66,150 +66,65 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Export filename__read_build_id_ns(), including a chroot fallback guarded
-by !nsinfo__need_setns() && nsinfo__check_proc(), and use it in the dsos
-callback and perf-inject's dso__read_build_id() instead of open-coding
-nsinfo__mountns_enter() and dso__filename_with_chroot() fallbacks.
+Add perf_env__is_same_boot() to compare the recorded boot_id in struct
+perf_env against the running host's /proc/sys/kernel/random/boot_id.
+For live sessions where no offline header was populated, it falls back
+to reading the host boot_id and returns true.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-inject.c | 12 +-----------
- tools/perf/util/build-id.c  | 15 ++++++++++++---
- tools/perf/util/dsos.c      | 17 +++--------------
- tools/perf/util/symbol.h    |  3 +++
- 4 files changed, 19 insertions(+), 28 deletions(-)
+ tools/perf/util/env.c | 25 +++++++++++++++++++++++++
+ tools/perf/util/env.h |  1 +
+ 2 files changed, 26 insertions(+)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index de3a74d2bab9220f..31e23169e25a5af1 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -906,24 +906,14 @@ static int perf_event__repipe_tracing_data(const struct perf_tool *tool,
- 
- static int dso__read_build_id(struct dso *dso)
- {
--	struct nscookie nsc;
- 	struct build_id bid = { .size = 0, };
- 
- 	if (dso__has_build_id(dso))
- 		return 0;
- 
- 	mutex_lock(dso__lock(dso));
--	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
--	if (filename__read_build_id(dso__long_name(dso), &bid) > 0)
-+	if (filename__read_build_id_ns(dso__long_name(dso), &bid, dso__nsinfo(dso)) > 0)
- 		dso__set_build_id(dso, &bid);
--	else if (dso__nsinfo(dso)) {
--		char *new_name = dso__filename_with_chroot(dso, dso__long_name(dso));
--
--		if (new_name && filename__read_build_id(new_name, &bid) > 0)
--			dso__set_build_id(dso, &bid);
--		free(new_name);
--	}
--	nsinfo__mountns_exit(&nsc);
- 	mutex_unlock(dso__lock(dso));
- 
- 	return dso__has_build_id(dso) ? 0 : -1;
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index c792448cc3442db9..395fc5b7bf2818e3 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -850,15 +850,24 @@ int build_id_cache__remove_s(const char *sbuild_id)
- 	return err;
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index f624ba98e23c6a77..ce1f9ab2c40a9599 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -445,6 +445,31 @@ const char *perf_env__boot_id(struct perf_env *env)
+ 	return boot_id;
  }
  
--static int filename__read_build_id_ns(const char *filename,
--				      struct build_id *bid,
--				      struct nsinfo *nsi)
-+int filename__read_build_id_ns(const char *filename,
-+			       struct build_id *bid,
-+			       struct nsinfo *nsi)
- {
- 	struct nscookie nsc;
- 	int ret;
- 
- 	nsinfo__mountns_enter(nsi, &nsc);
- 	ret = filename__read_build_id(filename, bid);
-+	if (ret < 0 && errno == ENOENT && !nsinfo__need_setns(nsi) &&
-+	    nsinfo__check_proc(nsi)) {
-+		char *new_name = filename_with_chroot(nsinfo__pid(nsi), filename);
++static char *host_boot_id;
 +
-+		if (new_name) {
-+			ret = filename__read_build_id(new_name, bid);
-+			free(new_name);
-+		}
-+	}
- 	nsinfo__mountns_exit(&nsc);
- 
- 	return ret;
-diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-index 7a56577f4ec86a18..9ae27ee934135c48 100644
---- a/tools/perf/util/dsos.c
-+++ b/tools/perf/util/dsos.c
-@@ -4,11 +4,11 @@
- #include "dso.h"
- #include "util.h"
- #include "vdso.h"
--#include "namespaces.h"
- #include <errno.h>
-+#include <linux/perf_event.h>
- #include <stdlib.h>
- #include <string.h>
--#include <symbol.h> // filename__read_build_id
-+#include <symbol.h> // filename__read_build_id_ns
- #include <unistd.h>
- 
- void dsos__init(struct dsos *dsos)
-@@ -72,7 +72,6 @@ struct dsos__read_build_ids_cb_args {
- static int dsos__read_build_ids_cb(struct dso *dso, void *data)
++static void init_host_boot_id(void)
++{
++	host_boot_id = read_host_boot_id();
++}
++
++bool perf_env__is_same_boot(struct perf_env *env)
++{
++	const char *env_boot_id;
++
++	DO_ONCE(init_host_boot_id);
++	if (!host_boot_id)
++		return false;
++
++	if (!env)
++		return true;
++
++	env_boot_id = perf_env__boot_id(env);
++	if (!env_boot_id)
++		return false;
++
++	return !strcmp(env_boot_id, host_boot_id);
++}
++
+ int perf_env__set_cmdline(struct perf_env *env, int argc, const char *argv[])
  {
- 	struct dsos__read_build_ids_cb_args *args = data;
--	struct nscookie nsc;
- 	struct build_id bid = { .size = 0, };
+ 	int i;
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index 4180380f4533790a..2d0a67ae306fb362 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -190,6 +190,7 @@ int perf_env__kernel_is_64_bit(struct perf_env *env);
+ bool perf_arch_is_big_endian(const char *arch);
+ const char *perf_env__os_release(struct perf_env *env);
+ const char *perf_env__boot_id(struct perf_env *env);
++bool perf_env__is_same_boot(struct perf_env *env);
  
- 	if (args->with_hits && !dso__hit(dso) && !dso__is_vdso(dso))
-@@ -81,20 +80,10 @@ static int dsos__read_build_ids_cb(struct dso *dso, void *data)
- 		args->have_build_id = true;
- 		return 0;
- 	}
--	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
--	if (filename__read_build_id(dso__long_name(dso), &bid) > 0) {
-+	if (filename__read_build_id_ns(dso__long_name(dso), &bid, dso__nsinfo(dso)) > 0) {
- 		dso__set_build_id(dso, &bid);
- 		args->have_build_id = true;
--	} else if (errno == ENOENT && dso__nsinfo(dso)) {
--		char *new_name = dso__filename_with_chroot(dso, dso__long_name(dso));
--
--		if (new_name && filename__read_build_id(new_name, &bid) > 0) {
--			dso__set_build_id(dso, &bid);
--			args->have_build_id = true;
--		}
--		free(new_name);
- 	}
--	nsinfo__mountns_exit(&nsc);
- 	return 0;
- }
+ int perf_env__set_cmdline(struct perf_env *env, int argc, const char *argv[]);
  
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 64fdf402d21913a3..a6bc187fae28029a 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -29,6 +29,7 @@
- struct dso;
- struct map;
- struct maps;
-+struct nsinfo;
- struct option;
- struct build_id;
- struct perf_env;
-@@ -257,6 +258,8 @@ struct symbol *dso__find_symbol_by_name(struct dso *dso, const char *name, size_
- enum dso_type dso__type_fd(int fd);
- 
- int filename__read_build_id(const char *filename, struct build_id *id);
-+int filename__read_build_id_ns(const char *filename, struct build_id *bid,
-+			       struct nsinfo *nsi);
- int sysfs__read_build_id(const char *filename, struct build_id *bid);
- int modules__parse(const char *filename, void *arg,
- 		   int (*process_module)(void *arg, const char *name,
 -- 
 2.56.1.831.g720f3f5937-goog
 
