@@ -1,80 +1,79 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=148.163.156.1
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795581273;
-	b=hX5vEr6IBZzSUm+eGsnDHmPX/PaCJwkluzsKBQHyw8zdpBq+ID1f0+OW44ySLssx0CQx
-	 y7uYZGIEUtkgMEWKhOei6zJoqGF01wGzWFfHISdHIkuFs5F5+yPT6Fjo3ouQG6FLDjdXp
-	 wnVpUTdWjRs+13MOJ/MapoYjnnPShhbFI1szEYSOBEjSr1Eq5hSvrAtE9KqNdMLKGXjtE
-	 LOgDNe7puWTQwO6Q83xZ+2cUPDJYVEHDPtDbEujwdJLy6v/tHCYipt+0UTEGUqW381HlA
-	 ZecGBRiokP1OgvAvVAX1W8HZOD75BKWFUkOgYurcTUt/Ey7UgFG90Fu1eh/wU3lA9Nw==
+	t=1795581315;
+	b=tB5AXnl2VDMGfSpqyrh8Bdz4uH7KufYJndeiB6onTMrQv6k+zdOrSWwehR7wqVbZYQKc
+	 lN3o5WuFt1Bo0zJs6SvWEYYyD7BhTuuY+eTA/et75JL29eZ+5K+WY7HpY41Qp5reE+gda
+	 7PnePISn9Fm4w6KL42pyoJIyi1MhXcBCGdeDIzOtz7sNeVh2T6q11GoeVZ0UtMaQT6pIn
+	 U7Gptu8gkCE1WOmhZPgLmyA3a/1L5M6UO5Drc4AJeRwFx8tnGK9uDthWjzToGu5gyO3bJ
+	 pFMOppt51VjjMj4vR5jBdA26LTMdaRoI6C1ZNkSj0D4PWrh1PMdoXaYN+9S4Y7iTnTg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795581273;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795581315;
 	h=DMARC-Filter:Received:DKIM-Signature:Received:Received:Received:
 	 Received:Received:Received:Received:Content-Type:Mime-Version:Subject:
 	 From:In-Reply-To:Date:Cc:Content-Transfer-Encoding:Message-Id:
 	 References:To:X-Mailer:X-TM-AS-GCONF:X-Proofpoint-Reinject:
-	 X-Proofpoint-Spam-Info:X-Proofpoint-GUID:
 	 X-Proofpoint-Spam-Details-Enc:X-Proofpoint-ORIG-GUID:
-	 X-Authority-Analysis:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details;
-	bh=nMHA4Wl7g1rAupMrR81aSIPl3+ZIUVoxVvBa4vbhtIw=;
-	b=ZAXBjhceBqN/w5BXSKlrOwzvUVlA2pEPSQ9APOMVD2MBNaMP0gM1zMv2Jnguzh8aIDyh
-	 2jb2fLbat7KD7WyCyw0zNnp5Mvu1RYucioGaYnl0bXnnSwlAguTksOuuoH/1Dbdyb2qpr
-	 Guf6QvykcHbMfs6FbnqEc8BrEIojHcL6dFrYGFTxysGcFC7IACb0OP+ogVFlLivmBzsV4
-	 WC6dVmuCE01KAv/VUQ/rXeHShrw9/f5taFm4/LRyNJWjUQ71SESHXeRBRNzUxBteJv96V
-	 YHwTbXvH73mx57GzWL6hbLWPR+5InjITFVOlVyuFHrvQVqv3J9XHfoWEuLvz7Z2E32w==
+	 X-Authority-Analysis:X-Proofpoint-GUID:X-Proofpoint-Spam-Info:
+	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details;
+	bh=Pun4vZnx401kKUP9E3hF28lvlD2KtzmRvYfuVIwamnw=;
+	b=pNWN+9DrX2OSgCHa3oI4PRnW9lx8aL3gPxPJxMTY92PzLy27Dd/EWi/8zDmaPLV7TMIL
+	 6tU86T0VJ2yYCsxCMZ2UTxaQ/5AXZsQviO90WQNKy+xY9tb14oeDkr39bkqGqPVSVVii9
+	 alyovDXOrMEvnRj71uOEb8Urw9dgObVLlT2Ff/dG3lfb3/iI4WO4x/Zr9hrHfG6iwLMa6
+	 lwoDvWCe5LyXsRN3iiftq7i3v1dOSqSpDRpgjJWcy2MfOOJaPSYoxncIpyUw2E6NiHSSa
+	 9/FIgvWLMY9NDyZqOIuwUAuHGJAZCmthTw7vtqnqfu4xn7MWKYroEaaaa14Iu5wFZug==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=linux.ibm.com;
 	spf=pass smtp.mailfrom=linux.ibm.com;
-	dkim=pass header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=Ej8Z9afm;
-	arc=none smtp.remote-ip=148.163.158.5
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	dkim=pass header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=fBeqi8WU;
+	arc=none smtp.remote-ip=148.163.156.1
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63BA606A31E;
-	Wed, 25 Nov 2026 04:34:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org B63BA606A31E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E85F606A31E;
+	Wed, 25 Nov 2026 04:35:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2E85F606A31E
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=Ej8Z9afm
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AP2YsUM2924396;
-	Wed, 25 Nov 2026 04:33:48 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.a=rsa-sha256 header.s=pp1 header.b=fBeqi8WU
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6AP2ZCGx144866;
+	Wed, 25 Nov 2026 04:34:29 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=nMHA4W
-	l7g1rAupMrR81aSIPl3+ZIUVoxVvBa4vbhtIw=; b=Ej8Z9afmL9J7i8P/giTtJg
-	LOiFqf3iGyBLns+Phiv97cACCzqdiEt/EC5j1uOSyErf6XcxDBy92RRrlIWm8Ma5
-	je//YgHqqFEevn4tQEAqEMJqWZEsEBl4X3jl4grXuIWxJW3cJTU8bCsh3jwro/2O
-	J0M8YHTatz5boLGnEv2TKF7hfcXpBdILLr0Hl/XQyxZw/E6nQNIBCP5vicjnrW2I
-	hJRDZ61dAJlN8wbNuCErOFVv7f1YlqqoYa5eTFa7CNBYaXcaGxffagcDcz8l/J/O
-	M4TiW7tWMVM+qIZ5F+pCMZu/xb19Dec4diu2hqcsia+d7VmzCLK2uO0eKOeTvV1w
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Pun4vZ
+	nx401kKUP9E3hF28lvlD2KtzmRvYfuVIwamnw=; b=fBeqi8WUDDFDRCxSbhb2Ib
+	fdRWjPSus3eKxoIge4ZUCRgXKBwXs5gScbjVAh11+gTgfAIi7sj/JMWFmitk2rW+
+	KGWh8OWDzEqw/Rb5l7finmD1Q7P08wSNrNGHaz5DSWPxdwGXULYPUukLuyY2dpFJ
+	vmIU2h7EeiX5mPNrxXtcnmaP9w8LldHqfpOMyKsnCmo5mbo0EZB7bxEzMU/PM1cX
+	yOdLwcycoTyoTLUWONpQL2vSUXzbMd3ehVow5Sd+t4L9AzNt7p4XTH8gswy977Ol
+	AgDjrHIaey9AkOrdagLVI/BM7WSUEbONHr9Yw25Y8gokKTjMKHFXc1IrESxyEyDw
 	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4j34p4j7ha-1
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4j34faav97-1
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Wed, 25 Nov 2026 04:33:47 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6AP2JG1U050584;
-	Wed, 25 Nov 2026 04:33:46 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4j5axktn88-1
+	Wed, 25 Nov 2026 04:34:28 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.11/8.18.1.11) with ESMTP id 6AP2JWjc1526269;
+	Wed, 25 Nov 2026 04:34:27 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4j5a412syg-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Nov 2026 04:33:46 +0000 (GMT)
+	Wed, 25 Nov 2026 04:34:27 +0000 (GMT)
 Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6AP4Xiu831785504
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6AP4YPYs38863130
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 25 Nov 2026 04:33:44 GMT
+	Wed, 25 Nov 2026 04:34:25 GMT
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 76B3620043;
-	Wed, 25 Nov 2026 04:33:44 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 4BAE720043;
+	Wed, 25 Nov 2026 04:34:25 +0000 (GMT)
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 288E42004B;
-	Wed, 25 Nov 2026 04:33:38 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 448C320040;
+	Wed, 25 Nov 2026 04:34:19 +0000 (GMT)
 Received: from smtpclient.apple (unknown [9.39.27.234])
 	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 25 Nov 2026 04:33:37 +0000 (GMT)
+	Wed, 25 Nov 2026 04:34:19 +0000 (GMT)
 Content-Type: text/plain;
 	charset=utf-8
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -86,11 +85,11 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
-Subject: Re: [PATCH v3 05/19] perf/core: Implement BUILD_ID_OFFSET and
- CALLCHAIN_BUILD_ID_OFFSET sample types
+Subject: Re: [PATCH v3 03/19] perf/uapi: Add BUILD_ID_OFFSET sample types to
+ UAPI
 From: Athira Rajeev <atrajeev@linux.ibm.com>
-In-Reply-To: <CAP-5=fXzbPSJpTnuiBtMbs06-4Yq63f6e2U4G=Pn6Q2WmEGOPw@mail.gmail.com>
-Date: Wed, 25 Nov 2026 10:03:25 +0530
+In-Reply-To: <CAP-5=fU-tWJM7brF=YJGfX0fbdivH-oFDo0s=PCt-UcQcqEEfA@mail.gmail.com>
+Date: Wed, 25 Nov 2026 10:04:08 +0530
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -112,466 +111,229 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
         linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <6B8C2484-D134-4B53-BF06-1AF6EB4E5E90@linux.ibm.com>
+Message-Id: <2CFB481C-CFCD-4828-A3C2-34E27649CAAC@linux.ibm.com>
 References: <20261116074414.3174737-1-irogers@google.com>
- <20261116074414.3174737-6-irogers@google.com>
- <27B92301-D708-4527-9988-3B39973558AE@linux.ibm.com>
- <CAP-5=fXzbPSJpTnuiBtMbs06-4Yq63f6e2U4G=Pn6Q2WmEGOPw@mail.gmail.com>
+ <20261116074414.3174737-4-irogers@google.com>
+ <6F41ABBE-16A3-4B1F-96C0-D6369D5A5A55@linux.ibm.com>
+ <CAP-5=fU-tWJM7brF=YJGfX0fbdivH-oFDo0s=PCt-UcQcqEEfA@mail.gmail.com>
 To: Ian Rogers <irogers@google.com>
 X-Mailer: Apple Mail (2.3864.300.41.1.7)
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Info: AW1haW4tMjYxMTI1MDAxNiBTYWx0ZWRfX215ZlKDYZOTu
- UhprbBFY6RyAYK49B27JLYL1MBcf1BagXxrPZwSWI7krg/NZqvqqU0GGE1S5RDF7bHYa/JNfQq3
- 03RcrjkOp+Bzd5J6FcF/5KKvlCwF4aI=
-X-Proofpoint-GUID: NtXTu6vTPOw30-R_xET9MEBHMZyJf5Hs
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTI1MDAxNiBTYWx0ZWRfX9IC6vsIfR1W0
- HqWR92nUyQW9EwYYLwvWQDCAv8yfNfBxeSXbipPwpLOG9H/gGwxhDdVc+lhMm1ATJL4C6j1Aq0J
- BxMvUKwH9tspueprz44DKCSY3VcshcULilitU7PHu+q2+LX7yTZdekIVgxc3ovXtybsajGz0DWn
- GWrCnphHjIeRkTLVbsqGtPLMXdXQ7+eA5FhbQUMJbWeaMYqEXogJFF6dEX4hnYxHG5N3+r8rVTv
- lapAGvW9EVU6E3R6HPS6HoHfyTPFH0v4DBRO7WKgRomc5J3vLbx9YGbl17hFnCS+haxBnQ3nCAW
- AYDYGKa6UH2BQHF7neKfeVqXM6uTWfkJ53GyaG/YNwUDV9TvV5KB5SGvNxuT+Cmx5JgOxqlZo+a
- vb4guG+Ut0npkzjk2SEPnkcTEQOV711WA9Qq8jR/Iitndl4TvdUKG4HditjomQrlNJkLjO3sPCg
- WK1pA8cx4WllV+gGNFw==
-X-Proofpoint-ORIG-GUID: Lr7zbMKXiBRbWHiB9CTjjDCTykoQeBg1
-X-Authority-Analysis: v=2.4 cv=QabzLcbv c=1 sm=1 tr=0 ts=6b06652b cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYxMTI1MDAxOCBTYWx0ZWRfX3BPFhA8TBiST
+ IirIOu1vcuI3kN4tzXsqsq0lcLCjPSQJ9Qzapo/G+HhNkKIEe8vrqDL6/C/b4uciDb4D1AL6F0/
+ ts/jH9w69XDtre1e2k+VWoaW29app1kCwjNt51i+ObbqbXQrsbCWuC9yZm06WwLwiKdBdYT4QXG
+ gkEqfDK1WH4WTwlZCmA4TovIzlEdIkzqTN4t2xbpbOcnFOMpCB75Y/cZwNY7tlphrkNN02bML0f
+ C25QPgsiGYepJtlIUHuMtaY3t118jr6SfRyoHgrLX1F4iBJEVIznLBpiLm82CetGbjBfoZ8Q2y2
+ ZCkuliTSV+lJkVqcJRiCD4k/NXToMIc085XEHguFAEgN+RiTC0hnnL/31B/Sm9h+EQgkT0VMrN6
+ 3wOUbVwhvo0rw9GFIsItYDXF4E1EC38bpDOisR39HHwMuPE2hjtM8KAedPV0x4k0N7EkVOoUCBB
+ k6FWe/vQbupPWUfW5Kg==
+X-Proofpoint-ORIG-GUID: anoizqBN2M67_adt4LV7QbWWclWrE387
+X-Authority-Analysis: v=2.4 cv=U6QHnuru c=1 sm=1 tr=0 ts=6b066555 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
  a=IkcTkHD0fZMA:10 a=zJRp6_cAMcgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=1XWaLZrsAAAA:8
- a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=My7GPmCN7a5uxHF4voIA:9 a=QEXdDO2ut3YA:10
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=1XWaLZrsAAAA:8
+ a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=t-w_3hl-lgbHpx5WNXoA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: voo5dPGjiV-oj2_lBEWa22xinqD8yDAR
+X-Proofpoint-Spam-Info: AW1haW4tMjYxMTI1MDAxOCBTYWx0ZWRfX83Pxjbx5sNTo
+ Y8POL7GDAi97ZF6/AkBfmeG9MvA967VOzdwGf3CSASK9EBZn3NwsFKCFIbQqXywR3G/uIpFWhSl
+ Ta/gZpWL0DZTjfONxIkdcha7Dwy9T3c=
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.138,FMLib:17.12.100.49
  definitions=2026-11-25_01,2026-11-23_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 phishscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0
- bulkscore=0 priorityscore=1501 clxscore=1015 malwarescore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2611040001 definitions=main-2611250016
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 impostorscore=0
+ clxscore=1015 bulkscore=0 suspectscore=0 adultscore=0 phishscore=0
+ malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2611040001
+ definitions=main-2611250018
 
 
 
-> On 25 Nov 2026, at 2:59=E2=80=AFAM, Ian Rogers <irogers@google.com> =
+> On 25 Nov 2026, at 2:30=E2=80=AFAM, Ian Rogers <irogers@google.com> =
 wrote:
 >=20
-> On Tue, Nov 24, 2026 at 9:33=E2=80=AFAM Athira Rajeev =
+> On Tue, Nov 24, 2026 at 2:36=E2=80=AFAM Athira Rajeev =
 <atrajeev@linux.ibm.com> wrote:
 >>=20
->>> On 16 Nov 2026, at 1:14=E2=80=AFPM, Ian Rogers <irogers@google.com> =
+>>=20
+>>=20
+>>> On 16 Nov 2026, at 1:13=E2=80=AFPM, Ian Rogers <irogers@google.com> =
 wrote:
 >>>=20
->>> Implement synchronous PERF_SAMPLE_BUILD_ID_OFFSET and
->>> PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET payload writing in the perf =
-event
->>> core using stack_map_get_build_id_offset(..., may_fault=3Dfalse).
+>>> Introduce PERF_SAMPLE_BUILD_ID_OFFSET and
+>>> PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET in enum =
+perf_event_sample_format.
 >>>=20
->>> For callchains, extend the per-CPU callchain buffers in
->>> kernel/events/callchain.c to provide scratch space to deduplicate =
-build
->>> IDs and encode the compressed build ID table and tagged 64-bit =
-offsets
->>> (with the top 8 bits storing the 1-based build ID index).
+>>> For PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET (and
+>>> PERF_RECORD_CALLCHAIN_DEFERRED when PERF_RECORD_MISC_MMAP_BUILD_ID =
+is
+>>> set), encode a deduplicated table of variable-length build IDs
+>>> (u32 nr_build_ids, u32 nr_offsets, followed by packed { u8 size;
+>>> u8 data[size]; } entries padded to 8-byte alignment) and an array of
+>>> 64-bit offsets whose top 8 bits encode the 1-based build ID index =
+(or
+>>> 0x00 for unresolved user addresses and 0xff for kernel/context =
+entries).
+>>> In common cases where multiple callchain frames belong to the same
+>>> binary, each unique build ID is encoded only once.
 >>>=20
 >>> Suggested-by: Namhyung Kim <namhyung@kernel.org>
 >>> Signed-off-by: Ian Rogers <irogers@google.com>
->>=20
->> Hi Ian
->>=20
->> I have few queries and adding them below
->=20
-> [snip]
->=20
->>> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
->>> index 9d24b6e0c91f..935b34d2dd33 100644
->>> --- a/kernel/events/callchain.c
->>> +++ b/kernel/events/callchain.c
->>> @@ -9,6 +9,7 @@
+>>> ---
+>>> include/uapi/linux/perf_event.h | 59 =
+++++++++++++++++++++++++++++++---
+>>> 1 file changed, 54 insertions(+), 5 deletions(-)
+>>>=20
+>>> diff --git a/include/uapi/linux/perf_event.h =
+b/include/uapi/linux/perf_event.h
+>>> index deb7c42d109b..775420ed9aee 100644
+>>> --- a/include/uapi/linux/perf_event.h
+>>> +++ b/include/uapi/linux/perf_event.h
+>>> @@ -165,8 +165,10 @@ enum perf_event_sample_format {
+>>> PERF_SAMPLE_DATA_PAGE_SIZE =3D 1U << 22,
+>>> PERF_SAMPLE_CODE_PAGE_SIZE =3D 1U << 23,
+>>> PERF_SAMPLE_WEIGHT_STRUCT =3D 1U << 24,
+>>> + PERF_SAMPLE_BUILD_ID_OFFSET =3D 1U << 25,
+>>> + PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET =3D 1U << 26,
+>>>=20
+>>> - PERF_SAMPLE_MAX =3D 1U << 25, /* non-ABI */
+>>> + PERF_SAMPLE_MAX =3D 1U << 27, /* non-ABI */
+>>> };
+>>>=20
+>>> #define PERF_SAMPLE_WEIGHT_TYPE (PERF_SAMPLE_WEIGHT | =
+PERF_SAMPLE_WEIGHT_STRUCT)
+>>> @@ -840,7 +842,8 @@ struct perf_event_mmap_page {
+>>> *
+>>> *   PERF_RECORD_MISC_EXACT_IP           - PERF_RECORD_SAMPLE of =
+precise events
+>>> *   PERF_RECORD_MISC_SWITCH_OUT_PREEMPT - PERF_RECORD_SWITCH* events
+>>> - *   PERF_RECORD_MISC_MMAP_BUILD_ID      - PERF_RECORD_MMAP2 event
+>>> + *   PERF_RECORD_MISC_MMAP_BUILD_ID      - PERF_RECORD_MMAP2 and
+>>> + *                                         =
+PERF_RECORD_CALLCHAIN_DEFERRED events
+>>> *
+>>> *
+>>> * PERF_RECORD_MISC_EXACT_IP:
+>>> @@ -852,7 +855,7 @@ struct perf_event_mmap_page {
+>>> *   Indicates that thread was preempted in TASK_RUNNING state.
+>>> *
+>>> * PERF_RECORD_MISC_MMAP_BUILD_ID:
+>>> - *   Indicates that mmap2 event carries build ID data.
+>>> + *   Indicates that mmap2 or deferred callchain event carries build =
+ID data.
 >>> */
->>>=20
->>> #include <linux/perf_event.h>
->>> +#include <linux/bpf.h>
->>> #include <linux/slab.h>
->>> #include <linux/sched/task_stack.h>
->>> #include <linux/uprobes.h>
->>> @@ -31,6 +32,26 @@ static inline size_t =
-perf_callchain_entry__sizeof(void)
->>> sysctl_perf_event_max_contexts_per_stack));
->>> }
->>>=20
->>> +static inline size_t perf_callchain_build_id_entry__sizeof(void)
->>> +{
->>> + return (sizeof(struct perf_callchain_build_id_entry) +
->>> + sizeof(__u64) * (sysctl_perf_event_max_stack +
->>> + sysctl_perf_event_max_contexts_per_stack));
->>> +}
->>> +
->>> +static inline size_t perf_callchain_bpf_build_id__sizeof(void)
->>> +{
->>> + return sizeof(struct bpf_stack_build_id) *
->>> +       (sysctl_perf_event_max_stack + 1);
->>> +}
->>> +
->>> +static inline size_t perf_callchain_context__sizeof(void)
->>> +{
->>> + return perf_callchain_entry__sizeof() +
->>> +       perf_callchain_build_id_entry__sizeof() +
->>> +       perf_callchain_bpf_build_id__sizeof();
->>> +}
->>> +
->>> static DEFINE_PER_CPU(u8, callchain_recursion[PERF_NR_CONTEXTS]);
->>> static atomic_t nr_callchain_events;
->>> static DEFINE_MUTEX(callchain_mutex);
->>> @@ -86,7 +107,7 @@ static int alloc_callchain_buffers(void)
->>> if (!entries)
->>> return -ENOMEM;
->>>=20
->>> - size =3D perf_callchain_entry__sizeof() * PERF_NR_CONTEXTS;
->>> + size =3D perf_callchain_context__sizeof() * PERF_NR_CONTEXTS;
+>>> #define PERF_RECORD_MISC_EXACT_IP (1 << 14)
+>>> #define PERF_RECORD_MISC_SWITCH_OUT_PREEMPT (1 << 14)
+>>> @@ -1095,6 +1098,38 @@ enum perf_event_type {
+>>> * { u64 code_page_size;} && PERF_SAMPLE_CODE_PAGE_SIZE
+>>> * { u64 size;
+>>> *  char data[size]; } && PERF_SAMPLE_AUX
+>>> + * { union {
+>>> + * struct {
+>>> + * struct perf_build_id bid;
+>>> + * u64 offset;
+>>> + * };
+>>> + * struct {
+>>> + * u64 zero;
+>>> + * u64 context;
+>>> + * u64 cookie;
+>>> + * u64 ip;
+>>> + * }; && attr.defer_callchain
+>>> + *  }; } && PERF_SAMPLE_BUILD_ID_OFFSET
+>>> + * { u32 nr_build_ids;
+>>> + *  u32 nr_offsets;
+>>> + *  struct {
+>>> + * u8 size;
+>>> + * u8 data[size];
+>>> + *  }[nr_build_ids];
+>>> + *  u8 pad[];
+>>> + *  u64 offsets[nr_offsets];
+>>> + *  #
+>>> + *  # Entries in offsets[] include PERF_CONTEXT_* markers (which
+>>> + *  # have top 8 bits 0xff). Kernel/hypervisor entries (after
+>>> + *  # PERF_CONTEXT_KERNEL, PERF_CONTEXT_HV, PERF_CONTEXT_GUEST,
+>>> + *  # or PERF_CONTEXT_GUEST_KERNEL) and the cookie word following
+>>> + *  # PERF_CONTEXT_USER_DEFERRED are raw 64-bit values. User
+>>> + *  # entries (after PERF_CONTEXT_USER or PERF_CONTEXT_GUEST_USER,
+>>> + *  # or in PERF_RECORD_CALLCHAIN_DEFERRED) use the top 8 bits to
+>>> + *  # encode a 1-based index (1..254) into the build_ids table and
+>>> + *  # the lower 56 bits for the DSO file offset, or 0x00 for an
+>>> + *  # unresolved user virtual address.
 >>=20
+>> Hi Ian,
 >>=20
->> in alloc_callchain_buffers(), we are changing size unconditionally to =
-:
+>> On PERF_SAMPLE_BUILD_ID_OFFSET, the layout comment doesn't say what =
+is
+>> written in the non-resolved cases. For =
+PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET
+>> it is clear: kernel entries are raw 64-bit values, unresolved user =
+entries
+>> have 0x00 in the top byte, and resolved user entries carry the table =
+index
+>> and the 56-bit file offset.
 >>=20
->> size =3D perf_callchain_context__sizeof() * PERF_NR_CONTEXTS;
+>> For the PERF_SAMPLE_BUILD_ID_OFFSET form, could the comment state:
 >>=20
->> Even if PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET is not set,
->> still the size grows for every case.
->>=20
->> This grows each per-CPU, per-context slot by the build ID table and =
+>> - What is written for a kernel IP? (e.g. bid.size =3D=3D 0 and offset =
+=3D=3D raw IP?)
+>> - What is written for an unresolved user IP? If bid.size =3D=3D 0, =
+does
+>>   =E2=80=9Coffset=E2=80=9D hold the raw virtual address?
+>=20
+> Yes, in both non-user (e.g. kernel/hypervisor) and unresolved user IP
+> cases, bid is zeroed (bid.size =3D=3D 0) and offset holds the raw
+> instruction pointer / virtual address. When attr.defer_callchain
+> defers a user IP, the union carries zero =3D=3D 0 (so bid.size =3D=3D =
+0),
+> context =3D=3D PERF_CONTEXT_USER_DEFERRED, the stitching cookie, and =
 the
->> bpf_stack_build_id scratch area, and it is not conditional on the new
->> sample types. get_callchain_buffers() is called for plain
->> PERF_SAMPLE_CALLCHAIN too, so as I read it, a plain "perf record -g"
->> (or any BPF tool using callchains) would also pay the extra memory on
->> every possible CPU, without --buildid-offset.
->>=20
->> Is that the intent? If not, could the extra scratch space be =
-allocated
->> only when an event with PERF_SAMPLE_BUILD_ID_OFFSET or
->> PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET exists? It would also be good =
-to
->> state the per-CPU memory cost in the commit message.
+> raw user IP.
 >=20
-> Agreed, plain PERF_SAMPLE_CALLCHAIN shouldn't pay that extra per-CPU
-> memory cost. Note that single-IP PERF_SAMPLE_BUILD_ID_OFFSET resolves
-> on the stack when not combined with
-> PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET, so only
-> PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET needs the per-CPU scratch
-> buffers.
->=20
-> In v4 I've split the build-ID callchain scratch buffers into a
-> separate refcounted allocation (get_callchain_build_id_buffers() /
-> put_callchain_build_id_buffers(), tracked via
-> PERF_ATTACH_CALLCHAIN_BUILD_ID) that is only allocated while at least
-> one PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET event is active. Plain
-> PERF_SAMPLE_CALLCHAIN events now incur zero extra memory overhead.
-> I've also documented the exact per-CPU memory cost in the commit
-> message (10,560 bytes per recursion slot, or 42,240 bytes / 41.25 KiB
-> per possible CPU across PERF_NR_CONTEXTS=3D4 at the default
-> perf_event_max_stack=3D127).
+> I've expanded the PERF_SAMPLE_BUILD_ID_OFFSET comment in Patch 03 for
+> v4 to explicitly document all of these cases.
 
-Hi Ian
+Thanks Ian for incorporating the feedback
+I will check the updates patch in V4
 
-Sure, Thanks for addressing the suggestion in V4
-I will check the latest changes in V4
-
->=20
->>>=20
->>> for_each_possible_cpu(cpu) {
->>> entries->cpu_entries[cpu] =3D kmalloc_node(size, GFP_KERNEL,
->>> @@ -169,7 +190,22 @@ struct perf_callchain_entry =
-*get_callchain_entry(int *rctx)
->>> cpu =3D smp_processor_id();
->>>=20
->>> return (((void *)entries->cpu_entries[cpu]) +
->>> - (*rctx * perf_callchain_entry__sizeof()));
->>> + (*rctx * perf_callchain_context__sizeof()));
->>> +}
->>> +
->>> +struct perf_callchain_build_id_entry *
->>> +get_callchain_build_id_entry(int *rctx, struct bpf_stack_build_id =
-**bpf_bids)
->>> +{
->>> + void *base =3D get_callchain_entry(rctx);
->>> +
->>> + if (!base)
->>> + return NULL;
->>> +
->>> + base +=3D perf_callchain_entry__sizeof();
->>> + if (bpf_bids)
->>> + *bpf_bids =3D base + perf_callchain_build_id_entry__sizeof();
->>> +
->>> + return base;
->>> }
->>>=20
->>> void
->>> @@ -178,6 +214,172 @@ put_callchain_entry(int rctx)
->>> put_recursion_context(this_cpu_ptr(callchain_recursion), rctx);
->>> }
->>>=20
->>> +void perf_callchain_encode_build_ids(struct =
-perf_callchain_build_id_entry *entry,
->>> +     const u64 *ips, u32 nr, u32 user_start,
->>> +     const struct bpf_stack_build_id *bpf_bids,
->>> +     u32 nr_bpf_bids, u32 max_size)
->>> +{
->>> + u32 nr_build_ids =3D 0, nr_offsets =3D 0;
->>> + u32 raw_bids_len =3D 0, aligned_bids_len =3D 0;
->>> +
->>> + static_assert(BUILD_ID_SIZE_MAX =3D=3D =
-PERF_CALLCHAIN_BUILD_ID_MAX_SIZE);
->>> +
->>> + for (u32 i =3D 0; i < nr; i++) {
->>> + u64 ip =3D ips[i];
->>> + u64 encoded_offset;
->>> + const struct bpf_stack_build_id *bpf_bid =3D NULL;
->>> +
->>> + if (i >=3D user_start && i - user_start < nr_bpf_bids)
->>> + bpf_bid =3D &bpf_bids[i - user_start];
->>> +
->>> + if (bpf_bid && bpf_bid->status =3D=3D BPF_STACK_BUILD_ID_VALID) {
->>> + u32 pos =3D 0, found_idx =3D 0;
->>> +
->>> + for (u32 b =3D 0; b < nr_build_ids; b++) {
->>> + u8 sz =3D entry->build_ids[pos];
->>> +
->>> + if (sz =3D=3D BUILD_ID_SIZE_MAX &&
->>> +    !memcmp(&entry->build_ids[pos + 1],
->>> +    bpf_bid->build_id,
->>> +    BUILD_ID_SIZE_MAX)) {
->>> + found_idx =3D b + 1;
->>> + break;
->>> + }
->>> + pos +=3D 1 + sz;
->>> + }
->>> +
->>> + if (!found_idx &&
->>> +    nr_build_ids < PERF_CALLCHAIN_BUILD_ID_MAX_NRS) {
->>> + u32 next_raw_len =3D raw_bids_len + 1 + BUILD_ID_SIZE_MAX;
->>> + u32 next_aligned_len =3D ALIGN(next_raw_len, sizeof(u64));
->>> +
->>> + if (next_aligned_len + (i + 1) * sizeof(u64) > max_size)
->>> + break;
->>> + entry->build_ids[raw_bids_len] =3D BUILD_ID_SIZE_MAX;
->>> + memcpy(&entry->build_ids[raw_bids_len + 1],
->>> +       bpf_bid->build_id, BUILD_ID_SIZE_MAX);
->>> + nr_build_ids++;
->>> + raw_bids_len =3D next_raw_len;
->>> + aligned_bids_len =3D next_aligned_len;
->>> + found_idx =3D nr_build_ids;
->>> + }
->>> +
->>> + if (aligned_bids_len + (i + 1) * sizeof(u64) > max_size)
->>> + break;
->>> +
->>> + if (found_idx) {
->>> + encoded_offset =3D ((u64)found_idx << 56) |
->>> + (bpf_bid->offset & GENMASK_ULL(55, 0));
->>> + } else {
->>> + encoded_offset =3D ip & GENMASK_ULL(55, 0);
->>> + }
->>> + } else {
->>> + if (aligned_bids_len + (i + 1) * sizeof(u64) > max_size)
->>> + break;
->>> + if (i >=3D user_start && ip < PERF_CONTEXT_MAX)
->>> + encoded_offset =3D ip & GENMASK_ULL(55, 0);
->>> + else
->>> + encoded_offset =3D ip;
->>> + }
->>> +
->>> + entry->offsets[i] =3D encoded_offset;
->>> + nr_offsets =3D i + 1;
->>> + }
->>> +
->>> + if (nr_offsets > 0 && nr_offsets <=3D user_start &&
->>> +    entry->offsets[nr_offsets - 1] =3D=3D =
-PERF_CONTEXT_USER_DEFERRED &&
->>> +    (nr_offsets < 2 ||
->>> +     entry->offsets[nr_offsets - 2] !=3D =
-PERF_CONTEXT_USER_DEFERRED))
->>> + nr_offsets--;
->>> +
->>> + if (aligned_bids_len > raw_bids_len) {
->>> + memset(&entry->build_ids[raw_bids_len], 0,
->>> +       aligned_bids_len - raw_bids_len);
->>> + }
->>> + entry->nr_build_ids =3D nr_build_ids;
->>> + entry->nr_offsets =3D nr_offsets;
->>> + entry->build_ids_len =3D aligned_bids_len;
->>> +}
->>> +
->>> +static struct perf_callchain_build_id_entry =
-__empty_callchain_build_id =3D {};
->>> +
->>> +struct perf_callchain_build_id_entry *
->>> +perf_callchain_build_id(struct perf_event *event,
->>> + struct perf_callchain_entry *callchain,
->>> + u64 ip, bool resolve_ip, u32 max_size)
->>> +{
->>> + bool crosstask =3D event->ctx->task && event->ctx->task !=3D =
-current;
->>> + bool has_user_ctx =3D is_user_task(current) && current->mm && =
-!crosstask;
->>> + struct perf_callchain_build_id_entry *entry;
->>> + struct bpf_stack_build_id *bpf_bids;
->>> + u32 nr, user_start, nr_bpf_bids =3D 0, ip_slot =3D 0;
->>> + int rctx;
->>> +
->>> + if (!callchain || !callchain->nr || max_size < sizeof(u64))
->>> + return &__empty_callchain_build_id;
->>> +
->>> + entry =3D get_callchain_build_id_entry(&rctx, &bpf_bids);
->>> + if (!entry)
->>> + return &__empty_callchain_build_id;
->>> +
->>> + entry->has_ip_bid =3D false;
->>> + nr =3D min_t(u64, callchain->nr,
->>> +   sysctl_perf_event_max_stack +
->>> +   sysctl_perf_event_max_contexts_per_stack);
->>> + user_start =3D nr;
->>> + if (has_user_ctx) {
->>> + for (u32 i =3D 0; i < nr; i++) {
->>> + if (callchain->ip[i] =3D=3D PERF_CONTEXT_USER) {
->>> + user_start =3D i + 1;
->>> + break;
->>> + }
->>> + }
->>> + if (user_start < nr) {
->>> + nr_bpf_bids =3D min_t(u32, nr - user_start,
->>> +    sysctl_perf_event_max_stack);
->>> + nr_bpf_bids =3D min_t(u32, nr_bpf_bids,
->>> +    max_size / sizeof(u64));
->>> + }
->>> + if (nr_bpf_bids > 0) {
->>> + if (resolve_ip) {
->>> + bpf_bids[0].ip =3D ip;
->>> + ip_slot =3D 1;
->>> + }
->>> + for (u32 i =3D 0; i < nr_bpf_bids; i++) {
->>> + bpf_bids[ip_slot + i].ip =3D
->>> + callchain->ip[user_start + i];
->>> + }
->>> + stack_map_get_build_id_offset(bpf_bids,
->>> +      ip_slot + nr_bpf_bids,
->>> +      true, false);
->>> + if (resolve_ip) {
->>> + memset(&entry->ip_bid, 0,
->>> +       sizeof(entry->ip_bid));
->>> + if (bpf_bids[0].status =3D=3D
->>> +    BPF_STACK_BUILD_ID_VALID) {
->>> + entry->ip_bid.size =3D
->>> + BUILD_ID_SIZE_MAX;
->>> + memcpy(entry->ip_bid.build_id,
->>> +       bpf_bids[0].build_id,
->>> +       BUILD_ID_SIZE_MAX);
->>> + entry->ip_bid.offset =3D
->>> + bpf_bids[0].offset;
->>> + } else {
->>> + entry->ip_bid.offset =3D ip;
->>> + }
->>> + entry->has_ip_bid =3D true;
->>> + }
->>> + }
->>> + }
->>> +
->>> + perf_callchain_encode_build_ids(entry, callchain->ip, nr, =
-user_start,
->>> + bpf_bids + ip_slot, nr_bpf_bids,
->>> + max_size);
->>> + put_callchain_entry(rctx);
->>> +
->>> + return entry;
->>> +}
->>> +
->>> static void fixup_uretprobe_trampoline_entries(struct =
-perf_callchain_entry *entry,
->>>      int start_entry_idx)
->>> {
->>> diff --git a/kernel/events/core.c b/kernel/events/core.c
->>> index fd9f654de269..d38ffe52c301 100644
->>> --- a/kernel/events/core.c
->>> +++ b/kernel/events/core.c
->>> @@ -2096,6 +2096,9 @@ static void __perf_event_header_size(struct =
-perf_event *event, u64 sample_type)
->>> if (sample_type & PERF_SAMPLE_CODE_PAGE_SIZE)
->>> size +=3D sizeof(data->code_page_size);
->>>=20
->>> + if (sample_type & PERF_SAMPLE_BUILD_ID_OFFSET)
->>> + size +=3D sizeof(struct perf_sample_build_id_offset);
->>> +
->>> event->header_size =3D size;
->>> }
->>>=20
->>> @@ -8396,6 +8399,78 @@ static void perf_output_read(struct =
-perf_output_handle *handle,
->>> perf_output_read_one(handle, event, enabled, running);
->>> }
->>>=20
->>> +static void perf_bpf_to_sample_bid_offset(struct bpf_stack_build_id =
-*bpf_bid)
->>> +{
->>> + struct perf_sample_build_id_offset *bid =3D (void *)bpf_bid;
->>> + u8 size =3D 0;
->>> +
->>> + static_assert(sizeof(*bid) =3D=3D sizeof(*bpf_bid));
->>> + static_assert(offsetof(struct perf_sample_build_id_offset, =
-build_id) =3D=3D
->>> +      offsetof(struct bpf_stack_build_id, build_id));
->>> + static_assert(offsetof(struct perf_sample_build_id_offset, offset) =
-=3D=3D
->>> +      offsetof(struct bpf_stack_build_id, offset));
->>> +
->>> + if (bpf_bid->status =3D=3D BPF_STACK_BUILD_ID_VALID)
->>> + size =3D BUILD_ID_SIZE_MAX;
->>=20
->> perf_bpf_to_sample_bid_offset() and perf_callchain_encode_build_ids() =
-only ever
->> write size =3D BUILD_ID_SIZE_MAX for a resolved build ID, and size =3D =
-0 for the unresolved case.
->> As far as I can see the table in =
-PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET,
->> therefore always contains BUILD_ID_SIZE_MAX-byte entries, although =
-patch 03 documents it
->> as variable-length {u8 size; u8 data[size]}.
->>=20
->> Is there a case where size can be anything other than 0 or 20? If =
-not,
->> could the UAPI comment in patch 03 say so?
->=20
-> ELF build IDs can have lengths other than 20 bytes (e.g. 8-byte xxhash
-> / --build-id=3D0x... or 16-byte MD5/UUID, alongside 20-byte SHA-1),
-> matching struct perf_build_id::size (1..20) in PERF_RECORD_MMAP2.
-Ok.
->=20
-> In the kernel, stack_map_get_build_id_offset() currently uses struct
-> bpf_stack_build_id which doesn't carry the parsed note length and
-> zero-pads shorter build IDs to BUILD_ID_SIZE_MAX (20), so
-> kernel-emitted table entries currently have size =3D=3D 20. However,
-> user-space tools such as "perf inject --sample-buildids" write the
-> exact DSO build ID length (1 <=3D size <=3D 20), and keeping size in =
-the
-> UAPI format also allows the kernel to emit unpadded lengths in the
-> future without an ABI break. Note that table entries in
-> PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET never have size =3D=3D 0 =
-(unresolved
-> frames are encoded via index 0x00 in offsets[] without adding a table
-> entry).
-
-Got it.
->=20
-> I've updated the UAPI comment in Patch 03 for v4 to explain this
-> explicitly (1 <=3D size <=3D 20, with the kernel currently =
-zero-padding to
-> 20 bytes via bpf_stack_build_id while user-space tools may emit the
-> exact unpadded length).
-Sure that helps
-
-Thanks
 Athira
->=20
-> Thanks!
+> Thanks,
 > Ian
 >=20
->> Thanks
+>> Thanks,
 >> Athira
+>>=20
+>>=20
+>>> + * } && PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET
+>>> * };
+>>> */
+>>> PERF_RECORD_SAMPLE =3D 9,
+>>> @@ -1306,8 +1341,22 @@ enum perf_event_type {
+>>> * struct {
+>>> * struct perf_event_header header;
+>>> * u64 cookie;
+>>> - * u64 nr;
+>>> - * u64 ips[nr];
+>>> + * union {
+>>> + * struct {
+>>> + * u64 nr;
+>>> + * u64 ips[nr];
+>>> + * };
+>>> + * struct {
+>>> + * u32 nr_build_ids;
+>>> + * u32 nr_offsets;
+>>> + * struct {
+>>> + * u8 size;
+>>> + * u8 data[size];
+>>> + * }[nr_build_ids];
+>>> + * u8 pad[];
+>>> + * u64 offsets[nr_offsets];
+>>> + * }; && (header.misc & PERF_RECORD_MISC_MMAP_BUILD_ID)
+>>> + * };
+>>> * struct sample_id sample_id;
+>>> * };
+>>> */
+>>> --
+>>> 2.56.1.703.gf848ed807c-goog
 
 
