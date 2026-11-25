@@ -1,68 +1,56 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795572385;
-	b=a5KHGkVGkWLFbEWM54F5/siUcdL4GGWj0OKoPOGQxB+l88pL0mNYd7mWSbBuBGnZldMH
-	 iHINVjZxe8KRbCY3AVQFBqh4JECGi55WV/XWnOoPPB5J4GhlpzEMSh7DHIAN7JRNgpV7F
-	 c24P+2OirbE0vUyLWkUvCV0SNCKaMQWOafvC6FMnL4e7SKBIwJibwfzAjTSG/gLcyCfZl
-	 RVELGT/OQ+4Uk3OzeS0kx1iN4C3/5GxmcGIwI/uDhbKe2f6eGkAq//vX0rADgFsmkzXMd
-	 TNGwwcX+timfpKdX92LdqI+jikSo09mLLfmNtnXN9eP/ZHXJqUlO8TiXFql+GTZX7rw==
+	t=1795573049;
+	b=GorOm8izWtq8cuZIDeeuxIqZCo58v/XDE60t6Fw/6H/Cc0cbfSfwOHaPaHk3NTpt2M5F
+	 8xN5WS79wNJ5Xyu++WSgibazjHQ/weCN2heUerbCW/XGMIJsWDsCdLLYKzIy4GY2ejaAj
+	 p+EOyBpkQAqHNwVcLnmBBjqyQv+h4zbh4zJqvnYxS/nXxq4zeskWjgTBKh0MvVmQ+/fTg
+	 F+oZNa601QZrMaReKujvPx67UVKFPlri32XK4PWpgJxrkloazwWBv2A8Akyd7slBB6vK6
+	 YZat7xMFopKFyOqnWcpZvBwby+HJLc60fl60BbqSFmmctXoEL7kxWYqIDIJ+5jyEWYg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795572385;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=UBTUjaVtS7K/5PWz3SSwOCRiC5A8W60WnjfBb608/1A=;
-	b=tOURSE1RjC3p5qPmOsgevcZd7kA4ZFVjmtZ54WhQtbr02CEE32Z1qCJi/b8WWM3udsZw
-	 ld2vi2YPcYEQ2FvwK2aB0p8pYVUu0SKo/Nj5ZHvJm6peqtI+OPR83zzv0d/K3pP5qob43
-	 7oKBReuYFP8vAeUbVYcLxNmhyPz9YZy/4jLMAKmIdjdvjXdijCFNKYZ8OraIeFzYLVspz
-	 GoNYKdmcm6RJxkkxBSa91ersUU2bNEt5MGe1hOIrs4NWxjvbr/QyG+IcI3s79I1ZXXKcX
-	 09KgMXmBMt7ORRdmplrxD4jDQi3XqNdUBhf03Dd3F5UrpCwcGqCdZgXiRd2zmYGd71w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795573049;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=SPbiQBdJAUd+QqTmNIFCXrbkatS9bA90y2l8ZVhkUGM=;
+	b=AwIJ934lgqbmxEGaau5rtFhNuVNLDY25E367UgKYNi7qHyXqsIYS8EdofmItYp8tVHSX
+	 DgMblqEbPmrTXp/hXWTBEZ6MTCYSfNlH6wwtaei5+Sc1jHknHWJEIFKNavSmBXrzfl9Wh
+	 T4Vk4bZoO4tG8hL8JBWSzHwj+MSXUW7PDYFt+je8n0mncnvNeqK0aD8MJ9Gs4zEWKo+9m
+	 fjxa87dTF8lm12XbGoibdF1sLBZl3mNzfCZgsWQuhxel1sijNoLnQZ6DtF3pbGdGMaaJj
+	 NTopROqhZ17KSPsV4lSFBjBNmSjN6loKBAfTSvy5A6NmT+3PujkkWC9Ta+xaWDysZEg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gEz1POMX;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Hb61Gkw6;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C95606A337;
-	Wed, 25 Nov 2026 02:06:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E463606A31E
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 02:17:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gEz1POMX
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3173E1F000F2;
-	Wed, 25 Nov 2026 02:06:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Hb61Gkw6
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8891D1F000D2;
+	Wed, 25 Nov 2026 02:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795572385;
-	bh=UBTUjaVtS7K/5PWz3SSwOCRiC5A8W60WnjfBb608/1A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=gEz1POMX5Ws6cMVWR6CtvoMEoSorRkKmNYgHEXR3+Q0nQENhMWDpDgZkiN8JboT1O
-	 GqYniRxaSPQr1aWqHMynv+TnBeBqmGOwXLY1ZRBvZH5/4330JS9IXbdgC9eUqCBMHs
-	 mmJUOiIAibyuqtVAKK23v2UeOt+zm2KJZV0zGtr9UoIJTQ15gJLUCmtppThAg9uUNJ
-	 6qTV5ycWH3n6KbRthpMvMqrRe6eq7V84yJPoYwmOWAal5wg0lCAF7PgRQgibdmqLcw
-	 gw30V/Yv73bolEHnKtqH+ydtCiYt1IWfH2DsYfl8mFWdowyI15rdBOisO+dn9GpTda
-	 19RSX8ppZTFcA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Chuck Wolber <chuck@wolber.net>,
-	Ian Rogers <irogers@google.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Marco Elver <elver@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>
-Subject: [PATCH v3 06/19] perf: Always inline the empty perf_lopwr_cb() stub
-Date: Tue, 24 Nov 2026 21:05:50 -0500
-Message-ID: <20261125020603.3934222-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261125020603.3934222-1-sashal@kernel.org>
-References: <20261125020603.3934222-1-sashal@kernel.org>
+	s=k20260515; t=1795573048;
+	bh=SPbiQBdJAUd+QqTmNIFCXrbkatS9bA90y2l8ZVhkUGM=;
+	h=From:Subject:Reply-To:To:In-Reply-To:References:Date;
+	b=Hb61Gkw6WVqSBC3teyO+r0cjmE6th/H+PMiWBjwlYON2kOJlC35FriCIYrIl45Ji3
+	 RIqZA9fKNCY8cPMJ1NSYhWcQsGV9KMuuw2s18OU+kXQeDxPc61bk/RmXy6PZypETF3
+	 qBJjXbnl++s5b1lQ9YJn1EHHsIyYLBO1hoayJk/wlglKnUhZz/apY8a70SJTCxHBNh
+	 MAV8hBIHBcIvXEmy27z5X8AxzQ4FDhhU4zA1UvidjW+D2akOO8WMhxjKnNrBKwDncl
+	 4oyX9Bs5v+upud2odbahPn2POZhTO0NIT5NSY5jSIAuL9BlNNNIkzsm9FAFxte+Dij
+	 1A298fU3bWs7A==
+Message-ID: <sashiko-outbox-232396@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6] perf stat: Refuse a group mixing tool and kernel
+ events
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "TAKANO Mitsuhiro" <takano32@gmail.com>, linux-perf-users@vger.kernel.org
+In-Reply-To: <20261125013826.1495729-1-takano32@gmail.com>
+References: <20261124135630.1027716-1-takano32@gmail.com>
+ <20261125013826.1495729-1-takano32@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 25 Nov 2026 02:17:26 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -71,36 +59,195 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-perf_lopwr_cb() is called from the noinstr acpi_idle_do_entry(). The
-x86 implementation is __always_inline, but the empty fallback is a
-plain static inline function, which the compiler won't inline into
-noinstr code when building with code coverage instrumentation:
+Thank you for your contribution! Sashiko AI review found 2 potential
+issues to consider:
+- [Medium] perf tests: per-task <not counted> failure on hybrid PMUs in
+  accepted()
+- [Medium] perf stat: NULL deref in evsel__enable_cpu() on unsplit weak
+  tool group
+--
 
-  vmlinux.o: warning: objtool: acpi_idle_do_entry+0x4: call to perf_lopwr_cb() leaves .noinstr.text section
+commit 102728bd68653615df5786d4a884d15a2f55a157
+Author: TAKANO Mitsuhiro <takano32@gmail.com>
 
-Make the stub __always_inline as well.
+perf stat: Refuse a group mixing tool and kernel events
 
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/linux/perf_event.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This commit rejects event groups that mix tool PMU events with kernel events
+in perf stat, while leaving weak groups led by a tool event to the open-loop
+weak group splitting logic and returning -2 from get_group_fd() for any tool
+leader.
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index e1e11500df097..09e4d780288e6 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -2142,7 +2142,7 @@ typedef int (perf_snapshot_branch_stack_t)(struct perf_branch_entry *entries,
- DECLARE_STATIC_CALL(perf_snapshot_branch_stack, perf_snapshot_branch_stack_t);
- 
- #ifndef PERF_NEEDS_LOPWR_CB
--static inline void perf_lopwr_cb(bool mode)
-+static __always_inline void perf_lopwr_cb(bool mode)
- {
- }
- #endif
--- 
-2.53.0
+Link: https://lore.kernel.org/all/sashiko-outbox-227849@kernel.org/
+Link: https://lore.kernel.org/all/sashiko-outbox-231330@kernel.org/
+Link: https://lore.kernel.org/all/20261111-tool-pmu-leader-v2-1-3faa0fb98c5=
+1@gmail.com/
+Link: https://lore.kernel.org/all/awC_aZXD5FBGu4mO@google.com/
+Link: https://lore.kernel.org/all/awTXdgY38s2bijW5@google.com/
+Link: https://lore.kernel.org/all/20261123071913.653315-7-irogers@google.co=
+m/
 
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 37752d6bfef45..21cf17d3dcca8 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -2469,6 +2469,70 @@ static int parse_tpebs_mode(const struct option *o=
+pt, const char *str,
+>  }
+>  #endif // HAVE_ARCH_X86_64_SUPPORT
+> =20
+> +/*
+> + * A tool event like user_time has no event in the kernel: perf reads it
+> + * from a file such as /proc/stat, or computes it in perf itself.  A gro=
+up
+> + * that mixes one with an event the kernel opens cannot be counted.
+> + * get_group_fd() has no group fd to hand to the members when the leader=
+ is
+> + * a tool event, so the members cannot be in a kernel group with it; with
+> + * a kernel event as the leader the members do open, but the group read =
+is
+> + * rejected as the kernel knows only the members it opened.  perf stat u=
+sed
+> + * to leave the rest of the group uncounted in both cases, when the CPU =
+maps
+> + * had not split the group first; refuse the group instead.  A group wit=
+h no
+> + * event the kernel opens is left alone, as perf reads each event in it.=
+  A
+> + * weak group led by a tool event is left to the weak group handling in =
+the
+> + * open loop, which splits it when a member fails to open; any other weak
+> + * group is refused like a strong one.
+> + */
+> +static int check_tool_groups(struct evlist *evlist)
+> +{
+> +	struct evsel *leader, *evsel;
+> +
+> +	evlist__for_each_entry(evlist, leader) {
+> +		struct evsel *tool =3D NULL;
+> +		bool has_kernel =3D false, weak =3D false;
+> +
+> +		if (!evsel__is_group_leader(leader) || leader->core.nr_members < 2)
+> +			continue;
+> +
+> +		/*
+> +		 * The members of a group are not necessarily adjacent in the
+> +		 * evlist: evlist__check_cpu_maps() makes a removed member a
+> +		 * leader of its own without moving it.
+> +		 */
+> +		evlist__for_each_entry(evlist, evsel) {
+> +			if (!evsel__has_leader(evsel, leader))
+> +				continue;
+> +			if (evsel__is_tool(evsel)) {
+> +				if (!tool)
+> +					tool =3D evsel;
+> +			} else if (!evsel__is_non_perf_event_open_pmu(evsel)) {
+> +				has_kernel =3D true;
+> +			}
+> +			weak |=3D evsel->weak_group;
+> +		}
+> +
+> +		if (!tool || !has_kernel)
+> +			continue;
+> +
+> +		/*
+> +		 * A weak group led by a tool event is left to the weak group
+> +		 * handling in the open loop: get_group_fd() returns -2 for a
+> +		 * tool leader, the open fails with EINVAL, and that is what
+> +		 * splits the group.  Any other weak group does not get that
+> +		 * far, so it is refused like a strong group.
+> +		 */
+> +		if (weak && evsel__is_tool(leader))
+> +			continue;
+
+[Severity: Medium]
+Can a weak group led by a tool event still reach enable_counters() with an
+unsplit member whose core.fd is NULL, causing a NULL pointer dereference in
+evsel__enable_cpu()?
+
+With a retire-latency member (for example,
+perf stat -a -e '{user_time,cycles:R}:W' -- true), evsel__open_cpu() returns
+early after evsel__tpebs_open() before allocating core.fd or calling
+get_group_fd(), so the weak group is never split.  Similarly, with an
+architecture force-grouped member and :WX (for example,
+perf stat -a -e '{user_time,slots}:WX' -- true on x86),
+evsel__remove_from_group() refuses to detach a member where
+arch_evsel__must_be_in_group() is true, so the second pass fails again in
+get_group_fd() and perf_evsel__free_fd() sets member->core.fd to NULL while
+leaving it attached to the tool leader:
+
+tools/perf/util/evsel.c:evsel__remove_from_group() {
+	if (!arch_evsel__must_be_in_group(evsel) && evsel !=3D leader) {
+		evsel__set_leader(evsel, evsel);
+		evsel->core.nr_members =3D 0;
+		leader->core.nr_members--;
+	}
+}
+
+When !target__enable_on_exec(&target), __evlist__enable() checks
+pos->core.fd only on the tool leader and calls evsel__enable_cpu(leader),
+which loops over remaining group members and calls
+perf_evsel__enable_cpu(&member->core) -> perf_evsel__run_ioctl() ->
+xyarray__max_y(NULL).
+
+> diff --git a/tools/perf/tests/shell/stat+tool_group.sh b/tools/perf/tests=
+/shell/stat+tool_group.sh
+> new file mode 100755
+> index 0000000000000..ff71429779792
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/stat+tool_group.sh
+
+[ ... ]
+
+> +accepted() {
+> +  local group=3D"$1" name rc=3D0
+> +
+> +  shift
+> +  echo "Testing that perf stat accepts ${group}"
+> +  perf stat -e "${group}" -o "${out}" -- true 2> "${stderr}" || rc=3D$?
+> +
+> +  if [ "${rc}" !=3D 0 ]; then
+> +    cat "${stderr}"
+> +    echo "perf stat failed for ${group} (${rc})  [Failed]"
+> +    err=3D1
+> +    return
+> +  fi
+> +  if grep -q "cannot be grouped with kernel events" "${stderr}"; then
+> +    cat "${stderr}"
+> +    echo "perf stat refused ${group}  [Failed]"
+> +    err=3D1
+> +    return
+> +  fi
+> +  for name in "$@"; do
+> +    # When no hardware cycles event can be counted, cycles falls back to
+> +    # task-clock and the evsel is renamed, so it need not appear.
+> +    case "${name}" in
+> +      cycles|cycles:*)
+> +        [ "${kernel_events}" =3D 0 ] && continue ;;
+> +    esac
+> +    if ! grep -q -- "${name}" "${out}"; then
+> +      echo "perf stat did not print ${name}  [Failed]"
+> +      cat "${out}"
+> +      err=3D1
+> +    fi
+> +  done
+> +  if grep -q "<not counted>" "${out}"; then
+> +    echo "perf stat did not count an event in ${group}  [Failed]"
+> +    cat "${out}"
+> +    err=3D1
+
+[Severity: Medium]
+Will this "<not counted>" check in accepted() fail on hybrid systems when
+running the per-task test cases such as '{user_time,cycles}:W' and
+'{cycles,instructions},duration_time'?
+
+On hybrid machines (such as Intel Alder Lake or ARM big.LITTLE), unqualified
+cycles and instructions expand into one evsel per core PMU (for example,
+cpu_core/cycles/ and cpu_atom/cycles/).  Because the initial kernel_events
+probe only checks for "<not supported>", kernel_events remains 1, and a
+short-lived per-task run of "true" without --hybrid-merge executes on only
+one core type while printing "<not counted>" for the unused core PMU.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261125013826.1495=
+729-1-takano32@gmail.com?part=3D1
