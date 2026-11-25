@@ -1,107 +1,104 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.217.43
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=74.125.82.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795569910;
-	b=eNHtnbXbSVWbZrxvjzMH8sSsyiS7fWvjScRBdTpaUYFpXXcItgcm/u4jXZbLRNaxA0cz
-	 Usv+Mk21pPHE4IcVMm6MX5D5Wrs1dqSHgP0a2VCQaXbFw2xF6ot/28jBZZ8+WnW929C1I
-	 6d1XZaYJ2j1V7GTXj9/rralJusJlSfb6OJTcHIYZhZNSZXUkQV9a2f4fH4qm63IT2OjkT
-	 iaodHTLCGEOSFBNUvpnE5lnaDQmrpICmwE1v3MeYwFw7T+/9CERbkYVRQ/rFLbviCeDb0
-	 otlHk0/+BntJ/nmh0FyfW189f5+H3raWmqiN/IfwI0b0ll4ynvzUUjBLyExuGKKMkmw==
+	t=1795570713;
+	b=IJNJvP8UB/sSUKtvCv389kJddEv//UZRn7PUfU7Ol1Pqk9nqqps+NbSt3W2fLLL+3lAK
+	 y8f6VlhKgshb8osdWg8hkGOisuMyfGlNn4t0xoEN0OR3rDJnSyfD4EJQBM0FgTmvM1lFA
+	 VhcSorm0oPDqpbYmszn3Vsm/byEtd4A9w/7YPxvH+PtwKcf9tePsuyQ8DEfx8ZVTZ0xeF
+	 DQQ3+CuIT8IcItpPzKCc09ZqMZr6HhlJfeiCDuRNCTdc5L5ODl8s0cPBzu3dkJrFsBjLy
+	 fRn+WAuCSHxvXRC6GkYzJLENlLIAfSYv24+ZhdihttJW07RVwGNUdiiV8MfC7VqZdUg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795569910;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795570713;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=MahiC7D0ZIOhMz97xWmjX00QeVr1A1IECgnuiT+EXIk=;
-	b=4irh/mlvRZ85D/TiIMtLPwk93MaDRCH7tjzxCg88C23UvYEgztr1wcjl7ZjqPdAob0l2
-	 aLiSEPJrSRBc4/1jXJI2g6/MqRfcQnoA5jQYGERZrxHugXY3qgt4B7+PxmChpGH9TZQM3
-	 tjtVHaprkNU7PnOFSLB+L8BR370ZGqd6Dmh7aKR2KwLCIPQIwJW9sZPcipBHKewi1DwfA
-	 lpcZpVQIjgrMnpGvXIo8TCh2ywWr1gD9Zq2ZSgo63uCFzOFxK9N5R/3FvhJYdWiM7ANAg
-	 GXlIw8VMLRussXHNV/CJE9LQQeSnvPKn+HeFx2mzUwJrwk4O94jbMvx+G7iDOOCTGoA==
+	 X-Gm-Message-State:X-Gm-Gg:X-Received:Received:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Transfer-Encoding;
+	bh=8Vv99MPpkslfI31+Mx5b7uT41xxx/LrADAwFgaN3tlY=;
+	b=CC9QDaXVyzUOjWEx6uX+kri/e7bvDDLRdN4111Qyf4GxQv/XS1fsxNBnklb62oiREkBk
+	 FK3mmq5kKyPGBwskIE7wQWFMSFBTSgj8hxPLoHp1lo5pD0/tG+kb2r8GgkeMDrHY/C/Tm
+	 Ok+a5zjjGHzscs9kGfjJWOIf/ZvSkTN2RlI/6novr2EH2poU2ggpLi/lqVgLZ02ac4Sa2
+	 S+/6E75r7apicKGE1lgBh0c4DtriQJKQCxsKa4DpdcU2FbL6kiQ2WzJFqeh8IX5nOpwij
+	 SKqjIBKyJiObj9mOmWBpRFtLYz+YFNkAGCL+Z+jaraufkb9YUUTF5Ewagv6q2bNqvsA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=kgvYsuQ2;
-	arc=none smtp.remote-ip=209.85.217.43
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=GFuy7yXk;
+	arc=none smtp.remote-ip=74.125.82.172
+Received: from mail-dy1-f172.google.com (mail-dy1-f172.google.com [74.125.82.172])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25998606A31E
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 01:25:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 25998606A31E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0C4606A323
+	for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 01:38:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5E0C4606A323
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=kgvYsuQ2
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-7cc53938a8fso3506291137.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 17:25:10 -0800 (PST)
+	dkim=pass (2048-bit key, unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=GFuy7yXk
+Received: by mail-dy1-f172.google.com with SMTP id 5a478bee46e88-33fb4680717so13410254eec.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Nov 2026 17:38:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795569909; x=1796174709; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1795570711; x=1796175511; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=MahiC7D0ZIOhMz97xWmjX00QeVr1A1IECgnuiT+EXIk=;
-        b=kgvYsuQ2Y1nixBlcyPnIyAQh3I9ZSoM6dKjIOvDumigk/uw1wooptga00DkPz89q4L
-         VdJy1S/+GSfiMFTafI2KgPha+2nHdQdFutbp3qWZowXir/kAiuMV4cyphjN4Bv+NCvfo
-         etJDQGAgwowYscTJX52Qbgv0psIniZFw4yD31wq0aDQRAQ09fIcg/+PmO62LlYOc2yrW
-         lli41aEY9Vmk5Js5f7QQnJKNxA96isKb58gxQYxeXeasjOekOduE5ADWWY/GT257GFjQ
-         FU7lnJfRZtPux0mXci3Umfo/+MONcMjROdaPyIc72AkHPKbW9lFe8BaeV3DTAf+pqE9f
-         ZJ3A==
+        bh=8Vv99MPpkslfI31+Mx5b7uT41xxx/LrADAwFgaN3tlY=;
+        b=GFuy7yXk0uHaGiYhxMTpDBkZnfZ6B0cUDHX8fkhSMzvEehYUvNjgajp95CqTsUWDHF
+         0D9qWi2e2hIudkXWKpfoAw/Nfvr16ceeRPyRD2/46wRaVjwYgLkthc62YL9vJdEXPMuW
+         iNpsk4bJ9Cd3MYxXHwsEDsjtIp5YbXtYiT72LTMGLFHKpQ0p86Rm9OwPJsiFla3MKZ14
+         we8d1myisgP+wicTxgSps5hybh/1aQPmdFBxmdV8Vm2yRp5+i8TDcjHR8NszJPTIZ4oi
+         4HtoWh3ibmxzJnM1gUMvyE8qrQ0yuJwQsTFzL73tbCjY1par8QHn6U0wor465cskQdqU
+         /X6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795569909; x=1796174709;
+        d=1e100.net; s=20260707; t=1795570711; x=1796175511;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=MahiC7D0ZIOhMz97xWmjX00QeVr1A1IECgnuiT+EXIk=;
-        b=M15rCbu/8TapZIbOV3BVjgCp73SwJ2VQrdRO27xb1jw7JICRyK+iJFWdF3nHBul18f
-         bWTi3uDZadPlir2rynGJ4Zc41oYDWE+sYE1h6LuLmmyWydvXTzSxBjxVfKOerB67Htdj
-         1K2hbrfAayrwn4wKjEm49aVdceJSR0fSH+2IYnHHmgwFXaxUQoT/czahrGljlDmS1oEl
-         YT5tJPInJpHMzpI8kxbojnlDEFepUcq2QSIsl770wc5fd3jUtscTSx52b7OKUYHwjOyl
-         L3MyBydrrWe/CwA/MCzK5T8osDlxGyGF/PzA7fcbeuCYvqkCEdJ5xOJicw/WiRNLR1Tt
-         K/EQ==
-X-Forwarded-Encrypted: i=1; AL+hErFE4hLGb8VqfbLCA1qTr/DHGpPlBy9/DoEro7wyIzHFvfvrX4o/JM05zNJpRWm8O2i6dX+xfIQJg+DORdFwCCe5@vger.kernel.org
-X-Gm-Message-State: APuU4Z+ahvHtU+cQjZdGBQRIAX8QcDlFfkn5WE9SYbGfnm5OsKnFtM+1
-	sOASJCqqJXFCmli+DzFqshWTCGkIsbUF0rr/UBHubZSzX+u0dXDYSDz5
-X-Gm-Gg: AZFdTZeaHBXMBtwUyorEvA2V7fTzaowgU0kKpVR72mFHj8WnbrqRKnxwCWrVnHPxpKx
-	cTEjuJvLE+E+8qGWtEPZsU29FhtAvEXpKqu3eZqx+MdjhA2+sD4QCUOnVrIf5KWgM7i42aKl1mv
-	4NwQ85BPed0YKWAwYJ6q+AJE1yH2elctAIehbQqY/tYCTPy3wxPWnq3bZktuMyw1hIipnsgGPlm
-	0QT+xYl6aLZTBWgGbCB8jKmC8VHyDu/w8lJOgHWr1U+SO7aeyWXLc91ffwyTwDfOXyxB1XzVgUF
-	0QdeZ8DGddxVH/LFmvip5ZOTwxYbU/zSTD0dOKjfqIedMu0SbbOrAPvNCd/pMHyL7c6am4NEGSG
-	bWQ9TdCzdqDK/t9CitUr0Uj1zq8xCTreIMzEZZQF3FEmbhyud2lzXuj2u58ci6S5dLHR7HcYvUf
-	VhW5zVGCdv5kROkKEuaWG/qdg89HHMmunCpPjMpX4jrm03qDeZn2OT36f5Z13MdHyZFsQF5cIx8
-	Gno/Oxnk4SbeEg/gh+yZBSuyf1YTqxnereCc+zXP9XkxmB+m90DIAWTBbA89FmPjR2lvJ5yrZAR
-	bHQl8N+biuRwrKYIeEmUrNll0aWphnEXS11cOPttHGKYLS3UnuMbbn9t9lPTmcb0mPsOssCbOBP
-	MDD/URVeMexBrABOvn8E9soH3AThiejB07ErQe7AFQ+KcsC9A4lL4Q8vZrj6NRkYDZZXotcMUzc
-	bE8YAdxwhtU0M=
-X-Received: by 2002:a05:6102:4245:b0:7ab:af4a:f2f3 with SMTP id ada2fe7eead31-7d739628997mr9588366137.26.1795569908929;
-        Tue, 24 Nov 2026 17:25:08 -0800 (PST)
-Received: from omarchy-jonathan.taildd0689.ts.net ([2800:40:33:a58e:d6f4:f4fd:c31f:7b1e])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-7d6e7d784b3sm16838329137.2.2026.11.24.17.25.04
+        bh=8Vv99MPpkslfI31+Mx5b7uT41xxx/LrADAwFgaN3tlY=;
+        b=OSaHYrq89vmLLtnrpLyFRFtCSmQ3rPFpIX4rHbYS0tzLtnCYYmIqYBD+yeEaYwBFW3
+         gdRSlIr5HvSS0axSbKLMvDVlzS4dKEVd3Ch5+vqFjaE6VJbXcQlY3AIPGpSlEkWV2KNS
+         yvOeYecgJjX0z4fY86GMcgek6qH0QWhPbPzn+464zoGFkq01E6ExEAAsv75iENuBjMSb
+         rerPRfsDogvQ3pL/b3OzEgtlNimEoq/Yzibm2EEbcOdC5Jpy3VONWjWZAengfvbeY1Q2
+         IoHRHQQS5X1qVHFaJPpTApYWTQIJ5N7fWlA+JtFpJ9qmmhe9SSiMFlDAlGNzthFexwDE
+         n1Uw==
+X-Gm-Message-State: APuU4Z8fnr0+NZl+LkbyEK+iYsnAsNnbcFF6kAjmWt3BrNt3GYzYJJM4
+	hSUCh81TMgwDPG8fGALzZtPzVT//+LMYFNI/ywUVeE4CDkxSQYn6OMv/W1ZJeJ91
+X-Gm-Gg: AZFdTZcrkCiFYdbN9tJ6mBwpr6SK3+MvEcvS1DKQe+x4pNuzjeYxpVeLgfL1LLHx61w
+	stz9DsdNriaqSOY+4xLU+VERZguUtXf9Mz+kZb0PFzpz/CMRRpoxXSDGH050tVNarAex+nwr/HX
+	1pRmhesCkW1fCuVFSxLKAjciCdjUN0uTbOlXVl3kYhDIx6PW9nGZJ016/PVYBx1MjRe6fNFwFHu
+	UZr0vmu3ALRDteGXG5408/55stSt7Kz8FWSu9c6m9KxuMRZOISV2D3FBpidF9y2JLGtOuqaw26n
+	HCngjWddIBnc9AHQfp9q1erQ0nOIHtNDFcNF5911EWvYGOzZSpxXuobaALVIzOOQ9nkQOpjo2E2
+	gEPqWTBSYbbCjBtpM3ZrEKg46Z4iLWlvi+uv3axiiM5gylxeywDzVaxpXraMZI8uEsd8bY/FT03
+	KA2WynEYt+YXUWkNmAcdcgXioHkbR1JkKN0fF7AuzQ24adkFsiAhpB9kmmzuqEC7bnhKbRYynci
+	uFcXS8XmNXrGAzjZ1U4qW6bf+iLHoxWtA/0zt/nC3EXtYCNHx9w55DJRqTqZTkgHpDq2f7UMb3a
+	FdmUkIWVNVgKMAMN4WJx
+X-Received: by 2002:a05:7301:9a82:b0:369:4c3f:8a5 with SMTP id 5a478bee46e88-3856ef45385mr17875756eec.14.1795570710976;
+        Tue, 24 Nov 2026 17:38:30 -0800 (PST)
+Received: from a1-free ([161.33.196.121])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-385677c371esm47889173eec.23.2026.11.24.17.38.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Nov 2026 17:25:07 -0800 (PST)
-From: Jonathan Goyvaerts <jonathan.goyvaerts@gmail.com>
-To: Ivan Shapovalov <intelfx@intelfx.name>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
+        Tue, 24 Nov 2026 17:38:30 -0800 (PST)
+From: TAKANO Mitsuhiro <takano32@gmail.com>
+To: linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Mark Rutland <mark.rutland@arm.com>,
+	Hang Zhengyang <hang.zhengyang1010@gmail.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
-	Nick Terrell <terrelln@fb.com>,
-	David Sterba <dsterba@suse.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] perf: support zstd-compressed kernel modules
-Date: Tue, 24 Nov 2026 22:24:39 -0300
-Message-ID: <20261125012441.391214-1-jonathan.goyvaerts@gmail.com>
-X-Mailer: git-send-email 2.56.1
-In-Reply-To: <auwQRrlxzuTg4dDN@z2>
-References: <20261014-perf-zstd-v1-0-9652727886fa@intelfx.name> <auwQRrlxzuTg4dDN@z2>
+	linux-kernel@vger.kernel.org,
+	TAKANO Mitsuhiro <takano32@gmail.com>,
+	Sashiko <sashiko-bot@kernel.org>
+Subject: [PATCH v6] perf stat: Refuse a group mixing tool and kernel events
+Date: Wed, 25 Nov 2026 01:38:26 +0000
+Message-ID: <20261125013826.1495729-1-takano32@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20261124135630.1027716-1-takano32@gmail.com>
+References: <20261124135630.1027716-1-takano32@gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -113,328 +110,527 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 04, 2026 at 09:12:38PM -0800, Namhyung Kim wrote:
-> Can you please address comments from Sashiko and the bot?
+A tool event has no kernel counterpart: user_time and system_time read
+/proc/stat, or /proc/<pid>/stat for a workload, and duration_time keeps
+its value in perf itself.  perf-list(1) says events from different PMUs
+cannot be grouped except for some software events, and the tool PMU counts
+as software, so a tool event stays in the group the user wrote.
 
-Ivan, in case it saves you time: the diff below goes on top of v1 and
-addresses those comments, plus a few more things I ran into. Please
-fold it into v2 as you see fit; if you take it as is, a
-Co-developed-by: with my Signed-off-by: is fine with me.
+The parser splits it from another software PMU's event, such as cpu-clock,
+and evlist__check_cpu_maps() removes members whose CPUs do not match the
+leader under -a or -C.  What is left is a group that cannot be counted.
 
-For the Sashiko and LKP reports:
+Before this change, with user_time or system_time as the leader,
+get_group_fd() handed the procfs descriptor to the members and the kernel
+rejected each with EBADF.  With duration_time as the leader there was no
+descriptor, so the members got -2 and failed with EINVAL, "broken group
+leader" appearing only in the debug log.  Either way perf stat printed the
+tool event and "<not supported>" for the rest of the group:
 
-- 4/4: step back by 3 (".ko") again, so .ko.gz and .ko.xz are modules
-  again. This is also the LKP kmod_path__parse failure.
-- 2/4: zstd_decompress_buffer() returns 0, not SIZE_MAX, when the
-  stream can't be set up.
-- 3/4: zstd_is_compressed() returns false when open() fails, and
-  compares the magic as bytes, like gzip_is_compressed() does, so it
-  needs no htole32() or <endian.h>.
-- 1/4: the comment in perf_session__process_compressed_event() names
-  zstd_decompress_buffer().
+  $ perf stat -e '{user_time,cycles}' -- sleep 0.05
+                   0      user_time
+     <not supported>      cycles
 
-Not in those reports:
+Before this change too, with a kernel event as the leader, the members did
+open, but the group read failed with ENOSPC.  perf sized the buffer for
+leader->core.nr_members entries, which included the tool event, while the
+kernel filled in one entry fewer; readn() then asked for the remainder
+with a count below the kernel's read_size, so the rest of the group came
+out as "<not counted>".  That was the shape of
+-e '{cycles,instructions,duration_time}', which had not been counted since
+commit 6828d6929b76 ("perf evsel: Refactor tool events").
 
-- 3/4: the !HAVE_ZSTD_SUPPORT stubs need __maybe_unused, or the
-  make_minimal build (NO_LIBZSTD=1) fails with
-  -Werror=unused-parameter.
-- 3/4: the ZSTD_DStream{In,Out}Size() buffers are 256 KiB of VLAs on
-  the stack. perf top decompresses modules on process_thread, which
-  gets the default thread stack: 128 KiB on musl. With the stack
-  limited by "ulimit -s 256", "perf buildid-cache -a asahi.ko.zst"
-  segfaults with v1. With fixed 16 KiB buffers it works down to
-  "ulimit -s 128".
-- Tests: .ko.zst cases for kmod_path__parse, and a .ko.zst case in
-  the build id cache shell test. The latter fails without the series
-  and also feeds it a truncated file.
-- Makefile.perf: the NO_LIBZSTD comment mentions modules.
+Counting such a group means moving the leader to a kernel event and
+letting the group read skip the tool members; that is left to a separate
+series.  Splitting the tool event out and warning, as
+evlist__check_cpu_maps() does, would let the kernel events count, but the
+tool event would lose the group's window and the warning is easy to miss
+in a script.  The braces are the user's explicit request, so perf stat
+should not quietly reinterpret them.  Ian's "perf pmu: Don't treat tool
+PMU as a kernel software PMU for event grouping" splits it in the parser
+and this check then has nothing to refuse; Hang's patch opens the members
+with group_fd = -1 instead, which this check preempts.  Only one of the
+three should be applied.
 
-Tested on arm64 (Arch Linux ARM, glibc, libzstd 1.5.7), where every
-module is .ko.zst, with tools/perf as at v1's base-commit
-0fcb05b72344f plus v1 and this diff:
+Refuse the group before the workload is started:
 
-- "perf buildid-cache -a asahi.ko.zst" adds the module.
-- A "perf record -a -g" stores the .ko.zst paths and the module build
-  ids, and perf script resolves all 3054 frames in the asahi module,
-  also with an empty build id cache. Without the series all of them
-  are [unknown].
-- perf test: DSO data, kmod_path__parse, Symbols, build id cache
-  operations and both Zstd tests pass.
-- The default build and the make_minimal flag set from tests/make
-  build.
+  A tool event cannot be grouped with kernel events: user_time
 
-Not done:
+That is followed by "Put it outside the braces", as in
+-e '{cycles,instructions},duration_time'.  perf stat used to leave the rest
+of the group uncounted and exit 0; it now exits 22.  Namhyung Kim preferred
+the refusal to counting the events one by one.  get_group_fd() no longer
+trips its BUG_ON() for a tool event with no descriptor, which is normal for
+duration_time; the BUG_ON() only fired in a DEBUG=1 build.
 
-- Only arm64: no x86, 32-bit or big-endian build.
-- Not tried on current perf-tools-next.
-- .ko.gz and .ko.xz only through kmod_path__parse, not at runtime.
-- Not the full perf test suite.
-- The musl stack overflow is shown with ulimit on glibc, not on musl.
-- On a truncated .ko.zst the loop ends with libzstd's "no progress"
-  error; only libzstd 1.5.7 was tried.
+A group of tool events only is accepted, as before.  A weak group led by a
+tool event is left to the weak group handling, which splits it in the open
+loop: get_group_fd() reports that no kernel group can hang off a tool
+event, and the loop splits on EINVAL before any member is enabled.  Any
+other weak group that mixes them is refused like a strong one.
 
-An LLM coding assistant wrote this diff and drafted this mail. I asked
-it to make perf read the .ko.zst modules on my machine. It found v1 on
-lore, applied it, worked through the Sashiko and LKP reports, found
-the rest with checkpatch.pl, perf's own tests and a live profile, and
-wrote the fixes and tests. I have reviewed the diff and the test
-results.
+Sashiko's review of v5 found that the split was skipped for a leader that
+is a tool event but still has an fd.  user_time and system_time do have
+one, a procfs descriptor, so fd == -1 was false and that descriptor was
+handed to perf_event_open() as group_fd.  Under -a with
+perf_event_paranoid > 1 the member cycles:k failed with EACCES, which is
+not a split condition, so it stayed in the group while its fd array was
+freed; enabling the group then dereferenced NULL:
 
-Thanks for the series,
-Jonathan
+  $ perf stat -a -e '{user_time,cycles:k}:W' -- true
+  Segmentation fault
 
-Assisted-by: LLM
-Signed-off-by: Jonathan Goyvaerts <jonathan.goyvaerts@gmail.com>
+get_group_fd() now returns -2 for a tool leader with or without an fd.  The
+fd it may have is a procfs one and cannot be a group_fd for the members.
+
+The test no longer requires cycles to be printed when no hardware cycles
+event can be counted: the evsel falls back to task-clock or is renamed,
+and the group output is still checked.  A weak group led by a tool event
+under -a is now run as well, so the crash above stays fixed.
+
+Where the core PMU covers only part of the CPUs (hybrid x86, big.LITTLE
+arm64), evlist__check_cpu_maps() takes the tool event out first under -a,
+so no mixed group is left to refuse.  Sashiko's review of v4 raised this
+and the NULL dereference that the get_group_fd() change above prevents.
+
+The code, the test, the man page and this message were written with
+Hermes Agent (deepseek-v4.1-flash); I reviewed the result, built perf, and
+ran tools/perf/tests/shell/stat+tool_group.sh and checkpatch.pl --strict.
+The -a segmentation fault above was reproduced here.  The EBADF and the
+group-read failure were not re-observed: kernel events cannot be opened
+here (perf_event_paranoid=4).
+
+Fixes: 6828d6929b76 ("perf evsel: Refactor tool events")
+Reported-by: Sashiko <sashiko-bot@kernel.org>
+Link: https://lore.kernel.org/all/sashiko-outbox-227849@kernel.org/
+Link: https://lore.kernel.org/all/sashiko-outbox-231330@kernel.org/
+Reported-by: Hang Zhengyang <hang.zhengyang1010@gmail.com>
+Link: https://lore.kernel.org/all/20261111-tool-pmu-leader-v2-1-3faa0fb98c51@gmail.com/
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/all/awC_aZXD5FBGu4mO@google.com/
+Link: https://lore.kernel.org/all/awTXdgY38s2bijW5@google.com/
+Cc: Ian Rogers <irogers@google.com>
+Link: https://lore.kernel.org/all/20261123071913.653315-7-irogers@google.com/
+Signed-off-by: TAKANO Mitsuhiro <takano32@gmail.com>
 ---
- tools/perf/Makefile.perf          |  4 ++--
- tools/perf/tests/kmod-path.c      | 21 ++++++++++++++++
- tools/perf/tests/shell/buildid.sh | 40 +++++++++++++++++++++++++++++++
- tools/perf/util/compress.h        |  9 ++++---
- tools/perf/util/dso.c             |  2 +-
- tools/perf/util/tool.c            |  2 +-
- tools/perf/util/zstd.c            | 31 ++++++++++++++----------
- 7 files changed, 89 insertions(+), 20 deletions(-)
+v6: Sashiko's review of v5 found that a tool leader with a procfs
+    descriptor skipped the weak group split: user_time and system_time
+    do have an fd, so fd == -1 was false, the procfs fd went to
+    perf_event_open() as group_fd, and under -a with
+    perf_event_paranoid > 1 the member failed with EACCES, which is not
+    a split condition.  Its fd array was freed and enabling the group
+    dereferenced NULL.  Reproduced here:
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 29cfd44c427f3..0d77f1aa0731e 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -106,8 +106,8 @@ include ../scripts/utilities.mak
- # streaming for record mode. Currently Posix AIO trace streaming is
- # supported only when linking with glibc.
- #
--# Define NO_LIBZSTD if you do not want support of Zstandard based runtime
--# trace compression in record mode.
-+# Define NO_LIBZSTD if you do not want support of Zstandard based kernel
-+# module decompression and runtime trace compression in record mode.
- #
- # Define TCMALLOC to enable tcmalloc heap profiling.
- #
-diff --git a/tools/perf/tests/kmod-path.c b/tools/perf/tests/kmod-path.c
-index dfe1bd5dabaa8..aacb49fbc9e4a 100644
---- a/tools/perf/tests/kmod-path.c
-+++ b/tools/perf/tests/kmod-path.c
-@@ -96,6 +96,27 @@ static int test__kmod_path__parse(struct test_suite *t __maybe_unused, int subte
- 	M("x.ko.gz", PERF_RECORD_MISC_USER, false);
- #endif
+      $ perf stat -a -e '{user_time,cycles:k}:W' -- true
+      Segmentation fault
+
+    get_group_fd() now returns -2 for any tool leader, with or without
+    an fd; the fd it may have is a procfs one and cannot be a group_fd.
+    The -a cases no longer crash and the refusal is unchanged.  The test
+    runs one of them, so the crash stays fixed.
+
+    The test no longer requires cycles to be printed when no hardware
+    cycles event can be counted: the evsel falls back to task-clock or
+    is renamed.  That was Sashiko's Low finding.
+
+    Two comments in builtin-stat.c that described the EBADF route
+    were updated to the EINVAL route that get_group_fd() returns for a
+    tool leader.
+
+    v5: Namhyung Kim confirmed on 2026-11-24 00:16 UTC
+    (https://lore.kernel.org/all/awTXdgY38s2bijW5@google.com/)
+    that the group should be rejected rather than counted event by event,
+    so this keeps the refusal and drops the question from the message.
+
+    Rebased onto v7.4-rc4.  The perf-tools-next branch fetched here is still
+    at 2026-10-27 and does not carry tools/include/linux/stddef.h.
+
+ tools/perf/Documentation/perf-stat.txt    |  14 ++
+ tools/perf/builtin-stat.c                 |  69 +++++++
+ tools/perf/tests/shell/stat+tool_group.sh | 237 ++++++++++++++++++++++
+ tools/perf/util/evsel.c                   |  11 +
+ 4 files changed, 331 insertions(+)
+ create mode 100755 tools/perf/tests/shell/stat+tool_group.sh
+
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 8ea17da89976..e52925ff776b 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -65,6 +65,20 @@ report::
+ 	Multiple PMU instances are typical for uncore PMUs, so the prefix
+ 	'uncore_' is also ignored when performing this match.
  
-+#ifdef HAVE_ZSTD_SUPPORT
-+	/* The zst id is its index in compressions[], after gz and xz */
-+#if defined(HAVE_ZLIB_SUPPORT) && defined(HAVE_LZMA_SUPPORT)
-+#define ZST_COMP 3
-+#elif defined(HAVE_ZLIB_SUPPORT) || defined(HAVE_LZMA_SUPPORT)
-+#define ZST_COMP 2
-+#else
-+#define ZST_COMP 1
-+#endif
-+	/* path                    alloc_name kmod   comp      name */
-+	T("/xxxx/xxxx/x-x.ko.zst", true,      true,  ZST_COMP, "[x_x]");
-+	T("/xxxx/xxxx/x-x.ko.zst", false,     true,  ZST_COMP, NULL);
-+	M("/xxxx/xxxx/x-x.ko.zst", PERF_RECORD_MISC_CPUMODE_UNKNOWN, true);
-+	M("/xxxx/xxxx/x-x.ko.zst", PERF_RECORD_MISC_KERNEL, true);
-+	M("/xxxx/xxxx/x-x.ko.zst", PERF_RECORD_MISC_USER, false);
-+
-+	T("/xxxx/xxxx/x.zst",      true,      false, ZST_COMP, "x.zst");
-+	T("/xxxx/xxxx/x.zst",      false,     false, ZST_COMP, NULL);
-+	M("/xxxx/xxxx/x.zst",      PERF_RECORD_MISC_KERNEL, false);
-+#endif
-+
- 	/* path            alloc_name  kmod  comp   name           */
- 	T("[test_module]", true      , true, false, "[test_module]");
- 	T("[test_module]", false     , true, false, NULL           );
-diff --git a/tools/perf/tests/shell/buildid.sh b/tools/perf/tests/shell/buildid.sh
-index 102808cca9db3..2aca6dfc11b6f 100755
---- a/tools/perf/tests/shell/buildid.sh
-+++ b/tools/perf/tests/shell/buildid.sh
-@@ -44,9 +44,11 @@ ex_pe=$(dirname $0)/../pe-file.exe
- data=$(mktemp /tmp/perf_buildid_test.data.XXX)
- log_out=$(mktemp /tmp/perf_buildid_test.log.out.XXX)
- log_err=$(mktemp /tmp/perf_buildid_test.log.err.XXX)
-+kmod_dir=$(mktemp -d /tmp/perf_buildid_test.kmod.XXX)
++	Tool events such as duration_time and user_time are read by perf
++	itself and have no event in the kernel.  A group of a tool event and
++	an event from a different software PMU, such as cpu-clock, is split by
++	the parser, which warns that events were regrouped; -a and -C split
++	a group whose members do not share the CPUs of the leader in the
++	same way.  A group that is not split and mixes a tool event with an
++	event the kernel opens is refused, as in -e '{user_time,cycles}',
++	instead of printing the tool event and leaving the rest of the group
++	uncounted.  Put the tool event outside the braces instead, as in
++	-e '{cycles,instructions},duration_time'.  A group of tool events
++	only is accepted.  A weak group (:W) led by a tool event is left to
++	the weak group handling, which splits it when a member fails to
++	open; any other weak group that mixes them is refused
++	like a strong group.
  
- cleanup() {
- 	rm -f ${ex_source} ${ex_md5} ${ex_sha1} ${data} ${log_out} ${log_err}
-+	rm -rf ${kmod_dir}
- 	if [ ${run_pe} -eq 1 ]; then
- 		rm -r ${wineprefix}
- 	fi
-@@ -198,6 +200,43 @@ test_add()
- 	rm -rf ${build_id_dir}
+ -i::
+ --no-inherit::
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 37752d6bfef4..21cf17d3dcca 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -2469,6 +2469,70 @@ static int parse_tpebs_mode(const struct option *opt, const char *str,
  }
- 
-+# perf has to decompress a .ko.zst module to read its build id
-+test_add_zst()
-+{
-+	if ! perf version --build-options | grep -q 'zstd: .* on '; then
-+		echo "WARNING: perf not built with zstd. .ko.zst modules will not be tested."
-+		return
-+	fi
-+	if ! [ -x "$(command -v zstd)" ]; then
-+		echo "WARNING: zstd not found. .ko.zst modules will not be tested."
-+		return
-+	fi
-+
-+	build_id_dir=$(mktemp -d /tmp/perf_buildid_test.debug.XXX)
-+	perf="perf --buildid-dir ${build_id_dir}"
-+
-+	# any ELF file with a build id will do as the module
-+	zstd -q -c ${ex_sha1} > ${kmod_dir}/ex.ko.zst
-+	head -c 100 ${kmod_dir}/ex.ko.zst > ${kmod_dir}/truncated.ko.zst
-+
-+	id=$(get_build_id ${ex_sha1})
-+	${perf} buildid-cache -v -a ${kmod_dir}/ex.ko.zst
-+	if ! ${perf} buildid-cache -l | grep -q ${id}; then
-+		echo "failed: ${id} of ${kmod_dir}/ex.ko.zst not in cache"
-+		exit 1
-+	fi
-+
-+	# must fail without hanging; buildid-cache -a only warns on failure
-+	${perf} buildid-cache -v -a ${kmod_dir}/truncated.ko.zst
-+	if [ "$(${perf} buildid-cache -l | wc -l)" -ne 1 ]; then
-+		echo "failed: truncated ${kmod_dir}/truncated.ko.zst was added"
-+		exit 1
-+	fi
-+
-+	echo "add .ko.zst: OK"
-+	rm -rf ${build_id_dir}
-+}
-+
- test_remove()
- {
- 	build_id_dir=$(mktemp -d /tmp/perf_buildid_test.debug.XXX)
-@@ -304,6 +343,7 @@ test_add ${ex_md5}
- if [ ${add_pe} -eq 1 ]; then
- 	test_add ${ex_pe}
- fi
-+test_add_zst
- 
- # add binaries via perf record post processing
- test_record ${ex_sha1}
-diff --git a/tools/perf/util/compress.h b/tools/perf/util/compress.h
-index fd6b541358bb6..c455686653907 100644
---- a/tools/perf/util/compress.h
-+++ b/tools/perf/util/compress.h
-@@ -92,17 +92,20 @@ static inline size_t zstd_decompress_buffer(struct zstd_data *data __maybe_unuse
- 	return 0;
- }
- 
--static inline int zstd_decompress_stream(struct zstd_data *data, int input_fd, int output_fd)
-+static inline int zstd_decompress_stream(struct zstd_data *data __maybe_unused,
-+					 int input_fd __maybe_unused,
-+					 int output_fd __maybe_unused)
- {
- 	return -1;
- }
- 
--static inline int zstd_decompress_to_fd(const char *input, int output_fd)
-+static inline int zstd_decompress_to_fd(const char *input __maybe_unused,
-+					int output_fd __maybe_unused)
- {
- 	return -1;
- }
- 
--static inline bool zstd_is_compressed(const char *input)
-+static inline bool zstd_is_compressed(const char *input __maybe_unused)
- {
- 	return false;
- }
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 0e8886172e239..fbc58283ef658 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -463,7 +463,7 @@ int __kmod_path__parse(struct kmod_path *m, const char *path,
- 
- 	m->comp = is_supported_compression(ext + 1);
- 	if (m->comp > COMP_ID__NONE)
--		ext -= strlen(compressions[m->comp].fmt);
-+		ext -= 3;
- 
- 	/* Check .ko extension only if there's enough name left. */
- 	if (ext > name)
-diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
-index d7956cd75c26d..dd8be27f57209 100644
---- a/tools/perf/util/tool.c
-+++ b/tools/perf/util/tool.c
-@@ -93,7 +93,7 @@ static int perf_session__process_compressed_event(const struct perf_tool *tool _
- 		 * data_size is independent of header.size (which
- 		 * includes padding); verify it doesn't exceed the
- 		 * actual payload to prevent out-of-bounds reads in
--		 * zstd_decompress_stream().
-+		 * zstd_decompress_buffer().
- 		 */
- 		if (src_size > event->header.size - sizeof(struct perf_record_compressed2))
- 			goto err_decomp;
-diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-index 982655a1f1a51..a063a680518cd 100644
---- a/tools/perf/util/zstd.c
-+++ b/tools/perf/util/zstd.c
-@@ -2,6 +2,7 @@
- 
- #include <errno.h>
- #include <fcntl.h>
-+#include <stdint.h>
- #include <string.h>
- #include <unistd.h>
- #include <linux/perf_event.h>
-@@ -143,13 +144,12 @@ ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_
- size_t zstd_decompress_buffer(struct zstd_data *data, void *src, size_t src_size,
- 			      void *dst, size_t dst_size)
- {
--	ssize_t ret;
-+	size_t ret;
- 	ZSTD_inBuffer input = { src, src_size, 0 };
- 	ZSTD_outBuffer output = { dst, dst_size, 0 };
- 
--	ret = zstd_init_dstream(data);
--	if (ret < 0)
--		return ret;
-+	if (zstd_init_dstream(data) < 0)
-+		return 0;
- 
- 	while (input.pos < input.size) {
- 		size_t prev_in = input.pos;
-@@ -177,12 +177,18 @@ size_t zstd_decompress_buffer(struct zstd_data *data, void *src, size_t src_size
- 	return output.pos;
- }
+ #endif // HAVE_ARCH_X86_64_SUPPORT
  
 +/*
-+ * Not ZSTD_DStream{In,Out}Size(): 256 KiB of stack is more than a musl
-+ * thread gets, and perf top decompresses modules on a thread.
++ * A tool event like user_time has no event in the kernel: perf reads it
++ * from a file such as /proc/stat, or computes it in perf itself.  A group
++ * that mixes one with an event the kernel opens cannot be counted.
++ * get_group_fd() has no group fd to hand to the members when the leader is
++ * a tool event, so the members cannot be in a kernel group with it; with
++ * a kernel event as the leader the members do open, but the group read is
++ * rejected as the kernel knows only the members it opened.  perf stat used
++ * to leave the rest of the group uncounted in both cases, when the CPU maps
++ * had not split the group first; refuse the group instead.  A group with no
++ * event the kernel opens is left alone, as perf reads each event in it.  A
++ * weak group led by a tool event is left to the weak group handling in the
++ * open loop, which splits it when a member fails to open; any other weak
++ * group is refused like a strong one.
 + */
-+#define CHUNK_SIZE 16384
++static int check_tool_groups(struct evlist *evlist)
++{
++	struct evsel *leader, *evsel;
 +
- int zstd_decompress_stream(struct zstd_data *data, int input_fd, int output_fd)
++	evlist__for_each_entry(evlist, leader) {
++		struct evsel *tool = NULL;
++		bool has_kernel = false, weak = false;
++
++		if (!evsel__is_group_leader(leader) || leader->core.nr_members < 2)
++			continue;
++
++		/*
++		 * The members of a group are not necessarily adjacent in the
++		 * evlist: evlist__check_cpu_maps() makes a removed member a
++		 * leader of its own without moving it.
++		 */
++		evlist__for_each_entry(evlist, evsel) {
++			if (!evsel__has_leader(evsel, leader))
++				continue;
++			if (evsel__is_tool(evsel)) {
++				if (!tool)
++					tool = evsel;
++			} else if (!evsel__is_non_perf_event_open_pmu(evsel)) {
++				has_kernel = true;
++			}
++			weak |= evsel->weak_group;
++		}
++
++		if (!tool || !has_kernel)
++			continue;
++
++		/*
++		 * A weak group led by a tool event is left to the weak group
++		 * handling in the open loop: get_group_fd() returns -2 for a
++		 * tool leader, the open fails with EINVAL, and that is what
++		 * splits the group.  Any other weak group does not get that
++		 * far, so it is refused like a strong group.
++		 */
++		if (weak && evsel__is_tool(leader))
++			continue;
++
++		pr_err("A tool event cannot be grouped with kernel events: %s\n",
++		       evsel__name(tool));
++		pr_err("Put it outside the braces, as in -e '{cycles,instructions},duration_time'.\n");
++		return -EINVAL;
++	}
++	return 0;
++}
++
+ int cmd_stat(int argc, const char **argv)
  {
- 	ssize_t ret;
- 	bool unflushed = false;
--	char buf_in[ZSTD_DStreamInSize()];
--	char buf_out[ZSTD_DStreamOutSize()];
-+	char buf_in[CHUNK_SIZE];
-+	char buf_out[CHUNK_SIZE];
- 	ZSTD_inBuffer in = {};
- 	ZSTD_outBuffer out = {};
+ 	struct opt_aggr_mode opt_mode = {};
+@@ -2947,6 +3011,11 @@ int cmd_stat(int argc, const char **argv)
  
-@@ -262,17 +268,16 @@ int zstd_decompress_to_fd(const char *input, int output_fd)
- bool zstd_is_compressed(const char *file)
- {
- 	int fd = open(file, O_RDONLY);
--	const uint32_t magic_le = htole32(ZSTD_MAGICNUMBER);
--	char buf[4];
-+	/* ZSTD_MAGICNUMBER as stored in the file (little-endian) */
-+	const uint8_t magic[4] = { 0x28, 0xb5, 0x2f, 0xfd };
-+	char buf[4] = { 0 };
- 	ssize_t rc;
+ 	evlist__check_cpu_maps(evsel_list);
  
--	if (fd < 0) {
--		pr_err("zstd: failed to open(%s): %s\n", file, strerror(errno));
--		return -1;
--	}
-+	if (fd < 0)
-+		return false;
++	if (check_tool_groups(evsel_list)) {
++		status = -EINVAL;
++		goto out;
++	}
++
+ 	/*
+ 	 * Initialize thread_map with comm names,
+ 	 * so we could print it out on output.
+diff --git a/tools/perf/tests/shell/stat+tool_group.sh b/tools/perf/tests/shell/stat+tool_group.sh
+new file mode 100755
+index 000000000000..ff7142977979
+--- /dev/null
++++ b/tools/perf/tests/shell/stat+tool_group.sh
+@@ -0,0 +1,237 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# perf stat tool events in an event group (no_mlock)
++
++set -e
++
++out=$(mktemp /tmp/__perf_test.stat_tool_group.XXXXXX)
++stderr=$(mktemp /tmp/__perf_test.stat_tool_group.XXXXXX)
++err=0
++skipped=0
++
++cleanup() {
++  rm -f "${out}" "${stderr}"
++
++  trap - EXIT TERM INT
++}
++
++trap_cleanup() {
++  echo "Unexpected signal in ${FUNCNAME[1]}"
++  cleanup
++  exit 1
++}
++trap trap_cleanup EXIT TERM INT
++
++# A tool event has no event in the kernel: perf reads it from a file such
++# as /proc/stat, or computes it in perf itself, so it cannot be counted in
++# a group that is opened with perf_event_open().  Such a group used to
++# print the tool event and leave the rest of the group uncounted, so perf
++# stat has to say what is wrong instead.
++
++# Whether this kernel lets the user open a hardware event decides whether
++# the accepted cases can show a measured value at all.  An event that is
++# not supported prints a "<not supported>" line even when perf stat exits 0.
++kernel_events=1
++if ! perf stat -e cycles -o "${out}" -- true 2> /dev/null ||
++   grep -q "<not supported>" "${out}" ||
++   ! grep -q "cycles" "${out}"; then
++  kernel_events=0
++fi
++
++# CPU-wide events need root or perf_event_paranoid <= 0, so -a can fail even
++# when a per-thread event works.
++syswide=1
++if ! perf stat -a -e cycles -o /dev/null -- true 2> /dev/null; then
++  syswide=0
++fi
++
++refused() {
++  local group="$1" tool="$2" rc=0
++  shift 2
++
++  echo "Testing that perf stat refuses ${group} $*"
++  perf stat "$@" -e "${group}" -o "${out}" -- true 2> "${stderr}" || rc=$?
++
++  if [ "${rc}" = 0 ]; then
++    echo "perf stat accepted ${group}  [Failed]"
++    err=1
++    return
++  fi
++  if [ "${rc}" != 22 ]; then
++    echo "perf stat failed with ${rc}, expected 22  [Failed]"
++    cat "${stderr}"
++    err=1
++  fi
++  if ! grep -qE "A tool event cannot be grouped with kernel events: (${tool})" \
++      "${stderr}"; then
++    echo "perf stat failed without naming ${tool}  [Failed]"
++    cat "${stderr}"
++    err=1
++  fi
++  if ! grep -q "Put it outside the braces" "${stderr}"; then
++    echo "perf stat failed without saying how to write it  [Failed]"
++    cat "${stderr}"
++    err=1
++  fi
++}
++
++# The events named after the group have to show up in the output.
++accepted() {
++  local group="$1" name rc=0
++
++  shift
++  echo "Testing that perf stat accepts ${group}"
++  perf stat -e "${group}" -o "${out}" -- true 2> "${stderr}" || rc=$?
++
++  if [ "${rc}" != 0 ]; then
++    cat "${stderr}"
++    echo "perf stat failed for ${group} (${rc})  [Failed]"
++    err=1
++    return
++  fi
++  if grep -q "cannot be grouped with kernel events" "${stderr}"; then
++    cat "${stderr}"
++    echo "perf stat refused ${group}  [Failed]"
++    err=1
++    return
++  fi
++  for name in "$@"; do
++    # When no hardware cycles event can be counted, cycles falls back to
++    # task-clock and the evsel is renamed, so it need not appear.
++    case "${name}" in
++      cycles|cycles:*)
++        [ "${kernel_events}" = 0 ] && continue ;;
++    esac
++    if ! grep -q -- "${name}" "${out}"; then
++      echo "perf stat did not print ${name}  [Failed]"
++      cat "${out}"
++      err=1
++    fi
++  done
++  if grep -q "<not counted>" "${out}"; then
++    echo "perf stat did not count an event in ${group}  [Failed]"
++    cat "${out}"
++    err=1
++  elif grep -q "<not supported>" "${out}"; then
++    if [ "${kernel_events}" = 1 ]; then
++      echo "perf stat could not open an event in ${group}  [Failed]"
++      cat "${out}"
++      err=1
++    else
++      echo "perf stat could not open an event in ${group}  [Skipped]"
++      skipped=$((skipped + 1))
++    fi
++  fi
++}
++
++# The tool event as the leader and as a member, a common group that puts
++# the tool event last, and a weak group led by a kernel event, which is
++# refused the same way.
++refused '{user_time,cycles}' user_time
++refused '{cycles,user_time}' user_time
++refused '{duration_time,instructions}' duration_time
++refused '{cycles,instructions,duration_time}' duration_time
++refused '{cycles,user_time}:W' user_time
++
++# The tool event in the middle of a group, and the first of two tool
++# events, which is the one the message names.
++refused '{cycles,user_time,instructions}' user_time
++refused '{user_time,system_time,cycles}' user_time
++
++# evlist__check_cpu_maps() takes duration_time out of this group (it is
++# read on one CPU only), which leaves cycles and user_time apart in the
++# evlist; the tool event has to be found anyway.  On a machine with one
++# CPU there is nothing to split, so either tool event can be the first.
++# When a core PMU covers only part of the CPUs (hybrid x86, big.LITTLE
++# arm64), -a gives the leader a subset of the CPUs and takes the tool
++# event out of the group as well, which leaves no group to refuse.  The
++# command is then counted instead of refused, and either way it must not
++# reach the tool event through a member with no descriptor.
++rc=0
++perf stat -a -e '{cycles,duration_time,user_time}' -o "${out}" -- true \
++  2> "${stderr}" || rc=$?
++if [ "${rc}" -ge 128 ]; then
++  echo "perf stat crashed on -a  [Failed]"
++  err=1
++elif [ "${rc}" -eq 0 ]; then
++  if [ "${syswide}" = 1 ] && [ "${kernel_events}" = 1 ]; then
++    if grep -qE "<not supported>|<not counted>" "${out}"; then
++      echo "perf stat left an event uncounted on -a  [Failed]"
++      cat "${out}"
++      err=1
++    fi
++  else
++    echo "perf stat counted -a without full access  [Skipped]"
++    skipped=$((skipped + 1))
++  fi
++elif [ "${rc}" -eq 22 ]; then
++  if ! grep -qE "A tool event cannot be grouped with kernel events: (user_time|duration_time)" \
++      "${stderr}" ||
++     ! grep -q "Put it outside the braces" "${stderr}"; then
++    echo "perf stat refused -a without the full message  [Failed]"
++    cat "${stderr}"
++    err=1
++  fi
++elif [ "${rc}" -ne 0 ]; then
++  echo "perf stat left -a with ${rc}  [Failed]"
++  cat "${stderr}"
++  err=1
++fi
++
++# A group of tool events only is read by perf itself, a single event in
++# braces is not a group, a tool event outside the braces is not a member,
++# and a weak group led by a tool event is split by the weak group
++# handling.  The member of such a group must never be enabled through a
++# descriptor that was freed; that used to crash under -a when the open of
++# the member failed outside the split conditions.
++rc=0
++perf stat -a -e '{user_time,cycles:k}:W' -o "${out}" -- true \
++  2> "${stderr}" || rc=$?
++if [ "${rc}" -ge 128 ]; then
++  echo "perf stat crashed on a weak tool group under -a  [Failed]"
++  err=1
++elif [ "${rc}" -ne 0 ]; then
++  echo "perf stat left a weak tool group under -a with ${rc}  [Failed]"
++  cat "${stderr}"
++  err=1
++elif ! grep -q -- "user_time" "${out}"; then
++  echo "perf stat dropped user_time from a weak tool group under -a  [Failed]"
++  cat "${out}"
++  err=1
++fi
++
++accepted '{user_time,system_time}' user_time system_time
++accepted '{duration_time,user_time}' duration_time user_time
++accepted '{user_time}' user_time
++accepted '{cycles,instructions},duration_time' duration_time
++accepted '{user_time,cycles}:W' user_time cycles
++accepted '{system_time,cycles}:W' system_time cycles
++accepted '{duration_time,cycles}:W' duration_time cycles
++
++echo "Testing that a tool event on its own is accepted"
++if ! perf stat -e user_time -o "${out}" -- true; then
++  echo "perf stat rejected a tool event on its own  [Failed]"
++  err=1
++elif ! grep -q "user_time" "${out}"; then
++  echo "perf stat did not print user_time  [Failed]"
++  cat "${out}"
++  err=1
++fi
++
++echo "Testing that the default events still work"
++if ! perf stat -o "${out}" -- true; then
++  echo "perf stat without -e failed  [Failed]"
++  err=1
++fi
++
++cleanup
++
++if [ "${err}" = 0 ] && [ "${skipped}" -gt 0 ]; then
++  echo "perf stat tool event group test [Success] (${skipped} skipped)"
++elif [ "${err}" = 0 ]; then
++  echo "perf stat tool event group test [Success]"
++else
++  echo "perf stat tool event group test [Failed]"
++fi
++
++exit "${err}"
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index d060fca8090f..d4cc705f3379 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2381,6 +2381,17 @@ static int get_group_fd(struct evsel *evsel, int cpu_map_idx, int thread)
+ 		return -1;
  
- 	rc = read(fd, buf, sizeof(buf));
- 	close(fd);
- 	return rc == sizeof(buf) ?
--	       memcmp(buf, (const char *) &magic_le, sizeof(buf)) == 0 : false;
-+	       memcmp(buf, magic, sizeof(buf)) == 0 : false;
- }
+ 	fd = FD(leader, cpu_map_idx, thread);
++	if (evsel__is_tool(leader)) {
++		/*
++		 * A tool event has no perf_event_open() descriptor, or has
++		 * only a procfs one (user_time, system_time).  Either way the
++		 * members cannot be in a kernel group with it, and its fd
++		 * must not be passed to perf_event_open() as group_fd.
++		 * builtin-stat.c decides on the weak group split from errno.
++		 */
++		errno = EINVAL;
++		return -2;
++	}
+ 	BUG_ON(fd == -1 && leader->supported);
+ 
+ 	/*
+
+base-commit: b6a9fa34ce4187cb69d3c588a4bbffc31ce5db8f
+-- 
+2.53.0
+
