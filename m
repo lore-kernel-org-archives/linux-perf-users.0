@@ -1,57 +1,74 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795642982;
-	b=ClPoWdLVOKMMpGjgqfdHT+dV65SlET4PxYXUB/cp1SPnAmAm5nsFe+Y+NrGWxQJcWEq0
-	 5l65Z2k2PIV/HuQ14CJdMxgjpNXvx7KyqhI1LGmYrd1JNGM6D03pLLDe2EwuWsUymuWyH
-	 GGrzKtSQAr+8CZJ40m2HEHwtFlt31v2vIoHVbw6lE4VJAviravToq4ZzabfST0For2aYZ
-	 B4NATUWue2EApZqd690M0FbjrppttL1+pHcBILtxThnadNR/lb4s75UNy4a7M2o711RJN
-	 G+kImit7NCkXW9cLtoHG/SxTWQaF/dO5DC8KrBruHNU/K/bXj05T/dSZ0N9YTw+pEfA==
+	t=1795643135;
+	b=co9tgQ2qIyHEFUO+C//lnuWbUbpWi5gYgmAUjKQcz5NIfOFwJsphbR9lSYffLv9cUj58
+	 UI9lX4iWpctEwe3yCFkz+ctgn7KeEPVXvgIHpe3kHVhgloPi95SaSmlK/57hSmxI86QJi
+	 szVydrCnWyD1bxdyiNnBNv8xnthBRTGGh5mBmBCooUui81bEGY9IckUDRxhnVL1wEldzN
+	 oZCX1VCnhAUqo33g5ocJ+6DtNO68Ww5h9F8EJ0U2PH75tzwU1wfWY8XhffYOg10nzUA9W
+	 Vb0T11fXokG63yaF5JpugY6aDYoqaEAorxUcmFoXmkG3Tj2A+9ZPR2JJXSGKHOa/i4A==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795642982;
-	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
-	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=fext65oXtLvi/Xrp8/knkU9aCKg4unXZwYmbKEzDlQw=;
-	b=BslPLvykDFxzK0iJqUqWwgiC268IEKWSt5gDuiHTXM4uBtCkrZA53DcHjFJ/DcQy6hQB
-	 SV84mS637mhQdUfJrkH8QWqftxppJzTB+LQXrd9T5UkF5kiRo+8hkcqJQPxGixxUG8E44
-	 rO3Hricd4b8ML9mmVxvnLMHnJ7Duvgs4FvGXFC9G0FhYPrgM6wODhnwTiOM+/hicdNJ/Y
-	 HOKnyVVmAYAOEiJ9sXeMxjFNsmt0AkuFsVP7CJ3TTBaNSigMzyiRq3CqUf4OZuogSmxXs
-	 srHUBLI8Ds4/GAz9P6Ibm9IjvZX+3+OcSMWHeXW+Lpbn6fFH5mBwh4nvgBfNx4f6fCw==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795643135;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=Jo4SEKF41tVgFr7rYNyyPCaU7SHDrcS+GKvJm3KJFcQ=;
+	b=NtNXwrWsENpZLf+WkoIEvDC2Pxb+zaOqWEYVCOrFWldpKyuY8Vqd+VqDOJjFz693bH4K
+	 3wqEwUGKC8WZUI4YeyL/jXIry6JZFC5AacEar/ysSy8NHnEdXAGQSWEc4jvmheev/RHoS
+	 DVrPf6Y/VQzkv4fqsNGrvAPwbjrKzy6hMuHT6RMVrUOOxyatA+Pk70eD0RgJKlt+l4ijJ
+	 ZmSJ/tm/lwUiNpgDDrrMyJm34g6TlY84HbJEFiiTU6eF2YGLqBcEqmae2/xntzDbRDc4E
+	 WN5S1mFUbnDDiU3sqp6Vw7B4zXBscxU77vPRPle1bqJKAwJtQ3m1bBIg1rJp9YkA/qg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gU6SglSY;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oxpD+fAm;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D8D606A321
-	for <linux-perf-users@vger.kernel.org>; Wed, 25 Nov 2026 21:43:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18ED9606A321;
+	Wed, 25 Nov 2026 21:45:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=gU6SglSY
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 485A01F000D3;
-	Wed, 25 Nov 2026 21:43:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=oxpD+fAm
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 142CB1F000F2;
+	Wed, 25 Nov 2026 21:45:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795642982;
-	bh=fext65oXtLvi/Xrp8/knkU9aCKg4unXZwYmbKEzDlQw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=gU6SglSYO/pwaCvvWzgdeodg9+LDzgODOmdLL49gc9vqAtPUVHAaAnp8NVgCPBazy
-	 egal3rFFQBxhI0CngsfsfL8wEGYCVY0XQh4sXcUNkkR9OnbcdwIJwqeRB8HzIk3MDH
-	 rFQlT+uEMsTllOM+w0anOqGDSRARIgZ686ybvf1ueLR/e6OZ2AdZbPMTx6McvQ+IAA
-	 SjzCpiJBINEOxIb9VNQ4Beq+n94oEULMZtZOfHlkG00DfHvO9zRdR5I9LX+cLBdTTY
-	 D/mN0dlhQM9wkCIRVHIeDIVthkLi+jurs7z4ScwaYFyVfIQe0LLceuejbElEOSM88u
-	 RnD1X7ecYYRkw==
-Message-ID: <sashiko-outbox-234203@kernel.org>
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 06/11] perf tools: Verify thread status and mount
- namespace inode
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Namhyung Kim" <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20261125212851.1792988-7-namhyung@kernel.org>
-References: <20261125212851.1792988-1-namhyung@kernel.org>
- <20261125212851.1792988-7-namhyung@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 25 Nov 2026 21:43:01 +0000
+	s=k20260515; t=1795643134;
+	bh=Jo4SEKF41tVgFr7rYNyyPCaU7SHDrcS+GKvJm3KJFcQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=oxpD+fAmaAmRA/r+MbxpVivJH1l4Aes+TjzfBYuCVvNxsL072nZd6psX9L1xfDgeQ
+	 8ePtke9iN0M9k/B1RFyKujsTuLMmw9nnFwJKMz3NoCq1rIgcKIvRUPcaUUdu1pInP0
+	 HSn3gq9sUB7edeNucfnBU63vRTN1meBqEOJCOnKTGL0bnOwoOFtvXdhDrj3zgcC2Vv
+	 5RvbvvOZc5niEXEme7K6CeIguth4B2W3dCq2m569znxaTv04Z1ewf4yBcvdGVQZ7di
+	 ObohOJcob2tqZItQVFAbM4rKBY3zFNwcQ5ExpkSHv+32dgnzqDSwm4825h9Z2rOVzf
+	 k3Tx7JdLll+SQ==
+Date: Wed, 25 Nov 2026 13:45:32 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Athira Rajeev <atrajeev@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Leo Yan <leo.yan@linux.dev>, Dmitry Vyukov <dvyukov@google.com>,
+	"Steinar H . Gunderson" <sesse@google.com>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 03/19] perf/uapi: Add BUILD_ID_OFFSET sample types to
+ UAPI
+Message-ID: <awdW_Al_OhIVCimV@google.com>
+References: <20261125005108.1020003-1-irogers@google.com>
+ <20261125005108.1020003-4-irogers@google.com>
+ <20261125132512.GB2668804@noisy.programming.kicks-ass.net>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -60,144 +77,37 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20261125132512.GB2668804@noisy.programming.kicks-ass.net>
 
-Thank you for your contribution! Sashiko AI review found 2 potential
-issues to consider:
-- [Medium] perf namespaces: strstr() in nsinfo__get_nspid() matches comm
-  in status
-- [Low] perf namespaces: unchecked open() in nsinfo__host_proc_get()
-  unpins /proc
---
+Hi Peter,
 
-commit 6ff70afbeba62bd6dad2f202209288f4822b3205
-Author: Namhyung Kim <namhyung@kernel.org>
+On Wed, Nov 25, 2026 at 02:25:12PM +0100, Peter Zijlstra wrote:
+> On Tue, Nov 24, 2026 at 04:50:52PM -0800, Ian Rogers wrote:
+> > Introduce PERF_SAMPLE_BUILD_ID_OFFSET and
+> > PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET in enum perf_event_sample_format.
+> > 
+> > For PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET (and
+> > PERF_RECORD_CALLCHAIN_DEFERRED when PERF_RECORD_MISC_MMAP_BUILD_ID is
+> > set), encode a deduplicated table of variable-length build IDs
+> > (u32 nr_build_ids, u32 nr_offsets, followed by packed { u8 size;
+> > u8 data[size]; } entries padded to 8-byte alignment) and an array of
+> > 64-bit offsets whose top 8 bits encode the 1-based build ID index (or
+> > 0x00 for unresolved user addresses and 0xff for kernel/context entries).
+> > In common cases where multiple callchain frames belong to the same
+> > binary, each unique build ID is encoded only once.
+> 
+> Why ?!? This is insane
 
-perf tools: Verify thread status and mount namespace inode
+This is basically to save space for callchains.  When multiple entries
+fall into the same binary, it can have a table of binaries/build-ids
+and use indices instead of repeating full build-id for each entry.
 
-This commit verifies that a thread's /proc/<pid>/task/<tid>/status Tgid
-matches pid and its mount namespace inode matches mntns_ino before entering
-its mount namespace, while pinning a reference-counted host /proc file
-descriptor across setns().
+It'd be great if it could have a global (or per-session) table.  This is
+a per-sample table.  Please let us know if you have a better idea.
 
-> diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
-> index 940132d3458be..704f69663129d 100644
-> --- a/tools/perf/util/namespaces.c
-> +++ b/tools/perf/util/namespaces.c
-[ ... ]
-> @@ -59,22 +60,102 @@ void namespaces__free(struct namespaces *namespaces)
->  	free(namespaces);
->  }
-> =20
-> -static int nsinfo__get_nspid(pid_t *tgid, pid_t *nstgid, bool *in_pidns,=
- const char *path)
-> +static DEFINE_MUTEX(host_proc_lock);
-> +static int host_proc_fd __guarded_by(&host_proc_lock) =3D -1;
-> +static unsigned int host_proc_refcnt __guarded_by(&host_proc_lock);
-> +
-> +static void nsinfo__host_proc_get(void)
-> +{
-> +	mutex_lock(&host_proc_lock);
-> +	if (host_proc_refcnt++ =3D=3D 0)
-> +		host_proc_fd =3D open("/proc", O_RDONLY | O_DIRECTORY | O_CLOEXEC);
-> +	mutex_unlock(&host_proc_lock);
-> +}
-> +
-> +static void nsinfo__host_proc_put(void)
-> +{
-> +	mutex_lock(&host_proc_lock);
-> +	if (host_proc_refcnt > 0 && --host_proc_refcnt =3D=3D 0 &&
-> +	    host_proc_fd >=3D 0) {
-> +		close(host_proc_fd);
-> +		host_proc_fd =3D -1;
-> +	}
-> +	mutex_unlock(&host_proc_lock);
-> +}
-> +
-> +static int nsinfo__proc_open(const char *rel_path, int flags)
-> +{
-> +	char path[64];
-> +	int ret;
-> +
-> +	mutex_lock(&host_proc_lock);
-> +	if (host_proc_fd >=3D 0) {
-> +		ret =3D openat(host_proc_fd, rel_path, flags);
-> +	} else {
-> +		scnprintf(path, sizeof(path), "/proc/%s", rel_path);
-> +		ret =3D open(path, flags);
-> +	}
-> +	mutex_unlock(&host_proc_lock);
-> +	return ret;
-> +}
+Thanks,
+Namhyung
 
-[Severity: Low]
-Can nsinfo__mountns_enter() enter a target mount namespace without pinning
-host /proc if open("/proc", ...) in nsinfo__host_proc_get() fails?
-
-Because host_proc_refcnt is incremented unconditionally and
-nsinfo__mountns_enter() does not check whether host_proc_fd >=3D 0, a failed
-open leaves host_proc_fd =3D=3D -1 while nsinfo__proc_open() falls back to
-opening /proc/<rel_path> by path.  Once setns() succeeds, subsequent
-nsinfo__proc_open(), nsinfo__proc_stat(), and nsinfo__proc_readlink() calls
-take the fallback path and resolve /proc inside the target mount namespace
-instead of the host /proc.
-
-[ ... ]
-
-> +static int nsinfo__get_nspid(pid_t *tgid, pid_t *nstgid, bool *in_pidns,
-> +			     const char *rel_path)
->  {
->  	FILE *f =3D NULL;
->  	char *statln =3D NULL;
->  	size_t linesz =3D 0;
->  	char *nspid;
-> +	int fd;
-> +	bool got_tgid =3D false;
-> =20
-> -	f =3D fopen(path, "r");
-> -	if (f =3D=3D NULL)
-> +	fd =3D nsinfo__proc_open(rel_path, O_RDONLY | O_CLOEXEC);
-> +	if (fd < 0)
->  		return -1;
-> +	f =3D fdopen(fd, "r");
-> +	if (f =3D=3D NULL) {
-> +		close(fd);
-> +		return -1;
-> +	}
-> =20
->  	while (getline(&statln, &linesz, f) !=3D -1) {
->  		/* Use tgid if CONFIG_PID_NS is not defined. */
->  		if (strstr(statln, "Tgid:") !=3D NULL) {
->  			*tgid =3D (pid_t)strtol(strrchr(statln, '\t'), NULL, 10);
->  			*nstgid =3D *tgid;
-> +			got_tgid =3D true;
->  		}
-> =20
->  		if (strstr(statln, "NStgid:") !=3D NULL) {
-> @@ -91,7 +172,17 @@ static int nsinfo__get_nspid(pid_t *tgid, pid_t *nstg=
-id, bool *in_pidns, const c
-> =20
->  	fclose(f);
->  	free(statln);
-> -	return 0;
-> +	return got_tgid ? 0 : -1;
-> +}
-
-[Severity: Medium]
-Can strstr() in nsinfo__get_nspid() match the user-controlled comm in the
-"Name:\t<comm>\n" line at the top of /proc/<pid>/task/<tid>/status?
-
-If a non-leader thread with a recycled TID (<pid>) sets its comm to
-"<pid>Tgid:NStgid:", both strstr() checks match on line 1, strtol() parses
-<pid> after the "Name:\t" tab into *tgid, and the NStgid branch breaks out
-of the loop before reading the real Tgid line, bypassing the
-tgid !=3D nsinfo__pid(nsi) recycling check in nsinfo__init_locked() and
-nsinfo__check_proc().  Similarly, a live thread whose comm contains
-"NStgid:" breaks out on line 1 with got_tgid =3D=3D false and is falsely ma=
-rked
-exited.  Using strstarts(statln, "Tgid:\t") and
-strstarts(statln, "NStgid:\t") would ensure only the actual status keys are
-matched.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261125212851.1792=
-988-1-namhyung@kernel.org?part=3D6
