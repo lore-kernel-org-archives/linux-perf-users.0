@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795634609;
-	b=nFz9TWZF0UxA5xJ7b2TIMHOxT617pdwo4N116pw9LmO8A8YVL7eizApylKw78rn0TGU9
-	 H8azAuJZuLPzaMA+bJGUPslumR06D75nKQu9WgwpvfymXsgXTZPYWLYlDExQZidLRoCGs
-	 X69SyOirspRRdig8fDGY1meeE2VPYwFJUpqSztF+sAgttP2cEIyTX9npr/RBGW1ReeNNx
-	 9e66AWRiZkzWb5gZurSAMQoZkh5B+MogwLB665NzxLycY5+Ivwfstqgjg8L7IKlsz4H+j
-	 d8+Z0REKojlrDC/C31iDxlsk9WQJQVDLRS4pjARYZjwPKJUT6GY6DJYHbawvVnQcmqg==
+	t=1795634615;
+	b=TIaRG2k6DI2FaYZTl2kVS1m6zd32cHgGabbOfELCKktRP1ZLPQ9gnkFpJz693YI89OX0
+	 NilGmlevP52AM0GfuO2P/lX34sMCk++4vEnphwDzNC1FnNFdkwg6IVgZjh7JuZ4O2obq3
+	 HJR/rnV2Fe2zbjnx4jczwmk0WXfc1ZqZbcUx1K3AhLJg0+t6tWCyR4LNX9KHQhbw/LbPn
+	 +CCnxP8HtaVSbYDRugKOQ0KnvQY8sSwNtAiLFzlYMUMJhyykcCniJQ1RL+H7nBvB5jVxd
+	 MfG8UlXKFI4wago6jVkid5tZ2rsM/LksW8PgiHMBIzmA2wWbHwwpmLIdGvBJBYeNMLg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795634609;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795634615;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=pfp8gaPqhsaUgu3J0t38d2U4yc4dPtHGtqJbx2EZfik=;
-	b=VqezdpVd/p9013JHcEcrt7FrKPONTmufCQgQajGApPJxSpq32HpbeWYoK6bbUSCLJU/q
-	 cXiPMWGHbDmXmLL8xwdvFowDfGdtH8AP34oGPmAIF8PowraF/lFK/+QuDJ0Y3cLcGJGOh
-	 FR7zC0MSEqHNEqVMFquVDSwkQlPDo18iYhIJjjPa8REFrbzCJeDbyzVTzT+UT0zLo1p27
-	 EWOjpGyuMNXu/uuFdBVDUrp+qQPq0KmM5lW/WeqKD+riwtbUy5fQOnN5mfZB4DZggCpaF
-	 j4pLMPouf6tTdzmj4n13gLZg2lq3m3EJRBY/gihUGAI9RSl0Ne+BjyqwcEzWzMIsbWA==
+	bh=gz34JshmpxO4pivmwNORkxA0bSyDyXKqVQUlmUTgD/8=;
+	b=NgNY3O3+u1oNdVWUdCV0iz1z9JBxxGsDNA01BIsKpy8atZE1zEZaZDlLmD8u4sQx0fXf
+	 vkyPfXOknaOBHCRZjvIlOtmn7B+gyQVJ6jJDtG14uSeAwnvrT/4372QtUdwZU2pXJomDU
+	 BxqsT6tcE6cbeNxd1Le5bH8OmHg+dxtUsBtLBgCeNMRK7D7M9JdZbDiTEqCbovYzOWLB9
+	 iBoAfxJRJSzubtIgsr6xA9lBkmcqTyhL5AKHRQ4927kNQFY044tUH/RHRCZAhODCtXb8x
+	 5PB2l6cPlJrLSBpEGI4IUJllSWiDI9sv5vuM2hlELaN1wfhEC+8RJoCfoOMjli5ZoFg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M5RvDYmd;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=P2LzlpzE;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BBAE606A32C;
-	Wed, 25 Nov 2026 19:23:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CBF8606A326;
+	Wed, 25 Nov 2026 19:23:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M5RvDYmd
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 635261F000C4;
-	Wed, 25 Nov 2026 19:23:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=P2LzlpzE
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0DAF1F000C0;
+	Wed, 25 Nov 2026 19:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795634609;
-	bh=pfp8gaPqhsaUgu3J0t38d2U4yc4dPtHGtqJbx2EZfik=;
+	s=k20260515; t=1795634615;
+	bh=gz34JshmpxO4pivmwNORkxA0bSyDyXKqVQUlmUTgD/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=M5RvDYmdEjyCO99VTvPZ6+1WL04goWldChZ04855/UbH8y1e0zo2SurRS48ji2lYv
-	 jeBxsxr5t5Jr5Y+3oIGC7wblZdFLRGm134mdcP6cabF1Z3Ut4oRXxknHlgRrB4QSzm
-	 i8+HVcGEqZMW0XMi0A1ijjjBNupgN9xTz1UjGAWtYL+EyMuu7S6N/qU3lZEqgiLu4+
-	 pSc6dM3CYcAGdT28ndKZ3FDsTYfD0aqX0bJf9ab1bY8wS6jf0nl1e0gvlQkyz2Jt9n
-	 WZLQ447zsmAa+3BceUBeliugMEaZqLgnlQrgJvNIh5+fArtNo7BkgoahoS5NuZrn9z
-	 2CjSjnkMN2kuw==
+	b=P2LzlpzESUJPmld9c/yrZGMYwKm81gPMI1SsYJtl9JmwdpZSlBanmU2cc6dJB0BFO
+	 /AXfEHWso/XYzGP2D2mbB8hR32KKLjHPtw9OOg0XDNhMGiGpLUdDuQ/VUAX2W2mkEk
+	 mm2apwCADdPg+fSv3p64G8NUI/P62lA+PwGPnxngV1fp/OexJvoRfVOnpsz+4zv/+Z
+	 nF2veaSo1s8wA1wI/HqbHX4hP+4NdCMVjsuhrkoPUDlK9qqEXZsQJuw27Da0cktHIJ
+	 CfQsKEmnMDphYXCCzRRWrCD06W9tW2tSjxxhLJpbLslR3dSKgs/lv8k+x/4W+fTs2Y
+	 TNf4mhdQO6yCA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v13 03/19] perf annotate: Print the stats where the counters are final
-Date: Wed, 25 Nov 2026 16:22:56 -0300
-Message-ID: <20261125192312.34134-4-acme@kernel.org>
+Subject: [PATCH v13 05/19] perf annotate-x86: Record immediates in a 64-bit field
+Date: Wed, 25 Nov 2026 16:22:58 -0300
+Message-ID: <20261125192312.34134-6-acme@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261125192312.34134-1-acme@kernel.org>
 References: <20261125192312.34134-1-acme@kernel.org>
@@ -70,158 +70,95 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The stats are printed from hists__find_annotations(), before that event
-is annotated: with --code-with-type the first event reports zeros,
-because those types are resolved while printing, and a later event can
-report a total that is not its own.  The data type total is only
-counted in --data-type mode, so --type-stat without it is incomplete
-too.
+An x86 immediate is parsed into the int offset shared with
+displacements, so a constant wider than 32 bits is truncated to garbage
+that the register tracking then records as its value.
 
-The data type pass resolves the samples while the histograms are being
-resorted, so in stdio without --code-with-type the counters are final
-before any annotation is printed.  Print the stats once there, before
-the annotations, so that the quality can be checked without scrolling,
-and once after them when --code-with-type or a browser is used, where
-the counters only reach their final values during the output.  Leave
-the TUI's alternate screen before printing, so the stats remain on the
-terminal.  Warn if --type-stat is used without --data-type.
+Add a s64 imm_value to struct annotated_op_loc, fill it in
+extract_op_location_x86() with strtoull() and read it in the three
+places of update_insn_state_x86() that take an immediate as a constant.
+The displacement and the ARM64 and x86 %gs: immediates, which fit in
+32 bits, stay in offset, and pointer offset tracking is unchanged.
 
-Fixes: 58824fa0087e1cb7 ("perf annotate: Add --insn-stat option for debugging")
-Fixes: 61a9741e9f78c64c ("perf annotate: Add --type-stat option for debugging")
-Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-annotate.txt |  2 +-
- tools/perf/builtin-annotate.c              | 68 +++++++++++++++++-----
- 2 files changed, 53 insertions(+), 17 deletions(-)
+ tools/perf/util/annotate-arch/annotate-x86.c | 13 ++++++++-----
+ tools/perf/util/annotate.h                   |  6 ++++--
+ 2 files changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
-index 1a90b09a12d5abb1..d27eff28ba4f6af0 100644
---- a/tools/perf/Documentation/perf-annotate.txt
-+++ b/tools/perf/Documentation/perf-annotate.txt
-@@ -169,7 +169,7 @@ include::itrace.txt[]
- 	all data types it finds.
+diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
+index 58991569db9b0da2..1ec32ecdebba5e1f 100644
+--- a/tools/perf/util/annotate-arch/annotate-x86.c
++++ b/tools/perf/util/annotate-arch/annotate-x86.c
+@@ -341,7 +341,7 @@ static void update_insn_state_x86(struct type_state *state,
+ 		tsr->lifetime_end = 0;
  
- --type-stat::
--	Show stats for the data type annotation.
-+	Show stats for the data type annotation (with --data-type).
+ 		if (src->imm)
+-			imm_value = src->offset;
++			imm_value = src->imm_value;
+ 		else if (has_reg_type(state, src->reg1) &&
+ 			 state->regs[src->reg1].kind == TSR_KIND_CONST)
+ 			imm_value = state->regs[src->reg1].imm_value;
+@@ -408,7 +408,7 @@ static void update_insn_state_x86(struct type_state *state,
+ 		tsr->lifetime_end = 0;
  
- --skip-empty::
- 	Do not display empty (or dummy) events.
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 7cb7e03d9a21d81b..52fbb88a6b63bd83 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -414,11 +414,6 @@ static void hists__find_annotations(struct hists *hists,
- 	struct rb_node *nd = rb_first_cached(&hists->entries), *next;
- 	int key = K_RIGHT;
+ 		if (src->imm)
+-			imm_value = src->offset;
++			imm_value = src->imm_value;
+ 		else if (has_reg_type(state, src->reg1) &&
+ 			 state->regs[src->reg1].kind == TSR_KIND_CONST)
+ 			imm_value = state->regs[src->reg1].imm_value;
+@@ -589,7 +589,7 @@ static void update_insn_state_x86(struct type_state *state,
  
--	if (ann->type_stat)
--		print_annotate_data_stat(&ann_data_stat);
--	if (ann->insn_stat)
--		print_annotate_item_stat(&ann_insn_stat, "Instruction");
--
- 	while (nd) {
- 		struct hist_entry *he = rb_entry(nd, struct hist_entry, rb_node);
- 		struct annotation *notes;
-@@ -552,12 +547,25 @@ static void hists__find_annotations(struct hists *hists,
- 	}
- }
+ 		if (src->imm) {
+ 			tsr->kind = TSR_KIND_CONST;
+-			tsr->imm_value = (s64)src->offset;
++			tsr->imm_value = src->imm_value;
+ 			tsr->offset = 0;
+ 			tsr->ok = true;
  
-+static void print_annotation_stats(struct perf_annotate *ann)
-+{
-+	/* pr_warning reaches the terminal: the browser mode has exited. */
-+	if (ann->type_stat && !ann->data_type)
-+		pr_warning("Warning: --type-stat needs --data-type\n");
+@@ -974,8 +974,11 @@ static void extract_op_location_x86(const struct arch *arch,
+ 		if (*s == arch->objdump.register_char) {
+ 			op_loc->reg1 = arch__dwarf_regnum(arch, s);
+ 		} else if (*s == arch->objdump.imm_char) {
+-			op_loc->offset = strtol(s + 1, &p, 0);
+-			if (p && p != s + 1)
++			const char *start = s + 1;
++			u64 imm = strtoull(start, &p, 0);
 +
-+	if (ann->data_type && ann->type_stat)
-+		print_annotate_data_stat(&ann_data_stat);
-+	if (ann->insn_stat)
-+		print_annotate_item_stat(&ann_insn_stat, "Instruction");
-+}
-+
- static int __cmd_annotate(struct perf_annotate *ann)
- {
- 	int ret;
- 	struct perf_session *session = ann->session;
- 	struct evsel *pos;
- 	u64 total_nr_samples;
-+	bool stats_first;
- 
- 	if (ann->cpu_list) {
- 		ret = perf_session__cpu_bitmap(session, ann->cpu_list,
-@@ -619,18 +627,14 @@ static int __cmd_annotate(struct perf_annotate *ann)
- 			 * An event group needs to display other events too.
- 			 * Let's delay printing until other events are processed.
- 			 */
--			if (symbol_conf.event_group) {
--				if (!evsel__is_group_leader(pos)) {
--					struct hists *leader_hists;
--
--					leader_hists = evsel__hists(evsel__leader(pos));
--					hists__match(leader_hists, hists);
--					hists__link(leader_hists, hists);
--				}
--				continue;
--			}
-+			if (symbol_conf.event_group &&
-+			    !evsel__is_group_leader(pos)) {
-+				struct hists *leader_hists;
- 
--			hists__find_annotations(hists, pos, ann);
-+				leader_hists = evsel__hists(evsel__leader(pos));
-+				hists__match(leader_hists, hists);
-+				hists__link(leader_hists, hists);
-+			}
- 		}
- 	}
- 
-@@ -639,6 +643,29 @@ static int __cmd_annotate(struct perf_annotate *ann)
- 		goto out;
- 	}
- 
-+	/*
-+	 * The data type pass resolves the samples while the histograms are
-+	 * being resorted, so with nothing left to resolve during the
-+	 * annotation print the stats are complete here: show them before
-+	 * the annotations, where judging quality needs no scrolling.  With
-+	 * --code-with-type and in a browser the types are resolved while
-+	 * printing, there the stats go after the annotations, once the
-+	 * totals are final.
-+	 */
-+	stats_first = use_browser == 0 && !annotate_opts.code_with_type;
-+	if (stats_first)
-+		print_annotation_stats(ann);
-+
-+	/* Standalone events, group leaders are printed together below */
-+	evlist__for_each_entry(session->evlist, pos) {
-+		struct hists *hists = evsel__hists(pos);
-+
-+		if (symbol_conf.event_group || hists->stats.nr_samples == 0)
-+			continue;
-+
-+		hists__find_annotations(hists, pos, ann);
-+	}
-+
- 	/* Display group events together */
- 	evlist__for_each_entry(session->evlist, pos) {
- 		struct hists *hists = evsel__hists(pos);
-@@ -663,6 +690,15 @@ static int __cmd_annotate(struct perf_annotate *ann)
- 		hists__find_annotations(hists, pos, ann);
- 	}
- 
-+	if (!stats_first && (ann->insn_stat || ann->type_stat)) {
-+		if (use_browser == 1) {
-+			/* Leave the alternate screen before printing to the terminal. */
-+			ui__exit(false);
-+			use_browser = 0;
-+		}
-+		print_annotation_stats(ann);
-+	}
-+
- 	if (use_browser == 2) {
- 		void (*show_annotations)(void);
- 
++			op_loc->imm_value = imm;
++			if (p && p != start)
+ 				op_loc->imm = true;
+ 		} else if (att && (*s == '-' || strstarts(s, "0x"))) {
+ 			u64 offset = strtoull(s, NULL, 0);
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index 58adf7f84146be5f..71a616b5ed1e1358 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -530,7 +530,8 @@ int arch__dwarf_regnum(const struct arch *arch, const char *str);
+  * struct annotated_op_loc - Location info of instruction operand
+  * @reg1: First register in the operand
+  * @reg2: Second register in the operand
+- * @offset: Memory access offset in the operand
++ * @imm_value: Immediate value of an x86 operand
++ * @offset: Memory access offset, or an ARM64 or x86 %gs: immediate
+  * @segment: Segment selector register
+  * @addr_mode: Addressing mode, only valid if @mem_ref is true
+  * @extend_type: Operand extension type (enum annotated_ext_type)
+@@ -538,11 +539,12 @@ int arch__dwarf_regnum(const struct arch *arch, const char *str);
+  * @amount: Number of bits to shift
+  * @mem_ref: Whether the operand accesses memory
+  * @multi_regs: Whether the second register is used
+- * @imm: Whether the operand is an immediate value (in offset)
++ * @imm: Whether the operand is an immediate value
+  */
+ struct annotated_op_loc {
+ 	int reg1;
+ 	int reg2;
++	s64 imm_value;
+ 	int offset;
+ 	u8 segment;
+ 	u8 addr_mode;
 -- 
 2.56.0
 
