@@ -1,46 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795631895;
-	b=YiXuZyqlD4G4F6Eg/PfMxEtjiWHMgwRmd3Drbl5BZtHHmosWWQlzx1v7Usj1dDfEl4jH
-	 X1obYaLE7xuEKVHNM0TuK9+XyVQMebhy9p0qVbw9wS6kEKGoKr70VEaCv5/ljSBoD1koy
-	 IkjQ8s5vfXT5uxakgk0Bq9gplP1rTV/H+GgBhWxTWqJsZAwj9QEwJXDZkC31RQrIAMeD2
-	 j3r2x7gJ0AZtjyb8eahUJbnjwrgoktnZc/+Js1ggtcxsVGVUOOCP7CV6AlJmXXUvX+oFQ
-	 M2giZlCh6EpUUhtE5NLDDUBvrLP/zzVBSC1I2GgeU5FETbCzfyqSnvp+gWizi/WLhbw==
+	t=1795632082;
+	b=K2kXL6PgvJiRSKoEqGvs1kfQnwa3EQw7bxDvUXMT+FcbC9KLjug8FAJkCFLqpMj7ms9P
+	 bJKRXScjxhRLJQQm3VDjNY2U2f7+ttKHUnBnfaknCNrpf+iQJZdxgtEcC66hBXHrxBbYr
+	 cPLldYS0s4skFTYWNLmEgwZAMZc9rdhuakVNALoMjbKFbCTuBRTazUW0ihBtSe9HOzW0M
+	 n3yvJCoF+u4itHWuw+BHw5+iJxQp4JWt++OzdIcCp8zW+P5ggWRI8bnepCyGyC2afrUyU
+	 iwhjRHzmadrepcWvqozfbxoy2A6IlIAXlZxOjnqpA3BUOUOFDQbszFXZ0bBT5eIfBlg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795631895;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795632082;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 Content-Transfer-Encoding:In-Reply-To;
-	bh=LBXfaNtpxMx3TkkX4gfbHV0iMPOegU1w1tIaTd7J1dE=;
-	b=jxPy0Q/VvG2PTTLDc2itgvdpbAy5kd2uWN0WgR7+G9IzWUR2ngokeLanaK99d+R5o8R9
-	 MbD3sjSLEUj/T1B/aLAJcW/Nk5uAXcr8oDJfGRqspEPmnQsXBALC//mXufB9TPitvf/iD
-	 1WxRqdE6mRJ8I+UM95KEdBp9TcKLrfexg+di9rGclDkXZZPHltIV6jjW/dSSLeNuNQSF9
-	 ReMNI8H95+kHrWNZz1E/VErS94FF15lhcgN8F4xB5sEkhiq62DsAU3WjjO2GPlT5Hu2Sn
-	 y55fv5zycHZBgp8IM2o83PJ/RBQjzJwOBsvcsyucBgmEtUAs4nJYTBc2thN2kwQT87w==
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=ZJ02y3Z30VnfaB4wxrfHVkrt7dhk7m57ns1frXinnz4=;
+	b=CYwe7MYhsfdA3xnR+jHAv+SHET3LJJB29NjBwNpn/jf67PfX3/nsNAm807YOTXSj8/We
+	 J3nA5nD1sewtJq/KMwAxfS2Oa40bJWMH+e5U8dB/4vxtg1LDIEYRo/9q7KeIm7I8WRk56
+	 I7fIOuNzFHbwCUAmVefWvl6zdCfLyA3z2cGH+8euJb+uPUOsCnpIka7+yUypjofpg3uCE
+	 JgyF3Gps4QxWL3r0B6seofqEGkU8GRmtJr8fW53jzHmy0e0pZeFPHkEtdXzlJx48BHCDK
+	 mdSk5+qH4L4YmtO1AoSrCgOHNAeqZmeFrSqTaea+5xOSzSbELoIH+aRF64lXpzoTmxw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YUUP65x9;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GK0HFFKE;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B8C606A329;
-	Wed, 25 Nov 2026 18:38:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABE5606A321;
+	Wed, 25 Nov 2026 18:41:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YUUP65x9
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 922D61F000C0;
-	Wed, 25 Nov 2026 18:38:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GK0HFFKE
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 750FB1F000C6;
+	Wed, 25 Nov 2026 18:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795631895;
-	bh=LBXfaNtpxMx3TkkX4gfbHV0iMPOegU1w1tIaTd7J1dE=;
+	s=k20260515; t=1795632082;
+	bh=ZJ02y3Z30VnfaB4wxrfHVkrt7dhk7m57ns1frXinnz4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=YUUP65x974U8Qt7ijSvC0EL+AddB/NBrvM4wk4AowrpLEVk1ctJMIMcgFCfmR5CgP
-	 vRyHK/nrkRrQr3wrtBCisKd3RNrsZwbiFlMVvE9N9vTrlOarLbBM2YDl0WkUZGIFTJ
-	 9osB6/+ZUwFM3nnDXayQQH92kro9cNSFAe5VMGh8R7flsDL8fU3TJkeKQn38qwj+ZD
-	 BUyoxUN9na4/OWNGzEOxyrVKCUSHNFs8czkYkbtnKamDNCxWhOwr0hFOMcj1yuSmvh
-	 ND3oQiQ5ekH+MBMnwsfePGt7uLTDURj9kFZ4aMNZiuradPZ6RxCXZfnr74Onfx0I+Q
-	 sL/ITheczVthw==
-Date: Wed, 25 Nov 2026 15:38:11 -0300
+	b=GK0HFFKE1HKitFjM8n3SlHQu6XByZ3pKm0R8a2UoEdaIlbDvu/si15UWYE7dgGDWs
+	 sGaViuj6jlRuBGKZ2Kj8k9ao2WGzeM21S/S/QwWYCDW4VTJixdWk6EHBGbkz/w6mtC
+	 vWP0RAUsaZM7pgBCAq8B1JYOxMQhIR14Gm3JMKttlCsXcJGTZvFnz4OL2lVEULNwPo
+	 dKbcBUWZlXSxz0i41czZCsGhusaqNoslt63Z6hvgR5jg7D5I6PZ63xh2GGN/gfBv5U
+	 7LcgWDhavlM1M1YhpQmvWXJLNgP1wH9P0wNkP9eAPWSOjxWepoSBCyuIWbhJPegO1V
+	 GTwrw5PtK7q2g==
+Date: Wed, 25 Nov 2026 15:41:19 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
@@ -50,11 +49,12 @@ Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
 	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v12 19/19] perf scripts: Add a coverage table
-Message-ID: <awcrE211m2HtJy4h@phoenix2>
+Subject: Re: [PATCH v12 03/19] perf annotate: Print the stats after the
+ annotations
+Message-ID: <awcrz9GZgf78UYLA@phoenix2>
 References: <20261123220024.14891-1-acme@kernel.org>
- <20261123220024.14891-20-acme@kernel.org>
- <awYyPRudKyzS5lUF@google.com>
+ <20261123220024.14891-4-acme@kernel.org>
+ <awYNhyPWLG0g_nDn@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -64,75 +64,54 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <awYyPRudKyzS5lUF@google.com>
+In-Reply-To: <awYNhyPWLG0g_nDn@google.com>
 
-On Tue, Nov 24, 2026 at 04:56:29PM -0800, Namhyung Kim wrote:
-> On Mon, Nov 23, 2026 at 07:00:24PM -0300, Arnaldo Carvalho de Melo wrote:
+On Tue, Nov 24, 2026 at 02:19:51PM -0800, Namhyung Kim wrote:
+> On Mon, Nov 23, 2026 at 07:00:08PM -0300, Arnaldo Carvalho de Melo wrote:
 > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 > > 
-> > Render the report of the last coverage run as a table of the files with
-> > the most uncovered lines, biggest gap first; --all lists every file and
-> > -f picks files explicitly, failing when a requested file has no coverage
-> > data.  coverage.sh prints the table when a run finishes; it is also wired
-> > as 'make -C tools/perf coverage-table', to print just the table.  It only
-> > reads coverage.sh's report.txt, so the measurement and the table are
-> > reviewed and changed separately.
-> > 
-> > For example, with --top 4 on a full test suite run:
-> > 
-> >     $ make -C tools/perf coverage-table O=/tmp/build/coverage \
-> >           COVERAGE_ARGS="--top 4"
-> >     tools/perf (no tests/ or bench/), 100+ executable lines:
-> >     the 4 biggest uncovered gaps, start here when adding coverage tests.
-> >     --all for every file: make -C tools/perf coverage-table O=/tmp/build/coverage COVERAGE_ARGS="--all"
-> > 
-> >     ┌──────────────────────────────────────────┬────────┬────────┬────────┬─────────────────────────────┬─────────────┬──────────┐
-> >     │ File                                     │  Lines │    Hit │   Miss │        Line Coverage        │       Funcs │  FuncCov │
-> >     ├──────────────────────────────────────────┼────────┼────────┼────────┼─────────────────────────────┼─────────────┼──────────┤
-> >     │ util/intel-pt.c                          │   3237 │      0 │   3237 │ ░░░░░░░░░░░░░░░░░░░░   0.0% │     0/142   │    0.00% │
-> >     │ util/intel-pt-decoder/intel-pt-decoder.c │   3208 │      0 │   3208 │ ░░░░░░░░░░░░░░░░░░░░   0.0% │     0/119   │    0.00% │
-> >     │ ui/browsers/hists.c                      │   2742 │      0 │   2742 │ ░░░░░░░░░░░░░░░░░░░░   0.0% │     0/124   │    0.00% │
-> >     │ builtin-sched.c                          │   3737 │   1543 │   2194 │ ████████░░░░░░░░░░░░  41.3% │    62/141   │   43.97% │
-> >     ├──────────────────────────────────────────┼────────┼────────┼────────┼─────────────────────────────┼─────────────┼──────────┤
-> >     │ TOTAL (perf)                             │ 174097 │  86374 │  87723 │ █████████░░░░░░░░░░░  49.6% │  5650/9358  │   60.38% │
-> >     └──────────────────────────────────────────┴────────┴────────┴────────┴─────────────────────────────┴─────────────┴──────────┘
+> > With --code-with-type the instruction stats are printed from
+> > hists__find_annotations() before that event is annotated: the first
+> > event reports zeros and later events can report stale counts.  The data
+> > type total is only counted in --data-type mode, so --type-stat without
+> > it is incomplete too.
 > 
-> Maybe you can use similar format both for line and function coverage
-> data.
+> I prefer having type/insn stat before the result so that I can check the
+> quality easily.  But probably it makes sense to do it later when it's
+> used with --code-with-type.
 
-Like this?
+Done:
 
-⬢ [acme@toolbx perf-tools-next]$ bash tools/perf/scripts/coverage-table.sh --cov-dir=/tmp/opencode/cov-more-cov --top 4
-tools/perf (no tests/ or bench/), 100+ executable lines:
-the 4 biggest uncovered gaps, start here when adding coverage tests.
---all for every file: make -C tools/perf coverage-table COVERAGE_ARGS="--cov-dir /tmp/opencode/cov-more-cov --all"
+commit a33b6175c93c126c92bd1b98bd0760b39d79c234
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Thu Oct 29 11:20:31 2026 -0300
 
-┌──────────────────────────────────────────┬───────────────┬───────────────────────────┬───────────────┬───────────────────────────┐
-│ File                                     │         Lines │         Coverage          │         Funcs │         Coverage          │
-├──────────────────────────────────────────┼───────────────┼───────────────────────────┼───────────────┼───────────────────────────┤
-│ builtin-trace.c                          │      155/3661 │ ░░░░░░░░░░░░░░░░░░   4.2% │         1/198 │ ░░░░░░░░░░░░░░░░░░   0.5% │
-│ util/intel-pt.c                          │        0/3237 │ ░░░░░░░░░░░░░░░░░░   0.0% │         0/142 │ ░░░░░░░░░░░░░░░░░░   0.0% │
-│ util/intel-pt-decoder/intel-pt-decoder.c │        0/3208 │ ░░░░░░░░░░░░░░░░░░   0.0% │         0/119 │ ░░░░░░░░░░░░░░░░░░   0.0% │
-│ builtin-sched.c                          │      737/3737 │ ███░░░░░░░░░░░░░░░  19.7% │        16/141 │ ██░░░░░░░░░░░░░░░░  11.4% │
-├──────────────────────────────────────────┼───────────────┼───────────────────────────┼───────────────┼───────────────────────────┤
-│ TOTAL (perf)                             │  75546/174407 │ ███████░░░░░░░░░░░  43.3% │     5044/9362 │ █████████░░░░░░░░░  53.9% │
-└──────────────────────────────────────────┴───────────────┴───────────────────────────┴───────────────┴───────────────────────────┘
-⬢ [acme@toolbx perf-tools-next]$
+    perf annotate: Print the stats where the counters are final
+    
+    The stats are printed from hists__find_annotations(), before that event
+    is annotated: with --code-with-type the first event reports zeros,
+    because those types are resolved while printing, and a later event can
+    report a total that is not its own.  The data type total is only
+    counted in --data-type mode, so --type-stat without it is incomplete
+    too.
+    
+    The data type pass resolves the samples while the histograms are being
+    resorted, so in stdio without --code-with-type the counters are final
+    before any annotation is printed.  Print the stats once there, before
+    the annotations, so that the quality can be checked without scrolling,
+    and once after them when --code-with-type or a browser is used, where
+    the counters only reach their final values during the output.  Leave
+    the TUI's alternate screen before printing, so the stats remain on the
+    terminal.  Warn if --type-stat is used without --data-type.
+    
+    Fixes: 58824fa0087e1cb7 ("perf annotate: Add --insn-stat option for debugging")
+    Fixes: 61a9741e9f78c64c ("perf annotate: Add --type-stat option for debugging")
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-?
+Still doing local LLM and container fleet builds to make sure everything
+builds and tests in multiple arches before posting.
 
 - Arnaldo
-
-> | File               |       Lines | Coverage     |     Funcs | Coverage     |
-> | util/intel-pt.c    |      0/3237 | ##      0.0% |     0/142 | ###     0.0% |
-> | ...
-> 
-> Thanks,
-> Namhyung
-> 
-> > 
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > ---
