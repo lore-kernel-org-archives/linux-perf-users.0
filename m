@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795645408;
-	b=WNid7dIsBwIlyhSGPtJpEnrNGjK3V1/HfdYHxPNf86+T9LnFaWHl1j/e1YSR7z1u4/Ow
-	 98GUqw3UL7ecllpvbLPA1WPJenijvk+etRXMvT/mHPXbBbQUWlNuYnxM4yqHF0jeKLzOG
-	 fW28kuQFm4uprrq1P88h04ZxbzK3CPTZ0rk0rHGIgA8fygdSHsWpEhGXFPXuFkLCy3qrQ
-	 uaa0DjdS1c6mDPrNR8YfjnJ3sYb/WxL4cuJdws506/hu4c9b1IRcA4DleDVCEg7nZhO07
-	 AyGS7MUM6+xBQjufnsntXYRJc4qNtMADwoTlWE+Sh6IaeHNx5PaQsLEnYn2+FffOwbA==
+	t=1795645413;
+	b=IpDemwLhKOOMHXG6vi1Bt7NzDf0MgAsJzY5/uDWF/2cdaJEMQlz12Z7GPlUlHGUIoI31
+	 Un8WcPRaih17hD2lad47UP+cSweu5bAcfloHeTxR/SnmYMkOCO/4eNw0RI+gcD+azmPix
+	 Jv53huGmk74zdMZKnVP+ro6mdVQA3NcVkqsRgWay9yfDyfK8q46Zz4IUU4msOOSzoZmlF
+	 LcIN8REnWfs83XWiw06b0gjEN+st3QKcHi6T4NyiBZXuplGJp6ARTI/OzFs1lzjW+n0qu
+	 qeVeCC8h9+21MH/QyMk0yfIXk+D/y97s2oOAI4TdWG046whnJXLHVBPpt4gJ+stpaMQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795645408;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795645413;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=L6+Tjtz4gXen59dBSrmC5R5AhC8kgQiMoS0NQgdjdN8=;
-	b=gQ5WjgAheCKfvqWnJO8g3tLHoHs5rxU+OnZLnZxKRXk1vxBjdQ7L0WEDTzfXTNL7zpC/
-	 2hYSwIyhZkculHqDHejCsngSQoiyewfgONoKL9GTUWhLzlLQKdI+T1IRn/iOz6phKr/xX
-	 jKa+L6CCm5Jcmffmf9phyHdZYyLP4PfIndnnM3XoAiOO5tjBqXSbeSi3t9cGvJZ/34zDK
-	 ays6cg31/xwqDYW0koq+2w25gjiJJq89C857J1oYYrrmcApANidyeaMg9bgdSM6KceTGL
-	 4XTmNR+OkUjXnpxiih043thwRGQ6EpYdbVRBi4zw15a6pwaBqGRquUArJlIIjNZEstg==
+	bh=+CvwWfPtMP1Sj+lI2GAc+Iqjnwn50p0H/UvHgpHxKkQ=;
+	b=Aqzzq00lRQi5oAisgzVC/YZ0Xz/TJm9AYGc9wn0iGxnUhL23yEnrQSZLuLPbw7gbCgmT
+	 aKzbi5uhVWWgpivRT5Dpve5AApBNqPA+lSaCIFmcXo4M/XjCbnalvf10Brz9BMUiGMHl4
+	 rUtkTN2atixQv64lN3RXogPNVm+TwL7h87JzjYhzxoTD1DPlLcE+a7r/4YdO3OTU+nbNA
+	 V80hP9b/M2A1mgzQXpok1IkvDJmwbrtm7SirSyRRG6wLpO+VmAKwUQ74apiESEd/oHkuM
+	 Gjhe6q96OlI7qTcAb9CwIA7MO+1d8LM/pS/9W53vgb49mYdydzCZQ8WxejHEAh0qlbg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=g6UjddVW;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bH4Qz3Ng;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E054606A31E;
-	Wed, 25 Nov 2026 22:23:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E39606A31E;
+	Wed, 25 Nov 2026 22:23:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=g6UjddVW
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 023FD1F000D4;
-	Wed, 25 Nov 2026 22:23:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bH4Qz3Ng
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AF911F000EB;
+	Wed, 25 Nov 2026 22:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795645407;
-	bh=L6+Tjtz4gXen59dBSrmC5R5AhC8kgQiMoS0NQgdjdN8=;
+	s=k20260515; t=1795645413;
+	bh=+CvwWfPtMP1Sj+lI2GAc+Iqjnwn50p0H/UvHgpHxKkQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=g6UjddVWTopC8dyFqBFOZXTv3A39cgBzTem4mJMYyI1a9W/PbMKYoGDGf9pS1uvML
-	 T7P5WZX4yBHi2JWTvIDYnoPJWjGCSEv7XHn3Yj94Jf8nI5v55c3MhamRz7VBt4dXnv
-	 wuz0QmpHZImYBNUxL/zPF+Rb9jmxIbHAODi0sASPfiSV/qcCqIftYIbWk7np90BeEa
-	 QlbGkMdOUKLsHnXXITck9xwPUX6GPW8EsbO7GOt+OgQstMtYYNubbbuABF6aDd3SDt
-	 t8f8r0Akez0jB3asT0Hiq2Qh/ucz2uTcTmigY6h5iauppfcHTRX3fz+hYfLFJ5yIQu
-	 WV0W0VnSqLRvw==
+	b=bH4Qz3NgpjMoMmfkaMXxSIi34JdzN33b1HNR/rsDtklB7TMapUByMRej2+jicVPv+
+	 2zLfIvwGwV9SKgMZBkd2A+JpxLR+8bVBQtzheMSmKywkc3dC9VL50AcQ3UzxA8nv+d
+	 VlCyVH5OwRI4aSzKLk5tUPlGviSSk8S23cqc/2FhDB1Mn3B62OW2mkUbL+7jXD4oMr
+	 ZfYcDM0aW+xEuNkxiWExiSjWOtcsrEG7FmgzCPgvXpu0c0IULqyimiIL9HTSKP3xQI
+	 O5dNQWwZ2Ev+gUZv04g2+aR4Yk6u1AInXG/efZzcs5jRXZtu+G9enxrEU2+42d49gS
+	 8+RkPANaXdQMg==
 From: Frederic Weisbecker <frederic@kernel.org>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Frederic Weisbecker <frederic@kernel.org>,
@@ -63,9 +63,9 @@ Cc: Frederic Weisbecker <frederic@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	x86@kernel.org,
 	Michael Kelley <mhklinux@outlook.com>
-Subject: [PATCH 14/47] perf/x86: Move CPUHP_AP_PERF_X86_STARTING post stop_machine()
-Date: Wed, 25 Nov 2026 23:21:57 +0100
-Message-ID: <20261125222230.22508-15-frederic@kernel.org>
+Subject: [PATCH 15/47] perf/amd/ibs: Move CPUHP_AP_PERF_X86_AMD_IBS_STARTING post stop_machine()
+Date: Wed, 25 Nov 2026 23:21:58 +0100
+Message-ID: <20261125222230.22508-16-frederic@kernel.org>
 X-Mailer: git-send-email 2.56.1
 In-Reply-To: <20261125222230.22508-1-frederic@kernel.org>
 References: <20261125222230.22508-1-frederic@kernel.org>
@@ -90,20 +90,11 @@ a new stop machine post function has been introduced to be executed
 after the main one with IRQs still disabled while other CPUs can exit
 stop_machine().
 
-Here only intel has a dying callback (intel_pmu_cpu_dying()) which does:
+Here the callback only restores the IBS interrupt to the normal priority
+on the local APIC and running it concurrently against other CPUs
+shouldn't expose any kind of race.
 
-* Deallocate the per CPU DS structure on the MSR_IA32_DS_AREA. This is
-  already racy against offlining CPUs because all possible CPUs's MSR
-  are written on a hardware event initialization, which still can happen
-  before the CPU actually goes off.
-
-* Deallocate PEBS buffer. This is already well synchronized against
-  hotplug up callback.
-
-Therefore the related teardwown callback can run concurrently with other
-CPUs.
-
-Move it to post stop_machine() accordingly.
+Move this teardown callback to post stop_machine() accordingly.
 
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 Tested-by: Michael Kelley <mhklinux@outlook.com>
@@ -112,15 +103,15 @@ Tested-by: Michael Kelley <mhklinux@outlook.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 2dd34a38f878..2aa2e9902a55 100644
+index 2aa2e9902a55..678cb9efce05 100644
 --- a/kernel/cpu.c
 +++ b/kernel/cpu.c
 @@ -1275,7 +1275,7 @@ void clear_tasks_mm_cpumask(int cpu)
  static int take_cpu_down(void *_param)
  {
  	struct cpuhp_cpu_state *st = this_cpu_ptr(&cpuhp_state);
--	enum cpuhp_state target = max((int)st->target, CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING);
-+	enum cpuhp_state target = max((int)st->target, CPUHP_AP_PERF_X86_STARTING);
+-	enum cpuhp_state target = max((int)st->target, CPUHP_AP_PERF_X86_STARTING);
++	enum cpuhp_state target = max((int)st->target, CPUHP_AP_PERF_X86_AMD_IBS_STARTING);
  	int err, cpu = smp_processor_id();
  
  	/* Ensure this CPU doesn't handle any more interrupts. */
@@ -128,8 +119,8 @@ index 2dd34a38f878..2aa2e9902a55 100644
  	enum cpuhp_state target = max((int)st->target, CPUHP_AP_OFFLINE);
  	int cpu = smp_processor_id();
  
--	WARN_ON(st->state != CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING);
-+	WARN_ON(st->state != CPUHP_AP_PERF_X86_STARTING);
+-	WARN_ON(st->state != CPUHP_AP_PERF_X86_STARTING);
++	WARN_ON(st->state != CPUHP_AP_PERF_X86_AMD_IBS_STARTING);
  	/*
  	 * Invoke the former CPU_DYING callbacks. DYING must not fail!
  	 */
