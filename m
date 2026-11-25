@@ -1,57 +1,57 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795569495;
-	b=vRZPxrlCS7XNS/p6WKVqVNu9adMhBKEHJJMmBaJ70fnNjwLq7tAaTFYel12pLlKZVHx8
-	 ML1dNxBYbZn/cbMZ6yNamr25A6WUeRFNWsRTMEh79CLDLQ3Grm3/nzpHQtvx05J9Y4ThB
-	 +CaM//3HpcT1N/SzHcgu81xVeLSMCCDFYlX0hCYmy8yJONDznjvEIGimsf46RpKX7gE3B
-	 DL7xZwAc7oza4d/NN8m3TL0DCkNn5YRO2LoBkJYYUl3H9ZLovgq+dMcQ6gIx/xmhuCYow
-	 0o7xWewdSWyn1r12ShXBrA/bpGka1G5Z0gYXsBPoSmQxcP61KBGL0dnJv5YqkKFD2xA==
+	t=1795569551;
+	b=N90uuxBzRTmbVl8kP93D17dhBn0zfV2d1F0MAQMVwccnyZHhcm3kUh/Rv+/lDvO1THZ7
+	 3sw9FVDFKPLXj9vg06jaBdCfJBk28MmGO8DsGXiyhQHjL4d0Y6Gt2OcwEQNhH6YIaMQdR
+	 fqWr8TkUxDCbnEec4iy4cZMs4kCLxe1LeGsq41K/V1v+xYb/C5g5Ka6NgwI1suDoMna7n
+	 hwBit4ZGFIGNoEoQOwui3Jh3U3B7tgnv1U4nLSFeC4kuxtDDqieXkcWVnBibN983dQrqm
+	 dmGvwZkdPJvFWgDyayKkzNt6gumnGnAsr26O+8AP7OlHFoxADzb9Cuj1LeEjdBQS/RQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795569495;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795569551;
 	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
 	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
-	bh=EzzL6ML2/SNsmeB6+Pz/Z7bmJjdvfo8HB7U/Vy8xZSM=;
-	b=U4RmetBOg8t0pcN5uOtemMT4y8UoGU5ACGUto9M0Ub7FFpHM2jCw+51Y/8W0YFE9D6TQ
-	 kY+Op3rAbJVJkB0yT1fNgbBS6JRuU5/G6Mru9hXSm6q1/WLbeIpWHx7k1IgWB/TYBQyo4
-	 xNUpw4E57OqUtXtA/FsvPrNZDGQk2609gUNaR2+HqjoORhQLnTh7f5vmT8kws+KBSeS9f
-	 7ppukIZyEwrJE2upsucQdAhd99faPC4cY/bhI7ZmWDiEzZ+cTMo4y2wOWDcJUUtUchM5a
-	 bZCc56wojeAQ1237MsHr68tzz/ogDubjDS5X2lvZhagucenMNzY1NBHAzfmQ2KrWn+Q==
+	bh=GmFQGGFUMrza2jufqoeXh+f4toB/Sj4rIXt4rxO0pfE=;
+	b=MgzGdPzueq56cJ0zicd3ThL/KqcHzFXk3I3biCLHflEXmDJ0bFlG8DLc/0Ms8dB4yfo6
+	 tABNpltc9/05BuDB1Q8Cu4DyAew6pOxW61V+QTmTmSTB5pEJsoajQDgxMc765ieQzXNvr
+	 UZS9oYQ282TdRFhW5iJp4Q0D7tnAeN7/fvOpmCoP9E78kEbMpRA95UE7B/ytPGFHdwjEw
+	 lN2R+ecpF+n2nkBMT9B7AVcY57xLyKeen5W1yNrFeFXj94xKXiThzXSPvoA3MM2Wp1ecl
+	 WB6ucO4WCze6t4rAEXK3v1occXcjwb6KoitwurAxNx/cg950FZjzRsw6RDI+WKFcP4w==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ctCeNOQ2;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Xrgr8hxk;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7D6606A31E;
-	Wed, 25 Nov 2026 01:18:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 767DA606A31E;
+	Wed, 25 Nov 2026 01:19:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ctCeNOQ2
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 384DA1F000C6;
-	Wed, 25 Nov 2026 01:18:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=Xrgr8hxk
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AB2F1F000C6;
+	Wed, 25 Nov 2026 01:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795569495;
-	bh=EzzL6ML2/SNsmeB6+Pz/Z7bmJjdvfo8HB7U/Vy8xZSM=;
+	s=k20260515; t=1795569551;
+	bh=GmFQGGFUMrza2jufqoeXh+f4toB/Sj4rIXt4rxO0pfE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ctCeNOQ2eWmNVU+B8yVeuo6UhjqXGxiZUXax3LDbauIeX3KOidFjmSnwy9ZT5+oK8
-	 iKa2tri+9Vk1O4o4HK6g3ONKJ/44NlUWAl5W0LMeQAj/Z+PcSQGUnlaFbQcw5o9snf
-	 tOwBbOjbxqEwREMxziKxEbVdTwTq3zfsQ/1Oeg3cESXc6zzd7FJH9NjEEQEtR6G1G+
-	 hCdjlsagqMQ3R17ddMxqfOafXyf6cQTA0IGB5Ga5+O3uAn/mHsExjaWKAT+DPhbrv/
-	 WnUrpH987P+oNxh+iycczR/rbClkUVmtV+++O5WQ4OZZpcEDUvu0vMKJ+TGQcvZi1L
-	 f2GYfT96qx8sw==
-Message-ID: <sashiko-outbox-232322@kernel.org>
+	b=Xrgr8hxkuORCU9ZmCFPACM7t5At30yfwrvtI9VnU9SxmCmMtmtViln3Cz9ltKgvRP
+	 qLztEXmPc8C/68Zu6EgPExKsACPrqjJPLiXxnKuKHqExcqawO40Rmg4HiKVPblE8+s
+	 P6/l2U9Kaq5B+3gEM6w9etdtFsPB0sQRUV25C1Q6wOswk6TUVH3a65fBh1wFtAFUwB
+	 JLtgBaGbyLkK2Ol8f0O8GPCx3FikAwRtRzcEoKmd0tBliZofcKrqlPGJN7S7P1SH2s
+	 pGaVJJQHVS/qd75W6Ughm47W/LaUMYP/4FGke5G/OyLq3Ubd8UCpq1Ovi0uZXX9tM8
+	 Kps9+JOA7vFhw==
+Message-ID: <sashiko-outbox-232323@kernel.org>
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 16/19] perf inject: Add --sample-buildids to convert
- samples to build ID + offset
+Subject: Re: [PATCH v4 05/19] perf/core: Implement BUILD_ID_OFFSET and
+ CALLCHAIN_BUILD_ID_OFFSET sample types
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-In-Reply-To: <20261125005108.1020003-17-irogers@google.com>
+In-Reply-To: <20261125005108.1020003-6-irogers@google.com>
 References: <20261125005108.1020003-1-irogers@google.com>
- <20261125005108.1020003-17-irogers@google.com>
+ <20261125005108.1020003-6-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 25 Nov 2026 01:18:14 +0000
+Date: Wed, 25 Nov 2026 01:19:10 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -61,112 +61,214 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 
-Thank you for your contribution! Sashiko AI review found 2 potential
+Thank you for your contribution! Sashiko AI review found 3 potential
 issues to consider:
-- [Medium] perf inject: repeated dso__read_build_id() calls on DSOs
-  without build ID
-- [Medium] perf inject: redundant O(K*M) build-ID map scans in
-  inject_bid_offset_tool__sample()
+- [High] perf/core: u16 header_size overflow in perf_prepare_sample()
+  with AUX
+- [Medium] perf/core: unprotected per-CPU entry in
+  perf_output_sample_build_id()
+- [Low] perf/core: wasted kernel IP lookup and uninit read in
+  perf_prepare_sample()
 --
 
-commit 2bebd91f8b6cc5fc073599d5f9ff18fadcfbd15b
+commit 12fd54f1045a93a0b62bd4e4ddb1fe0c0c1107f8
 Author: Ian Rogers <irogers@google.com>
 
-perf inject: Add --sample-buildids to convert samples to build ID + offset
+perf/core: Implement BUILD_ID_OFFSET and CALLCHAIN_BUILD_ID_OFFSET sample t=
+ypes
 
-This commit adds the --sample-buildids (-S) option to perf inject to drop
-user-space MMAP events and rewrite sample IPs and callchains into build
-IDs and file offsets.
+This commit implements synchronous PERF_SAMPLE_BUILD_ID_OFFSET and
+PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET payload generation using
+stack_map_get_build_id_offset() and per-CPU callchain build ID scratch
+buffers.
 
-> diff --git a/tools/perf/util/inject_bid_offset.c b/tools/perf/util/inject=
-_bid_offset.c
-> new file mode 100644
-> index 0000000000000..c6f80f2a95321
-> --- /dev/null
-> +++ b/tools/perf/util/inject_bid_offset.c
-
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index d67bb825c504c..2a6ab82d617ef 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
 [ ... ]
-
-> +static void perf_event__inject_sample_buildid_array(struct thread *threa=
-d,
-> +						    u64 ip, u8 cpumode,
-> +						    __u64 *array)
+> @@ -8394,6 +8400,78 @@ static void perf_output_read(struct perf_output_ha=
+ndle *handle,
+>  		perf_output_read_one(handle, event, enabled, running);
+>  }
+> =20
+[ ... ]
+> +static void perf_output_sample_build_id(struct perf_output_handle *handl=
+e,
+> +					struct perf_event_header *header,
+> +					struct perf_sample_data *data,
+> +					struct perf_event *event)
 > +{
-> +	struct perf_build_id bid =3D { .size =3D 0 };
-> +	u64 offset =3D ip;
-> +	struct addr_location al;
-> +	struct dso *dso;
-> +	const struct build_id *dso_bid;
+> +	u64 sample_type =3D data->type;
+> +	bool sample_bid =3D sample_type & PERF_SAMPLE_BUILD_ID_OFFSET;
+> +	bool callchain_bid =3D sample_type & PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFF=
+SET;
+> +	bool crosstask =3D event->ctx->task && event->ctx->task !=3D current;
+> +	bool has_user_ctx =3D is_user_task(current) && current->mm && !crosstas=
+k;
+> +	bool is_user =3D (header->misc & PERF_RECORD_MISC_CPUMODE_MASK) =3D=3D
+> +		       PERF_RECORD_MISC_USER;
 > +
-> +	struct perf_sample ps =3D { .ip =3D ip, .cpumode =3D cpumode };
+> +	if (sample_bid) {
+> +		if (is_user && has_user_ctx) {
+> +			if (callchain_bid && data->callchain_build_id &&
+> +			    data->callchain_build_id->has_ip_bid) {
+> +				perf_output_put(handle,
+> +						data->callchain_build_id->ip_bid);
+> +			} else {
+> +				struct bpf_stack_build_id bpf_bid =3D {
+> +					.ip =3D data->ip,
+> +				};
 > +
-> +	addr_location__init(&al);
+> +				stack_map_get_build_id_offset(&bpf_bid, 1, true,
+> +							      false);
+> +				perf_bpf_to_sample_bid_offset(&bpf_bid);
+> +				perf_output_put(handle, bpf_bid);
+> +			}
+> +		} else {
+> +			struct perf_sample_build_id_offset bid_offset =3D {
+> +				.offset =3D data->ip,
+> +			};
 > +
-> +	if (!thread ||
-> +	    (cpumode !=3D PERF_RECORD_MISC_USER &&
-> +	     cpumode !=3D PERF_RECORD_MISC_GUEST_USER))
-> +		goto write_bid;
-> +
-> +	if (!thread__find_map(thread, &ps, &al))
-> +		goto write_bid;
-> +
-> +	dso =3D al.map ? dso__get(map__dso(al.map)) : NULL;
-> +	if (!dso)
-> +		goto write_bid;
-> +	if (!dso__has_build_id(dso))
-> +		dso__read_build_id(dso);
-> +	dso_bid =3D dso__bid(dso);
-> +	if (!dso_bid || dso_bid->size =3D=3D 0 ||
-> +	    map__mapping_type(al.map) !=3D MAPPING_TYPE__DSO) {
-> +		dso__put(dso);
-> +		goto write_bid;
+> +			perf_output_put(handle, bid_offset);
+> +		}
 > +	}
+> +
+> +	if (callchain_bid) {
+> +		struct perf_callchain_build_id_entry *entry =3D
+> +			data->callchain_build_id;
+> +
+> +		__output_copy(handle, &entry->nr_build_ids,
+> +			      sizeof(u64) + entry->build_ids_len);
+> +		if (entry->nr_offsets) {
+> +			__output_copy(handle, entry->offsets,
+> +				      entry->nr_offsets * sizeof(u64));
+> +		}
+> +	}
+> +}
 
 [Severity: Medium]
-Does calling dso__read_build_id() here cause repeated filesystem open()
-and mount-namespace setns() syscalls on every sample IP and callchain
-frame that hits a DSO without a build ID?
+Can a nested perf event overwrite data->callchain_build_id during
+stack_map_get_build_id_offset() here?
 
-Both inject_bid_offset_tool__sample() and
-inject_bid_offset_tool__callchain_deferred() already call mark_dso_hit()
-first, which attempts dso__read_build_id() once per DSO tracked in
-ibo->synthesized_dsos.  When a mapping has no build ID (such as an
-anonymous mapping or a binary built without a build ID),
-dso__has_build_id() stays false, so this check re-runs
-dso__read_build_id() on every hit, even before checking
-map__mapping_type(al.map) !=3D MAPPING_TYPE__DSO.
+When callchain->nr > 0 but nr_bpf_bids =3D=3D 0 (for example, when
+exclude_callchain_user is set or no user frames follow PERF_CONTEXT_USER),
+perf_callchain_build_id() skips resolving ip, leaves entry->has_ip_bid
+false, and releases callchain_recursion[rctx] before returning the per-CPU
+entry:
+
+kernel/events/callchain.c:perf_callchain_build_id() {
+	...
+		if (nr_bpf_bids > 0) {
+			if (resolve_ip) {
+				bpf_bids[0].ip =3D ip;
+				ip_slot =3D 1;
+			}
+	...
+	perf_callchain_encode_build_ids(entry, callchain->ip, nr, user_start,
+					bpf_bids + ip_slot, nr_bpf_bids,
+					max_size);
+	put_callchain_entry(rctx);
+
+	return entry;
+}
+
+If the sampled IP was in user mode, perf_output_sample_build_id() then
+falls back to calling stack_map_get_build_id_offset() after
+perf_output_begin() has already reserved header->size bytes and while
+callchain_recursion[rctx] is no longer held:
+
+__perf_event_output()
+  perf_prepare_sample()
+    perf_callchain_build_id()
+      get_callchain_build_id_entry()
+      /* nr_bpf_bids =3D=3D 0: entry->has_ip_bid remains false */
+      put_callchain_entry(rctx)
+  perf_output_begin()               /* reserves header->size bytes */
+  perf_output_sample()
+    perf_output_sample_build_id()
+      stack_map_get_build_id_offset()
+        mmap_read_trylock()
+          <tracepoint / kprobe perf event at same context level>
+            perf_prepare_sample()
+              perf_callchain_build_id()
+                /* reuses same per-CPU entry and increases
+                 * entry->build_ids_len / entry->nr_offsets
+                 */
+      __output_copy(..., entry->build_ids_len)  <-- writes past reserved si=
+ze
+
+Resolving ip in perf_callchain_build_id() whenever resolve_ip &&
+has_user_ctx (even if nr_bpf_bids =3D=3D 0, or when !callchain->nr) would a=
+void
+calling stack_map_get_build_id_offset() during output while the per-CPU
+entry is unprotected.
 
 [ ... ]
 
-> +	ev->sample.header.size =3D (u16)(out - (u8 *)ev);
+> @@ -8963,6 +9052,24 @@ void perf_prepare_sample(struct perf_sample_data *=
+data,
+>  		data->sample_flags |=3D PERF_SAMPLE_CODE_PAGE_SIZE;
+>  	}
+> =20
+> +	if (filtered_sample_type & PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET) {
+> +		u32 header_size =3D perf_sample_data_size(data, event);
+> +		u32 max_size =3D 0;
+> +		struct perf_callchain_build_id_entry *entry;
 > +
-> +	orig_sample_size =3D evsel->sample_size;
-> +	if (perf_event__rewrite_attr_for_build_id_offset(&evsel->core.attr)) {
-> +		ret =3D -EFAULT;
-> +		goto out_put;
-> +	}
-> +	evsel->sample_size =3D __evsel__sample_size(evsel->core.attr.sample_typ=
-e);
-> +	perf_sample__init(&new_sample, /*all=3D*/true);
-> +	ret =3D __evsel__parse_sample(evsel, ev, &new_sample, /*needs_swap=3D*/=
-false);
-> +	if (!ret) {
-> +		new_sample.evsel =3D evsel;
-> +		ret =3D ibo->tool.delegate->sample(ibo->tool.delegate, ev,
-> +						 &new_sample, machine);
-> +	}
+> +		if (header_size < U16_MAX)
+> +			max_size =3D round_down(U16_MAX - header_size, sizeof(u64));
+> +
+> +		entry =3D perf_callchain_build_id(event, data->callchain,
+> +						data->ip,
+> +						!!(sample_type & PERF_SAMPLE_BUILD_ID_OFFSET),
+> +						max_size);
 
-[Severity: Medium]
-Does delegating the rewritten sample to perf_event__repipe_sample() trigger
-redundant build-ID map scans via build_id__mark_dso_hit()?
+[Severity: Low]
+Does this pass resolve_ip =3D true for kernel-mode samples and read
+data->ip when PERF_SAMPLE_IP was not prepared?
 
-mark_dso_hit() has already resolved the virtual addresses by binary search
-and marked the hit DSOs.  Passing new_sample to perf_event__repipe_sample()
-runs build_id__mark_dso_hit() on the converted BUILD_ID_OFFSET sample,
-which resolves the sample IP and every callchain frame through
-maps__find_by_build_id(), performing a linear scan across all thread
-mappings for each frame just to mark the same DSOs hit again.
+When a user task is sampled in kernel mode with both
+PERF_SAMPLE_BUILD_ID_OFFSET and PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET
+enabled, perf_callchain_build_id() looks up the kernel data->ip in
+current->mm via stack_map_get_build_id_offset(), even though
+perf_output_sample_build_id() checks is_user and discards entry->ip_bid.
+Also, when PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET is used without
+PERF_SAMPLE_IP, PERF_SAMPLE_CODE_PAGE_SIZE, or PERF_SAMPLE_BUILD_ID_OFFSET,
+data->ip is uninitialized on the stack when passed by value here.  Finally,
+perf_callchain_build_id() clamps nr_bpf_bids to max_size / sizeof(u64)
+without subtracting user_start, so it can resolve up to user_start trailing
+user frames that cannot fit in max_size.
+
+> +		data->callchain_build_id =3D entry;
+> +		data->dyn_size +=3D entry->build_ids_len +
+> +				  entry->nr_offsets * sizeof(u64);
+> +		data->sample_flags |=3D PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET;
+> +	}
+> +
+>  	if (filtered_sample_type & PERF_SAMPLE_AUX) {
+>  		u64 size;
+>  		u16 header_size =3D perf_sample_data_size(data, event);
+
+[Severity: High]
+Can header_size in the PERF_SAMPLE_AUX block wrap u16 to 0 when
+PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET is also enabled?
+
+max_size above allows the sample up to the end of
+PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET to reach round_down(U16_MAX, 8)
+(65528 bytes) without reserving the 8-byte aux_size field that
+PERF_SAMPLE_AUX unconditionally emits.  When perf_sample_data_size(data,
+event) reaches 65528, the PERF_SAMPLE_AUX block's
+
+	u16 header_size =3D perf_sample_data_size(data, event);
+
+	header_size +=3D sizeof(u64); /* size */
+
+wraps header_size to 0.  U16_MAX - header_size then becomes 65535,
+data->dyn_size exceeds 64 KiB, and perf_prepare_header() truncates u16
+header->size, causing perf_output_sample() to write 64 KiB more into the
+perf ring buffer than perf_output_begin() reserved.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261125005108.1020=
-003-1-irogers@google.com?part=3D16
+003-1-irogers@google.com?part=3D5
