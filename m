@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795642136;
-	b=fSknR7U0dRLHj3pBGun0D/2dDbDwKMekApL3XjdrYF3rtJKC8BV+xivJRd7Bc0TpN7k2
-	 NlGzREzCrTmXPOzbEWvEYL22VoOtVXTIz0ELYrkLM9MkbWVrnoDel5d+vXhVruVXeOI84
-	 EUjc1M7dMdA2bzYJa9wv83Kl5Y7qeWGh1GMuUp/Y1pM4KrF9hiXBB52sgZiBZLzYXDpTY
-	 pMQ8r2PaQDHG60fK0B/F/P3RU6SR80hWYBxCDbuLDO0Ggm+isjX1+I2if4m1ccMgZVOFZ
-	 6n14VCcZjHdLBj3jpoNM0IHUSgOFlPl3YKxb/YrRzeRODqbzLPUNBGaneSWbBtKimhA==
+	t=1795642137;
+	b=K5N4WU/4oa7P2G4a3ngHf7pUICW5JSIn5CGqq59EDzYzHaiYBSHxW2dEfqmxnGdKdJrE
+	 JVsDjsdZmFYD6NJgCHEIeT8ZfWW9xwUiUIIeuX23VgWhGoaA3F4nbXp87JWh70HgFB1/b
+	 /zdSnP5rSHBwBb/JvsEez0JSFKcPFPbKQxOIUUOFfAtmGlkP+/UlEqX7S5YssJH9rt8zB
+	 GwtU/IYDotiiiDqYfsDTNMyrROqKvzvJQdiGyIsGXwFmlcRW1AM6iydZFJRgjfsAH+3ux
+	 LfTCzexyrSu/FQKAtHQdy9bV7yOId/dpcqSCgkCPKmP7PLJgXAcnJKn5EA9EZkTJoEg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795642136;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795642137;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=WzMYT5u8R/PxI8KgUp7RM0Q4WDZdOzqM1dnSpQB2c60=;
-	b=Axg75n4vAoj3eTYNUI53bTXqrobSI1Ad3fOk1/t/pCh7q4UixS+AnWfJHyxdixjJn+yT
-	 UiglJ50/2fC1J8HmuqKSIPU9R++kCFowMwhLPInbhhv4PKNTpfZ9MFmyqH7obFQ45SDrW
-	 tgk2MTECO/On+73/zy8Kse6ORbtcDQf7lcetBcYHLKsXk6bIkanrdD99q8zMfhDFtpOnZ
-	 gn3SVGHpfRJr4TKvgDjsvdGnwO2iK2+VbyPH32/GCpHqXm2yHuFjDTtwHRrHFXpWp+V1N
-	 sCYOGkHyG1bfbQBLCbcPCdl/aAcEOcyk63k6X2GzKbfrTfaVdcjMJszQ/zK5GRuvYEw==
+	bh=JH494o90rJxcvAwAJTqPoK26uVbFN3qvukSY7zsueJ0=;
+	b=xImM8Lz3cDK1KxzaCF3FT7UiKskCq5FEEgpAnm+5UcTZ070ZDICyTuRkguvAnIB9vgye
+	 sJOk/AHKG9NjmtFl4w055LcvcFm61mIf85NWnoVVzOE35pjKbfsPIqCTBk1QA6ZiYTty+
+	 kDRR98Ml1VQKcK51eehzWk0ljx3Ua77TF0u8AcYBrfh4g+o9NfyALlEAo3WQWAICDg6QK
+	 Rv4yXs0W8ZGYw5Ic5DAgHgh4nKpCgxOTxxFUnYGIQTxH4hZOnYcx3TVUzqWulr6rb2g+X
+	 kXk55S9JaJZAOHynWoHjd846UZyI9X4ocHQTJHHYHQj928b/CptVdkzurMY5vdVyh7Q==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iNRhrufR;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jV6wH0sL;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB50E606A680;
-	Wed, 25 Nov 2026 21:28:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D58606A329;
+	Wed, 25 Nov 2026 21:28:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=iNRhrufR
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF7E11F0156B;
-	Wed, 25 Nov 2026 21:28:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=jV6wH0sL
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6BC41F000D0;
+	Wed, 25 Nov 2026 21:28:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795642136;
-	bh=WzMYT5u8R/PxI8KgUp7RM0Q4WDZdOzqM1dnSpQB2c60=;
+	s=k20260515; t=1795642137;
+	bh=JH494o90rJxcvAwAJTqPoK26uVbFN3qvukSY7zsueJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=iNRhrufRCZ700IHasnTFf0RtTVDwKUnIFI1ZfOPX+2r5yTMf7IA6KXfsIGmy63i78
-	 608j1Czr4SdtrK7euZzkBjGXvli75RDKl04R7uyO2Jsg/n1Z6ZL0Pd8sRkGKu+KDsH
-	 ZaZvgSCrmK3AL4IiydhDjd1xX+qcPFSgfNlMBx4I2m4s+mQ8NJl8A5F1pygn59LNk4
-	 MVTTX2rTaXKS/aqZ8/X+61KX44M8zibkOSZoqmiBNQECn8glJFKZOiAHZCGSdUhuWF
-	 /H4vZIb74gUU9uz13er51VzrmJuTumqaK2bV+mxlGpKzYv2H+qkSf9/XBKtCLaZUOl
-	 L0TN1mS/HPncw==
+	b=jV6wH0sLzEkdRvr6ml9O3WR3wdo6OQLBCLudVH2snjUJkzZrjA0YNHCq3DsGX7A5m
+	 5ftGxdRzjIWCW5XRbHudC6SoLMJL6V0aRz3R6YIpXrQmJFMqAwyzc0BNyLC0Z3I75f
+	 Opfgv9Sw0xlcwryEbg4ya9SaWFvPEFImqcYEsCmSX75VCJjTd5GmwafDEGBMvn7UBd
+	 IpKAqpvKR6/dA/cIWwaxcmkIiZzuw/jATFXIqYlt7gQxyPEuJFiEFcwunMIpHgdHBH
+	 m20WjjzImWP0SmR0fWqFs4s2K2gdvHNXX1eh/pjO9neR8zfWkrydCo+ZDQWv1EtSqc
+	 e2++mIrbdj03w==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -49,9 +49,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v4 05/11] perf tools: Defer /proc lookup until nsinfo is used
-Date: Wed, 25 Nov 2026 13:28:45 -0800
-Message-ID: <20261125212851.1792988-6-namhyung@kernel.org>
+Subject: [PATCH v4 06/11] perf tools: Verify thread status and mount namespace inode
+Date: Wed, 25 Nov 2026 13:28:46 -0800
+Message-ID: <20261125212851.1792988-7-namhyung@kernel.org>
 X-Mailer: git-send-email 2.56.1.839.g22a8290db9-goog
 In-Reply-To: <20261125212851.1792988-1-namhyung@kernel.org>
 References: <20261125212851.1792988-1-namhyung@kernel.org>
@@ -66,294 +66,585 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Do not read /proc/<pid>/task/<tid>/ eagerly in nsinfo__new_thread().
-Instead, initialize struct nsinfo on demand via
-nsinfo__ensure_init_locked() when namespace information is queried or
-entered, protected by nsinfo->lock.
+Verify /proc/<pid>/task/<tid>/status exists and has Tgid == pid before
+reading or entering a thread's namespaces to guard against PID/TID
+recycling.  Pin a reference-counted host /proc file descriptor across
+nsinfo__mountns_enter()/exit() and access relative /proc paths through
+nsinfo__proc_open(), nsinfo__proc_stat(), and nsinfo__proc_readlink()
+using stack buffers instead of heap-allocating mntns_path or keeping a
+permanent /proc descriptor open.
 
-Replace thread__nsinfo() with thread__get_nsinfo() and add
-thread__reset_nsinfo() to replace thread->nsinfo safely under
-thread->namespaces_lock on exec and PERF_RECORD_NAMESPACES events so
-namespace changes are picked up without racing existing readers.
+Also record the mount namespace inode (mntns_ino) during initialization,
+mark nsinfo exited if stating ns/mnt fails with ENOENT or ESRCH, and
+verify via fstat() that the opened namespace file descriptor still
+refers to the same mount namespace before calling setns().
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-inject.c  |  2 +-
- tools/perf/util/jitdump.c    |  2 +-
- tools/perf/util/map.c        |  2 +-
- tools/perf/util/namespaces.c | 28 ++++++++++++++++++----------
- tools/perf/util/namespaces.h |  1 +
- tools/perf/util/thread.c     | 34 +++++++++++++++++++++++++++++++++-
- tools/perf/util/thread.h     |  8 +++-----
- 7 files changed, 58 insertions(+), 19 deletions(-)
+ tools/perf/util/namespaces.c | 330 +++++++++++++++++++++++++++--------
+ tools/perf/util/namespaces.h |   9 +-
+ 2 files changed, 267 insertions(+), 72 deletions(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 0e01b14fa51676ab..05bf1aae61778952 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -626,7 +626,7 @@ static struct dso *findnew_dso(int pid, int tid, const char *filename,
- 	}
- 
- 	vdso = is_vdso_map(filename);
--	nsi = nsinfo__get(thread__nsinfo(thread));
-+	nsi = thread__get_nsinfo(thread);
- 
- 	if (vdso) {
- 		/* The vdso maps are always on the host and not the
-diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-index 45a05316b3ca65b7..95a08ead1f380747 100644
---- a/tools/perf/util/jitdump.c
-+++ b/tools/perf/util/jitdump.c
-@@ -985,7 +985,7 @@ jit_process(struct perf_session *session,
- 		return 0;
- 	}
- 
--	nsi = nsinfo__get(thread__nsinfo(thread));
-+	nsi = thread__get_nsinfo(thread);
- 	thread__put(thread);
- 
- 	/*
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 38b116d230d0b913..496aab188bd549ef 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -139,7 +139,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
- 		anon = is_anon_memory(filename) || flags & MAP_HUGETLB;
- 		vdso = is_vdso_map(filename);
- 		no_dso = is_no_dso_memory(filename);
--		nsi = nsinfo__get(thread__nsinfo(thread));
-+		nsi = thread__get_nsinfo(thread);
- 
- 		if ((anon || no_dso) && nsi && (prot & PROT_EXEC)) {
- 			snprintf(newfilename, sizeof(newfilename),
 diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
-index 75c2b0ec778ab25b..940132d3458be4c7 100644
+index 940132d3458be4c7..704f69663129d113 100644
 --- a/tools/perf/util/namespaces.c
 +++ b/tools/perf/util/namespaces.c
-@@ -110,6 +110,8 @@ static int nsinfo__init_locked(struct nsinfo *nsi)
- 	struct stat new_stat;
- 	int rv = -1;
+@@ -6,6 +6,7 @@
  
-+	RC_CHK_ACCESS(nsi)->inited = true;
-+
- 	if (snprintf(oldns, PATH_MAX, "/proc/self/ns/mnt") >= PATH_MAX)
- 		return rv;
- 
-@@ -160,6 +162,13 @@ int nsinfo__init(struct nsinfo *nsi)
- 	return rv;
+ #include "namespaces.h"
+ #include "event.h"
++#include <errno.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+@@ -59,22 +60,102 @@ void namespaces__free(struct namespaces *namespaces)
+ 	free(namespaces);
  }
  
-+static void nsinfo__ensure_init_locked(struct nsinfo *nsi)
-+	__must_hold(nsinfo__lock(nsi))
+-static int nsinfo__get_nspid(pid_t *tgid, pid_t *nstgid, bool *in_pidns, const char *path)
++static DEFINE_MUTEX(host_proc_lock);
++static int host_proc_fd __guarded_by(&host_proc_lock) = -1;
++static unsigned int host_proc_refcnt __guarded_by(&host_proc_lock);
++
++static void nsinfo__host_proc_get(void)
 +{
-+	if (!RC_CHK_ACCESS(nsi)->inited)
-+		nsinfo__init_locked(nsi);
++	mutex_lock(&host_proc_lock);
++	if (host_proc_refcnt++ == 0)
++		host_proc_fd = open("/proc", O_RDONLY | O_DIRECTORY | O_CLOEXEC);
++	mutex_unlock(&host_proc_lock);
 +}
 +
- static struct nsinfo *nsinfo__alloc(void)
++static void nsinfo__host_proc_put(void)
++{
++	mutex_lock(&host_proc_lock);
++	if (host_proc_refcnt > 0 && --host_proc_refcnt == 0 &&
++	    host_proc_fd >= 0) {
++		close(host_proc_fd);
++		host_proc_fd = -1;
++	}
++	mutex_unlock(&host_proc_lock);
++}
++
++static int nsinfo__proc_open(const char *rel_path, int flags)
++{
++	char path[64];
++	int ret;
++
++	mutex_lock(&host_proc_lock);
++	if (host_proc_fd >= 0) {
++		ret = openat(host_proc_fd, rel_path, flags);
++	} else {
++		scnprintf(path, sizeof(path), "/proc/%s", rel_path);
++		ret = open(path, flags);
++	}
++	mutex_unlock(&host_proc_lock);
++	return ret;
++}
++
++static int nsinfo__proc_stat(const char *rel_path, struct stat *st)
++{
++	char path[64];
++	int ret;
++
++	mutex_lock(&host_proc_lock);
++	if (host_proc_fd >= 0) {
++		ret = fstatat(host_proc_fd, rel_path, st, 0);
++	} else {
++		scnprintf(path, sizeof(path), "/proc/%s", rel_path);
++		ret = stat(path, st);
++	}
++	mutex_unlock(&host_proc_lock);
++	return ret;
++}
++
++ssize_t nsinfo__proc_readlink(const char *rel_path, char *buf, size_t size)
++{
++	char path[64];
++	ssize_t ret;
++
++	mutex_lock(&host_proc_lock);
++	if (host_proc_fd >= 0) {
++		ret = readlinkat(host_proc_fd, rel_path, buf, size);
++	} else {
++		scnprintf(path, sizeof(path), "/proc/%s", rel_path);
++		ret = readlink(path, buf, size);
++	}
++	mutex_unlock(&host_proc_lock);
++	return ret;
++}
++
++static int nsinfo__get_nspid(pid_t *tgid, pid_t *nstgid, bool *in_pidns,
++			     const char *rel_path)
  {
- 	struct nsinfo *res;
-@@ -190,16 +199,7 @@ struct nsinfo *nsinfo__new_thread(pid_t pid, pid_t tid)
- 	mutex_lock(nsinfo__lock(nsi));
- 	RC_CHK_ACCESS(nsi)->tgid = pid;
- 	RC_CHK_ACCESS(nsi)->nstgid = pid;
--	RC_CHK_ACCESS(nsi)->in_pidns = false;
- 	mutex_unlock(nsinfo__lock(nsi));
--	nsinfo__clear_need_setns(nsi);
--	/* Init may fail if the process exits while we're trying to look at its
--	 * proc information. In that case, save the pid but don't try to enter
--	 * the namespace.
--	 */
--	if (nsinfo__init(nsi) == -1)
--		nsinfo__clear_need_setns(nsi);
--
- 	return nsi;
+ 	FILE *f = NULL;
+ 	char *statln = NULL;
+ 	size_t linesz = 0;
+ 	char *nspid;
++	int fd;
++	bool got_tgid = false;
+ 
+-	f = fopen(path, "r");
+-	if (f == NULL)
++	fd = nsinfo__proc_open(rel_path, O_RDONLY | O_CLOEXEC);
++	if (fd < 0)
+ 		return -1;
++	f = fdopen(fd, "r");
++	if (f == NULL) {
++		close(fd);
++		return -1;
++	}
+ 
+ 	while (getline(&statln, &linesz, f) != -1) {
+ 		/* Use tgid if CONFIG_PID_NS is not defined. */
+ 		if (strstr(statln, "Tgid:") != NULL) {
+ 			*tgid = (pid_t)strtol(strrchr(statln, '\t'), NULL, 10);
+ 			*nstgid = *tgid;
++			got_tgid = true;
+ 		}
+ 
+ 		if (strstr(statln, "NStgid:") != NULL) {
+@@ -91,7 +172,17 @@ static int nsinfo__get_nspid(pid_t *tgid, pid_t *nstgid, bool *in_pidns, const c
+ 
+ 	fclose(f);
+ 	free(statln);
+-	return 0;
++	return got_tgid ? 0 : -1;
++}
++
++static int nsinfo__get_task_nspid(const struct nsinfo *nsi,
++				  pid_t *tgid, pid_t *nstgid, bool *in_pidns)
++{
++	char spath[64];
++
++	scnprintf(spath, sizeof(spath), "%d/task/%d/status",
++		  nsinfo__pid(nsi), nsinfo__tid(nsi));
++	return nsinfo__get_nspid(tgid, nstgid, in_pidns, spath);
  }
  
-@@ -212,7 +212,7 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
+ static struct mutex *nsinfo__lock(const struct nsinfo *nsi)
+@@ -100,53 +191,69 @@ static struct mutex *nsinfo__lock(const struct nsinfo *nsi)
+ 	return (struct mutex *)&RC_CHK_ACCESS(nsi)->lock;
+ }
+ 
++static void nsinfo__clear_need_setns_locked(struct nsinfo *nsi)
++	__must_hold(nsinfo__lock(nsi))
++{
++	RC_CHK_ACCESS(nsi)->inited = true;
++	RC_CHK_ACCESS(nsi)->need_setns = false;
++}
++
++static void nsinfo__set_exited_locked(struct nsinfo *nsi)
++	__must_hold(nsinfo__lock(nsi))
++{
++	RC_CHK_ACCESS(nsi)->exited = true;
++	nsinfo__clear_need_setns_locked(nsi);
++}
++
+ static int nsinfo__init_locked(struct nsinfo *nsi)
+ 	__must_hold(nsinfo__lock(nsi))
+ {
+-	char oldns[PATH_MAX];
+-	char spath[PATH_MAX];
+-	char *newns = NULL;
++	char newns[64];
+ 	struct stat old_stat;
+ 	struct stat new_stat;
+-	int rv = -1;
++	pid_t tgid = 0, nstgid = 0;
++	bool in_pidns = false;
++
++	if (RC_CHK_ACCESS(nsi)->exited)
++		return -1;
+ 
+ 	RC_CHK_ACCESS(nsi)->inited = true;
+ 
+-	if (snprintf(oldns, PATH_MAX, "/proc/self/ns/mnt") >= PATH_MAX)
+-		return rv;
++	/*
++	 * Verify that the thread (pid, tid) still exists in /proc and its Tgid
++	 * matches pid (guarding against PID/TID recycling), while resolving the
++	 * innermost tgid if the process is in a different PID namespace.
++	 */
++	if (nsinfo__get_task_nspid(nsi, &tgid, &nstgid, &in_pidns) < 0 ||
++	    tgid != nsinfo__pid(nsi)) {
++		nsinfo__set_exited_locked(nsi);
++		return -1;
++	}
+ 
+-	if (asprintf(&newns, "/proc/%d/task/%d/ns/mnt",
+-		     nsinfo__pid(nsi), nsinfo__tid(nsi)) == -1)
+-		return rv;
++	RC_CHK_ACCESS(nsi)->tgid = tgid;
++	RC_CHK_ACCESS(nsi)->nstgid = nstgid;
++	RC_CHK_ACCESS(nsi)->in_pidns = in_pidns;
+ 
+-	if (stat(oldns, &old_stat) < 0)
+-		goto out;
++	if (nsinfo__proc_stat("self/ns/mnt", &old_stat) < 0)
++		return -1;
+ 
+-	if (stat(newns, &new_stat) < 0)
+-		goto out;
++	scnprintf(newns, sizeof(newns), "%d/task/%d/ns/mnt",
++		  nsinfo__pid(nsi), nsinfo__tid(nsi));
++	if (nsinfo__proc_stat(newns, &new_stat) < 0) {
++		if (errno == ENOENT || errno == ESRCH)
++			nsinfo__set_exited_locked(nsi);
++		return -1;
++	}
+ 
+ 	/* Check if the mount namespaces differ, if so then indicate that we
+ 	 * want to switch as part of looking up dso/map data.
+ 	 */
+ 	if (old_stat.st_ino != new_stat.st_ino) {
+ 		RC_CHK_ACCESS(nsi)->need_setns = true;
+-		RC_CHK_ACCESS(nsi)->mntns_path = newns;
+-		newns = NULL;
++		RC_CHK_ACCESS(nsi)->mntns_ino = new_stat.st_ino;
+ 	}
+ 
+-	/* If we're dealing with a process that is in a different PID namespace,
+-	 * attempt to work out the innermost tgid for the process.
+-	 */
+-	if (snprintf(spath, PATH_MAX, "/proc/%d/task/%d/status",
+-		     nsinfo__pid(nsi), nsinfo__tid(nsi)) >= PATH_MAX)
+-		goto out;
+-
+-	rv = nsinfo__get_nspid(&RC_CHK_ACCESS(nsi)->tgid, &RC_CHK_ACCESS(nsi)->nstgid,
+-			       &RC_CHK_ACCESS(nsi)->in_pidns, spath);
+-
+-out:
+-	free(newns);
+-	return rv;
++	return 0;
+ }
+ 
+ int nsinfo__init(struct nsinfo *nsi)
+@@ -165,7 +272,7 @@ int nsinfo__init(struct nsinfo *nsi)
+ static void nsinfo__ensure_init_locked(struct nsinfo *nsi)
+ 	__must_hold(nsinfo__lock(nsi))
+ {
+-	if (!RC_CHK_ACCESS(nsi)->inited)
++	if (!RC_CHK_ACCESS(nsi)->inited && !RC_CHK_ACCESS(nsi)->exited)
+ 		nsinfo__init_locked(nsi);
+ }
+ 
+@@ -212,8 +319,8 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
  {
  	struct nsinfo *nnsi;
  	pid_t pid, tid, tgid, nstgid;
--	bool need_setns, in_pidns;
-+	bool inited, need_setns, in_pidns;
- 	char *mntns_path = NULL;
+-	bool inited, need_setns, in_pidns;
+-	char *mntns_path = NULL;
++	ino_t mntns_ino;
++	bool inited, exited, need_setns, in_pidns;
  
  	if (nsi == NULL)
-@@ -227,6 +227,7 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
+ 		return NULL;
+@@ -227,17 +334,11 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
  	tid = RC_CHK_ACCESS(nsi)->tid;
  	tgid = RC_CHK_ACCESS(nsi)->tgid;
  	nstgid = RC_CHK_ACCESS(nsi)->nstgid;
-+	inited = RC_CHK_ACCESS(nsi)->inited;
++	mntns_ino = RC_CHK_ACCESS(nsi)->mntns_ino;
+ 	inited = RC_CHK_ACCESS(nsi)->inited;
++	exited = RC_CHK_ACCESS(nsi)->exited;
  	need_setns = RC_CHK_ACCESS(nsi)->need_setns;
  	in_pidns = RC_CHK_ACCESS(nsi)->in_pidns;
- 	if (RC_CHK_ACCESS(nsi)->mntns_path) {
-@@ -244,6 +245,7 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
+-	if (RC_CHK_ACCESS(nsi)->mntns_path) {
+-		mntns_path = strdup(RC_CHK_ACCESS(nsi)->mntns_path);
+-		if (!mntns_path) {
+-			mutex_unlock(nsinfo__lock(nsi));
+-			nsinfo__put(nnsi);
+-			return NULL;
+-		}
+-	}
+ 	mutex_unlock(nsinfo__lock(nsi));
+ 
+ 	RC_CHK_ACCESS(nnsi)->pid = pid;
+@@ -245,10 +346,11 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
  	mutex_lock(nsinfo__lock(nnsi));
  	RC_CHK_ACCESS(nnsi)->tgid = tgid;
  	RC_CHK_ACCESS(nnsi)->nstgid = nstgid;
-+	RC_CHK_ACCESS(nnsi)->inited = inited;
++	RC_CHK_ACCESS(nnsi)->mntns_ino = mntns_ino;
+ 	RC_CHK_ACCESS(nnsi)->inited = inited;
++	RC_CHK_ACCESS(nnsi)->exited = exited;
  	RC_CHK_ACCESS(nnsi)->need_setns = need_setns;
  	RC_CHK_ACCESS(nnsi)->in_pidns = in_pidns;
- 	RC_CHK_ACCESS(nnsi)->mntns_path = mntns_path;
-@@ -295,6 +297,7 @@ bool nsinfo__need_setns(const struct nsinfo *nsi)
- 		return false;
+-	RC_CHK_ACCESS(nnsi)->mntns_path = mntns_path;
+ 	mutex_unlock(nsinfo__lock(nnsi));
  
- 	mutex_lock(nsinfo__lock(nsi));
+ 	return nnsi;
+@@ -263,9 +365,6 @@ static void nsinfo__delete(struct nsinfo *nsi)
+ {
+ 	if (nsi) {
+ 		WARN_ONCE(refcount_read(nsinfo__refcnt(nsi)) != 0, "nsinfo refcnt unbalanced\n");
+-		mutex_lock(nsinfo__lock(nsi));
+-		zfree(&RC_CHK_ACCESS(nsi)->mntns_path);
+-		mutex_unlock(nsinfo__lock(nsi));
+ 		mutex_destroy(&RC_CHK_ACCESS(nsi)->lock);
+ 		RC_CHK_FREE(nsi);
+ 	}
+@@ -289,6 +388,46 @@ void nsinfo__put(struct nsinfo *nsi)
+ 		RC_CHK_PUT(nsi);
+ }
+ 
++bool nsinfo__inited(const struct nsinfo *nsi)
++{
++	bool ret;
++
++	if (!nsi)
++		return false;
++
++	mutex_lock(nsinfo__lock(nsi));
++	ret = RC_CHK_ACCESS(nsi)->inited;
++	mutex_unlock(nsinfo__lock(nsi));
++	return ret;
++}
++
++bool nsinfo__exited(const struct nsinfo *nsi)
++{
++	bool ret;
++
++	if (!nsi)
++		return false;
++
++	mutex_lock(nsinfo__lock(nsi));
++	ret = RC_CHK_ACCESS(nsi)->exited;
++	mutex_unlock(nsinfo__lock(nsi));
++	return ret;
++}
++
++ino_t nsinfo__mntns_ino(const struct nsinfo *nsi)
++{
++	ino_t ret;
++
++	if (!nsi)
++		return 0;
++
++	mutex_lock(nsinfo__lock(nsi));
 +	nsinfo__ensure_init_locked((struct nsinfo *)nsi);
- 	ret = RC_CHK_ACCESS(nsi)->need_setns;
- 	mutex_unlock(nsinfo__lock(nsi));
- 	return ret;
-@@ -306,6 +309,7 @@ void nsinfo__clear_need_setns(struct nsinfo *nsi)
- 		return;
- 
- 	mutex_lock(nsinfo__lock(nsi));
-+	RC_CHK_ACCESS(nsi)->inited = true;
- 	RC_CHK_ACCESS(nsi)->need_setns = false;
- 	zfree(&RC_CHK_ACCESS(nsi)->mntns_path);
- 	mutex_unlock(nsinfo__lock(nsi));
-@@ -316,6 +320,7 @@ pid_t nsinfo__tgid(const struct nsinfo *nsi)
- 	pid_t ret;
- 
- 	mutex_lock(nsinfo__lock(nsi));
-+	nsinfo__ensure_init_locked((struct nsinfo *)nsi);
- 	ret = RC_CHK_ACCESS(nsi)->tgid;
- 	mutex_unlock(nsinfo__lock(nsi));
- 	return ret;
-@@ -326,6 +331,7 @@ pid_t nsinfo__nstgid(const struct nsinfo *nsi)
- 	pid_t ret;
- 
- 	mutex_lock(nsinfo__lock(nsi));
-+	nsinfo__ensure_init_locked((struct nsinfo *)nsi);
- 	ret = RC_CHK_ACCESS(nsi)->nstgid;
- 	mutex_unlock(nsinfo__lock(nsi));
- 	return ret;
-@@ -346,6 +352,7 @@ bool nsinfo__in_pidns(const struct nsinfo *nsi)
++	ret = RC_CHK_ACCESS(nsi)->mntns_ino;
++	mutex_unlock(nsinfo__lock(nsi));
++	return ret;
++}
++
+ bool nsinfo__need_setns(const struct nsinfo *nsi)
+ {
  	bool ret;
+@@ -298,7 +437,7 @@ bool nsinfo__need_setns(const struct nsinfo *nsi)
  
  	mutex_lock(nsinfo__lock(nsi));
-+	nsinfo__ensure_init_locked((struct nsinfo *)nsi);
- 	ret = RC_CHK_ACCESS(nsi)->in_pidns;
+ 	nsinfo__ensure_init_locked((struct nsinfo *)nsi);
+-	ret = RC_CHK_ACCESS(nsi)->need_setns;
++	ret = !RC_CHK_ACCESS(nsi)->exited && RC_CHK_ACCESS(nsi)->need_setns;
  	mutex_unlock(nsinfo__lock(nsi));
  	return ret;
-@@ -377,6 +384,7 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
+ }
+@@ -309,12 +448,44 @@ void nsinfo__clear_need_setns(struct nsinfo *nsi)
  		return;
  
  	mutex_lock(nsinfo__lock(nsi));
-+	nsinfo__ensure_init_locked(nsi);
- 	if (RC_CHK_ACCESS(nsi)->need_setns && RC_CHK_ACCESS(nsi)->mntns_path)
- 		mntns_path = strdup(RC_CHK_ACCESS(nsi)->mntns_path);
+-	RC_CHK_ACCESS(nsi)->inited = true;
+-	RC_CHK_ACCESS(nsi)->need_setns = false;
+-	zfree(&RC_CHK_ACCESS(nsi)->mntns_path);
++	nsinfo__clear_need_setns_locked(nsi);
  	mutex_unlock(nsinfo__lock(nsi));
+ }
+ 
++void nsinfo__set_exited(struct nsinfo *nsi)
++{
++	if (!nsi)
++		return;
++
++	mutex_lock(nsinfo__lock(nsi));
++	nsinfo__set_exited_locked(nsi);
++	mutex_unlock(nsinfo__lock(nsi));
++}
++
++bool nsinfo__check_proc(struct nsinfo *nsi)
++{
++	pid_t tgid = 0, nstgid = 0;
++	bool in_pidns = false;
++	bool exited;
++
++	if (!nsi)
++		return false;
++
++	mutex_lock(nsinfo__lock(nsi));
++	exited = RC_CHK_ACCESS(nsi)->exited;
++	mutex_unlock(nsinfo__lock(nsi));
++	if (exited)
++		return false;
++
++	if (nsinfo__get_task_nspid(nsi, &tgid, &nstgid, &in_pidns) < 0 ||
++	    tgid != nsinfo__pid(nsi)) {
++		nsinfo__set_exited(nsi);
++		return false;
++	}
++
++	return true;
++}
++
+ pid_t nsinfo__tgid(const struct nsinfo *nsi)
+ {
+ 	pid_t ret;
+@@ -369,7 +540,10 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
+ 				  struct nscookie *nc)
+ {
+ 	char curpath[PATH_MAX];
+-	char *mntns_path = NULL;
++	char mntns_path[64];
++	ino_t mntns_ino = 0;
++	bool need_setns = false;
++	struct stat st;
+ 	int oldns = -1;
+ 	int newns = -1;
+ 	char *oldcwd = NULL;
+@@ -379,66 +553,74 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
+ 
+ 	nc->oldns = -1;
+ 	nc->newns = -1;
++	nc->oldcwd = NULL;
+ 
+ 	if (!nsi)
+ 		return;
+ 
+ 	mutex_lock(nsinfo__lock(nsi));
+ 	nsinfo__ensure_init_locked(nsi);
+-	if (RC_CHK_ACCESS(nsi)->need_setns && RC_CHK_ACCESS(nsi)->mntns_path)
+-		mntns_path = strdup(RC_CHK_ACCESS(nsi)->mntns_path);
++	if (!RC_CHK_ACCESS(nsi)->exited && RC_CHK_ACCESS(nsi)->need_setns) {
++		need_setns = true;
++		mntns_ino = RC_CHK_ACCESS(nsi)->mntns_ino;
++	}
+ 	mutex_unlock(nsinfo__lock(nsi));
+ 
+-	if (!mntns_path)
++	if (!need_setns)
++		return;
++
++	if (!nsinfo__check_proc(nsi))
+ 		return;
+ 
+ 	if (!getcwd(curpath, sizeof(curpath)))
+-		goto out;
++		return;
+ 
+ 	oldcwd = strdup(curpath);
+ 	if (!oldcwd)
+-		goto out;
++		return;
++
++	/* Pin host /proc before entering any target mount namespace. */
++	nsinfo__host_proc_get();
+ 
+-	oldns = open("/proc/self/ns/mnt", O_RDONLY);
++	oldns = nsinfo__proc_open("self/ns/mnt", O_RDONLY | O_CLOEXEC);
+ 	if (oldns < 0)
+ 		goto errout;
+ 
+-	newns = open(mntns_path, O_RDONLY);
++	scnprintf(mntns_path, sizeof(mntns_path), "%d/task/%d/ns/mnt",
++		  nsinfo__pid(nsi), nsinfo__tid(nsi));
++	newns = nsinfo__proc_open(mntns_path, O_RDONLY | O_CLOEXEC);
+ 	if (newns < 0)
+ 		goto errout;
+ 
++	if (fstat(newns, &st) < 0 || st.st_ino != mntns_ino) {
++		nsinfo__clear_need_setns(nsi);
++		goto errout;
++	}
++
+ 	if (setns(newns, CLONE_NEWNS) < 0)
+ 		goto errout;
+ 
+-	free(mntns_path);
+ 	nc->oldcwd = oldcwd;
+ 	nc->oldns = oldns;
+ 	nc->newns = newns;
+ 	return;
+ 
+ errout:
++	nsinfo__host_proc_put();
+ 	free(oldcwd);
+ 	if (oldns > -1)
+ 		close(oldns);
+ 	if (newns > -1)
+ 		close(newns);
+-out:
+-	free(mntns_path);
+ }
+ 
+ void nsinfo__mountns_exit(struct nscookie *nc)
+ {
+-	if (nc == NULL || nc->oldns == -1 || nc->newns == -1 || !nc->oldcwd)
++	if (nc == NULL || !nc->oldcwd)
+ 		return;
+ 
+-	setns(nc->oldns, CLONE_NEWNS);
+-
+-	if (nc->oldcwd) {
+-		WARN_ON_ONCE(chdir(nc->oldcwd));
+-		zfree(&nc->oldcwd);
+-	}
+-
+ 	if (nc->oldns > -1) {
++		setns(nc->oldns, CLONE_NEWNS);
+ 		close(nc->oldns);
+ 		nc->oldns = -1;
+ 	}
+@@ -447,6 +629,12 @@ void nsinfo__mountns_exit(struct nscookie *nc)
+ 		close(nc->newns);
+ 		nc->newns = -1;
+ 	}
++
++	if (nc->oldcwd) {
++		WARN_ON_ONCE(chdir(nc->oldcwd));
++		zfree(&nc->oldcwd);
++	}
++	nsinfo__host_proc_put();
+ }
+ 
+ char *nsinfo__realpath(const char *path, struct nsinfo *nsi)
+@@ -478,6 +666,6 @@ bool nsinfo__is_in_root_namespace(void)
+ 	pid_t tgid = 0, nstgid = 0;
+ 	bool in_pidns = false;
+ 
+-	nsinfo__get_nspid(&tgid, &nstgid, &in_pidns, "/proc/self/status");
++	nsinfo__get_nspid(&tgid, &nstgid, &in_pidns, "self/status");
+ 	return !in_pidns;
+ }
 diff --git a/tools/perf/util/namespaces.h b/tools/perf/util/namespaces.h
-index c76090f54a819284..4e30b015db40caf5 100644
+index 4e30b015db40caf5..441cab597ae45e80 100644
 --- a/tools/perf/util/namespaces.h
 +++ b/tools/perf/util/namespaces.h
-@@ -37,6 +37,7 @@ DECLARE_RC_STRUCT(nsinfo) {
+@@ -37,10 +37,11 @@ DECLARE_RC_STRUCT(nsinfo) {
  	pid_t			tid;
  	pid_t			tgid __guarded_by(&lock);
  	pid_t			nstgid __guarded_by(&lock);
-+	bool			inited __guarded_by(&lock);
++	ino_t			mntns_ino __guarded_by(&lock);
+ 	bool			inited __guarded_by(&lock);
++	bool			exited __guarded_by(&lock);
  	bool			need_setns __guarded_by(&lock);
  	bool			in_pidns __guarded_by(&lock);
- 	char			*mntns_path __guarded_by(&lock);
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index 8d8427b561ddde11..c03c739e47191d1e 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -108,6 +108,7 @@ void thread__delete(struct thread *thread)
- 		list_del_init(&namespaces->list);
- 		namespaces__free(namespaces);
- 	}
-+	nsinfo__zput(RC_CHK_ACCESS(thread)->nsinfo);
- 	up_write(thread__namespaces_lock(thread));
+-	char			*mntns_path __guarded_by(&lock);
+ 	refcount_t		refcnt;
+ };
  
- 	down_write(thread__comm_lock(thread));
-@@ -117,7 +118,6 @@ void thread__delete(struct thread *thread)
- 	}
- 	up_write(thread__comm_lock(thread));
+@@ -58,8 +59,14 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi);
+ struct nsinfo *nsinfo__get(struct nsinfo *nsi);
+ void nsinfo__put(struct nsinfo *nsi);
  
--	nsinfo__zput(RC_CHK_ACCESS(thread)->nsinfo);
- 	srccode_state_free(thread__srccode_state(thread));
- 
- 	exit_rwsem(thread__namespaces_lock(thread));
-@@ -193,6 +193,34 @@ static int __thread__set_namespaces(struct thread *thread, u64 timestamp,
- 	return 0;
- }
- 
-+static void __thread__reset_nsinfo(struct thread *thread)
-+	__must_hold(thread__namespaces_lock(thread))
-+{
-+	nsinfo__zput(RC_CHK_ACCESS(thread)->nsinfo);
-+	RC_CHK_ACCESS(thread)->nsinfo = nsinfo__new_thread(thread__pid(thread),
-+							   thread__tid(thread));
-+}
-+
-+void thread__reset_nsinfo(struct thread *thread)
-+{
-+	down_write(thread__namespaces_lock(thread));
-+	__thread__reset_nsinfo(thread);
-+	up_write(thread__namespaces_lock(thread));
-+}
-+
-+struct nsinfo *thread__get_nsinfo(struct thread *thread)
-+{
-+	struct nsinfo *nsi;
-+
-+	if (!thread)
-+		return NULL;
-+
-+	down_read(thread__namespaces_lock(thread));
-+	nsi = nsinfo__get(RC_CHK_ACCESS(thread)->nsinfo);
-+	up_read(thread__namespaces_lock(thread));
-+	return nsi;
-+}
-+
- int thread__set_namespaces(struct thread *thread, u64 timestamp,
- 			   struct perf_record_namespaces *event)
- {
-@@ -200,6 +228,8 @@ int thread__set_namespaces(struct thread *thread, u64 timestamp,
- 
- 	down_write(thread__namespaces_lock(thread));
- 	ret = __thread__set_namespaces(thread, timestamp, event);
-+	if (!ret && event)
-+		__thread__reset_nsinfo(thread);
- 	up_write(thread__namespaces_lock(thread));
- 	return ret;
- }
-@@ -284,6 +314,8 @@ int __thread__set_comm(struct thread *thread, const char *str, u64 timestamp,
- 	down_write(thread__comm_lock(thread));
- 	ret = ____thread__set_comm(thread, str, timestamp, exec);
- 	up_write(thread__comm_lock(thread));
-+	if (!ret && exec)
-+		thread__reset_nsinfo(thread);
- 	return ret;
- }
- 
-diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-index a7850eebce4eb83e..68d63f9c37cc4240 100644
---- a/tools/perf/util/thread.h
-+++ b/tools/perf/util/thread.h
-@@ -56,7 +56,7 @@ DECLARE_RC_STRUCT(thread) {
- 
- 	void			*priv;
- 	struct thread_stack	*ts;
--	struct nsinfo		*nsinfo;
-+	struct nsinfo		*nsinfo __guarded_by(&namespaces_lock);
- 	struct srccode_state	srccode_state;
- 	bool			filter;
- 	int			filter_entry_depth;
-@@ -292,10 +292,8 @@ static inline void thread__set_ts(struct thread *thread, struct thread_stack *ts
- 	RC_CHK_ACCESS(thread)->ts = ts;
- }
- 
--static inline struct nsinfo *thread__nsinfo(struct thread *thread)
--{
--	return RC_CHK_ACCESS(thread)->nsinfo;
--}
-+struct nsinfo *thread__get_nsinfo(struct thread *thread);
-+void thread__reset_nsinfo(struct thread *thread);
- 
- static inline struct srccode_state *thread__srccode_state(struct thread *thread)
- {
++bool nsinfo__inited(const struct nsinfo *nsi);
++bool nsinfo__exited(const struct nsinfo *nsi);
++ino_t nsinfo__mntns_ino(const struct nsinfo *nsi);
+ bool nsinfo__need_setns(const struct nsinfo *nsi);
+ void nsinfo__clear_need_setns(struct nsinfo *nsi);
++void nsinfo__set_exited(struct nsinfo *nsi);
++bool nsinfo__check_proc(struct nsinfo *nsi);
++ssize_t nsinfo__proc_readlink(const char *rel_path, char *buf, size_t size);
+ pid_t nsinfo__tgid(const struct nsinfo  *nsi);
+ pid_t nsinfo__nstgid(const struct nsinfo  *nsi);
+ pid_t nsinfo__pid(const struct nsinfo  *nsi);
 -- 
 2.56.1.831.g720f3f5937-goog
 
