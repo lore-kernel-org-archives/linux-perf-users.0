@@ -1,62 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795634625;
-	b=pVYvyQc3KOdf0pMlDO1/TdFJwhx8xM4ldroEql3R0KSD0Svdm2oGBfWDhR3s5neF2DRi
-	 x4unYPno15D/OKOAFluX4tEX4TKiqSBzFcJVtd5jp0dIKZWM6Adct12kEKv99uNZHWKtf
-	 CbnYma/3CBTOs2kekN3h5uvOTUD4cYvTcVAjn/Dg8XbdMb59Oh8XaixpKl9xLJQrlDPZn
-	 v6Y5yd4QKhgmgkE1cR+2n50u082zRGdxupLI5YVQ28ARQKANTcp9z2fcBr83r/X5XaBSx
-	 S4Ji1rqhUGSlTPjP05ZHjhjF2ljvWv3CjiEM2zknsW11vDbbBBja2qFg3fRo70OdDeA==
+	t=1795634626;
+	b=QBK6xrmMtq02+DjPlOp9IB7NyouGwaxISU85tb/H6Z+aDKAqKhy+FaH0soaG5mpKdguP
+	 J5NRSLsGXHZkHx+gnPSBvE00syBCNk0ZqQQz4Lom1CfYINvEVd0p3sdgxVjod540Fr9Au
+	 fc5y4a97ESK+DtiOLsjOdO6/mY//hLrlbbT89flrp50ckD9DLDr7R3m9qXC+2mFnm3CBZ
+	 xCMTn4b6CsBirycxCVwARKMAsRI5J0PYTAJ+kJKYHbTT/cxUp/sqgLgCCZ3jdEHCj1LJp
+	 MHmf/TJH3t8MgKJcihf/bHfr0VNbs5BUIUlZ8rZLsjKYnDN/rr9iiBquXwOQulRZlvQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795634625;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=pRzPg4/OyrxVr4grURGPTQmXIVwb1IDEYhzi3FhBFh0=;
-	b=E1c6nQm5+PYs5bXHt6ZMmqqfgzBMf8Njxiki0jH8qJ/lGYOD8FaTBVhvxGHYdIBjT/Q6
-	 Udkyc83gMe25xubpxw1j2PMyFlPfcN3pBBlcc8BEaYpLI86jyePBhrEopfWbp7DcZ0oFr
-	 cWe57lV+9UoPGU4RcR1sRdQOBRWPxj/gjougi/Z+GFnfKuEq31eC1vUWKq3YbhHEh76Ii
-	 3QJdoY1PW5KhjkXEpEMMKzR2bgqyHdQFiFShCXGhTpgkAKsdNZsLo8pd4rlNcXNFZrjhF
-	 dL/LAdqx1vGio4K9KsuQZyCvMHteVxuePGee+xdlDdaDuZNuse215IQpxEkuQl/4qnA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795634626;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=sEtj+eS2/dUQTYhD2EVQry2utSvTjCQEZTPYKN95msI=;
+	b=cuDc0KzeuB+aL10tNXSH2kV2PuFLUJ5gVSOe9WN5diP6EhQw2yASF1Apn9Pm4h+Z7ZiU
+	 9OoziVjGCSu9HTmXW6YkzqkK8r/eYlQxWoimUmNblRL0mwxut3MfnWyshUG64xEa22uUk
+	 +mqB63gp32/FsiS8QLhsAW3ajKg14dlH9/jSYHcMaHnGJImq0HIYRbj8UivAUmWGv3zkM
+	 mWU/VenUGGN4MKeBqwcU63AeJnmD29IpWmL/qtx3GjGacfA+nOF2GSBQ6vCaOmuSAaJ9+
+	 LRkcaXNdtFud8ZLSPrOPRvLi5nteqHMbWjZovAMgtgFK39bZeSGufEcHrqrTsa6CqDg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DNxrz0Nb;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aM+IK10N;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1960606A335;
-	Wed, 25 Nov 2026 19:23:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64632606A32A;
+	Wed, 25 Nov 2026 19:23:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=DNxrz0Nb
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A9441F000C0;
-	Wed, 25 Nov 2026 19:23:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=aM+IK10N
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD4351F000E0;
+	Wed, 25 Nov 2026 19:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795634625;
-	bh=pRzPg4/OyrxVr4grURGPTQmXIVwb1IDEYhzi3FhBFh0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=DNxrz0NbS0Cop1PNRIPPHs7a190Ktxt6I/ff2KZu0cIqm5cuFVvb5xOnM6OSAHOQy
-	 udXr1nnHFVERfplJPRH0b1dorfJfYAdxETOzpnEbDfk2QtyksXNsDc/0DRkpMhQImz
-	 spehPpQvVj0gFy/e8sBBw8z5H6XJYYp8BYoYtdQ7WwadsnK5VGW7z38MF2A84ctzOr
-	 U4hFD+D2ku4+FVjEn5YauBMoDWqXh+1DNr7Qxy3KwDDxQvPnb2eLQ0o2f/GE3oJVXr
-	 3WpLQPCfpqB14nRNbl0BGi4E59t9OnPNgIZao+HdbPdeRiLQwSus+XEdxSFP9Gy/jX
-	 xqym9XHPzWFRw==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
+	s=k20260515; t=1795634626;
+	bh=sEtj+eS2/dUQTYhD2EVQry2utSvTjCQEZTPYKN95msI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=aM+IK10N8nWbIisPPLsZI/fIhSwmNJGRQq4uZTSWRKfq4rBeIldG4krMhZly5iSHR
+	 VCBo7/N3LCvPaE6904G0rRL+RTr8n5CClnoFPhMAV4fIvFHvLAa3UNiJPqkQi92RcV
+	 ESYEBo+27uj2Nma2Arw5OuuvWAnfoGVZG1nPKfa6/u0v628e6gP1Z31zBDvjH07WAq
+	 xLydK3s14PRkVa7+gsQyz0hBqu9k5TupQ3Ump2q+XsHsrQmdsyzICRnJc4yZZu1X9e
+	 pRe5hD2UTpumKU/9IMwrCTYDBjtjivxs2TzQINaXksTYZhkWzfYQPB8DBGmrSXK89B
+	 iWgrcfQ1W3ryQ==
+Date: Wed, 25 Nov 2026 11:23:44 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: TAKANO Mitsuhiro <takano32@gmail.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v13 08/19] perf test: Exercise the x86 operand parser
-Date: Wed, 25 Nov 2026 16:23:01 -0300
-Message-ID: <20261125192312.34134-9-acme@kernel.org>
-X-Mailer: git-send-email 2.56.1
-In-Reply-To: <20261125192312.34134-1-acme@kernel.org>
-References: <20261125192312.34134-1-acme@kernel.org>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf build: Replace the deprecated FileType with a helper
+Message-ID: <awc1wOQYO14k1R6j@google.com>
+References: <20261125173315.2359128-1-takano32@gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -66,253 +59,41 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20261125173315.2359128-1-takano32@gmail.com>
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Add a unit test for x86 operand parsing.  The 64-bit absolute disp32
-and movabs cases are from the allmodconfig clang build in the preceding
-changes.  Also check a 32-bit absolute address, an immediate, and
-values that should not become absolute addresses.  The same bare
-numbers must not become addresses when the disassembly is Intel
-syntax, where they can be immediates.  Both objdump spellings of the
-movabs instruction must yield the KASAN shadow offset.
+On Wed, Nov 25, 2026 at 05:33:15PM +0000, TAKANO Mitsuhiro wrote:
+> pylint-tests and pylint-pmu-events hang off `all`, so with a pylint that
+> reports W4904 the build fails on a tree nobody has changed.  Measured on
+> 7.4-rc4 with Python 3.14.9 and pylint 4.0.5, both targets exit 2 and
+> pylint reports:
+> 
+>   - W4904 deprecated-class, argparse.FileType: pmu-events/jevents.py:1494
+>     and :1496, tests/shell/lib/perf_json_output_lint.py:23
+> 
+> FileType is deprecated in the class's own terms - the docstring in 3.14
+> reads "Deprecated factory for creating file object types" - so the two
+> jevents call sites and the one in the JSON output linter are replaced by
+> a helper that opens the file, or hands back stdout or stdin for '-',
+> which is what FileType did.  The reader names its encoding, as the rest
+> of the Python in perf does.
+> 
+> Verification: pylint-tests and pylint-pmu-events exit 2 and 2 before this
+> change and 0 and 0 after it.  The generated pmu-events tables are byte
+> identical either side of the change, checked by running jevents.py for
+> arm64 and x86 over the same input tree and comparing pmu-events.c and
+> pmu-events-string.c.
+> 
+> Written with Hermes Agent, an LLM assistant; the author reviewed it and
+> ran the build and the generator as described.
+> 
 
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/tests/Build          |   1 +
- tools/perf/tests/annotate-ops.c | 184 ++++++++++++++++++++++++++++++++
- tools/perf/tests/builtin-test.c |   1 +
- tools/perf/tests/tests.h        |   1 +
- 4 files changed, 187 insertions(+)
- create mode 100644 tools/perf/tests/annotate-ops.c
+I think we have a pending patch already.
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index 5eebb2ec5ddefcfd..c7edd8569bbccb06 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -2,6 +2,7 @@
- 
- perf-test-y += builtin-test.o
- perf-test-y += tests-scripts.o
-+perf-test-y += annotate-ops.o
- perf-test-y += parse-events.o
- perf-test-y += uncore-event-sorting.o
- perf-test-y += dso-data.o
-diff --git a/tools/perf/tests/annotate-ops.c b/tools/perf/tests/annotate-ops.c
-new file mode 100644
-index 0000000000000000..627761b530fb654e
---- /dev/null
-+++ b/tools/perf/tests/annotate-ops.c
-@@ -0,0 +1,184 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * The x86 operand parser: what is a memory reference and where it points.
-+ *
-+ * The data type resolver follows absolute memory operands; an immediate
-+ * is not a memory reference.
-+ */
-+#include <elf.h>
-+#include <linux/compiler.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include "annotate.h"
-+#include "debug.h"
-+#include "dso.h"
-+#include "disasm.h"
-+#include "tests.h"
-+
-+struct op_case {
-+	const char		*insn;
-+	const struct ins_ops	*ops;
-+	const char		*operand;
-+	bool			mem_ref;
-+	int			offset;
-+};
-+
-+static struct op_case op_cases[] = {
-+	/* 32-bit absolute, and the 64-bit sign extended disp32 both ways */
-+	{ "mov",    &mov_ops,  "0x8c73448",		true,  0x8c73448 },
-+	{ "mov",    &mov_ops,  "0xffffffffff5fc300",	true,  -0xa03d00 },
-+	{ "mov",    &mov_ops,  "-0xa03d00",		true,  -0xa03d00 },
-+	/* An immediate is not a memory reference */
-+	{ "mov",    &mov_ops,  "$0x10",			false, 0 },
-+	/* Zero and values wider than a disp32 are not absolute addresses. */
-+	{ "mov",    &mov_ops,  "0x0",			false, 0 },
-+	{ "mov",    &mov_ops,  "0x100000000",		false, 0 },
-+};
-+
-+/* With an Intel syntax disassembly the same operand may be an immediate */
-+static struct op_case intel_cases[] = {
-+	{ "mov",    &mov_ops,  "0x8c73448",		false, 0 },
-+	{ "mov",    &mov_ops,  "0xffffffffff5fc300",	false, 0 },
-+	{ "mov",    &mov_ops,  "-0xa03d00",		false, 0 },
-+};
-+
-+static int check_operand(const struct arch *arch, const struct op_case *c,
-+			 struct dso *dso64, struct dso *dso32, struct dso *dsorel)
-+{
-+	struct disasm_line dl = {
-+		.ins = { .name = c->insn, .ops = c->ops },
-+	};
-+	struct annotated_insn_loc loc;
-+	struct annotated_op_loc *op;
-+	int ret = 0;
-+
-+	dl.ops.source.raw = (char *)c->operand;
-+
-+	if (annotate_get_insn_location(arch, &dl, &loc) < 0)
-+		return TEST_FAIL;
-+
-+	op = &loc.ops[INSN_OP_SOURCE];
-+	if (op->mem_ref != c->mem_ref) {
-+		pr_debug("'%s %s': mem_ref %d, expected %d\n", c->insn,
-+			 c->operand, op->mem_ref, c->mem_ref);
-+		ret = TEST_FAIL;
-+	}
-+	if (op->mem_ref && op->offset != c->offset) {
-+		pr_debug("'%s %s': offset %#x, expected %#x\n", c->insn,
-+			 c->operand, op->offset, c->offset);
-+		ret = TEST_FAIL;
-+	}
-+	if (c->mem_ref &&
-+	    (!annotated_op_loc__is_abs(op, dso64) ||
-+	     !annotated_op_loc__is_abs(op, dso32) ||
-+	     annotated_op_loc__abs_addr(op, dso64) != (u64)(s64)c->offset ||
-+	     annotated_op_loc__abs_addr(op, dso32) != (u32)c->offset)) {
-+		pr_debug("'%s %s': wrong absolute address\n", c->insn, c->operand);
-+		ret = TEST_FAIL;
-+	}
-+	/* The same operand in a relocatable object is an addend, not an address */
-+	if (c->mem_ref && annotated_op_loc__is_abs(op, dsorel)) {
-+		pr_debug("'%s %s': absolute address in a relocatable object\n",
-+			 c->insn, c->operand);
-+		ret = TEST_FAIL;
-+	}
-+
-+	return ret;
-+}
-+
-+struct movabs_case {
-+	const char	*name;
-+	const char	*operand;
-+	s64		imm;
-+};
-+
-+/* The KASAN shadow offset movabs, as both disassemblers print it */
-+static const struct movabs_case movabs_cases[] = {
-+	{ "movabsq", "$-0x2000040000000000, %r15 # imm = 0xDFFFFC0000000000",
-+	  -0x2000040000000000LL },
-+	{ "movabs",  "$0xdffffc0000000000,%r15", -0x2000040000000000LL },
-+};
-+
-+static int check_movabs(const struct arch *arch, const struct movabs_case *c)
-+{
-+	struct disasm_line dl = { .ins = { .name = c->name } };
-+	struct annotated_insn_loc loc;
-+	int ret = TEST_FAIL;
-+
-+	dl.ops.raw = strdup(c->operand);
-+	if (dl.ops.raw == NULL)
-+		return TEST_FAIL;
-+
-+	dl.ins.ops = ins__find(arch, c->name, &dl);
-+	if (dl.ins.ops != &mov_ops || dl.ins.ops->parse(arch, &dl.ops, NULL, &dl) < 0) {
-+		pr_debug("'%s %s': not parsed as a mov\n", c->name, c->operand);
-+		goto out;
-+	}
-+
-+	/*
-+	 * get_dwarf_regnum() is a stub returning -1 when perf is built
-+	 * without libdw, the target register cannot be resolved then.
-+	 */
-+#ifdef HAVE_LIBDW_SUPPORT
-+	if (annotate_get_insn_location(arch, &dl, &loc) == 0 &&
-+	    !loc.ops[INSN_OP_SOURCE].mem_ref && loc.ops[INSN_OP_SOURCE].imm &&
-+	    loc.ops[INSN_OP_SOURCE].imm_value == c->imm &&
-+	    loc.ops[INSN_OP_TARGET].reg1 != -1)
-+#else
-+	if (annotate_get_insn_location(arch, &dl, &loc) == 0 &&
-+	    !loc.ops[INSN_OP_SOURCE].mem_ref && loc.ops[INSN_OP_SOURCE].imm &&
-+	    loc.ops[INSN_OP_SOURCE].imm_value == c->imm)
-+#endif
-+		ret = TEST_OK;
-+	else
-+		pr_debug("'%s %s': not an immediate to a register\n",
-+			 c->name, c->operand);
-+out:
-+	free(dl.ops.source.raw);
-+	free(dl.ops.target.raw);
-+	free(dl.ops.raw);
-+	return ret;
-+}
-+
-+static int test__annotate_ops(struct test_suite *test __maybe_unused,
-+			      int subtest __maybe_unused)
-+{
-+	struct e_machine_and_e_flags id = { .e_machine = EM_X86_64, };
-+	const struct arch *arch = arch__new_x86(&id, NULL);
-+	struct dso *dso64 = dso__new("annotate-ops-64");
-+	struct dso *dso32 = dso__new("annotate-ops-32");
-+	struct dso *dsorel = dso__new("annotate-ops-rel");
-+	size_t i;
-+	int ret = 0;
-+
-+	if (arch == NULL || dso64 == NULL || dso32 == NULL || dsorel == NULL) {
-+		dso__put(dso64);
-+		dso__put(dso32);
-+		dso__put(dsorel);
-+		free((void *)arch);
-+		return TEST_FAIL;
-+	}
-+
-+	dso__set_is_64_bit(dso64, true);
-+	dso__set_is_64_bit(dso32, false);
-+	dso__set_rel(dsorel, ET_REL);
-+
-+	for (i = 0; i < ARRAY_SIZE(op_cases); i++)
-+		ret |= check_operand(arch, &op_cases[i], dso64, dso32, dsorel);
-+
-+	annotate_opts.disassembler_style = (char *) "intel";
-+	for (i = 0; i < ARRAY_SIZE(intel_cases); i++)
-+		ret |= check_operand(arch, &intel_cases[i], dso64, dso32, dsorel);
-+	annotate_opts.disassembler_style = NULL;
-+
-+	for (i = 0; i < ARRAY_SIZE(movabs_cases); i++)
-+		ret |= check_movabs(arch, &movabs_cases[i]);
-+
-+	dso__put(dso64);
-+	dso__put(dso32);
-+	dso__put(dsorel);
-+	free((void *)arch);
-+	return ret;
-+}
-+
-+DEFINE_SUITE("Annotate operand parsing", annotate_ops);
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 01c78ef20b97dec9..a27baf3a819ccf36 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -117,6 +117,7 @@ static struct test_suite *generic_tests[] = {
- 	&suite__openat_syscall_event_on_all_cpus,
- 	&suite__basic_mmap,
- 	&suite__mem,
-+	&suite__annotate_ops,
- 	&suite__parse_events,
- 	&suite__uncore_event_sorting,
- 	&suite__expr,
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index af822885890dda73..963cb34acd345153 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -153,6 +153,7 @@ DECLARE_SUITE(sample_parsing);
- DECLARE_SUITE(keep_tracking);
- DECLARE_SUITE(parse_no_sample_id_all);
- DECLARE_SUITE(dwarf_unwind);
-+DECLARE_SUITE(annotate_ops);
- DECLARE_SUITE(expr);
- DECLARE_SUITE(hists_filter);
- DECLARE_SUITE(mmap_thread_lookup);
--- 
-2.56.0
+https://lore.kernel.org/r/20261115003507.1872482-1-lalitmaganti@gmail.com
+
+Thanks,
+Namhyung
 
