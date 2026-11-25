@@ -1,45 +1,45 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795632082;
-	b=K2kXL6PgvJiRSKoEqGvs1kfQnwa3EQw7bxDvUXMT+FcbC9KLjug8FAJkCFLqpMj7ms9P
-	 bJKRXScjxhRLJQQm3VDjNY2U2f7+ttKHUnBnfaknCNrpf+iQJZdxgtEcC66hBXHrxBbYr
-	 cPLldYS0s4skFTYWNLmEgwZAMZc9rdhuakVNALoMjbKFbCTuBRTazUW0ihBtSe9HOzW0M
-	 n3yvJCoF+u4itHWuw+BHw5+iJxQp4JWt++OzdIcCp8zW+P5ggWRI8bnepCyGyC2afrUyU
-	 iwhjRHzmadrepcWvqozfbxoy2A6IlIAXlZxOjnqpA3BUOUOFDQbszFXZ0bBT5eIfBlg==
+	t=1795632291;
+	b=xeQPsKUUFOqedtrizJw/KyAfcpM+SHQMa9Abb4RRQ7H4sGXs0nwYm5oN50LlrFZoXR/1
+	 V9yyw0OpWzx+U6ENs1xA2dxoNcVa9ry7w7VU/O2j32QK7UUNfGcMt2sYR2psJhVqLN7TZ
+	 2xb9Z9SYXcBT00Q7dMpZosMjVCKSiNnTmIemw5FoosER+us6/JwCFwgUnzBR+ZPcP6KJ1
+	 Xpb6hFjgywDKOZEM38aGX+tzR5TyzKH4eARvzWMSfLxeX6SxucLEFeIymBi/5JLABGqcl
+	 z1Zwyp1i585teo4Ba0iOuXBCu3rP4pOccWMvzdeXlV5Ttkty1TcZlHuY+81OWtUdHVA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795632082;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795632291;
 	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
 	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=ZJ02y3Z30VnfaB4wxrfHVkrt7dhk7m57ns1frXinnz4=;
-	b=CYwe7MYhsfdA3xnR+jHAv+SHET3LJJB29NjBwNpn/jf67PfX3/nsNAm807YOTXSj8/We
-	 J3nA5nD1sewtJq/KMwAxfS2Oa40bJWMH+e5U8dB/4vxtg1LDIEYRo/9q7KeIm7I8WRk56
-	 I7fIOuNzFHbwCUAmVefWvl6zdCfLyA3z2cGH+8euJb+uPUOsCnpIka7+yUypjofpg3uCE
-	 JgyF3Gps4QxWL3r0B6seofqEGkU8GRmtJr8fW53jzHmy0e0pZeFPHkEtdXzlJx48BHCDK
-	 mdSk5+qH4L4YmtO1AoSrCgOHNAeqZmeFrSqTaea+5xOSzSbELoIH+aRF64lXpzoTmxw==
+	bh=BKhPGN180RFu2/grQW2UNifbxv0N3gAL244P7zoLa5U=;
+	b=cI8+1iFgo1oweL61kGVbf+/+xYcvkb1LX0+9Cmg3oxhJ8k9xXmLizDbGhUEJWMFBVODi
+	 3OJTFLThG2E7UfgHuZ81MQ6WRgMqSWl+/azAdM7Px0NEapdzKUJ5YgtjS/j4pGBMYOWf9
+	 NxICAWZ3zWpb3RCVD5oH4lBqqfgFBf09waGZNAKcoiOLRd4HvPUCDsqS2iQ8iKBqnFvR1
+	 M89PYsu4qfH/3ls9kqB0of+vlxyHPVEcvhTDe+GItuhRvQUC6mUPZArr5zWfFk/UYpsph
+	 rgHdFEHGdH5kXjdwbkTVW1JN5RZ2Ibe/qVYlphJ/e+qWtRqLHBfY7iuW7GiqyAdou0g==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GK0HFFKE;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YqYUcRPh;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABE5606A321;
-	Wed, 25 Nov 2026 18:41:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E11606A334;
+	Wed, 25 Nov 2026 18:44:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=GK0HFFKE
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 750FB1F000C6;
-	Wed, 25 Nov 2026 18:41:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=YqYUcRPh
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D9371F000E1;
+	Wed, 25 Nov 2026 18:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795632082;
-	bh=ZJ02y3Z30VnfaB4wxrfHVkrt7dhk7m57ns1frXinnz4=;
+	s=k20260515; t=1795632291;
+	bh=BKhPGN180RFu2/grQW2UNifbxv0N3gAL244P7zoLa5U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=GK0HFFKE1HKitFjM8n3SlHQu6XByZ3pKm0R8a2UoEdaIlbDvu/si15UWYE7dgGDWs
-	 sGaViuj6jlRuBGKZ2Kj8k9ao2WGzeM21S/S/QwWYCDW4VTJixdWk6EHBGbkz/w6mtC
-	 vWP0RAUsaZM7pgBCAq8B1JYOxMQhIR14Gm3JMKttlCsXcJGTZvFnz4OL2lVEULNwPo
-	 dKbcBUWZlXSxz0i41czZCsGhusaqNoslt63Z6hvgR5jg7D5I6PZ63xh2GGN/gfBv5U
-	 7LcgWDhavlM1M1YhpQmvWXJLNgP1wH9P0wNkP9eAPWSOjxWepoSBCyuIWbhJPegO1V
-	 GTwrw5PtK7q2g==
-Date: Wed, 25 Nov 2026 15:41:19 -0300
+	b=YqYUcRPhWCNTKfN4EJu8R56acer6B6KI+ptFHNE0xPPVN1yLnnV8DQu7tSNR1rIAn
+	 IAHxcFH3UjYBRKS7/0jV6aBIJm5OnCZoljAfNR5TDvvJ6b/bv2YZyna/m1gEQgwyJb
+	 pM4vVNW5jKdxcJuB4/HM6I36Ws6RC60eQ0eoB2fnJAIatxsSRiKnON0OtZuXVkCwJP
+	 M8vRF120gDWrLt6BV2sDs/77+DZ5DNdjPvffJRk1ksRK2T9i58gWbVn2+OK7lF6aFe
+	 ZnyPlXtMT4BluLV/foFfPzVLEY8QTONG/UZY+8X/gSFZtbUcMztNe2ZgJVyB/BFNlG
+	 7B7fgrWaWylqQ==
+Date: Wed, 25 Nov 2026 15:44:48 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
@@ -49,12 +49,12 @@ Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
 	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v12 03/19] perf annotate: Print the stats after the
- annotations
-Message-ID: <awcrz9GZgf78UYLA@phoenix2>
+Subject: Re: [PATCH v12 02/19] perf annotate: Handle absolute addressing in
+ data type profiling
+Message-ID: <awcsoGb_RJsvg-OM@phoenix2>
 References: <20261123220024.14891-1-acme@kernel.org>
- <20261123220024.14891-4-acme@kernel.org>
- <awYNhyPWLG0g_nDn@google.com>
+ <20261123220024.14891-3-acme@kernel.org>
+ <awYM6TM47djixK5N@google.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -66,52 +66,72 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <awYNhyPWLG0g_nDn@google.com>
+In-Reply-To: <awYM6TM47djixK5N@google.com>
 
-On Tue, Nov 24, 2026 at 02:19:51PM -0800, Namhyung Kim wrote:
-> On Mon, Nov 23, 2026 at 07:00:08PM -0300, Arnaldo Carvalho de Melo wrote:
+On Tue, Nov 24, 2026 at 02:17:13PM -0800, Namhyung Kim wrote:
+> On Mon, Nov 23, 2026 at 07:00:07PM -0300, Arnaldo Carvalho de Melo wrote:
 > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 > > 
-> > With --code-with-type the instruction stats are printed from
-> > hists__find_annotations() before that event is annotated: the first
-> > event reports zeros and later events can report stale counts.  The data
-> > type total is only counted in --data-type mode, so --type-stat without
-> > it is incomplete too.
+> > x86 code accesses globals with absolute addresses, and 64-bit code also
+> > uses the same encoding for MMIO: the 64-bit kernel's
+> > __default_send_IPI_dest_field uses a disp32 the CPU sign extends, an
+> > absolute SIB with no base and no index.  From an allmodconfig clang build,
+> > arch/x86/kernel/ipi.o:
+> > 
+> >   890:  8b 04 25 00 c3 5f ff    mov    0xffffffffff5fc300,%eax
+> >   8b1:  89 3c 25 10 c3 5f ff    mov    %edi,0xffffffffff5fc310
 > 
-> I prefer having type/insn stat before the result so that I can check the
-> quality easily.  But probably it makes sense to do it later when it's
-> used with --code-with-type.
+> Oh, is it reading and writing to the address 0xffffffffff5fc300?  That's
+> unfortunate and probably it needs to parse the encoding then.  IIUC we
+> cannot distinguish it from "mov 0x1, %eax" and treat it as memory access.
 
-Done:
+Yeah, we better stop using output from tools to parse and derive our
+logic, but while we still rely on parsing output from llvm/clang and
+gcc/gnu output:
 
-commit a33b6175c93c126c92bd1b98bd0760b39d79c234
+commit a49c0a8cc5d9402d01531938955f5f606f7ee765
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date:   Thu Oct 29 11:20:31 2026 -0300
+Date:   Sat Nov 14 14:05:53 2026 -0300
 
-    perf annotate: Print the stats where the counters are final
-    
-    The stats are printed from hists__find_annotations(), before that event
-    is annotated: with --code-with-type the first event reports zeros,
-    because those types are resolved while printing, and a later event can
-    report a total that is not its own.  The data type total is only
-    counted in --data-type mode, so --type-stat without it is incomplete
-    too.
-    
-    The data type pass resolves the samples while the histograms are being
-    resorted, so in stdio without --code-with-type the counters are final
-    before any annotation is printed.  Print the stats once there, before
-    the annotations, so that the quality can be checked without scrolling,
-    and once after them when --code-with-type or a browser is used, where
-    the counters only reach their final values during the output.  Leave
-    the TUI's alternate screen before printing, so the stats remain on the
-    terminal.  Warn if --type-stat is used without --data-type.
-    
-    Fixes: 58824fa0087e1cb7 ("perf annotate: Add --insn-stat option for debugging")
-    Fixes: 61a9741e9f78c64c ("perf annotate: Add --type-stat option for debugging")
-    Cc: Namhyung Kim <namhyung@kernel.org>
+    perf annotate: Handle absolute addressing in data type profiling
+
+    x86 code accesses globals with absolute addresses, and 64-bit code also
+    uses the same encoding for MMIO: the 64-bit kernel's
+    __default_send_IPI_dest_field uses a disp32 the CPU sign extends, an
+    absolute SIB with no base and no index.  From an allmodconfig clang build,
+    arch/x86/kernel/ipi.o:
+
+      890:  8b 04 25 00 c3 5f ff    mov    0xffffffffff5fc300,%eax
+      8b1:  89 3c 25 10 c3 5f ff    mov    %edi,0xffffffffff5fc310
+
+    These accesses are local APIC MMIO, but demonstrate the absolute SIB
+    encoding.  Absolute global accesses in 32-bit code can be resolved to
+    types as well.
+
+    llvm-objdump prints the same displacements as -0xa03d00 and -0xa03cf0.
+    The operand parser only recognized offset(reg), so the resolver skipped
+    the access as not a memory reference.
+
+    Parse a bare hex number as an absolute memory operand, including the
+    negative disp32 llvm-objdump prints, and use the address in the resolver.
+    The displacement is sign extended for 64-bit objects and zero extended
+    for 32-bit ones; values that do not fit, zero and relocatable addends are
+    skipped.  A bare number is an address only in AT&T output, where an
+    immediate carries $; Intel syntax prints both bare, so there it is not
+    taken for an address.  Branch targets do not come through the operand
+    strings at all: call and jump operands are resolved by their own parse
+    methods.
+
+    An absolute global load records the type in the destination register, so
+    the state is TSR_KIND_TYPE; a POINTER state records the address itself.
+    Guard the comparisons that made a -1 frame base equal the -1 "no
+    register" of an absolute operand.  A no-register operand is not looked up
+    as a variable, but the %gs:40 kernel stack canary is still recognized;
+    other segment-relative operands are skipped.
+
     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Still doing local LLM and container fleet builds to make sure everything
-builds and tests in multiple arches before posting.
+The code addressing that will be in the v13 post, which should be out
+soon.
 
 - Arnaldo
