@@ -1,23 +1,23 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.93.112
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
 	t=1795665781;
-	b=4uTQDSFnvsS60ZvJoQsdrWInbzR2ucKGFcnEVAUAnZJVU/HDd8V/YrtGY6oynN9iZzz9
-	 ABHv1rkfa1XKHvAKN3O8+pLA9fF3ygLAYQij+lPGSnsofN8ZVLVTKE2ByPmUcDfDY0DwP
-	 6UqjouUYAuyJUuIgnddSbyN1Mw1fM1lS3Tu29Vt25T0spGrOyO5fa3oyD7EoX3OrOJR76
-	 aBUHbBK72YNphi/pnu54Y3mh/YKkoUcb6DCylY7sdHC/zReESdStdwdpkHt9/t5k04vSW
-	 bl9lrQOp08al9+Tbnipvf6MRej1IZ1HKoxwT6tC2UpeBmDYU9FeRPVnhnmhhcOl19Dg==
+	b=LkTJe3aV1YGBhv+Lz5nqJKJa5l9Tk4C9tiDV+YWcUzJZxTBFQaXt71CDJa/stpv85pAN
+	 L0DIZx5XozPzLVfDJyT6SESjuWuAwyKH+ie75xEt7NTFfJ97rOHPK0Z3n98xXKAQqNSDa
+	 RG5LVHgS65CXoxH/yeXt8dAuPKzyNCKBPEr+PW/NtlpKj9N1Br+oDjiA28eojIw+KUsQc
+	 pZmoXi00fKn9je0tr7nFd4iF4otp3tk2qAmJ4IhkgKU5bjofcD+ErOYERbVwGUWtTtmJW
+	 t68kj6mIU0xTQb6pt8XcpmlXdTMBuVNvEOKQ+ETSis23XcosC5cDaISpVCrBvb2wGqA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
 	a=rsa-sha256; c=relaxed/relaxed; t=1795665781;
 	h=DMARC-Filter:Received:Received:Received:From:To:Cc:Subject:Date:
 	 Message-Id:X-Mailer:In-Reply-To:References:MIME-Version:
 	 Content-Transfer-Encoding:X-CM-TRANSID:X-Coremail-Antispam:
 	 X-CM-SenderInfo;
-	bh=tj2PIh8Kbuc4kronMnddn7XP0gr8whxK5H5QRLH76SE=;
-	b=lfWtbSGRo3LSB79DpWBWqORRq2J0IxVhLBpJJi/ypGAZje+AyIEE+B4n5sYa3atsXNdQ
-	 m8q/lM4nbS1xxgvLW/+0+SH9Jg3C7HANXxXem9x7VIX3mW2A7lj4CgpWCZGxC9iXGJODr
-	 rT5E69lsW/L1vxBZv/X5q07Opu+uiLvQf4tnsuDQsMWTZskUQF2OOKJQDZegLxgTMvHPW
-	 Bh+refHr404hVn6OHvE/M6F29GGFPOGsSXJdbwal9ZJEnIiHL+GfoH+xRIUm7vJxDsCe+
-	 6gy0EflIUeqWvvd5e1ryxLicpkmbh0iZyAYl/l1fEBe6IJFKvqQlT8c9Jxi4Qjj70ww==
+	bh=u8a+JmUNTQKadV14JX7bLRj0bKHwOADjmyLB7mBg+Pk=;
+	b=oiTizCKRXXpFyfAtEo5Wkga0MS6NOWaiRHaHSgrwjx30t6GnG+KiatQtA1eJPVX8+KWo
+	 MhKiDg8yMOybbrVsTJlRVgbxf7A3LWvNS6GP7HwoiMBPFEeieU6eZDLwH+tTsuCTpox2z
+	 bLmwZ5WU7sxH3pgqw5azv8eJ8jKFOCPPtL6z0qAHCLzrprRiVxa0rqZ6q6cBKCi/hzqvR
+	 3ntccwKCo/6qz2H2U5KJTUPMMtqZLwDg8HMS6DoiYiATFvzTInST/zcoHKAxiP8N0Ihia
+	 a0oevOZgy7mbTlpR22kxQc0chhzMzQo9bcE4sltVspFTkTBuf7xJ4RRtyoFW5PQy9zQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=none header.from=huaweicloud.com;
 	spf=pass smtp.mailfrom=huaweicloud.com;
@@ -26,20 +26,20 @@ Received: from dggmsgout12.his.huawei.com (dggmsgout12.his.huawei.com [124.71.93
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC7D606A33D;
-	Thu, 26 Nov 2026 04:02:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 1BC7D606A33D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260C2606A684;
+	Thu, 26 Nov 2026 04:03:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 260C2606A684
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggmsgout12.his.huawei.com (SkyGuard) with ESMTP id 4jZjYz3WmHz20bw;
+Received: from mail.maildlp.com (unknown [172.19.163.198])
+	by dggmsgout12.his.huawei.com (SkyGuard) with ESMTP id 4jZjYz4jCnz20ff;
 	Thu, 26 Nov 2026 12:02:47 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 3617240C8C;
+	by mail.maildlp.com (Postfix) with ESMTP id 5F1A740576;
 	Thu, 26 Nov 2026 12:02:52 +0800 (CST)
 Received: from huawei.com (unknown [10.67.174.193])
-	by APP4 (Coremail) with UTF8SMTPA id gCh0CgAHOullrwdrepVXFw--.42150S7;
-	Thu, 26 Nov 2026 12:02:51 +0800 (CST)
+	by APP4 (Coremail) with UTF8SMTPA id gCh0CgAHOullrwdrepVXFw--.42150S8;
+	Thu, 26 Nov 2026 12:02:52 +0800 (CST)
 From: Luo Gengkun <luogengkun@huaweicloud.com>
 To: stable@vger.kernel.org,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -63,9 +63,9 @@ Cc: Will Deacon <will@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	bpf@vger.kernel.org,
 	alexander.shishkin@linux.intel.com
-Subject: [PATCH stable/linux-6.6.y 5/9] perf/bpf: Remove unneeded uses_default_overflow_handler()
-Date: Thu, 26 Nov 2026 04:34:54 +0000
-Message-Id: <20261126043458.2394658-6-luogengkun@huaweicloud.com>
+Subject: [PATCH stable/linux-6.6.y 6/9] perf/bpf: Allow a BPF program to suppress all sample side effects
+Date: Thu, 26 Nov 2026 04:34:55 +0000
+Message-Id: <20261126043458.2394658-7-luogengkun@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20261126043458.2394658-1-luogengkun@huaweicloud.com>
 References: <20261126043458.2394658-1-luogengkun@huaweicloud.com>
@@ -79,10 +79,10 @@ List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAHOullrwdrepVXFw--.42150S7
-X-Coremail-Antispam: 1UD129KBjvJXoWxJF1kKF1xtF4kWrWxtF4kXrb_yoW7Jry3pr
-	Wqgrn0yFsrWF1jganIy3WDZF1UXwn7X3y3Ga18K3yFv34jgr93WFyqkw1Yqrs8JFyxuFyj
-	yw1UKryUZry5Z37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgAHOullrwdrepVXFw--.42150S8
+X-Coremail-Antispam: 1UD129KBjvJXoWxJrW8CFy3trW5ArWUXF43ZFb_yoW8AFW7pF
+	Z7Crs8Kw4jgrnFvw15Jrn7Za4UWw4rZwsxXw4kKw4fAryYq3sxXF4DW34aqrn0yF9Fka4f
+	tw1IvFyjv34UGFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUPmb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
 	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
@@ -101,126 +101,49 @@ X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
 From: Kyle Huey <me@kylehuey.com>
 
-[ Upstream commit 76f6d58845829e5d6ef55532e67a323e7d30c26e ]
+[ Upstream commit c4fcc7d1f41532e878087c7c43f4cf247604d68b ]
 
-Now that struct perf_event's orig_overflow_handler is gone, there's no need
-for the functions and macros to support looking past overflow_handler to
-orig_overflow_handler.
-
-This patch is solely a refactoring and results in no behavior change.
+Returning zero from a BPF program attached to a perf event already
+suppresses any data output. Return early from __perf_event_overflow() in
+this case so it will also suppress event_limit accounting, SIGTRAP
+generation, and F_ASYNC signalling.
 
 Signed-off-by: Kyle Huey <khuey@kylehuey.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Will Deacon <will@kernel.org>
 Acked-by: Song Liu <song@kernel.org>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 Acked-by: Andrii Nakryiko <andrii@kernel.org>
-Link: https://lore.kernel.org/r/20240412015019.7060-6-khuey@kylehuey.com
+Link: https://lore.kernel.org/r/20240412015019.7060-7-khuey@kylehuey.com
 Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
 ---
- arch/arm/kernel/hw_breakpoint.c   |  8 ++++----
- arch/arm64/kernel/hw_breakpoint.c |  4 ++--
- include/linux/perf_event.h        | 17 +++--------------
- 3 files changed, 9 insertions(+), 20 deletions(-)
+ kernel/events/core.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpoint.c
-index dc0fb7a81371..054e9199f30d 100644
---- a/arch/arm/kernel/hw_breakpoint.c
-+++ b/arch/arm/kernel/hw_breakpoint.c
-@@ -626,7 +626,7 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
- 	hw->address &= ~alignment_mask;
- 	hw->ctrl.len <<= offset;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index ba9cbf50773e..a6d7fc2a9ab2 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -9713,6 +9713,9 @@ static int __perf_event_overflow(struct perf_event *event,
  
--	if (uses_default_overflow_handler(bp)) {
-+	if (is_default_overflow_handler(bp)) {
- 		/*
- 		 * Mismatch breakpoints are required for single-stepping
- 		 * breakpoints.
-@@ -798,7 +798,7 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
- 		 * Otherwise, insert a temporary mismatch breakpoint so that
- 		 * we can single-step over the watchpoint trigger.
- 		 */
--		if (!uses_default_overflow_handler(wp))
-+		if (!is_default_overflow_handler(wp))
- 			continue;
- step:
- 		enable_single_step(wp, instruction_pointer(regs));
-@@ -811,7 +811,7 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
- 		info->trigger = addr;
- 		pr_debug("watchpoint fired: address = 0x%x\n", info->trigger);
- 		perf_bp_event(wp, regs);
--		if (uses_default_overflow_handler(wp))
-+		if (is_default_overflow_handler(wp))
- 			enable_single_step(wp, instruction_pointer(regs));
+ 	ret = __perf_event_account_interrupt(event, throttle);
+ 
++	if (event->prog && !bpf_overflow_handler(event, data, regs))
++		return ret;
++
+ 	/*
+ 	 * XXX event_limit might not quite work as expected on inherited
+ 	 * events
+@@ -9762,8 +9765,7 @@ static int __perf_event_overflow(struct perf_event *event,
+ 		irq_work_queue(&event->pending_irq);
  	}
  
-@@ -886,7 +886,7 @@ static void breakpoint_handler(unsigned long unknown, struct pt_regs *regs)
- 			info->trigger = addr;
- 			pr_debug("breakpoint fired: address = 0x%x\n", addr);
- 			perf_bp_event(bp, regs);
--			if (uses_default_overflow_handler(bp))
-+			if (is_default_overflow_handler(bp))
- 				enable_single_step(bp, addr);
- 			goto unlock;
- 		}
-diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-index c94dcffb7e83..559bf7b5f0f0 100644
---- a/arch/arm64/kernel/hw_breakpoint.c
-+++ b/arch/arm64/kernel/hw_breakpoint.c
-@@ -663,7 +663,7 @@ static int breakpoint_handler(unsigned long unused, unsigned long esr,
- 		perf_bp_event(bp, regs);
+-	if (!(event->prog && !bpf_overflow_handler(event, data, regs)))
+-		READ_ONCE(event->overflow_handler)(event, data, regs);
++	READ_ONCE(event->overflow_handler)(event, data, regs);
  
- 		/* Do we need to handle the stepping? */
--		if (uses_default_overflow_handler(bp))
-+		if (is_default_overflow_handler(bp))
- 			step = 1;
- unlock:
- 		rcu_read_unlock();
-@@ -742,7 +742,7 @@ static u64 get_distance_from_watchpoint(unsigned long addr, u64 val,
- static int watchpoint_report(struct perf_event *wp, unsigned long addr,
- 			     struct pt_regs *regs)
- {
--	int step = uses_default_overflow_handler(wp);
-+	int step = is_default_overflow_handler(wp);
- 	struct arch_hw_breakpoint *info = counter_arch_bp(wp);
- 
- 	info->trigger = addr;
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index f3bf97c4877b..43033a651bc0 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1336,8 +1336,10 @@ extern int perf_event_output(struct perf_event *event,
- 			     struct pt_regs *regs);
- 
- static inline bool
--__is_default_overflow_handler(perf_overflow_handler_t overflow_handler)
-+is_default_overflow_handler(struct perf_event *event)
- {
-+	perf_overflow_handler_t overflow_handler = event->overflow_handler;
-+
- 	if (likely(overflow_handler == perf_event_output_forward))
- 		return true;
- 	if (unlikely(overflow_handler == perf_event_output_backward))
-@@ -1345,19 +1347,6 @@ __is_default_overflow_handler(perf_overflow_handler_t overflow_handler)
- 	return false;
- }
- 
--#define is_default_overflow_handler(event) \
--	__is_default_overflow_handler((event)->overflow_handler)
--
--#ifdef CONFIG_BPF_SYSCALL
--static inline bool uses_default_overflow_handler(struct perf_event *event)
--{
--	return is_default_overflow_handler(event);
--}
--#else
--#define uses_default_overflow_handler(event) \
--	is_default_overflow_handler(event)
--#endif
--
- extern void
- perf_event_header__init(struct perf_event_header *header,
- 			struct perf_sample_data *data,
+ 	if (*perf_event_fasync(event) && event->pending_kill) {
+ 		event->pending_wakeup = 1;
 -- 
 2.34.1
 
