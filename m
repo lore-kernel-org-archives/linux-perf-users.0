@@ -1,115 +1,72 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.75.84
-ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
-	t=1795659311;
-	b=H5u78kUerpRMZmjJVsKniDHGFZH6JxDaWm5xN88H+AmQsdtXeUVP1lwD+fh7U1bIiasc
-	 SoijoGtAuNcnea0a3JLb6M4DUO8VkF7Z48+mhDNB+b4JOdbYWobfKvO/WwyubGNl7vK3E
-	 ZJJvZAbdam33EDSJ80eYUN3R/R8Ag/EWjsEF8u1DJolMC7xYrPnkoBXmvTqQAJZ6imCNs
-	 W2Ro0AD6X9ORJe4jWJwO0MCbAdJI2dARCG02i/Sz2zmY7z0mTdlPxIlGrhcRd32ThBAZX
-	 TBvWKI2sF0Y+fFfL5OUDsc2K6utBOJLkWUCpMkhWYDif2vK6kmjcdweH5957irDs1aw==
-ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795659311;
-	h=DMARC-Filter:Received:Received:X-MS-Exchange-Authentication-Results:
-	 Received-SPF:Received:Received:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-	 X-EOPAttributedMessage:X-MS-PublicTrafficType:
-	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
-	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
-	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-	 X-Forefront-Antispam-Report:
-	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
-	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
-	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-Id:
-	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
-	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
-	 X-MS-Exchange-CrossTenant-FromEntityHeader:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
-	bh=bNfk7c7XhNw0g064mxJvGOAQMtmgbxf7d5d8trfqvpg=;
-	b=n9w3MaTorgFY/sPTZ3u1TQgC9+DvRvPHZZgAogYG/IlR+Rb8rPAh8VDO79bc6SsOu3Vl
-	 4e6uPRrWlinqcSy5r0ODChnK7TLnsLeSIzUwJ7J62rp2LpQy+n9JYDxYjTF9JsZd+KWp6
-	 XV3+y4eeXUKagA+3tk2dp176pCyW+eFUqekT00odyIL7maG1T9vR+nCgUdaZdB4bwEwBY
-	 m3z4Q8izok9yrz5zh/TN2gn6of+f2rLgEGqkNAmK26uLx8LjhRo8p4QTilHJ/GlcIPQO4
-	 xH41QcI8ddxJYlImnbpE1Df8ysSR21q5DVewRvHr+ZkbQ64gtUV895x8qrANJcg+hBA==
-ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
-	dmarc=none header.from=cixtech.com;
-	spf=pass smtp.mailfrom=cixtech.com;
-	arc=pass header.oldest-pass=0 smtp.remote-ip=40.107.75.84
-Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022084.outbound.protection.outlook.com [40.107.75.84])
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.94.104
+ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
+	t=1795665776;
+	b=pAO32585dmqCKRAdE2NjGPtcXzqKlFvqx/QeCtFViyOgbCm/a/nputHykl5HHHI2TI2p
+	 LsYQutnbw26CMt6YkDyhnI4w2VCLvhLf/ZYRhnk/YsB8o6+ujPXHvHvvDxWDwEN3mysKI
+	 qiJyun51M0mwrob9ZjVlMkeSVdPXqWDf/NrAiJJ8PUiC+3qX4FjKdX+0E9JIPTXGKjIPn
+	 7uyzQbN42bsMWXSQfnyv9iMJTqgemJxEnVAWk2YqrO5MWBS67c3rXY1QXl93EOe8AU8jc
+	 8Rh3HjAexq+Ems4KzP2e0uATQneg+NghNZNZvM8jTYcO5JrkLI/FSk7d5OR3P3X5b+g==
+ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795665776;
+	h=DMARC-Filter:Received:Received:Received:From:To:Cc:Subject:Date:
+	 Message-Id:X-Mailer:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:X-CM-TRANSID:X-Coremail-Antispam:
+	 X-CM-SenderInfo;
+	bh=NN4M4Jo+5ge6yw1x29JgvGW6JvzHEGW3JJZE1kQgeRg=;
+	b=srgvVkarYFtsvA/3NIpfxA9/hmDUe7uHU7JCV6xgF2iu4PhNdvT/Zk101iggV9Dp2jvY
+	 0q8QHU/AiqkLluNPNOqACkCtszN4iDMJOPIkoJzJy+MJladLKC3bGuC7oRIXm6wq1lvN0
+	 lC1bZVYnToBsBZ2jH8LbqV9v7OWFoEBSVWUJ2AN0Iy1fzGpkzO8pjCuj8iV3T9JXIPWgs
+	 zn3NEg5hMiY5tVbcl9i/kTYfkTV4F+gJHdAyDT3XWdSrzcemRZ2SSohfFIPeoi2vvpE30
+	 LsMWYbcOGwoh1lCDyMair9wHGIsRyNUmPhohL4kmPluA/USk2ltELYE4/sbmc2TrSAw==
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
+	dmarc=none header.from=huaweicloud.com;
+	spf=pass smtp.mailfrom=huaweicloud.com;
+	arc=none smtp.remote-ip=124.71.94.104
+Received: from dggmsgout13.his.huawei.com (dggmsgout13.his.huawei.com [124.71.94.104])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE30606A31E;
-	Thu, 26 Nov 2026 02:15:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org DEE30606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PfZBcfN4gI8xvGxNOkefr9WrNIn9Vw5oyDycp1AcZkN+P/5Np0fyj4KYLEFxYHs9Y0GRi3L7rzYHUBiEnnpl4k71e8OGJtr/k/2F5aw3xvlvGxVjvPCPW9WKjC5OwMyJMJjdrOkqIRdY/PHW+Ny8dPzzZJCNSv/3nOcAcXDou/e+FNjjwBrRjrb/DbFfLeZQ2tilkXwRLRHlaHfbjWKdKt5pRuoWRbihcbLIeFp+KBSBimgdirEt+Wb/UomRhIyz6O4NdOyjnBX6EOb9/kYWAdkgWXx5X9GHNxe4PaEKdpbsRNmIQe0riePe1dwmChiZtR2lV8VNvNCONtuwJ2DxJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bNfk7c7XhNw0g064mxJvGOAQMtmgbxf7d5d8trfqvpg=;
- b=jKJ1BOg172WDiW2mk4qFByimE3a96aaDtTI0tNYGYX3zx9ccUet249qYVKWkzawMtSnDV+6WzbBVWg91DsPaUgcHOzuEtsKdeCgebjFpMHshJ5Y1ea4Hrfp9JD+M9Fe+w1IupvOyPnWan4/f30PglGYyAHgka+l7L5bxnHEWhhDRKtwQK6B5viEsCyUo3LO/aR9bzxPHPXhdQvMOy1I2YAh0SryGb3xVlNoUmJbyOvWqOlPaMFbPslifz7X3fLeE7M+RRD5UBEQV5NZ57c1C79c2OvcGrX5QnpgNzEXnvuWYkEqtGNR6ffYqrw9NmcumI4e102ph+YDP1GEnnTLNnw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from SG2PR02CA0137.apcprd02.prod.outlook.com (2603:1096:4:188::17)
- by SEYPR06MB5398.apcprd06.prod.outlook.com (2603:1096:101:8f::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.662.4; Thu, 26 Nov
- 2026 02:15:06 +0000
-Received: from SG2PEPF000B66CF.apcprd03.prod.outlook.com
- (2603:1096:4:188:cafe::9f) by SG2PR02CA0137.outlook.office365.com
- (2603:1096:4:188::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.662.7 via Frontend Transport; Thu, 26
- Nov 2026 02:15:05 +0000
-X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
- is 222.71.101.198) smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- SG2PEPF000B66CF.mail.protection.outlook.com (10.167.240.23) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.662.3 via Frontend Transport; Thu, 26 Nov 2026 02:15:05 +0000
-Received: from JohnnyFan (unknown [172.21.64.24])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 8CE25427EFC0;
-	Thu, 26 Nov 2026 10:15:03 +0800 (CST)
-Date: Thu, 26 Nov 2026 10:15:02 +0800
-From: Johnny Fan <johnny.fan@cixtech.com>
-To: Leo Yan <leo.yan@arm.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72B7606A323;
+	Thu, 26 Nov 2026 04:02:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A72B7606A323
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggmsgout13.his.huawei.com (SkyGuard) with ESMTP id 4jZjYz0PcLz1rqxP;
+	Thu, 26 Nov 2026 12:02:47 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 77177405F2;
+	Thu, 26 Nov 2026 12:02:51 +0800 (CST)
+Received: from huawei.com (unknown [10.67.174.193])
+	by APP4 (Coremail) with UTF8SMTPA id gCh0CgAHOullrwdrepVXFw--.42150S2;
+	Thu, 26 Nov 2026 12:02:51 +0800 (CST)
+From: Luo Gengkun <luogengkun@huaweicloud.com>
+To: stable@vger.kernel.org,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>, Johan Hovold <johan@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Sudeep Holla <sudeep.holla@kernel.org>,
-	Rob Herring <robh@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Cc: Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Russell King <linux@armlinux.org.uk>,
 	Catalin Marinas <catalin.marinas@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Al Grant <al.grant@arm.com>, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, driver-core@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 0/8] ACPI: arm64: Support PMU on Heterogeneous Systems
-Message-ID: <aweWJpk82HgKFshd@JohnnyFan>
-References: <20261116-acpi_arm_pmu_registration_hmp-v1-0-0371d4eca626@arm.com>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Song Liu <song@kernel.org>,
+	Kyle Huey <me@kylehuey.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	bpf@vger.kernel.org,
+	alexander.shishkin@linux.intel.com
+Subject: [PATCH stable/linux-6.6.y 0/9] perf/bpf: Fix NULL pointer dereference
+Date: Thu, 26 Nov 2026 04:34:49 +0000
+Message-Id: <20261126043458.2394658-1-luogengkun@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -119,70 +76,176 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261116-acpi_arm_pmu_registration_hmp-v1-0-0371d4eca626@arm.com>
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CF:EE_|SEYPR06MB5398:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2e1220a6-96db-4c0a-e801-08df4b6315fe
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700016|23010399003|7416014|1800799024|376014|6133799003|261009223027099003|18002099003|22082099003|56012099006|261021121427099003|261102123227099003|10067099003;
-X-Microsoft-Antispam-Message-Info:
-	7bbVmeq4ViQ4SAcxILLGy7dW7qe6B75sDk/hCx3bhHJZswBShtzSEB/W9x+/L2f9TM4x0OIxoGARVS2vNVBIxySeXKG3p0J60wM721IKmI+/40AtQu71qslvxvFpX1spoXBE9dPxueY6FS0LM9aP6QEJ8DKzOuVRVOH/Yhxz1vti+vixLrgEiC2fGhWS+FvMnl78CeVeKZen4BM4dSjFaRut70fJH89WK3LWTKEtdsOFLh4btaH9t/+axPH8Nw0Ao9gtCIk+EQlTeTssxtabPgQKrZV5A/S1Wp7Tg+q5N/dh7F0PldgObr4ZGKYfrV6TWOmjsSK019NJihG+DT94YiYbSjVQ0SHLCTfBH/+/5QJPa1m4qK/ESZFEgJufxd5mR1vxWsHxCVkDbrY6wkyl1GZewRLQauRFgSHRXo0n7fTrq+nN+nSmX5oimdM8QQCCpgEfwBZCRMM8Ezu0PXr+6gX0PLv+kEZvxJ8tsSQLbEeVZejrm8u0ObKynZXX8VXHY1NSe/md3aLLYE/GPxHrKDw8oWbOsbIqm8Ohg/L5eOt9/9AgGFEJ+mVDfuuteGCkS27SQIATj/bcwRELtw482wFhRTLdzbIQFtJGD9yoszVBxhiYgqTRiMv3NYnG8fYCoW0x983gMDubovMo1hGCTL0VkEu/6SUBGxxCxuYdrp9Jwbra71+gdEf9vFka/xxyR/AG5X/pA4cf1NK0jerxsQ==
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(23010399003)(7416014)(1800799024)(376014)(6133799003)(261009223027099003)(18002099003)(22082099003)(56012099006)(261021121427099003)(261102123227099003)(10067099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	5TS2jXpZVR8R9kbggziLGfvkUaRK68c3w/1otncHkDWS5CJJomie52nL7000UuXHRJCJFAeyqPglL8qz/NcvdYS67JTWd+rxsyqIJhpcIAS9/5Y60lHYKPzCV5CZXGfuKCPaL8HzOn1hRhocVK1zoNxDNlILM1QUM4Xvfgz23aqdOa7+XO9xeiP6D4Q9+oBpTEjFgdJ3MvOQ7xOMBMyQhCgYS6eDezIy6jeaAxUzlxYxQdCYUKGBqKWVJuqpzCCOMLdqnktnX8PLUZYoupGe7Mw1ZDM1IUfrWf2YtBzrjuDaQLESAMXl+UgYMDernAxlzAesjXhPivcoHqHD8prOF+YtTHPaYMdc2+EoJLmePNQy3aKzMOMin4jUJfSDvHt0p5SqyonJ9jduzw81HEGT38qqDSLzYmxel+Ot8Ft2A3mRD8FoZndA1qjk2U7O17vZ
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Nov 2026 02:15:05.1388
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e1220a6-96db-4c0a-e801-08df4b6315fe
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SG2PEPF000B66CF.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB5398
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgAHOullrwdrepVXFw--.42150S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3GryUXF1UCryrZF4kCw1kGrg_yoWxZrW8pF
+	ZxKrnIkr4kGF1I9w4fA3W2yFnrur4fXr45Jw1vyrWrCa90grZxXF9rK343KrW5JryvvFy2
+	qw18KrWYkryUZa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0E
+	n4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8
+	ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+	CY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IU0s2-5UUUUU==
+X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-On Mon, Nov 16, 2026 at 06:21:27PM +0000, Leo Yan wrote:
-> This series has been tested on Orion O6, with four little Cortex-A520
-> cores (CPUs 2-5) and eight big Cortex-A720 cores (CPUs 0-1 and 6-11).
-> It exposes the following PMU devices:
-> 
->   # ls /sys/bus/event_source/devices/
->   arm_spe_0  armv8_pmuv3_0  armv8_pmuv3_1  breakpoint  cs_etm  kprobe  software  tracepoint  uprobe
->   # cat /sys/bus/event_source/devices/armv8_pmuv3_0/cpus
->   0-1,6-11
->   # cat /sys/bus/event_source/devices/armv8_pmuv3_1/cpus
->   2-5
->   # cat /sys/bus/event_source/devices/arm_spe_0/cpumask
->   0-1,6-11
->   # ls /sys/bus/event_source/devices/cs_etm/sinks/
->   trbe0  trbe1  trbe10  trbe11  trbe2  trbe3  trbe4  trbe5  trbe6  trbe7  trbe8  trbe9
-> 
-> The CPU PMU masks match the MIDR groups: eight A720 CPUs and four A520
-> CPUs. SPE uses the A720 mask, and TRBE exposes one sink per CPU.
-> 
+We hit the following problem on x86:
 
-Hi Leo,
+	BUG: kernel NULL pointer dereference, address: 0000000000000000
+	#PF: supervisor instruction fetch in kernel mode
+	#PF: error_code(0x0010) - not-present page
+	RIP: 0010:0x0
+	Call Trace:
+	 <IRQ>
+	 bpf_overflow_handler+0xa4/0x120
+	 __perf_event_overflow+0x11d/0x2f0
+	 perf_swevent_hrtimer+0x127/0x140
+	 __hrtimer_run_queues+0x108/0x250
+	 hrtimer_interrupt+0xfb/0x230
+	 sysvec_apic_timer_interrupt+0x69/0x90
+	 </IRQ>
+	 <TASK>
+	 asm_sysvec_apic_timer_interrupt+0x1a/0x20
+	 __perf_event_set_bpf_prog+0xb7/0x180
+	 _perf_ioctl+0x1f9/0xb40
+	 perf_ioctl+0x41/0x70
+	 __se_sys_ioctl+0x82/0xc0
+	 do_syscall_64+0x44/0xb0
+	 entry_SYSCALL_64_after_hwframe+0x78/0xe2
+	 </TASK>
 
-Tested on a CIX internal development board (Sky1 SoC, 12 cores,
-Hunter 0-1,6-11 / Hayes 2-5) with the latest internal firmware, on
-top of 7.3-rc7.
+RIP is 0 with error_code(0x0010) (instruction fetch, not-present), i.e.
+an indirect call through a NULL function pointer.
 
-  arm_spe_0/cpumask   = 0-1,6-11
-  armv8_pmuv3_0/cpus  = 0-1,6-11
-  armv8_pmuv3_1/cpus  = 2-5
+perf_event_set_bpf_handler() records the handler currently installed on
+the event and replaces it with bpf_overflow_handler():
 
-SPE sampling works on the Hunter cores, CPU PMU events work on both
-CPU groups, and the boot log is clean. I did not test the TRBE sinks.
+	event->prog = prog;
+	event->bpf_cookie = bpf_cookie;
+	event->orig_overflow_handler = READ_ONCE(event->overflow_handler);
+	WRITE_ONCE(event->overflow_handler, bpf_overflow_handler);
 
-Tested-by: Johnny Fan <johnny.fan@cixtech.com>
+WRITE_ONCE() is a single-copy atomic access, not a compiler barrier, and
+the store to orig_overflow_handler is a plain assignment, so the compiler
+may reorder the two stores. GCC 11.4.0 does; disassembly of
+__perf_event_set_bpf_prog():
 
-Thanks,
-Johnny
+	mov    0x3d0(%rbp),%rax                  ; prev = overflow_handler
+	mov    %rsi,0x3e8(%rbp)                  ; event->prog = prog
+	mov    %r13,0x3f0(%rbp)                  ; event->bpf_cookie = cookie
+	movq   $bpf_overflow_handler,0x3d0(%rbp) ; publish overflow_handler
+	mov    %rax,0x3e0(%rbp)                  ; orig_overflow_handler = prev
+
+For a software event the overflow comes from perf_swevent_hrtimer() in
+hardirq context on the same CPU, so no memory ordering is involved at all,
+only the store order; the publish lands first and the hrtimer interrupt
+fires in between. bpf_overflow_handler() then runs the attached BPF program
+and, for a non-zero return value, calls the still-NULL
+orig_overflow_handler (struct perf_event is allocated with __GFP_ZERO).
+
+Upstream status:
+Not affected. f11f10bfa1ca ("perf/bpf: Call BPF handler directly, not
+through overflow machinery", v6.10) removed orig_overflow_handler and
+calls bpf_overflow_handler() directly from __perf_event_overflow(), so
+the reordering window no longer exists. That rework was not backported
+to any stable tree, and there is no standalone upstream fix for the
+ordering itself.
+
+Affected version:
+Introduced by aa6a5f3cb2b2 ("perf, bpf: add perf events core support for
+BPF_PROG_TYPE_PERF_EVENT programs", v4.9) and still present in the 5.10,
+5.15, 6.1 and 6.6 LTS trees; v6.10 removed the field altogether.
+
+To backport f11f10bfa1ca ("perf/bpf: Call BPF handler directly, not
+through overflow machinery"), that commit has to come with the series it
+was posted in, and with the fixups it later needed. f11f is not a
+standalone change: it calls bpf_overflow_handler() from
+__perf_event_overflow(), i.e. from a position the series first moves that
+function to, and the new call site reads struct perf_event members that
+the series first un-conditionalizes. On its own it does not produce a
+tree that builds in every Kconfig combination, and it regresses bpftrace
+until the follow-up fix is in.
+
+The series f11f was posted in, and which this backport carries in full:
+
+  Link: https://lore.kernel.org/r/20240412015019.7060-1-khuey@kylehuey.com
+
+  1. 4c03fe11b96b perf/bpf: Reorder bpf_overflow_handler() ahead of
+     __perf_event_overflow()                             [prerequisite]
+  2. 924d934393f9 perf/bpf: Create bpf_overflow_handler() stub for
+     !CONFIG_BPF_SYSCALL                                 [prerequisite]
+  3. 14e40a9578b7 perf/bpf: Remove #ifdef CONFIG_BPF_SYSCALL from struct
+     perf_event members                                  [prerequisite]
+  4. f11f10bfa1ca perf/bpf: Call BPF handler directly, not through
+     overflow machinery                                 [the fix]
+  5. 76f6d5884582 perf/bpf: Remove unneeded uses_default_overflow_handler()
+  6. c4fcc7d1f415 perf/bpf: Allow a BPF program to suppress all sample
+     side effects                                  [rest of the series]
+
+  f11f (0004 here) is the fix. 0001-0003 are prerequisites: 0001 moves
+  bpf_overflow_handler() ahead of __perf_event_overflow(), which is where
+  0004 calls it from; 0002 and 0003 make the new call site, which sits
+  outside #ifdef CONFIG_BPF_SYSCALL and reads event->prog
+  unconditionally, work when BPF is disabled. 0005 and 0006 are part of
+  the same series: they clean up what the refactoring left behind and add
+  the ability to suppress side effects, which is the point of the rework
+  but not the reason we are backporting it.
+
+The follow-up fixes, i.e. what upstream had to correct after the series
+landed:
+
+  7. 93d3fde7fd19 perf/bpf: Change the !CONFIG_BPF_SYSCALL stubs to
+     static inlines                                  [compile fix, Ingo]
+  8. 854dd99b5ddc perf/bpf: Mark perf_event_set_bpf_handler() and
+     perf_event_free_bpf_handler() as inline too     [compile fix, Ingo]
+  9. 100bff23818e perf/bpf: Don't call bpf_overflow_handler() for tracing
+     events                                          [Fixes: f11f10bfa1ca]
+
+The result is a verbatim backport of the series and its follow-up fixes
+(one hunk re-based, see "Adaptation notes"), so the tree stays identical
+to mainline and later perf/bpf backports continue to apply.
+
+Adaptation notes
+----------------
+
+Only 0005 needs manual handling.  0001-0004 and 0006-0009 apply with
+plain "git apply".  0005 conflicts on include/linux/perf_event.h because
+the hunk trailer references perf_event_header__init_id(), which does not
+exist in 6.6.y (perf_event_header__init() still has the extra
+type/misc/size arguments).  It was applied by replacing exactly the
+removed block; the resulting file is byte-identical to the mainline
+result for that hunk.
+
+Ingo Molnar (2):
+  perf/bpf: Change the !CONFIG_BPF_SYSCALL stubs to static inlines
+  perf/bpf: Mark perf_event_set_bpf_handler() and
+    perf_event_free_bpf_handler() as inline too
+
+Kyle Huey (7):
+  perf/bpf: Reorder bpf_overflow_handler() ahead of
+    __perf_event_overflow()
+  perf/bpf: Create bpf_overflow_handler() stub for !CONFIG_BPF_SYSCALL
+  perf/bpf: Remove #ifdef CONFIG_BPF_SYSCALL from struct perf_event
+    members
+  perf/bpf: Call BPF handler directly, not through overflow machinery
+  perf/bpf: Remove unneeded uses_default_overflow_handler()
+  perf/bpf: Allow a BPF program to suppress all sample side effects
+  perf/bpf: Don't call bpf_overflow_handler() for tracing events
+
+ arch/arm/kernel/hw_breakpoint.c   |   8 +-
+ arch/arm64/kernel/hw_breakpoint.c |   4 +-
+ include/linux/perf_event.h        |  23 +---
+ kernel/events/core.c              | 193 +++++++++++++++---------------
+ 4 files changed, 108 insertions(+), 120 deletions(-)
+
+-- 
+2.34.1
+
