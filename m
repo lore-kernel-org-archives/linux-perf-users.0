@@ -1,68 +1,47 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=124.71.94.104
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795657693;
-	b=SUWlQNkcSMTFFQFpcff1GvWtbWD7JOhNTTpTURazHmo8ffjbXa2LxSrAdMyhA7sH1xjb
-	 SJDBelo0MzxDCUq3ENi4j8HCPOEe1J/6vnD9VSIG56joqPiFuv23S9DbNRzKMBu9VKBVV
-	 qwDCToPIqFTykDTgCxY4cQ+nbRsCK/O+hqTng6cke7t7AXL2AWHhnJlDjc5+pRzLQgkxx
-	 om6gNvnQ6qur5A3xSpSR0THvgPyaChe2LJarJ2TCyD75u2ZraN9SppQHZFFXXJlVGGjtU
-	 1IGDW9vb/atwkch39bUCcYNFaVBDO+s4gnuN/CEmEETyZVU1Mluud5oItNiQvXEejSg==
+	t=1795658406;
+	b=TzKwTS8Tv1b9Fg1anbnatYiYLaS++w5EQIOeiS58zcr2llPAF4DHBQs5zslwsrtEeF21
+	 gp3XWHcg0Y4MvBsvtIlllyszhIEMl02OLkyH/wgYOVBIfXeB14sHL1kxUCyFC/YLHrSNd
+	 k0Hq4oYC4myuIoB2tGH/7aywumHM6vVfe0f4wS82XUclwy/s8GFZ6d3nUD5xmSYf3i8FQ
+	 m5mPJO2bMytka+Hx7ukLwPfL+fLqvKOM5uPSwKq5uEA4HLTsTb0iR9HR5UmLNwCPFTb5H
+	 0XicAwzgxiEGs5bp7b8I6XKESpme61ZHPE9ibVnr34oLO7TyV3RFxZ3LrG1i+7qmdTw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795657693;
-	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
-	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Message-ID:Date:
-	 MIME-Version:User-Agent:Subject:To:Cc:References:Content-Language:
-	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	bh=KcpTYD1leDjwoktNnUUdOWZ4MTRePHm2I59iRAC0Avk=;
-	b=0C/GWwHDVlRRSBEbVcAjfu3p4ZcQ1FaOTLiqxr74UEh+QD8Xf3hC8/vIzPdrmLLTdOEW
-	 uULo2A9L6Q9NcMkZ9aXQE+26Y//6B8l6pZeEY72bew7WOVS1JlDETMgzy80VyCEfkk+Ip
-	 QhCIbYeFa142s4vR5gJkaJ13/nx5kUpFLXGXvhu6kX8XHpUxXysao6hBZpFqCU2yeDI87
-	 nvQy9kcjz8qW0He8XyKMKQ2LzM7cnA448i5h5J5yM7zrs8B4hi44bqnddQsD2TPKk0GUd
-	 XzV+k/rSQZG07bEoh1DVbMD1dPWhxNVMfKr3HABBmc5KHZNJZzNmMtt4SVsWF3oTZjA==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795658406;
+	h=DMARC-Filter:Received:Received:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-Coremail-Antispam:X-CM-SenderInfo;
+	bh=Srx5W+XV/kLzuLr7plGWomX4jJTsOkYWbuOKGME2XXg=;
+	b=s7UCc8dwywypYfBy6V39WQL15UGpgUv72JKIBShlNStRm14mYzJfsfdVxB0pBZfKwciU
+	 7aPBfaaBijBiL34qgI/hao6Ydst125Ni2IrCGCnO0z3MWAYVSybgXvNvjaTdirQi+WrlM
+	 WGF95natSVnpNcCYEqfzazPMBw/cMlpqAV5Yhmm4bD4BhjgAjUOeecA/CSFub3IOojEiF
+	 3XF8UyzKLZVek8ChfE4upX0nWpNpq3HHwRaJOUMJYAiHqigQk3NnWSFWc5z/GkhIIn+D0
+	 zbpf9lLkn4LDYqlrvuJJOp7O4BPumyRB28Gvuoa94H1TGj8bYIZS/MsumGZ1S6VSkQA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=linux.intel.com;
-	spf=pass smtp.mailfrom=linux.intel.com;
-	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=AIAvPgZ1;
-	arc=none smtp.remote-ip=198.175.65.20
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	dmarc=none header.from=huaweicloud.com;
+	spf=pass smtp.mailfrom=huaweicloud.com;
+	arc=none smtp.remote-ip=124.71.94.104
+Received: from dggmsgout13.his.huawei.com (dggmsgout13.his.huawei.com [124.71.94.104])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D115606A321;
-	Thu, 26 Nov 2026 01:48:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 9D115606A321
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=AIAvPgZ1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1795657692; x=1827193692;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=3ywvCnuLRGFhFh6oKAnX1DqPEk3TMlhdv41yKV9WcKw=;
-  b=AIAvPgZ1URiebE2vvsqWjvckGsp8AyxCtTpgG4D+50xYzpj+wwHHm5na
-   hkwoDNQ8IKsB7x8qwO7KESuPFrQG0VNMD2jayYXUW5b2yFATnj6gVw3Sr
-   A6mS9LO+F2pI+EHXPKht6KeMSqZgA2UVLZYZfL8ngtuyUFUEUbTk0GcAe
-   TlJZdhdrvt4H7GOvvCl3vObyDZJTD01/Rm+eJXHK2cOG4YHfzkUad49ET
-   1gQVtw6NVe8i/I7TrRN9HbCap2H22rWMZZ5LjuREs7U2BONCDVL0+HHG6
-   UaAxhN314VEsn/oD2Py7RsVU1L/PpTcnWnxFBg8uk/grc5cC8ZrFA82vg
-   g==;
-X-CSE-ConnectionGUID: x3VwOtccRVOJNWAHrgoBZA==
-X-CSE-MsgGUID: oHEXv3YURVO5U/YrD45+tA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11977"; a="4603416"
-X-IronPort-AV: E=Sophos;i="6.27,233,1787036400"; 
-   d="scan'208";a="4603416"
-Received: from fmviesa013.fm.intel.com ([10.60.135.153])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 17:48:11 -0800
-X-CSE-ConnectionGUID: j5Yf3zR/QhqDf8zzaPXojw==
-X-CSE-MsgGUID: UVgIDXJFQrWXQhDvaoORWw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,233,1787036400"; 
-   d="scan'208";a="14065369"
-Received: from unknown (HELO [10.238.2.182]) ([10.238.2.182])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 17:48:09 -0800
-Message-ID: <33d3b7b8-df97-4db5-875f-3f39cd07672b@linux.intel.com>
-Date: Thu, 26 Nov 2026 09:48:06 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF88606A326;
+	Thu, 26 Nov 2026 02:00:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org AAF88606A326
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggmsgout13.his.huawei.com (SkyGuard) with ESMTP id 4jZfrD1lFpz1rqxL;
+	Thu, 26 Nov 2026 09:59:56 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 7B46A40A32;
+	Thu, 26 Nov 2026 10:00:00 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP4 (Coremail) with UTF8SMTPA id gCh0CgCHveyfkgdr9ytMFw--.17117S2;
+	Thu, 26 Nov 2026 10:00:00 +0800 (CST)
+Message-ID: <ea0a0fcf-0d96-416c-ba85-e98a8841cfb1@huaweicloud.com>
+Date: Thu, 26 Nov 2026 09:59:59 +0800
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -73,223 +52,159 @@ List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [linus:master] [perf/x86/intel] 2721e8da2d:
- WARNING:at_arch/x86/events/intel/ds.c:#intel_pmu_drain_arch_pebs
-To: kernel test robot <yi1.lai@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>, Kan Liang
- <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org
-References: <202611260816.5432877c-lkp@intel.com>
+Subject: Re: [PATCH v5 2/2] perf/core: Disable context fast-swap for sigtrap
+ events
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20261120173706.GC2668564@noisy.programming.kicks-ass.net>
+ <20261120174606.GM2669272@noisy.programming.kicks-ass.net>
+ <5507e48c-4e98-4e76-8d3f-4630a2655085@huaweicloud.com>
+ <c9ff579b-a7eb-481f-bb8d-489a4469c397@huaweicloud.com>
+ <20261125090809.GW2668804@noisy.programming.kicks-ass.net>
+ <4d17dd3b-df73-45c0-8113-f4ca259d549b@huaweicloud.com>
+ <20261125093836.GX2668804@noisy.programming.kicks-ass.net>
+ <c9c2c4df-a748-4787-b686-1fe6bc6564db@huaweicloud.com>
+ <6493eae2-9b36-4574-83ca-a139f4fbfb25@huaweicloud.com>
+ <20261125133601.GC2668804@noisy.programming.kicks-ass.net>
+ <20261125161342.GP2669272@noisy.programming.kicks-ass.net>
 Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <202611260816.5432877c-lkp@intel.com>
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <20261125161342.GP2669272@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgCHveyfkgdr9ytMFw--.17117S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxCrW5ZFWxKrykJw1ruF1ftFb_yoW5tw47pF
+	WUCa9ayrW0qFyqq343t348Aw12qw48ta9xX34DK3ySy3Z09rykXFnFgr4UuFnYqrykC3y3
+	Zr4jqrW2934UtFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7
+	CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8C
+	rVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4
+	IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY1x0262kK
+	e7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+	GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v2
+	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07
+	UAwIDUUUUU=
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-The warning looks triggered by below code.
-
-        if (WARN_ON_ONCE(!header->size)) {
-            corrupted = true;
-            goto done;
-        }
-
-Generally it indicates perf gets a PEBS record with 0 size which should be
-impossible in theory. 
-
-Yi, how frequently did you see the issue? If it can be reproduced, I can
-find a DMR to debug the issue. Thanks.
 
 
-On 11/26/2026 9:03 AM, kernel test robot wrote:
->
-> Hello,
->
-> kernel test robot noticed "WARNING:at_arch/x86/events/intel/ds.c:#intel_pmu_drain_arch_pebs" on:
->
-> commit: 2721e8da2de7271533ac36285332219f700d16ca ("perf/x86/intel: Allocate arch-PEBS buffer and initialize PEBS_BASE MSR") https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
->
-> [test failed on linux-next/master 3dd8c790a7b7027abdd568e36db5e82ffaea7c77]
->
-> in testcase: fxmark
-> version: fxmark-x86_64-63bcb4e-1_20260519 with following parameters:
->
-> 	nr_threads: 2c
-> 	disk: 1SSD
-> 	media: ssd
-> 	test: DWSL
-> 	fstype: ext4
-> 	directio: bufferedio
-> 	cpufreq_governor: performance
->
->
-> config: x86_64-rhel-9.4
-> compiler: gcc-14
-> test machine: 32 threads 1 sockets Genuine Intel(R) 0000 CPU @ 1.1GHz (Diamond Rapids) with 128G memory
->
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
->
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <yi1.lai@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202611260816.5432877c-lkp@intel.com
->
->
-> kern  :warn  : [   89.997775] [      C0] ------------[ cut here ]------------
-> kern  :warn  : [   89.997777] [      C0] WARNING: CPU: 0 PID: 593 at arch/x86/events/intel/ds.c:2965 intel_pmu_drain_arch_pebs (x86/events/intel/ds.c:2984)
-> kern  :warn  : [   89.997792] [      C0] Modules linked in: intel_tpmi_power_domains isst_if_common x86_pkg_temp_thermal intel_powerclamp coretemp binfmt_misc kvm_intel snd_pcm ipmi_ssif ast cxl_pmem iaa_crypto snd_timer nvme drm_client_lib libnvdimm dax_hmem kvm snd drm_shmem_helper soundcore nvme_core idxd intel_th_gth drm_kms_helper irqbypass intel_th_pci ghash_clmulni_intel idxd_bus pcspkr cxl_acpi intel_th intel_vsec acpi_ipmi cxl_port cxl_core ipmi_si ipmi_devintf einj ipmi_msghandler joydev pfr_telemetry pfr_update fuse drm nfnetlink
-> kern  :warn  : [   89.997815] [      C0] CPU: 0 UID: 0 PID: 593 Comm: sed Not tainted 6.18.0-rc1+ #1 PREEMPTLAZY
-> kern  :warn  : [   89.997819] [      C0] RIP: 0010:intel_pmu_drain_arch_pebs (x86/events/intel/ds.c:2984)
-> kern  :warn  : [   89.997822] [      C0] Code: 85 d2 48 c7 c2 c0 09 3d 83 48 0f 44 c2 e9 f8 fc ff ff 48 8d 34 0b 66 85 c0 0f 84 49 fe ff ff 0f b7 06 48 89 f3 e9 24 fe ff ff <0f> 0b e9 43 fe ff ff e8 61 b6 fe ff 48 89 ef 85 c0 74 18 48 8b 54
-> All code
-> ========
->    0:	85 d2                	test   %edx,%edx
->    2:	48 c7 c2 c0 09 3d 83 	mov    $0xffffffff833d09c0,%rdx
->    9:	48 0f 44 c2          	cmove  %rdx,%rax
->    d:	e9 f8 fc ff ff       	jmp    0xfffffffffffffd0a
->   12:	48 8d 34 0b          	lea    (%rbx,%rcx,1),%rsi
->   16:	66 85 c0             	test   %ax,%ax
->   19:	0f 84 49 fe ff ff    	je     0xfffffffffffffe68
->   1f:	0f b7 06             	movzwl (%rsi),%eax
->   22:	48 89 f3             	mov    %rsi,%rbx
->   25:	e9 24 fe ff ff       	jmp    0xfffffffffffffe4e
->   2a:*	0f 0b                	ud2		<-- trapping instruction
->   2c:	e9 43 fe ff ff       	jmp    0xfffffffffffffe74
->   31:	e8 61 b6 fe ff       	call   0xfffffffffffeb697
->   36:	48 89 ef             	mov    %rbp,%rdi
->   39:	85 c0                	test   %eax,%eax
->   3b:	74 18                	je     0x55
->   3d:	48                   	rex.W
->   3e:	8b                   	.byte 0x8b
->   3f:	54                   	push   %rsp
->
-> Code starting with the faulting instruction ===========================================
->    0:	0f 0b                	ud2
->    2:	e9 43 fe ff ff       	jmp    0xfffffffffffffe4a
->    7:	e8 61 b6 fe ff       	call   0xfffffffffffeb66d
->    c:	48 89 ef             	mov    %rbp,%rdi
->    f:	85 c0                	test   %eax,%eax
->   11:	74 18                	je     0x2b
->   13:	48                   	rex.W
->   14:	8b                   	.byte 0x8b
->   15:	54                   	push   %rsp
-> kern  :warn  : [   89.997823] [      C0] RSP: 0000:fffffe000000d950 EFLAGS: 00010046
-> kern  :warn  : [   89.997825] [      C0] RAX: 0000000000000000 RBX: ff110001017d0000 RCX: 00000000000003f5
-> kern  :warn  : [   89.997827] [      C0] RDX: ff1100203b618cc0 RSI: fffffe000000dc80 RDI: fffffe000000da80
-> kern  :warn  : [   89.997827] [      C0] RBP: 0000f0010000f000 R08: ff1100203b618cc0 R09: 0000000000000000
-> kern  :warn  : [   89.997828] [      C0] R10: ff1100203b618cc0 R11: 0000000000000000 R12: ff110001017df000
-> kern  :warn  : [   89.997829] [      C0] R13: fffffe000000dc80 R14: ff1100203b618cc0 R15: fffffe000000def8
-> kern  :warn  : [   89.997830] [      C0] FS:  00007f1067652840(0000) GS:ff110020b7817000(0000) knlGS:0000000000000000
-> kern  :warn  : [   89.997831] [      C0] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> kern  :warn  : [   89.997832] [      C0] CR2: 0000558b539e4000 CR3: 0000000106eac004 CR4: 0000000000f73ef0
-> kern  :warn  : [   89.997832] [      C0] PKRU: 55555554
-> kern  :warn  : [   89.997833] [      C0] Call Trace:
-> kern  :warn  : [   89.997837] [      C0]  <NMI>
-> kern  :warn  : [   89.997842] [      C0]  handle_pmi_common (x86/events/intel/core.c:3224)
-> kern  :warn  : [   89.997847] [      C0]  ? prb_read (printk/printk_ringbuffer.c:1940)
-> kern  :warn  : [   89.997854] [      C0]  ? _prb_read_valid (printk/printk_ringbuffer.c:2164)
-> kern  :warn  : [   89.997856] [      C0]  ? desc_update_last_finalized (printk/printk_ringbuffer.c:1531)
-> kern  :warn  : [   89.997858] [      C0]  ? flush_tlb_one_kernel (x86/include/asm/paravirt.h:85 x86/mm/tlb.c:1630 x86/mm/tlb.c:1585)
-> kern  :warn  : [   89.997862] [      C0]  ? native_set_fixmap (x86/mm/pgtable.c:581 x86/mm/pgtable.c:591)
-> kern  :warn  : [   89.997863] [      C0]  ? ghes_copy_tofrom_phys (x86/include/asm/fixmap.h:167 acpi/apei/ghes.c:193 acpi/apei/ghes.c:357)
-> kern  :warn  : [   89.997872] [      C0]  intel_pmu_handle_irq (x86/events/intel/core.c:3357)
-> kern  :warn  : [   89.997875] [      C0]  perf_event_nmi_handler (x86/events/core.c:1777 x86/events/core.c:1763)
-> kern  :warn  : [   89.997878] [      C0]  nmi_handle (x86/kernel/nmi.c:182)
-> kern  :warn  : [   89.997881] [      C0]  default_do_nmi (x86/kernel/nmi.c:437 x86/kernel/nmi.c:392)
-> kern  :warn  : [   89.997886] [      C0]  exc_nmi (x86/kernel/nmi.c:587)
-> kern  :warn  : [   89.997887] [      C0]  end_repeat_nmi (x86/entry/entry_64.S:1406)
-> kern  :warn  : [   89.997890] [      C0] RIP: 0010:io_serial_in (x86/kernel/early_printk.c:102)
-> kern  :warn  : [   89.997895] [      C0] Code: 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 0f b6 8f c1 00 00 00 0f b7 57 08 d3 e6 01 f2 ec <0f> b6 c0 c3 cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40
-> All code
-> ========
->    0:	00 90 90 90 90 90    	add    %dl,-0x6f6f6f70(%rax)
->    6:	90                   	nop
->    7:	90                   	nop
->    8:	90                   	nop
->    9:	90                   	nop
->    a:	90                   	nop
->    b:	90                   	nop
->    c:	90                   	nop
->    d:	90                   	nop
->    e:	90                   	nop
->    f:	90                   	nop
->   10:	90                   	nop
->   11:	f3 0f 1e fa          	endbr64
->   15:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
->   1a:	0f b6 8f c1 00 00 00 	movzbl 0xc1(%rdi),%ecx
->   21:	0f b7 57 08          	movzwl 0x8(%rdi),%edx
->   25:	d3 e6                	shl    %cl,%esi
->   27:	01 f2                	add    %esi,%edx
->   29:	ec                   	in     (%dx),%al
->   2a:*	0f b6 c0             	movzbl %al,%eax		<-- trapping instruction
->   2d:	c3                   	ret
->   2e:	cc                   	int3
->   2f:	cc                   	int3
->   30:	cc                   	int3
->   31:	cc                   	int3
->   32:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
->   39:	00 00 00 00 
->   3d:	0f                   	.byte 0xf
->   3e:	1f                   	(bad)
->   3f:	40                   	rex
->
-> Code starting with the faulting instruction ===========================================
->    0:	0f b6 c0             	movzbl %al,%eax
->    3:	c3                   	ret
->    4:	cc                   	int3
->    5:	cc                   	int3
->    6:	cc                   	int3
->    7:	cc                   	int3
->    8:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
->    f:	00 00 00 00 
->   13:	0f                   	.byte 0xf
->   14:	1f                   	(bad)
->   15:	40                   	rex
-> kern  :warn  : [   89.997896] [      C0] RSP: 0000:ffa0000002363c78 EFLAGS: 00000002
-> kern  :warn  : [   89.997897] [      C0] RAX: ffffffff81c75500 RBX: 0000000000000000 RCX: 0000000000000000
-> kern  :warn  : [   89.997897] [      C0] RDX: 00000000000003fd RSI: 0000000000000005 RDI: ffffffff840b3ea0
-> kern  :warn  : [   89.997898] [      C0] RBP: 000000000000006c R08: 6465766965636572 R09: 20494d4e202e6875
-> kern  :warn  : [   89.997898] [      C0] R10: 696563657220494d R11: 4e202e6875686855 R12: 0000000000000020
-> kern  :warn  : [   89.997899] [      C0] R13: ffffffff840b3ea0 R14: 000000000000000b R15: 0000000000000001
-> kern  :warn  : [   89.997900] [      C0]  ? mem16_serial_in (tty/serial/8250/8250_port.c:370)
-> kern  :warn  : [   89.997902] [      C0]  ? io_serial_in (x86/kernel/early_printk.c:102)
-> kern  :warn  : [   89.997904] [      C0]  ? io_serial_in (x86/kernel/early_printk.c:102)
-> kern  :warn  : [   89.997905] [      C0]  </NMI>
-> kern  :warn  : [   89.997905] [      C0]  <TASK>
-> kern  :warn  : [   89.997905] [      C0]  wait_for_lsr (tty/serial/8250/8250.h:137 tty/serial/8250/8250.h:159 tty/serial/8250/8250_port.c:1961)
-> kern  :warn  : [   89.997908] [      C0]  serial8250_console_write (tty/serial/8250/8250_port.c:3234 tty/serial/8250/8250_port.c:3275 tty/serial/8250/8250_port.c:3342)
-> kern  :warn  : [   89.997912] [      C0]  console_flush_all (printk/printk.c:3111 printk/printk.c:3199)
-> kern  :warn  : [   89.997914] [      C0]  console_unlock (printk/printk.c:3258 printk/printk.c:3298)
-> kern  :warn  : [   89.997915] [      C0]  wake_up_klogd_work_func (printk/printk.c:4498)
-> kern  :warn  : [   89.997917] [      C0]  irq_work_run_list (irq_work.c:221 irq_work.c:252)
-> kern  :warn  : [   89.997924] [      C0]  update_process_times (time/timer.c:2476)
-> kern  :warn  : [   89.997930] [      C0]  tick_nohz_handler (time/tick-sched.c:276 (discriminator 1) time/tick-sched.c:297 (discriminator 1))
-> kern  :warn  : [   89.997934] [      C0]  ? __pfx_tick_nohz_handler (time/tick-sched.c:110)
-> kern  :warn  : [   89.997936] [      C0]  __hrtimer_run_queues (time/hrtimer.c:1777 time/hrtimer.c:1841)
-> kern  :warn  : [   89.997938] [      C0]  hrtimer_interrupt (time/hrtimer.c:1903)
-> kern  :warn  : [   89.997940] [      C0]  __sysvec_apic_timer_interrupt (x86/kernel/apic/apic.c:1041 x86/kernel/apic/apic.c:1058)
-> kern  :warn  : [   89.997945] [      C0]  sysvec_apic_timer_interrupt (x86/kernel/apic/apic.c:1052 (discriminator 1) x86/kernel/apic/apic.c:1052 (discriminator 1))
-> kern  :warn  : [   89.997948] [      C0]  asm_sysvec_apic_timer_interrupt (x86/include/asm/idtentry.h:697)
-> kern  :warn  : [   89.997950] [      C0] RIP: 0033:0x558b0c0ef99c
-> kern  :warn  : [   89.997951] [      C0] Code: f8 48 c1 e0 04 48 03 45 00 45 89 e8 44 23 40 08 74 24 48 8b 73 08 48 8b 00 48 89 f2 48 83 c6 01 48 c1 e2 04 48 03 13 48 89 02 <48> 89 73 08 44 89 42 08 48 8b 55 08 48 83 c7 01 49 39 4c 24 08 7e
-> All code
-> ========
->    0:	f8                   	clc
->    1:	48 c1 e0 04          	shl    $0x4,%rax
->    5:	48 03 45 00          	add    0x0(%rbp),%rax
->    9:	45 89 e8             	mov    %r13d,%r8d
->    c:	44 23 40 08          	and    0x8(%rax),%r8d
->   10:	74 24                	je     0x36
->   12:	48 8b 73 08          	mov    0x8(%rbx),%rsi
->   16:	48 8b 00             	mov    (%rax),%rax
->   19:	48 89 f2             	mov    %rsi,%rdx
->   1c:	48 83 c6 01          	add    $0x1,%rsi
->   20:	48 c1 e2 04          	shl    $0x4,%rdx
->
->
-> The kernel config and materials to reproduce are available at:
-> https://download.01.org/0day-ci/archive/20261126/202611260816.5432877c-lkp@intel.com
->
->
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+On 2026/11/26 0:13, Peter Zijlstra wrote:
+> On Wed, Nov 25, 2026 at 02:36:01PM +0100, Peter Zijlstra wrote:
+>> On Wed, Nov 25, 2026 at 06:09:04PM +0800, Tengda Wu wrote:
+>>
+>>>>> Ah, I'm currently running it on an SPR Xeon; do I need to use
+>>>>> non-default arguments or just run the thing in a loop and drink tea
+>>>>> until it goes pop?
+>>>>
+>>>> No need to pass any other arguments; running it as follows should be enough:
+>>>>
+>>>>   for i {1..100}; do ./fast_swap ; done
+>>>>
+>>>
+>>> Correction: for i in {1..100}
+>>
+>> I used: while :; do ./perf-sigtrap-switch-poc; done
+>>
+>>> One more detail: I also specified a boot parameter (which might make it
+>>> easier to reproduce?):
+>>>   
+>>>   preempt=none
+>>
+>> That option is no longer available.
+>>
+
+Uh, I tested on linux-next, base commit: 84abb955b101 (tag: next-20261113).
+That option is still present at that commit.
+
+>> Anyway, I've had it running for a few hours now; but no joy :-( -- this
+>> is an unmodified tip/master kernel since I wanted to make sure I could
+>> reproduce before trying to fix.
+>>
+>> I'll just leave it running ...
+> 
+> 7 hours and nothing :-(
+> 
+> I'm going to have to ask you to try and reproduce I'm afraid. 
+> 
+
+Strange. Maybe the SPR Xeon is too fast, or the PMU tracepoint just isn't
+hitting? It's also possible that the old Intel machine I'm using locally
+(a 2014-era old CPU) is so slow that the probability of taking the fastpath
+is higher.
+
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1236,6 +1236,7 @@ extern const struct perf_event_attr *per
+>  extern void perf_event_print_debug(void);
+>  extern void perf_pmu_disable(struct pmu *pmu);
+>  extern void perf_pmu_enable(struct pmu *pmu);
+> +extern bool perf_pmu_enabled(struct pmu *pmu);
+>  extern void perf_sched_cb_dec(struct pmu *pmu);
+>  extern void perf_sched_cb_inc(struct pmu *pmu);
+>  extern int perf_event_task_disable(void);
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -1366,6 +1366,12 @@ void perf_pmu_enable(struct pmu *pmu)
+>  		pmu->pmu_enable(pmu);
+>  }
+>  
+> +bool perf_pmu_enabled(struct pmu *pmu)
+> +{
+> +	int *count = &this_cpc(pmu)->pmu_disable_count;
+> +	return *count == 0;
+> +}
+> +
+>  static void perf_assert_pmu_disabled(struct pmu *pmu)
+>  {
+>  	int *count = &this_cpc(pmu)->pmu_disable_count;
+> @@ -10955,7 +10961,7 @@ static int __perf_event_overflow(struct
+>  		 * claim the pending_work before task_work_add() recurses.
+>  		 */
+>  		if (cmpxchg_local(&event->pending_work, 0, 1) == 0) {
+> -			if (!task_work_add(current, &event->pending_task, notify_mode)) {
+> +			if (!task_work_add(event->ctx->task, &event->pending_task, notify_mode)) {
+>  				event->pending_work = pending_id;
+>  				local_inc(&event->ctx->nr_no_switch_fast);
+>  				WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
+> @@ -11151,6 +11157,9 @@ static int perf_swevent_match(struct per
+>  				struct perf_sample_data *data,
+>  				struct pt_regs *regs)
+>  {
+> +	if (!perf_pmu_enabled(event->pmu))
+> +		return 0;
+> +
+>  	if (event->attr.type != type)
+>  		return 0;
+>  
+> @@ -11531,6 +11540,9 @@ static int perf_tp_event_match(struct pe
+>  				struct perf_raw_record *raw,
+>  				struct pt_regs *regs)
+>  {
+> +	if (!perf_pmu_enabled(event->pmu))
+> +		return 0;
+> +
+>  	if (event->hw.state & PERF_HES_STOPPED)
+>  		return 0;
+>  	/*
+
+
+Hmm, I applied that patch to my local environment and tested it, and
+I no longer see the warning. The issue should be resolved.
+
+Tested-by: Tengda Wu <wutengda@huaweicloud.com>
+
+Thanks,
+Tengda
+
