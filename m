@@ -1,80 +1,49 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795690887;
-	b=sag7Ykw24TdGFWoLMJVEPa72scXAgcliAf02uzGsYSWnhohpbj1Fx9YA3kZJOOGkxSmI
-	 5wFYz2N7ClbdzbT791BdAJcxVGywrF2uBc9LpABbDJEFoWqikDaGjLy1tku8lSAB1DJcQ
-	 uwJGPlEbL1W0Ypvc5nhPtnW0axOdhP3ay8PnCiXehZWBmVebwGiAffi206QmDqLi0QTB9
-	 QoGVDTTDp4Onmy2BZniNbiPA2ffa9ebxXB1LLE2H9JXzREz6u8jGAPNPmm3RMLdOI8/B1
-	 wdHD/sk1vskaLPAiwgmXpRUacRYmts3Myz7wbEO4JJk5MJ5RUoX+Et9oYH0zNf37jJQ==
+	t=1795693554;
+	b=szTMBNYXEoTjLW0LU0jV90ci7z0wHG8TTPYdqI0Eyt+FGrlHze4GXUfYeJkmd2ukjOvH
+	 Nyse5fNYHfyMPh9CfgJo5E6Q+te85LVrxFnRuqjVHFd8wMFteACJIJKGgmxzORUkz6S41
+	 E/VxiBxF4gGwTCk0LS44oogAZgb8YvY8UiEbTdP5Znizzhtc2zWoXk5VFaO9ikG3XuQbU
+	 CugjLZGhThcnLU5iPLOsS14ocipsHUJn5XkJA1rZaxoAK1U4Z6PGyxhwT2j4pwzmbzHmn
+	 g081AJA2WqQMA6haFZxq4pA/si+gixheqHHKx6XTx43vuhWsKi8p//90PZPYLVWGn9Q==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795690887;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=AjkCmVg9boAhx5Bo6HTIMk6d7GO9e3ihiIAWw/O7vls=;
-	b=4tbMMbnKdPt1MNtCBg9kA0xLqhQkrvK3NjDdu8+mo9neGuPL8GVcEUO115cAwnSrs3Zr
-	 CdQh9G/lL0GwfwKQhPHaIFJpPVXkMFH/Nr5OYpiMA2EvTlmTz72w42A86ZeZKLh5kUfoK
-	 KRzfja5uUCQn3tmywWmaeta5UH5tQFzFHAB1uWTPANIORKoxOlrtSxLPEndgBISHXTR+8
-	 cCtdWUWgTgekEDhWkYjIxxUWHepaug8lcD0Y2QxseKB6aOnKo+avh7929HwnKzDzM81jF
-	 7reYoKNOBVkG5I/PWwIuAeMR8qztT2rHunMDHRvYCihfVR86XDQY86rsJtzQOGGaW2w==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795693554;
+	h=Received:DKIM-Signature:From:Subject:Date:Message-Id:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:X-Change-ID:To:
+	 Cc:X-Mailer:X-Developer-Signature:X-Developer-Key;
+	bh=b9g9ERtPsqpdKcGPaNpKk9eILy9YT2kx2AVKQ0CLRhU=;
+	b=uRCSOg3+1LU4+aOjBPM3dqTQqCtKlbLQi9JJI1qk9k8zDjUVIg7WbRHObdiAD4bucsLH
+	 NagyMHNvMzluVgYozV3uimWOXJA5sb5mXqGc7oN4K+PoOj6KUneHk/+CCeAgT9a5FjB9o
+	 BI5UHDe+rydayIVmbU9QTdVHv4gd8DhtDCQ0kqgNYfY/pn/T0GjKpzrZxeHY3cv2hZkjE
+	 oAJhilmXDIdqZJ41/T8f9Mnc1CWezs80rzDs7rHrZq85D0gYSYGQq4kFLRuVErqDgONUY
+	 kbpw3wj+2rtZ0Y7ex51d4etGduX3TAQ56nYAOuZLJHUwxPRSjWI5nVFnXcYa5b7Hcqg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=mWXL1qew;
-	arc=none smtp.remote-ip=90.155.92.199
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a6xkPRB6;
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0ED4606A31E;
-	Thu, 26 Nov 2026 11:01:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org C0ED4606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0EF1606A31C;
+	Thu, 26 Nov 2026 11:45:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=desiato.20200630 header.b=mWXL1qew
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=AjkCmVg9boAhx5Bo6HTIMk6d7GO9e3ihiIAWw/O7vls=; b=mWXL1qeweA2P2EHpiEfPtKLXGu
-	szMsRxl5JknvxEMVn7aR0PdYdUclI/KygNP9c7aEMHVzLcOPtSTBwv41ieAAPP1N+2k0I0AH7tuBJ
-	/wGcyCfT2pmDrM/CmRQDRNjuF3vxlkG4VGq+M5K2KN1F18VDJk2mdOK7ewc3tjOQ75NYE1XbXQIJH
-	w9F6EXaXkCIpyGaNajRl72hUVTBKJr5XJunXM42WWT+/z+eeCI7KUGWzSj+Q8N0tWkuYTpuPf/Yej
-	hcJVOQsI3/lLlwl6dMP6tpgI4OicCyS4ypjVp8S4+l5PmdGA94XXKhfQFlu0lMp3AAejg2xApUJ8x
-	XwaI8HAQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xWXDx-00000006Lvh-3AvI;
-	Thu, 26 Nov 2026 11:01:09 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id A8B37303082; Thu, 26 Nov 2026 12:01:08 +0100 (CET)
-Date: Thu, 26 Nov 2026 12:01:08 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Tengda Wu <wutengda@huaweicloud.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] perf/core: Disable context fast-swap for sigtrap
- events
-Message-ID: <20261126110108.GD49833@noisy.programming.kicks-ass.net>
-References: <5507e48c-4e98-4e76-8d3f-4630a2655085@huaweicloud.com>
- <c9ff579b-a7eb-481f-bb8d-489a4469c397@huaweicloud.com>
- <20261125090809.GW2668804@noisy.programming.kicks-ass.net>
- <4d17dd3b-df73-45c0-8113-f4ca259d549b@huaweicloud.com>
- <20261125093836.GX2668804@noisy.programming.kicks-ass.net>
- <c9c2c4df-a748-4787-b686-1fe6bc6564db@huaweicloud.com>
- <6493eae2-9b36-4574-83ca-a139f4fbfb25@huaweicloud.com>
- <20261125133601.GC2668804@noisy.programming.kicks-ass.net>
- <20261125161342.GP2669272@noisy.programming.kicks-ass.net>
- <ea0a0fcf-0d96-416c-ba85-e98a8841cfb1@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=a6xkPRB6
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EED91F000C6;
+	Thu, 26 Nov 2026 11:45:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795693554;
+	bh=b9g9ERtPsqpdKcGPaNpKk9eILy9YT2kx2AVKQ0CLRhU=;
+	h=From:Subject:Date:To:Cc;
+	b=a6xkPRB6cQrCH5e6BaEUzx/+0t8DOB8mDnrLe/BSLzBbpca0djP+gjPz0pxKgWFBI
+	 aOsxs5Qjv7RZnnT9QWVIt6BBzMRiNPRfKuXoxiSO/vQcoDSQQi4ngnmhpg4tpLFbPS
+	 b6Gv/v0E2HvCr2j/V7jystut6JFT07iSOXCE0EkaIwJCZLDdXPMYGv3omkuIXE7EaS
+	 kMR6ZlP1CxbD786wqmI/78JV9EeNSl1N7dhdaqKAnQYHq4QwRJS2lqKgKBUMyuLrk2
+	 jDKYCfomlcNbYoVzeHZipSAk6ugWgrsWg5nKEL+toiAgwqVcYBQZddLaV0QPhzujTn
+	 zLR/j0qtRIV5A==
+From: Christian Brauner <brauner@kernel.org>
+Subject: [PATCH 0/2] exec: two more sleepers in the way of exec
+Date: Thu, 26 Nov 2026 12:45:36 +0100
+Message-Id: <20261126-work-exec-update_lock-leftovers-v1-0-1024b26792bc@kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -84,83 +53,55 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ea0a0fcf-0d96-416c-ba85-e98a8841cfb1@huaweicloud.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/02NWwqDMBQFtyL3uzeo1AfdSiklxmNNFSNJtIK49
+ yYtlH7O4TCzk4PVcHRJdrJYtdNmCpCdElK9nB5g3QamPM3LLMsLfhk7MDYoXuZWetxHowYe0Xm
+ zwjouq6qu6gJtepYULLNFp7dP4Xr7sluaJ5SP2vhopAM3Vk6qj1MMiBgQfwHxC4h4p+N4A/zME
+ ai6AAAA
+X-Change-ID: 20261125-work-exec-update_lock-leftovers-6778785ed04a
+To: linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Jann Horn <jannh@google.com>, 
+ linux-kernel@vger.kernel.org, 
+ "Christian Brauner (Amutable)" <brauner@kernel.org>, stable@vger.kernel.org
+X-Mailer: b4 0.17-dev-04696
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1272; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=njczhrZp/bP2L0rmvaDHQkMbC7BtYSOzATdbUKj/00M=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWRzSL/a8PlCUfA/x6kfGZ4LvnlxcJ+ddiTjjzO8K082R
+ N5deIYzu6OUhUGMi0FWTJHFod0kXG45T8Vmo0wNmDmsTCBDGLg4BWAinxYwMrzo3HPO8I7GkuPL
+ jp2V1s/uuOp8Tf8Um+GCuIoviio3q4UYGW7Mllp6Z2NuoqlglVPqkj0rDj9do2QWfieliZfn30r
+ WbZwA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp;
+ fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 
-On Thu, Nov 26, 2026 at 09:59:59AM +0800, Tengda Wu wrote:
+This fixes two more places where a task sleeps on something userspace
+controls with a lock held that exec needs:
 
-> >>>   preempt=none
-> >>
-> >> That option is no longer available.
-> >>
-> 
-> Uh, I tested on linux-next, base commit: 84abb955b101 (tag: next-20261113).
-> That option is still present at that commit.
+* PERF_EVENT_IOC_SET_FILTER looks up the files of address filters with
+  the mutex of the perf context held and perf_event_exec() takes that
+  mutex with exec_update_lock held. With a file like /proc/<pid>/exe the
+  lookup takes exec_update_lock itself and deadlocks with exec.
 
-d3d16750693b ("sched: dynamic: Make PREEMPT_DYNAMIC depend on ARCH_HAS_PREEMPT_LAZY")
+* Without an MMU a read of /proc/<pid>/stat waits for the mmap lock with
+  exec_update_lock held.
 
+I don't have a machine with intel_pt at hand. The perf patch was tested
+with a hack that gives the task clock address filters.
 
-> > --- a/include/linux/perf_event.h
-> > +++ b/include/linux/perf_event.h
-> > @@ -1236,6 +1236,7 @@ extern const struct perf_event_attr *per
-> >  extern void perf_event_print_debug(void);
-> >  extern void perf_pmu_disable(struct pmu *pmu);
-> >  extern void perf_pmu_enable(struct pmu *pmu);
-> > +extern bool perf_pmu_enabled(struct pmu *pmu);
-> >  extern void perf_sched_cb_dec(struct pmu *pmu);
-> >  extern void perf_sched_cb_inc(struct pmu *pmu);
-> >  extern int perf_event_task_disable(void);
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -1366,6 +1366,12 @@ void perf_pmu_enable(struct pmu *pmu)
-> >  		pmu->pmu_enable(pmu);
-> >  }
-> >  
-> > +bool perf_pmu_enabled(struct pmu *pmu)
-> > +{
-> > +	int *count = &this_cpc(pmu)->pmu_disable_count;
-> > +	return *count == 0;
-> > +}
-> > +
-> >  static void perf_assert_pmu_disabled(struct pmu *pmu)
-> >  {
-> >  	int *count = &this_cpc(pmu)->pmu_disable_count;
-> > @@ -10955,7 +10961,7 @@ static int __perf_event_overflow(struct
-> >  		 * claim the pending_work before task_work_add() recurses.
-> >  		 */
-> >  		if (cmpxchg_local(&event->pending_work, 0, 1) == 0) {
-> > -			if (!task_work_add(current, &event->pending_task, notify_mode)) {
-> > +			if (!task_work_add(event->ctx->task, &event->pending_task, notify_mode)) {
-> >  				event->pending_work = pending_id;
-> >  				local_inc(&event->ctx->nr_no_switch_fast);
-> >  				WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
-> > @@ -11151,6 +11157,9 @@ static int perf_swevent_match(struct per
-> >  				struct perf_sample_data *data,
-> >  				struct pt_regs *regs)
-> >  {
-> > +	if (!perf_pmu_enabled(event->pmu))
-> > +		return 0;
-> > +
-> >  	if (event->attr.type != type)
-> >  		return 0;
-> >  
-> > @@ -11531,6 +11540,9 @@ static int perf_tp_event_match(struct pe
-> >  				struct perf_raw_record *raw,
-> >  				struct pt_regs *regs)
-> >  {
-> > +	if (!perf_pmu_enabled(event->pmu))
-> > +		return 0;
-> > +
-> >  	if (event->hw.state & PERF_HES_STOPPED)
-> >  		return 0;
-> >  	/*
-> 
-> 
-> Hmm, I applied that patch to my local environment and tested it, and
-> I no longer see the warning. The issue should be resolved.
-> 
-> Tested-by: Tengda Wu <wutengda@huaweicloud.com>
+What's left in that ioctl is that it takes the mmap lock of the task
+with the mutex held to find the mappings of the files.
 
-Excellent, thank you. Let me write up this one and land them in
-perf/urgent.
+Signed-off-by: Christian Brauner (Amutable) <brauner@kernel.org>
+---
+Christian Brauner (2):
+      perf: look up address filter files without ctx->mutex held
+      proc: call task_vsize() without exec_update_lock held
+
+ fs/proc/array.c      | 13 +++++++++++--
+ kernel/events/core.c | 36 ++++++++++++++++++++++++++----------
+ 2 files changed, 37 insertions(+), 12 deletions(-)
+---
+base-commit: 666539eecdf4db623f5e3c3e55cf9f2dfad24aa4
+change-id: 20261125-work-exec-update_lock-leftovers-6778785ed04a
+
