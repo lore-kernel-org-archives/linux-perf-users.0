@@ -1,60 +1,74 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=192.198.163.7
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795649025;
-	b=Mwz2zk0l2wDsI7mm/8OXFWbtUusjpJlMjyVPwtMYuBM64nf5cLnbmsLVq6nFPEdLju62
-	 JO2rSO1nqNL2Yd9wZ1fVXC7PTFOamYezptKCKJv35pJcfAAI4TBVd/m7I4vjuE2cjJ2YO
-	 WLsdcwyRCJyqAFU7J4cbLUMk1itpa1zdLbgN2Q0ds9jRqkre0sRa+807VwoEM9I7nWJOH
-	 HHOiaeNW+liv75c/l8fidtn/xwhz/O9lFOQtA/hle7MVFOjVpDUnXpPblSj6zq9L5HHXq
-	 pSuLWGHRu8h+f3vRJXOBFS/O3NwJHtf/pFzYlkmz6Ys52eVlu0OHhMlssaWV0hilqrQ==
+	t=1795655028;
+	b=xKybufphSjhFjSQj+2GywchQlQ4PPxekKKesx2u5OUX1BKpTowcURRE1KQJlRk2PAMKk
+	 OyxclisKSFLnFtoLk5U0Tv7axua9j5+TJm7KTsy+Q1tX69zzFIMU2+/FHKESeQGIZ9JeL
+	 oW76l/m/avYgYXy4HEYjCI09QciQ0eOY2v26n92Kioq78C0XM6wroO49PaeWH6ithnpmB
+	 6Za2uPsTetKUdY6A7pQPQWdig8iYIfbD2wupw8MxOrYZMCNkQWc/N5yYsqbgHkDddr82v
+	 3kGOXjcZXP/n6Zg3TA8UITyafvzLNXGs23lsNkof+zPtiTABgdnzjfQqJoV7jDCajSg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795649025;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
-	bh=HylcXLYdrbMpv/2aFN44v2Wt/953Ia1OkzX0FGD1774=;
-	b=XRc29Oqcx65uUoOB+6bLss208UqKd3zr8rHmvPDm1Yu32aOK1PLSxyKmUvYmY29IwS4A
-	 S/UicS4ISm/JGdV/qCvPGD7Qcj9hEE2CGyjGhhFNW6EpklfcFRrpG+KlOCwDvWmFXOTn1
-	 urZE1VJV9VZvmfASRsHpFpGpICdoGfoHUO9SHaNmNtHKfWlfNwBtygz6dHKqeuKoRMapV
-	 02rgnBVHsHBpO1WvSCGONlDU2n8sRZLqp08shrA0Qbcr/KW0ygnsCFnLYkFi5hgsntugo
-	 wnjxjUH8FS9iDfI8xpKK912iEPEjiJtQe2wEhzKpLCbIGj5EO+vXvSFNw92qGank+5A==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795655028;
+	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
+	 X-IronPort-AV:X-IronPort-AV:Received:X-CSE-ConnectionGUID:
+	 X-CSE-MsgGUID:X-ExtLoop1:X-IronPort-AV:Received:Date:From:To:Cc:
+	 Subject:Message-ID:MIME-Version:Content-Type:Content-Disposition;
+	bh=sAGJKv20+T5JxrYbMaCCgOfBa2QcSOaf1vHpKPhakQA=;
+	b=avXIj7Yya4sg8EX63oUtj4fusnJC/OamAX+CXCQshEHQUIb6CBzubgYlO59qPQmCEA04
+	 K/TtDiCK2/LXBuyOLMJdauygiE/JhEzUJfT90r+PTgYq4YWmhrN/36WYFOa/Rl1ifpzPk
+	 CJabW9lQTp2ftOmVwXcFZ61OPklvDC9Rf6SPzzaPbCYhtjhpe26iMWiyIgGpI2lNE8hW5
+	 Aje7DrQCeiDJYlgvmxUjHNd7Y8a0rWlX8rt3vDf2gGnSEJ6XIlzySUt7Bn/AIwNwoTZpx
+	 9z21yhAe2Ed6kO1nIMm1fDYDuV8MU00l4BCIT7YFWvkPa02JYQnAsdd2rIPPO2Z3YFA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m5dZl2dq;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	dmarc=pass header.from=intel.com;
+	spf=pass smtp.mailfrom=intel.com;
+	dkim=pass header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Dhu+j3ps;
+	arc=none smtp.remote-ip=192.198.163.7
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0396606A31E;
-	Wed, 25 Nov 2026 23:23:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E58606A31E;
+	Thu, 26 Nov 2026 01:03:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 47E58606A31E
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m5dZl2dq
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 822AE1F000C0;
-	Wed, 25 Nov 2026 23:23:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795649025;
-	bh=HylcXLYdrbMpv/2aFN44v2Wt/953Ia1OkzX0FGD1774=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=m5dZl2dqSzBRpFzDU0Pkcuu9rg485DnDUrCc5UIpY/bEhRpd3eKfa+XVoiBc1ml+5
-	 Z5MW1/6ElSqYiDzartJCR/5TqY37JUePR3actN4gEZ7azMjA3PrCTwuvZkSl9AHJkC
-	 uU82Got94V60Rbu2suuBrcBVwzkLudhL6XBo35oUUlIOelRVeZgyXOhgRUSZnGuKIO
-	 5xKdxFYaAiYWgcSDNnWZ132foUfrGcMtI/i78nRFgB3MZmj0zKh2ILa31a9DpIU3U/
-	 BUoC5ZHxyqFwG5zXXuWb59JMXRbrR1ip6dIgwiu0GD41cLjFLPZm6hmrrtFH/gXKyT
-	 P3URUmudfvSpg==
-Date: Wed, 25 Nov 2026 23:23:43 +0000
-From: Yosry Ahmed <yosry@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Sean Christopherson <seanjc@google.com>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Like Xu <likexu@tencent.com>, Jim Mattson <jmattson@google.com>, 
-	Mingwei Zhang <mizhang@google.com>
-Subject: Re: [PATCH] perf/x86: Don't enforce minimum period for KVM
- guest-only events
-Message-ID: <awdnFkLVRkAglrXv@google.com>
-References: <20231107183605.409588-1-seanjc@google.com>
- <20231117103236.GI3818@noisy.programming.kicks-ass.net>
- <ZWaU3HZURCjms5DM@google.com>
- <20231129112019.GG30650@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Dhu+j3ps
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1795655028; x=1827191028;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=aLMd4Mbo+MMK/ISt7293lRB7Cdxi/gAYKRXHqJ1P4a0=;
+  b=Dhu+j3psLZl2DwCNDAySMnHpMZ8y8Vn0IBeccNSDvfaHO4OLSoqBANLT
+   5r32y3mBFmTeaUqFIO6zuMvrSzFiJEI/92UEE9m10MOxnKK/vLRU4Gou7
+   pdsCHmUydmLc9QB1kDajwMo2B7BMPs0hNCRsCoE46ZrLyIZNY4I4zX6xE
+   fK8aNJYuEv0OamLNX33G1Mq3/9DzjdY3Pdxagt7Q1vpn2k3QyvC9I8DhY
+   LE5PfrWBRId66QCfRPFYYeZB7p0xTlZEa2reEPKE00MdKnoBBtVBYmMYl
+   gHiLSzo2wVxY7iEKyYwHBF2hndRZaVhkCfqCSvypXm/XuZNc/snlllQ32
+   g==;
+X-CSE-ConnectionGUID: TDSpMtQEQhSw2DNTHj9Nbw==
+X-CSE-MsgGUID: fVZWOb0oQlWG6+oVddIsrw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11977"; a="4396774"
+X-IronPort-AV: E=Sophos;i="6.27,233,1787036400"; 
+   d="scan'208";a="4396774"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 17:03:47 -0800
+X-CSE-ConnectionGUID: lK1IH4XiTa6s/oG2fgBRhg==
+X-CSE-MsgGUID: GzhaZM7ITEGd1GX9dq0AuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,233,1787036400"; 
+   d="scan'208";a="12155229"
+Received: from ly-workstation.sh.intel.com (HELO ly-workstation) ([10.239.182.64])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2026 17:03:44 -0800
+Date: Thu, 26 Nov 2026 09:03:41 +0800
+From: kernel test robot <yi1.lai@intel.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, yi1.lai@intel.com
+Subject: [linus:master] [perf/x86/intel]  2721e8da2d:
+ WARNING:at_arch/x86/events/intel/ds.c:#intel_pmu_drain_arch_pebs
+Message-ID: <202611260816.5432877c-lkp@intel.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -66,66 +80,198 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231129112019.GG30650@noisy.programming.kicks-ass.net>
 
-On Wed, Nov 29, 2023 at 12:20:19PM +0100, Peter Zijlstra wrote:
-> On Tue, Nov 28, 2023 at 05:33:16PM -0800, Sean Christopherson wrote:
-> 
-> > If programming a "period" of 1 puts the host at risk in some way, then I agree
-> > that this is unsafe and we need a different solution. 
-> 
-> IIRC if you put in -1 on a Nehalem, you end up with an NMI-storm which
-> wasn't trivial to recover from if at all (it's too long ago and I don't
-> have ancient hardware like that anymore :/)
-> 
-> > But if the worst case
-> > scenario is non-determinstic or odd behavior from the guest's perspective, then
-> > that's the guest's problem (with the caveat that the guest might not have accurate
-> > Family/Model/Stepping data to make informed decisions).
-> 
-> Things like bdm_limit_period() will cause odd behaviour IIRC, it does
-> daft things like generate extra PEBS records on overflow and gives
-> otherwise daft results for PDIR.
-> 
-> glc_limit_period() lacks a useful comment :/
 
-Sorry for thread necromancy, but it seems like the discussion stopped
-here and I'd like to get this fixed as I am observing the same failures
-that Sean did.
 
-Basically, if KVM needs to program period=1 (guest counter is -1), perf
-overwrites it to 2. After 1 event, the guest counter should overflow,
-but the hardware counter doesn't, so there is no PMI. On the other hand,
-KVM relies on the hardware PMIs to signal overflows while perf events
-are counting.
+Hello,
 
-The overflow is then lost: when KVM pauses the event (e.g. to account
-for an emulated instruction), it folds the perf count into its software
-counter and restarts the event with a new period, so the late hardware
-overflow never comes, and KVM only checks for wraps on its own emulated
-counts.
+kernel test robot noticed "WARNING:at_arch/x86/events/intel/ds.c:#intel_pmu_drain_arch_pebs" on:
 
-Sean's fix makes the problem go away on all CPU platforms, and Peter's
-makes it go away on Skylake+ on Intel (with updated microcode) and all
-AMD platforms. So I am mostly happy with both. It's worth noting that
-the blast radius is smaller with Sean's fix as it only affects guest
-events.
+commit: 2721e8da2de7271533ac36285332219f700d16ca ("perf/x86/intel: Allocate arch-PEBS buffer and initialize PEBS_BASE MSR") https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
 
-A middle ground would be skipping the left < 2 clamp on exclude_host
-events, but not the x86_pmu_limit_period() callback, which makes the
-problem go away on slightly more CPUs than Peter's patch (I think
-Sandy/Ivy Bridge, and Skylake on older microcode versions). This keeps
-the *_limit_period() subtleties in place.
+[test failed on linux-next/master 3dd8c790a7b7027abdd568e36db5e82ffaea7c77]
 
-All three versions seem to make the problem go away on AMD Turin.
+in testcase: fxmark
+version: fxmark-x86_64-63bcb4e-1_20260519 with following parameters:
 
-WDYT?
+	nr_threads: 2c
+	disk: 1SSD
+	media: ssd
+	test: DWSL
+	fstype: ext4
+	directio: bufferedio
+	cpufreq_governor: performance
 
-An alternative to all of this is a "fix" on the KVM side where KVM is
-always responsible for signaling all PMC overflows, instead of signaling
-some of them from the PMI code path. KVM would keep track of the guest
-counter value as of the last pause or write, and on PMI it would just
-pause the event, manually check for the counter wrapping, and deliver
-the PMI to the guest.
 
-This would obviously be a more complex change.
+config: x86_64-rhel-9.4
+compiler: gcc-14
+test machine: 32 threads 1 sockets Genuine Intel(R) 0000 CPU @ 1.1GHz (Diamond Rapids) with 128G memory
+
+(please refer to attached dmesg/kmsg for entire log/backtrace)
+
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <yi1.lai@intel.com>
+| Closes: https://lore.kernel.org/oe-lkp/202611260816.5432877c-lkp@intel.com
+
+
+kern  :warn  : [   89.997775] [      C0] ------------[ cut here ]------------
+kern  :warn  : [   89.997777] [      C0] WARNING: CPU: 0 PID: 593 at arch/x86/events/intel/ds.c:2965 intel_pmu_drain_arch_pebs (x86/events/intel/ds.c:2984)
+kern  :warn  : [   89.997792] [      C0] Modules linked in: intel_tpmi_power_domains isst_if_common x86_pkg_temp_thermal intel_powerclamp coretemp binfmt_misc kvm_intel snd_pcm ipmi_ssif ast cxl_pmem iaa_crypto snd_timer nvme drm_client_lib libnvdimm dax_hmem kvm snd drm_shmem_helper soundcore nvme_core idxd intel_th_gth drm_kms_helper irqbypass intel_th_pci ghash_clmulni_intel idxd_bus pcspkr cxl_acpi intel_th intel_vsec acpi_ipmi cxl_port cxl_core ipmi_si ipmi_devintf einj ipmi_msghandler joydev pfr_telemetry pfr_update fuse drm nfnetlink
+kern  :warn  : [   89.997815] [      C0] CPU: 0 UID: 0 PID: 593 Comm: sed Not tainted 6.18.0-rc1+ #1 PREEMPTLAZY
+kern  :warn  : [   89.997819] [      C0] RIP: 0010:intel_pmu_drain_arch_pebs (x86/events/intel/ds.c:2984)
+kern  :warn  : [   89.997822] [      C0] Code: 85 d2 48 c7 c2 c0 09 3d 83 48 0f 44 c2 e9 f8 fc ff ff 48 8d 34 0b 66 85 c0 0f 84 49 fe ff ff 0f b7 06 48 89 f3 e9 24 fe ff ff <0f> 0b e9 43 fe ff ff e8 61 b6 fe ff 48 89 ef 85 c0 74 18 48 8b 54
+All code
+========
+   0:	85 d2                	test   %edx,%edx
+   2:	48 c7 c2 c0 09 3d 83 	mov    $0xffffffff833d09c0,%rdx
+   9:	48 0f 44 c2          	cmove  %rdx,%rax
+   d:	e9 f8 fc ff ff       	jmp    0xfffffffffffffd0a
+  12:	48 8d 34 0b          	lea    (%rbx,%rcx,1),%rsi
+  16:	66 85 c0             	test   %ax,%ax
+  19:	0f 84 49 fe ff ff    	je     0xfffffffffffffe68
+  1f:	0f b7 06             	movzwl (%rsi),%eax
+  22:	48 89 f3             	mov    %rsi,%rbx
+  25:	e9 24 fe ff ff       	jmp    0xfffffffffffffe4e
+  2a:*	0f 0b                	ud2		<-- trapping instruction
+  2c:	e9 43 fe ff ff       	jmp    0xfffffffffffffe74
+  31:	e8 61 b6 fe ff       	call   0xfffffffffffeb697
+  36:	48 89 ef             	mov    %rbp,%rdi
+  39:	85 c0                	test   %eax,%eax
+  3b:	74 18                	je     0x55
+  3d:	48                   	rex.W
+  3e:	8b                   	.byte 0x8b
+  3f:	54                   	push   %rsp
+
+Code starting with the faulting instruction ===========================================
+   0:	0f 0b                	ud2
+   2:	e9 43 fe ff ff       	jmp    0xfffffffffffffe4a
+   7:	e8 61 b6 fe ff       	call   0xfffffffffffeb66d
+   c:	48 89 ef             	mov    %rbp,%rdi
+   f:	85 c0                	test   %eax,%eax
+  11:	74 18                	je     0x2b
+  13:	48                   	rex.W
+  14:	8b                   	.byte 0x8b
+  15:	54                   	push   %rsp
+kern  :warn  : [   89.997823] [      C0] RSP: 0000:fffffe000000d950 EFLAGS: 00010046
+kern  :warn  : [   89.997825] [      C0] RAX: 0000000000000000 RBX: ff110001017d0000 RCX: 00000000000003f5
+kern  :warn  : [   89.997827] [      C0] RDX: ff1100203b618cc0 RSI: fffffe000000dc80 RDI: fffffe000000da80
+kern  :warn  : [   89.997827] [      C0] RBP: 0000f0010000f000 R08: ff1100203b618cc0 R09: 0000000000000000
+kern  :warn  : [   89.997828] [      C0] R10: ff1100203b618cc0 R11: 0000000000000000 R12: ff110001017df000
+kern  :warn  : [   89.997829] [      C0] R13: fffffe000000dc80 R14: ff1100203b618cc0 R15: fffffe000000def8
+kern  :warn  : [   89.997830] [      C0] FS:  00007f1067652840(0000) GS:ff110020b7817000(0000) knlGS:0000000000000000
+kern  :warn  : [   89.997831] [      C0] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+kern  :warn  : [   89.997832] [      C0] CR2: 0000558b539e4000 CR3: 0000000106eac004 CR4: 0000000000f73ef0
+kern  :warn  : [   89.997832] [      C0] PKRU: 55555554
+kern  :warn  : [   89.997833] [      C0] Call Trace:
+kern  :warn  : [   89.997837] [      C0]  <NMI>
+kern  :warn  : [   89.997842] [      C0]  handle_pmi_common (x86/events/intel/core.c:3224)
+kern  :warn  : [   89.997847] [      C0]  ? prb_read (printk/printk_ringbuffer.c:1940)
+kern  :warn  : [   89.997854] [      C0]  ? _prb_read_valid (printk/printk_ringbuffer.c:2164)
+kern  :warn  : [   89.997856] [      C0]  ? desc_update_last_finalized (printk/printk_ringbuffer.c:1531)
+kern  :warn  : [   89.997858] [      C0]  ? flush_tlb_one_kernel (x86/include/asm/paravirt.h:85 x86/mm/tlb.c:1630 x86/mm/tlb.c:1585)
+kern  :warn  : [   89.997862] [      C0]  ? native_set_fixmap (x86/mm/pgtable.c:581 x86/mm/pgtable.c:591)
+kern  :warn  : [   89.997863] [      C0]  ? ghes_copy_tofrom_phys (x86/include/asm/fixmap.h:167 acpi/apei/ghes.c:193 acpi/apei/ghes.c:357)
+kern  :warn  : [   89.997872] [      C0]  intel_pmu_handle_irq (x86/events/intel/core.c:3357)
+kern  :warn  : [   89.997875] [      C0]  perf_event_nmi_handler (x86/events/core.c:1777 x86/events/core.c:1763)
+kern  :warn  : [   89.997878] [      C0]  nmi_handle (x86/kernel/nmi.c:182)
+kern  :warn  : [   89.997881] [      C0]  default_do_nmi (x86/kernel/nmi.c:437 x86/kernel/nmi.c:392)
+kern  :warn  : [   89.997886] [      C0]  exc_nmi (x86/kernel/nmi.c:587)
+kern  :warn  : [   89.997887] [      C0]  end_repeat_nmi (x86/entry/entry_64.S:1406)
+kern  :warn  : [   89.997890] [      C0] RIP: 0010:io_serial_in (x86/kernel/early_printk.c:102)
+kern  :warn  : [   89.997895] [      C0] Code: 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 0f b6 8f c1 00 00 00 0f b7 57 08 d3 e6 01 f2 ec <0f> b6 c0 c3 cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40
+All code
+========
+   0:	00 90 90 90 90 90    	add    %dl,-0x6f6f6f70(%rax)
+   6:	90                   	nop
+   7:	90                   	nop
+   8:	90                   	nop
+   9:	90                   	nop
+   a:	90                   	nop
+   b:	90                   	nop
+   c:	90                   	nop
+   d:	90                   	nop
+   e:	90                   	nop
+   f:	90                   	nop
+  10:	90                   	nop
+  11:	f3 0f 1e fa          	endbr64
+  15:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
+  1a:	0f b6 8f c1 00 00 00 	movzbl 0xc1(%rdi),%ecx
+  21:	0f b7 57 08          	movzwl 0x8(%rdi),%edx
+  25:	d3 e6                	shl    %cl,%esi
+  27:	01 f2                	add    %esi,%edx
+  29:	ec                   	in     (%dx),%al
+  2a:*	0f b6 c0             	movzbl %al,%eax		<-- trapping instruction
+  2d:	c3                   	ret
+  2e:	cc                   	int3
+  2f:	cc                   	int3
+  30:	cc                   	int3
+  31:	cc                   	int3
+  32:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
+  39:	00 00 00 00 
+  3d:	0f                   	.byte 0xf
+  3e:	1f                   	(bad)
+  3f:	40                   	rex
+
+Code starting with the faulting instruction ===========================================
+   0:	0f b6 c0             	movzbl %al,%eax
+   3:	c3                   	ret
+   4:	cc                   	int3
+   5:	cc                   	int3
+   6:	cc                   	int3
+   7:	cc                   	int3
+   8:	66 66 2e 0f 1f 84 00 	data16 cs nopw 0x0(%rax,%rax,1)
+   f:	00 00 00 00 
+  13:	0f                   	.byte 0xf
+  14:	1f                   	(bad)
+  15:	40                   	rex
+kern  :warn  : [   89.997896] [      C0] RSP: 0000:ffa0000002363c78 EFLAGS: 00000002
+kern  :warn  : [   89.997897] [      C0] RAX: ffffffff81c75500 RBX: 0000000000000000 RCX: 0000000000000000
+kern  :warn  : [   89.997897] [      C0] RDX: 00000000000003fd RSI: 0000000000000005 RDI: ffffffff840b3ea0
+kern  :warn  : [   89.997898] [      C0] RBP: 000000000000006c R08: 6465766965636572 R09: 20494d4e202e6875
+kern  :warn  : [   89.997898] [      C0] R10: 696563657220494d R11: 4e202e6875686855 R12: 0000000000000020
+kern  :warn  : [   89.997899] [      C0] R13: ffffffff840b3ea0 R14: 000000000000000b R15: 0000000000000001
+kern  :warn  : [   89.997900] [      C0]  ? mem16_serial_in (tty/serial/8250/8250_port.c:370)
+kern  :warn  : [   89.997902] [      C0]  ? io_serial_in (x86/kernel/early_printk.c:102)
+kern  :warn  : [   89.997904] [      C0]  ? io_serial_in (x86/kernel/early_printk.c:102)
+kern  :warn  : [   89.997905] [      C0]  </NMI>
+kern  :warn  : [   89.997905] [      C0]  <TASK>
+kern  :warn  : [   89.997905] [      C0]  wait_for_lsr (tty/serial/8250/8250.h:137 tty/serial/8250/8250.h:159 tty/serial/8250/8250_port.c:1961)
+kern  :warn  : [   89.997908] [      C0]  serial8250_console_write (tty/serial/8250/8250_port.c:3234 tty/serial/8250/8250_port.c:3275 tty/serial/8250/8250_port.c:3342)
+kern  :warn  : [   89.997912] [      C0]  console_flush_all (printk/printk.c:3111 printk/printk.c:3199)
+kern  :warn  : [   89.997914] [      C0]  console_unlock (printk/printk.c:3258 printk/printk.c:3298)
+kern  :warn  : [   89.997915] [      C0]  wake_up_klogd_work_func (printk/printk.c:4498)
+kern  :warn  : [   89.997917] [      C0]  irq_work_run_list (irq_work.c:221 irq_work.c:252)
+kern  :warn  : [   89.997924] [      C0]  update_process_times (time/timer.c:2476)
+kern  :warn  : [   89.997930] [      C0]  tick_nohz_handler (time/tick-sched.c:276 (discriminator 1) time/tick-sched.c:297 (discriminator 1))
+kern  :warn  : [   89.997934] [      C0]  ? __pfx_tick_nohz_handler (time/tick-sched.c:110)
+kern  :warn  : [   89.997936] [      C0]  __hrtimer_run_queues (time/hrtimer.c:1777 time/hrtimer.c:1841)
+kern  :warn  : [   89.997938] [      C0]  hrtimer_interrupt (time/hrtimer.c:1903)
+kern  :warn  : [   89.997940] [      C0]  __sysvec_apic_timer_interrupt (x86/kernel/apic/apic.c:1041 x86/kernel/apic/apic.c:1058)
+kern  :warn  : [   89.997945] [      C0]  sysvec_apic_timer_interrupt (x86/kernel/apic/apic.c:1052 (discriminator 1) x86/kernel/apic/apic.c:1052 (discriminator 1))
+kern  :warn  : [   89.997948] [      C0]  asm_sysvec_apic_timer_interrupt (x86/include/asm/idtentry.h:697)
+kern  :warn  : [   89.997950] [      C0] RIP: 0033:0x558b0c0ef99c
+kern  :warn  : [   89.997951] [      C0] Code: f8 48 c1 e0 04 48 03 45 00 45 89 e8 44 23 40 08 74 24 48 8b 73 08 48 8b 00 48 89 f2 48 83 c6 01 48 c1 e2 04 48 03 13 48 89 02 <48> 89 73 08 44 89 42 08 48 8b 55 08 48 83 c7 01 49 39 4c 24 08 7e
+All code
+========
+   0:	f8                   	clc
+   1:	48 c1 e0 04          	shl    $0x4,%rax
+   5:	48 03 45 00          	add    0x0(%rbp),%rax
+   9:	45 89 e8             	mov    %r13d,%r8d
+   c:	44 23 40 08          	and    0x8(%rax),%r8d
+  10:	74 24                	je     0x36
+  12:	48 8b 73 08          	mov    0x8(%rbx),%rsi
+  16:	48 8b 00             	mov    (%rax),%rax
+  19:	48 89 f2             	mov    %rsi,%rdx
+  1c:	48 83 c6 01          	add    $0x1,%rsi
+  20:	48 c1 e2 04          	shl    $0x4,%rdx
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20261126/202611260816.5432877c-lkp@intel.com
+
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
