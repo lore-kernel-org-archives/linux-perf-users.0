@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795743510;
-	b=jIbtDnnTK4tVpRc+MnMtMT0l+n4fOiga2ammM5lXlDiwb4AaHAjlA7AtzGZB1cdYshYC
-	 IyaJjVCX51XAQAp/Mw3nExwKYRfSscT1gJOMUoIm11qgAMfxiQVJrA/cF8TXmUF7XBs3c
-	 4H3+X4dHaunH+nD1rqisnzgIxeHDBRt24kuDa8twLWGmHkafflSEDESJCD7+wAH89695Z
-	 g3ryuztYpaL5YPyc+OybC3gsRZUXrhHf9ov05t8i55c2oLbbpo3EyfWo7mLhQdDHTaI9L
-	 6HekpX8e0sQfpNEtXWZoaaH6AKmBbfcPWsOPRaeCTPUdLprvr7D74FunRdDhDnhgqjg==
+	t=1795743513;
+	b=uY8H79RqfKnBUc9X0NoF9B1GQCkbofMoE3L7LEYNGNwLTswQodJFGUnJK8n/juzkZm8q
+	 SiCAuFfE137PEltKTpkRdtpIaOft3ToUfftmQA6yKxmgyoGRXqQoFu16QG8ITGATl74xk
+	 82JnFmirBR94QucwaeTKAT44VTLD5ZhY7ySpya17Y50xa145hOvDelQyTCdsVhqsK3Saq
+	 Jurk5M3dm0etAsa2mQadNtMuCKqJgr2ZuLNw3EWlisbLgLhpXGoELKmpHOwRmfT+1r0fb
+	 37V0OPiJix0dt+2a56KwQ1gGN+sfTFM4FXY6o6rfesIRZkYbpaZIS6M+vAAoHj89k4g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795743510;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795743513;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=/rqvI9oY8p3KhwXqn/mLDDtq3SqbBetp3DYPIyXLjeI=;
-	b=makc+cBB3bzXLVZdcGiphDMjpGSHWRvmyQzhSE79Tskg7RkAcpP9HwqbGgBY9d75T1BV
-	 GCzDO+RBdWM0an1qwsPPCpmmf6rr9WDzGGC/KQxQkCJw4Wdri6pMy766ZsWcLyUZp0iqx
-	 6Nd0JGZqNf2t9l+aFjyG3BDpjb5x7SB4wmi7yryx/O2dRDtvr6zZkvgZwPCXmMxAQXxGn
-	 gZbyLE8Mhj9jC9rnx/t0afBrCcPhPp0+foz1pR/BwlqrZ6jIFIBM0IzpenFo1NoxZgeqg
-	 hEZqNrtuG8k36ZShDOmQ105dNTR1qXnO92ggOmpx82hIOktEOULIQe2Yi+LigmdLfQg==
+	bh=9PfVaF+jwXHE4bP6TQ5bbPgw6kyFyVCifn3jl4j59jc=;
+	b=nI1JR8n0jYZgHmN9LgWdgRhdRNt6dGx4lbp0Lg6EZdLLmMhUYLwY5lUk9MmeIyNWHknh
+	 IxUkCuOkCUO3sitc5StroLxKccAUvbp9W3uh3AKnT+Shx72x/nXQVYayHDYpv2nnvoCcn
+	 BxIlSge5xmfXgyuG//gQJH3vV9O2q5zRzTLcNtvWTHgKmX9v+bldGiK3h7fXxhBaZ2g8U
+	 gqW4J0ObO1sVjzcdnaUIrp/Lbp4lOPuoNIE4GCsMqqqfj4/EdbdUZ2059t8IS+uUqvc+S
+	 WOHh0WcO1h1neit5oTEr3HpTxwjKPUgUOp46Tdi751Pnun967CWdGB8m22Cehof0vnA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eOOyXgqi;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=B+u1qQ9Z;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35996606A32D
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Nov 2026 01:38:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C544B606A321
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Nov 2026 01:38:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eOOyXgqi
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 091251F00897;
-	Fri, 27 Nov 2026 01:38:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=B+u1qQ9Z
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C9171F000C1;
+	Fri, 27 Nov 2026 01:38:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795743510;
-	bh=/rqvI9oY8p3KhwXqn/mLDDtq3SqbBetp3DYPIyXLjeI=;
+	s=k20260515; t=1795743513;
+	bh=9PfVaF+jwXHE4bP6TQ5bbPgw6kyFyVCifn3jl4j59jc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=eOOyXgqiLku5eGcDfTfYBuLLdrztu3NaKtSANwDQNxjLnqiRM5l0+WifZcGhTD3QC
-	 1vaSAlaUm1DjhtQaAqij2DimTtZzeVYhfq/UscvMil0kvzslmOQIUgwoG14/OjU2o3
-	 RpbPMhbeOq5ngispqzgQkFbr+Pg9EjxX/Vs9+XhjIEywICS4yJZyE+o6+rlg+RZGFU
-	 cIKC8jwNpvZyzv4SkjN/QAjv7F5UCv++Zd8jqMLrCrUNX14bYePe9G6ljmWzt2Rycg
-	 vazmN3v9JxkNJDgD+z07Mrgd6xPDWSiGpHlXn+j6pgLeSs7oGUQwGnftPINu1snbP0
-	 8K4OzpXXBDKXw==
+	b=B+u1qQ9ZxsDsNsvV42MZsqP6d+w3E5NRKWyynqclSJcyIFUNR3qs5kpSYFOmFVbpP
+	 /k5cu28f+/wyf39BS6X0eTUEXOCNGLIXn25xITvixC1PnB1YZWCPUjXaoSOGEYytW5
+	 /s4J7DuQuBYw95T8nABG+DMUjWSeslVTJ5AYkzKBEhdsY9BfgTxy5abml5dMp5uvZn
+	 60VIRVKe/tMH8ZG6NYFRPaaRfQJLfBE3UKi3gzubkdg5YlTIKcuQmjDCSoMpcSDYiR
+	 Ccb8za2OhC2PdmrgwuIqwrHaSiHzww09h2JLtsuHi4bzKIFmoCD4nHx+QIUOXb1QgV
+	 tXLPhBOVkjSaA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -50,9 +50,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v2 05/18] perf tests config: Exercise the config file and list options
-Date: Thu, 26 Nov 2026 22:37:48 -0300
-Message-ID: <20261127013801.14841-6-acme@kernel.org>
+Subject: [PATCH v2 06/18] perf tests script: Exercise the list, fields and dump options
+Date: Thu, 26 Nov 2026 22:37:49 -0300
+Message-ID: <20261127013801.14841-7-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20261127013801.14841-1-acme@kernel.org>
 References: <20261127013801.14841-1-acme@kernel.org>
@@ -69,157 +69,193 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Set, read back, update and list two variables under a private HOME,
-and check the --user/--system conflict and the invalid key errors.
-perf test exports PERF_CONFIG=/dev/null to the shell tests, unset it
-so perf config uses the private file.
+The script test only runs the parallel-perf script.  Cover the script
+list, a wide -F field set and the +field/-field syntax, per-event dumps,
+the data file header, the task and mmap event display and the reltime,
+deltatime, show-info, latency, ns and raw dump options.
+
+The list is read from the scripts dir in the perf exec path, which in a
+build tree points at a prefix that was never installed, so point
+PERF_EXEC_PATH at the source tree when it is unset.  A missing python3
+or parallel-perf.py is a skip only when nothing failed above, otherwise
+the exit status hides the failure behind an exit 2, which perf test
+reports as skipped.
 
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/config.sh | 134 +++++++++++++++++++++++++++++++
- 1 file changed, 134 insertions(+)
- create mode 100755 tools/perf/tests/shell/config.sh
+ tools/perf/tests/shell/script.sh | 135 ++++++++++++++++++++++++++++++-
+ 1 file changed, 133 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/shell/config.sh b/tools/perf/tests/shell/config.sh
-new file mode 100755
-index 0000000000000000..fc035bbec2e2ea18
---- /dev/null
-+++ b/tools/perf/tests/shell/config.sh
-@@ -0,0 +1,134 @@
-+#!/bin/bash
-+# perf config tests
-+# SPDX-License-Identifier: GPL-2.0
+diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/script.sh
+index af687c7cfe44c2c6..26fd0b9c7798339e 100755
+--- a/tools/perf/tests/shell/script.sh
++++ b/tools/perf/tests/shell/script.sh
+@@ -4,6 +4,26 @@
+ 
+ set -e
+ 
++shelldir=$(dirname "$0")
++# shellcheck source=lib/perf_has_symbol.sh
++. "${shelldir}"/lib/perf_has_symbol.sh
 +
-+set -e
++# perf script -l reads the scripts directory from the perf exec path,
++# which in a build tree points at a prefix that is not installed
++if [ -z "${PERF_EXEC_PATH}" ] && [ -d "${shelldir}"/../../python ]; then
++	PERF_EXEC_PATH=$(cd "${shelldir}"/../.. && pwd)
++	export PERF_EXEC_PATH
++fi
 +
-+err=0
-+tmpdir=$(mktemp -d /tmp/__perf_test_config.XXXXXX)
-+out="${tmpdir}/out"
++testprog="perf test -w thloop"
++testsym="test_loop"
++script_fields="comm,tid,pid,time,cpu,event,ip,sym,dso,dsoff,symoff,period,machine_pid,vcpu,ipc,insn,insnlen,misc,metric,synth,callindent,flags"
++if perf check feature -q libcapstone; then
++	script_fields="${script_fields},disasm"
++fi
 +
-+# perf test exports PERF_CONFIG=/dev/null to the shell tests, use a
-+# private HOME instead so the file written here is the one being read.
-+unset PERF_CONFIG
-+export HOME="${tmpdir}"
++skip_test_missing_symbol "${testsym}"
 +
-+cleanup() {
-+	rm -rf "${tmpdir}"
+ temp_dir=$(mktemp -d /tmp/perf-test-script.XXXXXXXXXX)
+ 
+ err=0
+@@ -27,18 +47,123 @@ trap_cleanup()
+ 
+ trap trap_cleanup EXIT TERM INT
+ 
++script_data="${temp_dir}/script-perf.data"
 +
-+	trap - EXIT TERM INT
++test_script_list()
++{
++	echo "perf script list test"
++	if ! perf script -l | grep -q "List of available scripts"
++	then
++		echo "perf script list test [Failed missing list header]"
++		err=1
++		return
++	fi
++	if ! perf script -l | grep -q "export-to-sqlite"
++	then
++		echo "perf script list test [Failed missing export-to-sqlite]"
++		err=1
++	fi
 +}
 +
-+trap_cleanup() {
-+	echo "Unexpected signal in ${FUNCNAME[1]}"
-+	cleanup
-+	exit 1
-+}
-+trap trap_cleanup EXIT TERM INT
-+
-+test_config_empty() {
-+	echo "Empty config test"
-+	if ! perf config --user --list > "${out}" 2>&1; then
-+		echo "Empty config [Failed: perf config --user --list failed]"
-+		cat "${out}"
++test_script_fields()
++{
++	echo "perf script fields test"
++	perf record -o "${script_data}" -e cpu-clock --sample-cpu ${testprog}
++	if ! perf script -i "${script_data}" -F "${script_fields}" | grep -q "${testsym}"
++	then
++		echo "perf script fields test [Failed missing ${testsym}]"
 +		err=1
 +		return
 +	fi
-+	if [ -s "${out}" ]; then
-+		echo "Empty config [Failed: unexpected output]"
-+		cat "${out}"
++	if ! perf script -i "${script_data}" -F +cpu | grep -q "${testsym}"
++	then
++		echo "perf script fields test [Failed to add the cpu field]"
 +		err=1
-+		return
 +	fi
-+	echo "Empty config [Success]"
++	if ! perf script -i "${script_data}" -F -comm | grep -q "${testsym}"
++	then
++		echo "perf script fields test [Failed to remove the comm field]"
++		err=1
++	fi
 +}
 +
-+test_config_set_get() {
-+	echo "Config set and get test"
-+	if ! perf config report.show-nr-samples=true call-graph.print-limit=5; then
-+		echo "Config set [Failed: perf config failed]"
++test_script_per_event_dump()
++{
++	echo "perf script per-event dump test"
++	if ! perf script -i "${script_data}" --per-event-dump > /dev/null
++	then
++		echo "perf script per-event dump test [Failed to write the dumps]"
 +		err=1
 +		return
 +	fi
-+	if [ ! -s "${HOME}/.perfconfig" ]; then
-+		echo "Config set [Failed: no config file]"
++	if ! grep -q "${testsym}" "${script_data}".*.dump
++	then
++		echo "perf script per-event dump test [Failed missing ${testsym}]"
 +		err=1
-+		return
 +	fi
-+
-+	if ! perf config --user report.show-nr-samples | grep -qx "report.show-nr-samples=true"; then
-+		echo "Config get [Failed: wrong report.show-nr-samples]"
-+		err=1
-+		return
-+	fi
-+	if ! perf config --user call-graph.print-limit | grep -qx "call-graph.print-limit=5"; then
-+		echo "Config get [Failed: wrong call-graph.print-limit]"
-+		err=1
-+		return
-+	fi
-+
-+	if ! perf config --user --list > "${out}" 2>&1 ||
-+	   ! grep -qx "report.show-nr-samples=true" "${out}" ||
-+	   ! grep -qx "call-graph.print-limit=5" "${out}"; then
-+		echo "Config list [Failed: missing variables]"
-+		cat "${out}"
-+		err=1
-+		return
-+	fi
-+	if ! perf config --list > "${out}" 2>&1 ||
-+	   ! grep -qx "report.show-nr-samples=true" "${out}"; then
-+		echo "Config list [Failed: missing user variable in the merged view]"
-+		cat "${out}"
-+		err=1
-+		return
-+	fi
-+
-+	if ! perf config report.show-nr-samples=false; then
-+		echo "Config update [Failed: perf config failed]"
-+		err=1
-+		return
-+	fi
-+	if ! perf config report.show-nr-samples | grep -qx "report.show-nr-samples=false"; then
-+		echo "Config update [Failed: value not updated]"
-+		err=1
-+		return
-+	fi
-+	echo "Config set and get test [Success]"
 +}
 +
-+test_config_errors() {
-+	echo "Config error test"
-+	if perf config --user --system --list > "${out}" 2>&1; then
-+		echo "Config error [Failed: --user --system succeeded]"
-+		cat "${out}"
++test_script_header()
++{
++	echo "perf script header test"
++	if ! perf script -i "${script_data}" --header | grep -q "captured on"
++	then
++		echo "perf script header test [Failed missing the header]"
 +		err=1
 +		return
 +	fi
-+	if ! grep -q "only one config file at a time" "${out}"; then
-+		echo "Config error [Failed: missing file option error]"
-+		cat "${out}"
++	if ! perf script -i "${script_data}" --header-only | grep -q "captured on"
++	then
++		echo "perf script header test [Failed missing the header only output]"
 +		err=1
-+		return
 +	fi
-+
-+	if perf config nosection > "${out}" 2>&1; then
-+		echo "Config error [Failed: invalid variable succeeded]"
-+		cat "${out}"
-+		err=1
-+		return
-+	fi
-+	if ! grep -q "does not contain a section name" "${out}"; then
-+		echo "Config error [Failed: missing invalid variable error]"
-+		cat "${out}"
-+		err=1
-+		return
-+	fi
-+	echo "Config error test [Success]"
 +}
 +
-+test_config_empty
-+test_config_set_get
-+test_config_errors
++test_script_events()
++{
++	echo "perf script events test"
++	if ! perf script -i "${script_data}" --show-task-events --show-mmap-events | grep -q "PERF_RECORD_"
++	then
++		echo "perf script events test [Failed missing the events]"
++		err=1
++	fi
++}
 +
-+cleanup
-+exit $err
++test_script_misc()
++{
++	echo "perf script misc options test"
++	for opt in --reltime --deltatime -I -L --ns
++	do
++		if ! perf script -i "${script_data}" ${opt} | grep -q "${testsym}"
++		then
++			echo "perf script misc options test [Failed ${opt}]"
++			err=1
++		fi
++	done
++	if ! perf script -i "${script_data}" -D | grep -q "PERF_RECORD_SAMPLE"
++	then
++		echo "perf script misc options test [Failed --dump-raw-trace]"
++		err=1
++	fi
++}
++
+ test_parallel_perf()
+ {
+ 	echo "parallel-perf test"
+ 	if ! python3 --version >/dev/null 2>&1 ; then
+ 		echo "SKIP: no python3"
+-		err=2
++		# Don't turn a failure in the tests above into a skip
++		if [ ${err} -eq 0 ]; then
++			err=2
++		fi
+ 		return
+ 	fi
+ 	pp=$(dirname "$0")/../../python/parallel-perf.py
+ 	if [ ! -f "${pp}" ] ; then
+ 		echo "SKIP: parallel-perf.py script not found "
+-		err=2
++		if [ ${err} -eq 0 ]; then
++			err=2
++		fi
+ 		return
+ 	fi
+ 	perf_data="${temp_dir}/pp-perf.data"
+@@ -50,6 +175,12 @@ test_parallel_perf()
+ 	echo "parallel-perf test [Success]"
+ }
+ 
++test_script_list
++test_script_fields
++test_script_per_event_dump
++test_script_header
++test_script_events
++test_script_misc
+ test_parallel_perf
+ 
+ cleanup
 -- 
 2.56.0
 
