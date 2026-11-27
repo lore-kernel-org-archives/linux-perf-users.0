@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795743507;
-	b=i1bqClALMc8LTfzE59Ib1IPWf0jXW8DBzpUdIEpWFzM0Si/Ylz+58xL8NiE0FC7lgTJD
-	 zJdTLoDmHaRaL67yaP+Jll3bpnWnqK7mkyUddBCpqAbxZ5JfMiWCvZuhk3dYVZFRCGfJG
-	 QYB0EoVtohDi1++viyts1N2v6j7Vz0YTilLbx2gVrBAB15ztN3WEXqADMUZ7eRjVZN7/o
-	 dDguHip9AQZDH9aOCGO/Lmxx5c1GJbeASLqhPxusc1N+RjyVEQgo9ikwqB/V3sGwJ2p5c
-	 avTcKK2M0nH26B9FSBrP2P7psyzKIzFOko8tYVOHJH1kizqtPiJRQL0bw/qI128XcGg==
+	t=1795743510;
+	b=jIbtDnnTK4tVpRc+MnMtMT0l+n4fOiga2ammM5lXlDiwb4AaHAjlA7AtzGZB1cdYshYC
+	 IyaJjVCX51XAQAp/Mw3nExwKYRfSscT1gJOMUoIm11qgAMfxiQVJrA/cF8TXmUF7XBs3c
+	 4H3+X4dHaunH+nD1rqisnzgIxeHDBRt24kuDa8twLWGmHkafflSEDESJCD7+wAH89695Z
+	 g3ryuztYpaL5YPyc+OybC3gsRZUXrhHf9ov05t8i55c2oLbbpo3EyfWo7mLhQdDHTaI9L
+	 6HekpX8e0sQfpNEtXWZoaaH6AKmBbfcPWsOPRaeCTPUdLprvr7D74FunRdDhDnhgqjg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795743507;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795743510;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=fyk5LKGEWjy2lkASU4jC9uMiEcgBR5rlw/9C6JX5sZI=;
-	b=EN1O8iOiBDBENptNbcsuU5+KfYp9wdeqthW6ySdOkWQHObzG7LdA2ZvD96DvqQFfs2ov
-	 P6dlbJBgxckTDq3Yno+piESzoe78uV17e7pLYLX6zx1x/9pM0N8AtDsfFVGZv9ehS3dtQ
-	 Y1b2yLdHHqy8iYfd6MyQRPTHhJvC5mSKSwCoxHvB3lod9c0ZQQ8IzRz4R6qZvZ0GEVzOz
-	 8Uws3wM9lapkkjiRQi2QHEmwRcftytK//rLQyl7xgCzqRNaoMB72g/1fv1x3Y3vea+TE1
-	 IZnm7lQCQdiFU8+rmjHszQr3VRUznbIwgdtmASp8SiOgvSlePjmVgojS+AOCrdXIhNQ==
+	bh=/rqvI9oY8p3KhwXqn/mLDDtq3SqbBetp3DYPIyXLjeI=;
+	b=makc+cBB3bzXLVZdcGiphDMjpGSHWRvmyQzhSE79Tskg7RkAcpP9HwqbGgBY9d75T1BV
+	 GCzDO+RBdWM0an1qwsPPCpmmf6rr9WDzGGC/KQxQkCJw4Wdri6pMy766ZsWcLyUZp0iqx
+	 6Nd0JGZqNf2t9l+aFjyG3BDpjb5x7SB4wmi7yryx/O2dRDtvr6zZkvgZwPCXmMxAQXxGn
+	 gZbyLE8Mhj9jC9rnx/t0afBrCcPhPp0+foz1pR/BwlqrZ6jIFIBM0IzpenFo1NoxZgeqg
+	 hEZqNrtuG8k36ZShDOmQ105dNTR1qXnO92ggOmpx82hIOktEOULIQe2Yi+LigmdLfQg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="R7PtPK/4";
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eOOyXgqi;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2A1606A31C
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Nov 2026 01:38:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35996606A32D
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Nov 2026 01:38:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=R7PtPK/4
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7DC81F000C1;
-	Fri, 27 Nov 2026 01:38:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=eOOyXgqi
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 091251F00897;
+	Fri, 27 Nov 2026 01:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795743506;
-	bh=fyk5LKGEWjy2lkASU4jC9uMiEcgBR5rlw/9C6JX5sZI=;
+	s=k20260515; t=1795743510;
+	bh=/rqvI9oY8p3KhwXqn/mLDDtq3SqbBetp3DYPIyXLjeI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=R7PtPK/400sBJFwHtQBkWvUds6FHRVrAyvywYBMVGNU1N/Vii/nnrlHPiFe5B5Dsi
-	 UnS0gNLYqyuBXk6zEFjnMW7ccAy6wc//A6ixsG7pd1XEZjpZu2LddUb4dEBn19NP9v
-	 /9w4Um9rhI3t2vzKc7geopwWnLDZ3x3KlqaPt1widcsXJSvolepZk6vnGYNTxEffSl
-	 ibKTJx44XqghJbDyrr0CjFqyj9nIsHwxzYVfqtO5WWOo7EgcHh8lo/9/YFdNdlixVZ
-	 jwavSL0xGkXktIGu0eyPpCBImG5zrDyWf3puKbiLyM1RtYiIQStUmHIkYY8qEvw7rc
-	 To7ZbPtdo933g==
+	b=eOOyXgqiLku5eGcDfTfYBuLLdrztu3NaKtSANwDQNxjLnqiRM5l0+WifZcGhTD3QC
+	 1vaSAlaUm1DjhtQaAqij2DimTtZzeVYhfq/UscvMil0kvzslmOQIUgwoG14/OjU2o3
+	 RpbPMhbeOq5ngispqzgQkFbr+Pg9EjxX/Vs9+XhjIEywICS4yJZyE+o6+rlg+RZGFU
+	 cIKC8jwNpvZyzv4SkjN/QAjv7F5UCv++Zd8jqMLrCrUNX14bYePe9G6ljmWzt2Rycg
+	 vazmN3v9JxkNJDgD+z07Mrgd6xPDWSiGpHlXn+j6pgLeSs7oGUQwGnftPINu1snbP0
+	 8K4OzpXXBDKXw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -50,9 +50,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v2 04/18] perf tests help: Add a basic perf help test
-Date: Thu, 26 Nov 2026 22:37:47 -0300
-Message-ID: <20261127013801.14841-5-acme@kernel.org>
+Subject: [PATCH v2 05/18] perf tests config: Exercise the config file and list options
+Date: Thu, 26 Nov 2026 22:37:48 -0300
+Message-ID: <20261127013801.14841-6-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20261127013801.14841-1-acme@kernel.org>
 References: <20261127013801.14841-1-acme@kernel.org>
@@ -69,34 +69,40 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf help and its -a option were not exercised by the suite.  Check the
-common command list and the command directory listing.
+Set, read back, update and list two variables under a private HOME,
+and check the --user/--system conflict and the invalid key errors.
+perf test exports PERF_CONFIG=/dev/null to the shell tests, unset it
+so perf config uses the private file.
 
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/help.sh | 80 ++++++++++++++++++++++++++++++++++
- 1 file changed, 80 insertions(+)
- create mode 100755 tools/perf/tests/shell/help.sh
+ tools/perf/tests/shell/config.sh | 134 +++++++++++++++++++++++++++++++
+ 1 file changed, 134 insertions(+)
+ create mode 100755 tools/perf/tests/shell/config.sh
 
-diff --git a/tools/perf/tests/shell/help.sh b/tools/perf/tests/shell/help.sh
+diff --git a/tools/perf/tests/shell/config.sh b/tools/perf/tests/shell/config.sh
 new file mode 100755
-index 0000000000000000..b7279a97a5615193
+index 0000000000000000..fc035bbec2e2ea18
 --- /dev/null
-+++ b/tools/perf/tests/shell/help.sh
-@@ -0,0 +1,80 @@
++++ b/tools/perf/tests/shell/config.sh
+@@ -0,0 +1,134 @@
 +#!/bin/bash
-+# perf help tests
++# perf config tests
 +# SPDX-License-Identifier: GPL-2.0
 +
 +set -e
 +
 +err=0
-+out=$(mktemp /tmp/__perf_test_help.out.XXXXX)
-+exec_path=
++tmpdir=$(mktemp -d /tmp/__perf_test_config.XXXXXX)
++out="${tmpdir}/out"
++
++# perf test exports PERF_CONFIG=/dev/null to the shell tests, use a
++# private HOME instead so the file written here is the one being read.
++unset PERF_CONFIG
++export HOME="${tmpdir}"
 +
 +cleanup() {
-+	rm -f "${out}"
-+	[ -z "${exec_path}" ] || rm -rf "${exec_path}"
++	rm -rf "${tmpdir}"
 +
 +	trap - EXIT TERM INT
 +}
@@ -108,59 +114,109 @@ index 0000000000000000..b7279a97a5615193
 +}
 +trap trap_cleanup EXIT TERM INT
 +
-+test_help_commands() {
-+	echo "perf help commands test"
-+	if ! perf help > "${out}" 2>&1; then
-+		echo "perf help commands test [Failed: perf help failed]"
++test_config_empty() {
++	echo "Empty config test"
++	if ! perf config --user --list > "${out}" 2>&1; then
++		echo "Empty config [Failed: perf config --user --list failed]"
 +		cat "${out}"
 +		err=1
 +		return
 +	fi
-+	if ! grep -q "The most commonly used perf commands are" "${out}"; then
-+		echo "perf help commands test [Failed missing command list]"
++	if [ -s "${out}" ]; then
++		echo "Empty config [Failed: unexpected output]"
 +		cat "${out}"
 +		err=1
 +		return
 +	fi
-+	if ! grep -q "See 'perf help COMMAND'" "${out}"; then
-+		echo "perf help commands test [Failed missing help hint]"
-+		err=1
-+		return
-+	fi
-+	echo "perf help commands test [Success]"
++	echo "Empty config [Success]"
 +}
 +
-+test_help_all() {
-+	echo "perf help -a test"
-+	# "available perf commands in" is printed only when the exec path holds
-+	# perf-* commands, which a build tree does not have. Give help -a a
-+	# temporary exec path with a dummy command to look for.
-+	exec_path=$(mktemp -d /tmp/__perf_test_help_exec.XXXXXX)
-+	printf '#!/bin/sh\n' > "${exec_path}/perf-dummy"
-+	chmod +x "${exec_path}/perf-dummy"
-+	if ! PERF_EXEC_PATH="${exec_path}" perf help -a > "${out}" 2>&1; then
-+		echo "perf help -a test [Failed: perf help -a failed]"
++test_config_set_get() {
++	echo "Config set and get test"
++	if ! perf config report.show-nr-samples=true call-graph.print-limit=5; then
++		echo "Config set [Failed: perf config failed]"
++		err=1
++		return
++	fi
++	if [ ! -s "${HOME}/.perfconfig" ]; then
++		echo "Config set [Failed: no config file]"
++		err=1
++		return
++	fi
++
++	if ! perf config --user report.show-nr-samples | grep -qx "report.show-nr-samples=true"; then
++		echo "Config get [Failed: wrong report.show-nr-samples]"
++		err=1
++		return
++	fi
++	if ! perf config --user call-graph.print-limit | grep -qx "call-graph.print-limit=5"; then
++		echo "Config get [Failed: wrong call-graph.print-limit]"
++		err=1
++		return
++	fi
++
++	if ! perf config --user --list > "${out}" 2>&1 ||
++	   ! grep -qx "report.show-nr-samples=true" "${out}" ||
++	   ! grep -qx "call-graph.print-limit=5" "${out}"; then
++		echo "Config list [Failed: missing variables]"
 +		cat "${out}"
 +		err=1
 +		return
 +	fi
-+	if ! grep -q "available perf commands in" "${out}"; then
-+		echo "perf help -a test [Failed missing command directory]"
++	if ! perf config --list > "${out}" 2>&1 ||
++	   ! grep -qx "report.show-nr-samples=true" "${out}"; then
++		echo "Config list [Failed: missing user variable in the merged view]"
 +		cat "${out}"
 +		err=1
 +		return
 +	fi
-+	if ! grep -q "  dummy" "${out}"; then
-+		echo "perf help -a test [Failed missing command from exec path]"
-+		cat "${out}"
++
++	if ! perf config report.show-nr-samples=false; then
++		echo "Config update [Failed: perf config failed]"
 +		err=1
 +		return
 +	fi
-+	echo "perf help -a test [Success]"
++	if ! perf config report.show-nr-samples | grep -qx "report.show-nr-samples=false"; then
++		echo "Config update [Failed: value not updated]"
++		err=1
++		return
++	fi
++	echo "Config set and get test [Success]"
 +}
 +
-+test_help_commands
-+test_help_all
++test_config_errors() {
++	echo "Config error test"
++	if perf config --user --system --list > "${out}" 2>&1; then
++		echo "Config error [Failed: --user --system succeeded]"
++		cat "${out}"
++		err=1
++		return
++	fi
++	if ! grep -q "only one config file at a time" "${out}"; then
++		echo "Config error [Failed: missing file option error]"
++		cat "${out}"
++		err=1
++		return
++	fi
++
++	if perf config nosection > "${out}" 2>&1; then
++		echo "Config error [Failed: invalid variable succeeded]"
++		cat "${out}"
++		err=1
++		return
++	fi
++	if ! grep -q "does not contain a section name" "${out}"; then
++		echo "Config error [Failed: missing invalid variable error]"
++		cat "${out}"
++		err=1
++		return
++	fi
++	echo "Config error test [Success]"
++}
++
++test_config_empty
++test_config_set_get
++test_config_errors
 +
 +cleanup
 +exit $err
