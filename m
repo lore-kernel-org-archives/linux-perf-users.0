@@ -1,74 +1,76 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795798944;
-	b=CWNms0LsoQAs2xTeBaMka4brByYHZvxJgWRoMjvkXwUOcziSJvJlT8VY7jbQmuunGXQa
-	 7HNLHy2F8t1fefwnUd5eqWZMnWm99bHtjTYYZ+MiU9FHXYSDGySEgg8g1WohZ9kDnsiCw
-	 2LUp8Kx9TrxryQjwX67ZLMDqQZpcYFMmJy9iXyYuS/ShEHfNr6o2DteW54/iLkBrSehzD
-	 LMuTZ+/7t7qbgVbbr55pn12F7M/Xoel5/TEpt3eksJXciry6A5JfO09tJlJWy37eMjsc0
-	 IaErTaw+Y3Mnd7DSn6yg6KJuEjczWLsUqDfhXH2mAar6wyJMzPx+/0fwy8gLo/4wwlA==
+	t=1795804683;
+	b=1E4qCel5s3TLQ1woGPosij44jeW9mxuefPVOQkd7o5/sQpqmHH9LhhnvPFAWgvMOxr6S
+	 CF1GEdg225gZgCGNQ2KuQ9QgmzB4EhAKwCw7C4Jw+fVa+XUM7sarf+Zk3ypnjHYXtaPdI
+	 yXtYI2C3u4rONeXADAy9cC7tX55ui+83G590Cgke4REB6caWlY8TuxLSSbQlwgrMC2ibQ
+	 fWR4IrVOyx6WJQCkAsh4fsBXwcKgmWxKR0nc2UxzmO3aa0eKij9XvXWB9VwmzJL+FSnGa
+	 fihkMS5SFvINo67dih61JgT+HL4fnolE2i2V+kFU+cVkzjJU4pzCAE5IHWKdhh89CXA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795798944;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=KxLg6Gx/zGlioMjDG7k4tE06ODo1W3pNMbUCbFfp87Y=;
-	b=hqout/7AmYXK5Xef8K0ULxrjdv4ca6sqjLBDIIbCsmriY7e5lYLQnam/aiiZov9jZwm8
-	 uLUyMQPjsl/VpZaVH95jZfuCTm8Bd7iFS26RUG7f2u4bWUQcLy0+K7YbxqH1IXSgNqKsb
-	 TxOi0bf2RSkzgjI0XZhiqKp73zRtaAlHLRZXz747vhliBk3CZ/acaN1YwH3LvbaQbWidI
-	 29v9tMUGDeQLmECdV2B8sX3JCI6Ajj0E1P4AfHq0FZ9orp1hjalv5L9ajRiFptstKZAXS
-	 EnPWDLsRf6gYiAhaK4stZjCSgZvA8rimf7cHcBiyKIHH5WhpWwZGat0+WDTnDhdNSiQ==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795804683;
+	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
+	 Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To;
+	bh=BWblz2p3e+RANKxaoCJc2peYHCm2/SRIz3+0ra5cwvs=;
+	b=ipsUahvfX9O0Yc9zeJzITMbtkJrA1933HuxHV+nwhtC4tBgPxJ8pLingzQYh1sh05kUj
+	 MMFmkbSQVitMFce6lCPyvK76LAljK5bxlKAuOXuxC4ZHKv3J6HNK9P/144ySIkD3R9of1
+	 Q81X+SrpkUHNAVbaEHkrSRCQVNXW/hCqsuUDHMB1+brupgTUv1jKteD+nssqDqgAtjc4B
+	 GgByhVOlwYoXtxIXimveMS1z68oNA2DrWzpIhZ0E9RMp0MNV8Rzu0shUMjPaX3BpSImmD
+	 HLh2GNd5HQeUpxrJG8tIIDX7bfi5Xcxe6l2EL6H37EVn5IbT+do+3HSTfAie77bg3sw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZBYG0roX;
-	arc=none smtp.remote-ip=100.103.45.18
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F026606A321;
-	Fri, 27 Nov 2026 17:02:24 +0000 (UTC)
+	dmarc=pass header.from=arm.com;
+	spf=pass smtp.mailfrom=arm.com;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=Pj8RMo4+;
+	arc=none smtp.remote-ip=217.140.110.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51910606A31C;
+	Fri, 27 Nov 2026 18:38:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 51910606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=ZBYG0roX
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 967F11F00936;
-	Fri, 27 Nov 2026 17:02:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795798943;
-	bh=KxLg6Gx/zGlioMjDG7k4tE06ODo1W3pNMbUCbFfp87Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ZBYG0roXlSFQCiyazn2M6kil0iU0nWj+gXJJ8FjOwJGMNnIO4++FGk70E6LvTcGLI
-	 pbGF8iqEAGEK/zRYx21P8HMuk1c2Tab1ZU7jI9pFwuxmfEED0vAwixWew1YjHqa4cK
-	 IP6YuRLcvu7MTlSh3ubjMezkAcJwMxGA2EFqZMtKW/eNUoc1NJVvLH2LdeUBnvlWza
-	 NtRJqvjCQrUD+8EWSVlZ2mkiYbfCMszP0LR2lig+fjt9uozxiWmBYzl3qo2La8TbIA
-	 LW0ytFjitfhYIWaid4WO+Yg4jdbGmzCPKQ8AWI6boJ6d4rceYl6KkmSQlFMMY8VSNQ
-	 IsMqNhea9ZK7Q==
-From: Sasha Levin <sashal@kernel.org>
-To: stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Sasha Levin <sashal@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=Pj8RMo4+
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 932731575;
+	Fri, 27 Nov 2026 10:37:59 -0800 (PST)
+Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7798F3F86C;
+	Fri, 27 Nov 2026 10:37:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1795804682; bh=WmazKbbRJkJgrB2424W6m6iKCFKjBQNVA1FAYPEAZmc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Pj8RMo4+8uVvzglyYRCuvg790viYUgDQspUF3aRjCZFHTiLXEeLCktxCz2Q7UPnWh
+	 4Z1ld8xUtlEp1n8tZigZexN643W7Amw3OqJikuSRR51zOqjfZIVcfNaTH0fln3cY1l
+	 SXQYNpjkf8/BO1QI4Ya//Lf7Zr/ObA7Ku4CQn1+s=
+Date: Fri, 27 Nov 2026 18:37:55 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	loongarch@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>,
+	Ian Rogers <irogers@google.com>, Oleg Nesterov <oleg@redhat.com>,
+	WANG Xuerui <kernel@xen0n.name>, Will Deacon <will@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
 	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>, Waiman Long <longman@redhat.com>,
+	Clark Williams <clrkwllms@kernel.org>,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	James Clark <james.clark@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
+	Namhyung Kim <namhyung@kernel.org>, Chris Zankel <chris@zankel.net>,
+	Max Filippov <jcmvbkbc@gmail.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Song Liu <song@kernel.org>,
-	Kyle Huey <me@kylehuey.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	bpf@vger.kernel.org,
-	alexander.shishkin@linux.intel.com,
-	Luo Gengkun <luogengkun@huaweicloud.com>
-Subject: Re: [PATCH stable/linux-6.6.y 0/9] perf/bpf: Fix NULL pointer dereference
-Date: Fri, 27 Nov 2026 12:01:17 -0500
-Message-ID: <2026-11-26-1-daily-reply-0029@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20261126043458.2394658-1-luogengkun@huaweicloud.com>
-References: <20261126043458.2394658-1-luogengkun@huaweicloud.com>
+	Jiri Olsa <jolsa@kernel.org>,
+	Ada Couprie Diaz <ada.coupriediaz@arm.com>
+Subject: Re: [PATCH v5] ARM, ARM64, LONGARCH, XTENSA: Delay HW BP
+ notification to task_work()
+Message-ID: <awnOAw-bnxDbljaE@arm.com>
+References: <20261120144553.TjgAd_G6@linutronix.de>
+ <20261120150320.GQ2668804@noisy.programming.kicks-ass.net>
+ <20261120155806.GK2669272@noisy.programming.kicks-ass.net>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -78,14 +80,68 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20261120155806.GK2669272@noisy.programming.kicks-ass.net>
 
-> We hit the following problem on x86:
->
-> 	BUG: kernel NULL pointer dereference, address: 0000000000000000
+On Fri, Nov 20, 2026 at 04:58:06PM +0100, Peter Zijlstra wrote:
+> On Fri, Nov 20, 2026 at 04:03:20PM +0100, Peter Zijlstra wrote:
+> > On Fri, Nov 20, 2026 at 03:45:53PM +0100, Sebastian Andrzej Siewior wrote:
+> > > Waiman, Luis, Ada reported that HW breakpoints on ARM64 trigger
+> > > "sleeping while atomic" warnings on PREEMPT_RT. The hardware event is
+> > > delivered with disabled interrupts and perf intrastrucure expects
+> > > disabled interrupts while the overflow callback is invoked.
+> > > 
+> > > The callback then sends a SIGTRAP signal for which it acquires
+> > > sighand_struct::siglock, a spinlock_t which becomes a sleeping lock and
+> > > must not be acquired in atomic context.
+> > > 
+> > > Delay the event callback until the return to userland.
+> > > Add perf_hwbp_notify(), a generic perf callback which delayes the
+> > > actual callback invocation to task_work_add() callback. This callback
+> > > invokes the architecture defined callback perf_arch_hwbp_send_sig().
+> > > This requires struct callback_head and the functions require
+> > > ARCH_NEED_PERF_HW_NOTIFY to be defined.
+> > > 
+> > > This was reported against ARM64. ARM, LongARCH and Xtensa follow the
+> > > same pattern are also converted. Xtensa is the only not supporting
+> > > PREEMPT_RT but now we have all architectures using the same pattern.
+> > > 
+> > > Fixes: d8fccd9ca5f90 ("arm64: Allow to enable PREEMPT_RT.")
+> > > Reported-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+> > > Reported-by: Waiman Long <longman@redhat.com>
+> > > Closes: https://lore.kernel.org/all/aho0eqjMESuHxECr@redhat.com/
+> > > Reviewed-by: Ada Couprie Diaz <ada.coupriediaz@arm.com>
+> > > Tested-by: Ada Couprie Diaz <ada.coupriediaz@arm.com>
+> > > Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > > ---
+> > 
+> > Mark; you was going to stare at this :-)
+> > 
+> > I'm thinking the archs are doing it wrong and should be sending the
+> > signal elsewhere.
+> 
+> Notably, I'm thinking arm64 should be sending the signal from either
+> do_watchpoint()/do_breakpoint(), after it has done perf_bp_event(),
+> or from el0_watchpt()/el0_breakpt().
+> 
+> Perf overflow handlers are not the place to send signals from.
+> 
+> That is very much what x86 also does, we send the signal from
+> exc_debug_user(); which is roughly equivalent to the above mentioned
+> functions.
 
-Queued the series for 6.6, thanks.
+(Mark and Will are the experts here but they are busy)
+
+I think we can do something similar for arm64, send the signal in
+el0_breakpt()/el0_watchpt() after local_daif_restore(). We do this with
+el0_brk64(). ptrace_hbptriggered() can just record the perf_event and
+defer the sending (we may need a new field in thread_struct::debug). No
+core code changes needed.
+
+I think Russell also objected to this patch for arm and Sashiko
+complains about loongarch issues (I haven't parsed them).
 
 -- 
-Thanks,
-Sasha
+Catalin
