@@ -1,78 +1,77 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=139.138.36.223
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=68.232.139.139
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795757839;
-	b=IH43BFjKvSuD+B70YHdh55XsJO4zj3m1zG0gpqzpSMMwuw4HuvcCOFvuXgd6u+zPdZ39
-	 RmiAhSeLJ6+edl0BhbK4glBBgWutBVk9GJ17g1yM2o6tJ9+Lv+9w3P/kwr4OvsrSLl9eF
-	 QDSoIV7REJe1v3jIUWYVmZ6vrplITz+f6/5/7+mCOHpUneLCqRTTSxdu/pJVojQ7POP7z
-	 7rc0IGoHgJF/huJhpjoCpU90vmX9po9s+ySVeN+IqDq4J2J+/p4am7FFmjKP9EErmD306
-	 S7sfy8Sjnf/ZGoJDOqGgxXu0OZk7ZxXHoZ6Ei+OVr4fELMZdvsj/82I1ZQugWyAQhVQ==
+	t=1795757846;
+	b=fglVIAG+B5+VoEi6G6QypiO0fNdGqpLM1WeFf0SNclngakLRPJB0auc9lqIR+E0e9uio
+	 Cgj3n9rWUh6YFjFPtgQ1FgnZq14/Rot3zqS4geo+TJn8JxK1qjpV748EQStiYYCmq9K3z
+	 4MYJjOHLto54LYwl+n89egEWhNgFDNzjKEB7IxFAULUp4SM/fgVa/PTqpqDgK6WnvE3Ad
+	 GKpjJCiCf+pmRwcf2UbO9Cp9V1e0M6thBVNr5juL9Oa/4T8F39lx6BO6uRSkUS2Kz8cs8
+	 VEW/jDMm+j8A+b3p7ESGvZXfKBmZ0rEjycmBqK7FmdPto5+Nylcl8Ct73jnDldXpclA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795757839;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795757846;
 	h=DMARC-Filter:DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
 	 X-IronPort-AV:X-IronPort-AV:Received:Received:Received:Received:From:
-	 Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:X-B4-Tracking:To:Cc:X-Mailer:
+	 Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key;
-	bh=Ju+S9oyc85uwedQeaMX1bcIVrmnLI/frBGJF0DcZf6E=;
-	b=dg7hN7ITMSfMMW0fdADmCiK4gAg+sJCaQIYGZlTLUw9rNBtxaEdQ40yut9r96bZcIOxg
-	 T3w7sYddxmpU7IOEnZOD5WIcohyp3jxROzvOo81QSzDexYOyLR+dG1C7v0FZc2pDAs1+a
-	 JVn18gThhuHZB3UgcXgkfvymBU1pCOW7+7rgzt6zM4qCJ9w0xwELb58TLRKtB4/tdMJDz
-	 EGqRWUyi9GhzRepcUA1fKSg2Z/aXmuBXUAP/O+e4K1VNiRPlgypqOiZj2KicD/OkcOBJy
-	 kmERb8xeTJwgTdwJgQf2snSPqkUeDoOmxaL9J9Kdx0LP4voWeX73SqTROJ2FtPzzb8A==
+	bh=tVnybqfQP+0SY9toa390RewPeBuG9wb3MHioOA0atLc=;
+	b=iemrgyYbAqoI6GbSsKJnoodrfINi9KkEM0u4B7QQLoZ2LPj/XqkO/j8yJrKlxcExmgmr
+	 HwnzCWSrZEU4+p4ai4L//yldkcfUoRWUFY31wF1DbB6XUU2xRs9rg9hpbm2pXN/Ftd0Ip
+	 mzS/h7mxNXEe+P+WXam2rjhS+WrHt6cW2c5dV62skyh9fL09tZHxZxc67og4vmxzGlwF7
+	 4ZVdwn9Gjqe1rqLDG2lZwJ2UuNCXn+oaObataZ8FOhN6mxrzu4EMrKnOMqvC96RP8uHu7
+	 2Dx0wVB3hUg3mnIhuBZVsEO+H60oZz2KLtoTRuJhKs2jRxD7Z/YMizSENDLUO50NjxQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=fujitsu.com;
 	spf=pass smtp.mailfrom=fujitsu.com;
-	dkim=pass header.d=fujitsu.com header.i=@fujitsu.com header.a=rsa-sha256 header.s=fj2 header.b=d2whCmrS;
-	arc=none smtp.remote-ip=139.138.36.223
-Received: from esa9.hc1455-7.c3s2.iphmx.com (esa9.hc1455-7.c3s2.iphmx.com [139.138.36.223])
+	dkim=pass header.d=fujitsu.com header.i=@fujitsu.com header.a=rsa-sha256 header.s=fj2 header.b=DWSt6B3d;
+	arc=none smtp.remote-ip=68.232.139.139
+Received: from esa6.hc1455-7.c3s2.iphmx.com (esa6.hc1455-7.c3s2.iphmx.com [68.232.139.139])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04B9606A31C;
-	Fri, 27 Nov 2026 05:37:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org A04B9606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A793606A321;
+	Fri, 27 Nov 2026 05:37:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5A793606A321
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.a=rsa-sha256 header.s=fj2 header.b=d2whCmrS
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.a=rsa-sha256 header.s=fj2 header.b=DWSt6B3d
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1795757839; x=1827293839;
-  h=from:subject:date:message-id:mime-version:
-   content-transfer-encoding:to:cc;
-  bh=idb+jXkILVxT03f1Wmltme/YCGuPkM4rAloBqQ13i5s=;
-  b=d2whCmrSvgXZG4i1W2pllyFc6rn6k/B00oN2FtIkFt3gmboBL5Hg/mif
-   SvTbQqdUUcgF9AL35y6KJ6udJPJE0B/po1jLLXglPD16n7CuVvzJ8KT7A
-   OJrPCPW+Sb8Lz7PgJfGzbISGNZEowL9PwUkT4pfbEPJAaIbu1mZuRT3m2
-   k3I+hyZfICh9FjLkY0E75qvnYZQuUajTgyZVSdmqEdeuwFTIgCp2KkFZx
-   ghGrXchgwP635ZaQmOb8/9Lz1tHX5v/RUiDpprpF0ejnYXP6k/PEKxEiy
-   PLd96rkCPpySbaKwF/BMWxwDO13y4HAnc6/pyyVkxnIBNT48/Dg87lFes
-   Q==;
-X-CSE-ConnectionGUID: g/UEa5BSSka3yJsam1tBpQ==
-X-CSE-MsgGUID: sezalC1CRbuiRQoUCRYxrg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11978"; a="250860196"
+  t=1795757854; x=1827293854;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=t70F907DzW+0QdbW9r0saLortrOhZdjwwGxQU9dlVtE=;
+  b=DWSt6B3dRzUL3QYlKn11chp/eWR0Udmw84e4LaU0r6Z3dxYEBgVk9nNs
+   WnA88YhD9+2NV5w12ZmUw3F9TfJP1ig6BrsQeA/fMaLKpk6u5tvVFT4Uc
+   7Me8NyBYkQd9/shZ5i3UmXXzs+3Rcs0Y/7ZGbNEXdgTtI6uPpuFUyLQov
+   FC5U+JkkO4ljzorR26JAe/tqRKK+H2zY+JQ7h7SR2Ap0d7Qpy4Xir5uKj
+   gIRc2SMTJpPhb/auhR3Fabir7noRBhI8NAgVXzsfGPEActd2s+C3g/9Lm
+   VIlJTRrsvlCq/frAZgs70hWyOFrprEprs00BaoElJ3e803c5QbaGOrhT2
+   w==;
+X-CSE-ConnectionGUID: lb/5sm0qTdyYf6qGwErJgg==
+X-CSE-MsgGUID: n8nL48JYRAam669t+3gZ3Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11978"; a="267417303"
 X-IronPort-AV: E=Sophos;i="6.27,236,1786978800"; 
-   d="scan'208";a="250860196"
-Received: from gmgwnl01.global.fujitsu.com (HELO mgmgwnl01.global.fujitsu.com) ([52.143.17.124])
-  by esa9.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2026 14:37:11 +0900
-Received: from az2nlsmgm2.o.css.fujitsu.com (unknown [10.150.26.202])
+   d="scan'208";a="267417303"
+Received: from gmgwuk01.global.fujitsu.com ([172.187.114.235])
+  by esa6.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2026 14:37:26 +0900
+Received: from az2uksmgm4.o.css.fujitsu.com (unknown [10.151.22.201])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mgmgwnl01.global.fujitsu.com (Postfix) with ESMTPS id 49CC810167;
-	Fri, 27 Nov 2026 05:37:11 +0000 (UTC)
+	by gmgwuk01.global.fujitsu.com (Postfix) with ESMTPS id 494C51002B91;
+	Fri, 27 Nov 2026 05:37:18 +0000 (UTC)
 Received: from az2uksmom4.o.css.fujitsu.com (unknown [10.151.22.204])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by az2nlsmgm2.o.css.fujitsu.com (Postfix) with ESMTPS id EECCD1C000C6;
-	Fri, 27 Nov 2026 05:37:10 +0000 (UTC)
+	by az2uksmgm4.o.css.fujitsu.com (Postfix) with ESMTPS id F3186140062C;
+	Fri, 27 Nov 2026 05:37:17 +0000 (UTC)
 Received: from [127.0.1.1] (unknown [10.124.178.20])
-	by az2uksmom4.o.css.fujitsu.com (Postfix) with ESMTP id E2031406873;
-	Fri, 27 Nov 2026 05:37:02 +0000 (UTC)
+	by az2uksmom4.o.css.fujitsu.com (Postfix) with ESMTP id 7952E4045EE;
+	Fri, 27 Nov 2026 05:37:10 +0000 (UTC)
 From: Tomohiro Misono <misono.tomohiro@fujitsu.com>
-Subject: [PATCH v4 0/5] arm64: Add workarounds for FUJITSU-MONAKA CPU
-Date: Fri, 27 Nov 2026 14:36:29 +0900
-Message-Id: <20261127-monaka-fix-for-upstream-v4-0-3395c415bbe4@fujitsu.com>
+Date: Fri, 27 Nov 2026 14:36:30 +0900
+Subject: [PATCH v4 1/5] arm64: cputype: Add FUJITSU MONAKA definition
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -84,10 +83,9 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAN4WCWsC/4XNSw6CMBCA4auQrq2ZlsrDlfcwLko7lWqgpAWiI
- dzdwkaNIS7/ycw3EwnoLQZyTCbicbTBujaG2CVE1bK9IrU6NuHAMwbAaeNaeZfU2Ac1ztOhC71
- H2dCsgAKYRllyQ+J15zHurPL5Eru2oXf+uT4a2TL9b46MAhUSFVSgKkzFyQw324dhr1xDFnXkH
- xLLtiUeJaNy1Jib0ojiV0rfEmPltpRGCQ65NkJzJVP1Lc3z/AKELkvHVAEAAA==
+Message-Id: <20261127-monaka-fix-for-upstream-v4-1-3395c415bbe4@fujitsu.com>
+References: <20261127-monaka-fix-for-upstream-v4-0-3395c415bbe4@fujitsu.com>
+In-Reply-To: <20261127-monaka-fix-for-upstream-v4-0-3395c415bbe4@fujitsu.com>
 To: Tomohiro Misono <misono.tomohiro@fujitsu.com>, 
  Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
  Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, 
@@ -104,82 +102,43 @@ Cc: Kohei Enju <enju.kohei@fujitsu.com>,
  linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org, 
  kvmarm@lists.linux.dev
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1795757822; l=3047;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1795757822; l=1299;
  i=misono.tomohiro@fujitsu.com; s=20261002; h=from:subject:message-id;
- bh=idb+jXkILVxT03f1Wmltme/YCGuPkM4rAloBqQ13i5s=;
- b=E8iwiA3EcZe5FSPZBag5pkUBQwUCUj0DqfD2h7OqcAjnzD2HeqTUwXIe9Y8NNlaHx/8Ef/ELv
- tqg7cY7bsKiDvn3NKaY++EwlUwqas92kYhYGa1ugGUVtHZl+tRooNmj
+ bh=t70F907DzW+0QdbW9r0saLortrOhZdjwwGxQU9dlVtE=;
+ b=uo0E+IarAjICrItkUNTDd7YTIlhjU6ClHbTKnjkdDTYC46jtdai+Js7t6184fHECST/PbUykE
+ 3NjjP4RzVEJBpj6YuT6vkUmsuxQSty4FTJX+cRWdyn9/LvpiSBkC6aW
 X-Developer-Key: i=misono.tomohiro@fujitsu.com; a=ed25519;
  pk=VLRxj5y4GJrHLmj3e2NBg30fX2U//ydi7c2G2qiNo10=
 
-This series adds workarounds for the FUJITSU-MONAKA CPU.
-Unfortunately, another erratum has been found since v2 and
-I added patch 5 for this new workaround.
- - Patch 1 ... Add the FUJITSU-MONAKA CPU type definition
- - Patch 2 ... Add a workaround for TLBI operation
- - Patch 3 ... Add a workaround for perf operation
- - Patch 4 ... Add a workaround for GIC operation
- - Patch 5 ... Add a workaround for WFE operation
+Add cpu part definition for FUJITSU-MONAKA.
 
-Although these workarounds do not depend on each other functionally,
-I have combined them into one series because patch 2-5
-use the CPU type definition added by the first patch,
-and all the workarounds update silicon-errata.rst.
-
-If preferred, I will resend them as separate patches.
-
-Best Regards,
-Tomohiro Misono
-
-Changes in v4:
-- Address Sashiko review, see each commits for the details
- - Rework TLBI workaround(patch 2)
- - Fix build error in GIC workaround(patch 4)
-- Link to v3: https://lore.kernel.org/r/20261119-monaka-fix-for-upstream-v3-0-057df4d2ca3c@fujitsu.com
-
-Changes in v3:
- - Add new workaround for WFE as patch 5
- - Address review comments in patch 2-4.
-   Especially now patch 2 disables TLBI range operations on MONAKA CPU.
-   See each commits for the details
- - Add Acked-by by Mark in patch 1
- - Rebased on 7.4-rc3
- - Link to v2: https://lore.kernel.org/r/20261016-monaka-fix-for-upstream-v2-0-fc7ede7f9f48@fujitsu.com
-
-Changes in v2:
- - Address review comments in patch 2-4. See each commits for the details
- - rebased on 7.3-rc7
- - Link to v1: https://lore.kernel.org/r/20261002-monaka-fix-for-upstream-v1-0-4aec0b0cbe34@fujitsu.com
-
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Tomohiro Misono <misono.tomohiro@fujitsu.com>
 ---
-Kohei Enju (1):
-      irqchip/gicv3: Add workaround for FUJITSU-MONAKA Erratum E#030003
+ arch/arm64/include/asm/cputype.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Tomohiro Misono (4):
-      arm64: cputype: Add FUJITSU MONAKA definition
-      arm64: tlb: Add tlbi workaround for FUJITSU-MONAKA Erratum E#030001
-      perf: arm_pmu: Add workaround for FUJITSU-MONAKA Erratum E#030002
-      arm64: Add workaround to replace WFE with NOP for FUJITSU-MONAKA Erratum E#030004
+diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
+index 6002d1d5f55f..fff0f460f43f 100644
+--- a/arch/arm64/include/asm/cputype.h
++++ b/arch/arm64/include/asm/cputype.h
+@@ -139,6 +139,7 @@
+ #define NVIDIA_CPU_PART_RIGEL		0x011
+ 
+ #define FUJITSU_CPU_PART_A64FX		0x001
++#define FUJITSU_CPU_PART_MONAKA		0x003
+ 
+ #define HISI_CPU_PART_TSV110		0xD01
+ #define HISI_CPU_PART_HIP09			0xD02
+@@ -237,6 +238,7 @@
+ #define MIDR_NVIDIA_OLYMPUS MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, NVIDIA_CPU_PART_OLYMPUS)
+ #define MIDR_NVIDIA_RIGEL MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, NVIDIA_CPU_PART_RIGEL)
+ #define MIDR_FUJITSU_A64FX MIDR_CPU_MODEL(ARM_CPU_IMP_FUJITSU, FUJITSU_CPU_PART_A64FX)
++#define MIDR_FUJITSU_MONAKA MIDR_CPU_MODEL(ARM_CPU_IMP_FUJITSU, FUJITSU_CPU_PART_MONAKA)
+ #define MIDR_HISI_TSV110 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_TSV110)
+ #define MIDR_HISI_HIP09 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_HIP09)
+ #define MIDR_HISI_HIP12 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_HIP12)
 
- Documentation/arch/arm64/silicon-errata.rst |  8 ++++
- arch/arm64/Kconfig                          | 58 +++++++++++++++++++++++++++++
- arch/arm64/include/asm/assembler.h          |  4 ++
- arch/arm64/include/asm/barrier.h            |  3 +-
- arch/arm64/include/asm/cmpxchg.h            |  4 +-
- arch/arm64/include/asm/cpucaps.h            |  6 +++
- arch/arm64/include/asm/cputype.h            |  2 +
- arch/arm64/kernel/cpu_errata.c              | 32 ++++++++++++++++
- arch/arm64/kernel/cpufeature.c              | 17 +++++++++
- arch/arm64/tools/cpucaps                    |  3 ++
- drivers/irqchip/irq-gic-v3.c                | 35 +++++++++++++++++
- drivers/perf/arm_pmu.c                      | 13 +++++++
- 12 files changed, 182 insertions(+), 3 deletions(-)
----
-base-commit: b6a9fa34ce4187cb69d3c588a4bbffc31ce5db8f
-change-id: 20261002-monaka-fix-for-upstream-680801dea92f
-
-Best regards,
 -- 
-Tomohiro Misono <misono.tomohiro@fujitsu.com>
+2.43.0
 
