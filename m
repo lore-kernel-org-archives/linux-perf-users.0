@@ -1,89 +1,90 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.128.169
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795755791;
-	b=W1+AVoyHLsOL4F0KK+NNgbvSpC6NbbnpTNpIhut07p4DdaLO/DBk3QRH98BuqrbfZ6DD
-	 w8Z007YkYieIkknqp91w4w+XPmUM7LFf7Y9jw5XtN2ioOzv2sXXdVf331mS3W5Zr15qZ+
-	 LSz5qeOb+7kNubbcOxvSH1m69oS9P8LrWBY2I+FHzksw15dE4EHf7yx7fPPYls1kCfSSW
-	 9N9sIij/7zEHOb+9S09H0KhCYtzmU4k1mJwXv1VjDeNPIzXIlqBaQ0dZ+VBWYAoEFk7b9
-	 ETFyF3UCAsRvtmbxz/vaKohkPHv+xhTymYWV4RCmIYy9m+UA+EPpQYYGjyC3ByKa6NA==
+	t=1795755794;
+	b=yzTQ49WAnb/aiFIl+yzMr8wiOkyWKBZnPL4WVwUNEx2gI9+ydM3Yybh/2uGp0o7PjU0V
+	 JGUP6YDEKavo6SRH+lA+INXWw1rBCM/dq7jPLHMi0QERHr4FAcc9AoNe9QLRGTQ0ede29
+	 tr72sDSN6eC+i3zpLnIl0P6/2U2Ei3lQe8K7y8d+6kwpj59EJbBH0pMzlx4ixKl/NhAOt
+	 RxP2MPpFllOZnpDMviC6G4EEQib1nUQrQsB9n/O1Y1qDSic8O8cvijcwunYTeYGisSOWv
+	 +7/hSwnvXAGnCUUgwNeG0MeWFUNdj98dTjyPGrWtott+yw6rBsKQ2szgTy9E5jmdEQQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795755791;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795755794;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
 	 From:Date:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	 Message-Id:References:In-Reply-To:To:Cc:X-Mailer:
 	 X-Developer-Signature:X-Developer-Key;
-	bh=NU6B5ejr1ZtQh+3o0BJNPa3k/4FRNqGMZ46W+lKcYxw=;
-	b=IP22U2KCnMWN1Hku/MVHtGiuqmQNYKITDq44pMD+tmyDN9hjmeQdQPaYaAoksvk/l1qn
-	 91hOzOhcIH/S6evzIqzZINRGCygAhNgO1oOilz2/g02TjA0JWgJXp5U7tGghOs9IILxWV
-	 qb9bx1dLKO3Zut76ITf9aya+pOQ/uE9Hx46kYGQY24thbboYYaiDRRmNgAW7ig5d0IVXf
-	 4VMsa+bRwm/MWVoYulyALkilU65XNsI1Fjgh3cg40Vg1rKCw30rmsbzbY3188oiejp8vq
-	 XjMBEvnfTnE0OyCwVRz3oPQ4/chzx86eezpuc1haQ5oRkU2v0C5plqxSc0VpAoPcakg==
+	bh=t8OXfROPB6uxAnJi0tzx26fxcmhnTza3+rRcXH/CCIU=;
+	b=ODkKqpUcaSF0CDXKcl0cKM0odeRnofc4Fwa0vPQ6SfyC0NxvdQXSRt8OsqOwkKkMK0FP
+	 01J8Thv5BUy8I8dpvQkhDjH9k7/Ry1OWK0/YdZOjE0DelrsYgKc99F9GtNpuvTUfmJFAt
+	 sPAG7+VZm9cVfxlJapiq3YGZupZ5I9P5f3BYC3OeaMOmBFWBDIaBzxhdpA5osoR5NXwJY
+	 mJIrWueArYw2fJu/GGZlm8qXVzxFUE8l/6zv33/iK3JIg47C9/uerBQ2mZASL4InI/hAq
+	 rXaOy/PTwIDS3/19tvv6xnQJu8up9vL9PhnE/SA5hUBNy2GTbrk9Nj5fkM4flS9GKlA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=BwwOuJy6;
-	arc=none smtp.remote-ip=209.85.128.174
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=MoxLb7KA;
+	arc=none smtp.remote-ip=209.85.128.169
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D53606A31C
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Nov 2026 05:03:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 98D53606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2888F606A32F
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Nov 2026 05:03:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 2888F606A32F
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=BwwOuJy6
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-8b2d14968c9so72719467b3.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 26 Nov 2026 21:03:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=MoxLb7KA
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-8b0ca1ebc8bso66797277b3.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 Nov 2026 21:03:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795755789; x=1796360589; darn=vger.kernel.org;
+        d=gmail.com; s=20260707; t=1795755792; x=1796360592; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=NU6B5ejr1ZtQh+3o0BJNPa3k/4FRNqGMZ46W+lKcYxw=;
-        b=BwwOuJy6uvc4IAzuXBsOaWxx/pasVbTFmA4pe3OGuXfBZkuGTnl8b6aa2UDBnT0Cjp
-         g9Ta7yuATsT5Rqk2wQTwWjQaDKs2UsusPEcYsz9yyp5/ur90QT7AClsD/uAYMFY3LY56
-         GLO6j1G3DmjzG6mlbRJPidoqp3cJ5D+jqE9kEmVeIc7BJ8ayNlVwrGA0rYz1lXiP23mq
-         2czfJjjDqeHQXf2wTpuXkfkViiZebIQFw07yAgT/FogZ6bOwrR62uMlwoNw7R5hUTOni
-         IFmO17FAosOJC8+yNJz1x7YWCo2mkGnASlVe39T6+guj2EDDDgfijovUq6glqlKo+2Ia
-         gePg==
+        bh=t8OXfROPB6uxAnJi0tzx26fxcmhnTza3+rRcXH/CCIU=;
+        b=MoxLb7KAmeMfVH9axfx8dt0QiXxxIlQJJ3czDPrzZL1HlMxVBMs/NVR/vFPJzSfv8d
+         5//3852Y4/mHfC/RLCZ4Q6gqQQkJALfr8qRqTvpKp/MxeIdguuAtchr9cBvqFMzvMI//
+         ZgfMbmIyvy1eKu1c99HjzNHHcKVVvYOm9u/85LSAlDxOrpi2te9S77qTE14H/CeqqVGw
+         bXczwk2EYkFyOR05tFjsLjyqW4dgMCbmdevkM1iZeCvkHe/8AtykRHNLggasi2peEK6g
+         +oVgGhxqum9L9rfFUyC0pMbsJ+UNBXbx3hNVDjDf6ILbZA8v66IwhSGF+fAMLX1z+L3M
+         GmCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795755789; x=1796360589;
+        d=1e100.net; s=20260707; t=1795755792; x=1796360592;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=NU6B5ejr1ZtQh+3o0BJNPa3k/4FRNqGMZ46W+lKcYxw=;
-        b=u0IYaBBmiYxE3UMBRwFfFtivja77BqSh4rgiDJnKfXGeL5lciI/TCZNO/Iw3nYL60/
-         T5R0om63KjonYLwWZzXaoy+ainyLQJRBLkBnsj4ES915EF7oXTXCiLsE4gxQvjmbCOa+
-         xf0VEiRn1K4LBpfWB2v6L/vs3PG8wmyuhW885Id/qtvIkJBoK3FkvkidPjO+PqHoZXgn
-         Sx2c7wnMSnxQY7MzzuqA4teuBCZcnZQCMO81p+yV3DJJTx/4EjdgZafJnT3XQy3RsMZM
-         QEKSs4PJg6lY/mBdei8A/vHje+7EI7O+/RJMjx2UMzq+tNG6cRiOOTLXIglrdyflLX5y
-         qHtA==
-X-Forwarded-Encrypted: i=1; AL+hErGx3zVy6vxF0esibpJkFuPnvRNGYGyLZD0YrXan4dU9LsF/a+rDPExxz2KE3xp4P97NQPVyG9Ipaw/fORZNDtc8@vger.kernel.org
-X-Gm-Message-State: APuU4Z+kJ+wDhPJOS+Mbo4Esgypwz2oUb0AEz1HI5KqRSimqLevD+Stq
-	oEjRgriGGfmDNh3cpIy/xtvrMmFLKCVIv8VkTpxZ4RizyLrwJDRVajSl5SHGOrVpa6A=
-X-Gm-Gg: AZFdTZfsndlTuGDZlO/7FlF2hpIRhMEjQJXQqE02vzQgJl2YIWPvfd1EafVjYRhYuPT
-	UJpqnJG/QUgE0ukE8PFDX8XCfrtPZy1WkRlpVVEe0uKBmL+eCzhG5nH/9SGk4zzVCUQWaIGxwcM
-	rPA5nkWnrBJzK0YCbMQoibe8yyRdYKq3yn95+VVPRBKGoAGafZNqnlLG2yMd9fJh2Fi+zpAd/t6
-	Lm+m2gGYGsNRijsoQCbESrcUtYVktcpbAjyb+h2apXrr0OQPo6Ht9QK0LFOBm7AW/NC01+VQx1g
-	7xNfO0Y3LXYqF6F+CCxnHHw66lip2RxMfI84Z9Z8YktfNNkDmreMhq4CW+1+xTcOFfVz01+1ftT
-	gL3ovYHDSjjedFOfXHzXVIHdc+MiAgqYv7WGii0iFC/J3CgCNzhe6Jjvi5HF1kn0rEfL3aooBfP
-	AP+aXhYdZgyi5S1FEwMfQuWKO71FFzDEnDE+2EQX1yn94EFDyhxRcqu6O9j87GOULJHUJbsHBPA
-	RwYfasFwYlyGGOnJmnS8UC5vFLAsX/AQsSsYwlQYxKrMsLDYM39fKQ2frTJ/rC1TbeQ1rYTfkmj
-	Akxxmc3jlpYEJ8Vt5YWHdP2+3q3bvCHzQl8CLeoRv54zBauF/lE9ju1RNVFciTibJXvkSilVoX4
-	1L/hQQbiax6Qp/hdPH3r1kG6DmuFgm/F2h/fWu5NyDA==
-X-Received: by 2002:a05:690c:29a:b0:8b3:6d4e:3f60 with SMTP id 00721157ae682-8b520507308mr72678507b3.61.1795755789170;
-        Thu, 26 Nov 2026 21:03:09 -0800 (PST)
+        bh=t8OXfROPB6uxAnJi0tzx26fxcmhnTza3+rRcXH/CCIU=;
+        b=gAfRikqqxhJHBDQIVKd5K0H+9Lym9h0H2LbwGNYQ/NFF0OJC9Flx622IYJFw2Od9qV
+         wdK3TjU/jn2cKz6f+38g4H5eVaNswmN4jPaZekBAoRrxBlAS4RbzuFxjIOEbJucAvTc0
+         5BHOj7kVVSb78EVIw++8bZaMihiMzK4LlAUxDnjnxmLG3mppp8nPN331reKWw9csGEcm
+         bm/02wNqkXxMkDs3z3b+Ptz8TDt16IbRnimjBss0xL5k7DJ0laCfU1+ehaQRT+fop5UV
+         7DGFfJDN3E/x6pWwPmSvwuUYXB37dXlyaylBEH346PiZ0l2fMq2uC7oEkwQ6lQan++rn
+         ngTg==
+X-Forwarded-Encrypted: i=1; AL+hErGS6KLh1qPmq3xID+TW9XonklyRWgkWCi6OVODmDOeEuFoEW5Bm3WwB/szP2yt6BBE/ZgpHWckLIYHAlQFdvKcM@vger.kernel.org
+X-Gm-Message-State: APuU4Z//Pp9/M+w04w2JL8xcBapZdrEJOG94jdf5plPXwi2xZLdGnCgJ
+	5+a0pLpiumDNj3Fgy8ViCJShiC68J6E3s9slhiNEiLl/evvb0m/wgYmB
+X-Gm-Gg: AZFdTZdRC4zZXVmAM6lCQ2nochx7ivSlhnewkfgK8EsvrMDk697zaFwSa7Qr7RDn9As
+	biVbeWVjKIctX5TTAB6kRkaJFZkrlZ+z++O4bjKnRkd1YsDKOgIOPGwOJmW9cP+BaJnESLuZKBE
+	qxekP1eavviRheOEBAXP2+r56iqBI+hJW341uq2y6a0KUFRigAvgYN/NzVZb6YBpu08wV6ab9LR
+	Sqw/j1HaQ+X71CGYLG+NsOnchIuQj2M5idn55XAu7UlwELVUxGNMsHghUeSLywPtqR/ReHcVZN6
+	lQYhWay3SvMZhgt5LyozxrrULWUg41vshjRd6a0eAPrik49lSJU1Dcj8O53EeWwOinIhjXDVHMM
+	xR/5Q75GjLbR5/9+Lb5x9xzQZJ08lXiKJJzLKVEhBrRKPmHNmvXoo0L4ysU4i/Ewpob3MlV50Ef
+	OnrI5+Q6ePFLnpcH6KZxTWEGtCiG43IVcqT/+7PTNaWeEWpAAWjgdxNlGwm75YH1i2nO9OI+KFR
+	XO5g/CYHiX2jxhn7/ggZyhYjXjOYKi3U9DqqwscIoatmMTuZJOds7tS/Ig5itxkCAsYNnILRCuI
+	4R10hUjt3+kPNYvv3QEoihhMxQQVD299r9s6vipg93l0vDXBHVKaGY0U3lSZZfvtlwJNWcfCNZE
+	olXf1thiF9imidY6kbaDjwjLQSYIYKIU8CRf91XklhA==
+X-Received: by 2002:a05:690c:968c:b0:8b4:fc74:a00 with SMTP id 00721157ae682-8b5204a1396mr111045827b3.27.1795755791699;
+        Thu, 26 Nov 2026 21:03:11 -0800 (PST)
 Received: from localhost ([2600:1702:7a90:6f9f:8bc4:8aec:108d:7a04])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-8b5202bf474sm91726777b3.21.2026.11.26.21.03.06
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-67df3378f59sm10383728d50.14.2026.11.26.21.03.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Nov 2026 21:03:07 -0800 (PST)
+        Thu, 26 Nov 2026 21:03:10 -0800 (PST)
 From: Matt Turner <mattst88@gmail.com>
-Date: Fri, 27 Nov 2026 00:02:57 -0500
-Subject: [PATCH 4/7] parisc: perf: program the PA-8800/PA-8900 counters
+Date: Fri, 27 Nov 2026 00:02:58 -0500
+Subject: [PATCH 5/7] parisc: perf: add a perf events PMU for
+ PA-8800/PA-8900
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -95,7 +96,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20261127-parisc-perf-pa8800-v1-4-4f3f077010ce@gmail.com>
+Message-Id: <20261127-parisc-perf-pa8800-v1-5-4f3f077010ce@gmail.com>
 References: <20261127-parisc-perf-pa8800-v1-0-4f3f077010ce@gmail.com>
 In-Reply-To: <20261127-parisc-perf-pa8800-v1-0-4f3f077010ce@gmail.com>
 To: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
@@ -109,668 +110,821 @@ To: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
 Cc: linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-perf-users@vger.kernel.org, Matt Turner <mattst88@gmail.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=22659; i=mattst88@gmail.com;
- h=from:subject:message-id; bh=ho5U7UtcjoP7GTaZ9QRFbMYgF5tvHpalaQa46i2sQUk=;
- b=owGbwMvMwCW25rVmCc8sv+mMp9WSGLI5+f6fz8u0TFSyriuQ2pEXdjtAV3bB00POXD7HhVSqf
- 1XtX6Ha8ZGFQYyLYaaYIkvcekWWWW07lvqclv4FM4eVCWSItEgDAxCwMPDlJuaVGukY6ZlqG+oZ
- Ahk6RvEQOT0Gjczi4tLUIt20giKHvPySxJLM/LxivfyC1LyC9AK9tMy0koyM/KLiVKARenmpJaa
- ujm5GhgYmlo4WZk4WjqYmzs5Ohk5ujo7Ork5GluYmBs6WjiauluYMXJwCMNds3s7IcKhosiNPmX
- VtWP8T5WrP6+XrdyjzsyzceYV71RX7V9tNpjEyXOiq8zb3eLanWJ7/WtqJZtXPOhEBlpWrFHsmn
- toaO+EpPwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=23398; i=mattst88@gmail.com;
+ h=from:subject:message-id; bh=fuQ5hjAH1GdSdhuV8vsteIeI0Bj/o+Xe1Q1oXEK5hek=;
+ b=owGbwMvMwCW25rVmCc8sv+mMp9WSGLI5+f4Lf0m2UTzccb9FSOlEmO4R/tkMMxv+fN96+V5sl
+ NPa0tc6HR9ZGMS4GGaKKbLErVdkmdW2Y6nPaelfMHNYmUCGSIs0MAABCwNfbmJeqZGOkZ6ptqGe
+ IZChYxQPkdNj0MgsLi5NLdJNKyhyyMsvSSzJzM8r1ssvSM0rSC/QS8tMK8nIyC8qTgUaoZeXWmL
+ q6uhmZGhgYuloYeZk4Whq4uzsZOjk5ujo7OpkZGluYuBs6WjiamnOwMUpAHPNM0+G/547fZ5HHF
+ eefTTY2Df+3Mo9pTsSpxxbtveI36br+qbB1eKMDGeWdBWYNYo5+37dupPxyGvfl1IO+5ru8B3an
+ 7Btyt7Lv/gA
 X-Developer-Key: i=mattst88@gmail.com; a=openpgp;
  fpr=3BB639E56F861FA2E86505690FDD682D974CA72A
 
-On PA-8800 and PA-8900 (Mako) /dev/perf uses the PCX-W2 bitmasks and the
-PCX-W images, which do not match Mako's RDRs, and reads the counters from
-chain 0 RDR15, which does not exist there. PA_PERF_OFF fails and writing
-an image shifts the wrong number of bits into the wrong RDRs.
+Expose the PA-8800/PA-8900 counters to perf as the "cpu" PMU, so that
+perf stat works. The generic cycles and instructions events map to the
+counters of the default image, and raw events select what ctr0 counts:
 
-Add a separate Mako path that loads the first built-in image of the C8000
-PDC 2.13 firmware, in the order and with the masks the firmware's
-PDC_INTRIGUE implementation uses. Masked RDRs are merged with their
-current contents, so the RDRs that hold live state are kept.
+  event=0  cycles                     ctr1 or ctr3
+  event=1  instructions               ctr2
+  event=2  tlb-misses                 ctr0
+  event=7  dtlb-misses                ctr0
+  event=8  itlb-misses                ctr0
+  event=9  nonnullified-instructions  ctr0
 
-The image is changed in RDR16_1 so that every core counts TLB misses on
-ctr0, cycles on ctr1 and ctr3, and instructions retired on ctr2. The
-firmware's image enables only ctr0 and ctr1 of the first core.
+The first byte of RDR4_0, which each core has its own copy of, selects
+what ctr0 counts. Bit 6 leaves out the data TLB misses and bit 7 the
+instruction TLB misses, and bit 3 makes it count retired instructions
+that are not nullified. The other event codes are left for the events
+that need more of the image changed.
 
-RDR15_1 holds the counters of both cores of a processor, four each in
-32-bit words, and reading it shifts it out. Read it and write it back,
-clearing only the half of the running core (DR2 bit 54), so that loading
-on one core does not reset the other one.
+The counters cannot interrupt and do not tell privilege levels apart, so
+sampling and the exclude bits are not supported. They are 31 bits wide:
+a counter wraps from 0x7fffffff to 0 and sets bit 31, which stays set.
+At four instructions a cycle ctr2 wraps in about half a second, so a
+per-CPU hrtimer reads them every 200 ms while events are active. Reading
+needs the counters stopped and shifts RDR15_1 out and back in.
 
-pmenb before an image has been loaded takes an HPMC, so PA_PERF_ON loads
-the image the first time it is used on a CPU and only runs pmenb after
-that.
+The image is loaded again, which restarts the counters from zero, only
+when what ctr0 counts changes.
+
+/dev/perf programs the same counters, so it cannot be opened while perf
+events exist, and the other way around.
 
 Signed-off-by: Matt Turner <mattst88@gmail.com>
 ---
- arch/parisc/kernel/Makefile          |   4 +-
- arch/parisc/kernel/perf.c            |  33 +++--
- arch/parisc/kernel/perf_mako.c       | 260 +++++++++++++++++++++++++++++++++++
- arch/parisc/kernel/perf_mako.h       |  20 +++
- arch/parisc/kernel/perf_mako_image.h | 208 ++++++++++++++++++++++++++++
- 5 files changed, 512 insertions(+), 13 deletions(-)
+ arch/parisc/kernel/Makefile          |   1 +
+ arch/parisc/kernel/perf.c            |   4 +-
+ arch/parisc/kernel/perf_event_mako.c | 414 +++++++++++++++++++++++++++++++++++
+ arch/parisc/kernel/perf_mako.c       | 183 ++++++++++++++--
+ arch/parisc/kernel/perf_mako.h       |  25 +++
+ 5 files changed, 605 insertions(+), 22 deletions(-)
 
 diff --git a/arch/parisc/kernel/Makefile b/arch/parisc/kernel/Makefile
-index 49f937c2abbe..90140593be54 100644
+index 90140593be54..2dcd74fe5cbc 100644
 --- a/arch/parisc/kernel/Makefile
 +++ b/arch/parisc/kernel/Makefile
-@@ -32,8 +32,8 @@ obj-$(CONFIG_64BIT)	+= sys_parisc32.o signal32.o
+@@ -32,6 +32,7 @@ obj-$(CONFIG_64BIT)	+= sys_parisc32.o signal32.o
  obj-$(CONFIG_STACKTRACE)+= stacktrace.o
  obj-$(CONFIG_AUDIT)	+= audit.o
  obj64-$(CONFIG_AUDIT)	+= compat_audit.o
--# only supported for PCX-W/U in 64-bit mode at the moment
--obj-$(CONFIG_64BIT)	+= perf.o perf_asm.o $(obj64-y)
-+# only supported in 64-bit mode at the moment
-+obj-$(CONFIG_64BIT)	+= perf.o perf_mako.o perf_asm.o $(obj64-y)
++obj64-$(CONFIG_PERF_EVENTS)	+= perf_event_mako.o
+ # only supported in 64-bit mode at the moment
+ obj-$(CONFIG_64BIT)	+= perf.o perf_mako.o perf_asm.o $(obj64-y)
  obj-$(CONFIG_GENERIC_ARCH_TOPOLOGY)	+= topology.o
- obj-$(CONFIG_FUNCTION_TRACER)		+= ftrace.o
- obj-$(CONFIG_FUNCTION_GRAPH_TRACER)	+= ftrace.o
 diff --git a/arch/parisc/kernel/perf.c b/arch/parisc/kernel/perf.c
-index 2494f16bb8fd..0b9619d18766 100644
+index 0b9619d18766..113fe97e6c5f 100644
 --- a/arch/parisc/kernel/perf.c
 +++ b/arch/parisc/kernel/perf.c
-@@ -43,6 +43,7 @@
- #include <asm/io.h>		/* for __raw_read() */
- 
- #include "perf_images.h"
-+#include "perf_mako.h"
- 
- #define MAX_RDR_WORDS	24
- #define PERF_VERSION	2	/* derived from hpux's PI v2 interface */
-@@ -56,6 +57,7 @@ struct rdr_tbl_ent {
- 
- static int perf_processor_interface __read_mostly = UNKNOWN_INTF;
- static int perf_enabled __read_mostly;
-+static bool perf_mako __ro_after_init;
- static DEFINE_SPINLOCK(perf_lock);
- static struct parisc_device *cpu_device __read_mostly;
- 
-@@ -140,7 +142,7 @@ static const struct rdr_tbl_ent perf_rdr_tbl_W[] = {
- };
- 
- /*
-- * RDR register descriptions for PCX-W2 (PA-8700). RDR11, RDR12, RDR13,
-+ * RDR register descriptions for PCX-W2 (PA-8700).  RDR11, RDR12, RDR13,
-  * RDR22, RDR23, RDR27 and RDR30 differ from PCX-W.
-  */
- static const struct rdr_tbl_ent perf_rdr_tbl_piranha[] = {
-@@ -213,7 +215,7 @@ static const uint64_t perf_bitmasks_piranha[] = {
- };
- 
- static const uint64_t *bitmask_array;   /* array of bitmasks to use */
--static const struct rdr_tbl_ent *perf_rdr_tbl_cuda __ro_after_init;
-+static const struct rdr_tbl_ent *perf_rdr_tbl_cuda __read_mostly;
- 
- /******************************************************************************
-  * Function Prototypes
-@@ -333,6 +335,12 @@ static ssize_t perf_write(struct file *file, const char __user *buf,
- 	uint32_t interface_type;
- 	uint32_t test;
- 
-+	if (!perfmon_capable())
-+		return -EACCES;
-+
+@@ -290,7 +290,7 @@ printk("Preparing to start counters\n");
+ static int perf_open(struct inode *inode, struct file *file)
+ {
+ 	spin_lock(&perf_lock);
+-	if (perf_enabled) {
++	if (perf_enabled || (perf_mako && !perf_mako_dev_get())) {
+ 		spin_unlock(&perf_lock);
+ 		return -EBUSY;
+ 	}
+@@ -307,6 +307,8 @@ static int perf_release(struct inode *inode, struct file *file)
+ {
+ 	spin_lock(&perf_lock);
+ 	perf_enabled = 0;
 +	if (perf_mako)
-+		return perf_mako_write(buf, count);
-+
- 	if (perf_processor_interface == ONYX_INTF)
- 		image_size = PCXU_IMAGE_SIZE;
- 	else if (perf_processor_interface == CUDA_INTF)
-@@ -340,9 +348,6 @@ static ssize_t perf_write(struct file *file, const char __user *buf,
- 	else
- 		return -EFAULT;
++		perf_mako_dev_put();
+ 	spin_unlock(&perf_lock);
  
--	if (!perfmon_capable())
--		return -EACCES;
--
- 	if (count != sizeof(uint32_t))
- 		return -EIO;
- 
-@@ -474,11 +479,17 @@ static long perf_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 
- 	    case PA_PERF_ON:
- 			/* Start the counters */
--			perf_start_counters();
-+			if (perf_mako)
-+				error = perf_mako_start();
-+			else
-+				perf_start_counters();
- 			break;
- 
- 	    case PA_PERF_OFF:
--			error_start = perf_stop_counters(raddr);
-+			if (perf_mako)
-+				error_start = perf_mako_stop(raddr);
-+			else
-+				error_start = perf_stop_counters(raddr);
- 			if (error_start != 0) {
- 				printk(KERN_ERR "perf_off: perf_stop_counters = %ld\n", error_start);
- 				error = -EFAULT;
-@@ -540,12 +551,12 @@ static int __init perf_init(void)
- 		 boot_cpu_data.cpu_type == mako2) {
- 		perf_processor_interface = CUDA_INTF;
- 		perf_rdr_tbl_cuda = perf_rdr_tbl_W;
--		if (boot_cpu_data.cpu_type == pcxw2)
-+		if (boot_cpu_data.cpu_type == pcxw2) {
- 			perf_rdr_tbl_cuda = perf_rdr_tbl_piranha;
--		if (boot_cpu_data.cpu_type == pcxw2 ||
--		    boot_cpu_data.cpu_type == mako ||
--		    boot_cpu_data.cpu_type == mako2)
- 			bitmask_array = perf_bitmasks_piranha;
-+		}
-+		perf_mako = boot_cpu_data.cpu_type == mako ||
-+			    boot_cpu_data.cpu_type == mako2;
- 	} else {
- 		perf_processor_interface = UNKNOWN_INTF;
- 		printk("Performance monitoring counters not supported on this processor\n");
-diff --git a/arch/parisc/kernel/perf_mako.c b/arch/parisc/kernel/perf_mako.c
+ 	return 0;
+diff --git a/arch/parisc/kernel/perf_event_mako.c b/arch/parisc/kernel/perf_event_mako.c
 new file mode 100644
-index 000000000000..e717ac0c97c8
+index 000000000000..f43c8a6cf13d
 --- /dev/null
-+++ b/arch/parisc/kernel/perf_mako.c
-@@ -0,0 +1,260 @@
++++ b/arch/parisc/kernel/perf_event_mako.c
+@@ -0,0 +1,414 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ * PA-8800/PA-8900 (Mako) performance counters
++ * perf events for the PA-8800/PA-8900 (Mako) performance counters
 + *
-+ * Each core has four counters in RDR15 of RDR chain 1, which the two cores
-+ * of a processor share: the first four 32-bit words belong to the core
-+ * with DR2 bit 54 clear. A counter is 31 bits wide; bit 31 is set when it
-+ * wraps and stays set. Before shifting chain 1, a core requests it by setting
-+ * DR2 bit 48 and waits for the grant in DR2 bit 53. Writes to both chains
-+ * are bracketed by setting and clearing bit 56 of RDR9 on chain 1. The
-+ * order and the image are those of the C8000 PDC 2.13 firmware's
-+ * PDC_INTRIGUE implementation.
++ * Each core has four 31-bit counters (see perf_mako.c):
 + *
-+ * pmenb before an image has been written takes an HPMC, so the counters
-+ * are only started on a CPU once the image has been loaded there.
++ *   ctr0: TLB misses, instruction and data, or only one kind, or
++ *         instructions retired and not nullified
++ *   ctr1, ctr3: cycles
++ *   ctr2: instructions retired
++ *
++ * The counters do not interrupt, so only counting is supported, and they
++ * count in all privilege levels. A counter wraps from 0x7fffffff to 0 and
++ * sets bit 31, which stays set. At four instructions a cycle ctr2 wraps
++ * in under half a second, so a per-CPU hrtimer reads the counters every
++ * 200 ms.
 + */
 +
-+#include <linux/bug.h>
-+#include <linux/errno.h>
-+#include <linux/iopoll.h>
-+#include <linux/irqflags.h>
++#define pr_fmt(fmt) "perf: " fmt
++
++#include <linux/bits.h>
++#include <linux/hrtimer.h>
++#include <linux/init.h>
 +#include <linux/kernel.h>
-+#include <linux/percpu.h>
-+#include <linux/uaccess.h>
-+#include <asm/perf.h>
-+#include <asm/special_insns.h>
++#include <linux/perf_event.h>
++#include <asm/processor.h>
 +
 +#include "perf_mako.h"
-+#include "perf_mako_image.h"
 +
-+#define MAKO_RDR(rdr, chain)	((rdr) | (chain) << 5)
-+#define MAKO_DR2_CHAIN1_REQ	(1UL << 48)
-+#define MAKO_DR2_CHAIN1_GRANT	(1UL << 53)
-+#define MAKO_DR2_CORE		(1UL << 54)
-+#define MAKO_RDR9_1_CONFIG	(1ULL << 56)
-+#define MAKO_CCR_PERF		0x20
++#define MAKO_NUM_CTRS		4
++#define MAKO_POLL_NS		(200 * NSEC_PER_MSEC)
++#define MAKO_CTR_MASK		GENMASK(30, 0)
 +
-+static DEFINE_PER_CPU(bool, perf_mako_loaded);
++enum {
++	MAKO_EV_CYCLES,
++	MAKO_EV_INSTRUCTIONS,
++	MAKO_EV_TLB_MISSES,
++	MAKO_EV_DTLB_MISSES = 7,
++	MAKO_EV_ITLB_MISSES,
++	MAKO_EV_NONNULLIFIED_INSTRUCTIONS,
++	MAKO_EV_MAX,
++};
 +
-+/* The second core of a processor, which owns the second half of RDR15_1. */
-+static bool perf_mako_core_b(void)
++/* The counters that can count each event, none for unused codes. */
++static const u8 mako_ctrs[MAKO_EV_MAX] = {
++	[MAKO_EV_CYCLES]		= BIT(1) | BIT(3),
++	[MAKO_EV_INSTRUCTIONS]		= BIT(2),
++	[MAKO_EV_TLB_MISSES]		= BIT(0),
++	[MAKO_EV_DTLB_MISSES]		= BIT(0),
++	[MAKO_EV_ITLB_MISSES]		= BIT(0),
++	[MAKO_EV_NONNULLIFIED_INSTRUCTIONS] = BIT(0),
++};
++
++#define MAKO_CONFIG_EVENT	GENMASK_ULL(7, 0)
++
++struct mako_pmu_cpu {
++	struct perf_event	*events[MAKO_NUM_CTRS];
++	u32			ctrs[MAKO_NUM_CTRS];	/* last read */
++	bool			running;		/* counters enabled */
++	struct hrtimer		timer;
++};
++
++static DEFINE_PER_CPU(struct mako_pmu_cpu, mako_pmu_cpu);
++
++/* The event code, which event_init() leaves in hw.config. */
++static unsigned int mako_event_code(struct perf_event *event)
 +{
-+	return perf_get_dr2() & MAKO_DR2_CORE;
++	return event->hw.config;
 +}
 +
 +/*
-+ * The other core holds chain 1 only while it loads or reads its counters,
++ * Assign counters to the events, and work out the configuration they
++ * need. Returns false if they do not fit together on one core.
++ */
++static bool mako_schedule(struct perf_event **events, int n, int *idx,
++			  struct perf_mako_config *cfg)
++{
++	u8 used = 0;
++	int i;
++
++	memset(cfg, 0, sizeof(*cfg));
++	for (i = 0; i < n; i++) {
++		unsigned int code = mako_event_code(events[i]);
++		u8 free = mako_ctrs[code] & ~used;
++
++		if (!free)
++			return false;
++		idx[i] = __ffs(free);
++		used |= BIT(idx[i]);
++
++		if (code == MAKO_EV_DTLB_MISSES)
++			cfg->ctr0 = MAKO_CTR0_DTLB;
++		else if (code == MAKO_EV_ITLB_MISSES)
++			cfg->ctr0 = MAKO_CTR0_ITLB;
++		else if (code == MAKO_EV_NONNULLIFIED_INSTRUCTIONS)
++			cfg->ctr0 = MAKO_CTR0_INSNS;
++	}
++
++	return true;
++}
++
++/* Gather the events on this CPU, plus extra if not NULL. */
++static int mako_collect(struct mako_pmu_cpu *pc, struct perf_event *extra,
++			struct perf_event **events)
++{
++	int i, n = 0;
++
++	for (i = 0; i < MAKO_NUM_CTRS; i++)
++		if (pc->events[i])
++			events[n++] = pc->events[i];
++	if (extra)
++		events[n++] = extra;
++
++	return n;
++}
++
++static void mako_event_update(struct perf_event *event, u32 now)
++{
++	struct hw_perf_event *hwc = &event->hw;
++	u32 prev = local64_read(&hwc->prev_count);
++
++	local64_set(&hwc->prev_count, now);
++	local64_add((now - prev) & MAKO_CTR_MASK, &event->count);
++}
++
++/*
++ * Read the counters, and if they are running for perf, update every
++ * started event. The counters have to be stopped to be read. They may
++ * have been left running by /dev/perf, so this always reads them. Called
 + * with interrupts off.
 + */
-+static int perf_mako_chain1_get(void)
++static void mako_read_all(struct mako_pmu_cpu *pc)
 +{
-+	unsigned long dr2;
-+	int ret;
++	int i;
 +
-+	perf_set_dr2(perf_get_dr2() | MAKO_DR2_CHAIN1_REQ);
-+	ret = read_poll_timeout_atomic(perf_get_dr2, dr2,
-+				       dr2 & MAKO_DR2_CHAIN1_GRANT, 1,
-+				       USEC_PER_MSEC, false);
-+	if (ret)
-+		perf_set_dr2(perf_get_dr2() & ~MAKO_DR2_CHAIN1_REQ);
++	perf_mako_disable();
++	if (perf_mako_read(pc->ctrs) == 0 && pc->running) {
++		for (i = 0; i < MAKO_NUM_CTRS; i++) {
++			struct perf_event *event = pc->events[i];
 +
-+	return ret;
++			if (event && !(event->hw.state & PERF_HES_STOPPED))
++				mako_event_update(event, pc->ctrs[i]);
++		}
++	}
++	if (pc->running)
++		perf_mako_enable();
 +}
 +
-+static void perf_mako_chain1_put(void)
++static enum hrtimer_restart mako_poll(struct hrtimer *timer)
 +{
-+	perf_set_dr2(perf_get_dr2() & ~MAKO_DR2_CHAIN1_REQ);
++	struct mako_pmu_cpu *pc = container_of(timer, struct mako_pmu_cpu, timer);
++
++	mako_read_all(pc);
++	hrtimer_forward_now(timer, ns_to_ktime(MAKO_POLL_NS));
++
++	return HRTIMER_RESTART;
 +}
 +
-+/* The last doubleword is shifted first, for both reads and writes. */
-+static void perf_mako_rdr_read_buf(unsigned int index, uint64_t *buf,
-+				   unsigned int n)
++static void mako_pmu_disable(struct pmu *pmu)
 +{
-+	while (n--)
-+		buf[n] = perf_mako_rdr_read(index);
++	struct mako_pmu_cpu *pc = this_cpu_ptr(&mako_pmu_cpu);
++
++	mako_read_all(pc);
++	perf_mako_disable();
++	pc->running = false;
 +}
 +
-+static void perf_mako_rdr_write_buf(unsigned int index, const uint64_t *buf,
-+				    unsigned int n)
++static void mako_pmu_enable(struct pmu *pmu)
 +{
-+	while (n--)
-+		perf_mako_rdr_write(index, buf[n]);
-+}
++	struct mako_pmu_cpu *pc = this_cpu_ptr(&mako_pmu_cpu);
++	struct perf_event *events[MAKO_NUM_CTRS];
++	struct perf_mako_config cfg;
++	int idx[MAKO_NUM_CTRS];
++	int i, n;
 +
-+/*
-+ * Write one RDR of the image. Where the image has a mask, merge it with
-+ * the current contents the way the firmware does, new = (image & ~mask) |
-+ * (current & mask). A read returns the RDR's bits right-justified in
-+ * num_words doublewords, while the image and the mask are left-justified,
-+ * so the read is shifted left by the unused bits.
-+ */
-+static void perf_mako_rdr_merge(const struct perf_mako_rdr *r,
-+				const uint64_t *data)
-+{
-+	unsigned int idx = MAKO_RDR(r->rdr, r->chain), n = r->num_words, s, j;
-+	uint64_t buf[4];
++	if (pc->running)
++		return;
 +
-+	if (!r->mask || WARN_ON_ONCE(n > ARRAY_SIZE(buf))) {
-+		perf_mako_rdr_write_buf(idx, data, n);
++	n = mako_collect(pc, NULL, events);
++	if (!n) {
++		hrtimer_try_to_cancel(&pc->timer);
 +		return;
 +	}
 +
-+	s = r->width % 64 ? 64 - r->width % 64 : 0;
-+	perf_mako_rdr_read_buf(idx, buf, n);
-+	for (j = 0; s && j < n; j++)
-+		buf[j] = buf[j] << s | (j + 1 < n ? buf[j + 1] >> (64 - s) : 0);
-+	for (j = 0; j < n; j++)
-+		buf[j] = (data[j] & ~r->mask[j]) | (buf[j] & r->mask[j]);
-+	perf_mako_rdr_write_buf(idx, buf, n);
-+}
++	/* add() placed the events, this only recomputes the configuration. */
++	if (WARN_ON_ONCE(!mako_schedule(events, n, idx, &cfg)))
++		return;
 +
-+static void perf_mako_config_bit(bool on)
-+{
-+	uint64_t val = perf_mako_rdr_read(MAKO_RDR(9, 1));
++	if (perf_mako_is_loaded(&cfg)) {
++		perf_mako_enable();
++	} else {
++		int ret = perf_mako_load(&cfg);
 +
-+	if (on)
-+		val |= MAKO_RDR9_1_CONFIG;
-+	else
-+		val &= ~MAKO_RDR9_1_CONFIG;
-+	perf_mako_rdr_write(MAKO_RDR(9, 1), val);
-+}
-+
-+/*
-+ * Read RDR15_1, optionally clearing this core's counters, and write it
-+ * back. Reads shift the RDR out, and the other core's counters must be
-+ * kept.
-+ */
-+static void perf_mako_ctrs_rw(uint64_t *buf, bool clear)
-+{
-+	perf_mako_rdr_read_buf(MAKO_RDR(15, 1), buf, 4);
-+	if (clear) {
-+		unsigned int h = perf_mako_core_b() ? 2 : 0;
-+
-+		buf[h] = 0;
-+		buf[h + 1] = 0;
++		if (ret) {
++			pr_warn_once("cannot load the counter image: %d\n", ret);
++			return;
++		}
++		memset(pc->ctrs, 0, sizeof(pc->ctrs));
++		for (i = 0; i < n; i++)
++			local64_set(&events[i]->hw.prev_count, 0);
 +	}
-+	perf_mako_rdr_write_buf(MAKO_RDR(15, 1), buf, 4);
++	pc->running = true;
++
++	if (!hrtimer_active(&pc->timer))
++		hrtimer_start(&pc->timer, ns_to_ktime(MAKO_POLL_NS),
++			      HRTIMER_MODE_REL_PINNED_HARD);
 +}
 +
-+/*
-+ * Write the image and start the counters on this CPU, from zero. Called
-+ * with interrupts off. Like the firmware's boot-time load, this holds
-+ * chain 1 across the image write and pmenb.
-+ */
-+static int perf_mako_load(void)
++static void mako_pmu_start(struct perf_event *event, int flags)
 +{
-+	unsigned long ccr = mfctl(10);
-+	uint64_t ctrs[4];
-+	int i, ret;
++	struct mako_pmu_cpu *pc = this_cpu_ptr(&mako_pmu_cpu);
++	struct hw_perf_event *hwc = &event->hw;
 +
-+	mtctl(ccr | MAKO_CCR_PERF, 10);
-+	ret = perf_mako_chain1_get();
-+	if (ret)
-+		goto out;
++	mako_read_all(pc);
++	local64_set(&hwc->prev_count, pc->ctrs[hwc->idx]);
++	hwc->state = 0;
++}
 +
-+	perf_mako_config_bit(true);
-+	for (i = 0; i < ARRAY_SIZE(perf_mako_image); i++) {
-+		const struct perf_mako_rdr *r = &perf_mako_image[i];
++static void mako_pmu_stop(struct perf_event *event, int flags)
++{
++	struct mako_pmu_cpu *pc = this_cpu_ptr(&mako_pmu_cpu);
++	struct hw_perf_event *hwc = &event->hw;
 +
-+		/*
-+		 * The firmware presets the first counter to 0x7fffffec.
-+		 * Start this core's counters from zero instead, and keep
-+		 * the other core's.
-+		 */
-+		if (r->chain == 1 && r->rdr == 15)
-+			perf_mako_ctrs_rw(ctrs, true);
-+		else
-+			perf_mako_rdr_merge(r, r->data);
++	if (hwc->state & PERF_HES_STOPPED)
++		return;
++
++	mako_read_all(pc);
++	hwc->state |= PERF_HES_STOPPED | PERF_HES_UPTODATE;
++}
++
++static int mako_pmu_add(struct perf_event *event, int flags)
++{
++	struct mako_pmu_cpu *pc = this_cpu_ptr(&mako_pmu_cpu);
++	struct perf_event *events[MAKO_NUM_CTRS + 1];
++	unsigned int code = mako_event_code(event);
++	struct perf_mako_config cfg;
++	int idx[MAKO_NUM_CTRS + 1];
++	unsigned long free = 0;
++	int i, n;
++
++	n = mako_collect(pc, event, events);
++	if (n > MAKO_NUM_CTRS || !mako_schedule(events, n, idx, &cfg))
++		return -EAGAIN;
++
++	/*
++	 * Keep the events already here on their counters. Each event can
++	 * use either only one counter or only ctr1 and ctr3, so if the
++	 * events fit together, one of this event's counters is free.
++	 */
++	for (i = 0; i < MAKO_NUM_CTRS; i++)
++		if (!pc->events[i] && (mako_ctrs[code] & BIT(i)))
++			free |= BIT(i);
++
++	event->hw.idx = __ffs(free);
++	pc->events[event->hw.idx] = event;
++
++	event->hw.state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
++	if (flags & PERF_EF_START)
++		mako_pmu_start(event, PERF_EF_RELOAD);
++
++	return 0;
++}
++
++static void mako_pmu_del(struct perf_event *event, int flags)
++{
++	struct mako_pmu_cpu *pc = this_cpu_ptr(&mako_pmu_cpu);
++
++	mako_pmu_stop(event, PERF_EF_UPDATE);
++	pc->events[event->hw.idx] = NULL;
++	perf_event_update_userpage(event);
++}
++
++static void mako_pmu_read(struct perf_event *event)
++{
++	mako_read_all(this_cpu_ptr(&mako_pmu_cpu));
++}
++
++static int mako_map_hw(u64 config)
++{
++	switch (config) {
++	case PERF_COUNT_HW_CPU_CYCLES:
++		return MAKO_EV_CYCLES;
++	case PERF_COUNT_HW_INSTRUCTIONS:
++		return MAKO_EV_INSTRUCTIONS;
++	default:
++		return -ENOENT;
 +	}
-+	perf_mako_config_bit(false);
-+
-+	asm volatile("pmenb" ::: "memory");
-+	perf_mako_chain1_put();
-+	this_cpu_write(perf_mako_loaded, true);
-+out:
-+	mtctl(ccr, 10);
-+	return ret;
 +}
 +
-+/* Read this CPU's four counters. Called with interrupts off. */
-+static int perf_mako_read(uint32_t *c)
++static void mako_event_destroy(struct perf_event *event)
 +{
-+	unsigned long ccr = mfctl(10);
-+	uint64_t buf[4];
-+	int i, w, ret;
-+
-+	mtctl(ccr | MAKO_CCR_PERF, 10);
-+	ret = perf_mako_chain1_get();
-+	if (ret)
-+		goto out;
-+
-+	perf_mako_config_bit(true);
-+	perf_mako_ctrs_rw(buf, false);
-+	perf_mako_config_bit(false);
-+	perf_mako_chain1_put();
-+
-+	w = perf_mako_core_b() ? 4 : 0;
-+	for (i = 0; i < 4; i++, w++)
-+		c[i] = buf[w / 2] >> (w % 2 ? 0 : 32);
-+out:
-+	mtctl(ccr, 10);
-+	return ret;
++	perf_mako_pmu_put();
 +}
 +
-+int perf_mako_start(void)
++static int mako_pmu_event_init(struct perf_event *event)
 +{
-+	unsigned long flags;
-+	int ret = 0;
++	struct perf_event *leader = event->group_leader, *sibling;
++	struct perf_event *events[MAKO_NUM_CTRS + 1];
++	struct perf_mako_config cfg;
++	int idx[MAKO_NUM_CTRS + 1];
++	int code, n = 0;
 +
-+	local_irq_save(flags);
-+	if (this_cpu_read(perf_mako_loaded))
-+		perf_intrigue_enable_perf_counters();
-+	else
-+		ret = perf_mako_load();
-+	local_irq_restore(flags);
-+
-+	return ret;
-+}
-+
-+int perf_mako_stop(uint32_t *raddr)
-+{
-+	unsigned long flags;
-+	int ret = -EINVAL;
-+
-+	local_irq_save(flags);
-+	if (this_cpu_read(perf_mako_loaded)) {
-+		perf_intrigue_disable_perf_counters();
-+		ret = perf_mako_read(raddr);
++	switch (event->attr.type) {
++	case PERF_TYPE_HARDWARE:
++		code = mako_map_hw(event->attr.config);
++		break;
++	case PERF_TYPE_RAW:
++		if (event->attr.config & ~MAKO_CONFIG_EVENT)
++			return -EINVAL;
++		code = event->attr.config;
++		break;
++	default:
++		return -ENOENT;
 +	}
-+	local_irq_restore(flags);
-+
-+	return ret;
-+}
-+
-+/*
-+ * The only image is (CUDA_INTF << 16) | 0: ctr0 counts TLB misses, ctr1
-+ * and ctr3 cycles, and ctr2 instructions retired. Writing it loads the
-+ * image on this CPU and restarts its counters from zero.
-+ */
-+ssize_t perf_mako_write(const char __user *buf, size_t count)
-+{
-+	unsigned long flags;
-+	uint32_t image;
-+	int ret;
-+
-+	if (count != sizeof(image))
-+		return -EIO;
-+	if (copy_from_user(&image, buf, sizeof(image)))
-+		return -EFAULT;
-+	if (image != CUDA_INTF << 16)
++	if (code < 0)
++		return code;
++	if (code >= MAKO_EV_MAX || !mako_ctrs[code])
 +		return -EINVAL;
 +
-+	local_irq_save(flags);
-+	if (this_cpu_read(perf_mako_loaded))
-+		perf_intrigue_disable_perf_counters();
-+	ret = perf_mako_load();
-+	local_irq_restore(flags);
++	event->hw.config = code;
 +
-+	return ret ? ret : count;
++	/* The whole group has to fit on one core. */
++	if (leader != event && leader->pmu == event->pmu)
++		events[n++] = leader;
++	for_each_sibling_event(sibling, leader) {
++		if (sibling->pmu != event->pmu)
++			continue;
++		if (n >= MAKO_NUM_CTRS)
++			return -EINVAL;
++		events[n++] = sibling;
++	}
++	events[n++] = event;
++	if (!mako_schedule(events, n, idx, &cfg))
++		return -EINVAL;
++
++	if (!perf_mako_pmu_get())
++		return -EBUSY;
++	event->destroy = mako_event_destroy;
++	event->hw.idx = -1;
++
++	return 0;
 +}
++
++PMU_FORMAT_ATTR(event, "config:0-7");
++
++static struct attribute *mako_format_attrs[] = {
++	&format_attr_event.attr,
++	NULL,
++};
++
++static const struct attribute_group mako_format_group = {
++	.name = "format",
++	.attrs = mako_format_attrs,
++};
++
++#define MAKO_EVENT_ATTR(_name, _code) \
++	PMU_EVENT_ATTR_STRING(_name, mako_attr_##_code, "event=" __stringify(_code))
++
++MAKO_EVENT_ATTR(cycles, 0);
++MAKO_EVENT_ATTR(instructions, 1);
++MAKO_EVENT_ATTR(tlb-misses, 2);
++MAKO_EVENT_ATTR(dtlb-misses, 7);
++MAKO_EVENT_ATTR(itlb-misses, 8);
++MAKO_EVENT_ATTR(nonnullified-instructions, 9);
++
++static struct attribute *mako_event_attrs[] = {
++	&mako_attr_0.attr.attr,
++	&mako_attr_1.attr.attr,
++	&mako_attr_2.attr.attr,
++	&mako_attr_7.attr.attr,
++	&mako_attr_8.attr.attr,
++	&mako_attr_9.attr.attr,
++	NULL,
++};
++
++static const struct attribute_group mako_events_group = {
++	.name = "events",
++	.attrs = mako_event_attrs,
++};
++
++static const struct attribute_group *mako_attr_groups[] = {
++	&mako_format_group,
++	&mako_events_group,
++	NULL,
++};
++
++static struct pmu mako_pmu = {
++	.task_ctx_nr	= perf_hw_context,
++	.capabilities	= PERF_PMU_CAP_NO_INTERRUPT | PERF_PMU_CAP_NO_EXCLUDE,
++	.attr_groups	= mako_attr_groups,
++	.event_init	= mako_pmu_event_init,
++	.pmu_enable	= mako_pmu_enable,
++	.pmu_disable	= mako_pmu_disable,
++	.add		= mako_pmu_add,
++	.del		= mako_pmu_del,
++	.start		= mako_pmu_start,
++	.stop		= mako_pmu_stop,
++	.read		= mako_pmu_read,
++};
++
++static int __init mako_pmu_init(void)
++{
++	int cpu;
++
++	if (boot_cpu_data.cpu_type != mako && boot_cpu_data.cpu_type != mako2)
++		return 0;
++
++	for_each_possible_cpu(cpu)
++		hrtimer_setup(&per_cpu(mako_pmu_cpu, cpu).timer, mako_poll,
++			      CLOCK_MONOTONIC, HRTIMER_MODE_REL_PINNED_HARD);
++
++	return perf_pmu_register(&mako_pmu, "cpu", PERF_TYPE_RAW);
++}
++device_initcall(mako_pmu_init);
+diff --git a/arch/parisc/kernel/perf_mako.c b/arch/parisc/kernel/perf_mako.c
+index e717ac0c97c8..626163c0b0ce 100644
+--- a/arch/parisc/kernel/perf_mako.c
++++ b/arch/parisc/kernel/perf_mako.c
+@@ -20,7 +20,10 @@
+ #include <linux/iopoll.h>
+ #include <linux/irqflags.h>
+ #include <linux/kernel.h>
++#include <linux/lockdep.h>
+ #include <linux/percpu.h>
++#include <linux/spinlock.h>
++#include <linux/string.h>
+ #include <linux/uaccess.h>
+ #include <asm/perf.h>
+ #include <asm/special_insns.h>
+@@ -35,7 +38,75 @@
+ #define MAKO_RDR9_1_CONFIG	(1ULL << 56)
+ #define MAKO_CCR_PERF		0x20
+ 
+-static DEFINE_PER_CPU(bool, perf_mako_loaded);
++/*
++ * RDR4_0 bits 0-7 select what ctr0 counts. With bit 3 clear it counts TLB
++ * misses; bit 6 leaves out the data TLB misses and bit 7 the instruction
++ * TLB misses. With bit 3 set it counts retired instructions that are not
++ * nullified, and bits 4-7 each leave out the instructions at one of the
++ * four word offsets in an aligned 16-byte block.
++ *
++ * RDR bits are numbered from the most significant bit of the first
++ * doubleword.
++ */
++#define MAKO_RDR4_0_CTR0_INSNS	3
++#define MAKO_RDR4_0_CTR0_NO_DTLB	6
++#define MAKO_RDR4_0_CTR0_NO_ITLB	7
++
++struct perf_mako_cpu {
++	bool			loaded;
++	struct perf_mako_config	cfg;
++	uint64_t		rdr4_0[ARRAY_SIZE(perf_mako_rdr4_0)];
++};
++
++static DEFINE_PER_CPU(struct perf_mako_cpu, perf_mako_cpu);
++
++/* /dev/perf loads the default configuration. */
++static const struct perf_mako_config perf_mako_dev_cfg;
++
++/* /dev/perf and perf events must not program the counters at once. */
++static DEFINE_SPINLOCK(perf_mako_owner_lock);
++static bool perf_mako_dev_open;
++static unsigned int perf_mako_pmu_users;
++
++bool perf_mako_dev_get(void)
++{
++	bool ok;
++
++	spin_lock(&perf_mako_owner_lock);
++	ok = !perf_mako_pmu_users;
++	if (ok)
++		perf_mako_dev_open = true;
++	spin_unlock(&perf_mako_owner_lock);
++
++	return ok;
++}
++
++void perf_mako_dev_put(void)
++{
++	spin_lock(&perf_mako_owner_lock);
++	perf_mako_dev_open = false;
++	spin_unlock(&perf_mako_owner_lock);
++}
++
++bool perf_mako_pmu_get(void)
++{
++	bool ok;
++
++	spin_lock(&perf_mako_owner_lock);
++	ok = !perf_mako_dev_open;
++	if (ok)
++		perf_mako_pmu_users++;
++	spin_unlock(&perf_mako_owner_lock);
++
++	return ok;
++}
++
++void perf_mako_pmu_put(void)
++{
++	spin_lock(&perf_mako_owner_lock);
++	perf_mako_pmu_users--;
++	spin_unlock(&perf_mako_owner_lock);
++}
+ 
+ /* The second core of a processor, which owns the second half of RDR15_1. */
+ static bool perf_mako_core_b(void)
+@@ -43,6 +114,29 @@ static bool perf_mako_core_b(void)
+ 	return perf_get_dr2() & MAKO_DR2_CORE;
+ }
+ 
++static void perf_mako_set_bit(uint64_t *buf, unsigned int bit, bool val)
++{
++	uint64_t m = 1ULL << (63 - bit % 64);
++
++	if (val)
++		buf[bit / 64] |= m;
++	else
++		buf[bit / 64] &= ~m;
++}
++
++/* Build this CPU's copy of RDR4_0 for cfg. */
++static void perf_mako_build(struct perf_mako_cpu *pc,
++			    const struct perf_mako_config *cfg)
++{
++	memcpy(pc->rdr4_0, perf_mako_rdr4_0, sizeof(pc->rdr4_0));
++	if (cfg->ctr0 == MAKO_CTR0_DTLB)
++		perf_mako_set_bit(pc->rdr4_0, MAKO_RDR4_0_CTR0_NO_ITLB, true);
++	else if (cfg->ctr0 == MAKO_CTR0_ITLB)
++		perf_mako_set_bit(pc->rdr4_0, MAKO_RDR4_0_CTR0_NO_DTLB, true);
++	else if (cfg->ctr0 == MAKO_CTR0_INSNS)
++		perf_mako_set_bit(pc->rdr4_0, MAKO_RDR4_0_CTR0_INSNS, true);
++}
++
+ /*
+  * The other core holds chain 1 only while it loads or reads its counters,
+  * with interrupts off.
+@@ -138,16 +232,24 @@ static void perf_mako_ctrs_rw(uint64_t *buf, bool clear)
+ }
+ 
+ /*
+- * Write the image and start the counters on this CPU, from zero. Called
+- * with interrupts off. Like the firmware's boot-time load, this holds
+- * chain 1 across the image write and pmenb.
++ * Write the image for cfg and start the counters on this CPU, from zero.
++ * Called with interrupts off. Like the firmware, this holds chain 1 across
++ * the image write and pmenb.
+  */
+-static int perf_mako_load(void)
++int perf_mako_load(const struct perf_mako_config *cfg)
+ {
+-	unsigned long ccr = mfctl(10);
++	struct perf_mako_cpu *pc = this_cpu_ptr(&perf_mako_cpu);
++	unsigned long ccr;
+ 	uint64_t ctrs[4];
+ 	int i, ret;
+ 
++	lockdep_assert_irqs_disabled();
++	perf_mako_build(pc, cfg);
++	if (pc->loaded)
++		perf_intrigue_disable_perf_counters();
++	pc->loaded = false;
++
++	ccr = mfctl(10);
+ 	mtctl(ccr | MAKO_CCR_PERF, 10);
+ 	ret = perf_mako_chain1_get();
+ 	if (ret)
+@@ -164,6 +266,8 @@ static int perf_mako_load(void)
+ 		 */
+ 		if (r->chain == 1 && r->rdr == 15)
+ 			perf_mako_ctrs_rw(ctrs, true);
++		else if (r->chain == 0 && r->rdr == 4)
++			perf_mako_rdr_merge(r, pc->rdr4_0);
+ 		else
+ 			perf_mako_rdr_merge(r, r->data);
+ 	}
+@@ -171,19 +275,28 @@ static int perf_mako_load(void)
+ 
+ 	asm volatile("pmenb" ::: "memory");
+ 	perf_mako_chain1_put();
+-	this_cpu_write(perf_mako_loaded, true);
++	pc->cfg = *cfg;
++	pc->loaded = true;
+ out:
+ 	mtctl(ccr, 10);
+ 	return ret;
+ }
+ 
+-/* Read this CPU's four counters. Called with interrupts off. */
+-static int perf_mako_read(uint32_t *c)
++/*
++ * Read this CPU's four counters. Called with interrupts off and the
++ * counters stopped.
++ */
++int perf_mako_read(uint32_t *c)
+ {
+-	unsigned long ccr = mfctl(10);
++	unsigned long ccr;
+ 	uint64_t buf[4];
+ 	int i, w, ret;
+ 
++	lockdep_assert_irqs_disabled();
++	if (!this_cpu_read(perf_mako_cpu.loaded))
++		return -EINVAL;
++
++	ccr = mfctl(10);
+ 	mtctl(ccr | MAKO_CCR_PERF, 10);
+ 	ret = perf_mako_chain1_get();
+ 	if (ret)
+@@ -202,31 +315,61 @@ static int perf_mako_read(uint32_t *c)
+ 	return ret;
+ }
+ 
++/* Start or stop the counters of a loaded CPU. Called with interrupts off. */
++void perf_mako_enable(void)
++{
++	if (this_cpu_read(perf_mako_cpu.loaded))
++		perf_intrigue_enable_perf_counters();
++}
++
++void perf_mako_disable(void)
++{
++	if (this_cpu_read(perf_mako_cpu.loaded))
++		perf_intrigue_disable_perf_counters();
++}
++
++static bool perf_mako_cfg_equal(const struct perf_mako_config *a,
++				const struct perf_mako_config *b)
++{
++	return a->ctr0 == b->ctr0;
++}
++
++/*
++ * Whether cfg is loaded on this CPU and still in effect, so that the
++ * counters can be restarted without loading it again.
++ */
++bool perf_mako_is_loaded(const struct perf_mako_config *cfg)
++{
++	struct perf_mako_cpu *pc = this_cpu_ptr(&perf_mako_cpu);
++
++	return pc->loaded && perf_mako_cfg_equal(&pc->cfg, cfg);
++}
++
++/* PA_PERF_ON: load the default configuration, or restart. */
+ int perf_mako_start(void)
+ {
+ 	unsigned long flags;
+ 	int ret = 0;
+ 
+ 	local_irq_save(flags);
+-	if (this_cpu_read(perf_mako_loaded))
+-		perf_intrigue_enable_perf_counters();
++	if (perf_mako_is_loaded(&perf_mako_dev_cfg))
++		perf_mako_enable();
+ 	else
+-		ret = perf_mako_load();
++		ret = perf_mako_load(&perf_mako_dev_cfg);
+ 	local_irq_restore(flags);
+ 
+ 	return ret;
+ }
+ 
++/* PA_PERF_OFF */
+ int perf_mako_stop(uint32_t *raddr)
+ {
+ 	unsigned long flags;
+-	int ret = -EINVAL;
++	int ret;
+ 
+ 	local_irq_save(flags);
+-	if (this_cpu_read(perf_mako_loaded)) {
+-		perf_intrigue_disable_perf_counters();
+-		ret = perf_mako_read(raddr);
+-	}
++	perf_mako_disable();
++	ret = perf_mako_read(raddr);
+ 	local_irq_restore(flags);
+ 
+ 	return ret;
+@@ -251,9 +394,7 @@ ssize_t perf_mako_write(const char __user *buf, size_t count)
+ 		return -EINVAL;
+ 
+ 	local_irq_save(flags);
+-	if (this_cpu_read(perf_mako_loaded))
+-		perf_intrigue_disable_perf_counters();
+-	ret = perf_mako_load();
++	ret = perf_mako_load(&perf_mako_dev_cfg);
+ 	local_irq_restore(flags);
+ 
+ 	return ret ? ret : count;
 diff --git a/arch/parisc/kernel/perf_mako.h b/arch/parisc/kernel/perf_mako.h
-new file mode 100644
-index 000000000000..88ca6cef988f
---- /dev/null
+index 88ca6cef988f..5a5ba83c893f 100644
+--- a/arch/parisc/kernel/perf_mako.h
 +++ b/arch/parisc/kernel/perf_mako.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+#ifndef PERF_MAKO_H
-+#define PERF_MAKO_H
-+
-+#include <linux/types.h>
-+
-+/* perf_asm.S */
-+unsigned long perf_get_dr2(void);
-+void perf_set_dr2(unsigned long dr2);
-+uint64_t perf_mako_rdr_read(unsigned long index);
-+void perf_mako_rdr_write(unsigned long index, uint64_t value);
-+void perf_intrigue_enable_perf_counters(void);
-+void perf_intrigue_disable_perf_counters(void);
-+
-+/* perf_mako.c, for /dev/perf */
-+ssize_t perf_mako_write(const char __user *buf, size_t count);
-+int perf_mako_start(void);
-+int perf_mako_stop(uint32_t *raddr);
-+
-+#endif
-diff --git a/arch/parisc/kernel/perf_mako_image.h b/arch/parisc/kernel/perf_mako_image.h
-new file mode 100644
-index 000000000000..099df7e42e0d
---- /dev/null
-+++ b/arch/parisc/kernel/perf_mako_image.h
-@@ -0,0 +1,208 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+#ifndef PERF_MAKO_IMAGE_H
-+#define PERF_MAKO_IMAGE_H
-+
-+/*
-+ * PA-8800/PA-8900 (Mako) image: the RDRs to write, in order, each with its
-+ * chain and data. data[0] is the most significant doubleword and is shifted
-+ * in last. This is the first built-in image of the C8000 PDC 2.13 firmware
-+ * (0x29c920 in the PDC0213 image), which the firmware's PDC_INTRIGUE calls
-+ * also load. RDR15 on chain 1 holds the counters.
-+ */
-+struct perf_mako_rdr {
-+	uint8_t		rdr;
-+	uint8_t		chain;
-+	uint8_t		num_words;
-+	uint16_t	width;
-+	const uint64_t	*data;
-+	const uint64_t	*mask;
+@@ -12,6 +12,31 @@ void perf_mako_rdr_write(unsigned long index, uint64_t value);
+ void perf_intrigue_enable_perf_counters(void);
+ void perf_intrigue_disable_perf_counters(void);
+ 
++/* What ctr0 counts */
++enum {
++	MAKO_CTR0_TLB,		/* TLB misses, instruction and data */
++	MAKO_CTR0_DTLB,		/* data TLB misses */
++	MAKO_CTR0_ITLB,		/* instruction TLB misses */
++	MAKO_CTR0_INSNS,	/* instructions retired and not nullified */
 +};
 +
-+#define PERF_MAKO_RDR(r, c, d) \
-+	{ .rdr = (r), .chain = (c), .num_words = ARRAY_SIZE(d), .data = (d) }
-+#define PERF_MAKO_RDR_MASK(r, c, w, d, m) \
-+	{ .rdr = (r), .chain = (c), .num_words = ARRAY_SIZE(d), .width = (w), \
-+	  .data = (d), .mask = (m) }
-+
-+static const uint64_t perf_mako_rdr0_0[] = {
-+	0x4001800000000000ULL,
-+};
-+static const uint64_t perf_mako_rdr1_0[] = {
-+	0x0000000000000000ULL,
-+};
-+static const uint64_t perf_mako_rdr4_0[] = {
-+	0x0000001000001fffULL, 0x0010007ffc000001ULL, 0xffffffffffffffffULL,
-+	0xffffffff0007ffffULL, 0xffd607ffff846007ULL, 0xffffa00000000000ULL,
-+};
-+static const uint64_t perf_mako_rdr5_0[] = {
-+	0xc0ffffffffffffffULL, 0xffffffffffffffffULL, 0xffffffffffffffffULL,
-+	0xffffffffffff0000ULL,
-+};
-+static const uint64_t perf_mako_rdr17_0[] = {
-+	0xc000000000000000ULL,
-+};
-+static const uint64_t perf_mako_rdr18_0[] = {
-+	0xc000000000000000ULL,
-+};
-+static const uint64_t perf_mako_rdr20_0[] = {
-+	0x00ffffffff3fffffULL, 0xffffffffffcfffffULL, 0xfff7fbfc00000000ULL,
-+};
-+static const uint64_t perf_mako_rdr21_0[] = {
-+	0x00ffffffff3fffffULL, 0xffffffffffcfffffULL, 0xfff7fbfc00000000ULL,
-+};
-+static const uint64_t perf_mako_rdr22_0[] = {
-+	0xffffffffffffffffULL, 0xffffffffffffffffULL, 0xffffffffffffffffULL,
-+	0xfffc000000000000ULL,
-+};
-+static const uint64_t perf_mako_rdr23_0[] = {
-+	0xffffffffffffffffULL, 0xffffffffffffffffULL, 0xffffffffffffffffULL,
-+	0xfffc000000000000ULL,
-+};
-+static const uint64_t perf_mako_rdr24_0[] = {
-+	0xfffffffffffff9ffULL, 0xfe00000000000000ULL,
-+};
-+static const uint64_t perf_mako_rdr25_0[] = {
-+	0xfffffffffffff9ffULL, 0xfe00000000000000ULL,
-+};
-+static const uint64_t perf_mako_rdr0_1[] = {
-+	0x0000000000000000ULL,
-+};
-+static const uint64_t perf_mako_rdr1_1[] = {
-+	0x0000000000000000ULL,
-+};
-+static const uint64_t perf_mako_rdr5_1[] = {
-+	0x65ffffffffffffffULL, 0xf500000000000000ULL, 0xffffffffffffffffULL,
-+	0x0000000000000000ULL,
-+};
-+static const uint64_t perf_mako_rdr6_1[] = {
-+	0xfff6fff6ffff0c20ULL, 0x000000000000c200ULL, 0x00000000000ee000ULL,
-+	0x0000000000ee0000ULL, 0x0000000000000000ULL,
-+};
-+static const uint64_t perf_mako_rdr9_1[] = {
-+	0x0000000000000001ULL,
-+};
-+static const uint64_t perf_mako_rdr15_1[] = {
-+	0x7fffffec00000000ULL, 0x0000000000000000ULL, 0x0000000000000000ULL,
-+	0x0000000000000000ULL,
-+};
-+/*
-+ * RDR16_1 selects what the counters count. The firmware's image enables
-+ * only ctr0 and ctr1 of the first core. Bytes are numbered from the most
-+ * significant byte of the first doubleword; changed from the firmware:
-+ *
-+ * - Byte 14 (event selects, bits 7..4 for the first core's ctr0..ctr3,
-+ *   bits 3..0 for the second core's) = 0xaa: ctr0 counts the TLB miss
-+ *   event, ctr2 the instructions retired event.
-+ * - Byte 58 bits 1:0 = 3: count on the first core's ctr1.
-+ * - Byte 59 = 0xfa: bits 7 and 5 enable the first core's ctr2 and ctr3,
-+ *   bits 3 and 1 the second core's ctr0 and ctr1.
-+ * - Byte 60 = 0xa0: bits 7 and 5 enable the second core's ctr2 and ctr3.
-+ *
-+ * Counters without an event selected count cycles, so on every CPU ctr0
-+ * counts TLB misses, ctr1 and ctr3 cycles and ctr2 instructions retired.
-+ */
-+static const uint64_t perf_mako_rdr16_1[] = {
-+	0x00020200a0000000ULL, 0x000aa4444110aa00ULL, 0x000000000009000fULL,
-+	0xf000000000000000ULL, 0x0000000005a12000ULL, 0x0000000000000000ULL,
-+	0x0000000500010555ULL, 0x100003faa0000000ULL, 0x00000ffff0fff000ULL,
-+	0x0000000000000000ULL, 0x0005000f2f0f0f0fULL, 0x0f0f0f0f0f0f0f30ULL,
-+	0xfaf0f08000000000ULL, 0x0000000000000000ULL, 0x900ff00000000000ULL,
-+	0x000000000005a000ULL, 0x0000012000000000ULL, 0x0000000000000005ULL,
-+	0x0015550400000100ULL, 0x00000000000fffffULL, 0xf0f0000000000000ULL,
-+	0x0000050000000f0fULL, 0x0f2f0f0f0f0f0f0fULL, 0x0f0f30f0faf00800ULL,
-+	0x0000000000000000ULL, 0x0000000090000ff0ULL, 0x0000005000050000ULL,
-+	0x0000000000000000ULL, 0x0020000200000000ULL, 0x0500001000000000ULL,
-+	0x0800040401000055ULL, 0x500c0000ff000000ULL, 0x0000ff0000aa00aaULL,
-+	0x0000000000000000ULL, 0x00000000005af000ULL, 0x0b00555000040101ULL,
-+	0x000000000000ffffULL, 0xfffff00000000000ULL, 0x0000000000000fffULL,
-+	0xffffffffffffffffULL, 0xfffffffffffffff0ULL, 0x0000000000000000ULL,
-+	0x0000000fffffffffULL, 0x0000000000000000ULL, 0x00000000ffffffffULL,
-+	0xffffffffffffffffULL, 0xffffffffff000000ULL, 0x0000000000000000ULL,
-+};
-+static const uint64_t perf_mako_rdr20_1[] = {
-+	0xfffffffffffff800ULL, 0x00000000003fffffULL, 0xfffffffe00000000ULL,
-+	0x00000fffffffffffULL, 0xff80000000000003ULL, 0xffffffffffffe000ULL,
-+	0x0000000000000000ULL,
-+};
-+static const uint64_t perf_mako_rdr24_1[] = {
-+	0x0000000000000000ULL, 0x0000000000000000ULL,
++struct perf_mako_config {
++	unsigned int	ctr0;		/* MAKO_CTR0_* */
 +};
 +
-+/*
-+ * The firmware does not store the image verbatim. It merges each RDR with
-+ * the current contents, new = (image & ~mask) | (current & mask), using
-+ * the mask table at 0x29ba90 in the PDC0213 image. A set mask bit keeps the
-+ * current bit. RDR0, RDR1, RDR9 and RDR24 on chain 1 hold live state, and
-+ * overwriting them hangs the machine or takes an HPMC. The masks below are
-+ * the firmware's, clipped to the width of each RDR, and are given only for
-+ * the RDRs where they keep a bit that exists. Those entries also give the
-+ * width of the RDR in bits, which the merge needs to align what it reads.
-+ */
-+static const uint64_t perf_mako_mask0_0[] = {
-+	0x0200000000000000ULL,
-+};
-+static const uint64_t perf_mako_mask1_0[] = {
-+	0xffc0ffffffffffffULL,
-+};
-+static const uint64_t perf_mako_mask20_0[] = {
-+	0xff00000000c00000ULL, 0x0000000000300000ULL, 0x0008040000000000ULL,
-+};
-+static const uint64_t perf_mako_mask21_0[] = {
-+	0xff00000000c00000ULL, 0x0000000000300000ULL, 0x0008040000000000ULL,
-+};
-+static const uint64_t perf_mako_mask22_0[] = {
-+	0x0000000000000000ULL, 0x0000000000000000ULL, 0x0000000000000000ULL,
-+	0x0003c00000000000ULL,
-+};
-+static const uint64_t perf_mako_mask23_0[] = {
-+	0x0000000000000000ULL, 0x0000000000000000ULL, 0x0000000000000000ULL,
-+	0x0003c00000000000ULL,
-+};
-+static const uint64_t perf_mako_mask0_1[] = {
-+	0xfffffbfffffffffeULL,
-+};
-+static const uint64_t perf_mako_mask1_1[] = {
-+	0xffffffcfffffffffULL,
-+};
-+static const uint64_t perf_mako_mask9_1[] = {
-+	0xfffffefffffffffcULL,
-+};
-+static const uint64_t perf_mako_mask24_1[] = {
-+	0xffffffffc3ffffffULL, 0xffffffffffffffffULL,
-+};
++/* perf_mako.c, with interrupts off */
++int perf_mako_load(const struct perf_mako_config *cfg);
++int perf_mako_read(uint32_t *c);
++void perf_mako_enable(void);
++void perf_mako_disable(void);
++bool perf_mako_is_loaded(const struct perf_mako_config *cfg);
 +
-+static const struct perf_mako_rdr perf_mako_image[] = {
-+	PERF_MAKO_RDR_MASK(0, 0, 19, perf_mako_rdr0_0,
-+			   perf_mako_mask0_0),
-+	PERF_MAKO_RDR_MASK(1, 0, 64, perf_mako_rdr1_0,
-+			   perf_mako_mask1_0),
-+	PERF_MAKO_RDR(4, 0, perf_mako_rdr4_0),
-+	PERF_MAKO_RDR(5, 0, perf_mako_rdr5_0),
-+	PERF_MAKO_RDR(17, 0, perf_mako_rdr17_0),
-+	PERF_MAKO_RDR(18, 0, perf_mako_rdr18_0),
-+	PERF_MAKO_RDR_MASK(20, 0, 158, perf_mako_rdr20_0,
-+			   perf_mako_mask20_0),
-+	PERF_MAKO_RDR_MASK(21, 0, 158, perf_mako_rdr21_0,
-+			   perf_mako_mask21_0),
-+	PERF_MAKO_RDR_MASK(22, 0, 210, perf_mako_rdr22_0,
-+			   perf_mako_mask22_0),
-+	PERF_MAKO_RDR_MASK(23, 0, 210, perf_mako_rdr23_0,
-+			   perf_mako_mask23_0),
-+	PERF_MAKO_RDR(24, 0, perf_mako_rdr24_0),
-+	PERF_MAKO_RDR(25, 0, perf_mako_rdr25_0),
-+	PERF_MAKO_RDR_MASK(0, 1, 64, perf_mako_rdr0_1,
-+			   perf_mako_mask0_1),
-+	PERF_MAKO_RDR_MASK(1, 1, 64, perf_mako_rdr1_1,
-+			   perf_mako_mask1_1),
-+	PERF_MAKO_RDR(5, 1, perf_mako_rdr5_1),
-+	PERF_MAKO_RDR(6, 1, perf_mako_rdr6_1),
-+	PERF_MAKO_RDR_MASK(9, 1, 64, perf_mako_rdr9_1,
-+			   perf_mako_mask9_1),
-+	PERF_MAKO_RDR(15, 1, perf_mako_rdr15_1),
-+	PERF_MAKO_RDR(16, 1, perf_mako_rdr16_1),
-+	PERF_MAKO_RDR(20, 1, perf_mako_rdr20_1),
-+	PERF_MAKO_RDR_MASK(24, 1, 128, perf_mako_rdr24_1,
-+			   perf_mako_mask24_1),
-+};
++/* Exclusion between /dev/perf and perf events */
++bool perf_mako_dev_get(void);
++void perf_mako_dev_put(void);
++bool perf_mako_pmu_get(void);
++void perf_mako_pmu_put(void);
 +
-+#endif
+ /* perf_mako.c, for /dev/perf */
+ ssize_t perf_mako_write(const char __user *buf, size_t count);
+ int perf_mako_start(void);
 
 -- 
 2.56.1
