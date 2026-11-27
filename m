@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795743534;
-	b=XsHOaUEHB8xUQolCMe5jOqJpfIOGN9ujrkMno9neRQqJpSYvNGpfGmrDcb0agwz2Ctxj
-	 nxDuuPfFmGTCkVKVUXhKMPwARJ1xfY128k2R+KKo3zN5o9QpQlNbVr6VAWWKM7XH+3Szi
-	 6vjaSdHR+JoJsDqElJHhdd7guSG4PX06NHs+zp5DlAwyZJPUb6S+6ssUERv8d+raplxC7
-	 niX/7B53GPkeQJTN+4JEqLLrRVSoAGTHnXhSwtnsl2ziX2nThXQQ09dnkDhl4t/BoJ5FR
-	 b6XEV06QUJNoj4bviTOqdTDnNURxrXtR1FTmZjM7Lf37LTGrt8Pi44ZxnnTfjgdAtWg==
+	t=1795743537;
+	b=qo5Yp3C7u0XN+F4bBiCa1or30N/LVB88Nu+XFUKGOZw1gViJ8Mhwg4R0p0lJooLqLJde
+	 jRMUzqzYHiwm2xBFKZaibGxu03WPqFxU4DW4mWVltCSsnatK8riZ2En8R5yIv+4G3HwQu
+	 ZnByFiMHF7ijsLzClCme0F1thOMKE7VSFhxCp7qq8kF4F4g6Jd6F29NR7ZF5LiCCX5uaJ
+	 BZ0vK+5u69FemYxC2XxHV9ojraXcRHOdJkYra3aNyD4/ce79GAgUHI4KiSsu0r1Fu4XeU
+	 XGDTPjFj5ygMDX+ns4BWg+Uu7OYvvpM4iGlzPDfpHBmkCnAoB1difw+Q8uR6/3bjTUQ==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795743534;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795743537;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=O78ah5N1oqd6VDyLowFG/7BD2J9RODMHe5GGvZ8b2fA=;
-	b=MD2J9gr15eGVi7c3Bsg4RuVfZSP2afqHP7nRBZVbukeNdu/5QB1l93omuaPNW4z2jcCf
-	 w/FivjwL5bSh9dH2XLxUvdR1Gs4ukhH7wA4XGxI99ydQj4Pf7fO75zmKpLig494nuGGi7
-	 rhE9RRdgxLzcBX9T15W/W6LUunXMki6EKzjcOZpskMRZp9Btld8E/okRTZXHf1B+5TCWh
-	 ertLmKMRYcnzS50eC0SyOo2AE4yDXTrU7VZJfW/XkEZ/bkji5Syq4MqZ4VNVnKzItKy0E
-	 ksGONg9lKG0lx1O044JAf+ZgJomMPDZOcBXT8IG3ImR6GIhuSOt5VKQ8Hw6vV9eD5uw==
+	bh=g/TBK80yUbD4foEex18EOrXvxR5DjUVSSFLkBoVPaQs=;
+	b=VJTAPnnaZNfQP151t8WsyZuyCQhd/1qq2DomIIhwZQd7Oiyjb6svqx2unq4N9GkzINJR
+	 jerKlX3DJXD6OWBs+j8zNcQoWFIkZ0ZxVcolS2WhvaKfcl1l9T8xriHRkXlNOhg4bCjvi
+	 ubucAzz5sV+/hRne/K/hkuK+Z58w0nEn5cbJNm6bigKEixfGuh3cSbwPGjlg08G0TaQWI
+	 K37CUuMXP/wqLC/yWoCAPSCXTzJfQyChkMUwsnQEhHhapf6beE8txxWOqizWHxzehhsx7
+	 niZzHk3NW+i0rM6o/sY7yXUznd93xSlg2btR8f9p52J3QYEwqnt3NqW7B4S0Z8VOyjA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PjkwlF0F;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M8iwU4gF;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3A2606A31C
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Nov 2026 01:38:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A05606A31C
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Nov 2026 01:38:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=PjkwlF0F
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 616C81F00893;
-	Fri, 27 Nov 2026 01:38:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=M8iwU4gF
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D98361F00893;
+	Fri, 27 Nov 2026 01:38:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795743534;
-	bh=O78ah5N1oqd6VDyLowFG/7BD2J9RODMHe5GGvZ8b2fA=;
+	s=k20260515; t=1795743537;
+	bh=g/TBK80yUbD4foEex18EOrXvxR5DjUVSSFLkBoVPaQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=PjkwlF0FUjVCltq4hZByTYoe9IcwdihJRnkL65u0ZwybcApkJU/xlUW8bX1EB8Jnq
-	 HlAoU0MS+OvOVCf7D6w4iHDAyACAW5ABBrrQ12FCdEkvGaXnl+JnpDTlFbrVKS0h+4
-	 6BrMNeLVSFJwKfEN3QzzCNkUv3iSaaT/jgKbUXkt5IZ1a9bWtKr+gD6dLg1oTsyTtg
-	 gKio0Up/XAUIY14zgwmWRsqntZWI9uzB89jUVSa05oI+XbFya02cHssf2DFHuPvRSR
-	 SLFEBCoFwmWSfEUhiAH1Rc736majWTKcuKq2WP5T/b5x2mwcRFVxhUquugC81rQdgp
-	 LOwG9n/QM845Q==
+	b=M8iwU4gFZCtxshNhhiDyamJHGtmlvcSY/2XjxwZ6m/nJSVr8geYB+R+0N9liwMGL/
+	 bipJArCqgxaUw8WMz9UC2VxqvYZgao4jLAnZpCrSqgQKU+lqAeS0TlYjytx+FAwR63
+	 9gG8VmBfOOW1uDwUvUW8LiFD4+V5Tq63Pba1rn+c36wwEioW637cwIIGocd2RDyUJs
+	 kLaC1s8gFbnLeItHQhUvxsDhbwmnysFgVvBf+c5pFhPB6qdvDjzUFCGl7GJTcfGHW0
+	 DADQNcsVZ152hT30UY5YxrVOMZubWAj49nc0AB0GOn88NoLwXME/X/Nx1tZFpfGxBG
+	 hQLXmcQJw7PSw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -50,9 +50,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v2 12/18] perf tests trace: Exercise the tracing options
-Date: Thu, 26 Nov 2026 22:37:55 -0300
-Message-ID: <20261127013801.14841-13-acme@kernel.org>
+Subject: [PATCH v2 13/18] perf tests timechart: Exercise the report options
+Date: Thu, 26 Nov 2026 22:37:56 -0300
+Message-ID: <20261127013801.14841-14-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20261127013801.14841-1-acme@kernel.org>
 References: <20261127013801.14841-1-acme@kernel.org>
@@ -69,125 +69,77 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Cover page faults, scheduler stats, syscall and failure summaries,
-event limits, callchains, target filters and the remaining tracing
-options.  Like the summary test it needs root.
+Run the report with width, process count, topology, highlight,
+process, power and tasks only, io and force options.
 
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/trace_options.sh | 103 ++++++++++++++++++++++++
- 1 file changed, 103 insertions(+)
- create mode 100755 tools/perf/tests/shell/trace_options.sh
+ tools/perf/tests/shell/timechart.sh | 46 +++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-diff --git a/tools/perf/tests/shell/trace_options.sh b/tools/perf/tests/shell/trace_options.sh
-new file mode 100755
-index 0000000000000000..5935f9ced6effa03
---- /dev/null
-+++ b/tools/perf/tests/shell/trace_options.sh
-@@ -0,0 +1,103 @@
-+#!/bin/bash
-+# perf trace option tests
-+# SPDX-License-Identifier: GPL-2.0
+diff --git a/tools/perf/tests/shell/timechart.sh b/tools/perf/tests/shell/timechart.sh
+index 40072b32171a9a1c..c55ddc5f923b2bcc 100755
+--- a/tools/perf/tests/shell/timechart.sh
++++ b/tools/perf/tests/shell/timechart.sh
+@@ -59,6 +59,33 @@ test_timechart() {
+ 	echo "perf timechart ${NAME} test [Success]"
+ }
+ 
++test_timechart_report_option() {
++	NAME=$1
 +
-+set -e
++	shift 1
++	echo "perf timechart report ${NAME} test"
 +
-+. "$(dirname $0)"/lib/probe.sh
++	if ! perf timechart -i "${perfdata}" -o "${output}" "$@" > /dev/null 2>&1; then
++		echo "perf timechart report ${NAME} test [Failed: perf timechart command failed]"
++		err=1
++		return
++	fi
 +
-+skip_if_no_perf_trace || exit 2
++	if [ ! -s "${output}" ]; then
++		echo "perf timechart report ${NAME} test [Failed: output file is empty or missing]"
++		err=1
++		return
++	fi
 +
-+# The syscall tracepoints need root to open.
-+if [ "$(id -u)" != 0 ]; then
-+	echo "[Skip] No root permission"
++	if ! grep -q "svg" "${output}"; then
++		echo "perf timechart report ${NAME} test [Failed: output doesn't look like SVG]"
++		err=1
++		return
++	fi
++
++	echo "perf timechart report ${NAME} test [Success]"
++}
++
+ if ! perf check feature -q libtraceevent ; then
+ 	echo "perf timechart is not supported. Skip."
+         cleanup
+@@ -69,5 +96,24 @@ test_timechart "Basic" ""
+ test_timechart "IO-only" "-I"
+ test_timechart "Backtrace" "-g"
+ 
++if [ ! -s "${perfdata}" ]; then
++	echo "perf timechart report options [Skipped: no recorded data]"
++	cleanup
 +	exit 2
 +fi
 +
-+err=0
-+out=$(mktemp /tmp/__perf_test_trace_opts.out.XXXXX)
++# Reuse the data recorded by the last test to exercise the report options.
++test_timechart_report_option "width" -w 1024
++test_timechart_report_option "proc-num" -n 4
++test_timechart_report_option "topology" -t
++test_timechart_report_option "highlight time" --highlight 1
++test_timechart_report_option "highlight name" --highlight true
++test_timechart_report_option "process" -p true
++test_timechart_report_option "power-only" -P
++test_timechart_report_option "tasks-only" -T
++test_timechart_report_option "io options" --io-min-time 1us \
++	--io-merge-dist 1us --io-skip-eagain
++test_timechart_report_option "force" -f
 +
-+cleanup() {
-+	rm -f "${out}"
-+
-+	trap - EXIT TERM INT
-+}
-+
-+trap_cleanup() {
-+	echo "Unexpected signal in ${FUNCNAME[1]}"
-+	cleanup
-+	exit 1
-+}
-+trap trap_cleanup EXIT TERM INT
-+
-+run_trace() {
-+	local desc="$1" expect="$2"
-+
-+	shift 2
-+	echo "Trace ${desc}"
-+	if ! perf trace "$@" > "${out}" 2>&1; then
-+		echo "Trace ${desc} [Failed: perf trace failed]"
-+		cat "${out}"
-+		err=1
-+		return
-+	fi
-+	if [ -n "${expect}" ] && ! grep -qE "${expect}" "${out}"; then
-+		echo "Trace ${desc} [Failed: missing '${expect}']"
-+		cat "${out}"
-+		err=1
-+		return
-+	fi
-+	echo "Trace ${desc} [Success]"
-+}
-+
-+# Page faults are software events, not syscalls, and exercise the
-+# separate page fault printing path.
-+run_trace "pagefaults" "fault \[" -F all -- perf test -w noploop 1
-+run_trace "minor pagefaults" "fault \[" -F min -- perf test -w noploop 1
-+run_trace "major pagefaults" "" -F maj -- sleep 0.1
-+
-+# sched_stat_runtime feeds the "sched" summary counters.
-+run_trace "sched" "" --sched -s -- sleep 0.1
-+
-+run_trace "syscalls" "" --syscalls -- true
-+# -e is a callback that replaces ev_qualifier, so the syscall list must
-+# be a single comma-separated argument rather than three -e flags.
-+run_trace "events" "openat" -e openat,read,write -- cat /dev/null
-+run_trace "failure" "" --failure -- false
-+run_trace "errno summary" "" --errno-summary -s -- cat /dev/null
-+run_trace "summary" "" -S --summary-mode=total -- cat /dev/null
-+run_trace "summary thread" "" -s --summary-mode=thread -- cat /dev/null
-+run_trace "duration filter" "" --duration 0.01 -- cat /dev/null
-+run_trace "max events" "" --max-events 5 -e write -- seq 1 100
-+run_trace "sort events" "" --sort-events -e write -- echo hello
-+run_trace "call graph" "" --call-graph fp --max-stack 5 --min-stack 1 \
-+	-e write -- echo hello
-+run_trace "kernel syscall graph" "" --kernel-syscall-graph \
-+	--call-graph fp -e write -- echo hello
-+run_trace "libtraceevent print" "" --libtraceevent_print \
-+	-e kmem:kmalloc -- true
-+run_trace "filter pids" "" --filter-pids 1 -- cat /dev/null
-+run_trace "proc map timeout" "" --proc-map-timeout 100 -- cat /dev/null
-+run_trace "mmap pages" "" -m 8 -- sleep 0.1
-+run_trace "delay" "" -D 10 -- sleep 0.1
-+run_trace "no inherit" "" --no-inherit -- sleep 0.1
-+if perf check feature -q bpf_skeletons; then
-+	run_trace "uid" "" -u "$(id -un)" -- true
-+else
-+	echo "Trace uid [Skipped: no BPF skeleton support]"
-+fi
-+run_trace "cpu" "" -C 0 -- sleep 0.1
-+run_trace "pid" "" -p $$ -- sleep 0.1
-+run_trace "tid" "" -t $$ -- sleep 0.1
-+run_trace "verbose" "" -v -e write -- echo hello
-+run_trace "bitmask list" "" --bitmask-list -e openat -- cat /dev/null
-+run_trace "print sample" "" --print-sample -e write -- echo hello
-+
-+echo "Trace invalid pagefault type"
-+if perf trace -F bogus -- true > "${out}" 2>&1; then
-+	echo "Trace invalid pagefault type [Failed: accepted invalid value]"
-+	err=1
-+fi
-+
-+cleanup
-+exit $err
+ cleanup
+ exit $err
 -- 
 2.56.0
 
