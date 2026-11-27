@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795743541;
-	b=gxADLPZ5IUimbIY/TruH7p4Swq6zDYJstcM4t3lFZ3GkDgbihnHaL8kNCX4T0CpmBqrk
-	 UBw1BjD9yfLe75FZ6i8+zOpdXIRexCk09fNRIdX30l40FQNaX4KFSEqWTZzUfKXL2Vd7C
-	 w0pzUD/02gAfB9B1tkxZoeYhpc+Z/9YfrpMtSVacJ82+u+ixdXsNXxzJbZbFYXD43lqfL
-	 rTQXlOz+CJKUjb5pAL4O09SMjKY6xDvOnO/A+9CgYb5fMR3XEJyAxJ7bWLae19StNduhc
-	 1uZgNomtDwZmDYEqZZ42ZsvNGAYBLLtufp3f9wkuATegeYtBJ07sNRtZMdQqCCgSKLw==
+	t=1795743544;
+	b=ShnwwGPFGno9T4aHkYSLUunXw69pzcai4CdAkNccY+BwvcrMa+/diya2K3ffb9t8GVek
+	 HbIpPedY8yoi7wlu86JVbb9w57JyTKMJ/SmrjAQ41YE5B9GWoJ9ncytHfn4+KHUwtelJJ
+	 Z9ZfYous+Ud4zwLN0JS7xnahbrfGdRIGgGYpWoERXSij+ngvSysPMV9Za4AQPmbnL3EXa
+	 UjmFJgeFrntOR8tJC5WQLUcqyS5CdgI/mjBj8mbT8svVbxfp1CN3nvlmLOepxEMnV7sC9
+	 edcR7UQzrzclVjq/zjcHhbflnbLPFZAqYvschYwLrJEbBjf+bI5gBl2V5sxxT9cHaLA==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795743541;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795743544;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=18P4UZhgtKtJUki+IsA5FD0ygckA34Mg1yHBZZTxTgM=;
-	b=kOb6RTjsuSsvaBR5xKV5YdvY/bXxN53ApyR/k8ktEvtFbk4P1VQtNQVK3BHt/Xy8fF7k
-	 /w202AuTwSGPoYAE9leFVp3dEhLSQo1ryBVLbMF9k5Mj+PlQnQ1xpPtyuQewOpz2qXrge
-	 psa7yMYMJ/PxLcJ3I/vY0SURT1eCsGe1pGsSJCJVS40Xag3zMzeeaNvYMeI8PDOQsu55X
-	 aHnda5rBIc+QKkPN8Eb7I1Jj2UrwA/u6Zpc6i6PhsD00+lH12AAyR8ftNFCwefImKWJCy
-	 3YMcsFiSyJhZqmvFzXaJsM8/8JbhJSIX0cklu473JmUsbio6TJ/dmrUA1ao9SuF4MwA==
+	bh=zNg6hmEPPDF4l3/AVrnA5RbSPnhIyY5DrKHYYpSSy6Y=;
+	b=mueRBKKsRMpp8iT+DZckzYamyzRAAgEkXNpzlQTKilS1/LMypyaiV68zhMTgEL0KgZ11
+	 s0YPf4jTPOSSuEqsuiD576EN+DI3aenDS+tlKBmg8c2006CaAnkKXG8xvRxyoWQ7OZ1hc
+	 iKQ5eLSrnSFVKVijvAPkFQ/VMGA/tGjStcm0qVKqcUkipvsksKUVrq3Q4hLeI5iUs5vdQ
+	 U4aPljbB7IMJ0KZ5nITJcQY72TFW6z5HPTjkW6pRW+pQ//qVOfZdjTBM4r6USfVKATTlE
+	 UYWDUM6QfojFCOHXMmHNNSIN+0/BoNJ0ECA4WsixOIDp6LAJFYkYuo3RdsKI+xJWhxg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XnbqhNaJ;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dtFPVjLn;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D85E606A31C
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Nov 2026 01:39:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC92606A324
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Nov 2026 01:39:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=XnbqhNaJ
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C71B1F00897;
-	Fri, 27 Nov 2026 01:38:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=dtFPVjLn
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C00F1F00897;
+	Fri, 27 Nov 2026 01:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795743540;
-	bh=18P4UZhgtKtJUki+IsA5FD0ygckA34Mg1yHBZZTxTgM=;
+	s=k20260515; t=1795743543;
+	bh=zNg6hmEPPDF4l3/AVrnA5RbSPnhIyY5DrKHYYpSSy6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=XnbqhNaJRTRGZSyRb+SyIj4xsQEbVOtySzozd7Sj1snJgN3M0ay6dlroyWtiNrFc5
-	 8lT63fQ0LVPtqxcql65LZq44qMGpXElhsTfpji+TSj7P+4cMz4T6s0gv93iq9eDo9F
-	 ft76bwyyce7hfHHU0UoAy0uLCAXLS1JHnn26NRUVFQ5KQesw1MIO9xRRE4hyU4w0kB
-	 p6y39Hm92eNmLWYSEpKecaKezjzq5D77BAMq2nDld7aavPFfckB05pNDwsRgrjOvA1
-	 7JB5Wt4oonWaxLlnEsak4N96JWdmBMP4As7wCoO+/9BYWvAbfdZ3Hy+MaIM07B7Q/l
-	 nnVZCyHiq2j7g==
+	b=dtFPVjLnAjqmhibvSMFt1YHKQuWkZL80TUkIDsoLBOy9AXLX+33m036MJchPHHWKc
+	 fNQR3EZ/j5LxoI5TOH4gxNvYzGtkTaaEIH5DONp8czvtApsqvAWUHBnDeie6O+PtqF
+	 hgN5FXOqsEPkj+3+or7uXx8gwGO01KRGhKqS/D0YNcHFKs2UPxk7hlrDJQAFkt2lF/
+	 M9DuJJ3kvbquZKF4tz2S9IozQ4vH31BUNtlptwQMLE+yx/n5spK83oc/FPP+ZLCNxc
+	 orqybOPe7aT8Og2Kj46+gxFIwC2nBrs5v0HfP0hRhhfYkf9KG3sg/lrv5w063N9XtV
+	 Qub0kwHeZxxKw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -50,9 +50,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v2 14/18] perf tests kmem: Add a basic perf kmem test
-Date: Thu, 26 Nov 2026 22:37:57 -0300
-Message-ID: <20261127013801.14841-15-acme@kernel.org>
+Subject: [PATCH v2 15/18] perf tests bench: Add smoke tests for perf bench
+Date: Thu, 26 Nov 2026 22:37:58 -0300
+Message-ID: <20261127013801.14841-16-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20261127013801.14841-1-acme@kernel.org>
 References: <20261127013801.14841-1-acme@kernel.org>
@@ -69,54 +69,33 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Exercise the slab and page allocators, their sort, caller and
-allocation views, the live page stats and the time filter.
+Run the numa, sched, futex, epoll, syscall, mem, internals, breakpoint
+and uprobe benchmarks with small workloads, including the numa
+convergence, perturbation and single node variants, and skip the ones
+that need root or hardware that is not present.
 
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/kmem.sh | 222 +++++++++++++++++++++++++++++++++
- 1 file changed, 222 insertions(+)
- create mode 100755 tools/perf/tests/shell/kmem.sh
+ tools/perf/tests/shell/bench.sh | 154 ++++++++++++++++++++++++++++++++
+ 1 file changed, 154 insertions(+)
+ create mode 100755 tools/perf/tests/shell/bench.sh
 
-diff --git a/tools/perf/tests/shell/kmem.sh b/tools/perf/tests/shell/kmem.sh
+diff --git a/tools/perf/tests/shell/bench.sh b/tools/perf/tests/shell/bench.sh
 new file mode 100755
-index 0000000000000000..196f1a723930161b
+index 0000000000000000..2a9c402c99f24a34
 --- /dev/null
-+++ b/tools/perf/tests/shell/kmem.sh
-@@ -0,0 +1,222 @@
++++ b/tools/perf/tests/shell/bench.sh
+@@ -0,0 +1,154 @@
 +#!/bin/bash
-+# perf kmem tests
++# perf bench tests
 +# SPDX-License-Identifier: GPL-2.0
 +
 +set -e
 +
-+# Root permissions required for tracing events.
-+if [ "$(id -u)" != 0 ]; then
-+	echo "[Skip] No root permission"
-+	exit 2
-+fi
-+
-+# Without libtraceevent cmd_kmem is a stub that fails instead of
-+# reporting the tracepoints below as unavailable.
-+if ! perf check feature -q libtraceevent; then
-+	echo "[Skip] No libtraceevent support"
-+	exit 2
-+fi
-+
-+if [ ! -e /sys/kernel/tracing/events/kmem/kmalloc ] &&
-+   [ ! -e /sys/kernel/debug/tracing/events/kmem/kmalloc ]; then
-+	echo "[Skip] No kmem tracepoints"
-+	exit 2
-+fi
-+
 +err=0
-+slabdata=$(mktemp /tmp/__perf_test_kmem.slab.XXXXX)
-+pagedata=$(mktemp /tmp/__perf_test_kmem.page.XXXXX)
-+out=$(mktemp /tmp/__perf_test_kmem.out.XXXXX)
++out=$(mktemp /tmp/__perf_test_bench.out.XXXXX)
 +
 +cleanup() {
-+	rm -f "${slabdata}" "${slabdata}".old
-+	rm -f "${pagedata}" "${pagedata}".old
 +	rm -f "${out}"
 +
 +	trap - EXIT TERM INT
@@ -129,180 +108,135 @@ index 0000000000000000..196f1a723930161b
 +}
 +trap trap_cleanup EXIT TERM INT
 +
-+fail() {
-+	echo "$1 [Failed: $2]"
-+	cat "${out}"
-+	err=1
++# Some benchmarks need root, others only report that the hardware is
++# not there, so treat the environment as a skip and a missing result
++# as a failure.
++bench_skip_reasons="No hardware support|perf_event_open: Permission denied|perf_event_open: No such file or directory|perf_event_open: Operation not supported|perf_event_open: No space left on device"
++
++# The NUMA benchmarks are compiled out without libnuma, and some pass
++# explicit CPU numbers that must be online and in the current cpuset.
++numa_ok=0
++if perf check feature -q libnuma; then
++	numa_ok=1
++fi
++cpu0_ok=0
++cpu1_ok=0
++if taskset -c 0 true > /dev/null 2>&1; then
++	cpu0_ok=1
++fi
++if taskset -c 1 true > /dev/null 2>&1; then
++	cpu1_ok=1
++fi
++
++run_bench() {
++	local name="$1" expect="$2"
++
++	shift 2
++	echo "Bench ${name}"
++	if ! perf bench "$@" > "${out}" 2>&1; then
++		if grep -qE "${bench_skip_reasons}" "${out}"; then
++			echo "Bench ${name} [Skipped: not supported here]"
++			return
++		fi
++		echo "Bench ${name} [Failed: perf bench failed]"
++		cat "${out}"
++		err=1
++		return
++	fi
++	# A benchmark can also decline to run and exit 0, printing that
++	# the hardware is not there, as the breakpoint ones do; that is a
++	# skip, not a success
++	if grep -qE "${bench_skip_reasons}" "${out}"; then
++		echo "Bench ${name} [Skipped: not supported here]"
++		return
++	fi
++	if ! grep -qE "${expect}" "${out}"; then
++		echo "Bench ${name} [Failed missing '${expect}']"
++		cat "${out}"
++		err=1
++		return
++	fi
++	echo "Bench ${name} [Success]"
 +}
 +
-+test_kmem_record() {
-+	echo "Kmem record"
-+	perf kmem record -o "${slabdata}" -- sleep 1
-+	echo "Kmem record [Success]"
-+}
++if [ "${numa_ok}" -eq 1 ]; then
++	run_bench numa/mem "GB/sec" numa mem -p 2 -t 2 -P 2 -T 1 -s 1 -l 1
++	run_bench numa/mem/options "GB/sec" numa mem -p 1 -t 1 -P 2 -s 1 -l 1 -c -d -r -z -B -R -W
++	run_bench numa/mem/init "GB/sec" numa mem -p 1 -t 1 -P 2 -s 1 -l 1 -I -H 1 -S -u 1 -B -r -z -Z
++	if [ "${cpu0_ok}" -eq 1 ] && [ "${cpu1_ok}" -eq 1 ]; then
++		run_bench numa/mem/bind "GB/sec" numa mem -p 2 -t 2 -P 2 -T 1 -s 1 -l 1 -C 0,1 -M 0,0
++	else
++		echo "Bench numa/mem/bind [Skipped: cpu 0 and 1 not available]"
++	fi
++	run_bench numa/mem/convergence "GB/sec" numa mem -p 1 -t 1 -P 512 -l 1 -s 1 -c -m
++	run_bench numa/mem/perturb "GB/sec" numa mem -p 1 -t 1 -P 512 -l 1 -s 1 -x 1 -S -d -d
++	if [ "${cpu0_ok}" -eq 1 ]; then
++		run_bench numa/mem/zero "GB/sec" numa mem -p 1 -t 2 -T 64 -l 1 -s 1 -C 0 -M 0 -B -Z -H -1
++	else
++		echo "Bench numa/mem/zero [Skipped: cpu 0 not available]"
++	fi
++else
++	echo "Bench numa/mem [Skipped: no libnuma support]"
++fi
++run_bench sched/messaging "Total time" sched messaging -g 1 -l 10
++run_bench sched/pipe "ops/sec" sched pipe -l 1000
++run_bench sched/seccomp-notify "ops/sec" sched seccomp-notify -l 10
++run_bench futex/hash "operations/sec" futex hash -t 2 -r 1 -s
++run_bench futex/wake "Wokeup" futex wake -t 2
++run_bench futex/wake-parallel "Avg per-thread latency" futex wake-parallel -t 2 -w 1
++run_bench futex/requeue "Requeued" futex requeue -t 2
++run_bench futex/lock-pi "operations/sec" futex lock-pi -t 2 -r 1
++run_bench epoll/wait "operations/sec" epoll wait -r 1 -t 2
++run_bench epoll/ctl "operations" epoll ctl -r 1 -t 2
++run_bench syscall/basic "ops/sec" syscall basic -l 100
++run_bench syscall/getpgid "ops/sec" syscall getpgid -l 100
++run_bench syscall/fork "ops/sec" syscall fork -l 10
++run_bench syscall/execve "ops/sec" syscall execve -l 10
++run_bench mem/memcpy "Copying" mem memcpy -s 4KB -l 1
++run_bench mem/memset "Copying" mem memset -s 4KB -l 1
++run_bench mem/mmap "Copying" mem mmap -s 4KB -l 1
++run_bench internals/synthesize "Average data synthesis took" internals synthesize -s -i 1
++run_bench internals/synthesize-mt "Average synthesis took" internals synthesize -t -m 1 -M 2 -I 1
++run_bench internals/kallsyms-parse "Average kallsyms__parse took" internals kallsyms-parse -i 1
++run_bench internals/inject-build-id "Average build-id injection took" internals inject-build-id -i 2 -m 2 -n 2
++run_bench internals/pmu-scan "Average PMU scanning took" internals pmu-scan -i 1
++run_bench breakpoint/thread "Created/joined" breakpoint thread -t 2 -b 2 -p 1
++run_bench breakpoint/enable "Enabled/disabled" breakpoint enable -p 1 -a 1
++run_bench uprobe/baseline "usecs/op" uprobe baseline -l 2
 +
-+test_kmem_slab_stat() {
-+	echo "Kmem slab stat"
-+	if ! perf kmem -i "${slabdata}" stat > "${out}" 2>&1; then
-+		fail "Kmem slab stat" "perf kmem stat failed"
-+		return
-+	fi
-+	if ! grep -q "SUMMARY (SLAB allocator)" "${out}"; then
-+		fail "Kmem slab stat" "missing summary"
-+		return
-+	fi
-+	echo "Kmem slab stat [Success]"
-+}
++if [ "$(id -u)" = 0 ]; then
++	run_bench internals/evlist-open-close "Number of events" internals evlist-open-close -i 2
++else
++	echo "Bench internals/evlist-open-close [Skipped: no root permission]"
++fi
 +
-+test_kmem_slab_stat_options() {
-+	echo "Kmem slab stat options"
-+	if ! perf kmem -i "${slabdata}" --sort hit,bytes --line 5 stat > "${out}" 2>&1; then
-+		fail "Kmem slab stat options" "perf kmem stat failed"
-+		return
-+	fi
-+	if ! grep -q "SUMMARY (SLAB allocator)" "${out}"; then
-+		fail "Kmem slab stat options" "missing summary"
-+		return
-+	fi
-+	echo "Kmem slab stat options [Success]"
-+}
-+
-+test_kmem_page_record() {
-+	echo "Kmem page record"
-+	perf kmem --page record -c 1000 -o "${pagedata}" -- sleep 1
-+	echo "Kmem page record [Success]"
-+}
-+
-+test_kmem_page_stat() {
-+	echo "Kmem page stat"
-+	if ! perf kmem --page -i "${pagedata}" stat > "${out}" 2>&1; then
-+		fail "Kmem page stat" "perf kmem stat failed"
-+		return
-+	fi
-+	if ! grep -q "SUMMARY (page allocator)" "${out}"; then
-+		fail "Kmem page stat" "missing summary"
-+		return
-+	fi
-+	echo "Kmem page stat [Success]"
-+}
-+
-+test_kmem_page_stat_options() {
-+	echo "Kmem page stat options"
-+	if ! perf kmem --page -i "${pagedata}" --sort order,gfp --line 5 stat > "${out}" 2>&1; then
-+		fail "Kmem page stat options" "perf kmem stat failed"
-+		return
-+	fi
-+	if ! grep -q "SUMMARY (page allocator)" "${out}"; then
-+		fail "Kmem page stat options" "missing summary"
-+		return
-+	fi
-+	echo "Kmem page stat options [Success]"
-+}
-+
-+test_kmem_slab_alloc() {
-+	echo "Kmem slab alloc stats"
-+	if ! perf kmem -i "${slabdata}" --alloc --sort bytes --line 5 stat > "${out}" 2>&1; then
-+		fail "Kmem slab alloc stats" "perf kmem stat failed"
-+		return
-+	fi
-+	if ! grep -q "SUMMARY (SLAB allocator)" "${out}"; then
-+		fail "Kmem slab alloc stats" "missing summary"
-+		return
-+	fi
-+	echo "Kmem slab alloc stats [Success]"
-+}
-+
-+test_kmem_page_caller() {
-+	echo "Kmem page caller stats"
-+	if ! perf kmem --page -i "${pagedata}" --caller --sort bytes --line 5 stat > "${out}" 2>&1; then
-+		fail "Kmem page caller stats" "perf kmem stat failed"
-+		return
-+	fi
-+	if ! grep -q "SUMMARY (page allocator)" "${out}"; then
-+		fail "Kmem page caller stats" "missing summary"
-+		return
-+	fi
-+	echo "Kmem page caller stats [Success]"
-+}
-+
-+test_kmem_page_caller_raw() {
-+	echo "Kmem page caller raw ip stats"
-+	if ! perf kmem --page -i "${pagedata}" --caller --raw-ip --sort callsite --line 5 stat > "${out}" 2>&1; then
-+		fail "Kmem page caller raw ip stats" "perf kmem stat failed"
-+		return
-+	fi
-+	if ! grep -q "SUMMARY (page allocator)" "${out}"; then
-+		fail "Kmem page caller raw ip stats" "missing summary"
-+		return
-+	fi
-+	echo "Kmem page caller raw ip stats [Success]"
-+}
-+
-+test_kmem_page_alloc() {
-+	echo "Kmem page alloc stats"
-+	if ! perf kmem --page -i "${pagedata}" --alloc --sort bytes --line 5 stat > "${out}" 2>&1; then
-+		fail "Kmem page alloc stats" "perf kmem stat failed"
-+		return
-+	fi
-+	if ! grep -q "SUMMARY (page allocator)" "${out}"; then
-+		fail "Kmem page alloc stats" "missing summary"
-+		return
-+	fi
-+	echo "Kmem page alloc stats [Success]"
-+}
-+
-+test_kmem_page_live() {
-+	echo "Kmem page live stats"
-+	if ! perf kmem --page --live -i "${pagedata}" --sort page --line 5 stat > "${out}" 2>&1; then
-+		fail "Kmem page live stats" "perf kmem stat failed"
-+		return
-+	fi
-+	if ! grep -q "SUMMARY (page allocator)" "${out}"; then
-+		fail "Kmem page live stats" "missing summary"
-+		return
-+	fi
-+	echo "Kmem page live stats [Success]"
-+}
-+
-+test_kmem_slab_caller() {
-+	echo "Kmem slab caller stats"
-+	if ! perf kmem -i "${slabdata}" --caller --sort callsite --line 5 stat > "${out}" 2>&1; then
-+		fail "Kmem slab caller stats" "perf kmem stat failed"
-+		return
-+	fi
-+	if ! grep -q "SUMMARY (SLAB allocator)" "${out}"; then
-+		fail "Kmem slab caller stats" "missing summary"
-+		return
-+	fi
-+	echo "Kmem slab caller stats [Success]"
-+}
-+
-+test_kmem_time_filter() {
-+	echo "Kmem time filter"
-+	if ! perf kmem -i "${slabdata}" --time 0, stat > "${out}" 2>&1; then
-+		fail "Kmem time filter" "perf kmem stat failed"
-+		return
-+	fi
-+	if ! grep -q "SUMMARY (SLAB allocator)" "${out}"; then
-+		fail "Kmem time filter" "missing summary"
-+		return
-+	fi
-+	echo "Kmem time filter [Success]"
-+}
-+
-+test_kmem_record
-+test_kmem_slab_stat
-+test_kmem_slab_stat_options
-+test_kmem_slab_alloc
-+test_kmem_slab_caller
-+test_kmem_time_filter
-+test_kmem_page_record
-+test_kmem_page_stat
-+test_kmem_page_stat_options
-+test_kmem_page_caller
-+test_kmem_page_caller_raw
-+test_kmem_page_alloc
-+test_kmem_page_live
++# The uprobe programs attach to usleep in libc, which needs BPF and,
++# on distributions using musl, is not available by that name.
++if perf version --build-options | grep -q 'bpf_skeletons: *\[ on' && [ "$(id -u)" = 0 ]; then
++	for mode in empty trace_printk empty_ret trace_printk_ret; do
++		echo "Bench uprobe/${mode}"
++		if ! perf bench uprobe "${mode}" -l 2 > "${out}" 2>&1; then
++			if grep -qE 'Failed to (attach bench uprobe|load and verify BPF skeleton)' "${out}"; then
++				echo "Bench uprobe/${mode} [Skipped: no uprobe support]"
++				continue
++			fi
++			echo "Bench uprobe/${mode} [Failed: perf bench failed]"
++			cat "${out}"
++			err=1
++			continue
++		fi
++		if ! grep -q "usecs/op" "${out}"; then
++			# bench_uprobe() returns 0 when the skeleton loads but the
++			# uprobe cannot be attached, so a missing result here is
++			# an unsupported environment, not a test failure.
++			echo "Bench uprobe/${mode} [Skipped: no result]"
++			continue
++		fi
++		echo "Bench uprobe/${mode} [Success]"
++	done
++else
++	echo "Bench uprobe [Skipped: needs root and BPF skeletons]"
++fi
 +
 +cleanup
 +exit $err
