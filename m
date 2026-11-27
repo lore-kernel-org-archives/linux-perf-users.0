@@ -1,44 +1,44 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795743552;
-	b=I7iaHNAUnD1DF+cMoHjjLiISqmrA27NtWQMNZzzVBe6lRmWXeimzbloNdZlANYbdPnbk
-	 TyRrh7lKzH1TFsczf83A89GKh/rx7clmRZqiEZZjjjLfagtNXDJT75nt0h3rYDKmpbkoE
-	 pA1fw2BTP+wRSkq1K1BFx0J8sjiukezLEhBvjIrBpKwm96r3hv/R7B5I70IUyltWyPoY4
-	 Jfewym4Vg+lvCHlIlLXs1/L7joF8ZOTiQOnCnqjiZJsEIgIZM3oFF85Ai7QLcfh15WQde
-	 APYJHa4RRG7HqkDKOJi7D6A829JkwU0XoMxN/9E5rEf+7g0K9uUdmzVG02+xAALDmqw==
+	t=1795743555;
+	b=mPFNFLZzl8z4iZR9x+lSaH/vxb0mEJQ6JEkC27kDM2mSUS/BPOzYMYVWU7BhSO7br6/P
+	 Zzqk8iviia2+fR0MjUjkwh6Lp6B4UC8Bv9R0NhjYjNOpN8Uz8r36p9Ink83y2fmkbz8Cd
+	 eyHrPjcIeQCLTtONSnYC/3n4FJPXdIgYaHOwFGJHZ3nTMZwvS5smC4nxt4hI3PrQ8rizI
+	 /e/SmlKzUE5wl0Jo1swZC0i3BmcuB0wEyo9MhU7HfcrBgNKd9i1uXQYVSI+nfac+dq/XG
+	 06sJX2Y76nr0cVwy0W/zCvbEONjl+DdQ/QyigbG36J7idxcl6iQPJDMWsJGjxEXiVkg==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795743552;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795743555;
 	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
 	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-	bh=fKXJvfCDBO7ruc1QH74xpnA7D+7y5u6KjAfV3mv542k=;
-	b=X/kYIeY72/mr39BFvIjXYQfOMofqzAsHLMQFUKpec8jddWJWcVxVcguRFVmHVXtjs4HM
-	 yp4qGsYXL5zpRG448ozEW2p4DKyxDgTlPkxPWYslg7I9z2GD4Yo6AfOw+76VDG8G0zJAb
-	 ZbIM6CQ2r+xcAmY1qfFtYT3hzHUQ2pgaQlYEYVtE3uiDv6nSwsjvKU5GPKQ9F/HgJBebK
-	 LpzkcVM6IttbH2yarZ3QxTSbEBreWbZcSmT5pOBjzlsqWEVL9QYbmVvOHyixDhn2q6Ybu
-	 bLmsRxxon5YfzqnBJmZl8eSxZL05I3mWWYD5qNem9efzzr0uqTAEsaTbgSV9v88Oo+Q==
+	bh=d8h6wRRwTscVlIyAgavXAucLih33keY98ET8SKCPwEw=;
+	b=Bq87EF721Skx025b6JVpIo3/pu/3Fp9bBbbCFLhjdF661A9XRWzUF3sADLsz3p3LX3aC
+	 6u61z+0X8LQE1LRWnjfwYNpeLfZ2NTpoNo+0fn/DfitAKLGfGBkviOM9BBd55RqopLH7k
+	 rNgFqoP8z/v4wgCX1tORt2c5cIGHTBiDzxREadqEOjJeieUpggatl4jct22WRx824aep2
+	 YxyzU2KXPYMPZwUCBREnK0jN/CbahgYJ1J8eC/kScc0wnOXHE4RWOywjtpUzf8cJsnSxd
+	 JUQbyCmJ2Rn9yRMLT4OehKG0tuuJGz+l6rWCebGQIbjCzZ06rdTHjRnXDPh9hopnCTA==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bxWjpjbh;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="H/fwD8kh";
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20428606A31E
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Nov 2026 01:39:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524D6606A31C
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Nov 2026 01:39:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=bxWjpjbh
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C672A1F0089B;
-	Fri, 27 Nov 2026 01:39:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=H/fwD8kh
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 457721F00898;
+	Fri, 27 Nov 2026 01:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795743551;
-	bh=fKXJvfCDBO7ruc1QH74xpnA7D+7y5u6KjAfV3mv542k=;
+	s=k20260515; t=1795743555;
+	bh=d8h6wRRwTscVlIyAgavXAucLih33keY98ET8SKCPwEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bxWjpjbhqq9DzJB0phQcAvE+ERI4SWTA0H+39Iwx8XuH0tl11dejKC4TqvqyOjqAp
-	 fxRtFqhedx0sK4miwhLAc7KskiTWnitl9ziOeS8/MtyDH6LtmQH4uQbnDpsmGHg8ei
-	 obiwSOJSQm3ywjrK2wIqJj3E/eQTeNIgiXdFbX8MwUWErUlQJ/qW3yrCDb2r6v/dzt
-	 lWx4yMHZw7v3lKV1sVVFNV+P+UCFJGE7lklQJaqJsYu7mwpdK2tPczRlgjtzVa9g1x
-	 jY+jqkbU+EP8i6ybxtp1+NRkyluBuhdhPBrv4LtZOBdV8JbL8exJ6HYeYjXZpc0utW
-	 sA3PBAkeaYT/g==
+	b=H/fwD8khAkCaOgIIVgTcR1CGStv7Nlo4WpWMslngI9cgdSnl1TSpf9YbLELiATFUh
+	 jCE34K3AM2O/y0GxOHU8E0LShuZ7hiGxW18wFVRJIlCBSSND1M2uozlWDGml1PP1dL
+	 6uihtGDUlN9j/GFfQ2SMJGhewI2cKEbcI/fGsjaReI7TIL/gCRCXzaHKZ/nOVGAD84
+	 flFzHZttQcwvHYcbCmpvptKosLOvJUFcUjgnxZwDBBkJ3WpSe5D92h7aAsHgcNBcee
+	 HKFkKZOSUW3yDv3uTRuW9vlsO14+Y+Qfvfwkur9OmKfvvmLLmB0iaeTn0DETWQZkTu
+	 btiCGi3XBc/Sg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -50,9 +50,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v2 17/18] perf tests probe: Exercise the variable and line listing
-Date: Thu, 26 Nov 2026 22:38:00 -0300
-Message-ID: <20261127013801.14841-18-acme@kernel.org>
+Subject: [PATCH v2 18/18] perf tests report: Exercise the TUI browsers
+Date: Thu, 26 Nov 2026 22:38:01 -0300
+Message-ID: <20261127013801.14841-19-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20261127013801.14841-1-acme@kernel.org>
 References: <20261127013801.14841-1-acme@kernel.org>
@@ -69,36 +69,43 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Show the variables, source lines and probe-able functions of a kernel
-function, and check the missing argument error.
+Run report and annotate on a pty and press the help, zoom and source
+keys, then check that the screens were drawn.  Needs python and
+libslang.
 
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/probe_vars.sh | 87 ++++++++++++++++++++++++++++
- 1 file changed, 87 insertions(+)
- create mode 100755 tools/perf/tests/shell/probe_vars.sh
+ tools/perf/tests/shell/report_tui.sh | 120 +++++++++++++++++++++++++++
+ 1 file changed, 120 insertions(+)
+ create mode 100755 tools/perf/tests/shell/report_tui.sh
 
-diff --git a/tools/perf/tests/shell/probe_vars.sh b/tools/perf/tests/shell/probe_vars.sh
+diff --git a/tools/perf/tests/shell/report_tui.sh b/tools/perf/tests/shell/report_tui.sh
 new file mode 100755
-index 0000000000000000..bacf055d84bd92cb
+index 0000000000000000..bc96e1452ee93b97
 --- /dev/null
-+++ b/tools/perf/tests/shell/probe_vars.sh
-@@ -0,0 +1,87 @@
++++ b/tools/perf/tests/shell/report_tui.sh
+@@ -0,0 +1,120 @@
 +#!/bin/bash
-+# perf probe variable and line listing tests
++# perf report and annotate TUI tests
 +# SPDX-License-Identifier: GPL-2.0
 +
 +set -e
 +
-+. "$(dirname $0)"/lib/probe.sh
++# shellcheck source=lib/setup_python.sh
++. "$(dirname "$0")/lib/setup_python.sh"
 +
-+skip_if_no_perf_probe || exit 2
++if ! perf check feature -q libslang; then
++	echo "[Skip] No libslang support"
++	exit 2
++fi
 +
 +err=0
-+out=$(mktemp /tmp/__perf_test_probe_vars.out.XXXXX)
++tmpdir=$(mktemp -d /tmp/__perf_test_tui.XXXXXX)
++perfdata="${tmpdir}/perf.data"
++tui_keys="${tmpdir}/tui_keys.py"
 +
 +cleanup() {
-+	rm -f "${out}"
++	rm -rf "${tmpdir}"
 +
 +	trap - EXIT TERM INT
 +}
@@ -110,64 +117,91 @@ index 0000000000000000..bacf055d84bd92cb
 +}
 +trap trap_cleanup EXIT TERM INT
 +
-+run_probe() {
-+	local desc="$1" expect="$2"
++# The TUI needs a terminal, so run it on a pty and feed it the keys a
++# user would press.
++cat > "${tui_keys}" <<'PY'
++import fcntl, os, pty, select, struct, sys, termios, time
 +
-+	shift 2
-+	echo "Probe ${desc}"
-+	if ! perf probe "$@" > "${out}" 2>&1; then
-+		echo "Probe ${desc} [Failed: perf probe failed]"
-+		cat "${out}"
++outfile = sys.argv[1]
++keys = sys.argv[2].encode()
++cmd = sys.argv[3:]
++
++pid, fd = pty.fork()
++if pid == 0:
++	os.environ["TERM"] = "xterm"
++	os.execvp(cmd[0], cmd)
++
++fcntl.ioctl(fd, termios.TIOCSWINSZ, struct.pack("HHHH", 40, 120, 0, 0))
++
++start = time.time()
++next_key = start + 1.5
++deadline = start + 20
++with open(outfile, "wb") as out:
++	while True:
++		now = time.time()
++		if now > deadline:
++			os.kill(pid, 9)
++			sys.exit(2)
++		if keys and now >= next_key:
++			# The browser may exit before all keys are consumed,
++			# which closes the pty and makes os.write() raise EIO.
++			try:
++				os.write(fd, keys[:1])
++			except OSError:
++				break
++			keys = keys[1:]
++			next_key = now + 0.7
++		r, _, _ = select.select([fd], [], [], 0.1)
++		if r:
++			try:
++				chunk = os.read(fd, 65536)
++			except OSError:
++				break
++			if not chunk:
++				break
++			out.write(chunk)
++			out.flush()
++
++_, status = os.waitpid(pid, 0)
++sys.exit(os.waitstatus_to_exitcode(status))
++PY
++
++run_tui() {
++	local desc="$1" keys="$2" expect="$3"
++
++	shift 3
++	echo "TUI ${desc}"
++	if ! "${PYTHON}" "${tui_keys}" "${tmpdir}/${desc}.out" "${keys}" "$@"; then
++		echo "TUI ${desc} [Failed: TUI exited with an error]"
 +		err=1
 +		return
 +	fi
-+	if [ -n "${expect}" ] && ! grep -q "${expect}" "${out}"; then
-+		echo "Probe ${desc} [Failed: missing '${expect}']"
-+		cat "${out}"
++	if ! grep -qa "${expect}" "${tmpdir}/${desc}.out"; then
++		echo "TUI ${desc} [Failed: missing '${expect}']"
 +		err=1
 +		return
 +	fi
-+	echo "Probe ${desc} [Success]"
++	echo "TUI ${desc} [Success]"
 +}
 +
-+# The variable and line listings need debug info, skip when the kernel
-+# was built without it.
-+if ! perf probe -V schedule > "${out}" 2>&1; then
-+	echo "Probe variable listing [Skipped: no debug info for schedule]"
++echo "TUI record"
++# One user-space event keeps perf.data from opening the multi-event
++# selection menu on hybrid systems; -q on report suppresses startup
++# dialogs such as the kptr_restrict warning that would eat a key.
++if ! perf record -q -e cpu-clock:u -o "${perfdata}" -- perf test -w noploop 1; then
++	echo "TUI record [Failed: perf record failed]"
 +	cleanup
-+	exit 2
++	exit 1
 +fi
 +
-+run_probe "vars" "Available variables at schedule" -V schedule
-+run_probe "vars long option" "Available variables at schedule" --vars schedule
-+run_probe "vars offset" "Available variables at schedule" -V schedule+0
-+
-+# -V only reads DWARF, while -L also opens the C source file at the path
-+# recorded in the debug info, which may not be installed.
-+if perf probe -L schedule > "${out}" 2>&1; then
-+	run_probe "line" "schedule" -L schedule
-+	run_probe "line long option" "schedule" --line schedule
-+else
-+	echo "Probe line listing [Skipped: no kernel source for schedule]"
-+fi
-+
-+if [ "$(id -u)" = 0 ]; then
-+	run_probe "funcs" "schedule" --funcs
-+	run_probe "funcs filter" "schedule" --funcs "sched*"
-+else
-+	echo "Probe funcs [Skipped: needs root to read the kernel symbols]"
-+fi
-+
-+echo "Probe missing add argument"
-+if perf probe -a > "${out}" 2>&1; then
-+	echo "Probe missing add argument [Failed: accepted no argument]"
-+	err=1
-+else
-+	if ! grep -q "Usage:" "${out}"; then
-+		echo "Probe missing add argument [Failed: missing usage]"
-+		err=1
-+	fi
-+fi
++run_tui "report" "q" "Overhead" perf report -q --tui -i "${perfdata}"
++run_tui "report help" "?qq" "Help" perf report -q --tui -i "${perfdata}"
++run_tui "report dso zoom" "dq" "Overhead" perf report -q --tui -i "${perfdata}"
++run_tui "report thread zoom" "tq" "Overhead" perf report -q --tui -i "${perfdata}"
++run_tui "annotate" "q" "Percent" perf annotate --tui -i "${perfdata}"
++# noploop is built without debug info, so 's' opens the "no source code"
++# warning and the first 'q' only dismisses it; the second one quits.
++run_tui "annotate source" "sqq" "Percent" perf annotate --tui -i "${perfdata}"
 +
 +cleanup
 +exit $err
