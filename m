@@ -1,74 +1,101 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=90.155.50.34
-ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795780671;
-	b=SR/AFwDOiuratPstDfypXTdzO4yZeMXKgAS/fDfiPhhLpvv4/qMvZf6UPpJmlLLIQXcd
-	 tM2uSdpXmTZQ82n9upMkcEy9CFpE5BjXo3UDvTRW1iXczrRpAaShElnfLzQF9iNbXD/1h
-	 9exzEJDTEQHdZK0D+IQf0MQGY2BqvvBdQTxieXj3ZWKGisv8ywXim0Xp8OxgQ7C9ojoJp
-	 PAmrty+N3Q9pHRLRZOxFT8rr1VuxB26lc/AgqHIhXQ24jxy31Y6BZBsU/dSMGVkhOjXlq
-	 T9gZjNxDF668iQ48dYwWDDBz3LRfRQnpQErlEC7q2ejVzMztFBMdnM6nYzhEcfsLe4g==
-ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795780671;
-	h=DMARC-Filter:DKIM-Signature:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=lYh1X6gu3bEoP46ZRo2CKjE7Ru+ghnrATHznTlKdHL4=;
-	b=kbFtHpKmDu++PXJhhT2uq7bjZuUg1r3tf32FkG2YWcLZUt+E+fYfgIsRVQgFR5gYr5Hl
-	 bgvj2APdse4pz1rf2hkWcdHhzN+HAFvHqb/Q9NZ+9mHbfhOBJfmD6D69jkAwF6nrnA3bS
-	 AR/Uh8X9hAIJ3u3DKR5qjHYdXN1jM12HtinqsHEVN152/G7dJIr/woYFYtePj8On6un8z
-	 0dXSN0w2KZhQ+K3+URsXOY+7O7kMu2Mzqf2eiHYkACjmu2vs6Ed3n3u8Uh7xugJ5Q4MHa
-	 QHnb2TtOMDyJiPgXB4fdITXASGHzcwlSnwYEbQhjHfxLPXy4kJFmy7Zr1EIcj5jCshA==
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=infradead.org;
-	spf=pass smtp.mailfrom=infradead.org;
-	dkim=pass header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b="Rk/83KGr";
-	arc=none smtp.remote-ip=90.155.50.34
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Authentication-Results: smtp.subspace.kernel.org; arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.62.48
+ARC-Seal: i=2; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=pass;
+	t=1795781885;
+	b=nBCKS4Q7o9dQq0QNyCqH2cwikj3FcheaQhByL11RjFH2if1pxsJRc+byajpOlr7aGio2
+	 b3PuYZFAXoBmwnioTHGlFhqsUjy4LWhc6YXBZywhleO4/XHxAvzdH9wGBtg+WR9TFMlTC
+	 9WoB5PnLGNuctm3KYui3xiFKlQKSPsImMJdiMN/srbwt3xN8xACOdZTLLTRxiCbTFPYgC
+	 JK1GmFk4uihZwzs2ofl3yjQTD60w68b07nw6S2rKPOVtfObAil08posx4PbUMIdNzFDoR
+	 6ou2szqaH+Cj6JjQ943dAj5pbnmF7pXioJNRf0pKKWrKBMHykKvDRV5bTFjR1RVnX5Q==
+ARC-Message-Signature: i=2; d=subspace.kernel.org; s=arc20261015;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795781885;
+	h=DMARC-Filter:DKIM-Signature:Received:Received:
+	 X-MS-Exchange-Authentication-Results:Received-SPF:Received:Received:
+	 Received:Received:Message-ID:Date:MIME-Version:User-Agent:Subject:To:
+	 CC:References:Content-Language:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:X-EOPAttributedMessage:
+	 X-MS-PublicTrafficType:X-MS-TrafficTypeDiagnostic:
+	 X-MS-Office365-Filtering-Correlation-Id:X-MS-Exchange-SenderADCheck:
+	 X-MS-Exchange-AntiSpam-Relay:X-Microsoft-Antispam:
+	 X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-Id:
+	 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp:
+	 X-MS-Exchange-CrossTenant-AuthSource:X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped;
+	bh=8GM4+1z3MXiFhuuyRo5bDjjiFnV2TtyBmRaHS0kauZQ=;
+	b=pmUz3VjHSdxOMWvwGrYJFFq+55NCr1KXvh9Qu3d3xwqa5v7E6zxMhl01QsZ/y5Wl2XL9
+	 iogQHKg3LsgoNqTDTZFLnZsDq9op+ruBTHXUKlveJpgKakO7D+GlBjvS5Bkk3rgZ6tTVQ
+	 8JFuUKGicIX7N/DRc8bIFEadG0LXDlCdWQELEQw07JElH9JZ8E0+DLw/4kAAqN485nddf
+	 wlscP6TRrFNFhs24UuUFfX41ETCg9rseYOdEVP5t9i6hXjxLl5wrXLXt39KntUcM141vW
+	 GUPQtZjpaX91UUyl4hfnBSV7nYQc4/orv3ulHD49Z0Uze7g/YWJKFYGY/6UdEXghk4A==
+ARC-Authentication-Results: i=2; smtp.subspace.kernel.org; 
+	dmarc=pass header.from=amd.com;
+	spf=fail smtp.mailfrom=amd.com;
+	dkim=pass header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=u5eKR6NB;
+	arc=pass header.oldest-pass=0 smtp.remote-ip=52.101.62.48
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011048.outbound.protection.outlook.com [52.101.62.48])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange ECDHE (secp384r1) server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446CC606A31E;
-	Fri, 27 Nov 2026 11:57:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 446CC606A31E
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC33606A31C;
+	Fri, 27 Nov 2026 12:18:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 8DC33606A31C
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=Rk/83KGr
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=lYh1X6gu3bEoP46ZRo2CKjE7Ru+ghnrATHznTlKdHL4=; b=Rk/83KGraaBTfzF4MfaRTlvEZm
-	8ybOmvlau3oTGuJUOzEHc/VNvlHXS4VVgzoE7IqQ7/5enq9PE6hephpIAGNDSgZFCQaBM+cKWC0lZ
-	QiuMRd8mzBa354QpthZIOsDVSSwt+0g+OtNVgjDiPJbhh0tsiwG8imhJP1ONg0A25f0EhZ1j1l2k1
-	AR3Trg/rcUnTaFrhOJEmcuHijwnp9M0D9z/Hoezdwx5F+Ji/FRM3qwaN7pgET6aiNJaBvqbs+IuQg
-	XY3a4DTxxHQjX5ahvGDNr83Ioqgr55mQmoSqkLybgWTBq/VAUryzJecM9WVvExMKE+p/9cTdZLjFO
-	ZEQOS9ng==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.100.1 #2 (Red Hat Linux))
-	id 1xWuaJ-0000000C3hu-0A3I;
-	Fri, 27 Nov 2026 11:57:47 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id DE34830027B; Fri, 27 Nov 2026 12:57:45 +0100 (CET)
-Date: Fri, 27 Nov 2026 12:57:45 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com, dapeng1.mi@linux.intel.com
-Subject: Re: [PATCH 1/2] perf: look up address filter files without
- ctx->mutex held
-Message-ID: <20261127115745.GA2883950@noisy.programming.kicks-ass.net>
-References: <20261126-work-exec-update_lock-leftovers-v1-0-1024b26792bc@kernel.org>
- <20261126-work-exec-update_lock-leftovers-v1-1-1024b26792bc@kernel.org>
- <20261126152414.GH49833@noisy.programming.kicks-ass.net>
- <20261126-gedruckt-gastarbeiter-vorsorgen-5fea7cea1877@brauner>
- <20261126-erlogen-bedrucken-dementieren-5de5e5460481@brauner>
- <20261127081303.GN49833@noisy.programming.kicks-ass.net>
- <20261127091852.GD83911@noisy.programming.kicks-ass.net>
- <20261127-tonlage-pilze-demolieren-5948f82f401c@brauner>
+	dkim=pass (1024-bit key, unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=u5eKR6NB
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=e150JoUyAHPymQ37Dhw3vcgXCXiB2eNWi7fveKR0v36L83C1f1yw3aiVfNXIRJ2IJrGqY1r9QbcsIG2zdjMin56XlEbYFPZdj5CdFz+3NEidCW5KVa732dOOSxhUD5CFLi55G6mT3SqmjtrEYL/rrIEOZs/rTtUK3G4wEZ6a+yaRdwfIyWrV0Xz9VLXfqkqRJULBTTGgIKRbrVIdNMekMuoKSTKy5AxCv+zt9IpVZMFkCL6D2JitZOgPsCpZSJdiD7yq5kfAtFRXOOgk36uejSJoYcWrEnf2dS5FRBpiqSAQsQ6uAwzqS2cei4JMtwvULFXLhL34jNqJAg4rMTOgrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8GM4+1z3MXiFhuuyRo5bDjjiFnV2TtyBmRaHS0kauZQ=;
+ b=p/PW+NeoCFFZtHD+x3lsSAfR9yXQup+OMgorHfFCAaFanidXWRsDR1PBgrkFWEqfTgxxaivNoAKUqZsL/Xd/VR9zjc6Pdc4ntD/mQGtfNT9AfeksnBMvT4zfyX7VmnXfPem7IwerRRK+u2WkrhdVHaQo+7e/l5lwX7zvovykNFDHv6rGL4EGD+7Du6n9k8OVl+Q36jii6lYQmEB3fv7uTnP53vQ1yy2NkgXqVlU9JrCGvVyotrIuDcktc22UAg582S86Z01/7WClB3Yba1Hrhxt1g9CwauayHQOptRMpVM4iYYPYI20QVbrlHYlCTbm7KoX1NFF9AT7xHvY2w/KECw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.dev smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8GM4+1z3MXiFhuuyRo5bDjjiFnV2TtyBmRaHS0kauZQ=;
+ b=u5eKR6NBvLQGXUPFWUBHklgFtSMiBScj2I5XzPgjXUiABt/4RhWSDWp3SsfVUNhc6xgxeUTgxmKnJuTwd1xaIQsHfab5Jv5LkpxvwNhvfdnVwleL2Zvxu726CmNzlSTn/wxc42BaIjh6uneYUYBYrKPLz7pfXt+L6TENVthKa3Q=
+Received: from CH0PR03CA0318.namprd03.prod.outlook.com (2603:10b6:610:118::26)
+ by PH8PR12MB999322.namprd12.prod.outlook.com (2603:10b6:510:40b::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.662.9; Fri, 27 Nov
+ 2026 12:17:15 +0000
+Received: from CH3PEPF0000000B.namprd04.prod.outlook.com
+ (2603:10b6:610:118:cafe::4c) by CH0PR03CA0318.outlook.office365.com
+ (2603:10b6:610:118::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.662.9 via Frontend Transport; Fri, 27
+ Nov 2026 12:17:15 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=pass (sender IP
+ is 165.204.84.17) smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ CH3PEPF0000000B.mail.protection.outlook.com (10.167.244.38) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.688.5 via Frontend Transport; Fri, 27 Nov 2026 12:17:15 +0000
+Received: from Satlexmb09.amd.com (10.181.42.218) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.57; Fri, 27 Nov
+ 2026 06:17:05 -0600
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb09.amd.com
+ (10.181.42.218) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.57; Fri, 27 Nov
+ 2026 06:17:05 -0600
+Received: from [10.211.224.132] (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.57 via Frontend
+ Transport; Fri, 27 Nov 2026 06:16:56 -0600
+Message-ID: <78f43e25-7617-4b48-9e18-ca7be1011d54@amd.com>
+Date: Fri, 27 Nov 2026 17:46:55 +0530
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -78,111 +105,70 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20261127-tonlage-pilze-demolieren-5948f82f401c@brauner>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/amd/ibs: Don't leak stack contents through
+ PERF_SAMPLE_WEIGHT_STRUCT
+To: Usama Arif <usama.arif@linux.dev>
+CC: <stable@vger.kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+	<acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <james.clark@linaro.org>,
+	<tglx@kernel.org>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, <hpa@zytor.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <rkeilty@meta.com>, <atish.patra@linux.dev>,
+	<dgreid@meta.com>, <riel@surriel.com>, <shakeel.butt@linux.dev>,
+	<kernel-team@meta.com>, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20261123162315.1142701-1-usama.arif@linux.dev>
+Content-Language: en-US
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <20261123162315.1142701-1-usama.arif@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PEPF0000000B:EE_|PH8PR12MB999322:EE_
+X-MS-Office365-Filtering-Correlation-Id: 354bb124-7761-480f-0100-08df4c805f88
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|36860700016|82310400026|1800799024|376014|7416014|261102123227099003|261021121427099003|261026121527099003|11063799006|56012099006|10067099003|22082099003|18002099003|261009223027099003|3023799007;
+X-Microsoft-Antispam-Message-Info:
+	J3pT3x6jqGHaRD1DdOQc7mJGdExRDDyM+6W4X/yOachdN8mpwAId2p8cS00fA/8F5ZPF7f/TiXLhcTCO7VqPWSbXq0MiDIneifSjXTfHW8DKnvt9DqCnZjgJCk24iwlJhc4u1atrnGFo2inY1QAM05wbQYwffpDWVy6tC9yBs9OGQY+VxRt/4mDIaiqiQFqB4dPQFgbo7hCh8WtMVmZqp1QQ+7jysHQJKDfhNri6QwQK96CKvyZuWLv0EEULHk3yHHPd3wLVSD3UfAv8lcCb0+DHZirB1ZlPlfvtWVFOjuxhdQiJP/4S4t972c8q/ImqwLh+wtPcnWGmGzeEJPQxYVJhLw8HvXFWk9+y5Asxf01Qi0yGAm0XU7s8Htncaz16bqiMlrCp6r5WVWd8sLs+FE4L9h47dPdshIEDQomQNW5bsCwmkDBT4t6E+1TSZdpnn2qU5f56gGU3es0j6QqaP6VMqNDhg4Lcz1fcXeKtt+K8Bvnb0VYHfMbCFmBrOiVIuycOBbJiG5LO3limJWqDPQEh5f4GowEVHkGgSo6B2Z+JHoPnBvm3nP95TjUmRhgxp2S6Nf8CkUUwL+1rOxLtKRqxe1eiwRnYPJNOi74UZIp4tKT/pfisLQMq7zNnVhpm8VzUCkUgzN9vGjbHmW020K4n3i+QP7gmSNoyWGJJCtAJkGksZe/Ui009mdRU9JnPdOQ0zsgWb8dI9xqBV6dq/Q==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(36860700016)(82310400026)(1800799024)(376014)(7416014)(261102123227099003)(261021121427099003)(261026121527099003)(11063799006)(56012099006)(10067099003)(22082099003)(18002099003)(261009223027099003)(3023799007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	R4QaYUdszGPxeGNiyCWKWeb4/7AZiaOahJ7BVoLM9TzvQ2yHTctd0tM4FpfqmX17KRpkVR8pwu5nUg398rj2haKQgREqPyoHnuPL/NDfh0QWjtE/kGsednsWzB+d6YFQGBnWj5Ol2e9s8mL7mDfxA1cOf95RNfBE7y2ygbvxI+/L4u8P4szV1QeWeuBljzUhNg9IDLoJhLMrZkZs/jU8Fyty1+54324I60bDtjTZPbU55CCUuFj9qecG+W+km0ni0G7jfBq1Nj7Qfx+tkXXjbeZmQ7tAjFuMHZ7e4Uzfni7G15CfIDLgzHFn8IaNa4WxR0KCcXIiB8gm7bdA1EStRqZcDeG3e9hnwmyZ0tPXlEpagfHsSvzMkybYHygoB8ofEj4VJeZeqLeNEnRSBSDAoaJ1kxZ0/UtW4CoEDD7R4dZjmTFXOeDNmGvMoUmUCMvo
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Nov 2026 12:17:15.1634
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 354bb124-7761-480f-0100-08df4c805f88
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH3PEPF0000000B.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB999322
 
-On Fri, Nov 27, 2026 at 10:45:28AM +0100, Christian Brauner wrote:
+> For a load that missed the data cache, perf_ibs_parse_ld_st_data()
+> reports the miss latency as the sample weight and marks
+> PERF_SAMPLE_WEIGHT_TYPE as done, so perf_prepare_sample() leaves the
+> field alone. With PERF_SAMPLE_WEIGHT_STRUCT it writes only var1_dw and
+> var2_w, but perf_output_sample() copies all 8 bytes of the union into
+> the ring buffer. var3_w therefore carries whatever was left in the
+> on-stack struct perf_sample_data in perf_ibs_handle_irq().
+> 
+> CONFIG_INIT_STACK_ALL_ZERO hides this by clearing the struct on entry.
+> Without it, every such sample hands 2 bytes of kernel stack to user
+> space. "perf mem record" asks for PERF_SAMPLE_WEIGHT_STRUCT on x86, and
+> since v6.14 swfilt lets an unprivileged user sample their own tasks with
+> IBS.
+> 
+> Write var3_w as well.
+> 
+> Fixes: 6b2ae4952ef8 ("perf/x86/amd: Support PERF_SAMPLE_{WEIGHT|WEIGHT_STRUCT}")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Usama Arif <usama.arif@linux.dev>
 
-> > @@ -12310,11 +12361,8 @@ perf_event_parse_addr_filter(struct perf_event *event, char *fstr,
-> >  
-> >  				ret = -EINVAL;
-> >  				if (!filter->path.dentry ||
-> > -				    !S_ISREG(d_inode(filter->path.dentry)
-> > -					     ->i_mode))
-> > +				    !S_ISREG(d_inode(filter->path.dentry)->i_mode))
-> >  					goto fail;
-> 
-> Just a thought on this. In vfs-7.5.lookup I have:
-> 
-> file_check_backing() which is the new default way to figure out whether
-> something can be a backing file for a given subsystem. Its checks are:
-> 
-> int file_check_backing(const struct file *file, fmode_t mode, umode_t type)
-> {
-> 	fmode_t io = mode & (FMODE_READ | FMODE_WRITE);
-> 	/* Drivers may point ->f_mapping at something else. */
-> 	umode_t fmt = file_inode(file)->i_mode & S_IFMT;
-> 	struct inode *real_inode;
-> 
-> 	/* O_PATH files are only fine for callers that just use the path. */
-> 	if ((file->f_mode & FMODE_PATH) && !(mode & FMODE_PATH))
-> 		return -EBADF;
-> 
-> 	if ((file->f_mode & io) != io)
-> 		return -EBADF;
-> 
-> 	if (fmt != S_IFREG && !(type == S_IFBLK && fmt == S_IFBLK))
-> 		return -EINVAL;
-> 
-> 	/* Look through stacking filesystems at the inode with the data. */
-> 	real_inode = d_real_data_inode(file->f_path.dentry);
-> 	if (IS_ERR(real_inode))
-> 		return PTR_ERR(real_inode);
-> 	if (real_inode->i_sb->s_iflags & SB_I_PSEUDO)
-> 		return -EINVAL;
-> 
-> 	if ((mode & FMODE_READ) &&
-> 	    (!(file->f_mode & FMODE_CAN_READ) || !file->f_op->read_iter))
-> 		return -EINVAL;
-> 
-> 	if ((mode & FMODE_WRITE) &&
-> 	    (!(file->f_mode & FMODE_CAN_WRITE) || !file->f_op->write_iter))
-> 		return -EINVAL;
-> 
-> 	return 0;
-> }
-> 
-> It excludes anything that is a pseudo filesystem:
-> 
-> arch/powerpc/platforms/cell/spufs/inode.c:      fc_init_pseudo(fc);
-> arch/s390/hypfs/inode.c:        fc_init_pseudo(fc);
-> drivers/android/binder/rust_binderfs.c: fc_init_pseudo(fc);
-> drivers/usb/gadget/function/f_fs.c:     fc_init_pseudo(fc);
-> drivers/usb/gadget/legacy/inode.c:      fc_init_pseudo(fc);
-> drivers/xen/xenfs/super.c:      fc_init_pseudo(fc);
-> fs/binfmt_misc.c:       fc_init_pseudo(fc);
-> fs/configfs/mount.c:    fc_init_pseudo(fc);
-> fs/debugfs/inode.c:     fc_init_pseudo(fc);
-> fs/devpts/inode.c:      fc_init_pseudo(fc);
-> fs/efivarfs/super.c:    fc_init_pseudo(fc);
-> fs/failfs.c:    fc_init_pseudo(fc);
-> fs/fuse/control.c:      fc_init_pseudo(fsc);
-> fs/kernfs/mount.c:      fc_init_pseudo(fc);
-> fs/libfs.c:             fc_init_pseudo(fc);
-> fs/nfsd/nfsctl.c:       fc_init_pseudo(fc);
-> fs/nullfs.c:    fc_init_pseudo(fc);
-> fs/ocfs2/dlmfs/dlmfs.c: fc_init_pseudo(fc);
-> fs/openpromfs/inode.c:  fc_init_pseudo(fc);
-> fs/proc/root.c: fc_init_pseudo(fc);
-> fs/pstore/inode.c:      fc_init_pseudo(fc);
-> fs/tracefs/inode.c:     fc_init_pseudo(fc);
-> include/linux/pseudo_fs.h:static inline void fc_init_pseudo(struct fs_context *fc)
-> ipc/mqueue.c:   fc_init_pseudo(fc);
-> kernel/bpf/inode.c:     fc_init_pseudo(fc);
-> net/sunrpc/rpc_pipe.c:  fc_init_pseudo(fc);
-> security/apparmor/apparmorfs.c: fc_init_pseudo(fc);
-> security/inode.c:       fc_init_pseudo(fc);
-> security/selinux/selinuxfs.c:   fc_init_pseudo(fc);
-> security/smack/smackfs.c:       fc_init_pseudo(fc);
-> 
-> I don't think anything on this list is something that you would ever
-> want to use as an object file?
-
-Very very possibly people would like /proc/kcore to self reference or
-something, but I'm not sure that's a thing. Adrian?
-
-> I think we should do an O_PATH open of the target file and then you
-> call:
-> 
-> file = filp_open(filename, O_PATH | O_REGULAR, 0)
-> 
-> if (file_check_backing(file, FMODE_PATH, 0))
-> 	return -EINVAL;
-
-We must close file, or does it have __free(file) on or something?
-
-> We had a whole bug class where various subsystems that used backing
-> files just allowed arbitrary files to be used.
-
-This seems fine to me and can go in independent of this locking stuff.
+Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
