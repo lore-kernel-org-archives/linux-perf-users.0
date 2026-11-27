@@ -1,48 +1,48 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795791745;
-	b=BihyNuBwt7IsvBn93AEhyqOnuLEVcyqeMH32HLMwyhnJYcEl9LkGYiWDHotJ5+/LxPXW
-	 sHx9oWsAk5h3+NG6dHMdJlJc2cOyAHqkSpLvL2st+90S/EkGvJwpNeS68ABgY8YHvqYG0
-	 NiTkCxEbTfNlLiTShpcMTVMyb+jXC+P0cdzv7jFPkCbgn4xqV5/OtvPnM2H1E+mBOX0GF
-	 UdOsepx39x4BXwLa+xRDutNULadIzUrQn3NBzbunTDx23OkXputfwSvxFIALfcQPEn7dx
-	 AKVwqNeLc4NLSTx3ktEkuItb3drOnTr4hs7/5ApPJUiYEsf4Oa4j0xPSnrRMr37wsew==
+	t=1795791889;
+	b=0P8StGULm6Odwbxl2Q4h7vRUBwLCquM7/fbtHFfmQZ9tX7zvIoExUbT19nxjBM9A5aXq
+	 Oda3lPJ/beFVqA84wUDGbjRSYeE0mX7++y7HnEBRfg/fe8zM9uWndxhAh12l7lwF1GDRc
+	 /a8wxBWGKS5JmWVmbQLQEGkq58LcJLwYxQMG5NBeHJ2ltibbTmGveaGEnI+k5Zhgr3G3F
+	 kDOBTTyEtZmkv+lXpEzVVMELRwWNp2szT5U6KnxcwZ7fI+DyNSQM/hJ1ng/xJskeTaEa+
+	 u4Cg5Vxlgoe4W0IY5enNSf8Uq4zYNIK9izSe4qtYTegG6N/d9SaaX6GLTuZVjO1eXXw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795791745;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795791889;
 	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
 	 Subject:Message-ID:References:MIME-Version:Content-Type:
 	 Content-Disposition:In-Reply-To;
-	bh=y4eKG9taiB9eB/Qf2Z8j0/REU4SNPEh0gD95UBGC7uc=;
-	b=0WV5dF2ezm1mCnLR0XY1LWQ6cyoHer+r6KZfDPllrP2vrDu+bKdBuJ3xYyNrDLBAvVe0
-	 WKrGLoHSRIRIhhOZFxv8B/KQ5EX+ggScQAFyHLntJCwObMKu1RjzxGJobsd8hqwiw2T41
-	 YVUYQZHmSE8bZsmTA3AKjdaGhkClws/XE/O6A4kW3hS8uotEvAZ5abZ2OECm/6579tN4t
-	 kl/FGN5GRaFK+AC6RmtemIdkQQ40eZ3iOn4nAGPi4zpoyzma0l0kt00dj8+Vr84QUQf3n
-	 knWsWmlRShsu+j8K96lzcGKfMWqcbhCBAWcUay87BETveETfxgVAnVhxeg0/wLjAJ6Q==
+	bh=zJMYmG+hFRAiAQXsXLcPjjAA+AdGp4gOt8/ZQXWz6Iw=;
+	b=Oi+nD0fOJsfry76m58KJOFRcouaFicoaObZGCYIrQ43Bo86OGGKkqfCOBXM/vOim6bvv
+	 b9rMi3Qe+eTY37nTZ2pWsuRI+Vi/9/Bl7uKu8DkNlfxL3tBmBtdtg8Bijj00xoZnrCSSW
+	 qzlYJyaYts/ECJ0q6v+KCcxLm2sy96+bkCCp90r8MjIrPZ5Osd8Jxj6cxKF/FBgyXgNBQ
+	 WsCDPbqGGBAhgfy5U2hVOD2IGLorDlHrY2NJRWFXXbQ9DlEoaTQq32usmMBoVS8Qnv2ip
+	 NMWxCBdGifq97EGNQ7PB51ZY9lZmSP2YA0HhI9s80JrzREXe29eY/MzPt0ffOVvTEJQ==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=arm.com;
 	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=uL1YJ1vk;
+	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=Q4hiAaGA;
 	arc=none smtp.remote-ip=217.140.110.172
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55CFD606A31C
-	for <linux-perf-users@vger.kernel.org>; Fri, 27 Nov 2026 15:02:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 55CFD606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09311606A327
+	for <linux-perf-users@vger.kernel.org>; Fri, 27 Nov 2026 15:04:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 09311606A327
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=uL1YJ1vk
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=Q4hiAaGA
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D5BAF169E;
-	Fri, 27 Nov 2026 07:02:21 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 709E3169E;
+	Fri, 27 Nov 2026 07:04:45 -0800 (PST)
 Received: from raptor (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB2833F86C;
-	Fri, 27 Nov 2026 07:02:21 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 454E23F632;
+	Fri, 27 Nov 2026 07:04:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1795791744; bh=/60+uV6MGkmJY4+B30J1nI4Z6rYXY4H1P3pCsqHWBGs=;
+	t=1795791888; bh=Kf2u3+pp6YKT0cNUHCqSJb7trEljWxemN2FamiU/bxs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uL1YJ1vkIAfsGkACGt/UNCS3ATBt/W/Wv6CgV5Ir54xLJrjZjX/hJyTaPnhdQS4wD
-	 ngvmEScfqauFVKfF1WZSooj0roxgqrFW7T7kG9QGRDYTLJ8x3LWjL8GbZXGL3Rvj0d
-	 NGApLgCsm5zNnhrT4b7wY3/LM3Jo4rlA2jhQL19k=
-Date: Fri, 27 Nov 2026 15:02:19 +0000
+	b=Q4hiAaGAw0EWPBEIOOeQkDgfHDkovS4x7Dg78UF0E/14h8/L2HyTx/tE5cNqhWF+W
+	 GSweeM6g3cvkUwPn1fDT2yNteGV/MJvxBjVEGkIqM2wWwWH+RUM/tYSO9wSfdy35Cj
+	 YYuc9m2+vc/SV0SLahDEc27J69+uBMD8Rfmbb5Mk=
+Date: Fri, 27 Nov 2026 15:04:42 +0000
 From: Alexandru Elisei <alexandru.elisei@arm.com>
 To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
 Cc: maz@kernel.org, oupton@kernel.org, fuad.tabba@linux.dev,
@@ -51,14 +51,12 @@ Cc: maz@kernel.org, oupton@kernel.org, fuad.tabba@linux.dev,
 	kvmarm@lists.linux.dev, will@kernel.org, mark.rutland@arm.com,
 	linux-perf-users@vger.kernel.org, catalin.marinas@arm.com,
 	james.clark@linaro.org
-Subject: Re: [RFC PATCH v7 07/28] KVM: arm64: Add KVM_ARM_VCPU_SPE VCPU
- feature
-Message-ID: <awmbe4dRgEkgqL-O@raptor>
+Subject: Re: [RFC PATCH v7 08/28] HACK! KVM: arm64: Disable SPE
+ virtualization if protected KVM is enabled
+Message-ID: <awmcCq3p0gOX1n_5@raptor>
 References: <20260903160623.315525-1-alexandru.elisei@arm.com>
- <20260903160623.315525-8-alexandru.elisei@arm.com>
- <atIr8IWcXcrjQ0wF@gremlin>
- <avX0-TDCOlQq-4iX@raptor>
- <avtEJaF27eHb_Ryd@gremlin>
+ <20260903160623.315525-9-alexandru.elisei@arm.com>
+ <atIzmvlo78PDwAXI@gremlin>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -70,91 +68,59 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <avtEJaF27eHb_Ryd@gremlin>
+In-Reply-To: <atIzmvlo78PDwAXI@gremlin>
 
 Hi Lorenzo,
 
-On Mon, Nov 16, 2026 at 05:59:07PM +0000, Lorenzo Stoakes (ARM) wrote:
-> On Thu, Nov 12, 2026 at 05:18:49PM +0000, Alexandru Elisei wrote:
-> > Hi Lorenzo,
+On Fri, Oct 16, 2026 at 03:30:26PM +0100, Lorenzo Stoakes (ARM) wrote:
+> On Thu, Sep 03, 2026 at 05:06:03PM +0100, Alexandru Elisei wrote:
+> > For RFC only.
 > >
-> > On Fri, Oct 16, 2026 at 03:23:57PM +0100, Lorenzo Stoakes (ARM) wrote:
-> > > On Thu, Sep 03, 2026 at 05:06:02PM +0100, Alexandru Elisei wrote:
-> > > > Add a new VCPU feature that enables SPE virtualization when set by
-> > > > userspace. KVM_VCPU_MAX_FEATURE will be bumped and the feature will
-> > > > become selectable by userspace once SPE support in KVM is implemented.
-> > >
-> > > I guess it's also limited currently at this point in the series by
-> > > KVM_CAP_ARM_SPE being unselectable as it stands I think?
-> >
-> > Yes, indirectly - KVM_CAP_ARM_SPE is advertised only when
-> > kvm_supports_spe() is true, and KVM_ARM_VCPU_SPE also depends on
-> > kvm_supports_spe(). CONFIG_KVM_ARM_SPE=y is required, but not sufficient,
-> > for kvm_supports_spe() to be true. So all of this depends on the Kconfig
-> > option, maybe I should document that in the capability doc.
 > 
-> Thanks that'd be good.
+> I realise this isn't intended for the final series :) but be good to put
+> something here briefly for reviewers to explain why this is here, e.g. pKVM
+> needs special attention etc. Similar comment for 9, 10 if there's an RFC
+> respin.
+> 
+> So for this and patches 9, 10 in general it seems you disable the feature
+> for:
+> 
+> - pKVM (at global level)
+> - non-VHE
+> - nested virt
+> 
+> Are these temporary for proof-of-concept reasons or do you plan to make
+> them permanent limitations for the initial implementation of SPE?
 
-I documented the dependency between KVM_CAP_ARM_SPE and CONFIG_KVM_ARM_SPE in
-the previous patch, where KVM_CAP_ARM_SPE is introduced.
+This was intended to be temporary ('For RFC only'), until we can get to a
+consensus that using guest_memfd to keep memory mapped at stage 2 for SPE is
+viable.
+
+As per the ongoing conversation on the cover letter [0], it is possible
+that these limitations (VHE-only, no pKVM, no NV) might end up as part of
+the initial implementation.
+
+[0] https://lore.kernel.org/kvmarm/auy-TwnMbIn-r2xl@gremlin/
 
 > 
-> >
-> > >
-> > > Maybe worth mentioning here that you're adding KVM_ARM_VPCU_SPE to the uapi,
-> > > updating docs, etc.?
-> >
-> > I can mention it, but the short diff should speak for itself?
-> 
-> I think it's worth giving the intent of your changes in the commit message, it
-> doesn't have to be much like 'Export to UAPI, document' etc. etc.
+> If the former it'd be good to know what your plans are to provide support
+> for these, if the latter it seems sensible to put these all in one patch
+> that describes why you are limiting each.
 
-Done.
+The reason for each limitation:
+
+- VHE-only: to save me the effort to implement the context switching code, which
+  is a pain to get right. Arguably this is the easiest to implement out of the
+  three though.
+
+- no pKVM: last I checked, the __host__ SPE driver is broken under pKVM, didn't
+  even bother figuring out if it can be made to work for a guest.
+
+- no NV: too much complexity around reinjecting an SPE fault back into the L1
+  hypervisor for an RFC. I'm also not sure if KVM can configure VNCR_EL1 to
+  transform accesses to the profiling buffer system registers to memory accesses
+  instead of traps, and how that interacts with the errata workarounds, and with
+  dirty page logging.
 
 Thanks,
 Alex
-
-> 
-> >
-> > >
-> > > >
-> > > > Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
-> > >
-> > > I wonder if there are any dependencies that need expressing in
-> > > arch/arm64/kvm/config.c?
-> > >
-> > > In any case all LGTM, with mega-nit below addressed :):
-> > >
-> > > Reviewed-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-> > >
-> > > > ---
-> > > >  Documentation/virt/kvm/api.rst    | 2 ++
-> > > >  arch/arm64/include/asm/kvm_spe.h  | 5 +++++
-> > > >  arch/arm64/include/uapi/asm/kvm.h | 1 +
-> > > >  arch/arm64/kvm/arm.c              | 7 +++++++
-> > > >  4 files changed, 15 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> > > > index 1ed5c389c7a4..654736fac78c 100644
-> > > > --- a/Documentation/virt/kvm/api.rst
-> > > > +++ b/Documentation/virt/kvm/api.rst
-> > > > @@ -3591,6 +3591,8 @@ Possible features:
-> > > >  	  Depends on KVM_CAP_ARM_EL2_E2H0.
-> > > >  	  KVM_ARM_VCPU_HAS_EL2 must also be set.
-> > > >
-> > > > +        - KVM_ARM_VCPU_SPE: Enable SPE for the CPU. Depends on KVM_CAP_ARM_SPE.
-> > >
-> > > Super nitty, sorry, but it seems other parts of the docs use tabs, whereas this
-> > > uses spaces?
-> >
-> > Fixed.
-> 
-> Thanks!
-> 
-> >
-> > Thanks,
-> > Alex
-> 
-> --
-> Cheers, Lorenzo
-> 
