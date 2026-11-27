@@ -1,66 +1,71 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795814058;
-	b=vLzcVRwnAtPX5IEctbzK02GFc8XAK6y8yw2w16Z4Y18lkAUqIYa3++loj7O/AtsBLCrQ
-	 UZpVSUGtEaOztxWVW0CRFRMgIfrWVJPAqp+u0a2aBFwdVHfxyrIix65u9ETL56wi4WliP
-	 kKHTP/MphUq7PR/d3Mq2aSd+WYGbJ/kAUkygaf/6r4imEJ9t6uLKMVYyZLo4pz0LyVErT
-	 BpDJBkrs15pLFveUIh7j64ZdjXPuM/hrODd/gX8yvfb9Olb0DUNx3CVDk9CGQfkBKb7eG
-	 uYxf10+ldDFUNeOy8AGw9FO0Whn654df2L0j2CH8J8ga8ne6l/0kK1j1Sx6dA0sThtw==
+	t=1795816235;
+	b=tn/7/IdyFygAOSdTI0O9aRT6k4wkHV3awYcBmq5Twc87EAl6RGrPb8FmaMZuyc/x3Z0T
+	 dcmCrfcTm/xJdjD+Xa5LWbp3NEDWYEwbUf2BZDqmTQ1bUnLa1nJibgegr29oX93LhlRQA
+	 78gOpguA9mrR152VbO9HyMKcJRoef56KAn7aBriR4znEw5D4qRNxb6zgjpx7kA3cO483V
+	 X9ZUDQawbvD8oH5tEPTffk9eCOWBA1GrbJfpi1kvV4s3hwYKY0WHop++vTX50nUfCk+9+
+	 JI1jD65LYSYPX4O6E5mUy1icGkUlzu12pqIbFW8MR/mFaCEiy5Xt9xGPLeh9RSMV5Vw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795814058;
-	h=DMARC-Filter:Received:Received:DKIM-Signature:Date:From:To:Cc:
-	 Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To;
-	bh=fZMajTFIhsk6u/dtLRxzX7CEIFWa9wuGr8CAmQQaGNw=;
-	b=uhtyTe1Wp5a6IUKu11iAIVOaRvBmOokmTylBS2kb1rNxXIZ8rIxCNkMqeHyoB/eKu/d3
-	 OllHP9aBABxrnIDprf5hwoOdmw+KOju/h02wRZwJMOE+MP4DaKy2iSZ+ba6Bg6GNt/bpb
-	 9jdeabLN22v9bNrmkaHwFio5gsPChJ8V17nKO/OloYeZOgXV+DxPuE2QZyUTv0q1+QD2j
-	 b3QLkw/yeVxnkrCixtkDbmdDkW6P3FcYBfzx8kWcc1bUHk7MMYgEGC2J9TOZd7gFFzsph
-	 3brkybHj7mGNF0h1Ti/FMpPKRLX62grazW8jv5KawRJldkwn8ePOmVL+QAWM7E22z8Q==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795816235;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:In-Reply-To;
+	bh=4+vJzaNaeGRIahAAcqcSHLCv6EEY6IvTeEZnCp6y4sA=;
+	b=wmaGzC/MFfwgxSkHO7wnEdJRcSEMdOXjvGjrFZPd9zqQEETMIFfzlhiZjESNzw5U63vp
+	 TCcNb4twyvJf4IUs01raZ7BmhY/ehkeypDYWKKUecDO4C3N4bzgvtzvEBYbtOwT3VoVYW
+	 GTJdn+FUDc21AteH8RlLzytOJtQKz7i5Iv8/hzLxKxWeYNZM2zbcQFIiLSOEME2cUt57Y
+	 PTphy28IPYL4fwofjoGioznBVnHwqZ12OzAWebmRM3S1BOOzk/RQKhwAgm93zidBZF/Cw
+	 scgeDpVYQPBSxYBjrKzuxBRxLtOiFxRb6IIxzWGm0U/tovuTBFw0CYn/0raiPnPasMw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dmarc=pass header.from=arm.com;
-	spf=pass smtp.mailfrom=arm.com;
-	dkim=pass header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=JBAGojIu;
-	arc=none smtp.remote-ip=217.140.110.172
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 195DB606A31C;
-	Fri, 27 Nov 2026 21:14:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 195DB606A31C
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b="m7y5w/m3";
+	arc=none smtp.remote-ip=100.103.45.18
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EBAB606A31E;
+	Fri, 27 Nov 2026 21:50:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key, unprotected) header.d=arm.com header.i=@arm.com header.a=rsa-sha256 header.s=foss header.b=JBAGojIu
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EFFE01575;
-	Fri, 27 Nov 2026 13:14:12 -0800 (PST)
-Received: from localhost (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 69F803F632;
-	Fri, 27 Nov 2026 13:14:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1795814055; bh=BvU5Ac6daDVpu8nVwZeldQF9W8KjlMmjXd6m7m9X1Ao=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JBAGojIux5rPsLXNCqTettd2ISRAQC7rD3tYF0Dvejdu3fznJ9SKFdDgWsjgEOLm1
-	 O/wxUNyTne+/0q80rgMwPXbgKa/1kjFG+wVKnranHikRG+FtpGO6alIKwyE7kURAM0
-	 SlAg2ZzKd4H8tiPTpD3barAL+1wZ4hdwygFK80TQ=
-Date: Fri, 27 Nov 2026 21:14:13 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=m7y5w/m3
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3147B1F000C1;
+	Fri, 27 Nov 2026 21:50:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1795816235;
+	bh=4+vJzaNaeGRIahAAcqcSHLCv6EEY6IvTeEZnCp6y4sA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=m7y5w/m3OjJrj+5R4ikLU7JDrMEaSbKrnjTSf1QWAmR98ovVN2zl6t8KJ8jgLjOnm
+	 lQxjlR9kpwVnEbP5P16pc5WNVRaxx3ufkQLGjZkCphaj6ZW36OHQqmHxWgrCVvukg8
+	 O2+UBBGkOqVraRpTQLqUcSmBCMuEapy3kjLyRUSxVtCvlaaPOzCcoHj8++dAnLLsf6
+	 aFH0lpCkdhoyLnvZDAu3I7v8MzDxd7tNhjYdo3lDd+OY52Kjvy8zNbPD6VBJAXt0ly
+	 yvfcRSidsej6T+v+zviabcsKUu6F/Er4LTv3m4jRFgHV0MLADAinFwPHi6tZnli7rZ
+	 +1+32wAO3SRug==
+Date: Fri, 27 Nov 2026 13:50:32 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: James Clark <james.clark@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
 	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@arm.com>,
-	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@arm.com>, Leo Yan <leo.yan@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>,
+	linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	coresight@lists.linaro.org
-Subject: Re: [PATCH 1/2] perf: arm_spe: Order padding before publishing AUX
- head
-Message-ID: <20261127211413.GH861809@e132581.arm.com>
-References: <20261015-add_barriers_for_perf_aux_output_skip-v1-0-5847d0578859@arm.com>
- <20261015-add_barriers_for_perf_aux_output_skip-v1-1-5847d0578859@arm.com>
- <awnPG6QADpRAgEzx@willie-the-truck>
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-doc@vger.kernel.org, John Garry <john.garry@linux.dev>,
+	Leo Yan <leo.yan@linux.dev>
+Subject: Re: [PATCH v4 00/19] perf cs-etm: Per-thread mode fixes and snapshot
+ wrap support
+Message-ID: <awn7KH6aDpurtZQH@google.com>
+References: <20261105-james-cs-unformatted-per-thread-fix-v4-0-7759e0ce2449@linaro.org>
+ <fa4e19d5-2e66-4468-9860-19cd9f3ea8db@linaro.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -70,39 +75,59 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <awnPG6QADpRAgEzx@willie-the-truck>
+In-Reply-To: <fa4e19d5-2e66-4468-9860-19cd9f3ea8db@linaro.org>
 
-On Fri, Nov 27, 2026 at 06:42:35PM +0000, Will Deacon wrote:
+Hi James,
 
-> > @@ -487,8 +487,11 @@ static void arm_spe_pmu_pad_buf(struct perf_output_handle *handle, int len)
-> >  	u64 head = PERF_IDX2OFF(handle->head, buf);
-> >  
-> >  	memset(buf->base + head, ARM_SPE_BUF_PAD_BYTE, len);
-> > -	if (!buf->snapshot)
-> > +	if (!buf->snapshot) {
-> > +		/* Order the padding stores before publishing the new aux_head. */
-> > +		smp_wmb();
-> >  		perf_aux_output_skip(handle, len);
-> > +	}
+On Tue, Nov 24, 2026 at 05:35:37PM +0000, James Clark wrote:
 > 
-> This looks correct to me, but I wonder if it should be handled by
-> perf_aux_output_skip() instead? arm_spe_pmu_pad_buf() is called from a
-> bunch of places in the driver, including in conjunction with
-> perf_aux_output_end(), which looks like it already has the necessary
-> memory barrier. So doing it here seems weird inconsistent to me.
+> 
+> On 05/11/2026 11:44, James Clark wrote:
+> > This series depends on:
+> > https://lore.kernel.org/linux-perf-users/20261030-perf_cs_etm_fix_non_taken-v3-0-7629b52ab047@arm.com/
+> > 
+> > Fix a few issues with per-thread mode:
+> >    - On nVHE, everything looks like guest trace instead of host
+> >    - Tracing multiple threads didn't really work
+> > 
+> > After adding a tests for those, it turns out there were some snapshot
+> > bugs not picked up by the other snapshot tests. That showed that the
+> > different snapshot searches for Intel BTS and Arm SPE were inconsistent
+> > and I think all tracers can benefit from using the same pointer fixup
+> > logic, so that gets refactored into the common auxtrace.c. Then SPE can
+> > just share the Intel BTS search as it was obviously copied from it
+> > originally. IntelPT keeps the more advanced duplicate data search, but
+> > in the future that could probably be made the common one and all tracers
+> > would benefit from using it (except maybe BTS if it always has a very
+> > small buffer, but I doubt the overhead of the duplicate search would be
+> > an issue). For now this is more of a refactor rather than behavioral
+> > change so don't do that yet.
+> > 
+> > Signed-off-by: James Clark <james.clark@linaro.org>
+> > ---
+> > Changes in v4:
+> > - Change test snapshot size to 128K for 64K machines
+> > - Put patchset depencency in cover letter text
+> > - Link to v3: https://patch.msgid.link/20261102-james-cs-unformatted-per-thread-fix-v3-0-dbcb0c281b9b@linaro.org
+> > 
+> > Changes in v3:
+> > - Keep the find_snapshot() callback instead of adding
+> >    snapshot_has_wrapped() and monotonic_snapshot_head boolean (Adrian)
+> > - Add auxtrace_record__default_find_snapshot() for the simple search for
+> >    BTS and SPE (Adrian)
+> > - Add auxtrace_record__snapshot_fixup() for any snapshot search
+> >    implementation to use to update the pointers (Adrian)
+> 
+> Hi Adrian,
+> 
+> Did you get a chance to check these changes? Sorry it took a while to send
+> the V3 after your comments.
 
-As I mentioned in the cover letter, the choice of barrier depends on the
-CPU memory model and the trace hardware. Perf deliberately leaves that
-choice to the AUX driver [1].
-
-SPE driver implicitly relies on the dsb(nsh) in
-arm_spe_pmu_disable_and_drain_local() to make trace writes visible
-before calling perf_aux_output_end(). I kept the barrier in the driver
-for perf_aux_output_skip() to follow the same convention.
+I've tried to apply it with Adrian's ack but it's didn't work.  Can you
+please rebase?
 
 Thanks,
-Leo
+Namhyung
 
-[1] https://lore.kernel.org/all/YLUFMzxin1PpgIdZ@hirez.programming.kicks-ass.net/
