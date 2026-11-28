@@ -1,61 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=100.103.45.18
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795829515;
-	b=dHP2E82Bf7wzDGBeFc+YNRI53U0MVRWhXG8/0JNOC59OB/YzQtdewlLtI8xtjNKEkr2w
-	 UJ1Jx+uVpDZLqsURVLpUcgkUJInKLLmgq6k2ElFRp0Ia123f3y3a5v3YfD3gDSbFZAdrW
-	 xZmfIQqqHStFbU7AdS+u6lfHjqkjdtoXrSdv0zQGKOfSp5vJ3gq5/MgKPRF0qzjQkD65r
-	 /j4GzpiSokebBDgjBDkkpjik5MKhdMdQUA6kIyBZI7HKEHX5F+9haHBd0Kw1ON3DMQ8m5
-	 nET5QmXIBBZFLiAfW5rpdfijVj7n8S6/vRuiVabFIFokgZgfboIK/qkAR/vRivW1TxA==
+	t=1795829784;
+	b=zpUB2eKjCV7vfvm7BaLyblaFnMsMeoQ9x/V82J5lWm2bws2BVKbPvww3HNt3yiWzR2y5
+	 m6Lx3g2SS36gh5I8gmqTbhu1N+roIRkpzcDLOjJHYj0EUIe4Jobd09RdTQ8aU3sgXzsQL
+	 ZQzKeHvVkFDL/WbBDivv0AOk1ujTYRbDr168KrdK9BbfLOAF4uRJNuifUfQ+tDHHu53RZ
+	 CWipScU+l3wX6J4EOGbHSQhvSy6yzgpXeael7R0TzsnU9J2oSVcv0qCd7QUwIg0YCi46B
+	 3vkAvpb8iST6/CyxtgupQaG/1oyKzyJS1JAEDNjCT9KK+xw3P6bt+uTxRgDAKjtixnw==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795829515;
-	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding;
-	bh=qG6NH2Oa/dn1BIGbF7vxSJ6enOoXEJUTUx9wkaGcorI=;
-	b=dJNVP2KNOUSqu+eDCI2mF+Vmun88kpGWUNQfFYjPvDR7KFuVW8WoXl/EYCedRGq9/lwc
-	 mQccmjcG/45NewyTRFDn77SRDsTVq1a6i2drQ4EAMWVJSTwFuVvlTW/jVDAnI3PL0Tbmz
-	 pksd/oRXqPYFOJUvQ906wFw7Axifemy6l/LLWQOibGSZn424qugbkWITH6VTRi6oQ8b+j
-	 kCY/6w2HC0nso7gMxL2azQpkt+fXIe7AyhZrRc/2cRDxN2WNpQsRN+59I81ZM9k+ismfF
-	 A2zemXTpkqnIiUM+M6SGbA2XmCj5qJjf5HJytzd6PCBoVIWXf/e0lJP4zKZZGtGJHAg==
+	a=rsa-sha256; c=relaxed/relaxed; t=1795829784;
+	h=Received:DKIM-Signature:Message-ID:From:Subject:Reply-To:To:Cc:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date;
+	bh=pEaRylSblft3jFAjWv0ExPnyKKbtv7QCYB8TcibuOX8=;
+	b=ffLvB1Q4o02EYMr3PVzU/u1s3622mCYQAtvlDm8gkQzl8W2wMjwOQZDjofXI80w/YaH+
+	 AvsjKjmcTdPxHT4HSTDhMcC3vxtj8xP5fEwAUBWkClmdrDCk4q1EPx45vXLEefkIlDRKR
+	 oF4XYxTuAP5B6VNC7JRgt6TuGQoU7y38ceIsH+i5W6eIUHGz8do2Vsh5dLfGCEro0mA3K
+	 bbP2/7i5/NxFhCAkNtKX2lFHNN6SsqS4Cw3vqxvh4b/xuwW78dd/7PDwxCz4CCsOnpApU
+	 jpOf9UFOYdXnzry6WUcjWaNtOPd3YL7hWM9M8f63OzoOUB9WOtoYFqmVQklzYp4lpdw==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
-	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RCIy4rpq;
+	dkim=pass header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FG3xsZR4;
 	arc=none smtp.remote-ip=100.103.45.18
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A900606A31C
-	for <linux-perf-users@vger.kernel.org>; Sat, 28 Nov 2026 01:31:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0722F606A31C
+	for <linux-perf-users@vger.kernel.org>; Sat, 28 Nov 2026 01:36:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=RCIy4rpq
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 873ED1F000C1;
-	Sat, 28 Nov 2026 01:31:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20260515 header.b=FG3xsZR4
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BB711F000C1;
+	Sat, 28 Nov 2026 01:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1795829514;
-	bh=qG6NH2Oa/dn1BIGbF7vxSJ6enOoXEJUTUx9wkaGcorI=;
-	h=From:To:Cc:Subject:Date;
-	b=RCIy4rpqLQpMrAiSx8nOHRrRWBFxg9DqltS+NTqzpE1LT5P2it/Ib24wp/q2O4riJ
-	 0kTTbTbVKrG/eiQnQNiSd8L9fbOA6ubq6RRoWeat2pphu5XSs5dQtee61rNXjaSZ/o
-	 0A1tU7rmjBYPlXsrQETZS6sna/pPo5BmYbOhG+VIxalb4RdDR5KnZug5LpcWIhDZkJ
-	 UpJy4YFTIBNpPKGi8QffRyvvPu4yXYeQuPNaehY173kHUiq//UZgcRCMqRFdqzRSA4
-	 v4x1w92zxSVi9KJ43cZiEpm5E8dYPoHMwM8GCoB+/rks60EWr4p5t28d98YaJK+hKN
-	 DGQAfOXS+HjxA==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Hang Zhengyang <hang.zhengyang1010@gmail.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH] perf bpf_counter: Fix the 32-bit build
-Date: Fri, 27 Nov 2026 22:31:44 -0300
-Message-ID: <20261128013144.16600-1-acme@kernel.org>
-X-Mailer: git-send-email 2.54.0
+	s=k20260515; t=1795829783;
+	bh=pEaRylSblft3jFAjWv0ExPnyKKbtv7QCYB8TcibuOX8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=FG3xsZR4p2epU8iQGlZZOc477Ufppy29uXpwN5WDdoU8KZqiwemuf3xfMLnqMVF1S
+	 sCLPxc6P2lU7LlU9hWXavC4aT+6LalYLJyxSn46Ps7ttDoWNphjm3ATkA1gkI3MbA5
+	 QzCRqb6HTZTAfDm8LnrTgarCc3gdSqqTgLnZK4sYQZjZJM48/Aq1CC7JN0/tTFG1s6
+	 EpBD1ua84GBMSVxE3+tuIE2ELx31cf72APp1OUaN71hqUTYnPocBRJ9unQD8RMc00i
+	 wk6B7Lr/QXKKcvOdpRhu/Cwd//RykJabDo2fO18549AeTccc0+FB4+2KBCD87TCLzk
+	 Q06KjbIHm0dnQ==
+Message-ID: <sashiko-outbox-238407@kernel.org>
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf bpf_counter: Fix the 32-bit build
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20261128013144.16600-1-acme@kernel.org>
+References: <20261128013144.16600-1-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 28 Nov 2026 01:36:23 +0000
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -64,45 +58,30 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 List-Owner: <mailto:linux-perf-users+owner@vger.kernel.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The bpffs hint added for the perf_event_attr map compares st.f_type with
-BPF_FS_MAGIC.  On 32-bit glibc __fsword_t is int while BPF_FS_MAGIC is
-unsigned int, so the comparison is a sign-compare warning:
+> The bpffs hint added for the perf_event_attr map compares st.f_type with
+> BPF_FS_MAGIC.  On 32-bit glibc __fsword_t is int while BPF_FS_MAGIC is
+> unsigned int, so the comparison is a sign-compare warning:
+>=20
+>   util/bpf_counter.c:394:43: error: comparison of integer expressions of
+>   different signedness: '__fsword_t' {aka 'int'} and 'unsigned int'
+>   [-Werror=3Dsign-compare]
+>=20
+> It is fatal where perf builds with WERROR=3D1, as the almalinux i386
+> images do; Debian builds with WERROR=3D0 and only warns, and Alpine's musl
+> defines f_type as unsigned long, so it does not warn at all.
+>=20
+> Cast f_type to unsigned long, the form tools/bpf/bpftool/common.c uses,
+> which is warning-free on both 32 and 64-bit.
+>=20
+> Fixes: 2ea09b93b4ca61c1 ("perf bpf_counter: Say why the perf_event_attr m=
+ap can't be used")
+> Cc: Hang Zhengyang <hang.zhengyang1010@gmail.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-  util/bpf_counter.c:394:43: error: comparison of integer expressions of
-  different signedness: '__fsword_t' {aka 'int'} and 'unsigned int'
-  [-Werror=sign-compare]
+Sashiko has reviewed this patch and found no issues.
 
-It is fatal where perf builds with WERROR=1, as the almalinux i386
-images do; Debian builds with WERROR=0 and only warns, and Alpine's musl
-defines f_type as unsigned long, so it does not warn at all.
-
-Cast f_type to unsigned long, the form tools/bpf/bpftool/common.c uses,
-which is warning-free on both 32 and 64-bit.
-
-Fixes: 2ea09b93b4ca61c1 ("perf bpf_counter: Say why the perf_event_attr map can't be used")
-Cc: Hang Zhengyang <hang.zhengyang1010@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/bpf_counter.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
-index 9a463eb9d51d9b2f..6a1d9081f0db5b80 100644
---- a/tools/perf/util/bpf_counter.c
-+++ b/tools/perf/util/bpf_counter.c
-@@ -391,7 +391,7 @@ static void bperf_pin_hint(struct target *target, const char *path)
- 
- 	scnprintf(buf, sizeof(buf), "%s", path);
- 	dir = dirname(buf);
--	if (statfs(dir, &st) || st.f_type == BPF_FS_MAGIC)
-+	if (statfs(dir, &st) || (unsigned long)st.f_type == BPF_FS_MAGIC)
- 		return;
- 	if (target->attr_map)
- 		pr_err("--bpf-attr-map: %s is not on bpffs\n", dir);
--- 
-2.56.0
-
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20261128013144.1660=
+0-1-acme@kernel.org?part=3D1
