@@ -1,82 +1,83 @@
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.remote-ip=209.85.214.174
 ARC-Seal: i=1; d=subspace.kernel.org; s=arc20261015; a=rsa-sha256; cv=none;
-	t=1795838112;
-	b=roN24rXI7WrMZ2Y6TiCErqqabEXF+kBZ0tkm47UP7Pn9qKV7KJVIZ+8OnSlFr6EL9na+
-	 dvv23Ml4rVscYgE6gIo/K54coCQeAzajuq3HOcEvsCeno6GsbhnmeWcZ0A/bDbKawVk0s
-	 4TiwKTpMqhzlSYumkKpaAQ5QNsBOdrhwskTo1RQ6Txw1ioNmG8d3JCl8KhSxg0i4/hwb2
-	 cT1QQ7NuND6+rY4jBwzPFvZ+D0vk7ObBRW+/LtTEeR7tCIF7DZ5JtazZQ4utUHar7qpW4
-	 3eRaCLBsJTbrrP0JPJ2prfjf4PQXvsK1r5VAxNMd2g95j7ydEpt7fbHmOUPahpN7eGw==
+	t=1795838116;
+	b=k64rF4b4X0sWP3TI++1xMQDnQF97MmWn3oa1RTlvgrAkbg2QJxGj9nZDOSaWj+FaKuUD
+	 1EE9fp33cpGlIvy6IvmRJGUUZrQR1lQdIMq7ILwCLyc9WlRZzFki+X9DBmVAKnfJkCBdZ
+	 FlojXNqDlkrTeGI8GxGaK+wAErGDwD/jSN/fvPDYEU+VhnPbBulNu4pLJHzC5S4SQbDlA
+	 q7zTs2AtuPnp4ge91CjuwV/RBERrl31ff01iZHDg8IX1LlqsP+83xdl7fYkNLBwTy/Bkw
+	 bjZUsWi4YqkI2Fhpxud6UOuWfwHE7/WKsX8FYKM0kuHvu2/Vnsh4DWxfMUb3mVm1L0g==
 ARC-Message-Signature: i=1; d=subspace.kernel.org; s=arc20261015;
-	a=rsa-sha256; c=relaxed/relaxed; t=1795838112;
+	a=rsa-sha256; c=relaxed/relaxed; t=1795838116;
 	h=DMARC-Filter:Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Gm-Gg:X-Received:Received:
-	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding;
-	bh=Qr/RK+Rq5dWLkIxZAbRco5wc0OP6SbAvwmR36bqd9dM=;
-	b=eilck+socl5iiqeKq3I1SNeO3/CaSpTdCtCBDDcttqpRFPzZs0heuzuj8JP4qjpW8fVm
-	 F8P0in00O/3wJhZ9rSJU+8LolA7QjIK9BHlh50wmVugu639stpcA2hSuO9IT/ELCgy/aY
-	 F5a29bO72D9CdEwRjBWie9T9uoLQum+fd+U6kmXNnejEj/TyDy2NmzAfoh1AzdDX1NI3n
-	 GrZVqkNF4l8ccWLcZ0ODLAERAhI8GMn47TXK2Rkm5W+YOxb/zeY+hcz+LdMDdmRhxu58J
-	 e0YMQZRdIiEnS046vVgKNPoQC83uR7r8NHU9AvN0Rc2Om5qdm5XajNB7Bhgkjswh+HA==
+	 From:To:Cc:Subject:Date:Message-ID:X-Mailer:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding;
+	bh=6XmgtedqGjyGKnA3AERgrzaJirhR7SRXn+PnZk5B5a4=;
+	b=lPb9n4D/wGwEc3E+VJl+IMv5j8KKYFd1ymurywybaK31t6XoNAYIcWbd+lCExuGOoXoS
+	 s4hG3jwMBey0G82db2JaTmx7Byc5IWxnxSdSeTXerFjHkwro7CS2Gj63nFOivMfapLuRD
+	 D3DF8Vl6xTpAiMi9T0gCTeYkknKzIY8SYMghKPYXw4jxaQsU8fIQQdwwYej1ZcqWIQpGt
+	 LD4mXX2qo4Jq+/M2TD7ffpLgvybvq5HWL8XaZ1A4HFQco8yiiT/Lp9a/bF96uV0r4lkya
+	 j3XjlRM4J83UWpHdwOSO2CSMcGH2y0mJeDt8hjUKJk8+F6ZAiV5kyzDL3A1DEa/wMWg==
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; 
 	dmarc=pass header.from=gmail.com;
 	spf=pass smtp.mailfrom=gmail.com;
-	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=z7j3vrxs;
-	arc=none smtp.remote-ip=209.85.214.169
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	dkim=pass header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=GqDNYQxV;
+	arc=none smtp.remote-ip=209.85.214.174
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C331606A31C
-	for <linux-perf-users@vger.kernel.org>; Sat, 28 Nov 2026 03:55:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 5C331606A31C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6636A606A334
+	for <linux-perf-users@vger.kernel.org>; Sat, 28 Nov 2026 03:55:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.2 smtp.subspace.kernel.org 6636A606A334
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=z7j3vrxs
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2f0426a65e0so52364135ad.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 27 Nov 2026 19:55:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20260707 header.b=GqDNYQxV
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2f03f3631b2so44367475ad.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Nov 2026 19:55:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20260707; t=1795838112; x=1796442912; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Qr/RK+Rq5dWLkIxZAbRco5wc0OP6SbAvwmR36bqd9dM=;
-        b=z7j3vrxsNuPQj48IJ4rQ8s7GhmpumDt/H6mPKRhZJCe2I0Ak+/1kQ7jTwjex+HRHiN
-         omPje4CSLBu5YDqsW+LZ2r4z5OyAHcuJiGbwRIu5yrI++kVdBL9zCFL7O3+UdYsPfmIO
-         LNufeNzboi9WdCytY57ZNu8oUAgb0+9DpOFES6l2pJRvtvOjC6Yf6jlXjxN7Y0FmJoAY
-         afRG8gBCIBlcWbVYPYrTJzcqXg3ki6o8kHD+kdW6q4p/LI/mY85wyJ4YkjZP/xEjTA1d
-         ks9sYVmHiB91s6uuY7txQBX0rx3fHznmIjRnn6bOO1WI8MVM8c2Xl3TrlBihM1PNJQtn
-         KAWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1795838112; x=1796442912;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20260707; t=1795838116; x=1796442916; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Qr/RK+Rq5dWLkIxZAbRco5wc0OP6SbAvwmR36bqd9dM=;
-        b=Zq1J9QIGVMsFA6RCgOoivgIIzyBx5YGDXNDa8jjRWedtig+B87ogvLQIfyHwDyReGd
-         SXHyz/NHXlGBEiTig5efNNPFsI4BP5zCYbDHwqeUn2DqeQEF93x0YaEQktxlx7lcV136
-         w/sXKGDRudn9FPSqnxvi1S72a/5Cvc8m3r17m/Ub/DK6iNoKB6/ABXjNKPLJy68dULKH
-         xMbLPwn/TVJq8pNETw7oPBTtyfXVHUuBu3dx2XEMLm0Q2md7mGGsdiNgFCp4jyjr442E
-         I1gZjLjkq5QS0ct+DSN4Fvid1/keTElnaPiOJBI7jpXYoVMhtT2mQB9YY5WxDAGtiZJi
-         lghw==
-X-Forwarded-Encrypted: i=1; AL+hErEBQekyLrLxu1SNjZAEk2nFxRW5ig5oNg6r9/FlhNqmVodA3AJhAcoXV6b4kkFVLGEbbO8yekp3MsVQhbNAXizD@vger.kernel.org
-X-Gm-Message-State: APuU4Z8w/q2Yj0mcqk5wcPpJX09nWvt3K7Wbgi6GGM5n8/AR5inznd16
-	ETUnf5Ts2oUP0lEW71hrsicLS78uEnWLKoiteWbxTq4DnULxOh7+LR74
-X-Gm-Gg: AZFdTZdd0sLXOFr5askYJ9utdTO9/BwMIkR0unEowiT6LQRs5UQxz+ofLtsIbqaPh1i
-	Xqb+xdRgExUbYImYi9RncwbuCmJy5rllE7j72Pg0XIuQUm7psBfyocQ1JGBOsyDlRgbyVFwbEd1
-	fbZv2NfGKzDgDYmtZ5b+dFZ54hvKotI9Or96jCRhlsZZIh5njrSrwxaUJerIvfx4k8beHGwLTRJ
-	ozwzLwn9lM1wXq6mIulGnNvsQnY66YXvxmTShNCIb6HDRll8/PThhq6b6vG2LtcBWXp55fuxhZH
-	0hYhiwBSsOslfTy4bDOLDAFu6er2Crrj6i/o7L1YcC75rhzWxUsdX3Ea/01uUcX6drPJJS+J3cF
-	tJk4kY+fJBe4meqocTwFGJKDH1c6XAK1UOpSEmaWegN9a7Mn/GenNjTwj/72Jv/lCbHwgMLPSVP
-	SGBthZ7VRAI5g//Ls9j0XR3wc5qQeqfwAw9tlrFgfVa8cnFNysKHUf8FAU4AM0kkYj027Sb1Wlh
-	ZxetvFkLYM75hUgHYAwxKAU3xFXNVHlI/oDxzmp013LNVgQ9UFDH7DuvkDhLPBTwtwe/u61lkI2
-	fEAW0r8b03iClwI5LOifR5AFuiw=
-X-Received: by 2002:a17:903:41cd:b0:2ed:5548:2989 with SMTP id d9443c01a7336-2f03f20115cmr222838275ad.30.1795838111725;
-        Fri, 27 Nov 2026 19:55:11 -0800 (PST)
+        bh=6XmgtedqGjyGKnA3AERgrzaJirhR7SRXn+PnZk5B5a4=;
+        b=GqDNYQxVdzmPk71SYW4P4fnCAOImoIcnS1MfGYCtTPcLljr6z9flP4o4ZjhCgjqkYo
+         F+OJsLbkypDiAtouP4r7JXfeb+qzBh7V3qodmbDEM3jgBJYoFsFGQB+0DmfEGxejWBQc
+         fZM1UMOJwNpeEVKuSWkMg8lRStrvULmsnb+djFUjWzJL+XjVaTqPxFnUy8FMqITnUj1I
+         iseRVKbUYLW/Ow52oRFUvea3VMBWIQu3o965QGtFzE+34KCdyCb/Dr6D7wFMg02iGmy/
+         veluhCk6NWcQs3d39CGFgUX/mZVuX6mbjQ7HimijheF1kUesEwbz+0AMao4pVSAtMhgb
+         mlow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1795838116; x=1796442916;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=6XmgtedqGjyGKnA3AERgrzaJirhR7SRXn+PnZk5B5a4=;
+        b=lXB0yR2/X9rId12YUnPYS70ToU5GuLeuev/s6n5G7zN0QAYn2QrJruAy6raV2Gd1Hj
+         w4BagjSNg9sVt/yvp7DwqkHZFIDB+9yc/Lc+FBPaAftYI+uqRbGgoFeLW1fKDTwOOyPk
+         PPBLM3Z2azxUV60COeBCKQkxlmudqeOr+tj+ya54/gSrlBVq4YOvQ3vSju6W3ZRQYH0s
+         Vk1UECjxP9bMpMUDsRfLI5atL4G1fqq/dO7ur2aekKhUSXiUzlxNmUhiS5Wt7/KscSR4
+         Y7pUpro2Eu+VilFh7p06X6ZEjhxXVKIS5cNGyGF112tKSuTW+sCLKOigJI+p7GIMdiot
+         YlmQ==
+X-Forwarded-Encrypted: i=1; AL+hErFumCkiwq7zo2h0ZPK//hNTmlv4S9irtBjBR1ZKSGG1p+WIBrR3Gi60CRrGQYzRrk658Z0AdO1yrkuK0UL+wsPa@vger.kernel.org
+X-Gm-Message-State: APuU4Z9ryJEekKSuFYFAITPE7tcbnFSozACJCJ3eIuMoV7L2rUy3IaPC
+	rQv3mLylfYBViLhG9uAReGg32XUwzkE6JkjkozNnBE30L2T0L4F4C9ef
+X-Gm-Gg: AZFdTZf6F5Dg3EDeBFXBZu1eCl1tx7eJrQVEIggTB3j7xkzQMnoEqzhCz1YT1Tcj/rb
+	aSa9Yd8kcRFMRy1FZIjL6Xj0sEt8vexKP9F2ZPaRrla/EspQHr+ZxPlLQg29DEDzNjgJTBsvaNw
+	QhPVeju3mSV2qUpiwDtZhKqe0dNAt/PZGhQWnfjLfWgG1Zj+kxoVVvI2ElwdY2nrXpjX7bkfPBk
+	kFJ7qnSfRrT3M5Eu0Ud26w99oL0DdotLWUBlTXQ0x7EzLB4Rk5lq9WKsR+Pe6EEugJU4p8T8eJ+
+	s2RZeL+0dCRq2s9T8X5wBgmAhei11f1dQPDf3a838YPD0iUco2XQsFxMIZshMQaMf92gmRi6ZXs
+	h2npzgIZxZ/ixm14LCHN8c/OqdExRkBYbKSQbrrHc6NuiA87R0SelM9cBSNupwAOwGnDB/lPdiu
+	hPbthyi7mG1ZibBrifXDeojQ6GFt0rfhPswdWC8zGnF+OvjIi3GrCEEbd70PWvEtyoyzg/TVVK4
+	rRZfrscS10vJzxtkmphUK3M2Z6a7UGLoJXhI2WSYN0cRtUoqJNJwrI0Mcq0sJWYZaEjoIQvPkFI
+	kbJiI3LeXUHx2/mKzeLPUODz16G8yWxo3hsJBUDt3TGKisXY
+X-Received: by 2002:a17:903:19e7:b0:2df:a4d8:57ad with SMTP id d9443c01a7336-2f03f271d6dmr235900075ad.72.1795838115727;
+        Fri, 27 Nov 2026 19:55:15 -0800 (PST)
 Received: from debian.. ([192.227.246.212])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2f099a4d875sm89190595ad.37.2026.11.27.19.55.07
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2f099a4d875sm89190595ad.37.2026.11.27.19.55.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Nov 2026 19:55:10 -0800 (PST)
+        Fri, 27 Nov 2026 19:55:15 -0800 (PST)
 From: Harry Bit <idleassetsd@gmail.com>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -91,10 +92,12 @@ Cc: Catalin Marinas <catalin.marinas@arm.com>,
 	linux-kernel@vger.kernel.org,
 	Chen Baozi <chenbaozi@phytium.com.cn>,
 	Harry Bit <idleassetsd@gmail.com>
-Subject: [PATCH 1/3] dt-bindings: vendor-prefixes: add phytium
-Date: Sat, 28 Nov 2026 11:55:02 +0800
-Message-ID: <20261128035504.760778-1-idleassetsd@gmail.com>
+Subject: [PATCH 2/3] dt-bindings: arm: cpus: add Phytium FTC310 and FTC664
+Date: Sat, 28 Nov 2026 11:55:03 +0800
+Message-ID: <20261128035504.760778-2-idleassetsd@gmail.com>
 X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20261128035504.760778-1-idleassetsd@gmail.com>
+References: <20261128035504.760778-1-idleassetsd@gmail.com>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Post: <mailto:linux-perf-users@vger.kernel.org>
@@ -108,27 +111,42 @@ Content-Transfer-Encoding: 8bit
 
 From: Chen Baozi <chenbaozi@phytium.com.cn>
 
-Add the vendor prefix for Phytium Technology Co., Ltd.
+Document the CPU and PMU compatible strings for Phytium FTC310 and
+FTC664 ARMv8 cores integrated in PE220x SoCs.
 
 Signed-off-by: Chen Baozi <chenbaozi@phytium.com.cn>
 Co-developed-by: Harry Bit <idleassetsd@gmail.com>
 Signed-off-by: Harry Bit <idleassetsd@gmail.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/arm/cpus.yaml | 2 ++
+ Documentation/devicetree/bindings/arm/pmu.yaml  | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 5471a06f93..374568acb2 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -1331,6 +1331,8 @@ patternProperties:
-     description: Phontech
-   "^phytec,.*":
-     description: PHYTEC Messtechnik GmbH
-+  "^phytium,.*":
-+    description: Phytium Technology Co., Ltd.
-   "^picochip,.*":
-     description: Picochip Ltd
-   "^pine64,.*":
+diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+index 96136b70da..658da1fdc4 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.yaml
++++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+@@ -206,6 +206,8 @@ properties:
+           - nvidia,tegra132-denver
+           - nvidia,tegra186-denver
+           - nvidia,tegra194-carmel
++          - phytium,ftc310
++          - phytium,ftc664
+           - qcom,krait
+           - qcom,kryo240
+           - qcom,kryo250
+diff --git a/Documentation/devicetree/bindings/arm/pmu.yaml b/Documentation/devicetree/bindings/arm/pmu.yaml
+index f47baaefcd..49976c889f 100644
+--- a/Documentation/devicetree/bindings/arm/pmu.yaml
++++ b/Documentation/devicetree/bindings/arm/pmu.yaml
+@@ -79,6 +79,8 @@ properties:
+           - cavium,thunder-pmu
+           - nvidia,denver-pmu
+           - nvidia,carmel-pmu
++          - phytium,ftc310-pmu
++          - phytium,ftc664-pmu
+           - qcom,krait-pmu
+           - qcom,scorpion-pmu
+           - qcom,scorpion-mp-pmu
 -- 
 2.47.3
